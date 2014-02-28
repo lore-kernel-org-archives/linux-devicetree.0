@@ -1,134 +1,34 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH v6 08/11] drivers: dma-contiguous: add initialization from
- device tree
-Date: Fri, 28 Feb 2014 14:42:53 +0100
-Message-ID: <1393594976-16728-9-git-send-email-m.szyprowski@samsung.com>
+From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v6 07/11] drivers: dma-coherent: add initialization from device
+ tree
+Date: Fri, 28 Feb 2014 14:42:52 +0100
+Message-ID: <1393594976-16728-8-git-send-email-m.szyprowski@samsung.com>
 References: <1393594976-16728-1-git-send-email-m.szyprowski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1393594976-16728-1-git-send-email-m.szyprowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Grant Likely <grant.likely@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Paul Mackerras <paulus@samba.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1393594976-16728-1-git-send-email-m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Refactor internal dma_contiguous_init_reserved_mem() function, which
-creates CMA area from previously reserved memory region and add support
-for handling 'shared-dma-pool' reserved-memory device tree nodes.
+Add support for handling 'shared-dma-pool' reserved-memory device tree
+nodes.
 
-Based on previous code provided by Josh Cartwright <joshc@codeaurora.org>
+Based on previous code provided by Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/base/dma-contiguous.c |  129 ++++++++++++++++++++++++++++++++++-------
- 1 file changed, 107 insertions(+), 22 deletions(-)
+ drivers/base/dma-coherent.c |   40 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-diff --git a/drivers/base/dma-contiguous.c b/drivers/base/dma-contiguous.c
-index 165c2c299e57..0efdf1986990 100644
---- a/drivers/base/dma-contiguous.c
-+++ b/drivers/base/dma-contiguous.c
-@@ -182,6 +182,49 @@ static int __init cma_init_reserved_areas(void)
- core_initcall(cma_init_reserved_areas);
- 
- /**
-+ * dma_contiguous_init_reserved_mem() - reserve custom contiguous area
-+ * @size: Size of the reserved area (in bytes),
-+ * @base: Base address of the reserved area optional, use 0 for any
-+ * @limit: End address of the reserved memory (optional, 0 for any).
-+ * @res_cma: Pointer to store the created cma region.
-+ *
-+ * This function reserves memory from early allocator. It should be
-+ * called by arch specific code once the early allocator (memblock or bootmem)
-+ * has been activated and all other subsystems have already allocated/reserved
-+ * memory. This function allows to create custom reserved areas for specific
-+ * devices.
-+ */
-+static int __init dma_contiguous_init_reserved_mem(phys_addr_t size,
-+					phys_addr_t base, struct cma **res_cma)
-+{
-+	struct cma *cma = &cma_areas[cma_area_count];
-+	phys_addr_t alignment;
-+
-+	/* Sanity checks */
-+	if (cma_area_count == ARRAY_SIZE(cma_areas)) {
-+		pr_err("Not enough slots for CMA reserved regions!\n");
-+		return -ENOSPC;
-+	}
-+
-+	if (!size || !memblock_is_region_reserved(base, size))
-+		return -EINVAL;
-+
-+	/* Sanitise input arguments */
-+	alignment = PAGE_SIZE << max(MAX_ORDER - 1, pageblock_order);
-+	if (ALIGN(base, alignment) != base || ALIGN(size, alignment) != size)
-+		return -EINVAL;
-+
-+	cma->base_pfn = PFN_DOWN(base);
-+	cma->count = size >> PAGE_SHIFT;
-+	*res_cma = cma;
-+	cma_area_count++;
-+
-+	/* Architecture specific contiguous memory fixup. */
-+	dma_contiguous_early_fixup(base, size);
-+	return 0;
-+}
-+
-+/**
-  * dma_contiguous_reserve_area() - reserve custom contiguous area
-  * @size: Size of the reserved area (in bytes),
-  * @base: Base address of the reserved area optional, use 0 for any
-@@ -197,7 +240,6 @@ core_initcall(cma_init_reserved_areas);
- int __init dma_contiguous_reserve_area(phys_addr_t size, phys_addr_t base,
- 				       phys_addr_t limit, struct cma **res_cma)
- {
--	struct cma *cma = &cma_areas[cma_area_count];
- 	phys_addr_t alignment;
- 	int ret = 0;
- 
-@@ -205,12 +247,6 @@ int __init dma_contiguous_reserve_area(phys_addr_t size, phys_addr_t base,
- 		 (unsigned long)size, (unsigned long)base,
- 		 (unsigned long)limit);
- 
--	/* Sanity checks */
--	if (cma_area_count == ARRAY_SIZE(cma_areas)) {
--		pr_err("Not enough slots for CMA reserved regions!\n");
--		return -ENOSPC;
--	}
--
- 	if (!size)
- 		return -EINVAL;
- 
-@@ -241,21 +277,12 @@ int __init dma_contiguous_reserve_area(phys_addr_t size, phys_addr_t base,
- 		}
- 	}
- 
--	/*
--	 * Each reserved area must be initialised later, when more kernel
--	 * subsystems (like slab allocator) are available.
--	 */
--	cma->base_pfn = PFN_DOWN(base);
--	cma->count = size >> PAGE_SHIFT;
--	*res_cma = cma;
--	cma_area_count++;
--
--	pr_info("CMA: reserved %ld MiB at %08lx\n", (unsigned long)size / SZ_1M,
--		(unsigned long)base);
--
--	/* Architecture specific contiguous memory fixup. */
--	dma_contiguous_early_fixup(base, size);
--	return 0;
-+	ret = dma_contiguous_init_reserved_mem(size, base, res_cma);
-+	if (ret == 0) {
-+		pr_info("CMA: reserved %ld MiB at %08lx\n",
-+			(unsigned long)size / SZ_1M, (unsigned long)base);
-+		return 0;
-+	}
- err:
- 	pr_err("CMA: failed to reserve %ld MiB\n", (unsigned long)size / SZ_1M);
- 	return ret;
-@@ -357,3 +384,61 @@ bool dma_release_from_contiguous(struct device *dev, struct page *pages,
- 
- 	return true;
+diff --git a/drivers/base/dma-coherent.c b/drivers/base/dma-coherent.c
+index bc256b641027..0a5fc7f3d03e 100644
+--- a/drivers/base/dma-coherent.c
++++ b/drivers/base/dma-coherent.c
+@@ -218,3 +218,43 @@ int dma_mmap_from_coherent(struct device *dev, struct vm_area_struct *vma,
+ 	return 0;
  }
+ EXPORT_SYMBOL(dma_mmap_from_coherent);
 +
 +/*
 + * Support for reserved memory regions defined in device tree
@@ -138,54 +38,41 @@ index 165c2c299e57..0efdf1986990 100644
 +#include <linux/of_fdt.h>
 +#include <linux/of_reserved_mem.h>
 +
-+#undef pr_fmt
-+#define pr_fmt(fmt) fmt
-+
-+static void rmem_cma_device_init(struct reserved_mem *rmem, struct device *dev)
++static void rmem_dma_device_init(struct reserved_mem *rmem, struct device *dev)
 +{
-+	struct cma *cma = rmem->priv;
-+	dev_set_cma_area(dev, cma);
++	dma_declare_coherent_memory(dev, rmem->base, rmem->base,
++		rmem->size, DMA_MEMORY_MAP | DMA_MEMORY_EXCLUSIVE);
 +}
 +
-+static const struct reserved_mem_ops rmem_cma_ops = {
-+	.device_init	= rmem_cma_device_init,
++static void rmem_dma_device_release(struct reserved_mem *rmem,
++				    struct device *dev)
++{
++	dma_release_declared_memory(dev);
++}
++
++static const struct reserved_mem_ops rmem_dma_ops = {
++	.device_init	= rmem_dma_device_init,
++	.device_release	= rmem_dma_device_release,
 +};
 +
-+static int __init rmem_cma_setup(struct reserved_mem *rmem,
++static int __init rmem_dma_setup(struct reserved_mem *rmem,
 +				 unsigned long node,
 +				 const char *uname)
 +{
-+	phys_addr_t align = PAGE_SIZE << max(MAX_ORDER - 1, pageblock_order);
-+	phys_addr_t mask = align - 1;
-+	struct cma *cma;
-+	int err;
-+
-+	if (!of_get_flat_dt_prop(node, "reusable", NULL))
++	if (of_get_flat_dt_prop(node, "reusable", NULL))
 +		return -EINVAL;
 +
-+	if ((rmem->base & mask) || (rmem->size & mask)) {
-+		pr_err("Reserved memory: incorrect alignment of CMA region\n");
-+		return -EINVAL;
-+	}
-+
-+	err = dma_contiguous_init_reserved_mem(rmem->size, rmem->base, &cma);
-+	if (err) {
-+		pr_err("Reserved memory: unable to setup CMA region\n");
-+		return err;
-+	}
-+
-+	if (of_get_flat_dt_prop(node, "linux,cma-default", NULL))
-+		dma_contiguous_set_default(cma);
-+
-+	rmem->ops = &rmem_cma_ops;
-+	rmem->priv = cma;
-+
-+	pr_info("Reserved memory: created CMA memory pool at %pa, size %ld MiB\n",
++	rmem->ops = &rmem_dma_ops;
++	pr_info("Reserved memory: created DMA memory pool at %pa, size %ld MiB\n",
 +		&rmem->base, (unsigned long)rmem->size / SZ_1M);
-+
 +	return 0;
 +}
-+RESERVEDMEM_OF_DECLARE(cma, "shared-dma-pool", rmem_cma_setup);
++RESERVEDMEM_OF_DECLARE(dma, "shared-dma-pool", rmem_dma_setup);
 +#endif
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
