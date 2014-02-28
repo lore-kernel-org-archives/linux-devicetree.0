@@ -1,89 +1,116 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v4] can: xilinx CAN controller support.
-Date: Fri, 28 Feb 2014 13:27:37 +0000
-Message-ID: <f7b303dd-bf23-40f2-bbd4-4594cba8f345@CO9EHSMHS026.ehs.local>
-References: <74d607e9-ac9c-4a9b-ac49-e84ae49d20c2@TX2EHSMHS031.ehs.local>
- <530D0A9C.5090402@pengutronix.de>
- <cd00fb2d-c8a7-423d-8aa0-2b413e9ac101@CO9EHSMHS017.ehs.local>
- <530DEA7C.6010609@pengutronix.de>
- <678ca296-8687-4e7c-9014-ae69d886a068@CO9EHSMHS014.ehs.local>
- <530E0B92.5010903@pengutronix.de>
- <2e3bfd38-37d5-4102-af79-821196c6c732@CH1EHSMHS006.ehs.local>
- <53104995.4010305@pengutronix.de>
- <48409965-e214-43b7-8b6a-08bf075707e1@CO9EHSMHS001.ehs.local>
- <53108798.7090902@pengutronix.de>
- <4902b8d8-139a-4fd0-9e6e-a30ce7e6683b@CH1EHSMHS019.ehs.local>
- <53108BEF.1020308@pengutronix.de>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [RFC PATCH v2 19/21] ARM: dts: exynos5250-arndale: add dsi and
+ panel nodes
+Date: Fri, 28 Feb 2014 15:31:12 +0200
+Message-ID: <53108FA0.4040903@ti.com>
+References: <1392204688-4591-1-git-send-email-a.hajda@samsung.com> <1392204688-4591-20-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53108BEF.1020308-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org" <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="uAMkR61uDAfn7MkQBP2MiuFTNTrrv3oc2"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1392204688-4591-20-git-send-email-a.hajda@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>, dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Sean Paul <seanpaul@chromium.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyYywNCg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE1hcmMg
-S2xlaW5lLUJ1ZGRlIFttYWlsdG86bWtsQHBlbmd1dHJvbml4LmRlXQ0KPiBTZW50OiBGcmlkYXks
-IEZlYnJ1YXJ5IDI4LCAyMDE0IDY6NDUgUE0NCj4gVG86IEFwcGFuYSBEdXJnYSBLZWRhcmVzd2Fy
-YSBSYW87IHdnQGdyYW5kZWdnZXIuY29tOyBNaWNoYWwgU2ltZWs7DQo+IGdyYW50Lmxpa2VseUBs
-aW5hcm8ub3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7IGxpbnV4LWNhbkB2Z2VyLmtlcm5lbC5vcmcN
-Cj4gQ2M6IG5ldGRldkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
-cmFkZWFkLm9yZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVA
-dmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjRdIGNhbjogeGlsaW54IENB
-TiBjb250cm9sbGVyIHN1cHBvcnQuDQo+DQo+IE9uIDAyLzI4LzIwMTQgMDI6MDcgUE0sIEFwcGFu
-YSBEdXJnYSBLZWRhcmVzd2FyYSBSYW8gd3JvdGU6DQo+ID4+Pj4gV2hhdCBoYXBwZW5zIGlmIHRo
-ZSBpbnRlcnJ1cHQgaGFuZGxlciBpcyBkZWxheWVkPyBGb3IgZXhhbXBsZSBpbiBhDQo+ID4+Pj4g
-UlQgZW5hYmxlZCBzeXN0ZW0gdGhlIGludGVycnVwdCBoYW5kbGVyIHJ1bnMgYXMgYSB0aHJlYWQu
-IFRoZXJlDQo+ID4+Pj4gbWlnaHQgYmUgb3RoZXIgdGhyZWFkcyB3aXRoIGhpZ2hlciBwcmlvcml0
-eS4gVGhlIGhhcmR3YXJlIHdpbGwNCj4gPj4+PiBwcm9iYWJseSBzZW5kIGFsbCBDQU4gZnJhbWVz
-IGluIHRoZSBGSUZPLCBzbyB5b3Ugd2FudCB0byByZWR1Y2UgdGhlDQo+ID4+Pj4gb3ZlcmhlYWQg
-YW5kIGxvb3AgaW4gdGhlIHR4IGNvbXBsZXRlIGhhbmRsZXIuDQo+ID4+Pj4NCj4gPj4+IFllcyBJ
-IGFncmVlIHdpdGggeW91ciBjb21tZW50Lg0KPiA+Pj4gSXQgd2lsbCBiZSBnb29kIHRvIGhhdmUg
-YSBsb29wIGluIHRoZSBUeCBpbnRlcnJ1cHQgaGFuZGxlciBJIGFtDQo+ID4+PiBtb2RpZnlpbmcg
-dGhlIFR4IGludGVycnVwdCBoYW5kbGVyIGxpa2UgYmVsb3cuDQo+ID4+Pg0KPiA+Pj4gc3RhdGlj
-IHZvaWQgeGNhbl90eF9pbnRlcnJ1cHQoc3RydWN0IG5ldF9kZXZpY2UgKm5kZXYsIHUzMiBpc3Ip
-IHsNCj4gPj4+ICAgICAgICAgc3RydWN0IHhjYW5fcHJpdiAqcHJpdiA9IG5ldGRldl9wcml2KG5k
-ZXYpOw0KPiA+Pj4gICAgICAgICBzdHJ1Y3QgbmV0X2RldmljZV9zdGF0cyAqc3RhdHMgPSAmbmRl
-di0+c3RhdHM7DQo+ID4+Pg0KPiA+Pj4gICAgICAgICB3aGlsZSAocHJpdi0+dHhfaGVhZCAtIHBy
-aXYtPnR4X3RhaWwgPiAwKSB7DQo+ID4+PiAgICAgICAgICAgICAgICAgaWYgKCEoaXNyICYgWENB
-Tl9JWFJfVFhPS19NQVNLKSkgew0KPiA+Pj4gICAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7
-DQo+ID4+PiAgICAgICAgICAgICAgICAgfQ0KPiA+Pj4gICAgICAgICAgICAgICAgIGNhbl9nZXRf
-ZWNob19za2IobmRldiwgcHJpdi0+dHhfdGFpbCAlDQo+ID4+PiAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgcHJpdi0+eGNhbl9lY2hvX3NrYl9tYXhfdHgpOw0KPiA+Pj4g
-ICAgICAgICAgICAgICAgIHByaXYtPnR4X3RhaWwrKzsNCj4gPj4+ICAgICAgICAgICAgICAgICBz
-dGF0cy0+dHhfcGFja2V0cysrOw0KPiA+Pj4gICAgICAgICAgICAgICAgIGNhbl9sZWRfZXZlbnQo
-bmRldiwgQ0FOX0xFRF9FVkVOVF9UWCk7DQo+DQo+IFByb2JhYmx5IGZpcnN0IGNsZWFyIHRoZSBp
-bnRlcnJ1cHQsIGJlY2F1c2UgeW91J3ZlIGp1c3QgaGFuZGxlZCBpdCwgdGhlbiBjaGVjaw0KPiBp
-ZiBpdCdzIHN0aWxsIHByZXNlbnQuIFRoZSBxdWVzdGlvbiBpcywgZG8geW91IGhhdmUgdG8gY2xl
-YXIgdGhlIElSUSBmb3IgZWFjaA0KPiB0cmFuc21pdHRlZCBmcmFtZSwgb3IgZG9lcyBvbmUgY2xl
-YW4gb2YgdGhlIGludGVycnVwdCBjbGVhciB0aGUgYml0IGZvciBtb3JlDQo+IHRoZW4gb25lIHRy
-YW5zbWl0dGVkIGZyYW1lPw0KPg0KDQpXZSBhbHJlYWR5IHdlcmUgY2xlYXJpbmcgaXQgaW4gdGhl
-IGludGVycnVwdCByb3V0aW5lICh4Y2FuX2ludGVycnVwdCkuIFRoYXQncyB3aHkgY2xlYXJpbmcg
-aXQgYXQgdGhlIGVuZCBvZiB0aGUgbG9vcC4NCldlIGhhdmUgdG8gY2xlYXIgdGhlIElSUSAoVFhP
-SykgZm9yIGVhY2ggdHJhbnNtaXR0ZWQgZnJhbWUuDQoNClJlZ2FyZHMsDQpLZWRhci4NCg0KDQo+
-ID4+PiAgICAgICAgICAgICAgICAgaXNyID0gcHJpdi0+cmVhZF9yZWcocHJpdiwgWENBTl9JU1Jf
-T0ZGU0VUKTsNCj4gPiAgICAgICAgICAgICAtLT4gY2xlYXIgVHggT0sgaW50ZXJydXB0Lg0KPg0K
-PiA+DQo+ID4+PiAgICAgICAgIH0NCj4gPj4+ICAgICAgICAgbmV0aWZfd2FrZV9xdWV1ZShuZGV2
-KTsNCj4gPj4+IH0NCj4gPj4+DQo+ID4+PiBBcmUgeW91IE9rIHdpdGggdGhpcz8NCj4NCj4gV2Vy
-ZSBnZXR0aW5nIHRoZXJlIDopDQo+DQo+IE1hcmMNCj4gLS0NCj4gUGVuZ3V0cm9uaXggZS5LLiAg
-ICAgICAgICAgICAgICAgIHwgTWFyYyBLbGVpbmUtQnVkZGUgICAgICAgICAgIHwNCj4gSW5kdXN0
-cmlhbCBMaW51eCBTb2x1dGlvbnMgICAgICAgIHwgUGhvbmU6ICs0OS0yMzEtMjgyNi05MjQgICAg
-IHwNCj4gVmVydHJldHVuZyBXZXN0L0RvcnRtdW5kICAgICAgICAgIHwgRmF4OiAgICs0OS01MTIx
-LTIwNjkxNy01NTU1IHwNCj4gQW10c2dlcmljaHQgSGlsZGVzaGVpbSwgSFJBIDI2ODYgIHwgaHR0
-cDovL3d3dy5wZW5ndXRyb25peC5kZSAgIHwNCg0KDQoNClRoaXMgZW1haWwgYW5kIGFueSBhdHRh
-Y2htZW50cyBhcmUgaW50ZW5kZWQgZm9yIHRoZSBzb2xlIHVzZSBvZiB0aGUgbmFtZWQgcmVjaXBp
-ZW50KHMpIGFuZCBjb250YWluKHMpIGNvbmZpZGVudGlhbCBpbmZvcm1hdGlvbiB0aGF0IG1heSBi
-ZSBwcm9wcmlldGFyeSwgcHJpdmlsZWdlZCBvciBjb3B5cmlnaHRlZCB1bmRlciBhcHBsaWNhYmxl
-IGxhdy4gSWYgeW91IGFyZSBub3QgdGhlIGludGVuZGVkIHJlY2lwaWVudCwgZG8gbm90IHJlYWQs
-IGNvcHksIG9yIGZvcndhcmQgdGhpcyBlbWFpbCBtZXNzYWdlIG9yIGFueSBhdHRhY2htZW50cy4g
-RGVsZXRlIHRoaXMgZW1haWwgbWVzc2FnZSBhbmQgYW55IGF0dGFjaG1lbnRzIGltbWVkaWF0ZWx5
-Lg0KDQoKCg==
+--uAMkR61uDAfn7MkQBP2MiuFTNTrrv3oc2
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+On 12/02/14 13:31, Andrzej Hajda wrote:
+> The patch adds bridge and panel nodes.
+> It adds also DSI properties specific for arndale board.
+>=20
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos5250-arndale.dts | 39 ++++++++++++++++++++++++=
+++++++++
+>  1 file changed, 39 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/d=
+ts/exynos5250-arndale.dts
+> index a0a985d..7d666b1 100644
+> --- a/arch/arm/boot/dts/exynos5250-arndale.dts
+> +++ b/arch/arm/boot/dts/exynos5250-arndale.dts
+> @@ -584,6 +584,45 @@
+>  		};
+>  	};
+> =20
+> +	panel: panel {
+> +		compatible =3D "boe,hv070wsa-100";
+> +		power-supply =3D <&vcc_3v3_reg>;
+> +		enable-gpios =3D <&gpd1 3 0>;
+> +		port {
+> +			panel_ep: endpoint {
+> +				remote-endpoint =3D <&bridge_out_ep>;
+> +			};
+> +		};
+> +	};
+> +
+> +	dsi_0: dsi@14500000 {
+> +		vddcore-supply =3D <&ldo8_reg>;
+> +		vddio-supply =3D <&ldo10_reg>;
+> +		samsung,pll-clock-frequency =3D <24000000>;
+> +		samsung,burst-clock-frequency =3D <320000000>;
+> +		samsung,esc-clock-frequency =3D <10000000>;
+> +		status =3D "okay";
+> +
+> +		bridge@0 {
+> +			reg =3D <0>;
+> +			compatible =3D "toshiba,tc358764";
+> +			vddc-supply =3D <&vcc_1v2_reg>;
+> +			vddio-supply =3D <&vcc_1v8_reg>;
+> +			vddmipi-supply =3D <&vcc_1v2_reg>;
+> +			vddlvds133-supply =3D <&vcc_3v3_reg>;
+> +			vddlvds112-supply =3D <&vcc_1v2_reg>;
+> +			reset-gpio =3D <&gpd1 6 1>;
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +			port@1 {
+> +				reg =3D <1>;
+> +				bridge_out_ep: endpoint {
+> +					remote-endpoint =3D <&panel_ep>;
+> +				};
+> +			};
+> +		};
+> +	};
+
+Compared to what I've done on OMAP, you don't seem to specify the video
+inputs for the tc358764 at all. In this case it's obvious, as the chip
+is a child of the DSI master. But the chip could as well be controlled
+via i2c, and so be placed as a child of the i2c nodes.
+
+So even if the driver doesn't use it, maybe it would be more future
+proof to have both input and output endpoints for the tc358764?
+
+ Tomi
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--uAMkR61uDAfn7MkQBP2MiuFTNTrrv3oc2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJTEI+gAAoJEPo9qoy8lh71wZYQAJusntlm939iLvqxgjXUtYx/
+rI3ED+GdEIkG3vI7e4CxH9EgWBpEKEHV8onY88aGhOwv8vtXhogPWg/sGJxFxCFZ
+8j5lqZDwzx7xeOqNgyToA7xTmKO7qLF1eQn02Fa7nrlVM1Z+JSifPEzG4Gykfqiv
+W4ciHwYoUAbfiZQCXdam7zakGJYhIq8wzUDPEiCovcMjXOdPmIFrO8n13vDMdOOy
+bqMr8L2/xar8Yjf1tKjrFLlrp59zVzGJdeS4djs4tv8IedSBD1pVVDJ1E8f5AYXI
+Tyn/bsg/zCdZEuB2Orb2v2V5EzHT9CZTgW7++IZh5D+CZfkTj+tCr8/2Da7nMVhl
+GfCOg/klc3Eb7rbUsr+KmmORBNT8wVH4e1HBf4+RRXPmNw4sUfepEGmzncLpBy0K
+wi1jac39QO9vbCXJAAZeAR9P0LVQQDF0mlL0rCdS9E2hLClhBGx9YcqHnU+9Atf2
+JNB8VrxqsI6VqFWcWggvvA8xIVdXmfnGlz3JvaAOCmBBeO9/kzom75KFBrM9vTgh
+uZalrdfbKcYz7lC8j3F0i2dLpruU3GpWUJ++XDPhD7++NAxmK36J9RFRQWzgwMmc
+j0gGR19oBXdMH0nUzLIuQz+gD8afmWqb5tvlVxRy1kkLv+a1fugWxiujSG0QASPq
+iAp8mojT6FNxmvngXELz
+=KmsM
+-----END PGP SIGNATURE-----
+
+--uAMkR61uDAfn7MkQBP2MiuFTNTrrv3oc2--
