@@ -1,41 +1,47 @@
-From: Georgi Djakov <gdjakov@mm-sol.com>
-Subject: Re: [PATCH v9 3/3] mmc: sdhci-msm: Add platform_execute_tunning implementation
-Date: Sat, 01 Mar 2014 00:10:05 +0200
-Message-ID: <5311093D.3090409@mm-sol.com>
-References: <1393586675-14628-1-git-send-email-gdjakov@mm-sol.com> <1393586675-14628-4-git-send-email-gdjakov@mm-sol.com> <F9D8CFEF-1A3C-4B25-B593-419C56E3A168@codeaurora.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 0/3] OMAP hwspinlock DT updates
+Date: Fri, 28 Feb 2014 14:14:39 -0800
+Message-ID: <20140228221439.GI13624@atomide.com>
+References: <1389659207-39445-1-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <F9D8CFEF-1A3C-4B25-B593-419C56E3A168@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: linux-mmc@vger.kernel.org, cjb@laptop.org, ulf.hansson@linaro.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1389659207-39445-1-git-send-email-s-anna@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Suman Anna <s-anna@ti.com>
+Cc: Benoit Cousson <bcousson@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 28.02.14, 18:51, Kumar Gala wrote:
->=20
-> On Feb 28, 2014, at 5:24 AM, Georgi Djakov <gdjakov@mm-sol.com> wrote=
-:
->=20
->> This patch adds implementation for platform specific tuning in order=
- to support
->> HS200 bus speed mode on Qualcomm SDHCI controller.
->>
->> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
->> Signed-off-by: Venkat Gopalakrishnan <venkatg@codeaurora.org>
->> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
->> ---
->> drivers/mmc/host/sdhci-msm.c |  424 ++++++++++++++++++++++++++++++++=
-+++++++++-
->> 1 file changed, 418 insertions(+), 6 deletions(-)
->=20
-> minor nit, in subject (platform_execute_tuning, with one =E2=80=99n=E2=
-=80=99).
->=20
-> - k
+* Suman Anna <s-anna@ti.com> [140113 16:29]:
+> Hi,
+> 
+> This series updates the existing OMAP hwspinlock DT nodes to have a
+> #hwlock-cells property as suggested by Mark Rutland [1], and adds the
+> hwspinlock nodes for two other newer SoCs - DRA7xx and AM43xx.
+> 
+> Posting the series separately from the driver DT adapation changes [2]
+> to avoid maintainer confusion.
 
-Oh, of course! Thanks!
+Thanks applying into omap-for-v3.15/dt.
 
-BR,
-Georgi
+Tony
+ 
+> [1] http://marc.info/?l=linux-omap&m=138433541420926&w=2
+> [2] http://marc.info/?l=linux-omap&m=138965904015225&w=2 
+> 
+> Suman Anna (3):
+>   ARM: dts: OMAP: Add #hwlock-cells property to hwspinlock nodes
+>   ARM: dts: DRA7: Add hwspinlock node
+>   ARM: dts: AM4372: Add hwspinlock node
+> 
+>  arch/arm/boot/dts/am33xx.dtsi | 1 +
+>  arch/arm/boot/dts/am4372.dtsi | 7 +++++++
+>  arch/arm/boot/dts/dra7.dtsi   | 7 +++++++
+>  arch/arm/boot/dts/omap4.dtsi  | 1 +
+>  arch/arm/boot/dts/omap5.dtsi  | 1 +
+>  5 files changed, 17 insertions(+)
+> 
+> -- 
+> 1.8.4.3
+> 
