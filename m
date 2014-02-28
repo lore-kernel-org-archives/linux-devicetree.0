@@ -1,119 +1,124 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: [PATCH v3 4/5] pci: Introduce a domain number for pci_host_bridge.
-Date: Fri, 28 Feb 2014 13:08:21 +0000
-Message-ID: <1393592902-24750-5-git-send-email-Liviu.Dudau@arm.com>
-References: <1393592902-24750-1-git-send-email-Liviu.Dudau@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393592902-24750-1-git-send-email-Liviu.Dudau@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 0/9] Doc/DT: DT bindings for various display components
+Date: Fri, 28 Feb 2014 15:14:04 +0200
+Message-ID: <53108B9C.5000006@ti.com>
+References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
+ <531087C0.1090501@gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============8145802462075367738=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <531087C0.1090501@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Tomasz Figa <tomasz.figa@gmail.com>, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Rob Clark <robdclark@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Make it easier to discover the domain number of a bus by storing
-the number in pci_host_bridge for the root bus. Several architectures
-have their own way of storing this information, so it makes sense
-to try to unify the code. While at this, add a new function that
-creates a root bus in a given domain and make pci_create_root_bus()
-a wrapper around this function.
+--===============8145802462075367738==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="Gtu5vU8V650wFqLEo8P7fwcHnl389Qh5u"
 
-Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+--Gtu5vU8V650wFqLEo8P7fwcHnl389Qh5u
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 78ccba0..1b2f45c 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1714,8 +1714,9 @@ void __weak pcibios_remove_bus(struct pci_bus *bus)
- {
- }
- 
--struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
--		struct pci_ops *ops, void *sysdata, struct list_head *resources)
-+struct pci_bus *pci_create_root_bus_in_domain(struct device *parent,
-+		int domain, int bus, struct pci_ops *ops, void *sysdata,
-+		struct list_head *resources)
- {
- 	int error;
- 	struct pci_host_bridge *bridge;
-@@ -1732,6 +1733,7 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
- 
- 	bridge->dev.parent = parent;
- 	bridge->dev.release = pci_release_host_bridge_dev;
-+	bridge->domain_nr = domain;
- 	error = pcibios_root_bridge_prepare(bridge);
- 	if (error) {
- 		kfree(bridge);
-@@ -1745,7 +1747,7 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
- 	b->sysdata = sysdata;
- 	b->ops = ops;
- 	b->number = b->busn_res.start = bus;
--	b2 = pci_find_bus(pci_domain_nr(b), bus);
-+	b2 = pci_find_bus(bridge->domain_nr, bus);
- 	if (b2) {
- 		/* If we already got to this bus through a different bridge, ignore it */
- 		dev_dbg(&b2->dev, "bus already known\n");
-@@ -1753,7 +1755,7 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
- 	}
- 
- 	bridge->bus = b;
--	dev_set_name(&bridge->dev, "pci%04x:%02x", pci_domain_nr(b), bus);
-+	dev_set_name(&bridge->dev, "pci%04x:%02x", bridge->domain_nr, bus);
- 	error = device_register(&bridge->dev);
- 	if (error) {
- 		put_device(&bridge->dev);
-@@ -1768,7 +1770,7 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
- 
- 	b->dev.class = &pcibus_class;
- 	b->dev.parent = b->bridge;
--	dev_set_name(&b->dev, "%04x:%02x", pci_domain_nr(b), bus);
-+	dev_set_name(&b->dev, "%04x:%02x", bridge->domain_nr, bus);
- 	error = device_register(&b->dev);
- 	if (error)
- 		goto class_dev_reg_err;
-@@ -1821,6 +1823,22 @@ err_out:
- 	return NULL;
- }
- 
-+struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
-+		struct pci_ops *ops, void *sysdata, struct list_head *resources)
-+{
-+	int domain_nr;
-+	struct pci_bus *b = pci_alloc_bus();
-+	if (!b)
-+		return NULL;
-+
-+	b->sysdata = sysdata;
-+	domain_nr = pci_domain_nr(b);
-+	kfree(b);
-+
-+	return pci_create_root_bus_in_domain(parent, domain_nr, bus,
-+				ops, sysdata, resources);
-+}
-+
- int pci_bus_insert_busn_res(struct pci_bus *b, int bus, int bus_max)
- {
- 	struct resource *res = &b->busn_res;
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 33aa2ca..1eed009 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -394,6 +394,7 @@ struct pci_host_bridge_window {
- struct pci_host_bridge {
- 	struct device dev;
- 	struct pci_bus *bus;		/* root bus */
-+	int domain_nr;
- 	struct list_head windows;	/* pci_host_bridge_windows */
- 	void (*release_fn)(struct pci_host_bridge *);
- 	void *release_data;
-@@ -747,6 +748,9 @@ struct pci_bus *pci_scan_bus(int bus, struct pci_ops *ops, void *sysdata);
- struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
- 				    struct pci_ops *ops, void *sysdata,
- 				    struct list_head *resources);
-+struct pci_bus *pci_create_root_bus_in_domain(struct device *parent,
-+			int domain, int bus, struct pci_ops *ops,
-+			void *sysdata, struct list_head *resources);
- int pci_bus_insert_busn_res(struct pci_bus *b, int bus, int busmax);
- int pci_bus_update_busn_res_end(struct pci_bus *b, int busmax);
- void pci_bus_release_busn_res(struct pci_bus *b);
--- 
-1.9.0
+On 28/02/14 14:57, Sebastian Hesselbarth wrote:
+
+> Out of curiosity, will there be DT nodes for pull-up resistors soon,
+> too? ;)
+
+If they don't work automatically, yes, we need DT nodes and drivers for
+them.
+
+> Honestly, TPD12S015 is a level shifter, there is nothing in it that
+> would justify a DT node nor a driver.
+
+TPD requires a power. Who turns that on? It also has two GPIOs, LS_OE
+and CT_CP_HPD, which need to be controlled based on what the user wants
+and the state of the HPD line. Who controls those?
+
+> Above you already note, that connector nodes should offer HPD in the
+> future, but I guess the binding should represent that now already.
+
+I think it can be added when somebody uses it. I don't see why that
+would cause trouble later to those that don't use it.
+
+> I will be a DT stub anyway, the corresponding video sink driver will
+> have to look it up.
+
+I'm not sure what you mean with that. Yes, it's not the most complex DT
+nodes out there.
+
+> Looking through the bindings for DVI and HDMI, I guess HPD gpio is
+> better kept in those nodes. From the relevant (DT) properties DVI and
+> HDMI connectors are in no way different.
+
+Well, I think the HPD gpio should be where it's most logical to have it.
+
+I mean, you could have a setup where you have the SoC HDMI encoder and
+and the HDMI connector, and the HPD pin goes directly to the HDMI
+encoder, which has HW support for it. In that case, the HDMI encoder
+node should contain the HPD, and the HDMI encoder should handle it.
+
+Or, your HDMI encoder could not have any kind of support for HPD. In
+that case you could have the HDMI connector driver handle the hotplug
+event. You could of course make the HDMI encoder driver handle the HPD
+gpio, but I usually try to have the driver handle the hardware device in
+question.
+
+In OMAP's case, we have the TPD chip between the HDMI encoder and the
+connector, and the logical place to handle HPD GPIO in that case is the
+TPD driver, as that's where the HPD is connected to and the TPD needs to
+be configured according to the state of the HPD.
+
+ Tomi
+
+
+
+--Gtu5vU8V650wFqLEo8P7fwcHnl389Qh5u
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJTEIucAAoJEPo9qoy8lh71G8kP/RfFSLElGL/z1dyjwbWAmPmz
+eVj+7Tq5+cuTG7Y3dxE+G5xckYQhg+/Z57CPq6N5Yygk9Lpo03UlPcDY9TRosM0N
+Fr4bp/VN9fKOugS0uNyqgaXfjBUX+ZlqGOM+Ume6Mqsk1yFZQxBKuref/vK+DKgz
+vg+0r9JIR2Plid6OzSgwMgifH6231A+qLGgb2+pn/nnODLiErUrbFGBUqiOTDFW5
+1DjzcJbnVxkugu/uEc4/VNU1V5hwPcDNGuOg9RT9Dv0+KGRRW2NpFTkai1C/zS/t
+4rwGwHrOYTIMIL74ZAKBsw4lcH3qAZyESuiy62xEB7D38CyoYpf+3E87omYBd3Pe
+ijsPjNWk5aNAWDxEZCGww/kojARuZgMKWXv4zqbbVMhbgMgDpJmlD7IteuuUE3C5
+DrcnbRxR+r87Wf/UOXyClm02goBNKWf/n9tzLGyO1rW8I5fr9cKC/KH4FsGPyCeh
+wgKGIU0hE/jAbDSEHEHExkb0Qnl3iyYL3S/jBzMpv3J7WZbg2UdjpeZADIRHoMgn
+JyLPvGYd5fawoyYP2658aVynVtU6Wyko/hu7Vgk7qI2KQL6yjhAuw4x1Gw+bO2J4
+lexYWssKEhXtNfJDgvDFfkWYHKs959OjH2nCAMn+Z6uFZfl9yYoySsDLpW5n4jY1
+xT1dUXUYVb4d2kZp1qwt
+=j3cF
+-----END PGP SIGNATURE-----
+
+--Gtu5vU8V650wFqLEo8P7fwcHnl389Qh5u--
+
+
+--===============8145802462075367738==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============8145802462075367738==--
