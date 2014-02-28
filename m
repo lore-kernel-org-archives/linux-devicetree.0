@@ -1,116 +1,104 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [RFC PATCH v2 19/21] ARM: dts: exynos5250-arndale: add dsi and
- panel nodes
-Date: Fri, 28 Feb 2014 15:31:12 +0200
-Message-ID: <53108FA0.4040903@ti.com>
-References: <1392204688-4591-1-git-send-email-a.hajda@samsung.com> <1392204688-4591-20-git-send-email-a.hajda@samsung.com>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v4] can: xilinx CAN controller support.
+Date: Fri, 28 Feb 2014 14:32:22 +0100
+Message-ID: <53108FE6.80405@pengutronix.de>
+References: <74d607e9-ac9c-4a9b-ac49-e84ae49d20c2@TX2EHSMHS031.ehs.local> <530D0A9C.5090402@pengutronix.de> <cd00fb2d-c8a7-423d-8aa0-2b413e9ac101@CO9EHSMHS017.ehs.local> <530DEA7C.6010609@pengutronix.de> <678ca296-8687-4e7c-9014-ae69d886a068@CO9EHSMHS014.ehs.local> <530E0B92.5010903@pengutronix.de> <2e3bfd38-37d5-4102-af79-821196c6c732@CH1EHSMHS006.ehs.local> <53104995.4010305@pengutronix.de> <48409965-e214-43b7-8b6a-08bf075707e1@CO9EHSMHS001.ehs.local> <53108798.7090902@pengutronix.de> <4902b8d8-139a-4fd0-9e6e-a30ce7e6683b@CH1EHSMHS019.ehs.local> <53108BEF.1020308@pengutronix.de> <f7b303dd-bf23-40f2-bbd4-4594cba8f345@CO9EHSMHS026.ehs.local>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="uAMkR61uDAfn7MkQBP2MiuFTNTrrv3oc2"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1392204688-4591-20-git-send-email-a.hajda@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>, dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Sean Paul <seanpaul@chromium.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+ protocol="application/pgp-signature";
+ boundary="4NUNi4ni8N9ONkSMXCLaVe3RLkGKiOkhm"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <f7b303dd-bf23-40f2-bbd4-4594cba8f345@CO9EHSMHS026.ehs.local>
+Sender: linux-can-owner@vger.kernel.org
+To: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>, "wg@grandegger.com" <wg@grandegger.com>, Michal Simek <michals@xilinx.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---uAMkR61uDAfn7MkQBP2MiuFTNTrrv3oc2
-Content-Type: text/plain; charset=ISO-8859-1
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--4NUNi4ni8N9ONkSMXCLaVe3RLkGKiOkhm
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On 12/02/14 13:31, Andrzej Hajda wrote:
-> The patch adds bridge and panel nodes.
-> It adds also DSI properties specific for arndale board.
+On 02/28/2014 02:27 PM, Appana Durga Kedareswara Rao wrote:
+
+>> -----Original Message-----
+>> From: Marc Kleine-Budde [mailto:mkl@pengutronix.de]
+>> Sent: Friday, February 28, 2014 6:45 PM
+>> To: Appana Durga Kedareswara Rao; wg@grandegger.com; Michal Simek;
+>> grant.likely@linaro.org; robh+dt@kernel.org; linux-can@vger.kernel.org=
+
+>> Cc: netdev@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linu=
+x-
+>> kernel@vger.kernel.org; devicetree@vger.kernel.org
+>> Subject: Re: [PATCH v4] can: xilinx CAN controller support.
+>>
+>> On 02/28/2014 02:07 PM, Appana Durga Kedareswara Rao wrote:
+>>>>>> What happens if the interrupt handler is delayed? For example in a=
+
+>>>>>> RT enabled system the interrupt handler runs as a thread. There
+>>>>>> might be other threads with higher priority. The hardware will
+>>>>>> probably send all CAN frames in the FIFO, so you want to reduce th=
+e
+>>>>>> overhead and loop in the tx complete handler.
+>>>>>>
+>>>>> Yes I agree with your comment.
+>>>>> It will be good to have a loop in the Tx interrupt handler I am
+>>>>> modifying the Tx interrupt handler like below.
+>>>>>
+>>>>> static void xcan_tx_interrupt(struct net_device *ndev, u32 isr) {
+>>>>>         struct xcan_priv *priv =3D netdev_priv(ndev);
+>>>>>         struct net_device_stats *stats =3D &ndev->stats;
+>>>>>
+>>>>>         while (priv->tx_head - priv->tx_tail > 0) {
+>>>>>                 if (!(isr & XCAN_IXR_TXOK_MASK)) {
+>>>>>                         break;
+>>>>>                 }
+>>>>>                 can_get_echo_skb(ndev, priv->tx_tail %
+>>>>>                                         priv->xcan_echo_skb_max_tx)=
+;
+>>>>>                 priv->tx_tail++;
+>>>>>                 stats->tx_packets++;
+>>>>>                 can_led_event(ndev, CAN_LED_EVENT_TX);
+>>
+>> Probably first clear the interrupt, because you've just handled it, th=
+en check
+>> if it's still present. The question is, do you have to clear the IRQ f=
+or each
+>> transmitted frame, or does one clean of the interrupt clear the bit fo=
+r more
+>> then one transmitted frame?
+>>
 >=20
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos5250-arndale.dts | 39 ++++++++++++++++++++++++=
-++++++++
->  1 file changed, 39 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/d=
-ts/exynos5250-arndale.dts
-> index a0a985d..7d666b1 100644
-> --- a/arch/arm/boot/dts/exynos5250-arndale.dts
-> +++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-> @@ -584,6 +584,45 @@
->  		};
->  	};
-> =20
-> +	panel: panel {
-> +		compatible =3D "boe,hv070wsa-100";
-> +		power-supply =3D <&vcc_3v3_reg>;
-> +		enable-gpios =3D <&gpd1 3 0>;
-> +		port {
-> +			panel_ep: endpoint {
-> +				remote-endpoint =3D <&bridge_out_ep>;
-> +			};
-> +		};
-> +	};
-> +
-> +	dsi_0: dsi@14500000 {
-> +		vddcore-supply =3D <&ldo8_reg>;
-> +		vddio-supply =3D <&ldo10_reg>;
-> +		samsung,pll-clock-frequency =3D <24000000>;
-> +		samsung,burst-clock-frequency =3D <320000000>;
-> +		samsung,esc-clock-frequency =3D <10000000>;
-> +		status =3D "okay";
-> +
-> +		bridge@0 {
-> +			reg =3D <0>;
-> +			compatible =3D "toshiba,tc358764";
-> +			vddc-supply =3D <&vcc_1v2_reg>;
-> +			vddio-supply =3D <&vcc_1v8_reg>;
-> +			vddmipi-supply =3D <&vcc_1v2_reg>;
-> +			vddlvds133-supply =3D <&vcc_3v3_reg>;
-> +			vddlvds112-supply =3D <&vcc_1v2_reg>;
-> +			reset-gpio =3D <&gpd1 6 1>;
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <0>;
-> +			port@1 {
-> +				reg =3D <1>;
-> +				bridge_out_ep: endpoint {
-> +					remote-endpoint =3D <&panel_ep>;
-> +				};
-> +			};
-> +		};
-> +	};
+> We already were clearing it in the interrupt routine
+> (xcan_interrupt). That's why clearing it at the end of the loop. We
+> have to clear the IRQ (TXOK) for each transmitted frame.
 
-Compared to what I've done on OMAP, you don't seem to specify the video
-inputs for the tc358764 at all. In this case it's obvious, as the chip
-is a child of the DSI master. But the chip could as well be controlled
-via i2c, and so be placed as a child of the i2c nodes.
+Please move the clear into the loop. Then it's all in one place. Good
+that you have to clear the bit for each transmitted frame. I think,
+we're almost done :) When I'm okay with the driver, let Wolfgang have a
+look at the error handling.
 
-So even if the driver doesn't use it, maybe it would be more future
-proof to have both input and output endpoints for the tc358764?
+Marc
 
- Tomi
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
 
-
---uAMkR61uDAfn7MkQBP2MiuFTNTrrv3oc2
+--4NUNi4ni8N9ONkSMXCLaVe3RLkGKiOkhm
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+Version: GnuPG v1
+Comment: Using GnuPG with Icedove - http://www.enigmail.net/
 
-iQIcBAEBAgAGBQJTEI+gAAoJEPo9qoy8lh71wZYQAJusntlm939iLvqxgjXUtYx/
-rI3ED+GdEIkG3vI7e4CxH9EgWBpEKEHV8onY88aGhOwv8vtXhogPWg/sGJxFxCFZ
-8j5lqZDwzx7xeOqNgyToA7xTmKO7qLF1eQn02Fa7nrlVM1Z+JSifPEzG4Gykfqiv
-W4ciHwYoUAbfiZQCXdam7zakGJYhIq8wzUDPEiCovcMjXOdPmIFrO8n13vDMdOOy
-bqMr8L2/xar8Yjf1tKjrFLlrp59zVzGJdeS4djs4tv8IedSBD1pVVDJ1E8f5AYXI
-Tyn/bsg/zCdZEuB2Orb2v2V5EzHT9CZTgW7++IZh5D+CZfkTj+tCr8/2Da7nMVhl
-GfCOg/klc3Eb7rbUsr+KmmORBNT8wVH4e1HBf4+RRXPmNw4sUfepEGmzncLpBy0K
-wi1jac39QO9vbCXJAAZeAR9P0LVQQDF0mlL0rCdS9E2hLClhBGx9YcqHnU+9Atf2
-JNB8VrxqsI6VqFWcWggvvA8xIVdXmfnGlz3JvaAOCmBBeO9/kzom75KFBrM9vTgh
-uZalrdfbKcYz7lC8j3F0i2dLpruU3GpWUJ++XDPhD7++NAxmK36J9RFRQWzgwMmc
-j0gGR19oBXdMH0nUzLIuQz+gD8afmWqb5tvlVxRy1kkLv+a1fugWxiujSG0QASPq
-iAp8mojT6FNxmvngXELz
-=KmsM
+iEYEARECAAYFAlMQj+YACgkQjTAFq1RaXHPxEQCdFOpBeFoC9vm/5oStNOK/07cd
+I+MAnjpuCqb7t0byrHGqEwjPN3VVV3GU
+=UJdI
 -----END PGP SIGNATURE-----
 
---uAMkR61uDAfn7MkQBP2MiuFTNTrrv3oc2--
+--4NUNi4ni8N9ONkSMXCLaVe3RLkGKiOkhm--
