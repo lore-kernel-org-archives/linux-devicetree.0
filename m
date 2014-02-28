@@ -1,110 +1,62 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 3/9] Doc/DT: Add DT binding documentation for DVI Connector
-Date: Fri, 28 Feb 2014 18:12:23 +0200
-Message-ID: <5310B567.7040605@ti.com>
-References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
- <1393590016-9361-4-git-send-email-tomi.valkeinen@ti.com>
- <20140228155937.GQ21483@n2100.arm.linux.org.uk>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 9/9] Doc/DT: Add DT binding documentation for tpd12s015
+	encoder
+Date: Fri, 28 Feb 2014 16:13:43 +0000
+Message-ID: <20140228161343.GS21483@n2100.arm.linux.org.uk>
+References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com> <1393590016-9361-10-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6544085606378846556=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140228155937.GQ21483@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Tomasz Figa <tomasz.figa@gmail.com>, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Rob Clark <robdclark@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1393590016-9361-10-git-send-email-tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============6544085606378846556==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="orJMs4cg3oEKUxhgVOG12N4bokLulnr6I"
+On Fri, Feb 28, 2014 at 02:20:16PM +0200, Tomi Valkeinen wrote:
+> Add DT binding documentation for tpd12s015 encoder
+> 
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+> Reviewed-by: Archit Taneja <archit-l0cyMroinI0@public.gmane.org>
+> ---
+>  .../devicetree/bindings/video/ti,tpd12s015.txt     | 44 ++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/video/ti,tpd12s015.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/video/ti,tpd12s015.txt b/Documentation/devicetree/bindings/video/ti,tpd12s015.txt
+> new file mode 100644
+> index 000000000000..26e6d32e3f20
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/ti,tpd12s015.txt
+> @@ -0,0 +1,44 @@
+> +TPD12S015 HDMI level shifter and ESD protection chip
+> +====================================================
+> +
+> +Required properties:
+> +- compatible: "ti,tpd12s015"
+> +
+> +Optional properties:
+> +- gpios: CT CP HPD, LS OE and HPD gpios
 
---orJMs4cg3oEKUxhgVOG12N4bokLulnr6I
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+If this is supposed to give people a clue about what these GPIOs are,
+it completely fails to do this.  CT CP?  HPD is obviously the hotplug
+detect signal, but why are there two - HDMI only has a single detect
+pin on the connector.
 
-On 28/02/14 17:59, Russell King - ARM Linux wrote:
+While it makes sense to stick all three into one property, is it
+possible that not all of these may be routed to a GPIO?  If so, how
+do you specify that one (or more) of these does not exist?
 
->> +dvi0: connector@0 {
->> +	compatible =3D "dvi-connector";
->> +	label =3D "dvi";
->> +
->> +	i2c-bus =3D <&i2c3>;
->> +
->> +	dvi_connector_in: endpoint {
->> +		remote-endpoint =3D <&tfp410_out>;
->> +	};
->> +};
->=20
-> This looks far too simplistic.  There are different classes of DVI
-> connector - there is:
->=20
-> DVI A - analogue only
-> DVI D - digital only (single and dual link)
-> DVI I - both (single and dual digital link)
->=20
-> DRM at least makes a distinction between these three classes, and this
-> disctinction is part of the user API.  How would a display system know
-> which kind of DVI connector is wired up on the board from this DT
-> description?
+Another issue here is that other HDMI encoders are available - should
+every encoder define its own set of bindings, or should there be a
+base set of bindings which all encoders should conform to - such as
+always having a HDMI output port?
 
-Yes, I think that's a valid change. But do we also need to specify
-single/dual link, in addition to the three types?
-
-I guess the compatible string is the easiest way for differentation, at
-least for the three main types, i.e. "dvi-d-connector" etc.
-
-"dvi-d-1l-connector" and "dvi-d-2l-connector" for the single/dual link?
-That looks a bit funny.
-
- Tomi
-
-
-
---orJMs4cg3oEKUxhgVOG12N4bokLulnr6I
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJTELVnAAoJEPo9qoy8lh71zAAQAI7D6sTc6fpNcul0qrzf5/Ts
-vXMXkzs42KeshpY0967RerXCz5DK2TMLSlPhlvBsfaeq4v85RyBzQ01DywIsXbsq
-RCeO1x4kJfMygPGZgtnxkpojUlgkHAxkLL3REYxrowx41OOD+dBKvbeBu1+ZmoJT
-E9uXVRVMtousyLKUEYKL97tvtGVF8UZ2I+U8pmAbw2Abo3CkVHR+2m2bQUP65wKU
-dCqNgLH4knxAn2f8xjVp3z0PF1rB37HNV1EbnE0zpXB9jokhV+uklBA2DdY2n5dH
-XieuZVX2aIS7OLqDDin6t7ciq3lGpAQMOvTJ8xVm6UR5AFXjKkRhzppIN+Cwatt4
-fitsjX+XhY75KvMu/WAclm84ZFQkmjZJy5tj+6Uqp52+h2XGOSTBMCyGf5Mli7zb
-zOz/bHJrO93iCcWZV88gHZhjUGRghHbjPA2ybUEO6hFWR5LJBKXwmIMCOGId6KIZ
-byx8ZfuyzvMBkYBIBo3rJSZU8ox8EGjDCDQrTFZnB09ZbgHZY9ZJOLfuAu/5aKV6
-3NuCujsiYTsNfswpVVv4uIf++zfkmcj4PTpAdb38Q9ESF6ioAgpgF13Qco5xi01a
-1p9jPLQWiZ/+sDRG7XVDf/qrQ/v2CTpJkxuYfal61eTC+GwtOISVpQr8eRqtlZi2
-qqaNhVIRtahsF4zhFRn0
-=ch7q
------END PGP SIGNATURE-----
-
---orJMs4cg3oEKUxhgVOG12N4bokLulnr6I--
-
-
---===============6544085606378846556==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============6544085606378846556==--
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
