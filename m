@@ -1,72 +1,270 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH 00/12] ARM: OMAP2 DT clock conversion
-Date: Fri, 28 Feb 2014 09:59:45 -0600
-Message-ID: <5310B271.5040708@ti.com>
-References: <1393579384-23440-1-git-send-email-t-kristo@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1393579384-23440-1-git-send-email-t-kristo@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, mturquette@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v5 2/5] ARM: imx6: gpc: Add PU power domain for GPU/VPU
+Date: Fri, 28 Feb 2014 17:03:44 +0100
+Message-ID: <1393603427-6199-3-git-send-email-p.zabel@pengutronix.de>
+References: <1393603427-6199-1-git-send-email-p.zabel@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1393603427-6199-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/28/2014 03:22 AM, Tero Kristo wrote:
-> Hi,
-> 
-> This set concludes the omap2+ clock DT conversion work by creating the
-> DT clock data for omap2 SoC also.
-> 
-> I am also currently doing related work to cleanup CM/PRM codebase in
-> preparation to move it into drivers/, this set is basically going to
-> be a pre-requisite for that. I'll hopefully post something related
-> to that early next week.
-> 
-> This set has been boot tested on OMAP2430 only (thanks Nishanth, I don't
-> have access to OMAP2 hardware myself), so any testing feedback on
-> 2420 board(s) would be appreciated.
-> 
-> Working tree:
-> 
-> Tree: https://github.com/t-kristo/linux-pm.git
-> Branch: 3.14-rc4-omap2-dt-clks
+When generic pm domain support is enabled, the PGC can be used
+to completely gate power to the PU power domain containing GPU3D,
+GPU2D, and VPU cores.
+This code triggers the PGC powerdown sequence to disable the GPU/VPU
+isolation cells and gate power and then disables the PU regulator.
+To reenable, the reverse powerup sequence is triggered after the PU
+regulator is enabled again.
+The GPU and VPU devices in the PU power domain temporarily need
+to be clocked during powerup, so that the reset machinery can work.
 
-I do see checkpatch warnings in the series:
-http://slexy.org/view/s20mzhlJ93
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+Changes since v4:
+ - Add pu_domain struct to contain regulator and clocks
+ - Obtain clocks from device tree instead of from bus notifier
+ - Add compatible value for imx6sl (untested)
+---
+ arch/arm/mach-imx/Kconfig |   2 +
+ arch/arm/mach-imx/gpc.c   | 182 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 184 insertions(+)
 
-Series boot tested with:
-3.14-rc4-omap2-dt-clks  fc73a96 ARM: OMAP2: clock: use DT clock boot
-if available
-from the tree mentioned above.
-
-Things look good other than the checkpatch violation noticed in
-report, so other than that,
-
-Tested-by: Nishanth Menon <nm@ti.com>
-
-omap2plus_defconfig
- 1: am335x-evm:  Boot PASS: http://slexy.org/raw/s2jdV3XMCC
- 2:  am335x-sk:  Boot PASS: http://slexy.org/raw/s210nZI8Hx
- 3: am3517-evm:  Boot PASS: http://slexy.org/raw/s21MG8kg6u
- 4:  am37x-evm:  Boot PASS: http://slexy.org/raw/s20coVhzLt
- 5: am43xx-epos:  Boot PASS: http://slexy.org/raw/s21XKjjwyk
- 6: BeagleBoard-XM:  Boot PASS: http://slexy.org/raw/s27PCmlDq7
- 7: BeagleBone-Black:  Boot PASS: http://slexy.org/raw/s2HX1Q3iPb
- 8:      crane: No Image built - Missing platform support?:
- 9:       dra7:  Boot PASS: http://slexy.org/raw/s21ofDfpD2
-10:        ldp:  Boot FAIL: http://slexy.org/raw/s2SbrpyX2p
-^^ legacy behavior
-11: PandaBoard-ES:  Boot PASS: http://slexy.org/raw/s21n4iMUKd
-12:    sdp2430:  Boot PASS: http://slexy.org/raw/s2CJ5hYl72
-13:    sdp3430:  Boot PASS: http://slexy.org/raw/s20axZ1nyb
-14:    sdp4430:  Boot PASS: http://slexy.org/raw/s21wt3C5F3
-15: OMAP5432uEVM:  Boot PASS: http://slexy.org/raw/s208PhmCpm
-TOTAL = 15 boards, Booted Boards = 13, No Boot boards = 2
-
-
-
+diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+index 33567aa..3c58f2e 100644
+--- a/arch/arm/mach-imx/Kconfig
++++ b/arch/arm/mach-imx/Kconfig
+@@ -808,6 +808,7 @@ config SOC_IMX6Q
+ 	select PL310_ERRATA_727915 if CACHE_PL310
+ 	select PL310_ERRATA_769419 if CACHE_PL310
+ 	select PM_OPP if PM
++	select PM_GENERIC_DOMAINS if PM
+ 
+ 	help
+ 	  This enables support for Freescale i.MX6 Quad processor.
+@@ -827,6 +828,7 @@ config SOC_IMX6SL
+ 	select PL310_ERRATA_588369 if CACHE_PL310
+ 	select PL310_ERRATA_727915 if CACHE_PL310
+ 	select PL310_ERRATA_769419 if CACHE_PL310
++	select PM_GENERIC_DOMAINS if PM
+ 
+ 	help
+ 	  This enables support for Freescale i.MX6 SoloLite processor.
+diff --git a/arch/arm/mach-imx/gpc.c b/arch/arm/mach-imx/gpc.c
+index 586e017..a0f587e 100644
+--- a/arch/arm/mach-imx/gpc.c
++++ b/arch/arm/mach-imx/gpc.c
+@@ -10,19 +10,40 @@
+  * http://www.gnu.org/copyleft/gpl.html
+  */
+ 
++#include <linux/clk.h>
++#include <linux/delay.h>
+ #include <linux/io.h>
+ #include <linux/irq.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/of_irq.h>
++#include <linux/platform_device.h>
++#include <linux/pm_clock.h>
++#include <linux/pm_domain.h>
++#include <linux/regulator/consumer.h>
+ #include <linux/irqchip/arm-gic.h>
+ #include "common.h"
++#include "hardware.h"
+ 
++#define GPC_CNTR		0x000
+ #define GPC_IMR1		0x008
++#define GPC_PGC_GPU_PDN		0x260
++#define GPC_PGC_GPU_PUPSCR	0x264
++#define GPC_PGC_GPU_PDNSCR	0x268
+ #define GPC_PGC_CPU_PDN		0x2a0
+ 
+ #define IMR_NUM			4
+ 
++#define GPU_VPU_PUP_REQ		BIT(1)
++#define GPU_VPU_PDN_REQ		BIT(0)
++
++struct pu_domain {
++	struct generic_pm_domain base;
++	struct regulator *reg;
++	struct clk *clk[6];
++	int num_clks;
++};
++
+ static void __iomem *gpc_base;
+ static u32 gpc_wake_irqs[IMR_NUM];
+ static u32 gpc_saved_imrs[IMR_NUM];
+@@ -138,3 +159,164 @@ void __init imx_gpc_init(void)
+ 	gic_arch_extn.irq_unmask = imx_gpc_irq_unmask;
+ 	gic_arch_extn.irq_set_wake = imx_gpc_irq_set_wake;
+ }
++
++#ifdef CONFIG_PM
++
++static int imx6q_pm_pu_power_off(struct generic_pm_domain *genpd)
++{
++	struct pu_domain *pu = container_of(genpd, struct pu_domain, base);
++	int iso, iso2sw;
++	u32 val;
++
++	/* Read ISO and ISO2SW power down delays */
++	val = readl_relaxed(gpc_base + GPC_PGC_GPU_PDNSCR);
++	iso = val & 0x3f;
++	iso2sw = (val >> 8) & 0x3f;
++
++	/* Gate off PU domain when GPU/VPU when powered down */
++	writel_relaxed(0x1, gpc_base + GPC_PGC_GPU_PDN);
++
++	/* Request GPC to power down GPU/VPU */
++	val = readl_relaxed(gpc_base + GPC_CNTR);
++	val |= GPU_VPU_PDN_REQ;
++	writel_relaxed(val, gpc_base + GPC_CNTR);
++
++	/* Wait ISO + ISO2SW IPG clock cycles */
++	ndelay((iso + iso2sw) * 1000 / 66);
++
++	regulator_disable(pu->reg);
++
++	return 0;
++}
++
++static int imx6q_pm_pu_power_on(struct generic_pm_domain *genpd)
++{
++	struct pu_domain *pu = container_of(genpd, struct pu_domain, base);
++	int i, ret, sw, sw2iso;
++	u32 val;
++
++	ret = regulator_enable(pu->reg);
++	if (ret) {
++		pr_err("%s: failed to enable regulator: %d\n", __func__, ret);
++		return ret;
++	}
++
++	/* Enable reset clocks for all devices in the PU domain */
++	for (i = 0; i < pu->num_clks; i++)
++		clk_prepare_enable(pu->clk[i]);
++
++	/* Gate off PU domain when GPU/VPU when powered down */
++	writel_relaxed(0x1, gpc_base + GPC_PGC_GPU_PDN);
++
++	/* Read ISO and ISO2SW power down delays */
++	val = readl_relaxed(gpc_base + GPC_PGC_GPU_PUPSCR);
++	sw = val & 0x3f;
++	sw2iso = (val >> 8) & 0x3f;
++
++	/* Request GPC to power up GPU/VPU */
++	val = readl_relaxed(gpc_base + GPC_CNTR);
++	val |= GPU_VPU_PUP_REQ;
++	writel_relaxed(val, gpc_base + GPC_CNTR);
++
++	/* Wait ISO + ISO2SW IPG clock cycles */
++	ndelay((sw + sw2iso) * 1000 / 66);
++
++	/* Disable reset clocks for all devices in the PU domain */
++	for (i = 0; i < pu->num_clks; i++)
++		clk_disable_unprepare(pu->clk[i]);
++
++	return 0;
++}
++
++static struct generic_pm_domain imx6q_arm_domain = {
++	.name = "ARM",
++};
++
++static struct pu_domain imx6q_pu_domain = {
++	.base = {
++		.name = "PU",
++		.power_off = imx6q_pm_pu_power_off,
++		.power_on = imx6q_pm_pu_power_on,
++		.power_off_latency_ns = 25000,
++		.power_on_latency_ns = 2000000,
++	},
++};
++
++static struct generic_pm_domain imx6sl_display_domain = {
++	.name = "DISPLAY",
++};
++
++static struct generic_pm_domain *imx_gpc_domains[] = {
++	&imx6q_arm_domain,
++	&imx6q_pu_domain.base,
++	&imx6sl_display_domain,
++};
++
++static struct genpd_onecell_data imx_gpc_onecell_data = {
++	.domains = imx_gpc_domains,
++	.domain_num = ARRAY_SIZE(imx_gpc_domains),
++};
++
++#endif /* CONFIG_PM */
++
++static int imx_gpc_probe(struct platform_device *pdev)
++{
++	struct regulator *pu_reg;
++	struct clk *clk;
++	bool is_off;
++	int ret, i;
++
++	pu_reg = devm_regulator_get(&pdev->dev, "pu");
++	if (IS_ERR(pu_reg)) {
++		ret = PTR_ERR(pu_reg);
++		dev_err(&pdev->dev, "failed to get pu regulator: %d\n", ret);
++		return ret;
++	}
++
++	/* The regulator is initially enabled */
++	ret = regulator_enable(pu_reg);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "failed to enable pu regulator: %d\n", ret);
++		return ret;
++	}
++	imx6q_pu_domain.base.of_node = pdev->dev.of_node;
++	imx6q_pu_domain.reg = pu_reg;
++
++	for (i = 0; ; i++) {
++		clk = of_clk_get(pdev->dev.of_node, i);
++		if (IS_ERR(clk))
++			break;
++		imx6q_pu_domain.clk[i] = clk;
++	}
++	imx6q_pu_domain.num_clks = i;
++
++	is_off = IS_ENABLED(CONFIG_PM_RUNTIME);
++	if (is_off)
++		imx6q_pm_pu_power_off(&imx6q_pu_domain.base);
++
++	pm_genpd_init(&imx6q_pu_domain.base, NULL, is_off);
++	of_genpd_add_provider(pdev->dev.of_node, of_genpd_xlate_onecell,
++			      &imx_gpc_onecell_data);
++	return 0;
++}
++
++static struct of_device_id imx_gpc_dt_ids[] = {
++	{ .compatible = "fsl,imx6q-gpc" },
++	{ .compatible = "fsl,imx6sl-gpc" },
++	{ }
++};
++
++static struct platform_driver imx_gpc_driver = {
++	.driver = {
++		.name = "imx-gpc",
++		.owner = THIS_MODULE,
++		.of_match_table = imx_gpc_dt_ids,
++	},
++	.probe = imx_gpc_probe,
++};
++
++static int __init imx_pgc_init(void)
++{
++	return platform_driver_register(&imx_gpc_driver);
++}
++subsys_initcall(imx_pgc_init);
 -- 
-Regards,
-Nishanth Menon
+1.8.5.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
