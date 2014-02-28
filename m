@@ -1,31 +1,28 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] arm64: Extend the PCI I/O space to 16MB
-Date: Fri, 28 Feb 2014 15:27:10 +0000
-Message-ID: <20140228152710.GC13970@arm.com>
-References: <1393506599-11561-1-git-send-email-Liviu.Dudau@arm.com>
- <1393506599-11561-3-git-send-email-Liviu.Dudau@arm.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 5/7] ARM: of: introduce common routine for DMA configuration
+Date: Fri, 28 Feb 2014 16:31:05 +0100
+Message-ID: <11548178.4dQyMzBAP8@wuerfel>
+References: <1393535872-20915-1-git-send-email-santosh.shilimkar@ti.com> <9618080.kpE3Kl6X8p@wuerfel> <5310A5F1.9070901@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1393506599-11561-3-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <5310A5F1.9070901-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2014 at 01:09:58PM +0000, Liviu Dudau wrote:
-> From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-> 
-> The patch moves the PCI I/O space (currently at 64K) before the
-> earlyprintk mapping and extends it to 16MB.
-> 
-> Signed-off-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+On Friday 28 February 2014 10:06:25 Santosh Shilimkar wrote:
+> I made that LPAE specific assuming the 32 machines anyway are
+> happy with default as they are today. We can keep CONFIG_ARM
+> and handle the special case in machine platform notifier.
 
-I'll push this into mainline for 3.15, no need to carry it.
+I think all other machines that support LPAE can also run with
+LPAE disabled and still use coherent DMA, they may just not
+support all the available RAM.
 
--- 
-Catalin
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
