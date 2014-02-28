@@ -1,77 +1,73 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 7/9] Doc/DT: Add DT binding documentation for Sony
-	acx565akm panel
-Date: Fri, 28 Feb 2014 14:38:27 +0100
-Message-ID: <1393594707.3802.31.camel@paszta.hi.pengutronix.de>
-References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
-	<1393590016-9361-8-git-send-email-tomi.valkeinen@ti.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [RFC PATCH v2 19/21] ARM: dts: exynos5250-arndale: add dsi and
+ panel nodes
+Date: Fri, 28 Feb 2014 15:39:31 +0200
+Message-ID: <53109193.3000604@ti.com>
+References: <1392204688-4591-1-git-send-email-a.hajda@samsung.com> <1392204688-4591-20-git-send-email-a.hajda@samsung.com> <53108FA0.4040903@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1393590016-9361-8-git-send-email-tomi.valkeinen@ti.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces@lists.freedesktop.org
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, dri-devel@lists.freedesktop.org, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="cF11C8lwJM8WMCg76f93oljBterlDBcrT"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <53108FA0.4040903@ti.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>, Andrzej Hajda <a.hajda@samsung.com>, dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Sean Paul <seanpaul@chromium.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomi,
+--cF11C8lwJM8WMCg76f93oljBterlDBcrT
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Am Freitag, den 28.02.2014, 14:20 +0200 schrieb Tomi Valkeinen:
-> Add DT binding documentation for Sony acx565akm panel
-> 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Reviewed-by: Sebastian Reichel <sre@debian.org>
-> Reviewed-by: Archit Taneja <archit@ti.com>
-> ---
->  .../devicetree/bindings/video/sony,acx565akm.txt   | 28 ++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/video/sony,acx565akm.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/video/sony,acx565akm.txt b/Documentation/devicetree/bindings/video/sony,acx565akm.txt
-> new file mode 100644
-> index 000000000000..cd9cfdf7e3fe
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/sony,acx565akm.txt
-> @@ -0,0 +1,28 @@
-> +Sony ACX565AKM SDI Panel
-> +========================
-> +
-> +Required properties:
-> +- compatible: "sony,acx565akm"
-> +
-> +Optional properties:
-> +- label: a symbolic name for the panel
-> +- gpios: panel reset gpio
+On 28/02/14 15:31, Tomi Valkeinen wrote:
 
-please let's call this reset-gpios.
+> Compared to what I've done on OMAP, you don't seem to specify the video=
 
-> +Required nodes:
-> +- Video port for SDI input
-> +
-> +Example
-> +-------
-> +
-> +acx565akm@2 {
-> +	compatible = "sony,acx565akm";
-> +	spi-max-frequency = <6000000>;
-> +	reg = <2>;
-> +
-> +	label = "lcd";
-> +	gpios = <&gpio3 26 GPIO_ACTIVE_HIGH>; /* 90 */
-> +
-> +	lcd_in: endpoint {
-> +		remote-endpoint = <&sdi_out>;
-> +	};
-> +};
+> inputs for the tc358764 at all. In this case it's obvious, as the chip
+> is a child of the DSI master. But the chip could as well be controlled
+> via i2c, and so be placed as a child of the i2c nodes.
+>=20
+> So even if the driver doesn't use it, maybe it would be more future
+> proof to have both input and output endpoints for the tc358764?
 
-regards
-Philipp
+Oh, and one addition: how me and Laurent see the DSI case (and other
+similar ones), the child/parent relationship gives the control bus path,
+and the video ports give the video data path.
+
+So both are always needed. A DSI panel may be controlled via DSI, i2c,
+spi, but the video path will always go from DSI master to the panel.
+
+Or, as a theoretical panel, you could have a DSI controlled panel, being
+a child of the DSI master, but the video data would come via, say,
+parallel RGB. You can actually do that with some panels/encoders, even
+if the concept is silly.
+
+ Tomi
+
+
+
+--cF11C8lwJM8WMCg76f93oljBterlDBcrT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJTEJGTAAoJEPo9qoy8lh71RckP/icrlE5FJgK0Uewo3eIESEPc
+oJQh3AceTcn/OcAISmD6vsN5lTzfK6n3fWakgRrJiNSGFCIiPgOqz154Qf7aQs31
+iSRD4GXNMvFubcyjzfWtHpPa8kqlO5Mf9VcPdjOyzTsam7uAlmXVDpBfvLQq9fE4
+B2K2A8B7vHkebe3r26rDWCJnx7WM7PqY10LqEBjgUeo8k4hcvOpLaKOen3iiIdpE
+Vb0Zm/qnH1h4qBre9hEse7mjdS3qeIsyfqGRBIJXKP2K/XtDfLj/sc0ntHiMA8uI
+OcbUvv9S24UT6mdZ4hvWR/hEaEnNXYPKG6ao2Q7NHekq1GotoRrE2z0fpErg895w
+slvYHAUTz/PAHiX972DsfVqfCguGuP6qaTPncr2fxJ2oMunXhYSmr+DXoTt1Vt3j
+KZwx+//fGVsDlB2Fs5997yTTY02wGrTApEF+JlxotoV3X9lA4So5wzo5iM4w1Mre
+DxC5ADswA256EFKn0VBJRyJs+Liu4HCcIp/a8vwql/Vj6TFtUzbz7bgYQM+38HVW
+dumaS0n3hAmQD95GTSx21buo0rS76iIQiGTf4/QKMFu1mUiO6NmaJ3VqNFdG1vQh
+j60F/hHcSBT1/HFK5Q854oBRIo3MKcnogG9wjijVdHjE57qtTjVsAL7B/1B8Y74l
+6ucxcdAMRWg/gBEQu8wJ
+=LRtp
+-----END PGP SIGNATURE-----
+
+--cF11C8lwJM8WMCg76f93oljBterlDBcrT--
