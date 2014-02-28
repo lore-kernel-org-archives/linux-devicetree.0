@@ -1,80 +1,58 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH] dma: of: Move the functions under CONFIG_OF_DMA instead
- of CONFIG_OF
-Date: Thu, 27 Feb 2014 19:27:03 -0500
-Message-ID: <530FD7D7.9000104@ti.com>
-References: <1393546850-13907-1-git-send-email-santosh.shilimkar@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] checkpatch: fix spurious vendor compatible warnings
+Date: Thu, 27 Feb 2014 19:24:14 -0600
+Message-ID: <CAL_JsqLnMyHGsv7L64FxooH0jaRjjF8uE=d=n6C84+hYB+ryVQ@mail.gmail.com>
+References: <1393531019-25134-1-git-send-email-florian.vaussard@epfl.ch>
+	<1393531808.24588.119.camel@joe-AO722>
+	<530F9F03.40803@epfl.ch>
+	<1393545229.24588.147.camel@joe-AO722>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1393546850-13907-1-git-send-email-santosh.shilimkar@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, arnd@arndb.de
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1393545229.24588.147.camel@joe-AO722>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Cc: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>, Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 27 February 2014 07:20 PM, Santosh Shilimkar wrote:
-> The of-dma.c is compiled out with !CONFIG_OF_DMA but the functions in
-> the header are kept under CONFIG_OF. Move them under CONFIG_OF_DMA
-> to avoid build errors with CONFIG_OFF && !CONFIG_OF_DMA
-> 
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> ---
->  include/linux/of_dma.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
-> index 0322363..3d2beab 100644
-> --- a/include/linux/of_dma.h
-> +++ b/include/linux/of_dma.h
-> @@ -31,7 +31,7 @@ struct of_dma_filter_info {
->  	dma_filter_fn	filter_fn;
->  };
->  
-> -#ifdef CONFIG_OF
-> +#ifdef CONFIG_OF_DMA
-Sorry.. Typo here.. Should have been CONFIG_DMA_OF
+On Thu, Feb 27, 2014 at 5:53 PM, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org> wrote:
+> On Thu, 2014-02-27 at 21:24 +0100, Florian Vaussard wrote:
+>> On 02/27/2014 09:10 PM, Joe Perches wrote:
+>> > On Thu, 2014-02-27 at 20:56 +0100, Florian Vaussard wrote:
+>> >> With a compatible string like
+>> >> compatible = "foo";
+>> >> checkpatch will currently try to find "foo" in  vendor-prefixes.txt,
+>> >> which is wrong since the vendor prefix is empty in this specific case.
+> []
+>> > Some vendor names have dashes.
+>> > I don't know if underscores are allowed.
+>> >
+>> > $ grep -rP --include=*.[ch] -oh "compatible\s*=\s*\"[^,]+,\w" * | \
+>> >   sed -r -e 's/\s//g' -e 's/,.$//' | sort | uniq -c | grep "[_-]"
+>> >       1 compatible="active-semi
+>> >       8 compatible="asahi-kasei
+> []
+>> In ePAPR v1.1, I could not find any strict requirement. It
+>> is just saying:
+>>
+>> The recommended format is "manufacturer,model", where manufacturer is a
+>> string describing the name of the manufacturer (such as a stock ticker
+>> symbol), and model specifies the model number.
+>
+> Should there also be a check in .c and .h files for
+>         .compatible = "somestring"
 
->From 31242461b6ba5e8c0c5ee26e394fa4cab61e3aa1 Mon Sep 17 00:00:00 2001
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Date: Thu, 27 Feb 2014 19:13:36 -0500
-Subject: [PATCH] dma: of: Move the functions under CONFIG_DMA_OF instead of
- CONFIG_OF
+Ideally, yes. I didn't do that because I figured there would be too
+many variations in formatting compared to dts files.
 
-The of-dma.c is compiled out with !CONFIG_DMA_OF but the functions in
-the header are kept under CONFIG_OF. Move them under CONFIG_OF_DMA
-to avoid build errors with CONFIG_OFF && !CONFIG_DMA_OF
+> and
+>         OF_DEV_AUXDATA("somestring",,,,)
 
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
----
- include/linux/of_dma.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Probably not. OF_DEV_AUXDATA is hopefully temporary. There are 156
+instances now and it looks like they've been going down since 3.8.
 
-diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
-index 0322363..0ea24f4 100644
---- a/include/linux/of_dma.h
-+++ b/include/linux/of_dma.h
-@@ -31,7 +31,7 @@ struct of_dma_filter_info {
- 	dma_filter_fn	filter_fn;
- };
- 
--#ifdef CONFIG_OF
-+#ifdef CONFIG_DMA_OF
- extern int of_dma_controller_register(struct device_node *np,
- 		struct dma_chan *(*of_dma_xlate)
- 		(struct of_phandle_args *, struct of_dma *),
--- 
-1.7.9.5
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
