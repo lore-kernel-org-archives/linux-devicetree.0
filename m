@@ -1,74 +1,43 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 5/9] ARM: dts: omap3-gta04: Add basic sound support.
-Date: Fri, 28 Feb 2014 14:25:02 -0800
-Message-ID: <20140228222501.GL13624@atomide.com>
-References: <1390685343-11663-1-git-send-email-marek@goldelico.com>
- <1390685343-11663-6-git-send-email-marek@goldelico.com>
+From: Georgi Djakov <gdjakov@mm-sol.com>
+Subject: Re: [PATCH v9 3/3] mmc: sdhci-msm: Add platform_execute_tunning implementation
+Date: Sat, 01 Mar 2014 00:29:53 +0200
+Message-ID: <53110DE1.6070204@mm-sol.com>
+References: <1393586675-14628-1-git-send-email-gdjakov@mm-sol.com> <1393586675-14628-4-git-send-email-gdjakov@mm-sol.com> <20140228205119.GJ7308@joshc.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1390685343-11663-6-git-send-email-marek@goldelico.com>
+In-Reply-To: <20140228205119.GJ7308@joshc.qualcomm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Belisko <marek@goldelico.com>
-Cc: bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, neilb@suse.de, hns@goldelico.com
+To: Josh Cartwright <joshc@codeaurora.org>
+Cc: linux-mmc@vger.kernel.org, cjb@laptop.org, ulf.hansson@linaro.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Marek Belisko <marek@goldelico.com> [140125 13:31]:
+On 28.02.14, 22:51, Josh Cartwright wrote:
+[..]
+>> +		sg_init_one(&sg, data_buf, sizeof(data_buf));
+>> +		memset(data_buf, 0, sizeof(data_buf));
+>> +		mmc_wait_for_req(mmc, &mrq);
+>> +
+>> +		if (!cmd.error && !data.error &&
+>> +		    !memcmp(data_buf, tuning_block_pattern, sizeof(data_buf))) {
+>=20
+> This memcmp is broken, sizeof(data_buf) is likely not what you want,
+> maybe you want 'size'?  Same thing for sg_init_one()/memset() above.
+>=20
+> From sparse:
+>=20
+> drivers/mmc/host/sdhci-msm.c: In function =C3=A2=E2=82=AC=CB=9Csdhci_=
+msm_execute_tuning=C3=A2=E2=82=AC=E2=84=A2:
+> drivers/mmc/host/sdhci-msm.c:461:53: warning: argument to =C3=A2=E2=82=
+=AC=CB=9Csizeof=C3=A2=E2=82=AC=E2=84=A2 in =C3=A2=E2=82=AC=CB=9Cmemcmp=C3=
+=A2=E2=82=AC=E2=84=A2 call is the same expression as the first source; =
+did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess=
+]
+>        !memcmp(data_buf, tuning_block_pattern, sizeof(data_buf))) {
+>=20
 
-Hmm care to add descriptions and repost the remaining patches
-that I did not yet pick up for the fixes?
+Nice catch, Josh! Thanks for reviewing!
 
-> Signed-off-by: NeilBrown <neilb@suse.de>
-
-Hmm should this also have From: NeilBrown <neilb@suse.de>?
-
-Also, while at it, maybe change your long time habit of adding
-a period to the end of the subject line? That is of course
-if you don't insist on having it, it's not usually used if
-you look at git log --pretty=oneline :)
-
-Regards,
-
-Tony
-
-> ---
->  arch/arm/boot/dts/omap3-gta04.dts | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/omap3-gta04.dts b/arch/arm/boot/dts/omap3-gta04.dts
-> index 7e09410..a924a843 100644
-> --- a/arch/arm/boot/dts/omap3-gta04.dts
-> +++ b/arch/arm/boot/dts/omap3-gta04.dts
-> @@ -36,6 +36,14 @@
->  			gpio-key,wakeup;
->  		};
->  	};
-> +
-> +	sound {
-> +		compatible = "ti,omap-twl4030";
-> +		ti,model = "gta04";
-> +
-> +		ti,mcbsp = <&mcbsp2>;
-> +		ti,codec = <&twl_audio>;
-> +	};
->  };
->  
->  &omap3_pmx_core {
-> @@ -79,6 +87,13 @@
->  		reg = <0x48>;
->  		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
->  		interrupt-parent = <&intc>;
-> +
-> +		twl_audio: audio {
-> +			compatible = "ti,twl4030-audio";
-> +			codec {
-> +			};
-> +		};
-> +
->  		vaux4: regulator-vaux4 {
->  			compatible = "ti,twl4030-vaux4";
->  			regulator-min-microvolt = <2800000>;
-> -- 
-> 1.8.3.2
-> 
+BR,
+Georgi
