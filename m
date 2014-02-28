@@ -1,33 +1,44 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: Re: [PATCH v3 06/15] dt: binding: add binding for ImgTec IR block
-Date: Fri, 28 Feb 2014 09:04:53 +0000
-Message-ID: <53105135.9030909@imgtec.com>
-References: <CAL_JsqLL6MbwajCUAm+NJk=ofL5OHq8b0zwO3LFb-TKY6UtVMQ@mail.gmail.com> <1391788155-29191-1-git-send-email-james.hogan@imgtec.com> <2514111.qYAaEZbJqk@radagast> <CAL_JsqJpbUzEUpUxtFe4JeZ=EtCfaQHsyPt3TqH8AJkGNRnTvw@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] dma: of: Move the functions under CONFIG_OF_DMA instead
+ of CONFIG_OF
+Date: Fri, 28 Feb 2014 10:23:06 +0100
+Message-ID: <6287295.Q1WPJPjeZV@wuerfel>
+References: <1393546850-13907-1-git-send-email-santosh.shilimkar@ti.com>
+ <530FD7D7.9000104@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJpbUzEUpUxtFe4JeZ=EtCfaQHsyPt3TqH8AJkGNRnTvw@mail.gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <530FD7D7.9000104@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 28/02/14 01:28, Rob Herring wrote:
-> On Thu, Feb 27, 2014 at 4:52 PM, James Hogan <james.hogan@imgtec.com> wrote:
->>> v3:
->>> - Rename compatible string to "img,ir-rev1" (Rob Herring).
->>> - Specify ordering of clocks explicitly (Rob Herring).
->>
->> I'd appreciate if somebody could give this another glance after the two
->> changes listed above and Ack it (I'll probably be posting a v4 patchset
->> tomorrow).
+On Thursday 27 February 2014 19:27:03 Santosh Shilimkar wrote:
 > 
-> Looks fine.
+> The of-dma.c is compiled out with !CONFIG_DMA_OF but the functions in
+> the header are kept under CONFIG_OF. Move them under CONFIG_OF_DMA
+> to avoid build errors with CONFIG_OFF && !CONFIG_DMA_OF
 > 
-> Acked-by: Rob Herring <robh@kernel.org>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
 
-Thanks Rob!
+Sorry, but what is the problem you are seeing with this?
 
-Cheers
-James
+CONFIG_DMA_OF is defined as 'OF && DMAENGINE', and this code
+should only be called from drivers that depend on DMAENGINE.
+
+I'm not saying your patch is wrong, but you shouldn't need it
+unless you do something very odd.
+
+	Arnd
