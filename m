@@ -1,15 +1,15 @@
 From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v2 4/7] dma: of: introduce of_dma_is_coherent() helper
-Date: Fri, 28 Feb 2014 09:17:08 -0500
-Message-ID: <53109A64.9030701@ti.com>
-References: <1393535872-20915-1-git-send-email-santosh.shilimkar@ti.com>
- <1393535872-20915-5-git-send-email-santosh.shilimkar@ti.com>
- <10040083.PbPEQQPCjl@wuerfel>
+Subject: Re: [PATCH] dma: of: Move the functions under CONFIG_OF_DMA instead
+ of CONFIG_OF
+Date: Fri, 28 Feb 2014 09:24:27 -0500
+Message-ID: <53109C1B.2030606@ti.com>
+References: <1393546850-13907-1-git-send-email-santosh.shilimkar@ti.com>
+ <530FD7D7.9000104@ti.com> <6287295.Q1WPJPjeZV@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <10040083.PbPEQQPCjl@wuerfel>
+In-Reply-To: <6287295.Q1WPJPjeZV@wuerfel>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,59 +19,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "magnus.damm@gmail.com" <magnus.damm@gmail.com>, Olof Johansson <olof@lixom.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 28 February 2014 04:39 AM, Arnd Bergmann wrote:
-> On Thursday 27 February 2014 16:17:49 Santosh Shilimkar wrote:
->> +
->> +/**
->> + * of_dma_is_coherent - Check if device is coherent
->> + * @np:        device node
->> + *
->> + * It returns true if "dma-coherent" property was found
->> + * for this device in DT.
->> + */
->> +bool of_dma_is_coherent(struct device_node *np)
->> +{
->> +       struct device_node *node = np;
->> +
->> +       while (node) {
->> +               if (of_property_read_bool(node, "dma-coherent")) {
->> +                       of_node_put(node);
->> +                       return true;
->> +               }
->> +               node = of_get_next_parent(node);
->> +       }
->> +       return false;
->> +}
->> +EXPORT_SYMBOL_GPL(of_dma_is_coherent);
+On Friday 28 February 2014 04:23 AM, Arnd Bergmann wrote:
+> On Thursday 27 February 2014 19:27:03 Santosh Shilimkar wrote:
 >>
+>> The of-dma.c is compiled out with !CONFIG_DMA_OF but the functions in
+>> the header are kept under CONFIG_OF. Move them under CONFIG_OF_DMA
+>> to avoid build errors with CONFIG_OFF && !CONFIG_DMA_OF
+>>
+>> Cc: Grant Likely <grant.likely@linaro.org>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
 > 
-> This won't work on architectures that are always coherent and
-> did not need 'dma-coherent' properties before, such as IBM
-> Power servers.
+> Sorry, but what is the problem you are seeing with this?
 > 
-> That said, I think the property makes sense, and we already have
-> platforms using it (highbank is the one I'm aware of).
+> CONFIG_DMA_OF is defined as 'OF && DMAENGINE', and this code
+> should only be called from drivers that depend on DMAENGINE.
 > 
-> We probably need ways to override this function in both ways:
-> "always coherent" (powerpc, x86), and "never coherent" (keystone
-> without LPAE) from platform code, and it would be nice to put
-> either option into DT in a global location as well. We may have
-> to go through a few iterations of this patch to get the best
-> algorithm, but I think the interface is good at least.
+> I'm not saying your patch is wrong, but you shouldn't need it
+> unless you do something very odd.
 > 
-Probably we should discuss bit more next week at connect. The
-current 'dma-coherent' is a per device property. For arch's
-which are always coherent, the per device property doesn't make
-sense.
+So for ARM 'allnoconfig' build we have CONFIG_OF enabled but
+CONFIG_DMA_OF disabled. With that the of-dma.c gets compiled
+out leaving the functions from of-dma.h undefined. I noticed
+this while adding couple of exports in of_dma.h
 
-BTW, the current users of this API is only ARM32 bit port
-and if this satisfies the ARM platforms, we should get
-this in kernel and then address other cases on need
-basis.
+I am not sure but we added couple of functions for dma-ranges
+and dma-coherent which gets called from generic code.
+
+In any case, the patch makes sense since the header and Makefile
+are not consistent.
 
 Regards,
 Santosh
