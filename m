@@ -1,59 +1,44 @@
-From: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH V7 06/10] SPEAr13XX: Add binding information for PCIe controller
-Date: Fri, 28 Feb 2014 17:24:59 +0530
-Message-ID: <5b20b323b280cf3a7aeb9c551ebe598019f87224.1393568715.git.mohit.kumar@st.com>
-References: <cover.1393568715.git.mohit.kumar@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1393568715.git.mohit.kumar-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arnd-r2nGTMty4D4@public.gmane.org
-Cc: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>, Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Maxime COQUELIN <maxime.coquelin@st.com>
+Subject: [PATCH 0/5] Add STiH407 SoC and reference board support
+Date: Fri, 28 Feb 2014 13:17:16 +0100
+Message-ID: <1393589841-6634-1-git-send-email-maxime.coquelin@st.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, Linus Walleij <linus.walleij@linaro.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Maxime Coquelin <maxime.coquelin@st.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+Cc: lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-From: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
+This series adds basic support to the STMicroelectronics STiH407 SoC and its
+B2120 reference board. The STiH407 is a dual-core ARM Cortex-A9 CPU aimed at
+STB market.
 
-SPEAr13XX uses designware PCIe controller. This patch adds information
-for the PCIe binding properties which are specific to SPEAr13XX SoC
-series.
+Giuseppe Cavallaro (2):
+  ARM: STi: add pinctrl support for the STiH407 SoC
+  pinctrl: st: Enhance the controller to manage unavailable registers
 
-Signed-off-by: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
-Cc: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- .../devicetree/bindings/pci/spear13xx-pcie.txt     |   14 ++++++++++++++
- 1 files changed, 14 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/spear13xx-pcie.txt
+Maxime Coquelin (3):
+  ARM: STi: Add STiH407 SoC support
+  ARM: dts: Add STiH407 SoC support
+  ARM: dts: STiH407: Add B2120 board support
 
-diff --git a/Documentation/devicetree/bindings/pci/spear13xx-pcie.txt b/Documentation/devicetree/bindings/pci/spear13xx-pcie.txt
-new file mode 100644
-index 0000000..49ea76d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/spear13xx-pcie.txt
-@@ -0,0 +1,14 @@
-+SPEAr13XX PCIe DT detail:
-+================================
-+
-+SPEAr13XX uses synopsis designware PCIe controller and ST MiPHY as phy
-+controller.
-+
-+Required properties:
-+- compatible : should be "st,spear1340-pcie", "snps,dw-pcie".
-+- phys		    : phandle to phy node associated with pcie controller
-+- phy-names	    : must be "pcie-phy"
-+- All other definitions as per generic PCI bindings
-+
-+ Optional properties:
-+- st,pcie-is-gen1 indicates that forced gen1 initialization is needed.
+ Documentation/arm/sti/stih407-overview.txt    |  18 +
+ Documentation/devicetree/bindings/arm/sti.txt |  15 +
+ arch/arm/boot/dts/Makefile                    |   3 +-
+ arch/arm/boot/dts/stih407-b2120.dts           |  78 ++++
+ arch/arm/boot/dts/stih407-clock.dtsi          |  41 ++
+ arch/arm/boot/dts/stih407-pinctrl.dtsi        | 618 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/stih407.dtsi                | 250 +++++++++++
+ arch/arm/mach-sti/Kconfig                     |   9 +
+ arch/arm/mach-sti/board-dt.c                  |   1 +
+ drivers/pinctrl/pinctrl-st.c                  | 123 +++--
+ 10 files changed, 1110 insertions(+), 46 deletions(-)
+ create mode 100644 Documentation/arm/sti/stih407-overview.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/sti.txt
+ create mode 100644 arch/arm/boot/dts/stih407-b2120.dts
+ create mode 100644 arch/arm/boot/dts/stih407-clock.dtsi
+ create mode 100644 arch/arm/boot/dts/stih407-pinctrl.dtsi
+ create mode 100644 arch/arm/boot/dts/stih407.dtsi
+
 -- 
-1.7.0.1
+1.9.0
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
