@@ -1,109 +1,77 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: Re: [PATCH v4 7/9] devicetree: bindings: Document PM8921/8058 keypads
-Date: Fri, 28 Feb 2014 07:55:27 -0600
-Message-ID: <20140228135527.GF7308@joshc.qualcomm.com>
-References: <1393552520-9068-1-git-send-email-sboyd@codeaurora.org>
- <1393552520-9068-8-git-send-email-sboyd@codeaurora.org>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH v2 4/7] dma: of: introduce of_dma_is_coherent() helper
+Date: Fri, 28 Feb 2014 09:17:08 -0500
+Message-ID: <53109A64.9030701@ti.com>
+References: <1393535872-20915-1-git-send-email-santosh.shilimkar@ti.com>
+ <1393535872-20915-5-git-send-email-santosh.shilimkar@ti.com>
+ <10040083.PbPEQQPCjl@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1393552520-9068-8-git-send-email-sboyd@codeaurora.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <10040083.PbPEQQPCjl@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "magnus.damm@gmail.com" <magnus.damm@gmail.com>, Olof Johansson <olof@lixom.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2014 at 05:55:18PM -0800, Stephen Boyd wrote:
-> Document the keypad device found on PM8921 and PM8058 PMICs.
-[..]
-> +++ b/Documentation/devicetree/bindings/input/qcom,pm8xxx-keypad.txt
-> @@ -0,0 +1,72 @@
-> +Qualcomm PM8xxx PMIC Keypad
-> +
-> +PROPERTIES
-> +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: must be one of:
-> +		    "qcom,pm8058-keypad"
-> +		    "qcom,pm8921-keypad"
-> +- interrupts:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: the first interrupt specifies the key sense interrupt
-> +		    and the second interrupt specifies the key stuck interrupt.
-> +		    The format of the specifier is defined by the binding
-> +		    document describing the node's interrupt parent.
-> +
-> +- linux,keymap:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: the linux keymap. More information can be found in
-> +		    input/matrix-keymap.txt.
-> +
-> +- keypad,num-rows:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: number of rows in the keymap. More information can be found
-> +		    in input/matrix-keymap.txt.
-> +
-> +- keypad,num-columns:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: number of columns in the keymap. More information can be
-> +		    found in input/matrix-keymap.txt.
-> +
-> +- debounce:
-> +	Usage: optional
-> +	Value type: <u32>
-> +	Definition: time in microseconds that key must be pressed or release
-> +		    for key sense interrupt to trigger.
-> +
-> +- scan-delay:
-> +	Usage: optional
-> +	Value type: <u32>
-> +	Definition: time in microseconds to pause between successive scans
-> +		    of the matrix array.
-> +
-> +- row-hold:
-> +	Usage: optional
-> +	Value type: <u32>
-> +	Definition: time in nanoseconds to pause between scans of each row in
-> +		    the matrix array.
+On Friday 28 February 2014 04:39 AM, Arnd Bergmann wrote:
+> On Thursday 27 February 2014 16:17:49 Santosh Shilimkar wrote:
+>> +
+>> +/**
+>> + * of_dma_is_coherent - Check if device is coherent
+>> + * @np:        device node
+>> + *
+>> + * It returns true if "dma-coherent" property was found
+>> + * for this device in DT.
+>> + */
+>> +bool of_dma_is_coherent(struct device_node *np)
+>> +{
+>> +       struct device_node *node = np;
+>> +
+>> +       while (node) {
+>> +               if (of_property_read_bool(node, "dma-coherent")) {
+>> +                       of_node_put(node);
+>> +                       return true;
+>> +               }
+>> +               node = of_get_next_parent(node);
+>> +       }
+>> +       return false;
+>> +}
+>> +EXPORT_SYMBOL_GPL(of_dma_is_coherent);
+>>
+> 
+> This won't work on architectures that are always coherent and
+> did not need 'dma-coherent' properties before, such as IBM
+> Power servers.
+> 
+> That said, I think the property makes sense, and we already have
+> platforms using it (highbank is the one I'm aware of).
+> 
+> We probably need ways to override this function in both ways:
+> "always coherent" (powerpc, x86), and "never coherent" (keystone
+> without LPAE) from platform code, and it would be nice to put
+> either option into DT in a global location as well. We may have
+> to go through a few iterations of this patch to get the best
+> algorithm, but I think the interface is good at least.
+> 
+Probably we should discuss bit more next week at connect. The
+current 'dma-coherent' is a per device property. For arch's
+which are always coherent, the per device property doesn't make
+sense.
 
-- linux,wakeup?
-- linux,no-auto-repeat?
+BTW, the current users of this API is only ARM32 bit port
+and if this satisfies the ARM platforms, we should get
+this in kernel and then address other cases on need
+basis.
 
-> +
-> +EXAMPLE
-> +
-> +	keypad {
-> +		compatible = "qcom,pm8921-keypad";
-> +		interrupt-parent = <&pmicintc>;
-> +		interrupts = <74 1>, <75 1>;
-> +		linux,keymap = <
-> +			MATRIX_KEY(0, 0, KEY_VOLUMEUP)
-> +			MATRIX_KEY(0, 1, KEY_VOLUMEDOWN)
-> +			MATRIX_KEY(0, 2, KEY_CAMERA_FOCUS)
-> +			MATRIX_KEY(0, 3, KEY_CAMERA)
-> +			>;
-> +		keypad,num-rows = <1>;
-> +		keypad,num-columns = <5>;
-> +		debounce = <15>;
-> +		scan-delay = <32>;
-> +		row-hold = <91500>;
-> +	};
-
-It odd to me that these newly created bindings don't have 'reg'
-properties, even though the device clearly has a register region.
-
-I suppose it makes sense from a "port over from platform data to DT"
-perspective, as these drivers have just assumed the location of their
-registers to be fixed; however I suspect things will need to be changed
-if/when we hope to share these drivers with pm8841/pm8941 and beyond...
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Regards,
+Santosh
