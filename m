@@ -1,58 +1,44 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH V5 2/4] DRIVERS: IRQCHIP: CROSSBAR: Add support for
- Crossbar IP
-Date: Fri, 28 Feb 2014 13:36:30 -0800
-Message-ID: <20140228213629.GB13624@atomide.com>
-References: <1386066445-28245-1-git-send-email-r.sricharan@ti.com>
- <1386066445-28245-3-git-send-email-r.sricharan@ti.com>
- <52D7B2CA.8080902@ti.com>
- <52EF7D85.5070705@ti.com>
- <alpine.DEB.2.02.1402041713470.24986@ionos.tec.linutronix.de>
- <52F23887.9060209@ti.com>
- <52F24683.9060200@ti.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: omap3 clocks: simplify ssi aliases
+Date: Fri, 28 Feb 2014 14:03:06 -0800
+Message-ID: <20140228220302.GF13624@atomide.com>
+References: <52DE24DA.8050104@ti.com>
+ <1390315061-14441-1-git-send-email-sre@debian.org>
+ <20140213224914.GD28216@atomide.com>
+ <20140214012546.GA7996@earth.universe>
+ <52FE1E8D.7010807@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <52F24683.9060200-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <52FE1E8D.7010807@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: Sebastian Reichel <sre@debian.org>, mturquette@linaro.org, bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org> [140205 06:13]:
-> Tony,
-> 
-> On Wednesday 05 February 2014 06:41 PM, Sricharan R wrote:
-> > On Tuesday 04 February 2014 09:44 PM, Thomas Gleixner wrote:
-> >> On Mon, 3 Feb 2014, Sricharan R wrote:
-> >>>> I already have your reviewed-by tag for the first patch in this series.
-> >>>>
-> >>>> Kevin was pointing out that irqchip maintainer tag is needed for this patch as well
-> >>>> to be merged. We are planning to take this series through arm-soc tree.
-> >>>>
-> >>>> Can i please have your tag for this patch as well ?
+* Tero Kristo <t-kristo@ti.com> [140214 05:50]:
+> On 02/14/2014 03:25 AM, Sebastian Reichel wrote:
+> >On Thu, Feb 13, 2014 at 02:49:14PM -0800, Tony Lindgren wrote:
+> >>* Sebastian Reichel <sre@debian.org> [140121 06:39]:
+> >>>update aliases for the ssi clocks ssi_ssr_fck, ssi_sst_fck and ssi_ick
+> >>>to make them consistent for omap34xx and omap36xx. This makes it
+> >>>possible to reference the clocks from generic omap3 dts files.
 > >>
-> >> Acked-by-me
-> >> --
-> >> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> >> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> > 
-> > Thanks Thomas.
-> > 
-> > Kevin,
-> >     I will re-send a branch based on rc1 for this.
-> > 
+> >>Is this needed as a fix for v3.14-rc? If so, please let me know
+> >>and ack if you want me to take it.
+> >
+> >The SSI driver will not arrive before 3.15 and 3.14 dts files do not
+> >contain any SSI nodes.
+> >
+> >Thus it should be enough to queue it for 3.15 if it goes via the
+> >same tree as the SSI dts patches.
+> >
+> >-- Sebastian
+> >
 > 
-> I have pushed a branch based on mainline,
->    git://github.com/Sricharanti/sricharan.git
->    branch: crossbar_3.14_rc1
+> The patch itself looks good to me, so acked.
 
-OK pulling into omap-for-v3.15/crossbar thanks.
+Thanks applying into omap-for-v3.15/dt with Tero's ack.
 
 Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
