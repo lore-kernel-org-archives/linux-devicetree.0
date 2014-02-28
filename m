@@ -1,78 +1,72 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 3/9] Doc/DT: Add DT binding documentation for DVI
-	Connector
-Date: Fri, 28 Feb 2014 15:59:37 +0000
-Message-ID: <20140228155937.GQ21483@n2100.arm.linux.org.uk>
-References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com> <1393590016-9361-4-git-send-email-tomi.valkeinen@ti.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH 00/12] ARM: OMAP2 DT clock conversion
+Date: Fri, 28 Feb 2014 09:59:45 -0600
+Message-ID: <5310B271.5040708@ti.com>
+References: <1393579384-23440-1-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1393590016-9361-4-git-send-email-tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1393579384-23440-1-git-send-email-t-kristo@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, mturquette@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 28, 2014 at 02:20:10PM +0200, Tomi Valkeinen wrote:
-> Add DT binding documentation for DVI Connector.
+On 02/28/2014 03:22 AM, Tero Kristo wrote:
+> Hi,
 > 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-> Reviewed-by: Archit Taneja <archit-l0cyMroinI0@public.gmane.org>
-> ---
->  .../devicetree/bindings/video/dvi-connector.txt    | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/video/dvi-connector.txt
+> This set concludes the omap2+ clock DT conversion work by creating the
+> DT clock data for omap2 SoC also.
 > 
-> diff --git a/Documentation/devicetree/bindings/video/dvi-connector.txt b/Documentation/devicetree/bindings/video/dvi-connector.txt
-> new file mode 100644
-> index 000000000000..6a0aff866c78
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/dvi-connector.txt
-> @@ -0,0 +1,26 @@
-> +DVI Connector
-> +==============
-> +
-> +Required properties:
-> +- compatible: "dvi-connector"
-> +
-> +Optional properties:
-> +- label: a symbolic name for the connector
-> +- i2c-bus: phandle to the i2c bus that is connected to DVI DDC
-> +
-> +Required nodes:
-> +- Video port for DVI input
-> +
-> +Example
-> +-------
-> +
-> +dvi0: connector@0 {
-> +	compatible = "dvi-connector";
-> +	label = "dvi";
-> +
-> +	i2c-bus = <&i2c3>;
-> +
-> +	dvi_connector_in: endpoint {
-> +		remote-endpoint = <&tfp410_out>;
-> +	};
-> +};
+> I am also currently doing related work to cleanup CM/PRM codebase in
+> preparation to move it into drivers/, this set is basically going to
+> be a pre-requisite for that. I'll hopefully post something related
+> to that early next week.
+> 
+> This set has been boot tested on OMAP2430 only (thanks Nishanth, I don't
+> have access to OMAP2 hardware myself), so any testing feedback on
+> 2420 board(s) would be appreciated.
+> 
+> Working tree:
+> 
+> Tree: https://github.com/t-kristo/linux-pm.git
+> Branch: 3.14-rc4-omap2-dt-clks
 
-This looks far too simplistic.  There are different classes of DVI
-connector - there is:
+I do see checkpatch warnings in the series:
+http://slexy.org/view/s20mzhlJ93
 
-DVI A - analogue only
-DVI D - digital only (single and dual link)
-DVI I - both (single and dual digital link)
+Series boot tested with:
+3.14-rc4-omap2-dt-clks  fc73a96 ARM: OMAP2: clock: use DT clock boot
+if available
+from the tree mentioned above.
 
-DRM at least makes a distinction between these three classes, and this
-disctinction is part of the user API.  How would a display system know
-which kind of DVI connector is wired up on the board from this DT
-description?
+Things look good other than the checkpatch violation noticed in
+report, so other than that,
+
+Tested-by: Nishanth Menon <nm@ti.com>
+
+omap2plus_defconfig
+ 1: am335x-evm:  Boot PASS: http://slexy.org/raw/s2jdV3XMCC
+ 2:  am335x-sk:  Boot PASS: http://slexy.org/raw/s210nZI8Hx
+ 3: am3517-evm:  Boot PASS: http://slexy.org/raw/s21MG8kg6u
+ 4:  am37x-evm:  Boot PASS: http://slexy.org/raw/s20coVhzLt
+ 5: am43xx-epos:  Boot PASS: http://slexy.org/raw/s21XKjjwyk
+ 6: BeagleBoard-XM:  Boot PASS: http://slexy.org/raw/s27PCmlDq7
+ 7: BeagleBone-Black:  Boot PASS: http://slexy.org/raw/s2HX1Q3iPb
+ 8:      crane: No Image built - Missing platform support?:
+ 9:       dra7:  Boot PASS: http://slexy.org/raw/s21ofDfpD2
+10:        ldp:  Boot FAIL: http://slexy.org/raw/s2SbrpyX2p
+^^ legacy behavior
+11: PandaBoard-ES:  Boot PASS: http://slexy.org/raw/s21n4iMUKd
+12:    sdp2430:  Boot PASS: http://slexy.org/raw/s2CJ5hYl72
+13:    sdp3430:  Boot PASS: http://slexy.org/raw/s20axZ1nyb
+14:    sdp4430:  Boot PASS: http://slexy.org/raw/s21wt3C5F3
+15: OMAP5432uEVM:  Boot PASS: http://slexy.org/raw/s208PhmCpm
+TOTAL = 15 boards, Booted Boards = 13, No Boot boards = 2
+
+
 
 -- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Nishanth Menon
