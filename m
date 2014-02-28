@@ -1,72 +1,103 @@
 From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: [PATCH v3 2/3] arm64: Extend the PCI I/O space to 16MB
-Date: Fri, 28 Feb 2014 13:08:32 +0000
-Message-ID: <1393592913-24796-3-git-send-email-Liviu.Dudau@arm.com>
-References: <1393592913-24796-1-git-send-email-Liviu.Dudau@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393592913-24796-1-git-send-email-Liviu.Dudau@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v3 2/5] pci: OF: Fix the conversion of IO ranges into IO
+ resources.
+Date: Fri, 28 Feb 2014 13:08:19 +0000
+Message-ID: <1393592902-24750-3-git-send-email-Liviu.Dudau@arm.com>
+References: <1393592902-24750-1-git-send-email-Liviu.Dudau@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1393592902-24750-1-git-send-email-Liviu.Dudau@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Catalin Marinas <catalin.marinas@arm.com>
+The ranges property for a host bridge controller in DT describes
+the mapping between the PCI bus address and the CPU physical address.
+The resources framework however expects that the IO resources start
+at a pseudo "port" address 0 (zero) and have a maximum size of IO_SPACE_LIMIT.
+The conversion from pci ranges to resources failed to take that into account.
 
-The patch moves the PCI I/O space (currently at 64K) before the
-earlyprintk mapping and extends it to 16MB.
+In the process move the function into drivers/of/address.c as it
+now depends on pci_address_to_pio() code.
 
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
 
-diff --git a/Documentation/arm64/memory.txt b/Documentation/arm64/memory.txt
-index 5e054bf..85e24c4 100644
---- a/Documentation/arm64/memory.txt
-+++ b/Documentation/arm64/memory.txt
-@@ -35,11 +35,13 @@ ffffffbc00000000	ffffffbdffffffff	   8GB		vmemmap
- 
- ffffffbe00000000	ffffffbffbbfffff	  ~8GB		[guard, future vmmemap]
- 
--ffffffbffbc00000	ffffffbffbdfffff	   2MB		earlyprintk device
-+ffffffbffa000000	ffffffbffaffffff	  16MB		PCI I/O space
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index d1bb30f..d595d98 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -724,3 +724,37 @@ void __iomem *of_iomap(struct device_node *np, int index)
+ 	return ioremap(res.start, resource_size(&res));
+ }
+ EXPORT_SYMBOL(of_iomap);
 +
-+ffffffbffb000000	ffffffbffbbfffff	  12MB		[guard]
++/**
++ * of_pci_range_to_resource - Create a resource from an of_pci_range
++ * @range:	the PCI range that describes the resource
++ * @np:		device node where the range belongs to
++ * @res:	pointer to a valid resource that will be updated to
++ *              reflect the values contained in the range.
++ * Note that if the range is an IO range, the resource will be converted
++ * using pci_address_to_pio() which can fail if it is called too early or
++ * if the range cannot be matched to any host bridge IO space (our case here).
++ * To guard against that we try to register the IO range first.
++ * If that fails we know that pci_address_to_pio() will do too.
++ */
++void of_pci_range_to_resource(struct of_pci_range *range,
++	struct device_node *np, struct resource *res)
++{
++	res->flags = range->flags;
++	if (res->flags & IORESOURCE_IO) {
++		unsigned long port = -1;
++		if (!pci_register_io_range(range->cpu_addr, range->size))
++			port = pci_address_to_pio(range->cpu_addr);
++		if (port == (unsigned long)-1) {
++			res->start = (resource_size_t)OF_BAD_ADDR;
++			res->end = (resource_size_t)OF_BAD_ADDR;
++			return;
++		}
++		res->start = port;
++	} else {
++		res->start = range->cpu_addr;
++	}
++	res->end = res->start + range->size - 1;
++	res->parent = res->child = res->sibling = NULL;
++	res->name = np->full_name;
++}
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index 40c418d..3fe500a 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -23,17 +23,8 @@ struct of_pci_range {
+ #define for_each_of_pci_range(parser, range) \
+ 	for (; of_pci_range_parser_one(parser, range);)
  
--ffffffbffbe00000	ffffffbffbe0ffff	  64KB		PCI I/O space
-+ffffffbffbc00000	ffffffbffbdfffff	   2MB		earlyprintk device
- 
--ffffffbffbe10000	ffffffbcffffffff	  ~2MB		[guard]
-+ffffffbffbe00000	ffffffbffbffffff	   2MB		[guard]
- 
- ffffffbffc000000	ffffffbfffffffff	  64MB		modules
- 
-@@ -60,11 +62,13 @@ fffffdfc00000000	fffffdfdffffffff	   8GB		vmemmap
- 
- fffffdfe00000000	fffffdfffbbfffff	  ~8GB		[guard, future vmmemap]
- 
--fffffdfffbc00000	fffffdfffbdfffff	   2MB		earlyprintk device
-+fffffdfffa000000	fffffdfffaffffff	  16MB		PCI I/O space
-+
-+fffffdfffb000000	fffffdfffbbfffff	  12MB		[guard]
- 
--fffffdfffbe00000	fffffdfffbe0ffff	  64KB		PCI I/O space
-+fffffdfffbc00000	fffffdfffbdfffff	   2MB		earlyprintk device
- 
--fffffdfffbe10000	fffffdfffbffffff	  ~2MB		[guard]
-+fffffdfffbe00000	fffffdfffbffffff	   2MB		[guard]
- 
- fffffdfffc000000	fffffdffffffffff	  64MB		modules
- 
-diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/io.h
-index 4cc813e..7846a6b 100644
---- a/arch/arm64/include/asm/io.h
-+++ b/arch/arm64/include/asm/io.h
-@@ -121,7 +121,7 @@ static inline u64 __raw_readq(const volatile void __iomem *addr)
-  *  I/O port access primitives.
-  */
- #define IO_SPACE_LIMIT		0xffff
--#define PCI_IOBASE		((void __iomem *)(MODULES_VADDR - SZ_2M))
-+#define PCI_IOBASE		((void __iomem *)(MODULES_VADDR - SZ_32M))
- 
- static inline u8 inb(unsigned long addr)
- {
+-static inline void of_pci_range_to_resource(struct of_pci_range *range,
+-					    struct device_node *np,
+-					    struct resource *res)
+-{
+-	res->flags = range->flags;
+-	res->start = range->cpu_addr;
+-	res->end = range->cpu_addr + range->size - 1;
+-	res->parent = res->child = res->sibling = NULL;
+-	res->name = np->full_name;
+-}
+-
++extern void of_pci_range_to_resource(struct of_pci_range *range,
++		struct device_node *np, struct resource *res);
+ /* Translate a DMA address from device space to CPU space */
+ extern u64 of_translate_dma_address(struct device_node *dev,
+ 				    const __be32 *in_addr);
 -- 
 1.9.0
