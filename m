@@ -1,92 +1,66 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 7/9] Doc/DT: Add DT binding documentation for Sony acx565akm
- panel
-Date: Fri, 28 Feb 2014 15:47:07 +0200
-Message-ID: <5310935B.1070605@ti.com>
-References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>	 <1393590016-9361-8-git-send-email-tomi.valkeinen@ti.com> <1393594707.3802.31.camel@paszta.hi.pengutronix.de>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="bKxAoMHM3OKHtFSMMrQ8ITRfjihNpKnXe"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393594707.3802.31.camel-+qGW7pzALmz7o/J7KWpOmN53zsg1cpMQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Alex Elder <elder@linaro.org>
+Subject: [PATCH 0/5] clk: bcm21664: add common clock support
+Date: Fri, 28 Feb 2014 07:49:26 -0600
+Message-ID: <1393595371-3789-1-git-send-email-elder@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: mturquette@linaro.org, bcm@fixthebug.org, mporter@linaro.org, devicetree@vger.kernel.org
+Cc: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---bKxAoMHM3OKHtFSMMrQ8ITRfjihNpKnXe
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+This is series has two parts.  The first two patches are changes
+to the existing Broadcom Kona family clock code to prepare for the
+addition of support for another SoC bcm21664.
 
-On 28/02/14 15:38, Philipp Zabel wrote:
-> Hi Tomi,
->=20
-> Am Freitag, den 28.02.2014, 14:20 +0200 schrieb Tomi Valkeinen:
->> Add DT binding documentation for Sony acx565akm panel
->>
->> Signed-off-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
->> Reviewed-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
->> Reviewed-by: Archit Taneja <archit-l0cyMroinI0@public.gmane.org>
->> ---
->>  .../devicetree/bindings/video/sony,acx565akm.txt   | 28 +++++++++++++=
-+++++++++
->>  1 file changed, 28 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/video/sony,acx56=
-5akm.txt
->>
->> diff --git a/Documentation/devicetree/bindings/video/sony,acx565akm.tx=
-t b/Documentation/devicetree/bindings/video/sony,acx565akm.txt
->> new file mode 100644
->> index 000000000000..cd9cfdf7e3fe
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/video/sony,acx565akm.txt
->> @@ -0,0 +1,28 @@
->> +Sony ACX565AKM SDI Panel
->> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D
->> +
->> +Required properties:
->> +- compatible: "sony,acx565akm"
->> +
->> +Optional properties:
->> +- label: a symbolic name for the panel
->> +- gpios: panel reset gpio
->=20
-> please let's call this reset-gpios.
+The remaining three define the binding and code for bcm21664, and
+replace the use of "fake" clocks in the device tree with the real
+ones.  This ends up being a fairly straightforward definition of
+the clocks on this SoC; the rest of the clock code is shared with
+other SoCs that use the Kona style clock system.
 
-Yes, I'll change this and the tfp410 one.
+This series depends on a number of other things that are
+currently queued for Linux 3.15 or have already been sent
+out for review:
+    - Clock support for bcm281xx (code and DT file, queued for 3.15)
+        https://github.com/broadcom/mach-bcm/
+	    armsoc/for-3.15/drivers
+	    armsoc/for-3.15/dt
+    - Additional fixes and features for bcm281xx (out for review)
+	https://lkml.org/lkml/2014/2/25/614
+    - Initial BCM21664 support (from Markus Mayer, out for review)
+	https://lkml.org/lkml/2014/2/27/615
+This prerequisite code appears in the branch (below) as merges from
+other publicly-available git branches.
 
- Tomi
+This code is available in the "review/bcm21664-clock" branch of
+the git repository here:
+    http://git.linaro.org/git/landing-teams/working/broadcom/kernel.git
 
 
+					-Alex
 
---bKxAoMHM3OKHtFSMMrQ8ITRfjihNpKnXe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Alex Elder (5):
+  clk: bcm281xx: move compatible string definitions
+  ARM: dts: revise kona clock binding document
+    Cleanup and prepare existing code for addition of new SoC.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+  ARM: dts: define clock binding for bcm21664
+  clk: bcm21664: use common clock framework
+  ARM: dts: use real clocks for bcm21664
+    Add support for the bcm21664 SoC.
 
-iQIcBAEBAgAGBQJTEJNbAAoJEPo9qoy8lh71n0AP/i90S2vnKeZp2NmP5vUtqk+6
-Y64Bjpl1t/En1Xa7LzuGsx4/jz+KYs/z7jRcD2BeiQ8kjVNOvXTVP5YYRYEEktqP
-BJM0yWKfU6vqrv+Mx6uQKIJ8j0J66vBpmY9Yi2NNYeW9D0I/BF4XFeP+GqyOWEhf
-BrWn38+WkkhOr0tHj0kwGurFMZInMxwCtx2h4Zrb+Cva9d91o9aU54Y6YTicBjJx
-1g8CmFcAtodv5tZWE3LB8oUJa1gUCGq6vNZlf4j5BZp6apI1Cu55C3CjZFMYGl6M
-RpgUezPH3cmsyWHVa+Wmxgwis9L1DEV6e0jPKOaI10usis3BCMnadDJsDho6C611
-yAhebyGGhZvSCcuygWq/pQLmXDOj8lF0NWXxY1Wfe/Ur+BboTn2KsLA1eCYvleYp
-qUdcNKpYvV/Y9hyXhcpZuiCIGnPWgxM5yS1VcV1c8hadg+Shm1Rgmm3afYWjJx3e
-mMO4XgbjUjAqadSETjruP5Z4WMogz0BDjGka/RCQVaEuDAZPuUGvJ6ho0h7uflTZ
-RlKOEIQgtTWp+bAsz+D9fa6xGpMIR9A6pdVedoA+EOTag4jG2Q9GgljvXbgXkYTe
-hIJ02EZrEiqOkNOj6fdf4xtx/KnBl51aqK756zzP5sImtSgmRsgQRCTmvghfOrMC
-g2uInWitLxCNAOZ4d86C
-=EjGF
------END PGP SIGNATURE-----
+ .../devicetree/bindings/clock/bcm-kona-clock.txt   |  116 +++++---
+ arch/arm/boot/dts/bcm21664.dtsi                    |  190 ++++++++-----
+ drivers/clk/bcm/Kconfig                            |    2 +-
+ drivers/clk/bcm/Makefile                           |    1 +
+ drivers/clk/bcm/clk-bcm21664.c                     |  290 ++++++++++++++++++++
+ drivers/clk/bcm/clk-bcm281xx.c                     |   12 -
+ include/dt-bindings/clock/bcm21664.h               |   62 +++++
+ include/dt-bindings/clock/bcm281xx.h               |   12 +
+ 8 files changed, 565 insertions(+), 120 deletions(-)
+ create mode 100644 drivers/clk/bcm/clk-bcm21664.c
+ create mode 100644 include/dt-bindings/clock/bcm21664.h
 
---bKxAoMHM3OKHtFSMMrQ8ITRfjihNpKnXe--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.7.9.5
+
