@@ -1,76 +1,73 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 4/9] Doc/DT: Add DT binding documentation for HDMI
-	Connector
-Date: Fri, 28 Feb 2014 16:34:31 +0000
-Message-ID: <20140228163431.GV21483@n2100.arm.linux.org.uk>
-References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
-	<1393590016-9361-5-git-send-email-tomi.valkeinen@ti.com>
-	<20140228160612.GR21483@n2100.arm.linux.org.uk>
-	<5310B609.1010105@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V2 1/3] dt: palmas: support IRQ inversion at the board
+ level
+Date: Fri, 28 Feb 2014 09:34:33 -0700
+Message-ID: <5310BA99.4050203@wwwdotorg.org>
+References: <1393534281-30759-1-git-send-email-swarren@wwwdotorg.org> <20140227210227.GE2931@xora-haswell> <530FAFAE.5050800@wwwdotorg.org> <20140228055818.GA29849@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <5310B609.1010105@ti.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces@lists.freedesktop.org
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140228055818.GA29849-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Graeme Gregory <graeme-/SyDAi3Rz4f10XsdtD+oqA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, J Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Ian Lartey <ian-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 28, 2014 at 06:15:05PM +0200, Tomi Valkeinen wrote:
-> On 28/02/14 18:06, Russell King - ARM Linux wrote:
+On 02/27/2014 10:58 PM, Mark Brown wrote:
+> On Thu, Feb 27, 2014 at 02:35:42PM -0700, Stephen Warren wrote:
+>> On 02/27/2014 02:02 PM, Graeme Gregory wrote:
 > 
-> >> +hdmi0: connector@1 {
-> >> +	compatible = "hdmi-connector";
-> >> +	label = "hdmi";
-> >> +
-> >> +	hdmi_connector_in: endpoint {
-> >> +		remote-endpoint = <&tpd12s015_out>;
-> >> +	};
-> >> +};
-> > 
-> > It seems rather weird to have DVI connectors having an optional I2C
-> > property, but HDMI (which augments DVI) not having that as at least an
-> > optional property.
+>>>> +- ti,irq-externally-inverted : If missing, the polarity of the Palmas IRQ
+>>>> +  output should be set to the opposite of the polarity indicated by the IRQ
+>>>> +  specifier in the interrupts property. If absent, the polarity should be
+>>>> +  configured to match. This allows the representation of an inverter between
+>>>> +  the Palmas IRQ output and the interrupt parent's IRQ input.
 > 
-> I have added only the properties that I have used. I did think about the
-> i2c for HDMI also, but thought that I don't use it, and so can't test
-> it, and so I could well create a bad binding.
+>>> This has got to be the wrong way to do things, all this leads to is every
+>>> device doing this property in its own way and having totally inconsistent
+>>> properties all meaning the same thing.
 > 
-> And, as I don't see any issue in adding it later, when someone uses it,
-> I decided to leave it out.
+>>> If there is some other hardware inverting lines then there should be
+>>> a generic binding for this in DT. This is not describing the palmas hardware
+>>> but some external object to the palmas.
 > 
-> > I can quite well see the iMX HDMI support needing an i2c bus here.
-> > 
-> > Also, HDMI has two connector standards - type A and type B, much like
-> > the single vs dual link of DVI.  Again, DRM exposes this to userspace.
+>> I'd be fine with removing the "ti," vendor prefix from the property
+>> name, and promoting it to be a cross-device standard.
 > 
-> True, but isn't that just a form factor? No functional differences? But
-> I agree, we can add the two types here also to the compatible string.
+>> I'm not sure that many devices will need this though; most don't have
+>> configurable output polarity. Still, I guess that shouldn't stop us from
+>> creating standards for the cases where it is needed.
+> 
+> It's really common for PMICs and CODECs to be able to set any interrupt
+> polarity at least.
+> 
+>> If the DT reviewers can ack the concept, I'm happy to respin the patch
+>> with the more generic property name.
+> 
+> I'm not sure that renaming the property really deals with the concerns
+> though since drivers still all need to manually add support for this,
+> shouldn't there be an interrupt controller described in the DT which
+> just chains on to the parent with the polarity inverted to do the
+> impedence match?
 
-HDMI A is 19 pins carrying TMDS channels 0-2.  HDMI B is 29 pins
-carrying TMDS channels 0-5.  So, the difference is the same as the
-single vs dual link on DVI-D/I connectors.
+I had thought of that when first dealing with this a couple years ago,
+but Olof suggested that was too complicated.
 
-There's actually three HDMI connectors:
+Certainly, adding an "inverting" interrupt controller into the path
+would solve the problem without inventing any new concept in DT.
+However, the inverter really isn't an interrupt controller in any
+meaningful fashion. It has no status/mask/enable/... registers at all;
+it's nothing more than an inverter gate, at least in my case. Hence, I'm
+actually not convinced that adding an extra interrupt controller into
+the path is correct here.
 
-  All three connectors carry all required HDMI signals, including a TMDS
-  link. The Type B connector is slightly larger and carries a second TMDS
-  link, which is necessary to support very high resolution displays using
-  dual link. The Type C connector carries the same signals as the Type A
-  but is more compact and intended for mobile applications.
-
-So, Type C and Type A are electrically the same.
-
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+Another alternative might be to add an extra IRQ bit in the IRQ
+specifier (and something similar would be needed for GPIO specifiers)
+that indicates "inversion between source and destination". This could be
+queried by drivers in exactly the same way as the existing polarity/type
+IRQ flags. We'd need to update each individual IRQ controller binding to
+enable that flag, since each binding defines its own definition of such
+flags. (although in practice since most use the same centrally suggested
+flags, this wouldn't be any more than just saying yes, this binding
+allows that new flag to be used).
