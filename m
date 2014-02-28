@@ -1,35 +1,49 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: [PATCHv2 08/16] ARM: OMAP3: remove deprecated
- CONFIG_OMAP_IOMMU_IVA2
-Date: Fri, 28 Feb 2014 19:58:47 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1402281958170.453@utopia.booyaka.com>
-References: <1392315347-32967-1-git-send-email-s-anna@ti.com> <1392315347-32967-9-git-send-email-s-anna@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 7/7] PCI: designware: split samsung and fsl bindings
+Date: Fri, 28 Feb 2014 21:03:01 +0100
+Message-ID: <201402282103.01897.arnd@arndb.de>
+References: <1393608523-17509-1-git-send-email-l.stach@pengutronix.de>
+ <1393608523-17509-8-git-send-email-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1392315347-32967-9-git-send-email-s-anna@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Tony Lindgren <tony@atomide.com>, Florian Vaussard <florian.vaussard@epfl.ch>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1393608523-17509-8-git-send-email-l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jingoo Han <jg1.han@samsung.com>, linux-samsung-soc@vger.kernel.org, Richard Zhu <r65037@freescale.com>, kernel@pengutronix.de, linux-sh@vger.kernel.org, Tim Harvey <tharvey@gateworks.com>, Stephen Warren <swarren@wwwdotorg.org>, Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, Thierry Reding <thierry.reding@gmail.com>, Ben Dooks <ben-linux@fluff.org>, linux-tegra@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 13 Feb 2014, Suman Anna wrote:
+On Friday 28 February 2014, Lucas Stach wrote:
+> +Required properties:
+> +- compatible: "fsl,imx6q-pcie"
+> +- reg: base addresse and length of the pcie controller
+> +- interrupts: First entry must contain interrupt handle for controller
+> +  INTA output.
 
-> From: Florian Vaussard <florian.vaussard@epfl.ch>
-> 
-> CONFIG_OMAP_IOMMU_IVA2 was defined originally to avoid conflicting
-> usage by tidspbridge and other iommu users. The same can be achieved
-> by marking the DT node disabled, so remove this obsolete flag and
-> the corresponding hwmod data can be enabled.
-> 
-> Cc: Paul Walmsley <paul@pwsan.com>
-> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
-> [s-anna@ti.com: revise commit log]
-> Signed-off-by: Suman Anna <s-anna@ti.com>
+I think this should be documented as "optional" and only for
+backwards compatibility with old kernels.
 
-Acked-by: Paul Walmsley <paul@pwsan.com>
+> +- clocks: Must contain an entry for each entry in clock-names.
+> +       See ../clocks/clock-bindings.txt for details.
+> +- clock-names: Must include the following entries: 
+> +       - "pcie_ref_125m"
+> +       - "sata_ref_100m"
+> +       - "lvds_gate"
+> +       - "pcie_axi"
 
-Am assuming that someone else will be merging this as part of the entire 
-series.
+I don't understand why you have completely different clocks here
+from the exynos documentation. The clock names should really be
+the same. Also, why do you have a "sata_ref_100m" clock?
+Is this just driving a device that happens to be on-board
+for a specific machine? Same for the "lvds_gate".
 
-- Paul
+	Arnd
