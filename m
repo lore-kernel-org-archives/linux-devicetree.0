@@ -1,7 +1,7 @@
 From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 7/9] Doc/DT: Add DT binding documentation for Sony acx565akm panel
-Date: Fri, 28 Feb 2014 14:20:14 +0200
-Message-ID: <1393590016-9361-8-git-send-email-tomi.valkeinen@ti.com>
+Subject: [PATCH 9/9] Doc/DT: Add DT binding documentation for tpd12s015 encoder
+Date: Fri, 28 Feb 2014 14:20:16 +0200
+Message-ID: <1393590016-9361-10-git-send-email-tomi.valkeinen@ti.com>
 References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,48 +12,63 @@ To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNg
 Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT binding documentation for Sony acx565akm panel
+Add DT binding documentation for tpd12s015 encoder
 
 Signed-off-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Reviewed-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 Reviewed-by: Archit Taneja <archit-l0cyMroinI0@public.gmane.org>
 ---
- .../devicetree/bindings/video/sony,acx565akm.txt   | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/sony,acx565akm.txt
+ .../devicetree/bindings/video/ti,tpd12s015.txt     | 44 ++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/ti,tpd12s015.txt
 
-diff --git a/Documentation/devicetree/bindings/video/sony,acx565akm.txt b/Documentation/devicetree/bindings/video/sony,acx565akm.txt
+diff --git a/Documentation/devicetree/bindings/video/ti,tpd12s015.txt b/Documentation/devicetree/bindings/video/ti,tpd12s015.txt
 new file mode 100644
-index 000000000000..cd9cfdf7e3fe
+index 000000000000..26e6d32e3f20
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/video/sony,acx565akm.txt
-@@ -0,0 +1,28 @@
-+Sony ACX565AKM SDI Panel
-+========================
++++ b/Documentation/devicetree/bindings/video/ti,tpd12s015.txt
+@@ -0,0 +1,44 @@
++TPD12S015 HDMI level shifter and ESD protection chip
++====================================================
 +
 +Required properties:
-+- compatible: "sony,acx565akm"
++- compatible: "ti,tpd12s015"
 +
 +Optional properties:
-+- label: a symbolic name for the panel
-+- gpios: panel reset gpio
++- gpios: CT CP HPD, LS OE and HPD gpios
 +
 +Required nodes:
-+- Video port for SDI input
++- Video port 0 for HDMI input
++- Video port 1 for HDMI output
 +
 +Example
 +-------
 +
-+acx565akm@2 {
-+	compatible = "sony,acx565akm";
-+	spi-max-frequency = <6000000>;
-+	reg = <2>;
++tpd12s015: encoder@1 {
++	compatible = "ti,tpd12s015";
 +
-+	label = "lcd";
-+	gpios = <&gpio3 26 GPIO_ACTIVE_HIGH>; /* 90 */
++	gpios = <&gpio2 28 GPIO_ACTIVE_HIGH>,	/* 60, CT CP HPD */
++		<&gpio2 9 GPIO_ACTIVE_HIGH>,	/* 41, LS OE */
++		<&gpio2 31 GPIO_ACTIVE_HIGH>;	/* 63, HPD */
 +
-+	lcd_in: endpoint {
-+		remote-endpoint = <&sdi_out>;
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++
++			tpd12s015_in: endpoint@0 {
++				remote-endpoint = <&hdmi_out>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++
++			tpd12s015_out: endpoint@0 {
++				remote-endpoint = <&hdmi_connector_in>;
++			};
++		};
 +	};
 +};
 -- 
