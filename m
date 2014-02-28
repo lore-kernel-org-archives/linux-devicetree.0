@@ -1,36 +1,88 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 0/9] Doc/DT: DT bindings for various display components
-Date: Fri, 28 Feb 2014 16:56:28 +0000
-Message-ID: <20140228165628.GX21483@n2100.arm.linux.org.uk>
-References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
-	<20140228162752.GU21483@n2100.arm.linux.org.uk>
-	<5310BDE3.60603@ti.com>
+From: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] clk: sun6i: Reparent AHB clock on PLL6
+Date: Fri, 28 Feb 2014 14:16:35 -0300
+Message-ID: <5310C473.7030304@elopez.com.ar>
+References: <1393605440-14643-1-git-send-email-maxime.ripard@free-electrons.com> <1393605440-14643-3-git-send-email-maxime.ripard@free-electrons.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <5310BDE3.60603@ti.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces@lists.freedesktop.org
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBD73XIMS3EHBBDEJYOMAKGQE34NM5GY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1393605440-14643-3-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 28, 2014 at 06:48:35PM +0200, Tomi Valkeinen wrote:
-> This is totally unclear to me. How does it become a public standard?
-> What's the forum for this?
+Hi Maxime,
 
-Me too.  That's where I'd hope someone on devicetree-discuss will be
-able to help us work out what's the right approach here. :)
+El 28/02/14 13:37, Maxime Ripard escribi=F3:
+> In order for the DMA controller to work for SDRAM to devices transfers, t=
+he AHB
+> clock should be reparented on the PLL6.
+>
+> Force that parenting in the clock driver.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>   drivers/clk/sunxi/clk-sunxi.c | 18 +++++++++++++++++-
+>   1 file changed, 17 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.=
+c
+> index f6f61cc..a5c5882 100644
+> --- a/drivers/clk/sunxi/clk-sunxi.c
+> +++ b/drivers/clk/sunxi/clk-sunxi.c
+> @@ -1286,7 +1286,7 @@ static void __init of_sunxi_table_clock_setup(const=
+ struct of_device_id *clk_mat
+>    */
+>   static void __init sunxi_clock_protect(void)
+>   {
+> -	struct clk *clk;
+> +	struct clk *clk, *parent;
+>
+>   	/* memory bus clock - sun5i+ */
+>   	clk =3D clk_get(NULL, "mbus");
+> @@ -1307,6 +1307,22 @@ static void __init sunxi_clock_protect(void)
+>   	if (!IS_ERR(clk))
+>   		clk_prepare_enable(clk);
+>
+> +	clk =3D clk_get(NULL, "ahb1_mux");
+> +	if (IS_ERR(clk)) {
+> +		pr_err("Couldn't get AHB1 Mux\n");
+> +		return;
+> +	}
+> +
+> +	parent =3D clk_get(NULL, "pll6");
+> +	if (IS_ERR(clk)) {
+> +		pr_err("Couldn't get PLL6\n");
+> +		return;
+> +	}
 
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+Remember this runs on every sunxi, but this bit of magic is sun6i only.=20
+We'll get bogus messages on the other platforms if this goes as is. You=20
+could do something like the following:
+
+ > +	clk =3D clk_get(NULL, "ahb1_mux");
+ > +	parent =3D clk_get(NULL, "pll6");
+ > +	if (!IS_ERR(clk) && !IS_ERR(parent))
+ > +		clk_set_parent(...)
+
+If these things become more common, we may need to consider a=20
+per-platform fixup function or something.
+
+Cheers,
+
+Emilio
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/groups/opt_out.
