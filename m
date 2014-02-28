@@ -1,15 +1,16 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 5/7] ARM: of: introduce common routine for DMA
- configuration
-Date: Fri, 28 Feb 2014 11:00:46 +0100
-Message-ID: <9618080.kpE3Kl6X8p@wuerfel>
-References: <1393535872-20915-1-git-send-email-santosh.shilimkar@ti.com>
- <1393535872-20915-6-git-send-email-santosh.shilimkar@ti.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v5 01/11] of: document bindings for reserved-memory nodes
+Date: Fri, 28 Feb 2014 11:01:50 +0100
+Message-ID: <53105E8E.1040504@gmail.com>
+References: <1392985527-6260-1-git-send-email-m.szyprowski@samsung.com>
+ <1392985527-6260-2-git-send-email-m.szyprowski@samsung.com>
+ <20140226115108.211D2C40A89@trevor.secretlab.ca>
+ <53105CC6.1090902@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1393535872-20915-6-git-send-email-santosh.shilimkar@ti.com>
+In-Reply-To: <53105CC6.1090902@samsung.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,124 +20,140 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, linus.walleij@linaro.org, magnus.damm@gmail.com, Olof Johansson <olof@lixom.net>, robh+dt@kernel.org, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Laura Abbott <lauraa@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Tomasz Figa <t.figa@samsung.com>, Will Deacon <will.deacon@arm.com>, Michal Nazarewicz <mina86@mina86.com>, Marc <marc.ceeeee@gmail.com>, Nishanth Peethambaran <nishanth.p@gmail.com>, Rob Herring <robh+dt@kernel.org>, Paul Mackerras <paulus@samba.org>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Josh Cartwright <joshc@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, Ian Campbell <ian.campbell@citrix.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 27 February 2014 16:17:50 Santosh Shilimkar wrote:
-> diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
-> index f751714..926b5dd 100644
-> --- a/arch/arm/kernel/devtree.c
-> +++ b/arch/arm/kernel/devtree.c
-> @@ -235,3 +238,61 @@ const struct machine_desc * __init setup_machine_fdt(unsigned int dt_phys)
->  
->  	return mdesc;
->  }
-> +
-> +void arm_dt_dma_configure(struct device *dev)
-> +{
-> +	dma_addr_t dma_addr;
-> +	phys_addr_t paddr, size;
-> +	dma_addr_t dma_mask;
-> +	int ret;
-> +
-> +	/*
-> +	 * if dma-ranges property doesn't exist - use 32 bits DMA mask
-> +	 * by default and don't set skip archdata.dma_pfn_offset
-> +	 */
-> +	ret = of_dma_get_range(dev->of_node, &dma_addr, &paddr, &size);
-> +	if (ret == -ENODEV) {
-> +		dev->coherent_dma_mask = DMA_BIT_MASK(32);
-> +		if (!dev->dma_mask)
-> +			dev->dma_mask = &dev->coherent_dma_mask;
-> +		return;
-> +	}
+On 28.02.2014 10:54, Marek Szyprowski wrote:
+> Hello,
+>
+> On 2014-02-26 12:51, Grant Likely wrote:
+>> On Fri, 21 Feb 2014 13:25:17 +0100, Marek Szyprowski
+>> <m.szyprowski@samsung.com> wrote:
+>> > From: Grant Likely <grant.likely@linaro.org>
+>> >
+>> > Reserved memory nodes allow for the reservation of static (fixed
+>> > address) regions, or dynamically allocated regions for a specific
+>> > purpose.
+>> >
+>> > Signed-off-by: Grant Likely <grant.likely@linaro.org>
+>> > [joshc: Based on binding document proposed (in non-patch form) here:
+>> >
+>> http://lkml.kernel.org/g/20131030134702.19B57C402A0@trevor.secretlab.ca
+>> >  adapted to support #memory-region-cells]
+>> > Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
+>> > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>> > ---
+>> >  .../bindings/reserved-memory/reserved-memory.txt   |  138
+>> ++++++++++++++++++++
+>> >  1 file changed, 138 insertions(+)
+>> >  create mode 100644
+>> Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+>> >
+>> > diff --git
+>> a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+>>
+>> > new file mode 100644
+>> > index 000000000000..a606ce90c9c4
+>> > --- /dev/null
+>> > +++
+>> b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+>> > @@ -0,0 +1,138 @@
+>> > +*** Reserved memory regions ***
+>> > +
+>> > +Reserved memory is specified as a node under the /reserved-memory
+>> node.
+>> > +The operating system shall exclude reserved memory from normal usage
+>> > +one can create child nodes describing particular reserved (excluded
+>> from
+>> > +normal use) memory regions. Such memory regions are usually
+>> designed for
+>> > +the special usage by various device drivers.
+>> > +
+>> > +Parameters for each memory region can be encoded into the device tree
+>> > +with the following nodes:
+>> > +
+>> > +/reserved-memory node
+>> > +---------------------
+>> > +#address-cells, #size-cells (required) - standard definition
+>> > +    - Should use the same values as the root node
+>> > +#memory-region-cells (required) - dictates number of cells used in
+>> the child
+>> > +                                  nodes memory-region specifier
+>>
+>> I still don't like this portion of the binding. I'm not convinced that
+>> it is necessary in the majority of cases and it is going to be very
+>> driver specific. I would rather drop it entirely from the common
+>> binding. If a specific driver needs to do something like the above then
+>> it can have a driver specific binding. Otherwise I think the default
+>> should be a simple phandle with no arguments to a single reserved memory
+>> node.
+>>
+>> Ben, can you weigh in on the current state of this document. I'm mostly
+>> happy with it aside from my comment above. Do you think this is ready to
+>> be merged?
+>>
+>> > +ranges (required) - standard definition
+>> > +    - Should be empty
+>> > +
+>> > +/reserved-memory/ child nodes
+>> > +-----------------------------
+>> > +Each child of the reserved-memory node specifies one or more
+>> regions of
+>> > +reserved memory. Each child node may either use a 'reg' property to
+>> > +specify a specific range of reserved memory, or a 'size' property with
+>> > +optional constraints to request a dynamically allocated block of
+>> memory.
+>> > +
+>> > +Following the generic-names recommended practice, node names should
+>> > +reflect the purpose of the node (ie. "framebuffer" or "dma-pool").
+>> Unit
+>> > +address (@<address>) should be appended to the name if the node is a
+>> > +static allocation.
+>> > +
+>> > +Properties:
+>> > +Requires either a) or b) below.
+>> > +a) static allocation
+>> > +   reg (required) - standard definition
+>> > +b) dynamic allocation
+>> > +   size (required) - length based on parent's #size-cells
+>> > +                   - Size in bytes of memory to reserve.
+>> > +   alignment (optional) - length based on parent's #size-cells
+>> > +                        - Address boundary for alignment of
+>> allocation.
+>> > +   alloc-ranges (optional) - prop-encoded-array (address, length
+>> pairs).
+>> > +                           - Specifies regions of memory that are
+>> > +                             acceptable to allocate from.
+>> > +
+>> > +If both reg and size are present, then the reg property takes
+>> precedence
+>> > +and size is ignored.
+>> > +
+>> > +Additional properties:
+>> > +compatible (optional) - standard definition
+>> > +    - may contain the following strings:
+>> > +        - shared-dma-pool: This indicates a region of memory meant
+>> to be
+>> > +          used as a shared pool of DMA buffers for a set of
+>> devices. It can
+>> > +          be used by an operating system to instanciate the
+>> necessary pool
+>> > +          management subsystem if necessary.
+>> > +        - vendor specific string in the form
+>> <vendor>,[<device>-]<usage>
+>>
+>> Add "Use vendor strings to identify regions dedicates for a specific
+>> vendor device. For example: 'acme,framebuffer'. Platform code can use
+>> vendor
+>> strings to identify device specific regions"
+>
+> So do you want to completely drop phandle based links between device
+> nodes and
+> memory regions?
 
-I think this is a reasonable default, but I also want Russell's
-opinion on this, since I suspect he will argue that we shouldn't
-default to setting a DMA mask for devices that are not DMA capable.
+Huh? How this would work with regions that have to be used for multiple 
+(but not all - not a default region) devices?
 
-Maybe someone has an idea how we can detect all three important cases:
-
-a) A device is marked as DMA capable using a dma-ranges property
-b) A device is known not to be DMA capable
-c) we don't have any dma-ranges properties in an old dtb file
-   but still want 32 bit masks by default.
-
-> +	/* if failed - disable DMA for device */
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to configure DMA\n");
-> +		return;
-> +	}
-
-I guess this is also where other platforms (shmobile, highbank, ...)
-will want the IOMMU detection to happen.
-
-> +	/* DMA ranges found. Calculate and set dma_pfn_offset */
-> +	dev->archdata.dma_pfn_offset = PFN_DOWN(paddr - dma_addr);
-> +
-> +	/* Configure DMA mask */
-> +	dev->dma_mask = kmalloc(sizeof(*dev->dma_mask), GFP_KERNEL);
-> +	if (!dev->dma_mask)
-> +		return;
-
-Do we have to worry about freeing this? We could in theory put the
-mask into pdev_archdata (as on microblaze), or point to
-coherent_dma_mask (as of_platform_device_create_pdata does).
-I can't think of a case where the latter won't actually work,
-since coherent_dma_mask!=*dma_mask doesn't happen on any platform
-device I have ever seen. coherent_dma_mask was introduced to handle
-some special requirements of PCI devices on ia64 or parisc.
-
-> +       dma_mask = dma_addr + size - 1;
-
-I can never remember if this is actually correct, or if it would have to
-be 
-
-	dma_mask = size - 1;
-
-instead. Russell knows.
-
-> +	ret = arm_dma_set_mask(dev, dma_mask);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to set DMA mask %#08x\n", dma_mask);
-> +		kfree(dev->dma_mask);
-> +		dev->dma_mask = NULL;
-> +		return;
-> +	}
-
-Again I'm hoping for Russell to provide the correct answer: Should we
-set the correct mask initially for the device here, or should we
-rely on dma_set_mask() to refuse a mask that is larger than we
-can handle?
-
-For PCI devices, we normally assume that we can always set a 32-bit
-DMA mask, but drivers can set a smaller mask if the device can
-support a smaller space than the bus can. In this case, the mask
-is already the intersection of what the device and all the parent
-buses support, and I'm not sure how the API describe in
-Documentation/DMA-API-HOWTO.txt would deal with this.
-
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index 404d1da..97d5533 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -213,10 +213,13 @@ static struct platform_device *of_platform_device_create_pdata(
->  
->  #if defined(CONFIG_MICROBLAZE)
->  	dev->archdata.dma_mask = 0xffffffffUL;
-> -#endif
-> +#elif defined(CONFIG_ARM_LPAE)
-> +	arm_dt_dma_configure(&dev->dev);
-> +#else
->  	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
->  	if (!dev->dev.dma_mask)
->  		dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
-> +#endif
-
-The dependency on CONFIG_ARM_LPAE is not correct the general case,
-that would be a special case on keystone. I'd suggest using
-CONFIG_ARM here, and finding a different way to return false
-for dma_is_coherent() on keystone with LPAE disabled.
-
-	Arnd
+Best regards,
+Tomasz
