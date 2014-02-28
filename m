@@ -1,46 +1,46 @@
-From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
-Subject: [PATCH v2 2/2] checkpatch: fix spurious vendor compatible warnings
-Date: Fri, 28 Feb 2014 17:25:42 +0100
-Message-ID: <1393604742-14317-3-git-send-email-florian.vaussard@epfl.ch>
-References: <1393604742-14317-1-git-send-email-florian.vaussard@epfl.ch>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 0/9] Doc/DT: DT bindings for various display components
+Date: Fri, 28 Feb 2014 16:27:52 +0000
+Message-ID: <20140228162752.GU21483@n2100.arm.linux.org.uk>
+References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393604742-14317-1-git-send-email-florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1393590016-9361-1-git-send-email-tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-With a compatible string like
+On Fri, Feb 28, 2014 at 02:20:07PM +0200, Tomi Valkeinen wrote:
+> Shortly about the display components in the series, in the order of probable
+> public interest:
+> 
+> * Analog TV, DVI and HDMI Connectors represent a respective connector on the
+>   board. They don't do much, but they do mark the end of the video pipeline (from
+>   the board's pov), and they should also in the future offer ways to handle
+>   things like the +5V pin on DVI and HDMI connector and HPD pin.
 
-compatible = "foo";
+The big thing which concerns me is that we're using very generic
+compatible strings here - has anyone done any searches to see whether
+there are any existing standards for this kind of stuff already?
 
-checkpatch will currently try to find "foo" in  vendor-prefixes.txt,
-which is wrong since the vendor prefix is empty in this specific case.
+Even if none can be found, if we're going to create something like
+this, it should probably become a public standard not just for Linux.
 
-Skip the vendor test if the compatible is not like
+If we're not willing to do that, I'd suggest prefixing the compatible
+strings with "linux," as a "company" identifier so that there's no
+chance that we may hit some major problem caused by a conflicting
+implementation in the future.
 
-compatible = "vendor,something";
+We could alternatively take the view that Linux will only ever be used
+with Linux specific DT files, but I think that's a rather broken
+approach given what DT is supposed to be.
 
-Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
----
- scripts/checkpatch.pl | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index e304e77..7437505 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -2058,6 +2058,7 @@ sub process {
- 				my $vendor = $compat;
- 				my $vendor_path = $dt_path . "vendor-prefixes.txt";
- 				next if (! -f $vendor_path);
-+				next if not $vendor =~ /^[a-zA-Z0-9\-]+\,.*/;
- 				$vendor =~ s/^([a-zA-Z0-9\-]+)\,.*/$1/;
- 				`grep -Eq "$vendor" $vendor_path`;
- 				if ( $? >> 8 ) {
 -- 
-1.8.5.3
-
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
