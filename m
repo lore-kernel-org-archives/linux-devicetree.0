@@ -1,41 +1,109 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [PATCH 0/7] PCI irq mapping fixes and cleanups
-Date: Sat, 1 Mar 2014 11:30:59 -0700
-Message-ID: <20140301183059.GA6315@obsidianresearch.com>
-References: <1393608523-17509-1-git-send-email-l.stach@pengutronix.de>
- <CAJ+vNU2VN5haOU2GN5o7UUg9vgYh06pAhvDaoGw6EzTBEbD0mg@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 3/4] ARM: DT: STi: Add DT node for MiPHY365x
+Date: Sun, 2 Mar 2014 00:13:58 +0530
+Message-ID: <53122A6E.3070001@ti.com>
+References: <1392377036-12816-1-git-send-email-lee.jones@linaro.org>
+ <1392377036-12816-3-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJ+vNU2VN5haOU2GN5o7UUg9vgYh06pAhvDaoGw6EzTBEbD0mg@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Tim Harvey <tharvey@gateworks.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jingoo Han <jg1.han@samsung.com>, linux-samsung-soc@vger.kernel.org, Richard Zhu <r65037@freescale.com>, Sascha Hauer <kernel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, Thierry Reding <thierry.reding@gmail.com>, Ben Dooks <ben-linux@fluff.org>, linux-tegra@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1392377036-12816-3-git-send-email-lee.jones@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@st.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alexandre.torgue@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 28, 2014 at 04:53:33PM -0800, Tim Harvey wrote:
+Hi,
 
-> In testing this on IMX6 I'm finding that 'of_irq_parse_and_map_pci()'
-> always returns -EINVAL because it can't find a dt node for the host
-> bridge: http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/drivers/of/of_pci_irq.c#n60.
+On Friday 14 February 2014 04:53 PM, Lee Jones wrote:
+> The MiPHY365x is a Generic PHY which can serve various SATA or PCIe
+> devices. It has 2 ports which it can use for either; both SATA, both
+> PCIe or one of each in any configuration.
+>
+> Cc: devicetree@vger.kernel.org
+> Cc: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-There may be some kind of issue in the pcie-designware.c:
+since this uses 'dt-bindings/phy/phy-miphy365x.h' which is used in phy 
+driver as well, I need ACK from dt maintainers so that I can queue both 
+the driver and dt patches myself.
 
-static struct pci_bus *dw_pcie_scan_bus(int nr, struct pci_sys_data *sys)
-{
-        struct pci_bus *bus;
-        struct pcie_port *pp = sys_to_pcie(sys);
-
-        if (pp) {
-                pp->root_bus_nr = sys->busnr;
-                bus = pci_scan_root_bus(NULL, sys->busnr, &dw_pcie_ops,
-                                     ^^^^^^^^^^^
-                                     Shouldn't be null for DT cases.
-
-Perhaps since the driver doesn't pass in a parent pointer, no parent
-device is associated with the struct pci_bus that gets created, so
-pci_bus_to_OF_node will always fail and the DT PCI mechanisms become
-broken.
-
-Jason
+Thanks
+Kishon
+> ---
+>   arch/arm/boot/dts/stih416-b2020-revE.dts |  6 +++++-
+>   arch/arm/boot/dts/stih416-b2020.dts      |  6 ++++++
+>   arch/arm/boot/dts/stih416.dtsi           | 13 +++++++++++++
+>   3 files changed, 24 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/stih416-b2020-revE.dts b/arch/arm/boot/dts/stih416-b2020-revE.dts
+> index a874570..dbe67fa 100644
+> --- a/arch/arm/boot/dts/stih416-b2020-revE.dts
+> +++ b/arch/arm/boot/dts/stih416-b2020-revE.dts
+> @@ -32,6 +32,10 @@
+>   		ethernet1: ethernet@fef08000 {
+>   			snps,reset-gpio 	= <&PIO0 7>;
+>   		};
+> -	};
+>
+> +		miphy365x_phy: miphy365x@0 {
+> +			st,pcie_tx_pol_inv = <1>;
+> +			st,sata_gen = "gen3";
+> +		};
+> +	};
+>   };
+> diff --git a/arch/arm/boot/dts/stih416-b2020.dts b/arch/arm/boot/dts/stih416-b2020.dts
+> index 276f28d..fd9cbad 100644
+> --- a/arch/arm/boot/dts/stih416-b2020.dts
+> +++ b/arch/arm/boot/dts/stih416-b2020.dts
+> @@ -13,4 +13,10 @@
+>   	model = "STiH416 B2020";
+>   	compatible = "st,stih416", "st,stih416-b2020";
+>
+> +	soc {
+> +		miphy365x_phy: miphy365x@0 {
+> +			st,pcie_tx_pol_inv = <1>;
+> +			st,sata_gen = "gen3";
+> +		};
+> +	};
+>   };
+> diff --git a/arch/arm/boot/dts/stih416.dtsi b/arch/arm/boot/dts/stih416.dtsi
+> index 85b8063..9fd8efb 100644
+> --- a/arch/arm/boot/dts/stih416.dtsi
+> +++ b/arch/arm/boot/dts/stih416.dtsi
+> @@ -9,6 +9,8 @@
+>   #include "stih41x.dtsi"
+>   #include "stih416-clock.dtsi"
+>   #include "stih416-pinctrl.dtsi"
+> +
+> +#include <dt-bindings/phy/phy-miphy365x.h>
+>   #include <dt-bindings/interrupt-controller/arm-gic.h>
+>   #include <dt-bindings/reset-controller/stih416-resets.h>
+>   / {
+> @@ -140,5 +142,16 @@
+>   			clocks		= <&CLK_S_ICN_REG_0>;
+>   		};
+>
+> +		miphy365x_phy: miphy365x@0 {
+> +			compatible      = "st,miphy365x-phy";
+> +			reg        	= <0xfe382000 0x100>,
+> +					  <0xfe38a000 0x100>,
+> +					  <0xfe394000 0x100>,
+> +					  <0xfe804000 0x100>;
+> +			reg-names  	= "sata0", "sata1", "pcie0", "pcie1";
+> +
+> +			#phy-cells 	= <2>;
+> +			st,syscfg  	= <&syscfg_rear>;
+> +		};
+>   	};
+>   };
+>
