@@ -1,39 +1,85 @@
-From: Ohad Ben-Cohen <ohad@wizery.com>
-Subject: Re: [PATCHv4 4/7] hwspinlock/core: add common OF helpers
-Date: Sun, 2 Mar 2014 07:14:51 +0200
-Message-ID: <CAK=WgbY0wDtGCm71E8VXi2g5+VcGogHEy8jdekTRg8xtp6-3rQ@mail.gmail.com>
-References: <1389658764-39199-1-git-send-email-s-anna@ti.com>
- <1389658764-39199-5-git-send-email-s-anna@ti.com> <CAJAp7Oi7wD+VsMAd37gT04yZ4TH4ygXFmheDhvmWuanUjpBmVQ@mail.gmail.com>
- <52F92524.3080402@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <52F92524.3080402@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Bjorn Andersson <bjorn@kryo.se>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@secretlab.ca>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC v1 3/3] clk: Add handling of clk parent and rate assigned from DT
+Date: Sat, 01 Mar 2014 21:11:54 +0000
+Message-ID: <20140301211154.38FE7C40F28@trevor.secretlab.ca>
+References: <1392829124-25705-1-git-send-email-s.nawrocki@samsung.com> < 1392829124-25705-4-git-send-email-s.nawrocki@samsung.com> <20140220140928. 27132C4050F@trevor.secretlab.ca> <53072C9D.5040303@samsung.com> < 20140224004826.22529.87768@quantum>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140224004826.22529.87768@quantum>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 10, 2014 at 9:14 PM, Suman Anna <s-anna@ti.com> wrote:
-> On 02/07/2014 04:49 PM, Bjorn Andersson wrote:
->> It seems to be standard practice to pass the error value back to the
->> consumer, so you should
->> return ERR_PTR(ret); here instead of the NULL...
->
->
-> I have modelled the return values in this function based on the return
-> values in the existing hwspin_lock_request interfaces. I would need to
-> change those functions as well.
->
-> Ohad,
-> Do you have any objections to the return code convention change?
+On Sun, 23 Feb 2014 16:48:26 -0800, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Quoting Sylwester Nawrocki (2014-02-21 02:38:21)
+> > On 20/02/14 15:09, Grant Likely wrote:
+> > [...]
+> > >> > diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > >> > index 7c52c29..d618498 100644
+> > >> > --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > >> > +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > >> > @@ -115,3 +115,27 @@ clock signal, and a UART.
+> > >> >    ("pll" and "pll-switched").
+> > >> >  * The UART has its baud clock connected the external oscillator and its
+> > >> >    register clock connected to the PLL clock (the "pll-switched" signal)
+> > >> > +
+> > >> > +==Static initial configuration of clock parent and clock frequency==
+> > >> > +
+> > >> > +Some platforms require static configuration of (parts of) the clock controller
+> > >> > +often determined by the board design. Such a configuration can be specified in
+> > >> > +a clock consumer node through [clk-name]-clk-parent and [clk-name]-clk-rate DT
+> > >> > +properties. The former should contain phandle and clock specifier of the parent
+> > >> > +clock, the latter the required clock's frequency value (one cell). "clk-name"
+> > >> > +should be listed in the clock-names property and a phandle and a clock specifier
+> > >> > +pair corresponding to it should be present in the clocks property.
+> > >> > +
+> > >> > +    uart@a000 {
+> > >> > +        compatible = "fsl,imx-uart";
+> > >> > +        reg = <0xa000 0x1000>;
+> > >> > +  ...
+> > >> > +        clocks = <&clkcon 0>, <&clkcon 3>;
+> > >> > +        clock-names = "baud", "mux";
+> > >> > +
+> > >> > +  mux-clk-parent = <&pll 1>;
+> > >> > +  baud-clk-rate = <460800>;
+> > >
+> > > This mixes patterns for references to clocks. Plus it requires composing
+> > > property names which is a little painful. I'd rather see a list of
+> > > tuples to match the existing pattern already in use
+> > > 
+> > >       clocks = <&clkcon 0>, <&clkcon 3>;
+> > >       clock-names = "baud", "mux";
+> > >       clock-parents = <0> <&pll 1>;
+> > >       clock-rates = <0> <460800>;
+> > 
+> > Thank you for the review. This looks much better to me. My bad, I wasn't 
+> > aware 0 can be used to denote an empty phandle like this. ePAPR seems not 
+> > to be specifying exact meaning of the 'phandle' property values, except 
+> > they be unique. Anyway, it seems to be clearly documented within the
+> > __of_parse_phandle_with_args() function. 
+> > 
+> > I'll try this modified binding instead, presumably it would be useful to 
+> > have a variant of __of_parse_phandle_with_args() function which would 
+> > accept a context data containing result of previous call within an iteration, 
+> > similarly as of_property_next_string() is written. So we don't iterate 
+> > from beginning of the list with each __of_parse_phandle_with_args() call. 
+> > But it's an optimization issue that could be considered separately I guess.
+> 
+> I was always partial to the regulator style of blahblah-supply but
+> Grant's suggestion is much cleaner with respect to the rest of the clock
+> binding.
+> 
+> I guess it will be a bit ugly if a very long array is needed with a
+> sparse attribute. E.g. 20 clocks specified in the 'clocks' property and
+> only a single clock needs to have its parent or rate specified.
+> 
+> Is there a reason not to support both methods?
 
-Unless strictly needed, I prefer we don't switch to the ERR_PTR code
-convention, as it reduces code readability and increases chances of
-user bugs.
+Yes. Complexity. Having two ways to do it is far worse to maintain.
 
-In our case, switching to ERR_PTR and friends seems only to optimize a
-few error paths, and I'm not sure it's a big win over simplicity.
+g.
 
-Thanks,
-Ohad.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
