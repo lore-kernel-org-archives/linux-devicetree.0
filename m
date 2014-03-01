@@ -1,102 +1,176 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v7 08/15] ahci-imx: Port to library-ised ahci_platform
-Date: Sat, 01 Mar 2014 11:38:32 +0100
-Message-ID: <5311B8A8.1000501@redhat.com>
-References: <1393084424-31099-1-git-send-email-hdegoede@redhat.com> <1393084424-31099-9-git-send-email-hdegoede@redhat.com> <20140228210820.GZ21483@n2100.arm.linux.org.uk>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] devicetree: Add Xilinx XADC binding documentation
+Date: Sat, 01 Mar 2014 11:06:52 +0000
+Message-ID: <5311BF4C.3070003@kernel.org>
+References: <1392646243-5538-1-git-send-email-lars@metafoo.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBNXRY2MAKGQEKVAE6LY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140228210820.GZ21483-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392646243-5538-1-git-send-email-lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
-
-On 02/28/2014 10:08 PM, Russell King - ARM Linux wrote:
-> On Sat, Feb 22, 2014 at 04:53:37PM +0100, Hans de Goede wrote:
->> +		/*
->> +		 * set PHY Paremeters, two steps to configure the GPR13,
->> +		 * one write for rest of parameters, mask of first write
->> +		 * is 0x07ffffff, and the other one write for setting
->> +		 * the mpll_clk_en.
->> +		 */
->> +		regmap_update_bits(imxpriv->gpr, IOMUXC_GPR13,
->> +				   IMX6Q_GPR13_SATA_RX_EQ_VAL_MASK |
->> +				   IMX6Q_GPR13_SATA_RX_LOS_LVL_MASK |
->> +				   IMX6Q_GPR13_SATA_RX_DPLL_MODE_MASK |
->> +				   IMX6Q_GPR13_SATA_SPD_MODE_MASK |
->> +				   IMX6Q_GPR13_SATA_MPLL_SS_EN |
->> +				   IMX6Q_GPR13_SATA_TX_ATTEN_MASK |
->> +				   IMX6Q_GPR13_SATA_TX_BOOST_MASK |
->> +				   IMX6Q_GPR13_SATA_TX_LVL_MASK |
->> +				   IMX6Q_GPR13_SATA_MPLL_CLK_EN |
->> +				   IMX6Q_GPR13_SATA_TX_EDGE_RATE,
->> +				   IMX6Q_GPR13_SATA_RX_EQ_VAL_3_0_DB |
->> +				   IMX6Q_GPR13_SATA_RX_LOS_LVL_SATA2M |
->> +				   IMX6Q_GPR13_SATA_RX_DPLL_MODE_2P_4F |
->> +				   IMX6Q_GPR13_SATA_SPD_MODE_3P0G |
->> +				   IMX6Q_GPR13_SATA_MPLL_SS_EN |
->> +				   IMX6Q_GPR13_SATA_TX_ATTEN_9_16 |
->> +				   IMX6Q_GPR13_SATA_TX_BOOST_3_33_DB |
->> +				   IMX6Q_GPR13_SATA_TX_LVL_1_025_V);
+On 17/02/14 14:10, Lars-Peter Clausen wrote:
+> The Xilinx XADC is a ADC that can be found in the series 7 FPGAs from Xilinx.
+> The XADC has a DRP interface for communication. Currently two different
+> frontends for the DRP interface exist. One that is only available on the ZYNQ
+> family as a hardmacro in the SoC portion of the ZYNQ. The other one is available
+> on all series 7 platforms and is a softmacro with a AXI interface. This binding
+> document describes the bindings for both of them since the bindings are very
+> similar.
 >
-> While I see this, I'll stick an oar in.
+> Each of them needs:
+> 	* A address range where the registers are mapped
+> 	* An interrupt number for the device interrupt
+> 	* A clock. For the the ZYNQ hardmacro interface this is the modules PCAP
+> 	  clock, for the AXI softmacro it is the AXI bus interface clock.
 >
-> It is totally wrong for this to be hard-coded into the driver - many
-> of these should be specified via DT, since they're board specific.
-> These are already different from the reset default in this register.
+> Additionally the bindings specify whether an external multiplexer is used and in
+> which mode it is used. The devicetree bindings also describe which external
+> channels are connected and in which configuration.
 >
-> The side effect of this hard coding is that eSATA just doesn't work
-> at all on some boards - the board I have requires TX_LVL_1_104V and
-> TX_BOOST_0_00_DB.
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+As the change from v1 was trivial and neither have had any response.
+I am taking the view that everyone is happy with this an applying it through
+the IIO tree. It has been 4 weeks since that first patch posting.
 
-I completely agree that if this is board specific it should be
-settable (override-able since we've existing dt files without a setting
-for it).
+Applied to the togreg branch of iio.git
 
-> Hence, I'd ask that while you move stuff like this around, you bear
-> in mind that we do need to add additional properties.
-
-I understand, but my interest in the imx code only goes as far as
-not making it regress. I already went above and beyond duty by
-buying an imx board with sata and cleaning up the horific platform
-device driver instantiating a platform device hack there was.
-
-My interest in platform-ahci was to clean it up so that it could be
-used as a proper basis to build other ARM ahci drivers on top of,
-such as a driver for the allwinner A10 and A20 ahci controller.
-
-While at this I ended up having to clean up the imx driver too, so
-as to not break at. As a bonus I fixed it to not loose the harddisk
-after a suspend / resume cycle, and that is really as far as my
-interest in the imx driver goes.
-
-I'm sure Tejun would welcome patches to add a dts property for
-setting the board-specific phy parameters, but I won't be
-writing it.
-
-> I'm in two minds about this - whether to make the existing binding
-> with its compatible string always use these settings, and invent a
-> new compatible string for one which is fully configurable (as it
-> _should_ have been from the very start) or whether to make this
-> the default if the various properties aren't specified.
-
-IMHO this does not warrant doing a new compatibole-string. Simply
-default to the current hardcoded phy settings if no settings are
-specified through devicetree.
-
-> Either way, this driver is electrically unusable as it stands here.
-
-That is only true on some boards.
-
-Regards,
-
-Hans
+Thanks,
+> ---
+> Changes since v1:
+> 	* Remove duplicated paragraph in the description
+> ---
+>   .../devicetree/bindings/iio/adc/xilinx-xadc.txt    | 113 +++++++++++++++++++++
+>   1 file changed, 113 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
+>
+> diff --git a/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
+> new file mode 100644
+> index 0000000..d9ee909
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
+> @@ -0,0 +1,113 @@
+> +Xilinx XADC device driver
+> +
+> +This binding document describes the bindings for both of them since the
+> +bindings are very similar. The Xilinx XADC is a ADC that can be found in the
+> +series 7 FPGAs from Xilinx. The XADC has a DRP interface for communication.
+> +Currently two different frontends for the DRP interface exist. One that is only
+> +available on the ZYNQ family as a hardmacro in the SoC portion of the ZYNQ. The
+> +other one is available on all series 7 platforms and is a softmacro with a AXI
+> +interface. This binding document describes the bindings for both of them since
+> +the bindings are very similar.
+> +
+> +Required properties:
+> +	- compatible: Should be one of
+> +		* "xlnx,zynq-xadc-1.00.a": When using the ZYNQ device
+> +		  configuration interface to interface to the XADC hardmacro.
+> +		* "xlnx,axi-xadc-1.00.a": When using the axi-xadc pcore to
+> +		  interface to the XADC hardmacro.
+> +	- reg: Address and length of the register set for the device
+> +	- interrupts: Interrupt for the XADC control interface.
+> +	- clocks: When using the ZYNQ this must be the ZYNQ PCAP clock,
+> +	  when using the AXI-XADC pcore this must be the clock that provides the
+> +	  clock to the AXI bus interface of the core.
+> +
+> +Optional properties:
+> +	- interrupt-parent: phandle to the parent interrupt controller
+> +	- xlnx,external-mux:
+> +		* "none": No external multiplexer is used, this is the default
+> +		  if the property is omitted.
+> +		* "single": External multiplexer mode is used with one
+> +		   multiplexer.
+> +		* "dual": External multiplexer mode is used with two
+> +		  multiplexers for simultaneous sampling.
+> +	- xlnx,external-mux-channel: Configures which pair of pins is used to
+> +	  sample data in external mux mode.
+> +	  Valid values for single external multiplexer mode are:
+> +		0: VP/VN
+> +		1: VAUXP[0]/VAUXN[0]
+> +		2: VAUXP[1]/VAUXN[1]
+> +		...
+> +		16: VAUXP[15]/VAUXN[15]
+> +	  Valid values for dual external multiplexer mode are:
+> +		1: VAUXP[0]/VAUXN[0] - VAUXP[8]/VAUXN[8]
+> +		2: VAUXP[1]/VAUXN[1] - VAUXP[9]/VAUXN[9]
+> +		...
+> +		8: VAUXP[7]/VAUXN[7] - VAUXP[15]/VAUXN[15]
+> +
+> +	  This property needs to be present if the device is configured for
+> +	  external multiplexer mode (either single or dual). If the device is
+> +	  not using external multiplexer mode the property is ignored.
+> +	- xnlx,channels: List of external channels that are connected to the ADC
+> +	  Required properties:
+> +		* #address-cells: Should be 1.
+> +		* #size-cells: Should be 0.
+> +
+> +	  The child nodes of this node represent the external channels which are
+> +	  connected to the ADC. If the property is no present no external
+> +	  channels will be assumed to be connected.
+> +
+> +	  Each child node represents one channel and has the following
+> +	  properties:
+> +		Required properties:
+> +			* reg: Pair of pins the the channel is connected to.
+> +				0: VP/VN
+> +				1: VAUXP[0]/VAUXN[0]
+> +				2: VAUXP[1]/VAUXN[1]
+> +				...
+> +				16: VAUXP[15]/VAUXN[15]
+> +			  Note each channel number should only be used at most
+> +			  once.
+> +		Optional properties:
+> +			* xlnx,bipolar: If set the channel is used in bipolar
+> +			  mode.
+> +
+> +
+> +Examples:
+> +	xadc@f8007100 {
+> +		compatible = "xlnx,zynq-xadc-1.00.a";
+> +		reg = <0xf8007100 0x20>;
+> +		interrupts = <0 7 4>;
+> +		interrupt-parent = <&gic>;
+> +		clocks = <&pcap_clk>;
+> +
+> +		xlnx,channels {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			channel@0 {
+> +				reg = <0>;
+> +			};
+> +			channel@1 {
+> +				reg = <1>;
+> +			};
+> +			channel@8 {
+> +				reg = <8>;
+> +			};
+> +		};
+> +	};
+> +
+> +	xadc@43200000 {
+> +		compatible = "xlnx,axi-xadc-1.00.a";
+> +		reg = <0x43200000 0x1000>;
+> +		interrupts = <0 53 4>;
+> +		interrupt-parent = <&gic>;
+> +		clocks = <&fpga1_clk>;
+> +
+> +		xlnx,channels {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			channel@0 {
+> +				reg = <0>;
+> +				xlnx,bipolar;
+> +			};
+> +		};
+> +	};
+>
