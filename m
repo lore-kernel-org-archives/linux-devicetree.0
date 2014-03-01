@@ -1,30 +1,39 @@
-From: Christoph Fritz <chf.fritz@googlemail.com>
-Subject: Re: [PATCH v4 3/4] ARM: OMAP2+: add legacy display for omap3 DBB056
-Date: Sat, 01 Mar 2014 21:07:30 +0100
-Message-ID: <1393704450.4909.41.camel@mars>
-References: <1392387656-15186-1-git-send-email-chf.fritz@googlemail.com>
-	 <1392387656-15186-4-git-send-email-chf.fritz@googlemail.com>
-	 <52FE29BF.9040307@ti.com>  <20140228223824.GN13624@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140228223824.GN13624@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, bcousson@baylibre.com, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Daniel Mack <zonque@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: [PATCHv2 0/2] Convert rx51-battery to IIO API and add DT support
+Date: Sat,  1 Mar 2014 21:22:43 +0100
+Message-ID: <1393705366-32420-1-git-send-email-sre@debian.org>
+References: <1393375569-21751-1-git-send-email-sre@debian.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1393375569-21751-1-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2014-02-28 at 14:38 -0800, Tony Lindgren wrote:
-> * Tomi Valkeinen <tomi.valkeinen@ti.com> [140214 06:38]:
-> > git://git.kernel.org/pub/scm/linux/kernel/git/tomba/linux.git work/dss-dt
-> > 
-> > That way you have it ready and tested if DSS DT goes forward.
-> 
-> Applying only patches 1 & 2 into omap-for-v3.15/dt thanks.
+Hi,
 
-I'll send a display support patch as soon as DSS DT is in linux-next.
+This is PATCHv2 for converting rx51-battery to the IIO API
+and adding DT support. The patchset compiles and has been
+tested on my Nokia N900. It depends on another patchset
+converting twl4030-madc to the IIO API [0].
 
- Thanks
-  -- Christoph
+Changes since PATCHv1 [1]:
+ * Release IIO channels on device removal
+ * Release IIO channels when errors occur in device probe
 
+[0] https://lkml.org/lkml/2014/3/1/105
+[1] Convert rx51-battery to IIO API and add DT support
+
+-- Sebastian
+
+Sebastian Reichel (2):
+  rx51_battery: convert to iio consumer
+  Documentation: DT: Document rx51-battery binding
+
+ .../devicetree/bindings/power/rx51-battery.txt     | 25 ++++++
+ drivers/power/rx51_battery.c                       | 90 ++++++++++++++++------
+ 2 files changed, 91 insertions(+), 24 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/rx51-battery.txt
+
+-- 
+1.9.0
