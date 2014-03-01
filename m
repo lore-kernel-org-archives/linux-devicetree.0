@@ -1,55 +1,80 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH 0/7] mfd: AXP20x: Add support for AXP202
- and AXP209
-Date: Sat, 01 Mar 2014 20:29:11 +0100
-Message-ID: <53123507.6020607@redhat.com>
-References: <1393692352-10839-1-git-send-email-carlo@caione.org>	<53121151.9050804@redhat.com> <CAOQ7t2ae35E-eiQW4DFspdTe3H7AWGzRpw4B_1t27p0OSkX_Uw@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBE7KZCMAKGQEEPGNN6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAOQ7t2ae35E-eiQW4DFspdTe3H7AWGzRpw4B_1t27p0OSkX_Uw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: [PATCHv1 0/9] Convert twl4030-madc to IIO API and add DT support
+Date: Sat,  1 Mar 2014 20:32:36 +0100
+Message-ID: <1393702365-26429-1-git-send-email-sre@debian.org>
+References: <1393444990-28140-1-git-send-email-sre@debian.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1393444990-28140-1-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 03/01/2014 06:17 PM, Carlo Caione wrote:
-> On Sat, Mar 1, 2014 at 5:56 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> Hi Carlo,
->>
->> Great work, thanks for all the time you're putting into this!
-> 
-> Hi Hans :)
-> 
->> I've 2 questions:
->>
->> 1) What dependencies does this patch-set have? Obviously it needs the NMI irq
->> patches for A20, anything else ?  I no longer see any use of a special flag
->> for ack on unmask, is that no longer needed ?
-> 
-> Yes, the only dependency is on the NMI controller patch.
-> After a discussion with Maxime and Thomas I decided to not push for
-> including the special flag for ack on unmask in the irqchip core but
-> to use the unmask callback as in the v3 version of the NMI controller
-> driver (so no flag needed)
-> 
->> 2) No poweroff functionality ? That would be really great to have.
-> 
-> Actually in [PATCH 1/7] I support the poweroff using the pm_power_off hook.
+This is PATCHv1 for converting twl4030-madc to the IIO API and
+adding DT support. The plan is to remove the private twl4030-madc
+API once all users have been removed or converted to the IIO API.
+The patchset compiles and has been tested on my Nokia N900.
 
-Ah I missed that, cool.
+Changes since RFCv4 [0]:
+ * Fixup all stuff found by Lee Jones and Jonathan Cameron
+   in RFCv4.
+   - Fixup kerneldoc comments
+   - Move ARRAY_SIZE() into correct patch. I accidently rebased
+     it into the wrong one.
+   - Use sizeof(*madc) instead of sizeof(struct twl4030_madc_data)
+   - Only call of_property_read_bool() if there is no pdata
+   - I left the brackets in "reg_base + (2 * i)". They have
+     been requested by Lee Jones and I think they make it easier
+     to understand what is going on.
+ * Add a bunch of Acked-By statements from those two
+ * Add new patch, which adds *_mean_raw sysfs ABI documentation
+   as requested by Jonathan Cameron
+ * Add another patch, which provides iio_read_channel_average_raw(),
+   so that drivers using the old API can be converted to the
+   IIO API.
+ * I switched from RFC to PATCH prefix.
 
-I'm doing with sunxi hacking for today, but I'll add these to sunxi-devel
-and them give them a test run tomorrow.
+TODO:
+ * Wait for feedback from DT binding maintainers
+ * Wait for feedback from Marek Belisko, who is testing the
+   change with twl4030-madc-battery driver on GTA04
 
-Regards,
+[0] https://lkml.org/lkml/2014/2/26/482
 
-Hans
+-- Sebastian
+
+Sebastian Reichel (9):
+  mfd: twl4030-madc: Use managed resources
+  mfd: twl4030-madc: Add DT support and convert to IIO framework
+  mfd: twl4030-madc: Cleanup driver
+  mfd: twl-core: Add twl_i2c_read/write_u16
+  mfd: twl4030-madc: Use twl_i2c_read/write_u16 for 16 bit registers
+  Documentation: DT: Document twl4030-madc binding
+  mfd: twl4030-madc: Move driver to drivers/iio/adc
+  iio: documentation: Add ABI documentation for *_mean_raw
+  iio: inkern: add iio_read_channel_average_raw
+
+ Documentation/ABI/testing/sysfs-bus-iio            |   8 +
+ .../devicetree/bindings/iio/adc/twl4030-madc.txt   |  24 ++
+ drivers/iio/adc/Kconfig                            |  10 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/{mfd => iio/adc}/twl4030-madc.c            | 301 +++++++++++++--------
+ drivers/iio/inkern.c                               |  18 ++
+ drivers/mfd/Kconfig                                |  10 -
+ drivers/mfd/Makefile                               |   1 -
+ include/linux/i2c/twl.h                            |  12 +
+ include/linux/i2c/twl4030-madc.h                   |   2 +-
+ include/linux/iio/consumer.h                       |  13 +
+ 11 files changed, 276 insertions(+), 124 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/twl4030-madc.txt
+ rename drivers/{mfd => iio/adc}/twl4030-madc.c (75%)
+
+-- 
+1.9.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
