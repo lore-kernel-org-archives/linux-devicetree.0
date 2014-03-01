@@ -1,118 +1,69 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] ARM: sunxi: Add driver for sunxi usb phy
-Date: Sat, 01 Mar 2014 14:17:34 +0100
-Message-ID: <5311DDEE.6070404@redhat.com>
-References: <1393157352-21104-1-git-send-email-hdegoede@redhat.com> <1393157352-21104-2-git-send-email-hdegoede@redhat.com> <CAGb2v64Gg6QKn4KRXQ2uGR_rFb1mFD1fgzN_6MJDnLuv_JYf6g@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2MiBSRVNFTkRdIHB3bTogQWRkIENMUFM3MTFYIFBXTSBz?=
+ =?UTF-8?B?dXBwb3J0?=
+Date: Sat, 01 Mar 2014 17:56:35 +0400
+Message-ID: <1393682195.224091960@f280.i.mail.ru>
+References: <1393342067-9086-1-git-send-email-shc_work@mail.ru>
+ <20140301100641.cdb4398a4172700cfd318213@mail.ru>
+ <201403011240.09137.arnd@arndb.de>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRB4N3Y6MAKGQE25OFXEI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAGb2v64Gg6QKn4KRXQ2uGR_rFb1mFD1fgzN_6MJDnLuv_JYf6g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <201403011240.09137.arnd@arndb.de>
+Sender: linux-pwm-owner@vger.kernel.org
+To: =?UTF-8?B?QXJuZCBCZXJnbWFubg==?= <arnd@arndb.de>
+Cc: =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>, =?UTF-8?B?bGludXgtcHdtQHZnZXIua2VybmVsLm9yZw==?= <linux-pwm@vger.kernel.org>, =?UTF-8?B?VGhpZXJyeSBSZWRpbmc=?= <thierry.reding@gmail.com>, =?UTF-8?B?ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc=?= <devicetree@vger.kernel.org>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt@kernel.org>, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <Pawel.Moll@arm.com>, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ijc+devicetree@hellion.org.uk>, =?UTF-8?B?S3VtYXIgR2FsYQ==?= <galak@codeaurora.org>, =?UTF-8?B?Z3JhbnQubGlrZWx5QGxpbmFyby5vcmc=?= <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 02/26/2014 04:12 PM, Chen-Yu Tsai wrote:
-> Hi,
-> 
-> On Sun, Feb 23, 2014 at 8:09 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> The Allwinner A1x / A2x SoCs have 2 or 3 usb phys which are all accessed
->> through a single set of registers. Besides this there are also some other
->> phy related bits which need poking, which are per phy, but shared between the
->> ohci and ehci controllers, so these are also controlled from this new phy
->> driver.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>  .../devicetree/bindings/phy/sun4i-usb-phy.txt      |  26 ++
->>  drivers/phy/Kconfig                                |  11 +
->>  drivers/phy/Makefile                               |   1 +
->>  drivers/phy/phy-sun4i-usb.c                        | 329 +++++++++++++++++++++
->>  4 files changed, 367 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
->>  create mode 100644 drivers/phy/phy-sun4i-usb.c
->>
-> [..]
->> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
->> new file mode 100644
->> index 0000000..31c4611
->> --- /dev/null
->> +++ b/drivers/phy/phy-sun4i-usb.c
-> [..]
->> +static int sun4i_usb_phy_probe(struct platform_device *pdev)
->> +{
->> +       struct sun4i_usb_phy_data *data;
->> +       struct device *dev = &pdev->dev;
->> +       struct device_node *np = dev->of_node;
->> +       void __iomem *pmu = NULL;
->> +       struct phy_provider *phy_provider;
->> +       struct reset_control *reset;
->> +       struct regulator *vbus;
->> +       struct resource *res;
->> +       struct phy *phy;
->> +       char name[16];
->> +       int i;
->> +
->> +       data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
->> +       if (!data)
->> +               return -ENOMEM;
->> +
->> +       mutex_init(&data->mutex);
->> +
->> +       if (of_device_is_compatible(np, "allwinner,sun5i-a13-usb-phy"))
->> +               data->num_phys = 2;
->> +       else
->> +               data->num_phys = 3;
->> +
->> +       if (of_device_is_compatible(np, "allwinner,sun4i-a10-usb-phy"))
->> +               data->disc_thresh = 3;
->> +       else
->> +               data->disc_thresh = 2;
->> +
->> +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy_ctrl");
->> +       data->base = devm_ioremap_resource(dev, res);
->> +       if (IS_ERR(data->base))
->> +               return PTR_ERR(data->base);
->> +
->> +       data->clk = devm_clk_get(dev, "usb_phy");
->> +       if (IS_ERR(data->clk)) {
->> +               dev_err(dev, "could not get usb_phy clock\n");
->> +               return PTR_ERR(data->clk);
->> +       }
->> +
->> +       /* Skip 0, 0 is the phy for otg which is not yet supported. */
->> +       for (i = 1; i < data->num_phys; i++) {
->> +               snprintf(name, sizeof(name), "usb%d_vbus", i);
->> +               vbus = devm_regulator_get_optional(dev, name);
->> +               if (IS_ERR(vbus)) {
->> +                       if (PTR_ERR(vbus) == -EPROBE_DEFER)
->> +                               return -EPROBE_DEFER;
->> +                       vbus = NULL;
->> +               }
->> +
->> +               snprintf(name, sizeof(name), "usb%d_reset", i);
->> +               reset = devm_reset_control_get(dev, name);
->> +               if (IS_ERR(reset)) {
-> 
-> I got around to rebasing my musb tree. I see you fixed the reset
-> control error path. You got one.
-> 
->> +                       dev_err(dev, "failed to get reset %s\n", name);
->> +                       return PTR_ERR(phy);
-> 
-> But you missed one here. And phy is uninitialized until later,
-> so this will break big time.
-
-Ah, my bad, this is fixed now for v4 of the patch.
-
-Regards,
-
-Hans
+0KHRg9Cx0LHQvtGC0LAsICAxINC80LDRgNGC0LAgMjAxNCwgMTI6NDAgKzAxOjAwINC+0YIgQXJu
+ZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5kZT46Cj4gT24gU2F0dXJkYXkgMDEgTWFyY2ggMjAxNCwg
+QWxleGFuZGVyIFNoaXlhbiB3cm90ZToKPiA+IEkgd2FudCB0byBlbGFib3JhdGUgb24gdGhlIGN1
+cnJlbnQgQ0xQUzcxMVggbGluZXVwOgo+ID4gUFM3MTEwICAtIEVPTCBPY3RvYmVyIDMwLCAyMDAx
+Cj4gPiBQUzcxMTEgIC0gRU9MIE9jdG9iZXIgMzAsIDIwMDEKPiA+IEVQNzIwOSAgLSBFT0wgQXBy
+aWwgMjUsIDIwMDMKPiA+IEVQNzIxMSAgLSBFT0wgQXByaWwgMjUsIDIwMDMKPiA+IEVQNzIxMiAg
+LSBFT0wgQXByaWwgMjUsIDIwMDMKPiA+IENTODk3MTIgLSBFT0wgQXVndXN0IDE1LCAyMDA1Cj4g
+PiBFUDczMDkgIC0gUHJvZHVjdGlvbgo+ID4gRVA3MzExICAtIFByb2R1Y3Rpb24KPiA+IEVQNzMx
+MiAgLSBQcm9kdWN0aW9uCj4gCj4gVGhhbmtzIGZvciB0aGUgbGlzdC4gSSB3b25kZXIgaWYgdGhl
+cmUgaXMgYSBnb29kIHBsYWNlIHRvIGtlZXAgdGhpcyBpbiB0aGUKPiBrZXJuZWwgc291cmNlIGZv
+ciByZWZlcmVuY2UuCj4gCj4gPiBTbyBhdCB0aGUgbW9tZW50LCBhbmQgbG9uZyBlbm91Z2gsIHBy
+b2R1Y2VkIG9ubHkgdGhyZWUgbW9kZWxzIG9mIENQVXMuCj4gPiBJIGFtIHN1cmUgdGhhdCB0aGUg
+aGFyZHdhcmUgd2l0aCBvbGQgQ1BVcyB3aWxsIG5vdCBiZSBhYmxlIHRvIHVzZSB0aGUKPiA+IG5l
+dyBrZXJuZWwgZHVlIHRvIG1lbW9yeSBsaW1pdGF0aW9ucywgbG93IENQVSBmcmVxdWVuY3ksIGV0
+Yy4KPiA+IAo+ID4gTXkgc3VnZ2VzdGlvbiBpcyB0byBhbHdheXMgdXNlIGEgY29tcGF0aWJpbGl0
+eSBzdHJpbmcgZm9yIHBsYXRmb3JtIGVudGlyZWx5LAo+ID4gaWUgImNpcnJ1cyxjbHBzNzExeC0k
+VU5JVCIsIG90aGVyd2lzZSBpdCBtYXkgcmVzdWx0IGluIG1pc2xlYWRpbmcuCj4gCj4gRnJvbSB5
+b3VyIGxpc3QsIGl0J3MgcHJldHR5IGNsZWFyIHRoYXQgdGhlcmUgd29uJ3QgYmUgYW55IG5ldyBj
+aGlwcyBuYW1lZAo+IFBTNzExeCBmb3IgeCA+IDEsIHNvIHVzaW5nIHRoYXQgc3RyaW5nIGlzIG5v
+dCBhbWJpZ3VvdXMuIFRoYXQgaXMgZ29vZAo+IHRvIGtub3cuIEl0J3MgYWxzbyB0aGUgb2xkZXN0
+IGNoaXAgaW4gdGhlIGZhbWlseSwgc28gbmFtaW5nIHRoaW5ncyBhZnRlciB0aGF0Cj4gaXMgY29u
+c2lzdGVudC4KPiAKPiA+IEluIGFueSBjYXNlLCBJIHdvdWxkIGxpa2UgdG8gaGVhciB0aGUgZmlu
+YWwgZGVjaXNpb24gb24gdGhpcyBpc3N1ZSwKPiA+IHNpbmNlIHRoZXJlIGFyZSBzZXZlcmFsIGRy
+aXZlcnMgYWxyZWFkeSB1c2luZyB0aGlzIHNjaGVtZSBhbmQgc29tZSBkcml2ZXJzCj4gPiBhd2Fp
+dGluZyBhcHBseWluZyBpbnRvIHRoZSBrZXJuZWwuCj4gPiBJIGRvIG5vdCBpbnNpc3Qgb24gaXRz
+IHBvc2l0aW9uLCBidXQganVzdCB3YW50IHRvIGNsYXJpZnkgdG8gbWFrZSBjaGFuZ2VzCj4gPiB0
+byBleGlzdGluZyBkcml2ZXJzIGFuZCB1c2UgdGhlIGFwcHJvdmVkIGNvbXBhdGliaWxpdHkgc3Ry
+aW5nIGluIHRoZSBmdXR1cmUuCj4gPiBBdCB0aGUgY3VycmVudCBzdGFnZSwgdGhlc2UgY2hhbmdl
+cyB3aWxsIG5vdCBsZWFkIHRvIGFueXRoaW5nIHRlcnJpYmxlLgo+IAo+IEhvdyBhYm91dCB3ZSBr
+ZWVwIHVzaW5nIHRoZSBjaXJydXMsY2xwczcxMXggYXMgdGhlIHN0cmluZyB0aGF0IGRyaXZlcnMK
+PiBtYXRjaCBhZ2FpbnN0LCBidXQgY2hhbmdlIHRoZSBEVCByZXByZXNlbnRhdGlvbiB0byBhbHdh
+eXMgbGlzdCB0aGUgc3BlY2lmaWMKPiBtb2RlbCBpbiBhZGRpdGlvbj8gVGhhdCB3YXkgd2UgYXJl
+IHByZXBhcmVkIHRvIGhhbmRsZSBxdWlya3MgaWYgd2UgbmVlZCB0bywKPiBidXQgeW91IGRvbid0
+IGhhdmUgdG8gY2hhbmdlIHRoZSBiaW5kaW5nIGluIGluY29tcGF0aWJsZSB3YXlzLgo+IAo+IFRo
+aXMgbWVhbnMgeW91IHNob3VsZCBsaXN0IGUuZy4KPiAKPiAJY29tcGF0aWJsZSA9ICJjaXJydXMs
+ZXA3MzA5LXB3bSIsICJjaXJydXMsY2xwczcxMXgtcHdtIjsKPiAKPiBvciAKPiAKPiAJY29tcGF0
+aWJsZSA9ICJjaXJydXMsY2xwczcxMTAtcHdtIiwgImNpcnJ1cyxjbHBzNzExeC1wd20iOwo+IAo+
+IGRlcGVuZGluZyBvbiB0aGUgbW9kZWwuIEZvciB1bml0cyB0aGF0IHdlcmUgaW50cm9kdWNlZCBp
+biBhIGxhdGVyCj4gbW9kZWwsIEkgd291bGQgcmVjb21tZW5kIHRvIHVzZSB0aGUgZmlyc3QgbW9k
+ZWwgdGhhdCBoYWQgaXQgcmF0aGVyCj4gdGhhbiB0aGUgb3JpZ2luYWwgY2xwczcxMXggdGhhdCBk
+aWRuJ3QsIGxpa2UKPiAKPiAJY29tcGF0aWJsZSA9ICJjaXJydXMsZXA3MzExLWtpdGNoZW5zaW5r
+IiwgImNpcnJ1cy1lcDcyMTEta2l0Y2hlbnNpbmsiOwo+IAo+IEZvciBiaW5kaW5ncyB0aGF0IGFy
+ZSBhbHJlYWR5IHJldmlld2VkIGFuZCBtZXJnZWQsIEkgd291bGRuJ3QgY2hhbmdlCj4gdGhlbSBh
+bnkgbW9yZSBldmVuIGlmIHRoZXkgaW5hY2N1cmF0ZWx5IGxpc3QgY2xwczcxMXggZm9yIHVuaXRz
+IHRoYXQKPiB3ZXJlIG5vdCBwcmVzZW50IGluIGNscHM3MTExLCBidXQgZm9yIG5ldyBvbmVzIEkn
+ZCBwcmVmZXIgdG8gZm9sbG93Cj4gdGhlIGNvbW1vbiBwcmFjdGljZSB0byB5b3VyIGJlc3Qga25v
+d2xlZGdlLgoKRXhjZWxsZW50LCBsZXQncyBkbyBzby4gSSB3aWxsIHByZXBhcmUgYSBwYXRjaCB0
+aGF0IHdpbGwgY2hhbmdlIGNvbXBhdGliaWxpdHkKc3RyaW5ncyBmb3IgZXhhbXBsZXMgaW4gdGhl
+IGN1cnJlbnQgYmluZGluZ3MgZG9jdW1lbnRzLgpGb3IgdGhpcyBkcml2ZXIgKFBXTSksIEkganVz
+dCBzZW5kIGEgdGhpcmQgdmVyc2lvbi4KCi0tLQo=
