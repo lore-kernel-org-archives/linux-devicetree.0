@@ -1,69 +1,34 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2MiBSRVNFTkRdIHB3bTogQWRkIENMUFM3MTFYIFBXTSBz?=
- =?UTF-8?B?dXBwb3J0?=
-Date: Sat, 01 Mar 2014 17:56:35 +0400
-Message-ID: <1393682195.224091960@f280.i.mail.ru>
-References: <1393342067-9086-1-git-send-email-shc_work@mail.ru>
- <20140301100641.cdb4398a4172700cfd318213@mail.ru>
- <201403011240.09137.arnd@arndb.de>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <201403011240.09137.arnd@arndb.de>
-Sender: linux-pwm-owner@vger.kernel.org
-To: =?UTF-8?B?QXJuZCBCZXJnbWFubg==?= <arnd@arndb.de>
-Cc: =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>, =?UTF-8?B?bGludXgtcHdtQHZnZXIua2VybmVsLm9yZw==?= <linux-pwm@vger.kernel.org>, =?UTF-8?B?VGhpZXJyeSBSZWRpbmc=?= <thierry.reding@gmail.com>, =?UTF-8?B?ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc=?= <devicetree@vger.kernel.org>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt@kernel.org>, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <Pawel.Moll@arm.com>, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ijc+devicetree@hellion.org.uk>, =?UTF-8?B?S3VtYXIgR2FsYQ==?= <galak@codeaurora.org>, =?UTF-8?B?Z3JhbnQubGlrZWx5QGxpbmFyby5vcmc=?= <grant.likely@linaro.org>
+From: Marek Belisko <marek@goldelico.com>
+Subject: [PATCH v2 0/7] ARM: dts: omap3-gta04: Various devicetree updates
+Date: Sat,  1 Mar 2014 14:58:47 +0100
+Message-ID: <1393682334-26805-1-git-send-email-marek@goldelico.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
+Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hns@goldelico.com, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-0KHRg9Cx0LHQvtGC0LAsICAxINC80LDRgNGC0LAgMjAxNCwgMTI6NDAgKzAxOjAwINC+0YIgQXJu
-ZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5kZT46Cj4gT24gU2F0dXJkYXkgMDEgTWFyY2ggMjAxNCwg
-QWxleGFuZGVyIFNoaXlhbiB3cm90ZToKPiA+IEkgd2FudCB0byBlbGFib3JhdGUgb24gdGhlIGN1
-cnJlbnQgQ0xQUzcxMVggbGluZXVwOgo+ID4gUFM3MTEwICAtIEVPTCBPY3RvYmVyIDMwLCAyMDAx
-Cj4gPiBQUzcxMTEgIC0gRU9MIE9jdG9iZXIgMzAsIDIwMDEKPiA+IEVQNzIwOSAgLSBFT0wgQXBy
-aWwgMjUsIDIwMDMKPiA+IEVQNzIxMSAgLSBFT0wgQXByaWwgMjUsIDIwMDMKPiA+IEVQNzIxMiAg
-LSBFT0wgQXByaWwgMjUsIDIwMDMKPiA+IENTODk3MTIgLSBFT0wgQXVndXN0IDE1LCAyMDA1Cj4g
-PiBFUDczMDkgIC0gUHJvZHVjdGlvbgo+ID4gRVA3MzExICAtIFByb2R1Y3Rpb24KPiA+IEVQNzMx
-MiAgLSBQcm9kdWN0aW9uCj4gCj4gVGhhbmtzIGZvciB0aGUgbGlzdC4gSSB3b25kZXIgaWYgdGhl
-cmUgaXMgYSBnb29kIHBsYWNlIHRvIGtlZXAgdGhpcyBpbiB0aGUKPiBrZXJuZWwgc291cmNlIGZv
-ciByZWZlcmVuY2UuCj4gCj4gPiBTbyBhdCB0aGUgbW9tZW50LCBhbmQgbG9uZyBlbm91Z2gsIHBy
-b2R1Y2VkIG9ubHkgdGhyZWUgbW9kZWxzIG9mIENQVXMuCj4gPiBJIGFtIHN1cmUgdGhhdCB0aGUg
-aGFyZHdhcmUgd2l0aCBvbGQgQ1BVcyB3aWxsIG5vdCBiZSBhYmxlIHRvIHVzZSB0aGUKPiA+IG5l
-dyBrZXJuZWwgZHVlIHRvIG1lbW9yeSBsaW1pdGF0aW9ucywgbG93IENQVSBmcmVxdWVuY3ksIGV0
-Yy4KPiA+IAo+ID4gTXkgc3VnZ2VzdGlvbiBpcyB0byBhbHdheXMgdXNlIGEgY29tcGF0aWJpbGl0
-eSBzdHJpbmcgZm9yIHBsYXRmb3JtIGVudGlyZWx5LAo+ID4gaWUgImNpcnJ1cyxjbHBzNzExeC0k
-VU5JVCIsIG90aGVyd2lzZSBpdCBtYXkgcmVzdWx0IGluIG1pc2xlYWRpbmcuCj4gCj4gRnJvbSB5
-b3VyIGxpc3QsIGl0J3MgcHJldHR5IGNsZWFyIHRoYXQgdGhlcmUgd29uJ3QgYmUgYW55IG5ldyBj
-aGlwcyBuYW1lZAo+IFBTNzExeCBmb3IgeCA+IDEsIHNvIHVzaW5nIHRoYXQgc3RyaW5nIGlzIG5v
-dCBhbWJpZ3VvdXMuIFRoYXQgaXMgZ29vZAo+IHRvIGtub3cuIEl0J3MgYWxzbyB0aGUgb2xkZXN0
-IGNoaXAgaW4gdGhlIGZhbWlseSwgc28gbmFtaW5nIHRoaW5ncyBhZnRlciB0aGF0Cj4gaXMgY29u
-c2lzdGVudC4KPiAKPiA+IEluIGFueSBjYXNlLCBJIHdvdWxkIGxpa2UgdG8gaGVhciB0aGUgZmlu
-YWwgZGVjaXNpb24gb24gdGhpcyBpc3N1ZSwKPiA+IHNpbmNlIHRoZXJlIGFyZSBzZXZlcmFsIGRy
-aXZlcnMgYWxyZWFkeSB1c2luZyB0aGlzIHNjaGVtZSBhbmQgc29tZSBkcml2ZXJzCj4gPiBhd2Fp
-dGluZyBhcHBseWluZyBpbnRvIHRoZSBrZXJuZWwuCj4gPiBJIGRvIG5vdCBpbnNpc3Qgb24gaXRz
-IHBvc2l0aW9uLCBidXQganVzdCB3YW50IHRvIGNsYXJpZnkgdG8gbWFrZSBjaGFuZ2VzCj4gPiB0
-byBleGlzdGluZyBkcml2ZXJzIGFuZCB1c2UgdGhlIGFwcHJvdmVkIGNvbXBhdGliaWxpdHkgc3Ry
-aW5nIGluIHRoZSBmdXR1cmUuCj4gPiBBdCB0aGUgY3VycmVudCBzdGFnZSwgdGhlc2UgY2hhbmdl
-cyB3aWxsIG5vdCBsZWFkIHRvIGFueXRoaW5nIHRlcnJpYmxlLgo+IAo+IEhvdyBhYm91dCB3ZSBr
-ZWVwIHVzaW5nIHRoZSBjaXJydXMsY2xwczcxMXggYXMgdGhlIHN0cmluZyB0aGF0IGRyaXZlcnMK
-PiBtYXRjaCBhZ2FpbnN0LCBidXQgY2hhbmdlIHRoZSBEVCByZXByZXNlbnRhdGlvbiB0byBhbHdh
-eXMgbGlzdCB0aGUgc3BlY2lmaWMKPiBtb2RlbCBpbiBhZGRpdGlvbj8gVGhhdCB3YXkgd2UgYXJl
-IHByZXBhcmVkIHRvIGhhbmRsZSBxdWlya3MgaWYgd2UgbmVlZCB0bywKPiBidXQgeW91IGRvbid0
-IGhhdmUgdG8gY2hhbmdlIHRoZSBiaW5kaW5nIGluIGluY29tcGF0aWJsZSB3YXlzLgo+IAo+IFRo
-aXMgbWVhbnMgeW91IHNob3VsZCBsaXN0IGUuZy4KPiAKPiAJY29tcGF0aWJsZSA9ICJjaXJydXMs
-ZXA3MzA5LXB3bSIsICJjaXJydXMsY2xwczcxMXgtcHdtIjsKPiAKPiBvciAKPiAKPiAJY29tcGF0
-aWJsZSA9ICJjaXJydXMsY2xwczcxMTAtcHdtIiwgImNpcnJ1cyxjbHBzNzExeC1wd20iOwo+IAo+
-IGRlcGVuZGluZyBvbiB0aGUgbW9kZWwuIEZvciB1bml0cyB0aGF0IHdlcmUgaW50cm9kdWNlZCBp
-biBhIGxhdGVyCj4gbW9kZWwsIEkgd291bGQgcmVjb21tZW5kIHRvIHVzZSB0aGUgZmlyc3QgbW9k
-ZWwgdGhhdCBoYWQgaXQgcmF0aGVyCj4gdGhhbiB0aGUgb3JpZ2luYWwgY2xwczcxMXggdGhhdCBk
-aWRuJ3QsIGxpa2UKPiAKPiAJY29tcGF0aWJsZSA9ICJjaXJydXMsZXA3MzExLWtpdGNoZW5zaW5r
-IiwgImNpcnJ1cy1lcDcyMTEta2l0Y2hlbnNpbmsiOwo+IAo+IEZvciBiaW5kaW5ncyB0aGF0IGFy
-ZSBhbHJlYWR5IHJldmlld2VkIGFuZCBtZXJnZWQsIEkgd291bGRuJ3QgY2hhbmdlCj4gdGhlbSBh
-bnkgbW9yZSBldmVuIGlmIHRoZXkgaW5hY2N1cmF0ZWx5IGxpc3QgY2xwczcxMXggZm9yIHVuaXRz
-IHRoYXQKPiB3ZXJlIG5vdCBwcmVzZW50IGluIGNscHM3MTExLCBidXQgZm9yIG5ldyBvbmVzIEkn
-ZCBwcmVmZXIgdG8gZm9sbG93Cj4gdGhlIGNvbW1vbiBwcmFjdGljZSB0byB5b3VyIGJlc3Qga25v
-d2xlZGdlLgoKRXhjZWxsZW50LCBsZXQncyBkbyBzby4gSSB3aWxsIHByZXBhcmUgYSBwYXRjaCB0
-aGF0IHdpbGwgY2hhbmdlIGNvbXBhdGliaWxpdHkKc3RyaW5ncyBmb3IgZXhhbXBsZXMgaW4gdGhl
-IGN1cnJlbnQgYmluZGluZ3MgZG9jdW1lbnRzLgpGb3IgdGhpcyBkcml2ZXIgKFBXTSksIEkganVz
-dCBzZW5kIGEgdGhpcmQgdmVyc2lvbi4KCi0tLQo=
+This updated series fix issue with proper gta04 booting in 3.14 kernel
+and add various devices to devicetree.
+
+Changes from V1: 
+- removed fixes which was merged to 3.14 already
+- add bma180 accelerometer + booting fix
+
+Marek Belisko (2):
+  ARM: dts: omap3-gta04: Add ti,omap36xx to compatible property to avoid
+    problems with booting
+  ARM: dts: omap3-gta04: Add touchscreen properties
+
+NeilBrown (5):
+  ARM: dts: omap3-gta04: Add support for magnetometer
+  ARM: dts: omap3-gta04: Add twl4030 charger
+  ARM: dts: omap3-gta04: Add basic sound support
+  ARM: dts: omap3-gta04: Enable mmc2 for wifi
+  ARM: dts: omap3-gta04: Add bma180 accelerometer
+
+ arch/arm/boot/dts/omap3-gta04.dts | 53 +++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 51 insertions(+), 2 deletions(-)
+
+-- 
+1.8.3.2
