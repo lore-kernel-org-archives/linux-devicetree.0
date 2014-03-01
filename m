@@ -1,83 +1,45 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v5 06/11] drivers: of: initialize and assign reserved
- memory to newly created devices
-Date: Sat, 01 Mar 2014 20:20:48 +0000
-Message-ID: <20140301202048.39FB9C40B6D@trevor.secretlab.ca>
-References: <1392985527-6260-1-git-send-email-m.szyprowski@samsung.com> <
- 1392985527-6260-7-git-send-email-m.szyprowski@samsung.com> <20140226121445.
- 54D2DC40A89@trevor.secretlab.ca> <530F0F24.2080903@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <530F0F24.2080903@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Laura Abbott <lauraa@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Tomasz Figa <t.figa@samsung.com>, Will Deacon <will.deacon@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michal Nazarewicz <mina86@mina86.com>, Marc <marc.ceeeee@gmail.com>, Nishanth Peethambaran <nishanth.p@gmail.com>, Rob Herring <robh+dt@kernel.org>, Paul Mackerras <paulus@samba.org>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Josh Cartwright <joshc@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, Ian Campbell <ian.campbell@citrix.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: devicetree repository separation/migration
+Date: Sat, 01 Mar 2014 21:04:41 +0000
+Message-ID: <20140301210441.8290AC40DCB@trevor.secretlab.ca>
+References: <20140217180544.GU7862@titan.lakedaemon.net> <5306A6C0.9000206@ gmail.com> <20140221141136.GI17250@pengutronix.de> < CAOesGMjY2aDLPYLncxHs9gqmWCFy+e4sZK_ET-17qzEU-JwvdQ@mail.gmail.com> < 20140228080025.GK24917@pengutronix.de>
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140228080025.GK24917-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 27 Feb 2014 11:10:44 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
-> Hello,
-> 
-> On 2014-02-26 13:14, Grant Likely wrote:
-> > On Fri, 21 Feb 2014 13:25:22 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
-> > > Use recently introduced of_reserved_mem_device_init() function to
-> > > automatically assign respective reserved memory region to the newly created
-> > > platform and amba device.
+On Fri, 28 Feb 2014 09:00:25 +0100, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> On Fri, Feb 21, 2014 at 10:47:09AM -0800, Olof Johansson wrote:
+> > On Fri, Feb 21, 2014 at 6:11 AM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> > > On Thu, Feb 20, 2014 at 05:07:12PM -0800, Frank Rowand wrote:
+> > 
+> > >> Why are the changes not submitted upstream?  (Or if they were submitted, why
+> > >> were they not accepted?)
 > > >
-> > > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> >
-> > I'm wary on this patch. It hides the assignment of regions into the core
-> > code and I worry that it is the wrong level of abstraction. I would
-> > think that drivers should know that they need a reserved memory region
-> > and should be calling the API to obtain the region directly rather than
-> > doing it for them. The reason being is that there may be some situations
-> > where the common code isn't quite right and the driver needs to override
-> > the behaviour. If it is called automatically then the driver cannot do
-> > that.
-> >
-> > Is it really a big burden to have the driver call the reserved memory
-> > init function?
+> > > The descriptions where to find the environment are obviously barebox
+> > > specific and not acceptable upstream.
+> > 
+> > Why not? Wouldn't it be useful if you could find where the environment
+> > is from the running Linux image so that you can change variables
+> > without rebooting into Barebox first?
 > 
-> If a device requires very special handling of the reserved memory region,
-> it may simply provide its own reserved memory region driver which will do
-> the required early initialization.
-> 
-> If we assume that driver needs to initialize reserved region manually, then
-> why do we ever bother with adding support for custom reserved memory drivers
-> and assigning regions to a device node? We can simply stick with just a set
-> of reserved regions and tell drivers to use them.
-> 
-> In my opinion for most typical use cases a board designer will assign
-> 'dma-shared-pool' driver to the given set of devices, which in turn ensures
-> that all memory allocations for dma purposes for those device will be
-> served from that region. It is really not a driver role to initialize it
-> in such case. Driver should focus on controlling hw operations, regardless
-> the way the hardware module has been integrated to the system.
-> 
-> I can perfectly imagine a generic driver which operates the same way in any
-> of the following cases (depends mainly on the hw version): 1) restricted
-> dma window, 2) iommu for all dma for the given device, 3) fully featured
-> memory master for dma for the given device (no restrictions), if the
-> respective kernel subsystems did the correct initialization and provide
-> their own methods for managing DMA operation. I already have a working
-> platform glue code for the above cases tested with Samsung multimedia
-> drivers. No changes to the drivers were required.
+> Indeed that would be very useful. Generally that would require some
+> generic binding for referring to partitions on mtd devices, partitions
+> on block devices and EEPROMs. If you think such a binding would have a
+> chance upstream I could try and come up with a binding.
 
-I don't have issue with the above. What I do have issue with is that by
-putting the call into core code, it means this binding gets applied to
-every platform devices, regardless of whether or not it makes sense. Yes
-of course there should be a common function for setting it up, and
-of_reserved_mem_device_init() looks about right. However, I strongly
-think that the setup call should be performed by the driver's .probe
-hook. I don't want it in of_platform_device_create_pdata().
+I agree. I want to explore doing the same thing for UEFI also. Currently
+the UEFI spec pretty much requires UEFI runtime services to 'own' the
+device that holds variable storage, but that doesn't work on
+cost-sensitive devices that can't afford separate flash dedicated to
+UEFI. I'd like to investigate a spec extension that defines the variable
+storage format on a block device so that Linux can directly manipulate
+it without a runtime services call.
 
 g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
