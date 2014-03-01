@@ -1,145 +1,23 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2] phy-rcar-gen2-usb: add device tree support
-Date: Sat, 1 Mar 2014 04:07:53 +0300
-Message-ID: <201403010407.54639.sergei.shtylyov@cogentembedded.com>
+From: "Harley Wang" <bn.jha-5yWXSbZMghFMM7uoKfkJtA@public.gmane.org>
+Subject: contact me
+Date: Sat, 1 Mar 2014 01:35:05 +0100
+Message-ID: <20140301003509.44CC03E22D2@MS6XF>
+Reply-To: <hctthg-h1-/E1597aS9LQAvxtiuMwx3w@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain;
+	charset="Windows-1251"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: balbi@ti.com, linux-usb@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, linux-sh@vger.kernel.org, valentine.barshak@cogentembedded.com, rob@landley.net, linux-doc@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add support of the device tree probing for the Renesas R-Car generation 2 SoCs
-documenting the device tree binding as necessary.
+contact me for details of $21.4m transfer.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
----
-This patch is against the 'next' branch of Felipe Balbi's 'usb.git' repo.
+The information contained in this electronic communication is intended solely for the individual(s) or entity to which it is addressed. It may contain proprietary, confidential and/or legally privileged information. Any review, retransmission, dissemination, printing, copying or other use of, or taking any action in reliance on the contents of this information by person(s) or entities other than the intended recipient is strictly prohibited and may be unlawful. If you have received this communication in error, please notify us by responding to this email or telephone and immediately and permanently delete all copies of this message and any attachments from your system(s). The contents of this message do not necessarily represent the views or policies of Aditya Birla Group. 
 
-Changes in version 2:
-- restored devm_clk_get() call and the error handling logic in the probe()
-  method, removed clk_put() call in the remove() method.
-
- Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt |   29 +++++++++++
- drivers/usb/phy/phy-rcar-gen2-usb.c                     |   42 ++++++++++++++--
- 2 files changed, 68 insertions(+), 3 deletions(-)
-
-Index: usb/Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt
-===================================================================
---- /dev/null
-+++ usb/Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt
-@@ -0,0 +1,29 @@
-+* Renesas R-Car generation 2 USB PHY
-+
-+This file provides information on what the device node for the R-Car generation
-+2 USB PHY contains.
-+
-+Required properties:
-+- compatible: "renesas,usb-phy-r8a7790" if the device is a part of R8A7790 SoC.
-+	      "renesas,usb-phy-r8a7791" if the device is a part of R8A7791 SoC.
-+- reg: offset and length of the register block.
-+- clocks: clock phandle and specifier pair.
-+- clock-names: string, clock input name, must be "usbhs".
-+
-+Optional properties:
-+- renesas,channel0-pci: boolean, specify when USB channel 0 should be connected
-+			to PCI EHCI/OHCI; otherwise, it will be connected to the
-+			USBHS controller.
-+- renesas,channel2-pci: boolean, specify when USB channel 2 should be connected
-+			to PCI EHCI/OHCI; otherwise, it will be connected to the
-+			USBSS controller (xHCI).
-+
-+Example (Lager board):
-+
-+	usb-phy@e6590100 {
-+		compatible = "renesas,usb-phy-r8a7790";
-+		reg = <0 0xe6590100 0 0x100>;
-+		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
-+		clock-names = "usbhs";
-+		renesas,channel2-pci;
-+	};
-Index: usb/drivers/usb/phy/phy-rcar-gen2-usb.c
-===================================================================
---- usb.orig/drivers/usb/phy/phy-rcar-gen2-usb.c
-+++ usb/drivers/usb/phy/phy-rcar-gen2-usb.c
-@@ -1,8 +1,8 @@
- /*
-  * Renesas R-Car Gen2 USB phy driver
-  *
-- * Copyright (C) 2013 Renesas Solutions Corp.
-- * Copyright (C) 2013 Cogent Embedded, Inc.
-+ * Copyright (C) 2013-2014 Renesas Solutions Corp.
-+ * Copyright (C) 2013-2014 Cogent Embedded, Inc.
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 as
-@@ -13,6 +13,7 @@
- #include <linux/delay.h>
- #include <linux/io.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/platform_data/usb-rcar-gen2-phy.h>
- #include <linux/platform_device.h>
- #include <linux/spinlock.h>
-@@ -167,6 +168,37 @@ out:
- 	spin_unlock_irqrestore(&priv->lock, flags);
- }
- 
-+#ifdef CONFIG_OF
-+static struct rcar_gen2_phy_platform_data *
-+rcar_gen2_usb_phy_parse_dt(struct device *dev)
-+{
-+	struct device_node *np = dev->of_node;
-+	struct rcar_gen2_phy_platform_data *pdata;
-+
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return NULL;
-+
-+	pdata->chan0_pci = of_property_read_bool(np, "renesas,channel0-pci");
-+	pdata->chan2_pci = of_property_read_bool(np, "renesas,channel2-pci");
-+
-+	return pdata;
-+}
-+
-+static const struct of_device_id rcar_gen2_usb_phy_match_table[] = {
-+	{ .compatible = "renesas,usb-phy-r8a7790" },
-+	{ .compatible = "renesas,usb-phy-r8a7791" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, rcar_gen2_usb_phy_match_table);
-+#else
-+static inline struct rcar_gen2_phy_platform_data *
-+rcar_gen2_usb_phy_parse_dt(struct device *dev)
-+{
-+	return NULL;
-+}
-+#endif
-+
- static int rcar_gen2_usb_phy_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -177,7 +209,10 @@ static int rcar_gen2_usb_phy_probe(struc
- 	struct clk *clk;
- 	int retval;
- 
--	pdata = dev_get_platdata(dev);
-+	if (dev->of_node)
-+		pdata = rcar_gen2_usb_phy_parse_dt(dev);
-+	else
-+		pdata = dev_get_platdata(dev);
- 	if (!pdata) {
- 		dev_err(dev, "No platform data\n");
- 		return -EINVAL;
-@@ -236,6 +271,7 @@ static int rcar_gen2_usb_phy_remove(stru
- static struct platform_driver rcar_gen2_usb_phy_driver = {
- 	.driver = {
- 		.name = "usb_phy_rcar_gen2",
-+		.of_match_table = of_match_ptr(rcar_gen2_usb_phy_match_table),
- 	},
- 	.probe = rcar_gen2_usb_phy_probe,
- 	.remove = rcar_gen2_usb_phy_remove,
+Computer viruses can be transmitted via email. Aditya Birla Group Companies attempts to sweep e-mails and attachments for viruses, it does not guarantee that either are virus free. The recipient should check this email and any attachments for the presence of viruses.  Aditya Birla Group does not accept any liability for any damage sustained as a result of viruses.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
