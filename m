@@ -1,74 +1,327 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 RESEND] pwm: Add CLPS711X PWM support
-Date: Sat, 1 Mar 2014 12:40:08 +0100
-Message-ID: <201403011240.09137.arnd@arndb.de>
-References: <1393342067-9086-1-git-send-email-shc_work@mail.ru> <20140226160046.GD29659@e106331-lin.cambridge.arm.com> <20140301100641.cdb4398a4172700cfd318213@mail.ru>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFCv4 3/7] mfd: twl4030-madc: Cleanup driver
+Date: Sat, 01 Mar 2014 11:41:07 +0000
+Message-ID: <5311C753.7020006@kernel.org>
+References: <1393374270-20079-1-git-send-email-sre@debian.org> <1393444990-28140-1-git-send-email-sre@debian.org> <1393444990-28140-4-git-send-email-sre@debian.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20140301100641.cdb4398a4172700cfd318213@mail.ru>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: Mark Rutland <mark.rutland@arm.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1393444990-28140-4-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 01 March 2014, Alexander Shiyan wrote:
-> I want to elaborate on the current CLPS711X lineup:
-> PS7110  - EOL October 30, 2001
-> PS7111  - EOL October 30, 2001
-> EP7209  - EOL April 25, 2003
-> EP7211  - EOL April 25, 2003
-> EP7212  - EOL April 25, 2003
-> CS89712 - EOL August 15, 2005
-> EP7309  - Production
-> EP7311  - Production
-> EP7312  - Production
-
-Thanks for the list. I wonder if there is a good place to keep this in the
-kernel source for reference.
-
-> So at the moment, and long enough, produced only three models of CPUs.
-> I am sure that the hardware with old CPUs will not be able to use the
-> new kernel due to memory limitations, low CPU frequency, etc.
-> 
-> My suggestion is to always use a compatibility string for platform entirely,
-> ie "cirrus,clps711x-$UNIT", otherwise it may result in misleading.
-
->From your list, it's pretty clear that there won't be any new chips named
-PS711x for x > 1, so using that string is not ambiguous. That is good
-to know. It's also the oldest chip in the family, so naming things after that
-is consistent.
-
-> In any case, I would like to hear the final decision on this issue,
-> since there are several drivers already using this scheme and some drivers
-> awaiting applying into the kernel.
-> I do not insist on its position, but just want to clarify to make changes
-> to existing drivers and use the approved compatibility string in the future.
-> At the current stage, these changes will not lead to anything terrible.
-
-How about we keep using the cirrus,clps711x as the string that drivers
-match against, but change the DT representation to always list the specific
-model in addition? That way we are prepared to handle quirks if we need to,
-but you don't have to change the binding in incompatible ways.
-
-This means you should list e.g.
-
-	compatible = "cirrus,ep7309-pwm", "cirrus,clps711x-pwm";
-
-or 
-
-	compatible = "cirrus,clps7110-pwm", "cirrus,clps711x-pwm";
-
-depending on the model. For units that were introduced in a later
-model, I would recommend to use the first model that had it rather
-than the original clps711x that didn't, like
-
-	compatible = "cirrus,ep7311-kitchensink", "cirrus-ep7211-kitchensink";
-
-For bindings that are already reviewed and merged, I wouldn't change
-them any more even if they inaccurately list clps711x for units that
-were not present in clps7111, but for new ones I'd prefer to follow
-the common practice to your best knowledge.
-
-	Arnd
+On 26/02/14 20:03, Sebastian Reichel wrote:
+> Some style fixes in twl4030-madc driver.
+>
+> Reported-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Good stuff, but would be nice to hammer the comments into proper kernel-doc
+style rather than going part of the way.  Also, the ARRAY_SIZE bit
+that both Lee and I picked up on in the previous patch snuck into
+this one instead.  Please move it back one patch.
+> ---
+>   drivers/mfd/twl4030-madc.c       | 106 ++++++++++++++++++---------------------
+>   include/linux/i2c/twl4030-madc.h |   2 +-
+>   2 files changed, 51 insertions(+), 57 deletions(-)
+>
+> diff --git a/drivers/mfd/twl4030-madc.c b/drivers/mfd/twl4030-madc.c
+> index 37cb3ad..c90013e 100644
+> --- a/drivers/mfd/twl4030-madc.c
+> +++ b/drivers/mfd/twl4030-madc.c
+> @@ -49,7 +49,7 @@
+>
+>   #include <linux/iio/iio.h>
+>
+> -/*
+> +/**
+>    * struct twl4030_madc_data - a container for madc info
+@dev: for kerneldoc.
+>    * @dev - pointer to device structure for madc
+>    * @lock - mutex protecting this data structure
+> @@ -63,8 +63,8 @@ struct twl4030_madc_data {
+>   	struct mutex lock;	/* mutex protecting this data structure */
+>   	struct twl4030_madc_request requests[TWL4030_MADC_NUM_METHODS];
+>   	bool use_second_irq;
+> -	int imr;
+> -	int isr;
+> +	u8 imr;
+> +	u8 isr;
+>   };
+>
+>   static int twl4030_madc_read(struct iio_dev *iio_dev,
+> @@ -157,17 +157,16 @@ twl4030_divider_ratios[16] = {
+>   };
+>
+>
+> -/*
+> - * Conversion table from -3 to 55 degree Celcius
+> - */
+> -static int therm_tbl[] = {
+> -30800,	29500,	28300,	27100,
+> -26000,	24900,	23900,	22900,	22000,	21100,	20300,	19400,	18700,	17900,
+> -17200,	16500,	15900,	15300,	14700,	14100,	13600,	13100,	12600,	12100,
+> -11600,	11200,	10800,	10400,	10000,	9630,	9280,	8950,	8620,	8310,
+> -8020,	7730,	7460,	7200,	6950,	6710,	6470,	6250,	6040,	5830,
+> -5640,	5450,	5260,	5090,	4920,	4760,	4600,	4450,	4310,	4170,
+> -4040,	3910,	3790,	3670,	3550
+> +/* Conversion table from -3 to 55 degrees Celcius */
+> +static int twl4030_therm_tbl[] = {
+> +	30800,	29500,	28300,	27100,
+> +	26000,	24900,	23900,	22900,	22000,	21100,	20300,	19400,	18700,
+> +	17900,	17200,	16500,	15900,	15300,	14700,	14100,	13600,	13100,
+> +	12600,	12100,	11600,	11200,	10800,	10400,	10000,	9630,	9280,
+> +	8950,	8620,	8310,	8020,	7730,	7460,	7200,	6950,	6710,
+> +	6470,	6250,	6040,	5830,	5640,	5450,	5260,	5090,	4920,
+> +	4760,	4600,	4450,	4310,	4170,	4040,	3910,	3790,	3670,
+> +	3550
+>   };
+>
+>   /*
+> @@ -199,7 +198,7 @@ const struct twl4030_madc_conversion_method twl4030_conversion_methods[] = {
+>   			      },
+>   };
+>
+> -/*
+> +/**
+Whilst better  - these are still not in kernel doc.  Please read the nano howto
+and fix them up.
+>    * Function to read a particular channel value.
+>    * @madc - pointer to struct twl4030_madc_data
+>    * @reg - lsb of ADC Channel
+> @@ -229,7 +228,7 @@ static int twl4030_madc_channel_raw_read(struct twl4030_madc_data *madc, u8 reg)
+>   }
+>
+>   /*
+> - * Return battery temperature
+> + * Return battery temperature in degrees Celsius
+>    * Or < 0 on failure.
+>    */
+>   static int twl4030battery_temperature(int raw_volt)
+> @@ -238,18 +237,18 @@ static int twl4030battery_temperature(int raw_volt)
+>   	int temp, curr, volt, res, ret;
+>
+>   	volt = (raw_volt * TEMP_STEP_SIZE) / TEMP_PSR_R;
+> -	/* Getting and calculating the supply current in micro ampers */
+> +	/* Getting and calculating the supply current in micro amperes */
+>   	ret = twl_i2c_read_u8(TWL_MODULE_MAIN_CHARGE, &val,
+>   		REG_BCICTL2);
+>   	if (ret < 0)
+>   		return ret;
+> +
+>   	curr = ((val & TWL4030_BCI_ITHEN) + 1) * 10;
+>   	/* Getting and calculating the thermistor resistance in ohms */
+>   	res = volt * 1000 / curr;
+>   	/* calculating temperature */
+>   	for (temp = 58; temp >= 0; temp--) {
+> -		int actual = therm_tbl[temp];
+> -
+> +		int actual = twl4030_therm_tbl[temp];
+>   		if ((actual - res) >= 0)
+>   			break;
+>   	}
+> @@ -271,11 +270,12 @@ static int twl4030battery_current(int raw_volt)
+>   	else /* slope of 0.88 mV/mA */
+>   		return (raw_volt * CURR_STEP_SIZE) / CURR_PSR_R2;
+>   }
+> +
+>   /*
+>    * Function to read channel values
+>    * @madc - pointer to twl4030_madc_data struct
+>    * @reg_base - Base address of the first channel
+> - * @Channels - 16 bit bitmap. If the bit is set, channel value is read
+> + * @Channels - 16 bit bitmap. If the bit is set, channel's value is read
+>    * @buf - The channel values are stored here. if read fails error
+>    * @raw - Return raw values without conversion
+>    * value is stored
+> @@ -286,17 +286,17 @@ static int twl4030_madc_read_channels(struct twl4030_madc_data *madc,
+>   				      long channels, int *buf,
+>   				      bool raw)
+>   {
+> -	int count = 0, count_req = 0, i;
+> +	int count = 0;
+> +	int i;
+>   	u8 reg;
+>
+>   	for_each_set_bit(i, &channels, TWL4030_MADC_MAX_CHANNELS) {
+> -		reg = reg_base + 2 * i;
+> +		u8 reg = reg_base + (2 * i);
+Precedence means the brackets aren't needed.  I don't suppose they do
+much harm though if you want to keep them.
+>   		buf[i] = twl4030_madc_channel_raw_read(madc, reg);
+>   		if (buf[i] < 0) {
+> -			dev_err(madc->dev,
+> -				"Unable to read register 0x%X\n", reg);
+> -			count_req++;
+> -			continue;
+> +			dev_err(madc->dev, "Unable to read register 0x%X\n",
+> +				reg);
+> +			return buf[i];
+>   		}
+>   		if (raw) {
+>   			count++;
+> @@ -307,7 +307,7 @@ static int twl4030_madc_read_channels(struct twl4030_madc_data *madc,
+>   			buf[i] = twl4030battery_current(buf[i]);
+>   			if (buf[i] < 0) {
+>   				dev_err(madc->dev, "err reading current\n");
+> -				count_req++;
+> +				return buf[i];
+>   			} else {
+>   				count++;
+>   				buf[i] = buf[i] - 750;
+> @@ -317,7 +317,7 @@ static int twl4030_madc_read_channels(struct twl4030_madc_data *madc,
+>   			buf[i] = twl4030battery_temperature(buf[i]);
+>   			if (buf[i] < 0) {
+>   				dev_err(madc->dev, "err reading temperature\n");
+> -				count_req++;
+> +				return buf[i];
+>   			} else {
+>   				buf[i] -= 3;
+>   				count++;
+> @@ -338,8 +338,6 @@ static int twl4030_madc_read_channels(struct twl4030_madc_data *madc,
+>   				twl4030_divider_ratios[i].numerator);
+>   		}
+>   	}
+> -	if (count_req)
+> -		dev_err(madc->dev, "%d channel conversion failed\n", count_req);
+>
+>   	return count;
+>   }
+> @@ -363,13 +361,13 @@ static int twl4030_madc_enable_irq(struct twl4030_madc_data *madc, u8 id)
+>   			madc->imr);
+>   		return ret;
+>   	}
+> +
+>   	val &= ~(1 << id);
+>   	ret = twl_i2c_write_u8(TWL4030_MODULE_MADC, val, madc->imr);
+>   	if (ret) {
+>   		dev_err(madc->dev,
+>   			"unable to write imr register 0x%X\n", madc->imr);
+>   		return ret;
+> -
+>   	}
+>
+>   	return 0;
+> @@ -432,7 +430,7 @@ static irqreturn_t twl4030_madc_threaded_irq_handler(int irq, void *_madc)
+>   			continue;
+>   		ret = twl4030_madc_disable_irq(madc, i);
+>   		if (ret < 0)
+> -			dev_dbg(madc->dev, "Disable interrupt failed%d\n", i);
+> +			dev_dbg(madc->dev, "Disable interrupt failed %d\n", i);
+>   		madc->requests[i].result_pending = 1;
+>   	}
+>   	for (i = 0; i < TWL4030_MADC_NUM_METHODS; i++) {
+> @@ -514,21 +512,17 @@ static int twl4030_madc_start_conversion(struct twl4030_madc_data *madc,
+>   {
+>   	const struct twl4030_madc_conversion_method *method;
+>   	int ret = 0;
+> +
+> +	if (conv_method != TWL4030_MADC_SW1 && conv_method != TWL4030_MADC_SW2)
+> +		return -ENOTSUPP;
+> +
+>   	method = &twl4030_conversion_methods[conv_method];
+> -	switch (conv_method) {
+> -	case TWL4030_MADC_SW1:
+> -	case TWL4030_MADC_SW2:
+> -		ret = twl_i2c_write_u8(TWL4030_MODULE_MADC,
+> -				       TWL4030_MADC_SW_START, method->ctrl);
+> -		if (ret) {
+> -			dev_err(madc->dev,
+> -				"unable to write ctrl register 0x%X\n",
+> -				method->ctrl);
+> -			return ret;
+> -		}
+> -		break;
+> -	default:
+> -		break;
+> +	ret = twl_i2c_write_u8(TWL4030_MODULE_MADC, TWL4030_MADC_SW_START,
+> +			       method->ctrl);
+> +	if (ret) {
+> +		dev_err(madc->dev, "unable to write ctrl register 0x%X\n",
+> +			method->ctrl);
+> +		return ret;
+>   	}
+>
+>   	return 0;
+> @@ -625,8 +619,8 @@ int twl4030_madc_conversion(struct twl4030_madc_request *req)
+>   				       ch_lsb, method->avg);
+>   		if (ret) {
+>   			dev_err(twl4030_madc->dev,
+> -				"unable to write sel reg 0x%X\n",
+> -				method->sel + 1);
+> +				"unable to write avg reg 0x%X\n",
+> +				method->avg);
+>   			goto out;
+>   		}
+>   	}
+> @@ -667,10 +661,6 @@ out:
+>   }
+>   EXPORT_SYMBOL_GPL(twl4030_madc_conversion);
+>
+> -/*
+> - * Return channel value
+> - * Or < 0 on failure.
+> - */
+>   int twl4030_get_madc_conversion(int channel_no)
+>   {
+>   	struct twl4030_madc_request req;
+> @@ -705,6 +695,7 @@ static int twl4030_madc_set_current_generator(struct twl4030_madc_data *madc,
+>   					      int chan, int on)
+>   {
+>   	int ret;
+> +	int regmask;
+>   	u8 regval;
+>
+>   	ret = twl_i2c_read_u8(TWL_MODULE_MAIN_CHARGE,
+> @@ -714,10 +705,13 @@ static int twl4030_madc_set_current_generator(struct twl4030_madc_data *madc,
+>   			TWL4030_BCI_BCICTL1);
+>   		return ret;
+>   	}
+> +
+> +	regmask = chan ? TWL4030_BCI_ITHEN : TWL4030_BCI_TYPEN;
+>   	if (on)
+> -		regval |= chan ? TWL4030_BCI_ITHEN : TWL4030_BCI_TYPEN;
+> +		regval |= regmask;
+>   	else
+> -		regval &= chan ? ~TWL4030_BCI_ITHEN : ~TWL4030_BCI_TYPEN;
+> +		regval &= ~regmask;
+> +
+>   	ret = twl_i2c_write_u8(TWL_MODULE_MAIN_CHARGE,
+>   			       regval, TWL4030_BCI_BCICTL1);
+>   	if (ret) {
+> @@ -732,7 +726,7 @@ static int twl4030_madc_set_current_generator(struct twl4030_madc_data *madc,
+>   /*
+>    * Function that sets MADC software power on bit to enable MADC
+>    * @madc - pointer to twl4030_madc_data struct
+> - * @on - Enable or disable MADC software powen on bit.
+> + * @on - Enable or disable MADC software power on bit.
+>    * returns error if i2c read/write fails else 0
+>    */
+>   static int twl4030_madc_set_power(struct twl4030_madc_data *madc, int on)
+> @@ -795,7 +789,7 @@ static int twl4030_madc_probe(struct platform_device *pdev)
+>   	iio_dev->info = &twl4030_madc_iio_info;
+>   	iio_dev->modes = INDIO_DIRECT_MODE;
+>   	iio_dev->channels = twl4030_madc_iio_channels;
+> -	iio_dev->num_channels = 16;
+> +	iio_dev->num_channels = ARRAY_SIZE(twl4030_madc_iio_channels);
+Move this back into the previous patch please.  We like to pretend that within
+a series we got everything right first time ;)
+>
+>   	/*
+>   	 * Phoenix provides 2 interrupt lines. The first one is connected to
+> diff --git a/include/linux/i2c/twl4030-madc.h b/include/linux/i2c/twl4030-madc.h
+> index 01f5951..1c0134d 100644
+> --- a/include/linux/i2c/twl4030-madc.h
+> +++ b/include/linux/i2c/twl4030-madc.h
+> @@ -44,7 +44,7 @@ struct twl4030_madc_conversion_method {
+>
+>   struct twl4030_madc_request {
+>   	unsigned long channels;
+> -	u16 do_avg;
+> +	bool do_avg;
+>   	u16 method;
+>   	u16 type;
+>   	bool active;
+>
