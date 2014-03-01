@@ -1,13 +1,13 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 09/19] ARM: sun4i: dt: Add USB host nodes to
- hackberry dts
-Date: Sat,  1 Mar 2014 20:26:28 +0100
-Message-ID: <1393701998-3553-10-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 08/19] ARM: sun4i: dt: Add USB host nodes to
+ cubieboard dts
+Date: Sat,  1 Mar 2014 20:26:27 +0100
+Message-ID: <1393701998-3553-9-git-send-email-hdegoede@redhat.com>
 References: <1393701998-3553-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBBXJZCMAKGQEY6XOV3I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBBPJZCMAKGQECJXQI2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1393701998-3553-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -16,38 +16,24 @@ Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
+
+From: Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
 Add nodes for the usb-phy and ehci- and ohci-usb-host controllers.
 
-Based on fex file settings, the fex file also contains a mysterious line:
-usb_hub_vcc_en_gpio = port:PB09<1><0><default><0>
-
-Which also clashes with usbc0, which has:
-usb_drv_vbus_gpio = port:PB09<1><0><default><0>
-
-So if usb does not work properly we need someone with a hackberry to look
-closer into this.
-
+Signed-off-by: Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun4i-a10-hackberry.dts | 40 +++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ arch/arm/boot/dts/sun4i-a10-cubieboard.dts | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun4i-a10-hackberry.dts b/arch/arm/boot/dts/sun4i-a10-hackberry.dts
-index 6692d336..d7c17e4 100644
---- a/arch/arm/boot/dts/sun4i-a10-hackberry.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-hackberry.dts
-@@ -13,6 +13,7 @@
- 
- /dts-v1/;
- /include/ "sun4i-a10.dtsi"
-+/include/ "sunxi-common-regulators.dtsi"
- 
- / {
- 	model = "Miniand Hackberry";
-@@ -35,6 +36,28 @@
+diff --git a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+index 20407ac..4684cbe 100644
+--- a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
++++ b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+@@ -34,11 +34,33 @@
  			};
  		};
  
@@ -65,6 +51,11 @@ index 6692d336..d7c17e4 100644
 +			status = "okay";
 +		};
 +
+ 		ahci: sata@01c18000 {
+ 			target-supply = <&reg_ahci_5v>;
+ 			status = "okay";
+ 		};
+ 
 +		ehci1: usb@01c1c000 {
 +			status = "okay";
 +		};
@@ -73,26 +64,12 @@ index 6692d336..d7c17e4 100644
 +			status = "okay";
 +		};
 +
- 		pio: pinctrl@01c20800 {
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&hackberry_hogs>;
-@@ -45,6 +68,13 @@
- 				allwinner,drive = <0>;
- 				allwinner,pull = <0>;
- 			};
-+
-+			usb2_vbus_pin_hackberry: usb2_vbus_pin@0 {
-+					allwinner,pins = "PH12";
-+					allwinner,function = "gpio_out";
-+					allwinner,drive = <0>;
-+					allwinner,pull = <0>;
-+			};
- 		};
- 
- 		uart0: serial@01c28000 {
-@@ -62,4 +92,14 @@
- 		enable-active-high;
- 		gpio = <&pio 7 19 0>;
+ 		pinctrl@01c20800 {
+ 			led_pins_cubieboard: led_pins@0 {
+ 				allwinner,pins = "PH20", "PH21";
+@@ -87,4 +109,12 @@
+ 	reg_ahci_5v: ahci-5v {
+ 		status = "okay";
  	};
 +
 +	reg_usb1_vbus: usb1-vbus {
@@ -100,8 +77,6 @@ index 6692d336..d7c17e4 100644
 +	};
 +
 +	reg_usb2_vbus: usb2-vbus {
-+		pinctrl-0 = <&usb2_vbus_pin_hackberry>;
-+		gpio = <&pio 7 12 0>;
 +		status = "okay";
 +	};
  };
