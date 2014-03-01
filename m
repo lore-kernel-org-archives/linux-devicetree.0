@@ -1,49 +1,30 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: [PATCHv1 4/9] mfd: twl-core: Add twl_i2c_read/write_u16
-Date: Sat,  1 Mar 2014 20:32:40 +0100
-Message-ID: <1393702365-26429-5-git-send-email-sre@debian.org>
-References: <1393444990-28140-1-git-send-email-sre@debian.org>
- <1393702365-26429-1-git-send-email-sre@debian.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393702365-26429-1-git-send-email-sre@debian.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@ring0.de>, Marek Belisko <marek@goldelico.com>, Jonathan Cameron <jic23@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Sebastian Reichel <sre@debian.org>
+From: Christoph Fritz <chf.fritz@googlemail.com>
+Subject: Re: [PATCH v4 3/4] ARM: OMAP2+: add legacy display for omap3 DBB056
+Date: Sat, 01 Mar 2014 21:07:30 +0100
+Message-ID: <1393704450.4909.41.camel@mars>
+References: <1392387656-15186-1-git-send-email-chf.fritz@googlemail.com>
+	 <1392387656-15186-4-git-send-email-chf.fritz@googlemail.com>
+	 <52FE29BF.9040307@ti.com>  <20140228223824.GN13624@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140228223824.GN13624@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, bcousson@baylibre.com, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Daniel Mack <zonque@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a simple twl_i2c_read/write_u16 wrapper over
-the twl_i2c_read/write, which is similar to the
-twl_i2c_read/write_u8 wrapper.
+On Fri, 2014-02-28 at 14:38 -0800, Tony Lindgren wrote:
+> * Tomi Valkeinen <tomi.valkeinen@ti.com> [140214 06:38]:
+> > git://git.kernel.org/pub/scm/linux/kernel/git/tomba/linux.git work/dss-dt
+> > 
+> > That way you have it ready and tested if DSS DT goes forward.
+> 
+> Applying only patches 1 & 2 into omap-for-v3.15/dt thanks.
 
-Signed-off-by: Sebastian Reichel <sre@debian.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
-Acked-by: Jonathan Cameron <jic23@kernel.org>
----
- include/linux/i2c/twl.h | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+I'll send a display support patch as soon as DSS DT is in linux-next.
 
-diff --git a/include/linux/i2c/twl.h b/include/linux/i2c/twl.h
-index ade1c06..d2b1670 100644
---- a/include/linux/i2c/twl.h
-+++ b/include/linux/i2c/twl.h
-@@ -195,6 +195,18 @@ static inline int twl_i2c_read_u8(u8 mod_no, u8 *val, u8 reg) {
- 	return twl_i2c_read(mod_no, val, reg, 1);
- }
- 
-+static inline int twl_i2c_write_u16(u8 mod_no, u16 val, u8 reg) {
-+	val = cpu_to_le16(val);
-+	return twl_i2c_write(mod_no, (u8*) &val, reg, 2);
-+}
-+
-+static inline int twl_i2c_read_u16(u8 mod_no, u16 *val, u8 reg) {
-+	int ret;
-+	ret = twl_i2c_read(mod_no, (u8*) val, reg, 2);
-+	*val = le16_to_cpu(*val);
-+	return ret;
-+}
-+
- int twl_get_type(void);
- int twl_get_version(void);
- int twl_get_hfclk_rate(void);
--- 
-1.9.0
+ Thanks
+  -- Christoph
+
