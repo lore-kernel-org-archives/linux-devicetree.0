@@ -1,63 +1,412 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH 2/2] ARM: zynq: dt: Add I2C nodes to Zynq device tree
-Date: Fri, 28 Feb 2014 18:28:34 -0800
-Message-ID: <ce5fbea5-de6e-4a29-9807-cccf0f59f654@CO9EHSMHS021.ehs.local>
-References: <1393632046-20062-1-git-send-email-soren.brinkmann@xilinx.com>
- <1393632046-20062-2-git-send-email-soren.brinkmann@xilinx.com>
+From: Liviu Dudau <liviu-I3yL/QOVVjH10XsdtD+oqA@public.gmane.org>
+Subject: Re: [PATCH v3 5/5] pci: Add support for creating a generic
+ host_bridge from device tree
+Date: Sat, 1 Mar 2014 02:39:05 +0000
+Message-ID: <20140301023905.GB31753@bart.dudau.co.uk>
+References: <1393592902-24750-1-git-send-email-Liviu.Dudau@arm.com>
+ <1393592902-24750-6-git-send-email-Liviu.Dudau@arm.com>
+ <CACoXjck59jA1Ub8mHB0zn16krCxagUgH8BmJVnLQ8KGpFg7WpA@mail.gmail.com>
+ <CACoXjckem9p0uKRBTF67xJ6-_nM2mxcmRyfsb0jue2TiVZiuxQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1393632046-20062-2-git-send-email-soren.brinkmann@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, Wolfram Sang <wsa@the-dreams.de>
-Cc: devicetree@vger.kernel.org, Harini Katakam <harinik@xilinx.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <CACoXjckem9p0uKRBTF67xJ6-_nM2mxcmRyfsb0jue2TiVZiuxQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>
+Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE0LTAyLTI4IGF0IDA0OjAwUE0gLTA4MDAsIFNvcmVuIEJyaW5rbWFubiB3cm90
-ZToKPiBTaWduZWQtb2ZmLWJ5OiBTb3JlbiBCcmlua21hbm4gPHNvcmVuLmJyaW5rbWFubkB4aWxp
-bnguY29tPgo+IC0tLQo+ICBhcmNoL2FybS9ib290L2R0cy96eW5xLTcwMDAuZHRzaSB8IDIyICsr
-KysrKysrKysrKwo+ICBhcmNoL2FybS9ib290L2R0cy96eW5xLXpjNzAyLmR0cyB8IDc2ICsrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgYXJjaC9hcm0vYm9vdC9kdHMv
-enlucS16YzcwNi5kdHMgfCA2OCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+
-ICAzIGZpbGVzIGNoYW5nZWQsIDE2NiBpbnNlcnRpb25zKCspCj4gClsuLi5dCj4gZGlmZiAtLWdp
-dCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtemM3MDIuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMv
-enlucS16YzcwMi5kdHMKPiBpbmRleCBjOTEzZjc3YTIxZWIuLjkxYTNhNTYwZjAzYiAxMDA2NDQK
-PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy96eW5xLXpjNzAyLmR0cwo+ICsrKyBiL2FyY2gvYXJt
-L2Jvb3QvZHRzL3p5bnEtemM3MDIuZHRzClsuLi5dCj4gKwo+ICsJCWkyY0A3IHsKPiArCQkJI2Fk
-ZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsJCQlyZWcgPSA8
-Nz47Cj4gKwkJCWh3bW9uQDUyIHsKPiArCQkJCWNvbXBhdGlibGUgPSAicG1idXMsdWNkOTI0OCI7
-Cj4gKwkJCQlyZWcgPSA8NTI+Owo+ICsJCQl9Owo+ICsJCQlod21vbkA1MyB7Cj4gKwkJCQljb21w
-YXRpYmxlID0gInBtYnVzLHVjZDkyNDgiOwo+ICsJCQkJcmVnID0gPDUzPjsKPiArCQkJfTsKPiAr
-CQkJaHdtb25ANTQgewo+ICsJCQkJY29tcGF0aWJsZSA9ICJwbWJ1cyx1Y2Q5MjQ4IjsKQWxsIHRo
-ZXNlIG9jY3VycmVuY2VzIG9mICdwbWJ1cycgc2hvdWxkIHJhdGhlciBiZSByZXBsYWNlZCB3aXRo
-ICd0aScuCkkgd2Fzbid0IGF3YXJlIG9mIGhvdyB0aGlzIERUIG5vZGUgdG8gSTJDIHByb2Jpbmcg
-d29ya3MgLSBhbmQgc3RpbGwKaGF2ZW4ndCBmdWxseSB1bmRlcnN0b29kIGl0IC0gYnV0IHRoZSB2
-ZW5kb3IgcHJlZml4IGlzIGFwcGFyZW50bHkgYQpkb24ndCBjYXJlIGFuZCB3ZSBjb3VsZCBzaW1w
-bHkgdXNlIHRoZSBjb3JyZWN0IG9uZSBoZXJlLgpJIGhhdmUgbm8gaWRlYSBob3cgSSBjYW1lIHVw
-IHdpdGggdGhlIGRlc2NyaXB0aW9uIHVzaW5nICdwbWJ1cycgKHdlCmNhcnJ5IHRoaXMgaW4gb3Vy
-IHZlbmRvciB0cmVlIGZvciBxdWl0ZSBhIHdoaWxlIGFscmVhZHkpLgpJcyB0aGVyZSBhbnkgZG9j
-dW1lbnQgZGVzY3JpYmluZyBob3cgYSBEVCBub2RlIGlzIG1hdGNoZWQgdG8gYW4KYXBwcm9wcmlh
-dGUgZHJpdmVyPyBUaGVzZSBJMkMgZHJpdmVycyB1c3VhbGx5IGRvbid0IGhhdmUgdGhlIGNvbW1v
-bgonc3RydWN0IG9mX2RldmljZV9pZCcuIEhlbmNlIG15IHByZWZlcnJlZCB3YXkgb2Ygc2ltcGx5
-IGdyZXBwaW5nIHRocm91Z2gKdGhlIGtlcm5lbCBmb3IgdGhlIGNvbXBhdGliaWxpdHkgc3RyaW5n
-IGRvZXMgbm90IHdvcmsuCgpbLi4uXQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy96
-eW5xLXpjNzA2LmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtemM3MDYuZHRzCj4gaW5kZXgg
-ODhmNjJjNTAzODJlLi5kYWIzMGY4MGQ1YjAgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9k
-dHMvenlucS16YzcwNi5kdHMKPiArKysgYi9hcmNoL2FybS9ib290L2R0cy96eW5xLXpjNzA2LmR0
-cwpbLi4uXQo+ICsJCWkyY0A3IHsKPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJCSNz
-aXplLWNlbGxzID0gPDA+Owo+ICsJCQlyZWcgPSA8Nz47Cj4gKwkJCXVjZDkwMTIwQDY1IHsKPiAr
-CQkJCWNvbXBhdGlibGUgPSAicG1idXMsdWNkOTAxMjAiOwpzYW1lIGhlcmUKCglTw7ZyZW4KCgoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJt
-LWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtl
-cm5lbAo=
+On Fri, Feb 28, 2014 at 06:07:05PM -0800, Tanmay Inamdar wrote:
+> Earlier email did not deliver to mailing lists because of plain text
+> setting problem on my side. Apologies for spamming. Sending it again.
+> 
+> Hello Liviu,
+> 
+
+Hello Tanmay,
+
+> While porting X-Gene PCIe driver to v2 series, following problems were observed.
+
+Thanks for trying it out.
+
+> 
+> 1. In 'of_create_pci_host_bridge' function, bus_range is defined
+> locally. So, while walking over list of resources in bridge->windows
+> later, during X-Gene controller related setup, garbage values are
+> found in the resource. Please allocate it dynamically.
+
+Bah, sorry for that. Will fix.
+
+> 
+> 2. 'domain_nr' problem is partially solved. There are still some
+> places where functions are getting invalid domain_nr.  For example,
+> 'pci_alloc_child_bus' tries to get domain_nr when bridge is not
+> assigned to bus. You may want to look for all the places where
+> pci_domain_nr is used. Please see below dump -->
+> 
+> pci 0001:00:00.0: scanning [bus 00-00] behind bridge, pass 1
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 1 at
+> /home/tinamdar/work/open-source/linux/fs/sysfs/dir.c:52
+> sysfs_warn_dup+0x80/0xc0()
+> sysfs: cannot create duplicate filename '/class/pci_bus/0000:01'
+> Modules linked in:
+> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 3.14.0-rc4+ #37
+> Call trace:
+> [<ffffffc000088140>] dump_backtrace+0x0/0x140
+> [<ffffffc000088294>] show_stack+0x14/0x20
+> [<ffffffc0004f64b0>] dump_stack+0x78/0xc4
+> [<ffffffc000096c88>] warn_slowpath_common+0x88/0xc0
+> [<ffffffc000096d10>] warn_slowpath_fmt+0x50/0x60
+> [<ffffffc0001b8260>] sysfs_warn_dup+0x80/0xc0
+> [<ffffffc0001b8718>] sysfs_do_create_link_sd.isra.2+0xf8/0x100
+> [<ffffffc0001b8740>] sysfs_create_link+0x20/0x40
+> [<ffffffc000322f5c>] device_add+0x41c/0x520
+> [<ffffffc00032307c>] device_register+0x1c/0x40
+> [<ffffffc0004f1924>] pci_add_new_bus+0x284/0x380
+> [<ffffffc0002c51a0>] pci_scan_bridge+0x4e0/0x540
+> [<ffffffc0002c52b4>] pci_scan_child_bus+0xb4/0x140
+> [<ffffffc0004f1a34>] pci_rescan_bus+0x14/0x40
+> [<ffffffc0006a12d4>] xgene_pcie_probe_bridge+0x688/0x750
+> [<ffffffc000327c64>] platform_drv_probe+0x24/0x60
+> [<ffffffc000325d74>] really_probe+0xf4/0x220
+> [<ffffffc000325fc4>] __driver_attach+0xa4/0xc0
+> [<ffffffc000323e18>] bus_for_each_dev+0x58/0xa0
+> [<ffffffc000325800>] driver_attach+0x20/0x40
+> [<ffffffc0003253d0>] bus_add_driver+0x150/0x220
+> [<ffffffc000326780>] driver_register+0x60/0x120
+> [<ffffffc000327c20>] __platform_driver_register+0x60/0x80
+> [<ffffffc0006a0c44>] xgene_pcie_driver_init+0x18/0x20
+> [<ffffffc0000814c4>] do_one_initcall+0xe4/0x160
+
+do you have your xgene_pcie_driver_init being called out of some subsys_initcall?
+If so, remove it and let the generic DT parsing code match your driver. The
+bridge should've been associated with the root bus by the time the child busses
+are scanned and allocated, unless I'm missing something obvious.
+
+Also, can you share your version of your driver with me?
+
+Best regards,
+Liviu
+
+> [<ffffffc00068c938>] kernel_init_freeable+0x138/0x1d8
+> [<ffffffc0004f06b0>] kernel_init+0x10/0xe0
+> ---[ end trace 53db1c3a7fbdeb88 ]---
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 1 at
+> /home/tinamdar/work/open-source/linux/drivers/pci/probe.c:711
+> pci_add_new_bus+0x36c/0x380()
+> 
+> Thanks,
+> Tanmay
+> 
+> On Fri, Feb 28, 2014 at 6:01 PM, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org> wrote:
+> > Hello Liviu,
+> >
+> > While porting X-Gene PCIe driver to v2 series, following problems were
+> > observed.
+> >
+> > 1. In 'of_create_pci_host_bridge' function, bus_range is defined locally.
+> > So, while walking over list of resources in bridge->windows later, during
+> > X-Gene controller related setup, garbage values are found in the resource.
+> > Please allocate it dynamically.
+> >
+> > 2. 'domain_nr' problem is partially solved. There are still some places
+> > where functions are getting invalid domain_nr.  For example,
+> > 'pci_alloc_child_bus' tries to get domain_nr when bridge is not assigned to
+> > bus. You may want to look for all the places where pci_domain_nr is used.
+> > Please see below dump -->
+> >
+> > pci 0001:00:00.0: scanning [bus 00-00] behind bridge, pass 1
+> > ------------[ cut here ]------------
+> > WARNING: CPU: 0 PID: 1 at
+> > /home/tinamdar/work/open-source/linux/fs/sysfs/dir.c:52
+> > sysfs_warn_dup+0x80/0xc0()
+> > sysfs: cannot create duplicate filename '/class/pci_bus/0000:01'
+> > Modules linked in:
+> > CPU: 0 PID: 1 Comm: swapper/0 Not tainted 3.14.0-rc4+ #37
+> > Call trace:
+> > [<ffffffc000088140>] dump_backtrace+0x0/0x140
+> > [<ffffffc000088294>] show_stack+0x14/0x20
+> > [<ffffffc0004f64b0>] dump_stack+0x78/0xc4
+> > [<ffffffc000096c88>] warn_slowpath_common+0x88/0xc0
+> > [<ffffffc000096d10>] warn_slowpath_fmt+0x50/0x60
+> > [<ffffffc0001b8260>] sysfs_warn_dup+0x80/0xc0
+> > [<ffffffc0001b8718>] sysfs_do_create_link_sd.isra.2+0xf8/0x100
+> > [<ffffffc0001b8740>] sysfs_create_link+0x20/0x40
+> > [<ffffffc000322f5c>] device_add+0x41c/0x520
+> > [<ffffffc00032307c>] device_register+0x1c/0x40
+> > [<ffffffc0004f1924>] pci_add_new_bus+0x284/0x380
+> > [<ffffffc0002c51a0>] pci_scan_bridge+0x4e0/0x540
+> > [<ffffffc0002c52b4>] pci_scan_child_bus+0xb4/0x140
+> > [<ffffffc0004f1a34>] pci_rescan_bus+0x14/0x40
+> > [<ffffffc0006a12d4>] xgene_pcie_probe_bridge+0x688/0x750
+> > [<ffffffc000327c64>] platform_drv_probe+0x24/0x60
+> > [<ffffffc000325d74>] really_probe+0xf4/0x220
+> > [<ffffffc000325fc4>] __driver_attach+0xa4/0xc0
+> > [<ffffffc000323e18>] bus_for_each_dev+0x58/0xa0
+> > [<ffffffc000325800>] driver_attach+0x20/0x40
+> > [<ffffffc0003253d0>] bus_add_driver+0x150/0x220
+> > [<ffffffc000326780>] driver_register+0x60/0x120
+> > [<ffffffc000327c20>] __platform_driver_register+0x60/0x80
+> > [<ffffffc0006a0c44>] xgene_pcie_driver_init+0x18/0x20
+> > [<ffffffc0000814c4>] do_one_initcall+0xe4/0x160
+> > [<ffffffc00068c938>] kernel_init_freeable+0x138/0x1d8
+> > [<ffffffc0004f06b0>] kernel_init+0x10/0xe0
+> > ---[ end trace 53db1c3a7fbdeb88 ]---
+> > ------------[ cut here ]------------
+> > WARNING: CPU: 0 PID: 1 at
+> > /home/tinamdar/work/open-source/linux/drivers/pci/probe.c:711
+> > pci_add_new_bus+0x36c/0x380()
+> >
+> > Thanks,
+> > Tanmay
+> >
+> >
+> >
+> > On Fri, Feb 28, 2014 at 5:08 AM, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org> wrote:
+> >>
+> >> Several platforms use a rather generic version of parsing
+> >> the device tree to find the host bridge ranges. Move the common code
+> >> into the generic PCI code and use it to create a pci_host_bridge
+> >> structure that can be used by arch code.
+> >>
+> >> Based on early attempts by Andrew Murray to unify the code.
+> >> Used powerpc and microblaze PCI code as starting point.
+> >>
+> >> Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+> >>
+> >> diff --git a/drivers/pci/host-bridge.c b/drivers/pci/host-bridge.c
+> >> index 06ace62..feb8436 100644
+> >> --- a/drivers/pci/host-bridge.c
+> >> +++ b/drivers/pci/host-bridge.c
+> >> @@ -6,9 +6,13 @@
+> >>  #include <linux/init.h>
+> >>  #include <linux/pci.h>
+> >>  #include <linux/module.h>
+> >> +#include <linux/of_address.h>
+> >> +#include <linux/of_pci.h>
+> >>
+> >>  #include "pci.h"
+> >>
+> >> +static int domain_nr;
+> >> +
+> >>  static struct pci_bus *find_pci_root_bus(struct pci_bus *bus)
+> >>  {
+> >>         while (bus->parent)
+> >> @@ -91,3 +95,133 @@ void pcibios_bus_to_resource(struct pci_bus *bus,
+> >> struct resource *res,
+> >>         res->end = region->end + offset;
+> >>  }
+> >>  EXPORT_SYMBOL(pcibios_bus_to_resource);
+> >> +
+> >> +/**
+> >> + * pci_host_bridge_of_get_ranges - Parse PCI host bridge resources from
+> >> DT
+> >> + * @dev: device node of the host bridge having the range property
+> >> + * @resources: list where the range of resources will be added after DT
+> >> parsing
+> >> + * @io_base: pointer to a variable that will contain the physical address
+> >> for
+> >> + * the start of the I/O range.
+> >> + *
+> >> + * If this function returns an error then the @resources list will be
+> >> freed.
+> >> + *
+> >> + * This function will parse the "ranges" property of a PCI host bridge
+> >> device
+> >> + * node and setup the resource mapping based on its content. It is
+> >> expected
+> >> + * that the property conforms with the Power ePAPR document.
+> >> + *
+> >> + * Each architecture is then offered the chance of applying their own
+> >> + * filtering of pci_host_bridge_windows based on their own restrictions
+> >> by
+> >> + * calling pcibios_fixup_bridge_ranges(). The filtered list of windows
+> >> + * can then be used when creating a pci_host_bridge structure.
+> >> + */
+> >> +static int pci_host_bridge_of_get_ranges(struct device_node *dev,
+> >> +               struct list_head *resources, resource_size_t *io_base)
+> >> +{
+> >> +       struct resource *res;
+> >> +       struct of_pci_range range;
+> >> +       struct of_pci_range_parser parser;
+> >> +       int err;
+> >> +
+> >> +       pr_info("PCI host bridge %s ranges:\n", dev->full_name);
+> >> +
+> >> +       /* Check for ranges property */
+> >> +       err = of_pci_range_parser_init(&parser, dev);
+> >> +       if (err)
+> >> +               return err;
+> >> +
+> >> +       pr_debug("Parsing ranges property...\n");
+> >> +       for_each_of_pci_range(&parser, &range) {
+> >> +               /* Read next ranges element */
+> >> +               pr_debug("pci_space: 0x%08x pci_addr:0x%016llx ",
+> >> +                               range.pci_space, range.pci_addr);
+> >> +               pr_debug("cpu_addr:0x%016llx size:0x%016llx\n",
+> >> +                                       range.cpu_addr, range.size);
+> >> +
+> >> +               /*
+> >> +                * If we failed translation or got a zero-sized region
+> >> +                * then skip this range
+> >> +                */
+> >> +               if (range.cpu_addr == OF_BAD_ADDR || range.size == 0)
+> >> +                       continue;
+> >> +
+> >> +               res = kzalloc(sizeof(struct resource), GFP_KERNEL);
+> >> +               if (!res) {
+> >> +                       err = -ENOMEM;
+> >> +                       goto bridge_ranges_nomem;
+> >> +               }
+> >> +
+> >> +               of_pci_range_to_resource(&range, dev, res);
+> >> +
+> >> +               if (resource_type(res) == IORESOURCE_IO)
+> >> +                       *io_base = range.cpu_addr;
+> >> +
+> >> +               pci_add_resource_offset(resources, res,
+> >> +                               res->start - range.pci_addr);
+> >> +       }
+> >> +
+> >> +       /* Apply architecture specific fixups for the ranges */
+> >> +       pcibios_fixup_bridge_ranges(resources);
+> >> +
+> >> +       return 0;
+> >> +
+> >> +bridge_ranges_nomem:
+> >> +       pci_free_resource_list(resources);
+> >> +       return err;
+> >> +}
+> >> +
+> >> +/**
+> >> + * of_create_pci_host_bridge - Create a PCI host bridge structure using
+> >> + * information passed in the DT.
+> >> + * @parent: device owning this host bridge
+> >> + * @ops: pci_ops associated with the host controller
+> >> + * @host_data: opaque data structure used by the host controller.
+> >> + *
+> >> + * returns a pointer to the newly created pci_host_bridge structure, or
+> >> + * NULL if the call failed.
+> >> + *
+> >> + * This function will try to obtain the host bridge domain number by
+> >> + * using of_alias_get_id() call with "pci-domain" as a stem. If that
+> >> + * fails, a local allocator will be used that will put each host bridge
+> >> + * in a new domain.
+> >> + */
+> >> +struct pci_host_bridge *
+> >> +of_create_pci_host_bridge(struct device *parent, struct pci_ops *ops,
+> >> void *host_data)
+> >> +{
+> >> +       int err, domain, busno;
+> >> +       struct resource bus_range;
+> >> +       struct pci_bus *root_bus;
+> >> +       struct pci_host_bridge *bridge;
+> >> +       resource_size_t io_base;
+> >> +       LIST_HEAD(res);
+> >> +
+> >> +       domain = of_alias_get_id(parent->of_node, "pci-domain");
+> >> +       if (domain == -ENODEV)
+> >> +               domain = domain_nr++;
+> >> +
+> >> +       err = of_pci_parse_bus_range(parent->of_node, &bus_range);
+> >> +       if (err) {
+> >> +               dev_info(parent, "No bus range for %s, using default
+> >> [0-255]\n",
+> >> +                       parent->of_node->full_name);
+> >> +               bus_range.start = 0;
+> >> +               bus_range.end = 255;
+> >> +               bus_range.flags = IORESOURCE_BUS;
+> >> +       }
+> >> +       busno = bus_range.start;
+> >> +       pci_add_resource(&res, &bus_range);
+> >> +
+> >> +       /* now parse the rest of host bridge bus ranges */
+> >> +       if (pci_host_bridge_of_get_ranges(parent->of_node, &res,
+> >> &io_base))
+> >> +               return NULL;
+> >> +
+> >> +       /* then create the root bus */
+> >> +       root_bus = pci_create_root_bus_in_domain(parent, domain, busno,
+> >> +                                               ops, host_data, &res);
+> >> +       if (!root_bus)
+> >> +               return NULL;
+> >> +
+> >> +       bridge = to_pci_host_bridge(root_bus->bridge);
+> >> +       bridge->io_base = io_base;
+> >> +
+> >> +       return bridge;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(of_create_pci_host_bridge);
+> >> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> >> index 1eed009..0c5e269 100644
+> >> --- a/include/linux/pci.h
+> >> +++ b/include/linux/pci.h
+> >> @@ -395,6 +395,7 @@ struct pci_host_bridge {
+> >>         struct device dev;
+> >>         struct pci_bus *bus;            /* root bus */
+> >>         int domain_nr;
+> >> +       resource_size_t io_base;        /* physical address for the start
+> >> of I/O area */
+> >>         struct list_head windows;       /* pci_host_bridge_windows */
+> >>         void (*release_fn)(struct pci_host_bridge *);
+> >>         void *release_data;
+> >> @@ -1786,11 +1787,23 @@ static inline struct device_node
+> >> *pci_bus_to_OF_node(struct pci_bus *bus)
+> >>         return bus ? bus->dev.of_node : NULL;
+> >>  }
+> >>
+> >> +struct pci_host_bridge *
+> >> +of_create_pci_host_bridge(struct device *parent, struct pci_ops *ops,
+> >> +                       void *host_data);
+> >> +
+> >> +void pcibios_fixup_bridge_ranges(struct list_head *resources);
+> >>  #else /* CONFIG_OF */
+> >>  static inline void pci_set_of_node(struct pci_dev *dev) { }
+> >>  static inline void pci_release_of_node(struct pci_dev *dev) { }
+> >>  static inline void pci_set_bus_of_node(struct pci_bus *bus) { }
+> >>  static inline void pci_release_bus_of_node(struct pci_bus *bus) { }
+> >> +
+> >> +static inline struct pci_host_bridge *
+> >> +pci_host_bridge_of_init(struct device *parent, struct pci_ops *ops,
+> >> +                       void *host_data)
+> >> +{
+> >> +       return NULL;
+> >> +}
+> >>  #endif  /* CONFIG_OF */
+> >>
+> >>  #ifdef CONFIG_EEH
+> >> --
+> >> 1.9.0
+> >>
+> >>
+> >> _______________________________________________
+> >> linux-arm-kernel mailing list
+> >> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> >> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> >
+> >
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+
+-- 
+-------------------
+   .oooO
+   (   )
+    \ (  Oooo.
+     \_) (   )
+          ) /
+         (_/
+
+ One small step
+   for me ...
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
