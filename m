@@ -1,163 +1,252 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v7 08/15] ahci-imx: Port to library-ised ahci_platform
-Date: Sat, 1 Mar 2014 11:24:24 +0000
-Message-ID: <20140301112424.GB21483@n2100.arm.linux.org.uk>
-References: <1393084424-31099-1-git-send-email-hdegoede@redhat.com> <1393084424-31099-9-git-send-email-hdegoede@redhat.com> <20140228210820.GZ21483@n2100.arm.linux.org.uk> <5311B8A8.1000501@redhat.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFCv4 2/7] mfd: twl4030-madc: Add DT support and convert to
+ IIO framework
+Date: Sat, 01 Mar 2014 11:33:33 +0000
+Message-ID: <5311C58D.3040006@kernel.org>
+References: <1393374270-20079-1-git-send-email-sre@debian.org> <1393444990-28140-1-git-send-email-sre@debian.org> <1393444990-28140-3-git-send-email-sre@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5311B8A8.1000501@redhat.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>, devicetree <devicetree@vger.kernel.org>
-Cc: Tejun Heo <tj@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-ide@vger.kernel.org, Oliver Schinagl <oliver@schinagl.nl>, Richard Zhu <Hong-Xing.Zhu@freescale.com>, linux-sunxi@googlegroups.com, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1393444990-28140-3-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-I've moved the devicetree mailing list to the To: header in case anyone
-there wants to comment on this.
-
-On Sat, Mar 01, 2014 at 11:38:32AM +0100, Hans de Goede wrote:
-> I'm sure Tejun would welcome patches to add a dts property for
-> setting the board-specific phy parameters, but I won't be
-> writing it.
-
-Don't worry, I already have something :)
-
->> I'm in two minds about this - whether to make the existing binding
->> with its compatible string always use these settings, and invent a
->> new compatible string for one which is fully configurable (as it
->> _should_ have been from the very start) or whether to make this
->> the default if the various properties aren't specified.
+On 26/02/14 20:03, Sebastian Reichel wrote:
+> This converts twl4030-madc module to use the Industrial IO ADC
+> framework and adds device tree support.
 >
-> IMHO this does not warrant doing a new compatibole-string. Simply
-> default to the current hardcoded phy settings if no settings are
-> specified through devicetree.
+> Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Mostly fine. I've replicated a few things Lee spotted + one logic bug I think
+in handling the platform_data, device tree interaction.
 
-The problem is that we need to keep existing setups working - which
-means when there's no properties specified, we need to default to the
-settings hard-coded into the driver.
 
-That means introducing properties like:
+> ---
+>   drivers/mfd/twl4030-madc.c | 127 +++++++++++++++++++++++++++++++++++++++++----
+>   1 file changed, 118 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/mfd/twl4030-madc.c b/drivers/mfd/twl4030-madc.c
+> index 5458561..37cb3ad 100644
+> --- a/drivers/mfd/twl4030-madc.c
+> +++ b/drivers/mfd/twl4030-madc.c
+> @@ -47,11 +47,14 @@
+>   #include <linux/gfp.h>
+>   #include <linux/err.h>
+>
+> +#include <linux/iio/iio.h>
+> +
+>   /*
+>    * struct twl4030_madc_data - a container for madc info
+>    * @dev - pointer to device structure for madc
+>    * @lock - mutex protecting this data structure
+>    * @requests - Array of request struct corresponding to SW1, SW2 and RT
+> + * @use_second_irq - IRQ selection (main or co-processor)
+>    * @imr - Interrupt mask register of MADC
+>    * @isr - Interrupt status register of MADC
+>    */
+> @@ -59,10 +62,73 @@ struct twl4030_madc_data {
+>   	struct device *dev;
+>   	struct mutex lock;	/* mutex protecting this data structure */
+>   	struct twl4030_madc_request requests[TWL4030_MADC_NUM_METHODS];
+> +	bool use_second_irq;
+>   	int imr;
+>   	int isr;
+>   };
+>
+> +static int twl4030_madc_read(struct iio_dev *iio_dev,
+> +			     const struct iio_chan_spec *chan,
+> +			     int *val, int *val2, long mask)
+> +{
+> +	struct twl4030_madc_data *madc = iio_priv(iio_dev);
+> +	struct twl4030_madc_request req;
+> +	int ret;
+> +
+> +	req.method = madc->use_second_irq ? TWL4030_MADC_SW2 : TWL4030_MADC_SW1;
+> +
+> +	req.channels = BIT(chan->channel);
+> +	req.active = false;
+> +	req.func_cb = NULL;
+> +	req.type = TWL4030_MADC_WAIT;
+> +	req.raw = !(mask == IIO_CHAN_INFO_PROCESSED);
+> +	req.do_avg = (mask == IIO_CHAN_INFO_AVERAGE_RAW);
+> +
+> +	ret = twl4030_madc_conversion(&req);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	*val = req.rbuf[chan->channel];
+> +
+> +	return IIO_VAL_INT;
+> +}
+> +
+> +static const struct iio_info twl4030_madc_iio_info = {
+> +	.read_raw = &twl4030_madc_read,
+> +	.driver_module = THIS_MODULE,
+> +};
+> +
+> +#define TWL4030_ADC_CHANNEL(_channel, _type, _name, _mask) {	\
+> +	.type = _type,					\
+> +	.channel = _channel,				\
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |  \
+> +			      BIT(IIO_CHAN_INFO_AVERAGE_RAW) | \
+> +			      _mask,			\
+> +	.datasheet_name = _name,			\
+> +	.indexed = 1,					\
+> +}
+A small addition to the ABI docs to include the average case
+would be good.  Obviously it should be there already but it isn't
+as far as I can see.
+> +
+> +static const struct iio_chan_spec twl4030_madc_iio_channels[] = {
+> +	TWL4030_ADC_CHANNEL(0, IIO_VOLTAGE, "ADCIN0", 0),
+> +	TWL4030_ADC_CHANNEL(1, IIO_TEMP, "ADCIN1",
+> +		BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	TWL4030_ADC_CHANNEL(2, IIO_VOLTAGE, "ADCIN2", 0),
+> +	TWL4030_ADC_CHANNEL(3, IIO_VOLTAGE, "ADCIN3", 0),
+> +	TWL4030_ADC_CHANNEL(4, IIO_VOLTAGE, "ADCIN4", 0),
+> +	TWL4030_ADC_CHANNEL(5, IIO_VOLTAGE, "ADCIN5", 0),
+> +	TWL4030_ADC_CHANNEL(6, IIO_VOLTAGE, "ADCIN6", 0),
+> +	TWL4030_ADC_CHANNEL(7, IIO_VOLTAGE, "ADCIN7", 0),
+> +	TWL4030_ADC_CHANNEL(8, IIO_VOLTAGE, "ADCIN8", 0),
+> +	TWL4030_ADC_CHANNEL(9, IIO_VOLTAGE, "ADCIN9", 0),
+> +	TWL4030_ADC_CHANNEL(10, IIO_CURRENT, "ADCIN10",
+> +		BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	TWL4030_ADC_CHANNEL(11, IIO_VOLTAGE, "ADCIN11", 0),
+> +	TWL4030_ADC_CHANNEL(12, IIO_VOLTAGE, "ADCIN12", 0),
+> +	TWL4030_ADC_CHANNEL(13, IIO_VOLTAGE, "ADCIN13", 0),
+> +	TWL4030_ADC_CHANNEL(14, IIO_VOLTAGE, "ADCIN14", 0),
+> +	TWL4030_ADC_CHANNEL(15, IIO_VOLTAGE, "ADCIN15", 0),
+> +};
+> +
+>   static struct twl4030_madc_data *twl4030_madc;
+>
+>   struct twl4030_prescale_divider_ratios {
+> @@ -702,28 +768,51 @@ static int twl4030_madc_probe(struct platform_device *pdev)
+>   {
+>   	struct twl4030_madc_data *madc;
+>   	struct twl4030_madc_platform_data *pdata = dev_get_platdata(&pdev->dev);
+> +	struct device_node *np = pdev->dev.of_node;
+>   	int irq, ret;
+>   	u8 regval;
+> +	struct iio_dev *iio_dev = NULL;
+>
+> -	if (!pdata) {
+> +	if (!pdata && !np) {
+>   		dev_err(&pdev->dev, "platform_data not available\n");
+>   		return -EINVAL;
+>   	}
+> -	madc = devm_kzalloc(&pdev->dev, sizeof(*madc), GFP_KERNEL);
+> -	if (!madc)
+> +
+> +	iio_dev = devm_iio_device_alloc(&pdev->dev,
+> +					sizeof(struct twl4030_madc_data));
+sizeof(*madc)) is shorter and slightly prefered.
 
-	fsl,no-spread-spectrum
+> +	if (!iio_dev) {
+> +		dev_err(&pdev->dev, "failed allocating iio device\n");
+>   		return -ENOMEM;
+> +	}
+>
+> +	madc = iio_priv(iio_dev);
+>   	madc->dev = &pdev->dev;
+> +	madc->use_second_irq = false;
+> +
+> +	iio_dev->name = dev_name(&pdev->dev);
+> +	iio_dev->dev.parent = &pdev->dev;
+> +	iio_dev->dev.of_node = pdev->dev.of_node;
+> +	iio_dev->info = &twl4030_madc_iio_info;
+> +	iio_dev->modes = INDIO_DIRECT_MODE;
+> +	iio_dev->channels = twl4030_madc_iio_channels;
+> +	iio_dev->num_channels = 16;
+Preferred to use ARRAY_SIZE(twl4030_madc_iio_channels);
+That's obviously right, whereas with an explicity number I had
+to go check :(
+>
+>   	/*
+>   	 * Phoenix provides 2 interrupt lines. The first one is connected to
+>   	 * the OMAP. The other one can be connected to the other processor such
+>   	 * as modem. Hence two separate ISR and IMR registers.
+>   	 */
+> -	madc->imr = (pdata->irq_line == 1) ?
+> -	    TWL4030_MADC_IMR1 : TWL4030_MADC_IMR2;
+> -	madc->isr = (pdata->irq_line == 1) ?
+> -	    TWL4030_MADC_ISR1 : TWL4030_MADC_ISR2;
+> +	if (pdata && pdata->irq_line != 1)
+> +		madc->use_second_irq = true;
+This logic looks wrong.  If pdata is true, but pdata->irq_line = 0
+it will read the of data which might not be there.
 
-so that the hard-coded defaults can be turned off, and also deal with
-a whole load of defaults for the other properties.  That's not
-particularly nice.  Doing it this way, what I currently have is this:
-
-struct reg_value {
-        u32 of_value;
-        u32 reg_value;
-};
-
-struct reg_property {
-        const char *name;
-        const struct reg_value *values;
-        size_t num_values;
-        u32 def_value;
-        u32 set_value;
-};
-
-static const struct reg_value gpr13_tx_level[] = {
-        {  937, IMX6Q_GPR13_SATA_TX_LVL_0_937_V },
-        {  947, IMX6Q_GPR13_SATA_TX_LVL_0_947_V },
-...
-        { 1230, IMX6Q_GPR13_SATA_TX_LVL_1_230_V },
-        { 1240, IMX6Q_GPR13_SATA_TX_LVL_1_240_V }
-};
-
-static const struct reg_value gpr13_tx_boost[] = {
-        {    0, IMX6Q_GPR13_SATA_TX_BOOST_0_00_DB },
-        {  370, IMX6Q_GPR13_SATA_TX_BOOST_0_37_DB },
-...
-        {  528, IMX6Q_GPR13_SATA_TX_BOOST_5_28_DB },
-        {  575, IMX6Q_GPR13_SATA_TX_BOOST_5_75_DB }
-};
-
-static const struct reg_value gpr13_tx_atten[] = {
-        {  8, IMX6Q_GPR13_SATA_TX_ATTEN_8_16 },
-        {  9, IMX6Q_GPR13_SATA_TX_ATTEN_9_16 },
-...
-        { 14, IMX6Q_GPR13_SATA_TX_ATTEN_14_16 },
-        { 16, IMX6Q_GPR13_SATA_TX_ATTEN_16_16 },
-};
-
-static const struct reg_value gpr13_rx_eq[] = {
-        {  500, IMX6Q_GPR13_SATA_RX_EQ_VAL_0_5_DB },
-        { 1000, IMX6Q_GPR13_SATA_RX_EQ_VAL_1_0_DB },
-...
-        { 3500, IMX6Q_GPR13_SATA_RX_EQ_VAL_3_5_DB },
-        { 4000, IMX6Q_GPR13_SATA_RX_EQ_VAL_4_0_DB },
-};
-
-static const struct reg_property gpr13_props[] = {
-        {
-                .name = "fsl,transmit-level-mV",
-                .values = gpr13_tx_level,
-                .num_values = ARRAY_SIZE(gpr13_tx_level),
-                .def_value = IMX6Q_GPR13_SATA_TX_LVL_1_025_V,
-        }, {
-                .name = "fsl,transmit-boost-mdB",
-                .values = gpr13_tx_boost,
-                .num_values = ARRAY_SIZE(gpr13_tx_boost),
-                .def_value = IMX6Q_GPR13_SATA_TX_BOOST_3_33_DB,
-        }, {
-                .name = "fsl,transmit-atten-16ths",
-                .values = gpr13_tx_atten,
-                .num_values = ARRAY_SIZE(gpr13_tx_atten),
-                .def_value = IMX6Q_GPR13_SATA_TX_ATTEN_9_16,
-        }, {
-                .name = "fsl,receive-eq-mdB",
-                .values = gpr13_rx_eq,
-                .num_values = ARRAY_SIZE(gpr13_rx_eq),
-                .def_value = IMX6Q_GPR13_SATA_RX_EQ_VAL_3_0_DB,
-        }, {
-                .name = "fsl,no-spread-spectrum",
-                .def_value = IMX6Q_GPR13_SATA_MPLL_SS_EN,
-                .set_value = 0,
-        },
-};
-
-and then a bunch of code to read through these tables and work out the
-GPR13 register value from it - it doesn't handle everything yet because
-I've not worked out a good way to do the last remaining three - I'm
-thinking that they want to be strings:
-
-                regmap_update_bits(imxpriv->gpr, IOMUXC_GPR13,
-                                   IMX6Q_GPR13_SATA_RX_EQ_VAL_MASK |
-...
-                                   IMX6Q_GPR13_SATA_TX_EDGE_RATE,
-                                   IMX6Q_GPR13_SATA_RX_LOS_LVL_SATA2M |
-                                   IMX6Q_GPR13_SATA_RX_DPLL_MODE_2P_4F |
-                                   IMX6Q_GPR13_SATA_SPD_MODE_3P0G |
-                                   reg_value);
-
-	RX_LOS_LVL: SATA1I / SATA1M / SATA1X / SATA2I / SATA2M / SATA2X
-	RX_DPLL_MODE: 1P_1F / 2P_2F / 1P_4F / 2P_4F
-	SPD_MODE: 3P0G / 1P5G (I do wonder whether this should be changed
-		when the Linux wants to slow the link speed.)
-
-With a new compatible string, we can use the hard-coded version for
-fsl,imx6q-ahci, but require all properties (with values) to be specified
-for a different compatible string, thereby eliminating all the defaults,
-and making things like "no-spread-spectrum" be a positive property instead
-of negative, and this simplifies the parsing code.
-
-There's also the obvious question about which of these properties should
-be generic ones for AHCI/SATA interfaces...  The only one I see with any
-kind of electrical properties specified is sata_highbank:
-
-- calxeda,tx-atten  : a u32 array that contains TX attenuation override
-                        codes, one per port. The upper 3 bytes are always
-                        0 and thus ignored.
-
-and that seems to be a register-coded value rather than an actual
-attenuation figure.
-
-A simpler solution to this would be to just provide an imx6-specific
-property which encodes the GPR13 value directly, and not bother with
-trying to provide individual properties.
-
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+> +	else
+> +		madc->use_second_irq = of_property_read_bool(np,
+> +				       "ti,system-uses-second-madc-irq");
+> +
+> +	madc->imr = madc->use_second_irq ? TWL4030_MADC_IMR2 :
+> +					   TWL4030_MADC_IMR1;
+> +	madc->isr = madc->use_second_irq ? TWL4030_MADC_ISR2 :
+> +					   TWL4030_MADC_ISR1;
+> +
+>   	ret = twl4030_madc_set_power(madc, 1);
+>   	if (ret < 0)
+>   		return ret;
+> @@ -768,7 +857,7 @@ static int twl4030_madc_probe(struct platform_device *pdev)
+>   		}
+>   	}
+>
+> -	platform_set_drvdata(pdev, madc);
+> +	platform_set_drvdata(pdev, iio_dev);
+>   	mutex_init(&madc->lock);
+>
+>   	irq = platform_get_irq(pdev, 0);
+> @@ -780,7 +869,15 @@ static int twl4030_madc_probe(struct platform_device *pdev)
+>   		goto err_i2c;
+>   	}
+>   	twl4030_madc = madc;
+> +
+> +	ret = iio_device_register(iio_dev);
+> +	if (ret) {
+> +		dev_dbg(&pdev->dev, "could not register iio device\n");
+> +		goto err_i2c;
+> +	}
+> +
+>   	return 0;
+> +
+>   err_i2c:
+>   	twl4030_madc_set_current_generator(madc, 0, 0);
+>   err_current_generator:
+> @@ -790,20 +887,32 @@ err_current_generator:
+>
+>   static int twl4030_madc_remove(struct platform_device *pdev)
+>   {
+> -	struct twl4030_madc_data *madc = platform_get_drvdata(pdev);
+> +	struct iio_dev *iio_dev = platform_get_drvdata(pdev);
+> +	struct twl4030_madc_data *madc = iio_priv(iio_dev);
+>
+>   	twl4030_madc_set_current_generator(madc, 0, 0);
+>   	twl4030_madc_set_power(madc, 0);
+>
+> +	iio_device_unregister(iio_dev);
+> +
+>   	return 0;
+>   }
+>
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id twl_madc_of_match[] = {
+> +	{.compatible = "ti,twl4030-madc", },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, twl_madc_of_match);
+> +#endif
+> +
+>   static struct platform_driver twl4030_madc_driver = {
+>   	.probe = twl4030_madc_probe,
+>   	.remove = twl4030_madc_remove,
+>   	.driver = {
+>   		   .name = "twl4030_madc",
+>   		   .owner = THIS_MODULE,
+> +		   .of_match_table = of_match_ptr(twl_madc_of_match),
+>   		   },
+>   };
+>
+>
