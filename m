@@ -1,34 +1,38 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 1/1] Update source code location for dtc in manual.txt
-Date: Mon, 3 Mar 2014 10:42:12 +1100
-Message-ID: <20140302234212.GF12916@voom.fritz.box>
-References: <1393796354-29704-1-git-send-email-xypron.glpk@gmx.de>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: [PATCH 1/1] Consistently use xrealloc instead of realloc
+Date: Mon, 3 Mar 2014 10:41:40 +1100
+Message-ID: <20140302234140.GD12916@voom.fritz.box>
+References: <1393792741-29043-1-git-send-email-xypron.glpk@gmx.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PyMzGVE0NRonI6bs"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="LSp5EJdfMPwZcMS1"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1393796354-29704-1-git-send-email-xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: xypron.glpk-Mmb7MZpHnFY@public.gmane.org
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1393792741-29043-1-git-send-email-xypron.glpk@gmx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: xypron.glpk@gmx.de
+Cc: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, devicetree-compiler@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---PyMzGVE0NRonI6bs
+--LSp5EJdfMPwZcMS1
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 02, 2014 at 10:39:14PM +0100, xypron.glpk-Mmb7MZpHnFY@public.gmane.org wrote:
-> From: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+On Sun, Mar 02, 2014 at 09:39:01PM +0100, xypron.glpk@gmx.de wrote:
+> From: Heinrich Schuchardt <xypron.glpk@gmx.de>
 >=20
-> The information about the location of the source code of the
-> device tree compiler was inaccurate.
+> fdtput.c:
+> Replace the remaining call to realloc by xrealloc.
+> Some redundant lines in encode_value can be saved.
 >=20
-> Signed-off-by: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
 
-Trailing whitespace removed, then applied.  Thanks.
+Applied, thanks.
+
+Note that in general dtc patches should be CCed to myself and Jon
+Loeliger <jdl@jdl.com>, the dtc maintainers.
 
 --=20
 David Gibson			| I'll have my music baroque, and my code
@@ -36,29 +40,25 @@ david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
 http://www.ozlabs.org/~dgibson
 
---PyMzGVE0NRonI6bs
+--LSp5EJdfMPwZcMS1
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJTE8HUAAoJEGw4ysog2bOSc60QAKWCBfipU460ro80awgDf5OO
-QMzylNuKSO7e47IjXI9at0tEA6VQVtfzn7fPP//sAzI5RkUjPSSeTxdRToREAsJt
-1CEyWXoTo+u8MLDDCSgi3zG7hdWAaoX6uR7E9wvfkKc75MCB8FiMBGUVBoz4hD24
-me33eQMx6V5AvbT1pIPE7Cb5mmfhi9XJfdl6W6QsSTeomCu5uSasqM0QqL/PkCmq
-a9PqCaxEAHUm98gu0kYQiuD2gBBPZQlLvma+cYpxWiFnsX5zKVHQ5HrZj1lhtqnp
-t0tfJB2FJTmFCXQLEzxcD8WTJRn0D609q4RY/CXYqGb1L2Dfy20uECZ2KjYw1n/C
-b2QyrwdzJ5XWVbNJFSuQKZbhf4JdBrqe+iKHRZA1x5lBdyHbzBntdvyJNdZWsSS/
-63QLiPP/XhktKK7riqujjN6Uz0m3guvGZxMdk+IBiX5asaseLS9H1wcIEDaCzxLW
-UvyemZ3G7zgsFZfO1moZyutpRLOsELzvff4oOdVx5icUE7Zrp+FX+atoYUAu5tzD
-YcxIlyqCJSnzRbwSlRws95q28c+dvi6srkXhiOwQjUdMFjmcRGcrwFCHzipbcyBw
-IpI1lTfFnaKmksKYvV0LleYAT6ZPqUEkzUmzIlwX9ymHhZADUQYR2ThWjVIrT3Yi
-2XT+MBw9DgLJ9OL8BRp+
-=JAQE
+iQIcBAEBAgAGBQJTE8G0AAoJEGw4ysog2bOSaYMQAIto65iqA1mZWk9uH9ruJtQm
+VAkfqi9IQL6WYYcXJitsbBY34RyxB1HJvq0LWqYKZj7+8DZXs8Z85LMvI9XgmuaS
+vM4HE5Uw+nALfCaBvbrlQuNvquTSR6qVlBXSAL39OqjWgEp1/MEnMD3tngFG0f8I
+QIJNwUNjqoZqiS4FlMjE0ntwyf+P3oeWsRK5AqSiAY/uEFj80H/9U99/DH52UBP0
+W3zSMlUxLDp8n3b2aYLEYIdjOgjGoQz2hDMw2GKKK7meTVv8ztSf0LYhyJGpv8a+
+9IeGRLcn3hHrt7hK7m0LKmv932uUR07PBm0ZgJ+UQXxv2+Ba3XPjLKESx64Z3+/u
+rVYNKlnqDKaaQcSpmGFNPmUqD0+PJRRBs0fdziZ0xHe7kA8D8YxnKvB18F0tTLcd
+80l9gjqOnnVL60bQr6ctZDF2+WxChQF9duyzq7U7rIBVbeu7dm3cAguzYA8UfxSB
+r+2HFLh8UvktV9vH+hsdcd+8qCpG1jVwGoYKOwHXg1fn2JN/73qcChB9/yHpXJNE
+gyi19ar8eRILAxGx0odclpY+2hZiSogKHXNtwGJ6ldlK/fEr6IV8Asx0v8SFzUCr
+XPwfrLObVDl8P5UWeXobFbeYju2uE5L/Dp/M0DGScAI+aTqTldjbpDJcK1KVRlqS
+cE4JanVNqIFOi8TNCdWW
+=1UTA
 -----END PGP SIGNATURE-----
 
---PyMzGVE0NRonI6bs--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--LSp5EJdfMPwZcMS1--
