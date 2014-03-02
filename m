@@ -1,45 +1,83 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: devicetree repository separation/migration
-Date: Sat, 01 Mar 2014 21:04:41 +0000
-Message-ID: <20140301210441.8290AC40DCB@trevor.secretlab.ca>
-References: <20140217180544.GU7862@titan.lakedaemon.net> <5306A6C0.9000206@ gmail.com> <20140221141136.GI17250@pengutronix.de> < CAOesGMjY2aDLPYLncxHs9gqmWCFy+e4sZK_ET-17qzEU-JwvdQ@mail.gmail.com> < 20140228080025.GK24917@pengutronix.de>
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140228080025.GK24917-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Eli Billauer <eli.billauer@gmail.com>
+Subject: [PATCH v2] mmc: sdhci: add quirk for broken write protect detection
+Date: Sun,  2 Mar 2014 13:20:00 +0200
+Message-ID: <1393759200-22819-1-git-send-email-eli.billauer@gmail.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: chris@printf.net
+Cc: michal.simek@xilinx.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Eli Billauer <eli.billauer@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 28 Feb 2014 09:00:25 +0100, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> On Fri, Feb 21, 2014 at 10:47:09AM -0800, Olof Johansson wrote:
-> > On Fri, Feb 21, 2014 at 6:11 AM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > > On Thu, Feb 20, 2014 at 05:07:12PM -0800, Frank Rowand wrote:
-> > 
-> > >> Why are the changes not submitted upstream?  (Or if they were submitted, why
-> > >> were they not accepted?)
-> > >
-> > > The descriptions where to find the environment are obviously barebox
-> > > specific and not acceptable upstream.
-> > 
-> > Why not? Wouldn't it be useful if you could find where the environment
-> > is from the running Linux image so that you can change variables
-> > without rebooting into Barebox first?
-> 
-> Indeed that would be very useful. Generally that would require some
-> generic binding for referring to partitions on mtd devices, partitions
-> on block devices and EEPROMs. If you think such a binding would have a
-> chance upstream I could try and come up with a binding.
+The write protection signal is absent on a board based upon Xilinx' Zynq
+processor ("ZyBo"). This leads the kernel to think that the MicroSD card is
+write protected, and causes a kernel panic during boot, as root fails to
+mount RW.
 
-I agree. I want to explore doing the same thing for UEFI also. Currently
-the UEFI spec pretty much requires UEFI runtime services to 'own' the
-device that holds variable storage, but that doesn't work on
-cost-sensitive devices that can't afford separate flash dedicated to
-UEFI. I'd like to investigate a spec extension that defines the variable
-storage format on a block device so that Linux can directly manipulate
-it without a runtime services call.
+This patch adds a quirk and an optional OF property, sdhci,broken-wp to
+work around this issue.
 
-g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Eli Billauer <eli.billauer@gmail.com>
+---
+ Documentation/devicetree/bindings/mmc/mmc.txt |    2 ++
+ drivers/mmc/host/sdhci-pltfm.c                |    4 +++-
+ drivers/mmc/host/sdhci.c                      |    2 ++
+ include/linux/mmc/sdhci.h                     |    2 ++
+ 4 files changed, 9 insertions(+), 1 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+index 458b57f..83a39c1 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+@@ -21,6 +21,8 @@ Optional properties:
+   below for the case, when a GPIO is used for the CD line
+ - wp-inverted: when present, polarity on the WP line is inverted. See the note
+   below for the case, when a GPIO is used for the WP line
++- broken-wp: when present, no indication of write protection is available,
++  and write protection is assumed always off.
+ - max-frequency: maximum operating clock frequency
+ - no-1-8-v: when present, denotes that 1.8v card voltage is not supported on
+   this system, even if the controller claims it is.
+diff --git a/drivers/mmc/host/sdhci-pltfm.c b/drivers/mmc/host/sdhci-pltfm.c
+index bef250e..dac20af 100644
+--- a/drivers/mmc/host/sdhci-pltfm.c
++++ b/drivers/mmc/host/sdhci-pltfm.c
+@@ -80,7 +80,9 @@ void sdhci_get_of_property(struct platform_device *pdev)
+ 		    bus_width == 1))
+ 			host->quirks |= SDHCI_QUIRK_FORCE_1_BIT_DATA;
+ 
+-		if (sdhci_of_wp_inverted(np))
++		if (of_get_property(np, "sdhci,broken-wp", NULL))
++			host->quirks2 |= SDHCI_QUIRK2_BROKEN_WRITE_PROTECT;
++		else if (sdhci_of_wp_inverted(np))
+ 			host->quirks |= SDHCI_QUIRK_INVERTED_WRITE_PROTECT;
+ 
+ 		if (of_get_property(np, "broken-cd", NULL))
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 9ddef47..6c77f2e 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -1657,6 +1657,8 @@ static int sdhci_check_ro(struct sdhci_host *host)
+ 		is_readonly = 0;
+ 	else if (host->ops->get_ro)
+ 		is_readonly = host->ops->get_ro(host);
++	else if (host->quirks2 & SDHCI_QUIRK2_BROKEN_WRITE_PROTECT)
++		is_readonly = 0;
+ 	else
+ 		is_readonly = !(sdhci_readl(host, SDHCI_PRESENT_STATE)
+ 				& SDHCI_WRITE_PROTECT);
+diff --git a/include/linux/mmc/sdhci.h b/include/linux/mmc/sdhci.h
+index 362927c4..0f6ef9d 100644
+--- a/include/linux/mmc/sdhci.h
++++ b/include/linux/mmc/sdhci.h
+@@ -100,6 +100,8 @@ struct sdhci_host {
+ #define SDHCI_QUIRK2_BROKEN_HOST_CONTROL		(1<<5)
+ /* Controller does not support HS200 */
+ #define SDHCI_QUIRK2_BROKEN_HS200			(1<<6)
++/* There is no indication for write protection at all, assume RW */
++#define SDHCI_QUIRK2_BROKEN_WRITE_PROTECT		(1<<7)
+ 
+ 	int irq;		/* Device IRQ */
+ 	void __iomem *ioaddr;	/* Mapped address */
+-- 
+1.7.2.3
+
