@@ -1,99 +1,224 @@
 From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RFC v1 3/3] clk: Add handling of clk parent and rate assigned from DT
-Date: Sat, 01 Mar 2014 21:13:48 +0000
-Message-ID: <20140301211348.98ECEC40FF7@trevor.secretlab.ca>
-References: <1392829124-25705-1-git-send-email-s.nawrocki@samsung.com> < 1392829124-25705-4-git-send-email-s.nawrocki@samsung.com> <20140220140928. 27132C4050F@trevor.secretlab.ca> <53072C9D.5040303@samsung.com> < 20140224004826.22529.87768@quantum> <530B8B46.6060003@samsung.com>
+Subject: Re: [PATCH v6 02/11] drivers: of: add initialization code for static reserved memory
+Date: Sun, 02 Mar 2014 13:28:42 +0800
+Message-ID: <20140302052842.EB26FC40E0C@trevor.secretlab.ca>
+References: <1393594976-16728-1-git-send-email-m.szyprowski@samsung.com> < 1393594976-16728-3-git-send-email-m.szyprowski@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <530B8B46.6060003-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1393594976-16728-3-git-send-email-m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 24 Feb 2014 19:11:18 +0100, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> On 24/02/14 01:48, Mike Turquette wrote:
-> > Quoting Sylwester Nawrocki (2014-02-21 02:38:21)
-> >> > On 20/02/14 15:09, Grant Likely wrote:
-> >> > [...]
-> >>>>> > >> > diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> >>>>> > >> > index 7c52c29..d618498 100644
-> >>>>> > >> > --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> >>>>> > >> > +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> >>>>> > >> > @@ -115,3 +115,27 @@ clock signal, and a UART.
-> >>>>> > >> >    ("pll" and "pll-switched").
-> >>>>> > >> >  * The UART has its baud clock connected the external oscillator and its
-> >>>>> > >> >    register clock connected to the PLL clock (the "pll-switched" signal)
-> >>>>> > >> > +
-> >>>>> > >> > +==Static initial configuration of clock parent and clock frequency==
-> >>>>> > >> > +
-> >>>>> > >> > +Some platforms require static configuration of (parts of) the clock controller
-> >>>>> > >> > +often determined by the board design. Such a configuration can be specified in
-> >>>>> > >> > +a clock consumer node through [clk-name]-clk-parent and [clk-name]-clk-rate DT
-> >>>>> > >> > +properties. The former should contain phandle and clock specifier of the parent
-> >>>>> > >> > +clock, the latter the required clock's frequency value (one cell). "clk-name"
-> >>>>> > >> > +should be listed in the clock-names property and a phandle and a clock specifier
-> >>>>> > >> > +pair corresponding to it should be present in the clocks property.
-> >>>>> > >> > +
-> >>>>> > >> > +    uart@a000 {
-> >>>>> > >> > +        compatible = "fsl,imx-uart";
-> >>>>> > >> > +        reg = <0xa000 0x1000>;
-> >>>>> > >> > +  ...
-> >>>>> > >> > +        clocks = <&clkcon 0>, <&clkcon 3>;
-> >>>>> > >> > +        clock-names = "baud", "mux";
-> >>>>> > >> > +
-> >>>>> > >> > +  mux-clk-parent = <&pll 1>;
-> >>>>> > >> > +  baud-clk-rate = <460800>;
-> >>> > >
-> >>> > > This mixes patterns for references to clocks. Plus it requires composing
-> >>> > > property names which is a little painful. I'd rather see a list of
-> >>> > > tuples to match the existing pattern already in use
-> >>> > > 
-> >>> > >       clocks = <&clkcon 0>, <&clkcon 3>;
-> >>> > >       clock-names = "baud", "mux";
-> >>> > >       clock-parents = <0> <&pll 1>;
-> >>> > >       clock-rates = <0> <460800>;
-> >> > 
-> >> > Thank you for the review. This looks much better to me. My bad, I wasn't 
-> >> > aware 0 can be used to denote an empty phandle like this. ePAPR seems not 
-> >> > to be specifying exact meaning of the 'phandle' property values, except 
-> >> > they be unique. Anyway, it seems to be clearly documented within the
-> >> > __of_parse_phandle_with_args() function. 
-> >> > 
-> >> > I'll try this modified binding instead, presumably it would be useful to 
-> >> > have a variant of __of_parse_phandle_with_args() function which would 
-> >> > accept a context data containing result of previous call within an iteration, 
-> >> > similarly as of_property_next_string() is written. So we don't iterate 
-> >> > from beginning of the list with each __of_parse_phandle_with_args() call. 
-> >> > But it's an optimization issue that could be considered separately I guess.
-> >
-> > I was always partial to the regulator style of blahblah-supply but
-> > Grant's suggestion is much cleaner with respect to the rest of the clock
-> > binding.
+On Fri, 28 Feb 2014 14:42:47 +0100, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> This patch adds support for static (defined by 'reg' property) reserved
+> memory regions declared in device tree.
 > 
-> I don't have a strong opinion, I'm slightly inclined towards Grant's suggestion,
-> which doesn't have a problem of limiting effective clk name to 21 characters.
+> Memory blocks can be reliably reserved only during early boot. This must
+> happen before the whole memory management subsystem is initialized,
+> because we need to ensure that the given contiguous blocks are not yet
+> allocated by kernel. Also it must happen before kernel mappings for the
+> whole low memory are created, to ensure that there will be no mappings
+> (for reserved blocks). Typically, all this happens before device tree
+> structures are unflattened, so we need to get reserved memory layout
+> directly from fdt.
 > 
-> Also DT property names with underscores coming from the clock names are a bit
-> incorrect and it might be not immediately obvious which part of name is a 
-> canonical property's name and which is clock's name. Let's consider property 
-> names like:
+> Based on previous code provided by Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 > 
-> mux-clk-parent, divider-clk-rate, sclk_mmc0-clk-parent, sclk_uart_baud0-clk-parent,
-> etc.
-> 
-> > I guess it will be a bit ugly if a very long array is needed with a
-> > sparse attribute. E.g. 20 clocks specified in the 'clocks' property and
-> > only a single clock needs to have its parent or rate specified.
-> 
-> It was also concerning me, but this inconvenience could be mitigated by 
-> reordering content of clocks/clock-names properties so that the clocks for
-> which parents and/or rates are being assigned are first on the list.
-> Then number of padding zeros is minimized.
+> Signed-off-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-If the array really gets that long for a device, then groups of clocks
-can also be split off into sub-nodes.
+Applied, thanks.
 
 g.
+
+> ---
+>  drivers/of/fdt.c       |  131 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_fdt.h |    3 ++
+>  2 files changed, 134 insertions(+)
+> 
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 758b4f8b30b7..819e11209718 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/of_fdt.h>
+> +#include <linux/sizes.h>
+>  #include <linux/string.h>
+>  #include <linux/errno.h>
+>  #include <linux/slab.h>
+> @@ -440,6 +441,118 @@ struct boot_param_header *initial_boot_params;
+>  #ifdef CONFIG_OF_EARLY_FLATTREE
+>  
+>  /**
+> + * res_mem_reserve_reg() - reserve all memory described in 'reg' property
+> + */
+> +static int __init __reserved_mem_reserve_reg(unsigned long node,
+> +					     const char *uname)
+> +{
+> +	int t_len = (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32);
+> +	phys_addr_t base, size;
+> +	unsigned long len;
+> +	__be32 *prop;
+> +	int nomap;
+> +
+> +	prop = of_get_flat_dt_prop(node, "reg", &len);
+> +	if (!prop)
+> +		return -ENOENT;
+> +
+> +	if (len && len % t_len != 0) {
+> +		pr_err("Reserved memory: invalid reg property in '%s', skipping node.\n",
+> +		       uname);
+> +		return -EINVAL;
+> +	}
+> +
+> +	nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
+> +
+> +	while (len >= t_len) {
+> +		base = dt_mem_next_cell(dt_root_addr_cells, &prop);
+> +		size = dt_mem_next_cell(dt_root_size_cells, &prop);
+> +
+> +		if (base && size &&
+> +		    early_init_dt_reserve_memory_arch(base, size, nomap) == 0)
+> +			pr_debug("Reserved memory: reserved region for node '%s': base %pa, size %ld MiB\n",
+> +				uname, &base, (unsigned long)size / SZ_1M);
+> +		else
+> +			pr_info("Reserved memory: failed to reserve memory for node '%s': base %pa, size %ld MiB\n",
+> +				uname, &base, (unsigned long)size / SZ_1M);
+> +
+> +		len -= t_len;
+> +	}
+> +	return 0;
+> +}
+> +
+> +/**
+> + * __reserved_mem_check_root() - check if #size-cells, #address-cells provided
+> + * in /reserved-memory matches the values supported by the current implementation,
+> + * also check if ranges property has been provided
+> + */
+> +static int __reserved_mem_check_root(unsigned long node)
+> +{
+> +	__be32 *prop;
+> +
+> +	prop = of_get_flat_dt_prop(node, "#size-cells", NULL);
+> +	if (!prop || be32_to_cpup(prop) != dt_root_size_cells)
+> +		return -EINVAL;
+> +
+> +	prop = of_get_flat_dt_prop(node, "#address-cells", NULL);
+> +	if (!prop || be32_to_cpup(prop) != dt_root_addr_cells)
+> +		return -EINVAL;
+> +
+> +	prop = of_get_flat_dt_prop(node, "ranges", NULL);
+> +	if (!prop)
+> +		return -EINVAL;
+> +	return 0;
+> +}
+> +
+> +/**
+> + * fdt_scan_reserved_mem() - scan a single FDT node for reserved memory
+> + */
+> +static int __init __fdt_scan_reserved_mem(unsigned long node, const char *uname,
+> +					  int depth, void *data)
+> +{
+> +	static int found;
+> +	const char *status;
+> +
+> +	if (!found && depth == 1 && strcmp(uname, "reserved-memory") == 0) {
+> +		if (__reserved_mem_check_root(node) != 0) {
+> +			pr_err("Reserved memory: unsupported node format, ignoring\n");
+> +			/* break scan */
+> +			return 1;
+> +		}
+> +		found = 1;
+> +		/* scan next node */
+> +		return 0;
+> +	} else if (!found) {
+> +		/* scan next node */
+> +		return 0;
+> +	} else if (found && depth < 2) {
+> +		/* scanning of /reserved-memory has been finished */
+> +		return 1;
+> +	}
+> +
+> +	status = of_get_flat_dt_prop(node, "status", NULL);
+> +	if (status && strcmp(status, "okay") != 0 && strcmp(status, "ok") != 0)
+> +		return 0;
+> +
+> +	__reserved_mem_reserve_reg(node, uname);
+> +
+> +	/* scan next node */
+> +	return 0;
+> +}
+> +
+> +/**
+> + * early_init_fdt_scan_reserved_mem() - create reserved memory regions
+> + *
+> + * This function grabs memory from early allocator for device exclusive use
+> + * defined in device tree structures. It should be called by arch specific code
+> + * once the early allocator (i.e. memblock) has been fully activated.
+> + */
+> +void __init early_init_fdt_scan_reserved_mem(void)
+> +{
+> +	of_scan_flat_dt(__fdt_scan_reserved_mem, NULL);
+> +}
+> +
+> +/**
+>   * of_scan_flat_dt - scan flattened tree blob and call callback on each.
+>   * @it: callback function
+>   * @data: context data pointer
+> @@ -856,6 +969,16 @@ void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
+>  	memblock_add(base, size);
+>  }
+>  
+> +int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
+> +					phys_addr_t size, bool nomap)
+> +{
+> +	if (memblock_is_region_reserved(base, size))
+> +		return -EBUSY;
+> +	if (nomap)
+> +		return memblock_remove(base, size);
+> +	return memblock_reserve(base, size);
+> +}
+> +
+>  /*
+>   * called from unflatten_device_tree() to bootstrap devicetree itself
+>   * Architectures can override this definition if memblock isn't used
+> @@ -864,6 +987,14 @@ void * __init __weak early_init_dt_alloc_memory_arch(u64 size, u64 align)
+>  {
+>  	return __va(memblock_alloc(size, align));
+>  }
+> +#else
+> +int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
+> +					phys_addr_t size, bool nomap)
+> +{
+> +	pr_err("Reserved memory not supported, ignoring range 0x%llx - 0x%llx%s\n",
+> +		  base, size, nomap ? " (nomap)" : "");
+> +	return -ENOSYS;
+> +}
+>  #endif
+>  
+>  bool __init early_init_dt_scan(void *params)
+> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+> index 2b77058a7335..8610ad8d77d2 100644
+> --- a/include/linux/of_fdt.h
+> +++ b/include/linux/of_fdt.h
+> @@ -98,7 +98,10 @@ extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
+>  				     int depth, void *data);
+>  extern int early_init_dt_scan_memory(unsigned long node, const char *uname,
+>  				     int depth, void *data);
+> +extern void early_init_fdt_scan_reserved_mem(void);
+>  extern void early_init_dt_add_memory_arch(u64 base, u64 size);
+> +extern int early_init_dt_reserve_memory_arch(phys_addr_t base, phys_addr_t size,
+> +					     bool no_map);
+>  extern void * early_init_dt_alloc_memory_arch(u64 size, u64 align);
+>  extern u64 dt_mem_next_cell(int s, __be32 **cellp);
+>  
+> -- 
+> 1.7.9.5
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
