@@ -1,64 +1,75 @@
-From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
-Subject: [RFC PATCH] EDAC support for ARM PL310 cache controller
-Date: Sun, 2 Mar 2014 20:02:39 +0530
-Message-ID: <85311a4f-219e-4f3d-ab48-81fce8ef3443@VA3EHSMHS019.ehs.local>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: =?UTF-8?q?=5BPATCH=201/3=5D=20DT=3A=20I2C=3A=20Add=20trivial=20bindings=20used=20by=20kirkwood=20boards?=
+Date: Sun,  2 Mar 2014 16:24:13 +0100
+Message-ID: <1393773855-9592-1-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dougthompson@xmission.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, michal.simek@xilinx.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
-Cc: kpc528@gmail.com, punnaia@xilinx.com, kalluripunnaiahchoudary@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add a number of eeproms and temperature sensors/fan controllers used
+by kirkwood boards.
 
-  The following patch adds EDAC support for reporting the data and tag ram
-parity errors for ARM PL310 cache controller.
-As part of this driver implementtaion, the following options are considered
-and this patch is implemented as described in option 3 
+Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+---
+ .../devicetree/bindings/i2c/trivial-devices.txt         | 17 +++++++++=
+++++++++
+ 1 file changed, 17 insertions(+)
 
-1. Enable the parity interrupts in cache-l2x0.c(pl310 driver) and notify the
-parity errors based on error interrupt.
-   This implementation is straight forward and no dependency with other
-modules. But it is not utilizing the edac framework which meant for error
-reproting
+diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt =
+b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+index e11ed0fe770c..7faa3eab2549 100644
+--- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
++++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+@@ -13,7 +13,22 @@ ad,ad7414		SMBus/I2C Digital Temperature Sensor in 6=
+-Pin SOT with SMBus Alert an
+ ad,adm9240		ADM9240:  Complete System Hardware Monitor for uProcessor-=
+Based Systems
+ adi,adt7461		+/-1C TDM Extended Temp Range I.C
+ adt7461			+/-1C TDM Extended Temp Range I.C
++adi,adt7473		+/-1C TDM Extended Temp Range I.C
++adi,adt7475		+/-1C TDM Extended Temp Range I.C
++adi,adt7476		+/-1C TDM Extended Temp Range I.C
++adi,adt7490		+/-1C TDM Extended Temp Range I.C
++at,24c00		i2c serial eeprom  (24cxx)
++at,24c01		i2c serial eeprom  (24cxx)
++at,24c02		i2c serial eeprom  (24cxx)
++at,24c04		i2c serial eeprom  (24cxx)
+ at,24c08		i2c serial eeprom  (24cxx)
++at,24c16		i2c serial eeprom  (24cxx)
++at,24c32		i2c serial eeprom  (24cxx)
++at,24c64		i2c serial eeprom  (24cxx)
++at,24c128		i2c serial eeprom  (24cxx)
++at,24c256		i2c serial eeprom  (24cxx)
++at,24c512		i2c serial eeprom  (24cxx)
++at,24c1024		i2c serial eeprom  (24cxx)
+ atmel,24c02		i2c serial eeprom  (24cxx)
+ atmel,at97sc3204t	i2c trusted platform module (TPM)
+ capella,cm32181		CM32181: Ambient Light Sensor
+@@ -45,8 +60,10 @@ maxim,ds1050		5 Bit Programmable, Pulse-Width Modula=
+tor
+ maxim,max1237		Low-Power, 4-/12-Channel, 2-Wire Serial, 12-Bit ADCs
+ maxim,max6625		9-Bit/12-Bit Temperature Sensors with I=C2=B2C-Compatib=
+le Serial Interface
+ mc,rv3029c2		Real Time Clock Module with I2C-Bus
++national,lm63		Temperature sensor with integrated fan control
+ national,lm75		I2C TEMP SENSOR
+ national,lm80		Serial Interface ACPI-Compatible Microprocessor System =
+Hardware Monitor
++national,lm85		Temperature sensor with integrated fan control
+ national,lm92		=C2=B10.33=C2=B0C Accurate, 12-Bit + Sign Temperature S=
+ensor and Thermal Window Comparator with Two-Wire Interface
+ nuvoton,npct501		i2c trusted platform module (TPM)
+ nxp,pca9556		Octal SMBus and I2C registered interface
+--=20
+1.8.5.3
 
-2. Move the edac chnages to cache-l2x0.c
-    With this implementation, the edac farme work may not be ready
-during this driver initilaization time. so this could be potential issue.
-
-3. Create seperate driver for parity checking
-   This implementaion looks organized. The edac driver always monitor the
-status and never modify the control register values except for enabling the 
-parity interrupts. But still in this case the pl310 platform device bind to
-both the cache-l2x0.c and edac driver and both drivers share the same region.
-
-The current implementation in cache-l2x0.c is not using the interrupts.if this
-driver is going to use interrupts then that time the edac driver need modifications
-for implementing shared irq mechanism.
-
-So, i request your commnets on this patch and please suggest if there is a
-better implemenattion than above.
-
-Punnaiah Choudary Kalluri (1):
-  edac: add support for PL310 L2 cache parity
-
- .../devicetree/bindings/edac/pl310_edac_l2.txt     |   19 ++
- drivers/edac/Kconfig                               |    7 +
- drivers/edac/Makefile                              |    1 +
- drivers/edac/pl310_edac_l2.c                       |  236 ++++++++++++++++++++
- 4 files changed, 263 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/edac/pl310_edac_l2.txt
- create mode 100644 drivers/edac/pl310_edac_l2.c
-
--- 
-1.7.4
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
