@@ -1,151 +1,55 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: [PATCH 3/3] ARM: Kirkwood: DT: Add missing vendor prefix
-Date: Sun,  2 Mar 2014 16:24:15 +0100
-Message-ID: <1393773855-9592-3-git-send-email-andrew@lunn.ch>
-References: <1393773855-9592-1-git-send-email-andrew@lunn.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393773855-9592-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH 1/3] soc: Introduce drivers/soc place-holder for SOC
+ specific drivers
+Date: Sun, 2 Mar 2014 17:12:06 +0000
+Message-ID: <20140302171206.6adbea6f@alan.etchedpixels.co.uk>
+References: <1393629520-12713-1-git-send-email-santosh.shilimkar@ti.com>
+ <1393629520-12713-2-git-send-email-santosh.shilimkar@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1393629520-12713-2-git-send-email-santosh.shilimkar@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Sandeep Nair <sandeep_n@ti.com>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add vendor prefixes to compatible strings where they are missing.
+On Fri, 28 Feb 2014 18:18:38 -0500
+Santosh Shilimkar <santosh.shilimkar@ti.com> wrote:
 
-Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
----
- arch/arm/boot/dts/kirkwood-b3.dts              | 2 +-
- arch/arm/boot/dts/kirkwood-cloudbox.dts        | 2 +-
- arch/arm/boot/dts/kirkwood-dreamplug.dts       | 2 +-
- arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts | 2 +-
- arch/arm/boot/dts/kirkwood-ns2-common.dtsi     | 2 +-
- arch/arm/boot/dts/kirkwood-nsa310.dts          | 2 +-
- arch/arm/boot/dts/kirkwood-nsa310a.dts         | 2 +-
- arch/arm/boot/dts/kirkwood-openblocks_a6.dts   | 2 +-
- arch/arm/boot/dts/kirkwood-openblocks_a7.dts   | 2 +-
- 9 files changed, 9 insertions(+), 9 deletions(-)
+> Based on earlier thread "https://lkml.org/lkml/2013/10/7/662" and
+> further discussion at Kernel Summit'2013, it was agreed to create
+> 'driver/soc' for drivers which are quite SOC specific.
+> 
+> Lets take the discussion forward with this patch.
 
-diff --git a/arch/arm/boot/dts/kirkwood-b3.dts b/arch/arm/boot/dts/kirkwood-b3.dts
-index 40791053106b..6becedebaa4e 100644
---- a/arch/arm/boot/dts/kirkwood-b3.dts
-+++ b/arch/arm/boot/dts/kirkwood-b3.dts
-@@ -75,7 +75,7 @@
- 			m25p16@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "m25p16";
-+				compatible = "st,m25p16";
- 				reg = <0>;
- 				spi-max-frequency = <40000000>;
- 				mode = <0>;
-diff --git a/arch/arm/boot/dts/kirkwood-cloudbox.dts b/arch/arm/boot/dts/kirkwood-cloudbox.dts
-index 0e06fd3cee4d..3b62aeeaa3a2 100644
---- a/arch/arm/boot/dts/kirkwood-cloudbox.dts
-+++ b/arch/arm/boot/dts/kirkwood-cloudbox.dts
-@@ -46,7 +46,7 @@
- 			flash@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "mx25l4005a";
-+				compatible = "mxicy,mx25l4005a";
- 				reg = <0>;
- 				spi-max-frequency = <20000000>;
- 				mode = <0>;
-diff --git a/arch/arm/boot/dts/kirkwood-dreamplug.dts b/arch/arm/boot/dts/kirkwood-dreamplug.dts
-index ef3463e0ae19..28b3ee369778 100644
---- a/arch/arm/boot/dts/kirkwood-dreamplug.dts
-+++ b/arch/arm/boot/dts/kirkwood-dreamplug.dts
-@@ -43,7 +43,7 @@
- 			m25p40@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "mx25l1606e";
-+				compatible = "mxicy,mx25l1606e";
- 				reg = <0>;
- 				spi-max-frequency = <50000000>;
- 				mode = <0>;
-diff --git a/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts b/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
-index 2cb0dc529165..32c6fb4a1162 100644
---- a/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
-+++ b/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
-@@ -56,7 +56,7 @@
- 			flash@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "mx25l12805d";
-+				compatible = "mxicy,mx25l12805d";
- 				reg = <0>;
- 				spi-max-frequency = <50000000>;
- 				mode = <0>;
-diff --git a/arch/arm/boot/dts/kirkwood-ns2-common.dtsi b/arch/arm/boot/dts/kirkwood-ns2-common.dtsi
-index 743152f31a81..594bad0e386e 100644
---- a/arch/arm/boot/dts/kirkwood-ns2-common.dtsi
-+++ b/arch/arm/boot/dts/kirkwood-ns2-common.dtsi
-@@ -32,7 +32,7 @@
- 			flash@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "mx25l4005a";
-+				compatible = "mxicy,mx25l4005a";
- 				reg = <0>;
- 				spi-max-frequency = <20000000>;
- 				mode = <0>;
-diff --git a/arch/arm/boot/dts/kirkwood-nsa310.dts b/arch/arm/boot/dts/kirkwood-nsa310.dts
-index 03fa24cf3344..0a07af9d8e58 100644
---- a/arch/arm/boot/dts/kirkwood-nsa310.dts
-+++ b/arch/arm/boot/dts/kirkwood-nsa310.dts
-@@ -104,7 +104,7 @@
- 			status = "okay";
- 
- 			adt7476: adt7476a@2e {
--				compatible = "adt7476";
-+				compatible = "adi,adt7476";
- 				reg = <0x2e>;
- 			};
- 		};
-diff --git a/arch/arm/boot/dts/kirkwood-nsa310a.dts b/arch/arm/boot/dts/kirkwood-nsa310a.dts
-index a5e779452867..27ca6a79c48a 100644
---- a/arch/arm/boot/dts/kirkwood-nsa310a.dts
-+++ b/arch/arm/boot/dts/kirkwood-nsa310a.dts
-@@ -94,7 +94,7 @@
- 			status = "okay";
- 
- 			lm85: lm85@2e {
--				compatible = "lm85";
-+				compatible = "national,lm85";
- 				reg = <0x2e>;
- 			};
- 		};
-diff --git a/arch/arm/boot/dts/kirkwood-openblocks_a6.dts b/arch/arm/boot/dts/kirkwood-openblocks_a6.dts
-index b88da9392c32..0650beafc1de 100644
---- a/arch/arm/boot/dts/kirkwood-openblocks_a6.dts
-+++ b/arch/arm/boot/dts/kirkwood-openblocks_a6.dts
-@@ -40,7 +40,7 @@
- 			pinctrl-names = "default";
- 
- 			s35390a: s35390a@30 {
--				compatible = "s35390a";
-+				compatible = "sii,s35390a";
- 				reg = <0x30>;
- 			};
- 		};
-diff --git a/arch/arm/boot/dts/kirkwood-openblocks_a7.dts b/arch/arm/boot/dts/kirkwood-openblocks_a7.dts
-index b2f7cae06839..895506743e4d 100644
---- a/arch/arm/boot/dts/kirkwood-openblocks_a7.dts
-+++ b/arch/arm/boot/dts/kirkwood-openblocks_a7.dts
-@@ -52,7 +52,7 @@
- 			pinctrl-names = "default";
- 
- 			s24c02: s24c02@50 {
--				compatible = "24c02";
-+				compatible = "at,24c02";
- 				reg = <0x50>;
- 			};
- 		};
--- 
-1.8.5.3
+So what happens if you put something in say soc/banana and 3 months later
+the same IP block shows up in two other devices both of which have their
+own soc/ directory already ?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+What happens when the same blocks shows up on both a SoC and
+later externally ?
+
+Where does a soc specifc gpio driver go ?
+
+It seems to me we've got a lot of confusion here because drivers/ is
+split by type, and we've also got arch/* machine specific drivers and
+we've got drivers/platform which is intended as far as I can see for
+everything you'd put in drivers/soc except for that which goes in arch/*
+anyway.
+
+If QMSS is arm specific why isn't it in arch/arm, if it's not why isn't
+it in drivers/platform ?
+
+Just trying to understand the point of drivers/soc. 
+
+Alan
