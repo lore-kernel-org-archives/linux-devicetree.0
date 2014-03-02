@@ -1,225 +1,181 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 02/11] drivers: of: add initialization code for static reserved memory
-Date: Sun, 02 Mar 2014 13:28:42 +0800
-Message-ID: <20140302052842.EB26FC40E0C@trevor.secretlab.ca>
-References: <1393594976-16728-1-git-send-email-m.szyprowski@samsung.com> < 1393594976-16728-3-git-send-email-m.szyprowski@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393594976-16728-3-git-send-email-m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v6 01/11] of: document bindings for reserved-memory nodes
+Date: Sun, 02 Mar 2014 13:00:12 +0800
+Message-ID: <20140302050012.8F71DC40372@trevor.secretlab.ca>
+References: <1393594976-16728-1-git-send-email-m.szyprowski@samsung.com> < 1393594976-16728-2-git-send-email-m.szyprowski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1393594976-16728-2-git-send-email-m.szyprowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Paul Mackerras <paulus@samba.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 28 Feb 2014 14:42:47 +0100, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> This patch adds support for static (defined by 'reg' property) reserved
-> memory regions declared in device tree.
+On Fri, 28 Feb 2014 14:42:46 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+> From: Grant Likely <grant.likely@linaro.org>
 > 
-> Memory blocks can be reliably reserved only during early boot. This must
-> happen before the whole memory management subsystem is initialized,
-> because we need to ensure that the given contiguous blocks are not yet
-> allocated by kernel. Also it must happen before kernel mappings for the
-> whole low memory are created, to ensure that there will be no mappings
-> (for reserved blocks). Typically, all this happens before device tree
-> structures are unflattened, so we need to get reserved memory layout
-> directly from fdt.
+> Reserved memory nodes allow for the reservation of static (fixed
+> address) regions, or dynamically allocated regions for a specific
+> purpose.
 > 
-> Based on previous code provided by Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> 
-> Signed-off-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Grant Likely <grant.likely@linaro.org>
+> [joshc: Based on binding document proposed (in non-patch form) here:
+>  http://lkml.kernel.org/g/20131030134702.19B57C402A0@trevor.secretlab.ca
+>  adapted to support #memory-region-cells]
+> Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
+> [mszyprow: removed #memory-region-cells property]
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-Applied, thanks.
+Merged, thanks.
 
 g.
 
 > ---
->  drivers/of/fdt.c       |  131 ++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of_fdt.h |    3 ++
->  2 files changed, 134 insertions(+)
+>  .../bindings/reserved-memory/reserved-memory.txt   |  136 ++++++++++++++++++++
+>  1 file changed, 136 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
 > 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 758b4f8b30b7..819e11209718 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -15,6 +15,7 @@
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_fdt.h>
-> +#include <linux/sizes.h>
->  #include <linux/string.h>
->  #include <linux/errno.h>
->  #include <linux/slab.h>
-> @@ -440,6 +441,118 @@ struct boot_param_header *initial_boot_params;
->  #ifdef CONFIG_OF_EARLY_FLATTREE
->  
->  /**
-> + * res_mem_reserve_reg() - reserve all memory described in 'reg' property
-> + */
-> +static int __init __reserved_mem_reserve_reg(unsigned long node,
-> +					     const char *uname)
-> +{
-> +	int t_len = (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32);
-> +	phys_addr_t base, size;
-> +	unsigned long len;
-> +	__be32 *prop;
-> +	int nomap;
+> diff --git a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> new file mode 100644
+> index 000000000000..8b0d747a38e7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> @@ -0,0 +1,136 @@
+> +*** Reserved memory regions ***
 > +
-> +	prop = of_get_flat_dt_prop(node, "reg", &len);
-> +	if (!prop)
-> +		return -ENOENT;
+> +Reserved memory is specified as a node under the /reserved-memory node.
+> +The operating system shall exclude reserved memory from normal usage
+> +one can create child nodes describing particular reserved (excluded from
+> +normal use) memory regions. Such memory regions are usually designed for
+> +the special usage by various device drivers.
 > +
-> +	if (len && len % t_len != 0) {
-> +		pr_err("Reserved memory: invalid reg property in '%s', skipping node.\n",
-> +		       uname);
-> +		return -EINVAL;
-> +	}
+> +Parameters for each memory region can be encoded into the device tree
+> +with the following nodes:
 > +
-> +	nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
+> +/reserved-memory node
+> +---------------------
+> +#address-cells, #size-cells (required) - standard definition
+> +    - Should use the same values as the root node
+> +ranges (required) - standard definition
+> +    - Should be empty
 > +
-> +	while (len >= t_len) {
-> +		base = dt_mem_next_cell(dt_root_addr_cells, &prop);
-> +		size = dt_mem_next_cell(dt_root_size_cells, &prop);
+> +/reserved-memory/ child nodes
+> +-----------------------------
+> +Each child of the reserved-memory node specifies one or more regions of
+> +reserved memory. Each child node may either use a 'reg' property to
+> +specify a specific range of reserved memory, or a 'size' property with
+> +optional constraints to request a dynamically allocated block of memory.
 > +
-> +		if (base && size &&
-> +		    early_init_dt_reserve_memory_arch(base, size, nomap) == 0)
-> +			pr_debug("Reserved memory: reserved region for node '%s': base %pa, size %ld MiB\n",
-> +				uname, &base, (unsigned long)size / SZ_1M);
-> +		else
-> +			pr_info("Reserved memory: failed to reserve memory for node '%s': base %pa, size %ld MiB\n",
-> +				uname, &base, (unsigned long)size / SZ_1M);
+> +Following the generic-names recommended practice, node names should
+> +reflect the purpose of the node (ie. "framebuffer" or "dma-pool"). Unit
+> +address (@<address>) should be appended to the name if the node is a
+> +static allocation.
 > +
-> +		len -= t_len;
-> +	}
-> +	return 0;
-> +}
+> +Properties:
+> +Requires either a) or b) below.
+> +a) static allocation
+> +   reg (required) - standard definition
+> +b) dynamic allocation
+> +   size (required) - length based on parent's #size-cells
+> +                   - Size in bytes of memory to reserve.
+> +   alignment (optional) - length based on parent's #size-cells
+> +                        - Address boundary for alignment of allocation.
+> +   alloc-ranges (optional) - prop-encoded-array (address, length pairs).
+> +                           - Specifies regions of memory that are
+> +                             acceptable to allocate from.
 > +
-> +/**
-> + * __reserved_mem_check_root() - check if #size-cells, #address-cells provided
-> + * in /reserved-memory matches the values supported by the current implementation,
-> + * also check if ranges property has been provided
-> + */
-> +static int __reserved_mem_check_root(unsigned long node)
-> +{
-> +	__be32 *prop;
+> +If both reg and size are present, then the reg property takes precedence
+> +and size is ignored.
 > +
-> +	prop = of_get_flat_dt_prop(node, "#size-cells", NULL);
-> +	if (!prop || be32_to_cpup(prop) != dt_root_size_cells)
-> +		return -EINVAL;
+> +Additional properties:
+> +compatible (optional) - standard definition
+> +    - may contain the following strings:
+> +        - shared-dma-pool: This indicates a region of memory meant to be
+> +          used as a shared pool of DMA buffers for a set of devices. It can
+> +          be used by an operating system to instanciate the necessary pool
+> +          management subsystem if necessary.
+> +        - vendor specific string in the form <vendor>,[<device>-]<usage>
+> +no-map (optional) - empty property
+> +    - Indicates the operating system must not create a virtual mapping
+> +      of the region as part of its standard mapping of system memory,
+> +      nor permit speculative access to it under any circumstances other
+> +      than under the control of the device driver using the region.
+> +reusable (optional) - empty property
+> +    - The operating system can use the memory in this region with the
+> +      limitation that the device driver(s) owning the region need to be
+> +      able to reclaim it back. Typically that means that the operating
+> +      system can use that region to store volatile or cached data that
+> +      can be otherwise regenerated or migrated elsewhere.
 > +
-> +	prop = of_get_flat_dt_prop(node, "#address-cells", NULL);
-> +	if (!prop || be32_to_cpup(prop) != dt_root_addr_cells)
-> +		return -EINVAL;
+> +Linux implementation note:
+> +- If a "linux,cma-default" property is present, then Linux will use the
+> +  region for the default pool of the contiguous memory allocator.
 > +
-> +	prop = of_get_flat_dt_prop(node, "ranges", NULL);
-> +	if (!prop)
-> +		return -EINVAL;
-> +	return 0;
-> +}
+> +Device node references to reserved memory
+> +-----------------------------------------
+> +Regions in the /reserved-memory node may be referenced by other device
+> +nodes by adding a memory-region property to the device node.
 > +
-> +/**
-> + * fdt_scan_reserved_mem() - scan a single FDT node for reserved memory
-> + */
-> +static int __init __fdt_scan_reserved_mem(unsigned long node, const char *uname,
-> +					  int depth, void *data)
-> +{
-> +	static int found;
-> +	const char *status;
+> +memory-region (optional) - phandle, specifier pairs to children of /reserved-memory
 > +
-> +	if (!found && depth == 1 && strcmp(uname, "reserved-memory") == 0) {
-> +		if (__reserved_mem_check_root(node) != 0) {
-> +			pr_err("Reserved memory: unsupported node format, ignoring\n");
-> +			/* break scan */
-> +			return 1;
-> +		}
-> +		found = 1;
-> +		/* scan next node */
-> +		return 0;
-> +	} else if (!found) {
-> +		/* scan next node */
-> +		return 0;
-> +	} else if (found && depth < 2) {
-> +		/* scanning of /reserved-memory has been finished */
-> +		return 1;
-> +	}
+> +Example
+> +-------
+> +This example defines 3 contiguous regions are defined for Linux kernel:
+> +one default of all device drivers (named linux,cma@72000000 and 64MiB in size),
+> +one dedicated to the framebuffer device (named framebuffer@78000000, 8MiB), and
+> +one for multimedia processing (named multimedia-memory@77000000, 64MiB).
 > +
-> +	status = of_get_flat_dt_prop(node, "status", NULL);
-> +	if (status && strcmp(status, "okay") != 0 && strcmp(status, "ok") != 0)
-> +		return 0;
+> +/ {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
 > +
-> +	__reserved_mem_reserve_reg(node, uname);
+> +	memory {
+> +		reg = <0x40000000 0x40000000>;
+> +	};
 > +
-> +	/* scan next node */
-> +	return 0;
-> +}
+> +	reserved-memory {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
 > +
-> +/**
-> + * early_init_fdt_scan_reserved_mem() - create reserved memory regions
-> + *
-> + * This function grabs memory from early allocator for device exclusive use
-> + * defined in device tree structures. It should be called by arch specific code
-> + * once the early allocator (i.e. memblock) has been fully activated.
-> + */
-> +void __init early_init_fdt_scan_reserved_mem(void)
-> +{
-> +	of_scan_flat_dt(__fdt_scan_reserved_mem, NULL);
-> +}
+> +		/* global autoconfigured region for contiguous allocations */
+> +		linux,cma {
+> +			compatible = "shared-dma-pool";
+> +			reusable;
+> +			#memory-region-cells = <0>;
+> +			size = <0x4000000>;
+> +			alignment = <0x2000>;
+> +			linux,cma-default;
+> +		};
 > +
-> +/**
->   * of_scan_flat_dt - scan flattened tree blob and call callback on each.
->   * @it: callback function
->   * @data: context data pointer
-> @@ -856,6 +969,16 @@ void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
->  	memblock_add(base, size);
->  }
->  
-> +int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
-> +					phys_addr_t size, bool nomap)
-> +{
-> +	if (memblock_is_region_reserved(base, size))
-> +		return -EBUSY;
-> +	if (nomap)
-> +		return memblock_remove(base, size);
-> +	return memblock_reserve(base, size);
-> +}
+> +		display_reserved: framebuffer@78000000 {
+> +			#memory-region-cells = <0>;
+> +			reg = <0x78000000 0x800000>;
+> +		};
 > +
->  /*
->   * called from unflatten_device_tree() to bootstrap devicetree itself
->   * Architectures can override this definition if memblock isn't used
-> @@ -864,6 +987,14 @@ void * __init __weak early_init_dt_alloc_memory_arch(u64 size, u64 align)
->  {
->  	return __va(memblock_alloc(size, align));
->  }
-> +#else
-> +int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
-> +					phys_addr_t size, bool nomap)
-> +{
-> +	pr_err("Reserved memory not supported, ignoring range 0x%llx - 0x%llx%s\n",
-> +		  base, size, nomap ? " (nomap)" : "");
-> +	return -ENOSYS;
-> +}
->  #endif
->  
->  bool __init early_init_dt_scan(void *params)
-> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-> index 2b77058a7335..8610ad8d77d2 100644
-> --- a/include/linux/of_fdt.h
-> +++ b/include/linux/of_fdt.h
-> @@ -98,7 +98,10 @@ extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
->  				     int depth, void *data);
->  extern int early_init_dt_scan_memory(unsigned long node, const char *uname,
->  				     int depth, void *data);
-> +extern void early_init_fdt_scan_reserved_mem(void);
->  extern void early_init_dt_add_memory_arch(u64 base, u64 size);
-> +extern int early_init_dt_reserve_memory_arch(phys_addr_t base, phys_addr_t size,
-> +					     bool no_map);
->  extern void * early_init_dt_alloc_memory_arch(u64 size, u64 align);
->  extern u64 dt_mem_next_cell(int s, __be32 **cellp);
->  
+> +		multimedia_reserved: multimedia@77000000 {
+> +			compatible = "acme,multimedia-memory";
+> +			#memory-region-cells = <1>;
+> +			reg = <0x77000000 0x4000000>;
+> +		};
+> +	};
+> +
+> +	/* ... */
+> +
+> +	fb0: video@12300000 {
+> +		memory-region = <&display_reserved>;
+> +		/* ... */
+> +	};
+> +
+> +	scaler: scaler@12500000 {
+> +		memory-region = <&multimedia_reserved 0xdeadbeef>;
+> +		/* ... */
+> +	};
+> +
+> +	codec: codec@12600000 {
+> +		memory-region = <&multimedia_reserved 0xfeebdaed>;
+> +		/* ... */
+> +	};
+> +};
 > -- 
 > 1.7.9.5
 > 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
