@@ -1,100 +1,65 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH 1/3] soc: Introduce drivers/soc place-holder for SOC
- specific drivers
-Date: Sun, 2 Mar 2014 12:48:22 -0800
-Message-ID: <20140302204822.GA16158@quad.lixom.net>
-References: <1393629520-12713-1-git-send-email-santosh.shilimkar@ti.com>
- <1393629520-12713-2-git-send-email-santosh.shilimkar@ti.com>
- <20140302171206.6adbea6f@alan.etchedpixels.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: xypron.glpk-Mmb7MZpHnFY@public.gmane.org
+Subject: [PATCH 1/1] Update source code location for dtc in manual.txt
+Date: Sun,  2 Mar 2014 22:39:14 +0100
+Message-ID: <1393796354-29704-1-git-send-email-xypron.glpk@gmx.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140302171206.6adbea6f-mUKnrFFms3BCCTY1wZZT65JpZx93mCW/@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
-Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sandeep Nair <sandeep_n-l0cyMroinI0@public.gmane.org>
+To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 02, 2014 at 05:12:06PM +0000, One Thousand Gnomes wrote:
-> On Fri, 28 Feb 2014 18:18:38 -0500
-> Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
-> 
-> > Based on earlier thread "https://lkml.org/lkml/2013/10/7/662" and
-> > further discussion at Kernel Summit'2013, it was agreed to create
-> > 'driver/soc' for drivers which are quite SOC specific.
-> > 
-> > Lets take the discussion forward with this patch.
-> 
-> So what happens if you put something in say soc/banana and 3 months later
-> the same IP block shows up in two other devices both of which have their
-> own soc/ directory already ?
+From: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
 
-This isn't so much about IP blocks as about all the other glue logic and
-management functions that vendors so far seem to implement in their own ways.
+The information about the location of the source code of the
+device tree compiler was inaccurate.
 
-I don't remember the name we agreed on, I don't think it was drivers/soc --
-partly because naming it that brings up the kinds of questions you have.
-Paul took it upon himself to start sorting this out (and merge through us on
-arm-soc), so he hopefully remembers better than me. :)
+Signed-off-by: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+---
+ Documentation/manual.txt |   21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
 
-> What happens when the same blocks shows up on both a SoC and
-> later externally ?
-> 
-> Where does a soc specifc gpio driver go ?
+diff --git a/Documentation/manual.txt b/Documentation/manual.txt
+index 65c8540..0a8e6d5 100644
+--- a/Documentation/manual.txt
++++ b/Documentation/manual.txt
+@@ -30,25 +30,22 @@ I - "dtc", the device tree compiler
+ 
+ 1) Sources
+ 
+-Source code for the Device Tree Compiler can be found at jdl.com.
+-The gitweb interface is:
++Source code for the Device Tree Compiler can be found at git.kernel.org.
+ 
+-    http://git.jdl.com/gitweb/
++The upstream repository is here:
+ 
+-The repository is here:
++    git://git.kernel.org/pub/scm/utils/dtc/dtc.git
++    https://git.kernel.org/pub/scm/utils/dtc/dtc.git
+ 
+-    git://www.jdl.com/software/dtc.git
+-    http://www.jdl.com/software/dtc.git
++The gitweb interface for the upstream respository is:
+ 
+-Tarballs of the 1.0.0 and latest releases are here:
+-
+-    http://www.jdl.com/software/dtc-v1.2.0.tgz
+-    http://www.jdl.com/software/dtc-latest.tgz
++    https://git.kernel.org/cgit/utils/dtc/dtc.git/ 
+ 
+ 1.1) Submitting Patches
+ 
+-Patches should be sent to jdl-CYoMK+44s/E@public.gmane.org, and CC'ed to
+-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsieG/Ez6ZCGd0@public.gmane.org
++Patches should be sent to the maintainers as determined with
++scripts/get_maintainer.pl of the Linux Kernel source and CC'ed to
++devicetree-compiler-u79uwXL29TaiAVqoAR/hOA@public.gmane.org
+ 
+ 2) Description
+ 
+-- 
+1.7.10.4
 
-drivers/gpio, of course. This isn't changing that.
-
-> It seems to me we've got a lot of confusion here because drivers/ is
-> split by type, and we've also got arch/* machine specific drivers and
-> we've got drivers/platform which is intended as far as I can see for
-> everything you'd put in drivers/soc except for that which goes in arch/*
-> anyway.
-> 
-> If QMSS is arm specific why isn't it in arch/arm, if it's not why isn't
-> it in drivers/platform ?
-
-drivers/platform are for specific vendor platforms. I.e. various laptop
-vendors, a few server vendors, etc. Code for a whole silicon vendor's driver
-does not belong there.
->
-> Just trying to understand the point of drivers/soc. 
-
-Shortcutting most of the discussion by focusing on this question. ;)
-
-We've been struggling to find a home for some of the code that we want to keep
-in the kernel tree, and we sat down to talk with (among others) Greg at KS to
-try to figure out how to move forward.
-
-The code isn't the pure drivers. Those we find homes for. GPIO, for example, is
-a clear choice: they go under drivers/gpio. IRQ controllers under
-drivers/irqchip, etc. We've been good at finding the places for these,
-including making new homes for them where none was before (pinctrl and clk
-subsystems come to mind).
-
-The type of code we were still looking for a home for is the glue code that
-tends to be shared between drivers. For example, on a communication chip it
-might be queue managers that are shared between SATA, DMA engine, Ethernet
-controllers, crypto engines, etc. There's no obvious place for us to locate
-that today. Most of this code is handled like a library with the drivers
-calling into it.
-
-So, again, it's not for drivers as much as for shared management code. It will
-not be used for drivers (the Keystone patch adds an actual driver, so we need
-to talk about that as well :).
-
-And as with all other code in the kernel: If we find that more than one
-vendor has something compatible, we make them refactor and share the
-code when we discover it. It's a method we use now and it's working pretty
-well.
-
-Finally, your question on why we're not locating this under arch/*? It's not
-architecture-dependent code, some vendors have several SoCs that are very
-similar but with different cores of different architectures (MIPS, ARM,
-PowerPC, ARM64, etc). So a location outside of arch/ is needed.
-
-
--Olof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
