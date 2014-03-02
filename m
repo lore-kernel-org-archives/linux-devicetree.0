@@ -1,83 +1,64 @@
-From: Eli Billauer <eli.billauer@gmail.com>
-Subject: [PATCH v2] mmc: sdhci: add quirk for broken write protect detection
-Date: Sun,  2 Mar 2014 13:20:00 +0200
-Message-ID: <1393759200-22819-1-git-send-email-eli.billauer@gmail.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: chris@printf.net
-Cc: michal.simek@xilinx.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Eli Billauer <eli.billauer@gmail.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 1/1] Remove dead code in util.c
+Date: Mon, 3 Mar 2014 00:11:25 +1100
+Message-ID: <20140302131125.GB12916@voom.fritz.box>
+References: <CAL_JsqK9Wquv6kgefyPvy0JqXNO7Cx2+iN_ss=CtgXnKEjrF-Q@mail.gmail.com>
+ <1393661507-7197-1-git-send-email-xypron.glpk@gmx.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="lEGEL1/lMxI0MVQ2"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1393661507-7197-1-git-send-email-xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: xypron.glpk-Mmb7MZpHnFY@public.gmane.org
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The write protection signal is absent on a board based upon Xilinx' Zynq
-processor ("ZyBo"). This leads the kernel to think that the MicroSD card is
-write protected, and causes a kernel panic during boot, as root fails to
-mount RW.
 
-This patch adds a quirk and an optional OF property, sdhci,broken-wp to
-work around this issue.
+--lEGEL1/lMxI0MVQ2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Eli Billauer <eli.billauer@gmail.com>
----
- Documentation/devicetree/bindings/mmc/mmc.txt |    2 ++
- drivers/mmc/host/sdhci-pltfm.c                |    4 +++-
- drivers/mmc/host/sdhci.c                      |    2 ++
- include/linux/mmc/sdhci.h                     |    2 ++
- 4 files changed, 9 insertions(+), 1 deletions(-)
+On Sat, Mar 01, 2014 at 09:11:47AM +0100, xypron.glpk-Mmb7MZpHnFY@public.gmane.org wrote:
+> From: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+>=20
+> xrealloc never returns null
+>=20
+> Signed-off-by: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-index 458b57f..83a39c1 100644
---- a/Documentation/devicetree/bindings/mmc/mmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-@@ -21,6 +21,8 @@ Optional properties:
-   below for the case, when a GPIO is used for the CD line
- - wp-inverted: when present, polarity on the WP line is inverted. See the note
-   below for the case, when a GPIO is used for the WP line
-+- broken-wp: when present, no indication of write protection is available,
-+  and write protection is assumed always off.
- - max-frequency: maximum operating clock frequency
- - no-1-8-v: when present, denotes that 1.8v card voltage is not supported on
-   this system, even if the controller claims it is.
-diff --git a/drivers/mmc/host/sdhci-pltfm.c b/drivers/mmc/host/sdhci-pltfm.c
-index bef250e..dac20af 100644
---- a/drivers/mmc/host/sdhci-pltfm.c
-+++ b/drivers/mmc/host/sdhci-pltfm.c
-@@ -80,7 +80,9 @@ void sdhci_get_of_property(struct platform_device *pdev)
- 		    bus_width == 1))
- 			host->quirks |= SDHCI_QUIRK_FORCE_1_BIT_DATA;
- 
--		if (sdhci_of_wp_inverted(np))
-+		if (of_get_property(np, "sdhci,broken-wp", NULL))
-+			host->quirks2 |= SDHCI_QUIRK2_BROKEN_WRITE_PROTECT;
-+		else if (sdhci_of_wp_inverted(np))
- 			host->quirks |= SDHCI_QUIRK_INVERTED_WRITE_PROTECT;
- 
- 		if (of_get_property(np, "broken-cd", NULL))
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 9ddef47..6c77f2e 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -1657,6 +1657,8 @@ static int sdhci_check_ro(struct sdhci_host *host)
- 		is_readonly = 0;
- 	else if (host->ops->get_ro)
- 		is_readonly = host->ops->get_ro(host);
-+	else if (host->quirks2 & SDHCI_QUIRK2_BROKEN_WRITE_PROTECT)
-+		is_readonly = 0;
- 	else
- 		is_readonly = !(sdhci_readl(host, SDHCI_PRESENT_STATE)
- 				& SDHCI_WRITE_PROTECT);
-diff --git a/include/linux/mmc/sdhci.h b/include/linux/mmc/sdhci.h
-index 362927c4..0f6ef9d 100644
---- a/include/linux/mmc/sdhci.h
-+++ b/include/linux/mmc/sdhci.h
-@@ -100,6 +100,8 @@ struct sdhci_host {
- #define SDHCI_QUIRK2_BROKEN_HOST_CONTROL		(1<<5)
- /* Controller does not support HS200 */
- #define SDHCI_QUIRK2_BROKEN_HS200			(1<<6)
-+/* There is no indication for write protection at all, assume RW */
-+#define SDHCI_QUIRK2_BROKEN_WRITE_PROTECT		(1<<7)
- 
- 	int irq;		/* Device IRQ */
- 	void __iomem *ioaddr;	/* Mapped address */
--- 
-1.7.2.3
+Applied, thanks.
 
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--lEGEL1/lMxI0MVQ2
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTEy39AAoJEGw4ysog2bOS7NQP/01WNPmmsaOS9OCN8P1n9Xvv
+4QkAzzsX7kCd6sfJkgDZdhsQN72AFnDb11iCeU10STlZz+PPnJ8LQEfZBSrAH5tL
+7Iz3FMwpinQ1NYsuGDVA5gwzMD1wEl/9Qq8Qmt1OmNhE5A4canioSpmn0Qmut2us
+oCVLPXct1Ix9VB/t+0aXaq8LYG1SgeFQcLYv8y8ZewcHqVdKwYWx1c8gmL2M5Kup
+1zlTOGU7ZYwH3QnvMzbUFZrpBxHFSymwnqU+vrqcNfwT3xAlLzqRQ0ye6bYRxOo2
+JjMOzikvfBekt1CT16PP0mpDFtHOVa52qthp6xLNyRXoyG7R2/i/Du/A3y91Tz3H
+ycTbhvnPkZgaV686K+IdfbFiln9XGbPKoGR9rgCDUU+Dyvw13lBywXQFtLerIxMa
+ajqWzVygPe1GL4/usfzGM6uAly0+krQu5brpyAM+cdo9p0HNknHYUppgtvphXAN5
+YbTcQkhwFy+aagjsUsICVwMIjSk96rEV4yBsmqO9Ap2TQjTPU+UU3eI7Aq/vZPti
+gKWlXisNhtKPImeNKqt+SxDVjoku6H8rjKNsE3iWF3meTPWQYSKTVCPShJvD1tQk
+BQBhqim3kfYqcqaAa3avSf+GSWdwBKy9qTQMzkWOZmfHvsUf23JTktbZdgf4oQ3y
+FxY39GpJ+9527QYp2Lup
+=OVEe
+-----END PGP SIGNATURE-----
+
+--lEGEL1/lMxI0MVQ2--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
