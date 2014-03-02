@@ -1,55 +1,108 @@
-From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Subject: Re: [PATCH 1/3] soc: Introduce drivers/soc place-holder for SOC
- specific drivers
-Date: Sun, 2 Mar 2014 17:12:06 +0000
-Message-ID: <20140302171206.6adbea6f@alan.etchedpixels.co.uk>
-References: <1393629520-12713-1-git-send-email-santosh.shilimkar@ti.com>
- <1393629520-12713-2-git-send-email-santosh.shilimkar@ti.com>
+From: Benoit Cousson <bcousson@baylibre.com>
+Subject: Re: [PATCHv2 9/9] arm: dts: am43x-gp-evm: Add matrix gpio keys.
+Date: Sun, 02 Mar 2014 18:30:02 +0100
+Message-ID: <53136A9A.2070003@baylibre.com>
+References: <1387456421-21379-1-git-send-email-sourav.poddar@ti.com> <1387456421-21379-10-git-send-email-sourav.poddar@ti.com> <52D417A1.9060007@ti.com> <20140114131444.GD10818@saruman.home> <52D547F5.2080307@baylibre.com> <5307628D.50109@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1393629520-12713-2-git-send-email-santosh.shilimkar@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Sandeep Nair <sandeep_n@ti.com>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5307628D.50109@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sourav Poddar <sourav.poddar@ti.com>
+Cc: balbi@ti.com, devicetree@vger.kernel.org, tony@atomide.com, linux-omap@vger.kernel.org, mark.rutland@arm.com, lokeshvutla@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 28 Feb 2014 18:18:38 -0500
-Santosh Shilimkar <santosh.shilimkar@ti.com> wrote:
+Hi Sourav,
 
-> Based on earlier thread "https://lkml.org/lkml/2013/10/7/662" and
-> further discussion at Kernel Summit'2013, it was agreed to create
-> 'driver/soc' for drivers which are quite SOC specific.
-> 
-> Lets take the discussion forward with this patch.
+On 21/02/2014 15:28, Sourav Poddar wrote:
+> Hi Benoit,
+> On Tuesday 14 January 2014 07:51 PM, Benoit Cousson wrote:
+>> Hi Felipe,
+>>
+>> On 14/01/2014 14:14, Felipe Balbi wrote:
+>>> On Mon, Jan 13, 2014 at 10:13:13PM +0530, sourav wrote:
+>>>> Benoit,
+>>>>
+>>>> On Thursday 19 December 2013 06:03 PM, Sourav Poddar wrote:
+>>>>> Add gpio keys node for am43x gp evm.
+>>>>>
+>>>>> Signed-off-by: Sourav Poddar<sourav.poddar@ti.com>
+>>>>> ---
+>>>>>   arch/arm/boot/dts/am437x-gp-evm.dts |   21 ++++++++++++++++++++=
++
+>>>>>   1 file changed, 21 insertions(+)
+>>>>>
+>>>>> diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts
+>>>>> b/arch/arm/boot/dts/am437x-gp-evm.dts
+>>>>> index 0dc248d..4eb72b8 100644
+>>>>> --- a/arch/arm/boot/dts/am437x-gp-evm.dts
+>>>>> +++ b/arch/arm/boot/dts/am437x-gp-evm.dts
+>>>>> @@ -13,6 +13,7 @@
+>>>>>   #include "am4372.dtsi"
+>>>>>   #include<dt-bindings/pinctrl/am43xx.h>
+>>>>>   #include<dt-bindings/pwm/pwm.h>
+>>>>> +#include<dt-bindings/gpio/gpio.h>
+>>>>>
+>>>>>   / {
+>>>>>       model =3D "TI AM437x GP EVM";
+>>>>> @@ -24,6 +25,26 @@
+>>>>>           brightness-levels =3D<0 51 53 56 62 75 101 152 255>;
+>>>>>           default-brightness-level =3D<8>;
+>>>>>       };
+>>>>> +
+>>>>> +    matrix_keypad: matrix_keypad@0 {
+>>>>> +        compatible =3D "gpio-matrix-keypad";
+>>>>> +        debounce-delay-ms =3D<5>;
+>>>>> +        col-scan-delay-us =3D<2>;
+>>>>> +
+>>>>> +        row-gpios =3D<&gpio3 21 GPIO_ACTIVE_HIGH /* Bank3, pin21=
+ */
+>>>>> + &gpio4 3 GPIO_ACTIVE_HIGH /* Bank4, pin3 */
+>>>>> + &gpio4 2 GPIO_ACTIVE_HIGH>; /* Bank4, pin2 */
+>>>>> +
+>>>>> +        col-gpios =3D<&gpio3 19 GPIO_ACTIVE_HIGH /* Bank3, pin19=
+ */
+>>>>> + &gpio3 20 GPIO_ACTIVE_HIGH>; /* Bank3, pin20 */
+>>>>> +
+>>>>> +        linux,keymap =3D<0x00000201      /* P1 */
+>>>>> +                0x00010202      /* P2 */
+>>>>> +                0x01000067      /* UP */
+>>>>> +                0x0101006a      /* RIGHT */
+>>>>> +                0x02000069      /* LEFT */
+>>>>> +                0x0201006c>;      /* DOWN */
+>>>>> +        };
+>>>>>   };
+>>>>>
+>>>>> &am43xx_pinmux {
+>>>>
+>>>> ping on this series, this series is lying for a while.
+>>>> This series is based on your for_3.14 branch.
+>>>
+>>> Benoit, do you need us to do anything else to get this merged ? Sou=
+rav
+>>> already rebased the patches as you requested back in December 19th.
+>>
+>> Nope, I've just needed more BW. I'll apply it ASAP.
+>>
+>> Thanks,
+>> Benoit
+>>
+> Ping on this.
 
-So what happens if you put something in say soc/banana and 3 months later
-the same IP block shows up in two other devices both of which have their
-own soc/ directory already ?
+I've just applied them. Sorry for the delay,
 
-What happens when the same blocks shows up on both a SoC and
-later externally ?
+Regards,
+Benoit
 
-Where does a soc specifc gpio driver go ?
-
-It seems to me we've got a lot of confusion here because drivers/ is
-split by type, and we've also got arch/* machine specific drivers and
-we've got drivers/platform which is intended as far as I can see for
-everything you'd put in drivers/soc except for that which goes in arch/*
-anyway.
-
-If QMSS is arm specific why isn't it in arch/arm, if it's not why isn't
-it in drivers/platform ?
-
-Just trying to understand the point of drivers/soc. 
-
-Alan
+--=20
+Beno=EEt Cousson
+BayLibre
+Embedded Linux Technology Lab
+www.baylibre.com
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
