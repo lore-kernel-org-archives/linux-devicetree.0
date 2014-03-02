@@ -1,64 +1,324 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 1/1] Remove dead code in util.c
-Date: Mon, 3 Mar 2014 00:11:25 +1100
-Message-ID: <20140302131125.GB12916@voom.fritz.box>
-References: <CAL_JsqK9Wquv6kgefyPvy0JqXNO7Cx2+iN_ss=CtgXnKEjrF-Q@mail.gmail.com>
- <1393661507-7197-1-git-send-email-xypron.glpk@gmx.de>
+From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Subject: [RFC PATCH] edac: add support for ARM PL310 L2 cache parity
+Date: Sun, 2 Mar 2014 20:02:40 +0530
+Message-ID: <a1a9e47a-069c-4285-9899-d5a58cf532c2@CO9EHSMHS003.ehs.local>
+References: <1393770760-32550-1-git-send-email-punnaia@xilinx.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lEGEL1/lMxI0MVQ2"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1393661507-7197-1-git-send-email-xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: xypron.glpk-Mmb7MZpHnFY@public.gmane.org
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1393770760-32550-1-git-send-email-punnaia@xilinx.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: dougthompson@xmission.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, michal.simek@xilinx.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
+Cc: kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, punnaia@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
+Add support for ARM Pl310 L2 cache controller parity error
 
---lEGEL1/lMxI0MVQ2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+---
+ .../devicetree/bindings/edac/pl310_edac_l2.txt     |   19 ++
+ drivers/edac/Kconfig                               |    7 +
+ drivers/edac/Makefile                              |    1 +
+ drivers/edac/pl310_edac_l2.c                       |  236 ++++++++++++++++++++
+ 4 files changed, 263 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/edac/pl310_edac_l2.txt
+ create mode 100644 drivers/edac/pl310_edac_l2.c
 
-On Sat, Mar 01, 2014 at 09:11:47AM +0100, xypron.glpk-Mmb7MZpHnFY@public.gmane.org wrote:
-> From: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
->=20
-> xrealloc never returns null
->=20
-> Signed-off-by: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+diff --git a/Documentation/devicetree/bindings/edac/pl310_edac_l2.txt b/Documentation/devicetree/bindings/edac/pl310_edac_l2.txt
+new file mode 100644
+index 0000000..94fbb8d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/edac/pl310_edac_l2.txt
+@@ -0,0 +1,19 @@
++Pl310 L2 Cache EDAC driver, it does reports the data and tag ram parity errors.
++
++Required properties:
++- compatible: Should be "arm,pl310-cache".
++- intterupts: Interrupt number to the cpu.
++- reg: Physical base address and size of cache controller's memory mapped
++  registers
++
++Example:
++++++++++
++
++	L2: cache-controller {
++		compatible = "arm,pl310-cache";
++		interrupts = <0 2 4>;
++		reg = <0xf8f02000 0x1000>;
++	};
++
++PL310 L2 Cache EDAC driver detects the Parity enable state by reading the
++appropriate control register.
+diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+index 878f090..059ac31 100644
+--- a/drivers/edac/Kconfig
++++ b/drivers/edac/Kconfig
+@@ -326,6 +326,13 @@ config EDAC_TILE
+ 	  Support for error detection and correction on the
+ 	  Tilera memory controller.
+ 
++config EDAC_PL310_L2
++	tristate "Pl310 L2 Cache Controller"
++	depends on EDAC_MM_EDAC && ARM
++	help
++	  Support for parity error detection on L2 cache controller
++	  data and tag ram memory
++
+ config EDAC_HIGHBANK_MC
+ 	tristate "Highbank Memory Controller"
+ 	depends on EDAC_MM_EDAC && ARCH_HIGHBANK
+diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
+index 4154ed6..179356f 100644
+--- a/drivers/edac/Makefile
++++ b/drivers/edac/Makefile
+@@ -64,3 +64,4 @@ obj-$(CONFIG_EDAC_OCTEON_PC)		+= octeon_edac-pc.o
+ obj-$(CONFIG_EDAC_OCTEON_L2C)		+= octeon_edac-l2c.o
+ obj-$(CONFIG_EDAC_OCTEON_LMC)		+= octeon_edac-lmc.o
+ obj-$(CONFIG_EDAC_OCTEON_PCI)		+= octeon_edac-pci.o
++obj-$(CONFIG_EDAC_PL310_L2)		+= pl310_edac_l2.o
+diff --git a/drivers/edac/pl310_edac_l2.c b/drivers/edac/pl310_edac_l2.c
+new file mode 100644
+index 0000000..649371a
+--- /dev/null
++++ b/drivers/edac/pl310_edac_l2.c
+@@ -0,0 +1,236 @@
++/*
++ * Pl310 L2 Cache EDAC Driver
++ *
++ * Copyright (C) 2013-2014 Xilinx, Inc.
++ *
++ * This program is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation, either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++#include <linux/edac.h>
++#include <linux/interrupt.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <asm/hardware/cache-l2x0.h>
++#include "edac_core.h"
++
++/* Auxilary control register definitions */
++#define L2X0_AUX_CTRL_PARITY_MASK	BIT(21)
++
++/* Interrupt imask/status/clear register definitions */
++#define L2X0_INTR_PARRD_MASK	0x4
++#define L2X0_INTR_PARRT_MASK	0x2
++
++/**
++ * struct pl310_edac_l2_priv - Zynq L2 cache controller private instance data
++ * @base:		Base address of the controller
++ * @irq:		Interrupt number
++ */
++struct pl310_edac_l2_priv {
++	void __iomem *base;
++	int irq;
++};
++
++/**
++ * pl310_edac_l2_parityerr_check - Check controller staus for parity errors
++ * @dci:	Pointer to the edac device controller instance
++ *
++ * This routine is used to check and post parity errors
++ */
++static void pl310_edac_l2_parityerr_check(struct edac_device_ctl_info *dci)
++{
++	struct pl310_edac_l2_priv *priv = dci->pvt_info;
++	u32 regval;
++
++	regval = readl(priv->base + L2X0_RAW_INTR_STAT);
++	if (regval & L2X0_INTR_PARRD_MASK) {
++		/* Data parity error will be reported as correctable error */
++		writel(L2X0_INTR_PARRD_MASK, priv->base + L2X0_INTR_CLEAR);
++		edac_device_handle_ce(dci, 0, 0, dci->ctl_name);
++	}
++	if (regval & L2X0_INTR_PARRT_MASK) {
++		/* tag parity error will be reported as uncorrectable error */
++		writel(L2X0_INTR_PARRT_MASK, priv->base + L2X0_INTR_CLEAR);
++		edac_device_handle_ue(dci, 0, 0, dci->ctl_name);
++	}
++}
++
++/**
++ * pl310_edac_l2_int_handler - ISR fucntion for l2cahe controller
++ * @irq:	Irq Number
++ * @device:	Pointer to the edac device controller instance
++ *
++ * This routine is triggered whenever there is parity error detected
++ *
++ * Return: Always returns IRQ_HANDLED
++ */
++static irqreturn_t pl310_edac_l2_int_handler(int irq, void *device)
++{
++	pl310_edac_l2_parityerr_check((struct edac_device_ctl_info *)device);
++	return IRQ_HANDLED;
++}
++
++/**
++ * pl310_edac_l2_poll_handler - Poll the status reg for parity errors
++ * @dci:	Pointer to the edac device controller instance
++ *
++ * This routine is used to check and post parity errors and is called by
++ * the EDAC polling thread
++ */
++static void pl310_edac_l2_poll_handler(struct edac_device_ctl_info *dci)
++{
++	pl310_edac_l2_parityerr_check(dci);
++}
++
++/**
++ * pl310_edac_l2_get_paritystate - check the parity enable/disable status
++ * @base:	Pointer to the contoller base address
++ *
++ * This routine returns the parity enable/diable status for the controller
++ *
++ * Return: true/false -  parity enabled/disabled.
++ */
++static bool pl310_edac_l2_get_paritystate(void __iomem *base)
++{
++	u32 regval;
++
++	regval = readl(base + L2X0_AUX_CTRL);
++	if (regval & L2X0_AUX_CTRL_PARITY_MASK)
++		return true;
++
++	return false;
++}
++
++/**
++ * pl310_edac_l2_probe - Check controller and bind driver
++ * @pdev:	Pointer to the platform_device struct
++ *
++ * This routine probes a specific arm,pl310-cache instance for binding
++ * with the driver.
++ *
++ * Return: 0 if the controller instance was successfully bound to the
++ * driver; otherwise, < 0 on error.
++ */
++static int pl310_edac_l2_probe(struct platform_device *pdev)
++{
++	struct edac_device_ctl_info *dci;
++	struct pl310_edac_l2_priv *priv;
++	int rc;
++	struct resource *res;
++	void __iomem *baseaddr;
++	u32 regval;
++
++	/* Get the data from the platform device */
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	baseaddr = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(baseaddr))
++		return PTR_ERR(baseaddr);
++
++	/* Check for the ecc enable status */
++	if (pl310_edac_l2_get_paritystate(baseaddr) == false) {
++		dev_err(&pdev->dev, "parity check not enabled\n");
++		return -ENXIO;
++	}
++
++	dci = edac_device_alloc_ctl_info(sizeof(*priv), "l2cache",
++					 1, "L", 1, 1, NULL, 0, 0);
++	if (IS_ERR(dci))
++		return PTR_ERR(dci);
++
++	priv = dci->pvt_info;
++	priv->base = baseaddr;
++	dci->dev = &pdev->dev;
++	dci->mod_name = "pl310_edac_l2";
++	dci->ctl_name = "pl310_l2_controller";
++	dci->dev_name = dev_name(&pdev->dev);
++
++	priv->irq = platform_get_irq(pdev, 0);
++	rc = devm_request_irq(&pdev->dev, priv->irq,
++				pl310_edac_l2_int_handler,
++				0, dev_name(&pdev->dev), (void *)dci);
++	if (rc < 0) {
++		dci->edac_check = pl310_edac_l2_poll_handler;
++		edac_op_state = EDAC_OPSTATE_POLL;
++	}
++
++	rc = edac_device_add_device(dci);
++	if (rc) {
++		dev_err(&pdev->dev, "failed to register with EDAC core\n");
++		goto del_edac_device;
++	}
++
++	if (edac_op_state != EDAC_OPSTATE_POLL) {
++		regval = readl(priv->base+L2X0_INTR_MASK);
++		regval |= (L2X0_INTR_PARRD_MASK | L2X0_INTR_PARRT_MASK);
++		writel(regval, priv->base+L2X0_INTR_MASK);
++	}
++
++	return rc;
++
++del_edac_device:
++	edac_device_del_device(&pdev->dev);
++	edac_device_free_ctl_info(dci);
++
++	return rc;
++}
++
++/**
++ * pl310_edac_l2_remove - Unbind driver from controller
++ * @pdev:	Pointer to the platform_device struct
++ *
++ * This routine unbinds the EDAC device controller instance associated
++ * with the specified arm,pl310-cache controller described by the
++ * OpenFirmware device tree node passed as a parameter.
++ *
++ * Return: Always returns 0
++ */
++static int pl310_edac_l2_remove(struct platform_device *pdev)
++{
++	struct edac_device_ctl_info *dci = platform_get_drvdata(pdev);
++	struct pl310_edac_l2_priv *priv = dci->pvt_info;
++	u32 regval;
++
++	if (edac_op_state != EDAC_OPSTATE_POLL) {
++		regval = readl(priv->base+L2X0_INTR_MASK);
++		regval &= ~(L2X0_INTR_PARRD_MASK | L2X0_INTR_PARRT_MASK);
++		writel(regval, priv->base+L2X0_INTR_MASK);
++	}
++
++	edac_device_del_device(&pdev->dev);
++	edac_device_free_ctl_info(dci);
++
++	return 0;
++}
++
++/* Device tree node type and compatible tuples this driver can match on */
++static struct of_device_id pl310_edac_l2_match[] = {
++	{ .compatible = "arm,pl310-cache", },
++	{ /* end of table */ }
++};
++
++MODULE_DEVICE_TABLE(of, pl310_edac_l2_match);
++
++static struct platform_driver pl310_edac_l2_driver = {
++	.driver = {
++		 .name = "pl310-edac-l2",
++		 .owner = THIS_MODULE,
++		 .of_match_table = pl310_edac_l2_match,
++	},
++	.probe = pl310_edac_l2_probe,
++	.remove = pl310_edac_l2_remove,
++};
++
++module_platform_driver(pl310_edac_l2_driver);
++
++MODULE_AUTHOR("Xilinx Inc.");
++MODULE_DESCRIPTION("pl310 L2 EDAC driver");
++MODULE_LICENSE("GPL v2");
+-- 
+1.7.4
 
-Applied, thanks.
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---lEGEL1/lMxI0MVQ2
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTEy39AAoJEGw4ysog2bOS7NQP/01WNPmmsaOS9OCN8P1n9Xvv
-4QkAzzsX7kCd6sfJkgDZdhsQN72AFnDb11iCeU10STlZz+PPnJ8LQEfZBSrAH5tL
-7Iz3FMwpinQ1NYsuGDVA5gwzMD1wEl/9Qq8Qmt1OmNhE5A4canioSpmn0Qmut2us
-oCVLPXct1Ix9VB/t+0aXaq8LYG1SgeFQcLYv8y8ZewcHqVdKwYWx1c8gmL2M5Kup
-1zlTOGU7ZYwH3QnvMzbUFZrpBxHFSymwnqU+vrqcNfwT3xAlLzqRQ0ye6bYRxOo2
-JjMOzikvfBekt1CT16PP0mpDFtHOVa52qthp6xLNyRXoyG7R2/i/Du/A3y91Tz3H
-ycTbhvnPkZgaV686K+IdfbFiln9XGbPKoGR9rgCDUU+Dyvw13lBywXQFtLerIxMa
-ajqWzVygPe1GL4/usfzGM6uAly0+krQu5brpyAM+cdo9p0HNknHYUppgtvphXAN5
-YbTcQkhwFy+aagjsUsICVwMIjSk96rEV4yBsmqO9Ap2TQjTPU+UU3eI7Aq/vZPti
-gKWlXisNhtKPImeNKqt+SxDVjoku6H8rjKNsE3iWF3meTPWQYSKTVCPShJvD1tQk
-BQBhqim3kfYqcqaAa3avSf+GSWdwBKy9qTQMzkWOZmfHvsUf23JTktbZdgf4oQ3y
-FxY39GpJ+9527QYp2Lup
-=OVEe
------END PGP SIGNATURE-----
-
---lEGEL1/lMxI0MVQ2--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
