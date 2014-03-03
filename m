@@ -1,127 +1,60 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 0/9] Device Tree support for the at91sam9261ek
-Date: Mon, 3 Mar 2014 19:41:09 +0100
-Message-ID: <20140303184109.GH3155@piout.net>
-References: <1393841162-25339-1-git-send-email-jjhiblot@traphandler.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCHv4 4/7] hwspinlock/core: add common OF helpers
+Date: Mon, 3 Mar 2014 12:46:01 -0600
+Message-ID: <5314CDE9.9040207@ti.com>
+References: <1389658764-39199-1-git-send-email-s-anna@ti.com>	<1389658764-39199-5-git-send-email-s-anna@ti.com>	<CAJAp7Oi7wD+VsMAd37gT04yZ4TH4ygXFmheDhvmWuanUjpBmVQ@mail.gmail.com>	<52F92524.3080402@ti.com>	<CAK=WgbY0wDtGCm71E8VXi2g5+VcGogHEy8jdekTRg8xtp6-3rQ@mail.gmail.com> <CAJAp7Ohf43hbKatCwS5Y1+OfEkJYWOkuhZhW-E_=t_9mfM+UaA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1393841162-25339-1-git-send-email-jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CAJAp7Ohf43hbKatCwS5Y1+OfEkJYWOkuhZhW-E_=t_9mfM+UaA@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn@kryo.se>, Ohad Ben-Cohen <ohad@wizery.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
+Ohad,
 
-Apart from my two nitpicks, the whole series is
-Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On 03/02/2014 02:19 PM, Bjorn Andersson wrote:
+> On Sat, Mar 1, 2014 at 9:14 PM, Ohad Ben-Cohen <ohad@wizery.com> wrote:
+>> On Mon, Feb 10, 2014 at 9:14 PM, Suman Anna <s-anna@ti.com> wrote:
+>>> On 02/07/2014 04:49 PM, Bjorn Andersson wrote:
+>>>> It seems to be standard practice to pass the error value back to the
+>>>> consumer, so you should
+>>>> return ERR_PTR(ret); here instead of the NULL...
+>>>
+>>>
+>>> I have modelled the return values in this function based on the return
+>>> values in the existing hwspin_lock_request interfaces. I would need to
+>>> change those functions as well.
+>>>
+>>> Ohad,
+>>> Do you have any objections to the return code convention change?
+>>
+>> Unless strictly needed, I prefer we don't switch to the ERR_PTR code
+>> convention, as it reduces code readability and increases chances of
+>> user bugs.
+>>
 
-On 03/03/2014 at 11:05:53 +0100, Jean-Jacques Hiblot wrote :
-> This patch set aims at bringing a device tree support for the sam9261.
-> It's mostly based on the sam9263 and sam9x5 stuff.
-> 
-> Changes since V4:
-> * change the compatibilty string for the bus matrix to
->   'atmel,at91sam9260-bus-matrix'
-> * add a documentation for the bus matrix DT binding
-> * panic if the DT description of the bus matrix is not found
-> * Fixed the GPIO banks' address range
-> 
-> Changes since V3:
-> * Added support for the touchscreen
-> * Added support for the spi dataflash
-> * Activated the TCB by default
-> * Reworked the patch organization to reduce the number of patchs
-> * changed the default bootargs (no mem description, UBI on mtdpart 5)
-> * Changed the xlate implementation of the at91 pinctrl driver to lock the GPIOs
->   for IRQs instead of requesting them (needed for the touchscreen driver)
-> * some stylistic changes
-> 
-> Changes since V2:
-> * removed the smc driver from the serie. It'll be posted in an independent
->   serie later.
-> * removed the DM9000 support (it'll come with the smc driver)
-> * the sam9261 now supports the Common Clock Framework (CCF). Note: to enable
->   the CCF you must remove from the kernel config the platforms that don't
->   support it.
-> * Added basic DT binding for the bus matrix
-> * Added support for USB host
-> * Added support for USB gadget
-> * in dts(i), replaced interrupt-parent with interrupts-extended
-> * changed the nand partition plan (same as for the sama5d3)
-> * removed 'mem' parameter in command line
-> * re-ordered dt-nodes in ascending address order.
-> * split the lcd support patch in 2 parts (SOC and board)
-> 
-> 
-> Change since V1:
-> * changed the DT representation to use address translation and separate the
->   timings' configuration from the device properties by adding a "simple-bus"
->   inetrmediate node.
-> * moved the smc driver from drivers/bus to drivers/memmory
-> * smc driver now accepts timings in nanoseconds as well as raw register values
-> * smc driver can clip the timings if they're out of bound and dump them to the
->   console
-> * DM9000 timings are now described in nanosecs (for the virtue of example)
-> 
-> supported features are:
-> * working with the Common Clock Framework and the old at91 clock implementation
-> * dbgu
-> * lcdc
-> * usb host
-> * usb gadget,
-> * spi dataflash
-> * nand flash
-> * touchscreen
-> * leds
-> * user buttons
-> 
-> In the TODO list:
-> * dm9000 (ethernet)
-> * audio
-> * mmc
-> 
-> This serie relies on the following patchs:
-> usb: at91-udc: fix irq and iomem resource retrieval
-> ARM: at91: prepare sam9 dt boards transition to common
-> 
-> Jean-Jacques
-> 
-> Jean-Jacques Hiblot (9):
->   at91: dt: Adds support for the bus matrix declaration in the DT
->   dt: bindings: at91: Add a new binding for the bus matrix
->   at91: pinctrl: don't request GPIOs used for interrupts but lock them
->     as IRQ
->   at91: dt: Add at91sam9261 dt SoC support
->   at91: dt: defconfig: Added the sam9261 to the list of DT-enabled SOCs
->   at91: dt: sam9261: Device Tree support for the at91sam9261ek
->   at91: updated the at91_dt_defconfig with support for the ADS7846
->   ARM: at91: prepare common clk transition for sam9261 SoC
->   ARM: at91: move sam9261 SoC to common clk
-> 
->  .../devicetree/bindings/arm/atmel-at91.txt         |  14 +
->  arch/arm/boot/dts/Makefile                         |   2 +
->  arch/arm/boot/dts/at91sam9261.dtsi                 | 740 +++++++++++++++++++++
->  arch/arm/boot/dts/at91sam9261ek.dts                | 204 ++++++
->  arch/arm/configs/at91_dt_defconfig                 |   2 +
->  arch/arm/mach-at91/Kconfig                         |   1 -
->  arch/arm/mach-at91/at91sam9261.c                   |  25 +-
->  arch/arm/mach-at91/setup.c                         |  21 +
->  drivers/pinctrl/pinctrl-at91.c                     |   5 +-
->  9 files changed, 1008 insertions(+), 6 deletions(-)
->  create mode 100644 arch/arm/boot/dts/at91sam9261.dtsi
->  create mode 100644 arch/arm/boot/dts/at91sam9261ek.dts
-> 
-> -- 
-> 1.9.0
-> 
+ From a current user/client perspectives, I didn't find any clients of 
+hwspinlock within the kernel. So, this is probably the right time to 
+change the return code convention.
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> In our case, switching to ERR_PTR and friends seems only to optimize a
+>> few error paths, and I'm not sure it's a big win over simplicity.
+
+The usage on the clients will also not become too complicated. The only 
+change on the clients is mostly the base error check change from if 
+(!hwlock) to if (IS_ERR(hwlock)).
+
+regards
+Suman
+
+> When introducing the ability to reference a hwspin lock via a phandle
+> in device tree it makes a big difference to be able to differ between
+> the case of "initialization failed" or "device not yet probed"; so
+> that the client knows if it should fail or retry later.
+>
+> Regards,
+> Bjorn
+>
