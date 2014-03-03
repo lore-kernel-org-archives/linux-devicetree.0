@@ -1,58 +1,106 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFCv4 0/7] Convert twl4030-madc to IIO API and add DT support
-Date: Mon, 3 Mar 2014 16:00:01 +0800
-Message-ID: <20140303080001.GH4674@lee--X1>
-References: <1393374270-20079-1-git-send-email-sre@debian.org>
- <1393444990-28140-1-git-send-email-sre@debian.org>
- <5311CA14.6080009@kernel.org>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 0/9] Doc/DT: DT bindings for various display components
+Date: Mon, 3 Mar 2014 10:04:38 +0200
+Message-ID: <53143796.2050309@ti.com>
+References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
+ <20140228162752.GU21483@n2100.arm.linux.org.uk> <5310BDE3.60603@ti.com>
+ <20140228165628.GX21483@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5311CA14.6080009-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============1666283940212038774=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140228165628.GX21483@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Tomasz Figa <tomasz.figa@gmail.com>, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Rob Clark <robdclark@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 01 Mar 2014, Jonathan Cameron wrote:
+--===============1666283940212038774==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="mLdtcipUaru7vkkgJkGglhP09QM6T3nLr"
 
-> On 26/02/14 20:03, Sebastian Reichel wrote:
-> >Hi,
-> >
-> >This is RFCv4 for converting twl4030-madc to the IIO API and
-> >adding DT support. The patchset compiles and has been tested
-> >on my Nokia N900.
-> >
-> >Changes since RFCv3 [0]:
-> >  * Added Acked-by from Lee Jones (MFD subsystem maintainer)
-> >    to twl_i2c_read/write_u16 patches
-> >  * Fixed style issues found by Lee Jones
-> >    This readded the temp variable Jonathan Cameron wanted to
-> >    be removed, but makes the code cleaner - especially once
-> >    the brackets for math for clarity are added.
-> >  * Tested with converted rx51-battery driver on Nokia N900,
-> >    which can be found at [1].
-> >
-> >[0] https://lkml.org/lkml/2014/2/25/627
-> >[1] https://lkml.org/lkml/2014/2/25/639
->=20
-> Hi All,
->=20
-> Obviously there are a few outstanding bits and pieces to be addressed=
-=2E
->=20
-> To get this lined up for a merge...
->=20
-> Lee, do you want to take this through mfd or shall I take it through
-> IIO?  I don't mind either way.  It stands pretty separate in IIO so
-> shouldn't cause any merge issues beyond minor fuzz.
+--mLdtcipUaru7vkkgJkGglhP09QM6T3nLr
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-I'm happy to take it through MFD with your Ack.
+Hi Rob, Pawel, Mark, Ian, Kumar,
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+On 28/02/14 18:56, Russell King - ARM Linux wrote:
+> On Fri, Feb 28, 2014 at 06:48:35PM +0200, Tomi Valkeinen wrote:
+>> This is totally unclear to me. How does it become a public standard?
+>> What's the forum for this?
+>=20
+> Me too.  That's where I'd hope someone on devicetree-discuss will be
+> able to help us work out what's the right approach here. :)
+
+The story briefly so far: I've implemented DT support for OMAP display,
+and created bindings for various (non-OMAP) display components,
+including generic connector bindings for DVI, HDMI and analog-tv.
+
+Russell's point was that these connector bindings are very generic, i.e.
+they are not for any particular chip from a particular vendor, but for
+any connector for DVI, HDMI or analog-tv. And he's worried that maybe we
+shouldn't define such generic bindings without consulting the whole
+device-tree community (i.e including non-linux users).
+
+So the question is, is there such a community and a forum to bring up
+this kind of things? If yes, should we bring this up there? If yes, what
+kind of things in general should be brought into the attention of
+non-linux users?
+
+What I wonder here is that while a thing like DVI connector is, of
+course, more generic than, say, "ti,tfp410" encoder chip, but isn't the
+case still the same: we're defining global bindings for hardware that
+should work for everyone, not only Linux users?
+
+ Tomi
+
+
+
+--mLdtcipUaru7vkkgJkGglhP09QM6T3nLr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJTFDeWAAoJEPo9qoy8lh71i38QAIix94EUjiYHPVzRVIjjWcYQ
+b2heqft8UTQHFkpEjj5hUc/Neie7Ub2sUqt/tjzqpS81Z+O4+qbDmnnvfaY6Ww81
+Vm8wAmno4NiHfX6oSGEtHRajrMEAg+taMoSFwfQLQQUTj8YYXWsG+UWs1UeT8wbM
+vbX0HXlR4RINxG9foo0zO1lthIOKfmL1a1XVWxEsm7lHG6UsNcCM3QmX0m3IpJ3V
+KUv2XSPOqOtvPRUdYUxzwBjWn51T4ANAl5j+6B8Y2vszocplBJRJ2NRKbP2SkiZf
+Qhy3b6svhk3DOVMCq7jMbB0hwJqMKdbg/u9NyPv0e7o42TxsRqe1KVCECjHOp1zH
+i2TvgbeCyqCojNAxw2GttMBIPEa067xxK7yz9iL/iw7GkFVZd8iffAZ9OtK91hzV
+RVEhVGo5vYNicduAnjdk1hwVKvB+p0HQ+UWs8A015TpbARVNh8mRQoLvdO0Nle1J
+P9jIAMKamnmXtLzALMDY6mVXjk6xrSjvFN4yhBe9Ep1LXARvSTwYJe6kzl5mxhpN
+BwXxS8Xw6zeVDtu3aXWC5rQcEV96q2rKry0qnQZ2F6AoWkjgPLSG1VVLkuQHed8z
+TNfwJE0Va/skJga1BD5sm9MWVaasRqc8YRj4Kz79QjkAt1MSVjLKrijSfEkBAoSf
+IXOlJp5t+6d3gQk0tgu8
+=sdgg
+-----END PGP SIGNATURE-----
+
+--mLdtcipUaru7vkkgJkGglhP09QM6T3nLr--
+
+
+--===============1666283940212038774==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============1666283940212038774==--
