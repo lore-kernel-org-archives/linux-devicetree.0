@@ -1,134 +1,85 @@
-From: Tanmay Inamdar <tinamdar@apm.com>
-Subject: Re: [PATCH v4 5/6] pci: Use parent domain number when allocating
- child busses.
-Date: Mon, 3 Mar 2014 15:14:47 -0800
-Message-ID: <CACoXjcnP80rSaYqy2EK8SBh8Q=5E8kh_GQ84Y_0hg3WrQ=fy+A@mail.gmail.com>
-References: <1393867996-32299-1-git-send-email-Liviu.Dudau@arm.com>
-	<1393867996-32299-6-git-send-email-Liviu.Dudau@arm.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 1/3] soc: Introduce drivers/soc place-holder for SOC
+ specific drivers
+Date: Mon, 3 Mar 2014 15:35:40 -0800
+Message-ID: <20140303233540.GB28934@kroah.com>
+References: <1393629520-12713-1-git-send-email-santosh.shilimkar@ti.com>
+ <1393629520-12713-2-git-send-email-santosh.shilimkar@ti.com>
+ <20140302171206.6adbea6f@alan.etchedpixels.co.uk>
+ <20140302204822.GA16158@quad.lixom.net>
+ <2DD4A0BB-509F-4F76-AA03-0CAFC9CEFE97@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1393867996-32299-6-git-send-email-Liviu.Dudau@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <2DD4A0BB-509F-4F76-AA03-0CAFC9CEFE97@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Paul Walmsley <paul@pwsan.com>, Arnd Bergmann <arnd@arndb.de>, devicetree <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org, Sandeep Nair <sandeep_n@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Liviu,
-
-Thanks for fixing up domain_nr. Now I have moved on further to a new
-domain_nr related warning dump :-)
-
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-xgene-pcie 1f500000.pcie: (rc) x8 gen-3 link up
-pci_bus 0001:00: scanning bus
-pci_setup_device:1101 domain_nr = 1
-pci 0001:00:00.0: [e008:e004] type 01 class 0x060400
-pci 0001:00:00.0: reg 0x10: [mem 0x4000000000-0x7fffffffff 64bit]
-pci 0001:00:00.0: calling xgene_pcie_fixup_bridge+0x0/0x80
-pci 0001:00:00.0: Hiding X-Gene pci host bridge resources 0001:00:00.0
-pci 0001:00:00.0: supports D1 D2
-pci_bus 0001:00: fixups for bus
-pci 0001:00:00.0: scanning [bus 03-03] behind bridge, pass 0
-pci 0001:00:00.0: bridge configuration invalid ([bus 03-03]), reconfiguring
-pci 0001:00:00.0: scanning [bus 00-00] behind bridge, pass 1
-** pci_scan_bridge:855  pci_domain_nr(bus) = 1
-** pci_alloc_child_bus:681  pci_domain_nr(bus) = 1
-pci_bus 0001:01: scanning bus
-pci_setup_device:1101 domain_nr = 0
-pci 0000:01:00.0: [15b3:1003] type 00 class 0x020000
-pci 0000:01:00.0: reg 0x10: [mem 0x00100000-0x001fffff 64bit]
-pci 0000:01:00.0: reg 0x18: [mem 0x00800000-0x00ffffff 64bit pref]
-pci 0000:01:00.0: reg 0x30: [mem 0x01000000-0x010fffff pref]
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1 at
-/home/tinamdar/work/open-source/linux/fs/sysfs/dir.c:52
-sysfs_warn_dup+0x80/0xc0()
-sysfs: cannot create duplicate filename '/bus/pci/devices/0000:01:00.0'
-Modules linked in:
-CPU: 0 PID: 1 Comm: swapper/0 Not tainted 3.14.0-rc5+ #40
-Call trace:
-[<ffffffc000088180>] dump_backtrace+0x0/0x140
-[<ffffffc0000882d0>] show_stack+0x10/0x20
-[<ffffffc0004f65ac>] dump_stack+0x74/0xc4
-[<ffffffc000096e04>] warn_slowpath_common+0x84/0xc0
-[<ffffffc000096e8c>] warn_slowpath_fmt+0x4c/0x60
-[<ffffffc0001b83dc>] sysfs_warn_dup+0x7c/0xc0
-[<ffffffc0001b8894>] sysfs_do_create_link_sd.isra.2+0xf4/0x100
-[<ffffffc0001b88bc>] sysfs_create_link+0x1c/0x40
-[<ffffffc0003250b0>] bus_add_device+0x110/0x1c0
-[<ffffffc000322f1c>] device_add+0x31c/0x520
-[<ffffffc0002c444c>] pci_device_add+0xec/0x140
-[<ffffffc0004f1758>] pci_scan_single_device+0x98/0xe0
-[<ffffffc0002c44e8>] pci_scan_slot+0x48/0x120
-[<ffffffc0002c5368>] pci_scan_child_bus+0x48/0x140
-[<ffffffc0002c522c>] pci_scan_bridge+0x4ec/0x5e0
-[<ffffffc0002c53c8>] pci_scan_child_bus+0xa8/0x140
-[<ffffffc0004f1b30>] pci_rescan_bus+0x10/0x40
-[<ffffffc0006a12ac>] xgene_pcie_probe_bridge+0x660/0x72c
-[<ffffffc000327d20>] platform_drv_probe+0x20/0x60
-[<ffffffc000325e30>] really_probe+0xf0/0x220
-[<ffffffc000326080>] __driver_attach+0xa0/0xc0
-[<ffffffc000323ed4>] bus_for_each_dev+0x54/0xa0
-[<ffffffc0003258bc>] driver_attach+0x1c/0x40
-[<ffffffc00032548c>] bus_add_driver+0x14c/0x220
-[<ffffffc00032683c>] driver_register+0x5c/0x120
-[<ffffffc000327cdc>] __platform_driver_register+0x5c/0x80
-[<ffffffc0006a0c40>] xgene_pcie_driver_init+0x14/0x20
-[<ffffffc0000814c0>] do_one_initcall+0xe0/0x160
-[<ffffffc00068c934>] kernel_init_freeable+0x134/0x1d8
-[<ffffffc0004f07ac>] kernel_init+0xc/0xe0
----[ end trace 3ee052d463aab7f3 ]---
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1 at
-/home/tinamdar/work/open-source/linux/drivers/pci/probe.c:1380
-pci_device_add+0x128/0x140()
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-I have made a small fix above your patch. After the fix is applied,
-dumps are gone and the enumeration finishes up smoothly for all the
-ports.
-Since the change is small, just pasting it here. Please review and
-apply if it's clean.
-
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index a12cda5..aac8366 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -693,7 +693,7 @@ static struct pci_bus *pci_alloc_child_bus(struct
-pci_bus *parent,
-        }
-
-        child->self = bridge;
--       child->bridge = get_device(&bridge->dev);
-+       child->bridge = get_device(parent->bridge);
-        child->dev.parent = child->bridge;
-        pci_set_bus_of_node(child);
-        pci_set_bus_speed(child);
-
-Thanks,
-Tanmay
-
-On Mon, Mar 3, 2014 at 9:33 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
-> pci_alloc_child_bus() uses the newly allocated child bus to figure
-> out the domain number that is going to use for setting the device
-> name. A better option is to use the parent bus domain number.
->
-> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
->
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 26237a0..a12cda5 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -677,7 +677,7 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
->          * now as the parent is not properly set up yet.
->          */
->         child->dev.class = &pcibus_class;
-> -       dev_set_name(&child->dev, "%04x:%02x", pci_domain_nr(child), busnr);
-> +       dev_set_name(&child->dev, "%04x:%02x", pci_domain_nr(parent), busnr);
->
->         /*
->          * Set up the primary, secondary and subordinate
-> --
-> 1.9.0
->
+T24gTW9uLCBNYXIgMDMsIDIwMTQgYXQgMTA6MTM6NTdBTSAtMDYwMCwgS3VtYXIgR2FsYSB3cm90
+ZToKPiAKPiBPbiBNYXIgMiwgMjAxNCwgYXQgMjo0OCBQTSwgT2xvZiBKb2hhbnNzb24gPG9sb2ZA
+bGl4b20ubmV0PiB3cm90ZToKPiAKPiA+IE9uIFN1biwgTWFyIDAyLCAyMDE0IGF0IDA1OjEyOjA2
+UE0gKzAwMDAsIE9uZSBUaG91c2FuZCBHbm9tZXMgd3JvdGU6Cj4gPj4gT24gRnJpLCAyOCBGZWIg
+MjAxNCAxODoxODozOCAtMDUwMAo+ID4+IFNhbnRvc2ggU2hpbGlta2FyIDxzYW50b3NoLnNoaWxp
+bWthckB0aS5jb20+IHdyb3RlOgo+ID4+IAo+ID4+PiBCYXNlZCBvbiBlYXJsaWVyIHRocmVhZCAi
+aHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTMvMTAvNy82NjIiIGFuZAo+ID4+PiBmdXJ0aGVyIGRp
+c2N1c3Npb24gYXQgS2VybmVsIFN1bW1pdCcyMDEzLCBpdCB3YXMgYWdyZWVkIHRvIGNyZWF0ZQo+
+ID4+PiAnZHJpdmVyL3NvYycgZm9yIGRyaXZlcnMgd2hpY2ggYXJlIHF1aXRlIFNPQyBzcGVjaWZp
+Yy4KPiA+Pj4gCj4gPj4+IExldHMgdGFrZSB0aGUgZGlzY3Vzc2lvbiBmb3J3YXJkIHdpdGggdGhp
+cyBwYXRjaC4KPiA+PiAKPiA+PiBTbyB3aGF0IGhhcHBlbnMgaWYgeW91IHB1dCBzb21ldGhpbmcg
+aW4gc2F5IHNvYy9iYW5hbmEgYW5kIDMgbW9udGhzIGxhdGVyCj4gPj4gdGhlIHNhbWUgSVAgYmxv
+Y2sgc2hvd3MgdXAgaW4gdHdvIG90aGVyIGRldmljZXMgYm90aCBvZiB3aGljaCBoYXZlIHRoZWly
+Cj4gPj4gb3duIHNvYy8gZGlyZWN0b3J5IGFscmVhZHkgPwo+ID4gCj4gPiBUaGlzIGlzbid0IHNv
+IG11Y2ggYWJvdXQgSVAgYmxvY2tzIGFzIGFib3V0IGFsbCB0aGUgb3RoZXIgZ2x1ZSBsb2dpYyBh
+bmQKPiA+IG1hbmFnZW1lbnQgZnVuY3Rpb25zIHRoYXQgdmVuZG9ycyBzbyBmYXIgc2VlbSB0byBp
+bXBsZW1lbnQgaW4gdGhlaXIgb3duIHdheXMuCj4gPiAKPiA+IEkgZG9uJ3QgcmVtZW1iZXIgdGhl
+IG5hbWUgd2UgYWdyZWVkIG9uLCBJIGRvbid0IHRoaW5rIGl0IHdhcyBkcml2ZXJzL3NvYyAtLQo+
+ID4gcGFydGx5IGJlY2F1c2UgbmFtaW5nIGl0IHRoYXQgYnJpbmdzIHVwIHRoZSBraW5kcyBvZiBx
+dWVzdGlvbnMgeW91IGhhdmUuCj4gPiBQYXVsIHRvb2sgaXQgdXBvbiBoaW1zZWxmIHRvIHN0YXJ0
+IHNvcnRpbmcgdGhpcyBvdXQgKGFuZCBtZXJnZSB0aHJvdWdoIHVzIG9uCj4gPiBhcm0tc29jKSwg
+c28gaGUgaG9wZWZ1bGx5IHJlbWVtYmVycyBiZXR0ZXIgdGhhbiBtZS4gOikKPiAKPiBJIHRoaW5r
+IGl0IHdhcyBkcml2ZXJzL3NvYyBmb3IgdGhlIGNhc2UgdGhhdCBQYXVsIHdhcyBnb2luZyB0byBs
+b29rIGF0LiAgSeKAmWQgZXhwZWN0IHdl4oCZZCBnbyB3aXRoIGRyaXZlcnMvc29jLzxWRU5ET1I+
+IHRvIHJlZHVjZSBjaHVybiBiZXR3ZWVuIG5ld2VyIFNvQyBmYW1pbGllcyBmcm9tIGEgY29tcGFu
+eSBzaGFyaW5nIHNvbWV0aGluZyB3aXRoIGFuIG9sZGVyIG9uZSwgZXRjLgo+IAo+ID4gCj4gPj4g
+V2hhdCBoYXBwZW5zIHdoZW4gdGhlIHNhbWUgYmxvY2tzIHNob3dzIHVwIG9uIGJvdGggYSBTb0Mg
+YW5kCj4gPj4gbGF0ZXIgZXh0ZXJuYWxseSA/Cj4gPj4gCj4gPj4gV2hlcmUgZG9lcyBhIHNvYyBz
+cGVjaWZjIGdwaW8gZHJpdmVyIGdvID8KPiA+IAo+ID4gZHJpdmVycy9ncGlvLCBvZiBjb3Vyc2Uu
+IFRoaXMgaXNuJ3QgY2hhbmdpbmcgdGhhdC4KPiA+IAo+ID4+IEl0IHNlZW1zIHRvIG1lIHdlJ3Zl
+IGdvdCBhIGxvdCBvZiBjb25mdXNpb24gaGVyZSBiZWNhdXNlIGRyaXZlcnMvIGlzCj4gPj4gc3Bs
+aXQgYnkgdHlwZSwgYW5kIHdlJ3ZlIGFsc28gZ290IGFyY2gvKiBtYWNoaW5lIHNwZWNpZmljIGRy
+aXZlcnMgYW5kCj4gPj4gd2UndmUgZ290IGRyaXZlcnMvcGxhdGZvcm0gd2hpY2ggaXMgaW50ZW5k
+ZWQgYXMgZmFyIGFzIEkgY2FuIHNlZSBmb3IKPiA+PiBldmVyeXRoaW5nIHlvdSdkIHB1dCBpbiBk
+cml2ZXJzL3NvYyBleGNlcHQgZm9yIHRoYXQgd2hpY2ggZ29lcyBpbiBhcmNoLyoKPiA+PiBhbnl3
+YXkuCj4gPj4gCj4gPj4gSWYgUU1TUyBpcyBhcm0gc3BlY2lmaWMgd2h5IGlzbid0IGl0IGluIGFy
+Y2gvYXJtLCBpZiBpdCdzIG5vdCB3aHkgaXNuJ3QKPiA+PiBpdCBpbiBkcml2ZXJzL3BsYXRmb3Jt
+ID8KPiA+IAo+ID4gZHJpdmVycy9wbGF0Zm9ybSBhcmUgZm9yIHNwZWNpZmljIHZlbmRvciBwbGF0
+Zm9ybXMuIEkuZS4gdmFyaW91cyBsYXB0b3AKPiA+IHZlbmRvcnMsIGEgZmV3IHNlcnZlciB2ZW5k
+b3JzLCBldGMuIENvZGUgZm9yIGEgd2hvbGUgc2lsaWNvbiB2ZW5kb3IncyBkcml2ZXIKPiA+IGRv
+ZXMgbm90IGJlbG9uZyB0aGVyZS4KPiA+PiAKPiA+PiBKdXN0IHRyeWluZyB0byB1bmRlcnN0YW5k
+IHRoZSBwb2ludCBvZiBkcml2ZXJzL3NvYy4gCj4gPiAKPiA+IFNob3J0Y3V0dGluZyBtb3N0IG9m
+IHRoZSBkaXNjdXNzaW9uIGJ5IGZvY3VzaW5nIG9uIHRoaXMgcXVlc3Rpb24uIDspCj4gPiAKPiA+
+IFdlJ3ZlIGJlZW4gc3RydWdnbGluZyB0byBmaW5kIGEgaG9tZSBmb3Igc29tZSBvZiB0aGUgY29k
+ZSB0aGF0IHdlIHdhbnQgdG8ga2VlcAo+ID4gaW4gdGhlIGtlcm5lbCB0cmVlLCBhbmQgd2Ugc2F0
+IGRvd24gdG8gdGFsayB3aXRoIChhbW9uZyBvdGhlcnMpIEdyZWcgYXQgS1MgdG8KPiA+IHRyeSB0
+byBmaWd1cmUgb3V0IGhvdyB0byBtb3ZlIGZvcndhcmQuCj4gCj4gV2UgdGFsa2VkIGFib3V0IGRy
+aXZlcnMvbGliIGFuZCBkcml2ZXJzL3NvYyBiYWNrIGF0IEtTLiAgR3JlZyB3YXMKPiBnb2luZyB0
+byBzdGFydCBvZiBkcml2ZXJzL2xpYiBhbmQgUGF1bCB3YXMgZ29pbmcgdG8gbG9vayBhdAo+IGRy
+aXZlcnMvc29jLgoKWWVzLCBkcml2ZXJzL2xpYi8gaXMgc3RpbGwgb24gbXkgVE9ETyBsaXN0LCB1
+bmZvcnR1bmF0bHkgd2F5IGRvd24gaXQuLi4KSSdsbCBnZXQgdG8gaXQgInNvb24iIHdpdGggc29t
+ZSB2YXJpYXRpb24gb2YgInNvb24iIDooCgpncmVnICJteSBpbmJveCBpcyBmdWxsIiBrLWgKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1r
+ZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
+ZWwK
