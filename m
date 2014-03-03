@@ -1,72 +1,45 @@
 From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: [PATCH v4 2/3] arm64: Extend the PCI I/O space to 16MB
-Date: Mon,  3 Mar 2014 17:33:32 +0000
-Message-ID: <1393868013-32345-3-git-send-email-Liviu.Dudau@arm.com>
-References: <1393868013-32345-1-git-send-email-Liviu.Dudau@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393868013-32345-1-git-send-email-Liviu.Dudau@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v4 5/6] pci: Use parent domain number when allocating child
+ busses.
+Date: Mon,  3 Mar 2014 17:33:15 +0000
+Message-ID: <1393867996-32299-6-git-send-email-Liviu.Dudau@arm.com>
+References: <1393867996-32299-1-git-send-email-Liviu.Dudau@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1393867996-32299-1-git-send-email-Liviu.Dudau@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Tanmay Inamdar <tinamdar@apm.com>, LKML <linux-kernel@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Catalin Marinas <catalin.marinas@arm.com>
+pci_alloc_child_bus() uses the newly allocated child bus to figure
+out the domain number that is going to use for setting the device
+name. A better option is to use the parent bus domain number.
 
-The patch moves the PCI I/O space (currently at 64K) before the
-earlyprintk mapping and extends it to 16MB.
+Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
 
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-
-diff --git a/Documentation/arm64/memory.txt b/Documentation/arm64/memory.txt
-index 5e054bf..85e24c4 100644
---- a/Documentation/arm64/memory.txt
-+++ b/Documentation/arm64/memory.txt
-@@ -35,11 +35,13 @@ ffffffbc00000000	ffffffbdffffffff	   8GB		vmemmap
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 26237a0..a12cda5 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -677,7 +677,7 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
+ 	 * now as the parent is not properly set up yet.
+ 	 */
+ 	child->dev.class = &pcibus_class;
+-	dev_set_name(&child->dev, "%04x:%02x", pci_domain_nr(child), busnr);
++	dev_set_name(&child->dev, "%04x:%02x", pci_domain_nr(parent), busnr);
  
- ffffffbe00000000	ffffffbffbbfffff	  ~8GB		[guard, future vmmemap]
- 
--ffffffbffbc00000	ffffffbffbdfffff	   2MB		earlyprintk device
-+ffffffbffa000000	ffffffbffaffffff	  16MB		PCI I/O space
-+
-+ffffffbffb000000	ffffffbffbbfffff	  12MB		[guard]
- 
--ffffffbffbe00000	ffffffbffbe0ffff	  64KB		PCI I/O space
-+ffffffbffbc00000	ffffffbffbdfffff	   2MB		earlyprintk device
- 
--ffffffbffbe10000	ffffffbcffffffff	  ~2MB		[guard]
-+ffffffbffbe00000	ffffffbffbffffff	   2MB		[guard]
- 
- ffffffbffc000000	ffffffbfffffffff	  64MB		modules
- 
-@@ -60,11 +62,13 @@ fffffdfc00000000	fffffdfdffffffff	   8GB		vmemmap
- 
- fffffdfe00000000	fffffdfffbbfffff	  ~8GB		[guard, future vmmemap]
- 
--fffffdfffbc00000	fffffdfffbdfffff	   2MB		earlyprintk device
-+fffffdfffa000000	fffffdfffaffffff	  16MB		PCI I/O space
-+
-+fffffdfffb000000	fffffdfffbbfffff	  12MB		[guard]
- 
--fffffdfffbe00000	fffffdfffbe0ffff	  64KB		PCI I/O space
-+fffffdfffbc00000	fffffdfffbdfffff	   2MB		earlyprintk device
- 
--fffffdfffbe10000	fffffdfffbffffff	  ~2MB		[guard]
-+fffffdfffbe00000	fffffdfffbffffff	   2MB		[guard]
- 
- fffffdfffc000000	fffffdffffffffff	  64MB		modules
- 
-diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/io.h
-index 4cc813e..7846a6b 100644
---- a/arch/arm64/include/asm/io.h
-+++ b/arch/arm64/include/asm/io.h
-@@ -121,7 +121,7 @@ static inline u64 __raw_readq(const volatile void __iomem *addr)
-  *  I/O port access primitives.
-  */
- #define IO_SPACE_LIMIT		0xffff
--#define PCI_IOBASE		((void __iomem *)(MODULES_VADDR - SZ_2M))
-+#define PCI_IOBASE		((void __iomem *)(MODULES_VADDR - SZ_32M))
- 
- static inline u8 inb(unsigned long addr)
- {
+ 	/*
+ 	 * Set up the primary, secondary and subordinate
 -- 
 1.9.0
