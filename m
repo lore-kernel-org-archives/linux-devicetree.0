@@ -1,7 +1,7 @@
 From: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
-Subject: [PATCH v5 2/9] dt: bindings: at91: Add a new binding for the bus matrix
-Date: Mon,  3 Mar 2014 11:05:55 +0100
-Message-ID: <1393841162-25339-3-git-send-email-jjhiblot@traphandler.com>
+Subject: [PATCH v5 5/9] at91: dt: defconfig: Added the sam9261 to the list of DT-enabled SOCs
+Date: Mon,  3 Mar 2014 11:05:58 +0100
+Message-ID: <1393841162-25339-6-git-send-email-jjhiblot@traphandler.com>
 References: <1393841162-25339-1-git-send-email-jjhiblot@traphandler.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1393841162-25339-1-git-send-email-jjhiblot@traphandler.com>
@@ -10,34 +10,22 @@ To: nicolas.ferre@atmel.com
 Cc: plagnioj@jcrosoft.com, b.brezillon@overkiz.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, gregory.clement@free-electrons.com, devicetree@vger.kernel.org, thomas.petazzoni@free-electrons.com, alexandre.belloni@free-electrons.com, Jean-Jacques Hiblot <jjhiblot@traphandler.com>
 List-Id: devicetree@vger.kernel.org
 
-This binding is used to initialize the bus matrix base address.
-
 Signed-off-by: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
 ---
- Documentation/devicetree/bindings/arm/atmel-at91.txt | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm/configs/at91_dt_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
-index 16f60b4..bf9cb13 100644
---- a/Documentation/devicetree/bindings/arm/atmel-at91.txt
-+++ b/Documentation/devicetree/bindings/arm/atmel-at91.txt
-@@ -105,3 +105,17 @@ Example:
- 		compatible = "atmel,at91sam9260-rstc";
- 		reg = <0xfffffd00 0x10>;
- 	};
-+
-+Bus Matrix controller
-+
-+required properties:
-+- compatible: Should be "atmel,<chip>-bus-matrix".
-+  <chip> can be "at91sam9260".
-+- reg: Should contain registers location and length
-+
-+Example:
-+
-+	matrix: matrix@ffffee00 {
-+		compatible = "atmel,at91sam9260-bus-matrix";
-+		reg = <0xffffee00 0x200>;
-+	};
+diff --git a/arch/arm/configs/at91_dt_defconfig b/arch/arm/configs/at91_dt_defconfig
+index 0b4e9b5..3c6905d 100644
+--- a/arch/arm/configs/at91_dt_defconfig
++++ b/arch/arm/configs/at91_dt_defconfig
+@@ -16,6 +16,7 @@ CONFIG_MODULE_UNLOAD=y
+ CONFIG_ARCH_AT91=y
+ CONFIG_SOC_AT91RM9200=y
+ CONFIG_SOC_AT91SAM9260=y
++CONFIG_SOC_AT91SAM9261=y
+ CONFIG_SOC_AT91SAM9263=y
+ CONFIG_SOC_AT91SAM9G45=y
+ CONFIG_SOC_AT91SAM9X5=y
 -- 
 1.9.0
