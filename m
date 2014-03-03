@@ -1,43 +1,68 @@
-From: "Mark A. Greer" <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Subject: Re: [PATCH 1/3] NFC: trf7970a: Add driver with ISO/IEC 14443 Type
- 2 Tag Support
-Date: Mon, 3 Mar 2014 11:11:12 -0700
-Message-ID: <20140303181112.GA32605@animalcreek.com>
-References: <1391206631-9862-1-git-send-email-mgreer@animalcreek.com>
- <1391206631-9862-2-git-send-email-mgreer@animalcreek.com>
- <20140221005059.GS18868@zurbaran>
- <20140226215309.GA21867@animalcreek.com>
+From: Vince Bridgers <vbridgers2013@gmail.com>
+Subject: Re: [PATCH RFC 0/3] Altera Triple Speed Ethernet (TSE) Driver RFC
+Date: Mon, 3 Mar 2014 12:11:35 -0600
+Message-ID: <CAOwfj2NoaF0Otr2X+TyvNfaUJei3PaZXr0WBu8c_Ongz2EEHxg@mail.gmail.com>
+References: <1393792922-2381-1-git-send-email-vbridgers2013@gmail.com>
+	<063D6719AE5E284EB5DD2968C1650D6D0F6CEC12@AcuExch.aculab.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140226215309.GA21867-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Lauro Ramos Venancio <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Aloisio Almeida Jr <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Erick Macias <emacias-l0cyMroinI0@public.gmane.org>, Thierry Escande <thierry.escande-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <063D6719AE5E284EB5DD2968C1650D6D0F6CEC12@AcuExch.aculab.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: David Laight <David.Laight@aculab.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 26, 2014 at 02:53:09PM -0700, Mark A. Greer wrote:
-> On Fri, Feb 21, 2014 at 01:50:59AM +0100, Samuel Ortiz wrote:
-> > Hi Mark,
-> 
-> Hi Samuel - thanks for the feedback.
-> 
-> > Code looks quite nice, especially since this looks like a fairly complex
-> > driver. And the initial coments are quite useful, I appreciate that.
-> > I have a few comments/questions though:
-> > 
-> > 
-> > > + * been received and there isn't an error).  The delay is 3 ms since delays
-> > > + * over 2 ms have been observed during testing.
-> > Would you say this timeout depend on the SPI bus bandwidth ?
-> 
-> It'll be one of the factors but the tag's response characteristics are
-> a big factor too.  I can bump it up a bit more if you prefer or do you
-> want me to somehow calculate it from the SPI bitrate?
+Hi David, thank you for taking the time to review and comment. My
+responses are inline.
 
-Ping.
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, Mar 3, 2014 at 3:53 AM, David Laight <David.Laight@aculab.com> wrote:
+> From: Vince Bridgers
+>> I'm submitting this patch set for comments as a first step towards upstreaming
+>> a driver for the Altera Triple Speed Ethernet (TSE) controller.
+> ...
+>> The design has been tested on Altera's Cyclone 4, 5, and Cyclone 5 SOC
+>> development kits using an ARM A9 processor and an Altera NIOS2 processor.
+>
+> I'm not sure this is relevant to any decision to import this but
+> as far as I know the nios2 port of gcc is not is part of the main gcc
+> release.
+> (If it was it would be easier to get fixes applied!)
+
+Mentor has released an updated NIOS2 GCC port that can be downloaded
+here http://www.mentor.com/embedded-software/sourcery-tools/sourcery-codebench/editions/lite-edition/.
+Instructions for building and running Linux on NIOS2 can be found here
+http://www.rocketboards.org/foswiki/Documentation/NiosIILinuxUserManual.
+The NIOS2 GCC port is in process of being upstreamed by Mentor
+Graphics. The Linux port for NIOS2 is in process of being mainlined.
+
+>
+> I'm also not entirely convinced that Linux is an appropriate
+> operating system for a 100MHz nios2 cpu. You'll certainly have
+> problems processing Ge data rates (and maybe 100M ones as well).
+
+I agree that you may not see line rate streaming network performance
+even at 100Mbps, but most customers using NIOS2 with TSE don't care
+about that - it's the connectivity they are interested in the most.
+There are many applications using a small soft processor like the
+NIOS2 that can take advantage of the ability to reconfigure soft logic
+on an FPGA that need some kind of network connectivity for device to
+device communication for data updates at some periodic rate that can
+be supported by such a system, or for simple configuration. If more
+performance is required a customer is free to choose a different
+product.
+
+I'm not sure this opinion has anything to do with the decision to
+upstream this particular patch or not since the TSE can be used with
+different processors in different configurations that customers demand
+and find useful.
+
+All the best,
+
+Vince
+
+>
+>         David
+>
+>
+>
