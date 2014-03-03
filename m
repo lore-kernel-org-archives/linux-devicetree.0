@@ -1,79 +1,87 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH 1/1] Consistently use xrealloc instead of realloc
-Date: Mon, 3 Mar 2014 11:08:09 +1100
-Message-ID: <20140303000809.GH12916@voom.fritz.box>
-References: <1393792741-29043-1-git-send-email-xypron.glpk@gmx.de>
- <20140302234140.GD12916@voom.fritz.box>
- <5313C616.9010104@gmx.de>
+From: Graeme Gregory <graeme-/SyDAi3Rz4f10XsdtD+oqA@public.gmane.org>
+Subject: Re: [PATCH V2 1/3] dt: palmas: support IRQ inversion at the board
+ level
+Date: Mon, 3 Mar 2014 08:52:46 +0800
+Message-ID: <20140303005246.GA22047@xora-yoga13>
+References: <1393534281-30759-1-git-send-email-swarren@wwwdotorg.org>
+ <20140227210227.GE2931@xora-haswell>
+ <530FAFAE.5050800@wwwdotorg.org>
+ <20140228055818.GA29849@sirena.org.uk>
+ <5310BA99.4050203@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7IgncvKP0CVPV/ZZ"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5313C616.9010104@gmx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Cc: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, jdl@jdl.com, devicetree-compiler@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <5310BA99.4050203-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, J Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Ian Lartey <ian-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Feb 28, 2014 at 09:34:33AM -0700, Stephen Warren wrote:
+> On 02/27/2014 10:58 PM, Mark Brown wrote:
+> > On Thu, Feb 27, 2014 at 02:35:42PM -0700, Stephen Warren wrote:
+> >> On 02/27/2014 02:02 PM, Graeme Gregory wrote:
+> > 
+> >>>> +- ti,irq-externally-inverted : If missing, the polarity of the Palmas IRQ
+> >>>> +  output should be set to the opposite of the polarity indicated by the IRQ
+> >>>> +  specifier in the interrupts property. If absent, the polarity should be
+> >>>> +  configured to match. This allows the representation of an inverter between
+> >>>> +  the Palmas IRQ output and the interrupt parent's IRQ input.
+> > 
+> >>> This has got to be the wrong way to do things, all this leads to is every
+> >>> device doing this property in its own way and having totally inconsistent
+> >>> properties all meaning the same thing.
+> > 
+> >>> If there is some other hardware inverting lines then there should be
+> >>> a generic binding for this in DT. This is not describing the palmas hardware
+> >>> but some external object to the palmas.
+> > 
+> >> I'd be fine with removing the "ti," vendor prefix from the property
+> >> name, and promoting it to be a cross-device standard.
+> > 
+> >> I'm not sure that many devices will need this though; most don't have
+> >> configurable output polarity. Still, I guess that shouldn't stop us from
+> >> creating standards for the cases where it is needed.
+> > 
+> > It's really common for PMICs and CODECs to be able to set any interrupt
+> > polarity at least.
+> > 
+> >> If the DT reviewers can ack the concept, I'm happy to respin the patch
+> >> with the more generic property name.
+> > 
+> > I'm not sure that renaming the property really deals with the concerns
+> > though since drivers still all need to manually add support for this,
+> > shouldn't there be an interrupt controller described in the DT which
+> > just chains on to the parent with the polarity inverted to do the
+> > impedence match?
+> 
+> I had thought of that when first dealing with this a couple years ago,
+> but Olof suggested that was too complicated.
+> 
+> Certainly, adding an "inverting" interrupt controller into the path
+> would solve the problem without inventing any new concept in DT.
+> However, the inverter really isn't an interrupt controller in any
+> meaningful fashion. It has no status/mask/enable/... registers at all;
+> it's nothing more than an inverter gate, at least in my case. Hence, I'm
+> actually not convinced that adding an extra interrupt controller into
+> the path is correct here.
+> 
+A interupt controller inline that does the inversion was my first thought
+but I think that is probably overkill unless there is a whole range
+of different interupt filtering operations.
 
---7IgncvKP0CVPV/ZZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Another alternative might be to add an extra IRQ bit in the IRQ
+> specifier (and something similar would be needed for GPIO specifiers)
+> that indicates "inversion between source and destination". This could be
+> queried by drivers in exactly the same way as the existing polarity/type
+> IRQ flags. We'd need to update each individual IRQ controller binding to
+> enable that flag, since each binding defines its own definition of such
+> flags. (although in practice since most use the same centrally suggested
+> flags, this wouldn't be any more than just saying yes, this binding
+> allows that new flag to be used).
+> 
+A new flag would meet my concerns of every chip doing basic inversion
+in different ways.
 
-On Mon, Mar 03, 2014 at 01:00:22AM +0100, Heinrich Schuchardt wrote:
-> >Note that in general dtc patches should be CCed to myself and Jon
-> >Loeliger <jdl@jdl.com>, the dtc maintainers.
-> >
->=20
-> This is the relevant section in file MAINTAINERS of Torvald's git.
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/MAIN=
-TAINERS
->=20
-> OPEN FIRMWARE AND FLATTENED DEVICE TREE
-> M:  Grant Likely <grant.likely@linaro.org>
-> M:  Rob Herring <robh+dt@kernel.org>
-> L:  devicetree@vger.kernel.org
-> W:  http://fdt.secretlab.ca
-> T:  git git://git.secretlab.ca/git/linux-2.6.git
-> S:  Maintained
-> F:  drivers/of/
-> F:  include/linux/of*.h
-> F:  scripts/dtc/
-> K:  of_get_property
-> K:  of_match_table
->=20
-> If the information is not accurate, please, have it updated.
-
-That's the maintainers information for the devicetree stuff included
-in the Linux kernel tree, not for dtc as an upstream project.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---7IgncvKP0CVPV/ZZ
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTE8fpAAoJEGw4ysog2bOSDwEP/RicZWpvB3qAZcxGZ/gggUUR
-N53NDdBXDJ5y8dpNh2enAVZk6W28Q4ZDgSsoYs8C0v4TISoJUmpAvrpAFtcMLRou
-sLu5QnaLMucn8bbrPpWFZfqSk0kUzt21HHq0p5rwWYA+TFVoPeZGTqFSiV1dBpPU
-MtNTYQ8UZwGiwLjyNoKL8J6DUrAj5S5j6MEg5esy7J3oJ7znAcuUZ6sw/QzPSVSl
-9XShHzf7AgPUq6jACoAIajlG6ngQmLAK6vI3UZ/41Ocbc/txl41iac1Y5zM/e+Ym
-RdEUTdsU1X5y7w6Ht3R3DJbQgdTVqLJbLSRGHj3//wy2BuTWN9LNbxOhK+vtplUe
-+GzIfyDZBaPTFFDYjcSos+C5EZoAEH8dGg1siSdGBd75u3c2HmioR+T4j2HEKNzA
-aVTKmuPpr6MRBVFh1ha3Dyuj6Yj9Owz3rzziQUVfyXr/SOE4UNEzQp8EjervjPuG
-hOmNSr2F4tGK3g/uboL6ODiK0gEL1lvon7QVGgNH56RRY1lO8SXVxV5WvLKzbyK9
-Z8Gn7pr6r6JAaOMH9Fbj8GC8qacLplZq/cB0rFbGWjkGCMcC0Gm3jX0HRtp+BupT
-Zu5KSMvfd3CgqSVpv/NhmR0REh56AB12E+sSq1fVEvYy228o/oSQgzn5y07RnQNV
-ZOeVn6/JIH9Shb5/BnD9
-=8MZ6
------END PGP SIGNATURE-----
-
---7IgncvKP0CVPV/ZZ--
+Graeme
