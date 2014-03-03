@@ -1,116 +1,64 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 4/9] Doc/DT: Add DT binding documentation for HDMI
- Connector
-Date: Mon, 3 Mar 2014 09:23:05 +0200
-Message-ID: <53142DD9.4020709@ti.com>
-References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>	<1393590016-9361-5-git-send-email-tomi.valkeinen@ti.com>	<20140228160612.GR21483@n2100.arm.linux.org.uk>	<5310B609.1010105@ti.com>	<20140228163431.GV21483@n2100.arm.linux.org.uk>
- <CAMuHMdVpT2Y-KQO46o=zbRSgqgx2mbBsPjGgoTDDwwfCOxUCmw@mail.gmail.com>
+From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 4/7] ARM: dts: exynos5440: fix PCIe interrupt mapping
+Date: Mon, 03 Mar 2014 16:40:47 +0900
+Message-ID: <000401cf36b3$e4aa0fb0$adfe2f10$%han@samsung.com>
+References: <1393608523-17509-1-git-send-email-l.stach@pengutronix.de>
+ <1393608523-17509-5-git-send-email-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3695540577319796835=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAMuHMdVpT2Y-KQO46o=zbRSgqgx2mbBsPjGgoTDDwwfCOxUCmw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Tomasz Figa <tomasz.figa@gmail.com>, DRI Development <dri-devel@lists.freedesktop.org>, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Rob Clark <robdclark@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1393608523-17509-5-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-language: ko
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Lucas Stach' <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Bjorn Helgaas' <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, 'Simon Horman' <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, 'Shawn Guo' <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Kukjin Kim' <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Stephen Warren' <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, 'Thierry Reding' <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Mark Rutland' <mark.rutland-5wv7dgnIgG8@public.gmane.org>, 'Ben Dooks' <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, 'Tim Harvey' <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, 'Richard Zhu' <r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, 'Arnd Bergmann' <arnd-r2nGTMty4D4@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, 'Jingoo Han' <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============3695540577319796835==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="tX7KBMdIlXs3671UlqlmJWi4Fg0xrbfsd"
+On Saturday, March 01, 2014 2:29 AM, Lucas Stach wrote:
+> 
+> So it actually works.
+> 
+> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/exynos5440.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
+> index 02a0a1226cef..65d425d9ec27 100644
+> --- a/arch/arm/boot/dts/exynos5440.dtsi
+> +++ b/arch/arm/boot/dts/exynos5440.dtsi
+> @@ -274,7 +274,7 @@
+>  			  0x82000000 0 0x40011000 0x40011000 0 0x1ffef000>; /* non-prefetchable memory */
+>  		#interrupt-cells = <1>;
+>  		interrupt-map-mask = <0 0 0 0>;
+> -		interrupt-map = <0x0 0 &gic 53>;
+> +		interrupt-map = <0 0 0 0 &gic GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
 
---tX7KBMdIlXs3671UlqlmJWi4Fg0xrbfsd
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+It makes build errors as below:
 
-On 01/03/14 20:58, Geert Uytterhoeven wrote:
-> On Fri, Feb 28, 2014 at 5:34 PM, Russell King - ARM Linux
-> <linux@arm.linux.org.uk> wrote:
->> There's actually three HDMI connectors:
->>
->>   All three connectors carry all required HDMI signals, including a TM=
-DS
->>   link. The Type B connector is slightly larger and carries a second T=
-MDS
->>   link, which is necessary to support very high resolution displays us=
-ing
->>   dual link. The Type C connector carries the same signals as the Type=
- A
->>   but is more compact and intended for mobile applications.
->>
->> So, Type C and Type A are electrically the same.
->=20
-> There's also D (e.g. on BeagleBone Black) and E:
->=20
-> http://en.wikipedia.org/wiki/HDMI#Connectors
->=20
-> Electrically they seem to be the same as A/C.
+DTC     arch/arm/boot/dts/exynos5440-ssdk5440.dtb
+Error: arch/arm/boot/dts/exynos5440.dtsi:289.33-34 syntax error
+FATAL ERROR: Unable to parse input tree
+make[1]: *** [arch/arm/boot/dts/exynos5440-ssdk5440.dtb] Error 1
+make: *** [exynos5440-ssdk5440.dtb] Error 2
 
-Right. And then there are the HDMI versions, and things like HDMI
-Ethernet Channel. After looking at these a bit, I don't think the HDMI
-connector needs any of those (hdmi version, eth) defined.
+Would you fix it?
 
-So...
+Best regards,
+Jingoo Han
 
-	compatible =3D "hdmi-connector";
-	type =3D "a";
-
-Or
-
-	compatible =3D "hdmi-connector";
-	type-a;
-
-I don't right away see any big pro with either one compared to the other.=
-
-
- Tomi
-
-
-
---tX7KBMdIlXs3671UlqlmJWi4Fg0xrbfsd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJTFC3ZAAoJEPo9qoy8lh71Gi8QAJNA6Hu8ubL7yiO5jzr6kxSc
-Yx/d8O/HngrIW4IGCfECdwBIMk3HOW7DGuSu9CkZk5N3LB4DT8INOTc31U5aDzvK
-bT7LGhJTWTJODRvvGwIURoe5tnhOW+z+RFxA9AtueNiC3SXQj8JdPBeLL7BTVvnQ
-nOsJU2qTQ3qaGjYWqZxdCn+kpaglV57eC/NMhsmewdl0R4nfdHEPYlCrGtA2+XwW
-C4lJQOrCkcJDjxcD3HGcaMcTrq9+IflnLYrE1KL7jgQcQlYE1NFfhC+UxD4d/LKB
-cnBnlwAHmB03u16wW8z4fzYqpjVDrlop/gXr7cpueh1+FcyUsOBW0x0sGF06mjvI
-43TjkP2AQHy+Pognl2Km4djq+FdQgTAy/y5UyqlqhKoT9gZl4eH+PlXVa4JmAua6
-HfEYB8/+mVNm/tlE/E3aLRMKVjG+U8OHloCf7tDtdmu+tNdFTlCKrRTkzG5dghEJ
-goCDfcgr8GZ69x1Ymv7KCNaxcVOWGe2sEfvCYMti1OlEFTdkNTlPPiKXxTVEg4Zc
-h7NR6ZHVGF95IOjBxEjyYNuxFIBT8RZ6NUBsWwybmQGOdnOvL7zquOGaNrqkApSc
-Rq22DXn49fWEsJKbrSYdPZgtg0TXfm8DERzGcGZmOLmXgVEEu1jl9k2567fosKEn
-FDaIId0er/ojIFE4z1h8
-=+D5X
------END PGP SIGNATURE-----
-
---tX7KBMdIlXs3671UlqlmJWi4Fg0xrbfsd--
-
-
---===============3695540577319796835==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============3695540577319796835==--
+>  		num-lanes = <4>;
+>  		status = "disabled";
+>  	};
+> @@ -295,7 +295,7 @@
+>  			  0x82000000 0 0x60011000 0x60011000 0 0x1ffef000>; /* non-prefetchable memory */
+>  		#interrupt-cells = <1>;
+>  		interrupt-map-mask = <0 0 0 0>;
+> -		interrupt-map = <0x0 0 &gic 56>;
+> +		interrupt-map = <0 0 0 0 &gic GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+>  		num-lanes = <4>;
+>  		status = "disabled";
+>  	};
+> --
+> 1.8.5.3
