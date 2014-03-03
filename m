@@ -1,192 +1,73 @@
-From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] checkpatch: fix spurious vendor compatible warnings
-Date: Mon, 03 Mar 2014 11:44:49 +0100
-Message-ID: <53145D21.4080101@epfl.ch>
-References: <1393604742-14317-1-git-send-email-florian.vaussard@epfl.ch>	 <1393604742-14317-3-git-send-email-florian.vaussard@epfl.ch> <1393621571.10280.49.camel@joe-AO722>
-Reply-To: florian.vaussard-p8DiymsW2f8@public.gmane.org
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] ARM: sun7i/sun6i: irqchip: Add
+ irqchip driver for NMI controller
+Date: Mon, 3 Mar 2014 11:55:14 +0100
+Message-ID: <20140303105514.GV607@lukather>
+References: <1393529662-8663-1-git-send-email-carlo@caione.org>
+ <1393529662-8663-2-git-send-email-carlo@caione.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393621571.10280.49.camel@joe-AO722>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="MqIM5Iaa8ROQPHlo"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBM6B2GMAKGQEWMVATJA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1393529662-8663-2-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 02/28/2014 10:06 PM, Joe Perches wrote:
-> Hi.
-> 
-> A couple of suggestions and a couple of questions.
-> 
-> I made the patch below against your patches to.
-> 
-> o Look for ".compatible = "foo" strings in .c and .h files too
-> o Improve the vendor name match in vendor-prefix.txt by only
->   matching the exact vendor name at the beginning of lines.
-> 
-> I then produced a file of all the compatible uses in dts
-> and used checkpatch on it.  It's a long list and a longer
-> checkpatch warning list.
-> 
-> $ git ls-files | grep -E "\.dtsi?$" | \
->   xargs grep -hE "^\s*compatible\s*="| \
->   sed -r -e 's/^\s*//' -e 's/\s*=\s*/ = /'| sort | uniq > tmp.dts
-> $ .scripts/checkpatch.pl -f tmp.dts
-> 
-> A couple of questions:
-> 
-> How does the $compat2 variable actually work?
-> What is it supposed to do?
-> 
-> 				my $compat2 = $compat;
-> 				$compat2 =~ s/\,[a-z]*\-/\,<\.\*>\-/;
-> 
-> For instance:
-> WARNING: DT compatible string "marvell,tauros2-cache" appears un-documented -- check ./Documentation/devicetree/bindings/
-> 
-> The prefix "tauros2-" doesn't match '=~ s/[a-z]*-/
-> 
+--MqIM5Iaa8ROQPHlo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This is my best guess, but correct me if I am wrong.
-Some bindings are documented in a more generic way. For instance,
+Hi Carlo,
 
-$ git grep ',<.*>-' Documentation/devicetree/bindings/
+On Thu, Feb 27, 2014 at 08:34:20PM +0100, Carlo Caione wrote:
+> Allwinner A20/A31 SoCs have special registers to control / (un)mask /
+> acknowledge NMI. This NMI controller is separated and independent from GI=
+C.
+> This patch adds a new irqchip to manage NMI.
+>=20
+> Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 
-gives examples like
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Documentation/devicetree/bindings/serial/fsl-imx-uart.txt:
-	compatible : Should be "fsl,<soc>-uart"
+Thanks!
+Maxime
 
-Here <soc> is a generic placeholder for any Freescale SoC
-(imx23, imx27, imx51, ...).
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-> Should it?  Should the '[a-z]*' be '[a-zA-Z0-9-]+'
-> like the other test?
-> 
+--MqIM5Iaa8ROQPHlo
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Looking at the current documentation, the list of these generic
-placeholders is pretty short:
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
 
-$ git grep ',<.*>-' Documentation/devicetree/bindings/ | \
-  grep -P -o ',<.*?>-' | grep -P -o '<.*>' | sort | uniq
+iQIcBAEBAgAGBQJTFF+RAAoJEBx+YmzsjxAgsc0QAJYVz+kzafClo9FmZz9Rfuwp
+bxWfcsnsRmgm1tSkO2A299mr55jjFyp2+voU4GvAMqZwOsogq9/+ee9RTXfevB4U
+bgpywO01xnACtrPrDVLRkzox4i/11fQZl381vv23KipRNaVoagzaxFtiwYTpbCEg
+zxsAJmQJa6A/6DeT86BdlXAAoRTQmWZqhjr8hZdcHRDcBPbdMg/KuC/1cOjjQY6l
+hxdHDkNhCT2L/TSzTDXGPav/RSzayZOg2tMqLFPna5UZvs1onThtwkOiDAxn/kFF
+bd6fd6qp4QsFNKCieDoGTWbQSgoX2Lb7Ek8bKYOMr+TwANYw9Neip0+hIVoNJeIG
+I3vBnIpbWrCtOBDe2wSwDe9Pd5rxOyhvr5k1Yh6KVRfa/tPY+ltK7azDGBOErOrH
+pkMavYVc0FpPMqNe5rloAbN5115kBFrMKiki6We16+qPoQxdEmL7HzQj7jH26d5I
+9PQ9M3730f+o1Qo0EJsh+2/WiuNpgDCFlgudkTWzTSboV2NER4cJilnviM5U8Hzn
+bxFlGR75TkGoKIKnpps+T+tFKP1EZVLekbEM+CwSooRBFYx53X7RXXXhSXbvMmkS
+sWotKwWnJe0wDhF9NwZKBUfu/1KCjVMSDQ+//AVQYqvspQtyA+NVA5zWvNwKF6bg
+lebDVkt/qhNUTyfB8o+O
+=JQdA
+-----END PGP SIGNATURE-----
 
-<board>
-<chip>
-<chip name>
-<mcu-chip>
-<processor>
-<soc>
-<SOC>
-<soc-family>
-
-so '[a-zA-Z0-9-]+' seems more reasonable indeed.
-
-> Also the grep used when $compat2 is different than $compat
-> has <.*>
-> 
-> There aren't any descriptions I see in binding/ that have
-> any <foo> like uses with the angle brackets.
-> 
-> Are the angle brackets "<" and ">" necessary?
-> 
-
-I guess that they are necessary, as we are dealing with placeholders.
-
-> I think the code block should look more like:
-> 
-> 				my $compat2 = $compat;
-> 				$compat2 =~ s/\,[a-zA-Z0-9]*\-/\,\.\*\-/g;
-
-$compat2 =~ s/\,[a-zA-Z0-9]*\-/<\.\*>\-/g;
-
-?
-
-> 				my $grepfor = "\Q$compat\E";
-> 				$grepfor .= "|\Q$compat2\E" if ($compat2 ne $compat);
-> 				`grep -Erq "$grepfor" $dt_path`;
-> 
-> so that there's only 1 grep pattern when
-> $compat2 is the same as $compat and the
-> strings are escape quoted.
-> 
-
-Looks better.
-
-> There are a _lot_ of missing entries:
-> 
-> o 164 vendor names
-> o 2408 device names (maybe due to bad compat2 greps?)
-> 
-
-This is why Rob implemented this check. This should force people to
-properly document bindings when submitting patches.
-
-> What, if anything, should be done about them?
-
-Ideally, this should be fixed over time. Fixing vendor names is pretty
-easy. Fixing device bindings implies a deeper knowledge of the binding
-and will take longer IMHO.
-
-Regards,
-Florian
-
-> 
-> ---
->  scripts/checkpatch.pl | 22 +++++++++++-----------
->  1 file changed, 11 insertions(+), 11 deletions(-)
-> 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 4b5e7b3..7a9eed9 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -2051,29 +2051,29 @@ sub process {
->  		}
->  
->  # check for DT compatible documentation
-> -		if (defined $root && $realfile =~ /\.dts/ &&
-> -		    $rawline =~ /^\+\s*compatible\s*=/) {
-> +		if (defined $root &&
-> +		    (($realfile =~ /\.dtsi?$/ && $line =~ /^\+\s*compatible\s*=\s*\"/) ||
-> +		     ($realfile =~ /\.[ch]$/ && $line =~ /^\+.*\.compatible\s*=\s*\"/))) {
-> +
->  			my @compats = $rawline =~ /\"([a-zA-Z0-9\-\,\.\+_]+)\"/g;
->  
-> +			my $dt_path = $root . "/Documentation/devicetree/bindings/";
-> +			my $vp_file = $root . "/Documentation/devicetree/bindings/vendor-prefixes.txt";
-> +
->  			foreach my $compat (@compats) {
->  				my $compat2 = $compat;
-> -				my $dt_path =  $root . "/Documentation/devicetree/bindings/";
->  				$compat2 =~ s/\,[a-z]*\-/\,<\.\*>\-/;
->  				`grep -Erq "$compat|$compat2" $dt_path`;
->  				if ( $? >> 8 ) {
->  					WARN("UNDOCUMENTED_DT_STRING",
->  					     "DT compatible string \"$compat\" appears un-documented -- check $dt_path\n" . $herecurr);
->  				}
-> -
-> -				my $vendor = $compat;
-> -				my $vendor_path = $dt_path . "vendor-prefixes.txt";
-> -				next if (! -f $vendor_path);
-> -				next if not $vendor =~ /^[a-zA-Z0-9\-]+\,.*/;
-> -				$vendor =~ s/^([a-zA-Z0-9\-]+)\,.*/$1/;
-> -				`grep -Eq "$vendor" $vendor_path`;
-> +				next if $compat !~ /^([a-zA-Z0-9\-]+)\,/;
-> +				my $vendor = $1;
-> +				`grep -Eq "^$vendor\\b" $vp_file`;
->  				if ( $? >> 8 ) {
->  					WARN("UNDOCUMENTED_DT_STRING",
-> -					     "DT compatible string vendor \"$vendor\" appears un-documented -- check $vendor_path\n" . $herecurr);
-> +					     "DT compatible string vendor \"$vendor\" appears un-documented -- check $vp_file\n" . $herecurr);
->  				}
->  			}
->  		}
-> ---
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--MqIM5Iaa8ROQPHlo--
