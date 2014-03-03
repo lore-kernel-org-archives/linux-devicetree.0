@@ -1,95 +1,118 @@
-From: Sourav Poddar <sourav.poddar@ti.com>
-Subject: Re: [PATCHv2 9/9] arm: dts: am43x-gp-evm: Add matrix gpio keys.
-Date: Mon, 3 Mar 2014 11:27:39 +0530
-Message-ID: <531419D3.6000207@ti.com>
-References: <1387456421-21379-1-git-send-email-sourav.poddar@ti.com> <1387456421-21379-10-git-send-email-sourav.poddar@ti.com> <52D417A1.9060007@ti.com> <20140114131444.GD10818@saruman.home> <52D547F5.2080307@baylibre.com> <5307628D.50109@ti.com> <53136A9A.2070003@baylibre.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 5/9] Doc/DT: Add DT binding documentation for MIPI DPI
+ Panel
+Date: Mon, 3 Mar 2014 08:05:26 +0200
+Message-ID: <53141BA6.4040702@ti.com>
+References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>	
+ <1393590016-9361-6-git-send-email-tomi.valkeinen@ti.com>
+ <1393594836.3802.32.camel@paszta.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <53136A9A.2070003@baylibre.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <bcousson@baylibre.com>
-Cc: balbi@ti.com, devicetree@vger.kernel.org, tony@atomide.com, linux-omap@vger.kernel.org, mark.rutland@arm.com, lokeshvutla@ti.com
+Content-Type: multipart/mixed; boundary="===============6633728618396692833=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1393594836.3802.32.camel@paszta.hi.pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Tomasz Figa <tomasz.figa@gmail.com>, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Rob Clark <robdclark@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 02 March 2014 11:00 PM, Benoit Cousson wrote:
-> Hi Sourav,
->
-> On 21/02/2014 15:28, Sourav Poddar wrote:
->> Hi Benoit,
->> On Tuesday 14 January 2014 07:51 PM, Benoit Cousson wrote:
->>> Hi Felipe,
->>>
->>> On 14/01/2014 14:14, Felipe Balbi wrote:
->>>> On Mon, Jan 13, 2014 at 10:13:13PM +0530, sourav wrote:
->>>>> Benoit,
->>>>>
->>>>> On Thursday 19 December 2013 06:03 PM, Sourav Poddar wrote:
->>>>>> Add gpio keys node for am43x gp evm.
->>>>>>
->>>>>> Signed-off-by: Sourav Poddar<sourav.poddar@ti.com>
->>>>>> ---
->>>>>>   arch/arm/boot/dts/am437x-gp-evm.dts |   21 +++++++++++++++++++++
->>>>>>   1 file changed, 21 insertions(+)
->>>>>>
->>>>>> diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts
->>>>>> b/arch/arm/boot/dts/am437x-gp-evm.dts
->>>>>> index 0dc248d..4eb72b8 100644
->>>>>> --- a/arch/arm/boot/dts/am437x-gp-evm.dts
->>>>>> +++ b/arch/arm/boot/dts/am437x-gp-evm.dts
->>>>>> @@ -13,6 +13,7 @@
->>>>>>   #include "am4372.dtsi"
->>>>>>   #include<dt-bindings/pinctrl/am43xx.h>
->>>>>>   #include<dt-bindings/pwm/pwm.h>
->>>>>> +#include<dt-bindings/gpio/gpio.h>
->>>>>>
->>>>>>   / {
->>>>>>       model = "TI AM437x GP EVM";
->>>>>> @@ -24,6 +25,26 @@
->>>>>>           brightness-levels =<0 51 53 56 62 75 101 152 255>;
->>>>>>           default-brightness-level =<8>;
->>>>>>       };
->>>>>> +
->>>>>> +    matrix_keypad: matrix_keypad@0 {
->>>>>> +        compatible = "gpio-matrix-keypad";
->>>>>> +        debounce-delay-ms =<5>;
->>>>>> +        col-scan-delay-us =<2>;
->>>>>> +
->>>>>> +        row-gpios =<&gpio3 21 GPIO_ACTIVE_HIGH /* Bank3, pin21 */
->>>>>> + &gpio4 3 GPIO_ACTIVE_HIGH /* Bank4, pin3 */
->>>>>> + &gpio4 2 GPIO_ACTIVE_HIGH>; /* Bank4, pin2 */
->>>>>> +
->>>>>> +        col-gpios =<&gpio3 19 GPIO_ACTIVE_HIGH /* Bank3, pin19 */
->>>>>> + &gpio3 20 GPIO_ACTIVE_HIGH>; /* Bank3, pin20 */
->>>>>> +
->>>>>> +        linux,keymap =<0x00000201      /* P1 */
->>>>>> +                0x00010202      /* P2 */
->>>>>> +                0x01000067      /* UP */
->>>>>> +                0x0101006a      /* RIGHT */
->>>>>> +                0x02000069      /* LEFT */
->>>>>> +                0x0201006c>;      /* DOWN */
->>>>>> +        };
->>>>>>   };
->>>>>>
->>>>>> &am43xx_pinmux {
->>>>>
->>>>> ping on this series, this series is lying for a while.
->>>>> This series is based on your for_3.14 branch.
->>>>
->>>> Benoit, do you need us to do anything else to get this merged ? Sourav
->>>> already rebased the patches as you requested back in December 19th.
->>>
->>> Nope, I've just needed more BW. I'll apply it ASAP.
->>>
->>> Thanks,
->>> Benoit
->>>
->> Ping on this.
->
-> I've just applied them. Sorry for the delay,
->
-> Regards,
-> Benoit
->
-Thanks!
+--===============6633728618396692833==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="9numtJOld7uFmmaqJIdc6GxIIkABnUkbL"
+
+--9numtJOld7uFmmaqJIdc6GxIIkABnUkbL
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+On 28/02/14 15:40, Philipp Zabel wrote:
+> Am Freitag, den 28.02.2014, 14:20 +0200 schrieb Tomi Valkeinen:
+>> Add DT binding documentation for MIPI DPI Panel.
+>>
+>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+>> Reviewed-by: Archit Taneja <archit@ti.com>
+>> ---
+>>  .../devicetree/bindings/video/panel-dpi.txt        | 43 +++++++++++++=
++++++++++
+>>  1 file changed, 43 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/video/panel-dpi.=
+txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/video/panel-dpi.txt b/D=
+ocumentation/devicetree/bindings/video/panel-dpi.txt
+>> new file mode 100644
+>> index 000000000000..72636c6f1c67
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/video/panel-dpi.txt
+>> @@ -0,0 +1,43 @@
+>> +Generic MIPI DPI Panel
+>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> +
+>> +Required properties:
+>> +- compatible: "panel-dpi"
+>> +
+>> +Optional properties:
+>> +- label: a symbolic name for the panel
+>> +- gpios: panel enable gpio and backlight enable gpio
+>> +
+>> +Required nodes:
+>> +- "panel-timing" containing video timings
+>> +  (Documentation/devicetree/bindings/video/display-timing.txt)
+>> +- Video port for DPI input
+>=20
+> I don't see anything MIPI specific here. Couldn't this be added to the
+> existing simple-panel binding?
+
+Hmm, well, the simple-panel bindings doesn't define video ports, and not
+even a common compatible property.
+
+ Tomi
+
+
+
+--9numtJOld7uFmmaqJIdc6GxIIkABnUkbL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJTFBupAAoJEPo9qoy8lh71+vYP/3WVF6gzXQo+DMWInjGZ45sx
+dLJxl96xVQ+YjsOkqOYk6PwBGV69dRQtue5L2zTgLs5ttaQ4OZ5ycbRyLEavDtXo
+lz8e1PFJGVVwP7f5NpDXhyHFT0bJmcondA3MOC5fA5Vw+jVgZ71LhBYI3ItG2PaC
+74/E1tnZOQgoKAJin0/xGhPcZ4i0EDdfg6ELmMyCf0ZImlrcBI1hKb/90WpTqSgM
+2VuRweiOdEEu2aS5OiLYtKMogXapSZnc75+GTwZ5aFKzgtKhFIHyoT41gMTFQQgm
+CYdYSrCHm+8xoOE3nfms/kxEcKg/r2Mbjn08TcZm5UdQsTIq1fGi7nnk9yDTrkRR
+du91gtXUI/5j6wdBEtMPKI6qdkSno62L3KfZySlT4FcSGoEKu6dCS0oH/S0kSqst
+DW/xr9ulnLAttDy1/zI86DGUz6JbDfIOL9wnVbT8Ea8kJ9o/9yBGytMv/4RKNpDk
+fm0JBCxI06RZh7rrVQBIlHX5JxA5/4dcgMKEjT6+nCpz8BWD96OfJEsBgcH/kwiA
+Sq3tRg6Xd+nemHPInGCJNN1vzGI7cjQ4T9pQNKti4SioCQScim88098vXKIvrdAz
+QeK8do7bimGrRPQBGScJAdWtSzxSenng18KiFGjISNZE1E9mhj8PJjnLNWMLnfDL
+kICuEZ0HBSEC8pVsbzM6
+=9Nwa
+-----END PGP SIGNATURE-----
+
+--9numtJOld7uFmmaqJIdc6GxIIkABnUkbL--
+
+
+--===============6633728618396692833==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============6633728618396692833==--
