@@ -1,68 +1,167 @@
-From: Vince Bridgers <vbridgers2013@gmail.com>
-Subject: Re: [PATCH RFC 0/3] Altera Triple Speed Ethernet (TSE) Driver RFC
-Date: Mon, 3 Mar 2014 12:11:35 -0600
-Message-ID: <CAOwfj2NoaF0Otr2X+TyvNfaUJei3PaZXr0WBu8c_Ongz2EEHxg@mail.gmail.com>
-References: <1393792922-2381-1-git-send-email-vbridgers2013@gmail.com>
-	<063D6719AE5E284EB5DD2968C1650D6D0F6CEC12@AcuExch.aculab.com>
+From: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2] pcie: Add Xilinx PCIe Host Bridge IP driver
+Date: Mon, 3 Mar 2014 23:43:21 +0530
+Message-ID: <CA+mB=1Lz6Wux-fZ-tECpn3QnwXa4pAZxpSbNng9KHbs_ACnzXQ@mail.gmail.com>
+References: <1393854036-5244-1-git-send-email-sthokal@xilinx.com>
+	<20140303174325.GB31062@obsidianresearch.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <063D6719AE5E284EB5DD2968C1650D6D0F6CEC12@AcuExch.aculab.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: David Laight <David.Laight@aculab.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140303174325.GB31062-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi David, thank you for taking the time to review and comment. My
-responses are inline.
-
-On Mon, Mar 3, 2014 at 3:53 AM, David Laight <David.Laight@aculab.com> wrote:
-> From: Vince Bridgers
->> I'm submitting this patch set for comments as a first step towards upstreaming
->> a driver for the Altera Triple Speed Ethernet (TSE) controller.
-> ...
->> The design has been tested on Altera's Cyclone 4, 5, and Cyclone 5 SOC
->> development kits using an ARM A9 processor and an Altera NIOS2 processor.
+On Mon, Mar 3, 2014 at 11:13 PM, Jason Gunthorpe
+<jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org> wrote:
+> On Mon, Mar 03, 2014 at 07:10:36PM +0530, Srikanth Thokala wrote:
 >
-> I'm not sure this is relevant to any decision to import this but
-> as far as I know the nios2 port of gcc is not is part of the main gcc
-> release.
-> (If it was it would be easier to get fixes applied!)
-
-Mentor has released an updated NIOS2 GCC port that can be downloaded
-here http://www.mentor.com/embedded-software/sourcery-tools/sourcery-codebench/editions/lite-edition/.
-Instructions for building and running Linux on NIOS2 can be found here
-http://www.rocketboards.org/foswiki/Documentation/NiosIILinuxUserManual.
-The NIOS2 GCC port is in process of being upstreamed by Mentor
-Graphics. The Linux port for NIOS2 is in process of being mainlined.
-
+>> +Required properties:
+>> +- #address-cells: Address representation for root ports, set to <3>
+>> +- #size-cells: Size representation for root ports, set to <2>
+>> +- compatible: Should contain "xlnx,axi-pcie-host-1.00.a"
+>> +- reg: Should contain AXI PCIe registers location and length
+>> +- interrupts: Should contain AXI PCIe interrupt
+>> +- ranges: ranges for the PCI memory regions
+>> +     Please refer to the standard PCI bus binding document for a more
+>> +     detailed explanation
+>> +
+>> +Example:
+>> +++++++++
+>> +
+>> +     pci_express: axi-pcie@50000000 {
+>> +             #address-cells = <3>;
+>> +             #size-cells = <2>;
+>> +             compatible = "xlnx,axi-pcie-host-1.00.a";
+>> +             reg = < 0x50000000 0x10000000 >;
+>> +             interrupts = < 0 52 4 >;
+>> +             ranges = < 0x02000000 0 0x60000000 0x60000000 0 0x10000000 >;
+>> +     };
 >
-> I'm also not entirely convinced that Linux is an appropriate
-> operating system for a 100MHz nios2 cpu. You'll certainly have
-> problems processing Ge data rates (and maybe 100M ones as well).
+> That is much shorter, more notes:
+>  - It looks like the driver (HW?) has no support for IO space?
 
-I agree that you may not see line rate streaming network performance
-even at 100Mbps, but most customers using NIOS2 with TSE don't care
-about that - it's the connectivity they are interested in the most.
-There are many applications using a small soft processor like the
-NIOS2 that can take advantage of the ability to reconfigure soft logic
-on an FPGA that need some kind of network connectivity for device to
-device communication for data updates at some periodic rate that can
-be supported by such a system, or for simple configuration. If more
-performance is required a customer is free to choose a different
-product.
+Yes, there is no support for IO space.
 
-I'm not sure this opinion has anything to do with the decision to
-upstream this particular patch or not since the TSE can be used with
-different processors in different configurations that customers demand
-and find useful.
+>  - How are INTA/B/C/D handled? Typically I'd like to see an
+>    interrupt-mapping block describing them.
 
-All the best,
+                                  /
+                                 /
+CPU   <--- PCIe IP  <---
 
-Vince
+
 
 >
->         David
+>    There are a few options here, if the HW can decode A/B/C/D then
+>    it probably needs another irq_domain for INTx, and have the IRQ
+>    handler decode like it does for MSI.
+> - The stanza needs a
+>     device_type = "pci";
 >
+>> +     for (i = 0; i < port->mem_resno; i++)
+>> +             pci_add_resource_offset(&sys->resources, &port->mem[i],
+>> +                                     sys->mem_offset);
 >
+> The sys->mem_offset is probably wrong, please review Arnd's comments
+> on the recent threads with Will and Liviu regarding how this is
+> supposed to work with DT.
 >
+> You may want to work with Liviu to use his patch set which provides
+> more generic support. Also, the driver needs to put every one of these
+> ports in a PCI domain, Liviu is working on generic support for that
+> too.
+
+Sure, I will check and come back to you.
+
+>
+>> +static struct pci_bus __init *xilinx_pcie_scan_bus(int nr,
+>> +                             struct pci_sys_data *sys)
+>> +{
+>> +     struct xilinx_pcie_port *port = sys_to_pcie(sys);
+>> +     struct pci_bus *bus;
+>> +
+>> +     if (port) {
+>> +             port->root_busno = sys->busnr;
+>> +             bus = pci_scan_root_bus(NULL, sys->busnr, &xilinx_pcie_ops,
+>> +                                     sys, &sys->resources);
+>
+> The NULL is probably wrong, please review the recent thread with Lucas
+> and Jingoo 'PCI irq mapping fixes and cleanups'
+
+Ok.
+
+>
+>> +static int xilinx_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+>> +{
+>> +     struct xilinx_pcie_port *port = sys_to_pcie(dev->bus->sysdata);
+>> +
+>> +     if (!port)
+>> +             return -EINVAL;
+>> +
+>> +     return port->irq;
+>> +}
+>
+> It is preferred to use DT mechanisms via of_irq_parse_and_map_pci
+> (interrupt-mapping, etc) to define the slot IRQ, drivers should not
+> provide a map_irq unless absolutely necessary.
+
+Ok.
+
+>
+>> +     /* make sure it is root port before touching header */
+>> +     pcie_write(port, PCI_COMMAND_MASTER, PCI_COMMAND);
+>
+> Bit of a confusing comment
+
+I will correct it.
+
+>
+>> +     /* Check if PCIe link is up? */
+>> +     port->link_up = xilinx_pcie_is_link_up(port);
+>> +     if (!port->link_up)
+>> +             dev_info(port->dev, "PCIe Link is DOWN\n");
+>> +     else
+>> +             dev_info(port->dev, "PCIe Link is UP\n");
+>
+> Don't forget to think about hot plug
+
+Ok, you mean using the 'rescan' correct?
+
+>
+>> +     /* Register Interrupt Handler */
+>> +     err = request_irq(port->irq, xilinx_pcie_intr_handler,
+>> +                             IRQF_SHARED, "xilinx-pcie", port);
+>
+> Use devm? This is leaking on error cases.
+>
+> Review other resources too...
+>
+>> +     /* Request and map I/O memory */
+>> +     io = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +     port->phys_reg_base = io->start;
+>> +     port->reg_size = resource_size(io);
+>
+> Here it uses the platform resource..
+>
+>> +     /* Map the IRQ */
+>> +     port->irq = irq_of_parse_and_map(node, 0);
+>
+> .. And here it doesn't, probably should be consistent and just use the
+> platform resources.
+
+Ok, I will correct it.
+
+Srikanth
+
+>
+> Jason
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
