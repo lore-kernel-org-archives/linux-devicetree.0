@@ -1,17 +1,17 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] ARM: sun7i/sun6i: irqchip: Add
- irqchip driver for NMI controller
-Date: Mon, 3 Mar 2014 11:55:14 +0100
-Message-ID: <20140303105514.GV607@lukather>
+Subject: Re: [PATCH v4 3/3] ARM: sun7i/sun6i: irqchip: Update
+ the documentation
+Date: Mon, 3 Mar 2014 12:02:40 +0100
+Message-ID: <20140303110240.GW607@lukather>
 References: <1393529662-8663-1-git-send-email-carlo@caione.org>
- <1393529662-8663-2-git-send-email-carlo@caione.org>
+ <1393529662-8663-4-git-send-email-carlo@caione.org>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="MqIM5Iaa8ROQPHlo"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBM6B2GMAKGQEWMVATJA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="PsVWHEfaXyN1A/K4"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBX6D2GMAKGQEWQ4RMSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1393529662-8663-2-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1393529662-8663-4-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi>
@@ -23,22 +23,72 @@ Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-su
 List-Id: devicetree@vger.kernel.org
 
 
---MqIM5Iaa8ROQPHlo
+--PsVWHEfaXyN1A/K4
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Carlo,
+Hi,
 
-On Thu, Feb 27, 2014 at 08:34:20PM +0100, Carlo Caione wrote:
-> Allwinner A20/A31 SoCs have special registers to control / (un)mask /
-> acknowledge NMI. This NMI controller is separated and independent from GI=
-C.
-> This patch adds a new irqchip to manage NMI.
+On Thu, Feb 27, 2014 at 08:34:22PM +0100, Carlo Caione wrote:
+> Added documentation for NMI irqchip.
 >=20
 > Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../allwinner,sun67i-sc-nmi.txt                    | 27 ++++++++++++++++=
+++++++
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controlle=
+r/allwinner,sun67i-sc-nmi.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/allwi=
+nner,sun67i-sc-nmi.txt b/Documentation/devicetree/bindings/interrupt-contro=
+ller/allwinner,sun67i-sc-nmi.txt
+> new file mode 100644
+> index 0000000..ac31487
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/allwinner,su=
+n67i-sc-nmi.txt
+> @@ -0,0 +1,27 @@
+> +Allwinner Sunxi NMI Controller
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+> +
+> +Required properties:
+> +
+> +- compatible : should be "allwinner,sun7i-a20-sc-nmi" or
+> +  "allwinner,sun6i-a31-sc-nmi"
+> +- reg : Specifies base physical address and size of the registers.
+> +- interrupt-controller : Identifies the node as an interrupt controller
+> +- #interrupt-cells : Specifies the number of cells needed to encode an
+> +  interrupt source. The value shall be 2. The first cell is the IRQ numb=
+er, the
+> +  second cell the trigger type.
 
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+What values correspond to what trigger type? What are the accepted values?
+
+> +- interrupt-parent: Specifies the parent interrupt controller.
+> +- interrupts: Specifies the list of interrupt lines which are handled by
+> +  the interrupt controller in the parent controller's notation. This val=
+ue
+> +  shall be the NMI.
+
+Hmmm, there's only one interrupt, not a list of them.
+
+> +
+> +Example:
+> +
+> +sc-nmi-intc@01c00030 {
+> +	compatible =3D "allwinner,sun7i-a20-sc-nmi";
+> +	interrupt-controller;
+> +	#interrupt-cells =3D <2>;
+> +	reg =3D <0x01c00030 0x0c>;
+> +	interrupt-parent =3D <&gic>;
+> +	interrupts =3D <0 0 4>;
+> +};
+> --=20
+> 1.8.3.2
+>=20
 
 Thanks!
 Maxime
@@ -48,26 +98,26 @@ Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
 
---MqIM5Iaa8ROQPHlo
+--PsVWHEfaXyN1A/K4
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.14 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTFF+RAAoJEBx+YmzsjxAgsc0QAJYVz+kzafClo9FmZz9Rfuwp
-bxWfcsnsRmgm1tSkO2A299mr55jjFyp2+voU4GvAMqZwOsogq9/+ee9RTXfevB4U
-bgpywO01xnACtrPrDVLRkzox4i/11fQZl381vv23KipRNaVoagzaxFtiwYTpbCEg
-zxsAJmQJa6A/6DeT86BdlXAAoRTQmWZqhjr8hZdcHRDcBPbdMg/KuC/1cOjjQY6l
-hxdHDkNhCT2L/TSzTDXGPav/RSzayZOg2tMqLFPna5UZvs1onThtwkOiDAxn/kFF
-bd6fd6qp4QsFNKCieDoGTWbQSgoX2Lb7Ek8bKYOMr+TwANYw9Neip0+hIVoNJeIG
-I3vBnIpbWrCtOBDe2wSwDe9Pd5rxOyhvr5k1Yh6KVRfa/tPY+ltK7azDGBOErOrH
-pkMavYVc0FpPMqNe5rloAbN5115kBFrMKiki6We16+qPoQxdEmL7HzQj7jH26d5I
-9PQ9M3730f+o1Qo0EJsh+2/WiuNpgDCFlgudkTWzTSboV2NER4cJilnviM5U8Hzn
-bxFlGR75TkGoKIKnpps+T+tFKP1EZVLekbEM+CwSooRBFYx53X7RXXXhSXbvMmkS
-sWotKwWnJe0wDhF9NwZKBUfu/1KCjVMSDQ+//AVQYqvspQtyA+NVA5zWvNwKF6bg
-lebDVkt/qhNUTyfB8o+O
-=JQdA
+iQIcBAEBAgAGBQJTFGFQAAoJEBx+YmzsjxAgEvIQAJ4AbC1jbYbS51LoupXRw7Ew
+Jdlg6yTuNA1MYg5uDwhUPx+WYcFbDm+SOZaCmDmONamoYDD8g2IxA/uyMc3O7S5F
+C8sQXpIpu/OExkGxfO/7au9nl2XqzIBcXZ7nc99JP6BGdVsWcDeLlc+Gp7xcp6/7
+qoiBq3sdUeEIgsUcv8pqZGt24Q21W021PA8VMggcMbYWb19OIiKAHx3D463csuZ6
+LiJVzQHqP5clUtVcGgDR5ohMhF8xurbSeBsXHrvUf4qWLvCvEMtg5xh0RuI6TU3Z
+slZDGvS3N8sleO15VvJyiblnk500BBZdYBQOKgiruo3tRF/ehO5O0QnZRtCQBquw
+RtZP3P/f0noi+AV8ctknqDmchcpX9HQJs2jp4vLPBvySOyOZ0zFut8/bwB337WU5
+2uW8UZ2WwkGDUABKZBrwlZFPiXEnXBuK2XPb7TkKZkcTfXRIgVDO33bQEQBQOKSA
+vyJe7xuPvOyoTId858FfnZPUfGftgqEnyP3kmutKO10thoo9fBbQuvFoDM8WX+yg
+3LPyRNHbxtvJ2u9/4oc9YRWPMyl/rplIFlbyFbyDc7FtbAuhIg+waT1OrWd7n8KX
+tp9/sECzaO712ahG1+sPyqmLhGLkLeZA/juHQbOKoDEIXUxDS5Hp9iEb4R21Jf/v
+aEoFITrRvwIuGkSIVEA0
+=jAJf
 -----END PGP SIGNATURE-----
 
---MqIM5Iaa8ROQPHlo--
+--PsVWHEfaXyN1A/K4--
