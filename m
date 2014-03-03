@@ -1,102 +1,202 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 0/6] Make dwc3 use Generic PHY Framework
-Date: Mon, 3 Mar 2014 10:40:51 -0600
-Message-ID: <20140303164051.GB10987@saruman.home>
-References: <1393846695-14644-1-git-send-email-kishon@ti.com>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v2] phy-rcar-gen2-usb: add device tree support
+Date: Mon, 3 Mar 2014 10:44:26 -0600
+Message-ID: <20140303164426.GD10987@saruman.home>
+References: <201403010407.54639.sergei.shtylyov@cogentembedded.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ftEhullJWpWg/VHq"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="3Pql8miugIZX0722"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1393846695-14644-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+In-Reply-To: <201403010407.54639.sergei.shtylyov@cogentembedded.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: balbi@ti.com, linux-usb@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-sh@vger.kernel.org, valentine.barshak@cogentembedded.com, rob@landley.net, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---ftEhullJWpWg/VHq
+--3Pql8miugIZX0722
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Mon, Mar 03, 2014 at 05:08:09PM +0530, Kishon Vijay Abraham I wrote:
-> Added support for optional PHY in dwc3 as not all SoCs having PHYs for DW=
-C3
-> should be programmed. While this can be considered as a temporary fix,
-> a long term solution would be to add 'nop' PHY for platforms that does
-> not have programmable PHY.
-> Adapted DWC3 and USB3 PHY to use Generic PHY framework. Also changed the
-> name of USB3 PHY driver to PIPE3 PHY driver since the same driver has to
-> be used for SATA and PCIE too.
+On Sat, Mar 01, 2014 at 04:07:53AM +0300, Sergei Shtylyov wrote:
+> Add support of the device tree probing for the Renesas R-Car generation 2=
+ SoCs
+> documenting the device tree binding as necessary.
 >=20
-> Changes from v4: (sending the entire patch series again)
-> * check the return values of phy_init and phy_power_on
-> * print errors if power_on or power_off of PHY fails.
->=20
-> Changes from v3: (Sent only adapt dwc3 core to use Generic PHY Framework)=
-=20
-> * avoided using quirks and rely on the return values of PHY APIs to find =
-the
-> presence of PHY.
->=20
-> Changes from v2:
-> * added a couple of fixes. One is invoking phy_resume after phy_init and =
-the
-> other is power off phy in error patch
-> * used quirks to identify if a particular platform does not have PHYs
-> * removed using separate header for pipe3 driver and also removed all ref=
-erencs
-> to SATA and PCIe in pipe3 driver since it's not yet adapted for those dri=
-vers.
->=20
-> Changes from v1:
-> * The logic in which the driver detects the presence of PHYs has changed.
-> * patch ordering has changed
-> * udelay is replaced with usleep_range
-> * A patch to remove set_suspend callback which was deferred from Generic
-> PHY Framework series has been included.
->=20
-> Kishon Vijay Abraham I (6):
->   usb: dwc3: core: support optional PHYs
->   usb: dwc3: adapt dwc3 core to use Generic PHY Framework
->   drivers: phy: usb3/pipe3: Adapt pipe3 driver to Generic PHY Framework
->   usb: phy: omap-usb2: remove *set_suspend* callback from omap-usb2
->   phy: omap-usb2: move omap_usb.h from linux/usb/ to linux/phy/
->   arm/dts: added dt properties to adapt to the new phy framwork
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-patches 1 and 2 are in my testing/next, I guess 3,4,5 and 6 have no
-direct dependency on those, right ?
+Unless someone on devicetree@vger gives me an ACK pretty soon, I'm
+afraid this patch will miss v3.15.
+
+>=20
+> ---
+> This patch is against the 'next' branch of Felipe Balbi's 'usb.git' repo.
+>=20
+> Changes in version 2:
+> - restored devm_clk_get() call and the error handling logic in the probe()
+>   method, removed clk_put() call in the remove() method.
+>=20
+>  Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt |   29 +++++++++=
+++
+>  drivers/usb/phy/phy-rcar-gen2-usb.c                     |   42 +++++++++=
++++++--
+>  2 files changed, 68 insertions(+), 3 deletions(-)
+>=20
+> Index: usb/Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- /dev/null
+> +++ usb/Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt
+> @@ -0,0 +1,29 @@
+> +* Renesas R-Car generation 2 USB PHY
+> +
+> +This file provides information on what the device node for the R-Car gen=
+eration
+> +2 USB PHY contains.
+> +
+> +Required properties:
+> +- compatible: "renesas,usb-phy-r8a7790" if the device is a part of R8A77=
+90 SoC.
+> +	      "renesas,usb-phy-r8a7791" if the device is a part of R8A7791 SoC.
+> +- reg: offset and length of the register block.
+> +- clocks: clock phandle and specifier pair.
+> +- clock-names: string, clock input name, must be "usbhs".
+> +
+> +Optional properties:
+> +- renesas,channel0-pci: boolean, specify when USB channel 0 should be co=
+nnected
+> +			to PCI EHCI/OHCI; otherwise, it will be connected to the
+> +			USBHS controller.
+> +- renesas,channel2-pci: boolean, specify when USB channel 2 should be co=
+nnected
+> +			to PCI EHCI/OHCI; otherwise, it will be connected to the
+> +			USBSS controller (xHCI).
+
+I wonder if these two properties should be taken care by pinctrl
+framework instead.
+
+> +
+> +Example (Lager board):
+> +
+> +	usb-phy@e6590100 {
+> +		compatible =3D "renesas,usb-phy-r8a7790";
+> +		reg =3D <0 0xe6590100 0 0x100>;
+> +		clocks =3D <&mstp7_clks R8A7790_CLK_HSUSB>;
+> +		clock-names =3D "usbhs";
+> +		renesas,channel2-pci;
+> +	};
+> Index: usb/drivers/usb/phy/phy-rcar-gen2-usb.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- usb.orig/drivers/usb/phy/phy-rcar-gen2-usb.c
+> +++ usb/drivers/usb/phy/phy-rcar-gen2-usb.c
+> @@ -1,8 +1,8 @@
+>  /*
+>   * Renesas R-Car Gen2 USB phy driver
+>   *
+> - * Copyright (C) 2013 Renesas Solutions Corp.
+> - * Copyright (C) 2013 Cogent Embedded, Inc.
+> + * Copyright (C) 2013-2014 Renesas Solutions Corp.
+> + * Copyright (C) 2013-2014 Cogent Embedded, Inc.
+>   *
+>   * This program is free software; you can redistribute it and/or modify
+>   * it under the terms of the GNU General Public License version 2 as
+> @@ -13,6 +13,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+> +#include <linux/of.h>
+>  #include <linux/platform_data/usb-rcar-gen2-phy.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/spinlock.h>
+> @@ -167,6 +168,37 @@ out:
+>  	spin_unlock_irqrestore(&priv->lock, flags);
+>  }
+> =20
+> +#ifdef CONFIG_OF
+> +static struct rcar_gen2_phy_platform_data *
+> +rcar_gen2_usb_phy_parse_dt(struct device *dev)
+> +{
+> +	struct device_node *np =3D dev->of_node;
+> +	struct rcar_gen2_phy_platform_data *pdata;
+> +
+> +	pdata =3D devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
+> +		return NULL;
+> +
+> +	pdata->chan0_pci =3D of_property_read_bool(np, "renesas,channel0-pci");
+> +	pdata->chan2_pci =3D of_property_read_bool(np, "renesas,channel2-pci");
+> +
+> +	return pdata;
+> +}
+> +
+> +static const struct of_device_id rcar_gen2_usb_phy_match_table[] =3D {
+> +	{ .compatible =3D "renesas,usb-phy-r8a7790" },
+> +	{ .compatible =3D "renesas,usb-phy-r8a7791" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, rcar_gen2_usb_phy_match_table);
+> +#else
+> +static inline struct rcar_gen2_phy_platform_data *
+> +rcar_gen2_usb_phy_parse_dt(struct device *dev)
+> +{
+> +	return NULL;
+> +}
+> +#endif
+> +
+>  static int rcar_gen2_usb_phy_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev =3D &pdev->dev;
+> @@ -177,7 +209,10 @@ static int rcar_gen2_usb_phy_probe(struc
+>  	struct clk *clk;
+>  	int retval;
+> =20
+> -	pdata =3D dev_get_platdata(dev);
+> +	if (dev->of_node)
+> +		pdata =3D rcar_gen2_usb_phy_parse_dt(dev);
+> +	else
+> +		pdata =3D dev_get_platdata(dev);
+>  	if (!pdata) {
+>  		dev_err(dev, "No platform data\n");
+>  		return -EINVAL;
+> @@ -236,6 +271,7 @@ static int rcar_gen2_usb_phy_remove(stru
+>  static struct platform_driver rcar_gen2_usb_phy_driver =3D {
+>  	.driver =3D {
+>  		.name =3D "usb_phy_rcar_gen2",
+> +		.of_match_table =3D of_match_ptr(rcar_gen2_usb_phy_match_table),
+>  	},
+>  	.probe =3D rcar_gen2_usb_phy_probe,
+>  	.remove =3D rcar_gen2_usb_phy_remove,
 
 --=20
 balbi
 
---ftEhullJWpWg/VHq
+--3Pql8miugIZX0722
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJTFLCTAAoJEIaOsuA1yqREt1kP+wX6Shd/dZdsubpGv+I+fEVl
-sMInbt/HfO8bKjFlZ/NMYs27WGU0FRmzlVA9jFHtRg+cZCVVKKyXyEegnveS/kTV
-MkG1UpwV2Ml3/emMDvIjV+opdtnVvy5FPqfc39GT8P+4VukWHfJW41k7eifZV5R6
-/GF03OB8qcCR3kv2fsKr4MFTvIqMkoCMBo2szjAk/qZixQKAwmXZR5+6VpPrQtt2
-k7YF0M4kzs/hQ0RllqsHB6wK8YacorpL1I+xlQ67zhcIqyL6Qq+p2TmZpguMFlU3
-iFGdx7QUeclawz7Xuq4WicYUW4Ouw7J6b4LGjAoGmUVO69jEex0gVRxas5yvf8xH
-x67qdZtTPgyMDbbSjbO1cMU9o9Fb8HpYZUo/CyDSE675m+V1eMNo+01y4bBCkywb
-7TNGWvm/mWlTNqaPQQ/DIrStDijSShLhLllc+xJggTk7UdES2s8YqT4jfyicA86W
-PAuusq+bXZP6eOGEke5hNOJHG7Bxbv7wAbDMd+CCi+r5ZbeCW0TDVEK7o8Y3Ohmq
-i0owImJeT2UMBaNc9/55G5S9C2wdoA0csLX1/Hye5LFkarB9xXdfmxPi/+rBtUdl
-/HH/juGyi+VLs58VumIKlplfDkttgZpBLvCUQTBgPB9PNwEesua1MhRw1EmTI9u0
-ccgCmoUXNXMAQcA6Hz1Q
-=fYr0
+iQIcBAEBAgAGBQJTFLFqAAoJEIaOsuA1yqREEqMP/3GRwLyUq1TWonB1wd324Lrj
+1hAJMFVHv+nQtpx5e4A2EKdcVGJWZlOuBuGjySYG+PgBCWpBMhrV8kz0IJtC+LoS
+ietBzG6j7qAAZEGgUGqQ4YsoKxXg94iVzmPZMhnXzJPl/KICaGgqOgaCibpoQOIo
+V4kqKNta4VY7Yfju1ATui73X0j3nTI750MVODbCqdxBw56rJZsQmDLXygaN4KLfB
+eirat+IUwKMVauivrdklwQ9Mx5vFxn1bYY24hqRYq0Obkk5Q11N9m8GqKuGA2rBP
+KlQfVz56pZDQI0LWmCQ+8p+ZinjixRXtQ04j9eVIkoNuVBZAH3Cy9Qx/cNzT4alg
+zkXrJCTFC5OFqBUnu6VsuRqOwkF3EvitfZvQdBQD0uuA+d5Nsc3TrK8Ra2xenJPA
+YrWITCUxakxsrWh60J46sPxJRBd5MwqwTLsb+BmITEFhGdhaPv2SJEyTEgzwuo7k
+5/xNa9NWgqr1knsOA0pH6ItY90brmlVYY9NCjIz2maOfdqdMXw+b7E7qSJcPkCRW
+qHvHsWGxHbI/+HMdD4XMaXHtJJCYOF2Ah1CxnG/Lg3rGzUJPqBWc4SlVGtMJkoMG
+wjzcgNsh5LrEcZcViqvCIA6Xi9UerMalbtNaVEO92xDuQsCGrQRU0mhAKI3mGuVT
+ceXn/106sPl9C1HszYUY
+=HdyP
 -----END PGP SIGNATURE-----
 
---ftEhullJWpWg/VHq--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--3Pql8miugIZX0722--
