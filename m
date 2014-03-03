@@ -1,106 +1,68 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 0/9] Doc/DT: DT bindings for various display components
-Date: Mon, 3 Mar 2014 10:04:38 +0200
-Message-ID: <53143796.2050309@ti.com>
-References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
- <20140228162752.GU21483@n2100.arm.linux.org.uk> <5310BDE3.60603@ti.com>
- <20140228165628.GX21483@n2100.arm.linux.org.uk>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH 0/7] PCI irq mapping fixes and cleanups
+Date: Mon, 03 Mar 2014 17:11:37 +0900
+Message-ID: <000601cf36b8$330b3a90$9921afb0$%han@samsung.com>
+References: <1393608523-17509-1-git-send-email-l.stach@pengutronix.de>
+ <CAJ+vNU2VN5haOU2GN5o7UUg9vgYh06pAhvDaoGw6EzTBEbD0mg@mail.gmail.com>
+ <20140301183059.GA6315@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1666283940212038774=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140228165628.GX21483@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Tomasz Figa <tomasz.figa@gmail.com>, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Rob Clark <robdclark@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-reply-to: <20140301183059.GA6315@obsidianresearch.com>
+Content-language: ko
+Sender: linux-sh-owner@vger.kernel.org
+To: 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Tim Harvey' <tharvey@gateworks.com>
+Cc: 'Lucas Stach' <l.stach@pengutronix.de>, 'Mark Rutland' <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Richard Zhu' <r65037@freescale.com>, 'Sascha Hauer' <kernel@pengutronix.de>, 'Arnd Bergmann' <arnd@arndb.de>, linux-sh@vger.kernel.org, 'Stephen Warren' <swarren@wwwdotorg.org>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Simon Horman' <horms@verge.net.au>, 'Thierry Reding' <thierry.reding@gmail.com>, 'Ben Dooks' <ben-linux@fluff.org>, linux-tegra@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Shawn Guo' <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---===============1666283940212038774==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="mLdtcipUaru7vkkgJkGglhP09QM6T3nLr"
+On Sunday, March 02, 2014 3:31 AM, Jason Gunthorpe wrote:
+> On Fri, Feb 28, 2014 at 04:53:33PM -0800, Tim Harvey wrote:
+> 
+> > In testing this on IMX6 I'm finding that 'of_irq_parse_and_map_pci()'
+> > always returns -EINVAL because it can't find a dt node for the host
+> > bridge:
+> http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/drivers/of/of_pci_irq.c#n60.
+> 
+> There may be some kind of issue in the pcie-designware.c:
+> 
+> static struct pci_bus *dw_pcie_scan_bus(int nr, struct pci_sys_data *sys)
+> {
+>         struct pci_bus *bus;
+>         struct pcie_port *pp = sys_to_pcie(sys);
+> 
+>         if (pp) {
+>                 pp->root_bus_nr = sys->busnr;
+>                 bus = pci_scan_root_bus(NULL, sys->busnr, &dw_pcie_ops,
+>                                      ^^^^^^^^^^^
+>                                      Shouldn't be null for DT cases.
+> 
+> Perhaps since the driver doesn't pass in a parent pointer, no parent
+> device is associated with the struct pci_bus that gets created, so
+> pci_bus_to_OF_node will always fail and the DT PCI mechanisms become
+> broken.
 
---mLdtcipUaru7vkkgJkGglhP09QM6T3nLr
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Jason,
+Thank you for your advice. :-)
 
-Hi Rob, Pawel, Mark, Ian, Kumar,
+Tim,
+I tested the following as Jason guided.
+You can test i.MX PCIe with this.
 
-On 28/02/14 18:56, Russell King - ARM Linux wrote:
-> On Fri, Feb 28, 2014 at 06:48:35PM +0200, Tomi Valkeinen wrote:
->> This is totally unclear to me. How does it become a public standard?
->> What's the forum for this?
->=20
-> Me too.  That's where I'd hope someone on devicetree-discuss will be
-> able to help us work out what's the right approach here. :)
+./drivers/pci/host/pcie-designware.c
+@@ -726,7 +727,7 @@ static struct pci_bus *dw_pcie_scan_bus(int nr, struct pci_sys_data *sys)
 
-The story briefly so far: I've implemented DT support for OMAP display,
-and created bindings for various (non-OMAP) display components,
-including generic connector bindings for DVI, HDMI and analog-tv.
+        if (pp) {
+                pp->root_bus_nr = sys->busnr;
+-               bus = pci_scan_root_bus(NULL, sys->busnr, &dw_pcie_ops,
++               bus = pci_scan_root_bus(pp->dev, sys->busnr, &dw_pcie_ops,
+                                        sys, &sys->resources);
+        } else {
+                bus = NULL;
 
-Russell's point was that these connector bindings are very generic, i.e.
-they are not for any particular chip from a particular vendor, but for
-any connector for DVI, HDMI or analog-tv. And he's worried that maybe we
-shouldn't define such generic bindings without consulting the whole
-device-tree community (i.e including non-linux users).
+However, I think that we may need to replace 'pci_common_init()'
+with 'pci_common_init_dev()'.
 
-So the question is, is there such a community and a forum to bring up
-this kind of things? If yes, should we bring this up there? If yes, what
-kind of things in general should be brought into the attention of
-non-linux users?
+Best regards,
+Jingoo Han
 
-What I wonder here is that while a thing like DVI connector is, of
-course, more generic than, say, "ti,tfp410" encoder chip, but isn't the
-case still the same: we're defining global bindings for hardware that
-should work for everyone, not only Linux users?
-
- Tomi
-
-
-
---mLdtcipUaru7vkkgJkGglhP09QM6T3nLr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJTFDeWAAoJEPo9qoy8lh71i38QAIix94EUjiYHPVzRVIjjWcYQ
-b2heqft8UTQHFkpEjj5hUc/Neie7Ub2sUqt/tjzqpS81Z+O4+qbDmnnvfaY6Ww81
-Vm8wAmno4NiHfX6oSGEtHRajrMEAg+taMoSFwfQLQQUTj8YYXWsG+UWs1UeT8wbM
-vbX0HXlR4RINxG9foo0zO1lthIOKfmL1a1XVWxEsm7lHG6UsNcCM3QmX0m3IpJ3V
-KUv2XSPOqOtvPRUdYUxzwBjWn51T4ANAl5j+6B8Y2vszocplBJRJ2NRKbP2SkiZf
-Qhy3b6svhk3DOVMCq7jMbB0hwJqMKdbg/u9NyPv0e7o42TxsRqe1KVCECjHOp1zH
-i2TvgbeCyqCojNAxw2GttMBIPEa067xxK7yz9iL/iw7GkFVZd8iffAZ9OtK91hzV
-RVEhVGo5vYNicduAnjdk1hwVKvB+p0HQ+UWs8A015TpbARVNh8mRQoLvdO0Nle1J
-P9jIAMKamnmXtLzALMDY6mVXjk6xrSjvFN4yhBe9Ep1LXARvSTwYJe6kzl5mxhpN
-BwXxS8Xw6zeVDtu3aXWC5rQcEV96q2rKry0qnQZ2F6AoWkjgPLSG1VVLkuQHed8z
-TNfwJE0Va/skJga1BD5sm9MWVaasRqc8YRj4Kz79QjkAt1MSVjLKrijSfEkBAoSf
-IXOlJp5t+6d3gQk0tgu8
-=sdgg
------END PGP SIGNATURE-----
-
---mLdtcipUaru7vkkgJkGglhP09QM6T3nLr--
-
-
---===============1666283940212038774==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============1666283940212038774==--
