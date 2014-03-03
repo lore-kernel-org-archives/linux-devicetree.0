@@ -1,88 +1,213 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v5 0/6] Make dwc3 use Generic PHY Framework
-Date: Mon, 3 Mar 2014 18:06:56 +0530
-Message-ID: <53147768.3030106@ti.com>
-References: <1393846695-14644-1-git-send-email-kishon@ti.com> <531473D0.6050601@ti.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4] PHY: sunxi: Add driver for sunxi usb phy
+Date: Mon, 3 Mar 2014 18:48:20 +0530
+Message-ID: <5314811C.1000905@ti.com>
+References: <1393693766-15352-1-git-send-email-hdegoede@redhat.com> <1393693766-15352-2-git-send-email-hdegoede@redhat.com> <53121AF4.4080802@ti.com> <531232BC.2070903@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <531473D0.6050601@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, bcousson@baylibre.com, balbi@ti.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, george.cherian@ti.com, heikki.krogerus@linux.intel.com
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, tony@atomide.com, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, grant.likely@linaro.org, s.nawrocki@samsung.com, galak@codeaurora.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBCOOP4VF5IDRBIUC2KMAKGQEIHJ7KBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <531232BC.2070903-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Roger,
+Hi,
 
-On Monday 03 March 2014 05:51 PM, Roger Quadros wrote:
-> Hi Kishon,
->
-> Which tree are these patches based on?
 
-mainline + Felipe's testing/next + Revert "usb: dwc3: core: enable 
-Suspend bit for USB2/3 PHYs" + Revert "usb: dwc3: preparation for 
-adapting dwc3 to generic phy framework"
+On Sunday 02 March 2014 12:49 AM, Hans de Goede wrote:
+> Hi,
+>
+> On 03/01/2014 06:37 PM, Kishon Vijay Abraham I wrote:
+>> Hi,
+>>
+>> On Saturday 01 March 2014 10:39 PM, Hans de Goede wrote:
+>>> The Allwinner A1x / A2x SoCs have 2 or 3 usb phys which are all accessed
+>>> through a single set of registers. Besides this there are also some other
+>>> phy related bits which need poking, which are per phy, but shared between the
+>>> ohci and ehci controllers, so these are also controlled from this new phy
+>>> driver.
+>>>
+>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>> ---
+>>>    .../devicetree/bindings/phy/sun4i-usb-phy.txt      |  26 ++
+>>>    drivers/phy/Kconfig                                |  11 +
+>>>    drivers/phy/Makefile                               |   1 +
+>>>    drivers/phy/phy-sun4i-usb.c                        | 331 +++++++++++++++++++++
+>>>    4 files changed, 369 insertions(+)
+>>>    create mode 100644 Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+>>>    create mode 100644 drivers/phy/phy-sun4i-usb.c
+>>>
+>> ..
+>> <snip>
+>> .
+>> .
+>>
+>>> +static int sun4i_usb_phy_init(struct phy *_phy)
+>>> +{
+>>> +    struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
+>>> +    struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
+>>> +    int ret;
+>>> +
+>>> +    ret = clk_prepare_enable(data->clk);
+>>> +    if (ret)
+>> dev_err here?
+>
+> I would expect the clk subsys to print an error if anything goes
+> wrong here, repeating that error in the device driver seems
+> not useful to me.
+>
+> Note that this practice of simply propagating the error is a common
+> pattern in many many users of the clk / reset / regulator framework.
+>
+> Also can I please get one final review of this patch rather then
+> a round of comments ending with:
+>
+> "If you can fix these minor comments while changing the $subject (PHY: sunxi) it
+> should be good to get merged."
+>
+> Only to get more review comments when I've already fixed the minor
+> comments ?
+>
+>>> +        return ret;
+>>> +
+>>> +    ret = reset_control_deassert(phy->reset);
+>>> +    if (ret) {
+>>
+>> here too..
+>
+> idem.
+>
+>>> +        clk_disable_unprepare(data->clk);
+>>> +        return ret;
+>>> +    }
+>>> +
+>>> +    /* Adjust PHY's magnitude and rate */
+>>> +    sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
+>>> +
+>>> +    /* Disconnect threshold adjustment */
+>>> +    sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL, data->disc_thresh, 2);
+>>> +
+>>> +    sun4i_usb_phy_passby(phy, 1);
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static int sun4i_usb_phy_exit(struct phy *_phy)
+>>> +{
+>>> +    struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
+>>> +    struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
+>>> +
+>>> +    sun4i_usb_phy_passby(phy, 0);
+>>> +    reset_control_assert(phy->reset);
+>>> +    clk_disable_unprepare(data->clk);
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static int sun4i_usb_phy_power_on(struct phy *_phy)
+>>> +{
+>>> +    struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
+>>> +    int ret = 0;
+>>> +
+>>> +    if (phy->vbus)
+>>> +        ret = regulator_enable(phy->vbus);
+>> dev_err here too..
+>
+> idem.
+>
+>>> +
+>>> +    return ret;
+>>> +}
+>>> +
+>>> +static int sun4i_usb_phy_power_off(struct phy *_phy)
+>>> +{
+>>> +    struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
+>>> +
+>>> +    if (phy->vbus)
+>>> +        regulator_disable(phy->vbus);
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static struct phy_ops sun4i_usb_phy_ops = {
+>>> +    .init        = sun4i_usb_phy_init,
+>>> +    .exit        = sun4i_usb_phy_exit,
+>>> +    .power_on    = sun4i_usb_phy_power_on,
+>>> +    .power_off    = sun4i_usb_phy_power_off,
+>>> +    .owner        = THIS_MODULE,
+>>> +};
+>>> +
+>>> +static struct phy *sun4i_usb_phy_xlate(struct device *dev,
+>>> +                    struct of_phandle_args *args)
+>>> +{
+>>> +    struct sun4i_usb_phy_data *data = dev_get_drvdata(dev);
+>>> +
+>>> +    if (WARN_ON(args->args[0] == 0 || args->args[0] >= data->num_phys))
+>>> +        return ERR_PTR(-ENODEV);
+>>> +
+>>> +    return data->phys[args->args[0]].phy;
+>>> +}
+>>> +
+>>> +static int sun4i_usb_phy_probe(struct platform_device *pdev)
+>>> +{
+>>> +    struct sun4i_usb_phy_data *data;
+>>> +    struct device *dev = &pdev->dev;
+>>> +    struct device_node *np = dev->of_node;
+>>> +    void __iomem *pmu = NULL;
+>>> +    struct phy_provider *phy_provider;
+>>> +    struct reset_control *reset;
+>>> +    struct regulator *vbus;
+>>> +    struct resource *res;
+>>> +    struct phy *phy;
+>>> +    char name[16];
+>>> +    int i;
+>>> +
+>>> +    data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+>>> +    if (!data)
+>>> +        return -ENOMEM;
+>>> +
+>>> +    mutex_init(&data->mutex);
+>>> +
+>>> +    if (of_device_is_compatible(np, "allwinner,sun5i-a13-usb-phy"))
+>>> +        data->num_phys = 2;
+>>> +    else
+>>> +        data->num_phys = 3;
+>>> +
+>>> +    if (of_device_is_compatible(np, "allwinner,sun4i-a10-usb-phy"))
+>>> +        data->disc_thresh = 3;
+>>> +    else
+>>> +        data->disc_thresh = 2;
+>>
+>> These 'data' can actually be part of 'of_device_id' table and can be obtained by using 'of_match_device'.
+>
+> This was already suggested by Maxime around the time of v2, and
+> I responded with this:
+>
+> "The problem with using the of_device_id .data field is that I can only
+> store a single integer there. To store 2 I need to: define a struct,
+> create an array of these structs with initialization. Create an enum for
+> indexing the array which must be kept in sync with the initializers
+> manually, store either the index, or a direct pointer to the correct array
+> entry into the .data field, add code to get the of_device_id from the
+> compatible string, and then finally extract the settings from the struct
+> again.
+>
+> See IE how this is done in drivers/ata/ahci_platform.c, I've tried
+> to come up with a simpler way and failed, for ahci_platform.c the
+> struct with per compatible-string data is quite big so it makes some
+> sense to use this construction. Here however not so much, this adds a
+> whole lot of unnecessary extra code + indirection. I esp. object against
+> the indirection as that unnecessarily makes it harder to follow whats
+> going on."
 
-Thanks
-Kishon
+alright.. missed that earlier. Sorry.
 
->
-> cheers,
-> -roger
->
-> On 03/03/2014 01:38 PM, Kishon Vijay Abraham I wrote:
->> Added support for optional PHY in dwc3 as not all SoCs having PHYs for DWC3
->> should be programmed. While this can be considered as a temporary fix,
->> a long term solution would be to add 'nop' PHY for platforms that does
->> not have programmable PHY.
->> Adapted DWC3 and USB3 PHY to use Generic PHY framework. Also changed the
->> name of USB3 PHY driver to PIPE3 PHY driver since the same driver has to
->> be used for SATA and PCIE too.
->>
->> Changes from v4: (sending the entire patch series again)
->> * check the return values of phy_init and phy_power_on
->> * print errors if power_on or power_off of PHY fails.
->>
->> Changes from v3: (Sent only adapt dwc3 core to use Generic PHY Framework)
->> * avoided using quirks and rely on the return values of PHY APIs to find the
->> presence of PHY.
->>
->> Changes from v2:
->> * added a couple of fixes. One is invoking phy_resume after phy_init and the
->> other is power off phy in error patch
->> * used quirks to identify if a particular platform does not have PHYs
->> * removed using separate header for pipe3 driver and also removed all referencs
->> to SATA and PCIe in pipe3 driver since it's not yet adapted for those drivers.
->>
->> Changes from v1:
->> * The logic in which the driver detects the presence of PHYs has changed.
->> * patch ordering has changed
->> * udelay is replaced with usleep_range
->> * A patch to remove set_suspend callback which was deferred from Generic
->> PHY Framework series has been included.
->>
->> Kishon Vijay Abraham I (6):
->>    usb: dwc3: core: support optional PHYs
->>    usb: dwc3: adapt dwc3 core to use Generic PHY Framework
->>    drivers: phy: usb3/pipe3: Adapt pipe3 driver to Generic PHY Framework
->>    usb: phy: omap-usb2: remove *set_suspend* callback from omap-usb2
->>    phy: omap-usb2: move omap_usb.h from linux/usb/ to linux/phy/
->>    arm/dts: added dt properties to adapt to the new phy framwork
->>
->>   Documentation/devicetree/bindings/usb/dwc3.txt     |    6 +-
->>   arch/arm/boot/dts/omap5.dtsi                       |    5 +-
->>   drivers/phy/Kconfig                                |   11 +
->>   drivers/phy/Makefile                               |    1 +
->>   drivers/phy/phy-omap-usb2.c                        |   27 +--
->>   .../phy/phy-omap-usb3.c => phy/phy-ti-pipe3.c}     |  240 ++++++++++++--------
->>   drivers/usb/dwc3/core.c                            |  116 +++++++---
->>   drivers/usb/dwc3/core.h                            |    7 +
->>   drivers/usb/phy/Kconfig                            |   11 -
->>   drivers/usb/phy/Makefile                           |    1 -
->>   include/linux/{usb => phy}/omap_usb.h              |    3 -
->>   11 files changed, 264 insertions(+), 164 deletions(-)
->>   rename drivers/{usb/phy/phy-omap-usb3.c => phy/phy-ti-pipe3.c} (54%)
->>   rename include/linux/{usb => phy}/omap_usb.h (95%)
->>
->
+-Kishon
