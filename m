@@ -1,51 +1,32 @@
-From: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
-Subject: [PATCH v5 8/9] ARM: at91: prepare common clk transition for sam9261 SoC
-Date: Mon,  3 Mar 2014 11:06:01 +0100
-Message-ID: <1393841162-25339-9-git-send-email-jjhiblot@traphandler.com>
-References: <1393841162-25339-1-git-send-email-jjhiblot@traphandler.com>
+From: George Cherian <george.cherian@ti.com>
+Subject: [PATCH 0/3] phy-omap-usb2 driver enhancements
+Date: Mon, 3 Mar 2014 15:40:21 +0530
+Message-ID: <1393841424-27656-1-git-send-email-george.cherian@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393841162-25339-1-git-send-email-jjhiblot@traphandler.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: nicolas.ferre@atmel.com
-Cc: plagnioj@jcrosoft.com, b.brezillon@overkiz.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, gregory.clement@free-electrons.com, devicetree@vger.kernel.org, thomas.petazzoni@free-electrons.com, alexandre.belloni@free-electrons.com, Jean-Jacques Hiblot <jjhiblot@traphandler.com>
+To: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: s.nawrocki@samsung.com, tony@atomide.com, george.cherian@ti.com, gregkh@linuxfoundation.org, kishon@ti.com, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
- This patch encloses sam9261 old clk registration in
-"#if defined(CONFIG_OLD_CLK_AT91) #endif" sections.
 
-Signed-off-by: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
----
- arch/arm/mach-at91/at91sam9261.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+This series 
+	* Adds suport for AM437x USB2 PHY driver
+	* Address DRA7 PHY errata for false disconnect
+	* New compatible for OMAP5
 
-diff --git a/arch/arm/mach-at91/at91sam9261.c b/arch/arm/mach-at91/at91sam9261.c
-index 5c90581..3345a2b 100644
---- a/arch/arm/mach-at91/at91sam9261.c
-+++ b/arch/arm/mach-at91/at91sam9261.c
-@@ -25,10 +25,12 @@
- #include "at91_rstc.h"
- #include "soc.h"
- #include "generic.h"
--#include "clock.h"
- #include "sam9_smc.h"
- #include "pm.h"
- 
-+#if defined(CONFIG_OLD_CLK_AT91)
-+#include "clock.h"
-+
- /* --------------------------------------------------------------------
-  *  Clocks
-  * -------------------------------------------------------------------- */
-@@ -264,7 +266,9 @@ static void __init at91sam9261_register_clocks(void)
- 	clk_register(&hck0);
- 	clk_register(&hck1);
- }
--
-+#else
-+#define at91sam9261_register_clocks NULL
-+#endif
- /* --------------------------------------------------------------------
-  *  GPIO
-  * -------------------------------------------------------------------- */
+Austin Beam (1):
+  phy: omap-usb2: Provide workaround for USB2PHY false disconnect
+
+George Cherian (2):
+  phy: omap-usb2: Adapt phy-omap-usb2 for AM437x
+  phy: omap-usb2: Add different compatible for OMAP5
+
+ Documentation/devicetree/bindings/usb/usb-phy.txt |   6 +-
+ drivers/phy/phy-omap-usb2.c                       | 106 +++++++++++++++++++---
+ include/linux/usb/omap_usb.h                      |  12 +++
+ 3 files changed, 111 insertions(+), 13 deletions(-)
+
 -- 
-1.9.0
+1.8.3.1
