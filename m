@@ -1,32 +1,63 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] ARM: tegra: add device tree for SHIELD
-Date: Mon, 03 Mar 2014 10:00:43 -0700
-Message-ID: <5314B53B.4010107@wwwdotorg.org>
-References: <1393818596-26775-1-git-send-email-acourbot@nvidia.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: [PATCH v4 1/6] pci: Introduce pci_register_io_range() helper function.
+Date: Mon,  3 Mar 2014 17:33:11 +0000
+Message-ID: <1393867996-32299-2-git-send-email-Liviu.Dudau@arm.com>
+References: <1393867996-32299-1-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393818596-26775-1-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1393867996-32299-1-git-send-email-Liviu.Dudau@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Tanmay Inamdar <tinamdar@apm.com>, LKML <linux-kernel@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/02/2014 08:49 PM, Alexandre Courbot wrote:
-> Add a device tree for NVIDIA SHIELD. The set of enabled features is
-> still minimal with no display option and USB requiring external power.
-> 
-> A default kernel command-line as well as initrd addresses are hardcoded
-> to match the static values the bootloader is known to use. This allows
-> booting from an appended DTB without having to alter it at boot time,
-> since the bootloader has no Device Tree support.
+Some architectures do not share x86 simple view of the I/O space and
+instead use a range of addresses that map to external devices. For PCI,
+these ranges can be expressed by OF bindings in a device tree file.
 
-This and the TN7 patch look fine. Hopefully I'll apply them soon,
-pending the ti,irq-externally-inverted discussion.
+Introduce a pci_register_io_range() helper function that can be used
+by the architecture code to keep track of the io ranges described by the
+PCI bindings.
 
-> +	/* SD card */
+Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
 
-Oh, that's all you meant by wanting to add comments? I guess I just
-recognize SD-vs-eMMC by the bus width, but adding the comments is a good
-idea.
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 1a54f1f..d1bb30f 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -619,6 +619,11 @@ const __be32 *of_get_address(struct device_node *dev, int index, u64 *size,
+ }
+ EXPORT_SYMBOL(of_get_address);
+ 
++int __weak pci_register_io_range(phys_addr_t addr, resource_size_t size)
++{
++	return 0;
++}
++
+ unsigned long __weak pci_address_to_pio(phys_addr_t address)
+ {
+ 	if (address > IO_SPACE_LIMIT)
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index 5f6ed6b..40c418d 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -56,6 +56,7 @@ extern void __iomem *of_iomap(struct device_node *device, int index);
+ extern const __be32 *of_get_address(struct device_node *dev, int index,
+ 			   u64 *size, unsigned int *flags);
+ 
++extern int pci_register_io_range(phys_addr_t addr, resource_size_t size);
+ extern unsigned long pci_address_to_pio(phys_addr_t addr);
+ 
+ extern int of_pci_range_parser_init(struct of_pci_range_parser *parser,
+-- 
+1.9.0
