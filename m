@@ -1,82 +1,43 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH V3 2/5] dt: define IRQ flags bit 4 as src/dst inversion
-Date: Mon,  3 Mar 2014 12:51:37 -0700
-Message-ID: <1393876300-3061-2-git-send-email-swarren@wwwdotorg.org>
-References: <1393876300-3061-1-git-send-email-swarren@wwwdotorg.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393876300-3061-1-git-send-email-swarren@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 1/3] NFC: trf7970a: Add driver with ISO/IEC 14443 Type 2
+ Tag Support
+Date: Mon, 3 Mar 2014 21:37:07 +0100
+Message-ID: <20140303203707.GB17664@zurbaran>
+References: <1391206631-9862-1-git-send-email-mgreer@animalcreek.com>
+ <1391206631-9862-2-git-send-email-mgreer@animalcreek.com>
+ <20140221005059.GS18868@zurbaran>
+ <20140226215309.GA21867@animalcreek.com>
+ <20140303181112.GA32605@animalcreek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140303181112.GA32605-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Mark A. Greer" <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+Cc: Lauro Ramos Venancio <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Aloisio Almeida Jr <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Erick Macias <emacias-l0cyMroinI0@public.gmane.org>, Thierry Escande <thierry.escande-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren@nvidia.com>
+Hi Mark,
 
-Some devices have configurable IRQ output polarities. Software might
-use IRQ specifier flag bits[3:0] to determine how to configure such a
-device's IRQ output polarity in order to match how the IRQ controller
-input is configured. If the board or SoC inverts the signal between the
-device's IRQ output and controller's IRQ output, software must be
-aware of this fact, in order to program the IRQ output to the correct
-(i.e. opposite) polarity. This flag provides that information.
+On Mon, Mar 03, 2014 at 11:11:12AM -0700, Mark A. Greer wrote:
+> > > Would you say this timeout depend on the SPI bus bandwidth ?
+> > 
+> > It'll be one of the factors but the tag's response characteristics are
+> > a big factor too.  I can bump it up a bit more if you prefer or do you
+> > want me to somehow calculate it from the SPI bitrate?
+> 
+> Ping.
+Sorry, I missed that one: No, bumping it a bit more just to be on the
+safe side will be enough.
 
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
----
-v3: New patch.
----
- Documentation/devicetree/bindings/arm/gic.txt                     | 8 ++++++++
- .../devicetree/bindings/interrupt-controller/interrupts.txt       | 8 ++++++++
- include/dt-bindings/interrupt-controller/irq.h                    | 1 +
- 3 files changed, 17 insertions(+)
+Cheers,
+Samuel.
 
-diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
-index bae0d87a38b2..b0b65a440239 100644
---- a/Documentation/devicetree/bindings/arm/gic.txt
-+++ b/Documentation/devicetree/bindings/arm/gic.txt
-@@ -33,6 +33,14 @@ Main node required properties:
- 		2 = high-to-low edge triggered
- 		4 = active high level-sensitive
- 		8 = active low level-sensitive
-+	bit[4] IRQ is inverted between source and sink.
-+	Some devices have configurable IRQ output polarities. Software might
-+	use flag bits[3:0] to determine how to configure such a device's IRQ
-+	output polarity in order to match how the IRQ controller input is
-+	configured. If the board or SoC inverts the signal between the
-+	device's IRQ output and controller's IRQ output, software must be
-+	aware of this fact, in order to program the IRQ output to the correct
-+	(i.e. opposite) polarity. This flag provides that information.
- 	bits[15:8] PPI interrupt cpu mask.  Each bit corresponds to each of
- 	the 8 possible cpus attached to the GIC.  A bit set to '1' indicated
- 	the interrupt is wired to that CPU.  Only valid for PPI interrupts.
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-index 1486497a24c1..636eb0f478bf 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-@@ -76,6 +76,14 @@ commonly used:
-         2 = high-to-low edge triggered
-         4 = active high level-sensitive
-         8 = active low level-sensitive
-+    - bit[4] IRQ is inverted between source and sink
-+        Some devices have configurable IRQ output polarities. Software might
-+        use flag bits[3:0] to determine how to configure such a device's IRQ
-+        output polarity in order to match how the IRQ controller input is
-+        configured. If the board or SoC inverts the signal between the
-+        device's IRQ output and controller's IRQ output, software must be
-+        aware of this fact, in order to program the IRQ output to the correct
-+        (i.e. opposite) polarity. This flag provides that information.
- 
-   Example:
- 
-diff --git a/include/dt-bindings/interrupt-controller/irq.h b/include/dt-bindings/interrupt-controller/irq.h
-index 33a1003c55aa..5b04918c5c72 100644
---- a/include/dt-bindings/interrupt-controller/irq.h
-+++ b/include/dt-bindings/interrupt-controller/irq.h
-@@ -15,5 +15,6 @@
- #define IRQ_TYPE_EDGE_BOTH	(IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_EDGE_RISING)
- #define IRQ_TYPE_LEVEL_HIGH	4
- #define IRQ_TYPE_LEVEL_LOW	8
-+#define IRQ_SRC_DST_INVERTED	16
- 
- #endif
 -- 
-1.8.1.5
+Intel Open Source Technology Centre
+http://oss.intel.com/
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
