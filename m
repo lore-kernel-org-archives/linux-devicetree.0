@@ -1,71 +1,103 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 02/12] phy: omap-control: Update DT binding information
-Date: Mon, 3 Mar 2014 11:02:49 -0800
-Message-ID: <20140303190247.GD25804@atomide.com>
-References: <1393859254-10937-1-git-send-email-rogerq@ti.com>
- <1393859254-10937-3-git-send-email-rogerq@ti.com>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [PATCH v2] pcie: Add Xilinx PCIe Host Bridge IP driver
+Date: Mon, 3 Mar 2014 12:09:46 -0700
+Message-ID: <20140303190946.GA28341@obsidianresearch.com>
+References: <1393854036-5244-1-git-send-email-sthokal@xilinx.com>
+ <20140303174325.GB31062@obsidianresearch.com>
+ <CA+mB=1JmRVzpz=32AbdN8W+2RrsxkPUb+s0zLUQXBrsj2Cdiwg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1393859254-10937-3-git-send-email-rogerq@ti.com>
+In-Reply-To: <CA+mB=1JmRVzpz=32AbdN8W+2RrsxkPUb+s0zLUQXBrsj2Cdiwg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: kishon@ti.com, balbi@ti.com, george.cherian@ti.com, balajitk@ti.com, hdegoede@redhat.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org
+To: Srikanth Thokala <sthokal@xilinx.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [140303 07:10]:
-> Move omap-control binding information to the right location.
+On Tue, Mar 04, 2014 at 12:21:55AM +0530, Srikanth Thokala wrote:
+
+> >> +     pci_express: axi-pcie@50000000 {
+> >> +             #address-cells = <3>;
+> >> +             #size-cells = <2>;
+> >> +             compatible = "xlnx,axi-pcie-host-1.00.a";
+> >> +             reg = < 0x50000000 0x10000000 >;
+> >> +             interrupts = < 0 52 4 >;
+> >> +             ranges = < 0x02000000 0 0x60000000 0x60000000 0 0x10000000 >;
+> >> +     };
+
+> >  - How are INTA/B/C/D handled? Typically I'd like to see an
+> >    interrupt-mapping block describing them.
+> >
+> >    There are a few options here, if the HW can decode A/B/C/D then
+> >    it probably needs another irq_domain for INTx, and have the IRQ
+> >    handler decode like it does for MSI.
 > 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
->  Documentation/devicetree/bindings/phy/ti-phy.txt   | 25 ++++++++++++++++++++++
->  Documentation/devicetree/bindings/usb/omap-usb.txt | 24 ---------------------
->  2 files changed, 25 insertions(+), 24 deletions(-)
+> The core provides a single interrupt for both INTx/MSI messages.  The
+> core decodes the TLP messages and accordingly assert the INTx/MSI
+> bits.  It provides two registers Interrupt FIFO Read 1 and Read 2 to get
+> more information of these.
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
-> index 207e14c..41dc132 100644
-> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
-> @@ -1,5 +1,30 @@
->  TI PHY: DT DOCUMENTATION FOR PHYs in TI PLATFORMs
->  
-> +OMAP CONTROL PHY
-> +
-> +Required properties:
-> + - compatible: Should be one of
-> + "ti,control-phy-otghs" - if it has otghs_control mailbox register as on OMAP4.
-> + "ti,control-phy-usb2" - if it has Power down bit in control_dev_conf register
-> +                        e.g. USB2_PHY on OMAP5.
-> + "ti,control-phy-pipe3" - if it has DPLL and individual Rx & Tx power control
-> +                        e.g. USB3 PHY and SATA PHY on OMAP5.
-> + "ti,control-phy-dra7usb2" - if it has power down register like USB2 PHY on
-> +                        DRA7 platform.
-> + "ti,control-phy-am437usb2" - if it has power down register like USB2 PHY on
-> +                        AM437 platform.
+>    | CPU |  <------  | PCIe IP |   <--  MSI/INTx Message (INTA, INTB,
+> INTC, INTD)
+> 
+>    Reading Interrupt Status Reg -> MSI/INTx bit set/not set
+>    Reading Root Port FIFO Read Register1 -> Mentions which interrupt
+> (INTx) is received
+>    Reading Root Port FIFO Read Register2 -> MSI Data
 
-To me it seems that you can leave out all the above. You can set these falgs
-flags directly in the driver based on the compatible flag. Then just initialize
-the .data in the driver based on the compatible flag.
+Okay, that matches my guess based on the code.
 
-> + - reg : Address and length of the register set for the device. It contains
-> +   the address of "otghs_control" for control-phy-otghs or "power" register
-> +   for other types.
-> + - reg-names: should be "otghs_control" control-phy-otghs and "power" for
-> +   other types.
-> +
-> +omap_control_usb: omap-control-usb@4a002300 {
-> +        compatible = "ti,control-phy-otghs";
-> +        reg = <0x4a00233c 0x4>;
-> +        reg-names = "otghs_control";
-> +};
+You probably want to do something like this:
 
-Then you would instead have something like this:
+     pci_express: axi-pcie@50000000 {
+             #address-cells = <3>;
+             #size-cells = <2>;
+	     device_type ="pci";
+             compatible = "xlnx,axi-pcie-host-1.00.a";
+             reg = < 0x50000000 0x10000000 >;
+             interrupts = < 0 52 4 >;
+             ranges = < 0x02000000 0 0x60000000 0x60000000 0 0x10000000 >;
 
-	compatible = "ti,am347-control-phy-otghs";
+	     pcie_intc: interrupt-controller {
+    		interrupt-controller;
+		#address-cells = <0>;
+		#interrupt-cells = <1>;
+	     }
 
-That way you can initialize things without a need for custom bindings.
+	     interrupt-map-mask = <0 0 0 7>;
+	     interrupt-map = <0 0 0 1 &pcie_intc 0>, // INT A
+	                     <0 0 0 2 &pcie_intc 2>, // INT B
+	                     <0 0 0 3 &pcie_intc 3>, // INT C
+	                     <0 0 0 4 &pcie_intc 4>; // INT D
+     };
 
-Regards,
+(similar to what ralink,rt3883 does for their binding)
 
-Tony
+Setup a interrupt domain like for MSI, except attach it to the
+nested interrupt-controller DT node. Decode the 4 interrutps from
+the core in the ISR and route them into the domain.
+
+The generic code will take care of the rest.
+
+This way all the interrupts are decoded and the interrupt-map DT
+functionality is supported, which is important in a number of
+board-specific corner cases.
+
+> > You may want to work with Liviu to use his patch set which provides
+> > more generic support. Also, the driver needs to put every one of these
+> > ports in a PCI domain, Liviu is working on generic support for that
+> > too.
+> 
+> I will check and come back to you.
+
+Will's latest patch that was just posted is a very good example of how
+the resource stuff should work correctly.
+
+> > Don't forget to think about hot plug
+> 
+> Did you mean using 'rescan' (from sysfs), correct?
+
+Yes
+
+Jason
