@@ -1,36 +1,153 @@
-From: David Laight <David.Laight@ACULAB.COM>
-Subject: RE: [PATCH RFC 0/3] Altera Triple Speed Ethernet (TSE) Driver RFC
-Date: Mon, 3 Mar 2014 09:53:10 +0000
-Message-ID: <063D6719AE5E284EB5DD2968C1650D6D0F6CEC12@AcuExch.aculab.com>
-References: <1393792922-2381-1-git-send-email-vbridgers2013@gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v6 17/18] ARM: sun4i: dt: Add ahci / sata support
+Date: Mon, 03 Mar 2014 11:07:59 +0100
+Message-ID: <5314547F.4020703@redhat.com>
+References: <1392811320-3132-1-git-send-email-hdegoede@redhat.com> <1392811320-3132-18-git-send-email-hdegoede@redhat.com> <20140221181519.GC3931@lukather> <53087755.3090608@redhat.com> <20140222171516.GA3610@lukather> <5308F63E.3070300@redhat.com> <20140303093315.GS607@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1393792922-2381-1-git-send-email-vbridgers2013@gmail.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: 'Vince Bridgers' <vbridgers2013@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBE5J2GMAKGQETHV2MGA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140303093315.GS607@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Vince Bridgers
-> I'm submitting this patch set for comments as a first step towards upstreaming
-> a driver for the Altera Triple Speed Ethernet (TSE) controller.
-...
-> The design has been tested on Altera's Cyclone 4, 5, and Cyclone 5 SOC
-> development kits using an ARM A9 processor and an Altera NIOS2 processor.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-I'm not sure this is relevant to any decision to import this but
-as far as I know the nios2 port of gcc is not is part of the main gcc
-release.
-(If it was it would be easier to get fixes applied!)
+Hi,
 
-I'm also not entirely convinced that Linux is an appropriate
-operating system for a 100MHz nios2 cpu. You'll certainly have
-problems processing Ge data rates (and maybe 100M ones as well).
+On 03/03/2014 10:33 AM, Maxime Ripard wrote:
+> Hi Hans,
+>=20
+> On Sat, Feb 22, 2014 at 08:10:54PM +0100, Hans de Goede wrote:
+>>>>> Since IIRC we have pretty much the same needs for the USB, can't we j=
+ust drop the SATA specific mention and use it as the common DTSI for the us=
+ual regulators?
+>>>>=20
+>>>> On most boards with sata, there will also be 1 or 2 usb regulators, so=
+ we need differently named regulator nodes for all 3 of ahci, usb1 and usb2=
+ vbus. On some boards how ever we may only need the usb regulators.
+>>>=20
+>>> Yes, obviously...
+>>>=20
+>>>> So if you look in my current personal sunxi-devel tree you will see se=
+parate dtsi files for both ahci and usb regulators,
+>>>=20
+>>> And this is precisely what I don't understand. Why do you *need* differ=
+ent DTSI files. If there's common regulators, that are used on most boards,=
+ fine, create a common regulators files. But why do you have to create a DT=
+SI to define only one regulator.
+>>>=20
+>>>> another advantage of having these separate is that the gpio controllin=
+g the regulator can be pre-populated with the reference design gpio which i=
+s used in most boards, so that the ahci specific code in the dts becomes on=
+ly the ahci: sata@... node.
+>>>=20
+>>> I understand very well the advantages of what having a reference regula=
+tors bring. What I don't understand is the benefits of having "topics" regu=
+lators DTSI.
+>>=20
+>> Ok, so let me try to explain:
+>>=20
+>> With topics regulator files, the ahci bits look something like this for =
+a board using the reference design gpio:
+>>=20
+>> /include/ "sunxi-ahci-reg.dtsi"
+>>=20
+>> ...
+>>=20
+>> ahci: sata@01c18000 { target-supply =3D <&reg_ahci_5v>; status =3D "okay=
+"; };
+>>=20
+>> If we put all regulators in one file, then the ahci regulator cannot be =
+enabled (so it will have status =3D "disabled) by default since most boards=
+ don't have it, so things would change into:
+>>=20
+>> /include/ "sunxi-common-regulators.dtsi"
+>>=20
+>> ...
+>>=20
+>> ahci: sata@01c18000 { target-supply =3D <&reg_ahci_5v>; status =3D "okay=
+"; };
+>>=20
+>> ...
+>>=20
+>> reg_ahci_5v: ahci-5v { status =3D "okay"; };
+>>=20
+>> Notice the addition of the 2nd node. This is why I ended up doing 2 sepa=
+rate dtsi files for the ahci and for the usb regulators.
+>>=20
+>> To me saying:
+>>=20
+>> /include/ "sunxi-ahci-reg.dtsi"
+>>=20
+>> Makes it clear to the reader that the board has a ahci target-supply reg=
+ulator, so enabling it separately seems being overly verbose.
+>>=20
+>> Of course of we change it to:
+>>=20
+>> /include/ "sunxi-common-regulators.dtsi"
+>>=20
+>> Then the verbosity / explicit enabling of various regulators becomes a g=
+ood thing, as it is not directly clear what the include does.
+>>=20
+>> But if we do this, then for many boards we end up replacing:
+>>=20
+>> /include/ "sunxi-ahci-reg.dtsi" /include/ "sun4i-a10-usb-vbus-reg.dtsi"
+>>=20
+>> With:
+>>=20
+>> /include/ "sunxi-common-regulators.dtsi"
+>>=20
+>> reg_ahci_5v: ahci-5v { status =3D "okay"; };
+>>=20
+>> reg_usb1_vbus: usb1-vbus { status =3D "okay"; };
+>>=20
+>> reg_usb2_vbus: usb2-vbus { status =3D "okay"; };
+>>=20
+>> I prefer the shorter version, but I can completely understand if you pre=
+fer the slightly more verbose version, this would also get rid of having di=
+fferent usb regulator dtsi files for sun4i / sun5i (as sun5i only has 1 usb=
+ host).
+>>=20
+>> I hope this helps explain my reasoning, as said I'm fine with either way=
+, if you want to change over to a single file + explicit enabling, let me k=
+now and I'll respin the ahci dts patches.  Note I'm going on vacation for a=
+ week starting Monday, so you likely won't get a new version until next wee=
+kend.
+>=20
+> Yes, I strongly prefer the second case. That allows to have a good-enough=
+ degree of factorisation, while not having anything happening behind the sc=
+enes.
 
-	David
+Good, note I've already assumed as much and send a new series
+which already has moved over to 1 common regulators dtsi,
+with all regulators disabled by default + explicit enabling
+in the board dts files.
 
+Regards,
 
+Hans
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
+iEYEARECAAYFAlMUVHEACgkQF3VEtJrzE/vIyQCfVgZNpu7YEk/pf7QiE90C6Cuj
+Dv8AoJq8fAEwTURGg5WF2FwMqZBPD1iS
+=3DVtd+
+-----END PGP SIGNATURE-----
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/groups/opt_out.
