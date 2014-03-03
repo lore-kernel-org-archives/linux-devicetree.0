@@ -1,57 +1,40 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH 1/1] Remove duplicate assignment
-Date: Mon, 3 Mar 2014 10:41:54 +1100
-Message-ID: <20140302234154.GE12916@voom.fritz.box>
-References: <1393793157-29233-1-git-send-email-xypron.glpk@gmx.de>
+From: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Subject: Re: [PATCH 1/1] Consistently use xrealloc instead of realloc
+Date: Mon, 03 Mar 2014 01:00:22 +0100
+Message-ID: <5313C616.9010104@gmx.de>
+References: <1393792741-29043-1-git-send-email-xypron.glpk@gmx.de> <20140302234140.GD12916@voom.fritz.box>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vKFfOv5t3oGVpiF+"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1393793157-29233-1-git-send-email-xypron.glpk@gmx.de>
+In-Reply-To: <20140302234140.GD12916@voom.fritz.box>
 Sender: linux-kernel-owner@vger.kernel.org
-To: xypron.glpk@gmx.de
-Cc: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, devicetree-compiler@vger.kernel.org, linux-kernel@vger.kernel.org
+To: David Gibson <david@gibson.dropbear.id.au>
+Cc: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, jdl@jdl.com, devicetree-compiler@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+> Note that in general dtc patches should be CCed to myself and Jon
+> Loeliger <jdl@jdl.com>, the dtc maintainers.
+>
 
---vKFfOv5t3oGVpiF+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is the relevant section in file MAINTAINERS of Torvald's git.
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/MAINTAINERS
 
-On Sun, Mar 02, 2014 at 09:45:57PM +0100, xypron.glpk@gmx.de wrote:
-> From: Heinrich Schuchardt <xypron.glpk@gmx.de>
->=20
-> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+OPEN FIRMWARE AND FLATTENED DEVICE TREE
+M:  Grant Likely <grant.likely@linaro.org>
+M:  Rob Herring <robh+dt@kernel.org>
+L:  devicetree@vger.kernel.org
+W:  http://fdt.secretlab.ca
+T:  git git://git.secretlab.ca/git/linux-2.6.git
+S:  Maintained
+F:  drivers/of/
+F:  include/linux/of*.h
+F:  scripts/dtc/
+K:  of_get_property
+K:  of_match_table
 
-Applied, thanks.
+If the information is not accurate, please, have it updated.
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Best regards
 
---vKFfOv5t3oGVpiF+
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTE8HBAAoJEGw4ysog2bOS61YQAM8CD2ifQwDRCzZCdSoX7e4V
-obL07YzUBuwW1D1hvh4Ud8JU/cCCxmwNHZ95OFpLSotdWsyN7tVKECmHdH+V8UD5
-PYN2/5ReftU7e9Ew9qNF4IGdoUj9alRXnXo/Q3lM8giBATK/u+kiKAVPzXeUX8mD
-y4u3zZZt+sx9wbay0mhde4c3aeENueQNIfMr+llv30ozp1Mm208qh72a9dfZmPva
-z+vnQMR6W+FHSoocsf09CtWfY9rEbn0QE8bvgnTVhX+ZA4kYEm0UnWmq/8sXc99I
-f4G16qbmISWSfUU4XYopxJQM2ORxNs0lPQZGwXuQZ3/TAQeepRAMbTciMYLCtb48
-bnvtn5uQR5KE6EvuZkG0LIQTTtL1RgN4BZr23UuBUBDHxcpuqpD69M8cdMDX+7R5
-MEMbILaUblkRdqrLtuXQILBwBudijM4Ju7t1m5Olntp3uxppz/IAIhFEDXHcrWwz
-kHoGHvlSnA/uqinLtnwSX0+AeixSAeihyoZk/rOpuuhJnPfB/ypiDiMV+SIWm2tl
-/EtYueeRcYHkcyPH99sIwzEaW0Wn31/cXa0fOMSdGK4gHo6LpX2JCcjP9zcv2+G6
-idUh9wSQ2wqd54HR6M0s2yYykDaYP9JHiAohCwqU8kJ40WjrvsHVwRJiVhIu6BpU
-tNg+F9FrHe8r+4180+K/
-=UxRP
------END PGP SIGNATURE-----
-
---vKFfOv5t3oGVpiF+--
+Heinrich Schuchardt
