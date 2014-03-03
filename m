@@ -1,79 +1,60 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC PATCH 3/6] PM / Voltagedomain: introduce voltage domain
- driver support
-Date: Mon, 3 Mar 2014 11:54:26 +0800
-Message-ID: <20140303035426.GC2411@sirena.org.uk>
-References: <1392755543-28335-1-git-send-email-nm@ti.com>
- <1392755543-28335-4-git-send-email-nm@ti.com>
- <20140224015826.GU25940@sirena.org.uk>
- <530B594F.2030500@ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv9][ 1/2] ASoC: eukrea-tlv320: Add DT support.
+Date: Mon, 3 Mar 2014 12:32:16 +0800
+Message-ID: <20140303043216.GI2411@sirena.org.uk>
+References: <1389806606-21521-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="r6fxLKBTHCmC166Z"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="3iqGNvuhWAyawlAA"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <530B594F.2030500@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Mike Turquette <mturquette@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+In-Reply-To: <1389806606-21521-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---r6fxLKBTHCmC166Z
-Content-Type: text/plain; charset=us-ascii
+--3iqGNvuhWAyawlAA
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 24, 2014 at 08:38:07AM -0600, Nishanth Menon wrote:
+On Wed, Jan 15, 2014 at 06:23:25PM +0100, Denis Carikli wrote:
+> Cc: Eric B=E9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 
-> Intent here is to allow drivers such as cpufreq-cpu0 to be reused on
-> platforms such as TI's OMAP derivatives, and other SoCs which differ
-> only by the sequence involved in voltage scale operations. So, this
-> patch provides a framework for registering the underlying
-> implementation of the SoC specific voltage change methodology.
+Applied, thanks.  Please do try to use a more standard format for patch
+submissions especially the subject lines - the way you write your
+subject lines isn't the normal one, something more like [PATCH v9 1/2]
+would be more standard for example.
 
-That bit is clear, what's very opaque from the code is how this is going
-to be accomplished.
+If there's a patch 2 I don't have it.
 
-> Overall the sequence takes place after this patch is as follows:
-> a) voltage domain drivers such as those of TI or others register with
-> voltage domain with devm_voltdm_register.
-> b) cpufreq-cpu0/devfreq drivers:
-> of_pm_voltdm_notifier_register(introduced as part of patch #1) to
-> register notifiers around clk of interest. This request is linked to
-> the specific voltage domain using phandle in device tree.
-> c) when cpufreq-cpu0/devfreq does a clk_set_rate, the common clock
-> framework triggers notifiers in voltage domain core which in turn,
-> invokes the corresponding handlers for the voltage domain driver
-> ensuring the right dvfs sequence specific to the SoC is triggered.
-
-So the first question I have here is what happens if multiple clocks
-need to be updated in lock step - if we're only triggering off clock
-notifiers that seems tricky.  The other thing here is that the fact that
-your API is "of_" suggests that it is in fact linked very srongly to DT
-- it'd be good to split out the layers to make sure things make sense
-standalone, the DT helpers are obviously good but the API should be able
-to stand separately.
-
---r6fxLKBTHCmC166Z
+--3iqGNvuhWAyawlAA
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTE/zvAAoJELSic+t+oim9cMcP/i0JAKgjHEbGVsgjUDypV9q1
-iF7cDi5/DSCxirm9mNtVG6UbR5iy8XuYJznaHcNct5K5CGc5Eydan5+NZr556M2E
-RG5G/KjNIukhvVT1eBhBm7S81uoF5wSJAsJnu/xUM9WCpJenbI7FqEEscYIMfU9o
-mZJ8uHn4t9VvEnmhEwTZcg2Qyq+6vP5eooRtb0BbO7t7COPcSFAdCji6XZJ2alAk
-PilOoP2Gh/ip3A7+mmMWiDvbRrfJUUkELruhDScvRwt6jY1y0HD8x5iUu1gIqRRJ
-Qifu2etbCcejsSEa6DfnyjbRhRRTeL6FnJR9dHnv0qs9tzryW+DEVXYT5DvYa5oi
-KkJoQaLsb2tJ1HlMmBSxtavqBz6yx2VD4t4PREWfTx+ZH6FRZOVifanSJUhggtKG
-RtQduD1GAkHZwu6yRrXND1YoPz0Ihrldb08tgqxQYVBqZaN/fX6ncX3/Jpl38Cih
-3EoAnm2UOSkZ1NjkeMT6ZB/ap5j6hwu4i7QJgcbrvf68J+RJAposA/5mj4OwVg3e
-+thB2kaTtV1jOxi7T9mOtAff/1oOkEB+Xc1Q3E7q7t1vcV/VNmCS2St0BMffzQeS
-pAiAe8OCQjHQ5TQIblrIf9SsvEmE+Du9TmpG6DwniCzAJvjL6aUr7mObanihfeeA
-IMTO0jrdB42Sh6/55OMI
-=PhJi
+iQIcBAEBAgAGBQJTFAXFAAoJELSic+t+oim9wcgP/iF27Ro5NgGqGYk/BJgv5Kh8
+aJB/GmY8mShYPfZliMqitJudEomEgL+lU7xsUBF0ptK+yb9ktWvhYkJffsJ3wgp1
+jv0uAhx4W/mWLsjnYpRvXmDyQaJ0LgU1wJfmwb3ioIo1xinfHItZKpFOU0nctp3L
+dvuOpStUfjPJWGNsgZVgG+0y8wcTDa8szn4DMYLwYZT9EBp1veYvbBoIC0W1LJY3
+WwVvkuJWCJYQYjTBuUYMgS8wC9oUCTWBkNTUPoOFVLquHPtSr9skNc53jTJP9iG0
+sjCH1IOkHq9weyyAnZfK2ydXMHsCMmiCC+6BuclsAyuzbIAJeni1U6tkTI/ZRG/b
+xwXRmw0hJvvndYdcvn5+DO2aY7+tWX+L6ux48k177NfXCSgPyV9ZX1Uo8dIydy2p
+YGqPszXB88BFACb9cAAyDpn3clJ8NqxejZz/dBpIK3MkS9TCF0CcLB0scGptPUY6
+MWsnfriKJ53Tp9nlbc+H1lhNX+Q+FHsQANFQKg83Wu2azJcy2VncHv/dweWVuLr5
+5rM0Z38aKGTqbp1iwg6qpgWwe6HAQ62gv0jv0qG85mKE2No0vw0j87mjhZGKL7jL
+n12yAlyS9RjizYdwG8UbaxMUKAcGRRBmSk+VI0E+QaGUnW+g4ClXxT2d/Oow5Z0R
+RHLz1IPnJ/TwintvYAVb
+=Qm2H
 -----END PGP SIGNATURE-----
 
---r6fxLKBTHCmC166Z--
+--3iqGNvuhWAyawlAA--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
