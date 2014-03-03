@@ -1,103 +1,139 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [PATCH v2] pcie: Add Xilinx PCIe Host Bridge IP driver
-Date: Mon, 3 Mar 2014 12:09:46 -0700
-Message-ID: <20140303190946.GA28341@obsidianresearch.com>
-References: <1393854036-5244-1-git-send-email-sthokal@xilinx.com>
- <20140303174325.GB31062@obsidianresearch.com>
- <CA+mB=1JmRVzpz=32AbdN8W+2RrsxkPUb+s0zLUQXBrsj2Cdiwg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: [PATCH V3 1/5] genirq: define flag IRQ_SRC_DST_INVERTED, and accessors
+Date: Mon,  3 Mar 2014 12:51:36 -0700
+Message-ID: <1393876300-3061-1-git-send-email-swarren@wwwdotorg.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CA+mB=1JmRVzpz=32AbdN8W+2RrsxkPUb+s0zLUQXBrsj2Cdiwg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srikanth Thokala <sthokal@xilinx.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 04, 2014 at 12:21:55AM +0530, Srikanth Thokala wrote:
+From: Stephen Warren <swarren@nvidia.com>
 
-> >> +     pci_express: axi-pcie@50000000 {
-> >> +             #address-cells = <3>;
-> >> +             #size-cells = <2>;
-> >> +             compatible = "xlnx,axi-pcie-host-1.00.a";
-> >> +             reg = < 0x50000000 0x10000000 >;
-> >> +             interrupts = < 0 52 4 >;
-> >> +             ranges = < 0x02000000 0 0x60000000 0x60000000 0 0x10000000 >;
-> >> +     };
+Some devices have configurable IRQ output polarities. Software might
+use IRQ_TYPE_* to determine how to configure such a device's IRQ
+output polarity in order to match how the IRQ controller input is
+configured. If the board or SoC inverts the signal between the
+device's IRQ output and controller's IRQ output, software must be
+aware of this fact, in order to program the IRQ output to the correct
+(i.e. opposite) polarity. This flag provides that information.
 
-> >  - How are INTA/B/C/D handled? Typically I'd like to see an
-> >    interrupt-mapping block describing them.
-> >
-> >    There are a few options here, if the HW can decode A/B/C/D then
-> >    it probably needs another irq_domain for INTx, and have the IRQ
-> >    handler decode like it does for MSI.
-> 
-> The core provides a single interrupt for both INTx/MSI messages.  The
-> core decodes the TLP messages and accordingly assert the INTx/MSI
-> bits.  It provides two registers Interrupt FIFO Read 1 and Read 2 to get
-> more information of these.
-> 
->    | CPU |  <------  | PCIe IP |   <--  MSI/INTx Message (INTA, INTB,
-> INTC, INTD)
-> 
->    Reading Interrupt Status Reg -> MSI/INTx bit set/not set
->    Reading Root Port FIFO Read Register1 -> Mentions which interrupt
-> (INTx) is received
->    Reading Root Port FIFO Read Register2 -> MSI Data
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+---
+v3: New patch.
+---
+ include/linux/irq.h    | 12 ++++++++++++
+ kernel/irq/chip.c      | 24 ++++++++++++++++++++++++
+ kernel/irq/irqdomain.c |  4 ++++
+ 3 files changed, 40 insertions(+)
 
-Okay, that matches my guess based on the code.
-
-You probably want to do something like this:
-
-     pci_express: axi-pcie@50000000 {
-             #address-cells = <3>;
-             #size-cells = <2>;
-	     device_type ="pci";
-             compatible = "xlnx,axi-pcie-host-1.00.a";
-             reg = < 0x50000000 0x10000000 >;
-             interrupts = < 0 52 4 >;
-             ranges = < 0x02000000 0 0x60000000 0x60000000 0 0x10000000 >;
-
-	     pcie_intc: interrupt-controller {
-    		interrupt-controller;
-		#address-cells = <0>;
-		#interrupt-cells = <1>;
-	     }
-
-	     interrupt-map-mask = <0 0 0 7>;
-	     interrupt-map = <0 0 0 1 &pcie_intc 0>, // INT A
-	                     <0 0 0 2 &pcie_intc 2>, // INT B
-	                     <0 0 0 3 &pcie_intc 3>, // INT C
-	                     <0 0 0 4 &pcie_intc 4>; // INT D
-     };
-
-(similar to what ralink,rt3883 does for their binding)
-
-Setup a interrupt domain like for MSI, except attach it to the
-nested interrupt-controller DT node. Decode the 4 interrutps from
-the core in the ISR and route them into the domain.
-
-The generic code will take care of the rest.
-
-This way all the interrupts are decoded and the interrupt-map DT
-functionality is supported, which is important in a number of
-board-specific corner cases.
-
-> > You may want to work with Liviu to use his patch set which provides
-> > more generic support. Also, the driver needs to put every one of these
-> > ports in a PCI domain, Liviu is working on generic support for that
-> > too.
-> 
-> I will check and come back to you.
-
-Will's latest patch that was just posted is a very good example of how
-the resource stuff should work correctly.
-
-> > Don't forget to think about hot plug
-> 
-> Did you mean using 'rescan' (from sysfs), correct?
-
-Yes
-
-Jason
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index 7dc10036eff5..535f3937e99e 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -73,6 +73,11 @@ typedef	void (*irq_preflow_handler_t)(struct irq_data *data);
+  * IRQ_IS_POLLED		- Always polled by another interrupt. Exclude
+  *				  it from the spurious interrupt detection
+  *				  mechanism and from core side polling.
++ * IRQ_SRC_DST_INVERTED		- An inverter exists between the source's IRQ
++ *				  output, and the IRQ controller's input.
++ *				  For devices with programmable output polarity
++ *				  this helps the driver match the device output
++ *				  to the controller's input polarity.
+  */
+ enum {
+ 	IRQ_TYPE_NONE		= 0x00000000,
+@@ -98,6 +103,7 @@ enum {
+ 	IRQ_NOTHREAD		= (1 << 16),
+ 	IRQ_PER_CPU_DEVID	= (1 << 17),
+ 	IRQ_IS_POLLED		= (1 << 18),
++	IRQ_SRC_DST_INVERTED	= (1 << 19),
+ };
+ 
+ #define IRQF_MODIFY_MASK	\
+@@ -218,6 +224,11 @@ static inline u32 irqd_get_trigger_type(struct irq_data *d)
+ 	return d->state_use_accessors & IRQD_TRIGGER_MASK;
+ }
+ 
++static inline u32 irqd_get_src_dst_inverted(struct irq_data *d)
++{
++	return d->state_use_accessors & IRQ_SRC_DST_INVERTED;
++}
++
+ /*
+  * Must only be called inside irq_chip.irq_set_type() functions.
+  */
+@@ -538,6 +549,7 @@ extern int irq_set_chip(unsigned int irq, struct irq_chip *chip);
+ extern int irq_set_handler_data(unsigned int irq, void *data);
+ extern int irq_set_chip_data(unsigned int irq, void *data);
+ extern int irq_set_irq_type(unsigned int irq, unsigned int type);
++extern int irq_set_src_dst_inverted(unsigned int irq, unsigned int inverted);
+ extern int irq_set_msi_desc(unsigned int irq, struct msi_desc *entry);
+ extern int irq_set_msi_desc_off(unsigned int irq_base, unsigned int irq_offset,
+ 				struct msi_desc *entry);
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index dc04c166c54d..ff9e13fa1170 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -70,6 +70,30 @@ int irq_set_irq_type(unsigned int irq, unsigned int type)
+ EXPORT_SYMBOL(irq_set_irq_type);
+ 
+ /**
++ *	irq_set_src_dst_inverted(unsigned int irq, u32 inverted)
++ *	@irq:		irq number
++ *	@inverted:	IRQ_SRC_DST_INVERTED value - see include/linux/irq.h
++ */
++int irq_set_src_dst_inverted(unsigned int irq, unsigned int inverted)
++{
++	unsigned long flags;
++	struct irq_desc *desc = irq_get_desc_buslock(irq, &flags, IRQ_GET_DESC_CHECK_GLOBAL);
++	int ret = 0;
++
++	if (!desc)
++		return -EINVAL;
++
++	inverted &= IRQ_SRC_DST_INVERTED;
++	if (inverted)
++		irqd_set(&desc->irq_data, inverted);
++	else
++		irqd_clear(&desc->irq_data, inverted);
++	irq_put_desc_busunlock(desc, flags);
++	return ret;
++}
++EXPORT_SYMBOL(irq_set_src_dst_inverted);
++
++/**
+  *	irq_set_handler_data - set irq handler data for an irq
+  *	@irq:	Interrupt number
+  *	@data:	Pointer to interrupt specific data
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index f14033700c25..f9cee747424e 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -471,6 +471,7 @@ unsigned int irq_create_of_mapping(struct of_phandle_args *irq_data)
+ 	struct irq_domain *domain;
+ 	irq_hw_number_t hwirq;
+ 	unsigned int type = IRQ_TYPE_NONE;
++	unsigned int inverted = 0;
+ 	unsigned int virq;
+ 
+ 	domain = irq_data->np ? irq_find_host(irq_data->np) : irq_default_domain;
+@@ -487,6 +488,8 @@ unsigned int irq_create_of_mapping(struct of_phandle_args *irq_data)
+ 		if (domain->ops->xlate(domain, irq_data->np, irq_data->args,
+ 					irq_data->args_count, &hwirq, &type))
+ 			return 0;
++		inverted = type & IRQ_SRC_DST_INVERTED;
++		type &= IRQ_TYPE_SENSE_MASK;
+ 	}
+ 
+ 	/* Create mapping */
+@@ -498,6 +501,7 @@ unsigned int irq_create_of_mapping(struct of_phandle_args *irq_data)
+ 	if (type != IRQ_TYPE_NONE &&
+ 	    type != irq_get_trigger_type(virq))
+ 		irq_set_irq_type(virq, type);
++	irq_set_src_dst_inverted(virq, inverted);
+ 	return virq;
+ }
+ EXPORT_SYMBOL_GPL(irq_create_of_mapping);
+-- 
+1.8.1.5
