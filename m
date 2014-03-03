@@ -1,91 +1,75 @@
-From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH 2/3] dts: mpc512x: adjust clock specs for FEC nodes
-Date: Mon, 3 Mar 2014 10:22:31 +0100
-Message-ID: <20140303092231.GS3327@book.gsilab.sittig.org>
-References: <1393237557-31406-1-git-send-email-gsi@denx.de>
- <1393237557-31406-2-git-send-email-gsi@denx.de>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH 4/7] ARM: dts: exynos5440: fix PCIe interrupt mapping
+Date: Mon, 03 Mar 2014 10:26:23 +0100
+Message-ID: <1393838783.4714.0.camel@weser.hi.pengutronix.de>
+References: <1393608523-17509-1-git-send-email-l.stach@pengutronix.de>
+	 <1393608523-17509-5-git-send-email-l.stach@pengutronix.de>
+	 <000401cf36b3$e4aa0fb0$adfe2f10$%han@samsung.com>
+	 <000501cf36b5$b0a27110$11e75330$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1393237557-31406-2-git-send-email-gsi-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <000501cf36b5$b0a27110$11e75330$%han@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-sh@vger.kernel.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Simon Horman' <horms@verge.net.au>, 'Shawn Guo' <shawn.guo@linaro.org>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Stephen Warren' <swarren@wwwdotorg.org>, 'Thierry Reding' <thierry.reding@gmail.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ben Dooks' <ben-linux@fluff.org>, 'Tim Harvey' <tharvey@gateworks.com>, 'Richard Zhu' <r65037@freescale.com>, 'Arnd Bergmann' <arnd@arndb.de>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 24, 2014 at 11:25 +0100, Gerhard Sittig wrote:
+Am Montag, den 03.03.2014, 16:53 +0900 schrieb Jingoo Han:
+> On Monday, March 03, 2014 4:41 PM, Jingoo Han wrote:
+> > On Saturday, March 01, 2014 2:29 AM, Lucas Stach wrote:
+> > >
+> > > So it actually works.
+> > >
+> > > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> > > ---
+> > >  arch/arm/boot/dts/exynos5440.dtsi | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
+> > > index 02a0a1226cef..65d425d9ec27 100644
+> > > --- a/arch/arm/boot/dts/exynos5440.dtsi
+> > > +++ b/arch/arm/boot/dts/exynos5440.dtsi
+> > > @@ -274,7 +274,7 @@
+> > >  			  0x82000000 0 0x40011000 0x40011000 0 0x1ffef000>; /* non-prefetchable memory */
+> > >  		#interrupt-cells = <1>;
+> > >  		interrupt-map-mask = <0 0 0 0>;
+> > > -		interrupt-map = <0x0 0 &gic 53>;
+> > > +		interrupt-map = <0 0 0 0 &gic GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+> > 
+> > It makes build errors as below:
+> > 
+> > DTC     arch/arm/boot/dts/exynos5440-ssdk5440.dtb
+> > Error: arch/arm/boot/dts/exynos5440.dtsi:289.33-34 syntax error
+> > FATAL ERROR: Unable to parse input tree
+> > make[1]: *** [arch/arm/boot/dts/exynos5440-ssdk5440.dtb] Error 1
+> > make: *** [exynos5440-ssdk5440.dtb] Error 2
+> > 
+> > Would you fix it?
 > 
-> a recent FEC binding document update that was motivated by i.MX
-> development revealed that ARM and PowerPC implementations in Linux
-> did not agree on the clock names to use for the FEC nodes
+> I fixed build errors after including 'arm-gic.h' as below:
 > 
-> change clock names from "per" to "ipg" in the FEC nodes of the
-> mpc5121.dtsi include file such that the .dts specs comply with
-> the common FEC binding
+> --- a/arch/arm/boot/dts/exynos5440.dtsi
+> +++ b/arch/arm/boot/dts/exynos5440.dtsi
+> @@ -9,6 +9,8 @@
+>   * published by the Free Software Foundation.
+>  */
 > 
-> this "incompatible" change does not break operation, because
-> - COMMON_CLK support for MPC5121/23/25 and adjusted .dts files
->   were only introduced in Linux v3.14-rc1, no mainline release
->   provided these specs before
-> - if this change won't make it for v3.14, the MPC512x CCF support
->   provides full backwards compability, and keeps operating with
->   device trees which lack clock specs or don't match in the names
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+>  #include "skeleton.dtsi"
 > 
-> Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+> Would you confirm this?
 
-ping
+That's the right fix, I'll include this (together with the other
+feedback I received) in v2 of the series.
 
-Are there opinions about making PowerPC users of FEC use the same
-clock names as ARM users do, to re-use (actually: keep sharing)
-the FEC binding?  The alternative would be to fragment the FEC
-binding into several bindings for ARM and PowerPC, which I feel
-would be undesirable, and is not necessary.
+Regards,
+Lucas
 
-It would be nice to ship v3.14 (the first release with proper CCF
-support for MPC512x) in a shape that is consistent with other FEC
-users (ARM i.MX).  We are lucky to have noticed the difference
-before the release, and need not introduce the incompatibility,
-and need not document and support obsolete conditions but can fix
-them instead.
-
-> ---
->  arch/powerpc/boot/dts/mpc5121.dtsi |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/powerpc/boot/dts/mpc5121.dtsi b/arch/powerpc/boot/dts/mpc5121.dtsi
-> index 2c0e1552d20b..a5a375598ed8 100644
-> --- a/arch/powerpc/boot/dts/mpc5121.dtsi
-> +++ b/arch/powerpc/boot/dts/mpc5121.dtsi
-> @@ -281,7 +281,7 @@
->  			#address-cells = <1>;
->  			#size-cells = <0>;
->  			clocks = <&clks MPC512x_CLK_FEC>;
-> -			clock-names = "per";
-> +			clock-names = "ipg";
->  		};
->  
->  		eth0: ethernet@2800 {
-> @@ -291,7 +291,7 @@
->  			local-mac-address = [ 00 00 00 00 00 00 ];
->  			interrupts = <4 0x8>;
->  			clocks = <&clks MPC512x_CLK_FEC>;
-> -			clock-names = "per";
-> +			clock-names = "ipg";
->  		};
->  
->  		/* USB1 using external ULPI PHY */
-> -- 
-> 1.7.10.4
-
-
-virtually yours
-Gerhard Sittig
 -- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
-Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Pengutronix e.K.                           | Lucas Stach                 |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-5076 |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
