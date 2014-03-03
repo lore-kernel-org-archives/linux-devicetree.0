@@ -1,81 +1,58 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH 4/7] ARM: dts: exynos5440: fix PCIe interrupt mapping
-Date: Mon, 03 Mar 2014 16:53:39 +0900
-Message-ID: <000501cf36b5$b0a27110$11e75330$%han@samsung.com>
-References: <1393608523-17509-1-git-send-email-l.stach@pengutronix.de>
- <1393608523-17509-5-git-send-email-l.stach@pengutronix.de>
- <000401cf36b3$e4aa0fb0$adfe2f10$%han@samsung.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFCv4 0/7] Convert twl4030-madc to IIO API and add DT support
+Date: Mon, 3 Mar 2014 16:00:01 +0800
+Message-ID: <20140303080001.GH4674@lee--X1>
+References: <1393374270-20079-1-git-send-email-sre@debian.org>
+ <1393444990-28140-1-git-send-email-sre@debian.org>
+ <5311CA14.6080009@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <000401cf36b3$e4aa0fb0$adfe2f10$%han@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Lucas Stach' <l.stach@pengutronix.de>, linux-arm-kernel@lists.infradead.org
-Cc: linux-samsung-soc@vger.kernel.org, linux-sh@vger.kernel.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Simon Horman' <horms@verge.net.au>, 'Shawn Guo' <shawn.guo@linaro.org>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Stephen Warren' <swarren@wwwdotorg.org>, 'Thierry Reding' <thierry.reding@gmail.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ben Dooks' <ben-linux@fluff.org>, 'Tim Harvey' <tharvey@gateworks.com>, 'Richard Zhu' <r65037@freescale.com>, 'Arnd Bergmann' <arnd@arndb.de>, kernel@pengutronix.de, 'Jingoo Han' <jg1.han@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5311CA14.6080009-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, March 03, 2014 4:41 PM, Jingoo Han wrote:
-> On Saturday, March 01, 2014 2:29 AM, Lucas Stach wrote:
+On Sat, 01 Mar 2014, Jonathan Cameron wrote:
+
+> On 26/02/14 20:03, Sebastian Reichel wrote:
+> >Hi,
 > >
-> > So it actually works.
+> >This is RFCv4 for converting twl4030-madc to the IIO API and
+> >adding DT support. The patchset compiles and has been tested
+> >on my Nokia N900.
 > >
-> > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> > ---
-> >  arch/arm/boot/dts/exynos5440.dtsi | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >Changes since RFCv3 [0]:
+> >  * Added Acked-by from Lee Jones (MFD subsystem maintainer)
+> >    to twl_i2c_read/write_u16 patches
+> >  * Fixed style issues found by Lee Jones
+> >    This readded the temp variable Jonathan Cameron wanted to
+> >    be removed, but makes the code cleaner - especially once
+> >    the brackets for math for clarity are added.
+> >  * Tested with converted rx51-battery driver on Nokia N900,
+> >    which can be found at [1].
 > >
-> > diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
-> > index 02a0a1226cef..65d425d9ec27 100644
-> > --- a/arch/arm/boot/dts/exynos5440.dtsi
-> > +++ b/arch/arm/boot/dts/exynos5440.dtsi
-> > @@ -274,7 +274,7 @@
-> >  			  0x82000000 0 0x40011000 0x40011000 0 0x1ffef000>; /* non-prefetchable memory */
-> >  		#interrupt-cells = <1>;
-> >  		interrupt-map-mask = <0 0 0 0>;
-> > -		interrupt-map = <0x0 0 &gic 53>;
-> > +		interrupt-map = <0 0 0 0 &gic GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-> 
-> It makes build errors as below:
-> 
-> DTC     arch/arm/boot/dts/exynos5440-ssdk5440.dtb
-> Error: arch/arm/boot/dts/exynos5440.dtsi:289.33-34 syntax error
-> FATAL ERROR: Unable to parse input tree
-> make[1]: *** [arch/arm/boot/dts/exynos5440-ssdk5440.dtb] Error 1
-> make: *** [exynos5440-ssdk5440.dtb] Error 2
-> 
-> Would you fix it?
+> >[0] https://lkml.org/lkml/2014/2/25/627
+> >[1] https://lkml.org/lkml/2014/2/25/639
+>=20
+> Hi All,
+>=20
+> Obviously there are a few outstanding bits and pieces to be addressed=
+=2E
+>=20
+> To get this lined up for a merge...
+>=20
+> Lee, do you want to take this through mfd or shall I take it through
+> IIO?  I don't mind either way.  It stands pretty separate in IIO so
+> shouldn't cause any merge issues beyond minor fuzz.
 
-I fixed build errors after including 'arm-gic.h' as below:
+I'm happy to take it through MFD with your Ack.
 
---- a/arch/arm/boot/dts/exynos5440.dtsi
-+++ b/arch/arm/boot/dts/exynos5440.dtsi
-@@ -9,6 +9,8 @@
-  * published by the Free Software Foundation.
- */
-
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
- #include "skeleton.dtsi"
-
-Would you confirm this?
-
-Best regards,
-Jingoo Han
-
-> 
-> >  		num-lanes = <4>;
-> >  		status = "disabled";
-> >  	};
-> > @@ -295,7 +295,7 @@
-> >  			  0x82000000 0 0x60011000 0x60011000 0 0x1ffef000>; /* non-prefetchable memory */
-> >  		#interrupt-cells = <1>;
-> >  		interrupt-map-mask = <0 0 0 0>;
-> > -		interrupt-map = <0x0 0 &gic 56>;
-> > +		interrupt-map = <0 0 0 0 &gic GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-> >  		num-lanes = <4>;
-> >  		status = "disabled";
-> >  	};
-> > --
-> > 1.8.5.3
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
