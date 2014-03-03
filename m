@@ -1,35 +1,31 @@
-From: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>
-Subject: [PATCH] ARM: dts: exynos5250: turn on the LDO10 on SMDK5250
-Date: Mon,  3 Mar 2014 16:45:10 +0530
-Message-ID: <1393845310-1898-1-git-send-email-yuvaraj.cd@samsung.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: kgene.kim@samsung.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: grant.likely@linaro.org, t.figa@samsung.com, jg1.han@samsung.com, swarren@wwwdotorg.org, mark.rutland@arm.com, joshi@samsung.com, ks.giri@samsung.com, thomas.ab@samsung.com, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [RFC PATCH] i2c: new bus driver for efm32
+Date: Mon, 3 Mar 2014 12:20:05 +0100
+Message-ID: <20140303112005.GC17249@pengutronix.de>
+References: <1392027598-29015-1-git-send-email-u.kleine-koenig@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1392027598-29015-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Commit 275dcd2 "ARM: dts: add max77686 pmic node for smdk5250" added
-required LDO's for SMDK5250 boards.Currently LDO10 is turned off.As LDO10,
-enable/disable the LDO22 which is required for VDDQ_MMC2_AP.So this patch 
-makes LDO10 turn's on always.
+On Mon, Feb 10, 2014 at 11:19:58AM +0100, Uwe Kleine-K=F6nig wrote:
+> This was tested on a EFM32GG-DK3750 devboard that has a temperature
+> sensor and an eeprom on its i2c bus.
+>=20
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+still no reply :-(
 
-Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
----
- arch/arm/boot/dts/exynos5250-smdk5250.dts |    1 +
- 1 file changed, 1 insertion(+)
+Uwe
 
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index f76946e..27a33d7 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -103,6 +103,7 @@
- 					regulator-name = "P1.8V_LDO_OUT10";
- 					regulator-min-microvolt = <1800000>;
- 					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
- 				};
- 
- 				ldo11_reg: LDO11 {
--- 
-1.7.10.4
-
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
