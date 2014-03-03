@@ -1,54 +1,36 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: [PATCH v12 15/15] ARM: dts: imx6: add mxs phy controller id
-Date: Mon, 3 Mar 2014 16:41:58 +0800
-Message-ID: <1393836118-4265-16-git-send-email-peter.chen@freescale.com>
-References: <1393836118-4265-1-git-send-email-peter.chen@freescale.com>
+From: David Laight <David.Laight@ACULAB.COM>
+Subject: RE: [PATCH RFC 0/3] Altera Triple Speed Ethernet (TSE) Driver RFC
+Date: Mon, 3 Mar 2014 09:53:10 +0000
+Message-ID: <063D6719AE5E284EB5DD2968C1650D6D0F6CEC12@AcuExch.aculab.com>
+References: <1393792922-2381-1-git-send-email-vbridgers2013@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1393836118-4265-1-git-send-email-peter.chen@freescale.com>
+In-Reply-To: <1393792922-2381-1-git-send-email-vbridgers2013@gmail.com>
+Content-Language: en-US
 Sender: linux-doc-owner@vger.kernel.org
-To: balbi@ti.com, shawn.guo@linaro.org, robh+dt@kernel.org, grant.likely@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com
-Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, peter.chen@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+To: 'Vince Bridgers' <vbridgers2013@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>
 List-Id: devicetree@vger.kernel.org
 
-We need to use controller id to access different register regions
-for mxs phy.
+From: Vince Bridgers
+> I'm submitting this patch set for comments as a first step towards upstreaming
+> a driver for the Altera Triple Speed Ethernet (TSE) controller.
+...
+> The design has been tested on Altera's Cyclone 4, 5, and Cyclone 5 SOC
+> development kits using an ARM A9 processor and an Altera NIOS2 processor.
 
-Signed-off-by: Peter Chen <peter.chen@freescale.com>
-Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
----
- arch/arm/boot/dts/imx6qdl.dtsi |    2 ++
- arch/arm/boot/dts/imx6sl.dtsi  |    2 ++
- 2 files changed, 4 insertions(+), 0 deletions(-)
+I'm not sure this is relevant to any decision to import this but
+as far as I know the nios2 port of gcc is not is part of the main gcc
+release.
+(If it was it would be easier to get fixes applied!)
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 047b147..581c4c9 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -33,6 +33,8 @@
- 		spi1 = &ecspi2;
- 		spi2 = &ecspi3;
- 		spi3 = &ecspi4;
-+		usbphy0 = &usbphy1;
-+		usbphy1 = &usbphy2;
- 	};
- 
- 	intc: interrupt-controller@00a01000 {
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index 30322b5..a06d939 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -27,6 +27,8 @@
- 		spi1 = &ecspi2;
- 		spi2 = &ecspi3;
- 		spi3 = &ecspi4;
-+		usbphy0 = &usbphy1;
-+		usbphy1 = &usbphy2;
- 	};
- 
- 	cpus {
--- 
-1.7.8
+I'm also not entirely convinced that Linux is an appropriate
+operating system for a 100MHz nios2 cpu. You'll certainly have
+problems processing Ge data rates (and maybe 100M ones as well).
+
+	David
+
 
 
