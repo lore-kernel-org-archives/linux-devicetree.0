@@ -1,56 +1,97 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv4 4/7] hwspinlock/core: add common OF helpers
-Date: Tue, 4 Mar 2014 11:38:23 -0600
-Message-ID: <53160F8F.9060405@ti.com>
-References: <1389658764-39199-1-git-send-email-s-anna@ti.com>	<1389658764-39199-5-git-send-email-s-anna@ti.com>	<CAJAp7Oi7wD+VsMAd37gT04yZ4TH4ygXFmheDhvmWuanUjpBmVQ@mail.gmail.com>	<52F92524.3080402@ti.com>	<CAK=WgbY0wDtGCm71E8VXi2g5+VcGogHEy8jdekTRg8xtp6-3rQ@mail.gmail.com> <CAJAp7Ohf43hbKatCwS5Y1+OfEkJYWOkuhZhW-E_=t_9mfM+UaA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJAp7Ohf43hbKatCwS5Y1+OfEkJYWOkuhZhW-E_=t_9mfM+UaA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH 22/22] clocksource: sh_mtu2: Add DT support
+Date: Tue,  4 Mar 2014 18:47:29 +0100
+Message-ID: <1393955249-18736-23-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+References: <1393955249-18736-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1393955249-18736-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org
+Cc: Wolfram Sang <wsa@the-dreams.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ohad,
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+---
+ .../devicetree/bindings/timer/renesas,mtu2.txt     | 37 ++++++++++++++++++++++
+ drivers/clocksource/sh_mtu2.c                      |  8 +++++
+ 2 files changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/renesas,mtu2.txt
 
-On 03/02/2014 02:19 PM, Bjorn Andersson wrote:
-> On Sat, Mar 1, 2014 at 9:14 PM, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org> wrote:
->> On Mon, Feb 10, 2014 at 9:14 PM, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> wrote:
->>> On 02/07/2014 04:49 PM, Bjorn Andersson wrote:
->>>> It seems to be standard practice to pass the error value back to the
->>>> consumer, so you should
->>>> return ERR_PTR(ret); here instead of the NULL...
->>>
->>>
->>> I have modelled the return values in this function based on the return
->>> values in the existing hwspin_lock_request interfaces. I would need to
->>> change those functions as well.
->>>
->>> Ohad,
->>> Do you have any objections to the return code convention change?
->>
->> Unless strictly needed, I prefer we don't switch to the ERR_PTR code
->> convention, as it reduces code readability and increases chances of
->> user bugs.
->>
->> In our case, switching to ERR_PTR and friends seems only to optimize a
->> few error paths, and I'm not sure it's a big win over simplicity.
->
-> When introducing the ability to reference a hwspin lock via a phandle
-> in device tree it makes a big difference to be able to differ between
-> the case of "initialization failed" or "device not yet probed"; so
-> that the client knows if it should fail or retry later.
->
+diff --git a/Documentation/devicetree/bindings/timer/renesas,mtu2.txt b/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
+new file mode 100644
+index 0000000..67edd25
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
+@@ -0,0 +1,37 @@
++* Renesas R-Car Multi-Function Timer Pulse Unit 2 (MTU2)
++
++The MTU2 is a multi-purpose, multi-channel timer/counter with configurable
++clock inputs and programmable compare match.
++
++Channels share hardware resources but their counter and compare match value
++are independent. The MTU2 hardware supports five channels indexed from 0 to 4.
++
++Required Properties:
++
++  - compatible: must contain "renesas,mtu2"
++
++  - reg: base address and length of the registers block for the timer module.
++
++  - interrupt-parent, interrupts: interrupt specifiers for the timer, one for
++    each entry in interrupt-names.
++  - interrupt-names: must contain one entry named "tgi?a" for each enabled
++    channel, where "?" is the channel index expressed as one digit from "0" to
++    "4".
++
++  - clocks: a list of phandle + clock-specifier pairs, one for each entry
++    in clock-names.
++  - clock-names: must contain "fck" for the functional clock.
++
++
++Example: R7S72100 (RZ/A1H) MTU2 node
++
++	mtu2: timer@fcff0000 {
++		compatible = "renesas,mtu2";
++		reg = <0xfcff0000 0x400>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 142 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 142 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "tgi0a", "tgi1a", "tgi2a";
++		clocks = <&mstp3_clks R7S72100_CLK_MTU2>;
++		clock-names = "fck";
++	};
+diff --git a/drivers/clocksource/sh_mtu2.c b/drivers/clocksource/sh_mtu2.c
+index ebdf9d1..79387af 100644
+--- a/drivers/clocksource/sh_mtu2.c
++++ b/drivers/clocksource/sh_mtu2.c
+@@ -23,6 +23,7 @@
+ #include <linux/ioport.h>
+ #include <linux/irq.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_domain.h>
+ #include <linux/pm_runtime.h>
+@@ -502,11 +503,18 @@ static const struct platform_device_id sh_mtu2_id_table[] = {
+ };
+ MODULE_DEVICE_TABLE(platform, sh_mtu2_id_table);
+ 
++static const struct of_device_id sh_mtu2_of_table[] = {
++	{ .compatible = "renesas,mtu2" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, sh_mtu2_of_table);
++
+ static struct platform_driver sh_mtu2_device_driver = {
+ 	.probe		= sh_mtu2_probe,
+ 	.remove		= sh_mtu2_remove,
+ 	.driver		= {
+ 		.name	= "sh_mtu2",
++		.of_match_table = of_match_ptr(sh_mtu2_of_table),
+ 	},
+ 	.id_table	= sh_mtu2_id_table,
+ };
+-- 
+1.8.3.2
 
-Can you confirm the changes you want me to make, so that I can refresh 
-and post a v5 for 3.15?
-
-regards
-Suman
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
