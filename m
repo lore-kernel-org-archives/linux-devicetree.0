@@ -1,53 +1,42 @@
-From: David Laight <David.Laight@ACULAB.COM>
-Subject: RE: [PATCH RFC 3/3] Altera TSE: Add Altera Triple Speed Ethernet
- (TSE) Driver
-Date: Tue, 4 Mar 2014 10:06:13 +0000
-Message-ID: <063D6719AE5E284EB5DD2968C1650D6D0F6CFE20@AcuExch.aculab.com>
-References: <1393792922-2381-1-git-send-email-vbridgers2013@gmail.com>
-	<1393792922-2381-4-git-send-email-vbridgers2013@gmail.com>
-	<5313D3DE.3030907@gmail.com>
- <CAOwfj2OjxyCNwgxWLjv5asDQYKD2Mcd3N_3Wn+jankK-pa35Fw@mail.gmail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v5 5/7] [media] of: move common endpoint parsing to
+ drivers/of
+Date: Tue, 04 Mar 2014 11:09:51 +0100
+Message-ID: <1393927791.3917.3.camel@paszta.hi.pengutronix.de>
+References: <1393522540-22887-1-git-send-email-p.zabel@pengutronix.de>
+	 <1393522540-22887-6-git-send-email-p.zabel@pengutronix.de>
+	 <5310FB23.5040203@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAOwfj2OjxyCNwgxWLjv5asDQYKD2Mcd3N_3Wn+jankK-pa35Fw@mail.gmail.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: 'Vince Bridgers' <vbridgers2013@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5310FB23.5040203@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sylwester Nawrocki <snjw23@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Of Vince Bridgers
-> Hello Florian, thank you for taking the time to comments. My responses inline.
-> 
-> On Sun, Mar 2, 2014 at 6:59 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> > Hello Vince,
+Am Freitag, den 28.02.2014, 22:09 +0100 schrieb Sylwester Nawrocki:
+[...]
+> > --- a/drivers/of/base.c
+> > +++ b/drivers/of/base.c
+> > @@ -1985,6 +1985,37 @@ struct device_node *of_find_next_cache_node(const struct device_node *np)
+> >   }
 > >
-> > It might help reviewing the patches by breaking the patches into:
-> >
-> > - the SGDMA bits
-> > - the MSGDMA bits
-> > - the Ethernet MAC driver per-se
+> >   /**
+> > + * of_graph_parse_endpoint() - parse common endpoint node properties
+> > + * @node: pointer to endpoint device_node
+> > + * @endpoint: pointer to the OF endpoint data structure
+> > + *
+> > + * All properties are optional. If none are found, we don't set any flags.
+> > + * This means the port has a static configuration and no properties have
+> > + * to be specified explicitly.
 > 
-> I'll break down the next submission.
-> 
-> >
-> > BTW, it does look like the SGDMA code could/should be a dmaengine driver?
-> 
-> I did consider this, but after studying the dmaengine api I found the
-> API definitions and semantics were not a match to the way the SGDMA
-> and MSGDMA behave collectively. Moreover, I could not find an example
-> of an Ethernet driver that made use of the dmaengine API - only the
-> Micrel driver seems to use it. When studying what components actually
-> used the dmaengine API I concluded the dmaengine API was defined for
-> use cases different than Ethernet.
+> I don't think these two sentences are needed, it's all described in the
+> DT binding documentation. And struct of_endpoint doesn't contain any
+> "flags" field.
 
-It is probably reasonable to expect that the SGDMA is instantiated for the
-sole use of the ethernet block - it probably wants two of them, and then
-treat it as part of the ethernet hardware.
-I've not looked at the TSE or SGDMA, but I suspect you could require that
-they be placed at adjacent Avalon addresses. So that they are effectively
-a single device. Qsys might even let you define such a beast.
+Thanks, I'll remove them.
 
-	David
+regards
+Philipp
