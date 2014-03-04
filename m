@@ -1,109 +1,181 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 2/2] of: fix of_update_property()
-Date: Tue, 04 Mar 2014 16:41:22 +0800
-Message-ID: <20140304084122.E3353C4308B@trevor.secretlab.ca>
-References: <1390370260-11273-1-git-send-email-Li.Xiubo@freescale.com> < 1390370260-11273-2-git-send-email-Li.Xiubo@freescale.com>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 5/7] [media] of: move common endpoint parsing to drivers/of
+Date: Tue, 4 Mar 2014 10:58:19 +0200
+Message-ID: <531595AB.4000001@ti.com>
+References: <1393522540-22887-1-git-send-email-p.zabel@pengutronix.de> <1393522540-22887-6-git-send-email-p.zabel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="W1QClLt3nmoU3v6nhl8j8kClSe3Q5JPLF"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1390370260-11273-2-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1393522540-22887-6-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 22 Jan 2014 13:57:40 +0800, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> The of_update_property() is intented to update a property in a node
-> and if the property does not exist, will add it.
-> 
-> The second search of the property is possibly won't be found, that
-> maybe removed by other thread just before the second search begain.
-> 
-> Using the __of_find_property() and __of_add_property() instead and
-> move them into lock operations.
-> 
-> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Cc: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+--W1QClLt3nmoU3v6nhl8j8kClSe3Q5JPLF
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-I've had to revert this patch. See below...
+Hi Philipp,
 
-> ---
->  drivers/of/base.c | 36 ++++++++++++++----------------------
->  1 file changed, 14 insertions(+), 22 deletions(-)
-> 
+On 27/02/14 19:35, Philipp Zabel wrote:
+> This patch adds a new struct of_endpoint which is then embedded in stru=
+ct
+> v4l2_of_endpoint and contains the endpoint properties that are not V4L2=
+
+> (or even media) specific: the port number, endpoint id, local device tr=
+ee
+> node and remote endpoint phandle. of_graph_parse_endpoint parses those
+> properties and is used by v4l2_of_parse_endpoint, which just adds the
+> V4L2 MBUS information to the containing v4l2_of_endpoint structure.
+
+<snip>
+
 > diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index b86b77a..458072d 100644
+> index 8ecca7a..ba3cfca 100644
 > --- a/drivers/of/base.c
 > +++ b/drivers/of/base.c
-> @@ -1573,7 +1573,7 @@ int of_update_property(struct device_node *np, struct property *newprop)
->  {
->  	struct property **next, *oldprop;
->  	unsigned long flags;
-> -	int rc, found = 0;
-> +	int rc = 0;
->  
->  	rc = of_property_notify(OF_RECONFIG_UPDATE_PROPERTY, np, newprop);
->  	if (rc)
-> @@ -1582,36 +1582,28 @@ int of_update_property(struct device_node *np, struct property *newprop)
->  	if (!newprop->name)
->  		return -EINVAL;
->  
-> -	oldprop = of_find_property(np, newprop->name, NULL);
-> -	if (!oldprop)
-> -		return of_add_property(np, newprop);
-> -
->  	raw_spin_lock_irqsave(&devtree_lock, flags);
-> -	next = &np->properties;
-> -	while (*next) {
-> -		if (*next == oldprop) {
-> -			/* found the node */
-> -			newprop->next = oldprop->next;
-> -			*next = newprop;
-> -			oldprop->next = np->deadprops;
-> -			np->deadprops = oldprop;
-> -			found = 1;
-> -			break;
-> -		}
-> -		next = &(*next)->next;
-> +	oldprop = __of_find_property(np, newprop->name, NULL);
-> +	if (!oldprop) {
-> +		/* add the node */
-> +		rc = __of_add_property(np, newprop);
-> +	} else {
-> +		/* replace the node */
-> +		next = &oldprop;
-
-Ugh. I just looked closer and the above line is completely broken.
-&oldprop is the address of 'oldprop' on the stack, *not* the address of
-the previous item in the list. The while loop is still required to find it.
-
-g.
-
-> +		newprop->next = oldprop->next;
-> +		*next = newprop;
-> +		oldprop->next = np->deadprops;
-> +		np->deadprops = oldprop;
->  	}
->  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
->  
-> -	if (!found)
-> -		return -ENODEV;
-> -
->  #ifdef CONFIG_PROC_DEVICETREE
->  	/* try to add to proc as well if it was initialized */
-> -	if (np->pde)
-> +	if (!rc && np->pde)
->  		proc_device_tree_update_prop(np->pde, newprop, oldprop);
->  #endif /* CONFIG_PROC_DEVICETREE */
->  
-> -	return 0;
-> +	return rc;
+> @@ -1985,6 +1985,37 @@ struct device_node *of_find_next_cache_node(cons=
+t struct device_node *np)
 >  }
->  
->  #if defined(CONFIG_OF_DYNAMIC)
-> -- 
-> 1.8.4
-> 
-> 
+> =20
+>  /**
+> + * of_graph_parse_endpoint() - parse common endpoint node properties
+> + * @node: pointer to endpoint device_node
+> + * @endpoint: pointer to the OF endpoint data structure
+> + *
+> + * All properties are optional. If none are found, we don't set any fl=
+ags.
+> + * This means the port has a static configuration and no properties ha=
+ve
+> + * to be specified explicitly.
+> + * The caller should hold a reference to @node.
+> + */
+> +int of_graph_parse_endpoint(const struct device_node *node,
+> +			    struct of_endpoint *endpoint)
+> +{
+> +	struct device_node *port_node =3D of_get_parent(node);
 
+Can port_node be NULL? Probably only if something is quite wrong, but
+maybe it's safer to return error in that case.
+
+> +	memset(endpoint, 0, sizeof(*endpoint));
+> +
+> +	endpoint->local_node =3D node;
+> +	/*
+> +	 * It doesn't matter whether the two calls below succeed.
+> +	 * If they don't then the default value 0 is used.
+> +	 */
+> +	of_property_read_u32(port_node, "reg", &endpoint->port);
+> +	of_property_read_u32(node, "reg", &endpoint->id);
+
+If the endpoint does not have 'port' as parent (i.e. the shortened
+format), the above will return the 'reg' of the device node (with
+'device node' I mean the main node, with 'compatible' property).
+
+And generally speaking, if struct of_endpoint is needed, maybe it would
+be better to return the struct of_endpoint when iterating the ports and
+endpoints. That way there's no need to do parsing "afterwards", trying
+to figure out if there's a parent port node, but the information is
+already at hand.
+
+> +
+> +	of_node_put(port_node);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(of_graph_parse_endpoint);
+> +
+> +/**
+>   * of_graph_get_next_endpoint() - get next endpoint node
+>   * @parent: pointer to the parent device node
+>   * @prev: previous endpoint node, or NULL to get first
+> diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
+> index 3bbeb60..2b233db 100644
+> --- a/include/linux/of_graph.h
+> +++ b/include/linux/of_graph.h
+> @@ -14,7 +14,21 @@
+>  #ifndef __LINUX_OF_GRAPH_H
+>  #define __LINUX_OF_GRAPH_H
+> =20
+> +/**
+> + * struct of_endpoint - the OF graph endpoint data structure
+> + * @port: identifier (value of reg property) of a port this endpoint b=
+elongs to
+> + * @id: identifier (value of reg property) of this endpoint
+> + * @local_node: pointer to device_node of this endpoint
+> + */
+> +struct of_endpoint {
+> +	unsigned int port;
+> +	unsigned int id;
+> +	const struct device_node *local_node;
+> +};
+
+A few thoughts about the iteration, and the API in general.
+
+In the omapdss version I separated iterating ports and endpoints, for
+the two reasons:
+
+1) I think there are cases where you may want to have properties in the
+port node, for things that are common for all the port's endpoints.
+
+2) if there are multiple ports, I think the driver code is cleaner if
+you first take the port, decide what port that is and maybe call a
+sub-function, and then iterate the endpoints for that port only.
+
+Both of those are possible with the API in the series, but not very clean=
+ly.
+
+Also, if you just want to iterate the endpoints, it's easy to implement
+a helper using the separate port and endpoint iterations.
+
+
+Then, about the get_remote functions: I think there should be only one
+function for that purpose, one that returns the device node that
+contains the remote endpoint.
+
+My reasoning is that the ports and endpoints, and their contents, should
+be private to the device. So the only use to get the remote is to get
+the actual device, to see if it's been probed, or maybe get some video
+API for that device.
+
+If the driver model used has some kind of master-driver, which goes
+through all the display entities, I think the above is still valid. When
+the master-driver follows the remote-link, it still needs to first get
+the main device node, as the ports and endpoints make no sense without
+the context of the main device node.
+
+ Tomi
+
+
+
+--W1QClLt3nmoU3v6nhl8j8kClSe3Q5JPLF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJTFZWrAAoJEPo9qoy8lh71ZqkQAIWQ3Rp4oBW8B1BfNm03QPeR
+1k7Z/xKVLox4L73LlV8SvcvtvMtKf7MWoHNISAbv9LJigcoea9y5KXvquOBKp7ll
+8HrL7BSpka2hI08OdSbN1Vr/OGa1CDSMQi2XQdQOxKePvfnpt4nky3WJ7/+JmZBG
+oguaSa6VjKVjfsZhSkDfiM0ctJAYQWsYa6vDOgEtbP67H7FXqJXsnvojYCDHUlpU
+uZ6teeIbfKVeqH2OiV5sJXmxJXs9VfmBscr5FfOgadYpzSHXmdKpI6LxncY6WSCp
+e/AESz3RYoRkqpiu/PA558Z15WKHREQE2MuL7eYlhm0nPp01bz+ovEr2EYbmz/wV
+7BvApIsJdf3c82WtuNNuFVN1qrQha79ojgMmNNfVHtDrYwshQylTh7eaKU9FsshQ
+ExRXw2/RejmUyV1+w3uIxhJpKpNL5P3UmS0eZLtmEGwvhs7ftbI8gp543GauFCdX
+dCsyJe+6C5ijOeOmwWnu2qd3WmAfiMB4/SVP/jr+V27Nldd0YaiM/HcatIMSEQeI
+eqReKC9c6grUhQzuuK+xq1/HT7Pp+ZwR8KTwGoqPc1A7wIvCztprUWtZjpYy7Cc/
+ZL60y28W21bT0k3L4pf02APdtn8XgZwMXt0BDV95X/J+ozWW6ViJ+n8KduOhSDoc
+WFQ0DKJPQ4BsZjopyKpw
+=vWYR
+-----END PGP SIGNATURE-----
+
+--W1QClLt3nmoU3v6nhl8j8kClSe3Q5JPLF--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
