@@ -1,78 +1,61 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v2 03/13] phy: omap-control: update dra7 and am437 usb2
- bindings
-Date: Thu, 6 Mar 2014 21:11:54 +0530
-Message-ID: <53189742.3060705@ti.com>
-References: <1394116729-28811-1-git-send-email-rogerq@ti.com>
- <1394116729-28811-4-git-send-email-rogerq@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 3/3] arm64: Add architecture support for PCI
+Date: Tue, 4 Mar 2014 23:28:51 +0100
+Message-ID: <201403042328.51361.arnd@arndb.de>
+References: <1393948216-11599-1-git-send-email-Liviu.Dudau@arm.com> <1393948216-11599-4-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1394116729-28811-4-git-send-email-rogerq@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Roger Quadros <rogerq@ti.com>, tony@atomide.com, balbi@ti.com
-Cc: devicetree@vger.kernel.org, george.cherian@ti.com, balajitk@ti.com, linux-ide@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, hdegoede@redhat.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1393948216-11599-4-git-send-email-Liviu.Dudau@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Felipe,
+On Tuesday 04 March 2014, Liviu Dudau wrote:
 
-On Thursday 06 March 2014 08:08 PM, Roger Quadros wrote:
-> The dra7-usb2 and am437-usb2 bindings have not yet been used.
-> Change them to be more elegant.
->
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
->   Documentation/devicetree/bindings/phy/ti-phy.txt | 4 ++--
+> +extern int isa_dma_bridge_buggy;
 
-Here too..
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+As commented before, I still think we can hardcode this to off
 
-Regards
-Kishon
->   drivers/phy/phy-omap-control.c                   | 4 ++--
->   2 files changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
-> index 5c5b1b0..28e674b 100644
-> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
-> @@ -9,9 +9,9 @@ Required properties:
->                           e.g. USB2_PHY on OMAP5.
->    "ti,control-phy-pipe3" - if it has DPLL and individual Rx & Tx power control
->                           e.g. USB3 PHY and SATA PHY on OMAP5.
-> - "ti,control-phy-dra7usb2" - if it has power down register like USB2 PHY on
-> + "ti,control-phy-dra7-usb2" - if it has power down register like USB2 PHY on
->                           DRA7 platform.
-> - "ti,control-phy-am437usb2" - if it has power down register like USB2 PHY on
-> + "ti,control-phy-am437-usb2" - if it has power down register like USB2 PHY on
->                           AM437 platform.
->    - reg : Address and length of the register set for the device. It contains
->      the address of "otghs_control" for control-phy-otghs or "power" register
-> diff --git a/drivers/phy/phy-omap-control.c b/drivers/phy/phy-omap-control.c
-> index 17fc200..a7e2d7f 100644
-> --- a/drivers/phy/phy-omap-control.c
-> +++ b/drivers/phy/phy-omap-control.c
-> @@ -228,11 +228,11 @@ static const struct of_device_id omap_control_phy_id_table[] = {
->   		.data = &pipe3_data,
->   	},
->   	{
-> -		.compatible = "ti,control-phy-dra7usb2",
-> +		.compatible = "ti,control-phy-dra7-usb2",
->   		.data = &dra7usb2_data,
->   	},
->   	{
-> -		.compatible = "ti,control-phy-am437usb2",
-> +		.compatible = "ti,control-phy-am437-usb2",
->   		.data = &am437usb2_data,
->   	},
->   	{},
->
+> +unsigned long pci_address_to_pio(phys_addr_t address)
+> +{
+> +	struct ioresource *res;
+> +
+> +	list_for_each_entry(res, &io_list, list) {
+> +		if (address >= res->start &&
+> +			address < res->start + res->size) {
+> +			return res->start - address;
+> +		}
+> +	}
+> +
+> +	return (unsigned long)-1;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_address_to_pio);
+
+This has two problems:
+
+- You return the address in bus space not the logical Linux
+  port number as powerpc and microblaze do.
+- You imply that the window starts at bus address zero, which
+  might not be the case.
+
+> +EXPORT_SYMBOL(pcibios_fixup_bus);
+
+no need for this export.
+
+> +/*
+> + * We don't have to worry about legacy ISA devices, so nothing to do here
+> + */
+> +resource_size_t pcibios_align_resource(void *data, const struct resource *res,
+> +				resource_size_t size, resource_size_t align)
+> +{
+> +	return ALIGN(res->start, align);
+> +}
+> +EXPORT_SYMBOL(pcibios_align_resource);
+
+or this one. Also, the ALIGN() is already done by the PCI core.
+
+	Arnd
