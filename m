@@ -1,129 +1,55 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [RFC PATCH v4 3/8] staging: imx-drm: Document updated imx-drm
-	device tree bindings
-Date: Tue, 04 Mar 2014 14:47:12 +0100
-Message-ID: <1393940832.3917.84.camel@paszta.hi.pengutronix.de>
-References: <1393338203-25051-1-git-send-email-p.zabel@pengutronix.de>
-	<1393338203-25051-4-git-send-email-p.zabel@pengutronix.de>
-	<530F1C4C.2010504@ti.com>
-	<1393506385.4507.49.camel@paszta.hi.pengutronix.de>
-	<20140227130020.GJ21483@n2100.arm.linux.org.uk> <530F43B9.800@ti.com>
-	<1393520088.4507.92.camel@paszta.hi.pengutronix.de>
-	<53103C72.5030509@ti.com>
+From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 0/4] AM43xx-ePOS-EVM audio support with TLV320AIC31XX driver
+Date: Tue, 4 Mar 2014 15:54:48 +0200
+Message-ID: <cover.1393941102.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <53103C72.5030509@ti.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces@lists.freedesktop.org
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, detheridge-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomi,
+Since the RFC version of the patches [1] I have addressed Mark Browns
+comments [2] as described in my mail here [3].
 
-Am Freitag, den 28.02.2014, 09:36 +0200 schrieb Tomi Valkeinen:
-> On 27/02/14 18:54, Philipp Zabel wrote:
-> 
-> >> - One IPU enabled, one disabled: nothing special here, just set the
-> >> other IPU to status="disabled" in the DT data. The driver for the
-> >> enabled IPU would register the required DRM entities.
-> > 
-> > that should work. Let the enabled IPU create the imx-drm platform device
-> > on probe, parse the device tree and ignore everything only hanging off
-> > of the disabled IPU.
-> 
-> I think you misunderstood me a bit.
-> 
-> What I meant is that there's no need for imx-drm device at all, neither
-> in the DT data or in the kernel side.
+Besr regards,
+Jyri
 
-agreed about the DT node. But the drm_device must be associated with a
-struct device. There is no reason to have the device representing the
-whole display subsystem hang off of one IPU over the other, and I'd
-rather not special case the IPU code with master/slave cases.
+[1] http://mailman.alsa-project.org/pipermail/alsa-devel/2014-February/073289.html
 
-> There'd just be the DT nodes for the IPUs, which would cause the IPU
-> platform devices to be created, and a driver for the IPU. So just like
-> for any other normal platform device.
+[2] http://mailman.alsa-project.org/pipermail/alsa-devel/2014-March/073703.html
+    http://mailman.alsa-project.org/pipermail/alsa-devel/2014-March/073704.html
+    http://mailman.alsa-project.org/pipermail/alsa-devel/2014-March/073705.html
+    
+[3] http://mailman.alsa-project.org/pipermail/alsa-devel/2014-March/073807.html
 
-Except that one IPU has to create the drm_device and the other needs to
-be drm_device-less.
+Jyri Sarha (4):
+  ASoC: tlv320aic31xx: Add basic codec driver implementation
+  ASoC: davinci-evm: Add AM43xx-EPOS-EVM audio support
+  ASoC: davinci: Add SND_AM43XX_SOC_EPOS_EVM build option
+  ASoC: tlv320aic32x4: Sort Makefile in alphabetic order
 
-> In the simplest cases, where only one IPU is enabled, or the IPUs want
-> to be considered as totally independent, there'd be nothing special. The
-> IPU driver would just register the drm entities.
+ .../bindings/sound/davinci-evm-audio.txt           |    9 +-
+ .../devicetree/bindings/sound/tlv320aic31xx.txt    |   58 +
+ include/dt-bindings/sound/tlv320aic31xx-micbias.h  |    9 +
+ sound/soc/codecs/Kconfig                           |    4 +
+ sound/soc/codecs/Makefile                          |    6 +-
+ sound/soc/codecs/tlv320aic31xx.c                   | 1345 ++++++++++++++++++++
+ sound/soc/codecs/tlv320aic31xx.h                   |  258 ++++
+ sound/soc/davinci/Kconfig                          |   12 +
+ sound/soc/davinci/Makefile                         |    1 +
+ sound/soc/davinci/davinci-evm.c                    |   41 +
+ 10 files changed, 1738 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/tlv320aic31xx.txt
+ create mode 100644 include/dt-bindings/sound/tlv320aic31xx-micbias.h
+ create mode 100644 sound/soc/codecs/tlv320aic31xx.c
+ create mode 100644 sound/soc/codecs/tlv320aic31xx.h
 
-[...]
-> Here the slave IPU doesn't need to scan the graph at all. It just needs
-> to make itself available somehow to the master. Maybe just by exported
-> functions, or registering itself somewhere.
->
-> Only the master IPU will scan the graph, and as all the entities are
-> connected to the same graph, including the slave IPU, the master can
-> find all the relevant nodes.
+-- 
+1.7.9.5
 
-Somehow it needs to know whether it should create the component master
-and drm_device, or just register as a slave component. I'd strongly
-prefer to have a look at the graph over giving explicit "master;" or
-"slave;" properties to the IPU device nodes for this single
-Linux-specific reason.
-
-[...]
-> And I don't even know if the master-slave method I described is valid,
-> although I don't see why it would not work. The master
-> "display-subsystem" DT node does make sense to me in cases like this,
-> where the IPUs need to be driven as a single unit.
-
-which is a sensible default for i.MX6.
-
-> > Did anybody propose such a generic term? How about:
-> > 
-> > -imx-drm {
-> > -	compatible = "fsl,imx-drm";
-> > -	ports = <&ipu1_di0>, <&ipu1_di1>;
-> > -};
-> > +display-subsystem {
-> > +	compatible = "fsl,imx-display-subsystem";
-> > +	ports = <&ipu1_di0>, <&ipu1_di1>;
-> > +};
-> 
-> That sounds fine to me.
-> 
-> I wonder how it works if, say, there are 4 IPUs, and you want to run
-> them in two pairs. In that case you need two of those display-subsystem
-> nodes. But I guess it's just a matter of assigning a number for them
-> with 'regs' property, and making sure the driver has nothing that
-> prevents multiple instances of it.
-
-Exactly. I'm not even sure it is necessary to assign a number.
-
-[...]
-> >> If that's not possible, then the drivers in question could have an
-> >> option to enable or disable themselves, passed via the kernel command
-> >> line, so that the user can select which subsystem to use.
-> > 
-> > That is the exact same problem as having multiple drivers that can bind
-> > to the same device.
-> 
-> Hmm, sorry? Weren't we just discussing about that problem =). Or maybe I
-> missed the original point from Russell, as the problem about DRM and
-> fbdev conflicting sounded a bit unrelated.
-
-I guess I missed it, though. Rereading the context, I am just
-(re)stating that this is a problem beyond DRM and fbdev. Compiling a
-kernel with two drivers binding to the same device, you effectively say
-"whichever binds first, I don't care". To change this, we'd need
-something similar to module blacklists for non-modular builds. I'd
-rather strive to remove the need for duplicate drivers in the kernel.
-
-regards
-Philipp
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
