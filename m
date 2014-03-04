@@ -1,101 +1,202 @@
-From: Tim Harvey <tharvey@gateworks.com>
-Subject: Re: [PATCH 0/7] PCI irq mapping fixes and cleanups
-Date: Mon, 3 Mar 2014 22:04:04 -0800
-Message-ID: <CAJ+vNU2rR0+-tW9Z6M_1NNOagDNCGYE71ifPj_WryYjvnFY=Pg@mail.gmail.com>
-References: <1393608523-17509-1-git-send-email-l.stach@pengutronix.de>
-	<CAJ+vNU2VN5haOU2GN5o7UUg9vgYh06pAhvDaoGw6EzTBEbD0mg@mail.gmail.com>
-	<20140301183059.GA6315@obsidianresearch.com>
-	<000601cf36b8$330b3a90$9921afb0$%han@samsung.com>
-	<CAJ+vNU3UL+LTWnoxW7scAig19=z2xoYCA-HZ6a7GUyGEXtKK9Q@mail.gmail.com>
-	<CAJ+vNU2ojt_o9=AOGfpbx6NCOE_kE6tsV8FvjoGYk9BBwP_OFQ@mail.gmail.com>
-	<20140304000102.GC5603@obsidianresearch.com>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH 2/3] soc: keystone: add QMSS driver
+Date: Tue, 4 Mar 2014 15:51:25 +0800
+Message-ID: <531585FD.5030607@ti.com>
+References: <1393629520-12713-1-git-send-email-santosh.shilimkar@ti.com>
+ <1393629520-12713-3-git-send-email-santosh.shilimkar@ti.com>
+ <1568CFCC-C778-4116-95F6-4EB407F096D6@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20140304000102.GC5603@obsidianresearch.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Richard Zhu <r65037@freescale.com>, Sascha Hauer <kernel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, linux-sh <linux-sh@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, Thierry Reding <thierry.reding@gmail.com>, Ben Dooks <ben-linux@fluff.org>, linux-tegra <linux-tegra@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1568CFCC-C778-4116-95F6-4EB407F096D6@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sandeep Nair <sandeep_n@ti.com>, linux-kernel@vger.kernel.org, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 3, 2014 at 4:01 PM, Jason Gunthorpe
-<jgunthorpe@obsidianresearch.com> wrote:
-> On Mon, Mar 03, 2014 at 03:40:43PM -0800, Tim Harvey wrote:
->
->> of_irq_parse_and_map_pci().  The GIC function that translates the
->> interrupt per domain is given irq_data: 0x123 0x04 0x00
->
-> This has been shifted by 1 byte..
->
->> IRQ 123, which should get 32 added to it for irq155).  Instead, the
->> implementation of gic_irq_domain_xlate()
->> (http://lxr.missinglinkelectronics.com/linux/drivers/irqchip/irq-gic.c#L832)
->> adds 32 to the 0x04 returning 20:
->> [    1.841781] of_irq_parse_raw:  /soc/pcie@0x01000000:00000001
->> [    1.841813] of_irq_parse_raw: ipar=/soc/pcie@0x01000000, size=1
->> [    1.841838]  -> addrsize=3
->> [    1.841870]  -> match=1 (imaplen=28)
->                               ^^^^^^^^^^^^^
->
-> That looks odd, it should be the number of dwords in the
-> interrupt-map, you have 4 lines of 8 dwords each, so it should be
-> 32.
+On Tuesday 04 March 2014 12:41 AM, Kumar Gala wrote:
+> =
 
-(+cc Grant Likely)
+> On Feb 28, 2014, at 5:18 PM, Santosh Shilimkar <santosh.shilimkar@ti.com>=
+ wrote:
+> =
 
-imaplen does indeed get initialized to 32 (size of interrupt-map /
-sizeof(u32)) but its printed above after its been decremented in the
-loop which is misleading
-(http://lxr.missinglinkelectronics.com/linux/drivers/of/irq.c#L201)
+>> From: Sandeep Nair <sandeep_n@ti.com>
+>>
+>> The QMSS (Queue Manager Sub System) found on Keystone SOCs is one of
+>> the main hardware sub system which forms the backbone of the Keystone
+>> Multi-core Navigator. QMSS consist of queue managers, packed-data struct=
+ure
+>> processors(PDSP), linking RAM, descriptor pools and infrastructure
+>> Packet DMA.
+>>
+>> The Queue Manager is a hardware module that is responsible for accelerat=
+ing
+>> management of the packet queues. Packets are queued/de-queued by writing=
+ or
+>> reading descriptor address to a particular memory mapped location. The P=
+DSPs
+>> perform QMSS related functions like accumulation, QoS, or event manageme=
+nt.
+>> Linking RAM registers are used to link the descriptors which are stored =
+in
+>> descriptor RAM. Descriptor RAM is configurable as internal or external m=
+emory.
+>>
+>> The QMSS driver manages the PDSP setups, linking RAM regions,
+>> queue pool management (allocation, push, pop and notify) and descriptor
+>> pool management. The specifics on the device tree bindings for
+>> QMSS can be found in:
+>>        Documentation/devicetree/bindings/soc/keystone-qmss.txt
+>>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: Kumar Gala <galak@codeaurora.org>
+>> Cc: Olof Johansson <olof@lixom.net>
+>> Cc: Arnd Bergmann <arnd@arndb.de>
+>> Cc: Grant Likely <grant.likely@linaro.org>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Signed-off-by: Sandeep Nair <sandeep_n@ti.com>
+>> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+>> ---
+>> .../devicetree/bindings/soc/keystone-qmss.txt      |  209 +++
+>> drivers/Kconfig                                    |    2 +
+>> drivers/Makefile                                   |    3 +
+>> drivers/soc/Kconfig                                |    2 +
+>> drivers/soc/Makefile                               |    5 +
+>> drivers/soc/keystone/Kconfig                       |   15 +
+>> drivers/soc/keystone/Makefile                      |    5 +
+>> drivers/soc/keystone/qmss_acc.c                    |  591 ++++++++
+>> drivers/soc/keystone/qmss_queue.c                  | 1533 ++++++++++++++=
+++++++
+>> drivers/soc/keystone/qmss_queue.h                  |  236 +++
+> =
 
-The issue appears to me to be a bug in of_irq_parse_raw() which has
-been around since Graht's original commit:
-http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/of/irq.c?id=7dc2e1134a22dc242175d5321c0c9e97d16eb87b
+> So this should be drivers/soc/ti, much like we use vendor in drivers/net/=
+ethernet
+> =
 
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 9bcf2cf..8829197 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -237,11 +237,11 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle
-                        /* Check for malformed properties */
-                        if (WARN_ON(newaddrsize + newintsize > MAX_PHANDLE_ARGS)
-                                goto fail;
--                       if (imaplen < (newaddrsize + newintsize))
-+                       if (imaplen < newintsize)
-                                goto fail;
+Agree. I will change that.
 
--                       imap += newaddrsize + newintsize;
--                       imaplen -= newaddrsize + newintsize;
-+                       imap += newintsize;
-+                       imaplen -= newintsize;
+>> include/linux/soc/keystone_qmss.h                  |  390 +++++
+> =
 
-                        pr_debug(" -> imaplen=%d\n", imaplen);
-                }
+> include/linux/soc/ti/
+> =
 
-The issue is that the interrupt-map table point (imap) needs to be
-incremented over the parent unit interrupt specifier which is
-newintsize cells, not newaddrsize + newintsize cells.  The invalid
-calculation would cause the pointer to get mis-aligned and thus only
-the first interrupt entry would ever get properly checked for a match.
+>> 11 files changed, 2991 insertions(+)
+>> create mode 100644 Documentation/devicetree/bindings/soc/keystone-qmss.t=
+xt
+>> create mode 100644 drivers/soc/Makefile
+>> create mode 100644 drivers/soc/keystone/Kconfig
+>> create mode 100644 drivers/soc/keystone/Makefile
+>> create mode 100644 drivers/soc/keystone/qmss_acc.c
+>> create mode 100644 drivers/soc/keystone/qmss_queue.c
+>> create mode 100644 drivers/soc/keystone/qmss_queue.h
+>> create mode 100644 include/linux/soc/keystone_qmss.h
+> =
 
-It looks like of_irq_parse_raw() is only called from
-of_irq_parse_pci() which prior to Lucas' patch was only called from
-pci_read_irq_line() called from pcibios_setup_device() used in
-arch/arm/powerpc, so perhaps this function isn't widely used
-explaining why the bug was never caught.
+> [snip]
+> =
 
-I'll post a patch shortly with the above fix.
+>> diff --git a/drivers/Kconfig b/drivers/Kconfig
+>> index 37f955f..3220516 100644
+>> --- a/drivers/Kconfig
+>> +++ b/drivers/Kconfig
+>> @@ -146,6 +146,8 @@ source "drivers/remoteproc/Kconfig"
+>>
+>> source "drivers/rpmsg/Kconfig"
+>>
+>> +source "drivers/soc/Kconfig"
+>> +
+>> source "drivers/devfreq/Kconfig"
+>>
+>> source "drivers/extcon/Kconfig"
+>> diff --git a/drivers/Makefile b/drivers/Makefile
+>> index 0d8e2a4..0c22db8 100644
+>> --- a/drivers/Makefile
+>> +++ b/drivers/Makefile
+>> @@ -146,6 +146,9 @@ obj-$(CONFIG_IOMMU_SUPPORT)	+=3D iommu/
+>> obj-$(CONFIG_REMOTEPROC)	+=3D remoteproc/
+>> obj-$(CONFIG_RPMSG)		+=3D rpmsg/
+>>
+>> +# SOC specific drivers
+>> +obj-y				+=3D soc/
+>> +
+>> # Virtualization drivers
+>> obj-$(CONFIG_VIRT_DRIVERS)	+=3D virt/
+>> obj-$(CONFIG_HYPERV)		+=3D hv/
+>> diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
+>> index 2f9d7d0..59980bd 100644
+>> --- a/drivers/soc/Kconfig
+>> +++ b/drivers/soc/Kconfig
+>> @@ -1,3 +1,5 @@
+>> menu "SOC specific Drivers"
+>>
+>> +source "drivers/soc/keystone/Kconfig"
+>> +
+>> endmenu
+>> diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+>> new file mode 100644
+>> index 0000000..c5d141e
+>> --- /dev/null
+>> +++ b/drivers/soc/Makefile
+>> @@ -0,0 +1,5 @@
+>> +#
+>> +# Makefile for the Linux kernel SOC specific device drivers.
+>> +#
+>> +
+>> +obj-$(CONFIG_ARCH_KEYSTONE)		+=3D keystone/
+>> diff --git a/drivers/soc/keystone/Kconfig b/drivers/soc/keystone/Kconfig
+>> new file mode 100644
+>> index 0000000..0b3131b
+>> --- /dev/null
+>> +++ b/drivers/soc/keystone/Kconfig
+>> @@ -0,0 +1,15 @@
+>> +#
+>> +# TI Keystone Soc drivers
+>> +#
+>> +
+> =
 
-<snip>
+> We should have this be something like:
+> =
 
->> [    1.841972] irq_create_of_mapping: calling xlate for 123/4/0 3
->
-> And it is the wrong data.. 123/4/0 is
+> menuconfig SOC_TI
+> 	bool =93TI SoC support=94
+> 	=
 
-right - this is shifted because of the issue above.
+> =
 
-With the above patch Lucas' original patch now operates correctly to
-resolve the 4 legacy PCI interrupts required when using a P2P bridge
-on the IMX6.
+> if SOC_TI
+> =
 
-Tim
+>> +config KEYSTONE_QMSS
+>> +	tristate "Keystone Queue Manager Sub System"
+>> +	depends on ARCH_KEYSTONE
+>> +	help
+>> +	  Say y here to support the Keystone Hardware Queue Manager support.
+>> +	  The Queue Manager is a hardware module that is responsible for
+>> +	  accelerating management of the packet queues. Packets are queued/
+>> +	  de-queued by writing/reading descriptor address to a particular
+>> +	  memory mapped location in the Queue Manager module.
+>> +
+>> +	  If unsure, say N.
+> =
+
+> endif # SOC_TI
+> =
+
+Make sense.Will update the patch accordingly.
+
+Regards,
+Santosh
