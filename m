@@ -1,104 +1,78 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [RFC PATCH v2 19/21] ARM: dts: exynos5250-arndale: add dsi and
- panel nodes
-Date: Tue, 4 Mar 2014 14:40:17 +0200
-Message-ID: <5315C9B1.5030401@ti.com>
-References: <1392204688-4591-1-git-send-email-a.hajda@samsung.com> <1392204688-4591-20-git-send-email-a.hajda@samsung.com> <53108FA0.4040903@ti.com> <53109193.3000604@ti.com> <5315C07B.3090705@samsung.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 3/9] Doc/DT: Add DT binding documentation for DVI Connector
+Date: Tue, 4 Mar 2014 13:54:54 +0100
+Message-ID: <20140304125454.GZ17001@phenom.ffwll.local>
+References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
+	<1393590016-9361-4-git-send-email-tomi.valkeinen@ti.com>
+	<20140228155937.GQ21483@n2100.arm.linux.org.uk>
+	<5310B567.7040605@ti.com>
+	<20140228162327.GT21483@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="G28D5tb5matwX7cCe7aVxeN40J6k9WwAt"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5315C07B.3090705@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>, dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Sean Paul <seanpaul@chromium.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20140228162327.GT21483@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces@lists.freedesktop.org
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Andrzej Hajda <a.hajda@samsung.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
---G28D5tb5matwX7cCe7aVxeN40J6k9WwAt
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Fri, Feb 28, 2014 at 04:23:27PM +0000, Russell King - ARM Linux wrote:
+> On Fri, Feb 28, 2014 at 06:12:23PM +0200, Tomi Valkeinen wrote:
+> > On 28/02/14 17:59, Russell King - ARM Linux wrote:
+> > 
+> > >> +dvi0: connector@0 {
+> > >> +	compatible = "dvi-connector";
+> > >> +	label = "dvi";
+> > >> +
+> > >> +	i2c-bus = <&i2c3>;
+> > >> +
+> > >> +	dvi_connector_in: endpoint {
+> > >> +		remote-endpoint = <&tfp410_out>;
+> > >> +	};
+> > >> +};
+> > > 
+> > > This looks far too simplistic.  There are different classes of DVI
+> > > connector - there is:
+> > > 
+> > > DVI A - analogue only
+> > > DVI D - digital only (single and dual link)
+> > > DVI I - both (single and dual digital link)
+> > > 
+> > > DRM at least makes a distinction between these three classes, and this
+> > > disctinction is part of the user API.  How would a display system know
+> > > which kind of DVI connector is wired up on the board from this DT
+> > > description?
+> > 
+> > Yes, I think that's a valid change. But do we also need to specify
+> > single/dual link, in addition to the three types?
+> 
+> I would argue that as it's a difference in physical hardware, then it
+> should be described in DT, even if we don't use it.  The reasoning is
+> that although we may not use it today, we may need to use it in the
+> future, and as we're describing what the hardware actually is - and
+> even in this case what pins may be present or missing on the connector,
+> it's unlikely to be problematical (the only problem is when someone
+> omits it...)
 
-On 04/03/14 14:00, Andrzej Hajda wrote:
+If you plug a dual-link dvi screen into a soc which can do dual-link but
+the actual connector is cheap and doesn't have this wired up
+(differentiate wtf) then the kernel needs to know. Otherwise it can't
+correctly filter out the modes with dotclocks high enough to require dual
+link and the user will look at a black screen.
 
-> I have made video path binding optional, in case of video bus
-> if the specific video path is not present driver uses the bus it is
-> connected to.
-> In case DSI panel is controlled via different bus the path should be
-> specified
-> explicitly.
->=20
-> I have no strong feelings against making this binding required but as
-> you have
-> stated above "in this case it's obvious" and for me quite redundant.
-
-Yes, it's a good point. I didn't realize they were optional, I thought
-they were not defined at all. I hadn't even thought that they could be
-optional, I guess because in my uses there's always a reason to have
-them. Even for a simple DSI command mode panel, I have information in
-the DSI master's endpoint:
-
-dsi {
-	...
-
-	dsi1_out_ep: endpoint {
-		remote-endpoint =3D <&lcd0_in>;
-		lanes =3D <0 1 2 3 4 5>;
-	};
-};
-
-which forces to use an endpoint in the panel also.
-
-And, actually, I think in your case also you would need an endpoint for
-the dsi master, if you wanted to support multiple endpoints. You
-currently have, for example, PLL clock freq as the DSI master's
-property, but it should really be a property of the DSI master's endpoint=
-=2E
-
-I.e. if you have two DSI panels connected to the same DSI master, in a
-way that only one can be enabled at a time (there would probably be a
-mux to select where the DSI lanes go, we have that on some development
-boards), you could well need different clock frequencies for the panels.
-
-> What is the gain in specifying explicitly video paths in such cases?
-
-- Until we (everyone interested in this) have thought about it fully and
-agreed that video paths in cases like this are optional, you would be
-safer to specify them explicitly. That way your bindings are valid in
-either case.
-
-- Uniformity. If in most cases we need to specify the video paths,
-either because the control path is different than the data path, or
-because there is need for endpoint specific information, having video
-paths as optional for some specific cases may needlessly complicate the
-code.
-
- Tomi
-
-
-
---G28D5tb5matwX7cCe7aVxeN40J6k9WwAt
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJTFcmxAAoJEPo9qoy8lh71yhoP/RCWKmi6QTB4F9xFMRkjwqOH
-uKfszgIm6SCLHREFguS1n/ddIGmwUpj5VIe7nbNPjKhy1aYeXis6FGZzStdzG/TJ
-FwQZK8UnfoKX1wmqRcWPUs6OWfNtXyHMRHNgJFteT3LUvU/UUBfGwIBmu4/k1oNs
-dl7oAXZriANHl7ZJp0mbn55nxIom1UkFEwxd+F9e7PbW9LimJv1IT6Hr9DWVHFjs
-S06Zruy8RXNtkcDlu22w6XpfY60djh/7tgFNEHwYrFMEg4Lmab5KTTPTh94mtTwc
-gml1h+FRo5eKUGunxW+esX0Zenfl0UmbVDohSm7n5bGaqNJPJpEM1juZUGnc68KW
-RT6ReM73XAf/3ImMgPpio1Dpz2CELqkzH+9yiYz+gxSlMbahlQsGdgOctqaTpFcb
-prw+eGnUEOaaEzRg72pke2oFuZc/GH2ioDclgAX31ufrValdLVwteZDk+0Hd8HIc
-7Zz6vI3ah1tc5VTkz9OhiUcpNQOd7bmRhO3BzZHhYlGh6MDpEa7Am3pn9S13an12
-6g4riDEtKWTembXh4vIDVRCn6M8B7OEoaLoaoKiUt6CDoFPp/zeKU6aOKfINeTuC
-NgUqhIf9xiCOX+waue4uEC9wZvPVQWMHEkDwUCk3rHM6R9yiSKD6vtlMbVr5fgpN
-y8KLFkTgrbsEz+9qlSr+
-=Lcl7
------END PGP SIGNATURE-----
-
---G28D5tb5matwX7cCe7aVxeN40J6k9WwAt--
+3.14 has a regression in drm/i915 where we've screwed this up ;-)
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
