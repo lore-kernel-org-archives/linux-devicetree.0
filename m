@@ -1,248 +1,66 @@
-From: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>
-Subject: RESEND [PATCH V9 2/2] ARM: dts: exynos5250: Enable ahci sata and sata phy
-Date: Tue,  4 Mar 2014 16:40:52 +0530
-Message-ID: <1393931452-18237-1-git-send-email-yuvaraj.cd@samsung.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: kishon@ti.com, kgene.kim@samsung.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: grant.likely@linaro.org, joshi@samsung.com, swarren@wwwdotorg.org, mark.rutland@arm.com, galak@codeaurora.org, jg1.han@samsung.com, ks.giri@samsung.com, b.zolnierkie@samsung.com, t.figa@samsung.com, christoffer.dall@linaro.com, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH v4 0/5] clk: exynos: add support for exynos5260 SoC
+Date: Tue, 04 Mar 2014 16:42:33 +0530
+Message-ID: <1393931558-23502-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mturquette@linaro.org, kgene.kim@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds dt entry for ahci sata controller and its
-corresponding phy controller.phy node has been added w.r.t
-new generic phy framework.
+From: Rahul Sharma <Rahul.Sharma@samsung.com>
 
-Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
----
- .../devicetree/bindings/ata/exynos-sata-phy.txt    |   14 --------
- .../devicetree/bindings/ata/exynos-sata.txt        |   25 +++++++++-----
- .../devicetree/bindings/phy/samsung-phy.txt        |   36 ++++++++++++++++++++
- arch/arm/boot/dts/exynos5250-arndale.dts           |   21 ++++++++++++
- arch/arm/boot/dts/exynos5250-smdk5250.dts          |   17 +++++----
- arch/arm/boot/dts/exynos5250.dtsi                  |   18 +++++++---
- 6 files changed, 98 insertions(+), 33 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
+Add clock support for exynos5260 SoC.
 
-diff --git a/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt b/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
-deleted file mode 100644
-index 37824fa..0000000
---- a/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
-+++ /dev/null
-@@ -1,14 +0,0 @@
--* Samsung SATA PHY Controller
--
--SATA PHY nodes are defined to describe on-chip SATA Physical layer controllers.
--Each SATA PHY controller should have its own node.
--
--Required properties:
--- compatible        : compatible list, contains "samsung,exynos5-sata-phy"
--- reg               : <registers mapping>
--
--Example:
--        sata@ffe07000 {
--                compatible = "samsung,exynos5-sata-phy";
--                reg = <0xffe07000 0x1000>;
--        };
-diff --git a/Documentation/devicetree/bindings/ata/exynos-sata.txt b/Documentation/devicetree/bindings/ata/exynos-sata.txt
-index 0849f10..b2adb1f 100644
---- a/Documentation/devicetree/bindings/ata/exynos-sata.txt
-+++ b/Documentation/devicetree/bindings/ata/exynos-sata.txt
-@@ -4,14 +4,21 @@ SATA nodes are defined to describe on-chip Serial ATA controllers.
- Each SATA controller should have its own node.
- 
- Required properties:
--- compatible        : compatible list, contains "samsung,exynos5-sata"
--- interrupts        : <interrupt mapping for SATA IRQ>
--- reg               : <registers mapping>
--- samsung,sata-freq : <frequency in MHz>
-+- compatible		: compatible list, contains "samsung,exynos5-sata"
-+- interrupts		: <interrupt mapping for SATA IRQ>
-+- reg			: <registers mapping>
-+- samsung,sata-freq	: <frequency in MHz>
-+- phys			: as mentioned in phy-bindings.txt
-+- phy-names		: as mentioned in phy-bindings.txt
- 
- Example:
--        sata@ffe08000 {
--                compatible = "samsung,exynos5-sata";
--                reg = <0xffe08000 0x1000>;
--                interrupts = <115>;
--        };
-+	sata@122f0000 {
-+		compatible = "snps,dwc-ahci";
-+		samsung,sata-freq = <66>;
-+		reg = <0x122f0000 0x1ff>;
-+		interrupts = <0 115 0>;
-+		clocks = <&clock 277>, <&clock 143>;
-+		clock-names = "sata", "sclk_sata";
-+		phys = <&sata_phy>;
-+		phy-names = "sata-phy";
-+	};
-diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-index c0fccaa..a937f75 100644
---- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-@@ -20,3 +20,39 @@ Required properties:
- - compatible : should be "samsung,exynos5250-dp-video-phy";
- - reg : offset and length of the Display Port PHY register set;
- - #phy-cells : from the generic PHY bindings, must be 0;
-+
-+Samsung SATA PHY Controller
-+---------------------------
-+
-+SATA PHY nodes are defined to describe on-chip SATA Physical layer controllers.
-+Each SATA PHY controller should have its own node.
-+
-+Required properties:
-+- compatible        : compatible list, contains "samsung,exynos5250-sata-phy"
-+- reg : offset and length of the SATA PHY register set;
-+- #phy-cells : from the generic phy bindings;
-+
-+Example:
-+	sata_phy: sata-phy@12170000 {
-+		compatible = "samsung,exynos5250-sata-phy";
-+		reg = <0x12170000 0x1ff>;
-+		clocks = <&clock 287>;
-+		clock-names = "sata_phyctrl";
-+		#phy-cells = <0>;
-+		samsung,exynos-sataphy-i2c-phandle = <&sata_phy_i2c>;
-+		samsung,syscon-phandle = <&pmu_syscon>;
-+	};
-+
-+Device-Tree bindings for sataphy i2c client driver
-+--------------------------------------------------
-+
-+Required properties:
-+compatible: Should be "samsung,exynos-sataphy-i2c"
-+- reg: I2C address of the sataphy i2c device.
-+
-+Example:
-+
-+	sata_phy_i2c:sata-phy@38 {
-+		compatible = "samsung,exynos-sataphy-i2c";
-+		reg = <0x38>;
-+	};
-diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
-index 38b96a4..97eef40 100644
---- a/arch/arm/boot/dts/exynos5250-arndale.dts
-+++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-@@ -375,6 +375,27 @@
- 		};
- 	};
- 
-+	i2c@121D0000 {
-+		status = "okay";
-+		samsung,i2c-sda-delay = <100>;
-+		samsung,i2c-max-bus-freq = <40000>;
-+		samsung,i2c-slave-addr = <0x38>;
-+
-+		sata_phy_i2c:sata-phy@38 {
-+			compatible = "samsung,exynos-sataphy-i2c";
-+			reg = <0x38>;
-+		};
-+	};
-+
-+	sata@122F0000 {
-+		status = "okay";
-+	};
-+
-+	sata-phy@12170000 {
-+		status = "okay";
-+		samsung,exynos-sataphy-i2c-phandle = <&sata_phy_i2c>;
-+	};
-+
- 	mmc_0: mmc@12200000 {
- 		status = "okay";
- 		num-slots = <1>;
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index f76946e..81782c1b 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -242,16 +242,12 @@
- 		samsung,i2c-slave-addr = <0x38>;
- 		status = "okay";
- 
--		sata-phy {
--			compatible = "samsung,sata-phy";
-+		sata_phy_i2c:sata-phy@38 {
-+			compatible = "samsung,exynos-sataphy-i2c";
- 			reg = <0x38>;
- 		};
- 	};
- 
--	sata@122F0000 {
--		samsung,sata-freq = <66>;
--	};
--
- 	i2c@12C80000 {
- 		samsung,i2c-sda-delay = <100>;
- 		samsung,i2c-max-bus-freq = <66000>;
-@@ -274,6 +270,15 @@
- 		};
- 	};
- 
-+	sata@122F0000 {
-+		status = "okay";
-+	};
-+
-+	sata-phy@12170000 {
-+		status = "okay";
-+		samsung,exynos-sataphy-i2c-phandle = <&sata_phy_i2c>;
-+	};
-+
- 	mmc@12200000 {
- 		status = "okay";
- 		num-slots = <1>;
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index 8f6300f..31f7cab 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -46,6 +46,7 @@
- 		i2c6 = &i2c_6;
- 		i2c7 = &i2c_7;
- 		i2c8 = &i2c_8;
-+		i2c9 = &i2c_9;
- 		pinctrl0 = &pinctrl_0;
- 		pinctrl1 = &pinctrl_1;
- 		pinctrl2 = &pinctrl_2;
-@@ -233,16 +234,25 @@
- 	};
- 
- 	sata@122F0000 {
--		compatible = "samsung,exynos5-sata-ahci";
-+		compatible = "snps,dwc-ahci";
-+		samsung,sata-freq = <66>;
- 		reg = <0x122F0000 0x1ff>;
- 		interrupts = <0 115 0>;
- 		clocks = <&clock 277>, <&clock 143>;
- 		clock-names = "sata", "sclk_sata";
-+		phys = <&sata_phy>;
-+		phy-names = "sata-phy";
-+		status = "disabled";
- 	};
- 
--	sata-phy@12170000 {
--		compatible = "samsung,exynos5-sata-phy";
-+	sata_phy: sata-phy@12170000 {
-+		compatible = "samsung,exynos5250-sata-phy";
- 		reg = <0x12170000 0x1ff>;
-+		clocks = <&clock 287>;
-+		clock-names = "sata_phyctrl";
-+		#phy-cells = <0>;
-+		samsung,syscon-phandle = <&pmu_system_controller>;
-+		status = "disabled";
- 	};
- 
- 	i2c_0: i2c@12C60000 {
-@@ -360,7 +370,7 @@
- 		status = "disabled";
- 	};
- 
--	i2c@121D0000 {
-+	i2c_9: i2c@121D0000 {
-                 compatible = "samsung,exynos5-sata-phy-i2c";
-                 reg = <0x121D0000 0x100>;
-                 #address-cells = <1>;
+This series is based on Kukjin's for-next and
+Mike's clk-next branches.
+
+V4:
+  1) Rework clock file as per Tomasz review comments at
+  	http://www.spinics.net/lists/arm-kernel/msg310116.html.
+
+V3:
+  1) Removed "samsung,exynos5260-clock" property from clock files.
+  2) Replaced "__SPIN_LOCK_UNLOCKED(lock)" with spin_lock_init.
+  3) Removed '(' and ')' around numeric constants in macros.
+
+V2:
+  1) Move suspend resume handling to Exynos5410 Clock file.
+  2) Removed Unused Macros and Condition checks for Exynos5260.
+  3) Add spin lock to clock provider context.
+  4) Add clock provider context for Exynos5410.
+  5) Uniform implementation for callbacks for PLL2550xx.
+  6) Split Exynos5260 clock file patch to bring it under 100 Kb limit.
+  7) Replace aclk/pclk/hclk gates with combined gates.
+  8) Remove CLK_IGNORE_UNUSED flag for gate clocks.
+Pankaj Dubey (1):
+  clk/samsung: add support for pll2550xx
+
+Rahul Sharma (4):
+  clk/samsung: add support for multiple clock providers
+  clk/samsung: add support for pll2650xx
+  clk/exynos5260: add macros and documentation for exynos5260
+  clk/exynos5260: add clock file for exynos5260
+
+ .../devicetree/bindings/clock/exynos5260-clock.txt |   55 +
+ drivers/clk/samsung/Makefile                       |    1 +
+ drivers/clk/samsung/clk-exynos4.c                  |   47 +-
+ drivers/clk/samsung/clk-exynos5250.c               |   25 +-
+ drivers/clk/samsung/clk-exynos5260.c               | 1933 ++++++++++++++++++++
+ drivers/clk/samsung/clk-exynos5260.h               |  448 +++++
+ drivers/clk/samsung/clk-exynos5420.c               |   24 +-
+ drivers/clk/samsung/clk-exynos5440.c               |   18 +-
+ drivers/clk/samsung/clk-pll.c                      |  222 ++-
+ drivers/clk/samsung/clk-pll.h                      |    2 +
+ drivers/clk/samsung/clk-s3c64xx.c                  |   44 +-
+ drivers/clk/samsung/clk.c                          |  115 +-
+ drivers/clk/samsung/clk.h                          |   72 +-
+ include/dt-bindings/clk/exynos5260-clk.h           |  233 +++
+ 14 files changed, 3090 insertions(+), 149 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/exynos5260-clock.txt
+ create mode 100644 drivers/clk/samsung/clk-exynos5260.c
+ create mode 100644 drivers/clk/samsung/clk-exynos5260.h
+ create mode 100644 include/dt-bindings/clk/exynos5260-clk.h
+
 -- 
-1.7.10.4
-
+1.7.9.5
