@@ -1,42 +1,64 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/2] ARM: dts: Add support for OMAP4 Gumstix
- DuoVero/Parlor
-Date: Tue, 4 Mar 2014 10:17:31 -0800
-Message-ID: <20140304181731.GD17470@atomide.com>
-References: <1393261669-32039-1-git-send-email-florian.vaussard@epfl.ch>
- <1393261669-32039-2-git-send-email-florian.vaussard@epfl.ch>
- <5314549C.1030400@epfl.ch>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 01/11] base: power: Add generic OF-based power domain
+ look-up
+Date: Tue, 4 Mar 2014 10:23:10 -0800
+Message-ID: <20140304182310.GA9985@codeaurora.org>
+References: <1393862536-9842-1-git-send-email-tomasz.figa@gmail.com>
+ <1393862536-9842-2-git-send-email-tomasz.figa@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5314549C.1030400@epfl.ch>
-Sender: linux-omap-owner@vger.kernel.org
-To: Florian Vaussard <florian.vaussard@epfl.ch>
-Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, Ash Charles <ash@gumstix.com>
+In-Reply-To: <1393862536-9842-2-git-send-email-tomasz.figa@gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene.kim@samsung.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-* Florian Vaussard <florian.vaussard@epfl.ch> [140303 02:12]:
-> Hi Tony, Benoit,
-> 
-> On 02/24/2014 06:07 PM, Florian Vaussard wrote:
-> > Gumstix DuoVero is an OMAP4430-based Computer On Module.
-> > Parlor is one of the available expansion board.
-> > 
-> > Tested features:
-> > - GPMC ethernet
-> > - HSUSB2 and OTG
-> > - Audio out
-> > - WiFi and Bluetooth (w2cbw0015 SDIO module)
-> > - LED and button
-> > 
-> 
-> Can this patch go into 3.15? The other one (HDMI support) can wait for
-> the DSS support to be merged, but I would like to give to this DTS a
-> wider exposure to testing opportunities.
+On 03/03, Tomasz Figa wrote:
+> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> index dc127e5..006b455 100644
+> --- a/drivers/base/power/domain.c
+> +++ b/drivers/base/power/domain.c
+> @@ -3,12 +3,16 @@
+>   *
+>   * Copyright (C) 2011 Rafael J. Wysocki <rjw@sisk.pl>, Renesas Electronics Corp.
+>   *
+> + * Support for Device Tree based power domain providers:
+> + * Copyright (C) 2014 Tomasz Figa <tomasz.figa@gmail.com>
+> + *
+>   * This file is released under the GPLv2.
+>   */
+>  
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+>  #include <linux/io.h>
+> +#include <linux/platform_device.h>
 
-Thanks applying into omap-for-v3.15/dt.
+Is this still needed?
 
-Regards,
+>  #include <linux/pm_runtime.h>
+>  #include <linux/pm_domain.h>
+>  #include <linux/pm_qos.h>
+[...]
+> +
+> +/*
+> + * DEVICE<->DOMAIN BINDING USING DEVICE TREE LOOK-UP
+> + *
+> + * The code below registers a notifier for platform bus devices'
+> + * BUS_NOTIFY_BIND_DRIVER events and tries to attach devices to their power
+> + * domains by looking them up using Device Tree.
+> + *
+> + * Similarly in BUS_NOTIFY_UNBOUND_DRIVER the device is detached from its
+> + * domain, since it no longer supports runtime PM without any driver bound
+> + * to it.
 
-Tony
+This looks outdated.
+
+> + *
+> + * Both generic and legacy Samsung-specific DT bindings are supported to
+> + * keep backwards compatibility with existing DTBs.
+> + */
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
