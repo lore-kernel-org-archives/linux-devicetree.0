@@ -1,7 +1,7 @@
 From: Sebastian Reichel <sre@debian.org>
-Subject: [PATCHv2 8/9] iio: documentation: Add ABI documentation for *_mean_raw
-Date: Tue,  4 Mar 2014 23:05:50 +0100
-Message-ID: <1393970751-18157-9-git-send-email-sre@debian.org>
+Subject: [PATCHv2 6/9] Documentation: DT: Document twl4030-madc binding
+Date: Tue,  4 Mar 2014 23:05:48 +0100
+Message-ID: <1393970751-18157-7-git-send-email-sre@debian.org>
 References: <1393702365-26429-1-git-send-email-sre@debian.org>
  <1393970751-18157-1-git-send-email-sre@debian.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -11,32 +11,44 @@ To: Sebastian Reichel <sre@ring0.de>, Marek Belisko <marek@goldelico.com>, Jonat
 Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Sebastian Reichel <sre@debian.org>
 List-Id: devicetree@vger.kernel.org
 
-Add ABI documentation for in_*_mean_raw files, which are
-already supported and used in the kernel for some time.
+Add devicetree binding documentation for twl4030-madc
+analog digital converter.
 
 Signed-off-by: Sebastian Reichel <sre@debian.org>
 ---
- Documentation/ABI/testing/sysfs-bus-iio | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../devicetree/bindings/iio/adc/twl4030-madc.txt   | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/twl4030-madc.txt
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-index 6e02c50..58ba333 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio
-+++ b/Documentation/ABI/testing/sysfs-bus-iio
-@@ -210,6 +210,14 @@ Contact:	linux-iio@vger.kernel.org
- Description:
- 		Scaled humidity measurement in milli percent.
- 
-+What:		/sys/bus/iio/devices/iio:deviceX/in_X_mean_raw
-+KernelVersion:	3.5
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Averaged raw measurement from channel X. The number of values
-+		used for averaging is device specific. The converting rules for
-+		normal raw values also applies to the averaged raw values.
+diff --git a/Documentation/devicetree/bindings/iio/adc/twl4030-madc.txt b/Documentation/devicetree/bindings/iio/adc/twl4030-madc.txt
+new file mode 100644
+index 0000000..6bdd214
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/twl4030-madc.txt
+@@ -0,0 +1,24 @@
++* TWL4030 Monitoring Analog to Digital Converter (MADC)
 +
- What:		/sys/bus/iio/devices/iio:deviceX/in_accel_offset
- What:		/sys/bus/iio/devices/iio:deviceX/in_accel_x_offset
- What:		/sys/bus/iio/devices/iio:deviceX/in_accel_y_offset
++The MADC subsystem in the TWL4030 consists of a 10-bit ADC
++combined with a 16-input analog multiplexer.
++
++Required properties:
++  - compatible: Should contain "ti,twl4030-madc".
++  - interrupts: IRQ line for the MADC submodule.
++  - #io-channel-cells: Should be set to <1>.
++
++Optional properties:
++  - ti,system-uses-second-madc-irq: boolean, set if the second madc irq register
++				    should be used, which is intended to be used
++				    by Co-Processors (e.g. a modem).
++
++Example:
++
++&twl {
++	madc {
++		compatible = "ti,twl4030-madc";
++		interrupts = <3>;
++		#io-channel-cells = <1>;
++	};
++};
 -- 
 1.9.0
