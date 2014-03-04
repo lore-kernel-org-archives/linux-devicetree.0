@@ -1,51 +1,59 @@
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v5 3/7] of: Warn if of_graph_get_next_endpoint is called
- with the root node
-Date: Tue, 04 Mar 2014 11:12:13 +0100
-Message-ID: <1393927933.3917.4.camel@paszta.hi.pengutronix.de>
+Subject: Re: [PATCH v5 2/7] Documentation: of: Document graph bindings
+Date: Tue, 04 Mar 2014 11:16:55 +0100
+Message-ID: <1393928215.3917.6.camel@paszta.hi.pengutronix.de>
 References: <1393522540-22887-1-git-send-email-p.zabel@pengutronix.de>
-	 <1393522540-22887-4-git-send-email-p.zabel@pengutronix.de>
-	 <5310FB05.4000307@gmail.com>
+	 <1393522540-22887-3-git-send-email-p.zabel@pengutronix.de>
+	 <5310FAE8.5090305@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <5310FB05.4000307@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sylwester Nawrocki <snjw23@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5310FAE8.5090305@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
 Cc: Grant Likely <grant.likely@linaro.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 28.02.2014, 22:09 +0100 schrieb Sylwester Nawrocki:
-> On 02/27/2014 06:35 PM, Philipp Zabel wrote:
-> > If of_graph_get_next_endpoint is given a parentless node instead of an
-> > endpoint node, it is clearly a bug.
-> >
-> > Signed-off-by: Philipp Zabel<p.zabel@pengutronix.de>
-> > ---
-> >   drivers/of/base.c | 4 ++--
-> >   1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/of/base.c b/drivers/of/base.c
-> > index b2f223f..6e650cf 100644
-> > --- a/drivers/of/base.c
-> > +++ b/drivers/of/base.c
-> > @@ -2028,8 +2028,8 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
-> >   		of_node_put(node);
-> >   	} else {
-> >   		port = of_get_parent(prev);
-> > -		if (!port)
-> > -			/* Hm, has someone given us the root node ?... */
-> > +		if (WARN_ONCE(!port, "%s(): endpoint has no parent node\n",
-> > +			      __func__))
+Hi Sylwester,
+
+Am Freitag, den 28.02.2014, 22:08 +0100 schrieb Sylwester Nawrocki:
+> Hi Philipp,
 > 
-> Perhaps we can add more information to this error log, e.g.
->
-> 		if (WARN_ONCE(!port, "%s(): endpoint %s has no parent node\n",
-> 			      __func__, prev->full_name))
-> ?
+> Just couple minor comments...
 
-Yes, I'll include this change next time.
+Thanks, I'll fix all of those.
 
-thanks
+> On 02/27/2014 06:35 PM, Philipp Zabel wrote:
+> > The device tree graph bindings as used by V4L2 and documented in
+> > Documentation/device-tree/bindings/media/video-interfaces.txt contain
+> > generic parts that are not media specific but could be useful for any
+> > subsystem with data flow between multiple devices. This document
+> > describe the generic bindings.
+> 
+> s/describe/describes/
+
+[...]
+
+> > +These common bindings do not contain any information about the direction of
+> 
+> s/of/or/ ?
+
+[...]
+
+> > +device_1 {
+> > +        port {
+> > +                device_1_output: endpoint {
+> > +                        remote-endpoint =<&device_2_input>;
+> > +                };
+> > +        };
+> > +};
+> > +
+> > +device_1 {
+> 
+> s/device_1/device_2/
+> But it might be better to use dashes instead of underscores
+> for the node names.
+
+regards
 Philipp
