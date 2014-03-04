@@ -1,202 +1,48 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH 2/3] soc: keystone: add QMSS driver
-Date: Tue, 4 Mar 2014 15:51:25 +0800
-Message-ID: <531585FD.5030607@ti.com>
-References: <1393629520-12713-1-git-send-email-santosh.shilimkar@ti.com>
- <1393629520-12713-3-git-send-email-santosh.shilimkar@ti.com>
- <1568CFCC-C778-4116-95F6-4EB407F096D6@codeaurora.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V3 4/5] mfd: palmas: support IRQ inversion at the board
+ level
+Date: Tue, 4 Mar 2014 16:25:12 +0800
+Message-ID: <20140304082512.GF10579@lee--X1>
+References: <1393876300-3061-1-git-send-email-swarren@wwwdotorg.org>
+ <1393876300-3061-4-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1568CFCC-C778-4116-95F6-4EB407F096D6@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sandeep Nair <sandeep_n@ti.com>, linux-kernel@vger.kernel.org, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1393876300-3061-4-git-send-email-swarren@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Samuel Ortiz <sameo@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 04 March 2014 12:41 AM, Kumar Gala wrote:
-> =
+> From: Stephen Warren <swarren@nvidia.com>
+>=20
+> Implement the new DT property ti,irq-externally-inverted, and add an
+> equivalent platform data field to match. This allows the driver to
+> correctly automatically configure the IRQ output polarity when the bo=
+ard
+> or SoC contains an inverter between the Palmas IRQ output and IRQ
+> controller input.
+>=20
+> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+> ---
+> v3:
+> * Use an IRQD flag to represent the data, rather than a custom DT pro=
+perty.
+> v2:
+> * Split V1's patch 1/2 into separate patches 1/3 and 2/3.
+> ---
+>  drivers/mfd/palmas.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 
-> On Feb 28, 2014, at 5:18 PM, Santosh Shilimkar <santosh.shilimkar@ti.com>=
- wrote:
-> =
+Looks good to me. Let me know how you want to deal with this. I'm
+happy to create an immutable branch for everyone to pull from.
 
->> From: Sandeep Nair <sandeep_n@ti.com>
->>
->> The QMSS (Queue Manager Sub System) found on Keystone SOCs is one of
->> the main hardware sub system which forms the backbone of the Keystone
->> Multi-core Navigator. QMSS consist of queue managers, packed-data struct=
-ure
->> processors(PDSP), linking RAM, descriptor pools and infrastructure
->> Packet DMA.
->>
->> The Queue Manager is a hardware module that is responsible for accelerat=
-ing
->> management of the packet queues. Packets are queued/de-queued by writing=
- or
->> reading descriptor address to a particular memory mapped location. The P=
-DSPs
->> perform QMSS related functions like accumulation, QoS, or event manageme=
-nt.
->> Linking RAM registers are used to link the descriptors which are stored =
-in
->> descriptor RAM. Descriptor RAM is configurable as internal or external m=
-emory.
->>
->> The QMSS driver manages the PDSP setups, linking RAM regions,
->> queue pool management (allocation, push, pop and notify) and descriptor
->> pool management. The specifics on the device tree bindings for
->> QMSS can be found in:
->>        Documentation/devicetree/bindings/soc/keystone-qmss.txt
->>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: Kumar Gala <galak@codeaurora.org>
->> Cc: Olof Johansson <olof@lixom.net>
->> Cc: Arnd Bergmann <arnd@arndb.de>
->> Cc: Grant Likely <grant.likely@linaro.org>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Signed-off-by: Sandeep Nair <sandeep_n@ti.com>
->> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
->> ---
->> .../devicetree/bindings/soc/keystone-qmss.txt      |  209 +++
->> drivers/Kconfig                                    |    2 +
->> drivers/Makefile                                   |    3 +
->> drivers/soc/Kconfig                                |    2 +
->> drivers/soc/Makefile                               |    5 +
->> drivers/soc/keystone/Kconfig                       |   15 +
->> drivers/soc/keystone/Makefile                      |    5 +
->> drivers/soc/keystone/qmss_acc.c                    |  591 ++++++++
->> drivers/soc/keystone/qmss_queue.c                  | 1533 ++++++++++++++=
-++++++
->> drivers/soc/keystone/qmss_queue.h                  |  236 +++
-> =
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-> So this should be drivers/soc/ti, much like we use vendor in drivers/net/=
-ethernet
-> =
-
-Agree. I will change that.
-
->> include/linux/soc/keystone_qmss.h                  |  390 +++++
-> =
-
-> include/linux/soc/ti/
-> =
-
->> 11 files changed, 2991 insertions(+)
->> create mode 100644 Documentation/devicetree/bindings/soc/keystone-qmss.t=
-xt
->> create mode 100644 drivers/soc/Makefile
->> create mode 100644 drivers/soc/keystone/Kconfig
->> create mode 100644 drivers/soc/keystone/Makefile
->> create mode 100644 drivers/soc/keystone/qmss_acc.c
->> create mode 100644 drivers/soc/keystone/qmss_queue.c
->> create mode 100644 drivers/soc/keystone/qmss_queue.h
->> create mode 100644 include/linux/soc/keystone_qmss.h
-> =
-
-> [snip]
-> =
-
->> diff --git a/drivers/Kconfig b/drivers/Kconfig
->> index 37f955f..3220516 100644
->> --- a/drivers/Kconfig
->> +++ b/drivers/Kconfig
->> @@ -146,6 +146,8 @@ source "drivers/remoteproc/Kconfig"
->>
->> source "drivers/rpmsg/Kconfig"
->>
->> +source "drivers/soc/Kconfig"
->> +
->> source "drivers/devfreq/Kconfig"
->>
->> source "drivers/extcon/Kconfig"
->> diff --git a/drivers/Makefile b/drivers/Makefile
->> index 0d8e2a4..0c22db8 100644
->> --- a/drivers/Makefile
->> +++ b/drivers/Makefile
->> @@ -146,6 +146,9 @@ obj-$(CONFIG_IOMMU_SUPPORT)	+=3D iommu/
->> obj-$(CONFIG_REMOTEPROC)	+=3D remoteproc/
->> obj-$(CONFIG_RPMSG)		+=3D rpmsg/
->>
->> +# SOC specific drivers
->> +obj-y				+=3D soc/
->> +
->> # Virtualization drivers
->> obj-$(CONFIG_VIRT_DRIVERS)	+=3D virt/
->> obj-$(CONFIG_HYPERV)		+=3D hv/
->> diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
->> index 2f9d7d0..59980bd 100644
->> --- a/drivers/soc/Kconfig
->> +++ b/drivers/soc/Kconfig
->> @@ -1,3 +1,5 @@
->> menu "SOC specific Drivers"
->>
->> +source "drivers/soc/keystone/Kconfig"
->> +
->> endmenu
->> diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
->> new file mode 100644
->> index 0000000..c5d141e
->> --- /dev/null
->> +++ b/drivers/soc/Makefile
->> @@ -0,0 +1,5 @@
->> +#
->> +# Makefile for the Linux kernel SOC specific device drivers.
->> +#
->> +
->> +obj-$(CONFIG_ARCH_KEYSTONE)		+=3D keystone/
->> diff --git a/drivers/soc/keystone/Kconfig b/drivers/soc/keystone/Kconfig
->> new file mode 100644
->> index 0000000..0b3131b
->> --- /dev/null
->> +++ b/drivers/soc/keystone/Kconfig
->> @@ -0,0 +1,15 @@
->> +#
->> +# TI Keystone Soc drivers
->> +#
->> +
-> =
-
-> We should have this be something like:
-> =
-
-> menuconfig SOC_TI
-> 	bool =93TI SoC support=94
-> 	=
-
-> =
-
-> if SOC_TI
-> =
-
->> +config KEYSTONE_QMSS
->> +	tristate "Keystone Queue Manager Sub System"
->> +	depends on ARCH_KEYSTONE
->> +	help
->> +	  Say y here to support the Keystone Hardware Queue Manager support.
->> +	  The Queue Manager is a hardware module that is responsible for
->> +	  accelerating management of the packet queues. Packets are queued/
->> +	  de-queued by writing/reading descriptor address to a particular
->> +	  memory mapped location in the Queue Manager module.
->> +
->> +	  If unsure, say N.
-> =
-
-> endif # SOC_TI
-> =
-
-Make sense.Will update the patch accordingly.
-
-Regards,
-Santosh
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
