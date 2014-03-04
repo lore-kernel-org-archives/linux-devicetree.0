@@ -1,57 +1,67 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH v2 2/4] ASoC: davinci-evm: Add
- AM43xx-EPOS-EVM audio support
-Date: Tue, 04 Mar 2014 15:12:17 +0100
-Message-ID: <5315DF41.1090302@metafoo.de>
-References: <cover.1393941102.git.jsarha@ti.com>
- <39776dc2fc736ef92f58eac83bce52a11fbbd6c3.1393941102.git.jsarha@ti.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH 7/7] PCI: designware: split samsung and fsl bindings
+Date: Tue, 04 Mar 2014 15:13:03 +0100
+Message-ID: <1393942383.9405.8.camel@weser.hi.pengutronix.de>
+References: <1393608523-17509-1-git-send-email-l.stach@pengutronix.de>
+	 <1393608523-17509-8-git-send-email-l.stach@pengutronix.de>
+	 <201402282103.01897.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <39776dc2fc736ef92f58eac83bce52a11fbbd6c3.1393941102.git.jsarha@ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jyri Sarha <jsarha@ti.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, liam.r.girdwood@linux.intel.com, peter.ujfalusi@ti.com, detheridge@ti.com, broonie@kernel.org, bcousson@baylibre.com
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <201402282103.01897.arnd@arndb.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-sh@vger.kernel.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, Shawn Guo <shawn.guo@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Jingoo Han <jg1.han@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Tim Harvey <tharvey@gateworks.com>, Richard Zhu <r65037@freescale.com>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
+Am Freitag, den 28.02.2014, 21:03 +0100 schrieb Arnd Bergmann:
+> On Friday 28 February 2014, Lucas Stach wrote:
+> > +Required properties:
+> > +- compatible: "fsl,imx6q-pcie"
+> > +- reg: base addresse and length of the pcie controller
+> > +- interrupts: First entry must contain interrupt handle for controller
+> > +  INTA output.
+> 
+> I think this should be documented as "optional" and only for
+> backwards compatibility with old kernels.
+> 
+> > +- clocks: Must contain an entry for each entry in clock-names.
+> > +       See ../clocks/clock-bindings.txt for details.
+> > +- clock-names: Must include the following entries: 
+> > +       - "pcie_ref_125m"
+> > +       - "sata_ref_100m"
+> > +       - "lvds_gate"
+> > +       - "pcie_axi"
+> 
+> I don't understand why you have completely different clocks here
+> from the exynos documentation. The clock names should really be
+> the same. Also, why do you have a "sata_ref_100m" clock?
+> Is this just driving a device that happens to be on-board
+> for a specific machine? Same for the "lvds_gate".
+> 
 
-> +static const struct snd_soc_dapm_widget aic31xx_dapm_widgets[] = {
-> +	SND_SOC_DAPM_HP("Headphone Jack", NULL),
-> +	SND_SOC_DAPM_SPK("Speaker", NULL),
-> +	SND_SOC_DAPM_MIC("Mic Jack", NULL),
-> +};
-> +
-> +/* Logic for EVMs with an aic31xx */
-> +static int evm_aic31xx_init(struct snd_soc_pcm_runtime *rtd)
-> +{
-> +	struct snd_soc_codec *codec = rtd->codec;
-> +	struct snd_soc_dapm_context *dapm = &codec->dapm;
+Right, we should be able to reuse the clock names. Though I'm not really
+sure how the Samsung clocks maps to those used on i.MX, as the names are
+a bit generic. Maybe someone from Samsung could shed a bit of light on
+this.
 
-Machine level DAPM elements should go into the card's DAPM context, not the 
-CODEC context. Also use rtd->card to get a pointer to the card instead of 
-rtd->codec->card.
+On i.MX6 the clock names (which I have to agree are pretty bad) map as
+follows:
+pcie_axi: host controller main register/bus access clock
+pcie_ref_125m: pcie phy reference clock
 
-> +	struct device_node *np = codec->card->dev->of_node;
-> +	int ret;
-> +
-> +	snd_soc_dapm_new_controls(dapm, aic31xx_dapm_widgets,
-> +				  ARRAY_SIZE(aic31xx_dapm_widgets));
-> +
-> +	if (np) {
-> +		ret = snd_soc_of_parse_audio_routing(codec->card,
-> +						     "ti,audio-routing");
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
+sata_ref_100m: pcie bus 100MHz reference clock
+lvds_gate: bad abstraction. Decides if the reference clock is sourced
+internal (i.e. the 100MHz ref clock above) or from an SoC external
+source. We should really find a better way of representing this in the
+clock tree.
+
+Regards,
+Lucas
+
+-- 
+Pengutronix e.K.                           | Lucas Stach                 |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-5076 |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
