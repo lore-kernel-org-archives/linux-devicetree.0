@@ -1,48 +1,110 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V3 4/5] mfd: palmas: support IRQ inversion at the board
- level
-Date: Tue, 4 Mar 2014 16:25:12 +0800
-Message-ID: <20140304082512.GF10579@lee--X1>
-References: <1393876300-3061-1-git-send-email-swarren@wwwdotorg.org>
- <1393876300-3061-4-git-send-email-swarren@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1393876300-3061-4-git-send-email-swarren@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Samuel Ortiz <sameo@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2 2/2] of: fix of_update_property()
+Date: Tue, 04 Mar 2014 16:41:22 +0800
+Message-ID: <20140304084122.E3353C4308B@trevor.secretlab.ca>
+References: <1390370260-11273-1-git-send-email-Li.Xiubo@freescale.com> < 1390370260-11273-2-git-send-email-Li.Xiubo@freescale.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1390370260-11273-2-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> From: Stephen Warren <swarren@nvidia.com>
->=20
-> Implement the new DT property ti,irq-externally-inverted, and add an
-> equivalent platform data field to match. This allows the driver to
-> correctly automatically configure the IRQ output polarity when the bo=
-ard
-> or SoC contains an inverter between the Palmas IRQ output and IRQ
-> controller input.
->=20
-> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+On Wed, 22 Jan 2014 13:57:40 +0800, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> The of_update_property() is intented to update a property in a node
+> and if the property does not exist, will add it.
+> 
+> The second search of the property is possibly won't be found, that
+> maybe removed by other thread just before the second search begain.
+> 
+> Using the __of_find_property() and __of_add_property() instead and
+> move them into lock operations.
+> 
+> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Cc: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+
+I've had to revert this patch. See below...
+
 > ---
-> v3:
-> * Use an IRQD flag to represent the data, rather than a custom DT pro=
-perty.
-> v2:
-> * Split V1's patch 1/2 into separate patches 1/3 and 2/3.
-> ---
->  drivers/mfd/palmas.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>  drivers/of/base.c | 36 ++++++++++++++----------------------
+>  1 file changed, 14 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index b86b77a..458072d 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1573,7 +1573,7 @@ int of_update_property(struct device_node *np, struct property *newprop)
+>  {
+>  	struct property **next, *oldprop;
+>  	unsigned long flags;
+> -	int rc, found = 0;
+> +	int rc = 0;
+>  
+>  	rc = of_property_notify(OF_RECONFIG_UPDATE_PROPERTY, np, newprop);
+>  	if (rc)
+> @@ -1582,36 +1582,28 @@ int of_update_property(struct device_node *np, struct property *newprop)
+>  	if (!newprop->name)
+>  		return -EINVAL;
+>  
+> -	oldprop = of_find_property(np, newprop->name, NULL);
+> -	if (!oldprop)
+> -		return of_add_property(np, newprop);
+> -
+>  	raw_spin_lock_irqsave(&devtree_lock, flags);
+> -	next = &np->properties;
+> -	while (*next) {
+> -		if (*next == oldprop) {
+> -			/* found the node */
+> -			newprop->next = oldprop->next;
+> -			*next = newprop;
+> -			oldprop->next = np->deadprops;
+> -			np->deadprops = oldprop;
+> -			found = 1;
+> -			break;
+> -		}
+> -		next = &(*next)->next;
+> +	oldprop = __of_find_property(np, newprop->name, NULL);
+> +	if (!oldprop) {
+> +		/* add the node */
+> +		rc = __of_add_property(np, newprop);
+> +	} else {
+> +		/* replace the node */
+> +		next = &oldprop;
 
-Looks good to me. Let me know how you want to deal with this. I'm
-happy to create an immutable branch for everyone to pull from.
+Ugh. I just looked closer and the above line is completely broken.
+&oldprop is the address of 'oldprop' on the stack, *not* the address of
+the previous item in the list. The while loop is still required to find it.
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+g.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+> +		newprop->next = oldprop->next;
+> +		*next = newprop;
+> +		oldprop->next = np->deadprops;
+> +		np->deadprops = oldprop;
+>  	}
+>  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  
+> -	if (!found)
+> -		return -ENODEV;
+> -
+>  #ifdef CONFIG_PROC_DEVICETREE
+>  	/* try to add to proc as well if it was initialized */
+> -	if (np->pde)
+> +	if (!rc && np->pde)
+>  		proc_device_tree_update_prop(np->pde, newprop, oldprop);
+>  #endif /* CONFIG_PROC_DEVICETREE */
+>  
+> -	return 0;
+> +	return rc;
+>  }
+>  
+>  #if defined(CONFIG_OF_DYNAMIC)
+> -- 
+> 1.8.4
+> 
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
