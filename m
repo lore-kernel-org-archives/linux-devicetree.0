@@ -1,61 +1,67 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 01/12] phy: rename struct omap_control_usb to struct
- omap_control_phy
-Date: Tue, 4 Mar 2014 14:56:54 +0530
-Message-ID: <53159C5E.2040701@ti.com>
-References: <1393859254-10937-1-git-send-email-rogerq@ti.com>
- <1393859254-10937-2-git-send-email-rogerq@ti.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: Kirkwood: DT: Add missing vendor prefix
+Date: Tue, 4 Mar 2014 10:28:54 +0100
+Message-ID: <20140304092854.GI16655@lunn.ch>
+References: <1393773855-9592-1-git-send-email-andrew@lunn.ch>
+ <1393773855-9592-3-git-send-email-andrew@lunn.ch>
+ <20140304030522.GZ1872@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1393859254-10937-2-git-send-email-rogerq@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: devicetree@vger.kernel.org, george.cherian@ti.com, balajitk@ti.com, linux-ide@vger.kernel.org, tony@atomide.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, hdegoede@redhat.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140304030522.GZ1872-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Roger,
+On Mon, Mar 03, 2014 at 10:05:22PM -0500, Jason Cooper wrote:
+> Andrew,
+> 
+> Couple of stupid questions:
+> 
+>  - I haven't seen 0/1 nor 1/1 show up anywhere (dt, lakml, inbox), am I
+>    missing something?
 
-On Monday 03 March 2014 08:37 PM, Roger Quadros wrote:
-> From: Kishon Vijay Abraham I <kishon@ti.com>
->
-> Rename struct omap_control_usb to struct omap_control_phy since it can
-> be used to control PHY of USB, SATA and PCIE. Also move the driver and
-> include files under *phy* and made the corresponding changes in the users
-> of phy-omap-control.
->
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
->   drivers/phy/Kconfig                  |  14 +-
->   drivers/phy/Makefile                 |   1 +
->   drivers/phy/phy-omap-control.c       | 320 +++++++++++++++++++++++++++++++++++
->   drivers/phy/phy-omap-usb2.c          |   8 +-
->   drivers/phy/phy-ti-pipe3.c           |   8 +-
->   drivers/usb/musb/omap2430.c          |   2 +-
->   drivers/usb/phy/Kconfig              |  10 --
->   drivers/usb/phy/Makefile             |   1 -
->   drivers/usb/phy/phy-omap-control.c   | 319 ----------------------------------
->   include/linux/phy/omap_control_phy.h |  89 ++++++++++
->   include/linux/usb/omap_control_usb.h |  89 ----------
->   11 files changed, 431 insertions(+), 430 deletions(-)
->   create mode 100644 drivers/phy/phy-omap-control.c
->   delete mode 100644 drivers/usb/phy/phy-omap-control.c
->   create mode 100644 include/linux/phy/omap_control_phy.h
->   delete mode 100644 include/linux/usb/omap_control_usb.h
+Humm, i will check, and do a resend if needed.
 
-you can use git format-patch -M if a file is moved from one place to 
-another. The diff count will be less in that case and reviewing will be 
-easier ;-)
+ 
+> On Sun, Mar 02, 2014 at 04:24:15PM +0100, Andrew Lunn wrote:
+> > Add vendor prefixes to compatible strings where they are missing.
+> > 
+> > Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/kirkwood-b3.dts              | 2 +-
+> >  arch/arm/boot/dts/kirkwood-cloudbox.dts        | 2 +-
+> >  arch/arm/boot/dts/kirkwood-dreamplug.dts       | 2 +-
+> >  arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts | 2 +-
+> >  arch/arm/boot/dts/kirkwood-ns2-common.dtsi     | 2 +-
+> >  arch/arm/boot/dts/kirkwood-nsa310.dts          | 2 +-
+> >  arch/arm/boot/dts/kirkwood-nsa310a.dts         | 2 +-
+> >  arch/arm/boot/dts/kirkwood-openblocks_a6.dts   | 2 +-
+> >  arch/arm/boot/dts/kirkwood-openblocks_a7.dts   | 2 +-
+> >  9 files changed, 9 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/kirkwood-b3.dts b/arch/arm/boot/dts/kirkwood-b3.dts
+> > index 40791053106b..6becedebaa4e 100644
+> > --- a/arch/arm/boot/dts/kirkwood-b3.dts
+> > +++ b/arch/arm/boot/dts/kirkwood-b3.dts
+> > @@ -75,7 +75,7 @@
+> >  			m25p16@0 {
+> >  				#address-cells = <1>;
+> >  				#size-cells = <1>;
+> > -				compatible = "m25p16";
+> > +				compatible = "st,m25p16";
+> 
+> Have you checked that the drivers for each of these changes already
+> support the new compatible strings?
 
-Cheers
-Kishon
+I2c and MTD ignore the vendor string when performing matches. However,
+checkpatch.pl does not. It is also technically correct to have a
+vendor string.
+
+       Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
