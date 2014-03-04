@@ -1,78 +1,29 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v2 1/3] power_supply: modelgauge_battery: Maxim ModelGauge
- ICs gauge
-Date: Tue, 04 Mar 2014 13:05:48 +0100
-Message-ID: <1393934748.1222.10.camel@AMDC1943>
-References: <1391293385-27539-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1391293385-27539-2-git-send-email-vladimir.barinov@cogentembedded.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [RFC PATCH v2 14/21] ARM: dts: exynos4412-trats2: add panel node
+Date: Tue, 04 Mar 2014 13:07:44 +0100
+Message-ID: <5315C210.2010500@samsung.com>
+References: <1392204688-4591-1-git-send-email-a.hajda@samsung.com>
+ <1392204688-4591-15-git-send-email-a.hajda@samsung.com>
+ <53109016.2060105@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1391293385-27539-2-git-send-email-vladimir.barinov@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Cc: anton@enomsg.org, dwmw2@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mk7.kang@samsung.com, mark.rutland@arm.com
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <53109016.2060105@ti.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Sean Paul <seanpaul@chromium.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-And one more comment:
+On 02/28/2014 02:33 PM, Tomi Valkeinen wrote:
+> I have the same comment here as for the bridge chip: I would specify the
+> video ports/endpoints between DSI master and the panel, even if you
+> don't use them at the moment.
+>
+>  Tomi
+>
+>
+I have sent my answer in bridge chip subthread.
 
-On Sun, 2014-02-02 at 02:23 +0400, Vladimir Barinov wrote:
-> +static int modelgauge_get_property(struct power_supply *psy,
-> +				   enum power_supply_property psp,
-> +				   union power_supply_propval *val)
-> +{
-> +	struct modelgauge_priv *priv = container_of(psy,
-> +						    struct modelgauge_priv,
-> +						    battery);
-> +	struct regmap *regmap = priv->regmap;
-> +	struct modelgauge_platform_data *pdata = priv->pdata;
-> +	int reg;
-> +	int ret;
-> +
-> +	switch (psp) {
-> +	case POWER_SUPPLY_PROP_STATUS:
-> +		if (pdata && pdata->get_charging_status)
-> +			val->intval = pdata->get_charging_status();
-> +		else
-> +			val->intval = POWER_SUPPLY_STATUS_UNKNOWN;
-> +		break;
-> +	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-> +		ret = regmap_read(regmap, MODELGAUGE_VCELL_REG, &reg);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		val->intval = modelgauge_lsb_to_uvolts(priv, reg);
-> +		break;
-> +	case POWER_SUPPLY_PROP_VOLTAGE_OCV:
-> +		/* Unlock model access */
-> +		regmap_write(regmap, MODELGAUGE_UNLOCK_REG,
-> +			     MODELGAUGE_UNLOCK_VALUE);
-> +		ret = regmap_read(regmap, MODELGAUGE_OCV_REG, &reg);
-> +		/* Lock model access */
-> +		regmap_write(regmap, MODELGAUGE_UNLOCK_REG, 0);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		val->intval = modelgauge_lsb_to_uvolts(priv, reg);
-> +		break;
-> +	case POWER_SUPPLY_PROP_CAPACITY:
-> +		ret = regmap_read(regmap, MODELGAUGE_SOC_REG, &reg);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		val->intval = reg / (1 << priv->soc_shift);
-> +		break;
-> +	case POWER_SUPPLY_PROP_TEMP:
-> +		if (pdata && pdata->get_temperature)
-> +			val->intval = pdata->get_temperature();
-> +		else
-> +			val->intval = 25;
-
-If pdata->get_temperature() is not supplied then probably the driver
-should not support POWER_SUPPLY_PROP_TEMP at all. I think it is better
-not to report any temperature than to report a wrong one.
-
-
-Best regards,
-Krzysztof
+Regards
+Andrzej
