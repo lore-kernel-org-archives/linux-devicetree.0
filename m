@@ -1,87 +1,104 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v5 6/7] of: Implement simplified graph binding for single
- port devices
-Date: Tue, 4 Mar 2014 11:06:25 +0200
-Message-ID: <53159791.5080205@ti.com>
-References: <1393522540-22887-1-git-send-email-p.zabel@pengutronix.de> <1393522540-22887-7-git-send-email-p.zabel@pengutronix.de>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 02/12] phy: omap-control: Update DT binding information
+Date: Tue, 4 Mar 2014 11:14:07 +0200
+Message-ID: <5315995F.5050206@ti.com>
+References: <1393859254-10937-1-git-send-email-rogerq@ti.com>
+ <1393859254-10937-3-git-send-email-rogerq@ti.com>
+ <20140303190247.GD25804@atomide.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="B16kFDpUQI20mJFiGkPvPK6AL8dL5J5xT"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393522540-22887-7-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Grant Likely <grant.likely@linaro.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140303190247.GD25804@atomide.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, george.cherian@ti.com, balajitk@ti.com, linux-ide@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, kishon@ti.com, hdegoede@redhat.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---B16kFDpUQI20mJFiGkPvPK6AL8dL5J5xT
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Hi Tony,
 
-On 27/02/14 19:35, Philipp Zabel wrote:
-> For simple devices with only one port, it can be made implicit.
-> The endpoint node can be a direct child of the device node.
+On 03/03/2014 09:02 PM, Tony Lindgren wrote:
+> * Roger Quadros <rogerq@ti.com> [140303 07:10]:
+>> Move omap-control binding information to the right location.
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> ---
+>>  Documentation/devicetree/bindings/phy/ti-phy.txt   | 25 ++++++++++++++++++++++
+>>  Documentation/devicetree/bindings/usb/omap-usb.txt | 24 ---------------------
+>>  2 files changed, 25 insertions(+), 24 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
+>> index 207e14c..41dc132 100644
+>> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
+>> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
+>> @@ -1,5 +1,30 @@
+>>  TI PHY: DT DOCUMENTATION FOR PHYs in TI PLATFORMs
+>>  
+>> +OMAP CONTROL PHY
+>> +
+>> +Required properties:
+>> + - compatible: Should be one of
+>> + "ti,control-phy-otghs" - if it has otghs_control mailbox register as on OMAP4.
+>> + "ti,control-phy-usb2" - if it has Power down bit in control_dev_conf register
+>> +                        e.g. USB2_PHY on OMAP5.
+>> + "ti,control-phy-pipe3" - if it has DPLL and individual Rx & Tx power control
+>> +                        e.g. USB3 PHY and SATA PHY on OMAP5.
+>> + "ti,control-phy-dra7usb2" - if it has power down register like USB2 PHY on
+>> +                        DRA7 platform.
+>> + "ti,control-phy-am437usb2" - if it has power down register like USB2 PHY on
+>> +                        AM437 platform.
+> 
+> To me it seems that you can leave out all the above. You can set these falgs
+> flags directly in the driver based on the compatible flag. Then just initialize
+> the .data in the driver based on the compatible flag.
 
-<snip>
+I'm not sure if I got you. A single platform can have different type of phys.
 
-> @@ -2105,9 +2112,11 @@ struct device_node *of_graph_get_remote_port_par=
-ent(
->  	/* Get remote endpoint node. */
->  	np =3D of_parse_phandle(node, "remote-endpoint", 0);
-> =20
-> -	/* Walk 3 levels up only if there is 'ports' node. */
-> +	/* Walk 3 levels up only if there is 'ports' node */
->  	for (depth =3D 3; depth && np; depth--) {
->  		np =3D of_get_next_parent(np);
-> +		if (depth =3D=3D 3 && of_node_cmp(np->name, "port"))
-> +			break;
->  		if (depth =3D=3D 2 && of_node_cmp(np->name, "ports"))
->  			break;
->  	}
+e.g. OMAP5 has both usb2 and pipe3 PHYs,
+DRA7 has both pipe3 and usb2 PHYs, but this usb2 PHY is not compatible with OMAP5 one
+so we need a new compatible id for that.
 
-This function becomes a bit funny. Would it be clearer just to do
-something like:
+To add to the woes, the designers were creative enough to make another mutation to
+the USB2 PHY for AM437x, :(
 
-	np =3D of_parse_phandle(node, "remote-endpoint", 0);
+What do you suggest the compatible ids should look like for these 5 types of PHY control?
+OTGHS	(OMAP4 & 5)
+USB2	(OMAP5)
+PIPE3	(OMAP5 & DRA7)
+USB2x	(DRA7)
+USB2y	(AM437)
 
-	np =3D of_get_next_parent(np);
-	if (of_node_cmp(np->name, "port") !=3D 0)
-		return np;
+cheers,
+-roger
 
-	np =3D of_get_next_parent(np);
-	if (of_node_cmp(np->name, "ports") !=3D 0)
-		return np;
-
-	np =3D of_get_next_parent(np);
-	return np;
-
- Tomi
-
-
-
---B16kFDpUQI20mJFiGkPvPK6AL8dL5J5xT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJTFZeRAAoJEPo9qoy8lh71T28QAK4N+uuEXW2aa2QA8W0r8A23
-LrKYuswYS70LIpa7Hu3+cbU6WJEtG3tRMGLwiiQ4O6iB64XASbkqKWRY9S20Rg3d
-q6eyIg8dKfRDVcGUPWg4hFPNQuU956eC1jryyRR4kmkppreaJ+hftIn9+QggDwex
-pjY3CVZmUDtvjRuN5Jooxnl1Q00rYNzHA9fuUIRs9uvdzVmlIC0X30N4heaoL8vL
-t6v83Iz2+PoMj6jIc68iL+esb0WHI2z3tlxaYHjAfR/1bM15j5W9LjIhByG3YuBO
-HCXwQA+ByUvL4vdH6Ghs0XtmLYuiKnciFVCv60a+SZ2jg4RYUa6axEOsdWm+iHiY
-QRkKYm3iGPlf8lCrXOt6vitQFvixKVn6Kt7cqdIgq5GKwUp4zNQjfZ8LiDutavFD
-WfqSRNuh8MCoFNFhNpu6itRiEn0rSR3Lz1//6+yprDQjFor4yTL2wP43mo7mdhwH
-cZmHJ2YhFDZ0Bl6Yg5NGjC1Dz6ErpVr8KfKYQaBBdrZeb5jjQJJeo94EzkylqJJc
-L38uhl/xPEXuPcFDSpQj32GJRkjYVkHRQ4OQ9x+Nn4GVJj65nj94pdo1Aa2b150n
-nMLTFuWM9fPNFP4YVmbZ8Gf+gtf08fZP0W/sbeB7SaYYofBLY2zEj+Ba+dfcUSAa
-MuIDLuJKjOrIFi4BiBc/
-=70wJ
------END PGP SIGNATURE-----
-
---B16kFDpUQI20mJFiGkPvPK6AL8dL5J5xT--
+> 
+>> + - reg : Address and length of the register set for the device. It contains
+>> +   the address of "otghs_control" for control-phy-otghs or "power" register
+>> +   for other types.
+>> + - reg-names: should be "otghs_control" control-phy-otghs and "power" for
+>> +   other types.
+>> +
+>> +omap_control_usb: omap-control-usb@4a002300 {
+>> +        compatible = "ti,control-phy-otghs";
+>> +        reg = <0x4a00233c 0x4>;
+>> +        reg-names = "otghs_control";
+>> +};
+> 
+> Then you would instead have something like this:
+> 
+> 	compatible = "ti,am347-control-phy-otghs";
+> 
+> That way you can initialize things without a need for custom bindings.
+> 
+> Regards,
+> 
+> Tony
+> 
