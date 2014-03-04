@@ -1,284 +1,172 @@
-From: Liviu Dudau <liviu-I3yL/QOVVjH10XsdtD+oqA@public.gmane.org>
-Subject: Re: [PATCH v4 5/6] pci: Use parent domain number when allocating
- child busses.
-Date: Tue, 4 Mar 2014 01:53:32 +0000
-Message-ID: <20140304015332.GC13582@bart.dudau.co.uk>
-References: <1393867996-32299-1-git-send-email-Liviu.Dudau@arm.com>
- <1393867996-32299-6-git-send-email-Liviu.Dudau@arm.com>
- <CACoXjcnP80rSaYqy2EK8SBh8Q=5E8kh_GQ84Y_0hg3WrQ=fy+A@mail.gmail.com>
- <20140303235132.GA13582@bart.dudau.co.uk>
- <CACoXjc=FM5Bohpw6xmD0OCRX40gX2EHzWmf0dXgDosY-Wg8=ZA@mail.gmail.com>
- <CACoXjcnzfC_7uh=-PbAsCQDb5RJVSQMXQmo-t+-uojWCP5+sDA@mail.gmail.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: Kirkwood: DT: Add missing vendor prefix
+Date: Mon, 3 Mar 2014 22:05:22 -0500
+Message-ID: <20140304030522.GZ1872@titan.lakedaemon.net>
+References: <1393773855-9592-1-git-send-email-andrew@lunn.ch>
+ <1393773855-9592-3-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CACoXjcnzfC_7uh=-PbAsCQDb5RJVSQMXQmo-t+-uojWCP5+sDA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1393773855-9592-3-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>
-Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 03, 2014 at 05:42:04PM -0800, Tanmay Inamdar wrote:
-> Hi Liviu,
+Andrew,
+
+Couple of stupid questions:
+
+ - I haven't seen 0/1 nor 1/1 show up anywhere (dt, lakml, inbox), am I
+   missing something?
+
+With that in mind:
+
+On Sun, Mar 02, 2014 at 04:24:15PM +0100, Andrew Lunn wrote:
+> Add vendor prefixes to compatible strings where they are missing.
 > 
-> Actually your suggested implementation of pci_domain_nr is working
-> perfectly. My bad for earlier email. I did not implement it correctly.
-
-Great. I will send an updated series for arm64 tomorrow.
-
-Best regards,
-Liviu
-
+> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/kirkwood-b3.dts              | 2 +-
+>  arch/arm/boot/dts/kirkwood-cloudbox.dts        | 2 +-
+>  arch/arm/boot/dts/kirkwood-dreamplug.dts       | 2 +-
+>  arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts | 2 +-
+>  arch/arm/boot/dts/kirkwood-ns2-common.dtsi     | 2 +-
+>  arch/arm/boot/dts/kirkwood-nsa310.dts          | 2 +-
+>  arch/arm/boot/dts/kirkwood-nsa310a.dts         | 2 +-
+>  arch/arm/boot/dts/kirkwood-openblocks_a6.dts   | 2 +-
+>  arch/arm/boot/dts/kirkwood-openblocks_a7.dts   | 2 +-
+>  9 files changed, 9 insertions(+), 9 deletions(-)
 > 
-> Thanks,
-> Tanmay
-> 
-> On Mon, Mar 3, 2014 at 4:42 PM, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org> wrote:
-> > Hello,
-> >
-> > Please see inline.
-> >
-> > On Mon, Mar 3, 2014 at 3:51 PM, Liviu Dudau <liviu-I3yL/QOVVjH10XsdtD+oqA@public.gmane.org> wrote:
-> >> On Mon, Mar 03, 2014 at 03:14:47PM -0800, Tanmay Inamdar wrote:
-> >>> Hello Liviu,
-> >>>
-> >>> Thanks for fixing up domain_nr. Now I have moved on further to a new
-> >>> domain_nr related warning dump :-)
-> >>>
-> >>> -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-> >>> xgene-pcie 1f500000.pcie: (rc) x8 gen-3 link up
-> >>> pci_bus 0001:00: scanning bus
-> >>> pci_setup_device:1101 domain_nr = 1
-> >>> pci 0001:00:00.0: [e008:e004] type 01 class 0x060400
-> >>> pci 0001:00:00.0: reg 0x10: [mem 0x4000000000-0x7fffffffff 64bit]
-> >>> pci 0001:00:00.0: calling xgene_pcie_fixup_bridge+0x0/0x80
-> >>> pci 0001:00:00.0: Hiding X-Gene pci host bridge resources 0001:00:00.0
-> >>> pci 0001:00:00.0: supports D1 D2
-> >>> pci_bus 0001:00: fixups for bus
-> >>> pci 0001:00:00.0: scanning [bus 03-03] behind bridge, pass 0
-> >>> pci 0001:00:00.0: bridge configuration invalid ([bus 03-03]), reconfiguring
-> >>> pci 0001:00:00.0: scanning [bus 00-00] behind bridge, pass 1
-> >>> ** pci_scan_bridge:855  pci_domain_nr(bus) = 1
-> >>> ** pci_alloc_child_bus:681  pci_domain_nr(bus) = 1
-> >>> pci_bus 0001:01: scanning bus
-> >>> pci_setup_device:1101 domain_nr = 0
-> >>
-> >> Why does the domain_nr change here?
-> >
-> > The bridge device pointer for parent and child should be same right? I
-> > think this is not the case here. Please look at the log at the bottom
-> > that I captured after trying your suggestions.
-> >
-> >>
-> >>> pci 0000:01:00.0: [15b3:1003] type 00 class 0x020000
-> >>> pci 0000:01:00.0: reg 0x10: [mem 0x00100000-0x001fffff 64bit]
-> >>> pci 0000:01:00.0: reg 0x18: [mem 0x00800000-0x00ffffff 64bit pref]
-> >>> pci 0000:01:00.0: reg 0x30: [mem 0x01000000-0x010fffff pref]
-> >>> ------------[ cut here ]------------
-> >>> WARNING: CPU: 0 PID: 1 at
-> >>> /home/tinamdar/work/open-source/linux/fs/sysfs/dir.c:52
-> >>> sysfs_warn_dup+0x80/0xc0()
-> >>> sysfs: cannot create duplicate filename '/bus/pci/devices/0000:01:00.0'
-> >>> Modules linked in:
-> >>> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 3.14.0-rc5+ #40
-> >>> Call trace:
-> >>> [<ffffffc000088180>] dump_backtrace+0x0/0x140
-> >>> [<ffffffc0000882d0>] show_stack+0x10/0x20
-> >>> [<ffffffc0004f65ac>] dump_stack+0x74/0xc4
-> >>> [<ffffffc000096e04>] warn_slowpath_common+0x84/0xc0
-> >>> [<ffffffc000096e8c>] warn_slowpath_fmt+0x4c/0x60
-> >>> [<ffffffc0001b83dc>] sysfs_warn_dup+0x7c/0xc0
-> >>> [<ffffffc0001b8894>] sysfs_do_create_link_sd.isra.2+0xf4/0x100
-> >>> [<ffffffc0001b88bc>] sysfs_create_link+0x1c/0x40
-> >>> [<ffffffc0003250b0>] bus_add_device+0x110/0x1c0
-> >>> [<ffffffc000322f1c>] device_add+0x31c/0x520
-> >>> [<ffffffc0002c444c>] pci_device_add+0xec/0x140
-> >>> [<ffffffc0004f1758>] pci_scan_single_device+0x98/0xe0
-> >>> [<ffffffc0002c44e8>] pci_scan_slot+0x48/0x120
-> >>> [<ffffffc0002c5368>] pci_scan_child_bus+0x48/0x140
-> >>> [<ffffffc0002c522c>] pci_scan_bridge+0x4ec/0x5e0
-> >>> [<ffffffc0002c53c8>] pci_scan_child_bus+0xa8/0x140
-> >>> [<ffffffc0004f1b30>] pci_rescan_bus+0x10/0x40
-> >>> [<ffffffc0006a12ac>] xgene_pcie_probe_bridge+0x660/0x72c
-> >>> [<ffffffc000327d20>] platform_drv_probe+0x20/0x60
-> >>> [<ffffffc000325e30>] really_probe+0xf0/0x220
-> >>> [<ffffffc000326080>] __driver_attach+0xa0/0xc0
-> >>> [<ffffffc000323ed4>] bus_for_each_dev+0x54/0xa0
-> >>> [<ffffffc0003258bc>] driver_attach+0x1c/0x40
-> >>> [<ffffffc00032548c>] bus_add_driver+0x14c/0x220
-> >>> [<ffffffc00032683c>] driver_register+0x5c/0x120
-> >>> [<ffffffc000327cdc>] __platform_driver_register+0x5c/0x80
-> >>> [<ffffffc0006a0c40>] xgene_pcie_driver_init+0x14/0x20
-> >>> [<ffffffc0000814c0>] do_one_initcall+0xe0/0x160
-> >>> [<ffffffc00068c934>] kernel_init_freeable+0x134/0x1d8
-> >>> [<ffffffc0004f07ac>] kernel_init+0xc/0xe0
-> >>> ---[ end trace 3ee052d463aab7f3 ]---
-> >>> ------------[ cut here ]------------
-> >>> WARNING: CPU: 0 PID: 1 at
-> >>> /home/tinamdar/work/open-source/linux/drivers/pci/probe.c:1380
-> >>> pci_device_add+0x128/0x140()
-> >>> -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-> >>>
-> >>> I have made a small fix above your patch. After the fix is applied,
-> >>> dumps are gone and the enumeration finishes up smoothly for all the
-> >>> ports.
-> >>> Since the change is small, just pasting it here. Please review and
-> >>> apply if it's clean.
-> >>
-> >> Honestly, I have no idea. I kept staring at the code for a better part of an hour
-> >> trying to decipher what the intent of the code was, without too much progress. I
-> >> still don't understand why the code in pci_alloc_child_bus() takes a shortcut when
-> >> the bridge argument is NULL when in my opinion it should use parent->bridge instead
-> >> and continue as normal.
-> >>
-> >>>
-> >>> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> >>> index a12cda5..aac8366 100644
-> >>> --- a/drivers/pci/probe.c
-> >>> +++ b/drivers/pci/probe.c
-> >>> @@ -693,7 +693,7 @@ static struct pci_bus *pci_alloc_child_bus(struct
-> >>> pci_bus *parent,
-> >>>         }
-> >>>
-> >>>         child->self = bridge;
-> >>> -       child->bridge = get_device(&bridge->dev);
-> >>> +       child->bridge = get_device(parent->bridge);
-> >>>         child->dev.parent = child->bridge;
-> >>
-> >> Hmm, not sure why this is needed. What does get_device(&bridge->dev)
-> >> return for you? The next line sets child->dev.parent to child->bridge,
-> >> but with your change I'm not sure we end up using the correct parent.
-> >>
-> >> Can you try to revert your change and modify the implementation of pci_domain_nr() in arm64
-> >> to look like this:
-> >>
-> >> static inline int pci_domain_nr(struct pci_bus *bus)
-> >> {
-> >>         struct pci_host_bridge *bridge;
-> >>
-> >>         while (bus->parent)
-> >>                 bus = bus->parent;
-> >>
-> >>         bridge = to_pci_host_bridge(bus->bridge);
-> >>         if (bridge)
-> >>                 return bridge->domain_nr;
-> >>
-> >>         return 0;
-> >> }
-> >>
-> >
-> > This did not work for me.
-> >
-> >
-> >> Please let me know what results you get.
-> >>
-> > I am printing following values
-> >
-> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > index a12cda5..c89f86a 100644
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -695,6 +695,8 @@ static struct pci_bus *pci_alloc_child_bus(struct
-> > pci_bus *parent,
-> >         child->self = bridge;
-> >         child->bridge = get_device(&bridge->dev);
-> >         child->dev.parent = child->bridge;
-> > +       printk("%s:%d bus = %p , bridge_dev = %p, domain = %d\n",
-> > +               __func__, __LINE__, child, child->bridge,
-> > pci_domain_nr(parent));
-> >         pci_set_bus_of_node(child);
-> >         pci_set_bus_speed(child);
-> >
-> > @@ -1095,6 +1097,8 @@ int pci_setup_device(struct pci_dev *dev)
-> >         dev_set_name(&dev->dev, "%04x:%02x:%02x.%d", pci_domain_nr(dev->bus),
-> >                      dev->bus->number, PCI_SLOT(dev->devfn),
-> >                      PCI_FUNC(dev->devfn));
-> > +       printk("%s:%d bus = %p , bridge_dev = %p, domain = %d\n",
-> > +               __func__, __LINE__, dev->bus, dev->bus->bridge,
-> > pci_domain_nr(dev->bus));
-> >
-> >         pci_read_config_dword(dev, PCI_CLASS_REVISION, &class);
-> >         dev->revision = class & 0xff;
-> >
-> > Following looks suspicious to me.
-> >
-> > bridge_dev = ffffffc7e03ffc00 for bus 0 in domain 1 while bridge_dev =
-> > ffffffc7e03f7098 for bus 1 in domain 1.
-> >
-> >  Log -->
-> > -----------------------------------------------------------------------------------------------------------------------------
-> > xgene-pcie 1f500000.pcie: (rc) x8 gen-3 link up
-> > pci_bus 0001:00: scanning bus
-> > pci_setup_device:1101 bus = ffffffc7e0060400 , bridge_dev =
-> > ffffffc7e03ffc00, domain = 1
-> > pci 0001:00:00.0: [e008:e004] type 01 class 0x060400
-> > pci 0001:00:00.0: reg 0x10: [mem 0x4000000000-0x7fffffffff 64bit]
-> > pci 0001:00:00.0: calling xgene_pcie_fixup_bridge+0x0/0x80
-> > pci 0001:00:00.0: Hiding X-Gene pci host bridge resources 0001:00:00.0
-> > pci 0001:00:00.0: supports D1 D2
-> > pci_bus 0001:00: fixups for bus
-> > pci 0001:00:00.0: scanning [bus 03-03] behind bridge, pass 0
-> > pci 0001:00:00.0: bridge configuration invalid ([bus 03-03]), reconfiguring
-> > pci 0001:00:00.0: scanning [bus 00-00] behind bridge, pass 1
-> > pci_alloc_child_bus:699 bus = ffffffc7e0063000 , bridge_dev =
-> > ffffffc7e03f7098, domain = 1
-> > pci_bus 0001:01: scanning bus
-> > pci_setup_device:1101 bus = ffffffc7e0063000 , bridge_dev =
-> > ffffffc7e03f7098, domain = 0
-> > pci 0000:01:00.0: [15b3:1003] type 00 class 0x020000
-> > pci 0000:01:00.0: reg 0x10: [mem 0x00100000-0x001fffff 64bit]
-> > pci 0000:01:00.0: reg 0x18: [mem 0x00800000-0x00ffffff 64bit pref]
-> > pci 0000:01:00.0: reg 0x30: [mem 0x01000000-0x010fffff pref]
-> > ------------[ cut here ]------------
-> > WARNING: CPU: 0 PID: 1 at
-> > /home/tinamdar/work/open-source/linux/fs/sysfs/dir.c:52
-> > sysfs_warn_dup+0x80/0xc0()
-> > sysfs: cannot create duplicate filename '/bus/pci/devices/0000:01:00.0'
-> > Modules linked in:
-> > CPU: 0 PID: 1 Comm: swapper/0 Not tainted 3.14.0-rc5+ #50
-> > -----------------------------------------------------------------------------------------------------------------------------
-> >
-> >
-> >> Best regards,
-> >> Liviu
-> >>
-> >>
-> >>>         pci_set_bus_of_node(child);
-> >>>         pci_set_bus_speed(child);
-> >>>
-> >>> Thanks,
-> >>> Tanmay
-> >>>
-> >>> On Mon, Mar 3, 2014 at 9:33 AM, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org> wrote:
-> >>> > pci_alloc_child_bus() uses the newly allocated child bus to figure
-> >>> > out the domain number that is going to use for setting the device
-> >>> > name. A better option is to use the parent bus domain number.
-> >>> >
-> >>> > Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-> >>> >
-> >>> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> >>> > index 26237a0..a12cda5 100644
-> >>> > --- a/drivers/pci/probe.c
-> >>> > +++ b/drivers/pci/probe.c
-> >>> > @@ -677,7 +677,7 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
-> >>> >          * now as the parent is not properly set up yet.
-> >>> >          */
-> >>> >         child->dev.class = &pcibus_class;
-> >>> > -       dev_set_name(&child->dev, "%04x:%02x", pci_domain_nr(child), busnr);
-> >>> > +       dev_set_name(&child->dev, "%04x:%02x", pci_domain_nr(parent), busnr);
-> >>> >
-> >>> >         /*
-> >>> >          * Set up the primary, secondary and subordinate
-> >>> > --
-> >>> > 1.9.0
-> >>> >
-> >>> --
-> >>> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> >>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> >>>
+> diff --git a/arch/arm/boot/dts/kirkwood-b3.dts b/arch/arm/boot/dts/kirkwood-b3.dts
+> index 40791053106b..6becedebaa4e 100644
+> --- a/arch/arm/boot/dts/kirkwood-b3.dts
+> +++ b/arch/arm/boot/dts/kirkwood-b3.dts
+> @@ -75,7 +75,7 @@
+>  			m25p16@0 {
+>  				#address-cells = <1>;
+>  				#size-cells = <1>;
+> -				compatible = "m25p16";
+> +				compatible = "st,m25p16";
 
+Have you checked that the drivers for each of these changes already
+support the new compatible strings?
+
+thx,
+
+Jason.
+
+>  				reg = <0>;
+>  				spi-max-frequency = <40000000>;
+>  				mode = <0>;
+> diff --git a/arch/arm/boot/dts/kirkwood-cloudbox.dts b/arch/arm/boot/dts/kirkwood-cloudbox.dts
+> index 0e06fd3cee4d..3b62aeeaa3a2 100644
+> --- a/arch/arm/boot/dts/kirkwood-cloudbox.dts
+> +++ b/arch/arm/boot/dts/kirkwood-cloudbox.dts
+> @@ -46,7 +46,7 @@
+>  			flash@0 {
+>  				#address-cells = <1>;
+>  				#size-cells = <1>;
+> -				compatible = "mx25l4005a";
+> +				compatible = "mxicy,mx25l4005a";
+>  				reg = <0>;
+>  				spi-max-frequency = <20000000>;
+>  				mode = <0>;
+> diff --git a/arch/arm/boot/dts/kirkwood-dreamplug.dts b/arch/arm/boot/dts/kirkwood-dreamplug.dts
+> index ef3463e0ae19..28b3ee369778 100644
+> --- a/arch/arm/boot/dts/kirkwood-dreamplug.dts
+> +++ b/arch/arm/boot/dts/kirkwood-dreamplug.dts
+> @@ -43,7 +43,7 @@
+>  			m25p40@0 {
+>  				#address-cells = <1>;
+>  				#size-cells = <1>;
+> -				compatible = "mx25l1606e";
+> +				compatible = "mxicy,mx25l1606e";
+>  				reg = <0>;
+>  				spi-max-frequency = <50000000>;
+>  				mode = <0>;
+> diff --git a/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts b/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
+> index 2cb0dc529165..32c6fb4a1162 100644
+> --- a/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
+> +++ b/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
+> @@ -56,7 +56,7 @@
+>  			flash@0 {
+>  				#address-cells = <1>;
+>  				#size-cells = <1>;
+> -				compatible = "mx25l12805d";
+> +				compatible = "mxicy,mx25l12805d";
+>  				reg = <0>;
+>  				spi-max-frequency = <50000000>;
+>  				mode = <0>;
+> diff --git a/arch/arm/boot/dts/kirkwood-ns2-common.dtsi b/arch/arm/boot/dts/kirkwood-ns2-common.dtsi
+> index 743152f31a81..594bad0e386e 100644
+> --- a/arch/arm/boot/dts/kirkwood-ns2-common.dtsi
+> +++ b/arch/arm/boot/dts/kirkwood-ns2-common.dtsi
+> @@ -32,7 +32,7 @@
+>  			flash@0 {
+>  				#address-cells = <1>;
+>  				#size-cells = <1>;
+> -				compatible = "mx25l4005a";
+> +				compatible = "mxicy,mx25l4005a";
+>  				reg = <0>;
+>  				spi-max-frequency = <20000000>;
+>  				mode = <0>;
+> diff --git a/arch/arm/boot/dts/kirkwood-nsa310.dts b/arch/arm/boot/dts/kirkwood-nsa310.dts
+> index 03fa24cf3344..0a07af9d8e58 100644
+> --- a/arch/arm/boot/dts/kirkwood-nsa310.dts
+> +++ b/arch/arm/boot/dts/kirkwood-nsa310.dts
+> @@ -104,7 +104,7 @@
+>  			status = "okay";
+>  
+>  			adt7476: adt7476a@2e {
+> -				compatible = "adt7476";
+> +				compatible = "adi,adt7476";
+>  				reg = <0x2e>;
+>  			};
+>  		};
+> diff --git a/arch/arm/boot/dts/kirkwood-nsa310a.dts b/arch/arm/boot/dts/kirkwood-nsa310a.dts
+> index a5e779452867..27ca6a79c48a 100644
+> --- a/arch/arm/boot/dts/kirkwood-nsa310a.dts
+> +++ b/arch/arm/boot/dts/kirkwood-nsa310a.dts
+> @@ -94,7 +94,7 @@
+>  			status = "okay";
+>  
+>  			lm85: lm85@2e {
+> -				compatible = "lm85";
+> +				compatible = "national,lm85";
+>  				reg = <0x2e>;
+>  			};
+>  		};
+> diff --git a/arch/arm/boot/dts/kirkwood-openblocks_a6.dts b/arch/arm/boot/dts/kirkwood-openblocks_a6.dts
+> index b88da9392c32..0650beafc1de 100644
+> --- a/arch/arm/boot/dts/kirkwood-openblocks_a6.dts
+> +++ b/arch/arm/boot/dts/kirkwood-openblocks_a6.dts
+> @@ -40,7 +40,7 @@
+>  			pinctrl-names = "default";
+>  
+>  			s35390a: s35390a@30 {
+> -				compatible = "s35390a";
+> +				compatible = "sii,s35390a";
+>  				reg = <0x30>;
+>  			};
+>  		};
+> diff --git a/arch/arm/boot/dts/kirkwood-openblocks_a7.dts b/arch/arm/boot/dts/kirkwood-openblocks_a7.dts
+> index b2f7cae06839..895506743e4d 100644
+> --- a/arch/arm/boot/dts/kirkwood-openblocks_a7.dts
+> +++ b/arch/arm/boot/dts/kirkwood-openblocks_a7.dts
+> @@ -52,7 +52,7 @@
+>  			pinctrl-names = "default";
+>  
+>  			s24c02: s24c02@50 {
+> -				compatible = "24c02";
+> +				compatible = "at,24c02";
+>  				reg = <0x50>;
+>  			};
+>  		};
+> -- 
+> 1.8.5.3
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
