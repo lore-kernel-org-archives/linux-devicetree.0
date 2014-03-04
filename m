@@ -1,66 +1,182 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 1/3] dt: palmas: support IRQ inversion at the board
- level
-Date: Tue, 4 Mar 2014 11:50:19 +0800
-Message-ID: <20140304035019.GZ2411@sirena.org.uk>
-References: <1393534281-30759-1-git-send-email-swarren@wwwdotorg.org>
- <20140227210227.GE2931@xora-haswell>
- <530FAFAE.5050800@wwwdotorg.org>
- <20140228055818.GA29849@sirena.org.uk>
- <5310BA99.4050203@wwwdotorg.org>
- <20140303005246.GA22047@xora-yoga13>
- <5314B0C0.4040008@wwwdotorg.org>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v7 2/4] Power: Reset: Generalize qnap-poweroff to work
+ on Synology devices.
+Date: Mon, 3 Mar 2014 22:54:13 -0500
+Message-ID: <20140304035413.GB1872@titan.lakedaemon.net>
+References: <1392840157-31072-1-git-send-email-klightspeed@killerwolves.net>
+ <1392840157-31072-3-git-send-email-klightspeed@killerwolves.net>
+ <20140222013954.GR7862@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="anW2uJ7hcMI/vMa8"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5314B0C0.4040008-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Graeme Gregory <graeme-/SyDAi3Rz4f10XsdtD+oqA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, J Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Ian Lartey <ian-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20140222013954.GR7862-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Feb 21, 2014 at 08:39:54PM -0500, Jason Cooper wrote:
+> Dmitry, David,
+> 
+> On Thu, Feb 20, 2014 at 06:02:35AM +1000, klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org wrote:
+> > From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> > 
+> > The Synology NAS devices use a very similar mechanism to QNAP NAS
+> > devices to power off. Both send a single charactor command to a PIC,
+> > over the second serial port. However the baud rate and the command
+> > differ. Generalize the driver to support this.
+> > 
+> > Signed-off-by: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
+> > Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> > Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+> > Cc: Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>
+> > Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+> > ---
+> >  .../bindings/power_supply/qnap-poweroff.txt        |  5 ++-
+> >  drivers/power/reset/qnap-poweroff.c                | 49 ++++++++++++++++------
+> >  2 files changed, 41 insertions(+), 13 deletions(-)
+> 
+> Do you guys want to take this, or me?  I'm fine either way, there's no
+> dependencies.
 
---anW2uJ7hcMI/vMa8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hmmm, it's been over a week.  Since it's isolated to a driver only
+kirkwood/mvebu devices use, I'll go ahead a queue this up to go through
+mvebu/arm-soc for v3.15.  Please ping me in the next few days if you'd
+prefer I drop it.
 
-On Mon, Mar 03, 2014 at 09:41:36AM -0700, Stephen Warren wrote:
+Applied to mvebu/drivers
 
-> 2) We can go through every single interrupt controller's DT binding and
-> driver, and implement (document and parse) the new IRQ specifier flag
-> there, and pass it throgh the Linux IRQ stack, yet we still need code in
-> every IC driver to actually read the flag, so we haven't removed any
-> code. It seems /much/ simpler, and no more of a maintenance or
-> consistency burden, to just have the IC driver read the flag directly
-> from their own DT.
+thx,
 
-Why does this have to be handled by the chip drivers?  Can't the
-interrupt controller configured in a way that the chip drivers never
-need to see it at all, for example by adding a "override the mode for
-this input" flag inside the device?
+Jason.
 
---anW2uJ7hcMI/vMa8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTFU14AAoJELSic+t+oim9PrYP/0GNcCPpJN0eW/tM1aKoh54G
-Fx2s5Ppc0GCWq4L92G5qNYCgWYJV5ZV30IM9rRorhJKjJaEZNuxdz+K4idYXvSo9
-4T/qEpkrsrCwgybvkFaMRFarUPL54gv1pMQ3wJUY1ywUSKjOvSNVq01dzFakbUb1
-EE09XR92InZ9ty04/uYaiB9ZQag9j7knLwS7Ys5WaNQbc/z6x/CWaiqhX/lXrYWP
-X3g1gl6cBT3EL3jhg6Oj+LDQTo85t5fPG8Xq7i3mBg2PG1MCJSiYGBH0Q00Bc1p8
-uaQPZ5/fGFn3nzkgdJvpU7haC7x89BsuBjTBVB4orEng34iINZ48jx35U2V6Qf9x
-fQkgtVo2lRHEDWE63ZQMpV39xSm/Hs9k/AsLUCvBVQ0PvrierMfdADAfsVKSDksb
-/QlBQalTmYy/+kHavEFJPGm+ywRzmjXxA8teABtg+lZEsrPtJV5VOmgHWOjD4nNR
-5DPU5hGKz6VZ2NTXruos+MScPGIth+OQQ1Y/5ggsZb/+kjNzbzSZb0So8tlHi+KS
-2ysCAfbJNbrptnacKlSBnpJhKBa/mW0i5dbnOveRhj/cQMbzkgERcyua3VIShdrB
-71wxIA+7TPQxbFpg/RnRzgbDPiJ68PEfKB1NaS+gB8fUlABHgHduXnnuejNkBqML
-gvdimylX8TlmfXaCkHlG
-=nc+8
------END PGP SIGNATURE-----
-
---anW2uJ7hcMI/vMa8--
+> > diff --git a/Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt b/Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt
+> > index 0347d83..af25e77 100644
+> > --- a/Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt
+> > +++ b/Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt
+> > @@ -6,8 +6,11 @@ Orion5x SoCs. Sending the character 'A', at 19200 baud, tells the
+> >  microcontroller to turn the power off. This driver adds a handler to
+> >  pm_power_off which is called to turn the power off.
+> >  
+> > +Synology NAS devices use a similar scheme, but a different baud rate,
+> > +9600, and a different character, '1'.
+> > +
+> >  Required Properties:
+> > -- compatible: Should be "qnap,power-off"
+> > +- compatible: Should be "qnap,power-off" or "synology,power-off"
+> >  
+> >  - reg: Address and length of the register set for UART1
+> >  - clocks: tclk clock
+> > diff --git a/drivers/power/reset/qnap-poweroff.c b/drivers/power/reset/qnap-poweroff.c
+> > index 37f56f7..a75db7f 100644
+> > --- a/drivers/power/reset/qnap-poweroff.c
+> > +++ b/drivers/power/reset/qnap-poweroff.c
+> > @@ -1,5 +1,5 @@
+> >  /*
+> > - * QNAP Turbo NAS Board power off
+> > + * QNAP Turbo NAS Board power off. Can also be used on Synology devices.
+> >   *
+> >   * Copyright (C) 2012 Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> >   *
+> > @@ -25,17 +25,43 @@
+> >  
+> >  #define UART1_REG(x)	(base + ((UART_##x) << 2))
+> >  
+> > +struct power_off_cfg {
+> > +	u32 baud;
+> > +	char cmd;
+> > +};
+> > +
+> > +static const struct power_off_cfg qnap_power_off_cfg = {
+> > +	.baud = 19200,
+> > +	.cmd = 'A',
+> > +};
+> > +
+> > +static const struct power_off_cfg synology_power_off_cfg = {
+> > +	.baud = 9600,
+> > +	.cmd = '1',
+> > +};
+> > +
+> > +static const struct of_device_id qnap_power_off_of_match_table[] = {
+> > +	{ .compatible = "qnap,power-off",
+> > +	  .data = &qnap_power_off_cfg,
+> > +	},
+> > +	{ .compatible = "synology,power-off",
+> > +	  .data = &synology_power_off_cfg,
+> > +	},
+> > +	{}
+> > +};
+> > +MODULE_DEVICE_TABLE(of, qnap_power_off_of_match_table);
+> > +
+> >  static void __iomem *base;
+> >  static unsigned long tclk;
+> > +static const struct power_off_cfg *cfg;
+> >  
+> >  static void qnap_power_off(void)
+> >  {
+> > -	/* 19200 baud divisor */
+> > -	const unsigned divisor = ((tclk + (8 * 19200)) / (16 * 19200));
+> > +	const unsigned divisor = ((tclk + (8 * cfg->baud)) / (16 * cfg->baud));
+> >  
+> >  	pr_err("%s: triggering power-off...\n", __func__);
+> >  
+> > -	/* hijack UART1 and reset into sane state (19200,8n1) */
+> > +	/* hijack UART1 and reset into sane state */
+> >  	writel(0x83, UART1_REG(LCR));
+> >  	writel(divisor & 0xff, UART1_REG(DLL));
+> >  	writel((divisor >> 8) & 0xff, UART1_REG(DLM));
+> > @@ -44,16 +70,21 @@ static void qnap_power_off(void)
+> >  	writel(0x00, UART1_REG(FCR));
+> >  	writel(0x00, UART1_REG(MCR));
+> >  
+> > -	/* send the power-off command 'A' to PIC */
+> > -	writel('A', UART1_REG(TX));
+> > +	/* send the power-off command to PIC */
+> > +	writel(cfg->cmd, UART1_REG(TX));
+> >  }
+> >  
+> >  static int qnap_power_off_probe(struct platform_device *pdev)
+> >  {
+> > +	struct device_node *np = pdev->dev.of_node;
+> >  	struct resource *res;
+> >  	struct clk *clk;
+> >  	char symname[KSYM_NAME_LEN];
+> >  
+> > +	const struct of_device_id *match =
+> > +		of_match_node(qnap_power_off_of_match_table, np);
+> > +	cfg = match->data;
+> > +
+> >  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >  	if (!res) {
+> >  		dev_err(&pdev->dev, "Missing resource");
+> > @@ -94,12 +125,6 @@ static int qnap_power_off_remove(struct platform_device *pdev)
+> >  	return 0;
+> >  }
+> >  
+> > -static const struct of_device_id qnap_power_off_of_match_table[] = {
+> > -	{ .compatible = "qnap,power-off", },
+> > -	{}
+> > -};
+> > -MODULE_DEVICE_TABLE(of, qnap_power_off_of_match_table);
+> > -
+> >  static struct platform_driver qnap_power_off_driver = {
+> >  	.probe	= qnap_power_off_probe,
+> >  	.remove	= qnap_power_off_remove,
+> > -- 
+> > 1.8.3.2
+> > 
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
