@@ -1,258 +1,245 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: RESEND [PATCH V9 2/2] ARM: dts: exynos5250: Enable ahci sata
- and sata phy
-Date: Tue, 4 Mar 2014 19:02:06 +0530
-Message-ID: <5315D5D6.2070308@ti.com>
-References: <1393931452-18237-1-git-send-email-yuvaraj.cd@samsung.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH RFC 1/5] ASoC: tlv320aic31xx: Add basic codec driver implementation
+Date: Tue, 4 Mar 2014 15:36:33 +0200
+Message-ID: <5315D6E1.3010008@ti.com>
+References: <cover.1393405575.git.jsarha@ti.com> <73198e2f7aca0379abc596027d7d59ac250061c7.1393405575.git.jsarha@ti.com> <20140303063444.GR2411@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393931452-18237-1-git-send-email-yuvaraj.cd@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, kgene.kim@samsung.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: grant.likely@linaro.org, joshi@samsung.com, swarren@wwwdotorg.org, mark.rutland@arm.com, galak@codeaurora.org, jg1.han@samsung.com, ks.giri@samsung.com, b.zolnierkie@samsung.com, t.figa@samsung.com, christoffer.dall@linaro.com, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140303063444.GR2411@sirena.org.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-omap@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, bcousson@baylibre.com, peter.ujfalusi@ti.com, detheridge@ti.com
 List-Id: devicetree@vger.kernel.org
 
+On 03/03/2014 08:34 AM, Mark Brown wrote:
+> On Wed, Feb 26, 2014 at 11:14:25AM +0200, Jyri Sarha wrote:
+>> This commit adds a bare bones driver support for TLV320AIC31XX family
+>> audio codecs. The driver adds basic stereo playback trough headphone
+>> and speaker outputs and mono capture trough microphone inputs.
+>
+> Always CC maintainers on patches please.
+>
 
+Will do.
 
-On Tuesday 04 March 2014 04:40 PM, Yuvaraj Kumar C D wrote:
-> This patch adds dt entry for ahci sata controller and its
-> corresponding phy controller.phy node has been added w.r.t
-> new generic phy framework.
+>> +static bool aic31xx_volatile(struct device *dev, unsigned int reg)
+>> +{
+>> +	if (aic31xx_precious(dev, reg) || aic31xx_real_volatile(dev, reg))
+>> +		return true;
+>> +
+>> +	switch (reg) {
+>> +	case AIC31XX_PAGECTL: /* regmap implementation requires this */
+>> +	case AIC31XX_RESET: /* always clears after write */
+>> +		return true;
+>> +	}
+>> +	return false;
+>> +}
 >
-> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+> This is more complex than you need, just write a standalone volatile
+> function with some comments in it.
+>
 
-FWIW
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->   .../devicetree/bindings/ata/exynos-sata-phy.txt    |   14 --------
->   .../devicetree/bindings/ata/exynos-sata.txt        |   25 +++++++++-----
->   .../devicetree/bindings/phy/samsung-phy.txt        |   36 ++++++++++++++++++++
->   arch/arm/boot/dts/exynos5250-arndale.dts           |   21 ++++++++++++
->   arch/arm/boot/dts/exynos5250-smdk5250.dts          |   17 +++++----
->   arch/arm/boot/dts/exynos5250.dtsi                  |   18 +++++++---
->   6 files changed, 98 insertions(+), 33 deletions(-)
->   delete mode 100644 Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
+Replaced with straight forward aic31xx_volatile() and aic31xx_writable() 
+functions.
+
+>> +static const struct regmap_range_cfg aic31xx_ranges[] = {
+>> +	{
+>> +		.name = "codec-regmap",
 >
-> diff --git a/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt b/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
-> deleted file mode 100644
-> index 37824fa..0000000
-> --- a/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
-> +++ /dev/null
-> @@ -1,14 +0,0 @@
-> -* Samsung SATA PHY Controller
-> -
-> -SATA PHY nodes are defined to describe on-chip SATA Physical layer controllers.
-> -Each SATA PHY controller should have its own node.
-> -
-> -Required properties:
-> -- compatible        : compatible list, contains "samsung,exynos5-sata-phy"
-> -- reg               : <registers mapping>
-> -
-> -Example:
-> -        sata@ffe07000 {
-> -                compatible = "samsung,exynos5-sata-phy";
-> -                reg = <0xffe07000 0x1000>;
-> -        };
-> diff --git a/Documentation/devicetree/bindings/ata/exynos-sata.txt b/Documentation/devicetree/bindings/ata/exynos-sata.txt
-> index 0849f10..b2adb1f 100644
-> --- a/Documentation/devicetree/bindings/ata/exynos-sata.txt
-> +++ b/Documentation/devicetree/bindings/ata/exynos-sata.txt
-> @@ -4,14 +4,21 @@ SATA nodes are defined to describe on-chip Serial ATA controllers.
->   Each SATA controller should have its own node.
+> Make this meaningful or omit it.
 >
->   Required properties:
-> -- compatible        : compatible list, contains "samsung,exynos5-sata"
-> -- interrupts        : <interrupt mapping for SATA IRQ>
-> -- reg               : <registers mapping>
-> -- samsung,sata-freq : <frequency in MHz>
-> +- compatible		: compatible list, contains "samsung,exynos5-sata"
-> +- interrupts		: <interrupt mapping for SATA IRQ>
-> +- reg			: <registers mapping>
-> +- samsung,sata-freq	: <frequency in MHz>
-> +- phys			: as mentioned in phy-bindings.txt
-> +- phy-names		: as mentioned in phy-bindings.txt
+
+Removed.
+
+>> +#define AIC31XX_NUM_SUPPLIES	6
+>> +static const char * const aic31xx_supply_names[] = {
 >
->   Example:
-> -        sata@ffe08000 {
-> -                compatible = "samsung,exynos5-sata";
-> -                reg = <0xffe08000 0x1000>;
-> -                interrupts = <115>;
-> -        };
-> +	sata@122f0000 {
-> +		compatible = "snps,dwc-ahci";
-> +		samsung,sata-freq = <66>;
-> +		reg = <0x122f0000 0x1ff>;
-> +		interrupts = <0 115 0>;
-> +		clocks = <&clock 277>, <&clock 143>;
-> +		clock-names = "sata", "sclk_sata";
-> +		phys = <&sata_phy>;
-> +		phy-names = "sata-phy";
-> +	};
-> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-> index c0fccaa..a937f75 100644
-> --- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-> @@ -20,3 +20,39 @@ Required properties:
->   - compatible : should be "samsung,exynos5250-dp-video-phy";
->   - reg : offset and length of the Display Port PHY register set;
->   - #phy-cells : from the generic PHY bindings, must be 0;
-> +
-> +Samsung SATA PHY Controller
-> +---------------------------
-> +
-> +SATA PHY nodes are defined to describe on-chip SATA Physical layer controllers.
-> +Each SATA PHY controller should have its own node.
-> +
-> +Required properties:
-> +- compatible        : compatible list, contains "samsung,exynos5250-sata-phy"
-> +- reg : offset and length of the SATA PHY register set;
-> +- #phy-cells : from the generic phy bindings;
-> +
-> +Example:
-> +	sata_phy: sata-phy@12170000 {
-> +		compatible = "samsung,exynos5250-sata-phy";
-> +		reg = <0x12170000 0x1ff>;
-> +		clocks = <&clock 287>;
-> +		clock-names = "sata_phyctrl";
-> +		#phy-cells = <0>;
-> +		samsung,exynos-sataphy-i2c-phandle = <&sata_phy_i2c>;
-> +		samsung,syscon-phandle = <&pmu_syscon>;
-> +	};
-> +
-> +Device-Tree bindings for sataphy i2c client driver
-> +--------------------------------------------------
-> +
-> +Required properties:
-> +compatible: Should be "samsung,exynos-sataphy-i2c"
-> +- reg: I2C address of the sataphy i2c device.
-> +
-> +Example:
-> +
-> +	sata_phy_i2c:sata-phy@38 {
-> +		compatible = "samsung,exynos-sataphy-i2c";
-> +		reg = <0x38>;
-> +	};
-> diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
-> index 38b96a4..97eef40 100644
-> --- a/arch/arm/boot/dts/exynos5250-arndale.dts
-> +++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-> @@ -375,6 +375,27 @@
->   		};
->   	};
+> Use the define in the array size to help check everything lines up.
 >
-> +	i2c@121D0000 {
-> +		status = "okay";
-> +		samsung,i2c-sda-delay = <100>;
-> +		samsung,i2c-max-bus-freq = <40000>;
-> +		samsung,i2c-slave-addr = <0x38>;
-> +
-> +		sata_phy_i2c:sata-phy@38 {
-> +			compatible = "samsung,exynos-sataphy-i2c";
-> +			reg = <0x38>;
-> +		};
-> +	};
-> +
-> +	sata@122F0000 {
-> +		status = "okay";
-> +	};
-> +
-> +	sata-phy@12170000 {
-> +		status = "okay";
-> +		samsung,exynos-sataphy-i2c-phandle = <&sata_phy_i2c>;
-> +	};
-> +
->   	mmc_0: mmc@12200000 {
->   		status = "okay";
->   		num-slots = <1>;
-> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> index f76946e..81782c1b 100644
-> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> @@ -242,16 +242,12 @@
->   		samsung,i2c-slave-addr = <0x38>;
->   		status = "okay";
+
+Done.
+
+>> +static const char * const ldac_in_text[] = {
+>> +	"off", "Left Data", "Right Data", "Mono"
+>> +};
 >
-> -		sata-phy {
-> -			compatible = "samsung,sata-phy";
-> +		sata_phy_i2c:sata-phy@38 {
-> +			compatible = "samsung,exynos-sataphy-i2c";
->   			reg = <0x38>;
->   		};
->   	};
+> Off not off - be consistent both internally and with the general style.
 >
-> -	sata@122F0000 {
-> -		samsung,sata-freq = <66>;
-> -	};
-> -
->   	i2c@12C80000 {
->   		samsung,i2c-sda-delay = <100>;
->   		samsung,i2c-max-bus-freq = <66000>;
-> @@ -274,6 +270,15 @@
->   		};
->   	};
+
+Done.
+
+>> +static const struct snd_kcontrol_new aic311x_snd_controls[] = {
+>> +	SOC_DOUBLE_R("SP Driver Playback Switch", AIC31XX_SPLGAIN,
+>> +		     AIC31XX_SPRGAIN, 2, 1, 0),
 >
-> +	sata@122F0000 {
-> +		status = "okay";
-> +	};
-> +
-> +	sata-phy@12170000 {
-> +		status = "okay";
-> +		samsung,exynos-sataphy-i2c-phandle = <&sata_phy_i2c>;
-> +	};
-> +
->   	mmc@12200000 {
->   		status = "okay";
->   		num-slots = <1>;
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> index 8f6300f..31f7cab 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -46,6 +46,7 @@
->   		i2c6 = &i2c_6;
->   		i2c7 = &i2c_7;
->   		i2c8 = &i2c_8;
-> +		i2c9 = &i2c_9;
->   		pinctrl0 = &pinctrl_0;
->   		pinctrl1 = &pinctrl_1;
->   		pinctrl2 = &pinctrl_2;
-> @@ -233,16 +234,25 @@
->   	};
+> SP?
 >
->   	sata@122F0000 {
-> -		compatible = "samsung,exynos5-sata-ahci";
-> +		compatible = "snps,dwc-ahci";
-> +		samsung,sata-freq = <66>;
->   		reg = <0x122F0000 0x1ff>;
->   		interrupts = <0 115 0>;
->   		clocks = <&clock 277>, <&clock 143>;
->   		clock-names = "sata", "sclk_sata";
-> +		phys = <&sata_phy>;
-> +		phy-names = "sata-phy";
-> +		status = "disabled";
->   	};
+
+"SP" replaced with "Speaker", also in DAPM switches.
+
+>> +	if (!strcmp(w->name, "DAC Left")) {
+>> +		mask = AIC31XX_LDACPWRSTATUS_MASK;
 >
-> -	sata-phy@12170000 {
-> -		compatible = "samsung,exynos5-sata-phy";
-> +	sata_phy: sata-phy@12170000 {
-> +		compatible = "samsung,exynos5250-sata-phy";
->   		reg = <0x12170000 0x1ff>;
-> +		clocks = <&clock 287>;
-> +		clock-names = "sata_phyctrl";
-> +		#phy-cells = <0>;
-> +		samsung,syscon-phandle = <&pmu_system_controller>;
-> +		status = "disabled";
->   	};
+> There's no overlap with the enable bits?  In general it would seem nicer
+> to have a switch based on the register bits used for the enable rather
+> than the tree of string comparisions but it's probably not that big a
+> deal overall.
 >
->   	i2c_0: i2c@12C60000 {
-> @@ -360,7 +370,7 @@
->   		status = "disabled";
->   	};
+
+Not with bits, but with regs. I decided this structure would be easier 
+to implement and understand than having a switch(w->reg) with nested 
+switch(w->shift) cases. I replaced the string comparisons with a single 
+switch case using a binary combination of w->reg and w->shift.
+
+>> +		dev_err(w->codec->dev, "Unknown widget '%s' calling %s/n",
+>> +			w->name, __func__);
+>> +		return -1;		switch (w->shift) {
+		case 7:
+			mask = AIC31XX_LDACPWRSTATUS_MASK;
+
 >
-> -	i2c@121D0000 {
-> +	i2c_9: i2c@121D0000 {
->                   compatible = "samsung,exynos5-sata-phy-i2c";
->                   reg = <0x121D0000 0x100>;
->                   #address-cells = <1>;
+> Return real error codes.
 >
+
+Changed to -EINVAL.
+
+>> +	if (event == SND_SOC_DAPM_POST_PMU)
+>> +		return aic31xx_wait_bits(aic31xx, reg, mask, mask, 5000, 100);
+>> +	else if (event == SND_SOC_DAPM_POST_PMD)
+>> +		return aic31xx_wait_bits(aic31xx, reg, mask, 0, 5000, 100);
+>
+> switch.
+>
+
+Done.
+
+>> +	SND_SOC_DAPM_DAC_E("DAC Right", "DAC Right Input",
+>> +			   AIC31XX_DACSETUP, 6, 0, aic31xx_dapm_power_event,
+>> +			   SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_POST_PMD),
+>
+> Don't use stream names, use DAPM to route from the AIF to the widgets.
+>
+
+Renamed DAC stnames to "Left Playback" and "Right Playback".
+
+>> +	switch (params_format(params)) {
+>> +	case SNDRV_PCM_FORMAT_S16_LE:
+>> +		break;
+>
+> params_width().
+>
+
+Done.
+
+>> +			    AIC31XX_IFACE1_DATALEN_MASK,
+>> +			    data);
+>> +
+>> +	return aic31xx_setup_pll(codec, params);
+>
+> This is going to mean that you have a symmetry constraint I think, if
+> you try to set up different rates for playback and capture presumably
+> things will break.  Setting symmetric_rates will tell applications about
+> that.
+>
+
+Done.
+
+>> +	case SND_SOC_DAIFMT_CBS_CFM:
+>> +	case SND_SOC_DAIFMT_CBM_CFS:
+>> +	case SND_SOC_DAIFMT_CBS_CFS:
+>> +		dev_err(codec->dev, "Unsupported DAI master/slave interface\n");
+>> +		return -EINVAL;
+>> +	default:
+>> +		dev_alert(codec->dev, "Invalid DAI master/slave interface\n");
+>> +		return -EINVAL;
+>
+> Just have a default.
+>
+
+Done.
+
+>> +	for (i = 0; aic31xx_divs[i].mclk != freq; i++)
+>> +		if (i == ARRAY_SIZE(aic31xx_divs)) {
+>> +			dev_err(aic31xx->dev, "%s: Unsupported frequency %d\n",
+>> +				__func__, freq);
+>> +			return -EINVAL;
+>> +		}
+>
+> Braces around the for () too please.
+>
+
+Done.
+
+>> +static int aic31xx_set_power(struct snd_soc_codec *codec, int power)
+>> +{
+>> +	struct aic31xx_priv *aic31xx = snd_soc_codec_get_drvdata(codec);
+>> +	int ret;
+>> +
+>> +	dev_dbg(codec->dev, "## %s: %d -> %d\n", __func__,
+>> +		aic31xx->power, power);
+>> +	if (aic31xx->power == power)
+>> +		return 0;
+>
+> This looks like you need sensible refcounting somewhere?  Implementing
+> this as the standard PM operations may be sensible.
+>
+
+Not really. This was just avoid power on sequence when bias level goes 
+from SND_SOC_BIAS_PREPARE back to SND_SOC_BIAS_STANDBY. I'll change this 
+to a "if (codec->dapm.bias_level == SND_SOC_BIAS_OFF)" in set_bias_level 
+like other codecs do.
+
+>> +		if (gpio_is_valid(aic31xx->pdata.gpio_reset)) {
+>> +			gpio_set_value(aic31xx->pdata.gpio_reset, 1);
+>> +			udelay(100);
+>> +		}
+>> +		snd_soc_write(codec, AIC31XX_RESET, 0x01);
+>> +		udelay(100);
+>> +		regcache_cache_only(aic31xx->regmap, false);
+>
+> You should be coming out of cache only mode before you issue the reset
+> write.  Is it not sensible to skip that if you have a physical reset
+> line?
+>
+>> +		snd_soc_write(codec, AIC31XX_RESET, 0x01);
+>> +		regcache_cache_only(aic31xx->regmap, true);
+>> +
+>> +		if (gpio_is_valid(aic31xx->pdata.gpio_reset))
+>> +			gpio_set_value(aic31xx->pdata.gpio_reset, 0);
+>
+> Likewise here.  Also if you do reset the CODEC then the dance you did
+> with the regulator notifiers becomes pointless - the goal with that is
+> to avoid the need to resync the cache if the CODEC wasn't actually reset
+> by a power cycle but since the CODEC is going to be explicitly reset
+> before it's powered off there's no benefit.
+>
+
+I rewrote the bias-level/power logic a bit. It should now look more like 
+the other codecs. I hope you like this version better.
+
+>> +	switch (level) {
+>> +	/* full On */
+>> +	case SND_SOC_BIAS_ON:
+>> +		/* All power is driven by DAPM system*/
+>> +		break;
+>> +	/* partial On */
+>
+> Coding style, please.
+>
+
+Removed the redundant badly indented comments.
+
+Fixed also the Kconfig and Makefile ordering and added dt-include for 
+micbias and changed the default to 2.0V. All are now squashed to a 
+single patch.
+
+In addition to addressing your comments I also added an internal ADC 
+input and DAC output for codec to turn on at playback/capture start even 
+if the alsamixers are not set correctly.
+
+I'll mail the patches shortly.
+
+Best regards,
+Jyri
