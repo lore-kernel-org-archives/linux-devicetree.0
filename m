@@ -1,100 +1,42 @@
-From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Subject: [PATCH] gpio: davinci: fix gpio selection for OF
-Date: Tue, 4 Mar 2014 23:06:02 +0100
-Message-ID: <1393970762-5346-1-git-send-email-holler@ahsoftware.de>
-References: <5315ED51.1000006@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <5315ED51.1000006-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Sebastian Reichel <sre@debian.org>
+Subject: [PATCHv2 8/9] iio: documentation: Add ABI documentation for *_mean_raw
+Date: Tue,  4 Mar 2014 23:05:50 +0100
+Message-ID: <1393970751-18157-9-git-send-email-sre@debian.org>
+References: <1393702365-26429-1-git-send-email-sre@debian.org>
+ <1393970751-18157-1-git-send-email-sre@debian.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1393970751-18157-1-git-send-email-sre@debian.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@ring0.de>, Marek Belisko <marek@goldelico.com>, Jonathan Cameron <jic23@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Sebastian Reichel <sre@debian.org>
 List-Id: devicetree@vger.kernel.org
 
-The driver missed an of_xlate function to translate gpio numbers
-as found in the DT to the correct chip and number.
+Add ABI documentation for in_*_mean_raw files, which are
+already supported and used in the kernel for some time.
 
-While there I've set #gpio_cells to a fixed value of 2.
-
-I've used gpio-pxa.c as template for those changes and tested my changes
-successfully on a da850 board using entries for gpio-leds in a DT. So I didn't
-reinvent the wheel but just copied and tested stuff.
-
-Thanks to Grygorii Strashko for the hint of the existing code in gpio-pxa.
-
-Signed-off-by: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Signed-off-by: Sebastian Reichel <sre@debian.org>
 ---
- drivers/gpio/gpio-davinci.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ Documentation/ABI/testing/sysfs-bus-iio | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-index 7629b4f..79f45c4 100644
---- a/drivers/gpio/gpio-davinci.c
-+++ b/drivers/gpio/gpio-davinci.c
-@@ -44,6 +44,9 @@ struct davinci_gpio_regs {
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+index 6e02c50..58ba333 100644
+--- a/Documentation/ABI/testing/sysfs-bus-iio
++++ b/Documentation/ABI/testing/sysfs-bus-iio
+@@ -210,6 +210,14 @@ Contact:	linux-iio@vger.kernel.org
+ Description:
+ 		Scaled humidity measurement in milli percent.
  
- static void __iomem *gpio_base;
- 
-+static struct davinci_gpio_controller *davinci_gpio_chips;
-+static int davinci_last_gpio;
++What:		/sys/bus/iio/devices/iio:deviceX/in_X_mean_raw
++KernelVersion:	3.5
++Contact:	linux-iio@vger.kernel.org
++Description:
++		Averaged raw measurement from channel X. The number of values
++		used for averaging is device specific. The converting rules for
++		normal raw values also applies to the averaged raw values.
 +
- static struct davinci_gpio_regs __iomem *gpio2regs(unsigned gpio)
- {
- 	void __iomem *ptr;
-@@ -172,6 +175,24 @@ of_err:
- 	return NULL;
- }
- 
-+#ifdef CONFIG_OF_GPIO
-+static int davinci_gpio_of_xlate(struct gpio_chip *gc,
-+			     const struct of_phandle_args *gpiospec,
-+			     u32 *flags)
-+{
-+	if (gpiospec->args[0] > davinci_last_gpio)
-+		return -EINVAL;
-+
-+	if (gc != &davinci_gpio_chips[gpiospec->args[0] / 32].chip)
-+		return -EINVAL;
-+
-+	if (flags)
-+		*flags = gpiospec->args[1];
-+
-+	return gpiospec->args[0] % 32;
-+}
-+#endif
-+
- static int davinci_gpio_probe(struct platform_device *pdev)
- {
- 	int i, base;
-@@ -236,6 +257,8 @@ static int davinci_gpio_probe(struct platform_device *pdev)
- 			chips[i].chip.ngpio = 32;
- 
- #ifdef CONFIG_OF_GPIO
-+		chips[i].chip.of_gpio_n_cells = 2;
-+		chips[i].chip.of_xlate = davinci_gpio_of_xlate;
- 		chips[i].chip.of_node = dev->of_node;
- #endif
- 		spin_lock_init(&chips[i].lock);
-@@ -251,6 +274,10 @@ static int davinci_gpio_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, chips);
- 	davinci_gpio_irq_setup(pdev);
-+
-+	davinci_gpio_chips = chips;
-+	davinci_last_gpio = ngpio;
-+
- 	return 0;
- }
- 
+ What:		/sys/bus/iio/devices/iio:deviceX/in_accel_offset
+ What:		/sys/bus/iio/devices/iio:deviceX/in_accel_x_offset
+ What:		/sys/bus/iio/devices/iio:deviceX/in_accel_y_offset
 -- 
-1.8.3.1
+1.9.0
