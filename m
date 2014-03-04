@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 5/7] ARM: sun6i: Protect SDRAM gating bit
-Date: Tue,  4 Mar 2014 17:18:02 +0100
-Message-ID: <1393949884-892-6-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH v3 4/7] ARM: sun6i: Protect CPU clock
+Date: Tue,  4 Mar 2014 17:18:01 +0100
+Message-ID: <1393949884-892-5-git-send-email-maxime.ripard@free-electrons.com>
 References: <1393949884-892-1-git-send-email-maxime.ripard@free-electrons.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
@@ -18,25 +18,42 @@ To: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Dan Williams 
 Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Prevent the SDRAM controller from being gated by force-enabling it in the
-machine code.
+Right now, AHB is an indirect child clock of the CPU clock. If that happens to
+change, since the CPU clock has no other consumers declared in Linux, it would
+be shut down, which is not really a good idea.
+
+Prevent this by forcing it enabled.
 
 Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/mach-sunxi/sun6i.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/mach-sunxi/sun6i.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/arch/arm/mach-sunxi/sun6i.c b/arch/arm/mach-sunxi/sun6i.c
-index 6b39055..1ccb275 100644
+index c5dc819..6b39055 100644
 --- a/arch/arm/mach-sunxi/sun6i.c
 +++ b/arch/arm/mach-sunxi/sun6i.c
-@@ -34,6 +34,11 @@ static void __init sun6i_dt_init(void)
- 	clk = clk_get(NULL, "cpu");
- 	if (!IS_ERR(clk))
- 		clk_prepare_enable(clk);
+@@ -10,6 +10,7 @@
+  * warranty of any kind, whether express or implied.
+  */
+ 
++#include <linux/clk.h>
+ #include <linux/clk-provider.h>
+ #include <linux/clocksource.h>
+ #include <linux/init.h>
+@@ -22,9 +23,17 @@
+ 
+ static void __init sun6i_dt_init(void)
+ {
++	struct clk *clk;
 +
-+	/* DDR gating clock */
-+	clk = clk_get(NULL, "ahb1_sdram");
+ 	sunxi_setup_restart();
+ 
+ 	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
++
++	/* Make sure the clocks we absolutely need are enabled */
++	/* CPU clock */
++	clk = clk_get(NULL, "cpu");
 +	if (!IS_ERR(clk))
 +		clk_prepare_enable(clk);
  }
