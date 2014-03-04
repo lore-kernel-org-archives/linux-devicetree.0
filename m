@@ -1,38 +1,81 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH v2] mmc: sdhci: add quirk for broken write protect
- detection
-Date: Tue, 4 Mar 2014 13:00:55 -0800
-Message-ID: <ae0f71ac-c5f7-4af7-a9ba-c019cec19ebf@AM1EHSMHS017.ehs.local>
-References: <1393759200-22819-1-git-send-email-eli.billauer@gmail.com>
- <74003aec-1707-4f43-b947-df148d573fa1@TX2EHSMHS038.ehs.local>
- <53163247.8000904@gmail.com>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 0/7] Watchdog support for Armada 375/38x SoC
+Date: Tue, 4 Mar 2014 17:03:28 -0300
+Message-ID: <20140304200328.GA11316@arch.cereza>
+References: <1393949244-5011-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20140304175341.GO1872@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <53163247.8000904@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eli Billauer <eli.billauer@gmail.com>
-Cc: chris@printf.net, michal.simek@xilinx.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mike Looijmans <mike.looijmans@topic.nl>
+In-Reply-To: <20140304175341.GO1872-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-03-04 at 10:06PM +0200, Eli Billauer wrote:
-> Hello S=C3=B6ren,
+On Mar 04, Jason Cooper wrote:
+> On Tue, Mar 04, 2014 at 01:07:17PM -0300, Ezequiel Garcia wrote:
+> > Here's a new patchset adding support for watchdog on Armada 375 and
+> > Armada 38x SoCs. Regarding the previous patchset, this time we're h=
+andling
+> > the SoCs differences in the watchdog driver itself.
+> >=20
+> > The new Armada 375/385 SoCs have two registers for the watchdog RST=
+OUT:
+> >=20
+> >  1. It has a dedicated register (similar to the one in A370/XP)
+> >  2. Also has a bit in a shared RSTOUT register.
+> >=20
+> > Therefore, in order to support this two-folded RSTOUT, we extend th=
+e 'reg'
+> > property in the watchdog devicetree and require a new pair of cells=
+ to specify
+> > the shared RSTOUT.
+> >=20
+> > On the driver side, we need to implement per-SoC stop() and enabled=
+()
+> > functions. Such somewhat complex infrastructure is needed to ensure=
+ the driver
+> > performs proper reset of the watchdog timer, by masking and disabli=
+ng the
+> > RSTOUT before the interrupt is enabled.
+> >=20
+> > Changes from v1:
+> >=20
+> >   * Reworked entirely!
+> >=20
+> > Ezequiel Garcia (7):
+> >   watchdog: orion: Introduce a SoC-specific RSTOUT mapping
+> >   watchdog: orion: Introduce per-SoC stop() function
+> >   watchdog: orion: Introduce per-SoC enabled() function
+> >   watchdog: orion: Add Armada 375/380 SoC support
+> >   ARM: mvebu: Enable Armada 375 watchdog in the devicetree
+> >   ARM: mvebu: Enable Armada 380/385 watchdog in the devicetree
+> >   ARM: mvebu: Add A375/A380 watchdog binding documentation
+> >=20
+> >  .../devicetree/bindings/watchdog/marvel.txt        |   7 +
+> >  arch/arm/boot/dts/armada-375.dtsi                  |   6 +
+> >  arch/arm/boot/dts/armada-38x.dtsi                  |   7 +
+> >  drivers/watchdog/orion_wdt.c                       | 167 +++++++++=
+++++++++++--
+> >  4 files changed, 177 insertions(+), 10 deletions(-)
 >=20
-> wp-inverted solves the practical problem indeed, and fools the
-> driver into thinking that the card has an inverted write protection
-> sensor, and the logic zero that it finds in the hardware register
-> means that the card isn't write protected.
+> From a cursory look, this is a big improvement.  Just one small note:=
+  I
+> almost didn't see this, since I wasn't in the Cc.  No need to resend,=
+ I
+> bounced it around to the right folders so I can track it.
 >=20
-> I'm insisting on this patch, because I think that the device tree
-> should describe the hardware as it is, and not fool the driver into
-> behaving the way we want it to. These tricks always bite back later
-> on.
-Well, why is broken-wp more accurate than wp-inverted? Strictly
-speaking the WP is there and working, it's just tied off to some value
-you want to have interpreted the other way.
-Anyway, seems like this is solvable with wp-inverted and whether the
-additional quirk is needed I leave to others do decide.
 
-	S=C3=B6ren
+Ouch.. sorry about that. Of course, wasn't on purpose!
+--=20
+Ezequiel Garc=EDa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
