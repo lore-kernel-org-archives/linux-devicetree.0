@@ -1,245 +1,129 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH RFC 1/5] ASoC: tlv320aic31xx: Add basic codec driver implementation
-Date: Tue, 4 Mar 2014 15:36:33 +0200
-Message-ID: <5315D6E1.3010008@ti.com>
-References: <cover.1393405575.git.jsarha@ti.com> <73198e2f7aca0379abc596027d7d59ac250061c7.1393405575.git.jsarha@ti.com> <20140303063444.GR2411@sirena.org.uk>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [RFC PATCH v4 3/8] staging: imx-drm: Document updated imx-drm
+	device tree bindings
+Date: Tue, 04 Mar 2014 14:47:12 +0100
+Message-ID: <1393940832.3917.84.camel@paszta.hi.pengutronix.de>
+References: <1393338203-25051-1-git-send-email-p.zabel@pengutronix.de>
+	<1393338203-25051-4-git-send-email-p.zabel@pengutronix.de>
+	<530F1C4C.2010504@ti.com>
+	<1393506385.4507.49.camel@paszta.hi.pengutronix.de>
+	<20140227130020.GJ21483@n2100.arm.linux.org.uk> <530F43B9.800@ti.com>
+	<1393520088.4507.92.camel@paszta.hi.pengutronix.de>
+	<53103C72.5030509@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140303063444.GR2411@sirena.org.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-omap@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, bcousson@baylibre.com, peter.ujfalusi@ti.com, detheridge@ti.com
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <53103C72.5030509@ti.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces@lists.freedesktop.org
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/03/2014 08:34 AM, Mark Brown wrote:
-> On Wed, Feb 26, 2014 at 11:14:25AM +0200, Jyri Sarha wrote:
->> This commit adds a bare bones driver support for TLV320AIC31XX family
->> audio codecs. The driver adds basic stereo playback trough headphone
->> and speaker outputs and mono capture trough microphone inputs.
+Hi Tomi,
+
+Am Freitag, den 28.02.2014, 09:36 +0200 schrieb Tomi Valkeinen:
+> On 27/02/14 18:54, Philipp Zabel wrote:
+> 
+> >> - One IPU enabled, one disabled: nothing special here, just set the
+> >> other IPU to status="disabled" in the DT data. The driver for the
+> >> enabled IPU would register the required DRM entities.
+> > 
+> > that should work. Let the enabled IPU create the imx-drm platform device
+> > on probe, parse the device tree and ignore everything only hanging off
+> > of the disabled IPU.
+> 
+> I think you misunderstood me a bit.
+> 
+> What I meant is that there's no need for imx-drm device at all, neither
+> in the DT data or in the kernel side.
+
+agreed about the DT node. But the drm_device must be associated with a
+struct device. There is no reason to have the device representing the
+whole display subsystem hang off of one IPU over the other, and I'd
+rather not special case the IPU code with master/slave cases.
+
+> There'd just be the DT nodes for the IPUs, which would cause the IPU
+> platform devices to be created, and a driver for the IPU. So just like
+> for any other normal platform device.
+
+Except that one IPU has to create the drm_device and the other needs to
+be drm_device-less.
+
+> In the simplest cases, where only one IPU is enabled, or the IPUs want
+> to be considered as totally independent, there'd be nothing special. The
+> IPU driver would just register the drm entities.
+
+[...]
+> Here the slave IPU doesn't need to scan the graph at all. It just needs
+> to make itself available somehow to the master. Maybe just by exported
+> functions, or registering itself somewhere.
 >
-> Always CC maintainers on patches please.
->
+> Only the master IPU will scan the graph, and as all the entities are
+> connected to the same graph, including the slave IPU, the master can
+> find all the relevant nodes.
 
-Will do.
+Somehow it needs to know whether it should create the component master
+and drm_device, or just register as a slave component. I'd strongly
+prefer to have a look at the graph over giving explicit "master;" or
+"slave;" properties to the IPU device nodes for this single
+Linux-specific reason.
 
->> +static bool aic31xx_volatile(struct device *dev, unsigned int reg)
->> +{
->> +	if (aic31xx_precious(dev, reg) || aic31xx_real_volatile(dev, reg))
->> +		return true;
->> +
->> +	switch (reg) {
->> +	case AIC31XX_PAGECTL: /* regmap implementation requires this */
->> +	case AIC31XX_RESET: /* always clears after write */
->> +		return true;
->> +	}
->> +	return false;
->> +}
->
-> This is more complex than you need, just write a standalone volatile
-> function with some comments in it.
->
+[...]
+> And I don't even know if the master-slave method I described is valid,
+> although I don't see why it would not work. The master
+> "display-subsystem" DT node does make sense to me in cases like this,
+> where the IPUs need to be driven as a single unit.
 
-Replaced with straight forward aic31xx_volatile() and aic31xx_writable() 
-functions.
+which is a sensible default for i.MX6.
 
->> +static const struct regmap_range_cfg aic31xx_ranges[] = {
->> +	{
->> +		.name = "codec-regmap",
->
-> Make this meaningful or omit it.
->
+> > Did anybody propose such a generic term? How about:
+> > 
+> > -imx-drm {
+> > -	compatible = "fsl,imx-drm";
+> > -	ports = <&ipu1_di0>, <&ipu1_di1>;
+> > -};
+> > +display-subsystem {
+> > +	compatible = "fsl,imx-display-subsystem";
+> > +	ports = <&ipu1_di0>, <&ipu1_di1>;
+> > +};
+> 
+> That sounds fine to me.
+> 
+> I wonder how it works if, say, there are 4 IPUs, and you want to run
+> them in two pairs. In that case you need two of those display-subsystem
+> nodes. But I guess it's just a matter of assigning a number for them
+> with 'regs' property, and making sure the driver has nothing that
+> prevents multiple instances of it.
 
-Removed.
+Exactly. I'm not even sure it is necessary to assign a number.
 
->> +#define AIC31XX_NUM_SUPPLIES	6
->> +static const char * const aic31xx_supply_names[] = {
->
-> Use the define in the array size to help check everything lines up.
->
+[...]
+> >> If that's not possible, then the drivers in question could have an
+> >> option to enable or disable themselves, passed via the kernel command
+> >> line, so that the user can select which subsystem to use.
+> > 
+> > That is the exact same problem as having multiple drivers that can bind
+> > to the same device.
+> 
+> Hmm, sorry? Weren't we just discussing about that problem =). Or maybe I
+> missed the original point from Russell, as the problem about DRM and
+> fbdev conflicting sounded a bit unrelated.
 
-Done.
+I guess I missed it, though. Rereading the context, I am just
+(re)stating that this is a problem beyond DRM and fbdev. Compiling a
+kernel with two drivers binding to the same device, you effectively say
+"whichever binds first, I don't care". To change this, we'd need
+something similar to module blacklists for non-modular builds. I'd
+rather strive to remove the need for duplicate drivers in the kernel.
 
->> +static const char * const ldac_in_text[] = {
->> +	"off", "Left Data", "Right Data", "Mono"
->> +};
->
-> Off not off - be consistent both internally and with the general style.
->
-
-Done.
-
->> +static const struct snd_kcontrol_new aic311x_snd_controls[] = {
->> +	SOC_DOUBLE_R("SP Driver Playback Switch", AIC31XX_SPLGAIN,
->> +		     AIC31XX_SPRGAIN, 2, 1, 0),
->
-> SP?
->
-
-"SP" replaced with "Speaker", also in DAPM switches.
-
->> +	if (!strcmp(w->name, "DAC Left")) {
->> +		mask = AIC31XX_LDACPWRSTATUS_MASK;
->
-> There's no overlap with the enable bits?  In general it would seem nicer
-> to have a switch based on the register bits used for the enable rather
-> than the tree of string comparisions but it's probably not that big a
-> deal overall.
->
-
-Not with bits, but with regs. I decided this structure would be easier 
-to implement and understand than having a switch(w->reg) with nested 
-switch(w->shift) cases. I replaced the string comparisons with a single 
-switch case using a binary combination of w->reg and w->shift.
-
->> +		dev_err(w->codec->dev, "Unknown widget '%s' calling %s/n",
->> +			w->name, __func__);
->> +		return -1;		switch (w->shift) {
-		case 7:
-			mask = AIC31XX_LDACPWRSTATUS_MASK;
-
->
-> Return real error codes.
->
-
-Changed to -EINVAL.
-
->> +	if (event == SND_SOC_DAPM_POST_PMU)
->> +		return aic31xx_wait_bits(aic31xx, reg, mask, mask, 5000, 100);
->> +	else if (event == SND_SOC_DAPM_POST_PMD)
->> +		return aic31xx_wait_bits(aic31xx, reg, mask, 0, 5000, 100);
->
-> switch.
->
-
-Done.
-
->> +	SND_SOC_DAPM_DAC_E("DAC Right", "DAC Right Input",
->> +			   AIC31XX_DACSETUP, 6, 0, aic31xx_dapm_power_event,
->> +			   SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_POST_PMD),
->
-> Don't use stream names, use DAPM to route from the AIF to the widgets.
->
-
-Renamed DAC stnames to "Left Playback" and "Right Playback".
-
->> +	switch (params_format(params)) {
->> +	case SNDRV_PCM_FORMAT_S16_LE:
->> +		break;
->
-> params_width().
->
-
-Done.
-
->> +			    AIC31XX_IFACE1_DATALEN_MASK,
->> +			    data);
->> +
->> +	return aic31xx_setup_pll(codec, params);
->
-> This is going to mean that you have a symmetry constraint I think, if
-> you try to set up different rates for playback and capture presumably
-> things will break.  Setting symmetric_rates will tell applications about
-> that.
->
-
-Done.
-
->> +	case SND_SOC_DAIFMT_CBS_CFM:
->> +	case SND_SOC_DAIFMT_CBM_CFS:
->> +	case SND_SOC_DAIFMT_CBS_CFS:
->> +		dev_err(codec->dev, "Unsupported DAI master/slave interface\n");
->> +		return -EINVAL;
->> +	default:
->> +		dev_alert(codec->dev, "Invalid DAI master/slave interface\n");
->> +		return -EINVAL;
->
-> Just have a default.
->
-
-Done.
-
->> +	for (i = 0; aic31xx_divs[i].mclk != freq; i++)
->> +		if (i == ARRAY_SIZE(aic31xx_divs)) {
->> +			dev_err(aic31xx->dev, "%s: Unsupported frequency %d\n",
->> +				__func__, freq);
->> +			return -EINVAL;
->> +		}
->
-> Braces around the for () too please.
->
-
-Done.
-
->> +static int aic31xx_set_power(struct snd_soc_codec *codec, int power)
->> +{
->> +	struct aic31xx_priv *aic31xx = snd_soc_codec_get_drvdata(codec);
->> +	int ret;
->> +
->> +	dev_dbg(codec->dev, "## %s: %d -> %d\n", __func__,
->> +		aic31xx->power, power);
->> +	if (aic31xx->power == power)
->> +		return 0;
->
-> This looks like you need sensible refcounting somewhere?  Implementing
-> this as the standard PM operations may be sensible.
->
-
-Not really. This was just avoid power on sequence when bias level goes 
-from SND_SOC_BIAS_PREPARE back to SND_SOC_BIAS_STANDBY. I'll change this 
-to a "if (codec->dapm.bias_level == SND_SOC_BIAS_OFF)" in set_bias_level 
-like other codecs do.
-
->> +		if (gpio_is_valid(aic31xx->pdata.gpio_reset)) {
->> +			gpio_set_value(aic31xx->pdata.gpio_reset, 1);
->> +			udelay(100);
->> +		}
->> +		snd_soc_write(codec, AIC31XX_RESET, 0x01);
->> +		udelay(100);
->> +		regcache_cache_only(aic31xx->regmap, false);
->
-> You should be coming out of cache only mode before you issue the reset
-> write.  Is it not sensible to skip that if you have a physical reset
-> line?
->
->> +		snd_soc_write(codec, AIC31XX_RESET, 0x01);
->> +		regcache_cache_only(aic31xx->regmap, true);
->> +
->> +		if (gpio_is_valid(aic31xx->pdata.gpio_reset))
->> +			gpio_set_value(aic31xx->pdata.gpio_reset, 0);
->
-> Likewise here.  Also if you do reset the CODEC then the dance you did
-> with the regulator notifiers becomes pointless - the goal with that is
-> to avoid the need to resync the cache if the CODEC wasn't actually reset
-> by a power cycle but since the CODEC is going to be explicitly reset
-> before it's powered off there's no benefit.
->
-
-I rewrote the bias-level/power logic a bit. It should now look more like 
-the other codecs. I hope you like this version better.
-
->> +	switch (level) {
->> +	/* full On */
->> +	case SND_SOC_BIAS_ON:
->> +		/* All power is driven by DAPM system*/
->> +		break;
->> +	/* partial On */
->
-> Coding style, please.
->
-
-Removed the redundant badly indented comments.
-
-Fixed also the Kconfig and Makefile ordering and added dt-include for 
-micbias and changed the default to 2.0V. All are now squashed to a 
-single patch.
-
-In addition to addressing your comments I also added an internal ADC 
-input and DAC output for codec to turn on at playback/capture start even 
-if the alsamixers are not set correctly.
-
-I'll mail the patches shortly.
-
-Best regards,
-Jyri
+regards
+Philipp
