@@ -1,156 +1,58 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCHv3 2/4] net: phy: extend fixed driver with fixed_phy_register()
-Date: Tue, 4 Mar 2014 10:44:38 -0800
-Message-ID: <CAGVrzca7m0hwL-Wgv2eqO9_khpJP3ioZjbRNX7dOged-bq_C9Q@mail.gmail.com>
-References: <1393930704-24374-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1393930704-24374-3-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v9 0/9] USB Host support for OMAP5 uEVM
+Date: Tue, 4 Mar 2014 10:47:51 -0800
+Message-ID: <20140304184750.GB8771@atomide.com>
+References: <1393510711-4697-1-git-send-email-rogerq@ti.com>
+ <20140228225627.GU13624@atomide.com>
+ <53144CBC.2050607@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1393930704-24374-3-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: netdev-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: "David S. Miller" <davem@davemloft.net>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Christian Gmeiner <christian.gmeiner@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <53144CBC.2050607-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2014-03-04 2:58 GMT-08:00 Thomas Petazzoni
-<thomas.petazzoni@free-electrons.com>:
-> The existing fixed_phy_add() function has several drawbacks that
-> prevents it from being used as is for OF-based declaration of fixed
-> PHYs:
->
->  * The address of the PHY on the fake bus needs to be passed, while a
->    dynamic allocation is desired.
->
->  * Since the phy_device instantiation is post-poned until the next
->    mdiobus scan, there is no way to associate the fixed PHY with its
->    OF node, which later prevents of_phy_connect() from finding this
->    fixed PHY from a given OF node.
->
-> To solve this, this commit introduces fixed_phy_register(), which will
-> allocate an available PHY address, add the PHY using fixed_phy_add()
-> and instantiate the phy_device structure associated with the provided
-> OF node.
+* Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [140303 01:38]:
+> Hi Tony,
+> 
+> On 03/01/2014 12:56 AM, Tony Lindgren wrote:
+> > * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [140227 06:21]:
+> >> Hi,
+> >>
+> >> This patchset brings up USB Host ports and Ethernet port on
+> >> the OMAP5 uEVM board.
+> >>
+> >> It also does some cleanup with respect to DT clock binding
+> >> for the mfd/omap-usb-host driver.
+> >>
+> >> Please queue these for -next.
+> >>
+> >> Lee,
+> >>
+> >> I've folded some platform data dependent patches with mfd patches
+> >> so that they don't break functionality when applied individually.
+> >> You can safely pull in all MFD patches (1 to 6).
+> >>
+> >> Tony & Benoit,
+> >>
+> >> Can you please accept patches 7, 8 and 9?
+> > 
+> > Are 7, 8 and 9 safe to queue separately from the MFD changes
+> > or do they need to wait for the MFD changes to get merged
+> > first?
+> > 
+> 
+> They are safe to queue separately.
 
-Besides the !CONFIG_FIXED_PHY hiccup (see below), this looks good to me:
+OK thanks applying 7, 8 and 9 into omap-for-v3.15/dt.
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Regards,
 
->
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> ---
->  drivers/net/phy/fixed.c   | 61 +++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/phy_fixed.h | 11 +++++++++
->  2 files changed, 72 insertions(+)
->
-> diff --git a/drivers/net/phy/fixed.c b/drivers/net/phy/fixed.c
-> index 0f02403..82095cc 100644
-> --- a/drivers/net/phy/fixed.c
-> +++ b/drivers/net/phy/fixed.c
-> @@ -21,6 +21,7 @@
->  #include <linux/phy_fixed.h>
->  #include <linux/err.h>
->  #include <linux/slab.h>
-> +#include <linux/of.h>
->
->  #define MII_REGS_NUM 29
->
-> @@ -203,6 +204,66 @@ err_regs:
->  }
->  EXPORT_SYMBOL_GPL(fixed_phy_add);
->
-> +void fixed_phy_del(int phy_addr)
-> +{
-> +       struct fixed_mdio_bus *fmb = &platform_fmb;
-> +       struct fixed_phy *fp, *tmp;
-> +
-> +       list_for_each_entry_safe(fp, tmp, &fmb->phys, node) {
-> +               if (fp->addr == phy_addr) {
-> +                       list_del(&fp->node);
-> +                       kfree(fp);
-> +                       return;
-> +               }
-> +       }
-> +}
-> +EXPORT_SYMBOL_GPL(fixed_phy_del);
-> +
-> +static int phy_fixed_addr;
-> +static DEFINE_SPINLOCK(phy_fixed_addr_lock);
-> +
-> +int fixed_phy_register(unsigned int irq,
-> +                      struct fixed_phy_status *status,
-> +                      struct device_node *np)
-> +{
-> +       struct fixed_mdio_bus *fmb = &platform_fmb;
-> +       struct phy_device *phy;
-> +       int phy_addr;
-> +       int ret;
-> +
-> +       /* Get the next available PHY address, up to PHY_MAX_ADDR */
-> +       spin_lock(&phy_fixed_addr_lock);
-> +       if (phy_fixed_addr == PHY_MAX_ADDR) {
-> +               spin_unlock(&phy_fixed_addr_lock);
-> +               return -ENOSPC;
-> +       }
-> +       phy_addr = phy_fixed_addr++;
-> +       spin_unlock(&phy_fixed_addr_lock);
-> +
-> +       ret = fixed_phy_add(PHY_POLL, phy_addr, status);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       phy = get_phy_device(fmb->mii_bus, phy_addr, false);
-> +       if (!phy || IS_ERR(phy)) {
-> +               fixed_phy_del(phy_addr);
-> +               return -EINVAL;
-> +       }
-> +
-> +       of_node_get(np);
-> +       phy->dev.of_node = np;
-> +
-> +       ret = phy_device_register(phy);
-> +       if (ret) {
-> +               phy_device_free(phy);
-> +               of_node_put(np);
-> +               fixed_phy_del(phy_addr);
-> +               return ret;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
->  static int __init fixed_mdio_bus_init(void)
->  {
->         struct fixed_mdio_bus *fmb = &platform_fmb;
-> diff --git a/include/linux/phy_fixed.h b/include/linux/phy_fixed.h
-> index 509d8f5..902e8a1 100644
-> --- a/include/linux/phy_fixed.h
-> +++ b/include/linux/phy_fixed.h
-> @@ -9,15 +9,26 @@ struct fixed_phy_status {
->         int asym_pause;
->  };
->
-> +struct device_node;
-> +
->  #ifdef CONFIG_FIXED_PHY
->  extern int fixed_phy_add(unsigned int irq, int phy_id,
->                          struct fixed_phy_status *status);
-> +extern int fixed_phy_register(unsigned int irq,
-> +                             struct fixed_phy_status *status,
-> +                             struct device_node *np);
->  #else
->  static inline int fixed_phy_add(unsigned int irq, int phy_id,
->                                 struct fixed_phy_status *status)
->  {
->         return -ENODEV;
->  }
-> +extern int fixed_phy_register(unsigned int irq,
-> +                             struct fixed_phy_status *status,
-> +                             struct device_node *np)
-> +{
-> +       return -ENODEV;
-> +}
-
-s/extern/static/ otherwise I doubt this builds correctly.
--- 
-Florian
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
