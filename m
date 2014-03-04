@@ -1,143 +1,248 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCHv3 3/4] of: provide a binding for fixed link PHYs
-Date: Tue,  4 Mar 2014 11:58:23 +0100
-Message-ID: <1393930704-24374-4-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1393930704-24374-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1393930704-24374-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: netdev-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Florian Fainelli <florian@openwrt.org>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Christian Gmeiner <christian.gmeiner@gmail.com>
+From: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>
+Subject: RESEND [PATCH V9 2/2] ARM: dts: exynos5250: Enable ahci sata and sata phy
+Date: Tue,  4 Mar 2014 16:40:52 +0530
+Message-ID: <1393931452-18237-1-git-send-email-yuvaraj.cd@samsung.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: kishon@ti.com, kgene.kim@samsung.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: grant.likely@linaro.org, joshi@samsung.com, swarren@wwwdotorg.org, mark.rutland@arm.com, galak@codeaurora.org, jg1.han@samsung.com, ks.giri@samsung.com, b.zolnierkie@samsung.com, t.figa@samsung.com, christoffer.dall@linaro.com, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Some Ethernet MACs have a "fixed link", and are not connected to a
-normal MDIO-managed PHY device. For those situations, a Device Tree
-binding allows to describe a "fixed link" using a special PHY node.
+This patch adds dt entry for ahci sata controller and its
+corresponding phy controller.phy node has been added w.r.t
+new generic phy framework.
 
-This patch adds:
-
- * A documentation for the fixed PHY Device Tree binding.
-
- * An of_phy_is_fixed_link() function that an Ethernet driver can call
-   on its PHY phandle to find out whether it's a fixed link PHY or
-   not. It should typically be used to know if
-   of_phy_register_fixed_link() should be called.
-
- * An of_phy_register_fixed_link() function that instantiates the
-   fixed PHY into the PHY subsystem, so that when the driver calls
-   of_phy_connect(), the PHY device associated to the OF node will be
-   found.
-
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
 ---
- .../devicetree/bindings/net/fixed-link.txt         | 34 ++++++++++++++++++++++
- drivers/of/of_mdio.c                               | 24 +++++++++++++++
- include/linux/of_mdio.h                            | 15 ++++++++++
- 3 files changed, 73 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/fixed-link.txt
+ .../devicetree/bindings/ata/exynos-sata-phy.txt    |   14 --------
+ .../devicetree/bindings/ata/exynos-sata.txt        |   25 +++++++++-----
+ .../devicetree/bindings/phy/samsung-phy.txt        |   36 ++++++++++++++++++++
+ arch/arm/boot/dts/exynos5250-arndale.dts           |   21 ++++++++++++
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |   17 +++++----
+ arch/arm/boot/dts/exynos5250.dtsi                  |   18 +++++++---
+ 6 files changed, 98 insertions(+), 33 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
 
-diff --git a/Documentation/devicetree/bindings/net/fixed-link.txt b/Documentation/devicetree/bindings/net/fixed-link.txt
-new file mode 100644
-index 0000000..9f2a1a50
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/fixed-link.txt
-@@ -0,0 +1,34 @@
-+Fixed link Device Tree binding
-+------------------------------
+diff --git a/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt b/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
+deleted file mode 100644
+index 37824fa..0000000
+--- a/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
++++ /dev/null
+@@ -1,14 +0,0 @@
+-* Samsung SATA PHY Controller
+-
+-SATA PHY nodes are defined to describe on-chip SATA Physical layer controllers.
+-Each SATA PHY controller should have its own node.
+-
+-Required properties:
+-- compatible        : compatible list, contains "samsung,exynos5-sata-phy"
+-- reg               : <registers mapping>
+-
+-Example:
+-        sata@ffe07000 {
+-                compatible = "samsung,exynos5-sata-phy";
+-                reg = <0xffe07000 0x1000>;
+-        };
+diff --git a/Documentation/devicetree/bindings/ata/exynos-sata.txt b/Documentation/devicetree/bindings/ata/exynos-sata.txt
+index 0849f10..b2adb1f 100644
+--- a/Documentation/devicetree/bindings/ata/exynos-sata.txt
++++ b/Documentation/devicetree/bindings/ata/exynos-sata.txt
+@@ -4,14 +4,21 @@ SATA nodes are defined to describe on-chip Serial ATA controllers.
+ Each SATA controller should have its own node.
+ 
+ Required properties:
+-- compatible        : compatible list, contains "samsung,exynos5-sata"
+-- interrupts        : <interrupt mapping for SATA IRQ>
+-- reg               : <registers mapping>
+-- samsung,sata-freq : <frequency in MHz>
++- compatible		: compatible list, contains "samsung,exynos5-sata"
++- interrupts		: <interrupt mapping for SATA IRQ>
++- reg			: <registers mapping>
++- samsung,sata-freq	: <frequency in MHz>
++- phys			: as mentioned in phy-bindings.txt
++- phy-names		: as mentioned in phy-bindings.txt
+ 
+ Example:
+-        sata@ffe08000 {
+-                compatible = "samsung,exynos5-sata";
+-                reg = <0xffe08000 0x1000>;
+-                interrupts = <115>;
+-        };
++	sata@122f0000 {
++		compatible = "snps,dwc-ahci";
++		samsung,sata-freq = <66>;
++		reg = <0x122f0000 0x1ff>;
++		interrupts = <0 115 0>;
++		clocks = <&clock 277>, <&clock 143>;
++		clock-names = "sata", "sclk_sata";
++		phys = <&sata_phy>;
++		phy-names = "sata-phy";
++	};
+diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+index c0fccaa..a937f75 100644
+--- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
++++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+@@ -20,3 +20,39 @@ Required properties:
+ - compatible : should be "samsung,exynos5250-dp-video-phy";
+ - reg : offset and length of the Display Port PHY register set;
+ - #phy-cells : from the generic PHY bindings, must be 0;
 +
-+Some Ethernet MACs have a "fixed link", and are not connected to a
-+normal MDIO-managed PHY device. For those situations, a Device Tree
-+binding allows to describe a "fixed link".
++Samsung SATA PHY Controller
++---------------------------
 +
-+Such a fixed link situation is described by creating a PHY node as a
-+sub-node of an Ethernet device, with the following properties:
++SATA PHY nodes are defined to describe on-chip SATA Physical layer controllers.
++Each SATA PHY controller should have its own node.
 +
-+* 'fixed-link' (boolean, mandatory), to indicate that this PHY is a
-+  fixed link PHY.
-+* 'speed' (integer, mandatory), to indicate the link speed. Accepted
-+  values are 10, 100 and 1000
-+* 'full-duplex' (boolean, optional), to indicate that full duplex is
-+  used. When absent, half duplex is assumed.
-+* 'pause' (boolean, optional), to indicate that pause should be
-+  enabled.
-+* 'asym-pause' (boolean, optional), to indicate that asym_pause should
-+  be enabled.
++Required properties:
++- compatible        : compatible list, contains "samsung,exynos5250-sata-phy"
++- reg : offset and length of the SATA PHY register set;
++- #phy-cells : from the generic phy bindings;
++
++Example:
++	sata_phy: sata-phy@12170000 {
++		compatible = "samsung,exynos5250-sata-phy";
++		reg = <0x12170000 0x1ff>;
++		clocks = <&clock 287>;
++		clock-names = "sata_phyctrl";
++		#phy-cells = <0>;
++		samsung,exynos-sataphy-i2c-phandle = <&sata_phy_i2c>;
++		samsung,syscon-phandle = <&pmu_syscon>;
++	};
++
++Device-Tree bindings for sataphy i2c client driver
++--------------------------------------------------
++
++Required properties:
++compatible: Should be "samsung,exynos-sataphy-i2c"
++- reg: I2C address of the sataphy i2c device.
 +
 +Example:
 +
-+ethernet@0 {
-+	...
-+	phy = <&phy0>;
-+	phy0: phy@0 {
-+	      fixed-link;
-+	      speed = <1000>;
-+	      full-duplex;
++	sata_phy_i2c:sata-phy@38 {
++		compatible = "samsung,exynos-sataphy-i2c";
++		reg = <0x38>;
 +	};
-+	...
-+};
-+
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index 875b7b6..c645fb8 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -14,6 +14,7 @@
- #include <linux/netdevice.h>
- #include <linux/err.h>
- #include <linux/phy.h>
-+#include <linux/phy_fixed.h>
- #include <linux/of.h>
- #include <linux/of_irq.h>
- #include <linux/of_mdio.h>
-@@ -274,3 +275,26 @@ struct phy_device *of_phy_attach(struct net_device *dev,
- 	return phy_attach_direct(dev, phy, flags, iface) ? NULL : phy;
- }
- EXPORT_SYMBOL(of_phy_attach);
-+
-+#if defined(CONFIG_FIXED_PHY)
-+bool of_phy_is_fixed_link(struct device_node *np)
-+{
-+	return of_property_read_bool(np, "fixed-link");
-+}
-+EXPORT_SYMBOL(of_phy_is_fixed_link);
-+
-+int of_phy_register_fixed_link(struct device_node *np)
-+{
-+	struct fixed_phy_status status = {};
-+
-+	status.link = 1;
-+	status.duplex = of_property_read_bool(np, "full-duplex");
-+	if (of_property_read_u32(np, "speed", &status.speed))
-+		return -EINVAL;
-+	status.pause = of_property_read_bool(np, "pause");
-+	status.asym_pause = of_property_read_bool(np, "asym-pause");
-+
-+	return fixed_phy_register(PHY_POLL, &status, np);
-+}
-+EXPORT_SYMBOL(of_phy_register_fixed_link);
-+#endif
-diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
-index 6fe8464..77a6e32 100644
---- a/include/linux/of_mdio.h
-+++ b/include/linux/of_mdio.h
-@@ -67,4 +67,19 @@ static inline struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np)
- }
- #endif /* CONFIG_OF */
+diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
+index 38b96a4..97eef40 100644
+--- a/arch/arm/boot/dts/exynos5250-arndale.dts
++++ b/arch/arm/boot/dts/exynos5250-arndale.dts
+@@ -375,6 +375,27 @@
+ 		};
+ 	};
  
-+#if defined(CONFIG_OF) && defined(CONFIG_FIXED_PHY)
-+extern int of_phy_register_fixed_link(struct device_node *np);
-+extern bool of_phy_is_fixed_link(struct device_node *np);
-+#else
-+static inline int of_phy_register_fixed_link(struct device_node *np)
-+{
-+	return -ENOSYS;
-+}
-+static inline bool of_phy_is_fixed_link(struct device_node *np)
-+{
-+	return false;
-+}
-+#endif
++	i2c@121D0000 {
++		status = "okay";
++		samsung,i2c-sda-delay = <100>;
++		samsung,i2c-max-bus-freq = <40000>;
++		samsung,i2c-slave-addr = <0x38>;
 +
++		sata_phy_i2c:sata-phy@38 {
++			compatible = "samsung,exynos-sataphy-i2c";
++			reg = <0x38>;
++		};
++	};
 +
- #endif /* __LINUX_OF_MDIO_H */
++	sata@122F0000 {
++		status = "okay";
++	};
++
++	sata-phy@12170000 {
++		status = "okay";
++		samsung,exynos-sataphy-i2c-phandle = <&sata_phy_i2c>;
++	};
++
+ 	mmc_0: mmc@12200000 {
+ 		status = "okay";
+ 		num-slots = <1>;
+diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+index f76946e..81782c1b 100644
+--- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
++++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+@@ -242,16 +242,12 @@
+ 		samsung,i2c-slave-addr = <0x38>;
+ 		status = "okay";
+ 
+-		sata-phy {
+-			compatible = "samsung,sata-phy";
++		sata_phy_i2c:sata-phy@38 {
++			compatible = "samsung,exynos-sataphy-i2c";
+ 			reg = <0x38>;
+ 		};
+ 	};
+ 
+-	sata@122F0000 {
+-		samsung,sata-freq = <66>;
+-	};
+-
+ 	i2c@12C80000 {
+ 		samsung,i2c-sda-delay = <100>;
+ 		samsung,i2c-max-bus-freq = <66000>;
+@@ -274,6 +270,15 @@
+ 		};
+ 	};
+ 
++	sata@122F0000 {
++		status = "okay";
++	};
++
++	sata-phy@12170000 {
++		status = "okay";
++		samsung,exynos-sataphy-i2c-phandle = <&sata_phy_i2c>;
++	};
++
+ 	mmc@12200000 {
+ 		status = "okay";
+ 		num-slots = <1>;
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index 8f6300f..31f7cab 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -46,6 +46,7 @@
+ 		i2c6 = &i2c_6;
+ 		i2c7 = &i2c_7;
+ 		i2c8 = &i2c_8;
++		i2c9 = &i2c_9;
+ 		pinctrl0 = &pinctrl_0;
+ 		pinctrl1 = &pinctrl_1;
+ 		pinctrl2 = &pinctrl_2;
+@@ -233,16 +234,25 @@
+ 	};
+ 
+ 	sata@122F0000 {
+-		compatible = "samsung,exynos5-sata-ahci";
++		compatible = "snps,dwc-ahci";
++		samsung,sata-freq = <66>;
+ 		reg = <0x122F0000 0x1ff>;
+ 		interrupts = <0 115 0>;
+ 		clocks = <&clock 277>, <&clock 143>;
+ 		clock-names = "sata", "sclk_sata";
++		phys = <&sata_phy>;
++		phy-names = "sata-phy";
++		status = "disabled";
+ 	};
+ 
+-	sata-phy@12170000 {
+-		compatible = "samsung,exynos5-sata-phy";
++	sata_phy: sata-phy@12170000 {
++		compatible = "samsung,exynos5250-sata-phy";
+ 		reg = <0x12170000 0x1ff>;
++		clocks = <&clock 287>;
++		clock-names = "sata_phyctrl";
++		#phy-cells = <0>;
++		samsung,syscon-phandle = <&pmu_system_controller>;
++		status = "disabled";
+ 	};
+ 
+ 	i2c_0: i2c@12C60000 {
+@@ -360,7 +370,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	i2c@121D0000 {
++	i2c_9: i2c@121D0000 {
+                 compatible = "samsung,exynos5-sata-phy-i2c";
+                 reg = <0x121D0000 0x100>;
+                 #address-cells = <1>;
 -- 
-1.8.3.2
+1.7.10.4
+
