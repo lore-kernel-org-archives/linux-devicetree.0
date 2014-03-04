@@ -1,67 +1,101 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] ARM: mvebu: move DT Dove to MVEBU
-Date: Mon, 3 Mar 2014 23:29:42 -0500
-Message-ID: <20140304042942.GK1872@titan.lakedaemon.net>
-References: <1393538613-28293-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1393663178-22120-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Tim Harvey <tharvey@gateworks.com>
+Subject: Re: [PATCH 0/7] PCI irq mapping fixes and cleanups
+Date: Mon, 3 Mar 2014 22:04:04 -0800
+Message-ID: <CAJ+vNU2rR0+-tW9Z6M_1NNOagDNCGYE71ifPj_WryYjvnFY=Pg@mail.gmail.com>
+References: <1393608523-17509-1-git-send-email-l.stach@pengutronix.de>
+	<CAJ+vNU2VN5haOU2GN5o7UUg9vgYh06pAhvDaoGw6EzTBEbD0mg@mail.gmail.com>
+	<20140301183059.GA6315@obsidianresearch.com>
+	<000601cf36b8$330b3a90$9921afb0$%han@samsung.com>
+	<CAJ+vNU3UL+LTWnoxW7scAig19=z2xoYCA-HZ6a7GUyGEXtKK9Q@mail.gmail.com>
+	<CAJ+vNU2ojt_o9=AOGfpbx6NCOE_kE6tsV8FvjoGYk9BBwP_OFQ@mail.gmail.com>
+	<20140304000102.GC5603@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1393663178-22120-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20140304000102.GC5603@obsidianresearch.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Richard Zhu <r65037@freescale.com>, Sascha Hauer <kernel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, linux-sh <linux-sh@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, Thierry Reding <thierry.reding@gmail.com>, Ben Dooks <ben-linux@fluff.org>, linux-tegra <linux-tegra@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 01, 2014 at 09:39:38AM +0100, Sebastian Hesselbarth wrote:
-> With all the DT support preparation done, we are able to move Dove
-> to MVEBU easily. Legacy non-DT mach-dove is left untouched to rot
-> for a while before removal.
-> 
-> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> Changelog:
-> v1->v2:
-> - just rename CONFIG_ARCH_DOVE to CONFIG_MACH_DOVE in dts/Makefile
->   (Suggested by Jason Cooper)
-> v2->v3:
-> - dropped drivers/phy/Kconfig change, which is now an individual
->   patch sent to Kishon.
-> 
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  arch/arm/boot/dts/Makefile    |  2 +-
->  arch/arm/mach-dove/Kconfig    | 12 ------------
->  arch/arm/mach-dove/Makefile   |  1 -
->  arch/arm/mach-dove/board-dt.c | 43 -------------------------------------------
->  arch/arm/mach-mvebu/Kconfig   | 12 ++++++++++++
->  arch/arm/mach-mvebu/Makefile  |  1 +
->  arch/arm/mach-mvebu/dove.c    | 39 +++++++++++++++++++++++++++++++++++++++
->  7 files changed, 53 insertions(+), 57 deletions(-)
->  delete mode 100644 arch/arm/mach-dove/board-dt.c
->  create mode 100644 arch/arm/mach-mvebu/dove.c
+On Mon, Mar 3, 2014 at 4:01 PM, Jason Gunthorpe
+<jgunthorpe@obsidianresearch.com> wrote:
+> On Mon, Mar 03, 2014 at 03:40:43PM -0800, Tim Harvey wrote:
+>
+>> of_irq_parse_and_map_pci().  The GIC function that translates the
+>> interrupt per domain is given irq_data: 0x123 0x04 0x00
+>
+> This has been shifted by 1 byte..
+>
+>> IRQ 123, which should get 32 added to it for irq155).  Instead, the
+>> implementation of gic_irq_domain_xlate()
+>> (http://lxr.missinglinkelectronics.com/linux/drivers/irqchip/irq-gic.c#L832)
+>> adds 32 to the 0x04 returning 20:
+>> [    1.841781] of_irq_parse_raw:  /soc/pcie@0x01000000:00000001
+>> [    1.841813] of_irq_parse_raw: ipar=/soc/pcie@0x01000000, size=1
+>> [    1.841838]  -> addrsize=3
+>> [    1.841870]  -> match=1 (imaplen=28)
+>                               ^^^^^^^^^^^^^
+>
+> That looks odd, it should be the number of dwords in the
+> interrupt-map, you have 4 lines of 8 dwords each, so it should be
+> 32.
 
-We'll see how it goes!
+(+cc Grant Likely)
 
-Applied to mvebu/soc
+imaplen does indeed get initialized to 32 (size of interrupt-map /
+sizeof(u32)) but its printed above after its been decremented in the
+loop which is misleading
+(http://lxr.missinglinkelectronics.com/linux/drivers/of/irq.c#L201)
 
-thx,
+The issue appears to me to be a bug in of_irq_parse_raw() which has
+been around since Graht's original commit:
+http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/of/irq.c?id=7dc2e1134a22dc242175d5321c0c9e97d16eb87b
 
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 9bcf2cf..8829197 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -237,11 +237,11 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle
+                        /* Check for malformed properties */
+                        if (WARN_ON(newaddrsize + newintsize > MAX_PHANDLE_ARGS)
+                                goto fail;
+-                       if (imaplen < (newaddrsize + newintsize))
++                       if (imaplen < newintsize)
+                                goto fail;
+
+-                       imap += newaddrsize + newintsize;
+-                       imaplen -= newaddrsize + newintsize;
++                       imap += newintsize;
++                       imaplen -= newintsize;
+
+                        pr_debug(" -> imaplen=%d\n", imaplen);
+                }
+
+The issue is that the interrupt-map table point (imap) needs to be
+incremented over the parent unit interrupt specifier which is
+newintsize cells, not newaddrsize + newintsize cells.  The invalid
+calculation would cause the pointer to get mis-aligned and thus only
+the first interrupt entry would ever get properly checked for a match.
+
+It looks like of_irq_parse_raw() is only called from
+of_irq_parse_pci() which prior to Lucas' patch was only called from
+pci_read_irq_line() called from pcibios_setup_device() used in
+arch/arm/powerpc, so perhaps this function isn't widely used
+explaining why the bug was never caught.
+
+I'll post a patch shortly with the above fix.
+
+<snip>
+
+>> [    1.841972] irq_create_of_mapping: calling xlate for 123/4/0 3
+>
+> And it is the wrong data.. 123/4/0 is
+
+right - this is shifted because of the issue above.
+
+With the above patch Lucas' original patch now operates correctly to
+resolve the 4 legacy PCI interrupts required when using a P2P bridge
+on the IMX6.
+
+Tim
