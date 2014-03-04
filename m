@@ -1,49 +1,63 @@
-From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: [PATCHv2 4/9] mfd: twl-core: Add twl_i2c_read/write_u16
-Date: Tue,  4 Mar 2014 23:05:46 +0100
-Message-ID: <1393970751-18157-5-git-send-email-sre@debian.org>
-References: <1393702365-26429-1-git-send-email-sre@debian.org>
- <1393970751-18157-1-git-send-email-sre@debian.org>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393970751-18157-1-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v5] can: xilinx CAN controller support.
+Date: Tue, 4 Mar 2014 15:51:15 -0800
+Message-ID: <1b9f22ac-4dde-4ecc-885a-3d8081157081@AM1EHSMHS012.ehs.local>
+References: <5254bfec-c6fd-4681-a34d-706d51e60fbb@VA3EHSMHS004.ehs.local>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5254bfec-c6fd-4681-a34d-706d51e60fbb-+Ck8Kgl/v0+XHCJdrdq+zrjjLBE8jN/0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a simple twl_i2c_read/write_u16 wrapper over
-the twl_i2c_read/write, which is similar to the
-twl_i2c_read/write_u8 wrapper.
+Hi Kedar,
 
-Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- include/linux/i2c/twl.h | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+On Tue, 2014-03-04 at 06:50PM +0530, Kedareswara rao Appana wrote:
+> This patch adds xilinx CAN controller support.
+> This driver supports both ZYNQ CANPS and Soft IP
+> AXI CAN controller.
+>=20
+[...]
+> diff --git a/Documentation/devicetree/bindings/net/can/xilinx_can.txt=
+ b/Documentation/devicetree/bindings/net/can/xilinx_can.txt
+> new file mode 100644
+> index 0000000..0e57103
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/can/xilinx_can.txt
+> @@ -0,0 +1,45 @@
+> +Xilinx Axi CAN/Zynq CANPS controller Device Tree Bindings
+> +---------------------------------------------------------
+> +
+> +Required properties:
+> +- compatible		: Should be "xlnx,zynq-can-1.00.a" for Zynq CAN
+> +			  controllers and "xlnx,axi-can-1.00.a" for Axi CAN
+> +			  controllers.
+> +- reg			: Physical base address and size of the Axi CAN/Zynq
+> +			  CANPS registers map.
+> +- interrupts		: Property with a value describing the interrupt
+> +			  number.
+> +- interrupt-parent	: Must be core interrupt controller
+> +- clock-names		: List of input clock names - "ref_clk", "aper_clk"
 
-diff --git a/include/linux/i2c/twl.h b/include/linux/i2c/twl.h
-index ade1c06..d2b1670 100644
---- a/include/linux/i2c/twl.h
-+++ b/include/linux/i2c/twl.h
-@@ -195,6 +195,18 @@ static inline int twl_i2c_read_u8(u8 mod_no, u8 *val, u8 reg) {
- 	return twl_i2c_read(mod_no, val, reg, 1);
- }
- 
-+static inline int twl_i2c_write_u16(u8 mod_no, u16 val, u8 reg) {
-+	val = cpu_to_le16(val);
-+	return twl_i2c_write(mod_no, (u8*) &val, reg, 2);
-+}
-+
-+static inline int twl_i2c_read_u16(u8 mod_no, u16 *val, u8 reg) {
-+	int ret;
-+	ret = twl_i2c_read(mod_no, (u8*) val, reg, 2);
-+	*val = le16_to_cpu(*val);
-+	return ret;
-+}
-+
- int twl_get_type(void);
- int twl_get_version(void);
- int twl_get_hfclk_rate(void);
--- 
-1.9.0
+Let's reconsider these names. These are rather Zynq specific names. Doe=
+s
+the IP documentation use these as well? The names should match the
+naming used for the IP, rather than the SOC. Is this the correct data s=
+heet:
+http://www.xilinx.com/support/documentation/ip_documentation/axi_can/v1=
+_03_a/ds791_axi_can.pdf
+? According to that the names should rather be 's_axi_aclk' and
+'can_clk', IMHO.
+
+	S=C3=B6ren
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
