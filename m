@@ -1,55 +1,29 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: Re: [PATCH 1/2] i2c: Add driver for Cadence I2C controller
-Date: Tue, 4 Mar 2014 11:04:01 -0600
-Message-ID: <20140304170401.GA18529@joshc.qualcomm.com>
-References: <1393632046-20062-1-git-send-email-soren.brinkmann@xilinx.com>
- <8af0e222-6337-4ec4-b718-099a9decc5ec@TX2EHSMHS034.ehs.local>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCHv3 0/4] Add DT support for fixed PHYs
+Date: Tue, 04 Mar 2014 21:09:53 +0300
+Message-ID: <531616F1.5060703@cogentembedded.com>
+References: <1393930704-24374-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <8af0e222-6337-4ec4-b718-099a9decc5ec@TX2EHSMHS034.ehs.local>
-Sender: linux-doc-owner@vger.kernel.org
-To: S?ren Brinkmann <soren.brinkmann@xilinx.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, Harini Katakam <harinik@xilinx.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1393930704-24374-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: netdev-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Florian Fainelli <florian@openwrt.org>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Christian Gmeiner <christian.gmeiner@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 28, 2014 at 07:06:29PM -0800, S?ren Brinkmann wrote:
-> On Fri, 2014-02-28 at 04:00PM -0800, Soren Brinkmann wrote:
-> > Add a driver for the Cadence I2C controller. This controller is for
-> > example found in Xilinx Zynq.
-> > 
-> > Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
-> > ---
-> >  .../devicetree/bindings/i2c/i2c-cadence.txt        |  21 +
-> >  MAINTAINERS                                        |   1 +
-> >  drivers/i2c/busses/Kconfig                         |   7 +
-> >  drivers/i2c/busses/Makefile                        |   1 +
-> >  drivers/i2c/busses/i2c-cadence.c                   | 901 +++++++++++++++++++++
-> >  5 files changed, 931 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-cadence.txt
-> >  create mode 100644 drivers/i2c/busses/i2c-cadence.c
-> > 
-> [...]
-> > diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-> > index f5ed03164d86..7806c1654068 100644
-> > --- a/drivers/i2c/busses/Kconfig
-> > +++ b/drivers/i2c/busses/Kconfig
-> > @@ -375,6 +375,13 @@ config I2C_BLACKFIN_TWI_CLK_KHZ
-> >  	help
-> >  	  The unit of the TWI clock is kHz.
-> >  
-> > +config I2C_CADENCE
-> > +	tristate "Cadence I2C Controller"
-> > +	depends on ARCH_ZYNQ
-> This can be reduced to a dependency on COMMON_CLK only, I think.
+Hello.
 
-Do you really need to depend on COMMON_CLK?  Most of the clk_* API's are
-properly stubbed when !HAVE_CLK.
+On 03/04/2014 01:58 PM, Thomas Petazzoni wrote:
 
-Also, you may want to split out the device tree bindings in a separate
-patch for separate review.
+> Here is a third version of the patch set that adds a Device Tree
+> binding and the related code to support fixed PHYs.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+> Since the second version, the changes have been:
+
+>   * Rebased on top of v3.14-rc1, and re-tested on hardware.
+
+    This needs to be rebased atop of net-next.git repo on git.kernel.org.
+
+WBR, Sergei
