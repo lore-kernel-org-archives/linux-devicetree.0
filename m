@@ -1,7 +1,7 @@
 From: Sebastian Reichel <sre@debian.org>
-Subject: [PATCHv2 7/9] mfd: twl4030-madc: Move driver to drivers/iio/adc
-Date: Tue,  4 Mar 2014 23:05:49 +0100
-Message-ID: <1393970751-18157-8-git-send-email-sre@debian.org>
+Subject: [PATCHv2 9/9] iio: inkern: add iio_read_channel_average_raw
+Date: Tue,  4 Mar 2014 23:05:51 +0100
+Message-ID: <1393970751-18157-10-git-send-email-sre@debian.org>
 References: <1393702365-26429-1-git-send-email-sre@debian.org>
  <1393970751-18157-1-git-send-email-sre@debian.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -11,89 +11,67 @@ To: Sebastian Reichel <sre@ring0.de>, Marek Belisko <marek@goldelico.com>, Jonat
 Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Sebastian Reichel <sre@debian.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a driver for an A/D converter, which belongs into
-drivers/iio/adc.
+Add iio_read_channel_average_raw to support reading
+averaged raw values in consumer drivers.
 
 Signed-off-by: Sebastian Reichel <sre@debian.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
-Acked-by: Jonathan Cameron <jic23@kernel.org>
 ---
- drivers/iio/adc/Kconfig                 | 10 ++++++++++
- drivers/iio/adc/Makefile                |  1 +
- drivers/{mfd => iio/adc}/twl4030-madc.c |  0
- drivers/mfd/Kconfig                     | 10 ----------
- drivers/mfd/Makefile                    |  1 -
- 5 files changed, 11 insertions(+), 11 deletions(-)
- rename drivers/{mfd => iio/adc}/twl4030-madc.c (100%)
+ drivers/iio/inkern.c         | 18 ++++++++++++++++++
+ include/linux/iio/consumer.h | 13 +++++++++++++
+ 2 files changed, 31 insertions(+)
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 2209f28..427f75c 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -183,6 +183,16 @@ config TI_AM335X_ADC
- 	  Say yes here to build support for Texas Instruments ADC
- 	  driver which is also a MFD client.
+diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
+index 0cf5f8e..adeba5a 100644
+--- a/drivers/iio/inkern.c
++++ b/drivers/iio/inkern.c
+@@ -443,6 +443,24 @@ err_unlock:
+ }
+ EXPORT_SYMBOL_GPL(iio_read_channel_raw);
  
-+config TWL4030_MADC
-+	tristate "TWL4030 MADC (Monitoring A/D Converter)"
-+	depends on TWL4030_CORE
-+	help
-+	This driver provides support for Triton TWL4030-MADC. The
-+	driver supports both RT and SW conversion methods.
++int iio_read_channel_average_raw(struct iio_channel *chan, int *val)
++{
++	int ret;
 +
-+	This driver can also be built as a module. If so, the module will be
-+	called twl4030-madc.
++	mutex_lock(&chan->indio_dev->info_exist_lock);
++	if (chan->indio_dev->info == NULL) {
++		ret = -ENODEV;
++		goto err_unlock;
++	}
 +
- config TWL6030_GPADC
- 	tristate "TWL6030 GPADC (General Purpose A/D Converter) Support"
- 	depends on TWL4030_CORE
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index ba9a10a..9acf2df 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -20,5 +20,6 @@ obj-$(CONFIG_MCP3422) += mcp3422.o
- obj-$(CONFIG_NAU7802) += nau7802.o
- obj-$(CONFIG_TI_ADC081C) += ti-adc081c.o
- obj-$(CONFIG_TI_AM335X_ADC) += ti_am335x_adc.o
-+obj-$(CONFIG_TWL4030_MADC) += twl4030-madc.o
- obj-$(CONFIG_TWL6030_GPADC) += twl6030-gpadc.o
- obj-$(CONFIG_VIPERBOARD_ADC) += viperboard_adc.o
-diff --git a/drivers/mfd/twl4030-madc.c b/drivers/iio/adc/twl4030-madc.c
-similarity index 100%
-rename from drivers/mfd/twl4030-madc.c
-rename to drivers/iio/adc/twl4030-madc.c
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 49bb445..23a8a51 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -935,16 +935,6 @@ config TWL4030_CORE
- 	  high speed USB OTG transceiver, an audio codec (on most
- 	  versions) and many other features.
++	ret = iio_channel_read(chan, val, NULL, IIO_CHAN_INFO_AVERAGE_RAW);
++err_unlock:
++	mutex_unlock(&chan->indio_dev->info_exist_lock);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(iio_read_channel_average_raw);
++
+ static int iio_convert_raw_to_processed_unlocked(struct iio_channel *chan,
+ 	int raw, int *processed, unsigned int scale)
+ {
+diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
+index 2752b1f..651f9a0 100644
+--- a/include/linux/iio/consumer.h
++++ b/include/linux/iio/consumer.h
+@@ -123,6 +123,19 @@ int iio_read_channel_raw(struct iio_channel *chan,
+ 			 int *val);
  
--config TWL4030_MADC
--	tristate "TI TWL4030 MADC"
--	depends on TWL4030_CORE
--	help
--	This driver provides support for triton TWL4030-MADC. The
--	driver supports both RT and SW conversion methods.
--
--	This driver can be built as a module. If so it will be
--	named twl4030-madc
--
- config TWL4030_POWER
- 	bool "TI TWL4030 power resources"
- 	depends on TWL4030_CORE && ARM
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 5aea5ef..c8eb0bc 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -71,7 +71,6 @@ obj-$(CONFIG_MFD_TPS80031)	+= tps80031.o
- obj-$(CONFIG_MENELAUS)		+= menelaus.o
- 
- obj-$(CONFIG_TWL4030_CORE)	+= twl-core.o twl4030-irq.o twl6030-irq.o
--obj-$(CONFIG_TWL4030_MADC)      += twl4030-madc.o
- obj-$(CONFIG_TWL4030_POWER)    += twl4030-power.o
- obj-$(CONFIG_MFD_TWL4030_AUDIO)	+= twl4030-audio.o
- obj-$(CONFIG_TWL6040_CORE)	+= twl6040.o
+ /**
++ * iio_read_channel_average_raw() - read from a given channel
++ * @chan:		The channel being queried.
++ * @val:		Value read back.
++ *
++ * Note raw reads from iio channels are in adc counts and hence
++ * scale will need to be applied if standard units required.
++ *
++ * In opposit to the normal iio_read_channel_raw this function
++ * returns the average of multiple reads.
++ */
++int iio_read_channel_average_raw(struct iio_channel *chan, int *val);
++
++/**
+  * iio_read_channel_processed() - read processed value from a given channel
+  * @chan:		The channel being queried.
+  * @val:		Value read back.
 -- 
 1.9.0
