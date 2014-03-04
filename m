@@ -1,7 +1,7 @@
 From: Sebastian Reichel <sre@debian.org>
-Subject: [PATCHv2 5/9] mfd: twl4030-madc: Use twl_i2c_read/write_u16 for 16 bit registers
-Date: Tue,  4 Mar 2014 23:05:47 +0100
-Message-ID: <1393970751-18157-6-git-send-email-sre@debian.org>
+Subject: [PATCHv2 7/9] mfd: twl4030-madc: Move driver to drivers/iio/adc
+Date: Tue,  4 Mar 2014 23:05:49 +0100
+Message-ID: <1393970751-18157-8-git-send-email-sre@debian.org>
 References: <1393702365-26429-1-git-send-email-sre@debian.org>
  <1393970751-18157-1-git-send-email-sre@debian.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -11,99 +11,89 @@ To: Sebastian Reichel <sre@ring0.de>, Marek Belisko <marek@goldelico.com>, Jonat
 Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Sebastian Reichel <sre@debian.org>
 List-Id: devicetree@vger.kernel.org
 
-Simplify reading and writing of 16 bit TWL registers in the
-driver by using twl_i2c_read_u16 and twl_i2c_write_u16.
+This is a driver for an A/D converter, which belongs into
+drivers/iio/adc.
 
 Signed-off-by: Sebastian Reichel <sre@debian.org>
 Acked-by: Lee Jones <lee.jones@linaro.org>
 Acked-by: Jonathan Cameron <jic23@kernel.org>
 ---
- drivers/mfd/twl4030-madc.c | 39 ++++++++-------------------------------
- 1 file changed, 8 insertions(+), 31 deletions(-)
+ drivers/iio/adc/Kconfig                 | 10 ++++++++++
+ drivers/iio/adc/Makefile                |  1 +
+ drivers/{mfd => iio/adc}/twl4030-madc.c |  0
+ drivers/mfd/Kconfig                     | 10 ----------
+ drivers/mfd/Makefile                    |  1 -
+ 5 files changed, 11 insertions(+), 11 deletions(-)
+ rename drivers/{mfd => iio/adc}/twl4030-madc.c (100%)
 
-diff --git a/drivers/mfd/twl4030-madc.c b/drivers/mfd/twl4030-madc.c
-index f37da65..d1ca36a 100644
---- a/drivers/mfd/twl4030-madc.c
-+++ b/drivers/mfd/twl4030-madc.c
-@@ -205,25 +205,19 @@ const struct twl4030_madc_conversion_method twl4030_conversion_methods[] = {
-  */
- static int twl4030_madc_channel_raw_read(struct twl4030_madc_data *madc, u8 reg)
- {
--	u8 msb, lsb;
-+	u16 val;
- 	int ret;
- 	/*
- 	 * For each ADC channel, we have MSB and LSB register pair. MSB address
- 	 * is always LSB address+1. reg parameter is the address of LSB register
- 	 */
--	ret = twl_i2c_read_u8(TWL4030_MODULE_MADC, &msb, reg + 1);
-+	ret = twl_i2c_read_u16(TWL4030_MODULE_MADC, &val, reg);
- 	if (ret) {
--		dev_err(madc->dev, "unable to read MSB register 0x%X\n",
--			reg + 1);
--		return ret;
--	}
--	ret = twl_i2c_read_u8(TWL4030_MODULE_MADC, &lsb, reg);
--	if (ret) {
--		dev_err(madc->dev, "unable to read LSB register 0x%X\n", reg);
-+		dev_err(madc->dev, "unable to read register 0x%X\n", reg);
- 		return ret;
- 	}
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index 2209f28..427f75c 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -183,6 +183,16 @@ config TI_AM335X_ADC
+ 	  Say yes here to build support for Texas Instruments ADC
+ 	  driver which is also a MFD client.
  
--	return (int)(((msb << 8) | lsb) >> 6);
-+	return (int)(val >> 6);
- }
++config TWL4030_MADC
++	tristate "TWL4030 MADC (Monitoring A/D Converter)"
++	depends on TWL4030_CORE
++	help
++	This driver provides support for Triton TWL4030-MADC. The
++	driver supports both RT and SW conversion methods.
++
++	This driver can also be built as a module. If so, the module will be
++	called twl4030-madc.
++
+ config TWL6030_GPADC
+ 	tristate "TWL6030 GPADC (General Purpose A/D Converter) Support"
+ 	depends on TWL4030_CORE
+diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+index ba9a10a..9acf2df 100644
+--- a/drivers/iio/adc/Makefile
++++ b/drivers/iio/adc/Makefile
+@@ -20,5 +20,6 @@ obj-$(CONFIG_MCP3422) += mcp3422.o
+ obj-$(CONFIG_NAU7802) += nau7802.o
+ obj-$(CONFIG_TI_ADC081C) += ti-adc081c.o
+ obj-$(CONFIG_TI_AM335X_ADC) += ti_am335x_adc.o
++obj-$(CONFIG_TWL4030_MADC) += twl4030-madc.o
+ obj-$(CONFIG_TWL6030_GPADC) += twl6030-gpadc.o
+ obj-$(CONFIG_VIPERBOARD_ADC) += viperboard_adc.o
+diff --git a/drivers/mfd/twl4030-madc.c b/drivers/iio/adc/twl4030-madc.c
+similarity index 100%
+rename from drivers/mfd/twl4030-madc.c
+rename to drivers/iio/adc/twl4030-madc.c
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 49bb445..23a8a51 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -935,16 +935,6 @@ config TWL4030_CORE
+ 	  high speed USB OTG transceiver, an audio codec (on most
+ 	  versions) and many other features.
  
- /*
-@@ -572,7 +566,6 @@ static int twl4030_madc_wait_conversion_ready(struct twl4030_madc_data *madc,
- int twl4030_madc_conversion(struct twl4030_madc_request *req)
- {
- 	const struct twl4030_madc_conversion_method *method;
--	u8 ch_msb, ch_lsb;
- 	int ret;
+-config TWL4030_MADC
+-	tristate "TI TWL4030 MADC"
+-	depends on TWL4030_CORE
+-	help
+-	This driver provides support for triton TWL4030-MADC. The
+-	driver supports both RT and SW conversion methods.
+-
+-	This driver can be built as a module. If so it will be
+-	named twl4030-madc
+-
+ config TWL4030_POWER
+ 	bool "TI TWL4030 power resources"
+ 	depends on TWL4030_CORE && ARM
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index 5aea5ef..c8eb0bc 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -71,7 +71,6 @@ obj-$(CONFIG_MFD_TPS80031)	+= tps80031.o
+ obj-$(CONFIG_MENELAUS)		+= menelaus.o
  
- 	if (!req || !twl4030_madc)
-@@ -588,37 +581,21 @@ int twl4030_madc_conversion(struct twl4030_madc_request *req)
- 		ret = -EBUSY;
- 		goto out;
- 	}
--	ch_msb = (req->channels >> 8) & 0xff;
--	ch_lsb = req->channels & 0xff;
- 	method = &twl4030_conversion_methods[req->method];
- 	/* Select channels to be converted */
--	ret = twl_i2c_write_u8(TWL4030_MODULE_MADC, ch_msb, method->sel + 1);
-+	ret = twl_i2c_write_u16(TWL4030_MODULE_MADC, req->channels, method->sel);
- 	if (ret) {
- 		dev_err(twl4030_madc->dev,
--			"unable to write sel register 0x%X\n", method->sel + 1);
--		goto out;
--	}
--	ret = twl_i2c_write_u8(TWL4030_MODULE_MADC, ch_lsb, method->sel);
--	if (ret) {
--		dev_err(twl4030_madc->dev,
--			"unable to write sel register 0x%X\n", method->sel + 1);
-+			"unable to write sel register 0x%X\n", method->sel);
- 		goto out;
- 	}
- 	/* Select averaging for all channels if do_avg is set */
- 	if (req->do_avg) {
--		ret = twl_i2c_write_u8(TWL4030_MODULE_MADC,
--				       ch_msb, method->avg + 1);
-+		ret = twl_i2c_write_u16(TWL4030_MODULE_MADC, req->channels,
-+				       method->avg);
- 		if (ret) {
- 			dev_err(twl4030_madc->dev,
- 				"unable to write avg register 0x%X\n",
--				method->avg + 1);
--			goto out;
--		}
--		ret = twl_i2c_write_u8(TWL4030_MODULE_MADC,
--				       ch_lsb, method->avg);
--		if (ret) {
--			dev_err(twl4030_madc->dev,
--				"unable to write avg reg 0x%X\n",
- 				method->avg);
- 			goto out;
- 		}
+ obj-$(CONFIG_TWL4030_CORE)	+= twl-core.o twl4030-irq.o twl6030-irq.o
+-obj-$(CONFIG_TWL4030_MADC)      += twl4030-madc.o
+ obj-$(CONFIG_TWL4030_POWER)    += twl4030-power.o
+ obj-$(CONFIG_MFD_TWL4030_AUDIO)	+= twl4030-audio.o
+ obj-$(CONFIG_TWL6040_CORE)	+= twl6040.o
 -- 
 1.9.0
