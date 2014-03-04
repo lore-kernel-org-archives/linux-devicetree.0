@@ -1,125 +1,65 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v5 5/7] [media] of: move common endpoint parsing to
- drivers/of
-Date: Tue, 04 Mar 2014 12:36:29 +0100
-Message-ID: <1393932989.3917.62.camel@paszta.hi.pengutronix.de>
-References: <1393522540-22887-1-git-send-email-p.zabel@pengutronix.de>
-	 <1393522540-22887-6-git-send-email-p.zabel@pengutronix.de>
-	 <531595AB.4000001@ti.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [RFC PATCH v2 19/21] ARM: dts: exynos5250-arndale: add dsi and
+	panel nodes
+Date: Tue, 04 Mar 2014 13:00:59 +0100
+Message-ID: <5315C07B.3090705@samsung.com>
+References: <1392204688-4591-1-git-send-email-a.hajda@samsung.com>
+	<1392204688-4591-20-git-send-email-a.hajda@samsung.com>
+	<53108FA0.4040903@ti.com> <53109193.3000604@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <531595AB.4000001@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <53109193.3000604@ti.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces@lists.freedesktop.org
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomi,
-
-Am Dienstag, den 04.03.2014, 10:58 +0200 schrieb Tomi Valkeinen:
-[...]
-> > +int of_graph_parse_endpoint(const struct device_node *node,
-> > +			    struct of_endpoint *endpoint)
-> > +{
-> > +	struct device_node *port_node = of_get_parent(node);
-> 
-> Can port_node be NULL? Probably only if something is quite wrong, but
-> maybe it's safer to return error in that case.
-
-both of_property_read_u32 and of_node_put can handle port_node == NULL.
-I'll add a WARN_ONCE here as for of_graph_get_next_endpoint and continue
-on.
-
-> > +	memset(endpoint, 0, sizeof(*endpoint));
-> > +
-> > +	endpoint->local_node = node;
-> > +	/*
-> > +	 * It doesn't matter whether the two calls below succeed.
-> > +	 * If they don't then the default value 0 is used.
-> > +	 */
-> > +	of_property_read_u32(port_node, "reg", &endpoint->port);
-> > +	of_property_read_u32(node, "reg", &endpoint->id);
-> 
-> If the endpoint does not have 'port' as parent (i.e. the shortened
-> format), the above will return the 'reg' of the device node (with
-> 'device node' I mean the main node, with 'compatible' property).
-
-Yes, a check for the port_node name is in order.
-
-> And generally speaking, if struct of_endpoint is needed, maybe it would
-> be better to return the struct of_endpoint when iterating the ports and
-> endpoints. That way there's no need to do parsing "afterwards", trying
-> to figure out if there's a parent port node, but the information is
-> already at hand.
-
-I'd like to keep the iteration separate from parsing so we can
-eventually introduce a for_each_endpoint_of_node helper macro around
-of_graph_get_next_endpoint.
-
-[...]
-> A few thoughts about the iteration, and the API in general.
-> 
-> In the omapdss version I separated iterating ports and endpoints, for
-> the two reasons:
-> 
-> 1) I think there are cases where you may want to have properties in the
-> port node, for things that are common for all the port's endpoints.
+On 02/28/2014 02:39 PM, Tomi Valkeinen wrote:
+> On 28/02/14 15:31, Tomi Valkeinen wrote:
 >
-> 2) if there are multiple ports, I think the driver code is cleaner if
-> you first take the port, decide what port that is and maybe call a
-> sub-function, and then iterate the endpoints for that port only.
-
-It depends a bit on whether you are actually iterating over individual
-ports, or if you are just walking the whole endpoint graph to find
-remote devices that have to be added to the component master's waiting
-list, for example.
-
-> Both of those are possible with the API in the series, but not very cleanly.
+>> Compared to what I've done on OMAP, you don't seem to specify the video
+>> inputs for the tc358764 at all. In this case it's obvious, as the chip
+>> is a child of the DSI master. But the chip could as well be controlled
+>> via i2c, and so be placed as a child of the i2c nodes.
+>>
+>> So even if the driver doesn't use it, maybe it would be more future
+>> proof to have both input and output endpoints for the tc358764?
+> Oh, and one addition: how me and Laurent see the DSI case (and other
+> similar ones), the child/parent relationship gives the control bus path,
+> and the video ports give the video data path.
 >
-> Also, if you just want to iterate the endpoints, it's easy to implement
-> a helper using the separate port and endpoint iterations.
+> So both are always needed. A DSI panel may be controlled via DSI, i2c,
+> spi, but the video path will always go from DSI master to the panel.
+I have made video path binding optional, in case of video bus
+if the specific video path is not present driver uses the bus it is
+connected to.
+In case DSI panel is controlled via different bus the path should be
+specified
+explicitly.
 
-I started out to move an existing (albeit lightly used) API to a common
-place so others can use it and improve upon it, too. I'm happy to pile
-on fixes directly in this series, but could we separate the improvement
-step from the move, for the bigger modifications?
+I have no strong feelings against making this binding required but as
+you have
+stated above "in this case it's obvious" and for me quite redundant.
 
-I had no immediate use for the port iteration, so I have taken no steps
-to add a function for this. I see no problem to add this later when
-somebody needs it, or even rewrite of_graph_get_next_endpoint to use it
-if it is feasible. Iterating over endpoints on a given port needs no
-helper, as you can just use for_each_child_of_node.
+What is the gain in specifying explicitly video paths in such cases?
+ 
 
-> Then, about the get_remote functions: I think there should be only one
-> function for that purpose, one that returns the device node that
-> contains the remote endpoint.
-> 
-> My reasoning is that the ports and endpoints, and their contents, should
-> be private to the device. So the only use to get the remote is to get
-> the actual device, to see if it's been probed, or maybe get some video
-> API for that device.
+> Or, as a theoretical panel, you could have a DSI controlled panel, being
+> a child of the DSI master, but the video data would come via, say,
+> parallel RGB. You can actually do that with some panels/encoders, even
+> if the concept is silly.
 
-of_graph_get_remote_port currently is used in the exynos4-is/fimc-is.c
-v4l2 driver to get the mipi-csi channel id from the remote port, and
-I've started using it in imx-drm-core.c for two cases:
-- given an endpoint on the encoder, find the remote port connected to
-  it, get the associated drm_crtc, to obtain its the drm_crtc_mask
-  for encoder->possible_crtcs.
-- given an encoder and a connected drm_crtc, walk all endpoints to find
-  the remote port associated with the drm_crtc, and then use the local
-  endpoint parent port to determine multiplexer settings.
+In this case explicit binding will work also.
 
-> If the driver model used has some kind of master-driver, which goes
-> through all the display entities, I think the above is still valid. When
-> the master-driver follows the remote-link, it still needs to first get
-> the main device node, as the ports and endpoints make no sense without
-> the context of the main device node.
-
-I'm not sure about this. I might just need the remote port node
-associated with a remote drm_crtc or drm_encoder structure to find out
-which local endpoint I should look at to retrieve configuration.
-
-regards
-Philipp
+Regards
+Andrzej
