@@ -1,209 +1,68 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v2 1/3] power_supply: modelgauge_battery: Maxim ModelGauge
- ICs gauge
-Date: Tue, 04 Mar 2014 11:48:59 +0100
-Message-ID: <1393930139.1222.7.camel@AMDC1943>
-References: <1391293385-27539-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1391293385-27539-2-git-send-email-vladimir.barinov@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1391293385-27539-2-git-send-email-vladimir.barinov@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Cc: anton@enomsg.org, dwmw2@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mk7.kang@samsung.com, mark.rutland@arm.com
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv3 0/4] Add DT support for fixed PHYs
+Date: Tue,  4 Mar 2014 11:58:20 +0100
+Message-ID: <1393930704-24374-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Florian Fainelli <florian@openwrt.org>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Christian Gmeiner <christian.gmeiner@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello,
 
-On Sun, 2014-02-02 at 02:23 +0400, Vladimir Barinov wrote:
-> Index: battery-2.6/drivers/power/modelgauge_battery.c
-> ===================================================================
-> --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-> +++ battery-2.6/drivers/power/modelgauge_battery.c	2014-02-02 01:29:34.314614874 +0400
-> @@ -0,0 +1,838 @@
-> +/*
-> + * Maxim ModelGauge ICs fuel gauge driver
-> + *
-> + * Author: Vladimir Barinov <source@cogentembedded.com>
-> + * Copyright (C) 2013 Cogent Embedded, Inc.
-> + *
-> + * This program is free software; you can redistribute  it and/or modify it
-> + * under  the terms of  the GNU General  Public License as published by the
-> + * Free Software Foundation;  either version 2 of the  License, or (at your
-> + * option) any later version.
-> + */
+Here is a third version of the patch set that adds a Device Tree
+binding and the related code to support fixed PHYs.
 
-(...)
+Since the second version, the changes have been:
 
-> +static int modelgauge_probe(struct i2c_client *client,
-> +			    const struct i2c_device_id *id)
-> +{
-> +	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
-> +	struct modelgauge_priv *priv;
-> +	int ret;
-> +
-> +	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_WORD_DATA))
-> +		return -EIO;
-> +
-> +	priv = devm_kzalloc(&client->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	if (client->dev.of_node)
-> +		priv->pdata = modelgauge_parse_dt(&client->dev);
-> +	else
-> +		priv->pdata = client->dev.platform_data;
-> +
-> +	priv->dev	= &client->dev;
-> +	priv->chip	= id->driver_data;
-> +
-> +	i2c_set_clientdata(client, priv);
-> +
-> +	priv->regmap = devm_regmap_init_i2c(client, &modelgauge_regmap);
-> +	if (IS_ERR(priv->regmap))
-> +		return PTR_ERR(priv->regmap);
-> +
-> +	priv->battery.name		= "modelgauge_battery";
-> +	priv->battery.type		= POWER_SUPPLY_TYPE_BATTERY;
-> +	priv->battery.get_property	= modelgauge_get_property;
-> +	priv->battery.properties	= modelgauge_battery_props;
-> +	priv->battery.num_properties	= ARRAY_SIZE(modelgauge_battery_props);
-> +
-> +	INIT_WORK(&priv->load_work, modelgauge_load_model_work);
-> +	INIT_DELAYED_WORK(&priv->rcomp_work, modelgauge_update_rcomp_work);
-> +
-> +	ret = modelgauge_init(priv);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = power_supply_register(&client->dev, &priv->battery);
-> +	if (ret) {
-> +		dev_err(priv->dev, "failed: power supply register\n");
-> +		goto err_supply;
-> +	}
-> +
-> +	if (client->irq) {
-> +		switch (priv->chip) {
-> +		case ID_MAX17040:
-> +		case ID_MAX17041:
-> +			dev_err(priv->dev, "alert line is not supported\n");
-> +			ret = -EINVAL;
-> +			goto err_irq;
-> +		default:
-> +			ret = devm_request_threaded_irq(priv->dev, client->irq,
-> +							NULL,
-> +							modelgauge_irq_handler,
-> +							IRQF_TRIGGER_FALLING,
-> +							priv->battery.name,
-> +							priv);
+ * Rebased on top of v3.14-rc1, and re-tested on hardware.
 
-Shouldn't it be also IRQF_ONESHOT? Without this you may get an error:
-genirq: Threaded irq requested with handler=NULL and !ONESHOT for irq
+ * Removed the RFC tag, since there seems to be some real interest in
+   this feature, and the code has gone through several iterations
+   already.
 
-> +			if (ret) {
-> +				dev_err(priv->dev, "failed to request irq %d\n",
-> +					client->irq);
-> +				goto err_irq;
-> +			}
-> +		}
-> +	}
-> +
-> +	return 0;
-> +
-> +err_irq:
-> +	power_supply_unregister(&priv->battery);
-> +err_supply:
-> +	cancel_work_sync(&priv->load_work);
-> +	cancel_delayed_work_sync(&priv->rcomp_work);
-> +	return ret;
-> +}
-> +
-> +static int modelgauge_remove(struct i2c_client *client)
-> +{
-> +	struct modelgauge_priv *priv = i2c_get_clientdata(client);
-> +
-> +	cancel_work_sync(&priv->load_work);
-> +	cancel_delayed_work_sync(&priv->rcomp_work);
-> +
-> +	power_supply_unregister(&priv->battery);
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int modelgauge_suspend(struct device *dev)
-> +{
-> +	struct i2c_client *client = to_i2c_client(dev);
-> +	struct modelgauge_priv *priv = i2c_get_clientdata(client);
-> +	struct modelgauge_platform_data *pdata = priv->pdata;
-> +
-> +	if (pdata && pdata->get_temperature)
-> +		cancel_delayed_work_sync(&priv->rcomp_work);
-> +
-> +	switch (priv->chip) {
-> +	case ID_MAX17040:
-> +	case ID_MAX17041:
-> +		return 0;
-> +	default:
-> +		if (client->irq) {
-> +			disable_irq(client->irq);
-> +			enable_irq_wake(client->irq);
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int modelgauge_resume(struct device *dev)
-> +{
-> +	struct i2c_client *client = to_i2c_client(dev);
-> +	struct modelgauge_priv *priv = i2c_get_clientdata(client);
-> +	struct modelgauge_platform_data *pdata = priv->pdata;
-> +
-> +	if (pdata && pdata->get_temperature)
-> +		schedule_delayed_work(&priv->rcomp_work,
-> +			    msecs_to_jiffies(MODELGAUGE_RCOMP_UPDATE_DELAY));
-> +
-> +	switch (priv->chip) {
-> +	case ID_MAX17040:
-> +	case ID_MAX17041:
-> +		return 0;
-> +	default:
-> +		if (client->irq) {
-> +			disable_irq_wake(client->irq);
-> +			enable_irq(client->irq);
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(modelgauge_pm_ops,
-> +			 modelgauge_suspend, modelgauge_resume);
-> +#define MODELGAUGE_PM_OPS (&modelgauge_pm_ops)
-> +#else
-> +#define MODELGAUGE_PM_OPS NULL
-> +#endif /* CONFIG_PM_SLEEP */
+ * The error handling in fixed_phy_register() has been fixed.
 
-You can simplify this into:
-+}
-+#endif /* CONFIG_PM_SLEEP */
-+
-+static SIMPLE_DEV_PM_OPS(modelgauge_pm_ops,
-+			 modelgauge_suspend, modelgauge_resume);
+Since the first version, the changes have been:
 
-And later:
-+static struct i2c_driver modelgauge_i2c_driver = {
-+	.driver	= {
-+		.name		= DRV_NAME,
-+		.of_match_table	= of_match_ptr(modelgauge_match),
-+		.pm		= &modelgauge_pm_ops,
+ * Instead of using a 'fixed-link' property inside the Ethernet device
+   DT node, with a fairly cryptic succession of integer values, we now
+   use a PHY subnode under the Ethernet device DT node, with explicit
+   properties to configure the duplex, speed, pause and other PHY
+   properties.
 
+ * The PHY address is automatically allocated by the kernel and no
+   longer visible in the Device Tree binding.
 
-Anyway, I like the idea of merging these drivers so I'm happy to test it
-further.
+ * The PHY device is created directly when the network driver calls
+   of_phy_connect_fixed_link(), and associated to the PHY DT node,
+   which allows the existing of_phy_connect() function to work,
+   without the need to use the deprecated of_phy_connect_fixed_link().
 
+Posts of previous versions:
 
-Best regards,
-Krzysztof
+  RFCv1: http://www.spinics.net/lists/netdev/msg243253.html
+  RFCv2: http://lists.infradead.org/pipermail/linux-arm-kernel/2013-September/196919.html
+
+Thanks,
+
+Thomas
+
+Thomas Petazzoni (4):
+  net: phy: decouple PHY id and PHY address in fixed PHY driver
+  net: phy: extend fixed driver with fixed_phy_register()
+  of: provide a binding for fixed link PHYs
+  net: mvneta: add support for fixed links
+
+ .../devicetree/bindings/net/fixed-link.txt         | 34 +++++++++
+ .../bindings/net/marvell-armada-370-neta.txt       |  4 +-
+ drivers/net/ethernet/marvell/mvneta.c              | 10 +--
+ drivers/net/phy/fixed.c                            | 81 +++++++++++++++++++---
+ drivers/of/of_mdio.c                               | 24 +++++++
+ include/linux/of_mdio.h                            | 15 ++++
+ include/linux/phy_fixed.h                          | 11 +++
+ 7 files changed, 163 insertions(+), 16 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/fixed-link.txt
+
+-- 
+1.8.3.2
