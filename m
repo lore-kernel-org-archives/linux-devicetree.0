@@ -1,66 +1,43 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCHv3 1/4] net: phy: decouple PHY id and PHY address in
- fixed PHY driver
-Date: Tue, 4 Mar 2014 20:04:24 +0100
-Message-ID: <20140304200424.66a6171f@skate>
-References: <1393930704-24374-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1393930704-24374-2-git-send-email-thomas.petazzoni@free-electrons.com>
-	<CAGVrzcYF0g-vDpkP_fnqb13faPtOOSy_Pqfo-Pgti0S26-1nSg@mail.gmail.com>
+From: Philipp Zabel <philipp.zabel@gmail.com>
+Subject: Re: [PATCH v2 02/11] drivercore: Bind/unbind power domain on probe/remove
+Date: Tue, 4 Mar 2014 20:17:41 +0100
+Message-ID: <CA+gwMceHSD6-dqsehDuwhVLwdNxdaRVteA=EA9UvhYMjB+xKWQ@mail.gmail.com>
+References: <1393862536-9842-1-git-send-email-tomasz.figa@gmail.com>
+	<1393862536-9842-3-git-send-email-tomasz.figa@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGVrzcYF0g-vDpkP_fnqb13faPtOOSy_Pqfo-Pgti0S26-1nSg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1393862536-9842-3-git-send-email-tomasz.figa@gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: linux-pm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Len Brown <len.brown@intel.com>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <t.figa@samsung.com>, Pavel Machek <pavel@ucw.cz>, Kukjin Kim <kgene.kim@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, LKML <linux-kernel@vger.kernel.org>, Mark Brown <broonie@ke>
 List-Id: devicetree@vger.kernel.org
 
-Dear Florian Fainelli,
+Hi Tomasz,
 
-On Tue, 4 Mar 2014 10:43:12 -0800, Florian Fainelli wrote:
+On Mon, Mar 3, 2014 at 5:02 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> On a number of platforms, devices are part of controllable power
+> domains, which need to be enabled before such devices can be accessed
+> and may be powered down when the device is idle to save some power.
+> This means that on systems that support power domain control using
+> generic power domains subsystem, it is necessary to add device to its
+> power domain before binding a driver to it and remove it from its power
+> domain after its driver is unbound to make sure that an unused device
+> does not affect power domain state.
+>
+> Since this is not limited to particular busses and specific
+> archs/platforms, it is more convenient to do the above directly in
+> driver core, just as done with pinctrl default configuration. This patch
+> adds necessary code to really_probe() and __device_release_driver() to
+> achieve this and maintain consistent stack-like ordering of operations
+> happening when binding and unbinding a driver.
+>
+> Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
 
-> >  struct fixed_phy {
-> > -       int id;
-> > +       int addr;
-> >         u16 regs[MII_REGS_NUM];
-> >         struct phy_device *phydev;
-> >         struct fixed_phy_status status;
-> > @@ -104,8 +104,8 @@ static int fixed_phy_update_regs(struct fixed_phy *fp)
-> >         if (fp->status.asym_pause)
-> >                 lpa |= LPA_PAUSE_ASYM;
-> >
-> > -       fp->regs[MII_PHYSID1] = fp->id >> 16;
-> > -       fp->regs[MII_PHYSID2] = fp->id;
-> > +       fp->regs[MII_PHYSID1] = 0xdead;
-> > +       fp->regs[MII_PHYSID2] = 0xbeef;
-> 
-> I am still scratching my head as to whether we want that change to be
-> in this particular version of changes, or if we want that to happen at
-> a later time when (if?) we can finally get some proper OUI number
-> allocation.
-> 
-> Technically we are presenting some sort of ABI to user-space, although
-> detecting a fixed PHY device by reading its MII_PHYSID1/2 and matching
-> it against its PHY address on the fixed MDIO bus would have been a
-> little "weak" (especially when you can check that the parent device in
-> sysfs is the fixed-0 bus).
+patches 01 and 02
+Reviewed-by: Philipp Zabel <philipp.zabel@gmail.com>
+Tested-by: Philipp Zabel <philipp.zabel@gmail.com>
+on i.MX6 GK802.
 
-Well the problem is that fp->id really isn't an id, it's the fake
-address of the PHY on the fake fixed MDIO bus. So it would mean that
-the MII_PHYSID of the first fixed PHY would probably be 0x0, then the
-second would have 0x1, then 0x2, and so on.
-
-Probably not worse than what is done today, though.
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards
+Philipp
