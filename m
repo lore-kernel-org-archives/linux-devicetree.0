@@ -1,43 +1,43 @@
-From: Philipp Zabel <philipp.zabel@gmail.com>
-Subject: Re: [PATCH v2 02/11] drivercore: Bind/unbind power domain on probe/remove
-Date: Tue, 4 Mar 2014 20:17:41 +0100
-Message-ID: <CA+gwMceHSD6-dqsehDuwhVLwdNxdaRVteA=EA9UvhYMjB+xKWQ@mail.gmail.com>
-References: <1393862536-9842-1-git-send-email-tomasz.figa@gmail.com>
-	<1393862536-9842-3-git-send-email-tomasz.figa@gmail.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v2] mmc: sdhci: add quirk for broken write protect
+ detection
+Date: Tue, 4 Mar 2014 11:26:05 -0800
+Message-ID: <74003aec-1707-4f43-b947-df148d573fa1@TX2EHSMHS038.ehs.local>
+References: <1393759200-22819-1-git-send-email-eli.billauer@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1393862536-9842-3-git-send-email-tomasz.figa@gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: linux-pm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Len Brown <len.brown@intel.com>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <t.figa@samsung.com>, Pavel Machek <pavel@ucw.cz>, Kukjin Kim <kgene.kim@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, LKML <linux-kernel@vger.kernel.org>, Mark Brown <broonie@ke>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1393759200-22819-1-git-send-email-eli.billauer@gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Eli Billauer <eli.billauer@gmail.com>
+Cc: chris@printf.net, michal.simek@xilinx.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mike Looijmans <mike.looijmans@topic.nl>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+Hi Eli,
 
-On Mon, Mar 3, 2014 at 5:02 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> On a number of platforms, devices are part of controllable power
-> domains, which need to be enabled before such devices can be accessed
-> and may be powered down when the device is idle to save some power.
-> This means that on systems that support power domain control using
-> generic power domains subsystem, it is necessary to add device to its
-> power domain before binding a driver to it and remove it from its power
-> domain after its driver is unbound to make sure that an unused device
-> does not affect power domain state.
->
-> Since this is not limited to particular busses and specific
-> archs/platforms, it is more convenient to do the above directly in
-> driver core, just as done with pinctrl default configuration. This patch
-> adds necessary code to really_probe() and __device_release_driver() to
-> achieve this and maintain consistent stack-like ordering of operations
-> happening when binding and unbinding a driver.
->
-> Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
+On Sun, 2014-03-02 at 01:20PM +0200, Eli Billauer wrote:
+> The write protection signal is absent on a board based upon Xilinx' Z=
+ynq
+> processor ("ZyBo"). This leads the kernel to think that the MicroSD c=
+ard is
+> write protected, and causes a kernel panic during boot, as root fails=
+ to
+> mount RW.
 
-patches 01 and 02
-Reviewed-by: Philipp Zabel <philipp.zabel@gmail.com>
-Tested-by: Philipp Zabel <philipp.zabel@gmail.com>
-on i.MX6 GK802.
+I talked to some people here at Xilinx. According to them, you have the
+option to pin out the WP signal, which would mean the board needs to
+tie/connect the signal properly. Or, if you select to not pin out the W=
+P
+signal, it should be tied to 0 within the chip.
+Currently, I have some doubts that is the case, since Mike reported the
+same issue, but would you mind double checking?
+In theory the signal should default to logic zero which would at most
+require to add the, already existing, 'wp-inverted' quirk when using
+micro-sd on Zynq.
 
-regards
-Philipp
+	Thanks,
+	S=C3=B6ren
+
+
