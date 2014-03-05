@@ -1,55 +1,40 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] spi: atmel: adopt pinctrl support
-Date: Wed, 5 Mar 2014 11:22:14 +0800
-Message-ID: <20140305032214.GU13126@sirena.org.uk>
-References: <1393984730-14828-1-git-send-email-wenyou.yang@atmel.com>
- <1393984730-14828-2-git-send-email-wenyou.yang@atmel.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qpPEP5KwiTnADq8L"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1393984730-14828-2-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: [PATCH 0/5] Add ST Keyscan driver
+Date: Wed,  5 Mar 2014 04:39:27 +0100
+Message-ID: <1393990772-9567-1-git-send-email-gabriel.fernandez@st.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@st.com>
 List-Id: devicetree@vger.kernel.org
 
+The goal of this series is to add ST Keyscan support to ST SoCs.
+The DT definition is added for STiH415 and STiH416 SoCs on
+B2000 board.
 
---qpPEP5KwiTnADq8L
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Gabriel Fernandez (4):
+  drivers: input: keyboard: st-keyscan: add keyscan driver
+  ARM: STi: DT: add keyscan for stih416
+  ARM: STi: DT: add keyscan for stih41x-b2000
+  ARM: multi_v7_defconfig: add st-keyscan driver
 
-On Wed, Mar 05, 2014 at 09:58:49AM +0800, Wenyou Yang wrote:
-> Amend the spi atmel pin controller to optionally take a pin control
-> handle and set the state of the pins to:
+Giuseppe CONDORELLI (1):
+  ARM: STi: DT: add keyscan for stih415
 
-Applied, thanks.
+ .../devicetree/bindings/input/st-keypad.txt        |  50 ++++
+ arch/arm/boot/dts/stih415-pinctrl.dtsi             |  16 +
+ arch/arm/boot/dts/stih415.dtsi                     |  10 +
+ arch/arm/boot/dts/stih416-pinctrl.dtsi             |  16 +
+ arch/arm/boot/dts/stih416.dtsi                     |  10 +
+ arch/arm/boot/dts/stih41x-b2000.dtsi               |  12 +
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ drivers/input/keyboard/Kconfig                     |  12 +
+ drivers/input/keyboard/Makefile                    |   1 +
+ drivers/input/keyboard/st-keyscan.c                | 323 +++++++++++++++++++++
+ 10 files changed, 451 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/st-keypad.txt
+ create mode 100644 drivers/input/keyboard/st-keyscan.c
 
---qpPEP5KwiTnADq8L
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+-- 
+1.9.0
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTFphdAAoJELSic+t+oim9mwkP/RlnLd4QhqQplRiqu84fq/2+
-45YiQ+wDdAfwhBe0aTw0BTCMSKTryN7SqQI9Qwoew/dKghiMb7HkuEeiDwsRfUMW
-bBsVmmclVJzWsHWZYXzDYWNMobPa8CigDSDS8/dq8IevnSzZw3gMCmEJkRXn3x6S
-iG0JR1yRk81zA/QqGm0e3xp3KeSvQG06CKscq3Qlnq9tifjwtexuFx430ACuhe6U
-GzdEJ4zONb0XU26Q0Wdo8pzJnUzVTrc9SupUG2cVi8KsKpraOQZyL+FkuLMcljex
-pswTxRFxlGKp0caOqakNIUWRan0jWEQitK4cyvlMQudkLAn55niZBP2hYTk8uiDr
-gkpH00CgCC4aBt3hKMMyzKkr2KJhcyw/Xl9NvZ7rExzNwqJ7aeped4UZ7mHGzcxt
-bTBOri7pxT+dOc2L2tqci6+56p91N7u18CnTzhHWjbrP01R/jFDB+V3no/GHTWsy
-V3+7nOyeKS+6hkl7Z/P28T124c/y1IvleJUsOhy5osE5JU6OHudWABDBW1HjONHO
-bMDBdsVySKCuDkRN+RW4P5Q+MjUvQmvoi7dc9al6+h/T3JGQxtNw6NhbHw4NlI+4
-BX9jlDVy5u0oAX9WN3A8HDYTzGXQ7J6zmKmuMZ/BGWlgppaulZ8XtqDqQa7xO7LV
-Ifjd6siW17J+RYncRXfM
-=NTnd
------END PGP SIGNATURE-----
-
---qpPEP5KwiTnADq8L--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
