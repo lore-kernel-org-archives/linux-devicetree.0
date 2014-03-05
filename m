@@ -1,7 +1,7 @@
 From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v6 8/8] of: Warn if of_graph_parse_endpoint is called with the root node
-Date: Wed,  5 Mar 2014 10:20:42 +0100
-Message-ID: <1394011242-16783-9-git-send-email-p.zabel@pengutronix.de>
+Subject: [PATCH v6 2/8] Documentation: of: Document graph bindings
+Date: Wed,  5 Mar 2014 10:20:36 +0100
+Message-ID: <1394011242-16783-3-git-send-email-p.zabel@pengutronix.de>
 References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1394011242-16783-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
@@ -10,28 +10,155 @@ To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mauro C
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-If of_graph_parse_endpoint is given a parentless node instead of an
-endpoint node, it is clearly a bug.
+The device tree graph bindings as used by V4L2 and documented in
+Documentation/device-tree/bindings/media/video-interfaces.txt contain
+generic parts that are not media specific but could be useful for any
+subsystem with data flow between multiple devices. This document
+describes the generic bindings.
 
 Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- drivers/of/base.c | 3 +++
- 1 file changed, 3 insertions(+)
+Changes since v5:
+ - Fixed spelling errors and a wrong device node name in the link section
+ Documentation/devicetree/bindings/graph.txt | 129 ++++++++++++++++++++++++++++
+ 1 file changed, 129 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/graph.txt
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index ffd0217..75de6bd 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1996,6 +1996,9 @@ int of_graph_parse_endpoint(const struct device_node *node,
- {
- 	struct device_node *port_node = of_get_parent(node);
- 
-+	WARN_ONCE(!port_node, "%s(): endpoint %s has no parent node\n",
-+		  __func__, node->full_name);
+diff --git a/Documentation/devicetree/bindings/graph.txt b/Documentation/devicetree/bindings/graph.txt
+new file mode 100644
+index 0000000..1a69c07
+--- /dev/null
++++ b/Documentation/devicetree/bindings/graph.txt
+@@ -0,0 +1,129 @@
++Common bindings for device graphs
 +
- 	memset(endpoint, 0, sizeof(*endpoint));
- 
- 	endpoint->local_node = node;
++General concept
++---------------
++
++The hierarchical organisation of the device tree is well suited to describe
++control flow to devices, but there can be more complex connections between
++devices that work together to form a logical compound device, following an
++arbitrarily complex graph.
++There already is a simple directed graph between devices tree nodes using
++phandle properties pointing to other nodes to describe connections that
++can not be inferred from device tree parent-child relationships. The device
++tree graph bindings described herein abstract more complex devices that can
++have multiple specifiable ports, each of which can be linked to one or more
++ports of other devices.
++
++These common bindings do not contain any information about the direction or
++type of the connections, they just map their existence. Specific properties
++may be described by specialized bindings depending on the type of connection.
++
++To see how this binding applies to video pipelines, for example, see
++Documentation/device-tree/bindings/media/video-interfaces.txt.
++Here the ports describe data interfaces, and the links between them are
++the connecting data buses. A single port with multiple connections can
++correspond to multiple devices being connected to the same physical bus.
++
++Organisation of ports and endpoints
++-----------------------------------
++
++Ports are described by child 'port' nodes contained in the device node.
++Each port node contains an 'endpoint' subnode for each remote device port
++connected to this port. If a single port is connected to more than one
++remote device, an 'endpoint' child node must be provided for each link.
++If more than one port is present in a device node or there is more than one
++endpoint at a port, or a port node needs to be associated with a selected
++hardware interface, a common scheme using '#address-cells', '#size-cells'
++and 'reg' properties is used number the nodes.
++
++device {
++        ...
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        port@0 {
++	        #address-cells = <1>;
++	        #size-cells = <0>;
++		reg = <0>;
++
++                endpoint@0 {
++			reg = <0>;
++			...
++		};
++                endpoint@1 {
++			reg = <1>;
++			...
++		};
++        };
++
++        port@1 {
++		reg = <1>;
++
++		endpoint { ... };
++	};
++};
++
++All 'port' nodes can be grouped under an optional 'ports' node, which
++allows to specify #address-cells, #size-cells properties for the 'port'
++nodes independently from any other child device nodes a device might
++have.
++
++device {
++        ...
++        ports {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                port@0 {
++                        ...
++                        endpoint@0 { ... };
++                        endpoint@1 { ... };
++                };
++
++                port@1 { ... };
++        };
++};
++
++Links between endpoints
++-----------------------
++
++Each endpoint should contain a 'remote-endpoint' phandle property that points
++to the corresponding endpoint in the port of the remote device. In turn, the
++remote endpoint should contain a 'remote-endpoint' property. If it has one,
++it must not point to another than the local endpoint. Two endpoints with their
++'remote-endpoint' phandles pointing at each other form a link between the
++containing ports.
++
++device-1 {
++        port {
++                device_1_output: endpoint {
++                        remote-endpoint = <&device_2_input>;
++                };
++        };
++};
++
++device-2 {
++        port {
++                device_2_input: endpoint {
++                        remote-endpoint = <&device_1_output>;
++                };
++        };
++};
++
++
++Required properties
++-------------------
++
++If there is more than one 'port' or more than one 'endpoint' node or 'reg'
++property is present in port and/or endpoint nodes the following properties
++are required in a relevant parent node:
++
++ - #address-cells : number of cells required to define port/endpoint
++                    identifier, should be 1.
++ - #size-cells    : should be zero.
++
++Optional endpoint properties
++----------------------------
++
++- remote-endpoint: phandle to an 'endpoint' subnode of a remote device node.
++
 -- 
 1.9.0.rc3
 
