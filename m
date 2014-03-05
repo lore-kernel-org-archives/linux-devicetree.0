@@ -1,86 +1,139 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v6 0/8] Move device tree graph parsing helpers to drivers/of
-Date: Wed, 5 Mar 2014 13:35:28 +0200
-Message-ID: <53170C00.20200@ti.com>
-References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v5 0/7] [RFC] Support for creating generic host_bridge
+ from device tree
+Date: Wed, 5 Mar 2014 11:40:54 +0000
+Message-ID: <20140305114054.GG1692@e106497-lin.cambridge.arm.com>
+References: <1393948204-11555-1-git-send-email-Liviu.Dudau@arm.com>
+ <CACoXjcmmbVsmvy46NhjFoBg8mRO=APiY3dZZY=ra-Ceib9Sr4A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="Ijxt5XB3RhGk7AVmrWSf4NnRCNT4LOlEX"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1394011242-16783-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CACoXjcmmbVsmvy46NhjFoBg8mRO=APiY3dZZY=ra-Ceib9Sr4A@mail.gmail.com>
+Content-Disposition: inline
+Sender: linux-pci-owner@vger.kernel.org
+To: Tanmay Inamdar <tinamdar@apm.com>
+Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
---Ijxt5XB3RhGk7AVmrWSf4NnRCNT4LOlEX
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On 05/03/14 11:20, Philipp Zabel wrote:
-> Hi,
+On Wed, Mar 05, 2014 at 01:53:55AM +0000, Tanmay Inamdar wrote:
+> Hello,
 >=20
-> this version of the OF graph helper move series further addresses a few=
- of
-> Tomi's and Sylwester's comments.
+> Thanks for the patch set.
 >=20
-> Changes since v5:
->  - Fixed spelling errors and a wrong device node name in the link secti=
-on
->  - Added parentless previous endpoint's full name to warning
->  - Fixed documentation comment for of_graph_parse_endpoint
->  - Unrolled for-loop in of_graph_get_remote_port_parent
+> On Tue, Mar 4, 2014 at 7:49 AM, Liviu Dudau <Liviu.Dudau@arm.com> wro=
+te:
+> > This is v5 of my attempt to add support for a generic pci_host_brid=
+ge controller created
+> > from a description passed in the device tree.
+> >
+> > Changes from v4:
+> >   - Export pci_find_host_bridge() to be used by arch code. There is=
+ scope for
+> >     making the arch/arm64 version of pci_domain_nr the default weak=
+ implementation
+> >     but that would double the size of this series in order to handl=
+e all #define
+> >     versions of the pci_domain_nr() function, so I suggest keeping =
+that for a separate
+> >     cleanup series.
+> >
+> > Changes from v3:
+> >   - Dynamically allocate bus_range resource in of_create_pci_host_b=
+ridge()
+> >   - Fix the domain number used when creating child busses.
+> >   - Changed domain number allocator to use atomic operations.
+> >   - Use ERR_PTR() to propagate the error out of pci_create_root_bus=
+_in_domain()
+> >     and of_create_pci_host_bridge().
+> >
+> > Changes from v2:
+> >   - Use range->cpu_addr when calling pci_address_to_pio()
+> >   - Introduce pci_register_io_range() helper function in order to r=
+egister
+> >     io ranges ahead of their conversion to PIO values. This is need=
+ed as no
+> >     information is being stored yet regarding the range mapping, ma=
+king
+> >     pci_address_to_pio() fail. Default weak implementation does not=
+hing,
+> >     to cover the default weak implementation of pci_address_to_pio(=
+) that
+> >     expects direct mapping of physical addresses into PIO values (x=
+86 view).
+> >
+> > Changes from v1:
+> >   - Add patch to fix conversion of IO ranges into IO resources.
+> >   - Added a domain_nr member to pci_host_bridge structure, and a ne=
+w function
+> >     to create a root bus in a given domain number. In order to faci=
+litate that
+> >     I propose changing the order of initialisation between pci_host=
+_bridge and
+> >     it's related bus in pci_create_root_bus() as sort of a rever of=
+ 7b5436635800.
+> >     This is done in patch 1/4 and 2/4.
+> >   - Added a simple allocator of domain numbers in drivers/pci/host-=
+bridge.c. The
+> >     code will first try to get a domain id from of_alias_get_id(...=
+, "pci-domain")
+> >     and if that fails assign the next unallocated domain id.
+> >   - Changed the name of the function that creates the generic host =
+bridge from
+> >     pci_host_bridge_of_init to of_create_pci_host_bridge and export=
+ed as GPL symbol.
+> >
+> >
+> > v4 thread here: https://lkml.org/lkml/2014/3/3/301
+> > v3 thread here: https://lkml.org/lkml/2014/2/28/216
+> > v2 thread here: https://lkml.org/lkml/2014/2/27/245
+> > v1 thread here: https://lkml.org/lkml/2014/2/3/380
+> >
+> > Best regards,
+> > Liviu
+> >
+> > Liviu Dudau (7):
+> >   pci: Introduce pci_register_io_range() helper function.
+> >   pci: OF: Fix the conversion of IO ranges into IO resources.
+> >   pci: Create pci_host_bridge before its associated bus in pci_crea=
+te_root_bus.
+> >   pci: Introduce a domain number for pci_host_bridge.
+> >   pci: Use parent domain number when allocating child busses.
+> >   pci: Export find_pci_host_bridge() function.
+> >   pci: Add support for creating a generic host_bridge from device t=
+ree
+> >
+> >  drivers/of/address.c       |  39 +++++++++++++
+> >  drivers/pci/host-bridge.c  | 142 +++++++++++++++++++++++++++++++++=
++++++++++++-
+> >  drivers/pci/probe.c        |  72 +++++++++++++++--------
+> >  include/linux/of_address.h |  14 +----
+> >  include/linux/pci.h        |  17 ++++++
+> >  5 files changed, 248 insertions(+), 36 deletions(-)
+> >
+> > --
+> > 1.9.0
+> >
 >=20
-> Philipp Zabel (8):
->   [media] of: move graph helpers from drivers/media/v4l2-core to
->     drivers/of
->   Documentation: of: Document graph bindings
->   of: Warn if of_graph_get_next_endpoint is called with the root node
->   of: Reduce indentation in of_graph_get_next_endpoint
->   [media] of: move common endpoint parsing to drivers/of
->   of: Implement simplified graph binding for single port devices
->   of: Document simplified graph binding for single port devices
->   of: Warn if of_graph_parse_endpoint is called with the root node
+> This series is working fine on X-Gene with multiple PCIe ports. You
+> can add my Tested-by if you want.
 
-So, as I've pointed out, I don't agree with the API, as it's too limited
-and I can't use it, but as this series is (mostly) about moving the
-current API to a common place, it's fine for me.
+What about the arm64 series, can I add a Tested-by to that one as well?
 
-Acked-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Thanks,
+Liviu
 
- Tomi
+>=20
+> Thanks,
+> Tanmay
+>=20
 
-
-
---Ijxt5XB3RhGk7AVmrWSf4NnRCNT4LOlEX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJTFwwAAAoJEPo9qoy8lh71JEsP/03+t53g9vANGhDyiOXREbXb
-IEaTqZEKLSF0gK6VP3wmOhDwKbM10Fs4pF4J4RgxZhr5uFRjMbm9sNg/mdurGFMq
-hxdH0er2i7sjIMU+aEfMQ59VvvLelkDjE5KhafHqf9HGuSNIjrVSdA47zrawnxiJ
-RWtJ3jNi417S+N4x8THoCZk3tScdVt2lIe+AHrvxdZDoLU2UyBr0FNXyxYDz3qwu
-NkUipsQEdaTmgMkDtNrFgLY1Prp8pLNeP5arHnrQAhK8abrhijM1Zdw48flRxsx7
-GUn5n0FpooIUW3vthAD3CZkQ55qr9/2ux5r1t27YZw21o6oFLk01GlLz1F7bS9vX
-YHtTtnWvPjYWEx+PokQdfjrXssYxDXDXznztlpGBUb+JcegYt9Fe0MAqE739LYKh
-q7IDmiAfSk4Xug1Z4QeD6H8y7hLyqbaU55L12/0SuHeVrSmXrhJZx3+cVqYC5X58
-g/80BQ2GOOUOtiWEGEWMp/vC8x7Zbpejfu4sKDH2Dy5VNPAGkXRmd5zkyy1GGQFz
-VgYwDl5Dxvxpfdq+oAIq3Ek/y48q/t9YMm1fgc/5nT16axJcLErPpvOavWqwRJ4T
-VU2RIXli2hWmQw0fIOsy1444vDGV6alI1DJ4NnmO5zaTzDIbx2/rBRT+aAx9eky2
-VyshKqNekhVO41mv3F3g
-=TPD2
------END PGP SIGNATURE-----
-
---Ijxt5XB3RhGk7AVmrWSf4NnRCNT4LOlEX--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
