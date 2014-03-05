@@ -1,39 +1,76 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v12] gpio: add a driver for the Synopsys DesignWare APB
- GPIO block
-Date: Wed, 5 Mar 2014 09:01:56 +0800
-Message-ID: <CACRpkdbSk3Vv+-U=jQTH=8E=yx4tkHApGq-ARfwXs-cBf4=ddA@mail.gmail.com>
-References: <1393369261-17469-1-git-send-email-delicious.quinoa@gmail.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH v5 7/7] pci: Add support for creating a generic host_bridge
+ from device tree
+Date: Wed, 05 Mar 2014 10:20:28 +0900
+Message-ID: <001f01cf3811$18463ed0$48d2bc70$%han@samsung.com>
+References: <1393948204-11555-1-git-send-email-Liviu.Dudau@arm.com>
+ <1393948204-11555-8-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393369261-17469-1-git-send-email-delicious.quinoa@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <delicious.quinoa@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Jamie Iles <jamie@jamieiles.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Mark Rutland <mark.rutland@arm.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Yves Vandervennet <rocket.yvanderv@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-reply-to: <1393948204-11555-8-git-send-email-Liviu.Dudau@arm.com>
+Content-language: ko
+Sender: linux-pci-owner@vger.kernel.org
+To: 'Liviu Dudau' <Liviu.Dudau@arm.com>
+Cc: 'linux-pci' <linux-pci@vger.kernel.org>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Catalin Marinas' <Catalin.Marinas@arm.com>, 'Will Deacon' <Will.Deacon@arm.com>, 'linaro-kernel' <linaro-kernel@lists.linaro.org>, 'Benjamin Herrenschmidt' <benh@kernel.crashing.org>, 'LKML' <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, 'LAKML' <linux-arm-kernel@lists.infradead.org>, 'Tanmay Inamdar' <tinamdar@apm.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 26, 2014 at 7:01 AM, Alan Tull <delicious.quinoa@gmail.com> wrote:
+On Wednesday, March 05, 2014 12:50 AM, Liviu Dudau wrote:
+> 
+> Several platforms use a rather generic version of parsing
+> the device tree to find the host bridge ranges. Move the common code
+> into the generic PCI code and use it to create a pci_host_bridge
+> structure that can be used by arch code.
+> 
+> Based on early attempts by Andrew Murray to unify the code.
+> Used powerpc and microblaze PCI code as starting point.
+> 
+> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> 
+> diff --git a/drivers/pci/host-bridge.c b/drivers/pci/host-bridge.c
+> index 8708b652..800678a 100644
+> --- a/drivers/pci/host-bridge.c
+> +++ b/drivers/pci/host-bridge.c
 
-> From: Jamie Iles <jamie@jamieiles.com>
->
-> The Synopsys DesignWare block is used in some ARM devices (picoxcell)
-> and can be configured to provide multiple banks of GPIO pins.
->
-> Signed-off-by: Jamie Iles <jamie@jamieiles.com>
-> Signed-off-by: Alan Tull <atull@altera.com>
-> Reviewed-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
->
-> v12: - Add irq_startup/shutdown
->      - do irq_create_mapping() in probe, irq_find_mapping() in to_irq()
->      - Adjust mappings to show support for 1 gpio per port.
->      - gpio-cells = <1>
+[.....]
 
-Patch applied!
+> +		res = kzalloc(sizeof(struct resource), GFP_KERNEL);
 
-You've done a tremendous work on this driver and there is
-absolutely nothing controversial about the bindings, so it is
-my pleasure to include this driver.
+It makes build error with exynos_defconfig. (ARM32)
+Thus, 'slab.h' is necessary in order to fix the build error.
 
-Yours,
-Linus Walleij
+./drivers/pci/host-bridge.c
+@@ -8,6 +8,7 @@
+ #include <linux/module.h>
+ #include <linux/of_address.h>
+ #include <linux/of_pci.h>
++#include <linux/slab.h>
+
+ #include "pci.h"
+
+
+> +		if (!res) {
+> +			err = -ENOMEM;
+> +			goto bridge_ranges_nomem;
+> +		}
+> +
+> +		of_pci_range_to_resource(&range, dev, res);
+> +
+> +		if (resource_type(res) == IORESOURCE_IO)
+> +			*io_base = range.cpu_addr;
+> +
+> +		pci_add_resource_offset(resources, res,
+> +				res->start - range.pci_addr);
+> +	}
+> +
+> +	/* Apply architecture specific fixups for the ranges */
+> +	pcibios_fixup_bridge_ranges(resources);
+
+It also makes compile problem with exynos_defconfig as below:
+
+drivers/built-in.o: In function `pci_host_bridge_of_get_ranges':
+drivers/pci/host-bridge.c:157: undefined reference to `pcibios_fixup_bridge_ranges'
+
+Best regards,
+Jingoo Han
