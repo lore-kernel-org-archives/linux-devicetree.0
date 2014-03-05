@@ -1,45 +1,200 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v6 3/8] of: Warn if of_graph_get_next_endpoint is called with the root node
-Date: Wed,  5 Mar 2014 10:20:37 +0100
-Message-ID: <1394011242-16783-4-git-send-email-p.zabel@pengutronix.de>
-References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1394011242-16783-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v5 08/11] ARM: dts: imx51: Add IPU ports and endpoints,
+ move imx-drm node to dtsi
+Date: Wed,  5 Mar 2014 10:20:59 +0100
+Message-ID: <1394011262-16849-9-git-send-email-p.zabel@pengutronix.de>
+References: <1394011262-16849-1-git-send-email-p.zabel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1394011262-16849-1-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-If of_graph_get_next_endpoint is given a parentless node instead of an
-endpoint node, it is clearly a bug.
+This patch connects IPU and and parallel display device tree
+nodes using the OF graph bindings described in
+Documentation/devicetree/bindings/media/video-interfaces.txt
 
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
-Changes since v5:
- - Added parentless previous endpoint's full name to warning
----
- drivers/of/base.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+The IPU ports correspond to the two display interfaces. The
+order of endpoints in the ports is arbitrary.
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index b2f223f..b5e690b 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -2028,8 +2028,8 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
- 		of_node_put(node);
- 	} else {
- 		port = of_get_parent(prev);
--		if (!port)
--			/* Hm, has someone given us the root node ?... */
-+		if (WARN_ONCE(!port, "%s(): endpoint %s has no parent node\n",
-+			      __func__, prev->full_name))
- 			return NULL;
+Since the imx-drm node now only needs to contain links to the
+display interfaces, it can be moved to the SoC dtsi level. At
+the board level, only connections between the display interface
+ports and panels have to be added.
+
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+Changes since v4:
+ - Changed DT compatible string to 'fsl,imx-display-subsystem' instead
+   of Linux specific 'fsl,imx-drm', changed DT node name from 'imx-drm'
+   to 'display-subsystem'.
+---
+ arch/arm/boot/dts/imx51-apf51dev.dts | 11 ++++++++++-
+ arch/arm/boot/dts/imx51-babbage.dts  | 28 ++++++++++++++++++++--------
+ arch/arm/boot/dts/imx51.dtsi         | 22 +++++++++++++++++++++-
+ 3 files changed, 51 insertions(+), 10 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx51-apf51dev.dts b/arch/arm/boot/dts/imx51-apf51dev.dts
+index 5a7f552..d3f9814 100644
+--- a/arch/arm/boot/dts/imx51-apf51dev.dts
++++ b/arch/arm/boot/dts/imx51-apf51dev.dts
+@@ -18,7 +18,6 @@
  
- 		/* Avoid dropping prev node refcount to 0. */
+ 	display@di1 {
+ 		compatible = "fsl,imx-parallel-display";
+-		crtcs = <&ipu 0>;
+ 		interface-pix-fmt = "bgr666";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_ipu_disp1_1>;
+@@ -41,6 +40,12 @@
+ 				pixelclk-active = <0>;
+ 			};
+ 		};
++
++		port {
++			display_in: endpoint {
++				remote-endpoint = <&ipu_di0_disp0>;
++			};
++		};
+ 	};
+ 
+ 	gpio-keys {
+@@ -122,3 +127,7 @@
+ 		};
+ 	};
+ };
++
++&ipu_di0_disp0 {
++	remote-endpoint = <&display_in>;
++};
+diff --git a/arch/arm/boot/dts/imx51-babbage.dts b/arch/arm/boot/dts/imx51-babbage.dts
+index 6ff15a0..6719271 100644
+--- a/arch/arm/boot/dts/imx51-babbage.dts
++++ b/arch/arm/boot/dts/imx51-babbage.dts
+@@ -23,7 +23,6 @@
+ 
+ 	display0: display@di0 {
+ 		compatible = "fsl,imx-parallel-display";
+-		crtcs = <&ipu 0>;
+ 		interface-pix-fmt = "rgb24";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_ipu_disp1_1>;
+@@ -41,11 +40,16 @@
+ 				vsync-len = <10>;
+ 			};
+ 		};
++
++		port {
++			display0_in: endpoint {
++				remote-endpoint = <&ipu_di0_disp0>;
++			};
++		};
+ 	};
+ 
+ 	display1: display@di1 {
+ 		compatible = "fsl,imx-parallel-display";
+-		crtcs = <&ipu 1>;
+ 		interface-pix-fmt = "rgb565";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_ipu_disp2_1>;
+@@ -68,6 +72,12 @@
+ 				pixelclk-active = <0>;
+ 			};
+ 		};
++
++		port {
++			display1_in: endpoint {
++				remote-endpoint = <&ipu_di1_disp1>;
++			};
++		};
+ 	};
+ 
+ 	gpio-keys {
+@@ -81,12 +91,6 @@
+ 		};
+ 	};
+ 
+-	imx-drm {
+-		compatible = "fsl,imx-drm";
+-		crtcs = <&ipu 0>, <&ipu 1>;
+-		connectors = <&display0>, <&display1>;
+-	};
+-
+ 	sound {
+ 		compatible = "fsl,imx51-babbage-sgtl5000",
+ 			     "fsl,imx-audio-sgtl5000";
+@@ -264,6 +268,14 @@
+ 	};
+ };
+ 
++&ipu_di0_disp0 {
++	remote-endpoint = <&display0_in>;
++};
++
++&ipu_di1_disp1 {
++	remote-endpoint = <&display1_in>;
++};
++
+ &ssi2 {
+ 	fsl,mode = "i2s-slave";
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
+index 4bcdd3a..28c96aa 100644
+--- a/arch/arm/boot/dts/imx51.dtsi
++++ b/arch/arm/boot/dts/imx51.dtsi
+@@ -79,6 +79,11 @@
+ 		};
+ 	};
+ 
++	display-subsystem {
++		compatible = "fsl,imx-display-subsystem";
++		ports = <&ipu_di0>, <&ipu_di1>;
++	};
++
+ 	soc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -92,13 +97,28 @@
+ 		};
+ 
+ 		ipu: ipu@40000000 {
+-			#crtc-cells = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 			compatible = "fsl,imx51-ipu";
+ 			reg = <0x40000000 0x20000000>;
+ 			interrupts = <11 10>;
+ 			clocks = <&clks 59>, <&clks 110>, <&clks 61>;
+ 			clock-names = "bus", "di0", "di1";
+ 			resets = <&src 2>;
++
++			ipu_di0: port@2 {
++				reg = <2>;
++
++				ipu_di0_disp0: endpoint {
++				};
++			};
++
++			ipu_di1: port@3 {
++				reg = <3>;
++
++				ipu_di1_disp1: endpoint {
++				};
++			};
+ 		};
+ 
+ 		aips@70000000 { /* AIPS1 */
 -- 
 1.9.0.rc3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
