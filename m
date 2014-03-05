@@ -1,88 +1,75 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx6qdl-sabresd.dtsi: Add heartbeat led
-Date: Wed, 5 Mar 2014 14:22:19 +0800
-Message-ID: <20140305062216.GI8784@S2101-09.ap.freescale.net>
-References: <1393943685-32579-1-git-send-email-vincent.stehle@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1393943685-32579-1-git-send-email-vincent.stehle-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vincent =?iso-8859-1?Q?Stehl=E9?= <vincent.stehle-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH] net: sky2: allow mac to come from dt
+Date: Tue,  4 Mar 2014 22:22:15 -0800
+Message-ID: <1394000535-25559-1-git-send-email-tharvey@gateworks.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Stephen Hemminger <stephen@networkplumber.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 04, 2014 at 03:34:45PM +0100, Vincent Stehl=E9 wrote:
-> Use the red gpio led for heartbeat.
+The driver reads the mac address from the device registers which would
+need to have been programmed by the bootloader.  This patch adds
+the ability to pull the mac from devicetree via the pci device dt node.
 
-Some people think it's annoying to have a LED blinking all the time.
-Since it's a user defined LED, let's leave it to users for their
-particular use case.
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+Cc: netdev@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+---
+ drivers/net/ethernet/marvell/sky2.c | 24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
-Shawn
-
->=20
-> Signed-off-by: Vincent Stehl=E9 <vincent.stehle-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->=20
-> Hi,
->=20
-> This has been tested on Sabre SD i.MX6 Quad board, with linux v3.14-r=
-c5+ and
-> imx_v6_v7_defconfig.
->=20
-> As a side note, checkpatch.pl complains about gpio-leds being undocum=
-ented, but
-> I am not sure what to do about that.
->=20
-> Best regards,
->=20
-> V.
->=20
->  arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/d=
-ts/imx6qdl-sabresd.dtsi
-> index e75e11b..cf4d736 100644
-> --- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-> @@ -88,6 +88,16 @@
->  		default-brightness-level =3D <7>;
->  		status =3D "okay";
->  	};
-> +
-> +	leds {
-> +		compatible =3D "gpio-leds";
-> +
-> +		heartbeat-led {
-> +		        label =3D "Heartbeat";
-> +		        gpios =3D <&gpio1 2 0>;
-> +		        linux,default-trigger =3D "heartbeat";
-> +		};
-> +	};
->  };
-> =20
->  &audmux {
-> @@ -182,6 +192,7 @@
->  				MX6QDL_PAD_ENET_TXD1__GPIO1_IO29 0x80000000
->  				MX6QDL_PAD_EIM_D22__GPIO3_IO22  0x80000000
->  				MX6QDL_PAD_ENET_CRS_DV__GPIO1_IO25 0x80000000
-> +				MX6QDL_PAD_GPIO_2__GPIO1_IO02 0x80000000
->  			>;
->  		};
->  	};
-> --=20
-> 1.9.0
->=20
->=20
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
+index 55a37ae..bff493a 100644
+--- a/drivers/net/ethernet/marvell/sky2.c
++++ b/drivers/net/ethernet/marvell/sky2.c
+@@ -44,6 +44,8 @@
+ #include <linux/prefetch.h>
+ #include <linux/debugfs.h>
+ #include <linux/mii.h>
++#include <linux/of_device.h>
++#include <linux/of_net.h>
+ 
+ #include <asm/irq.h>
+ 
+@@ -4748,6 +4750,7 @@ static struct net_device *sky2_init_netdev(struct sky2_hw *hw, unsigned port,
+ {
+ 	struct sky2_port *sky2;
+ 	struct net_device *dev = alloc_etherdev(sizeof(*sky2));
++	unsigned char *iap, tmpaddr[ETH_ALEN];
+ 
+ 	if (!dev)
+ 		return NULL;
+@@ -4805,8 +4808,27 @@ static struct net_device *sky2_init_netdev(struct sky2_hw *hw, unsigned port,
+ 
+ 	dev->features |= dev->hw_features;
+ 
++	/* try to get mac address in the following order:
++	 * 1) from device tree data
++	 * 2) from internal registers set by bootloader
++	 */
++	iap = NULL;
++	if (IS_ENABLED(CONFIG_OF)) {
++		struct device_node *np = hw->pdev->dev.of_node;
++		if (np)
++			iap = (unsigned char *) of_get_mac_address(np);
++	}
++
++	/* 2) mac registers set by bootloader
++	 */
++	if (!iap || !is_valid_ether_addr(iap)) {
++		memcpy_fromio(&tmpaddr, hw->regs + B2_MAC_1 + port * 8,
++			ETH_ALEN);
++		iap = &tmpaddr[0];
++	}
++
+ 	/* read the mac address */
+-	memcpy_fromio(dev->dev_addr, hw->regs + B2_MAC_1 + port * 8, ETH_ALEN);
++	ether_addr_copy(dev->dev_addr, iap);
+ 
+ 	return dev;
+ }
+-- 
+1.8.3.2
