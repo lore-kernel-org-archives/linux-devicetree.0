@@ -1,81 +1,53 @@
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v6 4/8] of: Reduce indentation in of_graph_get_next_endpoint
-Date: Wed,  5 Mar 2014 10:20:38 +0100
-Message-ID: <1394011242-16783-5-git-send-email-p.zabel@pengutronix.de>
-References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v5 11/11] staging: imx-drm: Update TODO
+Date: Wed,  5 Mar 2014 10:21:02 +0100
+Message-ID: <1394011262-16849-12-git-send-email-p.zabel@pengutronix.de>
+References: <1394011262-16849-1-git-send-email-p.zabel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1394011262-16849-1-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-A 'return endpoint;' at the end of the (!prev) case allows to
-reduce the indentation level of the (prev) case.
+The device tree bindings are updated regardless of the common display
+framework and in the meantime the HDMI driver was included.
 
 Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- drivers/of/base.c | 42 ++++++++++++++++++++++--------------------
- 1 file changed, 22 insertions(+), 20 deletions(-)
+ drivers/staging/imx-drm/TODO | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index b5e690b..a8e47d3 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -2026,32 +2026,34 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
- 			pr_err("%s(): no endpoint nodes specified for %s\n",
- 			       __func__, parent->full_name);
- 		of_node_put(node);
--	} else {
--		port = of_get_parent(prev);
--		if (WARN_ONCE(!port, "%s(): endpoint %s has no parent node\n",
--			      __func__, prev->full_name))
--			return NULL;
+diff --git a/drivers/staging/imx-drm/TODO b/drivers/staging/imx-drm/TODO
+index 6a9da94..29636fb 100644
+--- a/drivers/staging/imx-drm/TODO
++++ b/drivers/staging/imx-drm/TODO
+@@ -1,15 +1,10 @@
+ TODO:
+ - get DRM Maintainer review for this code
+-- Wait for common display framework to hit mainline and update the IPU
+-  driver to use it. This will most probably make changes to the devicetree
+-  bindings necessary.
+-- Factor out more code to common helper functions
+ - decide where to put the base driver. It is not specific to a subsystem
+   and would be used by DRM/KMS and media/V4L2
  
--		/* Avoid dropping prev node refcount to 0. */
--		of_node_get(prev);
--		endpoint = of_get_next_child(port, prev);
--		if (endpoint) {
--			of_node_put(port);
--			return endpoint;
--		}
-+		return endpoint;
-+	}
+ Missing features (not necessarily for moving out of staging):
  
--		/* No more endpoints under this port, try the next one. */
--		do {
--			port = of_get_next_child(parent, port);
--			if (!port)
--				return NULL;
--		} while (of_node_cmp(port->name, "port"));
-+	port = of_get_parent(prev);
-+	if (WARN_ONCE(!port, "%s(): endpoint %s has no parent node\n",
-+		      __func__, prev->full_name))
-+		return NULL;
- 
--		/* Pick up the first endpoint in this port. */
--		endpoint = of_get_next_child(port, NULL);
-+	/* Avoid dropping prev node refcount to 0. */
-+	of_node_get(prev);
-+	endpoint = of_get_next_child(port, prev);
-+	if (endpoint) {
- 		of_node_put(port);
-+		return endpoint;
- 	}
- 
-+	/* No more endpoints under this port, try the next one. */
-+	do {
-+		port = of_get_next_child(parent, port);
-+		if (!port)
-+			return NULL;
-+	} while (of_node_cmp(port->name, "port"));
-+
-+	/* Pick up the first endpoint in this port. */
-+	endpoint = of_get_next_child(port, NULL);
-+	of_node_put(port);
-+
- 	return endpoint;
- }
- EXPORT_SYMBOL(of_graph_get_next_endpoint);
+-- Add i.MX6 HDMI support
+ - Add support for IC (Image converter)
+ - Add support for CSI (CMOS Sensor interface)
+ - Add support for VDIC (Video Deinterlacer)
 -- 
 1.9.0.rc3
