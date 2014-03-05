@@ -1,134 +1,145 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCHv3 3/4] of: provide a binding for fixed link PHYs
-Date: Wed, 5 Mar 2014 09:33:36 -0800
-Message-ID: <CAGVrzcbiYmaH41B4Y+Z3s92XAToEace83_OzBXVtf_2oMgUB8A@mail.gmail.com>
-References: <1393930704-24374-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1393930704-24374-4-git-send-email-thomas.petazzoni@free-electrons.com>
- <CAGVrzcbHwxtgUfC4+u_3wszcmEYpz8Y7gu13xJy6TbT6fgR1sg@mail.gmail.com> <20140305102414.111f856e@skate>
+From: Tanmay Inamdar <tinamdar@apm.com>
+Subject: Re: [PATCH v5 0/7] [RFC] Support for creating generic host_bridge
+ from device tree
+Date: Wed, 5 Mar 2014 09:49:26 -0800
+Message-ID: <CACoXjcmZQuuOW3b6BwWSWPRL7JBCQ9HMWMfXjhCy3tTi+-HV3A@mail.gmail.com>
+References: <1393948204-11555-1-git-send-email-Liviu.Dudau@arm.com>
+	<CACoXjcmmbVsmvy46NhjFoBg8mRO=APiY3dZZY=ra-Ceib9Sr4A@mail.gmail.com>
+	<20140305114054.GG1692@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20140305102414.111f856e@skate>
-Sender: netdev-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: "David S. Miller" <davem@davemloft.net>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Christian Gmeiner <christian.gmeiner@gmail.com>, Grant Likely <grant.likely@linaro.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20140305114054.GG1692@e106497-lin.cambridge.arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Tanmay Inamdar <tinamdar@apm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-2014-03-05 1:24 GMT-08:00 Thomas Petazzoni
-<thomas.petazzoni@free-electrons.com>:
-> Dear Florian Fainelli,
->
-> On Tue, 4 Mar 2014 12:58:41 -0800, Florian Fainelli wrote:
->
->
->> What I like about this new binding is that we could place the
->> 'fixed-link' related properties in e.g: a SPI slave node, and have the
->> Ethernet MAC be pointed at it by a phandle to tell it: look this is
->> your PHY, it might not be one you could address on a MDIO bus, so I
->> have been providing additional properties to help you with the link
->> configuration.
+On Wed, Mar 5, 2014 at 3:40 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote=
+:
+> On Wed, Mar 05, 2014 at 01:53:55AM +0000, Tanmay Inamdar wrote:
+>> Hello,
 >>
->> One thing that needs to be addressed in this patch is how to deal with
->> the existing 5-digit fixed-link, something that sounds fairly easy and
->> which would not require changing the callers of of_phy_connect_fixed()
->> is to do the following:
->
-> I am not sure to understand "would not require changing the callers of
-> of_phy_connect_fixed()". This function is precisely introduced by the
-> patch set, so how would we need to "change the callers" ? Maybe you're
-> making a confusion with the existing of_phy_connect_fixed_link(), which
-> is used by network drivers to create a PHY using the old-style
-> fixed-link = <5 digits> binding ?
-
-I meant to write of_phy_connect_fixed_link() here.
-
->
->> - of_phy_is_fixed_link() needs to look for *all* required compatible
->> properties of the new binding to give an accurate verdict on the
->> nature of the PHY (to avoid false positives as mentioned in PATCH 4),
->
-> Hum?
->
-> The false positive problem only exists if you want to automatically
-> instantiate the fixed PHYs, as I proposed in a patch as a reply to my
-> series. And checking for *all* required properties does not make the
-> problem better: you could very well have other nodes in the tree that
-> have a "fixed-link" and a "speed" property, for example.
-
-Correct, but that means there is probably something missing here to
-uniquely identify this type of fixed PHYs then. 'fixed-link' could
-indeed be too generic, so we need to find a better name which is
-guaranteed to be unique to our use-case here. You offered a compatible
-string solution earlier, I am not sure that will fly very well too as
-we would need to keep an ever-growing list of special devices.
-
->
->> and it also needs to look for the 5-digit fixed-link property and
->> ensure the property is 5-digits long if existing
->
-> I don't understand how this could work. The of_phy_is_fixed_link()
-> function is meant to take as argument a Device Tree node that describes
-> a fixed PHY, using the new proposed DT binding for fixed PHYs.
->
-> The old 'fixed-link' binding has the fixed-link property as part of the
-> Ethernet node itself.
-
-The drivers using the 5-digit 'fixed-link' property already have that
-knowledge, so they can call of_phy_is_fixed_link() with a Ethernet
-Device Tree node argument, whereas newer driver using the new binding
-would call you with a phandle device tree node. This makes no
-difference for your specific function which will return a verdict.
-Once we know that we are dealing with such a fixed PHY, we can call
-of_phy_register_fixed_link() which will do what
-arch/powerpc/sysdev/fsl_soc.c::of_add_fixed_phys does today, except
-that it will be for users beyond PowerPC (e.g: bcmgenet).
-
->
-> So I don't really see how a sane function could check both.
-
-Something like:
-
-int sz;
-
-of_property_read_bool(np, "fixed-link") || (of_get_property(np,
-"fixed-link", &sz) && sz == sizeof(u32) * 5);
-
-The key point is that drivers using the "old" 5-digit 'fixed-link'
-already know that their 'fixed-link' property belongs to their
-Ethernet Device Tree node.
-
->
->> - of_phy_register_fixed_link() needs to also parse the old 5-digit
->> fixed-link property, most likely just copy-pasting what
->> arch/powerpc/sysdev/fsl_soc.c::of_add_fixed_phys does with the
->> property endian-swapping (as this code is for PowerPC)
+>> Thanks for the patch set.
 >>
->> Then we can deal with how to make that semi-automatic for the new
->> binding users to make it smoother to use a regular or "fixed PHY"
->> device.
+>> On Tue, Mar 4, 2014 at 7:49 AM, Liviu Dudau <Liviu.Dudau@arm.com> wr=
+ote:
+>> > This is v5 of my attempt to add support for a generic pci_host_bri=
+dge controller created
+>> > from a description passed in the device tree.
+>> >
+>> > Changes from v4:
+>> >   - Export pci_find_host_bridge() to be used by arch code. There i=
+s scope for
+>> >     making the arch/arm64 version of pci_domain_nr the default wea=
+k implementation
+>> >     but that would double the size of this series in order to hand=
+le all #define
+>> >     versions of the pci_domain_nr() function, so I suggest keeping=
+ that for a separate
+>> >     cleanup series.
+>> >
+>> > Changes from v3:
+>> >   - Dynamically allocate bus_range resource in of_create_pci_host_=
+bridge()
+>> >   - Fix the domain number used when creating child busses.
+>> >   - Changed domain number allocator to use atomic operations.
+>> >   - Use ERR_PTR() to propagate the error out of pci_create_root_bu=
+s_in_domain()
+>> >     and of_create_pci_host_bridge().
+>> >
+>> > Changes from v2:
+>> >   - Use range->cpu_addr when calling pci_address_to_pio()
+>> >   - Introduce pci_register_io_range() helper function in order to =
+register
+>> >     io ranges ahead of their conversion to PIO values. This is nee=
+ded as no
+>> >     information is being stored yet regarding the range mapping, m=
+aking
+>> >     pci_address_to_pio() fail. Default weak implementation does no=
+thing,
+>> >     to cover the default weak implementation of pci_address_to_pio=
+() that
+>> >     expects direct mapping of physical addresses into PIO values (=
+x86 view).
+>> >
+>> > Changes from v1:
+>> >   - Add patch to fix conversion of IO ranges into IO resources.
+>> >   - Added a domain_nr member to pci_host_bridge structure, and a n=
+ew function
+>> >     to create a root bus in a given domain number. In order to fac=
+ilitate that
+>> >     I propose changing the order of initialisation between pci_hos=
+t_bridge and
+>> >     it's related bus in pci_create_root_bus() as sort of a rever o=
+f 7b5436635800.
+>> >     This is done in patch 1/4 and 2/4.
+>> >   - Added a simple allocator of domain numbers in drivers/pci/host=
+-bridge.c. The
+>> >     code will first try to get a domain id from of_alias_get_id(..=
+=2E, "pci-domain")
+>> >     and if that fails assign the next unallocated domain id.
+>> >   - Changed the name of the function that creates the generic host=
+ bridge from
+>> >     pci_host_bridge_of_init to of_create_pci_host_bridge and expor=
+ted as GPL symbol.
+>> >
+>> >
+>> > v4 thread here: https://lkml.org/lkml/2014/3/3/301
+>> > v3 thread here: https://lkml.org/lkml/2014/2/28/216
+>> > v2 thread here: https://lkml.org/lkml/2014/2/27/245
+>> > v1 thread here: https://lkml.org/lkml/2014/2/3/380
+>> >
+>> > Best regards,
+>> > Liviu
+>> >
+>> > Liviu Dudau (7):
+>> >   pci: Introduce pci_register_io_range() helper function.
+>> >   pci: OF: Fix the conversion of IO ranges into IO resources.
+>> >   pci: Create pci_host_bridge before its associated bus in pci_cre=
+ate_root_bus.
+>> >   pci: Introduce a domain number for pci_host_bridge.
+>> >   pci: Use parent domain number when allocating child busses.
+>> >   pci: Export find_pci_host_bridge() function.
+>> >   pci: Add support for creating a generic host_bridge from device =
+tree
+>> >
+>> >  drivers/of/address.c       |  39 +++++++++++++
+>> >  drivers/pci/host-bridge.c  | 142 ++++++++++++++++++++++++++++++++=
+++++++++++++-
+>> >  drivers/pci/probe.c        |  72 +++++++++++++++--------
+>> >  include/linux/of_address.h |  14 +----
+>> >  include/linux/pci.h        |  17 ++++++
+>> >  5 files changed, 248 insertions(+), 36 deletions(-)
+>> >
+>> > --
+>> > 1.9.0
+>> >
+>>
+>> This series is working fine on X-Gene with multiple PCIe ports. You
+>> can add my Tested-by if you want.
 >
-> I still don't understand. With the old binding, the "fixed-link"
-> property is within some random Ethernet node, and there is no way for
-> us to find out whether a given node having a "fixed-link" property
-> corresponds to a fixed PHY, or something completely unrelated.
+> What about the arm64 series, can I add a Tested-by to that one as wel=
+l?
 
-By then, I meant, once we have sorted out that specific patchset, we
-can try to work on a solution to make
+Sure.
 
 >
-> So to conclude, I'm sorry, but I didn't understand at all what you
-> meant to say here, so I'm completely puzzled about what your
-> suggestions are.
+> Thanks,
+> Liviu
 >
-> Best regards,
+>>
+>> Thanks,
+>> Tanmay
+>>
 >
-> Thomas
 > --
-> Thomas Petazzoni, CTO, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
-
-
-
--- 
-Florian
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> | I would like to |
+> | fix the world,  |
+> | but they're not |
+> | giving me the   |
+>  \ source code!  /
+>   ---------------
+>     =C2=AF\_(=E3=83=84)_/=C2=AF
+>
