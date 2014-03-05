@@ -1,71 +1,30 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] net: sky2: allow mac to come from dt
-Date: Wed, 05 Mar 2014 18:15:39 +0400
-Message-ID: <5317318B.5020406@cogentembedded.com>
-References: <1394000535-25559-1-git-send-email-tharvey@gateworks.com>
+From: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 0/2] mfd: da9055: Add DT support & documentation for PMIC
+Date: Wed, 5 Mar 2014 14:18:32 +0000
+Message-ID: <cover.1394018471.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1394000535-25559-1-git-send-email-tharvey@gateworks.com>
-Sender: netdev-owner@vger.kernel.org
-To: Tim Harvey <tharvey@gateworks.com>, Stephen Hemminger <stephen@networkplumber.org>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+This patch set adds DT support for the MFD core of the da9055 PMIC, and adds
+the accompanying DT binding documentation for the device.
 
-On 05-03-2014 10:22, Tim Harvey wrote:
+v2: Small tidy-ups to documentation (remove new-line, use IRQ related defines)
 
-> The driver reads the mac address from the device registers which would
-> need to have been programmed by the bootloader.  This patch adds
-> the ability to pull the mac from devicetree via the pci device dt node.
+Adam Thomson (2):
+  mfd: da9055: Add DT support for PMIC
+  mfd: da9055: Add DT binding documentation for PMIC
 
-    I highly doubt that "[local-]mac-address" prop would be added to 
-(autodiscovered) PCI device node.
+ Documentation/devicetree/bindings/mfd/da9055.txt |   72 ++++++++++++++++++++++
+ drivers/mfd/da9055-i2c.c                         |    8 +++
+ 2 files changed, 80 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/da9055.txt
 
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-> Cc: netdev@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> ---
->   drivers/net/ethernet/marvell/sky2.c | 24 +++++++++++++++++++++++-
->   1 file changed, 23 insertions(+), 1 deletion(-)
-
-> diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
-> index 55a37ae..bff493a 100644
-> --- a/drivers/net/ethernet/marvell/sky2.c
-> +++ b/drivers/net/ethernet/marvell/sky2.c
-[...]
-> @@ -4805,8 +4808,27 @@ static struct net_device *sky2_init_netdev(struct sky2_hw *hw, unsigned port,
->
->   	dev->features |= dev->hw_features;
->
-> +	/* try to get mac address in the following order:
-> +	 * 1) from device tree data
-> +	 * 2) from internal registers set by bootloader
-> +	 */
-> +	iap = NULL;
-> +	if (IS_ENABLED(CONFIG_OF)) {
-> +		struct device_node *np = hw->pdev->dev.of_node;
-> +		if (np)
-> +			iap = (unsigned char *) of_get_mac_address(np);
-> +	}
-> +
-> +	/* 2) mac registers set by bootloader
-> +	 */
-> +	if (!iap || !is_valid_ether_addr(iap)) {
-> +		memcpy_fromio(&tmpaddr, hw->regs + B2_MAC_1 + port * 8,
-> +			ETH_ALEN);
-
-    This line should start right under & on the previous line.
-
-> +		iap = &tmpaddr[0];
-
-    Why not just 'tmpaddr'?
-
-> +	}
-> +
-
-WBR, Sergei
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
