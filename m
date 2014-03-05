@@ -1,75 +1,40 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH 2/5] ARM: STi: DT: add keyscan for stih415
-Date: Wed,  5 Mar 2014 04:39:29 +0100
-Message-ID: <1393990772-9567-3-git-send-email-gabriel.fernandez@st.com>
-References: <1393990772-9567-1-git-send-email-gabriel.fernandez@st.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1393990772-9567-1-git-send-email-gabriel.fernandez@st.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>, Giuseppe CONDORELLI <giuseppe.condorelli@st.com>, Gabriel Fernandez <gabriel.fernandez@st.com>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v5 1/8] mtd: spi-nor: copy the SPI NOR commands to a new header file
+Date: Wed, 5 Mar 2014 04:43:19 +0100
+Message-ID: <201403050443.19529.marex@denx.de>
+References: <1393238262-8622-1-git-send-email-b32955@freescale.com> <201403042313.14353.marex@denx.de> <5316932C.5040405@freescale.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5316932C.5040405-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, angus.clark-qxv4g6HH51o@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, b44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org, broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pekon-l0cyMroinI0@public.gmane.org, sourav.poddar-l0cyMroinI0@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Giuseppe CONDORELLI <giuseppe.condorelli@st.com>
+On Wednesday, March 05, 2014 at 03:59:56 AM, Huang Shijie wrote:
+> =E4=BA=8E 2014=E5=B9=B403=E6=9C=8805=E6=97=A5 06:13, Marek Vasut =E5=86=
+=99=E9=81=93:
+> > Please keep me on CC;-)
+>=20
+> sorry, My fault :(
+>=20
+> > I honestly have to wonder ... why do you not 'move' these definitio=
+ns
+> > instead of copying them ?
+>=20
+> In the first version , i did so:
+> http://marc.info/?l=3Dlinux-arm-kernel&m=3D138544933522564&w=3D2
+>=20
+> if I need to resend the patch set again, i can change to move the
+> commands to the new header.
 
-Add keyscan support for stih415.
-It is put disabled by default because it is not enabled on all boards
-Also there are PIOs conflict with already claimed lines.
+Why didn't you keep it like that? Was there some reason for that ?
 
-Signed-off-by: Giuseppe Condorelli <giuseppe.condorelli@st.com>
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
----
- arch/arm/boot/dts/stih415-pinctrl.dtsi | 16 ++++++++++++++++
- arch/arm/boot/dts/stih415.dtsi         | 10 ++++++++++
- 2 files changed, 26 insertions(+)
-
-diff --git a/arch/arm/boot/dts/stih415-pinctrl.dtsi b/arch/arm/boot/dts/stih415-pinctrl.dtsi
-index e56449d..731e4b1 100644
---- a/arch/arm/boot/dts/stih415-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stih415-pinctrl.dtsi
-@@ -87,6 +87,22 @@
- 				};
- 			};
- 
-+			keyscan {
-+				pinctrl_keyscan: keyscan {
-+					st,pins {
-+						keyin0  = <&PIO0 2 ALT2 IN>;
-+						keyin1  = <&PIO0 3 ALT2 IN>;
-+						keyin2  = <&PIO0 4 ALT2 IN>;
-+						keyin3  = <&PIO2 6 ALT2 IN>;
-+
-+						keyout0 = <&PIO1 6 ALT2 OUT>;
-+						keyout1 = <&PIO1 7 ALT2 OUT>;
-+						keyout2 = <&PIO0 6 ALT2 OUT>;
-+						keyout3 = <&PIO2 7 ALT2 OUT>;
-+					};
-+				};
-+			};
-+
- 			sbc_i2c0 {
- 				pinctrl_sbc_i2c0_default: sbc_i2c0-default {
- 					st,pins {
-diff --git a/arch/arm/boot/dts/stih415.dtsi b/arch/arm/boot/dts/stih415.dtsi
-index d9c7dd1..5930467 100644
---- a/arch/arm/boot/dts/stih415.dtsi
-+++ b/arch/arm/boot/dts/stih415.dtsi
-@@ -136,5 +136,15 @@
- 
- 			status		= "disabled";
- 		};
-+
-+		keyscan: keyscan@fe4b0000 {
-+			compatible = "st,keypad";
-+			status = "disabled";
-+			reg = <0xfe4b0000 0x2000>;
-+			interrupts = <GIC_SPI 212 IRQ_TYPE_NONE>;
-+			clocks	= <&CLK_SYSIN>;
-+			pinctrl-names	= "default";
-+			pinctrl-0 = <&pinctrl_keyscan>;
-+		};
- 	};
- };
--- 
-1.9.0
-
+Best regards,
+Marek Vasut
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
