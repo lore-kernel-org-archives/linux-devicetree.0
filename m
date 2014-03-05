@@ -1,120 +1,171 @@
-From: Liviu Dudau <liviu@dudau.co.uk>
-Subject: Re: [PATCH v5 7/7] pci: Add support for creating a generic
- host_bridge from device tree
-Date: Wed, 5 Mar 2014 08:33:12 +0000
-Message-ID: <20140305083311.GD13582@bart.dudau.co.uk>
-References: <1393948204-11555-1-git-send-email-Liviu.Dudau@arm.com>
- <1393948204-11555-8-git-send-email-Liviu.Dudau@arm.com>
- <001f01cf3811$18463ed0$48d2bc70$%han@samsung.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/4] phy: miphy365x: Add Device Tree bindings for the
+ MiPHY365x
+Date: Wed, 5 Mar 2014 16:40:39 +0800
+Message-ID: <20140305084039.GB14902@lee--X1>
+References: <1392377036-12816-1-git-send-email-lee.jones@linaro.org>
+ <20140305073422.GD20016@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <001f01cf3811$18463ed0$48d2bc70$%han@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: devicetree@vger.kernel.org, 'linaro-kernel' <linaro-kernel@lists.linaro.org>, 'Benjamin Herrenschmidt' <benh@kernel.crashing.org>, 'Arnd Bergmann' <arnd@arndb.de>, 'linux-pci' <linux-pci@vger.kernel.org>, 'Liviu Dudau' <Liviu.Dudau@arm.com>, 'LKML' <linux-kernel@vger.kernel.org>, 'Will Deacon' <Will.Deacon@arm.com>, 'Tanmay Inamdar' <tinamdar@apm.com>, 'Catalin Marinas' <Catalin.Marinas@arm.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'LAKML' <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20140305073422.GD20016@e106331-lin.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alexandre.torgue@st.com" <alexandre.torgue@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 05, 2014 at 10:20:28AM +0900, Jingoo Han wrote:
-> On Wednesday, March 05, 2014 12:50 AM, Liviu Dudau wrote:
-> > 
-> > Several platforms use a rather generic version of parsing
-> > the device tree to find the host bridge ranges. Move the common code
-> > into the generic PCI code and use it to create a pci_host_bridge
-> > structure that can be used by arch code.
-> > 
-> > Based on early attempts by Andrew Murray to unify the code.
-> > Used powerpc and microblaze PCI code as starting point.
-> > 
-> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> > 
-> > diff --git a/drivers/pci/host-bridge.c b/drivers/pci/host-bridge.c
-> > index 8708b652..800678a 100644
-> > --- a/drivers/pci/host-bridge.c
-> > +++ b/drivers/pci/host-bridge.c
-> 
-> [.....]
-> 
-> > +		res = kzalloc(sizeof(struct resource), GFP_KERNEL);
-> 
-> It makes build error with exynos_defconfig. (ARM32)
-> Thus, 'slab.h' is necessary in order to fix the build error.
-> 
-> ./drivers/pci/host-bridge.c
-> @@ -8,6 +8,7 @@
->  #include <linux/module.h>
->  #include <linux/of_address.h>
->  #include <linux/of_pci.h>
-> +#include <linux/slab.h>
+On Wed, 05 Mar 2014, Mark Rutland wrote:
 
-Will add, thanks!
-
-> 
->  #include "pci.h"
-> 
-> 
-> > +		if (!res) {
-> > +			err = -ENOMEM;
-> > +			goto bridge_ranges_nomem;
-> > +		}
+> On Fri, Feb 14, 2014 at 11:23:53AM +0000, Lee Jones wrote:
+> > The MiPHY365x is a Generic PHY which can serve various SATA or PCIe
+> > devices. It has 2 ports which it can use for either; both SATA, bot=
+h
+> > PCIe or one of each in any configuration.
+> >=20
+> > Cc: devicetree@vger.kernel.org
+> > Cc: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >  .../devicetree/bindings/phy/phy-miphy365x.txt      | 54 ++++++++++=
+++++++++++++
+> >  1 file changed, 54 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/phy-miphy=
+365x.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/phy/phy-miphy365x.tx=
+t b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
+> > new file mode 100644
+> > index 0000000..96f269f
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
+> > @@ -0,0 +1,54 @@
+> > +STMicroelectronics STi MIPHY365x PHY binding
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 > > +
-> > +		of_pci_range_to_resource(&range, dev, res);
+> > +This binding describes a miphy device that is used to control PHY =
+hardware
+> > +for SATA and PCIe.
 > > +
-> > +		if (resource_type(res) == IORESOURCE_IO)
-> > +			*io_base = range.cpu_addr;
+> > +Required properties:
+> > +- compatible: Should be "st,miphy365x-phy"
+> > +- #phy-cells: Should be 2 (See second example)
+> > +		First cell is the port number; MIPHY_PORT_{0,1}
+> > +		Second cell is device type; MIPHY_TYPE_{SATA,PCI}
+>=20
+> Either this should refer to the header file, or specific values shoul=
+d
+> be given in the binding document.
+
+When you say specific values you mean break out the {,}s?
+
+I thought most people would know what they mean.
+
+> > +- reg:	      Address and length of the register set for the device
+> > +- reg-names:  The names of the register addresses corresponding to=
+ the
+> > +	      registers filled in "reg"
+> > +		Options are; sata{0,1} and pcie{0,1} (See first example)
+>=20
+> How about something like:
+
+Same here.
+
+> - reg: a list of offset + length pairs, one for each entry in reg-nam=
+es
+> - reg-names: should contain some of:
+>   * "sata0" for ...
+>   * "sata1" for ...
+>   * "pcie0" for ...
+>   * "pcie1" for ...
+>=20
+> Where ... might just be "the sata port 0 registers"
+
+Seems awfully redundant.
+
+> > +- st,syscfg : Should be a phandle of the system configuration regi=
+ster group
+> > +	      which contain the SATA, PCIe mode setting bits
+>=20
+> I'll assume this is well-defined by some other binding.
+
+Right.
+
 > > +
-> > +		pci_add_resource_offset(resources, res,
-> > +				res->start - range.pci_addr);
-> > +	}
+> > +Optional properties:
+> > +- st,sata-gen	     : Generation of locally attached SATA IP. Expec=
+ted values
+> > +		       are {1,2,3). If not supplied generation 1 hardware will
+> > +		       be expected
+> > +- st,pcie-tx-pol-inv : Bool property to invert the polarity PCIe T=
+x (Txn/Txp)
+> > +- st,sata-tx-pol-inv : Bool property to invert the polarity SATA T=
+x (Txn/Txp)
+>=20
+> It might just be me, but the phrase "invert the polarity {SATA,PCIe} =
+Tx"
+> sounds odd. What exactly is being inverted?
+
+=46rom the doc (and the only reference of this functionallity):
+
+rx_polarity:
+  1: switch rxp/rxn
+tx_polarity:
+  1: switch txp/txn
+
+If we don't set these registers up to reflect the h/w configuration of
+the board, the MiPHY will not work.
+
 > > +
-> > +	/* Apply architecture specific fixups for the ranges */
-> > +	pcibios_fixup_bridge_ranges(resources);
-> 
-> It also makes compile problem with exynos_defconfig as below:
-> 
-> drivers/built-in.o: In function `pci_host_bridge_of_get_ranges':
-> drivers/pci/host-bridge.c:157: undefined reference to `pcibios_fixup_bridge_ranges'
+> > +Example:
+> > +
+> > +	miphy365x_phy: miphy365x@0 {
+> > +		compatible =3D "st,miphy365x-phy";
+> > +		#phy-cells =3D <2>;
+> > +		reg =3D	<0xfe382000 0x100>,
+> > +			<0xfe38a000 0x100>,
+> > +			<0xfe394000 0x100>,
+> > +			<0xfe804000 0x100>;
+> > +		reg-names =3D "sata0", "sata1", "pcie0", "pcie1";
+> > +		st,syscfg=3D <&syscfg_rear>;
+>=20
+> Nit: missing space before '=3D'.
 
-Does that mean that exynos_defconfig doesn't define CONFIG_OF? How do you
-compile all the .dts files then? Should CONFIG_OF not be added to the default config
-file?
+Will fix.
 
-Other than that, your comment is correct. drivers/pci/host-bridge.c gets compiled
-in regardless of CONFIG_OF and I need to provide an empty implementation for
-pcibios_fixup_bridge_ranges().
+> > +	};
+> > +
+> > +Specifying phy control of devices
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +Device nodes should specify the configuration required in their "p=
+hys"
+> > +property, containing a phandle to the miphy device node, a port nu=
+mber
+> > +and a device type.
+> > +
+> > +Example:
+> > +
+> > +#include <dt-bindings/phy/phy-miphy365x.h>
+> > +
+> > +	sata0: sata@fe380000 {
+> > +		...
+> > +		phys	  =3D <&miphy365x_phy MIPHY_PORT_0 MIPHY_TYPE_SATA>;
+> > +		...
+> > +	};
+>=20
+> Is there not a generic phy binding we can point to? It seems a bit
+> redundant to do this in each phy binding.
 
-Thanks!
+Sure, but that wouldn't make much of an example.
 
-Liviu
+  Documentation/devicetree/bindings/phy/phy-bindings.txt
 
-> 
-> Best regards,
-> Jingoo Han
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-
--- 
--------------------
-   .oooO
-   (   )
-    \ (  Oooo.
-     \_) (   )
-          ) /
-         (_/
-
- One small step
-   for me ...
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
