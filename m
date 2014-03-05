@@ -1,109 +1,290 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v10 1/3] mmc: sdhci-msm: Qualcomm SDHCI binding documentation
-Date: Wed, 5 Mar 2014 00:56:22 -0600
-Message-ID: <CAL_JsqKJ5Jn4wb8xtqrc09kkP4dzUA6qDEkK396RW+4qFNVf+Q@mail.gmail.com>
-References: <1393961226-25618-1-git-send-email-gdjakov@mm-sol.com>
-	<1393961226-25618-2-git-send-email-gdjakov@mm-sol.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 2/5] ARM: imx6: gpc: Add PU power domain for GPU/VPU
+Date: Wed, 5 Mar 2014 14:56:51 +0800
+Message-ID: <20140305065649.GJ8784@S2101-09.ap.freescale.net>
+References: <1393603427-6199-1-git-send-email-p.zabel@pengutronix.de>
+ <1393603427-6199-3-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1393961226-25618-2-git-send-email-gdjakov@mm-sol.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Georgi Djakov <gdjakov@mm-sol.com>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Chris Ball <cjb@laptop.org>, Ulf Hansson <ulf.hansson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1393603427-6199-3-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 4, 2014 at 1:27 PM, Georgi Djakov <gdjakov@mm-sol.com> wrote:
-> This patch adds the device-tree binding documentation for
-> Qualcomm SDHCI driver. It contains the differences between
-> the core properties in mmc.txt and the properties used by
-> the sdhci-msm driver.
->
-> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
+On Fri, Feb 28, 2014 at 05:03:44PM +0100, Philipp Zabel wrote:
+> When generic pm domain support is enabled, the PGC can be used
+> to completely gate power to the PU power domain containing GPU3D,
+> GPU2D, and VPU cores.
+> This code triggers the PGC powerdown sequence to disable the GPU/VPU
+> isolation cells and gate power and then disables the PU regulator.
+> To reenable, the reverse powerup sequence is triggered after the PU
+> regulator is enabled again.
+> The GPU and VPU devices in the PU power domain temporarily need
+> to be clocked during powerup, so that the reset machinery can work.
+> 
+> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > ---
->  .../devicetree/bindings/mmc/sdhci-msm.txt          |   63 ++++++++++++++++++++
->  1 file changed, 63 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> new file mode 100644
-> index 0000000..c635c53
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> @@ -0,0 +1,63 @@
-> +* Qualcomm SDHCI controller (sdhci-msm)
-> +
-> +This file documents differences between the core properties in mmc.txt
-> +and the properties used by the sdhci-msm driver.
-> +
-> +Required properties:
-> +- compatible: Should contain "qcom,sdhci-msm-v4".
-> +- reg: Base address and length of the register set listed in reg-names.
-> +- reg-names: Should contain the following:
-> +       "hc_mem"   - Host controller register map
-> +       "core_mem" - SD Core register map
+> Changes since v4:
+>  - Add pu_domain struct to contain regulator and clocks
+>  - Obtain clocks from device tree instead of from bus notifier
+>  - Add compatible value for imx6sl (untested)
+> ---
+>  arch/arm/mach-imx/Kconfig |   2 +
+>  arch/arm/mach-imx/gpc.c   | 182 ++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 184 insertions(+)
+> 
+> diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+> index 33567aa..3c58f2e 100644
+> --- a/arch/arm/mach-imx/Kconfig
+> +++ b/arch/arm/mach-imx/Kconfig
+> @@ -808,6 +808,7 @@ config SOC_IMX6Q
+>  	select PL310_ERRATA_727915 if CACHE_PL310
+>  	select PL310_ERRATA_769419 if CACHE_PL310
+>  	select PM_OPP if PM
+> +	select PM_GENERIC_DOMAINS if PM
 
-reg-names should not be required and the order specified by the binding.
+Would it make more sense to have HAVE_IMX_GPC select it instead?
 
-> +- interrupts: Should contain an interrupt-specifiers for the interrupts listed in interrupt-names.
-> +- interrupt-names: Should contain the following:
-> +       "hc_irq"     - Host controller interrupt
-> +       "pwr_irq"    - PMIC interrupt
+>  
+>  	help
+>  	  This enables support for Freescale i.MX6 Quad processor.
+> @@ -827,6 +828,7 @@ config SOC_IMX6SL
+>  	select PL310_ERRATA_588369 if CACHE_PL310
+>  	select PL310_ERRATA_727915 if CACHE_PL310
+>  	select PL310_ERRATA_769419 if CACHE_PL310
+> +	select PM_GENERIC_DOMAINS if PM
+>  
+>  	help
+>  	  This enables support for Freescale i.MX6 SoloLite processor.
+> diff --git a/arch/arm/mach-imx/gpc.c b/arch/arm/mach-imx/gpc.c
+> index 586e017..a0f587e 100644
+> --- a/arch/arm/mach-imx/gpc.c
+> +++ b/arch/arm/mach-imx/gpc.c
+> @@ -10,19 +10,40 @@
+>   * http://www.gnu.org/copyleft/gpl.html
+>   */
+>  
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+>  #include <linux/io.h>
+>  #include <linux/irq.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_clock.h>
 
-Same for interrupt-names.
+Is this header still needed?
 
-> +- vdd-supply: Phandle to the regulator for the vdd (core voltage) supply.
-> +- vdd-io-supply: Phandle to the regulator for the vdd-io (i/o voltage) supply.
-> +- pinctrl-names: Should contain only one value - "default".
-> +- pinctrl-0: Should specify pin control groups used for this controller.
-> +- clocks: A list of phandle + clock-specifier pairs for the clocks listed in clock-names.
-> +- clock-names: Should contain the following:
-> +       "iface" - Main peripheral bus clock (PCLK/HCLK - AHB Bus clock) (required)
-> +       "core"  - SDC MMC clock (MCLK) (required)
-> +       "bus"   - SDCC bus voter clock (optional)
+> +#include <linux/pm_domain.h>
+> +#include <linux/regulator/consumer.h>
+>  #include <linux/irqchip/arm-gic.h>
+>  #include "common.h"
+> +#include "hardware.h"
+>  
+> +#define GPC_CNTR		0x000
+>  #define GPC_IMR1		0x008
+> +#define GPC_PGC_GPU_PDN		0x260
+> +#define GPC_PGC_GPU_PUPSCR	0x264
+> +#define GPC_PGC_GPU_PDNSCR	0x268
+>  #define GPC_PGC_CPU_PDN		0x2a0
+>  
+>  #define IMR_NUM			4
+>  
+> +#define GPU_VPU_PUP_REQ		BIT(1)
+> +#define GPU_VPU_PDN_REQ		BIT(0)
 > +
-> +Example:
-> +
-> +       sdhc_1: sdhci@f9824900 {
-> +               compatible = "qcom,sdhci-msm-v4";
-> +               reg = <0xf9824900 0x11c>, <0xf9824000 0x800>;
+> +struct pu_domain {
+> +	struct generic_pm_domain base;
+> +	struct regulator *reg;
+> +	struct clk *clk[6];
 
-Are there cases where these are really in a different 4KB range? If
-not, this should just be 1 range.
+Define a macro for this number?
 
-> +               reg-names = "hc_mem", "core_mem";
-> +               interrupts = <0 123 0>, <0 138 0>;
-> +               interrupt-names = "hc_irq", "pwr_irq";
-> +               bus-width = <8>;
-> +               non-removable;
+> +	int num_clks;
+> +};
 > +
-> +               vdd-supply = <&pm8941_l20>;
-> +               vdd-io-supply = <&pm8941_s3>;
+>  static void __iomem *gpc_base;
+>  static u32 gpc_wake_irqs[IMR_NUM];
+>  static u32 gpc_saved_imrs[IMR_NUM];
+> @@ -138,3 +159,164 @@ void __init imx_gpc_init(void)
+>  	gic_arch_extn.irq_unmask = imx_gpc_irq_unmask;
+>  	gic_arch_extn.irq_set_wake = imx_gpc_irq_set_wake;
+>  }
 > +
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&sdc1_clk &sdc1_cmd &sdc1_data>;
+> +#ifdef CONFIG_PM
 > +
-> +               clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
-> +               clock-names = "core", "iface";
-> +       };
+> +static int imx6q_pm_pu_power_off(struct generic_pm_domain *genpd)
+> +{
+> +	struct pu_domain *pu = container_of(genpd, struct pu_domain, base);
+> +	int iso, iso2sw;
+> +	u32 val;
 > +
-> +       sdhc_2: sdhci@f98a4900 {
-> +               compatible = "qcom,sdhci-msm-v4";
-> +               reg = <0xf98a4900 0x11c>, <0xf98a4000 0x800>;
-> +               reg-names = "hc_mem", "core_mem";
-> +               interrupts = <0 125 0>, <0 221 0>;
-> +               interrupt-names = "hc_irq", "pwr_irq";
-> +               bus-width = <4>;
+> +	/* Read ISO and ISO2SW power down delays */
+> +	val = readl_relaxed(gpc_base + GPC_PGC_GPU_PDNSCR);
+> +	iso = val & 0x3f;
+> +	iso2sw = (val >> 8) & 0x3f;
 > +
-> +               vdd-supply = <&pm8941_l21>;
-> +               vdd-io-supply = <&pm8941_l13>;
+> +	/* Gate off PU domain when GPU/VPU when powered down */
+> +	writel_relaxed(0x1, gpc_base + GPC_PGC_GPU_PDN);
 > +
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&sdc2_clk &sdc2_cmd &sdc2_data>;
+> +	/* Request GPC to power down GPU/VPU */
+> +	val = readl_relaxed(gpc_base + GPC_CNTR);
+> +	val |= GPU_VPU_PDN_REQ;
+> +	writel_relaxed(val, gpc_base + GPC_CNTR);
 > +
-> +               clocks = <&gcc GCC_SDCC2_APPS_CLK>, <&gcc GCC_SDCC2_AHB_CLK>;
-> +               clock-names = "core", "iface";
-> +       };
-> --
-> 1.7.9.5
->
+> +	/* Wait ISO + ISO2SW IPG clock cycles */
+> +	ndelay((iso + iso2sw) * 1000 / 66);
+> +
+> +	regulator_disable(pu->reg);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx6q_pm_pu_power_on(struct generic_pm_domain *genpd)
+> +{
+> +	struct pu_domain *pu = container_of(genpd, struct pu_domain, base);
+> +	int i, ret, sw, sw2iso;
+> +	u32 val;
+> +
+> +	ret = regulator_enable(pu->reg);
+> +	if (ret) {
+> +		pr_err("%s: failed to enable regulator: %d\n", __func__, ret);
+> +		return ret;
+> +	}
+> +
+> +	/* Enable reset clocks for all devices in the PU domain */
+> +	for (i = 0; i < pu->num_clks; i++)
+> +		clk_prepare_enable(pu->clk[i]);
+> +
+> +	/* Gate off PU domain when GPU/VPU when powered down */
+> +	writel_relaxed(0x1, gpc_base + GPC_PGC_GPU_PDN);
+> +
+> +	/* Read ISO and ISO2SW power down delays */
+> +	val = readl_relaxed(gpc_base + GPC_PGC_GPU_PUPSCR);
+> +	sw = val & 0x3f;
+> +	sw2iso = (val >> 8) & 0x3f;
+> +
+> +	/* Request GPC to power up GPU/VPU */
+> +	val = readl_relaxed(gpc_base + GPC_CNTR);
+> +	val |= GPU_VPU_PUP_REQ;
+> +	writel_relaxed(val, gpc_base + GPC_CNTR);
+> +
+> +	/* Wait ISO + ISO2SW IPG clock cycles */
+> +	ndelay((sw + sw2iso) * 1000 / 66);
+> +
+> +	/* Disable reset clocks for all devices in the PU domain */
+> +	for (i = 0; i < pu->num_clks; i++)
+> +		clk_disable_unprepare(pu->clk[i]);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct generic_pm_domain imx6q_arm_domain = {
+> +	.name = "ARM",
+> +};
+> +
+> +static struct pu_domain imx6q_pu_domain = {
+> +	.base = {
+> +		.name = "PU",
+> +		.power_off = imx6q_pm_pu_power_off,
+> +		.power_on = imx6q_pm_pu_power_on,
+> +		.power_off_latency_ns = 25000,
+> +		.power_on_latency_ns = 2000000,
+> +	},
+> +};
+> +
+> +static struct generic_pm_domain imx6sl_display_domain = {
+> +	.name = "DISPLAY",
+> +};
+> +
+> +static struct generic_pm_domain *imx_gpc_domains[] = {
+> +	&imx6q_arm_domain,
+> +	&imx6q_pu_domain.base,
+> +	&imx6sl_display_domain,
+> +};
+> +
+> +static struct genpd_onecell_data imx_gpc_onecell_data = {
+> +	.domains = imx_gpc_domains,
+> +	.domain_num = ARRAY_SIZE(imx_gpc_domains),
+> +};
+> +
+> +#endif /* CONFIG_PM */
+> +
+> +static int imx_gpc_probe(struct platform_device *pdev)
+> +{
+> +	struct regulator *pu_reg;
+> +	struct clk *clk;
+> +	bool is_off;
+> +	int ret, i;
+> +
+> +	pu_reg = devm_regulator_get(&pdev->dev, "pu");
+> +	if (IS_ERR(pu_reg)) {
+> +		ret = PTR_ERR(pu_reg);
+> +		dev_err(&pdev->dev, "failed to get pu regulator: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* The regulator is initially enabled */
+> +	ret = regulator_enable(pu_reg);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "failed to enable pu regulator: %d\n", ret);
+> +		return ret;
+> +	}
+> +	imx6q_pu_domain.base.of_node = pdev->dev.of_node;
+
+How does this work with !CONFIG_PM build?
+
+Shawn
+
+> +	imx6q_pu_domain.reg = pu_reg;
+> +
+> +	for (i = 0; ; i++) {
+> +		clk = of_clk_get(pdev->dev.of_node, i);
+> +		if (IS_ERR(clk))
+> +			break;
+> +		imx6q_pu_domain.clk[i] = clk;
+> +	}
+> +	imx6q_pu_domain.num_clks = i;
+> +
+> +	is_off = IS_ENABLED(CONFIG_PM_RUNTIME);
+> +	if (is_off)
+> +		imx6q_pm_pu_power_off(&imx6q_pu_domain.base);
+> +
+> +	pm_genpd_init(&imx6q_pu_domain.base, NULL, is_off);
+> +	of_genpd_add_provider(pdev->dev.of_node, of_genpd_xlate_onecell,
+> +			      &imx_gpc_onecell_data);
+> +	return 0;
+> +}
+> +
+> +static struct of_device_id imx_gpc_dt_ids[] = {
+> +	{ .compatible = "fsl,imx6q-gpc" },
+> +	{ .compatible = "fsl,imx6sl-gpc" },
+> +	{ }
+> +};
+> +
+> +static struct platform_driver imx_gpc_driver = {
+> +	.driver = {
+> +		.name = "imx-gpc",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = imx_gpc_dt_ids,
+> +	},
+> +	.probe = imx_gpc_probe,
+> +};
+> +
+> +static int __init imx_pgc_init(void)
+> +{
+> +	return platform_driver_register(&imx_gpc_driver);
+> +}
+> +subsys_initcall(imx_pgc_init);
+> -- 
+> 1.8.5.3
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
