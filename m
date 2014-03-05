@@ -1,22 +1,22 @@
 From: Tanmay Inamdar <tinamdar@apm.com>
 Subject: Re: [PATCH v5 0/7] [RFC] Support for creating generic host_bridge
  from device tree
-Date: Wed, 5 Mar 2014 09:49:26 -0800
-Message-ID: <CACoXjcmZQuuOW3b6BwWSWPRL7JBCQ9HMWMfXjhCy3tTi+-HV3A@mail.gmail.com>
+Date: Wed, 5 Mar 2014 09:51:11 -0800
+Message-ID: <CACoXjcnCeWzwa6mA-+xU1B5PnQjtf6OZMUbOPKp2HjvxZnDfYQ@mail.gmail.com>
 References: <1393948204-11555-1-git-send-email-Liviu.Dudau@arm.com>
 	<CACoXjcmmbVsmvy46NhjFoBg8mRO=APiY3dZZY=ra-Ceib9Sr4A@mail.gmail.com>
-	<20140305114054.GG1692@e106497-lin.cambridge.arm.com>
+	<20140305081800.GD1692@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140305114054.GG1692@e106497-lin.cambridge.arm.com>
+In-Reply-To: <20140305081800.GD1692@e106497-lin.cambridge.arm.com>
 Sender: linux-pci-owner@vger.kernel.org
 To: Tanmay Inamdar <tinamdar@apm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 5, 2014 at 3:40 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote=
-:
+On Wed, Mar 5, 2014 at 12:18 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrot=
+e:
 > On Wed, Mar 05, 2014 at 01:53:55AM +0000, Tanmay Inamdar wrote:
 >> Hello,
 >>
@@ -119,13 +119,17 @@ tree
 >> This series is working fine on X-Gene with multiple PCIe ports. You
 >> can add my Tested-by if you want.
 >
-> What about the arm64 series, can I add a Tested-by to that one as wel=
-l?
+> Cheers! Any ETA on your updated patches?
 
-Sure.
+I will apply your V6 and generate mine on top of them. I will send my
+X-Gene patches out today.
 
 >
-> Thanks,
+> I might get the required signatures on the legal approval next week a=
+nd
+> then I will publish my host controller driver.
+>
+> Best regards,
 > Liviu
 >
 >>
