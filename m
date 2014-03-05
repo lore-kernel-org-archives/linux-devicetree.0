@@ -1,106 +1,58 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v10 1/3] mmc: sdhci-msm: Qualcomm SDHCI binding documentation
-Date: Wed, 5 Mar 2014 05:25:08 +0100
-Message-ID: <CAPDyKFp2whNGYj=bEM74DaNDjdqSkej=HsKD8AUNTo6hjZccHw@mail.gmail.com>
-References: <1393961226-25618-1-git-send-email-gdjakov@mm-sol.com>
-	<1393961226-25618-2-git-send-email-gdjakov@mm-sol.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 02/11] drivercore: Bind/unbind power domain on
+ probe/remove
+Date: Wed, 5 Mar 2014 12:26:02 +0800
+Message-ID: <20140305042602.GE13126@sirena.org.uk>
+References: <1393862536-9842-1-git-send-email-tomasz.figa@gmail.com>
+ <1393862536-9842-3-git-send-email-tomasz.figa@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1393961226-25618-2-git-send-email-gdjakov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Georgi Djakov <gdjakov@mm-sol.com>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <cjb@laptop.org>, devicetree@vger.kernel.org, grant.likely@linaro.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+wcwqhATTmTB6/2m"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1393862536-9842-3-git-send-email-tomasz.figa@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene.kim@samsung.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 4 March 2014 20:27, Georgi Djakov <gdjakov@mm-sol.com> wrote:
-> This patch adds the device-tree binding documentation for
-> Qualcomm SDHCI driver. It contains the differences between
-> the core properties in mmc.txt and the properties used by
-> the sdhci-msm driver.
->
-> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
-> ---
->  .../devicetree/bindings/mmc/sdhci-msm.txt          |   63 ++++++++++++++++++++
->  1 file changed, 63 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> new file mode 100644
-> index 0000000..c635c53
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> @@ -0,0 +1,63 @@
-> +* Qualcomm SDHCI controller (sdhci-msm)
-> +
-> +This file documents differences between the core properties in mmc.txt
-> +and the properties used by the sdhci-msm driver.
-> +
-> +Required properties:
-> +- compatible: Should contain "qcom,sdhci-msm-v4".
-> +- reg: Base address and length of the register set listed in reg-names.
-> +- reg-names: Should contain the following:
-> +       "hc_mem"   - Host controller register map
-> +       "core_mem" - SD Core register map
-> +- interrupts: Should contain an interrupt-specifiers for the interrupts listed in interrupt-names.
-> +- interrupt-names: Should contain the following:
-> +       "hc_irq"     - Host controller interrupt
-> +       "pwr_irq"    - PMIC interrupt
-> +- vdd-supply: Phandle to the regulator for the vdd (core voltage) supply.
-> +- vdd-io-supply: Phandle to the regulator for the vdd-io (i/o voltage) supply.
 
-The common naming of the above regulators are "vmmc" and "vqmmc". Is
-there any specific reason to why you can't use these names?
+--+wcwqhATTmTB6/2m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Kind regards
-Ulf Hansson
+On Mon, Mar 03, 2014 at 05:02:07PM +0100, Tomasz Figa wrote:
+> On a number of platforms, devices are part of controllable power
+> domains, which need to be enabled before such devices can be accessed
+> and may be powered down when the device is idle to save some power.
+> This means that on systems that support power domain control using
+> generic power domains subsystem, it is necessary to add device to its
+> power domain before binding a driver to it and remove it from its power
+> domain after its driver is unbound to make sure that an unused device
+> does not affect power domain state.
 
-> +- pinctrl-names: Should contain only one value - "default".
-> +- pinctrl-0: Should specify pin control groups used for this controller.
-> +- clocks: A list of phandle + clock-specifier pairs for the clocks listed in clock-names.
-> +- clock-names: Should contain the following:
-> +       "iface" - Main peripheral bus clock (PCLK/HCLK - AHB Bus clock) (required)
-> +       "core"  - SDC MMC clock (MCLK) (required)
-> +       "bus"   - SDCC bus voter clock (optional)
-> +
-> +Example:
-> +
-> +       sdhc_1: sdhci@f9824900 {
-> +               compatible = "qcom,sdhci-msm-v4";
-> +               reg = <0xf9824900 0x11c>, <0xf9824000 0x800>;
-> +               reg-names = "hc_mem", "core_mem";
-> +               interrupts = <0 123 0>, <0 138 0>;
-> +               interrupt-names = "hc_irq", "pwr_irq";
-> +               bus-width = <8>;
-> +               non-removable;
-> +
-> +               vdd-supply = <&pm8941_l20>;
-> +               vdd-io-supply = <&pm8941_s3>;
-> +
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&sdc1_clk &sdc1_cmd &sdc1_data>;
-> +
-> +               clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
-> +               clock-names = "core", "iface";
-> +       };
-> +
-> +       sdhc_2: sdhci@f98a4900 {
-> +               compatible = "qcom,sdhci-msm-v4";
-> +               reg = <0xf98a4900 0x11c>, <0xf98a4000 0x800>;
-> +               reg-names = "hc_mem", "core_mem";
-> +               interrupts = <0 125 0>, <0 221 0>;
-> +               interrupt-names = "hc_irq", "pwr_irq";
-> +               bus-width = <4>;
-> +
-> +               vdd-supply = <&pm8941_l21>;
-> +               vdd-io-supply = <&pm8941_l13>;
-> +
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&sdc2_clk &sdc2_cmd &sdc2_data>;
-> +
-> +               clocks = <&gcc GCC_SDCC2_APPS_CLK>, <&gcc GCC_SDCC2_AHB_CLK>;
-> +               clock-names = "core", "iface";
-> +       };
-> --
-> 1.7.9.5
->
+Reviewed-by: Mark Brown <broonie@linaro.org>
+
+--+wcwqhATTmTB6/2m
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTFqdXAAoJELSic+t+oim9lJgP/3yLE8EY4S+jtsmqD3m+2F3c
+RsPTLv8rvn9PEgplXczrlDf2Knisfeh7ads61m+VmoTAO+LSRDHIRS2Nbo6zGjmC
+R7ZYNlGS0hzcObirMtVlX/tC0WYiqYlgFlm7/TDcbxlDvwlKz8QqRNMFly5Ufvqm
+rSE0zi2J3hDKiuQPcernaOVubgv/w58kss2WWNLVKDfexcqPd8u4SOqTFvIp6r9+
+/uWl8ZNzkwLr88CkqLNDrE1D4iqyKvxpmMAnxDC8dKzMoDEq+EVc8OjI31J7e4Yt
+/e44dRIsdDU6J9VF9md3BKxquWFZifWBH7IvuXl8jDrdoMw3/Inb9PcpKkOYST4g
+7f4Dg2QVSvMc0EeLJ5XTk6Snr8IRs1LHKlyJWtXz6eq0oPo1PpL8UTJEFyieRr+d
+NVnrvahjAkVvAg+LctCalpCMK1xR8X30Qhdbd15DO+KDbBpQ5hSU6jE6gVKxaihB
+dCtNfLeJZYeZT3jaddJ9Rw6zu3aeKIQcGZRth7mA00KBNsuZ0xx25k2NqdisPrkA
+CqeuAZw5A5jsPNYp/iL9+cGe8szc4yI0Z7ZA0sQVX8D1uWVAHZeyqwLdIoXVNV0B
+OwDZIbkldBgoRwI0n64u0rZ1YLJKOcsTlzqNi4BNqMvbebaIqupqrPIZMrkdQTdj
+ml9+jUFjcAyLAhsP75ME
+=Lee6
+-----END PGP SIGNATURE-----
+
+--+wcwqhATTmTB6/2m--
