@@ -1,189 +1,237 @@
-From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [PATCH] pinctrl: at91: add the config GPIO_OUTPUT_x
-Date: Wed, 5 Mar 2014 05:31:58 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A24364172FF4EC4@penmbx01>
-References: <1393984400-14687-1-git-send-email-wenyou.yang@atmel.com>
- <635C1A75-4651-4B2C-AB64-E1D170A1F5F9@jcrosoft.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4] PHY: sunxi: Add driver for sunxi usb phy
+Date: Wed, 5 Mar 2014 11:09:25 +0530
+Message-ID: <5316B88D.4080104@ti.com>
+References: <1393693766-15352-1-git-send-email-hdegoede@redhat.com> <1393693766-15352-2-git-send-email-hdegoede@redhat.com> <53121AF4.4080802@ti.com> <531232BC.2070903@redhat.com> <5314811C.1000905@ti.com> <53160752.1030301@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <635C1A75-4651-4B2C-AB64-E1D170A1F5F9-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org" <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>, "<linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org> mailing list" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBCOOP4VF5IDRBFHR3KMAKGQENBF4BKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <53160752.1030301-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi JC,
 
-> -----Original Message-----
-> From: Jean-Christophe PLAGNIOL-VILLARD [mailto:plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org]
-> Sent: Wednesday, March 05, 2014 12:58 PM
-> To: Yang, Wenyou
-> Cc: Jean-Christophe PLAGNIOL-VILLARD; linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org;
-> b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org; <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org> mailing
-> list; Linux Kernel list; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
-> pawel.moll-5wv7dgnIgG8@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org;
-> galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-> Subject: Re: [PATCH] pinctrl: at91: add the config GPIO_OUTPUT_x
-> 
-> 
-> On Mar 5, 2014, at 9:53 AM, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
-> 
-> > In order to support the pinctrl sleep state.
-> 
-> As I said before NACK
-> 
-> this is not the job of the pinctrl to describe gpio output or input
-> state
-But according to what said in the section "GPIO mode pitfalls" of Documentation/pinctrl.txt.
-It should be handle by the pinctrl.
 
-If not, to deal with the sleep state will be very complicated. 
-Muxing the pins for FUNCTION to enable peripheral, then twist them over to GPIO mode
-and use gpio_direction_output() to drive it HIGH or LOW during sleep.
+On Tuesday 04 March 2014 10:33 PM, Hans de Goede wrote:
+> Hi,
+>
+> On 03/03/2014 02:18 PM, Kishon Vijay Abraham I wrote:
+>> Hi,
+>>
+>>
+>> On Sunday 02 March 2014 12:49 AM, Hans de Goede wrote:
+>>> Hi,
+>>>
+>>> On 03/01/2014 06:37 PM, Kishon Vijay Abraham I wrote:
+>>>> Hi,
+>>>>
+>>>> On Saturday 01 March 2014 10:39 PM, Hans de Goede wrote:
+>>>>> The Allwinner A1x / A2x SoCs have 2 or 3 usb phys which are all
+>>>>> accessed
+>>>>> through a single set of registers. Besides this there are also some
+>>>>> other
+>>>>> phy related bits which need poking, which are per phy, but shared
+>>>>> between the
+>>>>> ohci and ehci controllers, so these are also controlled from this
+>>>>> new phy
+>>>>> driver.
+>>>>>
+>>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>>> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>>>> ---
+>>>>>    .../devicetree/bindings/phy/sun4i-usb-phy.txt      |  26 ++
+>>>>>    drivers/phy/Kconfig                                |  11 +
+>>>>>    drivers/phy/Makefile                               |   1 +
+>>>>>    drivers/phy/phy-sun4i-usb.c                        | 331
+>>>>> +++++++++++++++++++++
+>>>>>    4 files changed, 369 insertions(+)
+>>>>>    create mode 100644
+>>>>> Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+>>>>>    create mode 100644 drivers/phy/phy-sun4i-usb.c
+>>>>>
+>>>> ..
+>>>> <snip>
+>>>> .
+>>>> .
+>>>>
+>>>>> +static int sun4i_usb_phy_init(struct phy *_phy)
+>>>>> +{
+>>>>> +    struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
+>>>>> +    struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
+>>>>> +    int ret;
+>>>>> +
+>>>>> +    ret = clk_prepare_enable(data->clk);
+>>>>> +    if (ret)
+>>>> dev_err here?
+>>>
+>>> I would expect the clk subsys to print an error if anything goes
+>>> wrong here, repeating that error in the device driver seems
+>>> not useful to me.
+>>>
+>>> Note that this practice of simply propagating the error is a common
+>>> pattern in many many users of the clk / reset / regulator framework.
+>>>
+>>> Also can I please get one final review of this patch rather then
+>>> a round of comments ending with:
+>>>
+>>> "If you can fix these minor comments while changing the $subject
+>>> (PHY: sunxi) it
+>>> should be good to get merged."
+>>>
+>>> Only to get more review comments when I've already fixed the minor
+>>> comments ?
+>>>
+>>>>> +        return ret;
+>>>>> +
+>>>>> +    ret = reset_control_deassert(phy->reset);
+>>>>> +    if (ret) {
+>>>>
+>>>> here too..
+>>>
+>>> idem.
+>>>
+>>>>> +        clk_disable_unprepare(data->clk);
+>>>>> +        return ret;
+>>>>> +    }
+>>>>> +
+>>>>> +    /* Adjust PHY's magnitude and rate */
+>>>>> +    sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
+>>>>> +
+>>>>> +    /* Disconnect threshold adjustment */
+>>>>> +    sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL, data->disc_thresh,
+>>>>> 2);
+>>>>> +
+>>>>> +    sun4i_usb_phy_passby(phy, 1);
+>>>>> +
+>>>>> +    return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static int sun4i_usb_phy_exit(struct phy *_phy)
+>>>>> +{
+>>>>> +    struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
+>>>>> +    struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
+>>>>> +
+>>>>> +    sun4i_usb_phy_passby(phy, 0);
+>>>>> +    reset_control_assert(phy->reset);
+>>>>> +    clk_disable_unprepare(data->clk);
+>>>>> +
+>>>>> +    return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static int sun4i_usb_phy_power_on(struct phy *_phy)
+>>>>> +{
+>>>>> +    struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
+>>>>> +    int ret = 0;
+>>>>> +
+>>>>> +    if (phy->vbus)
+>>>>> +        ret = regulator_enable(phy->vbus);
+>>>> dev_err here too..
+>>>
+>>> idem.
+>>>
+>>>>> +
+>>>>> +    return ret;
+>>>>> +}
+>>>>> +
+>>>>> +static int sun4i_usb_phy_power_off(struct phy *_phy)
+>>>>> +{
+>>>>> +    struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
+>>>>> +
+>>>>> +    if (phy->vbus)
+>>>>> +        regulator_disable(phy->vbus);
+>>>>> +
+>>>>> +    return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static struct phy_ops sun4i_usb_phy_ops = {
+>>>>> +    .init        = sun4i_usb_phy_init,
+>>>>> +    .exit        = sun4i_usb_phy_exit,
+>>>>> +    .power_on    = sun4i_usb_phy_power_on,
+>>>>> +    .power_off    = sun4i_usb_phy_power_off,
+>>>>> +    .owner        = THIS_MODULE,
+>>>>> +};
+>>>>> +
+>>>>> +static struct phy *sun4i_usb_phy_xlate(struct device *dev,
+>>>>> +                    struct of_phandle_args *args)
+>>>>> +{
+>>>>> +    struct sun4i_usb_phy_data *data = dev_get_drvdata(dev);
+>>>>> +
+>>>>> +    if (WARN_ON(args->args[0] == 0 || args->args[0] >=
+>>>>> data->num_phys))
+>>>>> +        return ERR_PTR(-ENODEV);
+>>>>> +
+>>>>> +    return data->phys[args->args[0]].phy;
+>>>>> +}
+>>>>> +
+>>>>> +static int sun4i_usb_phy_probe(struct platform_device *pdev)
+>>>>> +{
+>>>>> +    struct sun4i_usb_phy_data *data;
+>>>>> +    struct device *dev = &pdev->dev;
+>>>>> +    struct device_node *np = dev->of_node;
+>>>>> +    void __iomem *pmu = NULL;
+>>>>> +    struct phy_provider *phy_provider;
+>>>>> +    struct reset_control *reset;
+>>>>> +    struct regulator *vbus;
+>>>>> +    struct resource *res;
+>>>>> +    struct phy *phy;
+>>>>> +    char name[16];
+>>>>> +    int i;
+>>>>> +
+>>>>> +    data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+>>>>> +    if (!data)
+>>>>> +        return -ENOMEM;
+>>>>> +
+>>>>> +    mutex_init(&data->mutex);
+>>>>> +
+>>>>> +    if (of_device_is_compatible(np, "allwinner,sun5i-a13-usb-phy"))
+>>>>> +        data->num_phys = 2;
+>>>>> +    else
+>>>>> +        data->num_phys = 3;
+>>>>> +
+>>>>> +    if (of_device_is_compatible(np, "allwinner,sun4i-a10-usb-phy"))
+>>>>> +        data->disc_thresh = 3;
+>>>>> +    else
+>>>>> +        data->disc_thresh = 2;
+>>>>
+>>>> These 'data' can actually be part of 'of_device_id' table and can be
+>>>> obtained by using 'of_match_device'.
+>>>
+>>> This was already suggested by Maxime around the time of v2, and
+>>> I responded with this:
+>>>
+>>> "The problem with using the of_device_id .data field is that I can only
+>>> store a single integer there. To store 2 I need to: define a struct,
+>>> create an array of these structs with initialization. Create an enum for
+>>> indexing the array which must be kept in sync with the initializers
+>>> manually, store either the index, or a direct pointer to the correct
+>>> array
+>>> entry into the .data field, add code to get the of_device_id from the
+>>> compatible string, and then finally extract the settings from the struct
+>>> again.
+>>>
+>>> See IE how this is done in drivers/ata/ahci_platform.c, I've tried
+>>> to come up with a simpler way and failed, for ahci_platform.c the
+>>> struct with per compatible-string data is quite big so it makes some
+>>> sense to use this construction. Here however not so much, this adds a
+>>> whole lot of unnecessary extra code + indirection. I esp. object against
+>>> the indirection as that unnecessarily makes it harder to follow whats
+>>> going on."
+>>
+>> alright.. missed that earlier. Sorry.
+>
+> So does this mean you're going to take v4 as is, or do you want me to add
+> the dev_err calls you've pointed out before (note I still prefer to not
+> add these, but if you insist...) ?
 
---->8 ------------
-The solution is to not think that what the datasheet calls "GPIO mode"
-has to be handled by the <linux/gpio.h> interface. Instead view this as
-a certain pin config setting. Look in e.g. <linux/pinctrl/pinconf-generic.h>
-and you find this in the documentation:
+You should have received a notification on it being merged to 'next'. 
+didn't you?
 
-  PIN_CONFIG_OUTPUT: this will configure the pin in output, use argument
-     1 to indicate high level, argument 0 to indicate low level.
-
-So it is perfectly possible to push a pin into "GPIO mode" and drive the
-line low as part of the usual pin control map.
----<8 ------------
-
-Best Regards,
-Wenyou Yang
-
-> 
-> Best Regards,
-> J.
-> >
-> > Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> > ---
-> > Hi Linus,
-> >
-> > The patch is based on branch: for-next
-> > git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl
-> >
-> > Best Regards,
-> > Wenyou Yang
-> >
-> > drivers/pinctrl/pinctrl-at91.c     |   31
-> +++++++++++++++++++++++++++++++
-> > include/dt-bindings/pinctrl/at91.h |    2 ++
-> > 2 files changed, 33 insertions(+)
-> >
-> > diff --git a/drivers/pinctrl/pinctrl-at91.c
-> > b/drivers/pinctrl/pinctrl-at91.c index 5d24aae..fc51e59 100644
-> > --- a/drivers/pinctrl/pinctrl-at91.c
-> > +++ b/drivers/pinctrl/pinctrl-at91.c
-> > @@ -62,6 +62,8 @@ static int gpio_banks;
-> > #define DEGLITCH	(1 << 2)
-> > #define PULL_DOWN	(1 << 3)
-> > #define DIS_SCHMIT	(1 << 4)
-> > +#define GPIO_OUTPUT_HIGH	(1 << 5)
-> > +#define GPIO_OUTPUT_LOW		(1 << 6)
-> > #define DEBOUNCE	(1 << 16)
-> > #define DEBOUNCE_VAL_SHIFT	17
-> > #define DEBOUNCE_VAL	(0x3fff << DEBOUNCE_VAL_SHIFT)
-> > @@ -152,12 +154,15 @@ struct at91_pinctrl_mux_ops {
-> > 	void (*set_pulldown)(void __iomem *pio, unsigned mask, bool is_on);
-> > 	bool (*get_schmitt_trig)(void __iomem *pio, unsigned pin);
-> > 	void (*disable_schmitt_trig)(void __iomem *pio, unsigned mask);
-> > +	bool (*get_gpio_output)(void __iomem *pio, unsigned mask);
-> > +	void (*set_gpio_output)(void __iomem *pio, unsigned mask, bool
-> > +is_high);
-> > 	/* irq */
-> > 	int (*irq_type)(struct irq_data *d, unsigned type); };
-> >
-> > static int gpio_irq_type(struct irq_data *d, unsigned type); static
-> > int alt_gpio_irq_type(struct irq_data *d, unsigned type);
-> > +static void at91_mux_gpio_enable(void __iomem *pio, unsigned mask,
-> > +bool input);
-> >
-> > struct at91_pinctrl {
-> > 	struct device		*dev;
-> > @@ -472,6 +477,20 @@ static bool at91_mux_pio3_get_schmitt_trig(void
-> __iomem *pio, unsigned pin)
-> > 	return (__raw_readl(pio + PIO_SCHMITT) >> pin) & 0x1; }
-> >
-> > +static bool at91_mux_pio3_get_gpio_output(void __iomem *pio, unsigned
-> > +pin) {
-> > +	return (__raw_readl(pio + PIO_ODSR) >> pin) & 0x1; }
-> > +
-> > +static void at91_mux_pio3_set_gpio_output(void __iomem *pio,
-> > +						unsigned mask,
-> > +						bool is_high)
-> > +{
-> > +	at91_mux_gpio_enable(pio, mask, 0);
-> > +	writel_relaxed(mask, pio + (is_high ? PIO_SODR : PIO_CODR)); }
-> > +
-> > +
-> > static struct at91_pinctrl_mux_ops at91rm9200_ops = {
-> > 	.get_periph	= at91_mux_get_periph,
-> > 	.mux_A_periph	= at91_mux_set_A_periph,
-> > @@ -495,6 +514,8 @@ static struct at91_pinctrl_mux_ops at91sam9x5_ops
-> = {
-> > 	.set_pulldown	= at91_mux_pio3_set_pulldown,
-> > 	.get_schmitt_trig = at91_mux_pio3_get_schmitt_trig,
-> > 	.disable_schmitt_trig = at91_mux_pio3_disable_schmitt_trig,
-> > +	.get_gpio_output = at91_mux_pio3_get_gpio_output,
-> > +	.set_gpio_output = at91_mux_pio3_set_gpio_output,
-> > 	.irq_type	= alt_gpio_irq_type,
-> > };
-> >
-> > @@ -741,6 +762,10 @@ static int at91_pinconf_get(struct pinctrl_dev
-> *pctldev,
-> > 		*config |= PULL_DOWN;
-> > 	if (info->ops->get_schmitt_trig && info->ops->get_schmitt_trig(pio,
-> pin))
-> > 		*config |= DIS_SCHMIT;
-> > +	if (info->ops->get_gpio_output) {
-> > +		*config |= info->ops->get_gpio_output(pio, pin) ?
-> > +					GPIO_OUTPUT_HIGH : GPIO_OUTPUT_LOW;
-> > +	}
-> >
-> > 	return 0;
-> > }
-> > @@ -778,6 +803,12 @@ static int at91_pinconf_set(struct pinctrl_dev
-> *pctldev,
-> > 			info->ops->set_pulldown(pio, mask, config & PULL_DOWN);
-> > 		if (info->ops->disable_schmitt_trig && config & DIS_SCHMIT)
-> > 			info->ops->disable_schmitt_trig(pio, mask);
-> > +		if (info->ops->set_gpio_output) {
-> > +			if (config & GPIO_OUTPUT_HIGH)
-> > +				info->ops->set_gpio_output(pio, mask, 1);
-> > +			if (config & GPIO_OUTPUT_LOW)
-> > +				info->ops->set_gpio_output(pio, mask, 0);
-> > +		};
-> >
-> > 	} /* for each config */
-> >
-> > diff --git a/include/dt-bindings/pinctrl/at91.h
-> > b/include/dt-bindings/pinctrl/at91.h
-> > index 0fee6ff..e799268 100644
-> > --- a/include/dt-bindings/pinctrl/at91.h
-> > +++ b/include/dt-bindings/pinctrl/at91.h
-> > @@ -15,6 +15,8 @@
-> > #define AT91_PINCTRL_DEGLITCH		(1 << 2)
-> > #define AT91_PINCTRL_PULL_DOWN		(1 << 3)
-> > #define AT91_PINCTRL_DIS_SCHMIT		(1 << 4)
-> > +#define AT91_PINCTRL_OUTPUT_HIGH	(1 << 5)
-> > +#define AT91_PINCTRL_OUTPUT_LOW		(1 << 6)
-> > #define AT91_PINCTRL_DEBOUNCE		(1 << 16)
-> > #define AT91_PINCTRL_DEBOUNCE_VAL(x)	(x << 17)
-> >
-> > --
-> > 1.7.9.5
-> >
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Kishon
