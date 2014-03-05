@@ -1,65 +1,67 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v2 01/11] base: power: Add generic OF-based power domain
- look-up
-Date: Wed, 05 Mar 2014 12:53:16 +0100
-Message-ID: <5317102C.7000007@gmail.com>
-References: <1393862536-9842-1-git-send-email-tomasz.figa@gmail.com> <1393862536-9842-2-git-send-email-tomasz.figa@gmail.com> <20140304182310.GA9985@codeaurora.org>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v5 2/5] ARM: imx6: gpc: Add PU power domain for GPU/VPU
+Date: Wed, 05 Mar 2014 13:03:37 +0100
+Message-ID: <1394021017.8754.7.camel@paszta.hi.pengutronix.de>
+References: <1393603427-6199-1-git-send-email-p.zabel@pengutronix.de>
+	 <1393603427-6199-3-git-send-email-p.zabel@pengutronix.de>
+	 <20140305065649.GJ8784@S2101-09.ap.freescale.net>
+	 <1394013924.16929.14.camel@paszta.hi.pengutronix.de>
+	 <20140305110513.GM8784@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140304182310.GA9985@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene.kim@samsung.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140305110513.GM8784-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04.03.2014 19:23, Stephen Boyd wrote:
-> On 03/03, Tomasz Figa wrote:
->> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
->> index dc127e5..006b455 100644
->> --- a/drivers/base/power/domain.c
->> +++ b/drivers/base/power/domain.c
->> @@ -3,12 +3,16 @@
->>    *
->>    * Copyright (C) 2011 Rafael J. Wysocki <rjw@sisk.pl>, Renesas Electronics Corp.
->>    *
->> + * Support for Device Tree based power domain providers:
->> + * Copyright (C) 2014 Tomasz Figa <tomasz.figa@gmail.com>
->> + *
->>    * This file is released under the GPLv2.
->>    */
->>
->>   #include <linux/init.h>
->>   #include <linux/kernel.h>
->>   #include <linux/io.h>
->> +#include <linux/platform_device.h>
->
-> Is this still needed?
->
+Am Mittwoch, den 05.03.2014, 19:05 +0800 schrieb Shawn Guo:
+> On Wed, Mar 05, 2014 at 11:05:24AM +0100, Philipp Zabel wrote:
+> > > > +static int imx_gpc_probe(struct platform_device *pdev)
+> > > > +{
+> > > > +	struct regulator *pu_reg;
+> > > > +	struct clk *clk;
+> > > > +	bool is_off;
+> > > > +	int ret, i;
+> > > > +
+> > > > +	pu_reg = devm_regulator_get(&pdev->dev, "pu");
+> > > > +	if (IS_ERR(pu_reg)) {
+> > > > +		ret = PTR_ERR(pu_reg);
+> > > > +		dev_err(&pdev->dev, "failed to get pu regulator: %d\n", ret);
+> > > > +		return ret;
+> > > > +	}
+> > > > +
+> > > > +	/* The regulator is initially enabled */
+> > > > +	ret = regulator_enable(pu_reg);
+> > > > +	if (ret < 0) {
+> > > > +		dev_err(&pdev->dev, "failed to enable pu regulator: %d\n", ret);
+> > > > +		return ret;
+> > > > +	}
+> > > > +	imx6q_pu_domain.base.of_node = pdev->dev.of_node;
+> > > 
+> > > How does this work with !CONFIG_PM build?
+> > 
+> > Since I removed the regulator-always-on property from the PU regulator
+> > in the device tree, if CONFIG_PM is disabled, we have to request and
+> > enable pu_reg here. Otherwise the regulator framework will helpfully
+> > turn it off (imx6q-cpufreq never enables pu_reg).
+> > With the PU regulator disabled, the system would hang as soon as the
+> > CODA VPU or one of the Vivante GPU cores is accessed if !CONFIG_PM.
+> 
+> Sorry, I should have been more specific.  My question is how stuff like
+> imx6q_pu_domain are available for !CONFIG_PM build, since they are only
+> defined in #ifdef CONFIG_PM right above imx_gpc_probe().
 
-Probably not.
+Ouch, I misread the quoted context. Yes, everything starting from
+imx6q_pu_domain.base.of_node = pdev->dev.of_node;
+needs to be #ifdef CONFIG_PM.
 
->>   #include <linux/pm_runtime.h>
->>   #include <linux/pm_domain.h>
->>   #include <linux/pm_qos.h>
-> [...]
->> +
->> +/*
->> + * DEVICE<->DOMAIN BINDING USING DEVICE TREE LOOK-UP
->> + *
->> + * The code below registers a notifier for platform bus devices'
->> + * BUS_NOTIFY_BIND_DRIVER events and tries to attach devices to their power
->> + * domains by looking them up using Device Tree.
->> + *
->> + * Similarly in BUS_NOTIFY_UNBOUND_DRIVER the device is detached from its
->> + * domain, since it no longer supports runtime PM without any driver bound
->> + * to it.
->
-> This looks outdated.
->
+regards
+Philipp
 
-Oops, missed this one. Thanks for pointing out.
-
-Best regards,
-Tomasz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
