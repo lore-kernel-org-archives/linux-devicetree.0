@@ -1,47 +1,56 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH 1/1] ARM: EXYNOS: Map SYSRAM address through DT
-Date: Wed, 5 Mar 2014 21:06:25 +0530
-Message-ID: <CAK9yfHw2adag+J1B=te4QvTG-PMJzvbrMe7NwFZsUGJrJFjmSA@mail.gmail.com>
-References: <1392876308-4748-1-git-send-email-sachin.kamat@linaro.org>
-	<CAK9yfHz6wJPdC=DjgaiNOsPHY8k9zaB+p3-ahpwOOcPQtoWEHw@mail.gmail.com>
-	<531725E9.5010307@saftware.de>
+From: Tim Harvey <tharvey@gateworks.com>
+Subject: Re: [PATCH] net: sky2: allow mac to come from dt
+Date: Wed, 5 Mar 2014 07:38:01 -0800
+Message-ID: <CAJ+vNU1-LFxC+fNiwO+Jiyzp0PZMM7h4xA2wYCrgasY9vXg5aA@mail.gmail.com>
+References: <1394000535-25559-1-git-send-email-tharvey@gateworks.com>
+	<CAL_JsqLUOzGW7u2FqUKQQ8gu2m8ksBR48oHkfLZmbkUNtzxpSg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <531725E9.5010307@saftware.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andreas Oberritter <obi@saftware.de>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Arnd Bergmann <arnd@arndb.de>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLUOzGW7u2FqUKQQ8gu2m8ksBR48oHkfLZmbkUNtzxpSg@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Stephen Hemminger <stephen@networkplumber.org>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5 March 2014 18:56, Andreas Oberritter <obi@saftware.de> wrote:
-> On 05.03.2014 09:23, Sachin Kamat wrote:
->>> diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
->>> index d2e3f5f5916d..3ca3fb6aa5f4 100644
->>> --- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
->>> +++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
->>> @@ -28,6 +28,11 @@
->>>                 bootargs = "console=ttySAC2,115200N8 root=/dev/mmcblk0p5 rw rootwait earlyprintk panic=5 maxcpus=1";
->>>         };
->>>
->>> +       sysram@02020000 {
->                   ^
->>> +               compatible = "samsung,exynos4210-sysram";
->>> +               reg = <0x02025000 0x1000>;
->                           ^
->>> +       };
->>> +
+On Tue, Mar 4, 2014 at 10:32 PM, Rob Herring <robherring2@gmail.com> wrote:
+<snip>
+>> @@ -4805,8 +4808,27 @@ static struct net_device *sky2_init_netdev(struct sky2_hw *hw, unsigned port,
+>>
+>>         dev->features |= dev->hw_features;
+>>
+>> +       /* try to get mac address in the following order:
+>> +        * 1) from device tree data
+>> +        * 2) from internal registers set by bootloader
+>> +        */
+>> +       iap = NULL;
+>> +       if (IS_ENABLED(CONFIG_OF)) {
 >
-> Shouldn't these two addresses match?
+> This shouldn't be needed.
+>
+>> +               struct device_node *np = hw->pdev->dev.of_node;
+>> +               if (np)
+>> +                       iap = (unsigned char *) of_get_mac_address(np);
+>> +       }
+>
+> This should all just be 1 line. of_get_mac_address should just return
+> NULL if !CONFIG_OF or np == NULL.
 
-Ideally they should. However in this case, this particular board uses
-older revision
-of the SoC which has a different register address. I did not want to
-create a compatible
-string just for this (exceptional) case alone and hence did it this
-way to override the reg. address.
-Other option was not to have the register address in the node name.
+agreed - I verified this is true
 
- --
-With warm regards,
-Sachin
+>
+>> +
+>> +       /* 2) mac registers set by bootloader
+>> +        */
+>> +       if (!iap || !is_valid_ether_addr(iap)) {
+>
+> Perhaps is_valid_ether_addr check should also be moved into of_get_mac_address.
+>
+
+looks like it already does that - I'll simplify the above
+
+> Rob
+
+Thanks for the review!
+
+Tim
