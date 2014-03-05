@@ -1,48 +1,53 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 0/5] Add USB nodes for am43xx epos and gp evm
-Date: Wed, 5 Mar 2014 11:42:19 -0800
-Message-ID: <20140305194219.GD7599@atomide.com>
-References: <1393854834-23810-1-git-send-email-george.cherian@ti.com>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v5 0/3] ARM: sun7i/sun6i: irqchip: Irqchip
+ driver for NMI
+Date: Wed,  5 Mar 2014 20:45:28 +0100
+Message-ID: <1394048731-4570-1-git-send-email-carlo@caione.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1393854834-23810-1-git-send-email-george.cherian@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: George Cherian <george.cherian@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, anatol.pomozov@gmail.com, gregkh@linuxfoundation.org, balbi@ti.com, rogerq@ti.com, kishon@ti.com, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, bcousson@baylibre.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDWJTUUC5UCBBQ753WMAKGQE4BPYWUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* George Cherian <george.cherian@ti.com> [140303 05:58]:
-> The patch series adds USB dt nodes for am43xx epos and gp evm
-> 
-> Boot tested with  Benoit's for_3.15 + following patches
-> 
-> https://patchwork.kernel.org/patch/3600821/
-> https://patchwork.kernel.org/patch/3600831/
-> https://patchwork.kernel.org/patch/3600851/
-> https://patchwork.kernel.org/patch/3600841/
+Allwinner A20/A31 SoCs have a special interrupt controller for managing NMI.
+Three register are present to (un)mask, control and acknowledge NMI.
+These two patches add a new irqchip driver in cascade with GIC.
 
-Roger, care to look through these and ack if OK?
+Changes since v1:
+	- added binding document
 
-Regards,
+Changes since v2:
+	- fixed trigger type in DTS
+	- new explanations in binding documentation
+	- added support for A31 (sun6i)
 
-Tony
+Changes since v3:
+	- changed compatibles
 
-> George Cherian (5):
->   ARM: dts: am43xx clock data
->   ARM: dts: AM4372: Add USB nodes
->   ARM: dts: am437x-gp-evm: Enable USB
->   ARM: dts: am43x-epos-evm: Enable USB
->   doc: Add "ti,am437x-dwc3" comaptible for dwc3 glue
-> 
->  Documentation/devicetree/bindings/usb/omap-usb.txt |  4 +-
->  arch/arm/boot/dts/am4372.dtsi                      | 99 ++++++++++++++++++++++
->  arch/arm/boot/dts/am437x-gp-evm.dts                | 44 ++++++++++
->  arch/arm/boot/dts/am43x-epos-evm.dts               | 44 ++++++++++
->  arch/arm/boot/dts/am43xx-clocks.dtsi               | 17 ++++
->  5 files changed, 207 insertions(+), 1 deletion(-)
-> 
-> -- 
-> 1.8.3.1
-> 
+Changes since v4:
+	- fixed binding documentation
+
+Carlo Caione (3):
+  ARM: sun7i/sun6i: irqchip: Add irqchip driver for NMI controller
+  ARM: sun7i/sun6i: dts: Add NMI irqchip support
+  ARM: sun7i/sun6i: irqchip: Update the documentation
+
+ .../allwinner,sun67i-sc-nmi.txt                    |  27 +++
+ arch/arm/boot/dts/sun6i-a31.dtsi                   |   9 +
+ arch/arm/boot/dts/sun7i-a20.dtsi                   |   9 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-sunxi-nmi.c                    | 228 +++++++++++++++++++++
+ 5 files changed, 274 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/allwinner,sun67i-sc-nmi.txt
+ create mode 100644 drivers/irqchip/irq-sunxi-nmi.c
+
+-- 
+1.8.3.2
