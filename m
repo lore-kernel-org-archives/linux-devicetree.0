@@ -1,105 +1,148 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH 2/3] soc: keystone: add QMSS driver
-Date: Wed, 5 Mar 2014 10:47:18 +0800
-Message-ID: <53169036.9060808@ti.com>
-References: <1393629520-12713-1-git-send-email-santosh.shilimkar@ti.com>
- <1393629520-12713-3-git-send-email-santosh.shilimkar@ti.com>
- <AAE2808F-A2C8-4031-BFA4-1A20B182EA69@codeaurora.org>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [RFC PATCH v2 00/21] Add DSI display support for Exynos based boards
+Date: Wed, 5 Mar 2014 11:56:08 +0900
+Message-ID: <CAAQKjZOEAWG3jwTPOP7aBnpjyg8qLfq-Fcv_Mec2+fgmOULqEg@mail.gmail.com>
+References: <1392204688-4591-1-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <AAE2808F-A2C8-4031-BFA4-1A20B182EA69@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Nair, Sandeep" <sandeep_n@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1392204688-4591-1-git-send-email-a.hajda@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: DRI mailing list <dri-devel@lists.freedesktop.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 05 March 2014 01:59 AM, Kumar Gala wrote:
-> 
-> On Feb 28, 2014, at 5:18 PM, Santosh Shilimkar <santosh.shilimkar@ti.com> wrote:
-> 
->> From: Sandeep Nair <sandeep_n@ti.com>
->>
->> The QMSS (Queue Manager Sub System) found on Keystone SOCs is one of
->> the main hardware sub system which forms the backbone of the Keystone
->> Multi-core Navigator. QMSS consist of queue managers, packed-data structure
->> processors(PDSP), linking RAM, descriptor pools and infrastructure
->> Packet DMA.
->>
->> The Queue Manager is a hardware module that is responsible for accelerating
->> management of the packet queues. Packets are queued/de-queued by writing or
->> reading descriptor address to a particular memory mapped location. The PDSPs
->> perform QMSS related functions like accumulation, QoS, or event management.
->> Linking RAM registers are used to link the descriptors which are stored in
->> descriptor RAM. Descriptor RAM is configurable as internal or external memory.
->>
->> The QMSS driver manages the PDSP setups, linking RAM regions,
->> queue pool management (allocation, push, pop and notify) and descriptor
->> pool management. The specifics on the device tree bindings for
->> QMSS can be found in:
->>        Documentation/devicetree/bindings/soc/keystone-qmss.txt
->>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: Kumar Gala <galak@codeaurora.org>
->> Cc: Olof Johansson <olof@lixom.net>
->> Cc: Arnd Bergmann <arnd@arndb.de>
->> Cc: Grant Likely <grant.likely@linaro.org>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Signed-off-by: Sandeep Nair <sandeep_n@ti.com>
->> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
->> ---
->> .../devicetree/bindings/soc/keystone-qmss.txt      |  209 +++
->> drivers/Kconfig                                    |    2 +
->> drivers/Makefile                                   |    3 +
->> drivers/soc/Kconfig                                |    2 +
->> drivers/soc/Makefile                               |    5 +
->> drivers/soc/keystone/Kconfig                       |   15 +
->> drivers/soc/keystone/Makefile                      |    5 +
->> drivers/soc/keystone/qmss_acc.c                    |  591 ++++++++
->> drivers/soc/keystone/qmss_queue.c                  | 1533 ++++++++++++++++++++
->> drivers/soc/keystone/qmss_queue.h                  |  236 +++
->> include/linux/soc/keystone_qmss.h                  |  390 +++++
->> 11 files changed, 2991 insertions(+)
->> create mode 100644 Documentation/devicetree/bindings/soc/keystone-qmss.txt
->> create mode 100644 drivers/soc/Makefile
->> create mode 100644 drivers/soc/keystone/Kconfig
->> create mode 100644 drivers/soc/keystone/Makefile
->> create mode 100644 drivers/soc/keystone/qmss_acc.c
->> create mode 100644 drivers/soc/keystone/qmss_queue.c
->> create mode 100644 drivers/soc/keystone/qmss_queue.h
->> create mode 100644 include/linux/soc/keystone_qmss.h
-> 
-> Do you see qmss being able to provide HW support for a qdisc or doing processor to processor communication over something like rpmsg?
-> 
-> I ask because I do wondering if we should be looking at a drivers/hwqueue as other vendors have similar hardware.
-> 
-QMSS just provides the programming interfaces so that certain queues can be configured to achieve QOS tree. The actual qdisc should be
-part of the network driver as such. The queues are such a generic hardware that it can be used for wide variety of usecases and 
-supporting that through one driver will be really hard. We did talk of hwqueue last year but looks like the usecase variety is
-too much because of generic nature of them.
+Hi Andrzej,
 
-QMSS isn't used as such for message passing but queue hardware can be used as done by APM hardware which Arnd pointed me on the other
-thread. As Arnd recommended, the processor to processor communication related drivers should go under drivers/mailbox. One example,
-was the APM QMTM patchset [1]
+Thanks for your contributions.
 
->From first look the QMSS(APM) and QMTM(APM) looked very similar but they actually differ largely the way it works. Thanks to Arnd
-for useful discussion here at connect, I better understood how the QMTM works.
+2014-02-12 20:31 GMT+09:00 Andrzej Hajda <a.hajda@samsung.com>:
+> Hi,
+>
+> This patchset adds drivers and bindings to the following devices:
+> - Exynos DSI master,
+> - S6E8AA0 DSI panel,
+> - TC358764 DSI/LVDS bridge,
+> - HV070WSA-100 LVDS panel.
+>
+> It adds also display support in DTS files for the following boards:
+> - Exynos4210/Trats,
+> - Exynos4412/Trats2,
+> - Exynos5250/Arndale.
+>
+> Things worth mentioning:
+>
+> 1. I have implemented DSI/LVDS bridge using drm_panel framework, ie.
+> the driver exposes drm_panel interface on DSI side, and interact with
+> panels on LVDS side using drm_panel framework. This approach seems to
+> me simpler and more natural than using drm_bridge.
 
-If you know any other hardware, which needs similar interfaces as QMSS, we can surely think of another subsystem. QMSS is
-largely network usecase dominated but not limited to only those usecases. It is also used by pure drivers/crypto/ or
-can also be used for data movement for video etc. 
+Can you give me more details about why you think better to use panel
+framework than using drm_bridge?  "Simpler" and "more natural" are
+ambiguous to me.
 
-Regards,
-Santosh
+Using same drm_panel framework for LDVS bridge and real panel drivers
+isn't reasonable to me as now because drm_panel framework would be for
+real panel device even if the use of drm_panel framework looks like
+suitable to LVDS bridge driver. I thought Sean's way, ptn3460 driver
+using drm_bride stuff, is good enough, and that would be why
+drm_bridge exists and why drm_encoder has drm_bridge.
 
-[1] https://lkml.org/lkml/2014/2/14/703
+And I'm finding more generic way, how to handle LVDS bridge using
+super node so that  LVDS bridge driver isn't embedded to connector
+drivers such as eDP and MIPI-DSI, and dt binding of LVDS bridge can be
+done at top level of Exynos drm. Once the binding is done, encoder of
+display bus driver will have drm_bridge object of LVDS bridge driver
+so that display bus driver can handle LVDS bridge driver.
+
+Will review your patch series soon.
+
+Thanks,
+Inki Dae
+
+>
+> 2. I have used video interface bindings to make link between bridge and LVDS panel.
+> Other places where such links can be created are:
+> a) link between DSI master and slave, I wonder if it is always neccessary,
+>    DSI bus is also video bus,
+> b) link between FIMD(display controller) and DSI Master, currently Exynos DRM
+>    framework uses driver's hardcoded links, converting it to video interface
+>    bindings should be done (if required) by separate patches.
+>
+> The patchset is based on Sean's Paul Exynos refactor patches v4 [1].
+> To work properly porch calculation should be fixed according to my comment [2].
+>
+> It is the 2nd iteration of the patches, main changes:
+> - based on v4 refactor patches,
+> - added arndale related stuff.
+> Other changes are described in individual patches.
+>
+> [1] http://permalink.gmane.org/gmane.comp.video.dri.devel/99264
+> [2] http://permalink.gmane.org/gmane.comp.video.dri.devel/99826
+>
+> Regards
+> Andrzej
+>
+>
+> Andrzej Hajda (21):
+>   drm_mipi_dsi: add flags to DSI messages
+>   drm/exynos: delay fbdev initialization until an output is connected
+>   exynos/dsim: add DT bindings
+>   drm/exynos: add DSIM driver
+>   panel/s6e8aa0: add DT bindings
+>   drm/panel: add S6E8AA0 driver
+>   panel/tc358764: add DT bindings
+>   drm/panel: add TC358764 driver
+>   panel/simple: add video interface DT bindings
+>   panel/hv070wsa-100: add DT bindings
+>   drm/panel: add support for BOE HV070WSA-100 panel to simple-panel
+>   ARM: dts: exynos4: add MIPI DSI Master node
+>   ARM: dts: exynos4210-trats: add panel node
+>   ARM: dts: exynos4412-trats2: add panel node
+>   ARM: dts: exynos5250: add mipi-phy node
+>   ARM: dts: exynos5250: add display power domain node
+>   ARM: dts: exynos5250: add DSI node
+>   ARM: dts: exynos5250-arndale: add display regulators
+>   ARM: dts: exynos5250-arndale: add dsi and panel nodes
+>   ARM: dts: exynos4210-trats: enable exynos/fimd node
+>   ARM: dts: exynos4412-trats2: enable exynos/fimd node
+>
+>  .../devicetree/bindings/panel/boe,hv070wsa-100.txt |    7 +
+>  .../devicetree/bindings/panel/samsung,s6e8aa0.txt  |   51 +
+>  .../devicetree/bindings/panel/simple-panel.txt     |    6 +
+>  .../devicetree/bindings/panel/toshiba,tc358764.txt |   41 +
+>  .../devicetree/bindings/video/exynos_dsim.txt      |   53 +
+>  arch/arm/boot/dts/exynos4.dtsi                     |   14 +
+>  arch/arm/boot/dts/exynos4210-trats.dts             |   42 +
+>  arch/arm/boot/dts/exynos4412-trats2.dts            |   51 +
+>  arch/arm/boot/dts/exynos5250-arndale.dts           |   63 +
+>  arch/arm/boot/dts/exynos5250.dtsi                  |   25 +
+>  drivers/gpu/drm/exynos/Kconfig                     |    9 +
+>  drivers/gpu/drm/exynos/Makefile                    |    1 +
+>  drivers/gpu/drm/exynos/exynos_drm_drv.c            |   26 +-
+>  drivers/gpu/drm/exynos/exynos_drm_drv.h            |    1 +
+>  drivers/gpu/drm/exynos/exynos_drm_dsi.c            | 1402 ++++++++++++++++++++
+>  drivers/gpu/drm/exynos/exynos_drm_fb.c             |    3 +
+>  drivers/gpu/drm/exynos/exynos_drm_fbdev.c          |    4 +-
+>  drivers/gpu/drm/panel/Kconfig                      |   14 +
+>  drivers/gpu/drm/panel/Makefile                     |    2 +
+>  drivers/gpu/drm/panel/panel-s6e8aa0.c              | 1064 +++++++++++++++
+>  drivers/gpu/drm/panel/panel-simple.c               |   25 +
+>  drivers/gpu/drm/panel/panel-tc358764.c             |  505 +++++++
+>  include/drm/drm_mipi_dsi.h                         |    6 +
+>  23 files changed, 3402 insertions(+), 13 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/panel/boe,hv070wsa-100.txt
+>  create mode 100644 Documentation/devicetree/bindings/panel/samsung,s6e8aa0.txt
+>  create mode 100644 Documentation/devicetree/bindings/panel/toshiba,tc358764.txt
+>  create mode 100644 Documentation/devicetree/bindings/video/exynos_dsim.txt
+>  create mode 100644 drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>  create mode 100644 drivers/gpu/drm/panel/panel-s6e8aa0.c
+>  create mode 100644 drivers/gpu/drm/panel/panel-tc358764.c
+>
+> --
+> 1.8.3.2
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
