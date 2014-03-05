@@ -1,90 +1,130 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] ASoC: tlv320aic31xx: Add basic codec driver
- implementation
-Date: Wed, 5 Mar 2014 09:55:01 +0800
-Message-ID: <20140305015501.GS13126@sirena.org.uk>
-References: <cover.1393941102.git.jsarha@ti.com>
- <ba9718f573ca9195c80075a15fe114e0d4557da0.1393941102.git.jsarha@ti.com>
+From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] pinctrl: at91: add the config GPIO_OUTPUT_x
+Date: Wed, 5 Mar 2014 09:53:20 +0800
+Message-ID: <1393984400-14687-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Cbvl/UgeRTPlujdB"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <ba9718f573ca9195c80075a15fe114e0d4557da0.1393941102.git.jsarha-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, detheridge-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org
+Cc: b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+In order to support the pinctrl sleep state.
 
---Cbvl/UgeRTPlujdB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+---
+Hi Linus,
 
-On Tue, Mar 04, 2014 at 03:54:49PM +0200, Jyri Sarha wrote:
+The patch is based on branch: for-next
+git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl
 
-> +- ai31xx-micbias-vg - MicBias Voltage required.
-> +        MICBIAS_OFF - MICBIAS output it not powered
+Best Regards,
+Wenyou Yang
 
-Same comment as last time - why is this something which can be selected
-in the binding?
+ drivers/pinctrl/pinctrl-at91.c     |   31 +++++++++++++++++++++++++++++++
+ include/dt-bindings/pinctrl/at91.h |    2 ++
+ 2 files changed, 33 insertions(+)
 
-> +        MICBIAS_2_0V - MICBIAS output is powered to 2.0V
-> +        MICBIAS_2_5V - MICBIAS output is powered to 2.5V
-> +        MICBIAS_AVDD - MICBIAS output is connected to AVDD
+diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+index 5d24aae..fc51e59 100644
+--- a/drivers/pinctrl/pinctrl-at91.c
++++ b/drivers/pinctrl/pinctrl-at91.c
+@@ -62,6 +62,8 @@ static int gpio_banks;
+ #define DEGLITCH	(1 << 2)
+ #define PULL_DOWN	(1 << 3)
+ #define DIS_SCHMIT	(1 << 4)
++#define GPIO_OUTPUT_HIGH	(1 << 5)
++#define GPIO_OUTPUT_LOW		(1 << 6)
+ #define DEBOUNCE	(1 << 16)
+ #define DEBOUNCE_VAL_SHIFT	17
+ #define DEBOUNCE_VAL	(0x3fff << DEBOUNCE_VAL_SHIFT)
+@@ -152,12 +154,15 @@ struct at91_pinctrl_mux_ops {
+ 	void (*set_pulldown)(void __iomem *pio, unsigned mask, bool is_on);
+ 	bool (*get_schmitt_trig)(void __iomem *pio, unsigned pin);
+ 	void (*disable_schmitt_trig)(void __iomem *pio, unsigned mask);
++	bool (*get_gpio_output)(void __iomem *pio, unsigned mask);
++	void (*set_gpio_output)(void __iomem *pio, unsigned mask, bool is_high);
+ 	/* irq */
+ 	int (*irq_type)(struct irq_data *d, unsigned type);
+ };
+ 
+ static int gpio_irq_type(struct irq_data *d, unsigned type);
+ static int alt_gpio_irq_type(struct irq_data *d, unsigned type);
++static void at91_mux_gpio_enable(void __iomem *pio, unsigned mask, bool input);
+ 
+ struct at91_pinctrl {
+ 	struct device		*dev;
+@@ -472,6 +477,20 @@ static bool at91_mux_pio3_get_schmitt_trig(void __iomem *pio, unsigned pin)
+ 	return (__raw_readl(pio + PIO_SCHMITT) >> pin) & 0x1;
+ }
+ 
++static bool at91_mux_pio3_get_gpio_output(void __iomem *pio, unsigned pin)
++{
++	return (__raw_readl(pio + PIO_ODSR) >> pin) & 0x1;
++}
++
++static void at91_mux_pio3_set_gpio_output(void __iomem *pio,
++						unsigned mask,
++						bool is_high)
++{
++	at91_mux_gpio_enable(pio, mask, 0);
++	writel_relaxed(mask, pio + (is_high ? PIO_SODR : PIO_CODR));
++}
++
++
+ static struct at91_pinctrl_mux_ops at91rm9200_ops = {
+ 	.get_periph	= at91_mux_get_periph,
+ 	.mux_A_periph	= at91_mux_set_A_periph,
+@@ -495,6 +514,8 @@ static struct at91_pinctrl_mux_ops at91sam9x5_ops = {
+ 	.set_pulldown	= at91_mux_pio3_set_pulldown,
+ 	.get_schmitt_trig = at91_mux_pio3_get_schmitt_trig,
+ 	.disable_schmitt_trig = at91_mux_pio3_disable_schmitt_trig,
++	.get_gpio_output = at91_mux_pio3_get_gpio_output,
++	.set_gpio_output = at91_mux_pio3_set_gpio_output,
+ 	.irq_type	= alt_gpio_irq_type,
+ };
+ 
+@@ -741,6 +762,10 @@ static int at91_pinconf_get(struct pinctrl_dev *pctldev,
+ 		*config |= PULL_DOWN;
+ 	if (info->ops->get_schmitt_trig && info->ops->get_schmitt_trig(pio, pin))
+ 		*config |= DIS_SCHMIT;
++	if (info->ops->get_gpio_output) {
++		*config |= info->ops->get_gpio_output(pio, pin) ?
++					GPIO_OUTPUT_HIGH : GPIO_OUTPUT_LOW;
++	}
+ 
+ 	return 0;
+ }
+@@ -778,6 +803,12 @@ static int at91_pinconf_set(struct pinctrl_dev *pctldev,
+ 			info->ops->set_pulldown(pio, mask, config & PULL_DOWN);
+ 		if (info->ops->disable_schmitt_trig && config & DIS_SCHMIT)
+ 			info->ops->disable_schmitt_trig(pio, mask);
++		if (info->ops->set_gpio_output) {
++			if (config & GPIO_OUTPUT_HIGH)
++				info->ops->set_gpio_output(pio, mask, 1);
++			if (config & GPIO_OUTPUT_LOW)
++				info->ops->set_gpio_output(pio, mask, 0);
++		};
+ 
+ 	} /* for each config */
+ 
+diff --git a/include/dt-bindings/pinctrl/at91.h b/include/dt-bindings/pinctrl/at91.h
+index 0fee6ff..e799268 100644
+--- a/include/dt-bindings/pinctrl/at91.h
++++ b/include/dt-bindings/pinctrl/at91.h
+@@ -15,6 +15,8 @@
+ #define AT91_PINCTRL_DEGLITCH		(1 << 2)
+ #define AT91_PINCTRL_PULL_DOWN		(1 << 3)
+ #define AT91_PINCTRL_DIS_SCHMIT		(1 << 4)
++#define AT91_PINCTRL_OUTPUT_HIGH	(1 << 5)
++#define AT91_PINCTRL_OUTPUT_LOW		(1 << 6)
+ #define AT91_PINCTRL_DEBOUNCE		(1 << 16)
+ #define AT91_PINCTRL_DEBOUNCE_VAL(x)	(x << 17)
+ 
+-- 
+1.7.9.5
 
-The numbers still need to be defined in the binding, the point with the
-defines is to make both code and DTs more readable but we need to know
-what is actually going to go into the binary.
-
-> +	/* Mic Bias */
-> +	SND_SOC_DAPM_SUPPLY("Mic Bias", SND_SOC_NOPM, 0, 0, mic_bias_event,
-> +			    SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
-
-The idiomatic thing would be to use the pin name.
-
-> +	/* Make ADC turn on when recording even if not mixed from any inputs */
-> +	{"ADC", NULL, "Internal ADC Source"},
-
-Don't do this (or the equivalent from the DACs) - we don't do this for
-any other drivers, we shouldn't do it for this one.  If we're going to
-do something like this it should be generic not per driver hacks.
-
-> +	case SND_SOC_BIAS_STANDBY:
-> +		if (codec->dapm.bias_level == SND_SOC_BIAS_OFF)
-> +			aic31xx_set_power(codec, 1);
-> +		break;
-> +	case SND_SOC_BIAS_OFF:
-> +		aic31xx_set_power(codec, 0);
-> +		break;
-
-Just inline the set power function, or at the very least split it into
-separate on and off functions - there is zero shared code between the
-power on and off paths.
-
---Cbvl/UgeRTPlujdB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTFoPyAAoJELSic+t+oim9/lsQAJJxdUHcqmEjN1zX7CeZXTTP
-KzTU7cvi1+WToD/WDpDn5mYUHomJBPv+bxsPoU/PLLPanffkO5McVv+TH7oo075g
-s2JDKKGWhvngttz8nE7a64dHw5zf84uFTuBZVXsd/WguuNsHvWTPp5MDr7mJtR32
-i6ZQfq+BglhoMX/6LHPd3RMiXnzryvVVGpBNX3Rii7lOafawvCVwfttVjZzBaf5r
-IRY99V5P4G5p5jwtvIaSrOTwk1aqgV35PnZtgKU8iMxcOfipfI/MrlpboZCXnL63
-x3EXyYHWJq0ThlJ5ZFRpjYuvEhs+HCd0bw+bJ2Yl+9V4ZcY+jUDtLKJLvA+yNQrE
-AOIQjJby5NhKLulk+UwcJ/qWUja8hAC15v5lDF4mqfZhqk1XRjMBRpFo8uTk0FwV
-eiyLllUNo7eTxRhybtlVhSZFYfkOqeT4qOgS+gTIc6p8Iss0Da6hkmQu1rh4zB9t
-5NVRe6/FDNhaYkDtLhbhwn+HxxvPcNe76WBzFltF+BRmLCFo9XNvc8e4N0Q0KsK2
-iwJ+168f3XZuX1xckSzH+tXwbl+SXatrGeIk/AxM2n68fEJHOeo/xsO59YjpngO1
-FOx4ILoyHkXN9duZqPukqR3MF1lerY8znxVJyIFMhfAFs4y61mC6K7DFAH7IZXVq
-UgEGm7Ou0MBKZsOpVggr
-=6MKt
------END PGP SIGNATURE-----
-
---Cbvl/UgeRTPlujdB--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
