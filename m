@@ -1,58 +1,116 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v5 4/5] ARM: dts: imx6sl: Add power-domain information
- to gpc node
-Date: Wed, 05 Mar 2014 10:37:24 +0100
-Message-ID: <1394012244.16929.2.camel@paszta.hi.pengutronix.de>
-References: <1393603427-6199-1-git-send-email-p.zabel@pengutronix.de>
-	 <1393603427-6199-5-git-send-email-p.zabel@pengutronix.de>
-	 <20140305070009.GK8784@S2101-09.ap.freescale.net>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] gpio: davinci: fix gpio selection for OF
+Date: Wed, 5 Mar 2014 12:43:26 +0200
+Message-ID: <5316FFCE.1060603@ti.com>
+References: <5315ED51.1000006@ti.com>
+	<1393970762-5346-1-git-send-email-holler@ahsoftware.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140305070009.GK8784-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1393970762-5346-1-git-send-email-holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, den 05.03.2014, 15:00 +0800 schrieb Shawn Guo:
-> On Fri, Feb 28, 2014 at 05:03:46PM +0100, Philipp Zabel wrote:
-> > The PGC that is part of GPC controls isolation and power sequencing of the
-> > power domains. The PU power domain will be handled by the generic pm domain
-> > framework. It needs a phandle to the PU regulator to turn off power when
-> > the domain is disabled and a list of clocks to be enabled during powerup
-> > for reset propagation.
-> > 
-> > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
-> > Changes since v4:
-> >  - Use OF power domain bindings
-> >  - Added reset clocks
-> > ---
-> >  arch/arm/boot/dts/imx6sl.dtsi | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-> > index 28558f1..0e61262 100644
-> > --- a/arch/arm/boot/dts/imx6sl.dtsi
-> > +++ b/arch/arm/boot/dts/imx6sl.dtsi
-> > @@ -529,9 +529,13 @@
-> >  			};
-> >  
-> >  			gpc: gpc@020dc000 {
-> > -				compatible = "fsl,imx6sl-gpc", "fsl,imx6q-gpc";
-> > +				compatible = "fsl,imx6sl-gpc";
-> 
-> This change will break function imx_gpc_init(), which looks up
-> "fsl,imx6q-gpc" even on imx6sl.
+On 03/05/2014 12:06 AM, Alexander Holler wrote:
+> The driver missed an of_xlate function to translate gpio numbers
+> as found in the DT to the correct chip and number.
+>
+> While there I've set #gpio_cells to a fixed value of 2.
+>
+> I've used gpio-pxa.c as template for those changes and tested my changes
+> successfully on a da850 board using entries for gpio-leds in a DT. So I didn't
+> reinvent the wheel but just copied and tested stuff.
+>
+> Thanks to Grygorii Strashko for the hint of the existing code in gpio-pxa.
+>
+> Signed-off-by: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+> ---
+>   drivers/gpio/gpio-davinci.c | 27 +++++++++++++++++++++++++++
+>   1 file changed, 27 insertions(+)
+>
+> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+> index 7629b4f..79f45c4 100644
+> --- a/drivers/gpio/gpio-davinci.c
+> +++ b/drivers/gpio/gpio-davinci.c
+> @@ -44,6 +44,9 @@ struct davinci_gpio_regs {
+>
+>   static void __iomem *gpio_base;
+>
+> +static struct davinci_gpio_controller *davinci_gpio_chips;
+> +static int davinci_last_gpio;
+> +
+>   static struct davinci_gpio_regs __iomem *gpio2regs(unsigned gpio)
+>   {
+>   	void __iomem *ptr;
+> @@ -172,6 +175,24 @@ of_err:
+>   	return NULL;
+>   }
+>
+> +#ifdef CONFIG_OF_GPIO
+> +static int davinci_gpio_of_xlate(struct gpio_chip *gc,
+> +			     const struct of_phandle_args *gpiospec,
+> +			     u32 *flags)
+> +{
+> +	if (gpiospec->args[0] > davinci_last_gpio)
+> +		return -EINVAL;
+> +
+> +	if (gc != &davinci_gpio_chips[gpiospec->args[0] / 32].chip)
+> +		return -EINVAL;
+> +
+> +	if (flags)
+> +		*flags = gpiospec->args[1];
 
-Sorry, I'll drop this change.
+Just one question here - Could we use gpio_chip-dev and hence, drop
+static variables (davinci_gpio_chips, davinci_last_gpio)?
 
-regards
-Philipp
+The Davinci device holds davinci_gpio_platform_data
+in dev->platform_data and pointer on davinci_gpio_controller array
+in dev->p->driver_data.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+And looks like, dev_get_platdata(gc->dev) and
+dev_get_drvdata(gc->dev) can be used here.
+
+> +
+> +	return gpiospec->args[0] % 32;
+> +}
+> +#endif
+> +
+>   static int davinci_gpio_probe(struct platform_device *pdev)
+>   {
+>   	int i, base;
+> @@ -236,6 +257,8 @@ static int davinci_gpio_probe(struct platform_device *pdev)
+>   			chips[i].chip.ngpio = 32;
+>
+
+add here	chips[i].chip.dev = dev;
+
+>   #ifdef CONFIG_OF_GPIO
+> +		chips[i].chip.of_gpio_n_cells = 2;
+> +		chips[i].chip.of_xlate = davinci_gpio_of_xlate;
+>   		chips[i].chip.of_node = dev->of_node;
+>   #endif
+>   		spin_lock_init(&chips[i].lock);
+> @@ -251,6 +274,10 @@ static int davinci_gpio_probe(struct platform_device *pdev)
+>
+>   	platform_set_drvdata(pdev, chips);
+>   	davinci_gpio_irq_setup(pdev);
+> +
+> +	davinci_gpio_chips = chips;
+> +	davinci_last_gpio = ngpio;
+> +
+>   	return 0;
+>   }
+
+regards,
+-grygorii
