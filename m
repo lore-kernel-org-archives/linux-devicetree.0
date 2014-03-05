@@ -1,55 +1,120 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH 1/1] ARM: Exynos: Add generic compatible string
-Date: Wed, 5 Mar 2014 13:55:55 +0530
-Message-ID: <CAK9yfHxg8kwL2zFy7ErW4kR1_5BerxqaLyaJx3Jko8wLRGdCkw@mail.gmail.com>
-References: <1392809645-631-1-git-send-email-sachin.kamat@linaro.org>
-	<CAK9yfHxXTbNmgTYqFH1Mm-X_sN2GpfLPp0MKixU=g2bKxz8e=g@mail.gmail.com>
-	<CAOesGMiZXKRbrbmvKs4pF7HiXM1hsGjzbFUQmJ-n5-nar5uMBw@mail.gmail.com>
-	<201402251242.30654.arnd@arndb.de>
+From: Liviu Dudau <liviu@dudau.co.uk>
+Subject: Re: [PATCH v5 7/7] pci: Add support for creating a generic
+ host_bridge from device tree
+Date: Wed, 5 Mar 2014 08:33:12 +0000
+Message-ID: <20140305083311.GD13582@bart.dudau.co.uk>
+References: <1393948204-11555-1-git-send-email-Liviu.Dudau@arm.com>
+ <1393948204-11555-8-git-send-email-Liviu.Dudau@arm.com>
+ <001f01cf3811$18463ed0$48d2bc70$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <201402251242.30654.arnd@arndb.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Olof Johansson <olof@lixom.net>, Tomasz Figa <tomasz.figa@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <001f01cf3811$18463ed0$48d2bc70$%han@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: devicetree@vger.kernel.org, 'linaro-kernel' <linaro-kernel@lists.linaro.org>, 'Benjamin Herrenschmidt' <benh@kernel.crashing.org>, 'Arnd Bergmann' <arnd@arndb.de>, 'linux-pci' <linux-pci@vger.kernel.org>, 'Liviu Dudau' <Liviu.Dudau@arm.com>, 'LKML' <linux-kernel@vger.kernel.org>, 'Will Deacon' <Will.Deacon@arm.com>, 'Tanmay Inamdar' <tinamdar@apm.com>, 'Catalin Marinas' <Catalin.Marinas@arm.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'LAKML' <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 25 February 2014 17:12, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tuesday 25 February 2014, Olof Johansson wrote:
->> I disagree. I don't know what Samsung has in mind, but the revision of
->> the CPU doesn't have all that much to do with the rest of the SoC.
->> It's quite likely that some vendors (maybe not Samsung, but the same
->> concept applies) will ship 64-bit SoCs that are very similar to their
->> preceding 32-bit ones, same IP, similar busses, etc. I'm pretty sure
->> at least some vendors will do very close to that.
->
-> Right.
->
->> So, if EXYNOS4 and EXYNOS5 can share a compatible value when they use
->> different CPUs, then there's no reason that whatever future 64-bit
->> ones can also share it.
->
-> How about putting both 'samsung,exynos' and 'samsung,exynos4' in DT then
-> and having the platform code match exynos4 and exynos5 but not exynos?
->
-> That way, I think we are consistent and future-proof. Any code that needs
-> to know if it's running on some exynos version can just check for the
-> 'samsung,exynos' compatible value and that will work on both arm32 and
-> arm64. Also, if we ever decide we want to run a 32-bit kernel on a 64-bit
-> exynos, we can just add 'samsung,exynos6' (or whatever number that will
-> be) to the list.
->
-> My usual disclaimer for this: You should never ever consider actually
-> running a 32-bit kernel on a 64-bit CPU, but at the same time there
-> shouldn't be any reason why it won't work either, given that we require
-> arm64 based systems to have all SoC specific code in drivers and we
-> can use the same drivers on arm32.
+On Wed, Mar 05, 2014 at 10:20:28AM +0900, Jingoo Han wrote:
+> On Wednesday, March 05, 2014 12:50 AM, Liviu Dudau wrote:
+> > 
+> > Several platforms use a rather generic version of parsing
+> > the device tree to find the host bridge ranges. Move the common code
+> > into the generic PCI code and use it to create a pci_host_bridge
+> > structure that can be used by arch code.
+> > 
+> > Based on early attempts by Andrew Murray to unify the code.
+> > Used powerpc and microblaze PCI code as starting point.
+> > 
+> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> > 
+> > diff --git a/drivers/pci/host-bridge.c b/drivers/pci/host-bridge.c
+> > index 8708b652..800678a 100644
+> > --- a/drivers/pci/host-bridge.c
+> > +++ b/drivers/pci/host-bridge.c
+> 
+> [.....]
+> 
+> > +		res = kzalloc(sizeof(struct resource), GFP_KERNEL);
+> 
+> It makes build error with exynos_defconfig. (ARM32)
+> Thus, 'slab.h' is necessary in order to fix the build error.
+> 
+> ./drivers/pci/host-bridge.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/module.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_pci.h>
+> +#include <linux/slab.h>
 
-Kukjin, Tomasz,
+Will add, thanks!
 
-What is your opinion about Arnd's suggestion?
+> 
+>  #include "pci.h"
+> 
+> 
+> > +		if (!res) {
+> > +			err = -ENOMEM;
+> > +			goto bridge_ranges_nomem;
+> > +		}
+> > +
+> > +		of_pci_range_to_resource(&range, dev, res);
+> > +
+> > +		if (resource_type(res) == IORESOURCE_IO)
+> > +			*io_base = range.cpu_addr;
+> > +
+> > +		pci_add_resource_offset(resources, res,
+> > +				res->start - range.pci_addr);
+> > +	}
+> > +
+> > +	/* Apply architecture specific fixups for the ranges */
+> > +	pcibios_fixup_bridge_ranges(resources);
+> 
+> It also makes compile problem with exynos_defconfig as below:
+> 
+> drivers/built-in.o: In function `pci_host_bridge_of_get_ranges':
+> drivers/pci/host-bridge.c:157: undefined reference to `pcibios_fixup_bridge_ranges'
+
+Does that mean that exynos_defconfig doesn't define CONFIG_OF? How do you
+compile all the .dts files then? Should CONFIG_OF not be added to the default config
+file?
+
+Other than that, your comment is correct. drivers/pci/host-bridge.c gets compiled
+in regardless of CONFIG_OF and I need to provide an empty implementation for
+pcibios_fixup_bridge_ranges().
+
+Thanks!
+
+Liviu
+
+> 
+> Best regards,
+> Jingoo Han
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
 -- 
-With warm regards,
-Sachin
+-------------------
+   .oooO
+   (   )
+    \ (  Oooo.
+     \_) (   )
+          ) /
+         (_/
+
+ One small step
+   for me ...
