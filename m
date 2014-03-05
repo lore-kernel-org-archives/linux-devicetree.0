@@ -1,43 +1,36 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] dts: add support for MMC on socfpga boards
-Date: Thu, 06 Mar 2014 01:30:36 +0300
-Message-ID: <5317A58C.1080703@cogentembedded.com>
-References: <20140305162350.GA3674@pollux.denx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140305162350.GA3674@pollux.denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, dinguyen@altera.com
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: [RESEND Patch 2/3] DT: Vendors: Add vendor prefix for Macronix
+Date: Wed,  5 Mar 2014 22:33:26 +0100
+Message-ID: <1394055207-4639-3-git-send-email-andrew@lunn.ch>
+References: <1394055207-4639-1-git-send-email-andrew@lunn.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1394055207-4639-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Add vendor prefix mxicy for Macronix International Co., Ltd.
 
-On 03/05/2014 07:23 PM, Pavel Machek wrote:
+Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-> Add DTS binding for MMC on socfpga boards. Tested on Sockit.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 860c467374fe..f4599aea1f7d 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -63,4 +63,5 @@ microchip	Microchip Technology Inc.
+ mosaixtech	Mosaix Technologies, Inc.
+ mpl	MPL AG
++mxicy	Macronix International Co., Ltd.
+ national	National Semiconductor
+ netgear	Netgear, Inc.
+-- 
+1.9.0
 
-> Signed-off-by: Pavel Machek <pavel@denx.de>
-
-> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> index 537f1a5..cad7526 100644
-> --- a/arch/arm/boot/dts/socfpga.dtsi
-> +++ b/arch/arm/boot/dts/socfpga.dtsi
-> @@ -521,6 +521,23 @@
->   			reg-io-width = <4>;
->   		};
->
-> +		mmc: dwmmc0@ff704000 {
-
-    ePAPR standard [1] tells us in section 2.2.2:
-
-The name of a node should be somewhat generic, reflecting the function of the 
-device and not its 3 precise programming model.
-
-     So, please name the node just "mmc@ff704000". You can choose whatever 
-label you like.
-
-[1] http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.pdf
-
-WBR, Sergei
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
