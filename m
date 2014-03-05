@@ -1,53 +1,85 @@
-From: Barry Song <21cnbao@gmail.com>
-Subject: [PATCH v4 2/4] pwm: sirf: add dt-binding document
-Date: Wed,  5 Mar 2014 17:59:43 +0800
-Message-ID: <1394013583-6352-1-git-send-email-21cnbao@gmail.com>
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: thierry.reding@gmail.com, linux-pwm@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, workgroup.linux@csr.com, devicetree@vger.kernel.org, Barry Song <Baohua.Song@csr.com>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH 3/3] Documentation: mfd: s2mps11: Document support for S2MPS14
+Date: Wed, 5 Mar 2014 15:34:18 +0530
+Message-ID: <CAK9yfHxFciupJPw9XbVRsBUmY7bUT8L4goGW+TYPwQRUUqsKew@mail.gmail.com>
+References: <1394011373-4057-1-git-send-email-k.kozlowski@samsung.com>
+	<1394011373-4057-4-git-send-email-k.kozlowski@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1394011373-4057-4-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Sangbeom Kim <sbkim73@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, LKML <linux-kernel@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Yadwinder Singh Brar <yadi.brar@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Barry Song <Baohua.Song@csr.com>
+Hi Krzysztof,
 
-this patch adds dt-binding document for pwm-sirf. here the controller clock
-can't generate PWM signals, so we need seperate clock as signal source.
+On 5 March 2014 14:52, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
+> Add bindings documentation for S2MPS14 device to the s2mps11 driver.
 
-Signed-off-by: Barry Song <Baohua.Song@csr.com>
----
- Documentation/devicetree/bindings/pwm/pwm-sirf.txt |   23 ++++++++++++++++++++
- 1 files changed, 23 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sirf.txt
+nit: s/s2mps11/S2MPS11
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-sirf.txt b/Documentation/devicetree/bindings/pwm/pwm-sirf.txt
-new file mode 100644
-index 0000000..47851ea
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/pwm-sirf.txt
-@@ -0,0 +1,23 @@
-+SiRF prima2 & atlas6 PWM drivers
-+
-+Required properties:
-+- compatible: "sirf,prima2-pwm"
-+- reg: physical base address and length of the controller's registers
-+- #pwm-cells: should be 2.  The first cell specifies the per-chip index of the
-+  PWM to use and the second cell is the period in nanoseconds.
-+- clocks: from common clock binding: the 1st clock is for PWM controller the
-+  other clocks are the sources to generate PWM signals
-+- clock-names : The first one is the name of the clock for PWM, others are names
-+  of clock sources to generate PWM signal, e.g.sigsrc0 ~sigsrc4. For prima2 and
-+  atlas6, sigsrc0 is OSC with 26MHz, sigsrc3 is RTC with 32KHz, others are PLLs.
-+  Generally, PWM module uses the OSC as clock source to generate PWM signals.
-+
-+
-+Example:
-+pwm: pwm@b0130000 {
-+	compatible = "sirf,prima2-pwm";
-+	#pwm-cells = <2>;
-+	reg = <0xb0130000 0x10000>;
-+	clocks = <&clks 21>, <&clks 1>;
-+	clock-names = "pwmc", "sigsrc0"";
-+};
+>
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Tomasz Figa <t.figa@samsung.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Acked-by: Tomasz Figa <t.figa@samsung.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/s2mps11.txt |   12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+> index 15ee89c3cc7b..f69bec294f02 100644
+> --- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
+> +++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+> @@ -1,5 +1,5 @@
+>
+> -* Samsung S2MPS11 Voltage and Current Regulator
+> +* Samsung S2MPS11 and S2MPS14 Voltage and Current Regulator
+>
+>  The Samsung S2MPS11 is a multi-function device which includes voltage and
+>  current regulators, RTC, charger controller and other sub-blocks. It is
+> @@ -7,7 +7,7 @@ interfaced to the host controller using an I2C interface. Each sub-block is
+>  addressed by the host system using different I2C slave addresses.
+>
+>  Required properties:
+> -- compatible: Should be "samsung,s2mps11-pmic".
+> +- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-pmic".
+>  - reg: Specifies the I2C slave address of the pmic block. It should be 0x66.
+>
+>  Optional properties:
+> @@ -59,10 +59,14 @@ supports. Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
+>  as per the datasheet of s2mps11.
+>
+>         - LDOn
+> -                 - valid values for n are 1 to 38
+> +                 - valid values for n are:
+> +                       - S2MPS11: 1 to 38
+> +                       - S2MPS14: 1 to 25
+>                   - Example: LDO1, LD02, LDO28
+>         - BUCKn
+> -                 - valid values for n are 1 to 10.
+> +                 - valid values for n are:
+> +                       - S2MPS11: 1 to 10
+> +                       - S2MPS14: 1 to 5
+>                   - Example: BUCK1, BUCK2, BUCK9
+>
+>  Example:
+> --
+> 1.7.9.5
+>
+Looks good.
+Acked-by: Sachin Kamat <sachin.kamat@linaro.org>
+
+
 -- 
-1.7.5.4
-
+With warm regards,
+Sachin
