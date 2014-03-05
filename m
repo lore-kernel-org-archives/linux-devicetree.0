@@ -1,111 +1,58 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v5 2/5] ARM: imx6: gpc: Add PU power domain for GPU/VPU
-Date: Wed, 05 Mar 2014 11:05:24 +0100
-Message-ID: <1394013924.16929.14.camel@paszta.hi.pengutronix.de>
-References: <1393603427-6199-1-git-send-email-p.zabel@pengutronix.de>
-	 <1393603427-6199-3-git-send-email-p.zabel@pengutronix.de>
-	 <20140305065649.GJ8784@S2101-09.ap.freescale.net>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v5 01/11] staging: imx-drm-core: Use OF graph to find
+ components and connections between encoder and crtcs
+Date: Wed, 5 Mar 2014 10:05:17 +0000
+Message-ID: <20140305100516.GV21483@n2100.arm.linux.org.uk>
+References: <1394011262-16849-1-git-send-email-p.zabel@pengutronix.de>
+ <1394011262-16849-2-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140305065649.GJ8784-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <1394011262-16849-2-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Philipp Zabel <philipp.zabel@gmail.com>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+On Wed, Mar 05, 2014 at 10:20:52AM +0100, Philipp Zabel wrote:
+> +struct imx_drm_component {
+> +	struct device_node *of_node;
+> +	struct list_head list;
+> +};
+> +
 
-thank you for the comments.
+The only thing this structure appears to be doing is ensuring that a
+single component doesn't get added twice - is that correct?  If so,
+(and the troublesome problem with the IPU crtcs is now gone)
+we can modify the core component code such that it does this:
 
-Am Mittwoch, den 05.03.2014, 14:56 +0800 schrieb Shawn Guo:
-> > diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
-> > index 33567aa..3c58f2e 100644
-> > --- a/arch/arm/mach-imx/Kconfig
-> > +++ b/arch/arm/mach-imx/Kconfig
-> > @@ -808,6 +808,7 @@ config SOC_IMX6Q
-> >  	select PL310_ERRATA_727915 if CACHE_PL310
-> >  	select PL310_ERRATA_769419 if CACHE_PL310
-> >  	select PM_OPP if PM
-> > +	select PM_GENERIC_DOMAINS if PM
-> 
-> Would it make more sense to have HAVE_IMX_GPC select it instead?
+                if (c->master && c->master != master)
+                        continue;
 
-Yes, I'll change that.
+                if (compare(c->dev, compare_data)) {
+			if (!c->master)
+	                        component_attach_master(master, c);
+                        ret = 0;
+                        break;
+                }
 
-> > +#include <linux/pm_clock.h>
-> 
-> Is this header still needed?
+which will mean that you don't need to build this list anymore to track
+what will be added - though I'd like to think a little more about that
+before making that change.  Please confirm whether this will eliminate
+your list generation.
 
-No, will remove.
+Thanks.
 
-[...]
-> > +struct pu_domain {
-> > +	struct generic_pm_domain base;
-> > +	struct regulator *reg;
-> > +	struct clk *clk[6];
-> 
-> Define a macro for this number?
-
-#define GPC_CLK_MAX   6
-
-[...]
-> > +static int imx_gpc_probe(struct platform_device *pdev)
-> > +{
-> > +	struct regulator *pu_reg;
-> > +	struct clk *clk;
-> > +	bool is_off;
-> > +	int ret, i;
-> > +
-> > +	pu_reg = devm_regulator_get(&pdev->dev, "pu");
-> > +	if (IS_ERR(pu_reg)) {
-> > +		ret = PTR_ERR(pu_reg);
-> > +		dev_err(&pdev->dev, "failed to get pu regulator: %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	/* The regulator is initially enabled */
-> > +	ret = regulator_enable(pu_reg);
-> > +	if (ret < 0) {
-> > +		dev_err(&pdev->dev, "failed to enable pu regulator: %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +	imx6q_pu_domain.base.of_node = pdev->dev.of_node;
-> 
-> How does this work with !CONFIG_PM build?
-
-Since I removed the regulator-always-on property from the PU regulator
-in the device tree, if CONFIG_PM is disabled, we have to request and
-enable pu_reg here. Otherwise the regulator framework will helpfully
-turn it off (imx6q-cpufreq never enables pu_reg).
-With the PU regulator disabled, the system would hang as soon as the
-CODA VPU or one of the Vivante GPU cores is accessed if !CONFIG_PM.
-
-> > +	imx6q_pu_domain.reg = pu_reg;
-> > +
-> > +	for (i = 0; ; i++) {
-> > +		clk = of_clk_get(pdev->dev.of_node, i);
-> > +		if (IS_ERR(clk))
-> > +			break;
-
-Also, I should probably add
-+		if (i >= GPC_CLK_MAX) {
-+			dev_err(&pdev->dev, "more than %d clocks\n",
-+				GPC_CLK_MAX);
-+			return -EINVAL;
-+		}
-here.
-
-> > +		imx6q_pu_domain.clk[i] = clk;
-> > +	}
-> > +	imx6q_pu_domain.num_clks = i;
-[...]
-
-regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
