@@ -1,90 +1,162 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCHv3 3/4] of: provide a binding for fixed link PHYs
-Date: Wed, 5 Mar 2014 10:24:14 +0100
-Message-ID: <20140305102414.111f856e@skate>
-References: <1393930704-24374-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1393930704-24374-4-git-send-email-thomas.petazzoni@free-electrons.com>
-	<CAGVrzcbHwxtgUfC4+u_3wszcmEYpz8Y7gu13xJy6TbT6fgR1sg@mail.gmail.com>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] video: mmp: add device tree support
+Date: Wed, 5 Mar 2014 11:33:42 +0200
+Message-ID: <5316EF76.1050304@ti.com>
+References: <1389698184-28761-1-git-send-email-zzhu3@marvell.com>	<1389698184-28761-5-git-send-email-zzhu3@marvell.com>	<20140217143736.GC19308@e106331-lin.cambridge.arm.com> <CAJATT-5sQc7vsUhoFKdDnstqjj2R_yQ+Wk1NRf20UTM4-ndMSA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAGVrzcbHwxtgUfC4+u_3wszcmEYpz8Y7gu13xJy6TbT6fgR1sg@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Christian Gmeiner <christian.gmeiner@gmail.com>, Grant Likely <grant.likely@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="0xOVUFIIuv3GvCmvkSjEO1DfUWxSAfJoi"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJATT-5sQc7vsUhoFKdDnstqjj2R_yQ+Wk1NRf20UTM4-ndMSA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhou Zhu <zzhu84-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Zhou Zhu <zzhu3-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Guoqing Li <ligq-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lisa Du <cldu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, huangyh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Florian Fainelli,
+--0xOVUFIIuv3GvCmvkSjEO1DfUWxSAfJoi
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 4 Mar 2014 12:58:41 -0800, Florian Fainelli wrote:
+On 04/03/14 13:28, Zhou Zhu wrote:
+> Hi, Tomi and Mark,
+>=20
+> On Mon, Feb 17, 2014 at 10:37 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> w=
+rote:
+>>
+>> On Tue, Jan 14, 2014 at 11:16:24AM +0000, Zhou Zhu wrote:
+>>> add device tree support for mmp fb/controller
+>>> the description of DT config is at
+>>> Documentation/devicetree/bindings/fb/mmp-disp.txt
+>>>
+>>> Signed-off-by: Zhou Zhu <zzhu3-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/fb/mmp-disp.txt |   60 ++++++++
+>>>  drivers/video/mmp/fb/mmpfb.c                      |   73 ++++++----
+>>>  drivers/video/mmp/hw/mmp_ctrl.c                   |  160 +++++++++++=
++++++-----
+>>>  3 files changed, 235 insertions(+), 58 deletions(-)
+>>>  create mode 100644 Documentation/devicetree/bindings/fb/mmp-disp.txt=
+
+>=20
+>=20
+> Thank you very much for your review! I am trying to update the code
+> according to your comments.
+>=20
+> We have reviewed the dts and removed many software settings and
+> not-used settings - for example, we unpacked path-config/link-config
+> and removed some configures that we will never change.
+> Also we removed fb settings which is considered as software.
+>=20
+> Would you please give us some feedbacks if we adjust our dts into follo=
+w style?
+> As there might be big changes on the code structures, I would update
+> the code after this dts layout is considered as "right".
+>=20
+> mmp-disp@d420b000 {
+>     compatible =3D "marvell,mmp-disp";
+>     reg =3D <0xd420b000 0x1fc>;
+>     interrupts =3D <0 41 0x4>;
+>=20
+>     internal-connections {
+>         pipe1: pn-path {
+>         input =3D "panel-graphic"; //panel-graphic is the overlay name =
+in spec.
+>         output =3D &parallel;
+>         }
+>     }
+>     ports{
+>         parallel: parallel {
+>             marvell,rbswap;
+>             marvell,spi;
+>         }
+>     }
+>     status =3D "okay";
+> }
+>=20
+> panel-xxx {
+>     properties;
+>     connection =3D &parallel;
+> }
+
+I would recommend using the same style that is used in the OMAP DSS, imx
+drm and exynos patches that are introducing DT support. They use ports
+and endpoints as defined in:
+
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Docu=
+mentation/devicetree/bindings/media/video-interfaces.txt
+
+with the addition of a simplified endpoint format, where the 'port' node
+is not required.
+
+To give an idea what it could look like, I've modified your example
+above. It's just a rough example, you should study and think how it best
+fits for mmp.
+
+You could use the same format for the internal connections also, but I
+didn't touch that. I think internal connections can as well be
+configured separately, in a custom format, because there's no need for
+external components to connect to the internal links.
+
+mmp-disp@d420b000 {
+    compatible =3D "marvell,mmp-disp";
+    reg =3D <0xd420b000 0x1fc>;
+    interrupts =3D <0 41 0x4>;
+
+    internal-connections {
+        pipe1: pn-path {
+        input =3D "panel-graphic";
+        output =3D &disp_out;
+        }
+    }
+
+	disp_out: endpoint {
+		remote-endpoint =3D <&panel_in>;
+		marvell,rbswap;
+		marvell,spi;
+	};
+
+    status =3D "okay";
+}
+
+panel-xxx {
+	properties;
+
+	panel_in: endpoint {
+		remote-endpoint =3D <&disp_out>;
+	};
+};
+
+ Tomi
 
 
-> What I like about this new binding is that we could place the
-> 'fixed-link' related properties in e.g: a SPI slave node, and have the
-> Ethernet MAC be pointed at it by a phandle to tell it: look this is
-> your PHY, it might not be one you could address on a MDIO bus, so I
-> have been providing additional properties to help you with the link
-> configuration.
-> 
-> One thing that needs to be addressed in this patch is how to deal with
-> the existing 5-digit fixed-link, something that sounds fairly easy and
-> which would not require changing the callers of of_phy_connect_fixed()
-> is to do the following:
 
-I am not sure to understand "would not require changing the callers of
-of_phy_connect_fixed()". This function is precisely introduced by the
-patch set, so how would we need to "change the callers" ? Maybe you're
-making a confusion with the existing of_phy_connect_fixed_link(), which
-is used by network drivers to create a PHY using the old-style
-fixed-link = <5 digits> binding ?
+--0xOVUFIIuv3GvCmvkSjEO1DfUWxSAfJoi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-> - of_phy_is_fixed_link() needs to look for *all* required compatible
-> properties of the new binding to give an accurate verdict on the
-> nature of the PHY (to avoid false positives as mentioned in PATCH 4),
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-Hum?
+iQIcBAEBAgAGBQJTFu92AAoJEPo9qoy8lh711ccP/0e2c3zsoPKPFYjodRmAwBfo
+TvGTuKvTo4UOgAfHP1WJ0TpfSGpHm3EUdAj3itGSGn8VUaWoiRmaiWKCjH6D32IQ
+Ce7VtsZYETRsyBXUAWNDv7xrlUNYfn0t1NO1MEw37UIWRY4qvjnj4klGf/dqUKrG
+WBkbXjuIFdtTeYsh/eGgQKeu6gNvHBbUqlQn9ptDFgQ/X3jyZ1GkfIJufD4fFRX4
+ncy65MmhYtLlgYEJSoheZK90je8N9wvs4QYGfz/Am9KL++Eqkxn+0QaQ1aJClHVQ
+5Vk2pHAGY7hx4pZVCXGbGl0DCuWceEmITGP3O3jra9PRrD0W1tHYiRFVhS1jDtjF
+s8+9vyUAmBQVlaH+Wg1vNZUBhWUcrjJzDnm7xf/81PflN0VM5m2pb0720iftGF6x
+mF/LEbRkjpDcbOcBp9tWm+pgB2Q4d+Jfrib0nxWBunUfZw1paVl6eGOpH8AKU78M
+ela04/Q7tnK8YadyJ1OelCP/2I+UEwEvuUI9SL46TP8aLtbmrQs+vpofuGSPzaHK
+OQ7qx/lN4ouUbRx9MVGYyN9n1JX4/DqBX0ibm4c1sg4qoie9qBFM/foAMOzD0YI6
+IptkVdsNLLr9ItqTyJoC82v+RZOR3fmyG7PPf9hQquCVCyM9dR5OQi4MdBNR9l8O
+U0shVUKKpRHeoQ1Xefzf
+=xNMM
+-----END PGP SIGNATURE-----
 
-The false positive problem only exists if you want to automatically
-instantiate the fixed PHYs, as I proposed in a patch as a reply to my
-series. And checking for *all* required properties does not make the
-problem better: you could very well have other nodes in the tree that
-have a "fixed-link" and a "speed" property, for example.
-
-> and it also needs to look for the 5-digit fixed-link property and
-> ensure the property is 5-digits long if existing
-
-I don't understand how this could work. The of_phy_is_fixed_link()
-function is meant to take as argument a Device Tree node that describes
-a fixed PHY, using the new proposed DT binding for fixed PHYs.
-
-The old 'fixed-link' binding has the fixed-link property as part of the
-Ethernet node itself.
-
-So I don't really see how a sane function could check both.
-
-> - of_phy_register_fixed_link() needs to also parse the old 5-digit
-> fixed-link property, most likely just copy-pasting what
-> arch/powerpc/sysdev/fsl_soc.c::of_add_fixed_phys does with the
-> property endian-swapping (as this code is for PowerPC)
-> 
-> Then we can deal with how to make that semi-automatic for the new
-> binding users to make it smoother to use a regular or "fixed PHY"
-> device.
-
-I still don't understand. With the old binding, the "fixed-link"
-property is within some random Ethernet node, and there is no way for
-us to find out whether a given node having a "fixed-link" property
-corresponds to a fixed PHY, or something completely unrelated.
-
-So to conclude, I'm sorry, but I didn't understand at all what you
-meant to say here, so I'm completely puzzled about what your
-suggestions are.
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+--0xOVUFIIuv3GvCmvkSjEO1DfUWxSAfJoi--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
