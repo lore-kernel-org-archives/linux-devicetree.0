@@ -1,49 +1,26 @@
-From: yegorslists@googlemail.com
-Subject: [PATCH] ARM: dts: am335x-evmsk: enable dual_emac mode
-Date: Wed,  5 Mar 2014 08:29:19 +0100
-Message-ID: <1394004559-17862-1-git-send-email-yegorslists@googlemail.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv2 14/14] ARM: OMAP3: clock: remove legacy clock data
+Date: Wed, 5 Mar 2014 09:32:40 +0200
+Message-ID: <5316D318.8080405@ti.com>
+References: <1393924700-6510-1-git-send-email-t-kristo@ti.com> <1393924700-6510-15-git-send-email-t-kristo@ti.com> <20140304173242.GB17470@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140304173242.GB17470@atomide.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, tony@atomide.com, devicetree@vger.kernel.org, Yegor Yefremov <yegorslists@googlemail.com>
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, nm@ti.com, mturquette@linaro.org, paul@pwsan.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Yegor Yefremov <yegorslists@googlemail.com>
+On 03/04/2014 07:32 PM, Tony Lindgren wrote:
+> * Tero Kristo <t-kristo@ti.com> [140304 01:22]:
+>> This is no longer needed as clock data is provided through DT.
+>
+> And this one we cannot apply yet until omap3 is booting in device tree
+> only mode.
 
-EVM board provides two Ethernet ports, this patch sets them into
-dual_emac mode to provide two independent network interfaces.
+What is missing to achieve this? Some boards are not booting in DT mode 
+yet or?
 
-Signed-off-by: Yegor Yefremov <yegorslists@googlemail.com>
----
- arch/arm/boot/dts/am335x-evmsk.dts |    3 +++
- 1 files changed, 3 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
-index 40a66bd..144ed07 100644
---- a/arch/arm/boot/dts/am335x-evmsk.dts
-+++ b/arch/arm/boot/dts/am335x-evmsk.dts
-@@ -449,6 +449,7 @@
- 	pinctrl-names = "default", "sleep";
- 	pinctrl-0 = <&cpsw_default>;
- 	pinctrl-1 = <&cpsw_sleep>;
-+	dual_emac = <1>;
- };
- 
- &davinci_mdio {
-@@ -460,11 +461,13 @@
- &cpsw_emac0 {
- 	phy_id = <&davinci_mdio>, <0>;
- 	phy-mode = "rgmii-txid";
-+	dual_emac_res_vlan = <1>;
- };
- 
- &cpsw_emac1 {
- 	phy_id = <&davinci_mdio>, <1>;
- 	phy-mode = "rgmii-txid";
-+	dual_emac_res_vlan = <2>;
- };
- 
- &mmc1 {
--- 
-1.7.7
-
+-Tero
