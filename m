@@ -1,75 +1,66 @@
-From: Oliver Hartkopp <socketcan@hartkopp.net>
-Subject: Re: [PATCH v5] can: xilinx CAN controller support.
-Date: Wed, 05 Mar 2014 07:58:49 +0100
-Message-ID: <5316CB29.7040200@hartkopp.net>
-References: <5254bfec-c6fd-4681-a34d-706d51e60fbb@VA3EHSMHS004.ehs.local> <1b9f22ac-4dde-4ecc-885a-3d8081157081@AM1EHSMHS012.ehs.local>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 4/5] ARM: dts: imx6sl: Add power-domain information to
+ gpc node
+Date: Wed, 5 Mar 2014 15:00:11 +0800
+Message-ID: <20140305070009.GK8784@S2101-09.ap.freescale.net>
+References: <1393603427-6199-1-git-send-email-p.zabel@pengutronix.de>
+ <1393603427-6199-5-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <1b9f22ac-4dde-4ecc-885a-3d8081157081@AM1EHSMHS012.ehs.local>
-Sender: linux-can-owner@vger.kernel.org
-To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Cc: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>, wg@grandegger.com, mkl@pengutronix.de, michal.simek@xilinx.com, grant.likely@linaro.org, robh+dt@kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kedareswara rao Appana <appanad@xilinx.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1393603427-6199-5-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Feb 28, 2014 at 05:03:46PM +0100, Philipp Zabel wrote:
+> The PGC that is part of GPC controls isolation and power sequencing of the
+> power domains. The PU power domain will be handled by the generic pm domain
+> framework. It needs a phandle to the PU regulator to turn off power when
+> the domain is disabled and a list of clocks to be enabled during powerup
+> for reset propagation.
+> 
+> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+> Changes since v4:
+>  - Use OF power domain bindings
+>  - Added reset clocks
+> ---
+>  arch/arm/boot/dts/imx6sl.dtsi | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+> index 28558f1..0e61262 100644
+> --- a/arch/arm/boot/dts/imx6sl.dtsi
+> +++ b/arch/arm/boot/dts/imx6sl.dtsi
+> @@ -529,9 +529,13 @@
+>  			};
+>  
+>  			gpc: gpc@020dc000 {
+> -				compatible = "fsl,imx6sl-gpc", "fsl,imx6q-gpc";
+> +				compatible = "fsl,imx6sl-gpc";
 
+This change will break function imx_gpc_init(), which looks up
+"fsl,imx6q-gpc" even on imx6sl.
 
-On 05.03.2014 00:51, S=C3=B6ren Brinkmann wrote:
-> Hi Kedar,
->=20
-> On Tue, 2014-03-04 at 06:50PM +0530, Kedareswara rao Appana wrote:
->> This patch adds xilinx CAN controller support.
->> This driver supports both ZYNQ CANPS and Soft IP
->> AXI CAN controller.
->>
-> [...]
->> diff --git a/Documentation/devicetree/bindings/net/can/xilinx_can.tx=
-t b/Documentation/devicetree/bindings/net/can/xilinx_can.txt
->> new file mode 100644
->> index 0000000..0e57103
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/can/xilinx_can.txt
->> @@ -0,0 +1,45 @@
->> +Xilinx Axi CAN/Zynq CANPS controller Device Tree Bindings
->> +---------------------------------------------------------
->> +
->> +Required properties:
->> +- compatible		: Should be "xlnx,zynq-can-1.00.a" for Zynq CAN
->> +			  controllers and "xlnx,axi-can-1.00.a" for Axi CAN
->> +			  controllers.
->> +- reg			: Physical base address and size of the Axi CAN/Zynq
->> +			  CANPS registers map.
->> +- interrupts		: Property with a value describing the interrupt
->> +			  number.
->> +- interrupt-parent	: Must be core interrupt controller
->> +- clock-names		: List of input clock names - "ref_clk", "aper_clk"
->=20
-> Let's reconsider these names. These are rather Zynq specific names. D=
-oes
-> the IP documentation use these as well? The names should match the
-> naming used for the IP, rather than the SOC. Is this the correct data=
- sheet:
-> http://www.xilinx.com/support/documentation/ip_documentation/axi_can/=
-v1_03_a/ds791_axi_can.pdf
-> ? According to that the names should rather be 's_axi_aclk' and
-> 'can_clk', IMHO.
->=20
-> 	S=C3=B6ren
->=20
+Shawn
 
-And when renaming stuff anyway:
+>  				reg = <0x020dc000 0x4000>;
+>  				interrupts = <0 89 0x04>;
+> +				pu-supply = <&reg_pu>;
+> +				clocks = <&clks IMX6SL_CLK_GPU2D_OVG>,
+> +					 <&clks IMX6SL_CLK_GPU2D_PODF>;
+> +				#power-domain-cells = <1>;
+>  			};
+>  
+>  			gpr: iomuxc-gpr@020e0000 {
+> -- 
+> 1.8.5.3
+> 
 
-+
-+#define DRIVER_NAME	"XILINX_CAN"
-+
-
-should be changed to
-
-+
-+#define DRIVER_NAME	"xilinx_can"
-+
-
-Regards,
-Oliver
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
