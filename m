@@ -1,89 +1,29 @@
-From: Belisko Marek <marek.belisko@gmail.com>
-Subject: Re: [PATCHv2 0/9] Convert twl4030-madc to IIO API and add DT support
-Date: Wed, 5 Mar 2014 22:00:38 +0100
-Message-ID: <CAAfyv360c4UTKUgdYJREgnro1fGLLpGhcHUtdr0q5B6guGvLUQ@mail.gmail.com>
-References: <1393702365-26429-1-git-send-email-sre@debian.org>
-	<1393970751-18157-1-git-send-email-sre@debian.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393970751-18157-1-git-send-email-sre@debian.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: Sebastian Reichel <sre@ring0.de>, Jonathan Cameron <jic23@kernel.org>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: [RESEND Patch 0/2] DT vendor/soc updates
+Date: Wed,  5 Mar 2014 22:21:12 +0100
+Message-ID: <1394054474-4310-1-git-send-email-andrew@lunn.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This is a resend because i've been told they did not make it to the
+list properly.
 
-On Tue, Mar 4, 2014 at 11:05 PM, Sebastian Reichel <sre@debian.org> wrote:
-> Hi,
->
-> This is PATCHv2 for converting twl4030-madc to the IIO API and
-> adding DT support. The plan is to remove the private twl4030-madc
-> API once all users have been removed or converted to the IIO API.
-> The patchset compiles and has been tested on my Nokia N900.
->
-> Changes since PATCHv1 [0]:
->  * Fix warning about unused variable
->  * Add IIO_CHAN_INFO_PROCESSED to all channels, since voltage
->    channels also need some postprocessing
->
-> TODO:
->  * Wait for feedback from DT binding maintainers
->  * Wait for feedback from Marek Belisko, who is testing the
->    changes with twl4030-madc-battery driver on GTA04
-Tested on gta04 board. Works as expected with twl4030_madc_battery patches [1]
-on top. So you can add my Tested-by: Marek Belisko <marek@goldelico.com>
->
-> [0] https://lkml.org/lkml/2014/3/1/105
->
-> -- Sebastian
->
-> Sebastian Reichel (9):
->   mfd: twl4030-madc: Use managed resources
->   mfd: twl4030-madc: Add DT support and convert to IIO framework
->   mfd: twl4030-madc: Cleanup driver
->   mfd: twl-core: Add twl_i2c_read/write_u16
->   mfd: twl4030-madc: Use twl_i2c_read/write_u16 for 16 bit registers
->   Documentation: DT: Document twl4030-madc binding
->   mfd: twl4030-madc: Move driver to drivers/iio/adc
->   iio: documentation: Add ABI documentation for *_mean_raw
->   iio: inkern: add iio_read_channel_average_raw
->
->  Documentation/ABI/testing/sysfs-bus-iio            |   8 +
->  .../devicetree/bindings/iio/adc/twl4030-madc.txt   |  24 ++
->  drivers/iio/adc/Kconfig                            |  10 +
->  drivers/iio/adc/Makefile                           |   1 +
->  drivers/{mfd => iio/adc}/twl4030-madc.c            | 299 +++++++++++++--------
->  drivers/iio/inkern.c                               |  18 ++
->  drivers/mfd/Kconfig                                |  10 -
->  drivers/mfd/Makefile                               |   1 -
->  include/linux/i2c/twl.h                            |  12 +
->  include/linux/i2c/twl4030-madc.h                   |   2 +-
->  include/linux/iio/consumer.h                       |  13 +
->  11 files changed, 274 insertions(+), 124 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/twl4030-madc.txt
->  rename drivers/{mfd => iio/adc}/twl4030-madc.c (75%)
->
-> --
-> 1.9.0
->
+Andrew Lunn (2):
+  DT: Vendor: Add prefixes used by Kirkwood devices
+  DT: bindings: add missing Marvell Kirkwood SoC documentation
 
-[1]: http://www.spinics.net/lists/kernel/msg1700793.html
-
-BR,
-
-marek
-
+ .../devicetree/bindings/arm/marvell,kirkwood.txt   | 97 ++++++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt        | 13 +++
+ 2 files changed, 110 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/marvell,kirkwood.txt
 
 -- 
-as simple and primitive as possible
--------------------------------------------------
-Marek Belisko - OPEN-NANDRA
-Freelance Developer
+1.9.0
 
-Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
-Tel: +421 915 052 184
-skype: marekwhite
-twitter: #opennandra
-web: http://open-nandra.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
