@@ -1,49 +1,47 @@
-From: delicious quinoa <delicious.quinoa@gmail.com>
-Subject: Re: [PATCH v12] gpio: add a driver for the Synopsys DesignWare APB
- GPIO block
-Date: Wed, 5 Mar 2014 09:30:23 -0600
-Message-ID: <CANk1AXRWdxgY4T6CHAacePupuyKRn_byGCGdtdvbBHvJuZkZzw@mail.gmail.com>
-References: <1393369261-17469-1-git-send-email-delicious.quinoa@gmail.com>
-	<CACRpkdbSk3Vv+-U=jQTH=8E=yx4tkHApGq-ARfwXs-cBf4=ddA@mail.gmail.com>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH 1/1] ARM: EXYNOS: Map SYSRAM address through DT
+Date: Wed, 5 Mar 2014 21:06:25 +0530
+Message-ID: <CAK9yfHw2adag+J1B=te4QvTG-PMJzvbrMe7NwFZsUGJrJFjmSA@mail.gmail.com>
+References: <1392876308-4748-1-git-send-email-sachin.kamat@linaro.org>
+	<CAK9yfHz6wJPdC=DjgaiNOsPHY8k9zaB+p3-ahpwOOcPQtoWEHw@mail.gmail.com>
+	<531725E9.5010307@saftware.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbSk3Vv+-U=jQTH=8E=yx4tkHApGq-ARfwXs-cBf4=ddA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Jamie Iles <jamie@jamieiles.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Mark Rutland <mark.rutland@arm.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Yves Vandervennet <rocket.yvanderv@gmail.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <531725E9.5010307@saftware.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Andreas Oberritter <obi@saftware.de>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 4, 2014 at 7:01 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Wed, Feb 26, 2014 at 7:01 AM, Alan Tull <delicious.quinoa@gmail.com> wrote:
+On 5 March 2014 18:56, Andreas Oberritter <obi@saftware.de> wrote:
+> On 05.03.2014 09:23, Sachin Kamat wrote:
+>>> diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+>>> index d2e3f5f5916d..3ca3fb6aa5f4 100644
+>>> --- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
+>>> +++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+>>> @@ -28,6 +28,11 @@
+>>>                 bootargs = "console=ttySAC2,115200N8 root=/dev/mmcblk0p5 rw rootwait earlyprintk panic=5 maxcpus=1";
+>>>         };
+>>>
+>>> +       sysram@02020000 {
+>                   ^
+>>> +               compatible = "samsung,exynos4210-sysram";
+>>> +               reg = <0x02025000 0x1000>;
+>                           ^
+>>> +       };
+>>> +
 >
->> From: Jamie Iles <jamie@jamieiles.com>
->>
->> The Synopsys DesignWare block is used in some ARM devices (picoxcell)
->> and can be configured to provide multiple banks of GPIO pins.
->>
->> Signed-off-by: Jamie Iles <jamie@jamieiles.com>
->> Signed-off-by: Alan Tull <atull@altera.com>
->> Reviewed-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
->>
->> v12: - Add irq_startup/shutdown
->>      - do irq_create_mapping() in probe, irq_find_mapping() in to_irq()
->>      - Adjust mappings to show support for 1 gpio per port.
->>      - gpio-cells = <1>
->
-> Patch applied!
->
-> You've done a tremendous work on this driver and there is
-> absolutely nothing controversial about the bindings, so it is
-> my pleasure to include this driver.
->
-> Yours,
-> Linus Walleij
+> Shouldn't these two addresses match?
 
-Excellent!  Thanks Linus!
+Ideally they should. However in this case, this particular board uses
+older revision
+of the SoC which has a different register address. I did not want to
+create a compatible
+string just for this (exceptional) case alone and hence did it this
+way to override the reg. address.
+Other option was not to have the register address in the node name.
 
-And thanks Jamie for originating this driver!
-
-Alan Tull
-aka
-delicious quinoa
+ --
+With warm regards,
+Sachin
