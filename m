@@ -1,86 +1,36 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 0/3] pinctrl: mvebu: prepare for single PMU node
-Date: Wed, 5 Mar 2014 10:12:29 +0100
-Message-ID: <20140305091229.GA26485@lunn.ch>
-References: <1393977790-29110-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: dt.tangr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH RESEND] arm: nspire: modify device tree to use the lsi,zevio-usb driver
+Date: Wed,  5 Mar 2014 20:15:16 +1100
+Message-ID: <1394010916-17375-1-git-send-email-dt.tangr@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1393977790-29110-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Daniel Tang <dt.tangr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 05, 2014 at 01:03:07AM +0100, Sebastian Hesselbarth wrote:
-> This is a small patch set preparing a discussion and rework for the
-> Power Management Unit (PMU) found on Marvell Dove SoCs. We are planing
-> to consolidate PMU into a single DT node instead of chopping it into
-> tiny pieces [1].
-> 
-> As we just have taken in patches for pinctrl driver that grab another
-> piece of PMU reg space, we rather drop the corresponding reg property
-> and wait for v3.15 and proper PMU node rework.
-> 
-> Patch 1 drops the reg property added for pinctrl and is based on mvebu/dt.
-> 
-> Patch 2 drops the reg property added for pinctrl from the corresponding
-> binding documentation and example. It is based on recently pulled
-> mvebu/pinctrl-dove.
-> 
-> Patch 3 reduces a WARN on missing reg properties to dev_warn with FW_BUG,
-> as we just enforced this situation. The driver will continue to work
-> properly without the resource and derive it from other resources. As soon
-> as PMU binding is worked out, we will update the driver to make use of it.
-> 
-> The last patch is optional and Linus Walleij can reject it, if he is already
-> done for v3.15.
+From: Daniel Tang <dt.tangr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Hi Sebastian
 
-Whole set of three:
+Signed-off-by: Daniel Tang <dt.tangr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/nspire.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
-Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+diff --git a/arch/arm/boot/dts/nspire.dtsi b/arch/arm/boot/dts/nspire.dtsi
+index a22ffe6..012c6d1 100644
+--- a/arch/arm/boot/dts/nspire.dtsi
++++ b/arch/arm/boot/dts/nspire.dtsi
+@@ -65,6 +65,7 @@
+ 		};
+ 
+ 		usb0: usb@B0000000 {
++			compatible = "lsi,zevio-usb";
+ 			reg = <0xB0000000 0x1000>;
+ 			interrupts = <8>;
+ 		};
+-- 
+1.7.10.4
 
-  Thanks
-      Andrew
-> 
-> [1] https://lkml.org/lkml/2014/3/3/326
-> 
-> Sebastian Hesselbarth (3):
->   ARM: dove: drop pinctrl PMU reg property
->   devicetree: bindings: drop pinctrl PMU reg property
->   pinctrl: mvebu: silence WARN to dev_warn
-> 
->  Documentation/devicetree/bindings/pinctrl/marvell,dove-pinctrl.txt  | 2 +-
->  Documentation/devicetree/bindings/pinctrl/marvell,mvebu-pinctrl.txt | 2 +-
->  arch/arm/boot/dts/dove.dtsi                                         | 3 +--
->  drivers/pinctrl/mvebu/pinctrl-dove.c                                | 3 ++-
->  4 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> ---
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> -- 
-> 1.8.5.3
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
