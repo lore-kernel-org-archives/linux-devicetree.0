@@ -1,85 +1,111 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH 3/3] Documentation: mfd: s2mps11: Document support for S2MPS14
-Date: Wed, 5 Mar 2014 15:34:18 +0530
-Message-ID: <CAK9yfHxFciupJPw9XbVRsBUmY7bUT8L4goGW+TYPwQRUUqsKew@mail.gmail.com>
-References: <1394011373-4057-1-git-send-email-k.kozlowski@samsung.com>
-	<1394011373-4057-4-git-send-email-k.kozlowski@samsung.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v5 2/5] ARM: imx6: gpc: Add PU power domain for GPU/VPU
+Date: Wed, 05 Mar 2014 11:05:24 +0100
+Message-ID: <1394013924.16929.14.camel@paszta.hi.pengutronix.de>
+References: <1393603427-6199-1-git-send-email-p.zabel@pengutronix.de>
+	 <1393603427-6199-3-git-send-email-p.zabel@pengutronix.de>
+	 <20140305065649.GJ8784@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1394011373-4057-4-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Sangbeom Kim <sbkim73@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, LKML <linux-kernel@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Yadwinder Singh Brar <yadi.brar@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140305065649.GJ8784-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+Hi Shawn,
 
-On 5 March 2014 14:52, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
-> Add bindings documentation for S2MPS14 device to the s2mps11 driver.
+thank you for the comments.
 
-nit: s/s2mps11/S2MPS11
+Am Mittwoch, den 05.03.2014, 14:56 +0800 schrieb Shawn Guo:
+> > diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+> > index 33567aa..3c58f2e 100644
+> > --- a/arch/arm/mach-imx/Kconfig
+> > +++ b/arch/arm/mach-imx/Kconfig
+> > @@ -808,6 +808,7 @@ config SOC_IMX6Q
+> >  	select PL310_ERRATA_727915 if CACHE_PL310
+> >  	select PL310_ERRATA_769419 if CACHE_PL310
+> >  	select PM_OPP if PM
+> > +	select PM_GENERIC_DOMAINS if PM
+> 
+> Would it make more sense to have HAVE_IMX_GPC select it instead?
 
->
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Tomasz Figa <t.figa@samsung.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Acked-by: Tomasz Figa <t.figa@samsung.com>
-> ---
->  Documentation/devicetree/bindings/mfd/s2mps11.txt |   12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-> index 15ee89c3cc7b..f69bec294f02 100644
-> --- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
-> +++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-> @@ -1,5 +1,5 @@
->
-> -* Samsung S2MPS11 Voltage and Current Regulator
-> +* Samsung S2MPS11 and S2MPS14 Voltage and Current Regulator
->
->  The Samsung S2MPS11 is a multi-function device which includes voltage and
->  current regulators, RTC, charger controller and other sub-blocks. It is
-> @@ -7,7 +7,7 @@ interfaced to the host controller using an I2C interface. Each sub-block is
->  addressed by the host system using different I2C slave addresses.
->
->  Required properties:
-> -- compatible: Should be "samsung,s2mps11-pmic".
-> +- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-pmic".
->  - reg: Specifies the I2C slave address of the pmic block. It should be 0x66.
->
->  Optional properties:
-> @@ -59,10 +59,14 @@ supports. Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
->  as per the datasheet of s2mps11.
->
->         - LDOn
-> -                 - valid values for n are 1 to 38
-> +                 - valid values for n are:
-> +                       - S2MPS11: 1 to 38
-> +                       - S2MPS14: 1 to 25
->                   - Example: LDO1, LD02, LDO28
->         - BUCKn
-> -                 - valid values for n are 1 to 10.
-> +                 - valid values for n are:
-> +                       - S2MPS11: 1 to 10
-> +                       - S2MPS14: 1 to 5
->                   - Example: BUCK1, BUCK2, BUCK9
->
->  Example:
-> --
-> 1.7.9.5
->
-Looks good.
-Acked-by: Sachin Kamat <sachin.kamat@linaro.org>
+Yes, I'll change that.
 
+> > +#include <linux/pm_clock.h>
+> 
+> Is this header still needed?
 
--- 
-With warm regards,
-Sachin
+No, will remove.
+
+[...]
+> > +struct pu_domain {
+> > +	struct generic_pm_domain base;
+> > +	struct regulator *reg;
+> > +	struct clk *clk[6];
+> 
+> Define a macro for this number?
+
+#define GPC_CLK_MAX   6
+
+[...]
+> > +static int imx_gpc_probe(struct platform_device *pdev)
+> > +{
+> > +	struct regulator *pu_reg;
+> > +	struct clk *clk;
+> > +	bool is_off;
+> > +	int ret, i;
+> > +
+> > +	pu_reg = devm_regulator_get(&pdev->dev, "pu");
+> > +	if (IS_ERR(pu_reg)) {
+> > +		ret = PTR_ERR(pu_reg);
+> > +		dev_err(&pdev->dev, "failed to get pu regulator: %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	/* The regulator is initially enabled */
+> > +	ret = regulator_enable(pu_reg);
+> > +	if (ret < 0) {
+> > +		dev_err(&pdev->dev, "failed to enable pu regulator: %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +	imx6q_pu_domain.base.of_node = pdev->dev.of_node;
+> 
+> How does this work with !CONFIG_PM build?
+
+Since I removed the regulator-always-on property from the PU regulator
+in the device tree, if CONFIG_PM is disabled, we have to request and
+enable pu_reg here. Otherwise the regulator framework will helpfully
+turn it off (imx6q-cpufreq never enables pu_reg).
+With the PU regulator disabled, the system would hang as soon as the
+CODA VPU or one of the Vivante GPU cores is accessed if !CONFIG_PM.
+
+> > +	imx6q_pu_domain.reg = pu_reg;
+> > +
+> > +	for (i = 0; ; i++) {
+> > +		clk = of_clk_get(pdev->dev.of_node, i);
+> > +		if (IS_ERR(clk))
+> > +			break;
+
+Also, I should probably add
++		if (i >= GPC_CLK_MAX) {
++			dev_err(&pdev->dev, "more than %d clocks\n",
++				GPC_CLK_MAX);
++			return -EINVAL;
++		}
+here.
+
+> > +		imx6q_pu_domain.clk[i] = clk;
+> > +	}
+> > +	imx6q_pu_domain.num_clks = i;
+[...]
+
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
