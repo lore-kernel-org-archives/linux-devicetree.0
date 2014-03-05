@@ -1,68 +1,65 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: [PATCH v6 1/6] pci: Introduce pci_register_io_range() helper function.
-Date: Wed,  5 Mar 2014 11:48:52 +0000
-Message-ID: <1394020137-1830-2-git-send-email-Liviu.Dudau@arm.com>
-References: <1394020137-1830-1-git-send-email-Liviu.Dudau@arm.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v2 01/11] base: power: Add generic OF-based power domain
+ look-up
+Date: Wed, 05 Mar 2014 12:53:16 +0100
+Message-ID: <5317102C.7000007@gmail.com>
+References: <1393862536-9842-1-git-send-email-tomasz.figa@gmail.com> <1393862536-9842-2-git-send-email-tomasz.figa@gmail.com> <20140304182310.GA9985@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1394020137-1830-1-git-send-email-Liviu.Dudau@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, Tanmay Inamdar <tinamdar@apm.com>, LAKML <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140304182310.GA9985@codeaurora.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene.kim@samsung.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Some architectures do not share x86 simple view of the I/O space and
-instead use a range of addresses that map to external devices. For PCI,
-these ranges can be expressed by OF bindings in a device tree file.
+On 04.03.2014 19:23, Stephen Boyd wrote:
+> On 03/03, Tomasz Figa wrote:
+>> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+>> index dc127e5..006b455 100644
+>> --- a/drivers/base/power/domain.c
+>> +++ b/drivers/base/power/domain.c
+>> @@ -3,12 +3,16 @@
+>>    *
+>>    * Copyright (C) 2011 Rafael J. Wysocki <rjw@sisk.pl>, Renesas Electronics Corp.
+>>    *
+>> + * Support for Device Tree based power domain providers:
+>> + * Copyright (C) 2014 Tomasz Figa <tomasz.figa@gmail.com>
+>> + *
+>>    * This file is released under the GPLv2.
+>>    */
+>>
+>>   #include <linux/init.h>
+>>   #include <linux/kernel.h>
+>>   #include <linux/io.h>
+>> +#include <linux/platform_device.h>
+>
+> Is this still needed?
+>
 
-Introduce a pci_register_io_range() helper function that can be used
-by the architecture code to keep track of the io ranges described by the
-PCI bindings.
+Probably not.
 
-Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-Tested-by: Tanmay Inamdar <tinamdar@apm.com>
----
- drivers/of/address.c       | 5 +++++
- include/linux/of_address.h | 1 +
- 2 files changed, 6 insertions(+)
+>>   #include <linux/pm_runtime.h>
+>>   #include <linux/pm_domain.h>
+>>   #include <linux/pm_qos.h>
+> [...]
+>> +
+>> +/*
+>> + * DEVICE<->DOMAIN BINDING USING DEVICE TREE LOOK-UP
+>> + *
+>> + * The code below registers a notifier for platform bus devices'
+>> + * BUS_NOTIFY_BIND_DRIVER events and tries to attach devices to their power
+>> + * domains by looking them up using Device Tree.
+>> + *
+>> + * Similarly in BUS_NOTIFY_UNBOUND_DRIVER the device is detached from its
+>> + * domain, since it no longer supports runtime PM without any driver bound
+>> + * to it.
+>
+> This looks outdated.
+>
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 1a54f1f..d1bb30f 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -619,6 +619,11 @@ const __be32 *of_get_address(struct device_node *dev, int index, u64 *size,
- }
- EXPORT_SYMBOL(of_get_address);
- 
-+int __weak pci_register_io_range(phys_addr_t addr, resource_size_t size)
-+{
-+	return 0;
-+}
-+
- unsigned long __weak pci_address_to_pio(phys_addr_t address)
- {
- 	if (address > IO_SPACE_LIMIT)
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index 5f6ed6b..40c418d 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -56,6 +56,7 @@ extern void __iomem *of_iomap(struct device_node *device, int index);
- extern const __be32 *of_get_address(struct device_node *dev, int index,
- 			   u64 *size, unsigned int *flags);
- 
-+extern int pci_register_io_range(phys_addr_t addr, resource_size_t size);
- extern unsigned long pci_address_to_pio(phys_addr_t addr);
- 
- extern int of_pci_range_parser_init(struct of_pci_range_parser *parser,
--- 
-1.9.0
+Oops, missed this one. Thanks for pointing out.
+
+Best regards,
+Tomasz
