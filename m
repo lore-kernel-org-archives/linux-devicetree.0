@@ -1,104 +1,88 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [RFC PATCH v2 03/21] exynos/dsim: add DT bindings
-Date: Wed, 5 Mar 2014 14:56:38 +0900
-Message-ID: <CAAQKjZPO80-+-9kMufJGimjS8bAJBgHBS=DNESro_cvMmzqbgg@mail.gmail.com>
-References: <1392204688-4591-1-git-send-email-a.hajda@samsung.com>
-	<1392204688-4591-4-git-send-email-a.hajda@samsung.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-sabresd.dtsi: Add heartbeat led
+Date: Wed, 5 Mar 2014 14:22:19 +0800
+Message-ID: <20140305062216.GI8784@S2101-09.ap.freescale.net>
+References: <1393943685-32579-1-git-send-email-vincent.stehle@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1392204688-4591-4-git-send-email-a.hajda@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: DRI mailing list <dri-devel@lists.freedesktop.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1393943685-32579-1-git-send-email-vincent.stehle-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vincent =?iso-8859-1?Q?Stehl=E9?= <vincent.stehle-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-02-12 20:31 GMT+09:00 Andrzej Hajda <a.hajda@samsung.com>:
-> The patch adds DT bindings for Exynos DSI Master. DSIM follows rules
-> for DSI bus host bindings [1].
-> Properties describes its resources: memory, interrupt, clocks,
-> phy, regulators and frequencies of clocks.
->
-> [1]: Documentation/devicetree/bindings/mipi/dsi/mipi-dsi-bus.txt
->
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> ---
-> v2
-> - added burst and esc clock frequency properties
-> - add samsung prefix to all frequency props
-> ---
->  .../devicetree/bindings/video/exynos_dsim.txt      | 53 ++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/video/exynos_dsim.txt
->
-> diff --git a/Documentation/devicetree/bindings/video/exynos_dsim.txt b/Documentation/devicetree/bindings/video/exynos_dsim.txt
-> new file mode 100644
-> index 0000000..2a49704
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/exynos_dsim.txt
-> @@ -0,0 +1,53 @@
-> +Exynos MIPI DSI Master
-> +
-> +Required properties:
-> +  - compatible: "samsung,exynos4210-mipi-dsi"
-> +  - reg: physical base address and length of the registers set for the device
-> +  - interrupts: should contain DSI interrupt
-> +  - clocks: list of clock specifiers, must contain an entry for each required
-> +    entry in clock-names
-> +  - clock-names: should include "bus_clk"and "pll_clk" entries
-> +  - phys: list of phy specifiers, must contain an entry for each required
-> +    entry in phy-names
-> +  - phy-names: should include "dsim" entry
-> +  - vddcore-supply: MIPI DSIM Core voltage supply (e.g. 1.1V)
-> +  - vddio-supply: MIPI DSIM I/O and PLL voltage supply (e.g. 1.8V)
-> +  - samsung,pll-clock-frequency: specifies frequency of the "pll_clk" clock
-> +  - samsung,burst-clock-frequency: specifies DSI frequency in high-speed burst
-> +    mode
-> +  - samsung,esc-clock-frequency: specifies DSI frequency in escape mode
-> +  - #address-cells, #size-cells: should be set respectively to <1> and <0>
-> +    according to DSI host bindings (see MIPI DSI bindings [1])
-> +
-> +Optional properties:
-> +  - samsung,power-domain: a phandle to DSIM power domain node
-> +
-> +Child nodes:
-> +  Should contain DSI peripheral nodes (see DSI bindings [1])
-> +
-> +[1]: Documentation/devicetree/bindings/mipi/dsi/mipi-dsi-bus.txt
-> +
-> +Example:
-> +
-> +       dsi@11C80000 {
-> +               compatible = "samsung,exynos4210-mipi-dsi";
-> +               reg = <0x11C80000 0x10000>;
-> +               interrupts = <0 79 0>;
-> +               clocks = <&clock 286>, <&clock 143>;
-> +               clock-names = "bus_clk", "pll_clk";
-> +               phys = <&mipi_phy 1>;
-> +               phy-names = "dsim";
-> +               vddcore-supply = <&vusb_reg>;
-> +               vddio-supply = <&vmipi_reg>;
-> +               samsung,power-domain = <&pd_lcd0>;
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               samsung,pll-clock-frequency = <24000000>;
-> +               samsung,burst-clock-frequency = <500000000>;
-> +               samsung,esc-clock-frequency = <20000000>;
+On Tue, Mar 04, 2014 at 03:34:45PM +0100, Vincent Stehl=E9 wrote:
+> Use the red gpio led for heartbeat.
 
-Isn't a property indicating cpu or video mode needed for the future
-even though now DSI driver doesn't support CPU interface yet? Which
-mode is used would depend on machine.
+Some people think it's annoying to have a LED blinking all the time.
+Since it's a user defined LED, let's leave it to users for their
+particular use case.
 
+Shawn
+
+>=20
+> Signed-off-by: Vincent Stehl=E9 <vincent.stehle-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>=20
+> Hi,
+>=20
+> This has been tested on Sabre SD i.MX6 Quad board, with linux v3.14-r=
+c5+ and
+> imx_v6_v7_defconfig.
+>=20
+> As a side note, checkpatch.pl complains about gpio-leds being undocum=
+ented, but
+> I am not sure what to do about that.
+>=20
+> Best regards,
+>=20
+> V.
+>=20
+>  arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/d=
+ts/imx6qdl-sabresd.dtsi
+> index e75e11b..cf4d736 100644
+> --- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> @@ -88,6 +88,16 @@
+>  		default-brightness-level =3D <7>;
+>  		status =3D "okay";
+>  	};
 > +
-> +               panel@0 {
-> +                       reg = <0>;
-> +                       ...
-> +               };
-> +       };
-> --
-> 1.8.3.2
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+> +	leds {
+> +		compatible =3D "gpio-leds";
+> +
+> +		heartbeat-led {
+> +		        label =3D "Heartbeat";
+> +		        gpios =3D <&gpio1 2 0>;
+> +		        linux,default-trigger =3D "heartbeat";
+> +		};
+> +	};
+>  };
+> =20
+>  &audmux {
+> @@ -182,6 +192,7 @@
+>  				MX6QDL_PAD_ENET_TXD1__GPIO1_IO29 0x80000000
+>  				MX6QDL_PAD_EIM_D22__GPIO3_IO22  0x80000000
+>  				MX6QDL_PAD_ENET_CRS_DV__GPIO1_IO25 0x80000000
+> +				MX6QDL_PAD_GPIO_2__GPIO1_IO02 0x80000000
+>  			>;
+>  		};
+>  	};
+> --=20
+> 1.9.0
+>=20
+>=20
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
