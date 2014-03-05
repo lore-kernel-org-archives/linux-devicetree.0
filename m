@@ -1,77 +1,151 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v5] can: xilinx CAN controller support.
-Date: Wed, 5 Mar 2014 07:04:21 +0000
-Message-ID: <c6cf1c12-8e7b-4f5e-a495-0f23c04ddc5d@TX2EHSMHS013.ehs.local>
-References: <5254bfec-c6fd-4681-a34d-706d51e60fbb@VA3EHSMHS004.ehs.local>
- <1b9f22ac-4dde-4ecc-885a-3d8081157081@AM1EHSMHS012.ehs.local>
- <5316CB29.7040200@hartkopp.net>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 2/3] phy: omap-usb2: Provide workaround for USB2PHY false
+ disconnect
+Date: Wed, 5 Mar 2014 12:37:12 +0530
+Message-ID: <5316CD20.3030909@ti.com>
+References: <1393841424-27656-1-git-send-email-george.cherian@ti.com> <1393842174-29868-1-git-send-email-george.cherian@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5316CB29.7040200-fJ+pQTUTwRTk1uMJSBkQmQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oliver Hartkopp <socketcan-fJ+pQTUTwRTk1uMJSBkQmQ@public.gmane.org>
-Cc: Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org" <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, "mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1393842174-29868-1-git-send-email-george.cherian@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: George Cherian <george.cherian@ti.com>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, s.nawrocki@samsung.com, tony@atomide.com, gregkh@linuxfoundation.org, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgT2xpdmVyLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE9saXZl
-ciBIYXJ0a29wcCBbbWFpbHRvOnNvY2tldGNhbkBoYXJ0a29wcC5uZXRdDQo+IFNlbnQ6IFdlZG5l
-c2RheSwgTWFyY2ggMDUsIDIwMTQgMTI6MjkgUE0NCj4gVG86IEFwcGFuYSBEdXJnYSBLZWRhcmVz
-d2FyYSBSYW8NCj4gQ2M6IFNvcmVuIEJyaW5rbWFubjsgd2dAZ3JhbmRlZ2dlci5jb207IG1rbEBw
-ZW5ndXRyb25peC5kZTsgTWljaGFsDQo+IFNpbWVrOyBncmFudC5saWtlbHlAbGluYXJvLm9yZzsg
-cm9iaCtkdEBrZXJuZWwub3JnOyBsaW51eC0NCj4gY2FuQHZnZXIua2VybmVsLm9yZzsgbmV0ZGV2
-QHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-ZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5l
-bC5vcmc7IEFwcGFuYSBEdXJnYSBLZWRhcmVzd2FyYSBSYW8NCj4gU3ViamVjdDogUmU6IFtQQVRD
-SCB2NV0gY2FuOiB4aWxpbnggQ0FOIGNvbnRyb2xsZXIgc3VwcG9ydC4NCj4NCj4NCj4NCj4gT24g
-MDUuMDMuMjAxNCAwMDo1MSwgU8O2cmVuIEJyaW5rbWFubiB3cm90ZToNCj4gPiBIaSBLZWRhciwN
-Cj4gPg0KPiA+IE9uIFR1ZSwgMjAxNC0wMy0wNCBhdCAwNjo1MFBNICswNTMwLCBLZWRhcmVzd2Fy
-YSByYW8gQXBwYW5hIHdyb3RlOg0KPiA+PiBUaGlzIHBhdGNoIGFkZHMgeGlsaW54IENBTiBjb250
-cm9sbGVyIHN1cHBvcnQuDQo+ID4+IFRoaXMgZHJpdmVyIHN1cHBvcnRzIGJvdGggWllOUSBDQU5Q
-UyBhbmQgU29mdCBJUCBBWEkgQ0FOIGNvbnRyb2xsZXIuDQo+ID4+DQo+ID4gWy4uLl0NCj4gPj4g
-ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvY2FuL3hp
-bGlueF9jYW4udHh0DQo+ID4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25l
-dC9jYW4veGlsaW54X2Nhbi50eHQNCj4gPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPj4gaW5k
-ZXggMDAwMDAwMC4uMGU1NzEwMw0KPiA+PiAtLS0gL2Rldi9udWxsDQo+ID4+ICsrKyBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvY2FuL3hpbGlueF9jYW4udHh0DQo+ID4+
-IEBAIC0wLDAgKzEsNDUgQEANCj4gPj4gK1hpbGlueCBBeGkgQ0FOL1p5bnEgQ0FOUFMgY29udHJv
-bGxlciBEZXZpY2UgVHJlZSBCaW5kaW5ncw0KPiA+PiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ID4+ICsNCj4gPj4gK1JlcXVpcmVk
-IHByb3BlcnRpZXM6DQo+ID4+ICstIGNvbXBhdGlibGUgICAgICAgICAgICAgIDogU2hvdWxkIGJl
-ICJ4bG54LHp5bnEtY2FuLTEuMDAuYSIgZm9yIFp5bnENCj4gQ0FODQo+ID4+ICsgICAgICAgICAg
-ICAgICAgICAgIGNvbnRyb2xsZXJzIGFuZCAieGxueCxheGktY2FuLTEuMDAuYSIgZm9yIEF4aSBD
-QU4NCj4gPj4gKyAgICAgICAgICAgICAgICAgICAgY29udHJvbGxlcnMuDQo+ID4+ICstIHJlZyAg
-ICAgICAgICAgICAgICAgICAgIDogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBzaXplIG9mIHRo
-ZSBBeGkNCj4gQ0FOL1p5bnENCj4gPj4gKyAgICAgICAgICAgICAgICAgICAgQ0FOUFMgcmVnaXN0
-ZXJzIG1hcC4NCj4gPj4gKy0gaW50ZXJydXB0cyAgICAgICAgICAgICAgOiBQcm9wZXJ0eSB3aXRo
-IGEgdmFsdWUgZGVzY3JpYmluZyB0aGUgaW50ZXJydXB0DQo+ID4+ICsgICAgICAgICAgICAgICAg
-ICAgIG51bWJlci4NCj4gPj4gKy0gaW50ZXJydXB0LXBhcmVudCAgICAgICAgOiBNdXN0IGJlIGNv
-cmUgaW50ZXJydXB0IGNvbnRyb2xsZXINCj4gPj4gKy0gY2xvY2stbmFtZXMgICAgICAgICAgICAg
-OiBMaXN0IG9mIGlucHV0IGNsb2NrIG5hbWVzIC0gInJlZl9jbGsiLA0KPiAiYXBlcl9jbGsiDQo+
-ID4NCj4gPiBMZXQncyByZWNvbnNpZGVyIHRoZXNlIG5hbWVzLiBUaGVzZSBhcmUgcmF0aGVyIFp5
-bnEgc3BlY2lmaWMgbmFtZXMuDQo+ID4gRG9lcyB0aGUgSVAgZG9jdW1lbnRhdGlvbiB1c2UgdGhl
-c2UgYXMgd2VsbD8gVGhlIG5hbWVzIHNob3VsZCBtYXRjaA0KPiA+IHRoZSBuYW1pbmcgdXNlZCBm
-b3IgdGhlIElQLCByYXRoZXIgdGhhbiB0aGUgU09DLiBJcyB0aGlzIHRoZSBjb3JyZWN0IGRhdGEN
-Cj4gc2hlZXQ6DQo+ID4NCj4gaHR0cDovL3d3dy54aWxpbnguY29tL3N1cHBvcnQvZG9jdW1lbnRh
-dGlvbi9pcF9kb2N1bWVudGF0aW9uL2F4aV9jYW4NCj4gL3YNCj4gPiAxXzAzX2EvZHM3OTFfYXhp
-X2Nhbi5wZGYgPyBBY2NvcmRpbmcgdG8gdGhhdCB0aGUgbmFtZXMgc2hvdWxkIHJhdGhlcg0KPiA+
-IGJlICdzX2F4aV9hY2xrJyBhbmQgJ2Nhbl9jbGsnLCBJTUhPLg0KPiA+DQo+ID4gICAgIFPDtnJl
-bg0KPiA+DQo+DQo+IEFuZCB3aGVuIHJlbmFtaW5nIHN0dWZmIGFueXdheToNCj4NCj4gKw0KPiAr
-I2RlZmluZSBEUklWRVJfTkFNRSAgIlhJTElOWF9DQU4iDQo+ICsNCj4NCj4gc2hvdWxkIGJlIGNo
-YW5nZWQgdG8NCg0KT2sgV2lsbCBkbw0KDQpSZWdhcmRzLA0KS2VkYXIuDQoNCj4NCj4gKw0KPiAr
-I2RlZmluZSBEUklWRVJfTkFNRSAgInhpbGlueF9jYW4iDQo+ICsNCj4NCj4gUmVnYXJkcywNCj4g
-T2xpdmVyDQo+DQoNCg0KDQpUaGlzIGVtYWlsIGFuZCBhbnkgYXR0YWNobWVudHMgYXJlIGludGVu
-ZGVkIGZvciB0aGUgc29sZSB1c2Ugb2YgdGhlIG5hbWVkIHJlY2lwaWVudChzKSBhbmQgY29udGFp
-bihzKSBjb25maWRlbnRpYWwgaW5mb3JtYXRpb24gdGhhdCBtYXkgYmUgcHJvcHJpZXRhcnksIHBy
-aXZpbGVnZWQgb3IgY29weXJpZ2h0ZWQgdW5kZXIgYXBwbGljYWJsZSBsYXcuIElmIHlvdSBhcmUg
-bm90IHRoZSBpbnRlbmRlZCByZWNpcGllbnQsIGRvIG5vdCByZWFkLCBjb3B5LCBvciBmb3J3YXJk
-IHRoaXMgZW1haWwgbWVzc2FnZSBvciBhbnkgYXR0YWNobWVudHMuIERlbGV0ZSB0aGlzIGVtYWls
-IG1lc3NhZ2UgYW5kIGFueSBhdHRhY2htZW50cyBpbW1lZGlhdGVseS4NCg0KCgo=
+Hi,
 
+On Monday 03 March 2014 03:52 PM, George Cherian wrote:
+> From: Austin Beam <austinbeam@ti.com>
+>
+> Enable the dra7x errata workaround for false disconnect problem
+> with USB2PHY. False disconnects were detected with some of the devices.
+> Reduce the sensitivity of the disconnect logic within the USB2PHY subsystem
+> to enusre these false disconnects are not registered.
+>
+> [george.cherian@ti.com]
+> While at that, pass proper flags for each SoC's. This is a common driver
+> used across OMAP4,OMAP5,DRA7xx and AM437x USB2PHY.
+>
+> False disconnect workaround is currently applicable for only DRA7x.
+>
+> Update the Documentation also to add new comaptible.
+>
+> Signed-off-by: Austin Beam <austinbeam@ti.com>
+> Signed-off-by: George Cherian <george.cherian@ti.com>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>   Documentation/devicetree/bindings/usb/usb-phy.txt |  3 +-
+>   drivers/phy/phy-omap-usb2.c                       | 48 +++++++++++++++++++++++
+>   include/linux/usb/omap_usb.h                      |  3 ++
+>   3 files changed, 53 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/usb/usb-phy.txt b/Documentation/devicetree/bindings/usb/usb-phy.txt
+> index b3fa409..03de61a5 100644
+> --- a/Documentation/devicetree/bindings/usb/usb-phy.txt
+> +++ b/Documentation/devicetree/bindings/usb/usb-phy.txt
+> @@ -4,7 +4,8 @@ OMAP USB2 PHY
+>
+>   Required properties:
+>    - compatible: Should be either of
+> -	* "ti,omap-usb2" for OMAP4, OMAP5, DRA7
+> +	* "ti,omap-usb2" for OMAP4 and OMAP5
+> +	* "ti,dra7x-usb2" for DRA7
+>   	* "ti,am437x-usb2" for AM437x
+>    - reg : Address and length of the register set for the device.
+>    - #phy-cells: determine the number of cells that should be given in the
+> diff --git a/drivers/phy/phy-omap-usb2.c b/drivers/phy/phy-omap-usb2.c
+> index d54f24b..80ba7f0 100644
+> --- a/drivers/phy/phy-omap-usb2.c
+> +++ b/drivers/phy/phy-omap-usb2.c
+> @@ -31,6 +31,9 @@
+>   #include <linux/phy/phy.h>
+>   #include <linux/of_platform.h>
+>
+> +#define USB2PHY_DISCON_BYP_LATCH (1 << 31)
+> +#define USB2PHY_ANA_CONFIG1 0x4c
+> +
+>   /**
+>    * omap_usb2_set_comparator - links the comparator present in the sytem with
+>    *	this phy
+> @@ -138,7 +141,30 @@ static int omap_usb_power_on(struct phy *x)
+>   	return 0;
+>   }
+>
+> +static int omap_usb_init(struct phy *x)
+> +{
+> +	struct omap_usb *phy = phy_get_drvdata(x);
+> +	u32 val;
+> +
+> +	if (phy->flags & OMAP_USB2_CALIBRATE_FALSE_DISCONNECT) {
+> +		/*
+> +		 *
+> +		 * Reduce the sensitivity of internal PHY by enabling the
+> +		 * DISCON_BYP_LATCH of the USB2PHY_ANA_CONFIG1 register. This
+> +		 * resolves issues with certain devices which can otherwise
+> +		 * be prone to false disconnects.
+> +		 *
+> +		 */
+> +		val = omap_usb_readl(phy->phy_base, USB2PHY_ANA_CONFIG1);
+> +		val |= USB2PHY_DISCON_BYP_LATCH;
+> +		omap_usb_writel(phy->phy_base, USB2PHY_ANA_CONFIG1, val);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>   static struct phy_ops ops = {
+> +	.init		= omap_usb_init,
+>   	.power_on	= omap_usb_power_on,
+>   	.power_off	= omap_usb_power_off,
+>   	.owner		= THIS_MODULE,
+> @@ -150,6 +176,11 @@ static const struct usb_phy_data omap_usb2_data = {
+>   	.flags = OMAP_USB2_HAS_START_SRP | OMAP_USB2_HAS_SET_VBUS,
+>   };
+>
+> +static const struct usb_phy_data dra7x_usb2_data = {
+> +	.label = "dra7x_usb2",
+> +	.flags = OMAP_USB2_CALIBRATE_FALSE_DISCONNECT,
+> +};
+> +
+>   static const struct usb_phy_data am437x_usb2_data = {
+>   	.label = "am437x_usb2",
+>   	.flags =  0,
+> @@ -161,6 +192,10 @@ static const struct of_device_id omap_usb2_id_table[] = {
+>   		.data = &omap_usb2_data,
+>   	},
+>   	{
+> +		.compatible = "ti,dra7x-usb2",
+> +		.data = &dra7x_usb2_data,
+> +	},
+> +	{
+>   		.compatible = "ti,am437x-usb2",
+>   		.data = &am437x_usb2_data,
+>   	},
+> @@ -173,6 +208,7 @@ static int omap_usb2_probe(struct platform_device *pdev)
+>   {
+>   	struct omap_usb	*phy;
+>   	struct phy *generic_phy;
+> +	struct resource *res;
+>   	struct phy_provider *phy_provider;
+>   	struct usb_otg *otg;
+>   	struct device_node *node = pdev->dev.of_node;
+> @@ -208,6 +244,18 @@ static int omap_usb2_probe(struct platform_device *pdev)
+>   	phy->phy.otg		= otg;
+>   	phy->phy.type		= USB_PHY_TYPE_USB2;
+>
+> +	if (phy_data->flags & OMAP_USB2_CALIBRATE_FALSE_DISCONNECT) {
+> +		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +		if (!res) {
+> +			dev_err(&pdev->dev, "memory resource not available\n");
+> +			return -ENODEV;
+> +		}
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You can remove the error check here and..
+> +		phy->phy_base = devm_request_and_ioremap(&pdev->dev, res);
+
+use devm_ioremap_resource instead.
+
+Thanks
+Kishon
