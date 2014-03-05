@@ -1,106 +1,82 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 02/12] phy: omap-control: Update DT binding information
-Date: Wed, 5 Mar 2014 12:37:05 +0200
-Message-ID: <5316FE51.5090705@ti.com>
-References: <1393859254-10937-1-git-send-email-rogerq@ti.com>
- <1393859254-10937-3-git-send-email-rogerq@ti.com>
- <20140303190247.GD25804@atomide.com> <5315995F.5050206@ti.com>
- <20140304162855.GB3376@atomide.com>
+From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH 2/3] dts: mpc512x: adjust clock specs for FEC nodes
+Date: Wed, 5 Mar 2014 11:52:09 +0100
+Message-ID: <20140305105209.GZ3327@book.gsilab.sittig.org>
+References: <1393237557-31406-1-git-send-email-gsi@denx.de>
+ <1393237557-31406-2-git-send-email-gsi@denx.de>
+ <20140303092231.GS3327@book.gsilab.sittig.org>
+ <20140305014836.GC8784@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140304162855.GB3376@atomide.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, george.cherian@ti.com, balajitk@ti.com, linux-ide@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, kishon@ti.com, hdegoede@redhat.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140305014836.GC8784-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/04/2014 06:28 PM, Tony Lindgren wrote:
-> * Roger Quadros <rogerq@ti.com> [140304 01:17]:
->> Hi Tony,
->>
->> On 03/03/2014 09:02 PM, Tony Lindgren wrote:
->>> * Roger Quadros <rogerq@ti.com> [140303 07:10]:
->>>> Move omap-control binding information to the right location.
->>>>
->>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>>> ---
->>>>  Documentation/devicetree/bindings/phy/ti-phy.txt   | 25 ++++++++++++++++++++++
->>>>  Documentation/devicetree/bindings/usb/omap-usb.txt | 24 ---------------------
->>>>  2 files changed, 25 insertions(+), 24 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
->>>> index 207e14c..41dc132 100644
->>>> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
->>>> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
->>>> @@ -1,5 +1,30 @@
->>>>  TI PHY: DT DOCUMENTATION FOR PHYs in TI PLATFORMs
->>>>  
->>>> +OMAP CONTROL PHY
->>>> +
->>>> +Required properties:
->>>> + - compatible: Should be one of
->>>> + "ti,control-phy-otghs" - if it has otghs_control mailbox register as on OMAP4.
->>>> + "ti,control-phy-usb2" - if it has Power down bit in control_dev_conf register
->>>> +                        e.g. USB2_PHY on OMAP5.
->>>> + "ti,control-phy-pipe3" - if it has DPLL and individual Rx & Tx power control
->>>> +                        e.g. USB3 PHY and SATA PHY on OMAP5.
->>>> + "ti,control-phy-dra7usb2" - if it has power down register like USB2 PHY on
->>>> +                        DRA7 platform.
->>>> + "ti,control-phy-am437usb2" - if it has power down register like USB2 PHY on
->>>> +                        AM437 platform.
->>>
->>> To me it seems that you can leave out all the above. You can set these falgs
->>> flags directly in the driver based on the compatible flag. Then just initialize
->>> the .data in the driver based on the compatible flag.
->>
->> I'm not sure if I got you. A single platform can have different type of phys.
->>
->> e.g. OMAP5 has both usb2 and pipe3 PHYs,
->> DRA7 has both pipe3 and usb2 PHYs, but this usb2 PHY is not compatible with OMAP5 one
->> so we need a new compatible id for that.
->>
->> To add to the woes, the designers were creative enough to make another mutation to
->> the USB2 PHY for AM437x, :(
+On Wed, Mar 05, 2014 at 09:48 +0800, Shawn Guo wrote:
 > 
-> Oh OK, in that case the compatible flag may not be enough for configuring the
-> various instances.
->  
->> What do you suggest the compatible ids should look like for these 5 types of PHY control?
->> OTGHS	(OMAP4 & 5)
->> USB2	(OMAP5)
->> PIPE3	(OMAP5 & DRA7)
->> USB2x	(DRA7)
->> USB2y	(AM437)
+> On Mon, Mar 03, 2014 at 10:22:31AM +0100, Gerhard Sittig wrote:
+> > On Mon, Feb 24, 2014 at 11:25 +0100, Gerhard Sittig wrote:
+> > > 
+> > > a recent FEC binding document update that was motivated by i.MX
+> > > development revealed that ARM and PowerPC implementations in Linux
+> > > did not agree on the clock names to use for the FEC nodes
+> > > 
+> > > change clock names from "per" to "ipg" in the FEC nodes of the
+> > > mpc5121.dtsi include file such that the .dts specs comply with
+> > > the common FEC binding
+> > > 
+> > > this "incompatible" change does not break operation, because
+> > > - COMMON_CLK support for MPC5121/23/25 and adjusted .dts files
+> > >   were only introduced in Linux v3.14-rc1, no mainline release
+> > >   provided these specs before
+> > > - if this change won't make it for v3.14, the MPC512x CCF support
+> > >   provides full backwards compability, and keeps operating with
+> > >   device trees which lack clock specs or don't match in the names
+> > > 
+> > > Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+> > 
+> > ping
+> > 
+> > Are there opinions about making PowerPC users of FEC use the same
+> > clock names as ARM users do, to re-use (actually: keep sharing)
+> > the FEC binding?  The alternative would be to fragment the FEC
+> > binding into several bindings for ARM and PowerPC, which I feel
+> > would be undesirable, and is not necessary.
 > 
-> I think in that case having the various instances fully configurable from
-> device tree is OK if you prefer that. But if you wanted to use the
-> compatible flag, then you could do something like this:
+> As I already said, Documentation/devicetree/bindings/net/fsl-fec.txt
+> was created specifically for i.MX FEC controller from day one.  And even
+> as of today, it doesn't serve PowerPC, because for example the property
+> 'phy-mode' documented as required one is not required by PowerPC FEC.
+> My opinion would be to patch fsl-fec.txt a little bit to make it clear
+> that it's a binding doc for i.MX FEC, and create the other one for
+> PowerPC FEC.  This is the way less confusing to people and easier for
+> binding maintenance.
 
-I'll stick to the compatible flag.
+Should we still try to have a common behaviour where possible?
+Such that even if there are two bindings, they don't diverge in
+"unnecessary" ways?
 
-> 
-> ti,control-phy-omap4-otghs	(assuming same on omap4 & 5)
-> ti,control-phy-omap5-usb2
-> ti,control-phy-omap5-pipe3	(assuming same on omap5 & dra7)
-> ti,control-phy-dra7-usb2x
-> ti,control-phy-am437-usb2y
+But given that we already are past -rc5, I guess the suggested
+change is too late for v3.14 anyway.  So we have to live with the
+fact of a mainline release of different behaviour.
 
-OK.
+And the backwards compatibility support in the MPC512x CCF
+implementation allows to cope with a potential future "ipg"
+unification while still working with former "per" using device
+trees.  There's no blocker.  So nevermind.
 
-The last 2 can just be 
 
-ti,control-phy-dra7-usb2
-ti,control-phy-am437-usb2
-
-cheers,
--roger
+virtually yours
+Gerhard Sittig
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
