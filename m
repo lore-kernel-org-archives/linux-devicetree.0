@@ -1,168 +1,61 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v6 2/8] Documentation: of: Document graph bindings
-Date: Wed,  5 Mar 2014 10:20:36 +0100
-Message-ID: <1394011242-16783-3-git-send-email-p.zabel@pengutronix.de>
-References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1394011242-16783-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH 2/2] ARM: dts: sama5d36ek: add spi pinctrl sleep state
+Date: Wed, 5 Mar 2014 10:22:11 +0100
+Message-ID: <20140305092211.GB4441@piout.net>
+References: <1393984730-14828-1-git-send-email-wenyou.yang@atmel.com>
+ <1393984730-14828-3-git-send-email-wenyou.yang@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1393984730-14828-3-git-send-email-wenyou.yang@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wenyou Yang <wenyou.yang@atmel.com>
+Cc: broonie@kernel.org, nicolas.ferre@atmel.com, plagnioj@jcrosoft.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The device tree graph bindings as used by V4L2 and documented in
-Documentation/device-tree/bindings/media/video-interfaces.txt contain
-generic parts that are not media specific but could be useful for any
-subsystem with data flow between multiple devices. This document
-describes the generic bindings.
+Hi,
 
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
-Changes since v5:
- - Fixed spelling errors and a wrong device node name in the link section
- Documentation/devicetree/bindings/graph.txt | 129 ++++++++++++++++++++++++++++
- 1 file changed, 129 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/graph.txt
+On 05/03/2014 at 09:58:50 +0800, Wenyou Yang wrote :
+> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+> ---
+>  arch/arm/boot/dts/sama5d36ek.dts |   14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sama5d36ek.dts b/arch/arm/boot/dts/sama5d36ek.dts
+> index 59576c6..676d121 100644
+> --- a/arch/arm/boot/dts/sama5d36ek.dts
+> +++ b/arch/arm/boot/dts/sama5d36ek.dts
+> @@ -18,6 +18,8 @@
+>  	ahb {
+>  		apb {
+>  			spi0: spi@f0004000 {
+> +				pinctrl-names = "default", "sleep";
+> +				pinctrl-1 = <&pinctrl_spi0_sleep>;
+>  				status = "okay";
+>  			};
+>  
+> @@ -44,6 +46,18 @@
+>  			macb1: ethernet@f802c000 {
+>  				status = "okay";
+>  			};
+> +
+> +			pinctrl@fffff200 {
+> +				spi0 {
+> +					pinctrl_spi0_sleep: spi0-1 {
+> +						atmel,pins =
+> +							<AT91_PIOD 10 AT91_PERIPH_GPIO AT91_PINCTRL_OUTPUT_LOW	/* PD10 GPIO Output Low */
+> +							 AT91_PIOD 11 AT91_PERIPH_GPIO AT91_PINCTRL_OUTPUT_LOW	/* PD11 GPIO Output Low */
+> +							 AT91_PIOD 12 AT91_PERIPH_GPIO AT91_PINCTRL_OUTPUT_LOW>;	/* PD12 GPIO Output Low */
 
-diff --git a/Documentation/devicetree/bindings/graph.txt b/Documentation/devicetree/bindings/graph.txt
-new file mode 100644
-index 0000000..1a69c07
---- /dev/null
-+++ b/Documentation/devicetree/bindings/graph.txt
-@@ -0,0 +1,129 @@
-+Common bindings for device graphs
-+
-+General concept
-+---------------
-+
-+The hierarchical organisation of the device tree is well suited to describe
-+control flow to devices, but there can be more complex connections between
-+devices that work together to form a logical compound device, following an
-+arbitrarily complex graph.
-+There already is a simple directed graph between devices tree nodes using
-+phandle properties pointing to other nodes to describe connections that
-+can not be inferred from device tree parent-child relationships. The device
-+tree graph bindings described herein abstract more complex devices that can
-+have multiple specifiable ports, each of which can be linked to one or more
-+ports of other devices.
-+
-+These common bindings do not contain any information about the direction or
-+type of the connections, they just map their existence. Specific properties
-+may be described by specialized bindings depending on the type of connection.
-+
-+To see how this binding applies to video pipelines, for example, see
-+Documentation/device-tree/bindings/media/video-interfaces.txt.
-+Here the ports describe data interfaces, and the links between them are
-+the connecting data buses. A single port with multiple connections can
-+correspond to multiple devices being connected to the same physical bus.
-+
-+Organisation of ports and endpoints
-+-----------------------------------
-+
-+Ports are described by child 'port' nodes contained in the device node.
-+Each port node contains an 'endpoint' subnode for each remote device port
-+connected to this port. If a single port is connected to more than one
-+remote device, an 'endpoint' child node must be provided for each link.
-+If more than one port is present in a device node or there is more than one
-+endpoint at a port, or a port node needs to be associated with a selected
-+hardware interface, a common scheme using '#address-cells', '#size-cells'
-+and 'reg' properties is used number the nodes.
-+
-+device {
-+        ...
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        port@0 {
-+	        #address-cells = <1>;
-+	        #size-cells = <0>;
-+		reg = <0>;
-+
-+                endpoint@0 {
-+			reg = <0>;
-+			...
-+		};
-+                endpoint@1 {
-+			reg = <1>;
-+			...
-+		};
-+        };
-+
-+        port@1 {
-+		reg = <1>;
-+
-+		endpoint { ... };
-+	};
-+};
-+
-+All 'port' nodes can be grouped under an optional 'ports' node, which
-+allows to specify #address-cells, #size-cells properties for the 'port'
-+nodes independently from any other child device nodes a device might
-+have.
-+
-+device {
-+        ...
-+        ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                port@0 {
-+                        ...
-+                        endpoint@0 { ... };
-+                        endpoint@1 { ... };
-+                };
-+
-+                port@1 { ... };
-+        };
-+};
-+
-+Links between endpoints
-+-----------------------
-+
-+Each endpoint should contain a 'remote-endpoint' phandle property that points
-+to the corresponding endpoint in the port of the remote device. In turn, the
-+remote endpoint should contain a 'remote-endpoint' property. If it has one,
-+it must not point to another than the local endpoint. Two endpoints with their
-+'remote-endpoint' phandles pointing at each other form a link between the
-+containing ports.
-+
-+device-1 {
-+        port {
-+                device_1_output: endpoint {
-+                        remote-endpoint = <&device_2_input>;
-+                };
-+        };
-+};
-+
-+device-2 {
-+        port {
-+                device_2_input: endpoint {
-+                        remote-endpoint = <&device_1_output>;
-+                };
-+        };
-+};
-+
-+
-+Required properties
-+-------------------
-+
-+If there is more than one 'port' or more than one 'endpoint' node or 'reg'
-+property is present in port and/or endpoint nodes the following properties
-+are required in a relevant parent node:
-+
-+ - #address-cells : number of cells required to define port/endpoint
-+                    identifier, should be 1.
-+ - #size-cells    : should be zero.
-+
-+Optional endpoint properties
-+----------------------------
-+
-+- remote-endpoint: phandle to an 'endpoint' subnode of a remote device node.
-+
+I think that one would belong to the dtsi as this is generic enough.
+
+Also, it was suggested by Mark that list entries should be bracketed
+separately. But I guess we may not want to mix styles in the same file.
+Nicolas, what do you think ?
+
+
 -- 
-1.9.0.rc3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
