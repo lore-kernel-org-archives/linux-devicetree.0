@@ -1,163 +1,106 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] Documentation: mfd: Add binding document for
- S2MPA01
-Date: Wed, 5 Mar 2014 18:24:42 +0800
-Message-ID: <20140305100739.GF10380@lee--X1>
-References: <1392273476-32736-1-git-send-email-sachin.kamat@linaro.org>
- <1392273476-32736-3-git-send-email-sachin.kamat@linaro.org>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 02/12] phy: omap-control: Update DT binding information
+Date: Wed, 5 Mar 2014 12:37:05 +0200
+Message-ID: <5316FE51.5090705@ti.com>
+References: <1393859254-10937-1-git-send-email-rogerq@ti.com>
+ <1393859254-10937-3-git-send-email-rogerq@ti.com>
+ <20140303190247.GD25804@atomide.com> <5315995F.5050206@ti.com>
+ <20140304162855.GB3376@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1392273476-32736-3-git-send-email-sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140304162855.GB3376@atomide.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, george.cherian@ti.com, balajitk@ti.com, linux-ide@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, kishon@ti.com, hdegoede@redhat.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-=46AO Mark Brown,
+On 03/04/2014 06:28 PM, Tony Lindgren wrote:
+> * Roger Quadros <rogerq@ti.com> [140304 01:17]:
+>> Hi Tony,
+>>
+>> On 03/03/2014 09:02 PM, Tony Lindgren wrote:
+>>> * Roger Quadros <rogerq@ti.com> [140303 07:10]:
+>>>> Move omap-control binding information to the right location.
+>>>>
+>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/phy/ti-phy.txt   | 25 ++++++++++++++++++++++
+>>>>  Documentation/devicetree/bindings/usb/omap-usb.txt | 24 ---------------------
+>>>>  2 files changed, 25 insertions(+), 24 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
+>>>> index 207e14c..41dc132 100644
+>>>> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
+>>>> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
+>>>> @@ -1,5 +1,30 @@
+>>>>  TI PHY: DT DOCUMENTATION FOR PHYs in TI PLATFORMs
+>>>>  
+>>>> +OMAP CONTROL PHY
+>>>> +
+>>>> +Required properties:
+>>>> + - compatible: Should be one of
+>>>> + "ti,control-phy-otghs" - if it has otghs_control mailbox register as on OMAP4.
+>>>> + "ti,control-phy-usb2" - if it has Power down bit in control_dev_conf register
+>>>> +                        e.g. USB2_PHY on OMAP5.
+>>>> + "ti,control-phy-pipe3" - if it has DPLL and individual Rx & Tx power control
+>>>> +                        e.g. USB3 PHY and SATA PHY on OMAP5.
+>>>> + "ti,control-phy-dra7usb2" - if it has power down register like USB2 PHY on
+>>>> +                        DRA7 platform.
+>>>> + "ti,control-phy-am437usb2" - if it has power down register like USB2 PHY on
+>>>> +                        AM437 platform.
+>>>
+>>> To me it seems that you can leave out all the above. You can set these falgs
+>>> flags directly in the driver based on the compatible flag. Then just initialize
+>>> the .data in the driver based on the compatible flag.
+>>
+>> I'm not sure if I got you. A single platform can have different type of phys.
+>>
+>> e.g. OMAP5 has both usb2 and pipe3 PHYs,
+>> DRA7 has both pipe3 and usb2 PHYs, but this usb2 PHY is not compatible with OMAP5 one
+>> so we need a new compatible id for that.
+>>
+>> To add to the woes, the designers were creative enough to make another mutation to
+>> the USB2 PHY for AM437x, :(
+> 
+> Oh OK, in that case the compatible flag may not be enough for configuring the
+> various instances.
+>  
+>> What do you suggest the compatible ids should look like for these 5 types of PHY control?
+>> OTGHS	(OMAP4 & 5)
+>> USB2	(OMAP5)
+>> PIPE3	(OMAP5 & DRA7)
+>> USB2x	(DRA7)
+>> USB2y	(AM437)
+> 
+> I think in that case having the various instances fully configurable from
+> device tree is OK if you prefer that. But if you wanted to use the
+> compatible flag, then you could do something like this:
 
-> Added initial binding documentation for S2MPA01 MFD.
->=20
-> Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> Changes since v2:
-> * Re-worded as suggested by Mark Rutland
-> ---
->  Documentation/devicetree/bindings/mfd/s2mpa01.txt |   90 +++++++++++=
-++++++++++
->  1 file changed, 90 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/s2mpa01.txt
+I'll stick to the compatible flag.
 
-This document has been sitting on the MLs for nearly a month now. It
-seems well written and doesn't add any new bindings. With that in mind
-I'm inclined to take it though. However, as most of the important
-configuration here is regulator related I'd like Mark Browns Ack on
-it.
+> 
+> ti,control-phy-omap4-otghs	(assuming same on omap4 & 5)
+> ti,control-phy-omap5-usb2
+> ti,control-phy-omap5-pipe3	(assuming same on omap5 & dra7)
+> ti,control-phy-dra7-usb2x
+> ti,control-phy-am437-usb2y
 
-Mark, would you be so kind?
+OK.
 
-> diff --git a/Documentation/devicetree/bindings/mfd/s2mpa01.txt b/Docu=
-mentation/devicetree/bindings/mfd/s2mpa01.txt
-> new file mode 100644
-> index 000000000000..c13d3d8c3947
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
-> @@ -0,0 +1,90 @@
-> +
-> +* Samsung S2MPA01 Voltage and Current Regulator
-> +
-> +The Samsung S2MPA01 is a multi-function device which includes high
-> +efficiency buck converters including Dual-Phase buck converter, vari=
-ous LDOs,
-> +and an RTC. It is interfaced to the host controller using an I2C int=
-erface.
-> +Each sub-block is addressed by the host system using different I2C s=
-lave
-> +addresses.
-> +
-> +Required properties:
-> +- compatible: Should be "samsung,s2mpa01-pmic".
-> +- reg: Specifies the I2C slave address of the PMIC block. It should =
-be 0x66.
-> +
-> +Optional properties:
-> +- interrupt-parent: Specifies the phandle of the interrupt controlle=
-r to which
-> +  the interrupts from s2mpa01 are delivered to.
-> +- interrupts: An interrupt specifier for the sole interrupt generate=
-d by the
-> +  device.
-> +
-> +Optional nodes:
-> +- regulators: The regulators of s2mpa01 that have to be instantiated=
- should be
-> +  included in a sub-node named 'regulators'. Regulator nodes and con=
-straints
-> +  included in this sub-node use the standard regulator bindings whic=
-h are
-> +  documented elsewhere.
-> +
-> +Properties for BUCK regulator nodes:
-> +- regulator-ramp-delay: ramp delay in uV/us. May be 6250, 12500
-> +  (default), 25000, or 50000. May be 0 for disabling the ramp delay =
-on
-> +  BUCK{1,2,3,4}.
-> +
-> + In the absence of the regulator-ramp-delay property, the default ra=
-mp
-> + delay will be used.
-> +
-> +  NOTE: Some BUCKs share the ramp rate setting i.e. same ramp value =
-will be set
-> +  for a particular group of BUCKs. So provide same regulator-ramp-de=
-lay=3D<value>.
-> +
-> +  The following BUCKs share ramp settings:
-> +  * 1 and 6
-> +  * 2 and 4
-> +  * 8, 9, and 10
-> +
-> +The following are the names of the regulators that the s2mpa01 PMIC =
-block
-> +supports. Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK=
- number
-> +as per the datasheet of s2mpa01.
-> +
-> +	- LDOn
-> +		  - valid values for n are 1 to 26
-> +		  - Example: LDO1, LD02, LDO26
-> +	- BUCKn
-> +		  - valid values for n are 1 to 10.
-> +		  - Example: BUCK1, BUCK2, BUCK9
-> +
-> +Example:
-> +
-> +	s2mpa01_pmic@66 {
-> +		compatible =3D "samsung,s2mpa01-pmic";
-> +		reg =3D <0x66>;
-> +
-> +		regulators {
-> +			ldo1_reg: LDO1 {
-> +				regulator-name =3D "VDD_ALIVE";
-> +				regulator-min-microvolt =3D <1000000>;
-> +				regulator-max-microvolt =3D <1000000>;
-> +			};
-> +
-> +			ldo2_reg: LDO2 {
-> +				regulator-name =3D "VDDQ_MMC2";
-> +				regulator-min-microvolt =3D <2800000>;
-> +				regulator-max-microvolt =3D <2800000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			buck1_reg: BUCK1 {
-> +				regulator-name =3D "vdd_mif";
-> +				regulator-min-microvolt =3D <950000>;
-> +				regulator-max-microvolt =3D <1350000>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			buck2_reg: BUCK2 {
-> +				regulator-name =3D "vdd_arm";
-> +				regulator-min-microvolt =3D <950000>;
-> +				regulator-max-microvolt =3D <1350000>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-ramp-delay =3D <50000>;
-> +			};
-> +		};
-> +	};
+The last 2 can just be 
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ti,control-phy-dra7-usb2
+ti,control-phy-am437-usb2
+
+cheers,
+-roger
