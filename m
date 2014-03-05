@@ -1,45 +1,51 @@
-From: Christoph Fritz <chf.fritz@googlemail.com>
-Subject: Re: [PATCH v4 4/4] ARM: OMAP2+: Add pdata quirk for sys_clkout2
- for omap3 DBB056
-Date: Wed, 05 Mar 2014 14:25:32 +0100
-Message-ID: <1394025932.16566.44.camel@mars>
-References: <1392387656-15186-1-git-send-email-chf.fritz@googlemail.com>
-	 <1392387656-15186-5-git-send-email-chf.fritz@googlemail.com>
-	 <20140228223741.GM13624@atomide.com>  <53172175.5060603@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <53172175.5060603@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, bcousson@baylibre.com, Tomi Valkeinen <tomi.valkeinen@ti.com>, Nishanth Menon <nm@ti.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Daniel Mack <zonque@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH v2 5/6] ARM: dts: imx6: add PCIe interrupt mapping properties
+Date: Wed,  5 Mar 2014 14:25:50 +0100
+Message-ID: <1394025951-32438-6-git-send-email-l.stach@pengutronix.de>
+References: <1394025951-32438-1-git-send-email-l.stach@pengutronix.de>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1394025951-32438-1-git-send-email-l.stach@pengutronix.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-sh@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Jingoo Han <jg1.han@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, Shawn Guo <shawn.guo@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Thierry Reding <thierry.reding@gmail.com>, Arnd Bergmann <arnd@arndb.de>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-03-05 at 15:07 +0200, Tero Kristo wrote:
-> On 03/01/2014 12:37 AM, Tony Lindgren wrote:
-> > * Christoph Fritz <chf.fritz@googlemail.com> [140214 06:24]:
-> >> Full device tree support for clock control, especially to set frequencies,
-> >> is not yet accomplished. Until then, configure the 24Mhz of sys_clkout2 to
-> >> feed an USB-Hub here.
-> >
-> > Hmm would like to see Tero's comments on this, I wonder if we should
-> > wait on this to avoid extra churn?
-> 
-> Well, the set I posted that adds default clock parenting / default rate 
-> support to DT hasn't actually moved forward, so you might want to take 
-> this in as is now if it should be rushed. The clk-enable part isn't done 
-> currently by anything anyway. Just wondering though, should you create 
-> some sort of driver for your usb-hub which would control these clocks?
+As defined by the common PCI bindings.
 
-The USB-Hub, a USB2512 is wired as non-configurable. Its pin
-'XTAL1/CLKIN' can be connected to either a crystal or an external clock
-input. To economise the crystal, the clock-out of the omap is wired
-here.
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+---
+v2: drop blank lines
+---
+ arch/arm/boot/dts/imx6qdl.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-So in my view, a driver is unnecessary.
-
- Thanks
-  -- Christoph
-
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index fb28b2ecb1db..c1c06d25decc 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -10,6 +10,8 @@
+  * http://www.gnu.org/copyleft/gpl.html
+  */
+ 
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
+ #include "skeleton.dtsi"
+ 
+ / {
+@@ -127,6 +129,12 @@
+ 				  0x82000000 0 0x01000000 0x01000000 0 0x00f00000>; /* non-prefetchable memory */
+ 			num-lanes = <1>;
+ 			interrupts = <0 123 0x04>;
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0x7>;
++			interrupt-map = <0 0 0 1 &intc GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
++			                <0 0 0 2 &intc GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
++			                <0 0 0 3 &intc GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
++			                <0 0 0 4 &intc GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&clks 189>, <&clks 187>, <&clks 206>, <&clks 144>;
+ 			clock-names = "pcie_ref_125m", "sata_ref_100m", "lvds_gate", "pcie_axi";
+ 			status = "disabled";
+-- 
+1.9.0
 
