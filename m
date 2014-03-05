@@ -1,40 +1,55 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v5 1/8] mtd: spi-nor: copy the SPI NOR commands to a new header file
-Date: Wed, 5 Mar 2014 04:43:19 +0100
-Message-ID: <201403050443.19529.marex@denx.de>
-References: <1393238262-8622-1-git-send-email-b32955@freescale.com> <201403042313.14353.marex@denx.de> <5316932C.5040405@freescale.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] ASoC: tlv320aic32x4: Sort Makefile in alphabetic
+ order
+Date: Wed, 5 Mar 2014 11:28:08 +0800
+Message-ID: <20140305032808.GW13126@sirena.org.uk>
+References: <cover.1393941102.git.jsarha@ti.com>
+ <80b0f9ecd29b8bfb52fed22a0ca059591f89683d.1393941102.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5316932C.5040405-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, angus.clark-qxv4g6HH51o@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, b44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org, broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pekon-l0cyMroinI0@public.gmane.org, sourav.poddar-l0cyMroinI0@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="nqu5fpgjE+BQlEdo"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <80b0f9ecd29b8bfb52fed22a0ca059591f89683d.1393941102.git.jsarha-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, detheridge-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, March 05, 2014 at 03:59:56 AM, Huang Shijie wrote:
-> =E4=BA=8E 2014=E5=B9=B403=E6=9C=8805=E6=97=A5 06:13, Marek Vasut =E5=86=
-=99=E9=81=93:
-> > Please keep me on CC;-)
->=20
-> sorry, My fault :(
->=20
-> > I honestly have to wonder ... why do you not 'move' these definitio=
-ns
-> > instead of copying them ?
->=20
-> In the first version , i did so:
-> http://marc.info/?l=3Dlinux-arm-kernel&m=3D138544933522564&w=3D2
->=20
-> if I need to resend the patch set again, i can change to move the
-> commands to the new header.
 
-Why didn't you keep it like that? Was there some reason for that ?
+--nqu5fpgjE+BQlEdo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Best regards,
-Marek Vasut
+On Tue, Mar 04, 2014 at 03:54:52PM +0200, Jyri Sarha wrote:
+> The tlv320aic32x4 related files were wrongly placed after tlv320aic3x files.
+
+This doesn't apply against current code, please check and resend.
+
+--nqu5fpgjE+BQlEdo
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTFpnEAAoJELSic+t+oim9NFcP/1qsGndO15v8IETAbHKO3FW2
+3kxmuVB3b7lorRjUjil64HrLVOQWwpO/t2ycCrnet7eElf/rOlnaaNp0klLyqnEq
+VObU2DJYugBLf0GK7SFS6+xtC27n1lJ+ub2eh8GfVBneJ9QevU7E6KHjZfWWupf9
+KArdUfCoCoc66d+csamaZ5fo0S5jFrN6Ugc+ANu0P12ZJwAGK+zJvACYccT/4t6D
+byzcYRTxirpbf2RxOe3vq5D7tw5QddVKMGZOdy0gjji5+qY5VHxA1ZYPVZzs+0M2
+R3l7sydZl8mcfny1s53vVryNRSz0SbgsjDqXuO8S1rH0gfCKvnuqB3T8oEzWn9nD
+/D71tfLsv+xIbgq8K7txIhCPyAxH01HCnprrZDr6NXIcq3fpEmyczAn8VJ2I6V8s
+vs8GfS5NB/5IpceskkDgolpR9hdRBuFckveVArNu6/4tmlNTyGpV3H4DFPDCW8rC
+lw1t4S26rqApnMH1LYmsPXtn/HWmcxZOI530DZloSnVagechaN2U+GKrPn4C2fkK
+6AepMudbpQ8m9p+5sk3n8NeUa07grRZ/1S5KS5dcWA5G/Igr4rWkSARzpX0vTHrB
+R4xjAjHXdyMe6TBZ2F5Mes/tUa1mB2TMpaPj7cuOzZTXoyrH5F0iQ9oGZ9zcR5r9
+rbkNP+TzOy4M6DIgxLmD
+=RfI0
+-----END PGP SIGNATURE-----
+
+--nqu5fpgjE+BQlEdo--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
