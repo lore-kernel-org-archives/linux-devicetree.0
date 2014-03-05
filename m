@@ -1,100 +1,56 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v2] ARM: dts: imx6qdl-sabresd.dtsi: Add red led
-Date: Wed, 5 Mar 2014 19:42:28 +0800
-Message-ID: <20140305114223.GN8784@S2101-09.ap.freescale.net>
-References: <20140305062216.GI8784@S2101-09.ap.freescale.net>
- <1394007383-21874-1-git-send-email-vincent.stehle@freescale.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v2 01/11] base: power: Add generic OF-based power domain
+ look-up
+Date: Wed, 05 Mar 2014 12:47:14 +0100
+Message-ID: <53170EC2.6090908@gmail.com>
+References: <1393862536-9842-1-git-send-email-tomasz.figa@gmail.com>	<1393862536-9842-2-git-send-email-tomasz.figa@gmail.com> <CAPDyKFqK1JqxeJ_L_bzduixRLGA5m_FFPq_of2r6y0aCpS7z9A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1394007383-21874-1-git-send-email-vincent.stehle@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vincent =?iso-8859-1?Q?Stehl=E9?= <vincent.stehle@freescale.com>
-Cc: Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFqK1JqxeJ_L_bzduixRLGA5m_FFPq_of2r6y0aCpS7z9A@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene.kim@samsung.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Loren
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 05, 2014 at 09:16:23AM +0100, Vincent Stehl=E9 wrote:
-> Make the red gpio led available to the user.
->=20
-> This can be toggled with the sysfs for example, or used as a heartbea=
-t or mmc
-> activity light by changing the trigger.
->=20
-> Signed-off-by: Vincent Stehl=E9 <vincent.stehle@freescale.com>
-> Cc: Shawn Guo <shawn.guo@linaro.org>
-> Cc: Sascha Hauer <kernel@pengutronix.de>
->=20
-> ---
->=20
-> Hi Shawn,
->=20
-> Thanks for your feedback.
->=20
-> If you don't want to make the led a heartbeat by default, here is v2 =
-of the
-> patch, which only makes the led available to the user. One is then fr=
-ee to use
-> it as a heartbeat, or something else. Do you prefer it this way?
->=20
-> Best regards,
->=20
-> V.
->=20
->=20
-> Changes since v1:
-> - Do not make it a heartbeat by default.
->=20
->  arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/d=
-ts/imx6qdl-sabresd.dtsi
-> index e75e11b..210a8df 100644
-> --- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-> @@ -88,6 +88,16 @@
->  		default-brightness-level =3D <7>;
->  		status =3D "okay";
->  	};
-> +
-> +	leds {
-> +		compatible =3D "gpio-leds";
-> +
-> +		red {
-> +		        gpios =3D <&gpio1 2 0>;
-> +		        linux,default-trigger =3D "none";
+Hi Ulf,
 
-Per Documentation/devicetree/bindings/leds/common.txt, 'none' is not a
-valid value of property 'linux,default-trigger'.  I suggest you simply
-drop the property.
+On 05.03.2014 08:19, Ulf Hansson wrote:
+>> @@ -2177,3 +2181,297 @@ void pm_genpd_init(struct generic_pm_domain *genpd,
+>>          list_add(&genpd->gpd_list_node, &gpd_list);
+>>          mutex_unlock(&gpd_list_lock);
+>>   }
+>> +
+>> +#ifdef CONFIG_PM_GENERIC_DOMAINS_OF
+>
+> Do we need a new config for this? Can't we just use CONFIG_OF?
+>
 
-> +		        default-state =3D "on";
-> +		};
-> +	};
->  };
-> =20
->  &audmux {
-> @@ -182,6 +192,7 @@
->  				MX6QDL_PAD_ENET_TXD1__GPIO1_IO29 0x80000000
->  				MX6QDL_PAD_EIM_D22__GPIO3_IO22  0x80000000
->  				MX6QDL_PAD_ENET_CRS_DV__GPIO1_IO25 0x80000000
-> +				MX6QDL_PAD_GPIO_2__GPIO1_IO02 0x80000000
+I guess we could, but initially it would have to be CONFIG_OF && 
+!CONFIG_ARCH_EXYNOS until patch 03/11 converts Exynos to use the common 
+code.
 
-It's not a hog pin, so shouldn't be added here.  (Right, most of the
-existing pins shouldn't be here from the beginning)
+>> +       if (ret < 0) {
+>> +               dev_err(dev, "failed to add to power domain %s: %d",
+>> +                       pd->name, ret);
+>> +               return ret;
+>> +       }
+>> +
+>> +       pm_genpd_dev_need_restore(dev, true);
+>
+> So this will reflect the device as being inactive, which I think is
+> the wrong approach.
+>
+> Usually we should expect drivers that's being probed successfully to
+> leave their devices in active state, right?
 
-The patch from Liu Ying [1] could be a good example on this regard.
+It depends on domain power state, but actually it seems to be already 
+handled in __pm_genpd_add_device(), so this line might be not needed indeed.
 
-Shawn
+Strangely enough, it seemed to be needed on Exynos for correct 
+operation, but maybe in the meantime some fixes in genpd code showed up. 
+This will need some extra testing.
 
-[1] http://www.spinics.net/lists/arm-kernel/msg308999.html
-
->  			>;
->  		};
->  	};
-> --=20
-> 1.9.0
->=20
->=20
+Best regards,
+Tomasz
