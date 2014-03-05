@@ -1,132 +1,70 @@
-From: Marek Belisko <marek@goldelico.com>
-Subject: [PATCH v2] power: twl4030_madc_battery: Add device tree support.
-Date: Wed,  5 Mar 2014 21:52:18 +0100
-Message-ID: <1394052739-8589-3-git-send-email-marek@goldelico.com>
-References: <1394052739-8589-1-git-send-email-marek@goldelico.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1394052739-8589-1-git-send-email-marek@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, dbaryshkov@gmail.com, dwmw2@infradead.org, grant.likely@linaro.org
-Cc: hns@goldelico.com, sre@debian.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Belisko <marek@goldelico.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 6/6] documentation: bindings: document PMIC8921/8058 RTC
+Date: Wed, 05 Mar 2014 12:58:55 -0800
+Message-ID: <5317900F.5030803@codeaurora.org>
+References: <1394047776-13827-1-git-send-email-joshc@codeaurora.org> <1394047776-13827-7-git-send-email-joshc@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1394047776-13827-7-git-send-email-joshc@codeaurora.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Josh Cartwright <joshc@codeaurora.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Marek Belisko <marek@goldelico.com>
----
- drivers/power/twl4030_madc_battery.c | 81 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
+On 03/05/14 11:29, Josh Cartwright wrote:
+> diff --git a/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt b/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt
+> new file mode 100644
+> index 0000000..699bd30
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt
+> @@ -0,0 +1,29 @@
+> +* Real-Time Clock for Qualcomm 8058/8921 PMICs
+> +
+> +Required properties:
+> +- compatible: should be one of the following.
+> +    * "qcom,pm8058-rtc"
+> +    * "qcom,pm8921-rtc"
+> +- reg: base address of the register region
+> +- reg-names: corresponding reg names for the regions listed in the 'reg'
+> +             property, must contain:
+> +     "rtc_base" - base of the RTC register region
 
-diff --git a/drivers/power/twl4030_madc_battery.c b/drivers/power/twl4030_madc_battery.c
-index 0a64105..b446dd8 100644
---- a/drivers/power/twl4030_madc_battery.c
-+++ b/drivers/power/twl4030_madc_battery.c
-@@ -20,6 +20,7 @@
- #include <linux/i2c/twl4030-madc.h>
- #include <linux/power/twl4030_madc_battery.h>
- #include <linux/iio/consumer.h>
-+#include <linux/of.h>
- 
- struct twl4030_madc_battery {
- 	struct power_supply psy;
-@@ -184,6 +185,82 @@ static int twl4030_cmp(const void *a, const void *b)
- 		((struct twl4030_madc_bat_calibration *)a)->voltage;
- }
- 
-+#ifdef CONFIG_OF
-+static struct twl4030_madc_bat_platform_data *
-+	twl4030_madc_dt_probe(struct platform_device *pdev)
-+{
-+	struct twl4030_madc_bat_platform_data *pdata;
-+	struct device_node *np = pdev->dev.of_node;
-+	int ret;
-+	int i, proplen;
-+
-+	pdata = devm_kzalloc(&pdev->dev,
-+			sizeof(struct twl4030_madc_bat_platform_data),
-+			GFP_KERNEL);
-+	if (!pdata)
-+		return ERR_PTR(-ENOMEM);
-+
-+	ret = of_property_read_u32(np, "capacity", &pdata->capacity);
-+	if (ret != 0)
-+		return ERR_PTR(-EINVAL);
-+
-+	/* parse and prepare charging data */
-+	proplen = of_property_count_u32_elems(np, "charging-calibration-data");
-+	if (proplen < 0) {
-+		dev_warn(&pdev->dev, "No 'charging-calibration-data' property found\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	pdata->charging = devm_kzalloc(&pdev->dev,
-+		sizeof(struct twl4030_madc_bat_calibration) * (proplen / 2),
-+		GFP_KERNEL);
-+
-+	for (i = 0; i < proplen / 2; i++) {
-+		of_property_read_u32_index(np, "charging-calibration-data",
-+					   i * 2,
-+					   (u32 *)&pdata->charging[i].voltage);
-+		of_property_read_u32_index(np, "charging-calibration-data",
-+					  i * 2 + 1,
-+					  (u32 *)&pdata->charging[i].level);
-+	}
-+
-+	/* parse and prepare discharging data */
-+	proplen = of_property_count_u32_elems(np,
-+			"discharging-calibration-data");
-+	if (proplen < 0) {
-+		dev_warn(&pdev->dev, "No 'discharging-calibration-data' property found\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	pdata->discharging = devm_kzalloc(&pdev->dev,
-+		sizeof(struct twl4030_madc_bat_calibration) * (proplen / 2),
-+		GFP_KERNEL);
-+
-+	for (i = 0; i < proplen / 2; i++) {
-+		of_property_read_u32_index(np, "discharging-calibration-data",
-+					   i * 2,
-+					   (u32 *)&pdata->discharging[i].voltage);
-+		of_property_read_u32_index(np, "discharging-calibration-data",
-+					   i * 2 + 1,
-+					   (u32 *)&pdata->discharging[i].level);
-+	}
-+
-+	return pdata;
-+}
-+
-+static const struct of_device_id of_twl4030_madc_match[] = {
-+	{ .compatible = "ti,twl4030-madc-battery", },
-+	{},
-+};
-+
-+#else
-+static struct twl4030_madc_bat_platform_data *
-+	twl4030_madc_dt_probe(struct platform_device *pdev)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+#endif
-+
- static int twl4030_madc_battery_probe(struct platform_device *pdev)
- {
- 	struct twl4030_madc_battery *twl4030_madc_bat;
-@@ -195,6 +272,9 @@ static int twl4030_madc_battery_probe(struct platform_device *pdev)
- 	if (!twl4030_madc_bat)
- 		return -ENOMEM;
- 
-+	if (!pdata)
-+		pdata = twl4030_madc_dt_probe(pdev);
-+
- 	twl4030_madc_bat->psy.name = "twl4030_battery";
- 	twl4030_madc_bat->psy.type = POWER_SUPPLY_TYPE_BATTERY;
- 	twl4030_madc_bat->psy.properties = twl4030_madc_bat_props;
-@@ -264,6 +344,7 @@ static int twl4030_madc_battery_remove(struct platform_device *pdev)
- static struct platform_driver twl4030_madc_battery_driver = {
- 	.driver = {
- 		.name = "twl4030_madc_battery",
-+		.of_match_table = of_match_ptr(of_twl4030_madc_match),
- 	},
- 	.probe  = twl4030_madc_battery_probe,
- 	.remove = twl4030_madc_battery_remove,
+optional reg-names?
+
+> +- interrupts: interrupt list for the RTC, must contain a single interrupt
+> +              specifier for the alarm interrupt
+> +- interrupt-names: corresponding interrupt names for the interrupts listed in
+> +                   the 'interrupts' property, must contain:
+> +     "alarm" - summary interrupt for PMIC peripherals
+
+optional interrupt-names?
+
+> +
+> +Option properties:
+> +- linux,allow-set-time: indicates that the setting of RTC time is allowed by
+> +                        the host CPU
+
+Is this a "linux" property? It seems like something that other OSes
+would want to know about and doesn't require any explicit knowledge
+about operating  system things (like keymaps for example).
+
+> +
+> +Example:
+> +
+> +	rtc {
+
+rtc@11d
+
+> +		compatible = "qcom,pm8921-rtc";
+> +		reg = <0x11D>;
+> +		reg-names = "rtc_base";
+> +		interrupts = <0x27 0>;
+> +		interrupt-names = "alarm";
+> +	};
+
 -- 
-1.8.3.2
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
+
