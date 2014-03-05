@@ -1,20 +1,51 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2 1/6] ARM: dts: tegra: add PCIe interrupt mapping properties
-Date: Wed, 05 Mar 2014 14:55:41 -0700
-Message-ID: <53179D5D.4070303@wwwdotorg.org>
-References: <1394025951-32438-1-git-send-email-l.stach@pengutronix.de> <1394025951-32438-2-git-send-email-l.stach@pengutronix.de>
+From: Josh Cartwright <joshc@codeaurora.org>
+Subject: Re: [PATCH v10 1/3] mmc: sdhci-msm: Qualcomm SDHCI binding
+ documentation
+Date: Wed, 5 Mar 2014 16:10:47 -0600
+Message-ID: <20140305221047.GC18529@joshc.qualcomm.com>
+References: <1393961226-25618-1-git-send-email-gdjakov@mm-sol.com>
+ <1393961226-25618-2-git-send-email-gdjakov@mm-sol.com>
+ <CAL_JsqKJ5Jn4wb8xtqrc09kkP4dzUA6qDEkK396RW+4qFNVf+Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1394025951-32438-2-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKJ5Jn4wb8xtqrc09kkP4dzUA6qDEkK396RW+4qFNVf+Q@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Georgi Djakov <gdjakov@mm-sol.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Chris Ball <cjb@laptop.org>, Ulf Hansson <ulf.hansson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/05/2014 06:25 AM, Lucas Stach wrote:
-> Those are defined by the common PCI binding.
+Hey Rob-
 
-It sounds like there's no dependency between pathces 1/6 and 2/6, so I
-should apply 1/6 to the Tegra tree, and Bjorn apply 2/6 to the PCI tree?
+On Wed, Mar 05, 2014 at 12:56:22AM -0600, Rob Herring wrote:
+> On Tue, Mar 4, 2014 at 1:27 PM, Georgi Djakov <gdjakov@mm-sol.com> wrote:
+> > +- reg-names: Should contain the following:
+> > +       "hc_mem"   - Host controller register map
+> > +       "core_mem" - SD Core register map
+>
+> reg-names should not be required and the order specified by the binding.
+>
+> > +- interrupts: Should contain an interrupt-specifiers for the interrupts listed in interrupt-names.
+> > +- interrupt-names: Should contain the following:
+> > +       "hc_irq"     - Host controller interrupt
+> > +       "pwr_irq"    - PMIC interrupt
+>
+> Same for interrupt-names.
+
+Could you elaborate on this a bit?  I can understand not modifying an
+existing binding to make {reg,interrupt}-names required, but for
+completely new bindings, why is this a problem?
+
+Not allowing a binding to require these properties renders
+platform_get_{resource,irq}_byname() useless for drivers which
+exclusively use DT for enumeration.  It also makes it impossible to make
+a reg entry optional (although, there probably isn't a good usecase for
+this).
+
+Thanks,
+  Josh
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
