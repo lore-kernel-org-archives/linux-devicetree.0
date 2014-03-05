@@ -1,56 +1,60 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v6 0/8] Move device tree graph parsing helpers to drivers/of
-Date: Wed,  5 Mar 2014 10:20:34 +0100
-Message-ID: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v5 02/11] staging: imx-drm-core: use of_graph_parse_endpoint
+Date: Wed,  5 Mar 2014 10:20:53 +0100
+Message-ID: <1394011262-16849-3-git-send-email-p.zabel@pengutronix.de>
+References: <1394011262-16849-1-git-send-email-p.zabel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1394011262-16849-1-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Using of_graph_parse_endpoint recovers the port id from an endpoint device
+tree node. This just replaces an open coded read of the "reg" property.
 
-this version of the OF graph helper move series further addresses a few of
-Tomi's and Sylwester's comments.
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+ drivers/staging/imx-drm/imx-drm-core.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Changes since v5:
- - Fixed spelling errors and a wrong device node name in the link section
- - Added parentless previous endpoint's full name to warning
- - Fixed documentation comment for of_graph_parse_endpoint
- - Unrolled for-loop in of_graph_get_remote_port_parent
-
-Philipp Zabel (8):
-  [media] of: move graph helpers from drivers/media/v4l2-core to
-    drivers/of
-  Documentation: of: Document graph bindings
-  of: Warn if of_graph_get_next_endpoint is called with the root node
-  of: Reduce indentation in of_graph_get_next_endpoint
-  [media] of: move common endpoint parsing to drivers/of
-  of: Implement simplified graph binding for single port devices
-  of: Document simplified graph binding for single port devices
-  of: Warn if of_graph_parse_endpoint is called with the root node
-
- Documentation/devicetree/bindings/graph.txt   | 137 +++++++++++++++++++++
- drivers/media/i2c/adv7343.c                   |   4 +-
- drivers/media/i2c/mt9p031.c                   |   4 +-
- drivers/media/i2c/s5k5baf.c                   |   3 +-
- drivers/media/i2c/tvp514x.c                   |   3 +-
- drivers/media/i2c/tvp7002.c                   |   3 +-
- drivers/media/platform/exynos4-is/fimc-is.c   |   6 +-
- drivers/media/platform/exynos4-is/media-dev.c |  13 +-
- drivers/media/platform/exynos4-is/mipi-csis.c |   5 +-
- drivers/media/v4l2-core/v4l2-of.c             | 133 +-------------------
- drivers/of/base.c                             | 167 ++++++++++++++++++++++++++
- include/linux/of_graph.h                      |  66 ++++++++++
- include/media/v4l2-of.h                       |  33 +----
- 13 files changed, 399 insertions(+), 178 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/graph.txt
- create mode 100644 include/linux/of_graph.h
-
+diff --git a/drivers/staging/imx-drm/imx-drm-core.c b/drivers/staging/imx-drm/imx-drm-core.c
+index ecfc88b..4144a75 100644
+--- a/drivers/staging/imx-drm/imx-drm-core.c
++++ b/drivers/staging/imx-drm/imx-drm-core.c
+@@ -501,8 +501,9 @@ int imx_drm_encoder_get_mux_id(struct device_node *node,
+ {
+ 	struct imx_drm_crtc *imx_crtc = imx_drm_find_crtc(encoder->crtc);
+ 	struct device_node *ep = NULL;
++	struct of_endpoint endpoint;
+ 	struct device_node *port;
+-	int id, ret;
++	int ret;
+ 
+ 	if (!node || !imx_crtc)
+ 		return -EINVAL;
+@@ -515,9 +516,8 @@ int imx_drm_encoder_get_mux_id(struct device_node *node,
+ 		port = of_graph_get_remote_port(ep);
+ 		of_node_put(port);
+ 		if (port == imx_crtc->port) {
+-			ret = of_property_read_u32(ep->parent, "reg", &id);
+-			of_node_put(ep);
+-			return ret ? ret : id;
++			ret = of_graph_parse_endpoint(ep, &endpoint);
++			return ret ? ret : endpoint.id;
+ 		}
+ 	} while (ep);
+ 
 -- 
 1.9.0.rc3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
