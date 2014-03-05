@@ -1,76 +1,78 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH v5 7/7] pci: Add support for creating a generic host_bridge
- from device tree
-Date: Wed, 05 Mar 2014 10:20:28 +0900
-Message-ID: <001f01cf3811$18463ed0$48d2bc70$%han@samsung.com>
-References: <1393948204-11555-1-git-send-email-Liviu.Dudau@arm.com>
- <1393948204-11555-8-git-send-email-Liviu.Dudau@arm.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv9][ 2/2] ARM: dts: mbimxsd35: Add sound support.
+Date: Wed, 5 Mar 2014 09:23:22 +0800
+Message-ID: <20140305012319.GA8784@S2101-09.ap.freescale.net>
+References: <1389806606-21521-1-git-send-email-denis@eukrea.com>
+ <1389806606-21521-2-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-reply-to: <1393948204-11555-8-git-send-email-Liviu.Dudau@arm.com>
-Content-language: ko
-Sender: linux-pci-owner@vger.kernel.org
-To: 'Liviu Dudau' <Liviu.Dudau@arm.com>
-Cc: 'linux-pci' <linux-pci@vger.kernel.org>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Catalin Marinas' <Catalin.Marinas@arm.com>, 'Will Deacon' <Will.Deacon@arm.com>, 'linaro-kernel' <linaro-kernel@lists.linaro.org>, 'Benjamin Herrenschmidt' <benh@kernel.crashing.org>, 'LKML' <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, 'LAKML' <linux-arm-kernel@lists.infradead.org>, 'Tanmay Inamdar' <tinamdar@apm.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Jingoo Han' <jg1.han@samsung.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1389806606-21521-2-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Cc: Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, March 05, 2014 12:50 AM, Liviu Dudau wrote:
-> 
-> Several platforms use a rather generic version of parsing
-> the device tree to find the host bridge ranges. Move the common code
-> into the generic PCI code and use it to create a pci_host_bridge
-> structure that can be used by arch code.
-> 
-> Based on early attempts by Andrew Murray to unify the code.
-> Used powerpc and microblaze PCI code as starting point.
-> 
-> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> 
-> diff --git a/drivers/pci/host-bridge.c b/drivers/pci/host-bridge.c
-> index 8708b652..800678a 100644
-> --- a/drivers/pci/host-bridge.c
-> +++ b/drivers/pci/host-bridge.c
+On Wed, Jan 15, 2014 at 06:23:26PM +0100, Denis Carikli wrote:
+> Cc: Eric B=E9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 
-[.....]
+Applied, thanks.
 
-> +		res = kzalloc(sizeof(struct resource), GFP_KERNEL);
+Shawn
 
-It makes build error with exynos_defconfig. (ARM32)
-Thus, 'slab.h' is necessary in order to fix the build error.
-
-./drivers/pci/host-bridge.c
-@@ -8,6 +8,7 @@
- #include <linux/module.h>
- #include <linux/of_address.h>
- #include <linux/of_pci.h>
-+#include <linux/slab.h>
-
- #include "pci.h"
-
-
-> +		if (!res) {
-> +			err = -ENOMEM;
-> +			goto bridge_ranges_nomem;
-> +		}
+> ---
+> ChangeLog v8->v9:
+> - Better Cc list.
+>=20
+> ChangeLog v7->v8:
+> - Ajusted to match the driver changes.
+> ---
+>  .../boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts  |    9 +++++++++
+>  1 file changed, 9 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts b=
+/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
+> index 23f6fe1..3e207df 100644
+> --- a/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
+> +++ b/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
+> @@ -46,6 +46,14 @@
+>  			linux,default-trigger =3D "heartbeat";
+>  		};
+>  	};
 > +
-> +		of_pci_range_to_resource(&range, dev, res);
-> +
-> +		if (resource_type(res) == IORESOURCE_IO)
-> +			*io_base = range.cpu_addr;
-> +
-> +		pci_add_resource_offset(resources, res,
-> +				res->start - range.pci_addr);
-> +	}
-> +
-> +	/* Apply architecture specific fixups for the ranges */
-> +	pcibios_fixup_bridge_ranges(resources);
+> +	sound {
+> +		compatible =3D "eukrea,asoc-tlv320";
+> +		eukrea,model =3D "imx35-eukrea-tlv320aic23";
+> +		ssi-controller =3D <&ssi1>;
+> +		fsl,mux-int-port =3D <1>;
+> +		fsl,mux-ext-port =3D <4>;
+> +	};
+>  };
+> =20
+>  &audmux {
+> @@ -118,6 +126,7 @@
+>  };
+> =20
+>  &ssi1 {
+> +	codec-handle =3D <&tlv320aic23>;
+>  	fsl,mode =3D "i2s-slave";
+>  	status =3D "okay";
+>  };
+> --=20
+> 1.7.9.5
+>=20
 
-It also makes compile problem with exynos_defconfig as below:
-
-drivers/built-in.o: In function `pci_host_bridge_of_get_ranges':
-drivers/pci/host-bridge.c:157: undefined reference to `pcibios_fixup_bridge_ranges'
-
-Best regards,
-Jingoo Han
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
