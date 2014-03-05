@@ -1,171 +1,96 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/4] phy: miphy365x: Add Device Tree bindings for the
- MiPHY365x
-Date: Wed, 5 Mar 2014 16:40:39 +0800
-Message-ID: <20140305084039.GB14902@lee--X1>
-References: <1392377036-12816-1-git-send-email-lee.jones@linaro.org>
- <20140305073422.GD20016@e106331-lin.cambridge.arm.com>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 3/9] Doc/DT: Add DT binding documentation for DVI Connector
+Date: Wed, 5 Mar 2014 10:41:03 +0200
+Message-ID: <5316E31F.9050308@ti.com>
+References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com> <1393590016-9361-4-git-send-email-tomi.valkeinen@ti.com> <20140228155937.GQ21483@n2100.arm.linux.org.uk> <5310B567.7040605@ti.com> <20140228162327.GT21483@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140305073422.GD20016@e106331-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alexandre.torgue@st.com" <alexandre.torgue@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@st.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="brrLPLh10qtl3A3tiWQ06r71cgUf2Mb4l"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140228162327.GT21483-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 05 Mar 2014, Mark Rutland wrote:
+--brrLPLh10qtl3A3tiWQ06r71cgUf2Mb4l
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-> On Fri, Feb 14, 2014 at 11:23:53AM +0000, Lee Jones wrote:
-> > The MiPHY365x is a Generic PHY which can serve various SATA or PCIe
-> > devices. It has 2 ports which it can use for either; both SATA, bot=
-h
-> > PCIe or one of each in any configuration.
-> >=20
-> > Cc: devicetree@vger.kernel.org
-> > Cc: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  .../devicetree/bindings/phy/phy-miphy365x.txt      | 54 ++++++++++=
-++++++++++++
-> >  1 file changed, 54 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/phy-miphy=
-365x.txt
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/phy/phy-miphy365x.tx=
-t b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
-> > new file mode 100644
-> > index 0000000..96f269f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
-> > @@ -0,0 +1,54 @@
-> > +STMicroelectronics STi MIPHY365x PHY binding
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +This binding describes a miphy device that is used to control PHY =
-hardware
-> > +for SATA and PCIe.
-> > +
-> > +Required properties:
-> > +- compatible: Should be "st,miphy365x-phy"
-> > +- #phy-cells: Should be 2 (See second example)
-> > +		First cell is the port number; MIPHY_PORT_{0,1}
-> > +		Second cell is device type; MIPHY_TYPE_{SATA,PCI}
+On 28/02/14 18:23, Russell King - ARM Linux wrote:
+
+> That's rather a lot of compatible strings.  Another possibility is:
 >=20
-> Either this should refer to the header file, or specific values shoul=
-d
-> be given in the binding document.
+> 	compatible =3D "dvi-connector";
+> 	analog;
+> 	digital;
+> 	single-link;
+> 	dual-link;
 
-When you say specific values you mean break out the {,}s?
+I made the following changes compared to the posted version. I decided
+to leave the "single-link" out, as it's implied if "digital" is set.
 
-I thought most people would know what they mean.
+ Tomi
 
-> > +- reg:	      Address and length of the register set for the device
-> > +- reg-names:  The names of the register addresses corresponding to=
- the
-> > +	      registers filled in "reg"
-> > +		Options are; sata{0,1} and pcie{0,1} (See first example)
->=20
-> How about something like:
+@@ -6,11 +6,16 @@ Required properties:
 
-Same here.
+ Optional properties:
+ - label: a symbolic name for the connector
+-- i2c-bus: phandle to the i2c bus that is connected to DVI DDC
++- ddc-i2c-bus: phandle to the i2c bus that is connected to DVI DDC
++- analog: the connector has DVI analog pins
++- digital: the connector has DVI digital pins
++- dual-link: the connector has pins for DVI dual-link
 
-> - reg: a list of offset + length pairs, one for each entry in reg-nam=
-es
-> - reg-names: should contain some of:
->   * "sata0" for ...
->   * "sata1" for ...
->   * "pcie0" for ...
->   * "pcie1" for ...
->=20
-> Where ... might just be "the sata port 0 registers"
+ Required nodes:
+ - Video port for DVI input
 
-Seems awfully redundant.
++Note: One (or both) of 'analog' or 'digital' must be set.
++
+ Example
+ -------
 
-> > +- st,syscfg : Should be a phandle of the system configuration regi=
-ster group
-> > +	      which contain the SATA, PCIe mode setting bits
->=20
-> I'll assume this is well-defined by some other binding.
+@@ -18,7 +23,9 @@ dvi0: connector@0 {
+        compatible =3D "dvi-connector";
+        label =3D "dvi";
 
-Right.
+-       i2c-bus =3D <&i2c3>;
++       digital;
++
++       ddc-i2c-bus =3D <&i2c3>;
 
-> > +
-> > +Optional properties:
-> > +- st,sata-gen	     : Generation of locally attached SATA IP. Expec=
-ted values
-> > +		       are {1,2,3). If not supplied generation 1 hardware will
-> > +		       be expected
-> > +- st,pcie-tx-pol-inv : Bool property to invert the polarity PCIe T=
-x (Txn/Txp)
-> > +- st,sata-tx-pol-inv : Bool property to invert the polarity SATA T=
-x (Txn/Txp)
->=20
-> It might just be me, but the phrase "invert the polarity {SATA,PCIe} =
-Tx"
-> sounds odd. What exactly is being inverted?
+        dvi_connector_in: endpoint {
+                remote-endpoint =3D <&tfp410_out>;
 
-=46rom the doc (and the only reference of this functionallity):
 
-rx_polarity:
-  1: switch rxp/rxn
-tx_polarity:
-  1: switch txp/txn
 
-If we don't set these registers up to reflect the h/w configuration of
-the board, the MiPHY will not work.
+--brrLPLh10qtl3A3tiWQ06r71cgUf2Mb4l
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-> > +
-> > +Example:
-> > +
-> > +	miphy365x_phy: miphy365x@0 {
-> > +		compatible =3D "st,miphy365x-phy";
-> > +		#phy-cells =3D <2>;
-> > +		reg =3D	<0xfe382000 0x100>,
-> > +			<0xfe38a000 0x100>,
-> > +			<0xfe394000 0x100>,
-> > +			<0xfe804000 0x100>;
-> > +		reg-names =3D "sata0", "sata1", "pcie0", "pcie1";
-> > +		st,syscfg=3D <&syscfg_rear>;
->=20
-> Nit: missing space before '=3D'.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-Will fix.
+iQIcBAEBAgAGBQJTFuMfAAoJEPo9qoy8lh71D44P/i+MeIpF1+fEf97oJ5PMW3l5
+bLfNhD29hSpXwDBb3XjpT4750sLjA3BnJ/3fFIv9gxLO4xehpGj3sZcSH14RzmSh
+4/JOCnOhATiJ4CnyimYWfPZhJxyAW5+Y/WoH2aGW/vjZpTEc85mImdjq96sdC2KS
+Xxsq99cKeSgUOoD9nvO4iojeYnqlLj+Y0vNim4S459KneNL389eKaopAWwB/eEMh
+XipkG1YM1xdeh1NaW0ghe5KbyIvt7MsRahBcfumeX9gqRt2v3u6h2RqFUASxDRa4
+GoLx1aEC+JplX5s4XzDQbV3YMNYnEEdP1Sxm/6jOfmjtfJNpH+6sM8U6eBJMdLXf
+kI82WOZBIrYVAa18YQ8SbhBwrXnTp2V3fKXDG+jXPNdrob++VenSSJPVXDwPQyZc
+rP0qJx6+/FIJLjnlE+gt3LJ5QZSQHZ5P0ox0mOE8Q/KXi298fBhD1HLw+RNB/AOj
+sBjm8l94ICA1vmKhI+CIAf8rpNYvQiWYgN/uhyZ7qaCQqPJRhpcBbSj3pYbkCegA
+oOe0x/8DEP9MDYfwurM58Mzg4HFX/soeC+EI1a75oIQS1NQhAwx7TUSBA1pDJG+Z
+Iz6H14cNxBoUHfkhqoIpME7FO6XHwp8VbHZx6XKccyXh76OWuMBFaIJotUdddk3o
+JRML7GOxOXoOEH6y13BO
+=SSCl
+-----END PGP SIGNATURE-----
 
-> > +	};
-> > +
-> > +Specifying phy control of devices
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +Device nodes should specify the configuration required in their "p=
-hys"
-> > +property, containing a phandle to the miphy device node, a port nu=
-mber
-> > +and a device type.
-> > +
-> > +Example:
-> > +
-> > +#include <dt-bindings/phy/phy-miphy365x.h>
-> > +
-> > +	sata0: sata@fe380000 {
-> > +		...
-> > +		phys	  =3D <&miphy365x_phy MIPHY_PORT_0 MIPHY_TYPE_SATA>;
-> > +		...
-> > +	};
->=20
-> Is there not a generic phy binding we can point to? It seems a bit
-> redundant to do this in each phy binding.
-
-Sure, but that wouldn't make much of an example.
-
-  Documentation/devicetree/bindings/phy/phy-bindings.txt
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+--brrLPLh10qtl3A3tiWQ06r71cgUf2Mb4l--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
