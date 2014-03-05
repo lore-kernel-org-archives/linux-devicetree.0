@@ -1,56 +1,42 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v2 01/11] base: power: Add generic OF-based power domain
- look-up
-Date: Wed, 05 Mar 2014 12:47:14 +0100
-Message-ID: <53170EC2.6090908@gmail.com>
-References: <1393862536-9842-1-git-send-email-tomasz.figa@gmail.com>	<1393862536-9842-2-git-send-email-tomasz.figa@gmail.com> <CAPDyKFqK1JqxeJ_L_bzduixRLGA5m_FFPq_of2r6y0aCpS7z9A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFqK1JqxeJ_L_bzduixRLGA5m_FFPq_of2r6y0aCpS7z9A@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene.kim@samsung.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Loren
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: [PATCH v6 5/6] pci: Export find_pci_host_bridge() function.
+Date: Wed,  5 Mar 2014 11:48:56 +0000
+Message-ID: <1394020137-1830-6-git-send-email-Liviu.Dudau@arm.com>
+References: <1394020137-1830-1-git-send-email-Liviu.Dudau@arm.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1394020137-1830-1-git-send-email-Liviu.Dudau@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
+This is a useful function and we should make it visible outside the
+generic PCI code. Export it as a GPL symbol.
 
-On 05.03.2014 08:19, Ulf Hansson wrote:
->> @@ -2177,3 +2181,297 @@ void pm_genpd_init(struct generic_pm_domain *genpd,
->>          list_add(&genpd->gpd_list_node, &gpd_list);
->>          mutex_unlock(&gpd_list_lock);
->>   }
->> +
->> +#ifdef CONFIG_PM_GENERIC_DOMAINS_OF
->
-> Do we need a new config for this? Can't we just use CONFIG_OF?
->
+Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+Tested-by: Tanmay Inamdar <tinamdar@apm.com>
+---
+ drivers/pci/host-bridge.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-I guess we could, but initially it would have to be CONFIG_OF && 
-!CONFIG_ARCH_EXYNOS until patch 03/11 converts Exynos to use the common 
-code.
-
->> +       if (ret < 0) {
->> +               dev_err(dev, "failed to add to power domain %s: %d",
->> +                       pd->name, ret);
->> +               return ret;
->> +       }
->> +
->> +       pm_genpd_dev_need_restore(dev, true);
->
-> So this will reflect the device as being inactive, which I think is
-> the wrong approach.
->
-> Usually we should expect drivers that's being probed successfully to
-> leave their devices in active state, right?
-
-It depends on domain power state, but actually it seems to be already 
-handled in __pm_genpd_add_device(), so this line might be not needed indeed.
-
-Strangely enough, it seemed to be needed on Exynos for correct 
-operation, but maybe in the meantime some fixes in genpd code showed up. 
-This will need some extra testing.
-
-Best regards,
-Tomasz
+diff --git a/drivers/pci/host-bridge.c b/drivers/pci/host-bridge.c
+index 06ace62..8708b652 100644
+--- a/drivers/pci/host-bridge.c
++++ b/drivers/pci/host-bridge.c
+@@ -17,12 +17,13 @@ static struct pci_bus *find_pci_root_bus(struct pci_bus *bus)
+ 	return bus;
+ }
+ 
+-static struct pci_host_bridge *find_pci_host_bridge(struct pci_bus *bus)
++struct pci_host_bridge *find_pci_host_bridge(struct pci_bus *bus)
+ {
+ 	struct pci_bus *root_bus = find_pci_root_bus(bus);
+ 
+ 	return to_pci_host_bridge(root_bus->bridge);
+ }
++EXPORT_SYMBOL_GPL(find_pci_host_bridge);
+ 
+ void pci_set_host_bridge_release(struct pci_host_bridge *bridge,
+ 				 void (*release_fn)(struct pci_host_bridge *),
+-- 
+1.9.0
