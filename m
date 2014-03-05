@@ -1,134 +1,155 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v5 0/7] [RFC] Support for creating generic host_bridge
- from device tree
-Date: Wed, 5 Mar 2014 08:18:00 +0000
-Message-ID: <20140305081800.GD1692@e106497-lin.cambridge.arm.com>
+From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 3/7] pci: Create pci_host_bridge before its associated
+ bus in pci_create_root_bus.
+Date: Wed, 5 Mar 2014 08:19:29 +0000
+Message-ID: <20140305081929.GE1692@e106497-lin.cambridge.arm.com>
 References: <1393948204-11555-1-git-send-email-Liviu.Dudau@arm.com>
- <CACoXjcmmbVsmvy46NhjFoBg8mRO=APiY3dZZY=ra-Ceib9Sr4A@mail.gmail.com>
+ <1393948204-11555-4-git-send-email-Liviu.Dudau@arm.com>
+ <53169E86.1090609@huawei.com>
+ <002401cf382d$3062aa50$9127fef0$%han@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CACoXjcmmbVsmvy46NhjFoBg8mRO=APiY3dZZY=ra-Ceib9Sr4A@mail.gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <002401cf382d$3062aa50$9127fef0$%han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Tanmay Inamdar <tinamdar@apm.com>
-Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: 'Yijing Wang' <wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, 'linux-pci' <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, 'Bjorn Helgaas' <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, 'linaro-kernel' <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, 'Benjamin Herrenschmidt' <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, 'LKML' <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, 'LAKML' <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, 'Tanmay Inamdar' <tinamdar-qTEPVZfXA3Y@public.gmane.org>, 'Arnd Bergmann' <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 05, 2014 at 01:53:55AM +0000, Tanmay Inamdar wrote:
-> Hello,
+On Wed, Mar 05, 2014 at 04:41:35AM +0000, Jingoo Han wrote:
+> On Wednesday, March 05, 2014 12:48 PM, Yijing Wang wrote:
+> > On 2014/3/4 23:50, Liviu Dudau wrote:
+> > > Before commit 7b5436635800 the pci_host_bridge was created before=
+ the root bus.
+> > > As that commit has added a needless dependency on the bus for pci=
+_alloc_host_bridge()
+> > > the creation order has been changed for no good reason. Revert th=
+e order of
+> > > creation as we are going to depend on the pci_host_bridge structu=
+re to retrieve the
+> > > domain number of the root bus.
+> > >
+> > > Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+> > >
+> > > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > > index 6e34498..78ccba0 100644
+> > > --- a/drivers/pci/probe.c
+> > > +++ b/drivers/pci/probe.c
+> > > @@ -505,7 +505,7 @@ static void pci_release_host_bridge_dev(struc=
+t device *dev)
+> > >  	kfree(bridge);
+> > >  }
+> > >
+> > > -static struct pci_host_bridge *pci_alloc_host_bridge(struct pci_=
+bus *b)
+> > > +static struct pci_host_bridge *pci_alloc_host_bridge(void)
+> > >  {
+> > >  	struct pci_host_bridge *bridge;
+> > >
+> > > @@ -514,7 +514,6 @@ static struct pci_host_bridge *pci_alloc_host=
+_bridge(struct pci_bus *b)
+> > >  		return NULL;
+> > >
+> > >  	INIT_LIST_HEAD(&bridge->windows);
+> > > -	bridge->bus =3D b;
+> > >  	return bridge;
+> > >  }
+> > >
+> > > @@ -1727,9 +1726,21 @@ struct pci_bus *pci_create_root_bus(struct=
+ device *parent, int bus,
+> > >  	char bus_addr[64];
+> > >  	char *fmt;
+> > >
+> > > +	bridge =3D pci_alloc_host_bridge();
+> > > +	if (!bridge)
+> > > +		return NULL;
+> > > +
+> > > +	bridge->dev.parent =3D parent;
+> > > +	bridge->dev.release =3D pci_release_host_bridge_dev;
+> > > +	error =3D pcibios_root_bridge_prepare(bridge);
+> > > +	if (error) {
+> > > +		kfree(bridge);
+> > > +		return NULL;
+> >=20
+> > What about use goto err_out?
 >=20
-> Thanks for the patch set.
+> +1
 >=20
-> On Tue, Mar 4, 2014 at 7:49 AM, Liviu Dudau <Liviu.Dudau@arm.com> wro=
-te:
-> > This is v5 of my attempt to add support for a generic pci_host_brid=
-ge controller created
-> > from a description passed in the device tree.
-> >
-> > Changes from v4:
-> >   - Export pci_find_host_bridge() to be used by arch code. There is=
- scope for
-> >     making the arch/arm64 version of pci_domain_nr the default weak=
- implementation
-> >     but that would double the size of this series in order to handl=
-e all #define
-> >     versions of the pci_domain_nr() function, so I suggest keeping =
-that for a separate
-> >     cleanup series.
-> >
-> > Changes from v3:
-> >   - Dynamically allocate bus_range resource in of_create_pci_host_b=
-ridge()
-> >   - Fix the domain number used when creating child busses.
-> >   - Changed domain number allocator to use atomic operations.
-> >   - Use ERR_PTR() to propagate the error out of pci_create_root_bus=
-_in_domain()
-> >     and of_create_pci_host_bridge().
-> >
-> > Changes from v2:
-> >   - Use range->cpu_addr when calling pci_address_to_pio()
-> >   - Introduce pci_register_io_range() helper function in order to r=
-egister
-> >     io ranges ahead of their conversion to PIO values. This is need=
-ed as no
-> >     information is being stored yet regarding the range mapping, ma=
-king
-> >     pci_address_to_pio() fail. Default weak implementation does not=
-hing,
-> >     to cover the default weak implementation of pci_address_to_pio(=
-) that
-> >     expects direct mapping of physical addresses into PIO values (x=
-86 view).
-> >
-> > Changes from v1:
-> >   - Add patch to fix conversion of IO ranges into IO resources.
-> >   - Added a domain_nr member to pci_host_bridge structure, and a ne=
-w function
-> >     to create a root bus in a given domain number. In order to faci=
-litate that
-> >     I propose changing the order of initialisation between pci_host=
-_bridge and
-> >     it's related bus in pci_create_root_bus() as sort of a rever of=
- 7b5436635800.
-> >     This is done in patch 1/4 and 2/4.
-> >   - Added a simple allocator of domain numbers in drivers/pci/host-=
-bridge.c. The
-> >     code will first try to get a domain id from of_alias_get_id(...=
-, "pci-domain")
-> >     and if that fails assign the next unallocated domain id.
-> >   - Changed the name of the function that creates the generic host =
-bridge from
-> >     pci_host_bridge_of_init to of_create_pci_host_bridge and export=
-ed as GPL symbol.
-> >
-> >
-> > v4 thread here: https://lkml.org/lkml/2014/3/3/301
-> > v3 thread here: https://lkml.org/lkml/2014/2/28/216
-> > v2 thread here: https://lkml.org/lkml/2014/2/27/245
-> > v1 thread here: https://lkml.org/lkml/2014/2/3/380
-> >
-> > Best regards,
-> > Liviu
-> >
-> > Liviu Dudau (7):
-> >   pci: Introduce pci_register_io_range() helper function.
-> >   pci: OF: Fix the conversion of IO ranges into IO resources.
-> >   pci: Create pci_host_bridge before its associated bus in pci_crea=
-te_root_bus.
-> >   pci: Introduce a domain number for pci_host_bridge.
-> >   pci: Use parent domain number when allocating child busses.
-> >   pci: Export find_pci_host_bridge() function.
-> >   pci: Add support for creating a generic host_bridge from device t=
-ree
-> >
-> >  drivers/of/address.c       |  39 +++++++++++++
-> >  drivers/pci/host-bridge.c  | 142 +++++++++++++++++++++++++++++++++=
-+++++++++++-
-> >  drivers/pci/probe.c        |  72 +++++++++++++++--------
-> >  include/linux/of_address.h |  14 +----
-> >  include/linux/pci.h        |  17 ++++++
-> >  5 files changed, 248 insertions(+), 36 deletions(-)
-> >
-> > --
-> > 1.9.0
-> >
->=20
-> This series is working fine on X-Gene with multiple PCIe ports. You
-> can add my Tested-by if you want.
+> I agree with your opinion.
+> It makes the code simpler.
 
-Cheers! Any ETA on your updated patches?
+Hi Yijing and Jingoo,
 
-I might get the required signatures on the legal approval next week and
-then I will publish my host controller driver.
+Thanks for reviewing these patches, I will make the change for the next=
+ version.
 
 Best regards,
 Liviu
 
 >=20
-> Thanks,
-> Tanmay
+> Best regards,
+> Jingoo Han
+>=20
+> >=20
+> > > +	}
+> > > +
+> > >  	b =3D pci_alloc_bus();
+> > >  	if (!b)
+> > > -		return NULL;
+> > > +		goto err_out;
+> > >
+> > >  	b->sysdata =3D sysdata;
+> > >  	b->ops =3D ops;
+> > > @@ -1738,26 +1749,15 @@ struct pci_bus *pci_create_root_bus(struc=
+t device *parent, int bus,
+> > >  	if (b2) {
+> > >  		/* If we already got to this bus through a different bridge, i=
+gnore it */
+> > >  		dev_dbg(&b2->dev, "bus already known\n");
+> > > -		goto err_out;
+> > > +		goto err_bus_out;
+> > >  	}
+> > >
+> > > -	bridge =3D pci_alloc_host_bridge(b);
+> > > -	if (!bridge)
+> > > -		goto err_out;
+> > > -
+> > > -	bridge->dev.parent =3D parent;
+> > > -	bridge->dev.release =3D pci_release_host_bridge_dev;
+> > > +	bridge->bus =3D b;
+> > >  	dev_set_name(&bridge->dev, "pci%04x:%02x", pci_domain_nr(b), bu=
+s);
+> > > -	error =3D pcibios_root_bridge_prepare(bridge);
+> > > -	if (error) {
+> > > -		kfree(bridge);
+> > > -		goto err_out;
+> > > -	}
+> > > -
+> > >  	error =3D device_register(&bridge->dev);
+> > >  	if (error) {
+> > >  		put_device(&bridge->dev);
+> > > -		goto err_out;
+> > > +		goto err_bus_out;
+> > >  	}
+> > >  	b->bridge =3D get_device(&bridge->dev);
+> > >  	device_enable_async_suspend(b->bridge);
+> > > @@ -1814,8 +1814,10 @@ struct pci_bus *pci_create_root_bus(struct=
+ device *parent, int bus,
+> > >  class_dev_reg_err:
+> > >  	put_device(&bridge->dev);
+> > >  	device_unregister(&bridge->dev);
+> > > -err_out:
+> > > +err_bus_out:
+> > >  	kfree(b);
+> > > +err_out:
+> > > +	kfree(bridge);
+> > >  	return NULL;
+> > >  }
+> > >
+> > >
+>=20
 >=20
 
 --=20
@@ -140,3 +161,9 @@ Liviu
  \ source code!  /
   ---------------
     =C2=AF\_(=E3=83=84)_/=C2=AF
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
