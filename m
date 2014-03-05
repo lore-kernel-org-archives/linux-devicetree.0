@@ -1,55 +1,120 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] ASoC: tlv320aic32x4: Sort Makefile in alphabetic
- order
-Date: Wed, 5 Mar 2014 11:28:08 +0800
-Message-ID: <20140305032808.GW13126@sirena.org.uk>
-References: <cover.1393941102.git.jsarha@ti.com>
- <80b0f9ecd29b8bfb52fed22a0ca059591f89683d.1393941102.git.jsarha@ti.com>
+From: Yijing Wang <wangyijing@huawei.com>
+Subject: Re: [PATCH v5 3/7] pci: Create pci_host_bridge before its associated
+ bus in pci_create_root_bus.
+Date: Wed, 5 Mar 2014 11:48:22 +0800
+Message-ID: <53169E86.1090609@huawei.com>
+References: <1393948204-11555-1-git-send-email-Liviu.Dudau@arm.com> <1393948204-11555-4-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="nqu5fpgjE+BQlEdo"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <80b0f9ecd29b8bfb52fed22a0ca059591f89683d.1393941102.git.jsarha-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, detheridge-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1393948204-11555-4-git-send-email-Liviu.Dudau@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
+On 2014/3/4 23:50, Liviu Dudau wrote:
+> Before commit 7b5436635800 the pci_host_bridge was created before the root bus.
+> As that commit has added a needless dependency on the bus for pci_alloc_host_bridge()
+> the creation order has been changed for no good reason. Revert the order of
+> creation as we are going to depend on the pci_host_bridge structure to retrieve the
+> domain number of the root bus.
+> 
+> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 6e34498..78ccba0 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -505,7 +505,7 @@ static void pci_release_host_bridge_dev(struct device *dev)
+>  	kfree(bridge);
+>  }
+>  
+> -static struct pci_host_bridge *pci_alloc_host_bridge(struct pci_bus *b)
+> +static struct pci_host_bridge *pci_alloc_host_bridge(void)
+>  {
+>  	struct pci_host_bridge *bridge;
+>  
+> @@ -514,7 +514,6 @@ static struct pci_host_bridge *pci_alloc_host_bridge(struct pci_bus *b)
+>  		return NULL;
+>  
+>  	INIT_LIST_HEAD(&bridge->windows);
+> -	bridge->bus = b;
+>  	return bridge;
+>  }
+>  
+> @@ -1727,9 +1726,21 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
+>  	char bus_addr[64];
+>  	char *fmt;
+>  
+> +	bridge = pci_alloc_host_bridge();
+> +	if (!bridge)
+> +		return NULL;
+> +
+> +	bridge->dev.parent = parent;
+> +	bridge->dev.release = pci_release_host_bridge_dev;
+> +	error = pcibios_root_bridge_prepare(bridge);
+> +	if (error) {
+> +		kfree(bridge);
+> +		return NULL;
 
---nqu5fpgjE+BQlEdo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+What about use goto err_out?
 
-On Tue, Mar 04, 2014 at 03:54:52PM +0200, Jyri Sarha wrote:
-> The tlv320aic32x4 related files were wrongly placed after tlv320aic3x files.
+> +	}
+> +
+>  	b = pci_alloc_bus();
+>  	if (!b)
+> -		return NULL;
+> +		goto err_out;
+>  
+>  	b->sysdata = sysdata;
+>  	b->ops = ops;
+> @@ -1738,26 +1749,15 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
+>  	if (b2) {
+>  		/* If we already got to this bus through a different bridge, ignore it */
+>  		dev_dbg(&b2->dev, "bus already known\n");
+> -		goto err_out;
+> +		goto err_bus_out;
+>  	}
+>  
+> -	bridge = pci_alloc_host_bridge(b);
+> -	if (!bridge)
+> -		goto err_out;
+> -
+> -	bridge->dev.parent = parent;
+> -	bridge->dev.release = pci_release_host_bridge_dev;
+> +	bridge->bus = b;
+>  	dev_set_name(&bridge->dev, "pci%04x:%02x", pci_domain_nr(b), bus);
+> -	error = pcibios_root_bridge_prepare(bridge);
+> -	if (error) {
+> -		kfree(bridge);
+> -		goto err_out;
+> -	}
+> -
+>  	error = device_register(&bridge->dev);
+>  	if (error) {
+>  		put_device(&bridge->dev);
+> -		goto err_out;
+> +		goto err_bus_out;
+>  	}
+>  	b->bridge = get_device(&bridge->dev);
+>  	device_enable_async_suspend(b->bridge);
+> @@ -1814,8 +1814,10 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
+>  class_dev_reg_err:
+>  	put_device(&bridge->dev);
+>  	device_unregister(&bridge->dev);
+> -err_out:
+> +err_bus_out:
+>  	kfree(b);
+> +err_out:
+> +	kfree(bridge);
+>  	return NULL;
+>  }
+>  
+> 
 
-This doesn't apply against current code, please check and resend.
 
---nqu5fpgjE+BQlEdo
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTFpnEAAoJELSic+t+oim9NFcP/1qsGndO15v8IETAbHKO3FW2
-3kxmuVB3b7lorRjUjil64HrLVOQWwpO/t2ycCrnet7eElf/rOlnaaNp0klLyqnEq
-VObU2DJYugBLf0GK7SFS6+xtC27n1lJ+ub2eh8GfVBneJ9QevU7E6KHjZfWWupf9
-KArdUfCoCoc66d+csamaZ5fo0S5jFrN6Ugc+ANu0P12ZJwAGK+zJvACYccT/4t6D
-byzcYRTxirpbf2RxOe3vq5D7tw5QddVKMGZOdy0gjji5+qY5VHxA1ZYPVZzs+0M2
-R3l7sydZl8mcfny1s53vVryNRSz0SbgsjDqXuO8S1rH0gfCKvnuqB3T8oEzWn9nD
-/D71tfLsv+xIbgq8K7txIhCPyAxH01HCnprrZDr6NXIcq3fpEmyczAn8VJ2I6V8s
-vs8GfS5NB/5IpceskkDgolpR9hdRBuFckveVArNu6/4tmlNTyGpV3H4DFPDCW8rC
-lw1t4S26rqApnMH1LYmsPXtn/HWmcxZOI530DZloSnVagechaN2U+GKrPn4C2fkK
-6AepMudbpQ8m9p+5sk3n8NeUa07grRZ/1S5KS5dcWA5G/Igr4rWkSARzpX0vTHrB
-R4xjAjHXdyMe6TBZ2F5Mes/tUa1mB2TMpaPj7cuOzZTXoyrH5F0iQ9oGZ9zcR5r9
-rbkNP+TzOy4M6DIgxLmD
-=RfI0
------END PGP SIGNATURE-----
-
---nqu5fpgjE+BQlEdo--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Thanks!
+Yijing
