@@ -1,86 +1,50 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] net: sky2: allow mac to come from dt
-Date: Wed, 05 Mar 2014 21:15:51 +0300
-Message-ID: <531769D7.80507@cogentembedded.com>
-References: <1394000535-25559-1-git-send-email-tharvey@gateworks.com>	<5317318B.5020406@cogentembedded.com> <CAJ+vNU2Uzsriq6e1ef6iH7omTkGGSxz=ox=XquUTw5MFvQDFCA@mail.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v4 4/4] ARM: OMAP2+: Add pdata quirk for sys_clkout2 for
+ omap3 DBB056
+Date: Wed, 5 Mar 2014 09:21:56 -0800
+Message-ID: <20140305172156.GF4983@atomide.com>
+References: <1392387656-15186-1-git-send-email-chf.fritz@googlemail.com>
+ <1392387656-15186-5-git-send-email-chf.fritz@googlemail.com>
+ <20140228223741.GM13624@atomide.com>
+ <53172175.5060603@ti.com>
+ <1394025932.16566.44.camel@mars>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAJ+vNU2Uzsriq6e1ef6iH7omTkGGSxz=ox=XquUTw5MFvQDFCA@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Tim Harvey <tharvey@gateworks.com>
-Cc: Stephen Hemminger <stephen@networkplumber.org>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1394025932.16566.44.camel@mars>
+Sender: linux-omap-owner@vger.kernel.org
+To: Christoph Fritz <chf.fritz@googlemail.com>
+Cc: Tero Kristo <t-kristo@ti.com>, bcousson@baylibre.com, Tomi Valkeinen <tomi.valkeinen@ti.com>, Nishanth Menon <nm@ti.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Daniel Mack <zonque@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+* Christoph Fritz <chf.fritz@googlemail.com> [140305 05:28]:
+> On Wed, 2014-03-05 at 15:07 +0200, Tero Kristo wrote:
+> > On 03/01/2014 12:37 AM, Tony Lindgren wrote:
+> > > * Christoph Fritz <chf.fritz@googlemail.com> [140214 06:24]:
+> > >> Full device tree support for clock control, especially to set frequencies,
+> > >> is not yet accomplished. Until then, configure the 24Mhz of sys_clkout2 to
+> > >> feed an USB-Hub here.
+> > >
+> > > Hmm would like to see Tero's comments on this, I wonder if we should
+> > > wait on this to avoid extra churn?
+> > 
+> > Well, the set I posted that adds default clock parenting / default rate 
+> > support to DT hasn't actually moved forward, so you might want to take 
+> > this in as is now if it should be rushed. The clk-enable part isn't done 
+> > currently by anything anyway. Just wondering though, should you create 
+> > some sort of driver for your usb-hub which would control these clocks?
+> 
+> The USB-Hub, a USB2512 is wired as non-configurable. Its pin
+> 'XTAL1/CLKIN' can be connected to either a crystal or an external clock
+> input. To economise the crystal, the clock-out of the omap is wired
+> here.
+> 
+> So in my view, a driver is unnecessary.
 
-On 03/05/2014 06:38 PM, Tim Harvey wrote:
+Yeah that makes sense. Let's try not to rely on pdata-quirks.c for
+the new boards.
 
->>> The driver reads the mac address from the device registers which would
->>> need to have been programmed by the bootloader.  This patch adds
->>> the ability to pull the mac from devicetree via the pci device dt node.
+Regards,
 
->>     I highly doubt that "[local-]mac-address" prop would be added to
->> (autodiscovered) PCI device node.
-
-> I wouldn't have done this if I didn't need it ;)
-
-> The u-boot bootloader will do this for boards supporting devicetree.
-> Specifically, it will take the ethaddr/eth<n<addr/etc env vars and
-> apply a local-mac-address property to the devicetree using ethernet<n>
-> devicetree aliases.  This is to support MAC addresses coming from
-> EEPROM, eFUSE, etc.  The key here is that it doesn't need to know
-> where in the tree the eth devices are because it makes use of the
-> aliases node.
-
-> This of course requires that you do have an ethernet<n> alias to your
-> PCI based network device in your dt which I agree may seem strange for
-> an auto-probed bus, but in the case of a bootloader without PCI
-> support and/or sky2 support this seems the proper way to get the MAC
-> address from the bootloader to the driver.
-
-    Ah, thanks for the explanation.
-
->> [...]
-
->>> @@ -4805,8 +4808,27 @@ static struct net_device *sky2_init_netdev(struct
->>> sky2_hw *hw, unsigned port,
->>>
->>>          dev->features |= dev->hw_features;
->>>
->>> +       /* try to get mac address in the following order:
->>> +        * 1) from device tree data
->>> +        * 2) from internal registers set by bootloader
->>> +        */
->>> +       iap = NULL;
->>> +       if (IS_ENABLED(CONFIG_OF)) {
->>> +               struct device_node *np = hw->pdev->dev.of_node;
->>> +               if (np)
->>> +                       iap = (unsigned char *) of_get_mac_address(np);
->>> +       }
->>> +
->>> +       /* 2) mac registers set by bootloader
->>> +        */
-
-    Why not make it one-line? And it's kind of repetitive.
-
->>> +       if (!iap || !is_valid_ether_addr(iap)) {
->>> +               memcpy_fromio(&tmpaddr, hw->regs + B2_MAC_1 + port * 8,
->>> +                       ETH_ALEN);
-
->>     This line should start right under & on the previous line.
-
-> agreed - not sure why checkpatch.pl didn't catch that
-
-    It catches this only with --strict option.
-
->> WBR, Sergei
-
-> Thanks for the review!
-
-    Not at all.
-
-> Tim
-
-WBR, Sergei
+Tony
