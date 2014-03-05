@@ -1,34 +1,104 @@
-From: Huang Shijie <b32955@freescale.com>
-Subject: Re: [PATCH v5 1/8] mtd: spi-nor: copy the SPI NOR commands to a new
- header file
-Date: Wed, 5 Mar 2014 13:45:22 +0800
-Message-ID: <5316B9F2.8050301@freescale.com>
-References: <1393238262-8622-1-git-send-email-b32955@freescale.com> <201403042313.14353.marex@denx.de> <5316932C.5040405@freescale.com> <201403050443.19529.marex@denx.de>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [RFC PATCH v2 03/21] exynos/dsim: add DT bindings
+Date: Wed, 5 Mar 2014 14:56:38 +0900
+Message-ID: <CAAQKjZPO80-+-9kMufJGimjS8bAJBgHBS=DNESro_cvMmzqbgg@mail.gmail.com>
+References: <1392204688-4591-1-git-send-email-a.hajda@samsung.com>
+	<1392204688-4591-4-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <201403050443.19529.marex@denx.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Marek Vasut <marex@denx.de>
-Cc: linux-mtd@lists.infradead.org, dwmw2@infradead.org, angus.clark@st.com, shawn.guo@linaro.org, b44548@freescale.com, broonie@linaro.org, linux-doc@vger.kernel.org, b18965@freescale.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, pekon@ti.com, sourav.poddar@ti.com, computersforpeace@gmail.com, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1392204688-4591-4-git-send-email-a.hajda@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: DRI mailing list <dri-devel@lists.freedesktop.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-=E4=BA=8E 2014=E5=B9=B403=E6=9C=8805=E6=97=A5 11:43, Marek Vasut =E5=86=
-=99=E9=81=93:
-> Why didn't you keep it like that? Was there some reason for that ?
-http://marc.info/?l=3Dlinux-arm-kernel&m=3D138545182232220&w=3D4
+2014-02-12 20:31 GMT+09:00 Andrzej Hajda <a.hajda@samsung.com>:
+> The patch adds DT bindings for Exynos DSI Master. DSIM follows rules
+> for DSI bus host bindings [1].
+> Properties describes its resources: memory, interrupt, clocks,
+> phy, regulators and frequencies of clocks.
+>
+> [1]: Documentation/devicetree/bindings/mipi/dsi/mipi-dsi-bus.txt
+>
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> ---
+> v2
+> - added burst and esc clock frequency properties
+> - add samsung prefix to all frequency props
+> ---
+>  .../devicetree/bindings/video/exynos_dsim.txt      | 53 ++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/video/exynos_dsim.txt
+>
+> diff --git a/Documentation/devicetree/bindings/video/exynos_dsim.txt b/Documentation/devicetree/bindings/video/exynos_dsim.txt
+> new file mode 100644
+> index 0000000..2a49704
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/exynos_dsim.txt
+> @@ -0,0 +1,53 @@
+> +Exynos MIPI DSI Master
+> +
+> +Required properties:
+> +  - compatible: "samsung,exynos4210-mipi-dsi"
+> +  - reg: physical base address and length of the registers set for the device
+> +  - interrupts: should contain DSI interrupt
+> +  - clocks: list of clock specifiers, must contain an entry for each required
+> +    entry in clock-names
+> +  - clock-names: should include "bus_clk"and "pll_clk" entries
+> +  - phys: list of phy specifiers, must contain an entry for each required
+> +    entry in phy-names
+> +  - phy-names: should include "dsim" entry
+> +  - vddcore-supply: MIPI DSIM Core voltage supply (e.g. 1.1V)
+> +  - vddio-supply: MIPI DSIM I/O and PLL voltage supply (e.g. 1.8V)
+> +  - samsung,pll-clock-frequency: specifies frequency of the "pll_clk" clock
+> +  - samsung,burst-clock-frequency: specifies DSI frequency in high-speed burst
+> +    mode
+> +  - samsung,esc-clock-frequency: specifies DSI frequency in escape mode
+> +  - #address-cells, #size-cells: should be set respectively to <1> and <0>
+> +    according to DSI host bindings (see MIPI DSI bindings [1])
+> +
+> +Optional properties:
+> +  - samsung,power-domain: a phandle to DSIM power domain node
+> +
+> +Child nodes:
+> +  Should contain DSI peripheral nodes (see DSI bindings [1])
+> +
+> +[1]: Documentation/devicetree/bindings/mipi/dsi/mipi-dsi-bus.txt
+> +
+> +Example:
+> +
+> +       dsi@11C80000 {
+> +               compatible = "samsung,exynos4210-mipi-dsi";
+> +               reg = <0x11C80000 0x10000>;
+> +               interrupts = <0 79 0>;
+> +               clocks = <&clock 286>, <&clock 143>;
+> +               clock-names = "bus_clk", "pll_clk";
+> +               phys = <&mipi_phy 1>;
+> +               phy-names = "dsim";
+> +               vddcore-supply = <&vusb_reg>;
+> +               vddio-supply = <&vmipi_reg>;
+> +               samsung,power-domain = <&pd_lcd0>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               samsung,pll-clock-frequency = <24000000>;
+> +               samsung,burst-clock-frequency = <500000000>;
+> +               samsung,esc-clock-frequency = <20000000>;
 
-Pekon suggestted  do not touch the m25p80.c.
-So i just copy these commands to a new header.
-Anyway, it's really not an important issue for me. :)
+Isn't a property indicating cpu or video mode needed for the future
+even though now DSI driver doesn't support CPU interface yet? Which
+mode is used would depend on machine.
 
-
-
-thanks
-Huang Shijie
-
-
-
-
+> +
+> +               panel@0 {
+> +                       reg = <0>;
+> +                       ...
+> +               };
+> +       };
+> --
+> 1.8.3.2
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
