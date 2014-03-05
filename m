@@ -1,128 +1,51 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH v5 3/7] pci: Create pci_host_bridge before its associated
- bus in pci_create_root_bus.
-Date: Wed, 05 Mar 2014 13:41:35 +0900
-Message-ID: <002401cf382d$3062aa50$9127fef0$%han@samsung.com>
-References: <1393948204-11555-1-git-send-email-Liviu.Dudau@arm.com>
- <1393948204-11555-4-git-send-email-Liviu.Dudau@arm.com>
- <53169E86.1090609@huawei.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/7] ARM: mm: Introduce archdata.dma_pfn_offset
+Date: Wed, 5 Mar 2014 12:45:01 +0800
+Message-ID: <CACRpkdaRgf2yn51HYnJHBVKdrGdYhwSr0yf2GLmT3DwzmPbMDA@mail.gmail.com>
+References: <1393535872-20915-1-git-send-email-santosh.shilimkar@ti.com>
+	<1393535872-20915-2-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-reply-to: <53169E86.1090609@huawei.com>
-Content-language: ko
-Sender: linux-pci-owner@vger.kernel.org
-To: 'Yijing Wang' <wangyijing@huawei.com>, 'Liviu Dudau' <Liviu.Dudau@arm.com>
-Cc: 'linux-pci' <linux-pci@vger.kernel.org>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Catalin Marinas' <Catalin.Marinas@arm.com>, 'Will Deacon' <Will.Deacon@arm.com>, 'linaro-kernel' <linaro-kernel@lists.linaro.org>, 'Benjamin Herrenschmidt' <benh@kernel.crashing.org>, 'LKML' <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, 'LAKML' <linux-arm-kernel@lists.infradead.org>, 'Tanmay Inamdar' <tinamdar@apm.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Jingoo Han' <jg1.han@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1393535872-20915-2-git-send-email-santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, March 05, 2014 12:48 PM, Yijing Wang wrote:
-> On 2014/3/4 23:50, Liviu Dudau wrote:
-> > Before commit 7b5436635800 the pci_host_bridge was created before the root bus.
-> > As that commit has added a needless dependency on the bus for pci_alloc_host_bridge()
-> > the creation order has been changed for no good reason. Revert the order of
-> > creation as we are going to depend on the pci_host_bridge structure to retrieve the
-> > domain number of the root bus.
-> >
-> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> >
-> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > index 6e34498..78ccba0 100644
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -505,7 +505,7 @@ static void pci_release_host_bridge_dev(struct device *dev)
-> >  	kfree(bridge);
-> >  }
-> >
-> > -static struct pci_host_bridge *pci_alloc_host_bridge(struct pci_bus *b)
-> > +static struct pci_host_bridge *pci_alloc_host_bridge(void)
-> >  {
-> >  	struct pci_host_bridge *bridge;
-> >
-> > @@ -514,7 +514,6 @@ static struct pci_host_bridge *pci_alloc_host_bridge(struct pci_bus *b)
-> >  		return NULL;
-> >
-> >  	INIT_LIST_HEAD(&bridge->windows);
-> > -	bridge->bus = b;
-> >  	return bridge;
-> >  }
-> >
-> > @@ -1727,9 +1726,21 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
-> >  	char bus_addr[64];
-> >  	char *fmt;
-> >
-> > +	bridge = pci_alloc_host_bridge();
-> > +	if (!bridge)
-> > +		return NULL;
-> > +
-> > +	bridge->dev.parent = parent;
-> > +	bridge->dev.release = pci_release_host_bridge_dev;
-> > +	error = pcibios_root_bridge_prepare(bridge);
-> > +	if (error) {
-> > +		kfree(bridge);
-> > +		return NULL;
-> 
-> What about use goto err_out?
+On Fri, Feb 28, 2014 at 5:17 AM, Santosh Shilimkar
+<santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
 
-+1
+> From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+>
+> In most of cases DMA addresses can be performed using offset value of
+>  Bus address space relatively to physical address space as following:
+>
+> PFN->DMA:
+>  __pfn_to_phys(pfn + [-]dma_pfn_offset)
+>
+> DMA->PFN:
+>  __phys_to_pfn(dma_addr) + [-]dma_pfn_offset
+>
+> This patch introduces new field dma_pfn_offset in ARM dev_archdata
+> structure which has to be filed per-device at arch init time
+> (simplest way is to use Platform bus notifier to handle
+> BUS_NOTIFY_ADD_DEVICE event) and updates DMA address translation
+> routines in order to accommodate bus offset value by default.
+>
+> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
 
-I agree with your opinion.
-It makes the code simpler.
+This looks like exactly what I need to proceed to multiplatform on
+Integrator.
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Best regards,
-Jingoo Han
-
-> 
-> > +	}
-> > +
-> >  	b = pci_alloc_bus();
-> >  	if (!b)
-> > -		return NULL;
-> > +		goto err_out;
-> >
-> >  	b->sysdata = sysdata;
-> >  	b->ops = ops;
-> > @@ -1738,26 +1749,15 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
-> >  	if (b2) {
-> >  		/* If we already got to this bus through a different bridge, ignore it */
-> >  		dev_dbg(&b2->dev, "bus already known\n");
-> > -		goto err_out;
-> > +		goto err_bus_out;
-> >  	}
-> >
-> > -	bridge = pci_alloc_host_bridge(b);
-> > -	if (!bridge)
-> > -		goto err_out;
-> > -
-> > -	bridge->dev.parent = parent;
-> > -	bridge->dev.release = pci_release_host_bridge_dev;
-> > +	bridge->bus = b;
-> >  	dev_set_name(&bridge->dev, "pci%04x:%02x", pci_domain_nr(b), bus);
-> > -	error = pcibios_root_bridge_prepare(bridge);
-> > -	if (error) {
-> > -		kfree(bridge);
-> > -		goto err_out;
-> > -	}
-> > -
-> >  	error = device_register(&bridge->dev);
-> >  	if (error) {
-> >  		put_device(&bridge->dev);
-> > -		goto err_out;
-> > +		goto err_bus_out;
-> >  	}
-> >  	b->bridge = get_device(&bridge->dev);
-> >  	device_enable_async_suspend(b->bridge);
-> > @@ -1814,8 +1814,10 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
-> >  class_dev_reg_err:
-> >  	put_device(&bridge->dev);
-> >  	device_unregister(&bridge->dev);
-> > -err_out:
-> > +err_bus_out:
-> >  	kfree(b);
-> > +err_out:
-> > +	kfree(bridge);
-> >  	return NULL;
-> >  }
-> >
-> >
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
