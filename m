@@ -1,86 +1,51 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2 02/11] drivercore: Bind/unbind power domain on probe/remove
-Date: Wed, 5 Mar 2014 08:22:48 +0100
-Message-ID: <CAPDyKFpMSwXG0e1Q38wMwBocXgMb4_v9y=1kNeNi6t0GXDGN2A@mail.gmail.com>
-References: <1393862536-9842-1-git-send-email-tomasz.figa@gmail.com>
-	<1393862536-9842-3-git-send-email-tomasz.figa@gmail.com>
+From: "Gupta, Pekon" <pekon@ti.com>
+Subject: RE: [PATCH v5 1/8] mtd: spi-nor: copy the SPI NOR commands to a new
+ header file
+Date: Wed, 5 Mar 2014 07:24:21 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EAAFCDB@DBDE04.ent.ti.com>
+References: <1393238262-8622-1-git-send-email-b32955@freescale.com>
+ <201403042313.14353.marex@denx.de> <5316932C.5040405@freescale.com>
+ <201403050443.19529.marex@denx.de> <5316B9F2.8050301@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1393862536-9842-3-git-send-email-tomasz.figa@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene.kim@samsung.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Loren
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <5316B9F2.8050301@freescale.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Huang Shijie <b32955@freescale.com>, Marek Vasut <marex@denx.de>
+Cc: "angus.clark@st.com" <angus.clark@st.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "b44548@freescale.com" <b44548@freescale.com>, "broonie@linaro.org" <broonie@linaro.org>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "Poddar,
+ Sourav" <sourav.poddar@ti.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3 March 2014 17:02, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> On a number of platforms, devices are part of controllable power
-> domains, which need to be enabled before such devices can be accessed
-> and may be powered down when the device is idle to save some power.
-> This means that on systems that support power domain control using
-> generic power domains subsystem, it is necessary to add device to its
-> power domain before binding a driver to it and remove it from its power
-> domain after its driver is unbound to make sure that an unused device
-> does not affect power domain state.
->
-> Since this is not limited to particular busses and specific
-> archs/platforms, it is more convenient to do the above directly in
-> driver core, just as done with pinctrl default configuration. This patch
-> adds necessary code to really_probe() and __device_release_driver() to
-> achieve this and maintain consistent stack-like ordering of operations
-> happening when binding and unbinding a driver.
->
-> Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
-
-This definitely makes sense to me!
-
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-
-> ---
->  drivers/base/dd.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index 0605176..78e5b36 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -23,6 +23,7 @@
->  #include <linux/kthread.h>
->  #include <linux/wait.h>
->  #include <linux/async.h>
-> +#include <linux/pm_domain.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/pinctrl/devinfo.h>
->
-> @@ -273,6 +274,11 @@ static int really_probe(struct device *dev, struct device_driver *drv)
->
->         dev->driver = drv;
->
-> +       /* If using genpd, bind power domain now before probing */
-> +       ret = genpd_bind_domain(dev);
-> +       if (ret)
-> +               goto probe_failed;
-> +
->         /* If using pinctrl, bind pins now before probing */
->         ret = pinctrl_bind_pins(dev);
->         if (ret)
-> @@ -303,6 +309,7 @@ static int really_probe(struct device *dev, struct device_driver *drv)
->  probe_failed:
->         devres_release_all(dev);
->         driver_sysfs_remove(dev);
-> +       genpd_unbind_domain(dev);
->         dev->driver = NULL;
->         dev_set_drvdata(dev, NULL);
->
-> @@ -513,7 +520,7 @@ static void __device_release_driver(struct device *dev)
->                         blocking_notifier_call_chain(&dev->bus->p->bus_notifier,
->                                                      BUS_NOTIFY_UNBOUND_DRIVER,
->                                                      dev);
-> -
-> +               genpd_unbind_domain(dev);
->         }
->  }
->
-> --
-> 1.9.0
->
+SGkgTWFyZWssIFNoaWppZSwNCg0KPkZyb206IEh1YW5nIFNoaWppZSBbbWFpbHRvOmIzMjk1NUBm
+cmVlc2NhbGUuY29tXQ0KPg0KPuS6jiAyMDE05bm0MDPmnIgwNeaXpSAxMTo0MywgTWFyZWsgVmFz
+dXQg5YaZ6YGTOg0KPj4gV2h5IGRpZG4ndCB5b3Uga2VlcCBpdCBsaWtlIHRoYXQ/IFdhcyB0aGVy
+ZSBzb21lIHJlYXNvbiBmb3IgdGhhdCA/DQo+aHR0cDovL21hcmMuaW5mby8/bD1saW51eC1hcm0t
+a2VybmVsJm09MTM4NTQ1MTgyMjMyMjIwJnc9NA0KPg0KPlBla29uIHN1Z2dlc3R0ZWQgIGRvIG5v
+dCB0b3VjaCB0aGUgbTI1cDgwLmMuDQo+U28gaSBqdXN0IGNvcHkgdGhlc2UgY29tbWFuZHMgdG8g
+YSBuZXcgaGVhZGVyLg0KPkFueXdheSwgaXQncyByZWFsbHkgbm90IGFuIGltcG9ydGFudCBpc3N1
+ZSBmb3IgbWUuIDopDQo+DQpNeSBvcGluaW9uIHdhcyB0aGF0IHdlIHNob3VsZCBub3QgdG91Y2gg
+bTI1cDgwLmMgYmVjYXVzZToNCigxKSAgQXMgbTI1cDgwIGlzIGFscmVhZHkgd29ya2luZyBmb3Ig
+dmFyaW91cyB2ZW5kb3JzLiBTbyB1bmxlc3MgbXVsdGlwbGUNCiAgIHBsYXRmb3JtcyBzdGFydCB1
+c2luZyBTUEkgTk9SIGZyYW1ld29yaywgbTI1cDgwLmMgc2hvdWxkIHJlbWFpbiB1bnRvdWNoZWQu
+DQooMikgd2Ugc2hvdWxkIG5vdCBjbHV0dGVyIGhlYWRlciBmaWxlIHdpdGggdmVuZG9yIHNwZWNp
+ZmljIG9wLWNvZGVzIGFzIHVzZWQgaW4gbTI1cDgwLg0KICAgSSB3YXMgb2YgdGhlIG9waW5pb24g
+dGhhdCBpbnN0ZWFkIG9mIGhhcmQtY29kaW5nIHRoZSB2ZW5kb3Igc3BlY2lmaWMgaW5mbyBhcw0K
+ICAgTUFDUk9zLCBzdWNoIGluZm9ybWF0aW9uIHNob3VsZCBiZSB0YWtlbiBmcm9tIERUIG9yIHBs
+YXRmb3JtLWRhdGEuDQoNCkhvd2V2ZXIsIHRoaXMgd2FzIG15IHRob3VnaHQgZHVyaW5nIGluaXRp
+YWwgdmVyc2lvbnMgb2YgU1BJIE5PUiBwYXRjaGVzLg0KQnV0IG5vdyBpZiB5b3UgdGhpbmsgdGhh
+dCBTUEkgTk9SIGlzIHN0YWJsZSBlbm91Z2ggdGhhdCBzYW1lIGhlYWRlciBpbmZvDQpjYW4gYmUg
+cmV1c2VkIHdpdGhvdXQgY29uZmxpY3RzLCB0aGVuIG5vIHByb2JsZW1zLg0KDQooQXBvbG9naWVz
+IHRvIEh1YW5nIFNoaWppZSBmb3IgcmUtd29yayA6LSkgKS4NCg0Kd2l0aCByZWdhcmRzLCBwZWtv
+bg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CkxpbnV4IE1URCBkaXNjdXNzaW9uIG1haWxpbmcgbGlzdApodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LW10ZC8K
