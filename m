@@ -1,108 +1,110 @@
 From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: [PATCH v6 2/6] pci: OF: Fix the conversion of IO ranges into IO
- resources.
-Date: Wed,  5 Mar 2014 11:48:53 +0000
-Message-ID: <1394020137-1830-3-git-send-email-Liviu.Dudau@arm.com>
+Subject: [PATCH v6 3/6] pci: Create pci_host_bridge before its associated bus in pci_create_root_bus.
+Date: Wed,  5 Mar 2014 11:48:54 +0000
+Message-ID: <1394020137-1830-4-git-send-email-Liviu.Dudau@arm.com>
 References: <1394020137-1830-1-git-send-email-Liviu.Dudau@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1394020137-1830-1-git-send-email-Liviu.Dudau@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, Tanmay Inamdar <tinamdar@apm.com>, LAKML <linux-arm-kernel@lists.infradead.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-The ranges property for a host bridge controller in DT describes
-the mapping between the PCI bus address and the CPU physical address.
-The resources framework however expects that the IO resources start
-at a pseudo "port" address 0 (zero) and have a maximum size of IO_SPACE_LIMIT.
-The conversion from pci ranges to resources failed to take that into account.
-
-In the process move the function into drivers/of/address.c as it
-now depends on pci_address_to_pio() code.
+Before commit 7b5436635800 the pci_host_bridge was created before the root bus.
+As that commit has added a needless dependency on the bus for pci_alloc_host_bridge()
+the creation order has been changed for no good reason. Revert the order of
+creation as we are going to depend on the pci_host_bridge structure to retrieve the
+domain number of the root bus.
 
 Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
 Tested-by: Tanmay Inamdar <tinamdar@apm.com>
 ---
- drivers/of/address.c       | 34 ++++++++++++++++++++++++++++++++++
- include/linux/of_address.h | 13 ++-----------
- 2 files changed, 36 insertions(+), 11 deletions(-)
+ drivers/pci/probe.c | 36 ++++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index d1bb30f..d595d98 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -724,3 +724,37 @@ void __iomem *of_iomap(struct device_node *np, int index)
- 	return ioremap(res.start, resource_size(&res));
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 6e34498..fd11c12 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -505,7 +505,7 @@ static void pci_release_host_bridge_dev(struct device *dev)
+ 	kfree(bridge);
  }
- EXPORT_SYMBOL(of_iomap);
-+
-+/**
-+ * of_pci_range_to_resource - Create a resource from an of_pci_range
-+ * @range:	the PCI range that describes the resource
-+ * @np:		device node where the range belongs to
-+ * @res:	pointer to a valid resource that will be updated to
-+ *              reflect the values contained in the range.
-+ * Note that if the range is an IO range, the resource will be converted
-+ * using pci_address_to_pio() which can fail if it is called too early or
-+ * if the range cannot be matched to any host bridge IO space (our case here).
-+ * To guard against that we try to register the IO range first.
-+ * If that fails we know that pci_address_to_pio() will do too.
-+ */
-+void of_pci_range_to_resource(struct of_pci_range *range,
-+	struct device_node *np, struct resource *res)
-+{
-+	res->flags = range->flags;
-+	if (res->flags & IORESOURCE_IO) {
-+		unsigned long port = -1;
-+		if (!pci_register_io_range(range->cpu_addr, range->size))
-+			port = pci_address_to_pio(range->cpu_addr);
-+		if (port == (unsigned long)-1) {
-+			res->start = (resource_size_t)OF_BAD_ADDR;
-+			res->end = (resource_size_t)OF_BAD_ADDR;
-+			return;
-+		}
-+		res->start = port;
-+	} else {
-+		res->start = range->cpu_addr;
-+	}
-+	res->end = res->start + range->size - 1;
-+	res->parent = res->child = res->sibling = NULL;
-+	res->name = np->full_name;
-+}
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index 40c418d..3fe500a 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -23,17 +23,8 @@ struct of_pci_range {
- #define for_each_of_pci_range(parser, range) \
- 	for (; of_pci_range_parser_one(parser, range);)
  
--static inline void of_pci_range_to_resource(struct of_pci_range *range,
--					    struct device_node *np,
--					    struct resource *res)
--{
--	res->flags = range->flags;
--	res->start = range->cpu_addr;
--	res->end = range->cpu_addr + range->size - 1;
--	res->parent = res->child = res->sibling = NULL;
--	res->name = np->full_name;
--}
+-static struct pci_host_bridge *pci_alloc_host_bridge(struct pci_bus *b)
++static struct pci_host_bridge *pci_alloc_host_bridge(void)
+ {
+ 	struct pci_host_bridge *bridge;
+ 
+@@ -514,7 +514,6 @@ static struct pci_host_bridge *pci_alloc_host_bridge(struct pci_bus *b)
+ 		return NULL;
+ 
+ 	INIT_LIST_HEAD(&bridge->windows);
+-	bridge->bus = b;
+ 	return bridge;
+ }
+ 
+@@ -1727,9 +1726,19 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
+ 	char bus_addr[64];
+ 	char *fmt;
+ 
++	bridge = pci_alloc_host_bridge();
++	if (!bridge)
++		return NULL;
++
++	bridge->dev.parent = parent;
++	bridge->dev.release = pci_release_host_bridge_dev;
++	error = pcibios_root_bridge_prepare(bridge);
++	if (error)
++		goto err_out;
++
+ 	b = pci_alloc_bus();
+ 	if (!b)
+-		return NULL;
++		goto err_out;
+ 
+ 	b->sysdata = sysdata;
+ 	b->ops = ops;
+@@ -1738,26 +1747,15 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
+ 	if (b2) {
+ 		/* If we already got to this bus through a different bridge, ignore it */
+ 		dev_dbg(&b2->dev, "bus already known\n");
+-		goto err_out;
++		goto err_bus_out;
+ 	}
+ 
+-	bridge = pci_alloc_host_bridge(b);
+-	if (!bridge)
+-		goto err_out;
 -
-+extern void of_pci_range_to_resource(struct of_pci_range *range,
-+		struct device_node *np, struct resource *res);
- /* Translate a DMA address from device space to CPU space */
- extern u64 of_translate_dma_address(struct device_node *dev,
- 				    const __be32 *in_addr);
+-	bridge->dev.parent = parent;
+-	bridge->dev.release = pci_release_host_bridge_dev;
++	bridge->bus = b;
+ 	dev_set_name(&bridge->dev, "pci%04x:%02x", pci_domain_nr(b), bus);
+-	error = pcibios_root_bridge_prepare(bridge);
+-	if (error) {
+-		kfree(bridge);
+-		goto err_out;
+-	}
+-
+ 	error = device_register(&bridge->dev);
+ 	if (error) {
+ 		put_device(&bridge->dev);
+-		goto err_out;
++		goto err_bus_out;
+ 	}
+ 	b->bridge = get_device(&bridge->dev);
+ 	device_enable_async_suspend(b->bridge);
+@@ -1814,8 +1812,10 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
+ class_dev_reg_err:
+ 	put_device(&bridge->dev);
+ 	device_unregister(&bridge->dev);
+-err_out:
++err_bus_out:
+ 	kfree(b);
++err_out:
++	kfree(bridge);
+ 	return NULL;
+ }
+ 
 -- 
 1.9.0
