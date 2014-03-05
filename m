@@ -1,64 +1,71 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 4/5] ARM: dts: imx6sl: Add power-domain information to
- gpc node
-Date: Wed, 5 Mar 2014 15:00:11 +0800
-Message-ID: <20140305070009.GK8784@S2101-09.ap.freescale.net>
-References: <1393603427-6199-1-git-send-email-p.zabel@pengutronix.de>
- <1393603427-6199-5-git-send-email-p.zabel@pengutronix.de>
+From: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v5] can: xilinx CAN controller support.
+Date: Wed, 5 Mar 2014 07:03:46 +0000
+Message-ID: <437d1091-d4b4-4b27-8057-b22edeadb28c@TX2EHSMHS035.ehs.local>
+References: <5254bfec-c6fd-4681-a34d-706d51e60fbb@VA3EHSMHS004.ehs.local>
+ <20140304235115.GN13293@xsjandreislx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1393603427-6199-5-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20140304235115.GN13293@xsjandreislx>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org" <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, "mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 28, 2014 at 05:03:46PM +0100, Philipp Zabel wrote:
-> The PGC that is part of GPC controls isolation and power sequencing of the
-> power domains. The PU power domain will be handled by the generic pm domain
-> framework. It needs a phandle to the PU regulator to turn off power when
-> the domain is disabled and a list of clocks to be enabled during powerup
-> for reset propagation.
-> 
-> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
-> Changes since v4:
->  - Use OF power domain bindings
->  - Added reset clocks
-> ---
->  arch/arm/boot/dts/imx6sl.dtsi | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-> index 28558f1..0e61262 100644
-> --- a/arch/arm/boot/dts/imx6sl.dtsi
-> +++ b/arch/arm/boot/dts/imx6sl.dtsi
-> @@ -529,9 +529,13 @@
->  			};
->  
->  			gpc: gpc@020dc000 {
-> -				compatible = "fsl,imx6sl-gpc", "fsl,imx6q-gpc";
-> +				compatible = "fsl,imx6sl-gpc";
+SGkgU29yZW4sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU8O2cmVu
+IEJyaW5rbWFubiBbbWFpbHRvOnNvcmVuLmJyaW5rbWFubkB4aWxpbnguY29tXQ0KPiBTZW50OiBX
+ZWRuZXNkYXksIE1hcmNoIDA1LCAyMDE0IDU6MjEgQU0NCj4gVG86IEFwcGFuYSBEdXJnYSBLZWRh
+cmVzd2FyYSBSYW8NCj4gQ2M6IHdnQGdyYW5kZWdnZXIuY29tOyBta2xAcGVuZ3V0cm9uaXguZGU7
+IE1pY2hhbCBTaW1lazsNCj4gZ3JhbnQubGlrZWx5QGxpbmFyby5vcmc7IHJvYmgrZHRAa2VybmVs
+Lm9yZzsgbGludXgtY2FuQHZnZXIua2VybmVsLm9yZzsNCj4gbmV0ZGV2QHZnZXIua2VybmVsLm9y
+ZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC0NCj4ga2VybmVs
+QHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IEFwcGFuYSBEdXJn
+YQ0KPiBLZWRhcmVzd2FyYSBSYW8NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NV0gY2FuOiB4aWxp
+bnggQ0FOIGNvbnRyb2xsZXIgc3VwcG9ydC4NCj4NCj4gSGkgS2VkYXIsDQo+DQo+IE9uIFR1ZSwg
+MjAxNC0wMy0wNCBhdCAwNjo1MFBNICswNTMwLCBLZWRhcmVzd2FyYSByYW8gQXBwYW5hIHdyb3Rl
+Og0KPiA+IFRoaXMgcGF0Y2ggYWRkcyB4aWxpbnggQ0FOIGNvbnRyb2xsZXIgc3VwcG9ydC4NCj4g
+PiBUaGlzIGRyaXZlciBzdXBwb3J0cyBib3RoIFpZTlEgQ0FOUFMgYW5kIFNvZnQgSVAgQVhJIENB
+TiBjb250cm9sbGVyLg0KPiA+DQo+IFsuLi5dDQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvY2FuL3hpbGlueF9jYW4udHh0DQo+ID4gYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L2Nhbi94aWxpbnhfY2FuLnR4dA0KPiA+
+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMC4uMGU1NzEwMw0KPiA+IC0t
+LSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+bmV0L2Nhbi94aWxpbnhfY2FuLnR4dA0KPiA+IEBAIC0wLDAgKzEsNDUgQEANCj4gPiArWGlsaW54
+IEF4aSBDQU4vWnlucSBDQU5QUyBjb250cm9sbGVyIERldmljZSBUcmVlIEJpbmRpbmdzDQo+ID4g
+Ky0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LQ0KPiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArLSBjb21wYXRpYmxlICAg
+ICAgICAgICAgICAgOiBTaG91bGQgYmUgInhsbngsenlucS1jYW4tMS4wMC5hIiBmb3IgWnlucQ0K
+PiBDQU4NCj4gPiArICAgICAgICAgICAgICAgICAgICAgY29udHJvbGxlcnMgYW5kICJ4bG54LGF4
+aS1jYW4tMS4wMC5hIiBmb3IgQXhpIENBTg0KPiA+ICsgICAgICAgICAgICAgICAgICAgICBjb250
+cm9sbGVycy4NCj4gPiArLSByZWcgICAgICAgICAgICAgICAgICAgICAgOiBQaHlzaWNhbCBiYXNl
+IGFkZHJlc3MgYW5kIHNpemUgb2YgdGhlIEF4aSBDQU4vWnlucQ0KPiA+ICsgICAgICAgICAgICAg
+ICAgICAgICBDQU5QUyByZWdpc3RlcnMgbWFwLg0KPiA+ICstIGludGVycnVwdHMgICAgICAgICAg
+ICAgICA6IFByb3BlcnR5IHdpdGggYSB2YWx1ZSBkZXNjcmliaW5nIHRoZSBpbnRlcnJ1cHQNCj4g
+PiArICAgICAgICAgICAgICAgICAgICAgbnVtYmVyLg0KPiA+ICstIGludGVycnVwdC1wYXJlbnQg
+OiBNdXN0IGJlIGNvcmUgaW50ZXJydXB0IGNvbnRyb2xsZXINCj4gPiArLSBjbG9jay1uYW1lcyAg
+ICAgICAgICAgICAgOiBMaXN0IG9mIGlucHV0IGNsb2NrIG5hbWVzIC0gInJlZl9jbGsiLA0KPiAi
+YXBlcl9jbGsiDQo+DQo+IExldCdzIHJlY29uc2lkZXIgdGhlc2UgbmFtZXMuIFRoZXNlIGFyZSBy
+YXRoZXIgWnlucSBzcGVjaWZpYyBuYW1lcy4gRG9lcw0KPiB0aGUgSVAgZG9jdW1lbnRhdGlvbiB1
+c2UgdGhlc2UgYXMgd2VsbD8gVGhlIG5hbWVzIHNob3VsZCBtYXRjaCB0aGUNCj4gbmFtaW5nIHVz
+ZWQgZm9yIHRoZSBJUCwgcmF0aGVyIHRoYW4gdGhlIFNPQy4gSXMgdGhpcyB0aGUgY29ycmVjdCBk
+YXRhIHNoZWV0Og0KPiBodHRwOi8vd3d3LnhpbGlueC5jb20vc3VwcG9ydC9kb2N1bWVudGF0aW9u
+L2lwX2RvY3VtZW50YXRpb24vYXhpX2Nhbg0KPiAvdjFfMDNfYS9kczc5MV9heGlfY2FuLnBkZg0K
+PiA/IEFjY29yZGluZyB0byB0aGF0IHRoZSBuYW1lcyBzaG91bGQgcmF0aGVyIGJlICdzX2F4aV9h
+Y2xrJyBhbmQgJ2Nhbl9jbGsnLA0KPiBJTUhPLg0KDQpBeGkgQ0FOIGRyaXZlciB1c2VzIG9ubHkg
+b25lIGNsb2NrIGkuZSByZWZfY2xrIHRoZSBuYW1lIGluIHRoZSBkb2N1bWVudGF0aW9uIGZvciB0
+aGlzIGNsb2NrIGlzIGNhbl9jbGsuDQpPayB3aWxsIGNoYW5nZSB0aGUgY2xvY2sgbmFtZSB0byBj
+YW5fY2xrLg0KDQoNClJlZ2FyZHMsDQpLZWRhci4NCg0KPg0KPiAgICAgICBTw7ZyZW4NCg0KDQoN
+ClRoaXMgZW1haWwgYW5kIGFueSBhdHRhY2htZW50cyBhcmUgaW50ZW5kZWQgZm9yIHRoZSBzb2xl
+IHVzZSBvZiB0aGUgbmFtZWQgcmVjaXBpZW50KHMpIGFuZCBjb250YWluKHMpIGNvbmZpZGVudGlh
+bCBpbmZvcm1hdGlvbiB0aGF0IG1heSBiZSBwcm9wcmlldGFyeSwgcHJpdmlsZWdlZCBvciBjb3B5
+cmlnaHRlZCB1bmRlciBhcHBsaWNhYmxlIGxhdy4gSWYgeW91IGFyZSBub3QgdGhlIGludGVuZGVk
+IHJlY2lwaWVudCwgZG8gbm90IHJlYWQsIGNvcHksIG9yIGZvcndhcmQgdGhpcyBlbWFpbCBtZXNz
+YWdlIG9yIGFueSBhdHRhY2htZW50cy4gRGVsZXRlIHRoaXMgZW1haWwgbWVzc2FnZSBhbmQgYW55
+IGF0dGFjaG1lbnRzIGltbWVkaWF0ZWx5Lg0KDQoKCg==
 
-This change will break function imx_gpc_init(), which looks up
-"fsl,imx6q-gpc" even on imx6sl.
-
-Shawn
-
->  				reg = <0x020dc000 0x4000>;
->  				interrupts = <0 89 0x04>;
-> +				pu-supply = <&reg_pu>;
-> +				clocks = <&clks IMX6SL_CLK_GPU2D_OVG>,
-> +					 <&clks IMX6SL_CLK_GPU2D_PODF>;
-> +				#power-domain-cells = <1>;
->  			};
->  
->  			gpr: iomuxc-gpr@020e0000 {
-> -- 
-> 1.8.5.3
-> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
