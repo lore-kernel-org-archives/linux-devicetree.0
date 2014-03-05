@@ -1,151 +1,32 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 2/3] phy: omap-usb2: Provide workaround for USB2PHY false
- disconnect
-Date: Wed, 5 Mar 2014 12:37:12 +0530
-Message-ID: <5316CD20.3030909@ti.com>
-References: <1393841424-27656-1-git-send-email-george.cherian@ti.com> <1393842174-29868-1-git-send-email-george.cherian@ti.com>
+From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] ASoC: tlv320aic32x4: Sort Makefile in alphabetic
+ order
+Date: Wed, 5 Mar 2014 09:14:05 +0200
+Message-ID: <5316CEBD.9030205@ti.com>
+References: <cover.1393941102.git.jsarha@ti.com> <80b0f9ecd29b8bfb52fed22a0ca059591f89683d.1393941102.git.jsarha@ti.com> <20140305032808.GW13126@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1393842174-29868-1-git-send-email-george.cherian@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: George Cherian <george.cherian@ti.com>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, s.nawrocki@samsung.com, tony@atomide.com, gregkh@linuxfoundation.org, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140305032808.GW13126-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, detheridge-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 03/05/2014 05:28 AM, Mark Brown wrote:
+> On Tue, Mar 04, 2014 at 03:54:52PM +0200, Jyri Sarha wrote:
+>> The tlv320aic32x4 related files were wrongly placed after tlv320aic3x files.
+>
+> This doesn't apply against current code, please check and resend.
+>
 
-On Monday 03 March 2014 03:52 PM, George Cherian wrote:
-> From: Austin Beam <austinbeam@ti.com>
->
-> Enable the dra7x errata workaround for false disconnect problem
-> with USB2PHY. False disconnects were detected with some of the devices.
-> Reduce the sensitivity of the disconnect logic within the USB2PHY subsystem
-> to enusre these false disconnects are not registered.
->
-> [george.cherian@ti.com]
-> While at that, pass proper flags for each SoC's. This is a common driver
-> used across OMAP4,OMAP5,DRA7xx and AM437x USB2PHY.
->
-> False disconnect workaround is currently applicable for only DRA7x.
->
-> Update the Documentation also to add new comaptible.
->
-> Signed-off-by: Austin Beam <austinbeam@ti.com>
-> Signed-off-by: George Cherian <george.cherian@ti.com>
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->   Documentation/devicetree/bindings/usb/usb-phy.txt |  3 +-
->   drivers/phy/phy-omap-usb2.c                       | 48 +++++++++++++++++++++++
->   include/linux/usb/omap_usb.h                      |  3 ++
->   3 files changed, 53 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/usb/usb-phy.txt b/Documentation/devicetree/bindings/usb/usb-phy.txt
-> index b3fa409..03de61a5 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-phy.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-phy.txt
-> @@ -4,7 +4,8 @@ OMAP USB2 PHY
->
->   Required properties:
->    - compatible: Should be either of
-> -	* "ti,omap-usb2" for OMAP4, OMAP5, DRA7
-> +	* "ti,omap-usb2" for OMAP4 and OMAP5
-> +	* "ti,dra7x-usb2" for DRA7
->   	* "ti,am437x-usb2" for AM437x
->    - reg : Address and length of the register set for the device.
->    - #phy-cells: determine the number of cells that should be given in the
-> diff --git a/drivers/phy/phy-omap-usb2.c b/drivers/phy/phy-omap-usb2.c
-> index d54f24b..80ba7f0 100644
-> --- a/drivers/phy/phy-omap-usb2.c
-> +++ b/drivers/phy/phy-omap-usb2.c
-> @@ -31,6 +31,9 @@
->   #include <linux/phy/phy.h>
->   #include <linux/of_platform.h>
->
-> +#define USB2PHY_DISCON_BYP_LATCH (1 << 31)
-> +#define USB2PHY_ANA_CONFIG1 0x4c
-> +
->   /**
->    * omap_usb2_set_comparator - links the comparator present in the sytem with
->    *	this phy
-> @@ -138,7 +141,30 @@ static int omap_usb_power_on(struct phy *x)
->   	return 0;
->   }
->
-> +static int omap_usb_init(struct phy *x)
-> +{
-> +	struct omap_usb *phy = phy_get_drvdata(x);
-> +	u32 val;
-> +
-> +	if (phy->flags & OMAP_USB2_CALIBRATE_FALSE_DISCONNECT) {
-> +		/*
-> +		 *
-> +		 * Reduce the sensitivity of internal PHY by enabling the
-> +		 * DISCON_BYP_LATCH of the USB2PHY_ANA_CONFIG1 register. This
-> +		 * resolves issues with certain devices which can otherwise
-> +		 * be prone to false disconnects.
-> +		 *
-> +		 */
-> +		val = omap_usb_readl(phy->phy_base, USB2PHY_ANA_CONFIG1);
-> +		val |= USB2PHY_DISCON_BYP_LATCH;
-> +		omap_usb_writel(phy->phy_base, USB2PHY_ANA_CONFIG1, val);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->   static struct phy_ops ops = {
-> +	.init		= omap_usb_init,
->   	.power_on	= omap_usb_power_on,
->   	.power_off	= omap_usb_power_off,
->   	.owner		= THIS_MODULE,
-> @@ -150,6 +176,11 @@ static const struct usb_phy_data omap_usb2_data = {
->   	.flags = OMAP_USB2_HAS_START_SRP | OMAP_USB2_HAS_SET_VBUS,
->   };
->
-> +static const struct usb_phy_data dra7x_usb2_data = {
-> +	.label = "dra7x_usb2",
-> +	.flags = OMAP_USB2_CALIBRATE_FALSE_DISCONNECT,
-> +};
-> +
->   static const struct usb_phy_data am437x_usb2_data = {
->   	.label = "am437x_usb2",
->   	.flags =  0,
-> @@ -161,6 +192,10 @@ static const struct of_device_id omap_usb2_id_table[] = {
->   		.data = &omap_usb2_data,
->   	},
->   	{
-> +		.compatible = "ti,dra7x-usb2",
-> +		.data = &dra7x_usb2_data,
-> +	},
-> +	{
->   		.compatible = "ti,am437x-usb2",
->   		.data = &am437x_usb2_data,
->   	},
-> @@ -173,6 +208,7 @@ static int omap_usb2_probe(struct platform_device *pdev)
->   {
->   	struct omap_usb	*phy;
->   	struct phy *generic_phy;
-> +	struct resource *res;
->   	struct phy_provider *phy_provider;
->   	struct usb_otg *otg;
->   	struct device_node *node = pdev->dev.of_node;
-> @@ -208,6 +244,18 @@ static int omap_usb2_probe(struct platform_device *pdev)
->   	phy->phy.otg		= otg;
->   	phy->phy.type		= USB_PHY_TYPE_USB2;
->
-> +	if (phy_data->flags & OMAP_USB2_CALIBRATE_FALSE_DISCONNECT) {
-> +		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +		if (!res) {
-> +			dev_err(&pdev->dev, "memory resource not available\n");
-> +			return -ENODEV;
-> +		}
+That is because it depends on the first patch in this series. I'll move 
+it to first in the next one.
 
-You can remove the error check here and..
-> +		phy->phy_base = devm_request_and_ioremap(&pdev->dev, res);
-
-use devm_ioremap_resource instead.
-
-Thanks
-Kishon
+Best regards,
+Jyri
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
