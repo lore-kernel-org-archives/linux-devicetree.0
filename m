@@ -1,305 +1,109 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [RFC PATCH v2 08/21] drm/panel: add TC358764 driver
-Date: Wed, 5 Mar 2014 15:46:41 +0900
-Message-ID: <CAAQKjZPHi3eLAbFCEOWW5Y2MoADAmJfqNwywp-ub3Wc8suygmQ@mail.gmail.com>
-References: <1392204688-4591-1-git-send-email-a.hajda@samsung.com>
-	<1392204688-4591-9-git-send-email-a.hajda@samsung.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v10 1/3] mmc: sdhci-msm: Qualcomm SDHCI binding documentation
+Date: Wed, 5 Mar 2014 00:56:22 -0600
+Message-ID: <CAL_JsqKJ5Jn4wb8xtqrc09kkP4dzUA6qDEkK396RW+4qFNVf+Q@mail.gmail.com>
+References: <1393961226-25618-1-git-send-email-gdjakov@mm-sol.com>
+	<1393961226-25618-2-git-send-email-gdjakov@mm-sol.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1392204688-4591-9-git-send-email-a.hajda@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: DRI mailing list <dri-devel@lists.freedesktop.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1393961226-25618-2-git-send-email-gdjakov@mm-sol.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Georgi Djakov <gdjakov@mm-sol.com>
+Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Chris Ball <cjb@laptop.org>, Ulf Hansson <ulf.hansson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-02-12 20:31 GMT+09:00 Andrzej Hajda <a.hajda@samsung.com>:
-> The patch adds driver for Toshiba DSI/LVDS TC358764 bridge.
-> Driver registers itself as mipi_dsi_driver. It is exposed to the
-> system via drm_panel interface, it uses also drm_panel framework
-> to interact with LVDS panel connected to it.
-> Driver supports only DT bindings.
+On Tue, Mar 4, 2014 at 1:27 PM, Georgi Djakov <gdjakov@mm-sol.com> wrote:
+> This patch adds the device-tree binding documentation for
+> Qualcomm SDHCI driver. It contains the differences between
+> the core properties in mmc.txt and the properties used by
+> the sdhci-msm driver.
 >
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
 > ---
->  drivers/gpu/drm/panel/Kconfig          |   7 +
->  drivers/gpu/drm/panel/Makefile         |   1 +
->  drivers/gpu/drm/panel/panel-tc358764.c | 505 +++++++++++++++++++++++++++++++++
->  3 files changed, 513 insertions(+)
->  create mode 100644 drivers/gpu/drm/panel/panel-tc358764.c
+>  .../devicetree/bindings/mmc/sdhci-msm.txt          |   63 ++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-msm.txt
 >
-> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-> index 7527557..b98a485 100644
-> --- a/drivers/gpu/drm/panel/Kconfig
-> +++ b/drivers/gpu/drm/panel/Kconfig
-> @@ -23,4 +23,11 @@ config DRM_PANEL_S6E8AA0
->         select DRM_MIPI_DSI
->         select VIDEOMODE_HELPERS
->
-> +config DRM_PANEL_TC358764
-> +       tristate "TC358764 DSI/LVDS bridge"
-> +       depends on DRM && DRM_PANEL
-> +       depends on OF
-> +       select DRM_MIPI_DSI
-> +       select VIDEOMODE_HELPERS
-> +
->  endmenu
-> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-> index 181265b..7cbb0cf 100644
-> --- a/drivers/gpu/drm/panel/Makefile
-> +++ b/drivers/gpu/drm/panel/Makefile
-> @@ -1,2 +1,3 @@
->  obj-$(CONFIG_DRM_PANEL_SIMPLE) += panel-simple.o
->  obj-$(CONFIG_DRM_PANEL_S6E8AA0) += panel-s6e8aa0.o
-> +obj-$(CONFIG_DRM_PANEL_TC358764) += panel-tc358764.o
-> diff --git a/drivers/gpu/drm/panel/panel-tc358764.c b/drivers/gpu/drm/panel/panel-tc358764.c
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
 > new file mode 100644
-> index 0000000..f9c1289
+> index 0000000..c635c53
 > --- /dev/null
-> +++ b/drivers/gpu/drm/panel/panel-tc358764.c
-> @@ -0,0 +1,505 @@
-> +/*
-> + * TC358764 MIPI-DSI to LVDS bridge panel driver.
-> + *
-> + * Copyright (c) 2013 Samsung Electronics Co., Ltd
-> + *
-> + * Andrzej Hajda <a.hajda@samsung.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> +*/
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> @@ -0,0 +1,63 @@
+> +* Qualcomm SDHCI controller (sdhci-msm)
 > +
-> +#include <drm/drmP.h>
-> +#include <drm/drm_mipi_dsi.h>
-> +#include <drm/drm_panel.h>
-...
-> +/* of_* functions will be removed after acceptance of of_graph patches */
-> +static struct device_node *
-> +of_get_child_by_name_reg(struct device_node *parent, const char *name, u32 reg)
-> +{
-> +       struct device_node *np;
+> +This file documents differences between the core properties in mmc.txt
+> +and the properties used by the sdhci-msm driver.
 > +
-> +       for_each_child_of_node(parent, np) {
-> +               u32 r;
-> +
-> +               if (!np->name || of_node_cmp(np->name, name))
-> +                       continue;
-> +
-> +               if (of_property_read_u32(np, "reg", &r) < 0)
-> +                       r = 0;
-> +
-> +               if (reg == r)
-> +                       break;
-> +       }
-> +
-> +       return np;
-> +}
-> +
-> +static struct device_node *of_graph_get_port_by_reg(struct device_node *parent,
-> +                                                   u32 reg)
-> +{
-> +       struct device_node *ports, *port;
-> +
-> +       ports = of_get_child_by_name(parent, "ports");
-> +       if (ports) {
-> +               port = of_get_child_by_name_reg(ports, "port", reg);
-> +               of_node_put(ports);
-> +       } else {
-> +               port = of_get_child_by_name_reg(parent, "port", reg);
-> +       }
-> +       return port;
-> +}
-> +
-> +static struct device_node *
-> +of_graph_get_endpoint_by_reg(struct device_node *port, u32 reg)
-> +{
-> +       return of_get_child_by_name_reg(port, "endpoint", reg);
-> +}
-> +
-> +static struct device_node *
-> +of_graph_get_remote_port_parent(const struct device_node *node)
-> +{
-> +       struct device_node *np;
-> +       unsigned int depth;
-> +
-> +       /* Get remote endpoint node. */
-> +       np = of_parse_phandle(node, "remote-endpoint", 0);
-> +
-> +       /* Walk 3 levels up only if there is 'ports' node. */
-> +       for (depth = 3; depth && np; depth--) {
-> +               np = of_get_next_parent(np);
-> +               if (depth == 2 && of_node_cmp(np->name, "ports"))
-> +                       break;
-> +       }
-> +       return np;
-> +}
-> +
-> +static struct device_node *tc358764_of_find_panel_node(struct device *dev)
-> +{
-> +       struct device_node *np, *ep;
-> +
-> +       np = of_graph_get_port_by_reg(dev->of_node, 1);
-> +       if (!np)
-> +               return NULL;
-> +
-> +       ep = of_graph_get_endpoint_by_reg(np, 0);
-> +       of_node_put(np);
-> +       if (!ep)
-> +               return NULL;
-> +
-> +       np = of_graph_get_remote_port_parent(ep);
-> +       of_node_put(ep);
-> +
-> +       return np;
-> +}
-> +
-> +static int tc358764_parse_dt(struct tc358764 *ctx)
-> +{
-> +       struct device *dev = ctx->dev;
-> +       struct device_node *np = dev->of_node;
-> +       struct device_node *lvds;
-> +
-> +       ctx->reset_gpio = of_get_named_gpio(np, "reset-gpio", 0);
-> +       if (ctx->reset_gpio < 0) {
-> +               dev_err(dev, "no reset GPIO pin provided\n");
-> +               //return ctx->reset_gpio;
+> +Required properties:
+> +- compatible: Should contain "qcom,sdhci-msm-v4".
+> +- reg: Base address and length of the register set listed in reg-names.
+> +- reg-names: Should contain the following:
+> +       "hc_mem"   - Host controller register map
+> +       "core_mem" - SD Core register map
 
-Seem like your mistake.
+reg-names should not be required and the order specified by the binding.
 
-> +       }
-> +
-> +       lvds = tc358764_of_find_panel_node(ctx->dev);
+> +- interrupts: Should contain an interrupt-specifiers for the interrupts listed in interrupt-names.
+> +- interrupt-names: Should contain the following:
+> +       "hc_irq"     - Host controller interrupt
+> +       "pwr_irq"    - PMIC interrupt
 
-Isn't lvds device_node object of real lcd panel device, hv070wsa-100?
-it seems like more meaningful to use panel instead of lvds.
+Same for interrupt-names.
 
-> +       if (!lvds) {
-> +               dev_err(dev, "cannot find panel node\n");
-> +               return -EINVAL;
-> +       }
-> +       ctx->panel = of_drm_find_panel(lvds);
-> +       if (!ctx->panel) {
-> +               dev_info(dev, "panel not registered\n");
-> +               return -EPROBE_DEFER;
+> +- vdd-supply: Phandle to the regulator for the vdd (core voltage) supply.
+> +- vdd-io-supply: Phandle to the regulator for the vdd-io (i/o voltage) supply.
+> +- pinctrl-names: Should contain only one value - "default".
+> +- pinctrl-0: Should specify pin control groups used for this controller.
+> +- clocks: A list of phandle + clock-specifier pairs for the clocks listed in clock-names.
+> +- clock-names: Should contain the following:
+> +       "iface" - Main peripheral bus clock (PCLK/HCLK - AHB Bus clock) (required)
+> +       "core"  - SDC MMC clock (MCLK) (required)
+> +       "bus"   - SDCC bus voter clock (optional)
+> +
+> +Example:
+> +
+> +       sdhc_1: sdhci@f9824900 {
+> +               compatible = "qcom,sdhci-msm-v4";
+> +               reg = <0xf9824900 0x11c>, <0xf9824000 0x800>;
 
-That is what I concerned. This driver uses deferred probe feature
-because real LCD panel driver couldn't be probed yet at this moment.
-That isn't reasonable to me. There would be a better way than this
-one.
+Are there cases where these are really in a different 4KB range? If
+not, this should just be 1 range.
 
-> +       }
+> +               reg-names = "hc_mem", "core_mem";
+> +               interrupts = <0 123 0>, <0 138 0>;
+> +               interrupt-names = "hc_irq", "pwr_irq";
+> +               bus-width = <8>;
+> +               non-removable;
 > +
-> +       return 0;
-> +}
+> +               vdd-supply = <&pm8941_l20>;
+> +               vdd-io-supply = <&pm8941_s3>;
 > +
-> +static int tc358764_configure_regulators(struct tc358764 *ctx)
-> +{
-> +       int i, ret;
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&sdc1_clk &sdc1_cmd &sdc1_data>;
 > +
-> +       for (i = 0; i < ARRAY_SIZE(ctx->supplies); ++i)
-> +               ctx->supplies[i].supply = tc358764_supplies[i];
+> +               clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
+> +               clock-names = "core", "iface";
+> +       };
 > +
-> +       ret = devm_regulator_bulk_get(ctx->dev, ARRAY_SIZE(ctx->supplies),
-> +                                     ctx->supplies);
-> +       if (ret < 0)
-> +               dev_info(ctx->dev, "failed to get regulators: %d\n", ret);
+> +       sdhc_2: sdhci@f98a4900 {
+> +               compatible = "qcom,sdhci-msm-v4";
+> +               reg = <0xf98a4900 0x11c>, <0xf98a4000 0x800>;
+> +               reg-names = "hc_mem", "core_mem";
+> +               interrupts = <0 125 0>, <0 221 0>;
+> +               interrupt-names = "hc_irq", "pwr_irq";
+> +               bus-width = <4>;
 > +
-> +       return ret;
-> +}
+> +               vdd-supply = <&pm8941_l21>;
+> +               vdd-io-supply = <&pm8941_l13>;
 > +
-> +static int tc358764_probe(struct mipi_dsi_device *dsi)
-> +{
-> +       struct device *dev = &dsi->dev;
-> +       struct tc358764 *ctx;
-> +       int ret;
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&sdc2_clk &sdc2_cmd &sdc2_data>;
 > +
-> +       ctx = devm_kzalloc(dev, sizeof(struct tc358764), GFP_KERNEL);
-> +       if (!ctx) {
-> +               dev_err(dev, "failed to allocate tc358764 structure.\n");
-> +               return -ENOMEM;
-> +       }
-> +
-> +       mipi_dsi_set_drvdata(dsi, ctx);
-> +
-> +       ctx->dev = dev;
-> +
-> +       dsi->lanes = 4;
-> +       dsi->format = MIPI_DSI_FMT_RGB888;
-> +       dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST
-> +               | MIPI_DSI_MODE_VIDEO_AUTO_VERT;
-
-Is it right for the pixel format, mode type and lane count are fixed?
-I think these could be changed according to LCD type and its
-resolution.
-
-> +
-> +       ret = tc358764_parse_dt(ctx);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       ret = tc358764_configure_regulators(ctx);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       ret = devm_gpio_request_one(dev, ctx->reset_gpio, GPIOF_DIR_OUT,
-> +                                   "TC358764_RESET");
-> +       if (ret < 0) {
-> +               dev_info(dev, "failed to request reset gpio\n");
-> +               return ret;
-> +       }
-> +
-> +       drm_panel_init(&ctx->bridge);
-> +       ctx->bridge.dev = dev;
-> +       ctx->bridge.funcs = &tc358764_drm_funcs;
-> +
-> +       ret = drm_panel_add(&ctx->bridge);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       ret = mipi_dsi_attach(dsi);
-> +       if (ret < 0)
-> +               drm_panel_remove(&ctx->bridge);
-> +
-> +       return ret;
-> +}
-> +
-> +static int tc358764_remove(struct mipi_dsi_device *dsi)
-> +{
-> +       struct tc358764 *ctx = mipi_dsi_get_drvdata(dsi);
-> +
-> +       tc358764_poweroff(ctx);
-> +
-> +       mipi_dsi_detach(dsi);
-> +       drm_panel_remove(&ctx->bridge);
-> +
-> +       return 0;
-> +}
-> +
-> +static struct of_device_id tc358764_of_match[] = {
-> +       { .compatible = "toshiba,tc358764" },
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(of, tc358764_of_match);
-> +
-> +static struct mipi_dsi_driver tc358764_driver = {
-> +       .probe = tc358764_probe,
-> +       .remove = tc358764_remove,
-> +       .driver = {
-> +               .name = "panel_tc358764",
-> +               .owner = THIS_MODULE,
-> +               .of_match_table = tc358764_of_match,
-> +       },
-> +};
-> +module_mipi_dsi_driver(tc358764_driver);
-> +
-> +MODULE_AUTHOR("Andrzej Hajda <a.hajda@samsung.com>");
-> +MODULE_DESCRIPTION("MIPI-DSI based Driver for TC358764 DSI/LVDS Bridge");
-> +MODULE_LICENSE("GPL v2");
+> +               clocks = <&gcc GCC_SDCC2_APPS_CLK>, <&gcc GCC_SDCC2_AHB_CLK>;
+> +               clock-names = "core", "iface";
+> +       };
 > --
-> 1.8.3.2
+> 1.7.9.5
 >
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
