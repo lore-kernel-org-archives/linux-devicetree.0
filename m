@@ -1,72 +1,63 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH v5 7/7] pci: Add support for creating a generic host_bridge
- from device tree
-Date: Wed, 05 Mar 2014 17:58:22 +0900
-Message-ID: <000b01cf3851$0fe55d30$2fb01790$%han@samsung.com>
-References: <1393948204-11555-1-git-send-email-Liviu.Dudau@arm.com>
- <1393948204-11555-8-git-send-email-Liviu.Dudau@arm.com>
- <001f01cf3811$18463ed0$48d2bc70$%han@samsung.com>
- <20140305083311.GD13582@bart.dudau.co.uk>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] phy: miphy365x: Add Device Tree bindings for the
+ MiPHY365x
+Date: Wed, 5 Mar 2014 17:12:12 +0800
+Message-ID: <20140305091212.GA10380@lee--X1>
+References: <1392377036-12816-1-git-send-email-lee.jones@linaro.org>
+ <20140305073422.GD20016@e106331-lin.cambridge.arm.com>
+ <20140305084039.GB14902@lee--X1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20140305083311.GD13582@bart.dudau.co.uk>
-Content-language: ko
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Liviu Dudau' <liviu@dudau.co.uk>
-Cc: 'Liviu Dudau' <Liviu.Dudau@arm.com>, 'linux-pci' <linux-pci@vger.kernel.org>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Catalin Marinas' <Catalin.Marinas@arm.com>, 'Will Deacon' <Will.Deacon@arm.com>, 'linaro-kernel' <linaro-kernel@lists.linaro.org>, 'Benjamin Herrenschmidt' <benh@kernel.crashing.org>, 'LKML' <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, 'LAKML' <linux-arm-kernel@lists.infradead.org>, 'Tanmay Inamdar' <tinamdar@apm.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Jingoo Han' <jg1.han@samsung.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140305084039.GB14902@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alexandre.torgue-qxv4g6HH51o@public.gmane.org" <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, March 05, 2014 5:33 PM, Liviu Dudau wrote:
-> On Wed, Mar 05, 2014 at 10:20:28AM +0900, Jingoo Han wrote:
-> > On Wednesday, March 05, 2014 12:50 AM, Liviu Dudau wrote:
-> > >
-> > > Several platforms use a rather generic version of parsing
-> > > the device tree to find the host bridge ranges. Move the common code
-> > > into the generic PCI code and use it to create a pci_host_bridge
-> > > structure that can be used by arch code.
-> > >
-> > > Based on early attempts by Andrew Murray to unify the code.
-> > > Used powerpc and microblaze PCI code as starting point.
-> > >
-> > > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> > >
-> > > diff --git a/drivers/pci/host-bridge.c b/drivers/pci/host-bridge.c
-> > > index 8708b652..800678a 100644
-> > > --- a/drivers/pci/host-bridge.c
-> > > +++ b/drivers/pci/host-bridge.c
-
-[.....]
-
+> > > +Specifying phy control of devices
+> > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 > > > +
-> > > +	/* Apply architecture specific fixups for the ranges */
-> > > +	pcibios_fixup_bridge_ranges(resources);
-> >
-> > It also makes compile problem with exynos_defconfig as below:
-> >
-> > drivers/built-in.o: In function `pci_host_bridge_of_get_ranges':
-> > drivers/pci/host-bridge.c:157: undefined reference to `pcibios_fixup_bridge_ranges'
-> 
-> Does that mean that exynos_defconfig doesn't define CONFIG_OF? How do you
-> compile all the .dts files then? Should CONFIG_OF not be added to the default config
-> file?
+> > > +Device nodes should specify the configuration required in their =
+"phys"
+> > > +property, containing a phandle to the miphy device node, a port =
+number
+> > > +and a device type.
+> > > +
+> > > +Example:
+> > > +
+> > > +#include <dt-bindings/phy/phy-miphy365x.h>
+> > > +
+> > > +	sata0: sata@fe380000 {
+> > > +		...
+> > > +		phys	  =3D <&miphy365x_phy MIPHY_PORT_0 MIPHY_TYPE_SATA>;
+> > > +		...
+> > > +	};
+> >=20
+> > Is there not a generic phy binding we can point to? It seems a bit
+> > redundant to do this in each phy binding.
+>=20
+> Sure, but that wouldn't make much of an example.
+>=20
+>   Documentation/devicetree/bindings/phy/phy-bindings.txt
 
-Now, I am testing your patches with ARM32 platform such as
-Exynos SoCs. And the default 'exynos_defconfig' already defines
-CONFIG_OF=y. (./arch/arm/configs/exynos_defconfig)
+Ah sorry, I see what you mean now.
 
-> 
-> Other than that, your comment is correct. drivers/pci/host-bridge.c gets compiled
-> in regardless of CONFIG_OF and I need to provide an empty implementation for
-> pcibios_fixup_bridge_ranges().
+No, not yet. That's the next thing to go up into Mainline.
 
-There is no pcibios_fixup_bridge_ranges() in ./arch/arm/ directory.
-So, it makes the compile problem.
+I will replace this second example with a link when the other
+documentation document has been accepted.
 
-I think that the empty implementation for pcibios_fixup_bridge_ranges()
-may be necessary, in order to the compile problem.
-Or, __weak pcibios_fixup_bridge_ranges() would be used.
-
-Best regards,
-Jingoo Han
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
