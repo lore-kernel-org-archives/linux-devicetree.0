@@ -1,131 +1,89 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: [RESEND Patch 2/2] DT: bindings: add missing Marvell Kirkwood SoC documentation
-Date: Wed,  5 Mar 2014 22:21:14 +0100
-Message-ID: <1394054474-4310-3-git-send-email-andrew@lunn.ch>
-References: <1394054474-4310-1-git-send-email-andrew@lunn.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1394054474-4310-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+From: Loc Ho <lho@apm.com>
+Subject: Re: [PATCH v14 2/3] ata: Add APM X-Gene SoC AHCI SATA host controller driver
+Date: Wed, 5 Mar 2014 13:25:05 -0800
+Message-ID: <CAPw-ZT=BFjmFeiRL4fdYK8+R7baTWaAmQ4aXrJ-UUtDPqXUSog@mail.gmail.com>
+References: <1393306087-2875-1-git-send-email-lho@apm.com>
+	<1393306087-2875-2-git-send-email-lho@apm.com>
+	<1393306087-2875-3-git-send-email-lho@apm.com>
+	<1580977.AbkFy4UXLu@amdc1032>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <1580977.AbkFy4UXLu@amdc1032>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Olof Johansson <olof@lixom.net>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Marvell Dove SoC binding was not documented, yet. Add the
-documentation including the supported SoCs and boards.
+Hi,
 
-Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
----
- .../devicetree/bindings/arm/marvell,kirkwood.txt   | 97 ++++++++++++++++++++++
- 1 file changed, 97 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/marvell,kirkwood.txt
+>> +#define pdata_to_ctx(x) container_of(x, struct xgene_ahci_context, plat_data)
+>> +
+>> +struct xgene_ahci_context {
+>> +     struct ahci_platform_data plat_data;
+>
+> plat_data is used only to get to struct xgene_ahci_context instance
+> so it can be removed (especially since we want to remove struct
+> ahci_platform_data altogether in the long-term) and hpriv->plat_data
+> should be set to point to context instance itself.  Actually, this
+> seems to be the case already as hpriv->plat_data is set to hplat_data
+> (not to &hplat_data->plat_data) in xgene_ahci_probe() so I wonder how
+> does this driver work currently?
 
-diff --git a/Documentation/devicetree/bindings/arm/marvell,kirkwood.txt b/Documentation/devicetree/bindings/arm/marvell,kirkwood.txt
-new file mode 100644
-index 000000000000..925ecbf6e7b7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/marvell,kirkwood.txt
-@@ -0,0 +1,97 @@
-+Marvell Kirkwood SoC Family Device Tree Bindings
-+------------------------------------------------
-+
-+Boards with a SoC of the Marvell Kirkwook family, eg 88f6281
-+
-+* Required root node properties:
-+compatible: must contain "marvell,kirkwood"
-+
-+In addition, the above compatible shall be extended with the specific
-+SoC. Currently known SoC compatibles are:
-+
-+"marvell,kirkwood-88f6192"
-+"marvell,kirkwood-88f6281"
-+"marvell,kirkwood-88f6282"
-+"marvell,kirkwood-88f6283"
-+"marvell,kirkwood-88f6702"
-+"marvell,kirkwood-98DX4122"
-+
-+And in addition, the compatible shall be extended with the specific
-+board. Currently known boards are:
-+
-+"buffalo,lschlv2"
-+"buffalo,lsxhl"
-+"buffalo,lsxl"
-+"dlink,dns-320"
-+"dlink,dns-320-a1"
-+"dlink,dns-325"
-+"dlink,dns-325-a1"
-+"dlink,dns-kirkwood"
-+"excito,b3"
-+"globalscale,dreamplug-003-ds2001"
-+"globalscale,guruplug"
-+"globalscale,guruplug-server-plus"
-+"globalscale,sheevaplug"
-+"globalscale,sheevaplug"
-+"globalscale,sheevaplug-esata"
-+"globalscale,sheevaplug-esata-rev13"
-+"iom,iconnect"
-+"iom,iconnect-1.1"
-+"iom,ix2-200"
-+"keymile,km_kirkwood"
-+"lacie,cloudbox"
-+"lacie,inetspace_v2"
-+"lacie,laplug"
-+"lacie,netspace_lite_v2"
-+"lacie,netspace_max_v2"
-+"lacie,netspace_mini_v2"
-+"lacie,netspace_v2"
-+"marvell,db-88f6281-bp"
-+"marvell,db-88f6282-bp"
-+"marvell,mv88f6281gtw-ge"
-+"marvell,rd88f6281"
-+"marvell,rd88f6281"
-+"marvell,rd88f6281-a0"
-+"marvell,rd88f6281-a1"
-+"mpl,cec4"
-+"mpl,cec4-10"
-+"netgear,readynas"
-+"netgear,readynas"
-+"netgear,readynas-duo-v2"
-+"netgear,readynas-nv+-v2"
-+"plathome,openblocks-a6"
-+"plathome,openblocks-a7"
-+"raidsonic,ib-nas6210"
-+"raidsonic,ib-nas6210-b"
-+"raidsonic,ib-nas6220"
-+"raidsonic,ib-nas6220-b"
-+"raidsonic,ib-nas62x0"
-+"seagate,dockstar"
-+"seagate,goflexnet"
-+"synology,ds109"
-+"synology,ds110jv10"
-+"synology,ds110jv20"
-+"synology,ds110jv30"
-+"synology,ds111"
-+"synology,ds209"
-+"synology,ds210jv10"
-+"synology,ds210jv20"
-+"synology,ds212"
-+"synology,ds212jv10"
-+"synology,ds212jv20"
-+"synology,ds212pv10"
-+"synology,ds409"
-+"synology,ds409slim"
-+"synology,ds410j"
-+"synology,ds411"
-+"synology,ds411j"
-+"synology,ds411slim"
-+"synology,ds413jv10"
-+"synology,rs212"
-+"synology,rs409"
-+"synology,rs411"
-+"synology,rs812"
-+"usi,topkick"
-+"usi,topkick-1281P2"
-+"zyxel,nsa310"
-+"zyxel,nsa310a"
--- 
-1.9.0
+I will remove the plat_data. .
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +/**
+>> + * xgene_ahci_read_id - Read ID data from the specified device
+>> + * @dev: device
+>> + * @tf: proposed taskfile
+>> + * @id: data buffer
+>> + *
+>> + * This custom read ID function is required due to the fact that the HW
+>> + * does not support DEVSLP and the controller state machine may get stuck
+>> + * after processing the ID query command.
+>> + */
+>> +static unsigned int xgene_ahci_read_id(struct ata_device *dev,
+>> +                                    struct ata_taskfile *tf, u16 *id)
+>> +{
+>> +     u32 err_mask;
+>> +     void __iomem *port_mmio = ahci_port_base(dev->link->ap);
+>> +
+>> +     err_mask = ata_do_dev_read_id(dev, tf, id);
+>> +     if (err_mask)
+>> +             return err_mask;
+>> +
+>> +     /*
+>> +      * Mask reserved area. Bit78 spec of Link Power Management
+>
+> Word78?
+
+Yes...
+
+>
+>> +      * bit15-8: reserved
+>> +      * bit7: NCQ autosence
+>> +      * bit6: Software settings preservation supported
+>> +      * bit5: reserved
+>> +      * bit4: In-order sata delivery supported
+>> +      * bit3: DIPM requests supported
+>> +      * bit2: DMA Setup FIS Auto-Activate optimization supported
+>> +      * bit1: DMA Setup FIX non-Zero buffer offsets supported
+>> +      * bit0: Reserved
+>> +      *
+>> +      * Clear reserved bit (DEVSLP bit) as we don't support DEVSLP
+>> +      */
+>> +     id[78] &= 0x00FF;
+
+I will also fix this up by bit mask off.
+
+>> +
+>> +     /* HW requires toggle of the clock */
+>> +     ahci_platform_disable_clks(hpriv);
+>> +     rc = ahci_platform_enable_clks(hpriv);
+>
+> Why is this needed (extra clocks disable->enable sequence)?
+
+This is an HW errata with the clock. If I don't give the clock an full
+cycle, it doesn't work.
+
+-Loc
