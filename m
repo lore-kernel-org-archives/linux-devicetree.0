@@ -1,75 +1,49 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH 1/1] ARM: Exynos: Add generic compatible string
-Date: Wed, 5 Mar 2014 21:00:22 +0530
-Message-ID: <CAK9yfHyDbx8DcdFvoAQZuo9RWLTZmXZPj8gSo8B4z=R0c=Lf4Q@mail.gmail.com>
-References: <1392809645-631-1-git-send-email-sachin.kamat@linaro.org>
-	<CAK9yfHxXTbNmgTYqFH1Mm-X_sN2GpfLPp0MKixU=g2bKxz8e=g@mail.gmail.com>
-	<CAOesGMiZXKRbrbmvKs4pF7HiXM1hsGjzbFUQmJ-n5-nar5uMBw@mail.gmail.com>
-	<201402251242.30654.arnd@arndb.de>
-	<CAK9yfHxg8kwL2zFy7ErW4kR1_5BerxqaLyaJx3Jko8wLRGdCkw@mail.gmail.com>
-	<531714C4.2040200@gmail.com>
+From: delicious quinoa <delicious.quinoa@gmail.com>
+Subject: Re: [PATCH v12] gpio: add a driver for the Synopsys DesignWare APB
+ GPIO block
+Date: Wed, 5 Mar 2014 09:30:23 -0600
+Message-ID: <CANk1AXRWdxgY4T6CHAacePupuyKRn_byGCGdtdvbBHvJuZkZzw@mail.gmail.com>
+References: <1393369261-17469-1-git-send-email-delicious.quinoa@gmail.com>
+	<CACRpkdbSk3Vv+-U=jQTH=8E=yx4tkHApGq-ARfwXs-cBf4=ddA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <531714C4.2040200@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbSk3Vv+-U=jQTH=8E=yx4tkHApGq-ARfwXs-cBf4=ddA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Jamie Iles <jamie@jamieiles.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Mark Rutland <mark.rutland@arm.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Yves Vandervennet <rocket.yvanderv@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 5 March 2014 17:42, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> On 05.03.2014 09:25, Sachin Kamat wrote:
->>
->> On 25 February 2014 17:12, Arnd Bergmann <arnd@arndb.de> wrote:
->>>
->>> On Tuesday 25 February 2014, Olof Johansson wrote:
->>>>
->>>> I disagree. I don't know what Samsung has in mind, but the revision of
->>>> the CPU doesn't have all that much to do with the rest of the SoC.
->>>> It's quite likely that some vendors (maybe not Samsung, but the same
->>>> concept applies) will ship 64-bit SoCs that are very similar to their
->>>> preceding 32-bit ones, same IP, similar busses, etc. I'm pretty sure
->>>> at least some vendors will do very close to that.
->>>
->>>
->>> Right.
->>>
->>>> So, if EXYNOS4 and EXYNOS5 can share a compatible value when they use
->>>> different CPUs, then there's no reason that whatever future 64-bit
->>>> ones can also share it.
->>>
->>>
->>> How about putting both 'samsung,exynos' and 'samsung,exynos4' in DT then
->>> and having the platform code match exynos4 and exynos5 but not exynos?
->>>
->>> That way, I think we are consistent and future-proof. Any code that needs
->>> to know if it's running on some exynos version can just check for the
->>> 'samsung,exynos' compatible value and that will work on both arm32 and
->>> arm64. Also, if we ever decide we want to run a 32-bit kernel on a 64-bit
->>> exynos, we can just add 'samsung,exynos6' (or whatever number that will
->>> be) to the list.
->>>
->>> My usual disclaimer for this: You should never ever consider actually
->>> running a 32-bit kernel on a 64-bit CPU, but at the same time there
->>> shouldn't be any reason why it won't work either, given that we require
->>> arm64 based systems to have all SoC specific code in drivers and we
->>> can use the same drivers on arm32.
->>
->>
->> Kukjin, Tomasz,
->>
->> What is your opinion about Arnd's suggestion?
->>
+On Tue, Mar 4, 2014 at 7:01 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Wed, Feb 26, 2014 at 7:01 AM, Alan Tull <delicious.quinoa@gmail.com> wrote:
 >
-> I would still prefer introducing a generic string for 32-bit Exynos SoCs,
-> but I don't think it really matters a lot. I guess we can stick to just
-> exynos4 and exynos5 compatible strings then, as long as we can merge the
-> "board"-files and common.c together, since the code is pretty much
-> SoC-independent now.
+>> From: Jamie Iles <jamie@jamieiles.com>
+>>
+>> The Synopsys DesignWare block is used in some ARM devices (picoxcell)
+>> and can be configured to provide multiple banks of GPIO pins.
+>>
+>> Signed-off-by: Jamie Iles <jamie@jamieiles.com>
+>> Signed-off-by: Alan Tull <atull@altera.com>
+>> Reviewed-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+>>
+>> v12: - Add irq_startup/shutdown
+>>      - do irq_create_mapping() in probe, irq_find_mapping() in to_irq()
+>>      - Adjust mappings to show support for 1 gpio per port.
+>>      - gpio-cells = <1>
+>
+> Patch applied!
+>
+> You've done a tremendous work on this driver and there is
+> absolutely nothing controversial about the bindings, so it is
+> my pleasure to include this driver.
+>
+> Yours,
+> Linus Walleij
 
-OK. Just wanted a confirmation before sending out the patches.
-Thanks.
+Excellent!  Thanks Linus!
 
--- 
-With warm regards,
-Sachin
+And thanks Jamie for originating this driver!
+
+Alan Tull
+aka
+delicious quinoa
