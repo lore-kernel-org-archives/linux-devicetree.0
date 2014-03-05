@@ -1,65 +1,96 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v2 01/11] base: power: Add generic OF-based power domain
- look-up
-Date: Wed, 05 Mar 2014 13:44:34 +0100
-Message-ID: <53171C32.20107@gmail.com>
-References: <1393862536-9842-1-git-send-email-tomasz.figa@gmail.com>	<1393862536-9842-2-git-send-email-tomasz.figa@gmail.com> <CAPDyKFqK1JqxeJ_L_bzduixRLGA5m_FFPq_of2r6y0aCpS7z9A@mail.gmail.com> <53170EC2.6090908@gmail.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH v4 4/4] ARM: OMAP2+: Add pdata quirk for sys_clkout2 for
+ omap3 DBB056
+Date: Wed, 5 Mar 2014 15:07:01 +0200
+Message-ID: <53172175.5060603@ti.com>
+References: <1392387656-15186-1-git-send-email-chf.fritz@googlemail.com> <1392387656-15186-5-git-send-email-chf.fritz@googlemail.com> <20140228223741.GM13624@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <53170EC2.6090908@gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene.kim@samsung.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Loren
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140228223741.GM13624@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Christoph Fritz <chf.fritz@googlemail.com>
+Cc: bcousson@baylibre.com, Tomi Valkeinen <tomi.valkeinen@ti.com>, Nishanth Menon <nm@ti.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Daniel Mack <zonque@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05.03.2014 12:47, Tomasz Figa wrote:
-> Hi Ulf,
+On 03/01/2014 12:37 AM, Tony Lindgren wrote:
+> * Christoph Fritz <chf.fritz@googlemail.com> [140214 06:24]:
+>> Full device tree support for clock control, especially to set frequencies,
+>> is not yet accomplished. Until then, configure the 24Mhz of sys_clkout2 to
+>> feed an USB-Hub here.
 >
-> On 05.03.2014 08:19, Ulf Hansson wrote:
->>> @@ -2177,3 +2181,297 @@ void pm_genpd_init(struct generic_pm_domain
->>> *genpd,
->>>          list_add(&genpd->gpd_list_node, &gpd_list);
->>>          mutex_unlock(&gpd_list_lock);
->>>   }
->>> +
->>> +#ifdef CONFIG_PM_GENERIC_DOMAINS_OF
->>
->> Do we need a new config for this? Can't we just use CONFIG_OF?
->>
->
-> I guess we could, but initially it would have to be CONFIG_OF &&
-> !CONFIG_ARCH_EXYNOS until patch 03/11 converts Exynos to use the common
-> code.
->
->>> +       if (ret < 0) {
->>> +               dev_err(dev, "failed to add to power domain %s: %d",
->>> +                       pd->name, ret);
->>> +               return ret;
->>> +       }
->>> +
->>> +       pm_genpd_dev_need_restore(dev, true);
->>
->> So this will reflect the device as being inactive, which I think is
->> the wrong approach.
->>
->> Usually we should expect drivers that's being probed successfully to
->> leave their devices in active state, right?
->
-> It depends on domain power state, but actually it seems to be already
-> handled in __pm_genpd_add_device(), so this line might be not needed
-> indeed.
->
-> Strangely enough, it seemed to be needed on Exynos for correct
-> operation, but maybe in the meantime some fixes in genpd code showed up.
-> This will need some extra testing.
+> Hmm would like to see Tero's comments on this, I wonder if we should
+> wait on this to avoid extra churn?
 
-Hmm, after removing this line, power domains no longer work correctly on 
-Exynos (thanks Marek for testing). Unfortunately I'm on a sick leave 
-right now and I won't be able to debug this issue on Exynos for some 
-time, but I'll see if I can reproduce it on s3c64xx board I have here at 
-home.
+Well, the set I posted that adds default clock parenting / default rate 
+support to DT hasn't actually moved forward, so you might want to take 
+this in as is now if it should be rushed. The clk-enable part isn't done 
+currently by anything anyway. Just wondering though, should you create 
+some sort of driver for your usb-hub which would control these clocks?
 
-Best regards,
-Tomasz
+-Tero
+
+
+>
+> Regards,
+>
+> Tony
+>
+>> Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
+>> ---
+>>   arch/arm/mach-omap2/pdata-quirks.c |   37 ++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 37 insertions(+)
+>>
+>> diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
+>> index 435a823..e36ac3f 100644
+>> --- a/arch/arm/mach-omap2/pdata-quirks.c
+>> +++ b/arch/arm/mach-omap2/pdata-quirks.c
+>> @@ -172,6 +172,43 @@ static void __init am3517_evm_legacy_init(void)
+>>
+>>   static void __init omap3_dbb056_legacy_init(void)
+>>   {
+>> +	struct clk *clkout2;
+>> +	struct clk *cm96fck;
+>> +
+>> +	/* Reparent clkout2 to 96M_FCK */
+>> +	pr_info("%s: Late Reparent clkout2 to 96M_FCK\n", __func__);
+>> +	clkout2 = clk_get(NULL, "clkout2_src_ck");
+>> +	if (clkout2 < 0) {
+>> +		pr_err("a83x-quirk: couldn't get clkout2_src_ck\n");
+>> +		return;
+>> +	}
+>> +	cm96fck = clk_get(NULL, "cm_96m_fck");
+>> +	if (cm96fck < 0) {
+>> +		pr_err("a83x-quirk: couldn't get cm_96m_fck\n");
+>> +		return;
+>> +	}
+>> +	if (clk_set_parent(clkout2, cm96fck) < 0) {
+>> +		pr_err("a83x-quirk: couldn't reparent clkout2_src_ck\n");
+>> +		return;
+>> +	}
+>> +
+>> +	/* Set clkout2 to 24MHz for internal usb hub*/
+>> +	pr_info("%s: Set clkout2 to 24MHz for internal usb hub\n", __func__);
+>> +	clkout2 = clk_get(NULL, "sys_clkout2");
+>> +	if (clkout2 < 0) {
+>> +		pr_err("%s: couldn't get sys_clkout2\n", __func__);
+>> +		return;
+>> +	}
+>> +	if (clk_set_rate(clkout2, 24000000) < 0) {
+>> +		pr_err("%s: couldn't set sys_clkout2 rate\n", __func__);
+>> +		return;
+>> +	}
+>> +	if (clk_prepare_enable(clkout2) < 0) {
+>> +		pr_err("%s: couldn't enable sys_clkout2\n", __func__);
+>> +		return;
+>> +	}
+>> +
+>> +	/* Initialize display */
+>>   	omap3_dbb056_display_init_of();
+>>   }
+>>   #endif /* CONFIG_ARCH_OMAP3 */
+>> --
+>> 1.7.10.4
+>>
+
