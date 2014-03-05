@@ -1,139 +1,100 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v5 0/7] [RFC] Support for creating generic host_bridge
- from device tree
-Date: Wed, 5 Mar 2014 11:40:54 +0000
-Message-ID: <20140305114054.GG1692@e106497-lin.cambridge.arm.com>
-References: <1393948204-11555-1-git-send-email-Liviu.Dudau@arm.com>
- <CACoXjcmmbVsmvy46NhjFoBg8mRO=APiY3dZZY=ra-Ceib9Sr4A@mail.gmail.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v2] ARM: dts: imx6qdl-sabresd.dtsi: Add red led
+Date: Wed, 5 Mar 2014 19:42:28 +0800
+Message-ID: <20140305114223.GN8784@S2101-09.ap.freescale.net>
+References: <20140305062216.GI8784@S2101-09.ap.freescale.net>
+ <1394007383-21874-1-git-send-email-vincent.stehle@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CACoXjcmmbVsmvy46NhjFoBg8mRO=APiY3dZZY=ra-Ceib9Sr4A@mail.gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Tanmay Inamdar <tinamdar@apm.com>
-Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>
+In-Reply-To: <1394007383-21874-1-git-send-email-vincent.stehle@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vincent =?iso-8859-1?Q?Stehl=E9?= <vincent.stehle@freescale.com>
+Cc: Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 05, 2014 at 01:53:55AM +0000, Tanmay Inamdar wrote:
-> Hello,
+On Wed, Mar 05, 2014 at 09:16:23AM +0100, Vincent Stehl=E9 wrote:
+> Make the red gpio led available to the user.
 >=20
-> Thanks for the patch set.
+> This can be toggled with the sysfs for example, or used as a heartbea=
+t or mmc
+> activity light by changing the trigger.
 >=20
-> On Tue, Mar 4, 2014 at 7:49 AM, Liviu Dudau <Liviu.Dudau@arm.com> wro=
-te:
-> > This is v5 of my attempt to add support for a generic pci_host_brid=
-ge controller created
-> > from a description passed in the device tree.
-> >
-> > Changes from v4:
-> >   - Export pci_find_host_bridge() to be used by arch code. There is=
- scope for
-> >     making the arch/arm64 version of pci_domain_nr the default weak=
- implementation
-> >     but that would double the size of this series in order to handl=
-e all #define
-> >     versions of the pci_domain_nr() function, so I suggest keeping =
-that for a separate
-> >     cleanup series.
-> >
-> > Changes from v3:
-> >   - Dynamically allocate bus_range resource in of_create_pci_host_b=
-ridge()
-> >   - Fix the domain number used when creating child busses.
-> >   - Changed domain number allocator to use atomic operations.
-> >   - Use ERR_PTR() to propagate the error out of pci_create_root_bus=
-_in_domain()
-> >     and of_create_pci_host_bridge().
-> >
-> > Changes from v2:
-> >   - Use range->cpu_addr when calling pci_address_to_pio()
-> >   - Introduce pci_register_io_range() helper function in order to r=
-egister
-> >     io ranges ahead of their conversion to PIO values. This is need=
-ed as no
-> >     information is being stored yet regarding the range mapping, ma=
-king
-> >     pci_address_to_pio() fail. Default weak implementation does not=
-hing,
-> >     to cover the default weak implementation of pci_address_to_pio(=
-) that
-> >     expects direct mapping of physical addresses into PIO values (x=
-86 view).
-> >
-> > Changes from v1:
-> >   - Add patch to fix conversion of IO ranges into IO resources.
-> >   - Added a domain_nr member to pci_host_bridge structure, and a ne=
-w function
-> >     to create a root bus in a given domain number. In order to faci=
-litate that
-> >     I propose changing the order of initialisation between pci_host=
-_bridge and
-> >     it's related bus in pci_create_root_bus() as sort of a rever of=
- 7b5436635800.
-> >     This is done in patch 1/4 and 2/4.
-> >   - Added a simple allocator of domain numbers in drivers/pci/host-=
-bridge.c. The
-> >     code will first try to get a domain id from of_alias_get_id(...=
-, "pci-domain")
-> >     and if that fails assign the next unallocated domain id.
-> >   - Changed the name of the function that creates the generic host =
-bridge from
-> >     pci_host_bridge_of_init to of_create_pci_host_bridge and export=
-ed as GPL symbol.
-> >
-> >
-> > v4 thread here: https://lkml.org/lkml/2014/3/3/301
-> > v3 thread here: https://lkml.org/lkml/2014/2/28/216
-> > v2 thread here: https://lkml.org/lkml/2014/2/27/245
-> > v1 thread here: https://lkml.org/lkml/2014/2/3/380
-> >
-> > Best regards,
-> > Liviu
-> >
-> > Liviu Dudau (7):
-> >   pci: Introduce pci_register_io_range() helper function.
-> >   pci: OF: Fix the conversion of IO ranges into IO resources.
-> >   pci: Create pci_host_bridge before its associated bus in pci_crea=
-te_root_bus.
-> >   pci: Introduce a domain number for pci_host_bridge.
-> >   pci: Use parent domain number when allocating child busses.
-> >   pci: Export find_pci_host_bridge() function.
-> >   pci: Add support for creating a generic host_bridge from device t=
-ree
-> >
-> >  drivers/of/address.c       |  39 +++++++++++++
-> >  drivers/pci/host-bridge.c  | 142 +++++++++++++++++++++++++++++++++=
-+++++++++++-
-> >  drivers/pci/probe.c        |  72 +++++++++++++++--------
-> >  include/linux/of_address.h |  14 +----
-> >  include/linux/pci.h        |  17 ++++++
-> >  5 files changed, 248 insertions(+), 36 deletions(-)
-> >
-> > --
-> > 1.9.0
-> >
+> Signed-off-by: Vincent Stehl=E9 <vincent.stehle@freescale.com>
+> Cc: Shawn Guo <shawn.guo@linaro.org>
+> Cc: Sascha Hauer <kernel@pengutronix.de>
 >=20
-> This series is working fine on X-Gene with multiple PCIe ports. You
-> can add my Tested-by if you want.
+> ---
+>=20
+> Hi Shawn,
+>=20
+> Thanks for your feedback.
+>=20
+> If you don't want to make the led a heartbeat by default, here is v2 =
+of the
+> patch, which only makes the led available to the user. One is then fr=
+ee to use
+> it as a heartbeat, or something else. Do you prefer it this way?
+>=20
+> Best regards,
+>=20
+> V.
+>=20
+>=20
+> Changes since v1:
+> - Do not make it a heartbeat by default.
+>=20
+>  arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/d=
+ts/imx6qdl-sabresd.dtsi
+> index e75e11b..210a8df 100644
+> --- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> @@ -88,6 +88,16 @@
+>  		default-brightness-level =3D <7>;
+>  		status =3D "okay";
+>  	};
+> +
+> +	leds {
+> +		compatible =3D "gpio-leds";
+> +
+> +		red {
+> +		        gpios =3D <&gpio1 2 0>;
+> +		        linux,default-trigger =3D "none";
 
-What about the arm64 series, can I add a Tested-by to that one as well?
+Per Documentation/devicetree/bindings/leds/common.txt, 'none' is not a
+valid value of property 'linux,default-trigger'.  I suggest you simply
+drop the property.
 
-Thanks,
-Liviu
+> +		        default-state =3D "on";
+> +		};
+> +	};
+>  };
+> =20
+>  &audmux {
+> @@ -182,6 +192,7 @@
+>  				MX6QDL_PAD_ENET_TXD1__GPIO1_IO29 0x80000000
+>  				MX6QDL_PAD_EIM_D22__GPIO3_IO22  0x80000000
+>  				MX6QDL_PAD_ENET_CRS_DV__GPIO1_IO25 0x80000000
+> +				MX6QDL_PAD_GPIO_2__GPIO1_IO02 0x80000000
 
+It's not a hog pin, so shouldn't be added here.  (Right, most of the
+existing pins shouldn't be here from the beginning)
+
+The patch from Liu Ying [1] could be a good example on this regard.
+
+Shawn
+
+[1] http://www.spinics.net/lists/arm-kernel/msg308999.html
+
+>  			>;
+>  		};
+>  	};
+> --=20
+> 1.9.0
 >=20
-> Thanks,
-> Tanmay
 >=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
