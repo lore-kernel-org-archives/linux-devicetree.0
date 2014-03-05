@@ -1,149 +1,56 @@
-From: Tanmay Inamdar <tinamdar@apm.com>
-Subject: Re: [PATCH v5 0/7] [RFC] Support for creating generic host_bridge
- from device tree
-Date: Wed, 5 Mar 2014 09:51:11 -0800
-Message-ID: <CACoXjcnCeWzwa6mA-+xU1B5PnQjtf6OZMUbOPKp2HjvxZnDfYQ@mail.gmail.com>
-References: <1393948204-11555-1-git-send-email-Liviu.Dudau@arm.com>
-	<CACoXjcmmbVsmvy46NhjFoBg8mRO=APiY3dZZY=ra-Ceib9Sr4A@mail.gmail.com>
-	<20140305081800.GD1692@e106497-lin.cambridge.arm.com>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH v5 1/8] mtd: spi-nor: copy the SPI NOR commands to a new header file
+Date: Wed, 5 Mar 2014 14:36:43 +0100
+Message-ID: <201403051436.43830.marex@denx.de>
+References: <1393238262-8622-1-git-send-email-b32955@freescale.com> <5316B9F2.8050301@freescale.com> <20980858CB6D3A4BAE95CA194937D5E73EAAFCDB@DBDE04.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: Text/Plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140305081800.GD1692@e106497-lin.cambridge.arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Tanmay Inamdar <tinamdar@apm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73EAAFCDB@DBDE04.ent.ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Gupta, Pekon" <pekon@ti.com>
+Cc: Huang Shijie <b32955@freescale.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "angus.clark@st.com" <angus.clark@st.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "b44548@freescale.com" <b44548@freescale.com>, "broonie@linaro.org" <broonie@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Poddar, Sourav" <sourav.poddar@ti.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 5, 2014 at 12:18 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrot=
-e:
-> On Wed, Mar 05, 2014 at 01:53:55AM +0000, Tanmay Inamdar wrote:
->> Hello,
->>
->> Thanks for the patch set.
->>
->> On Tue, Mar 4, 2014 at 7:49 AM, Liviu Dudau <Liviu.Dudau@arm.com> wr=
-ote:
->> > This is v5 of my attempt to add support for a generic pci_host_bri=
-dge controller created
->> > from a description passed in the device tree.
->> >
->> > Changes from v4:
->> >   - Export pci_find_host_bridge() to be used by arch code. There i=
-s scope for
->> >     making the arch/arm64 version of pci_domain_nr the default wea=
-k implementation
->> >     but that would double the size of this series in order to hand=
-le all #define
->> >     versions of the pci_domain_nr() function, so I suggest keeping=
- that for a separate
->> >     cleanup series.
->> >
->> > Changes from v3:
->> >   - Dynamically allocate bus_range resource in of_create_pci_host_=
-bridge()
->> >   - Fix the domain number used when creating child busses.
->> >   - Changed domain number allocator to use atomic operations.
->> >   - Use ERR_PTR() to propagate the error out of pci_create_root_bu=
-s_in_domain()
->> >     and of_create_pci_host_bridge().
->> >
->> > Changes from v2:
->> >   - Use range->cpu_addr when calling pci_address_to_pio()
->> >   - Introduce pci_register_io_range() helper function in order to =
-register
->> >     io ranges ahead of their conversion to PIO values. This is nee=
-ded as no
->> >     information is being stored yet regarding the range mapping, m=
-aking
->> >     pci_address_to_pio() fail. Default weak implementation does no=
-thing,
->> >     to cover the default weak implementation of pci_address_to_pio=
-() that
->> >     expects direct mapping of physical addresses into PIO values (=
-x86 view).
->> >
->> > Changes from v1:
->> >   - Add patch to fix conversion of IO ranges into IO resources.
->> >   - Added a domain_nr member to pci_host_bridge structure, and a n=
-ew function
->> >     to create a root bus in a given domain number. In order to fac=
-ilitate that
->> >     I propose changing the order of initialisation between pci_hos=
-t_bridge and
->> >     it's related bus in pci_create_root_bus() as sort of a rever o=
-f 7b5436635800.
->> >     This is done in patch 1/4 and 2/4.
->> >   - Added a simple allocator of domain numbers in drivers/pci/host=
--bridge.c. The
->> >     code will first try to get a domain id from of_alias_get_id(..=
-=2E, "pci-domain")
->> >     and if that fails assign the next unallocated domain id.
->> >   - Changed the name of the function that creates the generic host=
- bridge from
->> >     pci_host_bridge_of_init to of_create_pci_host_bridge and expor=
-ted as GPL symbol.
->> >
->> >
->> > v4 thread here: https://lkml.org/lkml/2014/3/3/301
->> > v3 thread here: https://lkml.org/lkml/2014/2/28/216
->> > v2 thread here: https://lkml.org/lkml/2014/2/27/245
->> > v1 thread here: https://lkml.org/lkml/2014/2/3/380
->> >
->> > Best regards,
->> > Liviu
->> >
->> > Liviu Dudau (7):
->> >   pci: Introduce pci_register_io_range() helper function.
->> >   pci: OF: Fix the conversion of IO ranges into IO resources.
->> >   pci: Create pci_host_bridge before its associated bus in pci_cre=
-ate_root_bus.
->> >   pci: Introduce a domain number for pci_host_bridge.
->> >   pci: Use parent domain number when allocating child busses.
->> >   pci: Export find_pci_host_bridge() function.
->> >   pci: Add support for creating a generic host_bridge from device =
-tree
->> >
->> >  drivers/of/address.c       |  39 +++++++++++++
->> >  drivers/pci/host-bridge.c  | 142 ++++++++++++++++++++++++++++++++=
-++++++++++++-
->> >  drivers/pci/probe.c        |  72 +++++++++++++++--------
->> >  include/linux/of_address.h |  14 +----
->> >  include/linux/pci.h        |  17 ++++++
->> >  5 files changed, 248 insertions(+), 36 deletions(-)
->> >
->> > --
->> > 1.9.0
->> >
->>
->> This series is working fine on X-Gene with multiple PCIe ports. You
->> can add my Tested-by if you want.
->
-> Cheers! Any ETA on your updated patches?
+On Wednesday, March 05, 2014 at 08:24:21 AM, Gupta, Pekon wrote:
+> Hi Marek, Shijie,
+>=20
+> >From: Huang Shijie [mailto:b32955@freescale.com]
+> >
+> >=E4=BA=8E 2014=E5=B9=B403=E6=9C=8805=E6=97=A5 11:43, Marek Vasut =E5=
+=86=99=E9=81=93:
+> >> Why didn't you keep it like that? Was there some reason for that ?
+> >
+> >http://marc.info/?l=3Dlinux-arm-kernel&m=3D138545182232220&w=3D4
+> >
+> >Pekon suggestted  do not touch the m25p80.c.
+> >So i just copy these commands to a new header.
+> >Anyway, it's really not an important issue for me. :)
+>=20
+> My opinion was that we should not touch m25p80.c because:
+> (1)  As m25p80 is already working for various vendors. So unless mult=
+iple
+>    platforms start using SPI NOR framework, m25p80.c should remain
+> untouched. (2) we should not clutter header file with vendor specific
+> op-codes as used in m25p80. I was of the opinion that instead of
+> hard-coding the vendor specific info as MACROs, such information shou=
+ld be
+> taken from DT or platform-data.
+>=20
+> However, this was my thought during initial versions of SPI NOR patch=
+es.
+> But now if you think that SPI NOR is stable enough that same header i=
+nfo
+> can be reused without conflicts, then no problems.
+>=20
+> (Apologies to Huang Shijie for re-work :-) ).
 
-I will apply your V6 and generate mine on top of them. I will send my
-X-Gene patches out today.
+Ah, thanks for explaining, understood. Given that the m25p80.c is rewor=
+ked later=20
+in the series anyway, I'm mostly OK with this patch ... even though I'd=
+ prefer=20
+to see no duplication throughout the series ;-)
 
->
-> I might get the required signatures on the legal approval next week a=
-nd
-> then I will publish my host controller driver.
->
-> Best regards,
-> Liviu
->
->>
->> Thanks,
->> Tanmay
->>
->
-> --
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> | I would like to |
-> | fix the world,  |
-> | but they're not |
-> | giving me the   |
->  \ source code!  /
->   ---------------
->     =C2=AF\_(=E3=83=84)_/=C2=AF
->
+Best regards,
+Marek Vasut
