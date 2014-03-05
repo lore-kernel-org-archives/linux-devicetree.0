@@ -1,43 +1,195 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gYWhjaV9pbXg6IFB1dCAjaWZkZWYgQ09ORklHX1BNX1NM?=
- =?UTF-8?B?RUVQIGFyb3VuZCBzdXNwZW5kIC8gcmVzdW1lIGZ1bmN0aW9ucw==?=
-Date: Wed, 05 Mar 2014 23:27:45 +0400
-Message-ID: <1394047665.191935701@f319.i.mail.ru>
-References: <1394047069-29902-1-git-send-email-hdegoede@redhat.com>
- <201403052023.40492.marex@denx.de>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH 4/6] v4l: vsp1: Add DT support
+Date: Wed, 05 Mar 2014 20:30:27 +0100
+Message-ID: <4542787.8JEGs6DclK@avalon>
+References: <1394047444-30077-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201403052023.40492.marex@denx.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?TWFyZWsgVmFzdXQ=?= <marex@denx.de>
-Cc: =?UTF-8?B?ZGV2aWNldHJlZQ==?= <devicetree@vger.kernel.org>, =?UTF-8?B?SGFucyBkZSBHb2VkZQ==?= <hdegoede@redhat.com>, =?UTF-8?B?UmljaGFyZCBaaHU=?= <Hong-Xing.Zhu@freescale.com>, =?UTF-8?B?QmFydGxvbWllaiBab2xuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, linux-ide@vger.kernel.org, linux-sunxi@googlegroups.com, =?UTF-8?B?VGVqdW4gSGVv?= <tj@kernel.org>, =?UTF-8?B?TWF4aW1lIFJpcGFyZA==?= <maxime.ripard@free-electrons.com>, =?UTF-8?B?T2xpdmVyIFNjaGluYWds?= <oliver@schinagl.nl>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1394047444-30077-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-0KHRgNC10LTQsCwgIDUg0LzQsNGA0YLQsCAyMDE0LCAyMDoyMyArMDE6MDAg0L7RgiBNYXJlayBW
-YXN1dCA8bWFyZXhAZGVueC5kZT46Cj4gT24gV2VkbmVzZGF5LCBNYXJjaCAwNSwgMjAxNCBhdCAw
-ODoxNzo0OSBQTSwgSGFucyBkZSBHb2VkZSB3cm90ZToKPiA+IFRoaXMgZml4ZXMgdGhlIGZvbGxv
-d2luZyB3YXJuaW5ncyB3aGVuIENPTkZJR19QTV9TTEVFUCBpcyBub3Qgc2V0Ogo+ID4gCj4gPiBk
-cml2ZXJzL2F0YS9haGNpX2lteC5jOjI4NDoxMjogd2FybmluZzog4oCYaW14X2FoY2lfc3VzcGVu
-ZOKAmSBkZWZpbmVkIGJ1dCBub3QKPiA+IHVzZWQgWy1XdW51c2VkLWZ1bmN0aW9uXSBkcml2ZXJz
-L2F0YS9haGNpX2lteC5jOjI5OToxMjogd2FybmluZzoKPiA+IOKAmGlteF9haGNpX3Jlc3VtZeKA
-mSBkZWZpbmVkIGJ1dCBub3QgdXNlZCBbLVd1bnVzZWQtZnVuY3Rpb25dCj4gPiAKPiA+IFJlcG9y
-dGVkLWJ5OiBCYXJ0bG9taWVqIFpvbG5pZXJraWV3aWN6IDxiLnpvbG5pZXJraWVAc2Ftc3VuZy5j
-b20+Cj4gPiBDYzogQmFydGxvbWllaiBab2xuaWVya2lld2ljeiA8Yi56b2xuaWVya2llQHNhbXN1
-bmcuY29tPgo+ID4gU2lnbmVkLW9mZi1ieTogSGFucyBkZSBHb2VkZSA8aGRlZ29lZGVAcmVkaGF0
-LmNvbT4KPiAKPiBPYnZpb3VzbHkgbWFrZXMgc2Vuc2UuCj4gCj4gQWNrZWQtYnk6IE1hcmVrIFZh
-c3V0IDxtYXJleEBkZW54LmRlPgoKQnV0IGEgYmV0dGVyIHdheSBpcyB0byB1c2UgdGhlICJfX21h
-eWJlX3VudXNlZCIgYXR0cmlidXRlIGZvciBzdWNoIGNhc2VzLgoKLS0tCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGlu
-ZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+---
+ .../devicetree/bindings/media/renesas,vsp1.txt     | 51 +++++++++++++++++++++
+ drivers/media/platform/vsp1/vsp1_drv.c             | 52 ++++++++++++++++++----
+ 2 files changed, 95 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/renesas,vsp1.txt
+
+(With the DT mailing list CC'ed this time, sorry about that)
+
+diff --git a/Documentation/devicetree/bindings/media/renesas,vsp1.txt b/Documentation/devicetree/bindings/media/renesas,vsp1.txt
+new file mode 100644
+index 0000000..3b828d4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/renesas,vsp1.txt
+@@ -0,0 +1,51 @@
++* Renesas VSP1 Video Processing Engine
++
++The VSP1 is a video processing engine that supports up-/down-scaling, alpha
++blending, color space conversion and various other image processing features.
++It can be found in the Renesas R-Car second generation SoCs.
++
++Required properties:
++
++  - compatible: Must contain "renesas,vsp1"
++
++  - reg: Base address and length of the registers block for the VSP1.
++  - interrupt-parent, interrupts: Specifier for the VSP1 interrupt.
++
++  - clocks: A list of phandle + clock-specifier pairs for the main VSP1 clock
++    and the optional auxiliary RT clock if needed. VSP1 instances that need an
++    auxiliary RT clock must specify the clock-names property.
++
++  - renesas,#rpf: Number of Read Pixel Formatter (RPF) modules in the VSP1.
++  - renesas,#uds: Number of Up Down Scaler (UDS) modules in the VSP1.
++  - renesas,#wpf: Number of Write Pixel Formatter (WPF) modules in the VSP1.
++
++
++Optional properties:
++
++  - clock-names: When the VSP1 requires an auxiliary RT clock this property
++    must be present and must contain "", "rt".
++
++  - renesas,has-lif: Boolean, indicates that the LCD Interface (LIF) module is
++    available.
++  - renesas,has-lut: Boolean, indicates that the Look Up Table (LUT) module is
++    available.
++  - renesas,has-sru: Boolean, indicates that the Super Resolution Unit (SRU)
++    module is available.
++
++
++Example: R8A7790 (R-Car H2) VSP1-S node
++
++	vsp1@fe928000 {
++		compatible = "renesas,vsp1";
++		reg = <0 0xfe928000 0 0x8000>;
++		interrupts = <0 267 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp1_clks R8A7790_CLK_VSP1_SY>,
++			 <&mstp1_clks R8A7790_CLK_VSP1_RT>;
++		clock-names = "", "rt";
++
++		renesas,has-lut;
++		renesas,has-sru;
++		renesas,#rpf = <5>;
++		renesas,#uds = <3>;
++		renesas,#wpf = <4>;
++	};
+diff --git a/drivers/media/platform/vsp1/vsp1_drv.c b/drivers/media/platform/vsp1/vsp1_drv.c
+index 5f774cc..b75ca84 100644
+--- a/drivers/media/platform/vsp1/vsp1_drv.c
++++ b/drivers/media/platform/vsp1/vsp1_drv.c
+@@ -16,6 +16,7 @@
+ #include <linux/device.h>
+ #include <linux/interrupt.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/videodev2.h>
+ 
+@@ -458,34 +459,59 @@ static const struct dev_pm_ops vsp1_pm_ops = {
+  * Platform Driver
+  */
+ 
+-static struct vsp1_platform_data *
+-vsp1_get_platform_data(struct platform_device *pdev)
++static int vsp1_validate_platform_data(struct platform_device *pdev,
++				       struct vsp1_platform_data *pdata)
+ {
+-	struct vsp1_platform_data *pdata = pdev->dev.platform_data;
+-
+ 	if (pdata == NULL) {
+ 		dev_err(&pdev->dev, "missing platform data\n");
+-		return NULL;
++		return -EINVAL;
+ 	}
+ 
+ 	if (pdata->rpf_count <= 0 || pdata->rpf_count > VPS1_MAX_RPF) {
+ 		dev_err(&pdev->dev, "invalid number of RPF (%u)\n",
+ 			pdata->rpf_count);
+-		return NULL;
++		return -EINVAL;
+ 	}
+ 
+ 	if (pdata->uds_count <= 0 || pdata->uds_count > VPS1_MAX_UDS) {
+ 		dev_err(&pdev->dev, "invalid number of UDS (%u)\n",
+ 			pdata->uds_count);
+-		return NULL;
++		return -EINVAL;
+ 	}
+ 
+ 	if (pdata->wpf_count <= 0 || pdata->wpf_count > VPS1_MAX_WPF) {
+ 		dev_err(&pdev->dev, "invalid number of WPF (%u)\n",
+ 			pdata->wpf_count);
+-		return NULL;
++		return -EINVAL;
+ 	}
+ 
++	return 0;
++}
++
++static struct vsp1_platform_data *
++vsp1_get_platform_data(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct vsp1_platform_data *pdata;
++
++	if (!IS_ENABLED(CONFIG_OF) || np == NULL)
++		return pdev->dev.platform_data;
++
++	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++	if (pdata == NULL)
++		return NULL;
++
++	if (of_property_read_bool(np, "renesas,has-lif"))
++		pdata->features |= VSP1_HAS_LIF;
++	if (of_property_read_bool(np, "renesas,has-lut"))
++		pdata->features |= VSP1_HAS_LUT;
++	if (of_property_read_bool(np, "renesas,has-sru"))
++		pdata->features |= VSP1_HAS_SRU;
++
++	of_property_read_u32(np, "renesas,#rpf", &pdata->rpf_count);
++	of_property_read_u32(np, "renesas,#uds", &pdata->uds_count);
++	of_property_read_u32(np, "renesas,#wpf", &pdata->wpf_count);
++
+ 	return pdata;
+ }
+ 
+@@ -508,6 +534,10 @@ static int vsp1_probe(struct platform_device *pdev)
+ 	if (vsp1->pdata == NULL)
+ 		return -ENODEV;
+ 
++	ret = vsp1_validate_platform_data(pdev, vsp1->pdata);
++	if (ret < 0)
++		return ret;
++
+ 	/* I/O, IRQ and clock resources */
+ 	io = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	vsp1->mmio = devm_ioremap_resource(&pdev->dev, io);
+@@ -557,6 +587,11 @@ static int vsp1_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id vsp1_of_match[] = {
++	{ .compatible = "renesas,vsp1" },
++	{ },
++};
++
+ static struct platform_driver vsp1_platform_driver = {
+ 	.probe		= vsp1_probe,
+ 	.remove		= vsp1_remove,
+@@ -564,6 +599,7 @@ static struct platform_driver vsp1_platform_driver = {
+ 		.owner	= THIS_MODULE,
+ 		.name	= "vsp1",
+ 		.pm	= &vsp1_pm_ops,
++		.of_match_table = of_match_ptr(vsp1_of_match),
+ 	},
+ };
+ 
+-- 
+1.8.3.2
+
