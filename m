@@ -1,102 +1,70 @@
-From: Loc Ho <lho@apm.com>
-Subject: [PATCH v15 1/3] Documentation: Add documentation for the APM X-Gene SoC SATA host controller DTS binding
-Date: Wed,  5 Mar 2014 15:44:47 -0700
-Message-ID: <1394059489-30706-2-git-send-email-lho@apm.com>
-References: <1394059489-30706-1-git-send-email-lho@apm.com>
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <1394059489-30706-1-git-send-email-lho@apm.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+From: Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH v2] sky2: allow mac to come from dt
+Date: Wed,  5 Mar 2014 14:45:12 -0800
+Message-ID: <1394059512-1691-1-git-send-email-tharvey@gateworks.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Stephen Hemminger <stephen@networkplumber.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation for the APM X-Gene SoC SATA host controller DTS
-binding.
+The driver reads the mac address from the device registers which would
+need to have been programmed by the bootloader.  This patch adds
+the ability to pull the mac from devicetree via the pci device dt node.
 
-Signed-off-by: Loc Ho <lho@apm.com>
-Signed-off-by: Tuan Phan <tphan@apm.com>
-Signed-off-by: Suman Tripathi <stripathi@apm.com>
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+Cc: netdev@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+
+Changes since v1:
+ - simplified based on feedback
+ - fixed formatting
 ---
- .../devicetree/bindings/ata/apm-xgene.txt          |   70 ++++++++++++++++++++
- 1 files changed, 70 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/ata/apm-xgene.txt
+ drivers/net/ethernet/marvell/sky2.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/ata/apm-xgene.txt b/Documentation/devicetree/bindings/ata/apm-xgene.txt
-new file mode 100644
-index 0000000..633eb3b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ata/apm-xgene.txt
-@@ -0,0 +1,70 @@
-+* APM X-Gene 6.0 Gb/s SATA host controller nodes
-+
-+SATA host controller nodes are defined to describe on-chip Serial ATA
-+controllers. Each SATA controller (pair of ports) have its own node.
-+
-+Required properties:
-+- compatible		: Shall contain:
-+  * "apm,xgene-ahci-sgmii" if mux'ed with SGMII
-+  * "apm,xgene-ahci-pcie" if mux'ed with PCIe
-+- reg			: First memory resource shall be the AHCI memory
-+			  resource.
-+			  Second memory resource shall be the host controller
-+			  memory resource.
-+- interrupts		: Interrupt-specifier for SATA host controller IRQ.
-+- clocks		: Reference to the clock entry.
-+- phys			: A list of phandles + phy-specifiers, one for each
-+			  entry in phy-names.
-+- phy-names		: Should contain:
-+  * "sata-6g" for the SATA 6.0Gbps PHY
-+
-+Optional properties:
-+- status		: Shall be "ok" if enabled or "disabled" if disabled.
-+			  Default is "ok".
-+- interrupt-parent	: Interrupt controller.
-+
-+Example:
-+		sataclk: sataclk {
-+			compatible = "fixed-clock";
-+			#clock-cells = <1>;
-+			clock-frequency = <100000000>;
-+			clock-output-names = "sataclk";
-+		};
-+
-+		phy2: phy@1f22a000 {
-+			compatible = "apm,xgene-phy";
-+			reg = <0x0 0x1f22a000 0x0 0x100>,
-+			      <0x0 0x1f22c000 0x0 0x100>;
-+			#phy-cells = <1>;
-+		};
-+
-+		phy3: phy@1f23a000 {
-+			compatible = "apm,xgene-phy";
-+			reg = <0x0 0x1f23a000 0x0 0x100>,
-+			      <0x0 0x1f23c000 0x0 0x100>;
-+			#phy-cells = <1>;
-+		};
-+
-+		sata2: sata@1a400000 {
-+			compatible = "apm,xgene-ahci-sgmii";
-+			reg = <0x0 0x1a400000 0x0 0x1000>,
-+			      <0x0 0x1f220000 0x0 0x10000>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <0x0 0x87 0x4>;
-+			status = "ok";
-+			clocks = <&sataclk 0>;
-+			phys = <&phy2 0>;
-+			phy-names = "sata-6g";
-+		};
-+
-+		sata3: sata@1a800000 {
-+			compatible = "apm,xgene-ahci-pcie";
-+			reg = <0x0 0x1a800000 0x0 0x1000>,
-+			      <0x0 0x1f230000 0x0 0x10000>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <0x0 0x88 0x4>;
-+			status = "ok";
-+			clocks = <&sataclk 0>;
-+			phys = <&phy3 0>;
-+			phy-names = "sata-6g";
-+		};
+diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
+index 55a37ae..471473e 100644
+--- a/drivers/net/ethernet/marvell/sky2.c
++++ b/drivers/net/ethernet/marvell/sky2.c
+@@ -44,6 +44,8 @@
+ #include <linux/prefetch.h>
+ #include <linux/debugfs.h>
+ #include <linux/mii.h>
++#include <linux/of_device.h>
++#include <linux/of_net.h>
+ 
+ #include <asm/irq.h>
+ 
+@@ -4748,6 +4750,7 @@ static struct net_device *sky2_init_netdev(struct sky2_hw *hw, unsigned port,
+ {
+ 	struct sky2_port *sky2;
+ 	struct net_device *dev = alloc_etherdev(sizeof(*sky2));
++	unsigned char *iap, tmpaddr[ETH_ALEN];
+ 
+ 	if (!dev)
+ 		return NULL;
+@@ -4805,8 +4808,17 @@ static struct net_device *sky2_init_netdev(struct sky2_hw *hw, unsigned port,
+ 
+ 	dev->features |= dev->hw_features;
+ 
+-	/* read the mac address */
+-	memcpy_fromio(dev->dev_addr, hw->regs + B2_MAC_1 + port * 8, ETH_ALEN);
++	/* try to get mac address in the following order:
++	 * 1) from device tree data
++	 * 2) from internal registers set by bootloader
++	 */
++	iap = of_get_mac_address(hw->pdev->dev.of_node);
++	if (!iap) {
++		memcpy_fromio(&tmpaddr, hw->regs + B2_MAC_1 + port * 8,
++			      ETH_ALEN);
++		iap = tmpaddr;
++	}
++	ether_addr_copy(dev->dev_addr, iap);
+ 
+ 	return dev;
+ }
 -- 
-1.5.5
-
+1.8.3.2
