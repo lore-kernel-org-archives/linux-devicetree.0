@@ -1,92 +1,50 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: Re: [PATCH v2] power: twl4030-madc-battery: Convert to iio consumer.
-Date: Thu, 6 Mar 2014 00:25:14 +0100
-Message-ID: <20140305232513.GA9542@earth.universe>
-References: <1394052739-8589-1-git-send-email-marek@goldelico.com>
- <1394052739-8589-2-git-send-email-marek@goldelico.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v6 1/3] Fix ioport_map() for !CONFIG_GENERIC_IOMAP
+	cases.
+Date: Wed, 5 Mar 2014 23:31:35 +0000
+Message-ID: <20140305233135.GZ21483@n2100.arm.linux.org.uk>
+References: <1394020150-1875-1-git-send-email-Liviu.Dudau@arm.com> <1394020150-1875-2-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6c2NcOVqGQ03X4Wi"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1394052739-8589-2-git-send-email-marek@goldelico.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Marek Belisko <marek@goldelico.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, dbaryshkov@gmail.com, dwmw2@infradead.org, grant.likely@linaro.org, hns@goldelico.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1394020150-1875-2-git-send-email-Liviu.Dudau@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, Tanmay Inamdar <tinamdar@apm.com>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Mar 05, 2014 at 11:49:08AM +0000, Liviu Dudau wrote:
+> The inline version of ioport_map() that gets used when !CONFIG_GENERIC_IOMAP
+> is wrong. It returns a mapped (i.e. virtual) address that can start from
+> zero and completely ignores the PCI_IOBASE and IO_SPACE_LIMIT that most
+> architectures that use !CONFIG_GENERIC_MAP define.
 
---6c2NcOVqGQ03X4Wi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+What value does PCI_IOBASE and IO_SPACE_LIMIT have on other architectures
+who make use of asm-generic/io.h ?
 
-Hi Marek,
+$ git grep asm-generic/io.h arch/
+arch/arc/include/asm/io.h:#include <asm-generic/io.h>
+arch/blackfin/include/asm/io.h:#include <asm-generic/io.h>
+arch/metag/include/asm/io.h:#include <asm-generic/io.h>
+arch/microblaze/include/asm/io.h:/* from asm-generic/io.h */
+arch/openrisc/include/asm/io.h:#include <asm-generic/io.h>
+arch/s390/include/asm/io.h:#include <asm-generic/io.h>
+arch/score/include/asm/io.h:#include <asm-generic/io.h>
+arch/unicore32/include/asm/io.h:#include <asm-generic/io.h>
+arch/xtensa/include/asm/io.h:#include <asm-generic/io.h>
+$ arch/arc/include/asm/io.h:#define PCI_IOBASE ((void __iomem *)0)
+arch/arm64/include/asm/io.h:#define PCI_IOBASE          ((void __iomem *)(MODULES_VADDR - SZ_2M))
+arch/arm64/include/asm/io.h:    return readb(addr + PCI_IOBASE);
+arch/arm64/include/asm/io.h:    return readw(addr + PCI_IOBASE);
+arch/arm64/include/asm/io.h:    return readl(addr + PCI_IOBASE);
+arch/arm64/include/asm/io.h:    writeb(b, addr + PCI_IOBASE);
+arch/arm64/include/asm/io.h:    writew(b, addr + PCI_IOBASE);
+arch/arm64/include/asm/io.h:    writel(b, addr + PCI_IOBASE);
+arch/arm64/include/asm/io.h:            *buf++ = __raw_readb(addr + PCI_IOBASE);arch/arm64/include/asm/io.h:            *buf++ = __raw_readw(addr + PCI_IOBASE);arch/arm64/include/asm/io.h:            *buf++ = __raw_readl(addr + PCI_IOBASE);arch/arm64/include/asm/io.h:            __raw_writeb(*buf++, addr + PCI_IOBASE);arch/arm64/include/asm/io.h:            __raw_writew(*buf++, addr + PCI_IOBASE);arch/arm64/include/asm/io.h:            __raw_writel(*buf++, addr + PCI_IOBASE);arch/unicore32/include/asm/io.h:#define PCI_IOBASE      PKUNITY_PCILIO_BASE
+arch/unicore32/include/asm/io.h:#define PIO_OFFSET              (unsigned int)(PCI_IOBASE)
 
-I just have one comment:
 
-On Wed, Mar 05, 2014 at 09:52:17PM +0100, Marek Belisko wrote:
-> [...]
-> -static int madc_read(int index)
-> +static int madc_read(struct iio_channel *channel)
->  {
-> -	struct twl4030_madc_request req;
-> -	int val;
-> -
-> -	req.channels = index;
-> -	req.method = TWL4030_MADC_SW2;
-> -	req.type = TWL4030_MADC_WAIT;
-> -	req.do_avg = 0;
-> -	req.raw = false;
-> -	req.func_cb = NULL;
-> -
-> -	val = twl4030_madc_conversion(&req);
-> -	if (val < 0)
-> -		return val;
-> -
-> -	return req.rbuf[ffs(index) - 1];
-> +	int val, err;
-> +	err = iio_read_channel_processed(channel, &val);
-> +	if (err < 0) {
-> +		pr_info("Error:%d\n", err);
-
-This should be "Error: %d\n" (with a space).
-
-Apart from that you should use dev_info() or dev_err(), so that the
-message is properly prefixed by the device. Currently there is no
-hint where this error message is generated.
-
-> +		return err;
-> +	}
-> +	return val;
->  }
-> [...]
-
-After fixing this you can add
-
-Reviewed-By: Sebastian Reichel <sre@debian.org>
-
--- Sebastian
-
---6c2NcOVqGQ03X4Wi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJTF7JZAAoJENju1/PIO/qavQEQAIbXsimUlwv+td5tnBSSoYNk
-nve/ssCPA+gKGdksDESk8e+HhG4+zeERk/F8utmKtTzLIt7cKMPLWfuX5GLDN/Ad
-EQ0xjuO8icrtxFz66RCFp6xINsn5CNdquG/urAPM0k8RbBVyGDIDZyZyD2AhiDPC
-3JAK7yNCm0yGhZvS4czP6ozRYzIsgylpGO9lWgupGWm/w7bhP/dW/yC4s9XWT//v
-bc1Bv6qvBjooWg8WnrEWhmLmY2m6eTmyIOHg0C2KuJeBYiKABbIcHJsp/tlT5lY1
-wlODM8OUfoRFpCVKAE0KKYnsjeyzDraqpE0UFLW6G6shNVTsRaca1m5fMA2aJiLt
-wFrW6UHRA8DoCqDxofOVT61VOglpc9z8j37BMdc4Kpk4MpKarpIvpvhlcqyWYK1a
-XHtErVm7xga8Y7HvBug+KvtoxOX28dwR/io4BtfF5ol5OQzJNym4gXILr7io+AiC
-Q6yIF46QTmYIgZR5kzUd0raFDfaUBACsfkwd4vqZxYMPj59BJBkUD4QxQ83/FvRi
-ewSFbNVN1jxP28k/l4pKRsY3dIoR8asgCK+RJRLt9xPizUvjphkYMR+xfUvsYPV8
-ax2b7z6jnVa1Z+pA6MVP1eEYNQMlSCWTJ0z0+5h2K6HY0+ilPxsZ2Fk88aJJXgJN
-XrIM70beavCMlV5p/Rdj
-=xykJ
------END PGP SIGNATURE-----
-
---6c2NcOVqGQ03X4Wi--
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
