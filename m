@@ -1,130 +1,105 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH Resend 2/2] mfd: da9055: Add DT binding documentation for
- PMIC
-Date: Wed, 5 Mar 2014 10:38:50 +0800
-Message-ID: <20140305023850.GN10579@lee--X1>
-References: <cover.1392286537.git.Adam.Thomson.Opensource@diasemi.com>
- <574af9f46ca08e66f6e9bda8ef3a51e7c5c5178b.1392286537.git.Adam.Thomson.Opensource@diasemi.com>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH 2/3] soc: keystone: add QMSS driver
+Date: Wed, 5 Mar 2014 10:47:18 +0800
+Message-ID: <53169036.9060808@ti.com>
+References: <1393629520-12713-1-git-send-email-santosh.shilimkar@ti.com>
+ <1393629520-12713-3-git-send-email-santosh.shilimkar@ti.com>
+ <AAE2808F-A2C8-4031-BFA4-1A20B182EA69@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <574af9f46ca08e66f6e9bda8ef3a51e7c5c5178b.1392286537.git.Adam.Thomson.Opensource@diasemi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <AAE2808F-A2C8-4031-BFA4-1A20B182EA69@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Nair, Sandeep" <sandeep_n@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-> Acked-by: Mark Brown <broonie@kernel.org>
+On Wednesday 05 March 2014 01:59 AM, Kumar Gala wrote:
+> 
+> On Feb 28, 2014, at 5:18 PM, Santosh Shilimkar <santosh.shilimkar@ti.com> wrote:
+> 
+>> From: Sandeep Nair <sandeep_n@ti.com>
+>>
+>> The QMSS (Queue Manager Sub System) found on Keystone SOCs is one of
+>> the main hardware sub system which forms the backbone of the Keystone
+>> Multi-core Navigator. QMSS consist of queue managers, packed-data structure
+>> processors(PDSP), linking RAM, descriptor pools and infrastructure
+>> Packet DMA.
+>>
+>> The Queue Manager is a hardware module that is responsible for accelerating
+>> management of the packet queues. Packets are queued/de-queued by writing or
+>> reading descriptor address to a particular memory mapped location. The PDSPs
+>> perform QMSS related functions like accumulation, QoS, or event management.
+>> Linking RAM registers are used to link the descriptors which are stored in
+>> descriptor RAM. Descriptor RAM is configurable as internal or external memory.
+>>
+>> The QMSS driver manages the PDSP setups, linking RAM regions,
+>> queue pool management (allocation, push, pop and notify) and descriptor
+>> pool management. The specifics on the device tree bindings for
+>> QMSS can be found in:
+>>        Documentation/devicetree/bindings/soc/keystone-qmss.txt
+>>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: Kumar Gala <galak@codeaurora.org>
+>> Cc: Olof Johansson <olof@lixom.net>
+>> Cc: Arnd Bergmann <arnd@arndb.de>
+>> Cc: Grant Likely <grant.likely@linaro.org>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Signed-off-by: Sandeep Nair <sandeep_n@ti.com>
+>> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+>> ---
+>> .../devicetree/bindings/soc/keystone-qmss.txt      |  209 +++
+>> drivers/Kconfig                                    |    2 +
+>> drivers/Makefile                                   |    3 +
+>> drivers/soc/Kconfig                                |    2 +
+>> drivers/soc/Makefile                               |    5 +
+>> drivers/soc/keystone/Kconfig                       |   15 +
+>> drivers/soc/keystone/Makefile                      |    5 +
+>> drivers/soc/keystone/qmss_acc.c                    |  591 ++++++++
+>> drivers/soc/keystone/qmss_queue.c                  | 1533 ++++++++++++++++++++
+>> drivers/soc/keystone/qmss_queue.h                  |  236 +++
+>> include/linux/soc/keystone_qmss.h                  |  390 +++++
+>> 11 files changed, 2991 insertions(+)
+>> create mode 100644 Documentation/devicetree/bindings/soc/keystone-qmss.txt
+>> create mode 100644 drivers/soc/Makefile
+>> create mode 100644 drivers/soc/keystone/Kconfig
+>> create mode 100644 drivers/soc/keystone/Makefile
+>> create mode 100644 drivers/soc/keystone/qmss_acc.c
+>> create mode 100644 drivers/soc/keystone/qmss_queue.c
+>> create mode 100644 drivers/soc/keystone/qmss_queue.h
+>> create mode 100644 include/linux/soc/keystone_qmss.h
+> 
+> Do you see qmss being able to provide HW support for a qdisc or doing processor to processor communication over something like rpmsg?
+> 
+> I ask because I do wondering if we should be looking at a drivers/hwqueue as other vendors have similar hardware.
+> 
+QMSS just provides the programming interfaces so that certain queues can be configured to achieve QOS tree. The actual qdisc should be
+part of the network driver as such. The queues are such a generic hardware that it can be used for wide variety of usecases and 
+supporting that through one driver will be really hard. We did talk of hwqueue last year but looks like the usecase variety is
+too much because of generic nature of them.
 
-As this has Mark's ack, I'd be happy to apply the patch if you correct
-a couple of nits.
+QMSS isn't used as such for message passing but queue hardware can be used as done by APM hardware which Arnd pointed me on the other
+thread. As Arnd recommended, the processor to processor communication related drivers should go under drivers/mailbox. One example,
+was the APM QMTM patchset [1]
 
-> ---
->  Documentation/devicetree/bindings/mfd/da9055.txt |   73 ++++++++++++=
-++++++++++
->  1 files changed, 73 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/da9055.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/da9055.txt b/Docum=
-entation/devicetree/bindings/mfd/da9055.txt
-> new file mode 100644
-> index 0000000..f903c3f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/da9055.txt
-> @@ -0,0 +1,73 @@
-> +* Dialog DA9055 Power Management Integrated Circuit (PMIC)
-> +
-> +DA9055 consists of a large and varied group of sub-devices (I2C Only=
-):
-> +
-> +Device			 Supply Names	 Description
-> +------			 ------------	 -----------
-> +da9055-gpio		:		: GPIOs
-> +da9055-regulator	:		: Regulators
-> +da9055-onkey		:		: On key
-> +da9055-rtc		:		: RTC
-> +da9055-hwmon		:		: ADC
-> +da9055-watchdog		:		: Watchdog
-> +
-> +The CODEC device in DA9055 has a separate, configurable I2C address =
-and so
-> +is instantiated separately from the PMIC.
-> +
-> +For details on accompanying CODEC I2C device, see the following:
-> +Documentation/devicetree/bindings/sound/da9055.txt
-> +
-> +=3D=3D=3D=3D=3D=3D
-> +
-> +Required properties:
-> +- compatible : Should be "dlg,da9055-pmic"
-> +- reg: Specifies the I2C slave address (defaults to 0x5a but can be =
-modified)
-> +- interrupt-parent: Specifies the phandle of the interrupt controlle=
-r to which
-> +  the IRQs from da9055 are delivered to.
-> +- interrupts: IRQ line info for da9055 chip.
-> +- interrupt-controller: da9055 has internal IRQs (has own IRQ domain=
-).
-> +- #interrupt-cells: Should be 1, is the local IRQ number for da9055.
-> +
-> +Sub-nodes:
-> +- regulators : Contain the regulator nodes. The DA9055 regulators ar=
-e
-> +  bound using their names as listed below:
-> +
-> +    buck1     : regulator BUCK1
-> +    buck2     : regulator BUCK2
-> +    ldo1      : regulator LDO1
-> +    ldo2      : regulator LDO2
-> +    ldo3      : regulator LDO3
-> +    ldo4      : regulator LDO4
-> +    ldo5      : regulator LDO5
-> +    ldo6      : regulator LDO6
-> +
-> +  The bindings details of individual regulator device can be found i=
-n:
-> +  Documentation/devicetree/bindings/regulator/regulator.txt
-> +
-> +
-> +Example:
-> +
-> +	pmic: da9055-pmic@5a {
-> +		compatible =3D "dlg,da9055-pmic";
-> +		reg =3D <0x5a>;
-> +		interrupt-parent =3D <&intc>;
-> +		interrupts =3D <5 0x8>;
+>From first look the QMSS(APM) and QMTM(APM) looked very similar but they actually differ largely the way it works. Thanks to Arnd
+for useful discussion here at connect, I better understood how the QMTM works.
 
-I'd prefer if you used the #defines in:
-    dt-bindings/interrupt-controller/irq.h
+If you know any other hardware, which needs similar interfaces as QMSS, we can surely think of another subsystem. QMSS is
+largely network usecase dominated but not limited to only those usecases. It is also used by pure drivers/crypto/ or
+can also be used for data movement for video etc. 
 
-> +		interrupt-controller;
-> +		#interrupt-cells =3D <1>;
-> +
-> +		regulators {
-> +			buck1: BUCK1 {
-> +				regulator-min-microvolt =3D <725000>;
-> +				regulator-max-microvolt =3D <2075000>;
-> +			};
-> +
-> +			buck2: BUCK2 {
-> +				regulator-min-microvolt =3D <925000>;
-> +				regulator-max-microvolt =3D <2500000>;
-> +			};
+Regards,
+Santosh
 
-New line here.
-
-> +			ldo1: LDO1 {
-> +				regulator-min-microvolt =3D <900000>;
-> +				regulator-max-microvolt =3D <3300000>;
-> +			};
-> +		};
-> +	};
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+[1] https://lkml.org/lkml/2014/2/14/703
