@@ -1,99 +1,56 @@
-From: Tim Harvey <tharvey@gateworks.com>
-Subject: Re: [PATCH] net: sky2: allow mac to come from dt
-Date: Wed, 5 Mar 2014 07:38:22 -0800
-Message-ID: <CAJ+vNU2Uzsriq6e1ef6iH7omTkGGSxz=ox=XquUTw5MFvQDFCA@mail.gmail.com>
-References: <1394000535-25559-1-git-send-email-tharvey@gateworks.com>
-	<5317318B.5020406@cogentembedded.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 1/1] ARM: EXYNOS: Map SYSRAM address through DT
+Date: Wed, 05 Mar 2014 16:57:35 +0100
+Message-ID: <5317496F.5050702@gmail.com>
+References: <1392876308-4748-1-git-send-email-sachin.kamat@linaro.org> <CAK9yfHz6wJPdC=DjgaiNOsPHY8k9zaB+p3-ahpwOOcPQtoWEHw@mail.gmail.com> <531725E9.5010307@saftware.de> <CAK9yfHw2adag+J1B=te4QvTG-PMJzvbrMe7NwFZsUGJrJFjmSA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <5317318B.5020406@cogentembedded.com>
-Sender: netdev-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Stephen Hemminger <stephen@networkplumber.org>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAK9yfHw2adag+J1B=te4QvTG-PMJzvbrMe7NwFZsUGJrJFjmSA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>, Andreas Oberritter <obi@saftware.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Tomasz Figa <t.figa@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 5, 2014 at 6:15 AM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Hello.
 
-Hi Sergei,
 
->
->
-> On 05-03-2014 10:22, Tim Harvey wrote:
->
->> The driver reads the mac address from the device registers which would
->> need to have been programmed by the bootloader.  This patch adds
->> the ability to pull the mac from devicetree via the pci device dt node.
->
->
->    I highly doubt that "[local-]mac-address" prop would be added to
-> (autodiscovered) PCI device node.
-
-I wouldn't have done this if I didn't need it ;)
-
-The u-boot bootloader will do this for boards supporting devicetree.
-Specifically, it will take the ethaddr/eth<n<addr/etc env vars and
-apply a local-mac-address property to the devicetree using ethernet<n>
-devicetree aliases.  This is to support MAC addresses coming from
-EEPROM, eFUSE, etc.  The key here is that it doesn't need to know
-where in the tree the eth devices are because it makes use of the
-aliases node.
-
-This of course requires that you do have an ethernet<n> alias to your
-PCI based network device in your dt which I agree may seem strange for
-an auto-probed bus, but in the case of a bootloader without PCI
-support and/or sky2 support this seems the proper way to get the MAC
-address from the bootloader to the driver.
-
->
-> [...]
->
->> @@ -4805,8 +4808,27 @@ static struct net_device *sky2_init_netdev(struct
->> sky2_hw *hw, unsigned port,
+On 05.03.2014 16:36, Sachin Kamat wrote:
+> On 5 March 2014 18:56, Andreas Oberritter <obi@saftware.de> wrote:
+>> On 05.03.2014 09:23, Sachin Kamat wrote:
+>>>> diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+>>>> index d2e3f5f5916d..3ca3fb6aa5f4 100644
+>>>> --- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
+>>>> +++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+>>>> @@ -28,6 +28,11 @@
+>>>>                  bootargs = "console=ttySAC2,115200N8 root=/dev/mmcblk0p5 rw rootwait earlyprintk panic=5 maxcpus=1";
+>>>>          };
+>>>>
+>>>> +       sysram@02020000 {
+>>                    ^
+>>>> +               compatible = "samsung,exynos4210-sysram";
+>>>> +               reg = <0x02025000 0x1000>;
+>>                            ^
+>>>> +       };
+>>>> +
 >>
->>         dev->features |= dev->hw_features;
->>
->> +       /* try to get mac address in the following order:
->> +        * 1) from device tree data
->> +        * 2) from internal registers set by bootloader
->> +        */
->> +       iap = NULL;
->> +       if (IS_ENABLED(CONFIG_OF)) {
->> +               struct device_node *np = hw->pdev->dev.of_node;
->> +               if (np)
->> +                       iap = (unsigned char *) of_get_mac_address(np);
->> +       }
->> +
->> +       /* 2) mac registers set by bootloader
->> +        */
->> +       if (!iap || !is_valid_ether_addr(iap)) {
->> +               memcpy_fromio(&tmpaddr, hw->regs + B2_MAC_1 + port * 8,
->> +                       ETH_ALEN);
+>> Shouldn't these two addresses match?
 >
->
->    This line should start right under & on the previous line.
+> Ideally they should. However in this case, this particular board uses
+> older revision
+> of the SoC which has a different register address. I did not want to
+> create a compatible
+> string just for this (exceptional) case alone and hence did it this
+> way to override the reg. address.
+> Other option was not to have the register address in the node name.
 
-agreed - not sure why checkpatch.pl didn't catch that
+What about overriding status of sysram@02020000 node to "disabled" and 
+adding a new sysram@02025000 node in universal C210 dts?
 
->
->
->> +               iap = &tmpaddr[0];
+However, I'm still a bit concerned about using such platform and 
+use-case specific compatible strings here. SYSRAM is basically a normal 
+SRAM memory and usually just some specific areas of it are reserved for 
+special purposes.
 
-agreed - I will change this as its more readable
-
->
->
->    Why not just 'tmpaddr'?
->
->> +       }
->> +
->
->
-> WBR, Sergei
->
-
-Thanks for the review!
-
-Tim
+Best regards,
+Tomasz
