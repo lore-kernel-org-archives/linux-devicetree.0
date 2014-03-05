@@ -1,74 +1,132 @@
-From: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Subject: [PATCH v2] Documentation: DT: Document twl4030-madc-battery bindings.
-Date: Wed,  5 Mar 2014 21:52:19 +0100
-Message-ID: <1394052739-8589-4-git-send-email-marek@goldelico.com>
+From: Marek Belisko <marek@goldelico.com>
+Subject: [PATCH v2] power: twl4030_madc_battery: Add device tree support.
+Date: Wed,  5 Mar 2014 21:52:18 +0100
+Message-ID: <1394052739-8589-3-git-send-email-marek@goldelico.com>
 References: <1394052739-8589-1-git-send-email-marek@goldelico.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1394052739-8589-1-git-send-email-marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1394052739-8589-1-git-send-email-marek@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, dbaryshkov@gmail.com, dwmw2@infradead.org, grant.likely@linaro.org
+Cc: hns@goldelico.com, sre@debian.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Signed-off-by: Marek Belisko <marek@goldelico.com>
 ---
- .../bindings/power_supply/twl4030_madc_battery.txt | 43 ++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt
+ drivers/power/twl4030_madc_battery.c | 81 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 81 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt b/Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt
-new file mode 100644
-index 0000000..fd0b6d2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt
-@@ -0,0 +1,43 @@
-+twl4030_madc_battery
+diff --git a/drivers/power/twl4030_madc_battery.c b/drivers/power/twl4030_madc_battery.c
+index 0a64105..b446dd8 100644
+--- a/drivers/power/twl4030_madc_battery.c
++++ b/drivers/power/twl4030_madc_battery.c
+@@ -20,6 +20,7 @@
+ #include <linux/i2c/twl4030-madc.h>
+ #include <linux/power/twl4030_madc_battery.h>
+ #include <linux/iio/consumer.h>
++#include <linux/of.h>
+ 
+ struct twl4030_madc_battery {
+ 	struct power_supply psy;
+@@ -184,6 +185,82 @@ static int twl4030_cmp(const void *a, const void *b)
+ 		((struct twl4030_madc_bat_calibration *)a)->voltage;
+ }
+ 
++#ifdef CONFIG_OF
++static struct twl4030_madc_bat_platform_data *
++	twl4030_madc_dt_probe(struct platform_device *pdev)
++{
++	struct twl4030_madc_bat_platform_data *pdata;
++	struct device_node *np = pdev->dev.of_node;
++	int ret;
++	int i, proplen;
 +
-+Required properties:
-+ - compatible : "ti,twl4030-madc-battery"
-+ - capacity : battery capacity in uAh
-+ - charging-calibration-data : list of voltage(mV):level(%) values
-+	for charging calibration (see example)
-+ - discharging-calibration-data : list of voltage(mV):level(%) values
-+	for discharging calibration (see example)
-+ - io-channels: Should contain IIO channel specifiers
-+	for each element in io-channel-names.
-+- io-channel-names: Should contain the following values:
-+ * "temp" - The ADC channel for temperature reading
-+ * "ichg" - The ADC channel for battery charging status
-+ * "vbat" - The ADC channel to measure the battery voltage
++	pdata = devm_kzalloc(&pdev->dev,
++			sizeof(struct twl4030_madc_bat_platform_data),
++			GFP_KERNEL);
++	if (!pdata)
++		return ERR_PTR(-ENOMEM);
 +
-+Example:
-+	madc-battery {
-+		compatible = "ti,twl4030-madc-battery";
-+		capacity = <1200000>;
-+		charging-calibration-data = <4200 100
-+					     4100 75
-+					     4000 55
-+					     3900 25
-+					     3800 5
-+					     3700 2
-+					     3600 1
-+					     3300 0>;
++	ret = of_property_read_u32(np, "capacity", &pdata->capacity);
++	if (ret != 0)
++		return ERR_PTR(-EINVAL);
 +
-+		discharging-calibration-data = <4200 100
-+						4100 95
-+						4000 70
-+						3800 50
-+						3700 10
-+						3600 5
-+						3300 0>;
-+		io-channels = <&twl_madc 1>,
-+	                      <&twl_madc 10>,
-+			      <&twl_madc 12>;
-+		io-channel-names = "temp",
-+		                   "ichg",
-+		                   "vbat";
-+	};
++	/* parse and prepare charging data */
++	proplen = of_property_count_u32_elems(np, "charging-calibration-data");
++	if (proplen < 0) {
++		dev_warn(&pdev->dev, "No 'charging-calibration-data' property found\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	pdata->charging = devm_kzalloc(&pdev->dev,
++		sizeof(struct twl4030_madc_bat_calibration) * (proplen / 2),
++		GFP_KERNEL);
++
++	for (i = 0; i < proplen / 2; i++) {
++		of_property_read_u32_index(np, "charging-calibration-data",
++					   i * 2,
++					   (u32 *)&pdata->charging[i].voltage);
++		of_property_read_u32_index(np, "charging-calibration-data",
++					  i * 2 + 1,
++					  (u32 *)&pdata->charging[i].level);
++	}
++
++	/* parse and prepare discharging data */
++	proplen = of_property_count_u32_elems(np,
++			"discharging-calibration-data");
++	if (proplen < 0) {
++		dev_warn(&pdev->dev, "No 'discharging-calibration-data' property found\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	pdata->discharging = devm_kzalloc(&pdev->dev,
++		sizeof(struct twl4030_madc_bat_calibration) * (proplen / 2),
++		GFP_KERNEL);
++
++	for (i = 0; i < proplen / 2; i++) {
++		of_property_read_u32_index(np, "discharging-calibration-data",
++					   i * 2,
++					   (u32 *)&pdata->discharging[i].voltage);
++		of_property_read_u32_index(np, "discharging-calibration-data",
++					   i * 2 + 1,
++					   (u32 *)&pdata->discharging[i].level);
++	}
++
++	return pdata;
++}
++
++static const struct of_device_id of_twl4030_madc_match[] = {
++	{ .compatible = "ti,twl4030-madc-battery", },
++	{},
++};
++
++#else
++static struct twl4030_madc_bat_platform_data *
++	twl4030_madc_dt_probe(struct platform_device *pdev)
++{
++	return ERR_PTR(-ENODEV);
++}
++#endif
++
+ static int twl4030_madc_battery_probe(struct platform_device *pdev)
+ {
+ 	struct twl4030_madc_battery *twl4030_madc_bat;
+@@ -195,6 +272,9 @@ static int twl4030_madc_battery_probe(struct platform_device *pdev)
+ 	if (!twl4030_madc_bat)
+ 		return -ENOMEM;
+ 
++	if (!pdata)
++		pdata = twl4030_madc_dt_probe(pdev);
++
+ 	twl4030_madc_bat->psy.name = "twl4030_battery";
+ 	twl4030_madc_bat->psy.type = POWER_SUPPLY_TYPE_BATTERY;
+ 	twl4030_madc_bat->psy.properties = twl4030_madc_bat_props;
+@@ -264,6 +344,7 @@ static int twl4030_madc_battery_remove(struct platform_device *pdev)
+ static struct platform_driver twl4030_madc_battery_driver = {
+ 	.driver = {
+ 		.name = "twl4030_madc_battery",
++		.of_match_table = of_match_ptr(of_twl4030_madc_match),
+ 	},
+ 	.probe  = twl4030_madc_battery_probe,
+ 	.remove = twl4030_madc_battery_remove,
 -- 
 1.8.3.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
