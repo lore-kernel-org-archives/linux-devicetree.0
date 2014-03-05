@@ -1,101 +1,96 @@
-From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Subject: [PATCH v2 2/2] mfd: da9055: Add DT binding documentation for PMIC
-Date: Wed, 5 Mar 2014 14:18:37 +0000
-Message-ID: <566f6e7e74d468c49a667f5181292f431946070a.1394018471.git.Adam.Thomson.Opensource@diasemi.com>
-References: <cover.1394018471.git.Adam.Thomson.Opensource@diasemi.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1394018471.git.Adam.Thomson.Opensource@diasemi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>
+From: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v8 2/4] phy: core: Add devm_of_phy_get to phy-core
+Date: Wed, 05 Mar 2014 15:18:26 +0100
+Message-ID: <1394029108-2531-3-git-send-email-k.debski@samsung.com>
+References: <1394029108-2531-1-git-send-email-k.debski@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1394029108-2531-1-git-send-email-k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mat.krawczuk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, yulgon.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, av.tikhomirov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tjakobi-o02PS0xoJP9W0yFyLvAVXMxlOr/tl8fh@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, sander-7Kwe/DFdFGvR7s880joybQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Acked-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/mfd/da9055.txt |   72 ++++++++++++++++++++++
- 1 files changed, 72 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/da9055.txt
+Adding devm_of_phy_get will allow to get phys by supplying a
+pointer to the struct device_node instead of struct device.
 
-diff --git a/Documentation/devicetree/bindings/mfd/da9055.txt b/Documentation/devicetree/bindings/mfd/da9055.txt
-new file mode 100644
-index 0000000..6dab34d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/da9055.txt
-@@ -0,0 +1,72 @@
-+* Dialog DA9055 Power Management Integrated Circuit (PMIC)
+Signed-off-by: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ drivers/phy/phy-core.c  |   31 +++++++++++++++++++++++++++++++
+ include/linux/phy/phy.h |    8 ++++++++
+ 2 files changed, 39 insertions(+)
+
+diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+index 7c1b0e1..623b71c 100644
+--- a/drivers/phy/phy-core.c
++++ b/drivers/phy/phy-core.c
+@@ -526,6 +526,37 @@ struct phy *devm_phy_optional_get(struct device *dev, const char *string)
+ EXPORT_SYMBOL_GPL(devm_phy_optional_get);
+ 
+ /**
++ * devm_of_phy_get() - lookup and obtain a reference to a phy.
++ * @dev: device that requests this phy
++ * @np: node containing the phy
++ * @con_id: name of the phy from device's point of view
++ *
++ * Gets the phy using of_phy_get(), and associates a device with it using
++ * devres. On driver detach, release function is invoked on the devres data,
++ * then, devres data is freed.
++ */
++struct phy *devm_of_phy_get(struct device *dev, struct device_node *np,
++			    const char *con_id)
++{
++	struct phy **ptr, *phy;
 +
-+DA9055 consists of a large and varied group of sub-devices (I2C Only):
++	ptr = devres_alloc(devm_phy_release, sizeof(*ptr), GFP_KERNEL);
++	if (!ptr)
++		return ERR_PTR(-ENOMEM);
 +
-+Device			 Supply Names	 Description
-+------			 ------------	 -----------
-+da9055-gpio		:		: GPIOs
-+da9055-regulator	:		: Regulators
-+da9055-onkey		:		: On key
-+da9055-rtc		:		: RTC
-+da9055-hwmon		:		: ADC
-+da9055-watchdog		:		: Watchdog
++	phy = of_phy_get(np, con_id);
++	if (!IS_ERR(phy)) {
++		*ptr = phy;
++		devres_add(dev, ptr);
++	} else {
++		devres_free(ptr);
++	}
 +
-+The CODEC device in DA9055 has a separate, configurable I2C address and so
-+is instantiated separately from the PMIC.
++	return phy;
++}
++EXPORT_SYMBOL_GPL(devm_of_phy_get);
 +
-+For details on accompanying CODEC I2C device, see the following:
-+Documentation/devicetree/bindings/sound/da9055.txt
++/**
+  * phy_create() - create a new phy
+  * @dev: device that is creating the new phy
+  * @ops: function pointers for performing phy operations
+diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+index 2fe3194..bcbf96c 100644
+--- a/include/linux/phy/phy.h
++++ b/include/linux/phy/phy.h
+@@ -149,6 +149,8 @@ struct phy *phy_get(struct device *dev, const char *string);
+ struct phy *phy_optional_get(struct device *dev, const char *string);
+ struct phy *devm_phy_get(struct device *dev, const char *string);
+ struct phy *devm_phy_optional_get(struct device *dev, const char *string);
++struct phy *devm_of_phy_get(struct device *dev, struct device_node *np,
++			    const char *con_id);
+ void phy_put(struct phy *phy);
+ void devm_phy_put(struct device *dev, struct phy *phy);
+ struct phy *of_phy_get(struct device_node *np, const char *con_id);
+@@ -252,6 +254,12 @@ static inline struct phy *devm_phy_optional_get(struct device *dev,
+ 	return ERR_PTR(-ENOSYS);
+ }
+ 
++struct phy *devm_of_phy_get(struct device *dev, struct device_node *np,
++			    const char *con_id)
++{
++	return ERR_PTR(-ENOSYS);
++}
 +
-+======
-+
-+Required properties:
-+- compatible : Should be "dlg,da9055-pmic"
-+- reg: Specifies the I2C slave address (defaults to 0x5a but can be modified)
-+- interrupt-parent: Specifies the phandle of the interrupt controller to which
-+  the IRQs from da9055 are delivered to.
-+- interrupts: IRQ line info for da9055 chip.
-+- interrupt-controller: da9055 has internal IRQs (has own IRQ domain).
-+- #interrupt-cells: Should be 1, is the local IRQ number for da9055.
-+
-+Sub-nodes:
-+- regulators : Contain the regulator nodes. The DA9055 regulators are
-+  bound using their names as listed below:
-+
-+    buck1     : regulator BUCK1
-+    buck2     : regulator BUCK2
-+    ldo1      : regulator LDO1
-+    ldo2      : regulator LDO2
-+    ldo3      : regulator LDO3
-+    ldo4      : regulator LDO4
-+    ldo5      : regulator LDO5
-+    ldo6      : regulator LDO6
-+
-+  The bindings details of individual regulator device can be found in:
-+  Documentation/devicetree/bindings/regulator/regulator.txt
-+
-+
-+Example:
-+
-+	pmic: da9055-pmic@5a {
-+		compatible = "dlg,da9055-pmic";
-+		reg = <0x5a>;
-+		interrupt-parent = <&intc>;
-+		interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+
-+		regulators {
-+			buck1: BUCK1 {
-+				regulator-min-microvolt = <725000>;
-+				regulator-max-microvolt = <2075000>;
-+			};
-+			buck2: BUCK2 {
-+				regulator-min-microvolt = <925000>;
-+				regulator-max-microvolt = <2500000>;
-+			};
-+			ldo1: LDO1 {
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+		};
-+	};
+ static inline void phy_put(struct phy *phy)
+ {
+ }
+-- 
+1.7.9.5
+
 --
-1.7.0.4
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
