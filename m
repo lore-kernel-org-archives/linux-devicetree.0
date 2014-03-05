@@ -1,68 +1,90 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH 3/3] Documentation: mfd: s2mps11: Document support for S2MPS14
-Date: Wed, 05 Mar 2014 10:22:53 +0100
-Message-ID: <1394011373-4057-4-git-send-email-k.kozlowski@samsung.com>
-References: <1394011373-4057-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1394011373-4057-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sangbeom Kim <sbkim73@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Yadwinder Singh Brar <yadi.brar@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCHv3 3/4] of: provide a binding for fixed link PHYs
+Date: Wed, 5 Mar 2014 10:24:14 +0100
+Message-ID: <20140305102414.111f856e@skate>
+References: <1393930704-24374-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1393930704-24374-4-git-send-email-thomas.petazzoni@free-electrons.com>
+	<CAGVrzcbHwxtgUfC4+u_3wszcmEYpz8Y7gu13xJy6TbT6fgR1sg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAGVrzcbHwxtgUfC4+u_3wszcmEYpz8Y7gu13xJy6TbT6fgR1sg@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Christian Gmeiner <christian.gmeiner@gmail.com>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add bindings documentation for S2MPS14 device to the s2mps11 driver.
+Dear Florian Fainelli,
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Tomasz Figa <t.figa@samsung.com>
-Cc: devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Acked-by: Tomasz Figa <t.figa@samsung.com>
----
- Documentation/devicetree/bindings/mfd/s2mps11.txt |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+On Tue, 4 Mar 2014 12:58:41 -0800, Florian Fainelli wrote:
 
-diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-index 15ee89c3cc7b..f69bec294f02 100644
---- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
-+++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-@@ -1,5 +1,5 @@
- 
--* Samsung S2MPS11 Voltage and Current Regulator
-+* Samsung S2MPS11 and S2MPS14 Voltage and Current Regulator
- 
- The Samsung S2MPS11 is a multi-function device which includes voltage and
- current regulators, RTC, charger controller and other sub-blocks. It is
-@@ -7,7 +7,7 @@ interfaced to the host controller using an I2C interface. Each sub-block is
- addressed by the host system using different I2C slave addresses.
- 
- Required properties:
--- compatible: Should be "samsung,s2mps11-pmic".
-+- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-pmic".
- - reg: Specifies the I2C slave address of the pmic block. It should be 0x66.
- 
- Optional properties:
-@@ -59,10 +59,14 @@ supports. Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
- as per the datasheet of s2mps11.
- 
- 	- LDOn
--		  - valid values for n are 1 to 38
-+		  - valid values for n are:
-+			- S2MPS11: 1 to 38
-+			- S2MPS14: 1 to 25
- 		  - Example: LDO1, LD02, LDO28
- 	- BUCKn
--		  - valid values for n are 1 to 10.
-+		  - valid values for n are:
-+			- S2MPS11: 1 to 10
-+			- S2MPS14: 1 to 5
- 		  - Example: BUCK1, BUCK2, BUCK9
- 
- Example:
+
+> What I like about this new binding is that we could place the
+> 'fixed-link' related properties in e.g: a SPI slave node, and have the
+> Ethernet MAC be pointed at it by a phandle to tell it: look this is
+> your PHY, it might not be one you could address on a MDIO bus, so I
+> have been providing additional properties to help you with the link
+> configuration.
+> 
+> One thing that needs to be addressed in this patch is how to deal with
+> the existing 5-digit fixed-link, something that sounds fairly easy and
+> which would not require changing the callers of of_phy_connect_fixed()
+> is to do the following:
+
+I am not sure to understand "would not require changing the callers of
+of_phy_connect_fixed()". This function is precisely introduced by the
+patch set, so how would we need to "change the callers" ? Maybe you're
+making a confusion with the existing of_phy_connect_fixed_link(), which
+is used by network drivers to create a PHY using the old-style
+fixed-link = <5 digits> binding ?
+
+> - of_phy_is_fixed_link() needs to look for *all* required compatible
+> properties of the new binding to give an accurate verdict on the
+> nature of the PHY (to avoid false positives as mentioned in PATCH 4),
+
+Hum?
+
+The false positive problem only exists if you want to automatically
+instantiate the fixed PHYs, as I proposed in a patch as a reply to my
+series. And checking for *all* required properties does not make the
+problem better: you could very well have other nodes in the tree that
+have a "fixed-link" and a "speed" property, for example.
+
+> and it also needs to look for the 5-digit fixed-link property and
+> ensure the property is 5-digits long if existing
+
+I don't understand how this could work. The of_phy_is_fixed_link()
+function is meant to take as argument a Device Tree node that describes
+a fixed PHY, using the new proposed DT binding for fixed PHYs.
+
+The old 'fixed-link' binding has the fixed-link property as part of the
+Ethernet node itself.
+
+So I don't really see how a sane function could check both.
+
+> - of_phy_register_fixed_link() needs to also parse the old 5-digit
+> fixed-link property, most likely just copy-pasting what
+> arch/powerpc/sysdev/fsl_soc.c::of_add_fixed_phys does with the
+> property endian-swapping (as this code is for PowerPC)
+> 
+> Then we can deal with how to make that semi-automatic for the new
+> binding users to make it smoother to use a regular or "fixed PHY"
+> device.
+
+I still don't understand. With the old binding, the "fixed-link"
+property is within some random Ethernet node, and there is no way for
+us to find out whether a given node having a "fixed-link" property
+corresponds to a fixed PHY, or something completely unrelated.
+
+So to conclude, I'm sorry, but I didn't understand at all what you
+meant to say here, so I'm completely puzzled about what your
+suggestions are.
+
+Best regards,
+
+Thomas
 -- 
-1.7.9.5
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
