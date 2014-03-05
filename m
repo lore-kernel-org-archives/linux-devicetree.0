@@ -1,120 +1,63 @@
-From: Yijing Wang <wangyijing@huawei.com>
-Subject: Re: [PATCH v5 3/7] pci: Create pci_host_bridge before its associated
- bus in pci_create_root_bus.
-Date: Wed, 5 Mar 2014 11:48:22 +0800
-Message-ID: <53169E86.1090609@huawei.com>
-References: <1393948204-11555-1-git-send-email-Liviu.Dudau@arm.com> <1393948204-11555-4-git-send-email-Liviu.Dudau@arm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 01/11] base: power: Add generic OF-based power domain
+ look-up
+Date: Wed, 5 Mar 2014 12:24:23 +0800
+Message-ID: <20140305042423.GD13126@sirena.org.uk>
+References: <1393862536-9842-1-git-send-email-tomasz.figa@gmail.com>
+ <1393862536-9842-2-git-send-email-tomasz.figa@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1393948204-11555-4-git-send-email-Liviu.Dudau@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="lpbaaqEfWJan1gxl"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1393862536-9842-2-git-send-email-tomasz.figa@gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene.kim@samsung.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2014/3/4 23:50, Liviu Dudau wrote:
-> Before commit 7b5436635800 the pci_host_bridge was created before the root bus.
-> As that commit has added a needless dependency on the bus for pci_alloc_host_bridge()
-> the creation order has been changed for no good reason. Revert the order of
-> creation as we are going to depend on the pci_host_bridge structure to retrieve the
-> domain number of the root bus.
-> 
-> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 6e34498..78ccba0 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -505,7 +505,7 @@ static void pci_release_host_bridge_dev(struct device *dev)
->  	kfree(bridge);
->  }
->  
-> -static struct pci_host_bridge *pci_alloc_host_bridge(struct pci_bus *b)
-> +static struct pci_host_bridge *pci_alloc_host_bridge(void)
->  {
->  	struct pci_host_bridge *bridge;
->  
-> @@ -514,7 +514,6 @@ static struct pci_host_bridge *pci_alloc_host_bridge(struct pci_bus *b)
->  		return NULL;
->  
->  	INIT_LIST_HEAD(&bridge->windows);
-> -	bridge->bus = b;
->  	return bridge;
->  }
->  
-> @@ -1727,9 +1726,21 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
->  	char bus_addr[64];
->  	char *fmt;
->  
-> +	bridge = pci_alloc_host_bridge();
-> +	if (!bridge)
-> +		return NULL;
-> +
-> +	bridge->dev.parent = parent;
-> +	bridge->dev.release = pci_release_host_bridge_dev;
-> +	error = pcibios_root_bridge_prepare(bridge);
-> +	if (error) {
-> +		kfree(bridge);
-> +		return NULL;
 
-What about use goto err_out?
+--lpbaaqEfWJan1gxl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +	}
-> +
->  	b = pci_alloc_bus();
->  	if (!b)
-> -		return NULL;
-> +		goto err_out;
->  
->  	b->sysdata = sysdata;
->  	b->ops = ops;
-> @@ -1738,26 +1749,15 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
->  	if (b2) {
->  		/* If we already got to this bus through a different bridge, ignore it */
->  		dev_dbg(&b2->dev, "bus already known\n");
-> -		goto err_out;
-> +		goto err_bus_out;
->  	}
->  
-> -	bridge = pci_alloc_host_bridge(b);
-> -	if (!bridge)
-> -		goto err_out;
-> -
-> -	bridge->dev.parent = parent;
-> -	bridge->dev.release = pci_release_host_bridge_dev;
-> +	bridge->bus = b;
->  	dev_set_name(&bridge->dev, "pci%04x:%02x", pci_domain_nr(b), bus);
-> -	error = pcibios_root_bridge_prepare(bridge);
-> -	if (error) {
-> -		kfree(bridge);
-> -		goto err_out;
-> -	}
-> -
->  	error = device_register(&bridge->dev);
->  	if (error) {
->  		put_device(&bridge->dev);
-> -		goto err_out;
-> +		goto err_bus_out;
->  	}
->  	b->bridge = get_device(&bridge->dev);
->  	device_enable_async_suspend(b->bridge);
-> @@ -1814,8 +1814,10 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
->  class_dev_reg_err:
->  	put_device(&bridge->dev);
->  	device_unregister(&bridge->dev);
-> -err_out:
-> +err_bus_out:
->  	kfree(b);
-> +err_out:
-> +	kfree(bridge);
->  	return NULL;
->  }
->  
-> 
+On Mon, Mar 03, 2014 at 05:02:06PM +0100, Tomasz Figa wrote:
+> This patch introduces generic code to perform power domain look-up using
+> device tree and automatically bind devices to their power domains.
+> Generic device tree binding is introduced to specify power domains of
+> devices in their device tree nodes.
+>=20
+> Backwards compatibility with legacy Samsung-specific power domain
+> bindings is provided, but for now the new code is not compiled when
+> CONFIG_ARCH_EXYNOS is selected to avoid collision with legacy code. This
+> will change as soon as Exynos power domain code gets converted to use
+> the generic framework in further patch.
 
+Reviwed-by: Mark Brown <broonie@linaro.org>
 
--- 
-Thanks!
-Yijing
+(mainly the binding)
+
+--lpbaaqEfWJan1gxl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTFqbuAAoJELSic+t+oim9qlEP/3Okw/4lgebLju+P/1YcDHei
+U2AtkQef0Yof6nj2Y3u5H7cnjlC2pMGpZLNs+xP7TzHTX20ahTN8PHG47xXqmdnz
+aiKSMY+ljj6VH+BlDieGiL8V/r7RkwRy48ZPfD1ua2+5iNzCt5cqCMjuOSWZQ0Zq
+3Dx9Ow8DIJiwFT3sSQkDv92/jK1gqEYGeNab/vOOCwkIAXzoLjwvloDKcLXS8mku
+CrBzwUW1SaFjQAjEKhiRhbA2CFNq9WrzVggsoESJYqDEonb6vuas2SYJ7t9io5Fw
+Q8eEQ/MqGg6RHfWE626BS2KwQWPAhJHmsu6VuD3nxkVsYYpvzAnkf8lmkHJu2fh9
+2HqLLqGRR5cPIPL6105f9LmzV+oUScCxvT+V9S/++JNyYZ4nkGkqlecV3LTHB/br
+NWIDI/C6dfuwR1M5CDx1EeR3KcPEgw/tqwmyEIOY78+cTpRvOHazNlY9ZHROcx7q
+LKHgwz8VtPRwhv3wzllFi2s2IzHXXTmNIAnCBb4meB1NDSd97HQlGJ9wP+r6A6cy
+wzUSOPiUd2AL3nFnB0ppTiH3W4WcpUgL+biMsWQfSiJZaR/FGLj0ZDh9UMUfGqjT
+16PDNGBj9HX5JC4jPj7ORhOb1P4vchMmg/qMblNS5XcAQYesTbg/NvovH6KYGutK
+TSGYPet1l/gxwmEZkA0b
+=EODB
+-----END PGP SIGNATURE-----
+
+--lpbaaqEfWJan1gxl--
