@@ -1,116 +1,37 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] gpio: davinci: fix gpio selection for OF
-Date: Wed, 5 Mar 2014 12:43:26 +0200
-Message-ID: <5316FFCE.1060603@ti.com>
-References: <5315ED51.1000006@ti.com>
-	<1393970762-5346-1-git-send-email-holler@ahsoftware.de>
+From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH Resend 2/2] mfd: da9055: Add DT binding documentation
+ for PMIC
+Date: Wed, 5 Mar 2014 09:50:10 +0000
+Message-ID: <2E89032DDAA8B9408CB92943514A03376BAD4D92@SW-EX-MBX01.diasemi.com>
+References: <cover.1392286537.git.Adam.Thomson.Opensource@diasemi.com>
+ <574af9f46ca08e66f6e9bda8ef3a51e7c5c5178b.1392286537.git.Adam.Thomson.Opensource@diasemi.com>
+ <20140305023850.GN10579@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <1393970762-5346-1-git-send-email-holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140305023850.GN10579@lee--X1>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/05/2014 12:06 AM, Alexander Holler wrote:
-> The driver missed an of_xlate function to translate gpio numbers
-> as found in the DT to the correct chip and number.
->
-> While there I've set #gpio_cells to a fixed value of 2.
->
-> I've used gpio-pxa.c as template for those changes and tested my changes
-> successfully on a da850 board using entries for gpio-leds in a DT. So I didn't
-> reinvent the wheel but just copied and tested stuff.
->
-> Thanks to Grygorii Strashko for the hint of the existing code in gpio-pxa.
->
-> Signed-off-by: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-> ---
->   drivers/gpio/gpio-davinci.c | 27 +++++++++++++++++++++++++++
->   1 file changed, 27 insertions(+)
->
-> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-> index 7629b4f..79f45c4 100644
-> --- a/drivers/gpio/gpio-davinci.c
-> +++ b/drivers/gpio/gpio-davinci.c
-> @@ -44,6 +44,9 @@ struct davinci_gpio_regs {
->
->   static void __iomem *gpio_base;
->
-> +static struct davinci_gpio_controller *davinci_gpio_chips;
-> +static int davinci_last_gpio;
-> +
->   static struct davinci_gpio_regs __iomem *gpio2regs(unsigned gpio)
->   {
->   	void __iomem *ptr;
-> @@ -172,6 +175,24 @@ of_err:
->   	return NULL;
->   }
->
-> +#ifdef CONFIG_OF_GPIO
-> +static int davinci_gpio_of_xlate(struct gpio_chip *gc,
-> +			     const struct of_phandle_args *gpiospec,
-> +			     u32 *flags)
-> +{
-> +	if (gpiospec->args[0] > davinci_last_gpio)
-> +		return -EINVAL;
-> +
-> +	if (gc != &davinci_gpio_chips[gpiospec->args[0] / 32].chip)
-> +		return -EINVAL;
-> +
-> +	if (flags)
-> +		*flags = gpiospec->args[1];
-
-Just one question here - Could we use gpio_chip-dev and hence, drop
-static variables (davinci_gpio_chips, davinci_last_gpio)?
-
-The Davinci device holds davinci_gpio_platform_data
-in dev->platform_data and pointer on davinci_gpio_controller array
-in dev->p->driver_data.
-
-And looks like, dev_get_platdata(gc->dev) and
-dev_get_drvdata(gc->dev) can be used here.
-
-> +
-> +	return gpiospec->args[0] % 32;
-> +}
-> +#endif
-> +
->   static int davinci_gpio_probe(struct platform_device *pdev)
->   {
->   	int i, base;
-> @@ -236,6 +257,8 @@ static int davinci_gpio_probe(struct platform_device *pdev)
->   			chips[i].chip.ngpio = 32;
->
-
-add here	chips[i].chip.dev = dev;
-
->   #ifdef CONFIG_OF_GPIO
-> +		chips[i].chip.of_gpio_n_cells = 2;
-> +		chips[i].chip.of_xlate = davinci_gpio_of_xlate;
->   		chips[i].chip.of_node = dev->of_node;
->   #endif
->   		spin_lock_init(&chips[i].lock);
-> @@ -251,6 +274,10 @@ static int davinci_gpio_probe(struct platform_device *pdev)
->
->   	platform_set_drvdata(pdev, chips);
->   	davinci_gpio_irq_setup(pdev);
-> +
-> +	davinci_gpio_chips = chips;
-> +	davinci_last_gpio = ngpio;
-> +
->   	return 0;
->   }
-
-regards,
--grygorii
+T24gVHVlLCAwNSBNYXIgMjAxNCAwMjo0MDozOCArMDAwMCwgTGVlIEpvbmVzIHdyb3RlOg0KDQo+
+ID4gU2lnbmVkLW9mZi1ieTogQWRhbSBUaG9tc29uIDxBZGFtLlRob21zb24uT3BlbnNvdXJjZUBk
+aWFzZW1pLmNvbT4NCj4gPiBBY2tlZC1ieTogTWFyayBCcm93biA8YnJvb25pZUBrZXJuZWwub3Jn
+Pg0KPiANCj4gQXMgdGhpcyBoYXMgTWFyaydzIGFjaywgSSdkIGJlIGhhcHB5IHRvIGFwcGx5IHRo
+ZSBwYXRjaCBpZiB5b3UgY29ycmVjdA0KPiBhIGNvdXBsZSBvZiBuaXRzLg0KDQpZZXAuIE5vIHBy
+b2JsZW0uDQoNCj4gPiArRXhhbXBsZToNCj4gPiArDQo+ID4gKwlwbWljOiBkYTkwNTUtcG1pY0A1
+YSB7DQo+ID4gKwkJY29tcGF0aWJsZSA9ICJkbGcsZGE5MDU1LXBtaWMiOw0KPiA+ICsJCXJlZyA9
+IDwweDVhPjsNCj4gPiArCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZpbnRjPjsNCj4gPiArCQlpbnRl
+cnJ1cHRzID0gPDUgMHg4PjsNCj4gDQo+IEknZCBwcmVmZXIgaWYgeW91IHVzZWQgdGhlICNkZWZp
+bmVzIGluOg0KPiAgICAgZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvaXJxLmgNCg0K
+RmluZS4gV2lsbCBkbyB0aGF0Lg0KDQo+ID4gKwkJCWJ1Y2syOiBCVUNLMiB7DQo+ID4gKwkJCQly
+ZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDw5MjUwMDA+Ow0KPiA+ICsJCQkJcmVndWxhdG9yLW1h
+eC1taWNyb3ZvbHQgPSA8MjUwMDAwMD47DQo+ID4gKwkJCX07DQo+IA0KPiBOZXcgbGluZSBoZXJl
+Lg0KDQpXaWxsIHJlbW92ZSBpdC4NCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
