@@ -1,58 +1,50 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: [PATCH 6/6] documentation: bindings: document PMIC8921/8058 RTC
-Date: Wed,  5 Mar 2014 13:29:36 -0600
-Message-ID: <1394047776-13827-7-git-send-email-joshc@codeaurora.org>
-References: <1394047776-13827-1-git-send-email-joshc@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1394047776-13827-1-git-send-email-joshc@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alessandro Zummo <a.zummo@towertech.it>, linux-kernel@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCHv3 00/13] OMAP IOMMU DT adaptation for 3.15
+Date: Wed, 5 Mar 2014 11:33:26 -0800
+Message-ID: <20140305193326.GA7599@atomide.com>
+References: <1393620164-14633-1-git-send-email-s-anna@ti.com>
+	<20140228230000.GW13624@atomide.com>
+	<20140304160432.GG2799@8bytes.org> <5316068F.3020003@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5316068F.3020003-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This RTC is found on the Qualcomm 8921 and 8058 PMICs.
+* Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [140304 09:03]:
+> On 03/04/2014 10:04 AM, Joerg Roedel wrote:
+> >
+> >Applied patches 1-7 to my arm/omap branch.
+> >
+> >Tony, you can pull that branch into your tree if needed (when I pushed
+> >it, which will happen today or tomorrow).
 
-Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
----
- .../devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt    | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt
+OK thanks, looks like remaining patches compile just fine even without
+it which is nice.
 
-diff --git a/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt b/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt
-new file mode 100644
-index 0000000..699bd30
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt
-@@ -0,0 +1,29 @@
-+* Real-Time Clock for Qualcomm 8058/8921 PMICs
-+
-+Required properties:
-+- compatible: should be one of the following.
-+    * "qcom,pm8058-rtc"
-+    * "qcom,pm8921-rtc"
-+- reg: base address of the register region
-+- reg-names: corresponding reg names for the regions listed in the 'reg'
-+             property, must contain:
-+     "rtc_base" - base of the RTC register region
-+- interrupts: interrupt list for the RTC, must contain a single interrupt
-+              specifier for the alarm interrupt
-+- interrupt-names: corresponding interrupt names for the interrupts listed in
-+                   the 'interrupts' property, must contain:
-+     "alarm" - summary interrupt for PMIC peripherals
-+
-+Option properties:
-+- linux,allow-set-time: indicates that the setting of RTC time is allowed by
-+                        the host CPU
-+
-+Example:
-+
-+	rtc {
-+		compatible = "qcom,pm8921-rtc";
-+		reg = <0x11D>;
-+		reg-names = "rtc_base";
-+		interrupts = <0x27 0>;
-+		interrupt-names = "alarm";
-+	};
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+> Tony,
+> Can you also pull in the corresponding DTS node patches as well that
+> go along with this series.
+> http://marc.info/?l=linux-omap&m=139362062805816&w=2
+
+They look OK to me, but looks like Benoit and Paul are not Cc:ed
+on the hwmod changes. I suggest you resend just patches 8 - 13 and
+the .dts changes as a new series with Benoit and Paul on Cc for
+them so they have a chance to review and ack them.
+
+Regards,
+
+Tony
