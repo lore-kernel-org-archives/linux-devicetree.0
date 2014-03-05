@@ -1,49 +1,40 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCHv3 00/13] OMAP IOMMU DT adaptation for 3.15
-Date: Wed, 5 Mar 2014 14:07:01 -0600
-Message-ID: <531783E5.4090302@ti.com>
-References: <1393620164-14633-1-git-send-email-s-anna@ti.com> <20140228230000.GW13624@atomide.com> <20140304160432.GG2799@8bytes.org> <5316068F.3020003@ti.com> <20140305193326.GA7599@atomide.com>
+From: Georgi Djakov <gdjakov@mm-sol.com>
+Subject: Re: [PATCH v10 1/3] mmc: sdhci-msm: Qualcomm SDHCI binding documentation
+Date: Wed, 05 Mar 2014 22:21:59 +0200
+Message-ID: <53178767.9020908@mm-sol.com>
+References: <1393961226-25618-1-git-send-email-gdjakov@mm-sol.com>	<1393961226-25618-2-git-send-email-gdjakov@mm-sol.com> <CAPDyKFp2whNGYj=bEM74DaNDjdqSkej=HsKD8AUNTo6hjZccHw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140305193326.GA7599@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFp2whNGYj=bEM74DaNDjdqSkej=HsKD8AUNTo6hjZccHw@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <cjb@laptop.org>, devicetree@vger.kernel.org, grant.likely@linaro.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Tony,
-
-On 03/05/2014 01:33 PM, Tony Lindgren wrote:
-> * Suman Anna <s-anna@ti.com> [140304 09:03]:
->> On 03/04/2014 10:04 AM, Joerg Roedel wrote:
->>>
->>> Applied patches 1-7 to my arm/omap branch.
->>>
->>> Tony, you can pull that branch into your tree if needed (when I pushed
->>> it, which will happen today or tomorrow).
+On 03/05/2014 06:25 AM, Ulf Hansson wrote:
+> On 4 March 2014 20:27, Georgi Djakov <gdjakov@mm-sol.com> wrote:
+[..]
+>> +Required properties:
+>> +- compatible: Should contain "qcom,sdhci-msm-v4".
+>> +- reg: Base address and length of the register set listed in reg-names.
+>> +- reg-names: Should contain the following:
+>> +       "hc_mem"   - Host controller register map
+>> +       "core_mem" - SD Core register map
+>> +- interrupts: Should contain an interrupt-specifiers for the interrupts listed in interrupt-names.
+>> +- interrupt-names: Should contain the following:
+>> +       "hc_irq"     - Host controller interrupt
+>> +       "pwr_irq"    - PMIC interrupt
+>> +- vdd-supply: Phandle to the regulator for the vdd (core voltage) supply.
+>> +- vdd-io-supply: Phandle to the regulator for the vdd-io (i/o voltage) supply.
 >
-> OK thanks, looks like remaining patches compile just fine even without
-> it which is nice.
+> The common naming of the above regulators are "vmmc" and "vqmmc". Is
+> there any specific reason to why you can't use these names?
 
-Yes, I did test the boot specifically for this both with and without the 
-corresponding DTS nodes.
+Hi Ulf,
+They are named this way on the schematics, i will change them to the 
+common names. Thanks!
 
->
->> Tony,
->> Can you also pull in the corresponding DTS node patches as well that
->> go along with this series.
->> http://marc.info/?l=linux-omap&m=139362062805816&w=2
->
-> They look OK to me, but looks like Benoit and Paul are not Cc:ed
-> on the hwmod changes. I suggest you resend just patches 8 - 13 and
-> the .dts changes as a new series with Benoit and Paul on Cc for
-> them so they have a chance to review and ack them.
-
-OK, will do.
-
-Thanks
-Suman
-
-
+BR,
+Georgi
