@@ -1,99 +1,100 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 02/12] phy: omap-control: Update DT binding information
-Date: Wed, 5 Mar 2014 14:23:06 +0200
-Message-ID: <5317172A.1050803@ti.com>
-References: <1393859254-10937-1-git-send-email-rogerq@ti.com> <1393859254-10937-3-git-send-email-rogerq@ti.com> <20140303190247.GD25804@atomide.com> <5315995F.5050206@ti.com> <20140304162855.GB3376@atomide.com>
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 1/3] NFC: trf7970a: Add driver with ISO/IEC 14443 Type 2
+ Tag Support
+Date: Wed, 5 Mar 2014 13:36:16 +0100
+Message-ID: <20140305123616.GC14401@zurbaran>
+References: <1391206631-9862-1-git-send-email-mgreer@animalcreek.com>
+ <1391206631-9862-2-git-send-email-mgreer@animalcreek.com>
+ <20140221005059.GS18868@zurbaran>
+ <20140226215309.GA21867@animalcreek.com>
+ <20140305001943.GA29983@animalcreek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20140304162855.GB3376@atomide.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: kishon@ti.com, balbi@ti.com, george.cherian@ti.com, balajitk@ti.com, hdegoede@redhat.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140305001943.GA29983-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Mark A. Greer" <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+Cc: Lauro Ramos Venancio <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Aloisio Almeida Jr <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Erick Macias <emacias-l0cyMroinI0@public.gmane.org>, Thierry Escande <thierry.escande-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-+ George
-
-Tony,
-
-On 03/04/2014 06:28 PM, Tony Lindgren wrote:
-> * Roger Quadros <rogerq@ti.com> [140304 01:17]:
->> Hi Tony,
->>
->> On 03/03/2014 09:02 PM, Tony Lindgren wrote:
->>> * Roger Quadros <rogerq@ti.com> [140303 07:10]:
->>>> Move omap-control binding information to the right location.
->>>>
->>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>>> ---
->>>>  Documentation/devicetree/bindings/phy/ti-phy.txt   | 25 ++++++++++++++++++++++
->>>>  Documentation/devicetree/bindings/usb/omap-usb.txt | 24 ---------------------
->>>>  2 files changed, 25 insertions(+), 24 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
->>>> index 207e14c..41dc132 100644
->>>> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
->>>> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
->>>> @@ -1,5 +1,30 @@
->>>>  TI PHY: DT DOCUMENTATION FOR PHYs in TI PLATFORMs
->>>>  
->>>> +OMAP CONTROL PHY
->>>> +
->>>> +Required properties:
->>>> + - compatible: Should be one of
->>>> + "ti,control-phy-otghs" - if it has otghs_control mailbox register as on OMAP4.
->>>> + "ti,control-phy-usb2" - if it has Power down bit in control_dev_conf register
->>>> +                        e.g. USB2_PHY on OMAP5.
->>>> + "ti,control-phy-pipe3" - if it has DPLL and individual Rx & Tx power control
->>>> +                        e.g. USB3 PHY and SATA PHY on OMAP5.
->>>> + "ti,control-phy-dra7usb2" - if it has power down register like USB2 PHY on
->>>> +                        DRA7 platform.
->>>> + "ti,control-phy-am437usb2" - if it has power down register like USB2 PHY on
->>>> +                        AM437 platform.
->>>
->>> To me it seems that you can leave out all the above. You can set these falgs
->>> flags directly in the driver based on the compatible flag. Then just initialize
->>> the .data in the driver based on the compatible flag.
->>
->> I'm not sure if I got you. A single platform can have different type of phys.
->>
->> e.g. OMAP5 has both usb2 and pipe3 PHYs,
->> DRA7 has both pipe3 and usb2 PHYs, but this usb2 PHY is not compatible with OMAP5 one
->> so we need a new compatible id for that.
->>
->> To add to the woes, the designers were creative enough to make another mutation to
->> the USB2 PHY for AM437x, :(
+On Tue, Mar 04, 2014 at 05:19:43PM -0700, Mark A. Greer wrote:
+> On Wed, Feb 26, 2014 at 02:53:09PM -0700, Mark A. Greer wrote:
+> > On Fri, Feb 21, 2014 at 01:50:59AM +0100, Samuel Ortiz wrote:
+> > 
+> > > > +static int trf7970a_in_send_cmd(struct nfc_digital_dev *ddev,
+> > > > +		struct sk_buff *skb, u16 timeout,
+> > > > +		nfc_digital_cmd_complete_t cb, void *arg)
+> > > > +{
+> > > > +	struct trf7970a *trf = nfc_digital_get_drvdata(ddev);
+> > > > +	char *prefix;
+> > > > +	unsigned int len;
+> > > > +	int ret;
+> > > > +
+> > > > +	dev_dbg(trf->dev, "New request - state: %d, timeout: %d ms, len: %d\n",
+> > > > +			trf->state, timeout, skb->len);
+> > > > +
+> > > > +	if (skb->len > TRF7970A_TX_MAX)
+> > > > +		return -EINVAL;
+> > > > +
+> > > > +	mutex_lock(&trf->lock);
+> > > > +
+> > > > +	if ((trf->state != TRF7970A_ST_IDLE) &&
+> > > > +			(trf->state != TRF7970A_ST_IDLE_RX_BLOCKED)) {
+> > > > +		dev_err(trf->dev, "%s - Bogus state: %d\n", __func__,
+> > > > +				trf->state);
+> > > > +		ret = -EIO;
+> > > > +		goto out_err;
+> > > > +	}
+> > > > +
+> > > > +	trf->rx_skb = nfc_alloc_recv_skb(TRF7970A_RX_SKB_ALLOC_SIZE,
+> > > > +			GFP_KERNEL);
+> > > > +	if (!trf->rx_skb) {
+> > > > +		dev_dbg(trf->dev, "Can't alloc rx_skb\n");
+> > > > +		ret = -ENOMEM;
+> > > > +		goto out_err;
+> > > > +	}
+> > > > +
+> > > > +	if (trf->state == TRF7970A_ST_IDLE_RX_BLOCKED) {
+> > > > +		ret = trf7970a_cmd(trf, TRF7970A_CMD_ENABLE_RX);
+> > > > +		if (ret)
+> > > > +			goto out_err;
+> > > > +
+> > > > +		trf->state = TRF7970A_ST_IDLE;
+> > > > +	}
+> > > > +
+> > > > +	ret = trf7970a_per_cmd_config(trf, skb);
+> > > > +	if (ret)
+> > > > +		goto out_err;
+> > > > +
+> > > > +	trf->ddev = ddev;
+> > > > +	trf->tx_skb = skb;
+> > > As you're going to carry this guy around and may need it from e.g. your
+> > > threaded interrupt handler, shouldn't you take a reference (skb_get) on it ?
+> > > I'm concerned by the fact that you could see your tx_skb disappear from
+> > > abort_cmd and get an IRQ before your state is set to IDLE.
+> > > Hmm, I guess that's protected by the mutex and so when you get an abort
+> > > from the digital stack you reset the state to IDLE and no one should try
+> > > to touch tx_skb after you release the mutex. Is that what you had in
+> > > mind ?
+> > 
+> > It is but taking a reference is a good idea.  I'll add that.
 > 
-> Oh OK, in that case the compatible flag may not be enough for configuring the
-> various instances.
->  
->> What do you suggest the compatible ids should look like for these 5 types of PHY control?
->> OTGHS	(OMAP4 & 5)
->> USB2	(OMAP5)
->> PIPE3	(OMAP5 & DRA7)
->> USB2x	(DRA7)
->> USB2y	(AM437)
+> I've changed my mind on this (hope that's okay).
 > 
-> I think in that case having the various instances fully configurable from
-> device tree is OK if you prefer that. But if you wanted to use the
-> compatible flag, then you could do something like this:
-> 
-> ti,control-phy-omap4-otghs	(assuming same on omap4 & 5)
-> ti,control-phy-omap5-usb2
-> ti,control-phy-omap5-pipe3	(assuming same on omap5 & dra7)
-> ti,control-phy-dra7-usb2x
-> ti,control-phy-am437-usb2y
-> ...
-> 
+> The driver is in control of freeing that skb and won't free it until
+> there's an abort or the processing is complete.  I believe that handle
+> the race with an abort correctly.
+That was my understanding as well, and I wanted to make sure that you
+had that in mind too. It seems to be the case.
 
-Please note that the original bindings were added in v3.13 and I'm just moving the documentation
-to the right location. So I don't think we should change the bindings now.
+Cheers,
+Samuel.
 
-"ti,control-phy-dra7usb2" and "ti,control-phy-am437usb2" have no users still so we could probably
-change those to "ti,control-phy-dra7-usb2" and "ti,control-phy-am437-usb2".
-
-What do you say?
-
-cheers,
--roger
+-- 
+Intel Open Source Technology Centre
+http://oss.intel.com/
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
