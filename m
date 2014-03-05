@@ -1,32 +1,89 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 4/6] rtc: pm8xxx: add support for devicetree
-Date: Wed, 05 Mar 2014 12:59:01 -0800
-Message-ID: <53179015.906@codeaurora.org>
-References: <1394047776-13827-1-git-send-email-joshc@codeaurora.org> <1394047776-13827-5-git-send-email-joshc@codeaurora.org>
+From: Belisko Marek <marek.belisko@gmail.com>
+Subject: Re: [PATCHv2 0/9] Convert twl4030-madc to IIO API and add DT support
+Date: Wed, 5 Mar 2014 22:00:38 +0100
+Message-ID: <CAAfyv360c4UTKUgdYJREgnro1fGLLpGhcHUtdr0q5B6guGvLUQ@mail.gmail.com>
+References: <1393702365-26429-1-git-send-email-sre@debian.org>
+	<1393970751-18157-1-git-send-email-sre@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1394047776-13827-5-git-send-email-joshc@codeaurora.org>
+In-Reply-To: <1393970751-18157-1-git-send-email-sre@debian.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Josh Cartwright <joshc@codeaurora.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, David Brown <davidb@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, devicetree@vger.kernel.org
+To: Sebastian Reichel <sre@debian.org>
+Cc: Sebastian Reichel <sre@ring0.de>, Jonathan Cameron <jic23@kernel.org>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/05/14 11:29, Josh Cartwright wrote:
-> Add support for describing the PM8921/PM8058 RTC in device tree.
+Hi,
+
+On Tue, Mar 4, 2014 at 11:05 PM, Sebastian Reichel <sre@debian.org> wrote:
+> Hi,
 >
-> Additionally:
->    - drop support for describing the RTC using platform data,
->      as there are no current in tree users who do so.
->    - make allow_set_time a device-specific flag, instead of mucking
->      with the rtc_ops
+> This is PATCHv2 for converting twl4030-madc to the IIO API and
+> adding DT support. The plan is to remove the private twl4030-madc
+> API once all users have been removed or converted to the IIO API.
+> The patchset compiles and has been tested on my Nokia N900.
 >
-> Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
+> Changes since PATCHv1 [0]:
+>  * Fix warning about unused variable
+>  * Add IIO_CHAN_INFO_PROCESSED to all channels, since voltage
+>    channels also need some postprocessing
+>
+> TODO:
+>  * Wait for feedback from DT binding maintainers
+>  * Wait for feedback from Marek Belisko, who is testing the
+>    changes with twl4030-madc-battery driver on GTA04
+Tested on gta04 board. Works as expected with twl4030_madc_battery patches [1]
+on top. So you can add my Tested-by: Marek Belisko <marek@goldelico.com>
+>
+> [0] https://lkml.org/lkml/2014/3/1/105
+>
+> -- Sebastian
+>
+> Sebastian Reichel (9):
+>   mfd: twl4030-madc: Use managed resources
+>   mfd: twl4030-madc: Add DT support and convert to IIO framework
+>   mfd: twl4030-madc: Cleanup driver
+>   mfd: twl-core: Add twl_i2c_read/write_u16
+>   mfd: twl4030-madc: Use twl_i2c_read/write_u16 for 16 bit registers
+>   Documentation: DT: Document twl4030-madc binding
+>   mfd: twl4030-madc: Move driver to drivers/iio/adc
+>   iio: documentation: Add ABI documentation for *_mean_raw
+>   iio: inkern: add iio_read_channel_average_raw
+>
+>  Documentation/ABI/testing/sysfs-bus-iio            |   8 +
+>  .../devicetree/bindings/iio/adc/twl4030-madc.txt   |  24 ++
+>  drivers/iio/adc/Kconfig                            |  10 +
+>  drivers/iio/adc/Makefile                           |   1 +
+>  drivers/{mfd => iio/adc}/twl4030-madc.c            | 299 +++++++++++++--------
+>  drivers/iio/inkern.c                               |  18 ++
+>  drivers/mfd/Kconfig                                |  10 -
+>  drivers/mfd/Makefile                               |   1 -
+>  include/linux/i2c/twl.h                            |  12 +
+>  include/linux/i2c/twl4030-madc.h                   |   2 +-
+>  include/linux/iio/consumer.h                       |  13 +
+>  11 files changed, 274 insertions(+), 124 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/twl4030-madc.txt
+>  rename drivers/{mfd => iio/adc}/twl4030-madc.c (75%)
+>
+> --
+> 1.9.0
 >
 
-Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
+[1]: http://www.spinics.net/lists/kernel/msg1700793.html
+
+BR,
+
+marek
+
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+as simple and primitive as possible
+-------------------------------------------------
+Marek Belisko - OPEN-NANDRA
+Freelance Developer
+
+Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
+Tel: +421 915 052 184
+skype: marekwhite
+twitter: #opennandra
+web: http://open-nandra.com
