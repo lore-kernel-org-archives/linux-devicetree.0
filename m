@@ -1,154 +1,163 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: [PATCH v5 11/14] usb: phy: msm: Add support for secondary PHY control
-Date: Wed,  5 Mar 2014 12:13:47 +0200
-Message-ID: <1394014430-26485-12-git-send-email-iivanov@mm-sol.com>
-References: <1394014430-26485-1-git-send-email-iivanov@mm-sol.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1394014430-26485-1-git-send-email-iivanov@mm-sol.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Felipe Balbi <balbi@ti.com>
-Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 3/3] Documentation: mfd: Add binding document for
+ S2MPA01
+Date: Wed, 5 Mar 2014 18:24:42 +0800
+Message-ID: <20140305100739.GF10380@lee--X1>
+References: <1392273476-32736-1-git-send-email-sachin.kamat@linaro.org>
+ <1392273476-32736-3-git-send-email-sachin.kamat@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1392273476-32736-3-git-send-email-sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+=46AO Mark Brown,
 
-Allow support to use 2nd HSPHY with USB2 Core.
-Some platforms may have configuration to allow USB controller
-work with any of the two HSPHYs present. By default driver
-configures USB core to use primary HSPHY. Add support to allow
-user select 2nd HSPHY using DT parameter.
+> Added initial binding documentation for S2MPA01 MFD.
+>=20
+> Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> Changes since v2:
+> * Re-worded as suggested by Mark Rutland
+> ---
+>  Documentation/devicetree/bindings/mfd/s2mpa01.txt |   90 +++++++++++=
+++++++++++
+>  1 file changed, 90 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/s2mpa01.txt
 
-Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-Cc: Manu Gautam <mgautam@codeaurora.org>
----
- .../devicetree/bindings/usb/msm-hsusb.txt          |    6 +++++
- drivers/usb/phy/phy-msm-usb.c                      |   24 ++++++++++++++++++--
- include/linux/usb/msm_hsusb.h                      |    1 +
- include/linux/usb/msm_hsusb_hw.h                   |    1 +
- 4 files changed, 30 insertions(+), 2 deletions(-)
+This document has been sitting on the MLs for nearly a month now. It
+seems well written and doesn't add any new bindings. With that in mind
+I'm inclined to take it though. However, as most of the important
+configuration here is regulator related I'd like Mark Browns Ack on
+it.
 
-diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-index ee4123d..0669667 100644
---- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-+++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-@@ -59,6 +59,12 @@ Optional properties:
-                 For example: qcom,phy-init-sequence = < -1 0x63 >;
-                 Will update only value at address ULPI_EXT_VENDOR_SPECIFIC + 1.
+Mark, would you be so kind?
 
-+- qcom,phy-num: Select number of pyco-phy to use, can be one of
-+                0 - PHY one, default
-+                1 - Second PHY
-+                Some platforms may have configuration to allow USB
-+                controller work with any of the two HSPHYs present.
-+
- Example HSUSB OTG controller device node:
+> diff --git a/Documentation/devicetree/bindings/mfd/s2mpa01.txt b/Docu=
+mentation/devicetree/bindings/mfd/s2mpa01.txt
+> new file mode 100644
+> index 000000000000..c13d3d8c3947
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
+> @@ -0,0 +1,90 @@
+> +
+> +* Samsung S2MPA01 Voltage and Current Regulator
+> +
+> +The Samsung S2MPA01 is a multi-function device which includes high
+> +efficiency buck converters including Dual-Phase buck converter, vari=
+ous LDOs,
+> +and an RTC. It is interfaced to the host controller using an I2C int=
+erface.
+> +Each sub-block is addressed by the host system using different I2C s=
+lave
+> +addresses.
+> +
+> +Required properties:
+> +- compatible: Should be "samsung,s2mpa01-pmic".
+> +- reg: Specifies the I2C slave address of the PMIC block. It should =
+be 0x66.
+> +
+> +Optional properties:
+> +- interrupt-parent: Specifies the phandle of the interrupt controlle=
+r to which
+> +  the interrupts from s2mpa01 are delivered to.
+> +- interrupts: An interrupt specifier for the sole interrupt generate=
+d by the
+> +  device.
+> +
+> +Optional nodes:
+> +- regulators: The regulators of s2mpa01 that have to be instantiated=
+ should be
+> +  included in a sub-node named 'regulators'. Regulator nodes and con=
+straints
+> +  included in this sub-node use the standard regulator bindings whic=
+h are
+> +  documented elsewhere.
+> +
+> +Properties for BUCK regulator nodes:
+> +- regulator-ramp-delay: ramp delay in uV/us. May be 6250, 12500
+> +  (default), 25000, or 50000. May be 0 for disabling the ramp delay =
+on
+> +  BUCK{1,2,3,4}.
+> +
+> + In the absence of the regulator-ramp-delay property, the default ra=
+mp
+> + delay will be used.
+> +
+> +  NOTE: Some BUCKs share the ramp rate setting i.e. same ramp value =
+will be set
+> +  for a particular group of BUCKs. So provide same regulator-ramp-de=
+lay=3D<value>.
+> +
+> +  The following BUCKs share ramp settings:
+> +  * 1 and 6
+> +  * 2 and 4
+> +  * 8, 9, and 10
+> +
+> +The following are the names of the regulators that the s2mpa01 PMIC =
+block
+> +supports. Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK=
+ number
+> +as per the datasheet of s2mpa01.
+> +
+> +	- LDOn
+> +		  - valid values for n are 1 to 26
+> +		  - Example: LDO1, LD02, LDO26
+> +	- BUCKn
+> +		  - valid values for n are 1 to 10.
+> +		  - Example: BUCK1, BUCK2, BUCK9
+> +
+> +Example:
+> +
+> +	s2mpa01_pmic@66 {
+> +		compatible =3D "samsung,s2mpa01-pmic";
+> +		reg =3D <0x66>;
+> +
+> +		regulators {
+> +			ldo1_reg: LDO1 {
+> +				regulator-name =3D "VDD_ALIVE";
+> +				regulator-min-microvolt =3D <1000000>;
+> +				regulator-max-microvolt =3D <1000000>;
+> +			};
+> +
+> +			ldo2_reg: LDO2 {
+> +				regulator-name =3D "VDDQ_MMC2";
+> +				regulator-min-microvolt =3D <2800000>;
+> +				regulator-max-microvolt =3D <2800000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			buck1_reg: BUCK1 {
+> +				regulator-name =3D "vdd_mif";
+> +				regulator-min-microvolt =3D <950000>;
+> +				regulator-max-microvolt =3D <1350000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +			};
+> +
+> +			buck2_reg: BUCK2 {
+> +				regulator-name =3D "vdd_arm";
+> +				regulator-min-microvolt =3D <950000>;
+> +				regulator-max-microvolt =3D <1350000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-ramp-delay =3D <50000>;
+> +			};
+> +		};
+> +	};
 
-     usb@f9a55000 {
-diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
-index 7e5c4ab..f3e9389 100644
---- a/drivers/usb/phy/phy-msm-usb.c
-+++ b/drivers/usb/phy/phy-msm-usb.c
-@@ -315,6 +315,9 @@ static int msm_otg_phy_reset(struct msm_otg *motg)
- 	if (!retries)
- 		return -ETIMEDOUT;
-
-+	if (motg->phy_number)
-+		writel(readl(USB_PHY_CTRL2) | BIT(16), USB_PHY_CTRL2);
-+
- 	dev_info(motg->phy.dev, "phy_reset: success\n");
- 	return 0;
- }
-@@ -369,6 +372,9 @@ static int msm_otg_reset(struct usb_phy *phy)
- 		ulpi_write(phy, ulpi_val, ULPI_USB_INT_EN_FALL);
- 	}
-
-+	if (motg->phy_number)
-+		writel(readl(USB_PHY_CTRL2) | BIT(16), USB_PHY_CTRL2);
-+
- 	return 0;
- }
-
-@@ -405,6 +411,7 @@ static int msm_otg_suspend(struct msm_otg *motg)
- 	struct usb_phy *phy = &motg->phy;
- 	struct usb_bus *bus = phy->otg->host;
- 	struct msm_otg_platform_data *pdata = motg->pdata;
-+	void __iomem *addr;
- 	int cnt = 0;
-
- 	if (atomic_read(&motg->in_lpm))
-@@ -464,9 +471,13 @@ static int msm_otg_suspend(struct msm_otg *motg)
- 	 */
- 	writel(readl(USB_USBCMD) | ASYNC_INTR_CTRL | ULPI_STP_CTRL, USB_USBCMD);
-
-+	addr = USB_PHY_CTRL;
-+	if (motg->phy_number)
-+		addr = USB_PHY_CTRL2;
-+
- 	if (motg->pdata->phy_type == SNPS_28NM_INTEGRATED_PHY &&
- 			motg->pdata->otg_control == OTG_PMIC_CONTROL)
--		writel(readl(USB_PHY_CTRL) | PHY_RETEN, USB_PHY_CTRL);
-+		writel(readl(addr) | PHY_RETEN, addr);
-
- 	clk_disable_unprepare(motg->pclk);
- 	clk_disable_unprepare(motg->clk);
-@@ -496,6 +507,7 @@ static int msm_otg_resume(struct msm_otg *motg)
- {
- 	struct usb_phy *phy = &motg->phy;
- 	struct usb_bus *bus = phy->otg->host;
-+	void __iomem *addr;
- 	int cnt = 0;
- 	unsigned temp;
-
-@@ -509,9 +521,14 @@ static int msm_otg_resume(struct msm_otg *motg)
-
- 	if (motg->pdata->phy_type == SNPS_28NM_INTEGRATED_PHY &&
- 			motg->pdata->otg_control == OTG_PMIC_CONTROL) {
-+
-+		addr = USB_PHY_CTRL;
-+		if (motg->phy_number)
-+			addr = USB_PHY_CTRL2;
-+
- 		msm_hsusb_ldo_set_mode(motg, 1);
- 		msm_hsusb_config_vddcx(motg, 1);
--		writel(readl(USB_PHY_CTRL) & ~PHY_RETEN, USB_PHY_CTRL);
-+		writel(readl(addr) & ~PHY_RETEN, addr);
- 	}
-
- 	temp = readl(USB_USBCMD);
-@@ -1397,6 +1414,9 @@ static int msm_otg_read_dt(struct platform_device *pdev, struct msm_otg *motg)
- 		if (val == OTG_PMIC_CONTROL)
- 			pdata->otg_control = val;
-
-+	if (!of_property_read_u32(node, "qcom,phy-num", &val) && val < 2)
-+		motg->phy_number = val;
-+
- 	prop = of_find_property(node, "qcom,phy-init-sequence", &len);
- 	if (!prop || !len)
- 		return 0;
-diff --git a/include/linux/usb/msm_hsusb.h b/include/linux/usb/msm_hsusb.h
-index 4e5d916..4628f1a 100644
---- a/include/linux/usb/msm_hsusb.h
-+++ b/include/linux/usb/msm_hsusb.h
-@@ -158,6 +158,7 @@ struct msm_otg {
- 	atomic_t in_lpm;
- 	int async_int;
- 	unsigned cur_power;
-+	int phy_number;
- 	struct delayed_work chg_work;
- 	enum usb_chg_state chg_state;
- 	enum usb_chg_type chg_type;
-diff --git a/include/linux/usb/msm_hsusb_hw.h b/include/linux/usb/msm_hsusb_hw.h
-index 6e97a2d..e6d7035 100644
---- a/include/linux/usb/msm_hsusb_hw.h
-+++ b/include/linux/usb/msm_hsusb_hw.h
-@@ -25,6 +25,7 @@
- #define USB_OTGSC            (MSM_USB_BASE + 0x01A4)
- #define USB_USBMODE          (MSM_USB_BASE + 0x01A8)
- #define USB_PHY_CTRL         (MSM_USB_BASE + 0x0240)
-+#define USB_PHY_CTRL2        (MSM_USB_BASE + 0x0278)
-
- #define USBCMD_RESET   2
- #define USB_USBINTR          (MSM_USB_BASE + 0x0148)
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-1.7.9.5
-
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
