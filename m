@@ -1,71 +1,41 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v3 06/13] phy: ti-pipe3: Don't get 'wkupclk' and 'refclk' for
- SATA PHY
-Date: Thu, 6 Mar 2014 17:31:22 +0200
-Message-ID: <1394119882-12859-1-git-send-email-rogerq@ti.com>
-References: <1394116729-28811-7-git-send-email-rogerq@ti.com>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v2 6/6] PCI: designware: use new OF interrupt mapping when possible
+Date: Thu, 6 Mar 2014 16:33:31 +0100
+Message-ID: <201403061633.31260.marex@denx.de>
+References: <1394025951-32438-1-git-send-email-l.stach@pengutronix.de> <1394025951-32438-7-git-send-email-l.stach@pengutronix.de> <000201cf38e6$5b02d6e0$110884a0$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1394116729-28811-7-git-send-email-rogerq@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: kishon@ti.com, tony@atomide.com, balbi@ti.com
-Cc: devicetree@vger.kernel.org, george.cherian@ti.com, balajitk@ti.com, linux-ide@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, hdegoede@redhat.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rogerq@ti.com
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <000201cf38e6$5b02d6e0$110884a0$%han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Troy Kisky <troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Cc: 'Lucas Stach' <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Bjorn Helgaas' <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, 'Simon Horman' <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, 'Shawn Guo' <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Stephen Warren' <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, 'Ben Dooks' <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, 'Kukjin Kim' <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Thierry Reding' <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Arnd Bergmann' <arnd-r2nGTMty4D4@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, 'Mohit KUMAR DCG' <Mohit.KUMAR-qxv4g6HH51o@public.gmane.org>, 'Pratyush Anand' <pratyush.anand-qxv4g6HH51o@public.gmane.org>, 'Richard Zhu' <r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, 'Kishon Vijay Abraham I' <kishon-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SATA PHY doesn't need 'wkupclk; and 'refclk' so don't
-try to get them for SATA PHY.
+On Thursday, March 06, 2014 at 03:47:03 AM, Jingoo Han wrote:
+> On Wednesday, March 05, 2014 10:26 PM, Lucas Stach wrote:
+> > This is the recommended method of doing the IRQ
+> > mapping. For old devicetrees we fall back to the
+> > previous practice.
+> > 
+> > Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> 
+> (+cc Mohit KUMAR, Richard Zhu, Pratyush Anand, Marek Vasut,
+>        Kishon Vijay Abraham I)
+> 
+> Acked-by: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> 
+> It works properly on Exynos platform.
+> Thank you.
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
-v3 - Fixed checkpatch warning
+Looks reasonable,
 
- drivers/phy/phy-ti-pipe3.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 
-diff --git a/drivers/phy/phy-ti-pipe3.c b/drivers/phy/phy-ti-pipe3.c
-index f141237..f925f60 100644
---- a/drivers/phy/phy-ti-pipe3.c
-+++ b/drivers/phy/phy-ti-pipe3.c
-@@ -294,16 +294,21 @@ static int ti_pipe3_probe(struct platform_device *pdev)
- 
- 	phy->dev		= &pdev->dev;
- 
--	phy->wkupclk = devm_clk_get(phy->dev, "wkupclk");
--	if (IS_ERR(phy->wkupclk)) {
--		dev_err(&pdev->dev, "unable to get wkupclk\n");
--		return PTR_ERR(phy->wkupclk);
--	}
-+	if (!of_device_is_compatible(node, "ti,phy-pipe3-sata")) {
-+		phy->wkupclk = devm_clk_get(phy->dev, "wkupclk");
-+		if (IS_ERR(phy->wkupclk)) {
-+			dev_err(&pdev->dev, "unable to get wkupclk\n");
-+			return PTR_ERR(phy->wkupclk);
-+		}
- 
--	phy->refclk = devm_clk_get(phy->dev, "refclk");
--	if (IS_ERR(phy->refclk)) {
--		dev_err(&pdev->dev, "unable to get refclk\n");
--		return PTR_ERR(phy->refclk);
-+		phy->refclk = devm_clk_get(phy->dev, "refclk");
-+		if (IS_ERR(phy->refclk)) {
-+			dev_err(&pdev->dev, "unable to get refclk\n");
-+			return PTR_ERR(phy->refclk);
-+		}
-+	} else {
-+		phy->wkupclk = ERR_PTR(-ENODEV);
-+		phy->refclk = ERR_PTR(-ENODEV);
- 	}
- 
- 	phy->sys_clk = devm_clk_get(phy->dev, "sysclk");
--- 
-1.8.3.2
++CC Troy if he wants to test it on SL/N6X .
+
+Best regards,
+Marek Vasut
