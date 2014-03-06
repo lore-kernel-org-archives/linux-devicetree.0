@@ -1,71 +1,176 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 3/9] Doc/DT: Add DT binding documentation for DVI Connector
-Date: Thu, 6 Mar 2014 09:39:40 +0100
-Message-ID: <CAMuHMdWVSfKrudBhE7FW-ZWBvMOLWjrQZvn1qZUfRt_H+P7A2w@mail.gmail.com>
-References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
-	<1393590016-9361-4-git-send-email-tomi.valkeinen@ti.com>
-	<20140228155937.GQ21483@n2100.arm.linux.org.uk>
-	<5310B567.7040605@ti.com>
-	<20140228162327.GT21483@n2100.arm.linux.org.uk>
-	<5316E31F.9050308@ti.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 2/5] ARM: dts: AM4372: Add USB nodes
+Date: Thu, 6 Mar 2014 10:49:29 +0200
+Message-ID: <53183699.8070106@ti.com>
+References: <1393854834-23810-1-git-send-email-george.cherian@ti.com> <1393854834-23810-3-git-send-email-george.cherian@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <5316E31F.9050308@ti.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces@lists.freedesktop.org
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, DRI Development <dri-devel@lists.freedesktop.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1393854834-23810-3-git-send-email-george.cherian@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: George Cherian <george.cherian@ti.com>, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: anatol.pomozov@gmail.com, gregkh@linuxfoundation.org, balbi@ti.com, kishon@ti.com, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, bcousson@baylibre.com, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 5, 2014 at 9:41 AM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
-> On 28/02/14 18:23, Russell King - ARM Linux wrote:
->
->> That's rather a lot of compatible strings.  Another possibility is:
->>
->>       compatible = "dvi-connector";
->>       analog;
->>       digital;
->>       single-link;
->>       dual-link;
->
-> I made the following changes compared to the posted version. I decided
-> to leave the "single-link" out, as it's implied if "digital" is set.
->
->  Tomi
->
-> @@ -6,11 +6,16 @@ Required properties:
->
->  Optional properties:
->  - label: a symbolic name for the connector
-> -- i2c-bus: phandle to the i2c bus that is connected to DVI DDC
-> +- ddc-i2c-bus: phandle to the i2c bus that is connected to DVI DDC
-> +- analog: the connector has DVI analog pins
-> +- digital: the connector has DVI digital pins
-> +- dual-link: the connector has pins for DVI dual-link
->
->  Required nodes:
->  - Video port for DVI input
->
-> +Note: One (or both) of 'analog' or 'digital' must be set.
+Hi George,
 
-So dual-link needs both "digital" and "dual-link"?
+On 03/03/2014 03:53 PM, George Cherian wrote:
+> Add nodes for 2 instances each of
+> 	- ocp2scp
+> 	- USB PHY control module
+> 	- USB PHY
+> 	- dwc3_omap
+> 	- USB
+> 
+> for AM43xx.
+> 
+> Signed-off-by: George Cherian <george.cherian@ti.com>
+> ---
+>  arch/arm/boot/dts/am4372.dtsi | 99 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 99 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+> index 5a7cc38..90408b3 100644
+> --- a/arch/arm/boot/dts/am4372.dtsi
+> +++ b/arch/arm/boot/dts/am4372.dtsi
+> @@ -698,6 +698,105 @@
+>  			       <&edma 11>;
+>  			dma-names = "tx", "rx";
+>  		};
+> +
+> +		am43xx_control_usb2phy1: control-phy@44e10620 {
+> +			compatible = "ti,control-phy-am437usb2";
 
-Gr{oetje,eeting}s,
+Since this is the first usage of this compatible ID, we still have room to
+change it to be better. Tony's suggestion was to use "ti,control-phy-am437-usb2"
 
-                        Geert
+Please see
+http://article.gmane.org/gmane.linux.drivers.devicetree/64833
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> +			reg = <0x44e10620 0x4>;
+> +			reg-names = "power";
+> +			status = "disabled";
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Why disable something that is within the SoC and does not affect board configurations? 
+
+Question applies for all the nodes in this patch except the ones that come out on the
+SoC pins. e.g. PHY.
+
+> +		};
+> +
+> +		am43xx_control_usb2phy2: control-phy@0x44e10628 {
+> +			compatible = "ti,control-phy-am437usb2";
+> +			reg = <0x44e10628 0x4>;
+> +			reg-names = "power";
+> +			status = "disabled";
+> +		};
+> +
+> +		ocp2scp0: ocp2scp@483a8000 {
+> +			compatible = "ti,omap-ocp2scp";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +			ti,hwmods = "ocp2scp0";
+> +			status = "disabled";
+> +
+> +			usb2_phy1: usb2phy1@483a8000 {
+
+should be
+			usb2_phy1: phy@483a8000 {
+
+> +				compatible = "ti,am437x-usb2";
+> +				reg = <0x483a8000 0x8000>;
+> +				ctrl-module = <&am43xx_control_usb2phy1>;
+> +				clocks = <&clk_32768_ck>,
+> +					 <&usb_otg_ss0_refclk960m>;
+> +				clock-names = "usb_phy_cm_clk32k",
+> +					      "usb_otg_ss_refclk960m";
+
+clock-names should be platform independent. Better option would be to
+modify the usb2 driver to use names like "wkupclk" and "refclk"
+
+> +				#phy-cells = <0>;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		ocp2scp1: ocp2scp@483e8000 {
+> +			compatible = "ti,omap-ocp2scp";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +			ti,hwmods = "ocp2scp1";
+> +			status = "disabled";
+> +
+> +			usb2_phy2: usb2phy2@483e8000 {
+> +				compatible = "ti,am437x-usb2";
+> +				reg = <0x483e8000 0x8000>;
+> +				ctrl-module = <&am43xx_control_usb2phy2>;
+> +				clocks = <&clk_32768_ck>,
+> +					 <&usb_otg_ss1_refclk960m>;
+> +				clock-names = "usb_phy_cm_clk32k",
+> +					      "usb_otg_ss_refclk960m";
+> +				#phy-cells = <0>;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		dwc3_1: omap_dwc3_1@48380000 {
+> +			compatible = "ti,am437x-dwc3";
+> +			ti,hwmods = "usb_otg_ss0";
+> +			reg = <0x48380000 0x10000>;
+> +			interrupts = <GIC_SPI 172 IRQ_TYPE_LEVEL_HIGH>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			utmi-mode = <1>;
+> +			ranges;
+> +			status = "disabled";
+> +
+> +			usb1: usb@48390000 {
+> +				compatible = "synopsys,dwc3";
+> +				reg = <0x48390000 0x17000>;
+> +				interrupts = <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
+> +				usb-phy = <&usb2_phy1>;
+
+shouldn't this be		phys = <&usb2_phy1>;	?
+
+> +				phy-names = "usb2-phy";
+
+what about
+	maximum-speed = "high-speed";
+and
+	dr_mode = "otg"; ?
+
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		dwc3_2: omap_dwc3_2@483c0000 {
+> +			compatible = "ti,am437x-dwc3";
+> +			ti,hwmods = "usb_otg_ss1";
+> +			reg = <0x483c0000 0x10000>;
+> +			interrupts = <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			utmi-mode = <1>;
+> +			ranges;
+> +			status = "disabled";
+> +
+> +			usb2: usb@483d0000 {
+> +				compatible = "synopsys,dwc3";
+> +				reg = <0x483d0000 0x17000>;
+> +				interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> +				usb-phy = <&usb2_phy2>;
+> +				phy-names = "usb2-phy";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+>  	};
+>  };
+>  
+> 
+
+cheers,
+-roger
