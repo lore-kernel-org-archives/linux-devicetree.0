@@ -1,145 +1,93 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH v6 09/10] ARM: dts: Add rear camera nodes for Exynos4412 TRATS2
- board
-Date: Thu, 06 Mar 2014 17:20:18 +0100
-Message-ID: <1394122819-9582-10-git-send-email-s.nawrocki@samsung.com>
-References: <1394122819-9582-1-git-send-email-s.nawrocki@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1394122819-9582-1-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, galak@codeaurora.org, kyungmin.park@samsung.com, kgene.kim@samsung.com, a.hajda@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v6 0/8] Move device tree graph parsing helpers to drivers/of
+Date: Thu, 06 Mar 2014 17:32:49 +0100
+Message-ID: <5318A331.2070603@samsung.com>
+References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de>
+ <53170C00.20200@ti.com> <1394030554.8754.31.camel@paszta.hi.pengutronix.de>
+ <20140306141657.GB21483@n2100.arm.linux.org.uk>
+ <20140306121721.6186dafb@samsung.com> <5318988C.2030004@samsung.com>
+ <1394122879.3622.47.camel@paszta.hi.pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1394122879.3622.47.camel-+qGW7pzALmz7o/J7KWpOmN53zsg1cpMQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch enables the rear facing camera (s5c73m3) on TRATS2 board
-by adding the I2C0 bus controller, s5c73m3 sensor, MIPI CSI-2 receiver
-and the sensor's voltage regulator supply nodes.
+On 06/03/14 17:21, Philipp Zabel wrote:
+> Am Donnerstag, den 06.03.2014, 16:47 +0100 schrieb Sylwester Nawrocki:
+>> On 06/03/14 16:17, Mauro Carvalho Chehab wrote:
+>>> Em Thu, 06 Mar 2014 14:16:57 +0000
+>>> Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> escreveu:
+>>>>> On Wed, Mar 05, 2014 at 03:42:34PM +0100, Philipp Zabel wrote:
+>>>>>>> Am Mittwoch, den 05.03.2014, 13:35 +0200 schrieb Tomi Valkeinen:
+> [...]
+>>>>>>>>> So, as I've pointed out, I don't agree with the API, as it's too limited
+>>>>>>>>> and I can't use it, but as this series is (mostly) about moving the
+>>>>>>>>> current API to a common place, it's fine for me.
+>>>>>>>>>
+>>>>>>>>> Acked-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+>>>>>>>
+>>>>>>> Thanks. I'll be happy to help expanding the API to parse ports
+>>>>>>> individually, once this gets accepted.
+>>>>>>>
+>>>>>>> Mauro, Guennadi, are you fine with how this turned out? I'd like to get
+>>>>>>> your acks again, for the changed location.
+>>>
+>>> From my side, there's nothing on such code that is V4L2 specific.
+>>> Moving it to drivers/of makes sense on my eyes.
+>>>
+>>> Acked-by: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>
+>> I'm OK with patches 1...5, 8, so for these:
+>>
+>> Acked-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>
+>> Regarding the simplified version of the binding, I thought we should
+>> leave 'port' instead of 'endpoint' node. This could cover more hardware
+>> configurations. Are there any users of this simplified binding queued
+>> for v3.15 ? If not, perhaps we can postpone it and discuss it a bit more
+>> (sorry, couldn't find time to comment on that earlier) ?
+> 
+> Since Tomi needs the separate port/endpoint iteration anyway, 
+> postponing the simple bindings shouldn't hurt. I'll (re)submit them
+> together in a second series.
 
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
-Changes since v5:
-  - none.
+Ok, thanks.
 
-Changes since v4:
-  - removed changes related to s5k6a3 sensor.
----
- arch/arm/boot/dts/exynos4412-trats2.dts |   81 +++++++++++++++++++++++++++++--
- 1 file changed, 78 insertions(+), 3 deletions(-)
+>>>>> I'll need those acks before I can even think about queuing up the
+>>>>> imx-drm bits.
+>>>>>
+>>>>> Another way to deal with this is if this gets pulled into the V4L tree
+>>>>> from Philipp's git tree, I can also pull that in myself.  What mustn't
+>>>>> happen is for these to be committed independently as patches.
+>>>
+>>> If everyone agrees, I actually prefer have this patch applied on my tree,
+>>> in order to avoid some potential merge conflicts at the merge window,
+>>> as we might have other drivers and changes there touching on those API
+>>> calls (I'm aware of a series of patches from Sylwester with some DT
+>>> stuff on it. Not sure if it would be affected by such changes or not).
+>>
+>> Yes, it's going to conflict with my patch series. I thought it could be
+>> put onto a stable a topic branch, e.g. at git://linuxtv.org/media_tree.git,
+>> which could be then pulled into the media master branch and anywhere
+>> else it is needed ?
+> 
+> Mauro, are you ok with handling the conflict in the merge, or should I
+> rebase on top of the media tree after you merged Sylwester's changes?
 
-diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
-index 4f851cc..0c6afbe 100644
---- a/arch/arm/boot/dts/exynos4412-trats2.dts
-+++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-@@ -71,7 +71,33 @@
- 			enable-active-high;
- 		};
- 
--		/* More to come */
-+		cam_af_reg: voltage-regulator-2 {
-+			compatible = "regulator-fixed";
-+			regulator-name = "CAM_AF";
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <2800000>;
-+			gpio = <&gpm0 4 0>;
-+			enable-active-high;
-+		};
-+
-+		cam_isp_core_reg: voltage-regulator-3 {
-+			compatible = "regulator-fixed";
-+			regulator-name = "CAM_ISP_CORE_1.2V_EN";
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+			gpio = <&gpm0 3 0>;
-+			enable-active-high;
-+			regulator-always-on;
-+		};
-+
-+		lcd_vdd3_reg: voltage-regulator-4 {
-+			compatible = "regulator-fixed";
-+			regulator-name = "LCD_VDD_2.2V";
-+			regulator-min-microvolt = <2200000>;
-+			regulator-max-microvolt = <2200000>;
-+			gpio = <&gpc0 1 0>;
-+			enable-active-high;
-+		};
- 	};
- 
- 	gpio-keys {
-@@ -106,6 +132,38 @@
- 		};
- 	};
- 
-+	i2c_0: i2c@13860000 {
-+		samsung,i2c-sda-delay = <100>;
-+		samsung,i2c-slave-addr = <0x10>;
-+		samsung,i2c-max-bus-freq = <400000>;
-+		pinctrl-0 = <&i2c0_bus>;
-+		pinctrl-names = "default";
-+		status = "okay";
-+
-+		s5c73m3@3c {
-+			compatible = "samsung,s5c73m3";
-+			reg = <0x3c>;
-+			standby-gpios = <&gpm0 1 1>;   /* ISP_STANDBY */
-+			xshutdown-gpios = <&gpf1 3 1>; /* ISP_RESET */
-+			vdd-int-supply = <&buck9_reg>;
-+			vddio-cis-supply = <&ldo9_reg>;
-+			vdda-supply = <&ldo17_reg>;
-+			vddio-host-supply = <&ldo18_reg>;
-+			vdd-af-supply = <&cam_af_reg>;
-+			vdd-reg-supply = <&cam_io_reg>;
-+			clock-frequency = <24000000>;
-+			/* CAM_A_CLKOUT */
-+			clocks = <&camera 0>;
-+			clock-names = "cis_extclk";
-+			port {
-+				s5c73m3_ep: endpoint {
-+					remote-endpoint = <&csis0_ep>;
-+					data-lanes = <1 2 3 4>;
-+				};
-+			};
-+		};
-+	};
-+
- 	i2c@13890000 {
- 		samsung,i2c-sda-delay = <100>;
- 		samsung,i2c-slave-addr = <0x10>;
-@@ -511,8 +569,8 @@
- 		};
- 	};
- 
--	camera {
--		pinctrl-0 = <&cam_port_b_clk_active>;
-+	camera: camera {
-+		pinctrl-0 = <&cam_port_a_clk_active &cam_port_b_clk_active>;
- 		pinctrl-names = "default";
- 		status = "okay";
- 
-@@ -532,6 +590,23 @@
- 			status = "okay";
- 		};
- 
-+		csis_0: csis@11880000 {
-+			status = "okay";
-+			vddcore-supply = <&ldo8_reg>;
-+			vddio-supply = <&ldo10_reg>;
-+			clock-frequency = <176000000>;
-+
-+			/* Camera C (3) MIPI CSI-2 (CSIS0) */
-+			port@3 {
-+				reg = <3>;
-+				csis0_ep: endpoint {
-+					remote-endpoint = <&s5c73m3_ep>;
-+					data-lanes = <1 2 3 4>;
-+					samsung,csis-hs-settle = <12>;
-+				};
-+			};
-+		};
-+
- 		csis_1: csis@11890000 {
- 			vddcore-supply = <&ldo8_reg>;
- 			vddio-supply = <&ldo10_reg>;
--- 
-1.7.9.5
+I could rebase and resolve any conflicts before sending my pull request
+to Mauro. I don't think it's a good idea to rebase this series onto the
+media tree, since it is touching drivers/of.
+
+--
+Regards,
+Sylwester
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
