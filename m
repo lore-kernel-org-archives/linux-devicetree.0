@@ -1,39 +1,25 @@
 From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: [PATCH 1/7] device: introduce per device dma_pfn_offset
-Date: Thu, 6 Mar 2014 17:19:52 +0800
-Message-ID: <1394097598-17622-2-git-send-email-santosh.shilimkar@ti.com>
+Subject: [PATCH 2/7] of: introduce of_dma_get_range() helper
+Date: Thu, 6 Mar 2014 17:19:53 +0800
+Message-ID: <1394097598-17622-3-git-send-email-santosh.shilimkar@ti.com>
 References: <1394097598-17622-1-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1394097598-17622-1-git-send-email-santosh.shilimkar@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Catalin Marinas <catalin.marinas@arm.com>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On few architectures, there are few restrictions on DMAble area of system
-RAM. That also means that devices needs to know about this restrictions so
-that the dma_masks can be updated accordingly and dma address translation
-helpers can add/subtract the dma offset.
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-In most of cases DMA addresses can be performed using offset value of
-Bus address space relatively to physical address space as following:
-
-PFN->DMA:  __pfn_to_phys(pfn + [-]dma_pfn_offset)
-DMA->PFN:  __phys_to_pfn(dma_addr) + [-]dma_pfn_offset
-
-So we introduce per device dma_pfn_offset which can be popullated
-by architectures init code while creating the devices.
+The of_dma_get_range() allows to find "dma-range" property for
+the specified device and parse it.
+ dma-ranges format:
+   DMA addr (dma_addr)          : naddr cells
+   CPU addr (phys_addr_t)       : pna cells
+   size                         : nsize cells
 
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Russell King <linux@arm.linux.org.uk>
@@ -46,28 +32,129 @@ Cc: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
 ---
- include/linux/device.h |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/of/platform.c       |   85 +++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of_platform.h |    8 ++++
+ 2 files changed, 93 insertions(+)
 
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 952b010..6940b25 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -688,6 +688,7 @@ struct acpi_dev_node {
-  * @coherent_dma_mask: Like dma_mask, but for alloc_coherent mapping as not all
-  * 		hardware supports 64-bit addresses for consistent allocations
-  * 		such descriptors.
-+ * @dma_pfn_offset: offset of DMA memory range relatively of RAM
-  * @dma_parms:	A low level driver may set these to teach IOMMU code about
-  * 		segment limitations.
-  * @dma_pools:	Dma pools (if dma'ble device).
-@@ -753,6 +754,7 @@ struct device {
- 					     not all hardware supports
- 					     64 bit addresses for consistent
- 					     allocations such descriptors. */
-+	unsigned long	dma_pfn_offset;
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 404d1da..2265a55 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -485,4 +485,89 @@ int of_platform_populate(struct device_node *root,
+ 	return rc;
+ }
+ EXPORT_SYMBOL_GPL(of_platform_populate);
++
++/**
++ * of_dma_get_range - Get DMA range info
++ * @np:		device node to get DMA range info
++ * @dma_addr:	pointer to store initial DMA address of DMA range
++ * @paddr:	pointer to store initial CPU address of DMA range
++ * @size:	pointer to store size of DMA range
++ *
++ * Look in bottom up direction for the first "dma-range" property
++ * and parse it.
++ *  dma-ranges format:
++ *	DMA addr (dma_addr)	: naddr cells
++ *	CPU addr (phys_addr_t)	: pna cells
++ *	size			: nsize cells
++ *
++ * It returns -ENODEV if "dma-ranges" property was not found
++ * for this device in DT.
++ */
++extern int of_dma_get_range(struct device_node *np, dma_addr_t *dma_addr,
++		phys_addr_t *paddr, phys_addr_t *size)
++{
++	struct device_node *node = np;
++	const u32 *ranges = NULL;
++	int len, naddr, nsize, pna;
++	int ret = 0;
++
++	if (!node)
++		return -EINVAL;
++
++	while (1) {
++		naddr = of_n_addr_cells(node);
++		nsize = of_n_size_cells(node);
++		node = of_get_next_parent(node);
++		if (!node)
++			break;
++
++		ranges = of_get_property(node, "dma-ranges", &len);
++
++		/* Ignore empty ranges, they imply no translation required */
++		if (ranges && len > 0)
++			break;
++
++		/*
++		 * At least empty ranges has to be defined for parent node if
++		 * DMA is supported
++		 */
++		if (!ranges)
++			break;
++	}
++
++	if (!ranges) {
++		pr_debug("%s: no dma-ranges found for node(%s)\n",
++			 __func__, np->full_name);
++		ret = -ENODEV;
++		goto out;
++	}
++
++	len /= sizeof(u32);
++
++	pna = of_n_addr_cells(node);
++
++	/* dma-ranges format:
++	 * DMA addr	: naddr cells
++	 * CPU addr	: pna cells
++	 * size		: nsize cells
++	 */
++	*dma_addr = of_read_number(ranges, naddr);
++	*paddr = of_translate_dma_address(np, ranges);
++	if (*paddr == OF_BAD_ADDR) {
++		pr_err("%s: translation of DMA address(%pad) to CPU address failed node(%s)\n",
++		       __func__, dma_addr, np->full_name);
++		ret = -EINVAL;
++	}
++
++	*size = of_read_number(ranges + naddr + pna, nsize);
++
++	pr_debug("dma_addr(%pad) cpu_addr(%pa) size(%pa)\n",
++		 dma_addr, paddr, size);
++
++out:
++	of_node_put(node);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(of_dma_get_range);
+ #endif /* CONFIG_OF_ADDRESS */
+diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
+index 05cb4a9..ba7d3dc 100644
+--- a/include/linux/of_platform.h
++++ b/include/linux/of_platform.h
+@@ -72,6 +72,8 @@ extern int of_platform_populate(struct device_node *root,
+ 				const struct of_device_id *matches,
+ 				const struct of_dev_auxdata *lookup,
+ 				struct device *parent);
++extern int of_dma_get_range(struct device_node *np, dma_addr_t *dma_addr,
++				phys_addr_t *paddr, phys_addr_t *size);
+ #else
+ static inline int of_platform_populate(struct device_node *root,
+ 					const struct of_device_id *matches,
+@@ -80,6 +82,12 @@ static inline int of_platform_populate(struct device_node *root,
+ {
+ 	return -ENODEV;
+ }
++
++static inline int of_dma_get_range(struct device_node *np, dma_addr_t *dma_addr,
++					phys_addr_t *paddr, phys_addr_t *size)
++{
++	return -ENODEV;
++}
+ #endif
  
- 	struct device_dma_parameters *dma_parms;
- 
+ #endif	/* _LINUX_OF_PLATFORM_H */
 -- 
 1.7.9.5
