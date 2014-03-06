@@ -1,41 +1,88 @@
-From: Stephen Hemminger <stephen@networkplumber.org>
-Subject: Re: [PATCH v2] sky2: allow mac to come from dt
-Date: Wed, 5 Mar 2014 15:45:32 -0800
-Message-ID: <20140305154532.331faba8@nehalam.linuxnetplumber.net>
-References: <1394059512-1691-1-git-send-email-tharvey@gateworks.com>
+From: Josh Cartwright <joshc@codeaurora.org>
+Subject: Re: [PATCH 6/6] documentation: bindings: document PMIC8921/8058 RTC
+Date: Wed, 5 Mar 2014 18:00:58 -0600
+Message-ID: <20140306000058.GE18529@joshc.qualcomm.com>
+References: <1394047776-13827-1-git-send-email-joshc@codeaurora.org>
+ <1394047776-13827-7-git-send-email-joshc@codeaurora.org>
+ <5317900F.5030803@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1394059512-1691-1-git-send-email-tharvey@gateworks.com>
-Sender: netdev-owner@vger.kernel.org
-To: Tim Harvey <tharvey@gateworks.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5317900F.5030803@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed,  5 Mar 2014 14:45:12 -0800
-Tim Harvey <tharvey@gateworks.com> wrote:
+On Wed, Mar 05, 2014 at 12:58:55PM -0800, Stephen Boyd wrote:
+> On 03/05/14 11:29, Josh Cartwright wrote:
+> > diff --git a/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt b/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt
+> > new file mode 100644
+> > index 0000000..699bd30
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt
+> > @@ -0,0 +1,29 @@
+> > +* Real-Time Clock for Qualcomm 8058/8921 PMICs
+> > +
+> > +Required properties:
+> > +- compatible: should be one of the following.
+> > +    * "qcom,pm8058-rtc"
+> > +    * "qcom,pm8921-rtc"
+> > +- reg: base address of the register region
+> > +- reg-names: corresponding reg names for the regions listed in the 'reg'
+> > +             property, must contain:
+> > +     "rtc_base" - base of the RTC register region
+> 
+> optional reg-names?
+> 
+> > +- interrupts: interrupt list for the RTC, must contain a single interrupt
+> > +              specifier for the alarm interrupt
+> > +- interrupt-names: corresponding interrupt names for the interrupts listed in
+> > +                   the 'interrupts' property, must contain:
+> > +     "alarm" - summary interrupt for PMIC peripherals
+> 
+> optional interrupt-names?
 
-> +	unsigned char *iap, tmpaddr[ETH_ALEN];
->  
->  	if (!dev)
->  		return NULL;
-> @@ -4805,8 +4808,17 @@ static struct net_device *sky2_init_netdev(struct sky2_hw *hw, unsigned port,
->  
->  	dev->features |= dev->hw_features;
->  
-> -	/* read the mac address */
-> -	memcpy_fromio(dev->dev_addr, hw->regs + B2_MAC_1 + port * 8, ETH_ALEN);
-> +	/* try to get mac address in the following order:
-> +	 * 1) from device tree data
-> +	 * 2) from internal registers set by bootloader
-> +	 */
-> +	iap = of_get_mac_address(hw->pdev->dev.of_node);
-> +	if (!iap) {
-> +		memcpy_fromio(&tmpaddr, hw->regs + B2_MAC_1 + port * 8,
-> +			      ETH_ALEN);
-> +		iap = tmpaddr;
-> +	}
-> +	ether_addr_copy(dev->dev_addr, iap);
+It isn't clear to me why these should be made optional, I hope Rob
+provides some clarification in the sdhci-msm thread.
 
-Can be done without stack tmpaddr.
+> > +
+> > +Option properties:
+
+Woops, this should be "Optional" :).
+
+> > +- linux,allow-set-time: indicates that the setting of RTC time is allowed by
+> > +                        the host CPU
+> 
+> Is this a "linux" property? It seems like something that other OSes
+> would want to know about and doesn't require any explicit knowledge
+> about operating  system things (like keymaps for example).
+
+Yeah, I wasn't quite sure how to name this property.  It's
+Linux-specific in the sense that the underlying operation method is
+"set_time", but I agree this should be named something else...
+
+How do you feel about simply "allow-set-time"?
+
+> 
+> > +
+> > +Example:
+> > +
+> > +	rtc {
+> 
+> rtc@11d
+
+Yep, thanks.
+
+> > +		compatible = "qcom,pm8921-rtc";
+> > +		reg = <0x11D>;
+> > +		reg-names = "rtc_base";
+> > +		interrupts = <0x27 0>;
+> > +		interrupt-names = "alarm";
+> > +	};
+> >
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
