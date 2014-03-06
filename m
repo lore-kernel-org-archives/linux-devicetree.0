@@ -1,92 +1,120 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC PATCH v4 3/8] staging: imx-drm: Document updated imx-drm
- device tree bindings
-Date: Fri, 07 Mar 2014 00:42:23 +0100
-Message-ID: <1764424.18FbCM7BbM@avalon>
-References: <1393338203-25051-1-git-send-email-p.zabel@pengutronix.de>
- <20140227134348.GK21483@n2100.arm.linux.org.uk> <530F4761.2020000@ti.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v5 5/7] [media] of: move common endpoint parsing to drivers/of
+Date: Fri, 07 Mar 2014 00:59:17 +0100
+Message-ID: <22856833.LpWmmzXcxv@avalon>
+References: <1393522540-22887-1-git-send-email-p.zabel@pengutronix.de> <1393932989.3917.62.camel@paszta.hi.pengutronix.de> <5315C535.2070303@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <530F4761.2020000@ti.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, kernel@pengutronix.de, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; boundary="nextPart1412993.9E2XQkZQ0N"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5315C535.2070303-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 27 February 2014 16:10:41 Tomi Valkeinen wrote:
-> On 27/02/14 15:43, Russell King - ARM Linux wrote:
-> > That may be - but the problem with CDF solving this problem is that it's
-> > wrong.  It's fixing what is in actual fact a *generic* problem in a much
-> > too specific way.  To put it another way, it's forcing everyone to fix
-> > the same problem in their own separate ways because no one is willing to
-> > take a step back and look at the larger picture.
-> > 
-> > We can see that because ASoC has exactly the same problem - it has to
-> > wait until all devices (DMA, CPU DAIs, codecs etc) are present before it
-> > can initialise, just like DRM.  Can you re-use the CDF solution for ASoC?
-> > No.  Can it be re-used elsewhere in non-display subsystems?  No.
-> > 
-> > Therefore, CDF is yet another implementation specific solution to a
-> > generic problem which can't be re-used.
-> > 
-> > Yes, I realise that CDF may do other stuff, but because of the above, it's
-> > a broken solution.
-> 
-> What? Because CDF didn't fix a particular subproblem for everyone, it's
-> broken solution? Or did I miss your point?
 
-Furthermore CDF was an RFC, a proof of concept implementation of the various 
-components involved to solve the problems at hand. It was in no way meant to 
-be merged as-is, and I would certainly have made the asynchronous registration 
-code generic had I been requested to do so specifically. Unfortunately and 
-sadly miscommunication lead to CDF being rejected in one block with a fuzzy 
-message on how to proceed. We won't rewrite the past, but let's move forward 
-in the right direction.
+--nextPart1412993.9E2XQkZQ0N
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
 
-> The main point of CDF is not solving the initialization issue. If that
-> was the point, it would've been Common Initialization Framework.
-> 
-> The main point of CDF is to allow us to have encoder and panel drivers
-> that can be used by all platforms, in complex display pipeline setups.
-> It just also has to have some solution for the initialization problem to
-> get things working.
-> 
-> In fact, Laurent's CDF version has a solution for init problem which, I
-> my memory serves me right, is very much similar to yours. It just wasn't
-> generic. I don't remember if Laurent had a specific master node defined,
-> but the LCD controller was very much like it. It would be trivial to
-> change it to use the component helpers.
+Hi Tomi,
 
-That's correct. The CDF composite device model was based on the V4L2 composite 
-device model, implemented in drivers/media/v4l2-core/v4l2-async.c. Both are 
-very similar in purpose to the component framework. The reason why it wasn't 
-generic in the first place was that I wanted to implement a full solution as a 
-proof of concept first between polishing each part independently. That turned 
-out not to be the best decision ever.
+On Tuesday 04 March 2014 14:21:09 Tomi Valkeinen wrote:
+> On 04/03/14 13:36, Philipp Zabel wrote:
+> > Am Dienstag, den 04.03.2014, 10:58 +0200 schrieb Tomi Valkeinen:
+> > [...]
 
-> My solution is different, because I don't like the idea of requiring all
-> the display components to be up and running to use any of the displays.
-> In fact, it's not a solution at all for me, as it would prevent displays
-> working on boards that do not have all the display components installed,
-> or if the user didn't compile all the drivers.
+[snip]
 
-As mentioned in my reply to Russell's component framework patch, I would like 
-to base v4l2-async on top of the component framework. For this to be possible 
-we need support for partial bind in the component framework, which would make 
-it possible to support your use cases. Let's discuss how to achieve that in 
-the other mail thread.
+> >> Then, about the get_remote functions: I think there should be only=
+ one
+> >> function for that purpose, one that returns the device node that
+> >> contains the remote endpoint.
+> >>=20
+> >> My reasoning is that the ports and endpoints, and their contents, =
+should
+> >> be private to the device. So the only use to get the remote is to =
+get
+> >> the actual device, to see if it's been probed, or maybe get some v=
+ideo
+> >> API for that device.
+> >=20
+> > of_graph_get_remote_port currently is used in the exynos4-is/fimc-i=
+s.c
+> > v4l2 driver to get the mipi-csi channel id from the remote port, an=
+d
+> > I've started using it in imx-drm-core.c for two cases:
+> > - given an endpoint on the encoder, find the remote port connected =
+to
+> >   it, get the associated drm_crtc, to obtain its the drm_crtc_mask
+> >   for encoder->possible_crtcs.
+> >=20
+> > - given an encoder and a connected drm_crtc, walk all endpoints to =
+find
+> >   the remote port associated with the drm_crtc, and then use the lo=
+cal
+> >   endpoint parent port to determine multiplexer settings.
+>=20
+> Ok.
+>=20
+> In omapdss each driver handles only the ports and endpoints defined f=
+or
+> its device, and they can be considered private to that device. The on=
+ly
+> reason to look for the remote endpoint is to find the remote device. =
+To
+> me the omapdss model makes sense, and feels logical and sane =3D). So=
+ I
+> have to say I'm not really familiar with the model you're using.
 
--- 
+I agree with you that most of the content of the remote endpoint should=
+ be=20
+considered private to the remote device and not accessed by the local d=
+evice=20
+driver. There is, however, one piece of information from the remote end=
+point=20
+useful to the local device driver, it's the remote port identifier. Thi=
+s can=20
+be expressed by a phandle, a remote port number, a media entity pad poi=
+nter,=20
+or any other mean, but the information is useful for the local device d=
+river=20
+to communicate with the remote device driver. For instance a driver cou=
+ld use=20
+it to ask its video stream source to start the video stream on a given =
+port.
+
+> Of course, the different get_remove_* funcs do no harm, even if we ha=
+ve
+> a bunch of them. My point was only about enforcing the correct use of=
+
+> the model, where "correct" is of course subjective =3D).
+
+=2D-=20
 Regards,
 
 Laurent Pinchart
+
+--nextPart1412993.9E2XQkZQ0N
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQEcBAABAgAGBQJTGQvaAAoJEIkPb2GL7hl1nsgH/iaADjsddE23C9P/qi8ml19s
+qEum6GLOg4wMHC1lwi3C9R7Vrg/J7CmfBX+BpXlkNv8O12vndoFI9AernLmn0e4l
+9gWuA9B4u3j3Pd9jI++EbhTiz/W3u01uwBI3xfv4WogeDWwCxy6B7iih4S298fVq
+c61CZbwNObSUZ7Y1U09W0JP8cGI1A3d2GJc1eILl9FcVrXAWAhYU+mwLRoVOp2bl
+Pv0AYPaIXrUsF8CaFbT7Lq6EwMwgEMhFH5L7tSrbvVxf8azb5bESBNPDEK8cpEup
+WygjooyLx6Lxkq49rHvn/CHKv+0qP4kMXa2yxUUEVEur1abCGxftMp6qAQ5UlV4=
+=LqjR
+-----END PGP SIGNATURE-----
+
+--nextPart1412993.9E2XQkZQ0N--
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
