@@ -1,91 +1,71 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v9 3/4] phy: Add new Exynos USB 2.0 PHY driver
-Date: Thu, 6 Mar 2014 14:00:24 +0530
-Message-ID: <53183220.3040606@ti.com>
-References: <1394033288-5551-1-git-send-email-k.debski@samsung.com> <1394033288-5551-4-git-send-email-k.debski@samsung.com> <005c01cf3915$c53476c0$4f9d6440$%tikhomirov@samsung.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 3/9] Doc/DT: Add DT binding documentation for DVI Connector
+Date: Thu, 6 Mar 2014 09:39:40 +0100
+Message-ID: <CAMuHMdWVSfKrudBhE7FW-ZWBvMOLWjrQZvn1qZUfRt_H+P7A2w@mail.gmail.com>
+References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
+	<1393590016-9361-4-git-send-email-tomi.valkeinen@ti.com>
+	<20140228155937.GQ21483@n2100.arm.linux.org.uk>
+	<5310B567.7040605@ti.com>
+	<20140228162327.GT21483@n2100.arm.linux.org.uk>
+	<5316E31F.9050308@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <005c01cf3915$c53476c0$4f9d6440$%tikhomirov@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Anton Tikhomirov <av.tikhomirov@samsung.com>, 'Kamil Debski' <k.debski@samsung.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kyungmin.park@samsung.com, t.figa@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samsung.com, gautam.vivek@samsung.com, mat.krawczuk@gmail.com, yulgon.kim@samsung.com, p.paneri@samsung.com, jg1.han@samsung.com, galak@codeaurora.org, matt.porter@linaro.org, tjakobi@math.uni-bielefeld.de, stern@rowland.harvard.edu, sander@humilis.net
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <5316E31F.9050308@ti.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces@lists.freedesktop.org
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, DRI Development <dri-devel@lists.freedesktop.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Mar 5, 2014 at 9:41 AM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+> On 28/02/14 18:23, Russell King - ARM Linux wrote:
+>
+>> That's rather a lot of compatible strings.  Another possibility is:
+>>
+>>       compatible = "dvi-connector";
+>>       analog;
+>>       digital;
+>>       single-link;
+>>       dual-link;
+>
+> I made the following changes compared to the posted version. I decided
+> to leave the "single-link" out, as it's implied if "digital" is set.
+>
+>  Tomi
+>
+> @@ -6,11 +6,16 @@ Required properties:
+>
+>  Optional properties:
+>  - label: a symbolic name for the connector
+> -- i2c-bus: phandle to the i2c bus that is connected to DVI DDC
+> +- ddc-i2c-bus: phandle to the i2c bus that is connected to DVI DDC
+> +- analog: the connector has DVI analog pins
+> +- digital: the connector has DVI digital pins
+> +- dual-link: the connector has pins for DVI dual-link
+>
+>  Required nodes:
+>  - Video port for DVI input
+>
+> +Note: One (or both) of 'analog' or 'digital' must be set.
 
+So dual-link needs both "digital" and "dual-link"?
 
-On Thursday 06 March 2014 01:56 PM, Anton Tikhomirov wrote:
-> Hi Kamil,
->
-> ...
->
->> +| 3. Supporting SoCs
->> ++--------------------
->> +
->> +To support a new SoC a new file should be added to the drivers/phy
->> +directory. Each SoC's configuration is stored in an instance of the
->> +struct samsung_usb2_phy_config.
->> +
->> +struct samsung_usb2_phy_config {
->> +	const struct samsung_usb2_common_phy *phys;
->> +	unsigned int num_phys;
->> +	bool has_mode_switch;
->
-> You missed rate_to_clk here.
->
->> +};
->> +
->
-> ...
->
->> diff --git a/drivers/phy/phy-samsung-usb2.c b/drivers/phy/phy-samsung-
->> usb2.c
->> new file mode 100644
->> index 0000000..c3b7719
->> --- /dev/null
->> +++ b/drivers/phy/phy-samsung-usb2.c
->> @@ -0,0 +1,222 @@
->> +/*
->> + * Samsung SoC USB 1.1/2.0 PHY driver
->> + *
->> + * Copyright (C) 2013 Samsung Electronics Co., Ltd.
->> + * Author: Kamil Debski <k.debski@samsung.com>
->> + *
->> + * This program is free software; you can redistribute it and/or
->> modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/phy/phy.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/spinlock.h>
->> +#include "phy-samsung-usb2.h"
->> +
->> +static int samsung_usb2_phy_power_on(struct phy *phy)
->> +{
->> +	struct samsung_usb2_phy_instance *inst = phy_get_drvdata(phy);
->> +	struct samsung_usb2_phy_driver *drv = inst->drv;
->> +	int ret;
->> +
->> +	dev_dbg(drv->dev, "Request to power_on \"%s\" usb phy\n",
->> +		inst->cfg->label);
->> +	ret = clk_prepare_enable(drv->clk);
->
-> clk_prepare_enable() can sleep, and therefore doesn't allow
-> samusng_usb2_phy_power_on() to be used in atomic context
-> (e.g. inside spin_lock-ed area), what sometimes may be desirable.
-> What about to prepare clock in probe, and just enable it here
-> (note: clk_enable() doesn't sleep).
+Gr{oetje,eeting}s,
 
-The PHY power-on callback is anyway called with mutex held, so I guess 
-it's fine to have clk_prepare_enable() here.
+                        Geert
 
-Thanks
-Kishon
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
