@@ -1,72 +1,70 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv2 13/14] ARM: OMAP24xx: clock: remove legacy clock data
-Date: Thu, 6 Mar 2014 15:39:30 +0200
-Message-ID: <53187A92.2000809@ti.com>
-References: <1393924700-6510-1-git-send-email-t-kristo@ti.com> <1393924700-6510-14-git-send-email-t-kristo@ti.com> <20140304173200.GA17470@atomide.com> <5316217C.2070906@ti.com> <20140304212811.GA8705@atomide.com> <5316DCF6.6070808@ti.com> <20140305170857.GD4983@atomide.com> <20140305181045.GH4983@atomide.com>
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Subject: Re: [PATCH v2] mmc: sdhci: add quirk for broken write protect detection
+Date: Thu, 6 Mar 2014 14:31:52 +0100
+Message-ID: <531878C8.2020001@topic.nl>
+References: <1393759200-22819-1-git-send-email-eli.billauer@gmail.com> <74003aec-1707-4f43-b947-df148d573fa1@TX2EHSMHS038.ehs.local> <53163247.8000904@gmail.com> <ae0f71ac-c5f7-4af7-a9ba-c019cec19ebf@AM1EHSMHS017.ehs.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140305181045.GH4983@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, nm@ti.com, mturquette@linaro.org, paul@pwsan.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <ae0f71ac-c5f7-4af7-a9ba-c019cec19ebf@AM1EHSMHS017.ehs.local>
+Sender: linux-mmc-owner@vger.kernel.org
+To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>, Eli Billauer <eli.billauer@gmail.com>
+Cc: chris@printf.net, michal.simek@xilinx.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/05/2014 08:10 PM, Tony Lindgren wrote:
-> * Tony Lindgren <tony@atomide.com> [140305 09:12]:
->> * Tero Kristo <t-kristo@ti.com> [140305 00:17]:
->>> On 03/04/2014 11:28 PM, Tony Lindgren wrote:
->>>> * Tero Kristo <t-kristo@ti.com> [140304 10:58]:
->>>>> On 03/04/2014 07:32 PM, Tony Lindgren wrote:
->>>>>> * Tero Kristo <t-kristo@ti.com> [140304 01:22]:
->>>>>>> This is no longer needed as clock data is provided through DT.
->>>>>>
->>>>>> Looks like there's a new error even before applying this patch in
->>>>>> the series as I'm now getting the following oops on n8x0. So cannot
->>>>>> test this patch yet.
->>>>>
->>>>> Is this with OMAP2 only boot?
->>>>
->>>> Yeah that's with omap2 only.
->>>
->>> That explains it, as previous series was never boot tested in omap2
->>> only config (due to build issues.)
->>>
->>> I just force pushed the branch with the below additional patch, can
->>> you check if it works now?
+=EF=BB=BFOn 03/04/2014 10:00 PM, S=C3=B6ren Brinkmann wrote:
+> On Tue, 2014-03-04 at 10:06PM +0200, Eli Billauer wrote:
+>> Hello S=C3=B6ren,
 >>
->> Yes seems to work with that thanks. And with the omap2 legacy clock
->> data removed too, it boots fine on n8x0 and 2430sdp.
+>> wp-inverted solves the practical problem indeed, and fools the
+>> driver into thinking that the card has an inverted write protection
+>> sensor, and the logic zero that it finds in the hardware register
+>> means that the card isn't write protected.
 >>
->> I suggest you drop the omap3 legacy data patch from this branch
->> as it's not omap2 related and cannot be done yet. Then try to get
->> acks from Paul. And if there are no issues, it seems Mike could take
->> the whole branch as it seems to merge just fine with what I have
->> queued. So for all the patches except for the omap3 legacy data
->> removal, feel free to add:
->>
->> Acked-by: Tony Lindgren <tony@atomide.com>
->
-> Found one randconfig error with this series when CONFIG_ARCH_OMAP2
-> is not set:
->
-> /drivers/clk/ti/dpll.c:273: undefined reference to `omap2xxx_clkt_dpllcore_init'
-> drivers/clk/ti/dpll.c:311: undefined reference to `clkhwops_omap2xxx_dpll'
+>> I'm insisting on this patch, because I think that the device tree
+>> should describe the hardware as it is, and not fool the driver into
+>> behaving the way we want it to. These tricks always bite back later
+>> on.
+> Well, why is broken-wp more accurate than wp-inverted? Strictly
+> speaking the WP is there and working, it's just tied off to some valu=
+e
+> you want to have interpreted the other way.
+> Anyway, seems like this is solvable with wp-inverted and whether the
+> additional quirk is needed I leave to others do decide.
 
-Yeah, this is in this series. Force pushed a minor update to patch #4 to 
-fix this.
+I've begged for this patch - or a similar one - to be included too, bec=
+ause on=20
+our boards, the "wp" value appears to be sort of random. Out of 5 proto=
+type=20
+boards, 3 would only boot with wp-inverted while the other 2 wouldn't b=
+oot=20
+with wp-inverted set.
 
-I can repost the series if Mike or Paul or someone requests this.
+In our case I really don't know (and I don't care either) to which logi=
+c level=20
+the wp happens to think it's wired. I just want to be able to tell the =
+driver=20
+that the WP line is=20
+free-floating-and-might-have-any-random-value-at-any-given-moment which=
+ is a=20
+bit long, so I'd go for disable-wp instead.
 
--Tero
+Mike.
 
->
-> It's also possible the error is the PRM clean up series, but probably
-> in this series based drivers/clk/ti/dpll.c path.
->
-> Regards,
->
-> Tony
->
+
+Met vriendelijke groet / kind regards,
+
+Mike Looijmans
+
+TOPIC Embedded Systems
+Eindhovenseweg 32-C, NL-5683 KH Best
+Postbus 440, NL-5680 AK Best
+Telefoon: (+31) (0) 499 33 69 79
+Telefax:  (+31) (0) 499 33 69 70
+E-mail: mike.looijmans@topic.nl
+Website: www.topic.nl
+
+Please consider the environment before printing this e-mail
 
