@@ -1,136 +1,73 @@
-From: Anton Tikhomirov <av.tikhomirov@samsung.com>
-Subject: RE: [PATCH v9 3/4] phy: Add new Exynos USB 2.0 PHY driver
-Date: Thu, 06 Mar 2014 18:19:39 +0900
-Message-ID: <006501cf391d$335fb9a0$9a1f2ce0$%tikhomirov@samsung.com>
-References: <1394033288-5551-1-git-send-email-k.debski@samsung.com>
- <1394033288-5551-4-git-send-email-k.debski@samsung.com>
- <005c01cf3915$c53476c0$4f9d6440$%tikhomirov@samsung.com>
- <53183220.3040606@ti.com>
- <006201cf3919$5f760750$1e6215f0$%tikhomirov@samsung.com>
- <5318384B.7020009@ti.com>
- <006301cf391a$c99c7280$5cd55780$%tikhomirov@samsung.com>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: [PATCH 1/7] device: introduce per device dma_pfn_offset
+Date: Thu, 6 Mar 2014 17:19:52 +0800
+Message-ID: <1394097598-17622-2-git-send-email-santosh.shilimkar@ti.com>
+References: <1394097598-17622-1-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=Windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <006301cf391a$c99c7280$5cd55780$%tikhomirov@samsung.com>
-Content-language: en-us
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Anton Tikhomirov' <av.tikhomirov@samsung.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>, 'Kamil Debski' <k.debski@samsung.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kyungmin.park@samsung.com, t.figa@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samsung.com, gautam.vivek@samsung.com, mat.krawczuk@gmail.com, yulgon.kim@samsung.com, p.paneri@samsung.com, jg1.han@samsung.com, galak@codeaurora.org, matt.porter@linaro.org, tjakobi@math.uni-bielefeld.de, stern@rowland.harvard.edu, sander@humilis.net
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1394097598-17622-1-git-send-email-santosh.shilimkar@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Catalin Marinas <catalin.marinas@arm.com>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On few architectures, there are few restrictions on DMAble area of system
+RAM. That also means that devices needs to know about this restrictions so
+that the dma_masks can be updated accordingly and dma address translation
+helpers can add/subtract the dma offset.
 
-> Subject: RE: [PATCH v9 3/4] phy: Add new Exynos USB 2.0 PHY driver
-> 
-> Hi,
-> 
-> > Subject: Re: [PATCH v9 3/4] phy: Add new Exynos USB 2.0 PHY driver
-> >
-> > Hi,
-> >
-> > On Thursday 06 March 2014 02:22 PM, Anton Tikhomirov wrote:
-> > > Hello,
-> > >
-> > >> Subject: Re: [PATCH v9 3/4] phy: Add new Exynos USB 2.0 PHY driver
-> > >>
-> > >>
-> > >>
-> > >> On Thursday 06 March 2014 01:56 PM, Anton Tikhomirov wrote:
-> > >>> Hi Kamil,
-> > >>>
-> > >>> ...
-> > >>>
-> > >>>> +| 3. Supporting SoCs
-> > >>>> ++--------------------
-> > >>>> +
-> > >>>> +To support a new SoC a new file should be added to the
-> > drivers/phy
-> > >>>> +directory. Each SoC's configuration is stored in an instance of
-> > the
-> > >>>> +struct samsung_usb2_phy_config.
-> > >>>> +
-> > >>>> +struct samsung_usb2_phy_config {
-> > >>>> +	const struct samsung_usb2_common_phy *phys;
-> > >>>> +	unsigned int num_phys;
-> > >>>> +	bool has_mode_switch;
-> > >>>
-> > >>> You missed rate_to_clk here.
-> > >>>
-> > >>>> +};
-> > >>>> +
-> > >>>
-> > >>> ...
-> > >>>
-> > >>>> diff --git a/drivers/phy/phy-samsung-usb2.c b/drivers/phy/phy-
-> > >> samsung-
-> > >>>> usb2.c
-> > >>>> new file mode 100644
-> > >>>> index 0000000..c3b7719
-> > >>>> --- /dev/null
-> > >>>> +++ b/drivers/phy/phy-samsung-usb2.c
-> > >>>> @@ -0,0 +1,222 @@
-> > >>>> +/*
-> > >>>> + * Samsung SoC USB 1.1/2.0 PHY driver
-> > >>>> + *
-> > >>>> + * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-> > >>>> + * Author: Kamil Debski <k.debski@samsung.com>
-> > >>>> + *
-> > >>>> + * This program is free software; you can redistribute it
-> and/or
-> > >>>> modify
-> > >>>> + * it under the terms of the GNU General Public License version
-> 2
-> > >> as
-> > >>>> + * published by the Free Software Foundation.
-> > >>>> + */
-> > >>>> +
-> > >>>> +#include <linux/clk.h>
-> > >>>> +#include <linux/mfd/syscon.h>
-> > >>>> +#include <linux/module.h>
-> > >>>> +#include <linux/of.h>
-> > >>>> +#include <linux/of_address.h>
-> > >>>> +#include <linux/phy/phy.h>
-> > >>>> +#include <linux/platform_device.h>
-> > >>>> +#include <linux/spinlock.h>
-> > >>>> +#include "phy-samsung-usb2.h"
-> > >>>> +
-> > >>>> +static int samsung_usb2_phy_power_on(struct phy *phy)
-> > >>>> +{
-> > >>>> +	struct samsung_usb2_phy_instance *inst =
-> > phy_get_drvdata(phy);
-> > >>>> +	struct samsung_usb2_phy_driver *drv = inst->drv;
-> > >>>> +	int ret;
-> > >>>> +
-> > >>>> +	dev_dbg(drv->dev, "Request to power_on \"%s\" usb phy\n",
-> > >>>> +		inst->cfg->label);
-> > >>>> +	ret = clk_prepare_enable(drv->clk);
-> > >>>
-> > >>> clk_prepare_enable() can sleep, and therefore doesn't allow
-> > >>> samusng_usb2_phy_power_on() to be used in atomic context
-> > >>> (e.g. inside spin_lock-ed area), what sometimes may be desirable.
-> > >>> What about to prepare clock in probe, and just enable it here
-> > >>> (note: clk_enable() doesn't sleep).
-> > >>
-> > >> The PHY power-on callback is anyway called with mutex held, so I
-> > guess
-> > >> it's fine to have clk_prepare_enable() here.
-> > >
-> > > If we rely totally on generic PHY functions such as phy_power_on()
-> > > and friends, why do we need to use locking in callbacks at all.
-> >
-> > Didn't get you.. We don't want to invoke power_on when init is
-> getting
-> > executed or you don't want power on or power off to get executed
-> > simultaneously right? So we need to protect it.
-> 
-> I mean callbacks such as samsung_usb2_phy_power_on() which uses
-> spin_lock.
-> It's already protected by mutex in phy_power_on().
+In most of cases DMA addresses can be performed using offset value of
+Bus address space relatively to physical address space as following:
 
-Well... phy_power_on() uses mutex to protect power_on() callback.
-power_on() is samsung_usb2_phy_power_on() in our case.
-samsung_usb2_phy_power_on() uses spinlock.
-My question is why do we need to use spinlock _inside_ callback
-if it is already protected by mutex.
+PFN->DMA:  __pfn_to_phys(pfn + [-]dma_pfn_offset)
+DMA->PFN:  __phys_to_pfn(dma_addr) + [-]dma_pfn_offset
+
+So we introduce per device dma_pfn_offset which can be popullated
+by architectures init code while creating the devices.
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Olof Johansson <olof@lixom.net>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+---
+ include/linux/device.h |    2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 952b010..6940b25 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -688,6 +688,7 @@ struct acpi_dev_node {
+  * @coherent_dma_mask: Like dma_mask, but for alloc_coherent mapping as not all
+  * 		hardware supports 64-bit addresses for consistent allocations
+  * 		such descriptors.
++ * @dma_pfn_offset: offset of DMA memory range relatively of RAM
+  * @dma_parms:	A low level driver may set these to teach IOMMU code about
+  * 		segment limitations.
+  * @dma_pools:	Dma pools (if dma'ble device).
+@@ -753,6 +754,7 @@ struct device {
+ 					     not all hardware supports
+ 					     64 bit addresses for consistent
+ 					     allocations such descriptors. */
++	unsigned long	dma_pfn_offset;
+ 
+ 	struct device_dma_parameters *dma_parms;
+ 
+-- 
+1.7.9.5
