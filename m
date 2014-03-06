@@ -1,143 +1,89 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RESEND Patch 3/3] ARM: Kirkwood: DT: Add missing vendor prefix
-Date: Wed, 5 Mar 2014 20:53:25 -0600
-Message-ID: <CAL_JsqKGGgA_bGLXsBV7QrEjEvzupXBPNegWyxMhMGeoiWQ++Q@mail.gmail.com>
-References: <1394055207-4639-1-git-send-email-andrew@lunn.ch>
-	<1394055207-4639-4-git-send-email-andrew@lunn.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
+Subject: [PATCH 1/5] SDHCI: Add a generic registration to the SDHCI platform driver
+Date: Thu,  6 Mar 2014 14:52:24 +1100
+Message-ID: <1394077948-8395-2-git-send-email-alistair@popple.id.au>
+References: <1394077948-8395-1-git-send-email-alistair@popple.id.au>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1394055207-4639-4-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <1394077948-8395-1-git-send-email-alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org
+Cc: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 5, 2014 at 3:33 PM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
-> Add vendor prefixes to compatible strings where they are missing.
+This patch adds a generic platform driver registration to the exiting SDHCI
+platform driver using the devicetree compatibility string "generic-sdhci".
 
-Please explain why you are breaking the ABI and why that is okay.
-Normally, you should just leave this as is or add the new compatible
-string rather than change it.
+Signed-off-by: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
+---
+ .../devicetree/bindings/mmc/sdhci-pltfm.txt        | 16 +++++++++++++
+ drivers/mmc/host/sdhci-pltfm.c                     | 28 ++++++++++++++++++++++
+ 2 files changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-pltfm.txt
 
-Rob
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-pltfm.txt b/Documentation/devicetree/bindings/mmc/sdhci-pltfm.txt
+new file mode 100644
+index 0000000..3940659
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/sdhci-pltfm.txt
+@@ -0,0 +1,16 @@
++Generic SHDCI platform driver
++
++The generic SDHCI platform driver should support most SDHCI host
++controllers. It uses the compatible="generic-sdhci" property and
++supports the following device tree properties as described in mmc.txt.
++
++Supported properties (described in mmc.txt):
++- reg
++- interrupts
++- wp-inverted
++- broken-cd
++- no-1-8-v
++- keep-power-in-suspend
++- enable-sdio-wakeup
++- bus-width
++- clock-frequency
+diff --git a/drivers/mmc/host/sdhci-pltfm.c b/drivers/mmc/host/sdhci-pltfm.c
+index bef250e..696d1f6 100644
+--- a/drivers/mmc/host/sdhci-pltfm.c
++++ b/drivers/mmc/host/sdhci-pltfm.c
+@@ -260,6 +260,34 @@ const struct dev_pm_ops sdhci_pltfm_pmops = {
+ EXPORT_SYMBOL_GPL(sdhci_pltfm_pmops);
+ #endif	/* CONFIG_PM */
+ 
++static int sdhci_generic_probe(struct platform_device *pdev)
++{
++	return sdhci_pltfm_register(pdev, NULL, 0);
++}
++
++static int sdhci_generic_remove(struct platform_device *pdev)
++{
++	return sdhci_pltfm_unregister(pdev);
++}
++
++static const struct of_device_id sdhci_generic_of_match[] = {
++	{ .compatible = "generic-sdhci" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, sdhci_generic_of_match);
++
++static struct platform_driver sdhci_generic_driver = {
++	.driver = {
++		.name = "sdhci-generic",
++		.owner = THIS_MODULE,
++		.of_match_table = sdhci_generic_of_match,
++		.pm = SDHCI_PLTFM_PMOPS,
++	},
++	.probe = sdhci_generic_probe,
++	.remove = sdhci_generic_remove,
++};
++module_platform_driver(sdhci_generic_driver);
++
+ static int __init sdhci_pltfm_drv_init(void)
+ {
+ 	pr_info("sdhci-pltfm: SDHCI platform and OF driver helper\n");
+-- 
+1.8.3.2
 
->
-> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> ---
->  arch/arm/boot/dts/kirkwood-b3.dts              | 2 +-
->  arch/arm/boot/dts/kirkwood-cloudbox.dts        | 2 +-
->  arch/arm/boot/dts/kirkwood-dreamplug.dts       | 2 +-
->  arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts | 2 +-
->  arch/arm/boot/dts/kirkwood-ns2-common.dtsi     | 2 +-
->  arch/arm/boot/dts/kirkwood-nsa310.dts          | 2 +-
->  arch/arm/boot/dts/kirkwood-nsa310a.dts         | 2 +-
->  arch/arm/boot/dts/kirkwood-openblocks_a6.dts   | 2 +-
->  arch/arm/boot/dts/kirkwood-openblocks_a7.dts   | 2 +-
->  9 files changed, 9 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/kirkwood-b3.dts b/arch/arm/boot/dts/kirkwood-b3.dts
-> index 40791053106b..6becedebaa4e 100644
-> --- a/arch/arm/boot/dts/kirkwood-b3.dts
-> +++ b/arch/arm/boot/dts/kirkwood-b3.dts
-> @@ -76,5 +76,5 @@
->                                 #address-cells = <1>;
->                                 #size-cells = <1>;
-> -                               compatible = "m25p16";
-> +                               compatible = "st,m25p16";
->                                 reg = <0>;
->                                 spi-max-frequency = <40000000>;
-> diff --git a/arch/arm/boot/dts/kirkwood-cloudbox.dts b/arch/arm/boot/dts/kirkwood-cloudbox.dts
-> index 0e06fd3cee4d..3b62aeeaa3a2 100644
-> --- a/arch/arm/boot/dts/kirkwood-cloudbox.dts
-> +++ b/arch/arm/boot/dts/kirkwood-cloudbox.dts
-> @@ -47,5 +47,5 @@
->                                 #address-cells = <1>;
->                                 #size-cells = <1>;
-> -                               compatible = "mx25l4005a";
-> +                               compatible = "mxicy,mx25l4005a";
->                                 reg = <0>;
->                                 spi-max-frequency = <20000000>;
-> diff --git a/arch/arm/boot/dts/kirkwood-dreamplug.dts b/arch/arm/boot/dts/kirkwood-dreamplug.dts
-> index ef3463e0ae19..28b3ee369778 100644
-> --- a/arch/arm/boot/dts/kirkwood-dreamplug.dts
-> +++ b/arch/arm/boot/dts/kirkwood-dreamplug.dts
-> @@ -44,5 +44,5 @@
->                                 #address-cells = <1>;
->                                 #size-cells = <1>;
-> -                               compatible = "mx25l1606e";
-> +                               compatible = "mxicy,mx25l1606e";
->                                 reg = <0>;
->                                 spi-max-frequency = <50000000>;
-> diff --git a/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts b/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
-> index 2cb0dc529165..32c6fb4a1162 100644
-> --- a/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
-> +++ b/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
-> @@ -57,5 +57,5 @@
->                                 #address-cells = <1>;
->                                 #size-cells = <1>;
-> -                               compatible = "mx25l12805d";
-> +                               compatible = "mxicy,mx25l12805d";
->                                 reg = <0>;
->                                 spi-max-frequency = <50000000>;
-> diff --git a/arch/arm/boot/dts/kirkwood-ns2-common.dtsi b/arch/arm/boot/dts/kirkwood-ns2-common.dtsi
-> index 743152f31a81..594bad0e386e 100644
-> --- a/arch/arm/boot/dts/kirkwood-ns2-common.dtsi
-> +++ b/arch/arm/boot/dts/kirkwood-ns2-common.dtsi
-> @@ -33,5 +33,5 @@
->                                 #address-cells = <1>;
->                                 #size-cells = <1>;
-> -                               compatible = "mx25l4005a";
-> +                               compatible = "mxicy,mx25l4005a";
->                                 reg = <0>;
->                                 spi-max-frequency = <20000000>;
-> diff --git a/arch/arm/boot/dts/kirkwood-nsa310.dts b/arch/arm/boot/dts/kirkwood-nsa310.dts
-> index 03fa24cf3344..0a07af9d8e58 100644
-> --- a/arch/arm/boot/dts/kirkwood-nsa310.dts
-> +++ b/arch/arm/boot/dts/kirkwood-nsa310.dts
-> @@ -105,5 +105,5 @@
->
->                         adt7476: adt7476a@2e {
-> -                               compatible = "adt7476";
-> +                               compatible = "adi,adt7476";
->                                 reg = <0x2e>;
->                         };
-> diff --git a/arch/arm/boot/dts/kirkwood-nsa310a.dts b/arch/arm/boot/dts/kirkwood-nsa310a.dts
-> index a5e779452867..27ca6a79c48a 100644
-> --- a/arch/arm/boot/dts/kirkwood-nsa310a.dts
-> +++ b/arch/arm/boot/dts/kirkwood-nsa310a.dts
-> @@ -95,5 +95,5 @@
->
->                         lm85: lm85@2e {
-> -                               compatible = "lm85";
-> +                               compatible = "national,lm85";
->                                 reg = <0x2e>;
->                         };
-> diff --git a/arch/arm/boot/dts/kirkwood-openblocks_a6.dts b/arch/arm/boot/dts/kirkwood-openblocks_a6.dts
-> index b88da9392c32..0650beafc1de 100644
-> --- a/arch/arm/boot/dts/kirkwood-openblocks_a6.dts
-> +++ b/arch/arm/boot/dts/kirkwood-openblocks_a6.dts
-> @@ -41,5 +41,5 @@
->
->                         s35390a: s35390a@30 {
-> -                               compatible = "s35390a";
-> +                               compatible = "sii,s35390a";
->                                 reg = <0x30>;
->                         };
-> diff --git a/arch/arm/boot/dts/kirkwood-openblocks_a7.dts b/arch/arm/boot/dts/kirkwood-openblocks_a7.dts
-> index b2f7cae06839..895506743e4d 100644
-> --- a/arch/arm/boot/dts/kirkwood-openblocks_a7.dts
-> +++ b/arch/arm/boot/dts/kirkwood-openblocks_a7.dts
-> @@ -53,5 +53,5 @@
->
->                         s24c02: s24c02@50 {
-> -                               compatible = "24c02";
-> +                               compatible = "at,24c02";
->                                 reg = <0x50>;
->                         };
-> --
-> 1.9.0
->
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
