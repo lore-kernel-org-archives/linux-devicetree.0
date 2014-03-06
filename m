@@ -1,41 +1,73 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v2 08/13] phy: ti-pipe3: Fix suspend/resume and module reload
-Date: Thu, 6 Mar 2014 16:38:44 +0200
-Message-ID: <1394116729-28811-9-git-send-email-rogerq@ti.com>
-References: <1394116729-28811-1-git-send-email-rogerq@ti.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH] ARM: mvebu: add Device Tree for the Armada 385 RD board
+Date: Thu, 6 Mar 2014 15:46:00 +0100
+Message-ID: <20140306144600.GM4780@lunn.ch>
+References: <1394107868-26094-1-git-send-email-gregory.clement@free-electrons.com>
+ <20140306131429.GJ4780@lunn.ch>
+ <5318779C.8030901@free-electrons.com>
+ <20140306142117.GL4780@lunn.ch>
+ <531886B4.2070002@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1394116729-28811-1-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kishon@ti.com, tony@atomide.com, balbi@ti.com
-Cc: george.cherian@ti.com, balajitk@ti.com, hdegoede@redhat.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-ide@vger.kernel.org, rogerq@ti.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <531886B4.2070002-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Due to Errata i783, SATA breaks if its DPLL is idled. The recommeded
-workaround to issue a softreset to the SATA controller doesn't seem to
-work. Here we just prevent SATA DPLL from Idling and hence avoid
-the issue altogether.
+> >>> I think you can use aliases to get the order correct, independent of
+> >>> how you list them in DT. That should be a lot safer than assuming
+> >>> things are instantiated from top to bottom.
+> >>
+> >> It sounds interesting, how would you do this?
+> > 
+> > As there already is in armada-370-xp.dtsi
+> > 
+> >         aliases {
+> >                 eth0 = &eth0;
+> >                 eth1 = &eth1;
+> >         };
+> > 
+> > 
+> > 	eth0: ethernet@70000 {
+> > 	}
+> >         eth1: ethernet@74000 {
+> > 	}
+> > 
+> > This at least works for i2c devices. The pdev->id is set using the
+> > alias number.
+> 
+> Well I think it doesn't work with ethernet devices because we already do
+> this in aramda-38x.dtsi:
+> 
+> 	aliases {
+> 		gpio0 = &gpio0;
+> 		gpio1 = &gpio1;
+> 		eth0 = &eth0;
+> 		eth1 = &eth1;
+> 		eth2 = &eth2;
+> 	};
+> 
+> 	eth1: ethernet@30000 {
+> 	}
+> 	eth2: ethernet@34000 {
+> 	}
+> 	eth0: ethernet@70000 {
+> 	}
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- drivers/phy/phy-ti-pipe3.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Ah, Erm, O.K. 
 
-diff --git a/drivers/phy/phy-ti-pipe3.c b/drivers/phy/phy-ti-pipe3.c
-index 12cc900..5913676 100644
---- a/drivers/phy/phy-ti-pipe3.c
-+++ b/drivers/phy/phy-ti-pipe3.c
-@@ -238,6 +238,10 @@ static int ti_pipe3_exit(struct phy *x)
- 	u32 val;
- 	unsigned long timeout;
+It seems to be an i2c thing. Take a look at i2c_add_adapter().
+
+        if (dev->of_node) {
+                id = of_alias_get_id(dev->of_node, "i2c");
  
-+	/* SATA DPLL can't be powered down due to Errata i783 */
-+	if (of_device_is_compatible(phy->dev->of_node, "ti,phy-pipe3-sata"))
-+		return 0;
-+
- 	/* Put DPLL in IDLE mode */
- 	val = ti_pipe3_readl(phy->pll_ctrl_base, PLL_CONFIGURATION2);
- 	val |= PLL_IDLE;
--- 
-1.8.3.2
+You could put something similar into the ethernet driver.
+
+    Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
