@@ -1,93 +1,65 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v6 0/8] Move device tree graph parsing helpers to drivers/of
-Date: Thu, 06 Mar 2014 17:32:49 +0100
-Message-ID: <5318A331.2070603@samsung.com>
-References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de>
- <53170C00.20200@ti.com> <1394030554.8754.31.camel@paszta.hi.pengutronix.de>
- <20140306141657.GB21483@n2100.arm.linux.org.uk>
- <20140306121721.6186dafb@samsung.com> <5318988C.2030004@samsung.com>
- <1394122879.3622.47.camel@paszta.hi.pengutronix.de>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v2] mmc: sdhci: add quirk for broken write protect
+ detection
+Date: Thu, 6 Mar 2014 08:42:48 -0800
+Message-ID: <ad0a3559-a687-4f51-b284-f515372cfad2@VA3EHSMHS001.ehs.local>
+References: <1393759200-22819-1-git-send-email-eli.billauer@gmail.com>
+ <74003aec-1707-4f43-b947-df148d573fa1@TX2EHSMHS038.ehs.local>
+ <53163247.8000904@gmail.com>
+ <ae0f71ac-c5f7-4af7-a9ba-c019cec19ebf@AM1EHSMHS017.ehs.local>
+ <531878C8.2020001@topic.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1394122879.3622.47.camel-+qGW7pzALmz7o/J7KWpOmN53zsg1cpMQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <531878C8.2020001@topic.nl>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Mike Looijmans <mike.looijmans@topic.nl>
+Cc: Eli Billauer <eli.billauer@gmail.com>, chris@printf.net, michal.simek@xilinx.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/14 17:21, Philipp Zabel wrote:
-> Am Donnerstag, den 06.03.2014, 16:47 +0100 schrieb Sylwester Nawrocki:
->> On 06/03/14 16:17, Mauro Carvalho Chehab wrote:
->>> Em Thu, 06 Mar 2014 14:16:57 +0000
->>> Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> escreveu:
->>>>> On Wed, Mar 05, 2014 at 03:42:34PM +0100, Philipp Zabel wrote:
->>>>>>> Am Mittwoch, den 05.03.2014, 13:35 +0200 schrieb Tomi Valkeinen:
-> [...]
->>>>>>>>> So, as I've pointed out, I don't agree with the API, as it's too limited
->>>>>>>>> and I can't use it, but as this series is (mostly) about moving the
->>>>>>>>> current API to a common place, it's fine for me.
->>>>>>>>>
->>>>>>>>> Acked-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
->>>>>>>
->>>>>>> Thanks. I'll be happy to help expanding the API to parse ports
->>>>>>> individually, once this gets accepted.
->>>>>>>
->>>>>>> Mauro, Guennadi, are you fine with how this turned out? I'd like to get
->>>>>>> your acks again, for the changed location.
->>>
->>> From my side, there's nothing on such code that is V4L2 specific.
->>> Moving it to drivers/of makes sense on my eyes.
->>>
->>> Acked-by: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>
->> I'm OK with patches 1...5, 8, so for these:
->>
->> Acked-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>
->> Regarding the simplified version of the binding, I thought we should
->> leave 'port' instead of 'endpoint' node. This could cover more hardware
->> configurations. Are there any users of this simplified binding queued
->> for v3.15 ? If not, perhaps we can postpone it and discuss it a bit more
->> (sorry, couldn't find time to comment on that earlier) ?
-> 
-> Since Tomi needs the separate port/endpoint iteration anyway, 
-> postponing the simple bindings shouldn't hurt. I'll (re)submit them
-> together in a second series.
+On Thu, 2014-03-06 at 02:31PM +0100, Mike Looijmans wrote:
+> On 03/04/2014 10:00 PM, S=C3=B6ren Brinkmann wrote:
+> >On Tue, 2014-03-04 at 10:06PM +0200, Eli Billauer wrote:
+> >>Hello S=C3=B6ren,
+> >>
+> >>wp-inverted solves the practical problem indeed, and fools the
+> >>driver into thinking that the card has an inverted write protection
+> >>sensor, and the logic zero that it finds in the hardware register
+> >>means that the card isn't write protected.
+> >>
+> >>I'm insisting on this patch, because I think that the device tree
+> >>should describe the hardware as it is, and not fool the driver into
+> >>behaving the way we want it to. These tricks always bite back later
+> >>on.
+> >Well, why is broken-wp more accurate than wp-inverted? Strictly
+> >speaking the WP is there and working, it's just tied off to some val=
+ue
+> >you want to have interpreted the other way.
+> >Anyway, seems like this is solvable with wp-inverted and whether the
+> >additional quirk is needed I leave to others do decide.
+>=20
+> I've begged for this patch - or a similar one - to be included too,
+> because on our boards, the "wp" value appears to be sort of random.
+> Out of 5 prototype boards, 3 would only boot with wp-inverted while
+> the other 2 wouldn't boot with wp-inverted set.
+>=20
+> In our case I really don't know (and I don't care either) to which
+> logic level the wp happens to think it's wired. I just want to be
+> able to tell the driver that the WP line is
+> free-floating-and-might-have-any-random-value-at-any-given-moment
+> which is a bit long, so I'd go for disable-wp instead.
 
-Ok, thanks.
+Could you provide the design you use and give more details? According t=
+o
+the people I talked to, the signal should never float, unless you pin i=
+t
+out and don't drive it.
+Actually, you should open a support case for this. It is not supposed t=
+o
+happen.
 
->>>>> I'll need those acks before I can even think about queuing up the
->>>>> imx-drm bits.
->>>>>
->>>>> Another way to deal with this is if this gets pulled into the V4L tree
->>>>> from Philipp's git tree, I can also pull that in myself.  What mustn't
->>>>> happen is for these to be committed independently as patches.
->>>
->>> If everyone agrees, I actually prefer have this patch applied on my tree,
->>> in order to avoid some potential merge conflicts at the merge window,
->>> as we might have other drivers and changes there touching on those API
->>> calls (I'm aware of a series of patches from Sylwester with some DT
->>> stuff on it. Not sure if it would be affected by such changes or not).
->>
->> Yes, it's going to conflict with my patch series. I thought it could be
->> put onto a stable a topic branch, e.g. at git://linuxtv.org/media_tree.git,
->> which could be then pulled into the media master branch and anywhere
->> else it is needed ?
-> 
-> Mauro, are you ok with handling the conflict in the merge, or should I
-> rebase on top of the media tree after you merged Sylwester's changes?
+	S=C3=B6ren
 
-I could rebase and resolve any conflicts before sending my pull request
-to Mauro. I don't think it's a good idea to rebase this series onto the
-media tree, since it is touching drivers/of.
 
---
-Regards,
-Sylwester
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
