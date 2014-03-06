@@ -1,159 +1,227 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/3] phy: omap-usb2: Adapt phy-omap-usb2 for AM437x
-Date: Thu, 6 Mar 2014 16:43:07 +0530
-Message-ID: <53185843.8060101@ti.com>
-References: <1393841424-27656-1-git-send-email-george.cherian@ti.com> <1393841424-27656-2-git-send-email-george.cherian@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393841424-27656-2-git-send-email-george.cherian-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Kamil Debski <k.debski@samsung.com>
+Subject: [PATCH v10 0/4] phy: Add new Exynos USB 2.0 PHY driver
+Date: Thu, 06 Mar 2014 12:16:45 +0100
+Message-ID: <1394104609-28242-1-git-send-email-k.debski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kyungmin.park@samsung.com, kishon@ti.com, t.figa@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samsung.com, gautam.vivek@samsung.com, mat.krawczuk@gmail.com, yulgon.kim@samsung.com, p.paneri@samsung.com, av.tikhomirov@samsung.com, jg1.han@samsung.com, galak@codeaurora.org, matt.porter@linaro.org, k.debski@samsung.com, tjakobi@math.uni-bielefeld.de, stern@rowland.harvard.edu, sander@humilis.net
 List-Id: devicetree@vger.kernel.org
 
-George,
+Hi,
 
-On Monday 03 March 2014 03:40 PM, George Cherian wrote:
-> Adapt phy-omap-usb2 driver for AM437x.
-> 	- Add new comaptible "ti,am437x-usb2" for AM437x
-> 	- Pass proper data to differentiate AM437x and others.
-> 	- AM437x doesnot support  set_vbus and start_srp.
-> 	- Also update the Documentation to add new compatible.
->
-> Signed-off-by: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
-> ---
->   Documentation/devicetree/bindings/usb/usb-phy.txt |  4 +-
->   drivers/phy/phy-omap-usb2.c                       | 49 +++++++++++++++++------
->   include/linux/usb/omap_usb.h                      |  9 +++++
->   3 files changed, 49 insertions(+), 13 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/usb/usb-phy.txt b/Documentation/devicetree/bindings/usb/usb-phy.txt
-> index c0245c8..b3fa409 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-phy.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-phy.txt
-> @@ -3,7 +3,9 @@ USB PHY
->   OMAP USB2 PHY
->
->   Required properties:
-> - - compatible: Should be "ti,omap-usb2"
-> + - compatible: Should be either of
-> +	* "ti,omap-usb2" for OMAP4, OMAP5, DRA7
-> +	* "ti,am437x-usb2" for AM437x
->    - reg : Address and length of the register set for the device.
->    - #phy-cells: determine the number of cells that should be given in the
->      phandle while referencing this phy.
-> diff --git a/drivers/phy/phy-omap-usb2.c b/drivers/phy/phy-omap-usb2.c
-> index 7699752..d54f24b 100644
-> --- a/drivers/phy/phy-omap-usb2.c
-> +++ b/drivers/phy/phy-omap-usb2.c
-> @@ -144,6 +144,31 @@ static struct phy_ops ops = {
->   	.owner		= THIS_MODULE,
->   };
->
-> +#ifdef CONFIG_OF
-> +static const struct usb_phy_data omap_usb2_data = {
-> +	.label = "omap_usb2",
-> +	.flags = OMAP_USB2_HAS_START_SRP | OMAP_USB2_HAS_SET_VBUS,
-> +};
-> +
-> +static const struct usb_phy_data am437x_usb2_data = {
-> +	.label = "am437x_usb2",
-> +	.flags =  0,
-> +};
-> +
-> +static const struct of_device_id omap_usb2_id_table[] = {
-> +	{
-> +		.compatible = "ti,omap-usb2",
-> +		.data = &omap_usb2_data,
-> +	},
-> +	{
-> +		.compatible = "ti,am437x-usb2",
-> +		.data = &am437x_usb2_data,
-> +	},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, omap_usb2_id_table);
-> +#endif
-> +
->   static int omap_usb2_probe(struct platform_device *pdev)
->   {
->   	struct omap_usb	*phy;
-> @@ -153,10 +178,16 @@ static int omap_usb2_probe(struct platform_device *pdev)
->   	struct device_node *node = pdev->dev.of_node;
->   	struct device_node *control_node;
->   	struct platform_device *control_pdev;
-> +	const struct of_device_id *of_id;
-> +	struct usb_phy_data *phy_data;
-> +
-> +	of_id = of_match_device(of_match_ptr(omap_usb2_id_table), &pdev->dev);
->
-> -	if (!node)
-> +	if (!of_id)
->   		return -EINVAL;
->
-> +	phy_data = (struct usb_phy_data *)of_id->data;
-> +
->   	phy = devm_kzalloc(&pdev->dev, sizeof(*phy), GFP_KERNEL);
->   	if (!phy) {
->   		dev_err(&pdev->dev, "unable to allocate memory for USB2 PHY\n");
-> @@ -172,7 +203,7 @@ static int omap_usb2_probe(struct platform_device *pdev)
->   	phy->dev		= &pdev->dev;
->
->   	phy->phy.dev		= phy->dev;
-> -	phy->phy.label		= "omap-usb2";
-> +	phy->phy.label		= phy_data->label;
->   	phy->phy.set_suspend	= omap_usb2_suspend;
->   	phy->phy.otg		= otg;
->   	phy->phy.type		= USB_PHY_TYPE_USB2;
-> @@ -196,8 +227,10 @@ static int omap_usb2_probe(struct platform_device *pdev)
->
->   	otg->set_host		= omap_usb_set_host;
->   	otg->set_peripheral	= omap_usb_set_peripheral;
-> -	otg->set_vbus		= omap_usb_set_vbus;
-> -	otg->start_srp		= omap_usb_start_srp;
-> +	if (phy_data->flags & OMAP_USB2_HAS_SET_VBUS)
-> +		otg->set_vbus		= omap_usb_set_vbus;
-> +	if (phy_data->flags & OMAP_USB2_HAS_START_SRP)
-> +		otg->start_srp		= omap_usb_start_srp;
->   	otg->phy		= &phy->phy;
->
->   	platform_set_drvdata(pdev, phy);
-> @@ -297,14 +330,6 @@ static const struct dev_pm_ops omap_usb2_pm_ops = {
->   #define DEV_PM_OPS     NULL
->   #endif
->
-> -#ifdef CONFIG_OF
-> -static const struct of_device_id omap_usb2_id_table[] = {
-> -	{ .compatible = "ti,omap-usb2" },
-> -	{}
-> -};
-> -MODULE_DEVICE_TABLE(of, omap_usb2_id_table);
-> -#endif
-> -
->   static struct platform_driver omap_usb2_driver = {
->   	.probe		= omap_usb2_probe,
->   	.remove		= omap_usb2_remove,
-> diff --git a/include/linux/usb/omap_usb.h b/include/linux/usb/omap_usb.h
-> index 6ae2936..034161d 100644
-> --- a/include/linux/usb/omap_usb.h
-> +++ b/include/linux/usb/omap_usb.h
-> @@ -42,6 +42,15 @@ struct omap_usb {
->   	u8			is_suspended:1;
->   };
->
-> +struct usb_phy_data {
-> +	const char *label;
-> +	u32 flags;
+This is the tenth version of this patchset. The only difference since v9
+is correction in the documentation.
 
-u8 should be sufficient no?
+Best wishes,
+Kamil Debski
 
-Can you also refresh the patch on linux-phy next?
+--------------
+Changes from v9:
+1) phy: core: Add an exported of_phy_get function
+   - No changes since v9.
+2) phy: core: Add devm_of_phy_get to phy-core
+   - No changes since v9.
+3) phy: Add new Exynos USB 2.0 PHY driver
+   - Fixed missing callback in the documentation of the
+     samsung_usb2_phy_config structure.
+4) phy: Add Exynos 5250 support to the Exynos USB 2.0 PHY
+   - No changes since v9.
 
-Thanks
-Kishon
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--------------
+Changes from v8:
+1) phy: core: Add an exported of_phy_get function
+   - No changes since v8.
+2) phy: core: Add devm_of_phy_get to phy-core
+   - No changes since v8.
+3) phy: Add new Exynos USB 2.0 PHY driver
+   - Fix empty blank line at EOF errors
+4) phy: Add Exynos 5250 support to the Exynos USB 2.0 PHY
+   - Fix empty blank line at EOF error
+
+--------------
+Changes from v7:
+1) phy: core: Add an exported of_phy_get function
+   - No changes since v7.
+2) phy: core: Add devm_of_phy_get to phy-core
+   - No changes since v7.
+3) phy: Add new Exynos USB 2.0 PHY driver
+   - Fix checkpatch errors with code indentation and corrected whitespace.
+4) phy: Add Exynos 5250 support to the Exynos USB 2.0 PHY
+   - Fix checkpatch errors with code indentation and corrected whitespace.
+
+--------------
+Changes from v6: (not including the change that controller patches were removed
+form this patchset, also this patchset excludes S5PV210 support - it needs more
+testing)
+1) phy: core: Add an exported of_phy_get function
+   - No changes since v6.
+2) phy: core: Add devm_of_phy_get to phy-core
+   - No changes since v6.
+3) phy: Add new Exynos USB 2.0 PHY driver
+   - Changed the way clocks are supplied to the driver. Prior to version v7
+     there were reference clocks for every phy instance, now a single "ref"
+     clock was introduced.
+   - Updated documentation to match the aforementioned change.
+   - Add offset EXYNOS_*_UPHYCLK_PHYFSEL_OFFSET to the clock register content
+     defines.
+   - Corrected way clock register is modified. Instead of a simple write, a
+     proper read, modify, write sequence was introduced.
+   - Important stability fix - added udelay after PHY reset. This fixes a bug
+     causing instability in USB LAN adapters. Without the delay the DMA burst
+     mode was could not be enabled.
+4) phy: Add Exynos 5250 support to the Exynos USB 2.0 PHY
+   - Changed handling of clocks to use a single "ref" clock.
+
+----------------
+Changes from v5:
+1) phy: core: Add an exported of_phy_get function
+- corrected behaviour of the modification when GENERIC_PHY is not enabled
+  by adding a stub of the of_phy_get function
+2) phy: core: Add devm_of_phy_get to phy-core
+- corrected behaviour of the modification when GENERIC_PHY is not enabled
+  by adding a stub of the devm_of_phy_get function
+3) dts: Add usb2phy to Exynos 4
+- no change
+4) dts: Add usb2phy to Exynos 5250
+- in the previous version, this patch included some phy-exynos5250-usb2.c code
+  by mistake, the code has been remove and added to the proper patch
+5) phy: Add new Exynos USB PHY driver
+- changed strings from Exynos 4212 to Exynos 4x12, as the Exynos 4212 driver is
+  actually a driver for the whole Exynos 4x12 family
+- added documentation to the Exynos USB 2.0 PHY driver adaptaion layer
+- corrected strings HSCI -> HSIC
+- fixed a problem introduced by previous change - on Exynos 4x12 the HSIC did
+  not work on its own
+- mode switch support was added to Exynos 4x12 (same io pins are used by host
+  and device)
+- support for phy_set_bus_width introduced by Matt Porter was added
+6) phy: Add support for S5PV210 to the Exynos USB PHY
+- setting of clk register was fixed
+7) phy: Add Exynos 5250 support to the Exynos USB 2.0 PHY
+- supoprt was added for HSIC and device
+8) usb: ehci-exynos: Change to use phy provided by the generic phy framework
+- DT documentation was moved from usb-ehci.txt to exynos-usb.txt
+
+----------------
+Changes from v4:
+1) phy: core: Add an exported of_phy_get function
+- the new exported function of_phy_get was changed to take the phy's name as a
+  parameter instead of the index
+2) phy: core: Add devm_of_phy_get to phy-core
+- fixes made in the comments to devm_of_phy_get
+3) phy: Add new Exynos USB PHY driver
+- move the documentation from a new to an existing file - samsung-phy.txt
+- fix typos and uppercase hex addresses
+- add more explanations to Kconfig (checkpatch still complains, but I find it
+  hard to think what else could I add)
+- add selects MFD_SYSCON as the driver needs it (Thank you, Tobias!)
+- cleanup included headers in both *.c and .h files
+- use BIT(x) macro instead of (1 << x)
+- replaced HOST and DEV with PHY0 and PHY1 in phy-exynos4212-usb2.c, the
+  registers are described as PHYx in the documentation hence the decision to
+  leave the PHYx naming
+- fixed typo in exynos4210_rate_to_clk reg -> *reg
+- change hax_mode_switch and enabled type to bool
+4) usb: ehci-s5p: Change to use phy provided by the generic phy framework
+- Put the issue of phy->otg in order - since the new phy driver does not provide
+  this field. With the new driver the switch between host and device is done in
+  power_on of the respective host and device phys.
+5) usb: s3c-hsotg: Use the new Exynos USB phy driver with the generic phy
+   framework
+- fixed the example in the documentation
+6) phy: Add support for S5PV210 to the Exynos USB PHY driver
+- include files cleanup
+- use BIT(x) macro instead of (1 << x)
+7) phy: Add Exynos 5250 support to the Exynos USB 2.0 PHY driver
+- include files cleanup
+- use BIT(x) macro instead of (1 << x)
+8) dts: Add usb2phy to Exynos 4
+- no changes
+9) dts: Add usb2phy to Exynos 5250
+- no changes
+
+----------------
+Changes from v3:
+- using PMU and system registers indirectly via syscon
+- change labelling
+- change Kconfig name
+- fixed typos/stray whitespace
+- move of_phy_provider_register() to the end of probe
+- add a regular error return code to the rate_to_clk functions
+- cleanup code and remove unused code
+- change struct names to avoid collisions
+- add mechanism to support multiple phys by the ehci driver
+
+----------------
+Changes from v2:
+- rebase all patches to the usb-next branch
+- fixes in the documentation file
+  - remove wrong entries in the phy node (ranges, and #address- & #size-cells)
+  - add clocks and clock-names as required properites
+  - rephrase a few sentences
+- fixes in the ehci-exynos.c file
+  - move phy_name variable next to phy in exynos_ehci_hcd
+  - remove otg from exynos_ehci_hcd as it was no longer used
+  - move devm_phy_get after the Exynos5440 skip_phy check
+- fixes in the s3c-hsotg.c file
+  - cosmetic fixes (remove empty line that was wrongfully added)
+- fixes in the main driver
+  - remove cpu_type in favour for a boolean flag matched with the compatible
+    value
+  - rename files, structures, variables and Kconfig entires - change from simple
+    "uphy" to "usb2_phy"
+  - fix multiline comments style
+  - simplify #ifdefs in of_device_id
+  - fix Kconfig description
+  - change dev_info to dev_dbg where reasonable
+  - cosmetic changes (remove wrongful blank lines)
+  - remove unnecessary reference counting
+
+----------------
+Changes from v1:
+- the changes include minor fixes of the hardware initialization of the PHY
+  module
+- some other minor fixes were introduced
+
+----------------------
+Original cover letter:
+
+Hi,
+
+This patch adds a new drive for USB PHYs for Samsung SoCs. The driver is
+using the Generic PHY Framework created by Kishon Vijay Abrahan I. It
+can be found here https://lkml.org/lkml/2013/8/21/29. This patch adds
+support to Exynos4 family of SoCs. Support for Exynos3 and Exynos5 is
+planned to be added in the near future.
+
+I welcome your comments.
+
+----------------------
+Kamil Debski (4):
+  phy: core: Add an exported of_phy_get function
+  phy: core: Add devm_of_phy_get to phy-core
+  phy: Add new Exynos USB 2.0 PHY driver
+  phy: Add Exynos 5250 support to the Exynos USB 2.0 PHY driver
+
+ .../devicetree/bindings/phy/samsung-phy.txt        |   54 +++
+ Documentation/phy/samsung-usb2.txt                 |  135 +++++++
+ drivers/phy/Kconfig                                |   40 ++
+ drivers/phy/Makefile                               |    4 +
+ drivers/phy/phy-core.c                             |   76 +++-
+ drivers/phy/phy-exynos4210-usb2.c                  |  261 +++++++++++++
+ drivers/phy/phy-exynos4x12-usb2.c                  |  328 ++++++++++++++++
+ drivers/phy/phy-exynos5250-usb2.c                  |  404 ++++++++++++++++++++
+ drivers/phy/phy-samsung-usb2.c                     |  228 +++++++++++
+ drivers/phy/phy-samsung-usb2.h                     |   67 ++++
+ include/linux/phy/phy.h                            |   14 +
+ 11 files changed, 1602 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/phy/samsung-usb2.txt
+ create mode 100644 drivers/phy/phy-exynos4210-usb2.c
+ create mode 100644 drivers/phy/phy-exynos4x12-usb2.c
+ create mode 100644 drivers/phy/phy-exynos5250-usb2.c
+ create mode 100644 drivers/phy/phy-samsung-usb2.c
+ create mode 100644 drivers/phy/phy-samsung-usb2.h
+
+-- 
+1.7.9.5
