@@ -1,105 +1,174 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 3/9] Doc/DT: Add DT binding documentation for DVI Connector
-Date: Thu, 6 Mar 2014 10:52:00 +0200
-Message-ID: <53183730.5060205@ti.com>
-References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>	<1393590016-9361-4-git-send-email-tomi.valkeinen@ti.com>	<20140228155937.GQ21483@n2100.arm.linux.org.uk>	<5310B567.7040605@ti.com>	<20140228162327.GT21483@n2100.arm.linux.org.uk>	<5316E31F.9050308@ti.com> <CAMuHMdWVSfKrudBhE7FW-ZWBvMOLWjrQZvn1qZUfRt_H+P7A2w@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v13 2/3] PHY: add APM X-Gene SoC 15Gbps Multi-purpose
+ PHY driver
+Date: Thu, 6 Mar 2014 14:23:05 +0530
+Message-ID: <53183771.9070501@ti.com>
+References: <1394059399-30671-1-git-send-email-lho@apm.com> <1394059399-30671-2-git-send-email-lho@apm.com> <1394059399-30671-3-git-send-email-lho@apm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="TQJ1RXgncEldqqG3JXXPILmUer1UDHP3I"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdWVSfKrudBhE7FW-ZWBvMOLWjrQZvn1qZUfRt_H+P7A2w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DRI Development <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1394059399-30671-3-git-send-email-lho@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Loc Ho <lho@apm.com>, tj@kernel.org
+Cc: olof@lixom.net, arnd@arndb.de, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
---TQJ1RXgncEldqqG3JXXPILmUer1UDHP3I
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On 06/03/14 10:39, Geert Uytterhoeven wrote:
-> On Wed, Mar 5, 2014 at 9:41 AM, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> =
-wrote:
->> On 28/02/14 18:23, Russell King - ARM Linux wrote:
->>
->>> That's rather a lot of compatible strings.  Another possibility is:
->>>
->>>       compatible =3D "dvi-connector";
->>>       analog;
->>>       digital;
->>>       single-link;
->>>       dual-link;
->>
->> I made the following changes compared to the posted version. I decided=
+On Thursday 06 March 2014 04:13 AM, Loc Ho wrote:
+> This patch adds support for the APM X-Gene SoC 15Gbps Multi-purpose PHY.
+> This is the physical layer interface for the corresponding host
+> controller. Currently, only external clock and Gen3 SATA mode
+> are supported.
+>
+> Signed-off-by: Loc Ho <lho@apm.com>
+> Signed-off-by: Tuan Phan <tphan@apm.com>
+> Signed-off-by: Suman Tripathi <stripathi@apm.com>
+> ---
+>   drivers/phy/Kconfig     |    7 +
+>   drivers/phy/Makefile    |    2 +
+>   drivers/phy/phy-xgene.c | 1756 +++++++++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 1765 insertions(+), 0 deletions(-)
+>   create mode 100644 drivers/phy/phy-xgene.c
+>
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index afa2354..221a1b7 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -64,4 +64,11 @@ config BCM_KONA_USB2_PHY
+>   	help
+>   	  Enable this to support the Broadcom Kona USB 2.0 PHY.
+>
+> +config PHY_XGENE
+> +	tristate "APM X-Gene 15Gbps PHY support"
+> +	depends on HAS_IOMEM && OF && (ARM64 || COMPILE_TEST)
+> +	select GENERIC_PHY
+> +	help
+> +	  This option enables support for APM X-Gene SoC multi-purpose PHY.
+> +
+>   endmenu
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index b57c253..dee70f4 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -9,3 +9,5 @@ obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
+>   obj-$(CONFIG_PHY_MVEBU_SATA)		+= phy-mvebu-sata.o
+>   obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
+>   obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
+> +obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
+> +
+.
+.
+<snip>
+.
+.
 
->> to leave the "single-link" out, as it's implied if "digital" is set.
->>
->>  Tomi
->>
->> @@ -6,11 +6,16 @@ Required properties:
->>
->>  Optional properties:
->>  - label: a symbolic name for the connector
->> -- i2c-bus: phandle to the i2c bus that is connected to DVI DDC
->> +- ddc-i2c-bus: phandle to the i2c bus that is connected to DVI DDC
->> +- analog: the connector has DVI analog pins
->> +- digital: the connector has DVI digital pins
->> +- dual-link: the connector has pins for DVI dual-link
->>
->>  Required nodes:
->>  - Video port for DVI input
->>
->> +Note: One (or both) of 'analog' or 'digital' must be set.
->=20
-> So dual-link needs both "digital" and "dual-link"?
+> +	int i;
+> +
+> +	rc = xgene_phy_hw_initialize(ctx, CLK_EXT_DIFF, SSC_DISABLE);
+> +	if (rc) {
+> +		dev_err(ctx->dev, "PHY initialize failed %d\n", rc);
+> +		return rc;
+> +	}
+> +
+> +	/* Setup clock properly after PHY configuration */
+> +	if (!IS_ERR(ctx->clk)) {
+> +		/* HW requires an toggle of the clock */
+> +		clk_prepare_enable(ctx->clk);
+> +		clk_disable_unprepare(ctx->clk);
+> +		clk_prepare_enable(ctx->clk);
+> +	}
+> +
+> +	/* Compute average value */
+> +	for (i = 0; i < MAX_LANE; i++)
+> +		xgene_phy_gen_avg_val(ctx, i);
+> +
+> +	dev_dbg(ctx->dev, "PHY initialized\n");
+> +	return 0;
+> +}
+> +
+> +static const struct phy_ops xgene_phy_ops = {
+> +	.init		= xgene_phy_hw_init,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static struct phy *xgene_phy_xlate(struct device *dev,
+> +				   struct of_phandle_args *args)
+> +{
+> +	struct xgene_phy_ctx *ctx = dev_get_drvdata(dev);
+> +
+> +	if (args->args_count > 0) {
+> +		if (args->args[0] >= MODE_MAX)
+> +			return NULL;
 
-Yes. It is extra, but it felt clearer to me to have 'digital' as a
-matching property for 'analog'.
+Are you sure you want to return NULL instead of error? NULL is 
+considered a valid value for optional PHYs.
+> +		ctx->mode = args->args[0];
+> +	}
 
-Alternatively we could have three options:
+I think it doesn't make sense to return the phy without the 'mode'. So 
+we should report error here too.
 
-analog;
-digital-single-link;
-digital-dual-link;
+> +	return ctx->phy;
+> +}
+> +
+> +static void xgene_phy_get_param(struct platform_device *pdev,
+> +				const char *name, u32 *buffer,
+> +				int count, u32 *default_val,
+> +				u32 conv_factor)
+> +{
+> +	int i;
+> +
+> +	if (!of_property_read_u32_array(pdev->dev.of_node, name, buffer,
+> +					count)) {
+> +		for (i = 0; i < count; i++)
+> +			buffer[i] /= conv_factor;
+> +		return;
+> +	}
+> +	/* Does not exist, load default */
+> +	for (i = 0; i < count; i++)
+> +		buffer[i] = default_val[i % 3];
+> +}
+> +
+> +static int xgene_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct phy_provider *phy_provider;
+> +	struct xgene_phy_ctx *ctx;
+> +	struct resource *res;
+> +	int rc = 0;
+> +	u32 default_spd[] = DEFAULT_SATA_SPD_SEL;
+> +	u32 default_txboost_gain[] = DEFAULT_SATA_TXBOOST_GAIN;
+> +	u32 default_txeye_direction[] = DEFAULT_SATA_TXEYEDIRECTION;
+> +	u32 default_txeye_tuning[] = DEFAULT_SATA_TXEYETUNING;
+> +	u32 default_txamp[] = DEFAULT_SATA_TXAMP;
+> +	u32 default_txcn1[] = DEFAULT_SATA_TXCN1;
+> +	u32 default_txcn2[] = DEFAULT_SATA_TXCN2;
+> +	u32 default_txcp1[] = DEFAULT_SATA_TXCP1;
+> +	int i;
+> +
+> +	ctx = devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
+> +	if (!ctx) {
+> +		dev_err(&pdev->dev, "can't allocate PHY context\n");
+remove dev_err here.. kzalloc will do that for you..
+> +		return -ENOMEM;
+> +	}
+> +	ctx->dev = &pdev->dev;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res) {
+> +		dev_err(&pdev->dev, "no PHY resource address\n");
 
-My reasoning to the format I chose was basically that when a connector
-supports 'digital', it contains TMDS clock and TMDS data for link 1.
-Adding dual link to that adds only TMDS data for link 2, so the second
-data link is kind of an additional feature, marked with a flag.
+same here.. you don't have to even check for return value of res. 
+ioremap_resource will take care of that.
+> +		rc = -EINVAL;
+> +		goto error;
+> +	}
+> +	ctx->sds_base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (!ctx->sds_base) {
+> +		dev_err(&pdev->dev, "can't map PHY resource\n");
 
-Not a very big argument, and I'm fine with other format suggestions.
+same here..
 
- Tomi
-
-
-
---TQJ1RXgncEldqqG3JXXPILmUer1UDHP3I
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJTGDcwAAoJEPo9qoy8lh71DvwP/jhYkTe3hYf29HbZhf1U8Dt+
-P9XVeGNFi1II4FiJYWOnWsjaUHGKdX0ZmiWRhJp7vahH8GOgq1OoPkXUXcq4gE9G
-1P8DE17/hENU99UxKcuQ1GgEMMUh0lls00a8HKpVTdpBKqXfpBKMSELpP6S2gy0s
-gOiJ/WjgfoSBAwxqa4ef7RfRIPO5jFksxey4i8Dgoiojot48spWMHi58D7vxxiui
-ofMp+0q4FUKrhvpzqsjIMdoQl9pBwlewclAvWd0KJD72yuqIlkLjlzeg1ffPHEia
-pnM9wyH22Bz9qXsiQ2Lrs0k/Kfn0VYYghd8yPSGuJpNIJm4AmgteBOMJVdCQOIdE
-pQ/XINd1aL2pby6SsRVWImfTXsYqKW8cFRLI8K67nJ8mRtui+qiBjxDlxy98i6Dc
-XYMekIzigLHmsd5os6BQv7/RHp4hVDtvhsOYk0TTZYzeps4oXLJmsnfRVXrI0rqY
-zR7vU4EdHDbq/cGCjogrnX1lHb7vtJQ+FpRvB0AiBTQyGAU32tjpFmFZjesUwbLZ
-K6g4g1LXh0buUmgyiWE3R/1U2ZuziewcBhHSH7x1/geI7+NICgjbF5M+hItWEshf
-uUaka4fh0d5+zVD0xNSg90VEZ3faJ5imEu0JYLmgJylIa/dAazTxxR1epplTJDOH
-jniXnavF3ZvM1z4rfMJh
-=Vdsd
------END PGP SIGNATURE-----
-
---TQJ1RXgncEldqqG3JXXPILmUer1UDHP3I--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
