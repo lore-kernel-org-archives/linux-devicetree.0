@@ -1,159 +1,43 @@
-From: George Cherian <george.cherian@ti.com>
-Subject: [PATCH v2 2/3] phy: omap-usb2: Provide workaround for USB2PHY false disconnect
-Date: Thu, 6 Mar 2014 15:29:59 +0530
-Message-ID: <1394099999-20027-1-git-send-email-george.cherian@ti.com>
-References: <1393841424-27656-1-git-send-email-george.cherian@ti.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Re: [PATCH 0/7] mfd: AXP20x: Add support for AXP202
+ and AXP209
+Date: Thu, 06 Mar 2014 11:07:33 +0100
+Message-ID: <531848E5.4050704@redhat.com>
+References: <1393692352-10839-1-git-send-email-carlo@caione.org>	<53121151.9050804@redhat.com>	<CAOQ7t2ae35E-eiQW4DFspdTe3H7AWGzRpw4B_1t27p0OSkX_Uw@mail.gmail.com>	<53123507.6020607@redhat.com>	<531782DF.6090209@redhat.com> <CAOQ7t2bx1u73kxQVa3AeQ-hZ9nP3GSukEdXk-jRNwbT0vUH4+A@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393841424-27656-1-git-send-email-george.cherian@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: s.nawrocki@samsung.com, tony@atomide.com, george.cherian@ti.com, gregkh@linuxfoundation.org, kishon@ti.com, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRB7ER4GMAKGQEX4RYDEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAOQ7t2bx1u73kxQVa3AeQ-hZ9nP3GSukEdXk-jRNwbT0vUH4+A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Austin Beam <austinbeam@ti.com>
+Hi,
 
-Enable the dra7x errata workaround for false disconnect problem
-with USB2PHY. False disconnects were detected with some of the devices.
-Reduce the sensitivity of the disconnect logic within the USB2PHY subsystem
-to enusre these false disconnects are not registered.
+On 03/05/2014 09:46 PM, Carlo Caione wrote:
+> On Wed, Mar 5, 2014 at 9:02 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>>
+>> So I've added your patches to my sunxi-devel tree and they work as advertised :)
+> 
+> Thank you for keeping the tree updated :)
+> 
+>> I've also added dt support for the axp209 to the cubietruck dts file, to avoid
+>> things becoming a copy and paste fest I've introduced a new axp209.dtsi file,
+>> as well as did some fixes to the existing sun?i-a*.dtsi files, see my tree here:
+>> https://github.com/jwrdegoede/linux-sunxi/commits/sunxi-devel
+> 
+> That was also my idea (creating a new axp20x.dtsi) but it has been
+> turned down by Maxime and Lee
 
-[george.cherian@ti.com]
-While at that, pass proper flags for each SoC's. This is a common driver
-used across OMAP4,OMAP5,DRA7xx and AM437x USB2PHY.
+Hmm, do you have a pointer to the mailinglist discussion about this ?
 
-False disconnect workaround is currently applicable for only DRA7x.
+Regards,
 
-Update the Documentation also to add new comaptible.
-
-Signed-off-by: Austin Beam <austinbeam@ti.com>
-Signed-off-by: George Cherian <george.cherian@ti.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
-v1 -> v2 
- changed devm_request_and ioremap to devm_ioremap_resource
-
- drivers/phy/phy-omap-usb2.c  | 44 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/usb/omap_usb.h |  3 +++
- 2 files changed, 47 insertions(+)
-
-diff --git a/drivers/phy/phy-omap-usb2.c b/drivers/phy/phy-omap-usb2.c
-index d54f24b..0ae4129 100644
---- a/drivers/phy/phy-omap-usb2.c
-+++ b/drivers/phy/phy-omap-usb2.c
-@@ -31,6 +31,9 @@
- #include <linux/phy/phy.h>
- #include <linux/of_platform.h>
- 
-+#define USB2PHY_DISCON_BYP_LATCH (1 << 31)
-+#define USB2PHY_ANA_CONFIG1 0x4c
-+
- /**
-  * omap_usb2_set_comparator - links the comparator present in the sytem with
-  *	this phy
-@@ -138,7 +141,30 @@ static int omap_usb_power_on(struct phy *x)
- 	return 0;
- }
- 
-+static int omap_usb_init(struct phy *x)
-+{
-+	struct omap_usb *phy = phy_get_drvdata(x);
-+	u32 val;
-+
-+	if (phy->flags & OMAP_USB2_CALIBRATE_FALSE_DISCONNECT) {
-+		/*
-+		 *
-+		 * Reduce the sensitivity of internal PHY by enabling the
-+		 * DISCON_BYP_LATCH of the USB2PHY_ANA_CONFIG1 register. This
-+		 * resolves issues with certain devices which can otherwise
-+		 * be prone to false disconnects.
-+		 *
-+		 */
-+		val = omap_usb_readl(phy->phy_base, USB2PHY_ANA_CONFIG1);
-+		val |= USB2PHY_DISCON_BYP_LATCH;
-+		omap_usb_writel(phy->phy_base, USB2PHY_ANA_CONFIG1, val);
-+	}
-+
-+	return 0;
-+}
-+
- static struct phy_ops ops = {
-+	.init		= omap_usb_init,
- 	.power_on	= omap_usb_power_on,
- 	.power_off	= omap_usb_power_off,
- 	.owner		= THIS_MODULE,
-@@ -150,6 +176,11 @@ static const struct usb_phy_data omap_usb2_data = {
- 	.flags = OMAP_USB2_HAS_START_SRP | OMAP_USB2_HAS_SET_VBUS,
- };
- 
-+static const struct usb_phy_data dra7x_usb2_data = {
-+	.label = "dra7x_usb2",
-+	.flags = OMAP_USB2_CALIBRATE_FALSE_DISCONNECT,
-+};
-+
- static const struct usb_phy_data am437x_usb2_data = {
- 	.label = "am437x_usb2",
- 	.flags =  0,
-@@ -161,6 +192,10 @@ static const struct of_device_id omap_usb2_id_table[] = {
- 		.data = &omap_usb2_data,
- 	},
- 	{
-+		.compatible = "ti,dra7x-usb2",
-+		.data = &dra7x_usb2_data,
-+	},
-+	{
- 		.compatible = "ti,am437x-usb2",
- 		.data = &am437x_usb2_data,
- 	},
-@@ -173,6 +208,7 @@ static int omap_usb2_probe(struct platform_device *pdev)
- {
- 	struct omap_usb	*phy;
- 	struct phy *generic_phy;
-+	struct resource *res;
- 	struct phy_provider *phy_provider;
- 	struct usb_otg *otg;
- 	struct device_node *node = pdev->dev.of_node;
-@@ -208,6 +244,14 @@ static int omap_usb2_probe(struct platform_device *pdev)
- 	phy->phy.otg		= otg;
- 	phy->phy.type		= USB_PHY_TYPE_USB2;
- 
-+	if (phy_data->flags & OMAP_USB2_CALIBRATE_FALSE_DISCONNECT) {
-+		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+		phy->phy_base = devm_ioremap_resource(&pdev->dev, res);
-+		if (!phy->phy_base)
-+			return -ENOMEM;
-+		phy->flags |= OMAP_USB2_CALIBRATE_FALSE_DISCONNECT;
-+	}
-+
- 	control_node = of_parse_phandle(node, "ctrl-module", 0);
- 	if (!control_node) {
- 		dev_err(&pdev->dev, "Failed to get control device phandle\n");
-diff --git a/include/linux/usb/omap_usb.h b/include/linux/usb/omap_usb.h
-index 034161d..248a603 100644
---- a/include/linux/usb/omap_usb.h
-+++ b/include/linux/usb/omap_usb.h
-@@ -34,11 +34,13 @@ struct omap_usb {
- 	struct usb_phy		phy;
- 	struct phy_companion	*comparator;
- 	void __iomem		*pll_ctrl_base;
-+	void __iomem		*phy_base;
- 	struct device		*dev;
- 	struct device		*control_dev;
- 	struct clk		*wkupclk;
- 	struct clk		*sys_clk;
- 	struct clk		*optclk;
-+	u8			flags;
- 	u8			is_suspended:1;
- };
- 
-@@ -50,6 +52,7 @@ struct usb_phy_data {
- /* Driver Flags */
- #define OMAP_USB2_HAS_START_SRP (1 << 0)
- #define OMAP_USB2_HAS_SET_VBUS (1 << 1)
-+#define OMAP_USB2_CALIBRATE_FALSE_DISCONNECT (1 << 2)
- 
- #define	phy_to_omapusb(x)	container_of((x), struct omap_usb, phy)
- 
--- 
-1.8.3.1
+Hans
