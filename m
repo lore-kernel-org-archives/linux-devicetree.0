@@ -1,52 +1,48 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dove: drop pinctrl PMU reg property
-Date: Thu, 6 Mar 2014 15:15:10 -0500
-Message-ID: <20140306201510.GJ1872@titan.lakedaemon.net>
-References: <1393977790-29110-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1393977790-29110-2-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH v6 01/10] Documentation: dt: Add binding documentation
+ for S5K6A3 image sensor
+Date: Thu, 06 Mar 2014 21:15:42 +0100
+Message-ID: <5318D76E.80203@gmail.com>
+References: <1394122819-9582-1-git-send-email-s.nawrocki@samsung.com> <1394122819-9582-2-git-send-email-s.nawrocki@samsung.com> <CA+gwMcc7sLp0N5oyCYf-121AzS8KsRdNsvY3DJ7p3z=yVLrBdw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1393977790-29110-2-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <CA+gwMcc7sLp0N5oyCYf-121AzS8KsRdNsvY3DJ7p3z=yVLrBdw@mail.gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Philipp Zabel <philipp.zabel@gmail.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-samsung-soc@vger.kernel.org, a.hajda@samsung.com, kyungmin.park@samsung.com, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene.kim@samsung.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 05, 2014 at 01:03:08AM +0100, Sebastian Hesselbarth wrote:
-> Marvell Dove's pinctrl does require some PMU regs for muxing PMU
-> functions to MPP pins. Recently, a discussion started about consolidating
-> Power Management Unit (PMU) into a single DT node. As we don't want
-> anymore DT ABI in the way, drop the corresponding reg property from
-> pinctrl node now. The driver will derive the registers from existing
-> reg properties.
-> 
-> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> 
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org> 
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> 
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org> 
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> 
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> 
-> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> 
-> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org 
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org 
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  arch/arm/boot/dts/dove.dtsi | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+Hi Phillip,
 
-Applied to mvebu/dt
+On 03/06/2014 07:08 PM, Philipp Zabel wrote:
+>> +++ b/Documentation/devicetree/bindings/media/samsung-s5k6a3.txt
+>> >  @@ -0,0 +1,33 @@
+>> >  +Samsung S5K6A3(YX) raw image sensor
+>> >  +---------------------------------
+>> >  +
+>> >  +S5K6A3(YX) is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
+>> >  +and CCI (I2C compatible) control bus.
+>> >  +
+>> >  +Required properties:
+>> >  +
+>> >  +- compatible   : "samsung,s5k6a3";
+>> >  +- reg          : I2C slave address of the sensor;
+>> >  +- svdda-supply : core voltage supply;
+>> >  +- svddio-supply        : I/O voltage supply;
+>> >  +- afvdd-supply : AF (actuator) voltage supply;
+>> >  +- gpios                : specifier of a GPIO connected to the RESET pin;
+>
+> Please use 'reset-gpios' for GPIOs connected to reset pins.
 
-thx,
+I would prefer to keep it as is, I'm not adding a new driver in this
+series, just the binding documentation and doing some refactoring.
+So if I changed this now, the driver would need to be messed up with
+an additional code to support both 'gpios' and 'reset-gpios'. Are
+there any serious reasons to use this specific name ? It's not
+related to the reset signal DT bindings, is it ?
 
-Jason.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Sylwester
