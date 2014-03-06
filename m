@@ -1,114 +1,62 @@
-From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 3/3] arm64: Add architecture support for PCI
-Date: Thu, 6 Mar 2014 16:17:13 +0000
-Message-ID: <20140306161713.GH6457@e106497-lin.cambridge.arm.com>
-References: <1393948216-11599-1-git-send-email-Liviu.Dudau@arm.com>
- <1393948216-11599-4-git-send-email-Liviu.Dudau@arm.com>
- <201403042328.51361.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201403042328.51361.arnd-r2nGTMty4D4@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH v6 00/10] Add device tree support for Exynos4 camera interface
+Date: Thu, 06 Mar 2014 17:20:09 +0100
+Message-ID: <1394122819-9582-1-git-send-email-s.nawrocki@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, galak@codeaurora.org, kyungmin.park@samsung.com, kgene.kim@samsung.com, a.hajda@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 04, 2014 at 10:28:51PM +0000, Arnd Bergmann wrote:
-> On Tuesday 04 March 2014, Liviu Dudau wrote:
->=20
-> > +extern int isa_dma_bridge_buggy;
->=20
-> As commented before, I still think we can hardcode this to off
+This series adds devicetree support for the front and rear camera of
+the Exynos4412 SoC Trats2 board. It converts related drivers to use
+the v4l2-async API. The SoC output clocks are provided to external image
+image sensors through the common clock API.
 
-Unfortunately that doesn't work when you have CONFIG_PCI=3Dy. drivers/p=
-ci/pci.c has:
+This iteration includes three small fixes, detailed description can
+be found in patches 7/10, 8/10.
 
-drivers/pci/pci.c:int isa_dma_bridge_buggy;
-drivers/pci/pci.c:EXPORT_SYMBOL(isa_dma_bridge_buggy);
+I'd like to ask for a DT binding maintainer review/Ack of patch 3/10.
+I'm  going to push this series to the media tree on beginning of next
+week.
 
-and drivers/pci/quirks.c does:
+Thanks,
+Sylwester
 
-drivers/pci/quirks.c:   if (!isa_dma_bridge_buggy) {
-drivers/pci/quirks.c:           isa_dma_bridge_buggy=3D1;
-drivers/pci/quirks.c-           dev_info(&dev->dev, "Activating ISA DMA=
- hang workarounds\n");
-drivers/pci/quirks.c-   }
+Sylwester Nawrocki (10):
+  Documentation: dt: Add binding documentation for S5K6A3 image sensor
+  Documentation: dt: Add binding documentation for S5C73M3 camera
+  Documentation: devicetree: Update Samsung FIMC DT binding
+  V4L: Add driver for s5k6a3 image sensor
+  V4L: s5c73m3: Add device tree support
+  exynos4-is: Use external s5k6a3 sensor driver
+  exynos4-is: Add clock provider for the SCLK_CAM clock outputs
+  exynos4-is: Add support for asynchronous subdevices registration
+  ARM: dts: Add rear camera nodes for Exynos4412 TRATS2 board
+  ARM: dts: exynos4: Update camera clk provider and s5k6a3 sensor node
 
-
->=20
-> > +unsigned long pci_address_to_pio(phys_addr_t address)
-> > +{
-> > +	struct ioresource *res;
-> > +
-> > +	list_for_each_entry(res, &io_list, list) {
-> > +		if (address >=3D res->start &&
-> > +			address < res->start + res->size) {
-> > +			return res->start - address;
-> > +		}
-> > +	}
-> > +
-> > +	return (unsigned long)-1;
-> > +}
-> > +EXPORT_SYMBOL_GPL(pci_address_to_pio);
->=20
-> This has two problems:
->=20
-> - You return the address in bus space not the logical Linux
->   port number as powerpc and microblaze do.
-> - You imply that the window starts at bus address zero, which
->   might not be the case.
-
-That's definitely not the intention here. I want to return the
-logical port number and I want that port number to start from
-zero for every registered IO range.=20
-
->=20
-> > +EXPORT_SYMBOL(pcibios_fixup_bus);
->=20
-> no need for this export.
-
-OK.
-
->=20
-> > +/*
-> > + * We don't have to worry about legacy ISA devices, so nothing to =
-do here
-> > + */
-> > +resource_size_t pcibios_align_resource(void *data, const struct re=
-source *res,
-> > +				resource_size_t size, resource_size_t align)
-> > +{
-> > +	return ALIGN(res->start, align);
-> > +}
-> > +EXPORT_SYMBOL(pcibios_align_resource);
->=20
-> or this one. Also, the ALIGN() is already done by the PCI core.
-
-This has been fix in v6 already.
-
-Thanks for reviewing this!
-
-Liviu
-
->=20
-> 	Arnd
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+ .../devicetree/bindings/media/samsung-fimc.txt     |   34 +-
+ .../devicetree/bindings/media/samsung-s5c73m3.txt  |   97 +++++
+ .../devicetree/bindings/media/samsung-s5k6a3.txt   |   33 ++
+ arch/arm/boot/dts/exynos4.dtsi                     |    6 +-
+ arch/arm/boot/dts/exynos4412-trats2.dts            |   86 ++++-
+ drivers/media/i2c/Kconfig                          |    8 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/s5c73m3/s5c73m3-core.c           |  207 ++++++++---
+ drivers/media/i2c/s5c73m3/s5c73m3-spi.c            |    6 +
+ drivers/media/i2c/s5c73m3/s5c73m3.h                |    4 +
+ drivers/media/i2c/s5k6a3.c                         |  389 ++++++++++++++++++++
+ drivers/media/platform/exynos4-is/fimc-is-regs.c   |    2 +-
+ drivers/media/platform/exynos4-is/fimc-is-sensor.c |  285 +-------------
+ drivers/media/platform/exynos4-is/fimc-is-sensor.h |   49 +--
+ drivers/media/platform/exynos4-is/fimc-is.c        |   97 ++---
+ drivers/media/platform/exynos4-is/fimc-is.h        |    4 +-
+ drivers/media/platform/exynos4-is/media-dev.c      |  340 ++++++++++++-----
+ drivers/media/platform/exynos4-is/media-dev.h      |   32 +-
+ 18 files changed, 1136 insertions(+), 544 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/samsung-s5c73m3.txt
+ create mode 100644 Documentation/devicetree/bindings/media/samsung-s5k6a3.txt
+ create mode 100644 drivers/media/i2c/s5k6a3.c
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
