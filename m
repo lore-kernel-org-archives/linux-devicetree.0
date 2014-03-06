@@ -1,71 +1,118 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] video: ARM CLCD: Add DT support
-Date: Thu, 6 Mar 2014 12:21:34 +0200
-Message-ID: <53184C2E.3000807@ti.com>
-References: <1394036606-17784-1-git-send-email-pawel.moll@arm.com>
+From: Kamil Debski <k.debski@samsung.com>
+Subject: RE: [PATCH v9 3/4] phy: Add new Exynos USB 2.0 PHY driver
+Date: Thu, 06 Mar 2014 11:24:44 +0100
+Message-ID: <193a01cf3926$4bef53f0$e3cdfbd0$%debski@samsung.com>
+References: <1394033288-5551-1-git-send-email-k.debski@samsung.com>
+ <1394033288-5551-4-git-send-email-k.debski@samsung.com>
+ <005c01cf3915$c53476c0$4f9d6440$%tikhomirov@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="Akl0XEf6Nn5aTGssPp7GFb60uLQ0kXm0n"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1394036606-17784-1-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jonathan Austin <Jonathan.Austin-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <005c01cf3915$c53476c0$4f9d6440$%tikhomirov@samsung.com>
+Content-language: pl
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Anton Tikhomirov' <av.tikhomirov@samsung.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kyungmin.park@samsung.com, kishon@ti.com, Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, gautam.vivek@samsung.com, mat.krawczuk@gmail.com, yulgon.kim@samsung.com, p.paneri@samsung.com, jg1.han@samsung.com, galak@codeaurora.org, matt.porter@linaro.org, tjakobi@math.uni-bielefeld.de, stern@rowland.harvard.edu, sander@humilis.net
 List-Id: devicetree@vger.kernel.org
 
---Akl0XEf6Nn5aTGssPp7GFb60uLQ0kXm0n
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Hi Anton, Kishon,
 
-Hi Pawel,
+> From: Anton Tikhomirov [mailto:av.tikhomirov@samsung.com]
+> Sent: Thursday, March 06, 2014 9:26 AM
+> 
+> Hi Kamil,
+> 
+> ...
+> 
+> > +| 3. Supporting SoCs
+> > ++--------------------
+> > +
+> > +To support a new SoC a new file should be added to the drivers/phy
+> > +directory. Each SoC's configuration is stored in an instance of the
+> > +struct samsung_usb2_phy_config.
+> > +
+> > +struct samsung_usb2_phy_config {
+> > +	const struct samsung_usb2_common_phy *phys;
+> > +	unsigned int num_phys;
+> > +	bool has_mode_switch;
+> 
+> You missed rate_to_clk here.
 
-On 05/03/14 18:23, Pawel Moll wrote:
-> This patch adds basic DT bindings for the PL11x CLCD cells
-> and make their fbdev driver use them.
+Thank you for spotting this.
 
-Is this an old HW, and presumably there won't be new users for it? If
-yes, this is probably fine. If not, you might want to look at the video
-ports and endpoints, which is used by at least three not-yet-merged serie=
-s:
+Kishon: I am sorry that this omission was made. I am happy to send an
+updated patchset. However, I want to give some time for any additional
+comments. Do you think that we have for this? Is today evening ok with you?
+> 
+> > +};
+> > +
+> 
+> ...
+> 
+> > diff --git a/drivers/phy/phy-samsung-usb2.c b/drivers/phy/phy-
+> samsung-
+> > usb2.c new file mode 100644 index 0000000..c3b7719
+> > --- /dev/null
+> > +++ b/drivers/phy/phy-samsung-usb2.c
+> > @@ -0,0 +1,222 @@
+> > +/*
+> > + * Samsung SoC USB 1.1/2.0 PHY driver
+> > + *
+> > + * Copyright (C) 2013 Samsung Electronics Co., Ltd.
+> > + * Author: Kamil Debski <k.debski@samsung.com>
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/mfd/syscon.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/phy/phy.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/spinlock.h>
+> > +#include "phy-samsung-usb2.h"
+> > +
+> > +static int samsung_usb2_phy_power_on(struct phy *phy) {
+> > +	struct samsung_usb2_phy_instance *inst = phy_get_drvdata(phy);
+> > +	struct samsung_usb2_phy_driver *drv = inst->drv;
+> > +	int ret;
+> > +
+> > +	dev_dbg(drv->dev, "Request to power_on \"%s\" usb phy\n",
+> > +		inst->cfg->label);
+> > +	ret = clk_prepare_enable(drv->clk);
+> 
+> clk_prepare_enable() can sleep, and therefore doesn't allow
+> samusng_usb2_phy_power_on() to be used in atomic context (e.g. inside
+> spin_lock-ed area), what sometimes may be desirable.
+> What about to prepare clock in probe, and just enable it here
+> (note: clk_enable() doesn't sleep).
 
-[PATCHv3 00/41] OMAPDSS: DT support v3
-[PATCH v5 00/11] imx-drm dt bindings
-[RFC PATCH v2 00/21] Add DSI display support for Exynos based boards
+>From the onward discussion between you and Kishon, I draw the conclusion
+that this change is not necessary. Right?
 
-Using bindings like that would be more future proof, even if the current
-driver doesn't use them.
+> 
+> > +	if (ret)
+> > +		goto err_main_clk;
+> > +	ret = clk_prepare_enable(drv->ref_clk);
+> > +	if (ret)
+> > +		goto err_instance_clk;
+> > +	if (inst->cfg->power_on) {
+> > +		spin_lock(&drv->lock);
+> > +		ret = inst->cfg->power_on(inst);
+> > +		spin_unlock(&drv->lock);
+> > +	}
+> > +
+> > +	return 0;
+> 
+> Thank you
 
- Tomi
-
-
-
---Akl0XEf6Nn5aTGssPp7GFb60uLQ0kXm0n
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJTGEwuAAoJEPo9qoy8lh71pdEP/2+bLsds4O6LJTNLLU4mTkCf
-L+nkfM3QlX9GJlNXXJ8J9V0jrZwMgMXQBnXQyBxhYT2kEaOydtuMakKFSM70FvuZ
-+o4XhHfH6DkzzJcz7OmNjfdKUQ4SmSbiPoGnheCv3TJA5UZRCeyYyO8VAACTNUDi
-B9jWE2cR1h/HBQvgtwggoPfpA/GgjCwQhucoFIE7a5DXIEmaUR3ZVRY/raFatDub
-0uIGZMkog9PYp+iRKTZwc0ogdqXBUoz/0xyGN+m+V1ZClP+QD9GaD0J7aWoR4IB1
-GVIZ05I12xhZMM3YCHh6Prmv1urmzGop7Mrlv9iB/64KVXuUz9aF7blGtPi8tC2+
-ZWrCHEN+cZBwLYhTbhd/T7ZOMbDybVGoRjaLlstqsVe2hdCISbLatS+4J16hR5X3
-t3LurMdcP0cIULHyO7XFe3GSfBkKYVy1r1Md8RNFFQPvNs3KnTJA23I3bU+AIVdA
-haAiGqijShmAS08iDMc0V99cAN+n6hlsjwNzQCDfGiBM9bYKY6yBH7Cceqr/NTh6
-6gNY3tM4I/Sz4795g6gy1UQx96wHCXPhNlxH+2T/Re4T8mEYeY0aSV+BIIWvZMdp
-onSJNrMbJBXryugWRnM6duO5ABoYgILSF/8p3iNPE1b35REcguWLry3u7VDf29Na
-79Zmz71bR6agdtp8Ed8z
-=tX/s
------END PGP SIGNATURE-----
-
---Akl0XEf6Nn5aTGssPp7GFb60uLQ0kXm0n--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best wishes,
+-- 
+Kamil Debski
+Samsung R&D Institute Poland
