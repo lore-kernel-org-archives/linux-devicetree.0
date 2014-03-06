@@ -1,19 +1,70 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v2 1/6] ARM: dts: tegra: add PCIe interrupt mapping properties
-Date: Thu, 06 Mar 2014 10:41:12 -0700
-Message-ID: <5318B338.8000709@wwwdotorg.org>
-References: <1394025951-32438-1-git-send-email-l.stach@pengutronix.de> <1394025951-32438-2-git-send-email-l.stach@pengutronix.de>
+From: Georgi Djakov <gdjakov@mm-sol.com>
+Subject: Re: [PATCH v10 1/3] mmc: sdhci-msm: Qualcomm SDHCI binding documentation
+Date: Thu, 06 Mar 2014 19:45:55 +0200
+Message-ID: <5318B453.9060804@mm-sol.com>
+References: <1393961226-25618-1-git-send-email-gdjakov@mm-sol.com>	<1393961226-25618-2-git-send-email-gdjakov@mm-sol.com> <CAL_JsqKJ5Jn4wb8xtqrc09kkP4dzUA6qDEkK396RW+4qFNVf+Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1394025951-32438-2-git-send-email-l.stach@pengutronix.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>, linux-arm-kernel@lists.infradead.org
-Cc: linux-sh@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Jingoo Han <jg1.han@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, Shawn Guo <shawn.guo@linaro.org>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Thierry Reding <thierry.reding@gmail.com>, Arnd Bergmann <arnd@arndb.de>, kernel@pengutronix.de
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKJ5Jn4wb8xtqrc09kkP4dzUA6qDEkK396RW+4qFNVf+Q@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Chris Ball <cjb@laptop.org>, Ulf Hansson <ulf.hansson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/05/2014 06:25 AM, Lucas Stach wrote:
-> Those are defined by the common PCI binding.
+On 03/05/2014 08:56 AM, Rob Herring wrote:
+> On Tue, Mar 4, 2014 at 1:27 PM, Georgi Djakov <gdjakov@mm-sol.com> wrote:
+[..]
+>> +Required properties:
+>> +- compatible: Should contain "qcom,sdhci-msm-v4".
+>> +- reg: Base address and length of the register set listed in reg-names.
+>> +- reg-names: Should contain the following:
+>> +       "hc_mem"   - Host controller register map
+>> +       "core_mem" - SD Core register map
+>
+> reg-names should not be required and the order specified by the binding.
+>
 
-I've applied this to Tegra's for-3.15/dt branch.
+Ok, Rob! Thanks!
+
+>> +- interrupts: Should contain an interrupt-specifiers for the interrupts listed in interrupt-names.
+>> +- interrupt-names: Should contain the following:
+>> +       "hc_irq"     - Host controller interrupt
+>> +       "pwr_irq"    - PMIC interrupt
+>
+> Same for interrupt-names.
+>
+
+Ok.
+
+>> +- vdd-supply: Phandle to the regulator for the vdd (core voltage) supply.
+>> +- vdd-io-supply: Phandle to the regulator for the vdd-io (i/o voltage) supply.
+>> +- pinctrl-names: Should contain only one value - "default".
+>> +- pinctrl-0: Should specify pin control groups used for this controller.
+>> +- clocks: A list of phandle + clock-specifier pairs for the clocks listed in clock-names.
+>> +- clock-names: Should contain the following:
+>> +       "iface" - Main peripheral bus clock (PCLK/HCLK - AHB Bus clock) (required)
+>> +       "core"  - SDC MMC clock (MCLK) (required)
+>> +       "bus"   - SDCC bus voter clock (optional)
+>> +
+>> +Example:
+>> +
+>> +       sdhc_1: sdhci@f9824900 {
+>> +               compatible = "qcom,sdhci-msm-v4";
+>> +               reg = <0xf9824900 0x11c>, <0xf9824000 0x800>;
+>
+> Are there cases where these are really in a different 4KB range? If
+> not, this should just be 1 range.
+>
+
+Thanks for your suggestion. This sounds reasonable, but in this case,
+I think that it might be better leaving the memory regions separated as 
+it will help avoiding code duplication. I am using the generic 
+sdhci_pltfm_init(), which assumes that the first resource is the HC 
+iomem and configures the host. If I merge them, the HC address will be 
+offset and this might require duplicating some of the init code.
+Is it acceptable to leave it this way?
+
+BR,
+Georgi
