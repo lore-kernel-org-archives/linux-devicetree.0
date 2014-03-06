@@ -1,88 +1,57 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: Re: [PATCH 6/6] documentation: bindings: document PMIC8921/8058 RTC
-Date: Wed, 5 Mar 2014 18:00:58 -0600
-Message-ID: <20140306000058.GE18529@joshc.qualcomm.com>
-References: <1394047776-13827-1-git-send-email-joshc@codeaurora.org>
- <1394047776-13827-7-git-send-email-joshc@codeaurora.org>
- <5317900F.5030803@codeaurora.org>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 08/10] ARM: dts: OMAP3: Add IVA IOMMU node
+Date: Wed, 5 Mar 2014 18:24:17 -0600
+Message-ID: <1394065459-16409-9-git-send-email-s-anna@ti.com>
+References: <1394065459-16409-1-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5317900F.5030803@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1394065459-16409-1-git-send-email-s-anna-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 05, 2014 at 12:58:55PM -0800, Stephen Boyd wrote:
-> On 03/05/14 11:29, Josh Cartwright wrote:
-> > diff --git a/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt b/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt
-> > new file mode 100644
-> > index 0000000..699bd30
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt
-> > @@ -0,0 +1,29 @@
-> > +* Real-Time Clock for Qualcomm 8058/8921 PMICs
-> > +
-> > +Required properties:
-> > +- compatible: should be one of the following.
-> > +    * "qcom,pm8058-rtc"
-> > +    * "qcom,pm8921-rtc"
-> > +- reg: base address of the register region
-> > +- reg-names: corresponding reg names for the regions listed in the 'reg'
-> > +             property, must contain:
-> > +     "rtc_base" - base of the RTC register region
-> 
-> optional reg-names?
-> 
-> > +- interrupts: interrupt list for the RTC, must contain a single interrupt
-> > +              specifier for the alarm interrupt
-> > +- interrupt-names: corresponding interrupt names for the interrupts listed in
-> > +                   the 'interrupts' property, must contain:
-> > +     "alarm" - summary interrupt for PMIC peripherals
-> 
-> optional interrupt-names?
+From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
 
-It isn't clear to me why these should be made optional, I hope Rob
-provides some clarification in the sdhci-msm thread.
+Add the DT node for the IOMMU within the DSP subsystem. The entry
+is disabled to keep in line with the hwmod usage as intended by
+the deprecated CONFIG_OMAP_IOMMU_IVA2 flag.
 
-> > +
-> > +Option properties:
+Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+[s-anna-l0cyMroinI0@public.gmane.org: split the entry and disable the node]
+Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/omap3.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Woops, this should be "Optional" :).
-
-> > +- linux,allow-set-time: indicates that the setting of RTC time is allowed by
-> > +                        the host CPU
-> 
-> Is this a "linux" property? It seems like something that other OSes
-> would want to know about and doesn't require any explicit knowledge
-> about operating  system things (like keymaps for example).
-
-Yeah, I wasn't quite sure how to name this property.  It's
-Linux-specific in the sense that the underlying operation method is
-"set_time", but I agree this should be named something else...
-
-How do you feel about simply "allow-set-time"?
-
-> 
-> > +
-> > +Example:
-> > +
-> > +	rtc {
-> 
-> rtc@11d
-
-Yep, thanks.
-
-> > +		compatible = "qcom,pm8921-rtc";
-> > +		reg = <0x11D>;
-> > +		reg-names = "rtc_base";
-> > +		interrupts = <0x27 0>;
-> > +		interrupt-names = "alarm";
-> > +	};
-> >
-
+diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+index f7a47e3..9574a9e 100644
+--- a/arch/arm/boot/dts/omap3.dtsi
++++ b/arch/arm/boot/dts/omap3.dtsi
+@@ -418,6 +418,14 @@
+ 			ti,#tlb-entries = <8>;
+ 		};
+ 
++		mmu_iva: mmu@5d000000 {
++			compatible = "ti,omap2-iommu";
++			reg = <0x5d000000 0x80>;
++			interrupts = <28>;
++			ti,hwmods = "mmu_iva";
++			status = "disabled";
++		};
++
+ 		wdt2: wdt@48314000 {
+ 			compatible = "ti,omap3-wdt";
+ 			reg = <0x48314000 0x80>;
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+1.9.0
