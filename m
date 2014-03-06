@@ -1,45 +1,170 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: Re: [PATCH 0/7] mfd: AXP20x: Add support for AXP202
- and AXP209
-Date: Thu, 6 Mar 2014 12:32:21 +0100
-Message-ID: <CAOQ7t2bs9-FSD9PGakwU4uJacjPd9Ss8Qv3wGjeeZt_igOyhrw@mail.gmail.com>
-References: <1393692352-10839-1-git-send-email-carlo@caione.org>
-	<53121151.9050804@redhat.com>
-	<CAOQ7t2ae35E-eiQW4DFspdTe3H7AWGzRpw4B_1t27p0OSkX_Uw@mail.gmail.com>
-	<53123507.6020607@redhat.com>
-	<531782DF.6090209@redhat.com>
-	<CAOQ7t2bx1u73kxQVa3AeQ-hZ9nP3GSukEdXk-jRNwbT0vUH4+A@mail.gmail.com>
-	<531848E5.4050704@redhat.com>
-	<CAOQ7t2aVchEe0Mtbp8KV4ZTzE_0C0BeO15S7aF4nJx6PaBno=w@mail.gmail.com>
-	<5318568E.4040405@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDWJTUUC5UCBBZNZ4GMAKGQE4554ANY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <5318568E.4040405-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, wens Tsai <wens-jdAy2FN1RRM@public.gmane.org>, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] ARM: mvebu: add Device Tree for the Armada 385 RD board
+Date: Thu,  6 Mar 2014 13:11:08 +0100
+Message-ID: <1394107868-26094-1-git-send-email-gregory.clement@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 6, 2014 at 12:05 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->
-> Ah, yes but that is before you added all the regulators, which are a fixed part
-> of the chip. Once you get long dts bits like that having a dtsi file makes a lot
-> of sense IMHO. Note that the part of the dts this was discussing is actually the part
-> I did not put in the dtis, since it can vary per board :)
+The Armada 385 RD board is the reference design board from Marvell
+for the Armada 385 SoC. This commit adds a Device Tree description for
+this board, which enables the following features:
 
-Oook, now it makes sense. The idea was to integrate axp20x.dtsi at a
-later time, but probably I was misunderstood. Thank you for clarifying
-it.
-I'll put axp20x.dtsi back in v2.
+ * Network interfaces
+ * I2C bus
+ * Serial port
+ * SPI bus, with a SPI flash
+ * PCIe interface
+
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+Hi,
+
+I have received this board only recently, so that why its device tree
+comes only now. This patch should not cause any trouble to other part
+of the kernel, so that's why I think it is reasonable to have it in
+3.15.
 
 Thanks,
 
+Gregory
+
+
+ arch/arm/boot/dts/Makefile          |   3 +-
+ arch/arm/boot/dts/armada-385-rd.dts | 104 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 106 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/armada-385-rd.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index f7d678808122..9155cf48e1b1 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -153,7 +153,8 @@ dtb-$(CONFIG_MACH_ARMADA_370) += \
+ dtb-$(CONFIG_MACH_ARMADA_375) += \
+ 	armada-375-db.dtb
+ dtb-$(CONFIG_MACH_ARMADA_38X) += \
+-	armada-385-db.dtb
++	armada-385-db.dtb \
++	armada-385-rd.dtb
+ dtb-$(CONFIG_MACH_ARMADA_XP) += \
+ 	armada-xp-axpwifiap.dtb \
+ 	armada-xp-db.dtb \
+diff --git a/arch/arm/boot/dts/armada-385-rd.dts b/arch/arm/boot/dts/armada-385-rd.dts
+new file mode 100644
+index 000000000000..951bd91059e1
+--- /dev/null
++++ b/arch/arm/boot/dts/armada-385-rd.dts
+@@ -0,0 +1,104 @@
++/*
++ * Device Tree file for Marvell Armada 385 Reference Design board
++ * (RD-88F6820-AP)
++ *
++ *  Copyright (C) 2014 Marvell
++ *
++ * Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
++ * Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++/dts-v1/;
++#include "armada-385.dtsi"
++
++/ {
++	model = "Marvell Armada 385 Reference Design";
++	compatible = "marvell,a385-rd", "marvell,armada385", "marvell,armada38x";
++
++	chosen {
++		bootargs = "console=ttyS0,115200 earlyprintk";
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x00000000 0x10000000>; /* 256 MB */
++	};
++
++	soc {
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000
++			  MBUS_ID(0x01, 0x1d) 0 0xfff00000 0x100000>;
++
++		internal-regs {
++			spi@10600 {
++				status = "okay";
++
++				spi-flash@0 {
++					#address-cells = <1>;
++					#size-cells = <1>;
++					compatible = "m25p128";
++					reg = <0>; /* Chip select 0 */
++					spi-max-frequency = <108000000>;
++				};
++			};
++
++			i2c@11000 {
++				status = "okay";
++				clock-frequency = <100000>;
++			};
++
++			serial@12000 {
++				clock-frequency = <200000000>;
++				status = "okay";
++			};
++
++
++			/*
++			 * The Ethernet nodes are not ordered by
++			 * address on purpose. Indeed the first
++			 * Ethernet port of the board (Giga0) is
++			 * located at 0x70000 whereas the the second
++			 * Ethernet(Giga 1) port is located at
++			 * 0x30000.
++			 */
++
++			ethernet@70000 {
++				status = "okay";
++				phy = <&phy0>;
++				phy-mode = "rgmii";
++			};
++
++			ethernet@30000 {
++				status = "okay";
++				phy = <&phy1>;
++				phy-mode = "rgmii";
++			};
++
++
++			mdio {
++				phy0: ethernet-phy@0 {
++					reg = <0>;
++				};
++
++				phy1: ethernet-phy@1 {
++					reg = <1>;
++				};
++			};
++		};
++
++		pcie-controller {
++			status = "okay";
++			/*
++			 * One PCIe units is accessible through
++			 * standard PCIe slot on the board.
++			 */
++			pcie@1,0 {
++				/* Port 0, Lane 0 */
++				status = "okay";
++			};
++		};
++	};
++};
 -- 
-Carlo Caione
+1.8.1.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
