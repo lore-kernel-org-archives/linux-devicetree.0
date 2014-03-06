@@ -1,68 +1,66 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 00/10] arch/arm OMAP IOMMU patches for 3.15
-Date: Wed, 5 Mar 2014 18:24:09 -0600
-Message-ID: <1394065459-16409-1-git-send-email-s-anna@ti.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 6/6] documentation: bindings: document PMIC8921/8058 RTC
+Date: Wed, 05 Mar 2014 17:31:27 -0800
+Message-ID: <5317CFEF.1060003@codeaurora.org>
+References: <1394047776-13827-1-git-send-email-joshc@codeaurora.org> <1394047776-13827-7-git-send-email-joshc@codeaurora.org> <5317900F.5030803@codeaurora.org> <20140306000058.GE18529@joshc.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20140306000058.GE18529@joshc.qualcomm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Josh Cartwright <joshc@codeaurora.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul, Benoit,
+On 03/05/14 16:00, Josh Cartwright wrote:
+> On Wed, Mar 05, 2014 at 12:58:55PM -0800, Stephen Boyd wrote:
+>> On 03/05/14 11:29, Josh Cartwright wrote:
+>>> diff --git a/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt b/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt
+>>> new file mode 100644
+>>> index 0000000..699bd30
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt
+>>> @@ -0,0 +1,29 @@
+>>> +* Real-Time Clock for Qualcomm 8058/8921 PMICs
+>>> +
+>>> +Required properties:
+>>> +- compatible: should be one of the following.
+>>> +    * "qcom,pm8058-rtc"
+>>> +    * "qcom,pm8921-rtc"
+>>> +- reg: base address of the register region
+>>> +- reg-names: corresponding reg names for the regions listed in the 'reg'
+>>> +             property, must contain:
+>>> +     "rtc_base" - base of the RTC register region
+>> optional reg-names?
+>>
+>>> +- interrupts: interrupt list for the RTC, must contain a single interrupt
+>>> +              specifier for the alarm interrupt
+>>> +- interrupt-names: corresponding interrupt names for the interrupts listed in
+>>> +                   the 'interrupts' property, must contain:
+>>> +     "alarm" - summary interrupt for PMIC peripherals
+>> optional interrupt-names?
+> It isn't clear to me why these should be made optional, I hope Rob
+> provides some clarification in the sdhci-msm thread.
 
-This is a repost as per Tony's request [3] of all the OMAP IOMMU DT support
-patches that are under arch/arm. The series just assimilates patches 8
-through 13 from the v3 OMAP IOMMU DT adaptation for 3.15 series [1], and
-all the v2 patches from the OMAP IOMMU DTS nodes [2].
+Looks like the driver isn't using either of these properties, so I'm not
+sure why they're needed. Maybe they should just be removed.
 
-The only change made with respect to the patches above is in the OMAP4
-and OMAP5 DTS nodes - I have adjusted the reg sizes from 0xff to 0x100.
+>
+>
+>>> +- linux,allow-set-time: indicates that the setting of RTC time is allowed by
+>>> +                        the host CPU
+>> Is this a "linux" property? It seems like something that other OSes
+>> would want to know about and doesn't require any explicit knowledge
+>> about operating  system things (like keymaps for example).
+> Yeah, I wasn't quite sure how to name this property.  It's
+> Linux-specific in the sense that the underlying operation method is
+> "set_time", but I agree this should be named something else...
+>
+> How do you feel about simply "allow-set-time"?
 
-Can you please provide your acks on the hwmod patches and DTS
-patches?
-
-regards
-Suman
-
-[1] http://marc.info/?l=linux-omap&m=139362022805667&w=2
-[2] http://marc.info/?l=linux-omap&m=139362062805816&w=2
-[3] http://marc.info/?l=linux-omap&m=139404802021252&w=2
-
-Florian Vaussard (4):
-  ARM: OMAP3: remove deprecated CONFIG_OMAP_IOMMU_IVA2
-  ARM: dts: OMAP3: Update ISP IOMMU node
-  ARM: dts: OMAP3: Add IVA IOMMU node
-  ARM: dts: OMAP4: Add IOMMU nodes
-
-Suman Anna (6):
-  ARM: OMAP3: fix iva mmu programming issues
-  ARM: OMAP2+: change the ISP device archdata MMU name for DT
-  ARM: OMAP2+: use pdata quirks for iommu reset lines
-  ARM: OMAP5: hwmod data: add mmu data for ipu & dsp
-  ARM: OMAP2+: extend iommu pdata-quirks to OMAP5
-  ARM: dts: OMAP5: Add IOMMU nodes
-
- arch/arm/boot/dts/omap3.dtsi                | 15 ++++--
- arch/arm/boot/dts/omap4.dtsi                | 15 ++++++
- arch/arm/boot/dts/omap5.dtsi                | 15 ++++++
- arch/arm/mach-omap2/clockdomains3xxx_data.c |  2 +-
- arch/arm/mach-omap2/devices.c               |  3 ++
- arch/arm/mach-omap2/omap_hwmod_3xxx_data.c  | 12 ++---
- arch/arm/mach-omap2/omap_hwmod_54xx_data.c  | 83 +++++++++++++++++++++++++++++
- arch/arm/mach-omap2/pdata-quirks.c          | 24 +++++++++
- arch/arm/plat-omap/Kconfig                  |  3 --
- 9 files changed, 157 insertions(+), 15 deletions(-)
+Sounds ok to me.
 
 -- 
-1.9.0
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
