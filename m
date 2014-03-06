@@ -1,176 +1,105 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 2/5] ARM: dts: AM4372: Add USB nodes
-Date: Thu, 6 Mar 2014 10:49:29 +0200
-Message-ID: <53183699.8070106@ti.com>
-References: <1393854834-23810-1-git-send-email-george.cherian@ti.com> <1393854834-23810-3-git-send-email-george.cherian@ti.com>
+From: Anton Tikhomirov <av.tikhomirov@samsung.com>
+Subject: RE: [PATCH v9 3/4] phy: Add new Exynos USB 2.0 PHY driver
+Date: Thu, 06 Mar 2014 17:52:15 +0900
+Message-ID: <006201cf3919$5f760750$1e6215f0$%tikhomirov@samsung.com>
+References: <1394033288-5551-1-git-send-email-k.debski@samsung.com>
+ <1394033288-5551-4-git-send-email-k.debski@samsung.com>
+ <005c01cf3915$c53476c0$4f9d6440$%tikhomirov@samsung.com>
+ <53183220.3040606@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=Windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393854834-23810-3-git-send-email-george.cherian@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: George Cherian <george.cherian@ti.com>, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: anatol.pomozov@gmail.com, gregkh@linuxfoundation.org, balbi@ti.com, kishon@ti.com, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, bcousson@baylibre.com, tony@atomide.com
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <53183220.3040606@ti.com>
+Content-language: en-us
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Kishon Vijay Abraham I' <kishon@ti.com>, 'Kamil Debski' <k.debski@samsung.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kyungmin.park@samsung.com, t.figa@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samsung.com, gautam.vivek@samsung.com, mat.krawczuk@gmail.com, yulgon.kim@samsung.com, p.paneri@samsung.com, jg1.han@samsung.com, galak@codeaurora.org, matt.porter@linaro.org, tjakobi@math.uni-bielefeld.de, stern@rowland.harvard.edu, sander@humilis.net
 List-Id: devicetree@vger.kernel.org
 
-Hi George,
+Hello,
 
-On 03/03/2014 03:53 PM, George Cherian wrote:
-> Add nodes for 2 instances each of
-> 	- ocp2scp
-> 	- USB PHY control module
-> 	- USB PHY
-> 	- dwc3_omap
-> 	- USB
+> Subject: Re: [PATCH v9 3/4] phy: Add new Exynos USB 2.0 PHY driver
 > 
-> for AM43xx.
 > 
-> Signed-off-by: George Cherian <george.cherian@ti.com>
-> ---
->  arch/arm/boot/dts/am4372.dtsi | 99 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 99 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-> index 5a7cc38..90408b3 100644
-> --- a/arch/arm/boot/dts/am4372.dtsi
-> +++ b/arch/arm/boot/dts/am4372.dtsi
-> @@ -698,6 +698,105 @@
->  			       <&edma 11>;
->  			dma-names = "tx", "rx";
->  		};
-> +
-> +		am43xx_control_usb2phy1: control-phy@44e10620 {
-> +			compatible = "ti,control-phy-am437usb2";
-
-Since this is the first usage of this compatible ID, we still have room to
-change it to be better. Tony's suggestion was to use "ti,control-phy-am437-usb2"
-
-Please see
-http://article.gmane.org/gmane.linux.drivers.devicetree/64833
-
-> +			reg = <0x44e10620 0x4>;
-> +			reg-names = "power";
-> +			status = "disabled";
-
-Why disable something that is within the SoC and does not affect board configurations? 
-
-Question applies for all the nodes in this patch except the ones that come out on the
-SoC pins. e.g. PHY.
-
-> +		};
-> +
-> +		am43xx_control_usb2phy2: control-phy@0x44e10628 {
-> +			compatible = "ti,control-phy-am437usb2";
-> +			reg = <0x44e10628 0x4>;
-> +			reg-names = "power";
-> +			status = "disabled";
-> +		};
-> +
-> +		ocp2scp0: ocp2scp@483a8000 {
-> +			compatible = "ti,omap-ocp2scp";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +			ti,hwmods = "ocp2scp0";
-> +			status = "disabled";
-> +
-> +			usb2_phy1: usb2phy1@483a8000 {
-
-should be
-			usb2_phy1: phy@483a8000 {
-
-> +				compatible = "ti,am437x-usb2";
-> +				reg = <0x483a8000 0x8000>;
-> +				ctrl-module = <&am43xx_control_usb2phy1>;
-> +				clocks = <&clk_32768_ck>,
-> +					 <&usb_otg_ss0_refclk960m>;
-> +				clock-names = "usb_phy_cm_clk32k",
-> +					      "usb_otg_ss_refclk960m";
-
-clock-names should be platform independent. Better option would be to
-modify the usb2 driver to use names like "wkupclk" and "refclk"
-
-> +				#phy-cells = <0>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +
-> +		ocp2scp1: ocp2scp@483e8000 {
-> +			compatible = "ti,omap-ocp2scp";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +			ti,hwmods = "ocp2scp1";
-> +			status = "disabled";
-> +
-> +			usb2_phy2: usb2phy2@483e8000 {
-> +				compatible = "ti,am437x-usb2";
-> +				reg = <0x483e8000 0x8000>;
-> +				ctrl-module = <&am43xx_control_usb2phy2>;
-> +				clocks = <&clk_32768_ck>,
-> +					 <&usb_otg_ss1_refclk960m>;
-> +				clock-names = "usb_phy_cm_clk32k",
-> +					      "usb_otg_ss_refclk960m";
-> +				#phy-cells = <0>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +
-> +		dwc3_1: omap_dwc3_1@48380000 {
-> +			compatible = "ti,am437x-dwc3";
-> +			ti,hwmods = "usb_otg_ss0";
-> +			reg = <0x48380000 0x10000>;
-> +			interrupts = <GIC_SPI 172 IRQ_TYPE_LEVEL_HIGH>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			utmi-mode = <1>;
-> +			ranges;
-> +			status = "disabled";
-> +
-> +			usb1: usb@48390000 {
-> +				compatible = "synopsys,dwc3";
-> +				reg = <0x48390000 0x17000>;
-> +				interrupts = <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
-> +				usb-phy = <&usb2_phy1>;
-
-shouldn't this be		phys = <&usb2_phy1>;	?
-
-> +				phy-names = "usb2-phy";
-
-what about
-	maximum-speed = "high-speed";
-and
-	dr_mode = "otg"; ?
-
-> +				status = "disabled";
-> +			};
-> +		};
-> +
-> +		dwc3_2: omap_dwc3_2@483c0000 {
-> +			compatible = "ti,am437x-dwc3";
-> +			ti,hwmods = "usb_otg_ss1";
-> +			reg = <0x483c0000 0x10000>;
-> +			interrupts = <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			utmi-mode = <1>;
-> +			ranges;
-> +			status = "disabled";
-> +
-> +			usb2: usb@483d0000 {
-> +				compatible = "synopsys,dwc3";
-> +				reg = <0x483d0000 0x17000>;
-> +				interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> +				usb-phy = <&usb2_phy2>;
-> +				phy-names = "usb2-phy";
-> +				status = "disabled";
-> +			};
-> +		};
-> +
->  	};
->  };
->  
+> On Thursday 06 March 2014 01:56 PM, Anton Tikhomirov wrote:
+> > Hi Kamil,
+> >
+> > ...
+> >
+> >> +| 3. Supporting SoCs
+> >> ++--------------------
+> >> +
+> >> +To support a new SoC a new file should be added to the drivers/phy
+> >> +directory. Each SoC's configuration is stored in an instance of the
+> >> +struct samsung_usb2_phy_config.
+> >> +
+> >> +struct samsung_usb2_phy_config {
+> >> +	const struct samsung_usb2_common_phy *phys;
+> >> +	unsigned int num_phys;
+> >> +	bool has_mode_switch;
+> >
+> > You missed rate_to_clk here.
+> >
+> >> +};
+> >> +
+> >
+> > ...
+> >
+> >> diff --git a/drivers/phy/phy-samsung-usb2.c b/drivers/phy/phy-
+> samsung-
+> >> usb2.c
+> >> new file mode 100644
+> >> index 0000000..c3b7719
+> >> --- /dev/null
+> >> +++ b/drivers/phy/phy-samsung-usb2.c
+> >> @@ -0,0 +1,222 @@
+> >> +/*
+> >> + * Samsung SoC USB 1.1/2.0 PHY driver
+> >> + *
+> >> + * Copyright (C) 2013 Samsung Electronics Co., Ltd.
+> >> + * Author: Kamil Debski <k.debski@samsung.com>
+> >> + *
+> >> + * This program is free software; you can redistribute it and/or
+> >> modify
+> >> + * it under the terms of the GNU General Public License version 2
+> as
+> >> + * published by the Free Software Foundation.
+> >> + */
+> >> +
+> >> +#include <linux/clk.h>
+> >> +#include <linux/mfd/syscon.h>
+> >> +#include <linux/module.h>
+> >> +#include <linux/of.h>
+> >> +#include <linux/of_address.h>
+> >> +#include <linux/phy/phy.h>
+> >> +#include <linux/platform_device.h>
+> >> +#include <linux/spinlock.h>
+> >> +#include "phy-samsung-usb2.h"
+> >> +
+> >> +static int samsung_usb2_phy_power_on(struct phy *phy)
+> >> +{
+> >> +	struct samsung_usb2_phy_instance *inst = phy_get_drvdata(phy);
+> >> +	struct samsung_usb2_phy_driver *drv = inst->drv;
+> >> +	int ret;
+> >> +
+> >> +	dev_dbg(drv->dev, "Request to power_on \"%s\" usb phy\n",
+> >> +		inst->cfg->label);
+> >> +	ret = clk_prepare_enable(drv->clk);
+> >
+> > clk_prepare_enable() can sleep, and therefore doesn't allow
+> > samusng_usb2_phy_power_on() to be used in atomic context
+> > (e.g. inside spin_lock-ed area), what sometimes may be desirable.
+> > What about to prepare clock in probe, and just enable it here
+> > (note: clk_enable() doesn't sleep).
 > 
+> The PHY power-on callback is anyway called with mutex held, so I guess
+> it's fine to have clk_prepare_enable() here.
 
-cheers,
--roger
+If we rely totally on generic PHY functions such as phy_power_on()
+and friends, why do we need to use locking in callbacks at all.
+
+> 
+> Thanks
+> Kishon
