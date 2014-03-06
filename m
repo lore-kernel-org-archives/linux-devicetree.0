@@ -1,53 +1,77 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: Re: [PATCH 0/7] mfd: AXP20x: Add support for AXP202
- and AXP209
-Date: Thu, 6 Mar 2014 11:10:55 +0100
-Message-ID: <CAOQ7t2aVchEe0Mtbp8KV4ZTzE_0C0BeO15S7aF4nJx6PaBno=w@mail.gmail.com>
-References: <1393692352-10839-1-git-send-email-carlo@caione.org>
-	<53121151.9050804@redhat.com>
-	<CAOQ7t2ae35E-eiQW4DFspdTe3H7AWGzRpw4B_1t27p0OSkX_Uw@mail.gmail.com>
-	<53123507.6020607@redhat.com>
-	<531782DF.6090209@redhat.com>
-	<CAOQ7t2bx1u73kxQVa3AeQ-hZ9nP3GSukEdXk-jRNwbT0vUH4+A@mail.gmail.com>
-	<531848E5.4050704@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: imx6qdl-sabresd.dtsi: Add red led
+Date: Thu, 6 Mar 2014 11:13:11 +0100
+Message-ID: <20140306101311.GZ17250@pengutronix.de>
+References: <20140305062216.GI8784@S2101-09.ap.freescale.net>
+ <1394007383-21874-1-git-send-email-vincent.stehle@freescale.com>
+ <20140305114223.GN8784@S2101-09.ap.freescale.net>
+ <20140305193925.GY21483@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDWJTUUC5UCBBPET4GMAKGQE5RNG7QY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <531848E5.4050704-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, wens Tsai <wens-jdAy2FN1RRM@public.gmane.org>, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140305193925.GY21483-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent =?iso-8859-15?Q?Stehl=E9?= <vincent.stehle-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 6, 2014 at 11:07 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> Hi,
->
-> On 03/05/2014 09:46 PM, Carlo Caione wrote:
->> On Wed, Mar 5, 2014 at 9:02 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->>>
->>> So I've added your patches to my sunxi-devel tree and they work as advertised :)
->>
->> Thank you for keeping the tree updated :)
->>
->>> I've also added dt support for the axp209 to the cubietruck dts file, to avoid
->>> things becoming a copy and paste fest I've introduced a new axp209.dtsi file,
->>> as well as did some fixes to the existing sun?i-a*.dtsi files, see my tree here:
->>> https://github.com/jwrdegoede/linux-sunxi/commits/sunxi-devel
->>
->> That was also my idea (creating a new axp20x.dtsi) but it has been
->> turned down by Maxime and Lee
->
-> Hmm, do you have a pointer to the mailinglist discussion about this ?
+On Wed, Mar 05, 2014 at 07:39:26PM +0000, Russell King - ARM Linux wrote:
+> On Wed, Mar 05, 2014 at 07:42:28PM +0800, Shawn Guo wrote:
+> > It's not a hog pin, so shouldn't be added here.  (Right, most of the
+> > existing pins shouldn't be here from the beginning)
+> 
+> On the subject of that kind of thing... I have an issue with the existing
+> pinmux stuff.  This is a wider issue than your discussion above...
+> 
+> I regard the idea of requiring the pinmux to be configured as part of
+> the driver probe a rather broken concept - yes, it makes sense in some
+> scenarios, but for the vast majority of cases, it doesn't.
+> 
+> Let's take an example.  A pin is wired to a SPDIF transceiver.  The
+> out-of-reset SoC configuration results in the pin turning the LED on
+> in the SPDIF transceiver.
+> 
+> With the way stuff is setup, with the driver having the pinmux settings
+> for itself, the point at which that pin gets configured is when the
+> driver loads, which may be a module - so that can happen quite late in
+> the boot sequence.  A failure to boot can result in it not happening at
+> all.
+> 
+> So, this brings up the obvious question: is this proper behaviour of the
+> hardware, or is this something we should do better with - such as where
+> we know what the settings should be for a platform, and these settings
+> never change, we arrange for that to happen at kernel boot time as a
+> once-off.
+> 
+> For example, in the above case, we know it's board XYZ, we know that this
+> pin is connected to the SPDIF transceiver, so maybe we should configure
+> it early on in the boot sequence whether or not the driver has been
+> configured and/or loaded.
 
-Sure, http://www.spinics.net/lists/arm-kernel/msg306497.html
+I have a similar case here on my desk. Our customer provided us a
+complete list of pinmux and drive strength settings which must just be
+written into registers. It's very convenient to skip the entire kernel
+pinmux setup. With the driver core setting up the pins this is easily
+possible, we only have to skip the pinctrl nodes from the devices.
+The only exception currently is the imx-esdhci which manually tries
+to setup its pinmux.
 
-Best,
+So with the current pinctrl stuff it's possible to do pinctrl completely
+in the bootloader or as Shawn suggested, you can also put it in the hog
+group.
+
+Maybe we just have to state somewhere that doing so is not just a
+byproduct but instead can and should be done if necessary.
+
+Sascha
 
 -- 
-Carlo Caione
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
