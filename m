@@ -1,105 +1,105 @@
-From: Anton Tikhomirov <av.tikhomirov@samsung.com>
-Subject: RE: [PATCH v9 3/4] phy: Add new Exynos USB 2.0 PHY driver
-Date: Thu, 06 Mar 2014 17:52:15 +0900
-Message-ID: <006201cf3919$5f760750$1e6215f0$%tikhomirov@samsung.com>
-References: <1394033288-5551-1-git-send-email-k.debski@samsung.com>
- <1394033288-5551-4-git-send-email-k.debski@samsung.com>
- <005c01cf3915$c53476c0$4f9d6440$%tikhomirov@samsung.com>
- <53183220.3040606@ti.com>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 3/9] Doc/DT: Add DT binding documentation for DVI Connector
+Date: Thu, 6 Mar 2014 10:52:00 +0200
+Message-ID: <53183730.5060205@ti.com>
+References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>	<1393590016-9361-4-git-send-email-tomi.valkeinen@ti.com>	<20140228155937.GQ21483@n2100.arm.linux.org.uk>	<5310B567.7040605@ti.com>	<20140228162327.GT21483@n2100.arm.linux.org.uk>	<5316E31F.9050308@ti.com> <CAMuHMdWVSfKrudBhE7FW-ZWBvMOLWjrQZvn1qZUfRt_H+P7A2w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=Windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <53183220.3040606@ti.com>
-Content-language: en-us
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Kishon Vijay Abraham I' <kishon@ti.com>, 'Kamil Debski' <k.debski@samsung.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kyungmin.park@samsung.com, t.figa@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samsung.com, gautam.vivek@samsung.com, mat.krawczuk@gmail.com, yulgon.kim@samsung.com, p.paneri@samsung.com, jg1.han@samsung.com, galak@codeaurora.org, matt.porter@linaro.org, tjakobi@math.uni-bielefeld.de, stern@rowland.harvard.edu, sander@humilis.net
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="TQJ1RXgncEldqqG3JXXPILmUer1UDHP3I"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdWVSfKrudBhE7FW-ZWBvMOLWjrQZvn1qZUfRt_H+P7A2w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DRI Development <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+--TQJ1RXgncEldqqG3JXXPILmUer1UDHP3I
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-> Subject: Re: [PATCH v9 3/4] phy: Add new Exynos USB 2.0 PHY driver
-> 
-> 
-> 
-> On Thursday 06 March 2014 01:56 PM, Anton Tikhomirov wrote:
-> > Hi Kamil,
-> >
-> > ...
-> >
-> >> +| 3. Supporting SoCs
-> >> ++--------------------
-> >> +
-> >> +To support a new SoC a new file should be added to the drivers/phy
-> >> +directory. Each SoC's configuration is stored in an instance of the
-> >> +struct samsung_usb2_phy_config.
-> >> +
-> >> +struct samsung_usb2_phy_config {
-> >> +	const struct samsung_usb2_common_phy *phys;
-> >> +	unsigned int num_phys;
-> >> +	bool has_mode_switch;
-> >
-> > You missed rate_to_clk here.
-> >
-> >> +};
-> >> +
-> >
-> > ...
-> >
-> >> diff --git a/drivers/phy/phy-samsung-usb2.c b/drivers/phy/phy-
-> samsung-
-> >> usb2.c
-> >> new file mode 100644
-> >> index 0000000..c3b7719
-> >> --- /dev/null
-> >> +++ b/drivers/phy/phy-samsung-usb2.c
-> >> @@ -0,0 +1,222 @@
-> >> +/*
-> >> + * Samsung SoC USB 1.1/2.0 PHY driver
-> >> + *
-> >> + * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-> >> + * Author: Kamil Debski <k.debski@samsung.com>
-> >> + *
-> >> + * This program is free software; you can redistribute it and/or
-> >> modify
-> >> + * it under the terms of the GNU General Public License version 2
-> as
-> >> + * published by the Free Software Foundation.
-> >> + */
-> >> +
-> >> +#include <linux/clk.h>
-> >> +#include <linux/mfd/syscon.h>
-> >> +#include <linux/module.h>
-> >> +#include <linux/of.h>
-> >> +#include <linux/of_address.h>
-> >> +#include <linux/phy/phy.h>
-> >> +#include <linux/platform_device.h>
-> >> +#include <linux/spinlock.h>
-> >> +#include "phy-samsung-usb2.h"
-> >> +
-> >> +static int samsung_usb2_phy_power_on(struct phy *phy)
-> >> +{
-> >> +	struct samsung_usb2_phy_instance *inst = phy_get_drvdata(phy);
-> >> +	struct samsung_usb2_phy_driver *drv = inst->drv;
-> >> +	int ret;
-> >> +
-> >> +	dev_dbg(drv->dev, "Request to power_on \"%s\" usb phy\n",
-> >> +		inst->cfg->label);
-> >> +	ret = clk_prepare_enable(drv->clk);
-> >
-> > clk_prepare_enable() can sleep, and therefore doesn't allow
-> > samusng_usb2_phy_power_on() to be used in atomic context
-> > (e.g. inside spin_lock-ed area), what sometimes may be desirable.
-> > What about to prepare clock in probe, and just enable it here
-> > (note: clk_enable() doesn't sleep).
-> 
-> The PHY power-on callback is anyway called with mutex held, so I guess
-> it's fine to have clk_prepare_enable() here.
+On 06/03/14 10:39, Geert Uytterhoeven wrote:
+> On Wed, Mar 5, 2014 at 9:41 AM, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> =
+wrote:
+>> On 28/02/14 18:23, Russell King - ARM Linux wrote:
+>>
+>>> That's rather a lot of compatible strings.  Another possibility is:
+>>>
+>>>       compatible =3D "dvi-connector";
+>>>       analog;
+>>>       digital;
+>>>       single-link;
+>>>       dual-link;
+>>
+>> I made the following changes compared to the posted version. I decided=
 
-If we rely totally on generic PHY functions such as phy_power_on()
-and friends, why do we need to use locking in callbacks at all.
+>> to leave the "single-link" out, as it's implied if "digital" is set.
+>>
+>>  Tomi
+>>
+>> @@ -6,11 +6,16 @@ Required properties:
+>>
+>>  Optional properties:
+>>  - label: a symbolic name for the connector
+>> -- i2c-bus: phandle to the i2c bus that is connected to DVI DDC
+>> +- ddc-i2c-bus: phandle to the i2c bus that is connected to DVI DDC
+>> +- analog: the connector has DVI analog pins
+>> +- digital: the connector has DVI digital pins
+>> +- dual-link: the connector has pins for DVI dual-link
+>>
+>>  Required nodes:
+>>  - Video port for DVI input
+>>
+>> +Note: One (or both) of 'analog' or 'digital' must be set.
+>=20
+> So dual-link needs both "digital" and "dual-link"?
 
-> 
-> Thanks
-> Kishon
+Yes. It is extra, but it felt clearer to me to have 'digital' as a
+matching property for 'analog'.
+
+Alternatively we could have three options:
+
+analog;
+digital-single-link;
+digital-dual-link;
+
+My reasoning to the format I chose was basically that when a connector
+supports 'digital', it contains TMDS clock and TMDS data for link 1.
+Adding dual link to that adds only TMDS data for link 2, so the second
+data link is kind of an additional feature, marked with a flag.
+
+Not a very big argument, and I'm fine with other format suggestions.
+
+ Tomi
+
+
+
+--TQJ1RXgncEldqqG3JXXPILmUer1UDHP3I
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJTGDcwAAoJEPo9qoy8lh71DvwP/jhYkTe3hYf29HbZhf1U8Dt+
+P9XVeGNFi1II4FiJYWOnWsjaUHGKdX0ZmiWRhJp7vahH8GOgq1OoPkXUXcq4gE9G
+1P8DE17/hENU99UxKcuQ1GgEMMUh0lls00a8HKpVTdpBKqXfpBKMSELpP6S2gy0s
+gOiJ/WjgfoSBAwxqa4ef7RfRIPO5jFksxey4i8Dgoiojot48spWMHi58D7vxxiui
+ofMp+0q4FUKrhvpzqsjIMdoQl9pBwlewclAvWd0KJD72yuqIlkLjlzeg1ffPHEia
+pnM9wyH22Bz9qXsiQ2Lrs0k/Kfn0VYYghd8yPSGuJpNIJm4AmgteBOMJVdCQOIdE
+pQ/XINd1aL2pby6SsRVWImfTXsYqKW8cFRLI8K67nJ8mRtui+qiBjxDlxy98i6Dc
+XYMekIzigLHmsd5os6BQv7/RHp4hVDtvhsOYk0TTZYzeps4oXLJmsnfRVXrI0rqY
+zR7vU4EdHDbq/cGCjogrnX1lHb7vtJQ+FpRvB0AiBTQyGAU32tjpFmFZjesUwbLZ
+K6g4g1LXh0buUmgyiWE3R/1U2ZuziewcBhHSH7x1/geI7+NICgjbF5M+hItWEshf
+uUaka4fh0d5+zVD0xNSg90VEZ3faJ5imEu0JYLmgJylIa/dAazTxxR1epplTJDOH
+jniXnavF3ZvM1z4rfMJh
+=Vdsd
+-----END PGP SIGNATURE-----
+
+--TQJ1RXgncEldqqG3JXXPILmUer1UDHP3I--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
