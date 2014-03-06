@@ -1,45 +1,72 @@
-From: Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] fix build error in gpio-dwapb patch
-Date: Thu, 6 Mar 2014 13:29:40 -0600
-Message-ID: <1394134180-23208-1-git-send-email-delicious.quinoa@gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 3/9] phy-rcar-usb-gen2: add device tree support
+Date: Thu, 06 Mar 2014 23:54:53 +0300
+Message-ID: <5318E09D.6000305@cogentembedded.com>
+References: <1394128887-4197-1-git-send-email-ben.dooks@codethink.co.uk> <1394128887-4197-4-git-send-email-ben.dooks@codethink.co.uk> <5318C973.70501@cogentembedded.com> <5318BC3A.808@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-68IGFXMjmZ7QT0dZR+AlfA@public.gmane.org>
-Cc: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, delicious quinoa <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Yves Vandervennet <rocket.yvanderv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <5318BC3A.808@codethink.co.uk>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: linux-sh@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@lists.codethink.co.uk, magnus.damn@opensource.se, horms@verge.net.au, Felipe Balbi <balbi@ti.com>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Hello.
 
-fix build error with this message:
-kernel/irq/Kconfig:41:error: recursive dependency detected!
-kernel/irq/Kconfig:41:  symbol GENERIC_IRQ_CHIP is selected by GPIO_DWAPB
-drivers/gpio/Kconfig:131:       symbol GPIO_DWAPB depends on IRQ_DOMAIN
-kernel/irq/Kconfig:46:  symbol IRQ_DOMAIN is selected by GENERIC_IRQ_CHIP
+On 03/06/2014 09:19 PM, Ben Dooks wrote:
 
-Signed-off-by: Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
----
- drivers/gpio/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>>> Add support for the phy-rcar-gen2-usb driver to be probed from device
+>>> tree.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 9979017..0e524d7 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -132,7 +132,7 @@ config GPIO_DWAPB
- 	tristate "Synopsys DesignWare APB GPIO driver"
- 	select GPIO_GENERIC
- 	select GENERIC_IRQ_CHIP
--	depends on OF_GPIO && IRQ_DOMAIN
-+	depends on OF_GPIO
- 	help
- 	  Say Y or M here to build support for the Synopsys DesignWare APB
- 	  GPIO block.
--- 
-1.7.9.5
+>>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>> Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
+[...]
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>   drivers/usb/phy/phy-rcar-gen2-usb.c                | 34
+>>> +++++++++++++++++---
+>>>   3 files changed, 66 insertions(+), 5 deletions(-)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/usb/renesas,rcar-gen2-usb-phy.txt
+
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/usb/renesas,rcar-gen2-usb-phy.txt
+>>> b/Documentation/devicetree/bindings/usb/renesas,rcar-gen2-usb-phy.txt
+>>> new file mode 100644
+>>> index 0000000..5351a30
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/usb/renesas,rcar-gen2-usb-phy.txt
+>>> @@ -0,0 +1,36 @@
+>>> +Renesas RCar gen2 USB PHY bindings
+>>> +----------------------------------
+>>> +
+>>> +Bindings for the USB PHY block used in some Renesas SoCs.
+>>> +
+>>> +Required properties:
+>>> + - compatible:  "renesas,usb-phy-r8a7790" for the R8A7790 SoC
+>>> +        "renesas,usb-phy-r8a7791" for the R8A7791 SoC
+>>> + - reg : A single region to access device registers
+>>> + - clocks : The reference to the clock to use for this block
+>>> + - clock-names : The name for the clock at index 0 (must be "usbhs")
+>>> +
+>>> +Optional properties:
+>>> +
+>>> + - renesas,usb0-device: boolean, if present USB0 is connected to HS
+>>> device
+>>> +            otherwise the USB0 is connected to OHCI/EHCI host.
+
+>>     IIUC, the testing has shown that USBHS is dual-role controller in
+>> that case, i.e. supports both host and device roles (the manual has the
+>> host controller details too). Vladimir, is it so?
+
+> Currently there is no auto-detection for this, so it gets set at
+> start time.
+
+    The mode can be auto-detected by reading SW5. My point was however, that 
+it doesn't seem correct to call the prop "renesas,usb0-device". I'd rather 
+suggest "renesas,usb0-usbhs" if you keep sticking to the scheme opposite to 
+the platform data.
+
+WBR, Sergei
+
