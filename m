@@ -1,85 +1,157 @@
-From: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v6 0/8] Move device tree graph parsing helpers to drivers/of
-Date: Thu, 06 Mar 2014 12:17:21 -0300
-Message-ID: <20140306121721.6186dafb@samsung.com>
-References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de>
- <53170C00.20200@ti.com> <1394030554.8754.31.camel@paszta.hi.pengutronix.de>
- <20140306141657.GB21483@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20140306141657.GB21483-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH v2] ARM: mvebu: add Device Tree for the Armada 385 RD board
+Date: Thu,  6 Mar 2014 16:17:55 +0100
+Message-ID: <1394119075-18657-1-git-send-email-gregory.clement@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Em Thu, 06 Mar 2014 14:16:57 +0000
-Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> escreveu:
+The Armada 385 RD board is the reference design board from Marvell
+for the Armada 385 SoC. This commit adds a Device Tree description for
+this board, which enables the following features:
 
-> On Wed, Mar 05, 2014 at 03:42:34PM +0100, Philipp Zabel wrote:
-> > Am Mittwoch, den 05.03.2014, 13:35 +0200 schrieb Tomi Valkeinen:
-> > > Hi,
-> > > 
-> > > On 05/03/14 11:20, Philipp Zabel wrote:
-> > > > Hi,
-> > > > 
-> > > > this version of the OF graph helper move series further addresses a few of
-> > > > Tomi's and Sylwester's comments.
-> > > > 
-> > > > Changes since v5:
-> > > >  - Fixed spelling errors and a wrong device node name in the link section
-> > > >  - Added parentless previous endpoint's full name to warning
-> > > >  - Fixed documentation comment for of_graph_parse_endpoint
-> > > >  - Unrolled for-loop in of_graph_get_remote_port_parent
-> > > > 
-> > > > Philipp Zabel (8):
-> > > >   [media] of: move graph helpers from drivers/media/v4l2-core to
-> > > >     drivers/of
-> > > >   Documentation: of: Document graph bindings
-> > > >   of: Warn if of_graph_get_next_endpoint is called with the root node
-> > > >   of: Reduce indentation in of_graph_get_next_endpoint
-> > > >   [media] of: move common endpoint parsing to drivers/of
-> > > >   of: Implement simplified graph binding for single port devices
-> > > >   of: Document simplified graph binding for single port devices
-> > > >   of: Warn if of_graph_parse_endpoint is called with the root node
-> > > 
-> > > So, as I've pointed out, I don't agree with the API, as it's too limited
-> > > and I can't use it, but as this series is (mostly) about moving the
-> > > current API to a common place, it's fine for me.
-> > > 
-> > > Acked-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-> > 
-> > Thanks. I'll be happy to help expanding the API to parse ports
-> > individually, once this gets accepted.
-> > 
-> > Mauro, Guennadi, are you fine with how this turned out? I'd like to get
-> > your acks again, for the changed location.
+ * Network interfaces
+ * I2C bus
+ * Serial port
+ * SPI bus, with a SPI flash
+ * PCIe interface
 
->From my side, there's nothing on such code that is V4L2 specific.
-Moving it to drivers/of makes sense on my eyes.
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+---
+Changelog:
+v1 -> v2:
 
-Acked-by: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> 
-> I'll need those acks before I can even think about queuing up the
-> imx-drm bits.
-> 
-> Another way to deal with this is if this gets pulled into the V4L tree
-> from Philipp's git tree, I can also pull that in myself.  What mustn't
-> happen is for these to be committed independently as patches.
+- used the phy-mode "rgmii-id" to be able to work with the Marvell PHY
+  driver enabled
 
-If everyone agrees, I actually prefer have this patch applied on my tree,
-in order to avoid some potential merge conflicts at the merge window,
-as we might have other drivers and changes there touching on those API
-calls (I'm aware of a series of patches from Sylwester with some DT
-stuff on it. Not sure if it would be affected by such changes or not).
+- put the ethernet nodes in the address order, as it has no effect to
+  change ti at this level (should be done at dtsi level)
 
+- inverted the phy devices (which was improperly assigned in v1)
+
+- added the vendor prefix for the SPI flash
+
+
+ arch/arm/boot/dts/Makefile          |  3 +-
+ arch/arm/boot/dts/armada-385-rd.dts | 94 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 96 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/armada-385-rd.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 7407ee8961cf..670897b9e915 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -153,7 +153,8 @@ dtb-$(CONFIG_MACH_ARMADA_370) += \
+ dtb-$(CONFIG_MACH_ARMADA_375) += \
+ 	armada-375-db.dtb
+ dtb-$(CONFIG_MACH_ARMADA_38X) += \
+-	armada-385-db.dtb
++	armada-385-db.dtb \
++	armada-385-rd.dtb
+ dtb-$(CONFIG_MACH_ARMADA_XP) += \
+ 	armada-xp-axpwifiap.dtb \
+ 	armada-xp-db.dtb \
+diff --git a/arch/arm/boot/dts/armada-385-rd.dts b/arch/arm/boot/dts/armada-385-rd.dts
+new file mode 100644
+index 000000000000..45250c88814b
+--- /dev/null
++++ b/arch/arm/boot/dts/armada-385-rd.dts
+@@ -0,0 +1,94 @@
++/*
++ * Device Tree file for Marvell Armada 385 Reference Design board
++ * (RD-88F6820-AP)
++ *
++ *  Copyright (C) 2014 Marvell
++ *
++ * Gregory CLEMENT <gregory.clement@free-electrons.com>
++ * Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++/dts-v1/;
++#include "armada-385.dtsi"
++
++/ {
++	model = "Marvell Armada 385 Reference Design";
++	compatible = "marvell,a385-rd", "marvell,armada385", "marvell,armada38x";
++
++	chosen {
++		bootargs = "console=ttyS0,115200 earlyprintk";
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x00000000 0x10000000>; /* 256 MB */
++	};
++
++	soc {
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000
++			  MBUS_ID(0x01, 0x1d) 0 0xfff00000 0x100000>;
++
++		internal-regs {
++			spi@10600 {
++				status = "okay";
++
++				spi-flash@0 {
++					#address-cells = <1>;
++					#size-cells = <1>;
++					compatible = "st,m25p128";
++					reg = <0>; /* Chip select 0 */
++					spi-max-frequency = <108000000>;
++				};
++			};
++
++			i2c@11000 {
++				status = "okay";
++				clock-frequency = <100000>;
++			};
++
++			serial@12000 {
++				clock-frequency = <200000000>;
++				status = "okay";
++			};
++
++			ethernet@30000 {
++				status = "okay";
++				phy = <&phy0>;
++				phy-mode = "rgmii-id";
++			};
++
++			ethernet@70000 {
++				status = "okay";
++				phy = <&phy1>;
++				phy-mode = "rgmii-id";
++			};
++
++
++			mdio {
++				phy0: ethernet-phy@0 {
++					reg = <0>;
++				};
++
++				phy1: ethernet-phy@1 {
++					reg = <1>;
++				};
++			};
++		};
++
++		pcie-controller {
++			status = "okay";
++			/*
++			 * One PCIe units is accessible through
++			 * standard PCIe slot on the board.
++			 */
++			pcie@1,0 {
++				/* Port 0, Lane 0 */
++				status = "okay";
++			};
++		};
++	};
++};
 -- 
-
-Cheers,
-Mauro
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.1.2
