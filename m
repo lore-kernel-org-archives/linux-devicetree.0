@@ -1,78 +1,40 @@
 From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: [PATCH 5/9] ARM: shmbobile: r8a7790.dtsi: add pci0/1/2 nodes
-Date: Thu,  6 Mar 2014 18:01:23 +0000
-Message-ID: <1394128887-4197-6-git-send-email-ben.dooks@codethink.co.uk>
+Subject: [PATCH 8/9] ARM: shmobile: lager.dts: add usbphy reference
+Date: Thu,  6 Mar 2014 18:01:26 +0000
+Message-ID: <1394128887-4197-9-git-send-email-ben.dooks@codethink.co.uk>
 References: <1394128887-4197-1-git-send-email-ben.dooks@codethink.co.uk>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1394128887-4197-1-git-send-email-ben.dooks@codethink.co.uk>
 Sender: linux-sh-owner@vger.kernel.org
 To: linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
-Cc: linux-kernel@lists.codethink.co.uk, sergei.shtylyov@cogentembedded.com, magnus.damn@opensource.se, horms@verge.net.au, Ben Dooks <ben.dooks@codethink.co.uk>, devicetree@vger.kernel.org, horms+renesas@verge.net.au
+Cc: linux-kernel@lists.codethink.co.uk, sergei.shtylyov@cogentembedded.com, magnus.damn@opensource.se, horms@verge.net.au, Ben Dooks <ben.dooks@codethink.co.uk>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add nodes for USB PCI bridge devices.
+Enable the usbphy node so that the phy driver is available.
 
 Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
 ---
-Cc: devicetree@vger.kernel.org
 Cc: linux-sh@vger.kernel.org
-Cc: horms+renesas@verge.net.au
-
-Conflicts:
-	arch/arm/boot/dts/r8a7790.dtsi
+Cc: devicetree@vger.kernel.org
+Cc: Magnus Damm <magnus.damm@gmail.com>
+Cc: Simon Horman <horms@verge.net.au>
 ---
- arch/arm/boot/dts/r8a7790.dtsi | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ arch/arm/boot/dts/r8a7790-lager.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-index a1e7c39..7325fee 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -763,4 +763,43 @@
- 		#size-cells = <0>;
- 		status = "disabled";
- 	};
-+
-+	pci0: pci@ee090000  {
-+		compatible = "renesas,pci-r8a7790";
-+		clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
-+		reg = <0x0 0xee090000 0x0 0xc00>,
-+		      <0x0 0xee080000 0x0 0x1100>;
-+		interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
-+		status = "disabled";
-+
-+		bus-range = <0 0>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+	};
-+
-+	pci1: pci@ee0b0000  {
-+		compatible = "renesas,pci-r8a7790";
-+		clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
-+		reg = <0x0 0xee0b0000 0x0 0xc00>,
-+		      <0x0 0xee0a0000 0x0 0x1100>;
-+		interrupts = <0 112 IRQ_TYPE_LEVEL_HIGH>;
-+		status = "disabled";
-+
-+		bus-range = <1 1>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+	};
-+
-+	pci2: pci@ee0d0000  {
-+		compatible = "renesas,pci-r8a7790";
-+		clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
-+		reg = <0x0 0xee0d0000 0x0 0xc00>,
-+		      <0x0 0xee0c0000 0x0 0x1100>;
-+		interrupts = <0 113 IRQ_TYPE_LEVEL_HIGH>;
-+		status = "disabled";
-+
-+		bus-range = <2 2>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+	};
+diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
+index fd6851f..63d58d6 100644
+--- a/arch/arm/boot/dts/r8a7790-lager.dts
++++ b/arch/arm/boot/dts/r8a7790-lager.dts
+@@ -246,3 +246,7 @@
+ 	pinctrl-0 = <&usb2_pins>;
+ 	pinctrl-names = "default";
  };
++
++&usbphy {
++	status = "okay";
++};
 -- 
 1.9.0
 
