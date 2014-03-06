@@ -1,43 +1,83 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 3/3] pinctrl: mvebu: silence WARN to dev_warn
-Date: Thu, 6 Mar 2014 15:18:03 -0500
-Message-ID: <20140306201803.GL1872@titan.lakedaemon.net>
-References: <1393977790-29110-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1393977790-29110-4-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Belisko Marek <marek.belisko@gmail.com>
+Subject: Re: [PATCH v2] power: twl4030-madc-battery: Convert to iio consumer.
+Date: Thu, 6 Mar 2014 22:10:19 +0100
+Message-ID: <CAAfyv34X1naNEyht0q+bD3QUjCxLJribmfWfZkP073WS7ve4kA@mail.gmail.com>
+References: <1394052739-8589-1-git-send-email-marek@goldelico.com>
+	<1394052739-8589-2-git-send-email-marek@goldelico.com>
+	<20140305232513.GA9542@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1393977790-29110-4-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140305232513.GA9542@earth.universe>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Reichel <sre@debian.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 05, 2014 at 01:03:10AM +0100, Sebastian Hesselbarth wrote:
-> Pinctrl will WARN on missing DT resources, which is a little bit too
-> noisy. Use dev_warn with FW_BUG instead.
-> 
-> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> 
-> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> 
-> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org 
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org 
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  drivers/pinctrl/mvebu/pinctrl-dove.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+Hi Sebastian,
 
-Applied to mvebu/pinctrl
+On Thu, Mar 6, 2014 at 12:25 AM, Sebastian Reichel <sre@debian.org> wrote:
+> Hi Marek,
+>
+> I just have one comment:
+>
+> On Wed, Mar 05, 2014 at 09:52:17PM +0100, Marek Belisko wrote:
+>> [...]
+>> -static int madc_read(int index)
+>> +static int madc_read(struct iio_channel *channel)
+>>  {
+>> -     struct twl4030_madc_request req;
+>> -     int val;
+>> -
+>> -     req.channels = index;
+>> -     req.method = TWL4030_MADC_SW2;
+>> -     req.type = TWL4030_MADC_WAIT;
+>> -     req.do_avg = 0;
+>> -     req.raw = false;
+>> -     req.func_cb = NULL;
+>> -
+>> -     val = twl4030_madc_conversion(&req);
+>> -     if (val < 0)
+>> -             return val;
+>> -
+>> -     return req.rbuf[ffs(index) - 1];
+>> +     int val, err;
+>> +     err = iio_read_channel_processed(channel, &val);
+>> +     if (err < 0) {
+>> +             pr_info("Error:%d\n", err);
+>
+> This should be "Error: %d\n" (with a space).
+Ups this is remain from debugging messages. I'll remove it and re-post patches.
+Thanks.
+>
+> Apart from that you should use dev_info() or dev_err(), so that the
+> message is properly prefixed by the device. Currently there is no
+> hint where this error message is generated.
+>
+>> +             return err;
+>> +     }
+>> +     return val;
+>>  }
+>> [...]
+>
+> After fixing this you can add
+>
+> Reviewed-By: Sebastian Reichel <sre@debian.org>
+>
+> -- Sebastian
 
-thx,
+BR,
 
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+marek
+
+-- 
+as simple and primitive as possible
+-------------------------------------------------
+Marek Belisko - OPEN-NANDRA
+Freelance Developer
+
+Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
+Tel: +421 915 052 184
+skype: marekwhite
+twitter: #opennandra
+web: http://open-nandra.com
