@@ -1,37 +1,140 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] mfd: da9055: Add DT binding documentation for PMIC
-Date: Thu, 6 Mar 2014 17:22:25 +0800
-Message-ID: <20140306092225.GE16034@lee--X1>
-References: <cover.1394018471.git.Adam.Thomson.Opensource@diasemi.com>
- <566f6e7e74d468c49a667f5181292f431946070a.1394018471.git.Adam.Thomson.Opensource@diasemi.com>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: [PATCH 4/7] of: configure the platform device dma_mask and dma_pfn_offset
+Date: Thu, 6 Mar 2014 17:19:55 +0800
+Message-ID: <1394097598-17622-5-git-send-email-santosh.shilimkar@ti.com>
+References: <1394097598-17622-1-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <566f6e7e74d468c49a667f5181292f431946070a.1394018471.git.Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1394097598-17622-1-git-send-email-santosh.shilimkar@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mfd/da9055.txt |   72 ++++++++++++=
-++++++++++
->  1 files changed, 72 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/da9055.txt
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-Applied, thanks.
+Retrieve DMA configuration from DT and setup platform device's DMA
+parameters.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The DMA configuration in DT has to be specified using "dma-ranges"
+property if supported. The DMA configuration applied
+by dt_dma_configure() as following:
+ - call of_get_dma_range() and get supported DMA range info
+   (dma_addr, cpu_addr, dma_size);
+ - if "not found" then fill dma_mask as DMA_BIT_MASK(32)
+   (this is default behaviour);
+ - if "failed" then clean up dma_mask (DMA not supported)
+ - if ok then update devices DMA configuration:
+      set dma_mask to (dma_addr + dma_size - 1)
+      set dma_pfn_offset to PFN_DOWN(cpu_addr - dma_addr)
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Olof Johansson <olof@lixom.net>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+---
+ drivers/of/platform.c |   75 +++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 72 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index bd080db..53bb12f 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -187,6 +187,77 @@ struct platform_device *of_device_alloc(struct device_node *np,
+ EXPORT_SYMBOL(of_device_alloc);
+ 
+ /**
++ * dt_dma_configure - apply default DMA configuration from dt
++ * @dev:	Device to apply DMA configuration
++ *
++ * Try to get devices's DMA configuration from DT and apply it.
++ * The DMA configuration is represented in DT by "dma-ranges" property.
++ * It configures:
++ *	dma_pfn_offset, dma_mask and coherent_dma_mask.
++ *
++ * In case if DMA configuration can't be acquired from DT the default one is
++ * applied:
++ *	dma_pfn_offset = 0,
++ *	dma_mask = DMA_BIT_MASK(32)
++ *	coherent_dma_mask = DMA_BIT_MASK(32).
++ *
++ * In case if platform code need to use own DMA configuration - it can use
++ * Platform bus notifier and handle BUS_NOTIFY_ADD_DEVICE event to fix up
++ * DMA configuration.
++ */
++static void dt_dma_configure(struct device *dev)
++{
++	dma_addr_t dma_addr;
++	phys_addr_t paddr, size;
++	dma_addr_t dma_mask;
++	int ret;
++
++	/*
++	 * if dma-ranges property doesn't exist - use 32 bits DMA mask
++	 * by default and don't set skip archdata.dma_pfn_offset
++	 */
++	ret = of_dma_get_range(dev->of_node, &dma_addr, &paddr, &size);
++	if (ret == -ENODEV) {
++		dev->coherent_dma_mask = DMA_BIT_MASK(32);
++		if (!dev->dma_mask)
++			dev->dma_mask = &dev->coherent_dma_mask;
++		return;
++	}
++
++	/* if failed - disable DMA for device */
++	if (ret < 0) {
++		dev_err(dev, "failed to configure DMA\n");
++		return;
++	}
++
++	/* DMA ranges found. Calculate and set dma_pfn_offset */
++	dev->dma_pfn_offset = PFN_DOWN(paddr - dma_addr);
++
++	/* Configure DMA mask */
++	dev->dma_mask = &dev->coherent_dma_mask;
++	if (!dev->dma_mask)
++		return;
++
++	dma_mask = dma_addr + size - 1;
++
++	ret = dma_set_mask(dev, dma_mask);
++	if (ret < 0) {
++		dev_err(dev, "failed to set DMA mask %pad\n", &dma_mask);
++		dev->dma_mask = NULL;
++		return;
++	}
++
++	dev_dbg(dev, "dma_pfn_offset(%#08lx) dma_mask(%pad)\n",
++		dev->dma_pfn_offset, dev->dma_mask);
++
++	ret = dma_set_coherent_mask(dev, dma_mask);
++	if (ret < 0) {
++		dev_err(dev, "failed to set coherent DMA mask %pad\n",
++			&dma_mask);
++	}
++}
++
++/**
+  * of_platform_device_create_pdata - Alloc, initialize and register an of_device
+  * @np: pointer to node to create device for
+  * @bus_id: name to assign device
+@@ -214,9 +285,7 @@ static struct platform_device *of_platform_device_create_pdata(
+ #if defined(CONFIG_MICROBLAZE)
+ 	dev->archdata.dma_mask = 0xffffffffUL;
+ #endif
+-	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+-	if (!dev->dev.dma_mask)
+-		dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
++	dt_dma_configure(&dev->dev);
+ 	dev->dev.bus = &platform_bus_type;
+ 	dev->dev.platform_data = platform_data;
+ 
+-- 
+1.7.9.5
