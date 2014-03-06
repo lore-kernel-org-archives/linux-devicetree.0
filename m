@@ -1,81 +1,39 @@
-From: Tanmay Inamdar <tinamdar@apm.com>
-Subject: [PATCH v4 3/4] dt-bindings: pci: xgene pcie device tree bindings
-Date: Wed,  5 Mar 2014 22:06:02 -0800
-Message-ID: <1394085963-27553-4-git-send-email-tinamdar@apm.com>
-References: <1394085963-27553-1-git-send-email-tinamdar@apm.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1394085963-27553-1-git-send-email-tinamdar@apm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches@apm.com, jcm@redhat.com, Tanmay Inamdar <tinamdar@apm.com>
+From: Tushar Behera <tushar.behera@linaro.org>
+Subject: [PATCH 0/2] Move header files from dt-bindings/clk to dt-bindings/clock
+Date: Thu,  6 Mar 2014 11:34:42 +0530
+Message-ID: <1394085884-13081-1-git-send-email-tushar.behera@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@maxim.org.za, plagnioj@jcrosoft.com, kgene.kim@samsung.com, t.figa@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the bindings for X-Gene PCIe driver. The driver resides
-under 'drivers/pci/host/pci-xgene.c' file.
+Clock related headers files are mostly located in include/dt-bindings/clock
+folder. There are only 2 header files left in include/dt-bindings/clk. Move them
+to the most used folder.
 
-Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
----
- .../devicetree/bindings/pci/xgene-pci.txt          |   52 ++++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/xgene-pci.txt
+All changes related to a single file movement are contained in a single patch
+to avoid any build breakage.
 
-diff --git a/Documentation/devicetree/bindings/pci/xgene-pci.txt b/Documentation/devicetree/bindings/pci/xgene-pci.txt
-new file mode 100644
-index 0000000..e19fdb8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/xgene-pci.txt
-@@ -0,0 +1,52 @@
-+* AppliedMicro X-Gene PCIe interface
-+
-+Required properties:
-+- device_type: set to "pci"
-+- compatible: should contain "apm,xgene-pcie" to identify the core.
-+- reg: A list of physical base address and length for each set of controller
-+       registers. Must contain an entry for each entry in the reg-names
-+       property.
-+- reg-names: Must include the following entries:
-+  "csr": controller configuration registers.
-+  "cfg": pcie configuration space registers.
-+- #address-cells: set to <3>
-+- #size-cells: set to <2>
-+- ranges: ranges for the outbound memory, I/O regions.
-+- dma-ranges: ranges for the inbound memory regions.
-+- #interrupt-cells: set to <1>
-+- interrupt-map-mask and interrupt-map: standard PCI properties
-+	to define the mapping of the PCIe interface to interrupt
-+	numbers.
-+- clocks: from common clock binding: handle to pci clock.
-+
-+Optional properties:
-+- status: Either "ok" or "disabled".
-+
-+Example:
-+
-+SoC specific DT Entry:
-+	pcie0: pcie@1f2b0000 {
-+		status = "disabled";
-+		device_type = "pci";
-+		compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
-+		#interrupt-cells = <1>;
-+		#size-cells = <2>;
-+		#address-cells = <3>;
-+		reg = < 0x00 0x1f2b0000 0x0 0x00010000   /* Controller registers */
-+			0xe0 0xd0000000 0x0 0x00200000>; /* PCI config space */
-+		reg-names = "csr", "cfg";
-+		ranges = <0x01000000 0x00 0x00000000 0xe0 0x00000000 0x00 0x00010000   /* io */
-+			  0x02000000 0x00 0x10000000 0xe0 0x10000000 0x00 0x80000000>; /* mem */
-+		dma-ranges = <0x42000000 0x40 0x00000000 0x40 0x00000000 0x40 0x00000000>;
-+		interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+		interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xc2 0x1
-+				 0x0 0x0 0x0 0x2 &gic 0x0 0xc3 0x1
-+				 0x0 0x0 0x0 0x3 &gic 0x0 0xc4 0x1
-+				 0x0 0x0 0x0 0x4 &gic 0x0 0xc5 0x1>;
-+		clocks = <&pcie0clk 0>;
-+	};
-+
-+Board specific DT Entry:
-+	&pcie0 {
-+		status = "ok";
-+	};
+The patches are based next-20140305.
+
+Tushar Behera (2):
+  dt-bindings: clock: Move at91.h to dt-bindigs/clock
+  dt-bindings: clock: Move exynos-audss-clk.h to dt-bindings/clock
+
+ .../devicetree/bindings/clock/at91-clock.txt       |    2 +-
+ arch/arm/boot/dts/exynos5250.dtsi                  |    2 +-
+ arch/arm/boot/dts/exynos5420.dtsi                  |    2 +-
+ arch/arm/boot/dts/sama5d3.dtsi                     |    2 +-
+ arch/arm/boot/dts/sama5d3_mci2.dtsi                |    2 +-
+ arch/arm/boot/dts/sama5d3_tcb1.dtsi                |    2 +-
+ arch/arm/boot/dts/sama5d3_uart.dtsi                |    2 +-
+ drivers/clk/samsung/clk-exynos-audss.c             |    2 +-
+ include/dt-bindings/{clk => clock}/at91.h          |    0
+ .../dt-bindings/{clk => clock}/exynos-audss-clk.h  |    0
+ 10 files changed, 8 insertions(+), 8 deletions(-)
+ rename include/dt-bindings/{clk => clock}/at91.h (100%)
+ rename include/dt-bindings/{clk => clock}/exynos-audss-clk.h (100%)
+
 -- 
 1.7.9.5
