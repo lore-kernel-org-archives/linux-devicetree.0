@@ -1,195 +1,156 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 2/5] ARM: dts: AM4372: Add USB nodes
-Date: Thu, 6 Mar 2014 15:12:09 +0200
-Message-ID: <53187429.1000408@ti.com>
-References: <1393854834-23810-1-git-send-email-george.cherian@ti.com> <1393854834-23810-3-git-send-email-george.cherian@ti.com> <53183699.8070106@ti.com> <531869C2.3070905@ti.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH] ARM: mvebu: add Device Tree for the Armada 385 RD board
+Date: Thu, 6 Mar 2014 14:14:29 +0100
+Message-ID: <20140306131429.GJ4780@lunn.ch>
+References: <1394107868-26094-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <531869C2.3070905@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: George Cherian <george.cherian@ti.com>, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: anatol.pomozov@gmail.com, gregkh@linuxfoundation.org, balbi@ti.com, kishon@ti.com, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, bcousson@baylibre.com, tony@atomide.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1394107868-26094-1-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/06/2014 02:27 PM, George Cherian wrote:
-> Hi Roger,
+On Thu, Mar 06, 2014 at 01:11:08PM +0100, Gregory CLEMENT wrote:
+> The Armada 385 RD board is the reference design board from Marvell
+> for the Armada 385 SoC. This commit adds a Device Tree description for
+> this board, which enables the following features:
 > 
-> On 3/6/2014 2:19 PM, Roger Quadros wrote:
->> Hi George,
->>
->> On 03/03/2014 03:53 PM, George Cherian wrote:
->>> Add nodes for 2 instances each of
->>>     - ocp2scp
->>>     - USB PHY control module
->>>     - USB PHY
->>>     - dwc3_omap
->>>     - USB
->>>
->>> for AM43xx.
->>>
->>> Signed-off-by: George Cherian <george.cherian@ti.com>
->>> ---
->>>   arch/arm/boot/dts/am4372.dtsi | 99 +++++++++++++++++++++++++++++++++++++++++++
->>>   1 file changed, 99 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
->>> index 5a7cc38..90408b3 100644
->>> --- a/arch/arm/boot/dts/am4372.dtsi
->>> +++ b/arch/arm/boot/dts/am4372.dtsi
->>> @@ -698,6 +698,105 @@
->>>                      <&edma 11>;
->>>               dma-names = "tx", "rx";
->>>           };
->>> +
->>> +        am43xx_control_usb2phy1: control-phy@44e10620 {
->>> +            compatible = "ti,control-phy-am437usb2";
->> Since this is the first usage of this compatible ID, we still have room to
->> change it to be better. Tony's suggestion was to use "ti,control-phy-am437-usb2"
->>
->> Please see
->> http://article.gmane.org/gmane.linux.drivers.devicetree/64833
+>  * Network interfaces
+>  * I2C bus
+>  * Serial port
+>  * SPI bus, with a SPI flash
+>  * PCIe interface
 > 
-> Okay.
->>> +            reg = <0x44e10620 0x4>;
->>> +            reg-names = "power";
->>> +            status = "disabled";
->> Why disable something that is within the SoC and does not affect board configurations?
->>
->> Question applies for all the nodes in this patch except the ones that come out on the
->> SoC pins. e.g. PHY.
-> Okay
->>> +        };
->>> +
->>> +        am43xx_control_usb2phy2: control-phy@0x44e10628 {
->>> +            compatible = "ti,control-phy-am437usb2";
->>> +            reg = <0x44e10628 0x4>;
->>> +            reg-names = "power";
->>> +            status = "disabled";
->>> +        };
->>> +
->>> +        ocp2scp0: ocp2scp@483a8000 {
->>> +            compatible = "ti,omap-ocp2scp";
->>> +            #address-cells = <1>;
->>> +            #size-cells = <1>;
->>> +            ranges;
->>> +            ti,hwmods = "ocp2scp0";
->>> +            status = "disabled";
->>> +
->>> +            usb2_phy1: usb2phy1@483a8000 {
->> should be
-> okay
->>             usb2_phy1: phy@483a8000 {
->>
->>> +                compatible = "ti,am437x-usb2";
->>> +                reg = <0x483a8000 0x8000>;
->>> +                ctrl-module = <&am43xx_control_usb2phy1>;
->>> +                clocks = <&clk_32768_ck>,
->>> +                     <&usb_otg_ss0_refclk960m>;
->>> +                clock-names = "usb_phy_cm_clk32k",
->>> +                          "usb_otg_ss_refclk960m";
->> clock-names should be platform independent. Better option would be to
->> modify the usb2 driver to use names like "wkupclk" and "refclk"
-> The phy driver still does devm_get_clk using above clock names and not "wkupclk" and "refclk".
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> ---
+> Hi,
 > 
-
-I'll post a patch soon that takes care of both clock names and the compatible ids in
-the phy-omap-usb2.c driver.
-
->>> +                #phy-cells = <0>;
->>> +                status = "disabled";
->>> +            };
->>> +        };
->>> +
->>> +        ocp2scp1: ocp2scp@483e8000 {
->>> +            compatible = "ti,omap-ocp2scp";
->>> +            #address-cells = <1>;
->>> +            #size-cells = <1>;
->>> +            ranges;
->>> +            ti,hwmods = "ocp2scp1";
->>> +            status = "disabled";
->>> +
->>> +            usb2_phy2: usb2phy2@483e8000 {
->>> +                compatible = "ti,am437x-usb2";
->>> +                reg = <0x483e8000 0x8000>;
->>> +                ctrl-module = <&am43xx_control_usb2phy2>;
->>> +                clocks = <&clk_32768_ck>,
->>> +                     <&usb_otg_ss1_refclk960m>;
->>> +                clock-names = "usb_phy_cm_clk32k",
->>> +                          "usb_otg_ss_refclk960m";
->>> +                #phy-cells = <0>;
->>> +                status = "disabled";
->>> +            };
->>> +        };
->>> +
->>> +        dwc3_1: omap_dwc3_1@48380000 {
->>> +            compatible = "ti,am437x-dwc3";
->>> +            ti,hwmods = "usb_otg_ss0";
->>> +            reg = <0x48380000 0x10000>;
->>> +            interrupts = <GIC_SPI 172 IRQ_TYPE_LEVEL_HIGH>;
->>> +            #address-cells = <1>;
->>> +            #size-cells = <1>;
->>> +            utmi-mode = <1>;
->>> +            ranges;
->>> +            status = "disabled";
->>> +
->>> +            usb1: usb@48390000 {
->>> +                compatible = "synopsys,dwc3";
->>> +                reg = <0x48390000 0x17000>;
->>> +                interrupts = <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
->>> +                usb-phy = <&usb2_phy1>;
->> shouldn't this be        phys = <&usb2_phy1>;    ?
+> I have received this board only recently, so that why its device tree
+> comes only now. This patch should not cause any trouble to other part
+> of the kernel, so that's why I think it is reasonable to have it in
+> 3.15.
 > 
-> At the time of writing this patch phys property is still not in.
-> Also generic-phy conversion for dwc3 was recently posted by kishon.
->>> +                phy-names = "usb2-phy";
->> what about
->>     maximum-speed = "high-speed";
->> and
->>     dr_mode = "otg"; ?
+> Thanks,
 > 
-> Done from board file. Actually maximum-speed I can set here.
-> dr_mode is a board property.
-
-Is it a known standard that dr_mode must come from board dts?
-
-I think dr_mode can be set here by default. Board can always override if it
-needs non otg operation.
-
-cheers,
--roger
-
->>> +                status = "disabled";
->>> +            };
->>> +        };
->>> +
->>> +        dwc3_2: omap_dwc3_2@483c0000 {
->>> +            compatible = "ti,am437x-dwc3";
->>> +            ti,hwmods = "usb_otg_ss1";
->>> +            reg = <0x483c0000 0x10000>;
->>> +            interrupts = <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>;
->>> +            #address-cells = <1>;
->>> +            #size-cells = <1>;
->>> +            utmi-mode = <1>;
->>> +            ranges;
->>> +            status = "disabled";
->>> +
->>> +            usb2: usb@483d0000 {
->>> +                compatible = "synopsys,dwc3";
->>> +                reg = <0x483d0000 0x17000>;
->>> +                interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
->>> +                usb-phy = <&usb2_phy2>;
->>> +                phy-names = "usb2-phy";
->>> +                status = "disabled";
->>> +            };
->>> +        };
->>> +
->>>       };
->>>   };
->>>  
->> cheers,
->> -roger
+> Gregory
 > 
 > 
+>  arch/arm/boot/dts/Makefile          |   3 +-
+>  arch/arm/boot/dts/armada-385-rd.dts | 104 ++++++++++++++++++++++++++++++++++++
+>  2 files changed, 106 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/armada-385-rd.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index f7d678808122..9155cf48e1b1 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -153,7 +153,8 @@ dtb-$(CONFIG_MACH_ARMADA_370) += \
+>  dtb-$(CONFIG_MACH_ARMADA_375) += \
+>  	armada-375-db.dtb
+>  dtb-$(CONFIG_MACH_ARMADA_38X) += \
+> -	armada-385-db.dtb
+> +	armada-385-db.dtb \
+> +	armada-385-rd.dtb
+>  dtb-$(CONFIG_MACH_ARMADA_XP) += \
+>  	armada-xp-axpwifiap.dtb \
+>  	armada-xp-db.dtb \
+> diff --git a/arch/arm/boot/dts/armada-385-rd.dts b/arch/arm/boot/dts/armada-385-rd.dts
+> new file mode 100644
+> index 000000000000..951bd91059e1
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/armada-385-rd.dts
+> @@ -0,0 +1,104 @@
+> +/*
+> + * Device Tree file for Marvell Armada 385 Reference Design board
+> + * (RD-88F6820-AP)
+> + *
+> + *  Copyright (C) 2014 Marvell
+> + *
+> + * Gregory CLEMENT <gregory.clement@free-electrons.com>
+> + * Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2.  This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +/dts-v1/;
+> +#include "armada-385.dtsi"
+> +
+> +/ {
+> +	model = "Marvell Armada 385 Reference Design";
+> +	compatible = "marvell,a385-rd", "marvell,armada385", "marvell,armada38x";
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200 earlyprintk";
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x10000000>; /* 256 MB */
+> +	};
+> +
+> +	soc {
+> +		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000
+> +			  MBUS_ID(0x01, 0x1d) 0 0xfff00000 0x100000>;
+> +
+> +		internal-regs {
+> +			spi@10600 {
+> +				status = "okay";
+> +
+> +				spi-flash@0 {
+> +					#address-cells = <1>;
+> +					#size-cells = <1>;
+> +					compatible = "m25p128";
 
+Hi Gregory
+
+I guess checkpatch.pl is probably complaining about missing vendor
+prefix?
+
+> +					reg = <0>; /* Chip select 0 */
+> +					spi-max-frequency = <108000000>;
+> +				};
+> +			};
+> +
+> +			i2c@11000 {
+> +				status = "okay";
+> +				clock-frequency = <100000>;
+> +			};
+> +
+> +			serial@12000 {
+> +				clock-frequency = <200000000>;
+> +				status = "okay";
+> +			};
+> +
+> +
+> +			/*
+> +			 * The Ethernet nodes are not ordered by
+> +			 * address on purpose. Indeed the first
+> +			 * Ethernet port of the board (Giga0) is
+> +			 * located at 0x70000 whereas the the second
+> +			 * Ethernet(Giga 1) port is located at
+> +			 * 0x30000.
+> +			 */
+> +
+> +			ethernet@70000 {
+> +				status = "okay";
+> +				phy = <&phy0>;
+> +				phy-mode = "rgmii";
+> +			};
+> +
+> +			ethernet@30000 {
+> +				status = "okay";
+> +				phy = <&phy1>;
+> +				phy-mode = "rgmii";
+> +			};
+> +
+
+I think you can use aliases to get the order correct, independent of
+how you list them in DT. That should be a lot safer than assuming
+things are instantiated from top to bottom.
+
+       Andrew
