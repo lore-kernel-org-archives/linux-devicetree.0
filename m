@@ -1,48 +1,57 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v6 01/10] Documentation: dt: Add binding documentation
- for S5K6A3 image sensor
-Date: Thu, 06 Mar 2014 21:15:42 +0100
-Message-ID: <5318D76E.80203@gmail.com>
-References: <1394122819-9582-1-git-send-email-s.nawrocki@samsung.com> <1394122819-9582-2-git-send-email-s.nawrocki@samsung.com> <CA+gwMcc7sLp0N5oyCYf-121AzS8KsRdNsvY3DJ7p3z=yVLrBdw@mail.gmail.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH 2/3] devicetree: bindings: drop pinctrl PMU reg property
+Date: Thu, 6 Mar 2014 15:17:28 -0500
+Message-ID: <20140306201728.GK1872@titan.lakedaemon.net>
+References: <1393977790-29110-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1393977790-29110-3-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <CA+gwMcc7sLp0N5oyCYf-121AzS8KsRdNsvY3DJ7p3z=yVLrBdw@mail.gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Philipp Zabel <philipp.zabel@gmail.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-samsung-soc@vger.kernel.org, a.hajda@samsung.com, kyungmin.park@samsung.com, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene.kim@samsung.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1393977790-29110-3-git-send-email-sebastian.hesselbarth@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Phillip,
+On Wed, Mar 05, 2014 at 01:03:09AM +0100, Sebastian Hesselbarth wrote:
+> Marvell Dove's pinctrl does require some PMU regs for muxing PMU
+> functions to MPP pins. Recently, a discussion started about consolidating
+> Power Management Unit (PMU) into a single DT node. As we don't want
+> anymore DT ABI in the way, drop the corresponding reg property from
+> pinctrl binding documentation now.
+> 
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> ---
+> Cc: Rob Herring <robh+dt@kernel.org> 
+> Cc: Pawel Moll <pawel.moll@arm.com> 
+> Cc: Mark Rutland <mark.rutland@arm.com> 
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk> 
+> Cc: Kumar Gala <galak@codeaurora.org> 
+> Cc: Russell King <linux@arm.linux.org.uk> 
+> Cc: Jason Cooper <jason@lakedaemon.net> 
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Gregory Clement <gregory.clement@free-electrons.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: devicetree@vger.kernel.org 
+> Cc: linux-arm-kernel@lists.infradead.org 
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  Documentation/devicetree/bindings/pinctrl/marvell,dove-pinctrl.txt  | 2 +-
+>  Documentation/devicetree/bindings/pinctrl/marvell,mvebu-pinctrl.txt | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 
-On 03/06/2014 07:08 PM, Philipp Zabel wrote:
->> +++ b/Documentation/devicetree/bindings/media/samsung-s5k6a3.txt
->> >  @@ -0,0 +1,33 @@
->> >  +Samsung S5K6A3(YX) raw image sensor
->> >  +---------------------------------
->> >  +
->> >  +S5K6A3(YX) is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
->> >  +and CCI (I2C compatible) control bus.
->> >  +
->> >  +Required properties:
->> >  +
->> >  +- compatible   : "samsung,s5k6a3";
->> >  +- reg          : I2C slave address of the sensor;
->> >  +- svdda-supply : core voltage supply;
->> >  +- svddio-supply        : I/O voltage supply;
->> >  +- afvdd-supply : AF (actuator) voltage supply;
->> >  +- gpios                : specifier of a GPIO connected to the RESET pin;
->
-> Please use 'reset-gpios' for GPIOs connected to reset pins.
+Applied to mvebu/pinctrl
 
-I would prefer to keep it as is, I'm not adding a new driver in this
-series, just the binding documentation and doing some refactoring.
-So if I changed this now, the driver would need to be messed up with
-an additional code to support both 'gpios' and 'reset-gpios'. Are
-there any serious reasons to use this specific name ? It's not
-related to the reset signal DT bindings, is it ?
+thx,
 
---
-Regards,
-Sylwester
+Jason.
