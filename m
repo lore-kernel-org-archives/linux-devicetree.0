@@ -1,72 +1,53 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 3/9] phy-rcar-usb-gen2: add device tree support
-Date: Thu, 06 Mar 2014 23:54:53 +0300
-Message-ID: <5318E09D.6000305@cogentembedded.com>
-References: <1394128887-4197-1-git-send-email-ben.dooks@codethink.co.uk> <1394128887-4197-4-git-send-email-ben.dooks@codethink.co.uk> <5318C973.70501@cogentembedded.com> <5318BC3A.808@codethink.co.uk>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH v2] ARM: mvebu: add Device Tree for the Armada 385 RD
+ board
+Date: Thu, 6 Mar 2014 15:10:59 -0500
+Message-ID: <20140306201059.GI1872@titan.lakedaemon.net>
+References: <1394119075-18657-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <5318BC3A.808@codethink.co.uk>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: linux-sh@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@lists.codethink.co.uk, magnus.damn@opensource.se, horms@verge.net.au, Felipe Balbi <balbi@ti.com>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1394119075-18657-1-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Thu, Mar 06, 2014 at 04:17:55PM +0100, Gregory CLEMENT wrote:
+> The Armada 385 RD board is the reference design board from Marvell
+> for the Armada 385 SoC. This commit adds a Device Tree description for
+> this board, which enables the following features:
+> 
+>  * Network interfaces
+>  * I2C bus
+>  * Serial port
+>  * SPI bus, with a SPI flash
+>  * PCIe interface
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> ---
+> Changelog:
+> v1 -> v2:
+> 
+> - used the phy-mode "rgmii-id" to be able to work with the Marvell PHY
+>   driver enabled
+> 
+> - put the ethernet nodes in the address order, as it has no effect to
+>   change ti at this level (should be done at dtsi level)
+> 
+> - inverted the phy devices (which was improperly assigned in v1)
+> 
+> - added the vendor prefix for the SPI flash
+> 
+> 
+>  arch/arm/boot/dts/Makefile          |  3 +-
+>  arch/arm/boot/dts/armada-385-rd.dts | 94 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 96 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/armada-385-rd.dts
 
-On 03/06/2014 09:19 PM, Ben Dooks wrote:
+Applied to mvebu/dt
 
->>> Add support for the phy-rcar-gen2-usb driver to be probed from device
->>> tree.
+thx,
 
->>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
->>> Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
-[...]
-
->>>   drivers/usb/phy/phy-rcar-gen2-usb.c                | 34
->>> +++++++++++++++++---
->>>   3 files changed, 66 insertions(+), 5 deletions(-)
->>>   create mode 100644
->>> Documentation/devicetree/bindings/usb/renesas,rcar-gen2-usb-phy.txt
-
->>> diff --git
->>> a/Documentation/devicetree/bindings/usb/renesas,rcar-gen2-usb-phy.txt
->>> b/Documentation/devicetree/bindings/usb/renesas,rcar-gen2-usb-phy.txt
->>> new file mode 100644
->>> index 0000000..5351a30
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/usb/renesas,rcar-gen2-usb-phy.txt
->>> @@ -0,0 +1,36 @@
->>> +Renesas RCar gen2 USB PHY bindings
->>> +----------------------------------
->>> +
->>> +Bindings for the USB PHY block used in some Renesas SoCs.
->>> +
->>> +Required properties:
->>> + - compatible:  "renesas,usb-phy-r8a7790" for the R8A7790 SoC
->>> +        "renesas,usb-phy-r8a7791" for the R8A7791 SoC
->>> + - reg : A single region to access device registers
->>> + - clocks : The reference to the clock to use for this block
->>> + - clock-names : The name for the clock at index 0 (must be "usbhs")
->>> +
->>> +Optional properties:
->>> +
->>> + - renesas,usb0-device: boolean, if present USB0 is connected to HS
->>> device
->>> +            otherwise the USB0 is connected to OHCI/EHCI host.
-
->>     IIUC, the testing has shown that USBHS is dual-role controller in
->> that case, i.e. supports both host and device roles (the manual has the
->> host controller details too). Vladimir, is it so?
-
-> Currently there is no auto-detection for this, so it gets set at
-> start time.
-
-    The mode can be auto-detected by reading SW5. My point was however, that 
-it doesn't seem correct to call the prop "renesas,usb0-device". I'd rather 
-suggest "renesas,usb0-usbhs" if you keep sticking to the scheme opposite to 
-the platform data.
-
-WBR, Sergei
-
+Jason.
