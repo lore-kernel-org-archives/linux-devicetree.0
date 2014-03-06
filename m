@@ -1,70 +1,50 @@
-From: Georgi Djakov <gdjakov@mm-sol.com>
-Subject: Re: [PATCH v10 1/3] mmc: sdhci-msm: Qualcomm SDHCI binding documentation
-Date: Thu, 06 Mar 2014 19:45:55 +0200
-Message-ID: <5318B453.9060804@mm-sol.com>
-References: <1393961226-25618-1-git-send-email-gdjakov@mm-sol.com>	<1393961226-25618-2-git-send-email-gdjakov@mm-sol.com> <CAL_JsqKJ5Jn4wb8xtqrc09kkP4dzUA6qDEkK396RW+4qFNVf+Q@mail.gmail.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 6/6] MAINTAINERS: add entry for the Broadcom BCM63xx ARM SoCs
+Date: Thu, 6 Mar 2014 09:45:59 -0800
+Message-ID: <1394127959-3159-7-git-send-email-f.fainelli@gmail.com>
+References: <1394127959-3159-1-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKJ5Jn4wb8xtqrc09kkP4dzUA6qDEkK396RW+4qFNVf+Q@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Chris Ball <cjb@laptop.org>, Ulf Hansson <ulf.hansson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1394127959-3159-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, jpeshkin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/05/2014 08:56 AM, Rob Herring wrote:
-> On Tue, Mar 4, 2014 at 1:27 PM, Georgi Djakov <gdjakov@mm-sol.com> wrote:
-[..]
->> +Required properties:
->> +- compatible: Should contain "qcom,sdhci-msm-v4".
->> +- reg: Base address and length of the register set listed in reg-names.
->> +- reg-names: Should contain the following:
->> +       "hc_mem"   - Host controller register map
->> +       "core_mem" - SD Core register map
->
-> reg-names should not be required and the order specified by the binding.
->
+Add a MAINTAINERS entry covering all the Broadcom BCM63xx ARM DSL SoCs
+files along with the relevant git tree and mailing-list.
 
-Ok, Rob! Thanks!
+Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ MAINTAINERS | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
->> +- interrupts: Should contain an interrupt-specifiers for the interrupts listed in interrupt-names.
->> +- interrupt-names: Should contain the following:
->> +       "hc_irq"     - Host controller interrupt
->> +       "pwr_irq"    - PMIC interrupt
->
-> Same for interrupt-names.
->
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e1297ff255e1..628cfe1c6daa 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1882,6 +1882,16 @@ F:	arch/arm/boot/dts/bcm2835*
+ F:	arch/arm/configs/bcm2835_defconfig
+ F:	drivers/*/*bcm2835*
+ 
++BROADCOM BCM63XX ARM ARCHITECTURE
++M:	Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
++T:	git git://git.github.com/broadcom/arm-bcm63xx
++S:	Maintained
++F:	arch/arm/mach-bcm/board_bcm63xx.c
++F:	arch/arm/mach-bcm/bcm63xx.h
++F:	arch/arm/include/debug/bcm63xxx.S
++F:	arch/arm/configs/bcm_defconfig
++
+ BROADCOM TG3 GIGABIT ETHERNET DRIVER
+ M:	Nithin Nayak Sujir <nsujir-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+ M:	Michael Chan <mchan-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+-- 
+1.8.3.2
 
-Ok.
-
->> +- vdd-supply: Phandle to the regulator for the vdd (core voltage) supply.
->> +- vdd-io-supply: Phandle to the regulator for the vdd-io (i/o voltage) supply.
->> +- pinctrl-names: Should contain only one value - "default".
->> +- pinctrl-0: Should specify pin control groups used for this controller.
->> +- clocks: A list of phandle + clock-specifier pairs for the clocks listed in clock-names.
->> +- clock-names: Should contain the following:
->> +       "iface" - Main peripheral bus clock (PCLK/HCLK - AHB Bus clock) (required)
->> +       "core"  - SDC MMC clock (MCLK) (required)
->> +       "bus"   - SDCC bus voter clock (optional)
->> +
->> +Example:
->> +
->> +       sdhc_1: sdhci@f9824900 {
->> +               compatible = "qcom,sdhci-msm-v4";
->> +               reg = <0xf9824900 0x11c>, <0xf9824000 0x800>;
->
-> Are there cases where these are really in a different 4KB range? If
-> not, this should just be 1 range.
->
-
-Thanks for your suggestion. This sounds reasonable, but in this case,
-I think that it might be better leaving the memory regions separated as 
-it will help avoiding code duplication. I am using the generic 
-sdhci_pltfm_init(), which assumes that the first resource is the HC 
-iomem and configures the host. If I merge them, the HC address will be 
-offset and this might require duplicating some of the init code.
-Is it acceptable to leave it this way?
-
-BR,
-Georgi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
