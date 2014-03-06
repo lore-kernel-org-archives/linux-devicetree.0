@@ -1,78 +1,70 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] dts: mpc512x: adjust clock specs for FEC nodes
-Date: Thu, 6 Mar 2014 11:21:29 +0100
-Message-ID: <20140306102129.GB17250@pengutronix.de>
-References: <1393237557-31406-1-git-send-email-gsi@denx.de>
- <1393237557-31406-2-git-send-email-gsi@denx.de>
- <20140303092231.GS3327@book.gsilab.sittig.org>
- <20140305014836.GC8784@S2101-09.ap.freescale.net>
- <20140305105209.GZ3327@book.gsilab.sittig.org>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] video: ARM CLCD: Add DT support
+Date: Thu, 6 Mar 2014 12:21:34 +0200
+Message-ID: <53184C2E.3000807@ti.com>
+References: <1394036606-17784-1-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="Akl0XEf6Nn5aTGssPp7GFb60uLQ0kXm0n"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140305105209.GZ3327-kDjWylLy9wD0K7fsECOQyeGNnDKD8DIp@public.gmane.org>
+In-Reply-To: <1394036606-17784-1-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jonathan Austin <Jonathan.Austin-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 05, 2014 at 11:52:09AM +0100, Gerhard Sittig wrote:
-> On Wed, Mar 05, 2014 at 09:48 +0800, Shawn Guo wrote:
-> > 
-> > On Mon, Mar 03, 2014 at 10:22:31AM +0100, Gerhard Sittig wrote:
-> > > On Mon, Feb 24, 2014 at 11:25 +0100, Gerhard Sittig wrote:
-> > > > 
-> > > > a recent FEC binding document update that was motivated by i.MX
-> > > > development revealed that ARM and PowerPC implementations in Linux
-> > > > did not agree on the clock names to use for the FEC nodes
-> > > > 
-> > > > change clock names from "per" to "ipg" in the FEC nodes of the
-> > > > mpc5121.dtsi include file such that the .dts specs comply with
-> > > > the common FEC binding
-> > > > 
-> > > > this "incompatible" change does not break operation, because
-> > > > - COMMON_CLK support for MPC5121/23/25 and adjusted .dts files
-> > > >   were only introduced in Linux v3.14-rc1, no mainline release
-> > > >   provided these specs before
-> > > > - if this change won't make it for v3.14, the MPC512x CCF support
-> > > >   provides full backwards compability, and keeps operating with
-> > > >   device trees which lack clock specs or don't match in the names
-> > > > 
-> > > > Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-> > > 
-> > > ping
-> > > 
-> > > Are there opinions about making PowerPC users of FEC use the same
-> > > clock names as ARM users do, to re-use (actually: keep sharing)
-> > > the FEC binding?  The alternative would be to fragment the FEC
-> > > binding into several bindings for ARM and PowerPC, which I feel
-> > > would be undesirable, and is not necessary.
-> > 
-> > As I already said, Documentation/devicetree/bindings/net/fsl-fec.txt
-> > was created specifically for i.MX FEC controller from day one.  And even
-> > as of today, it doesn't serve PowerPC, because for example the property
-> > 'phy-mode' documented as required one is not required by PowerPC FEC.
-> > My opinion would be to patch fsl-fec.txt a little bit to make it clear
-> > that it's a binding doc for i.MX FEC, and create the other one for
-> > PowerPC FEC.  This is the way less confusing to people and easier for
-> > binding maintenance.
-> 
-> Should we still try to have a common behaviour where possible?
-> Such that even if there are two bindings, they don't diverge in
-> "unnecessary" ways?
+--Akl0XEf6Nn5aTGssPp7GFb60uLQ0kXm0n
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Maybe the long term goal should be to share the code. The MPC5200 FEC
-and the i.MX FEC are very similar. Only the DMA engine is quite
-different.
+Hi Pawel,
 
-Sascha
+On 05/03/14 18:23, Pawel Moll wrote:
+> This patch adds basic DT bindings for the PL11x CLCD cells
+> and make their fbdev driver use them.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Is this an old HW, and presumably there won't be new users for it? If
+yes, this is probably fine. If not, you might want to look at the video
+ports and endpoints, which is used by at least three not-yet-merged serie=
+s:
+
+[PATCHv3 00/41] OMAPDSS: DT support v3
+[PATCH v5 00/11] imx-drm dt bindings
+[RFC PATCH v2 00/21] Add DSI display support for Exynos based boards
+
+Using bindings like that would be more future proof, even if the current
+driver doesn't use them.
+
+ Tomi
+
+
+
+--Akl0XEf6Nn5aTGssPp7GFb60uLQ0kXm0n
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJTGEwuAAoJEPo9qoy8lh71pdEP/2+bLsds4O6LJTNLLU4mTkCf
+L+nkfM3QlX9GJlNXXJ8J9V0jrZwMgMXQBnXQyBxhYT2kEaOydtuMakKFSM70FvuZ
++o4XhHfH6DkzzJcz7OmNjfdKUQ4SmSbiPoGnheCv3TJA5UZRCeyYyO8VAACTNUDi
+B9jWE2cR1h/HBQvgtwggoPfpA/GgjCwQhucoFIE7a5DXIEmaUR3ZVRY/raFatDub
+0uIGZMkog9PYp+iRKTZwc0ogdqXBUoz/0xyGN+m+V1ZClP+QD9GaD0J7aWoR4IB1
+GVIZ05I12xhZMM3YCHh6Prmv1urmzGop7Mrlv9iB/64KVXuUz9aF7blGtPi8tC2+
+ZWrCHEN+cZBwLYhTbhd/T7ZOMbDybVGoRjaLlstqsVe2hdCISbLatS+4J16hR5X3
+t3LurMdcP0cIULHyO7XFe3GSfBkKYVy1r1Md8RNFFQPvNs3KnTJA23I3bU+AIVdA
+haAiGqijShmAS08iDMc0V99cAN+n6hlsjwNzQCDfGiBM9bYKY6yBH7Cceqr/NTh6
+6gNY3tM4I/Sz4795g6gy1UQx96wHCXPhNlxH+2T/Re4T8mEYeY0aSV+BIIWvZMdp
+onSJNrMbJBXryugWRnM6duO5ABoYgILSF/8p3iNPE1b35REcguWLry3u7VDf29Na
+79Zmz71bR6agdtp8Ed8z
+=tX/s
+-----END PGP SIGNATURE-----
+
+--Akl0XEf6Nn5aTGssPp7GFb60uLQ0kXm0n--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
