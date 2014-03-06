@@ -1,82 +1,52 @@
 From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [RESEND Patch 1/2] DT: Vendor: Add prefixes used by Kirkwood
- devices
-Date: Thu, 6 Mar 2014 07:25:02 -0500
-Message-ID: <20140306122502.GX1872@titan.lakedaemon.net>
-References: <1394054474-4310-1-git-send-email-andrew@lunn.ch>
- <1394054474-4310-2-git-send-email-andrew@lunn.ch>
- <8738ivy0uo.fsf@natisbad.org>
+Subject: Re: [RESEND Patch 0/3] Prefixes for Kirkwood DT files
+Date: Thu, 6 Mar 2014 07:26:59 -0500
+Message-ID: <20140306122659.GY1872@titan.lakedaemon.net>
+References: <1394055207-4639-1-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <8738ivy0uo.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1394055207-4639-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 06, 2014 at 01:21:03PM +0100, Arnaud Ebalard wrote:
-> Hi Andrew,
+On Wed, Mar 05, 2014 at 10:33:24PM +0100, Andrew Lunn wrote:
+> It has been reported that not all these patches made it to the
+> list. This is probably because git send-email used UTF8 encoded, since
+> some of the hunks contain context lines using none ASCII characters.
 > 
-> Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> writes:
-> 
-> > Add a number of vendor prefixes by kirkwood devices. These are not all
-> > stock tickers, but have been in use for a while so changing would not
-> > be easy.
-> >
-> > Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/vendor-prefixes.txt | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > index c73b435f58f5..860c467374fe 100644
-> > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > @@ -20,2 +20,3 @@ bosch	Bosch Sensortec GmbH
-> >  brcm	Broadcom Corporation
-> > +buffalo	Buffalo, Inc.
-> >  capella	Capella Microsystems, Inc
-> > @@ -30,2 +31,3 @@ davicom	DAVICOM Semiconductor, Inc.
-> >  denx	Denx Software Engineering
-> > +dlink	D-Link Corporation
-> >  edt	Emerging Display Technologies
-> > @@ -35,2 +37,3 @@ epson	Seiko Epson Corp.
-> >  est	ESTeem Wireless Modems
-> > +excito	Excito
-> >  fsl	Freescale Semiconductor
-> > @@ -39,2 +42,3 @@ gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
-> >  gmt	Global Mixed-mode Technology, Inc.
-> > +globalscale	GlobalScale Technologies, Inc.
-> >  gumstix	Gumstix, Inc.
-> > @@ -45,2 +49,3 @@ ibm	International Business Machines (IBM)
-> >  idt	Integrated Device Technologies, Inc.
-> > +iom	Iomega Corporation
-> >  img	Imagination Technologies Ltd.
-> > @@ -49,2 +54,4 @@ isl	Intersil
-> >  karo	Ka-Ro electronics GmbH
-> > +keymile	Keymile GmbH
-> > +lacie	LaCie
-> >  lg	LG Corporation
-> > @@ -56,3 +63,5 @@ microchip	Microchip Technology Inc.
-> >  mosaixtech	Mosaix Technologies, Inc.
-> > +mpl	MPL AG
-> >  national	National Semiconductor
-> > +netgear	Netgear, Inc.
-> 
-> I do not have a strong opinion on it but I think I read on LAKML there
-> was some kind of rule to use ticker symbol for a given vendor if it
-> exists e.g. ntgr for netgear (like fsl for freescale, brcm for broadcom,
-> etc).
+> Andrew Lunn (3):
+>   DT: I2C: Add trivial bindings used by kirkwood boards
+>   DT: Vendors: Add vendor prefix for Macronix
 
-For new symbols, we do try to use the ticker when available.  However,
-it's more important not to break compatibility with DT info already in
-the field.
+Hmmm, I still didn't receive these two.  I'll check an online archive
+later...
 
 thx,
 
 Jason.
+
+>   ARM: Kirkwood: DT: Add missing vendor prefix
+> 
+>  .../devicetree/bindings/i2c/trivial-devices.txt         | 17 +++++++++++++++++
+>  Documentation/devicetree/bindings/vendor-prefixes.txt   |  1 +
+>  arch/arm/boot/dts/kirkwood-b3.dts                       |  2 +-
+>  arch/arm/boot/dts/kirkwood-cloudbox.dts                 |  2 +-
+>  arch/arm/boot/dts/kirkwood-dreamplug.dts                |  2 +-
+>  arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts          |  2 +-
+>  arch/arm/boot/dts/kirkwood-ns2-common.dtsi              |  2 +-
+>  arch/arm/boot/dts/kirkwood-nsa310.dts                   |  2 +-
+>  arch/arm/boot/dts/kirkwood-nsa310a.dts                  |  2 +-
+>  arch/arm/boot/dts/kirkwood-openblocks_a6.dts            |  2 +-
+>  arch/arm/boot/dts/kirkwood-openblocks_a7.dts            |  2 +-
+>  11 files changed, 27 insertions(+), 9 deletions(-)
+> 
+> -- 
+> 1.9.0
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
