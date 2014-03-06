@@ -1,91 +1,94 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH] ARM: mvebu: add Device Tree for the Armada 385 RD board
-Date: Thu, 6 Mar 2014 15:21:17 +0100
-Message-ID: <20140306142117.GL4780@lunn.ch>
-References: <1394107868-26094-1-git-send-email-gregory.clement@free-electrons.com>
- <20140306131429.GJ4780@lunn.ch>
- <5318779C.8030901@free-electrons.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v2 00/13] ARM: OMAP: SATA support for OMAP5 & DRA7
+Date: Thu, 6 Mar 2014 16:22:52 +0200
+Message-ID: <1394115785-28301-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5318779C.8030901-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: kishon@ti.comg, tony@atomide.com, balbi@ti.com
+Cc: devicetree@vger.kernel.org, george.cherian@ti.com, balajitk@ti.com, linux-ide@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, hdegoede@redhat.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rogerq@ti.com
 List-Id: devicetree@vger.kernel.org
 
-> > Hi Gregory
-> > 
-> > I guess checkpatch.pl is probably complaining about missing vendor
-> > prefix?
-> > 
-> 
-> yes and also about m25p128 itself because it was not explicitly written
-> in Documentation/devicetree/bindings/. Actually it was written to "see the
-> "m25p_ids" table in drivers/mtd/devices/m25p80.c for the list of" the compatible
-> name.
-> 
-> For the first warning I can add the vendor part, but for the other warning, do we
-> really want to copy the m25p_ids table in Documentation/devicetree/bindings/mtd/m25p80.txt ?
+Hi,
 
-I think the DT Maintainers and checkpatch.pl maintainers need to think
-about this. Maybe a regex would be enough in
-Documentation/devicetree/bindings/mtd/m25p80.txt?
+This series adds SATA support for OMAP5 uevm and DRA7-evm boards.
 
-For the moment i would suggest adding a vendor prefix, but nothing
-more.
+- Cleans up the ti-pipe3 PHY driver
+- Adds SATA DPLL support to ti-pipe3 PHY driver
+- Adds SATA nodes to hwmod and SoC DT data
 
+Patches are based on 3.14-rc4 with balbi/next, linux-phy/next and
+omap-for-v3.15/dt merged on top..
 
-> >> +			/*
-> >> +			 * The Ethernet nodes are not ordered by
-> >> +			 * address on purpose. Indeed the first
-> >> +			 * Ethernet port of the board (Giga0) is
-> >> +			 * located at 0x70000 whereas the the second
-> >> +			 * Ethernet(Giga 1) port is located at
-> >> +			 * 0x30000.
-> >> +			 */
-> >> +
-> >> +			ethernet@70000 {
-> >> +				status = "okay";
-> >> +				phy = <&phy0>;
-> >> +				phy-mode = "rgmii";
-> >> +			};
-> >> +
-> >> +			ethernet@30000 {
-> >> +				status = "okay";
-> >> +				phy = <&phy1>;
-> >> +				phy-mode = "rgmii";
-> >> +			};
-> >> +
-> > 
-> > I think you can use aliases to get the order correct, independent of
-> > how you list them in DT. That should be a lot safer than assuming
-> > things are instantiated from top to bottom.
-> 
-> It sounds interesting, how would you do this?
+To test SATA you will also need [1].
 
-As there already is in armada-370-xp.dtsi
+[1] - http://article.gmane.org/gmane.comp.hardware.netbook.arm.sunxi/7285
 
-        aliases {
-                eth0 = &eth0;
-                eth1 = &eth1;
-        };
+Changelog:
 
+v2
+- use 'depends on' instead of 'select' OCP2SCP bus driver.
+- Changed DT bindings for dra7-usb2 and am437-usb2 phy.
 
-	eth0: ethernet@70000 {
-	}
-        eth1: ethernet@74000 {
-	}
+cheers,
+-roger
 
-This at least works for i2c devices. The pdev->id is set using the
-alias number.
+---
+Balaji T K (2):
+  ARM: dts: omap5: add sata node
+  ARM: dts: dra7: add OCP2SCP3 and SATA nodes
 
-      Andrew
+Keshava Munegowda (1):
+  ARM: OMAP5: hwmod: Add ocp2scp3 and sata hwmods
 
+Kishon Vijay Abraham I (1):
+  phy: rename struct omap_control_usb to struct omap_control_phy
 
+Nikhil Devshatwar (1):
+  ARM: DRA7: hwmod: Add ocp2scp3 and sata hwmods
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Roger Quadros (8):
+  phy: omap-control: Update DT binding information
+  phy: omap-control: update dra7 and am437 usb2 bindings
+  phy: ti-pipe3: cleanup clock handling
+  phy: ti-pipe3: Add SATA DPLL support
+  phy: ti-pipe3: Don't get 'wkupclk' and 'refclk' for SATA PHY
+  phy: ti-pipe3: streamline PHY operations
+  phy: ti-pipe3: Fix suspend/resume and module reload
+  phy: omap: Depend on OMAP_OCP2SCP bus driver
+
+ Documentation/devicetree/bindings/phy/ti-phy.txt   |  40 ++-
+ Documentation/devicetree/bindings/usb/omap-usb.txt |  24 --
+ arch/arm/boot/dts/dra7.dtsi                        |  39 +++
+ arch/arm/boot/dts/omap5.dtsi                       |  47 ++-
+ arch/arm/mach-omap2/omap_hwmod_54xx_data.c         |  73 +++++
+ arch/arm/mach-omap2/omap_hwmod_7xx_data.c          |  31 +-
+ drivers/phy/Kconfig                                |  16 +-
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-omap-control.c                     | 320 +++++++++++++++++++++
+ drivers/phy/phy-omap-usb2.c                        |   8 +-
+ drivers/phy/phy-ti-pipe3.c                         | 269 ++++++++++-------
+ drivers/usb/musb/omap2430.c                        |   2 +-
+ drivers/usb/phy/Kconfig                            |  10 -
+ drivers/usb/phy/Makefile                           |   1 -
+ drivers/usb/phy/phy-omap-control.c                 | 319 --------------------
+ include/linux/phy/omap_control_phy.h               |  89 ++++++
+ include/linux/usb/omap_control_usb.h               |  89 ------
+ 17 files changed, 815 insertions(+), 563 deletions(-)
+ create mode 100644 drivers/phy/phy-omap-control.c
+ delete mode 100644 drivers/usb/phy/phy-omap-control.c
+ create mode 100644 include/linux/phy/omap_control_phy.h
+ delete mode 100644 include/linux/usb/omap_control_usb.h
+
+-- 
+1.8.3.2
