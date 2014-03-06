@@ -1,79 +1,72 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v5 06/11] imx-drm: imx-tve: Fix DDC I2C bus property
-Date: Thu, 06 Mar 2014 14:32:03 +0100
-Message-ID: <1394112723.3622.7.camel@paszta.hi.pengutronix.de>
-References: <1394011262-16849-1-git-send-email-p.zabel@pengutronix.de>
- <1394011262-16849-7-git-send-email-p.zabel@pengutronix.de>
- <20140306130320.GA21483@n2100.arm.linux.org.uk>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv2 13/14] ARM: OMAP24xx: clock: remove legacy clock data
+Date: Thu, 6 Mar 2014 15:39:30 +0200
+Message-ID: <53187A92.2000809@ti.com>
+References: <1393924700-6510-1-git-send-email-t-kristo@ti.com> <1393924700-6510-14-git-send-email-t-kristo@ti.com> <20140304173200.GA17470@atomide.com> <5316217C.2070906@ti.com> <20140304212811.GA8705@atomide.com> <5316DCF6.6070808@ti.com> <20140305170857.GD4983@atomide.com> <20140305181045.GH4983@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20140306130320.GA21483@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140305181045.GH4983@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, nm@ti.com, mturquette@linaro.org, paul@pwsan.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
+On 03/05/2014 08:10 PM, Tony Lindgren wrote:
+> * Tony Lindgren <tony@atomide.com> [140305 09:12]:
+>> * Tero Kristo <t-kristo@ti.com> [140305 00:17]:
+>>> On 03/04/2014 11:28 PM, Tony Lindgren wrote:
+>>>> * Tero Kristo <t-kristo@ti.com> [140304 10:58]:
+>>>>> On 03/04/2014 07:32 PM, Tony Lindgren wrote:
+>>>>>> * Tero Kristo <t-kristo@ti.com> [140304 01:22]:
+>>>>>>> This is no longer needed as clock data is provided through DT.
+>>>>>>
+>>>>>> Looks like there's a new error even before applying this patch in
+>>>>>> the series as I'm now getting the following oops on n8x0. So cannot
+>>>>>> test this patch yet.
+>>>>>
+>>>>> Is this with OMAP2 only boot?
+>>>>
+>>>> Yeah that's with omap2 only.
+>>>
+>>> That explains it, as previous series was never boot tested in omap2
+>>> only config (due to build issues.)
+>>>
+>>> I just force pushed the branch with the below additional patch, can
+>>> you check if it works now?
+>>
+>> Yes seems to work with that thanks. And with the omap2 legacy clock
+>> data removed too, it boots fine on n8x0 and 2430sdp.
+>>
+>> I suggest you drop the omap3 legacy data patch from this branch
+>> as it's not omap2 related and cannot be done yet. Then try to get
+>> acks from Paul. And if there are no issues, it seems Mike could take
+>> the whole branch as it seems to merge just fine with what I have
+>> queued. So for all the patches except for the omap3 legacy data
+>> removal, feel free to add:
+>>
+>> Acked-by: Tony Lindgren <tony@atomide.com>
+>
+> Found one randconfig error with this series when CONFIG_ARCH_OMAP2
+> is not set:
+>
+> /drivers/clk/ti/dpll.c:273: undefined reference to `omap2xxx_clkt_dpllcore_init'
+> drivers/clk/ti/dpll.c:311: undefined reference to `clkhwops_omap2xxx_dpll'
 
-Am Donnerstag, den 06.03.2014, 13:03 +0000 schrieb Russell King - ARM
-Linux:
-> On Wed, Mar 05, 2014 at 10:20:57AM +0100, Philipp Zabel wrote:
-> > This patch fixes the TV Encoder DDC I2C bus property to use the common
-> > 'ddc-i2c-bus' property name instead of 'ddc'.
-> 
-> Looking at both hdmi and tve, the ddc part is very similar.  The difference
-> is how the probe is handled:
-> 
-> imx-hdmi:
->         ddc_node = of_parse_phandle(np, "ddc", 0);
->         if (ddc_node) {
->                 hdmi->ddc = of_find_i2c_adapter_by_node(ddc_node);
->                 if (!hdmi->ddc)
->                         dev_dbg(hdmi->dev, "failed to read ddc node\n");
-> 
->                 of_node_put(ddc_node);
->         } else {
->                 dev_dbg(hdmi->dev, "no ddc property found\n");
->         }
-> 
-> imx-tve:
->         ddc_node = of_parse_phandle(np, "ddc", 0);
->         if (ddc_node) {
->                 tve->ddc = of_find_i2c_adapter_by_node(ddc_node);
->                 of_node_put(ddc_node);
->         }
+Yeah, this is in this series. Force pushed a minor update to patch #4 to 
+fix this.
 
-panel-simple.c
-        ddc = of_parse_phandle(dev->of_node, "ddc-i2c-bus", 0);
-        if (ddc) {
-                panel->ddc = of_find_i2c_adapter_by_node(ddc);
-                of_node_put(ddc);
+I can repost the series if Mike or Paul or someone requests this.
 
-                if (!panel->ddc) {
-                        err = -EPROBE_DEFER;
-                        goto free_backlight;
-                }
-        }
+-Tero
 
->It appears to differ only by debug prints - is there any reason we
-> couldn't unify the DDC backend part?  I've tinkered with this idea,
-> and already have a patch, though it needs a little rework.
-> 
-> Any thoughts?
+>
+> It's also possible the error is the PRM clean up series, but probably
+> in this series based drivers/clk/ti/dpll.c path.
+>
+> Regards,
+>
+> Tony
+>
 
-there should be a generic helper for obtaining the DDC I2C adapter from
-the device tree. I'd prefer not to stall the imx-drm-dt series on this,
-though.
-
-regards
-Philipp
