@@ -1,71 +1,40 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v2 02/13] phy: omap-control: Update DT binding information
-Date: Thu, 6 Mar 2014 09:58:40 -0600
-Message-ID: <20140306155840.GE25648@saruman.home>
-References: <1394116729-28811-1-git-send-email-rogerq@ti.com>
- <1394116729-28811-3-git-send-email-rogerq@ti.com>
- <531896EB.1050409@ti.com>
-Reply-To: <balbi@ti.com>
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: Re: [PATCH] ARM: mvebu: add Device Tree for the Armada 385 RD board
+Date: Thu, 6 Mar 2014 13:02:13 -0300
+Message-ID: <20140306160213.GA4327@arch.cereza>
+References: <1394107868-26094-1-git-send-email-gregory.clement@free-electrons.com>
+ <20140306131429.GJ4780@lunn.ch>
+ <5318779C.8030901@free-electrons.com>
+ <20140306142117.GL4780@lunn.ch>
+ <531886B4.2070002@free-electrons.com>
+ <20140306144600.GM4780@lunn.ch>
+ <53188B73.4000109@free-electrons.com>
+ <53189892.5090502@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8vCeF2GUdMpe9ZbK"
-Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <531896EB.1050409@ti.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Roger Quadros <rogerq@ti.com>, tony@atomide.com, balbi@ti.com, george.cherian@ti.com, balajitk@ti.com, hdegoede@redhat.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-ide@vger.kernel.org
+In-Reply-To: <53189892.5090502@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---8vCeF2GUdMpe9ZbK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mar 06, Gregory CLEMENT wrote:
+> On 06/03/2014 15:51, Gregory CLEMENT wrote:
+> > the dsi file.
+> >=20
+> > I will have a look on the ethernet driver.
+>=20
+> Well the naming is done in __dev_alloc_name() and it depends on
+> the probe order.
+>=20
 
-On Thu, Mar 06, 2014 at 09:10:27PM +0530, Kishon Vijay Abraham I wrote:
-> Felipe,
->=20
-> On Thursday 06 March 2014 08:08 PM, Roger Quadros wrote:
-> >Move omap-control binding information to the right location.
-> >
-> >Signed-off-by: Roger Quadros <rogerq@ti.com>
-> >---
-> >  Documentation/devicetree/bindings/phy/ti-phy.txt   | 25 ++++++++++++++=
-++++++++
->=20
-> This patch is dependent on
->=20
-> "Documentation: dt bindings: move ..usb/usb-phy.txt to
->  ..phy/ti-phy.txt"
->=20
-> which got merged in your tree. So can you take this patch also?
-> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+Can't we fix this so the probe order doesn't affect the name?
 
-done
-
+Is that sane?
 --=20
-balbi
-
---8vCeF2GUdMpe9ZbK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTGJswAAoJEIaOsuA1yqRE5foP/0wYc0zAXUKmUnXeIQC4VvCL
-SJDG7OE0pbp+wFIqtufzn5W8W2HXGccpT4tTbvFxuFskIvrCLcTtYg5grU9uUJXE
-fQcxghvpLD2i6JLdhaMfSUBngD2m1DEnOK5x7krzQ7O9xmS5C2/LOqWGSW0HXYlb
-nEb7NxHvtoUCtkgBdfDxfEuJuBvOkJN2JmMNcyNvT7gz4l63XD4ijFhhbej9lNC/
-XaEbVBzNSSdo/Y5Zl45wkL3JFpyuHCEsfQX7vf4III8ARUnLPiAZ1MHnI7puotwq
-mstDC2XBxNqq9otFVoGs7dtXBItO1Fy1BeWtfByPhEnwCncYSklYM4utbMrIERf1
-A1XbqDxKh+vgcl+4sfFcenFFdNEuIPT/fVukBKOHX8kmQ31kNoe8Qr8X30Q4abFZ
-K41MqU1cGFYzTTroS1vkahlqIaqbddy88jn8Hl6MvrhaXoeop36zB/vEF75lO4+r
-2hX13SlGLhVCR9IweUo3OB4rTGpaYbhlYAzwPiZ1jGgTvEpv83B6hNcVGJa4+ohS
-Owz2Of50MiSBe7wEO4bx21H3sOgnakGp+xCULxN+g4wUYCZe+IiwAEftDkDEDv0s
-y4OlP0GKeYBSWvbJ9XdLsc7AfGn/+rpnaBLqfijsD+da+oQFFlukkj5sb+5CEtkP
-VCrOpuzLCyWOSBARZuUy
-=4SrN
------END PGP SIGNATURE-----
-
---8vCeF2GUdMpe9ZbK--
+Ezequiel Garc=EDa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
