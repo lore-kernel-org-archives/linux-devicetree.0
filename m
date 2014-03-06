@@ -1,121 +1,74 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v2 00/13] ARM: OMAP: SATA support for OMAP5 & DRA7
-Date: Thu, 6 Mar 2014 16:27:56 +0200
-Message-ID: <531885EC.50706@ti.com>
-References: <1394115785-28301-1-git-send-email-rogerq@ti.com>
+From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RFC v8 5/5] dma: mpc512x: register for device tree channel lookup
+Date: Thu, 6 Mar 2014 18:28:57 +0400
+Message-ID: <CAF0T0X5XAd=qW_4F2fmz_nmLDifjeicO23i_BThph2gsQiKgRg@mail.gmail.com>
+References: <1393240172-18769-1-git-send-email-a13xp0p0v88@gmail.com>
+	<1393240172-18769-6-git-send-email-a13xp0p0v88@gmail.com>
+	<1393247295.28803.10.camel@smile.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1394115785-28301-1-git-send-email-rogerq@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: kishon@ti.comg, tony@atomide.com, balbi@ti.com
-Cc: devicetree@vger.kernel.org, george.cherian@ti.com, balajitk@ti.com, linux-ide@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, hdegoede@redhat.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1393247295.28803.10.camel-XvqNBM/wLWRrdx17CPfAsdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/06/2014 04:22 PM, Roger Quadros wrote:
-> Hi,
-> 
-> This series adds SATA support for OMAP5 uevm and DRA7-evm boards.
-> 
-> - Cleans up the ti-pipe3 PHY driver
-> - Adds SATA DPLL support to ti-pipe3 PHY driver
-> - Adds SATA nodes to hwmod and SoC DT data
-> 
-> Patches are based on 3.14-rc4 with balbi/next, linux-phy/next and
-> omap-for-v3.15/dt merged on top..
-> 
-> To test SATA you will also need [1].
-> 
-> [1] - http://article.gmane.org/gmane.comp.hardware.netbook.arm.sunxi/7285
-> 
-> Changelog:
-> 
-> v2
-> - use 'depends on' instead of 'select' OCP2SCP bus driver.
-> - Changed DT bindings for dra7-usb2 and am437-usb2 phy.
-> 
-> cheers,
-> -roger
-> 
-> ---
-> Balaji T K (2):
->   ARM: dts: omap5: add sata node
->   ARM: dts: dra7: add OCP2SCP3 and SATA nodes
-> 
-> Keshava Munegowda (1):
->   ARM: OMAP5: hwmod: Add ocp2scp3 and sata hwmods
-> 
-> Kishon Vijay Abraham I (1):
->   phy: rename struct omap_control_usb to struct omap_control_phy
-> 
-> Nikhil Devshatwar (1):
->   ARM: DRA7: hwmod: Add ocp2scp3 and sata hwmods
-> 
-> Roger Quadros (8):
->   phy: omap-control: Update DT binding information
->   phy: omap-control: update dra7 and am437 usb2 bindings
->   phy: ti-pipe3: cleanup clock handling
->   phy: ti-pipe3: Add SATA DPLL support
->   phy: ti-pipe3: Don't get 'wkupclk' and 'refclk' for SATA PHY
->   phy: ti-pipe3: streamline PHY operations
->   phy: ti-pipe3: Fix suspend/resume and module reload
->   phy: omap: Depend on OMAP_OCP2SCP bus driver
-> 
->  Documentation/devicetree/bindings/phy/ti-phy.txt   |  40 ++-
->  Documentation/devicetree/bindings/usb/omap-usb.txt |  24 --
->  arch/arm/boot/dts/dra7.dtsi                        |  39 +++
->  arch/arm/boot/dts/omap5.dtsi                       |  47 ++-
->  arch/arm/mach-omap2/omap_hwmod_54xx_data.c         |  73 +++++
->  arch/arm/mach-omap2/omap_hwmod_7xx_data.c          |  31 +-
->  drivers/phy/Kconfig                                |  16 +-
->  drivers/phy/Makefile                               |   1 +
->  drivers/phy/phy-omap-control.c                     | 320 +++++++++++++++++++++
->  drivers/phy/phy-omap-usb2.c                        |   8 +-
->  drivers/phy/phy-ti-pipe3.c                         | 269 ++++++++++-------
->  drivers/usb/musb/omap2430.c                        |   2 +-
->  drivers/usb/phy/Kconfig                            |  10 -
->  drivers/usb/phy/Makefile                           |   1 -
->  drivers/usb/phy/phy-omap-control.c                 | 319 --------------------
->  include/linux/phy/omap_control_phy.h               |  89 ++++++
->  include/linux/usb/omap_control_usb.h               |  89 ------
->  17 files changed, 815 insertions(+), 563 deletions(-)
->  create mode 100644 drivers/phy/phy-omap-control.c
->  delete mode 100644 drivers/usb/phy/phy-omap-control.c
->  create mode 100644 include/linux/phy/omap_control_phy.h
->  delete mode 100644 include/linux/usb/omap_control_usb.h
-> 
-oops. forgot to add -M :(.
+Hello Andy.
 
-I'll resend just the 1st patch since it contains the file rename.
-updated diffstat is below.
+2014-02-24 17:08 GMT+04:00 Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>:
+> On Mon, 2014-02-24 at 15:09 +0400, Alexander Popov wrote:
+>> @@ -1018,11 +1019,23 @@ static int mpc_dma_probe(struct platform_device *op)
+>>       /* Register DMA engine */
+>>       dev_set_drvdata(dev, mdma);
+>>       retval = dma_async_device_register(dma);
+>> -     if (retval) {
+>> -             devm_free_irq(dev, mdma->irq, mdma);
+>> -             irq_dispose_mapping(mdma->irq);
+>> +     if (retval)
+>> +             goto out_irq;
+>> +
+>> +     /* register with OF helpers for DMA lookups (nonfatal) */
+>> +     if (dev->of_node) {
+>> +             retval = of_dma_controller_register(dev->of_node,
+>> +                                                 of_dma_xlate_by_chan_id,
+>> +                                                 mdma);
+>> +             if (retval)
+>> +                     dev_warn(dev, "could not register for OF lookup\n");
+>>       }
+>>
+>> +     return 0;
+>> +
+>> +out_irq:
+>> +     devm_free_irq(dev, mdma->irq, mdma);
+>
+> Something wrong either with devm_request_irq() or you don't need to call
+> devm_free_irq() explicitly. Once we already try to discuss this earlier
+> in this mailing list with Lars-Peter(?), though there were no solution
+> how to keep devm_*_irq usability.
 
- Documentation/devicetree/bindings/phy/ti-phy.txt   |  40 ++-
- Documentation/devicetree/bindings/usb/omap-usb.txt |  24 --
- arch/arm/boot/dts/dra7.dtsi                        |  39 +++
- arch/arm/boot/dts/omap5.dtsi                       |  47 +++-
- arch/arm/mach-omap2/omap_hwmod_54xx_data.c         |  73 ++++++
- arch/arm/mach-omap2/omap_hwmod_7xx_data.c          |  31 ++-
- drivers/phy/Kconfig                                |  16 +-
- drivers/phy/Makefile                               |   1 +
- drivers/{usb => }/phy/phy-omap-control.c           | 169 ++++++-------
- drivers/phy/phy-omap-usb2.c                        |   8 +-
- drivers/phy/phy-ti-pipe3.c                         | 269 +++++++++++++--------
- drivers/usb/musb/omap2430.c                        |   2 +-
- drivers/usb/phy/Kconfig                            |  10 -
- drivers/usb/phy/Makefile                           |   1 -
- .../omap_control_usb.h => phy/omap_control_phy.h}  |  36 +--
- 15 files changed, 509 insertions(+), 257 deletions(-)
- rename drivers/{usb => }/phy/phy-omap-control.c (53%)
- rename include/linux/{usb/omap_control_usb.h => phy/omap_control_phy.h} (68%)
+Thanks, I've read this discussion. It seems that the current code doesn't do
+anything bad, though devm_request_irq() and devm_free_irq() can be changed
+to request_irq() and free_irq() accordingly. Do you think it's worth being done
+in a separate patch in this series?
 
-cheers,
--roger
+>> +     irq_dispose_mapping(mdma->irq);
+>>       return retval;
+>>  }
+>>
+>> @@ -1031,6 +1044,8 @@ static int mpc_dma_remove(struct platform_device *op)
+>>       struct device *dev = &op->dev;
+>>       struct mpc_dma *mdma = dev_get_drvdata(dev);
+>>
+>> +     if (dev->of_node)
+>> +             of_dma_controller_free(dev->of_node);
+>>       dma_async_device_unregister(&mdma->dma);
+>>       devm_free_irq(dev, mdma->irq, mdma);
+>>       irq_dispose_mapping(mdma->irq);
+
+Best regards,
+Alexander
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
