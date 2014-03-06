@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/6] ARM: restrict BCM_KONA_UART to ARCH_BCM_MOBILE
-Date: Thu, 6 Mar 2014 09:45:55 -0800
-Message-ID: <1394127959-3159-3-git-send-email-f.fainelli@gmail.com>
+Subject: [PATCH 4/6] ARM: BCM63XX: add BCM63138 minimal Device Tree
+Date: Thu, 6 Mar 2014 09:45:57 -0800
+Message-ID: <1394127959-3159-5-git-send-email-f.fainelli@gmail.com>
 References: <1394127959-3159-1-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,28 +12,138 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, jpeshkin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Low-level debugging using the Broadcom Kona UART only makes sense on the
-ARCH_BCM_MOBILE platform and would otherwise prevent ARCH_BCM_63XX from
-picking up the right UART implementation by default.
+Add a very minimalistic BCM63138 Device Tree include file which
+describes the BCM63138 SoC with only the basic set of required
+peripherals:
+
+- Cortex A9 CPU
+- ARM GIC
+- PL310 Level-2 cache controller
+- ARM TWD & Global timers
+- ARM TWD watchdog
+- legacy MIPS bus (UBUS)
 
 Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/Kconfig.debug | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/bcm63138.dtsi | 109 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 109 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm63138.dtsi
 
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index 0531da8e5216..c23f52445308 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -108,7 +108,7 @@ choice
- 
- 	config DEBUG_BCM_KONA_UART
- 		bool "Kernel low-level debugging messages via BCM KONA UART"
--		depends on ARCH_BCM
-+		depends on ARCH_BCM_MOBILE
- 		select DEBUG_UART_8250
- 		help
- 		  Say Y here if you want kernel low-level debugging support
+diff --git a/arch/arm/boot/dts/bcm63138.dtsi b/arch/arm/boot/dts/bcm63138.dtsi
+new file mode 100644
+index 000000000000..190d6e53a85a
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm63138.dtsi
+@@ -0,0 +1,109 @@
++/*
++ * Broadcom BCM63138 DSL SoCs Device Tree
++ *
++ * Copyright (C) 2014 Broadcom Corporation
++ *
++ * Licensed under the GNU/GPL. See COPYING for details
++ */
++
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++
++#include "skeleton.dtsi"
++
++/ {
++	compatible = "brcm,bcm63138";
++	model = "Broadcom BCM63138 DSL SoC";
++	interrupt-parent = <&gic>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a9";
++			next-level-cache = <&L2>;
++			reg = <0>;
++		};
++	};
++
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		arm_timer_clk: arm_timer_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <500000000>;
++		};
++	};
++
++	/* ARM bus */
++	axi@80000000 {
++		compatible = "simple-bus";
++		ranges = <0 0x80000000 0x783003>;
++		reg = <0x80000000 0x783003>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		L2: cache-controller@1d000 {
++			compatible = "arm,pl310-cache";
++			reg = <0x1d000 0x1000>;
++			cache-unified;
++			cache-level = <2>;
++			interrupts = <GIC_PPI 0 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		mpcore@1e000 {
++			compatible = "simple-bus";
++			reg = <0x1e000 0x20000>;
++			ranges = <0 0x1e000 0x20000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			scu: scu@0 {
++				compatible = "arm,cortex-a9-scu";
++				reg = <0x0 0x100>;
++			};
++
++			gic: interrupt-controller@100 {
++				compatible = "arm,cortex-a9-gic";
++				reg = <0x1000 0x1000
++					0x100 0x100>;
++				#interrupt-cells = <3>;
++				#address-cells = <0>;
++				interrupt-controller;
++			};
++
++			global_timer: timer@200 {
++				compatible = "arm,cortex-a9-global-timer";
++				reg = <0x200 0x20>;
++				interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&arm_timer_clk>;
++			};
++
++			local_timer: local-timer@600 {
++				compatible = "arm,cortex-a9-twd-timer";
++				reg = <0x600 0x20>;
++				interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&arm_timer_clk>;
++			};
++
++			twd_watchdog: watchdog@620 {
++				compatible = "arm,cortex-a9-twd-wdt";
++				reg = <0x620 0x20>;
++				interupts = <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>;
++			};
++		};
++	};
++
++	/* Legacy UBUS base */
++	ubus@fffe8000 {
++		compatible = "simple-bus";
++		reg = <0xfffe8000 0x8053>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0xfffe8000 0x8053>;
++	};
++};
 -- 
 1.8.3.2
 
