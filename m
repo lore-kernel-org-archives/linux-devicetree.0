@@ -1,80 +1,141 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v6 0/8] Move device tree graph parsing helpers to
- drivers/of
-Date: Thu, 06 Mar 2014 17:21:19 +0100
-Message-ID: <1394122879.3622.47.camel@paszta.hi.pengutronix.de>
-References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de>
-	 <53170C00.20200@ti.com> <1394030554.8754.31.camel@paszta.hi.pengutronix.de>
-	 <20140306141657.GB21483@n2100.arm.linux.org.uk>
-	 <20140306121721.6186dafb@samsung.com> <5318988C.2030004@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5318988C.2030004@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH v6 02/10] Documentation: dt: Add binding documentation for
+ S5C73M3 camera
+Date: Thu, 06 Mar 2014 17:20:11 +0100
+Message-ID: <1394122819-9582-3-git-send-email-s.nawrocki@samsung.com>
+References: <1394122819-9582-1-git-send-email-s.nawrocki@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1394122819-9582-1-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, galak@codeaurora.org, kyungmin.park@samsung.com, kgene.kim@samsung.com, a.hajda@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 06.03.2014, 16:47 +0100 schrieb Sylwester Nawrocki:
-> On 06/03/14 16:17, Mauro Carvalho Chehab wrote:
-> > Em Thu, 06 Mar 2014 14:16:57 +0000
-> > Russell King - ARM Linux <linux@arm.linux.org.uk> escreveu:
-> >> > On Wed, Mar 05, 2014 at 03:42:34PM +0100, Philipp Zabel wrote:
-> >>> > > Am Mittwoch, den 05.03.2014, 13:35 +0200 schrieb Tomi Valkeinen:
-[...]
-> >>>> > > > So, as I've pointed out, I don't agree with the API, as it's too limited
-> >>>> > > > and I can't use it, but as this series is (mostly) about moving the
-> >>>> > > > current API to a common place, it's fine for me.
-> >>>> > > > 
-> >>>> > > > Acked-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> >>> > > 
-> >>> > > Thanks. I'll be happy to help expanding the API to parse ports
-> >>> > > individually, once this gets accepted.
-> >>> > > 
-> >>> > > Mauro, Guennadi, are you fine with how this turned out? I'd like to get
-> >>> > > your acks again, for the changed location.
-> >
-> > From my side, there's nothing on such code that is V4L2 specific.
-> > Moving it to drivers/of makes sense on my eyes.
-> > 
-> > Acked-by: Mauro Carvalho Chehab <m.chehab@samsung.com>
-> 
-> I'm OK with patches 1...5, 8, so for these:
-> 
-> Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> 
-> Regarding the simplified version of the binding, I thought we should
-> leave 'port' instead of 'endpoint' node. This could cover more hardware
-> configurations. Are there any users of this simplified binding queued
-> for v3.15 ? If not, perhaps we can postpone it and discuss it a bit more
-> (sorry, couldn't find time to comment on that earlier) ?
+This adds DT binding documentation for Samsung S5C73M3 camera sensor
+with an embedded ISP.
 
-Since Tomi needs the separate port/endpoint iteration anyway, 
-postponing the simple bindings shouldn't hurt. I'll (re)submit them
-together in a second series.
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+---
+Changes since v5:
+ - none.
 
-> >> > I'll need those acks before I can even think about queuing up the
-> >> > imx-drm bits.
-> >> > 
-> >> > Another way to deal with this is if this gets pulled into the V4L tree
-> >> > from Philipp's git tree, I can also pull that in myself.  What mustn't
-> >> > happen is for these to be committed independently as patches.
-> >
-> > If everyone agrees, I actually prefer have this patch applied on my tree,
-> > in order to avoid some potential merge conflicts at the merge window,
-> > as we might have other drivers and changes there touching on those API
-> > calls (I'm aware of a series of patches from Sylwester with some DT
-> > stuff on it. Not sure if it would be affected by such changes or not).
-> 
-> Yes, it's going to conflict with my patch series. I thought it could be
-> put onto a stable a topic branch, e.g. at git://linuxtv.org/media_tree.git,
-> which could be then pulled into the media master branch and anywhere
-> else it is needed ?
+Changes since v4:
+ - added missing unit-address at the example SPI device node;
 
-Mauro, are you ok with handling the conflict in the merge, or should I
-rebase on top of the media tree after you merged Sylwester's changes?
+Changes since v3:
+ - DT binding documentation separated into this patch;
 
-regards
-Philipp
+Changes since v2:
+ - rephrased 'clocks' and 'clock-names' properties' description;
+---
+ .../devicetree/bindings/media/samsung-s5c73m3.txt  |   97 ++++++++++++++++++++
+ 1 file changed, 97 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/samsung-s5c73m3.txt
+
+diff --git a/Documentation/devicetree/bindings/media/samsung-s5c73m3.txt b/Documentation/devicetree/bindings/media/samsung-s5c73m3.txt
+new file mode 100644
+index 0000000..2c85c45
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/samsung-s5c73m3.txt
+@@ -0,0 +1,97 @@
++Samsung S5C73M3 8Mp camera ISP
++------------------------------
++
++The S5C73M3 camera ISP supports MIPI CSI-2 and parallel (ITU-R BT.656) video
++data busses. The I2C bus is the main control bus and additionally the SPI bus
++is used, mostly for transferring the firmware to and from the device. Two
++slave device nodes corresponding to these control bus interfaces are required
++and should be placed under respective bus controller nodes.
++
++I2C slave device node
++---------------------
++
++Required properties:
++
++- compatible	    : "samsung,s5c73m3";
++- reg		    : I2C slave address of the sensor;
++- vdd-int-supply    : digital power supply (1.2V);
++- vdda-supply	    : analog power supply (1.2V);
++- vdd-reg-supply    : regulator input power supply (2.8V);
++- vddio-host-supply : host I/O power supply (1.8V to 2.8V);
++- vddio-cis-supply  : CIS I/O power supply (1.2V to 1.8V);
++- vdd-af-supply     : lens power supply (2.8V);
++- xshutdown-gpios   : specifier of GPIO connected to the XSHUTDOWN pin;
++- standby-gpios     : specifier of GPIO connected to the STANDBY pin;
++- clocks	    : should contain list of phandle and clock specifier pairs
++		      according to common clock bindings for the clocks described
++		      in the clock-names property;
++- clock-names	    : should contain "cis_extclk" entry for the CIS_EXTCLK clock;
++
++Optional properties:
++
++- clock-frequency   : the frequency at which the "cis_extclk" clock should be
++		      configured to operate, in Hz; if this property is not
++		      specified default 24 MHz value will be used.
++
++The common video interfaces bindings (see video-interfaces.txt) should be used
++to specify link from the S5C73M3 to an external image data receiver. The S5C73M3
++device node should contain one 'port' child node with an 'endpoint' subnode for
++this purpose. The data link from a raw image sensor to the S5C73M3 can be
++similarly specified, but it is optional since the S5C73M3 ISP and a raw image
++sensor are usually inseparable and form a hybrid module.
++
++Following properties are valid for the endpoint node(s):
++
++endpoint subnode
++----------------
++
++- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
++  video-interfaces.txt. This sensor doesn't support data lane remapping
++  and physical lane indexes in subsequent elements of the array should
++  be only consecutive ascending values.
++
++SPI device node
++---------------
++
++Required properties:
++
++- compatible	    : "samsung,s5c73m3";
++
++For more details see description of the SPI busses bindings
++(../spi/spi-bus.txt) and bindings of a specific bus controller.
++
++Example:
++
++i2c@138A000000 {
++	...
++	s5c73m3@3c {
++		compatible = "samsung,s5c73m3";
++		reg = <0x3c>;
++		vdd-int-supply = <&buck9_reg>;
++		vdda-supply = <&ldo17_reg>;
++		vdd-reg-supply = <&cam_io_reg>;
++		vddio-host-supply = <&ldo18_reg>;
++		vddio-cis-supply = <&ldo9_reg>;
++		vdd-af-supply = <&cam_af_reg>;
++		clock-frequency = <24000000>;
++		clocks = <&clk 0>;
++		clock-names = "cis_extclk";
++		reset-gpios = <&gpf1 3 1>;
++		standby-gpios = <&gpm0 1 1>;
++		port {
++			s5c73m3_ep: endpoint {
++				remote-endpoint = <&csis0_ep>;
++				data-lanes = <1 2 3 4>;
++			};
++		};
++	};
++};
++
++spi@1392000 {
++	...
++	s5c73m3_spi: s5c73m3@0 {
++		compatible = "samsung,s5c73m3";
++		reg = <0>;
++		...
++	};
++};
+-- 
+1.7.9.5
