@@ -1,81 +1,130 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: [PATCH 6/7] ARM: dma: Use dma_pfn_offset for dma address translation
-Date: Thu, 6 Mar 2014 17:19:57 +0800
-Message-ID: <1394097598-17622-7-git-send-email-santosh.shilimkar@ti.com>
-References: <1394097598-17622-1-git-send-email-santosh.shilimkar@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Markus Mayer <markus.mayer@linaro.org>
+Subject: [PATCH v2 2/3] ARM: bcm21664: Add board support.
+Date: Thu,  6 Mar 2014 17:18:13 +0800
+Message-ID: <1394097494-29899-3-git-send-email-markus.mayer@linaro.org>
+References: <1394097494-29899-1-git-send-email-markus.mayer@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1394097598-17622-1-git-send-email-santosh.shilimkar@ti.com>
+In-Reply-To: <1394097494-29899-1-git-send-email-markus.mayer@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>
+To: Matt Porter <matt.porter@linaro.org>, Christian Daudt <bcm@fixthebug.org>
+Cc: Device Tree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+Add support for the Broadcom BCM21664 mobile SoC. It has two Cortex-A9
+cores like the BCM281xx family of chips. BCM21664 and BCM281xx share
+many IP blocks in addition to the ARM cores.
 
-In most of cases DMA addresses can be performed using offset value of
- Bus address space relatively to physical address space as following:
-
-PFN->DMA:
- __pfn_to_phys(pfn + [-]dma_pfn_offset)
-
-DMA->PFN:
- __phys_to_pfn(dma_addr) + [-]dma_pfn_offset
-
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Olof Johansson <olof@lixom.net>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Signed-off-by: Markus Mayer <markus.mayer@linaro.org>
 ---
- arch/arm/include/asm/dma-mapping.h |   17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ arch/arm/mach-bcm/Makefile         |  6 ++-
+ arch/arm/mach-bcm/board_bcm21664.c | 78 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 82 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm/mach-bcm/board_bcm21664.c
 
-diff --git a/arch/arm/include/asm/dma-mapping.h b/arch/arm/include/asm/dma-mapping.h
-index e701a4d..8c12149 100644
---- a/arch/arm/include/asm/dma-mapping.h
-+++ b/arch/arm/include/asm/dma-mapping.h
-@@ -58,22 +58,31 @@ static inline int dma_set_mask(struct device *dev, u64 mask)
- #ifndef __arch_pfn_to_dma
- static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
- {
--	return (dma_addr_t)__pfn_to_bus(pfn);
-+	if (!dev)
-+		return DMA_ERROR_CODE;
-+	return (dma_addr_t)__pfn_to_bus(pfn - dev->dma_pfn_offset);
- }
+diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
+index c2ccd5a..0e2e52e 100644
+--- a/arch/arm/mach-bcm/Makefile
++++ b/arch/arm/mach-bcm/Makefile
+@@ -1,5 +1,5 @@
+ #
+-# Copyright (C) 2012-2013 Broadcom Corporation
++# Copyright (C) 2012-2014 Broadcom Corporation
+ #
+ # This program is free software; you can redistribute it and/or
+ # modify it under the terms of the GNU General Public License as
+@@ -10,6 +10,8 @@
+ # of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
  
- static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
- {
--	return __bus_to_pfn(addr);
-+	if (!dev)
-+		return 0;
-+	return __bus_to_pfn(addr) + dev->dma_pfn_offset;
- }
- 
- static inline void *dma_to_virt(struct device *dev, dma_addr_t addr)
- {
--	return (void *)__bus_to_virt((unsigned long)addr);
-+	if (!dev)
-+		return NULL;
-+	return (void *)__bus_to_virt(__pfn_to_bus(dma_to_pfn(dev, addr)));
- }
- 
- static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
- {
--	return (dma_addr_t)__virt_to_bus((unsigned long)(addr));
-+	if (!dev)
-+		return DMA_ERROR_CODE;
-+	return pfn_to_dma(dev,
-+			   __bus_to_pfn(__virt_to_bus((unsigned long)(addr))));
- }
- 
- #else
+-obj-$(CONFIG_ARCH_BCM_MOBILE)	:= board_bcm281xx.o bcm_kona_smc.o bcm_kona_smc_asm.o kona.o
++obj-$(CONFIG_ARCH_BCM_MOBILE)	:= board_bcm281xx.o board_bcm21664.o \
++				bcm_kona_smc.o bcm_kona_smc_asm.o kona.o
++
+ plus_sec := $(call as-instr,.arch_extension sec,+sec)
+ AFLAGS_bcm_kona_smc_asm.o	:=-Wa,-march=armv7-a$(plus_sec)
+diff --git a/arch/arm/mach-bcm/board_bcm21664.c b/arch/arm/mach-bcm/board_bcm21664.c
+new file mode 100644
+index 0000000..acc1573
+--- /dev/null
++++ b/arch/arm/mach-bcm/board_bcm21664.c
+@@ -0,0 +1,78 @@
++/*
++ * Copyright (C) 2014 Broadcom Corporation
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation version 2.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/clocksource.h>
++#include <linux/of_address.h>
++#include <linux/of_platform.h>
++
++#include <asm/mach/arch.h>
++
++#include "bcm_kona_smc.h"
++#include "kona.h"
++
++#define RSTMGR_DT_STRING		"brcm,bcm21664-resetmgr"
++
++#define RSTMGR_REG_WR_ACCESS_OFFSET	0
++#define RSTMGR_REG_CHIP_SOFT_RST_OFFSET	4
++
++#define RSTMGR_WR_PASSWORD		0xa5a5
++#define RSTMGR_WR_PASSWORD_SHIFT	8
++#define RSTMGR_WR_ACCESS_ENABLE		1
++
++static void bcm21664_restart(enum reboot_mode mode, const char *cmd)
++{
++	void __iomem *base;
++	struct device_node *resetmgr;
++
++	resetmgr = of_find_compatible_node(NULL, NULL, RSTMGR_DT_STRING);
++	if (!resetmgr) {
++		pr_emerg("Couldn't find " RSTMGR_DT_STRING "\n");
++		return;
++	}
++	base = of_iomap(resetmgr, 0);
++	if (!base) {
++		pr_emerg("Couldn't map " RSTMGR_DT_STRING "\n");
++		return;
++	}
++
++	/*
++	 * A soft reset is triggered by writing a 0 to bit 0 of the soft reset
++	 * register. To write to that register we must first write the password
++	 * and the enable bit in the write access enable register.
++	 */
++	writel((RSTMGR_WR_PASSWORD << RSTMGR_WR_PASSWORD_SHIFT) |
++		RSTMGR_WR_ACCESS_ENABLE,
++		base + RSTMGR_REG_WR_ACCESS_OFFSET);
++	writel(0, base + RSTMGR_REG_CHIP_SOFT_RST_OFFSET);
++
++	/* Wait for reset */
++	while (1);
++}
++
++static void __init bcm21664_init(void)
++{
++	of_platform_populate(NULL, of_default_bus_match_table, NULL,
++		&platform_bus);
++	kona_l2_cache_init();
++}
++
++static const char * const bcm21664_dt_compat[] = {
++	"brcm,bcm21664",
++	NULL,
++};
++
++DT_MACHINE_START(BCM21664_DT, "BCM21664 Broadcom Application Processor")
++	.init_machine = bcm21664_init,
++	.restart = bcm21664_restart,
++	.dt_compat = bcm21664_dt_compat,
++MACHINE_END
 -- 
-1.7.9.5
+1.9.0
