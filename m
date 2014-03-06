@@ -1,399 +1,136 @@
-From: Markus Mayer <markus.mayer@linaro.org>
-Subject: [PATCH v2 3/3] ARM: dts: bcm21664: Add device tree files.
-Date: Thu,  6 Mar 2014 17:18:14 +0800
-Message-ID: <1394097494-29899-4-git-send-email-markus.mayer@linaro.org>
-References: <1394097494-29899-1-git-send-email-markus.mayer@linaro.org>
+From: Anton Tikhomirov <av.tikhomirov@samsung.com>
+Subject: RE: [PATCH v9 3/4] phy: Add new Exynos USB 2.0 PHY driver
+Date: Thu, 06 Mar 2014 18:19:39 +0900
+Message-ID: <006501cf391d$335fb9a0$9a1f2ce0$%tikhomirov@samsung.com>
+References: <1394033288-5551-1-git-send-email-k.debski@samsung.com>
+ <1394033288-5551-4-git-send-email-k.debski@samsung.com>
+ <005c01cf3915$c53476c0$4f9d6440$%tikhomirov@samsung.com>
+ <53183220.3040606@ti.com>
+ <006201cf3919$5f760750$1e6215f0$%tikhomirov@samsung.com>
+ <5318384B.7020009@ti.com>
+ <006301cf391a$c99c7280$5cd55780$%tikhomirov@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=Windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1394097494-29899-1-git-send-email-markus.mayer@linaro.org>
+In-reply-to: <006301cf391a$c99c7280$5cd55780$%tikhomirov@samsung.com>
+Content-language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <matt.porter@linaro.org>, Christian Daudt <bcm@fixthebug.org>
-Cc: Device Tree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+To: 'Anton Tikhomirov' <av.tikhomirov@samsung.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>, 'Kamil Debski' <k.debski@samsung.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kyungmin.park@samsung.com, t.figa@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samsung.com, gautam.vivek@samsung.com, mat.krawczuk@gmail.com, yulgon.kim@samsung.com, p.paneri@samsung.com, jg1.han@samsung.com, galak@codeaurora.org, matt.porter@linaro.org, tjakobi@math.uni-bielefeld.de, stern@rowland.harvard.edu, sander@humilis.net
 List-Id: devicetree@vger.kernel.org
 
-Add device tree files for the Broadcom BCM21664 SoC.
+Hi,
 
-Signed-off-by: Markus Mayer <markus.mayer@linaro.org>
----
- arch/arm/boot/dts/Makefile            |   3 +-
- arch/arm/boot/dts/bcm21664-garnet.dts |  56 +++++++
- arch/arm/boot/dts/bcm21664.dtsi       | 292 ++++++++++++++++++++++++++++++++++
- 3 files changed, 350 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/bcm21664-garnet.dts
- create mode 100644 arch/arm/boot/dts/bcm21664.dtsi
+> Subject: RE: [PATCH v9 3/4] phy: Add new Exynos USB 2.0 PHY driver
+> 
+> Hi,
+> 
+> > Subject: Re: [PATCH v9 3/4] phy: Add new Exynos USB 2.0 PHY driver
+> >
+> > Hi,
+> >
+> > On Thursday 06 March 2014 02:22 PM, Anton Tikhomirov wrote:
+> > > Hello,
+> > >
+> > >> Subject: Re: [PATCH v9 3/4] phy: Add new Exynos USB 2.0 PHY driver
+> > >>
+> > >>
+> > >>
+> > >> On Thursday 06 March 2014 01:56 PM, Anton Tikhomirov wrote:
+> > >>> Hi Kamil,
+> > >>>
+> > >>> ...
+> > >>>
+> > >>>> +| 3. Supporting SoCs
+> > >>>> ++--------------------
+> > >>>> +
+> > >>>> +To support a new SoC a new file should be added to the
+> > drivers/phy
+> > >>>> +directory. Each SoC's configuration is stored in an instance of
+> > the
+> > >>>> +struct samsung_usb2_phy_config.
+> > >>>> +
+> > >>>> +struct samsung_usb2_phy_config {
+> > >>>> +	const struct samsung_usb2_common_phy *phys;
+> > >>>> +	unsigned int num_phys;
+> > >>>> +	bool has_mode_switch;
+> > >>>
+> > >>> You missed rate_to_clk here.
+> > >>>
+> > >>>> +};
+> > >>>> +
+> > >>>
+> > >>> ...
+> > >>>
+> > >>>> diff --git a/drivers/phy/phy-samsung-usb2.c b/drivers/phy/phy-
+> > >> samsung-
+> > >>>> usb2.c
+> > >>>> new file mode 100644
+> > >>>> index 0000000..c3b7719
+> > >>>> --- /dev/null
+> > >>>> +++ b/drivers/phy/phy-samsung-usb2.c
+> > >>>> @@ -0,0 +1,222 @@
+> > >>>> +/*
+> > >>>> + * Samsung SoC USB 1.1/2.0 PHY driver
+> > >>>> + *
+> > >>>> + * Copyright (C) 2013 Samsung Electronics Co., Ltd.
+> > >>>> + * Author: Kamil Debski <k.debski@samsung.com>
+> > >>>> + *
+> > >>>> + * This program is free software; you can redistribute it
+> and/or
+> > >>>> modify
+> > >>>> + * it under the terms of the GNU General Public License version
+> 2
+> > >> as
+> > >>>> + * published by the Free Software Foundation.
+> > >>>> + */
+> > >>>> +
+> > >>>> +#include <linux/clk.h>
+> > >>>> +#include <linux/mfd/syscon.h>
+> > >>>> +#include <linux/module.h>
+> > >>>> +#include <linux/of.h>
+> > >>>> +#include <linux/of_address.h>
+> > >>>> +#include <linux/phy/phy.h>
+> > >>>> +#include <linux/platform_device.h>
+> > >>>> +#include <linux/spinlock.h>
+> > >>>> +#include "phy-samsung-usb2.h"
+> > >>>> +
+> > >>>> +static int samsung_usb2_phy_power_on(struct phy *phy)
+> > >>>> +{
+> > >>>> +	struct samsung_usb2_phy_instance *inst =
+> > phy_get_drvdata(phy);
+> > >>>> +	struct samsung_usb2_phy_driver *drv = inst->drv;
+> > >>>> +	int ret;
+> > >>>> +
+> > >>>> +	dev_dbg(drv->dev, "Request to power_on \"%s\" usb phy\n",
+> > >>>> +		inst->cfg->label);
+> > >>>> +	ret = clk_prepare_enable(drv->clk);
+> > >>>
+> > >>> clk_prepare_enable() can sleep, and therefore doesn't allow
+> > >>> samusng_usb2_phy_power_on() to be used in atomic context
+> > >>> (e.g. inside spin_lock-ed area), what sometimes may be desirable.
+> > >>> What about to prepare clock in probe, and just enable it here
+> > >>> (note: clk_enable() doesn't sleep).
+> > >>
+> > >> The PHY power-on callback is anyway called with mutex held, so I
+> > guess
+> > >> it's fine to have clk_prepare_enable() here.
+> > >
+> > > If we rely totally on generic PHY functions such as phy_power_on()
+> > > and friends, why do we need to use locking in callbacks at all.
+> >
+> > Didn't get you.. We don't want to invoke power_on when init is
+> getting
+> > executed or you don't want power on or power off to get executed
+> > simultaneously right? So we need to protect it.
+> 
+> I mean callbacks such as samsung_usb2_phy_power_on() which uses
+> spin_lock.
+> It's already protected by mutex in phy_power_on().
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 0320303..0c1853a 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -48,7 +48,8 @@ dtb-$(CONFIG_ARCH_AT91)	+= sama5d36ek.dtb
- dtb-$(CONFIG_ARCH_ATLAS6) += atlas6-evb.dtb
- dtb-$(CONFIG_ARCH_BCM2835) += bcm2835-rpi-b.dtb
- dtb-$(CONFIG_ARCH_BCM_MOBILE) += bcm11351-brt.dtb \
--	bcm28155-ap.dtb
-+	bcm28155-ap.dtb \
-+	bcm21664-garnet.dtb
- dtb-$(CONFIG_ARCH_BCM2835) += bcm2835-rpi-b.dtb
- dtb-$(CONFIG_ARCH_BERLIN) += \
- 	berlin2-sony-nsz-gs7.dtb	\
-diff --git a/arch/arm/boot/dts/bcm21664-garnet.dts b/arch/arm/boot/dts/bcm21664-garnet.dts
-new file mode 100644
-index 0000000..e87cb26
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm21664-garnet.dts
-@@ -0,0 +1,56 @@
-+/*
-+ * Copyright (C) 2014 Broadcom Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+
-+#include "bcm21664.dtsi"
-+
-+/ {
-+	model = "BCM21664 Garnet board";
-+	compatible = "brcm,bcm21664-garnet", "brcm,bcm21664";
-+
-+	memory {
-+		reg = <0x80000000 0x40000000>; /* 1 GB */
-+	};
-+
-+	uart@3e000000 {
-+		status = "okay";
-+	};
-+
-+	sdio1: sdio@3f180000 {
-+		max-frequency = <48000000>;
-+		status = "okay";
-+	};
-+
-+	sdio2: sdio@3f190000 {
-+		non-removable;
-+		max-frequency = <48000000>;
-+		status = "okay";
-+	};
-+
-+	sdio4: sdio@3f1b0000 {
-+		max-frequency = <48000000>;
-+		cd-gpios = <&gpio 91 GPIO_ACTIVE_LOW>;
-+		status = "okay";
-+	};
-+
-+	usbotg: usb@3f120000 {
-+		status = "okay";
-+	};
-+
-+	usbphy: usb-phy@3f130000 {
-+		status = "okay";
-+	};
-+};
-diff --git a/arch/arm/boot/dts/bcm21664.dtsi b/arch/arm/boot/dts/bcm21664.dtsi
-new file mode 100644
-index 0000000..08a44d4
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm21664.dtsi
-@@ -0,0 +1,292 @@
-+/*
-+ * Copyright (C) 2014 Broadcom Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+#include "skeleton.dtsi"
-+
-+/ {
-+	model = "BCM21664 SoC";
-+	compatible = "brcm,bcm21664";
-+	interrupt-parent = <&gic>;
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200n8";
-+	};
-+
-+	gic: interrupt-controller@3ff00100 {
-+		compatible = "arm,cortex-a9-gic";
-+		#interrupt-cells = <3>;
-+		#address-cells = <0>;
-+		interrupt-controller;
-+		reg = <0x3ff01000 0x1000>,
-+		      <0x3ff00100 0x100>;
-+	};
-+
-+	smc@0x3404e000 {
-+		compatible = "brcm,bcm21664-smc", "brcm,kona-smc";
-+		reg = <0x3404e000 0x400>; /* 1 KiB in SRAM */
-+	};
-+
-+	uart@3e000000 {
-+		compatible = "brcm,bcm21664-dw-apb-uart", "snps,dw-apb-uart";
-+		status = "disabled";
-+		reg = <0x3e000000 0x118>;
-+		clocks = <&uartb_clk>;
-+		interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+	};
-+
-+	uart@3e001000 {
-+		compatible = "brcm,bcm21664-dw-apb-uart", "snps,dw-apb-uart";
-+		status = "disabled";
-+		reg = <0x3e001000 0x118>;
-+		clocks = <&uartb2_clk>;
-+		interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+	};
-+
-+	uart@3e002000 {
-+		compatible = "brcm,bcm21664-dw-apb-uart", "snps,dw-apb-uart";
-+		status = "disabled";
-+		reg = <0x3e002000 0x118>;
-+		clocks = <&uartb3_clk>;
-+		interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+	};
-+
-+	L2: l2-cache {
-+		compatible = "arm,pl310-cache";
-+		reg = <0x3ff20000 0x1000>;
-+		cache-unified;
-+		cache-level = <2>;
-+	};
-+
-+	brcm,resetmgr@35001f00 {
-+		compatible = "brcm,bcm21664-resetmgr";
-+		reg = <0x35001f00 0x24>;
-+	};
-+
-+	timer@35006000 {
-+		compatible = "brcm,kona-timer";
-+		reg = <0x35006000 0x1c>;
-+		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&hub_timer_clk>;
-+	};
-+
-+	gpio: gpio@35003000 {
-+		compatible = "brcm,bcm21664-gpio", "brcm,kona-gpio";
-+		reg = <0x35003000 0x524>;
-+		interrupts =
-+		       <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH
-+			GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH
-+			GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH
-+			GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-+		#gpio-cells = <2>;
-+		#interrupt-cells = <2>;
-+		gpio-controller;
-+		interrupt-controller;
-+	};
-+
-+	sdio1: sdio@3f180000 {
-+		compatible = "brcm,kona-sdhci";
-+		reg = <0x3f180000 0x801c>;
-+		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&sdio1_clk>;
-+		status = "disabled";
-+	};
-+
-+	sdio2: sdio@3f190000 {
-+		compatible = "brcm,kona-sdhci";
-+		reg = <0x3f190000 0x801c>;
-+		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&sdio2_clk>;
-+		status = "disabled";
-+	};
-+
-+	sdio3: sdio@3f1a0000 {
-+		compatible = "brcm,kona-sdhci";
-+		reg = <0x3f1a0000 0x801c>;
-+		interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&sdio3_clk>;
-+		status = "disabled";
-+	};
-+
-+	sdio4: sdio@3f1b0000 {
-+		compatible = "brcm,kona-sdhci";
-+		reg = <0x3f1b0000 0x801c>;
-+		interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&sdio4_clk>;
-+		status = "disabled";
-+	};
-+
-+	i2c@3e016000 {
-+		compatible = "brcm,bcm21664-i2c", "brcm,kona-i2c";
-+		reg = <0x3e016000 0x70>;
-+		interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&bsc1_clk>;
-+		status = "disabled";
-+	};
-+
-+	i2c@3e017000 {
-+		compatible = "brcm,bcm21664-i2c", "brcm,kona-i2c";
-+		reg = <0x3e017000 0x70>;
-+		interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&bsc2_clk>;
-+		status = "disabled";
-+	};
-+
-+	i2c@3e018000 {
-+		compatible = "brcm,bcm21664-i2c", "brcm,kona-i2c";
-+		reg = <0x3e018000 0x70>;
-+		interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&bsc3_clk>;
-+		status = "disabled";
-+	};
-+
-+	i2c@3e01c000 {
-+		compatible = "brcm,bcm21664-i2c", "brcm,kona-i2c";
-+		reg = <0x3e01c000 0x70>;
-+		interrupts = <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&bsc4_clk>;
-+		status = "disabled";
-+	};
-+
-+	clocks {
-+		bsc1_clk: bsc1 {
-+			compatible = "fixed-clock";
-+			clock-frequency = <13000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		bsc2_clk: bsc2 {
-+			compatible = "fixed-clock";
-+			clock-frequency = <13000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		bsc3_clk: bsc3 {
-+			compatible = "fixed-clock";
-+			clock-frequency = <13000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		bsc4_clk: bsc4 {
-+			compatible = "fixed-clock";
-+			clock-frequency = <13000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		pmu_bsc_clk: pmu_bsc {
-+			compatible = "fixed-clock";
-+			clock-frequency = <13000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		hub_timer_clk: hub_timer {
-+			compatible = "fixed-clock";
-+			clock-frequency = <32768>;
-+			#clock-cells = <0>;
-+		};
-+
-+		pwm_clk: pwm {
-+			compatible = "fixed-clock";
-+			clock-frequency = <26000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		sdio1_clk: sdio1 {
-+			compatible = "fixed-clock";
-+			clock-frequency = <48000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		sdio2_clk: sdio2 {
-+			compatible = "fixed-clock";
-+			clock-frequency = <48000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		sdio3_clk: sdio3 {
-+			compatible = "fixed-clock";
-+			clock-frequency = <48000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		sdio4_clk: sdio4 {
-+			compatible = "fixed-clock";
-+			clock-frequency = <48000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		tmon_1m_clk: tmon_1m {
-+			compatible = "fixed-clock";
-+			clock-frequency = <1000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		uartb_clk: uartb {
-+			compatible = "fixed-clock";
-+			clock-frequency = <13000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		uartb2_clk: uartb2 {
-+			compatible = "fixed-clock";
-+			clock-frequency = <13000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		uartb3_clk: uartb3 {
-+			compatible = "fixed-clock";
-+			clock-frequency = <13000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		usb_otg_ahb_clk: usb_otg_ahb {
-+			compatible = "fixed-clock";
-+			clock-frequency = <52000000>;
-+			#clock-cells = <0>;
-+		};
-+	};
-+
-+	usbotg: usb@3f120000 {
-+		compatible = "snps,dwc2";
-+		reg = <0x3f120000 0x10000>;
-+		interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&usb_otg_ahb_clk>;
-+		clock-names = "otg";
-+		phys = <&usbphy>;
-+		phy-names = "usb2-phy";
-+		status = "disabled";
-+	};
-+
-+	usbphy: usb-phy@3f130000 {
-+		compatible = "brcm,kona-usb2-phy";
-+		reg = <0x3f130000 0x28>;
-+		#phy-cells = <0>;
-+		status = "disabled";
-+	};
-+};
--- 
-1.9.0
+Well... phy_power_on() uses mutex to protect power_on() callback.
+power_on() is samsung_usb2_phy_power_on() in our case.
+samsung_usb2_phy_power_on() uses spinlock.
+My question is why do we need to use spinlock _inside_ callback
+if it is already protected by mutex.
