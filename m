@@ -1,73 +1,34 @@
-From: Tushar Behera <tushar.behera@linaro.org>
-Subject: [PATCH 2/2] dt-bindings: clock: Move exynos-audss-clk.h to dt-bindings/clock
-Date: Thu,  6 Mar 2014 11:34:44 +0530
-Message-ID: <1394085884-13081-3-git-send-email-tushar.behera@linaro.org>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH 2/2] dt-bindings: clock: Move exynos-audss-clk.h to dt-bindings/clock
+Date: Thu, 6 Mar 2014 12:04:07 +0530
+Message-ID: <CAK9yfHwLRV_Wj+O=tNEGWw2g4oR9t1-O9bNwozfwv+WOPkjpoQ@mail.gmail.com>
 References: <1394085884-13081-1-git-send-email-tushar.behera@linaro.org>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1394085884-13081-1-git-send-email-tushar.behera@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@maxim.org.za, plagnioj@jcrosoft.com, kgene.kim@samsung.com, t.figa@samsung.com
+	<1394085884-13081-3-git-send-email-tushar.behera@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1394085884-13081-3-git-send-email-tushar.behera@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tushar Behera <tushar.behera@linaro.org>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux@maxim.org.za, plagnioj@jcrosoft.com, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Most of the clock related dt-binding header files are located in
-dt-bindings/clock folder. It would be good to keep all the similar
-header files at a single location.
+On 6 March 2014 11:34, Tushar Behera <tushar.behera@linaro.org> wrote:
+> Most of the clock related dt-binding header files are located in
+> dt-bindings/clock folder. It would be good to keep all the similar
+> header files at a single location.
+>
+> Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
+> CC: Kukjin Kim <kgene.kim@samsung.com>
+> CC: Tomasz Figa <t.figa@samsung.com>
+> ---
 
-Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
-CC: Kukjin Kim <kgene.kim@samsung.com>
-CC: Tomasz Figa <t.figa@samsung.com>
----
- arch/arm/boot/dts/exynos5250.dtsi                  |    2 +-
- arch/arm/boot/dts/exynos5420.dtsi                  |    2 +-
- drivers/clk/samsung/clk-exynos-audss.c             |    2 +-
- .../dt-bindings/{clk => clock}/exynos-audss-clk.h  |    0
- 4 files changed, 3 insertions(+), 3 deletions(-)
- rename include/dt-bindings/{clk => clock}/exynos-audss-clk.h (100%)
+Sensible move.
+Reviewed-by: Sachin Kamat <sachin.kamat@linaro.org>
 
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index 8f6300f..2048012 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -20,7 +20,7 @@
- #include "exynos5.dtsi"
- #include "exynos5250-pinctrl.dtsi"
- 
--#include <dt-bindings/clk/exynos-audss-clk.h>
-+#include <dt-bindings/clock/exynos-audss-clk.h>
- 
- / {
- 	compatible = "samsung,exynos5250";
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index 45e2e65..64c7f6d 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -16,7 +16,7 @@
- #include "exynos5.dtsi"
- #include "exynos5420-pinctrl.dtsi"
- 
--#include <dt-bindings/clk/exynos-audss-clk.h>
-+#include <dt-bindings/clock/exynos-audss-clk.h>
- 
- / {
- 	compatible = "samsung,exynos5420";
-diff --git a/drivers/clk/samsung/clk-exynos-audss.c b/drivers/clk/samsung/clk-exynos-audss.c
-index 884187f..13eae14c 100644
---- a/drivers/clk/samsung/clk-exynos-audss.c
-+++ b/drivers/clk/samsung/clk-exynos-audss.c
-@@ -17,7 +17,7 @@
- #include <linux/module.h>
- #include <linux/platform_device.h>
- 
--#include <dt-bindings/clk/exynos-audss-clk.h>
-+#include <dt-bindings/clock/exynos-audss-clk.h>
- 
- enum exynos_audss_clk_type {
- 	TYPE_EXYNOS4210,
-diff --git a/include/dt-bindings/clk/exynos-audss-clk.h b/include/dt-bindings/clock/exynos-audss-clk.h
-similarity index 100%
-rename from include/dt-bindings/clk/exynos-audss-clk.h
-rename to include/dt-bindings/clock/exynos-audss-clk.h
+Now that the dt-bindings/clk folder is empty (with these 2 patches
+applied), it can be deleted as well.
+
 -- 
-1.7.9.5
-
+With warm regards,
+Sachin
