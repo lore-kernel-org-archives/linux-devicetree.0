@@ -1,170 +1,65 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH 2/3] soc: keystone: add QMSS driver
-Date: Thu, 6 Mar 2014 09:46:47 +0800
-Message-ID: <5317D387.3000708@ti.com>
-References: <1393629520-12713-1-git-send-email-santosh.shilimkar@ti.com>
- <1393629520-12713-3-git-send-email-santosh.shilimkar@ti.com>
- <AAE2808F-A2C8-4031-BFA4-1A20B182EA69@codeaurora.org>
- <53169036.9060808@ti.com>
- <0817AD72-FBD0-4DB0-86C7-6C8EAC84BAA2@codeaurora.org>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: imx6qdl-sabresd.dtsi: Add red led
+Date: Thu, 6 Mar 2014 10:05:16 +0800
+Message-ID: <20140306020514.GC11366@S2101-09.ap.freescale.net>
+References: <20140305062216.GI8784@S2101-09.ap.freescale.net>
+ <1394007383-21874-1-git-send-email-vincent.stehle@freescale.com>
+ <20140305114223.GN8784@S2101-09.ap.freescale.net>
+ <20140305193925.GY21483@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <0817AD72-FBD0-4DB0-86C7-6C8EAC84BAA2@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Nair,
- Sandeep" <sandeep_n@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140305193925.GY21483-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Vincent =?iso-8859-1?Q?Stehl=E9?= <vincent.stehle-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 05 March 2014 05:55 PM, Kumar Gala wrote:
-> =
+On Wed, Mar 05, 2014 at 07:39:26PM +0000, Russell King - ARM Linux wrote:
+> On Wed, Mar 05, 2014 at 07:42:28PM +0800, Shawn Guo wrote:
+> > It's not a hog pin, so shouldn't be added here.  (Right, most of the
+> > existing pins shouldn't be here from the beginning)
+> 
+> On the subject of that kind of thing... I have an issue with the existing
+> pinmux stuff.  This is a wider issue than your discussion above...
+> 
+> I regard the idea of requiring the pinmux to be configured as part of
+> the driver probe a rather broken concept - yes, it makes sense in some
+> scenarios, but for the vast majority of cases, it doesn't.
 
-> On Mar 4, 2014, at 8:47 PM, Santosh Shilimkar <santosh.shilimkar@ti.com> =
-wrote:
-> =
+>From what I've seen, it's the opposite - the concept works for the
+majority, and only some scenarios needs special handling.
 
->> On Wednesday 05 March 2014 01:59 AM, Kumar Gala wrote:
->>>
->>> On Feb 28, 2014, at 5:18 PM, Santosh Shilimkar <santosh.shilimkar@ti.co=
-m> wrote:
->>>
->>>> From: Sandeep Nair <sandeep_n@ti.com>
->>>>
->>>> The QMSS (Queue Manager Sub System) found on Keystone SOCs is one of
->>>> the main hardware sub system which forms the backbone of the Keystone
->>>> Multi-core Navigator. QMSS consist of queue managers, packed-data stru=
-cture
->>>> processors(PDSP), linking RAM, descriptor pools and infrastructure
->>>> Packet DMA.
->>>>
->>>> The Queue Manager is a hardware module that is responsible for acceler=
-ating
->>>> management of the packet queues. Packets are queued/de-queued by writi=
-ng or
->>>> reading descriptor address to a particular memory mapped location. The=
- PDSPs
->>>> perform QMSS related functions like accumulation, QoS, or event manage=
-ment.
->>>> Linking RAM registers are used to link the descriptors which are store=
-d in
->>>> descriptor RAM. Descriptor RAM is configurable as internal or external=
- memory.
->>>>
->>>> The QMSS driver manages the PDSP setups, linking RAM regions,
->>>> queue pool management (allocation, push, pop and notify) and descriptor
->>>> pool management. The specifics on the device tree bindings for
->>>> QMSS can be found in:
->>>>       Documentation/devicetree/bindings/soc/keystone-qmss.txt
->>>>
->>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>> Cc: Kumar Gala <galak@codeaurora.org>
->>>> Cc: Olof Johansson <olof@lixom.net>
->>>> Cc: Arnd Bergmann <arnd@arndb.de>
->>>> Cc: Grant Likely <grant.likely@linaro.org>
->>>> Cc: Rob Herring <robh+dt@kernel.org>
->>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>> Signed-off-by: Sandeep Nair <sandeep_n@ti.com>
->>>> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
->>>> ---
->>>> .../devicetree/bindings/soc/keystone-qmss.txt      |  209 +++
->>>> drivers/Kconfig                                    |    2 +
->>>> drivers/Makefile                                   |    3 +
->>>> drivers/soc/Kconfig                                |    2 +
->>>> drivers/soc/Makefile                               |    5 +
->>>> drivers/soc/keystone/Kconfig                       |   15 +
->>>> drivers/soc/keystone/Makefile                      |    5 +
->>>> drivers/soc/keystone/qmss_acc.c                    |  591 ++++++++
->>>> drivers/soc/keystone/qmss_queue.c                  | 1533 ++++++++++++=
-++++++++
->>>> drivers/soc/keystone/qmss_queue.h                  |  236 +++
->>>> include/linux/soc/keystone_qmss.h                  |  390 +++++
->>>> 11 files changed, 2991 insertions(+)
->>>> create mode 100644 Documentation/devicetree/bindings/soc/keystone-qmss=
-.txt
->>>> create mode 100644 drivers/soc/Makefile
->>>> create mode 100644 drivers/soc/keystone/Kconfig
->>>> create mode 100644 drivers/soc/keystone/Makefile
->>>> create mode 100644 drivers/soc/keystone/qmss_acc.c
->>>> create mode 100644 drivers/soc/keystone/qmss_queue.c
->>>> create mode 100644 drivers/soc/keystone/qmss_queue.h
->>>> create mode 100644 include/linux/soc/keystone_qmss.h
->>>
->>> Do you see qmss being able to provide HW support for a qdisc or doing p=
-rocessor to processor communication over something like rpmsg?
->>>
->>> I ask because I do wondering if we should be looking at a drivers/hwque=
-ue as other vendors have similar hardware.
->>>
->> QMSS just provides the programming interfaces so that certain queues can=
- be configured to achieve QOS tree. The actual qdisc should be
->> part of the network driver as such. The queues are such a generic hardwa=
-re that it can be used for wide variety of usecases and =
+> 
+> Let's take an example.  A pin is wired to a SPDIF transceiver.  The
+> out-of-reset SoC configuration results in the pin turning the LED on
+> in the SPDIF transceiver.
+> 
+> With the way stuff is setup, with the driver having the pinmux settings
+> for itself, the point at which that pin gets configured is when the
+> driver loads, which may be a module - so that can happen quite late in
+> the boot sequence.  A failure to boot can result in it not happening at
+> all.
+> 
+> So, this brings up the obvious question: is this proper behaviour of the
+> hardware, or is this something we should do better with - such as where
+> we know what the settings should be for a platform, and these settings
+> never change, we arrange for that to happen at kernel boot time as a
+> once-off.
+> 
+> For example, in the above case, we know it's board XYZ, we know that this
+> pin is connected to the SPDIF transceiver, so maybe we should configure
+> it early on in the boot sequence whether or not the driver has been
+> configured and/or loaded.
 
->> supporting that through one driver will be really hard. We did talk of h=
-wqueue last year but looks like the usecase variety is
->> too much because of generic nature of them.
->>
->> QMSS isn't used as such for message passing but queue hardware can be us=
-ed as done by APM hardware which Arnd pointed me on the other
->> thread. As Arnd recommended, the processor to processor communication re=
-lated drivers should go under drivers/mailbox. One example,
->> was the APM QMTM patchset [1]
->>
->> From first look the QMSS(APM) and QMTM(APM) looked very similar but they=
- actually differ largely the way it works. Thanks to Arnd
->> for useful discussion here at connect, I better understood how the QMTM =
-works.
->>
->> If you know any other hardware, which needs similar interfaces as QMSS, =
-we can surely think of another subsystem. QMSS is
->> largely network usecase dominated but not limited to only those usecases=
-. It is also used by pure drivers/crypto/ or
->> can also be used for data movement for video etc. =
+For such special case, I'm fine with using hog group to handle it.  But
+IMO, bootloader is even a better place to correct such unreasonable
+out-of-reset SoC configuration for particular board.
 
->>
+Shawn
 
-[..]
-
->> [1] https://lkml.org/lkml/2014/2/14/703
-> =
-
-> The Freescale QorIQ Devices have a Queue Manager (QMan) as part of their =
-Data Path Architecture (DPAA).  I haven=92t looked at the QMTM from APM, bu=
-t not sure if mailbox is the best place for these things.  They seem so muc=
-h more involved than what I=92m guessing most people are thinking with mail=
-box.
-> =
-
-I also felt that even for APM case mailbox may not be the right subsystem b=
-ut seems like
-the whole QMTM is based on message passing and thats why Arnd suggested the=
- drives/mailbox
-
-At least for TI QMSS, we didn't find any suitable existing subsystem so far=
-. Arnd also
-agreed that we can't fit the QMSS in mailbox subsystem. If there are more h=
-ardware which
-would like to have similar subsystem interfaces like QMSS, am more than hap=
-py to work with
-them on common interfaces. As you know, I tried this last year as well but =
-heard none.
-Arnd also suggested that we look at interfaces are geared towards more soph=
-isticated
-cases like Open VSwitch.
-
-So my current plan is stick to drivers/soc/ and focus more and getting inte=
-rfaces and
-bindings right. So any help reviewing those would be greatly appreciated.
-
-Regards,
-Santosh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
