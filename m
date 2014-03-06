@@ -1,123 +1,38 @@
 From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: Re: [PATCH 3/9] phy-rcar-usb-gen2: add device tree support
-Date: Thu, 06 Mar 2014 18:19:38 +0000
-Message-ID: <5318BC3A.808@codethink.co.uk>
-References: <1394128887-4197-1-git-send-email-ben.dooks@codethink.co.uk> <1394128887-4197-4-git-send-email-ben.dooks@codethink.co.uk> <5318C973.70501@cogentembedded.com>
+Subject: Re: [PATCH 1/9] pci-rcar-gen2: add devicetree support
+Date: Thu, 06 Mar 2014 18:21:34 +0000
+Message-ID: <5318BCAE.7000108@codethink.co.uk>
+References: <1394128887-4197-1-git-send-email-ben.dooks@codethink.co.uk> <1394128887-4197-2-git-send-email-ben.dooks@codethink.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <5318C973.70501@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-sh@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@lists.codethink.co.uk, magnus.damn@opensource.se, horms@verge.net.au, Felipe Balbi <balbi@ti.com>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1394128887-4197-2-git-send-email-ben.dooks@codethink.co.uk>
+Sender: linux-pci-owner@vger.kernel.org
+To: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: linux-sh@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@lists.codethink.co.uk, sergei.shtylyov@cogentembedded.com, magnus.damn@opensource.se, horms@verge.net.au, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/14 19:16, Sergei Shtylyov wrote:
-> Hello.
+On 06/03/14 18:01, Ben Dooks wrote:
+> Add OF match table for pci-rcar-gen2 driver for device tree support.
 >
-> On 03/06/2014 09:01 PM, Ben Dooks wrote:
->
->> Add support for the phy-rcar-gen2-usb driver to be probed from device
->> tree.
->
->> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
->> Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
->> ---
->> Fixes from v2:
->>     - fix missed of_match_ptr()
->>     - fix names of channel selection booleans
->>     - updated and merged documentation for dt entries
->>
->> Fixes from v2:
->>     - fix missing of_if patch
->>
->> Fixes from v1:
->>     - use of_property_reasd-bool()
->>     - remove unused of_id variable
->>
->> Cc: Felipe Balbi <balbi@ti.com>
->> Cc: linux-usb@vger.kernel.org
->> Cc: linux-sh@vger.kernel.org
->> Cc: Magnus Damm <magnus.damm@gmail.com>
->> Cc: Simon Horman <horms@verge.net.au>
->> Cc: devicetree@vger.kernel.org
->
->> Conflicts:
->>     drivers/usb/phy/phy-rcar-gen2-usb.c
->> ---
->>   .../bindings/usb/renesas,rcar-gen2-usb-phy.txt     | 36
->> ++++++++++++++++++++++
->>   drivers/pci/host/pci-rcar-gen2.c                   |  1 +
->
->     Eh? What does this file have to do with USB PHY?
 
-Ah, it was a fixup for a missing header that got merged
-into the wrong file. Will fix that.
+> diff --git a/drivers/pci/host/pci-rcar-gen2.c b/drivers/pci/host/pci-rcar-gen2.c
+> index fd3e3ab..1216784 100644
+> --- a/drivers/pci/host/pci-rcar-gen2.c
+> +++ b/drivers/pci/host/pci-rcar-gen2.c
+> @@ -16,6 +16,7 @@
+>   #include <linux/kernel.h>
+>   #include <linux/module.h>
+>   #include <linux/pci.h>
+> +#include <linux/of_pci.h>
+>   #include <linux/platform_device.h>
+>   #include <linux/pm_runtime.h>
+>   #include <linux/sizes.h>
 
->>   drivers/usb/phy/phy-rcar-gen2-usb.c                | 34
->> +++++++++++++++++---
->>   3 files changed, 66 insertions(+), 5 deletions(-)
->>   create mode 100644
->> Documentation/devicetree/bindings/usb/renesas,rcar-gen2-usb-phy.txt
->
->> diff --git
->> a/Documentation/devicetree/bindings/usb/renesas,rcar-gen2-usb-phy.txt
->> b/Documentation/devicetree/bindings/usb/renesas,rcar-gen2-usb-phy.txt
->> new file mode 100644
->> index 0000000..5351a30
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/renesas,rcar-gen2-usb-phy.txt
->> @@ -0,0 +1,36 @@
->> +Renesas RCar gen2 USB PHY bindings
->> +----------------------------------
->> +
->> +Bindings for the USB PHY block used in some Renesas SoCs.
->> +
->> +Required properties:
->> + - compatible:  "renesas,usb-phy-r8a7790" for the R8A7790 SoC
->> +        "renesas,usb-phy-r8a7791" for the R8A7791 SoC
->> + - reg : A single region to access device registers
->> + - clocks : The reference to the clock to use for this block
->> + - clock-names : The name for the clock at index 0 (must be "usbhs")
->> +
->> +Optional properties:
->> +
->> + - renesas,usb0-device: boolean, if present USB0 is connected to HS
->> device
->> +            otherwise the USB0 is connected to OHCI/EHCI host.
->
->     IIUC, the testing has shown that USBHS is dual-role controller in
-> that case, i.e. supports both host and device roles (the manual has the
-> host controller details too). Vladimir, is it so?
+Apologies all, there's a missing include of <linux/of.h> which should
+have been added here
 
-Currently there is no auto-detection for this, so it gets set at
-start time.
-
->> + - renesas,usb2-xhci: boolean, if present USB2 is connected to XHCI
->> controller
->> +              otherwise the USB2 is connected to OHCI/EHCI host.
->> +
->> +
->> +Example device node for SoC dtsi file:
->> +
->> +    usbphy: usbphy@e6590100 {
->> +        compatible = "renesas,usb-phy-r8a7790";
->> +        clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
->> +        clock-names = "usbhs";
->> +        reg = < 0x0 0xe6590100 0x0 0x100>;
->> +        status = "disabled";
->> +    };
->> +
->> +Example board file:
->> +
->> +&usbphy {
->> +    status = "okay";
->> +};
->
->     These are usually merged into one node for the example.
-
-Much nicer if separate.
 
 -- 
 Ben Dooks				http://www.codethink.co.uk/
