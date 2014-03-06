@@ -1,53 +1,52 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v2] ARM: mvebu: add Device Tree for the Armada 385 RD
- board
-Date: Thu, 6 Mar 2014 15:10:59 -0500
-Message-ID: <20140306201059.GI1872@titan.lakedaemon.net>
-References: <1394119075-18657-1-git-send-email-gregory.clement@free-electrons.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dove: drop pinctrl PMU reg property
+Date: Thu, 6 Mar 2014 15:15:10 -0500
+Message-ID: <20140306201510.GJ1872@titan.lakedaemon.net>
+References: <1393977790-29110-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1393977790-29110-2-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1394119075-18657-1-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1393977790-29110-2-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 06, 2014 at 04:17:55PM +0100, Gregory CLEMENT wrote:
-> The Armada 385 RD board is the reference design board from Marvell
-> for the Armada 385 SoC. This commit adds a Device Tree description for
-> this board, which enables the following features:
+On Wed, Mar 05, 2014 at 01:03:08AM +0100, Sebastian Hesselbarth wrote:
+> Marvell Dove's pinctrl does require some PMU regs for muxing PMU
+> functions to MPP pins. Recently, a discussion started about consolidating
+> Power Management Unit (PMU) into a single DT node. As we don't want
+> anymore DT ABI in the way, drop the corresponding reg property from
+> pinctrl node now. The driver will derive the registers from existing
+> reg properties.
 > 
->  * Network interfaces
->  * I2C bus
->  * Serial port
->  * SPI bus, with a SPI flash
->  * PCIe interface
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
-> Changelog:
-> v1 -> v2:
-> 
-> - used the phy-mode "rgmii-id" to be able to work with the Marvell PHY
->   driver enabled
-> 
-> - put the ethernet nodes in the address order, as it has no effect to
->   change ti at this level (should be done at dtsi level)
-> 
-> - inverted the phy devices (which was improperly assigned in v1)
-> 
-> - added the vendor prefix for the SPI flash
-> 
-> 
->  arch/arm/boot/dts/Makefile          |  3 +-
->  arch/arm/boot/dts/armada-385-rd.dts | 94 +++++++++++++++++++++++++++++++++++++
->  2 files changed, 96 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/armada-385-rd.dts
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> 
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org> 
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> 
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org> 
+> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> 
+> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> 
+> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> 
+> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org 
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org 
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  arch/arm/boot/dts/dove.dtsi | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 
 Applied to mvebu/dt
 
 thx,
 
 Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
