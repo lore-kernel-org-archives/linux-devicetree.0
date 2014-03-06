@@ -1,100 +1,107 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v6 0/8] Move device tree graph parsing helpers to drivers/of
-Date: Thu, 06 Mar 2014 16:47:24 +0100
-Message-ID: <5318988C.2030004@samsung.com>
-References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de>
- <53170C00.20200@ti.com> <1394030554.8754.31.camel@paszta.hi.pengutronix.de>
- <20140306141657.GB21483@n2100.arm.linux.org.uk>
- <20140306121721.6186dafb@samsung.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: mvebu: add Device Tree for the Armada 385 RD board
+Date: Thu, 06 Mar 2014 16:47:30 +0100
+Message-ID: <53189892.5090502@free-electrons.com>
+References: <1394107868-26094-1-git-send-email-gregory.clement@free-electrons.com> <20140306131429.GJ4780@lunn.ch> <5318779C.8030901@free-electrons.com> <20140306142117.GL4780@lunn.ch> <531886B4.2070002@free-electrons.com> <20140306144600.GM4780@lunn.ch> <53188B73.4000109@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20140306121721.6186dafb-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <53188B73.4000109-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/14 16:17, Mauro Carvalho Chehab wrote:
-> Em Thu, 06 Mar 2014 14:16:57 +0000
-> Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> escreveu:
+On 06/03/2014 15:51, Gregory CLEMENT wrote:
+> On 06/03/2014 15:46, Andrew Lunn wrote:
+>>>>>> I think you can use aliases to get the order correct, independent of
+>>>>>> how you list them in DT. That should be a lot safer than assuming
+>>>>>> things are instantiated from top to bottom.
+>>>>>
+>>>>> It sounds interesting, how would you do this?
+>>>>
+>>>> As there already is in armada-370-xp.dtsi
+>>>>
+>>>>         aliases {
+>>>>                 eth0 = &eth0;
+>>>>                 eth1 = &eth1;
+>>>>         };
+>>>>
+>>>>
+>>>> 	eth0: ethernet@70000 {
+>>>> 	}
+>>>>         eth1: ethernet@74000 {
+>>>> 	}
+>>>>
+>>>> This at least works for i2c devices. The pdev->id is set using the
+>>>> alias number.
+>>>
+>>> Well I think it doesn't work with ethernet devices because we already do
+>>> this in aramda-38x.dtsi:
+>>>
+>>> 	aliases {
+>>> 		gpio0 = &gpio0;
+>>> 		gpio1 = &gpio1;
+>>> 		eth0 = &eth0;
+>>> 		eth1 = &eth1;
+>>> 		eth2 = &eth2;
+>>> 	};
+>>>
+>>> 	eth1: ethernet@30000 {
+>>> 	}
+>>> 	eth2: ethernet@34000 {
+>>> 	}
+>>> 	eth0: ethernet@70000 {
+>>> 	}
+>>
+>> Ah, Erm, O.K. 
+>>
+>> It seems to be an i2c thing. Take a look at i2c_add_adapter().
+>>
+>>         if (dev->of_node) {
+>>                 id = of_alias_get_id(dev->of_node, "i2c");
+>>  
+>> You could put something similar into the ethernet driver.
+>>
 > 
->> > On Wed, Mar 05, 2014 at 03:42:34PM +0100, Philipp Zabel wrote:
->>> > > Am Mittwoch, den 05.03.2014, 13:35 +0200 schrieb Tomi Valkeinen:
->>>> > > > Hi,
->>>> > > > 
->>>> > > > On 05/03/14 11:20, Philipp Zabel wrote:
->>>>> > > > > Hi,
->>>>> > > > > 
->>>>> > > > > this version of the OF graph helper move series further addresses a few of
->>>>> > > > > Tomi's and Sylwester's comments.
->>>>> > > > > 
->>>>> > > > > Changes since v5:
->>>>> > > > >  - Fixed spelling errors and a wrong device node name in the link section
->>>>> > > > >  - Added parentless previous endpoint's full name to warning
->>>>> > > > >  - Fixed documentation comment for of_graph_parse_endpoint
->>>>> > > > >  - Unrolled for-loop in of_graph_get_remote_port_parent
->>>>> > > > > 
->>>>> > > > > Philipp Zabel (8):
->>>>> > > > >   [media] of: move graph helpers from drivers/media/v4l2-core to
->>>>> > > > >     drivers/of
->>>>> > > > >   Documentation: of: Document graph bindings
->>>>> > > > >   of: Warn if of_graph_get_next_endpoint is called with the root node
->>>>> > > > >   of: Reduce indentation in of_graph_get_next_endpoint
->>>>> > > > >   [media] of: move common endpoint parsing to drivers/of
->>>>> > > > >   of: Implement simplified graph binding for single port devices
->>>>> > > > >   of: Document simplified graph binding for single port devices
->>>>> > > > >   of: Warn if of_graph_parse_endpoint is called with the root node
->>>> > > > 
->>>> > > > So, as I've pointed out, I don't agree with the API, as it's too limited
->>>> > > > and I can't use it, but as this series is (mostly) about moving the
->>>> > > > current API to a common place, it's fine for me.
->>>> > > > 
->>>> > > > Acked-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
->>> > > 
->>> > > Thanks. I'll be happy to help expanding the API to parse ports
->>> > > individually, once this gets accepted.
->>> > > 
->>> > > Mauro, Guennadi, are you fine with how this turned out? I'd like to get
->>> > > your acks again, for the changed location.
->
-> From my side, there's nothing on such code that is V4L2 specific.
-> Moving it to drivers/of makes sense on my eyes.
 > 
-> Acked-by: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Actually even what I did, didn't work as I expected. The order should have been changed in
+> the dsi file.
+> 
+> I will have a look on the ethernet driver.
 
-I'm OK with patches 1...5, 8, so for these:
+Well the naming is done in __dev_alloc_name() and it depends on
+the probe order.
 
-Acked-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+So I really wonder if we should not put the ethernet@70000 before the othe
+Ethernet node in the armada-38x.dts file. Otherwise it is very misleading to
+have eth0 for the second interface, eth1 for the third one, and eth2 for
+the first one.
 
-Regarding the simplified version of the binding, I thought we should
-leave 'port' instead of 'endpoint' node. This could cover more hardware
-configurations. Are there any users of this simplified binding queued
-for v3.15 ? If not, perhaps we can postpone it and discuss it a bit more
-(sorry, couldn't find time to comment on that earlier) ?
 
->> > I'll need those acks before I can even think about queuing up the
->> > imx-drm bits.
->> > 
->> > Another way to deal with this is if this gets pulled into the V4L tree
->> > from Philipp's git tree, I can also pull that in myself.  What mustn't
->> > happen is for these to be committed independently as patches.
->
-> If everyone agrees, I actually prefer have this patch applied on my tree,
-> in order to avoid some potential merge conflicts at the merge window,
-> as we might have other drivers and changes there touching on those API
-> calls (I'm aware of a series of patches from Sylwester with some DT
-> stuff on it. Not sure if it would be affected by such changes or not).
+Thanks,
 
-Yes, it's going to conflict with my patch series. I thought it could be
-put onto a stable a topic branch, e.g. at git://linuxtv.org/media_tree.git,
-which could be then pulled into the media master branch and anywhere
-else it is needed ?
+Gregory
 
---
-Regards,
-Sylwester
+> 
+> 
+> Thanks,
+> 
+> Gregory
+> 
+> 
+>>     Andrew
+>>
+> 
+> 
+
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
