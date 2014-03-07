@@ -1,126 +1,55 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2] phy-rcar-gen2-usb: add device tree support
-Date: Sat, 08 Mar 2014 02:57:11 +0300
-Message-ID: <531A5CD7.6030903@cogentembedded.com>
-References: <201403010407.54639.sergei.shtylyov@cogentembedded.com> <CANqRtoRTtsF64jZ-n_VbmzkRehUoBWQLEd5jfAL86wyLrvAUPQ@mail.gmail.com> <5319D75C.5020701@cogentembedded.com>
+From: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Subject: Re: rfc: checkpatch logical line continuations (was IBM Akebono: Add
+ support for a new PHY interface to the IBM emac driver)
+Date: Sat, 8 Mar 2014 02:04:21 +0300
+Message-ID: <20140307230420.GH29018@mwanda>
+References: <1394077948-8395-1-git-send-email-alistair@popple.id.au>
+ <1394077948-8395-3-git-send-email-alistair@popple.id.au>
+ <20140307.154142.488351276799532264.davem@davemloft.net>
+ <1394226164.16156.96.camel@joe-AO722>
+ <20140307213017.GA18769@cloud>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5319D75C.5020701@cogentembedded.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: Felipe Balbi <balbi@ti.com>, Linux-USB <linux-usb@vger.kernel.org>, robh+dt@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, SH-Linux <linux-sh@vger.kernel.org>, Valentine Barshak <valentine.barshak@cogentembedded.com>, rob@landley.net, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140307213017.GA18769@cloud>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org
+Cc: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Dan Carpenter <error27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Randy Dunlap <randy.dunlap-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Fri, Mar 07, 2014 at 01:30:17PM -0800, josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org wrote:
+> On Fri, Mar 07, 2014 at 01:02:44PM -0800, Joe Perches wrote:
+> > On Fri, 2014-03-07 at 15:41 -0500, David Miller wrote:
+> > > From: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
+> > > Date: Thu,  6 Mar 2014 14:52:25 +1100
+> > > 
+> > > > +	out_be32(dev->reg, in_be32(dev->reg) | WKUP_ETH_RGMIIEN
+> > > > +		 | WKUP_ETH_TX_OE | WKUP_ETH_RX_IE);
+> > > 
+> > > When an expression spans multiple lines, the lines should end with
+> > > operators rather than begin with them.
+> > 
+> > That's not in CodingStyle currently.
+> 
+> It's also not even remotely consistent across existing kernel code, and
+> it isn't obvious that there's a general developer consensus on the
+> "right" way to write it.
+> 
 
-On 03/07/2014 05:27 PM, Sergei Shtylyov wrote:
+We just had this discussion in staging and Greg modified the patch to
+put the operator at the end.
 
->>> Add support of the device tree probing for the Renesas R-Car generation 2 SoCs
->>> documenting the device tree binding as necessary.
+https://lkml.org/lkml/2014/2/25/125
 
->>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+It's like logical && and || operators which go at the end these days.
+I don't really want to have a lot of checkpatch churn to convert
+everything...
 
->>> ---
->>> This patch is against the 'next' branch of Felipe Balbi's 'usb.git' repo.
+regards,
+dan carpenter
 
->>> Changes in version 2:
->>> - restored devm_clk_get() call and the error handling logic in the probe()
->>>    method, removed clk_put() call in the remove() method.
-
->>>   Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt |   29 +++++++++++
->>>   drivers/usb/phy/phy-rcar-gen2-usb.c                     |   42
->>> ++++++++++++++--
->>>   2 files changed, 68 insertions(+), 3 deletions(-)
-
->>> Index: usb/Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt
->>> ===================================================================
->>> --- /dev/null
->>> +++ usb/Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt
->>> @@ -0,0 +1,29 @@
->>> +* Renesas R-Car generation 2 USB PHY
->>> +
->>> +This file provides information on what the device node for the R-Car
->>> generation
->>> +2 USB PHY contains.
->>> +
->>> +Required properties:
->>> +- compatible: "renesas,usb-phy-r8a7790" if the device is a part of R8A7790
->>> SoC.
->>> +             "renesas,usb-phy-r8a7791" if the device is a part of R8A7791
->>> SoC.
->>> +- reg: offset and length of the register block.
->>> +- clocks: clock phandle and specifier pair.
->>> +- clock-names: string, clock input name, must be "usbhs".
->>> +
->>> +Optional properties:
->>> +- renesas,channel0-pci: boolean, specify when USB channel 0 should be
->>> connected
->>> +                       to PCI EHCI/OHCI; otherwise, it will be connected
->>> to the
->>> +                       USBHS controller.
->>> +- renesas,channel2-pci: boolean, specify when USB channel 2 should be
->>> connected
->>> +                       to PCI EHCI/OHCI; otherwise, it will be connected
->>> to the
->>> +                       USBSS controller (xHCI).
-
->> Thanks for your efforts here, but this DT binding looks like a mix of
->> software configuration and hardware description.
-
->     I disagree. I have already explained to Mark Rutland how selecting a
-> particular controller for a particular USB port should depend on the kind of
-> the USB connector used, i.e. the board hardware.
-
->>> +Example (Lager board):
->>> +
->>> +       usb-phy@e6590100 {
->>> +               compatible = "renesas,usb-phy-r8a7790";
->>> +               reg = <0 0xe6590100 0 0x100>;
->>> +               clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
->>> +               clock-names = "usbhs";
->>> +               renesas,channel2-pci;
->>> +       };
-
->> As an example, instead of relying on "renesas,channel0-pci" or
->> "renesas,channel2-pci" to specify which hard coded software
->> configuration you want please rework this to expose 3 separate
->> channels and use DT to point each host controller to the right
->> channel.
-
->     So you want to expose the channels as "virtual devices"? Or what do you
-> want?
-
-    OK, let's assume you want either "virtual" PHYs or channel subnodes in the 
-PHY node we have now. Now what the PHY driver should do with all these 
-phandles pointing from the controller nodes to the PHY nodes or the channel 
-subnodes? Scan all device tree in search of the nodes having certain prop and 
-get info from such nodes on how to program the channel MUXing register using 
-their "compatible" props? Sorry, that doesn't appeal to me at all.
-    Now if we got the phandles pointing from the PHY node back to the selected 
-controllers, things would look somewhat better. Yet it still looks like an 
-unnecessary complication of what I'm proposing and so doesn't appeal to me 
-much either.
-    So, what's your intent here (other than to make my life harder :-)?
-
-> Also, it seems almost impossible to represent some USB controllers in DT
-> -- such as USBHS in particular.
-
-    I've spent several days staring at the various USBHS code and I'm going to 
-send you a more detailed report on USBHS vs DT issues.
-
-[...]
-
->> So this is a NAK on my side. I expect better.
-
->     Thanks for your long awaited feedback.
-
-    I'm not convinced that what you're proposing is indeed better though.
-
->> Thanks,
-
->> / magnus
-
-WBR, Sergei
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
