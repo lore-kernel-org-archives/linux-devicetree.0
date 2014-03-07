@@ -1,15 +1,16 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 3/7] of: introduce of_dma_is_coherent() helper
-Date: Fri, 7 Mar 2014 17:09:11 +0100
-Message-ID: <201403071709.11568.arnd@arndb.de>
-References: <1394097598-17622-1-git-send-email-santosh.shilimkar@ti.com>
- <CAL_JsqJ3QhRRNVAsvAPP=Ex_ptQcbpCXh7pf44K1xh+scFqiug@mail.gmail.com>
- <531948A8.9040106@ti.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 5/8] phy: omap-usb2: Add clock names to Documentation
+ binding
+Date: Fri, 7 Mar 2014 21:53:03 +0530
+Message-ID: <5319F267.3080309@ti.com>
+References: <1394197751-28984-1-git-send-email-rogerq@ti.com>
+ <1394197751-28984-6-git-send-email-rogerq@ti.com>
+ <20140307160422.GA23885@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <531948A8.9040106@ti.com>
+In-Reply-To: <20140307160422.GA23885@saruman.home>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,26 +20,23 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: balbi@ti.com
+Cc: devicetree@vger.kernel.org, george.cherian@ti.com, tony@atomide.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 07 March 2014, Santosh Shilimkar wrote:
-> On Friday 07 March 2014 11:55 AM, Rob Herring wrote:
+Felipe,
+
+On Friday 07 March 2014 09:34 PM, Felipe Balbi wrote:
+> On Fri, Mar 07, 2014 at 03:09:08PM +0200, Roger Quadros wrote:
+>> Add "wkupclk" and "refclk" information to DT binding information.
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> ---
 >
-> > Thinking about this some more, if the arch is always coherent or
-> > always non-coherent, then the default ops are always fine. In that
-> > case set_arch_dma_coherent_ops is always a nop and of_dma_is_coherent
-> > is a don't care.
-> > 
-> Hmmm.. I guess you are right. In that case we can drop the need of
-> config option.
+> so, should I take this one ?
 
-A compile-time config option clearly would not work here, because it
-breaks multiplatform support when some platforms are different from
-others. I can still see the possible need for a global run-time setting
-though, to give some platform init code the ability to override the
-DT flags when it knows better. That is probably what you want to do
-on keystone without LPAE.
+yes.. the ti-phy.txt is only in your tree.
 
-	Arnd
+Thanks
+Kishon
+>
