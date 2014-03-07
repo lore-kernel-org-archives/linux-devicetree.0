@@ -1,79 +1,46 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH 00/10] pinctrl: mvebu: remove hard-coded addresses from
- Dove pinctrl
-Date: Thu, 6 Mar 2014 21:16:33 -0500
-Message-ID: <20140307021633.GN1872@titan.lakedaemon.net>
-References: <1393231382-11078-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <20140224181023.GA1010@titan.lakedaemon.net>
- <CACRpkdZ+YGTyDj6i8c198MdRtz3GY-YBmVO9LysPCcmT4EC0cg@mail.gmail.com>
- <20140226000940.GF1872@titan.lakedaemon.net>
- <CACRpkdYQa2BG_qxf5zY=7rks6O31ZF-BX0af3_u1MOgwfwxFSQ@mail.gmail.com>
- <20140226145345.GG1872@titan.lakedaemon.net>
- <CACRpkdZRJG-TzN4c3NSH9PqcQzpo6EbEn5_bM-P3sh4_vSjtaA@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4] net: rfkill: gpio: remove gpio names
+Date: Fri, 7 Mar 2014 10:51:27 +0800
+Message-ID: <CACRpkdZo1UHyCHe20LqRefCvS9BOT-2XeQXiZzLDQzUz4=Yc-w@mail.gmail.com>
+References: <1392900697-27577-1-git-send-email-heikki.krogerus@linux.intel.com>
+	<1392900697-27577-3-git-send-email-heikki.krogerus@linux.intel.com>
+	<53062F97.3050407@wwwdotorg.org>
+	<CAGb2v66-tDZhrm9dnXe+PdQTaLZbw20sw3uYzLor2eXpVWmPMA@mail.gmail.com>
+	<5306E599.7020605@wwwdotorg.org>
+	<CACRpkdZBvKU31EDX=6=wVLXaQDAqD6VHtaE_mGnFLr1UYQAH9g@mail.gmail.com>
+	<530CD45A.8050803@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZRJG-TzN4c3NSH9PqcQzpo6EbEn5_bM-P3sh4_vSjtaA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <530CD45A.8050803-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Gross <mark.gross-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 07, 2014 at 09:26:48AM +0800, Linus Walleij wrote:
-> On Wed, Feb 26, 2014 at 10:53 PM, Jason Cooper <jason@lakedaemon.net> wrote:
-> > On Wed, Feb 26, 2014 at 10:43:45AM +0100, Linus Walleij wrote:
-> 
-> >> Actually, I'd prefer to pull it in, rebase and sign off each patch
-> >> individually in my tree if that is not causing you problems.
-> >
-> > Actually, that would mess us up pretty badly. :(
-> 
-> OK so I didn't do this, I just pulled it in :-)
+On Wed, Feb 26, 2014 at 1:35 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 02/25/2014 02:13 AM, Linus Walleij wrote:
 
-I could tell, Stephen would have had a heart attack :)
+>> So it is basically there to satisfy the habit in some device
+>> tree bindings to name gpio arrays instead of just passing gpios = <...>;
+>> (The latter should be encouraged going forward.)
+>
+> Do you really want to switch from named GPIO lookups to index-based GPIO
+> lookups?
 
-> >> That way it is visible that the patches were funneled through pin
-> >> control.
-> >
-> > I'm a little confused by this.  Once you merge the branch into one of
-> > yours, that merge commit is a part of the history.
-> 
-> Yes this has been discussed in the past.
+I don't know what I want. I only know that ACPI and DT people
+are starting to step on each others feet.
 
-Would you have a link handy?  My first thought was to create a tag, eg
-"Sent-through: subsystem <maintainer@example.com>" that I would add to
-patches as I pull them in.  After all, I know where I'm sending them.
-Or should at any rate.
+> Index-based lookups make it much harder to extend the DT
+> binding in a backwards-compatible fashion, especially in the face of
+> optional GPIOs (of which all of CD, WP, power are).
 
-> But when a developer bisects down to a certain commit and just looks
-> at it with git log there is no telling which subsystem this thing came
-> from and who actually funnelled it to Torvalds.
+You're probably right. At the same time it makes the world complex
+for the ambition to use the same interface for DT and ACPI alike.
 
-True.
-
-> I do know you *can* find that out with some git magic, the problem
-> is that it is so magic that most developers don't know it and just
-> look at the signoffs.
-
-It would be helpful if there were a complement to 'git merge-base', say
-'git merge-tip' to point to the merge commit that joined the branch
-containing commit X.
-
-Run in succession, it would yield committers me (I merged pinctrl-dove
-into pinctrl), you, Torvalds.
-
-> But it's not like I care super-much.
-
-Well, if the code is perfect, we don't have to worry about a lazy
-developer bisecting down to one of our commits. ;-)
-
-btw - I have one last pull request I'll be sending tomorrow that's a
-couple of commits on top of what you currently have.  It's very small,
-but we're avoiding locking ourselves into supporting a bad DT ABI.  The
-real code change just downgrades a WARN().  The rest is correcting the
-binding doc.
-
-thx,
-
-Jason.
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
