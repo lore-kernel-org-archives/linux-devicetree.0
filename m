@@ -1,101 +1,126 @@
-From: Stanimir Vabanov <svarbanov@mm-sol.com>
-Subject: Re: [Patch v8 2/2] dmaengine: add Qualcomm BAM dma driver
-Date: Sat, 08 Mar 2014 00:29:49 +0200
-Message-ID: <531A485D.9010508@mm-sol.com>
-References: <1393828245-18766-1-git-send-email-agross@codeaurora.org> <1393828245-18766-3-git-send-email-agross@codeaurora.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2] phy-rcar-gen2-usb: add device tree support
+Date: Sat, 08 Mar 2014 02:57:11 +0300
+Message-ID: <531A5CD7.6030903@cogentembedded.com>
+References: <201403010407.54639.sergei.shtylyov@cogentembedded.com> <CANqRtoRTtsF64jZ-n_VbmzkRehUoBWQLEd5jfAL86wyLrvAUPQ@mail.gmail.com> <5319D75C.5020701@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1393828245-18766-3-git-send-email-agross@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <agross@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5319D75C.5020701@cogentembedded.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: Felipe Balbi <balbi@ti.com>, Linux-USB <linux-usb@vger.kernel.org>, robh+dt@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, SH-Linux <linux-sh@vger.kernel.org>, Valentine Barshak <valentine.barshak@cogentembedded.com>, rob@landley.net, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
+Hello.
 
-Thanks for the patch.
+On 03/07/2014 05:27 PM, Sergei Shtylyov wrote:
 
-<snip>
+>>> Add support of the device tree probing for the Renesas R-Car generation 2 SoCs
+>>> documenting the device tree binding as necessary.
 
-> +#define BAM_IRQ_SRCS_EE(pipe)		(0x0800 + ((pipe) * 0x80))
-> +#define BAM_IRQ_SRCS_MSK_EE(pipe)	(0x0804 + ((pipe) * 0x80))
+>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-s/pipe/ee ?
+>>> ---
+>>> This patch is against the 'next' branch of Felipe Balbi's 'usb.git' repo.
 
-<snip>
+>>> Changes in version 2:
+>>> - restored devm_clk_get() call and the error handling logic in the probe()
+>>>    method, removed clk_put() call in the remove() method.
 
-> +struct bam_chan {
-> +	struct virt_dma_chan vc;
-> +
-> +	struct bam_device *bdev;
-> +
-> +	/* configuration from device tree */
-> +	u32 id;
-> +	u32 ee;
-> +
+>>>   Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt |   29 +++++++++++
+>>>   drivers/usb/phy/phy-rcar-gen2-usb.c                     |   42
+>>> ++++++++++++++--
+>>>   2 files changed, 68 insertions(+), 3 deletions(-)
 
-do we need per channel ee? I'm asking because failed to find references
-to it.
+>>> Index: usb/Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt
+>>> ===================================================================
+>>> --- /dev/null
+>>> +++ usb/Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt
+>>> @@ -0,0 +1,29 @@
+>>> +* Renesas R-Car generation 2 USB PHY
+>>> +
+>>> +This file provides information on what the device node for the R-Car
+>>> generation
+>>> +2 USB PHY contains.
+>>> +
+>>> +Required properties:
+>>> +- compatible: "renesas,usb-phy-r8a7790" if the device is a part of R8A7790
+>>> SoC.
+>>> +             "renesas,usb-phy-r8a7791" if the device is a part of R8A7791
+>>> SoC.
+>>> +- reg: offset and length of the register block.
+>>> +- clocks: clock phandle and specifier pair.
+>>> +- clock-names: string, clock input name, must be "usbhs".
+>>> +
+>>> +Optional properties:
+>>> +- renesas,channel0-pci: boolean, specify when USB channel 0 should be
+>>> connected
+>>> +                       to PCI EHCI/OHCI; otherwise, it will be connected
+>>> to the
+>>> +                       USBHS controller.
+>>> +- renesas,channel2-pci: boolean, specify when USB channel 2 should be
+>>> connected
+>>> +                       to PCI EHCI/OHCI; otherwise, it will be connected
+>>> to the
+>>> +                       USBSS controller (xHCI).
 
-> +	struct bam_async_desc *curr_txd;	/* current running dma */
-> +
-> +	/* runtime configuration */
-> +	struct dma_slave_config slave;
-> +
-> +	/* fifo storage */
-> +	struct bam_desc_hw *fifo_virt;
-> +	dma_addr_t fifo_phys;
-> +
-> +	/* fifo markers */
-> +	unsigned short head;		/* start of active descriptor entries */
-> +	unsigned short tail;		/* end of active descriptor entries */
-> +
-> +	unsigned int initialized;	/* is the channel hw initialized? */
-> +	unsigned int paused;		/* is the channel paused? */
-> +	unsigned int reconfigure;	/* new slave config? */
-> +
-> +	struct list_head node;
-> +};
-> +
+>> Thanks for your efforts here, but this DT binding looks like a mix of
+>> software configuration and hardware description.
 
-<snip>
+>     I disagree. I have already explained to Mark Rutland how selecting a
+> particular controller for a particular USB port should depend on the kind of
+> the USB connector used, i.e. the board hardware.
 
-> +
-> +/**
-> + * bam_alloc_chan - Allocate channel resources for DMA channel.
-> + * @chan: specified channel
-> + *
-> + * This function allocates the FIFO descriptor memory
-> + */
-> +static int bam_alloc_chan(struct dma_chan *chan)
-> +{
-> +	struct bam_chan *bchan = to_bam_chan(chan);
-> +	struct bam_device *bdev = bchan->bdev;
-> +
+>>> +Example (Lager board):
+>>> +
+>>> +       usb-phy@e6590100 {
+>>> +               compatible = "renesas,usb-phy-r8a7790";
+>>> +               reg = <0 0xe6590100 0 0x100>;
+>>> +               clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
+>>> +               clock-names = "usbhs";
+>>> +               renesas,channel2-pci;
+>>> +       };
 
-you could invert the logic and avoid extra indentation.
-	if (bchan->fifo_virt)
-		return 0;
+>> As an example, instead of relying on "renesas,channel0-pci" or
+>> "renesas,channel2-pci" to specify which hard coded software
+>> configuration you want please rework this to expose 3 separate
+>> channels and use DT to point each host controller to the right
+>> channel.
 
-> +	/* allocate FIFO descriptor space, but only if necessary */
-> +	if (!bchan->fifo_virt) {
-> +		bchan->fifo_virt = dma_alloc_writecombine(bdev->dev,
-> +					BAM_DESC_FIFO_SIZE, &bchan->fifo_phys,
-> +					GFP_KERNEL);
-> +
-> +		if (!bchan->fifo_virt) {
-> +			dev_err(bdev->dev, "Failed to allocate desc fifo\n");
-> +			return -ENOMEM;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
+>     So you want to expose the channels as "virtual devices"? Or what do you
+> want?
 
-<snip>
+    OK, let's assume you want either "virtual" PHYs or channel subnodes in the 
+PHY node we have now. Now what the PHY driver should do with all these 
+phandles pointing from the controller nodes to the PHY nodes or the channel 
+subnodes? Scan all device tree in search of the nodes having certain prop and 
+get info from such nodes on how to program the channel MUXing register using 
+their "compatible" props? Sorry, that doesn't appeal to me at all.
+    Now if we got the phandles pointing from the PHY node back to the selected 
+controllers, things would look somewhat better. Yet it still looks like an 
+unnecessary complication of what I'm proposing and so doesn't appeal to me 
+much either.
+    So, what's your intent here (other than to make my life harder :-)?
 
-regards,
-Stan
+> Also, it seems almost impossible to represent some USB controllers in DT
+> -- such as USBHS in particular.
+
+    I've spent several days staring at the various USBHS code and I'm going to 
+send you a more detailed report on USBHS vs DT issues.
+
+[...]
+
+>> So this is a NAK on my side. I expect better.
+
+>     Thanks for your long awaited feedback.
+
+    I'm not convinced that what you're proposing is indeed better though.
+
+>> Thanks,
+
+>> / magnus
+
+WBR, Sergei
+
