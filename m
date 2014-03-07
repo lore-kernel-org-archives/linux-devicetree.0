@@ -1,72 +1,33 @@
-From: Tim Harvey <tharvey@gateworks.com>
-Subject: [PATCH v3] sky2: allow mac to come from dt
-Date: Fri,  7 Mar 2014 20:59:53 -0800
-Message-ID: <1394254793-19228-1-git-send-email-tharvey@gateworks.com>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: Stephen Hemminger <stephen@networkplumber.org>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v6 1/8] [media] of: move graph helpers from drivers/media/v4l2-core to drivers/of
+Date: Fri, 07 Mar 2014 18:25:37 +0000
+Message-ID: <20140307182537.C2CC5C40B10@trevor.secretlab.ca>
+References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de> < 1394011242-16783-2-git-send-email-p.zabel@pengutronix.de>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1394011242-16783-2-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <m.chehab@samsung.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-The driver reads the mac address from the device registers which would
-need to have been programmed by the bootloader.  This patch adds
-the ability to pull the mac from devicetree via the pci device dt node.
+On Wed,  5 Mar 2014 10:20:35 +0100, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> This patch moves the parsing helpers used to parse connected graphs
+> in the device tree, like the video interface bindings documented in
+> Documentation/devicetree/bindings/media/video-interfaces.txt, from
+> drivers/media/v4l2-core/v4l2-of.c into drivers/of/base.c.
+> 
+> This allows to reuse the same parser code from outside the V4L2
+> framework, most importantly from display drivers.
+> The functions v4l2_of_get_next_endpoint, v4l2_of_get_remote_port,
+> and v4l2_of_get_remote_port_parent are moved. They are renamed to
+> of_graph_get_next_endpoint, of_graph_get_remote_port, and
+> of_graph_get_remote_port_parent, respectively.
+> Since there are not that many current users yet, switch all of
+> them to the new functions right away.
+> 
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-Cc: netdev@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
+This patch is fine because it only moves code, but I'm not providing an
+ack yet.  I'll supply one when I'm happy with the collection of fixups.
 
-Changes since v2:
- - eliminated use of stack tmpaddr per feedback
-
-Changes since v1:
- - simplified based on feedback
- - fixed formatting
----
- drivers/net/ethernet/marvell/sky2.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
-index 55a37ae..2434611 100644
---- a/drivers/net/ethernet/marvell/sky2.c
-+++ b/drivers/net/ethernet/marvell/sky2.c
-@@ -44,6 +44,8 @@
- #include <linux/prefetch.h>
- #include <linux/debugfs.h>
- #include <linux/mii.h>
-+#include <linux/of_device.h>
-+#include <linux/of_net.h>
- 
- #include <asm/irq.h>
- 
-@@ -4748,6 +4750,7 @@ static struct net_device *sky2_init_netdev(struct sky2_hw *hw, unsigned port,
- {
- 	struct sky2_port *sky2;
- 	struct net_device *dev = alloc_etherdev(sizeof(*sky2));
-+	const void *iap;
- 
- 	if (!dev)
- 		return NULL;
-@@ -4805,8 +4808,16 @@ static struct net_device *sky2_init_netdev(struct sky2_hw *hw, unsigned port,
- 
- 	dev->features |= dev->hw_features;
- 
--	/* read the mac address */
--	memcpy_fromio(dev->dev_addr, hw->regs + B2_MAC_1 + port * 8, ETH_ALEN);
-+	/* try to get mac address in the following order:
-+	 * 1) from device tree data
-+	 * 2) from internal registers set by bootloader
-+	 */
-+	iap = of_get_mac_address(hw->pdev->dev.of_node);
-+	if (iap)
-+		memcpy(dev->dev_addr, iap, ETH_ALEN);
-+	else
-+		memcpy_fromio(dev->dev_addr, hw->regs + B2_MAC_1 + port * 8,
-+			      ETH_ALEN);
- 
- 	return dev;
- }
--- 
-1.8.3.2
+g.
