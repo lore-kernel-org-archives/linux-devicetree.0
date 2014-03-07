@@ -1,59 +1,59 @@
-From: Maxime COQUELIN <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v3 0/5] Add STiH407 SoC and reference board support
-Date: Fri,  7 Mar 2014 15:40:46 +0100
-Message-ID: <1394203251-25361-1-git-send-email-maxime.coquelin@st.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Maxime COQUELIN <maxime.coquelin@st.com>
+Subject: [PATCH v3 3/5] pinctrl: st: add pinctrl support for the STiH407 SoC
+Date: Fri,  7 Mar 2014 15:40:49 +0100
+Message-ID: <1394203251-25361-4-git-send-email-maxime.coquelin@st.com>
+References: <1394203251-25361-1-git-send-email-maxime.coquelin@st.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1394203251-25361-1-git-send-email-maxime.coquelin@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, Linus Walleij <linus.walleij@linaro.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Maxime Coquelin <maxime.coquelin@st.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+Cc: lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds basic support to the STMicroelectronics STiH407 SoC and its
-B2120 reference board. The STiH407 is a dual-core ARM Cortex-A9 CPU aimed at
-STB market.
+From: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 
-Changes since v2:
------------------
-    - Reordered the pinctrl patches
-    - Moved stih407_flashdata to stih407 pinctrl patch
+This patch adds the initial support for pinctrl based on H407 SoC.
 
-Changes since v1:
------------------
-	- Changed patch 2 commit title
-	- Rebased pinctrl patches to linux-pinctrl/devel
-	- Rebased ARM patches to arm_soc/for-next
+Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
+Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+---
+ drivers/pinctrl/pinctrl-st.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-Giuseppe Cavallaro (2):
-  pinctrl: st: Enhance the controller to manage unavailable registers
-  pinctrl: st: add pinctrl support for the STiH407 SoC
-
-Maxime Coquelin (3):
-  ARM: STi: Add STiH407 SoC support
-  ARM: dts: Add STiH407 SoC support
-  ARM: dts: STiH407: Add B2120 board support
-
- Documentation/arm/sti/stih407-overview.txt    |  18 +
- Documentation/devicetree/bindings/arm/sti.txt |  15 +
- arch/arm/boot/dts/Makefile                    |   3 +-
- arch/arm/boot/dts/stih407-b2120.dts           |  78 ++++
- arch/arm/boot/dts/stih407-clock.dtsi          |  41 ++
- arch/arm/boot/dts/stih407-pinctrl.dtsi        | 618 ++++++++++++++++++++++++++
- arch/arm/boot/dts/stih407.dtsi                | 250 +++++++++++
- arch/arm/mach-sti/Kconfig                     |   9 +
- arch/arm/mach-sti/board-dt.c                  |   1 +
- drivers/pinctrl/pinctrl-st.c                  | 123 +++--
- 10 files changed, 1110 insertions(+), 46 deletions(-)
- create mode 100644 Documentation/arm/sti/stih407-overview.txt
- create mode 100644 Documentation/devicetree/bindings/arm/sti.txt
- create mode 100644 arch/arm/boot/dts/stih407-b2120.dts
- create mode 100644 arch/arm/boot/dts/stih407-clock.dtsi
- create mode 100644 arch/arm/boot/dts/stih407-pinctrl.dtsi
- create mode 100644 arch/arm/boot/dts/stih407.dtsi
-
+diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
+index 1721611..d1886b4 100644
+--- a/drivers/pinctrl/pinctrl-st.c
++++ b/drivers/pinctrl/pinctrl-st.c
+@@ -390,6 +390,19 @@ static const struct st_pctl_data  stih416_data = {
+ 	.alt = 0, .oe = 40, .pu = 50, .od = 60, .rt = 100,
+ };
+ 
++static const struct st_pctl_data  stih407_flashdata = {
++	.rt_style	= st_retime_style_none,
++	.input_delays	= stih416_delays,
++	.ninput_delays	= 14,
++	.output_delays	= stih416_delays,
++	.noutput_delays = 14,
++	.alt = 0,
++	.oe = -1, /* Not Available */
++	.pu = -1, /* Not Available */
++	.od = 60,
++	.rt = 100,
++};
++
+ /* Low level functions.. */
+ static inline int st_gpio_bank(int gpio)
+ {
+@@ -1596,6 +1609,10 @@ static struct of_device_id st_pctl_of_match[] = {
+ 	{ .compatible = "st,stih416-rear-pinctrl", .data = &stih416_data},
+ 	{ .compatible = "st,stih416-fvdp-fe-pinctrl", .data = &stih416_data},
+ 	{ .compatible = "st,stih416-fvdp-lite-pinctrl", .data = &stih416_data},
++	{ .compatible = "st,stih407-sbc-pinctrl", .data = &stih416_data},
++	{ .compatible = "st,stih407-front-pinctrl", .data = &stih416_data},
++	{ .compatible = "st,stih407-rear-pinctrl", .data = &stih416_data},
++	{ .compatible = "st,stih407-flash-pinctrl", .data = &stih407_flashdata},
+ 	{ /* sentinel */ }
+ };
+ 
 -- 
 1.9.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
