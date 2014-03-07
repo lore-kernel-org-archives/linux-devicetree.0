@@ -1,62 +1,45 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 1/2] imx-drm: imx-ldb: Add drm_panel support
-Date: Fri, 07 Mar 2014 18:45:15 +0100
-Message-ID: <1394214315.16309.47.camel@paszta.hi.pengutronix.de>
-References: <1394114080-27223-1-git-send-email-p.zabel@pengutronix.de>
-	<20140307172243.GQ21483@n2100.arm.linux.org.uk>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v5 00/11] imx-drm dt bindings
+Date: Fri, 7 Mar 2014 17:56:12 +0000
+Message-ID: <20140307175612.GR21483@n2100.arm.linux.org.uk>
+References: <1394011262-16849-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20140307172243.GQ21483@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces@lists.freedesktop.org
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <1394011262-16849-1-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
-
-Am Freitag, den 07.03.2014, 17:22 +0000 schrieb Russell King - ARM
-Linux:
-> On Thu, Mar 06, 2014 at 02:54:39PM +0100, Philipp Zabel wrote:
-> > This patch allows to optionally attach the lvds-channel to a panel
-> > supported by a drm_panel driver instead of supplying the modes via
-> > device tree.
+On Wed, Mar 05, 2014 at 10:20:51AM +0100, Philipp Zabel wrote:
+> Hi,
 > 
-> Hmm, I think something may be missing in this patch... you're introducing
-> calls into the drm panel code, but there's nothign which ensures that
-> code gets built alongside imx-ldb.c.  With imx-ldb built as a module,
-> I get:
-> 
-> ERROR: "drm_panel_attach" [drivers/staging/imx-drm/imx-ldb.ko] undefined!
-> ERROR: "of_drm_find_panel" [drivers/staging/imx-drm/imx-ldb.ko] undefined!
+> this latest version of the imx-drm DT binding patches applies
+> on top of staging-next and also depends on the OF graph binding
+> patchset that moves the v4l2_of helpers to drivers/of.
+> Currently, the two patchsets are also available at:
+>     git://git.pengutronix.de/git/pza/linux.git topic/of-graph
+>     git://git.pengutronix.de/git/pza/linux.git topic/imx-drm-dt
 
-Thanks for testing. Yes, this Kconfig change is missing from patch 1:
+Okay, having looked at the second tree, pulling that will result in
+pulling in all of the staging tree here, which I'd rather not do.  Unless
+there's any objection, I'd like to take these as patches on top of the
+imx-drm stuff which I sent to Greg plus the of-graph stuff which they
+depend upon.  In other words, exactly how I've been testing it today.
 
-diff --git a/drivers/staging/imx-drm/Kconfig
-b/drivers/staging/imx-drm/Kconfig
-index 82fb758..8e5b7e9 100644
---- a/drivers/staging/imx-drm/Kconfig
-+++ b/drivers/staging/imx-drm/Kconfig
-@@ -35,6 +35,7 @@ config DRM_IMX_TVE
- config DRM_IMX_LDB
- 	tristate "Support for LVDS displays"
- 	depends on DRM_IMX && MFD_SYSCON
-+	select DRM_PANEL
- 	help
- 	  Choose this to enable the internal LVDS Display Bridge (LDB)
- 	  found on i.MX53 and i.MX6 processors.
+Any objections?
 
-I haven't noticed because I've enabled the parallel display driver,
-which does correctly select DRM_PANEL.
-
-regards
-Philipp
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
