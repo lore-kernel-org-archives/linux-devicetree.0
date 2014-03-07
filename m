@@ -1,67 +1,49 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v4] phy: omap-control: update dra7 and am437 usb2
- Documentation bindings
-Date: Fri, 7 Mar 2014 13:56:55 +0530
-Message-ID: <531982CF.3040004@ti.com>
-References: <53189742.3060705@ti.com>
- <1394121786-28193-1-git-send-email-balbi@ti.com>
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [PATCH 0/5] Add STiH407 SoC and reference board support
+Date: Fri, 7 Mar 2014 09:31:13 +0100
+Message-ID: <531983D1.7030606@st.com>
+References: <1393589841-6634-1-git-send-email-maxime.coquelin@st.com> <CACRpkdbztgbWn3kmm4gv6OLcX+bPnyK5BCt0SJJcWo+iyGsWvA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1394121786-28193-1-git-send-email-balbi@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, rogerq@ti.com, balbi@ti.com
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbztgbWn3kmm4gv6OLcX+bPnyK5BCt0SJJcWo+iyGsWvA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Linus
 
+On 03/07/2014 04:11 AM, Linus Walleij wrote:
+> On Fri, Feb 28, 2014 at 8:17 PM, Maxime COQUELIN <maxime.coquelin@st.com> wrote:
+>
+>> This series adds basic support to the STMicroelectronics STiH407 SoC and its
+>> B2120 reference board. The STiH407 is a dual-core ARM Cortex-A9 CPU aimed at
+>> STB market.
+>>
+>> Giuseppe Cavallaro (2):
+>>    ARM: STi: add pinctrl support for the STiH407 SoC
+>>    pinctrl: st: Enhance the controller to manage unavailable registers
+>>
+>> Maxime Coquelin (3):
+>>    ARM: STi: Add STiH407 SoC support
+>>    ARM: dts: Add STiH407 SoC support
+>>    ARM: dts: STiH407: Add B2120 board support
+>
+> So I'd like to take the pinctrl patch through my tree and the rest through
+> ARM SoC but it seems it does not apply :-/
 
-On Friday 07 March 2014 01:55 PM, Kishon Vijay Abraham I wrote:
-> From: Felipe Balbi <balbi@ti.com>
->
-> From: Roger Quadros <rogerq@ti.com>
+Sorry, the series was based on v3.14-rc4.
 
-There seems to be some problem with this patch. Pls ignore this.
+I split the series in two:
+	- pinctrl patches based on the linux-pinctrl/devel branch
+	- ARM patches on arm_soc
 
-Thanks
-Kishon
+Regards,
+Maxime
+
 >
-> The dra7-usb2 and am437-usb2 bindings have not yet been used.
-> Change them to be more elegant.
->
-> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Signed-off-by: Felipe Balbi <balbi@ti.com>
-> ---
-> Changes from v3:
-> * changed the compatible name to 'ti,control-phy-usb2-dra7' and
->    'ti,control-phy-usb2-am437'
->
->   Documentation/devicetree/bindings/phy/ti-phy.txt | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
-> index 41dc132..8694aae 100644
-> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
-> @@ -9,9 +9,9 @@ Required properties:
->                           e.g. USB2_PHY on OMAP5.
->    "ti,control-phy-pipe3" - if it has DPLL and individual Rx & Tx power control
->                           e.g. USB3 PHY and SATA PHY on OMAP5.
-> - "ti,control-phy-dra7usb2" - if it has power down register like USB2 PHY on
-> + "ti,control-phy-usb2-dra7" - if it has power down register like USB2 PHY on
->                           DRA7 platform.
-> - "ti,control-phy-am437usb2" - if it has power down register like USB2 PHY on
-> + "ti,control-phy-usb2-am437" - if it has power down register like USB2 PHY on
->                           AM437 platform.
->    - reg : Address and length of the register set for the device. It contains
->      the address of "otghs_control" for control-phy-otghs or "power" register
+> Yours,
+> Linus Walleij
 >
