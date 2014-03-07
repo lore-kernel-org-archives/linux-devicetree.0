@@ -1,81 +1,53 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 00/10] pinctrl: mvebu: remove hard-coded addresses from
- Dove pinctrl
-Date: Fri, 7 Mar 2014 11:54:47 +0800
-Message-ID: <CACRpkdZnseVr8DZKu7Z_Q4uOvWybSs4uhM+JQK_L8u+KJ2myJA@mail.gmail.com>
-References: <1393231382-11078-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <20140224181023.GA1010@titan.lakedaemon.net>
- <CACRpkdZ+YGTyDj6i8c198MdRtz3GY-YBmVO9LysPCcmT4EC0cg@mail.gmail.com>
- <20140226000940.GF1872@titan.lakedaemon.net>
- <CACRpkdYQa2BG_qxf5zY=7rks6O31ZF-BX0af3_u1MOgwfwxFSQ@mail.gmail.com>
- <20140226145345.GG1872@titan.lakedaemon.net>
- <CACRpkdZRJG-TzN4c3NSH9PqcQzpo6EbEn5_bM-P3sh4_vSjtaA@mail.gmail.com>
- <20140307021633.GN1872@titan.lakedaemon.net>
- <20140307034747.GP1872@titan.lakedaemon.net>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/7] of: introduce of_dma_is_coherent() helper
+Date: Thu, 6 Mar 2014 21:55:56 -0600
+Message-ID: <CAL_JsqJ3QhRRNVAsvAPP=Ex_ptQcbpCXh7pf44K1xh+scFqiug@mail.gmail.com>
+References: <1394097598-17622-1-git-send-email-santosh.shilimkar@ti.com>
+	<1394097598-17622-4-git-send-email-santosh.shilimkar@ti.com>
+	<CAL_JsqJnG1c0=+UgOmNOGs7a5jv2f3O074-TsXibiHsXapXhcQ@mail.gmail.com>
+	<53194092.7010809@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140307034747.GP1872@titan.lakedaemon.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53194092.7010809-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 7, 2014 at 11:47 AM, Jason Cooper <jason@lakedaemon.net> wrote:
-> On Thu, Mar 06, 2014 at 09:16:33PM -0500, Jason Cooper wrote:
->> On Fri, Mar 07, 2014 at 09:26:48AM +0800, Linus Walleij wrote:
->> > On Wed, Feb 26, 2014 at 10:53 PM, Jason Cooper <jason@lakedaemon.net> wrote:
-> ...
->> > > I'm a little confused by this.  Once you merge the branch into one of
->> > > yours, that merge commit is a part of the history.
->> >
->> > Yes this has been discussed in the past.
+On Thu, Mar 6, 2014 at 9:44 PM, Santosh Shilimkar
+<santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
+> On Friday 07 March 2014 11:13 AM, Rob Herring wrote:
+>> On Thu, Mar 6, 2014 at 3:19 AM, Santosh Shilimkar
+>> <santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
+>>> The of_dma_is_coherent() helper parses the given DT device
+>>> node to see if the "dma-coherent" property is supported and
+>>> returns true or false accordingly.
+>>>
+>>> For the architectures which are fully dma coherent and don't need per device
+>>> property, it can enable CONFIG_ARCH_IS_DMA_COHERENT config option which
+>>> enables DMA coherent for all devices by default.
 >>
->> Would you have a link handy?  My first thought was to create a tag, eg
->> "Sent-through: subsystem <maintainer@example.com>" that I would add to
->> patches as I pull them in.  After all, I know where I'm sending them.
->> Or should at any rate.
+>> This worries me. I killed off arch_is_coherent() for arm. Now we're
+>> adding something back. Also, we already have HAVE_GENERIC_DMA_COHERENT
+>> which is different, but the names will be confusing. MIPS also has
+>> DMA_NONCOHERENT.
 >>
->> > But when a developer bisects down to a certain commit and just looks
->> > at it with git log there is no telling which subsystem this thing came
->> > from and who actually funnelled it to Torvalds.
->>
->> True.
->>
->> > I do know you *can* find that out with some git magic, the problem
->> > is that it is so magic that most developers don't know it and just
->> > look at the signoffs.
->>
->> It would be helpful if there were a complement to 'git merge-base', say
->> 'git merge-tip' to point to the merge commit that joined the branch
->> containing commit X.
->>
->> Run in succession, it would yield committers me (I merged pinctrl-dove
->> into pinctrl), you, Torvalds.
+> Thanks for comments Rob. I will address them in next version.
+> Specifically about ARCH_IS_DMA_COHERENT, I wasn't very comfortable either
+> while adding it. But as Arnd mentioned, there is a need to have a way
+> for the arch's which are fully coherent to use coherent ops by default.
 >
-> grrr.  Couldn't let it go.  If you add this alias:
->
->   merged-by-who = log --ancestry-path --reverse --merges --format=\"%h %cD \\\"%cN <%cE>\\\"\"
->
-> to you ~/.gitconfig, then
->
-> $ git merged-by-who 2c4b229bafcf..pinctrl/for-next
-> 08d4f0c8b131 Sat, 1 Mar 2014 07:03:36 +0000 "Jason Cooper <jason@lakedaemon.net>"
-> 7cab36e5eee9 Sat, 1 Mar 2014 07:03:52 +0000 "Jason Cooper <jason@lakedaemon.net>"
-> cdfe3175eb90 Mon, 3 Mar 2014 13:39:20 +0800 "Linus Walleij <linus.walleij@linaro.org>"
-> a9ea2ed45a22 Mon, 3 Mar 2014 13:40:22 +0800 "Linus Walleij <linus.walleij@linaro.org>"
-> 7bd0df13646d Wed, 5 Mar 2014 17:12:17 +0800 "Linus Walleij <linus.walleij@linaro.org>"
+> Am not sure whats the best way to have such support without imposing
+> any special updates on such arches.
 
-nifty alias, I added it to my .gitconfig.
+Thinking about this some more, if the arch is always coherent or
+always non-coherent, then the default ops are always fine. In that
+case set_arch_dma_coherent_ops is always a nop and of_dma_is_coherent
+is a don't care.
 
-Yours,
-Linus Walleij
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
