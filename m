@@ -1,57 +1,48 @@
-From: George Cherian <george.cherian@ti.com>
-Subject: [PATCH v3 5/5] ARM: dts: am43x-epos-evm: Enable USB
-Date: Fri, 7 Mar 2014 17:27:02 +0530
-Message-ID: <1394193422-18242-6-git-send-email-george.cherian@ti.com>
-References: <1394193422-18242-1-git-send-email-george.cherian@ti.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v6 0/8] Move device tree graph parsing helpers to
+	drivers/of
+Date: Fri, 7 Mar 2014 12:06:33 +0000
+Message-ID: <20140307120633.GJ21483@n2100.arm.linux.org.uk>
+References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de> <53170C00.20200@ti.com> <1394030554.8754.31.camel@paszta.hi.pengutronix.de> <20140306141657.GB21483@n2100.arm.linux.org.uk> <20140306121721.6186dafb@samsung.com> <5318988C.2030004@samsung.com> <1394122879.3622.47.camel@paszta.hi.pengutronix.de> <5318A331.2070603@samsung.com> <1394124630.3622.64.camel@paszta.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1394193422-18242-1-git-send-email-george.cherian@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: balbi@ti.com, rogerq@ti.com, kishon@ti.com, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, tony@atomide.com, anatol.pomozov@gmail.com, bcousson@baylibre.com, George Cherian <george.cherian@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1394124630.3622.64.camel@paszta.hi.pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable
-	- ocp2scp
-	- USB PHY control module
-	- USB PHY
-	- dwc3_omap
-	- USB
+On Thu, Mar 06, 2014 at 05:50:30PM +0100, Philipp Zabel wrote:
+> Am Donnerstag, den 06.03.2014, 17:32 +0100 schrieb Sylwester Nawrocki:
+> > On 06/03/14 17:21, Philipp Zabel wrote:
+> > > Am Donnerstag, den 06.03.2014, 16:47 +0100 schrieb Sylwester Nawrocki:
+> > >> Yes, it's going to conflict with my patch series. I thought it could be
+> > >> put onto a stable a topic branch, e.g. at git://linuxtv.org/media_tree.git,
+> > >> which could be then pulled into the media master branch and anywhere
+> > >> else it is needed ?
+> > > 
+> > > Mauro, are you ok with handling the conflict in the merge, or should I
+> > > rebase on top of the media tree after you merged Sylwester's changes?
+> > 
+> > I could rebase and resolve any conflicts before sending my pull request
+> > to Mauro. I don't think it's a good idea to rebase this series onto the
+> > media tree, since it is touching drivers/of.
+> 
+> Excellent, thanks. I will send a pull request to Mauro and Russell
+> shortly.
 
-for am43x-epos-evm
+Unless we can find some way to resolve the problem which just happened
+(Mauro applied the of-graph as patches to his tree inspite of this
+discussion), I don't see the imx-drm DT changes being able to be pulled
+in for the upcoming merge window - because otherwise it means that
+whatever Mauro has applied your of-graph changes on top of in his tree
+also gets pulled into my tree and Greg's tree.
 
-Signed-off-by: George Cherian <george.cherian@ti.com>
----
- arch/arm/boot/dts/am43x-epos-evm.dts | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+I'm afraid this has turned into a total shambles, and I'm totally
+hacked off at Mauro over this.
 
-diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
-index a7d0db1..0ced342 100644
---- a/arch/arm/boot/dts/am43x-epos-evm.dts
-+++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-@@ -251,3 +251,21 @@
- 	pinctrl-0 = <&spi1_pins>;
- 	status = "okay";
- };
-+
-+&usb2_phy1 {
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	dr_mode = "peripheral";
-+	status = "okay";
-+};
-+
-+&usb2_phy2 {
-+	status = "okay";
-+};
-+
-+&usb2 {
-+	dr_mode = "host";
-+	status = "okay";
-+};
 -- 
-1.8.3.1
-
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
