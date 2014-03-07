@@ -1,7 +1,7 @@
 From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
-Subject: [PATCH v3 2/4] checkpatch: fix spurious vendor compatible warnings
-Date: Fri,  7 Mar 2014 14:26:09 +0100
-Message-ID: <1394198771-25913-3-git-send-email-florian.vaussard@epfl.ch>
+Subject: [PATCH v3 4/4] checkpatch: improve the compatible vendor match
+Date: Fri,  7 Mar 2014 14:26:11 +0100
+Message-ID: <1394198771-25913-5-git-send-email-florian.vaussard@epfl.ch>
 References: <1394198771-25913-1-git-send-email-florian.vaussard@epfl.ch>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1394198771-25913-1-git-send-email-florian.vaussard-p8DiymsW2f8@public.gmane.org>
@@ -10,41 +10,54 @@ To: Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Joe Perches <j
 Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-With a compatible string like
+From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
 
-compatible = "foo";
+From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
 
-checkpatch will currently try to find "foo" in  vendor-prefixes.txt,
-which is wrong since the vendor prefix is empty in this specific case.
+Improve the vendor name match in vendor-prefix.txt
+by only matching the exact vendor name at the beginning of lines.
 
-Skip the vendor test if the compatible is not like
-
-compatible = "vendor,something";
-
-Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
-[joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org: cleaned the implementation]
 Signed-off-by: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+[florian.vaussard-p8DiymsW2f8@public.gmane.org: split patch, commit log]
+Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
 ---
- scripts/checkpatch.pl | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ scripts/checkpatch.pl | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index e304e77..96f10ba 100755
+index 9205153..5bda9f7 100755
 --- a/scripts/checkpatch.pl
 +++ b/scripts/checkpatch.pl
-@@ -2055,10 +2055,10 @@ sub process {
+@@ -2047,9 +2047,11 @@ sub process {
+ 
+ 			my @compats = $rawline =~ /\"([a-zA-Z0-9\-\,\.\+_]+)\"/g;
+ 
++			my $dt_path = $root . "/Documentation/devicetree/bindings/";
++			my $vp_file = $dt_path . "vendor-prefixes.txt";
++
+ 			foreach my $compat (@compats) {
+ 				my $compat2 = $compat;
+-				my $dt_path =  $root . "/Documentation/devicetree/bindings/";
+ 				$compat2 =~ s/\,[a-z]*\-/\,<\.\*>\-/;
+ 				`grep -Erq "$compat|$compat2" $dt_path`;
+ 				if ( $? >> 8 ) {
+@@ -2057,14 +2059,12 @@ sub process {
  					     "DT compatible string \"$compat\" appears un-documented -- check $dt_path\n" . $herecurr);
  				}
  
--				my $vendor = $compat;
- 				my $vendor_path = $dt_path . "vendor-prefixes.txt";
- 				next if (! -f $vendor_path);
--				$vendor =~ s/^([a-zA-Z0-9\-]+)\,.*/$1/;
-+				next if $compat !~ /^([a-zA-Z0-9\-]+)\,/;
-+				my $vendor = $1;
- 				`grep -Eq "$vendor" $vendor_path`;
+-				my $vendor_path = $dt_path . "vendor-prefixes.txt";
+-				next if (! -f $vendor_path);
+ 				next if $compat !~ /^([a-zA-Z0-9\-]+)\,/;
+ 				my $vendor = $1;
+-				`grep -Eq "$vendor" $vendor_path`;
++				`grep -Eq "^$vendor\\b" $vp_file`;
  				if ( $? >> 8 ) {
  					WARN("UNDOCUMENTED_DT_STRING",
+-					     "DT compatible string vendor \"$vendor\" appears un-documented -- check $vendor_path\n" . $herecurr);
++					     "DT compatible string vendor \"$vendor\" appears un-documented -- check $vp_file\n" . $herecurr);
+ 				}
+ 			}
+ 		}
 -- 
 1.8.5.3
 
