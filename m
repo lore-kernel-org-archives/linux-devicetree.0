@@ -1,178 +1,26 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v4 5/5] clk/exynos5260: add clock file for exynos5260
-Date: Fri, 07 Mar 2014 16:22:45 +0100
-Message-ID: <5319E445.9000409@gmail.com>
-References: <1394113551-2134-1-git-send-email-rahul.sharma@samsung.com> <CAGcde9Hqs92bri0Fu3y7rvMhiFMYe+N7YWT-mxL2HTsnJTvz2w@mail.gmail.com> <5319D3E5.4000001@gmail.com> <CAGcde9GetFjdRxqJfPY_1qdxzKb+4cqjsc+ALnN0PxSrApjyxg@mail.gmail.com>
+From: srinivas kandagatla <srinivas.kandagatla@st.com>
+Subject: Re: [PATCH v3 3/5] pinctrl: st: add pinctrl support for the STiH407
+ SoC
+Date: Fri, 7 Mar 2014 15:36:20 +0000
+Message-ID: <5319E774.1070505@st.com>
+References: <1394203251-25361-1-git-send-email-maxime.coquelin@st.com> <1394203251-25361-4-git-send-email-maxime.coquelin@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAGcde9GetFjdRxqJfPY_1qdxzKb+4cqjsc+ALnN0PxSrApjyxg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Pankaj Dubey <pankaj.dubey@samsung.com>
-Cc: Rahul Sharma <rahul.sharma@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, mturquette@linaro.org, joshi@samsung.com, kgene.kim@samsung.com, r.sh.open@gmail.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1394203251-25361-4-git-send-email-maxime.coquelin@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Maxime COQUELIN <maxime.coquelin@st.com>, Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Stuart Menefy <stuart.menefy@st.com>, Linus Walleij <linus.walleij@linaro.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+Cc: lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 07.03.2014 16:10, Pankaj Dubey wrote:
-> Hi Tomasz,
->
->
-> On Fri, Mar 7, 2014 at 11:12 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
->> Hi Pankaj,
->>
->>
->> On 07.03.2014 14:56, Pankaj Dubey wrote:
->>>>
->>>> +static void __init exynos5260_clk_top_init(struct device_node *np)
->>>> +{
->>>> +       struct exynos5260_cmu_info cmu;
->>>> +       struct samsung_clk_provider *ctx;
->>>> +
->>>> +       memset(&cmu, 0, sizeof(cmu));
->>>> +
->>>> +       cmu.pll_clks = top_pll_clks;
->>>> +       cmu.nr_pll_clks =  ARRAY_SIZE(top_pll_clks);
->>>> +       cmu.mux_clks = top_mux_clks;
->>>> +       cmu.nr_mux_clks = ARRAY_SIZE(top_mux_clks);
->>>> +       cmu.div_clks = top_div_clks;
->>>> +       cmu.nr_div_clks = ARRAY_SIZE(top_div_clks);
->>>> +       cmu.gate_clks = top_gate_clks;
->>>> +       cmu.nr_gate_clks = ARRAY_SIZE(top_gate_clks);
->>>> +       cmu.nr_clk_ids = TOP_NR_CLK;
->>>> +       cmu.clk_regs = top_clk_regs;
->>>> +       cmu.nr_clk_regs = ARRAY_SIZE(top_clk_regs);
->>>> +
->>>> +       ctx = exynos5260_cmu_register_one(np, &cmu);
->>>> +
->>>> +       samsung_clk_of_register_fixed_ext(ctx, fixed_rate_ext_clks,
->>>> +                       ARRAY_SIZE(fixed_rate_ext_clks),
->>>> +                       ext_clk_match);
->>>> +}
->>>> +
->>>> +CLK_OF_DECLARE(exynos5260_clk_top, "samsung,exynos5260-clock-top",
->>>> +               exynos5260_clk_top_init);
->>>
->>>
->>> Well with this approach we end up adding 14 such
->>> exynosxxx_clk_xxx_init functions all of which has similar lines of
->>> code. As I know there are many upcoming Exynos SoC which will also
->>> have similar multiple clock controllers (in some of them there are
->>> upto 25 clock domains, and in that case we will end up writing 25 such
->>> init functions) so I have following suggestion where we can have one
->>> more structure which will hold all static data and match_table to
->>> match compatibility string and return CMU_TYPE which can be mapped to
->>> get proper clock_data which can be used in single clock_init function.
->>> Following is some sample code which I have implemented and tested on
->>> one of Exynos SoC. Please let me know your opinion about this.
->>
->>
->> Yes, this looks better indeed, however there is still a room for
->> improvement. Please see my comments below.
->>
->>
->>>
->>> =============================
->>>
->>> static struct exynosxxxx_clock_data exynosxxxx_clk_data[] __initdata = {
->>
->>
->> Instead of making this an array, particular elements could be separate
->> structures. This would simplify the code below.
->>
->>
->>>           {
->>>                   .cmu_type = CMU_TYPE_TOP,
->>>                   .mux_clocks = top_mux_clks,
->>>                   .div_clocks = top_div_clks,
->>>                   .pll_clocks = top_pll_clks,
->>>                   .clk_regs = top_clk_regs,
->>>                   .nr_mux_clocks = ARRAY_SIZE(top_mux_clks),
->>>                   .nr_div_clocks = ARRAY_SIZE(top_div_clks),
->>>                   .nr_pll_clocks = ARRAY_SIZE(top_pll_clks),
->>>                   .nr_clk_regs = ARRAY_SIZE(top_clk_regs),
->>>                   .nr_clks  = TOP_NR_CLK,
->>>           }, {
->>>                   .cmu_type = CMU_TYPE_EGL,
->>>                   .mux_clocks = egl_mux_clks,
->>>                   .div_clocks = egl_div_clks,
->>>                   .pll_clocks = egl_pll_clks,
->>>                    .clk_regs = egl_clk_regs,
->>>                   .nr_mux_clocks = ARRAY_SIZE(egl_mux_clks),
->>>                   .nr_div_clocks = ARRAY_SIZE(egl_div_clks),
->>>                   .nr_pll_clocks = ARRAY_SIZE(egl_pll_clks),
->>>                   .nr_clk_regs = ARRAY_SIZE(egl_clk_regs),
->>>                   .nr_clks  = EGL_NR_CLK,
->>>           }, {
->>>          /* Add similar elements here */
->>> };
->>>
->>> static struct of_device_id cmu_subtype_match_table[] = {
->>>           {
->>>                   .compatible = "exynosxxxx-cmu-top",
->>>                   .data   = (void *)CMU_TYPE_TOP,
->>
->>
->> Here the data would be just a pointer to respective clock data struct
->> defined above.
->>
->>
->>>           }, {
->>>                   .compatible = "exynosxxx-cmu-peris",
->>>                   .data   = (void *)CMU_TYPE_PERIS,
->>>           }, {
->>>          /* Add similar elements here */
->>> };
->>>
->>> void __init exynosxxx_clk_init(struct device_node *np)
->>> {
->>>            [snip]
->>>
->>>           match = of_match_node(cmu_subtype_match_table, np);
->>>
->>>           if (!match)
->>>                   panic("%s: cmu type (%s) is not supported.\n", __func__,
->>>                                   np->name);
->>
->>
->> This can't happen, because this function won't be called for any node with
->> compatible string not declared using CLK_OF_DECLARE().
->
-> Agreed.
->
->>
->>
->>>
->>>           reg_base = of_iomap(np, 0);
->>>           if (!reg_base)
->>>                   panic("%s: failed to map registers\n", __func__);
->>>
->>>           cmu_type = (unsigned long) match->data;
->>>
->>>           for (; i < CMU_TYPE_ALL; i++) {
->>>                   clk_data = &exynosxxxx_clk_data[i];
->>>                   if (cmu_type == clk_data->cmu_type)
->>>                           break;
->>>           }
->>
->>
->> Now clk_data could be taken directly from match->data, without the need to
->> iterate over an array.
->
-> Good point. Let me change as per your suggestion and test. And then we
-> will go for this change in next new version of patch.
+On 07/03/14 14:40, Maxime COQUELIN wrote:
+> From: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+> 
+> This patch adds the initial support for pinctrl based on H407 SoC.
+> 
+> Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
+> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+> ---
+Acked-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
 
-OK, thanks.
-
-> Also please
-> review rest patch also and let us know if anything still can be
-> improved.
-
-I had reviewed version 3 of this series and most of my comments have 
-been addressed. I'm waiting for remaining two to be addressed, but they 
-are covered by your comments for v4.
-
-A link to v3 thread for reference:
-http://thread.gmane.org/gmane.linux.kernel.samsung-soc/27249
-
-Best regards,
-Tomasz
