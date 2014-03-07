@@ -1,22 +1,38 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: rfc: checkpatch logical line continuations
-Date: Fri, 07 Mar 2014 16:23:41 -0500 (EST)
-Message-ID: <20140307.162341.1600860024275495539.davem@davemloft.net>
-References: <1394077948-8395-3-git-send-email-alistair@popple.id.au>
-	<20140307.154142.488351276799532264.davem@davemloft.net>
-	<1394226164.16156.96.camel@joe-AO722>
+From: josh@joshtriplett.org
+Subject: Re: rfc: checkpatch logical line continuations (was IBM Akebono:
+ Add support for a new PHY interface to the IBM emac driver)
+Date: Fri, 7 Mar 2014 13:30:17 -0800
+Message-ID: <20140307213017.GA18769@cloud>
+References: <1394077948-8395-1-git-send-email-alistair@popple.id.au>
+ <1394077948-8395-3-git-send-email-alistair@popple.id.au>
+ <20140307.154142.488351276799532264.davem@davemloft.net>
+ <1394226164.16156.96.camel@joe-AO722>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <1394226164.16156.96.camel@joe-AO722>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org
-Cc: alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, error27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org, randy.dunlap-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: David Miller <davem@davemloft.net>, alistair@popple.id.au, netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Dan Carpenter <error27@gmail.com>, Randy Dunlap <randy.dunlap@oracle.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Date: Fri, 07 Mar 2014 13:02:44 -0800
+On Fri, Mar 07, 2014 at 01:02:44PM -0800, Joe Perches wrote:
+> On Fri, 2014-03-07 at 15:41 -0500, David Miller wrote:
+> > From: Alistair Popple <alistair@popple.id.au>
+> > Date: Thu,  6 Mar 2014 14:52:25 +1100
+> > 
+> > > +	out_be32(dev->reg, in_be32(dev->reg) | WKUP_ETH_RGMIIEN
+> > > +		 | WKUP_ETH_TX_OE | WKUP_ETH_RX_IE);
+> > 
+> > When an expression spans multiple lines, the lines should end with
+> > operators rather than begin with them.
+> 
+> That's not in CodingStyle currently.
+
+It's also not even remotely consistent across existing kernel code, and
+it isn't obvious that there's a general developer consensus on the
+"right" way to write it.
 
 > Right now, checkpatch emits a --strict only warning on "&&" or "||"
 > at the beginning of line but that could be changed to any "$Operators"
@@ -31,9 +47,18 @@ Date: Fri, 07 Mar 2014 13:02:44 -0800
 > The ones that likely have a too high false positive rates
 > are the negation "!" and bitwise "~".
 
-Unary operators at the beginning of a line are perfectly fine,
-it's the other ones that are the problem.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I don't think warning about operators at start of line seems like a good
+idea at all.  There are plenty of cases where putting the operator at
+the start of the line will produce a better result.  (I'd actually
+suggest that in *most* cases.)
+
+> Also, using perl, it's hard to distinguish between a
+> logical "&" and the address-of "&" as well as the
+> multiplication "*" and indirection "*" so maybe those
+> should be excluded too.
+> 
+> And I think it should only be added as a --strict test.
+
+Agreed, if even that.
+
+- Josh Triplett
