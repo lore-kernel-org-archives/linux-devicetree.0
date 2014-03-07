@@ -1,164 +1,120 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCHv3 2/4] net: phy: extend fixed driver with fixed_phy_register()
-Date: Sat, 08 Mar 2014 04:21:02 +0000
-Message-ID: <20140308042102.9BAE6C41032@trevor.secretlab.ca>
-References: <1393930704-24374-1-git-send-email-thomas.petazzoni@ free-electrons.com> <1393930704-24374-3-git-send-email-thomas.petazzoni@ free-electrons.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1393930704-24374-3-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: netdev-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Lior Amsalem <alior@marvell.com>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Christian Gmeiner <christian.gmeiner@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Florian Fainelli <florian@openwrt.org>, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 3/6] pci: Create pci_host_bridge before its associated bus in pci_create_root_bus.
+Date: Fri, 07 Mar 2014 21:07:48 +0000
+Message-ID: <20140307210748.A20EFC40E11@trevor.secretlab.ca>
+References: <1394020137-1830-1-git-send-email-Liviu.Dudau@arm.com> < 1394020137-1830-4-git-send-email-Liviu.Dudau@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1394020137-1830-4-git-send-email-Liviu.Dudau@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, Tanmay Inamdar <tinamdar@apm.com>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue,  4 Mar 2014 11:58:22 +0100, Thomas Petazzoni <thomas.petazzoni@free-electrons.com> wrote:
-> The existing fixed_phy_add() function has several drawbacks that
-> prevents it from being used as is for OF-based declaration of fixed
-> PHYs:
+On Wed,  5 Mar 2014 11:48:54 +0000, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+> Before commit 7b5436635800 the pci_host_bridge was created before the root bus.
+> As that commit has added a needless dependency on the bus for pci_alloc_host_bridge()
+> the creation order has been changed for no good reason. Revert the order of
+> creation as we are going to depend on the pci_host_bridge structure to retrieve the
+> domain number of the root bus.
 > 
->  * The address of the PHY on the fake bus needs to be passed, while a
->    dynamic allocation is desired.
-> 
->  * Since the phy_device instantiation is post-poned until the next
->    mdiobus scan, there is no way to associate the fixed PHY with its
->    OF node, which later prevents of_phy_connect() from finding this
->    fixed PHY from a given OF node.
-> 
-> To solve this, this commit introduces fixed_phy_register(), which will
-> allocate an available PHY address, add the PHY using fixed_phy_add()
-> and instantiate the phy_device structure associated with the provided
-> OF node.
-
-The phy address assignment is a little naive, but that can be fixed in a
-follow-up patch (see below for a suggestion)
+> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> Tested-by: Tanmay Inamdar <tinamdar@apm.com>
 
 Acked-by: Grant Likely <grant.likely@linaro.org>
 
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 > ---
->  drivers/net/phy/fixed.c   | 61 +++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/phy_fixed.h | 11 +++++++++
->  2 files changed, 72 insertions(+)
+>  drivers/pci/probe.c | 36 ++++++++++++++++++------------------
+>  1 file changed, 18 insertions(+), 18 deletions(-)
 > 
-> diff --git a/drivers/net/phy/fixed.c b/drivers/net/phy/fixed.c
-> index 0f02403..82095cc 100644
-> --- a/drivers/net/phy/fixed.c
-> +++ b/drivers/net/phy/fixed.c
-> @@ -21,6 +21,7 @@
->  #include <linux/phy_fixed.h>
->  #include <linux/err.h>
->  #include <linux/slab.h>
-> +#include <linux/of.h>
->  
->  #define MII_REGS_NUM 29
->  
-> @@ -203,6 +204,66 @@ err_regs:
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 6e34498..fd11c12 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -505,7 +505,7 @@ static void pci_release_host_bridge_dev(struct device *dev)
+>  	kfree(bridge);
 >  }
->  EXPORT_SYMBOL_GPL(fixed_phy_add);
 >  
-> +void fixed_phy_del(int phy_addr)
-> +{
-> +	struct fixed_mdio_bus *fmb = &platform_fmb;
-> +	struct fixed_phy *fp, *tmp;
-> +
-> +	list_for_each_entry_safe(fp, tmp, &fmb->phys, node) {
-> +		if (fp->addr == phy_addr) {
-> +			list_del(&fp->node);
-> +			kfree(fp);
-> +			return;
-> +		}
-> +	}
-> +}
-> +EXPORT_SYMBOL_GPL(fixed_phy_del);
-> +
-> +static int phy_fixed_addr;
-> +static DEFINE_SPINLOCK(phy_fixed_addr_lock);
-> +
-> +int fixed_phy_register(unsigned int irq,
-> +		       struct fixed_phy_status *status,
-> +		       struct device_node *np)
-> +{
-> +	struct fixed_mdio_bus *fmb = &platform_fmb;
-> +	struct phy_device *phy;
-> +	int phy_addr;
-> +	int ret;
-> +
-> +	/* Get the next available PHY address, up to PHY_MAX_ADDR */
-> +	spin_lock(&phy_fixed_addr_lock);
-> +	if (phy_fixed_addr == PHY_MAX_ADDR) {
-> +		spin_unlock(&phy_fixed_addr_lock);
-> +		return -ENOSPC;
-> +	}
-> +	phy_addr = phy_fixed_addr++;
-
-If this instead looked over the fixed mdio bus list then an unallocated
-address could be assigned without the global static.
-
-> +	spin_unlock(&phy_fixed_addr_lock);
-> +
-> +	ret = fixed_phy_add(PHY_POLL, phy_addr, status);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	phy = get_phy_device(fmb->mii_bus, phy_addr, false);
-> +	if (!phy || IS_ERR(phy)) {
-> +		fixed_phy_del(phy_addr);
-> +		return -EINVAL;
-> +	}
-> +
-> +	of_node_get(np);
-> +	phy->dev.of_node = np;
-> +
-> +	ret = phy_device_register(phy);
-> +	if (ret) {
-> +		phy_device_free(phy);
-> +		of_node_put(np);
-> +		fixed_phy_del(phy_addr);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int __init fixed_mdio_bus_init(void)
+> -static struct pci_host_bridge *pci_alloc_host_bridge(struct pci_bus *b)
+> +static struct pci_host_bridge *pci_alloc_host_bridge(void)
 >  {
->  	struct fixed_mdio_bus *fmb = &platform_fmb;
-> diff --git a/include/linux/phy_fixed.h b/include/linux/phy_fixed.h
-> index 509d8f5..902e8a1 100644
-> --- a/include/linux/phy_fixed.h
-> +++ b/include/linux/phy_fixed.h
-> @@ -9,15 +9,26 @@ struct fixed_phy_status {
->  	int asym_pause;
->  };
+>  	struct pci_host_bridge *bridge;
 >  
-> +struct device_node;
-> +
->  #ifdef CONFIG_FIXED_PHY
->  extern int fixed_phy_add(unsigned int irq, int phy_id,
->  			 struct fixed_phy_status *status);
-> +extern int fixed_phy_register(unsigned int irq,
-> +			      struct fixed_phy_status *status,
-> +			      struct device_node *np);
->  #else
->  static inline int fixed_phy_add(unsigned int irq, int phy_id,
->  				struct fixed_phy_status *status)
->  {
->  	return -ENODEV;
+> @@ -514,7 +514,6 @@ static struct pci_host_bridge *pci_alloc_host_bridge(struct pci_bus *b)
+>  		return NULL;
+>  
+>  	INIT_LIST_HEAD(&bridge->windows);
+> -	bridge->bus = b;
+>  	return bridge;
 >  }
-> +extern int fixed_phy_register(unsigned int irq,
-> +			      struct fixed_phy_status *status,
-> +			      struct device_node *np)
-> +{
-> +	return -ENODEV;
-> +}
->  #endif /* CONFIG_FIXED_PHY */
 >  
->  /*
+> @@ -1727,9 +1726,19 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
+>  	char bus_addr[64];
+>  	char *fmt;
+>  
+> +	bridge = pci_alloc_host_bridge();
+> +	if (!bridge)
+> +		return NULL;
+> +
+> +	bridge->dev.parent = parent;
+> +	bridge->dev.release = pci_release_host_bridge_dev;
+> +	error = pcibios_root_bridge_prepare(bridge);
+> +	if (error)
+> +		goto err_out;
+> +
+>  	b = pci_alloc_bus();
+>  	if (!b)
+> -		return NULL;
+> +		goto err_out;
+>  
+>  	b->sysdata = sysdata;
+>  	b->ops = ops;
+> @@ -1738,26 +1747,15 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
+>  	if (b2) {
+>  		/* If we already got to this bus through a different bridge, ignore it */
+>  		dev_dbg(&b2->dev, "bus already known\n");
+> -		goto err_out;
+> +		goto err_bus_out;
+>  	}
+>  
+> -	bridge = pci_alloc_host_bridge(b);
+> -	if (!bridge)
+> -		goto err_out;
+> -
+> -	bridge->dev.parent = parent;
+> -	bridge->dev.release = pci_release_host_bridge_dev;
+> +	bridge->bus = b;
+>  	dev_set_name(&bridge->dev, "pci%04x:%02x", pci_domain_nr(b), bus);
+> -	error = pcibios_root_bridge_prepare(bridge);
+> -	if (error) {
+> -		kfree(bridge);
+> -		goto err_out;
+> -	}
+> -
+>  	error = device_register(&bridge->dev);
+>  	if (error) {
+>  		put_device(&bridge->dev);
+> -		goto err_out;
+> +		goto err_bus_out;
+>  	}
+>  	b->bridge = get_device(&bridge->dev);
+>  	device_enable_async_suspend(b->bridge);
+> @@ -1814,8 +1812,10 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
+>  class_dev_reg_err:
+>  	put_device(&bridge->dev);
+>  	device_unregister(&bridge->dev);
+> -err_out:
+> +err_bus_out:
+>  	kfree(b);
+> +err_out:
+> +	kfree(bridge);
+>  	return NULL;
+>  }
+>  
 > -- 
-> 1.8.3.2
+> 1.9.0
 > 
 > 
 > _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> linaro-kernel mailing list
+> linaro-kernel@lists.linaro.org
+> http://lists.linaro.org/mailman/listinfo/linaro-kernel
