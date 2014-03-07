@@ -1,58 +1,88 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: rfc: checkpatch logical line continuations (was IBM Akebono:
- Add support for a new PHY interface to the IBM emac driver)
-Date: Fri, 07 Mar 2014 15:15:45 -0800
-Message-ID: <1394234145.16156.109.camel@joe-AO722>
-References: <1394077948-8395-1-git-send-email-alistair@popple.id.au>
-	 <1394077948-8395-3-git-send-email-alistair@popple.id.au>
-	 <20140307.154142.488351276799532264.davem@davemloft.net>
-	 <1394226164.16156.96.camel@joe-AO722> <20140307213017.GA18769@cloud>
-	 <20140307230420.GH29018@mwanda>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140307230420.GH29018@mwanda>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: josh@joshtriplett.org, David Miller <davem@davemloft.net>, alistair@popple.id.au, netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Dan Carpenter <error27@gmail.com>, Randy Dunlap <randy.dunlap@oracle.com>
+From: Florian Vaussard <florian.vaussard@epfl.ch>
+Subject: [PATCH v2] Documentation: dt: Reduce fragmentation of <..> placeholders
+Date: Sat,  8 Mar 2014 00:28:30 +0100
+Message-ID: <1394234910-8547-1-git-send-email-florian.vaussard@epfl.ch>
+References: <CAMuHMdUmcnzafPhWrp4qYBB3UniFbVtqzNNg-7ed_Q6hZKMeDw@mail.gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUmcnzafPhWrp4qYBB3UniFbVtqzNNg-7ed_Q6hZKMeDw@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Joe Perches <joe@perches.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2014-03-08 at 02:04 +0300, Dan Carpenter wrote:
-> On Fri, Mar 07, 2014 at 01:30:17PM -0800, josh@joshtriplett.org wrote:
-> > On Fri, Mar 07, 2014 at 01:02:44PM -0800, Joe Perches wrote:
-> > > On Fri, 2014-03-07 at 15:41 -0500, David Miller wrote:
-> > > > From: Alistair Popple <alistair@popple.id.au>
-> > > > Date: Thu,  6 Mar 2014 14:52:25 +1100
-> > > > 
-> > > > > +	out_be32(dev->reg, in_be32(dev->reg) | WKUP_ETH_RGMIIEN
-> > > > > +		 | WKUP_ETH_TX_OE | WKUP_ETH_RX_IE);
-> > > > 
-> > > > When an expression spans multiple lines, the lines should end with
-> > > > operators rather than begin with them.
-> > > 
-> > > That's not in CodingStyle currently.
-> > 
-> > It's also not even remotely consistent across existing kernel code, and
-> > it isn't obvious that there's a general developer consensus on the
-> > "right" way to write it.
-> > 
-> 
-> We just had this discussion in staging and Greg modified the patch to
-> put the operator at the end.
-> 
-> https://lkml.org/lkml/2014/2/25/125
+Placeholders <..> are sometimes used in the devicetree documentation
+to define family-wide compatible strings (like fsl,<chip>-ipu where
+chip can be any Freescale SoC).
 
-I remember and it's the reason I bring it up in a
-more public way.
+These placeholders are loosly defined. This lead to some
+fragmentation. Looking at the current placeholders, we have:
 
-> It's like logical && and || operators which go at the end these days.
-> I don't really want to have a lot of checkpatch churn to convert
-> everything...
+      3 <board>
+     32 <chip>
+      1 <chip name>
+      1 <mcu-chip>
+      1 <processor>
+     30 <soc>
+      1 <SOC>
+      1 <soc-family>
 
-Nor I really.  I simply would like a tool that lets
-more core maintainers like David M avoid sending out
-"do this, not that" type emails about patches.
+This patch consolidates this to:
 
-I don't mind adding style checking that emits something
-for patches and is quieter when scanning files.
+      3 <board>
+     33 <chip>
+      1 <mcu-chip>
+      1 <processor>
+     32 <soc>
+
+Reported-by: Joe Perches <joe@perches.com>
+Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
+---
+ Documentation/devicetree/bindings/arm/samsung/sysreg.txt | 2 +-
+ Documentation/devicetree/bindings/pinctrl/pinctrl-st.txt | 2 +-
+ Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt | 4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
+index 0ab3251..b945b23 100644
+--- a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
++++ b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
+@@ -1,7 +1,7 @@
+ SAMSUNG S5P/Exynos SoC series System Registers (SYSREG)
+ 
+ Properties:
+- - compatible : should contain "samsung,<chip name>-sysreg", "syscon";
++ - compatible : should contain "samsung,<chip>-sysreg", "syscon";
+    For Exynos4 SoC series it should be "samsung,exynos4-sysreg", "syscon";
+  - reg : offset and length of the register set.
+ 
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-st.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-st.txt
+index 05bf82a..393a53a 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-st.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-st.txt
+@@ -12,7 +12,7 @@ ST pinctrl driver controls PIO multiplexing block and also interacts with
+ gpio driver to configure a pin.
+ 
+ Required properties: (PIO multiplexing block)
+-- compatible	: should be "st,<SOC>-<pio-block>-pinctrl"
++- compatible	: should be "st,<soc>-<pio-block>-pinctrl"
+ 	like st,stih415-sbc-pinctrl, st,stih415-front-pinctrl and so on.
+ - gpio-controller : Indicates this device is a GPIO controller
+ - #gpio-cells	  : Should be one. The first cell is the pin number.
+diff --git a/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt b/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
+index e39cb26..b488ffa 100644
+--- a/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
++++ b/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
+@@ -2,8 +2,8 @@ Allwinner SoCs Watchdog timer
+ 
+ Required properties:
+ 
+-- compatible : should be "allwinner,<soc-family>-wdt", the currently supported
+-  SoC families being sun4i and sun6i
++- compatible : should be "allwinner,<soc>-wdt", the currently supported
++  SoC being sun4i and sun6i
+ - reg : Specifies base physical address and size of the registers.
+ 
+ Example:
+-- 
+1.8.5.3
+
