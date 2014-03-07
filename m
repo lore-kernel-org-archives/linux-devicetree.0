@@ -1,100 +1,103 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [RFC PATCH v2 19/21] ARM: dts: exynos5250-arndale: add dsi and
- panel nodes
-Date: Fri, 7 Mar 2014 16:36:59 +0200
-Message-ID: <5319D98B.4080709@ti.com>
-References: <1392204688-4591-1-git-send-email-a.hajda@samsung.com> <1392204688-4591-20-git-send-email-a.hajda@samsung.com> <53108FA0.4040903@ti.com> <53109193.3000604@ti.com> <5315C07B.3090705@samsung.com> <CAAQKjZPVvAxC7=voKJ1Jid3Ynnrjcg6s5m95fwetx7iDeZUN+w@mail.gmail.com> <5319B9FF.50201@samsung.com> <5319BC45.4040308@ti.com> <5319C4A8.8080900@samsung.com> <5319C976.3060908@ti.com> <5319D4FC.5090703@samsung.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="HkiL4VlBwLR7XNghgEJHPC4mBiiS5jk68"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5319D4FC.5090703@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Inki Dae <inki.dae@samsung.com>, DRI mailing list <dri-devel@lists.freedesktop.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+From: Maxime COQUELIN <maxime.coquelin@st.com>
+Subject: [PATCH v3 1/5] ARM: STi: Add STiH407 SoC support
+Date: Fri,  7 Mar 2014 15:40:47 +0100
+Message-ID: <1394203251-25361-2-git-send-email-maxime.coquelin@st.com>
+References: <1394203251-25361-1-git-send-email-maxime.coquelin@st.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1394203251-25361-1-git-send-email-maxime.coquelin@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, Linus Walleij <linus.walleij@linaro.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Maxime Coquelin <maxime.coquelin@st.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+Cc: lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
---HkiL4VlBwLR7XNghgEJHPC4mBiiS5jk68
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+This patch adds support to STiH407 SoC.
 
-On 07/03/14 16:17, Andrzej Hajda wrote:
-> On 03/07/2014 02:28 PM, Tomi Valkeinen wrote:
-> (...)
->> There are many possible connections from FIMD, some of them:
->> FIMD ---> RGB panel, external
->> FIMD ---> DSI, on SoC
->> FIMD ---> eDP, on SoC
->> FIMD ---> ImageEnhacer, on SoC
->> This sounds similar to OMAP, at least roughly.
->>
->>> In the first case port should be created.
->>> In other cases connection could be determined by presence/absence
->>> of specific nodes, so in fact the port can be optional, almost like i=
-n
->>> my proposal :)
->> Well, I think not.
->>
->> In the external encoder case, the ports are there, and they are used.
->> You just didn't specify them, and thus make the driver deduce them fro=
-m
->> the DT.
->>
->> In the FIMD case, if the the RGB port is needed, you need to specify i=
-t
->> in the DT data, and it's used. If you only need, say, DSI, the RGB por=
-t
->> is not used and thus it doesn't need to be present in the DT data.
->>
->> It's fine to leave the port definition out if it is not used at all.
-> On Exynos, DSI is in fact RGB/DSI encoder (or I80/DSI). DSI and RGB pin=
-s
-> are connected to the same FIMD output. So from FIMD point of view
-> RGB port is used in both cases.
+Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
+Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+---
+ Documentation/arm/sti/stih407-overview.txt    | 18 ++++++++++++++++++
+ Documentation/devicetree/bindings/arm/sti.txt | 15 +++++++++++++++
+ arch/arm/mach-sti/Kconfig                     |  9 +++++++++
+ arch/arm/mach-sti/board-dt.c                  |  1 +
+ 4 files changed, 43 insertions(+)
+ create mode 100644 Documentation/arm/sti/stih407-overview.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/sti.txt
 
-I guessed as much, as it's the same on OMAP.
+diff --git a/Documentation/arm/sti/stih407-overview.txt b/Documentation/arm/sti/stih407-overview.txt
+new file mode 100644
+index 0000000..3343f32
+--- /dev/null
++++ b/Documentation/arm/sti/stih407-overview.txt
+@@ -0,0 +1,18 @@
++			STiH407 Overview
++			================
++
++Introduction
++------------
++
++    The STiH407 is the new generation of SoC for Multi-HD, AVC set-top boxes
++    and server/connected client application for satellite, cable, terrestrial
++    and IP-STB markets.
++
++    Features
++    - ARM Cortex-A9 1.5 GHz dual core CPU (28nm)
++    - SATA2, USB 3.0, PCIe, Gbit Ethernet
++
++  Document Author
++  ---------------
++
++  Maxime Coquelin <maxime.coquelin@st.com>, (c) 2014 ST Microelectronics
+diff --git a/Documentation/devicetree/bindings/arm/sti.txt b/Documentation/devicetree/bindings/arm/sti.txt
+new file mode 100644
+index 0000000..92f16c7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/sti.txt
+@@ -0,0 +1,15 @@
++ST STi Platforms Device Tree Bindings
++---------------------------------------
++
++Boards with the ST STiH415 SoC shall have the following properties:
++Required root node property:
++compatible = "st,stih415";
++
++Boards with the ST STiH416 SoC shall have the following properties:
++Required root node property:
++compatible = "st,stih416";
++
++Boards with the ST STiH407 SoC shall have the following properties:
++Required root node property:
++compatible = "st,stih407";
++
+diff --git a/arch/arm/mach-sti/Kconfig b/arch/arm/mach-sti/Kconfig
+index d2c13ba..c0a3f53 100644
+--- a/arch/arm/mach-sti/Kconfig
++++ b/arch/arm/mach-sti/Kconfig
+@@ -39,4 +39,13 @@ config SOC_STIH416
+ 	  and other digital audio/video applications using Flattened Device
+ 	  Trees.
+ 
++config SOC_STIH407
++	bool "STiH407 STMicroelectronics Consumer Electronics family"
++	default y
++	help
++	  This enables support for STMicroelectronics Digital Consumer
++	  Electronics family StiH407 parts, primarily targeted at set-top-box
++	  and other digital audio/video applications using Flattened Device
++	  Trees.
++
+ endif
+diff --git a/arch/arm/mach-sti/board-dt.c b/arch/arm/mach-sti/board-dt.c
+index 1217fb5..df731f2 100644
+--- a/arch/arm/mach-sti/board-dt.c
++++ b/arch/arm/mach-sti/board-dt.c
+@@ -36,6 +36,7 @@ static void __init stih41x_machine_init(void)
+ static const char *stih41x_dt_match[] __initdata = {
+ 	"st,stih415",
+ 	"st,stih416",
++	"st,stih407",
+ 	NULL
+ };
+ 
+-- 
+1.9.0
 
-But I think it's still fine to have a port only for RGB panel. For the
-RGB panel, you have pins on the SoC to which the RGB data goes to. The
-RGB port in DT represents these pins. You don't have pins for the
-FIMD->DSI case.
-
-But as I said, it's fine to use ports for internal connections also if
-it works for you.
-
-I still don't like the idea of having the port as optional in DT for
-cases where the port comes from the parent device. Sure, it removes some
-lines from the DT, but I think it makes it more confusing. Especially as
-I think it's a very rare case where you could use that optional format,
-as usually you will have some properties in the endpoint node.
-
- Tomi
-
-
-
---HkiL4VlBwLR7XNghgEJHPC4mBiiS5jk68
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJTGdmLAAoJEPo9qoy8lh71t7IP/1dj2iZMo3hKpJNX6+Avbm67
-R9nUhgRy7+cP3gxQIPScrdngit+TayjDij2Tnb5RX3ExAoR5EFsRJGm+OM2GTYSS
-vKCX3muHoHK0kWho1EWVEyOWQroIHjyzybQEm11Gzn3HGfwtARtD2FzjFW3omdrO
-WJSFNOelMNj5YwowL+RZiv1RzmsgRulRb2igC7YbIOTyqBn48Gy9P99Ow1rygazA
-WW/Z2HaoBMKgmrsjVDO9OjKi7a04n7GtYjGSVvOrs/4tNgqH+tgJHxiXK19b589V
-dOYAY8YYj9CkYlpqUrG5RBvmSLs/GaSxhh7/7xdjfXHhqAMHsuVBVu5+noWY3llU
-Mq86o63ey1RM7fad9pvWBtJ08rVBWqBmlqDaKeGND4J9E6LymktVb4ZrL/BZYvbe
-Poc3i/OQbVmZnix6GBwjWINrVDDOGwg/taqZmUaimPJgnkOQcUckLiNjaYYd8Yta
-+W/7lkbUg3zrwOFKFUc50ujqpdxqAYd4b5HFOcavq2vgTOhrwAe9XVUapMdph0cR
-lt93j9agV51BWI3SQrWdxOrFO1HvWt2+R7QEvzR1l5QCkHdzye9pR/mMYrwu6Hl0
-1bLJcQqvqidSEueFSesGUk9mb+s4AtqzuB6YYdaowulhRvJk9/LBj+WvXtfFRzfZ
-ZwV4qmyM7K8BSGilEJ+9
-=hcR/
------END PGP SIGNATURE-----
-
---HkiL4VlBwLR7XNghgEJHPC4mBiiS5jk68--
