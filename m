@@ -1,86 +1,55 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH v2] phy-rcar-gen2-usb: add device tree support
-Date: Fri, 7 Mar 2014 14:46:05 +0900
-Message-ID: <CANqRtoRTtsF64jZ-n_VbmzkRehUoBWQLEd5jfAL86wyLrvAUPQ@mail.gmail.com>
-References: <201403010407.54639.sergei.shtylyov@cogentembedded.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v3] phy: omap-control: update dra7 and am437 usb2 bindings
+Date: Fri, 7 Mar 2014 11:18:00 +0530
+Message-ID: <1394171280-13359-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <201403010407.54639.sergei.shtylyov@cogentembedded.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Felipe Balbi <balbi@ti.com>, Linux-USB <linux-usb@vger.kernel.org>, robh+dt@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, SH-Linux <linux-sh@vger.kernel.org>, Valentine Barshak <valentine.barshak@cogentembedded.com>, rob@landley.net, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
+Cc: kishon@ti.com, balbi@ti.com, rogerq@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 1, 2014 at 10:07 AM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Add support of the device tree probing for the Renesas R-Car generation 2 SoCs
-> documenting the device tree binding as necessary.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->
-> ---
-> This patch is against the 'next' branch of Felipe Balbi's 'usb.git' repo.
->
-> Changes in version 2:
-> - restored devm_clk_get() call and the error handling logic in the probe()
->   method, removed clk_put() call in the remove() method.
->
->  Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt |   29 +++++++++++
->  drivers/usb/phy/phy-rcar-gen2-usb.c                     |   42 ++++++++++++++--
->  2 files changed, 68 insertions(+), 3 deletions(-)
->
-> Index: usb/Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt
-> ===================================================================
-> --- /dev/null
-> +++ usb/Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt
-> @@ -0,0 +1,29 @@
-> +* Renesas R-Car generation 2 USB PHY
-> +
-> +This file provides information on what the device node for the R-Car generation
-> +2 USB PHY contains.
-> +
-> +Required properties:
-> +- compatible: "renesas,usb-phy-r8a7790" if the device is a part of R8A7790 SoC.
-> +             "renesas,usb-phy-r8a7791" if the device is a part of R8A7791 SoC.
-> +- reg: offset and length of the register block.
-> +- clocks: clock phandle and specifier pair.
-> +- clock-names: string, clock input name, must be "usbhs".
-> +
-> +Optional properties:
-> +- renesas,channel0-pci: boolean, specify when USB channel 0 should be connected
-> +                       to PCI EHCI/OHCI; otherwise, it will be connected to the
-> +                       USBHS controller.
-> +- renesas,channel2-pci: boolean, specify when USB channel 2 should be connected
-> +                       to PCI EHCI/OHCI; otherwise, it will be connected to the
-> +                       USBSS controller (xHCI).
+From: Roger Quadros <rogerq@ti.com>
 
-Thanks for your efforts here, but this DT binding looks like a mix of
-software configuration and hardware description. I would like to omit
-the software configuration portion if possible and only describe the
-hardware.
+The dra7-usb2 and am437-usb2 bindings have not yet been used.
+Change them to be more elegant.
 
-> +Example (Lager board):
-> +
-> +       usb-phy@e6590100 {
-> +               compatible = "renesas,usb-phy-r8a7790";
-> +               reg = <0 0xe6590100 0 0x100>;
-> +               clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
-> +               clock-names = "usbhs";
-> +               renesas,channel2-pci;
-> +       };
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+Changes from v2:
+Kept only the drivers/phy part in this patch
 
-As an example, instead of relying on "renesas,channel0-pci" or
-"renesas,channel2-pci" to specify which hard coded software
-configuration you want please rework this to expose 3 separate
-channels and use DT to point each host controller to the right
-channel.
+ drivers/phy/phy-omap-control.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-That will give us the opportunity to perform any kind of run time
-selection and not be limited by software policy set by DT.
-
-So this is a NAK on my side. I expect better.
-
-Thanks,
-
-/ magnus
+diff --git a/drivers/phy/phy-omap-control.c b/drivers/phy/phy-omap-control.c
+index 17fc200..a7e2d7f 100644
+--- a/drivers/phy/phy-omap-control.c
++++ b/drivers/phy/phy-omap-control.c
+@@ -228,11 +228,11 @@ static const struct of_device_id omap_control_phy_id_table[] = {
+ 		.data = &pipe3_data,
+ 	},
+ 	{
+-		.compatible = "ti,control-phy-dra7usb2",
++		.compatible = "ti,control-phy-dra7-usb2",
+ 		.data = &dra7usb2_data,
+ 	},
+ 	{
+-		.compatible = "ti,control-phy-am437usb2",
++		.compatible = "ti,control-phy-am437-usb2",
+ 		.data = &am437usb2_data,
+ 	},
+ 	{},
+-- 
+1.7.9.5
