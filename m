@@ -1,60 +1,69 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: Re: [PATCH 6/6] documentation: bindings: document PMIC8921/8058 RTC
-Date: Fri, 7 Mar 2014 13:01:14 -0600
-Message-ID: <20140307190114.GJ18529@joshc.qualcomm.com>
-References: <1394047776-13827-1-git-send-email-joshc@codeaurora.org>
- <1394047776-13827-7-git-send-email-joshc@codeaurora.org>
- <5317900F.5030803@codeaurora.org>
- <20140306000058.GE18529@joshc.qualcomm.com>
- <5317CFEF.1060003@codeaurora.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v5 00/11] imx-drm dt bindings
+Date: Fri, 7 Mar 2014 19:17:23 +0000
+Message-ID: <20140307191723.GS21483@n2100.arm.linux.org.uk>
+References: <1394011262-16849-1-git-send-email-p.zabel@pengutronix.de>
+	<20140307175612.GR21483@n2100.arm.linux.org.uk>
+	<20140307182857.GB6963@kroah.com>
+	<CA+gwMcfMMUvRc6ZPh3qM1nGXW3ECWA=CD6M9PbgmoOdwx4fGYQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <5317CFEF.1060003@codeaurora.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+In-Reply-To: <CA+gwMcfMMUvRc6ZPh3qM1nGXW3ECWA=CD6M9PbgmoOdwx4fGYQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces@lists.freedesktop.org
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+To: Philipp Zabel <philipp.zabel@gmail.com>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, Sascha Hauer <kernel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 05, 2014 at 05:31:27PM -0800, Stephen Boyd wrote:
-> On 03/05/14 16:00, Josh Cartwright wrote:
-> > On Wed, Mar 05, 2014 at 12:58:55PM -0800, Stephen Boyd wrote:
-> >> On 03/05/14 11:29, Josh Cartwright wrote:
-> >>> diff --git a/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt b/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt
-> >>> new file mode 100644
-> >>> index 0000000..699bd30
-> >>> --- /dev/null
-> >>> +++ b/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt
-> >>> @@ -0,0 +1,29 @@
-> >>> +* Real-Time Clock for Qualcomm 8058/8921 PMICs
-> >>> +
-> >>> +Required properties:
-> >>> +- compatible: should be one of the following.
-> >>> +    * "qcom,pm8058-rtc"
-> >>> +    * "qcom,pm8921-rtc"
-> >>> +- reg: base address of the register region
-> >>> +- reg-names: corresponding reg names for the regions listed in the 'reg'
-> >>> +             property, must contain:
-> >>> +     "rtc_base" - base of the RTC register region
-> >> optional reg-names?
-> >>
-> >>> +- interrupts: interrupt list for the RTC, must contain a single interrupt
-> >>> +              specifier for the alarm interrupt
-> >>> +- interrupt-names: corresponding interrupt names for the interrupts listed in
-> >>> +                   the 'interrupts' property, must contain:
-> >>> +     "alarm" - summary interrupt for PMIC peripherals
-> >> optional interrupt-names?
-> > It isn't clear to me why these should be made optional, I hope Rob
-> > provides some clarification in the sdhci-msm thread.
+On Fri, Mar 07, 2014 at 07:57:51PM +0100, Philipp Zabel wrote:
+> [Added Shawn to Cc:]
 > 
-> Looks like the driver isn't using either of these properties, so I'm not
-> sure why they're needed. Maybe they should just be removed.
+> On Fri, Mar 7, 2014 at 7:28 PM, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> > On Fri, Mar 07, 2014 at 05:56:12PM +0000, Russell King - ARM Linux wrote:
+> >> On Wed, Mar 05, 2014 at 10:20:51AM +0100, Philipp Zabel wrote:
+> >> > Hi,
+> >> >
+> >> > this latest version of the imx-drm DT binding patches applies
+> >> > on top of staging-next and also depends on the OF graph binding
+> >> > patchset that moves the v4l2_of helpers to drivers/of.
+> >> > Currently, the two patchsets are also available at:
+> >> >     git://git.pengutronix.de/git/pza/linux.git topic/of-graph
+> >> >     git://git.pengutronix.de/git/pza/linux.git topic/imx-drm-dt
+> >>
+> >> Okay, having looked at the second tree, pulling that will result in
+> >> pulling in all of the staging tree here, which I'd rather not do.  Unless
+> >> there's any objection, I'd like to take these as patches on top of the
+> >> imx-drm stuff which I sent to Greg plus the of-graph stuff which they
+> >> depend upon.  In other words, exactly how I've been testing it today.
+> >>
+> >> Any objections?
+> >
+> > None from me!  :)
+> 
+> Nor from me. But I'd like to point out that there already is one merge issue
+> with Shawn's for-next branch in arch/arm/boot/dts/imx53-qsb.dts between
+>     d5eb195 "ARM: dts: i.MX53: move common QSB nodes to new file"
+> and these two patches:
+>     17b5001 "imx-drm: convert to componentised device support".
+>     "ARM: dts: imx53: Add IPU DI ports and endpoints, move imx-drm node to dtsi"
+> The first one already is in staging-next.
 
-The driver does make use of platform_get_irq_byname(pdev, "alarm"), and
-I expect to make use of platform_get_resource_byname(pdev, IORESOURCE_REG, "rtc_base")
-in the near future.
+Yes, I'm aware of that (since I've been encountering it when creating
+the build tree for my autobuilder.)
+
+Thanks.
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
