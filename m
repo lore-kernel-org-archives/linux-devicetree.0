@@ -1,49 +1,58 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [GIT PULL] Move device tree graph parsing helpers to drivers/of
-Date: Fri, 7 Mar 2014 13:29:02 +0000
-Message-ID: <20140307132902.GK21483@n2100.arm.linux.org.uk>
-References: <1394126000.3622.66.camel@paszta.hi.pengutronix.de> <20140307115517.GI21483@n2100.arm.linux.org.uk> <20140307092031.68cd985d@samsung.com>
+From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Subject: Re: [PATCH v3 3/4] checkpatch: check compatible strings in .c and
+ .h too
+Date: Fri, 07 Mar 2014 14:29:46 +0100
+Message-ID: <5319C9CA.1080604@epfl.ch>
+References: <1394198771-25913-1-git-send-email-florian.vaussard@epfl.ch> <1394198771-25913-4-git-send-email-florian.vaussard@epfl.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140307092031.68cd985d@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <m.chehab@samsung.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1394198771-25913-4-git-send-email-florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 07, 2014 at 09:20:31AM -0300, Mauro Carvalho Chehab wrote:
-> Em Fri, 07 Mar 2014 11:55:17 +0000
-> Russell King - ARM Linux <linux@arm.linux.org.uk> escreveu:
-> 
-> > On Thu, Mar 06, 2014 at 06:13:20PM +0100, Philipp Zabel wrote:
-> > > Hi Mauro, Russell,
-> > > 
-> > > I have temporarily removed the simplified bindings at Sylwester's
-> > > request and updated the branch with the acks. The following changes
-> > > since commit 0414855fdc4a40da05221fc6062cccbc0c30f169:
-> > > 
-> > >   Linux 3.14-rc5 (2014-03-02 18:56:16 -0800)
-> > > 
-> > > are available in the git repository at:
-> > > 
-> > >   git://git.pengutronix.de/git/pza/linux.git topic/of-graph
-> > 
-> > Okay, this has all gone wrong.  Mauro has applied your changes as patches,
-> > and I've pulled this set of changes.  So we're going to be all set for
-> > merge conflicts....... just fscking great.
-> > 
-> > I really don't know why I bother trying to do the right thing sometimes.
-> > 
-> 
-> I just reverted my tree to the previous state before applying the patches
-> and did a git pull instead, in order to avoid merge conflicts when the
-> imx-drm patches arrive via staging tree.
 
-Thank you, that will work much better, and will avoid flames from Linus
-at the next merge window.
 
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+On 03/07/2014 02:26 PM, Florian Vaussard wrote:
+> From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+> 
+> From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+> 
+
+Mmmh, sorry for this. I will resend.
+
+> Look for ".compatible = "foo" strings not only in .dts files, but
+> in .c and .h too.
+> 
+> Signed-off-by: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+> [florian.vaussard-p8DiymsW2f8@public.gmane.org: split patch, commit log]
+> Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+> ---
+>  scripts/checkpatch.pl | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 96f10ba..9205153 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -2041,8 +2041,10 @@ sub process {
+>  		}
+>  
+>  # check for DT compatible documentation
+> -		if (defined $root && $realfile =~ /\.dts/ &&
+> -		    $rawline =~ /^\+\s*compatible\s*=/) {
+> +		if (defined $root &&
+> +			(($realfile =~ /\.dtsi?$/ && $line =~ /^\+\s*compatible\s*=\s*\"/) ||
+> +			 ($realfile =~ /\.[ch]$/ && $line =~ /^\+.*\.compatible\s*=\s*\"/))) {
+> +
+>  			my @compats = $rawline =~ /\"([a-zA-Z0-9\-\,\.\+_]+)\"/g;
+>  
+>  			foreach my $compat (@compats) {
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
