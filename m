@@ -1,120 +1,101 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v5 5/7] [media] of: move common endpoint parsing to drivers/of
-Date: Fri, 07 Mar 2014 00:59:17 +0100
-Message-ID: <22856833.LpWmmzXcxv@avalon>
-References: <1393522540-22887-1-git-send-email-p.zabel@pengutronix.de> <1393932989.3917.62.camel@paszta.hi.pengutronix.de> <5315C535.2070303@ti.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v6 4/8] of: Reduce indentation in of_graph_get_next_endpoint
+Date: Fri, 07 Mar 2014 01:12:37 +0100
+Message-ID: <31687163.hgTkcLrn0Z@avalon>
+References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de> <1394011242-16783-5-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1412993.9E2XQkZQ0N"; micalg="pgp-sha1"; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5315C535.2070303-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1394011242-16783-5-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Grant Likely <grant.likely@linaro.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Philipp,
 
---nextPart1412993.9E2XQkZQ0N
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="us-ascii"
+Thank you for the patch.
 
-Hi Tomi,
+I've submitted a fix for the of_graph_get_next_endpoint() function, but it 
+hasn't been applied yet due to the patch series that contained it needing more 
+work.
 
-On Tuesday 04 March 2014 14:21:09 Tomi Valkeinen wrote:
-> On 04/03/14 13:36, Philipp Zabel wrote:
-> > Am Dienstag, den 04.03.2014, 10:58 +0200 schrieb Tomi Valkeinen:
-> > [...]
+The patch is available at https://patchwork.linuxtv.org/patch/21946/. I can 
+rebase it on top of this series, but I still wanted to let you know about it 
+in case you would like to integrate it.
 
-[snip]
+On Wednesday 05 March 2014 10:20:38 Philipp Zabel wrote:
+> A 'return endpoint;' at the end of the (!prev) case allows to
+> reduce the indentation level of the (prev) case.
+> 
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+>  drivers/of/base.c | 42 ++++++++++++++++++++++--------------------
+>  1 file changed, 22 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index b5e690b..a8e47d3 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -2026,32 +2026,34 @@ struct device_node *of_graph_get_next_endpoint(const
+> struct device_node *parent, pr_err("%s(): no endpoint nodes specified for
+> %s\n",
+>  			       __func__, parent->full_name);
+>  		of_node_put(node);
+> -	} else {
+> -		port = of_get_parent(prev);
+> -		if (WARN_ONCE(!port, "%s(): endpoint %s has no parent node\n",
+> -			      __func__, prev->full_name))
+> -			return NULL;
+> 
+> -		/* Avoid dropping prev node refcount to 0. */
+> -		of_node_get(prev);
+> -		endpoint = of_get_next_child(port, prev);
+> -		if (endpoint) {
+> -			of_node_put(port);
+> -			return endpoint;
+> -		}
+> +		return endpoint;
+> +	}
+> 
+> -		/* No more endpoints under this port, try the next one. */
+> -		do {
+> -			port = of_get_next_child(parent, port);
+> -			if (!port)
+> -				return NULL;
+> -		} while (of_node_cmp(port->name, "port"));
+> +	port = of_get_parent(prev);
+> +	if (WARN_ONCE(!port, "%s(): endpoint %s has no parent node\n",
+> +		      __func__, prev->full_name))
+> +		return NULL;
+> 
+> -		/* Pick up the first endpoint in this port. */
+> -		endpoint = of_get_next_child(port, NULL);
+> +	/* Avoid dropping prev node refcount to 0. */
+> +	of_node_get(prev);
+> +	endpoint = of_get_next_child(port, prev);
+> +	if (endpoint) {
+>  		of_node_put(port);
+> +		return endpoint;
+>  	}
+> 
+> +	/* No more endpoints under this port, try the next one. */
+> +	do {
+> +		port = of_get_next_child(parent, port);
+> +		if (!port)
+> +			return NULL;
+> +	} while (of_node_cmp(port->name, "port"));
+> +
+> +	/* Pick up the first endpoint in this port. */
+> +	endpoint = of_get_next_child(port, NULL);
+> +	of_node_put(port);
+> +
+>  	return endpoint;
+>  }
+>  EXPORT_SYMBOL(of_graph_get_next_endpoint);
 
-> >> Then, about the get_remote functions: I think there should be only=
- one
-> >> function for that purpose, one that returns the device node that
-> >> contains the remote endpoint.
-> >>=20
-> >> My reasoning is that the ports and endpoints, and their contents, =
-should
-> >> be private to the device. So the only use to get the remote is to =
-get
-> >> the actual device, to see if it's been probed, or maybe get some v=
-ideo
-> >> API for that device.
-> >=20
-> > of_graph_get_remote_port currently is used in the exynos4-is/fimc-i=
-s.c
-> > v4l2 driver to get the mipi-csi channel id from the remote port, an=
-d
-> > I've started using it in imx-drm-core.c for two cases:
-> > - given an endpoint on the encoder, find the remote port connected =
-to
-> >   it, get the associated drm_crtc, to obtain its the drm_crtc_mask
-> >   for encoder->possible_crtcs.
-> >=20
-> > - given an encoder and a connected drm_crtc, walk all endpoints to =
-find
-> >   the remote port associated with the drm_crtc, and then use the lo=
-cal
-> >   endpoint parent port to determine multiplexer settings.
->=20
-> Ok.
->=20
-> In omapdss each driver handles only the ports and endpoints defined f=
-or
-> its device, and they can be considered private to that device. The on=
-ly
-> reason to look for the remote endpoint is to find the remote device. =
-To
-> me the omapdss model makes sense, and feels logical and sane =3D). So=
- I
-> have to say I'm not really familiar with the model you're using.
-
-I agree with you that most of the content of the remote endpoint should=
- be=20
-considered private to the remote device and not accessed by the local d=
-evice=20
-driver. There is, however, one piece of information from the remote end=
-point=20
-useful to the local device driver, it's the remote port identifier. Thi=
-s can=20
-be expressed by a phandle, a remote port number, a media entity pad poi=
-nter,=20
-or any other mean, but the information is useful for the local device d=
-river=20
-to communicate with the remote device driver. For instance a driver cou=
-ld use=20
-it to ask its video stream source to start the video stream on a given =
-port.
-
-> Of course, the different get_remove_* funcs do no harm, even if we ha=
-ve
-> a bunch of them. My point was only about enforcing the correct use of=
-
-> the model, where "correct" is of course subjective =3D).
-
-=2D-=20
+-- 
 Regards,
 
 Laurent Pinchart
-
---nextPart1412993.9E2XQkZQ0N
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQEcBAABAgAGBQJTGQvaAAoJEIkPb2GL7hl1nsgH/iaADjsddE23C9P/qi8ml19s
-qEum6GLOg4wMHC1lwi3C9R7Vrg/J7CmfBX+BpXlkNv8O12vndoFI9AernLmn0e4l
-9gWuA9B4u3j3Pd9jI++EbhTiz/W3u01uwBI3xfv4WogeDWwCxy6B7iih4S298fVq
-c61CZbwNObSUZ7Y1U09W0JP8cGI1A3d2GJc1eILl9FcVrXAWAhYU+mwLRoVOp2bl
-Pv0AYPaIXrUsF8CaFbT7Lq6EwMwgEMhFH5L7tSrbvVxf8azb5bESBNPDEK8cpEup
-WygjooyLx6Lxkq49rHvn/CHKv+0qP4kMXa2yxUUEVEur1abCGxftMp6qAQ5UlV4=
-=LqjR
------END PGP SIGNATURE-----
-
---nextPart1412993.9E2XQkZQ0N--
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
