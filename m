@@ -1,102 +1,63 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 3/9] Doc/DT: Add DT binding documentation for DVI Connector
-Date: Fri, 07 Mar 2014 15:17:39 +0100
-Message-ID: <1394201859.16309.14.camel@paszta.hi.pengutronix.de>
-References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
-	<1393590016-9361-4-git-send-email-tomi.valkeinen@ti.com>
-	<20140228155937.GQ21483@n2100.arm.linux.org.uk>	<5310B567.7040605@ti.com>
-	<20140228162327.GT21483@n2100.arm.linux.org.uk>	<5316E31F.9050308@ti.com>
-	<CAMuHMdWVSfKrudBhE7FW-ZWBvMOLWjrQZvn1qZUfRt_H+P7A2w@mail.gmail.com>
-	<53183730.5060205@ti.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [RFC PATCH v2 19/21] ARM: dts: exynos5250-arndale: add dsi and
+ panel nodes
+Date: Fri, 07 Mar 2014 15:17:32 +0100
+Message-ID: <5319D4FC.5090703@samsung.com>
+References: <1392204688-4591-1-git-send-email-a.hajda@samsung.com>
+ <1392204688-4591-20-git-send-email-a.hajda@samsung.com>
+ <53108FA0.4040903@ti.com> <53109193.3000604@ti.com>
+ <5315C07B.3090705@samsung.com>
+ <CAAQKjZPVvAxC7=voKJ1Jid3Ynnrjcg6s5m95fwetx7iDeZUN+w@mail.gmail.com>
+ <5319B9FF.50201@samsung.com> <5319BC45.4040308@ti.com>
+ <5319C4A8.8080900@samsung.com> <5319C976.3060908@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <53183730.5060205@ti.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces@lists.freedesktop.org
-Errors-To: dri-devel-bounces@lists.freedesktop.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <5319C976.3060908@ti.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
 To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, DRI Development <dri-devel@lists.freedesktop.org>, Andrzej Hajda <a.hajda@samsung.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Inki Dae <inki.dae@samsung.com>, DRI mailing list <dri-devel@lists.freedesktop.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Am Donnerstag, den 06.03.2014, 10:52 +0200 schrieb Tomi Valkeinen:
-> On 06/03/14 10:39, Geert Uytterhoeven wrote:
-> > On Wed, Mar 5, 2014 at 9:41 AM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
-> >> On 28/02/14 18:23, Russell King - ARM Linux wrote:
-> >>
-> >>> That's rather a lot of compatible strings.  Another possibility is:
-> >>>
-> >>>       compatible = "dvi-connector";
-> >>>       analog;
-> >>>       digital;
-> >>>       single-link;
-> >>>       dual-link;
-> >>
-> >> I made the following changes compared to the posted version. I decided
-> >> to leave the "single-link" out, as it's implied if "digital" is set.
-> >>
-> >>  Tomi
-> >>
-> >> @@ -6,11 +6,16 @@ Required properties:
-> >>
-> >>  Optional properties:
-> >>  - label: a symbolic name for the connector
-> >> -- i2c-bus: phandle to the i2c bus that is connected to DVI DDC
-> >> +- ddc-i2c-bus: phandle to the i2c bus that is connected to DVI DDC
-> >> +- analog: the connector has DVI analog pins
-> >> +- digital: the connector has DVI digital pins
-> >> +- dual-link: the connector has pins for DVI dual-link
-> >>
-> >>  Required nodes:
-> >>  - Video port for DVI input
-> >>
-> >> +Note: One (or both) of 'analog' or 'digital' must be set.
-> > 
-> > So dual-link needs both "digital" and "dual-link"?
-> 
-> Yes. It is extra, but it felt clearer to me to have 'digital' as a
-> matching property for 'analog'.
-> 
-> Alternatively we could have three options:
-> 
-> analog;
-> digital-single-link;
-> digital-dual-link;
-> 
-> My reasoning to the format I chose was basically that when a connector
-> supports 'digital', it contains TMDS clock and TMDS data for link 1.
-> Adding dual link to that adds only TMDS data for link 2, so the second
-> data link is kind of an additional feature, marked with a flag.
-> 
-> Not a very big argument, and I'm fine with other format suggestions.
-
-I'd prefer the analog / digital / dual-link variant for aesthetic
-reasons. But looking at other connector types, I wonder if this should
-be generalized even more:
-
-For HDMI/DVI (digital) single-link means one clock pair and 3 TMDS data
-pairs, dual-link means one clock pair and 6 data pairs.
-
-On LVDS connectors, there usually are one clock pair and three (18-bit)
-or four (24-bit) LVDS data pairs, in dual channel configuration two
-clock pairs and 6 or 8 data pairs are used.
-
-For DisplayPort there is no separate clock pair, but 1 to 4 data pairs,
-and MIPI DSI again has one clock pair and a one or more data pairs.
-
-There are already optional endpoint configuration properties
-'data-lanes' and 'clock-lanes' for MIPI CSI-2 defined in
-Documentation/devicetree/bindings/media/video-interfaces.txt.
-Could/should this be aligned with the same?
-
-regards
-Philipp
+On 03/07/2014 02:28 PM, Tomi Valkeinen wrote:
+(...)
+> There are many possible connections from FIMD, some of them:
+> FIMD ---> RGB panel, external
+> FIMD ---> DSI, on SoC
+> FIMD ---> eDP, on SoC
+> FIMD ---> ImageEnhacer, on SoC
+> This sounds similar to OMAP, at least roughly.
+>
+>> In the first case port should be created.
+>> In other cases connection could be determined by presence/absence
+>> of specific nodes, so in fact the port can be optional, almost like in
+>> my proposal :)
+> Well, I think not.
+>
+> In the external encoder case, the ports are there, and they are used.
+> You just didn't specify them, and thus make the driver deduce them from
+> the DT.
+>
+> In the FIMD case, if the the RGB port is needed, you need to specify it
+> in the DT data, and it's used. If you only need, say, DSI, the RGB port
+> is not used and thus it doesn't need to be present in the DT data.
+>
+> It's fine to leave the port definition out if it is not used at all.
+On Exynos, DSI is in fact RGB/DSI encoder (or I80/DSI). DSI and RGB pins
+are connected to the same FIMD output. So from FIMD point of view
+RGB port is used in both cases.
+>
+>>> For OMAP, the SoC's display blocks are all inside one bigger DSS
+>>> "container", so I have not seen need to represent the connections
+>>> between the internal components in the DT data.
+>> How do you deal with situation when IPs in SoC can be connected in
+>> different ways ?
+> Basically so that (using exynos terms) if, say DSI panel is to be
+> enabled, the DSI panel driver will reserve the DSI master for itself,
+> and the DSI master will reserve the FIMD for itself, presuming FIMD has
+> not already been reserved. When the DSI panel is disabled, FIMD is freed.
+>
+>  Tomi
+>
+>
