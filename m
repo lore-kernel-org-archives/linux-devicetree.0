@@ -1,48 +1,61 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v6 0/8] Move device tree graph parsing helpers to
-	drivers/of
-Date: Fri, 7 Mar 2014 12:06:33 +0000
-Message-ID: <20140307120633.GJ21483@n2100.arm.linux.org.uk>
-References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de> <53170C00.20200@ti.com> <1394030554.8754.31.camel@paszta.hi.pengutronix.de> <20140306141657.GB21483@n2100.arm.linux.org.uk> <20140306121721.6186dafb@samsung.com> <5318988C.2030004@samsung.com> <1394122879.3622.47.camel@paszta.hi.pengutronix.de> <5318A331.2070603@samsung.com> <1394124630.3622.64.camel@paszta.hi.pengutronix.de>
+From: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
+Subject: [RFC PATCH 0/9] drivers: dma: Add support for dma-channel router
+Date: Fri, 7 Mar 2014 17:46:07 +0530
+Message-ID: <1394194576-23741-1-git-send-email-r.sricharan@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1394124630.3622.64.camel@paszta.hi.pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: r.sricharan-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: santosh.shilimkar-l0cyMroinI0@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, nm-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 06, 2014 at 05:50:30PM +0100, Philipp Zabel wrote:
-> Am Donnerstag, den 06.03.2014, 17:32 +0100 schrieb Sylwester Nawrocki:
-> > On 06/03/14 17:21, Philipp Zabel wrote:
-> > > Am Donnerstag, den 06.03.2014, 16:47 +0100 schrieb Sylwester Nawrocki:
-> > >> Yes, it's going to conflict with my patch series. I thought it could be
-> > >> put onto a stable a topic branch, e.g. at git://linuxtv.org/media_tree.git,
-> > >> which could be then pulled into the media master branch and anywhere
-> > >> else it is needed ?
-> > > 
-> > > Mauro, are you ok with handling the conflict in the merge, or should I
-> > > rebase on top of the media tree after you merged Sylwester's changes?
-> > 
-> > I could rebase and resolve any conflicts before sending my pull request
-> > to Mauro. I don't think it's a good idea to rebase this series onto the
-> > media tree, since it is touching drivers/of.
-> 
-> Excellent, thanks. I will send a pull request to Mauro and Russell
-> shortly.
+In some SoCs the dma request lines from the peripherals are
+routed to the dma-controller through a crossbar. With this the
+dma controller's available request lines are shared between the
+peripherals.
 
-Unless we can find some way to resolve the problem which just happened
-(Mauro applied the of-graph as patches to his tree inspite of this
-discussion), I don't see the imx-drm DT changes being able to be pulled
-in for the upcoming merge window - because otherwise it means that
-whatever Mauro has applied your of-graph changes on top of in his tree
-also gets pulled into my tree and Greg's tree.
+This adds support to register the crossbar router associated with
+a dma-channel and let the dma-controller driver map/unmap
+the peripheral dma crossbar line to dma-controller's request
+line.
 
-I'm afraid this has turned into a total shambles, and I'm totally
-hacked off at Mauro over this.
+This is on top of Russell's OMAP dma engine rework series
+
+	http://www.spinics.net/lists/linux-omap/msg102969.html
+
+Sricharan R (9):
+  drivers: dma: omap-dma: Avoid hard-coding of the dma-request channels
+  drivers: dma: of-dma: Add support for dma-request line routers
+  drivers: dma: omap-dma: Add a seperate xlate function to get router
+    data
+  drivers: omap-dma: Add crossbar line as a resource to omap_chan
+    structure
+  drivers: dma: Add dma crossbar driver
+  arm: dts: dra: Add dma crossbar node
+  arm: dts: dra: Add dma-request router phandle to dma-specs
+  arm: dra: Enable dma crossbar support on dra7xx
+  arm: dts: dra7: Change the total dma-req numbers to crossbar channels
+
+ .../devicetree/bindings/arm/omap/dma-crossbar.txt  |   26 +++
+ arch/arm/boot/dts/dra7.dtsi                        |   47 +++--
+ arch/arm/configs/omap2plus_defconfig               |    1 +
+ drivers/dma/Kconfig                                |    7 +
+ drivers/dma/Makefile                               |    1 +
+ drivers/dma/of-dma.c                               |   82 +++++++-
+ drivers/dma/omap-dma-xbar.c                        |  219 ++++++++++++++++++++
+ drivers/dma/omap-dma-xbar.h                        |   32 +++
+ drivers/dma/omap-dma.c                             |   72 ++++++-
+ include/linux/of_dma.h                             |   22 ++
+ 10 files changed, 479 insertions(+), 30 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/omap/dma-crossbar.txt
+ create mode 100644 drivers/dma/omap-dma-xbar.c
+ create mode 100644 drivers/dma/omap-dma-xbar.h
 
 -- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
