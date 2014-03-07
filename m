@@ -1,55 +1,69 @@
-From: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Subject: Re: rfc: checkpatch logical line continuations (was IBM Akebono: Add
- support for a new PHY interface to the IBM emac driver)
-Date: Sat, 8 Mar 2014 02:04:21 +0300
-Message-ID: <20140307230420.GH29018@mwanda>
-References: <1394077948-8395-1-git-send-email-alistair@popple.id.au>
- <1394077948-8395-3-git-send-email-alistair@popple.id.au>
- <20140307.154142.488351276799532264.davem@davemloft.net>
- <1394226164.16156.96.camel@joe-AO722>
- <20140307213017.GA18769@cloud>
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [Patch v8 2/2] dmaengine: add Qualcomm BAM dma driver
+Date: Fri, 7 Mar 2014 17:07:59 -0600
+Message-ID: <20140307230759.GC3241@qualcomm.com>
+References: <1393828245-18766-1-git-send-email-agross@codeaurora.org>
+ <1393828245-18766-3-git-send-email-agross@codeaurora.org>
+ <531A485D.9010508@mm-sol.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140307213017.GA18769@cloud>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org
-Cc: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Dan Carpenter <error27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Randy Dunlap <randy.dunlap-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <531A485D.9010508@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stanimir Vabanov <svarbanov@mm-sol.com>
+Cc: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 07, 2014 at 01:30:17PM -0800, josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org wrote:
-> On Fri, Mar 07, 2014 at 01:02:44PM -0800, Joe Perches wrote:
-> > On Fri, 2014-03-07 at 15:41 -0500, David Miller wrote:
-> > > From: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
-> > > Date: Thu,  6 Mar 2014 14:52:25 +1100
-> > > 
-> > > > +	out_be32(dev->reg, in_be32(dev->reg) | WKUP_ETH_RGMIIEN
-> > > > +		 | WKUP_ETH_TX_OE | WKUP_ETH_RX_IE);
-> > > 
-> > > When an expression spans multiple lines, the lines should end with
-> > > operators rather than begin with them.
-> > 
-> > That's not in CodingStyle currently.
+On Sat, Mar 08, 2014 at 12:29:49AM +0200, Stanimir Vabanov wrote:
+> > +#define BAM_IRQ_SRCS_EE(pipe)		(0x0800 + ((pipe) * 0x80))
+> > +#define BAM_IRQ_SRCS_MSK_EE(pipe)	(0x0804 + ((pipe) * 0x80))
 > 
-> It's also not even remotely consistent across existing kernel code, and
-> it isn't obvious that there's a general developer consensus on the
-> "right" way to write it.
+> s/pipe/ee ?
 > 
 
-We just had this discussion in staging and Greg modified the patch to
-put the operator at the end.
+Ah good catch.  I'll fix that.
 
-https://lkml.org/lkml/2014/2/25/125
+> > +struct bam_chan {
+> > +	struct virt_dma_chan vc;
+> > +
+> > +	struct bam_device *bdev;
+> > +
+> > +	/* configuration from device tree */
+> > +	u32 id;
+> > +	u32 ee;
+> > +
+> 
+> do we need per channel ee? I'm asking because failed to find references
+> to it.
+> 
 
-It's like logical && and || operators which go at the end these days.
-I don't really want to have a lot of checkpatch churn to convert
-everything...
+You're right.  This is dead variable.  I had transitioned from channel to
+device when I modified the bindings.  Device is where it belongs.  I'll fix
+this.
 
-regards,
-dan carpenter
+<snip>
+> > +
+> > +/**
+> > + * bam_alloc_chan - Allocate channel resources for DMA channel.
+> > + * @chan: specified channel
+> > + *
+> > + * This function allocates the FIFO descriptor memory
+> > + */
+> > +static int bam_alloc_chan(struct dma_chan *chan)
+> > +{
+> > +	struct bam_chan *bchan = to_bam_chan(chan);
+> > +	struct bam_device *bdev = bchan->bdev;
+> > +
+> 
+> you could invert the logic and avoid extra indentation.
+> 	if (bchan->fifo_virt)
+> 		return 0;
+> 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+True.  I'll flip that.
+
+-- 
+sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
