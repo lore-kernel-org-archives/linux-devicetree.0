@@ -1,51 +1,38 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 3/5] pinctrl: st: Enhance the controller to manage
- unavailable registers
-Date: Fri, 7 Mar 2014 11:10:43 +0800
-Message-ID: <CACRpkdYczgJiDQEfkiiJdXVtm-42_rRSedf6HGd7Eoq0ttWJ3A@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/5] Add STiH407 SoC and reference board support
+Date: Fri, 7 Mar 2014 11:11:45 +0800
+Message-ID: <CACRpkdbztgbWn3kmm4gv6OLcX+bPnyK5BCt0SJJcWo+iyGsWvA@mail.gmail.com>
 References: <1393589841-6634-1-git-send-email-maxime.coquelin@st.com>
-	<1393589841-6634-4-git-send-email-maxime.coquelin@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1393589841-6634-4-git-send-email-maxime.coquelin@st.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Maxime COQUELIN <maxime.coquelin@st.com>
-Cc: Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1393589841-6634-1-git-send-email-maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime COQUELIN <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 28, 2014 at 8:17 PM, Maxime COQUELIN <maxime.coquelin@st.com> wrote:
+On Fri, Feb 28, 2014 at 8:17 PM, Maxime COQUELIN <maxime.coquelin-qxv4g6HH51o@public.gmane.org> wrote:
 
-> From: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+> This series adds basic support to the STMicroelectronics STiH407 SoC and its
+> B2120 reference board. The STiH407 is a dual-core ARM Cortex-A9 CPU aimed at
+> STB market.
 >
-> This patch adds a new logic inside the st pinctrl to manage
-> an unsupported scenario: some sysconfig are not available!
+> Giuseppe Cavallaro (2):
+>   ARM: STi: add pinctrl support for the STiH407 SoC
+>   pinctrl: st: Enhance the controller to manage unavailable registers
 >
-> This is the case of STiH407 where, although documented, the
-> following registers from SYSCFG_FLASH have been removed from the SoC.
->
-> SYSTEM_CONFIG3040
->    Output Enable pad control for all PIO Alternate Functions
-> and
-> SYSTEM_ CONFIG3050
->    Pull Up pad control for all PIO Alternate Functions
->
-> Without managing this condition an imprecise external abort
-> will be detect.
->
-> To do this the patch also reviews the st_parse_syscfgs
-> and other routines to manipulate the registers only if
-> actually available.
-> In any case, for example the st_parse_syscfgs detected
-> an error condition but no action was made in the
-> st_pctl_probe_dt.
->
-> Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
-> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+> Maxime Coquelin (3):
+>   ARM: STi: Add STiH407 SoC support
+>   ARM: dts: Add STiH407 SoC support
+>   ARM: dts: STiH407: Add B2120 board support
 
-Hm this does not apply to my tree at all. It appears this is not
-a stand-alone, patch, so it depends on some other patch to
-pinctrl-sti?
+So I'd like to take the pinctrl patch through my tree and the rest through
+ARM SoC but it seems it does not apply :-/
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
