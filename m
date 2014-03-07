@@ -1,70 +1,37 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCHv3 00/41] OMAPDSS: DT support v3
-Date: Fri, 7 Mar 2014 08:49:29 -0800
-Message-ID: <20140307164929.GC3789@atomide.com>
-References: <1390301833-24944-1-git-send-email-tomi.valkeinen@ti.com>
- <531823C5.1020008@ti.com>
+From: Florian Vaussard <florian.vaussard@epfl.ch>
+Subject: Re: [PATCH v3 0/4] checkpatch: enhance compatible string checking
+Date: Fri, 07 Mar 2014 17:53:42 +0100
+Message-ID: <5319F996.6090201@epfl.ch>
+References: <1394198771-25913-1-git-send-email-florian.vaussard@epfl.ch> <1394208487.16156.62.camel@joe-AO722>
+Reply-To: florian.vaussard@epfl.ch
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <531823C5.1020008@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Stefan Roese <stefan.roese@gmail.com>, Sebastian Reichel <sre@debian.org>, Robert Nelson <robertcnelson@gmail.com>, "Dr . H . Nikolaus Schaller" <hns@goldelico.com>, Marek Belisko <marek@goldelico.com>, Sebastian Reichel <sre@ring0.de>, Javier Martinez Canillas <javier@dowhile0.org>, Enric Balletbo Serra <eballetbo@gmail.com>, Florian Vaussard <florian.vaussard@epfl.ch>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1394208487.16156.62.camel@joe-AO722>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: Andy Whitcroft <apw@canonical.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen@ti.com> [140305 23:32]:
-> Hi Tony,
+
+On 03/07/2014 05:08 PM, Joe Perches wrote:
+> On Fri, 2014-03-07 at 14:26 +0100, Florian Vaussard wrote:
+>> Joe: I have split your patch to perform atomic changes. I also
+>> merged one part into one of my patch. I added your S-o-B on the
+>> corresponding patches, I let you check if you are OK with the changes.
 > 
-> On 21/01/14 12:56, Tomi Valkeinen wrote:
-> > Hi,
-> > 
-> > Here's version 3 of the DSS DT series.
+> Could you please send a clean V4 without my SOB and add
+> Andrew Morton <akpm@linux-foundation.org> to the cc's?
 > 
-> Can you have a look at the arch/arm/ parts in the series and ack if
-> they're ok, i.e, patches 1, 2, 32.
 
-Patches 1, 2 & 32 look OK to me, so for those please feel free to add:
+Do I remove your SOB from all 4 patches?
 
-Acked-by: Tony Lindgren <tony@atomide.com>
-
-There's a minor merge conflict in pdata-quirks.c, but that's trivial
-so it should be OK for you to queue those along with the DSS patches.
-
-> Then there are the .dts patches, 22-30, for which I haven't been able to
-> get any acks. I'm not sure who I should get acks from for those, but I
-> don't mind adding yours if you want to give it.
+> Andrew is generally the path to get checkpatch changes
+> upstream.
 > 
-> The .dts patches have had minor changes compared to the ones posted
-> here, according to the DT bindings review comments, but nothing much has
-> changed.
 
-These will cause unnecessary merge conflicts all over the place:
-
-Auto-merging arch/arm/boot/dts/omap4.dtsi
-CONFLICT (content): Merge conflict in arch/arm/boot/dts/omap4.dtsi
-Auto-merging arch/arm/boot/dts/omap4-sdp.dts
-CONFLICT (content): Merge conflict in arch/arm/boot/dts/omap4-sdp.dts
-Auto-merging arch/arm/boot/dts/omap4-panda-common.dtsi
-CONFLICT (content): Merge conflict in arch/arm/boot/dts/omap4-panda-common.dtsi
-Auto-merging arch/arm/boot/dts/omap3.dtsi
-Auto-merging arch/arm/boot/dts/omap3-n900.dts
-CONFLICT (content): Merge conflict in arch/arm/boot/dts/omap3-n900.dts
-Auto-merging arch/arm/boot/dts/omap3-igep0020.dts
-CONFLICT (content): Merge conflict in arch/arm/boot/dts/omap3-igep0020.dts
-Auto-merging arch/arm/boot/dts/omap3-beagle.dts
-CONFLICT (content): Merge conflict in arch/arm/boot/dts/omap3-beagle.dts
-Auto-merging arch/arm/boot/dts/omap3-beagle-xm.dts
-CONFLICT (content): Merge conflict in arch/arm/boot/dts/omap3-beagle-xm.dts
-
-How about do a pull request for just the .dts changes against current
-omap-for-v3.15/dt branch ASAP for me so I can pull it in? That is assuming
-that just the .dts changes alone won't break anything.
-
-Then make sure your series works both ways and maybe do a follow up
-patch that flips things over after the dependencies are merged.
+Sure.
 
 Regards,
-
-Tony
+Florian
