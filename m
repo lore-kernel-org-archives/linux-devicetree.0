@@ -1,76 +1,58 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 4/7] of: configure the platform device dma_mask and dma_pfn_offset
-Date: Fri, 7 Mar 2014 17:02:41 +0100
-Message-ID: <201403071702.41716.arnd@arndb.de>
-References: <1394097598-17622-1-git-send-email-santosh.shilimkar@ti.com> <CAL_Jsq+Y8w0sLLdh5vcWMnW3ohEafAFRWubtCK66P1axsf1wRA@mail.gmail.com> <53194817.70802@ti.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 5/8] phy: omap-usb2: Add clock names to Documentation
+ binding
+Date: Fri, 7 Mar 2014 10:04:22 -0600
+Message-ID: <20140307160422.GA23885@saruman.home>
+References: <1394197751-28984-1-git-send-email-rogerq@ti.com>
+ <1394197751-28984-6-git-send-email-rogerq@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53194817.70802-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="RnlQjJ0d97Da+TV1"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1394197751-28984-6-git-send-email-rogerq@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: balbi@ti.com, tony@atomide.com, kishon@ti.com, george.cherian@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 07 March 2014, Santosh Shilimkar wrote:
-> >> +
-> >> +       ret = dma_set_mask(dev, dma_mask);
-> >> +       if (ret < 0) {
-> >> +               dev_err(dev, "failed to set DMA mask %pad\n", &dma_mask);
-> >> +               dev->dma_mask = NULL;
-> >> +               return;
-> >> +       }
-> >> +
-> >> +       dev_dbg(dev, "dma_pfn_offset(%#08lx) dma_mask(%pad)\n",
-> >> +               dev->dma_pfn_offset, dev->dma_mask);
-> >> +
-> >> +       ret = dma_set_coherent_mask(dev, dma_mask);
-> > 
-> > I think these 2 calls belong in the drivers, not here.
-> > 
-> I also had same initial thought but Arnd mentioned that its a
-> shared responsibility between ARCH and drivers. Driver which
-> could be common between arches not always have the correct
-> mask information and it can change based on which arch it
-> is running.
-> 
-> With some discussion back and forth, we thought updating
-> the dma_mask while the device getting created, would be
-> better place since we can find the arch capability at
-> this centralise code and update it.
-> 
-> Ofcourse its bit debatable as the question you asked is
-> bit obvious as well. I let Arnd give his view here.
+--RnlQjJ0d97Da+TV1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If we set the mask *here*, we probably don't want to call 'dma_set_mask', but
-write to the mask directly, or we could call dma_coerce_mask_and_coherent(),
-which is really for overriding the mask pointer and value at once in cases
-where you absolutely know what it should be.
+On Fri, Mar 07, 2014 at 03:09:08PM +0200, Roger Quadros wrote:
+> Add "wkupclk" and "refclk" information to DT binding information.
+>=20
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
 
-We do need to decide what interface we want to use in platform device drivers,
-and I'm hoping that Russell has some idea which one he prefers:
+so, should I take this one ?
 
-a) Follow what we do for PCI devices: assume that we can do DMA_MASK(32)
-on any device, and have drivers call dma_set_mask(DMA_MASK(64)) on devices
-that would like to do more than that, or call e.g. dma_set_mask(DMA_MASK(28))
-for devices that can do less than 32 bit, as given in the argument. This
-approach would be most consistent with the way PCI works, but it doesn't
-really work well for the case where the mask is less than 32-bit and the
-device driver doesn't know that.
+--=20
+balbi
 
-b) Never have to call dma_set_mask() for platform devices and assume that the
-platform code sets it up correctly. This would probably be the simpler
-solution, and I can't think of any downsides at the moment.
+--RnlQjJ0d97Da+TV1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-In either case we probably want to call something like dt_dma_configure()
-from dma_set_mask() again to make sure that we stay within the limits
-imposed by the bus structure.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-	Arnd
+iQIcBAEBAgAGBQJTGe4GAAoJEIaOsuA1yqREPVMQAJpNVOTfB0cH2UubmHbU3pKq
+X/efYcMQhJSFO6sD0swIOKAZpMELvIX6ECtZZ6uW/CJ3P/U4jmBYo/BNNbgpkzL1
+3+1FXfwPAknXACGuR0TEFk3Reol0aY5/EoW/mZinTue4ENujWWBSj1ejhvhQoweV
+iUTUuDdGzoXhzlHn8ia8x8Zpd8ZO/n7u2o/kPt+IuplKg2X+6t6rbcMsf5B+WSY/
+KqYfDIuFpAMXuzhADi5ViNAnbbt/nNl0uI5tJWsr/TZD79Z/eHa3iZhLw42Q9XMy
+U0MxuVYbJ+/I8AdNHeroLb0qqntfpXGvyemv9C/C+XF8SiU9pGN/kGdqKQfkvkJp
+M7ygkzUdrAZM6VUl2qNO0/SWmFhCj3E7zfFTmLgoCq+v8xx7vDEppGy6KqtcZUL4
+Q5Z2DlVQidnGr9zkTLs3yOPMCdEzGhNsPe9H7M/bJ9+rvp/V18J7FtEbEKEQWAWD
+PsjmOL5eV+7kY6Xi/GVS2hk3yxfy6LCv+f8YtJf+kHaVCyFsAT/9lpp05kNoxe+E
+uINWcemjo1SuwAT+I0Vu7uQCvd0wGPLaJ1guKpTPp1n+m+fD5X2Ty1r+NTU/e5HG
+QrFSyh+fkmXWxd/22NfcL2Xen5AAUnXRKB83Z2plW3tbhPGHyfWNt5i8nD+KilhT
+sEmxMS/T7RUwFzziJqH6
+=kxAZ
+-----END PGP SIGNATURE-----
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--RnlQjJ0d97Da+TV1--
