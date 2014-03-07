@@ -1,54 +1,51 @@
-From: YOSHIYUKI ITO <yoshiyuki.ito.ub@renesas.com>
-Subject: RE: [PATCH 00/10] pinctrl: mvebu: remove hard-coded addresses from
- Dove pinctrl
-Date: Fri, 7 Mar 2014 03:08:36 +0000
-Message-ID: <2376200c835b48d5b0c39d0186877fca@SIXPR06MB144.apcprd06.prod.outlook.com>
-References: <1393231382-11078-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <20140224181023.GA1010@titan.lakedaemon.net>
- <CACRpkdZ+YGTyDj6i8c198MdRtz3GY-YBmVO9LysPCcmT4EC0cg@mail.gmail.com>
- <20140226000940.GF1872@titan.lakedaemon.net>
- <CACRpkdYQa2BG_qxf5zY=7rks6O31ZF-BX0af3_u1MOgwfwxFSQ@mail.gmail.com>
- <20140226145345.GG1872@titan.lakedaemon.net>
- <CACRpkdZRJG-TzN4c3NSH9PqcQzpo6EbEn5_bM-P3sh4_vSjtaA@mail.gmail.com>
- <20140307021633.GN1872@titan.lakedaemon.net>
- <20140307.115709.525573020409548427.yoshiyuki.ito.ub@renesas.com>
- <20140307030359.GO1872@titan.lakedaemon.net>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/5] pinctrl: st: Enhance the controller to manage
+ unavailable registers
+Date: Fri, 7 Mar 2014 11:10:43 +0800
+Message-ID: <CACRpkdYczgJiDQEfkiiJdXVtm-42_rRSedf6HGd7Eoq0ttWJ3A@mail.gmail.com>
+References: <1393589841-6634-1-git-send-email-maxime.coquelin@st.com>
+	<1393589841-6634-4-git-send-email-maxime.coquelin@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140307030359.GO1872@titan.lakedaemon.net>
-Content-Language: ja-JP
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "andrew@lunn.ch" <andrew@lunn.ch>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rob@landley.net" <rob@landley.net>, "galak@codeaurora.org" <galak@codeaurora.org>, "gregory.clement@free-electrons.com" <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1393589841-6634-4-git-send-email-maxime.coquelin@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Maxime COQUELIN <maxime.coquelin@st.com>
+Cc: Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Feb 28, 2014 at 8:17 PM, Maxime COQUELIN <maxime.coquelin@st.com> wrote:
 
-Hi Jason and all other recipients,
+> From: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+>
+> This patch adds a new logic inside the st pinctrl to manage
+> an unsupported scenario: some sysconfig are not available!
+>
+> This is the case of STiH407 where, although documented, the
+> following registers from SYSCFG_FLASH have been removed from the SoC.
+>
+> SYSTEM_CONFIG3040
+>    Output Enable pad control for all PIO Alternate Functions
+> and
+> SYSTEM_ CONFIG3050
+>    Pull Up pad control for all PIO Alternate Functions
+>
+> Without managing this condition an imprecise external abort
+> will be detect.
+>
+> To do this the patch also reviews the st_parse_syscfgs
+> and other routines to manipulate the registers only if
+> actually available.
+> In any case, for example the st_parse_syscfgs detected
+> an error condition but no action was made in the
+> st_pctl_probe_dt.
+>
+> Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
+> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 
-   I'm sorry to my mis operation.. Please ignore my odd mail last I sent.
-I have to check my mailer.
+Hm this does not apply to my tree at all. It appears this is not
+a stand-alone, patch, so it depends on some other patch to
+pinctrl-sti?
 
-Regards,
-Yoshiyuki Ito.
-
------Original Message-----
-From: Jason Cooper [mailto:jason@lakedaemon.net] 
-Sent: Friday, March 07, 2014 12:04 PM
-To: YOSHIYUKI ITO
-Cc: linus.walleij@linaro.org; mark.rutland@arm.com; andrew@lunn.ch; linux@arm.linux.org.uk; pawel.moll@arm.com; linux-doc@vger.kernel.org; ijc+devicetree@hellion.org.uk; linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; robh+dt@kernel.org; rob@landley.net; galak@codeaurora.org; gregory.clement@free-electrons.com; linux-arm-kernel@lists.infradead.org; sebastian.hesselbarth@gmail.com
-Subject: Re: [PATCH 00/10] pinctrl: mvebu: remove hard-coded addresses from Dove pinctrl
-
-Yoshiyuki,
-
-Umm, I'm pretty sure you didn't send this to who you thought you did. :)
-
-thx,
-
-Jason.
-
-On Fri, Mar 07, 2014 at 11:57:09AM +0900, Yoshiyuki Ito wrote:
-> 
-> ... something which might have been private but I don't speak Japanese
-> (?) ...
+Yours,
+Linus Walleij
