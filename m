@@ -1,33 +1,25 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v6 1/8] [media] of: move graph helpers from drivers/media/v4l2-core to drivers/of
-Date: Fri, 07 Mar 2014 18:25:37 +0000
-Message-ID: <20140307182537.C2CC5C40B10@trevor.secretlab.ca>
-References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de> < 1394011242-16783-2-git-send-email-p.zabel@pengutronix.de>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1394011242-16783-2-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
+Subject: Re: [PATCH v6 2/8] Documentation: of: Document graph bindings
+Date: Fri, 07 Mar 2014 18:27:17 +0000
+Message-ID: <20140307182717.67596C40B43@trevor.secretlab.ca>
+References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de> < 1394011242-16783-3-git-send-email-p.zabel@pengutronix.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1394011242-16783-3-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Mauro Carvalho Chehab <m.chehab@samsung.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>
 Cc: Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed,  5 Mar 2014 10:20:35 +0100, Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> This patch moves the parsing helpers used to parse connected graphs
-> in the device tree, like the video interface bindings documented in
-> Documentation/devicetree/bindings/media/video-interfaces.txt, from
-> drivers/media/v4l2-core/v4l2-of.c into drivers/of/base.c.
-> 
-> This allows to reuse the same parser code from outside the V4L2
-> framework, most importantly from display drivers.
-> The functions v4l2_of_get_next_endpoint, v4l2_of_get_remote_port,
-> and v4l2_of_get_remote_port_parent are moved. They are renamed to
-> of_graph_get_next_endpoint, of_graph_get_remote_port, and
-> of_graph_get_remote_port_parent, respectively.
-> Since there are not that many current users yet, switch all of
-> them to the new functions right away.
+On Wed,  5 Mar 2014 10:20:36 +0100, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> The device tree graph bindings as used by V4L2 and documented in
+> Documentation/device-tree/bindings/media/video-interfaces.txt contain
+> generic parts that are not media specific but could be useful for any
+> subsystem with data flow between multiple devices. This document
+> describes the generic bindings.
 > 
 > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-This patch is fine because it only moves code, but I'm not providing an
-ack yet.  I'll supply one when I'm happy with the collection of fixups.
+See my comments on the previous version. My concerns are the handling of
+the optional 'ports' node and the usage of reverse links.
 
 g.
