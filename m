@@ -1,65 +1,59 @@
-From: George Cherian <george.cherian@ti.com>
-Subject: [PATCH v2 4/5] ARM: dts: am437x-gp-evm: Enable USB
-Date: Fri, 7 Mar 2014 14:45:57 +0530
-Message-ID: <1394183758-3821-5-git-send-email-george.cherian@ti.com>
-References: <1394183758-3821-1-git-send-email-george.cherian@ti.com>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH] spi/s3c64xx: Update DT binding documentation to match
+	code
+Date: Fri, 7 Mar 2014 09:19:08 +0000
+Message-ID: <20140307091908.GJ8570@opensource.wolfsonmicro.com>
+References: <1394125539-28062-1-git-send-email-ckeepax@opensource.wolfsonmicro.com> <20140307024841.GV13126@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1394183758-3821-1-git-send-email-george.cherian@ti.com>
+Content-Disposition: inline
+In-Reply-To: <20140307024841.GV13126@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: balbi@ti.com, rogerq@ti.com, kishon@ti.com, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, tony@atomide.com, anatol.pomozov@gmail.com, bcousson@baylibre.com, George Cherian <george.cherian@ti.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: ks.giri@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable
-	- ocp2scp
-	- USB PHY control module
-	- USB PHY
-	- dwc3_omap
-	- USB
-for am437x-gp-evm
+On Fri, Mar 07, 2014 at 10:48:41AM +0800, Mark Brown wrote:
+> On Thu, Mar 06, 2014 at 05:05:39PM +0000, Charles Keepax wrote:
+> 
+> > The following patch added support for spi controllers with a dedicated
+> > chip select pin:
+> > 
+> > commit 3146beec21b64f4551fcf0ac148381d54dc41b1b
+> > spi: s3c64xx: Added provision for dedicated cs pin
+> > 
+> > It updated the device tree binding to require a "cs-gpio" property to be
+> > specified on the spi controller node if chip selects will be given as
+> > GPIOs per slave, rather than the controller having a dedicated internal
+> > chip select pin.
+> 
+> No, it doesn't - it's saying that if the device has a "cs-gpio" property
+> then to use that as the chip select.  It's not a boolean, it's a GPIO
+> specifier.  Looking at the code it looks like the intention is to search
+> all children for a cs-gpio during the controller probe, it's possible
+> that this isn't working correctly.
 
-Signed-off-by: George Cherian <george.cherian@ti.com>
----
- arch/arm/boot/dts/am437x-gp-evm.dts | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+That is basically part of my question is the current setup doing
+what it is intended to? The Samsung binding has controller-data
+blocks on each of the slaves that specify the gpio for that
+slave.
 
-diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-index 4eb72b8..1d516a7 100644
---- a/arch/arm/boot/dts/am437x-gp-evm.dts
-+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-@@ -98,3 +98,31 @@
- &gpio4 {
- 	status = "okay";
- };
-+
-+
-+&usb2_phy1 {
-+	status = "okay";
-+};
-+
-+&dwc3_1 {
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	dr_mode = "peripheral";
-+	status = "okay";
-+};
-+
-+
-+&usb2_phy2 {
-+	status = "okay";
-+};
-+
-+&dwc3_2 {
-+	status = "okay";
-+};
-+
-+&usb2 {
-+	dr_mode = "host";
-+	status = "okay";
-+};
--- 
-1.8.3.1
+@@ -1326,7 +1340,11 @@ static int s3c64xx_spi_probe(struct platform_device *pdev)
+        sdd->cntrlr_info = sci;
+        sdd->pdev = pdev;
+        sdd->sfr_start = mem_res->start;
++       sdd->cs_gpio = true;
+        if (pdev->dev.of_node) {
++               if (!of_find_property(pdev->dev.of_node, "cs-gpio", NULL))
++                       sdd->cs_gpio = false;
+
+This part of the original patch adds the check, I guess the
+mistake could be an assumption that of_find_property will
+recursively check all the children, which it won't. This will
+just check the controller node itself for a cs-gpio property but
+as these are specified within sub-nodes they won't be found.
+Hence currently you need to add one at the controller level.
+
+Thanks,
+Charles
