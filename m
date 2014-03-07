@@ -1,49 +1,136 @@
-From: George Cherian <george.cherian@ti.com>
-Subject: [PATCH v2 2/5] ARM: dts: am43xx clock data
-Date: Fri, 7 Mar 2014 14:45:55 +0530
-Message-ID: <1394183758-3821-3-git-send-email-george.cherian@ti.com>
-References: <1394183758-3821-1-git-send-email-george.cherian@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1394183758-3821-1-git-send-email-george.cherian@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: balbi@ti.com, rogerq@ti.com, kishon@ti.com, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, tony@atomide.com, anatol.pomozov@gmail.com, bcousson@baylibre.com, George Cherian <george.cherian@ti.com>
+From: Maxime COQUELIN <maxime.coquelin@st.com>
+Subject: [PATCH v2 5/5] ARM: dts: STiH407: Add B2120 board support
+Date: Fri,  7 Mar 2014 10:41:12 +0100
+Message-ID: <1394185272-26054-6-git-send-email-maxime.coquelin@st.com>
+References: <1394185272-26054-1-git-send-email-maxime.coquelin@st.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1394185272-26054-1-git-send-email-maxime.coquelin@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, Linus Walleij <linus.walleij@linaro.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Maxime Coquelin <maxime.coquelin@st.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+Cc: lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Add USB reference clock data
+B2120 HDK is the reference board for STiH407 SoC.
+It has the following characteristics:
+ - 1GB DDR3
+ - 8GB eMMC / SD-Card slot
+ - 32MB NOR Flash
+ - 1 x Gbit Ethernet
+ - 1 x USB 3.0 port
+ - 1 x Mini-PCIe
+ - 1 x SATA
+ - 1 x HDMI output
+ - 1 x HDMI input
+ - 1 x SPDIF
 
-Signed-off-by: George Cherian <george.cherian@ti.com>
+This patch only introduces basic functionnalities, such as I2C and UART.
+
+Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
+Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 ---
- arch/arm/boot/dts/am43xx-clocks.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/arm/boot/dts/Makefile          |  3 +-
+ arch/arm/boot/dts/stih407-b2120.dts | 78 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 80 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/stih407-b2120.dts
 
-diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
-index 142009c..506d036 100644
---- a/arch/arm/boot/dts/am43xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
-@@ -653,4 +653,21 @@
- 		clocks = <&clk_32768_ck>, <&clk_32k_tpm_ck>;
- 		reg = <0x4260>;
- 	};
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index d109908..c8ad5f5 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -310,7 +310,8 @@ dtb-$(CONFIG_ARCH_SPEAR6XX)+= spear600-evb.dtb
+ dtb-$(CONFIG_ARCH_STI)+= stih415-b2000.dtb \
+ 	stih416-b2000.dtb \
+ 	stih415-b2020.dtb \
+-	stih416-b2020.dtb
++	stih416-b2020.dtb \
++	stih407-b2120.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += \
+ 	sun4i-a10-a1000.dtb \
+ 	sun4i-a10-cubieboard.dtb \
+diff --git a/arch/arm/boot/dts/stih407-b2120.dts b/arch/arm/boot/dts/stih407-b2120.dts
+new file mode 100644
+index 0000000..9c97da4
+--- /dev/null
++++ b/arch/arm/boot/dts/stih407-b2120.dts
+@@ -0,0 +1,78 @@
++/*
++ * Copyright (C) 2014 STMicroelectronics (R&D) Limited.
++ * Author: Giuseppe Cavallaro <peppe.cavallaro@st.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++/dts-v1/;
++#include "stih407.dtsi"
++/ {
++	model = "STiH407 B2120";
++	compatible = "st,stih407", "st,stih407-b2120";
 +
-+	usb_otg_ss0_refclk960m: usb_otg_ss0_refclk960m {
-+		#clock-cells = <0>;
-+	        compatible = "ti,gate-clock";
-+		clocks = <&dpll_per_clkdcoldo>;
-+	        ti,bit-shift = <8>;
-+	        reg = <0x8a60>;
++	chosen {
++		bootargs = "console=ttyAS0,115200";
++		linux,stdout-path = &sbc_serial0;
 +	};
 +
-+	usb_otg_ss1_refclk960m: usb_otg_ss1_refclk960m {
-+		#clock-cells = <0>;
-+	        compatible = "ti,gate-clock";
-+		clocks = <&dpll_per_clkdcoldo>;
-+	        ti,bit-shift = <8>;
-+		reg = <0x8a68>;
++	memory {
++		device_type = "memory";
++		reg = <0x40000000 0x80000000>;
 +	};
 +
- };
++	aliases {
++		ttyAS0 = &sbc_serial0;
++	};
++
++	soc {
++		sbc_serial0: serial@9530000 {
++			status = "okay";
++		};
++
++		leds {
++			compatible = "gpio-leds";
++			red {
++				#gpio-cells = <2>;
++				label = "Front Panel LED";
++				gpios = <&PIO4 1 0>;
++				linux,default-trigger = "heartbeat";
++			};
++			green {
++				#gpio-cells = <2>;
++				gpios = <&PIO1 3 0>;
++				default-state = "off";
++			};
++		};
++
++		i2c@9842000 {
++			status = "okay";
++		};
++
++		i2c@9843000 {
++			status = "okay";
++		};
++
++		i2c@9844000 {
++			status = "okay";
++		};
++
++		i2c@9845000 {
++			status = "okay";
++		};
++
++		i2c@9540000 {
++			status = "okay";
++		};
++
++		/* SSC11 to HDMI */
++		i2c@9541000 {
++			status = "okay";
++			/* HDMI V1.3a supports Standard mode only */
++			clock-frequency = <100000>;
++			st,i2c-min-scl-pulse-width-us = <0>;
++			st,i2c-min-sda-pulse-width-us = <5>;
++		};
++	};
++};
 -- 
-1.8.3.1
+1.9.0
+
