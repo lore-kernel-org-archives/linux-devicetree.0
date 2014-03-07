@@ -1,70 +1,101 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: rfc: checkpatch logical line continuations (was IBM Akebono:
- Add support for a new PHY interface to the IBM emac driver)
-Date: Fri, 07 Mar 2014 13:45:25 -0800
-Message-ID: <1394228725.16156.102.camel@joe-AO722>
-References: <1394077948-8395-1-git-send-email-alistair@popple.id.au>
-	 <1394077948-8395-3-git-send-email-alistair@popple.id.au>
-	 <20140307.154142.488351276799532264.davem@davemloft.net>
-	 <1394226164.16156.96.camel@joe-AO722> <20140307213017.GA18769@cloud>
+From: Stanimir Vabanov <svarbanov@mm-sol.com>
+Subject: Re: [Patch v8 2/2] dmaengine: add Qualcomm BAM dma driver
+Date: Sat, 08 Mar 2014 00:29:49 +0200
+Message-ID: <531A485D.9010508@mm-sol.com>
+References: <1393828245-18766-1-git-send-email-agross@codeaurora.org> <1393828245-18766-3-git-send-email-agross@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140307213017.GA18769@cloud>
-Sender: linux-kernel-owner@vger.kernel.org
-To: josh@joshtriplett.org
-Cc: David Miller <davem@davemloft.net>, alistair@popple.id.au, netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Dan Carpenter <error27@gmail.com>, Randy Dunlap <rdunlap@infradead.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1393828245-18766-3-git-send-email-agross@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <agross@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2014-03-07 at 13:30 -0800, josh@joshtriplett.org wrote:
-> On Fri, Mar 07, 2014 at 01:02:44PM -0800, Joe Perches wrote:
-> > On Fri, 2014-03-07 at 15:41 -0500, David Miller wrote:
-> > > From: Alistair Popple <alistair@popple.id.au>
-> > > Date: Thu,  6 Mar 2014 14:52:25 +1100
-> > > 
-> > > > +	out_be32(dev->reg, in_be32(dev->reg) | WKUP_ETH_RGMIIEN
-> > > > +		 | WKUP_ETH_TX_OE | WKUP_ETH_RX_IE);
-> > > 
-> > > When an expression spans multiple lines, the lines should end with
-> > > operators rather than begin with them.
-> > 
-> > That's not in CodingStyle currently.
-> 
-> It's also not even remotely consistent across existing kernel code, and
-> it isn't obvious that there's a general developer consensus on the
-> "right" way to write it.
+Hi Andy,
 
-I agree with that.  Stuff that's not in CodingStyle generally
-doesn't have a developer consensus.
+Thanks for the patch.
 
-> > Right now, checkpatch emits a --strict only warning on "&&" or "||"
-> > at the beginning of line but that could be changed to any "$Operators"
-> > 
-> > our $Arithmetic = qr{\+|-|\*|\/|%};
-> > our $Operators	= qr{
-> > 			<=|>=|==|!=|
-> > 			=>|->|<<|>>|<|>|!|~|
-> > 			&&|\|\||,|\^|\+\+|--|&|\||$Arithmetic
-> > 		  }x;
-> > 
-> > The ones that likely have a too high false positive rates
-> > are the negation "!" and bitwise "~".
-> 
-> I don't think warning about operators at start of line seems like a good
-> idea at all.  There are plenty of cases where putting the operator at
-> the start of the line will produce a better result.  (I'd actually
-> suggest that in *most* cases.)
-> 
-> > Also, using perl, it's hard to distinguish between a
-> > logical "&" and the address-of "&" as well as the
-> > multiplication "*" and indirection "*" so maybe those
-> > should be excluded too.
-> > 
-> > And I think it should only be added as a --strict test.
-> 
-> Agreed, if even that.
+<snip>
 
-And probably made specific to net/ and drivers/net like
-a few other comment style tests until such time as a
-consensus exists.
+> +#define BAM_IRQ_SRCS_EE(pipe)		(0x0800 + ((pipe) * 0x80))
+> +#define BAM_IRQ_SRCS_MSK_EE(pipe)	(0x0804 + ((pipe) * 0x80))
+
+s/pipe/ee ?
+
+<snip>
+
+> +struct bam_chan {
+> +	struct virt_dma_chan vc;
+> +
+> +	struct bam_device *bdev;
+> +
+> +	/* configuration from device tree */
+> +	u32 id;
+> +	u32 ee;
+> +
+
+do we need per channel ee? I'm asking because failed to find references
+to it.
+
+> +	struct bam_async_desc *curr_txd;	/* current running dma */
+> +
+> +	/* runtime configuration */
+> +	struct dma_slave_config slave;
+> +
+> +	/* fifo storage */
+> +	struct bam_desc_hw *fifo_virt;
+> +	dma_addr_t fifo_phys;
+> +
+> +	/* fifo markers */
+> +	unsigned short head;		/* start of active descriptor entries */
+> +	unsigned short tail;		/* end of active descriptor entries */
+> +
+> +	unsigned int initialized;	/* is the channel hw initialized? */
+> +	unsigned int paused;		/* is the channel paused? */
+> +	unsigned int reconfigure;	/* new slave config? */
+> +
+> +	struct list_head node;
+> +};
+> +
+
+<snip>
+
+> +
+> +/**
+> + * bam_alloc_chan - Allocate channel resources for DMA channel.
+> + * @chan: specified channel
+> + *
+> + * This function allocates the FIFO descriptor memory
+> + */
+> +static int bam_alloc_chan(struct dma_chan *chan)
+> +{
+> +	struct bam_chan *bchan = to_bam_chan(chan);
+> +	struct bam_device *bdev = bchan->bdev;
+> +
+
+you could invert the logic and avoid extra indentation.
+	if (bchan->fifo_virt)
+		return 0;
+
+> +	/* allocate FIFO descriptor space, but only if necessary */
+> +	if (!bchan->fifo_virt) {
+> +		bchan->fifo_virt = dma_alloc_writecombine(bdev->dev,
+> +					BAM_DESC_FIFO_SIZE, &bchan->fifo_phys,
+> +					GFP_KERNEL);
+> +
+> +		if (!bchan->fifo_virt) {
+> +			dev_err(bdev->dev, "Failed to allocate desc fifo\n");
+> +			return -ENOMEM;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+
+<snip>
+
+regards,
+Stan
