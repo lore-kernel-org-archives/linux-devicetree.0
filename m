@@ -1,64 +1,54 @@
-From: josh@joshtriplett.org
-Subject: Re: rfc: checkpatch logical line continuations (was IBM Akebono:
- Add support for a new PHY interface to the IBM emac driver)
-Date: Fri, 7 Mar 2014 13:30:17 -0800
-Message-ID: <20140307213017.GA18769@cloud>
-References: <1394077948-8395-1-git-send-email-alistair@popple.id.au>
- <1394077948-8395-3-git-send-email-alistair@popple.id.au>
- <20140307.154142.488351276799532264.davem@davemloft.net>
- <1394226164.16156.96.camel@joe-AO722>
+From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH] ARM: mvebu: add Device Tree for the Armada 385 RD board
+Date: Fri, 7 Mar 2014 21:42:32 +0000
+Message-ID: <20140307214232.795e76b8@alan.etchedpixels.co.uk>
+References: <1394107868-26094-1-git-send-email-gregory.clement@free-electrons.com>
+ <20140306131429.GJ4780@lunn.ch>
+ <5318779C.8030901@free-electrons.com>
+ <20140306142117.GL4780@lunn.ch>
+ <531886B4.2070002@free-electrons.com>
+ <20140306144600.GM4780@lunn.ch>
+ <53188B73.4000109@free-electrons.com>
+ <53189892.5090502@free-electrons.com>
+ <20140306160213.GA4327@arch.cereza> <20140306172339.GP4780@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1394226164.16156.96.camel@joe-AO722>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: David Miller <davem@davemloft.net>, alistair@popple.id.au, netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Dan Carpenter <error27@gmail.com>, Randy Dunlap <randy.dunlap@oracle.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140306172339.GP4780@lunn.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Tawfik Bayouk <tawfik@marvell.com>, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 07, 2014 at 01:02:44PM -0800, Joe Perches wrote:
-> On Fri, 2014-03-07 at 15:41 -0500, David Miller wrote:
-> > From: Alistair Popple <alistair@popple.id.au>
-> > Date: Thu,  6 Mar 2014 14:52:25 +1100
+On Thu, 6 Mar 2014 18:23:39 +0100
+Andrew Lunn <andrew@lunn.ch> wrote:
+
+> > Can't we fix this so the probe order doesn't affect the name?
 > > 
-> > > +	out_be32(dev->reg, in_be32(dev->reg) | WKUP_ETH_RGMIIEN
-> > > +		 | WKUP_ETH_TX_OE | WKUP_ETH_RX_IE);
-> > 
-> > When an expression spans multiple lines, the lines should end with
-> > operators rather than begin with them.
+> > Is that sane?
 > 
-> That's not in CodingStyle currently.
-
-It's also not even remotely consistent across existing kernel code, and
-it isn't obvious that there's a general developer consensus on the
-"right" way to write it.
-
-> Right now, checkpatch emits a --strict only warning on "&&" or "||"
-> at the beginning of line but that could be changed to any "$Operators"
+> You are not supposed to trust the device name, since probing can
+> happen in parallel, on different buses. udev should have rules to name
+> the interfaces based on the MAC address. On my Debian system i have:
 > 
-> our $Arithmetic = qr{\+|-|\*|\/|%};
-> our $Operators	= qr{
-> 			<=|>=|==|!=|
-> 			=>|->|<<|>>|<|>|!|~|
-> 			&&|\|\||,|\^|\+\+|--|&|\||$Arithmetic
-> 		  }x;
+> /etc/udev/rules.d/70-persistent-net.rules
 > 
-> The ones that likely have a too high false positive rates
-> are the negation "!" and bitwise "~".
+> So what is important is that the MAC addresses are assigned correctly
+> to the device. And DT does that based on MMIO address, so should be
+> reliable, independent of probe order.
 
-I don't think warning about operators at start of line seems like a good
-idea at all.  There are plenty of cases where putting the operator at
-the start of the line will produce a better result.  (I'd actually
-suggest that in *most* cases.)
+Remembering of course thats its valid to have one MAC address per system
+not per network controller, so this does blow up in certain cases. You
+can still use udev rules for most of those cases to identify off some
+other property.
 
-> Also, using perl, it's hard to distinguish between a
-> logical "&" and the address-of "&" as well as the
-> multiplication "*" and indirection "*" so maybe those
-> should be excluded too.
-> 
-> And I think it should only be added as a --strict test.
-
-Agreed, if even that.
-
-- Josh Triplett
+Alan
