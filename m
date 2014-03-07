@@ -1,79 +1,57 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [RFC PATCH v2 19/21] ARM: dts: exynos5250-arndale: add dsi and
- panel nodes
-Date: Fri, 07 Mar 2014 14:07:52 +0100
-Message-ID: <5319C4A8.8080900@samsung.com>
-References: <1392204688-4591-1-git-send-email-a.hajda@samsung.com>
- <1392204688-4591-20-git-send-email-a.hajda@samsung.com>
- <53108FA0.4040903@ti.com> <53109193.3000604@ti.com>
- <5315C07B.3090705@samsung.com>
- <CAAQKjZPVvAxC7=voKJ1Jid3Ynnrjcg6s5m95fwetx7iDeZUN+w@mail.gmail.com>
- <5319B9FF.50201@samsung.com> <5319BC45.4040308@ti.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH 0/8] USB support for DRA7-evm
+Date: Fri, 7 Mar 2014 15:09:03 +0200
+Message-ID: <1394197751-28984-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <5319BC45.4040308@ti.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Inki Dae <inki.dae@samsung.com>, DRI mailing list <dri-devel@lists.freedesktop.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: balbi@ti.com, tony@atomide.com
+Cc: devicetree@vger.kernel.org, george.cherian@ti.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rogerq@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 03/07/2014 01:32 PM, Tomi Valkeinen wrote:
-> On 07/03/14 14:22, Andrzej Hajda wrote:
->
->> I think we should even extend the bindings to fimd:
->> dsi {
->>     port@0 {
->>         dsi_0: endpoint {
->>             remote-endpoint=<&fimd_0>;
->>         }
->>     }
->>     port@1 {
->>         dsi_1: endpoint {
->>             remote-endpoint=<&lvds_0>;
->>         }
->>     }
->> }
->>
->> fimd {
->>     port@0 {
->>         fimd_0: endpoint {
->>             remote-endpoint=<&dsi_0>;
->>         }
->>     }
->> }
-> If both fimd and dsi are SoC components, I don't see any strict need for
-> that. I think the ports/endpoints are only important when dealing with
-> external components, which can be used on any platform. For SoC internal
-> components you can have relevant data directly in the drivers, as it is
-> fixed (for that SoC).
->
-> Of course, if using ports for SoC internal components makes things
-> easier for you, I don't see any problems with it either.
-There are many possible connections from FIMD, some of them:
-FIMD ---> RGB panel, external
-FIMD ---> DSI, on SoC
-FIMD ---> eDP, on SoC
-FIMD ---> ImageEnhacer, on SoC
+Hi,
 
-In the first case port should be created.
-In other cases connection could be determined by presence/absence
-of specific nodes, so in fact the port can be optional, almost like in
-my proposal :)
+This series enables the 2 USB ports on the DRA7-evm.
 
+Patches are based on on 3.14-rc4 with balbi/next, linux-phy/next,
+omap-for-v3.15/dt merged and [1] applied.
 
->
-> For OMAP, the SoC's display blocks are all inside one bigger DSS
-> "container", so I have not seen need to represent the connections
-> between the internal components in the DT data.
-How do you deal with situation when IPs in SoC can be connected in
-different ways ?
+[1] - http://article.gmane.org/gmane.linux.drivers.devicetree/65223.
 
-Andrzej
-> If the display components were truly independent IPs on the SoC, then
-> using ports might make things easier.
->
->  Tomi
->
->
+cheers,
+-roger
+
+---
+Roger Quadros (8):
+  CLK: ti: dra7: Initialize USB_DPLL
+  ARM: dts: dra7-clock: Add "l3init_960m_gfclk" clock gate
+  ARM: DRA7: hwmod: Add SYSCONFIG for usb_otg_ss
+  phy: omap-usb2: Use generic clock names "wkupclk" and "refclk"
+  phy: omap-usb2: Add clock names to Documentation binding
+  ARM: dts: omap4+: Add clocks to USB2 PHY node
+  ARM: dts: dra7: Add USB related nodes
+  dts: dra7-evm: add USB support
+
+ Documentation/devicetree/bindings/phy/ti-phy.txt |   7 ++
+ arch/arm/boot/dts/dra7-evm.dts                   |  24 +++++
+ arch/arm/boot/dts/dra7.dtsi                      | 110 +++++++++++++++++++++++
+ arch/arm/boot/dts/dra7xx-clocks.dtsi             |  12 ++-
+ arch/arm/boot/dts/omap4.dtsi                     |   2 +
+ arch/arm/boot/dts/omap5.dtsi                     |   2 +
+ arch/arm/mach-omap2/omap_hwmod_7xx_data.c        |  22 ++---
+ drivers/clk/ti/clk-7xx.c                         |  11 +++
+ drivers/phy/phy-omap-usb2.c                      |   8 +-
+ 9 files changed, 182 insertions(+), 16 deletions(-)
+
+-- 
+1.8.3.2
