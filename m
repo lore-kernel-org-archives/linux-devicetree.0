@@ -1,101 +1,54 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v6 4/8] of: Reduce indentation in of_graph_get_next_endpoint
-Date: Fri, 07 Mar 2014 01:12:37 +0100
-Message-ID: <31687163.hgTkcLrn0Z@avalon>
-References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de> <1394011242-16783-5-git-send-email-p.zabel@pengutronix.de>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 0/7] Watchdog support for Armada 375/38x SoC
+Date: Thu, 6 Mar 2014 21:13:46 -0300
+Message-ID: <20140307001346.GB13690@arch.cereza>
+References: <1393949244-5011-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1394011242-16783-5-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Grant Likely <grant.likely@linaro.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1393949244-5011-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+On Mar 04, Ezequiel Garcia wrote:
+> Here's a new patchset adding support for watchdog on Armada 375 and
+> Armada 38x SoCs. Regarding the previous patchset, this time we're han=
+dling
+> the SoCs differences in the watchdog driver itself.
+>=20
+> The new Armada 375/385 SoCs have two registers for the watchdog RSTOU=
+T:
+>=20
+>  1. It has a dedicated register (similar to the one in A370/XP)
+>  2. Also has a bit in a shared RSTOUT register.
+>=20
+> Therefore, in order to support this two-folded RSTOUT, we extend the =
+'reg'
+> property in the watchdog devicetree and require a new pair of cells t=
+o specify
+> the shared RSTOUT.
+>=20
+> On the driver side, we need to implement per-SoC stop() and enabled()
+> functions. Such somewhat complex infrastructure is needed to ensure t=
+he driver
+> performs proper reset of the watchdog timer, by masking and disabling=
+ the
+> RSTOUT before the interrupt is enabled.
+>=20
 
-Thank you for the patch.
+JasonG: How does this look now?
 
-I've submitted a fix for the of_graph_get_next_endpoint() function, but it 
-hasn't been applied yet due to the patch series that contained it needing more 
-work.
-
-The patch is available at https://patchwork.linuxtv.org/patch/21946/. I can 
-rebase it on top of this series, but I still wanted to let you know about it 
-in case you would like to integrate it.
-
-On Wednesday 05 March 2014 10:20:38 Philipp Zabel wrote:
-> A 'return endpoint;' at the end of the (!prev) case allows to
-> reduce the indentation level of the (prev) case.
-> 
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
->  drivers/of/base.c | 42 ++++++++++++++++++++++--------------------
->  1 file changed, 22 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index b5e690b..a8e47d3 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -2026,32 +2026,34 @@ struct device_node *of_graph_get_next_endpoint(const
-> struct device_node *parent, pr_err("%s(): no endpoint nodes specified for
-> %s\n",
->  			       __func__, parent->full_name);
->  		of_node_put(node);
-> -	} else {
-> -		port = of_get_parent(prev);
-> -		if (WARN_ONCE(!port, "%s(): endpoint %s has no parent node\n",
-> -			      __func__, prev->full_name))
-> -			return NULL;
-> 
-> -		/* Avoid dropping prev node refcount to 0. */
-> -		of_node_get(prev);
-> -		endpoint = of_get_next_child(port, prev);
-> -		if (endpoint) {
-> -			of_node_put(port);
-> -			return endpoint;
-> -		}
-> +		return endpoint;
-> +	}
-> 
-> -		/* No more endpoints under this port, try the next one. */
-> -		do {
-> -			port = of_get_next_child(parent, port);
-> -			if (!port)
-> -				return NULL;
-> -		} while (of_node_cmp(port->name, "port"));
-> +	port = of_get_parent(prev);
-> +	if (WARN_ONCE(!port, "%s(): endpoint %s has no parent node\n",
-> +		      __func__, prev->full_name))
-> +		return NULL;
-> 
-> -		/* Pick up the first endpoint in this port. */
-> -		endpoint = of_get_next_child(port, NULL);
-> +	/* Avoid dropping prev node refcount to 0. */
-> +	of_node_get(prev);
-> +	endpoint = of_get_next_child(port, prev);
-> +	if (endpoint) {
->  		of_node_put(port);
-> +		return endpoint;
->  	}
-> 
-> +	/* No more endpoints under this port, try the next one. */
-> +	do {
-> +		port = of_get_next_child(parent, port);
-> +		if (!port)
-> +			return NULL;
-> +	} while (of_node_cmp(port->name, "port"));
-> +
-> +	/* Pick up the first endpoint in this port. */
-> +	endpoint = of_get_next_child(port, NULL);
-> +	of_node_put(port);
-> +
->  	return endpoint;
->  }
->  EXPORT_SYMBOL(of_graph_get_next_endpoint);
-
--- 
-Regards,
-
-Laurent Pinchart
+Any chance someone gives a Tested-by on Dove/Kirkwood?
+--=20
+Ezequiel Garc=EDa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
