@@ -1,119 +1,89 @@
-From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
-Subject: [PATCH] of: add missing major vendors
-Date: Fri,  7 Mar 2014 13:38:37 +0100
-Message-ID: <1394195917-25166-1-git-send-email-florian.vaussard@epfl.ch>
+From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] ASoC: tlv320aic31xx: Add basic codec driver implementation
+Date: Fri, 7 Mar 2014 14:53:15 +0200
+Message-ID: <5319C13B.4090101@ti.com>
+References: <cover.1393941102.git.jsarha@ti.com> <ba9718f573ca9195c80075a15fe114e0d4557da0.1393941102.git.jsarha@ti.com> <20140305015501.GS13126@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140305015501.GS13126-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, detheridge-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Looking at the current vendor strings used in the kernel's .dts/.dtsi
-files, some vendors are used a high number of times without
-being documented. Document the ones that are used more than 10 times.
+On 03/05/2014 03:55 AM, Mark Brown wrote:
+> On Tue, Mar 04, 2014 at 03:54:49PM +0200, Jyri Sarha wrote:
+>
+>> +- ai31xx-micbias-vg - MicBias Voltage required.
+>> +        MICBIAS_OFF - MICBIAS output it not powered
+>
+> Same comment as last time - why is this something which can be selected
+> in the binding?
+>
 
-Note: a few inconsistencies were found, and thus not documented.
-Here is the list:
-- mrvl: duplicates "marvell"
-- st-ericsson: duplicates "ste" _and_ "stericsson"
-- pci8086: seems to be a unfortunate alias for "intel"
-- pnpPNP: used on PowerPC?
+Fixed.
 
-Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+>> +        MICBIAS_2_0V - MICBIAS output is powered to 2.0V
+>> +        MICBIAS_2_5V - MICBIAS output is powered to 2.5V
+>> +        MICBIAS_AVDD - MICBIAS output is connected to AVDD
+>
+> The numbers still need to be defined in the binding, the point with the
+> defines is to make both code and DTs more readable but we need to know
+> what is actually going to go into the binary.
+>
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 40ce2df..b5e7485 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -3,6 +3,7 @@ Device tree binding vendor prefix registry.  Keep list in alphabetical order.
- This isn't an exhaustive list, but you should add new prefixes to it before
- using them to avoid name-space collisions.
- 
-+abilis	Abilis Systems
- active-semi	Active-Semi International Inc
- ad	Avionic Design GmbH
- adi	Analog Devices, Inc.
-@@ -11,14 +12,17 @@ ak	Asahi Kasei Corp.
- allwinner	Allwinner Technology Co., Ltd.
- altr	Altera Corp.
- amcc	Applied Micro Circuits Corporation (APM, formally AMCC)
-+amd	Advanced Micro Devices (AMD), Inc.
- amstaos	AMS-Taos Inc.
- apm	Applied Micro Circuits Corporation (APM)
- arm	ARM Ltd.
-+armadeus	ARMadeus Systems SARL
- atmel	Atmel Corporation
- auo	AU Optronics Corporation
- avago	Avago Technologies
- bosch	Bosch Sensortec GmbH
- brcm	Broadcom Corporation
-+calxeda	Calxeda
- capella	Capella Microsystems, Inc
- cavium	Cavium, Inc.
- cdns	Cadence Design Systems Inc.
-@@ -26,8 +30,10 @@ chrp	Common Hardware Reference Platform
- chunghwa	Chunghwa Picture Tubes Ltd.
- cirrus	Cirrus Logic, Inc.
- cortina	Cortina Systems, Inc.
-+crystalfontz	Crystalfontz America, Inc.
- dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
- davicom	DAVICOM Semiconductor, Inc.
-+dlink	D-Link Systems, Inc.
- denx	Denx Software Engineering
- edt	Emerging Display Technologies
- emmicro	EM Microelectronic
-@@ -37,7 +43,9 @@ est	ESTeem Wireless Modems
- fsl	Freescale Semiconductor
- GEFanuc	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
- gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
-+globalscale	Globalscale Technologies, Inc.
- gmt	Global Mixed-mode Technology, Inc.
-+google	Google, Inc.
- gumstix	Gumstix, Inc.
- haoyu	Haoyu Microelectronic Co. Ltd.
- hisilicon	Hisilicon Limited.
-@@ -46,9 +54,12 @@ hp	Hewlett Packard
- ibm	International Business Machines (IBM)
- idt	Integrated Device Technologies, Inc.
- img	Imagination Technologies Ltd.
-+intel	Intel Corporation
- intercontrol	Inter Control Group
- isl	Intersil
- karo	Ka-Ro electronics GmbH
-+lacie	LaCie
-+lantiq	Lantiq Semiconductor
- lg	LG Corporation
- linux	Linux-specific binding
- lsi	LSI Corp. (LSI Logic)
-@@ -56,12 +67,16 @@ marvell	Marvell Technology Group Ltd.
- maxim	Maxim Integrated Products
- microchip	Microchip Technology Inc.
- mosaixtech	Mosaix Technologies, Inc.
-+moxa	Moxa
- national	National Semiconductor
- neonode		Neonode Inc.
-+netgear	NETGEAR
- nintendo	Nintendo
-+nokia	Nokia
- nvidia	NVIDIA
- nxp	NXP Semiconductors
- onnn	ON Semiconductor Corp.
-+opencores	OpenCores.org
- panasonic	Panasonic Corporation
- phytec	PHYTEC Messtechnik GmbH
- picochip	Picochip Ltd
-@@ -94,4 +109,5 @@ via	VIA Technologies, Inc.
- winbond Winbond Electronics corp.
- wlf	Wolfson Microelectronics
- wm	Wondermedia Technologies, Inc.
-+xes	Extreme Engineering Solutions (X-ES)
- xlnx	Xilinx
--- 
-1.8.5.3
+Numbers added.
 
+>> +	/* Mic Bias */
+>> +	SND_SOC_DAPM_SUPPLY("Mic Bias", SND_SOC_NOPM, 0, 0, mic_bias_event,
+>> +			    SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
+>
+> The idiomatic thing would be to use the pin name.
+>
+
+In this case the mic bias comes out of the chip trough a separate pin 
+and it is up to board designer to connect it with any (or all) of the 
+three mic pins.
+
+>> +	/* Make ADC turn on when recording even if not mixed from any inputs */
+>> +	{"ADC", NULL, "Internal ADC Source"},
+>
+> Don't do this (or the equivalent from the DACs) - we don't do this for
+> any other drivers, we shouldn't do it for this one.  If we're going to
+> do something like this it should be generic not per driver hacks.
+>
+
+Similar approach is used at least in wm8400.c, wm8990.c, wm8991.c, and 
+in ab8500-codec.c. But I see your point. I'll roll back that change. I 
+moved the clock enable/disable code to set_bias_level() to avoid 
+unwanted behavior (codec clocks not turning on at playback/capture start 
+if damp switches are not set correctly).
+
+>> +	case SND_SOC_BIAS_STANDBY:
+>> +		if (codec->dapm.bias_level == SND_SOC_BIAS_OFF)
+>> +			aic31xx_set_power(codec, 1);
+>> +		break;
+>> +	case SND_SOC_BIAS_OFF:
+>> +		aic31xx_set_power(codec, 0);
+>> +		break;
+>
+> Just inline the set power function, or at the very least split it into
+> separate on and off functions - there is zero shared code between the
+> power on and off paths.
+>
+
+After adding the clock enable/disable code to set_bias_level, it started 
+to look hairy when everything was inlined. I split the set_power 
+function to *_on and *_off functions.
+
+In addition to these, after rebasing on top of linux-next branch, I 
+started to use use the new SOC_DOUBLE_R_S_TLV macro for the signed 
+integer mixers.
+
+Best regards,
+Jyri
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
