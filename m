@@ -1,61 +1,44 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH 3/7] of: introduce of_dma_is_coherent() helper
-Date: Fri, 7 Mar 2014 12:18:48 +0800
-Message-ID: <531948A8.9040106@ti.com>
-References: <1394097598-17622-1-git-send-email-santosh.shilimkar@ti.com>	<1394097598-17622-4-git-send-email-santosh.shilimkar@ti.com>	<CAL_JsqJnG1c0=+UgOmNOGs7a5jv2f3O074-TsXibiHsXapXhcQ@mail.gmail.com>	<53194092.7010809@ti.com>
- <CAL_JsqJ3QhRRNVAsvAPP=Ex_ptQcbpCXh7pf44K1xh+scFqiug@mail.gmail.com>
+From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/6] ARM: BCM63XX: add support for BCM63138 SoC
+Date: Thu, 6 Mar 2014 20:44:57 -0800
+Message-ID: <CAJiQ=7BrCqo3VijjEvt2JLifM0MNGYmAA+VG_YQbSHfyBqsbtg@mail.gmail.com>
+References: <1394127959-3159-1-git-send-email-f.fainelli@gmail.com> <53193FEE.4060002@ieee.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqJ3QhRRNVAsvAPP=Ex_ptQcbpCXh7pf44K1xh+scFqiug@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53193FEE.4060002-EkmVulN54Sk@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alex Elder <elder-EkmVulN54Sk@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, jpeshkin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 07 March 2014 11:55 AM, Rob Herring wrote:
-> On Thu, Mar 6, 2014 at 9:44 PM, Santosh Shilimkar
-> <santosh.shilimkar@ti.com> wrote:
->> On Friday 07 March 2014 11:13 AM, Rob Herring wrote:
->>> On Thu, Mar 6, 2014 at 3:19 AM, Santosh Shilimkar
->>> <santosh.shilimkar@ti.com> wrote:
->>>> The of_dma_is_coherent() helper parses the given DT device
->>>> node to see if the "dma-coherent" property is supported and
->>>> returns true or false accordingly.
->>>>
->>>> For the architectures which are fully dma coherent and don't need per device
->>>> property, it can enable CONFIG_ARCH_IS_DMA_COHERENT config option which
->>>> enables DMA coherent for all devices by default.
->>>
->>> This worries me. I killed off arch_is_coherent() for arm. Now we're
->>> adding something back. Also, we already have HAVE_GENERIC_DMA_COHERENT
->>> which is different, but the names will be confusing. MIPS also has
->>> DMA_NONCOHERENT.
->>>
->> Thanks for comments Rob. I will address them in next version.
->> Specifically about ARCH_IS_DMA_COHERENT, I wasn't very comfortable either
->> while adding it. But as Arnd mentioned, there is a need to have a way
->> for the arch's which are fully coherent to use coherent ops by default.
->>
->> Am not sure whats the best way to have such support without imposing
->> any special updates on such arches.
-> 
-> Thinking about this some more, if the arch is always coherent or
-> always non-coherent, then the default ops are always fine. In that
-> case set_arch_dma_coherent_ops is always a nop and of_dma_is_coherent
-> is a don't care.
-> 
-Hmmm.. I guess you are right. In that case we can drop the need of
-config option.
+On Thu, Mar 6, 2014 at 7:41 PM, Alex Elder <elder-EkmVulN54Sk@public.gmane.org> wrote:
+>> This patchset adds very minimal support for the BCM63138 SoC which is
+>> a xDSL SoC using a dual Cortex A9 CPU complex.
+>
+>
+> Why do you use "63xx" for the generic name, when the specific
+> part you are defining here is 63138?  I would have expected
+> "63xxx".
 
-Regards,
-Santosh
+The product line has a mix of 4-digit and 5-digit part numbers.  The
+drivers for onchip peripherals all used "bcm63xx":
+
+$ find drivers/ | grep 63xx
+drivers/tty/serial/bcm63xx_uart.c
+drivers/pcmcia/bcm63xx_pcmcia.h
+drivers/pcmcia/bcm63xx_pcmcia.c
+drivers/usb/gadget/bcm63xx_udc.c
+drivers/watchdog/max63xx_wdt.c
+drivers/watchdog/bcm63xx_wdt.c
+drivers/char/hw_random/bcm63xx-rng.c
+drivers/mtd/bcm63xxpart.c
+drivers/net/phy/bcm63xx.c
+drivers/net/ethernet/broadcom/bcm63xx_enet.h
+drivers/net/ethernet/broadcom/bcm63xx_enet.c
+drivers/spi/spi-bcm63xx.c
+drivers/spi/spi-bcm63xx-hsspi.c
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
