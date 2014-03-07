@@ -1,42 +1,142 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH] of: add missing major vendors
-Date: Fri, 7 Mar 2014 08:02:44 -0600
-Message-ID: <09739E6B-1136-41CC-A2A8-41C77589CD56@codeaurora.org>
-References: <1394195917-25166-1-git-send-email-florian.vaussard@epfl.ch>
-Mime-Version: 1.0 (Mac OS X Mail 7.2 \(1874\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1394195917-25166-1-git-send-email-florian.vaussard@epfl.ch>
-Sender: linux-doc-owner@vger.kernel.org
-To: Florian Vaussard <florian.vaussard@epfl.ch>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v4 5/5] clk/exynos5260: add clock file for exynos5260
+Date: Fri, 07 Mar 2014 15:12:53 +0100
+Message-ID: <5319D3E5.4000001@gmail.com>
+References: <1394113551-2134-1-git-send-email-rahul.sharma@samsung.com> <CAGcde9Hqs92bri0Fu3y7rvMhiFMYe+N7YWT-mxL2HTsnJTvz2w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAGcde9Hqs92bri0Fu3y7rvMhiFMYe+N7YWT-mxL2HTsnJTvz2w@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Pankaj Dubey <pankaj.dubey@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, mturquette@linaro.org, joshi@samsung.com, r.sh.open@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Pankaj,
 
-On Mar 7, 2014, at 6:38 AM, Florian Vaussard <florian.vaussard@epfl.ch> wrote:
+On 07.03.2014 14:56, Pankaj Dubey wrote:
+>> +static void __init exynos5260_clk_top_init(struct device_node *np)
+>> +{
+>> +       struct exynos5260_cmu_info cmu;
+>> +       struct samsung_clk_provider *ctx;
+>> +
+>> +       memset(&cmu, 0, sizeof(cmu));
+>> +
+>> +       cmu.pll_clks = top_pll_clks;
+>> +       cmu.nr_pll_clks =  ARRAY_SIZE(top_pll_clks);
+>> +       cmu.mux_clks = top_mux_clks;
+>> +       cmu.nr_mux_clks = ARRAY_SIZE(top_mux_clks);
+>> +       cmu.div_clks = top_div_clks;
+>> +       cmu.nr_div_clks = ARRAY_SIZE(top_div_clks);
+>> +       cmu.gate_clks = top_gate_clks;
+>> +       cmu.nr_gate_clks = ARRAY_SIZE(top_gate_clks);
+>> +       cmu.nr_clk_ids = TOP_NR_CLK;
+>> +       cmu.clk_regs = top_clk_regs;
+>> +       cmu.nr_clk_regs = ARRAY_SIZE(top_clk_regs);
+>> +
+>> +       ctx = exynos5260_cmu_register_one(np, &cmu);
+>> +
+>> +       samsung_clk_of_register_fixed_ext(ctx, fixed_rate_ext_clks,
+>> +                       ARRAY_SIZE(fixed_rate_ext_clks),
+>> +                       ext_clk_match);
+>> +}
+>> +
+>> +CLK_OF_DECLARE(exynos5260_clk_top, "samsung,exynos5260-clock-top",
+>> +               exynos5260_clk_top_init);
+>
+> Well with this approach we end up adding 14 such
+> exynosxxx_clk_xxx_init functions all of which has similar lines of
+> code. As I know there are many upcoming Exynos SoC which will also
+> have similar multiple clock controllers (in some of them there are
+> upto 25 clock domains, and in that case we will end up writing 25 such
+> init functions) so I have following suggestion where we can have one
+> more structure which will hold all static data and match_table to
+> match compatibility string and return CMU_TYPE which can be mapped to
+> get proper clock_data which can be used in single clock_init function.
+> Following is some sample code which I have implemented and tested on
+> one of Exynos SoC. Please let me know your opinion about this.
 
-> Looking at the current vendor strings used in the kernel's .dts/.dtsi
-> files, some vendors are used a high number of times without
-> being documented. Document the ones that are used more than 10 times.
-> 
-> Note: a few inconsistencies were found, and thus not documented.
-> Here is the list:
-> - mrvl: duplicates "marvell"
-> - st-ericsson: duplicates "ste" _and_ "stericsson"
-> - pci8086: seems to be a unfortunate alias for "intel"
-> - pnpPNP: used on PowerPC?
-> 
-> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
-> ---
-> Documentation/devicetree/bindings/vendor-prefixes.txt | 16 ++++++++++++++++
-> 1 file changed, 16 insertions(+)
+Yes, this looks better indeed, however there is still a room for 
+improvement. Please see my comments below.
 
-pnpPNP is from OpenFirmware days for ISA PNP bus bindings.
+>
+> =============================
+>
+> static struct exynosxxxx_clock_data exynosxxxx_clk_data[] __initdata = {
 
-- k
+Instead of making this an array, particular elements could be separate 
+structures. This would simplify the code below.
 
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+>          {
+>                  .cmu_type = CMU_TYPE_TOP,
+>                  .mux_clocks = top_mux_clks,
+>                  .div_clocks = top_div_clks,
+>                  .pll_clocks = top_pll_clks,
+>                  .clk_regs = top_clk_regs,
+>                  .nr_mux_clocks = ARRAY_SIZE(top_mux_clks),
+>                  .nr_div_clocks = ARRAY_SIZE(top_div_clks),
+>                  .nr_pll_clocks = ARRAY_SIZE(top_pll_clks),
+>                  .nr_clk_regs = ARRAY_SIZE(top_clk_regs),
+>                  .nr_clks  = TOP_NR_CLK,
+>          }, {
+>                  .cmu_type = CMU_TYPE_EGL,
+>                  .mux_clocks = egl_mux_clks,
+>                  .div_clocks = egl_div_clks,
+>                  .pll_clocks = egl_pll_clks,
+>                   .clk_regs = egl_clk_regs,
+>                  .nr_mux_clocks = ARRAY_SIZE(egl_mux_clks),
+>                  .nr_div_clocks = ARRAY_SIZE(egl_div_clks),
+>                  .nr_pll_clocks = ARRAY_SIZE(egl_pll_clks),
+>                  .nr_clk_regs = ARRAY_SIZE(egl_clk_regs),
+>                  .nr_clks  = EGL_NR_CLK,
+>          }, {
+>         /* Add similar elements here */
+> };
+>
+> static struct of_device_id cmu_subtype_match_table[] = {
+>          {
+>                  .compatible = "exynosxxxx-cmu-top",
+>                  .data   = (void *)CMU_TYPE_TOP,
 
+Here the data would be just a pointer to respective clock data struct 
+defined above.
+
+>          }, {
+>                  .compatible = "exynosxxx-cmu-peris",
+>                  .data   = (void *)CMU_TYPE_PERIS,
+>          }, {
+>         /* Add similar elements here */
+> };
+>
+> void __init exynosxxx_clk_init(struct device_node *np)
+> {
+>           [snip]
+>
+>          match = of_match_node(cmu_subtype_match_table, np);
+>
+>          if (!match)
+>                  panic("%s: cmu type (%s) is not supported.\n", __func__,
+>                                  np->name);
+
+This can't happen, because this function won't be called for any node 
+with compatible string not declared using CLK_OF_DECLARE().
+
+>
+>          reg_base = of_iomap(np, 0);
+>          if (!reg_base)
+>                  panic("%s: failed to map registers\n", __func__);
+>
+>          cmu_type = (unsigned long) match->data;
+>
+>          for (; i < CMU_TYPE_ALL; i++) {
+>                  clk_data = &exynosxxxx_clk_data[i];
+>                  if (cmu_type == clk_data->cmu_type)
+>                          break;
+>          }
+
+Now clk_data could be taken directly from match->data, without the need 
+to iterate over an array.
+
+Best regards,
+Tomasz
