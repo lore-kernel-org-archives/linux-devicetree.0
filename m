@@ -1,125 +1,34 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v6 6/8] of: Implement simplified graph binding for single port devices
-Date: Fri, 07 Mar 2014 18:38:02 +0000
-Message-ID: <20140307183802.B6E90C40C6F@trevor.secretlab.ca>
-References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de> < 1394011242-16783-7-git-send-email-p.zabel@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1394011242-16783-7-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <m.chehab@samsung.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core to drivers/of
+Date: Sat, 08 Mar 2014 01:06:45 +0800
+Message-ID: <20140307170645.CE50DC40A1B@trevor.secretlab.ca>
+References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de>	 < CAL_Jsq+U9zU1i+STLHMBjY5BeEP6djYnJVE5X1ix-D2q_zWztQ@mail.gmail.com>	 < 20140217181451.7EB7FC4044D@trevor.secretlab.ca>	 <20140218070624.GP17250@ pengutronix.de>	 <20140218162627.32BA4C40517@trevor.secretlab.ca>	 < 1393263389.3091.82.camel@pizza.hi.pengutronix.de>	 <20140226110114. CF2C7C40A89@trevor.secretlab.ca> <1393426129.3248.64.camel@paszta.hi. pengutronix.de> <530EF914.3000407@ti.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <530EF914.3000407@ti.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed,  5 Mar 2014 10:20:40 +0100, Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> For simple devices with only one port, it can be made implicit.
-> The endpoint node can be a direct child of the device node.
+On Thu, 27 Feb 2014 10:36:36 +0200, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+> On 26/02/14 16:48, Philipp Zabel wrote:
 > 
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> >> I would like the document to acknowledge the difference from the
+> >> phandle+args pattern used elsewhere and a description of when it would
+> >> be appropriate to use this instead of a simpler binding.
+> > 
+> > Alright. The main point of this binding is that the devices may have
+> > multiple distinct ports that each can be connected to other devices.
+> 
+> The other main point with this binding are multiple endpoints per port.
+> So you can have, say, a display controller, with single port, which has
+> two endpoints going to two separate LCD panels.
+> 
+> In physical level that would usually mean that the same pins from the
+> display controller are connected to two panels. Most likely this would
+> mean that only one panel can be used at a time, possibly with different
+> settings (say, 16 RGB pins for one panel, 24 RGB pins for the other).
 
-Ergh... I think this is too loosely defined. The caller really should be
-explicit about which behaviour it needs. I'll listen to arguments
-though if you can make a strong argument.
+What device is in control in that scenario?
 
 g.
-
-> --- > Changes since v5:
->  - Unrolled for-loop in of_graph_get_remote_port_parent
-> ---
->  drivers/of/base.c | 42 +++++++++++++++++++++++++++++-------------
->  1 file changed, 29 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 715144af..ffd0217 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -2003,7 +2003,8 @@ int of_graph_parse_endpoint(const struct device_node *node,
->  	 * It doesn't matter whether the two calls below succeed.
->  	 * If they don't then the default value 0 is used.
->  	 */
-> -	of_property_read_u32(port_node, "reg", &endpoint->port);
-> +	if (port_node && !of_node_cmp(port_node->name, "port"))
-> +		of_property_read_u32(port_node, "reg", &endpoint->port);
->  	of_property_read_u32(node, "reg", &endpoint->id);
->  
->  	of_node_put(port_node);
-> @@ -2034,8 +2035,13 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
->  		struct device_node *node;
->  		/*
->  		 * It's the first call, we have to find a port subnode
-> -		 * within this node or within an optional 'ports' node.
-> +		 * within this node or within an optional 'ports' node,
-> +		 * or at least a single endpoint.
->  		 */
-> +		endpoint = of_get_child_by_name(parent, "endpoint");
-> +		if (endpoint)
-> +			return endpoint;
-> +
->  		node = of_get_child_by_name(parent, "ports");
->  		if (node)
->  			parent = node;
-> @@ -2046,8 +2052,6 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
->  			/* Found a port, get an endpoint. */
->  			endpoint = of_get_next_child(port, NULL);
->  			of_node_put(port);
-> -		} else {
-> -			endpoint = NULL;
->  		}
->  
->  		if (!endpoint)
-> @@ -2062,6 +2066,10 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
->  	if (WARN_ONCE(!port, "%s(): endpoint %s has no parent node\n",
->  		      __func__, prev->full_name))
->  		return NULL;
-> +	if (port == parent) {
-> +		of_node_put(port);
-> +		return NULL;
-> +	}
->  
->  	/* Avoid dropping prev node refcount to 0. */
->  	of_node_get(prev);
-> @@ -2097,18 +2105,21 @@ struct device_node *of_graph_get_remote_port_parent(
->  			       const struct device_node *node)
->  {
->  	struct device_node *np;
-> -	unsigned int depth;
->  
->  	/* Get remote endpoint node. */
->  	np = of_parse_phandle(node, "remote-endpoint", 0);
-> +	if (!np)
-> +		return NULL;
->  
-> -	/* Walk 3 levels up only if there is 'ports' node. */
-> -	for (depth = 3; depth && np; depth--) {
-> -		np = of_get_next_parent(np);
-> -		if (depth == 2 && of_node_cmp(np->name, "ports"))
-> -			break;
-> -	}
-> -	return np;
-> +	np = of_get_next_parent(np);
-> +	if (!np || of_node_cmp(np->name, "port") != 0)
-> +		return np;
-> +
-> +	np = of_get_next_parent(np);
-> +	if (!np || of_node_cmp(np->name, "ports") != 0)
-> +		return np;
-> +
-> +	return of_get_next_parent(np);
->  }
->  EXPORT_SYMBOL(of_graph_get_remote_port_parent);
->  
-> @@ -2127,6 +2138,11 @@ struct device_node *of_graph_get_remote_port(const struct device_node *node)
->  	np = of_parse_phandle(node, "remote-endpoint", 0);
->  	if (!np)
->  		return NULL;
-> -	return of_get_next_parent(np);
-> +	np = of_get_next_parent(np);
-> +	if (of_node_cmp(np->name, "port")) {
-> +		of_node_put(np);
-> +		return NULL;
-> +	}
-> +	return np;
->  }
->  EXPORT_SYMBOL(of_graph_get_remote_port);
-> -- 
-> 1.9.0.rc3
-> 
