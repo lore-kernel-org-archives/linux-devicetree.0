@@ -1,34 +1,115 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: Re: [PATCH] spi/s3c64xx: Update DT binding documentation to
-	match code
-Date: Fri, 7 Mar 2014 11:12:02 +0000
-Message-ID: <20140307111202.GK8570@opensource.wolfsonmicro.com>
-References: <4F.EF.24278.5C999135@epcpsbgx4.samsung.com>
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [PATCH v2 3/5] pinctrl: st: Enhance the controller to manage
+ unavailable registers
+Date: Fri, 7 Mar 2014 12:28:28 +0100
+Message-ID: <5319AD5C.7050301@st.com>
+References: <1394185272-26054-1-git-send-email-maxime.coquelin@st.com> <1394185272-26054-4-git-send-email-maxime.coquelin@st.com> <5319A263.6020201@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4F.EF.24278.5C999135-hl5l+cwj/UQ8ySZrqMDKH/pXobYPEAuW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: GIRISH K S <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5319A263.6020201@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: srinivas kandagatla <srinivas.kandagatla@st.com>, Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Stuart Menefy <stuart.menefy@st.com>, Linus Walleij <linus.walleij@linaro.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+Cc: lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 07, 2014 at 10:04:53AM +0000, GIRISH K S wrote:
-> Hello Charles, instead of the binding modification I shall
-> handle it in the driver probe function by getting child
-> node using the api of_get_child_by_name(child-node,
-> "controller-data) and then use of_find_property to parse
-> the cs-gpio.
+Hi Srini,
+
+On 03/07/2014 11:41 AM, srinivas kandagatla wrote:
+> Hi Peppe/Maxime,
+> I missed a comment... :-)
 >
-> This looks like a better fix. Is that ok?
+>
+> On 07/03/14 09:41, Maxime COQUELIN wrote:
+>> From: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+>>
+>> This patch adds a new logic inside the st pinctrl to manage
+>> an unsupported scenario: some sysconfig are not available!
+>>
+>> This is the case of STiH407 where, although documented, the
+>> following registers from SYSCFG_FLASH have been removed from the SoC.
+>>
+>> SYSTEM_CONFIG3040
+>>     Output Enable pad control for all PIO Alternate Functions
+>> and
+>> SYSTEM_ CONFIG3050
+>>     Pull Up pad control for all PIO Alternate Functions
+>>
+>> Without managing this condition an imprecise external abort
+>> will be detect.
+>>
+>> To do this the patch also reviews the st_parse_syscfgs
+>> and other routines to manipulate the registers only if
+>> actually available.
+>> In any case, for example the st_parse_syscfgs detected
+>> an error condition but no action was made in the
+>> st_pctl_probe_dt.
+>>
+>> Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
+>> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+>> ---
+>>   drivers/pinctrl/pinctrl-st.c | 121 +++++++++++++++++++++++++++----------------
+>>   1 file changed, 75 insertions(+), 46 deletions(-)
+>>
+>> diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
+>> index 9e9b6ea..d1886b4 100644
+>> --- a/drivers/pinctrl/pinctrl-st.c
+>> +++ b/drivers/pinctrl/pinctrl-st.c
+>> @@ -390,6 +390,19 @@ static const struct st_pctl_data  stih416_data = {
+>>   	.alt = 0, .oe = 40, .pu = 50, .od = 60, .rt = 100,
+>>   };
+>>
+>> +static const struct st_pctl_data  stih407_flashdata = {
+>> +	.rt_style	= st_retime_style_none,
+>> +	.input_delays	= stih416_delays,
+>> +	.ninput_delays	= 14,
+>> +	.output_delays	= stih416_delays,
+>> +	.noutput_delays = 14,
+>> +	.alt = 0,
+>> +	.oe = -1, /* Not Available */
+>> +	.pu = -1, /* Not Available */
+>> +	.od = 60,
+>> +	.rt = 100,
+>> +};
+>> +
+>
+> I think this stih407_flashdata go with the previous patch "pinctrl: st:
+> add pinctrl support for the STiH407 SoC"
+>
+> So that this patch just adds new checks to pinctrl-driver and not
+> stih407 related stuff.
 
-Sounds like a good solution to me.
+Problem is that "oe" and "pu" takes -1 in that patch, and these values 
+will be passed directly to devm_regmap_field_alloc without any check.
 
-Thanks,
-Charles
+I propose to apply this patch before "pinctrl: st: add pinctrl support 
+for the STiH407 SoC", and move stih407_flashdata as you recommend.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Is it fine for you?
+
+Thanks for the review,
+Maxime
+
+>
+> Other than that the patch looks good to me.
+>
+>>   }
+>>
+>>   /*
+>> @@ -1583,7 +1612,7 @@ static struct of_device_id st_pctl_of_match[] = {
+>>   	{ .compatible = "st,stih407-sbc-pinctrl", .data = &stih416_data},
+>>   	{ .compatible = "st,stih407-front-pinctrl", .data = &stih416_data},
+>>   	{ .compatible = "st,stih407-rear-pinctrl", .data = &stih416_data},
+>> -	{ .compatible = "st,stih407-flash-pinctrl", .data = &stih416_data},
+>> +	{ .compatible = "st,stih407-flash-pinctrl", .data = &stih407_flashdata},
+> Same as first comment.
+>>   	{ /* sentinel */ }
+>>   };
+>>
+>>
+>
+>
+> Thanks,
+> srini
+>
