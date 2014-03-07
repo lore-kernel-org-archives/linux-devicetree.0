@@ -1,80 +1,45 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 6/7] regulator: AXP20x: Add support for
- regulators subsystem
-Date: Fri, 7 Mar 2014 19:22:13 +0100
-Message-ID: <20140307182213.GC607@lukather>
-References: <1393692352-10839-1-git-send-email-carlo@caione.org>
- <1393692352-10839-7-git-send-email-carlo@caione.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v5 00/11] imx-drm dt bindings
+Date: Fri, 7 Mar 2014 10:28:57 -0800
+Message-ID: <20140307182857.GB6963@kroah.com>
+References: <1394011262-16849-1-git-send-email-p.zabel@pengutronix.de>
+ <20140307175612.GR21483@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fgeUT96Xdo+SN8mm"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB7U55CMAKGQEFHRI5FQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <1393692352-10839-7-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+In-Reply-To: <20140307175612.GR21483@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Mar 07, 2014 at 05:56:12PM +0000, Russell King - ARM Linux wrote:
+> On Wed, Mar 05, 2014 at 10:20:51AM +0100, Philipp Zabel wrote:
+> > Hi,
+> > 
+> > this latest version of the imx-drm DT binding patches applies
+> > on top of staging-next and also depends on the OF graph binding
+> > patchset that moves the v4l2_of helpers to drivers/of.
+> > Currently, the two patchsets are also available at:
+> >     git://git.pengutronix.de/git/pza/linux.git topic/of-graph
+> >     git://git.pengutronix.de/git/pza/linux.git topic/imx-drm-dt
+> 
+> Okay, having looked at the second tree, pulling that will result in
+> pulling in all of the staging tree here, which I'd rather not do.  Unless
+> there's any objection, I'd like to take these as patches on top of the
+> imx-drm stuff which I sent to Greg plus the of-graph stuff which they
+> depend upon.  In other words, exactly how I've been testing it today.
+> 
+> Any objections?
 
---fgeUT96Xdo+SN8mm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, Mar 01, 2014 at 05:45:51PM +0100, Carlo Caione wrote:
-> +static struct platform_driver axp20x_regulator_driver =3D {
-> +	.probe	=3D axp20x_regulator_probe,
-> +	.remove	=3D axp20x_regulator_remove,
-> +	.driver	=3D {
-> +		.name		=3D "axp20x-regulator",
-> +		.owner		=3D THIS_MODULE,
-> +	},
-> +};
-> +
-> +static int __init axp20x_regulator_init(void)
-> +{
-> +	return platform_driver_register(&axp20x_regulator_driver);
-> +}
-> +
-> +subsys_initcall(axp20x_regulator_init);
-
-Hmmm, really?
-
-I thought the AXP was only connected through I2C? How is that a
-platform device then?
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---fgeUT96Xdo+SN8mm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTGg5UAAoJEBx+YmzsjxAg4Q0QAK03UjUsT5aGKp3zLpgh2a5C
-rCc9hZiaSRe/PIQjmMlMNTWXOb8A2zGYjLhdOr16TO9skfJAWjkZFAQhqMy68UAB
-k82FY0rfAsu8qp2CnzrfTnyrt3kCDnyGYEtUUn+KeytEY52ODZyNM9rVmca1iD0a
-mtvpizRY9KryZtRONMBXRqjznFZg/XeeGz2P/qFubETBK0yOuuiWiipDcxLg6DCH
-WrmzohPoqEiXPh0Z3LMXnHIIMYqsBoEyYuiyM4iWHCdzXTNaqdgvpf4GllCPGoyg
-2ysY4wv54kNC2LNMR6IkqgKUOOgrwlhBKBJoMa+5ddHOylqoZoHZLv5lTSXXr7/6
-riqXlfKaa/QvTKJ2T8iWifQ7UBjXxDonN50yAbR+h4kkkCpLNAs2sR0fHU23d/DF
-B5Ue51E8sgsOeUgLQXbkg5dVKn4xzt3L90kasewDw4JMDYsHyh67LuBHE7dplxQQ
-sWduCl0UdvkKxrkphmpjD05QJVZdSQYbatEk8dS0knJPxp7eOnZ12rR/HHyChn/Q
-ysKD4JzMqLI0K/DxUQPt7ErnHXs9ZOZG3AB9Zg27GrPMYjlI1qs/TJpfdZT1jYIO
-uSAb8Zt6x21d59y2YddVKwT9aQyutHORFbNnpYYOqFR205w3Vq/bxq1zRk0T3t2d
-G0eMpoyuobezTzgpGLD5
-=3/gW
------END PGP SIGNATURE-----
-
---fgeUT96Xdo+SN8mm--
+None from me!  :)
