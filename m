@@ -1,69 +1,70 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 5/8] phy: omap-usb2: Add clock names to Documentation
- binding
-Date: Fri, 7 Mar 2014 10:24:06 -0600
-Message-ID: <20140307162406.GB23885@saruman.home>
-References: <1394197751-28984-1-git-send-email-rogerq@ti.com>
- <1394197751-28984-6-git-send-email-rogerq@ti.com>
- <20140307160422.GA23885@saruman.home>
- <5319F267.3080309@ti.com>
-Reply-To: <balbi@ti.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv3 00/41] OMAPDSS: DT support v3
+Date: Fri, 7 Mar 2014 08:49:29 -0800
+Message-ID: <20140307164929.GC3789@atomide.com>
+References: <1390301833-24944-1-git-send-email-tomi.valkeinen@ti.com>
+ <531823C5.1020008@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mojUlQ0s9EVzWg2t"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5319F267.3080309@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: balbi@ti.com, Roger Quadros <rogerq@ti.com>, tony@atomide.com, george.cherian@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
+In-Reply-To: <531823C5.1020008@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Stefan Roese <stefan.roese@gmail.com>, Sebastian Reichel <sre@debian.org>, Robert Nelson <robertcnelson@gmail.com>, "Dr . H . Nikolaus Schaller" <hns@goldelico.com>, Marek Belisko <marek@goldelico.com>, Sebastian Reichel <sre@ring0.de>, Javier Martinez Canillas <javier@dowhile0.org>, Enric Balletbo Serra <eballetbo@gmail.com>, Florian Vaussard <florian.vaussard@epfl.ch>
 List-Id: devicetree@vger.kernel.org
 
---mojUlQ0s9EVzWg2t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+* Tomi Valkeinen <tomi.valkeinen@ti.com> [140305 23:32]:
+> Hi Tony,
+> 
+> On 21/01/14 12:56, Tomi Valkeinen wrote:
+> > Hi,
+> > 
+> > Here's version 3 of the DSS DT series.
+> 
+> Can you have a look at the arch/arm/ parts in the series and ack if
+> they're ok, i.e, patches 1, 2, 32.
 
-On Fri, Mar 07, 2014 at 09:53:03PM +0530, Kishon Vijay Abraham I wrote:
-> Felipe,
->=20
-> On Friday 07 March 2014 09:34 PM, Felipe Balbi wrote:
-> >On Fri, Mar 07, 2014 at 03:09:08PM +0200, Roger Quadros wrote:
-> >>Add "wkupclk" and "refclk" information to DT binding information.
-> >>
-> >>Signed-off-by: Roger Quadros <rogerq@ti.com>
-> >>---
-> >
-> >so, should I take this one ?
->=20
-> yes.. the ti-phy.txt is only in your tree.
+Patches 1, 2 & 32 look OK to me, so for those please feel free to add:
 
-yeah, I know that, but I need to know if this is safe to be applied as
-in "it won't change anymore".
+Acked-by: Tony Lindgren <tony@atomide.com>
 
---=20
-balbi
+There's a minor merge conflict in pdata-quirks.c, but that's trivial
+so it should be OK for you to queue those along with the DSS patches.
 
---mojUlQ0s9EVzWg2t
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> Then there are the .dts patches, 22-30, for which I haven't been able to
+> get any acks. I'm not sure who I should get acks from for those, but I
+> don't mind adding yours if you want to give it.
+> 
+> The .dts patches have had minor changes compared to the ones posted
+> here, according to the DT bindings review comments, but nothing much has
+> changed.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+These will cause unnecessary merge conflicts all over the place:
 
-iQIcBAEBAgAGBQJTGfKmAAoJEIaOsuA1yqREmxEQALYnC3r4FzQsBjhHagyMOx/L
-xAE/K/glxOmA73sBtp8tRnse0xo9v++XBEQxhICTpw08KFmEsopPtMwU5RMKRJ+v
-OzCQLtCTphZ2PB+mnW+yw4BmrHorN8mQPCR1vIaYTpIITiXz/1lUpNT7dqBFu5Ob
-Ps9CVi6ZwH3o/sUZFLCUQKUM1lDC8EjGFeA/Qv3XaH/Xe3Z6tZ25swVmp1qxNWbr
-sfoZ67r7tUd693ZXM1N/tlg/527sqFRF8+DvD1xO6Ug03hfxJimXKzt9Gx9Sc9Rz
-L8OlFlozwGlPlOdXlQsnnbCRYL70z4hiEoCg51IfZLWR5sS+QSv15s4FbMic5EwM
-PMVQwg3EdMT8phXvaaDeWTYPuLJ+r/0ifSsTPL+KxCjNvPd7y7maoHcSagnowIkc
-fYCP0fBzlvIfLjhBFhs8JHoYhiQzsCQZOYjXXwZIJ5K20/4NSAr+k3yeh3NGqa+0
-i/cSrvG++rdi/vrNAtDlKJ4Q58g/kfHpJTBTE72a8RZmuITz9nV0B0SQyFfxJ/9F
-Wqb5NBMhzwil+aM+YDgp1XzxCgJo0br3aSwMoyOsSWPnaH7bkc7h1T9XUmUSK6iV
-s5icimkPU+YFpx3JPW/JnA0W9YDOkzBYP7soO6S8tOqP/qgJj+lCZ60eRh+P6XfA
-aAde7QbA6cjBbBqrSidl
-=m959
------END PGP SIGNATURE-----
+Auto-merging arch/arm/boot/dts/omap4.dtsi
+CONFLICT (content): Merge conflict in arch/arm/boot/dts/omap4.dtsi
+Auto-merging arch/arm/boot/dts/omap4-sdp.dts
+CONFLICT (content): Merge conflict in arch/arm/boot/dts/omap4-sdp.dts
+Auto-merging arch/arm/boot/dts/omap4-panda-common.dtsi
+CONFLICT (content): Merge conflict in arch/arm/boot/dts/omap4-panda-common.dtsi
+Auto-merging arch/arm/boot/dts/omap3.dtsi
+Auto-merging arch/arm/boot/dts/omap3-n900.dts
+CONFLICT (content): Merge conflict in arch/arm/boot/dts/omap3-n900.dts
+Auto-merging arch/arm/boot/dts/omap3-igep0020.dts
+CONFLICT (content): Merge conflict in arch/arm/boot/dts/omap3-igep0020.dts
+Auto-merging arch/arm/boot/dts/omap3-beagle.dts
+CONFLICT (content): Merge conflict in arch/arm/boot/dts/omap3-beagle.dts
+Auto-merging arch/arm/boot/dts/omap3-beagle-xm.dts
+CONFLICT (content): Merge conflict in arch/arm/boot/dts/omap3-beagle-xm.dts
 
---mojUlQ0s9EVzWg2t--
+How about do a pull request for just the .dts changes against current
+omap-for-v3.15/dt branch ASAP for me so I can pull it in? That is assuming
+that just the .dts changes alone won't break anything.
+
+Then make sure your series works both ways and maybe do a follow up
+patch that flips things over after the dependencies are merged.
+
+Regards,
+
+Tony
