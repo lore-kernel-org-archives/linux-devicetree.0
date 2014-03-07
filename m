@@ -1,38 +1,117 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/5] Add STiH407 SoC and reference board support
-Date: Fri, 7 Mar 2014 11:11:45 +0800
-Message-ID: <CACRpkdbztgbWn3kmm4gv6OLcX+bPnyK5BCt0SJJcWo+iyGsWvA@mail.gmail.com>
-References: <1393589841-6634-1-git-send-email-maxime.coquelin@st.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 3/7] of: introduce of_dma_is_coherent() helper
+Date: Thu, 6 Mar 2014 21:13:26 -0600
+Message-ID: <CAL_JsqJnG1c0=+UgOmNOGs7a5jv2f3O074-TsXibiHsXapXhcQ@mail.gmail.com>
+References: <1394097598-17622-1-git-send-email-santosh.shilimkar@ti.com>
+	<1394097598-17622-4-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393589841-6634-1-git-send-email-maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime COQUELIN <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1394097598-17622-4-git-send-email-santosh.shilimkar@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 28, 2014 at 8:17 PM, Maxime COQUELIN <maxime.coquelin-qxv4g6HH51o@public.gmane.org> wrote:
-
-> This series adds basic support to the STMicroelectronics STiH407 SoC and its
-> B2120 reference board. The STiH407 is a dual-core ARM Cortex-A9 CPU aimed at
-> STB market.
+On Thu, Mar 6, 2014 at 3:19 AM, Santosh Shilimkar
+<santosh.shilimkar@ti.com> wrote:
+> The of_dma_is_coherent() helper parses the given DT device
+> node to see if the "dma-coherent" property is supported and
+> returns true or false accordingly.
 >
-> Giuseppe Cavallaro (2):
->   ARM: STi: add pinctrl support for the STiH407 SoC
->   pinctrl: st: Enhance the controller to manage unavailable registers
+> For the architectures which are fully dma coherent and don't need per device
+> property, it can enable CONFIG_ARCH_IS_DMA_COHERENT config option which
+> enables DMA coherent for all devices by default.
+
+This worries me. I killed off arch_is_coherent() for arm. Now we're
+adding something back. Also, we already have HAVE_GENERIC_DMA_COHERENT
+which is different, but the names will be confusing. MIPS also has
+DMA_NONCOHERENT.
+
 >
-> Maxime Coquelin (3):
->   ARM: STi: Add STiH407 SoC support
->   ARM: dts: Add STiH407 SoC support
->   ARM: dts: STiH407: Add B2120 board support
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Russell King <linux@arm.linux.org.uk>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Olof Johansson <olof@lixom.net>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> ---
+>  drivers/of/platform.c       |   31 +++++++++++++++++++++++++++++++
+>  include/linux/of_platform.h |    6 ++++++
+>  2 files changed, 37 insertions(+)
+>
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index 2265a55..bd080db 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -570,4 +570,35 @@ out:
+>         return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(of_dma_get_range);
+> +
+> +/**
+> + * of_dma_is_coherent - Check if device is coherent
+> + * @np:        device node
+> + *
+> + * It returns true if "dma-coherent" property was found
+> + * for this device in DT.
+> + */
+> +#ifndef CONFIG_ARCH_IS_DMA_COHERENT
+> +bool of_dma_is_coherent(struct device_node *np)
+> +{
+> +       struct device_node *node = np;
+> +
+> +       while (node) {
 
-So I'd like to take the pinctrl patch through my tree and the rest through
-ARM SoC but it seems it does not apply :-/
+This screams for a for_each_parent_of_node helper.
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +               if (of_property_read_bool(node, "dma-coherent")) {
+> +                       of_node_put(node);
+> +                       return true;
+> +               }
+> +               node = of_get_next_parent(node);
+> +       }
+> +       return false;
+> +}
+> +EXPORT_SYMBOL_GPL(of_dma_is_coherent);
+> +#else
+> +inline bool of_dma_is_coherent(struct device_node *np)
+
+This is in the header and should not be here.
+
+> +{
+> +       /* ARCH is fully dma coherent and don't need per device control */
+> +       return true;
+> +}
+> +EXPORT_SYMBOL_GPL(of_dma_is_coherent);
+> +#endif
+>  #endif /* CONFIG_OF_ADDRESS */
+> diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
+> index ba7d3dc..48e0748 100644
+> --- a/include/linux/of_platform.h
+> +++ b/include/linux/of_platform.h
+> @@ -74,6 +74,7 @@ extern int of_platform_populate(struct device_node *root,
+>                                 struct device *parent);
+>  extern int of_dma_get_range(struct device_node *np, dma_addr_t *dma_addr,
+>                                 phys_addr_t *paddr, phys_addr_t *size);
+> +extern bool of_dma_is_coherent(struct device_node *np);
+>  #else
+>  static inline int of_platform_populate(struct device_node *root,
+>                                         const struct of_device_id *matches,
+> @@ -88,6 +89,11 @@ static inline int of_dma_get_range(struct device_node *np, dma_addr_t *dma_addr,
+>  {
+>         return -ENODEV;
+>  }
+> +
+> +static inline bool of_dma_is_coherent(struct device_node *np)
+> +{
+> +       return false;
+> +}
+>  #endif
+
+I don't think you have the ifdefs right here.
+
+Rob
