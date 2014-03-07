@@ -1,45 +1,76 @@
-From: srinivas kandagatla <srinivas.kandagatla@st.com>
-Subject: Re: [PATCH v3 2/5] pinctrl: st: Enhance the controller to manage
- unavailable registers
-Date: Fri, 7 Mar 2014 15:37:05 +0000
-Message-ID: <5319E7A1.5060605@st.com>
-References: <1394203251-25361-1-git-send-email-maxime.coquelin@st.com> <1394203251-25361-3-git-send-email-maxime.coquelin@st.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 4/7] of: configure the platform device dma_mask and dma_pfn_offset
+Date: Fri, 7 Mar 2014 17:02:41 +0100
+Message-ID: <201403071702.41716.arnd@arndb.de>
+References: <1394097598-17622-1-git-send-email-santosh.shilimkar@ti.com> <CAL_Jsq+Y8w0sLLdh5vcWMnW3ohEafAFRWubtCK66P1axsf1wRA@mail.gmail.com> <53194817.70802@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1394203251-25361-3-git-send-email-maxime.coquelin@st.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Maxime COQUELIN <maxime.coquelin@st.com>, Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Stuart Menefy <stuart.menefy@st.com>, Linus Walleij <linus.walleij@linaro.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
-Cc: lee.jones@linaro.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53194817.70802-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/03/14 14:40, Maxime COQUELIN wrote:
-> From: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+On Friday 07 March 2014, Santosh Shilimkar wrote:
+> >> +
+> >> +       ret = dma_set_mask(dev, dma_mask);
+> >> +       if (ret < 0) {
+> >> +               dev_err(dev, "failed to set DMA mask %pad\n", &dma_mask);
+> >> +               dev->dma_mask = NULL;
+> >> +               return;
+> >> +       }
+> >> +
+> >> +       dev_dbg(dev, "dma_pfn_offset(%#08lx) dma_mask(%pad)\n",
+> >> +               dev->dma_pfn_offset, dev->dma_mask);
+> >> +
+> >> +       ret = dma_set_coherent_mask(dev, dma_mask);
+> > 
+> > I think these 2 calls belong in the drivers, not here.
+> > 
+> I also had same initial thought but Arnd mentioned that its a
+> shared responsibility between ARCH and drivers. Driver which
+> could be common between arches not always have the correct
+> mask information and it can change based on which arch it
+> is running.
 > 
-> This patch adds a new logic inside the st pinctrl to manage
-> an unsupported scenario: some sysconfig are not available!
+> With some discussion back and forth, we thought updating
+> the dma_mask while the device getting created, would be
+> better place since we can find the arch capability at
+> this centralise code and update it.
 > 
-> This is the case of STiH407 where, although documented, the
-> following registers from SYSCFG_FLASH have been removed from the SoC.
-> 
-> SYSTEM_CONFIG3040
->    Output Enable pad control for all PIO Alternate Functions
-> and
-> SYSTEM_ CONFIG3050
->    Pull Up pad control for all PIO Alternate Functions
-> 
-> Without managing this condition an imprecise external abort
-> will be detect.
-> 
-> To do this the patch also reviews the st_parse_syscfgs
-> and other routines to manipulate the registers only if
-> actually available.
-> In any case, for example the st_parse_syscfgs detected
-> an error condition but no action was made in the
-> st_pctl_probe_dt.
-> 
-> Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
-> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Acked-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+> Ofcourse its bit debatable as the question you asked is
+> bit obvious as well. I let Arnd give his view here.
 
+If we set the mask *here*, we probably don't want to call 'dma_set_mask', but
+write to the mask directly, or we could call dma_coerce_mask_and_coherent(),
+which is really for overriding the mask pointer and value at once in cases
+where you absolutely know what it should be.
+
+We do need to decide what interface we want to use in platform device drivers,
+and I'm hoping that Russell has some idea which one he prefers:
+
+a) Follow what we do for PCI devices: assume that we can do DMA_MASK(32)
+on any device, and have drivers call dma_set_mask(DMA_MASK(64)) on devices
+that would like to do more than that, or call e.g. dma_set_mask(DMA_MASK(28))
+for devices that can do less than 32 bit, as given in the argument. This
+approach would be most consistent with the way PCI works, but it doesn't
+really work well for the case where the mask is less than 32-bit and the
+device driver doesn't know that.
+
+b) Never have to call dma_set_mask() for platform devices and assume that the
+platform code sets it up correctly. This would probably be the simpler
+solution, and I can't think of any downsides at the moment.
+
+In either case we probably want to call something like dt_dma_configure()
+from dma_set_mask() again to make sure that we stay within the limits
+imposed by the bus structure.
+
+	Arnd
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
