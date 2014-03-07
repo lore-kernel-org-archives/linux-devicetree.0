@@ -1,67 +1,268 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 3/3] pinctrl: mvebu: silence WARN to dev_warn
-Date: Fri, 7 Mar 2014 08:46:16 -0500
-Message-ID: <20140307134616.GR1872@titan.lakedaemon.net>
-References: <1393977790-29110-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1393977790-29110-4-git-send-email-sebastian.hesselbarth@gmail.com>
- <20140306201803.GL1872@titan.lakedaemon.net>
- <CACRpkda0JCLZUv_KPmwucDh3ko2YbtG2ukMMscSodAbBpiY+zw@mail.gmail.com>
- <20140307035056.GQ1872@titan.lakedaemon.net>
- <CACRpkdbEQSj7jLWT2BFR22m7phwmyKCByhQuFFgHvHoKvQFD5g@mail.gmail.com>
+From: Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: Re: [PATCH v4 5/5] clk/exynos5260: add clock file for exynos5260
+Date: Fri, 7 Mar 2014 22:56:23 +0900
+Message-ID: <CAGcde9Hqs92bri0Fu3y7rvMhiFMYe+N7YWT-mxL2HTsnJTvz2w@mail.gmail.com>
+References: <1394113551-2134-1-git-send-email-rahul.sharma@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbEQSj7jLWT2BFR22m7phwmyKCByhQuFFgHvHoKvQFD5g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1394113551-2134-1-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <rahul.sharma@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, mturquette@linaro.org, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 07, 2014 at 11:56:11AM +0800, Linus Walleij wrote:
-> On Fri, Mar 7, 2014 at 11:50 AM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
-> > On Fri, Mar 07, 2014 at 11:48:25AM +0800, Linus Walleij wrote:
-> >> On Fri, Mar 7, 2014 at 4:18 AM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
-> >> > On Wed, Mar 05, 2014 at 01:03:10AM +0100, Sebastian Hesselbarth wrote:
-> >> >> Pinctrl will WARN on missing DT resources, which is a little bit too
-> >> >> noisy. Use dev_warn with FW_BUG instead.
-> >> >>
-> >> >> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> >> ---
-> >> >> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> >> >> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> >> >> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> >> >> Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> >> >> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >> >> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >> >> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> >> >> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >> >> ---
-> >> >>  drivers/pinctrl/mvebu/pinctrl-dove.c | 3 ++-
-> >> >>  1 file changed, 2 insertions(+), 1 deletion(-)
-> >> >
-> >> > Applied to mvebu/pinctrl
-> >>
-> >> So are you carrying this patch, or shall I apply it to my tree?
-> >>
-> >> In the former case: Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >
-> > I'll send you a pull tomorrow.
-> 
-> For a single patch?
+Hi Rahul,
 
-Well, just the doc change and WARN change.  I've already taken the dts
-change into mvebu/dt (for arm-soc).
+On Thu, Mar 6, 2014 at 10:45 PM, Rahul Sharma <rahul.sharma@samsung.com> wrote:
+> Add support for exynos5260 clocks in clock driver.
+>
+> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
 
-There should be no need for these two to be in mvebu's for-next, so if
-it's easier for you to pick them, please do so.
+Even though my signed-off-by is present in this patch I can't see my
+email-id in cc list. Please check why?
 
-I'll drop them from mvebu/pinctrl and update mvebu's for-next right now.
+[snip]
 
-thx,
+> +#include "clk-exynos5260.h"
+> +#include "clk.h"
+> +#include "clk-pll.h"
+> +
+> +#include <dt-bindings/clk/exynos5260-clk.h>
 
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Better to move "exynos5260-clk.h" from "dt-bindings/clk" to "dt-bindings/clock"
+as patch for moving all such headers already landed and looks good also.
+
+[snip]
+
+> +/*
+> + * Applicable for all 2550 Type PLLS for Exynos5260, listed below
+> + * DISP_PLL, EGL_PLL, KFC_PLL, MEM_PLL,
+> + * BUS_PLL, MEDIA_PLL, G3D_PLL.
+> + */
+> +static const struct samsung_pll_rate_table pll2550_24mhz_tbl[] = {
+
+shouldn't we mark rate_table with __initconst?
+
+[snip]
+
+> + * Applicable for 2650 Type PLL for AUD_PLL.
+> + */
+> +static const struct samsung_pll_rate_table pll2650_24mhz_tbl[] = {
+
+Ditto.
+
+[snip]
+
+> +#else
+> +static void exynos5260_clk_sleep_init(void) {}
+
+This will fail to compile if CONFIG_PM_SLEEP is not defined. Keep function
+signature same.
+
+> +#endif
+> +
+> +static struct samsung_clk_provider *
+> +__init exynos5260_cmu_register_one(struct device_node *np,
+> +                       struct exynos5260_cmu_info *cmu)
+> +{
+> +       void __iomem *reg_base;
+> +       struct samsung_clk_provider *ctx;
+> +
+> +       reg_base = of_iomap(np, 0);
+> +       if (!reg_base)
+> +               panic("%s: failed to map registers\n", __func__);
+> +
+> +       ctx = samsung_clk_init(np, reg_base, cmu->nr_clk_ids);
+> +       if (!ctx)
+> +               panic("%s: unable to alllocate ctx\n", __func__);
+> +
+> +       if (cmu->pll_clks)
+> +               samsung_clk_register_pll(ctx, cmu->pll_clks, cmu->nr_pll_clks,
+> +                       reg_base);
+> +       if (cmu->mux_clks)
+> +               samsung_clk_register_mux(ctx,  cmu->mux_clks,
+> +                       cmu->nr_mux_clks);
+> +       if (cmu->div_clks)
+> +               samsung_clk_register_div(ctx, cmu->div_clks, cmu->nr_div_clks);
+> +       if (cmu->gate_clks)
+> +               samsung_clk_register_gate(ctx, cmu->gate_clks,
+> +                       cmu->nr_gate_clks);
+> +       if (cmu->clk_regs)
+> +               exynos5260_clk_sleep_init(reg_base, cmu->clk_regs,
+> +                       cmu->nr_clk_regs);
+> +
+> +       return ctx;
+
+As far as I can see only one user of this return "ctx" is only
+"exynos5260_clk_top_init", other init functions just ignoring this
+return value.
+This can be avoided if we register "fin_pll" (as well as all phyclocks
+as they are also fixed rate clocks) clock via DT.
+As I have already done it for another ExynosXXX SoC and it worked for
+me, on the same hand when today I tried this on Exynos5260, I can see
+it's working well and I can register "fin_pll" as "fixed_clock" via DT
+and kernel booted without any issues. Late registration of parent
+clock does not causing any issues and CCF takes care of that.
+If required I can send the changes internally or if you are OK I can
+also upload next version of this patch with this fix, along with
+addressing all other comments .
+
+[snip]
+
+> +struct samsung_fixed_rate_clock fixed_rate_ext_clks[] __initdata = {
+> +       FRATE(FIN_PLL, "fin_pll", NULL, CLK_IS_ROOT, 0),
+> +};
+
+In this version you removed other fixed clocks (phyclks and ioclks)
+but I can not see corresponding DT patches where it has been moved.
+Or am I missing anything here?
+
+[snip]
+
+> +static void __init exynos5260_clk_top_init(struct device_node *np)
+> +{
+> +       struct exynos5260_cmu_info cmu;
+> +       struct samsung_clk_provider *ctx;
+> +
+> +       memset(&cmu, 0, sizeof(cmu));
+> +
+> +       cmu.pll_clks = top_pll_clks;
+> +       cmu.nr_pll_clks =  ARRAY_SIZE(top_pll_clks);
+> +       cmu.mux_clks = top_mux_clks;
+> +       cmu.nr_mux_clks = ARRAY_SIZE(top_mux_clks);
+> +       cmu.div_clks = top_div_clks;
+> +       cmu.nr_div_clks = ARRAY_SIZE(top_div_clks);
+> +       cmu.gate_clks = top_gate_clks;
+> +       cmu.nr_gate_clks = ARRAY_SIZE(top_gate_clks);
+> +       cmu.nr_clk_ids = TOP_NR_CLK;
+> +       cmu.clk_regs = top_clk_regs;
+> +       cmu.nr_clk_regs = ARRAY_SIZE(top_clk_regs);
+> +
+> +       ctx = exynos5260_cmu_register_one(np, &cmu);
+> +
+> +       samsung_clk_of_register_fixed_ext(ctx, fixed_rate_ext_clks,
+> +                       ARRAY_SIZE(fixed_rate_ext_clks),
+> +                       ext_clk_match);
+> +}
+> +
+> +CLK_OF_DECLARE(exynos5260_clk_top, "samsung,exynos5260-clock-top",
+> +               exynos5260_clk_top_init);
+
+Well with this approach we end up adding 14 such
+exynosxxx_clk_xxx_init functions all of which has similar lines of
+code. As I know there are many upcoming Exynos SoC which will also
+have similar multiple clock controllers (in some of them there are
+upto 25 clock domains, and in that case we will end up writing 25 such
+init functions) so I have following suggestion where we can have one
+more structure which will hold all static data and match_table to
+match compatibility string and return CMU_TYPE which can be mapped to
+get proper clock_data which can be used in single clock_init function.
+Following is some sample code which I have implemented and tested on
+one of Exynos SoC. Please let me know your opinion about this.
+
+=============================
+
+static struct exynosxxxx_clock_data exynosxxxx_clk_data[] __initdata = {
+        {
+                .cmu_type = CMU_TYPE_TOP,
+                .mux_clocks = top_mux_clks,
+                .div_clocks = top_div_clks,
+                .pll_clocks = top_pll_clks,
+                .clk_regs = top_clk_regs,
+                .nr_mux_clocks = ARRAY_SIZE(top_mux_clks),
+                .nr_div_clocks = ARRAY_SIZE(top_div_clks),
+                .nr_pll_clocks = ARRAY_SIZE(top_pll_clks),
+                .nr_clk_regs = ARRAY_SIZE(top_clk_regs),
+                .nr_clks  = TOP_NR_CLK,
+        }, {
+                .cmu_type = CMU_TYPE_EGL,
+                .mux_clocks = egl_mux_clks,
+                .div_clocks = egl_div_clks,
+                .pll_clocks = egl_pll_clks,
+                 .clk_regs = egl_clk_regs,
+                .nr_mux_clocks = ARRAY_SIZE(egl_mux_clks),
+                .nr_div_clocks = ARRAY_SIZE(egl_div_clks),
+                .nr_pll_clocks = ARRAY_SIZE(egl_pll_clks),
+                .nr_clk_regs = ARRAY_SIZE(egl_clk_regs),
+                .nr_clks  = EGL_NR_CLK,
+        }, {
+       /* Add similar elements here */
+};
+
+static struct of_device_id cmu_subtype_match_table[] = {
+        {
+                .compatible = "exynosxxxx-cmu-top",
+                .data   = (void *)CMU_TYPE_TOP,
+        }, {
+                .compatible = "exynosxxx-cmu-peris",
+                .data   = (void *)CMU_TYPE_PERIS,
+        }, {
+       /* Add similar elements here */
+};
+
+void __init exynosxxx_clk_init(struct device_node *np)
+{
+         [snip]
+
+        match = of_match_node(cmu_subtype_match_table, np);
+
+        if (!match)
+                panic("%s: cmu type (%s) is not supported.\n", __func__,
+                                np->name);
+
+        reg_base = of_iomap(np, 0);
+        if (!reg_base)
+                panic("%s: failed to map registers\n", __func__);
+
+        cmu_type = (unsigned long) match->data;
+
+        for (; i < CMU_TYPE_ALL; i++) {
+                clk_data = &exynosxxxx_clk_data[i];
+                if (cmu_type == clk_data->cmu_type)
+                        break;
+        }
+
+        ctx = samsung_clk_init(np, reg_base, clk_data->nr_clks);
+        if (!ctx)
+                panic("%s: unable to alllocate ctx\n", __func__);
+
+        if (clk_data->nr_pll_clocks)
+          samsung_clk_register_pll(ctx, clk_data->pll_clocks,
+                                clk_data->nr_pll_clocks,
+                                reg_base);
+        if (clk_data->nr_mux_clocks)
+                samsung_clk_register_mux(ctx, clk_data->mux_clocks,
+                                clk_data->nr_mux_clocks);
+        if (clk_data->nr_div_clocks)
+                samsung_clk_register_div(ctx, clk_data->div_clocks,
+                                clk_data->nr_div_clocks);
+        if (clk_data->nr_gate_clocks)
+                samsung_clk_register_gate(ctx, clk_data->gate_clocks,
+                                clk_data->nr_gate_clocks);
+          if (cmu->nr_clk_regs)
+             exynosxxx_clk_sleep_init(reg_base, cmu->clk_regs,
+                       cmu->nr_clk_regs);
+         [snip]
+
+ }
+CLK_OF_DECLARE(cmu_top, "exynosxxxx-cmu-top", exynosxxxx_clk_init);
+CLK_OF_DECLARE(cmu_egl, "exynosxxxx-cmu-egl", exynosxxxx_clk_init);
+/* add more clock domain entries here */
+
+=======================================================
+
+> diff --git a/drivers/clk/samsung/clk-exynos5260.h b/drivers/clk/samsung/clk-exynos5260.h
+> new file mode 100644
+> index 0000000..7c3717a
+> --- /dev/null
+> +++ b/drivers/clk/samsung/clk-exynos5260.h
+> @@ -0,0 +1,448 @@
+> +#ifndef __CLK_EXYNOS5260_H
+> +#define __CLK_EXYNOS5260_H
+> +
+
+
+Thanks,
+Pankaj Dubey
