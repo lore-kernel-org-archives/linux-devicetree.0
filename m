@@ -1,45 +1,80 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 0/8] Move device tree graph parsing helpers to drivers/of
-Date: Fri, 07 Mar 2014 18:49:34 +0000
-Message-ID: <20140307184934.5F6D2C40D2A@trevor.secretlab.ca>
-References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de> < 20140306152414.GC21483@n2100.arm.linux.org.uk> <1394120379.3622.37.camel@ paszta.hi.pengutronix.de> <20140306155018.GD21483@n2100.arm.linux.org.uk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140306155018.GD21483-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v6 1/6] pci: Introduce pci_register_io_range() helper
+ function.
+Date: Fri, 07 Mar 2014 19:35:40 +0000
+Message-ID: <20140307193540.72720C40DBA@trevor.secretlab.ca>
+References: <1394020137-1830-1-git-send-email-Liviu.Dudau@arm.com> <
+ 1394020137-1830-2-git-send-email-Liviu.Dudau@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1394020137-1830-2-git-send-email-Liviu.Dudau@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tanmay Inamdar <tinamdar@apm.com>, LKML <linux-kernel@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 6 Mar 2014 15:50:18 +0000, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> On Thu, Mar 06, 2014 at 04:39:39PM +0100, Philipp Zabel wrote:
-> > Am Donnerstag, den 06.03.2014, 15:24 +0000 schrieb Russell King - ARM
-> > Linux:
-> > > On Wed, Mar 05, 2014 at 10:20:34AM +0100, Philipp Zabel wrote:
-> > > > this version of the OF graph helper move series further addresses a few of
-> > > > Tomi's and Sylwester's comments.
-> > > 
-> > > Philipp,
-> > > 
-> > > You mention in your other cover for imx-drm bits that this is available
-> > > via:
-> > > 
-> > > 	git://git.pengutronix.de/git/pza/linux.git topic/of-graph
-> > > 
-> > > What is this tree based upon?
-> > 
-> > It is based on v3.14-rc5.
+On Wed,  5 Mar 2014 11:48:52 +0000, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+> Some architectures do not share x86 simple view of the I/O space and
+> instead use a range of addresses that map to external devices. For PCI,
+> these ranges can be expressed by OF bindings in a device tree file.
 > 
-> Great.  As everyone seems happy, can you both send me and Mauro a pull
-> request for this please?  Once Mauro says it's in his tree, I'll pull
-> it in for imx-drm stuff.
+> Introduce a pci_register_io_range() helper function that can be used
+> by the architecture code to keep track of the io ranges described by the
+> PCI bindings.
 > 
-> Thanks.
+> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> Tested-by: Tanmay Inamdar <tinamdar@apm.com>
 
-I'm really not. There are still unresolved issues.
+Acked-by: Grant Likely <grant.likely@linaro.org>
 
-g.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  drivers/of/address.c       | 5 +++++
+>  include/linux/of_address.h | 1 +
+>  2 files changed, 6 insertions(+)
+> 
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index 1a54f1f..d1bb30f 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -619,6 +619,11 @@ const __be32 *of_get_address(struct device_node *dev, int index, u64 *size,
+>  }
+>  EXPORT_SYMBOL(of_get_address);
+>  
+> +int __weak pci_register_io_range(phys_addr_t addr, resource_size_t size)
+> +{
+> +	return 0;
+> +}
+> +
+>  unsigned long __weak pci_address_to_pio(phys_addr_t address)
+>  {
+>  	if (address > IO_SPACE_LIMIT)
+> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+> index 5f6ed6b..40c418d 100644
+> --- a/include/linux/of_address.h
+> +++ b/include/linux/of_address.h
+> @@ -56,6 +56,7 @@ extern void __iomem *of_iomap(struct device_node *device, int index);
+>  extern const __be32 *of_get_address(struct device_node *dev, int index,
+>  			   u64 *size, unsigned int *flags);
+>  
+> +extern int pci_register_io_range(phys_addr_t addr, resource_size_t size);
+>  extern unsigned long pci_address_to_pio(phys_addr_t addr);
+>  
+>  extern int of_pci_range_parser_init(struct of_pci_range_parser *parser,
+> -- 
+> 1.9.0
+> 
+> 
+> _______________________________________________
+> linaro-kernel mailing list
+> linaro-kernel@lists.linaro.org
+> http://lists.linaro.org/mailman/listinfo/linaro-kernel
