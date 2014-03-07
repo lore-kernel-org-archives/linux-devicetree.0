@@ -1,69 +1,71 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH v2 3/3] Documentation: mfd: s2mps11: Document support for
- S2MPS14
-Date: Fri, 07 Mar 2014 11:10:52 +0100
-Message-ID: <1394187052-591-4-git-send-email-k.kozlowski@samsung.com>
-References: <1394187052-591-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1394187052-591-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sangbeom Kim <sbkim73@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Yadwinder Singh Brar <yadi.brar@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v3 0/8] ARM: OMAP: SATA support for OMAP5 & DRA7
+Date: Fri, 7 Mar 2014 12:15:00 +0200
+Message-ID: <1394187308-19622-1-git-send-email-rogerq@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: kishon-l0cyMroinI0@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, balajitk-l0cyMroinI0@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add bindings documentation for S2MPS14 device to the s2mps11 driver.
+Hi Tony & Felipe,
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Tomasz Figa <t.figa@samsung.com>
-Cc: devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Acked-by: Tomasz Figa <t.figa@samsung.com>
+Kishon has pulled in the relevant PHY patches into his tree.
+These are the remaining patches from the series.
+
+Patches 1 to 3 need to go through Felipe's USB tree.
+Patches 4 to 8 need to go through Tony's OMAP tree.
+
+Thanks.
+
+Patches are based on 3.14-rc4 with balbi/next, linux-phy/next and
+omap-for-v3.15/dt merged on top.
+
+To test SATA you will also need [1].
+
+[1] - http://article.gmane.org/gmane.comp.hardware.netbook.arm.sunxi/7285
+
+Changelog:
+v3
+- Removed PHY patches and rebased.
+
+v2
+- use 'depends on' instead of 'select' OCP2SCP bus driver.
+- Changed DT bindings for dra7-usb2 and am437-usb2 phy.
+
+cheers,
+-roger
+
 ---
- Documentation/devicetree/bindings/mfd/s2mps11.txt |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+Balaji T K (2):
+  ARM: dts: omap5: add sata node
+  ARM: dts: dra7: add OCP2SCP3 and SATA nodes
 
-diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-index 15ee89c3cc7b..f69bec294f02 100644
---- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
-+++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-@@ -1,5 +1,5 @@
- 
--* Samsung S2MPS11 Voltage and Current Regulator
-+* Samsung S2MPS11 and S2MPS14 Voltage and Current Regulator
- 
- The Samsung S2MPS11 is a multi-function device which includes voltage and
- current regulators, RTC, charger controller and other sub-blocks. It is
-@@ -7,7 +7,7 @@ interfaced to the host controller using an I2C interface. Each sub-block is
- addressed by the host system using different I2C slave addresses.
- 
- Required properties:
--- compatible: Should be "samsung,s2mps11-pmic".
-+- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-pmic".
- - reg: Specifies the I2C slave address of the pmic block. It should be 0x66.
- 
- Optional properties:
-@@ -59,10 +59,14 @@ supports. Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
- as per the datasheet of s2mps11.
- 
- 	- LDOn
--		  - valid values for n are 1 to 38
-+		  - valid values for n are:
-+			- S2MPS11: 1 to 38
-+			- S2MPS14: 1 to 25
- 		  - Example: LDO1, LD02, LDO28
- 	- BUCKn
--		  - valid values for n are 1 to 10.
-+		  - valid values for n are:
-+			- S2MPS11: 1 to 10
-+			- S2MPS14: 1 to 5
- 		  - Example: BUCK1, BUCK2, BUCK9
- 
- Example:
+Keshava Munegowda (1):
+  ARM: OMAP5: hwmod: Add ocp2scp3 and sata hwmods
+
+Nikhil Devshatwar (1):
+  ARM: DRA7: hwmod: Add ocp2scp3 and sata hwmods
+
+Roger Quadros (4):
+  phy: omap-control: update dra7 and am437 usb2 Documentation bindings
+  phy: ti-pipe3: Add clocks to PIPE3 PHY Documentation binding
+  phy: ti-pipe3: Add SATA compatible to Documentation binding
+  ARM: dts: omap5: Add clocks to USB3 PHY node
+
+ Documentation/devicetree/bindings/phy/ti-phy.txt | 19 +++++-
+ arch/arm/boot/dts/dra7.dtsi                      | 39 +++++++++++++
+ arch/arm/boot/dts/omap5.dtsi                     | 46 +++++++++++++++
+ arch/arm/mach-omap2/omap_hwmod_54xx_data.c       | 73 ++++++++++++++++++++++++
+ arch/arm/mach-omap2/omap_hwmod_7xx_data.c        | 31 ++++++++--
+ 5 files changed, 200 insertions(+), 8 deletions(-)
+
 -- 
-1.7.9.5
+1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
