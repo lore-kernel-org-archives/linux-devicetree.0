@@ -1,65 +1,84 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: mvebu: add Device Tree for the Armada 385 RD board
-Date: Fri, 07 Mar 2014 10:53:42 +0100
-Message-ID: <53199726.4080300@free-electrons.com>
-References: <1394107868-26094-1-git-send-email-gregory.clement@free-electrons.com> <20140306131429.GJ4780@lunn.ch> <5318779C.8030901@free-electrons.com> <20140306142117.GL4780@lunn.ch> <531886B4.2070002@free-electrons.com> <20140306144600.GM4780@lunn.ch> <53188B73.4000109@free-electrons.com> <53189892.5090502@free-electrons.com> <20140306160213.GA4327@arch.cereza> <20140306172339.GP4780@lunn.ch> <20140306191747.GA32655@arch.cereza>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [RFC PATCH v2 00/21] Add DSI display support for Exynos based
+ boards
+Date: Fri, 07 Mar 2014 11:00:21 +0100
+Message-ID: <531998B5.7040002@samsung.com>
+References: <1392204688-4591-1-git-send-email-a.hajda@samsung.com>
+ <CAAQKjZOEAWG3jwTPOP7aBnpjyg8qLfq-Fcv_Mec2+fgmOULqEg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140306191747.GA32655-nAQHv47ARr+vIlHkl8J1cg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAAQKjZOEAWG3jwTPOP7aBnpjyg8qLfq-Fcv_Mec2+fgmOULqEg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Inki Dae <inki.dae@samsung.com>
+Cc: DRI mailing list <dri-devel@lists.freedesktop.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/2014 20:17, Ezequiel Garcia wrote:
-> On Mar 06, Andrew Lunn wrote:
->>> Can't we fix this so the probe order doesn't affect the name?
->>>
->>> Is that sane?
+On 03/05/2014 03:56 AM, Inki Dae wrote:
+> Hi Andrzej,
+>
+> Thanks for your contributions.
+>
+> 2014-02-12 20:31 GMT+09:00 Andrzej Hajda <a.hajda@samsung.com>:
+>> Hi,
 >>
->> You are not supposed to trust the device name, since probing can
->> happen in parallel, on different buses. udev should have rules to name
->> the interfaces based on the MAC address. On my Debian system i have:
+>> This patchset adds drivers and bindings to the following devices:
+>> - Exynos DSI master,
+>> - S6E8AA0 DSI panel,
+>> - TC358764 DSI/LVDS bridge,
+>> - HV070WSA-100 LVDS panel.
 >>
->> /etc/udev/rules.d/70-persistent-net.rules
+>> It adds also display support in DTS files for the following boards:
+>> - Exynos4210/Trats,
+>> - Exynos4412/Trats2,
+>> - Exynos5250/Arndale.
 >>
->> So what is important is that the MAC addresses are assigned correctly
->> to the device. And DT does that based on MMIO address, so should be
->> reliable, independent of probe order.
+>> Things worth mentioning:
 >>
-
-I was aware of this solution, and indeed for the end user it is the thing
-to do.
-
-However my concern was more about the people testing the kernel early or for
-people bringing up a new board. I fear that we will have many false bug report
-about it.
-
-For the second category, I think we should at least point this in the dtsi.
-
-
-Thanks,
-
-Gregory
-
-
-> 
-> Right, makes perfect sense!
-> 
-> So we can just keep the nodes address-ordered, without caring about the name?
-> 
+>> 1. I have implemented DSI/LVDS bridge using drm_panel framework, ie.
+>> the driver exposes drm_panel interface on DSI side, and interact with
+>> panels on LVDS side using drm_panel framework. This approach seems to
+>> me simpler and more natural than using drm_bridge.
+> Can you give me more details about why you think better to use panel
+> framework than using drm_bridge?  "Simpler" and "more natural" are
+> ambiguous to me.
+In this particular case DSI master expects on the other end
+any device having DSI slave interface, it could be panel or bridge.
+So it seems natural that both types of slave devices should expose
+the same interface also  on programming level.
+Another problem with drm_bridge is that it is not scalable -
+if some manufacturer will decide to add another block between the bridge
+and the panel there is no drm component which can be used for it.
+Using drm_panel the way I have used in toshiba bridge makes scalability
+possible,
+it will be only a matter of adding a driver for new block and making
+proper links in device tree, I see no easy way of doing it with
+drm_bridge approach.
 
 
+>
+> Using same drm_panel framework for LDVS bridge and real panel drivers
+> isn't reasonable to me as now because drm_panel framework would be for
+> real panel device even if the use of drm_panel framework looks like
+> suitable to LVDS bridge driver. I thought Sean's way, ptn3460 driver
+> using drm_bride stuff, is good enough, and that would be why
+> drm_bridge exists and why drm_encoder has drm_bridge.
+>
+> And I'm finding more generic way, how to handle LVDS bridge using
+> super node so that  LVDS bridge driver isn't embedded to connector
+> drivers such as eDP and MIPI-DSI, and dt binding of LVDS bridge can be
+> done at top level of Exynos drm. Once the binding is done, encoder of
+> display bus driver will have drm_bridge object of LVDS bridge driver
+> so that display bus driver can handle LVDS bridge driver.
+Could you explain what you mean by "dt binding of LVDS bridge can be
+done at top level of Exynos drm" ? How it will look like if there
+will be more bridges, one for DSI, one for HDMI, etc... What if there
+will be two
+bridges in one chain. How it will cope with video pipeline bindings?
+>
+> Will review your patch series soon.
+Thanks in advance.
 
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+Andrzej
