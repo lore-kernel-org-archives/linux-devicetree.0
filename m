@@ -1,99 +1,58 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2] Documentation: dt: Reduce fragmentation of <..> placeholders
-Date: Sat, 8 Mar 2014 15:09:07 -0600
-Message-ID: <CAL_Jsq+4SztwyrmMtN31Vof3Tb8U9VVpLs1uON5W=VVOpX=nUQ@mail.gmail.com>
-References: <CAMuHMdUmcnzafPhWrp4qYBB3UniFbVtqzNNg-7ed_Q6hZKMeDw@mail.gmail.com>
-	<1394234910-8547-1-git-send-email-florian.vaussard@epfl.ch>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core
+ to drivers/of
+Date: Sun, 09 Mar 2014 00:25:07 +0100
+Message-ID: <531BA6D3.4030004@gmail.com>
+References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> < CAL_Jsq+U9zU1i+STLHMBjY5BeEP6djYnJVE5X1ix-D2q_zWztQ@mail.gmail.com> < 20140217181451.7EB7FC4044D@trevor.secretlab.ca> <20140218070624.GP17250@ pengutronix.de> <20140218162627.32BA4C40517@trevor.secretlab.ca> < 1393263389.3091.82.camel@pizza.hi.pengutronix.de> <20140226110114. CF2C7C40A89@trevor.secretlab.ca> <1393426129.3248.64.camel@paszta.hi. pengutronix.de> <20140307170550.1DFB2C40A0D@trevor.secretlab.ca> <531AF1E8. 50606@ti.com> <20140308114115.BB08EC40612@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1394234910-8547-1-git-send-email-florian.vaussard@epfl.ch>
-Sender: linux-doc-owner@vger.kernel.org
-To: Florian Vaussard <florian.vaussard@epfl.ch>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Geert Uytterhoeven <geert@linux-m68k.org>, Joe Perches <joe@perches.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140308114115.BB08EC40612@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 7, 2014 at 5:28 PM, Florian Vaussard
-<florian.vaussard@epfl.ch> wrote:
-> Placeholders <..> are sometimes used in the devicetree documentation
-> to define family-wide compatible strings (like fsl,<chip>-ipu where
-> chip can be any Freescale SoC).
+On 03/08/2014 12:41 PM, Grant Likely wrote:
+>>> Another thought. In terms of the pattern, I would add a recommendation
+>>> >  >  that there should be a way to identify ports of a particular type. ie.
+>>> >  >  If I were using the pattern to implement an patch bay of DSP filters,
+>>> >  >  where each input and output, then each target node should have a unique
+>>> >  >  identifier property analogous to "interrupt-controller" or
+>>> >  >  "gpio-controller". In this fictitious example I would probably choose
+>>> >  >  "audiostream-input-port" and "audiostream-output-port" as empty
+>>> >  >  properties in the port nodes. (I'm not suggesting a change to the
+>>> >  >  existing binding, but making a recommendation to new users).
+>> >
+>> >  I don't see any harm in that, but I don't right away see what could be
+>> >  done with them? Did you have something in mind?
 >
-> These placeholders are loosly defined. This lead to some
-> fragmentation. Looking at the current placeholders, we have:
+> It would help with schema validation and allow ports of the same
+> interface to get grouped together.
 >
->       3 <board>
->      32 <chip>
->       1 <chip name>
->       1 <mcu-chip>
->       1 <processor>
->      30 <soc>
->       1 <SOC>
->       1 <soc-family>
->
-> This patch consolidates this to:
->
->       3 <board>
->      33 <chip>
->       1 <mcu-chip>
->       1 <processor>
->      32 <soc>
->
+>> >  I guess those could be used to study the graph before the drivers have
+>> >  been loaded. After the drivers have been loaded, the drivers should
+>> >  somehow register themselves and the ports/endpoints. And as the driver
+>> >  knows what kind of ports they are, it can supply this information in the
+>> >  runtime data structures.
+>> >
+>> >  If we do that, would it be better to have two pieces of data:
+>> >  input/output/bi-directional, and the port type (say, mipi-dpi, lvds, etc.)?
 
-I would prefer to consolidate these into just board and chip. If we
-have any oddballs, they can just document the exact strings.
+I'm not sure about the direction information (it also came up when we
+originally discussed this binding), but the port type information would
+be useful. As it turns out, it is not always possible to describe a data
+bus interface type/data transmission protocol with a set of primitive
+properties in an endpoint node. Especially in cases when the physical
+layer is basically identical, for instance in case of MIPI CSI-2 and
+SMIA CCP2, or in future MIPI CSI-3 and MIPI CSI-2.
 
-Rob
+In general there could likely be more than one supported, if both the
+transmitter and the receiver are sufficiently configurable.
 
-> Reported-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
-> ---
->  Documentation/devicetree/bindings/arm/samsung/sysreg.txt | 2 +-
->  Documentation/devicetree/bindings/pinctrl/pinctrl-st.txt | 2 +-
->  Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt | 4 ++--
->  3 files changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
-> index 0ab3251..b945b23 100644
-> --- a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
-> +++ b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
-> @@ -1,7 +1,7 @@
->  SAMSUNG S5P/Exynos SoC series System Registers (SYSREG)
->
->  Properties:
-> - - compatible : should contain "samsung,<chip name>-sysreg", "syscon";
-> + - compatible : should contain "samsung,<chip>-sysreg", "syscon";
->     For Exynos4 SoC series it should be "samsung,exynos4-sysreg", "syscon";
->   - reg : offset and length of the register set.
->
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-st.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-st.txt
-> index 05bf82a..393a53a 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-st.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-st.txt
-> @@ -12,7 +12,7 @@ ST pinctrl driver controls PIO multiplexing block and also interacts with
->  gpio driver to configure a pin.
->
->  Required properties: (PIO multiplexing block)
-> -- compatible   : should be "st,<SOC>-<pio-block>-pinctrl"
-> +- compatible   : should be "st,<soc>-<pio-block>-pinctrl"
->         like st,stih415-sbc-pinctrl, st,stih415-front-pinctrl and so on.
->  - gpio-controller : Indicates this device is a GPIO controller
->  - #gpio-cells    : Should be one. The first cell is the pin number.
-> diff --git a/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt b/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-> index e39cb26..b488ffa 100644
-> --- a/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-> @@ -2,8 +2,8 @@ Allwinner SoCs Watchdog timer
->
->  Required properties:
->
-> -- compatible : should be "allwinner,<soc-family>-wdt", the currently supported
-> -  SoC families being sun4i and sun6i
-> +- compatible : should be "allwinner,<soc>-wdt", the currently supported
-> +  SoC being sun4i and sun6i
->  - reg : Specifies base physical address and size of the registers.
->
->  Example:
-> --
-> 1.8.5.3
->
+Then, to be able to fully describe a data port, perhaps we could
+add a property like 'interface-type' or 'bus-type' with values like
+"mipi-dbi", mipi-dsi", "mipi-csi2", "smia-ccp2", "hdmi", etc.
+
+> Sure. That's worth considering.
