@@ -1,85 +1,36 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/7] of: configure the platform device dma_mask and dma_pfn_offset
-Date: Sat, 8 Mar 2014 14:11:55 -0600
-Message-ID: <CAL_JsqLu_16p-8FLjBYt7xQA2eAyiprPML2q5R3fnivZPrvPug@mail.gmail.com>
-References: <1394097598-17622-1-git-send-email-santosh.shilimkar@ti.com>
-	<CAL_Jsq+Y8w0sLLdh5vcWMnW3ohEafAFRWubtCK66P1axsf1wRA@mail.gmail.com>
-	<53194817.70802@ti.com>
-	<201403071702.41716.arnd@arndb.de>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 0/4] checkpatch: enhance compatible string checking
+Date: Sat, 8 Mar 2014 14:59:51 -0600
+Message-ID: <CAL_JsqLp_v_BVSMa6DZ8oiV2HkTBeASYk+aa=heAcwE4CQcY7Q@mail.gmail.com>
+References: <1394235527-8999-1-git-send-email-florian.vaussard@epfl.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201403071702.41716.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <1394235527-8999-1-git-send-email-florian.vaussard-p8DiymsW2f8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Cc: Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 7, 2014 at 10:02 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Friday 07 March 2014, Santosh Shilimkar wrote:
->> >> +
->> >> +       ret = dma_set_mask(dev, dma_mask);
->> >> +       if (ret < 0) {
->> >> +               dev_err(dev, "failed to set DMA mask %pad\n", &dma_mask);
->> >> +               dev->dma_mask = NULL;
->> >> +               return;
->> >> +       }
->> >> +
->> >> +       dev_dbg(dev, "dma_pfn_offset(%#08lx) dma_mask(%pad)\n",
->> >> +               dev->dma_pfn_offset, dev->dma_mask);
->> >> +
->> >> +       ret = dma_set_coherent_mask(dev, dma_mask);
->> >
->> > I think these 2 calls belong in the drivers, not here.
->> >
->> I also had same initial thought but Arnd mentioned that its a
->> shared responsibility between ARCH and drivers. Driver which
->> could be common between arches not always have the correct
->> mask information and it can change based on which arch it
->> is running.
->>
->> With some discussion back and forth, we thought updating
->> the dma_mask while the device getting created, would be
->> better place since we can find the arch capability at
->> this centralise code and update it.
->>
->> Ofcourse its bit debatable as the question you asked is
->> bit obvious as well. I let Arnd give his view here.
+On Fri, Mar 7, 2014 at 5:38 PM, Florian Vaussard
+<florian.vaussard-p8DiymsW2f8@public.gmane.org> wrote:
+> Hi,
 >
-> If we set the mask *here*, we probably don't want to call 'dma_set_mask', but
-> write to the mask directly, or we could call dma_coerce_mask_and_coherent(),
-> which is really for overriding the mask pointer and value at once in cases
-> where you absolutely know what it should be.
+> This series proposes a number of fixes and enhancements to the checks
+> performed on compatible strings:
 >
-> We do need to decide what interface we want to use in platform device drivers,
-> and I'm hoping that Russell has some idea which one he prefers:
->
-> a) Follow what we do for PCI devices: assume that we can do DMA_MASK(32)
-> on any device, and have drivers call dma_set_mask(DMA_MASK(64)) on devices
-> that would like to do more than that, or call e.g. dma_set_mask(DMA_MASK(28))
-> for devices that can do less than 32 bit, as given in the argument. This
-> approach would be most consistent with the way PCI works, but it doesn't
-> really work well for the case where the mask is less than 32-bit and the
-> device driver doesn't know that.
->
-> b) Never have to call dma_set_mask() for platform devices and assume that the
-> platform code sets it up correctly. This would probably be the simpler
-> solution, and I can't think of any downsides at the moment.
+> 1) Fix vendor check for strings with dashes
+> 2) Fix spurious vendor warning, when there is no vendor
+> 3) Check for compatible strings in .c and .h files too
+> 4) Match only at the begining of each line in vendor-prefixes.txt
 
-I don't think we want this. In the case of setting up 64-bit masters,
-it is typically the device that knows if it can do 64-bit DMA either
-thru a capabilities register or compatible value. That device specific
-knowledge should really stay within the device's driver.
+For the series:
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+I haven't had a chance to test, but will try to do so this week.
 
 Rob
-
->
-> In either case we probably want to call something like dt_dma_configure()
-> from dma_set_mask() again to make sure that we stay within the limits
-> imposed by the bus structure.
->
->         Arnd
->
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
