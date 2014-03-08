@@ -1,158 +1,83 @@
 From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core
+Subject: Re: [PATCH v4 1/3] [media] of: move graph helpers from drivers/media/v4l2-core
  to drivers/of
-Date: Sat, 8 Mar 2014 12:33:12 +0200
-Message-ID: <531AF1E8.50606@ti.com>
-References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> < CAL_Jsq+U9zU1i+STLHMBjY5BeEP6djYnJVE5X1ix-D2q_zWztQ@mail.gmail.com> < 20140217181451.7EB7FC4044D@trevor.secretlab.ca> <20140218070624.GP17250@ pengutronix.de> <20140218162627.32BA4C40517@trevor.secretlab.ca> < 1393263389.3091.82.camel@pizza.hi.pengutronix.de> <20140226110114. CF2C7C40A89@trevor.secretlab.ca> <1393426129.3248.64.camel@paszta.hi. pengutronix.de> <20140307170550.1DFB2C40A0D@trevor.secretlab.ca>
+Date: Sat, 8 Mar 2014 12:46:05 +0200
+Message-ID: <531AF4ED.5020608@ti.com>
+References: <1393340304-19005-1-git-send-email-p.zabel@pengutronix.de> < 1393340304-19005-2-git-send-email-p.zabel@pengutronix.de> <20140226113729. A9D5AC40A89@trevor.secretlab.ca> <1393428297.3248.92.camel@paszta.hi. pengutronix.de> <20140307171804.EF245C40A32@trevor.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
 	protocol="application/pgp-signature";
-	boundary="cnoPqmmUwkTkq4naa3Apwcn2sU5IbeXRp"
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20140307170550.1DFB2C40A0D@trevor.secretlab.ca>
-Sender: linux-media-owner@vger.kernel.org
+	boundary="KDhiUnuuxVHKONxw4jlm14R4d5nVQ8tXr"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140307171804.EF245C40A32@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Grant Likely <grant.likely@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Philipp Zabel <philipp.zabel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
---cnoPqmmUwkTkq4naa3Apwcn2sU5IbeXRp
+--KDhiUnuuxVHKONxw4jlm14R4d5nVQ8tXr
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-On 07/03/14 19:05, Grant Likely wrote:
-> On Wed, 26 Feb 2014 15:48:49 +0100, Philipp Zabel <p.zabel@pengutronix.=
-de> wrote:
->> Hi Grant,
+On 07/03/14 19:18, Grant Likely wrote:
+
+> From a pattern perspective I have no problem with that.... From an
+> individual driver binding perspective that is just dumb! It's fine for
+> the ports node to be optional, but an individual driver using the
+> binding should be explicit about which it will accept. Please use eithe=
+r
+> a flag or a separate wrapper so that the driver can select the
+> behaviour.
+
+Why is that? The meaning of the DT data stays the same, regardless of
+the existence of the 'ports' node. The driver uses the graph helpers to
+parse the port/endpoint data, so individual drivers don't even have to
+care about the format used.
+
+As I see it, the graph helpers should allow the drivers to iterate the
+ports and the endpoints for a port. These should work the same way, no
+matter which abbreviated format is used in the dts.
+
+>> The helper should find the two endpoints in both cases.
+>> Tomi suggests an even more compact form for devices with just one port=
+:
 >>
->> thank you for the comments.
+>> 	device {
+>> 		endpoint { ... };
+>>
+>> 		some-other-child { ... };
+>> 	};
 >=20
-> Hi Philipp,
->=20
-> I've got lots of comments and quesitons below, but I must say thank you=
+> That's fine. In that case the driver would specifically require the
+> endpoint to be that one node.... although the above looks a little weir=
+d
 
-> for doing this. It is a helpful description.
+The driver can't require that. It's up to the board designer to decide
+how many endpoints are used. A driver may say that it has a single input
+port. But the number of endpoints for that port is up to the use case.
 
-Thanks for the comments. I'll answer from my point of view, which may be
-different than Philipp's.
-
-> Bear with me, I'm going to comment on each point. I'm not criticizing,
-> but I do want to understand the HW design. In particular I want to
-> understand why the linkage is treated as bidirectional instead of one
-> device being the master.
->=20
-> In this specific example, what would be managing the transfer? Is there=
-
-> an overarching driver that assembles the pieces, or would you expect
-> individual drivers to find each other?
-
-The direction of the dataflow depends on the case. For camera, the data
-flows from external components towards the SoC. For display, vice versa.
-I don't know much about camera, but for display there are bi-directional
-buses, like MIPI DBI and MIPI DSI. However, in those cases, the main
-flow direction is clear, towards the display.
-
-Then again, these are meant to be generic graph bindings, and the
-dataflow could be fully bi-directional.
-
-As for the driver model (does it matter when we are talking about DT
-bindings?), I think there are very different opinions. My thought for
-display is that there is always an overarching driver, something that
-manages the video pipeline as a whole.
-
-However, each of the individual drivers in the video pipeline will
-control its input ports. So, say, a panel driver gets a command from the
-overarching control driver to enable the panel device. The panel driver
-reacts by calling the encoder (i.e. the one that outputs pixels to the
-panel), commanding it to enable the video stream.
-
-I know some (many?) people think the other way around, that the encoder
-commands the panel to enable itself. I don't think that's versatile
-enough. As a theoretical, slightly exaggerated, example, we could have a
-panel that wants the pixel clock to be enabled for a short while before
-enabling the actual pixel stream. And maybe the panel driver needs to do
-something before the pixel stream is enabled (say, send a command to the
-panel).
-
-The above is very easy to do if the panel driver is in control of the
-received video stream. It's rather difficult to do if the encoder is in
-control.
-
-Also, I think a panel (or any encoder) can be compared to a display
-controller: a display controller uses DMA to transfer pixel data from
-the memory to the display controller. A panel or encoder uses the
-incoming video bus to transfer pixel data from the previous display
-component to the panel or encoder device. And I don't think anyone says
-the DMA driver should be in control of the display controller.
-
-But this is going quite a bit into the SW architecture. Does it matter
-when we are talking about the representation of HW in the DT data?
-
-> In all of the above examples I see a unidirectional data flow. There ar=
+> to me. I would recommend that if there are other non-port child nodes
+> then the ports should still be encapsulated by a ports node.  The devic=
 e
-> producer ports and consumer ports. Is there any (reasonable) possibilit=
-y
-> of peer ports that are bidirectional?
+> binding should not be ambiguous about which nodes are ports.
 
-Yes, as I mentioned above. However, I do believe that at the moment all
-the cases have a clear a main direction. But then, if these are generic
-bindings, do we want to rely on that?
+Hmm, ambiguous in what way?
 
->> According to video-interfaces.txt, it is expected that endpoints conta=
-in
->> phandles pointing to the remote endpoint on both sides. I'd like to
->> leave this up to the more specialized bindings, but I can see that thi=
-s
->> makes enumerating the connections starting from each device tree node
->> easier, for example at probe time.
->=20
-> This has come up in the past. That approach comes down to premature
-> optimization at the expense of making the data structure more prone to
-> inconsistency. I consider it to be a bad pattern.
->=20
-> Backlinks are good for things like dynamically linked lists that need t=
-o
-> be fast and the software fully manages the links. For a data structure =
-like
-> the FDT it is better to have the data in one place, and one place only.=
+If the dts uses 'ports' node, all the ports and endpoints are inside
+that 'ports' node. If there is no 'ports' node, there may be one or more
+'port' nodes, which then contain endpoints. If there are no 'port'
+nodes, there may be a single 'endpoint' node.
 
-> Besides, computers are *good* at parsing data structures. :-)
->=20
-> I appreciate that existing drivers may be using the backlinks, but I
-> strongly recommend not doing it for new users.
-
-Ok. If we go for single directional link, the question is then: which
-way? And is the direction different for display and camera, which are
-kind of reflections of each other?
-
-> Another thought. In terms of the pattern, I would add a recommendation
-> that there should be a way to identify ports of a particular type. ie.
-> If I were using the pattern to implement an patch bay of DSP filters,
-> where each input and output, then each target node should have a unique=
-
-> identifier property analogous to "interrupt-controller" or
-> "gpio-controller". In this fictitious example I would probably choose
-> "audiostream-input-port" and "audiostream-output-port" as empty
-> properties in the port nodes. (I'm not suggesting a change to the
-> existing binding, but making a recommendation to new users).
-
-I don't see any harm in that, but I don't right away see what could be
-done with them? Did you have something in mind?
-
-I guess those could be used to study the graph before the drivers have
-been loaded. After the drivers have been loaded, the drivers should
-somehow register themselves and the ports/endpoints. And as the driver
-knows what kind of ports they are, it can supply this information in the
-runtime data structures.
-
-If we do that, would it be better to have two pieces of data:
-input/output/bi-directional, and the port type (say, mipi-dpi, lvds, etc.=
-)?
+True, there are many "if"s there. But I don't think it's ambiguous. The
+reason we have these abbreviations is that the full 'ports' node is not
+needed that often, and it is rather verbose. In almost all the use
+cases, panels and connectors can use the single endpoint format.
 
  Tomi
 
 
 
---cnoPqmmUwkTkq4naa3Apwcn2sU5IbeXRp
+--KDhiUnuuxVHKONxw4jlm14R4d5nVQ8tXr
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
@@ -161,19 +86,19 @@ Content-Disposition: attachment; filename="signature.asc"
 Version: GnuPG v1.4.14 (GNU/Linux)
 Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iQIcBAEBAgAGBQJTGvHoAAoJEPo9qoy8lh71znwP+wUlBdokuXfe2j0reIpKNwe+
-HFShJwkAYDcWchoX1KizPqgecigqRt0/3LUyBdQBTj9FEkTAkfTNbRhZKObl5V12
-B8QOyNGrTT4Ti9uG6Ae0NIX9wfZL+DKKJKZggJYoRXGU2kRVlqiOajw++tOV7Vr+
-BFuQIRZO14tU2dVLc+QkZ+RngEWRwmmJEyKEtmqNUOavGanmxieM0/c/Y/XnmlWG
-35Ln6bx4r8pQeLqGWza+Q/xVg/WbRw51hk0rj6S+qLvgJn5U21AYfMDSJPe7LUv9
-W/UTiB0AqKW/9RgpeYwwOGgaMDDjBdStnJMhKA8L2UXLXtPDDAZ6S7ibsKXIvIOr
-DJKeeIlidMFd+KpM38ukOeQ6HHQ0GxfVxPzbRl00S1/3336XWHnup2fFSXM++Sl5
-nn0fut9KB0zuBC5Ez85g3j8huemHEPywN7egy3H/dvpHjzJ4Q+iZrfSRaf5Wa2fq
-fPeda7ZkSCCsvyoLg1Cfyjkv+zSvcORuTah66Rcn1wmtcaZ/llGPeAKxVabl4cuZ
-CfojfluKUIz01EM0Wh68oYWaoUFwHxdta7qehQXStM2CLTurxZLzzwmSRe+xLvEk
-5l4Fb2Sc7eLwp9jCRDKlrDgtHCSkt5fbDjT39yQZymg7CdyQyPGPThyGAsHxJ763
-ppawTPNNO3FvYyiEzzpE
-=i/Y3
+iQIcBAEBAgAGBQJTGvTtAAoJEPo9qoy8lh71DkoQAI9olG4IKoXnS42j7svHIReP
+4XREe5aFwEpxNbzJYEhCEEHFmVd3GhngyZbxGIo0eQAknNbzIEHOIKwHzh5QGQWj
+3efXba0KDGgTOiog/3KZE5eRNkw/5wBbarUvf11eBv6VPT68hf2S+YeiP3A8/oxl
+QEJZYDjUMPFN2L6hL2jcFFqgEaOQL+swJHw/MVroG9kvZlnIvMCfoE4rW5ml6t6I
+WukH8z+kVV05KrZwD96y31Rw6dHEEYIxvrOH+n9MK5n7ZHBVnrTZd1LdIRcb/PYP
+yVEZAf7wzyKUtizJDx3jr8e0k9bPQp0wmdcOy82SVt/96Di7YFYOmtG41z477mSY
+Gyo4t1NKyeZ/ouIsKoQsgWaTwtPuz/k3L97dFqaTkFVvj1HNrJVA0pYMONHEA1d4
+xFcL9CQZGSoeVIIGDN/40klKZeAcE8jim5Duhb4/E205LVibchKUwZAivfJeFY0W
+6apfXGb1unJUbg4ODUVsPblV1goDhyhVQcC28XX6k8kAD/m37Luq0uDwX6rdVOMT
+zL3K+kOLbq29ykU5IlNsoNS+Tyu1NKILplkYy2DStN88Yu5LH25ksGqBevOlqHeR
+8UHy2bTzq7SHCvmDzSn3SRfzxpF7OIdMVBxWpdCiT+sX94QPoEPSP56g+IFYoGFR
+NollNDhACsHpUTT8vDES
+=NrAG
 -----END PGP SIGNATURE-----
 
---cnoPqmmUwkTkq4naa3Apwcn2sU5IbeXRp--
+--KDhiUnuuxVHKONxw4jlm14R4d5nVQ8tXr--
