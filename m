@@ -1,161 +1,79 @@
-From: Philipp Zabel <philipp.zabel@gmail.com>
-Subject: Re: [PATCH v4 1/3] [media] of: move graph helpers from
- drivers/media/v4l2-core to drivers/of
-Date: Sat, 8 Mar 2014 13:07:23 +0100
-Message-ID: <CA+gwMcfgKre8S4KHPvTVuAuz672aehGrN1UfFpwKAueTAcrMZQ@mail.gmail.com>
-References: <1393340304-19005-1-git-send-email-p.zabel@pengutronix.de>
-	<1393428297.3248.92.camel@paszta.hi.pengutronix.de>
-	<20140307171804.EF245C40A32@trevor.secretlab.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140307171804.EF245C40A32@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v4 1/3] [media] of: move graph helpers from drivers/media/v4l2-core to drivers/of
+Date: Sat, 08 Mar 2014 12:23:21 +0000
+Message-ID: <20140308122321.9D433C40612@trevor.secretlab.ca>
+References: <1393340304-19005-1-git-send-email-p.zabel@pengutronix.de> < 1393340304-19005-2-git-send-email-p.zabel@pengutronix.de> <20140226113729. A9D5AC40A89@trevor.secretlab.ca> <1393428297.3248.92.camel@paszta.hi. pengutronix.de> <20140307171804.EF245C40A32@trevor.secretlab.ca> <531AF4ED. 5020608@ti.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <531AF4ED.5020608@ti.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Philipp Zabel <philipp.zabel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+On Sat, 8 Mar 2014 12:46:05 +0200, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+> On 07/03/14 19:18, Grant Likely wrote:
+> 
+> > From a pattern perspective I have no problem with that.... From an
+> > individual driver binding perspective that is just dumb! It's fine for
+> > the ports node to be optional, but an individual driver using the
+> > binding should be explicit about which it will accept. Please use either
+> > a flag or a separate wrapper so that the driver can select the
+> > behaviour.
+> 
+> Why is that? The meaning of the DT data stays the same, regardless of
+> the existence of the 'ports' node. The driver uses the graph helpers to
+> parse the port/endpoint data, so individual drivers don't even have to
+> care about the format used.
 
-On Fri, Mar 7, 2014 at 6:18 PM, Grant Likely <grant.likely@linaro.org> wrote:
-> On Wed, 26 Feb 2014 16:24:57 +0100, Philipp Zabel <p.zabel@pengutronix.de> wrote:
->> The 'ports' node is optional. It is only needed if the parent node has
->> its own #address-cells and #size-cells properties. If the ports are
->> direct children of the device node, there might be other nodes than
->> ports:
->>
->>       device {
->>               #address-cells = <1>;
->>               #size-cells = <0>;
->>
->>               port@0 {
->>                       endpoint { ... };
->>               };
->>               port@1 {
->>                       endpoint { ... };
->>               };
->>
->>               some-other-child { ... };
->>       };
->>
->>       device {
->>               #address-cells = <x>;
->>               #size-cells = <y>;
->>
->>               ports {
->>                       #address-cells = <1>;
->>                       #size-cells = <0>;
->>
->>                       port@0 {
->>                               endpoint { ... };
->>                       };
->>                       port@1 {
->>                               endpoint { ... };
->>                       };
->>               };
->>
->>               some-other-child { ... };
->>       };
+You don't want to give options to the device tree writer. It should work
+one way and one way only. Every different combination is a different
+permutation to get wrong. The only time we should be allowing for more
+than one way to do it is when there is an existing binding that has
+proven to be insufficient and it needs to be extended, such as was done
+with interrupts-extended to deal with deficiencies in the interrupts
+property.
+
+> As I see it, the graph helpers should allow the drivers to iterate the
+> ports and the endpoints for a port. These should work the same way, no
+> matter which abbreviated format is used in the dts.
 >
-> From a pattern perspective I have no problem with that.... From an
-> individual driver binding perspective that is just dumb! It's fine for
-> the ports node to be optional, but an individual driver using the
-> binding should be explicit about which it will accept. Please use either
-> a flag or a separate wrapper so that the driver can select the
-> behaviour.
+> >> The helper should find the two endpoints in both cases.
+> >> Tomi suggests an even more compact form for devices with just one port:
+> >>
+> >> 	device {
+> >> 		endpoint { ... };
+> >>
+> >> 		some-other-child { ... };
+> >> 	};
+> > 
+> > That's fine. In that case the driver would specifically require the
+> > endpoint to be that one node.... although the above looks a little weird
+> 
+> The driver can't require that. It's up to the board designer to decide
+> how many endpoints are used. A driver may say that it has a single input
+> port. But the number of endpoints for that port is up to the use case.
 
-If the generic binding exists in both forms, most drivers should be
-able to cope with both. Maybe it should be mentioned in the bindings
-that the short form without ports node should be used where possible
-(i.e. for devices that don't already have #address,size-cells != 1,0).
+Come now, when you're writing a driver you know if it will ever be
+possible to have more than one port. If that is the case then the
+binding should be specifically laid out for that. If there will never be
+multiple ports and the binding is unambiguous, then, and only then,
+should the shortcut be used, and only the shortcut should be accepted.
 
-Having a separate wrapper to enforce the ports node for devices that
-need it might be useful.
+> > to me. I would recommend that if there are other non-port child nodes
+> > then the ports should still be encapsulated by a ports node.  The device
+> > binding should not be ambiguous about which nodes are ports.
+> 
+> Hmm, ambiguous in what way?
 
->> The helper should find the two endpoints in both cases.
->> Tomi suggests an even more compact form for devices with just one port:
->>
->>       device {
->>               endpoint { ... };
->>
->>               some-other-child { ... };
->>       };
->
-> That's fine. In that case the driver would specifically require the
-> endpoint to be that one node.... although the above looks a little weird
-> to me. I would recommend that if there are other non-port child nodes
-> then the ports should still be encapsulated by a ports node.  The device
-> binding should not be ambiguous about which nodes are ports.
+Parsing the binding now consists of a ladder of 'ifs' that gives three
+distinct different behaviours for no benefit. You don't want that in
+bindings because it makes it more difficult to get the parsing right in
+the first place, and to make sure that all users parse it in the same
+way (Linux, U-Boot, BSD, etc). Bindings should be as absolutely simple
+as possible.
 
-Sylwester suggested as an alternative, if I understood correctly, to
-drop the endpoint node and instead keep the port:
+Just to be clear, I have no problem with having the option in the
+pattern, but the driver needs to be specific about what layout it
+expects.
 
-    device-a {
-        implicit_output_ep: port {
-            remote-endpoint = <&explicit_input_ep>;
-        };
-    };
-
-    device-b {
-        port {
-            explicit_input_ep: endpoint {
-                remote-endpoint = <&implicit_output_ep>;
-            };
-        };
-    };
-
-This would have the advantage to reduce verbosity for devices with multiple
-ports that are only connected via one endport each, and you'd always have
-the connected ports in the device tree as 'port' nodes.
-
->> > It seems that this function is merely a helper to get all grandchildren
->> > of a node (with some very minor constraints). That could be generalized
->> > and simplified. If the function takes the "ports" node as an argument
->> > instead of the parent, then there is a greater likelyhood that other
->> > code can make use of it...
->> >
->> > Thinking further. I think the semantics of this whole feature basically
->> > boil down to this:
->> >
->> > #define for_each_grandchild_of_node(parent, child, grandchild) \
->> >     for_each_child_of_node(parent, child) \
->> >             for_each_child_of_node(child, grandchild)
->> >
->> > Correct? Or in this specific case:
->> >
->> >     parent = of_get_child_by_name(np, "ports")
->> >     for_each_grandchild_of_node(parent, child, grandchild) {
->> >             ...
->> >     }
->>
->> Hmm, that would indeed be a bit more generic, but it doesn't handle the
->> optional 'ports' subnode and doesn't allow for other child nodes in the
->> device node.
->
-> See above. The no-ports-node version could be the
-> for_each_grandchild_of_node() block, and the yes-ports-node version
-> could be a wrapper around that.
-
-For the yes-ports-node version I see no problem, but without the ports node,
-for_each_grandchild_of_node would also collect the children of non-port
-child nodes.
-The port and endpoint nodes in this binding are identified by their name,
-so maybe adding of_get_next_child_by_name() /
-for_each_named_child_of_node() could be helpful here.
-
->> > Finally, looking at the actual patch, is any of this actually needed.
->> > All of the users updated by this patch only ever handle a single
->> > endpoint. Have I read it correctly? Are there any users supporting
->> > multiple endpoints?
->>
->> Yes, mainline currently only contains simple cases. I have posted i.MX6
->> patches that use this scheme for the output path:
->>   http://www.spinics.net/lists/arm-kernel/msg310817.html
->>   http://www.spinics.net/lists/arm-kernel/msg310821.html
->
-> Blurg. On a plane right now. Can't go and read those links.
-
-The patches are merged into the staging tree now at bfe24b9.
-
-regards
-Philipp
+g.
