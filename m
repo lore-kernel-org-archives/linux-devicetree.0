@@ -1,45 +1,50 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
 Subject: Re: [PATCH v2] dt: platform driver: Fill the resources before probe and defer if needed
-Date: Sat, 08 Mar 2014 07:37:58 +0000
-Message-ID: <20140308073758.DA63FC408EC@trevor.secretlab.ca>
-References: <20140220153042.DF053C4050F@trevor.secretlab.ca> < 1392988720-20976-1-git-send-email-jjhiblot@traphandler.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392988720-20976-1-git-send-email-jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
+Date: Sat, 08 Mar 2014 07:32:38 +0000
+Message-ID: <20140308073238.49318C404DA@trevor.secretlab.ca>
+References: <20140220153042.DF053C4050F@trevor.secretlab.ca> < 1392988720-20976-1-git-send-email-jjhiblot@traphandler.com> < 902E09E6452B0E43903E4F2D568737AB0B9D2959@DFRE01.ent.ti.com> < CACh+v5MPTx6nwVj1s3krntJqQ6DMTQ2hQ93Hc+rRNAuFa9+qPw@mail.gmail.com> < CACh+v5N3Z=c1T3eGnjuudDkQH2YRW2knTunZtN=-64jHRT71OQ@mail.gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACh+v5N3Z=c1T3eGnjuudDkQH2YRW2knTunZtN=-64jHRT71OQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jean-Jacques Hiblot <jjhiblot@traphandler.com>Jean-Jacques Hiblot <jjhiblot@traphandler.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Strashko, Grygorii" <grygorii.strashko@ti.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregory.clement@free-electrons.com" <gregory.clement@free-electrons.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 21 Feb 2014 14:18:40 +0100, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org> wrote:
-> The goal of this patch is to allow drivers to be probed even if at the time of
-> the DT parsing some of their ressources are not available yet.
+On Thu, 27 Feb 2014 17:43:15 +0100, Jean-Jacques Hiblot <jjhiblot@traphandler.com> wrote:
+> Hi Grant,
+> 
+> 2014-02-21 17:22 GMT+01:00 Jean-Jacques Hiblot <jjhiblot@traphandler.com>:
+> > Hi Grygorii,
+> >
+> > 2014-02-21 16:37 GMT+01:00 Strashko, Grygorii <grygorii.strashko@ti.com>:
+> >> Hi  Jean-Jacques,
+> >>
+> >> Sorry for top posting.
+> >>
+> >> As I know, there have been several attempts to solve the same problem already:)
+> >> [1] https://lkml.org/lkml/2013/9/18/216
+> >> [2] https://lkml.org/lkml/2013/11/22/520
+> >> [3] https://lkml.org/lkml/2014/1/8/240
+> >>
+> >> There are some questions related to your approach:
+> >> 1) How to distinguish between cases "IRQ domain not ready" and "wrong IRQ data in DT" or other IRQ parsing errors?
+> >> Otherwise, Driver's probe will be deffered wrongly and forever,
+> >> Thierry Reding has tried to solve this in [1].
+> >
+> > This approach doesn't really care about the cause of the problem.  I'm
+> > of the opinion that never-ending deferred probing is not a big issue,
+> > being not triggered so often after start-up (only when a new device is
+> > probed). But if we need to make it right, then we would have to change
+> > a bit the API of irq_create_of_mapping() and irq_of_parse_and_map()
+> > (or maybe duplicate this one to keep the patch small) to return a real
+> > error code instead a simple 0. Then would should be able to
+> > distinguish the different error causes.
+> 
+> What do you think of the 2nd version of the patch? Is it all right to
+> allways return EPROBE_DEFER or should we try to discriminate the error
+> cause?
 
-Hi Jean-Jacques
-
-[...]
-> +int of_platform_device_prepare(struct platform_device *dev)
-> +{
-> +	struct device_node *np;
-> +	int i, irq_index;
-> +	struct resource *res;
-> +
-> +	/*
-> +	 * This function applies only devices described in the DT.
-> +	 * Other platform devices have their ressources already populated.
-> +	 */
-> +	np = dev->dev.of_node;
-> +	if (!np)
-> +		return 0;
-
-I believe we already talked about the above test. This function must
-only process devices created by of_platform_populate(). Merely checking
-the of_node pointer is not a sufficient test because there are other
-paths in the kernel for creating platform_devices that might get a node
-pointer attached to it.
+The error cause must be determined. It is explicitly allowed for a
+single interrupt to be empty, and I believe there are users.
 
 g.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
