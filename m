@@ -1,27 +1,47 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v6 2/6] pci: OF: Fix the conversion of IO ranges into IO resources.
-Date: Sat, 8 Mar 2014 18:17:39 +0100
-Message-ID: <201403081817.39810.arnd@arndb.de>
-References: <1394020137-1830-1-git-send-email-Liviu.Dudau@arm.com> <1394020137-1830-3-git-send-email-Liviu.Dudau@arm.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC PATCH 0/9] drivers: dma: Add support for dma-channel router
+Date: Sat, 8 Mar 2014 13:53:45 -0600
+Message-ID: <CAL_JsqLF6Ey1t1BV4tnFcFK-KmOU9H2nQE+ZHoZRq2r_nRTxNw@mail.gmail.com>
+References: <1394194576-23741-1-git-send-email-r.sricharan@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1394020137-1830-3-git-send-email-Liviu.Dudau@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1394194576-23741-1-git-send-email-r.sricharan@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sricharan R <r.sricharan@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, rnayak@ti.com, Sekhar Nori <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vinod Koul <vinod.koul@intel.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 05 March 2014, Liviu Dudau wrote:
-> +               unsigned long port = -1;
-> +               if (!pci_register_io_range(range->cpu_addr, range->size))
-> +                       port = pci_address_to_pio(range->cpu_addr);
+On Fri, Mar 7, 2014 at 6:16 AM, Sricharan R <r.sricharan@ti.com> wrote:
+> In some SoCs the dma request lines from the peripherals are
+> routed to the dma-controller through a crossbar. With this the
+> dma controller's available request lines are shared between the
+> peripherals.
+>
+> This adds support to register the crossbar router associated with
+> a dma-channel and let the dma-controller driver map/unmap
+> the peripheral dma crossbar line to dma-controller's request
+> line.
 
-I don't remember the outcome of my suggestion to just return 'port' from
-pci_register_io_range(). In my mind that would be much simpler than
-adding the range in a data structure just so we can look it up in the very
-next line.
+This is not a unique concept and should follow some existing pattern.
+Perhaps something like interrupt-map. For the dmas property, the
+parent should be the crossbar and then the crossbar block has to
+translate that into the DMA controller request. All the DMA ctrlr
+request connections should be described in the crossbar node. In
+theory, you could have chained crossbars. This should be documented as
+part of the generic DMA binding.
 
-	Arnd
+There are also other similar IP like CoreSight CTI which are just
+signal routers. So there is probably some possibility of common code
+here.
+
+Rob
