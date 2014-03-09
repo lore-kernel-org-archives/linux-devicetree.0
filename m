@@ -1,51 +1,47 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 1/2] ASoC: tlv320aic32x4: Sort Makefile in alphabetic
- order
-Date: Sun, 9 Mar 2014 08:44:55 +0000
-Message-ID: <20140309084455.GU28112@sirena.org.uk>
-References: <cover.1394195429.git.jsarha@ti.com>
- <63050ed5e0a7f696bb1719457301ca3601da18e7.1394195429.git.jsarha@ti.com>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: Re: [PATCH 6/7] regulator: AXP20x: Add support for
+ regulators subsystem
+Date: Sun, 9 Mar 2014 09:56:18 +0100
+Message-ID: <20140309085618.GA4683@localhost.fastwebnet.it>
+References: <1393692352-10839-1-git-send-email-carlo@caione.org>
+ <1393692352-10839-7-git-send-email-carlo@caione.org>
+ <20140307182213.GC607@lukather>
+ <CAOQ7t2YSidSPVSBrBzj3R1SYS_Xb10a2vfEs+u1DEkrhEJQCaQ@mail.gmail.com>
+ <20140309075148.GJ28112@sirena.org.uk>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="NDK13HdMpWlXqknW"
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDWJTUUC5UCBBAGZ6CMAKGQECTRG75I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140309075148.GJ28112-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <63050ed5e0a7f696bb1719457301ca3601da18e7.1394195429.git.jsarha@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jyri Sarha <jsarha@ti.com>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, peter.ujfalusi@ti.com, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, detheridge@ti.com
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Sun, Mar 09, 2014 at 07:51:48AM +0000, Mark Brown wrote:
+> On Sat, Mar 08, 2014 at 12:43:04PM +0100, Carlo Caione wrote:
+> > On Fri, Mar 7, 2014 at 7:22 PM, Maxime Ripard
+> > > On Sat, Mar 01, 2014 at 05:45:51PM +0100, Carlo Caione wrote:
+> 
+> > >> +     return platform_driver_register(&axp20x_regulator_driver);
+> 
+> > > I thought the AXP was only connected through I2C? How is that a
+> > > platform device then?
+> 
+> > Not really. It is plain wrong.
+> > I'll fix it in v2.
+> 
+> Are you sure this is wrong?  For MFDs the core MFD is a driver of
+> whatever bus type is in use but the function drivers are platform
+> devices which talk to the hardware via the core device.
 
---NDK13HdMpWlXqknW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+ok, I spoke too soon. Sorry for the noise.
 
-On Fri, Mar 07, 2014 at 02:58:32PM +0200, Jyri Sarha wrote:
-> The tlv320aic32x4 related lines were wrongly placed after tlv320aic3x lines.
-
-Applied, thanks.
-
---NDK13HdMpWlXqknW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTHCoDAAoJELSic+t+oim9IzsQAIF2kipI/Za8FEV1TjpIb9Zc
-prpWxFhqwJ6HOVCOBb7G9AgDSv7nBIpCuTerc+If7pzQk6sanasNxH1ypAJ2MGd/
-pbWMl+ROcs990ThMSPBt29XsPy8j3BVhP2PxO9kB9yLPPAQNGI0Y06laruwC1OVF
-IIoYNpuW60pqJq9N6crK6+0/ppouIhKWPyxlWG+HOaVsaiDAf6gW4GWfRLF7+JER
-IhT7p0bqqY52F0KTSI881s32WBlcrZ5eR3b6cDaeTEzJp080sKY2zJZ8LLesttHf
-nlV6NxMBkqhz8wKbqQUD+cFcbQ5CP2IT6N7BlVU8PeKUtjYgirxhm6zBZDfG9an0
-715gQ0FIS+cGnMz2ny7tColA/l6tBsM1tkjY9OXGeUnBW4QEuu3GbKlvFOk+Erul
-iyowvUrYSuue+hQgSDAxoinusHTDNEn3KFoRfV2nVw+aOUgrbGcXUGtolHp5XIbi
-rnEpPz0FYr6V5xTI6e/xCIfne2/niBxiQ+P3ImoFxTer3cMqEm+T9j7haSMmUzIB
-qxgMksyRLSvXGSBJTp+z6IW+c2f9NIvDT0tf7PnHuyi94QOE595caNDimM/k0AbB
-xOsfrclBSrbZQeMe9tPP7zji2MednttGTqLyy1i6AILALwb7TqK8WfVNkvYmiXr3
-iOHimY4mJ6jgFih4l171
-=DBSP
------END PGP SIGNATURE-----
-
---NDK13HdMpWlXqknW--
+-- 
+Carlo Caione
