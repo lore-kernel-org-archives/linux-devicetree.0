@@ -1,62 +1,68 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] i2c designware add support of I2C standard mode
-Date: Sun, 9 Mar 2014 09:07:53 +0100
-Message-ID: <20140309080753.GC2575@katana>
-References: <20140116193345.GB4127@katana>
- <1390236338-21407-1-git-send-email-romainba@abilis.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] ASoC: tlv320aic31xx: Add basic codec driver
+ implementation
+Date: Sun, 9 Mar 2014 08:12:29 +0000
+Message-ID: <20140309081229.GM28112@sirena.org.uk>
+References: <cover.1393941102.git.jsarha@ti.com>
+ <ba9718f573ca9195c80075a15fe114e0d4557da0.1393941102.git.jsarha@ti.com>
+ <20140305015501.GS13126@sirena.org.uk>
+ <5319C13B.4090101@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Sr1nOIr3CvdE5hEN"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="abrXHEFNt7TvgPF5"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1390236338-21407-1-git-send-email-romainba-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Baeriswyl <Romain.Baeriswyl-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Chiau Ee Chew <chiau.ee.chew-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Shinya Kuribayashi <skuribay-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, romainba-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org
+In-Reply-To: <5319C13B.4090101-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, detheridge-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---Sr1nOIr3CvdE5hEN
+--abrXHEFNt7TvgPF5
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
+On Fri, Mar 07, 2014 at 02:53:15PM +0200, Jyri Sarha wrote:
+> On 03/05/2014 03:55 AM, Mark Brown wrote:
 
-> +	/* fast mode by default */
+> >>+	/* Mic Bias */
+> >>+	SND_SOC_DAPM_SUPPLY("Mic Bias", SND_SOC_NOPM, 0, 0, mic_bias_event,
+> >>+			    SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
 
-Please add "because of legacy reasons" since the usual default is
-100kHz.
+> >The idiomatic thing would be to use the pin name.
 
-> +	clk_freq = 400000;
+> In this case the mic bias comes out of the chip trough a separate
+> pin and it is up to board designer to connect it with any (or all)
+> of the three mic pins.
 
-> +		/* Only standard mode at 100kHz and fast mode at 400kHz
-> +		 * are supported.
-> +		 */
-> +		if (clk_freq != 100000 && clk_freq != 400000)
-> +			return -EINVAL;
+Yes, exactly - you should be using the name of the pin that supplies the
+bias.  This is how essentially all microphone biases work.
 
-You didn't add the error message I requested last time.
-
-
---Sr1nOIr3CvdE5hEN
+--abrXHEFNt7TvgPF5
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTHCFYAAoJEBQN5MwUoCm2naQQAKHnlAs5QVp89Pwg1CUG0E8S
-I8xzKt6poP+bNznTsxNCrQiWJLSGAh3fu6PYtTaIOpF6syuayzuC6PoEP1wCUuFe
-6Z4srh5j1+nqmGs4TarLD3+Lu7nkGGalw4KMavpXbR0QdHuGZFJuxmE+iKuhE5Zt
-xhuXoK+i4NalPEXoA5c9oGFZ5ETPu7wefu4sANnyYchwDyS1JvmflMqrzC+WqYvz
-QiUrGk8Ar3qCMVbRX4guAZklRm/OZnNH2S4/G0cQaVUeERG0f28KsBEaEFYnFG5s
-F+569ot/mBeh1LoJQjfjIdHJwKJf4swbjmwNeB78OA5xXfwPVEsypH5GmCeVWapR
-j9pbV6LHVyDIXn+HibIlGNzyEVWkc+qs/mFPBz+ZycFKZxLoskfN7UNq7+BgIXfa
-/86WFki+iutPv3xCrWNDGEhWvgDAK0sxysJoLev19d0L4WkPhLTQ6Fn/laHc+y+2
-1UH2mA334+Cg2sE81HRdg1KZhx7Rya8QO507Dgbu9f+MPOUPd+lpTkE1PnLP9ZKS
-hP9UgbR/wLIEA9paMj99hZ9b85mCv0qX7E9u3wX6dtfQZuAKqqPtgj2rKc1YPuEu
-HX9BhsxteXMDYtqEGmKwJIYfdxFgdX0j59tx64ru95uwVl3uIA9X7C/MQtZIbSrI
-4vLYTXDiHWcgpLwbC97+
-=nyS+
+iQIcBAEBAgAGBQJTHCJqAAoJELSic+t+oim9YpYP/AmHdvQQ1IGy2p4Yr/QSw86B
+NipC3EwFBY353fDT0vtuJz63VYdEoaky3266DpKaK7mTl0rTMjGoHhcEZZ6Upl4r
+z79o0KkAd465LSEQk8r4qEK7ClnQbPtgT6gKDWvZKIgeaCJTAgxhTiwbskvuGy5K
+JH5wnTKO98D0wG5CBYBUCLFJxATDCSufIyjGVNdlQ6T+ULjv3a31aQjAHQ+Cylb7
+0eosouK8n7Iy/3UHF+fCkOPPPiVuciJ+r8XN6Qm4SIMdJVKkStNcS1p0wjZlDhtX
+AjPaQYw/KTvBxg7E3XoRjLbxPFA4HwJ53YEL5c21IJ/yotm+PHuVWhUvpj7C0lAq
+aOrM7DSqVPB2/Upj/+qL1sNv7wA+nqKD0csOaUjGf4lsmAkZLQP2EISJ8UFgnyx5
+QI9vBVQ2Wsn+dMUQTTDm94zGL11P+Y2QxAelgO+Uv+joGG/mq6SZmGHfYmbVmvlT
+/8O/m0obvdStdNLA435RB154TM469IK9H6bmiV7y40Y3i4Pw8EA6TVnzBk5Xfde9
+ulHHb3zdFaF7bZCY4XqnFbBejRxjEblz1GVC5ASHfrm5MbFDns86whQRDejJI9pe
+Yc3aVsGFohVtgkq0csDa0j0LXwvv7wJ1Tpn1kZGRRXYxMha98z/LFlMDeDU30cRK
+8KShKTfvkqxouOWMd4GL
+=5oZq
 -----END PGP SIGNATURE-----
 
---Sr1nOIr3CvdE5hEN--
+--abrXHEFNt7TvgPF5--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
