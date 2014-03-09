@@ -1,92 +1,50 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core
- to drivers/of
-Date: Tue, 11 Mar 2014 15:27:43 +0200
-Message-ID: <531F0F4F.3070008@ti.com>
-References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> <139468148.3QhLg3QYq1@avalon> <531F08A8.300@ti.com> <1883687.VdfitvQEN3@avalon>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 4/7] of: configure the platform device dma_mask and dma_pfn_offset
+Date: Sun, 9 Mar 2014 07:39:18 +0100
+Message-ID: <201403090739.18351.arnd@arndb.de>
+References: <1394097598-17622-1-git-send-email-santosh.shilimkar@ti.com> <201403071702.41716.arnd@arndb.de> <CAL_JsqLu_16p-8FLjBYt7xQA2eAyiprPML2q5R3fnivZPrvPug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="0Q6TkmB7CV19g7QLgQpItgpNRphxUoJ7W"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1883687.VdfitvQEN3@avalon>
+In-Reply-To: <CAL_JsqLu_16p-8FLjBYt7xQA2eAyiprPML2q5R3fnivZPrvPug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---0Q6TkmB7CV19g7QLgQpItgpNRphxUoJ7W
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Saturday 08 March 2014, Rob Herring wrote:
+> On Fri, Mar 7, 2014 at 10:02 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
 
-On 11/03/14 15:16, Laurent Pinchart wrote:
+> > a) Follow what we do for PCI devices: assume that we can do DMA_MASK(32)
+> > on any device, and have drivers call dma_set_mask(DMA_MASK(64)) on devices
+> > that would like to do more than that, or call e.g. dma_set_mask(DMA_MASK(28))
+> > for devices that can do less than 32 bit, as given in the argument. This
+> > approach would be most consistent with the way PCI works, but it doesn't
+> > really work well for the case where the mask is less than 32-bit and the
+> > device driver doesn't know that.
+> >
+> > b) Never have to call dma_set_mask() for platform devices and assume that the
+> > platform code sets it up correctly. This would probably be the simpler
+> > solution, and I can't think of any downsides at the moment.
+> 
+> I don't think we want this. In the case of setting up 64-bit masters,
+> it is typically the device that knows if it can do 64-bit DMA either
+> thru a capabilities register or compatible value. That device specific
+> knowledge should really stay within the device's driver.
 
->> And if I gathered Grant's opinion correctly (correct me if I'm wrong),=
+So you think we should still set a 64-bit mask in the "ranges" property
+for devices that can only do 32-bit and let the driver figure it out?
 
->> he thinks things should be explicit, i.e. the bindings for, say, an
->> encoder should state that the encoder's output endpoint _must_ contain=
- a
->> remote-endpoint property, whereas the encoder's input endpoint _must
->> not_ contain a remote-endpoint property.
->=20
-> Actually my understand was that DT links would have the same direction =
-as the=20
-> data flow. There would be no ambiguity in that case as the direction of=
- the=20
+I think this approach is much less useful for platform devices than it is
+for PCI devices, where we don't explicitly describe the "ranges" for each
+device. Are you thinking of off-chip or on-chip DMA masters here? If
+on-chip, I don't think it's likely that we would end up with different
+versions of the chip that have the same device on there but not the
+same DMA capabilities.
 
-Ok. At least at some point in the discussion the rule of thumb was to
-have the "master" point at the "slave", which are a bit vague terms, but
-I think both display and camera controllers were given as examples of
-"master".
-
-> data flow is known. What happens for bidirectional data flows still nee=
-d to be=20
-> discussed though. And if we want to use the of-graph bindings to descri=
-be=20
-> graphs without a data flow, a decision will need to be taken there too.=
-
-
-Yep. My worry is that if the link direction is defined in the bindings
-for the device, somebody will at some point have a complex board which
-happens to use two devices in such a way, that either neither of them
-point to each other, or both point to each other.
-
-Maybe we can make sure that never happens, but I feel a bit nervous
-about it especially for bi-directional cases. If the link has no clear
-main-dataflow direction, it may be a bit difficult to say which way to li=
-nk.
-
-With double-linking all those concerns just disappear.
-
- Tomi
-
-
-
---0Q6TkmB7CV19g7QLgQpItgpNRphxUoJ7W
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJTHw9PAAoJEPo9qoy8lh71xrIP/37RUXTwCDENqR3hT6yGCTh1
-0yc5WhysNkn71ov48iYGQdHZyA9Qb/SAXaLcNegr/f+0URNcV9AdQijWP59GdnE2
-G0qCzycaHdJDOP/r7GomjyI4gHn23oDpAGy+80JtWOEyRSQGwibgcxnouodJ6F71
-E/ZSTnWlMG/m+EgWpfL7HySwVnKUD1uC2kqawqrG+3IlsV0Hjeu0CK9R184zBdwm
-AiHmRdo+hgId0EP4xf27HovzkjT9U4OGPK6bqsEcgt7jTjp7D7PLWuzuo4RHZbic
-gFGmrua6biFN6qmMdUTzzLR7fq6CCDov8YGjsKUZXbuURWJH4XviPoHtaVarr0jZ
-C8AOM3bKwl4efSn/iAC/ms17wwfp0TxkoT06z44WhueLYMi+sKVh4xhiZErN63gZ
-opOusNWEAX73IFmOV9RjPbAT0iJ022cFshM4L4kOH2enpHC552vfv/ctgIpiliDB
-nSN2tc+ePjBDcHL+ygZ4iojydHKhChtOazcA0wd0qEyrcqoSvQsYzX+yagwxef34
-R7Gh7Jz2jhqBQkdswPLYbioy8FEowOtEKRiZgRuf4duW4stBzrDCOUO1foCB5vAK
-A+kxlcwnhMXyRSyF8uJ9/KDAnvm273Ohf2wfEvdcy85jLXr/AVHG79Xla+vYpLK6
-Gih+a+PMZx1pUt3I2SXK
-=Ze4i
------END PGP SIGNATURE-----
-
---0Q6TkmB7CV19g7QLgQpItgpNRphxUoJ7W--
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
