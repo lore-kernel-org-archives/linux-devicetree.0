@@ -1,64 +1,62 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [linux-sunxi] Re: [PATCH 6/7] regulator: AXP20x: Add support for
- regulators subsystem
-Date: Sun, 9 Mar 2014 07:51:48 +0000
-Message-ID: <20140309075148.GJ28112@sirena.org.uk>
-References: <1393692352-10839-1-git-send-email-carlo@caione.org>
- <1393692352-10839-7-git-send-email-carlo@caione.org>
- <20140307182213.GC607@lukather>
- <CAOQ7t2YSidSPVSBrBzj3R1SYS_Xb10a2vfEs+u1DEkrhEJQCaQ@mail.gmail.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] i2c designware add support of I2C standard mode
+Date: Sun, 9 Mar 2014 09:07:53 +0100
+Message-ID: <20140309080753.GC2575@katana>
+References: <20140116193345.GB4127@katana>
+ <1390236338-21407-1-git-send-email-romainba@abilis.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9wW02hG+pBvRTRBg"
-Return-path: <linux-doc-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="Sr1nOIr3CvdE5hEN"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAOQ7t2YSidSPVSBrBzj3R1SYS_Xb10a2vfEs+u1DEkrhEJQCaQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Carlo Caione <carlo@caione.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org, hdegoede@redhat.com, emilio@elopez.com.ar, wens@csie.org, sameo@linux.intel.com, lee.jones@linaro.org, devicetree@vger.kernel.org, dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, linux-doc@vger.kernel.org, lgirdwood@gmail.com, linux-sunxi@googlegroups.com
+In-Reply-To: <1390236338-21407-1-git-send-email-romainba-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Romain Baeriswyl <Romain.Baeriswyl-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Chiau Ee Chew <chiau.ee.chew-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Shinya Kuribayashi <skuribay-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, romainba-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---9wW02hG+pBvRTRBg
+--Sr1nOIr3CvdE5hEN
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Sat, Mar 08, 2014 at 12:43:04PM +0100, Carlo Caione wrote:
-> On Fri, Mar 7, 2014 at 7:22 PM, Maxime Ripard
-> > On Sat, Mar 01, 2014 at 05:45:51PM +0100, Carlo Caione wrote:
 
-> >> +     return platform_driver_register(&axp20x_regulator_driver);
+> +	/* fast mode by default */
 
-> > I thought the AXP was only connected through I2C? How is that a
-> > platform device then?
+Please add "because of legacy reasons" since the usual default is
+100kHz.
 
-> Not really. It is plain wrong.
-> I'll fix it in v2.
+> +	clk_freq = 400000;
 
-Are you sure this is wrong?  For MFDs the core MFD is a driver of
-whatever bus type is in use but the function drivers are platform
-devices which talk to the hardware via the core device.
+> +		/* Only standard mode at 100kHz and fast mode at 400kHz
+> +		 * are supported.
+> +		 */
+> +		if (clk_freq != 100000 && clk_freq != 400000)
+> +			return -EINVAL;
 
---9wW02hG+pBvRTRBg
+You didn't add the error message I requested last time.
+
+
+--Sr1nOIr3CvdE5hEN
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Version: GnuPG v1.4.15 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTHB2QAAoJELSic+t+oim9bpgP/38efi+vZmadMoeQu7+Poa9d
-nq3X5m01GyJoyMIB3uSfjulMCfTmZ6zEd14oDNEbU62oo9aCStmewT863p70eh/u
-Lt2AJW2A2OZsOxPzWJeK2DWpAviwW7STXAtkiLoX7VWqW26J1bhZsk/wcaogpKlJ
-Sr4dRd5o7MDX2jKcMjxJelFOYdNu7yTZP4ko5x9ENImsG8OETZ1SFYCE7N+lMd4K
-Zam9ehRiB6hMa5jXyqoQQ4FydI90I8bZCgUXnuZUxiPdxK+2sDIc1/JtrdlTTtYe
-0Q0EQZ5mtnvmrRKW0ATgiXhvKQZSKXu0srJ+Jm9L7NUzw+aVuHLSsXyXKWDdLn4f
-BIwZb8a1aeH3TSvvjLXQpxRp5btdBgjyYQ97uo4BGGLUrYVVaOIcrBwqDskCY2gh
-wMpNJpCYp27GXfwv3l9yNC3W+QiRuU4bCP4Ptp86t+sMztAyitsp2w/Y9R6v2iN2
-RiIUV8FYZqkjR2RtLxIedZTxqKL4HENpw8Tam+u6+PtLnMdoMvMAeDOxloqifyUi
-N/L65DAGa7d+bf3DkVXNss2sUgTFjI5GztQs2ntQiRJ05uH1O9pICsWe3SmhpCcj
-WkBmwIcuMSscQzTJtm/Bt2lf4bLO/yoa0FGQWSIRBjTVrM+ssoQGaprPn9Six1cZ
-0GFPTo2Jmc3kh/ChA6q7
-=gJPf
+iQIcBAEBAgAGBQJTHCFYAAoJEBQN5MwUoCm2naQQAKHnlAs5QVp89Pwg1CUG0E8S
+I8xzKt6poP+bNznTsxNCrQiWJLSGAh3fu6PYtTaIOpF6syuayzuC6PoEP1wCUuFe
+6Z4srh5j1+nqmGs4TarLD3+Lu7nkGGalw4KMavpXbR0QdHuGZFJuxmE+iKuhE5Zt
+xhuXoK+i4NalPEXoA5c9oGFZ5ETPu7wefu4sANnyYchwDyS1JvmflMqrzC+WqYvz
+QiUrGk8Ar3qCMVbRX4guAZklRm/OZnNH2S4/G0cQaVUeERG0f28KsBEaEFYnFG5s
+F+569ot/mBeh1LoJQjfjIdHJwKJf4swbjmwNeB78OA5xXfwPVEsypH5GmCeVWapR
+j9pbV6LHVyDIXn+HibIlGNzyEVWkc+qs/mFPBz+ZycFKZxLoskfN7UNq7+BgIXfa
+/86WFki+iutPv3xCrWNDGEhWvgDAK0sxysJoLev19d0L4WkPhLTQ6Fn/laHc+y+2
+1UH2mA334+Cg2sE81HRdg1KZhx7Rya8QO507Dgbu9f+MPOUPd+lpTkE1PnLP9ZKS
+hP9UgbR/wLIEA9paMj99hZ9b85mCv0qX7E9u3wX6dtfQZuAKqqPtgj2rKc1YPuEu
+HX9BhsxteXMDYtqEGmKwJIYfdxFgdX0j59tx64ru95uwVl3uIA9X7C/MQtZIbSrI
+4vLYTXDiHWcgpLwbC97+
+=nyS+
 -----END PGP SIGNATURE-----
 
---9wW02hG+pBvRTRBg--
+--Sr1nOIr3CvdE5hEN--
