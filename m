@@ -1,101 +1,126 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: [PATCHv2 2/6] HSI: Add function to register HSI clients from DT
-Date: Sun,  9 Mar 2014 23:25:52 +0100
-Message-ID: <1394403956-17297-3-git-send-email-sre@debian.org>
-References: <1393199401-27197-1-git-send-email-sre@debian.org>
- <1394403956-17297-1-git-send-email-sre@debian.org>
+From: Sebastian Reichel <sre@ring0.de>
+Subject: Generic HSI client DT bindings
+Date: Mon, 10 Mar 2014 00:41:44 +0100
+Message-ID: <20140309234143.GA19034@earth.universe>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1394403956-17297-1-git-send-email-sre@debian.org>
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@ring0.de>, Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, =?UTF-8?q?=D0=98=D0=B2=D0=B0=D0=B9=D0=BB=D0=BE=20=D0=94=D0=B8=D0=BC=D0=B8=D1=82=D1=80=D0=BE=D0=B2?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Sebastian Reichel <sre@debian.org>
+To: Sebastian Reichel <sre@ring0.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Carlos Chinea <cch.devel@gmail.com>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Dmitry Tarnyagin <dmitry.tarnyagin@lockless.no>, Pawel Szyszuk <pawel.szyszuk@stericsson.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add new method hsi_add_clients_from_dt, which can be used
-to initialize HSI clients from a device tree node.
 
-The function currently only registers the generic hsi_char
-device, which is the only one available in the Linux kernel.
-Support for loading generic hsi clients will be added once
-a common binding has been specified for them.
+--mP3DRpeJDSE+ciuQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Sebastian Reichel <sre@debian.org>
----
- drivers/hsi/hsi.c       | 32 +++++++++++++++++++++++++++++++-
- include/linux/hsi/hsi.h |  2 ++
- 2 files changed, 33 insertions(+), 1 deletion(-)
+Hi,
 
-diff --git a/drivers/hsi/hsi.c b/drivers/hsi/hsi.c
-index 749f7b5..6fde590 100644
---- a/drivers/hsi/hsi.c
-+++ b/drivers/hsi/hsi.c
-@@ -26,8 +26,14 @@
- #include <linux/slab.h>
- #include <linux/string.h>
- #include <linux/notifier.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- #include "hsi_core.h"
- 
-+static struct hsi_board_info hsi_char_dev_info = {
-+	.name = "hsi_char",
-+};
-+
- static ssize_t modalias_show(struct device *dev,
- 			struct device_attribute *a __maybe_unused, char *buf)
- {
-@@ -50,7 +56,13 @@ static int hsi_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
- 
- static int hsi_bus_match(struct device *dev, struct device_driver *driver)
- {
--	return strcmp(dev_name(dev), driver->name) == 0;
-+	if (of_driver_match_device(dev, driver))
-+		return true;
-+
-+	if (strcmp(dev_name(dev), driver->name) == 0)
-+		return true;
-+
-+	return false;
- }
- 
- static struct bus_type hsi_bus_type = {
-@@ -101,6 +113,24 @@ static void hsi_scan_board_info(struct hsi_controller *hsi)
- 		}
- }
- 
-+static void hsi_add_client_from_dt(struct hsi_port *port,
-+						struct device_node *client)
-+{
-+	/* TODO */
-+}
-+
-+void hsi_add_clients_from_dt(struct hsi_port *port, struct device_node *clients)
-+{
-+	struct device_node *child;
-+
-+	/* register hsi-char device */
-+	hsi_new_client(port, &hsi_char_dev_info);
-+
-+	for_each_available_child_of_node(clients, child)
-+		hsi_add_client_from_dt(port, child);
-+}
-+EXPORT_SYMBOL_GPL(hsi_add_clients_from_dt);
-+
- static int hsi_remove_client(struct device *dev, void *data __maybe_unused)
- {
- 	device_unregister(dev);
-diff --git a/include/linux/hsi/hsi.h b/include/linux/hsi/hsi.h
-index 0dca785..fb07339 100644
---- a/include/linux/hsi/hsi.h
-+++ b/include/linux/hsi/hsi.h
-@@ -282,6 +282,8 @@ struct hsi_controller *hsi_alloc_controller(unsigned int n_ports, gfp_t flags);
- void hsi_put_controller(struct hsi_controller *hsi);
- int hsi_register_controller(struct hsi_controller *hsi);
- void hsi_unregister_controller(struct hsi_controller *hsi);
-+void hsi_add_clients_from_dt(struct hsi_port *port,
-+						struct device_node *clients);
- 
- static inline void hsi_controller_set_drvdata(struct hsi_controller *hsi,
- 								void *data)
--- 
-1.9.0
+I'm currently working on Device Tree support for the HSI subsystem
+to get the Nokia N900 modem working in the mainline kernel. I guess
+the key question for the binding has been asked by Mark:
+
+Mark Rutland <mark.rutland@arm.com> wrote [0]:
+> Does HSI have an addressing scheme, or does each port
+> have a single device?
+
+It's easy to answer the question in an abstract way: A HSI link
+connects two processors with each other providing multiple logical
+channels. The problem is, that only the physical layer is specified
+AFAIK (I do not have access to HSI specification, so I do not know
+for sure). Thus the exact usage of the channels is vendor specific.
+
+For the Nokia N900 modem the following one of the following bindings
+seem senseful to me:
+
+========= Variant A =========
+hsi-port {
+	/* some nodes describing the port */
+
+	n900_modem: client-device {
+		compatible = "nokia,n900-modem";
+		reg = <0>, <1>, <2>, <3>;
+		reg-names = "mcsaab-control",
+			    "speech-control",
+			    "mcsaab-data",
+			    "speech-data";
+		hsi-mode = "stream";
+		hsi-speed-kbps = <55000>;
+		hsi-flow = "synchronized";
+		hsi-arb-mode = "round-robin";
+	};
+};
+#############################
+
+========= Variant B =========
+hsi-port {
+	/* some nodes describing the port */
+
+	cmt_mcsaab: client-device@0 {
+		compatible = "nokia,mcsaab-protocol";
+		reg = <0>, <2>;
+		reg-names = "mcsaab-control",
+			    "mcsaab-data";
+		hsi-mode = "stream";
+		hsi-channels = <4>;
+		hsi-speed-kbps = <55000>;
+		hsi-flow = "synchronized";
+		hsi-arb-mode = "round-robin";
+	};
+
+	cmt_speech: client-device@1 {
+		compatible = "nokia,cmt-speech";
+		reg = <1>, <4>;
+		reg-names = "speech-control",
+			    "speech-data";
+		hsi-mode = "stream";
+		hsi-channels = <4>;
+		hsi-speed-kbps = <55000>;
+		hsi-flow = "synchronized";
+		hsi-arb-mode = "round-robin";
+	};
+};
+#############################
+
+Both bindings are simplified and do not map all of the hardware's
+capabilities: Some settings can be configured differently for RX and
+TX. It should be easy to extend the support for e.g. hsi-mode-rx
+and hsi-mode-tx once this is needed. For devices configuring them
+the same having just one node seems better to me (I assume almost
+all devices want them to be the same).
+
+As far as I can see only ST-Erricson has also HSI clients prepared
+for the mainline kernel. It would be nice to get some feedback from
+you. If you know more HSI users, which are not yet Cc'd please feel
+free to point them here.
+
+[0] http://article.gmane.org/gmane.linux.kernel/1654456
+
+-- Sebastian
+
+--mP3DRpeJDSE+ciuQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJTHPw3AAoJENju1/PIO/qaeXwP/3Azj3pMd0U94lvvZN1Xcbgg
+aeYenK1aQDKI34JVPQmYj0XSA6/uz2kCu942neSpbS5LQA9zZd3XotFQDCNsa4Xd
+0dnCN7hxluV010FzrjDI20MN4nXt8f3dgQzBz5CmQjYa9rsVsVeFoEfghLaxuI5B
+/w2jVgtKkkEE08FfL0C8gNGnEdnpbA8SbIyXr1+uLMUYUM9KSbz3eZfPM0hnadnI
+MT7/l5enCkSRZRs0+AferCUxegJByFyGERgfwK9dDTPk8h+q8Ap4J9fBcuW3ytDe
+fIA3EcIleX+NUHzixM80OXYM5dBHd6aPZSrfbLlrGWfViAfLH1q+LQJNrcTL1q3c
+I5HT4lcjwDJtMLs9rlPbxaDelfALDvXod8L5ZQ2UGvbaiHjUaaOC2IOsZ++FqbDi
+J9trkVEaUH+sYI420Y+A/1lMHbTFN89eHVc5+O3LB2SjcmIZma04fHh1w1qrkj6u
+en9H6UBTLjGC0nOBT92rdUAd324fjjsHmAMSJfWeTpBr4WiZeyZIa/j9WToX57/a
+ZRPdvYUtuXVAaLSYHztLrCZqc+pwuIYZbADBTLPmaRgGc3MG6TthcNanaxF+5djW
+IbklrTvWyLTx9CGRgnYS6CpDW8zI0SlfSIGr3KPBMGd0vz6WSOMns2uvhSB/6m7p
+Ixm0ywnM4OXIUXgnYhRZ
+=2wzm
+-----END PGP SIGNATURE-----
+
+--mP3DRpeJDSE+ciuQ--
