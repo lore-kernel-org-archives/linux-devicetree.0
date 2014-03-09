@@ -1,56 +1,51 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: Re: [PATCH] spi/s3c64xx: Update DT binding documentation to
- match code
-Date: Sun, 9 Mar 2014 08:43:59 +0000
-Message-ID: <20140309084359.GT28112@sirena.org.uk>
-References: <6F.EF.24278.6C999135@epcpsbgx4.samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 1/2] ASoC: tlv320aic32x4: Sort Makefile in alphabetic
+ order
+Date: Sun, 9 Mar 2014 08:44:55 +0000
+Message-ID: <20140309084455.GU28112@sirena.org.uk>
+References: <cover.1394195429.git.jsarha@ti.com>
+ <63050ed5e0a7f696bb1719457301ca3601da18e7.1394195429.git.jsarha@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="rK9cUJk4ANtwQkTL"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="NDK13HdMpWlXqknW"
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <6F.EF.24278.6C999135-hl5l+cwj/UQ8ySZrqMDKH/pXobYPEAuW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: GIRISH K S <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <63050ed5e0a7f696bb1719457301ca3601da18e7.1394195429.git.jsarha@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jyri Sarha <jsarha@ti.com>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, peter.ujfalusi@ti.com, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, detheridge@ti.com
 List-Id: devicetree@vger.kernel.org
 
 
---rK9cUJk4ANtwQkTL
+--NDK13HdMpWlXqknW
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, Mar 07, 2014 at 10:04:54AM +0000, GIRISH K S wrote:
-> <HTML><HEAD><TITLE>Samsung Enterprise Portal mySingle</TITLE>
-> <META content="text/html; charset=windows-1252" http-equiv=Content-Type>
-> <STYLE id=mysingle_style type=text/css>P {
+On Fri, Mar 07, 2014 at 02:58:32PM +0200, Jyri Sarha wrote:
+> The tlv320aic32x4 related lines were wrongly placed after tlv320aic3x lines.
 
-Please fix your mailer to send text mails, this is illegible.
+Applied, thanks.
 
---rK9cUJk4ANtwQkTL
+--NDK13HdMpWlXqknW
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTHCnMAAoJELSic+t+oim9jIMP/3R5WNQwpZQGYt7L0eNpAfuk
-q/9aQAPfdGHy5Zya9/1ElERpUGwhaGLItsUGl6rswT3TSczjmVaBljc6Yeyt3pGL
-zB8KaV7KRBcZmkoL3n6M2oOLSqPEjFmfvzSx0TCLynhhXFqTPWMKK2RwdpXf638b
-dr1h6zoRAxyLyhD74kiG+kCrPQ6XZ8mZQrHIfgzVJARVe7DXCPa7iNEkdaasGc2x
-P8QW9a9m53sVpxaP26i9ZsKqsIOnGVMRFnj9ALpzjynKiHqVClP3SSP+eV/fw/JO
-o9TQTxpeYUQqPmGA8NB6SRPFz4kBQN3DmIBoRGOlxfdABW8h+5YjHOpZI8MBcIFz
-lLa2wdcBCCHu3u3c63PMmMGy6ysYKDhp10Xm4MSt79GzhHX82wtU+FJIQcJzG4jB
-LHHsVT/2NaknoxbSUysWn8IL2CwMb6OjPDgRtJOA4rs+NiAKwGdj7FcnSX6Zo3Zk
-gzvs78ney/PisstrgzeTV6i1iC7bLBKHXScSC6i7cVJJzKI5GCYAGJ3nnb6z3ifF
-VeVoPw9hB4/63RfiGIlxu6E07cIGAE8MTnFR/ZXADoricEmxTQRCXPyS5Qa6814F
-CNZLQB24mFFcyNgCBHl2HBrqCoClJLusYW4sq/W23YhN0bvBlhlDJhjwaSI1RpBg
-TcHWOQ1DmdLWuDXdvy/T
-=VwDU
+iQIcBAEBAgAGBQJTHCoDAAoJELSic+t+oim9IzsQAIF2kipI/Za8FEV1TjpIb9Zc
+prpWxFhqwJ6HOVCOBb7G9AgDSv7nBIpCuTerc+If7pzQk6sanasNxH1ypAJ2MGd/
+pbWMl+ROcs990ThMSPBt29XsPy8j3BVhP2PxO9kB9yLPPAQNGI0Y06laruwC1OVF
+IIoYNpuW60pqJq9N6crK6+0/ppouIhKWPyxlWG+HOaVsaiDAf6gW4GWfRLF7+JER
+IhT7p0bqqY52F0KTSI881s32WBlcrZ5eR3b6cDaeTEzJp080sKY2zJZ8LLesttHf
+nlV6NxMBkqhz8wKbqQUD+cFcbQ5CP2IT6N7BlVU8PeKUtjYgirxhm6zBZDfG9an0
+715gQ0FIS+cGnMz2ny7tColA/l6tBsM1tkjY9OXGeUnBW4QEuu3GbKlvFOk+Erul
+iyowvUrYSuue+hQgSDAxoinusHTDNEn3KFoRfV2nVw+aOUgrbGcXUGtolHp5XIbi
+rnEpPz0FYr6V5xTI6e/xCIfne2/niBxiQ+P3ImoFxTer3cMqEm+T9j7haSMmUzIB
+qxgMksyRLSvXGSBJTp+z6IW+c2f9NIvDT0tf7PnHuyi94QOE595caNDimM/k0AbB
+xOsfrclBSrbZQeMe9tPP7zji2MednttGTqLyy1i6AILALwb7TqK8WfVNkvYmiXr3
+iOHimY4mJ6jgFih4l171
+=DBSP
 -----END PGP SIGNATURE-----
 
---rK9cUJk4ANtwQkTL--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--NDK13HdMpWlXqknW--
