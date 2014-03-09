@@ -1,39 +1,99 @@
-From: Philipp Zabel <pza@pengutronix.de>
-Subject: Re: [PATCH v6 6/8] of: Implement simplified graph binding for single
- port devices
-Date: Sun, 9 Mar 2014 20:21:43 +0100
-Message-ID: <20140309192143.GB4939@pengutronix.de>
-References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de>
- <1394011242-16783-7-git-send-email-p.zabel@pengutronix.de>
- <20140307183802.B6E90C40C6F@trevor.secretlab.ca>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH 1/4] ARM: dts: keystone: update for supporting K2L/K2E EVMs
+Date: Mon, 10 Mar 2014 04:01:12 +0800
+Message-ID: <531CC888.1080100@ti.com>
+References: <1393365035-20083-1-git-send-email-santosh.shilimkar@ti.com>
+ <1393365035-20083-2-git-send-email-santosh.shilimkar@ti.com>
+ <20140309053924.GD12854@quad.lixom.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140307183802.B6E90C40C6F@trevor.secretlab.ca>
-Sender: linux-media-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140309053924.GD12854@quad.lixom.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, "Karicheri,
+ Muralidharan" <m-karicheri2@ti.com>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 07, 2014 at 06:38:02PM +0000, Grant Likely wrote:
-> On Wed,  5 Mar 2014 10:20:40 +0100, Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> > For simple devices with only one port, it can be made implicit.
-> > The endpoint node can be a direct child of the device node.
-> > 
-> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+On Sunday 09 March 2014 01:39 PM, Olof Johansson wrote:
+> On Tue, Feb 25, 2014 at 04:50:32PM -0500, Santosh Shilimkar wrote:
+>> From: Murali Karicheri <m-karicheri2@ti.com>
+>>
+>> This patch add compatibility strings for k2hk, k2l and k2e EVMs
+>>
+>> Cc: Olof Johansson <olof@lixom.net>
+>> Cc: Arnd Bergmann <arnd@arndb.de>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Kumar Gala <galak@codeaurora.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+>> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+>> ---
+>>  .../devicetree/bindings/arm/keystone/keystone.txt  |   10 ++++++++++
+>>  arch/arm/mach-keystone/keystone.c                  |    3 +++
+>>  2 files changed, 13 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/keystone/keystone.txt b/Documentation/devicetree/bindings/arm/keystone/keystone.txt
+>> index 63c0e6a..ad16e7a 100644
+>> --- a/Documentation/devicetree/bindings/arm/keystone/keystone.txt
+>> +++ b/Documentation/devicetree/bindings/arm/keystone/keystone.txt
+>> @@ -8,3 +8,13 @@ Required properties:
+>>   - compatible: All TI specific devices present in Keystone SOC should be in
+>>     the form "ti,keystone-*". Generic devices like gic, arch_timers, ns16550
+>>     type UART should use the specified compatible for those devices.
+>> +
+>> +Boards:
+>> +-  Keystone 2 Hawking/Kepler EVM
+>> +   compatible = "ti,k2hk-evm"
+>> +
+>> +-  Keystone 2 Lamarr EVM
+>> +   compatible = "ti,k2l-evm"
 > 
-> Ergh... I think this is too loosely defined. The caller really should be
-> explicit about which behaviour it needs. I'll listen to arguments
-> though if you can make a strong argument.
+> Your previous email said Lammar. One, or maybe both, are wrong, but which one?
+>
+My email had a typo then. The one here is right.
+ 
+>> +
+>> +-  Keystone 2 Edison EVM
+>> +   compatible = "ti,k2e-evm"
+>> diff --git a/arch/arm/mach-keystone/keystone.c b/arch/arm/mach-keystone/keystone.c
+>> index 6e6bb7d..aa0d212 100644
+>> --- a/arch/arm/mach-keystone/keystone.c
+>> +++ b/arch/arm/mach-keystone/keystone.c
+>> @@ -47,6 +47,9 @@ static void __init keystone_init(void)
+>>  
+>>  static const char *keystone_match[] __initconst = {
+>>  	"ti,keystone-evm",
+>> +	"ti,k2hk-evm",
+>> +	"ti,k2l-evm",
+>> +	"ti,k2e-evm",
+> 
+> -evm indicate board-level compat fields. We'd be better off just keeping a
+> "ti,keystone" top-level compatible here and just using that to probe. That
+> way you don't have to touch the file for new boards in the future.
+> 
+So far keystone-evm was k2hk(Keystone2 Hawking EVM) but with additional two
+SOC's and board's, separate compatible was needed to differentiate. These
+boards do have significant differences though current mainline code.
+This mainly because the boards are build for those specific SOC families.
 
-I have dropped this patch and the corresponding documentation patch for
-now. This simplification is a separate issue from the move and there is
-no consensus yet.
-Basically the main issue with the port { endpoint { remote-endpoint=... } }
-binding is that it is very verbose if you just need a single link.
-Instead of removing the port node, we could also remove the endpoint node
-and have the remote-endpoint property direcly in the port node.
+I would like to keep the organisation that way so that we cab support any
+future boards like below.
+"ti,k2hk-evm" --> All the Keystone2 Hawking/Kepler boards
+"ti,k2l-evm" --> All the Keystone2 Lamarr boards
+"ti,k2e-evm" --> All the Keystone2 Edision boards
 
-regards
-Philipp
+I don't expect to touch this file till new SOC gets added with its
+EVM.
+
+Regards,
+Ssantosh
