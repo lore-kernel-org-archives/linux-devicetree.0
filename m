@@ -1,81 +1,90 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/7] mfd: AXP20x: Add mfd driver for AXP20x PMIC
-Date: Sun, 9 Mar 2014 10:11:44 +0100
-Message-ID: <20140309091144.GB3335@lukather>
-References: <1393692352-10839-1-git-send-email-carlo@caione.org>
- <1393692352-10839-2-git-send-email-carlo@caione.org>
- <20140307180936.GY607@lukather>
- <20140308113141.GA14009@localhost.fastwebnet.it>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH RFC 1/5] dtc: Add helpers for various message levels
+Date: Sun, 9 Mar 2014 22:43:19 +1100
+Message-ID: <20140309114319.GF20356@voom.redhat.com>
+References: <1392919611-10746-1-git-send-email-t.figa@samsung.com>
+ <1392919611-10746-2-git-send-email-t.figa@samsung.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="l76fUT7nc3MelDdI"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBF7C6CMAKGQERYFUSDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="VUDLurXRWRKrGuMn"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140308113141.GA14009-bi+AKbBUZKZeIdyRz4JgOMwOAu8XWILU@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+In-Reply-To: <1392919611-10746-2-git-send-email-t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, jdl-CYoMK+44s/E@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---l76fUT7nc3MelDdI
+--VUDLurXRWRKrGuMn
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Carlo,
-
-On Sat, Mar 08, 2014 at 12:31:41PM +0100, Carlo Caione wrote:
-> > > +	axp20x->pm_off =3D of_property_read_bool(node, "axp,system-power-co=
-ntroller");
-> > > +
-> > > +	if (axp20x->pm_off && !pm_power_off) {
-> > > +		axp20x_pm_power_off =3D axp20x;
-> > > +		pm_power_off =3D axp20x_power_off;
-> > > +	}
-> >=20
-> > I don't think we have any other way to actually power down the board.
-> >=20
-> > Is there any reason why we would not need this property?
+On Thu, Feb 20, 2014 at 07:06:47PM +0100, Tomasz Figa wrote:
+> This patch adds three helper macros to print errors, warnings and
+> informational messages using standard format.
 >=20
-> In case you have multiple PMIC on the board in this way you con define
-> which is the one apt to power off.
+> Signed-off-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  dtc.h | 3 +++
+>  1 file changed, 3 insertions(+)
+>=20
+> diff --git a/dtc.h b/dtc.h
+> index 20de073..e95bed7 100644
+> --- a/dtc.h
+> +++ b/dtc.h
+> @@ -43,6 +43,9 @@
+>  #define debug(fmt,args...)
+>  #endif
+> =20
+> +#define pr_err(...)	fprintf (stderr, "ERROR: " __VA_ARGS__)
+> +#define pr_warn(...)	fprintf (stderr, "WARNING: " __VA_ARGS__)
+> +#define pr_info(...)	fprintf (stderr, "INFO: " __VA_ARGS__)
 
-Do we even have such a board?
+So, there are already several message helper functions in dtc.
+They're not all that consistently applied, so I can see an argument
+for cleaning things up, and replacing them with ones modelled on the
+kernel versions like these.
 
-Let's leave this out, we can always add it later if needs be.
+But.. this patch doesn't do that, it just adds yet another variant to
+the mix.
+
+In addition, what we want for messages in dtc is a bit different from
+the kernel - the kernel's expexted to keep running, and the messages
+log events of interest.  For dtc, for each warning/error you should
+also be deciding whether that should terminate the program or not -
+these helpers don't address that.
 
 --=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
---l76fUT7nc3MelDdI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+--VUDLurXRWRKrGuMn
+Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
+Version: GnuPG v1
 
-iQIcBAEBAgAGBQJTHDBQAAoJEBx+YmzsjxAg9B0P/1j3QcvmqrQgRsjC85S9kKgO
-a9tO1XGghla6nIvvpcQVqhNMSjvwyEs/qG8dw3NMipcHJfQvbU3s3phvLscvC6eF
-6OSJKKJV7EI3KgWmKHvkjO4/OY/MICPjZvsRYxkIIW3p5eWpnPFJEYfXwXF3cCE9
-RUiYjwsz0hxePt/M2WXOVrhR1COR/awE6EssBsCrwwcS/xwS1qggjoisqMJ0gCJR
-Pg7Vzq8pstEoIFlwjD3FVZICKBya17+6f5KUOk8eiKirQwTD3uc/16DQ8zS6AkG9
-m37XseUmJgXZ8xQ2ucC4Nr9vC1HBgcyEehVobq+ogAIUOfG3flA0HyFLiQOZ6D8x
-w0cDHK17j6vh2DKy1fimoMpDkZWkMePUMmzxNrrn+qqnoup/WGkXKae/QQEWN1tQ
-NRRVBalgQYphOgNN0ysAu8pjVZEi6Sg9ZR+/5uQkWjcx5sU6t3rWTWD94e7MIorO
-GBUIfWM34uTsezHG53jMWc3aePLivo7jgw7CeidmT4L2pkDmXJHLs3elC0i6dBoU
-uIDJNHDOlCb8B2qIvu08C6d902V71l/8zAL/oH+9Mcc/CxLVqpDTeG0F8R7ljuqT
-HykaDEFwZg2yjHw3SZ1W3e6J609aq3lCdVzl4XeQwHpiEr+vi8ej0KlEu+bicK8/
-qghfREbrDY91wOWpmzHa
-=Dqzz
+iQIcBAEBAgAGBQJTHFPXAAoJEGw4ysog2bOSdKcP/1YJdzsC8PWXKoPkj+QO24Aj
+YmpiDCvEvvBYaVAxVAw5mXYhQj/DSN/iDcsYj6fXz9a3lOXRpoyYVRMROR4tTc9A
+lA/MYrYEko474fVMPhwT1K48z8iKY/j2BaFm4MCCEFblPUvhPAj0h2mn+D09lFe9
+pPza4ReJBMluqESV8Fg1tW/rbTlbr1ESLTmna0fwoQhiB0SaIKfpRvyFDnQwtm0k
+GPkr+d6ZdPC2CDTXTTEcQob7P1gf3lZV8G004oyVLkbr5GfEape90zpuNw75Qook
+T61O0jNwWxNpeF5ln7UmAv1lbWaCIOfh5LdsR5KWAMfEBs0ilvUUOWeBLR4SSgXW
+xtdYV4NOvHIeDZ9+n0dcOkTMO2ztBVkPDz3SUBezLe6HY6vsXbqa+bdgjQ6sOu2Y
+S5r5ytSivcNbE/DstL5bI5vtWXROjINJDl9lGdR5Zth2kIGYQjV4w+YmGyfwQYln
+xpaxS5KDAiaXRoFDRE0zpZQQr27M1RFwljjlCSAUwMK+ybkwi/kmOr6uHMeE9QjH
+lCT8On7T75Pa8Re8+FgQLRHIOuxkWxGfnZx7GrYwpl09dMqfiRAVIx4Q1Zl7gbjs
+5TUVem42wuq73km5HuTQlUOiFZtrgx8Zm1s1EL8jiufAnngVUZw/By6t43P7WLnG
+7Jw6cK9Pe+eq+gCzgJs2
+=GGOC
 -----END PGP SIGNATURE-----
 
---l76fUT7nc3MelDdI--
+--VUDLurXRWRKrGuMn--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
