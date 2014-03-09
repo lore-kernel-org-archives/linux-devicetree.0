@@ -1,99 +1,74 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH 1/4] ARM: dts: keystone: update for supporting K2L/K2E EVMs
-Date: Mon, 10 Mar 2014 04:01:12 +0800
-Message-ID: <531CC888.1080100@ti.com>
-References: <1393365035-20083-1-git-send-email-santosh.shilimkar@ti.com>
- <1393365035-20083-2-git-send-email-santosh.shilimkar@ti.com>
- <20140309053924.GD12854@quad.lixom.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140309053924.GD12854@quad.lixom.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, "Karicheri,
- Muralidharan" <m-karicheri2@ti.com>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Sebastian Reichel <sre@debian.org>
+Subject: [PATCHv2 0/6] OMAP SSI driver
+Date: Sun,  9 Mar 2014 23:25:50 +0100
+Message-ID: <1394403956-17297-1-git-send-email-sre@debian.org>
+References: <1393199401-27197-1-git-send-email-sre@debian.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1393199401-27197-1-git-send-email-sre@debian.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@ring0.de>, Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, =?UTF-8?q?=D0=98=D0=B2=D0=B0=D0=B9=D0=BB=D0=BE=20=D0=94=D0=B8=D0=BC=D0=B8=D1=82=D1=80=D0=BE=D0=B2?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Sebastian Reichel <sre@debian.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 09 March 2014 01:39 PM, Olof Johansson wrote:
-> On Tue, Feb 25, 2014 at 04:50:32PM -0500, Santosh Shilimkar wrote:
->> From: Murali Karicheri <m-karicheri2@ti.com>
->>
->> This patch add compatibility strings for k2hk, k2l and k2e EVMs
->>
->> Cc: Olof Johansson <olof@lixom.net>
->> Cc: Arnd Bergmann <arnd@arndb.de>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Kumar Gala <galak@codeaurora.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
->> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
->> ---
->>  .../devicetree/bindings/arm/keystone/keystone.txt  |   10 ++++++++++
->>  arch/arm/mach-keystone/keystone.c                  |    3 +++
->>  2 files changed, 13 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/keystone/keystone.txt b/Documentation/devicetree/bindings/arm/keystone/keystone.txt
->> index 63c0e6a..ad16e7a 100644
->> --- a/Documentation/devicetree/bindings/arm/keystone/keystone.txt
->> +++ b/Documentation/devicetree/bindings/arm/keystone/keystone.txt
->> @@ -8,3 +8,13 @@ Required properties:
->>   - compatible: All TI specific devices present in Keystone SOC should be in
->>     the form "ti,keystone-*". Generic devices like gic, arch_timers, ns16550
->>     type UART should use the specified compatible for those devices.
->> +
->> +Boards:
->> +-  Keystone 2 Hawking/Kepler EVM
->> +   compatible = "ti,k2hk-evm"
->> +
->> +-  Keystone 2 Lamarr EVM
->> +   compatible = "ti,k2l-evm"
-> 
-> Your previous email said Lammar. One, or maybe both, are wrong, but which one?
->
-My email had a typo then. The one here is right.
- 
->> +
->> +-  Keystone 2 Edison EVM
->> +   compatible = "ti,k2e-evm"
->> diff --git a/arch/arm/mach-keystone/keystone.c b/arch/arm/mach-keystone/keystone.c
->> index 6e6bb7d..aa0d212 100644
->> --- a/arch/arm/mach-keystone/keystone.c
->> +++ b/arch/arm/mach-keystone/keystone.c
->> @@ -47,6 +47,9 @@ static void __init keystone_init(void)
->>  
->>  static const char *keystone_match[] __initconst = {
->>  	"ti,keystone-evm",
->> +	"ti,k2hk-evm",
->> +	"ti,k2l-evm",
->> +	"ti,k2e-evm",
-> 
-> -evm indicate board-level compat fields. We'd be better off just keeping a
-> "ti,keystone" top-level compatible here and just using that to probe. That
-> way you don't have to touch the file for new boards in the future.
-> 
-So far keystone-evm was k2hk(Keystone2 Hawking EVM) but with additional two
-SOC's and board's, separate compatible was needed to differentiate. These
-boards do have significant differences though current mainline code.
-This mainly because the boards are build for those specific SOC families.
+Hi,
 
-I would like to keep the organisation that way so that we cab support any
-future boards like below.
-"ti,k2hk-evm" --> All the Keystone2 Hawking/Kepler boards
-"ti,k2l-evm" --> All the Keystone2 Lamarr boards
-"ti,k2e-evm" --> All the Keystone2 Edision boards
+This is the sixth round of the OMAP SSI driver patches. I think the OMAP SSI
+driver is ready for mainline and should be included in 3.15. This round updates
+the patchset according to the comments from Mark Rutland and Rob Herring.
 
-I don't expect to touch this file till new SOC gets added with its
-EVM.
+Changes since PATCHv1 [0]:
+ * add a general description of what HSI is (Documentation/hsi.txt)
+ * remove generic HSI client binding for now. I will send a separate
+   patchset to discuss the HSI client binding.
+ * Replace (*struct->func)(args) by struct->func(args)
+ * Replace platform_get_resource_byname by platform_get_irq_byname
+ * omap-ssi: only count childs compatible with "ti,omap3-ssi-port"
+ * omap-ssi: only populate subdevices compatible with "ti,omap3-ssi-port"
 
-Regards,
-Ssantosh
+TODO:
+* Central Message Queue
+  I did not yet implement a central message queue in the HSI framework.
+  I will do this after Nokia N900 modem is working in the mainline kernel.
+* Remove the hwmod DT hack
+  This depends on some future work merging hwmod data into DT.
+* Implement proper context loss detection
+
+P.S.: It would be nice if I get some Reviewed-By/Acked-By.
+
+[0] https://lkml.org/lkml/2014/2/23/173
+
+-- Sebastian
+
+Sebastian Reichel (6):
+  Documentation: HSI: Add some general description for the HSI subsystem
+  HSI: Add function to register HSI clients from DT
+  HSI: method to unregister clients from an hsi port
+  HSI: hsi-char: fix driver for multiport scenarios
+  HSI: Introduce OMAP SSI driver
+  Documentation: DT: omap-ssi binding documentation
+
+ Documentation/devicetree/bindings/hsi/omap-ssi.txt |   82 ++
+ Documentation/hsi.txt                              |   75 ++
+ drivers/hsi/Kconfig                                |    1 +
+ drivers/hsi/Makefile                               |    1 +
+ drivers/hsi/clients/hsi_char.c                     |    2 +-
+ drivers/hsi/controllers/Kconfig                    |   19 +
+ drivers/hsi/controllers/Makefile                   |    6 +
+ drivers/hsi/controllers/omap_ssi.c                 |  621 +++++++++
+ drivers/hsi/controllers/omap_ssi.h                 |  166 +++
+ drivers/hsi/controllers/omap_ssi_port.c            | 1401 ++++++++++++++++++++
+ drivers/hsi/controllers/omap_ssi_regs.h            |  171 +++
+ drivers/hsi/hsi.c                                  |   42 +-
+ include/linux/hsi/hsi.h                            |    3 +
+ 13 files changed, 2588 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/hsi/omap-ssi.txt
+ create mode 100644 Documentation/hsi.txt
+ create mode 100644 drivers/hsi/controllers/Kconfig
+ create mode 100644 drivers/hsi/controllers/Makefile
+ create mode 100644 drivers/hsi/controllers/omap_ssi.c
+ create mode 100644 drivers/hsi/controllers/omap_ssi.h
+ create mode 100644 drivers/hsi/controllers/omap_ssi_port.c
+ create mode 100644 drivers/hsi/controllers/omap_ssi_regs.h
+
+-- 
+1.9.0
