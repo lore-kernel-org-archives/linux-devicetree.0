@@ -1,116 +1,72 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v6 6/6] pci: Add support for creating a generic
- host_bridge from device tree
-Date: Mon, 10 Mar 2014 16:33:44 +0000
-Message-ID: <20140310163343.GY6457@e106497-lin.cambridge.arm.com>
-References: <1394020137-1830-1-git-send-email-Liviu.Dudau@arm.com>
- <201403081815.08829.arnd@arndb.de>
- <20140310144414.GT6457@e106497-lin.cambridge.arm.com>
- <2115856.ZTdgp5fkma@wuerfel>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/5] drivers: input: keyboard: st-keyscan: add keyscan
+ driver
+Date: Mon, 10 Mar 2014 16:35:57 +0000
+Message-ID: <20140310163557.GJ13661@lee--X1>
+References: <1393990772-9567-1-git-send-email-gabriel.fernandez@st.com>
+ <1393990772-9567-2-git-send-email-gabriel.fernandez@st.com>
+ <20140310114819.GO14976@lee--X1>
+ <20140310152859.GA29054@core.coreip.homeip.net>
+ <20140310153815.GE13661@lee--X1>
+ <20140310155824.GB29054@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <2115856.ZTdgp5fkma@wuerfel>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Tanmay Inamdar <tinamdar@apm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bjorn Helgaas <bhelgaas@google.com>
+In-Reply-To: <20140310155824.GB29054@core.coreip.homeip.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, kernel@stlinux.com, Giuseppe Condorelli <giuseppe.condorelli@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 10, 2014 at 03:21:01PM +0000, Arnd Bergmann wrote:
-> On Monday 10 March 2014 14:44:14 Liviu Dudau wrote:
-> > I will try to improve the error handling in the next patchset versi=
-on.
-> > However I am still confused about the earlier discussion on
-> > pci_register_io_range(). Your suggestion initially was to return an
-> > error in the default weak implementation, but in your last email yo=
-u
-> > are talking about returning 'port'.
+> > > > > This patch adds ST Keyscan driver to use the keypad hw a subs=
+et
+> > > > > of ST boards provide. Specific board setup will be put in the
+> > > > > given dt.
+> > > > >=20
+> > > > > Signed-off-by: Giuseppe Condorelli <giuseppe.condorelli@st.co=
+m>
+> > > > > Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+> > > >=20
+> > > > Are you sure these are in the correct order?
+> > > >=20
+> > > > What is the history of this commit?
+> > > >=20
+> > > > > ---
+> > > > >  .../devicetree/bindings/input/st-keypad.txt        |  50 +++=
++
+> > > >=20
+> > > > This should be submitted as a seperate patch.
+> > >=20
+> > > Why do we have such requirement? To me it would make more sense t=
+o add
+> > > binding documentation in the same commit as the code that uses th=
+ese
+> > > bindings.
+> >=20
+> > I'm inclined to agree with you and that's actually how we used to d=
+o
+> > it, but a decision was made by the DT guys at one of the Kernel
+> > Summits to submit Documentation as a separate patch.
 >=20
-> You can do either one: 'port' should be positive or zero, while the
-> error would always be negative. We do the same thing in many interfac=
-es
-> in the kernel.
->=20
-> > My idea when I've introduced the
-> > helper function was that it would return an error if it fails to
-> > register the IO range and zero otherwise. I agree that we can treat
-> > the default 'do nothing with the IO range' case as an error, with
-> > the caveat that will force architectures that use this code to
-> > provide their own implementation of pci_register_io_range() in orde=
-r
-> > to avoid failure, even for the cases where the architecture has a 1=
-:1
-> > mapping between IO and CPU addresses.
->=20
-> Which architectures are you thinking of? The only one I know that
-> does this is ia64, and we won't ever have to support this helper
-> on that architecture.
+> Do you have background for this decision? To me it is akin splitting
+> header file into a separate patch.
 
-I was thinking about architectures that have IO_SPACE_LIMIT >=3D 0xffff=
-ffff.
-While not an absolute indicator, with the default pci_address_to_pio()
-that means that they can use the CPU MMIO address as IO address directl=
-y.
+The discussion/decision was verbal unfortunately.
 
-$ git grep IO_SPACE_LIMIT | grep -i ffffffff
-arch/arm/include/asm/io.h:#define IO_SPACE_LIMIT ((resource_size_t)0xff=
-ffffff)
-arch/arm/mach-at91/include/mach/io.h:#define IO_SPACE_LIMIT		0xFFFFFFFF
-arch/arm/mach-omap1/include/mach/io.h:#define IO_SPACE_LIMIT 0xffffffff
-arch/arm/mach-pxa/include/mach/io.h:#define IO_SPACE_LIMIT 0xffffffff
-arch/arm/mach-s3c24xx/include/mach/io.h:#define IO_SPACE_LIMIT 0xffffff=
-ff
-arch/avr32/include/asm/io.h:#define IO_SPACE_LIMIT	0xffffffff
-arch/frv/include/asm/io.h:#define IO_SPACE_LIMIT	0xffffffff
-arch/ia64/include/asm/io.h:#define IO_SPACE_LIMIT		0xffffffffffffffffUL
-arch/m32r/include/asm/io.h:#define IO_SPACE_LIMIT  0xFFFFFFFF
-arch/m68k/include/asm/io_no.h:#define IO_SPACE_LIMIT 0xffffffff
-arch/microblaze/include/asm/io.h:#define IO_SPACE_LIMIT (0xFFFFFFFF)
-arch/mn10300/include/asm/io.h:#define IO_SPACE_LIMIT 0xffffffff
-arch/sh/include/asm/io.h:#define IO_SPACE_LIMIT 0xffffffff
-arch/sparc/include/asm/io_32.h:#define IO_SPACE_LIMIT 0xffffffff
-arch/sparc/include/asm/io_64.h:#define IO_SPACE_LIMIT 0xfffffffffffffff=
-fUL
-arch/tile/include/asm/io.h:#define IO_SPACE_LIMIT 0xffffffff
-
-
->=20
-> I did not ask to treat 'do nothing with the IO range' as an error,
-> what I meant is that we should treat 'architecture cannot translate
-> from I/O space to memory space but DT lists a translation anyway'
-> as an error. On x86, you should never see an entry for the I/O space
-> in "ranges", so we will not call this function unless there is a
-> bug in DT.
-
-Ok, it's just that there is no "architecture cannot translate from I/O
-space to memory space" indicator anywhere and I don't want to make x86
-a special case.
-
-So, my proposal is this: default weak implementation of pci_register_io=
-_range()
-returns an error (meaning I have no idea how to translate IO addresses
-to memory space) and anyone that wants this function to return success =
-will
-have to provide their implementation.
-
-I will send an updated series.
-
-Best regards,
-Liviu
-
->=20
-> 	Arnd
->=20
->=20
+I don't really mind either way. I'm just attempting to enforce the
+decisions that were made by the forces-that-be. Perhaps ping
+devicetree@vger.kernel.org with me in CC for more clarification if
+required.
 
 --=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
