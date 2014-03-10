@@ -1,148 +1,78 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/9] Doc/DT: Add DT binding documentation for DVI Connector
-Date: Mon, 10 Mar 2014 16:45:58 -0500
-Message-ID: <CAL_JsqJ00Zr1tMoyR1+qHUhsNoc6Kj6s+nTZTkNTwki9HFHq8g@mail.gmail.com>
-References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
-	<1393590016-9361-4-git-send-email-tomi.valkeinen@ti.com>
-	<20140228155937.GQ21483@n2100.arm.linux.org.uk>
-	<1393604717.3802.61.camel@paszta.hi.pengutronix.de>
+From: mr.nuke.me-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: Re: [PATCH v5 6/8] ARM: dts: sun4i: Add support for mmc
+Date: Mon, 10 Mar 2014 14:49:15 -0700 (PDT)
+Message-ID: <ac47de94-92ef-4b53-9983-34dd2f9924ea@googlegroups.com>
+References: <20140211190543.4568.83517.stgit@dizzy-6.o2s.ch>
+ <20140211193423.4568.34947.stgit@dizzy-6.o2s.ch>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393604717.3802.61.camel-+qGW7pzALmz7o/J7KWpOmN53zsg1cpMQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDGJVA6QWUDRBXHG7CMAKGQEQN7VB7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140211193423.4568.34947.stgit-GPtPHOohwllnsqa/0SyWJQ@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 28, 2014 at 10:25 AM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> Am Freitag, den 28.02.2014, 15:59 +0000 schrieb Russell King - ARM
-> Linux:
->> On Fri, Feb 28, 2014 at 02:20:10PM +0200, Tomi Valkeinen wrote:
->> > Add DT binding documentation for DVI Connector.
->> >
->> > Signed-off-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
->> > Reviewed-by: Archit Taneja <archit-l0cyMroinI0@public.gmane.org>
->> > ---
->> >  .../devicetree/bindings/video/dvi-connector.txt    | 26 ++++++++++++++++++++++
->> >  1 file changed, 26 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/video/dvi-connector.txt
->> >
->> > diff --git a/Documentation/devicetree/bindings/video/dvi-connector.txt b/Documentation/devicetree/bindings/video/dvi-connector.txt
->> > new file mode 100644
->> > index 000000000000..6a0aff866c78
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/video/dvi-connector.txt
->> > @@ -0,0 +1,26 @@
->> > +DVI Connector
->> > +==============
->> > +
->> > +Required properties:
->> > +- compatible: "dvi-connector"
->> > +
->> > +Optional properties:
->> > +- label: a symbolic name for the connector
->> > +- i2c-bus: phandle to the i2c bus that is connected to DVI DDC
->> > +
->> > +Required nodes:
->> > +- Video port for DVI input
->> > +
->> > +Example
->> > +-------
->> > +
->> > +dvi0: connector@0 {
->> > +   compatible = "dvi-connector";
->> > +   label = "dvi";
->> > +
->> > +   i2c-bus = <&i2c3>;
->> > +
->> > +   dvi_connector_in: endpoint {
->> > +           remote-endpoint = <&tfp410_out>;
->> > +   };
->> > +};
->>
->> This looks far too simplistic.  There are different classes of DVI
->> connector - there is:
->>
->> DVI A - analogue only
->> DVI D - digital only (single and dual link)
->> DVI I - both (single and dual digital link)
->>
->> DRM at least makes a distinction between these three classes, and this
->> disctinction is part of the user API.  How would a display system know
->> which kind of DVI connector is wired up on the board from this DT
->> description?
->
-> Maybe this could be inferred from the sources connected to it. For
-> example a i.MX5 board with the SoC internal TV Encoder and an external
-> SiI902x HDMI encoder connected to the same DVI I connector:
->
-> ipu {
->         port@2 {
->                 ipu_di0_disp0: endpoint {
->                         remote-endpoint = <&sii902x_in>;
->                 };
->         };
->         port@3 {
->                 ipu_di1_tve: endpoint {
->                         remote-endpoint = <&tve_in>;
->                 };
->         };
-> };
->
-> &sii902x {
->         compatible = "si,sii9022";
->
->         port@0 {
->                 sii902x_in: endpoint {
->                         remote-endpoint = <&ipu_di0>;
->                 };
->         };
->         port@1 {
->                 sii902x_out: endpoint {
->                         remote-endpoint = <&dvi_d_in>;
->                 };
->         };
-> };
->
-> &tve {
->         compatible = "fsl,imx53-tve";
->         port@0 {
->                 tve_in: endpoint {
->                         remote-endpoint = <&ipu_di1>;
->                 };
->         };
->         port@1 {
->                 tve_out: endpoint {
->                         remote-endpoint = <&dvi_a_in>;
->                 };
->         };
-> };
->
-> dvi-connector {
->         compatible = "dvi-connector";
->         ddc-i2c-bus = <&i2c3>;
->
->         port {
->                 dvi_d_in: endpoint@0 {
->                         remote-endpoint = <&sii902x_out>;
->                 };
->                 dvi_a_in: endpoint@1 {
->                         remote-endpoint = <&tve_out>;
->                 };
->         };
-> };
->
-> It should be possible to let the connector know that those two endpoints
-> are connected to a TMDS source and to a VGA source, respectively.
+On Tuesday, February 11, 2014 1:34:25 PM UTC-6, David Lanzend=C3=B6rfer wro=
+te:
+> diff --git a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+> b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+> index b139ee6..20b976a 100644
+> --- a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+> +++ b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+> @@ -33,6 +33,14 @@
+>  			};
+>  	=09
+>  		};
+> +		mmc0: mmc@01c0f000 {
+> +			pinctrl-names =3D "default", "default";
+> +			pinctrl-0 =3D <&mmc0_pins_a>;
+> +			pinctrl-1 =3D <&mmc0_cd_pin_reference_design>;
+> +			cd-gpios =3D <&pio 7 1 0>; /* PH1 */
+> +			status =3D "okay";
+> +		};
+> +
+>  		pinctrl@01c20800 {
+>  	=09
+>  			led_pins_cubieboard: led_pins@0 {
+>  		=09
+>  				allwinner,pins =3D "PH20", "PH21";
+> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi
+> b/arch/arm/boot/dts/sun4i-a10.dtsi
+> index 9044c53..d040d37 100644
+> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
+> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+> @@ -330,6 +330,46 @@
+>  			#size-cells =3D <0>;
+>  	=09
+>  		};
+> +		mmc0: mmc@01c0f000 {
+> +			compatible =3D "allwinner,sun5i-a13-mmc";
 
-I like this proposal over the others. Although, would dual link be a
-single endpoint or 2 endpoints? How would you differentiate that?
+Should be "allwinner,sun4i-a10-mmc", or we will hang the MMC driver on A10.
 
-The port node seems a bit pointless.
+> +		mmc1: mmc@01c10000 {
+> +			compatible =3D "allwinner,sun5i-a13-mmc";
+ditto
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +		mmc2: mmc@01c11000 {
+> +			compatible =3D "allwinner,sun5i-a13-mmc";
+ditto
+
+> +		mmc3: mmc@01c12000 {
+> +			compatible =3D "allwinner,sun5i-a13-mmc";
+ditto
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
