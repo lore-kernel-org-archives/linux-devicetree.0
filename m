@@ -1,39 +1,109 @@
-From: Sebastian Capella <sebastian.capella@linaro.org>
-Subject: Re: [PATCH RFC v4 3/3] Documentation: arm: define DT idle states
- bindings
-Date: Mon, 10 Mar 2014 11:22:33 -0700
-Message-ID: <CADHgK6tH5VuTTsbt=4KppvSmKTT4VrftxJHUokRje1uQthUhfA@mail.gmail.com>
-References: <1392724051-11950-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1392724051-11950-4-git-send-email-lorenzo.pieralisi@arm.com>
- <20140219160449.11460.93660@capellas-linux>
- <20140310180109.GB834@e102568-lin.cambridge.arm.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH RFC] usb: gadget: Add xilinx axi usb2 device support
+Date: Mon, 10 Mar 2014 13:44:41 -0500
+Message-ID: <20140310184440.GC32363@saruman.home>
+References: <774153d4-d33f-4bb4-813b-582762bc3af9@TX2EHSMHS021.ehs.local>
+ <20140220182257.GF23217@saruman.home>
+ <a39ce44a-2f92-4067-be6d-7311a78bb195@VA3EHSMHS013.ehs.local>
+ <20140221153905.GE31902@saruman.home>
+ <CALHRZuouwUh398PkmatQMyZNzrEreH-kGwJTTC7CsY_gdq8dbQ@mail.gmail.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140310180109.GB834@e102568-lin.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Mark Hambleton <mark.hambleton@broadcom.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Dave P Martin <Dave.Martin@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen Boyd <sboyd@codeaurora.org>, Amit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Y5rl02BVI9TCfPar"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CALHRZuouwUh398PkmatQMyZNzrEreH-kGwJTTC7CsY_gdq8dbQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sundeep subbaraya <sundeep.lkml@gmail.com>
+Cc: balbi@ti.com, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <michals@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10 March 2014 11:01, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
-> Ack ?
+--Y5rl02BVI9TCfPar
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi Lorenzo,
+Hi,
 
-Yes, ack from me.
+On Mon, Mar 10, 2014 at 07:06:19PM +0530, sundeep subbaraya wrote:
+> On Fri, Feb 21, 2014 at 9:09 PM, Felipe Balbi <balbi@ti.com> wrote:
+> > Hi,
+> >
+> > On Fri, Feb 21, 2014 at 11:27:07AM +0000, Subbaraya Sundeep Bhatta wrot=
+e:
+> >> > From the looks of it, I doubt this was actually tested, you need a l=
+ot
+> >> > of work on this driver.
+> >> Tested on both ARM and Microblaze architectures with Mass storage gadg=
+et.
+> >> Will send a v2 after addressing all your comments.
+> >
+> > clearly you didn't try to remove and reinsert the module or you would
+> > see a whole bunch of errors.
+> >
+>=20
+> Yes you are correct. My console hung up as soon as i rmmod my driver.
+> Could you please point me where am wrong.
 
- Acked-by: Sebastian Capella <sebastian.capella@linaro.org>
+Many of your mistakes have already been pointed out here:
 
-Thanks!
+http://marc.info/?l=3Dlinux-usb&m=3D139292068028649&w=3D2
 
-Sebastian
+Please fix those and see if following script works:
+
+#!/bin/sh
+
+MODULE=3D"xilinx_udc"
+
+for i in $(seq 500); do
+	modprobe $MODULE > /dev/null 2>&1;
+	modprobe -r $MODULE > /dev/null 2>&1;
+	if [ $? -eq 0 ]; then
+		echo -n "."
+	else
+		echo -n "F"
+	fi
+done
+
+echo "Finished"
+
+you shouldn't see any F characters and your machine shouldn't crash or
+hang or reboot...
+
+Also make sure to run g_zero testcases and mass storage tescases. I
+wrote, long ago, a small tool to help testing UDC drivers running with
+the mass storage gadget, which you can find in [1]. There's a runner
+script which makes it easy to full test suite which you can find in [2].
+
+[1] https://gitorious.org/usb/usb-tools/source/7eb7ef21de6cd124e0e0d0e7df9d=
+dfff0e2f548e:msc.c
+[2] https://gitorious.org/usb/usb-tools/source/7eb7ef21de6cd124e0e0d0e7df9d=
+dfff0e2f548e:msc.sh
+
+--=20
+balbi
+
+--Y5rl02BVI9TCfPar
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTHggYAAoJEIaOsuA1yqREDx8QAIOL7NX7AOSJpFFsw/IkCsdg
+2MDjokLJkG5VJ1nMJcjPJrE6D5neFMO06sTDRjtVnAqTr85qPDM2e0/SkEIKgKsq
+V8E2FpSI2bZK5yODRZMREuWFaM9E0N1bU6WqoTzftmUbIy+uqwhhwqw7E9vDo1uH
+zb2spRbm113hOGCs7L0t4LjaAIwLG0td+Q6uOidKB3pZWClEFcRzetTEewMrR/gj
+mnIeSSIHUMaOdyJBi5T5U5+HD8O0UKG8p4eTD9mxznq95KWPq/xFgxxFxy5PfP9T
+r3mppyBMIVDKhRBDpsa7iC4BfYzF1FMlbKifhoZnIzDFWwbPr70negQEy8TdbuA1
+SlLzZGdEhw/nsrjP7/zkXbTC7qaZxShi1coS74rw4jDzygQHliboRgp7Zia2d9Uq
+QwVZzrRsg3Flak9ToXN6aNtb5vHNFjni/VsMA72xTXt4YJ3HWOwGb8QCJaKnwNyt
+jy55fD+mKzB2cyOI4jv7oraBWr0MSwSFNUOhH4MsoJM8i1WYnMgY5+osF+DMCokr
+w4CfSG/b3Z86xaW8AtTfEcJp/Arja158gftAT+qg2UFzOitOlI3pS+osUj12liu9
+asvtzYwZUpZOmnV27tOhLOpxmYiLnUM9THL4KZNGy/q7xoguZ8Vu1hjnMb/YHqxQ
+dIt6Dx6Wt0Qtob+LA3gZ
+=kJfR
+-----END PGP SIGNATURE-----
+
+--Y5rl02BVI9TCfPar--
