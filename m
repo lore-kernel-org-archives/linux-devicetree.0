@@ -1,102 +1,72 @@
-From: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [Patch v9 0/2] Add Qualcomm BAM dmaengine driver
-Date: Mon, 10 Mar 2014 16:40:18 -0500
-Message-ID: <1394487622-1679-1-git-send-email-agross@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Subject: [PATCH v2 0/7] tty: xuartps: Rebranding + DT documentation
+Date: Mon, 10 Mar 2014 14:40:03 -0700
+Message-ID: <1394487610-2419-1-git-send-email-soren.brinkmann@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-serial-owner@vger.kernel.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Cc: Michal Simek <michal.simek@xilinx.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Soren Brinkmann <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch set introduces the dmaengine driver for the Qualcomm Bus Access
-Manager (BAM) DMA controller present on MSM 8x74 devices.  A number of the
-on-chip devices have their own BAM DMA controller and use it to move data
-between system memory and peripherals or between two peripherals.
+Hi,
 
-The initial version of this driver will only support slave DMA operations
-between system memory and peripherals.
+this series rebrands the Xilinx PS UART driver as Cadence UART and
+documents its DT bindings (+ some clean up along the way).
 
-Changes from v8:
-	- Fix macro to use ee instead of pipe for variable name
-	- Fixed various nit comments
-	- Fixed probe clock release issue on error case
+The rebranding goes as far as reasonable. Things like file name, kconfi=
+g
+symbols and other things with user space impact are left as is. Please
+refer to the discussion in the RFC threads[1-2] for more details.
 
-Changes from v7:
-        - Fix shift issue when reading NUM_EEs field.
-        - Unmask global BAM interrupt during BAM initialization.
+Similar the DT binding has been extended. In addition to the new and
+preferred Cadence binding, the current xuartps binding is maintained.
+Though, only the Cadence names for clock-names are documented.
 
-Changes from v6:
-        - Changed KConfig dependency from ARCH_MSM_DT to ARCH_QCOM.
-        - Incorporated comments on DT binding.
-        - Changed driver source file to accomodate DT changes.
+References:
+ [1]  https://lkml.org/lkml/2014/3/4/405
+ [2]  https://lkml.org/lkml/2014/3/7/450
 
-Changes from v5:
-        - Separated copyright from BAM description
-        - Removed usage of slave dma direction
-        - Reworked slave config interface
-        - Removed max segment size restriction in slave_sg
-        - Added acked-by on DT patch
-        - Fixed nit comments
+v2:
+ - no changes regarding the patches
+ - fixed (I sincerely hope) email recipients
 
-Changes from v4:
-        - Add devm_free_irq() to .remove to avoid race condition
-        - Free FIFO memory in .remove
+Changes from the latest RFC:
+ - squashed function/symbol renaming into 'tty: xuartps: Rebrand driver
+   as Cadence UART'
+ - Revised the commit message of 'tty: xuartps: Don't write IRQ disable
+   register to enable interrupts' (was 'tty: xuartps: Remove bogus
+   comment and register write'
 
-Changes from v3:
-        - Remove unused bam_channel_dir.
-        - Remove incorrect write to BAM_IRQ_SRCS_EE (read only).
-        - Remove dma direction from DT binding and revise driver to use
-          direction from prep_slave_sg.
-        - Remove unnecessary channel reset from channel_init.  This could affect
-          channels controlled from other execution environments.
-        - Change terminate_all to also take care of the current active
-          descriptor.
-        - Rework .remove function to correctly mask interrupts and clean up
-          resources and tasklets.
+   	Thanks,
+	S=C3=B6ren
 
-Changes from v2:
-        - Corrected Kconfig dependencies
-        - Moved execution environment ID to controller DT binding.  The EE is
-          a global setting across all of the channels on the controller.
-        - Combined header into source file.
-        - Corrected copyright date.
-        - Moved channel hardware initialization to occur when channel is used
-          for the first time.
-        - Converted dma_alloc_coherent to dma_alloc_writecombine
-        - Removed unecessary reset of channel from the dma terminate_all
-        - Corrected usage of EE in irq handler and channel configuration
-          functions.
-        - Changed resource functions inside probe to use correct APIs.
-        - Removed dma filter function and modified dma_xlate to use
-          dma_get_slave_channel API
-        - Fixed various nit comments
+Soren Brinkmann (7):
+  tty: xuartps: Clean up
+  tty: xuartps: Print warning in clock notifier
+  tty: xuartps: Refactor read-modify-writes
+  tty: xuartps: Don't write IRQ disable register to enable interrupts
+  tty: xuartps: Rebrand driver as Cadence UART
+  tty: cadence: Document DT binding
+  ARM: zynq: DT: Migrate UART to Cadence binding
 
-Changes from v1:
-        - Converted driver to use virt-dma
-        - Reworked probe function per review comments
-        - tx_status function now computes and returns residuals
-        - Removed proprietary slave config.  Removed associated include file.
-        - Renamed files to reflect vendor name instead of specific device
-        - Converted to use (readl|writel)_relaxed w/ appropriate barriers
-        - Removed unions in favor of standard types.
+ .../devicetree/bindings/serial/cdns,uart.txt       |   20 +
+ arch/arm/boot/dts/zynq-7000.dtsi                   |    8 +-
+ drivers/tty/serial/Kconfig                         |    9 +-
+ drivers/tty/serial/xilinx_uartps.c                 | 1116 ++++++++++--=
+--------
+ include/uapi/linux/serial_core.h                   |    2 +-
+ 5 files changed, 560 insertions(+), 595 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/serial/cdns,uart.=
+txt
 
-Andy Gross (2):
-  dmaengine: qcom_bam_dma: Add device tree binding
-  dmaengine: add Qualcomm BAM dma driver
-
- .../devicetree/bindings/dma/qcom_bam_dma.txt       |   41 +
- drivers/dma/Kconfig                                |    9 +
- drivers/dma/Makefile                               |    1 +
- drivers/dma/qcom_bam_dma.c                         | 1111 ++++++++++++++++++++
- 4 files changed, 1162 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
- create mode 100644 drivers/dma/qcom_bam_dma.c
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+--=20
+1.9.0.1.g4196000
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-serial"=
+ in
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
