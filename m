@@ -1,127 +1,47 @@
-From: Boris BREZILLON <b.brezillon.dev@gmail.com>
-Subject: Re: [RFC PATCH v2 04/14] mtd: nand: define struct nand_timings
-Date: Mon, 10 Mar 2014 14:44:04 +0100
-Message-ID: <531DC1A4.7010208@gmail.com>
-References: <1391006064-28890-1-git-send-email-b.brezillon.dev@gmail.com> <1391006064-28890-5-git-send-email-b.brezillon.dev@gmail.com>
+From: Walter Goossens <waltergoossens-CmkmPbn3yAE@public.gmane.org>
+Subject: Re: Device Tree Generator
+Date: Mon, 10 Mar 2014 14:26:25 +0100
+Message-ID: <531DBD81.40201@home.nl>
+References: <CA+nFU8SUbmwmUN1SWVoh2VEEQ-r347v=GMfDJmAbMhn_yLQCRA@mail.gmail.com> <531D91CD.2010300@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1391006064-28890-5-git-send-email-b.brezillon.dev@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Brian Norris <computersforpeace@gmail.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Rob Herring <rob.herring@calxeda.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, dev@linux-sunxi.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <531D91CD.2010300-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, =?ISO-8859-1?Q?Marc_Mar=ED?= <marc.mari.barcelo-Iylbf7zvluZi+jfwTKn9+w@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-Le 29/01/2014 15:34, Boris BREZILLON a =C3=A9crit :
-> Define a struct containing the standard NAND timings as described in =
-NAND
-> datasheets.
+On 03/10/14 11:19, Michal Simek wrote:
+> On 03/07/2014 07:57 PM, Marc Mar=ED wrote:
+>> Hello everyone
+>>
+>> In the context of Google Summer of Code project, I'm thinking to wor=
+k
+>> on a device-tree generator, starting at the Beagleboard platform.
+>>
+>> To define better the scope of this project, so it can be useful too
+>> outside this specific platform, I would like to ask for your opinion=
+s
+>> in necessary and good-to-have features.
+> FYI: Xilinx have device-tree generator which extract information
+> from design tools.
 >
-> Signed-off-by: Boris BREZILLON <b.brezillon.dev@gmail.com>
-> ---
->   include/linux/mtd/nand.h |   49 +++++++++++++++++++++++++++++++++++=
-+++++++++++
->   1 file changed, 49 insertions(+)
+> Thanks,
+> Michal
 >
-> diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
-> index 9e6c8f9..67f0829 100644
-> --- a/include/linux/mtd/nand.h
-> +++ b/include/linux/mtd/nand.h
-> @@ -805,4 +805,53 @@ static inline bool nand_is_slc(struct nand_chip =
-*chip)
->   {
->   	return chip->bits_per_cell =3D=3D 1;
->   }
-> +
-> +/**
-> + * struct nand_sdr_timings - SDR NAND chip timings
-> + *
-> + * This struct defines the timing requirements of a SDR NAND chip.
-> + * These informations can be found in every NAND datasheets and the =
-timings
-> + * meaning are described in the ONFI specifications:
-> + * www.onfi.org/~/media/ONFI/specs/onfi_3_1_spec.pdf=E2=80=8E (chapt=
-er 4.15 Timing
-> + * Parameters)
-> + *
-> + */
-> +
-> +struct nand_sdr_timings {
-> +	u32 tALH_min;
-> +	u32 tADL_min;
-> +	u32 tALS_min;
-> +	u32 tAR_min;
-> +	u32 tCEA_max;
-> +	u32 tCEH_min;
-> +	u32 tCH_min;
-> +	u32 tCHZ_max;
-> +	u32 tCLH_min;
-> +	u32 tCLR_min;
-> +	u32 tCLS_min;
-> +	u32 tCOH_min;
-> +	u32 tCS_min;
-> +	u32 tDH_min;
-> +	u32 tDS_min;
-> +	u32 tFEAT_max;
-> +	u32 tIR_min;
-> +	u32 tITC_max;
-> +	u32 tRC_min;
-> +	u32 tREA_max;
-> +	u32 tREH_min;
-> +	u32 tRHOH_min;
-> +	u32 tRHW_min;
-> +	u32 tRHZ_max;
-> +	u32 tRLOH_min;
-> +	u32 tRP_min;
-> +	u32 tRR_min;
-> +	u64 tRST_max;
-> +	u32 tWB_max;
-> +	u32 tWC_min;
-> +	u32 tWH_min;
-> +	u32 tWHR_min;
-> +	u32 tWP_min;
-> +	u32 tWW_min;
-> +};
 
-Some timings are missing here (see Table 55 in the ONFI spec):
+And so does Altera ;)
+I think it makes sense for reprogrammable devices (such as FPGA's) but
+I'm not quite sure why you'd need a devicetree generator for a fairly
+static board.
 
--tR
--tBERS
--tCCS
--tPLEBSY
--...
+Walter
 
-I see at least 3 of those timings that could be useful (for the moment)=
- :
-- tR: this one should be used to fill the chip_delay field
-- tPROG and tBERS: could be used within nand_wait to choose the timeo
-   value appropriately.
 
-The problem is that these timings cannot be deduced from the ONFI timin=
-g=20
-mode
-but should rather be extracted from other ONFI parameters or from=20
-specific DT
-properties (hence why I didn't add them to the nand_sdr_timings struct=20
-int the
-first place).
-
-Should I add these fields to the nand_sdr_timings struct and change the=
- way
-onfi_async_timing_mode_to_sdr_timings works (fill a nand timing struct=20
-passed
-as an argument instead of returning a const pointer) ?
-Or should I create a new struct for these timings ?
-In the latter case how should I name it ?
-
-Best Regards,
-
-Boris
-
-> +
->   #endif /* __LINUX_MTD_NAND_H */
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
