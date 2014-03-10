@@ -1,141 +1,108 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 7/7] ARM: sun6i: dt: Add A31 DMA controller
- to DTSI
-Date: Mon, 10 Mar 2014 15:41:52 +0100
-Message-ID: <1394462512-11620-8-git-send-email-maxime.ripard@free-electrons.com>
-References: <1394462512-11620-1-git-send-email-maxime.ripard@free-electrons.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v5 1/7] pci: Introduce pci_register_io_range() helper
+ function.
+Date: Mon, 10 Mar 2014 14:45:19 +0000
+Message-ID: <20140310144519.GU6457@e106497-lin.cambridge.arm.com>
+References: <1393948204-11555-1-git-send-email-Liviu.Dudau@arm.com>
+ <201403042330.09607.arnd@arndb.de>
+ <20140306160442.GG6457@e106497-lin.cambridge.arm.com>
+ <201403070124.13139.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB6E766MAKGQEMSWQG3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1394462512-11620-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201403070124.13139.arnd@arndb.de>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Now that we have a DMA driver, we can add the DMA bindings in the DTSI for the
-controller and the devices supported that can use DMA.
+On Fri, Mar 07, 2014 at 12:24:12AM +0000, Arnd Bergmann wrote:
+> On Thursday 06 March 2014, Liviu Dudau wrote:
+> > On Tue, Mar 04, 2014 at 10:30:09PM +0000, Arnd Bergmann wrote:
+> > > On Tuesday 04 March 2014, Liviu Dudau wrote:
+> > > > +int __weak pci_register_io_range(phys_addr_t addr, resource_si=
+ze_t size)
+> > > > +{
+> > > > +       return 0;
+> > > > +}
+> > > > +
+> > >=20
+> > > How about returning an error here? You don't actually register th=
+e range.
+> >=20
+> > That's not the intention here. I basically want a nop, as by defaul=
+t (read x86)
+> > we do nothing with the IO range.
+>=20
+> I think x86 is a bad default though, because that is the exception ra=
+ther than
+> the rule. I also think that on x86, you shouldn't have an entry for t=
+he I/O
+> space in the "ranges" property since there is no translation, and the=
+n we don't
+> call this function.
+>=20
+> PCI devices described in DT on x86 would still be able to list their =
+I/O BARs
+> in DT, but you don't ever translate them into MMIO ranges.
+>=20
+> 	Arnd
+>=20
 
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/boot/dts/sun6i-a31.dtsi | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+So, if I understand you correctly, you would prefer to fail here and he=
+nce stop the
+parsing for the x86, rather than pretending everything is OK and going =
+through the
+motions?
 
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index 7fff9a20f079..e687b0d1e838 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -237,6 +237,15 @@
- 		#size-cells = <1>;
- 		ranges;
- 
-+		dma: dma-controller@01c02000 {
-+			compatible = "allwinner,sun6i-a31-dma";
-+			reg = <0x01c02000 0x1000>;
-+			interrupts = <0 50 4>;
-+			clocks = <&ahb1_gates 6>;
-+			resets = <&ahb1_rst 6>;
-+			#dma-cells = <1>;
-+		};
-+
- 		pio: pinctrl@01c20800 {
- 			compatible = "allwinner,sun6i-a31-pinctrl";
- 			reg = <0x01c20800 0x400>;
-@@ -322,6 +331,8 @@
- 			reg-io-width = <4>;
- 			clocks = <&apb2_gates 16>;
- 			resets = <&apb2_rst 16>;
-+			dmas = <&dma 6>, <&dma 6>;
-+			dma-names = "rx", "tx";
- 			status = "disabled";
- 		};
- 
-@@ -333,6 +344,8 @@
- 			reg-io-width = <4>;
- 			clocks = <&apb2_gates 17>;
- 			resets = <&apb2_rst 17>;
-+			dmas = <&dma 7>, <&dma 7>;
-+			dma-names = "rx", "tx";
- 			status = "disabled";
- 		};
- 
-@@ -344,6 +357,8 @@
- 			reg-io-width = <4>;
- 			clocks = <&apb2_gates 18>;
- 			resets = <&apb2_rst 18>;
-+			dmas = <&dma 8>, <&dma 8>;
-+			dma-names = "rx", "tx";
- 			status = "disabled";
- 		};
- 
-@@ -355,6 +370,8 @@
- 			reg-io-width = <4>;
- 			clocks = <&apb2_gates 19>;
- 			resets = <&apb2_rst 19>;
-+			dmas = <&dma 9>, <&dma 9>;
-+			dma-names = "rx", "tx";
- 			status = "disabled";
- 		};
- 
-@@ -366,6 +383,8 @@
- 			reg-io-width = <4>;
- 			clocks = <&apb2_gates 20>;
- 			resets = <&apb2_rst 20>;
-+			dmas = <&dma 10>, <&dma 10>;
-+			dma-names = "rx", "tx";
- 			status = "disabled";
- 		};
- 
-@@ -377,6 +396,8 @@
- 			reg-io-width = <4>;
- 			clocks = <&apb2_gates 21>;
- 			resets = <&apb2_rst 21>;
-+			dmas = <&dma 22>, <&dma 22>;
-+			dma-names = "rx", "tx";
- 			status = "disabled";
- 		};
- 
-@@ -426,6 +447,8 @@
- 			interrupts = <0 65 4>;
- 			clocks = <&ahb1_gates 20>, <&spi0_clk>;
- 			clock-names = "ahb", "mod";
-+			dmas = <&dma 23>, <&dma 23>;
-+			dma-names = "rx", "tx";
- 			resets = <&ahb1_rst 20>;
- 			status = "disabled";
- 		};
-@@ -436,6 +459,8 @@
- 			interrupts = <0 66 4>;
- 			clocks = <&ahb1_gates 21>, <&spi1_clk>;
- 			clock-names = "ahb", "mod";
-+			dmas = <&dma 24>, <&dma 24>;
-+			dma-names = "rx", "tx";
- 			resets = <&ahb1_rst 21>;
- 			status = "disabled";
- 		};
-@@ -446,6 +471,8 @@
- 			interrupts = <0 67 4>;
- 			clocks = <&ahb1_gates 22>, <&spi2_clk>;
- 			clock-names = "ahb", "mod";
-+			dmas = <&dma 25>, <&dma 25>;
-+			dma-names = "rx", "tx";
- 			resets = <&ahb1_rst 22>;
- 			status = "disabled";
- 		};
-@@ -456,6 +483,8 @@
- 			interrupts = <0 68 4>;
- 			clocks = <&ahb1_gates 23>, <&spi3_clk>;
- 			clock-names = "ahb", "mod";
-+			dmas = <&dma 26>, <&dma 26>;
-+			dma-names = "rx", "tx";
- 			resets = <&ahb1_rst 23>;
- 			status = "disabled";
- 		};
--- 
-1.9.0
+That was not my original thinking when I've introduced this function he=
+re. The main
+purpose of the function is to help the correct translation of IO addres=
+ses in
+pci_address_to_pio(). As Jason has explained very nicely, we have 3 typ=
+es of
+architectures here that we try to support:
+  - the ones that have separate IO address space (x86)
+  - the ones that have 1:1 mapping between physical IO addresses and lo=
+gical ports
+  - the architectures that memory map the IO addresses in virtual addre=
+ss space
+    and then translate the logical addresses into virtual based on a gi=
+ven offset.
+
+=46or the first two types we don't want to do anything special. Archite=
+ctures that
+fall in the last category will have to provide their own version of thi=
+s function,
+with the arm64 version being generic enough to be used as de facto?
+
+But I can see your point of view as well. I just don't know if that is =
+good enough
+for powerpc and microblaze. With the way things are in my patch, they s=
+hould be able
+to switch to of_create_pci_host_bridge() easily*, with your suggestion =
+they will
+have to provide their implementation for pci_register_io_range().
+
+We really need to get another architecture converted. If there are no o=
+ther takers I
+will make a stab once the current push towards upstreaming AArch64 hard=
+ware support
+slows down.
+
+* says the newby with confidence in his voice ;)
+
+Liviu
+
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
