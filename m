@@ -1,102 +1,143 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v2 4/8] Input: pixcir_i2c_ts: Use Type-B Multi-Touch
- protocol
-Date: Mon, 10 Mar 2014 11:37:01 -0500
-Message-ID: <20140310163701.GA30397@saruman.home>
-References: <1393428486-15001-1-git-send-email-rogerq@ti.com>
- <1393428486-15001-5-git-send-email-rogerq@ti.com>
- <531B3331.9050008@euromail.se>
- <531D7E66.1070300@ti.com>
-Reply-To: <balbi@ti.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 0/9] Doc/DT: DT bindings for various display components
+Date: Mon, 10 Mar 2014 18:40:58 +0200
+Message-ID: <531DEB1A.5090509@ti.com>
+References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>	<20140228162752.GU21483@n2100.arm.linux.org.uk>	<5310BDE3.60603@ti.com>	<20140228165628.GX21483@n2100.arm.linux.org.uk>	<53143796.2050309@ti.com>
+ <CAL_JsqLppZHjND_LFMxscR0WCD4Ox7vF0fDbQFoYg=TENXxY8Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3MwIy2ne0vdjdPXF"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <531D7E66.1070300@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: Henrik Rydberg <rydberg@euromail.se>, dmitry.torokhov@gmail.com, jcbian@pixcir.com.cn, balbi@ti.com, dmurphy@ti.com, mugunthanvnm@ti.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============2137101544635221257=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqLppZHjND_LFMxscR0WCD4Ox7vF0fDbQFoYg=TENXxY8Q@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-fbdev@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Tomasz Figa <tomasz.figa@gmail.com>, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Rob Clark <robdclark@gmail.com>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
---3MwIy2ne0vdjdPXF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--===============2137101544635221257==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="eET4CNQ3bBDUnx3QgaDsfXJpAXst4naJq"
+
+--eET4CNQ3bBDUnx3QgaDsfXJpAXst4naJq
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 10, 2014 at 10:57:10AM +0200, Roger Quadros wrote:
-> Hi Henrik,
->=20
-> On 03/08/2014 05:11 PM, Henrik Rydberg wrote:
-> > Hi Roger,
-> >=20
-> > the MT implementation seems mostly fine, just one curiosity:
-> >=20
-> >>  static irqreturn_t pixcir_ts_isr(int irq, void *dev_id)
-> >>  {
-> >>  	struct pixcir_i2c_ts_data *tsdata =3D dev_id;
-> >>  	const struct pixcir_ts_platform_data *pdata =3D tsdata->chip;
-> >> +	struct pixcir_report_data report;
-> >> =20
-> >>  	while (!tsdata->exiting) {
-> >> -		pixcir_ts_poscheck(tsdata);
-> >> -
-> >> -		if (gpio_get_value(pdata->gpio_attb))
-> >> +		/* parse packet */
-> >> +		pixcir_ts_parse(tsdata, &report);
-> >> +
-> >> +		/* report it */
-> >> +		pixcir_ts_report(tsdata, &report);
-> >> +
-> >> +		if (gpio_get_value(pdata->gpio_attb)) {
-> >> +			if (report.num_touches) {
-> >> +				/*
-> >> +				 * Last report with no finger up?
-> >> +				 * Do it now then.
-> >> +				 */
-> >> +				input_mt_sync_frame(tsdata->input);
-> >> +				input_sync(tsdata->input);
-> >=20
-> > Why is this special handling needed?
->=20
-> This is needed because the controller doesn't always report when all fing=
-ers
-> have left the screen. e.g. report might contain 3 fingers touched and then
-> gpio_attb line is de-asserted. There's no report with 0 fingers touched e=
-ven
-> if the user's fingers have left the screen. So we never detect a BUTTON_U=
-P.
->=20
-> Without this s/w workaround we observe side effects like buttons being pr=
-essed
-> but not released. To me it looks like a bug in the controller.
+Hi Rob,
 
-the other way would be to *also* use IRQF_TRIGGER_RISING, then you get
-an IRQ when fingers leave the screen. No ?
+On 10/03/14 18:05, Rob Herring wrote:
 
---=20
-balbi
+>> Russell's point was that these connector bindings are very generic, i.=
+e.
+>> they are not for any particular chip from a particular vendor, but for=
 
---3MwIy2ne0vdjdPXF
+>> any connector for DVI, HDMI or analog-tv. And he's worried that maybe =
+we
+>> shouldn't define such generic bindings without consulting the whole
+>> device-tree community (i.e including non-linux users).
+>=20
+> So re-work it to be generic and send it out. DT maintainers would
+> rarely disagree that something shouldn't be made generic.
+
+They (in this series) are already designed to be generic.
+
+I should perhaps re-word the question: we are concerned whether these
+bindings are good for all the users, not just us, and whether there
+already exists something that overlaps.
+
+Afaik, there's nothing overlapping. And I don't see why they wouldn't be
+good for all users (with the few minor modifications that have been
+discussed in this thread). But, if I gathered right, Russell would like
+some kind of ack from someone who might know better than us.
+
+So is it enough to have posted these, and gotten acks from the people
+involved, or should we get acks from DT maintainers also?
+
+Is there a way to get the attention of, say, BSD people, or should we
+just presume they'll follow the list?
+
+>> So the question is, is there such a community and a forum to bring up
+>> this kind of things? If yes, should we bring this up there? If yes, wh=
+at
+>> kind of things in general should be brought into the attention of
+>> non-linux users?
+>=20
+> devicetree list is just that. It is not just for Linux. There is the
+> newly created devicetree-spec@vger.kernel.org which is for more
+> core/common binding discussion.
+
+Ok.
+
+>> What I wonder here is that while a thing like DVI connector is, of
+>> course, more generic than, say, "ti,tfp410" encoder chip, but isn't th=
+e
+>> case still the same: we're defining global bindings for hardware that
+>> should work for everyone, not only Linux users?
+>=20
+> Defining the connectors in DT is a useful thing although mainly when
+> you have multiple connectors of the same type. Labels for composite,
+> SVideo, VGA, DVI, HDMI seem less useful to me. Describing position or
+> printed label (like front vs. rear connections) seem more useful to
+> me.
+
+My point above was that it feels mentally easier to define bindings for
+one particular IP block or chip, than defining bindings for a more
+generic thing like "HDMI connector". But, in the end, I believe they
+both should go through similar review, and there's no such difference.
+
+As for the labels, they can be anything that makes sense for that
+particular board. It can be "HDMI Front", if such makes sense, or
+"HDMI-2" if the connector has such physical printed label. Or, say,
+"Main LCD", "Secondary LCD". It's a free form text that is given to the
+user.
+
+ Tomi
+
+
+
+--eET4CNQ3bBDUnx3QgaDsfXJpAXst4naJq
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iQIcBAEBAgAGBQJTHeotAAoJEIaOsuA1yqRETb4QALJCMlzEjH+h++ArhkS3w5sU
-k/ZGnOjvxNLoSaAKzjd6A9os07SGtLhzJdc96fOa4+ZL9kG4nLn0tgQWbbANY3UG
-PJSoXh4RcR/tRVLsVbTVTzY5lCtiPPDljDO1eeyEdNu4WnchMXVYD2Zs/Qt2gc3C
-xttLeCsDgwpjr45EO0vzexkeUyDWSQHtki9aYID/dljC2MxRXwyGC3F7w4YLRVCc
-S3y8uHB7wcHtf+0lbvW/NpPep3lyWblblzlqwCiRlXWoni+xmA+/fVMvNo3LJb3D
-zuYy0Ox4lMCjaqmbI5UfxL22IxtLW36DicEEiPcXyjJmy9z3qFFszQz1VTtn88yh
-nhg49wAQxMKwtIaj8zM9XaWasW2ujkcMRFpnW3y5liuVR1hRui24RDlkNieYb32y
-Y2mRhqtMsgP6bNncRwPk1qYFQ1jTv2T5fxmzw2NVLzK+AQsDiDWu/DWtJm8O8pIH
-FPfip7tQUUakUD1E/0s6yMexZbkVKEzPyneHZV0qcrp6ihcd/iedpSGB99cOZ85S
-9ko8pA9zUw7XDbFvlQAs6cyu2Qlt6LSz6x+v3EzyLOoimtCnmwQ2+0Jwkoj4eB3n
-KBYlOgihOnSR5jBIswpNpDWxtRL2AIRt5rlycUeTg8DGQLZV1HDJTLQHD4QCoGDm
-u6qYhSpgJP3ot6Q1evBN
-=F8xU
+iQIcBAEBAgAGBQJTHesaAAoJEPo9qoy8lh71R9MQAKdG8OcH5aml90jL66StavCl
+qQ/yoBzyCF6Xcyt9ks0hCMCs5rb9/G9rgTd3oT+j48q1Cxa1t5AkHeDB05B999RO
+QnrC2CNJxeS/R2tRBvjxH5ebkh1GabFVesgN5I3GMNOKJvtY8wgqDiK8tEPOMG6j
+jrf31ML7HPnIuHcyRZbtlgMWrQlUSQaxzm9aJ6DG/AugGVquHhGyKk+6efMfbEAn
+GUyGheyU7QjvlUZG40o0I8ETH8kBLQKD6Eq9Rtw9IhNfY/aFNhefvwWjxxKNlJhE
+d6ESaKGYf2vFs4lxFR+lZY+iB5utrsD4hrFsAM2uqwbX+OBNALhazhAS374IKQsY
+E1FXp1YI2+P8tP99omKW7KYyW4QK304KwNC4Av8twdoXwqhZhXaNQffT0fjoPVSI
+hRSsEc/kQG2IUeoIRflCBRA8P01gDWGjJVO3+DvPD6NJRe5A+5CeFrq/SzND55wy
+qmeixItVbGNrzPkiZW2izvcNgs4Jytypu+DJdsezWQz6oA+RzHKSLJUOy5fK/gaC
+mn8RkAd9eFcsJe1HszvuQCmuypOvNC1hy+RYwoIbth3FzvAxbyOBPKx4nx53afz1
+yf9T7LaPSQ0bqi+1JEO3+4eihxmEBiYKOWt6EYIPLpMyDug6cIk7gz++ZsXGLj5c
+yR6IGKHq3Li+T5ypbUnA
+=6AnV
 -----END PGP SIGNATURE-----
 
---3MwIy2ne0vdjdPXF--
+--eET4CNQ3bBDUnx3QgaDsfXJpAXst4naJq--
+
+
+--===============2137101544635221257==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============2137101544635221257==--
