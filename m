@@ -1,197 +1,140 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: [PATCH v2 4/6] rtc: pm8xxx: add support for devicetree
-Date: Mon, 10 Mar 2014 13:44:47 -0500
-Message-ID: <1394477089-3996-5-git-send-email-joshc@codeaurora.org>
-References: <1394477089-3996-1-git-send-email-joshc@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1394477089-3996-1-git-send-email-joshc@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Morton <akpm@linux-foundation.org>, Alessandro Zummo <a.zummo@towertech.it>, David Brown <davidb@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, rtc-linux@googlegroups.com, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6 6/6] pci: Add support for creating a generic host_bridge from device tree
+Date: Mon, 10 Mar 2014 19:59:59 +0100
+Message-ID: <1469359.kil5iaOqdU@wuerfel>
+References: <1394020137-1830-1-git-send-email-Liviu.Dudau@arm.com> <2115856.ZTdgp5fkma@wuerfel> <20140310163343.GY6457@e106497-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20140310163343.GY6457@e106497-lin.cambridge.arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Tanmay Inamdar <tinamdar@apm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bjorn Helgaas <bhelgaas@google.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for describing the PM8921/PM8058 RTC in device tree.
+On Monday 10 March 2014 16:33:44 Liviu Dudau wrote:
+> On Mon, Mar 10, 2014 at 03:21:01PM +0000, Arnd Bergmann wrote:
+> > On Monday 10 March 2014 14:44:14 Liviu Dudau wrote:
+> > > I will try to improve the error handling in the next patchset version.
+> > > However I am still confused about the earlier discussion on
+> > > pci_register_io_range(). Your suggestion initially was to return an
+> > > error in the default weak implementation, but in your last email you
+> > > are talking about returning 'port'.
+> > 
+> > You can do either one: 'port' should be positive or zero, while the
+> > error would always be negative. We do the same thing in many interfaces
+> > in the kernel.
+> > 
+> > > My idea when I've introduced the
+> > > helper function was that it would return an error if it fails to
+> > > register the IO range and zero otherwise. I agree that we can treat
+> > > the default 'do nothing with the IO range' case as an error, with
+> > > the caveat that will force architectures that use this code to
+> > > provide their own implementation of pci_register_io_range() in order
+> > > to avoid failure, even for the cases where the architecture has a 1:1
+> > > mapping between IO and CPU addresses.
+> > 
+> > Which architectures are you thinking of? The only one I know that
+> > does this is ia64, and we won't ever have to support this helper
+> > on that architecture.
+> 
+> I was thinking about architectures that have IO_SPACE_LIMIT >= 0xffffffff.
+> While not an absolute indicator, with the default pci_address_to_pio()
+> that means that they can use the CPU MMIO address as IO address directly.
 
-Additionally:
-   - drop support for describing the RTC using platform data,
-     as there are no current in tree users who do so.
-   - make allow_set_time a device-specific flag, instead of mucking
-     with the rtc_ops
+Not really, that would only work if they also have instructions to do
+raw accesses to physical memory addresses rather than virtual memory
+pointers that most architectures do.
 
-Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
-Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/rtc/rtc-pm8xxx.c       | 52 +++++++++++++++++++++++-------------------
- include/linux/mfd/pm8xxx/rtc.h | 25 --------------------
- 2 files changed, 29 insertions(+), 48 deletions(-)
- delete mode 100644 include/linux/mfd/pm8xxx/rtc.h
+> $ git grep IO_SPACE_LIMIT | grep -i ffffffff
+> arch/arm/include/asm/io.h:#define IO_SPACE_LIMIT ((resource_size_t)0xffffffff)
+> arch/arm/mach-at91/include/mach/io.h:#define IO_SPACE_LIMIT		0xFFFFFFFF
+> arch/arm/mach-omap1/include/mach/io.h:#define IO_SPACE_LIMIT 0xffffffff
+> arch/arm/mach-pxa/include/mach/io.h:#define IO_SPACE_LIMIT 0xffffffff
+> arch/arm/mach-s3c24xx/include/mach/io.h:#define IO_SPACE_LIMIT 0xffffffff
 
-diff --git a/drivers/rtc/rtc-pm8xxx.c b/drivers/rtc/rtc-pm8xxx.c
-index 91ac2e3..6e3cd34 100644
---- a/drivers/rtc/rtc-pm8xxx.c
-+++ b/drivers/rtc/rtc-pm8xxx.c
-@@ -9,7 +9,7 @@
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  * GNU General Public License for more details.
-  */
--
-+#include <linux/of.h>
- #include <linux/module.h>
- #include <linux/init.h>
- #include <linux/rtc.h>
-@@ -19,9 +19,6 @@
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- 
--#include <linux/mfd/pm8xxx/rtc.h>
--
--
- /* RTC Register offsets from RTC CTRL REG */
- #define PM8XXX_ALARM_CTRL_OFFSET	0x01
- #define PM8XXX_RTC_WRITE_OFFSET		0x02
-@@ -39,6 +36,7 @@
-  * struct pm8xxx_rtc -  rtc driver internal structure
-  * @rtc:		rtc device for this driver.
-  * @regmap:		regmap used to access RTC registers
-+ * @allow_set_time:	indicates whether writing to the RTC is allowed
-  * @rtc_alarm_irq:	rtc alarm irq number.
-  * @rtc_base:		address of rtc control register.
-  * @rtc_read_base:	base address of read registers.
-@@ -51,6 +49,7 @@
- struct pm8xxx_rtc {
- 	struct rtc_device *rtc;
- 	struct regmap *regmap;
-+	bool allow_set_time;
- 	int rtc_alarm_irq;
- 	int rtc_base;
- 	int rtc_read_base;
-@@ -75,6 +74,9 @@ static int pm8xxx_rtc_set_time(struct device *dev, struct rtc_time *tm)
- 	u8 value[NUM_8_BIT_RTC_REGS], alarm_enabled = 0, ctrl_reg;
- 	struct pm8xxx_rtc *rtc_dd = dev_get_drvdata(dev);
- 
-+	if (!rtc_dd->allow_set_time)
-+		return -EACCES;
-+
- 	rtc_tm_to_time(tm, &secs);
- 
- 	for (i = 0; i < NUM_8_BIT_RTC_REGS; i++) {
-@@ -298,8 +300,9 @@ rtc_rw_fail:
- 	return rc;
- }
- 
--static struct rtc_class_ops pm8xxx_rtc_ops = {
-+static const struct rtc_class_ops pm8xxx_rtc_ops = {
- 	.read_time	= pm8xxx_rtc_read_time,
-+	.set_time	= pm8xxx_rtc_set_time,
- 	.set_alarm	= pm8xxx_rtc_set_alarm,
- 	.read_alarm	= pm8xxx_rtc_read_alarm,
- 	.alarm_irq_enable = pm8xxx_rtc_alarm_irq_enable,
-@@ -353,18 +356,26 @@ rtc_alarm_handled:
- 	return IRQ_HANDLED;
- }
- 
-+/*
-+ * Hardcoded RTC bases until IORESOURCE_REG mapping is figured out
-+ */
-+static const struct of_device_id pm8xxx_id_table[] = {
-+	{ .compatible = "qcom,pm8921-rtc", .data = (void *) 0x11D },
-+	{ .compatible = "qcom,pm8058-rtc", .data = (void *) 0x1E8 },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, pm8xxx_id_table);
-+
- static int pm8xxx_rtc_probe(struct platform_device *pdev)
- {
- 	int rc;
- 	unsigned int ctrl_reg;
--	bool rtc_write_enable = false;
- 	struct pm8xxx_rtc *rtc_dd;
--	struct resource *rtc_resource;
--	const struct pm8xxx_rtc_platform_data *pdata =
--						dev_get_platdata(&pdev->dev);
-+	const struct of_device_id *match;
- 
--	if (pdata != NULL)
--		rtc_write_enable = pdata->rtc_write_enable;
-+	match = of_match_node(pm8xxx_id_table, pdev->dev.of_node);
-+	if (!match)
-+		return -ENXIO;
- 
- 	rtc_dd = devm_kzalloc(&pdev->dev, sizeof(*rtc_dd), GFP_KERNEL);
- 	if (rtc_dd == NULL)
-@@ -385,14 +396,10 @@ static int pm8xxx_rtc_probe(struct platform_device *pdev)
- 		return -ENXIO;
- 	}
- 
--	rtc_resource = platform_get_resource_byname(pdev, IORESOURCE_IO,
--						    "pmic_rtc_base");
--	if (!(rtc_resource && rtc_resource->start)) {
--		dev_err(&pdev->dev, "RTC IO resource absent!\n");
--		return -ENXIO;
--	}
-+	rtc_dd->allow_set_time = of_property_read_bool(pdev->dev.of_node,
-+						      "allow-set-time");
- 
--	rtc_dd->rtc_base = rtc_resource->start;
-+	rtc_dd->rtc_base = (long) match->data;
- 
- 	/* Setup RTC register addresses */
- 	rtc_dd->rtc_write_base = rtc_dd->rtc_base + PM8XXX_RTC_WRITE_OFFSET;
-@@ -419,8 +426,6 @@ static int pm8xxx_rtc_probe(struct platform_device *pdev)
- 	}
- 
- 	rtc_dd->ctrl_reg = ctrl_reg;
--	if (rtc_write_enable)
--		pm8xxx_rtc_ops.set_time = pm8xxx_rtc_set_time;
- 
- 	platform_set_drvdata(pdev, rtc_dd);
- 
-@@ -479,9 +484,10 @@ static SIMPLE_DEV_PM_OPS(pm8xxx_rtc_pm_ops,
- static struct platform_driver pm8xxx_rtc_driver = {
- 	.probe		= pm8xxx_rtc_probe,
- 	.driver	= {
--		.name	= PM8XXX_RTC_DEV_NAME,
--		.owner	= THIS_MODULE,
--		.pm	= &pm8xxx_rtc_pm_ops,
-+		.name		= "rtc-pm8xxx",
-+		.owner		= THIS_MODULE,
-+		.pm		= &pm8xxx_rtc_pm_ops,
-+		.of_match_table	= pm8xxx_id_table,
- 	},
- };
- 
-diff --git a/include/linux/mfd/pm8xxx/rtc.h b/include/linux/mfd/pm8xxx/rtc.h
-deleted file mode 100644
-index 14f1983..0000000
---- a/include/linux/mfd/pm8xxx/rtc.h
-+++ /dev/null
-@@ -1,25 +0,0 @@
--/* Copyright (c) 2010-2011, Code Aurora Forum. All rights reserved.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 and
-- * only version 2 as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- */
--
--#ifndef __RTC_PM8XXX_H__
--#define __RTC_PM8XXX_H__
--
--#define PM8XXX_RTC_DEV_NAME     "rtc-pm8xxx"
--/**
-- * struct pm8xxx_rtc_pdata - RTC driver platform data
-- * @rtc_write_enable: variable stating RTC write capability
-- */
--struct pm8xxx_rtc_platform_data {
--	bool rtc_write_enable;
--};
--
--#endif /* __RTC_PM8XXX_H__ */
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+These use a special trick where an __iomem pointer is the same as
+the port number. This works most of the time, but breaks anything
+that assumes that port numbers are low, such as /dev/port or
+broken devices. Moreover, it means your code won't work because
+it depends on passing the virtual start address of the PIO mapping
+window as io_offset.
+
+> arch/avr32/include/asm/io.h:#define IO_SPACE_LIMIT	0xffffffff
+> arch/frv/include/asm/io.h:#define IO_SPACE_LIMIT	0xffffffff
+
+They have no MMU, and the code relies on the port number to match
+both the virtual and the physical address. You could be right about
+these, but I would guess that the code also needs some other
+changes if we want to make it work on nommu kernels. It also depends
+on whether the I/O bus address is the same as the CPU address, or
+if it starts at bus address 0.
+
+> arch/ia64/include/asm/io.h:#define IO_SPACE_LIMIT		0xffffffffffffffffUL
+
+Here, the definition is special, the token is just used to encode
+a space number and an offset within the I/O space.
+
+> arch/m32r/include/asm/io.h:#define IO_SPACE_LIMIT  0xFFFFFFFF
+
+no PCI here.
+
+> arch/m68k/include/asm/io_no.h:#define IO_SPACE_LIMIT 0xffffffff
+
+This looks like a mistake, it should be smaller
+
+> arch/microblaze/include/asm/io.h:#define IO_SPACE_LIMIT (0xFFFFFFFF)
+
+I suspect it doesn't actually work. microblaze copied large parts
+of this from PowerPC, but the parts that differ apparently get
+it wrong for the I/O space. 
+
+> arch/mn10300/include/asm/io.h:#define IO_SPACE_LIMIT 0xffffffff
+
+Same category as frv. We should ask David Howells whether he
+thinks I/O space actually works on these.
+
+> arch/sh/include/asm/io.h:#define IO_SPACE_LIMIT 0xffffffff
+
+I think this should just be 0xffff.
+
+> arch/sparc/include/asm/io_32.h:#define IO_SPACE_LIMIT 0xffffffff
+> arch/sparc/include/asm/io_64.h:#define IO_SPACE_LIMIT 0xffffffffffffffffUL
+
+Sparc actually accesses the physical addresses, so in theory
+it could always work. In the 64-bit case it would however have
+to check that the port number is smaller than 0xffffffff, otherwise
+you couldn't set the BAR. This means you still need a custom
+function.
+
+> arch/tile/include/asm/io.h:#define IO_SPACE_LIMIT 0xffffffff
+
+tile seems to support only ioport_map() but not inb/outb, if I'm
+reading this right.
+
+> > I did not ask to treat 'do nothing with the IO range' as an error,
+> > what I meant is that we should treat 'architecture cannot translate
+> > from I/O space to memory space but DT lists a translation anyway'
+> > as an error. On x86, you should never see an entry for the I/O space
+> > in "ranges", so we will not call this function unless there is a
+> > bug in DT.
+> 
+> Ok, it's just that there is no "architecture cannot translate from I/O
+> space to memory space" indicator anywhere and I don't want to make x86
+> a special case.
+
+Right.
+
+> So, my proposal is this: default weak implementation of pci_register_io_range()
+> returns an error (meaning I have no idea how to translate IO addresses
+> to memory space) and anyone that wants this function to return success will
+> have to provide their implementation.
+
+Another idea: make this conditional on the definition of PCI_IOBASE: If this
+is defined, we can use the arm64 version that uses this number. Otherwise
+we fall back to returning an error, which means that either on the
+architecture we shouldn't be calling that function, or we need a custom
+implementation.
+
+	Arnd
