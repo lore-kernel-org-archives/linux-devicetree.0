@@ -1,1178 +1,687 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: [Patch v9 2/2] dmaengine: add Qualcomm BAM dma driver
-Date: Mon, 10 Mar 2014 16:40:20 -0500
-Message-ID: <1394487622-1679-3-git-send-email-agross@codeaurora.org>
-References: <1394487622-1679-1-git-send-email-agross@codeaurora.org>
+From: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Subject: [PATCH v2 1/7] tty: xuartps: Clean up
+Date: Mon, 10 Mar 2014 14:40:04 -0700
+Message-ID: <1394487610-2419-2-git-send-email-soren.brinkmann@xilinx.com>
+References: <1394487610-2419-1-git-send-email-soren.brinkmann@xilinx.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1394487622-1679-1-git-send-email-agross@codeaurora.org>
+In-Reply-To: <1394487610-2419-1-git-send-email-soren.brinkmann@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Andy Gross <agross@codeaurora.org>
+To: Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Cc: Michal Simek <michal.simek@xilinx.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Soren Brinkmann <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the DMA engine driver for the QCOM Bus Access Manager (BAM) DMA controller
-found in the MSM 8x74 platforms.
+This is all white space and comment clean up. Mostly reformatting
+comments.
 
-Each BAM DMA device is associated with a specific on-chip peripheral.  Each
-channel provides a uni-directional data transfer engine that is capable of
-transferring data between the peripheral and system memory (System mode), or
-between two peripherals (BAM2BAM).
-
-The initial release of this driver only supports slave transfers between
-peripherals and system memory.
-
-Signed-off-by: Andy Gross <agross@codeaurora.org>
+Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
 ---
- drivers/dma/Kconfig        |    9 +
- drivers/dma/Makefile       |    1 +
- drivers/dma/qcom_bam_dma.c | 1111 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 1121 insertions(+)
- create mode 100644 drivers/dma/qcom_bam_dma.c
+ drivers/tty/serial/xilinx_uartps.c | 294 ++++++++++++++-----------------------
+ 1 file changed, 111 insertions(+), 183 deletions(-)
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 605b016..f87cef9 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -401,4 +401,13 @@ config DMATEST
- config DMA_ENGINE_RAID
- 	bool
+diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
+index f619ad5b5eae..1c6e1a68ae95 100644
+--- a/drivers/tty/serial/xilinx_uartps.c
++++ b/drivers/tty/serial/xilinx_uartps.c
+@@ -1,14 +1,13 @@
+ /*
+  * Xilinx PS UART driver
+  *
+- * 2011 - 2013 (C) Xilinx Inc.
++ * 2011 - 2014 (C) Xilinx Inc.
+  *
+  * This program is free software; you can redistribute it
+  * and/or modify it under the terms of the GNU General Public
+  * License as published by the Free Software Foundation;
+  * either version 2 of the License, or (at your option) any
+  * later version.
+- *
+  */
  
-+config QCOM_BAM_DMA
-+	tristate "QCOM BAM DMA support"
-+	depends on ARCH_QCOM || (COMPILE_TEST && OF && ARM)
-+	select DMA_ENGINE
-+	select DMA_VIRTUAL_CHANNELS
-+	---help---
-+	  Enable support for the QCOM BAM DMA controller.  This controller
-+	  provides DMA capabilities for a variety of on-chip devices.
+ #if defined(CONFIG_SERIAL_XILINX_PS_UART_CONSOLE) && defined(CONFIG_MAGIC_SYSRQ)
+@@ -49,39 +48,27 @@ static int rx_timeout = 10;
+ module_param(rx_timeout, uint, S_IRUGO);
+ MODULE_PARM_DESC(rx_timeout, "Rx timeout, 1-255");
+ 
+-/********************************Register Map********************************/
+-/** UART
+- *
+- * Register offsets for the UART.
+- *
+- */
+-#define XUARTPS_CR_OFFSET	0x00  /* Control Register [8:0] */
+-#define XUARTPS_MR_OFFSET	0x04  /* Mode Register [10:0] */
+-#define XUARTPS_IER_OFFSET	0x08  /* Interrupt Enable [10:0] */
+-#define XUARTPS_IDR_OFFSET	0x0C  /* Interrupt Disable [10:0] */
+-#define XUARTPS_IMR_OFFSET	0x10  /* Interrupt Mask [10:0] */
+-#define XUARTPS_ISR_OFFSET	0x14  /* Interrupt Status [10:0]*/
+-#define XUARTPS_BAUDGEN_OFFSET	0x18  /* Baud Rate Generator [15:0] */
+-#define XUARTPS_RXTOUT_OFFSET	0x1C  /* RX Timeout [7:0] */
+-#define XUARTPS_RXWM_OFFSET	0x20  /* RX FIFO Trigger Level [5:0] */
+-#define XUARTPS_MODEMCR_OFFSET	0x24  /* Modem Control [5:0] */
+-#define XUARTPS_MODEMSR_OFFSET	0x28  /* Modem Status [8:0] */
+-#define XUARTPS_SR_OFFSET	0x2C  /* Channel Status [11:0] */
+-#define XUARTPS_FIFO_OFFSET	0x30  /* FIFO [15:0] or [7:0] */
+-#define XUARTPS_BAUDDIV_OFFSET	0x34  /* Baud Rate Divider [7:0] */
+-#define XUARTPS_FLOWDEL_OFFSET	0x38  /* Flow Delay [15:0] */
+-#define XUARTPS_IRRX_PWIDTH_OFFSET 0x3C /* IR Minimum Received Pulse
+-						Width [15:0] */
+-#define XUARTPS_IRTX_PWIDTH_OFFSET 0x40 /* IR Transmitted pulse
+-						Width [7:0] */
+-#define XUARTPS_TXWM_OFFSET	0x44  /* TX FIFO Trigger Level [5:0] */
+-
+-/** Control Register
+- *
+- * The Control register (CR) controls the major functions of the device.
+- *
+- * Control Register Bit Definitions
+- */
++/* Register offsets for the UART. */
++#define XUARTPS_CR_OFFSET	0x00  /* Control Register */
++#define XUARTPS_MR_OFFSET	0x04  /* Mode Register */
++#define XUARTPS_IER_OFFSET	0x08  /* Interrupt Enable */
++#define XUARTPS_IDR_OFFSET	0x0C  /* Interrupt Disable */
++#define XUARTPS_IMR_OFFSET	0x10  /* Interrupt Mask */
++#define XUARTPS_ISR_OFFSET	0x14  /* Interrupt Status */
++#define XUARTPS_BAUDGEN_OFFSET	0x18  /* Baud Rate Generator */
++#define XUARTPS_RXTOUT_OFFSET	0x1C  /* RX Timeout */
++#define XUARTPS_RXWM_OFFSET	0x20  /* RX FIFO Trigger Level */
++#define XUARTPS_MODEMCR_OFFSET	0x24  /* Modem Control */
++#define XUARTPS_MODEMSR_OFFSET	0x28  /* Modem Status */
++#define XUARTPS_SR_OFFSET	0x2C  /* Channel Status */
++#define XUARTPS_FIFO_OFFSET	0x30  /* FIFO */
++#define XUARTPS_BAUDDIV_OFFSET	0x34  /* Baud Rate Divider */
++#define XUARTPS_FLOWDEL_OFFSET	0x38  /* Flow Delay */
++#define XUARTPS_IRRX_PWIDTH_OFFSET 0x3C /* IR Minimum Received Pulse Width */
++#define XUARTPS_IRTX_PWIDTH_OFFSET 0x40 /* IR Transmitted pulse Width */
++#define XUARTPS_TXWM_OFFSET	0x44  /* TX FIFO Trigger Level */
 +
- endif
-diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-index a029d0f4..907b915 100644
---- a/drivers/dma/Makefile
-+++ b/drivers/dma/Makefile
-@@ -44,3 +44,4 @@ obj-$(CONFIG_DMA_JZ4740) += dma-jz4740.o
- obj-$(CONFIG_TI_CPPI41) += cppi41.o
- obj-$(CONFIG_K3_DMA) += k3dma.o
- obj-$(CONFIG_MOXART_DMA) += moxart-dma.o
-+obj-$(CONFIG_QCOM_BAM_DMA) += qcom_bam_dma.o
-diff --git a/drivers/dma/qcom_bam_dma.c b/drivers/dma/qcom_bam_dma.c
-new file mode 100644
-index 0000000..82c9231
---- /dev/null
-+++ b/drivers/dma/qcom_bam_dma.c
-@@ -0,0 +1,1111 @@
++/* Control Register Bit Definitions */
+ #define XUARTPS_CR_STOPBRK	0x00000100  /* Stop TX break */
+ #define XUARTPS_CR_STARTBRK	0x00000080  /* Set TX break */
+ #define XUARTPS_CR_TX_DIS	0x00000020  /* TX disabled. */
+@@ -92,14 +79,11 @@ MODULE_PARM_DESC(rx_timeout, "Rx timeout, 1-255");
+ #define XUARTPS_CR_RXRST	0x00000001  /* RX logic reset */
+ #define XUARTPS_CR_RST_TO	0x00000040  /* Restart Timeout Counter */
+ 
+-/** Mode Register
+- *
 +/*
-+ * Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
++ * Mode Register:
+  * The mode register (MR) defines the mode of transfer as well as the data
+  * format. If this register is modified during transmission or reception,
+  * data validity cannot be guaranteed.
+- *
+- * Mode Register Bit Definitions
+- *
+  */
+ #define XUARTPS_MR_CLKSEL		0x00000001  /* Pre-scalar selection */
+ #define XUARTPS_MR_CHMODE_L_LOOP	0x00000200  /* Local loop back mode */
+@@ -118,8 +102,8 @@ MODULE_PARM_DESC(rx_timeout, "Rx timeout, 1-255");
+ #define XUARTPS_MR_CHARLEN_7_BIT	0x00000004  /* 7 bits data */
+ #define XUARTPS_MR_CHARLEN_8_BIT	0x00000000  /* 8 bits data */
+ 
+-/** Interrupt Registers
+- *
 +/*
-+ * QCOM BAM DMA engine driver
-+ *
-+ * QCOM BAM DMA blocks are distributed amongst a number of the on-chip
-+ * peripherals on the MSM 8x74.  The configuration of the channels are dependent
-+ * on the way they are hard wired to that specific peripheral.  The peripheral
-+ * device tree entries specify the configuration of each channel.
-+ *
-+ * The DMA controller requires the use of external memory for storage of the
-+ * hardware descriptors for each channel.  The descriptor FIFO is accessed as a
-+ * circular buffer and operations are managed according to the offset within the
-+ * FIFO.  After pipe/channel reset, all of the pipe registers and internal state
-+ * are back to defaults.
-+ *
-+ * During DMA operations, we write descriptors to the FIFO, being careful to
-+ * handle wrapping and then write the last FIFO offset to that channel's
-+ * P_EVNT_REG register to kick off the transaction.  The P_SW_OFSTS register
-+ * indicates the current FIFO offset that is being processed, so there is some
-+ * indication of where the hardware is currently working.
++ * Interrupt Registers:
+  * Interrupt control logic uses the interrupt enable register (IER) and the
+  * interrupt disable register (IDR) to set the value of the bits in the
+  * interrupt mask register (IMR). The IMR determines whether to pass an
+@@ -127,7 +111,6 @@ MODULE_PARM_DESC(rx_timeout, "Rx timeout, 1-255");
+  * Writing a 1 to IER Enables an interrupt, writing a 1 to IDR disables an
+  * interrupt. IMR and ISR are read only, and IER and IDR are write only.
+  * Reading either IER or IDR returns 0x00.
+- *
+  * All four registers have the same bit definitions.
+  */
+ #define XUARTPS_IXR_TOUT	0x00000100 /* RX Timeout error interrupt */
+@@ -145,8 +128,8 @@ MODULE_PARM_DESC(rx_timeout, "Rx timeout, 1-255");
+ /* Goes in read_status_mask for break detection as the HW doesn't do it*/
+ #define XUARTPS_IXR_BRK		0x80000000
+ 
+-/** Channel Status Register
+- *
++/*
++ * Channel Status Register:
+  * The channel status register (CSR) is provided to enable the control logic
+  * to monitor the status of bits in the channel interrupt status register,
+  * even if these are masked out by the interrupt mask register.
+@@ -163,11 +146,11 @@ MODULE_PARM_DESC(rx_timeout, "Rx timeout, 1-255");
+ 
+ /**
+  * struct xuartps - device data
+- * @port		Pointer to the UART port
+- * @refclk		Reference clock
+- * @aperclk		APB clock
+- * @baud		Current baud rate
+- * @clk_rate_change_nb	Notifier block for clock changes
++ * @port:		Pointer to the UART port
++ * @refclk:		Reference clock
++ * @aperclk:		APB clock
++ * @baud:		Current baud rate
++ * @clk_rate_change_nb:	Notifier block for clock changes
+  */
+ struct xuartps {
+ 	struct uart_port	*port;
+@@ -183,8 +166,8 @@ struct xuartps {
+  * @irq: Irq number
+  * @dev_id: Id of the port
+  *
+- * Returns IRQHANDLED
+- **/
++ * Return: IRQHANDLED
 + */
-+
-+#include <linux/kernel.h>
-+#include <linux/io.h>
-+#include <linux/init.h>
-+#include <linux/slab.h>
-+#include <linux/module.h>
-+#include <linux/interrupt.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/scatterlist.h>
-+#include <linux/device.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_dma.h>
-+#include <linux/clk.h>
-+#include <linux/dmaengine.h>
-+
-+#include "dmaengine.h"
-+#include "virt-dma.h"
-+
-+struct bam_desc_hw {
-+	u32 addr;		/* Buffer physical address */
-+	u16 size;		/* Buffer size in bytes */
-+	u16 flags;
-+};
-+
-+#define DESC_FLAG_INT BIT(15)
-+#define DESC_FLAG_EOT BIT(14)
-+#define DESC_FLAG_EOB BIT(13)
-+
-+struct bam_async_desc {
-+	struct virt_dma_desc vd;
-+
-+	u32 num_desc;
-+	u32 xfer_len;
-+	struct bam_desc_hw *curr_desc;
-+
-+	enum dma_transfer_direction dir;
-+	size_t length;
-+	struct bam_desc_hw desc[0];
-+};
-+
-+#define BAM_CTRL			0x0000
-+#define BAM_REVISION			0x0004
-+#define BAM_SW_REVISION			0x0080
-+#define BAM_NUM_PIPES			0x003C
-+#define BAM_TIMER			0x0040
-+#define BAM_TIMER_CTRL			0x0044
-+#define BAM_DESC_CNT_TRSHLD		0x0008
-+#define BAM_IRQ_SRCS			0x000C
-+#define BAM_IRQ_SRCS_MSK		0x0010
-+#define BAM_IRQ_SRCS_UNMASKED		0x0030
-+#define BAM_IRQ_STTS			0x0014
-+#define BAM_IRQ_CLR			0x0018
-+#define BAM_IRQ_EN			0x001C
-+#define BAM_CNFG_BITS			0x007C
-+#define BAM_IRQ_SRCS_EE(ee)		(0x0800 + ((ee) * 0x80))
-+#define BAM_IRQ_SRCS_MSK_EE(ee)		(0x0804 + ((ee) * 0x80))
-+#define BAM_P_CTRL(pipe)		(0x1000 + ((pipe) * 0x1000))
-+#define BAM_P_RST(pipe)			(0x1004 + ((pipe) * 0x1000))
-+#define BAM_P_HALT(pipe)		(0x1008 + ((pipe) * 0x1000))
-+#define BAM_P_IRQ_STTS(pipe)		(0x1010 + ((pipe) * 0x1000))
-+#define BAM_P_IRQ_CLR(pipe)		(0x1014 + ((pipe) * 0x1000))
-+#define BAM_P_IRQ_EN(pipe)		(0x1018 + ((pipe) * 0x1000))
-+#define BAM_P_EVNT_DEST_ADDR(pipe)	(0x182C + ((pipe) * 0x1000))
-+#define BAM_P_EVNT_REG(pipe)		(0x1818 + ((pipe) * 0x1000))
-+#define BAM_P_SW_OFSTS(pipe)		(0x1800 + ((pipe) * 0x1000))
-+#define BAM_P_DATA_FIFO_ADDR(pipe)	(0x1824 + ((pipe) * 0x1000))
-+#define BAM_P_DESC_FIFO_ADDR(pipe)	(0x181C + ((pipe) * 0x1000))
-+#define BAM_P_EVNT_TRSHLD(pipe)		(0x1828 + ((pipe) * 0x1000))
-+#define BAM_P_FIFO_SIZES(pipe)		(0x1820 + ((pipe) * 0x1000))
-+
-+/* BAM CTRL */
-+#define BAM_SW_RST			BIT(0)
-+#define BAM_EN				BIT(1)
-+#define BAM_EN_ACCUM			BIT(4)
-+#define BAM_TESTBUS_SEL_SHIFT		5
-+#define BAM_TESTBUS_SEL_MASK		0x3F
-+#define BAM_DESC_CACHE_SEL_SHIFT	13
-+#define BAM_DESC_CACHE_SEL_MASK		0x3
-+#define BAM_CACHED_DESC_STORE		BIT(15)
-+#define IBC_DISABLE			BIT(16)
-+
-+/* BAM REVISION */
-+#define REVISION_SHIFT		0
-+#define REVISION_MASK		0xFF
-+#define NUM_EES_SHIFT		8
-+#define NUM_EES_MASK		0xF
-+#define CE_BUFFER_SIZE		BIT(13)
-+#define AXI_ACTIVE		BIT(14)
-+#define USE_VMIDMT		BIT(15)
-+#define SECURED			BIT(16)
-+#define BAM_HAS_NO_BYPASS	BIT(17)
-+#define HIGH_FREQUENCY_BAM	BIT(18)
-+#define INACTIV_TMRS_EXST	BIT(19)
-+#define NUM_INACTIV_TMRS	BIT(20)
-+#define DESC_CACHE_DEPTH_SHIFT	21
-+#define DESC_CACHE_DEPTH_1	(0 << DESC_CACHE_DEPTH_SHIFT)
-+#define DESC_CACHE_DEPTH_2	(1 << DESC_CACHE_DEPTH_SHIFT)
-+#define DESC_CACHE_DEPTH_3	(2 << DESC_CACHE_DEPTH_SHIFT)
-+#define DESC_CACHE_DEPTH_4	(3 << DESC_CACHE_DEPTH_SHIFT)
-+#define CMD_DESC_EN		BIT(23)
-+#define INACTIV_TMR_BASE_SHIFT	24
-+#define INACTIV_TMR_BASE_MASK	0xFF
-+
-+/* BAM NUM PIPES */
-+#define BAM_NUM_PIPES_SHIFT		0
-+#define BAM_NUM_PIPES_MASK		0xFF
-+#define PERIPH_NON_PIPE_GRP_SHIFT	16
-+#define PERIPH_NON_PIP_GRP_MASK		0xFF
-+#define BAM_NON_PIPE_GRP_SHIFT		24
-+#define BAM_NON_PIPE_GRP_MASK		0xFF
-+
-+/* BAM CNFG BITS */
-+#define BAM_PIPE_CNFG		BIT(2)
-+#define BAM_FULL_PIPE		BIT(11)
-+#define BAM_NO_EXT_P_RST	BIT(12)
-+#define BAM_IBC_DISABLE		BIT(13)
-+#define BAM_SB_CLK_REQ		BIT(14)
-+#define BAM_PSM_CSW_REQ		BIT(15)
-+#define BAM_PSM_P_RES		BIT(16)
-+#define BAM_AU_P_RES		BIT(17)
-+#define BAM_SI_P_RES		BIT(18)
-+#define BAM_WB_P_RES		BIT(19)
-+#define BAM_WB_BLK_CSW		BIT(20)
-+#define BAM_WB_CSW_ACK_IDL	BIT(21)
-+#define BAM_WB_RETR_SVPNT	BIT(22)
-+#define BAM_WB_DSC_AVL_P_RST	BIT(23)
-+#define BAM_REG_P_EN		BIT(24)
-+#define BAM_PSM_P_HD_DATA	BIT(25)
-+#define BAM_AU_ACCUMED		BIT(26)
-+#define BAM_CMD_ENABLE		BIT(27)
-+
-+#define BAM_CNFG_BITS_DEFAULT	(BAM_PIPE_CNFG |	\
-+				 BAM_NO_EXT_P_RST |	\
-+				 BAM_IBC_DISABLE |	\
-+				 BAM_SB_CLK_REQ |	\
-+				 BAM_PSM_CSW_REQ |	\
-+				 BAM_PSM_P_RES |	\
-+				 BAM_AU_P_RES |		\
-+				 BAM_SI_P_RES |		\
-+				 BAM_WB_P_RES |		\
-+				 BAM_WB_BLK_CSW |	\
-+				 BAM_WB_CSW_ACK_IDL |	\
-+				 BAM_WB_RETR_SVPNT |	\
-+				 BAM_WB_DSC_AVL_P_RST |	\
-+				 BAM_REG_P_EN |		\
-+				 BAM_PSM_P_HD_DATA |	\
-+				 BAM_AU_ACCUMED |	\
-+				 BAM_CMD_ENABLE)
-+
-+/* PIPE CTRL */
-+#define P_EN			BIT(1)
-+#define P_DIRECTION		BIT(3)
-+#define P_SYS_STRM		BIT(4)
-+#define P_SYS_MODE		BIT(5)
-+#define P_AUTO_EOB		BIT(6)
-+#define P_AUTO_EOB_SEL_SHIFT	7
-+#define P_AUTO_EOB_SEL_512	(0 << P_AUTO_EOB_SEL_SHIFT)
-+#define P_AUTO_EOB_SEL_256	(1 << P_AUTO_EOB_SEL_SHIFT)
-+#define P_AUTO_EOB_SEL_128	(2 << P_AUTO_EOB_SEL_SHIFT)
-+#define P_AUTO_EOB_SEL_64	(3 << P_AUTO_EOB_SEL_SHIFT)
-+#define P_PREFETCH_LIMIT_SHIFT	9
-+#define P_PREFETCH_LIMIT_32	(0 << P_PREFETCH_LIMIT_SHIFT)
-+#define P_PREFETCH_LIMIT_16	(1 << P_PREFETCH_LIMIT_SHIFT)
-+#define P_PREFETCH_LIMIT_4	(2 << P_PREFETCH_LIMIT_SHIFT)
-+#define P_WRITE_NWD		BIT(11)
-+#define P_LOCK_GROUP_SHIFT	16
-+#define P_LOCK_GROUP_MASK	0x1F
-+
-+/* BAM_DESC_CNT_TRSHLD */
-+#define CNT_TRSHLD		0xffff
-+#define DEFAULT_CNT_THRSHLD	0x4
-+
-+/* BAM_IRQ_SRCS */
-+#define BAM_IRQ			BIT(31)
-+#define P_IRQ			0x7fffffff
-+
-+/* BAM_IRQ_SRCS_MSK */
-+#define BAM_IRQ_MSK		BAM_IRQ
-+#define P_IRQ_MSK		P_IRQ
-+
-+/* BAM_IRQ_STTS */
-+#define BAM_TIMER_IRQ		BIT(4)
-+#define BAM_EMPTY_IRQ		BIT(3)
-+#define BAM_ERROR_IRQ		BIT(2)
-+#define BAM_HRESP_ERR_IRQ	BIT(1)
-+
-+/* BAM_IRQ_CLR */
-+#define BAM_TIMER_CLR		BIT(4)
-+#define BAM_EMPTY_CLR		BIT(3)
-+#define BAM_ERROR_CLR		BIT(2)
-+#define BAM_HRESP_ERR_CLR	BIT(1)
-+
-+/* BAM_IRQ_EN */
-+#define BAM_TIMER_EN		BIT(4)
-+#define BAM_EMPTY_EN		BIT(3)
-+#define BAM_ERROR_EN		BIT(2)
-+#define BAM_HRESP_ERR_EN	BIT(1)
-+
-+/* BAM_P_IRQ_EN */
-+#define P_PRCSD_DESC_EN		BIT(0)
-+#define P_TIMER_EN		BIT(1)
-+#define P_WAKE_EN		BIT(2)
-+#define P_OUT_OF_DESC_EN	BIT(3)
-+#define P_ERR_EN		BIT(4)
-+#define P_TRNSFR_END_EN		BIT(5)
-+#define P_DEFAULT_IRQS_EN	(P_PRCSD_DESC_EN | P_ERR_EN | P_TRNSFR_END_EN)
-+
-+/* BAM_P_SW_OFSTS */
-+#define P_SW_OFSTS_MASK		0xffff
-+
-+#define BAM_DESC_FIFO_SIZE	SZ_32K
-+#define MAX_DESCRIPTORS (BAM_DESC_FIFO_SIZE / sizeof(struct bam_desc_hw) - 1)
-+#define BAM_MAX_DATA_SIZE	(SZ_32K - 8)
-+
-+struct bam_chan {
-+	struct virt_dma_chan vc;
-+
-+	struct bam_device *bdev;
-+
-+	/* configuration from device tree */
-+	u32 id;
-+
-+	struct bam_async_desc *curr_txd;	/* current running dma */
-+
-+	/* runtime configuration */
-+	struct dma_slave_config slave;
-+
-+	/* fifo storage */
-+	struct bam_desc_hw *fifo_virt;
-+	dma_addr_t fifo_phys;
-+
-+	/* fifo markers */
-+	unsigned short head;		/* start of active descriptor entries */
-+	unsigned short tail;		/* end of active descriptor entries */
-+
-+	unsigned int initialized;	/* is the channel hw initialized? */
-+	unsigned int paused;		/* is the channel paused? */
-+	unsigned int reconfigure;	/* new slave config? */
-+
-+	struct list_head node;
-+};
-+
-+static inline struct bam_chan *to_bam_chan(struct dma_chan *common)
-+{
-+	return container_of(common, struct bam_chan, vc.chan);
-+}
-+
-+struct bam_device {
-+	void __iomem *regs;
-+	struct device *dev;
-+	struct dma_device common;
-+	struct device_dma_parameters dma_parms;
-+	struct bam_chan *channels;
-+	u32 num_channels;
-+
-+	/* execution environment ID, from DT */
-+	u32 ee;
-+
-+	struct clk *bamclk;
-+	int irq;
-+
-+	/* dma start transaction tasklet */
-+	struct tasklet_struct task;
-+};
-+
-+/**
-+ * bam_reset_channel - Reset individual BAM DMA channel
-+ * @bchan: bam channel
-+ *
-+ * This function resets a specific BAM channel
-+ */
-+static void bam_reset_channel(struct bam_chan *bchan)
-+{
-+	struct bam_device *bdev = bchan->bdev;
-+
-+	lockdep_assert_held(&bchan->vc.lock);
-+
-+	/* reset channel */
-+	writel_relaxed(1, bdev->regs + BAM_P_RST(bchan->id));
-+	writel_relaxed(0, bdev->regs + BAM_P_RST(bchan->id));
-+
-+	/* don't allow cpu to reorder BAM register accesses done after this */
-+	wmb();
-+
-+	/* make sure hw is initialized when channel is used the first time  */
-+	bchan->initialized = 0;
-+}
-+
-+/**
-+ * bam_chan_init_hw - Initialize channel hardware
-+ * @bchan: bam channel
-+ *
-+ * This function resets and initializes the BAM channel
-+ */
-+static void bam_chan_init_hw(struct bam_chan *bchan,
-+	enum dma_transfer_direction dir)
-+{
-+	struct bam_device *bdev = bchan->bdev;
-+	u32 val;
-+
-+	/* Reset the channel to clear internal state of the FIFO */
-+	bam_reset_channel(bchan);
-+
-+	/*
-+	 * write out 8 byte aligned address.  We have enough space for this
-+	 * because we allocated 1 more descriptor (8 bytes) than we can use
-+	 */
-+	writel_relaxed(ALIGN(bchan->fifo_phys, sizeof(struct bam_desc_hw)),
-+			bdev->regs + BAM_P_DESC_FIFO_ADDR(bchan->id));
-+	writel_relaxed(BAM_DESC_FIFO_SIZE, bdev->regs +
-+			BAM_P_FIFO_SIZES(bchan->id));
-+
-+	/* enable the per pipe interrupts, enable EOT, ERR, and INT irqs */
-+	writel_relaxed(P_DEFAULT_IRQS_EN, bdev->regs + BAM_P_IRQ_EN(bchan->id));
-+
-+	/* unmask the specific pipe and EE combo */
-+	val = readl_relaxed(bdev->regs + BAM_IRQ_SRCS_MSK_EE(bdev->ee));
-+	val |= BIT(bchan->id);
-+	writel_relaxed(val, bdev->regs + BAM_IRQ_SRCS_MSK_EE(bdev->ee));
-+
-+	/* don't allow cpu to reorder the channel enable done below */
-+	wmb();
-+
-+	/* set fixed direction and mode, then enable channel */
-+	val = P_EN | P_SYS_MODE;
-+	if (dir == DMA_DEV_TO_MEM)
-+		val |= P_DIRECTION;
-+
-+	writel_relaxed(val, bdev->regs + BAM_P_CTRL(bchan->id));
-+
-+	bchan->initialized = 1;
-+
-+	/* init FIFO pointers */
-+	bchan->head = 0;
-+	bchan->tail = 0;
-+}
-+
-+/**
-+ * bam_alloc_chan - Allocate channel resources for DMA channel.
-+ * @chan: specified channel
-+ *
-+ * This function allocates the FIFO descriptor memory
-+ */
-+static int bam_alloc_chan(struct dma_chan *chan)
-+{
-+	struct bam_chan *bchan = to_bam_chan(chan);
-+	struct bam_device *bdev = bchan->bdev;
-+
-+	if (bchan->fifo_virt)
-+		return 0;
-+
-+	/* allocate FIFO descriptor space, but only if necessary */
-+	bchan->fifo_virt = dma_alloc_writecombine(bdev->dev, BAM_DESC_FIFO_SIZE,
-+				&bchan->fifo_phys, GFP_KERNEL);
-+
-+	if (!bchan->fifo_virt) {
-+		dev_err(bdev->dev, "Failed to allocate desc fifo\n");
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * bam_free_chan - Frees dma resources associated with specific channel
-+ * @chan: specified channel
-+ *
-+ * Free the allocated fifo descriptor memory and channel resources
-+ *
-+ */
-+static void bam_free_chan(struct dma_chan *chan)
-+{
-+	struct bam_chan *bchan = to_bam_chan(chan);
-+	struct bam_device *bdev = bchan->bdev;
-+	u32 val;
-+	unsigned long flags;
-+
-+	vchan_free_chan_resources(to_virt_chan(chan));
-+
-+	if (bchan->curr_txd) {
-+		dev_err(bchan->bdev->dev, "Cannot free busy channel\n");
-+		return;
-+	}
-+
-+	spin_lock_irqsave(&bchan->vc.lock, flags);
-+	bam_reset_channel(bchan);
-+	spin_unlock_irqrestore(&bchan->vc.lock, flags);
-+
-+	dma_free_writecombine(bdev->dev, BAM_DESC_FIFO_SIZE, bchan->fifo_virt,
-+				bchan->fifo_phys);
-+	bchan->fifo_virt = NULL;
-+
-+	/* mask irq for pipe/channel */
-+	val = readl_relaxed(bdev->regs + BAM_IRQ_SRCS_MSK_EE(bdev->ee));
-+	val &= ~BIT(bchan->id);
-+	writel_relaxed(val, bdev->regs + BAM_IRQ_SRCS_MSK_EE(bdev->ee));
-+
-+	/* disable irq */
-+	writel_relaxed(0, bdev->regs + BAM_P_IRQ_EN(bchan->id));
-+}
-+
-+/**
-+ * bam_slave_config - set slave configuration for channel
-+ * @chan: dma channel
-+ * @cfg: slave configuration
-+ *
-+ * Sets slave configuration for channel
-+ *
-+ */
-+static void bam_slave_config(struct bam_chan *bchan,
-+		struct dma_slave_config *cfg)
-+{
-+	memcpy(&bchan->slave, cfg, sizeof(*cfg));
-+	bchan->reconfigure = 1;
-+}
-+
-+/**
-+ * bam_prep_slave_sg - Prep slave sg transaction
-+ *
-+ * @chan: dma channel
-+ * @sgl: scatter gather list
-+ * @sg_len: length of sg
-+ * @direction: DMA transfer direction
-+ * @flags: DMA flags
-+ * @context: transfer context (unused)
-+ */
-+static struct dma_async_tx_descriptor *bam_prep_slave_sg(struct dma_chan *chan,
-+	struct scatterlist *sgl, unsigned int sg_len,
-+	enum dma_transfer_direction direction, unsigned long flags,
-+	void *context)
-+{
-+	struct bam_chan *bchan = to_bam_chan(chan);
-+	struct bam_device *bdev = bchan->bdev;
-+	struct bam_async_desc *async_desc;
-+	struct scatterlist *sg;
-+	u32 i;
-+	struct bam_desc_hw *desc;
-+	unsigned int num_alloc = 0;
-+
-+
-+	if (!is_slave_direction(direction)) {
-+		dev_err(bdev->dev, "invalid dma direction\n");
-+		return NULL;
-+	}
-+
-+	/* calculate number of required entries */
-+	for_each_sg(sgl, sg, sg_len, i)
-+		num_alloc += DIV_ROUND_UP(sg_dma_len(sg), BAM_MAX_DATA_SIZE);
-+
-+	/* allocate enough room to accomodate the number of entries */
-+	async_desc = kzalloc(sizeof(*async_desc) +
-+			(num_alloc * sizeof(struct bam_desc_hw)), GFP_NOWAIT);
-+
-+	if (!async_desc)
-+		goto err_out;
-+
-+	async_desc->num_desc = num_alloc;
-+	async_desc->curr_desc = async_desc->desc;
-+	async_desc->dir = direction;
-+
-+	/* fill in temporary descriptors */
-+	desc = async_desc->desc;
-+	for_each_sg(sgl, sg, sg_len, i) {
-+		unsigned int remainder = sg_dma_len(sg);
-+		unsigned int curr_offset = 0;
-+
-+		do {
-+			desc->addr = sg_dma_address(sg) + curr_offset;
-+
-+			if (remainder > BAM_MAX_DATA_SIZE) {
-+				desc->size = BAM_MAX_DATA_SIZE;
-+				remainder -= BAM_MAX_DATA_SIZE;
-+				curr_offset += BAM_MAX_DATA_SIZE;
-+			} else {
-+				desc->size = remainder;
-+				remainder = 0;
+ static irqreturn_t xuartps_isr(int irq, void *dev_id)
+ {
+ 	struct uart_port *port = (struct uart_port *)dev_id;
+@@ -205,7 +188,6 @@ static irqreturn_t xuartps_isr(int irq, void *dev_id)
+ 	 * error with all-zeros data as a break sequence. Most of the time,
+ 	 * there's another non-zero byte at the end of the sequence.
+ 	 */
+-
+ 	if (isrstatus & XUARTPS_IXR_FRAMING) {
+ 		while (!(xuartps_readl(XUARTPS_SR_OFFSET) &
+ 					XUARTPS_SR_RXEMPTY)) {
+@@ -264,8 +246,9 @@ static irqreturn_t xuartps_isr(int irq, void *dev_id)
+ 			} else if (isrstatus & XUARTPS_IXR_FRAMING) {
+ 				port->icount.frame++;
+ 				status = TTY_FRAME;
+-			} else if (isrstatus & XUARTPS_IXR_OVERRUN)
++			} else if (isrstatus & XUARTPS_IXR_OVERRUN) {
+ 				port->icount.overrun++;
 +			}
-+
-+			async_desc->length += desc->size;
-+			desc++;
-+		} while (remainder > 0);
-+	}
-+
-+	return vchan_tx_prep(&bchan->vc, &async_desc->vd, flags);
-+
-+err_out:
-+	kfree(async_desc);
-+	return NULL;
-+}
-+
-+/**
-+ * bam_dma_terminate_all - terminate all transactions on a channel
-+ * @bchan: bam dma channel
-+ *
-+ * Dequeues and frees all transactions
-+ * No callbacks are done
-+ *
+ 
+ 			uart_insert_char(port, isrstatus, XUARTPS_IXR_OVERRUN,
+ 					data, status);
+@@ -300,7 +283,7 @@ static irqreturn_t xuartps_isr(int irq, void *dev_id)
+ 				 * the buffer if it reaches limit.
+ 				 */
+ 				port->state->xmit.tail =
+-					(port->state->xmit.tail + 1) & \
++					(port->state->xmit.tail + 1) &
+ 						(UART_XMIT_SIZE - 1);
+ 			}
+ 
+@@ -325,7 +308,7 @@ static irqreturn_t xuartps_isr(int irq, void *dev_id)
+  * @rbdiv: BDIV value (return value)
+  * @rcd: CD value (return value)
+  * @div8: Value for clk_sel bit in mod (return value)
+- * Returns baud rate, requested baud when possible, or actual baud when there
++ * Return: baud rate, requested baud when possible, or actual baud when there
+  *	was too much error, zero if no valid divisors are found.
+  *
+  * Formula to obtain baud rate is
+@@ -384,7 +367,7 @@ static unsigned int xuartps_calc_baud_divs(unsigned int clk, unsigned int baud,
+  * xuartps_set_baud_rate - Calculate and set the baud rate
+  * @port: Handle to the uart port structure
+  * @baud: Baud rate to set
+- * Returns baud rate, requested baud when possible, or actual baud when there
++ * Return: baud rate, requested baud when possible, or actual baud when there
+  *	   was too much error, zero if no valid divisors are found.
+  */
+ static unsigned int xuartps_set_baud_rate(struct uart_port *port,
+@@ -419,7 +402,7 @@ static unsigned int xuartps_set_baud_rate(struct uart_port *port,
+  * @nb:		Notifier block
+  * @event:	Notify event
+  * @data:	Notifier data
+- * Returns NOTIFY_OK on success, NOTIFY_BAD on error.
++ * Return:	NOTIFY_OK or NOTIFY_DONE on success, NOTIFY_BAD on error.
+  */
+ static int xuartps_clk_notifier_cb(struct notifier_block *nb,
+ 		unsigned long event, void *data)
+@@ -438,8 +421,7 @@ static int xuartps_clk_notifier_cb(struct notifier_block *nb,
+ 	switch (event) {
+ 	case PRE_RATE_CHANGE:
+ 	{
+-		u32 bdiv;
+-		u32 cd;
++		u32 bdiv, cd;
+ 		int div8;
+ 
+ 		/*
+@@ -509,13 +491,10 @@ static int xuartps_clk_notifier_cb(struct notifier_block *nb,
+ }
+ #endif
+ 
+-/*----------------------Uart Operations---------------------------*/
+-
+ /**
+  * xuartps_start_tx -  Start transmitting bytes
+  * @port: Handle to the uart port structure
+- *
+- **/
 + */
-+static void bam_dma_terminate_all(struct bam_chan *bchan)
-+{
-+	unsigned long flag;
-+	LIST_HEAD(head);
-+
-+	/* remove all transactions, including active transaction */
-+	spin_lock_irqsave(&bchan->vc.lock, flag);
-+	if (bchan->curr_txd) {
-+		list_add(&bchan->curr_txd->vd.node, &bchan->vc.desc_issued);
-+		bchan->curr_txd = NULL;
-+	}
-+
-+	vchan_get_all_descriptors(&bchan->vc, &head);
-+	spin_unlock_irqrestore(&bchan->vc.lock, flag);
-+
-+	vchan_dma_desc_free_list(&bchan->vc, &head);
-+}
-+
-+/**
-+ * bam_control - DMA device control
-+ * @chan: dma channel
-+ * @cmd: control cmd
-+ * @arg: cmd argument
-+ *
-+ * Perform DMA control command
-+ *
+ static void xuartps_start_tx(struct uart_port *port)
+ {
+ 	unsigned int status, numbytes = port->fifosize;
+@@ -530,9 +509,8 @@ static void xuartps_start_tx(struct uart_port *port)
+ 	xuartps_writel((status & ~XUARTPS_CR_TX_DIS) | XUARTPS_CR_TX_EN,
+ 		XUARTPS_CR_OFFSET);
+ 
+-	while (numbytes-- && ((xuartps_readl(XUARTPS_SR_OFFSET)
+-		& XUARTPS_SR_TXFULL)) != XUARTPS_SR_TXFULL) {
+-
++	while (numbytes-- && ((xuartps_readl(XUARTPS_SR_OFFSET) &
++				XUARTPS_SR_TXFULL)) != XUARTPS_SR_TXFULL) {
+ 		/* Break if no more data available in the UART buffer */
+ 		if (uart_circ_empty(&port->state->xmit))
+ 			break;
+@@ -562,8 +540,7 @@ static void xuartps_start_tx(struct uart_port *port)
+ /**
+  * xuartps_stop_tx - Stop TX
+  * @port: Handle to the uart port structure
+- *
+- **/
 + */
-+static int bam_control(struct dma_chan *chan, enum dma_ctrl_cmd cmd,
-+	unsigned long arg)
-+{
-+	struct bam_chan *bchan = to_bam_chan(chan);
-+	struct bam_device *bdev = bchan->bdev;
-+	int ret = 0;
-+	unsigned long flag;
-+
-+	switch (cmd) {
-+	case DMA_PAUSE:
-+		spin_lock_irqsave(&bchan->vc.lock, flag);
-+		writel_relaxed(1, bdev->regs + BAM_P_HALT(bchan->id));
-+		bchan->paused = 1;
-+		spin_unlock_irqrestore(&bchan->vc.lock, flag);
-+		break;
-+
-+	case DMA_RESUME:
-+		spin_lock_irqsave(&bchan->vc.lock, flag);
-+		writel_relaxed(0, bdev->regs + BAM_P_HALT(bchan->id));
-+		bchan->paused = 0;
-+		spin_unlock_irqrestore(&bchan->vc.lock, flag);
-+		break;
-+
-+	case DMA_TERMINATE_ALL:
-+		bam_dma_terminate_all(bchan);
-+		break;
-+
-+	case DMA_SLAVE_CONFIG:
-+		spin_lock_irqsave(&bchan->vc.lock, flag);
-+		bam_slave_config(bchan, (struct dma_slave_config *)arg);
-+		spin_unlock_irqrestore(&bchan->vc.lock, flag);
-+		break;
-+
-+	default:
-+		ret = -ENXIO;
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
-+/**
-+ * process_channel_irqs - processes the channel interrupts
-+ * @bdev: bam controller
-+ *
-+ * This function processes the channel interrupts
-+ *
+ static void xuartps_stop_tx(struct uart_port *port)
+ {
+ 	unsigned int regval;
+@@ -577,8 +554,7 @@ static void xuartps_stop_tx(struct uart_port *port)
+ /**
+  * xuartps_stop_rx - Stop RX
+  * @port: Handle to the uart port structure
+- *
+- **/
 + */
-+static u32 process_channel_irqs(struct bam_device *bdev)
-+{
-+	u32 i, srcs, pipe_stts;
-+	unsigned long flags;
-+	struct bam_async_desc *async_desc;
-+
-+	srcs = readl_relaxed(bdev->regs + BAM_IRQ_SRCS_EE(bdev->ee));
-+
-+	/* return early if no pipe/channel interrupts are present */
-+	if (!(srcs & P_IRQ))
-+		return srcs;
-+
-+	for (i = 0; i < bdev->num_channels; i++) {
-+		struct bam_chan *bchan = &bdev->channels[i];
-+
-+		if (!(srcs & BIT(i)))
-+			continue;
-+
-+		/* clear pipe irq */
-+		pipe_stts = readl_relaxed(bdev->regs +
-+			BAM_P_IRQ_STTS(i));
-+
-+		writel_relaxed(pipe_stts, bdev->regs +
-+				BAM_P_IRQ_CLR(i));
-+
-+		spin_lock_irqsave(&bchan->vc.lock, flags);
-+		async_desc = bchan->curr_txd;
-+
-+		if (async_desc) {
-+			async_desc->num_desc -= async_desc->xfer_len;
-+			async_desc->curr_desc += async_desc->xfer_len;
-+			bchan->curr_txd = NULL;
-+
-+			/* manage FIFO */
-+			bchan->head += async_desc->xfer_len;
-+			bchan->head %= MAX_DESCRIPTORS;
-+
-+			/*
-+			 * if complete, process cookie.  Otherwise
-+			 * push back to front of desc_issued so that
-+			 * it gets restarted by the tasklet
-+			 */
-+			if (!async_desc->num_desc)
-+				vchan_cookie_complete(&async_desc->vd);
-+			else
-+				list_add(&async_desc->vd.node,
-+					&bchan->vc.desc_issued);
-+		}
-+
-+		spin_unlock_irqrestore(&bchan->vc.lock, flags);
-+	}
-+
-+	return srcs;
-+}
-+
-+/**
-+ * bam_dma_irq - irq handler for bam controller
-+ * @irq: IRQ of interrupt
-+ * @data: callback data
-+ *
-+ * IRQ handler for the bam controller
+ static void xuartps_stop_rx(struct uart_port *port)
+ {
+ 	unsigned int regval;
+@@ -593,8 +569,8 @@ static void xuartps_stop_rx(struct uart_port *port)
+  * xuartps_tx_empty -  Check whether TX is empty
+  * @port: Handle to the uart port structure
+  *
+- * Returns TIOCSER_TEMT on success, 0 otherwise
+- **/
++ * Return: TIOCSER_TEMT on success, 0 otherwise
 + */
-+static irqreturn_t bam_dma_irq(int irq, void *data)
-+{
-+	struct bam_device *bdev = data;
-+	u32 clr_mask = 0, srcs = 0;
-+
-+	srcs |= process_channel_irqs(bdev);
-+
-+	/* kick off tasklet to start next dma transfer */
-+	if (srcs & P_IRQ)
-+		tasklet_schedule(&bdev->task);
-+
-+	if (srcs & BAM_IRQ)
-+		clr_mask = readl_relaxed(bdev->regs + BAM_IRQ_STTS);
-+
-+	/* don't allow reorder of the various accesses to the BAM registers */
-+	mb();
-+
-+	writel_relaxed(clr_mask, bdev->regs + BAM_IRQ_CLR);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+/**
-+ * bam_tx_status - returns status of transaction
-+ * @chan: dma channel
-+ * @cookie: transaction cookie
-+ * @txstate: DMA transaction state
-+ *
-+ * Return status of dma transaction
+ static unsigned int xuartps_tx_empty(struct uart_port *port)
+ {
+ 	unsigned int status;
+@@ -608,8 +584,7 @@ static unsigned int xuartps_tx_empty(struct uart_port *port)
+  *			transmitting char breaks
+  * @port: Handle to the uart port structure
+  * @ctl: Value based on which start or stop decision is taken
+- *
+- **/
 + */
-+static enum dma_status bam_tx_status(struct dma_chan *chan, dma_cookie_t cookie,
-+		struct dma_tx_state *txstate)
-+{
-+	struct bam_chan *bchan = to_bam_chan(chan);
-+	struct virt_dma_desc *vd;
-+	int ret;
-+	size_t residue = 0;
-+	unsigned int i;
-+	unsigned long flags;
-+
-+	ret = dma_cookie_status(chan, cookie, txstate);
-+	if (ret == DMA_COMPLETE)
-+		return ret;
-+
-+	if (!txstate)
-+		return bchan->paused ? DMA_PAUSED : ret;
-+
-+	spin_lock_irqsave(&bchan->vc.lock, flags);
-+	vd = vchan_find_desc(&bchan->vc, cookie);
-+	if (vd)
-+		residue = container_of(vd, struct bam_async_desc, vd)->length;
-+	else if (bchan->curr_txd && bchan->curr_txd->vd.tx.cookie == cookie)
-+		for (i = 0; i < bchan->curr_txd->num_desc; i++)
-+			residue += bchan->curr_txd->curr_desc[i].size;
-+
-+	spin_unlock_irqrestore(&bchan->vc.lock, flags);
-+
-+	dma_set_residue(txstate, residue);
-+
-+	if (ret == DMA_IN_PROGRESS && bchan->paused)
-+		ret = DMA_PAUSED;
-+
-+	return ret;
-+}
-+
-+/**
-+ * bam_apply_new_config
-+ * @bchan: bam dma channel
-+ * @dir: DMA direction
+ static void xuartps_break_ctl(struct uart_port *port, int ctl)
+ {
+ 	unsigned int status;
+@@ -636,8 +611,7 @@ static void xuartps_break_ctl(struct uart_port *port, int ctl)
+  * @port: Handle to the uart port structure
+  * @termios: Handle to the input termios structure
+  * @old: Values of the previously saved termios structure
+- *
+- **/
 + */
-+static void bam_apply_new_config(struct bam_chan *bchan,
-+	enum dma_transfer_direction dir)
-+{
-+	struct bam_device *bdev = bchan->bdev;
-+	u32 maxburst;
-+
-+	if (dir == DMA_DEV_TO_MEM)
-+		maxburst = bchan->slave.src_maxburst;
-+	else
-+		maxburst = bchan->slave.dst_maxburst;
-+
-+	writel_relaxed(maxburst, bdev->regs + BAM_DESC_CNT_TRSHLD);
-+
-+	bchan->reconfigure = 0;
-+}
-+
-+/**
-+ * bam_start_dma - start next transaction
-+ * @bchan - bam dma channel
+ static void xuartps_set_termios(struct uart_port *port,
+ 				struct ktermios *termios, struct ktermios *old)
+ {
+@@ -671,9 +645,7 @@ static void xuartps_set_termios(struct uart_port *port,
+ 	if (tty_termios_baud_rate(termios))
+ 		tty_termios_encode_baud_rate(termios, baud, baud);
+ 
+-	/*
+-	 * Update the per-port timeout.
+-	 */
++	/* Update the per-port timeout. */
+ 	uart_update_timeout(port, termios->c_cflag, baud);
+ 
+ 	/* Set TX/RX Reset */
+@@ -683,7 +655,8 @@ static void xuartps_set_termios(struct uart_port *port,
+ 
+ 	ctrl_reg = xuartps_readl(XUARTPS_CR_OFFSET);
+ 
+-	/* Clear the RX disable and TX disable bits and then set the TX enable
++	/*
++	 * Clear the RX disable and TX disable bits and then set the TX enable
+ 	 * bit and RX enable bit to enable the transmitter and receiver.
+ 	 */
+ 	xuartps_writel(
+@@ -761,8 +734,8 @@ static void xuartps_set_termios(struct uart_port *port,
+  * xuartps_startup - Called when an application opens a xuartps port
+  * @port: Handle to the uart port structure
+  *
+- * Returns 0 on success, negative error otherwise
+- **/
++ * Return: 0 on success, negative errno otherwise
 + */
-+static void bam_start_dma(struct bam_chan *bchan)
-+{
-+	struct virt_dma_desc *vd = vchan_next_desc(&bchan->vc);
-+	struct bam_device *bdev = bchan->bdev;
-+	struct bam_async_desc *async_desc;
-+	struct bam_desc_hw *desc;
-+	struct bam_desc_hw *fifo = PTR_ALIGN(bchan->fifo_virt,
-+					sizeof(struct bam_desc_hw));
-+
-+	lockdep_assert_held(&bchan->vc.lock);
-+
-+	if (!vd)
-+		return;
-+
-+	list_del(&vd->node);
-+
-+	async_desc = container_of(vd, struct bam_async_desc, vd);
-+	bchan->curr_txd = async_desc;
-+
-+	/* on first use, initialize the channel hardware */
-+	if (!bchan->initialized)
-+		bam_chan_init_hw(bchan, async_desc->dir);
-+
-+	/* apply new slave config changes, if necessary */
-+	if (bchan->reconfigure)
-+		bam_apply_new_config(bchan, async_desc->dir);
-+
-+	desc = bchan->curr_txd->curr_desc;
-+
-+	if (async_desc->num_desc > MAX_DESCRIPTORS)
-+		async_desc->xfer_len = MAX_DESCRIPTORS;
-+	else
-+		async_desc->xfer_len = async_desc->num_desc;
-+
-+	/* set INT on last descriptor */
-+	desc[async_desc->xfer_len - 1].flags |= DESC_FLAG_INT;
-+
-+	if (bchan->tail + async_desc->xfer_len > MAX_DESCRIPTORS) {
-+		u32 partial = MAX_DESCRIPTORS - bchan->tail;
-+
-+		memcpy(&fifo[bchan->tail], desc,
-+				partial * sizeof(struct bam_desc_hw));
-+		memcpy(fifo, &desc[partial], (async_desc->xfer_len - partial) *
-+				sizeof(struct bam_desc_hw));
-+	} else {
-+		memcpy(&fifo[bchan->tail], desc,
-+			async_desc->xfer_len * sizeof(struct bam_desc_hw));
-+	}
-+
-+	bchan->tail += async_desc->xfer_len;
-+	bchan->tail %= MAX_DESCRIPTORS;
-+
-+	/* ensure descriptor writes and dma start not reordered */
-+	wmb();
-+	writel_relaxed(bchan->tail * sizeof(struct bam_desc_hw),
-+			bdev->regs + BAM_P_EVNT_REG(bchan->id));
-+}
-+
-+/**
-+ * dma_tasklet - DMA IRQ tasklet
-+ * @data: tasklet argument (bam controller structure)
-+ *
-+ * Sets up next DMA operation and then processes all completed transactions
+ static int xuartps_startup(struct uart_port *port)
+ {
+ 	unsigned int retval = 0, status = 0;
+@@ -824,8 +797,7 @@ static int xuartps_startup(struct uart_port *port)
+ /**
+  * xuartps_shutdown - Called when an application closes a xuartps port
+  * @port: Handle to the uart port structure
+- *
+- **/
 + */
-+static void dma_tasklet(unsigned long data)
-+{
-+	struct bam_device *bdev = (struct bam_device *)data;
-+	struct bam_chan *bchan;
-+	unsigned long flags;
-+	unsigned int i;
-+
-+	/* go through the channels and kick off transactions */
-+	for (i = 0; i < bdev->num_channels; i++) {
-+		bchan = &bdev->channels[i];
-+		spin_lock_irqsave(&bchan->vc.lock, flags);
-+
-+		if (!list_empty(&bchan->vc.desc_issued) && !bchan->curr_txd)
-+			bam_start_dma(bchan);
-+		spin_unlock_irqrestore(&bchan->vc.lock, flags);
-+	}
-+}
-+
-+/**
-+ * bam_issue_pending - starts pending transactions
-+ * @chan: dma channel
-+ *
-+ * Calls tasklet directly which in turn starts any pending transactions
+ static void xuartps_shutdown(struct uart_port *port)
+ {
+ 	int status;
+@@ -844,8 +816,8 @@ static void xuartps_shutdown(struct uart_port *port)
+  * xuartps_type - Set UART type to xuartps port
+  * @port: Handle to the uart port structure
+  *
+- * Returns string on success, NULL otherwise
+- **/
++ * Return: string on success, NULL otherwise
 + */
-+static void bam_issue_pending(struct dma_chan *chan)
-+{
-+	struct bam_chan *bchan = to_bam_chan(chan);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&bchan->vc.lock, flags);
-+
-+	/* if work pending and idle, start a transaction */
-+	if (vchan_issue_pending(&bchan->vc) && !bchan->curr_txd)
-+		bam_start_dma(bchan);
-+
-+	spin_unlock_irqrestore(&bchan->vc.lock, flags);
-+}
-+
-+/**
-+ * bam_dma_free_desc - free descriptor memory
-+ * @vd: virtual descriptor
-+ *
+ static const char *xuartps_type(struct uart_port *port)
+ {
+ 	return port->type == PORT_XUARTPS ? XUARTPS_NAME : NULL;
+@@ -856,8 +828,8 @@ static const char *xuartps_type(struct uart_port *port)
+  * @port: Handle to the uart port structure
+  * @ser: Handle to the structure whose members are compared
+  *
+- * Returns 0 if success otherwise -EINVAL
+- **/
++ * Return: 0 on success, negative errno otherwise.
 + */
-+static void bam_dma_free_desc(struct virt_dma_desc *vd)
-+{
-+	struct bam_async_desc *async_desc = container_of(vd,
-+			struct bam_async_desc, vd);
-+
-+	kfree(async_desc);
-+}
-+
-+static struct dma_chan *bam_dma_xlate(struct of_phandle_args *dma_spec,
-+		struct of_dma *of)
-+{
-+	struct bam_device *bdev = container_of(of->of_dma_data,
-+					struct bam_device, common);
-+	unsigned int request;
-+
-+	if (dma_spec->args_count != 1)
-+		return NULL;
-+
-+	request = dma_spec->args[0];
-+	if (request >= bdev->num_channels)
-+		return NULL;
-+
-+	return dma_get_slave_channel(&(bdev->channels[request].vc.chan));
-+}
-+
-+/**
-+ * bam_init
-+ * @bdev: bam device
-+ *
-+ * Initialization helper for global bam registers
+ static int xuartps_verify_port(struct uart_port *port,
+ 					struct serial_struct *ser)
+ {
+@@ -880,8 +852,8 @@ static int xuartps_verify_port(struct uart_port *port,
+  *				uart_add_one_port()
+  * @port: Handle to the uart port structure
+  *
+- * Returns 0, -ENOMEM if request fails
+- **/
++ * Return: 0 on success, negative errno otherwise.
 + */
-+static int bam_init(struct bam_device *bdev)
-+{
-+	u32 val;
-+
-+	/* read revision and configuration information */
-+	val = readl_relaxed(bdev->regs + BAM_REVISION) >> NUM_EES_SHIFT;
-+	val &= NUM_EES_MASK;
-+
-+	/* check that configured EE is within range */
-+	if (bdev->ee >= val)
-+		return -EINVAL;
-+
-+	val = readl_relaxed(bdev->regs + BAM_NUM_PIPES);
-+	bdev->num_channels = val & BAM_NUM_PIPES_MASK;
-+
-+	/* s/w reset bam */
-+	/* after reset all pipes are disabled and idle */
-+	val = readl_relaxed(bdev->regs + BAM_CTRL);
-+	val |= BAM_SW_RST;
-+	writel_relaxed(val, bdev->regs + BAM_CTRL);
-+	val &= ~BAM_SW_RST;
-+	writel_relaxed(val, bdev->regs + BAM_CTRL);
-+
-+	/* make sure previous stores are visible before enabling BAM */
-+	wmb();
-+
-+	/* enable bam */
-+	val |= BAM_EN;
-+	writel_relaxed(val, bdev->regs + BAM_CTRL);
-+
-+	/* set descriptor threshhold, start with 4 bytes */
-+	writel_relaxed(DEFAULT_CNT_THRSHLD, bdev->regs + BAM_DESC_CNT_TRSHLD);
-+
-+	/* Enable default set of h/w workarounds, ie all except BAM_FULL_PIPE */
-+	writel_relaxed(BAM_CNFG_BITS_DEFAULT, bdev->regs + BAM_CNFG_BITS);
-+
-+	/* enable irqs for errors */
-+	writel_relaxed(BAM_ERROR_EN | BAM_HRESP_ERR_EN,
-+				bdev->regs + BAM_IRQ_EN);
-+
-+	/* unmask global bam interrupt */
-+	writel_relaxed(BAM_IRQ_MSK, bdev->regs + BAM_IRQ_SRCS_MSK_EE(bdev->ee));
-+
-+	return 0;
-+}
-+
-+static void bam_channel_init(struct bam_device *bdev, struct bam_chan *bchan,
-+	u32 index)
-+{
-+	bchan->id = index;
-+	bchan->bdev = bdev;
-+
-+	vchan_init(&bchan->vc, &bdev->common);
-+	bchan->vc.desc_free = bam_dma_free_desc;
-+}
-+
-+static int bam_dma_probe(struct platform_device *pdev)
-+{
-+	struct bam_device *bdev;
-+	struct resource *iores;
-+	int ret, i;
-+
-+	bdev = devm_kzalloc(&pdev->dev, sizeof(*bdev), GFP_KERNEL);
-+	if (!bdev)
-+		return -ENOMEM;
-+
-+	bdev->dev = &pdev->dev;
-+
-+	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	bdev->regs = devm_ioremap_resource(&pdev->dev, iores);
-+	if (IS_ERR(bdev->regs))
-+		return PTR_ERR(bdev->regs);
-+
-+	bdev->irq = platform_get_irq(pdev, 0);
-+	if (bdev->irq < 0)
-+		return bdev->irq;
-+
-+	ret = of_property_read_u32(pdev->dev.of_node, "qcom,ee", &bdev->ee);
-+	if (ret) {
-+		dev_err(bdev->dev, "Execution environment unspecified\n");
-+		return ret;
-+	}
-+
-+	bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
-+	if (IS_ERR(bdev->bamclk))
-+		return PTR_ERR(bdev->bamclk);
-+
-+	ret = clk_prepare_enable(bdev->bamclk);
-+	if (ret) {
-+		dev_err(bdev->dev, "failed to prepare/enable clock\n");
-+		return ret;
-+	}
-+
-+	ret = bam_init(bdev);
-+	if (ret)
-+		goto err_disable_clk;
-+
-+	tasklet_init(&bdev->task, dma_tasklet, (unsigned long)bdev);
-+
-+	bdev->channels = devm_kcalloc(bdev->dev, bdev->num_channels,
-+				sizeof(*bdev->channels), GFP_KERNEL);
-+
-+	if (!bdev->channels) {
-+		ret = -ENOMEM;
-+		goto err_disable_clk;
-+	}
-+
-+	/* allocate and initialize channels */
-+	INIT_LIST_HEAD(&bdev->common.channels);
-+
-+	for (i = 0; i < bdev->num_channels; i++)
-+		bam_channel_init(bdev, &bdev->channels[i], i);
-+
-+	ret = devm_request_irq(bdev->dev, bdev->irq, bam_dma_irq,
-+			IRQF_TRIGGER_HIGH, "bam_dma", bdev);
-+	if (ret)
-+		goto err_disable_clk;
-+
-+	/* set max dma segment size */
-+	bdev->common.dev = bdev->dev;
-+	bdev->common.dev->dma_parms = &bdev->dma_parms;
-+	ret = dma_set_max_seg_size(bdev->common.dev, BAM_MAX_DATA_SIZE);
-+	if (ret) {
-+		dev_err(bdev->dev, "cannot set maximum segment size\n");
-+		goto err_disable_clk;
-+	}
-+
-+	platform_set_drvdata(pdev, bdev);
-+
-+	/* set capabilities */
-+	dma_cap_zero(bdev->common.cap_mask);
-+	dma_cap_set(DMA_SLAVE, bdev->common.cap_mask);
-+
-+	/* initialize dmaengine apis */
-+	bdev->common.device_alloc_chan_resources = bam_alloc_chan;
-+	bdev->common.device_free_chan_resources = bam_free_chan;
-+	bdev->common.device_prep_slave_sg = bam_prep_slave_sg;
-+	bdev->common.device_control = bam_control;
-+	bdev->common.device_issue_pending = bam_issue_pending;
-+	bdev->common.device_tx_status = bam_tx_status;
-+	bdev->common.dev = bdev->dev;
-+
-+	ret = dma_async_device_register(&bdev->common);
-+	if (ret) {
-+		dev_err(bdev->dev, "failed to register dma async device\n");
-+		goto err_disable_clk;
-+	}
-+
-+	ret = of_dma_controller_register(pdev->dev.of_node, bam_dma_xlate,
-+					&bdev->common);
-+	if (ret)
-+		goto err_unregister_dma;
-+
-+	return 0;
-+
-+err_unregister_dma:
-+	dma_async_device_unregister(&bdev->common);
-+err_disable_clk:
-+	clk_disable_unprepare(bdev->bamclk);
-+	return ret;
-+}
-+
-+static int bam_dma_remove(struct platform_device *pdev)
-+{
-+	struct bam_device *bdev = platform_get_drvdata(pdev);
-+	u32 i;
-+
-+	of_dma_controller_free(pdev->dev.of_node);
-+	dma_async_device_unregister(&bdev->common);
-+
-+	/* mask all interrupts for this execution environment */
-+	writel_relaxed(0, bdev->regs + BAM_IRQ_SRCS_MSK_EE(bdev->ee));
-+
-+	devm_free_irq(bdev->dev, bdev->irq, bdev);
-+
-+	for (i = 0; i < bdev->num_channels; i++) {
-+		bam_dma_terminate_all(&bdev->channels[i]);
-+		tasklet_kill(&bdev->channels[i].vc.task);
-+
-+		dma_free_writecombine(bdev->dev, BAM_DESC_FIFO_SIZE,
-+			bdev->channels[i].fifo_virt,
-+			bdev->channels[i].fifo_phys);
-+	}
-+
-+	tasklet_kill(&bdev->task);
-+
-+	clk_disable_unprepare(bdev->bamclk);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id bam_of_match[] = {
-+	{ .compatible = "qcom,bam-v1.4.0", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, bam_of_match);
-+
-+static struct platform_driver bam_dma_driver = {
-+	.probe = bam_dma_probe,
-+	.remove = bam_dma_remove,
-+	.driver = {
-+		.name = "bam-dma-engine",
-+		.owner = THIS_MODULE,
-+		.of_match_table = bam_of_match,
-+	},
-+};
-+
-+module_platform_driver(bam_dma_driver);
-+
-+MODULE_AUTHOR("Andy Gross <agross@codeaurora.org>");
-+MODULE_DESCRIPTION("QCOM BAM DMA engine driver");
-+MODULE_LICENSE("GPL v2");
+ static int xuartps_request_port(struct uart_port *port)
+ {
+ 	if (!request_mem_region(port->mapbase, XUARTPS_REGISTER_SPACE,
+@@ -899,12 +871,12 @@ static int xuartps_request_port(struct uart_port *port)
+ }
+ 
+ /**
+- * xuartps_release_port - Release the memory region attached to a xuartps
+- *				port, called when the driver removes a xuartps
+- *				port via uart_remove_one_port().
++ * xuartps_release_port - Release UART port
+  * @port: Handle to the uart port structure
+  *
+- **/
++ * Release the memory region attached to a xuartps port. Called when the
++ * driver removes a xuartps port via uart_remove_one_port().
++ */
+ static void xuartps_release_port(struct uart_port *port)
+ {
+ 	release_mem_region(port->mapbase, XUARTPS_REGISTER_SPACE);
+@@ -913,12 +885,10 @@ static void xuartps_release_port(struct uart_port *port)
+ }
+ 
+ /**
+- * xuartps_config_port - Configure xuartps, called when the driver adds a
+- *				xuartps port
++ * xuartps_config_port - Configure UART port
+  * @port: Handle to the uart port structure
+  * @flags: If any
+- *
+- **/
++ */
+ static void xuartps_config_port(struct uart_port *port, int flags)
+ {
+ 	if (flags & UART_CONFIG_TYPE && xuartps_request_port(port) == 0)
+@@ -927,12 +897,10 @@ static void xuartps_config_port(struct uart_port *port, int flags)
+ 
+ /**
+  * xuartps_get_mctrl - Get the modem control state
+- *
+  * @port: Handle to the uart port structure
+  *
+- * Returns the modem control state
+- *
+- **/
++ * Return: The modem control state
++ */
+ static unsigned int xuartps_get_mctrl(struct uart_port *port)
+ {
+ 	return TIOCM_CTS | TIOCM_DSR | TIOCM_CAR;
+@@ -996,38 +964,23 @@ static void xuartps_poll_put_char(struct uart_port *port, unsigned char c)
+ }
+ #endif
+ 
+-/** The UART operations structure
+- */
+ static struct uart_ops xuartps_ops = {
+ 	.set_mctrl	= xuartps_set_mctrl,
+ 	.get_mctrl	= xuartps_get_mctrl,
+ 	.enable_ms	= xuartps_enable_ms,
+-
+-	.start_tx	= xuartps_start_tx,	/* Start transmitting */
+-	.stop_tx	= xuartps_stop_tx,	/* Stop transmission */
+-	.stop_rx	= xuartps_stop_rx,	/* Stop reception */
+-	.tx_empty	= xuartps_tx_empty,	/* Transmitter busy? */
+-	.break_ctl	= xuartps_break_ctl,	/* Start/stop
+-						 * transmitting break
+-						 */
+-	.set_termios	= xuartps_set_termios,	/* Set termios */
+-	.startup	= xuartps_startup,	/* App opens xuartps */
+-	.shutdown	= xuartps_shutdown,	/* App closes xuartps */
+-	.type		= xuartps_type,		/* Set UART type */
+-	.verify_port	= xuartps_verify_port,	/* Verification of port
+-						 * params
+-						 */
+-	.request_port	= xuartps_request_port,	/* Claim resources
+-						 * associated with a
+-						 * xuartps port
+-						 */
+-	.release_port	= xuartps_release_port,	/* Release resources
+-						 * associated with a
+-						 * xuartps port
+-						 */
+-	.config_port	= xuartps_config_port,	/* Configure when driver
+-						 * adds a xuartps port
+-						 */
++	.start_tx	= xuartps_start_tx,
++	.stop_tx	= xuartps_stop_tx,
++	.stop_rx	= xuartps_stop_rx,
++	.tx_empty	= xuartps_tx_empty,
++	.break_ctl	= xuartps_break_ctl,
++	.set_termios	= xuartps_set_termios,
++	.startup	= xuartps_startup,
++	.shutdown	= xuartps_shutdown,
++	.type		= xuartps_type,
++	.verify_port	= xuartps_verify_port,
++	.request_port	= xuartps_request_port,
++	.release_port	= xuartps_release_port,
++	.config_port	= xuartps_config_port,
+ #ifdef CONFIG_CONSOLE_POLL
+ 	.poll_get_char	= xuartps_poll_get_char,
+ 	.poll_put_char	= xuartps_poll_put_char,
+@@ -1037,11 +990,10 @@ static struct uart_ops xuartps_ops = {
+ static struct uart_port xuartps_port[2];
+ 
+ /**
+- * xuartps_get_port - Configure the port from the platform device resource
+- *			info
++ * xuartps_get_port - Configure the port from the platform device resource info
+  *
+- * Returns a pointer to a uart_port or NULL for failure
+- **/
++ * Return: Pointer to a uart_port or NULL for failure
++ */
+ static struct uart_port *xuartps_get_port(void)
+ {
+ 	struct uart_port *port;
+@@ -1072,14 +1024,11 @@ static struct uart_port *xuartps_get_port(void)
+ 	return port;
+ }
+ 
+-/*-----------------------Console driver operations--------------------------*/
+-
+ #ifdef CONFIG_SERIAL_XILINX_PS_UART_CONSOLE
+ /**
+  * xuartps_console_wait_tx - Wait for the TX to be full
+  * @port: Handle to the uart port structure
+- *
+- **/
++ */
+ static void xuartps_console_wait_tx(struct uart_port *port)
+ {
+ 	while ((xuartps_readl(XUARTPS_SR_OFFSET) & XUARTPS_SR_TXEMPTY)
+@@ -1091,8 +1040,7 @@ static void xuartps_console_wait_tx(struct uart_port *port)
+  * xuartps_console_putchar - write the character to the FIFO buffer
+  * @port: Handle to the uart port structure
+  * @ch: Character to be written
+- *
+- **/
++ */
+ static void xuartps_console_putchar(struct uart_port *port, int ch)
+ {
+ 	xuartps_console_wait_tx(port);
+@@ -1101,10 +1049,10 @@ static void xuartps_console_putchar(struct uart_port *port, int ch)
+ 
+ /**
+  * xuartps_console_write - perform write operation
+- * @port: Handle to the uart port structure
++ * @co: Handle to the console
+  * @s: Pointer to character array
+  * @count: No of characters
+- **/
++ */
+ static void xuartps_console_write(struct console *co, const char *s,
+ 				unsigned int count)
+ {
+@@ -1151,8 +1099,8 @@ static void xuartps_console_write(struct console *co, const char *s,
+  * @co: Console handle
+  * @options: Initial settings of uart
+  *
+- * Returns 0, -ENODEV if no device
+- **/
++ * Return: 0 on success, negative errno otherwise.
++ */
+ static int __init xuartps_console_setup(struct console *co, char *options)
+ {
+ 	struct uart_port *port = &xuartps_port[co->index];
+@@ -1190,8 +1138,8 @@ static struct console xuartps_console = {
+ /**
+  * xuartps_console_init - Initialization call
+  *
+- * Returns 0 on success, negative error otherwise
+- **/
++ * Return: 0 on success, negative error otherwise.
++ */
+ static int __init xuartps_console_init(void)
+ {
+ 	register_console(&xuartps_console);
+@@ -1202,17 +1150,15 @@ console_initcall(xuartps_console_init);
+ 
+ #endif /* CONFIG_SERIAL_XILINX_PS_UART_CONSOLE */
+ 
+-/** Structure Definitions
+- */
+ static struct uart_driver xuartps_uart_driver = {
+-	.owner		= THIS_MODULE,		/* Owner */
+-	.driver_name	= XUARTPS_NAME,		/* Driver name */
+-	.dev_name	= XUARTPS_TTY_NAME,	/* Node name */
+-	.major		= XUARTPS_MAJOR,	/* Major number */
+-	.minor		= XUARTPS_MINOR,	/* Minor number */
+-	.nr		= XUARTPS_NR_PORTS,	/* Number of UART ports */
++	.owner		= THIS_MODULE,
++	.driver_name	= XUARTPS_NAME,
++	.dev_name	= XUARTPS_TTY_NAME,
++	.major		= XUARTPS_MAJOR,
++	.minor		= XUARTPS_MINOR,
++	.nr		= XUARTPS_NR_PORTS,
+ #ifdef CONFIG_SERIAL_XILINX_PS_UART_CONSOLE
+-	.cons		= &xuartps_console,	/* Console */
++	.cons		= &xuartps_console,
+ #endif
+ };
+ 
+@@ -1221,7 +1167,7 @@ static struct uart_driver xuartps_uart_driver = {
+  * xuartps_suspend - suspend event
+  * @device: Pointer to the device structure
+  *
+- * Returns 0
++ * Return: 0
+  */
+ static int xuartps_suspend(struct device *device)
+ {
+@@ -1269,7 +1215,7 @@ static int xuartps_suspend(struct device *device)
+  * xuartps_resume - Resume after a previous suspend
+  * @device: Pointer to the device structure
+  *
+- * Returns 0
++ * Return: 0
+  */
+ static int xuartps_resume(struct device *device)
+ {
+@@ -1329,15 +1275,12 @@ static int xuartps_resume(struct device *device)
+ 
+ static SIMPLE_DEV_PM_OPS(xuartps_dev_pm_ops, xuartps_suspend, xuartps_resume);
+ 
+-/* ---------------------------------------------------------------------
+- * Platform bus binding
+- */
+ /**
+  * xuartps_probe - Platform driver probe
+  * @pdev: Pointer to the platform device structure
+  *
+- * Returns 0 on success, negative error otherwise
+- **/
++ * Return: 0 on success, negative error otherwise.
++ */
+ static int xuartps_probe(struct platform_device *pdev)
+ {
+ 	int rc;
+@@ -1437,8 +1380,8 @@ err_out_clk_dis_aper:
+  * xuartps_remove - called when the platform driver is unregistered
+  * @pdev: Pointer to the platform device structure
+  *
+- * Returns 0 on success, negative error otherwise
+- **/
++ * Return: 0 on success, negative error otherwise.
++ */
+ static int xuartps_remove(struct platform_device *pdev)
+ {
+ 	struct uart_port *port = platform_get_drvdata(pdev);
+@@ -1465,24 +1408,16 @@ static struct of_device_id xuartps_of_match[] = {
+ MODULE_DEVICE_TABLE(of, xuartps_of_match);
+ 
+ static struct platform_driver xuartps_platform_driver = {
+-	.probe   = xuartps_probe,		/* Probe method */
+-	.remove  = xuartps_remove,		/* Detach method */
++	.probe   = xuartps_probe,
++	.remove  = xuartps_remove,
+ 	.driver  = {
+ 		.owner = THIS_MODULE,
+-		.name = XUARTPS_NAME,		/* Driver name */
++		.name = XUARTPS_NAME,
+ 		.of_match_table = xuartps_of_match,
+ 		.pm = &xuartps_dev_pm_ops,
+ 		},
+ };
+ 
+-/* ---------------------------------------------------------------------
+- * Module Init and Exit
+- */
+-/**
+- * xuartps_init - Initial driver registration call
+- *
+- * Returns whether the registration was successful or not
+- **/
+ static int __init xuartps_init(void)
+ {
+ 	int retval = 0;
+@@ -1500,15 +1435,8 @@ static int __init xuartps_init(void)
+ 	return retval;
+ }
+ 
+-/**
+- * xuartps_exit - Driver unregistration call
+- **/
+ static void __exit xuartps_exit(void)
+ {
+-	/* The order of unregistration is important. Unregister the
+-	 * UART driver before the platform driver crashes the system.
+-	 */
+-
+ 	/* Unregister the platform driver */
+ 	platform_driver_unregister(&xuartps_platform_driver);
+ 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+1.9.0.1.g4196000
