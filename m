@@ -1,51 +1,86 @@
-From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] video: ARM CLCD: Add DT support
-Date: Mon, 10 Mar 2014 12:09:42 +0000
-Message-ID: <1394453382.3853.6.camel@hornet>
-References: <1394036606-17784-1-git-send-email-pawel.moll@arm.com>
-	 <53184C2E.3000807@ti.com> <1394119431.4160.84.camel@hornet>
-	 <5319AF00.5030602@ti.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 6/7] DMA: sun6i: Add driver for the
+ Allwinner A31 DMA controller
+Date: Mon, 10 Mar 2014 13:05:58 +0100
+Message-ID: <20140310120558.GF2815@lukather>
+References: <1393949884-892-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1393949884-892-7-git-send-email-maxime.ripard@free-electrons.com>
+ <1394028474.28803.172.camel@smile.fi.intel.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5319AF00.5030602-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jonathan Austin <Jonathan.Austin-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="JcvBIhDvR6w3jUPA"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBG6X62MAKGQEQSX76QA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1394028474.28803.172.camel-XvqNBM/wLWRrdx17CPfAsdBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: "Shevchenko, Andriy" <andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, "Williams, Dan J" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Koul, Vinod" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org" <sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, "shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org" <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, "zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org" <zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2014-03-07 at 11:35 +0000, Tomi Valkeinen wrote:
-> > ... and this makes me try to get out of its way. In other words, I fully
-> > agree with you, but I don't think this applies to this particular patch,
-> > as I'm not even trying to represent the display pipeline. The (optional)
-> 
-> Right, you are not, at the moment. My point was, if the driver is
-> extended later to support pipelines, or common panel/encoder drivers,
-> you (most likely) need to have similar bindings than the other people use.
 
-No argument here.
+--JcvBIhDvR6w3jUPA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Note that the same DT bindings you add here should also work for the DRM
-> driver in the future. So, in fact, the question is extended to: will the
-> fbdev 
+Hi Andriy,
 
-No, I don't think so. It's a end of line for it, I believe. From my
-personal point of view the main goal is to fill the last gap between DT
-and non-DT support on one of the Versatile Express boards - CLCD works
-fine when booted with ATAGs, doesn't work when booted with DT. It looks
-bad.
+On Wed, Mar 05, 2014 at 02:07:55PM +0000, Shevchenko, Andriy wrote:
+> > +		return PTR_ERR(pll6);
+> > +	}
+> > +
+> > +	ret =3D clk_set_parent(mux, pll6);
+> > +	if (ret) {
+> > +		dev_err(&pdev->dev, "Couldn't reparent AHB1 on PLL6\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	devm_clk_put(&pdev->dev, mux);
+> > +	devm_clk_put(&pdev->dev, pll6);
+>=20
+> Since you put those here, would it be better to use plain
+> clk_get/clk_put ?
 
-> or drm driver support common panels/encoders?
+Actually, this allows to have no exit path for the case where one of
+the calls between the first clk_get, and here. devm_clk_* makes error
+handling much easier here, that's just all
 
-I would hope so, yes. VE display pipeline is quite complex (more than I
-would hope ;-) so to implement KMS in a proper way (with hotplugging,
-bells and whistles) it will have to know more than now. But it's out of
-scope for me.
+I'll fix the other comments you had, and send a new version.
 
-Pawel
+Thanks!
+Maxime
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--JcvBIhDvR6w3jUPA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTHaqlAAoJEBx+YmzsjxAgUrsP/R3AjphaZbpaJGAQua0RghUQ
+U2khP8K6Z6dHvkUumqAh43mnrDydDxbVzLqSdCkg9FGoq1jjp5rLPORutCtC/Ybz
+l8eHUi2aiaL5shT48XlJ/hKLaicrl6ZSPG0uOEsHqZtaaSFc3bK6RWSRozLmhiWz
+DyToIg0xh4xetWGWaw2pZKeGZdnuUSurfMh4Bk9ZoQunxtZn7o61vs6RZ0kpaoH2
+QIPmufn+TMuuVzTQY7yyx0nwp1vGH9am6AZRr52SDqvHVfzcnXiJF6W1N+6rh7OP
+3Ag+YnxYZKXe+2LLEzbaPh6JzqgmYfuChYJ9zuIgcJZyuoKw0YvG2XgDO/KTjguG
+Q/ZPX+mOAHlfc5+eT4BaiJ1457wXZ95jpcN3mhnrAswIkzMKwcNKdBrHtAuCaEFv
+AwPR1bNZP1KYCFxW6O3mQl9/UmQJhXITzvBwGmlZN31CebF4eZ9MmgpuNGS0GYeA
++aqAFhm224Wp35+phn5H+Tj42p37jEiN1nCkvXu2tlTjhWq6AnxF1xpyysnWRpAi
+MofIDPnaEWsDFZ5fKOiBf5MURz1hjY9uIRpbSiDYIqHuR2T+ukGkLlBrSKkX0Df6
+hVCfykbjtiX+vJ3AysnTCewla0H1MIDGS7o7sTaa1kYMINoVEwIFAOPWPZ5m+Jch
+AZK/yREPcCqyDr6GVJ4v
+=xrpl
+-----END PGP SIGNATURE-----
+
+--JcvBIhDvR6w3jUPA--
