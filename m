@@ -1,109 +1,57 @@
 From: Sebastian Reichel <sre@debian.org>
-Subject: [PATCHv3 5/9] mfd: twl4030-madc: Use twl_i2c_read/write_u16 for 16 bit registers
-Date: Mon, 10 Mar 2014 18:25:25 +0100
-Message-ID: <1394472329-15485-6-git-send-email-sre@debian.org>
-References: <1394472329-15485-1-git-send-email-sre@debian.org>
+Subject: [PATCHv3 0/9] Convert twl4030-madc to IIO API and add DT support
+Date: Mon, 10 Mar 2014 18:25:20 +0100
+Message-ID: <1394472329-15485-1-git-send-email-sre@debian.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1394472329-15485-1-git-send-email-sre@debian.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sebastian Reichel <sre@ring0.de>, Marek Belisko <marek@goldelico.com>, Jonathan Cameron <jic23@kernel.org>
 Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Sebastian Reichel <sre@debian.org>
 List-Id: devicetree@vger.kernel.org
 
-Simplify reading and writing of 16 bit TWL registers in the
-driver by using twl_i2c_read_u16 and twl_i2c_write_u16.
+Hi,
 
-Signed-off-by: Sebastian Reichel <sre@debian.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
-Acked-by: Jonathan Cameron <jic23@kernel.org>
-Tested-by: Marek Belisko <marek@goldelico.com>
----
- drivers/mfd/twl4030-madc.c | 39 ++++++++-------------------------------
- 1 file changed, 8 insertions(+), 31 deletions(-)
+This is PATCHv3 for converting twl4030-madc to the IIO API and
+adding DT support. The plan is to remove the private twl4030-madc
+API once all users have been removed or converted to the IIO API.
+The patchset compiles and has been tested on my Nokia N900.
 
-diff --git a/drivers/mfd/twl4030-madc.c b/drivers/mfd/twl4030-madc.c
-index 890d520..ccfb10d 100644
---- a/drivers/mfd/twl4030-madc.c
-+++ b/drivers/mfd/twl4030-madc.c
-@@ -205,25 +205,19 @@ const struct twl4030_madc_conversion_method twl4030_conversion_methods[] = {
-  */
- static int twl4030_madc_channel_raw_read(struct twl4030_madc_data *madc, u8 reg)
- {
--	u8 msb, lsb;
-+	u16 val;
- 	int ret;
- 	/*
- 	 * For each ADC channel, we have MSB and LSB register pair. MSB address
- 	 * is always LSB address+1. reg parameter is the address of LSB register
- 	 */
--	ret = twl_i2c_read_u8(TWL4030_MODULE_MADC, &msb, reg + 1);
-+	ret = twl_i2c_read_u16(TWL4030_MODULE_MADC, &val, reg);
- 	if (ret) {
--		dev_err(madc->dev, "unable to read MSB register 0x%X\n",
--			reg + 1);
--		return ret;
--	}
--	ret = twl_i2c_read_u8(TWL4030_MODULE_MADC, &lsb, reg);
--	if (ret) {
--		dev_err(madc->dev, "unable to read LSB register 0x%X\n", reg);
-+		dev_err(madc->dev, "unable to read register 0x%X\n", reg);
- 		return ret;
- 	}
- 
--	return (int)(((msb << 8) | lsb) >> 6);
-+	return (int)(val >> 6);
- }
- 
- /*
-@@ -572,7 +566,6 @@ static int twl4030_madc_wait_conversion_ready(struct twl4030_madc_data *madc,
- int twl4030_madc_conversion(struct twl4030_madc_request *req)
- {
- 	const struct twl4030_madc_conversion_method *method;
--	u8 ch_msb, ch_lsb;
- 	int ret;
- 
- 	if (!req || !twl4030_madc)
-@@ -588,37 +581,21 @@ int twl4030_madc_conversion(struct twl4030_madc_request *req)
- 		ret = -EBUSY;
- 		goto out;
- 	}
--	ch_msb = (req->channels >> 8) & 0xff;
--	ch_lsb = req->channels & 0xff;
- 	method = &twl4030_conversion_methods[req->method];
- 	/* Select channels to be converted */
--	ret = twl_i2c_write_u8(TWL4030_MODULE_MADC, ch_msb, method->sel + 1);
-+	ret = twl_i2c_write_u16(TWL4030_MODULE_MADC, req->channels, method->sel);
- 	if (ret) {
- 		dev_err(twl4030_madc->dev,
--			"unable to write sel register 0x%X\n", method->sel + 1);
--		goto out;
--	}
--	ret = twl_i2c_write_u8(TWL4030_MODULE_MADC, ch_lsb, method->sel);
--	if (ret) {
--		dev_err(twl4030_madc->dev,
--			"unable to write sel register 0x%X\n", method->sel + 1);
-+			"unable to write sel register 0x%X\n", method->sel);
- 		goto out;
- 	}
- 	/* Select averaging for all channels if do_avg is set */
- 	if (req->do_avg) {
--		ret = twl_i2c_write_u8(TWL4030_MODULE_MADC,
--				       ch_msb, method->avg + 1);
-+		ret = twl_i2c_write_u16(TWL4030_MODULE_MADC, req->channels,
-+				       method->avg);
- 		if (ret) {
- 			dev_err(twl4030_madc->dev,
- 				"unable to write avg register 0x%X\n",
--				method->avg + 1);
--			goto out;
--		}
--		ret = twl_i2c_write_u8(TWL4030_MODULE_MADC,
--				       ch_lsb, method->avg);
--		if (ret) {
--			dev_err(twl4030_madc->dev,
--				"unable to write avg reg 0x%X\n",
- 				method->avg);
- 			goto out;
- 		}
+Changes since PATCHv2 [0]:
+ * Added Tested-by: Marek Belisko to all patches, which modify
+   code used by twl4030-madc-battery driver
+ * Update madc->use_second_irq as suggested by Lee Jones
+ * Use dev_err instead of dev_dbg for error messages in probe function
+ * Add a space between "{" and ".compatible"
+ * Decrease indention of closing "}" in twl4030_madc_driver.driver
+
+[0] https://lkml.org/lkml/2014/3/4/815
+
+-- Sebastian
+
+Sebastian Reichel (9):
+  mfd: twl4030-madc: Use managed resources
+  mfd: twl4030-madc: Add DT support and convert to IIO framework
+  mfd: twl4030-madc: Cleanup driver
+  mfd: twl-core: Add twl_i2c_read/write_u16
+  mfd: twl4030-madc: Use twl_i2c_read/write_u16 for 16 bit registers
+  Documentation: DT: Document twl4030-madc binding
+  mfd: twl4030-madc: Move driver to drivers/iio/adc
+  iio: documentation: Add ABI documentation for *_mean_raw
+  iio: inkern: add iio_read_channel_average_raw
+
+ Documentation/ABI/testing/sysfs-bus-iio            |   8 +
+ .../devicetree/bindings/iio/adc/twl4030-madc.txt   |  24 ++
+ drivers/iio/adc/Kconfig                            |  10 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/{mfd => iio/adc}/twl4030-madc.c            | 302 +++++++++++++--------
+ drivers/iio/inkern.c                               |  18 ++
+ drivers/mfd/Kconfig                                |  10 -
+ drivers/mfd/Makefile                               |   1 -
+ include/linux/i2c/twl.h                            |  12 +
+ include/linux/i2c/twl4030-madc.h                   |   2 +-
+ include/linux/iio/consumer.h                       |  13 +
+ 11 files changed, 275 insertions(+), 126 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/twl4030-madc.txt
+ rename drivers/{mfd => iio/adc}/twl4030-madc.c (75%)
+
 -- 
 1.9.0
