@@ -1,60 +1,116 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] mfd: Support SiRF audio modules
-Date: Mon, 10 Mar 2014 16:31:58 +0000
-Message-ID: <20140310163158.GI13661@lee--X1>
-References: <1394184531-7679-1-git-send-email-rongjun.ying@csr.com>
- <20140310103532.GI14976@lee--X1>
- <CAByv0RNQrPitsfcAwMvn=eZ1hNSaii=jw94H68rQvfQXnjYz9A@mail.gmail.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v6 6/6] pci: Add support for creating a generic
+ host_bridge from device tree
+Date: Mon, 10 Mar 2014 16:33:44 +0000
+Message-ID: <20140310163343.GY6457@e106497-lin.cambridge.arm.com>
+References: <1394020137-1830-1-git-send-email-Liviu.Dudau@arm.com>
+ <201403081815.08829.arnd@arndb.de>
+ <20140310144414.GT6457@e106497-lin.cambridge.arm.com>
+ <2115856.ZTdgp5fkma@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <2115856.ZTdgp5fkma@wuerfel>
 Content-Disposition: inline
-In-Reply-To: <CAByv0RNQrPitsfcAwMvn=eZ1hNSaii=jw94H68rQvfQXnjYz9A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: RongJun Ying <rjying-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, DL-SHA-WorkGroupLinux <workgroup.linux-kQvG35nSl+M@public.gmane.org>, Rongjun Ying <rongjun.ying-kQvG35nSl+M@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Tanmay Inamdar <tinamdar@apm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bjorn Helgaas <bhelgaas@google.com>
 List-Id: devicetree@vger.kernel.org
 
-> >> +     if (of_device_is_compatible(pdev->dev.of_node,
-> >> +                     "sirf,prima2-audio")) {
-> >> +             cell =3D sirf_audio_prima2_devs;
-> >> +             cell_number =3D ARRAY_SIZE(sirf_audio_prima2_devs);
-> >
-> > s/cell_number/n_devs
-> >
-> >> +     } else if (of_device_is_compatible(pdev->dev.of_node,
-> >> +                     "sirf,atlas6-audio")) {
-> >> +             cell =3D sirf_audio_atlas6_devs;
-> >> +             cell_number =3D ARRAY_SIZE(sirf_audio_atlas6_devs);
-> >
-> > s/cell_number/n_devs
-> >
-> >> +     } else
-> >> +             return -EINVAL;
-> >
-> > I'm not sure there's any need for this. Why don't you just parse th=
-e
-> > child nodes? Are you even sure you need an MFD at all? It appears
-> > you're just using an MFD to share a regmap. Seems like over-kill to=
- me.
+On Mon, Mar 10, 2014 at 03:21:01PM +0000, Arnd Bergmann wrote:
+> On Monday 10 March 2014 14:44:14 Liviu Dudau wrote:
+> > I will try to improve the error handling in the next patchset versi=
+on.
+> > However I am still confused about the earlier discussion on
+> > pci_register_io_range(). Your suggestion initially was to return an
+> > error in the default weak implementation, but in your last email yo=
+u
+> > are talking about returning 'port'.
 >=20
-> In my case, the prima2 and atlas6 codec have small different. But
-> they use the same register address space.
-> The sound codec driver need know what codec device is applied.
+> You can do either one: 'port' should be positive or zero, while the
+> error would always be negative. We do the same thing in many interfac=
+es
+> in the kernel.
+>=20
+> > My idea when I've introduced the
+> > helper function was that it would return an error if it fails to
+> > register the IO range and zero otherwise. I agree that we can treat
+> > the default 'do nothing with the IO range' case as an error, with
+> > the caveat that will force architectures that use this code to
+> > provide their own implementation of pci_register_io_range() in orde=
+r
+> > to avoid failure, even for the cases where the architecture has a 1=
+:1
+> > mapping between IO and CPU addresses.
+>=20
+> Which architectures are you thinking of? The only one I know that
+> does this is ia64, and we won't ever have to support this helper
+> on that architecture.
 
-Mark,
+I was thinking about architectures that have IO_SPACE_LIMIT >=3D 0xffff=
+ffff.
+While not an absolute indicator, with the default pci_address_to_pio()
+that means that they can use the CPU MMIO address as IO address directl=
+y.
 
-I understand it was you who made the original request for the regmap
-to be shared between devices. Was it an MFD that you had in mind?
+$ git grep IO_SPACE_LIMIT | grep -i ffffffff
+arch/arm/include/asm/io.h:#define IO_SPACE_LIMIT ((resource_size_t)0xff=
+ffffff)
+arch/arm/mach-at91/include/mach/io.h:#define IO_SPACE_LIMIT		0xFFFFFFFF
+arch/arm/mach-omap1/include/mach/io.h:#define IO_SPACE_LIMIT 0xffffffff
+arch/arm/mach-pxa/include/mach/io.h:#define IO_SPACE_LIMIT 0xffffffff
+arch/arm/mach-s3c24xx/include/mach/io.h:#define IO_SPACE_LIMIT 0xffffff=
+ff
+arch/avr32/include/asm/io.h:#define IO_SPACE_LIMIT	0xffffffff
+arch/frv/include/asm/io.h:#define IO_SPACE_LIMIT	0xffffffff
+arch/ia64/include/asm/io.h:#define IO_SPACE_LIMIT		0xffffffffffffffffUL
+arch/m32r/include/asm/io.h:#define IO_SPACE_LIMIT  0xFFFFFFFF
+arch/m68k/include/asm/io_no.h:#define IO_SPACE_LIMIT 0xffffffff
+arch/microblaze/include/asm/io.h:#define IO_SPACE_LIMIT (0xFFFFFFFF)
+arch/mn10300/include/asm/io.h:#define IO_SPACE_LIMIT 0xffffffff
+arch/sh/include/asm/io.h:#define IO_SPACE_LIMIT 0xffffffff
+arch/sparc/include/asm/io_32.h:#define IO_SPACE_LIMIT 0xffffffff
+arch/sparc/include/asm/io_64.h:#define IO_SPACE_LIMIT 0xfffffffffffffff=
+fUL
+arch/tile/include/asm/io.h:#define IO_SPACE_LIMIT 0xffffffff
+
+
+>=20
+> I did not ask to treat 'do nothing with the IO range' as an error,
+> what I meant is that we should treat 'architecture cannot translate
+> from I/O space to memory space but DT lists a translation anyway'
+> as an error. On x86, you should never see an entry for the I/O space
+> in "ranges", so we will not call this function unless there is a
+> bug in DT.
+
+Ok, it's just that there is no "architecture cannot translate from I/O
+space to memory space" indicator anywhere and I don't want to make x86
+a special case.
+
+So, my proposal is this: default weak implementation of pci_register_io=
+_range()
+returns an error (meaning I have no idea how to translate IO addresses
+to memory space) and anyone that wants this function to return success =
+will
+have to provide their implementation.
+
+I will send an updated series.
+
+Best regards,
+Liviu
+
+>=20
+> 	Arnd
+>=20
+>=20
 
 --=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
