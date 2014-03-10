@@ -1,87 +1,66 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core
- to drivers/of
-Date: Mon, 10 Mar 2014 12:18:20 +0200
-Message-ID: <531D916C.2010903@ti.com>
-References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> < CAL_Jsq+U9zU1i+STLHMBjY5BeEP6djYnJVE5X1ix-D2q_zWztQ@mail.gmail.com> < 20140217181451.7EB7FC4044D@trevor.secretlab.ca> <20140218070624.GP17250@ pengutronix.de> <20140218162627.32BA4C40517@trevor.secretlab.ca> < 1393263389.3091.82.camel@pizza.hi.pengutronix.de> <20140226110114. CF2C7C40A89@trevor.secretlab.ca> <1393426129.3248.64.camel@paszta.hi. pengutronix.de> <20140307170550.1DFB2C40A0D@trevor.secretlab.ca> <531AF1E8. 50606@ti.com> <20140308114115.BB08EC40612@trevor.secretlab.ca>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: Device Tree Generator
+Date: Mon, 10 Mar 2014 11:19:57 +0100
+Message-ID: <531D91CD.2010300@monstr.eu>
+References: <CA+nFU8SUbmwmUN1SWVoh2VEEQ-r347v=GMfDJmAbMhn_yLQCRA@mail.gmail.com>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="m9agE5FH5X00TA97e9K7BvgiWLaTKpLWn"
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20140308114115.BB08EC40612@trevor.secretlab.ca>
-Sender: linux-media-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
+ protocol="application/pgp-signature";
+ boundary="U82MC25JGtAubdlSCMAe6aX0jVJlqstla"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CA+nFU8SUbmwmUN1SWVoh2VEEQ-r347v=GMfDJmAbMhn_yLQCRA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?ISO-8859-1?Q?Marc_Mar=ED?= <marc.mari.barcelo-Iylbf7zvluZi+jfwTKn9+w@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---m9agE5FH5X00TA97e9K7BvgiWLaTKpLWn
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--U82MC25JGtAubdlSCMAe6aX0jVJlqstla
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-On 08/03/14 13:41, Grant Likely wrote:
-
->> Ok. If we go for single directional link, the question is then: which
->> way? And is the direction different for display and camera, which are
->> kind of reflections of each other?
+On 03/07/2014 07:57 PM, Marc Mar=ED wrote:
+> Hello everyone
 >=20
-> In general I would recommend choosing whichever device you would
-> sensibly think of as a master. In the camera case I would choose the
-> camera controller node instead of the camera itself, and in the display=
+> In the context of Google Summer of Code project, I'm thinking to work
+> on a device-tree generator, starting at the Beagleboard platform.
+>=20
+> To define better the scope of this project, so it can be useful too
+> outside this specific platform, I would like to ask for your opinions
+> in necessary and good-to-have features.
 
-> case I would choose the display controller instead of the panel. The
-> binding author needs to choose what she things makes the most sense, bu=
-t
-> drivers can still use if it it turns out to be 'backwards'
+FYI: Xilinx have device-tree generator which extract information
+from design tools.
 
-I would perhaps choose the same approach, but at the same time I think
-it's all but clear. The display controller doesn't control the panel any
-more than a DMA controller controls, say, the display controller.
+Thanks,
+Michal
 
-In fact, in earlier versions of OMAP DSS DT support I had a simpler port
-description, and in that I had the panel as the master (i.e. link from
-panel to dispc) because the panel driver uses the display controller's
-features to provide the panel device a data stream.
-
-And even with the current OMAP DSS DT version, which uses the v4l2 style
-ports/endpoints, the driver model is still the same, and only links
-towards upstream are used.
-
-So one reason I'm happy with the dual-linking is that I can easily
-follow the links from the downstream entities to upstream entities, and
-other people, who have different driver model, can easily do the opposite=
-=2E
-
-But I agree that single-linking is enough and this can be handled at
-runtime, even if it makes the code more complex. And perhaps requires
-extra data in the dts, to give the start points for the graph.
-
- Tomi
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
 
 
 
---m9agE5FH5X00TA97e9K7BvgiWLaTKpLWn
+--U82MC25JGtAubdlSCMAe6aX0jVJlqstla
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
+Version: GnuPG v1.4.10 (GNU/Linux)
 Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iQIcBAEBAgAGBQJTHZFsAAoJEPo9qoy8lh71TxgP/2VBc8qqL7gzkimED+kI2e+J
-tDApeGiLcqQEq7MW+Jgq9ssDxPUUY/zoIDEM2xzg1xO9fXVi++TziIXEGrp0vE/r
-JAYUT/YQ+St07VakXFrnBPAmvpIfph+mE841yr0gOXVyY+EJKFWK8RUwCCLBL6WJ
-jBTuy7gHUQpTcm+Y+gI2rUh12buP8i9kSaqTmI2qIEtV08GmDvQJm5d6u9uGKHk1
-kbzuV9IT3/3W2iBiiphIfjdeZ5n+qwxUbPNVy+fdzf8z9+mCl7cqwIQGV1fIdRK1
-wapu+JGFoqc36PdtGUiTImJDfkoInPfuyj2IEhEKzTSV2sDM2XYn0g0HNwuKvIro
-E9CEQXeqm2G0TUbmtxNPWgHGXu7GOkHa5PhfzYyQIBBoX3hQrS12bRkrsb3gmMM6
-tAMZQU/6Jkwjwl0qXXI8tH4p6nvxQbLIXxzkhpbv7Qh4Ue32C6AkD3I1zL043dCr
-N2qeWdNz7rVHRL0EFXnJQoem0n70R6SToCXreJiH4NWg9uiTcm1Ey0dc8Dc07cST
-ZV4Wxky+zDvnAIKXI7Aa26yHIdJXZPMIsr4carehvRfoLZVtoCoT4Fg7MnUDf2sz
-n91XgkSLqlPkzRcSiLf87DAzhuFEtGBE1tvYq924wGr6cPVGIt0ELPNKBofaMzra
-yQGD/2hoPCNBi/DVj9BW
-=leqH
+iEYEARECAAYFAlMdkc0ACgkQykllyylKDCEI/gCeLZFjkRcgErQRJeVxx9jd7Idn
+DgsAn2dXmU6RvKzv3fSuWub0LqQouOFB
+=m1tS
 -----END PGP SIGNATURE-----
 
---m9agE5FH5X00TA97e9K7BvgiWLaTKpLWn--
+--U82MC25JGtAubdlSCMAe6aX0jVJlqstla--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
