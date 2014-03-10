@@ -1,90 +1,70 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v6 2/8] Documentation: of: Document graph bindings
-Date: Mon, 10 Mar 2014 12:37:42 +0100
-Message-ID: <2406124.RniJY1n1Xd@avalon>
-References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de> <20140307182717.67596C40B43@trevor.secretlab.ca> <1394443690.7380.10.camel@paszta.hi.pengutronix.de>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [linux-sunxi] Re: [RFC PATCH v2 08/14] mtd: nand: add sunxi
+ NAND flash controller support
+Date: Mon, 10 Mar 2014 12:37:51 +0100
+Message-ID: <1394451471.6627.10.camel@weser.hi.pengutronix.de>
+References: <1391006064-28890-1-git-send-email-b.brezillon.dev@gmail.com>
+	 <1391006064-28890-9-git-send-email-b.brezillon.dev@gmail.com>
+	 <20140129175641.GF1427@obsidianresearch.com>
+	 <20140129184619.GC27143@localhost>
+	 <20140129191005.GG1427@obsidianresearch.com> <531D9F4B.6040505@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1394443690.7380.10.camel-+qGW7pzALmz7o/J7KWpOmN53zsg1cpMQ@public.gmane.org>
+In-Reply-To: <531D9F4B.6040505-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+Am Montag, den 10.03.2014, 12:17 +0100 schrieb Boris BREZILLON:
+> Hello Jason,
+>=20
+> Le 29/01/2014 20:10, Jason Gunthorpe a =C3=A9crit :
+> > On Wed, Jan 29, 2014 at 03:46:20PM -0300, Ezequiel Garcia wrote:
+> >
+> >> After CE# has been pulled high and then transitioned low again, th=
+e host
+> >> should issue a Set Features to select the appropriate asynchronous=
+ timing mode.
+> >> """
+> > Oh, I had forgot you should do a set feature too
+> >
+> > Boris, I think the core core should handle this dance and the drive=
+r
+> > should just implement a call back to change the timing mode on the
+> > interface..
+> >
+> > If I ever get a moment I can work on support for timing setting in =
+the
+> > mvebu driver, I have boards here with ONFI NAND..
+>=20
+> Any progress on this ?
+> I'm about to post the 3rd version of this series and if you already h=
+ave
+> something working I could base my work on your proposal.
+>=20
 
-On Monday 10 March 2014 10:28:10 Philipp Zabel wrote:
-> Hi Grant,
-> 
-> Am Freitag, den 07.03.2014, 18:27 +0000 schrieb Grant Likely:
-> > On Wed,  5 Mar 2014 10:20:36 +0100, Philipp Zabel wrote:
-> > > The device tree graph bindings as used by V4L2 and documented in
-> > > Documentation/device-tree/bindings/media/video-interfaces.txt contain
-> > > generic parts that are not media specific but could be useful for any
-> > > subsystem with data flow between multiple devices. This document
-> > > describes the generic bindings.
-> > > 
-> > > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > 
-> > See my comments on the previous version. My concerns are the handling of
-> > the optional 'ports' node and the usage of reverse links.
-> 
-> would this change address your concern about the reverse links? As the
-> preexisting video-interfaces.txt bindings mandate the reverse links, I
-> worry about introducing a second, subtly different binding. It should be
-> noted somewhere in video-interfaces.txt that the reverse links are
-> deprecated for the but still supported by the code for backwards
-> compatibility.
+I'm also interested in seeing this moving forward. I'm currently portin=
+g
+the Tegra NAND drive to mainline and at least the OF ONFI mode and ONFI
+mode to timing converter parts of this series are really helpful.
 
-I'm very much against removing the reverse links. Without them the graph will 
-become much more complex to parse. You can try to convince me, but for now I'm 
-afraid it's a NACK.
-
-> diff --git a/Documentation/devicetree/bindings/graph.txt
-> b/Documentation/devicetree/bindings/graph.txt index 1a69c07..eb6cae5 100644
-> --- a/Documentation/devicetree/bindings/graph.txt
-> +++ b/Documentation/devicetree/bindings/graph.txt
-> @@ -87,12 +87,13 @@ device {
->  Links between endpoints
->  -----------------------
-> 
-> -Each endpoint should contain a 'remote-endpoint' phandle property that
-> points -to the corresponding endpoint in the port of the remote device. In
-> turn, the -remote endpoint should contain a 'remote-endpoint' property. If
-> it has one, -it must not point to another than the local endpoint. Two
-> endpoints with their -'remote-endpoint' phandles pointing at each other
-> form a link between the -containing ports.
-> +Two endpoint nodes form a link between the two ports they are contained in
-> +if one contains a 'remote-endpoint' phandle property, pointing to the other
-> +endpoint. The endpoint pointed to should not contain a 'remote-endpoint'
-> +property itself. Which direction the phandle should point in depends on
-> the +device type. In general, links should be pointing outwards from
-> central +devices that provide DMA memory interfaces, such as display
-> controller, +video capture interface, or serial digital audio interface
-> cores.
-> 
->  device-1 {
->          port {
-> @@ -104,8 +105,8 @@ device-1 {
-> 
->  device-2 {
->          port {
-> -                device_2_input: endpoint {
-> -                        remote-endpoint = <&device_1_output>;
-> +                device_2_input: endpoint { };
-> +                       /* no remote-endpoint, this endpoint is pointed at
-> */ };
->          };
->  };
-
--- 
 Regards,
-
-Laurent Pinchart
+Lucas
+--=20
+Pengutronix e.K.                           | Lucas Stach               =
+  |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-507=
+6 |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
+5 |
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
