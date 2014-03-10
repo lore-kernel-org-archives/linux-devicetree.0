@@ -1,59 +1,81 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 6/6] documentation: bindings: document PMIC8921/8058 RTC
-Date: Mon, 10 Mar 2014 10:35:25 -0500
-Message-ID: <CAL_JsqJU-vb8CAat+X-WtW9rDPzqj9oDfpXf8pEwuwLVtOskPA@mail.gmail.com>
-References: <1394047776-13827-1-git-send-email-joshc@codeaurora.org>
-	<1394047776-13827-7-git-send-email-joshc@codeaurora.org>
-	<5317900F.5030803@codeaurora.org>
-	<20140306000058.GE18529@joshc.qualcomm.com>
+Subject: Re: [PATCH v3] sky2: allow mac to come from dt
+Date: Mon, 10 Mar 2014 10:36:25 -0500
+Message-ID: <CAL_JsqLEOOQ-0H3fuGHME9Q7iF_7h+Y_mrWcwJP7YjCKiZ8aNw@mail.gmail.com>
+References: <1394254793-19228-1-git-send-email-tharvey@gateworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140306000058.GE18529@joshc.qualcomm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Josh Cartwright <joshc@codeaurora.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Alessandro Zummo <a.zummo@towertech.it>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1394254793-19228-1-git-send-email-tharvey@gateworks.com>
+Sender: netdev-owner@vger.kernel.org
+To: Tim Harvey <tharvey@gateworks.com>
+Cc: Stephen Hemminger <stephen@networkplumber.org>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 5, 2014 at 6:00 PM, Josh Cartwright <joshc@codeaurora.org> wrote:
-> On Wed, Mar 05, 2014 at 12:58:55PM -0800, Stephen Boyd wrote:
->> On 03/05/14 11:29, Josh Cartwright wrote:
->> > diff --git a/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt b/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt
->> > new file mode 100644
->> > index 0000000..699bd30
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt
->> > @@ -0,0 +1,29 @@
->> > +* Real-Time Clock for Qualcomm 8058/8921 PMICs
->> > +
->> > +Required properties:
->> > +- compatible: should be one of the following.
->> > +    * "qcom,pm8058-rtc"
->> > +    * "qcom,pm8921-rtc"
->> > +- reg: base address of the register region
->> > +- reg-names: corresponding reg names for the regions listed in the 'reg'
->> > +             property, must contain:
->> > +     "rtc_base" - base of the RTC register region
->>
->> optional reg-names?
->>
->> > +- interrupts: interrupt list for the RTC, must contain a single interrupt
->> > +              specifier for the alarm interrupt
->> > +- interrupt-names: corresponding interrupt names for the interrupts listed in
->> > +                   the 'interrupts' property, must contain:
->> > +     "alarm" - summary interrupt for PMIC peripherals
->>
->> optional interrupt-names?
+On Fri, Mar 7, 2014 at 10:59 PM, Tim Harvey <tharvey@gateworks.com> wrote:
+> The driver reads the mac address from the device registers which would
+> need to have been programmed by the bootloader.  This patch adds
+> the ability to pull the mac from devicetree via the pci device dt node.
 >
-> It isn't clear to me why these should be made optional, I hope Rob
-> provides some clarification in the sdhci-msm thread.
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+> Cc: netdev@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
 
-Because reg and interrupt names are relatively new and reluctantly
-added by DT maintainers. Personally, I think it was a mistake and it
-is simply Linux specific information leaking into the DT, but it did
-make transition to DT easier. The requirement is still the ordering of
-reg and interrupts fields must be defined and you cannot rely on the
-names to define the order. It is quite pointless here since you only
-have 1 field.
+Acked-by: Rob Herring <robh@kernel.org>
 
-Rob
+>
+> Changes since v2:
+>  - eliminated use of stack tmpaddr per feedback
+>
+> Changes since v1:
+>  - simplified based on feedback
+>  - fixed formatting
+> ---
+>  drivers/net/ethernet/marvell/sky2.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
+> index 55a37ae..2434611 100644
+> --- a/drivers/net/ethernet/marvell/sky2.c
+> +++ b/drivers/net/ethernet/marvell/sky2.c
+> @@ -44,6 +44,8 @@
+>  #include <linux/prefetch.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/mii.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_net.h>
+>
+>  #include <asm/irq.h>
+>
+> @@ -4748,6 +4750,7 @@ static struct net_device *sky2_init_netdev(struct sky2_hw *hw, unsigned port,
+>  {
+>         struct sky2_port *sky2;
+>         struct net_device *dev = alloc_etherdev(sizeof(*sky2));
+> +       const void *iap;
+>
+>         if (!dev)
+>                 return NULL;
+> @@ -4805,8 +4808,16 @@ static struct net_device *sky2_init_netdev(struct sky2_hw *hw, unsigned port,
+>
+>         dev->features |= dev->hw_features;
+>
+> -       /* read the mac address */
+> -       memcpy_fromio(dev->dev_addr, hw->regs + B2_MAC_1 + port * 8, ETH_ALEN);
+> +       /* try to get mac address in the following order:
+> +        * 1) from device tree data
+> +        * 2) from internal registers set by bootloader
+> +        */
+> +       iap = of_get_mac_address(hw->pdev->dev.of_node);
+> +       if (iap)
+> +               memcpy(dev->dev_addr, iap, ETH_ALEN);
+> +       else
+> +               memcpy_fromio(dev->dev_addr, hw->regs + B2_MAC_1 + port * 8,
+> +                             ETH_ALEN);
+>
+>         return dev;
+>  }
+> --
+> 1.8.3.2
+>
