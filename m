@@ -1,94 +1,60 @@
-From: Mauro Carvalho Chehab <m.chehab@samsung.com>
-Subject: Re: [GIT PULL] Move device tree graph parsing helpers to drivers/of
-Date: Mon, 10 Mar 2014 10:26:30 -0300
-Message-ID: <20140310102630.3cb1bcd7@samsung.com>
-References: <1394126000.3622.66.camel@paszta.hi.pengutronix.de>
- <20140307182330.75168C40AE3@trevor.secretlab.ca>
+From: =?ISO-8859-1?Q?Marc_Mar=ED?= <marc.mari.barcelo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Device Tree Generator
+Date: Mon, 10 Mar 2014 14:26:51 +0100
+Message-ID: <CA+nFU8Tx=hp686EhcP3u=wqQN=kL7PBJLy7DNcFu55T_Lp7OdA@mail.gmail.com>
+References: <CA+nFU8SUbmwmUN1SWVoh2VEEQ-r347v=GMfDJmAbMhn_yLQCRA@mail.gmail.com>
+ <531D91CD.2010300@monstr.eu> <531DBD81.40201@home.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20140307182330.75168C40AE3@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Greg KH <gregkh@linuxfoundation.org>Russell King - ARM Linux <linux@arm.linux.org.uk>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <531DBD81.40201-CmkmPbn3yAE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Walter Goossens <waltergoossens-CmkmPbn3yAE@public.gmane.org>
+Cc: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Em Fri, 07 Mar 2014 18:23:30 +0000
-Grant Likely <grant.likely@linaro.org> escreveu:
+As far as I know, when you add extensions to the board, the device
+tree has to be changed. They already developed a dynamic device tree
+updater, but it has to be changed manually.
 
-> On Thu, 06 Mar 2014 18:13:20 +0100, Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> > Hi Mauro, Russell,
-> > 
-> > I have temporarily removed the simplified bindings at Sylwester's
-> > request and updated the branch with the acks. The following changes
-> > since commit 0414855fdc4a40da05221fc6062cccbc0c30f169:
-> > 
-> >   Linux 3.14-rc5 (2014-03-02 18:56:16 -0800)
-> > 
-> > are available in the git repository at:
-> > 
-> >   git://git.pengutronix.de/git/pza/linux.git topic/of-graph
-> > 
-> > for you to fetch changes up to d484700a36952c6675aa47dec4d7a536929aa922:
-> > 
-> >   of: Warn if of_graph_parse_endpoint is called with the root node (2014-03-06 17:41:54 +0100)
-> 
-> Nak. I made comments that haven't been resolved yet. I've replied with
-> more detail tonight. The big issues are how drivers handle the optional
-> 'ports' node and I do not agree to the double-linkage in the binding
-> description.
+But, I already decided to do another project for which I'm more qualifi=
+ed.
 
-If I understood well, you're requesting to revert all those six patches
-that were imported via git pull from my tree (and from Greg and Russell),
-right?
+Regards
+Marc
 
-E. g. reverting those changesets:
-	d484700a3695 f2a575f67695 4329b93b283c 6ff60d397b17 4d56ed5a009b fd9fdb78a9bf
-
-as it seems that there's no easy way to revert a git pull.
-
-I suspect that this will likely cause some harm when merging from our
-trees upstream.
-
-Regards,
-Mauro
-
-> 
-> g.
-> 
-> > 
-> > ----------------------------------------------------------------
-> > Philipp Zabel (6):
-> >       [media] of: move graph helpers from drivers/media/v4l2-core to drivers/of
-> >       Documentation: of: Document graph bindings
-> >       of: Warn if of_graph_get_next_endpoint is called with the root node
-> >       of: Reduce indentation in of_graph_get_next_endpoint
-> >       [media] of: move common endpoint parsing to drivers/of
-> >       of: Warn if of_graph_parse_endpoint is called with the root node
-> > 
-> >  Documentation/devicetree/bindings/graph.txt   | 129 ++++++++++++++++++++++
-> >  drivers/media/i2c/adv7343.c                   |   4 +-
-> >  drivers/media/i2c/mt9p031.c                   |   4 +-
-> >  drivers/media/i2c/s5k5baf.c                   |   3 +-
-> >  drivers/media/i2c/tvp514x.c                   |   3 +-
-> >  drivers/media/i2c/tvp7002.c                   |   3 +-
-> >  drivers/media/platform/exynos4-is/fimc-is.c   |   6 +-
-> >  drivers/media/platform/exynos4-is/media-dev.c |  13 ++-
-> >  drivers/media/platform/exynos4-is/mipi-csis.c |   5 +-
-> >  drivers/media/v4l2-core/v4l2-of.c             | 133 +----------------------
-> >  drivers/of/base.c                             | 151 ++++++++++++++++++++++++++
-> >  include/linux/of_graph.h                      |  66 +++++++++++
-> >  include/media/v4l2-of.h                       |  33 +-----
-> >  13 files changed, 375 insertions(+), 178 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/graph.txt
-> >  create mode 100644 include/linux/of_graph.h
-> > 
-> > 
-> 
-
-
--- 
-
-Regards,
-Mauro
+2014-03-10 14:26 GMT+01:00 Walter Goossens <waltergoossens-CmkmPbn3yAE@public.gmane.org>:
+> On 03/10/14 11:19, Michal Simek wrote:
+>> On 03/07/2014 07:57 PM, Marc Mar=ED wrote:
+>>> Hello everyone
+>>>
+>>> In the context of Google Summer of Code project, I'm thinking to wo=
+rk
+>>> on a device-tree generator, starting at the Beagleboard platform.
+>>>
+>>> To define better the scope of this project, so it can be useful too
+>>> outside this specific platform, I would like to ask for your opinio=
+ns
+>>> in necessary and good-to-have features.
+>> FYI: Xilinx have device-tree generator which extract information
+>> from design tools.
+>>
+>> Thanks,
+>> Michal
+>>
+>
+> And so does Altera ;)
+> I think it makes sense for reprogrammable devices (such as FPGA's) bu=
+t
+> I'm not quite sure why you'd need a devicetree generator for a fairly
+> static board.
+>
+> Walter
+>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
