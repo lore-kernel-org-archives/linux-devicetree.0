@@ -1,30 +1,28 @@
-From: Chao Xie <xiechao.mail-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: device name in sysfs
-Date: Mon, 10 Mar 2014 10:15:12 +0800
-Message-ID: <CADApbejNSFCU5nv0uAxZtF4gT-YfWWquy9E2eMfAOUQtVFR7dg@mail.gmail.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/7] watchdog: orion: Introduce per-SoC stop() function
+Date: Sun, 09 Mar 2014 19:30:04 -0700
+Message-ID: <531D23AC.4020702@roeck-us.net>
+References: <1393949244-5011-1-git-send-email-ezequiel.garcia@free-electrons.com> <1393949244-5011-3-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1393949244-5011-3-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-hi
-If we use device tree, and depending on dts file to help to create the
-devices, the name of the device will be like "ssp.d4282a00". For the
-bus, for example, sound, it directory name in sysfs will change from
-"sound" to "sound.8" which "8" is the global number.
-It brings some difficulties for user.
-For example, the device driver may define some interfaces in sysfs,
-and user can get or set some information.
-We may have the user settings same for mutilple SOCes, for example,
-for android, we may define a common interface to control the device,
-and this device may be integrated by multiple SOCes.
-Without SOCes, ther interfaces and even the application even the
-source code of the application are same. Now with device tree, the
-interfaces may changes and we can not share one application for all
-SOCes.
-Does anyone have idea to handle this problem? Thanks.
+On 03/04/2014 08:07 AM, Ezequiel Garcia wrote:
+> In order to support other SoCs, it's needed to have a different stop()
+> implementation for each SoC. This commit adds no functionality, and it
+> consists of preparation work.
+>
+> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
