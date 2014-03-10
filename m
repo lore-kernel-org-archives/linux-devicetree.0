@@ -1,52 +1,93 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: [RFC] Serial port aliases in DT
-Date: Mon, 10 Mar 2014 12:59:03 +0100
-Message-ID: <5448979.WQPtOb56tW@avalon>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [RFC PATCH] edac: zynq: Added EDAC support for zynq ddr ecc controller
+Date: Mon, 10 Mar 2014 12:58:56 +0100
+Message-ID: <531DA900.5060202@monstr.eu>
+References: <4adb2b4b-2ad6-42b9-929e-cc062f817245@TX2EHSMHS021.ehs.local> <20140310105655.GH14999@e106331-lin.cambridge.arm.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: linux-sh@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="oDbPVhl1X1dX8MJdBfDsuSDlbxsSGQFq8"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140310105655.GH14999@e106331-lin.cambridge.arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, "dougthompson@xmission.com" <dougthompson@xmission.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "kpc528@gmail.com" <kpc528@gmail.com>, "kalluripunnaiahchoudary@gmail.com" <kalluripunnaiahchoudary@gmail.com>, "punnaia@xilinx.com" <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--oDbPVhl1X1dX8MJdBfDsuSDlbxsSGQFq8
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-I've recently reviewed a patch adding serial port aliases to the device tree 
-and would like to pick your brains about a disagreement I had with the 
-developer.
+On 03/10/2014 11:56 AM, Mark Rutland wrote:
+> On Sun, Mar 09, 2014 at 02:57:16AM +0000, Punnaiah Choudary Kalluri wro=
+te:
+>> Added EDAC support for reporting the ecc errors of zynq ddr controller=
+=2E
+>> The ddr ecc controller corrects single bit errors and detects double b=
+it
+>> errors
+>>
+>> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+>> ---
+>>  .../devicetree/bindings/edac/zynq_edac.txt         |   18 +
+>>  drivers/edac/Kconfig                               |    7 +
+>>  drivers/edac/Makefile                              |    1 +
+>>  drivers/edac/zynq_edac.c                           |  613 +++++++++++=
++++++++++
+>>  4 files changed, 639 insertions(+), 0 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/edac/zynq_edac.t=
+xt
+>>  create mode 100644 drivers/edac/zynq_edac.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/edac/zynq_edac.txt b/Do=
+cumentation/devicetree/bindings/edac/zynq_edac.txt
+>> new file mode 100644
+>> index 0000000..c21ff83
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/edac/zynq_edac.txt
+>> @@ -0,0 +1,18 @@
+>> +Zynq EDAC driver, it does reports the DDR ECC single bit errors that =
+are
+>> +corrected and double bit ecc errors that are detected by the DDR ECC =
+controller.
+>> +ECC support for DDR is available in half-bus width(16 bit) configurat=
+ion only.
+>> +
+>> +Required properties:
+>> +- compatible: Should be "xlnx,ps7-ddrc" or "xlnx,ps7-ddrc-1.00.a"
+>=20
+> Is this an or or a xor?
 
-The SoC includes 8 serial ports. They are all disabled in the SoC .dtsi, and 
-enabled selectively by board DT files. As not all serial ports are available 
-on all boards, the question was whether to add aliases for all ports (in the 
-.dtsi in this case) like
+Compatible string should be just xlnx,zynq-ddrc-1.00.a.
+Nothing with ps7.
 
-         serial0 = &scif0;
-         serial1 = &scif1;
-         serial2 = &scif2;
-         serial3 = &scif3;
-         serial4 = &scif4;
-         serial5 = &scif5;
-         serial6 = &scif6;
-         serial7 = &scif7;
+Thanks,
+Michal
 
-or to just add aliases for the enabled ports (in the board DT file) like
 
-         serial0 = &scif2;
-         serial1 = &scif3;
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
 
-Note the numbering in the latter case: as the board doesn't use serial ports 0 
-and 1, hardware ports 2 and 3 become logical ports 0 and 1.
 
-I considered that having Linux create ttySC0 and ttySC1 devices for the first 
-two ports of the board, regardless of which hardware ports are used, is 
-simpler from a user point of view (it allows sharing the same inittab settings 
-for the console serial port across several boards for instance). I'd 
-appreciate feedback on that.
 
--- 
-Regards,
+--oDbPVhl1X1dX8MJdBfDsuSDlbxsSGQFq8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-Laurent Pinchart
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
+iEYEARECAAYFAlMdqQAACgkQykllyylKDCG/5gCfS7ef2Z11eN5l+5C5L1LZERTk
+N8EAoJqsvEm9i4ZuhRxjBCZDZraaJCze
+=GHMX
+-----END PGP SIGNATURE-----
+
+--oDbPVhl1X1dX8MJdBfDsuSDlbxsSGQFq8--
