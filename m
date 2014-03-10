@@ -1,410 +1,66 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] mfd: Support SiRF audio modules
-Date: Mon, 10 Mar 2014 10:35:32 +0000
-Message-ID: <20140310103532.GI14976@lee--X1>
-References: <1394184531-7679-1-git-send-email-rongjun.ying@csr.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCHv2 0/9] Convert twl4030-madc to IIO API and add DT support
+Date: Mon, 10 Mar 2014 10:43:56 +0000
+Message-ID: <20140310104356.GL14976@lee--X1>
+References: <1393702365-26429-1-git-send-email-sre@debian.org>
+ <1393970751-18157-1-git-send-email-sre@debian.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1394184531-7679-1-git-send-email-rongjun.ying-kQvG35nSl+M@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: RongJun Ying <rjying-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, workgroup.linux-kQvG35nSl+M@public.gmane.org, Rongjun Ying <rongjun.ying-kQvG35nSl+M@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1393970751-18157-1-git-send-email-sre@debian.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@debian.org>
+Cc: Sebastian Reichel <sre@ring0.de>, Marek Belisko <marek@goldelico.com>, Jonathan Cameron <jic23@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-CC'ing the DT ML, please don't forget in future.
+> TODO:
+>  * Wait for feedback from DT binding maintainers
+>  * Wait for feedback from Marek Belisko, who is testing the
+>    changes with twl4030-madc-battery driver on GTA04
 
-> From: Rongjun Ying <rongjun.ying-kQvG35nSl+M@public.gmane.org>
+This patch-set has stalled.
+
+Can you send a fresh patch-set (not linked to the old ones, as the
+thread is getting very complicated again) complete with all the Acks
+you have received?
+
+> [0] https://lkml.org/lkml/2014/3/1/105
 >=20
-> The audio modules inside the consist of an internal audio codec, inte=
-rnal
-> audio port and i2s controller.
+> -- Sebastian
 >=20
-> These modules sharing same register range and size.
-> sirf-audio.c provides common regmap mmio handling for all audio modul=
-es.
-> The sound drivers operation are via regmap.
+> Sebastian Reichel (9):
+>   mfd: twl4030-madc: Use managed resources
+>   mfd: twl4030-madc: Add DT support and convert to IIO framework
+>   mfd: twl4030-madc: Cleanup driver
+>   mfd: twl-core: Add twl_i2c_read/write_u16
+>   mfd: twl4030-madc: Use twl_i2c_read/write_u16 for 16 bit registers
+>   Documentation: DT: Document twl4030-madc binding
+>   mfd: twl4030-madc: Move driver to drivers/iio/adc
+>   iio: documentation: Add ABI documentation for *_mean_raw
+>   iio: inkern: add iio_read_channel_average_raw
 >=20
-> Signed-off-by: Rongjun Ying <rongjun.ying-kQvG35nSl+M@public.gmane.org>
-> ---
->  .../devicetree/bindings/mfd/sirf-audio.txt         |   67 ++++++++++=
-+
-
-DT documentation should be provided in a separate patch.
-
->  drivers/mfd/Kconfig                                |   11 ++
->  drivers/mfd/Makefile                               |    1 +
->  drivers/mfd/sirf-audio.c                           |  119 ++++++++++=
-++++++++++
->  include/linux/mfd/sirf/audio.h                     |   17 +++
->  5 files changed, 215 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/sirf-audio.=
-txt
->  create mode 100644 drivers/mfd/sirf-audio.c
->  create mode 100644 include/linux/mfd/sirf/audio.h
+>  Documentation/ABI/testing/sysfs-bus-iio            |   8 +
+>  .../devicetree/bindings/iio/adc/twl4030-madc.txt   |  24 ++
+>  drivers/iio/adc/Kconfig                            |  10 +
+>  drivers/iio/adc/Makefile                           |   1 +
+>  drivers/{mfd =3D> iio/adc}/twl4030-madc.c            | 299 +++++++++=
+++++--------
+>  drivers/iio/inkern.c                               |  18 ++
+>  drivers/mfd/Kconfig                                |  10 -
+>  drivers/mfd/Makefile                               |   1 -
+>  include/linux/i2c/twl.h                            |  12 +
+>  include/linux/i2c/twl4030-madc.h                   |   2 +-
+>  include/linux/iio/consumer.h                       |  13 +
+>  11 files changed, 274 insertions(+), 124 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/twl4030=
+-madc.txt
+>  rename drivers/{mfd =3D> iio/adc}/twl4030-madc.c (75%)
 >=20
-> diff --git a/Documentation/devicetree/bindings/mfd/sirf-audio.txt b/D=
-ocumentation/devicetree/bindings/mfd/sirf-audio.txt
-> new file mode 100644
-> index 0000000..cc6a39b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/sirf-audio.txt
-> @@ -0,0 +1,67 @@
-> +SiRF SoC audio modules
-> +
-> +The audio modules inside the consist of an internal audio codec, int=
-ernal
-
-=2E.. inside the <what?>
-
-> +audio port and i2s controller.
-> +
-> +Required properties:
-> +- compatible: "sirf,prima2-audio" or "sirf,atlas6-audio"
-> +- reg : the register address of the device.
-
-Nit: s/the/The
-
-> +- #address-cells: Must be 1
-> +- #size-cells: Must be 1
-> +
-> +Nodes:
-> +Internal audio codec:
-> +  - compatible : "sirf,atlas6-audio-codec" or "sirf,prima2-audio-cod=
-ec"
-> +  - clocks: the clock of SiRF internal audio codec
-
-Nit: s/the/The
-
-Might be worth mentioning that clocks expects a phandle.
-
-> +Internal audio port:
-> +- compatible: "sirf,audio-port"
-> +- dmas: List of DMA controller phandle and DMA request line ordered =
-pairs.
-
-s/phandle/phandles
-
-> +- dma-names: Identifier string for each DMA request line in the dmas=
- property.
-> +  These strings correspond 1:1 with the ordered pairs in dmas.
-> +
-> +  One of the DMA channels will be responsible for transmission (shou=
-ld be
-> +  named "tx") and one for reception (should be named "rx").
-> +
-> +I2S controller:
-> +- compatible: "sirf,prima2-i2s"
-> +- dmas: List of DMA controller phandle and DMA request line ordered =
-pairs.
-
-s/phandle/phandles
-
-> +- dma-names: Identifier string for each DMA request line in the dmas=
- property.
-> +  These strings correspond 1:1 with the ordered pairs in dmas.
-> +
-> +  One of the DMA channels will be responsible for transmission (shou=
-ld be
-> +  named "tx") and one for reception (should be named "rx").
-
-No need to keep mentioning these same lines over and over - just point
-to:
-  Documentation/devicetree/bindings/dma/dma.txt
-
-> +- clocks: I2S controller clock source
-> +- pinctrl-names: Must contain a "default" entry.
-> +- pinctrl-NNN: One property must exist for each entry in pinctrl-nam=
-es.
-
-Again, rather than making up your own interpretation of the standard
-pinctrl properties, just point to:
-  Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-
-=46ull stops and colons are not consistent throughout.
-
-> +Example:
-> +
-> +sirfaudio: sirfaudio@b0040000 {
-> +	compatible =3D "sirf,atlas6-audio";
-> +	reg =3D <0xb0040000 0x10000>;
-> +	#address-cells =3D <1>;
-> +	#size-cells =3D <1>;
-> +
-> +	audiocodec: audiocodec@b0040000 {
-> +		compatible =3D "sirf,atlas6-audio-codec";
-> +		interrupts =3D <35>;
-
-No flags?
-
-> +		clocks =3D <&clks 27>;
-> +	};
-> +
-> +	audioport: audioport@b0040000 {
-
-No need for the @b0040000 on child properties.
-
-> +		compatible =3D "sirf,audio-port";
-> +		dmas =3D <&dmac1 3>, <&dmac1 8>;
-> +		dma-names =3D "rx", "tx";
-> +	};
-> +
-> +	i2s: i2s@b0040000 {
-> +		compatible =3D "sirf,prima2-i2s";
-> +		dmas =3D <&dmac1 6>, <&dmac1 12>;
-> +		dma-names =3D "rx", "tx";
-> +		clocks =3D <&clks 27>;
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&i2s_pins_a>;
-> +	};
-> +};
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index b7c74a7..1c13019 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -546,6 +546,17 @@ config MFD_SI476X_CORE
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called si476x-core.
-> =20
-> +config MFD_SIRF_AUDIO
-> +	tristate "SiRF Audio modules"
-> +	depends on ARCH_SIRF
-
-depends on OF
-
-> +	select MFD_CORE
-> +	select REGMAP_MMIO
-> +	help
-> +	  This is the driver for the SiRF audio modules, include I2S,
-
-s/include/which consists of (or similar)
-
-> +	  internal audio codec, internal audio port and AC97. These modules
-> +	  share same register map region and size. So this MFD driver used
-
-s/same/the same
-
-s/register map region and size/address space
-
-s/used/is used
-
-> +	  to manage regmap.
-
-s/regmap/the regmap OR via regmap
-
-> +
->  config MFD_SM501
->  	tristate "Silicon Motion SM501"
->  	 ---help---
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 8a28dc9..9182170 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -164,3 +164,4 @@ obj-$(CONFIG_MFD_RETU)		+=3D retu-mfd.o
->  obj-$(CONFIG_MFD_AS3711)	+=3D as3711.o
->  obj-$(CONFIG_MFD_AS3722)	+=3D as3722.o
->  obj-$(CONFIG_MFD_STW481X)	+=3D stw481x.o
-> +obj-$(CONFIG_MFD_SIRF_AUDIO)	+=3D sirf-audio.o
-> diff --git a/drivers/mfd/sirf-audio.c b/drivers/mfd/sirf-audio.c
-> new file mode 100644
-> index 0000000..078f0a2
-> --- /dev/null
-> +++ b/drivers/mfd/sirf-audio.c
-> @@ -0,0 +1,119 @@
-> +/*
-> + * airf-audio.c
-> + *
-> + * Copyright (c) 2014 Cambridge Silicon Radio Limited, a CSR plc gro=
-up company.
-> + *
-> + * Licensed under GPLv2 or later.
-> + */
-
-Please use a more standard header. There are plenty of good examples
-in other drivers.
-
-> +#include <linux/module.h>
-> +#include <linux/moduleparam.h>
-> +#include <linux/init.h>
-> +#include <linux/err.h>
-> +#include <linux/of.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/mfd/sirf/audio.h>
-> +#include <linux/regmap.h>
-> +
-> +static const struct mfd_cell sirf_audio_atlas6_devs[] =3D {
-> +	{
-> +		.of_compatible =3D "sirf,prima2-i2s",
-> +		.name =3D "sirf-i2s",
-> +	}, {
-> +		.of_compatible =3D "sirf,atlas6-audio-codec",
-> +		.name =3D "sirf-audio-codec",
-> +	}, {
-> +		.of_compatible =3D "sirf,audio-port",
-> +		.name =3D "sirf-audio-port",
-> +	}
-> +};
-> +
-> +static const struct mfd_cell sirf_audio_prima2_devs[] =3D {
-> +	{
-> +		.of_compatible =3D "sirf,prima2-i2s",
-> +		.name =3D "sirf-i2s",
-> +	}, {
-> +		.of_compatible =3D "sirf,prima2-audio-codec",
-> +		.name =3D "sirf-audio-codec",
-> +	}, {
-> +		.of_compatible =3D "sirf,audio-port",
-> +		.name =3D "sirf-audio-port",
-> +	}
-> +};
-> +
-> +static const struct regmap_config sirf_audio_regmap_config =3D {
-> +	.reg_bits =3D 32,
-> +	.reg_stride =3D 4,
-> +	.val_bits =3D 32,
-> +	.cache_type =3D REGCACHE_NONE,
-> +};
-> +
-> +static int sirf_audio_probe(struct platform_device *pdev)
-> +{
-> +	struct resource *mem_res;
-> +	struct sirf_audio_dev *sirf_audio;
-> +	void __iomem *base;
-> +	struct mfd_cell *cell;
-> +	int cell_number;
-> +
-> +	sirf_audio =3D devm_kzalloc(&pdev->dev, sizeof(struct sirf_audio_de=
-v),
-
-sizeof(*sirf_audio)
-
-> +				GFP_KERNEL);
-> +	if (sirf_audio =3D=3D NULL)
-
-if (!sirf_audio)
-
-> +		return -ENOMEM;
-> +
-> +	mem_res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	base =3D devm_ioremap_resource(&pdev->dev, mem_res);
-> +	if (base =3D=3D NULL)
-
-if (!base)
-
-> +		return -ENOMEM;
-> +
-> +	sirf_audio->regmap =3D devm_regmap_init_mmio(&pdev->dev, base,
-> +					    &sirf_audio_regmap_config);
-> +	if (IS_ERR(sirf_audio->regmap))
-> +		return PTR_ERR(sirf_audio->regmap);
-
-Use a local regmap variable here and assign it to sirf_audio->regmap
-if successful.
-
-> +	platform_set_drvdata(pdev, sirf_audio);
-> +
-> +	if (of_device_is_compatible(pdev->dev.of_node,
-> +			"sirf,prima2-audio")) {
-> +		cell =3D sirf_audio_prima2_devs;
-> +		cell_number =3D ARRAY_SIZE(sirf_audio_prima2_devs);
-
-s/cell_number/n_devs
-
-> +	} else if (of_device_is_compatible(pdev->dev.of_node,
-> +			"sirf,atlas6-audio")) {
-> +		cell =3D sirf_audio_atlas6_devs;
-> +		cell_number =3D ARRAY_SIZE(sirf_audio_atlas6_devs);
-
-s/cell_number/n_devs
-
-> +	} else
-> +		return -EINVAL;
-
-I'm not sure there's any need for this. Why don't you just parse the
-child nodes? Are you even sure you need an MFD at all? It appears
-you're just using an MFD to share a regmap. Seems like over-kill to me.
-
-> +	return mfd_add_devices(&pdev->dev, -1, cell, cell_number,
-> +			NULL, 0, NULL);
-> +}
-> +
-> +static int sirf_audio_remove(struct platform_device *pdev)
-> +{
-> +	mfd_remove_devices(&pdev->dev);
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id sirf_audio_of_match[] =3D {
-> +	{ .compatible =3D "sirf,prima2-audio", },
-> +	{ .compatible =3D "sirf,atlas6-audio", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, sirf_audio_of_match);
-> +
-> +static struct platform_driver sirf_audio_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "sirf-audio",
-> +		.owner =3D THIS_MODULE,
-> +		.of_match_table =3D sirf_audio_of_match,
-> +	},
-> +	.probe =3D sirf_audio_probe,
-> +	.remove =3D sirf_audio_remove,
-> +};
-> +
-> +module_platform_driver(sirf_audio_driver);
-> +
-> +MODULE_DESCRIPTION("SiRF Audio mfd driver");
-
-s/mfd/MFD
-
-> +MODULE_AUTHOR("RongJun Ying <Rongjun.Ying-kQvG35nSl+M@public.gmane.org>");
-> +MODULE_LICENSE("GPL v2");
-> +
-> diff --git a/include/linux/mfd/sirf/audio.h b/include/linux/mfd/sirf/=
-audio.h
-> new file mode 100644
-> index 0000000..d8cfff9
-> --- /dev/null
-> +++ b/include/linux/mfd/sirf/audio.h
-> @@ -0,0 +1,17 @@
-> +/*
-> + * audio.h
-> + *
-> + * Copyright (c) 2014 Cambridge Silicon Radio Limited, a CSR plc gro=
-up company.
-> + *
-> + * Licensed under GPLv2 or later.
-> + */
-
-Use a standard header please.
-
-> +
-> +
-
-Superfluous new lines.
-
-> +#ifndef __LINUX_MFD_SIRF_AUDIO_H
-> +#define __LINUX_MFD_SIRF_AUDIO_H
-
-The LINUX_ is superfluous also.
-
-> +struct sirf_audio_dev {
-> +	struct regmap *regmap;
-> +};
-
-Is this going to be utilised in the subordinate drivers?
-
-> +#endif /* __LINUX_MFD_SIRF_AUDIO_H */
 
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
