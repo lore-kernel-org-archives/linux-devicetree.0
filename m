@@ -1,174 +1,69 @@
-From: Liviu Dudau <liviu@dudau.co.uk>
-Subject: Re: [PATCH v6 6/6] pci: Add support for creating a generic
- host_bridge from device tree
-Date: Mon, 10 Mar 2014 21:56:00 +0000
-Message-ID: <20140310215600.GA14968@bart.dudau.co.uk>
-References: <1394020137-1830-1-git-send-email-Liviu.Dudau@arm.com>
- <2115856.ZTdgp5fkma@wuerfel>
- <20140310163343.GY6457@e106497-lin.cambridge.arm.com>
- <1469359.kil5iaOqdU@wuerfel>
+From: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 6/6] documentation: bindings: document PMIC8921/8058
+ RTC
+Date: Mon, 10 Mar 2014 17:11:32 -0500
+Message-ID: <20140310221132.GN18529@joshc.qualcomm.com>
+References: <1394477089-3996-1-git-send-email-joshc@codeaurora.org>
+ <1394477089-3996-7-git-send-email-joshc@codeaurora.org>
+ <CAL_JsqJe7M6i0RKWVPHbvyHbHscMtZmW-xbJuaJTePqYRKWrUg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1469359.kil5iaOqdU@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci <linux-pci@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Tanmay Inamdar <tinamdar@apm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <CAL_JsqJe7M6i0RKWVPHbvyHbHscMtZmW-xbJuaJTePqYRKWrUg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 10, 2014 at 07:59:59PM +0100, Arnd Bergmann wrote:
-> On Monday 10 March 2014 16:33:44 Liviu Dudau wrote:
-> > On Mon, Mar 10, 2014 at 03:21:01PM +0000, Arnd Bergmann wrote:
-> > > On Monday 10 March 2014 14:44:14 Liviu Dudau wrote:
-> > > > I will try to improve the error handling in the next patchset version.
-> > > > However I am still confused about the earlier discussion on
-> > > > pci_register_io_range(). Your suggestion initially was to return an
-> > > > error in the default weak implementation, but in your last email you
-> > > > are talking about returning 'port'.
-> > > 
-> > > You can do either one: 'port' should be positive or zero, while the
-> > > error would always be negative. We do the same thing in many interfaces
-> > > in the kernel.
-> > > 
-> > > > My idea when I've introduced the
-> > > > helper function was that it would return an error if it fails to
-> > > > register the IO range and zero otherwise. I agree that we can treat
-> > > > the default 'do nothing with the IO range' case as an error, with
-> > > > the caveat that will force architectures that use this code to
-> > > > provide their own implementation of pci_register_io_range() in order
-> > > > to avoid failure, even for the cases where the architecture has a 1:1
-> > > > mapping between IO and CPU addresses.
-> > > 
-> > > Which architectures are you thinking of? The only one I know that
-> > > does this is ia64, and we won't ever have to support this helper
-> > > on that architecture.
-> > 
-> > I was thinking about architectures that have IO_SPACE_LIMIT >= 0xffffffff.
-> > While not an absolute indicator, with the default pci_address_to_pio()
-> > that means that they can use the CPU MMIO address as IO address directly.
+On Mon, Mar 10, 2014 at 04:22:51PM -0500, Rob Herring wrote:
+> On Mon, Mar 10, 2014 at 1:44 PM, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> > This RTC is found on the Qualcomm 8921 and 8058 PMICs.
+> >
+> > Signed-off-by: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt     | 21 +++++++++++++++++++++
+> >  1 file changed, 21 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt b/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt
+> > new file mode 100644
+> > index 0000000..3eaa582
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt
+> > @@ -0,0 +1,21 @@
+> > +* Real-Time Clock for Qualcomm 8058/8921 PMICs
+> > +
+> > +Required properties:
+> > +- compatible: should be one of the following.
+> > +    * "qcom,pm8058-rtc"
+> > +    * "qcom,pm8921-rtc"
+> > +- reg: base address of the register region
 > 
-> Not really, that would only work if they also have instructions to do
-> raw accesses to physical memory addresses rather than virtual memory
-> pointers that most architectures do.
-> 
-> > $ git grep IO_SPACE_LIMIT | grep -i ffffffff
-> > arch/arm/include/asm/io.h:#define IO_SPACE_LIMIT ((resource_size_t)0xffffffff)
-> > arch/arm/mach-at91/include/mach/io.h:#define IO_SPACE_LIMIT		0xFFFFFFFF
-> > arch/arm/mach-omap1/include/mach/io.h:#define IO_SPACE_LIMIT 0xffffffff
-> > arch/arm/mach-pxa/include/mach/io.h:#define IO_SPACE_LIMIT 0xffffffff
-> > arch/arm/mach-s3c24xx/include/mach/io.h:#define IO_SPACE_LIMIT 0xffffffff
-> 
-> These use a special trick where an __iomem pointer is the same as
-> the port number. This works most of the time, but breaks anything
-> that assumes that port numbers are low, such as /dev/port or
-> broken devices. Moreover, it means your code won't work because
-> it depends on passing the virtual start address of the PIO mapping
-> window as io_offset.
-> 
-> > arch/avr32/include/asm/io.h:#define IO_SPACE_LIMIT	0xffffffff
-> > arch/frv/include/asm/io.h:#define IO_SPACE_LIMIT	0xffffffff
-> 
-> They have no MMU, and the code relies on the port number to match
-> both the virtual and the physical address. You could be right about
-> these, but I would guess that the code also needs some other
-> changes if we want to make it work on nommu kernels. It also depends
-> on whether the I/O bus address is the same as the CPU address, or
-> if it starts at bus address 0.
-> 
-> > arch/ia64/include/asm/io.h:#define IO_SPACE_LIMIT		0xffffffffffffffffUL
-> 
-> Here, the definition is special, the token is just used to encode
-> a space number and an offset within the I/O space.
-> 
-> > arch/m32r/include/asm/io.h:#define IO_SPACE_LIMIT  0xFFFFFFFF
-> 
-> no PCI here.
-> 
-> > arch/m68k/include/asm/io_no.h:#define IO_SPACE_LIMIT 0xffffffff
-> 
-> This looks like a mistake, it should be smaller
-> 
-> > arch/microblaze/include/asm/io.h:#define IO_SPACE_LIMIT (0xFFFFFFFF)
-> 
-> I suspect it doesn't actually work. microblaze copied large parts
-> of this from PowerPC, but the parts that differ apparently get
-> it wrong for the I/O space. 
-> 
-> > arch/mn10300/include/asm/io.h:#define IO_SPACE_LIMIT 0xffffffff
-> 
-> Same category as frv. We should ask David Howells whether he
-> thinks I/O space actually works on these.
-> 
-> > arch/sh/include/asm/io.h:#define IO_SPACE_LIMIT 0xffffffff
-> 
-> I think this should just be 0xffff.
-> 
-> > arch/sparc/include/asm/io_32.h:#define IO_SPACE_LIMIT 0xffffffff
-> > arch/sparc/include/asm/io_64.h:#define IO_SPACE_LIMIT 0xffffffffffffffffUL
-> 
-> Sparc actually accesses the physical addresses, so in theory
-> it could always work. In the 64-bit case it would however have
-> to check that the port number is smaller than 0xffffffff, otherwise
-> you couldn't set the BAR. This means you still need a custom
-> function.
-> 
-> > arch/tile/include/asm/io.h:#define IO_SPACE_LIMIT 0xffffffff
-> 
-> tile seems to support only ioport_map() but not inb/outb, if I'm
-> reading this right.
-> 
-> > > I did not ask to treat 'do nothing with the IO range' as an error,
-> > > what I meant is that we should treat 'architecture cannot translate
-> > > from I/O space to memory space but DT lists a translation anyway'
-> > > as an error. On x86, you should never see an entry for the I/O space
-> > > in "ranges", so we will not call this function unless there is a
-> > > bug in DT.
-> > 
-> > Ok, it's just that there is no "architecture cannot translate from I/O
-> > space to memory space" indicator anywhere and I don't want to make x86
-> > a special case.
-> 
-> Right.
-> 
-> > So, my proposal is this: default weak implementation of pci_register_io_range()
-> > returns an error (meaning I have no idea how to translate IO addresses
-> > to memory space) and anyone that wants this function to return success will
-> > have to provide their implementation.
-> 
-> Another idea: make this conditional on the definition of PCI_IOBASE: If this
-> is defined, we can use the arm64 version that uses this number. Otherwise
-> we fall back to returning an error, which means that either on the
-> architecture we shouldn't be calling that function, or we need a custom
-> implementation.
+> Wait a second. This is all part of an MFD device. I think this whole
+> binding does not make sense on it's own. The DT should describe the
+> PMIC, not necessarily some sub-component of it. Perhaps there are sub
+> nodes of the PMIC node, but that would be all part of the PMIC
+> binding. Having sub drivers for an MFD is really a Linux problem that
+> doesn't belong in DT.
 
-PCI_IOBASE is always defined. See the discussion with Russell on this subject.
+Okay, this makes sense, I can move this documentation to
+Documentation/bindings/mfd/qcom,pm8xxx.txt where the PMIC binding
+currently is.
 
-include/asm-generic/io.h has at line 118:
+Note that this does introduce a dependency on Lee Jones' mfd tree, where
+DT support for the parent pm8921 driver is pending for 3.15.
 
-#ifndef PCI_IOBASE
-#define PCI_IOBASE ((void __iomem *) 0)
-#endif
+Andrew, how would you prefer I proceed?  Would you like me to respin
+this patch?  The whole series?  An incremental patch?
 
-I will go with my idea tomorrow. arm64 overwrite the implementation anyway, I
-find it cleaner rather than having to do #ifdefs and/or ifs.
+Thanks,
+  Josh
 
-Best regards,
-Liviu
-
-> 
-> 	Arnd
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
