@@ -1,38 +1,53 @@
-Return-Path: <shc_work@mail.ru>
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Subject: =?UTF-8?B?UmU6IEV4dGVuZGluZyB3ZHQtZ3BpbyB0byBiZSB1c2VkIG9uIG5vbi1vZiAo?=
- =?UTF-8?B?bm8gRFQpIHBsYXRmb3Jtcw==?=
-Mime-Version: 1.0
-Date: Sat, 29 Mar 2014 16:29:45 +0400
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Message-ID: <1396096185.560264234@f368.i.mail.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-In-Reply-To: <CACna6rwRzw1fo2_DyV3T4fa4+cA3=LTcFHRpRsfZWwR2ugQn_w@mail.gmail.com>
-References: <CACna6rwRzw1fo2_DyV3T4fa4+cA3=LTcFHRpRsfZWwR2ugQn_w@mail.gmail.com>
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: devicetree@vger.kernel.org, =?UTF-8?B?V2ltIFZhbiBTZWJyb2Vjaw==?= <wim@iguana.be>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt@kernel.org>, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <pawel.moll@arm.com>, =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>, =?UTF-8?B?U3RlcGhlbiBXYXJyZW4=?= <swarren@wwwdotorg.org>, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ijc+devicetree@hellion.org.uk>, =?UTF-8?B?R3JhbnQgTGlrZWx5?= <grant.likely@linaro.org>, =?UTF-8?B?SGF1a2UgTWVocnRlbnM=?= <hauke@hauke-m.de>, linux-watchdog@vger.kernel.org, =?UTF-8?B?RmxvcmlhbiBGYWluZWxsaQ==?= <florian@openwrt.org>
+Return-Path: <sebastian.capella@linaro.org>
+MIME-Version: 1.0
+In-Reply-To: <20140310180109.GB834@e102568-lin.cambridge.arm.com>
+References: <1392724051-11950-1-git-send-email-lorenzo.pieralisi@arm.com>
+	<1392724051-11950-4-git-send-email-lorenzo.pieralisi@arm.com>
+	<20140219160449.11460.93660@capellas-linux>
+	<20140310180109.GB834@e102568-lin.cambridge.arm.com>
+Date: Mon, 10 Mar 2014 11:11:10 -0700
+Message-ID: <CADHgK6sZs9cPBcCa9ETu7MV8q+t8inaVF_QWaf3JRmZsnHY0Sg@mail.gmail.com>
+Subject: Re: [PATCH RFC v4 3/3] Documentation: arm: define DT idle states bindings
+From: Sebastian Capella <sebastian.capella@linaro.org>
+Content-Type: multipart/alternative; boundary=089e0102f2123b530004f4448774
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dave P Martin <Dave.Martin@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Kumar Gala <galak@codeaurora.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Russell King <linux@arm.linux.org.uk>, Mark Hambleton <mark.hambleton@broadcom.com>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <t.figa@samsung.com>, Kevin Hilman <khilman@linaro.org>, Mike Turquette <mturquette@linaro.org>, Mark Brown <broonie@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-U2F0LCAyOSBNYXIgMjAxNCAxMjo1NDo0MCArMDEwMCDQvtGCIFJhZmHFgiBNacWCZWNraSA8emFq
-ZWM1QGdtYWlsLmNvbT46Cj4gSGkgZ3V5cywKPiAKPiBJJ3ZlIG5vdGljZWQgZ3Bpb193ZHQgd2Fz
-IGFkZGVkIHRvIHRoZSBrZXJuZWwgdG8gc3VwcG9ydCBzb21lIGRldmljZXMKPiBiYXNlZCBvbiBk
-ZXZpY2V0cmVlLgo+IFdlIHVzZWQgdG8gaGF2ZSBvdXIgb3duIChub3QgbWFpbmxpbmVkKSBncGlv
-X3dkdCBpbiBPcGVuV3J0IHByb2plY3Q6Cj4gaHR0cDovL2dpdC5vcGVud3J0Lm9yZy8/cD1vcGVu
-d3J0LmdpdDthPWJsb2I7Zj10YXJnZXQvbGludXgvZ2VuZXJpYy9wYXRjaGVzLTMuMTAvOTkwLWdw
-aW9fd2R0LnBhdGNoO2hiPUhFQUQKPiAKPiBUaGUgbWFpbiBkaWZmZXJlbmNlIGlzIHRoYXQgdGhl
-IG1haW5saW5lZCBvbmUgdXNlcyBPRiwgd2hpbGUgT3BlbldydCdzCj4gb25lIHVzZXMgcGxhaW4g
-cGxhdGZvcm0gQVBJICh3aXRoIHN0cnVjdCBncGlvX3dkdF9wbGF0Zm9ybV9kYXRhKS4KPiAKPiBJ
-IHdhbnRlZCB0byBicmluZyBhIHRvcGljIG9mIG1haW5saW5pbmcgT3BlbldydCdzIHNvbHV0aW9u
-LiBXZQo+IGRlZmluaXRlbHkgbmVlZCB0aGF0IGFuZCBhdCB0aGUgc2FtZSB0aW1lIG91ciBkZXZp
-Y2UocykgZG9uJ3QgdXNlIE9GIC8KPiBEVC4KPiAKPiBEbyB5b3UgdGhpbmsgd2Ugc2hvdWxkIGV4
-dGVuZCB3ZHQtZ3BpbyB0byBoYW5kbGUgdGhhdD8gT3IgZG8geW91IHRoaW5rCj4gdGhpcyBkcml2
-ZXIgaXMgc28gc21hbGwsIGl0J3Mgbm90IHdvcnRoIGl0IGFuZCB3ZSBzaG91bGQgc3VibWl0IGEK
-PiBzZXBhcmF0ZWQgb25lPwo+IAo+IEFwYXJ0IGZyb20gQVBJIGJlaW5nIHVzZWQsIG9uZSBvdGhl
-ciBkaWZmZXJlbmNlIEkgc2VlIGlzIE9wZW5XcnQKPiBzdXBwb3J0cyBkaWZmZXJlbnQgdmFsdWVz
-IGZvciAiZmlyc3QgdGljayIgYW5kICJpbnRlcnZhbCIuIEJ1dCB0aGF0Cj4gY291bGQgYmUgZWFz
-aWx5IGhhbmRsZWQuCgpJbiBmYWN0LCB0aGlzIGRyaXZlciBjYW4gYmUgZXh0ZW5kZWQgdG8gbm9u
-LURUIHN1cHBvcnQgd2l0aG91dCBhZGRpbmcKYW55IHBsYXRmb3JtX2RhdGEgaGVhZGVycy4gVGhp
-cyBjYW4gYmUgaW1wbGVtZW50ZWQgYnkgY29udmVydCBkcml2ZXIKdG8gdXNpbmcgZGVzY3JpcHRv
-ci1iYXNlZCBHUElPIGZ1bmN0aW9ucyAoZ3Bpb2Rfe30pLgpIVyB0aW1lb3V0IHZhbHVlIGluIHRo
-aXMgY2FzZSBjYW4gYmUgdGFrZW4gd2l0aCBtb2R1bGVfcGFyYW0oKS4KCi0tLQoK
+--089e0102f2123b530004f4448774
+Content-Type: text/plain; charset=UTF-8
+
+On 10 March 2014 11:01, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+
+>
+> Ack ?
+>
+Hi Lorenzo,
+
+Yes, ack from me.
+
+ Acked-by: Sebastian Capella <sebastian.capella@linaro.org>
+
+Thanks!
+
+Sebastian
+
+--089e0102f2123b530004f4448774
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><br><div class=3D"gmail=
+_quote">On 10 March 2014 11:01, Lorenzo Pieralisi <span dir=3D"ltr">&lt;<a =
+href=3D"mailto:lorenzo.pieralisi@arm.com" target=3D"_blank">lorenzo.pierali=
+si@arm.com</a>&gt;</span> wrote:<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
+left-width:1px;border-left-color:rgb(204,204,204);border-left-style:solid;p=
+adding-left:1ex"><div class=3D""><div class=3D"h5"><br></div></div>
+Ack ?<br></blockquote><div>Hi Lorenzo,</div><div><br></div><div>Yes, ack fr=
+om me.</div><div><br></div><div>=C2=A0Acked-by: Sebastian Capella &lt;<a hr=
+ef=3D"mailto:sebastian.capella@linaro.org">sebastian.capella@linaro.org</a>=
+&gt;</div>
+<div><br></div><div>Thanks!</div><div><br></div><div>Sebastian=C2=A0</div><=
+/div></div></div>
+
+--089e0102f2123b530004f4448774--
