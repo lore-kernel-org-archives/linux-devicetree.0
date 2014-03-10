@@ -1,29 +1,77 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH v4] AM43xx-ePOS-EVM audio support with TLV320AIC31XX driver
-Date: Mon, 10 Mar 2014 11:26:17 +0200
-Message-ID: <531D8539.4060501@ti.com>
-References: <cover.1394440470.git.jsarha@ti.com> <20140310091350.GE28112@sirena.org.uk>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v6 2/8] Documentation: of: Document graph bindings
+Date: Mon, 10 Mar 2014 10:28:10 +0100
+Message-ID: <1394443690.7380.10.camel@paszta.hi.pengutronix.de>
+References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de>
+	 < 1394011242-16783-3-git-send-email-p.zabel@pengutronix.de>
+	 <20140307182717.67596C40B43@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140310091350.GE28112@sirena.org.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, peter.ujfalusi@ti.com, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, detheridge@ti.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140307182717.67596C40B43@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/10/2014 11:13 AM, Mark Brown wrote:
-> On Mon, Mar 10, 2014 at 10:52:20AM +0200, Jyri Sarha wrote:
->> Since the v3 version of the patches:
->> - Dropped "ASoC: tlv320aic32x4: Sort Makefile in alphabetic order" out
->
-> Please don't send cover letters for single patches, if there's anything
-> important put it in the patch after the --- (or in the changelog).
->
+Hi Grant,
 
-Just wanted to indicate that this is still the same series, even if 
-there is only one patch left... but won't do that anymore.
+Am Freitag, den 07.03.2014, 18:27 +0000 schrieb Grant Likely:
+> On Wed,  5 Mar 2014 10:20:36 +0100, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> > The device tree graph bindings as used by V4L2 and documented in
+> > Documentation/device-tree/bindings/media/video-interfaces.txt contain
+> > generic parts that are not media specific but could be useful for any
+> > subsystem with data flow between multiple devices. This document
+> > describes the generic bindings.
+> > 
+> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> 
+> See my comments on the previous version. My concerns are the handling of
+> the optional 'ports' node and the usage of reverse links.
 
-BR,
-Jyri
+would this change address your concern about the reverse links? As the
+preexisting video-interfaces.txt bindings mandate the reverse links, I
+worry about introducing a second, subtly different binding. It should be
+noted somewhere in video-interfaces.txt that the reverse links are
+deprecated for the but still supported by the code for backwards
+compatibility.
+
+diff --git a/Documentation/devicetree/bindings/graph.txt b/Documentation/devicetree/bindings/graph.txt
+index 1a69c07..eb6cae5 100644
+--- a/Documentation/devicetree/bindings/graph.txt
++++ b/Documentation/devicetree/bindings/graph.txt
+@@ -87,12 +87,13 @@ device {
+ Links between endpoints
+ -----------------------
+ 
+-Each endpoint should contain a 'remote-endpoint' phandle property that points
+-to the corresponding endpoint in the port of the remote device. In turn, the
+-remote endpoint should contain a 'remote-endpoint' property. If it has one,
+-it must not point to another than the local endpoint. Two endpoints with their
+-'remote-endpoint' phandles pointing at each other form a link between the
+-containing ports.
++Two endpoint nodes form a link between the two ports they are contained in
++if one contains a 'remote-endpoint' phandle property, pointing to the other
++endpoint. The endpoint pointed to should not contain a 'remote-endpoint'
++property itself. Which direction the phandle should point in depends on the
++device type. In general, links should be pointing outwards from central
++devices that provide DMA memory interfaces, such as display controller,
++video capture interface, or serial digital audio interface cores.
+ 
+ device-1 {
+         port {
+@@ -104,8 +105,8 @@ device-1 {
+ 
+ device-2 {
+         port {
+-                device_2_input: endpoint {
+-                        remote-endpoint = <&device_1_output>;
++                device_2_input: endpoint { };
++                       /* no remote-endpoint, this endpoint is pointed at */
+                 };
+         };
+ };
+
+regards
+Philipp
