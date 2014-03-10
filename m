@@ -1,143 +1,69 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 0/9] Doc/DT: DT bindings for various display components
-Date: Mon, 10 Mar 2014 18:40:58 +0200
-Message-ID: <531DEB1A.5090509@ti.com>
-References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>	<20140228162752.GU21483@n2100.arm.linux.org.uk>	<5310BDE3.60603@ti.com>	<20140228165628.GX21483@n2100.arm.linux.org.uk>	<53143796.2050309@ti.com>
- <CAL_JsqLppZHjND_LFMxscR0WCD4Ox7vF0fDbQFoYg=TENXxY8Q@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] mfd: Support SiRF audio modules
+Date: Mon, 10 Mar 2014 16:48:12 +0000
+Message-ID: <20140310164812.GN28112@sirena.org.uk>
+References: <1394184531-7679-1-git-send-email-rongjun.ying@csr.com>
+ <20140310103532.GI14976@lee--X1>
+ <CAByv0RNQrPitsfcAwMvn=eZ1hNSaii=jw94H68rQvfQXnjYz9A@mail.gmail.com>
+ <20140310163158.GI13661@lee--X1>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2137101544635221257=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqLppZHjND_LFMxscR0WCD4Ox7vF0fDbQFoYg=TENXxY8Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-fbdev@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Tomasz Figa <tomasz.figa@gmail.com>, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Rob Clark <robdclark@gmail.com>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="B3waPi4ExgyhRtaA"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140310163158.GI13661@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: RongJun Ying <rjying-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, DL-SHA-WorkGroupLinux <workgroup.linux-kQvG35nSl+M@public.gmane.org>, Rongjun Ying <rongjun.ying-kQvG35nSl+M@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============2137101544635221257==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="eET4CNQ3bBDUnx3QgaDsfXJpAXst4naJq"
 
---eET4CNQ3bBDUnx3QgaDsfXJpAXst4naJq
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-Hi Rob,
-
-On 10/03/14 18:05, Rob Herring wrote:
-
->> Russell's point was that these connector bindings are very generic, i.=
-e.
->> they are not for any particular chip from a particular vendor, but for=
-
->> any connector for DVI, HDMI or analog-tv. And he's worried that maybe =
-we
->> shouldn't define such generic bindings without consulting the whole
->> device-tree community (i.e including non-linux users).
->=20
-> So re-work it to be generic and send it out. DT maintainers would
-> rarely disagree that something shouldn't be made generic.
-
-They (in this series) are already designed to be generic.
-
-I should perhaps re-word the question: we are concerned whether these
-bindings are good for all the users, not just us, and whether there
-already exists something that overlaps.
-
-Afaik, there's nothing overlapping. And I don't see why they wouldn't be
-good for all users (with the few minor modifications that have been
-discussed in this thread). But, if I gathered right, Russell would like
-some kind of ack from someone who might know better than us.
-
-So is it enough to have posted these, and gotten acks from the people
-involved, or should we get acks from DT maintainers also?
-
-Is there a way to get the attention of, say, BSD people, or should we
-just presume they'll follow the list?
-
->> So the question is, is there such a community and a forum to bring up
->> this kind of things? If yes, should we bring this up there? If yes, wh=
-at
->> kind of things in general should be brought into the attention of
->> non-linux users?
->=20
-> devicetree list is just that. It is not just for Linux. There is the
-> newly created devicetree-spec@vger.kernel.org which is for more
-> core/common binding discussion.
-
-Ok.
-
->> What I wonder here is that while a thing like DVI connector is, of
->> course, more generic than, say, "ti,tfp410" encoder chip, but isn't th=
-e
->> case still the same: we're defining global bindings for hardware that
->> should work for everyone, not only Linux users?
->=20
-> Defining the connectors in DT is a useful thing although mainly when
-> you have multiple connectors of the same type. Labels for composite,
-> SVideo, VGA, DVI, HDMI seem less useful to me. Describing position or
-> printed label (like front vs. rear connections) seem more useful to
-> me.
-
-My point above was that it feels mentally easier to define bindings for
-one particular IP block or chip, than defining bindings for a more
-generic thing like "HDMI connector". But, in the end, I believe they
-both should go through similar review, and there's no such difference.
-
-As for the labels, they can be anything that makes sense for that
-particular board. It can be "HDMI Front", if such makes sense, or
-"HDMI-2" if the connector has such physical printed label. Or, say,
-"Main LCD", "Secondary LCD". It's a free form text that is given to the
-user.
-
- Tomi
-
-
-
---eET4CNQ3bBDUnx3QgaDsfXJpAXst4naJq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJTHesaAAoJEPo9qoy8lh71R9MQAKdG8OcH5aml90jL66StavCl
-qQ/yoBzyCF6Xcyt9ks0hCMCs5rb9/G9rgTd3oT+j48q1Cxa1t5AkHeDB05B999RO
-QnrC2CNJxeS/R2tRBvjxH5ebkh1GabFVesgN5I3GMNOKJvtY8wgqDiK8tEPOMG6j
-jrf31ML7HPnIuHcyRZbtlgMWrQlUSQaxzm9aJ6DG/AugGVquHhGyKk+6efMfbEAn
-GUyGheyU7QjvlUZG40o0I8ETH8kBLQKD6Eq9Rtw9IhNfY/aFNhefvwWjxxKNlJhE
-d6ESaKGYf2vFs4lxFR+lZY+iB5utrsD4hrFsAM2uqwbX+OBNALhazhAS374IKQsY
-E1FXp1YI2+P8tP99omKW7KYyW4QK304KwNC4Av8twdoXwqhZhXaNQffT0fjoPVSI
-hRSsEc/kQG2IUeoIRflCBRA8P01gDWGjJVO3+DvPD6NJRe5A+5CeFrq/SzND55wy
-qmeixItVbGNrzPkiZW2izvcNgs4Jytypu+DJdsezWQz6oA+RzHKSLJUOy5fK/gaC
-mn8RkAd9eFcsJe1HszvuQCmuypOvNC1hy+RYwoIbth3FzvAxbyOBPKx4nx53afz1
-yf9T7LaPSQ0bqi+1JEO3+4eihxmEBiYKOWt6EYIPLpMyDug6cIk7gz++ZsXGLj5c
-yR6IGKHq3Li+T5ypbUnA
-=6AnV
------END PGP SIGNATURE-----
-
---eET4CNQ3bBDUnx3QgaDsfXJpAXst4naJq--
-
-
---===============2137101544635221257==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+--B3waPi4ExgyhRtaA
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+On Mon, Mar 10, 2014 at 04:31:58PM +0000, Lee Jones wrote:
 
---===============2137101544635221257==--
+> > > I'm not sure there's any need for this. Why don't you just parse the
+> > > child nodes? Are you even sure you need an MFD at all? It appears
+> > > you're just using an MFD to share a regmap. Seems like over-kill to me.
+
+> > In my case, the prima2 and atlas6 codec have small different. But
+> > they use the same register address space.
+> > The sound codec driver need know what codec device is applied.
+
+> I understand it was you who made the original request for the regmap
+> to be shared between devices. Was it an MFD that you had in mind?
+
+I was expecting an audio driver that registered several interfaces with
+the ASoC core rather than a MFD.  It's possible there's some good reason
+for doing things this way, I've not looked at the new patches (I only
+seem to have one for the MFD itself...).
+
+--B3waPi4ExgyhRtaA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTHezJAAoJELSic+t+oim9mrQP/3n/+zpuU0nzAqyPcMfdDPKj
+iNGsfC1ZNT6aA+9u/xCUZpl61bJJKPFHQPrcDCOnIeTNFHrdBwmBylvrJ7YpedzJ
+2F/GsUC19pBPmwnW2soa4IJUEluNODbXNjZ0NB6cWvwCzlwNGSqmgpPeeuMjyTP9
+XKKt82kxwzaeZd0h8Xc/chFRdB3K1u7worHbJn7pcZPxYHIHyQo4YKoaF81fZG+1
+HFEgzhCmj1wuQ4HRm6N4fyZpdn38NSXdGZ9I6t1t9B7lR4NyfeO/A5ZDTU0yzuy/
+t/1W74jwYtiyPWVbX0OvIOY5prT68kzLHoCMBa2+VDXZgyhymP7eBEEYUUH5HBR5
+Zvgeny8hzRUR+tzH16xf3A2kzGxCJi4xVTCNItoeFE0G/70/90xD0WRPzk/hp+tr
+oY4MTPoT64CMgZYdY5ZlIIwLcz1BHk8g1+NXHu5hJrPHuhoPGdgMhH0ZeZdqG1ot
+eohhppGYSPs5jNhS4NzNFE1D59pqdowt93QZ4T39aUwkQ+wmi3oT26xftUOEk9Js
+ArMDCnm33F8sJfu/vcBrSXw3HlEQ4LIYFw1hOBmK3JKAXhXhTgsR4g0qU/jy9jyu
+D4KAp0LkufNT2Hn2iWUWTQqpzVj9dq6o4eQ8T34YCQLIY820Gh+gnjaCkxoLNaSB
+idkoBNNjt6qb++t4UUXv
+=zcyA
+-----END PGP SIGNATURE-----
+
+--B3waPi4ExgyhRtaA--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
