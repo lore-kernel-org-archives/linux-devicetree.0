@@ -1,79 +1,104 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 1/5] drivers: input: keyboard: st-keyscan: add keyscan
- driver
-Date: Mon, 10 Mar 2014 08:28:59 -0700
-Message-ID: <20140310152859.GA29054@core.coreip.homeip.net>
-References: <1393990772-9567-1-git-send-email-gabriel.fernandez@st.com>
- <1393990772-9567-2-git-send-email-gabriel.fernandez@st.com>
- <20140310114819.GO14976@lee--X1>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v4 6/7] DMA: sun6i: Add driver for the
+ Allwinner A31 DMA controller
+Date: Mon, 10 Mar 2014 16:34:04 +0100
+Message-ID: <2475487.axlvKsBQ0c@wuerfel>
+References: <1394462512-11620-1-git-send-email-maxime.ripard@free-electrons.com> <1394462512-11620-7-git-send-email-maxime.ripard@free-electrons.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140310114819.GO14976@lee--X1>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, kernel@stlinux.com, Giuseppe Condorelli <giuseppe.condorelli@st.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDEKVJM7XAHRBBVX66MAKGQEVZDGY2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1394462512-11620-7-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+On Monday 10 March 2014 15:41:51 Maxime Ripard wrote:
 
-On Mon, Mar 10, 2014 at 11:48:19AM +0000, Lee Jones wrote:
-> Hi Gabi,
-> 
-> Sorry for the delay. It was a hectic week last week.
-> 
-> As promised:
-> 
-> > This patch adds ST Keyscan driver to use the keypad hw a subset
-> > of ST boards provide. Specific board setup will be put in the
-> > given dt.
-> > 
-> > Signed-off-by: Giuseppe Condorelli <giuseppe.condorelli@st.com>
-> > Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
-> 
-> Are you sure these are in the correct order?
-> 
-> What is the history of this commit?
-> 
-> > ---
-> >  .../devicetree/bindings/input/st-keypad.txt        |  50 ++++
-> 
-> This should be submitted as a seperate patch.
+> +/*
+> + * Hardware representation of the LLI
+> + *
+> + * The hardware will be fed the physical address of this structure,
+> + * and read its content in order to start the transfer.
+> + */
+> +struct sun6i_dma_lli {
+> +	u32			cfg;
+> +	u32			src;
+> +	u32			dst;
+> +	u32			len;
+> +	u32			para;
+> +	u32			p_lli_next;
+> +	struct sun6i_dma_lli	*v_lli_next;
+> +} __packed;
 
-Why do we have such requirement? To me it would make more sense to add
-binding documentation in the same commit as the code that uses these
-bindings.
+It looks strange to have a pointer in a hardware structure, since
+the pointer doesn't make sense to the device.
 
-[...]
+Also, the '__packed' attribute seems strange. Are you sure
+you want to reduce the alignment from 4 bytes to 1 byte?
 
-> > +
-> > +	error = matrix_keypad_parse_of_params(dev, &pdata->num_out_pads,
-> > +			&pdata->num_in_pads);
-> > +	if (error) {
-> > +		dev_err(dev, "failed to parse keypad params\n");
-> > +		return error;
-> 
-> Nit: It's pretty unusual to use this for a standard error handling
-> variable. Consider 'ret' or 'err' as a replacement.
+> +static irqreturn_t sun6i_dma_interrupt(int irq, void *dev_id)
+> +{
+> +	struct sun6i_dma_dev *sdev = dev_id;
+> +	struct sun6i_vchan *vchan;
+> +	struct sun6i_pchan *pchan;
+> +	int i, j, ret = IRQ_NONE;
+> +	u32 status;
+> +
+> +	for (i = 0; i < 2; i++) {
+> +		status = readl(sdev->base + DMA_IRQ_STAT(i));
+> +		if (!status)
+> +			continue;
+> +
+> +		dev_dbg(sdev->slave.dev, "DMA irq status %s: 0x%x\n",
+> +			i ? "high" : "low", status);
+> +
+> +		writel(status, sdev->base + DMA_IRQ_STAT(i));
+> +
+> +		for (j = 0; (j < 8) && status; j++) {
+> +			if (status & DMA_IRQ_QUEUE) {
+> +				pchan = sdev->pchans + j;
+> +				vchan = pchan->vchan;
+> +
+> +				if (vchan) {
+> +					unsigned long flags;
+> +
+> +					spin_lock_irqsave(&vchan->vc.lock,
+> +							  flags);
 
-I like "error", in fact there are a lot of these in input. I use "error" for
-data that is only returned from error path and "retval" when the same
-variable is returned in both success and error paths.
+Interrupts are already disabled here.
 
-> > +
-> > +	input_dev->id.bustype = BUS_HOST;
-> > +	input_dev->id.vendor = 0x0001;
-> > +	input_dev->id.product = 0x0001;
-> > +	input_dev->id.version = 0x0100;
-> 
-> Any chance we can #define these?
+> +	sdc->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(sdc->clk)) {
+> +		dev_err(&pdev->dev, "No clock specified\n");
+> +		return PTR_ERR(sdc->clk);
+> +	}
+> +
+> +	mux = devm_clk_get(&pdev->dev, "ahb1_mux");
+> +	if (IS_ERR(mux)) {
+> +		dev_err(&pdev->dev, "Couldn't get AHB1 Mux\n");
+> +		return PTR_ERR(mux);
+> +	}
+> +
+> +	pll6 = devm_clk_get(&pdev->dev, "pll6");
+> +	if (IS_ERR(pll6)) {
+> +		dev_err(&pdev->dev, "Couldn't get PLL6\n");
+> +		return PTR_ERR(pll6);
+> +	}
+> +
+> +	ret = clk_set_parent(mux, pll6);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Couldn't reparent AHB1 on PLL6\n");
+> +		return ret;
+> +	}
 
-Even better would be not use 0x0001 as vendor as there (unfortunately)
-quite a few other drivers use it already. Either omit or chose something
-else. Does ST have PCI or USB VID assigned?
+Neither "pll6" nor "ahb1_mux" are listed in the DT binding. Also, why
+is it the driver's business to set the parent?
 
-Thanks.
-
--- 
-Dmitry
+	Arnd
