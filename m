@@ -1,60 +1,31 @@
-From: Rahul Sharma <r.sh.open@gmail.com>
-Subject: Re: [PATCH v4 1/5] clk/samsung: add support for multiple clock providers
-Date: Mon, 10 Mar 2014 07:44:09 +0530
-Message-ID: <CAPdUM4PfZvpuS+bhxxGZjJGH+7tqfTqp=6WsDj8WfPJnYcyrSw@mail.gmail.com>
-References: <1393931558-23502-1-git-send-email-rahul.sharma@samsung.com>
-	<1393931558-23502-2-git-send-email-rahul.sharma@samsung.com>
-	<531D037B.2080708@gmail.com>
+From: Chao Xie <xiechao.mail-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: device name in sysfs
+Date: Mon, 10 Mar 2014 10:15:12 +0800
+Message-ID: <CADApbejNSFCU5nv0uAxZtF4gT-YfWWquy9E2eMfAOUQtVFR7dg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <531D037B.2080708@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, sunil joshi <joshi@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10 March 2014 05:42, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> Hi Rahul,
->
->
-> On 04.03.2014 12:12, Rahul Sharma wrote:
->>
->> Samsung CCF helper functions do not provide support to
->> register multiple Clock Providers for a given SoC. Due to
->> this limitation SoC platforms are not able to use these
->> helpers for registering multiple clock providers and are
->> forced to bypass this layer.
->>
->> This layer is modified accordingly to enable the support.
->>
->> Clock file for exynos4, exynos5250, exynos5420, exynos5440
->> and S3c64xx are also modified as per changed helper functions.
->>
->> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
->> ---
->>   drivers/clk/samsung/clk-exynos4.c    |   47 +++++++-------
->>   drivers/clk/samsung/clk-exynos5250.c |   25 +++++---
->>   drivers/clk/samsung/clk-exynos5420.c |   24 ++++---
->>   drivers/clk/samsung/clk-exynos5440.c |   18 +++---
->>   drivers/clk/samsung/clk-pll.c        |   14 +++--
->>   drivers/clk/samsung/clk-s3c64xx.c    |   44 +++++++------
->>   drivers/clk/samsung/clk.c            |  115
->> +++++++++++++++++++---------------
->>   drivers/clk/samsung/clk.h            |   72 ++++++++++++++-------
->>   8 files changed, 210 insertions(+), 149 deletions(-)
->
->
-> This patch looks good. However in the meantime two series adding s3c2412 and
-> s3c2416 clock drivers have been merged through Kgene's tree and this patch
-> should be rebased on top of this. I have pulled those drivers to my tree as
-> well, to samsung-next branch.
->
-
-Sure. I will add similar changes for these 2 SoCs and repost v5.
-
-Regards,
-Rahul Sharma
-
-> Best regards,
-> Tomasz
+hi
+If we use device tree, and depending on dts file to help to create the
+devices, the name of the device will be like "ssp.d4282a00". For the
+bus, for example, sound, it directory name in sysfs will change from
+"sound" to "sound.8" which "8" is the global number.
+It brings some difficulties for user.
+For example, the device driver may define some interfaces in sysfs,
+and user can get or set some information.
+We may have the user settings same for mutilple SOCes, for example,
+for android, we may define a common interface to control the device,
+and this device may be integrated by multiple SOCes.
+Without SOCes, ther interfaces and even the application even the
+source code of the application are same. Now with device tree, the
+interfaces may changes and we can not share one application for all
+SOCes.
+Does anyone have idea to handle this problem? Thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
