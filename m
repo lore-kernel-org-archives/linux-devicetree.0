@@ -1,86 +1,62 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 6/7] DMA: sun6i: Add driver for the
- Allwinner A31 DMA controller
-Date: Mon, 10 Mar 2014 13:05:58 +0100
-Message-ID: <20140310120558.GF2815@lukather>
-References: <1393949884-892-1-git-send-email-maxime.ripard@free-electrons.com>
- <1393949884-892-7-git-send-email-maxime.ripard@free-electrons.com>
- <1394028474.28803.172.camel@smile.fi.intel.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4] ASoC: tlv320aic31xx: Add basic codec driver
+ implementation
+Date: Mon, 10 Mar 2014 12:11:49 +0000
+Message-ID: <20140310121149.GF28112@sirena.org.uk>
+References: <cover.1394440470.git.jsarha@ti.com>
+ <dc68ce35a3f44b5c8a55be928e06f72f463338fa.1394440470.git.jsarha@ti.com>
+ <20140310120938.GJ14999@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JcvBIhDvR6w3jUPA"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBG6X62MAKGQEQSX76QA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="7+J38Rf7xqVaSgUf"
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1394028474.28803.172.camel-XvqNBM/wLWRrdx17CPfAsdBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: "Shevchenko, Andriy" <andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, "Williams, Dan J" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Koul, Vinod" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org" <sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, "shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org" <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, "zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org" <zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>
+In-Reply-To: <20140310120938.GJ14999@e106331-lin.cambridge.arm.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Jyri Sarha <jsarha@ti.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "peter.ujfalusi@ti.com" <peter.ujfalusi@ti.com>, "liam.r.girdwood@linux.intel.com" <liam.r.girdwood@linux.intel.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "detheridge@ti.com" <detheridge@ti.com>
 List-Id: devicetree@vger.kernel.org
 
 
---JcvBIhDvR6w3jUPA
+--7+J38Rf7xqVaSgUf
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi Andriy,
+On Mon, Mar 10, 2014 at 12:09:38PM +0000, Mark Rutland wrote:
+> On Mon, Mar 10, 2014 at 08:52:21AM +0000, Jyri Sarha wrote:
 
-On Wed, Mar 05, 2014 at 02:07:55PM +0000, Shevchenko, Andriy wrote:
-> > +		return PTR_ERR(pll6);
-> > +	}
-> > +
-> > +	ret =3D clk_set_parent(mux, pll6);
-> > +	if (ret) {
-> > +		dev_err(&pdev->dev, "Couldn't reparent AHB1 on PLL6\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	devm_clk_put(&pdev->dev, mux);
-> > +	devm_clk_put(&pdev->dev, pll6);
->=20
-> Since you put those here, would it be better to use plain
-> clk_get/clk_put ?
+> > +        1 or MICBIAS_2_0V - MICBIAS output is powered to 2.0V
+> > +        2 or MICBIAS_2_5V - MICBIAS output is powered to 2.5V
+> > +        3 or MICBIAS_AVDD - MICBIAS output is connected to AVDD
+> > +       If this node is not mentioned or if the value is unknown, then
+> > +       micbias is set to 2.0V.
 
-Actually, this allows to have no exit path for the case where one of
-the calls between the first clk_get, and here. devm_clk_* makes error
-handling much easier here, that's just all
+> Why does the dts write need to select these -- what prevents this
+> getting selected dynamically?
 
-I'll fix the other comments you had, and send a new version.
+It's a property of the system integration - the board will be designed
+to bias the microphone at some voltage.
 
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---JcvBIhDvR6w3jUPA
+--7+J38Rf7xqVaSgUf
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTHaqlAAoJEBx+YmzsjxAgUrsP/R3AjphaZbpaJGAQua0RghUQ
-U2khP8K6Z6dHvkUumqAh43mnrDydDxbVzLqSdCkg9FGoq1jjp5rLPORutCtC/Ybz
-l8eHUi2aiaL5shT48XlJ/hKLaicrl6ZSPG0uOEsHqZtaaSFc3bK6RWSRozLmhiWz
-DyToIg0xh4xetWGWaw2pZKeGZdnuUSurfMh4Bk9ZoQunxtZn7o61vs6RZ0kpaoH2
-QIPmufn+TMuuVzTQY7yyx0nwp1vGH9am6AZRr52SDqvHVfzcnXiJF6W1N+6rh7OP
-3Ag+YnxYZKXe+2LLEzbaPh6JzqgmYfuChYJ9zuIgcJZyuoKw0YvG2XgDO/KTjguG
-Q/ZPX+mOAHlfc5+eT4BaiJ1457wXZ95jpcN3mhnrAswIkzMKwcNKdBrHtAuCaEFv
-AwPR1bNZP1KYCFxW6O3mQl9/UmQJhXITzvBwGmlZN31CebF4eZ9MmgpuNGS0GYeA
-+aqAFhm224Wp35+phn5H+Tj42p37jEiN1nCkvXu2tlTjhWq6AnxF1xpyysnWRpAi
-MofIDPnaEWsDFZ5fKOiBf5MURz1hjY9uIRpbSiDYIqHuR2T+ukGkLlBrSKkX0Df6
-hVCfykbjtiX+vJ3AysnTCewla0H1MIDGS7o7sTaa1kYMINoVEwIFAOPWPZ5m+Jch
-AZK/yREPcCqyDr6GVJ4v
-=xrpl
+iQIcBAEBAgAGBQJTHawCAAoJELSic+t+oim9uoEP/iOpX1L8a/ZT0Il6IzHtmk43
+sRRUcTsv5Z/w8mjtNgHbXJz9g27oeYHtk5qqkQQ+gSiVG85E6yj+Qw8RwtCC1CrE
+0obNDXvLsa8moS/h7TCbX/8q4aZBddQ3RvBxv+CX/cF5u0eNqgQCAIzYra5fMh8I
+RgBIFduJViPDsuJbUJ8dktO3V7xGRrb0Dz8aTWKk3IXOUZWMW0/9RdfLz2jU/zpx
+KqMLvWxRVhXMPXTbAOREqWNSxncM1cbef5jHJ9jbgF6Z3ZISjtHymrdshNupmVue
+l5ui9HMQUuqbljz4yvR8cTbLD8i1YNp6sSgzDsebo3x3wgEI+AbwaDb/HxAp/9Py
+ImT2CuMbSPBBnXZL6w9ST4O5aSAYeV/DItSxIK9YFaLnEO57WTODtQXboMR8OeVj
+eAGGKZJsGyeobC7yclkd6EYmbgyScxfpb6t2x/ZIo551kVRiI7uNEISLPF4phVvp
+GC6WFd/+Yr8+9SBasuWZ1PmNgY2SPy6XSnmDGCKzjQsHUW26MfDztWj70MPYKW7Z
+VyaYR7VprhAmJU1NgaAkVwFh7F3HKlzC2Ux3xT4MJMdyMGO69Zls5cGmG7dmJUXJ
+3zRmE1rqe0zrjt/KdxH5wTSsCrevqyNkIedONj4or8lLzxsqObur2wjTHzXgZgBA
+8R16mnO9SxUfqdMuKfdO
+=tl+G
 -----END PGP SIGNATURE-----
 
---JcvBIhDvR6w3jUPA--
+--7+J38Rf7xqVaSgUf--
