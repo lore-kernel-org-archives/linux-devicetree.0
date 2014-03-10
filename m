@@ -1,95 +1,55 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 3/5] pinctrl: st: add pinctrl support for the STiH407
- SoC
-Date: Mon, 10 Mar 2014 14:44:29 +0000
-Message-ID: <20140310144429.GA13661@lee--X1>
-References: <1394203251-25361-1-git-send-email-maxime.coquelin@st.com>
- <1394203251-25361-4-git-send-email-maxime.coquelin@st.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 1/7] clk: sunxi: Remove calls to clk_put
+Date: Mon, 10 Mar 2014 15:41:46 +0100
+Message-ID: <1394462512-11620-2-git-send-email-maxime.ripard@free-electrons.com>
+References: <1394462512-11620-1-git-send-email-maxime.ripard@free-electrons.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1394203251-25361-4-git-send-email-maxime.coquelin@st.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Maxime COQUELIN <maxime.coquelin@st.com>
-Cc: Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, Linus Walleij <linus.walleij@linaro.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB34766MAKGQEJ5QQD6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1394462512-11620-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> From: Giuseppe Cavallaro <peppe.cavallaro@st.com>
->=20
-> This patch adds the initial support for pinctrl based on H407 SoC.
->=20
-> Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
-> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Callers of clk_put must disable the clock first. This also means that as long
+as the clock is enabled the driver should hold a reference to that clock.
+Hence, the call to clk_put here are bogus and should be removed.
 
-SOBs should be in order of submission flow and author's should only be
-kept if the patch is unchanged. If it's been adapted you will require
-a re-review and they Acked-by or Reviewed-by tag.
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ drivers/clk/sunxi/clk-sunxi.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-> ---
->  drivers/pinctrl/pinctrl-st.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->=20
-> diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-s=
-t.c
-> index 1721611..d1886b4 100644
-> --- a/drivers/pinctrl/pinctrl-st.c
-> +++ b/drivers/pinctrl/pinctrl-st.c
-> @@ -390,6 +390,19 @@ static const struct st_pctl_data  stih416_data =3D=
- {
->  	.alt =3D 0, .oe =3D 40, .pu =3D 50, .od =3D 60, .rt =3D 100,
->  };
-> =20
-> +static const struct st_pctl_data  stih407_flashdata =3D {
-
-Nit: Double space.
-
-> +	.rt_style	=3D st_retime_style_none,
-> +	.input_delays	=3D stih416_delays,
-> +	.ninput_delays	=3D 14,
-
-ARRAY_SIZE(stih416_delays)
-
-> +	.output_delays	=3D stih416_delays,
-> +	.noutput_delays =3D 14,
-
-ARRAY_SIZE(stih416_delays)
-
-> +	.alt =3D 0,
-> +	.oe =3D -1, /* Not Available */
-> +	.pu =3D -1, /* Not Available */
-> +	.od =3D 60,
-> +	.rt =3D 100,
-> +};
-> +
->  /* Low level functions.. */
->  static inline int st_gpio_bank(int gpio)
->  {
-> @@ -1596,6 +1609,10 @@ static struct of_device_id st_pctl_of_match[] =
-=3D {
->  	{ .compatible =3D "st,stih416-rear-pinctrl", .data =3D &stih416_dat=
-a},
->  	{ .compatible =3D "st,stih416-fvdp-fe-pinctrl", .data =3D &stih416_=
-data},
->  	{ .compatible =3D "st,stih416-fvdp-lite-pinctrl", .data =3D &stih41=
-6_data},
-> +	{ .compatible =3D "st,stih407-sbc-pinctrl", .data =3D &stih416_data=
-},
-> +	{ .compatible =3D "st,stih407-front-pinctrl", .data =3D &stih416_da=
-ta},
-> +	{ .compatible =3D "st,stih407-rear-pinctrl", .data =3D &stih416_dat=
-a},
-> +	{ .compatible =3D "st,stih407-flash-pinctrl", .data =3D &stih407_fl=
-ashdata},
->  	{ /* sentinel */ }
->  };
-
-After the small changes above, feel free to add my:
-  Acked-by: Lee Jones <lee.jones@linaro.org>
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+index 23baad9d934a..7119c02c9fa8 100644
+--- a/drivers/clk/sunxi/clk-sunxi.c
++++ b/drivers/clk/sunxi/clk-sunxi.c
+@@ -1290,17 +1290,13 @@ static void __init sunxi_clock_protect(void)
+ 
+ 	/* memory bus clock - sun5i+ */
+ 	clk = clk_get(NULL, "mbus");
+-	if (!IS_ERR(clk)) {
++	if (!IS_ERR(clk))
+ 		clk_prepare_enable(clk);
+-		clk_put(clk);
+-	}
+ 
+ 	/* DDR clock - sun4i+ */
+ 	clk = clk_get(NULL, "pll5_ddr");
+-	if (!IS_ERR(clk)) {
++	if (!IS_ERR(clk))
+ 		clk_prepare_enable(clk);
+-		clk_put(clk);
+-	}
+ }
+ 
+ static void __init sunxi_init_clocks(void)
+-- 
+1.9.0
