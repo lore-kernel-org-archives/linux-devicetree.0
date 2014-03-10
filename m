@@ -1,101 +1,49 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/9] Doc/DT: DT bindings for various display components
-Date: Mon, 10 Mar 2014 15:32:41 -0500
-Message-ID: <CAL_Jsq+cwWXCmFDK7b+YVo5vYKqxtN6ym=YbOqYnJwCPf2JpWQ@mail.gmail.com>
-References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
-	<20140228162752.GU21483@n2100.arm.linux.org.uk>
-	<5310BDE3.60603@ti.com>
-	<20140228165628.GX21483@n2100.arm.linux.org.uk>
-	<53143796.2050309@ti.com>
-	<CAL_JsqLppZHjND_LFMxscR0WCD4Ox7vF0fDbQFoYg=TENXxY8Q@mail.gmail.com>
-	<531DEB1A.5090509@ti.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v15 3/3] arm64: Add APM X-Gene SoC 15Gbps Multi-purpose
+ PHY DTS entries
+Date: Mon, 10 Mar 2014 16:45:49 -0400
+Message-ID: <20140310204549.GJ25290@htj.dyndns.org>
+References: <1394213289-29565-1-git-send-email-lho@apm.com>
+ <1394213289-29565-2-git-send-email-lho@apm.com>
+ <1394213289-29565-3-git-send-email-lho@apm.com>
+ <1394213289-29565-4-git-send-email-lho@apm.com>
+ <CAPw-ZTmwFZjKT2+CUUp73TDXJcXy-bEY_sTNg-TtH-COzDnCfw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <531DEB1A.5090509-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPw-ZTmwFZjKT2+CUUp73TDXJcXy-bEY_sTNg-TtH-COzDnCfw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Loc Ho <lho@apm.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 10, 2014 at 11:40 AM, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> wrote:
-> Hi Rob,
->
-> On 10/03/14 18:05, Rob Herring wrote:
->
->>> Russell's point was that these connector bindings are very generic, i.e.
->>> they are not for any particular chip from a particular vendor, but for
->>> any connector for DVI, HDMI or analog-tv. And he's worried that maybe we
->>> shouldn't define such generic bindings without consulting the whole
->>> device-tree community (i.e including non-linux users).
->>
->> So re-work it to be generic and send it out. DT maintainers would
->> rarely disagree that something shouldn't be made generic.
->
-> They (in this series) are already designed to be generic.
->
-> I should perhaps re-word the question: we are concerned whether these
-> bindings are good for all the users, not just us, and whether there
-> already exists something that overlaps.
+On Sun, Mar 09, 2014 at 10:23:33PM -0700, Loc Ho wrote:
+> Hi Tejun,
+> 
+> On Fri, Mar 7, 2014 at 9:28 AM, Loc Ho <lho@apm.com> wrote:
+> 
+> > This patch adds the DTS entries for the APM X-Gene SoC 15Gbps Multi-purpose
+> > PHY driver. The PHY for SATA controller 2 and 3 are enabled by default.
+> >
+> > Signed-off-by: Loc Ho <lho@apm.com>
+> > Signed-off-by: Tuan Phan <tphan@apm.com>
+> > Signed-off-by: Suman Tripathi <stripathi@apm.com>
+> > ---
+> >  arch/arm64/boot/dts/apm-storm.dtsi |   75
+> > ++++++++++++++++++++++++++++++++++++
+> >  1 files changed, 75 insertions(+), 0 deletions(-)
+> >
+> >
+> Kishon had pulled in the PHY doc/driver patches. Will you pulling in the
+> PHY DTS and the SATA host driver patches soon?
 
-Given this is tied into the rest of video description with endpoints
-and such, you really have to look at the whole picture to answer that
-question. I'd guess Linux well ahead of other OSs in terms of dealing
-with the plethora of video and graphics h/w. I'd be more concerned
-that the bindings are good for all h/w rather than all OS's.
+Kishon, is the following branch the right one to pull into
+libata/for-3.15?
 
-> Afaik, there's nothing overlapping. And I don't see why they wouldn't be
-> good for all users (with the few minor modifications that have been
-> discussed in this thread). But, if I gathered right, Russell would like
-> some kind of ack from someone who might know better than us.
->
-> So is it enough to have posted these, and gotten acks from the people
-> involved, or should we get acks from DT maintainers also?
+ git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git next
 
-We really leave it up to the subsystem maintainers to decide, but for
-new common/generic bindings it is a good idea to get DT maintainers
-ack. I'll go thru the individual patches.
+Thanks.
 
-> Is there a way to get the attention of, say, BSD people, or should we
-> just presume they'll follow the list?
-
-devicetree-spec was created specifically to have a lower volume list
-without a bunch of Linux driver patches which aren't relevant to
-people from other OSs.
-
->>> So the question is, is there such a community and a forum to bring up
->>> this kind of things? If yes, should we bring this up there? If yes, what
->>> kind of things in general should be brought into the attention of
->>> non-linux users?
->>
->> devicetree list is just that. It is not just for Linux. There is the
->> newly created devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org which is for more
->> core/common binding discussion.
->
-> Ok.
->
->>> What I wonder here is that while a thing like DVI connector is, of
->>> course, more generic than, say, "ti,tfp410" encoder chip, but isn't the
->>> case still the same: we're defining global bindings for hardware that
->>> should work for everyone, not only Linux users?
->>
->> Defining the connectors in DT is a useful thing although mainly when
->> you have multiple connectors of the same type. Labels for composite,
->> SVideo, VGA, DVI, HDMI seem less useful to me. Describing position or
->> printed label (like front vs. rear connections) seem more useful to
->> me.
->
-> My point above was that it feels mentally easier to define bindings for
-> one particular IP block or chip, than defining bindings for a more
-> generic thing like "HDMI connector". But, in the end, I believe they
-> both should go through similar review, and there's no such difference.
-
-Unless you need to describe different types of HDMI connectors, I
-don't see any issue with it being generic. I certainly don't see the
-need for prepending with "linux," in this case.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+tejun
