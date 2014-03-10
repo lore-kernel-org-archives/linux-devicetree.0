@@ -1,46 +1,27 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2 6/6] documentation: bindings: document PMIC8921/8058 RTC
-Date: Mon, 10 Mar 2014 16:22:51 -0500
-Message-ID: <CAL_JsqJe7M6i0RKWVPHbvyHbHscMtZmW-xbJuaJTePqYRKWrUg@mail.gmail.com>
-References: <1394477089-3996-1-git-send-email-joshc@codeaurora.org>
-	<1394477089-3996-7-git-send-email-joshc@codeaurora.org>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH 0/7] tty: xuartps: Rebranding + DT documentation
+Date: Mon, 10 Mar 2014 14:36:50 -0700
+Message-ID: <f9be7124-0c1e-4529-8ae5-bfe32d98ebf0@VA3EHSMHS014.ehs.local>
+References: <1394486478-31037-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1394477089-3996-7-git-send-email-joshc@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Josh Cartwright <joshc@codeaurora.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Alessandro Zummo <a.zummo@towertech.it>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, rtc-linux@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1394486478-31037-1-git-send-email-soren.brinkmann@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Cc: Michal Simek <michal.simek@xilinx.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 10, 2014 at 1:44 PM, Josh Cartwright <joshc@codeaurora.org> wrote:
-> This RTC is found on the Qualcomm 8921 and 8058 PMICs.
->
-> Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
-> ---
->  .../devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt     | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt
->
-> diff --git a/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt b/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt
-> new file mode 100644
-> index 0000000..3eaa582
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/qcom,pm8xxx-rtc.txt
-> @@ -0,0 +1,21 @@
-> +* Real-Time Clock for Qualcomm 8058/8921 PMICs
-> +
-> +Required properties:
-> +- compatible: should be one of the following.
-> +    * "qcom,pm8058-rtc"
-> +    * "qcom,pm8921-rtc"
-> +- reg: base address of the register region
+This seemed to have bounced for some recipients. I think the culprit wa=
+s
+a missing '>' in one of the email addresses.
+I'll send a v2 with the same patches and hopefully fixed recipients
+list. Sorry for the noise.
 
-Wait a second. This is all part of an MFD device. I think this whole
-binding does not make sense on it's own. The DT should describe the
-PMIC, not necessarily some sub-component of it. Perhaps there are sub
-nodes of the PMIC node, but that would be all part of the PMIC
-binding. Having sub drivers for an MFD is really a Linux problem that
-doesn't belong in DT.
+Does anybody have some script/better method to assemble the recipients
+list? C&P the output of the get_maintainers script is apparently error
+prone.
 
-Rob
+	S=C3=B6ren
