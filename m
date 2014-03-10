@@ -1,71 +1,141 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4] ASoC: tlv320aic31xx: Add basic codec driver
- implementation
-Date: Mon, 10 Mar 2014 15:47:44 +0000
-Message-ID: <20140310154744.GJ28112@sirena.org.uk>
-References: <cover.1394440470.git.jsarha@ti.com>
- <dc68ce35a3f44b5c8a55be928e06f72f463338fa.1394440470.git.jsarha@ti.com>
- <20140310125848.GI28112@sirena.org.uk>
- <531DBD55.6030008@ti.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] of: add missing major vendors
+Date: Mon, 10 Mar 2014 10:49:29 -0500
+Message-ID: <CAL_JsqJugFL6ZbRyZhC7hOWU+rSowzXB84=LjPso8jJ_2ohMHw@mail.gmail.com>
+References: <1394195917-25166-1-git-send-email-florian.vaussard@epfl.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="YKGyq5YQxDjF8U6+"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <531DBD55.6030008@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jyri Sarha <jsarha@ti.com>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, peter.ujfalusi@ti.com, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, detheridge@ti.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1394195917-25166-1-git-send-email-florian.vaussard@epfl.ch>
+Sender: linux-doc-owner@vger.kernel.org
+To: Florian Vaussard <florian.vaussard@epfl.ch>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Mar 7, 2014 at 6:38 AM, Florian Vaussard
+<florian.vaussard@epfl.ch> wrote:
+> Looking at the current vendor strings used in the kernel's .dts/.dtsi
+> files, some vendors are used a high number of times without
+> being documented. Document the ones that are used more than 10 times.
+>
+> Note: a few inconsistencies were found, and thus not documented.
+> Here is the list:
+> - mrvl: duplicates "marvell"
 
---YKGyq5YQxDjF8U6+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+There was a whole thread on this change to marvell. We don't want mrvl
+documented.
 
-On Mon, Mar 10, 2014 at 03:25:41PM +0200, Jyri Sarha wrote:
-> On 03/10/2014 02:58 PM, Mark Brown wrote:
-> >On Mon, Mar 10, 2014 at 10:52:21AM +0200, Jyri Sarha wrote:
+> - st-ericsson: duplicates "ste" _and_ "stericsson"
 
-> >>>+- ai31xx-micbias-vg - MicBias Voltage setting
-> >>>+        0 or MICBIAS_OFF - MICBIAS output it not powered
+We should make it clear which one is preferred. If there are a bunch
+of cases, then we should document and mark deprecated. If there are
+only a few, I would leave undocumented.
 
-> >So, on every other version of this patch set I've suggested removing
-> >this as there's no reason why the bias would be wired up but disabled.
-> >Each time you seem to agree that the option should be removed yet here
-> >it is again...
+> - pci8086: seems to be a unfortunate alias for "intel"
+> - pnpPNP: used on PowerPC?
 
-> I agreed on not to have it as the default. I can still imagine
-> couple of reason to have this option around. For instance, if the
-> board designer decides to pull the bias voltage from outside of the
-> chip completely, or like in my test setup when I feed the mic input
-> from a headset output of another device, because I do not have a
-> microphone around ATM.
+I believe these are special cases where the vendor and product IDs are
+used to form the compatible strings.
 
-To repeat what I said first time around in those cases the pin wouldn't
-be connected at all so why would it ever be enabled?  You're not
-specifying that it's going to be always enabled at a given voltage.
+>
+> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 
---YKGyq5YQxDjF8U6+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Thanks for fixing these and in particular my failure to document Calxeda. :)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Applied for 3.15.
 
-iQIcBAEBAgAGBQJTHd6cAAoJELSic+t+oim9trQP/3U2wxnnI8EB/Ivyu57yxfbH
-KzqT0hcQfFKpGcYkrh/LFcAqCdV4DR3zDwrVcpJ+5Q9g1l5E7rmHL/cVSTpOFzb2
-Xw5AMjOpDsZo+R52JMVDhaBI+Di9f/J334VWOLIUcV+9fm6s5jX2HhX/RPrxxznd
-z2X509a7rPs/CuiaH2+sAWHc4DVIPwB24EkkTjH8Ayfqogx8l3PLMhwDE4eCbMcL
-NxhseMHC3lIs9SgduxW1ynU49PCpEe2Ul4LX609AOwnfT0UwfbxriPx6HvwUpwla
-EYYtRn6HDHuIRPJiGZoM5HGJ88tOADLSgGPmrUUiBP0HtxAKf/pCFkRtLnjYcYqp
-cWYOjM6xll8pO0GFb70sSsZ2noef0L1y2idFM+ZCEk0v7OI/MUNB3iSp/EVMxUk8
-qBp5mBv+2FiGUrM89n9oVw915NKeiY9AH3vU5ZDIiiCGgw0YMiTnUY1EXoY0mv4p
-GBQ+M99i4vcikxBbOeBncrDQdDv8IY0NeC1NGV3+IsCKXVDyG2GXQ/AoqmGhaXb/
-vld2yX8XbddMlEMGwNL4OQIxGNBTq/vTIHhX4rCF4E194vHcXfwX3OG4euJkwyaH
-wcHoaS07x1ROWuVj5BNNzJ68hH46T88Agt3z1NpvN0n2o55YMm0tCxQ91ebQ4lFD
-u4+eLwlPp3uBHQoxuF6A
-=NU/C
------END PGP SIGNATURE-----
+Rob
 
---YKGyq5YQxDjF8U6+--
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 40ce2df..b5e7485 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -3,6 +3,7 @@ Device tree binding vendor prefix registry.  Keep list in alphabetical order.
+>  This isn't an exhaustive list, but you should add new prefixes to it before
+>  using them to avoid name-space collisions.
+>
+> +abilis Abilis Systems
+>  active-semi    Active-Semi International Inc
+>  ad     Avionic Design GmbH
+>  adi    Analog Devices, Inc.
+> @@ -11,14 +12,17 @@ ak  Asahi Kasei Corp.
+>  allwinner      Allwinner Technology Co., Ltd.
+>  altr   Altera Corp.
+>  amcc   Applied Micro Circuits Corporation (APM, formally AMCC)
+> +amd    Advanced Micro Devices (AMD), Inc.
+>  amstaos        AMS-Taos Inc.
+>  apm    Applied Micro Circuits Corporation (APM)
+>  arm    ARM Ltd.
+> +armadeus       ARMadeus Systems SARL
+>  atmel  Atmel Corporation
+>  auo    AU Optronics Corporation
+>  avago  Avago Technologies
+>  bosch  Bosch Sensortec GmbH
+>  brcm   Broadcom Corporation
+> +calxeda        Calxeda
+>  capella        Capella Microsystems, Inc
+>  cavium Cavium, Inc.
+>  cdns   Cadence Design Systems Inc.
+> @@ -26,8 +30,10 @@ chrp Common Hardware Reference Platform
+>  chunghwa       Chunghwa Picture Tubes Ltd.
+>  cirrus Cirrus Logic, Inc.
+>  cortina        Cortina Systems, Inc.
+> +crystalfontz   Crystalfontz America, Inc.
+>  dallas Maxim Integrated Products (formerly Dallas Semiconductor)
+>  davicom        DAVICOM Semiconductor, Inc.
+> +dlink  D-Link Systems, Inc.
+>  denx   Denx Software Engineering
+>  edt    Emerging Display Technologies
+>  emmicro        EM Microelectronic
+> @@ -37,7 +43,9 @@ est   ESTeem Wireless Modems
+>  fsl    Freescale Semiconductor
+>  GEFanuc        GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+>  gef    GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+> +globalscale    Globalscale Technologies, Inc.
+>  gmt    Global Mixed-mode Technology, Inc.
+> +google Google, Inc.
+>  gumstix        Gumstix, Inc.
+>  haoyu  Haoyu Microelectronic Co. Ltd.
+>  hisilicon      Hisilicon Limited.
+> @@ -46,9 +54,12 @@ hp   Hewlett Packard
+>  ibm    International Business Machines (IBM)
+>  idt    Integrated Device Technologies, Inc.
+>  img    Imagination Technologies Ltd.
+> +intel  Intel Corporation
+>  intercontrol   Inter Control Group
+>  isl    Intersil
+>  karo   Ka-Ro electronics GmbH
+> +lacie  LaCie
+> +lantiq Lantiq Semiconductor
+>  lg     LG Corporation
+>  linux  Linux-specific binding
+>  lsi    LSI Corp. (LSI Logic)
+> @@ -56,12 +67,16 @@ marvell     Marvell Technology Group Ltd.
+>  maxim  Maxim Integrated Products
+>  microchip      Microchip Technology Inc.
+>  mosaixtech     Mosaix Technologies, Inc.
+> +moxa   Moxa
+>  national       National Semiconductor
+>  neonode                Neonode Inc.
+> +netgear        NETGEAR
+>  nintendo       Nintendo
+> +nokia  Nokia
+>  nvidia NVIDIA
+>  nxp    NXP Semiconductors
+>  onnn   ON Semiconductor Corp.
+> +opencores      OpenCores.org
+>  panasonic      Panasonic Corporation
+>  phytec PHYTEC Messtechnik GmbH
+>  picochip       Picochip Ltd
+> @@ -94,4 +109,5 @@ via  VIA Technologies, Inc.
+>  winbond Winbond Electronics corp.
+>  wlf    Wolfson Microelectronics
+>  wm     Wondermedia Technologies, Inc.
+> +xes    Extreme Engineering Solutions (X-ES)
+>  xlnx   Xilinx
+> --
+> 1.8.5.3
+>
