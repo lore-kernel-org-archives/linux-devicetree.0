@@ -1,86 +1,85 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC PATCH 3/6] PM / Voltagedomain: introduce voltage domain
- driver support
-Date: Mon, 10 Mar 2014 17:22:21 +0000
-Message-ID: <20140310172221.GT28112@sirena.org.uk>
-References: <1392755543-28335-1-git-send-email-nm@ti.com>
- <1392755543-28335-4-git-send-email-nm@ti.com>
- <20140224015826.GU25940@sirena.org.uk>
- <530B594F.2030500@ti.com>
- <20140303035426.GC2411@sirena.org.uk>
- <531DF250.5060100@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8kUASS5K4BSNeq5L"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <531DF250.5060100@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Mike Turquette <mturquette@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: [PATCHv3 1/9] mfd: twl4030-madc: Use managed resources
+Date: Mon, 10 Mar 2014 18:25:21 +0100
+Message-ID: <1394472329-15485-2-git-send-email-sre@debian.org>
+References: <1394472329-15485-1-git-send-email-sre@debian.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1394472329-15485-1-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Update twl4030-madc driver to use managed resources.
 
---8kUASS5K4BSNeq5L
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Tested-by: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+---
+ drivers/mfd/twl4030-madc.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-On Mon, Mar 10, 2014 at 12:11:44PM -0500, Nishanth Menon wrote:
-> On 03/02/2014 09:54 PM, Mark Brown wrote:
-> > On Mon, Feb 24, 2014 at 08:38:07AM -0600, Nishanth Menon wrote:
-
-> >> Intent here is to allow drivers such as cpufreq-cpu0 to be reused on
-> >> platforms such as TI's OMAP derivatives, and other SoCs which differ
-> >> only by the sequence involved in voltage scale operations. So, this
-> >> patch provides a framework for registering the underlying
-> >> implementation of the SoC specific voltage change methodology.
-
-> > That bit is clear, what's very opaque from the code is how this is going
-> > to be accomplished.
-
-> The SoC specific voltage domain drivers register with
-> devm_voltdm_register. the fops provide the abstraction needed for the
-> SoC (example in patch #5 - which introduces OMAP specific voltage
-> domain which handles ABB and VDD regulators).
-
-> What would you suggest that we do to clarify the usage here?
-
-Probably saying something about this in the commit message would be
-enough - mentioning how the registration occurs and that things are
-triggered by clock frequency changes.
-
-> > So the first question I have here is what happens if multiple clocks
-> > need to be updated in lock step - if we're only triggering off clock
-> > notifiers that seems tricky.  The other thing here is that the fact that
-
-> Yes, that is true, however, there are ways to implement them, for
-> example: We could implement an higher level clock that takes care of
-> the multiple clock node control to handle this kind of scenario.
-
-That seems concerning given the fact that people seem to like describing
-their entire clock trees in DT, we shouldn't be putting implementation
-stuff there.
-
---8kUASS5K4BSNeq5L
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTHfTKAAoJELSic+t+oim9/kUQAIUvz2655/fFegzVWJ0LDCLK
-ATWtEJA1/XIFOYBnPQvHtEaoVhCGToHJZD6pzmy8rT+7D15ZYXZQbvwybTHrQsp3
-A35Qms8i675kRHvvWT/1PpooKyBkJCQWQe5m/zqnR92HM/Ml/vdf+hqq6lqT8JFP
-AxEUY71U5TGyFrVp1ueUcoymDCu097tFeZ1JiWCF1B3680WSG4+opUs7IdrpWhEm
-sBLhpN04/XlPkfrT1tlvuwEtbnqDpUPw8Z5vQ1Mgc68U/CNweuZsJQKpZLPQsk+6
-G99asrG03LO/d7tms0vqGGGgpqDcUuR3371cNRjHvaRqHI4Qsdpj8ksNqVKeoZdq
-VAud/sse+++ODS6crhOG6PlJt8jgwytHS5MVCdBRk/pVTyDvvWEgVDiBKRW3nW/3
-Mt7XxryqnUdPZvjsdzbb5UZ5iYGtB5oVLyUAeqoY8r51b/BWcvlPYdyxBsOn0Ml5
-WUECc61s+jb3la6CxVXhulq/e+Gv+Ti1D63viVJsQGnV0B3TDSS0WHdUCMYxVbX1
-MEiObZ+Uo+GMpW4GgdFxEVwXGmD5nh48ggTSY1XbXfeLRokcJcP4w+AOoCLDMccM
-x3MBjFgVDTryGG/PrANkD9AQe2pOpSXoD3r9GeQVpT0XdYeDmBCpuoqFRb2XFXWI
-6DbVVfLPKWVtWMZJn+LN
-=K5n7
------END PGP SIGNATURE-----
-
---8kUASS5K4BSNeq5L--
+diff --git a/drivers/mfd/twl4030-madc.c b/drivers/mfd/twl4030-madc.c
+index 4c583e4..5458561 100644
+--- a/drivers/mfd/twl4030-madc.c
++++ b/drivers/mfd/twl4030-madc.c
+@@ -702,14 +702,14 @@ static int twl4030_madc_probe(struct platform_device *pdev)
+ {
+ 	struct twl4030_madc_data *madc;
+ 	struct twl4030_madc_platform_data *pdata = dev_get_platdata(&pdev->dev);
+-	int ret;
++	int irq, ret;
+ 	u8 regval;
+ 
+ 	if (!pdata) {
+ 		dev_err(&pdev->dev, "platform_data not available\n");
+ 		return -EINVAL;
+ 	}
+-	madc = kzalloc(sizeof(*madc), GFP_KERNEL);
++	madc = devm_kzalloc(&pdev->dev, sizeof(*madc), GFP_KERNEL);
+ 	if (!madc)
+ 		return -ENOMEM;
+ 
+@@ -726,7 +726,7 @@ static int twl4030_madc_probe(struct platform_device *pdev)
+ 	    TWL4030_MADC_ISR1 : TWL4030_MADC_ISR2;
+ 	ret = twl4030_madc_set_power(madc, 1);
+ 	if (ret < 0)
+-		goto err_power;
++		return ret;
+ 	ret = twl4030_madc_set_current_generator(madc, 0, 1);
+ 	if (ret < 0)
+ 		goto err_current_generator;
+@@ -770,7 +770,9 @@ static int twl4030_madc_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, madc);
+ 	mutex_init(&madc->lock);
+-	ret = request_threaded_irq(platform_get_irq(pdev, 0), NULL,
++
++	irq = platform_get_irq(pdev, 0);
++	ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
+ 				   twl4030_madc_threaded_irq_handler,
+ 				   IRQF_TRIGGER_RISING, "twl4030_madc", madc);
+ 	if (ret) {
+@@ -783,9 +785,6 @@ err_i2c:
+ 	twl4030_madc_set_current_generator(madc, 0, 0);
+ err_current_generator:
+ 	twl4030_madc_set_power(madc, 0);
+-err_power:
+-	kfree(madc);
+-
+ 	return ret;
+ }
+ 
+@@ -793,10 +792,8 @@ static int twl4030_madc_remove(struct platform_device *pdev)
+ {
+ 	struct twl4030_madc_data *madc = platform_get_drvdata(pdev);
+ 
+-	free_irq(platform_get_irq(pdev, 0), madc);
+ 	twl4030_madc_set_current_generator(madc, 0, 0);
+ 	twl4030_madc_set_power(madc, 0);
+-	kfree(madc);
+ 
+ 	return 0;
+ }
+-- 
+1.9.0
