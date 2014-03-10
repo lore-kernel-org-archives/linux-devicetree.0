@@ -1,53 +1,55 @@
-Return-Path: <sebastian.capella@linaro.org>
-MIME-Version: 1.0
-In-Reply-To: <20140310180109.GB834@e102568-lin.cambridge.arm.com>
-References: <1392724051-11950-1-git-send-email-lorenzo.pieralisi@arm.com>
-	<1392724051-11950-4-git-send-email-lorenzo.pieralisi@arm.com>
-	<20140219160449.11460.93660@capellas-linux>
-	<20140310180109.GB834@e102568-lin.cambridge.arm.com>
-Date: Mon, 10 Mar 2014 11:11:10 -0700
-Message-ID: <CADHgK6sZs9cPBcCa9ETu7MV8q+t8inaVF_QWaf3JRmZsnHY0Sg@mail.gmail.com>
-Subject: Re: [PATCH RFC v4 3/3] Documentation: arm: define DT idle states bindings
-From: Sebastian Capella <sebastian.capella@linaro.org>
-Content-Type: multipart/alternative; boundary=089e0102f2123b530004f4448774
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dave P Martin <Dave.Martin@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Kumar Gala <galak@codeaurora.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Russell King <linux@arm.linux.org.uk>, Mark Hambleton <mark.hambleton@broadcom.com>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <t.figa@samsung.com>, Kevin Hilman <khilman@linaro.org>, Mike Turquette <mturquette@linaro.org>, Mark Brown <broonie@kernel.org>
+Return-Path: <soeren.brinkmann@gmail.com>
+Sender: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soeren.brinkmann@gmail.com>
+From: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Subject: [PATCH 7/7] ARM: zynq: DT: Migrate UART to Cadence binding
+Date: Mon, 10 Mar 2014 14:21:18 -0700
+Message-Id: <1394486478-31037-8-git-send-email-soren.brinkmann@xilinx.com>
+In-Reply-To: <1394486478-31037-1-git-send-email-soren.brinkmann@xilinx.com>
+References: <1394486478-31037-1-git-send-email-soren.brinkmann@xilinx.com>
+To: Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Cc: Michal Simek <michal.simek@xilinx.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Soren Brinkmann <soren.brinkmann@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
---089e0102f2123b530004f4448774
-Content-Type: text/plain; charset=UTF-8
+The Zynq UART is Cadence IP and the driver has been renamed accordingly.
+Migrate the DT to use the new binding for the UART driver.
 
-On 10 March 2014 11:01, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Acked-by: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+This change depends on 'tty: xuartps: Rebrand driver as Cadence UART',
+which introduces the new clock-names.
+---
+ arch/arm/boot/dts/zynq-7000.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
->
-> Ack ?
->
-Hi Lorenzo,
-
-Yes, ack from me.
-
- Acked-by: Sebastian Capella <sebastian.capella@linaro.org>
-
-Thanks!
-
-Sebastian
-
---089e0102f2123b530004f4448774
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><br><div class=3D"gmail=
-_quote">On 10 March 2014 11:01, Lorenzo Pieralisi <span dir=3D"ltr">&lt;<a =
-href=3D"mailto:lorenzo.pieralisi@arm.com" target=3D"_blank">lorenzo.pierali=
-si@arm.com</a>&gt;</span> wrote:<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
-left-width:1px;border-left-color:rgb(204,204,204);border-left-style:solid;p=
-adding-left:1ex"><div class=3D""><div class=3D"h5"><br></div></div>
-Ack ?<br></blockquote><div>Hi Lorenzo,</div><div><br></div><div>Yes, ack fr=
-om me.</div><div><br></div><div>=C2=A0Acked-by: Sebastian Capella &lt;<a hr=
-ef=3D"mailto:sebastian.capella@linaro.org">sebastian.capella@linaro.org</a>=
-&gt;</div>
-<div><br></div><div>Thanks!</div><div><br></div><div>Sebastian=C2=A0</div><=
-/div></div></div>
-
---089e0102f2123b530004f4448774--
+diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+index 8b67b19392ec..0ed0d4b0579a 100644
+--- a/arch/arm/boot/dts/zynq-7000.dtsi
++++ b/arch/arm/boot/dts/zynq-7000.dtsi
+@@ -67,19 +67,19 @@
+ 		};
+ 
+ 		uart0: uart@e0000000 {
+-			compatible = "xlnx,xuartps";
++			compatible = "xlnx,xuartps", "cdns,uart-r1p8";
+ 			status = "disabled";
+ 			clocks = <&clkc 23>, <&clkc 40>;
+-			clock-names = "ref_clk", "aper_clk";
++			clock-names = "uart_clk", "pclk";
+ 			reg = <0xE0000000 0x1000>;
+ 			interrupts = <0 27 4>;
+ 		};
+ 
+ 		uart1: uart@e0001000 {
+-			compatible = "xlnx,xuartps";
++			compatible = "xlnx,xuartps", "cdns,uart-r1p8";
+ 			status = "disabled";
+ 			clocks = <&clkc 24>, <&clkc 41>;
+-			clock-names = "ref_clk", "aper_clk";
++			clock-names = "uart_clk", "pclk";
+ 			reg = <0xE0001000 0x1000>;
+ 			interrupts = <0 50 4>;
+ 		};
+-- 
+1.9.0.1.g4196000
