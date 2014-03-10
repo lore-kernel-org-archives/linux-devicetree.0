@@ -1,110 +1,60 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 1/4] phy: miphy365x: Add Device Tree bindings for the
- MiPHY365x
-Date: Mon, 10 Mar 2014 16:22:54 +0000
-Message-ID: <20140310162254.GG13661@lee--X1>
-References: <1392377036-12816-1-git-send-email-lee.jones@linaro.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] mfd: Support SiRF audio modules
+Date: Mon, 10 Mar 2014 16:31:58 +0000
+Message-ID: <20140310163158.GI13661@lee--X1>
+References: <1394184531-7679-1-git-send-email-rongjun.ying@csr.com>
+ <20140310103532.GI14976@lee--X1>
+ <CAByv0RNQrPitsfcAwMvn=eZ1hNSaii=jw94H68rQvfQXnjYz9A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1392377036-12816-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mark.rutland@arm.com
-Cc: alexandre.torgue@st.com, devicetree@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <CAByv0RNQrPitsfcAwMvn=eZ1hNSaii=jw94H68rQvfQXnjYz9A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: RongJun Ying <rjying-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, DL-SHA-WorkGroupLinux <workgroup.linux-kQvG35nSl+M@public.gmane.org>, Rongjun Ying <rongjun.ying-kQvG35nSl+M@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-phy: miphy365x: Add Device Tree bindings for the MiPHY365x
-
-The MiPHY365x is a Generic PHY which can serve various SATA or PCIe
-devices. It has 2 ports which it can use for either; both SATA, both
-PCIe or one of each in any configuration.
-
-Cc: devicetree@vger.kernel.org
-Cc: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
-
-diff --git a/Documentation/devicetree/bindings/phy/phy-miphy365x.txt b/=
-Documentation/devicetree/bindings/phy/phy-miphy365x.txt
-new file mode 100644
-index 0000000..15d105a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
-@@ -0,0 +1,62 @@
-+STMicroelectronics STi MIPHY365x PHY binding
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+This binding describes a miphy device that is used to control PHY hard=
-ware
-+for SATA and PCIe.
-+
-+Required properties:
-+- compatible :	Should be "st,miphy365x-phy"
-+- #phy-cells :	Should be 2 (See second example)
-+		First cell is the port number from:
-+			- MIPHY_PORT_0
-+			- MIPHY_PORT_1
-+		Second cell is device type from:
-+			- MIPHY_TYPE_SATA
-+			- MIPHY_TYPE_PCI
-+- reg       :	Address and length of register sets for each device in
-+		"reg-names"
-+- reg-names : 	The names of the register addresses corresponding to th=
+> >> +     if (of_device_is_compatible(pdev->dev.of_node,
+> >> +                     "sirf,prima2-audio")) {
+> >> +             cell =3D sirf_audio_prima2_devs;
+> >> +             cell_number =3D ARRAY_SIZE(sirf_audio_prima2_devs);
+> >
+> > s/cell_number/n_devs
+> >
+> >> +     } else if (of_device_is_compatible(pdev->dev.of_node,
+> >> +                     "sirf,atlas6-audio")) {
+> >> +             cell =3D sirf_audio_atlas6_devs;
+> >> +             cell_number =3D ARRAY_SIZE(sirf_audio_atlas6_devs);
+> >
+> > s/cell_number/n_devs
+> >
+> >> +     } else
+> >> +             return -EINVAL;
+> >
+> > I'm not sure there's any need for this. Why don't you just parse th=
 e
-+		registers filled in "reg", from:
-+			- sata0: For SATA port 0 registers
-+			- sata1: For SATA port 1 registers
-+			- pcie0: For PCIE port 0 registers
-+			- pcie1: For PCIE port 1 registers
-+- st,syscfg : 	Should be a phandle of the system configuration registe=
-r group
-+		which contain the SATA, PCIe mode setting bits
-+
-+Optional properties:
-+- st,sata-gen	     :	Generation of locally attached SATA IP. Expected =
-values
-+			are {1,2,3). If not supplied generation 1 hardware will
-+			be expected
-+- st,pcie-tx-pol-inv :	Bool property to invert the polarity PCIe Tx (T=
-xn/Txp)
-+- st,sata-tx-pol-inv :	Bool property to invert the polarity SATA Tx (T=
-xn/Txp)
-+
-+Example:
-+
-+	miphy365x_phy: miphy365x@0 {
-+		compatible =3D "st,miphy365x-phy";
-+		#phy-cells =3D <2>;
-+		reg =3D	<0xfe382000 0x100>,
-+			<0xfe38a000 0x100>,
-+			<0xfe394000 0x100>,
-+			<0xfe804000 0x100>;
-+		reg-names =3D "sata0", "sata1", "pcie0", "pcie1";
-+		st,syscfg =3D <&syscfg_rear>;
-+	};
-+
-+Specifying phy control of devices
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+Device nodes should specify the configuration required in their "phys"
-+property, containing a phandle to the miphy device node, a port number
-+and a device type.
-+
-+Example:
-+
-+#include <dt-bindings/phy/phy-miphy365x.h>
-+
-+	sata0: sata@fe380000 {
-+		...
-+		phys	  =3D <&miphy365x_phy MIPHY_PORT_0 MIPHY_TYPE_SATA>;
-+		...
-+	};
+> > child nodes? Are you even sure you need an MFD at all? It appears
+> > you're just using an MFD to share a regmap. Seems like over-kill to=
+ me.
+>=20
+> In my case, the prima2 and atlas6 codec have small different. But
+> they use the same register address space.
+> The sound codec driver need know what codec device is applied.
+
+Mark,
+
+I understand it was you who made the original request for the regmap
+to be shared between devices. Was it an MFD that you had in mind?
 
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
