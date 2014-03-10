@@ -1,77 +1,85 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v6 2/8] Documentation: of: Document graph bindings
-Date: Mon, 10 Mar 2014 10:28:10 +0100
-Message-ID: <1394443690.7380.10.camel@paszta.hi.pengutronix.de>
-References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de>
-	 < 1394011242-16783-3-git-send-email-p.zabel@pengutronix.de>
-	 <20140307182717.67596C40B43@trevor.secretlab.ca>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] [media] of: move graph helpers from drivers/media/v4l2-core
+ to drivers/of
+Date: Mon, 10 Mar 2014 11:29:11 +0200
+Message-ID: <531D85E7.2060409@ti.com>
+References: <1393340304-19005-1-git-send-email-p.zabel@pengutronix.de> <20140307171804.EF245C40A32@trevor.secretlab.ca> <CA+gwMcfgKre8S4KHPvTVuAuz672aehGrN1UfFpwKAueTAcrMZQ@mail.gmail.com> <1536567.OYzyi25bjL@avalon> <531D7E9F.3090708@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140307182717.67596C40B43@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="bIh8W89TUIJmlfTSEVOve9C1uhLTE6eBG"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <531D7E9F.3090708-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+--bIh8W89TUIJmlfTSEVOve9C1uhLTE6eBG
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Am Freitag, den 07.03.2014, 18:27 +0000 schrieb Grant Likely:
-> On Wed,  5 Mar 2014 10:20:36 +0100, Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> > The device tree graph bindings as used by V4L2 and documented in
-> > Documentation/device-tree/bindings/media/video-interfaces.txt contain
-> > generic parts that are not media specific but could be useful for any
-> > subsystem with data flow between multiple devices. This document
-> > describes the generic bindings.
-> > 
-> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> 
-> See my comments on the previous version. My concerns are the handling of
-> the optional 'ports' node and the usage of reverse links.
+On 10/03/14 10:58, Andrzej Hajda wrote:
 
-would this change address your concern about the reverse links? As the
-preexisting video-interfaces.txt bindings mandate the reverse links, I
-worry about introducing a second, subtly different binding. It should be
-noted somewhere in video-interfaces.txt that the reverse links are
-deprecated for the but still supported by the code for backwards
-compatibility.
+> I want to propose another solution to simplify bindings, in fact I have=
 
-diff --git a/Documentation/devicetree/bindings/graph.txt b/Documentation/devicetree/bindings/graph.txt
-index 1a69c07..eb6cae5 100644
---- a/Documentation/devicetree/bindings/graph.txt
-+++ b/Documentation/devicetree/bindings/graph.txt
-@@ -87,12 +87,13 @@ device {
- Links between endpoints
- -----------------------
- 
--Each endpoint should contain a 'remote-endpoint' phandle property that points
--to the corresponding endpoint in the port of the remote device. In turn, the
--remote endpoint should contain a 'remote-endpoint' property. If it has one,
--it must not point to another than the local endpoint. Two endpoints with their
--'remote-endpoint' phandles pointing at each other form a link between the
--containing ports.
-+Two endpoint nodes form a link between the two ports they are contained in
-+if one contains a 'remote-endpoint' phandle property, pointing to the other
-+endpoint. The endpoint pointed to should not contain a 'remote-endpoint'
-+property itself. Which direction the phandle should point in depends on the
-+device type. In general, links should be pointing outwards from central
-+devices that provide DMA memory interfaces, such as display controller,
-+video capture interface, or serial digital audio interface cores.
- 
- device-1 {
-         port {
-@@ -104,8 +105,8 @@ device-1 {
- 
- device-2 {
-         port {
--                device_2_input: endpoint {
--                        remote-endpoint = <&device_1_output>;
-+                device_2_input: endpoint { };
-+                       /* no remote-endpoint, this endpoint is pointed at */
-                 };
-         };
- };
+> few ideas to consider:
+>=20
+> 1. Use named ports instead of address-cells/regs. Ie instead of
+> port@number schema, use port-function. This will allow to avoid ports
+> node and #address-cells, #size-cells, reg properties.
+> Additionally it should increase readability of the bindings.
+>=20
+> device {
+> 	port-dsi {
+> 		endpoint { ... };
+> 	};
+> 	port-rgb {
+> 		endpoint { ... };
+> 	};
+> };
+>=20
+> It is little bit like with gpios vs reset-gpios properties.
+> Another advantage I see we do not need do mappings of port numbers
+> to functions between dts, drivers and documentation.
 
-regards
-Philipp
+That makes it more difficult to iterate the ports. You need to go
+through all the nodes and use partial name matching. I think for things
+like gpios, the driver always gives the full name, so there's no need
+for any kind of partial matching or searching.
+
+It looks nice when just looking at the DT, though.
+
+ Tomi
+
+
+
+--bIh8W89TUIJmlfTSEVOve9C1uhLTE6eBG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJTHYXqAAoJEPo9qoy8lh71bKAP/0BLKbGZuSlBttYPCuKE2QgJ
+3TrJWDTyxsLwyHZlaRf7r8E9uP15CpGiYdu3ki1uxs3JAfp6ISNWodcCTdBxBcIi
+z7IzB9mrjkQ6pYBxA7wMqAbVBCyJSmQxBMUVkpC5ZhiFxXvphpzjDDCk/Ps4mAHu
+RGVBWSfoijqjOkZFzqqSCbjeiOgDYTcBI9Q1Vl7T+g6hurVJ9QHq8Fa3dUzDXFZ8
+zGqhVdSP5hDA9CpX5T4t668hx5LS6PQ9TZK/FAYTJ0FyJeELmuB3P+WOR4RwzcGA
+zyhWIIA4FvwvS+BdUO430mVFs7u2wf7PrEkNknxvHiXjsZOxp+DkaV1E6xpJhqxL
+IR4kMx5cW1bWMEoAz3op3xOFvtyzWQR4ycpAoQZirFl1AveyxW5xajGt1NYCKl03
+Hq3bsUBsrnAt4ttSgprQudq45bd5wVKJK0NailEuKPwynmXiNphUVVqHTgDIPh8k
+0oUw86GHYFXizJaDK3eLesiW1mnLL2SRs+fAf/5Pj4ZviBbKJHexgdcjR439xp0U
+64eIEN7wGMbyFpFR9R8lJBdTS+Wqrlo6r01EOb3tZMcn/fanJomx75OCFO09vD3z
+KFFWguKUx1GvL6q0Zx6vB/MYdifYnk1kQmt7dSW6vY630yRKJKHKj3rZ7Rvokycb
+k5/gKLojCM7fmZaItMmo
+=Yge3
+-----END PGP SIGNATURE-----
+
+--bIh8W89TUIJmlfTSEVOve9C1uhLTE6eBG--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
