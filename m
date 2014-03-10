@@ -1,27 +1,71 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH 0/7] tty: xuartps: Rebranding + DT documentation
-Date: Mon, 10 Mar 2014 14:36:50 -0700
-Message-ID: <f9be7124-0c1e-4529-8ae5-bfe32d98ebf0@VA3EHSMHS014.ehs.local>
-References: <1394486478-31037-1-git-send-email-soren.brinkmann@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1394486478-31037-1-git-send-email-soren.brinkmann@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Cc: Michal Simek <michal.simek@xilinx.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+From: Andy Gross <agross@codeaurora.org>
+Subject: [Patch v9 1/2] dmaengine: qcom_bam_dma: Add device tree binding
+Date: Mon, 10 Mar 2014 16:40:19 -0500
+Message-ID: <1394487622-1679-2-git-send-email-agross@codeaurora.org>
+References: <1394487622-1679-1-git-send-email-agross@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1394487622-1679-1-git-send-email-agross@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Andy Gross <agross@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-This seemed to have bounced for some recipients. I think the culprit wa=
-s
-a missing '>' in one of the email addresses.
-I'll send a v2 with the same patches and hopefully fixed recipients
-list. Sorry for the noise.
+Add device tree binding support for the QCOM BAM DMA driver.
 
-Does anybody have some script/better method to assemble the recipients
-list? C&P the output of the get_maintainers script is apparently error
-prone.
+Acked-by: Kumar Gala <galak@codeaurora.org>
+Signed-off-by: Andy Gross <agross@codeaurora.org>
+---
+ .../devicetree/bindings/dma/qcom_bam_dma.txt       |   41 ++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
 
-	S=C3=B6ren
+diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+new file mode 100644
+index 0000000..d75a9d7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+@@ -0,0 +1,41 @@
++QCOM BAM DMA controller
++
++Required properties:
++- compatible: must contain "qcom,bam-v1.4.0" for MSM8974
++- reg: Address range for DMA registers
++- interrupts: Should contain the one interrupt shared by all channels
++- #dma-cells: must be <1>, the cell in the dmas property of the client device
++  represents the channel number
++- clocks: required clock
++- clock-names: must contain "bam_clk" entry
++- qcom,ee : indicates the active Execution Environment identifier (0-7) used in
++  the secure world.
++
++Example:
++
++	uart-bam: dma@f9984000 = {
++		compatible = "qcom,bam-v1.4.0";
++		reg = <0xf9984000 0x15000>;
++		interrupts = <0 94 0>;
++		clocks = <&gcc GCC_BAM_DMA_AHB_CLK>;
++		clock-names = "bam_clk";
++		#dma-cells = <1>;
++		qcom,ee = <0>;
++	};
++
++DMA clients must use the format described in the dma.txt file, using a two cell
++specifier for each channel.
++
++Example:
++	serial@f991e000 {
++		compatible = "qcom,msm-uart";
++		reg = <0xf991e000 0x1000>
++			<0xf9944000 0x19000>;
++		interrupts = <0 108 0>;
++		clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>,
++			<&gcc GCC_BLSP1_AHB_CLK>;
++		clock-names = "core", "iface";
++
++		dmas = <&uart-bam 0>, <&uart-bam 1>;
++		dma-names = "rx", "tx";
++	};
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
