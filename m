@@ -1,66 +1,127 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: Device Tree Generator
-Date: Mon, 10 Mar 2014 11:19:57 +0100
-Message-ID: <531D91CD.2010300@monstr.eu>
-References: <CA+nFU8SUbmwmUN1SWVoh2VEEQ-r347v=GMfDJmAbMhn_yLQCRA@mail.gmail.com>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 3/9] Doc/DT: Add DT binding documentation for DVI Connector
+Date: Mon, 10 Mar 2014 12:32:18 +0200
+Message-ID: <531D94B2.4040304@ti.com>
+References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>		<1393590016-9361-4-git-send-email-tomi.valkeinen@ti.com>		<20140228155937.GQ21483@n2100.arm.linux.org.uk>	<5310B567.7040605@ti.com>		<20140228162327.GT21483@n2100.arm.linux.org.uk>	<5316E31F.9050308@ti.com>	
+ <CAMuHMdWVSfKrudBhE7FW-ZWBvMOLWjrQZvn1qZUfRt_H+P7A2w@mail.gmail.com>	
+ <53183730.5060205@ti.com>
+ <1394201859.16309.14.camel@paszta.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="U82MC25JGtAubdlSCMAe6aX0jVJlqstla"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+nFU8SUbmwmUN1SWVoh2VEEQ-r347v=GMfDJmAbMhn_yLQCRA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?ISO-8859-1?Q?Marc_Mar=ED?= <marc.mari.barcelo-Iylbf7zvluZi+jfwTKn9+w@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============3665889406844472445=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1394201859.16309.14.camel@paszta.hi.pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Tomasz Figa <tomasz.figa@gmail.com>, DRI Development <dri-devel@lists.freedesktop.org>, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Rob Clark <robdclark@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel@ffwll.ch>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---U82MC25JGtAubdlSCMAe6aX0jVJlqstla
-Content-Type: text/plain; charset=ISO-8859-1
+--===============3665889406844472445==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="RkIoJepCQE6ohBv3vaGX65afdsqoIPTM5"
+
+--RkIoJepCQE6ohBv3vaGX65afdsqoIPTM5
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On 03/07/2014 07:57 PM, Marc Mar=ED wrote:
-> Hello everyone
+On 07/03/14 16:17, Philipp Zabel wrote:
+> Hi,
 >=20
-> In the context of Google Summer of Code project, I'm thinking to work
-> on a device-tree generator, starting at the Beagleboard platform.
+> Am Donnerstag, den 06.03.2014, 10:52 +0200 schrieb Tomi Valkeinen:
+
+>> analog;
+>> digital-single-link;
+>> digital-dual-link;
+>>
+>> My reasoning to the format I chose was basically that when a connector=
+
+>> supports 'digital', it contains TMDS clock and TMDS data for link 1.
+>> Adding dual link to that adds only TMDS data for link 2, so the second=
+
+>> data link is kind of an additional feature, marked with a flag.
+>>
+>> Not a very big argument, and I'm fine with other format suggestions.
 >=20
-> To define better the scope of this project, so it can be useful too
-> outside this specific platform, I would like to ask for your opinions
-> in necessary and good-to-have features.
+> I'd prefer the analog / digital / dual-link variant for aesthetic
+> reasons. But looking at other connector types, I wonder if this should
+> be generalized even more:
+>=20
+> For HDMI/DVI (digital) single-link means one clock pair and 3 TMDS data=
 
-FYI: Xilinx have device-tree generator which extract information
-from design tools.
+> pairs, dual-link means one clock pair and 6 data pairs.
+>=20
+> On LVDS connectors, there usually are one clock pair and three (18-bit)=
 
-Thanks,
-Michal
+> or four (24-bit) LVDS data pairs, in dual channel configuration two
+> clock pairs and 6 or 8 data pairs are used.
+>=20
+> For DisplayPort there is no separate clock pair, but 1 to 4 data pairs,=
 
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+> and MIPI DSI again has one clock pair and a one or more data pairs.
+>=20
+> There are already optional endpoint configuration properties
+> 'data-lanes' and 'clock-lanes' for MIPI CSI-2 defined in
+> Documentation/devicetree/bindings/media/video-interfaces.txt.
+> Could/should this be aligned with the same?
+
+Hmm. Well, at least for HDMI and DP we anyway need the connector type,
+which tells the form factor, and it also tells the TMDS details. So, we
+could define the lanes in a common way, but we'd still need extra
+information.
+
+For MIPI DSI and (I believe) LVDS, we don't need connectors. Connectors,
+as described in this binding, are meant for standard hotpluggable
+connectors to which you can connect any device that has that same connect=
+or.
+
+ Tomi
 
 
 
---U82MC25JGtAubdlSCMAe6aX0jVJlqstla
+--RkIoJepCQE6ohBv3vaGX65afdsqoIPTM5
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
+Version: GnuPG v1.4.14 (GNU/Linux)
 Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iEYEARECAAYFAlMdkc0ACgkQykllyylKDCEI/gCeLZFjkRcgErQRJeVxx9jd7Idn
-DgsAn2dXmU6RvKzv3fSuWub0LqQouOFB
-=m1tS
+iQIcBAEBAgAGBQJTHZSyAAoJEPo9qoy8lh712lQP/Rd9QLxZRb2ZfEebjDG+ViQR
+8ylNpWziWniwoDltBFYF70eQ+KmMi5RUoU01/DjargjDCWnlOK7Rc/zCRn3p2L/w
+FSE/aKV13p5kASmnQq7V9LvpvXCjzNbwPX7PBSYsRuGbHLVRFXHY+ImYaRzBuVDP
+TdFjvtVsTYqyywrAVRYLZH3vSiu+P4ukugMjfbTbs4wn0aqier/2Jvlj3/MqqhL7
+2FUkh8qec9Sf1Ii/2jhJAR+fo7qS4JGjlMp6bsR7f3C1S/0MQPhWXhoR9BSaZfuE
+E4yJSDGWvcwjbpufw6rSTIKPcV1gk29s3TaWhBHkH1fiUSLV32voa/2o2r7KkSW/
+gCcwPSnKJz7VRN41GvmT8q/bIFYY4939S+1KUhB+Vaz5MqnKwVO+39ZVNKB1ulYU
+BLXVdEZJeRPLXwstzvVDevOZ+WJR7rKLEFIpvxuDmZwsu/t5ac7fGR2xwmH4ApUZ
+Ja4XTBJMR3H0cBqSCWE9HUBeL/FcwKXRwCDhKiM+aa8i34Qa8YRhf2fokHxxB1JB
+4p9IeY68HjgfOwqgvF08hKOyEN6fpkIf6NIEdTZRTjbK5A2bvVHmB0Rrexijg+Sv
+dErub6AOckHvy9AofyZcgpCYbdHqVuXfkTHftRSHp68UmACLeU0yhD/sq+ccy2et
+SN74aQUZUw8sKWwGfQE9
+=sJHC
 -----END PGP SIGNATURE-----
 
---U82MC25JGtAubdlSCMAe6aX0jVJlqstla--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--RkIoJepCQE6ohBv3vaGX65afdsqoIPTM5--
+
+
+--===============3665889406844472445==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============3665889406844472445==--
