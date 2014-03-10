@@ -1,52 +1,57 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 1/8] ARM: dts: dra7: Initialize USB_DPLL
-Date: Mon, 10 Mar 2014 14:49:21 +0200
-Message-ID: <1394455761-19226-1-git-send-email-rogerq@ti.com>
-References: <1394197751-28984-2-git-send-email-rogerq@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC] Serial port aliases in DT
+Date: Mon, 10 Mar 2014 13:57:23 +0100
+Message-ID: <2488692.p5nEA6pWSY@wuerfel>
+References: <5448979.WQPtOb56tW@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1394197751-28984-2-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: balbi-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <5448979.WQPtOb56tW@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>
 List-Id: devicetree@vger.kernel.org
 
-USB_DPLL must be initialized and locked at boot so that
-USB modules can work.
+On Monday 10 March 2014 12:59:03 Laurent Pinchart wrote:
+> 
+> The SoC includes 8 serial ports. They are all disabled in the SoC .dtsi, and 
+> enabled selectively by board DT files. As not all serial ports are available 
+> on all boards, the question was whether to add aliases for all ports (in the 
+> .dtsi in this case) like
+> 
+>          serial0 = &scif0;
+>          serial1 = &scif1;
+>          serial2 = &scif2;
+>          serial3 = &scif3;
+>          serial4 = &scif4;
+>          serial5 = &scif5;
+>          serial6 = &scif6;
+>          serial7 = &scif7;
+> 
+> or to just add aliases for the enabled ports (in the board DT file) like
+> 
+>          serial0 = &scif2;
+>          serial1 = &scif3;
+> 
+> Note the numbering in the latter case: as the board doesn't use serial ports 0 
+> and 1, hardware ports 2 and 3 become logical ports 0 and 1.
+> 
+> I considered that having Linux create ttySC0 and ttySC1 devices for the first 
+> two ports of the board, regardless of which hardware ports are used, is 
+> simpler from a user point of view (it allows sharing the same inittab settings 
+> for the console serial port across several boards for instance). I'd 
+> appreciate feedback on that.
 
-Program USB_DLL_M2 output to half rate as well.
+I think the traditional interpretation is that we want to use the aliases
+to reflect the device names in the OS. This however comes back to the more
+general issue of serial port device naming: Linux traditionally uses separate
+names per driver (e.g. ttySC0 instead of ttyS0).
 
-Patch depends on
-https://www.mail-archive.com/linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg101300.html
+There has been discussion in the past about changing this to let all drivers
+use the same namespace, but it's not yet clear to me how we'd do this in a
+100% backwards compatible way. Maybe it's best left to udev to figure out
+the driver independent name, but then we definitely should use the alias
+for that name.
 
-CC: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-CC: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/dra7.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 597979b..f376923 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -815,3 +815,11 @@
- };
- 
- /include/ "dra7xx-clocks.dtsi"
-+
-+&dpll_usb_ck {
-+        default-rate = <960000000>;
-+};
-+
-+&dpll_usb_m2_ck {
-+	default-rate = <480000000>;
-+};
--- 
-1.8.3.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
