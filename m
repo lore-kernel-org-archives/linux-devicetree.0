@@ -1,65 +1,87 @@
-From: David Laight <David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org>
-Subject: RE: rfc: checkpatch logical line continuations (was IBM Akebono:
- Add support for a new PHY interface to the IBM emac driver)
-Date: Mon, 10 Mar 2014 09:53:41 +0000
-Message-ID: <063D6719AE5E284EB5DD2968C1650D6D0F6D8E55@AcuExch.aculab.com>
-References: <1394077948-8395-1-git-send-email-alistair@popple.id.au>
- <1394077948-8395-3-git-send-email-alistair@popple.id.au>
- <20140307.154142.488351276799532264.davem@davemloft.net>
- <1394226164.16156.96.camel@joe-AO722> <20140307213017.GA18769@cloud>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core
+ to drivers/of
+Date: Mon, 10 Mar 2014 12:18:20 +0200
+Message-ID: <531D916C.2010903@ti.com>
+References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> < CAL_Jsq+U9zU1i+STLHMBjY5BeEP6djYnJVE5X1ix-D2q_zWztQ@mail.gmail.com> < 20140217181451.7EB7FC4044D@trevor.secretlab.ca> <20140218070624.GP17250@ pengutronix.de> <20140218162627.32BA4C40517@trevor.secretlab.ca> < 1393263389.3091.82.camel@pizza.hi.pengutronix.de> <20140226110114. CF2C7C40A89@trevor.secretlab.ca> <1393426129.3248.64.camel@paszta.hi. pengutronix.de> <20140307170550.1DFB2C40A0D@trevor.secretlab.ca> <531AF1E8. 50606@ti.com> <20140308114115.BB08EC40612@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140307213017.GA18769@cloud>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "'josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org'" <josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org" <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Dan Carpenter <error27-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Randy Dunlap <randy.dunlap-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="m9agE5FH5X00TA97e9K7BvgiWLaTKpLWn"
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20140308114115.BB08EC40612@trevor.secretlab.ca>
+Sender: linux-media-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org
-> On Fri, Mar 07, 2014 at 01:02:44PM -0800, Joe Perches wrote:
-> > On Fri, 2014-03-07 at 15:41 -0500, David Miller wrote:
-> > > From: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
-> > > Date: Thu,  6 Mar 2014 14:52:25 +1100
-> > >
-> > > > +	out_be32(dev->reg, in_be32(dev->reg) | WKUP_ETH_RGMIIEN
-> > > > +		 | WKUP_ETH_TX_OE | WKUP_ETH_RX_IE);
-> > >
-> > > When an expression spans multiple lines, the lines should end with
-> > > operators rather than begin with them.
-> >
-> > That's not in CodingStyle currently.
-> 
-> It's also not even remotely consistent across existing kernel code, and
-> it isn't obvious that there's a general developer consensus on the
-> "right" way to write it.
+--m9agE5FH5X00TA97e9K7BvgiWLaTKpLWn
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-My personal preference (which counts for nothing here) is to put
-the operators at the start of the continuation like in order to
-make it more obvious that it is a continuation.
+On 08/03/14 13:41, Grant Likely wrote:
 
-The netdev rules are particularly problematical for code like:
-        if (tst(foo, foo2, foo3, ...) && ....... &&
-                tst2(......) && tst3()) {
-                baz(....);
-where a scan read of the LHS gives the wrong logic.
+>> Ok. If we go for single directional link, the question is then: which
+>> way? And is the direction different for display and camera, which are
+>> kind of reflections of each other?
+>=20
+> In general I would recommend choosing whichever device you would
+> sensibly think of as a master. In the camera case I would choose the
+> camera controller node instead of the camera itself, and in the display=
 
-At least we don't have a coding style that allows very long lnes
-an puts } and { on their own lines - leading to:
-                ...
-        }
-        while (foo(...) && bar(...) && ..... /* very long line falls off screen */
-        {
-                int x;
-Is that the top or bottom of a loop?
+> case I would choose the display controller instead of the panel. The
+> binding author needs to choose what she things makes the most sense, bu=
+t
+> drivers can still use if it it turns out to be 'backwards'
 
-	David
+I would perhaps choose the same approach, but at the same time I think
+it's all but clear. The display controller doesn't control the panel any
+more than a DMA controller controls, say, the display controller.
+
+In fact, in earlier versions of OMAP DSS DT support I had a simpler port
+description, and in that I had the panel as the master (i.e. link from
+panel to dispc) because the panel driver uses the display controller's
+features to provide the panel device a data stream.
+
+And even with the current OMAP DSS DT version, which uses the v4l2 style
+ports/endpoints, the driver model is still the same, and only links
+towards upstream are used.
+
+So one reason I'm happy with the dual-linking is that I can easily
+follow the links from the downstream entities to upstream entities, and
+other people, who have different driver model, can easily do the opposite=
+=2E
+
+But I agree that single-linking is enough and this can be handled at
+runtime, even if it makes the code more complex. And perhaps requires
+extra data in the dts, to give the start points for the graph.
+
+ Tomi
 
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--m9agE5FH5X00TA97e9K7BvgiWLaTKpLWn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJTHZFsAAoJEPo9qoy8lh71TxgP/2VBc8qqL7gzkimED+kI2e+J
+tDApeGiLcqQEq7MW+Jgq9ssDxPUUY/zoIDEM2xzg1xO9fXVi++TziIXEGrp0vE/r
+JAYUT/YQ+St07VakXFrnBPAmvpIfph+mE841yr0gOXVyY+EJKFWK8RUwCCLBL6WJ
+jBTuy7gHUQpTcm+Y+gI2rUh12buP8i9kSaqTmI2qIEtV08GmDvQJm5d6u9uGKHk1
+kbzuV9IT3/3W2iBiiphIfjdeZ5n+qwxUbPNVy+fdzf8z9+mCl7cqwIQGV1fIdRK1
+wapu+JGFoqc36PdtGUiTImJDfkoInPfuyj2IEhEKzTSV2sDM2XYn0g0HNwuKvIro
+E9CEQXeqm2G0TUbmtxNPWgHGXu7GOkHa5PhfzYyQIBBoX3hQrS12bRkrsb3gmMM6
+tAMZQU/6Jkwjwl0qXXI8tH4p6nvxQbLIXxzkhpbv7Qh4Ue32C6AkD3I1zL043dCr
+N2qeWdNz7rVHRL0EFXnJQoem0n70R6SToCXreJiH4NWg9uiTcm1Ey0dc8Dc07cST
+ZV4Wxky+zDvnAIKXI7Aa26yHIdJXZPMIsr4carehvRfoLZVtoCoT4Fg7MnUDf2sz
+n91XgkSLqlPkzRcSiLf87DAzhuFEtGBE1tvYq924wGr6cPVGIt0ELPNKBofaMzra
+yQGD/2hoPCNBi/DVj9BW
+=leqH
+-----END PGP SIGNATURE-----
+
+--m9agE5FH5X00TA97e9K7BvgiWLaTKpLWn--
