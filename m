@@ -1,232 +1,112 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: [PATCH v2 46/48] adv7604: Add DT support
-Date: Tue, 11 Mar 2014 00:15:57 +0100
-Message-ID: <1394493359-14115-47-git-send-email-laurent.pinchart@ideasonboard.com>
-References: <1394493359-14115-1-git-send-email-laurent.pinchart@ideasonboard.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1394493359-14115-1-git-send-email-laurent.pinchart@ideasonboard.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org
+From: Vince Bridgers <vbridgers2013@gmail.com>
+Subject: [PATCH net-next v2 0/9] Altera Triple Speed Ethernet (TSE) Driver
+Date: Mon, 10 Mar 2014 18:14:28 -0500
+Message-ID: <1394493277-2105-1-git-send-email-vbridgers2013@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, vbridgers2013@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Parse the device tree node to populate platform data.
+V2: Address comments from initial RFC review.
+    - The driver files were broken up by major sections of functionality.
+      These include MSGDMA, SGDMA, Misc, and Main. 
+    - Add patch for MAINTAINERS file, add the maintainer for this submission
+    - Use 32-bit lower/upper physical address accessor functions so the driver
+      is 64-bit ready.
+    - Use standard bindings where applicable. Especially phy-addr, and change
+      "altr,rx-fifo-depth" to "rx-fifo-depth" and "altr,tx-fifo-depth" to 
+      "tx-fifo-depth".
+    - Add use of max-frame-size property
+    - Update bindings documents accordingly
+    - Correct interrupt handler to use budget parameter in the convential way
+    - Use macros consistently to define bit fields across files
+    - Correct include exclusion macro in altera_msgdmahw.h (typo)
+    - Remove use of barriers, these were not necessary since the DMA APIs
+      ensure memory & buffer consistency
+    - Remove use of netif_carrier_off in driver
+    - move probing of phy from the open function to the probe function
+    - use of_get_phy_mode instead of custom function
+    - Use the .data field in the device structure to obtain a pointer
+      to SGDMA or MSGDMA device specific properties and functions. 
+    - remove custom function to access devicetree since Altera specific
+      bindings requiring it's use have been deprecated in favor of 
+      standard bindings. 
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
- .../devicetree/bindings/media/i2c/adv7604.txt      | 56 +++++++++++++
- drivers/media/i2c/adv7604.c                        | 92 ++++++++++++++++++----
- 2 files changed, 134 insertions(+), 14 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/adv7604.txt
+The Altera TSE is a 10/100/1000 Mbps Ethernet soft IP component that can be
+configured and synthesized using Quartus, and programmed into Altera FPGAs.
+Two types of soft DMA IP components are supported by this driver - the Altera
+SGDMA and the MSGDMA. The MSGDMA DMA component is preferred over the SGDMA,
+since the SGDMA will be deprecated in favor of the MSGDMA. Software supporting
+both is provided for customers still using the SGDMA and to demonstrate how
+multiple types of DMA engines may be supported by the TSE driver in the event
+customers wish to develop their own custom soft DMA engine for particular
+applications.
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-new file mode 100644
-index 0000000..0845c50
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-@@ -0,0 +1,56 @@
-+* Analog Devices ADV7604/11 video decoder with HDMI receiver
-+
-+The ADV7604 and ADV7611 are multiformat video decoders with an integrated HDMI
-+receiver. The ADV7604 has four multiplexed HDMI inputs and one analog input,
-+and the ADV7611 has one HDMI input and no analog input.
-+
-+Required Properties:
-+
-+  - compatible: Must contain one of the following
-+    - "adi,adv7604" for the ADV7604
-+    - "adi,adv7611" for the ADV7611
-+
-+  - reg: I2C slave address
-+
-+  - hpd-gpios: References to the GPIOs that control the HDMI hot-plug
-+    detection pins, one per HDMI input. The active flag indicates the GPIO
-+    level that enables hot-plug detection.
-+
-+Optional Properties:
-+
-+  - reset-gpios: Reference to the GPIO connected to the device's reset pin.
-+
-+  - adi,default-input: Index of the input to be configured as default. Valid
-+    values are 0..5 for the ADV7604 and 0 for the ADV7611.
-+
-+  - adi,disable-power-down: Boolean property. When set forces the device to
-+    ignore the power-down pin. The property is valid for the ADV7604 only as
-+    the ADV7611 has no power-down pin.
-+
-+  - adi,disable-cable-reset: Boolean property. When set disables the HDMI
-+    receiver automatic reset when the HDMI cable is unplugged.
-+
-+Example:
-+
-+	hdmi_receiver@4c {
-+		compatible = "adi,adv7611";
-+		reg = <0x4c>;
-+
-+		reset-gpios = <&ioexp 0 GPIO_ACTIVE_LOW>;
-+		hpd-gpios = <&ioexp 2 GPIO_ACTIVE_HIGH>;
-+
-+		adi,default-input = <0>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+		};
-+		port@1 {
-+			reg = <1>;
-+			hdmi_in: endpoint {
-+				remote-endpoint = <&ccdc_in>;
-+			};
-+		};
-+	};
-diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
-index cce140c..de44213 100644
---- a/drivers/media/i2c/adv7604.c
-+++ b/drivers/media/i2c/adv7604.c
-@@ -2626,13 +2626,70 @@ static const struct adv7604_chip_info adv7604_chip_info[] = {
- 	},
- };
- 
-+static struct i2c_device_id adv7604_i2c_id[] = {
-+	{ "adv7604", (kernel_ulong_t)&adv7604_chip_info[ADV7604] },
-+	{ "adv7611", (kernel_ulong_t)&adv7604_chip_info[ADV7611] },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, adv7604_i2c_id);
-+
-+static struct of_device_id adv7604_of_id[] = {
-+	{ .compatible = "adi,adv7604", .data = &adv7604_chip_info[ADV7604] },
-+	{ .compatible = "adi,adv7611", .data = &adv7604_chip_info[ADV7611] },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, adv7604_of_id);
-+
-+static int adv7604_parse_dt(struct adv7604_state *state)
-+{
-+	struct device_node *np;
-+	int ret;
-+
-+	np = state->i2c_clients[ADV7604_PAGE_IO]->dev.of_node;
-+
-+	state->pdata.disable_pwrdnb =
-+		of_property_read_bool(np, "adi,disable-power-down");
-+	state->pdata.disable_cable_det_rst =
-+		of_property_read_bool(np, "adi,disable-cable-reset");
-+
-+	ret = of_property_read_u32(np, "adi,default-input",
-+				   &state->pdata.default_input);
-+	if (ret < 0)
-+		state->pdata.default_input = -1;
-+
-+	/* Disable the interrupt for now as no DT-based board uses it. */
-+	state->pdata.int1_config = ADV7604_INT1_CONFIG_DISABLED;
-+
-+	/* Use the default I2C addresses. */
-+	state->pdata.i2c_addresses[ADV7604_PAGE_AVLINK] = 0x42;
-+	state->pdata.i2c_addresses[ADV7604_PAGE_CEC] = 0x40;
-+	state->pdata.i2c_addresses[ADV7604_PAGE_INFOFRAME] = 0x3e;
-+	state->pdata.i2c_addresses[ADV7604_PAGE_ESDP] = 0x38;
-+	state->pdata.i2c_addresses[ADV7604_PAGE_DPP] = 0x3c;
-+	state->pdata.i2c_addresses[ADV7604_PAGE_AFE] = 0x26;
-+	state->pdata.i2c_addresses[ADV7604_PAGE_REP] = 0x32;
-+	state->pdata.i2c_addresses[ADV7604_PAGE_EDID] = 0x36;
-+	state->pdata.i2c_addresses[ADV7604_PAGE_HDMI] = 0x34;
-+	state->pdata.i2c_addresses[ADV7604_PAGE_TEST] = 0x30;
-+	state->pdata.i2c_addresses[ADV7604_PAGE_CP] = 0x22;
-+	state->pdata.i2c_addresses[ADV7604_PAGE_VDP] = 0x24;
-+
-+	/* HACK: Hardcode the remaining platform data fields. */
-+	state->pdata.blank_data = 1;
-+	state->pdata.op_656_range = 1;
-+	state->pdata.alt_data_sat = 1;
-+	state->pdata.insert_av_codes = 1;
-+	state->pdata.op_format_mode_sel = ADV7604_OP_FORMAT_MODE0;
-+
-+	return 0;
-+}
-+
- static int adv7604_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
- {
- 	static const struct v4l2_dv_timings cea640x480 =
- 		V4L2_DV_BT_CEA_640X480P59_94;
- 	struct adv7604_state *state;
--	struct adv7604_platform_data *pdata = client->dev.platform_data;
- 	struct v4l2_ctrl_handler *hdl;
- 	struct v4l2_subdev *sd;
- 	unsigned int i;
-@@ -2651,19 +2708,32 @@ static int adv7604_probe(struct i2c_client *client,
- 		return -ENOMEM;
- 	}
- 
--	state->info = &adv7604_chip_info[id->driver_data];
- 	state->i2c_clients[ADV7604_PAGE_IO] = client;
- 
- 	/* initialize variables */
- 	state->restart_stdi_once = true;
- 	state->selected_input = ~0;
- 
--	/* platform data */
--	if (!pdata) {
-+	if (IS_ENABLED(CONFIG_OF) && client->dev.of_node) {
-+		const struct of_device_id *oid;
-+
-+		oid = of_match_node(adv7604_of_id, client->dev.of_node);
-+		state->info = oid->data;
-+
-+		err = adv7604_parse_dt(state);
-+		if (err < 0) {
-+			v4l_err(client, "DT parsing error\n");
-+			return err;
-+		}
-+	} else if (client->dev.platform_data) {
-+		struct adv7604_platform_data *pdata = client->dev.platform_data;
-+
-+		state->info = (const struct adv7604_chip_info *)id->driver_data;
-+		state->pdata = *pdata;
-+	} else {
- 		v4l_err(client, "No platform data!\n");
- 		return -ENODEV;
- 	}
--	state->pdata = *pdata;
- 
- 	/* Request GPIOs. */
- 	for (i = 0; i < state->info->num_dv_ports; ++i) {
-@@ -2762,7 +2832,7 @@ static int adv7604_probe(struct i2c_client *client,
- 			continue;
- 
- 		state->i2c_clients[i] =
--			adv7604_dummy_client(sd, pdata->i2c_addresses[i],
-+			adv7604_dummy_client(sd, state->pdata.i2c_addresses[i],
- 					     0xf2 + i);
- 		if (state->i2c_clients[i] == NULL) {
- 			err = -ENOMEM;
-@@ -2836,21 +2906,15 @@ static int adv7604_remove(struct i2c_client *client)
- 
- /* ----------------------------------------------------------------------- */
- 
--static struct i2c_device_id adv7604_id[] = {
--	{ "adv7604", ADV7604 },
--	{ "adv7611", ADV7611 },
--	{ }
--};
--MODULE_DEVICE_TABLE(i2c, adv7604_id);
--
- static struct i2c_driver adv7604_driver = {
- 	.driver = {
- 		.owner = THIS_MODULE,
- 		.name = "adv7604",
-+		.of_match_table = of_match_ptr(adv7604_of_id),
- 	},
- 	.probe = adv7604_probe,
- 	.remove = adv7604_remove,
--	.id_table = adv7604_id,
-+	.id_table = adv7604_i2c_id,
- };
- 
- module_i2c_driver(adv7604_driver);
+The design has been tested on Altera's Cyclone 4, 5, and Cyclone 5 SOC
+development kits using an ARM A9 processor and an Altera NIOS2 processor.
+Differences in CPU/DMA coherency management and address alignment are
+addressed by proper use of driver APIs and semantics.
+
+Patch 1/9 is for the MAINTAINERS modifications. Patch 2/9 is for the changes
+required to the drivers/net/ethernet build files. Patches 3 and 4 are for the 
+driver bindings and documentation. The remainder of the patches are for the
+Altera Triple Speed Ethernet driver broken up by logical function, such as
+build files, SGDMA, MSGDMA, Miscellaneous files, and the main driver source 
+and header file. 
+
+Thank you for the constructive comments so far, and I look forward to
+completing this process.
+
+Vince 
+
+Vince Bridgers (9):
+  MAINTAINERS: Add entry for Altera Triple Speed Ethernet Driver
+  net: ethernet: Change Ethernet Makefile and Kconfig for Altera TSE
+    driver
+  dts: Add bindings for the Altera Triple Speed Ethernet driver
+  Documentation: networking: Add Altera Ethernet (TSE) Documentation
+  Altera TSE: Add Altera Ethernet Driver Makefile and Kconfig
+  Altera TSE: Add Altera Ethernet Driver MSGDMA File Components
+  Altera TSE: Add Altera Ethernet Driver SGDMA file components
+  Altera TSE: Add Miscellaneous Files for Altera Ethernet Driver
+  Altera TSE: Add main and header file for Altera Ethernet Driver
+
+ .../devicetree/bindings/net/altera_tse.txt         |  112 ++
+ Documentation/networking/altera_tse.txt            |  119 ++
+ MAINTAINERS                                        |    7 +
+ drivers/net/ethernet/Kconfig                       |    1 +
+ drivers/net/ethernet/Makefile                      |    1 +
+ drivers/net/ethernet/altera/Kconfig                |    8 +
+ drivers/net/ethernet/altera/Makefile               |    7 +
+ drivers/net/ethernet/altera/altera_msgdma.c        |  203 +++
+ drivers/net/ethernet/altera/altera_msgdma.h        |   34 +
+ drivers/net/ethernet/altera/altera_msgdmahw.h      |  167 +++
+ drivers/net/ethernet/altera/altera_sgdma.c         |  532 +++++++
+ drivers/net/ethernet/altera/altera_sgdma.h         |   35 +
+ drivers/net/ethernet/altera/altera_sgdmahw.h       |  124 ++
+ drivers/net/ethernet/altera/altera_tse.h           |  486 ++++++
+ drivers/net/ethernet/altera/altera_tse_ethtool.c   |  226 +++
+ drivers/net/ethernet/altera/altera_tse_main.c      | 1546 ++++++++++++++++++++
+ drivers/net/ethernet/altera/altera_utils.c         |   44 +
+ drivers/net/ethernet/altera/altera_utils.h         |   27 +
+ 18 files changed, 3679 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/altera_tse.txt
+ create mode 100644 Documentation/networking/altera_tse.txt
+ create mode 100644 drivers/net/ethernet/altera/Kconfig
+ create mode 100644 drivers/net/ethernet/altera/Makefile
+ create mode 100644 drivers/net/ethernet/altera/altera_msgdma.c
+ create mode 100644 drivers/net/ethernet/altera/altera_msgdma.h
+ create mode 100644 drivers/net/ethernet/altera/altera_msgdmahw.h
+ create mode 100644 drivers/net/ethernet/altera/altera_sgdma.c
+ create mode 100644 drivers/net/ethernet/altera/altera_sgdma.h
+ create mode 100644 drivers/net/ethernet/altera/altera_sgdmahw.h
+ create mode 100644 drivers/net/ethernet/altera/altera_tse.h
+ create mode 100644 drivers/net/ethernet/altera/altera_tse_ethtool.c
+ create mode 100644 drivers/net/ethernet/altera/altera_tse_main.c
+ create mode 100644 drivers/net/ethernet/altera/altera_utils.c
+ create mode 100644 drivers/net/ethernet/altera/altera_utils.h
+
 -- 
-1.8.3.2
+1.7.9.5
+
