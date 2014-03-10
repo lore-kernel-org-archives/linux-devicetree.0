@@ -1,76 +1,90 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: [PATCH RFC 2/2] ASoC: simple-card: Take snd_soc_of_parse_daifmt() change in to account
-Date: Mon, 10 Mar 2014 13:28:38 +0200
-Message-ID: <17e88098b67762008c06709afa5933212d94715d.1394450178.git.jsarha@ti.com>
-References: <cover.1394450178.git.jsarha@ti.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v6 2/8] Documentation: of: Document graph bindings
+Date: Mon, 10 Mar 2014 12:37:42 +0100
+Message-ID: <2406124.RniJY1n1Xd@avalon>
+References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de> <20140307182717.67596C40B43@trevor.secretlab.ca> <1394443690.7380.10.camel@paszta.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <cover.1394450178.git.jsarha@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: peter.ujfalusi@ti.com, broonie@kernel.org, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, detheridge@ti.com, Jyri Sarha <jsarha@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1394443690.7380.10.camel-+qGW7pzALmz7o/J7KWpOmN53zsg1cpMQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-snd_soc_of_parse_daifmt() needs to know if it is parsing a cpu-dai node.
+Hi Philipp,
 
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
----
- sound/soc/generic/simple-card.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+On Monday 10 March 2014 10:28:10 Philipp Zabel wrote:
+> Hi Grant,
+> 
+> Am Freitag, den 07.03.2014, 18:27 +0000 schrieb Grant Likely:
+> > On Wed,  5 Mar 2014 10:20:36 +0100, Philipp Zabel wrote:
+> > > The device tree graph bindings as used by V4L2 and documented in
+> > > Documentation/device-tree/bindings/media/video-interfaces.txt contain
+> > > generic parts that are not media specific but could be useful for any
+> > > subsystem with data flow between multiple devices. This document
+> > > describes the generic bindings.
+> > > 
+> > > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > 
+> > See my comments on the previous version. My concerns are the handling of
+> > the optional 'ports' node and the usage of reverse links.
+> 
+> would this change address your concern about the reverse links? As the
+> preexisting video-interfaces.txt bindings mandate the reverse links, I
+> worry about introducing a second, subtly different binding. It should be
+> noted somewhere in video-interfaces.txt that the reverse links are
+> deprecated for the but still supported by the code for backwards
+> compatibility.
 
-diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
-index 7cabcc5..7cbbf44 100644
---- a/sound/soc/generic/simple-card.c
-+++ b/sound/soc/generic/simple-card.c
-@@ -87,7 +87,8 @@ asoc_simple_card_sub_parse_of(struct device_node *np,
- 			      unsigned int daifmt,
- 			      struct asoc_simple_dai *dai,
- 			      const struct device_node **p_node,
--			      const char **name)
-+			      const char **name,
-+			      bool is_cpu_dai_node)
- {
- 	struct device_node *node;
- 	struct clk *clk;
-@@ -117,7 +118,7 @@ asoc_simple_card_sub_parse_of(struct device_node *np,
- 	 * bitclock-master,    frame-master
- 	 * and specific "format" if it has
- 	 */
--	dai->fmt = snd_soc_of_parse_daifmt(np, NULL);
-+	dai->fmt = snd_soc_of_parse_daifmt(np, NULL, is_cpu_dai_node);
- 	dai->fmt |= daifmt;
- 
- 	/*
-@@ -165,7 +166,7 @@ static int asoc_simple_card_parse_of(struct device_node *node,
- 	snd_soc_of_parse_card_name(&priv->snd_card, "simple-audio-card,name");
- 
- 	/* get CPU/CODEC common format via simple-audio-card,format */
--	priv->daifmt = snd_soc_of_parse_daifmt(node, "simple-audio-card,") &
-+	priv->daifmt = snd_soc_of_parse_daifmt(node, "simple-audio-card,", 0) &
- 		(SND_SOC_DAIFMT_FORMAT_MASK | SND_SOC_DAIFMT_INV_MASK);
- 
- 	/* off-codec widgets */
-@@ -191,7 +192,8 @@ static int asoc_simple_card_parse_of(struct device_node *node,
- 		ret = asoc_simple_card_sub_parse_of(np, priv->daifmt,
- 						  &priv->cpu_dai,
- 						  &dai_link->cpu_of_node,
--						  &dai_link->cpu_dai_name);
-+						  &dai_link->cpu_dai_name,
-+						  true);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -202,7 +204,8 @@ static int asoc_simple_card_parse_of(struct device_node *node,
- 		ret = asoc_simple_card_sub_parse_of(np, priv->daifmt,
- 						  &priv->codec_dai,
- 						  &dai_link->codec_of_node,
--						  &dai_link->codec_dai_name);
-+						  &dai_link->codec_dai_name,
-+						  false);
- 	if (ret < 0)
- 		return ret;
- 
+I'm very much against removing the reverse links. Without them the graph will 
+become much more complex to parse. You can try to convince me, but for now I'm 
+afraid it's a NACK.
+
+> diff --git a/Documentation/devicetree/bindings/graph.txt
+> b/Documentation/devicetree/bindings/graph.txt index 1a69c07..eb6cae5 100644
+> --- a/Documentation/devicetree/bindings/graph.txt
+> +++ b/Documentation/devicetree/bindings/graph.txt
+> @@ -87,12 +87,13 @@ device {
+>  Links between endpoints
+>  -----------------------
+> 
+> -Each endpoint should contain a 'remote-endpoint' phandle property that
+> points -to the corresponding endpoint in the port of the remote device. In
+> turn, the -remote endpoint should contain a 'remote-endpoint' property. If
+> it has one, -it must not point to another than the local endpoint. Two
+> endpoints with their -'remote-endpoint' phandles pointing at each other
+> form a link between the -containing ports.
+> +Two endpoint nodes form a link between the two ports they are contained in
+> +if one contains a 'remote-endpoint' phandle property, pointing to the other
+> +endpoint. The endpoint pointed to should not contain a 'remote-endpoint'
+> +property itself. Which direction the phandle should point in depends on
+> the +device type. In general, links should be pointing outwards from
+> central +devices that provide DMA memory interfaces, such as display
+> controller, +video capture interface, or serial digital audio interface
+> cores.
+> 
+>  device-1 {
+>          port {
+> @@ -104,8 +105,8 @@ device-1 {
+> 
+>  device-2 {
+>          port {
+> -                device_2_input: endpoint {
+> -                        remote-endpoint = <&device_1_output>;
+> +                device_2_input: endpoint { };
+> +                       /* no remote-endpoint, this endpoint is pointed at
+> */ };
+>          };
+>  };
+
 -- 
-1.7.9.5
+Regards,
 
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
