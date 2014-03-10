@@ -1,71 +1,232 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [RFC PATCH] edac: zynq: Added EDAC support for zynq ddr ecc
- controller
-Date: Mon, 10 Mar 2014 15:32:25 -0700
-Message-ID: <fa35006e-055d-4ef2-9b65-a0f8cc6a0c8f@AM1EHSMHS016.ehs.local>
-References: <4adb2b4b-2ad6-42b9-929e-cc062f817245@TX2EHSMHS021.ehs.local>
- <20140310105655.GH14999@e106331-lin.cambridge.arm.com>
- <531DA900.5060202@monstr.eu>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <531DA900.5060202@monstr.eu>
-Sender: linux-doc-owner@vger.kernel.org
-To: Michal Simek <monstr@monstr.eu>
-Cc: Mark Rutland <mark.rutland@arm.com>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, "dougthompson@xmission.com" <dougthompson@xmission.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "kpc528@gmail.com" <kpc528@gmail.com>, "kalluripunnaiahchoudary@gmail.com" <kalluripunnaiahchoudary@gmail.com>punnai
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: [PATCH v2 46/48] adv7604: Add DT support
+Date: Tue, 11 Mar 2014 00:15:57 +0100
+Message-ID: <1394493359-14115-47-git-send-email-laurent.pinchart@ideasonboard.com>
+References: <1394493359-14115-1-git-send-email-laurent.pinchart@ideasonboard.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1394493359-14115-1-git-send-email-laurent.pinchart@ideasonboard.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2014-03-10 at 12:58PM +0100, Michal Simek wrote:
-> On 03/10/2014 11:56 AM, Mark Rutland wrote:
-> > On Sun, Mar 09, 2014 at 02:57:16AM +0000, Punnaiah Choudary Kalluri=
- wrote:
-> >> Added EDAC support for reporting the ecc errors of zynq ddr contro=
-ller.
-> >> The ddr ecc controller corrects single bit errors and detects doub=
-le bit
-> >> errors
-> >>
-> >> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
-> >> ---
-> >>  .../devicetree/bindings/edac/zynq_edac.txt         |   18 +
-> >>  drivers/edac/Kconfig                               |    7 +
-> >>  drivers/edac/Makefile                              |    1 +
-> >>  drivers/edac/zynq_edac.c                           |  613 +++++++=
-+++++++++++++
-> >>  4 files changed, 639 insertions(+), 0 deletions(-)
-> >>  create mode 100644 Documentation/devicetree/bindings/edac/zynq_ed=
-ac.txt
-> >>  create mode 100644 drivers/edac/zynq_edac.c
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/edac/zynq_edac.txt =
-b/Documentation/devicetree/bindings/edac/zynq_edac.txt
-> >> new file mode 100644
-> >> index 0000000..c21ff83
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/edac/zynq_edac.txt
-> >> @@ -0,0 +1,18 @@
-> >> +Zynq EDAC driver, it does reports the DDR ECC single bit errors t=
-hat are
-> >> +corrected and double bit ecc errors that are detected by the DDR =
-ECC controller.
-> >> +ECC support for DDR is available in half-bus width(16 bit) config=
-uration only.
-> >> +
-> >> +Required properties:
-> >> +- compatible: Should be "xlnx,ps7-ddrc" or "xlnx,ps7-ddrc-1.00.a"
-> >=20
-> > Is this an or or a xor?
->=20
-> Compatible string should be just xlnx,zynq-ddrc-1.00.a.
-> Nothing with ps7.
+Parse the device tree node to populate platform data.
 
-Isn't this vendor IP? IMHO, this should be something completely
-different. Or if you want some Zynq-specific compat string it should
-refer to an actual version string associated with Zynq. 1.00.a is not,
-AFAIK.
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+ .../devicetree/bindings/media/i2c/adv7604.txt      | 56 +++++++++++++
+ drivers/media/i2c/adv7604.c                        | 92 ++++++++++++++++++----
+ 2 files changed, 134 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/adv7604.txt
 
-	S=C3=B6ren
-
-
+diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+new file mode 100644
+index 0000000..0845c50
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+@@ -0,0 +1,56 @@
++* Analog Devices ADV7604/11 video decoder with HDMI receiver
++
++The ADV7604 and ADV7611 are multiformat video decoders with an integrated HDMI
++receiver. The ADV7604 has four multiplexed HDMI inputs and one analog input,
++and the ADV7611 has one HDMI input and no analog input.
++
++Required Properties:
++
++  - compatible: Must contain one of the following
++    - "adi,adv7604" for the ADV7604
++    - "adi,adv7611" for the ADV7611
++
++  - reg: I2C slave address
++
++  - hpd-gpios: References to the GPIOs that control the HDMI hot-plug
++    detection pins, one per HDMI input. The active flag indicates the GPIO
++    level that enables hot-plug detection.
++
++Optional Properties:
++
++  - reset-gpios: Reference to the GPIO connected to the device's reset pin.
++
++  - adi,default-input: Index of the input to be configured as default. Valid
++    values are 0..5 for the ADV7604 and 0 for the ADV7611.
++
++  - adi,disable-power-down: Boolean property. When set forces the device to
++    ignore the power-down pin. The property is valid for the ADV7604 only as
++    the ADV7611 has no power-down pin.
++
++  - adi,disable-cable-reset: Boolean property. When set disables the HDMI
++    receiver automatic reset when the HDMI cable is unplugged.
++
++Example:
++
++	hdmi_receiver@4c {
++		compatible = "adi,adv7611";
++		reg = <0x4c>;
++
++		reset-gpios = <&ioexp 0 GPIO_ACTIVE_LOW>;
++		hpd-gpios = <&ioexp 2 GPIO_ACTIVE_HIGH>;
++
++		adi,default-input = <0>;
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++		};
++		port@1 {
++			reg = <1>;
++			hdmi_in: endpoint {
++				remote-endpoint = <&ccdc_in>;
++			};
++		};
++	};
+diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
+index cce140c..de44213 100644
+--- a/drivers/media/i2c/adv7604.c
++++ b/drivers/media/i2c/adv7604.c
+@@ -2626,13 +2626,70 @@ static const struct adv7604_chip_info adv7604_chip_info[] = {
+ 	},
+ };
+ 
++static struct i2c_device_id adv7604_i2c_id[] = {
++	{ "adv7604", (kernel_ulong_t)&adv7604_chip_info[ADV7604] },
++	{ "adv7611", (kernel_ulong_t)&adv7604_chip_info[ADV7611] },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, adv7604_i2c_id);
++
++static struct of_device_id adv7604_of_id[] = {
++	{ .compatible = "adi,adv7604", .data = &adv7604_chip_info[ADV7604] },
++	{ .compatible = "adi,adv7611", .data = &adv7604_chip_info[ADV7611] },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, adv7604_of_id);
++
++static int adv7604_parse_dt(struct adv7604_state *state)
++{
++	struct device_node *np;
++	int ret;
++
++	np = state->i2c_clients[ADV7604_PAGE_IO]->dev.of_node;
++
++	state->pdata.disable_pwrdnb =
++		of_property_read_bool(np, "adi,disable-power-down");
++	state->pdata.disable_cable_det_rst =
++		of_property_read_bool(np, "adi,disable-cable-reset");
++
++	ret = of_property_read_u32(np, "adi,default-input",
++				   &state->pdata.default_input);
++	if (ret < 0)
++		state->pdata.default_input = -1;
++
++	/* Disable the interrupt for now as no DT-based board uses it. */
++	state->pdata.int1_config = ADV7604_INT1_CONFIG_DISABLED;
++
++	/* Use the default I2C addresses. */
++	state->pdata.i2c_addresses[ADV7604_PAGE_AVLINK] = 0x42;
++	state->pdata.i2c_addresses[ADV7604_PAGE_CEC] = 0x40;
++	state->pdata.i2c_addresses[ADV7604_PAGE_INFOFRAME] = 0x3e;
++	state->pdata.i2c_addresses[ADV7604_PAGE_ESDP] = 0x38;
++	state->pdata.i2c_addresses[ADV7604_PAGE_DPP] = 0x3c;
++	state->pdata.i2c_addresses[ADV7604_PAGE_AFE] = 0x26;
++	state->pdata.i2c_addresses[ADV7604_PAGE_REP] = 0x32;
++	state->pdata.i2c_addresses[ADV7604_PAGE_EDID] = 0x36;
++	state->pdata.i2c_addresses[ADV7604_PAGE_HDMI] = 0x34;
++	state->pdata.i2c_addresses[ADV7604_PAGE_TEST] = 0x30;
++	state->pdata.i2c_addresses[ADV7604_PAGE_CP] = 0x22;
++	state->pdata.i2c_addresses[ADV7604_PAGE_VDP] = 0x24;
++
++	/* HACK: Hardcode the remaining platform data fields. */
++	state->pdata.blank_data = 1;
++	state->pdata.op_656_range = 1;
++	state->pdata.alt_data_sat = 1;
++	state->pdata.insert_av_codes = 1;
++	state->pdata.op_format_mode_sel = ADV7604_OP_FORMAT_MODE0;
++
++	return 0;
++}
++
+ static int adv7604_probe(struct i2c_client *client,
+ 			 const struct i2c_device_id *id)
+ {
+ 	static const struct v4l2_dv_timings cea640x480 =
+ 		V4L2_DV_BT_CEA_640X480P59_94;
+ 	struct adv7604_state *state;
+-	struct adv7604_platform_data *pdata = client->dev.platform_data;
+ 	struct v4l2_ctrl_handler *hdl;
+ 	struct v4l2_subdev *sd;
+ 	unsigned int i;
+@@ -2651,19 +2708,32 @@ static int adv7604_probe(struct i2c_client *client,
+ 		return -ENOMEM;
+ 	}
+ 
+-	state->info = &adv7604_chip_info[id->driver_data];
+ 	state->i2c_clients[ADV7604_PAGE_IO] = client;
+ 
+ 	/* initialize variables */
+ 	state->restart_stdi_once = true;
+ 	state->selected_input = ~0;
+ 
+-	/* platform data */
+-	if (!pdata) {
++	if (IS_ENABLED(CONFIG_OF) && client->dev.of_node) {
++		const struct of_device_id *oid;
++
++		oid = of_match_node(adv7604_of_id, client->dev.of_node);
++		state->info = oid->data;
++
++		err = adv7604_parse_dt(state);
++		if (err < 0) {
++			v4l_err(client, "DT parsing error\n");
++			return err;
++		}
++	} else if (client->dev.platform_data) {
++		struct adv7604_platform_data *pdata = client->dev.platform_data;
++
++		state->info = (const struct adv7604_chip_info *)id->driver_data;
++		state->pdata = *pdata;
++	} else {
+ 		v4l_err(client, "No platform data!\n");
+ 		return -ENODEV;
+ 	}
+-	state->pdata = *pdata;
+ 
+ 	/* Request GPIOs. */
+ 	for (i = 0; i < state->info->num_dv_ports; ++i) {
+@@ -2762,7 +2832,7 @@ static int adv7604_probe(struct i2c_client *client,
+ 			continue;
+ 
+ 		state->i2c_clients[i] =
+-			adv7604_dummy_client(sd, pdata->i2c_addresses[i],
++			adv7604_dummy_client(sd, state->pdata.i2c_addresses[i],
+ 					     0xf2 + i);
+ 		if (state->i2c_clients[i] == NULL) {
+ 			err = -ENOMEM;
+@@ -2836,21 +2906,15 @@ static int adv7604_remove(struct i2c_client *client)
+ 
+ /* ----------------------------------------------------------------------- */
+ 
+-static struct i2c_device_id adv7604_id[] = {
+-	{ "adv7604", ADV7604 },
+-	{ "adv7611", ADV7611 },
+-	{ }
+-};
+-MODULE_DEVICE_TABLE(i2c, adv7604_id);
+-
+ static struct i2c_driver adv7604_driver = {
+ 	.driver = {
+ 		.owner = THIS_MODULE,
+ 		.name = "adv7604",
++		.of_match_table = of_match_ptr(adv7604_of_id),
+ 	},
+ 	.probe = adv7604_probe,
+ 	.remove = adv7604_remove,
+-	.id_table = adv7604_id,
++	.id_table = adv7604_i2c_id,
+ };
+ 
+ module_i2c_driver(adv7604_driver);
+-- 
+1.8.3.2
