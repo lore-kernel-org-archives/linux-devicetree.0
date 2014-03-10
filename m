@@ -1,66 +1,92 @@
 From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 Subject: Re: [PATCH v4 1/3] [media] of: move graph helpers from drivers/media/v4l2-core
  to drivers/of
-Date: Mon, 10 Mar 2014 08:00:02 +0200
-Message-ID: <531D54E2.8030303@ti.com>
-References: <1393340304-19005-1-git-send-email-p.zabel@pengutronix.de> <20140307171804.EF245C40A32@trevor.secretlab.ca> <CA+gwMcfgKre8S4KHPvTVuAuz672aehGrN1UfFpwKAueTAcrMZQ@mail.gmail.com> <1536567.OYzyi25bjL@avalon>
+Date: Mon, 10 Mar 2014 08:34:54 +0200
+Message-ID: <531D5D0E.8000605@ti.com>
+References: <1393340304-19005-1-git-send-email-p.zabel@pengutronix.de> < 1393340304-19005-2-git-send-email-p.zabel@pengutronix.de> <20140226113729. A9D5AC40A89@trevor.secretlab.ca> <1393428297.3248.92.camel@paszta.hi. pengutronix.de> <20140307171804.EF245C40A32@trevor.secretlab.ca> <531AF4ED. 5020608@ti.com> <20140308122321.9D433C40612@trevor.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
 	protocol="application/pgp-signature";
-	boundary="DeQCUmhTJf3eaP0IppoJdqa9WWp4raOCE"
+	boundary="geFLiFodre9MAPFuUJV74UQT9Qala7crh"
 Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1536567.OYzyi25bjL@avalon>
+In-Reply-To: <20140308122321.9D433C40612@trevor.secretlab.ca>
 Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Philipp Zabel <philipp.zabel@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+To: Grant Likely <grant.likely@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Philipp Zabel <philipp.zabel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
---DeQCUmhTJf3eaP0IppoJdqa9WWp4raOCE
+--geFLiFodre9MAPFuUJV74UQT9Qala7crh
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-On 08/03/14 17:54, Laurent Pinchart wrote:
+On 08/03/14 14:23, Grant Likely wrote:
 
->> Sylwester suggested as an alternative, if I understood correctly, to
->> drop the endpoint node and instead keep the port:
+>>> That's fine. In that case the driver would specifically require the
+>>> endpoint to be that one node.... although the above looks a little we=
+ird
 >>
->>     device-a {
->>         implicit_output_ep: port {
->>             remote-endpoint =3D <&explicit_input_ep>;
->>         };
->>     };
->>
->>     device-b {
->>         port {
->>             explicit_input_ep: endpoint {
->>                 remote-endpoint =3D <&implicit_output_ep>;
->>             };
->>         };
->>     };
->>
->> This would have the advantage to reduce verbosity for devices with mul=
-tiple
->> ports that are only connected via one endport each, and you'd always h=
-ave
->> the connected ports in the device tree as 'port' nodes.
+>> The driver can't require that. It's up to the board designer to decide=
+
+>> how many endpoints are used. A driver may say that it has a single inp=
+ut
+>> port. But the number of endpoints for that port is up to the use case.=
+
 >=20
-> I like that idea. I would prefer making the 'port' nodes mandatory and =
-the=20
-> 'ports' and 'endpoint' nodes optional. Leaving the 'port' node out slig=
-htly=20
-> decreases readability in my opinion, but making the 'endpoint' node opt=
-ional=20
-> increases it. That's just my point of view though.
+> Come now, when you're writing a driver you know if it will ever be
+> possible to have more than one port. If that is the case then the
+> binding should be specifically laid out for that. If there will never b=
+e
+> multiple ports and the binding is unambiguous, then, and only then,
+> should the shortcut be used, and only the shortcut should be accepted.
 
-I, on the other hand, don't like it =3D). With that format, the
-remote-endpoint doesn't point to an EP, but a port. And you'll have
-endpoint's properties in a port node, among the port's properties.
+I was talking about endpoints, not ports. There's no unclarity about the
+number of ports, that comes directly from the hardware for that specific
+component. The number of endpoints, however, come from the board
+hardware. The driver writer cannot know that.
+
+>>> to me. I would recommend that if there are other non-port child nodes=
+
+>>> then the ports should still be encapsulated by a ports node.  The dev=
+ice
+>>> binding should not be ambiguous about which nodes are ports.
+>>
+>> Hmm, ambiguous in what way?
+>=20
+> Parsing the binding now consists of a ladder of 'ifs' that gives three
+> distinct different behaviours for no benefit. You don't want that in
+
+It considerably lessens the amount of text in the DT for many use cases,
+making it easier to write and maintain the dts files.
+
+> bindings because it makes it more difficult to get the parsing right in=
+
+> the first place, and to make sure that all users parse it in the same
+> way (Linux, U-Boot, BSD, etc). Bindings should be as absolutely simple
+> as possible.
+
+Well, yes, I agree there. This is not the simplest of bindings. I'd be
+more than happy if we would come up with simpler version of this, which
+would still allow us to have the same descriptive power.
+
+> Just to be clear, I have no problem with having the option in the
+> pattern, but the driver needs to be specific about what layout it
+> expects.
+
+If we forget the shortened endpoint format, I think it can be quite
+specific.
+
+A device has either one port, in which case it should require the
+'ports' node to be omitted, or the device has more than one port, in
+which case it should require 'ports' node.
+
+Note that the original v4l2 binding doc says that 'ports' is always
+optional.
 
  Tomi
 
 
 
---DeQCUmhTJf3eaP0IppoJdqa9WWp4raOCE
+--geFLiFodre9MAPFuUJV74UQT9Qala7crh
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
@@ -69,19 +95,19 @@ Content-Disposition: attachment; filename="signature.asc"
 Version: GnuPG v1.4.14 (GNU/Linux)
 Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iQIcBAEBAgAGBQJTHVTiAAoJEPo9qoy8lh71qmsP/R2b9WW0b8zK1ws3LrxX5baI
-pWob+wLoTEpUFnXtL6lWq4PFt93fKHnyIJl4TvV0P2qlxYg5Fh1rrX4pQaN3J1eE
-2K6WxzPu/yQmWKsl1iiq9e140bBzWDkiCXsXIVYLtHK7TyZ0kXoT+yZVGGy+JZtd
-gSbS6+yqhUpsfOBaGHEdx4CQ/OIKIBERwmGtdM2cT/CtQpEvx5rcwtO2U33VpSDP
-jjmGTF1lqJWQXtwbnXgFKSGAswhW03RFgYxKlEQYwB0srVY3cxf9pyFxsRaIBV/H
-FBgSwVBilYP8u59WnhRLAD7ECftmcc0Lac0R0eKoweIbUOFaAscbSPXngVf839Jl
-gj/6fMV6V6xYlxmJl6cIk5WX9yHz29zu1n4Fw5HBeF7iXP6Htg+ATnk5SJKEYtc7
-VsVji9DpqUmB/hkUl4QSJsy4zT7pGKg1PQ/h0+qmdLMrFOWJLPy4doVnYxIF1nKE
-rNmCGXGfiArPSNUYTTy7Q26joMR9o6V3P8M1HKT5KVjoBg7OR7mBK7pLREUHDGKI
-UBCqUAbHYUotPFE8EOUiLzEGFmflMzFw0x1n2PYQQ4pdvnhWPmZE/hnntlFIEgp1
-rPF1C6OQTh8nje6iTMbMhQ+Bc9RfEsrNSgeHSP+k2MTR/HEXpLUFwxMbcEDJm9eX
-j/buX9gTycsHqihIukW7
-=+/pa
+iQIcBAEBAgAGBQJTHV0OAAoJEPo9qoy8lh71HDgQAKM2fQOi/eKLuN2FOb5ogNqK
+I4aWC5M4WkeBaba5U2g0lPESu2g0x9hrOvWQOFgd/GpKctRZI1DmB4Rc+rSAv/UN
+0Cbzm+KB+RnGNfjaHmEzBNQDcv+a20I/jCLDWOcwJIm5kSW2gByBXSdsyXHuJpYP
+uMbbZa3Yql1+FF3Y+5FIf5NpFpVlrXI2tMTPHZw/5gAwFSe2laFIcBslRAsz8wwL
+4n3CkpJayQJSUG26wNsIdJnceCZ+QHEAWSSYXxyQCZ4rDG2x6+czUX4Dq3Jd46V+
+F6Hx2tuQIBZZsiZVLVDbCJvnAcT60WwvA0F8Vzd5FCl+Mn8GA4GXXot22HhBLHd2
+roUaSbMtd1iV51AfEw9d1St/QRKD0aiVL6xabAtSHvBUIuk2ICFUoOviG82Rl0cS
+JtNVcCjbE9Q/mXxoiXWDgyGVbaFjKU5e6CxiBT6Xf6zJOV5w6NRgw3IsC8ITLe+F
+RdSLKYCCr1+u31njpuZ37jST+MtkNr1UI9ocCQHT1SncYDFrHNbxabTfwN/f77S0
+gDADeDi6Y5LKlv8tnZLXp70gQuY/+BJonvyIDZkLMcUv/0n9771yWD0IFPtYl1kK
+bByZnSSuPPAy8zkwRRr2AOybasaLQ7xtVm/qouS+ydoAq3Rx8z/TZxVbJUDGMbik
+pbR/OIiW3ZDUpIjWk2+d
+=2Hm0
 -----END PGP SIGNATURE-----
 
---DeQCUmhTJf3eaP0IppoJdqa9WWp4raOCE--
+--geFLiFodre9MAPFuUJV74UQT9Qala7crh--
