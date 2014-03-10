@@ -1,141 +1,80 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] of: add missing major vendors
-Date: Mon, 10 Mar 2014 10:49:29 -0500
-Message-ID: <CAL_JsqJugFL6ZbRyZhC7hOWU+rSowzXB84=LjPso8jJ_2ohMHw@mail.gmail.com>
-References: <1394195917-25166-1-git-send-email-florian.vaussard@epfl.ch>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 1/7] pci: Introduce pci_register_io_range() helper
+ function.
+Date: Mon, 10 Mar 2014 16:57:42 +0100
+Message-ID: <1852456.hNkOzqVe7y@wuerfel>
+References: <1393948204-11555-1-git-send-email-Liviu.Dudau@arm.com>
+ <201403070124.13139.arnd@arndb.de>
+ <20140310144519.GU6457@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1394195917-25166-1-git-send-email-florian.vaussard@epfl.ch>
-Sender: linux-doc-owner@vger.kernel.org
-To: Florian Vaussard <florian.vaussard@epfl.ch>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140310144519.GU6457@e106497-lin.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, Tanmay Inamdar <tinamdar@apm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 7, 2014 at 6:38 AM, Florian Vaussard
-<florian.vaussard@epfl.ch> wrote:
-> Looking at the current vendor strings used in the kernel's .dts/.dtsi
-> files, some vendors are used a high number of times without
-> being documented. Document the ones that are used more than 10 times.
->
-> Note: a few inconsistencies were found, and thus not documented.
-> Here is the list:
-> - mrvl: duplicates "marvell"
+On Monday 10 March 2014 14:45:19 Liviu Dudau wrote:
+> 
+> So, if I understand you correctly, you would prefer to fail here and hence stop the
+> parsing for the x86, rather than pretending everything is OK and going through the
+> motions?
 
-There was a whole thread on this change to marvell. We don't want mrvl
-documented.
+Yes, on x86 it is clearly a bug if we end up calling this function.
 
-> - st-ericsson: duplicates "ste" _and_ "stericsson"
+> That was not my original thinking when I've introduced this function here. The main
+> purpose of the function is to help the correct translation of IO addresses in
+> pci_address_to_pio(). As Jason has explained very nicely, we have 3 types of
+> architectures here that we try to support:
+>   - the ones that have separate IO address space (x86)
+>   - the ones that have 1:1 mapping between physical IO addresses and logical ports
 
-We should make it clear which one is preferred. If there are a bunch
-of cases, then we should document and mark deprecated. If there are
-only a few, I would leave undocumented.
+Still not convinced this second one actually exists.
 
-> - pci8086: seems to be a unfortunate alias for "intel"
-> - pnpPNP: used on PowerPC?
+>   - the architectures that memory map the IO addresses in virtual address space
+>     and then translate the logical addresses into virtual based on a given offset.
+> 
+> For the first two types we don't want to do anything special. Architectures that
+> fall in the last category will have to provide their own version of this function,
+> with the arm64 version being generic enough to be used as de facto?
 
-I believe these are special cases where the vendor and product IDs are
-used to form the compatible strings.
+The page flags might be different across architectures: arm32 currently uses
+MT_DEVICE, which only exists on arm32 and derived architectures (unicore32,
+arm64).
 
->
-> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+> But I can see your point of view as well. I just don't know if that is good enough
+> for powerpc and microblaze. With the way things are in my patch, they should be able
+> to switch to of_create_pci_host_bridge() easily*, with your suggestion they will
+> have to provide their implementation for pci_register_io_range().
 
-Thanks for fixing these and in particular my failure to document Calxeda. :)
+I think there would still be a lot to do have powerpc switch over to
+of_create_pci_host_bridge(), the more likely thing to happen is to have
+that architecture implement its own copy that calls the same internal helpers
+and does some more things that we may not want on other architectures.
 
-Applied for 3.15.
+Microblaze can probably be changed to use of_create_pci_host_bridge()
+and need no custom code at all, it should need only a subset of what
+we need for arm64.
 
-Rob
+> We really need to get another architecture converted. If there are no other takers I
+> will make a stab once the current push towards upstreaming AArch64 hardware support
+> slows down.
 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 40ce2df..b5e7485 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -3,6 +3,7 @@ Device tree binding vendor prefix registry.  Keep list in alphabetical order.
->  This isn't an exhaustive list, but you should add new prefixes to it before
->  using them to avoid name-space collisions.
->
-> +abilis Abilis Systems
->  active-semi    Active-Semi International Inc
->  ad     Avionic Design GmbH
->  adi    Analog Devices, Inc.
-> @@ -11,14 +12,17 @@ ak  Asahi Kasei Corp.
->  allwinner      Allwinner Technology Co., Ltd.
->  altr   Altera Corp.
->  amcc   Applied Micro Circuits Corporation (APM, formally AMCC)
-> +amd    Advanced Micro Devices (AMD), Inc.
->  amstaos        AMS-Taos Inc.
->  apm    Applied Micro Circuits Corporation (APM)
->  arm    ARM Ltd.
-> +armadeus       ARMadeus Systems SARL
->  atmel  Atmel Corporation
->  auo    AU Optronics Corporation
->  avago  Avago Technologies
->  bosch  Bosch Sensortec GmbH
->  brcm   Broadcom Corporation
-> +calxeda        Calxeda
->  capella        Capella Microsystems, Inc
->  cavium Cavium, Inc.
->  cdns   Cadence Design Systems Inc.
-> @@ -26,8 +30,10 @@ chrp Common Hardware Reference Platform
->  chunghwa       Chunghwa Picture Tubes Ltd.
->  cirrus Cirrus Logic, Inc.
->  cortina        Cortina Systems, Inc.
-> +crystalfontz   Crystalfontz America, Inc.
->  dallas Maxim Integrated Products (formerly Dallas Semiconductor)
->  davicom        DAVICOM Semiconductor, Inc.
-> +dlink  D-Link Systems, Inc.
->  denx   Denx Software Engineering
->  edt    Emerging Display Technologies
->  emmicro        EM Microelectronic
-> @@ -37,7 +43,9 @@ est   ESTeem Wireless Modems
->  fsl    Freescale Semiconductor
->  GEFanuc        GE Fanuc Intelligent Platforms Embedded Systems, Inc.
->  gef    GE Fanuc Intelligent Platforms Embedded Systems, Inc.
-> +globalscale    Globalscale Technologies, Inc.
->  gmt    Global Mixed-mode Technology, Inc.
-> +google Google, Inc.
->  gumstix        Gumstix, Inc.
->  haoyu  Haoyu Microelectronic Co. Ltd.
->  hisilicon      Hisilicon Limited.
-> @@ -46,9 +54,12 @@ hp   Hewlett Packard
->  ibm    International Business Machines (IBM)
->  idt    Integrated Device Technologies, Inc.
->  img    Imagination Technologies Ltd.
-> +intel  Intel Corporation
->  intercontrol   Inter Control Group
->  isl    Intersil
->  karo   Ka-Ro electronics GmbH
-> +lacie  LaCie
-> +lantiq Lantiq Semiconductor
->  lg     LG Corporation
->  linux  Linux-specific binding
->  lsi    LSI Corp. (LSI Logic)
-> @@ -56,12 +67,16 @@ marvell     Marvell Technology Group Ltd.
->  maxim  Maxim Integrated Products
->  microchip      Microchip Technology Inc.
->  mosaixtech     Mosaix Technologies, Inc.
-> +moxa   Moxa
->  national       National Semiconductor
->  neonode                Neonode Inc.
-> +netgear        NETGEAR
->  nintendo       Nintendo
-> +nokia  Nokia
->  nvidia NVIDIA
->  nxp    NXP Semiconductors
->  onnn   ON Semiconductor Corp.
-> +opencores      OpenCores.org
->  panasonic      Panasonic Corporation
->  phytec PHYTEC Messtechnik GmbH
->  picochip       Picochip Ltd
-> @@ -94,4 +109,5 @@ via  VIA Technologies, Inc.
->  winbond Winbond Electronics corp.
->  wlf    Wolfson Microelectronics
->  wm     Wondermedia Technologies, Inc.
-> +xes    Extreme Engineering Solutions (X-ES)
->  xlnx   Xilinx
-> --
-> 1.8.5.3
->
+Moving over microblaze I think would be a good start. It has rather
+specific requirements since there is only one host driver, but then again
+that PCI host implementation might be shared with zynq (or synthesizable
+there). I also wonder whether it's actually related to the X-gene PCI,
+since I know some of the ppc4xx use Xilinx PCI and X-gene is also
+based on those.
+
+	Arnd
