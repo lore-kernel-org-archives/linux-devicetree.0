@@ -1,66 +1,64 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCHv2 0/9] Convert twl4030-madc to IIO API and add DT support
-Date: Mon, 10 Mar 2014 10:43:56 +0000
-Message-ID: <20140310104356.GL14976@lee--X1>
-References: <1393702365-26429-1-git-send-email-sre@debian.org>
- <1393970751-18157-1-git-send-email-sre@debian.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH] edac: zynq: Added EDAC support for zynq ddr ecc
+ controller
+Date: Mon, 10 Mar 2014 10:56:56 +0000
+Message-ID: <20140310105655.GH14999@e106331-lin.cambridge.arm.com>
+References: <4adb2b4b-2ad6-42b9-929e-cc062f817245@TX2EHSMHS021.ehs.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1393970751-18157-1-git-send-email-sre@debian.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: Sebastian Reichel <sre@ring0.de>, Marek Belisko <marek@goldelico.com>, Jonathan Cameron <jic23@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org
+In-Reply-To: <4adb2b4b-2ad6-42b9-929e-cc062f817245-8XeO8fnFoNFnw48GICbVzrjjLBE8jN/0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org" <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "kalluripunnaiahchoudary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <kalluripunnaiahchoudary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> TODO:
->  * Wait for feedback from DT binding maintainers
->  * Wait for feedback from Marek Belisko, who is testing the
->    changes with twl4030-madc-battery driver on GTA04
+On Sun, Mar 09, 2014 at 02:57:16AM +0000, Punnaiah Choudary Kalluri wrote:
+> Added EDAC support for reporting the ecc errors of zynq ddr controller.
+> The ddr ecc controller corrects single bit errors and detects double bit
+> errors
+> 
+> Signed-off-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/edac/zynq_edac.txt         |   18 +
+>  drivers/edac/Kconfig                               |    7 +
+>  drivers/edac/Makefile                              |    1 +
+>  drivers/edac/zynq_edac.c                           |  613 ++++++++++++++++++++
+>  4 files changed, 639 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/edac/zynq_edac.txt
+>  create mode 100644 drivers/edac/zynq_edac.c
+> 
+> diff --git a/Documentation/devicetree/bindings/edac/zynq_edac.txt b/Documentation/devicetree/bindings/edac/zynq_edac.txt
+> new file mode 100644
+> index 0000000..c21ff83
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/edac/zynq_edac.txt
+> @@ -0,0 +1,18 @@
+> +Zynq EDAC driver, it does reports the DDR ECC single bit errors that are
+> +corrected and double bit ecc errors that are detected by the DDR ECC controller.
+> +ECC support for DDR is available in half-bus width(16 bit) configuration only.
+> +
+> +Required properties:
+> +- compatible: Should be "xlnx,ps7-ddrc" or "xlnx,ps7-ddrc-1.00.a"
 
-This patch-set has stalled.
+Is this an or or a xor?
 
-Can you send a fresh patch-set (not linked to the old ones, as the
-thread is getting very complicated again) complete with all the Acks
-you have received?
+For the former case, which is the most general, which can be used as a
+fallback?
 
-> [0] https://lkml.org/lkml/2014/3/1/105
->=20
-> -- Sebastian
->=20
-> Sebastian Reichel (9):
->   mfd: twl4030-madc: Use managed resources
->   mfd: twl4030-madc: Add DT support and convert to IIO framework
->   mfd: twl4030-madc: Cleanup driver
->   mfd: twl-core: Add twl_i2c_read/write_u16
->   mfd: twl4030-madc: Use twl_i2c_read/write_u16 for 16 bit registers
->   Documentation: DT: Document twl4030-madc binding
->   mfd: twl4030-madc: Move driver to drivers/iio/adc
->   iio: documentation: Add ABI documentation for *_mean_raw
->   iio: inkern: add iio_read_channel_average_raw
->=20
->  Documentation/ABI/testing/sysfs-bus-iio            |   8 +
->  .../devicetree/bindings/iio/adc/twl4030-madc.txt   |  24 ++
->  drivers/iio/adc/Kconfig                            |  10 +
->  drivers/iio/adc/Makefile                           |   1 +
->  drivers/{mfd =3D> iio/adc}/twl4030-madc.c            | 299 +++++++++=
-++++--------
->  drivers/iio/inkern.c                               |  18 ++
->  drivers/mfd/Kconfig                                |  10 -
->  drivers/mfd/Makefile                               |   1 -
->  include/linux/i2c/twl.h                            |  12 +
->  include/linux/i2c/twl4030-madc.h                   |   2 +-
->  include/linux/iio/consumer.h                       |  13 +
->  11 files changed, 274 insertions(+), 124 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/twl4030=
--madc.txt
->  rename drivers/{mfd =3D> iio/adc}/twl4030-madc.c (75%)
->=20
+How about something like:
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+- compatible: should contain:
+  * "xlnx,ps7-ddrc-1.00.a" for <DESCRIPTION HERE>
+  * "xlnx,ps7-ddrc" for any compatible variant
+
+Is there any need at all for the "xlnx,ps7-ddrc" string? The driver
+doesn't care about it.
+
+Cheers,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
