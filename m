@@ -1,134 +1,166 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core to drivers/of
-Date: Mon, 10 Mar 2014 14:58:15 +0000
-Message-ID: <20140310145815.17595C405FA@trevor.secretlab.ca>
-References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> < 20140226110114.CF2C7C40A89@trevor.secretlab.ca> <531D916C.2010903@ti.com> < 5427810.BUKJ3iUXnO@avalon>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <5427810.BUKJ3iUXnO@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v5] can: xilinx CAN controller support.
+Date: Mon, 10 Mar 2014 16:04:51 +0100
+Message-ID: <531DD493.3030306@monstr.eu>
+References: <5254bfec-c6fd-4681-a34d-706d51e60fbb@VA3EHSMHS004.ehs.local> <531DD2C4.5060109@pengutronix.de>
+Reply-To: monstr@monstr.eu
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="28123aDbw4E4PW0pDFFffk3LqkX9oJfrI"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <531DD2C4.5060109@pengutronix.de>
+Sender: linux-can-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Kedareswara rao Appana <appana.durga.rao@xilinx.com>, wg@grandegger.com, michal.simek@xilinx.com, grant.likely@linaro.org, robh+dt@kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kedareswara rao Appana <appanad@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Mar 2014 14:52:53 +0100, Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
-> On Monday 10 March 2014 12:18:20 Tomi Valkeinen wrote:
-> > On 08/03/14 13:41, Grant Likely wrote:
-> > >> Ok. If we go for single directional link, the question is then: which
-> > >> way? And is the direction different for display and camera, which are
-> > >> kind of reflections of each other?
-> > > 
-> > > In general I would recommend choosing whichever device you would
-> > > sensibly think of as a master. In the camera case I would choose the
-> > > camera controller node instead of the camera itself, and in the display
-> > > case I would choose the display controller instead of the panel. The
-> > > binding author needs to choose what she things makes the most sense, but
-> > > drivers can still use if it it turns out to be 'backwards'
-> > 
-> > I would perhaps choose the same approach, but at the same time I think
-> > it's all but clear. The display controller doesn't control the panel any
-> > more than a DMA controller controls, say, the display controller.
-> > 
-> > In fact, in earlier versions of OMAP DSS DT support I had a simpler port
-> > description, and in that I had the panel as the master (i.e. link from
-> > panel to dispc) because the panel driver uses the display controller's
-> > features to provide the panel device a data stream.
-> > 
-> > And even with the current OMAP DSS DT version, which uses the v4l2 style
-> > ports/endpoints, the driver model is still the same, and only links
-> > towards upstream are used.
-> > 
-> > So one reason I'm happy with the dual-linking is that I can easily
-> > follow the links from the downstream entities to upstream entities, and
-> > other people, who have different driver model, can easily do the opposite.
-> > 
-> > But I agree that single-linking is enough and this can be handled at
-> > runtime, even if it makes the code more complex. And perhaps requires
-> > extra data in the dts, to give the start points for the graph.
-> 
-> In theory unidirectional links in DT are indeed enough. However, let's not 
-> forget the following.
-> 
-> - There's no such thing as single start points for graphs. Sure, in some 
-> simple cases the graph will have a single start point, but that's not a 
-> generic rule. For instance the camera graphs 
-> http://ideasonboard.org/media/omap3isp.ps and 
-> http://ideasonboard.org/media/eyecam.ps have two camera sensors, and thus two 
-> starting points from a data flow point of view. And if you want a better 
-> understanding of how complex media graphs can become, have a look at 
-> http://ideasonboard.org/media/vsp1.0.pdf (that's a real world example, albeit 
-> all connections are internal to the SoC in that particular case, and don't 
-> need to be described in DT).
-> 
-> - There's also no such thing as a master device that can just point to slave 
-> devices. Once again simple cases exist where that model could work, but real 
-> world examples exist of complex pipelines with dozens of elements all 
-> implemented by a separate IP core and handled by separate drivers, forming a 
-> graph with long chains and branches. We thus need real graph bindings.
-> 
-> - Finally, having no backlinks in DT would make the software implementation 
-> very complex. We need to be able to walk the graph in a generic way without 
-> having any of the IP core drivers loaded, and without any specific starting 
-> point. We would thus need to parse the complete DT tree, looking at all nodes 
-> and trying to find out whether they're part of the graph we're trying to walk. 
-> The complexity of the operation would be at best quadratic to the number of 
-> nodes in the whole DT and to the number of nodes in the graph.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--28123aDbw4E4PW0pDFFffk3LqkX9oJfrI
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Not really. To being with, you cannot determine any meaning of a node
-across the tree (aside from it being an endpoint) without also
-understanding the binding that the node is a part of. That means you
-need to have something matching against the compatible string on both
-ends of the linkage. For instance:
+Hi Marc,
 
-panel {
-	compatible = "acme,lvds-panel";
-	lvds-port: port {
-	};
-};
+On 03/10/2014 03:57 PM, Marc Kleine-Budde wrote:
+> On 03/04/2014 02:20 PM, Kedareswara rao Appana wrote:
+>> This patch adds xilinx CAN controller support.
+>> This driver supports both ZYNQ CANPS and Soft IP
+>> AXI CAN controller.
+>>
+>> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+>> ---
+>> This patch is rebased on the 3.14 rc5 kernel.
+>> Changes for v5:
+>> - Updated the driver with the review comments.
+>> - Remove the check for the tx fifo full interrupt condition
+>>   form Tx interrupt routine as we are checking it in the _xmit
+>>   routine.
+>> - Clearing the txok interrupt in the tx interrupt routine for
+>>   every Tx can frame.
+>> Changes for v4:
+>> - Added check for the tx fifo full interrupt condition in
+>>   Tx interrupt routine.
+>> - Added be iohelper functions.
+>> - Moved the clock enable/disable to probe/remove because of
+>>   Added big endian support for AXI CAN controller case(reading
+>>   a register during probe for that we need to enable clock).
+>> Changes for v3:
+>> - Updated the driver with the review comments.
+>> - Modified the tranmit logic as per Marc suggestion.
+>> - Enabling the clock when the interface is up to reduce the
+>>   Power consumption.
+>> Changes for v2:
+>> - Updated with the review comments.
+>> - Removed the unnecessary debug prints.
+>> - include tx,rx fifo depths in ZYNQ CANPS case also.
+>> ---
+>>  .../devicetree/bindings/net/can/xilinx_can.txt     |   45 +
+>>  drivers/net/can/Kconfig                            |    7 +
+>>  drivers/net/can/Makefile                           |    1 +
+>>  drivers/net/can/xilinx_can.c                       | 1195 +++++++++++=
++++++++++
+>>  4 files changed, 1248 insertions(+), 0 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/net/can/xilinx_c=
+an.txt
+>>  create mode 100644 drivers/net/can/xilinx_can.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/can/xilinx_can.txt =
+b/Documentation/devicetree/bindings/net/can/xilinx_can.txt
+>> new file mode 100644
+>> index 0000000..0e57103
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/can/xilinx_can.txt
+>> @@ -0,0 +1,45 @@
+>> +Xilinx Axi CAN/Zynq CANPS controller Device Tree Bindings
+>> +---------------------------------------------------------
+>> +
+>> +Required properties:
+>> +- compatible		: Should be "xlnx,zynq-can-1.00.a" for Zynq CAN
+>> +			  controllers and "xlnx,axi-can-1.00.a" for Axi CAN
+>> +			  controllers.
+>> +- reg			: Physical base address and size of the Axi CAN/Zynq
+>> +			  CANPS registers map.
+>> +- interrupts		: Property with a value describing the interrupt
+>> +			  number.
+>> +- interrupt-parent	: Must be core interrupt controller
+>> +- clock-names		: List of input clock names - "ref_clk", "aper_clk"
+>> +			  (See clock bindings for details. Two clocks are
+>> +			   required for Zynq CAN. For Axi CAN
+>> +			   case it is one(ref_clk)).
+>> +- clocks		: Clock phandles (see clock bindings for details).
+>> +- tx-fifo-depth		: Can Tx fifo depth.
+>> +- rx-fifo-depth		: Can Rx fifo depth.
+>> +
+>> +
+>> +Example:
+>> +
+>> +For Zynq CANPS Dts file:
+>> +	zynq_can_0: zynq-can@e0008000 {
+>> +			compatible =3D "xlnx,zynq-can-1.00.a";
+>> +			clocks =3D <&clkc 19>, <&clkc 36>;
+>> +			clock-names =3D "ref_clk", "aper_clk";
+>> +			reg =3D <0xe0008000 0x1000>;
+>> +			interrupts =3D <0 28 4>;
+>> +			interrupt-parent =3D <&intc>;
+>> +			tx-fifo-depth =3D <0x40>;
+>> +			rx-fifo-depth =3D <0x40>;
+>> +		};
+>> +For Axi CAN Dts file:
+>> +	axi_can_0: axi-can@40000000 {
+>> +			compatible =3D "xlnx,axi-can-1.00.a";
+>> +			clocks =3D <&clkc 0>;
+>> +			clock-names =3D "ref_clk" ;
+>> +			reg =3D <0x40000000 0x10000>;
+>> +			interrupt-parent =3D <&intc>;
+>> +			interrupts =3D <0 59 1>;
+>> +			tx-fifo-depth =3D <0x40>;
+>> +			rx-fifo-depth =3D <0x40>;
+>> +		};
+>> diff --git a/drivers/net/can/Kconfig b/drivers/net/can/Kconfig
+>> index 9e7d95d..b180239 100644
+>> --- a/drivers/net/can/Kconfig
+>> +++ b/drivers/net/can/Kconfig
+>> @@ -125,6 +125,13 @@ config CAN_GRCAN
+>>  	  endian syntheses of the cores would need some modifications on
+>>  	  the hardware level to work.
+>> =20
+>> +config CAN_XILINXCAN
+>> +	tristate "Xilinx CAN"
+>> +	depends on ARCH_ZYNQ || MICROBLAZE
+>=20
+> Is Zynq multiarch already?
 
-display-controller {
-	compatible = "encom,video";
-	port {
-		remote-endpoint = <&lvds-port>;
-	};
-};
+let me just answer this. Zynq is device with hardcoded dual arm cortex-a9=
+ + some IPs
+and programmable logic.
+It means if you add Microblaze to PL or another CPU then you get multi ar=
+chitecture setup.
 
-In the above example, the encom,video driver has absolutely zero
-information about what the acme,lvds-panel binding actually implements.
-There needs to be both a driver for the "acme,lvds-panel" binding and
-one for the "encom,video" binding (even if the acme,lvds-panel binding
-is very thin and defers the functionality to the video controller).
+Thanks,
+Michal
 
-What you want here is the drivers to register each side of the
-connection. That could be modeled with something like the following
-(pseudocode):
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
 
-struct of_endpoint {
-	struct list_head list;
-	struct device_node *ep_node;
-	void *context;
-	void (*cb)(struct of_endpoint *ep, void *data);
-}
 
-int of_register_port(struct device *node, void (*cb)(struct of_endpoint *ep, void *data), void *data)
-{
-	struct of_endpoint *ep = kzalloc(sizeof(*ep), GFP_KERNEL);
 
-	ep->ep_node = node;
-	ep->data = data;
-	ep->callback = cb;
+--28123aDbw4E4PW0pDFFffk3LqkX9oJfrI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-	/* store the endpoint to a list */
-	/* check if the endpoint has a remote-endpoint link */
-		/* If so, then link the two together and call the
-		 * callbacks */
-}
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-That's neither expensive or complicated.
+iEYEARECAAYFAlMd1JQACgkQykllyylKDCEt9gCfUBv4Gadu/W/Y8D3k3145gW7H
+kKYAoI7QyXZKjK9hbvwovkpq3EyWYr0a
+=vpLT
+-----END PGP SIGNATURE-----
 
-Originally I suggested walking the whole tree multiple times, but as
-mentioned that doesn't scale, and as I thought about the above it isn't
-even a valid thing to do. Everything has to be driven by drivers, so
-even if the backlinks are there, nothing can be done with the link until
-the other side goes through enumeration independently.
-
-g.
+--28123aDbw4E4PW0pDFFffk3LqkX9oJfrI--
