@@ -1,7 +1,7 @@
 From: Sebastian Reichel <sre@debian.org>
-Subject: [PATCHv3 6/9] Documentation: DT: Document twl4030-madc binding
-Date: Mon, 10 Mar 2014 18:25:26 +0100
-Message-ID: <1394472329-15485-7-git-send-email-sre@debian.org>
+Subject: [PATCHv3 9/9] iio: inkern: add iio_read_channel_average_raw
+Date: Mon, 10 Mar 2014 18:25:29 +0100
+Message-ID: <1394472329-15485-10-git-send-email-sre@debian.org>
 References: <1394472329-15485-1-git-send-email-sre@debian.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1394472329-15485-1-git-send-email-sre@debian.org>
@@ -10,44 +10,67 @@ To: Sebastian Reichel <sre@ring0.de>, Marek Belisko <marek@goldelico.com>, Jonat
 Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Sebastian Reichel <sre@debian.org>
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree binding documentation for twl4030-madc
-analog digital converter.
+Add iio_read_channel_average_raw to support reading
+averaged raw values in consumer drivers.
 
 Signed-off-by: Sebastian Reichel <sre@debian.org>
 ---
- .../devicetree/bindings/iio/adc/twl4030-madc.txt   | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/twl4030-madc.txt
+ drivers/iio/inkern.c         | 18 ++++++++++++++++++
+ include/linux/iio/consumer.h | 13 +++++++++++++
+ 2 files changed, 31 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/twl4030-madc.txt b/Documentation/devicetree/bindings/iio/adc/twl4030-madc.txt
-new file mode 100644
-index 0000000..6bdd214
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/twl4030-madc.txt
-@@ -0,0 +1,24 @@
-+* TWL4030 Monitoring Analog to Digital Converter (MADC)
+diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
+index 0cf5f8e..adeba5a 100644
+--- a/drivers/iio/inkern.c
++++ b/drivers/iio/inkern.c
+@@ -443,6 +443,24 @@ err_unlock:
+ }
+ EXPORT_SYMBOL_GPL(iio_read_channel_raw);
+ 
++int iio_read_channel_average_raw(struct iio_channel *chan, int *val)
++{
++	int ret;
 +
-+The MADC subsystem in the TWL4030 consists of a 10-bit ADC
-+combined with a 16-input analog multiplexer.
++	mutex_lock(&chan->indio_dev->info_exist_lock);
++	if (chan->indio_dev->info == NULL) {
++		ret = -ENODEV;
++		goto err_unlock;
++	}
 +
-+Required properties:
-+  - compatible: Should contain "ti,twl4030-madc".
-+  - interrupts: IRQ line for the MADC submodule.
-+  - #io-channel-cells: Should be set to <1>.
++	ret = iio_channel_read(chan, val, NULL, IIO_CHAN_INFO_AVERAGE_RAW);
++err_unlock:
++	mutex_unlock(&chan->indio_dev->info_exist_lock);
 +
-+Optional properties:
-+  - ti,system-uses-second-madc-irq: boolean, set if the second madc irq register
-+				    should be used, which is intended to be used
-+				    by Co-Processors (e.g. a modem).
++	return ret;
++}
++EXPORT_SYMBOL_GPL(iio_read_channel_average_raw);
 +
-+Example:
+ static int iio_convert_raw_to_processed_unlocked(struct iio_channel *chan,
+ 	int raw, int *processed, unsigned int scale)
+ {
+diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
+index 2752b1f..651f9a0 100644
+--- a/include/linux/iio/consumer.h
++++ b/include/linux/iio/consumer.h
+@@ -123,6 +123,19 @@ int iio_read_channel_raw(struct iio_channel *chan,
+ 			 int *val);
+ 
+ /**
++ * iio_read_channel_average_raw() - read from a given channel
++ * @chan:		The channel being queried.
++ * @val:		Value read back.
++ *
++ * Note raw reads from iio channels are in adc counts and hence
++ * scale will need to be applied if standard units required.
++ *
++ * In opposit to the normal iio_read_channel_raw this function
++ * returns the average of multiple reads.
++ */
++int iio_read_channel_average_raw(struct iio_channel *chan, int *val);
 +
-+&twl {
-+	madc {
-+		compatible = "ti,twl4030-madc";
-+		interrupts = <3>;
-+		#io-channel-cells = <1>;
-+	};
-+};
++/**
+  * iio_read_channel_processed() - read processed value from a given channel
+  * @chan:		The channel being queried.
+  * @val:		Value read back.
 -- 
 1.9.0
