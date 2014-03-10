@@ -1,62 +1,99 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4] ASoC: tlv320aic31xx: Add basic codec driver
- implementation
-Date: Mon, 10 Mar 2014 12:11:49 +0000
-Message-ID: <20140310121149.GF28112@sirena.org.uk>
-References: <cover.1394440470.git.jsarha@ti.com>
- <dc68ce35a3f44b5c8a55be928e06f72f463338fa.1394440470.git.jsarha@ti.com>
- <20140310120938.GJ14999@e106331-lin.cambridge.arm.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v5 1/2] video: ARM CLCD: Add DT support
+Date: Mon, 10 Mar 2014 14:23:21 +0200
+Message-ID: <531DAEB9.3020502@ti.com>
+References: <1394036606-17784-1-git-send-email-pawel.moll@arm.com>	
+ <53184C2E.3000807@ti.com> <1394119431.4160.84.camel@hornet>	
+ <5319AF00.5030602@ti.com> <1394453382.3853.6.camel@hornet>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7+J38Rf7xqVaSgUf"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140310120938.GJ14999@e106331-lin.cambridge.arm.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Jyri Sarha <jsarha@ti.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "peter.ujfalusi@ti.com" <peter.ujfalusi@ti.com>, "liam.r.girdwood@linux.intel.com" <liam.r.girdwood@linux.intel.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "detheridge@ti.com" <detheridge@ti.com>
+Content-Type: multipart/mixed; boundary="===============1356619276834852516=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1394453382.3853.6.camel@hornet>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Jonathan Austin <Jonathan.Austin@arm.com>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <Will.Deacon@arm.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+--===============1356619276834852516==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="aa37lV0Gl3uBSegaRCa4iE0mmFJ7XIJ9U"
 
---7+J38Rf7xqVaSgUf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--aa37lV0Gl3uBSegaRCa4iE0mmFJ7XIJ9U
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 10, 2014 at 12:09:38PM +0000, Mark Rutland wrote:
-> On Mon, Mar 10, 2014 at 08:52:21AM +0000, Jyri Sarha wrote:
+On 10/03/14 14:09, Pawel Moll wrote:
 
-> > +        1 or MICBIAS_2_0V - MICBIAS output is powered to 2.0V
-> > +        2 or MICBIAS_2_5V - MICBIAS output is powered to 2.5V
-> > +        3 or MICBIAS_AVDD - MICBIAS output is connected to AVDD
-> > +       If this node is not mentioned or if the value is unknown, then
-> > +       micbias is set to 2.0V.
+>> Note that the same DT bindings you add here should also work for the D=
+RM
+>> driver in the future. So, in fact, the question is extended to: will t=
+he
+>> fbdev=20
+>=20
+> No, I don't think so. It's a end of line for it, I believe. From my
+> personal point of view the main goal is to fill the last gap between DT=
 
-> Why does the dts write need to select these -- what prevents this
-> getting selected dynamically?
+> and non-DT support on one of the Versatile Express boards - CLCD works
+> fine when booted with ATAGs, doesn't work when booted with DT. It looks=
 
-It's a property of the system integration - the board will be designed
-to bias the microphone at some voltage.
+> bad.
 
---7+J38Rf7xqVaSgUf
+The DT describes the hardware, and there should be only one description
+of it, no matter what the used SW is. I see compatible =3D "arm,pl111" in=
+
+the dts. PL111 is the LCD controller, right? What will the DRM driver
+use, then, if the "arm,pl111" DT data is designed to work only for the
+fbdev?
+
+ Tomi
+
+
+
+--aa37lV0Gl3uBSegaRCa4iE0mmFJ7XIJ9U
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iQIcBAEBAgAGBQJTHawCAAoJELSic+t+oim9uoEP/iOpX1L8a/ZT0Il6IzHtmk43
-sRRUcTsv5Z/w8mjtNgHbXJz9g27oeYHtk5qqkQQ+gSiVG85E6yj+Qw8RwtCC1CrE
-0obNDXvLsa8moS/h7TCbX/8q4aZBddQ3RvBxv+CX/cF5u0eNqgQCAIzYra5fMh8I
-RgBIFduJViPDsuJbUJ8dktO3V7xGRrb0Dz8aTWKk3IXOUZWMW0/9RdfLz2jU/zpx
-KqMLvWxRVhXMPXTbAOREqWNSxncM1cbef5jHJ9jbgF6Z3ZISjtHymrdshNupmVue
-l5ui9HMQUuqbljz4yvR8cTbLD8i1YNp6sSgzDsebo3x3wgEI+AbwaDb/HxAp/9Py
-ImT2CuMbSPBBnXZL6w9ST4O5aSAYeV/DItSxIK9YFaLnEO57WTODtQXboMR8OeVj
-eAGGKZJsGyeobC7yclkd6EYmbgyScxfpb6t2x/ZIo551kVRiI7uNEISLPF4phVvp
-GC6WFd/+Yr8+9SBasuWZ1PmNgY2SPy6XSnmDGCKzjQsHUW26MfDztWj70MPYKW7Z
-VyaYR7VprhAmJU1NgaAkVwFh7F3HKlzC2Ux3xT4MJMdyMGO69Zls5cGmG7dmJUXJ
-3zRmE1rqe0zrjt/KdxH5wTSsCrevqyNkIedONj4or8lLzxsqObur2wjTHzXgZgBA
-8R16mnO9SxUfqdMuKfdO
-=tl+G
+iQIcBAEBAgAGBQJTHa65AAoJEPo9qoy8lh71rFoP/1oOoTi8QqCu54d4HJLCg6i+
+mJlEqeUBwpjyMPojQGU7oUs99qOHiqy1LlpLP6TQ35RO26LkkWHJnw3wtZBHubr0
+nsXQnE4rPr4K8qd/3y0uPaw5oS2pqUiV3580LZ7ZkEStdaj0WhQxgjgHxLjGgvPU
+LFHehIuHl2lLl9hVbnVvyymkpxgpd1t44npPGX3rIFP9j+SPV5nfr5W9oaluJH6Q
+6HWoCletZ11A7fYW6r3yqLI5sjxaslidhAdBGiQpGE1zy0eXBHknyWE+1o1zbzBQ
+cbcS6+JkT6JnWAsFcyg59PdpjIwQt8lXn8LBl22dbWI60tf8XDOpNu7tYqgxfOVG
+zMCuRXRFd47IY4VmkJJrXJKL/vGADwKMKMzDjDUDLlhKALElZEYa2mV40JKPOxJ8
+omniOYd9b/c8aPsHimOZKpvWZKMlE2RFTDRohmVwzKCquJdaJ2XR7ZnEsBoYAiU4
+TpM0t7600JTnR7v/JJsTyyVXrbuwn3T41Tm/kfiz11EOP+9JlUtBi+atDTK8O5J7
+kG+sZQ9ogL6jGM1VYf4/7X2GUibsG60hmLd7cGeh4/K2DxhwS2tXAMw1Ha+2gLrz
+qXsMw8gafIqhOFM9ASrihA+FzLGhjZYS+WHxESCgjkm7U/j5cutUCNGi0i/FW4ZF
+dGgOpaVw9Zalztvc62oH
+=9fd9
 -----END PGP SIGNATURE-----
 
---7+J38Rf7xqVaSgUf--
+--aa37lV0Gl3uBSegaRCa4iE0mmFJ7XIJ9U--
+
+
+--===============1356619276834852516==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============1356619276834852516==--
