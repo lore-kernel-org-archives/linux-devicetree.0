@@ -1,78 +1,36 @@
-From: mr.nuke.me-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: Re: [PATCH v5 6/8] ARM: dts: sun4i: Add support for mmc
-Date: Mon, 10 Mar 2014 14:49:15 -0700 (PDT)
-Message-ID: <ac47de94-92ef-4b53-9983-34dd2f9924ea@googlegroups.com>
-References: <20140211190543.4568.83517.stgit@dizzy-6.o2s.ch>
- <20140211193423.4568.34947.stgit@dizzy-6.o2s.ch>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Josh Cartwright <joshc@codeaurora.org>
+Subject: Re: [PATCH v2 4/6] rtc: pm8xxx: add support for devicetree
+Date: Mon, 10 Mar 2014 16:56:58 -0500
+Message-ID: <20140310215658.GM18529@joshc.qualcomm.com>
+References: <1394477089-3996-1-git-send-email-joshc@codeaurora.org>
+ <1394477089-3996-5-git-send-email-joshc@codeaurora.org>
+ <20140310134748.dae1b77cfac3df68bd2c1d69@linux-foundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDGJVA6QWUDRBXHG7CMAKGQEQN7VB7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140211193423.4568.34947.stgit-GPtPHOohwllnsqa/0SyWJQ@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140310134748.dae1b77cfac3df68bd2c1d69@linux-foundation.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, David Brown <davidb@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, rtc-linux@googlegroups.com, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, February 11, 2014 1:34:25 PM UTC-6, David Lanzend=C3=B6rfer wro=
-te:
-> diff --git a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
-> b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
-> index b139ee6..20b976a 100644
-> --- a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
-> +++ b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
-> @@ -33,6 +33,14 @@
->  			};
->  	=09
->  		};
-> +		mmc0: mmc@01c0f000 {
-> +			pinctrl-names =3D "default", "default";
-> +			pinctrl-0 =3D <&mmc0_pins_a>;
-> +			pinctrl-1 =3D <&mmc0_cd_pin_reference_design>;
-> +			cd-gpios =3D <&pio 7 1 0>; /* PH1 */
-> +			status =3D "okay";
-> +		};
-> +
->  		pinctrl@01c20800 {
->  	=09
->  			led_pins_cubieboard: led_pins@0 {
->  		=09
->  				allwinner,pins =3D "PH20", "PH21";
-> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi
-> b/arch/arm/boot/dts/sun4i-a10.dtsi
-> index 9044c53..d040d37 100644
-> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
-> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-> @@ -330,6 +330,46 @@
->  			#size-cells =3D <0>;
->  	=09
->  		};
-> +		mmc0: mmc@01c0f000 {
-> +			compatible =3D "allwinner,sun5i-a13-mmc";
+On Mon, Mar 10, 2014 at 01:47:48PM -0700, Andrew Morton wrote:
+> On Mon, 10 Mar 2014 13:44:47 -0500 Josh Cartwright <joshc@codeaurora.org> wrote:
+> 
+> > Add support for describing the PM8921/PM8058 RTC in device tree.
+> > 
+> > Additionally:
+> >    - drop support for describing the RTC using platform data,
+> >      as there are no current in tree users who do so.
+> >    - make allow_set_time a device-specific flag, instead of mucking
+> >      with the rtc_ops
+> 
+> Is this tested with and without CONFIG_OF?
 
-Should be "allwinner,sun4i-a10-mmc", or we will hang the MMC driver on A10.
+It's been runtime tested with CONFIG_OF and I ensured it at least built
+when !CONFIG_OF, although the drivers useless in that configuration.
 
-> +		mmc1: mmc@01c10000 {
-> +			compatible =3D "allwinner,sun5i-a13-mmc";
-ditto
-
-> +		mmc2: mmc@01c11000 {
-> +			compatible =3D "allwinner,sun5i-a13-mmc";
-ditto
-
-> +		mmc3: mmc@01c12000 {
-> +			compatible =3D "allwinner,sun5i-a13-mmc";
-ditto
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
