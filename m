@@ -1,40 +1,98 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core to drivers/of
-Date: Mon, 10 Mar 2014 14:41:02 +0000
-Message-ID: <20140310144102.58C13C405FA@trevor.secretlab.ca>
-References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> < CAL_Jsq+U9zU1i+STLHMBjY5BeEP6djYnJVE5X1ix-D2q_zWztQ@mail.gmail.com> < 20140217181451.7EB7FC4044D@trevor.secretlab.ca> <20140218070624.GP17250@ pengutronix.de> <20140218162627.32BA4C40517@trevor.secretlab.ca> < 1393263389.3091.82.camel@pizza.hi.pengutronix.de> <20140226110114. CF2C7C40A89@trevor.secretlab.ca> <1393426129.3248.64.camel@paszta.hi. pengutronix.de> <20140307170550.1DFB2C40A0D@trevor.secretlab.ca> <531AF1E8. 50606@ti.com> <20140308114115.BB08EC40612@trevor.secretlab.ca> <531D916C. 2010903@ti.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <531D916C.2010903-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v6 6/6] pci: Add support for creating a generic
+ host_bridge from device tree
+Date: Mon, 10 Mar 2014 14:44:14 +0000
+Message-ID: <20140310144414.GT6457@e106497-lin.cambridge.arm.com>
+References: <1394020137-1830-1-git-send-email-Liviu.Dudau@arm.com>
+ <1394020137-1830-7-git-send-email-Liviu.Dudau@arm.com>
+ <201403081815.08829.arnd@arndb.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <201403081815.08829.arnd@arndb.de>
+Content-Disposition: inline
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Mar 2014 12:18:20 +0200, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> wrote:
-> On 08/03/14 13:41, Grant Likely wrote:
-> 
-> >> Ok. If we go for single directional link, the question is then: which
-> >> way? And is the direction different for display and camera, which are
-> >> kind of reflections of each other?
-> > 
-> > In general I would recommend choosing whichever device you would
-> > sensibly think of as a master. In the camera case I would choose the
-> > camera controller node instead of the camera itself, and in the display
-> > case I would choose the display controller instead of the panel. The
-> > binding author needs to choose what she things makes the most sense, but
-> > drivers can still use if it it turns out to be 'backwards'
-> 
-> I would perhaps choose the same approach, but at the same time I think
-> it's all but clear. The display controller doesn't control the panel any
-> more than a DMA controller controls, say, the display controller.
+On Sat, Mar 08, 2014 at 05:15:08PM +0000, Arnd Bergmann wrote:
+> On Wednesday 05 March 2014, Liviu Dudau wrote:
+> > +
+> > +	pr_debug("Parsing ranges property...\n");
+> > +	for_each_of_pci_range(&parser, &range) {
+> > +		/* Read next ranges element */
+> > +		pr_debug("pci_space: 0x%08x pci_addr:0x%016llx ",
+> > +				range.pci_space, range.pci_addr);
+> > +		pr_debug("cpu_addr:0x%016llx size:0x%016llx\n",
+> > +					range.cpu_addr, range.size);
+> > +
+> > +		/*
+> > +		 * If we failed translation or got a zero-sized region
+> > +		 * then skip this range
+> > +		 */
+> > +		if (range.cpu_addr =3D=3D OF_BAD_ADDR || range.size =3D=3D 0)
+> > +			continue;
+> > +
+> > +		res =3D kzalloc(sizeof(struct resource), GFP_KERNEL);
+> > +		if (!res)
+> > +			return -ENOMEM;
+> > +
+> > +		of_pci_range_to_resource(&range, dev, res);
+> > +
+> > +		if (resource_type(res) =3D=3D IORESOURCE_IO)
+> > +			*io_base =3D range.cpu_addr;
+> > +
+> > +		pci_add_resource_offset(resources, res,
+> > +				res->start - range.pci_addr);
+> > +	}
+>=20
+> As mentioned regarding the pci_register_io_range() helper, x86
+> would not enter the 'resource_type(res) =3D=3D IORESOURCE_IO' code pa=
+th,
+> which on the one hand is fine so we can return an error from
+> pci_register_io_range() there, but I think it will lead to
+> io_base getting an uninitialized content.
+>=20
+> There could also be other reasons why pci_register_io_range() fails,
+> e.g. because the space is exhausted, and I think we should try to
+> catch that here and skip the pci_add_resource_offset() and io_base
+> assignment then.
 
-In a sense it doesn't actually matter. You sensibly want to choose the
-most likely direction that drivers would go looking for a device it
-depends on, but it can be matched up at runtime regardless of the
-direction chosen by the binding.
+Hi Arnd,
 
-g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I will try to improve the error handling in the next patchset version.
+However I am still confused about the earlier discussion on
+pci_register_io_range(). Your suggestion initially was to return an
+error in the default weak implementation, but in your last email you
+are talking about returning 'port'. My idea when I've introduced the
+helper function was that it would return an error if it fails to
+register the IO range and zero otherwise. I agree that we can treat
+the default 'do nothing with the IO range' case as an error, with
+the caveat that will force architectures that use this code to
+provide their own implementation of pci_register_io_range() in order
+to avoid failure, even for the cases where the architecture has a 1:1
+mapping between IO and CPU addresses.
+
+I've just noticed that my home server has silently dropped my reply
+to you from the 7th of March, so I'm going to resend it using ARM's
+setup.
+
+Best regards,
+Liviu
+
+
+>=20
+> 	Arnd
+>=20
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
