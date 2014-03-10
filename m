@@ -1,45 +1,68 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v6 6/6] pci: Add support for creating a generic
- host_bridge from device tree
-Date: Mon, 10 Mar 2014 20:16:25 +0100
-Message-ID: <CAMuHMdWzm1D83zquwuQVKwbqRdXmSw7u1ui7iZyC3VGdGhn0HA@mail.gmail.com>
-References: <1394020137-1830-1-git-send-email-Liviu.Dudau@arm.com>
-	<2115856.ZTdgp5fkma@wuerfel>
-	<20140310163343.GY6457@e106497-lin.cambridge.arm.com>
-	<1469359.kil5iaOqdU@wuerfel>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v6 4/8] of: Reduce indentation in of_graph_get_next_endpoint
+Date: Mon, 10 Mar 2014 20:19:44 +0100
+Message-ID: <1688746.6CaQoSDOni@avalon>
+References: <1394011242-16783-1-git-send-email-p.zabel@pengutronix.de> <31687163.hgTkcLrn0Z@avalon> <1394214054.16309.45.camel@paszta.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1469359.kil5iaOqdU@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Tanmay Inamdar <tinamdar@apm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1394214054.16309.45.camel-+qGW7pzALmz7o/J7KWpOmN53zsg1cpMQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 10, 2014 at 7:59 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->> arch/avr32/include/asm/io.h:#define IO_SPACE_LIMIT    0xffffffff
->> arch/frv/include/asm/io.h:#define IO_SPACE_LIMIT      0xffffffff
+Hi Philipp,
+
+On Friday 07 March 2014 18:40:54 Philipp Zabel wrote:
+> Am Freitag, den 07.03.2014, 01:12 +0100 schrieb Laurent Pinchart:
+> > Hi Philipp,
+> > 
+> > Thank you for the patch.
+> > 
+> > I've submitted a fix for the of_graph_get_next_endpoint() function, but it
+> > hasn't been applied yet due to the patch series that contained it needing
+> > more work.
+> > 
+> > The patch is available at https://patchwork.linuxtv.org/patch/21946/. I
+> > can rebase it on top of this series, but I still wanted to let you know
+> > about it in case you would like to integrate it.
+> 
+> Thank you for the pointer. A pity about the timing, this will mostly
+> revert my indentation patch. I'd be glad if you could rebase on top of
+> the merged series.
+> 
+> While we look at of_graph_get_next_endpoint(), could you explain the
+> reason behind the extra reference count increase on the prev node:
 >
-> They have no MMU, and the code relies on the port number to match
-> both the virtual and the physical address. You could be right about
-> these, but I would guess that the code also needs some other
-> changes if we want to make it work on nommu kernels. It also depends
-> on whether the I/O bus address is the same as the CPU address, or
-> if it starts at bus address 0.
-
->> arch/m68k/include/asm/io_no.h:#define IO_SPACE_LIMIT 0xffffffff
+> 	/*
+> 	 * Avoid dropping prev node refcount to 0 when getting the next
+> 	 * child below.
+> 	 */
+> 	of_node_get(prev);
 >
-> This looks like a mistake, it should be smaller
+> This unfortunately makes using the function in for_each style macros a
+> hassle. If that part wasn't there and all users that want to keep using
+> prev after the call were expected to increase refcount themselves,
+> we could have a
+>
+> #define of_graph_for_each_endpoint(parent, endpoint) \
+> 	for (endpoint = of_graph_get_next_endpoint(parent, NULL); \
+> 	     endpoint != NULL; \
+> 	     endpoint = of_graph_get_next_endpoint(parent, endpoint))
 
-io_no.h is for nommu.
+I don't know what the exact design decision was (Sylwester might know), but I 
+suspect it's mostly about historical reasons. I see no reason that would 
+prevent modifying the current behaviour to make a for-each loop easier to 
+implement.
 
-Gr{oetje,eeting}s,
+-- 
+Regards,
 
-                        Geert
+Laurent Pinchart
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
