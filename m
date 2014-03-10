@@ -1,58 +1,77 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/5] ARM: STi: Add STiH407 SoC support
-Date: Mon, 10 Mar 2014 12:34:05 +0000
-Message-ID: <20140310123405.GU14976@lee--X1>
-References: <1394203251-25361-1-git-send-email-maxime.coquelin@st.com>
- <1394203251-25361-2-git-send-email-maxime.coquelin@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1394203251-25361-2-git-send-email-maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime COQUELIN <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH 3/3] Documentation: mfd: s2mps11: Describe S5M8767 and S2MPS14
+ clocks
+Date: Mon, 10 Mar 2014 13:34:18 +0100
+Message-ID: <1394454858-3139-4-git-send-email-k.kozlowski@samsung.com>
+References: <1394454858-3139-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1394454858-3139-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, Sangbeom Kim <sbkim73@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: Tushar Behera <tushar.behera@linaro.org>, Yadwinder Singh Brar <yadi.brar@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-> This patch adds support to STiH407 SoC.
->=20
-> Signed-off-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
-> ---
->  Documentation/arm/sti/stih407-overview.txt    | 18 +++++++++++++++++=
+Add bindings documentation for clocks on S5M8767 and S2MPS14 devices.
+
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Tomasz Figa <t.figa@samsung.com>
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+---
+ Documentation/devicetree/bindings/mfd/s2mps11.txt |   24 +++++++++++++--------
+ 1 file changed, 15 insertions(+), 9 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+index 15ee89c3cc7b..67ea05ca8050 100644
+--- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
++++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+@@ -16,20 +16,25 @@ Optional properties:
+ - interrupts: Interrupt specifiers for interrupt sources.
+ 
+ Optional nodes:
+-- clocks: s2mps11 provides three(AP/CP/BT) buffered 32.768 KHz outputs, so to
+-  register these as clocks with common clock framework instantiate a sub-node
+-  named "clocks". It uses the common clock binding documented in :
++- clocks: s2mps11 and s5m8767 provide three(AP/CP/BT) buffered 32.768 KHz
++  outputs, so to register these as clocks with common clock framework
++  instantiate a sub-node named "clocks". It uses the common clock binding
++  documented in :
+   [Documentation/devicetree/bindings/clock/clock-bindings.txt]
++  The s2mps14 provides two (AP/BT) buffered 32.768 KHz outputs.
+   - #clock-cells: should be 1.
+ 
+   - The following is the list of clocks generated by the controller. Each clock
+     is assigned an identifier and client nodes use this identifier to specify
+     the clock which they consume.
+-    Clock               ID
+-    ----------------------
+-    32KhzAP		0
+-    32KhzCP		1
+-    32KhzBT		2
++    Clock               ID           Devices
++    ----------------------------------------------------------
++    32KhzAP		0            S2MPS11, S2MPS14, S5M8767
++    32KhzCP		1            S2MPS11, S5M8767
++    32KhzBT		2            S2MPS11, S2MPS14, S5M8767
 +
->  Documentation/devicetree/bindings/arm/sti.txt | 15 +++++++++++++++
->  arch/arm/mach-sti/Kconfig                     |  9 +++++++++
->  arch/arm/mach-sti/board-dt.c                  |  1 +
->  4 files changed, 43 insertions(+)
->  create mode 100644 Documentation/arm/sti/stih407-overview.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/sti.txt
-
-<snip>
-
-> +config SOC_STIH407
-> +	bool "STiH407 STMicroelectronics Consumer Electronics family"
-> +	default y
-> +	help
-> +	  This enables support for STMicroelectronics Digital Consumer
-> +	  Electronics family StiH407 parts, primarily targeted at set-top-b=
-ox
-> +	  and other digital audio/video applications using Flattened Device
-> +	  Trees.
-> +
-
-Are these configs actually used for something?
-
-<snip>
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
++  - compatible: Should be one of: "samsung,s2mps11-clk", "samsung,s2mps14-clk",
++		"samsung,s5m8767-clk"
+ 
+ - regulators: The regulators of s2mps11 that have to be instantiated should be
+ included in a sub-node named 'regulators'. Regulator nodes included in this
+@@ -71,7 +76,8 @@ Example:
+ 		compatible = "samsung,s2mps11-pmic";
+ 		reg = <0x66>;
+ 
+-		s2m_osc: clocks{
++		s2m_osc: clocks {
++			compatible = "samsung,s2mps11-clk";
+ 			#clock-cells = 1;
+ 			clock-output-names = "xx", "yy", "zz";
+ 		};
+-- 
+1.7.9.5
