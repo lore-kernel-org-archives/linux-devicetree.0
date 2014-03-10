@@ -1,187 +1,71 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] soc: keystone: add QMSS driver
-Date: Mon, 10 Mar 2014 12:02:12 -0500
-Message-ID: <CAL_Jsq+O660oV9FtthG3gTkVOhL0ku-UHSrkt-ROauu1iNpbaA@mail.gmail.com>
-References: <1393629520-12713-1-git-send-email-santosh.shilimkar@ti.com>
-	<1393629520-12713-3-git-send-email-santosh.shilimkar@ti.com>
+From: Josh Cartwright <joshc@codeaurora.org>
+Subject: Re: [PATCH 6/6] documentation: bindings: document PMIC8921/8058 RTC
+Date: Mon, 10 Mar 2014 12:05:26 -0500
+Message-ID: <20140310170526.GK18529@joshc.qualcomm.com>
+References: <1394047776-13827-1-git-send-email-joshc@codeaurora.org>
+ <1394047776-13827-7-git-send-email-joshc@codeaurora.org>
+ <5317900F.5030803@codeaurora.org>
+ <20140306000058.GE18529@joshc.qualcomm.com>
+ <CAL_JsqJU-vb8CAat+X-WtW9rDPzqj9oDfpXf8pEwuwLVtOskPA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393629520-12713-3-git-send-email-santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sandeep Nair <sandeep_n-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJU-vb8CAat+X-WtW9rDPzqj9oDfpXf8pEwuwLVtOskPA@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Alessandro Zummo <a.zummo@towertech.it>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 28, 2014 at 5:18 PM, Santosh Shilimkar
-<santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
-> From: Sandeep Nair <sandeep_n-l0cyMroinI0@public.gmane.org>
+Hey Rob-
+
+Thanks for the reply.
+
+On Mon, Mar 10, 2014 at 10:35:25AM -0500, Rob Herring wrote:
+> On Wed, Mar 5, 2014 at 6:00 PM, Josh Cartwright <joshc@codeaurora.org> wrote:
+> > On Wed, Mar 05, 2014 at 12:58:55PM -0800, Stephen Boyd wrote:
+> >> On 03/05/14 11:29, Josh Cartwright wrote:
+> >> > +- interrupts: interrupt list for the RTC, must contain a single interrupt
+> >> > +              specifier for the alarm interrupt
+> >> > +- interrupt-names: corresponding interrupt names for the interrupts listed in
+> >> > +                   the 'interrupts' property, must contain:
+> >> > +     "alarm" - summary interrupt for PMIC peripherals
+> >>
+> >> optional interrupt-names?
+> >
+> > It isn't clear to me why these should be made optional, I hope Rob
+> > provides some clarification in the sdhci-msm thread.
 >
-> The QMSS (Queue Manager Sub System) found on Keystone SOCs is one of
-> the main hardware sub system which forms the backbone of the Keystone
-> Multi-core Navigator. QMSS consist of queue managers, packed-data structure
-> processors(PDSP), linking RAM, descriptor pools and infrastructure
-> Packet DMA.
->
-> The Queue Manager is a hardware module that is responsible for accelerating
-> management of the packet queues. Packets are queued/de-queued by writing or
-> reading descriptor address to a particular memory mapped location. The PDSPs
-> perform QMSS related functions like accumulation, QoS, or event management.
-> Linking RAM registers are used to link the descriptors which are stored in
-> descriptor RAM. Descriptor RAM is configurable as internal or external memory.
->
-> The QMSS driver manages the PDSP setups, linking RAM regions,
-> queue pool management (allocation, push, pop and notify) and descriptor
-> pool management. The specifics on the device tree bindings for
-> QMSS can be found in:
->         Documentation/devicetree/bindings/soc/keystone-qmss.txt
+> Because reg and interrupt names are relatively new and reluctantly
+> added by DT maintainers. Personally, I think it was a mistake and it
+> is simply Linux specific information leaking into the DT, but it did
+> make transition to DT easier.
 
-You are telling me where I can find a file that is added in this commit?
+I don't necessarily buy the Linux-specific argument in general.  If a
+devices' datasheet clearly gives names to register regions and
+interrupts, what about reflecting these names in the bindings is
+Linux-specific?
 
-All this description of what the h/w block does should go into the binding doc.
+Now, there are probably abuses of this, where the reg-names and
+interrupt-names are abused to ensure driver compatibility with devices
+described in board files, and only in that case will I agree is
+Linux-specific and should be strongly discouraged.
 
->
-> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Sandeep Nair <sandeep_n-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-> ---
->  .../devicetree/bindings/soc/keystone-qmss.txt      |  209 +++
->  drivers/Kconfig                                    |    2 +
->  drivers/Makefile                                   |    3 +
->  drivers/soc/Kconfig                                |    2 +
->  drivers/soc/Makefile                               |    5 +
->  drivers/soc/keystone/Kconfig                       |   15 +
->  drivers/soc/keystone/Makefile                      |    5 +
->  drivers/soc/keystone/qmss_acc.c                    |  591 ++++++++
->  drivers/soc/keystone/qmss_queue.c                  | 1533 ++++++++++++++++++++
->  drivers/soc/keystone/qmss_queue.h                  |  236 +++
->  include/linux/soc/keystone_qmss.h                  |  390 +++++
->  11 files changed, 2991 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/keystone-qmss.txt
->  create mode 100644 drivers/soc/Makefile
->  create mode 100644 drivers/soc/keystone/Kconfig
->  create mode 100644 drivers/soc/keystone/Makefile
->  create mode 100644 drivers/soc/keystone/qmss_acc.c
->  create mode 100644 drivers/soc/keystone/qmss_queue.c
->  create mode 100644 drivers/soc/keystone/qmss_queue.h
->  create mode 100644 include/linux/soc/keystone_qmss.h
->
-> diff --git a/Documentation/devicetree/bindings/soc/keystone-qmss.txt b/Documentation/devicetree/bindings/soc/keystone-qmss.txt
-> new file mode 100644
-> index 0000000..f975207
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/keystone-qmss.txt
-> @@ -0,0 +1,209 @@
-> +* Texas Instruments Keystone QMSS driver
-> +
-> +Required properties:
-> +- compatible   : Must be "ti,keystone-qmss";
-> +- clocks       : phandle to the reference clock for this device.
-> +- queue-range  : <start number> total range of queue numbers for the device.
-> +- linkram0     : <address size> for internal link ram, where size is the total
-> +                 link ram entries.
-> +- linkram1     : <address size> for external link ram, where size is the total
-> +                 external link ram entries. If the address is specified as "0"
-> +                 driver will allocate memory.
-> +- qmgrs         : the number of individual queue managers in the device. On
-> +                  keystone 1 range of devices there should be only one node.
-> +                 On keystone 2 devices there can be more than 1 node.
-> +  -- managed-queues    : the actual queues managed by each queue manager
-> +                         instance, specified as <"base queue #" "# of queues">.
-> +  -- reg               : Address and length of the register set for the device
-> +                         for peek, status, config, region, push, pop regions.
-> +  -- reg-names         : Names for the above register regions. The name to be
-> +                         used is as follows:
-> +                         - "config" : Queue configuration region.
-> +                         - "status" : Queue status RAM.
-> +                         - "region" : Descriptor memory setup region.
-> +                         - "push"   : Queue Management/Queue Proxy region.
-> +                         - "pop"    : Queue Management/Queue Proxy region.
-> +                         - "peek"   : Queue Peek region.
+> The requirement is still the ordering of reg and interrupts fields
+> must be defined and you cannot rely on the names to define the order.
 
-reg-names should be optional. Also you have the order different from
-reg. Be consistent as to what is the correct order.
+Should this requirement also exist for other <foo>-names properties?
 
-> +- queue-pools  : Queue ranges are grouped into 3 type of pools:
-> +                 - qpend           : pool of qpend(interruptible) queues
-> +                 - general-purpose : pool of general queues, primarly used
-> +                                     as free descriptor queues or the
-> +                                     transmit DMA queues.
-> +                 - accumulator     : pool of queues on accumulator channel
-> +                 Each range can have the following properties:
-> +  -- values            : number of queues to use per queue range, specified as
-> +                         <"base queue #" "# of queues">.
+> It is quite pointless here since you only have 1 field.
 
-values of what? This needs a better name.
+Indeed in the interrupt case it is worthless, as there is only one alarm
+interrupt.  However for registers I do plan to extend this binding in
+the future to document a newer RTC which does split registers across
+multiple named address regions.
 
-> +  -- interrupts                : Optional property to specify the interrupt mapping
-> +                         for interruptible queues. The driver additionaly sets
-> +                         the interrupt affinity based on the cpu mask.
-> +  -- reserved          : Optional property used to reserve the range. Queues
-> +                         in a reserved range can only be allocated by id.
+Thanks again,
+  Josh
 
-reserved what? This needs a better name and description.
-
-> +  -- accumulator       : Accumulator channel property specified as:
-> +                         <pdsp-id, channel, entries, pacing mode, latency>
-> +                         pdsp-id     : QMSS PDSP running accumulator firmware
-> +                                       on which the channel has to be
-> +                                       configured
-> +                         channel     : Accumulator channel number
-> +                         entries     : Size of the accumulator descriptor list
-> +                         pacing mode : Interrupt pacing mode
-> +                                       0 : None, i.e interrupt on list full
-> +                                       1 : Time delay since last interrupt
-> +                                       2 : Time delay since first new packet
-> +                                       3 : Time delay since last new packet
-> +                         latency     : time to delay the interrupt, specified
-> +                                       in microseconds.
-> +  -- multi-queue       : Optional property to specify that the channel has to
-> +                         monitor upto 32 queues starting at the base queue #.
-
-What does the property contain? What's a channel in this context?
-
-> +- descriptor-regions   : Descriptor memory region specification.
-
-huh?
-
-> +  -- id                                : region number.
-> +  -- values                    : number of descriptors in the region,
-> +                                 specified as
-> +                                 <"# of descriptors" "descriptor size">.
-> +  -- link-index                        : start index, i.e. index of the first
-> +                                 descriptor in the region.
-> +
-> +Optional properties:
-> +- dma-coherent : Present if DMA operations are coherent.
-> +- pdsps                : PDSP configuration, if any.
-
-This is a child node? Make that clear and separate the description for
-each node.
-
-> +  -- firmware          : firmware to be loaded on the PDSP.
-> +  -- id                        : the qmss pdsp that will run the firmware.
-> +  -- reg               : Address and length of the register set of the PDSP
-> +                         for iram, intd, region, command regions.
-> +  -- reg-names         : Names for the above register regions. The name to be
-> +                         used is as follows:
-> +                         - "iram"   : PDSP internal RAM region.
-> +                         - "reg"    : PDSP control/status region registers.
-> +                         - "intd"   : QMSS interrupt distributor registers.
-> +                         - "cmd"    : PDSP command interface region.
-> +
-> +Example:
-
-I probably have other comments, but address the above first.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
