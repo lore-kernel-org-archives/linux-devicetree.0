@@ -1,47 +1,148 @@
-From: David Laight <David.Laight@ACULAB.COM>
-Subject: RE: [PATCH net-next v2 8/9] Altera TSE: Add Miscellaneous Files for
- Altera Ethernet Driver
-Date: Tue, 11 Mar 2014 15:51:59 +0000
-Message-ID: <063D6719AE5E284EB5DD2968C1650D6D0F6DAA4B@AcuExch.aculab.com>
-References: <1394493277-2105-1-git-send-email-vbridgers2013@gmail.com>
-	<1394493277-2105-9-git-send-email-vbridgers2013@gmail.com>
-	<20140310174031.4145a3ff@nehalam.linuxnetplumber.net>
- <CAOwfj2O8p2MQtFhaLrSzjRAnOYtR2qS3POXaaDd=3qtnwwovZg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAOwfj2O8p2MQtFhaLrSzjRAnOYtR2qS3POXaaDd=3qtnwwovZg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: 'Vince Bridgers' <vbridgers2013@gmail.com>, Stephen Hemminger <stephen@networkplumber.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH v7 3/10] Documentation: devicetree: Update Samsung FIMC DT
+ binding
+Date: Tue, 11 Mar 2014 17:00:35 +0100
+Message-ID: <1394553635-12134-1-git-send-email-s.nawrocki@samsung.com>
+References: <24917002.Y0kBkkQHhZ@avalon>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <24917002.Y0kBkkQHhZ@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: laurent.pinchart@ideasonboard.com, robh+dt@kernel.org, mark.rutland@arm.com, galak@codeaurora.org, kyungmin.park@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Vince Bridgers
-> On Mon, Mar 10, 2014 at 7:40 PM, Stephen Hemminger
-> <stephen@networkplumber.org> wrote:
-> > On Mon, 10 Mar 2014 18:14:36 -0500
-> > Vince Bridgers <vbridgers2013@gmail.com> wrote:
-> >
-> >> +
-> >> +     buf[0] = (u64) ioread32(&mac->frames_transmitted_ok);
-> >
-> > The cast to u64 is not really necessary, C will do it for you.
-> > You do need the cast to do the shift for the 64 bit values.
-> 
-> Ok, understood. I generally add the cast so it's explicit, but I'll modify.
+This patch documents following updates of the Exynos4 SoC camera subsystem
+devicetree binding:
 
-The problem is that the cast will allow incorrect code to compile.
-eg, you might have a pointer, not an integer.
+ - addition of #clock-cells and clock-output-names properties to 'camera'
+   node - these are now needed so the image sensor sub-devices can reference
+   clocks provided by the camera host interface,
+ - dropped a note about required clock-frequency properties at the
+   image sensor nodes; the sensor devices can now control their clock
+   explicitly through the clk API and there is no need to require this
+   property in the camera host interface binding.
 
-Many years ago I got caught out by a #define like the following:
-#define foo(ptr) { int s = splhi(); do_foo((void *)ptr); splx(s); }
-My code crashed because I'd called foo(s).
-Now that #define is broken in so many ways, but the (void *) cast
-stopped the compiler erroring one of them.
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+---
+Resending only single patch which changed.
 
-	David
+Changes since v6:
+ - #clock-cells, clock-output-names documented as mandatory properties;
+ - renamed "cam_mclk_{a,b}" to "cam_{a,b}_clkout in the example dts,
+   this now matches changes in exynos4.dtsi further in the patch series;
+ - marked "samsung,camclk-out" property as deprecated.
 
+Changes since v5:
+ - none.
 
+Changes since v4:
+ - dropped a requirement of specific order of values in clocks/
+   clock-names properties (Mark) and reference to clock-names in
+   clock-output-names property description (Mark).
+---
+ .../devicetree/bindings/media/samsung-fimc.txt     |   46 +++++++++++++-------
+ 1 file changed, 31 insertions(+), 15 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+index 96312f6..1908a5f 100644
+--- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
++++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+@@ -15,11 +15,21 @@ Common 'camera' node
+
+ Required properties:
+
+-- compatible	: must be "samsung,fimc", "simple-bus"
+-- clocks	: list of clock specifiers, corresponding to entries in
+-		  the clock-names property;
+-- clock-names	: must contain "sclk_cam0", "sclk_cam1", "pxl_async0",
+-		  "pxl_async1" entries, matching entries in the clocks property.
++- compatible: must be "samsung,fimc", "simple-bus"
++- clocks: list of clock specifiers, corresponding to entries in
++  the clock-names property;
++- clock-names : must contain "sclk_cam0", "sclk_cam1", "pxl_async0",
++  "pxl_async1" entries, matching entries in the clocks property.
++
++- #clock-cells: from the common clock bindings (../clock/clock-bindings.txt),
++  must be 1. A clock provider is associated with the 'camera' node and it should
++  be referenced by external sensors that use clocks provided by the SoC on
++  CAM_*_CLKOUT pins. The clock specifier cell stores an index of a clock.
++  The indices are 0, 1 for CAM_A_CLKOUT, CAM_B_CLKOUT clocks respectively.
++
++- clock-output-names: from the common clock bindings, should contain names of
++  clocks registered by the camera subsystem corresponding to CAM_A_CLKOUT,
++  CAM_B_CLKOUT output clocks respectively.
+
+ The pinctrl bindings defined in ../pinctrl/pinctrl-bindings.txt must be used
+ to define a required pinctrl state named "default" and optional pinctrl states:
+@@ -32,6 +42,7 @@ way around.
+
+ The 'camera' node must include at least one 'fimc' child node.
+
++
+ 'fimc' device nodes
+ -------------------
+
+@@ -88,8 +99,8 @@ port nodes specifies data input - 0, 1 indicates input A, B respectively.
+
+ Optional properties
+
+-- samsung,camclk-out : specifies clock output for remote sensor,
+-		       0 - CAM_A_CLKOUT, 1 - CAM_B_CLKOUT;
++- samsung,camclk-out (deprecated) : specifies clock output for remote sensor,
++  0 - CAM_A_CLKOUT, 1 - CAM_B_CLKOUT;
+
+ Image sensor nodes
+ ------------------
+@@ -97,8 +108,8 @@ Image sensor nodes
+ The sensor device nodes should be added to their control bus controller (e.g.
+ I2C0) nodes and linked to a port node in the csis or the parallel-ports node,
+ using the common video interfaces bindings, defined in video-interfaces.txt.
+-The implementation of this bindings requires clock-frequency property to be
+-present in the sensor device nodes.
++An optional clock-frequency property needs to be present in the sensor device
++nodes. Default value when this property is not present is 24 MHz.
+
+ Example:
+
+@@ -114,7 +125,7 @@ Example:
+ 			vddio-supply = <...>;
+
+ 			clock-frequency = <24000000>;
+-			clocks = <...>;
++			clocks = <&camera 1>;
+ 			clock-names = "mclk";
+
+ 			port {
+@@ -135,7 +146,7 @@ Example:
+ 			vddio-supply = <...>;
+
+ 			clock-frequency = <24000000>;
+-			clocks = <...>;
++			clocks = <&camera 0>;
+ 			clock-names = "mclk";
+
+ 			port {
+@@ -149,12 +160,17 @@ Example:
+
+ 	camera {
+ 		compatible = "samsung,fimc", "simple-bus";
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		status = "okay";
+-
++		clocks = <&clock 132>, <&clock 133>, <&clock 351>,
++			 <&clock 352>;
++		clock-names = "sclk_cam0", "sclk_cam1", "pxl_async0",
++			      "pxl_async1";
++		#clock-cells = <1>;
++		clock-output-names = "cam_a_clkout", "cam_b_clkout";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&cam_port_a_clk_active>;
++		status = "okay";
++		#address-cells = <1>;
++		#size-cells = <1>;
+
+ 		/* parallel camera ports */
+ 		parallel-ports {
+--
+1.7.9.5
