@@ -1,106 +1,74 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 4/7] watchdog: orion: Add Armada 375/380 SoC support
-Date: Tue, 11 Mar 2014 17:16:24 -0300
-Message-ID: <20140311201624.GC8506@arch.cereza>
-References: <1393949244-5011-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1393949244-5011-5-git-send-email-ezequiel.garcia@free-electrons.com>
- <531D1F9B.8090804@roeck-us.net>
+From: Max Filippov <jcmvbkbc@gmail.com>
+Subject: Re: [PATCH 1/3] spi: add xtfpga SPI controller driver
+Date: Wed, 12 Mar 2014 00:20:49 +0400
+Message-ID: <CAMo8BfLTn+pneF6_7XkP66+LzpZgcefnAo_FkwxpvtYdt9yduA@mail.gmail.com>
+References: <1394541891-26469-1-git-send-email-jcmvbkbc@gmail.com>
+	<1394541891-26469-2-git-send-email-jcmvbkbc@gmail.com>
+	<20140311194959.GB28112@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <531D1F9B.8090804-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140311194959.GB28112@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>, linux-spi@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Zankel <chris@zankel.net>, Marc Gauthier <marc@cadence.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mar 09, Guenter Roeck wrote:
-> On 03/04/2014 08:07 AM, Ezequiel Garcia wrote:
-[..]
-> >  MODULE_DEVICE_TABLE(of, orion_wdt_of_match_table);
-> >@@ -396,6 +475,25 @@ static int orion_wdt_probe(struct platform_devi=
-ce *pdev)
-> >  		if (!dev->rstout)
-> >  			return -ENOMEM;
-> >
-> >+	} else if (of_device_is_compatible(node, "marvell,armada-375-wdt")=
- ||
-> >+		   of_device_is_compatible(node, "marvell,armada-380-wdt")) {
-> >+
-> >+		res =3D platform_get_resource(pdev, IORESOURCE_MEM, 1);
->=20
-> Looks like each supported watchdog needs this call. Might as well do =
-it earlier
-> and just once, unless you have a good reason for doing it this way.
-> To me this just looks like a lot of code replication.
->=20
+On Tue, Mar 11, 2014 at 11:49 PM, Mark Brown <broonie@kernel.org> wrote:
+> On Tue, Mar 11, 2014 at 04:44:49PM +0400, Max Filippov wrote:
+>
+>> +static inline int xtfpga_spi_wait_busy(struct xtfpga_spi *xspi)
+>> +{
+>> +     unsigned long timeout = jiffies + msecs_to_jiffies(100);
+>> +     while (xtfpga_spi_read32(xspi, XTFPGA_SPI_BUSY)) {
+>> +             if (!time_before(jiffies, timeout))
+>> +                     return -EBUSY;
+>> +             else
+>> +                     cpu_relax();
+>> +     }
+>> +     return 0;
+>> +}
+>
+> So we'll busy wait for up to 100ms - that seems like an awfully long
+> time.  Perhaps fall back to msleep() if the delay is non-trivial (or
+> just reduce the timeout)?
 
-Well... it seemed to me as cleaner to have one 'if' block per compatibl=
-e
-group and do all the ioremap'ing in it.
+The timeout is here for the unlikely case everything went wrong. Normally
+transfers get completed in about 10 useconds on 50 MHz hardware, it
+doesn't seem worth msleeping here. I put the timeout here just because
+otherwise infinite loop polling the device register looks scary.
 
-Otherwise, it would be like this (seudo-code):
+>  If there are large enough FIFOs dead
+> reckoning a sleep for the expected transfer time might be helpful but it
+> seems like there's no meaningful FIFO.
 
-rstout =3D foo_request_ioremap();
-if (!rsout)
-	if (compatible(1)) {
-		/* Missing RSTOUT! Do backwards compatibility hack */
-		rstout =3D fw_bug_fallback();
-		if (!rstout)
-			return -ENODEV;
-	} else
-		return -ENODEV;
+Right, there's no FIFO in that device.
 
-if (compatible(3))
-	rstout_mask =3D foo_request_ioremap();
-	if (!rstout_mask)
-		return -ENODEV;
+>> +/* Unused: this device controls its only CS automatically,
+>> + * deactivating it after every 16 bit transfer completion.
+>> + */
+>
+> This is too limited to use with most SPI clients, they'll want to be
+> able to transmit more than one word (and the fact that only 16 bit words
+> are supported is also an issue, though that's easy enough to handle for
+> a bitbanging driver - I'd really strongly suggest supporting 8 bits per
+> word as well).  Clients are pretty much going to need to use GPIO based
+> chip select, you should make sure that's supported and covered in the
+> binding.
 
-Maybe it's a matter of taste, but I think this looks better:
+There's no hardware for that. This device is really dumb, it is specifically
+suited to control TLV320AIC23 which expects exactly 16 bit words, SPI
+mode 0.
 
-if (compatible(1))
-	request_ioremap all registers ...
-else if (compatible(2))
-	request_ioremap all registers ...
-else if (compatible(3))
-	request_ioremap all registers ...
-else
-	return -ENODEV;
+>> +static void xtfpga_spi_chipselect(struct spi_device *spi, int is_on)
+>> +{
+>> +}
+>
+> Omit this since it's empty.
 
-At the price of a little code duplication.
+The bitbang side doesn't like when this callback is NULL and returns
+-EINVAL from spi_bitbang_start.
 
-> It might also possibly make sense to move all the memory initializati=
-ons
-> into a separate function; the probe function gets a bit large.
->=20
-> >+		if (!res)
-> >+			return -ENODEV;
-> >+		dev->rstout =3D devm_ioremap(&pdev->dev, res->start,
-> >+					   resource_size(res));
-> >+		if (!dev->rstout)
-> >+			return -ENOMEM;
-> >+
-> >+		res =3D platform_get_resource(pdev, IORESOURCE_MEM, 2);
-> >+		if (!res)
-> >+			return -ENODEV;
-> >+		dev->rstout_mask =3D devm_ioremap(&pdev->dev, res->start,
-> >+						resource_size(res));
->=20
-> devm_ioremap_resource() is better here.
->=20
-
-True. We are currently confusing the shared and non-shared registers,
-and treating them all as shared. I'll fix that.
-
-Thanks for the review,
---=20
-Ezequiel Garc=EDa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Thanks.
+-- Max
