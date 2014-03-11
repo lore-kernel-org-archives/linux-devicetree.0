@@ -1,148 +1,69 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH net-next v2 3/9] dts: Add bindings for the Altera
- Triple Speed Ethernet driver
-Date: Tue, 11 Mar 2014 09:22:23 +0000
-Message-ID: <20140311092222.GA31679@e106331-lin.cambridge.arm.com>
-References: <1394493277-2105-1-git-send-email-vbridgers2013@gmail.com>
- <1394493277-2105-4-git-send-email-vbridgers2013@gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v2 4/8] Input: pixcir_i2c_ts: Use Type-B Multi-Touch protocol
+Date: Tue, 11 Mar 2014 11:35:08 +0200
+Message-ID: <531ED8CC.4010903@ti.com>
+References: <1393428486-15001-1-git-send-email-rogerq@ti.com> <1393428486-15001-5-git-send-email-rogerq@ti.com> <531B3331.9050008@euromail.se> <531D7E66.1070300@ti.com> <20140310163701.GA30397@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1394493277-2105-4-git-send-email-vbridgers2013@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Vince Bridgers <vbridgers2013@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20140310163701.GA30397@saruman.home>
+Sender: linux-input-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: Henrik Rydberg <rydberg@euromail.se>, dmitry.torokhov@gmail.com, jcbian@pixcir.com.cn, dmurphy@ti.com, mugunthanvnm@ti.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 10, 2014 at 11:14:31PM +0000, Vince Bridgers wrote:
-> This patch adds a bindings description for the Altera Triple Speed Ethernet
-> (TSE) driver. The bindings support the legacy SGDMA soft IP as well as the
-> preferred MSGDMA soft IP. The TSE can be configured and synthesized in soft
-> logic using Altera's Quartus toolchain. Please consult the bindings document
-> for supported options.
+On 03/10/2014 06:37 PM, Felipe Balbi wrote:
+> On Mon, Mar 10, 2014 at 10:57:10AM +0200, Roger Quadros wrote:
+>> Hi Henrik,
+>>
+>> On 03/08/2014 05:11 PM, Henrik Rydberg wrote:
+>>> Hi Roger,
+>>>
+>>> the MT implementation seems mostly fine, just one curiosity:
+>>>
+>>>>  static irqreturn_t pixcir_ts_isr(int irq, void *dev_id)
+>>>>  {
+>>>>  	struct pixcir_i2c_ts_data *tsdata = dev_id;
+>>>>  	const struct pixcir_ts_platform_data *pdata = tsdata->chip;
+>>>> +	struct pixcir_report_data report;
+>>>>  
+>>>>  	while (!tsdata->exiting) {
+>>>> -		pixcir_ts_poscheck(tsdata);
+>>>> -
+>>>> -		if (gpio_get_value(pdata->gpio_attb))
+>>>> +		/* parse packet */
+>>>> +		pixcir_ts_parse(tsdata, &report);
+>>>> +
+>>>> +		/* report it */
+>>>> +		pixcir_ts_report(tsdata, &report);
+>>>> +
+>>>> +		if (gpio_get_value(pdata->gpio_attb)) {
+>>>> +			if (report.num_touches) {
+>>>> +				/*
+>>>> +				 * Last report with no finger up?
+>>>> +				 * Do it now then.
+>>>> +				 */
+>>>> +				input_mt_sync_frame(tsdata->input);
+>>>> +				input_sync(tsdata->input);
+>>>
+>>> Why is this special handling needed?
+>>
+>> This is needed because the controller doesn't always report when all fingers
+>> have left the screen. e.g. report might contain 3 fingers touched and then
+>> gpio_attb line is de-asserted. There's no report with 0 fingers touched even
+>> if the user's fingers have left the screen. So we never detect a BUTTON_UP.
+>>
+>> Without this s/w workaround we observe side effects like buttons being pressed
+>> but not released. To me it looks like a bug in the controller.
 > 
-> Signed-off-by: Vince Bridgers <vbridgers2013@gmail.com>
-> ---
-> V2: - Update bindings to use standard Ethernet and Phy bindings.
->       Use standard "phy-addr" instead of Altera's "phy-addr".
->       Use "rx-fifo-depth" and "tx-fifo-depth" instead of versions
->       prepended with "altr," in units of 32-bit quantities.
->       Add missing bindings to describe "altr,enable-hash" and
->       "altr,enable-sup-addr".
-> ---
->  .../devicetree/bindings/net/altera_tse.txt         |  112 ++++++++++++++++++++
->  1 file changed, 112 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/altera_tse.txt
+> the other way would be to *also* use IRQF_TRIGGER_RISING, then you get
+> an IRQ when fingers leave the screen. No ?
 > 
-> diff --git a/Documentation/devicetree/bindings/net/altera_tse.txt b/Documentation/devicetree/bindings/net/altera_tse.txt
-> new file mode 100644
-> index 0000000..040e4e7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/altera_tse.txt
-> @@ -0,0 +1,112 @@
-> +* Altera Triple-Speed Ethernet MAC driver (TSE)
-> +
-> +Required properties:
-> +- compatible: Should be "altr,tse-1.0" for legacy SGDMA based TSE, and should
-> +		be "altr,tse-msgdma-1.0" for the preferred MSGDMA based TSE.
-> +		ALTR is supported for legacy device trees, but is deprecated.
-> +		altr should be used for all new designs.
-> +- reg: Address and length of the register set for the device. It contains
-> +  the information of registers in the same order as described by reg-names
-> +- reg-names: Should contain the reg names
-> +  "control_port": MAC configuration space region
-> +  "tx_csr":       xDMA Tx dispatcher control and status space region
-> +  "tx_desc":      MSGDMA Tx dispatcher descriptor space region
-> +  "rx_csr" :      xDMA Rx dispatcher control and status space region
-> +  "rx_desc":      MSGDMA Rx dispatcher descriptor space region
-> +  "rx_resp":      MSGDMA Rx dispatcher response space region
-> +  "s1":		  SGDMA descriptor memory
-> +- interrupts: Should contain the TSE interrupts and it's mode.
-> +- interrupt-names: Should contain the interrupt names
-> +  "rx_irq":       xDMA Rx dispatcher interrupt
-> +  "tx_irq":       xDMA Tx dispatcher interrupt
-> +- rx-fifo-depth: MAC receive FIFO buffer depth in bytes
-> +- tx-fifo-depth: MAC transmit FIFO buffer depth in bytes
-> +- phy-mode: See ethernet.txt in the same directory.
-> +- phy-handle: See ethernet.txt in the same directory.
-> +- phy-addr: See ethernet.txt in the same directory. A configuration should
-> +		include phy-handle or phy-addr.
-> +- altr,enable-sup-addr: If 0, TSE has no supplemental addresses configured.
-> +			If 1, TSE supports additional unicast addresses.
-> +- altr,enable-hash: If 0, TSE does not support hash multicast filtering. If 1,
-> +			TSE supports a hash based multicast filter.
 
-Why are these not booleans / empty properties?
+Yes that is also possible but it involves an additional interrupt context switch.
+Sometimes the controller does report 0 finger touches before de-asserting the ATTB line and so
+this additional interrupt is not needed by the approach I used.
 
-If this is a hardware feature, "enable" sounds wrong -- these describe
-the presence of a feature, not whether the system is expected to ernable
-them.
-
-How about altr,has-supplementary-unicast and
-altr,has-hash-multicast-filter ?
-
-> +
-> +-mdio device tree subnode: When the TSE has a phy connected to its local
-> +		mdio, there must be device tree subnode with the following
-> +		required properties:
-> +
-> +	- compatible: Must be "altr,tse-mdio".
-> +	- #address-cells: Must be <1>.
-> +	- #size-cells: Must be <0>.
-> +
-> +	For each phy on the mdio bus, there must be a node with the following
-> +	fields:
-> +
-> +	- reg: phy id used to communicate to phy.
-> +	- device_type: Must be "ethernet-phy".
-> +
-> +Optional properties:
-> +- local-mac-address: See ethernet.txt in the same directory.
-> +- max-frame-size: See ethernet.txt in the same directory.
-> +
-> +Example:
-> +
-> +	tse_sub_0_eth_tse_0: ethernet@0x100000000 {
-
-It would be nice to have a comma in the unit address between the two
-32-bit halves, as we do for other dts where #address-cells = <2>. It
-makes it easier to verify by inspection.
-
-> +		compatible = "altr,tse-msgdma-1.0";
-> +		reg = < 0x00000001 0x00000000 0x00000400
-> +			0x00000001 0x00000460 0x00000020
-> +			0x00000001 0x00000480 0x00000020
-> +			0x00000001 0x000004A0 0x00000008
-> +			0x00000001 0x00000400 0x00000020
-> +			0x00000001 0x00000420 0x00000020 >;
-
-Nit: please bracket list entries individually for consistency.
-
-> +		reg-names = "control_port", "rx_csr", "rx_desc", "rx_resp", "tx_csr", "tx_desc";
-> +		interrupt-parent = < &hps_0_arm_gic_0 >;
-> +		interrupts = < 0 41 4 0 40 4 >;
-
-Please bracket these individually, it makes it far easy to see where one
-ends and another begins.
-
-Cheers,
-Mark.
-
-> +		interrupt-names = "rx_irq", "tx_irq";
-> +		rx-fifo-depth = < 2048 >;
-> +		tx-fifo-depth = < 2048 >;
-> +		address-bits = < 48 >;
-> +		max-frame-size = < 1500 >;
-> +		local-mac-address = [ 00 00 00 00 00 00 ];
-> +		phy-mode = "gmii";
-> +		altr,enable-sup-addr = < 0 >;
-> +		altr,enable-hash = < 1 >;
-> +		phy-handle = < &phy0 >;
-> +		mdio@0 {
-
-Drop the unit-address for the mdio node. The parent has no address space
-defined for it, and there's only one.
-
-Cheers,
-Mark.
+cheers,
+-roger
