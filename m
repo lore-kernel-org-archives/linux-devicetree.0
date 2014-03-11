@@ -1,64 +1,75 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 3/9] Doc/DT: Add DT binding documentation for DVI Connector
-Date: Tue, 11 Mar 2014 12:19:00 +0100
-Message-ID: <1394536740.3772.7.camel@paszta.hi.pengutronix.de>
-References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
-	<1393590016-9361-4-git-send-email-tomi.valkeinen@ti.com>
-	<20140228155937.GQ21483@n2100.arm.linux.org.uk>
-	<1393604717.3802.61.camel@paszta.hi.pengutronix.de>
-	<CAL_JsqJ00Zr1tMoyR1+qHUhsNoc6Kj6s+nTZTkNTwki9HFHq8g@mail.gmail.com>
-	<531EAF8F.2040400@ti.com>
-	<CAMuHMdWqt4M5OEXp8y_DR8UEA8GPxJg99cz-HcmMPQB+h+Rh0A@mail.gmail.com>
-	<531EC385.7090001@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2] ASoC: cs42888: Add codec driver support
+Date: Tue, 11 Mar 2014 11:30:53 +0000
+Message-ID: <20140311113053.GA1036@e106331-lin.cambridge.arm.com>
+References: <1394536791-8381-1-git-send-email-Guangyu.Chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <531EC385.7090001@ti.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces@lists.freedesktop.org
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, DRI Development <dri-devel@lists.freedesktop.org>, Andrzej Hajda <a.hajda@samsung.com>, Rob Herring <robherring2@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert@linux-m68k.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1394536791-8381-1-git-send-email-Guangyu.Chen@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Nicolin Chen <Guangyu.Chen@freescale.com>
+Cc: "broonie@kernel.org" <broonie@kernel.org>, "brian.austin@cirrus.com" <brian.austin@cirrus.com>, "Paul.Handrigan@cirrus.com" <Paul.Handrigan@cirrus.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "lars@metafoo.de" <lars@metafoo.de>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 11.03.2014, 10:04 +0200 schrieb Tomi Valkeinen:
-> On 11/03/14 10:00, Geert Uytterhoeven wrote:
-> > On Tue, Mar 11, 2014 at 7:39 AM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
-> >> On 10/03/14 23:45, Rob Herring wrote:
-> >>> I like this proposal over the others. Although, would dual link be a
-> >>
-> >> I don't like inferring the information. With the above, you can't find
-> >> out that the DVI connector has digital and analog support before all the
-> >> drivers are loaded.
-> >>
-> >>> single endpoint or 2 endpoints? How would you differentiate that?
-> >>
-> >> Hmm, well endpoints for a single port are exclusive. So it's either a
-> >> single port and a single endpoint, or two ports and two endpoints. I
-> >> think dual link has to be single port & endpoint, as the TMDS links need
-> >> to be driven together as a single bus.
-> >>
-> >> And dual-link is not really "two links". DVI dual-link means 1 clock
-> >> lane and 6 data lanes, compared to 1 clock lane and 3 data lanes for
-> >> single-link.
-> > 
-> > What about having a property for the number of data lanes?
+On Tue, Mar 11, 2014 at 11:19:51AM +0000, Nicolin Chen wrote:
+> This patch adds support for the Cirrus Logic CS42888 Audio CODEC that
+> has four 24-bit A/D and eight 24-bit D/A converters.
 > 
-> That was already suggested by Philipp in this thread. I don't see
-> anything wrong with that, but I don't really see benefit either.
-> "dual-link" is a standard term for 6 data lanes for the DVI connector.
-> And the choices are 3 or 6 data lanes, nothing else.
+> [ CS42888 supports both I2C and SPI control ports. As initial patch,
+>   this patch only adds the support for I2C. ]
+> 
+> Signed-off-by: Nicolin Chen <Guangyu.Chen@freescale.com>
+> ---
+> 
+> Changelog
+> v2:
+>  * Separated driver into I2C and main part drivers.
+>  * Added error out if failed to get clock.
+>  * Enabled Auto-mute function as default.
+>  * Disabled runtime-pm in remove().
+>  * Added return value checking for regcache_sync().
+>  * Fixed some trival parts like 'const' as Lars mentioned.
+> 
+>  .../devicetree/bindings/sound/cs42888.txt          |  27 ++
+>  sound/soc/codecs/Kconfig                           |  10 +
+>  sound/soc/codecs/Makefile                          |   4 +
+>  sound/soc/codecs/cs42888-i2c.c                     |  68 +++
+>  sound/soc/codecs/cs42888.c                         | 536 +++++++++++++++++++++
+>  sound/soc/codecs/cs42888.h                         | 213 ++++++++
+>  6 files changed, 858 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/cs42888.txt
+>  create mode 100644 sound/soc/codecs/cs42888-i2c.c
+>  create mode 100644 sound/soc/codecs/cs42888.c
+>  create mode 100644 sound/soc/codecs/cs42888.h
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/cs42888.txt b/Documentation/devicetree/bindings/sound/cs42888.txt
+> new file mode 100644
+> index 0000000..7736527
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/cs42888.txt
+> @@ -0,0 +1,27 @@
+> +CS42888 audio CODEC
+> +
+> +Required properties:
+> +
+> +  - compatible : "cirrus,cs42888"
+> +
+> +  - reg : the I2C address of the device for I2C
+> +
+> +  - clocks : phandle to the clock source for MCLK
+> +
+> +  - clock-names : must contain "mclk".
 
-The number of lanes of a DisplayPort connector could be 1 to 4. Also,
-there's dual-mode DP which can use four lanes to drive
-somewhat-like-HDMI single link TMDS signals.
+If you use clock-names, please define the clocks property in terms of
+clock-names to avoid redundancy. e.g.
 
-regards
-Philipp
+- clocks: a list of phandles + clock-specifiers, one for each entry in
+  clock-names.
+
+It makes the relationship between the two clearer, and makes it far
+easier to alter the binding in future if required.
+
+Cheers,
+Mark.
