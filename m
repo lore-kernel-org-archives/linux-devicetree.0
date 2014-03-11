@@ -1,74 +1,81 @@
-From: Matt Porter <mporter@linaro.org>
-Subject: Re: [PATCH v2 3/5] regulator: add bcm590xx regulator driver
-Date: Tue, 11 Mar 2014 11:47:50 -0400
-Message-ID: <20140311154750.GI25092@beef>
-References: <1392765432-9111-1-git-send-email-mporter@linaro.org>
- <1392765432-9111-4-git-send-email-mporter@linaro.org>
- <20140219045232.GD2669@sirena.org.uk>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v2 7/7] ARM: zynq: DT: Migrate UART to Cadence binding
+Date: Tue, 11 Mar 2014 08:48:47 -0700
+Message-ID: <fbca0284-8a38-4767-bd17-8e5f52b21ef7@CH1EHSMHS005.ehs.local>
+References: <1394487610-2419-1-git-send-email-soren.brinkmann@xilinx.com>
+ <1394487610-2419-8-git-send-email-soren.brinkmann@xilinx.com>
+ <62cd32ad-8743-4d49-a1b6-c178054a9756@CO9EHSMHS011.ehs.local>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mYCpIKhGyMATD0i+"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-serial-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140219045232.GD2669@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Christian Daudt <bcm@fixthebug.org>, Devicetree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+In-Reply-To: <62cd32ad-8743-4d49-a1b6-c178054a9756@CO9EHSMHS011.ehs.local>
+Sender: linux-serial-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---mYCpIKhGyMATD0i+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Feb 19, 2014 at 01:52:32PM +0900, Mark Brown wrote:
-> On Tue, Feb 18, 2014 at 06:17:10PM -0500, Matt Porter wrote:
+On Tue, 2014-03-11 at 09:52AM +0100, Michal Simek wrote:
+> On 03/10/2014 10:40 PM, Soren Brinkmann wrote:
+> > The Zynq UART is Cadence IP and the driver has been renamed accordi=
+ngly.
+> > Migrate the DT to use the new binding for the UART driver.
+> >=20
+> > Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> > Acked-by: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > ---
+> > This change depends on 'tty: xuartps: Rebrand driver as Cadence UAR=
+T',
+> > which introduces the new clock-names.
+> > ---
+> >  arch/arm/boot/dts/zynq-7000.dtsi | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/z=
+ynq-7000.dtsi
+> > index 8b67b19392ec..0ed0d4b0579a 100644
+> > --- a/arch/arm/boot/dts/zynq-7000.dtsi
+> > +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+> > @@ -67,19 +67,19 @@
+> >  		};
+> > =20
+> >  		uart0: uart@e0000000 {
+> > -			compatible =3D "xlnx,xuartps";
+> > +			compatible =3D "xlnx,xuartps", "cdns,uart-r1p8";
+> >  			status =3D "disabled";
+> >  			clocks =3D <&clkc 23>, <&clkc 40>;
+> > -			clock-names =3D "ref_clk", "aper_clk";
+> > +			clock-names =3D "uart_clk", "pclk";
+> >  			reg =3D <0xE0000000 0x1000>;
+> >  			interrupts =3D <0 27 4>;
+> >  		};
+> > =20
+> >  		uart1: uart@e0001000 {
+> > -			compatible =3D "xlnx,xuartps";
+> > +			compatible =3D "xlnx,xuartps", "cdns,uart-r1p8";
+> >  			status =3D "disabled";
+> >  			clocks =3D <&clkc 24>, <&clkc 41>;
+> > -			clock-names =3D "ref_clk", "aper_clk";
+> > +			clock-names =3D "uart_clk", "pclk";
+> >  			reg =3D <0xE0001000 0x1000>;
+> >  			interrupts =3D <0 50 4>;
+> >  		};
 >=20
-> > +static struct of_device_id bcm590xx_of_match[] =3D {
-> > +	{ .compatible =3D "brcm,bcm59056-regs", },
-> > +	{ }
-> > +};
->=20
-> This looks pretty much OK however I am in general suspicious of MFDs
-> that have subdevices like this in the DT - it doesn't seem like this is
-> a reusable device which can appear anywhere else so you're pretty much
-> just representing the way that Linux splits things up here rather than a
-> reusable IP that can reasonably have a separate binding.
->=20
-> If you had a binding which did something like enumerate the individual
-> IP blocks as individual devices that'd be more interesting, I could see
-> for example that a different PMIC might have a different set of register
-> compatible regulator IPs laid out.  It looks like that might be doable,
-> but it's in no way essential.
+> This should be at least the part of 5/7 because between 5/7 and 7/7
+> driver will fail to probe.
 
-Ok I dropped this for v3 in favor of using mfd_add_device() and having
-the regulator driver reference the of_node from the parent device.
+The driver should never fail to probe. The old bindings will continue t=
+o
+work. So, only dependency for this is, the new clock names must be
+merged in. So, it has to be rather late in the series.
 
--Matt
+	S=C3=B6ren
 
 
-
---mYCpIKhGyMATD0i+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTHzAmAAoJEOfTILNwq7R4CF0P/10jxyRa0TDFYBmVuOyl6pPT
-UCwDr41O1SEWpL4cN67nrExXRUnzcN6p08srS47evulG67A1MqCsT/nhKJ/OqSjx
-GBQiFAUMzWmsSZRPBpQOoxl1LqP0tPJp8RUopsM5nmgGqqWt4lX4PBBSUNpL7fQP
-a+GtTJ6sELL1GAnM52hkCmDG/8nPsCgMYn6dizRY1JLPsn0qCadszc8ItGnF6mYg
-V36vsKpWVxMKU2bnCwMtnX69W+gCf7rhdPtYJwrb3GylV1zyJ8TiOjIW087dJTac
-MrJX5bu7j80nj2uu51jjDoPj3ZBR/6fn81R/+gdHwN0eYagk+zWvcqE0WSAsx0HM
-k6u5i5IStuLOPACtwQvs5jDiN2bMXREL90tlbyTg8dAR1EzmXt4sp80F3GoyykbP
-bNLqjpnN20s7l2fQ1s/Bp5ZurdOb85mZnAb8UGhj4IGtO4GoMb38NXw8tVdGIsM5
-cPfj7AZ5zP+s2uRluppuShqglCVVkCt5CLCt+K4h1BsbyAZfYj7AROKVXeejIDyy
-COkU8uwf15YqNuxIHCRvDk5u86T85pJr6ZFOzH8uh/O1xhtY0gO6SvNhYzvW3E8j
-Z6sWL3MlPNPpsQo7+G0nx8sZ61vXdEX5gPTYjKQP/kX/M+Px+HnRj9sNMbXqN4H2
-29eoYxn/VH/bw3GrG2fS
-=zJmM
------END PGP SIGNATURE-----
-
---mYCpIKhGyMATD0i+--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-serial"=
+ in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
