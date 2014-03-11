@@ -1,15 +1,15 @@
 From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 1/5] ARM: dts: exynos4x12: Add ADC's dt data to read raw
- data
-Date: Tue, 11 Mar 2014 13:20:15 +0100
-Message-ID: <531EFF7F.9010405@samsung.com>
+Subject: Re: [PATCH 2/5] ARM: dts: exynos4x12: Add PMU dt data to support
+ PMU(Perforamnce Monitoring Unit)
+Date: Tue, 11 Mar 2014 13:21:17 +0100
+Message-ID: <531EFFBD.8050301@samsung.com>
 References: <1394524494-30641-1-git-send-email-cw00.choi@samsung.com>
- <1394524494-30641-2-git-send-email-cw00.choi@samsung.com>
+ <1394524494-30641-3-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1394524494-30641-2-git-send-email-cw00.choi@samsung.com>
+In-reply-to: <1394524494-30641-3-git-send-email-cw00.choi@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: Chanwoo Choi <cw00.choi@samsung.com>, kgene.kim@samsung.com
 Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk
@@ -18,54 +18,26 @@ List-Id: devicetree@vger.kernel.org
 Hi Chanwoo,
 
 On 11.03.2014 08:54, Chanwoo Choi wrote:
-> This patch add ADC(Analog to Digital Converter)'s dt data to get raw data
-> with IIO subsystem. Usually, ADC is used to check temperature, jack type, and
-> so on.
+> ARM CPU has its own performance profiling unit(PMU, Perforamnce Monitoring Unit).
+> This patch add PMU dt data to support PMU which count cache hit and miss events.
 >
-
-8< ---
-
-> Register map
-> - <0x126C0000 0x100> : ADC register's base address
-> - <0x10020718 0x4> : ADC_PHY_CONTROL, TS-ADC control register address
+> PMU interrput list of Exynos4212
+> - <2 2> : INTG2[2] - PMUIRQ[0] for CPU0
+> - <3 2> : INTG3[2] - PMUIRQ[1] for CPU1
 >
-> Clock
-> - <&clock 326> : ADC clock (clock name :'tsadc')
->
-> Interrupt
-> - INTG10[3] : ADC for General ADC
-
---- >8
-
-I don't think there is a need to include such data in commit message. A 
-commit message should say what is done and why it's done (and sometimes 
-how it's done, in case of some complex code being added) and I guess 
-that's all.
-
+> PMU interrput list of Exynos4412
+> - <2 2> : INTG2[2], PMUIRQ[0] for CPU0
+> - <3 2> : INTG3[2], PMUIRQ[1] for CPU1
+> - <18 2> : INTG18[2], PMUIRQ[2] : CPU2
+> - <19 2> : INTG19[2], PMUIRQ[3] : CPU3
 >
 > Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 > Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
 > ---
->   arch/arm/boot/dts/exynos4x12.dtsi | 12 ++++++++++++
->   1 file changed, 12 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/exynos4x12.dtsi b/arch/arm/boot/dts/exynos4x12.dtsi
-> index 5c412aa..5a3e551 100644
-> --- a/arch/arm/boot/dts/exynos4x12.dtsi
-> +++ b/arch/arm/boot/dts/exynos4x12.dtsi
-> @@ -80,6 +80,18 @@
->   		};
->   	};
->
-> +	adc: adc@126C0000 {
-> +		compatible = "samsung,exynos-adc-v1";
-> +		reg = <0x126C0000 0x100>, <0x10020718 0x4>;
-> +		interrupt-parent = <&combiner>;
-> +		interrupts = <10 3>;
-> +		clocks = <&clock 326>;
+>   arch/arm/boot/dts/exynos4x12.dtsi | 6 ++++++
+>   1 file changed, 6 insertions(+)
 
-Please use clock macros instead of numbers, as introduced by Andrzej 
-Hajda's patches merged to Kgene's tree.
+Reviewed-by: Tomasz Figa <t.figa@samsung.com>
 
 Best regards,
 Tomasz
