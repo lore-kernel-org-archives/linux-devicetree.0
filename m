@@ -1,69 +1,37 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v2 4/8] Input: pixcir_i2c_ts: Use Type-B Multi-Touch protocol
-Date: Tue, 11 Mar 2014 11:35:08 +0200
-Message-ID: <531ED8CC.4010903@ti.com>
-References: <1393428486-15001-1-git-send-email-rogerq@ti.com> <1393428486-15001-5-git-send-email-rogerq@ti.com> <531B3331.9050008@euromail.se> <531D7E66.1070300@ti.com> <20140310163701.GA30397@saruman.home>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v5] can: xilinx CAN controller support.
+Date: Tue, 11 Mar 2014 10:38:14 +0100
+Message-ID: <546dbc60-dd7b-4249-bab8-ad7e008b9aad@AM1EHSMHS001.ehs.local>
+References: <5254bfec-c6fd-4681-a34d-706d51e60fbb@VA3EHSMHS004.ehs.local> <531DD493.3030306@monstr.eu> <531DD5E7.7090406@pengutronix.de> <3245971.RIuVmbVL0Z@wuerfel> <1964213d-6bd9-49fa-805e-42e1e0630fd5@VA3EHSMHS029.ehs.local> <20140311044555.GA12373@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20140310163701.GA30397@saruman.home>
-Sender: linux-input-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: Henrik Rydberg <rydberg@euromail.se>, dmitry.torokhov@gmail.com, jcbian@pixcir.com.cn, dmurphy@ti.com, mugunthanvnm@ti.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <20140311044555.GA12373@localhost>
+Sender: linux-can-owner@vger.kernel.org
+To: Fengguang Wu <fengguang.wu@intel.com>
+Cc: Michal Simek <michal.simek@xilinx.com>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Marc Kleine-Budde <mkl@pengutronix.de>, monstr@monstr.eu, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, robh+dt@kernel.org, Kedareswara rao Appana <appana.durga.rao@xilinx.com>, grant.likely@linaro.org, Kedareswara rao Appana <appanad@xilinx.com>, wg@grandegger.com
 List-Id: devicetree@vger.kernel.org
 
-On 03/10/2014 06:37 PM, Felipe Balbi wrote:
-> On Mon, Mar 10, 2014 at 10:57:10AM +0200, Roger Quadros wrote:
->> Hi Henrik,
->>
->> On 03/08/2014 05:11 PM, Henrik Rydberg wrote:
->>> Hi Roger,
+On 03/11/2014 05:45 AM, Fengguang Wu wrote:
+>>> You probably want something like
 >>>
->>> the MT implementation seems mostly fine, just one curiosity:
->>>
->>>>  static irqreturn_t pixcir_ts_isr(int irq, void *dev_id)
->>>>  {
->>>>  	struct pixcir_i2c_ts_data *tsdata = dev_id;
->>>>  	const struct pixcir_ts_platform_data *pdata = tsdata->chip;
->>>> +	struct pixcir_report_data report;
->>>>  
->>>>  	while (!tsdata->exiting) {
->>>> -		pixcir_ts_poscheck(tsdata);
->>>> -
->>>> -		if (gpio_get_value(pdata->gpio_attb))
->>>> +		/* parse packet */
->>>> +		pixcir_ts_parse(tsdata, &report);
->>>> +
->>>> +		/* report it */
->>>> +		pixcir_ts_report(tsdata, &report);
->>>> +
->>>> +		if (gpio_get_value(pdata->gpio_attb)) {
->>>> +			if (report.num_touches) {
->>>> +				/*
->>>> +				 * Last report with no finger up?
->>>> +				 * Do it now then.
->>>> +				 */
->>>> +				input_mt_sync_frame(tsdata->input);
->>>> +				input_sync(tsdata->input);
->>>
->>> Why is this special handling needed?
+>>> 	config CAN_XILINX
+>>> 	tristate "Xilinx CAN"
+>>> 	depends on ARCH_ZYNQ || MICROBLAZE || COMPILE_TEST
+>>> 	depends on COMMON_CLK && HAS_MMIO  # whatever you need for other architectures
 >>
->> This is needed because the controller doesn't always report when all fingers
->> have left the screen. e.g. report might contain 3 fingers touched and then
->> gpio_attb line is de-asserted. There's no report with 0 fingers touched even
->> if the user's fingers have left the screen. So we never detect a BUTTON_UP.
->>
->> Without this s/w workaround we observe side effects like buttons being pressed
->> but not released. To me it looks like a bug in the controller.
+>> Fengguang: Are you use COMPILE_TEST in zero day testing system?
 > 
-> the other way would be to *also* use IRQF_TRIGGER_RISING, then you get
-> an IRQ when fingers leave the screen. No ?
-> 
+> Yeah, the randconfig build/boot tests should cover both COMPILE_TEST
+> and !COMPILE_TEST cases.
 
-Yes that is also possible but it involves an additional interrupt context switch.
-Sometimes the controller does report 0 finger touches before de-asserting the ATTB line and so
-this additional interrupt is not needed by the approach I used.
+But the point is that randconfig is really random it means it definitely can
+cover but not there is no certainty that for that build, you are running,
+has both option for all architectures enabled.
+Or do I read it wrongly?
 
-cheers,
--roger
+Thanks,
+Michal
+
+
