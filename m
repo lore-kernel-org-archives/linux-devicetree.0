@@ -1,87 +1,62 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH net-next v3 5/9] Altera TSE: Add Miscellaneous Files for
- Altera Ethernet Driver
-Date: Tue, 11 Mar 2014 15:59:07 -0700
-Message-ID: <1394578747.28839.4.camel@joe-AO722>
-References: <1394577791-6547-1-git-send-email-vbridgers2013@gmail.com>
-	 <1394577791-6547-6-git-send-email-vbridgers2013@gmail.com>
+From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] mfd: add bcm590xx pmu driver
+Date: Tue, 11 Mar 2014 19:25:45 -0400
+Message-ID: <20140311232545.GP25092@beef>
+References: <1394552775-31264-1-git-send-email-mporter@linaro.org>
+ <1394552775-31264-3-git-send-email-mporter@linaro.org>
+ <20140311160837.GP21216@lee--X1>
+ <20140311221938.GO25092@beef>
+ <20140311224517.GA5672@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1394577791-6547-6-git-send-email-vbridgers2013@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Vince Bridgers <vbridgers2013@gmail.com>
-Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-doc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140311224517.GA5672@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-03-11 at 17:43 -0500, Vince Bridgers wrote:
-> This patch adds miscellaneous files for the Altera Ethernet Driver,
-> including ethtool support.
+On Tue, Mar 11, 2014 at 10:45:17PM +0000, Lee Jones wrote:
+> > > > Add a driver for the BCM590xx PMU multi-function devices. The driver
+> > > > initially supports regmap initialization and instantiation of the
+> > > > voltage regulator device function of the PMU.
+> > > > 
+> > > > Signed-off-by: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > > Reviewed-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > > Reviewed-by: Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > > ---
+> > > >  drivers/mfd/Kconfig          |  8 ++++
+> > > >  drivers/mfd/Makefile         |  1 +
+> > > >  drivers/mfd/bcm590xx.c       | 93 ++++++++++++++++++++++++++++++++++++++++++++
+> > > >  include/linux/mfd/bcm590xx.h | 31 +++++++++++++++
+> > > >  4 files changed, 133 insertions(+)
+> > > >  create mode 100644 drivers/mfd/bcm590xx.c
+> > > >  create mode 100644 include/linux/mfd/bcm590xx.h
+> > > 
+> > > I have a tiny nit that 'ret' doesn't need to be initialised before
+> > > use in probe(), but apart from that...
+> > > 
+> > > Looks pretty sensible:
+> > >   Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > 
+> > Ok, thanks. When I get back in front of my desktop I'll send a v4 of
+> > just this patch to address that nit. Mark already applied the regulator
+> > driver from this series, will you be taking this through your tree? For
+> > that matter, I wonder if the binding would also go through your tree
+> > with this driver.
+> 
+> At least the MFD portion and the DT binding doc will go through the
+> MFD tree.
+> 
+> Are there any inter-patch dependencies in the set? If so, we should
+> know about them so we can coordinate a sensible solution.
 
-trivial notes:
+Yes, the regulator driver (3/5) that Mark applied is dependent on this
+patch...the regulator driver includes include/linux/mfd/bcm590xx.h.
 
-> diff --git a/drivers/net/ethernet/altera/altera_tse_ethtool.c b/drivers/net/ethernet/altera/altera_tse_ethtool.c
-[]
-> +static char const stat_gstrings[][ETH_GSTRING_LEN] = {
-
-static const char
-
-> +	"aFramesTransmittedOK",
-
-Why the prefix with a?
-
-> +	"aFramesReceivedOK",
-
-"rx_packets" is typically used
-
-> +	"aFramesCheckSequenceErrors",
-
-> +	"aAlignmentErrors",
-> +	"aOctetsTransmittedOK",
-> +	"aOctetsReceivedOK",
-> +	"aTxPAUSEMACCtrlFrames",
-> +	"aRxPAUSEMACCtrlFrames",
-> +	"ifInErrors",
-> +	"ifOutErrors",
-> +	"ifInUcastPkts",
-> +	"ifInMulticastPkts",
-> +	"ifInBroadcastPkts",
-> +	"ifOutDiscards",
-> +	"ifOutUcastPkts",
-> +	"ifOutMulticastPkts",
-> +	"ifOutBroadcastPkts",
-> +	"etherStatsDropEvents",
-> +	"etherStatsOctets",
-> +	"etherStatsPkts",
-> +	"etherStatsUndersizePkts",
-> +	"etherStatsOversizePkts",
-> +	"etherStatsPkts64Octets",
-> +	"etherStatsPkts65to127Octets",
-> +	"etherStatsPkts128to255Octets",
-> +	"etherStatsPkts256to511Octets",
-> +	"etherStatsPkts512to1023Octets",
-> +	"etherStatsPkts1024to1518Octets",
-> +	"etherStatsPkts1519toXOctets",
-> +	"etherStatsJabbers",
-> +	"etherStatsFragments",
-
-Perhaps review all of these strings for
-unusual naming.
-
-> +static void tse_get_regs(struct net_device *dev, struct ethtool_regs *regs,
-> +			 void *regbuf)
-> +{
-> +	int i;
-> +	struct altera_tse_private *priv = netdev_priv(dev);
-> +	u32 *tse_mac_regs = (u32 *)priv->mac_dev;
-> +	u32 *buf = (u32 *)regbuf;
-
-void * doesn't need a cast
-
-	u32 *buf = regbuf
-
-is just fine.
-
-
-
+-Matt
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
