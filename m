@@ -1,118 +1,123 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [RFC PATCH] edac: zynq: Added EDAC support for zynq ddr ecc controller
-Date: Tue, 11 Mar 2014 09:32:51 +0100
-Message-ID: <531ECA33.8050803@monstr.eu>
-References: <4adb2b4b-2ad6-42b9-929e-cc062f817245@TX2EHSMHS021.ehs.local> <20140310105655.GH14999@e106331-lin.cambridge.arm.com> <531DA900.5060202@monstr.eu> <fa35006e-055d-4ef2-9b65-a0f8cc6a0c8f@AM1EHSMHS016.ehs.local>
-Reply-To: monstr@monstr.eu
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v9 0/9] USB Host support for OMAP5 uEVM
+Date: Tue, 11 Mar 2014 10:48:11 +0200
+Message-ID: <531ECDCB.4060700@ti.com>
+References: <1393510711-4697-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="3dbUwieR7F5EVM6DstcsT09KmBooOenbK"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <fa35006e-055d-4ef2-9b65-a0f8cc6a0c8f@AM1EHSMHS016.ehs.local>
-Sender: linux-doc-owner@vger.kernel.org
-To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, "dougthompson@xmission.com" <dougthompson@xmission.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "kpc528@gmail.com" <kpc528@gmail.com>, "kalluripunnaiahchoudary@gmail.com" <kalluripunnaiahchoudary@gmail.com>punnai
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1393510711-4697-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---3dbUwieR7F5EVM6DstcsT09KmBooOenbK
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hi Lee,
 
-On 03/10/2014 11:32 PM, S=C3=B6ren Brinkmann wrote:
-> On Mon, 2014-03-10 at 12:58PM +0100, Michal Simek wrote:
->> On 03/10/2014 11:56 AM, Mark Rutland wrote:
->>> On Sun, Mar 09, 2014 at 02:57:16AM +0000, Punnaiah Choudary Kalluri w=
-rote:
->>>> Added EDAC support for reporting the ecc errors of zynq ddr controll=
-er.
->>>> The ddr ecc controller corrects single bit errors and detects double=
- bit
->>>> errors
->>>>
->>>> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
->>>> ---
->>>>  .../devicetree/bindings/edac/zynq_edac.txt         |   18 +
->>>>  drivers/edac/Kconfig                               |    7 +
->>>>  drivers/edac/Makefile                              |    1 +
->>>>  drivers/edac/zynq_edac.c                           |  613 +++++++++=
-+++++++++++
->>>>  4 files changed, 639 insertions(+), 0 deletions(-)
->>>>  create mode 100644 Documentation/devicetree/bindings/edac/zynq_edac=
-=2Etxt
->>>>  create mode 100644 drivers/edac/zynq_edac.c
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/edac/zynq_edac.txt b/=
-Documentation/devicetree/bindings/edac/zynq_edac.txt
->>>> new file mode 100644
->>>> index 0000000..c21ff83
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/edac/zynq_edac.txt
->>>> @@ -0,0 +1,18 @@
->>>> +Zynq EDAC driver, it does reports the DDR ECC single bit errors tha=
-t are
->>>> +corrected and double bit ecc errors that are detected by the DDR EC=
-C controller.
->>>> +ECC support for DDR is available in half-bus width(16 bit) configur=
-ation only.
->>>> +
->>>> +Required properties:
->>>> +- compatible: Should be "xlnx,ps7-ddrc" or "xlnx,ps7-ddrc-1.00.a"
->>>
->>> Is this an or or a xor?
->>
->> Compatible string should be just xlnx,zynq-ddrc-1.00.a.
->> Nothing with ps7.
->=20
-> Isn't this vendor IP? IMHO, this should be something completely
-> different. Or if you want some Zynq-specific compat string it should
-> refer to an actual version string associated with Zynq. 1.00.a is not,
-> AFAIK.
+On 02/27/2014 04:18 PM, Roger Quadros wrote:
+> Hi,
+> 
+> This patchset brings up USB Host ports and Ethernet port on
+> the OMAP5 uEVM board.
+> 
+> It also does some cleanup with respect to DT clock binding
+> for the mfd/omap-usb-host driver.
+> 
+> Please queue these for -next.
+> 
+> Lee,
+> 
+> I've folded some platform data dependent patches with mfd patches
+> so that they don't break functionality when applied individually.
+> You can safely pull in all MFD patches (1 to 6).
+> 
+> Tony & Benoit,
+> 
+> Can you please accept patches 7, 8 and 9?
 
-I have checked with Punnaiah that this is Synopsys DDR memory controller.=
+Tony has already picked up 7,8 and 9 through omap-soc tree.
 
-Zynq is based on 1.4 version with some customization.
-It means I think reasonable solution is
-call it drivers/edac/synopsys_edac.c
-rename zynq_ in driver to synopsys_ and
-use xlnx,zynq-ddrc-1.00.a compatible string because zynq is not using
-clean synopsys version.
+Since you acked most patches except 5 and 6, are you fine if Tony takes
+all the patches 1 to 4 in this series via omap-soc tree?
 
-I am not getting point why you don't like 1.00.a suffix here.
-Because of historical point of view compatible strings should be differen=
-t
-for early silicon, silicon v1, silicon v2, silicon v3, etc
-but we haven't used it at all that's why we can use xilinx scheme
-which we are using for our soft IPs.
+What about patches 5 and 6?
 
-Does it sound reasonable?
+cheers,
+-roger
 
-Thanks,
-Michal
+> 
+> Thanks.
+> 
+> Tested on:
+>  - OMAP5 uEVM
+>  - Pandaboard ES Rev. B1
+>  - Beagleboard-XM Rev C2 (DT + Legacy)
+>  - Beagleboard Rev C4 (DT + Legacy)
+> 
+> Changelog:
+> 
+> v9:
+> - Folded dependent platform data patches into MFD patches.
+> 
+> v8:
+> - Addressed review comments and split patch
+>   "mfd: omap-usb-host: Get clocks based on hardware revision"
+> - Removed unnecessary usb host dummy clocks on OMAP3
+> - Removed unnecessary clock alias "ehci_logic_fck" for OMAP3
+> - Rebased on 3.14-rc3
+> 
+> v7:
+> - Rebased on 3.14-rc2
+> - Removed incompatible ids from DT files and examples
+> 
+> v6:
+> - Initialized clocks to -ENODEV and split patch 3.
+> 
+> v5:
+> - Expose all clocks in the DT binding document for mfd:omap-usb-host
+> and mfd:omap-usb-tll
+> 
+> v4:
+> - Updated DT binding document for clock binding
+> 
+> v3:
+> - Rebased on top of 3.13-rc7
+> 
+> cheers,
+> -roger
+> 
+> ---
+> Roger Quadros (9):
+>   mfd: omap-usb-host: Get clocks based on hardware revision
+>   mfd: omap-usb-host: Always fail on clk_get() error
+>   mfd: omap-usb-host: Use proper clock name instead of alias
+>   mfd: omap-usb-host: Use clock names as per function for reference
+>     clocks
+>   mfd: omap-usb-host: Update DT clock binding information
+>   mfd: omap-usb-tll: Update DT clock binding information
+>   ARM: OMAP2+: Remove legacy_init_ehci_clk()
+>   ARM: dts: OMAP2+: Get rid of incompatible ids for USB host nodes
+>   usb: omap: dts: Update DT binding example usage
+> 
+>  .../devicetree/bindings/mfd/omap-usb-host.txt      |  23 ++++
+>  .../devicetree/bindings/mfd/omap-usb-tll.txt       |  10 ++
+>  .../devicetree/bindings/usb/ehci-omap.txt          |   2 +-
+>  .../devicetree/bindings/usb/ohci-omap3.txt         |   2 +-
+>  arch/arm/boot/dts/omap3.dtsi                       |   4 +-
+>  arch/arm/boot/dts/omap4-panda-common.dtsi          |   8 +-
+>  arch/arm/boot/dts/omap4.dtsi                       |  10 +-
+>  arch/arm/boot/dts/omap5-uevm.dts                   |   8 +-
+>  arch/arm/boot/dts/omap5.dtsi                       |  10 +-
+>  arch/arm/mach-omap2/cclock3xxx_data.c              |   4 -
+>  arch/arm/mach-omap2/omap_hwmod_3xxx_data.c         |   6 --
+>  arch/arm/mach-omap2/pdata-quirks.c                 |  16 ---
+>  drivers/clk/ti/clk-3xxx.c                          |   4 -
+>  drivers/mfd/omap-usb-host.c                        | 116 ++++++++++++++-------
+>  14 files changed, 135 insertions(+), 88 deletions(-)
+> 
 
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---3dbUwieR7F5EVM6DstcsT09KmBooOenbK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlMeyjMACgkQykllyylKDCGCdQCeK8CWXc9HZeiQMIsnQTtK2PyN
-KkYAn01PI6POUb/yfXPn5iSvlSjdB1zs
-=eOSS
------END PGP SIGNATURE-----
-
---3dbUwieR7F5EVM6DstcsT09KmBooOenbK--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
