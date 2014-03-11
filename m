@@ -1,55 +1,71 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v15 3/3] arm64: Add APM X-Gene SoC 15Gbps Multi-purpose
- PHY DTS entries
-Date: Tue, 11 Mar 2014 11:34:44 +0530
-Message-ID: <531EA77C.103@ti.com>
-References: <1394213289-29565-1-git-send-email-lho@apm.com> <1394213289-29565-2-git-send-email-lho@apm.com> <1394213289-29565-3-git-send-email-lho@apm.com> <1394213289-29565-4-git-send-email-lho@apm.com> <CAPw-ZTmwFZjKT2+CUUp73TDXJcXy-bEY_sTNg-TtH-COzDnCfw@mail.gmail.com> <20140310204549.GJ25290@htj.dyndns.org>
+From: Barry Song <Barry.Song-kQvG35nSl+M@public.gmane.org>
+Subject: RE: [PATCH] mfd: Support SiRF audio modules
+Date: Tue, 11 Mar 2014 06:23:27 +0000
+Message-ID: <5EB3BFCD089AD643B9BB63439F5FD5E9012BE2D700@SHAASIEXM01.ASIA.ROOT.PRI>
+References: <1394184531-7679-1-git-send-email-rongjun.ying@csr.com>
+ <20140310103532.GI14976@lee--X1>
+ <5EB3BFCD089AD643B9BB63439F5FD5E9012BE2D157@SHAASIEXM01.ASIA.ROOT.PRI>
+ <20140311054926.GA2839@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20140310204549.GJ25290@htj.dyndns.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>, Loc Ho <lho@apm.com>
-Cc: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140311054926.GA2839@lee--X1>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: RongJun Ying <rjying-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, DL-SHA-WorkGroupLinux <DL-SHA-WorkGroupLinux-z7JfP6tgrtVrifDez5n5bw@public.gmane.org>, Rongjun Ying <Rongjun.Ying-kQvG35nSl+M@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Tuesday 11 March 2014 02:15 AM, Tejun Heo wrote:
-> On Sun, Mar 09, 2014 at 10:23:33PM -0700, Loc Ho wrote:
->> Hi Tejun,
->>
->> On Fri, Mar 7, 2014 at 9:28 AM, Loc Ho <lho@apm.com> wrote:
->>
->>> This patch adds the DTS entries for the APM X-Gene SoC 15Gbps Multi-purpose
->>> PHY driver. The PHY for SATA controller 2 and 3 are enabled by default.
->>>
->>> Signed-off-by: Loc Ho <lho@apm.com>
->>> Signed-off-by: Tuan Phan <tphan@apm.com>
->>> Signed-off-by: Suman Tripathi <stripathi@apm.com>
->>> ---
->>>   arch/arm64/boot/dts/apm-storm.dtsi |   75
->>> ++++++++++++++++++++++++++++++++++++
->>>   1 files changed, 75 insertions(+), 0 deletions(-)
->>>
->>>
->> Kishon had pulled in the PHY doc/driver patches. Will you pulling in the
->> PHY DTS and the SATA host driver patches soon?
->
-> Kishon, is the following branch the right one to pull into
-> libata/for-3.15?
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git next
-
-
-My PULL request to Greg has this..
-git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git 
-tags/for_3.15
-
-Btw you can add my
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-for this patch.
-
-Thanks
-Kishon
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMZWUgSm9u
+ZXMgW21haWx0bzpsZWUuam9uZXNAbGluYXJvLm9yZ10NCj4gU2VudDogVHVl
+c2RheSwgTWFyY2ggMTEsIDIwMTQgMTo0OSBQTQ0KPiBUbzogQmFycnkgU29u
+Zw0KPiBDYzogUm9uZ0p1biBZaW5nOyBSb2IgSGVycmluZzsgUGF3ZWwgTW9s
+bDsgTWFyayBSdXRsYW5kOyBTdGVwaGVuIFdhcnJlbjsNCj4gSWFuIENhbXBi
+ZWxsOyBSb2IgTGFuZGxleTsgU2FtdWVsIE9ydGl6OyBHcmFudCBMaWtlbHk7
+IERMLVNIQS0NCj4gV29ya0dyb3VwTGludXg7IFJvbmdqdW4gWWluZzsgZGV2
+aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRD
+SF0gbWZkOiBTdXBwb3J0IFNpUkYgYXVkaW8gbW9kdWxlcw0KPiANCj4gPiA+
+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvbWZkL3NpcmYvYXVkaW8u
+aA0KPiA+ID4gPiBiL2luY2x1ZGUvbGludXgvbWZkL3NpcmYvYXVkaW8uaCBu
+ZXcgZmlsZSBtb2RlIDEwMDY0NCBpbmRleA0KPiA+ID4gPiAwMDAwMDAwLi5k
+OGNmZmY5DQo+ID4gPiA+IC0tLSAvZGV2L251bGwNCj4gPiA+ID4gKysrIGIv
+aW5jbHVkZS9saW51eC9tZmQvc2lyZi9hdWRpby5oDQo+ID4gPiA+IEBAIC0w
+LDAgKzEsMTcgQEANCj4gPiA+ID4gKy8qDQo+ID4gPiA+ICsgKiBhdWRpby5o
+DQo+ID4gPiA+ICsgKg0KPiA+ID4gPiArICogQ29weXJpZ2h0IChjKSAyMDE0
+IENhbWJyaWRnZSBTaWxpY29uIFJhZGlvIExpbWl0ZWQsIGEgQ1NSIHBsYw0K
+PiA+ID4gPiArZ3JvdXANCj4gPiA+IGNvbXBhbnkuDQo+ID4gPiA+ICsgKg0K
+PiA+ID4gPiArICogTGljZW5zZWQgdW5kZXIgR1BMdjIgb3IgbGF0ZXIuDQo+
+ID4gPiA+ICsgKi8NCj4gPiA+DQo+ID4gPiBVc2UgYSBzdGFuZGFyZCBoZWFk
+ZXIgcGxlYXNlDQo+ID4NCj4gPiBJIHRoaW5rIHRoaXMgaGFzIGJlZW4gYSBz
+dGFuZGFyZCBoZWFkZXIuIEl0IGlzIG9uZSBzaW1wbGVyIHZlcnNpb24gZm9y
+IGxpY2Vuc2UuDQo+ID4gSWYgdGhlcmUgaXMgYW55IHByb2JsZW0gaGVyZSwg
+aXQgc2hvdWxkIGJlIHRoZSAxc3QgbGluZSwgd2UgbWlnaHQgcmVwbGFjZQ0K
+PiBhdWRpby5oIGJ5IGEgc2ltcGxlIGRlc2NyaXB0aW9uIG9mIHRoaXMgZmls
+ZS4NCj4gDQo+IE15IGlzc3VlIHdhc24ndCB3aXRoIHRoZSBsaWNlbnNlLCBi
+dXQgdGhlIGhlYWRlciBpbiBnZW5lcmFsLiBJdCBzdGFydGVkIG9mZg0KPiB3
+aXRob3V0IGEgcHJvcGVyIG5hbWUgZm9yIHRoZSBkcml2ZXIgZm9sbG93ZWQg
+Ynkgbm8gZGVzY3JpcHRpb24gb2YgdGhlIGNvZGUsDQo+IHRoZW4gSSBub3Rp
+Y2VkIHRoZSBhdXRob3IgKHdobyBpcyBsaXN0ZWQgYXQgdGhlIGJvdHRvbSkg
+aXMgbm90IG1lbnRpb25lZC4gTXkNCj4gaXNzdWUgaXMgdGhhdCBpdCdzIHNw
+YXJzZSBhbmQgdW5pbmZvcm1hdGl2ZS4NCg0KSSBkbyB0aGluayBSb25nanVu
+IHNob3VsZCBoYXZlIGEgc2ltcGxlIGRlc2NyaXB0aW9uIGluc3RlYWQgb2Yg
+YSAiYXVkaW8uaCIuDQoNCi1iYXJyeQ0KDQoKCk1lbWJlciBvZiB0aGUgQ1NS
+IHBsYyBncm91cCBvZiBjb21wYW5pZXMuIENTUiBwbGMgcmVnaXN0ZXJlZCBp
+biBFbmdsYW5kIGFuZCBXYWxlcywgcmVnaXN0ZXJlZCBudW1iZXIgNDE4NzM0
+NiwgcmVnaXN0ZXJlZCBvZmZpY2UgQ2h1cmNoaWxsIEhvdXNlLCBDYW1icmlk
+Z2UgQnVzaW5lc3MgUGFyaywgQ293bGV5IFJvYWQsIENhbWJyaWRnZSwgQ0I0
+IDBXWiwgVW5pdGVkIEtpbmdkb20KTW9yZSBpbmZvcm1hdGlvbiBjYW4gYmUg
+Zm91bmQgYXQgd3d3LmNzci5jb20uIEtlZXAgdXAgdG8gZGF0ZSB3aXRoIENT
+UiBvbiBvdXIgdGVjaG5pY2FsIGJsb2csIHd3dy5jc3IuY29tL2Jsb2csIENT
+UiBwZW9wbGUgYmxvZywgd3d3LmNzci5jb20vcGVvcGxlLCBZb3VUdWJlLCB3
+d3cueW91dHViZS5jb20vdXNlci9DU1JwbGMsIEZhY2Vib29rLCB3d3cuZmFj
+ZWJvb2suY29tL3BhZ2VzL0NTUi8xOTEwMzg0MzQyNTM1MzQsIG9yIGZvbGxv
+dyB1cyBvbiBUd2l0dGVyIGF0IHd3dy50d2l0dGVyLmNvbS9DU1JfcGxjLgpO
+ZXcgZm9yIDIwMTQsIHlvdSBjYW4gbm93IGFjY2VzcyB0aGUgd2lkZSByYW5n
+ZSBvZiBwcm9kdWN0cyBwb3dlcmVkIGJ5IGFwdFggYXQgd3d3LmFwdHguY29t
+Lgo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
