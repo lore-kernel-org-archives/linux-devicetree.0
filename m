@@ -1,52 +1,54 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 3/5] regulator: add bcm590xx regulator driver
-Date: Tue, 11 Mar 2014 18:52:52 +0000
-Message-ID: <20140311185252.GX28112@sirena.org.uk>
-References: <1394552775-31264-1-git-send-email-mporter@linaro.org>
- <1394552775-31264-4-git-send-email-mporter@linaro.org>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [RFC PATCH v2 04/14] mtd: nand: define struct nand_timings
+Date: Tue, 11 Mar 2014 12:55:54 -0600
+Message-ID: <20140311185554.GD31835@obsidianresearch.com>
+References: <1391006064-28890-1-git-send-email-b.brezillon.dev@gmail.com>
+ <1391006064-28890-5-git-send-email-b.brezillon.dev@gmail.com>
+ <531DC1A4.7010208@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="MPTQUV1vt+merpdf"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1394552775-31264-4-git-send-email-mporter@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <mporter@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Christian Daudt <bcm@fixthebug.org>, Devicetree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+In-Reply-To: <531DC1A4.7010208@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Boris BREZILLON <b.brezillon.dev@gmail.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Brian Norris <computersforpeace@gmail.com>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, dev@linux-sunxi.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Mar 10, 2014 at 02:44:04PM +0100, Boris BREZILLON wrote:
 
---MPTQUV1vt+merpdf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Some timings are missing here (see Table 55 in the ONFI spec):
 
-On Tue, Mar 11, 2014 at 11:46:13AM -0400, Matt Porter wrote:
-> Add a regulator driver for the BCM590xx PMU voltage regulators.
-> The driver supports LDOs and DCDCs in normal mode only. There is
-> no support for low-power mode or power sequencing.
+Right..
 
-Applied, thanks.
+The 'mode' covers only the raw electrical parameters needed to
+exchange commands, other timings cover the commands
+themselves. Notably the timing mode does not alter those parameters.
 
---MPTQUV1vt+merpdf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+To me it seems tidy to keep the 'mode' timings contained in their own
+struct and find other homes for the other parameters.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+> -tR
+> -tBERS
+> -tCCS
+> -tPLEBSY
+> -...
+> 
+> I see at least 3 of those timings that could be useful (for the moment) :
+> - tR: this one should be used to fill the chip_delay field
+> - tPROG and tBERS: could be used within nand_wait to choose the timeo
+>   value appropriately.
 
-iQIcBAEBAgAGBQJTH1uBAAoJELSic+t+oim9Y60P/2QI8WZIJenmRod/AjD7GsRn
-hE0+/UVpMc71gq0OxNDqPJAWU0sxYuC/Vbn+5hbO2SVd7KjpurDxOk4xC3meWHUz
-eg+56O8g4oomL9SlwTlR6D0/7WMY1Yz/DkDfIUz5HuQjc8ibhL6MhKhcpLLXnp29
-1yq5lyPlj/lJXM0pkTf/IeG+jjHp1vZs/H0R+Xq1nqpsNROaHkhcM0IQq9JXhTsW
-PYc2VFQcHZ/zGxP9YpG2K86UGT/bNStEpqg6ciyjd58HzfHf56dDr+3LCmcCv2IB
-roLHFvpc2T9N6LAxjdMlAsDXb3R+rwLhW9IAHaf4LzpOzmr5gSODE4Ewyp2jUYMq
-sUBVBsHlo3+sqcn1sZU+Z9xMoKPday7LfDM6AicPgrDj4uxpSWDGWHIl4BmwIgIu
-4JNc5HuDTSKR6PhOoG6cR+06xGOTZ5YPVoobvge/IwYcrOWUVrECr3IEaj/LuKgc
-4pzqU18J+z211jACMpCgUA33Rlx0ixee/PdpOwUK80kvs7+XFQnoY+HD06HLo6iK
-2iRrO6avkPKLplq9C4skwMGkbhls7IVblClUDyB5IS1YGddaR0qe5IUfx48lHtky
-bJeoYCSVkjIhz9//fOExtBcPopAnSXU3nePKmuhNU6qHJQ7BL/rKWq511v2OChi3
-c+u+5SyumsYd7UJu1ZEd
-=/huS
------END PGP SIGNATURE-----
+IIRC these timing values are really only necessary if the controller
+does not support the READY/BUSY input, in that case drivers typically
+seem to use 'chip_delay' which is the maximum possible command
+execution time (a sleep long enough to guarentee that READY/BUSY is
+de-asserted).
 
---MPTQUV1vt+merpdf--
+> Or should I create a new struct for these timings ?
+> In the latter case how should I name it ?
+
+struct onfi_command_timings ?
+
+Regards,
+Jason
