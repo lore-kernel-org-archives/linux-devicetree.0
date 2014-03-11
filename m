@@ -1,134 +1,83 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core to drivers/of
-Date: Tue, 11 Mar 2014 14:16:37 +0100
-Message-ID: <1883687.VdfitvQEN3@avalon>
-References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> <139468148.3QhLg3QYq1@avalon> <531F08A8.300@ti.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v5 00/11] imx-drm dt bindings
+Date: Tue, 11 Mar 2014 21:27:29 +0800
+Message-ID: <20140311132727.GB26502@S2101-09.ap.freescale.net>
+References: <1394011262-16849-1-git-send-email-p.zabel@pengutronix.de>
+ <20140311034607.GA26502@S2101-09.ap.freescale.net>
+ <1394538128.3772.15.camel@paszta.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1520312.nzqQsCAHx5"; micalg="pgp-sha1"; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <531F08A8.300-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <1394538128.3772.15.camel@paszta.hi.pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Mar 11, 2014 at 12:42:08PM +0100, Philipp Zabel wrote:
+> Hi Shawn,
+> 
+> Am Dienstag, den 11.03.2014, 11:46 +0800 schrieb Shawn Guo:
+> > On Wed, Mar 05, 2014 at 10:20:51AM +0100, Philipp Zabel wrote:
+> > > Hi,
+> > > 
+> > > this latest version of the imx-drm DT binding patches applies
+> > > on top of staging-next and also depends on the OF graph binding
+> > > patchset that moves the v4l2_of helpers to drivers/of.
+> > > Currently, the two patchsets are also available at:
+> > >     git://git.pengutronix.de/git/pza/linux.git topic/of-graph
+> > >     git://git.pengutronix.de/git/pza/linux.git topic/imx-drm-dt
+> > 
+> > Hi Philipp,
+> > 
+> > I just came across a couple problems when testing the series on
+> > my imx6dl-sabresd board in dual display case - HDMI + LVDS.  I tested it
+> > using Russell's branch below, which I believe has all the pieces put
+> > together.
+> > 
+> >   git://ftp.arm.linux.org.uk/~rmk/linux-arm.git imx-drm-staging
+> > 
+> > - When I enable HDMI and LVDS support in both kernel build and device
+> >   tree, HDMI seems working fine but LVDS color is corrupted quite badly.
+> > 
+> > - When I enable HDMI and LVDS support in kernel build but only LVDS in
+> >   device tree (keep HDMI disabled in device tree by not changing
+> >   'status' of HDMI node to 'okay'), LVDS does not even work.  In this
+> >   case, it seems that the binding of display-subsystem does not succeed.
+> 
+> Can you check if you get the bound messages from
+> drivers/base/component.c:
+> 
+> imx-drm display-subsystem.11: bound imx-ipuv3-crtc.0 (ops ipu_crtc_ops)
+> imx-drm display-subsystem.11: bound imx-ipuv3-crtc.1 (ops ipu_crtc_ops)
+> imx-drm display-subsystem.11: bound ldb.10 (ops imx_ldb_ops)
+> 
+> I have tried this branch with a Phytec phyFLEX i.MX6S on PBAB01
+> baseboard with EDT 800x480 LVDS panel, and it seems to work.
+> The check in drivers/staging/imx-drm/imx-drm-core.c:675 should make sure
+> that unavailable (status="disabled") devices are just skipped.
 
---nextPart1520312.nzqQsCAHx5
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="us-ascii"
+Sorry, Philipp.  The setup in my report is incorrect.  The correct setup
+to see this issue consists of:
 
-Hi Tomi,
+1) build a kernel without HDMI support, i.e. !CONFIG_DRM_IMX_HDMI
 
-On Tuesday 11 March 2014 14:59:20 Tomi Valkeinen wrote:
-> On 11/03/14 13:43, Laurent Pinchart wrote:
-> >> We could scan the whole tree for entities, ports and endpoints onc=
-e, in
-> >> the base oftree code, and put that into a graph structure, adding =
-the
-> >> backlinks. The of_graph_* helpers could then use that graph instea=
-d of
-> >> the device tree.
-> >=20
-> > That could work. The complexity would still be quadratic, but we wo=
-uld
-> > parse the full device tree once only.
-> >=20
-> > The runtime complexity would still be increased, as the graph helpe=
-rs
-> > would need to find the endpoint object in the parsed graph correspo=
-nding
-> > to the DT node they get as an argument. That's proportional to the =
-number
-> > of graph elements, not the total number of DT nodes, so I suppose i=
-t's not
-> > too bad.
-> >=20
-> > We also need to make sure this would work with insertion of DT frag=
-ments
-> > at runtime. Probably not a big deal, but it has to be kept in mind.=
+2) enable HDMI device in DT, i.e. adding the lines below in board dts.
 
->=20
-> About the endpoint linking direction... As I think was suggested, the=
+	&hdmi {
+	       status = "okay";
+	};
 
-> base logic would be to make endpoints point "outward" from the SoC, i=
-.e.
-> a display controller would point to a panel, and a capture controller=
+Sorry for the confusion.
 
-> would point to a sensor.
->
-> But how about this case:
->=20
-> I have a simple video pipeline with a display controller, an encoder =
-and
-> a panel, as follows:
->=20
-> dispc -> encoder -> panel
->=20
-> Here the arrows show which way the remote-endpoint links point. So
-> looking at the encoder, the encoder's input port is pointed at by the=
-
-> dispc, and the encoder's output port points at the panel.
->=20
-> Then, I have a capture pipeline, with a capture controller, an encode=
-r
-> (the same one that was used for display above) and a sensor, as follo=
-ws:
->=20
-> camc -> encoder -> sensor
->=20
-> Again the arrows show the links. Note that here the encoder's _output=
-_
-> port is pointed at by the camc, and the encoder's _input_ port points=
- at
-> the sensor.
->=20
-> So depending on the use case, the endpoints would point to opposite
-> direction from the encoder's point of view.
->=20
-> And if I gathered Grant's opinion correctly (correct me if I'm wrong)=
-,
-> he thinks things should be explicit, i.e. the bindings for, say, an
-> encoder should state that the encoder's output endpoint _must_ contai=
-n a
-> remote-endpoint property, whereas the encoder's input endpoint _must
-> not_ contain a remote-endpoint property.
-
-Actually my understand was that DT links would have the same direction =
-as the=20
-data flow. There would be no ambiguity in that case as the direction of=
- the=20
-data flow is known. What happens for bidirectional data flows still nee=
-d to be=20
-discussed though. And if we want to use the of-graph bindings to descri=
-be=20
-graphs without a data flow, a decision will need to be taken there too.=
-
-
-=2D-=20
-Regards,
-
-Laurent Pinchart
-
---nextPart1520312.nzqQsCAHx5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQEcBAABAgAGBQJTHwzCAAoJEIkPb2GL7hl1cPsH/2lo/WyYziaiB9oJ1QluxzHG
-nMIZNmfOqHT4KCnwuJVKJyr6KrjBOhpcKo5ZPxOHHfq79jYckbb1dzisu+CUCOEo
-QiP5CeqNGKAkUKrcb1joHoKOKd6ArkZl5yuhPq6+5NvYVmoDC3lfj/GsxMtuUgn7
-fQhzShuiFFOzgivrhBe1+S0vaVwxOrSQMpAnDxW90zuG8sb4ObfR00SI7OPKUhmH
-gDWJF6pTNy4o0u5BcXxVNIaxyniZzK0F9/XeVsXSyHqW4qzslZSwlgpRWYcCMdgM
-2B/kcjknjoJs10cV7DPEyUq2Q1CvDXyTgF5UGE8LwE2uffR89N2NKn0bhP5bE5w=
-=jVcg
------END PGP SIGNATURE-----
-
---nextPart1520312.nzqQsCAHx5--
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Shawn
