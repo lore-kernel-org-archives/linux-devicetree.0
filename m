@@ -1,45 +1,265 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v6 6/6] pci: Add support for creating a generic
- host_bridge from device tree
-Date: Tue, 11 Mar 2014 07:50:24 +0100
-Message-ID: <4254618.BlpDUOctDb@wuerfel>
-References: <1394020137-1830-1-git-send-email-Liviu.Dudau@arm.com>
- <1469359.kil5iaOqdU@wuerfel> <20140310215600.GA14968@bart.dudau.co.uk>
+From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
+Subject: RE: [PATCH] pinctrl: at91: add the config GPIO_OUTPUT_x
+Date: Tue, 11 Mar 2014 06:54:48 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A24364172FFBC8C@penmbx01>
+References: <1393984400-14687-1-git-send-email-wenyou.yang@atmel.com>
+ <635C1A75-4651-4B2C-AB64-E1D170A1F5F9@jcrosoft.com>
+ <B256D81BAE5131468A838E5D7A24364172FF4EC4@penmbx01>
+ <B256D81BAE5131468A838E5D7A24364172FFB955@penmbx01>
+ <F73ABBC2-BFD3-43D5-9BAB-5D17CD585E89@jcrosoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140310215600.GA14968@bart.dudau.co.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Liviu Dudau <liviu@dudau.co.uk>, linaro-kernel <linaro-kernel@lists.linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Tanmay Inamdar <tinamdar@apm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bjorn Helgaas <bhelgaas@google.com>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <F73ABBC2-BFD3-43D5-9BAB-5D17CD585E89@jcrosoft.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, Linux Kernel list <linux-kernel@vger.kernel.org>, "b.brezillon@overkiz.com" <b.brezillon@overkiz.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "<linux-arm-kernel@lists.infradead.org> mailing list" <linux-arm-kernel@lists.infradead.org>, "Lin, JM" <JM.Lin@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 10 March 2014 21:56:00 Liviu Dudau wrote:
-> 
-> PCI_IOBASE is always defined. See the discussion with Russell on this subject.
-> 
-> include/asm-generic/io.h has at line 118:
-> 
-> #ifndef PCI_IOBASE
-> #define PCI_IOBASE ((void __iomem *) 0)
-> #endif
 
-That is only defined for those that use asm-generic/pci.h, which most architectures
-don't.
- 
-> I will go with my idea tomorrow. arm64 overwrite the implementation anyway, I
-> find it cleaner rather than having to do #ifdefs and/or ifs.
 
-I'd really hope we can get to a point where arm64 doesn't need any architecture
-specific code for this. It doesn't do anything special.
+> -----Original Message-----
+> From: Jean-Christophe PLAGNIOL-VILLARD [mailto:plagnioj@jcrosoft.com]
+> Sent: Tuesday, March 11, 2014 12:16 PM
+> To: Yang, Wenyou
+> Cc: Jean-Christophe PLAGNIOL-VILLARD; mark.rutland@arm.com;
+> devicetree@vger.kernel.org; pawel.moll@arm.com;
+> ijc+devicetree@hellion.org.uk; linus.walleij@linaro.org; Linux Kernel
+> list; b.brezillon@overkiz.com; robh+dt@kernel.org; galak@codeaurora.org;
+> <linux-arm-kernel@lists.infradead.org> mailing list
+> Subject: Re: [PATCH] pinctrl: at91: add the config GPIO_OUTPUT_x
+> 
+> 
+> On Mar 11, 2014, at 9:28 AM, Yang, Wenyou <Wenyou.Yang@atmel.com> wrote:
+> 
+> > Hi JC,
+> >
+> >> -----Original Message-----
+> >> From: Yang, Wenyou
+> >> Sent: Wednesday, March 05, 2014 1:32 PM
+> >> To: Jean-Christophe PLAGNIOL-VILLARD
+> >> Cc: linus.walleij@linaro.org; b.brezillon@overkiz.com; <linux-arm-
+> >> kernel@lists.infradead.org> mailing list; Linux Kernel list;
+> >> devicetree@vger.kernel.org; robh+dt@kernel.org; pawel.moll@arm.com;
+> >> mark.rutland@arm.com; ijc+devicetree@hellion.org.uk;
+> >> galak@codeaurora.org
+> >> Subject: RE: [PATCH] pinctrl: at91: add the config GPIO_OUTPUT_x
+> >>
+> >> Hi JC,
+> >>
+> >>> -----Original Message-----
+> >>> From: Jean-Christophe PLAGNIOL-VILLARD
+> >>> [mailto:plagnioj@jcrosoft.com]
+> >>> Sent: Wednesday, March 05, 2014 12:58 PM
+> >>> To: Yang, Wenyou
+> >>> Cc: Jean-Christophe PLAGNIOL-VILLARD; linus.walleij@linaro.org;
+> >>> b.brezillon@overkiz.com; <linux-arm-kernel@lists.infradead.org>
+> >>> mailing list; Linux Kernel list; devicetree@vger.kernel.org;
+> >>> robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com;
+> >>> ijc+devicetree@hellion.org.uk; galak@codeaurora.org
+> >>> Subject: Re: [PATCH] pinctrl: at91: add the config GPIO_OUTPUT_x
+> >>>
+> >>>
+> >>> On Mar 5, 2014, at 9:53 AM, Wenyou Yang <wenyou.yang@atmel.com>
+> wrote:
+> >>>
+> >>>> In order to support the pinctrl sleep state.
+> >>>
+> >>> As I said before NACK
+> >>>
+> >>> this is not the job of the pinctrl to describe gpio output or input
+> >>> state
+> >> But according to what said in the section "GPIO mode pitfalls" of
+> >> Documentation/pinctrl.txt.
+> >> It should be handle by the pinctrl.
+> >>
+> >> If not, to deal with the sleep state will be very complicated.
+> >> Muxing the pins for FUNCTION to enable peripheral, then twist them
+> >> over to GPIO mode and use gpio_direction_output() to drive it HIGH or
+> >> LOW during sleep.
+> >>
+> >> --->8 ------------
+> >> The solution is to not think that what the datasheet calls "GPIO
+> mode"
+> >> has to be handled by the <linux/gpio.h> interface. Instead view this
+> >> as a certain pin config setting. Look in e.g. <linux/pinctrl/pinconf-
+> >> generic.h> and you find this in the documentation:
+> >>
+> >>  PIN_CONFIG_OUTPUT: this will configure the pin in output, use
+> argument
+> >>     1 to indicate high level, argument 0 to indicate low level.
+> >>
+> >> So it is perfectly possible to push a pin into "GPIO mode" and drive
+> >> the line low as part of the usual pin control map.
+> >> ---<8 ------------
+> >
+> > Do you have any feedback?
+> 
+> Here the issue is that you do drive the gpio and use as a gpio
+> 
+> which means you request it as a GPIO so after you can not reswitch it to
+> alternative function and the gpio is already requested as alternative
+> function
+> 
+> So basically you mess-up with the gpio API and pinctrl API by bypassing
+> both
 
-	Arnd
+But I don't agree with you.
+
+As I known, in mainline the other SoC vendors provide such function, configure the gpio mode with output config by pinctrl.
+
+For example, ST. nomadisk.
+You can see it in the function: nmk_pin_config_set() of the file, pinctrl-nomadik.c.
+It provides GPIO mode and OUTPUT config.
+
+This is a good solution, as what said in Documentation/pinctrl.txt,
+
+it is perfectly possible to push a pin into "GPIO mode" and drive the line low as part of the usual pin control map.
+
+
+Best Regards,
+Wenyou Yang
+> 
+> Best Regards,
+> J.
+> 
+> >
+> > Thanks,
+> > Wenyou Yang
+> >
+> >>
+> >>>
+> >>> Best Regards,
+> >>> J.
+> >>>>
+> >>>> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+> >>>> ---
+> >>>> Hi Linus,
+> >>>>
+> >>>> The patch is based on branch: for-next
+> >>>> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl
+> >>>>
+> >>>> Best Regards,
+> >>>> Wenyou Yang
+> >>>>
+> >>>> drivers/pinctrl/pinctrl-at91.c     |   31
+> >>> +++++++++++++++++++++++++++++++
+> >>>> include/dt-bindings/pinctrl/at91.h |    2 ++
+> >>>> 2 files changed, 33 insertions(+)
+> >>>>
+> >>>> diff --git a/drivers/pinctrl/pinctrl-at91.c
+> >>>> b/drivers/pinctrl/pinctrl-at91.c index 5d24aae..fc51e59 100644
+> >>>> --- a/drivers/pinctrl/pinctrl-at91.c
+> >>>> +++ b/drivers/pinctrl/pinctrl-at91.c
+> >>>> @@ -62,6 +62,8 @@ static int gpio_banks;
+> >>>> #define DEGLITCH	(1 << 2)
+> >>>> #define PULL_DOWN	(1 << 3)
+> >>>> #define DIS_SCHMIT	(1 << 4)
+> >>>> +#define GPIO_OUTPUT_HIGH	(1 << 5)
+> >>>> +#define GPIO_OUTPUT_LOW		(1 << 6)
+> >>>> #define DEBOUNCE	(1 << 16)
+> >>>> #define DEBOUNCE_VAL_SHIFT	17
+> >>>> #define DEBOUNCE_VAL	(0x3fff << DEBOUNCE_VAL_SHIFT)
+> >>>> @@ -152,12 +154,15 @@ struct at91_pinctrl_mux_ops {
+> >>>> 	void (*set_pulldown)(void __iomem *pio, unsigned mask, bool is_on);
+> >>>> 	bool (*get_schmitt_trig)(void __iomem *pio, unsigned pin);
+> >>>> 	void (*disable_schmitt_trig)(void __iomem *pio, unsigned mask);
+> >>>> +	bool (*get_gpio_output)(void __iomem *pio, unsigned mask);
+> >>>> +	void (*set_gpio_output)(void __iomem *pio, unsigned mask,
+> bool
+> >>>> +is_high);
+> >>>> 	/* irq */
+> >>>> 	int (*irq_type)(struct irq_data *d, unsigned type); };
+> >>>>
+> >>>> static int gpio_irq_type(struct irq_data *d, unsigned type); static
+> >>>> int alt_gpio_irq_type(struct irq_data *d, unsigned type);
+> >>>> +static void at91_mux_gpio_enable(void __iomem *pio, unsigned mask,
+> >>>> +bool input);
+> >>>>
+> >>>> struct at91_pinctrl {
+> >>>> 	struct device		*dev;
+> >>>> @@ -472,6 +477,20 @@ static bool
+> >>>> at91_mux_pio3_get_schmitt_trig(void
+> >>> __iomem *pio, unsigned pin)
+> >>>> 	return (__raw_readl(pio + PIO_SCHMITT) >> pin) & 0x1; }
+> >>>>
+> >>>> +static bool at91_mux_pio3_get_gpio_output(void __iomem *pio,
+> >>>> +unsigned
+> >>>> +pin) {
+> >>>> +	return (__raw_readl(pio + PIO_ODSR) >> pin) & 0x1; }
+> >>>> +
+> >>>> +static void at91_mux_pio3_set_gpio_output(void __iomem *pio,
+> >>>> +						unsigned mask,
+> >>>> +						bool is_high)
+> >>>> +{
+> >>>> +	at91_mux_gpio_enable(pio, mask, 0);
+> >>>> +	writel_relaxed(mask, pio + (is_high ? PIO_SODR : PIO_CODR)); }
+> >>>> +
+> >>>> +
+> >>>> static struct at91_pinctrl_mux_ops at91rm9200_ops = {
+> >>>> 	.get_periph	= at91_mux_get_periph,
+> >>>> 	.mux_A_periph	= at91_mux_set_A_periph,
+> >>>> @@ -495,6 +514,8 @@ static struct at91_pinctrl_mux_ops
+> >>>> at91sam9x5_ops
+> >>> = {
+> >>>> 	.set_pulldown	= at91_mux_pio3_set_pulldown,
+> >>>> 	.get_schmitt_trig = at91_mux_pio3_get_schmitt_trig,
+> >>>> 	.disable_schmitt_trig = at91_mux_pio3_disable_schmitt_trig,
+> >>>> +	.get_gpio_output = at91_mux_pio3_get_gpio_output,
+> >>>> +	.set_gpio_output = at91_mux_pio3_set_gpio_output,
+> >>>> 	.irq_type	= alt_gpio_irq_type,
+> >>>> };
+> >>>>
+> >>>> @@ -741,6 +762,10 @@ static int at91_pinconf_get(struct pinctrl_dev
+> >>> *pctldev,
+> >>>> 		*config |= PULL_DOWN;
+> >>>> 	if (info->ops->get_schmitt_trig &&
+> >>>> info->ops->get_schmitt_trig(pio,
+> >>> pin))
+> >>>> 		*config |= DIS_SCHMIT;
+> >>>> +	if (info->ops->get_gpio_output) {
+> >>>> +		*config |= info->ops->get_gpio_output(pio, pin) ?
+> >>>> +					GPIO_OUTPUT_HIGH : GPIO_OUTPUT_LOW;
+> >>>> +	}
+> >>>>
+> >>>> 	return 0;
+> >>>> }
+> >>>> @@ -778,6 +803,12 @@ static int at91_pinconf_set(struct pinctrl_dev
+> >>> *pctldev,
+> >>>> 			info->ops->set_pulldown(pio, mask, config & PULL_DOWN);
+> >>>> 		if (info->ops->disable_schmitt_trig && config & DIS_SCHMIT)
+> >>>> 			info->ops->disable_schmitt_trig(pio, mask);
+> >>>> +		if (info->ops->set_gpio_output) {
+> >>>> +			if (config & GPIO_OUTPUT_HIGH)
+> >>>> +				info->ops->set_gpio_output(pio, mask, 1);
+> >>>> +			if (config & GPIO_OUTPUT_LOW)
+> >>>> +				info->ops->set_gpio_output(pio, mask, 0);
+> >>>> +		};
+> >>>>
+> >>>> 	} /* for each config */
+> >>>>
+> >>>> diff --git a/include/dt-bindings/pinctrl/at91.h
+> >>>> b/include/dt-bindings/pinctrl/at91.h
+> >>>> index 0fee6ff..e799268 100644
+> >>>> --- a/include/dt-bindings/pinctrl/at91.h
+> >>>> +++ b/include/dt-bindings/pinctrl/at91.h
+> >>>> @@ -15,6 +15,8 @@
+> >>>> #define AT91_PINCTRL_DEGLITCH		(1 << 2)
+> >>>> #define AT91_PINCTRL_PULL_DOWN		(1 << 3)
+> >>>> #define AT91_PINCTRL_DIS_SCHMIT		(1 << 4)
+> >>>> +#define AT91_PINCTRL_OUTPUT_HIGH	(1 << 5)
+> >>>> +#define AT91_PINCTRL_OUTPUT_LOW		(1 << 6)
+> >>>> #define AT91_PINCTRL_DEBOUNCE		(1 << 16)
+> >>>> #define AT91_PINCTRL_DEBOUNCE_VAL(x)	(x << 17)
+> >>>>
+> >>>> --
+> >>>> 1.7.9.5
+> >>>>
+> >
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
