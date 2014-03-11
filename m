@@ -1,35 +1,42 @@
-From: Loc Ho <lho@apm.com>
-Subject: Re: [PATCH v15 3/3] arm64: Add APM X-Gene SoC AHCI SATA host
- controller DTS entries
-Date: Tue, 11 Mar 2014 08:51:37 -0700
-Message-ID: <CAPw-ZTmBSeOXv5ExVAiSkcU=qH3zHp52eVuGBfYYD=7=sjhVgw@mail.gmail.com>
-References: <1394059489-30706-1-git-send-email-lho@apm.com>
-	<1394059489-30706-2-git-send-email-lho@apm.com>
-	<1394059489-30706-3-git-send-email-lho@apm.com>
-	<1394059489-30706-4-git-send-email-lho@apm.com>
-	<20140311124943.GD11477@htj.dyndns.org>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] irqchip: sun4i: Fix acomment about mask
+ register initialization
+Date: Tue, 11 Mar 2014 16:54:33 +0100
+Message-ID: <1394553273-30473-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20140311124943.GD11477@htj.dyndns.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBP7D7SMAKGQETUQY75Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tejun,
+The comment was claiming that we were masking all irqs, while the code actually
+*un*masks all of them.
 
->> This patch adds APM X-Gene SoC AHCI SATA host controller DTS entries.
->
-> I pulled the phy branch into libata/for-3.15 but this patch fails to
-> apply.  Can you please regenerate the patches which need to be applied
-> on top of libata/for-3.15.
->
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/irqchip/irq-sun4i.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Kishon didn't applied the PHY DTS patch. Did you first apply the PHY
-DTS patch? We agreed that you will first pull in the PHY DTS as well
-as the host controller patches. I don't see any reason why it wouldn't
-apply if both DTS is applied. I will pull libata/for-3.15 and check
-out.
-
--Loc
+diff --git a/drivers/irqchip/irq-sun4i.c b/drivers/irqchip/irq-sun4i.c
+index 3761bf1..749a355 100644
+--- a/drivers/irqchip/irq-sun4i.c
++++ b/drivers/irqchip/irq-sun4i.c
+@@ -109,7 +109,7 @@ static int __init sun4i_of_init(struct device_node *node,
+ 	writel(0, sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(1));
+ 	writel(0, sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(2));
+ 
+-	/* Mask all the interrupts */
++	/* Unmask all the interrupts, ENABLE_REG(x) is used for masking */
+ 	writel(0, sun4i_irq_base + SUN4I_IRQ_MASK_REG(0));
+ 	writel(0, sun4i_irq_base + SUN4I_IRQ_MASK_REG(1));
+ 	writel(0, sun4i_irq_base + SUN4I_IRQ_MASK_REG(2));
+-- 
+1.9.0
