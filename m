@@ -1,155 +1,67 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v6 03/10] Documentation: devicetree: Update Samsung FIMC DT
- binding
-Date: Tue, 11 Mar 2014 14:38:37 +0100
-Message-ID: <531F11DD.5040300@samsung.com>
-References: <1394122819-9582-1-git-send-email-s.nawrocki@samsung.com>
- <1394122819-9582-4-git-send-email-s.nawrocki@samsung.com>
- <1608087.RUCeTiNcRR@avalon>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [RFC PATCH] [media]: of: move graph helpers from
+ drivers/media/v4l2-core to drivers/of
+Date: Tue, 11 Mar 2014 14:44:23 +0100
+Message-ID: <1394545463.3772.24.camel@paszta.hi.pengutronix.de>
+References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de>
+	 <139468148.3QhLg3QYq1@avalon> <531F08A8.300@ti.com>
+	 <1883687.VdfitvQEN3@avalon> <531F0F4F.3070008@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <1608087.RUCeTiNcRR@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, galak@codeaurora.org, kyungmin.park@samsung.com, kgene.kim@samsung.com, a.hajda@samsung.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <531F0F4F.3070008@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Grant Likely <grant.likely@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hi,
 
-Thanks for your review.
-
-On 11/03/14 13:30, Laurent Pinchart wrote:
-[...]
->> ---
->>  .../devicetree/bindings/media/samsung-fimc.txt     |   34 ++++++++++++-----
->>  1 file changed, 26 insertions(+), 8 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt
->> b/Documentation/devicetree/bindings/media/samsung-fimc.txt index
->> 96312f6..dbd4020 100644
->> --- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
->> +++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
->> @@ -32,6 +32,21 @@ way around.
->>
->>  The 'camera' node must include at least one 'fimc' child node.
->>
->> +Optional properties:
->> +
->> +- #clock-cells: from the common clock bindings
->> (../clock/clock-bindings.txt),
->> +  must be 1. A clock provider is associated with the 'camera' node and it
->> should
->> +  be referenced by external sensors that use clocks provided by the SoC on
->> +  CAM_*_CLKOUT pins. The clock specifier cell stores an index of a clock.
->> +  The indices are 0, 1 for CAM_A_CLKOUT, CAM_B_CLKOUT clocks respectively.
->> +
->> +- clock-output-names: from the common clock bindings, should contain names
->> of
->> +  clocks registered by the camera subsystem corresponding to CAM_A_CLKOUT,
->> +  CAM_B_CLKOUT output clocks respectively.
+Am Dienstag, den 11.03.2014, 15:27 +0200 schrieb Tomi Valkeinen:
+> On 11/03/14 15:16, Laurent Pinchart wrote:
 > 
-> Wouldn't it be better to document the "cam_mclk_a" and "cam_mclk_b" names 
-> explicitly ? Or do you expect different names to be used in different DT files 
-> ? And as they correspond to the CAM_A_CLKOUT and CAM_B_CLKOUT pins, shouldn't 
-> they be named "cam_a_clkout" and "cam_b_clkout" ?
-
-Basically I could use fixed names for these clocks, I just wanted to keep
-a possibility to override them in dts to avoid any possible clock name
-collisions, rather than keep a list of different names per SoC in the driver. 
-Right now fixed names could also be used for all SoCs I'm aware of, 
-nevertheless I would prefer to keep the clock-output-names property.
-"cam_a_clkout", "cam_b_clkout" may be indeed better names, I'll change
-that.
-
->> +Note: #clock-cells and clock-output-names are mandatory properties if
->> external
->> +image sensor devices reference 'camera' device node as a clock provider.
->> +
+> >> And if I gathered Grant's opinion correctly (correct me if I'm wrong),
+> >> he thinks things should be explicit, i.e. the bindings for, say, an
+> >> encoder should state that the encoder's output endpoint _must_ contain a
+> >> remote-endpoint property, whereas the encoder's input endpoint _must
+> >> not_ contain a remote-endpoint property.
+> > 
+> > Actually my understand was that DT links would have the same direction as the 
+> > data flow. There would be no ambiguity in that case as the direction of the 
 > 
-> What's the reason not to make them always mandatory ? Backward compatibility 
-> only ? If so wouldn't it make sense to document the properties as mandatory 
-> from now on, and treating them as optional in the driver for backward 
-> compatibility ?
-
-Yes, it's for backwards compatibility only. It may be a good idea to just 
-document them as required, since this is how the device is expected to be 
-described in DT from now. I'll just make these a required properties, 
-the driver already handles them as optional.
-
->>  'fimc' device nodes
->>  -------------------
->>
->> @@ -97,8 +112,8 @@ Image sensor nodes
->>  The sensor device nodes should be added to their control bus controller
->> (e.g. I2C0) nodes and linked to a port node in the csis or the
->> parallel-ports node, using the common video interfaces bindings, defined in
->> video-interfaces.txt.
->> -The implementation of this bindings requires clock-frequency property to be
->> -present in the sensor device nodes.
->> +An optional clock-frequency property needs to be present in the sensor
->> device
->> +nodes. Default value when this property is not present is 24 MHz.
+> Ok. At least at some point in the discussion the rule of thumb was to
+> have the "master" point at the "slave", which are a bit vague terms, but
+> I think both display and camera controllers were given as examples of
+> "master".
 > 
-> This bothers me. Having the FIMC driver read the clock-frequence property from 
-> the sensor DT nodes feels like a layering violation. Shouldn't the sensor 
-> drivers call clk_set_rate() explicitly instead ?
-
-It is supposed to do so, after this whole patch series. So the camera
-controller driver will not need such properties. What do you think about
-removing this sentence altogether ?
-
->>  Example:
->>
->> @@ -114,7 +129,7 @@ Example:
->>  			vddio-supply = <...>;
->>
->>  			clock-frequency = <24000000>;
->> -			clocks = <...>;
->> +			clocks = <&camera 1>;
->>  			clock-names = "mclk";
->>
->>  			port {
->> @@ -135,7 +150,7 @@ Example:
->>  			vddio-supply = <...>;
->>
->>  			clock-frequency = <24000000>;
->> -			clocks = <...>;
->> +			clocks = <&camera 0>;
->>  			clock-names = "mclk";
->>
->>  			port {
->> @@ -149,12 +164,15 @@ Example:
->>
->>  	camera {
->>  		compatible = "samsung,fimc", "simple-bus";
->> -		#address-cells = <1>;
->> -		#size-cells = <1>;
->> -		status = "okay";
->> -
->> +		clocks = <&clock 132>, <&clock 133>;
->> +		clock-names = "sclk_cam0", "sclk_cam1";
+> > data flow is known. What happens for bidirectional data flows still need to be 
+> > discussed though. And if we want to use the of-graph bindings to describe 
+> > graphs without a data flow, a decision will need to be taken there too.
 > 
-> The documentation mentions that clock-names must contain "sclk_cam0", 
-> "sclk_cam1", "pxl_async0", "pxl_async1". Are the last two optional ? If so I 
-> think you should clarify the description of the clock-names property. This can 
-> be done in a separate patch.
+> Yep. My worry is that if the link direction is defined in the bindings
+> for the device, somebody will at some point have a complex board which
+> happens to use two devices in such a way, that either neither of them
+> point to each other, or both point to each other.
+> 
+> Maybe we can make sure that never happens, but I feel a bit nervous
+> about it especially for bi-directional cases. If the link has no clear
+> main-dataflow direction, it may be a bit difficult to say which way to link.
+> 
+> With double-linking all those concerns just disappear.
 
-"pxl_async0", "pxl_async1" are mandatory, I'll add them also into
-this example dts.
+another possibility would be to just leave it open in the generic
+bindings:
 
->> +		#clock-cells = <1>;
->> +		clock-output-names = "cam_mclk_a", "cam_mclk_b";
->>  		pinctrl-names = "default";
->>  		pinctrl-0 = <&cam_port_a_clk_active>;
->> +		status = "okay";
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->>
->>  		/* parallel camera ports */
->>  		parallel-ports {
+"Two endpoints are considered linked together if any of them contains a
+ 'remote-endpoint' phandle property that points to the other. If both
+ contain a 'remote-endpoint' property, both must point at each other."
 
---
-Regards,
-Sylwester
+As long as we make sure that the generic code is able to generate the
+undirected graph from this, we could then let more specific bindings
+(like video-interfaces.txt) define that the phandle links always should
+point in both directions, in data flow direction, north, or outwards
+from the 'master'.
+
+regards
+Philipp
