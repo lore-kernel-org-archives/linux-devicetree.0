@@ -1,280 +1,157 @@
-From: Alexander Shiyan <shc_work@mail.ru>
-Subject: [PATCH v5] gpio: Driver for SYSCON-based GPIOs
-Date: Tue, 11 Mar 2014 21:55:14 +0400
-Message-ID: <1394560514-9019-1-git-send-email-shc_work@mail.ru>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Alexander Shiyan <shc_work@mail.ru>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v5 2/4] devicetree: bindings: Document Krait CPU/L1 EDAC
+Date: Tue, 11 Mar 2014 18:01:50 +0000
+Message-ID: <20140311180150.GD25796@e102568-lin.cambridge.arm.com>
+References: <20140116113332.GC25540@e102568-lin.cambridge.arm.com>
+ <20140116180505.GA30925@codeaurora.org>
+ <20140116183326.GG25540@e102568-lin.cambridge.arm.com>
+ <20140116192617.GA13785@codeaurora.org>
+ <20140117102109.GA22544@e102568-lin.cambridge.arm.com>
+ <20140219002043.GE14769@codeaurora.org>
+ <20140225111655.GA6855@e102568-lin.cambridge.arm.com>
+ <E34E6789-03BC-452C-9053-82CA1D027861@codeaurora.org>
+ <20140226120103.GA25326@e102568-lin.cambridge.arm.com>
+ <20140307230856.GE9985@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20140307230856.GE9985@codeaurora.org>
+Content-Disposition: inline
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Kumar Gala <galak@codeaurora.org>, Borislav Petkov <bp@alien8.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SYSCON driver was designed for using memory areas (registers)
-that are used in several subsystems. There are systems (CPUs)
-which use bits in one register for various purposes and thus
-should be handled by various kernel subsystems. This driver
-allows you to use the individual SYSCON bits as GPIOs.
-ARM CLPS711X SYSFLG1 input lines has been added as first user
-of this driver.
+On Fri, Mar 07, 2014 at 11:08:56PM +0000, Stephen Boyd wrote:
+> On 02/26, Lorenzo Pieralisi wrote:
+> > On Tue, Feb 25, 2014 at 08:48:38PM +0000, Kumar Gala wrote:
+> > > 
+> > > On Feb 25, 2014, at 5:16 AM, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+> > > > 
+> > > > As I mentioned, I do not like the idea of adding compatible properties
+> > > > just to force the kernel to create platform devices out of device tree
+> > > > nodes. On top of that I would avoid adding a compatible property
+> > > > to the cpus node (after all properties like enable-method are common for all
+> > > > cpus but still duplicated), my only concern being backward compatibility
+> > > > here (ie if we do that for interrupts, we should do that also for other
+> > > > common cpu nodes properties, otherwise we have different rules for
+> > > > different properties).
+> > > > 
+> > > > I think you can then add interrupts to cpu nodes ("qcom,krait" specific),
+> > > > and as you mentioned create a platform device for that.
+> > > > 
+> > > > Thanks,
+> > > > Lorenzo
+> > > 
+> > > So I agree with the statement about adding compatibles just to create platform devices is wrong.  However its seems perfectly reasonable for a cpu node to have a compatible property.  I don't see why a CPU is any different from any other device described in a DT.
+> > 
+> > I was referring to the /cpus node, not to individual cpu nodes, where
+> > the compatible property is already present now.
+> > 
+> 
+> Ok I think I'll go ahead with moving the interrupts into each cpu node, i.e.:
+> 
+>         cpus {  
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+> 
+>                 cpu@0 { 
+>                         compatible = "qcom,krait";
+>                         device_type = "cpu";
+>                         reg = <0>;
+>                         interrupts = <1 14 0x304>;
+>                         next-level-cache = <&L2>;
+>                 };
+> 
+>                 cpu@1 { 
+>                         compatible = "qcom,krait";
+>                         device_type = "cpu";
+>                         reg = <1>;
+>                         interrupts = <1 14 0x304>;
+>                         next-level-cache = <&L2>;
+>                 };
+> 
+>                 L2: l2-cache {
+>                         compatible = "cache";
+>                         interrupts = <0 2 0x4>;
+> 		};
+> 	};
+> 
+> Or should we be expressing the L1 cache as well? Something like:
+> 
+>         cpus {  
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+> 
+>                 cpu@0 { 
+>                         compatible = "qcom,krait";
+>                         device_type = "cpu";
+>                         reg = <0>;
+>                         next-level-cache = <&L1_0>;
+> 
+> 			L1_0: l1-cache {
+> 				compatible = "arm,arch-cache";
+> 				interrupts = <1 14 0x304>;
+> 				next-level-cache = <&L2>;
+> 			}
+>                 };
+> 
+>                 cpu@1 { 
+>                         compatible = "qcom,krait";
+>                         device_type = "cpu";
+>                         reg = <1>;
+>                         next-level-cache = <&L1_1>;
+> 
+> 			L1_1: l1-cache {
+> 				compatible = "arm,arch-cache";
+> 				interrupts = <1 14 0x304>;
+> 				next-level-cache = <&L2>;
+> 			}
+>                 };
+> 
+>                 L2: l2-cache {
+>                         compatible = "arm,arch-cache";
+>                         interrupts = <0 2 0x4>;
+> 		};
+> 	};
+> 
+> (I'm also wondering if the 3rd cell of the interrupt binding
+> should only indicate the CPU that the interrupt property is
+> inside?)
 
-Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
----
- .../bindings/gpio/cirrus,clps711x-mctrl-gpio.txt   |  17 ++
- drivers/gpio/Kconfig                               |   6 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-syscon.c                         | 191 +++++++++++++++++++++
- 4 files changed, 215 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/cirrus,clps711x-mctrl-gpio.txt
- create mode 100644 drivers/gpio/gpio-syscon.c
+I am not aware of interrupts associated with vanilla :) "arm,arch-cache"
+objects, so I think that should be handled as a "qcom,krait" specific property
+(in the cpu node), or you should add another cache binding (compatible) for
+that.
 
-diff --git a/Documentation/devicetree/bindings/gpio/cirrus,clps711x-mctrl-gpio.txt b/Documentation/devicetree/bindings/gpio/cirrus,clps711x-mctrl-gpio.txt
-new file mode 100644
-index 0000000..94ae9f8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/cirrus,clps711x-mctrl-gpio.txt
-@@ -0,0 +1,17 @@
-+* ARM Cirrus Logic CLPS711X SYSFLG1 MCTRL GPIOs
-+
-+Required properties:
-+- compatible: Should contain "cirrus,clps711x-mctrl-gpio".
-+- gpio-controller: Marks the device node as a gpio controller.
-+- #gpio-cells: Should be two. The first cell is the pin number and
-+  the second cell is used to specify the gpio polarity:
-+    0 = Active high,
-+    1 = Active low.
-+
-+Example:
-+	sysgpio: sysgpio {
-+		compatible = "cirrus,ep7312-mctrl-gpio",
-+			     "cirrus,clps711x-mctrl-gpio";
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index d71d3f8..45f14a76 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -290,6 +290,12 @@ config GPIO_STA2X11
- 	  Say yes here to support the STA2x11/ConneXt GPIO device.
- 	  The GPIO module has 128 GPIO pins with alternate functions.
- 
-+config GPIO_SYSCON
-+	tristate "GPIO based on SYSCON"
-+	depends on MFD_SYSCON && OF
-+	help
-+	  Say yes here to support GPIO functionality though SYSCON driver.
-+
- config GPIO_TS5500
- 	tristate "TS-5500 DIO blocks and compatibles"
- 	depends on TS5500 || COMPILE_TEST
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index aaff7ff..6309aff 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -77,6 +77,7 @@ obj-$(CONFIG_GPIO_STA2X11)	+= gpio-sta2x11.o
- obj-$(CONFIG_GPIO_STMPE)	+= gpio-stmpe.o
- obj-$(CONFIG_GPIO_STP_XWAY)	+= gpio-stp-xway.o
- obj-$(CONFIG_GPIO_SX150X)	+= gpio-sx150x.o
-+obj-$(CONFIG_GPIO_SYSCON)	+= gpio-syscon.o
- obj-$(CONFIG_GPIO_TB10X)	+= gpio-tb10x.o
- obj-$(CONFIG_GPIO_TC3589X)	+= gpio-tc3589x.o
- obj-$(CONFIG_ARCH_TEGRA)	+= gpio-tegra.o
-diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-new file mode 100644
-index 0000000..b50fe12
---- /dev/null
-+++ b/drivers/gpio/gpio-syscon.c
-@@ -0,0 +1,191 @@
-+/*
-+ *  SYSCON GPIO driver
-+ *
-+ *  Copyright (C) 2014 Alexander Shiyan <shc_work@mail.ru>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/gpio.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
-+
-+#define GPIO_SYSCON_FEAT_IN	BIT(0)
-+#define GPIO_SYSCON_FEAT_OUT	BIT(1)
-+#define GPIO_SYSCON_FEAT_DIR	BIT(2)
-+
-+/* SYSCON driver is designed to use 32-bit wide registers */
-+#define SYSCON_REG_SIZE		(4)
-+#define SYSCON_REG_BITS		(SYSCON_REG_SIZE * 8)
-+
-+/**
-+ * struct syscon_gpio_data - Configuration for the device.
-+ * compatible:		SYSCON driver compatible string.
-+ * flags:		Set of GPIO_SYSCON_FEAT_ flags:
-+ *			GPIO_SYSCON_FEAT_IN:	GPIOs supports input,
-+ *			GPIO_SYSCON_FEAT_OUT:	GPIOs supports output,
-+ *			GPIO_SYSCON_FEAT_DIR:	GPIOs supports switch direction.
-+ * bit_count:		Number of bits used as GPIOs.
-+ * dat_bit_offset:	Offset (in bits) to the first GPIO bit.
-+ * dir_bit_offset:	Optional offset (in bits) to the first bit to switch
-+ *			GPIO direction (Used with GPIO_SYSCON_FEAT_DIR flag).
-+ */
-+
-+struct syscon_gpio_data {
-+	const char	*compatible;
-+	unsigned int	flags;
-+	unsigned int	bit_count;
-+	unsigned int	dat_bit_offset;
-+	unsigned int	dir_bit_offset;
-+};
-+
-+struct syscon_gpio_priv {
-+	struct gpio_chip		chip;
-+	struct regmap			*syscon;
-+	const struct syscon_gpio_data	*data;
-+};
-+
-+static inline struct syscon_gpio_priv *to_syscon_gpio(struct gpio_chip *chip)
-+{
-+	return container_of(chip, struct syscon_gpio_priv, chip);
-+}
-+
-+static int syscon_gpio_get(struct gpio_chip *chip, unsigned offset)
-+{
-+	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
-+	unsigned int val, offs = priv->data->dat_bit_offset + offset;
-+	int ret;
-+
-+	ret = regmap_read(priv->syscon,
-+			  (offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE, &val);
-+	if (ret)
-+		return ret;
-+
-+	return !!(val & BIT(offs % SYSCON_REG_BITS));
-+}
-+
-+static void syscon_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
-+{
-+	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
-+	unsigned int offs = priv->data->dat_bit_offset + offset;
-+
-+	regmap_update_bits(priv->syscon,
-+			   (offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE,
-+			   BIT(offs % SYSCON_REG_BITS),
-+			   val ? BIT(offs % SYSCON_REG_BITS) : 0);
-+}
-+
-+static int syscon_gpio_dir_in(struct gpio_chip *chip, unsigned offset)
-+{
-+	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
-+
-+	if (priv->data->flags & GPIO_SYSCON_FEAT_DIR) {
-+		unsigned int offs = priv->data->dir_bit_offset + offset;
-+
-+		regmap_update_bits(priv->syscon,
-+				   (offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE,
-+				   BIT(offs % SYSCON_REG_BITS), 0);
-+	}
-+
-+	return 0;
-+}
-+
-+static int syscon_gpio_dir_out(struct gpio_chip *chip, unsigned offset, int val)
-+{
-+	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
-+
-+	if (priv->data->flags & GPIO_SYSCON_FEAT_DIR) {
-+		unsigned int offs = priv->data->dir_bit_offset + offset;
-+
-+		regmap_update_bits(priv->syscon,
-+				   (offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE,
-+				   BIT(offs % SYSCON_REG_BITS),
-+				   BIT(offs % SYSCON_REG_BITS));
-+	}
-+
-+	syscon_gpio_set(chip, offset, val);
-+
-+	return 0;
-+}
-+
-+static const struct syscon_gpio_data clps711x_mctrl_gpio = {
-+	/* ARM CLPS711X SYSFLG1 Bits 8-10 */
-+	.compatible	= "cirrus,clps711x-syscon1",
-+	.flags		= GPIO_SYSCON_FEAT_IN,
-+	.bit_count	= 3,
-+	.dat_bit_offset	= 0x40 * 8 + 8,
-+};
-+
-+static const struct of_device_id syscon_gpio_ids[] = {
-+	{
-+		.compatible	= "cirrus,clps711x-mctrl-gpio",
-+		.data		= &clps711x_mctrl_gpio,
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, syscon_gpio_ids);
-+
-+static int syscon_gpio_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	const struct of_device_id *of_id = of_match_device(syscon_gpio_ids, dev);
-+	struct syscon_gpio_priv *priv;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->data = of_id->data;
-+
-+	priv->syscon =
-+		syscon_regmap_lookup_by_compatible(priv->data->compatible);
-+	if (IS_ERR(priv->syscon))
-+		return PTR_ERR(priv->syscon);
-+
-+	priv->chip.dev = dev;
-+	priv->chip.owner = THIS_MODULE;
-+	priv->chip.label = dev_name(dev);
-+	priv->chip.base = -1;
-+	priv->chip.ngpio = priv->data->bit_count;
-+	priv->chip.get = syscon_gpio_get;
-+	if (priv->data->flags & GPIO_SYSCON_FEAT_IN)
-+		priv->chip.direction_input = syscon_gpio_dir_in;
-+	if (priv->data->flags & GPIO_SYSCON_FEAT_OUT) {
-+		priv->chip.set = syscon_gpio_set;
-+		priv->chip.direction_output = syscon_gpio_dir_out;
-+	}
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	return gpiochip_add(&priv->chip);
-+}
-+
-+static int syscon_gpio_remove(struct platform_device *pdev)
-+{
-+	struct syscon_gpio_priv *priv = platform_get_drvdata(pdev);
-+
-+	return gpiochip_remove(&priv->chip);
-+}
-+
-+static struct platform_driver syscon_gpio_driver = {
-+	.driver	= {
-+		.name		= "gpio-syscon",
-+		.owner		= THIS_MODULE,
-+		.of_match_table	= syscon_gpio_ids,
-+	},
-+	.probe	= syscon_gpio_probe,
-+	.remove	= syscon_gpio_remove,
-+};
-+module_platform_driver(syscon_gpio_driver);
-+
-+MODULE_AUTHOR("Alexander Shiyan <shc_work@mail.ru>");
-+MODULE_DESCRIPTION("SYSCON GPIO driver");
-+MODULE_LICENSE("GPL");
--- 
-1.8.3.2
+As you might have noticed (idle states thread) I am keen on defining objects
+for L1 caches explicitly, that patch still requires an ACK though (and
+you need to update it since you cannot add an interrupt property for all
+"arm,arch-cache" objects. I am sorry for being a pain, but I do not
+think that's correct from a HW description standpoint).
 
+> Finally we can have the edac driver look for a "qcom,krait"
+> compatible node in cpus that it can create a platform device for,
+> i.e..
+> 
+> static int __init krait_edac_driver_init(void)
+> {
+>         struct device_node *np;
+> 
+>         np = of_get_cpu_node(0, NULL);
+>         if (!np)
+>                 return 0;
+> 
+>         if (!krait_edacp && of_device_is_compatible(np, "qcom,krait"))
+>                 krait_edacp = of_platform_device_create(np, "krait_edac", NULL);
+>         of_node_put(np);
+> 
+>         return platform_driver_register(&krait_edac_driver);
+> }
+> module_init(krait_edac_driver_init);
+
+It seems fine to me, but it requires an ACK from platform bus and DT
+maintainers.
+
+Lorenzo
