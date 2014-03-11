@@ -1,94 +1,155 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v5 00/11] imx-drm dt bindings
-Date: Tue, 11 Mar 2014 14:34:38 +0100
-Message-ID: <1394544878.4339.7.camel@weser.hi.pengutronix.de>
-References: <1394011262-16849-1-git-send-email-p.zabel@pengutronix.de>
- <20140311034607.GA26502@S2101-09.ap.freescale.net>
- <1394538128.3772.15.camel@paszta.hi.pengutronix.de>
- <20140311132727.GB26502@S2101-09.ap.freescale.net>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v6 03/10] Documentation: devicetree: Update Samsung FIMC DT
+ binding
+Date: Tue, 11 Mar 2014 14:38:37 +0100
+Message-ID: <531F11DD.5040300@samsung.com>
+References: <1394122819-9582-1-git-send-email-s.nawrocki@samsung.com>
+ <1394122819-9582-4-git-send-email-s.nawrocki@samsung.com>
+ <1608087.RUCeTiNcRR@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20140311132727.GB26502@S2101-09.ap.freescale.net>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, kernel@pengutronix.de, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <1608087.RUCeTiNcRR@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, galak@codeaurora.org, kyungmin.park@samsung.com, kgene.kim@samsung.com, a.hajda@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 11.03.2014, 21:27 +0800 schrieb Shawn Guo:
-> On Tue, Mar 11, 2014 at 12:42:08PM +0100, Philipp Zabel wrote:
-> > Hi Shawn,
-> > 
-> > Am Dienstag, den 11.03.2014, 11:46 +0800 schrieb Shawn Guo:
-> > > On Wed, Mar 05, 2014 at 10:20:51AM +0100, Philipp Zabel wrote:
-> > > > Hi,
-> > > > 
-> > > > this latest version of the imx-drm DT binding patches applies
-> > > > on top of staging-next and also depends on the OF graph binding
-> > > > patchset that moves the v4l2_of helpers to drivers/of.
-> > > > Currently, the two patchsets are also available at:
-> > > >     git://git.pengutronix.de/git/pza/linux.git topic/of-graph
-> > > >     git://git.pengutronix.de/git/pza/linux.git topic/imx-drm-dt
-> > > 
-> > > Hi Philipp,
-> > > 
-> > > I just came across a couple problems when testing the series on
-> > > my imx6dl-sabresd board in dual display case - HDMI + LVDS.  I tested it
-> > > using Russell's branch below, which I believe has all the pieces put
-> > > together.
-> > > 
-> > >   git://ftp.arm.linux.org.uk/~rmk/linux-arm.git imx-drm-staging
-> > > 
-> > > - When I enable HDMI and LVDS support in both kernel build and device
-> > >   tree, HDMI seems working fine but LVDS color is corrupted quite badly.
-> > > 
-> > > - When I enable HDMI and LVDS support in kernel build but only LVDS in
-> > >   device tree (keep HDMI disabled in device tree by not changing
-> > >   'status' of HDMI node to 'okay'), LVDS does not even work.  In this
-> > >   case, it seems that the binding of display-subsystem does not succeed.
-> > 
-> > Can you check if you get the bound messages from
-> > drivers/base/component.c:
-> > 
-> > imx-drm display-subsystem.11: bound imx-ipuv3-crtc.0 (ops ipu_crtc_ops)
-> > imx-drm display-subsystem.11: bound imx-ipuv3-crtc.1 (ops ipu_crtc_ops)
-> > imx-drm display-subsystem.11: bound ldb.10 (ops imx_ldb_ops)
-> > 
-> > I have tried this branch with a Phytec phyFLEX i.MX6S on PBAB01
-> > baseboard with EDT 800x480 LVDS panel, and it seems to work.
-> > The check in drivers/staging/imx-drm/imx-drm-core.c:675 should make sure
-> > that unavailable (status="disabled") devices are just skipped.
-> 
-> Sorry, Philipp.  The setup in my report is incorrect.  The correct setup
-> to see this issue consists of:
-> 
-> 1) build a kernel without HDMI support, i.e. !CONFIG_DRM_IMX_HDMI
-> 
-> 2) enable HDMI device in DT, i.e. adding the lines below in board dts.
-> 
-> 	&hdmi {
-> 	       status = "okay";
-> 	};
-> 
-> Sorry for the confusion.
-> 
-This isn't a supported use-case, the componentized device stuff is there
-exactly to ensure that the DRM device is only brought up after all
-active components have an driver attached to them.
+Hi Laurent,
 
+Thanks for your review.
+
+On 11/03/14 13:30, Laurent Pinchart wrote:
+[...]
+>> ---
+>>  .../devicetree/bindings/media/samsung-fimc.txt     |   34 ++++++++++++-----
+>>  1 file changed, 26 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt
+>> b/Documentation/devicetree/bindings/media/samsung-fimc.txt index
+>> 96312f6..dbd4020 100644
+>> --- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
+>> +++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+>> @@ -32,6 +32,21 @@ way around.
+>>
+>>  The 'camera' node must include at least one 'fimc' child node.
+>>
+>> +Optional properties:
+>> +
+>> +- #clock-cells: from the common clock bindings
+>> (../clock/clock-bindings.txt),
+>> +  must be 1. A clock provider is associated with the 'camera' node and it
+>> should
+>> +  be referenced by external sensors that use clocks provided by the SoC on
+>> +  CAM_*_CLKOUT pins. The clock specifier cell stores an index of a clock.
+>> +  The indices are 0, 1 for CAM_A_CLKOUT, CAM_B_CLKOUT clocks respectively.
+>> +
+>> +- clock-output-names: from the common clock bindings, should contain names
+>> of
+>> +  clocks registered by the camera subsystem corresponding to CAM_A_CLKOUT,
+>> +  CAM_B_CLKOUT output clocks respectively.
+> 
+> Wouldn't it be better to document the "cam_mclk_a" and "cam_mclk_b" names 
+> explicitly ? Or do you expect different names to be used in different DT files 
+> ? And as they correspond to the CAM_A_CLKOUT and CAM_B_CLKOUT pins, shouldn't 
+> they be named "cam_a_clkout" and "cam_b_clkout" ?
+
+Basically I could use fixed names for these clocks, I just wanted to keep
+a possibility to override them in dts to avoid any possible clock name
+collisions, rather than keep a list of different names per SoC in the driver. 
+Right now fixed names could also be used for all SoCs I'm aware of, 
+nevertheless I would prefer to keep the clock-output-names property.
+"cam_a_clkout", "cam_b_clkout" may be indeed better names, I'll change
+that.
+
+>> +Note: #clock-cells and clock-output-names are mandatory properties if
+>> external
+>> +image sensor devices reference 'camera' device node as a clock provider.
+>> +
+> 
+> What's the reason not to make them always mandatory ? Backward compatibility 
+> only ? If so wouldn't it make sense to document the properties as mandatory 
+> from now on, and treating them as optional in the driver for backward 
+> compatibility ?
+
+Yes, it's for backwards compatibility only. It may be a good idea to just 
+document them as required, since this is how the device is expected to be 
+described in DT from now. I'll just make these a required properties, 
+the driver already handles them as optional.
+
+>>  'fimc' device nodes
+>>  -------------------
+>>
+>> @@ -97,8 +112,8 @@ Image sensor nodes
+>>  The sensor device nodes should be added to their control bus controller
+>> (e.g. I2C0) nodes and linked to a port node in the csis or the
+>> parallel-ports node, using the common video interfaces bindings, defined in
+>> video-interfaces.txt.
+>> -The implementation of this bindings requires clock-frequency property to be
+>> -present in the sensor device nodes.
+>> +An optional clock-frequency property needs to be present in the sensor
+>> device
+>> +nodes. Default value when this property is not present is 24 MHz.
+> 
+> This bothers me. Having the FIMC driver read the clock-frequence property from 
+> the sensor DT nodes feels like a layering violation. Shouldn't the sensor 
+> drivers call clk_set_rate() explicitly instead ?
+
+It is supposed to do so, after this whole patch series. So the camera
+controller driver will not need such properties. What do you think about
+removing this sentence altogether ?
+
+>>  Example:
+>>
+>> @@ -114,7 +129,7 @@ Example:
+>>  			vddio-supply = <...>;
+>>
+>>  			clock-frequency = <24000000>;
+>> -			clocks = <...>;
+>> +			clocks = <&camera 1>;
+>>  			clock-names = "mclk";
+>>
+>>  			port {
+>> @@ -135,7 +150,7 @@ Example:
+>>  			vddio-supply = <...>;
+>>
+>>  			clock-frequency = <24000000>;
+>> -			clocks = <...>;
+>> +			clocks = <&camera 0>;
+>>  			clock-names = "mclk";
+>>
+>>  			port {
+>> @@ -149,12 +164,15 @@ Example:
+>>
+>>  	camera {
+>>  		compatible = "samsung,fimc", "simple-bus";
+>> -		#address-cells = <1>;
+>> -		#size-cells = <1>;
+>> -		status = "okay";
+>> -
+>> +		clocks = <&clock 132>, <&clock 133>;
+>> +		clock-names = "sclk_cam0", "sclk_cam1";
+> 
+> The documentation mentions that clock-names must contain "sclk_cam0", 
+> "sclk_cam1", "pxl_async0", "pxl_async1". Are the last two optional ? If so I 
+> think you should clarify the description of the clock-names property. This can 
+> be done in a separate patch.
+
+"pxl_async0", "pxl_async1" are mandatory, I'll add them also into
+this example dts.
+
+>> +		#clock-cells = <1>;
+>> +		clock-output-names = "cam_mclk_a", "cam_mclk_b";
+>>  		pinctrl-names = "default";
+>>  		pinctrl-0 = <&cam_port_a_clk_active>;
+>> +		status = "okay";
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>>
+>>  		/* parallel camera ports */
+>>  		parallel-ports {
+
+--
 Regards,
-Lucas
--- 
-Pengutronix e.K.                           | Lucas Stach                 |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-5076 |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Sylwester
