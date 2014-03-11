@@ -1,148 +1,50 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH v7 3/10] Documentation: devicetree: Update Samsung FIMC DT
- binding
-Date: Tue, 11 Mar 2014 17:00:35 +0100
-Message-ID: <1394553635-12134-1-git-send-email-s.nawrocki@samsung.com>
-References: <24917002.Y0kBkkQHhZ@avalon>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <24917002.Y0kBkkQHhZ@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: laurent.pinchart@ideasonboard.com, robh+dt@kernel.org, mark.rutland@arm.com, galak@codeaurora.org, kyungmin.park@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] mfd: add bcm590xx pmu driver
+Date: Tue, 11 Mar 2014 16:08:37 +0000
+Message-ID: <20140311160837.GP21216@lee--X1>
+References: <1394552775-31264-1-git-send-email-mporter@linaro.org>
+ <1394552775-31264-3-git-send-email-mporter@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1394552775-31264-3-git-send-email-mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch documents following updates of the Exynos4 SoC camera subsystem
-devicetree binding:
+> Add a driver for the BCM590xx PMU multi-function devices. The driver
+> initially supports regmap initialization and instantiation of the
+> voltage regulator device function of the PMU.
+>=20
+> Signed-off-by: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/mfd/Kconfig          |  8 ++++
+>  drivers/mfd/Makefile         |  1 +
+>  drivers/mfd/bcm590xx.c       | 93 ++++++++++++++++++++++++++++++++++=
+++++++++++
+>  include/linux/mfd/bcm590xx.h | 31 +++++++++++++++
+>  4 files changed, 133 insertions(+)
+>  create mode 100644 drivers/mfd/bcm590xx.c
+>  create mode 100644 include/linux/mfd/bcm590xx.h
 
- - addition of #clock-cells and clock-output-names properties to 'camera'
-   node - these are now needed so the image sensor sub-devices can reference
-   clocks provided by the camera host interface,
- - dropped a note about required clock-frequency properties at the
-   image sensor nodes; the sensor devices can now control their clock
-   explicitly through the clk API and there is no need to require this
-   property in the camera host interface binding.
+I have a tiny nit that 'ret' doesn't need to be initialised before
+use in probe(), but apart from that...
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
-Resending only single patch which changed.
+Looks pretty sensible:
+  Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Changes since v6:
- - #clock-cells, clock-output-names documented as mandatory properties;
- - renamed "cam_mclk_{a,b}" to "cam_{a,b}_clkout in the example dts,
-   this now matches changes in exynos4.dtsi further in the patch series;
- - marked "samsung,camclk-out" property as deprecated.
-
-Changes since v5:
- - none.
-
-Changes since v4:
- - dropped a requirement of specific order of values in clocks/
-   clock-names properties (Mark) and reference to clock-names in
-   clock-output-names property description (Mark).
----
- .../devicetree/bindings/media/samsung-fimc.txt     |   46 +++++++++++++-------
- 1 file changed, 31 insertions(+), 15 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
-index 96312f6..1908a5f 100644
---- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
-+++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
-@@ -15,11 +15,21 @@ Common 'camera' node
-
- Required properties:
-
--- compatible	: must be "samsung,fimc", "simple-bus"
--- clocks	: list of clock specifiers, corresponding to entries in
--		  the clock-names property;
--- clock-names	: must contain "sclk_cam0", "sclk_cam1", "pxl_async0",
--		  "pxl_async1" entries, matching entries in the clocks property.
-+- compatible: must be "samsung,fimc", "simple-bus"
-+- clocks: list of clock specifiers, corresponding to entries in
-+  the clock-names property;
-+- clock-names : must contain "sclk_cam0", "sclk_cam1", "pxl_async0",
-+  "pxl_async1" entries, matching entries in the clocks property.
-+
-+- #clock-cells: from the common clock bindings (../clock/clock-bindings.txt),
-+  must be 1. A clock provider is associated with the 'camera' node and it should
-+  be referenced by external sensors that use clocks provided by the SoC on
-+  CAM_*_CLKOUT pins. The clock specifier cell stores an index of a clock.
-+  The indices are 0, 1 for CAM_A_CLKOUT, CAM_B_CLKOUT clocks respectively.
-+
-+- clock-output-names: from the common clock bindings, should contain names of
-+  clocks registered by the camera subsystem corresponding to CAM_A_CLKOUT,
-+  CAM_B_CLKOUT output clocks respectively.
-
- The pinctrl bindings defined in ../pinctrl/pinctrl-bindings.txt must be used
- to define a required pinctrl state named "default" and optional pinctrl states:
-@@ -32,6 +42,7 @@ way around.
-
- The 'camera' node must include at least one 'fimc' child node.
-
-+
- 'fimc' device nodes
- -------------------
-
-@@ -88,8 +99,8 @@ port nodes specifies data input - 0, 1 indicates input A, B respectively.
-
- Optional properties
-
--- samsung,camclk-out : specifies clock output for remote sensor,
--		       0 - CAM_A_CLKOUT, 1 - CAM_B_CLKOUT;
-+- samsung,camclk-out (deprecated) : specifies clock output for remote sensor,
-+  0 - CAM_A_CLKOUT, 1 - CAM_B_CLKOUT;
-
- Image sensor nodes
- ------------------
-@@ -97,8 +108,8 @@ Image sensor nodes
- The sensor device nodes should be added to their control bus controller (e.g.
- I2C0) nodes and linked to a port node in the csis or the parallel-ports node,
- using the common video interfaces bindings, defined in video-interfaces.txt.
--The implementation of this bindings requires clock-frequency property to be
--present in the sensor device nodes.
-+An optional clock-frequency property needs to be present in the sensor device
-+nodes. Default value when this property is not present is 24 MHz.
-
- Example:
-
-@@ -114,7 +125,7 @@ Example:
- 			vddio-supply = <...>;
-
- 			clock-frequency = <24000000>;
--			clocks = <...>;
-+			clocks = <&camera 1>;
- 			clock-names = "mclk";
-
- 			port {
-@@ -135,7 +146,7 @@ Example:
- 			vddio-supply = <...>;
-
- 			clock-frequency = <24000000>;
--			clocks = <...>;
-+			clocks = <&camera 0>;
- 			clock-names = "mclk";
-
- 			port {
-@@ -149,12 +160,17 @@ Example:
-
- 	camera {
- 		compatible = "samsung,fimc", "simple-bus";
--		#address-cells = <1>;
--		#size-cells = <1>;
--		status = "okay";
--
-+		clocks = <&clock 132>, <&clock 133>, <&clock 351>,
-+			 <&clock 352>;
-+		clock-names = "sclk_cam0", "sclk_cam1", "pxl_async0",
-+			      "pxl_async1";
-+		#clock-cells = <1>;
-+		clock-output-names = "cam_a_clkout", "cam_b_clkout";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&cam_port_a_clk_active>;
-+		status = "okay";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-
- 		/* parallel camera ports */
- 		parallel-ports {
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-1.7.9.5
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
