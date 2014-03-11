@@ -1,54 +1,46 @@
-From: Maxime Coquelin <maxime.coquelin@st.com>
-Subject: Re: [PATCH v3 1/5] ARM: STi: Add STiH407 SoC support
-Date: Tue, 11 Mar 2014 14:56:47 +0100
-Message-ID: <531F161F.9040804@st.com>
-References: <1394203251-25361-1-git-send-email-maxime.coquelin@st.com> <1394203251-25361-2-git-send-email-maxime.coquelin@st.com> <20140310123405.GU14976@lee--X1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140310123405.GU14976@lee--X1>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, kernel@stlinux.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Stuart Menefy <stuart.menefy@st.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-arm-kernel@lists.infradead.org
+From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 2/3] soc: keystone: add QMSS driver
+Date: Tue, 11 Mar 2014 09:04:24 -0500
+Message-ID: <5EE98053-31B8-4679-AAE2-4F026C61D1D4@codeaurora.org>
+References: <1393629520-12713-1-git-send-email-santosh.shilimkar@ti.com>	<1393629520-12713-3-git-send-email-santosh.shilimkar@ti.com> <CAL_Jsq+O660oV9FtthG3gTkVOhL0ku-UHSrkt-ROauu1iNpbaA@mail.gmail.com> <531E2C55.70702@ti.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.2 \(1874\))
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <531E2C55.70702-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sandeep Nair <sandeep_n-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Sorry, I missed this one.
 
-On 03/10/2014 01:34 PM, Lee Jones wrote:
->> This patch adds support to STiH407 SoC.
->>
->> Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
->> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
->> ---
->>   Documentation/arm/sti/stih407-overview.txt    | 18 ++++++++++++++++++
->>   Documentation/devicetree/bindings/arm/sti.txt | 15 +++++++++++++++
->>   arch/arm/mach-sti/Kconfig                     |  9 +++++++++
->>   arch/arm/mach-sti/board-dt.c                  |  1 +
->>   4 files changed, 43 insertions(+)
->>   create mode 100644 Documentation/arm/sti/stih407-overview.txt
->>   create mode 100644 Documentation/devicetree/bindings/arm/sti.txt
->
-> <snip>
->
->> +config SOC_STIH407
->> +	bool "STiH407 STMicroelectronics Consumer Electronics family"
->> +	default y
->> +	help
->> +	  This enables support for STMicroelectronics Digital Consumer
->> +	  Electronics family StiH407 parts, primarily targeted at set-top-box
->> +	  and other digital audio/video applications using Flattened Device
->> +	  Trees.
->> +
->
-> Are these configs actually used for something?
-Not currently, but it is going to happen (for reset controller).
+On Mar 10, 2014, at 4:19 PM, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
 
-I will add it only when I'll send the reset controller driver for STiH407.
+>>> +  -- reg-names         : Names for the above register regions. The name to be
+>>> +                         used is as follows:
+>>> +                         - "config" : Queue configuration region.
+>>> +                         - "status" : Queue status RAM.
+>>> +                         - "region" : Descriptor memory setup region.
+>>> +                         - "push"   : Queue Management/Queue Proxy region.
+>>> +                         - "pop"    : Queue Management/Queue Proxy region.
+>>> +                         - "peek"   : Queue Peek region.
+>> 
+>> reg-names should be optional. Also you have the order different from
+>> reg. Be consistent as to what is the correct order.
+>> 
+> We thought of using reg-names to remove the ordering to index
+> the regs. So if we make the reg-names optional, then indexing
+> by order will be used. We can do that.
 
-Regards,
-Maxime
+We keep having this conversation, why does reg-names need to be optional for new bindings?
 
->
-> <snip>
->
+- k
+
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
