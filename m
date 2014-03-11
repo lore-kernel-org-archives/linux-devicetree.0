@@ -1,67 +1,52 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [RFC PATCH] [media]: of: move graph helpers from
- drivers/media/v4l2-core to drivers/of
-Date: Tue, 11 Mar 2014 14:44:23 +0100
-Message-ID: <1394545463.3772.24.camel@paszta.hi.pengutronix.de>
-References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de>
-	 <139468148.3QhLg3QYq1@avalon> <531F08A8.300@ti.com>
-	 <1883687.VdfitvQEN3@avalon> <531F0F4F.3070008@ti.com>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 3/3] Documentation: of: Document graph bindings
+Date: Tue, 11 Mar 2014 14:47:14 +0100
+Message-ID: <531F13E2.3040603@samsung.com>
+References: <1393340304-19005-1-git-send-email-p.zabel@pengutronix.de>
+ <1393340304-19005-4-git-send-email-p.zabel@pengutronix.de>
+ <530DE8A9.9050809@ti.com> <1393426623.3248.70.camel@paszta.hi.pengutronix.de>
+ <530DFF4C.8080807@ti.com> <20140307181132.B2D71C40A88@trevor.secretlab.ca>
+ <531AE46A.2060808@ti.com> <20140308122532.1AED9C40612@trevor.secretlab.ca>
+ <531D6178.3070906@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <531F0F4F.3070008@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Grant Likely <grant.likely@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <531D6178.3070906-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 10/03/14 07:53, Tomi Valkeinen wrote:
+> On 08/03/14 14:25, Grant Likely wrote:
+> 
+>> Sure. If endpoints are logical, then only create the ones actually
+>> hooked up. No problem there. But nor do I see any issue with having
+>> empty connections if the board author things it makes sense to have them
+>> in the dtsi.
+> 
+> I don't think they are usually logical, although they probably might be
+> in some cases.
 
-Am Dienstag, den 11.03.2014, 15:27 +0200 schrieb Tomi Valkeinen:
-> On 11/03/14 15:16, Laurent Pinchart wrote:
-> 
-> >> And if I gathered Grant's opinion correctly (correct me if I'm wrong),
-> >> he thinks things should be explicit, i.e. the bindings for, say, an
-> >> encoder should state that the encoder's output endpoint _must_ contain a
-> >> remote-endpoint property, whereas the encoder's input endpoint _must
-> >> not_ contain a remote-endpoint property.
-> > 
-> > Actually my understand was that DT links would have the same direction as the 
-> > data flow. There would be no ambiguity in that case as the direction of the 
-> 
-> Ok. At least at some point in the discussion the rule of thumb was to
-> have the "master" point at the "slave", which are a bit vague terms, but
-> I think both display and camera controllers were given as examples of
-> "master".
-> 
-> > data flow is known. What happens for bidirectional data flows still need to be 
-> > discussed though. And if we want to use the of-graph bindings to describe 
-> > graphs without a data flow, a decision will need to be taken there too.
-> 
-> Yep. My worry is that if the link direction is defined in the bindings
-> for the device, somebody will at some point have a complex board which
-> happens to use two devices in such a way, that either neither of them
-> point to each other, or both point to each other.
-> 
-> Maybe we can make sure that never happens, but I feel a bit nervous
-> about it especially for bi-directional cases. If the link has no clear
-> main-dataflow direction, it may be a bit difficult to say which way to link.
-> 
-> With double-linking all those concerns just disappear.
+The endpoint nodes are supposed to be logical, they just group properties
+describing a port's configuration.
 
-another possibility would be to just leave it open in the generic
-bindings:
+> As I see it, a "port" is a group of pins in a hardware component, and
+> two endpoints define a connection between two ports, which on the HW
+> level are the wires between the ports.
+> 
+> So a port with two endpoints is a group of pins, with wires that go from
+> the same pins to two different components.
 
-"Two endpoints are considered linked together if any of them contains a
- 'remote-endpoint' phandle property that points to the other. If both
- contain a 'remote-endpoint' property, both must point at each other."
+It could be approximated like this, but I don't think it is needed.
+I would rather stay with only port nodes mapped to hardware and the
+endpoint nodes logical.
 
-As long as we make sure that the generic code is able to generate the
-undirected graph from this, we could then let more specific bindings
-(like video-interfaces.txt) define that the phandle links always should
-point in both directions, in data flow direction, north, or outwards
-from the 'master'.
-
-regards
-Philipp
+--
+Regards,
+Sylwester
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
