@@ -1,73 +1,197 @@
-From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v4 0/5] BCM59056 PMU regulator support
-Date: Tue, 11 Mar 2014 19:33:52 -0400
-Message-ID: <1394580837-8331-1-git-send-email-mporter@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>
-Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Matt Porter <mporter@linaro.org>
+Subject: [PATCH v4 2/5] mfd: add bcm590xx pmu driver
+Date: Tue, 11 Mar 2014 19:33:54 -0400
+Message-ID: <1394580837-8331-3-git-send-email-mporter@linaro.org>
+References: <1394580837-8331-1-git-send-email-mporter@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1394580837-8331-1-git-send-email-mporter@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Christian Daudt <bcm@fixthebug.org>
+Cc: Devicetree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The BCM59056 is a multi-function power management unit used with the
-BCM281xx family of SoCs. This series adds an MFD and voltage regulator
-driver to support the BCM59056. The bcm28155-ap DT support is updated
-to enable use of regulators on the otg and sdhci peripherals.
+Add a driver for the BCM590xx PMU multi-function devices. The driver
+initially supports regmap initialization and instantiation of the
+voltage regulator device function of the PMU.
 
-Changes since v3:
-	- remove needless init of local ret variable in mfd driver probe
-
-Changes since v2:
-	- Move to mfd_add_devices() approach, eliminating representation
-	  of the regulator block as a hardware subdevice. Regulators are
-	  listed in the PMU binding and referenced via the parent device
-	  of_node by the regulator driver.
-	- Allow mfd driver to build as module
-	- Remove regulator constraints from the .dtsi include only the
-	  board-specific constraints in the board .dts.
-
-Changes since v1:
-        - renamed to bcm590xx to accomodate future family parts
-        - remove use of subsys_initcall
-        - fix BCM590XX_MAX_REGISTER value
-        - remove unused chip id in mfd of/i2c matching
-        - switch to of_platform_populate() in mfd
-        - update binding to single document with regulators as optional
-          properties in the regulator subdevice IP description
-        - remove unused regulator get/set mode ops
-        - remove unneeded regulator NULL constraint check
-        - regulators property is optional, allow the driver to probe
-          when it is missing
-        - move of_node presence check into bcm590xx_parse_dt_reg_data()
-
-Matt Porter (5):
-  mfd: add bcm590xx pmu DT binding
-  mfd: add bcm590xx pmu driver
-  regulator: add bcm590xx regulator driver
-  ARM: configs: bcm_defconfig: enable bcm590xx regulator support
-  ARM: dts: add bcm590xx pmu support and enable for bcm28155-ap
-
- Documentation/devicetree/bindings/mfd/bcm590xx.txt |  41 ++
- arch/arm/boot/dts/bcm28155-ap.dts                  |  47 ++-
- arch/arm/boot/dts/bcm59056.dtsi                    |  77 ++++
- arch/arm/configs/bcm_defconfig                     |   7 +
- drivers/mfd/Kconfig                                |   8 +
- drivers/mfd/Makefile                               |   1 +
- drivers/mfd/bcm590xx.c                             |  93 +++++
- drivers/regulator/Kconfig                          |   8 +
- drivers/regulator/Makefile                         |   1 +
- drivers/regulator/bcm590xx-regulator.c             | 413 +++++++++++++++++++++
- include/linux/mfd/bcm590xx.h                       |  31 ++
- 11 files changed, 726 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/bcm590xx.txt
- create mode 100644 arch/arm/boot/dts/bcm59056.dtsi
+Signed-off-by: Matt Porter <mporter@linaro.org>
+Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
+Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
+---
+ drivers/mfd/Kconfig          |  8 ++++
+ drivers/mfd/Makefile         |  1 +
+ drivers/mfd/bcm590xx.c       | 93 ++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/bcm590xx.h | 31 +++++++++++++++
+ 4 files changed, 133 insertions(+)
  create mode 100644 drivers/mfd/bcm590xx.c
- create mode 100644 drivers/regulator/bcm590xx-regulator.c
  create mode 100644 include/linux/mfd/bcm590xx.h
 
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 49bb445..27ff37c 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -59,6 +59,14 @@ config MFD_AAT2870_CORE
+ 	  additional drivers must be enabled in order to use the
+ 	  functionality of the device.
+ 
++config MFD_BCM590XX
++	tristate "Broadcom BCM590xx PMUs"
++	select MFD_CORE
++	select REGMAP_I2C
++	depends on I2C
++	help
++	  Support for the BCM590xx PMUs from Broadcom
++
+ config MFD_CROS_EC
+ 	tristate "ChromeOS Embedded Controller"
+ 	select MFD_CORE
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index 5aea5ef..4c342bf 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -8,6 +8,7 @@ obj-$(CONFIG_MFD_88PM800)	+= 88pm800.o 88pm80x.o
+ obj-$(CONFIG_MFD_88PM805)	+= 88pm805.o 88pm80x.o
+ obj-$(CONFIG_MFD_SM501)		+= sm501.o
+ obj-$(CONFIG_MFD_ASIC3)		+= asic3.o tmio_core.o
++obj-$(CONFIG_MFD_BCM590XX)	+= bcm590xx.o
+ obj-$(CONFIG_MFD_CROS_EC)	+= cros_ec.o
+ obj-$(CONFIG_MFD_CROS_EC_I2C)	+= cros_ec_i2c.o
+ obj-$(CONFIG_MFD_CROS_EC_SPI)	+= cros_ec_spi.o
+diff --git a/drivers/mfd/bcm590xx.c b/drivers/mfd/bcm590xx.c
+new file mode 100644
+index 0000000..926a57e
+--- /dev/null
++++ b/drivers/mfd/bcm590xx.c
+@@ -0,0 +1,93 @@
++/*
++ * Broadcom BCM590xx PMU
++ *
++ * Copyright 2014 Linaro Limited
++ * Author: Matt Porter <mporter@linaro.org>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under  the terms of the GNU General  Public License as published by the
++ * Free Software Foundation;  either version 2 of the License, or (at your
++ * option) any later version.
++ */
++
++#include <linux/err.h>
++#include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/mfd/bcm590xx.h>
++#include <linux/mfd/core.h>
++#include <linux/module.h>
++#include <linux/moduleparam.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++
++static const struct mfd_cell bcm590xx_devs[] = {
++	{
++		.name = "bcm590xx-vregs",
++	},
++};
++
++static const struct regmap_config bcm590xx_regmap_config = {
++	.reg_bits	= 8,
++	.val_bits	= 8,
++	.max_register	= BCM590XX_MAX_REGISTER,
++	.cache_type	= REGCACHE_RBTREE,
++};
++
++static int bcm590xx_i2c_probe(struct i2c_client *i2c,
++			      const struct i2c_device_id *id)
++{
++	struct bcm590xx *bcm590xx;
++	int ret;
++
++	bcm590xx = devm_kzalloc(&i2c->dev, sizeof(*bcm590xx), GFP_KERNEL);
++	if (!bcm590xx)
++		return -ENOMEM;
++
++	i2c_set_clientdata(i2c, bcm590xx);
++	bcm590xx->dev = &i2c->dev;
++	bcm590xx->i2c_client = i2c;
++
++	bcm590xx->regmap = devm_regmap_init_i2c(i2c, &bcm590xx_regmap_config);
++	if (IS_ERR(bcm590xx->regmap)) {
++		ret = PTR_ERR(bcm590xx->regmap);
++		dev_err(&i2c->dev, "regmap initialization failed: %d\n", ret);
++		return ret;
++	}
++
++	ret = mfd_add_devices(&i2c->dev, -1, bcm590xx_devs,
++			      ARRAY_SIZE(bcm590xx_devs), NULL, 0, NULL);
++	if (ret < 0)
++		dev_err(&i2c->dev, "failed to add sub-devices: %d\n", ret);
++
++	return ret;
++}
++
++static const struct of_device_id bcm590xx_of_match[] = {
++	{ .compatible = "brcm,bcm59056" },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, bcm590xx_of_match);
++
++static const struct i2c_device_id bcm590xx_i2c_id[] = {
++	{ "bcm59056" },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, bcm590xx_i2c_id);
++
++static struct i2c_driver bcm590xx_i2c_driver = {
++	.driver = {
++		   .name = "bcm590xx",
++		   .owner = THIS_MODULE,
++		   .of_match_table = of_match_ptr(bcm590xx_of_match),
++	},
++	.probe = bcm590xx_i2c_probe,
++	.id_table = bcm590xx_i2c_id,
++};
++module_i2c_driver(bcm590xx_i2c_driver);
++
++MODULE_AUTHOR("Matt Porter <mporter@linaro.org>");
++MODULE_DESCRIPTION("BCM590xx multi-function driver");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:bcm590xx");
+diff --git a/include/linux/mfd/bcm590xx.h b/include/linux/mfd/bcm590xx.h
+new file mode 100644
+index 0000000..434df2d
+--- /dev/null
++++ b/include/linux/mfd/bcm590xx.h
+@@ -0,0 +1,31 @@
++/*
++ * Broadcom BCM590xx PMU
++ *
++ * Copyright 2014 Linaro Limited
++ * Author: Matt Porter <mporter@linaro.org>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under  the terms of the GNU General  Public License as published by the
++ * Free Software Foundation;  either version 2 of the License, or (at your
++ * option) any later version.
++ *
++ */
++
++#ifndef __LINUX_MFD_BCM590XX_H
++#define __LINUX_MFD_BCM590XX_H
++
++#include <linux/device.h>
++#include <linux/i2c.h>
++#include <linux/regmap.h>
++
++/* max register address */
++#define BCM590XX_MAX_REGISTER	0xe7
++
++struct bcm590xx {
++	struct device *dev;
++	struct i2c_client *i2c_client;
++	struct regmap *regmap;
++	unsigned int id;
++};
++
++#endif /*  __LINUX_MFD_BCM590XX_H */
 -- 
 1.8.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
