@@ -1,30 +1,29 @@
 From: Vince Bridgers <vbridgers2013@gmail.com>
 Subject: Re: [PATCH net-next v2 8/9] Altera TSE: Add Miscellaneous Files for
  Altera Ethernet Driver
-Date: Tue, 11 Mar 2014 10:33:45 -0500
-Message-ID: <CAOwfj2PekMTsc+r6bBGrSxUbmUD+BhvTfWomCuDuST5qgc0=Yg@mail.gmail.com>
+Date: Tue, 11 Mar 2014 10:35:00 -0500
+Message-ID: <CAOwfj2O8p2MQtFhaLrSzjRAnOYtR2qS3POXaaDd=3qtnwwovZg@mail.gmail.com>
 References: <1394493277-2105-1-git-send-email-vbridgers2013@gmail.com>
 	<1394493277-2105-9-git-send-email-vbridgers2013@gmail.com>
-	<20140310173836.5845b01c@nehalam.linuxnetplumber.net>
+	<20140310174031.4145a3ff@nehalam.linuxnetplumber.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140310173836.5845b01c@nehalam.linuxnetplumber.net>
+In-Reply-To: <20140310174031.4145a3ff@nehalam.linuxnetplumber.net>
 Sender: linux-doc-owner@vger.kernel.org
 To: Stephen Hemminger <stephen@networkplumber.org>
 Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 10, 2014 at 7:38 PM, Stephen Hemminger
+On Mon, Mar 10, 2014 at 7:40 PM, Stephen Hemminger
 <stephen@networkplumber.org> wrote:
 > On Mon, 10 Mar 2014 18:14:36 -0500
 > Vince Bridgers <vbridgers2013@gmail.com> wrote:
 >
->> +static char stat_gstrings[][ETH_GSTRING_LEN] = {
->> +     "aFramesTransmittedOK",
->> +     "aFramesReceivedOK",
->> +     "aFramesCheckSequenceErro
+>> +
+>> +     buf[0] = (u64) ioread32(&mac->frames_transmitted_ok);
 >
-> nit: should be const char
+> The cast to u64 is not really necessary, C will do it for you.
+> You do need the cast to do the shift for the 64 bit values.
 
-Ok, will address.
+Ok, understood. I generally add the cast so it's explicit, but I'll modify.
