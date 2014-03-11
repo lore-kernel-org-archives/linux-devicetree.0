@@ -1,72 +1,96 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v4 1/2] arm: dts: omap4+: Add DMM bindings
-Date: Tue, 11 Mar 2014 09:15:16 +0200
-Message-ID: <531EB804.90702@ti.com>
-References: <1379063679-4869-1-git-send-email-archit@ti.com> <1381820660-5501-1-git-send-email-archit@ti.com> <1381820660-5501-2-git-send-email-archit@ti.com>
+From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Subject: RE: [RFC PATCH] edac: zynq: Added EDAC support for zynq ddr ecc
+ controller
+Date: Tue, 11 Mar 2014 07:25:24 +0000
+Message-ID: <2da88be0-6cbf-4cf5-9aa9-453084863da7@TX2EHSMHS038.ehs.local>
+References: <4adb2b4b-2ad6-42b9-929e-cc062f817245@TX2EHSMHS021.ehs.local>
+ <20140310105655.GH14999@e106331-lin.cambridge.arm.com>
+ <531DA900.5060202@monstr.eu>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="LaNWtfPPfJxMfRsWKk10OAkXLQUrgQjAP"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1381820660-5501-2-git-send-email-archit@ti.com>
+In-Reply-To: <531DA900.5060202@monstr.eu>
+Content-Language: en-US
 Sender: linux-doc-owner@vger.kernel.org
-To: Archit Taneja <archit@ti.com>, bcousson@baylibre.com, tony@atomide.com, mark.rutland@arm.com
-Cc: robdclark@gmail.com, linux-doc@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Andy Gross <andygro@gmail.com>
+To: "monstr@monstr.eu" <monstr@monstr.eu>, Mark Rutland <mark.rutland@arm.com>
+Cc: "dougthompson@xmission.com" <dougthompson@xmission.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, Michal Simek <michals@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "kpc528@gmail.com" <kpc528@gmail.com>, "kalluripunnaiahchoudary@gmail.com" <kalluripunnaiahchoudary@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
---LaNWtfPPfJxMfRsWKk10OAkXLQUrgQjAP
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On 15/10/13 10:04, Archit Taneja wrote:
-> Add Dynamic Memory Manager (DMM) bindings for OMAP4 and OMAP5 devices. =
-DMM
-> only requires address and irq information.
->=20
-> Add documentation for the DMM bindings.
->=20
-> Originally worked on by Andy Gross <andygro@gmail.com>
->=20
-> Cc: Andy Gross <andygro@gmail.com>
-> Signed-off-by: Archit Taneja <archit@ti.com>
-> ---
->  Documentation/devicetree/bindings/arm/omap/dmm.txt | 22 ++++++++++++++=
-++++++++
->  arch/arm/boot/dts/omap4.dtsi                       |  7 +++++++
->  arch/arm/boot/dts/omap5.dtsi                       |  7 +++++++
->  3 files changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/omap/dmm.txt
-
-Has this been queued for 3.15?
-
- Tomi
 
 
+>-----Original Message-----
+>From: Michal Simek [mailto:monstr@monstr.eu]
+>Sent: Monday, March 10, 2014 5:29 PM
+>To: Mark Rutland
+>Cc: Punnaiah Choudary Kalluri; dougthompson@xmission.com;
+>devicetree@vger.kernel.org; linux-doc@vger.kernel.org; linux-arm-
+>kernel@lists.infradead.org; linux-kernel@vger.kernel.org; linux-
+>edac@vger.kernel.org; Michal Simek; robh+dt@kernel.org; Pawel Moll;
+>ijc+devicetree@hellion.org.uk; galak@codeaurora.org; rob@landley.net;
+>kpc528@gmail.com; kalluripunnaiahchoudary@gmail.com; Punnaiah Choudary
+>Kalluri
+>Subject: Re: [RFC PATCH] edac: zynq: Added EDAC support for zynq ddr ecc
+>controller
+>
+>On 03/10/2014 11:56 AM, Mark Rutland wrote:
+>> On Sun, Mar 09, 2014 at 02:57:16AM +0000, Punnaiah Choudary Kalluri
+>wrote:
+>>> Added EDAC support for reporting the ecc errors of zynq ddr controller.
+>>> The ddr ecc controller corrects single bit errors and detects double
+>>> bit errors
+>>>
+>>> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+>>> ---
+>>>  .../devicetree/bindings/edac/zynq_edac.txt         |   18 +
+>>>  drivers/edac/Kconfig                               |    7 +
+>>>  drivers/edac/Makefile                              |    1 +
+>>>  drivers/edac/zynq_edac.c                           |  613 ++++++++++++++++++++
+>>>  4 files changed, 639 insertions(+), 0 deletions(-)  create mode
+>>> 100644 Documentation/devicetree/bindings/edac/zynq_edac.txt
+>>>  create mode 100644 drivers/edac/zynq_edac.c
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/edac/zynq_edac.txt
+>>> b/Documentation/devicetree/bindings/edac/zynq_edac.txt
+>>> new file mode 100644
+>>> index 0000000..c21ff83
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/edac/zynq_edac.txt
+>>> @@ -0,0 +1,18 @@
+>>> +Zynq EDAC driver, it does reports the DDR ECC single bit errors that
+>>> +are corrected and double bit ecc errors that are detected by the DDR ECC
+>controller.
+>>> +ECC support for DDR is available in half-bus width(16 bit) configuration
+>only.
+>>> +
+>>> +Required properties:
+>>> +- compatible: Should be "xlnx,ps7-ddrc" or "xlnx,ps7-ddrc-1.00.a"
+>>
+>> Is this an or or a xor?
+>
+>Compatible string should be just xlnx,zynq-ddrc-1.00.a.
+>Nothing with ps7.
+Hi Mark and Michal,
 
---LaNWtfPPfJxMfRsWKk10OAkXLQUrgQjAP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+I will correct the binding info and send the next version
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+Regards,
+Punnaiah
+>
+>Thanks,
+>Michal
+>
+>
+>--
+>Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+>w: www.monstr.eu p: +42-0-721842854
+>Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+>Maintainer of Linux kernel - Xilinx Zynq ARM architecture Microblaze U-BOOT
+>custodian and responsible for u-boot arm zynq platform
+>
 
-iQIcBAEBAgAGBQJTHrgEAAoJEPo9qoy8lh71xfoP/jt/ggDnsg5CXl/cQUnjVLQB
-GYifRXzYuSWepXejLxfqpx4EsFn7X8Yl/fNHIBcHx6jmV1pOtw5vDAMQ5dzIq2Os
-hL8M9SPaSUGDWT6selRQU1tERfM2NNLAwWX2a4hsvy/ArwODsEp47EDyR+pr5zJ3
-QVICOpJsCF0w6W7DxIFL/xcphMB2ZiDSSaxcbj9ZKXIGQRzic+RfKQmLGHhOd+XY
-D452ZQCFtjaoyYC4GDWIsHE8dcKkudX/eLsVasabI3Ich1DDbeQ0KYtBF3LldVBl
-zbP64yErpdeSyfRwjuhQVnlNvyN/c7dks52Tfk9FlSOTzUEgLEXq8waa4QoDrG4K
-qriZD9Uf8kI21XkeynV3WcMao1iKawbIIxrBF20+h6VP5jOFViL0pgwq4P7zpwTj
-e3pk6AFgmnw7B6qL4q/EgRp6lG1ykFLWiUXsP3Clhz4Fbkr2cCAv7h1vsryh0XEQ
-qr97VCs9T3dAW4MkJECKs1KBHw5p9hm3Q2MBPeMcYG8J0Jwv9vGnUjPqi8E99heG
-02/PyS4DMDLwceuYX+NVodaHZ53Q2VeNC1V65WAKWRqjRdi6HPfPpOO2TiJtuLOT
-GMN6EeSV6m5GtkcTUUtoU0rUcvLyukWEzfo+SBth6L5IbiKRQ6GzAlik2jA7WIF7
-hOcJfWS7kebz+5BjRS/R
-=rBGn
------END PGP SIGNATURE-----
 
---LaNWtfPPfJxMfRsWKk10OAkXLQUrgQjAP--
+
+This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
+
+
