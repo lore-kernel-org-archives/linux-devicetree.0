@@ -1,63 +1,83 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v9 0/9] USB Host support for OMAP5 uEVM
-Date: Tue, 11 Mar 2014 13:07:15 +0000
-Message-ID: <20140311130715.GM21216@lee--X1>
-References: <1393510711-4697-1-git-send-email-rogerq@ti.com>
- <531ECDCB.4060700@ti.com>
- <20140311120259.GI21216@lee--X1>
- <531EFE97.1090202@ti.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH 5/5] ARM: dts: exynos4412-trats2: Add ADC's dt data to get
+ temperature of SoC/battery
+Date: Tue, 11 Mar 2014 14:09:00 +0100
+Message-ID: <531F0AEC.7010606@samsung.com>
+References: <1394524494-30641-1-git-send-email-cw00.choi@samsung.com>
+ <1394524494-30641-6-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <531EFE97.1090202@ti.com>
+In-reply-to: <1394524494-30641-6-git-send-email-cw00.choi@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: tony@atomide.com, bcousson@baylibre.com, balbi@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>, kgene.kim@samsung.com
+Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
+Hi Chanwoo,
 
-> >>> This patchset brings up USB Host ports and Ethernet port on
-> >>> the OMAP5 uEVM board.
-> >>>
-> >>> It also does some cleanup with respect to DT clock binding
-> >>> for the mfd/omap-usb-host driver.
-> >>>
-> >>> Please queue these for -next.
-> >>>
-> >>> Lee,
-> >>>
-> >>> I've folded some platform data dependent patches with mfd patches
-> >>> so that they don't break functionality when applied individually.
-> >>> You can safely pull in all MFD patches (1 to 6).
-> >>>
-> >>> Tony & Benoit,
-> >>>
-> >>> Can you please accept patches 7, 8 and 9?
-> >>
-> >> Tony has already picked up 7,8 and 9 through omap-soc tree.
-> >>
-> >> Since you acked most patches except 5 and 6, are you fine if Tony =
-takes
-> >> all the patches 1 to 4 in this series via omap-soc tree?
-> >>
-> >> What about patches 5 and 6?
-> >=20
-> > Any patches which are orthogonal can just be sucked into whichever =
-tree
-> > they belong in. If there are inter-subsystem dependencies I'd prefe=
-r
-> > to take them and issue a immutable branch pull-request to the other
-> > maintainers.
-> >=20
-> Awesome. That would be great, thanks.
+On 11.03.2014 08:54, Chanwoo Choi wrote:
+> This patch use ADC to get the temperature of SoC/battery by using NTC thermistor
+> driver in hwmon. NTC thermistor driver covnvert ADC's raw data to temperature
+> by using following variables:
+>
+> - pullup-uv    : Voltage
+> - pullup-ohm   : Pull-up resistance
+> - pulldown-ohm : Pull-down resistance
+> - io-channels  : It means ADC channel.
+>
 
-That does mean I need a) all of the Maintainer Acks and b) you to tell
-me which ones need to go through a single tree.
+Those properties are well-defined in "ntc,ncp15wb473" DT bindings 
+documentation. There is no need to repeat them here.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>   arch/arm/boot/dts/exynos4412-trats2.dts | 21 +++++++++++++++++++++
+>   1 file changed, 21 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
+> index 4f851cc..fc517c3 100644
+> --- a/arch/arm/boot/dts/exynos4412-trats2.dts
+> +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
+> @@ -106,6 +106,27 @@
+>   		};
+>   	};
+>
+> +	adc: adc@126C0000 {
+> +		vdd-supply = <&ldo3_reg>;
+> +		status = "okay";
+> +
+> +		ncp15wb473@0 {
+
+style: Nodes should have generic names, e.g. thermistor@0.
+
+Also if node name is suffixed with @unit-address, then the node should 
+have a reg property with its first entry corresponding to the 
+unit-address. Now there is no physical unit-address definition for those 
+thermistors, so they shouldn't use this naming pattern, but rather 
+something like "thermistor-0" or "thermistor-ap".
+
+> +			compatible = "ntc,ncp15wb473";
+> +			pullup-uv = <1800000>;	 /* VCC_1.8V_AP */
+> +			pullup-ohm = <100000>;	 /* 100K */
+> +			pulldown-ohm = <100000>; /* 100K */
+> +			io-channels = <&adc 1>;  /* AP temperature */
+> +		};
+> +
+> +		ncp15wb473@1 {
+> +			compatible = "ntc,ncp15wb473";
+> +			pullup-uv = <1800000>;	 /* VCC_1.8V_AP */
+> +			pullup-ohm = <100000>;	 /* 100K */
+> +			pulldown-ohm = <100000>; /* 100K */
+> +			io-channels = <&adc 2>;  /* Battery temperature */
+> +		};
+
+Anyway, I don't think it is correct to place IIO consumers under IIO 
+provider node, because IIO is not a control bus, but rather a resource 
+provider, like GPIO, clock, etc. So both thermistor nodes should be 
+placed outside the adc node. (They might be grouped in a simple-bus 
+subnode, though, to improve readability.)
+
+Best regards,
+Tomasz
