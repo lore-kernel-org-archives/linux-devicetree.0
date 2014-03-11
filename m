@@ -1,33 +1,58 @@
-From: Fengguang Wu <fengguang.wu@intel.com>
-Subject: Re: [PATCH v5] can: xilinx CAN controller support.
-Date: Tue, 11 Mar 2014 12:45:55 +0800
-Message-ID: <20140311044555.GA12373@localhost>
-References: <5254bfec-c6fd-4681-a34d-706d51e60fbb@VA3EHSMHS004.ehs.local>
- <531DD493.3030306@monstr.eu>
- <531DD5E7.7090406@pengutronix.de>
- <3245971.RIuVmbVL0Z@wuerfel>
- <1964213d-6bd9-49fa-805e-42e1e0630fd5@VA3EHSMHS029.ehs.local>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] mfd: Support SiRF audio modules
+Date: Tue, 11 Mar 2014 05:49:26 +0000
+Message-ID: <20140311054926.GA2839@lee--X1>
+References: <1394184531-7679-1-git-send-email-rongjun.ying@csr.com>
+ <20140310103532.GI14976@lee--X1>
+ <5EB3BFCD089AD643B9BB63439F5FD5E9012BE2D157@SHAASIEXM01.ASIA.ROOT.PRI>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-can-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1964213d-6bd9-49fa-805e-42e1e0630fd5@VA3EHSMHS029.ehs.local>
-Sender: linux-can-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Marc Kleine-Budde <mkl@pengutronix.de>, monstr@monstr.eu, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, robh+dt@kernel.org, Kedareswara rao Appana <appana.durga.rao@xilinx.com>, grant.likely@linaro.org, Kedareswara rao Appana <appanad@xilinx.com>, wg@grandegger.com
+In-Reply-To: <5EB3BFCD089AD643B9BB63439F5FD5E9012BE2D157-W2enlP78h2wYZnBWG7VmBdnKn0HB1kRyVQQcQy+6Uvc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Barry Song <Barry.Song-kQvG35nSl+M@public.gmane.org>
+Cc: RongJun Ying <rjying-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, DL-SHA-WorkGroupLinux <DL-SHA-WorkGroupLinux-z7JfP6tgrtVrifDez5n5bw@public.gmane.org>, Rongjun Ying <Rongjun.Ying-kQvG35nSl+M@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> > You probably want something like
-> > 
-> > 	config CAN_XILINX
-> > 	tristate "Xilinx CAN"
-> > 	depends on ARCH_ZYNQ || MICROBLAZE || COMPILE_TEST
-> > 	depends on COMMON_CLK && HAS_MMIO  # whatever you need for other architectures
-> 
-> Fengguang: Are you use COMPILE_TEST in zero day testing system?
+> > > diff --git a/include/linux/mfd/sirf/audio.h b/include/linux/mfd/s=
+irf/audio.h
+> > > new file mode 100644
+> > > index 0000000..d8cfff9
+> > > --- /dev/null
+> > > +++ b/include/linux/mfd/sirf/audio.h
+> > > @@ -0,0 +1,17 @@
+> > > +/*
+> > > + * audio.h
+> > > + *
+> > > + * Copyright (c) 2014 Cambridge Silicon Radio Limited, a CSR plc=
+ group
+> > company.
+> > > + *
+> > > + * Licensed under GPLv2 or later.
+> > > + */
+> >=20
+> > Use a standard header please
+>=20
+> I think this has been a standard header. It is one simpler version fo=
+r license.
+> If there is any problem here, it should be the 1st line, we might rep=
+lace audio.h by a simple description of this file.
 
-Yeah, the randconfig build/boot tests should cover both COMPILE_TEST
-and !COMPILE_TEST cases.
+My issue wasn't with the license, but the header in general. It
+started off without a proper name for the driver followed by no
+description of the code, then I noticed the author (who is listed
+at the bottom) is not mentioned. My issue is that it's sparse and
+uninformative.
 
-Thanks,
-Fengguang
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
