@@ -1,72 +1,63 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH v2 0/7] tty: xuartps: Rebranding + DT documentation
-Date: Tue, 11 Mar 2014 11:29:13 -0700
-Message-ID: <b4e6dfe6-ad49-4d81-855b-8dd905665616@VA3EHSMHS039.ehs.local>
-References: <1394487610-2419-1-git-send-email-soren.brinkmann@xilinx.com>
- <531EE993.80400@monstr.eu>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: Re: [RFC PATCH v2 08/14] mtd: nand: add sunxi NAND
+ flash controller support
+Date: Tue, 11 Mar 2014 12:45:13 -0600
+Message-ID: <20140311184513.GC31835@obsidianresearch.com>
+References: <1391006064-28890-1-git-send-email-b.brezillon.dev@gmail.com>
+ <1391006064-28890-9-git-send-email-b.brezillon.dev@gmail.com>
+ <20140129175641.GF1427@obsidianresearch.com>
+ <20140129184619.GC27143@localhost>
+ <20140129191005.GG1427@obsidianresearch.com>
+ <531D9F4B.6040505@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCWOL4E62AORBQVT7WMAKGQE3JHDTAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <531D9F4B.6040505-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <531EE993.80400@monstr.eu>
-Sender: linux-doc-owner@vger.kernel.org
-To: Michal Simek <monstr@monstr.eu>
-Cc: Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Michal Simek <michal.simek@xilinx.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+To: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-03-11 at 11:46AM +0100, Michal Simek wrote:
-> On 03/10/2014 10:40 PM, Soren Brinkmann wrote:
-> > Hi,
-> >=20
-> > this series rebrands the Xilinx PS UART driver as Cadence UART and
-> > documents its DT bindings (+ some clean up along the way).
-> >=20
-> > The rebranding goes as far as reasonable. Things like file name, kc=
-onfig
-> > symbols and other things with user space impact are left as is. Ple=
-ase
-> > refer to the discussion in the RFC threads[1-2] for more details.
-> >=20
-> > Similar the DT binding has been extended. In addition to the new an=
-d
-> > preferred Cadence binding, the current xuartps binding is maintaine=
-d.
-> > Though, only the Cadence names for clock-names are documented.
-> >=20
-> > References:
-> >  [1]  https://lkml.org/lkml/2014/3/4/405
-> >  [2]  https://lkml.org/lkml/2014/3/7/450
-> >=20
-> > v2:
-> >  - no changes regarding the patches
-> >  - fixed (I sincerely hope) email recipients
-> >=20
-> > Changes from the latest RFC:
-> >  - squashed function/symbol renaming into 'tty: xuartps: Rebrand dr=
-iver
-> >    as Cadence UART'
-> >  - Revised the commit message of 'tty: xuartps: Don't write IRQ dis=
-able
-> >    register to enable interrupts' (was 'tty: xuartps: Remove bogus
-> >    comment and register write'
+On Mon, Mar 10, 2014 at 12:17:31PM +0100, Boris BREZILLON wrote:
+> Hello Jason,
 >=20
-> One more thing. I was thinking this is based on my 3 patches I have
-> already sent to mainline. But as I see they are not applied yet.
+> Le 29/01/2014 20:10, Jason Gunthorpe a =E9crit :
+> >On Wed, Jan 29, 2014 at 03:46:20PM -0300, Ezequiel Garcia wrote:
+> >
+> >>After CE# has been pulled high and then transitioned low again, the hos=
+t
+> >>should issue a Set Features to select the appropriate asynchronous timi=
+ng mode.
+> >>"""
+> >Oh, I had forgot you should do a set feature too
+> >
+> >Boris, I think the core core should handle this dance and the driver
+> >should just implement a call back to change the timing mode on the
+> >interface..
+> >
+> >If I ever get a moment I can work on support for timing setting in the
+> >mvebu driver, I have boards here with ONFI NAND..
 >=20
-> https://lkml.org/lkml/2014/1/21/107
+> Any progress on this ?
+> I'm about to post the 3rd version of this series and if you already have
+> something working I could base my work on your proposal.
 
-I think my cleanup patch covers these changes as well. I'll see if it
-makes sense to separate out this patch.
+Sorry, no, I will try to look over your v3 though.
 
-> https://lkml.org/lkml/2014/1/21/101
+Regards,
+Jason
 
-This is obsolete with the rebranding, IMHO.
-
-> http://www.spinics.net/lists/arm-kernel/msg302796.html
-
-I can add this to this series.
-
-	S=C3=B6ren
-
-
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
