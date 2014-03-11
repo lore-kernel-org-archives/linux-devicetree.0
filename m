@@ -1,197 +1,118 @@
-From: Maxime Coquelin <maxime.coquelin@st.com>
-Subject: Re: [PATCH v3 2/5] pinctrl: st: Enhance the controller to manage
- unavailable registers
-Date: Tue, 11 Mar 2014 09:18:08 +0100
-Message-ID: <531EC6C0.4080202@st.com>
-References: <1394203251-25361-1-git-send-email-maxime.coquelin@st.com> <1394203251-25361-3-git-send-email-maxime.coquelin@st.com> <20140310091707.GD14976@lee--X1>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [RFC PATCH] edac: zynq: Added EDAC support for zynq ddr ecc controller
+Date: Tue, 11 Mar 2014 09:32:51 +0100
+Message-ID: <531ECA33.8050803@monstr.eu>
+References: <4adb2b4b-2ad6-42b9-929e-cc062f817245@TX2EHSMHS021.ehs.local> <20140310105655.GH14999@e106331-lin.cambridge.arm.com> <531DA900.5060202@monstr.eu> <fa35006e-055d-4ef2-9b65-a0f8cc6a0c8f@AM1EHSMHS016.ehs.local>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="3dbUwieR7F5EVM6DstcsT09KmBooOenbK"
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140310091707.GD14976@lee--X1>
+In-Reply-To: <fa35006e-055d-4ef2-9b65-a0f8cc6a0c8f@AM1EHSMHS016.ehs.local>
 Sender: linux-doc-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, Linus Walleij <linus.walleij@linaro.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, "dougthompson@xmission.com" <dougthompson@xmission.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "kpc528@gmail.com" <kpc528@gmail.com>, "kalluripunnaiahchoudary@gmail.com" <kalluripunnaiahchoudary@gmail.com>punnai
 List-Id: devicetree@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--3dbUwieR7F5EVM6DstcsT09KmBooOenbK
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+On 03/10/2014 11:32 PM, S=C3=B6ren Brinkmann wrote:
+> On Mon, 2014-03-10 at 12:58PM +0100, Michal Simek wrote:
+>> On 03/10/2014 11:56 AM, Mark Rutland wrote:
+>>> On Sun, Mar 09, 2014 at 02:57:16AM +0000, Punnaiah Choudary Kalluri w=
+rote:
+>>>> Added EDAC support for reporting the ecc errors of zynq ddr controll=
+er.
+>>>> The ddr ecc controller corrects single bit errors and detects double=
+ bit
+>>>> errors
+>>>>
+>>>> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+>>>> ---
+>>>>  .../devicetree/bindings/edac/zynq_edac.txt         |   18 +
+>>>>  drivers/edac/Kconfig                               |    7 +
+>>>>  drivers/edac/Makefile                              |    1 +
+>>>>  drivers/edac/zynq_edac.c                           |  613 +++++++++=
++++++++++++
+>>>>  4 files changed, 639 insertions(+), 0 deletions(-)
+>>>>  create mode 100644 Documentation/devicetree/bindings/edac/zynq_edac=
+=2Etxt
+>>>>  create mode 100644 drivers/edac/zynq_edac.c
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/edac/zynq_edac.txt b/=
+Documentation/devicetree/bindings/edac/zynq_edac.txt
+>>>> new file mode 100644
+>>>> index 0000000..c21ff83
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/edac/zynq_edac.txt
+>>>> @@ -0,0 +1,18 @@
+>>>> +Zynq EDAC driver, it does reports the DDR ECC single bit errors tha=
+t are
+>>>> +corrected and double bit ecc errors that are detected by the DDR EC=
+C controller.
+>>>> +ECC support for DDR is available in half-bus width(16 bit) configur=
+ation only.
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible: Should be "xlnx,ps7-ddrc" or "xlnx,ps7-ddrc-1.00.a"
+>>>
+>>> Is this an or or a xor?
+>>
+>> Compatible string should be just xlnx,zynq-ddrc-1.00.a.
+>> Nothing with ps7.
+>=20
+> Isn't this vendor IP? IMHO, this should be something completely
+> different. Or if you want some Zynq-specific compat string it should
+> refer to an actual version string associated with Zynq. 1.00.a is not,
+> AFAIK.
 
-On 03/10/2014 10:17 AM, Lee Jones wrote:
->> From: Giuseppe Cavallaro <peppe.cavallaro@st.com>
->>
->> This patch adds a new logic inside the st pinctrl to manage
->> an unsupported scenario: some sysconfig are not available!
->>
->> This is the case of STiH407 where, although documented, the
->> following registers from SYSCFG_FLASH have been removed from the SoC.
->>
->> SYSTEM_CONFIG3040
->>     Output Enable pad control for all PIO Alternate Functions
->> and
->> SYSTEM_ CONFIG3050
->>     Pull Up pad control for all PIO Alternate Functions
->>
->> Without managing this condition an imprecise external abort
->> will be detect.
->>
->> To do this the patch also reviews the st_parse_syscfgs
->> and other routines to manipulate the registers only if
->> actually available.
->> In any case, for example the st_parse_syscfgs detected
->> an error condition but no action was made in the
->> st_pctl_probe_dt.
->>
->> Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
->> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
->
-> These two SOBs need reordering.
-Right,
-this will be changed here and everywhere else in the series.
+I have checked with Punnaiah that this is Synopsys DDR memory controller.=
 
->
->> ---
->>   drivers/pinctrl/pinctrl-st.c | 106 +++++++++++++++++++++++++------------------
->>   1 file changed, 61 insertions(+), 45 deletions(-)
->>
->> diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
->> index 9fb66aa..1721611 100644
->> --- a/drivers/pinctrl/pinctrl-st.c
->> +++ b/drivers/pinctrl/pinctrl-st.c
->> @@ -410,25 +410,27 @@ static void st_pinconf_set_config(struct st_pio_control *pc,
->>   	unsigned int oe_value, pu_value, od_value;
->>   	unsigned long mask = BIT(pin);
->>
->> -	regmap_field_read(output_enable, &oe_value);
->> -	regmap_field_read(pull_up, &pu_value);
->> -	regmap_field_read(open_drain, &od_value);
->> -
->> -	/* Clear old values */
->> -	oe_value &= ~mask;
->> -	pu_value &= ~mask;
->> -	od_value &= ~mask;
->> -
->> -	if (config & ST_PINCONF_OE)
->> -		oe_value |= mask;
->> -	if (config & ST_PINCONF_PU)
->> -		pu_value |= mask;
->> -	if (config & ST_PINCONF_OD)
->> -		od_value |= mask;
->> -
->> -	regmap_field_write(output_enable, oe_value);
->> -	regmap_field_write(pull_up, pu_value);
->> -	regmap_field_write(open_drain, od_value);
->> +	if (output_enable) {
->> +		regmap_field_read(output_enable, &oe_value);
->> +		oe_value &= ~mask;
->> +		if (config & ST_PINCONF_OE)
->> +			oe_value |= mask;
->> +		regmap_field_write(output_enable, oe_value);
->> +	}
->> +	if (pull_up) {
->> +		regmap_field_read(pull_up, &pu_value);
->> +		pu_value &= ~mask;
->> +		if (config & ST_PINCONF_PU)
->> +			pu_value |= mask;
->> +		regmap_field_write(pull_up, pu_value);
->> +	}
->> +	if (open_drain) {
->> +		regmap_field_read(open_drain, &od_value);
->> +		od_value &= ~mask;
->> +		if (config & ST_PINCONF_OD)
->> +			od_value |= mask;
->> +		regmap_field_write(open_drain, od_value);
->> +	}
->
-> Nice change.
->
-> Nit: For consistency with the changes below, please consider placing
-> new lines between the 3 outer checks.
-Done
+Zynq is based on 1.4 version with some customization.
+It means I think reasonable solution is
+call it drivers/edac/synopsys_edac.c
+rename zynq_ in driver to synopsys_ and
+use xlnx,zynq-ddrc-1.00.a compatible string because zynq is not using
+clean synopsys version.
 
->
->>   }
->>
->
-> <snip>
->
->> -static void st_pinconf_get_direction(struct st_pio_control *pc,
->> -	int pin, unsigned long *config)
->> +static void st_pinconf_get_direction(struct st_pio_control *pc, int pin,
->> +				     unsigned long *config)
->
-> Unrelated change?
-Yes this is unrelated.
-I removed this change. It will be sent later with maybe other cosmetic 
-changes.
+I am not getting point why you don't like 1.00.a suffix here.
+Because of historical point of view compatible strings should be differen=
+t
+for early silicon, silicon v1, silicon v2, silicon v3, etc
+but we haven't used it at all that's why we can use xilinx scheme
+which we are using for our soft IPs.
 
->
->>   {
->>   	unsigned int oe_value, pu_value, od_value;
->
-> Is it worth checking for (!config) here?
-
-That would be better indeed.
-But since that lack of safety check was already present before this 
-change, it should be handled in a separate patch.
-
-I'll add this in my todo list.
-
->
->> -	regmap_field_read(pc->oe, &oe_value);
->> -	regmap_field_read(pc->pu, &pu_value);
->> -	regmap_field_read(pc->od, &od_value);
->> +	if (pc->oe) {
->> +		regmap_field_read(pc->oe, &oe_value);
->> +		if (oe_value & BIT(pin))
->> +			ST_PINCONF_PACK_OE(*config);
->> +	}
->>
->> -	if (oe_value & BIT(pin))
->> -		ST_PINCONF_PACK_OE(*config);
->> -	if (pu_value & BIT(pin))
->> -		ST_PINCONF_PACK_PU(*config);
->> -	if (od_value & BIT(pin))
->> -		ST_PINCONF_PACK_OD(*config);
->> +	if (pc->pu) {
->> +		regmap_field_read(pc->pu, &pu_value);
->> +		if (pu_value & BIT(pin))
->> +			ST_PINCONF_PACK_PU(*config);
->> +	}
->>
->> +	if (pc->od) {
->> +		regmap_field_read(pc->od, &od_value);
->> +		if (od_value & BIT(pin))
->> +			ST_PINCONF_PACK_OD(*config);
->> +	}
->>   }
->
-> Nice.
->
->>   static int st_pinconf_get_retime_packed(struct st_pinctrl *info,
->> @@ -1105,8 +1116,21 @@ static int st_pctl_dt_setup_retime(struct st_pinctrl *info,
->>   	return -EINVAL;
->>   }
->>
->> -static int st_parse_syscfgs(struct st_pinctrl *info,
->> -		int bank, struct device_node *np)
->> +
->> +static struct regmap_field *st_pc_get_value(struct device *dev,
->> +					    struct regmap *regmap, int bank,
->> +					    int data, int lsb, int msb)
->> +{
->> +	struct reg_field reg = REG_FIELD((data + bank) * 4, lsb, msb);
->> +
->> +	if (data < 0)
->> +		return NULL;
->
-> What happens is data < 0 and it's used in REG_FIELD?
-Nothing bad, but I agree this is not crystal clear.
-
->
-> Would it make more sense to make this check before calling REG_FIELD?
-Yes, it will be done in the v4.
-
-<snip>
+Does it sound reasonable?
 
 Thanks,
-Maxime
+Michal
+
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--3dbUwieR7F5EVM6DstcsT09KmBooOenbK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlMeyjMACgkQykllyylKDCGCdQCeK8CWXc9HZeiQMIsnQTtK2PyN
+KkYAn01PI6POUb/yfXPn5iSvlSjdB1zs
+=eOSS
+-----END PGP SIGNATURE-----
+
+--3dbUwieR7F5EVM6DstcsT09KmBooOenbK--
