@@ -1,78 +1,59 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC] Serial port aliases in DT
-Date: Tue, 11 Mar 2014 12:57:59 +0100
-Message-ID: <1454965.NzCSO7fLpj@avalon>
-References: <5448979.WQPtOb56tW@avalon> <2488692.p5nEA6pWSY@wuerfel>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v9 0/9] USB Host support for OMAP5 uEVM
+Date: Tue, 11 Mar 2014 12:02:59 +0000
+Message-ID: <20140311120259.GI21216@lee--X1>
+References: <1393510711-4697-1-git-send-email-rogerq@ti.com>
+ <531ECDCB.4060700@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <2488692.p5nEA6pWSY@wuerfel>
-Sender: linux-sh-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <531ECDCB.4060700-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+> > Hi,
+> >=20
+> > This patchset brings up USB Host ports and Ethernet port on
+> > the OMAP5 uEVM board.
+> >=20
+> > It also does some cleanup with respect to DT clock binding
+> > for the mfd/omap-usb-host driver.
+> >=20
+> > Please queue these for -next.
+> >=20
+> > Lee,
+> >=20
+> > I've folded some platform data dependent patches with mfd patches
+> > so that they don't break functionality when applied individually.
+> > You can safely pull in all MFD patches (1 to 6).
+> >=20
+> > Tony & Benoit,
+> >=20
+> > Can you please accept patches 7, 8 and 9?
+>=20
+> Tony has already picked up 7,8 and 9 through omap-soc tree.
+>=20
+> Since you acked most patches except 5 and 6, are you fine if Tony tak=
+es
+> all the patches 1 to 4 in this series via omap-soc tree?
+>=20
+> What about patches 5 and 6?
 
-On Monday 10 March 2014 13:57:23 Arnd Bergmann wrote:
-> On Monday 10 March 2014 12:59:03 Laurent Pinchart wrote:
-> > The SoC includes 8 serial ports. They are all disabled in the SoC .dtsi,
-> > and enabled selectively by board DT files. As not all serial ports are
-> > available on all boards, the question was whether to add aliases for all
-> > ports (in the .dtsi in this case) like
-> > 
-> >          serial0 = &scif0;
-> >          serial1 = &scif1;
-> >          serial2 = &scif2;
-> >          serial3 = &scif3;
-> >          serial4 = &scif4;
-> >          serial5 = &scif5;
-> >          serial6 = &scif6;
-> >          serial7 = &scif7;
-> > 
-> > or to just add aliases for the enabled ports (in the board DT file) like
-> > 
-> >          serial0 = &scif2;
-> >          serial1 = &scif3;
-> > 
-> > Note the numbering in the latter case: as the board doesn't use serial
-> > ports 0 and 1, hardware ports 2 and 3 become logical ports 0 and 1.
-> > 
-> > I considered that having Linux create ttySC0 and ttySC1 devices for the
-> > first two ports of the board, regardless of which hardware ports are
-> > used, is simpler from a user point of view (it allows sharing the same
-> > inittab settings for the console serial port across several boards for
-> > instance). I'd appreciate feedback on that.
-> 
-> I think the traditional interpretation is that we want to use the aliases
-> to reflect the device names in the OS.
+Any patches which are orthogonal can just be sucked into whichever tree
+they belong in. If there are inter-subsystem dependencies I'd prefer
+to take them and issue a immutable branch pull-request to the other
+maintainers.
 
-If I interpret this correctly it means that the question boils down to whether 
-we want the system to expose ttySC0 and ttySC1 or ttySC2 and ttySC3, in case 
-only ports 2 and 3 are enabled.
-
-Let's note that, despite the above example showing 8 instances of identical 
-serial IP cores, the reality is a bit more complex and Renesas SoCs usually 
-include different serial IP cores with several instances of each of them. 
-Ports of the same time are numbered in the datasheet, but there's no standard 
-or natural ordering global to all serial ports.
-
-This starts to remind me about the whole stable network device name changes we 
-went through recently.
-
-> This however comes back to the more general issue of serial port device
-> naming: Linux traditionally uses separate names per driver (e.g. ttySC0
-> instead of ttyS0).
-> 
-> There has been discussion in the past about changing this to let all drivers
-> use the same namespace, but it's not yet clear to me how we'd do this in a
-> 100% backwards compatible way. Maybe it's best left to udev to figure out
-> the driver independent name, but then we definitely should use the alias
-> for that name.
-
--- 
-Regards,
-
-Laurent Pinchart
-
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
