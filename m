@@ -1,96 +1,35 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [RFC PATCH] edac: zynq: Added EDAC support for zynq ddr ecc
- controller
-Date: Tue, 11 Mar 2014 08:50:57 -0700
-Message-ID: <21bfd874-8084-4d23-b973-42a0e50157bc@AM1EHSMHS009.ehs.local>
-References: <4adb2b4b-2ad6-42b9-929e-cc062f817245@TX2EHSMHS021.ehs.local>
- <20140310105655.GH14999@e106331-lin.cambridge.arm.com>
- <531DA900.5060202@monstr.eu>
- <fa35006e-055d-4ef2-9b65-a0f8cc6a0c8f@AM1EHSMHS016.ehs.local>
- <531ECA33.8050803@monstr.eu>
+From: Loc Ho <lho@apm.com>
+Subject: Re: [PATCH v15 3/3] arm64: Add APM X-Gene SoC AHCI SATA host
+ controller DTS entries
+Date: Tue, 11 Mar 2014 08:51:37 -0700
+Message-ID: <CAPw-ZTmBSeOXv5ExVAiSkcU=qH3zHp52eVuGBfYYD=7=sjhVgw@mail.gmail.com>
+References: <1394059489-30706-1-git-send-email-lho@apm.com>
+	<1394059489-30706-2-git-send-email-lho@apm.com>
+	<1394059489-30706-3-git-send-email-lho@apm.com>
+	<1394059489-30706-4-git-send-email-lho@apm.com>
+	<20140311124943.GD11477@htj.dyndns.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <531ECA33.8050803@monstr.eu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <monstr@monstr.eu>
-Cc: Mark Rutland <mark.rutland@arm.com>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, "dougthompson@xmission.com" <dougthompson@xmission.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "kpc528@gmail.com" <kpc528@gmail.com>, "kalluripunnaiahchoudary@gmail.com" <kalluripunnaiahchoudary@gmail.com>punnai
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20140311124943.GD11477@htj.dyndns.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-03-11 at 09:32AM +0100, Michal Simek wrote:
-> On 03/10/2014 11:32 PM, S=C3=B6ren Brinkmann wrote:
-> > On Mon, 2014-03-10 at 12:58PM +0100, Michal Simek wrote:
-> >> On 03/10/2014 11:56 AM, Mark Rutland wrote:
-> >>> On Sun, Mar 09, 2014 at 02:57:16AM +0000, Punnaiah Choudary Kallu=
-ri wrote:
-> >>>> Added EDAC support for reporting the ecc errors of zynq ddr cont=
-roller.
-> >>>> The ddr ecc controller corrects single bit errors and detects do=
-uble bit
-> >>>> errors
-> >>>>
-> >>>> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
-> >>>> ---
-> >>>>  .../devicetree/bindings/edac/zynq_edac.txt         |   18 +
-> >>>>  drivers/edac/Kconfig                               |    7 +
-> >>>>  drivers/edac/Makefile                              |    1 +
-> >>>>  drivers/edac/zynq_edac.c                           |  613 +++++=
-+++++++++++++++
-> >>>>  4 files changed, 639 insertions(+), 0 deletions(-)
-> >>>>  create mode 100644 Documentation/devicetree/bindings/edac/zynq_=
-edac.txt
-> >>>>  create mode 100644 drivers/edac/zynq_edac.c
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/edac/zynq_edac.tx=
-t b/Documentation/devicetree/bindings/edac/zynq_edac.txt
-> >>>> new file mode 100644
-> >>>> index 0000000..c21ff83
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/devicetree/bindings/edac/zynq_edac.txt
-> >>>> @@ -0,0 +1,18 @@
-> >>>> +Zynq EDAC driver, it does reports the DDR ECC single bit errors=
- that are
-> >>>> +corrected and double bit ecc errors that are detected by the DD=
-R ECC controller.
-> >>>> +ECC support for DDR is available in half-bus width(16 bit) conf=
-iguration only.
-> >>>> +
-> >>>> +Required properties:
-> >>>> +- compatible: Should be "xlnx,ps7-ddrc" or "xlnx,ps7-ddrc-1.00.=
-a"
-> >>>
-> >>> Is this an or or a xor?
-> >>
-> >> Compatible string should be just xlnx,zynq-ddrc-1.00.a.
-> >> Nothing with ps7.
-> >=20
-> > Isn't this vendor IP? IMHO, this should be something completely
-> > different. Or if you want some Zynq-specific compat string it shoul=
-d
-> > refer to an actual version string associated with Zynq. 1.00.a is n=
-ot,
-> > AFAIK.
->=20
-> I have checked with Punnaiah that this is Synopsys DDR memory control=
-ler.
-> Zynq is based on 1.4 version with some customization.
-> It means I think reasonable solution is
-> call it drivers/edac/synopsys_edac.c
-> rename zynq_ in driver to synopsys_ and
-> use xlnx,zynq-ddrc-1.00.a compatible string because zynq is not using
-> clean synopsys version.
->=20
-> I am not getting point why you don't like 1.00.a suffix here.
-> Because of historical point of view compatible strings should be diff=
-erent
-> for early silicon, silicon v1, silicon v2, silicon v3, etc
-> but we haven't used it at all that's why we can use xilinx scheme
-> which we are using for our soft IPs.
+Hi Tejun,
 
-Well, but you refer to Zynq which has silicon revisions you can use to
-refer to a specific Zynq version. That matches data sheets. Zynq-1.00.a
-is just completely made up and wouldn't be found in any data sheet.
+>> This patch adds APM X-Gene SoC AHCI SATA host controller DTS entries.
+>
+> I pulled the phy branch into libata/for-3.15 but this patch fails to
+> apply.  Can you please regenerate the patches which need to be applied
+> on top of libata/for-3.15.
+>
 
-	S=C3=B6ren
+Kishon didn't applied the PHY DTS patch. Did you first apply the PHY
+DTS patch? We agreed that you will first pull in the PHY DTS as well
+as the host controller patches. I don't see any reason why it wouldn't
+apply if both DTS is applied. I will pull libata/for-3.15 and check
+out.
+
+-Loc
