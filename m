@@ -1,72 +1,280 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v5 0/9] Use regmap+devm+DT in pm8xxx input drivers
-Date: Tue, 11 Mar 2014 10:50:00 -0700
-Message-ID: <531F4CC8.5010202@codeaurora.org>
-References: <1393958088-1456-1-git-send-email-sboyd@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1393958088-1456-1-git-send-email-sboyd@codeaurora.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Josh Cartwright <joshc@codeaurora.org>, linux-input@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Alexander Shiyan <shc_work@mail.ru>
+Subject: [PATCH v5] gpio: Driver for SYSCON-based GPIOs
+Date: Tue, 11 Mar 2014 21:55:14 +0400
+Message-ID: <1394560514-9019-1-git-send-email-shc_work@mail.ru>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-gpio@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Alexander Shiyan <shc_work@mail.ru>
 List-Id: devicetree@vger.kernel.org
 
-ping?
+SYSCON driver was designed for using memory areas (registers)
+that are used in several subsystems. There are systems (CPUs)
+which use bits in one register for various purposes and thus
+should be handled by various kernel subsystems. This driver
+allows you to use the individual SYSCON bits as GPIOs.
+ARM CLPS711X SYSFLG1 input lines has been added as first user
+of this driver.
 
-On 03/04/14 10:34, Stephen Boyd wrote:
-> These patches move the pm8xxx input drivers over to use devm_* APIs
-> and regmap. This breaks the dependency of these drivers on the pm8xxx
-> specific read/write calls and also simplifies the probe code a bit.
-> Finally we add devicetree support to these drivers so they can be probed
-> on the platforms that are supported upstream.
->
-> Changes since v4:
->  * Added reg property to bindings
->  * Added linux,* properties to keypad binding
->
-> Changes since v3:
->  * Dropped devm conversion patch for pwrkey
->  * Fixed compilation of keypad
->
-> Changes since v2:
->  * Rebased to v3.14-rc3
->
-> Changes since v1:
->  * Picked up Dmitry's version of devm for pwrkey
->  * Added DT bindings and parsing patches
->  * Dropped patches picked up by Dmitry
->
-> Stephen Boyd (9):
->   Input: pmic8xxx-keypad - Fix build by removing gpio configuration
->   Input: pmic8xxx-keypad - Migrate to devm_* APIs
->   Input: pmic8xxx-keypad - Migrate to regmap APIs
->   Input: pmic8xxx-keypad - Migrate to DT
->   Input: pmic8xxx-pwrkey - Migrate to DT
->   Input: pm8xxx-vibrator - Add DT match table
->   devicetree: bindings: Document PM8921/8058 keypads
->   devicetree: bindings: Document PM8921/8058 power keys
->   devicetree: bindings: Document PM8921/8058 vibrators
->
->  .../bindings/input/qcom,pm8xxx-keypad.txt          |  89 ++++++
->  .../bindings/input/qcom,pm8xxx-pwrkey.txt          |  46 +++
->  .../devicetree/bindings/input/qcom,pm8xxx-vib.txt  |  22 ++
->  drivers/input/keyboard/pmic8xxx-keypad.c           | 348 ++++++++-------------
->  drivers/input/misc/pm8xxx-vibrator.c               |   8 +
->  drivers/input/misc/pmic8xxx-pwrkey.c               |  33 +-
->  include/linux/input/pmic8xxx-keypad.h              |  52 ---
->  include/linux/input/pmic8xxx-pwrkey.h              |  31 --
->  8 files changed, 316 insertions(+), 313 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/input/qcom,pm8xxx-keypad.txt
->  create mode 100644 Documentation/devicetree/bindings/input/qcom,pm8xxx-pwrkey.txt
->  create mode 100644 Documentation/devicetree/bindings/input/qcom,pm8xxx-vib.txt
->  delete mode 100644 include/linux/input/pmic8xxx-keypad.h
->  delete mode 100644 include/linux/input/pmic8xxx-pwrkey.h
->
+Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+---
+ .../bindings/gpio/cirrus,clps711x-mctrl-gpio.txt   |  17 ++
+ drivers/gpio/Kconfig                               |   6 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-syscon.c                         | 191 +++++++++++++++++++++
+ 4 files changed, 215 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/cirrus,clps711x-mctrl-gpio.txt
+ create mode 100644 drivers/gpio/gpio-syscon.c
 
-
+diff --git a/Documentation/devicetree/bindings/gpio/cirrus,clps711x-mctrl-gpio.txt b/Documentation/devicetree/bindings/gpio/cirrus,clps711x-mctrl-gpio.txt
+new file mode 100644
+index 0000000..94ae9f8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/cirrus,clps711x-mctrl-gpio.txt
+@@ -0,0 +1,17 @@
++* ARM Cirrus Logic CLPS711X SYSFLG1 MCTRL GPIOs
++
++Required properties:
++- compatible: Should contain "cirrus,clps711x-mctrl-gpio".
++- gpio-controller: Marks the device node as a gpio controller.
++- #gpio-cells: Should be two. The first cell is the pin number and
++  the second cell is used to specify the gpio polarity:
++    0 = Active high,
++    1 = Active low.
++
++Example:
++	sysgpio: sysgpio {
++		compatible = "cirrus,ep7312-mctrl-gpio",
++			     "cirrus,clps711x-mctrl-gpio";
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index d71d3f8..45f14a76 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -290,6 +290,12 @@ config GPIO_STA2X11
+ 	  Say yes here to support the STA2x11/ConneXt GPIO device.
+ 	  The GPIO module has 128 GPIO pins with alternate functions.
+ 
++config GPIO_SYSCON
++	tristate "GPIO based on SYSCON"
++	depends on MFD_SYSCON && OF
++	help
++	  Say yes here to support GPIO functionality though SYSCON driver.
++
+ config GPIO_TS5500
+ 	tristate "TS-5500 DIO blocks and compatibles"
+ 	depends on TS5500 || COMPILE_TEST
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index aaff7ff..6309aff 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -77,6 +77,7 @@ obj-$(CONFIG_GPIO_STA2X11)	+= gpio-sta2x11.o
+ obj-$(CONFIG_GPIO_STMPE)	+= gpio-stmpe.o
+ obj-$(CONFIG_GPIO_STP_XWAY)	+= gpio-stp-xway.o
+ obj-$(CONFIG_GPIO_SX150X)	+= gpio-sx150x.o
++obj-$(CONFIG_GPIO_SYSCON)	+= gpio-syscon.o
+ obj-$(CONFIG_GPIO_TB10X)	+= gpio-tb10x.o
+ obj-$(CONFIG_GPIO_TC3589X)	+= gpio-tc3589x.o
+ obj-$(CONFIG_ARCH_TEGRA)	+= gpio-tegra.o
+diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
+new file mode 100644
+index 0000000..b50fe12
+--- /dev/null
++++ b/drivers/gpio/gpio-syscon.c
+@@ -0,0 +1,191 @@
++/*
++ *  SYSCON GPIO driver
++ *
++ *  Copyright (C) 2014 Alexander Shiyan <shc_work@mail.ru>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#include <linux/err.h>
++#include <linux/gpio.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/mfd/syscon.h>
++
++#define GPIO_SYSCON_FEAT_IN	BIT(0)
++#define GPIO_SYSCON_FEAT_OUT	BIT(1)
++#define GPIO_SYSCON_FEAT_DIR	BIT(2)
++
++/* SYSCON driver is designed to use 32-bit wide registers */
++#define SYSCON_REG_SIZE		(4)
++#define SYSCON_REG_BITS		(SYSCON_REG_SIZE * 8)
++
++/**
++ * struct syscon_gpio_data - Configuration for the device.
++ * compatible:		SYSCON driver compatible string.
++ * flags:		Set of GPIO_SYSCON_FEAT_ flags:
++ *			GPIO_SYSCON_FEAT_IN:	GPIOs supports input,
++ *			GPIO_SYSCON_FEAT_OUT:	GPIOs supports output,
++ *			GPIO_SYSCON_FEAT_DIR:	GPIOs supports switch direction.
++ * bit_count:		Number of bits used as GPIOs.
++ * dat_bit_offset:	Offset (in bits) to the first GPIO bit.
++ * dir_bit_offset:	Optional offset (in bits) to the first bit to switch
++ *			GPIO direction (Used with GPIO_SYSCON_FEAT_DIR flag).
++ */
++
++struct syscon_gpio_data {
++	const char	*compatible;
++	unsigned int	flags;
++	unsigned int	bit_count;
++	unsigned int	dat_bit_offset;
++	unsigned int	dir_bit_offset;
++};
++
++struct syscon_gpio_priv {
++	struct gpio_chip		chip;
++	struct regmap			*syscon;
++	const struct syscon_gpio_data	*data;
++};
++
++static inline struct syscon_gpio_priv *to_syscon_gpio(struct gpio_chip *chip)
++{
++	return container_of(chip, struct syscon_gpio_priv, chip);
++}
++
++static int syscon_gpio_get(struct gpio_chip *chip, unsigned offset)
++{
++	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
++	unsigned int val, offs = priv->data->dat_bit_offset + offset;
++	int ret;
++
++	ret = regmap_read(priv->syscon,
++			  (offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE, &val);
++	if (ret)
++		return ret;
++
++	return !!(val & BIT(offs % SYSCON_REG_BITS));
++}
++
++static void syscon_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
++{
++	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
++	unsigned int offs = priv->data->dat_bit_offset + offset;
++
++	regmap_update_bits(priv->syscon,
++			   (offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE,
++			   BIT(offs % SYSCON_REG_BITS),
++			   val ? BIT(offs % SYSCON_REG_BITS) : 0);
++}
++
++static int syscon_gpio_dir_in(struct gpio_chip *chip, unsigned offset)
++{
++	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
++
++	if (priv->data->flags & GPIO_SYSCON_FEAT_DIR) {
++		unsigned int offs = priv->data->dir_bit_offset + offset;
++
++		regmap_update_bits(priv->syscon,
++				   (offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE,
++				   BIT(offs % SYSCON_REG_BITS), 0);
++	}
++
++	return 0;
++}
++
++static int syscon_gpio_dir_out(struct gpio_chip *chip, unsigned offset, int val)
++{
++	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
++
++	if (priv->data->flags & GPIO_SYSCON_FEAT_DIR) {
++		unsigned int offs = priv->data->dir_bit_offset + offset;
++
++		regmap_update_bits(priv->syscon,
++				   (offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE,
++				   BIT(offs % SYSCON_REG_BITS),
++				   BIT(offs % SYSCON_REG_BITS));
++	}
++
++	syscon_gpio_set(chip, offset, val);
++
++	return 0;
++}
++
++static const struct syscon_gpio_data clps711x_mctrl_gpio = {
++	/* ARM CLPS711X SYSFLG1 Bits 8-10 */
++	.compatible	= "cirrus,clps711x-syscon1",
++	.flags		= GPIO_SYSCON_FEAT_IN,
++	.bit_count	= 3,
++	.dat_bit_offset	= 0x40 * 8 + 8,
++};
++
++static const struct of_device_id syscon_gpio_ids[] = {
++	{
++		.compatible	= "cirrus,clps711x-mctrl-gpio",
++		.data		= &clps711x_mctrl_gpio,
++	},
++	{ }
++};
++MODULE_DEVICE_TABLE(of, syscon_gpio_ids);
++
++static int syscon_gpio_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	const struct of_device_id *of_id = of_match_device(syscon_gpio_ids, dev);
++	struct syscon_gpio_priv *priv;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->data = of_id->data;
++
++	priv->syscon =
++		syscon_regmap_lookup_by_compatible(priv->data->compatible);
++	if (IS_ERR(priv->syscon))
++		return PTR_ERR(priv->syscon);
++
++	priv->chip.dev = dev;
++	priv->chip.owner = THIS_MODULE;
++	priv->chip.label = dev_name(dev);
++	priv->chip.base = -1;
++	priv->chip.ngpio = priv->data->bit_count;
++	priv->chip.get = syscon_gpio_get;
++	if (priv->data->flags & GPIO_SYSCON_FEAT_IN)
++		priv->chip.direction_input = syscon_gpio_dir_in;
++	if (priv->data->flags & GPIO_SYSCON_FEAT_OUT) {
++		priv->chip.set = syscon_gpio_set;
++		priv->chip.direction_output = syscon_gpio_dir_out;
++	}
++
++	platform_set_drvdata(pdev, priv);
++
++	return gpiochip_add(&priv->chip);
++}
++
++static int syscon_gpio_remove(struct platform_device *pdev)
++{
++	struct syscon_gpio_priv *priv = platform_get_drvdata(pdev);
++
++	return gpiochip_remove(&priv->chip);
++}
++
++static struct platform_driver syscon_gpio_driver = {
++	.driver	= {
++		.name		= "gpio-syscon",
++		.owner		= THIS_MODULE,
++		.of_match_table	= syscon_gpio_ids,
++	},
++	.probe	= syscon_gpio_probe,
++	.remove	= syscon_gpio_remove,
++};
++module_platform_driver(syscon_gpio_driver);
++
++MODULE_AUTHOR("Alexander Shiyan <shc_work@mail.ru>");
++MODULE_DESCRIPTION("SYSCON GPIO driver");
++MODULE_LICENSE("GPL");
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+1.8.3.2
 
