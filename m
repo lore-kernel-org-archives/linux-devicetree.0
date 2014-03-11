@@ -1,79 +1,42 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v7 3/10] Documentation: devicetree: Update Samsung FIMC DT binding
-Date: Tue, 11 Mar 2014 17:20:35 +0100
-Message-ID: <1823087.0J3KNi6X3C@avalon>
-References: <24917002.Y0kBkkQHhZ@avalon> <1394553635-12134-1-git-send-email-s.nawrocki@samsung.com>
+From: David =?ISO-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer@o2s.ch>
+Subject: Re: [PATCH v5 6/8] ARM: dts: sun4i: Add support for mmc
+Date: Tue, 11 Mar 2014 17:20:07 +0100
+Message-ID: <42261272.Q7MxffSYhm__4108.43133363432$1394554931$gmane$org@pagira.o2s.ch>
+References: <20140211190543.4568.83517.stgit@dizzy-6.o2s.ch> <ac47de94-92ef-4b53-9983-34dd2f9924ea@googlegroups.com> <531F3203.3010807@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1394553635-12134-1-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, galak@codeaurora.org, kyungmin.park@samsung.com
+Content-Type: multipart/signed; boundary="nextPart2551496.doVSr9qlEj"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <531F3203.3010807@redhat.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: mr.nuke.me@gmail.com, linux-sunxi@googlegroups.com, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Mike Turquette <mturquette@linaro.org>, Simon Baatz <gmbnomis@gmail.com>, Emilio =?ISO-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, linux-mmc@vger.kernel.org, Chris Ball <chris@printf.net>, linux-kernel@vger.kernel.org, H Hartley Sweeten <hsweeten@visionengravers.com>, Tejun Heo <tj@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
 
-Thank you for the patch.
+--nextPart2551496.doVSr9qlEj
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
 
-On Tuesday 11 March 2014 17:00:35 Sylwester Nawrocki wrote:
-> This patch documents following updates of the Exynos4 SoC camera subsystem
-> devicetree binding:
-> 
->  - addition of #clock-cells and clock-output-names properties to 'camera'
->    node - these are now needed so the image sensor sub-devices can reference
-> clocks provided by the camera host interface,
->  - dropped a note about required clock-frequency properties at the
->    image sensor nodes; the sensor devices can now control their clock
->    explicitly through the clk API and there is no need to require this
->    property in the camera host interface binding.
-> 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
-> Resending only single patch which changed.
-> 
-> Changes since v6:
->  - #clock-cells, clock-output-names documented as mandatory properties;
->  - renamed "cam_mclk_{a,b}" to "cam_{a,b}_clkout in the example dts,
->    this now matches changes in exynos4.dtsi further in the patch series;
->  - marked "samsung,camclk-out" property as deprecated.
-> 
-> Changes since v5:
->  - none.
-> 
-> Changes since v4:
->  - dropped a requirement of specific order of values in clocks/
->    clock-names properties (Mark) and reference to clock-names in
->    clock-output-names property description (Mark).
-> ---
->  .../devicetree/bindings/media/samsung-fimc.txt     |   46
-> +++++++++++++------- 1 file changed, 31 insertions(+), 15 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt
-> b/Documentation/devicetree/bindings/media/samsung-fimc.txt index
-> 96312f6..1908a5f 100644
-> --- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
-> +++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+Hi
+> Oh, good catch, thanks! Fixed in the sunxi-devel branch
+> in my *personal* git repo. I'll also push this to the official linux-=
+sunxi
+> sunxi-devel branch later today.
+Fixed it for the next patch set as well.
 
-[snip]
+=2Ddavid
+--nextPart2551496.doVSr9qlEj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
->  Image sensor nodes
->  ------------------
-> @@ -97,8 +108,8 @@ Image sensor nodes
->  The sensor device nodes should be added to their control bus controller
-> (e.g. I2C0) nodes and linked to a port node in the csis or the
-> parallel-ports node, using the common video interfaces bindings, defined in
-> video-interfaces.txt.
-> -The implementation of this bindings requires clock-frequency property to be
-> -present in the sensor device nodes.
-> +An optional clock-frequency property needs to be present in the sensor
-> device
-> +nodes. Default value when this property is not present is 24 MHz.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-I think you forgot to drop that sentence.
+iEYEABECAAYFAlMfN8AACgkQAeZw77btGjrCUQCcDa/7l4czACrVLp/xW6ouXjkM
+fLcAnRgiCRQQMtgr2T49tHWovMLE1y5K
+=2X9L
+-----END PGP SIGNATURE-----
 
--- 
-Regards,
+--nextPart2551496.doVSr9qlEj--
 
-Laurent Pinchart
