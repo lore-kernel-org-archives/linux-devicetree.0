@@ -1,205 +1,53 @@
-From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
-Subject: RE: [PATCH] pinctrl: at91: add the config GPIO_OUTPUT_x
-Date: Tue, 11 Mar 2014 01:28:32 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A24364172FFB955@penmbx01>
-References: <1393984400-14687-1-git-send-email-wenyou.yang@atmel.com>
- <635C1A75-4651-4B2C-AB64-E1D170A1F5F9@jcrosoft.com>
- <B256D81BAE5131468A838E5D7A24364172FF4EC4@penmbx01>
+From: RongJun Ying <rjying-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] mfd: Support SiRF audio modules
+Date: Tue, 11 Mar 2014 09:33:08 +0800
+Message-ID: <CAByv0RNEZOkh2-_=Lu-FS2D66JRwt5c+iSbF=x3k8semUwe_3g@mail.gmail.com>
+References: <1394184531-7679-1-git-send-email-rongjun.ying@csr.com>
+	<20140310103532.GI14976@lee--X1>
+	<CAByv0RNQrPitsfcAwMvn=eZ1hNSaii=jw94H68rQvfQXnjYz9A@mail.gmail.com>
+	<20140310163158.GI13661@lee--X1>
+	<20140310164812.GN28112@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <B256D81BAE5131468A838E5D7A24364172FF4EC4@penmbx01>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Jean-Christophe PLAGNIOL-VILLARD' <plagnioj@jcrosoft.com>
-Cc: "'linus.walleij@linaro.org'" <linus.walleij@linaro.org>, "'b.brezillon@overkiz.com'" <b.brezillon@overkiz.com>, "'<linux-arm-kernel@lists.infradead.org> mailing list'" <linux-arm-kernel@lists.infradead.org>, 'Linux Kernel list' <linux-kernel@vger.kernel.org>, "'devicetree@vger.kernel.org'" <devicetree@vger.kernel.org>, "'robh+dt@kernel.org'" <robh+dt@kernel.org>, "'pawel.moll@arm.com'" <pawel.moll@arm.com>, "'mark.rutland@arm.com'" <mark.rutland@arm.com>, "'ijc+devicetree@hellion.org.uk'" <ijc+devicetree@hellion.org.uk>, "'galak@codeaurora.org'" <galak@codeaurora.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140310164812.GN28112-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, DL-SHA-WorkGroupLinux <workgroup.linux-kQvG35nSl+M@public.gmane.org>, Rongjun Ying <rongjun.ying-kQvG35nSl+M@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi JC,
+2014-03-11 0:48 GMT+08:00 Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> On Mon, Mar 10, 2014 at 04:31:58PM +0000, Lee Jones wrote:
+>
+>> > > I'm not sure there's any need for this. Why don't you just parse the
+>> > > child nodes? Are you even sure you need an MFD at all? It appears
+>> > > you're just using an MFD to share a regmap. Seems like over-kill to me.
+>
+>> > In my case, the prima2 and atlas6 codec have small different. But
+>> > they use the same register address space.
+>> > The sound codec driver need know what codec device is applied.
+>
+>> I understand it was you who made the original request for the regmap
+>> to be shared between devices. Was it an MFD that you had in mind?
+>
+> I was expecting an audio driver that registered several interfaces with
+> the ASoC core rather than a MFD.  It's possible there's some good reason
+> for doing things this way, I've not looked at the new patches (I only
+> seem to have one for the MFD itself...).
 
-> -----Original Message-----
-> From: Yang, Wenyou
-> Sent: Wednesday, March 05, 2014 1:32 PM
-> To: Jean-Christophe PLAGNIOL-VILLARD
-> Cc: linus.walleij@linaro.org; b.brezillon@overkiz.com; <linux-arm-
-> kernel@lists.infradead.org> mailing list; Linux Kernel list;
-> devicetree@vger.kernel.org; robh+dt@kernel.org; pawel.moll@arm.com;
-> mark.rutland@arm.com; ijc+devicetree@hellion.org.uk;
-> galak@codeaurora.org
-> Subject: RE: [PATCH] pinctrl: at91: add the config GPIO_OUTPUT_x
-> 
-> Hi JC,
-> 
-> > -----Original Message-----
-> > From: Jean-Christophe PLAGNIOL-VILLARD [mailto:plagnioj@jcrosoft.com]
-> > Sent: Wednesday, March 05, 2014 12:58 PM
-> > To: Yang, Wenyou
-> > Cc: Jean-Christophe PLAGNIOL-VILLARD; linus.walleij@linaro.org;
-> > b.brezillon@overkiz.com; <linux-arm-kernel@lists.infradead.org>
-> > mailing list; Linux Kernel list; devicetree@vger.kernel.org;
-> > robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com;
-> > ijc+devicetree@hellion.org.uk; galak@codeaurora.org
-> > Subject: Re: [PATCH] pinctrl: at91: add the config GPIO_OUTPUT_x
-> >
-> >
-> > On Mar 5, 2014, at 9:53 AM, Wenyou Yang <wenyou.yang@atmel.com> wrote:
-> >
-> > > In order to support the pinctrl sleep state.
-> >
-> > As I said before NACK
-> >
-> > this is not the job of the pinctrl to describe gpio output or input
-> > state
-> But according to what said in the section "GPIO mode pitfalls" of
-> Documentation/pinctrl.txt.
-> It should be handle by the pinctrl.
-> 
-> If not, to deal with the sleep state will be very complicated.
-> Muxing the pins for FUNCTION to enable peripheral, then twist them over
-> to GPIO mode and use gpio_direction_output() to drive it HIGH or LOW
-> during sleep.
-> 
-> --->8 ------------
-> The solution is to not think that what the datasheet calls "GPIO mode"
-> has to be handled by the <linux/gpio.h> interface. Instead view this as
-> a certain pin config setting. Look in e.g. <linux/pinctrl/pinconf-
-> generic.h> and you find this in the documentation:
-> 
->   PIN_CONFIG_OUTPUT: this will configure the pin in output, use argument
->      1 to indicate high level, argument 0 to indicate low level.
-> 
-> So it is perfectly possible to push a pin into "GPIO mode" and drive the
-> line low as part of the usual pin control map.
-> ---<8 ------------
+I think the MFD driver is better than the ASoC core. Because the mfd_add_devices
+can register all child device into system and the parent driver data
+can be got the regmap
+to all child drivers.
 
-Do you have any feedback?
+Hi Mark Brown:
+I will send new patches of sound, if the MFD driver is applied.
 
-Thanks,
-Wenyou Yang
-
-> 
-> >
-> > Best Regards,
-> > J.
-> > >
-> > > Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
-> > > ---
-> > > Hi Linus,
-> > >
-> > > The patch is based on branch: for-next
-> > > git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl
-> > >
-> > > Best Regards,
-> > > Wenyou Yang
-> > >
-> > > drivers/pinctrl/pinctrl-at91.c     |   31
-> > +++++++++++++++++++++++++++++++
-> > > include/dt-bindings/pinctrl/at91.h |    2 ++
-> > > 2 files changed, 33 insertions(+)
-> > >
-> > > diff --git a/drivers/pinctrl/pinctrl-at91.c
-> > > b/drivers/pinctrl/pinctrl-at91.c index 5d24aae..fc51e59 100644
-> > > --- a/drivers/pinctrl/pinctrl-at91.c
-> > > +++ b/drivers/pinctrl/pinctrl-at91.c
-> > > @@ -62,6 +62,8 @@ static int gpio_banks;
-> > > #define DEGLITCH	(1 << 2)
-> > > #define PULL_DOWN	(1 << 3)
-> > > #define DIS_SCHMIT	(1 << 4)
-> > > +#define GPIO_OUTPUT_HIGH	(1 << 5)
-> > > +#define GPIO_OUTPUT_LOW		(1 << 6)
-> > > #define DEBOUNCE	(1 << 16)
-> > > #define DEBOUNCE_VAL_SHIFT	17
-> > > #define DEBOUNCE_VAL	(0x3fff << DEBOUNCE_VAL_SHIFT)
-> > > @@ -152,12 +154,15 @@ struct at91_pinctrl_mux_ops {
-> > > 	void (*set_pulldown)(void __iomem *pio, unsigned mask, bool is_on);
-> > > 	bool (*get_schmitt_trig)(void __iomem *pio, unsigned pin);
-> > > 	void (*disable_schmitt_trig)(void __iomem *pio, unsigned mask);
-> > > +	bool (*get_gpio_output)(void __iomem *pio, unsigned mask);
-> > > +	void (*set_gpio_output)(void __iomem *pio, unsigned mask, bool
-> > > +is_high);
-> > > 	/* irq */
-> > > 	int (*irq_type)(struct irq_data *d, unsigned type); };
-> > >
-> > > static int gpio_irq_type(struct irq_data *d, unsigned type); static
-> > > int alt_gpio_irq_type(struct irq_data *d, unsigned type);
-> > > +static void at91_mux_gpio_enable(void __iomem *pio, unsigned mask,
-> > > +bool input);
-> > >
-> > > struct at91_pinctrl {
-> > > 	struct device		*dev;
-> > > @@ -472,6 +477,20 @@ static bool at91_mux_pio3_get_schmitt_trig(void
-> > __iomem *pio, unsigned pin)
-> > > 	return (__raw_readl(pio + PIO_SCHMITT) >> pin) & 0x1; }
-> > >
-> > > +static bool at91_mux_pio3_get_gpio_output(void __iomem *pio,
-> > > +unsigned
-> > > +pin) {
-> > > +	return (__raw_readl(pio + PIO_ODSR) >> pin) & 0x1; }
-> > > +
-> > > +static void at91_mux_pio3_set_gpio_output(void __iomem *pio,
-> > > +						unsigned mask,
-> > > +						bool is_high)
-> > > +{
-> > > +	at91_mux_gpio_enable(pio, mask, 0);
-> > > +	writel_relaxed(mask, pio + (is_high ? PIO_SODR : PIO_CODR)); }
-> > > +
-> > > +
-> > > static struct at91_pinctrl_mux_ops at91rm9200_ops = {
-> > > 	.get_periph	= at91_mux_get_periph,
-> > > 	.mux_A_periph	= at91_mux_set_A_periph,
-> > > @@ -495,6 +514,8 @@ static struct at91_pinctrl_mux_ops
-> > > at91sam9x5_ops
-> > = {
-> > > 	.set_pulldown	= at91_mux_pio3_set_pulldown,
-> > > 	.get_schmitt_trig = at91_mux_pio3_get_schmitt_trig,
-> > > 	.disable_schmitt_trig = at91_mux_pio3_disable_schmitt_trig,
-> > > +	.get_gpio_output = at91_mux_pio3_get_gpio_output,
-> > > +	.set_gpio_output = at91_mux_pio3_set_gpio_output,
-> > > 	.irq_type	= alt_gpio_irq_type,
-> > > };
-> > >
-> > > @@ -741,6 +762,10 @@ static int at91_pinconf_get(struct pinctrl_dev
-> > *pctldev,
-> > > 		*config |= PULL_DOWN;
-> > > 	if (info->ops->get_schmitt_trig && info->ops->get_schmitt_trig(pio,
-> > pin))
-> > > 		*config |= DIS_SCHMIT;
-> > > +	if (info->ops->get_gpio_output) {
-> > > +		*config |= info->ops->get_gpio_output(pio, pin) ?
-> > > +					GPIO_OUTPUT_HIGH : GPIO_OUTPUT_LOW;
-> > > +	}
-> > >
-> > > 	return 0;
-> > > }
-> > > @@ -778,6 +803,12 @@ static int at91_pinconf_set(struct pinctrl_dev
-> > *pctldev,
-> > > 			info->ops->set_pulldown(pio, mask, config & PULL_DOWN);
-> > > 		if (info->ops->disable_schmitt_trig && config & DIS_SCHMIT)
-> > > 			info->ops->disable_schmitt_trig(pio, mask);
-> > > +		if (info->ops->set_gpio_output) {
-> > > +			if (config & GPIO_OUTPUT_HIGH)
-> > > +				info->ops->set_gpio_output(pio, mask, 1);
-> > > +			if (config & GPIO_OUTPUT_LOW)
-> > > +				info->ops->set_gpio_output(pio, mask, 0);
-> > > +		};
-> > >
-> > > 	} /* for each config */
-> > >
-> > > diff --git a/include/dt-bindings/pinctrl/at91.h
-> > > b/include/dt-bindings/pinctrl/at91.h
-> > > index 0fee6ff..e799268 100644
-> > > --- a/include/dt-bindings/pinctrl/at91.h
-> > > +++ b/include/dt-bindings/pinctrl/at91.h
-> > > @@ -15,6 +15,8 @@
-> > > #define AT91_PINCTRL_DEGLITCH		(1 << 2)
-> > > #define AT91_PINCTRL_PULL_DOWN		(1 << 3)
-> > > #define AT91_PINCTRL_DIS_SCHMIT		(1 << 4)
-> > > +#define AT91_PINCTRL_OUTPUT_HIGH	(1 << 5)
-> > > +#define AT91_PINCTRL_OUTPUT_LOW		(1 << 6)
-> > > #define AT91_PINCTRL_DEBOUNCE		(1 << 16)
-> > > #define AT91_PINCTRL_DEBOUNCE_VAL(x)	(x << 17)
-> > >
-> > > --
-> > > 1.7.9.5
-> > >
+Thanks.
+-- 
+------------------------------
+Rongjun Ying
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
