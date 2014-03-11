@@ -1,106 +1,119 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 3/9] Doc/DT: Add DT binding documentation for DVI Connector
-Date: Tue, 11 Mar 2014 08:43:18 +0200
-Message-ID: <531EB086.8040404@ti.com>
-References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>	
- <1393590016-9361-4-git-send-email-tomi.valkeinen@ti.com>	
- <20140228155937.GQ21483@n2100.arm.linux.org.uk>
- <1393604717.3802.61.camel@paszta.hi.pengutronix.de>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] mfd: Support SiRF audio modules
+Date: Tue, 11 Mar 2014 06:44:01 +0000
+Message-ID: <20140311064401.GB2839@lee--X1>
+References: <1394505387-13665-1-git-send-email-rongjun.ying@csr.com>
+ <1394505387-13665-2-git-send-email-rongjun.ying@csr.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8914113012528807589=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1393604717.3802.61.camel@paszta.hi.pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Tomasz Figa <tomasz.figa@gmail.com>, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Rob Clark <robdclark@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1394505387-13665-2-git-send-email-rongjun.ying-kQvG35nSl+M@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: RongJun Ying <rjying-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, workgroup.linux-kQvG35nSl+M@public.gmane.org, Rongjun Ying <rongjun.ying-kQvG35nSl+M@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============8914113012528807589==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="mTHRbUBsIG2Ra7bvfcHTKn5En2CvWexqB"
-
---mTHRbUBsIG2Ra7bvfcHTKn5En2CvWexqB
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-On 28/02/14 18:25, Philipp Zabel wrote:
-
-> dvi-connector {
-> 	compatible =3D "dvi-connector";
-> 	ddc-i2c-bus =3D <&i2c3>;
+> From: Rongjun Ying <rongjun.ying-kQvG35nSl+M@public.gmane.org>
 >=20
-> 	port {
-> 		dvi_d_in: endpoint@0 {
-> 			remote-endpoint =3D <&sii902x_out>;
-> 		};
-> 		dvi_a_in: endpoint@1 {
-> 			remote-endpoint =3D <&tve_out>;
-> 		};
-> 	};
-> };
+> The audio modules consist of an internal audio codec, internal
+> audio port and i2s controller.
 >=20
-> It should be possible to let the connector know that those two endpoint=
-s
-> are connected to a TMDS source and to a VGA source, respectively.
+> These modules sharing same register address space.
+> sirf-audio.c provides common regmap mmio handling for all audio modul=
+es.
+> The sound drivers will get regmap from sirf audio mfd driver.
+>=20
+> Signed-off-by: Rongjun Ying <rongjun.ying-kQvG35nSl+M@public.gmane.org>
+> ---
+> -v2:
+> 1. Fixed a lot of english syntax error
+> 2. Add "OF" depend
+> 3. Get codec compatible from child node of dts
+> 4. Use a standard header
+>=20
+>  drivers/mfd/Kconfig            |   10 +++
+>  drivers/mfd/Makefile           |    1 +
+>  drivers/mfd/sirf-audio.c       |  128 ++++++++++++++++++++++++++++++=
+++++++++++
+>  include/linux/mfd/sirf/audio.h |   22 +++++++
+>  4 files changed, 161 insertions(+), 0 deletions(-)
+>  create mode 100644 drivers/mfd/sirf-audio.c
+>  create mode 100644 include/linux/mfd/sirf/audio.h
 
-I have not worked with boards that would have the analog part, so just
-wondering about the above.
+<snip>
 
-The above would mean that either digital or analog is in use, but not
-both. Was that the intention? From the connector's perspective, the
-analog and digital pins are separate, and I think they can be used at
-the same time. That kind of sounds like the analog and digital pins
-should be represented as separate ports.
+> +static struct mfd_cell sirf_audio_devs[] =3D {
+> +	{
+> +		.name =3D "sirf-audio-codec",
+> +	}, {
+> +		.of_compatible =3D "sirf,prima2-i2s",
+> +		.name =3D "sirf-i2s",
+> +	}, {
+> +		.of_compatible =3D "sirf,audio-port",
+> +		.name =3D "sirf-audio-port",
+> +	}
+> +};
 
- Tomi
+The compatible string for the CODEC is mentioned in the Documentation,
+but missing here.
 
+Nit: Also please put .name first and .of_compatible second.
 
+<snip>
 
---mTHRbUBsIG2Ra7bvfcHTKn5En2CvWexqB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+> +	regmap =3D devm_regmap_init_mmio(&pdev->dev, base,
+> +					    &sirf_audio_regmap_config);
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+Odd tabbing here. It's neither tabs, nor '(' aligned.
 
-iQIcBAEBAgAGBQJTHrCGAAoJEPo9qoy8lh71sbcP/id8eVwyYhfKbpC8nnMfgzfQ
-UskPVnG7Tp6cSBewDmz/befBqCKGnTC51lOr941WmWhdXZk9ZeON+nAEo2XyF+kG
-emIq2aYb5NtAKFIKHS/F9omT8KmiVBE/jRWAoWN0fGx2iJJUz7YN7h5DoeGVROv4
-O4zeCY0ci8LpmsL5qFk07/LsNoHTtUqWi7KTPqeeK8VmtkmVeKIgsVQAR+a8e834
-5IDhfeQ1O6FNi52+c3bcubZBp/+pEPgRiPc0es1/NacreXfd/7QO3mXpQuu0ImhL
-xWT7r09xZz+ktuBhmEx6olsNYD4C3UskO4qOdOqCFqG/7AYos35+HFM7iZJIwvzG
-F8zp1EaqpqumFHdL1jwp2ld4x80NKVlZDJrumUsyYIqginFS/a615A2SLy0JwQyl
-reriEPxOHaIr5+BzGCabZK3/5CivRk+S+cEJjY6SXhkMgG3fxp2qi/Hla7MZ69fh
-1pvQw19yHJMcc5TrxJ5B6x7h7b/RtRRao1N1Yf8qc3gyZShAyV8z496F6uT0SPnV
-+Zg3/jP1/IOL59aLG2FLo8Ae62aR8nPIjtvGTf/9zlsrqtC/coz9rW8TEEmd9mh2
-vJYotHCliY87neaEXlNLUcbwUL4ZrFp08skPEBAivxqbso0nLyBrBuWznY+pbnOX
-exRC1vycJllPWMFzHpdg
-=q41a
------END PGP SIGNATURE-----
+> +	compatible =3D of_get_property(codec_np, "compatible", &cplen);
+> +	if (!compatible)
+> +		return -EINVAL;
+> +
+> +	/* Overwrite internal codec compatible string */
+> +	sirf_audio_devs[0].of_compatible =3D kstrdup(compatible, GFP_KERNEL=
+);
 
---mTHRbUBsIG2Ra7bvfcHTKn5En2CvWexqB--
+Oh wow, but no.
 
+Use of_platform_populate() instead of fiddling with the DT like this.
 
---===============8914113012528807589==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+> +	ret =3D  mfd_add_devices(&pdev->dev, -1, sirf_audio_devs,
+> +			ARRAY_SIZE(sirf_audio_devs),
+> +			NULL, 0, NULL);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "add mfd devices failed: %d\n", ret);
+> +		goto err_add_devs;
+> +	}
+> +
+> +	return 0;
+> +
+> +err_add_devs:
+> +	kfree(sirf_audio_devs[0].of_compatible);
 
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+<snip>
 
---===============8914113012528807589==--
+> +static int sirf_audio_remove(struct platform_device *pdev)
+> +{
+> +	kfree(sirf_audio_devs[0].of_compatible);
+
+Gross.
+
+> +	mfd_remove_devices(&pdev->dev);
+> +	return 0;
+> +}
+
+<snip>
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
