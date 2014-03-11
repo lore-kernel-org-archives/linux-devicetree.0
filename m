@@ -1,235 +1,219 @@
-From: Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/3] spi: add xtfpga SPI controller driver
-Date: Tue, 11 Mar 2014 16:44:49 +0400
-Message-ID: <1394541891-26469-2-git-send-email-jcmvbkbc@gmail.com>
-References: <1394541891-26469-1-git-send-email-jcmvbkbc@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1394541891-26469-1-git-send-email-jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Chris Zankel <chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org>, Marc Gauthier <marc-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v5] can: xilinx CAN controller support.
+Date: Tue, 11 Mar 2014 13:48:54 +0100
+Message-ID: <531F0636.4050608@pengutronix.de>
+References: <5254bfec-c6fd-4681-a34d-706d51e60fbb@VA3EHSMHS004.ehs.local> <531DD2C4.5060109@pengutronix.de> <f1e2f08f-05fc-40d3-8437-4c6817d631cb@AM1EHSMHS010.ehs.local>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="suD0cqq8XrJJSQR2n7FFKTRB1voTPGq4L"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <f1e2f08f-05fc-40d3-8437-4c6817d631cb@AM1EHSMHS010.ehs.local>
+Sender: linux-can-owner@vger.kernel.org
+To: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Cc: "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Michal Simek <michals@xilinx.com>, "wg@grandegger.com" <wg@grandegger.com>, "fengguang.wu@intel.com" <fengguang.wu@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-This simple SPI master controller is built into xtfpga bitstreams. It
-always transfers 16 bit words in SPI mode 0, automatically asserting CS
-on transfer start and deasserting on end.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--suD0cqq8XrJJSQR2n7FFKTRB1voTPGq4L
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/spi/Kconfig             |  13 ++++
- drivers/spi/Makefile            |   1 +
- drivers/spi/spi-xtensa-xtfpga.c | 165 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 179 insertions(+)
- create mode 100644 drivers/spi/spi-xtensa-xtfpga.c
+On 03/11/2014 01:34 PM, Appana Durga Kedareswara Rao wrote:
 
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 581ee2a..e3f5335 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -520,6 +520,19 @@ config SPI_XILINX
- 
- 	  Or for the DS570, see "XPS Serial Peripheral Interface (SPI) (v2.00b)"
- 
-+config SPI_XTENSA_XTFPGA
-+	tristate "Xtensa SPI controller for xtfpga"
-+	depends on XTENSA && XTENSA_PLATFORM_XTFPGA
-+	select SPI_BITBANG
-+	help
-+	  SPI driver for xtfpga SPI master controller.
-+
-+	  This simple SPI master controller is built into xtfpga bitstreams
-+	  and is used to control daughterboard audio codec. It always transfers
-+	  16 bit words in SPI mode 0, automatically asserting CS on transfer
-+	  start and deasserting on end.
-+
-+
- config SPI_NUC900
- 	tristate "Nuvoton NUC900 series SPI"
- 	depends on ARCH_W90X900
-diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-index 95af48d..5379ade 100644
---- a/drivers/spi/Makefile
-+++ b/drivers/spi/Makefile
-@@ -79,3 +79,4 @@ obj-$(CONFIG_SPI_TOPCLIFF_PCH)		+= spi-topcliff-pch.o
- obj-$(CONFIG_SPI_TXX9)			+= spi-txx9.o
- obj-$(CONFIG_SPI_XCOMM)		+= spi-xcomm.o
- obj-$(CONFIG_SPI_XILINX)		+= spi-xilinx.o
-+obj-$(CONFIG_SPI_XTENSA_XTFPGA)		+= spi-xtensa-xtfpga.o
-diff --git a/drivers/spi/spi-xtensa-xtfpga.c b/drivers/spi/spi-xtensa-xtfpga.c
-new file mode 100644
-index 0000000..3131916
---- /dev/null
-+++ b/drivers/spi/spi-xtensa-xtfpga.c
-@@ -0,0 +1,165 @@
-+/*
-+ * Xtensa xtfpga SPI controller driver
-+ *
-+ * Copyright (c) 2014 Cadence Design Systems Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/io.h>
-+#include <linux/jiffies.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/spi/spi.h>
-+#include <linux/spi/spi_bitbang.h>
-+
-+#define XTFPGA_SPI_NAME "xtfpga_spi"
-+
-+#define XTFPGA_SPI_START	0x0
-+#define XTFPGA_SPI_BUSY		0x4
-+#define XTFPGA_SPI_DATA		0x8
-+
-+struct xtfpga_spi {
-+	struct spi_bitbang bitbang;
-+	void __iomem *regs;
-+};
-+
-+static inline void xtfpga_spi_write32(const struct xtfpga_spi *spi,
-+				      unsigned addr, u32 val)
-+{
-+	iowrite32(val, spi->regs + addr);
-+}
-+
-+static inline unsigned int xtfpga_spi_read32(const struct xtfpga_spi *spi,
-+					     unsigned addr)
-+{
-+	return ioread32(spi->regs + addr);
-+}
-+
-+static inline int xtfpga_spi_wait_busy(struct xtfpga_spi *xspi)
-+{
-+	unsigned long timeout = jiffies + msecs_to_jiffies(100);
-+	while (xtfpga_spi_read32(xspi, XTFPGA_SPI_BUSY)) {
-+		if (!time_before(jiffies, timeout))
-+			return -EBUSY;
-+		else
-+			cpu_relax();
-+	}
-+	return 0;
-+}
-+
-+static u32 xtfpga_spi_txrx_word(struct spi_device *spi, unsigned nsecs,
-+				u32 v, u8 bits)
-+{
-+	struct xtfpga_spi *xspi = spi_master_get_devdata(spi->master);
-+
-+	/* Bytes that should go out earlier have lower addresses,
-+	 * but the hardware operates with 16 bit words and transmits
-+	 * higher bits first. Thus data in memory is in BE order.
-+	 */
-+	xtfpga_spi_write32(xspi, XTFPGA_SPI_DATA, be16_to_cpu(v));
-+	xtfpga_spi_write32(xspi, XTFPGA_SPI_START, 1);
-+	xtfpga_spi_wait_busy(xspi);
-+	xtfpga_spi_write32(xspi, XTFPGA_SPI_START, 0);
-+
-+	return 0;
-+}
-+
-+/* Unused: this device controls its only CS automatically,
-+ * deactivating it after every 16 bit transfer completion.
-+ */
-+static void xtfpga_spi_chipselect(struct spi_device *spi, int is_on)
-+{
-+}
-+
-+static int xtfpga_spi_probe(struct platform_device *pdev)
-+{
-+	struct xtfpga_spi *xspi;
-+	struct resource *mem;
-+	int ret;
-+	struct spi_master *master;
-+
-+	master = spi_alloc_master(&pdev->dev, sizeof(struct xtfpga_spi));
-+	if (!master)
-+		return -ENOMEM;
-+
-+	master->flags = SPI_MASTER_NO_RX;
-+	master->bits_per_word_mask = SPI_BPW_MASK(16);
-+	master->bus_num = pdev->dev.id;
-+	master->dev.of_node = pdev->dev.of_node;
-+
-+	xspi = spi_master_get_devdata(master);
-+	xspi->bitbang.master = master;
-+	xspi->bitbang.chipselect = xtfpga_spi_chipselect;
-+	xspi->bitbang.txrx_word[SPI_MODE_0] = xtfpga_spi_txrx_word;
-+
-+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!mem) {
-+		dev_err(&pdev->dev, "No memory resource\n");
-+		ret = -ENODEV;
-+		goto err;
-+	}
-+	xspi->regs = devm_ioremap_resource(&pdev->dev, mem);
-+	if (IS_ERR(xspi->regs)) {
-+		ret = PTR_ERR(xspi->regs);
-+		goto err;
-+	}
-+
-+	xtfpga_spi_write32(xspi, XTFPGA_SPI_START, 0);
-+	ret = xtfpga_spi_wait_busy(xspi);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "Device stuck in busy state\n");
-+		goto err;
-+	}
-+
-+	ret = spi_bitbang_start(&xspi->bitbang);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "spi_bitbang_start failed\n");
-+		goto err;
-+	}
-+
-+	platform_set_drvdata(pdev, master);
-+	return 0;
-+err:
-+	spi_master_put(master);
-+	return ret;
-+}
-+
-+static int xtfpga_spi_remove(struct platform_device *pdev)
-+{
-+	struct spi_master *master = platform_get_drvdata(pdev);
-+	struct xtfpga_spi *xspi = spi_master_get_devdata(master);
-+
-+	spi_bitbang_stop(&xspi->bitbang);
-+	spi_master_put(master);
-+
-+	return 0;
-+}
-+
-+MODULE_ALIAS("platform:" XTFPGA_SPI_NAME);
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id xtfpga_spi_of_match[] = {
-+	{ .compatible = "cdns,xtfpga-spi", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, xtfpga_spi_of_match);
-+#endif
-+
-+static struct platform_driver xtfpga_spi_driver = {
-+	.probe = xtfpga_spi_probe,
-+	.remove = xtfpga_spi_remove,
-+	.driver = {
-+		.name = XTFPGA_SPI_NAME,
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(xtfpga_spi_of_match),
-+	},
-+};
-+module_platform_driver(xtfpga_spi_driver);
-+
-+MODULE_AUTHOR("Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
-+MODULE_DESCRIPTION("xtensa xtfpga SPI driver");
-+MODULE_LICENSE("GPL");
--- 
-1.8.1.4
+>>> diff --git a/drivers/net/can/Kconfig b/drivers/net/can/Kconfig index
+>>> 9e7d95d..b180239 100644
+>>> --- a/drivers/net/can/Kconfig
+>>> +++ b/drivers/net/can/Kconfig
+>>> @@ -125,6 +125,13 @@ config CAN_GRCAN
+>>>       endian syntheses of the cores would need some modifications on
+>>>       the hardware level to work.
+>>>
+>>> +config CAN_XILINXCAN
+>>> +   tristate "Xilinx CAN"
+>>> +   depends on ARCH_ZYNQ || MICROBLAZE
+>>
+>> Is Zynq multiarch already?
+> Discussions are going on this
+> So the final thing that Fengguang ( fengguang.wu@intel.com)
+> Proposed is
+>         config CAN_XILINX
+>         tristate "Xilinx CAN"
+>         depends on ARCH_ZYNQ || MICROBLAZE || COMPILE_TEST
+>         depends on COMMON_CLK && HAS_MMIO  # whatever you need for othe=
+r architectures
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Are you Ok for this?
+
+You have to fill the 2nd depends on with some sane values, though.
+
+[...]
+
+>>> +/**
+>>> + * struct xcan_priv - This definition define CAN driver instance
+>>> + * @can:                   CAN private data structure.
+>>> + * @tx_head:                       Tx CAN packets ready to send on t=
+he
+>> queue
+>>> + * @tx_tail:                       Tx CAN packets successfully sende=
+d on the
+>> queue
+>>> + * @tx_max:                        Maximum number packets the driver=
+ can
+>> send
+>>> + * @napi:                  NAPI structure
+>>> + * @read_reg:                      For reading data from CAN registe=
+rs
+>>> + * @write_reg:                     For writing data to CAN registers=
+
+>>> + * @dev:                   Network device data structure
+>>> + * @reg_base:                      Ioremapped address to registers
+>>> + * @irq_flags:                     For request_irq()
+>>> + * @aperclk:                       Pointer to struct clk
+>>> + * @devclk:                        Pointer to struct clk
+>>> + */
+>>> +struct xcan_priv {
+>>> +   struct can_priv can;
+>>> +   unsigned int tx_head;
+>>> +   unsigned int tx_tail;
+>>> +   u32 tx_max;
+>> Please make it an unsigned int, too.
+>>
+> Ok
+>=20
+>=20
+>>> +   struct napi_struct napi;
+>>> +   u32 (*read_reg)(const struct xcan_priv *priv, enum xcan_reg reg);=
+
+>>> +   void (*write_reg)(const struct xcan_priv *priv, enum xcan_reg reg=
+,
+>>> +                   u32 val);
+>>> +   struct net_device *dev;
+>>> +   void __iomem *reg_base;
+>>> +   unsigned long irq_flags;
+>>> +   struct clk *aperclk;
+>>> +   struct clk *devclk;
+>>
+>> Please rename the clock variables to match the names in the DT.
+>>
+> The clock names are different for axi CAN and CANPS case.
+> So will make them as busclk and devclk
+> Are you ok with this?
+
+Why not "ref_clk" and "aper_clk" as used in the DT?
+
+>>> +};
+>>> +
+
+[...]
+
+>>> +/**
+>>> + * xcan_chip_start - This the drivers start routine
+>>> + * @ndev:  Pointer to net_device structure
+>>> + *
+>>> + * This is the drivers start routine.
+>>> + * Based on the State of the CAN device it puts
+>>> + * the CAN device into a proper mode.
+>>> + *
+>>> + * Return: 0 on success and failure value on error  */ static int
+>>> +xcan_chip_start(struct net_device *ndev) {
+>>> +   struct xcan_priv *priv =3D netdev_priv(ndev);
+>>> +   u32 err;
+>>> +   unsigned long timeout;
+>>> +
+>>> +   /* Check if it is in reset mode */
+>>> +   err =3D set_reset_mode(ndev);
+>>> +   if (err < 0)
+>>> +           return err;
+>>> +
+>>> +   err =3D xcan_set_bittiming(ndev);
+>>> +   if (err < 0)
+>>> +           return err;
+>>> +
+>>> +   /* Enable interrupts */
+>>> +   priv->write_reg(priv, XCAN_IER_OFFSET, XCAN_INTR_ALL);
+>>> +
+>>> +   /* Check whether it is loopback mode or normal mode  */
+>>> +   if (priv->can.ctrlmode & CAN_CTRLMODE_LOOPBACK)
+>>> +           /* Put device into loopback mode */
+>>> +           priv->write_reg(priv, XCAN_MSR_OFFSET,
+>> XCAN_MSR_LBACK_MASK);
+>>> +   else
+>>> +           /* The device is in normal mode */
+>>> +           priv->write_reg(priv, XCAN_MSR_OFFSET, 0);
+>>> +
+>>> +   if (priv->can.state =3D=3D CAN_STATE_STOPPED) {
+>>
+>> Your device is in stopped mode, add you go though set_reset_mode()
+>> already.
+>=20
+> Will remove this if condition I putted this condition here because in s=
+et_reset_mode we are putting the
+> Device state in Stopped state.
+
+So the device is in CAN_STATE_STOPPED, as this code just went through
+set_reset_mode() some lines ago. so it makes no sense to check if it
+(still) is (the code runs serialized here).
+
+>>
+>>> +           /* Enable Xilinx CAN */
+>>> +           priv->write_reg(priv, XCAN_SRR_OFFSET,
+>> XCAN_SRR_CEN_MASK);
+>>> +           priv->can.state =3D CAN_STATE_ERROR_ACTIVE;
+>>> +           timeout =3D jiffies + XCAN_TIMEOUT;
+>>> +           if (priv->can.ctrlmode & CAN_CTRLMODE_LOOPBACK) {
+>>> +                   while ((priv->read_reg(priv, XCAN_SR_OFFSET)
+>>> +                                   & XCAN_SR_LBACK_MASK) =3D=3D 0) {=
+
+>>> +                           if (time_after(jiffies, timeout)) {
+>>> +                                   netdev_warn(ndev,
+>>> +                                           "timedout for loopback
+>> mode\n");
+>>> +                                   return -ETIMEDOUT;
+>>> +                           }
+>>> +                           usleep_range(500, 10000);
+>>> +                   }
+>>> +           } else {
+>>> +                   while ((priv->read_reg(priv, XCAN_SR_OFFSET)
+>>> +                                   & XCAN_SR_NORMAL_MASK) =3D=3D 0) =
+{
+>>> +                           if (time_after(jiffies, timeout)) {
+>>> +                                   netdev_warn(ndev,
+>>> +                                           "timedout for normal
+>> mode\n");
+>>> +                                   return -ETIMEDOUT;
+>>> +                           }
+>>> +                           usleep_range(500, 10000);
+>>> +                   }
+>>> +           }
+>>> +           netdev_dbg(ndev, "status:#x%08x\n",
+>>> +                           priv->read_reg(priv, XCAN_SR_OFFSET));
+>>> +   }
+>>> +   priv->can.state =3D CAN_STATE_ERROR_ACTIVE;
+>>> +   return 0;
+>>> +}
+
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--suD0cqq8XrJJSQR2n7FFKTRB1voTPGq4L
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+Comment: Using GnuPG with Icedove - http://www.enigmail.net/
+
+iEYEARECAAYFAlMfBjYACgkQjTAFq1RaXHO3HgCdFPWt6PHc7gid8sZPzLaNhqLd
+sZwAn2WC+wU7uWOFt3SmS65rFhhX9zpL
+=DirU
+-----END PGP SIGNATURE-----
+
+--suD0cqq8XrJJSQR2n7FFKTRB1voTPGq4L--
