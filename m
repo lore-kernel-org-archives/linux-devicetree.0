@@ -1,119 +1,45 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] mfd: Support SiRF audio modules
-Date: Tue, 11 Mar 2014 06:44:01 +0000
-Message-ID: <20140311064401.GB2839@lee--X1>
-References: <1394505387-13665-1-git-send-email-rongjun.ying@csr.com>
- <1394505387-13665-2-git-send-email-rongjun.ying@csr.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6 6/6] pci: Add support for creating a generic
+ host_bridge from device tree
+Date: Tue, 11 Mar 2014 07:50:24 +0100
+Message-ID: <4254618.BlpDUOctDb@wuerfel>
+References: <1394020137-1830-1-git-send-email-Liviu.Dudau@arm.com>
+ <1469359.kil5iaOqdU@wuerfel> <20140310215600.GA14968@bart.dudau.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1394505387-13665-2-git-send-email-rongjun.ying-kQvG35nSl+M@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: RongJun Ying <rjying-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, workgroup.linux-kQvG35nSl+M@public.gmane.org, Rongjun Ying <rongjun.ying-kQvG35nSl+M@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140310215600.GA14968@bart.dudau.co.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Liviu Dudau <liviu@dudau.co.uk>, linaro-kernel <linaro-kernel@lists.linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Tanmay Inamdar <tinamdar@apm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bjorn Helgaas <bhelgaas@google.com>
 List-Id: devicetree@vger.kernel.org
 
-> From: Rongjun Ying <rongjun.ying-kQvG35nSl+M@public.gmane.org>
->=20
-> The audio modules consist of an internal audio codec, internal
-> audio port and i2s controller.
->=20
-> These modules sharing same register address space.
-> sirf-audio.c provides common regmap mmio handling for all audio modul=
-es.
-> The sound drivers will get regmap from sirf audio mfd driver.
->=20
-> Signed-off-by: Rongjun Ying <rongjun.ying-kQvG35nSl+M@public.gmane.org>
-> ---
-> -v2:
-> 1. Fixed a lot of english syntax error
-> 2. Add "OF" depend
-> 3. Get codec compatible from child node of dts
-> 4. Use a standard header
->=20
->  drivers/mfd/Kconfig            |   10 +++
->  drivers/mfd/Makefile           |    1 +
->  drivers/mfd/sirf-audio.c       |  128 ++++++++++++++++++++++++++++++=
-++++++++++
->  include/linux/mfd/sirf/audio.h |   22 +++++++
->  4 files changed, 161 insertions(+), 0 deletions(-)
->  create mode 100644 drivers/mfd/sirf-audio.c
->  create mode 100644 include/linux/mfd/sirf/audio.h
+On Monday 10 March 2014 21:56:00 Liviu Dudau wrote:
+> 
+> PCI_IOBASE is always defined. See the discussion with Russell on this subject.
+> 
+> include/asm-generic/io.h has at line 118:
+> 
+> #ifndef PCI_IOBASE
+> #define PCI_IOBASE ((void __iomem *) 0)
+> #endif
 
-<snip>
+That is only defined for those that use asm-generic/pci.h, which most architectures
+don't.
+ 
+> I will go with my idea tomorrow. arm64 overwrite the implementation anyway, I
+> find it cleaner rather than having to do #ifdefs and/or ifs.
 
-> +static struct mfd_cell sirf_audio_devs[] =3D {
-> +	{
-> +		.name =3D "sirf-audio-codec",
-> +	}, {
-> +		.of_compatible =3D "sirf,prima2-i2s",
-> +		.name =3D "sirf-i2s",
-> +	}, {
-> +		.of_compatible =3D "sirf,audio-port",
-> +		.name =3D "sirf-audio-port",
-> +	}
-> +};
+I'd really hope we can get to a point where arm64 doesn't need any architecture
+specific code for this. It doesn't do anything special.
 
-The compatible string for the CODEC is mentioned in the Documentation,
-but missing here.
-
-Nit: Also please put .name first and .of_compatible second.
-
-<snip>
-
-> +	regmap =3D devm_regmap_init_mmio(&pdev->dev, base,
-> +					    &sirf_audio_regmap_config);
-
-Odd tabbing here. It's neither tabs, nor '(' aligned.
-
-> +	compatible =3D of_get_property(codec_np, "compatible", &cplen);
-> +	if (!compatible)
-> +		return -EINVAL;
-> +
-> +	/* Overwrite internal codec compatible string */
-> +	sirf_audio_devs[0].of_compatible =3D kstrdup(compatible, GFP_KERNEL=
-);
-
-Oh wow, but no.
-
-Use of_platform_populate() instead of fiddling with the DT like this.
-
-> +	ret =3D  mfd_add_devices(&pdev->dev, -1, sirf_audio_devs,
-> +			ARRAY_SIZE(sirf_audio_devs),
-> +			NULL, 0, NULL);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "add mfd devices failed: %d\n", ret);
-> +		goto err_add_devs;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_add_devs:
-> +	kfree(sirf_audio_devs[0].of_compatible);
-
-<snip>
-
-> +static int sirf_audio_remove(struct platform_device *pdev)
-> +{
-> +	kfree(sirf_audio_devs[0].of_compatible);
-
-Gross.
-
-> +	mfd_remove_devices(&pdev->dev);
-> +	return 0;
-> +}
-
-<snip>
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
