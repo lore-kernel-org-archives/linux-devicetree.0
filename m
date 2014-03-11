@@ -1,68 +1,98 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH RFC v2 0/2] Fix simple-card *-master DT parameter handling
-Date: Tue, 11 Mar 2014 10:50:20 +0000
-Message-ID: <20140311105020.GO28112@sirena.org.uk>
-References: <cover.1394451329.git.jsarha@ti.com>
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [PATCH v3 2/5] pinctrl: st: Enhance the controller to manage
+ unavailable registers
+Date: Tue, 11 Mar 2014 11:55:53 +0100
+Message-ID: <531EEBB9.1050405@st.com>
+References: <1394203251-25361-1-git-send-email-maxime.coquelin@st.com>	<1394203251-25361-3-git-send-email-maxime.coquelin@st.com>	<20140310091707.GD14976@lee--X1> <531EC6C0.4080202@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fnSZu+x/QQRjdWqq"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1394451329.git.jsarha@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jyri Sarha <jsarha@ti.com>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, peter.ujfalusi@ti.com, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, detheridge@ti.com, Xiubo Li <Li.Xiubo@freescale.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <531EC6C0.4080202@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, kernel@stlinux.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---fnSZu+x/QQRjdWqq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 10, 2014 at 01:41:14PM +0200, Jyri Sarha wrote:
-> Since RFC:
-> - fixed commit msg typo
-> - added include/sound/soc.h changes too
->=20
-> The sematics of bitclock-master and frame-master DT parameters
-> should depend on whether they are found from a cpu-dai or codec
-> sub-node.
->=20
-> - bitclock-master in cpu-dai node means Codec-Bitclock-Slave
-> - frame-master in cpu-dai node means Codec-Frame-Slave
-> - bitclock-master in codec node means Codec-Bitclock-Master
-> - frame-master in codec node means Codec-Frame-Master
->=20
-> For example in a cpu-dai mode bitclock-master parameter should produce
-> SND_SOC_DAIFMT_CBS_* daifmt flags and a codec node
-> SND_SOC_DAIFMT_CBM_* flags.
+On 03/11/2014 09:18 AM, Maxime Coquelin wrote:
+>
+>
+> On 03/10/2014 10:17 AM, Lee Jones wrote:
+>>> From: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+>>>
+>>> This patch adds a new logic inside the st pinctrl to manage
+>>> an unsupported scenario: some sysconfig are not available!
+>>>
+>>> This is the case of STiH407 where, although documented, the
+>>> following registers from SYSCFG_FLASH have been removed from the SoC.
+>>>
+>>> SYSTEM_CONFIG3040
+>>>     Output Enable pad control for all PIO Alternate Functions
+>>> and
+>>> SYSTEM_ CONFIG3050
+>>>     Pull Up pad control for all PIO Alternate Functions
+>>>
+>>> Without managing this condition an imprecise external abort
+>>> will be detect.
+>>>
+>>> To do this the patch also reviews the st_parse_syscfgs
+>>> and other routines to manipulate the registers only if
+>>> actually available.
+>>> In any case, for example the st_parse_syscfgs detected
+>>> an error condition but no action was made in the
+>>> st_pctl_probe_dt.
+>>>
+>>> Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
+>>> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+>>
+>> These two SOBs need reordering.
+> Right,
+> this will be changed here and everywhere else in the series.
+>
+>>
+>>> ---
+>>>   drivers/pinctrl/pinctrl-st.c | 106
+>>> +++++++++++++++++++++++++------------------
+>>>   1 file changed, 61 insertions(+), 45 deletions(-)
+>>>
+>>> diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
+>>> index 9fb66aa..1721611 100644
+>>> --- a/drivers/pinctrl/pinctrl-st.c
+>>> +++ b/drivers/pinctrl/pinctrl-st.c
 
-I've added Morimoto-san and Xiubo to the CCs - can you please have a
-look at this?  I can't see any in tree users but presumably there are
-some existing out of tree users of the binding that use it without
-current problems.
+<snip>
 
---fnSZu+x/QQRjdWqq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+>>>
+>>> -static int st_parse_syscfgs(struct st_pinctrl *info,
+>>> -        int bank, struct device_node *np)
+>>> +
+>>> +static struct regmap_field *st_pc_get_value(struct device *dev,
+>>> +                        struct regmap *regmap, int bank,
+>>> +                        int data, int lsb, int msb)
+>>> +{
+>>> +    struct reg_field reg = REG_FIELD((data + bank) * 4, lsb, msb);
+>>> +
+>>> +    if (data < 0)
+>>> +        return NULL;
+>>
+>> What happens is data < 0 and it's used in REG_FIELD?
+> Nothing bad, but I agree this is not crystal clear.
+>
+>>
+>> Would it make more sense to make this check before calling REG_FIELD?
+> Yes, it will be done in the v4.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Finally, I have to keep it as it was if I want this patch to compile.
 
-iQIcBAEBAgAGBQJTHuppAAoJELSic+t+oim9lhcP/RFsHYs9T1K6MDRroYdq8nY0
-1a0s8GKZC1/80BBO+cOSFNvfOr6+SfopL9ECT0YYZsF2ht5azipVbaSyJSWD0zp2
-2GyaD2UdJM4AWz8x/OGmv78gu2NOL8fVTkSO0qHYRUkYsZyR25NdepzarjAsZiI1
-GHjEsAQJCSQpBCFzWqpnZo3la5sMebgGhvGBVHzuw4JLv9EByTID66mWfV6UJ9Ox
-BMTgjzo3RInQQhWid+CQBScItJmqOB6niOrdTxhotwCkagvubUey/HV+xZiszTWo
-2gsWYJUfDcAxCzQfGc++9LHI0FAXwS8BYtJcFJOdu1Tbd9WpAHZYbXNrYUO4i0Pu
-EsingVO5bQR0lyOFK5uh3VOURIFmzWSkgKPfYNDbTDaQSCFhUzhw/9BgHLmrjgoe
-xIQkz10+9bvoy1aUAWWO3I69rx4pvLPHKx4YbYbqgO5urWLaDtqdU5OOuyEvosxp
-FcMoEG6LvQnYznpnl113pvc7l89t8AJq1DnWZvIlh2ByBeGnho8Ll+ATVOFWDTxK
-QrrRPrKs+rm3R65jlgcIzd7nnBhE3tmaRKxSSzw5fHlVU27AboaqhGo8bGPmbcTO
-IURJGXz5YdVwEF9pA/Vfydqd0ECxf/DrhXqA/OIZbNggCAXbHtn/F/dZ+Rf8gGKF
-ArkIJcpy6HMsRowjb28e
-=iCjv
------END PGP SIGNATURE-----
-
---fnSZu+x/QQRjdWqq--
+>
+> <snip>
+>
+> Thanks,
+> Maxime
+>
+> _______________________________________________
+> Kernel mailing list
+> Kernel@stlinux.com
+> http://www.stlinux.com/mailman/listinfo/kernel
