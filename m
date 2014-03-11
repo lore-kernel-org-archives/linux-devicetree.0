@@ -1,89 +1,68 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v2 0/7] tty: xuartps: Rebranding + DT documentation
-Date: Tue, 11 Mar 2014 11:46:43 +0100
-Message-ID: <531EE993.80400@monstr.eu>
-References: <1394487610-2419-1-git-send-email-soren.brinkmann@xilinx.com>
-Reply-To: monstr@monstr.eu
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH RFC v2 0/2] Fix simple-card *-master DT parameter handling
+Date: Tue, 11 Mar 2014 10:50:20 +0000
+Message-ID: <20140311105020.GO28112@sirena.org.uk>
+References: <cover.1394451329.git.jsarha@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="Uihq5Ov6SDStNcGpgA3iVBDBpLxmW1BK4"
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1394487610-2419-1-git-send-email-soren.brinkmann@xilinx.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Cc: Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Michal Simek <michal.simek@xilinx.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+	protocol="application/pgp-signature"; boundary="fnSZu+x/QQRjdWqq"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1394451329.git.jsarha@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jyri Sarha <jsarha@ti.com>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, peter.ujfalusi@ti.com, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, detheridge@ti.com, Xiubo Li <Li.Xiubo@freescale.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---Uihq5Ov6SDStNcGpgA3iVBDBpLxmW1BK4
-Content-Type: text/plain; charset=UTF-8
+
+--fnSZu+x/QQRjdWqq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On 03/10/2014 10:40 PM, Soren Brinkmann wrote:
-> Hi,
+On Mon, Mar 10, 2014 at 01:41:14PM +0200, Jyri Sarha wrote:
+> Since RFC:
+> - fixed commit msg typo
+> - added include/sound/soc.h changes too
 >=20
-> this series rebrands the Xilinx PS UART driver as Cadence UART and
-> documents its DT bindings (+ some clean up along the way).
+> The sematics of bitclock-master and frame-master DT parameters
+> should depend on whether they are found from a cpu-dai or codec
+> sub-node.
 >=20
-> The rebranding goes as far as reasonable. Things like file name, kconfi=
-g
-> symbols and other things with user space impact are left as is. Please
-> refer to the discussion in the RFC threads[1-2] for more details.
+> - bitclock-master in cpu-dai node means Codec-Bitclock-Slave
+> - frame-master in cpu-dai node means Codec-Frame-Slave
+> - bitclock-master in codec node means Codec-Bitclock-Master
+> - frame-master in codec node means Codec-Frame-Master
 >=20
-> Similar the DT binding has been extended. In addition to the new and
-> preferred Cadence binding, the current xuartps binding is maintained.
-> Though, only the Cadence names for clock-names are documented.
->=20
-> References:
->  [1]  https://lkml.org/lkml/2014/3/4/405
->  [2]  https://lkml.org/lkml/2014/3/7/450
->=20
-> v2:
->  - no changes regarding the patches
->  - fixed (I sincerely hope) email recipients
->=20
-> Changes from the latest RFC:
->  - squashed function/symbol renaming into 'tty: xuartps: Rebrand driver=
+> For example in a cpu-dai mode bitclock-master parameter should produce
+> SND_SOC_DAIFMT_CBS_* daifmt flags and a codec node
+> SND_SOC_DAIFMT_CBM_* flags.
 
->    as Cadence UART'
->  - Revised the commit message of 'tty: xuartps: Don't write IRQ disable=
+I've added Morimoto-san and Xiubo to the CCs - can you please have a
+look at this?  I can't see any in tree users but presumably there are
+some existing out of tree users of the binding that use it without
+current problems.
 
->    register to enable interrupts' (was 'tty: xuartps: Remove bogus
->    comment and register write'
-
-One more thing. I was thinking this is based on my 3 patches I have
-already sent to mainline. But as I see they are not applied yet.
-
-https://lkml.org/lkml/2014/1/21/107
-https://lkml.org/lkml/2014/1/21/101
-http://www.spinics.net/lists/arm-kernel/msg302796.html
-
-Thanks,
-Michal
-
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---Uihq5Ov6SDStNcGpgA3iVBDBpLxmW1BK4
+--fnSZu+x/QQRjdWqq
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-iEYEARECAAYFAlMe6ZMACgkQykllyylKDCFrrwCfX/JsE2LZP0PX4Qk2Z4BmPGOV
-nyAAnjpT8J6IiMT2FGszoziPENhIZkNK
-=r6xw
+iQIcBAEBAgAGBQJTHuppAAoJELSic+t+oim9lhcP/RFsHYs9T1K6MDRroYdq8nY0
+1a0s8GKZC1/80BBO+cOSFNvfOr6+SfopL9ECT0YYZsF2ht5azipVbaSyJSWD0zp2
+2GyaD2UdJM4AWz8x/OGmv78gu2NOL8fVTkSO0qHYRUkYsZyR25NdepzarjAsZiI1
+GHjEsAQJCSQpBCFzWqpnZo3la5sMebgGhvGBVHzuw4JLv9EByTID66mWfV6UJ9Ox
+BMTgjzo3RInQQhWid+CQBScItJmqOB6niOrdTxhotwCkagvubUey/HV+xZiszTWo
+2gsWYJUfDcAxCzQfGc++9LHI0FAXwS8BYtJcFJOdu1Tbd9WpAHZYbXNrYUO4i0Pu
+EsingVO5bQR0lyOFK5uh3VOURIFmzWSkgKPfYNDbTDaQSCFhUzhw/9BgHLmrjgoe
+xIQkz10+9bvoy1aUAWWO3I69rx4pvLPHKx4YbYbqgO5urWLaDtqdU5OOuyEvosxp
+FcMoEG6LvQnYznpnl113pvc7l89t8AJq1DnWZvIlh2ByBeGnho8Ll+ATVOFWDTxK
+QrrRPrKs+rm3R65jlgcIzd7nnBhE3tmaRKxSSzw5fHlVU27AboaqhGo8bGPmbcTO
+IURJGXz5YdVwEF9pA/Vfydqd0ECxf/DrhXqA/OIZbNggCAXbHtn/F/dZ+Rf8gGKF
+ArkIJcpy6HMsRowjb28e
+=iCjv
 -----END PGP SIGNATURE-----
 
---Uihq5Ov6SDStNcGpgA3iVBDBpLxmW1BK4--
+--fnSZu+x/QQRjdWqq--
