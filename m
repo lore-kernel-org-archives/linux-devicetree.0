@@ -1,157 +1,72 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v5 2/4] devicetree: bindings: Document Krait CPU/L1 EDAC
-Date: Tue, 11 Mar 2014 18:01:50 +0000
-Message-ID: <20140311180150.GD25796@e102568-lin.cambridge.arm.com>
-References: <20140116113332.GC25540@e102568-lin.cambridge.arm.com>
- <20140116180505.GA30925@codeaurora.org>
- <20140116183326.GG25540@e102568-lin.cambridge.arm.com>
- <20140116192617.GA13785@codeaurora.org>
- <20140117102109.GA22544@e102568-lin.cambridge.arm.com>
- <20140219002043.GE14769@codeaurora.org>
- <20140225111655.GA6855@e102568-lin.cambridge.arm.com>
- <E34E6789-03BC-452C-9053-82CA1D027861@codeaurora.org>
- <20140226120103.GA25326@e102568-lin.cambridge.arm.com>
- <20140307230856.GE9985@codeaurora.org>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v2 0/7] tty: xuartps: Rebranding + DT documentation
+Date: Tue, 11 Mar 2014 11:29:13 -0700
+Message-ID: <b4e6dfe6-ad49-4d81-855b-8dd905665616@VA3EHSMHS039.ehs.local>
+References: <1394487610-2419-1-git-send-email-soren.brinkmann@xilinx.com>
+ <531EE993.80400@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140307230856.GE9985@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Kumar Gala <galak@codeaurora.org>, Borislav Petkov <bp@alien8.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <531EE993.80400@monstr.eu>
+Sender: linux-doc-owner@vger.kernel.org
+To: Michal Simek <monstr@monstr.eu>
+Cc: Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Michal Simek <michal.simek@xilinx.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 07, 2014 at 11:08:56PM +0000, Stephen Boyd wrote:
-> On 02/26, Lorenzo Pieralisi wrote:
-> > On Tue, Feb 25, 2014 at 08:48:38PM +0000, Kumar Gala wrote:
-> > > 
-> > > On Feb 25, 2014, at 5:16 AM, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
-> > > > 
-> > > > As I mentioned, I do not like the idea of adding compatible properties
-> > > > just to force the kernel to create platform devices out of device tree
-> > > > nodes. On top of that I would avoid adding a compatible property
-> > > > to the cpus node (after all properties like enable-method are common for all
-> > > > cpus but still duplicated), my only concern being backward compatibility
-> > > > here (ie if we do that for interrupts, we should do that also for other
-> > > > common cpu nodes properties, otherwise we have different rules for
-> > > > different properties).
-> > > > 
-> > > > I think you can then add interrupts to cpu nodes ("qcom,krait" specific),
-> > > > and as you mentioned create a platform device for that.
-> > > > 
-> > > > Thanks,
-> > > > Lorenzo
-> > > 
-> > > So I agree with the statement about adding compatibles just to create platform devices is wrong.  However its seems perfectly reasonable for a cpu node to have a compatible property.  I don't see why a CPU is any different from any other device described in a DT.
-> > 
-> > I was referring to the /cpus node, not to individual cpu nodes, where
-> > the compatible property is already present now.
-> > 
-> 
-> Ok I think I'll go ahead with moving the interrupts into each cpu node, i.e.:
-> 
->         cpus {  
->                 #address-cells = <1>;
->                 #size-cells = <0>;
-> 
->                 cpu@0 { 
->                         compatible = "qcom,krait";
->                         device_type = "cpu";
->                         reg = <0>;
->                         interrupts = <1 14 0x304>;
->                         next-level-cache = <&L2>;
->                 };
-> 
->                 cpu@1 { 
->                         compatible = "qcom,krait";
->                         device_type = "cpu";
->                         reg = <1>;
->                         interrupts = <1 14 0x304>;
->                         next-level-cache = <&L2>;
->                 };
-> 
->                 L2: l2-cache {
->                         compatible = "cache";
->                         interrupts = <0 2 0x4>;
-> 		};
-> 	};
-> 
-> Or should we be expressing the L1 cache as well? Something like:
-> 
->         cpus {  
->                 #address-cells = <1>;
->                 #size-cells = <0>;
-> 
->                 cpu@0 { 
->                         compatible = "qcom,krait";
->                         device_type = "cpu";
->                         reg = <0>;
->                         next-level-cache = <&L1_0>;
-> 
-> 			L1_0: l1-cache {
-> 				compatible = "arm,arch-cache";
-> 				interrupts = <1 14 0x304>;
-> 				next-level-cache = <&L2>;
-> 			}
->                 };
-> 
->                 cpu@1 { 
->                         compatible = "qcom,krait";
->                         device_type = "cpu";
->                         reg = <1>;
->                         next-level-cache = <&L1_1>;
-> 
-> 			L1_1: l1-cache {
-> 				compatible = "arm,arch-cache";
-> 				interrupts = <1 14 0x304>;
-> 				next-level-cache = <&L2>;
-> 			}
->                 };
-> 
->                 L2: l2-cache {
->                         compatible = "arm,arch-cache";
->                         interrupts = <0 2 0x4>;
-> 		};
-> 	};
-> 
-> (I'm also wondering if the 3rd cell of the interrupt binding
-> should only indicate the CPU that the interrupt property is
-> inside?)
+On Tue, 2014-03-11 at 11:46AM +0100, Michal Simek wrote:
+> On 03/10/2014 10:40 PM, Soren Brinkmann wrote:
+> > Hi,
+> >=20
+> > this series rebrands the Xilinx PS UART driver as Cadence UART and
+> > documents its DT bindings (+ some clean up along the way).
+> >=20
+> > The rebranding goes as far as reasonable. Things like file name, kc=
+onfig
+> > symbols and other things with user space impact are left as is. Ple=
+ase
+> > refer to the discussion in the RFC threads[1-2] for more details.
+> >=20
+> > Similar the DT binding has been extended. In addition to the new an=
+d
+> > preferred Cadence binding, the current xuartps binding is maintaine=
+d.
+> > Though, only the Cadence names for clock-names are documented.
+> >=20
+> > References:
+> >  [1]  https://lkml.org/lkml/2014/3/4/405
+> >  [2]  https://lkml.org/lkml/2014/3/7/450
+> >=20
+> > v2:
+> >  - no changes regarding the patches
+> >  - fixed (I sincerely hope) email recipients
+> >=20
+> > Changes from the latest RFC:
+> >  - squashed function/symbol renaming into 'tty: xuartps: Rebrand dr=
+iver
+> >    as Cadence UART'
+> >  - Revised the commit message of 'tty: xuartps: Don't write IRQ dis=
+able
+> >    register to enable interrupts' (was 'tty: xuartps: Remove bogus
+> >    comment and register write'
+>=20
+> One more thing. I was thinking this is based on my 3 patches I have
+> already sent to mainline. But as I see they are not applied yet.
+>=20
+> https://lkml.org/lkml/2014/1/21/107
 
-I am not aware of interrupts associated with vanilla :) "arm,arch-cache"
-objects, so I think that should be handled as a "qcom,krait" specific property
-(in the cpu node), or you should add another cache binding (compatible) for
-that.
+I think my cleanup patch covers these changes as well. I'll see if it
+makes sense to separate out this patch.
 
-As you might have noticed (idle states thread) I am keen on defining objects
-for L1 caches explicitly, that patch still requires an ACK though (and
-you need to update it since you cannot add an interrupt property for all
-"arm,arch-cache" objects. I am sorry for being a pain, but I do not
-think that's correct from a HW description standpoint).
+> https://lkml.org/lkml/2014/1/21/101
 
-> Finally we can have the edac driver look for a "qcom,krait"
-> compatible node in cpus that it can create a platform device for,
-> i.e..
-> 
-> static int __init krait_edac_driver_init(void)
-> {
->         struct device_node *np;
-> 
->         np = of_get_cpu_node(0, NULL);
->         if (!np)
->                 return 0;
-> 
->         if (!krait_edacp && of_device_is_compatible(np, "qcom,krait"))
->                 krait_edacp = of_platform_device_create(np, "krait_edac", NULL);
->         of_node_put(np);
-> 
->         return platform_driver_register(&krait_edac_driver);
-> }
-> module_init(krait_edac_driver_init);
+This is obsolete with the rebranding, IMHO.
 
-It seems fine to me, but it requires an ACK from platform bus and DT
-maintainers.
+> http://www.spinics.net/lists/arm-kernel/msg302796.html
 
-Lorenzo
+I can add this to this series.
+
+	S=C3=B6ren
+
+
