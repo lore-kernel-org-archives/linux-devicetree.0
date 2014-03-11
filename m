@@ -1,68 +1,55 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v6 6/6] pci: Add support for creating a generic
- host_bridge from device tree
-Date: Tue, 11 Mar 2014 09:46:41 +0000
-Message-ID: <20140311094641.GA27064@e106497-lin.cambridge.arm.com>
-References: <1394020137-1830-1-git-send-email-Liviu.Dudau@arm.com>
- <1469359.kil5iaOqdU@wuerfel>
- <20140310215600.GA14968@bart.dudau.co.uk>
- <4254618.BlpDUOctDb@wuerfel>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 resend] spi: hs-spi: Improve bindings
+Date: Tue, 11 Mar 2014 09:49:25 +0000
+Message-ID: <20140311094925.GH28112@sirena.org.uk>
+References: <1394530851-20244-1-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4254618.BlpDUOctDb@wuerfel>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="sZRnawO6aO3tZKd5"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Liviu Dudau <liviu@dudau.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci <linux-pci@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Tanmay Inamdar <tinamdar@apm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>
+In-Reply-To: <1394530851-20244-1-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 11, 2014 at 06:50:24AM +0000, Arnd Bergmann wrote:
-> On Monday 10 March 2014 21:56:00 Liviu Dudau wrote:
-> >=20
-> > PCI_IOBASE is always defined. See the discussion with Russell on th=
-is subject.
-> >=20
-> > include/asm-generic/io.h has at line 118:
-> >=20
-> > #ifndef PCI_IOBASE
-> > #define PCI_IOBASE ((void __iomem *) 0)
-> > #endif
->=20
-> That is only defined for those that use asm-generic/pci.h, which most=
- architectures
-> don't.
 
-I think it is defined for anyone that #includes <asm-generic/io.h>. The=
-re is no other
-#ifdef around that.
+--sZRnawO6aO3tZKd5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> =20
-> > I will go with my idea tomorrow. arm64 overwrite the implementation=
- anyway, I
-> > find it cleaner rather than having to do #ifdefs and/or ifs.
->=20
-> I'd really hope we can get to a point where arm64 doesn't need any ar=
-chitecture
-> specific code for this. It doesn't do anything special.
+On Tue, Mar 11, 2014 at 10:40:51AM +0100, Geert Uytterhoeven wrote:
 
-I agree.
+> Mark: Can you please ack and take this, so Simon can apply the patches that
+>       use these bindings? Thx!
 
-Best regards,
-Liviu
+Why would I ack it and not apply it?
 
->=20
-> 	Arnd
->=20
->=20
+--sZRnawO6aO3tZKd5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTHtwiAAoJELSic+t+oim9fnAP/02ERjEPU70G2VN2Af15auOL
+pMk87BcPvijEIt/fVdobBCOh3QR36gDGhgcq8/vDMbRrKfH9LQyiu+qBOAmQ34Vm
+56755sEULotxt20JvSA0Rnpmk6VIHcgZrlwqGz28fbWsNTqKiDfNDADDpd4wRruE
+/JHfJcXtYZaY/XCCYO1gAnk+hHYKNXsKk1iRFUFb/28zzlpYtY2EwU3PsP1sHVXX
+St4+qEbopGv8tdi84tVvNGItRAvJBhySxTn1Z1KCqXa7gtGQTtfNAyIeq/NnIFrK
+IHGU17igwAAvC/Y6BiWMh9FczsSrGLcy/usdO3J7CvXq+Eqt8IvGuOHPjFbsg635
+Rol+qYtzeNGT//cxOa2ItMD33JhzgX49yld7q5dHscqWaVqr7/iDZ2aMGJeIG4vb
+JVO/7g345yKJOJGzhz+AtEeYs2awjKTthmMwCFh9HG5M5DsLRH/TLy0tmYdSfjuK
+JavPSO0LgBFeDTtF+YaLARsUX/XdD+OrndfKktUSUHIQlR8sL/Ui9r/j/DeGFla7
+2MlFYu1OGGBkpYQDv+QSqeXWk0pFCpRNymUbOjt+qummznA2kHtZglnuQ49fM/8w
+TFv+4eOPUWGYj+HkvGoFp8Rl4EukJdEfBaKh3QOTFmz0jvtfk4oFkzu0SJFO/JFs
+wiLi/a03jcqknsU8u1A8
+=is/3
+-----END PGP SIGNATURE-----
+
+--sZRnawO6aO3tZKd5--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
