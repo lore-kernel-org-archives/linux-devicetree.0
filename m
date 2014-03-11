@@ -1,225 +1,37 @@
-From: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Subject: [PATCH v3 2/2] ARM: zynq: dt: Add I2C nodes to Zynq device tree
-Date: Tue, 11 Mar 2014 09:50:13 -0700
-Message-ID: <1394556613-11692-2-git-send-email-soren.brinkmann@xilinx.com>
-References: <1394556613-11692-1-git-send-email-soren.brinkmann@xilinx.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1394556613-11692-1-git-send-email-soren.brinkmann@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>
-Cc: Mike Looijmans <mike.looijmans@topic.nl>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, Harini Katakam <harinik@xilinx.com>, Soren Brinkmann <soren.brinkmann@xilinx.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v15 3/3] arm64: Add APM X-Gene SoC AHCI SATA host
+ controller DTS entries
+Date: Tue, 11 Mar 2014 12:55:48 -0400
+Message-ID: <20140311165548.GA20776@mtj.dyndns.org>
+References: <1394059489-30706-1-git-send-email-lho@apm.com>
+ <1394059489-30706-2-git-send-email-lho@apm.com>
+ <1394059489-30706-3-git-send-email-lho@apm.com>
+ <1394059489-30706-4-git-send-email-lho@apm.com>
+ <20140311124943.GD11477@htj.dyndns.org>
+ <CAPw-ZTmBSeOXv5ExVAiSkcU=qH3zHp52eVuGBfYYD=7=sjhVgw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-scsi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPw-ZTmBSeOXv5ExVAiSkcU=qH3zHp52eVuGBfYYD=7=sjhVgw@mail.gmail.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Loc Ho <lho@apm.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
----
-v3:
- - no changes
-v2:
- - replace 'pmbus' with 'ti' in compatibility strings of UCD devices
----
- arch/arm/boot/dts/zynq-7000.dtsi | 22 ++++++++++++
- arch/arm/boot/dts/zynq-zc702.dts | 76 ++++++++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/zynq-zc706.dts | 68 +++++++++++++++++++++++++++++++++++
- 3 files changed, 166 insertions(+)
+Hello, Loc.
 
-diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-index 8b67b19392ec..fb1e1e7cae8f 100644
---- a/arch/arm/boot/dts/zynq-7000.dtsi
-+++ b/arch/arm/boot/dts/zynq-7000.dtsi
-@@ -48,6 +48,28 @@
- 		interrupt-parent = <&intc>;
- 		ranges;
- 
-+		i2c0: zynq-i2c@e0004000 {
-+			compatible = "cdns,i2c-r1p10";
-+			status = "disabled";
-+			clocks = <&clkc 38>;
-+			interrupt-parent = <&intc>;
-+			interrupts = <0 25 4>;
-+			reg = <0xE0004000 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		i2c1: zynq-i2c@e0005000 {
-+			compatible = "cdns,i2c-r1p10";
-+			status = "disabled";
-+			clocks = <&clkc 39>;
-+			interrupt-parent = <&intc>;
-+			interrupts = <0 48 4>;
-+			reg = <0xE0005000 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
- 		intc: interrupt-controller@f8f01000 {
- 			compatible = "arm,cortex-a9-gic";
- 			#interrupt-cells = <3>;
-diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
-index c913f77a21eb..5e09cee33d42 100644
---- a/arch/arm/boot/dts/zynq-zc702.dts
-+++ b/arch/arm/boot/dts/zynq-zc702.dts
-@@ -34,6 +34,82 @@
- 	phy-mode = "rgmii";
- };
- 
-+&i2c0 {
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	i2cswitch@74 {
-+		compatible = "nxp,pca9548";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x74>;
-+
-+		i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+			si570: clock-generator@5d {
-+				#clock-cells = <0>;
-+				compatible = "silabs,si570";
-+				temperature-stability = <50>;
-+				reg = <0x5d>;
-+				factory-fout = <156250000>;
-+				clock-frequency = <148500000>;
-+			};
-+		};
-+
-+		i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+			eeprom@54 {
-+				compatible = "at,24c08";
-+				reg = <0x54>;
-+			};
-+		};
-+
-+		i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+			gpio@21 {
-+				compatible = "ti,tca6416";
-+				reg = <0x21>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+			};
-+		};
-+
-+		i2c@4 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <4>;
-+			rtc@51 {
-+				compatible = "nxp,pcf8563";
-+				reg = <0x51>;
-+			};
-+		};
-+
-+		i2c@7 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <7>;
-+			hwmon@52 {
-+				compatible = "ti,ucd9248";
-+				reg = <52>;
-+			};
-+			hwmon@53 {
-+				compatible = "ti,ucd9248";
-+				reg = <53>;
-+			};
-+			hwmon@54 {
-+				compatible = "ti,ucd9248";
-+				reg = <54>;
-+			};
-+		};
-+	};
-+};
-+
- &sdhci0 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/zynq-zc706.dts b/arch/arm/boot/dts/zynq-zc706.dts
-index 88f62c50382e..4cc9913078cd 100644
---- a/arch/arm/boot/dts/zynq-zc706.dts
-+++ b/arch/arm/boot/dts/zynq-zc706.dts
-@@ -35,6 +35,74 @@
- 	phy-mode = "rgmii";
- };
- 
-+&i2c0 {
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	i2cswitch@74 {
-+		compatible = "nxp,pca9548";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x74>;
-+
-+		i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+			si570: clock-generator@5d {
-+				#clock-cells = <0>;
-+				compatible = "silabs,si570";
-+				temperature-stability = <50>;
-+				reg = <0x5d>;
-+				factory-fout = <156250000>;
-+				clock-frequency = <148500000>;
-+			};
-+		};
-+
-+		i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+			eeprom@54 {
-+				compatible = "at,24c08";
-+				reg = <0x54>;
-+			};
-+		};
-+
-+		i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+			gpio@21 {
-+				compatible = "ti,tca6416";
-+				reg = <0x21>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+			};
-+		};
-+
-+		i2c@4 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <4>;
-+			rtc@51 {
-+				compatible = "nxp,pcf8563";
-+				reg = <0x51>;
-+			};
-+		};
-+
-+		i2c@7 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <7>;
-+			ucd90120@65 {
-+				compatible = "ti,ucd90120";
-+				reg = <0x65>;
-+			};
-+		};
-+	};
-+};
-+
- &sdhci0 {
- 	status = "okay";
- };
+On Tue, Mar 11, 2014 at 08:51:37AM -0700, Loc Ho wrote:
+> Kishon didn't applied the PHY DTS patch. Did you first apply the PHY
+> DTS patch? We agreed that you will first pull in the PHY DTS as well
+> as the host controller patches. I don't see any reason why it wouldn't
+> apply if both DTS is applied. I will pull libata/for-3.15 and check
+> out.
+
+Can you please repost patches to apply on top of the current
+libata/for-3.15?
+
+Thanks.
+
 -- 
-1.9.0.1.g4196000
+tejun
