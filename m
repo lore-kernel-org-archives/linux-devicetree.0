@@ -1,75 +1,165 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 00/10] arch/arm OMAP IOMMU patches for 3.15
-Date: Tue, 11 Mar 2014 16:49:10 -0500
-Message-ID: <531F84D6.8070101@ti.com>
-References: <1394065459-16409-1-git-send-email-s-anna@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1394065459-16409-1-git-send-email-s-anna-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+From: Loc Ho <lho@apm.com>
+Subject: [PATCH v16 0/4] ata: Add APM X-Gene SoC AHCI SATA host controller support
+Date: Tue, 11 Mar 2014 16:11:31 -0600
+Message-ID: <1394575895-7039-1-git-send-email-lho@apm.com>
+Return-path: <linux-scsi-owner@vger.kernel.org>
+Sender: linux-scsi-owner@vger.kernel.org
+To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
+Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+This patch adds support for the APM X-Gene SoC AHCI SATA host controller. In
+order for the host controller to work, the corresponding PHY driver
+musts also be available. Currently, only Gen3 disk is supported with this
+initial version.
 
-On 03/05/2014 06:24 PM, Suman Anna wrote:
-> Hi Paul, Benoit,
->
-> This is a repost as per Tony's request [3] of all the OMAP IOMMU DT support
-> patches that are under arch/arm. The series just assimilates patches 8
-> through 13 from the v3 OMAP IOMMU DT adaptation for 3.15 series [1], and
-> all the v2 patches from the OMAP IOMMU DTS nodes [2].
->
-> The only change made with respect to the patches above is in the OMAP4
-> and OMAP5 DTS nodes - I have adjusted the reg sizes from 0xff to 0x100.
->
-> Can you please provide your acks on the hwmod patches and DTS
-> patches?
+v16:
+ * Rebase to libata-for-3.15
+ * Pull in the PHY DTS patch as the host controller DTS patch depends on it
 
-Ping. Can you review and provide your acks for Patches 2 and 5 (the 
-hwmod patches) for Tony to pick up all the patches in the series?
+v15:
+ * Rebase to libata next branch
+ * Remove field plat_data and PHY from context structure
+ * Fix comment on function xgene_ahci_read_id as well as using bit mask to
+   clear DEVSLP bit
+ * Remove function xgene_ahci_force_phy_rdy and xgene_ahci_phy_restart as not
+   required since Gen1/Gen2 support remove for this initial version
+ * Update function xgene_ahci_do_hardreset comment
+ * Remove Gen1/Gen2 support from function xgene_ahci_do_hardreset
+ * Change int to u32 for variable portcmd_saved in function
+   xgene_ahci_hardreset
+ * Change variable hplat_data to ctx in function xgene_ahci_probe
+ * Remove PHY call and using ahci_platform_enable_resource instead
+ * Add ahci_patlform_remove_one to driver function .remove
+ * Change phy-name to "sata-phy"
 
-regards
-Suman
+v14:
+ * Remove the shutdown already check and replace the while loop check with
+   msleep in function xgene_ahci_init_memram
 
->
-> [1] http://marc.info/?l=linux-omap&m=139362022805667&w=2
-> [2] http://marc.info/?l=linux-omap&m=139362062805816&w=2
-> [3] http://marc.info/?l=linux-omap&m=139404802021252&w=2
->
-> Florian Vaussard (4):
->    ARM: OMAP3: remove deprecated CONFIG_OMAP_IOMMU_IVA2
->    ARM: dts: OMAP3: Update ISP IOMMU node
->    ARM: dts: OMAP3: Add IVA IOMMU node
->    ARM: dts: OMAP4: Add IOMMU nodes
->
-> Suman Anna (6):
->    ARM: OMAP3: fix iva mmu programming issues
->    ARM: OMAP2+: change the ISP device archdata MMU name for DT
->    ARM: OMAP2+: use pdata quirks for iommu reset lines
->    ARM: OMAP5: hwmod data: add mmu data for ipu & dsp
->    ARM: OMAP2+: extend iommu pdata-quirks to OMAP5
->    ARM: dts: OMAP5: Add IOMMU nodes
->
->   arch/arm/boot/dts/omap3.dtsi                | 15 ++++--
->   arch/arm/boot/dts/omap4.dtsi                | 15 ++++++
->   arch/arm/boot/dts/omap5.dtsi                | 15 ++++++
->   arch/arm/mach-omap2/clockdomains3xxx_data.c |  2 +-
->   arch/arm/mach-omap2/devices.c               |  3 ++
->   arch/arm/mach-omap2/omap_hwmod_3xxx_data.c  | 12 ++---
->   arch/arm/mach-omap2/omap_hwmod_54xx_data.c  | 83 +++++++++++++++++++++++++++++
->   arch/arm/mach-omap2/pdata-quirks.c          | 24 +++++++++
->   arch/arm/plat-omap/Kconfig                  |  3 --
->   9 files changed, 157 insertions(+), 15 deletions(-)
->
+v13:
+ * Add fully-winged style comment for function xgene_ahci_read_id and
+   xgene_ahci_do_hardrest
+ * Minor comments update for function xgene_ahci_read_id,
+   xgene_ahci_do_hardrest, and xgene_ahci_hardreset
+ * NOTE: There is no functional code change.
+
+v12:
+ * Remove function xgene_ahci_get_channel and use the ata_port field port_no
+ * Update comment for function xgene_ahci_read_id to function comment style
+   '/**'
+ * Update comment for multiple lines to fully-winged style
+
+v11:
+ * Drop the export functions requirement with libachi
+ * Change CONFIG_SATA_XGENE to CONFIG_AHCI_XGENE
+ * Rename file sata_xgene.c to ahci_xgene.c
+ * Convert to use Hans De Geode version 5 ahci_platform code re-factor changes
+   to reduce code duplication. For extra context, use plat_data to store our
+   context. The probe function follows the ahci_sunxi implementation. A number
+   of code fragments update to reflect this change.
+ * Update comment for function xgene_ahci_read_id
+ * Minor code move around in function xgene_ahci_do_hardreset and use
+   ATA_BUSY instead 0x80
+ * Fix hardreset to use start_engine function pointer as required due to newer
+   kernel rebased
+ * Fix the set DMA mask for 32-bit as well
+
+v10:
+ * Update binding documentation
+
+v9:
+ * Remove ACPI/EFI include files
+ * Remove the IO flush support, interrupt routine, and DTS resources
+ * Remove function xgene_rd, xgene_wr, and xgene_wr_flush
+ * Remove PMP support (function xgene_ahci_qc_issue, xgene_ahci_qc_prep,
+   xgene_ahci_qc_fill_rtf, xgene_ahci_softreset, and xgene_ahci_do_softreset)
+ * Rename function xgene_ahci_enable_phy to xgene_ahci_force_phy_rdy
+ * Clean up hardreset functions
+ * Require v7 of the PHY driver
+
+v8:
+ * Remove _ADDR from defines
+ * Remove define MSTAWAUX_COHERENT_BYPASS_SET and
+   STARAUX_COHERENT_BYPASS_SET and use direct coding
+ * Remove the un-necessary check for DTS boot with built in ACPI table
+ * Switch to use dma_set_mask_and_coherent for setting DMA mask
+ * Remove ACPI table matching code
+ * Update clock-names for sata01clk, sata23clk, and sata45clk
+
+v7:
+ * Update the clock code by toggle the clock
+ * Update the DTS clock mask values due to the clock spilt between host and
+   v5 of the PHY drivers
+
+v6:
+ * Update binding documentation
+ * Change select PHY_XGENE_SATA to PHY_XGENE
+ * Add ULL to constants
+ * Change indentation and comments
+ * Clean up the probe functions a bit more
+ * Remove xgene_ahci_remove function
+ * Add the flush register to DTS
+ * Remove the interrupt-parent from DTS
+
+v5:
+ * Sync up to v3 of the PHY driver
+ * Remove MSLIM wrapper functions
+ * Change the memory shutdown loop to use usleep_range
+ * Use devm_ioremap_resource instead devm_ioremap
+ * Remove suspend/resume functions as not needed
+
+v4:
+ * Remove the ID property in DT
+ * Remove the temporary PHY direct function call and use PHY function
+ * Change printk to pr_debug
+ * Move the IOB flush addresses into the DT
+ * Remove the parameters retrieval function as no longer needed
+ * Remove the header file as no longer needed
+ * Require v2 patch of the SATA PHY driver. Require slightly modification
+   in the Kconfig as it is moved to folder driver/phy and use Kconfig
+   PHY_XGENE_SATA instead SATA_XGENE_PHY.
+
+v3:
+ * Move out the SATA PHY to another driver
+ * Remove the clock-cells entry from DTS
+ * Remove debug wrapper
+ * Remove delay functions wrapper
+ * Clean up resource and IRQ query
+ * Remove query clock name
+ * Switch to use dma_set_mask/dma_coherent_mask
+ * Remove un-necessary devm_kfree
+ * Update GPL license header to v2
+ * Spilt up function xgene_ahci_hardreset
+ * Spilt up function xgene_ahci_probe
+ * Remove all reference of CONFIG_ARCH_MSLIM
+ * Clean up chip revision code
+
+v2:
+ * Clean up file sata_xgene.c with Lindent and etc
+ * Clean up file sata_xgene_serdes.c with Lindent and etc
+ * Add description to each patch
+
+v1:
+ * inital version
+
+Signed-off-by: Loc Ho <lho@apm.com>
+Signed-off-by: Tuan Phan <tphan@apm.com>
+Signed-off-by: Suman Tripathi <stripathi@apm.com>
+---
+Loc Ho (4):
+  arm64: Add APM X-Gene SoC 15Gbps Multi-purpose PHY DTS entries
+  Documentation: Add documentation for the APM X-Gene SoC SATA host
+    controller DTS binding
+  ata: Add APM X-Gene SoC AHCI SATA host controller driver
+  arm64: Add APM X-Gene SoC AHCI SATA host controller DTS entries
+
+ .../devicetree/bindings/ata/apm-xgene.txt          |   70 +++
+ arch/arm64/boot/dts/apm-storm.dtsi                 |  150 ++++++
+ drivers/ata/Kconfig                                |    7 +
+ drivers/ata/Makefile                               |    1 +
+ drivers/ata/ahci_xgene.c                           |  490 ++++++++++++++++++++
+ 5 files changed, 718 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/ata/apm-xgene.txt
+ create mode 100644 drivers/ata/ahci_xgene.c
+
