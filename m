@@ -1,71 +1,102 @@
-From: Barry Song <Barry.Song-kQvG35nSl+M@public.gmane.org>
-Subject: RE: [PATCH] mfd: Support SiRF audio modules
-Date: Tue, 11 Mar 2014 06:23:27 +0000
-Message-ID: <5EB3BFCD089AD643B9BB63439F5FD5E9012BE2D700@SHAASIEXM01.ASIA.ROOT.PRI>
-References: <1394184531-7679-1-git-send-email-rongjun.ying@csr.com>
- <20140310103532.GI14976@lee--X1>
- <5EB3BFCD089AD643B9BB63439F5FD5E9012BE2D157@SHAASIEXM01.ASIA.ROOT.PRI>
- <20140311054926.GA2839@lee--X1>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 3/9] Doc/DT: Add DT binding documentation for DVI Connector
+Date: Tue, 11 Mar 2014 08:39:11 +0200
+Message-ID: <531EAF8F.2040400@ti.com>
+References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>	<1393590016-9361-4-git-send-email-tomi.valkeinen@ti.com>	<20140228155937.GQ21483@n2100.arm.linux.org.uk>	<1393604717.3802.61.camel@paszta.hi.pengutronix.de>
+ <CAL_JsqJ00Zr1tMoyR1+qHUhsNoc6Kj6s+nTZTkNTwki9HFHq8g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140311054926.GA2839@lee--X1>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: RongJun Ying <rjying-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, DL-SHA-WorkGroupLinux <DL-SHA-WorkGroupLinux-z7JfP6tgrtVrifDez5n5bw@public.gmane.org>, Rongjun Ying <Rongjun.Ying-kQvG35nSl+M@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============5605144914386706817=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqJ00Zr1tMoyR1+qHUhsNoc6Kj6s+nTZTkNTwki9HFHq8g@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-fbdev@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Tomasz Figa <tomasz.figa@gmail.com>, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Rob Clark <robdclark@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMZWUgSm9u
-ZXMgW21haWx0bzpsZWUuam9uZXNAbGluYXJvLm9yZ10NCj4gU2VudDogVHVl
-c2RheSwgTWFyY2ggMTEsIDIwMTQgMTo0OSBQTQ0KPiBUbzogQmFycnkgU29u
-Zw0KPiBDYzogUm9uZ0p1biBZaW5nOyBSb2IgSGVycmluZzsgUGF3ZWwgTW9s
-bDsgTWFyayBSdXRsYW5kOyBTdGVwaGVuIFdhcnJlbjsNCj4gSWFuIENhbXBi
-ZWxsOyBSb2IgTGFuZGxleTsgU2FtdWVsIE9ydGl6OyBHcmFudCBMaWtlbHk7
-IERMLVNIQS0NCj4gV29ya0dyb3VwTGludXg7IFJvbmdqdW4gWWluZzsgZGV2
-aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRD
-SF0gbWZkOiBTdXBwb3J0IFNpUkYgYXVkaW8gbW9kdWxlcw0KPiANCj4gPiA+
-ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvbWZkL3NpcmYvYXVkaW8u
-aA0KPiA+ID4gPiBiL2luY2x1ZGUvbGludXgvbWZkL3NpcmYvYXVkaW8uaCBu
-ZXcgZmlsZSBtb2RlIDEwMDY0NCBpbmRleA0KPiA+ID4gPiAwMDAwMDAwLi5k
-OGNmZmY5DQo+ID4gPiA+IC0tLSAvZGV2L251bGwNCj4gPiA+ID4gKysrIGIv
-aW5jbHVkZS9saW51eC9tZmQvc2lyZi9hdWRpby5oDQo+ID4gPiA+IEBAIC0w
-LDAgKzEsMTcgQEANCj4gPiA+ID4gKy8qDQo+ID4gPiA+ICsgKiBhdWRpby5o
-DQo+ID4gPiA+ICsgKg0KPiA+ID4gPiArICogQ29weXJpZ2h0IChjKSAyMDE0
-IENhbWJyaWRnZSBTaWxpY29uIFJhZGlvIExpbWl0ZWQsIGEgQ1NSIHBsYw0K
-PiA+ID4gPiArZ3JvdXANCj4gPiA+IGNvbXBhbnkuDQo+ID4gPiA+ICsgKg0K
-PiA+ID4gPiArICogTGljZW5zZWQgdW5kZXIgR1BMdjIgb3IgbGF0ZXIuDQo+
-ID4gPiA+ICsgKi8NCj4gPiA+DQo+ID4gPiBVc2UgYSBzdGFuZGFyZCBoZWFk
-ZXIgcGxlYXNlDQo+ID4NCj4gPiBJIHRoaW5rIHRoaXMgaGFzIGJlZW4gYSBz
-dGFuZGFyZCBoZWFkZXIuIEl0IGlzIG9uZSBzaW1wbGVyIHZlcnNpb24gZm9y
-IGxpY2Vuc2UuDQo+ID4gSWYgdGhlcmUgaXMgYW55IHByb2JsZW0gaGVyZSwg
-aXQgc2hvdWxkIGJlIHRoZSAxc3QgbGluZSwgd2UgbWlnaHQgcmVwbGFjZQ0K
-PiBhdWRpby5oIGJ5IGEgc2ltcGxlIGRlc2NyaXB0aW9uIG9mIHRoaXMgZmls
-ZS4NCj4gDQo+IE15IGlzc3VlIHdhc24ndCB3aXRoIHRoZSBsaWNlbnNlLCBi
-dXQgdGhlIGhlYWRlciBpbiBnZW5lcmFsLiBJdCBzdGFydGVkIG9mZg0KPiB3
-aXRob3V0IGEgcHJvcGVyIG5hbWUgZm9yIHRoZSBkcml2ZXIgZm9sbG93ZWQg
-Ynkgbm8gZGVzY3JpcHRpb24gb2YgdGhlIGNvZGUsDQo+IHRoZW4gSSBub3Rp
-Y2VkIHRoZSBhdXRob3IgKHdobyBpcyBsaXN0ZWQgYXQgdGhlIGJvdHRvbSkg
-aXMgbm90IG1lbnRpb25lZC4gTXkNCj4gaXNzdWUgaXMgdGhhdCBpdCdzIHNw
-YXJzZSBhbmQgdW5pbmZvcm1hdGl2ZS4NCg0KSSBkbyB0aGluayBSb25nanVu
-IHNob3VsZCBoYXZlIGEgc2ltcGxlIGRlc2NyaXB0aW9uIGluc3RlYWQgb2Yg
-YSAiYXVkaW8uaCIuDQoNCi1iYXJyeQ0KDQoKCk1lbWJlciBvZiB0aGUgQ1NS
-IHBsYyBncm91cCBvZiBjb21wYW5pZXMuIENTUiBwbGMgcmVnaXN0ZXJlZCBp
-biBFbmdsYW5kIGFuZCBXYWxlcywgcmVnaXN0ZXJlZCBudW1iZXIgNDE4NzM0
-NiwgcmVnaXN0ZXJlZCBvZmZpY2UgQ2h1cmNoaWxsIEhvdXNlLCBDYW1icmlk
-Z2UgQnVzaW5lc3MgUGFyaywgQ293bGV5IFJvYWQsIENhbWJyaWRnZSwgQ0I0
-IDBXWiwgVW5pdGVkIEtpbmdkb20KTW9yZSBpbmZvcm1hdGlvbiBjYW4gYmUg
-Zm91bmQgYXQgd3d3LmNzci5jb20uIEtlZXAgdXAgdG8gZGF0ZSB3aXRoIENT
-UiBvbiBvdXIgdGVjaG5pY2FsIGJsb2csIHd3dy5jc3IuY29tL2Jsb2csIENT
-UiBwZW9wbGUgYmxvZywgd3d3LmNzci5jb20vcGVvcGxlLCBZb3VUdWJlLCB3
-d3cueW91dHViZS5jb20vdXNlci9DU1JwbGMsIEZhY2Vib29rLCB3d3cuZmFj
-ZWJvb2suY29tL3BhZ2VzL0NTUi8xOTEwMzg0MzQyNTM1MzQsIG9yIGZvbGxv
-dyB1cyBvbiBUd2l0dGVyIGF0IHd3dy50d2l0dGVyLmNvbS9DU1JfcGxjLgpO
-ZXcgZm9yIDIwMTQsIHlvdSBjYW4gbm93IGFjY2VzcyB0aGUgd2lkZSByYW5n
-ZSBvZiBwcm9kdWN0cyBwb3dlcmVkIGJ5IGFwdFggYXQgd3d3LmFwdHguY29t
-Lgo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--===============5605144914386706817==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="U3bV4otFdFfvT2UMbSeXkLuqSiFbTkPIi"
+
+--U3bV4otFdFfvT2UMbSeXkLuqSiFbTkPIi
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+On 10/03/14 23:45, Rob Herring wrote:
+
+> I like this proposal over the others. Although, would dual link be a
+
+I don't like inferring the information. With the above, you can't find
+out that the DVI connector has digital and analog support before all the
+drivers are loaded.
+
+> single endpoint or 2 endpoints? How would you differentiate that?
+
+Hmm, well endpoints for a single port are exclusive. So it's either a
+single port and a single endpoint, or two ports and two endpoints. I
+think dual link has to be single port & endpoint, as the TMDS links need
+to be driven together as a single bus.
+
+And dual-link is not really "two links". DVI dual-link means 1 clock
+lane and 6 data lanes, compared to 1 clock lane and 3 data lanes for
+single-link.
+
+> The port node seems a bit pointless.
+
+There's another thread discussing the ports and endpoints.
+
+The port node represents, for example, the pins for the connection for
+that device. And an endpoint-endpoint link represents wires between two
+ports.
+
+ Tomi
+
+
+
+--U3bV4otFdFfvT2UMbSeXkLuqSiFbTkPIi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJTHq+TAAoJEPo9qoy8lh71yuQP/1mQsdM2LxHap7o5dWfHHBO3
+iSu3sIKKNo+Pe58SiVzzK4FmezI6tHPRUb/tHJLCI3+c/v75R1H5NDCtDkV8WK/B
+TY0WWY88N1sLPwA2LqJUrnWQ9xwIANKpYsNslnYSjthDYwrtAVJPRgGIj6PsqDwm
+TYPCKpwGGHV9B+EoiMHkL33WzbacThsPf32JqO9eXOOhrzG1yj9rcXYc79srNTYt
+bDc1UEhWnQIheYG/g0fHCNDN+38VoGUXujjM1EV7fZtqmnFl4DOM2v1rF9k6MS17
+U9uv5uT7tgrZxU8axny8Pza1sbzPlkEBx488ampeaRVljJbJRcWqYpGVAzk5G/Ul
+nC07UClE6CPn1K/Njj/1R5eWwVUaM2ZBAGKiiVR0+c4roMNifMUuViffbMw0RxuH
+ITQLLSVsVstCzJw52URcdMZLQGGSDF3OgTAtIvDzJE7FGtuVTaqUeohawAxLM2By
+OMgYhXfIDy5u5YkWeAVufdm+864+7fNRmtAxnmcmq3CcFkwbUsqmrxVuQcdnwR4T
+C5kRXfj2xXPKW2oYBZVoC94c3Ie0QVr+3FZC5/OXUCo/cztC6/rnLG3qJC0wHH8m
+uuxI5cKpZ/1nd7IirKbjKjRQGmWO2R/JW9L+PDErWKOAWX5SYMx9BDZHYCk4r4t8
+GlC7SsHNmTBhcc95ZWoM
+=IvkU
+-----END PGP SIGNATURE-----
+
+--U3bV4otFdFfvT2UMbSeXkLuqSiFbTkPIi--
+
+
+--===============5605144914386706817==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============5605144914386706817==--
