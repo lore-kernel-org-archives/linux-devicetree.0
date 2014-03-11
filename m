@@ -1,78 +1,87 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: Re: [PATCH 6/7] regulator: AXP20x: Add support for
- regulators subsystem
-Date: Tue, 11 Mar 2014 19:29:40 +0000
-Message-ID: <20140311192940.GA28112@sirena.org.uk>
-References: <1393692352-10839-1-git-send-email-carlo@caione.org>
- <1393692352-10839-7-git-send-email-carlo@caione.org>
- <20140303015616.GN2411@sirena.org.uk>
- <20140311192411.GA4193@localhost.fastwebnet.it>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Subject: Re: [PATCH 1/3] spi: add xtfpga SPI controller driver
+Date: Tue, 11 Mar 2014 19:49:59 +0000
+Message-ID: <20140311194959.GB28112@sirena.org.uk>
+References: <1394541891-26469-1-git-send-email-jcmvbkbc@gmail.com>
+ <1394541891-26469-2-git-send-email-jcmvbkbc@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="p/KhqoubD7lvdjkp"
-Return-path: <linux-sunxi+bncBDQ2L75W5QGBBQWI7WMAKGQEDV3OQPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="Tdmc70C6TklGKgyg"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140311192411.GA4193-bi+AKbBUZKZeIdyRz4JgOMwOAu8XWILU@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+In-Reply-To: <1394541891-26469-2-git-send-email-jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Zankel <chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org>, Marc Gauthier <marc-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---p/KhqoubD7lvdjkp
+--Tdmc70C6TklGKgyg
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Mar 11, 2014 at 08:24:11PM +0100, Carlo Caione wrote:
-> On Mon, Mar 03, 2014 at 10:56:16AM +0900, Mark Brown wrote:
+On Tue, Mar 11, 2014 at 04:44:49PM +0400, Max Filippov wrote:
 
-> > > +	regulators = of_find_node_by_name(np, "regulators");
-> > > +	if (!regulators) {
-> > > +		dev_err(&pdev->dev, "regulators node not found\n");
-> > > +		return -EINVAL;
-> > > +	}
+> +static inline int xtfpga_spi_wait_busy(struct xtfpga_spi *xspi)
+> +{
+> +	unsigned long timeout = jiffies + msecs_to_jiffies(100);
+> +	while (xtfpga_spi_read32(xspi, XTFPGA_SPI_BUSY)) {
+> +		if (!time_before(jiffies, timeout))
+> +			return -EBUSY;
+> +		else
+> +			cpu_relax();
+> +	}
+> +	return 0;
+> +}
 
-> > The driver should be able to start up with no configuration provided at
-> > all except for the device being registered - the user won't be able to
-> > change anything but they will be able to read the current state of the
-> > hardware which can be useful for diagnostics.
+So we'll busy wait for up to 100ms - that seems like an awfully long
+time.  Perhaps fall back to msleep() if the delay is non-trivial (or
+just reduce the timeout)?  If there are large enough FIFOs dead
+reckoning a sleep for the expected transfer time might be helpful but it
+seems like there's no meaningful FIFO.
 
-> If the device is DT enabled and no configuration is provided for
-> regulators, these are disabled according to:
+> +/* Unused: this device controls its only CS automatically,
+> + * deactivating it after every 16 bit transfer completion.
+> + */
 
-> http://lxr.linux.no/linux+v3.13.5/drivers/regulator/core.c#L3797
+This is too limited to use with most SPI clients, they'll want to be
+able to transmit more than one word (and the fact that only 16 bit words
+are supported is also an issue, though that's easy enough to handle for
+a bitbanging driver - I'd really strongly suggest supporting 8 bits per
+word as well).  Clients are pretty much going to need to use GPIO based
+chip select, you should make sure that's supported and covered in the
+binding.
 
-> Am I missing something or do you have any pointer?
+> +static void xtfpga_spi_chipselect(struct spi_device *spi, int is_on)
+> +{
+> +}
 
-With the above code the driver will return an error and never get as far
-as registering the regulator.
+Omit this since it's empty.
 
---p/KhqoubD7lvdjkp
+--Tdmc70C6TklGKgyg
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTH2QgAAoJELSic+t+oim9mQoP/276+HMJAwUTJyw8rJJgOLjL
-NZm3CT6aIOl8mUEDHb+fW5t6PIFcTD0vRbvyLXV22LXZiuC06Po0p+YEzBnQfqJQ
-jydzn5B4l/H2P/eFr7W49XVwobUcTuWCaGkMDDhYPehq5ZO8/4zcpEjYYzh1fyge
-12ESTLKIuT4laanAjJT67vpND7kSL3XbeKLAuafJumW+qANclxctyMFjIumM7uj7
-IBm0V02HuZCmzXu9AOsXJSydxQXXRtAyj7xoSItVD+OwnyccO17iRScpCFPdCJjU
-csDEbFBdlyZVKTDPlxEM1to7NuDKaFt7A2/voUEg+RyyObLm20l2zCwVXZVOEGS9
-7aV2YpwSz83SEUIRNQu11pYh1hh0SN6q6u1xNUAZHWJrohRmCUoRNdO8dfutn/Mv
-+B8CELZNnOdj7A7XACtH12gc80gAlFQ9lDrxCkZ3uBxeC14l1Xl7bV5+US7tOfoZ
-LtBXpBT+nyub8l1kbe3a00xB/avBcRksB65rSHFIkcORf2s5Dco+uLXDuAKfuwWe
-2sdtznkIx0tesr/rNA/wYUjrpYrKJM20OMmylFLLUwNTP4Gp3lDLqnaP6HaMVab8
-15y/DvP90+V9ml6mh3BxN27BnmtdHAlmrMWJBrFL0idVRd7wT1sIzAm61efdA9wk
-c54SypYeyiJw/WTVbdsO
-=X72t
+iQIcBAEBAgAGBQJTH2jjAAoJELSic+t+oim95Y4P/3qAvXHC1Be5ufU34cmYeMwQ
+1QULypLbsN0LPf67sySX2/RmzSdEnxzLIADD/zz33vjVAz2FZNtIdEuvUDfhPbcm
+HJs64FQjLLrLcxQplN/ja9Fn4jnKpWoL+UB7OSBwqsZqVUhv1Yj8bUWTJYBJwhX/
++KSTtyvXzexWfKGbSSEfUbuTM/FXZ4RG2jLnxS2x4i/WeXkHI3g8zgTrtTUWJpvV
+kNSByKs9jCLK4u649QiTmOJ/8WKokijHJB7i2IPZ1GPhU+vtIAL+PIxfYnz9QQU0
+qFrxtVguPrHnABYDsovx81s3f0+IUKZECr0YzZEJ5tGgG+Qe1PWiaEmVrFCYu4bv
+VFfXEOA5+Y2B6cJow576qsqi/qG6enlnDhocbV1FFq5NdhMSFSScp0pK9wp3KhaH
+M5FLpdR8lw4/s5Nbt0SAFIF29Ul1KJrqZOjJvUww4kGHRLSBKUhoNJ6sYR+hkchj
+S7ooqB8DyHIibfX0K+E+oabtKVg3b9b/gd6+Hp+d8Mk2bj/lo41ElrdDmLHL23u/
+t7TcSmrRCyPWLtiFlTP9KcrBdgsiCy6Et7hFp0dvirjM0KicP6hsbGtrB6Aygs7u
+LrumrLmdYfXQnKZCHywyhcrJj78LM3TZJDPEZiPE+09UXlpzkzv7mfH2qfC0GNUy
+tCT9YEMBDhQvxIZo//fX
+=dWNJ
 -----END PGP SIGNATURE-----
 
---p/KhqoubD7lvdjkp--
+--Tdmc70C6TklGKgyg--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
