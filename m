@@ -1,104 +1,128 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v5 00/11] imx-drm dt bindings
-Date: Tue, 11 Mar 2014 12:42:08 +0100
-Message-ID: <1394538128.3772.15.camel@paszta.hi.pengutronix.de>
-References: <1394011262-16849-1-git-send-email-p.zabel@pengutronix.de>
- <20140311034607.GA26502@S2101-09.ap.freescale.net>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC] Serial port aliases in DT
+Date: Tue, 11 Mar 2014 12:56:50 +0100
+Message-ID: <1551855.ylN84WQiIN@avalon>
+References: <5448979.WQPtOb56tW@avalon> <20140310123837.GB7227@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20140311034607.GA26502@S2101-09.ap.freescale.net>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; boundary="nextPart2108228.ilkLqbBC90"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20140310123837.GB7227@katana>
+Sender: linux-sh-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
 
-Am Dienstag, den 11.03.2014, 11:46 +0800 schrieb Shawn Guo:
-> On Wed, Mar 05, 2014 at 10:20:51AM +0100, Philipp Zabel wrote:
-> > Hi,
-> > 
-> > this latest version of the imx-drm DT binding patches applies
-> > on top of staging-next and also depends on the OF graph binding
-> > patchset that moves the v4l2_of helpers to drivers/of.
-> > Currently, the two patchsets are also available at:
-> >     git://git.pengutronix.de/git/pza/linux.git topic/of-graph
-> >     git://git.pengutronix.de/git/pza/linux.git topic/imx-drm-dt
-> 
-> Hi Philipp,
-> 
-> I just came across a couple problems when testing the series on
-> my imx6dl-sabresd board in dual display case - HDMI + LVDS.  I tested it
-> using Russell's branch below, which I believe has all the pieces put
-> together.
-> 
->   git://ftp.arm.linux.org.uk/~rmk/linux-arm.git imx-drm-staging
-> 
-> - When I enable HDMI and LVDS support in both kernel build and device
->   tree, HDMI seems working fine but LVDS color is corrupted quite badly.
-> 
-> - When I enable HDMI and LVDS support in kernel build but only LVDS in
->   device tree (keep HDMI disabled in device tree by not changing
->   'status' of HDMI node to 'okay'), LVDS does not even work.  In this
->   case, it seems that the binding of display-subsystem does not succeed.
+--nextPart2108228.ilkLqbBC90
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
 
-Can you check if you get the bound messages from
-drivers/base/component.c:
+Hi Wolfram,
 
-imx-drm display-subsystem.11: bound imx-ipuv3-crtc.0 (ops ipu_crtc_ops)
-imx-drm display-subsystem.11: bound imx-ipuv3-crtc.1 (ops ipu_crtc_ops)
-imx-drm display-subsystem.11: bound ldb.10 (ops imx_ldb_ops)
+On Monday 10 March 2014 13:38:37 Wolfram Sang wrote:
+> > I've recently reviewed a patch adding serial port aliases to the de=
+vice
+> > tree and would like to pick your brains about a disagreement I had =
+with
+> > the developer.
+>=20
+> And here is the developer :)
+>=20
+> > The SoC includes 8 serial ports. They are all disabled in the SoC .=
+dtsi,
+> > and enabled selectively by board DT files. As not all serial ports =
+are
+> > available on all boards, the question was whether to add aliases fo=
+r all
+> > ports (in the .dtsi in this case) like
+> >=20
+> >          serial0 =3D &scif0;
+> >          serial1 =3D &scif1;
+> >          serial2 =3D &scif2;
+> >          serial3 =3D &scif3;
+> >          serial4 =3D &scif4;
+> >          serial5 =3D &scif5;
+> >          serial6 =3D &scif6;
+> >          serial7 =3D &scif7;
+> >=20
+> > or to just add aliases for the enabled ports (in the board DT file)=
+ like
+> >=20
+> >          serial0 =3D &scif2;
+> >          serial1 =3D &scif3;
+> >=20
+> > Note the numbering in the latter case: as the board doesn't use ser=
+ial
+> > ports 0 and 1, hardware ports 2 and 3 become logical ports 0 and 1.=
 
-I have tried this branch with a Phytec phyFLEX i.MX6S on PBAB01
-baseboard with EDT 800x480 LVDS panel, and it seems to work.
-The check in drivers/staging/imx-drm/imx-drm-core.c:675 should make sure
-that unavailable (status="disabled") devices are just skipped.
+> >=20
+> > I considered that having Linux create ttySC0 and ttySC1 devices for=
+ the
+> > first two ports of the board, regardless of which hardware ports ar=
+e
+> > used, is simpler from a user point of view (it allows sharing the s=
+ame
+> > inittab settings for the console serial port across several boards =
+for
+> > instance). I'd appreciate feedback on that.
+>=20
+> First, I don't think this is restricted to serial ports but how to us=
+e
+> aliases in general. We may decide this or that way, yet we should do =
+it
+> consistently. Using aliases this way for serial ports and that way fo=
+r
+> I2C busses will create a mess.
+> And currently, I only know of 1:1 mappings for I2C/SPI. So, on the sa=
+me
+> board, you'll need to open /dev/i2c-2, not /dev/i2c-0.
+>=20
+> From my experience, things get complicated when stuff gets added and =
+the
+> numbers go wild:
+>=20
+>           serial0 =3D &scif2;
+>           serial1 =3D &scif3;
+>           serial2 =3D &scif6;
+>           serial3 =3D &scif0;
+>           serial4 =3D &scif7;
+>=20
+> When debugging here, trying to remember which port to open for the
+> terminal, and which number to scan for in the schematics is error-pro=
+ne
+> and a PITA.
+>=20
+> Yeah, the drawback is that the console might be at different places
+> across boards. I suggest to update inittab at runtime anyhow, since n=
+ot
+> only the number but also the naming often changes (ttyXYZ to ttyABC).=
 
-> Please confirm if they are real problems or I'm missing something here.
 
-If the devices are bound, can you check in debugfs whether the panel
-(ldb_di) clock is set correctly?
-I wonder if Russell's DI code makes a decision that the panel clock
-can't be supported from the IPU internal clock. Then you'd need
-something like this to allow setting the video PLL:
+Just out of curiosity (as I could use it), do you have a sample impleme=
+ntation=20
+of dynamic inittab updates ?
 
-diff --git a/arch/arm/mach-imx/clk-imx6q.c b/arch/arm/mach-imx/clk-imx6q.c
-index f6c5af5..f9b90e7 100644
---- a/arch/arm/mach-imx/clk-imx6q.c
-+++ b/arch/arm/mach-imx/clk-imx6q.c
-@@ -258,14 +258,14 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
- 	clk[ipu2_sel]         = imx_clk_mux("ipu2_sel",         base + 0x3c, 14, 2, ipu_sels,          ARRAY_SIZE(ipu_sels));
- 	clk[ldb_di0_sel]      = imx_clk_mux_flags("ldb_di0_sel", base + 0x2c, 9,  3, ldb_di_sels,      ARRAY_SIZE(ldb_di_sels), CLK_SET_RATE_PARENT);
- 	clk[ldb_di1_sel]      = imx_clk_mux_flags("ldb_di1_sel", base + 0x2c, 12, 3, ldb_di_sels,      ARRAY_SIZE(ldb_di_sels), CLK_SET_RATE_PARENT);
--	clk[ipu1_di0_pre_sel] = imx_clk_mux("ipu1_di0_pre_sel", base + 0x34, 6,  3, ipu_di_pre_sels,   ARRAY_SIZE(ipu_di_pre_sels));
--	clk[ipu1_di1_pre_sel] = imx_clk_mux("ipu1_di1_pre_sel", base + 0x34, 15, 3, ipu_di_pre_sels,   ARRAY_SIZE(ipu_di_pre_sels));
--	clk[ipu2_di0_pre_sel] = imx_clk_mux("ipu2_di0_pre_sel", base + 0x38, 6,  3, ipu_di_pre_sels,   ARRAY_SIZE(ipu_di_pre_sels));
--	clk[ipu2_di1_pre_sel] = imx_clk_mux("ipu2_di1_pre_sel", base + 0x38, 15, 3, ipu_di_pre_sels,   ARRAY_SIZE(ipu_di_pre_sels));
--	clk[ipu1_di0_sel]     = imx_clk_mux("ipu1_di0_sel",     base + 0x34, 0,  3, ipu1_di0_sels,     ARRAY_SIZE(ipu1_di0_sels));
--	clk[ipu1_di1_sel]     = imx_clk_mux("ipu1_di1_sel",     base + 0x34, 9,  3, ipu1_di1_sels,     ARRAY_SIZE(ipu1_di1_sels));
--	clk[ipu2_di0_sel]     = imx_clk_mux("ipu2_di0_sel",     base + 0x38, 0,  3, ipu2_di0_sels,     ARRAY_SIZE(ipu2_di0_sels));
--	clk[ipu2_di1_sel]     = imx_clk_mux("ipu2_di1_sel",     base + 0x38, 9,  3, ipu2_di1_sels,     ARRAY_SIZE(ipu2_di1_sels));
-+	clk[ipu1_di0_pre_sel] = imx_clk_mux_flags("ipu1_di0_pre_sel", base + 0x34, 6,  3, ipu_di_pre_sels,   ARRAY_SIZE(ipu_di_pre_sels), CLK_SET_RATE_PARENT);
-+	clk[ipu1_di1_pre_sel] = imx_clk_mux_flags("ipu1_di1_pre_sel", base + 0x34, 15, 3, ipu_di_pre_sels,   ARRAY_SIZE(ipu_di_pre_sels), CLK_SET_RATE_PARENT);
-+	clk[ipu2_di0_pre_sel] = imx_clk_mux_flags("ipu2_di0_pre_sel", base + 0x38, 6,  3, ipu_di_pre_sels,   ARRAY_SIZE(ipu_di_pre_sels), CLK_SET_RATE_PARENT);
-+	clk[ipu2_di1_pre_sel] = imx_clk_mux_flags("ipu2_di1_pre_sel", base + 0x38, 15, 3, ipu_di_pre_sels,   ARRAY_SIZE(ipu_di_pre_sels), CLK_SET_RATE_PARENT);
-+	clk[ipu1_di0_sel]     = imx_clk_mux_flags("ipu1_di0_sel",     base + 0x34, 0,  3, ipu1_di0_sels,     ARRAY_SIZE(ipu1_di0_sels), CLK_SET_RATE_PARENT);
-+	clk[ipu1_di1_sel]     = imx_clk_mux_flags("ipu1_di1_sel",     base + 0x34, 9,  3, ipu1_di1_sels,     ARRAY_SIZE(ipu1_di1_sels), CLK_SET_RATE_PARENT);
-+	clk[ipu2_di0_sel]     = imx_clk_mux_flags("ipu2_di0_sel",     base + 0x38, 0,  3, ipu2_di0_sels,     ARRAY_SIZE(ipu2_di0_sels), CLK_SET_RATE_PARENT);
-+	clk[ipu2_di1_sel]     = imx_clk_mux_flags("ipu2_di1_sel",     base + 0x38, 9,  3, ipu2_di1_sels,     ARRAY_SIZE(ipu2_di1_sels), CLK_SET_RATE_PARENT);
- 	clk[hsi_tx_sel]       = imx_clk_mux("hsi_tx_sel",       base + 0x30, 28, 1, hsi_tx_sels,       ARRAY_SIZE(hsi_tx_sels));
- 	clk[pcie_axi_sel]     = imx_clk_mux("pcie_axi_sel",     base + 0x18, 10, 1, pcie_axi_sels,     ARRAY_SIZE(pcie_axi_sels));
- 	clk[ssi1_sel]         = imx_clk_fixup_mux("ssi1_sel",   base + 0x1c, 10, 2, ssi_sels,          ARRAY_SIZE(ssi_sels),          imx_cscmr1_fixup);
+=2D-=20
+Regards,
 
-regards
-Philipp
+Laurent Pinchart
+
+--nextPart2108228.ilkLqbBC90
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQEcBAABAgAGBQJTHvoIAAoJEIkPb2GL7hl1OLQH/1M49+kRL3Hnnc5mpuOHEQhI
+2/EdvYCp8AR5b2SJZkx2emb7dK9FA7FejumwMjHKdv0weo5lWNwINoqF2X1xpICC
+2/CtO15tEnV0yB2Bzj8SHMwnKvtho6efXn213kcWUXBjaDhEGW3T/b8WfLFxXQky
+ykkhJYd/As9DGTli9UfkLx6+0Q5ZzW6DDOOQMPMyrUnhMfeq/wRKQJHDLcj8nFi+
+Mn2fgqfDmYd/tsKG0e+76IS2jsV9QJ7tQ/RvteNBeYr2ATqVN83j9iBBx7QWxECg
+cNY1recQX3/6hmyLH5A6Tp3hMc571jTWxwomyoJBIkCyIEzhzSSfDKx0H16lBmM=
+=OC9W
+-----END PGP SIGNATURE-----
+
+--nextPart2108228.ilkLqbBC90--
+
