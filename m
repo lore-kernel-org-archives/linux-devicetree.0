@@ -1,42 +1,47 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH] ARM: zynq: Add OCM driver
-Date: Tue, 11 Mar 2014 15:13:59 -0700
-Message-ID: <e870cbc7-5934-4a14-aab4-416cdfd1627d@VA3EHSMHS007.ehs.local>
-References: <299e37ab245da9132808c6d4265a17b9a417bf62.1389022555.git.michal.simek@xilinx.com>
- <CAOesGMiroyjPbcjfG24_sUqCicCD4M7NF2aD=Xi8NVgagZThuA@mail.gmail.com>
+From: Matt Porter <mporter@linaro.org>
+Subject: Re: [PATCH v3 2/5] mfd: add bcm590xx pmu driver
+Date: Tue, 11 Mar 2014 18:19:38 -0400
+Message-ID: <20140311221938.GO25092@beef>
+References: <1394552775-31264-1-git-send-email-mporter@linaro.org>
+ <1394552775-31264-3-git-send-email-mporter@linaro.org>
+ <20140311160837.GP21216@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAOesGMiroyjPbcjfG24_sUqCicCD4M7NF2aD=Xi8NVgagZThuA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Michal Simek <michal.simek@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Michal Simek <monstr@monstr.eu>, Josh Cartwright <josh.cartwright@ni.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <20140311160837.GP21216@lee--X1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Christian Daudt <bcm@fixthebug.org>, Devicetree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-03-11 at 02:31PM -0700, Olof Johansson wrote:
-> Hi Michal,
->=20
-> Sorry for the late review, I didn't notice the driver when it was
-> posted and I only saw it now with the pull request. Comments below.
->=20
->=20
-> On Mon, Jan 6, 2014 at 7:36 AM, Michal Simek <michal.simek@xilinx.com=
-> wrote:
-> > The driver provide memory allocator which can
-> > be used by others drivers to allocate memory inside OCM.
-> > All location for 64kB blocks are supported
-> > and driver is trying to allocate the largest continuous
-> > block of memory.
->=20
-> I don't think you explain what OCM is anywhere, what is it? Since
-> you're reusing the generic SRAM driver I'm suspecting it's related?
+On Tue, Mar 11, 2014 at 04:08:37PM +0000, Lee Jones wrote:
+> > Add a driver for the BCM590xx PMU multi-function devices. The driver
+> > initially supports regmap initialization and instantiation of the
+> > voltage regulator device function of the PMU.
+> > 
+> > Signed-off-by: Matt Porter <mporter@linaro.org>
+> > Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
+> > Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
+> > ---
+> >  drivers/mfd/Kconfig          |  8 ++++
+> >  drivers/mfd/Makefile         |  1 +
+> >  drivers/mfd/bcm590xx.c       | 93 ++++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/mfd/bcm590xx.h | 31 +++++++++++++++
+> >  4 files changed, 133 insertions(+)
+> >  create mode 100644 drivers/mfd/bcm590xx.c
+> >  create mode 100644 include/linux/mfd/bcm590xx.h
+> 
+> I have a tiny nit that 'ret' doesn't need to be initialised before
+> use in probe(), but apart from that...
+> 
+> Looks pretty sensible:
+>   Acked-by: Lee Jones <lee.jones@linaro.org>
 
-It stands for 'On-Chip Memory'. For Zynq that is a RAM consisting of
-four 64k chunks that can be individually mapped to a high or low addres=
-s.
+Ok, thanks. When I get back in front of my desktop I'll send a v4 of
+just this patch to address that nit. Mark already applied the regulator
+driver from this series, will you be taking this through your tree? For
+that matter, I wonder if the binding would also go through your tree
+with this driver.
 
-	S=C3=B6ren
-
-
+-Matt
