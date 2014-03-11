@@ -1,63 +1,63 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: Re: [RFC PATCH v2 08/14] mtd: nand: add sunxi NAND
- flash controller support
-Date: Tue, 11 Mar 2014 12:45:13 -0600
-Message-ID: <20140311184513.GC31835@obsidianresearch.com>
-References: <1391006064-28890-1-git-send-email-b.brezillon.dev@gmail.com>
- <1391006064-28890-9-git-send-email-b.brezillon.dev@gmail.com>
- <20140129175641.GF1427@obsidianresearch.com>
- <20140129184619.GC27143@localhost>
- <20140129191005.GG1427@obsidianresearch.com>
- <531D9F4B.6040505@gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2] ASoC: cs42888: Add codec driver support
+Date: Tue, 11 Mar 2014 18:46:06 +0000
+Message-ID: <20140311184606.GW28112@sirena.org.uk>
+References: <1394536791-8381-1-git-send-email-Guangyu.Chen@freescale.com>
+ <alpine.DEB.2.02.1403111026280.3558@heelrod>
+ <531F320E.70605@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCWOL4E62AORBQVT7WMAKGQE3JHDTAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <531D9F4B.6040505-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="MUSEnV6akQk4QhdD"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-To: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <531F320E.70605@metafoo.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Brian Austin <brian.austin@cirrus.com>, Nicolin Chen <Guangyu.Chen@freescale.com>, Paul.Handrigan@cirrus.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, lgirdwood@gmail.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 10, 2014 at 12:17:31PM +0100, Boris BREZILLON wrote:
-> Hello Jason,
->=20
-> Le 29/01/2014 20:10, Jason Gunthorpe a =E9crit :
-> >On Wed, Jan 29, 2014 at 03:46:20PM -0300, Ezequiel Garcia wrote:
-> >
-> >>After CE# has been pulled high and then transitioned low again, the hos=
-t
-> >>should issue a Set Features to select the appropriate asynchronous timi=
-ng mode.
-> >>"""
-> >Oh, I had forgot you should do a set feature too
-> >
-> >Boris, I think the core core should handle this dance and the driver
-> >should just implement a call back to change the timing mode on the
-> >interface..
-> >
-> >If I ever get a moment I can work on support for timing setting in the
-> >mvebu driver, I have boards here with ONFI NAND..
->=20
-> Any progress on this ?
-> I'm about to post the 3rd version of this series and if you already have
-> something working I could base my work on your proposal.
 
-Sorry, no, I will try to look over your v3 though.
+--MUSEnV6akQk4QhdD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Regards,
-Jason
+On Tue, Mar 11, 2014 at 04:55:58PM +0100, Lars-Peter Clausen wrote:
+> On 03/11/2014 04:41 PM, Brian Austin wrote:
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> >So WRT the CS42888, this is one device in a series of 2 devices that are
+> >register compatible with the only difference being that the CS42488 has 2
+> >extra ADC's. Same die and same DeviceID.
+
+> >Would it make more sense to submit the driver with the extra ADC's to make
+> >it feature complete for both devices? Wouldn't be odd to have 2 drivers that
+> >do the same for 98% of the code.
+
+> This should be in one driver. But support for the second device can
+> always be added in a follow up patch.
+
+Yes, we can add support later.  It might be helpful to name the driver
+with some generic name I guess.
+
+--MUSEnV6akQk4QhdD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTH1nqAAoJELSic+t+oim9C/gP/i5BAh0i6DINdS77d401B9NC
+PQQulo2Wjz08u6THrD0oASQB+4wOaM6xI1U+YMyXBtXbw4zYW0isO/3MmXTGhFcm
+Kj7+MMtZcSaLuxm/17n9WDNiErgqmxCwsBaemnIN3fLHX8mrJd8r9MBkGOI5Puc5
+RTn1fgig48xlGcnD+Or+14oUyUIGrZlKAZ7ybLBOlj6DEsLBAY6lja1Uc68qyC/f
+5wsijto7NLacEbQULXO3pxiAd4m3D4NO8btb7xWk8YTw2omyJFhOepzmGdaUFESU
+938ngC8XyWc5+BVWDnt29hBHP0vuzDq0Qvzsge6wEVsz/2XUl/Bm83mxxYW+q2kw
+5MB0+t6QJUeOWncvmd1mlNAo13QaXeXcD3KZiC+If7Zgpq2SoVAGqAgvxBDntY8x
+ukBbnLLVnEAr1uugmdNUvsz0O4AOdaEiYJycNRQQAszQxMEeBogyGMn/LJEjXY9U
+JqCHNGNIyiU2ptFXE9ISIDI9d1BzUFxfWjVY3zgWRqvTn2795X5Wdb1jwVcqv+Rb
+wasU2ncCCy43+ICORRCRACTQozmR5hfsDAxZNBf8oojg7us4CIhcDGDOM2EU7yLa
+UuSkEPWrzGi8KomI8zKlqnPeAYbNVmRlVHVfoe6pL+4H92EECgAHlnKoIuntw1os
+2PKpZFYXjt43jn4wkfvB
+=WB+k
+-----END PGP SIGNATURE-----
+
+--MUSEnV6akQk4QhdD--
