@@ -1,207 +1,104 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core to drivers/of
-Date: Tue, 11 Mar 2014 12:43:44 +0100
-Message-ID: <139468148.3QhLg3QYq1@avalon>
-References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> <4339286.FzhQ2m6hoA@avalon> <1394466030.7380.39.camel@paszta.hi.pengutronix.de>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v5 00/11] imx-drm dt bindings
+Date: Tue, 11 Mar 2014 12:42:08 +0100
+Message-ID: <1394538128.3772.15.camel@paszta.hi.pengutronix.de>
+References: <1394011262-16849-1-git-send-email-p.zabel@pengutronix.de>
+ <20140311034607.GA26502@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1394466030.7380.39.camel@paszta.hi.pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Grant Likely <grant.likely@linaro.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20140311034607.GA26502@S2101-09.ap.freescale.net>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+Hi Shawn,
 
-On Monday 10 March 2014 16:40:30 Philipp Zabel wrote:
-> Am Montag, den 10.03.2014, 16:15 +0100 schrieb Laurent Pinchart:
-> > On Monday 10 March 2014 14:58:15 Grant Likely wrote:
-> > > On Mon, 10 Mar 2014 14:52:53 +0100, Laurent Pinchart wrote:
-> > > > On Monday 10 March 2014 12:18:20 Tomi Valkeinen wrote:
-> > > > > On 08/03/14 13:41, Grant Likely wrote:
-> > > > > >> Ok. If we go for single directional link, the question is then:
-> > > > > >> which way? And is the direction different for display and camera,
-> > > > > >> which are kind of reflections of each other?
-> > > > > > 
-> > > > > > In general I would recommend choosing whichever device you would
-> > > > > > sensibly think of as a master. In the camera case I would choose
-> > > > > > the camera controller node instead of the camera itself, and in
-> > > > > > the display case I would choose the display controller instead of
-> > > > > > the panel. The binding author needs to choose what she things
-> > > > > > makes the most sense, but drivers can still use if it it turns out
-> > > > > > to be 'backwards'
-> > > > > 
-> > > > > I would perhaps choose the same approach, but at the same time I
-> > > > > think it's all but clear. The display controller doesn't control the
-> > > > > panel any more than a DMA controller controls, say, the display
-> > > > > controller.
-> > > > > 
-> > > > > In fact, in earlier versions of OMAP DSS DT support I had a simpler
-> > > > > port description, and in that I had the panel as the master (i.e.
-> > > > > link from panel to dispc) because the panel driver uses the display
-> > > > > controller's features to provide the panel device a data stream.
-> > > > > 
-> > > > > And even with the current OMAP DSS DT version, which uses the v4l2
-> > > > > style ports/endpoints, the driver model is still the same, and only
-> > > > > links towards upstream are used.
-> > > > > 
-> > > > > So one reason I'm happy with the dual-linking is that I can easily
-> > > > > follow the links from the downstream entities to upstream entities,
-> > > > > and other people, who have different driver model, can easily do the
-> > > > > opposite.
-> > > > > 
-> > > > > But I agree that single-linking is enough and this can be handled at
-> > > > > runtime, even if it makes the code more complex. And perhaps
-> > > > > requires extra data in the dts, to give the start points for the
-> > > > > graph.
-> > > > 
-> > > > In theory unidirectional links in DT are indeed enough. However, let's
-> > > > not forget the following.
-> > > > 
-> > > > - There's no such thing as single start points for graphs. Sure, in
-> > > > some simple cases the graph will have a single start point, but that's
-> > > > not a generic rule. For instance the camera graphs
-> > > > http://ideasonboard.org/media/omap3isp.ps and
-> > > > http://ideasonboard.org/media/eyecam.ps have two camera sensors, and
-> > > > thus two starting points from a data flow point of view. And if you
-> > > > want a better understanding of how complex media graphs can become,
-> > > > have a look at http://ideasonboard.org/media/vsp1.0.pdf (that's a real
-> > > > world example, albeit all connections are internal to the SoC in that
-> > > > particular case, and don't need to be described in DT).
-> > > > 
-> > > > - There's also no such thing as a master device that can just point to
-> > > > slave devices. Once again simple cases exist where that model could
-> > > > work, but real world examples exist of complex pipelines with dozens
-> > > > of elements all implemented by a separate IP core and handled by
-> > > > separate drivers, forming a graph with long chains and branches. We
-> > > > thus need real graph bindings.
-> > > > 
-> > > > - Finally, having no backlinks in DT would make the software
-> > > > implementation very complex. We need to be able to walk the graph in a
-> > > > generic way without having any of the IP core drivers loaded, and
-> > > > without any specific starting point. We would thus need to parse the
-> > > > complete DT tree, looking at all nodes and trying to find out whether
-> > > > they're part of the graph we're trying to walk. The complexity of the
-> > > > operation would be at best quadratic to the number of nodes in the
-> > > > whole DT and to the number of nodes in the graph.
-> > > 
-> > > Not really. To being with, you cannot determine any meaning of a node
-> > > across the tree (aside from it being an endpoint)
+Am Dienstag, den 11.03.2014, 11:46 +0800 schrieb Shawn Guo:
+> On Wed, Mar 05, 2014 at 10:20:51AM +0100, Philipp Zabel wrote:
+> > Hi,
 > > 
-> > That's the important part. I can assume the target node of the
-> > remote-endpoint phandle to be an endpoint, and can thus assume that it
-> > implements the of-graph bindings. That's all I need to be able to walk
-> > the graph in a generic way.
-> >
-> > > without also understanding the binding that the node is a part of. That
-> > > means you need to have something matching against the compatible string
-> > > on both ends of the linkage. For instance:
-> > > 
-> > > panel {
-> > > 	compatible = "acme,lvds-panel";
-> > > 	lvds-port: port {
-> > > 	};
-> > > };
-> > > 
-> > > display-controller {
-> > > 	compatible = "encom,video";
-> > > 	port {
-> > > 		remote-endpoint = <&lvds-port>;
-> > > 	};
-> > > };
-> > > 
-> > > In the above example, the encom,video driver has absolutely zero
-> > > information about what the acme,lvds-panel binding actually implements.
-> > > There needs to be both a driver for the "acme,lvds-panel" binding and
-> > > one for the "encom,video" binding (even if the acme,lvds-panel binding
-> > > is very thin and defers the functionality to the video controller).
-> > 
-> > I absolutely agree with that. We need a driver for each device (in this
-> > case the acme panel and the encom display controller), and we need those
-> > drivers to register entities (in the generic sense of the term) for them
-> > to be able to communicate with each other. The display controller driver
-> > must not try to parse panel-specific properties from the panel node.
-> > However, as described above, I believe it can parse ports and endpoints
-> > to walk the graph.
-> >
-> > > What you want here is the drivers to register each side of the
-> > > connection. That could be modeled with something like the following
-> > > (pseudocode):
-> > > 
-> > > struct of_endpoint {
-> > > 	struct list_head list;
-> > > 	struct device_node *ep_node;
-> > > 	void *context;
-> > > 	void (*cb)(struct of_endpoint *ep, void *data);
-> > > }
-> > > 
-> > > int of_register_port(struct device *node, void (*cb)(struct of_endpoint
-> > > *ep, void *data), void *data) {
-> > > 	struct of_endpoint *ep = kzalloc(sizeof(*ep), GFP_KERNEL);
-> > > 	
-> > > 	ep->ep_node = node;
-> > > 	ep->data = data;
-> > > 	ep->callback = cb;
-> > > 	
-> > > 	/* store the endpoint to a list */
-> > > 	/* check if the endpoint has a remote-endpoint link */
-> > > 		/* If so, then link the two together and call the
-> > > 		 * callbacks */
-> > > }
-> > > 
-> > > That's neither expensive or complicated.
-> > > 
-> > > Originally I suggested walking the whole tree multiple times, but as
-> > > mentioned that doesn't scale, and as I thought about the above it isn't
-> > > even a valid thing to do. Everything has to be driven by drivers, so
-> > > even if the backlinks are there, nothing can be done with the link until
-> > > the other side goes through enumeration independently.
-> > 
-> > For such composite devices, what we need from a drivers point of view is a
-> > mechanism to wait for all components to be in place before proceeding.
-> > This isn't DT-related as such, but the graph is obviously described in DT
-> > for DT- based platforms.
-> > 
-> > There are at least two mainline implementation of such a mechanism. One of
-> > them can be found in drivers/media/v4l2-core/v4l2-async.c, another more
-> > recent one in drivers/base/component.c. Neither of them is DT-specific,
-> > and they don't try to parse DT content.
-> > 
-> > The main problem, from a DT point of view, is that we need to pick a
-> > master driver that will initiate the process of waiting for all components
-> > to be in place. This is usually the driver of the main component inside
-> > the SoC. For a camera capture pipeline the master is the SoC camera device
-> > driver that will create the V4L2 device node(s). For a display pipeline
-> > the master is the SoC display driver that will create the DRM/KMS
-> > devices.
-> > 
-> > The master device driver needs to create a list of all components it
-> > needs, and wait until all those components have been probed by their
-> > respective driver. Creating such a list requires walking the graph,
-> > starting at the master device (using a CPU-centric view as described by
-> > Russell). This is why we need the backlinks, as the master device can have
-> > inbound links.
->
-> We could scan the whole tree for entities, ports and endpoints once, in
-> the base oftree code, and put that into a graph structure, adding the
-> backlinks.
-> The of_graph_* helpers could then use that graph instead of the device
-> tree.
+> > this latest version of the imx-drm DT binding patches applies
+> > on top of staging-next and also depends on the OF graph binding
+> > patchset that moves the v4l2_of helpers to drivers/of.
+> > Currently, the two patchsets are also available at:
+> >     git://git.pengutronix.de/git/pza/linux.git topic/of-graph
+> >     git://git.pengutronix.de/git/pza/linux.git topic/imx-drm-dt
+> 
+> Hi Philipp,
+> 
+> I just came across a couple problems when testing the series on
+> my imx6dl-sabresd board in dual display case - HDMI + LVDS.  I tested it
+> using Russell's branch below, which I believe has all the pieces put
+> together.
+> 
+>   git://ftp.arm.linux.org.uk/~rmk/linux-arm.git imx-drm-staging
+> 
+> - When I enable HDMI and LVDS support in both kernel build and device
+>   tree, HDMI seems working fine but LVDS color is corrupted quite badly.
+> 
+> - When I enable HDMI and LVDS support in kernel build but only LVDS in
+>   device tree (keep HDMI disabled in device tree by not changing
+>   'status' of HDMI node to 'okay'), LVDS does not even work.  In this
+>   case, it seems that the binding of display-subsystem does not succeed.
 
-That could work. The complexity would still be quadratic, but we would parse 
-the full device tree once only.
+Can you check if you get the bound messages from
+drivers/base/component.c:
 
-The runtime complexity would still be increased, as the graph helpers would 
-need to find the endpoint object in the parsed graph corresponding to the DT 
-node they get as an argument. That's proportional to the number of graph 
-elements, not the total number of DT nodes, so I suppose it's not too bad.
+imx-drm display-subsystem.11: bound imx-ipuv3-crtc.0 (ops ipu_crtc_ops)
+imx-drm display-subsystem.11: bound imx-ipuv3-crtc.1 (ops ipu_crtc_ops)
+imx-drm display-subsystem.11: bound ldb.10 (ops imx_ldb_ops)
 
-We also need to make sure this would work with insertion of DT fragments at 
-runtime. Probably not a big deal, but it has to be kept in mind.
+I have tried this branch with a Phytec phyFLEX i.MX6S on PBAB01
+baseboard with EDT 800x480 LVDS panel, and it seems to work.
+The check in drivers/staging/imx-drm/imx-drm-core.c:675 should make sure
+that unavailable (status="disabled") devices are just skipped.
 
--- 
-Regards,
+> Please confirm if they are real problems or I'm missing something here.
 
-Laurent Pinchart
+If the devices are bound, can you check in debugfs whether the panel
+(ldb_di) clock is set correctly?
+I wonder if Russell's DI code makes a decision that the panel clock
+can't be supported from the IPU internal clock. Then you'd need
+something like this to allow setting the video PLL:
+
+diff --git a/arch/arm/mach-imx/clk-imx6q.c b/arch/arm/mach-imx/clk-imx6q.c
+index f6c5af5..f9b90e7 100644
+--- a/arch/arm/mach-imx/clk-imx6q.c
++++ b/arch/arm/mach-imx/clk-imx6q.c
+@@ -258,14 +258,14 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
+ 	clk[ipu2_sel]         = imx_clk_mux("ipu2_sel",         base + 0x3c, 14, 2, ipu_sels,          ARRAY_SIZE(ipu_sels));
+ 	clk[ldb_di0_sel]      = imx_clk_mux_flags("ldb_di0_sel", base + 0x2c, 9,  3, ldb_di_sels,      ARRAY_SIZE(ldb_di_sels), CLK_SET_RATE_PARENT);
+ 	clk[ldb_di1_sel]      = imx_clk_mux_flags("ldb_di1_sel", base + 0x2c, 12, 3, ldb_di_sels,      ARRAY_SIZE(ldb_di_sels), CLK_SET_RATE_PARENT);
+-	clk[ipu1_di0_pre_sel] = imx_clk_mux("ipu1_di0_pre_sel", base + 0x34, 6,  3, ipu_di_pre_sels,   ARRAY_SIZE(ipu_di_pre_sels));
+-	clk[ipu1_di1_pre_sel] = imx_clk_mux("ipu1_di1_pre_sel", base + 0x34, 15, 3, ipu_di_pre_sels,   ARRAY_SIZE(ipu_di_pre_sels));
+-	clk[ipu2_di0_pre_sel] = imx_clk_mux("ipu2_di0_pre_sel", base + 0x38, 6,  3, ipu_di_pre_sels,   ARRAY_SIZE(ipu_di_pre_sels));
+-	clk[ipu2_di1_pre_sel] = imx_clk_mux("ipu2_di1_pre_sel", base + 0x38, 15, 3, ipu_di_pre_sels,   ARRAY_SIZE(ipu_di_pre_sels));
+-	clk[ipu1_di0_sel]     = imx_clk_mux("ipu1_di0_sel",     base + 0x34, 0,  3, ipu1_di0_sels,     ARRAY_SIZE(ipu1_di0_sels));
+-	clk[ipu1_di1_sel]     = imx_clk_mux("ipu1_di1_sel",     base + 0x34, 9,  3, ipu1_di1_sels,     ARRAY_SIZE(ipu1_di1_sels));
+-	clk[ipu2_di0_sel]     = imx_clk_mux("ipu2_di0_sel",     base + 0x38, 0,  3, ipu2_di0_sels,     ARRAY_SIZE(ipu2_di0_sels));
+-	clk[ipu2_di1_sel]     = imx_clk_mux("ipu2_di1_sel",     base + 0x38, 9,  3, ipu2_di1_sels,     ARRAY_SIZE(ipu2_di1_sels));
++	clk[ipu1_di0_pre_sel] = imx_clk_mux_flags("ipu1_di0_pre_sel", base + 0x34, 6,  3, ipu_di_pre_sels,   ARRAY_SIZE(ipu_di_pre_sels), CLK_SET_RATE_PARENT);
++	clk[ipu1_di1_pre_sel] = imx_clk_mux_flags("ipu1_di1_pre_sel", base + 0x34, 15, 3, ipu_di_pre_sels,   ARRAY_SIZE(ipu_di_pre_sels), CLK_SET_RATE_PARENT);
++	clk[ipu2_di0_pre_sel] = imx_clk_mux_flags("ipu2_di0_pre_sel", base + 0x38, 6,  3, ipu_di_pre_sels,   ARRAY_SIZE(ipu_di_pre_sels), CLK_SET_RATE_PARENT);
++	clk[ipu2_di1_pre_sel] = imx_clk_mux_flags("ipu2_di1_pre_sel", base + 0x38, 15, 3, ipu_di_pre_sels,   ARRAY_SIZE(ipu_di_pre_sels), CLK_SET_RATE_PARENT);
++	clk[ipu1_di0_sel]     = imx_clk_mux_flags("ipu1_di0_sel",     base + 0x34, 0,  3, ipu1_di0_sels,     ARRAY_SIZE(ipu1_di0_sels), CLK_SET_RATE_PARENT);
++	clk[ipu1_di1_sel]     = imx_clk_mux_flags("ipu1_di1_sel",     base + 0x34, 9,  3, ipu1_di1_sels,     ARRAY_SIZE(ipu1_di1_sels), CLK_SET_RATE_PARENT);
++	clk[ipu2_di0_sel]     = imx_clk_mux_flags("ipu2_di0_sel",     base + 0x38, 0,  3, ipu2_di0_sels,     ARRAY_SIZE(ipu2_di0_sels), CLK_SET_RATE_PARENT);
++	clk[ipu2_di1_sel]     = imx_clk_mux_flags("ipu2_di1_sel",     base + 0x38, 9,  3, ipu2_di1_sels,     ARRAY_SIZE(ipu2_di1_sels), CLK_SET_RATE_PARENT);
+ 	clk[hsi_tx_sel]       = imx_clk_mux("hsi_tx_sel",       base + 0x30, 28, 1, hsi_tx_sels,       ARRAY_SIZE(hsi_tx_sels));
+ 	clk[pcie_axi_sel]     = imx_clk_mux("pcie_axi_sel",     base + 0x18, 10, 1, pcie_axi_sels,     ARRAY_SIZE(pcie_axi_sels));
+ 	clk[ssi1_sel]         = imx_clk_fixup_mux("ssi1_sel",   base + 0x1c, 10, 2, ssi_sels,          ARRAY_SIZE(ssi_sels),          imx_cscmr1_fixup);
+
+regards
+Philipp
