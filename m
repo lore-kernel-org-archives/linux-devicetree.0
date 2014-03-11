@@ -1,87 +1,70 @@
-From: Vince Bridgers <vbridgers2013@gmail.com>
-Subject: Re: [PATCH net-next v2 2/9] net: ethernet: Change Ethernet Makefile
- and Kconfig for Altera TSE driver
-Date: Tue, 11 Mar 2014 10:46:19 -0500
-Message-ID: <CAOwfj2O_vZ=2Dah5qycV2-tVm1hG6OxrcHZSzqhM8+tWFUBtMw@mail.gmail.com>
-References: <1394493277-2105-1-git-send-email-vbridgers2013@gmail.com>
-	<1394493277-2105-3-git-send-email-vbridgers2013@gmail.com>
-	<531F1928.4080505@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <531F1928.4080505@cogentembedded.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>
+From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v3 0/5] BCM59056 PMU regulator support
+Date: Tue, 11 Mar 2014 11:46:10 -0400
+Message-ID: <1394552775-31264-1-git-send-email-mporter@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>
+Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+The BCM59056 is a multi-function power management unit used with the
+BCM281xx family of SoCs. This series adds an MFD and voltage regulator
+driver to support the BCM59056. The bcm28155-ap DT support is updated
+to enable use of regulators on the otg and sdhci peripherals.
 
-On Tue, Mar 11, 2014 at 9:09 AM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Hello.
->
->
-> On 11-03-2014 3:14, Vince Bridgers wrote:
->
->> This patch changes the Ethernet Makefile and Kconfig files to add the
->> Altera
->> Ethernet driver component.
->
->
->> Signed-off-by: Vince Bridgers <vbridgers2013@gmail.com>
->> ---
->> V2: - No change to Kconfig and Makefile from initial RFC review
->
->
->    Unfortunately, the order of patches seems wrong. This patch should be
-> among the last.
->
->
->> ---
->>   drivers/net/ethernet/Kconfig  |    1 +
->>   drivers/net/ethernet/Makefile |    1 +
->>   2 files changed, 2 insertions(+)
->
->
->> diff --git a/drivers/net/ethernet/Kconfig b/drivers/net/ethernet/Kconfig
->> index 506b024..39484b5 100644
->> --- a/drivers/net/ethernet/Kconfig
->> +++ b/drivers/net/ethernet/Kconfig
->> @@ -22,6 +22,7 @@ source "drivers/net/ethernet/adaptec/Kconfig"
->>   source "drivers/net/ethernet/aeroflex/Kconfig"
->>   source "drivers/net/ethernet/allwinner/Kconfig"
->>   source "drivers/net/ethernet/alteon/Kconfig"
->> +source "drivers/net/ethernet/altera/Kconfig"
->
->
->    This file doesn't exist yet.
->
->
->>   source "drivers/net/ethernet/amd/Kconfig"
->>   source "drivers/net/ethernet/apple/Kconfig"
->>   source "drivers/net/ethernet/arc/Kconfig"
->> diff --git a/drivers/net/ethernet/Makefile b/drivers/net/ethernet/Makefile
->> index c0b8789..adf61af 100644
->> --- a/drivers/net/ethernet/Makefile
->> +++ b/drivers/net/ethernet/Makefile
->> @@ -8,6 +8,7 @@ obj-$(CONFIG_NET_VENDOR_ADAPTEC) += adaptec/
->>   obj-$(CONFIG_GRETH) += aeroflex/
->>   obj-$(CONFIG_NET_VENDOR_ALLWINNER) += allwinner/
->>   obj-$(CONFIG_NET_VENDOR_ALTEON) += alteon/
->> +obj-$(CONFIG_ALTERA_TSE) += altera/
->
->
->    This directory doesn't exist yet.
->
-> WBR, Sergei
->
+Changes since v2:
+	- Move to mfd_add_devices() approach, eliminating representation
+	  of the regulator block as a hardware subdevice. Regulators are
+	  listed in the PMU binding and referenced via the parent device
+	  of_node by the regulator driver.
+	- Allow mfd driver to build as module
+	- Remove regulator constraints from the .dtsi include only the
+	  board-specific constraints in the board .dts.
 
-Understood, this was an oversight on my part when I created the
-patchset. I'll address and respin.
+Changes since v1:
+        - renamed to bcm590xx to accomodate future family parts
+        - remove use of subsys_initcall
+        - fix BCM590XX_MAX_REGISTER value
+        - remove unused chip id in mfd of/i2c matching
+        - switch to of_platform_populate() in mfd
+        - update binding to single document with regulators as optional
+          properties in the regulator subdevice IP description
+        - remove unused regulator get/set mode ops
+        - remove unneeded regulator NULL constraint check
+        - regulators property is optional, allow the driver to probe
+          when it is missing
+        - move of_node presence check into bcm590xx_parse_dt_reg_data()
 
-Thank you for taking the time to review and comment,
+Matt Porter (5):
+  mfd: add bcm590xx pmu DT binding
+  mfd: add bcm590xx pmu driver
+  regulator: add bcm590xx regulator driver
+  ARM: configs: bcm_defconfig: enable bcm590xx regulator support
+  ARM: dts: add bcm590xx pmu support and enable for bcm28155-ap
 
-All the best,
+ Documentation/devicetree/bindings/mfd/bcm590xx.txt |  41 ++
+ arch/arm/boot/dts/bcm28155-ap.dts                  |  47 ++-
+ arch/arm/boot/dts/bcm59056.dtsi                    |  77 ++++
+ arch/arm/configs/bcm_defconfig                     |   7 +
+ drivers/mfd/Kconfig                                |   8 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/bcm590xx.c                             |  93 +++++
+ drivers/regulator/Kconfig                          |   8 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/bcm590xx-regulator.c             | 413 +++++++++++++++++++++
+ include/linux/mfd/bcm590xx.h                       |  31 ++
+ 11 files changed, 726 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/bcm590xx.txt
+ create mode 100644 arch/arm/boot/dts/bcm59056.dtsi
+ create mode 100644 drivers/mfd/bcm590xx.c
+ create mode 100644 drivers/regulator/bcm590xx-regulator.c
+ create mode 100644 include/linux/mfd/bcm590xx.h
 
-Vince
+-- 
+1.8.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
