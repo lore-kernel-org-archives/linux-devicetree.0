@@ -1,91 +1,60 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] devicetree: bindings: Document Krait CPU/L1 EDAC
-Date: Tue, 11 Mar 2014 14:03:50 -0700
-Message-ID: <20140311210350.GF9985@codeaurora.org>
-References: <20140116180505.GA30925@codeaurora.org>
- <20140116183326.GG25540@e102568-lin.cambridge.arm.com>
- <20140116192617.GA13785@codeaurora.org>
- <20140117102109.GA22544@e102568-lin.cambridge.arm.com>
- <20140219002043.GE14769@codeaurora.org>
- <20140225111655.GA6855@e102568-lin.cambridge.arm.com>
- <E34E6789-03BC-452C-9053-82CA1D027861@codeaurora.org>
- <20140226120103.GA25326@e102568-lin.cambridge.arm.com>
- <20140307230856.GE9985@codeaurora.org>
- <20140311180150.GD25796@e102568-lin.cambridge.arm.com>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: Re: [PATCH 6/7] regulator: AXP20x: Add support for
+ regulators subsystem
+Date: Tue, 11 Mar 2014 22:06:59 +0100
+Message-ID: <20140311210659.GA10961@localhost.fastwebnet.it>
+References: <1393692352-10839-1-git-send-email-carlo@caione.org>
+ <1393692352-10839-7-git-send-email-carlo@caione.org>
+ <20140303015616.GN2411@sirena.org.uk>
+ <20140311192411.GA4193@localhost.fastwebnet.it>
+ <20140311192940.GA28112@sirena.org.uk>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDWJTUUC5UCBBOPV7WMAKGQEJVPIVCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140311192940.GA28112-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140311180150.GD25796-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/11, Lorenzo Pieralisi wrote:
-> On Fri, Mar 07, 2014 at 11:08:56PM +0000, Stephen Boyd wrote:
-> > 
-> > Or should we be expressing the L1 cache as well? Something like:
-> > 
-> >         cpus {  
-> >                 #address-cells = <1>;
-> >                 #size-cells = <0>;
-> > 
-> >                 cpu@0 { 
-> >                         compatible = "qcom,krait";
-> >                         device_type = "cpu";
-> >                         reg = <0>;
-> >                         next-level-cache = <&L1_0>;
-> > 
-> > 			L1_0: l1-cache {
-> > 				compatible = "arm,arch-cache";
-> > 				interrupts = <1 14 0x304>;
-> > 				next-level-cache = <&L2>;
-> > 			}
-> >                 };
-> > 
-> >                 cpu@1 { 
-> >                         compatible = "qcom,krait";
-> >                         device_type = "cpu";
-> >                         reg = <1>;
-> >                         next-level-cache = <&L1_1>;
-> > 
-> > 			L1_1: l1-cache {
-> > 				compatible = "arm,arch-cache";
-> > 				interrupts = <1 14 0x304>;
-> > 				next-level-cache = <&L2>;
-> > 			}
-> >                 };
-> > 
-> >                 L2: l2-cache {
-> >                         compatible = "arm,arch-cache";
-> >                         interrupts = <0 2 0x4>;
-> > 		};
-> > 	};
-> > 
-> > (I'm also wondering if the 3rd cell of the interrupt binding
-> > should only indicate the CPU that the interrupt property is
-> > inside?)
+On Tue, Mar 11, 2014 at 07:29:40PM +0000, Mark Brown wrote:
+> On Tue, Mar 11, 2014 at 08:24:11PM +0100, Carlo Caione wrote:
+> > On Mon, Mar 03, 2014 at 10:56:16AM +0900, Mark Brown wrote:
 > 
-> I am not aware of interrupts associated with vanilla :) "arm,arch-cache"
-> objects, so I think that should be handled as a "qcom,krait" specific property
-> (in the cpu node), or you should add another cache binding (compatible) for
-> that.
+> > > > +	regulators = of_find_node_by_name(np, "regulators");
+> > > > +	if (!regulators) {
+> > > > +		dev_err(&pdev->dev, "regulators node not found\n");
+> > > > +		return -EINVAL;
+> > > > +	}
 > 
-> As you might have noticed (idle states thread) I am keen on defining objects
-> for L1 caches explicitly, that patch still requires an ACK though (and
-> you need to update it since you cannot add an interrupt property for all
-> "arm,arch-cache" objects. I am sorry for being a pain, but I do not
-> think that's correct from a HW description standpoint).
+> > > The driver should be able to start up with no configuration provided at
+> > > all except for the device being registered - the user won't be able to
+> > > change anything but they will be able to read the current state of the
+> > > hardware which can be useful for diagnostics.
 > 
+> > If the device is DT enabled and no configuration is provided for
+> > regulators, these are disabled according to:
+> 
+> > http://lxr.linux.no/linux+v3.13.5/drivers/regulator/core.c#L3797
+> 
+> > Am I missing something or do you have any pointer?
+> 
+> With the above code the driver will return an error and never get as far
+> as registering the regulator.
 
-Ok. s/arm,arch-cache/qcom,arch-cache/ then. I imagine it is easy
-enough to add some bits in the cache binding once it's accepted.
+I agree, but if I register the regulators without having the constrains
+defined in the DT, when regulator_init_complete() is
+called, the regulators are disabled powering off the SoC (at least for
+DCDC2 and DCDC3).
+
+Thanks,
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Carlo Caione
