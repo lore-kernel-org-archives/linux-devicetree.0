@@ -1,62 +1,69 @@
-From: Matt Porter <mporter@linaro.org>
-Subject: Re: [PATCH v2 1/5] mfd: add bcm590xx pmu DT binding
-Date: Tue, 11 Mar 2014 11:49:30 -0400
-Message-ID: <20140311154930.GJ25092@beef>
+From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] mfd: add bcm590xx pmu driver
+Date: Tue, 11 Mar 2014 11:50:02 -0400
+Message-ID: <20140311155002.GK25092@beef>
 References: <1392765432-9111-1-git-send-email-mporter@linaro.org>
- <1392765432-9111-2-git-send-email-mporter@linaro.org>
- <20140219044726.GC2669@sirena.org.uk>
+ <1392765432-9111-3-git-send-email-mporter@linaro.org>
+ <20140219044605.GB2669@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7ZAtKRhVyVSsbBD2"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="z4+8/lEcDcG5Ke9S"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140219044726.GC2669@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Christian Daudt <bcm@fixthebug.org>, Devicetree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+In-Reply-To: <20140219044605.GB2669-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---7ZAtKRhVyVSsbBD2
+--z4+8/lEcDcG5Ke9S
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 19, 2014 at 01:47:26PM +0900, Mark Brown wrote:
-> On Tue, Feb 18, 2014 at 06:17:08PM -0500, Matt Porter wrote:
+On Wed, Feb 19, 2014 at 01:46:05PM +0900, Mark Brown wrote:
+> On Tue, Feb 18, 2014 at 06:17:09PM -0500, Matt Porter wrote:
 >=20
+> > +config MFD_BCM590XX
+> > +	bool "Broadcom BCM590xx PMUs"
+> > +	select MFD_CORE
+> > +	select REGMAP_I2C
+> > +	depends on I2C=3Dy
+> > +	help
+> > +	  Support for the BCM590xx PMUs from Broadcom
 > > +
-> > +				rfldo_reg: regulator@0 {
-> > +					reg =3D <0>;
 >=20
-> What do these reg values mean, they don't seem to be documented in the
-> binding?
+> Why does this need to be built in?
 
-Dropped this and the deprecated regulator-compatible property in v3 in
-favor of using node name matching.
+It doesn't. Just an oversight now fixed in v3.
 
 -Matt
 
---7ZAtKRhVyVSsbBD2
+--z4+8/lEcDcG5Ke9S
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJTHzCKAAoJEOfTILNwq7R4Pq4QAOgn9SRakbL1zULbyZYH8ucG
-ozn7PKiHYzYls/RTxkv+hWIUzwWl6M8bk8UIhfmMulb4xiqzmss82R6VvXGYRFy/
-WPNyym4Qz5v4pF1RUWAGph3ApC50NaCdZ9JgkdckIHl/8TF9jOM8T3Jh81RZibEB
-KiRqLOxvKCmdkCGFf0eaHmK8pbIbD28UeRg0wFalKbJAIiyfXfG7nbv+CK2519aj
-nfykd0U3i+l8LzZvjr1v01Xn7uR+9c7qvqAfS+OCv54okMh4arhx+S8h9IgqEUr9
-2sfQRsHnDy3f3+KbCR8+sto1ZIrCTXioX9QdlfI1jp3yFhULLkpAXEuYEk15I/VN
-K9W8K9kwt559ziyMoZZIV2zQ1+w/aiamsNV1JQ4Lq2fknANF/fAOitQ8fjnFbo16
-k2hQgTI5/eLKs6Sa7R7kjCtoaLj0BKSb8SMyPLH806FbWjJzwMzzK/aBNQPon38v
-NuBrh4vvx22pLhOTG3XFTKXjurL2r63V6fsa1r5XT5u5xW3zM0B/XplR5aTKJknl
-n0GySjy9dCqrm8f429TVKC08STvmXUdceOMvzhrmTN4FnLc/eALNBjVpG07zlQXN
-YCIpV6cFrag0VbuDbRk1dn2SqP8MBvnzch8QSrDyXNmpQOSc93t1wDeweQHkYnFU
-m/364ITsSAfvdS2TEEwQ
-=2mUN
+iQIcBAEBAgAGBQJTHzCqAAoJEOfTILNwq7R4/AcP/0afa+s37SF5aJM7vlrFWTSu
+K7YyO9bp7HXJqPi/VY/RosgwOW/y6gVV4Yv6+4i7sNX/3+xBwAnME1qIxZsvW5io
+m7qe8omfmWzNKsiwRSIM6zM84DLCyLtjsPtUH0PUi41U12AsnuBdTXzoEtxgG+ib
++RD+Y5tYebifCurjgxR5wrnMZJvoS+SS2h/9hOzc+AJAKbKtDNPoN2ejw8j/MM1A
+QcwF2IhVFXbkZir2EEeU/YGca6AKhDt2I5S8UsWU9bUc0HJTRfHQqXP656wjjVLh
+Uy9fTd/QMLE0/Ih8ugq8GEpRGAcw3sYxz+APnlFwwsbWBrxj6PyysQB8aZxLEAl1
+OAakIjkg/t2uYptS/KrpcriWzzTctsyo2VMYJ9ijtJb+uxSqrk7hU1EvKrf7/nlN
+Db/GmEfor9/diuLfWJy8mni3b5JdZ/wfHUEuG3+wIi9+kqf6Gu4YWnCm33vDOuUO
+mfmvkJ/Scf/am4hxw9AvBI32la9ttciMmI4QFoPcYeIJlmTMdz9EWtHG4wAEDxxA
+tTaGAdjKeOs88BIQl6zGUjQkknbvBJy5i/8xTuJ/vVomkyKdjh9MZk2UEgGBUf4L
+0R0fkt71Afibq7ylFGG5A0bXBW74FJGTQVfi3RnvmuQ8AOUPACPBkw6gyoFX7A0q
+Tz/yN9f8FowoLUiQkDRM
+=n+KR
 -----END PGP SIGNATURE-----
 
---7ZAtKRhVyVSsbBD2--
+--z4+8/lEcDcG5Ke9S--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
