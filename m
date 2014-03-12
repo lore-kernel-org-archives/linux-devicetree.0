@@ -1,85 +1,55 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 1/5] mfd: add bcm590xx pmu DT binding
-Date: Wed, 12 Mar 2014 14:09:30 +0000
-Message-ID: <20140312140930.GA4374@e106331-lin.cambridge.arm.com>
-References: <1394633237-16837-1-git-send-email-mporter@linaro.org>
- <1394633237-16837-2-git-send-email-mporter@linaro.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/6] pinctrl: st: Enhance the controller to manage
+ unavailable registers
+Date: Wed, 12 Mar 2014 15:16:32 +0100
+Message-ID: <CACRpkdY4FJ04=jnU_7GVM_W80Lx=t2nggx9=2=cfdHAJdN2kNw@mail.gmail.com>
+References: <1394614210-15698-1-git-send-email-maxime.coquelin@st.com>
+	<1394614210-15698-3-git-send-email-maxime.coquelin@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1394633237-16837-2-git-send-email-mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1394614210-15698-3-git-send-email-maxime.coquelin-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Maxime COQUELIN <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 12, 2014 at 02:07:13PM +0000, Matt Porter wrote:
-> Add a DT binding for the BCM590xx PMUs. The binding inherits from
-> the generic regulator bindings.
-> 
-> Signed-off-by: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Reviewed-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Reviewed-by: Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Wed, Mar 12, 2014 at 9:50 AM, Maxime COQUELIN <maxime.coquelin-qxv4g6HH51o@public.gmane.org> wrote:
 
-Looks sane to me.
+> From: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+>
+> This patch adds a new logic inside the st pinctrl to manage
+> an unsupported scenario: some sysconfig are not available!
+>
+> This is the case of STiH407 where, although documented, the
+> following registers from SYSCFG_FLASH have been removed from the SoC.
+>
+> SYSTEM_CONFIG3040
+>    Output Enable pad control for all PIO Alternate Functions
+> and
+> SYSTEM_ CONFIG3050
+>    Pull Up pad control for all PIO Alternate Functions
+>
+> Without managing this condition an imprecise external abort
+> will be detect.
+>
+> To do this the patch also reviews the st_parse_syscfgs
+> and other routines to manipulate the registers only if
+> actually available.
+> In any case, for example the st_parse_syscfgs detected
+> an error condition but no action was made in the
+> st_pctl_probe_dt.
+>
+> Acked-by: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+> Acked-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+> Signed-off-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
 
-Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+This v4 version applied to the pinctrl devel branch with
+Lee's ACK.
 
-Mark.
-
-> ---
->  Documentation/devicetree/bindings/mfd/bcm590xx.txt | 37 ++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/bcm590xx.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/bcm590xx.txt b/Documentation/devicetree/bindings/mfd/bcm590xx.txt
-> new file mode 100644
-> index 0000000..1fe30e2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/bcm590xx.txt
-> @@ -0,0 +1,37 @@
-> +-------------------------------
-> +BCM590xx Power Management Units
-> +-------------------------------
-> +
-> +Required properties:
-> +- compatible: "brcm,bcm59056"
-> +- reg: I2C slave address
-> +- interrupts: interrupt for the PMU. Generic interrupt client node bindings
-> +  are described in interrupt-controller/interrupts.txt
-> +
-> +------------------
-> +Voltage Regulators
-> +------------------
-> +
-> +Optional child nodes:
-> +- regulators: container node for regulators following the generic
-> +  regulator binding in regulator/regulator.txt
-> +
-> +  The valid regulator node names for BCM59056 are:
-> +  	rfldo, camldo1, camldo2, simldo1, simldo2, sdldo, sdxldo,
-> +	mmcldo1, mmcldo2, audldo, micldo, usbldo, vibldo,
-> +	csr, iosr1, iosr2, msr, sdsr1, sdsr2, vsr
-> +
-> +Example:
-> +	pmu: bcm59056@8 {
-> +		compatible = "brcm,bcm59056";
-> +		reg = <0x08>;
-> +		interrupts = <GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>;
-> +		regulators {
-> +			rfldo_reg: rfldo {
-> +				regulator-min-microvolt = <1200000>;
-> +				regulator-max-microvolt = <3300000>;
-> +			};
-> +
-> +			...
-> +		};
-> +	};
-> -- 
-> 1.8.4
-> 
-> 
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
