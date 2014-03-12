@@ -1,284 +1,124 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 6/9] at91: dt: sam9261: Device Tree support for the
- at91sam9261ek
-Date: Wed, 12 Mar 2014 14:35:00 +0100
-Message-ID: <53206284.2000002@atmel.com>
-References: <1393841162-25339-1-git-send-email-jjhiblot@traphandler.com> <1393841162-25339-7-git-send-email-jjhiblot@traphandler.com> <20140303183800.GF3155@piout.net>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] irqchip: sun4i: Fix irq 0 not working
+Date: Wed, 12 Mar 2014 14:45:14 +0100
+Message-ID: <532064EA.1070308@redhat.com>
+References: <1394553060-30298-1-git-send-email-hdegoede@redhat.com> <20140312100935.GY2815@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140303183800.GF3155-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
-Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRB36JQGMQKGQEMJV7YVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140312100935.GY2815@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/03/2014 19:38, Alexandre Belloni :
-> On 03/03/2014 at 11:05:59 +0100, Jean-Jacques Hiblot wrote :
->> This patch implements a DTS to boot a at91sam9261ek with a dt-enabled
->> kernel (at91_dt_defconfig).
->> supported features are:
->> * dbgu
->> * lcdc
->> * usb host
->> * usb gadget,
->> * spi dataflash
->> * nand flash
->> * touchscreen
->> * leds
->> * user buttons
+Hi,
+
+On 03/12/2014 11:09 AM, Maxime Ripard wrote:
+> Hi,
+> 
+> On Tue, Mar 11, 2014 at 04:51:00PM +0100, Hans de Goede wrote:
+>> SUN4I_IRQ_VECTOR_REG containing 0 can mean one of 2 things:
+>> 1) irq 0 pending
+>> 2) no more irqs pending
 >>
->> In the TODO list:
->> * dm9000 (ethernet)
->> * audio
->> * mmc
+>> So we must loop always atleast once to make irq 0 work, otherwise irq 0
+>> will never get serviced and we end up with a hard hang because
+>> sun4i_handle_irq gets re-entered constantly.
 >>
->> Signed-off-by: Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 >> ---
->>  arch/arm/boot/dts/Makefile          |   2 +
->>  arch/arm/boot/dts/at91sam9261ek.dts | 204 ++++++++++++++++++++++++++++++++++++
->>  2 files changed, 206 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/at91sam9261ek.dts
+>>  drivers/irqchip/irq-sun4i.c | 10 ++++++++--
+>>  1 file changed, 8 insertions(+), 2 deletions(-)
 >>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index 0320303..f496473 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -12,6 +12,8 @@ dtb-$(CONFIG_ARCH_AT91) += ethernut5.dtb
->>  dtb-$(CONFIG_ARCH_AT91) += evk-pro3.dtb
->>  dtb-$(CONFIG_ARCH_AT91) += tny_a9260.dtb
->>  dtb-$(CONFIG_ARCH_AT91) += usb_a9260.dtb
->> +# sam9261
->> +dtb-$(CONFIG_ARCH_AT91) += at91sam9261ek.dtb
->>  # sam9263
->>  dtb-$(CONFIG_ARCH_AT91) += at91sam9263ek.dtb
->>  dtb-$(CONFIG_ARCH_AT91) += tny_a9263.dtb
->> diff --git a/arch/arm/boot/dts/at91sam9261ek.dts b/arch/arm/boot/dts/at91sam9261ek.dts
->> new file mode 100644
->> index 0000000..03adb7f
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/at91sam9261ek.dts
->> @@ -0,0 +1,204 @@
->> +/*
->> + * at91sam9261ek.dts - Device Tree file for Atmel at91sam9261 reference board
->> + *
->> + *  Copyright (C) 2013 Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
->> + *
->> + * Licensed under GPLv2 only.
->> + */
->> +/dts-v1/;
->> +#include "at91sam9261.dtsi"
->> +
->> +/ {
->> +	model = "Atmel at91sam9261ek";
->> +	compatible = "atmel,at91sam9261ek", "atmel,at91sam9261", "atmel,at91sam9";
->> +
->> +	chosen {
->> +		bootargs = "console=ttyS0,115200 rootfstype=ubifs ubi.mtd=5 root=ubi0:rootfs rw";
->> +	};
->> +
->> +	memory {
->> +		reg = <0x20000000 0x4000000>;
->> +	};
->> +
->> +	clocks {
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		ranges;
->> +
->> +		main_clock: clock@0 {
->> +			compatible = "atmel,osc", "fixed-clock";
->> +			clock-frequency = <18432000>;
->> +		};
->> +	};
->> +
->> +	ahb {
->> +		usb0: ohci@00500000 {
->> +			status = "okay";
->> +		};
->> +
->> +		fb0: fb@0x00600000 {
->> +			display = <&display0>;
->> +			atmel,power-control-gpio = <&pioA 12 GPIO_ACTIVE_LOW>;
->> +			status = "okay";
->> +
->> +			display0: display {
->> +				bits-per-pixel = <16>;
->> +				atmel,lcdcon-backlight;
->> +				atmel,dmacon = <0x1>;
->> +				atmel,lcdcon2 = <0x80008002>;
->> +				atmel,guard-time = <1>;
->> +				atmel,lcd-wiring-mode = "BRG";
->> +
->> +				display-timings {
->> +					native-mode = <&timing0>;
->> +					timing0: timing0 {
->> +						clock-frequency = <4965000>;
->> +						hactive = <240>;
->> +						vactive = <320>;
->> +						hback-porch = <1>;
->> +						hfront-porch = <33>;
->> +						vback-porch = <1>;
->> +						vfront-porch = <0>;
->> +						hsync-len = <5>;
->> +						vsync-len = <1>;
->> +						hsync-active = <1>;
->> +						vsync-active = <1>;
->> +					};
->> +				};
->> +			};
->> +		};
->> +
->> +		nand0: nand@40000000 {
->> +			nand-bus-width = <8>;
->> +			nand-ecc-mode = "soft";
->> +			nand-on-flash-bbt;
->> +			status = "okay";
->> +
->> +			at91bootstrap@0 {
->> +				label = "at91bootstrap";
->> +				reg = <0x0 0x40000>;
->> +			};
->> +
->> +			bootloader@40000 {
->> +				label = "bootloader";
->> +				reg = <0x40000 0x80000>;
->> +			};
->> +
->> +			bootloaderenv@c0000 {
->> +				label = "bootloader env";
->> +				reg = <0xc0000 0xc0000>;
->> +			};
->> +
->> +			dtb@180000 {
->> +				label = "device tree";
->> +				reg = <0x180000 0x80000>;
->> +			};
->> +
->> +			kernel@200000 {
->> +				label = "kernel";
->> +				reg = <0x200000 0x600000>;
->> +			};
->> +
->> +			rootfs@800000 {
->> +				label = "rootfs";
->> +				reg = <0x800000 0x0f800000>;
->> +			};
->> +		};
->> +
->> +		apb {
->> +			usb1: gadget@fffa4000 {
->> +				atmel,vbus-gpio = <&pioB 29 GPIO_ACTIVE_HIGH>;
->> +				status = "okay";
->> +			};
+>> diff --git a/drivers/irqchip/irq-sun4i.c b/drivers/irqchip/irq-sun4i.c
+>> index a5438d8..3761bf1 100644
+>> --- a/drivers/irqchip/irq-sun4i.c
+>> +++ b/drivers/irqchip/irq-sun4i.c
+>> @@ -140,10 +140,16 @@ static asmlinkage void __exception_irq_entry sun4i_handle_irq(struct pt_regs *re
+>>  {
+>>  	u32 irq, hwirq;
+>>  
+>> +	/*
+>> +	 * hwirq == 0 can mean one of 2 things:
+>> +	 * 1) irq 0 pending
+>> +	 * 2) no more irqs pending
 > 
-> Nit: add a white line between nodes please, same for a few nodes below.
+> 3) spurious interrupt.
+> 
+>> +	 * So loop always atleast once to make irq 0 work.
+>> +	 */
+>>  	hwirq = readl(sun4i_irq_base + SUN4I_IRQ_VECTOR_REG) >> 2;
+>> -	while (hwirq != 0) {
+>> +	do {
+> 
+> I'd at least lookup in the pending register to see if the interrupt 0
+> was actually triggered. Otherwise, you could end up with spurious
+> handler calls on the interrupt 0.
 
-Done while including in the at91-3.15-cleanup branch.
+Yes, I was already worrying about this myself after sending the patch,
+and considered reading pending too.
 
 > 
->> +			spi0: spi@fffc8000 {
->> +				cs-gpios = <&pioA 3 0>, <0>, <&pioA 28 0>, <0>;
->> +				status = "okay";
->> +
->> +				mtd_dataflash@0 {
->> +					compatible = "atmel,at45", "atmel,dataflash";
->> +					reg = <0>;
->> +					spi-max-frequency = <15000000>;
->> +				};
->> +				tsc2046@0 {
->> +					reg = <2>;
->> +					compatible = "ti,ads7843";
->> +					interrupts-extended = <&pioC 2 IRQ_TYPE_EDGE_BOTH>;
->> +					spi-max-frequency = <3000000>;
->> +					pendown-gpio = <&pioC 2 GPIO_ACTIVE_HIGH>;
->> +
->> +					ti,x-min = /bits/ 16 <150>;
->> +					ti,x-max = /bits/ 16 <3830>;
->> +					ti,y-min = /bits/ 16 <190>;
->> +					ti,y-max = /bits/ 16 <3830>;
->> +					ti,vref-delay-usecs = /bits/ 16 <450>;
->> +					ti,x-plate-ohms = /bits/ 16 <450>;
->> +					ti,y-plate-ohms = /bits/ 16 <250>;
->> +					ti,pressure-max = /bits/ 16 <15000>;
->> +					ti,debounce-rep = /bits/ 16 <0>;
->> +					ti,debounce-tol = /bits/ 16 <65535>;
->> +					ti,debounce-max = /bits/ 16 <1>;
->> +
->> +					linux,wakeup;
->> +				};
->> +			};
->> +
->> +			dbgu: serial@fffff200 {
->> +				status = "okay";
->> +			};
->> +
->> +			watchdog@fffffd40 {
->> +				status = "okay";
->> +			};
->> +
->> +		};
->> +	};
->> +
->> +	leds {
->> +		compatible = "gpio-leds";
->> +
->> +		ds8 {
->> +			label = "ds8";
->> +			gpios = <&pioA 13 GPIO_ACTIVE_LOW>;
->> +			linux,default-trigger = "none";
->> +		};
->> +		ds7 {
->> +			label = "ds7";
->> +			gpios = <&pioA 14 GPIO_ACTIVE_LOW>;
->> +			linux,default-trigger = "nand-disk";
->> +		};
->> +		ds1 {
->> +			label = "ds1";
->> +			gpios = <&pioA 23 GPIO_ACTIVE_LOW>;
->> +			linux,default-trigger = "heartbeat";
->> +		};
->> +	};
->> +
->> +	gpio_keys {
->> +		compatible = "gpio-keys";
->> +
->> +		button_0 {
->> +			label = "button_0";
->> +			gpios = <&pioA 27 GPIO_ACTIVE_LOW>;
->> +			linux,code = <256>;
->> +			gpio-key,wakeup;
->> +		};
->> +		button_1 {
->> +			label = "button_1";
->> +			gpios = <&pioA 26 GPIO_ACTIVE_LOW>;
->> +			linux,code = <257>;
->> +			gpio-key,wakeup;
->> +		};
->> +		button_2 {
->> +			label = "button_2";
->> +			gpios = <&pioA 25 GPIO_ACTIVE_LOW>;
->> +			linux,code = <258>;
->> +			gpio-key,wakeup;
->> +		};
->> +		button_3 {
->> +			label = "button_3";
->> +			gpios = <&pioA 24 GPIO_ACTIVE_LOW>;
->> +			linux,code = <259>;
->> +			gpio-key,wakeup;
->> +		};
->> +	};
->> +};
->> -- 
->> 1.9.0
->>
+>>  		irq = irq_find_mapping(sun4i_irq_domain, hwirq);
+>>  		handle_IRQ(irq, regs);
+>>  		hwirq = readl(sun4i_irq_base + SUN4I_IRQ_VECTOR_REG) >> 2;
 > 
+> And you end up with the same issue if there's a first != 0 interrupt,
+> and then the interrupt 0.
 
+No, before my fix sun4i_handle_irq would be called continuously since we
+were never handling irq 0, so if this happens we will simply drop out
+of sun4i_handle_irq only to immediately get recalled, this does make this
+scenario more expensive, but things will still work, while it saves an
+also not cheap read from SUN4I_IRQ_PENDING_REG(0) for each regular
+interrupt.
 
--- 
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Note I agree the spurious irq case is an issue, as said that has me
+worried too.
+
+> What about something like:
+> 
+> while (1) {
+> 	hwirq = readl(sun4i_irq_base + SUN4I_IRQ_VECTOR_REG) >> 2;
+> 	if (!hwirq)
+> 		if (!(readl(sun4i_irq_base + SUN4I_IRQ_PENDING_REG(0)) & BIT(0)))
+> 			break;
+>
+> 	irq = irq_find_mapping(sun4i_irq_domain, hwirq);
+> 	handle_IRQ(irq, regs);
+> }
+
+Yes that should work nicely, but for the straight path it means reading pending
+once for each interrupt.
+
+I agree we need to read pending before calling handle_IRQ for irq 0, but
+we only need to do so if the first read from SUN4I_IRQ_VECTOR_REG == 0,
+on any subsequent reads from SUN4I_IRQ_VECTOR_REG returning 0 we can exit
+immediately, in the worst case we'll get called again, and then do the
+right thing.
+
+IE something like this:
+
+	hwirq = readl(sun4i_irq_base + SUN4I_IRQ_VECTOR_REG) >> 2;
+	/* Ensure hwirq == 0 is because of irq 0 pending */
+	if (hwirq == 0 && !(readl(sun4i_irq_base + SUN4I_IRQ_PENDING_REG(0)) & BIT(0)))
+		return;
+	do {
+		irq = irq_find_mapping(sun4i_irq_domain, hwirq);
+		handle_IRQ(irq, regs);
+		hwirq = readl(sun4i_irq_base + SUN4I_IRQ_VECTOR_REG) >> 2;
+	} while (hwirq);
+
+Note untested, and this might be unnecessary optimization. So let me know which
+version you prefer and I'll give it a test run.
+
+Regards,
+
+Hans
