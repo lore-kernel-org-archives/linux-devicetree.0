@@ -1,213 +1,32 @@
-From: Maxime COQUELIN <maxime.coquelin@st.com>
-Subject: [PATCH v4 2/6] pinctrl: st: Enhance the controller to manage
- unavailable registers
-Date: Wed, 12 Mar 2014 09:50:06 +0100
-Message-ID: <1394614210-15698-3-git-send-email-maxime.coquelin@st.com>
-References: <1394614210-15698-1-git-send-email-maxime.coquelin@st.com>
+From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v5 0/8] mtd: spi-nor: add a new framework for SPI NOR
+Date: Wed, 12 Mar 2014 16:13:51 +0800
+Message-ID: <20140312081350.GC30808@shlinux2.ap.freescale.net>
+References: <1393238262-8622-1-git-send-email-b32955@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1394614210-15698-1-git-send-email-maxime.coquelin@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, Linus Walleij <linus.walleij@linaro.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Maxime Coquelin <maxime.coquelin@st.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
-Cc: lee.jones@linaro.org
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1393238262-8622-1-git-send-email-b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+Cc: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, angus.clark-qxv4g6HH51o@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pekon-l0cyMroinI0@public.gmane.org, sourav.poddar-l0cyMroinI0@public.gmane.org, broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+On Mon, Feb 24, 2014 at 06:37:34PM +0800, Huang Shijie wrote:
+Hi Brian:
 
-This patch adds a new logic inside the st pinctrl to manage
-an unsupported scenario: some sysconfig are not available!
+   Could you please review this patch set? I really hope it can be merged
+   as soon as possibel.  But now, the patch set has stalled for a long time.
 
-This is the case of STiH407 where, although documented, the
-following registers from SYSCFG_FLASH have been removed from the SoC.
+   Since you have pushed the patches for m25p80.c, i have to rebase this
+   patch set again and again...
 
-SYSTEM_CONFIG3040
-   Output Enable pad control for all PIO Alternate Functions
-and
-SYSTEM_ CONFIG3050
-   Pull Up pad control for all PIO Alternate Functions
+   thanks
+   Huang Shijie
+   
 
-Without managing this condition an imprecise external abort
-will be detect.
-
-To do this the patch also reviews the st_parse_syscfgs
-and other routines to manipulate the registers only if
-actually available.
-In any case, for example the st_parse_syscfgs detected
-an error condition but no action was made in the
-st_pctl_probe_dt.
-
-Acked-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Acked-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
----
- drivers/pinctrl/pinctrl-st.c | 104 +++++++++++++++++++++++++------------------
- 1 file changed, 61 insertions(+), 43 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
-index 9fb66aa..7073eaf 100644
---- a/drivers/pinctrl/pinctrl-st.c
-+++ b/drivers/pinctrl/pinctrl-st.c
-@@ -410,25 +410,29 @@ static void st_pinconf_set_config(struct st_pio_control *pc,
- 	unsigned int oe_value, pu_value, od_value;
- 	unsigned long mask = BIT(pin);
- 
--	regmap_field_read(output_enable, &oe_value);
--	regmap_field_read(pull_up, &pu_value);
--	regmap_field_read(open_drain, &od_value);
--
--	/* Clear old values */
--	oe_value &= ~mask;
--	pu_value &= ~mask;
--	od_value &= ~mask;
--
--	if (config & ST_PINCONF_OE)
--		oe_value |= mask;
--	if (config & ST_PINCONF_PU)
--		pu_value |= mask;
--	if (config & ST_PINCONF_OD)
--		od_value |= mask;
--
--	regmap_field_write(output_enable, oe_value);
--	regmap_field_write(pull_up, pu_value);
--	regmap_field_write(open_drain, od_value);
-+	if (output_enable) {
-+		regmap_field_read(output_enable, &oe_value);
-+		oe_value &= ~mask;
-+		if (config & ST_PINCONF_OE)
-+			oe_value |= mask;
-+		regmap_field_write(output_enable, oe_value);
-+	}
-+
-+	if (pull_up) {
-+		regmap_field_read(pull_up, &pu_value);
-+		pu_value &= ~mask;
-+		if (config & ST_PINCONF_PU)
-+			pu_value |= mask;
-+		regmap_field_write(pull_up, pu_value);
-+	}
-+
-+	if (open_drain) {
-+		regmap_field_read(open_drain, &od_value);
-+		od_value &= ~mask;
-+		if (config & ST_PINCONF_OD)
-+			od_value |= mask;
-+		regmap_field_write(open_drain, od_value);
-+	}
- }
- 
- static void st_pctl_set_function(struct st_pio_control *pc,
-@@ -439,6 +443,9 @@ static void st_pctl_set_function(struct st_pio_control *pc,
- 	int pin = st_gpio_pin(pin_id);
- 	int offset = pin * 4;
- 
-+	if (!alt)
-+		return;
-+
- 	regmap_field_read(alt, &val);
- 	val &= ~(0xf << offset);
- 	val |= function << offset;
-@@ -576,17 +583,23 @@ static void st_pinconf_get_direction(struct st_pio_control *pc,
- {
- 	unsigned int oe_value, pu_value, od_value;
- 
--	regmap_field_read(pc->oe, &oe_value);
--	regmap_field_read(pc->pu, &pu_value);
--	regmap_field_read(pc->od, &od_value);
-+	if (pc->oe) {
-+		regmap_field_read(pc->oe, &oe_value);
-+		if (oe_value & BIT(pin))
-+			ST_PINCONF_PACK_OE(*config);
-+	}
- 
--	if (oe_value & BIT(pin))
--		ST_PINCONF_PACK_OE(*config);
--	if (pu_value & BIT(pin))
--		ST_PINCONF_PACK_PU(*config);
--	if (od_value & BIT(pin))
--		ST_PINCONF_PACK_OD(*config);
-+	if (pc->pu) {
-+		regmap_field_read(pc->pu, &pu_value);
-+		if (pu_value & BIT(pin))
-+			ST_PINCONF_PACK_PU(*config);
-+	}
- 
-+	if (pc->od) {
-+		regmap_field_read(pc->od, &od_value);
-+		if (od_value & BIT(pin))
-+			ST_PINCONF_PACK_OD(*config);
-+	}
- }
- 
- static int st_pinconf_get_retime_packed(struct st_pinctrl *info,
-@@ -1105,8 +1118,21 @@ static int st_pctl_dt_setup_retime(struct st_pinctrl *info,
- 	return -EINVAL;
- }
- 
--static int st_parse_syscfgs(struct st_pinctrl *info,
--		int bank, struct device_node *np)
-+
-+static struct regmap_field *st_pc_get_value(struct device *dev,
-+					    struct regmap *regmap, int bank,
-+					    int data, int lsb, int msb)
-+{
-+	struct reg_field reg = REG_FIELD((data + bank) * 4, lsb, msb);
-+
-+	if (data < 0)
-+		return NULL;
-+
-+	return devm_regmap_field_alloc(dev, regmap, reg);
-+}
-+
-+static void st_parse_syscfgs(struct st_pinctrl *info, int bank,
-+			     struct device_node *np)
- {
- 	const struct st_pctl_data *data = info->data;
- 	/**
-@@ -1116,29 +1142,21 @@ static int st_parse_syscfgs(struct st_pinctrl *info,
- 	 */
- 	int lsb = (bank%4) * ST_GPIO_PINS_PER_BANK;
- 	int msb = lsb + ST_GPIO_PINS_PER_BANK - 1;
--	struct reg_field alt_reg = REG_FIELD((data->alt + bank) * 4, 0, 31);
--	struct reg_field oe_reg = REG_FIELD((data->oe + bank/4) * 4, lsb, msb);
--	struct reg_field pu_reg = REG_FIELD((data->pu + bank/4) * 4, lsb, msb);
--	struct reg_field od_reg = REG_FIELD((data->od + bank/4) * 4, lsb, msb);
- 	struct st_pio_control *pc = &info->banks[bank].pc;
- 	struct device *dev = info->dev;
- 	struct regmap *regmap  = info->regmap;
- 
--	pc->alt = devm_regmap_field_alloc(dev, regmap, alt_reg);
--	pc->oe = devm_regmap_field_alloc(dev, regmap, oe_reg);
--	pc->pu = devm_regmap_field_alloc(dev, regmap, pu_reg);
--	pc->od = devm_regmap_field_alloc(dev, regmap, od_reg);
--
--	if (IS_ERR(pc->alt) || IS_ERR(pc->oe) ||
--			IS_ERR(pc->pu) || IS_ERR(pc->od))
--		return -EINVAL;
-+	pc->alt = st_pc_get_value(dev, regmap, bank, data->alt, 0, 31);
-+	pc->oe = st_pc_get_value(dev, regmap, bank/4, data->oe, lsb, msb);
-+	pc->pu = st_pc_get_value(dev, regmap, bank/4, data->pu, lsb, msb);
-+	pc->od = st_pc_get_value(dev, regmap, bank/4, data->od, lsb, msb);
- 
- 	/* retime avaiable for all pins by default */
- 	pc->rt_pin_mask = 0xff;
- 	of_property_read_u32(np, "st,retime-pin-mask", &pc->rt_pin_mask);
- 	st_pctl_dt_setup_retime(info, bank, pc);
- 
--	return 0;
-+	return;
- }
- 
- /*
--- 
-1.9.0
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
