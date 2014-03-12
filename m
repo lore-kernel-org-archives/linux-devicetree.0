@@ -1,141 +1,180 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [RFC PATCH v2 00/21] Add DSI display support for Exynos based
- boards
-Date: Wed, 12 Mar 2014 12:16:10 +0100
-Message-ID: <532041FA.7070300@samsung.com>
-References: <1392204688-4591-1-git-send-email-a.hajda@samsung.com>
- <CAAQKjZOEAWG3jwTPOP7aBnpjyg8qLfq-Fcv_Mec2+fgmOULqEg@mail.gmail.com>
- <531998B5.7040002@samsung.com>
- <CAAQKjZN3PoXoEFRXzHA+vrMCLfTRYJ9g3rFjzodNRNh62hPuDw@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core to drivers/of
+Date: Wed, 12 Mar 2014 12:21:32 +0100
+Message-ID: <2398742.ziJRvL3pZ3@avalon>
+References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> <20140312102556.GC21483@n2100.arm.linux.org.uk> <53203B2D.6080201@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAAQKjZN3PoXoEFRXzHA+vrMCLfTRYJ9g3rFjzodNRNh62hPuDw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, DRI mailing list <dri-devel@lists.freedesktop.org>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: multipart/signed; boundary="nextPart1849666.9EvsXHZdxQ"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53203B2D.6080201-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12.03.2014 11:08, Inki Dae wrote:
-> 2014-03-07 19:00 GMT+09:00 Andrzej Hajda <a.hajda@samsung.com>:
->> On 03/05/2014 03:56 AM, Inki Dae wrote:
->>> Hi Andrzej,
->>>
->>> Thanks for your contributions.
->>>
->>> 2014-02-12 20:31 GMT+09:00 Andrzej Hajda <a.hajda@samsung.com>:
->>>> Hi,
->>>>
->>>> This patchset adds drivers and bindings to the following devices:
->>>> - Exynos DSI master,
->>>> - S6E8AA0 DSI panel,
->>>> - TC358764 DSI/LVDS bridge,
->>>> - HV070WSA-100 LVDS panel.
->>>>
->>>> It adds also display support in DTS files for the following boards:
->>>> - Exynos4210/Trats,
->>>> - Exynos4412/Trats2,
->>>> - Exynos5250/Arndale.
->>>>
->>>> Things worth mentioning:
->>>>
->>>> 1. I have implemented DSI/LVDS bridge using drm_panel framework, ie.
->>>> the driver exposes drm_panel interface on DSI side, and interact with
->>>> panels on LVDS side using drm_panel framework. This approach seems to
->>>> me simpler and more natural than using drm_bridge.
->>> Can you give me more details about why you think better to use panel
->>> framework than using drm_bridge?  "Simpler" and "more natural" are
->>> ambiguous to me.
->> In this particular case DSI master expects on the other end
->> any device having DSI slave interface, it could be panel or bridge.
->> So it seems natural that both types of slave devices should expose
->> the same interface also  on programming level.
->> Another problem with drm_bridge is that it is not scalable -
->> if some manufacturer will decide to add another block between the bridge
->> and the panel there is no drm component which can be used for it.
->> Using drm_panel the way I have used in toshiba bridge makes scalability
->> possible,
->> it will be only a matter of adding a driver for new block and making
->> proper links in device tree, I see no easy way of doing it with
->> drm_bridge approach.
->
-> Now drm_bridge may not cover all hardware. However drm_bridge has
-> already been merged to mainline so I think we need to use drm_bridge
-> somehow instead of using other one, and also we could extend
-> drm_bridge if needed. It would be definitely impossible for a new
-> framework to cover all hardware because there may be other hardware
-> not appeared yet. That is what we are doing for mainline until now.
->
 
-Well, maybe drm_bridge has been merged, but so has been drm_panel. 
-Moreover, merged code is not carved in stone, if there is a better 
-option that could replace it, users of it can be converted to the new 
-approach and the old one can be removed.
+--nextPart1849666.9EvsXHZdxQ
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
 
-As I believe Andrzej has demonstrated, drm_panel framework is clearly 
-superior over drm_bridge and I can't think of any good reason why it 
-couldn't become more generic and replace drm_bridge. Of course it can be 
-renamed then to something more generic appropriately.
+Hi Russell and Tomi,
 
->>
->>
->>>
->>> Using same drm_panel framework for LDVS bridge and real panel drivers
->>> isn't reasonable to me as now because drm_panel framework would be for
->>> real panel device even if the use of drm_panel framework looks like
->>> suitable to LVDS bridge driver. I thought Sean's way, ptn3460 driver
->>> using drm_bride stuff, is good enough, and that would be why
->>> drm_bridge exists and why drm_encoder has drm_bridge.
->>>
->>> And I'm finding more generic way, how to handle LVDS bridge using
->>> super node so that  LVDS bridge driver isn't embedded to connector
->>> drivers such as eDP and MIPI-DSI, and dt binding of LVDS bridge can be
->>> done at top level of Exynos drm. Once the binding is done, encoder of
->>> display bus driver will have drm_bridge object of LVDS bridge driver
->>> so that display bus driver can handle LVDS bridge driver.
->> Could you explain what you mean by "dt binding of LVDS bridge can be
->> done at top level of Exynos drm" ? How it will look like if there
->> will be more bridges, one for DSI, one for HDMI, etc... What if there
->> will be two
->> bridges in one chain. How it will cope with video pipeline bindings?
->
-> it was just my idea so I have no implementation about it yet.
->
-> My idea is that crtc and encoder are binded at top level of Exynos drm
-> as is. And for bridge support, the only difference is, in case that
-> encoder driver has bridge, the dt binding of the encoder driver is
-> done once last one between encoder and bridge driver is binded. It
-> would mean that bridge driver can use driver model and it doesn't need
-> to concern about probe order issue.
->
-> For this, encoder driver with bridge, MIPI-DSI or eDP, would need to
-> use component interfaces specific to Exynos drm. As a result, once the
-> dt bindings of crtc and encoder are completed at top level, encoder
-> driver has its own drm_bridge for bridge, and dt binding you proposed
-> could be used without any change, and drm_panel could also be used
-> only for real lcd panel driver.
->
-> And below is a block diagram I think,
->
->                                    DRM KMS
->                     /                      |                 \
->                /                           |                      \
->           crtc                      encoder              connector
->             |                           /     \                          |
->             |                       /             \                      |
->             |                      |           drm_bridge   drm_panel
->             |                      |                   |                 |
->             |                      |                   |                 |
->          FIMD         MIPI-DSI    LVDS bridge    Panel
->
+On Wednesday 12 March 2014 12:47:09 Tomi Valkeinen wrote:
+> On 12/03/14 12:25, Russell King - ARM Linux wrote:
+> > On Mon, Mar 10, 2014 at 02:52:53PM +0100, Laurent Pinchart wrote:
+> >> In theory unidirectional links in DT are indeed enough. However, l=
+et's
+> >> not forget the following.
+> >>=20
+> >> - There's no such thing as single start points for graphs. Sure, i=
+n some
+> >> simple cases the graph will have a single start point, but that's =
+not a
+> >> generic rule. For instance the camera graphs
+> >> http://ideasonboard.org/media/omap3isp.ps and
+> >> http://ideasonboard.org/media/eyecam.ps have two camera sensors, a=
+nd thus
+> >> two starting points from a data flow point of view.
+> >=20
+> > I think we need to stop thinking of a graph linked in terms of data=
 
-Hmm, this doesn't seem to be complete. Several bridges can be chained 
-together. Also I believe "Panel" and "drm_panel" on your diagram should 
-be basically the same. This leads to obvious conclusion that drm_bridge 
-and drm_panel should be merged and Andrzej has shown an example (and 
-IMHO good) way to do it, as drm_panel already provides a significant 
-amount of existing infrastructure.
+> > flow - that's really not useful.
+> >=20
+> > Consider a display subsystem.  The CRTC is the primary interface fo=
+r
+> > the CPU - this is the "most interesting" interface, it's the interf=
+ace
+> > which provides access to the picture to be displayed for the CPU.  =
+Other
+> > interfaces are secondary to that purpose - reading the I2C DDC bus =
+for
+> > the display information is all secondary to the primary purpose of
+> > displaying a picture.
+> >=20
+> > For a capture subsystem, the primary interface for the CPU is the f=
+rame
+> > grabber (whether it be an already encoded frame or not.)  The senso=
+r
+> > devices are all secondary to that.
+> >=20
+> > So, the primary software interface in each case is where the data f=
+or
+> > the primary purpose is transferred.  This is the point at which the=
+se
+> > graphs should commence since this is where we would normally start
+> > enumeration of the secondary interfaces.
+> >=20
+> > V4L2 even provides interfaces for this: you open the capture device=
+,
+> > which then allows you to enumerate the capture device's inputs, and=
 
-Best regards,
-Tomasz
+> > this in turn allows you to enumerate their properties.  You don't o=
+pen
+> > a particular sensor and work back up the tree.
+
+Please note that this has partly changed a couple of years ago with the=
+=20
+introduction of the media controller framework. Userspace now opens a l=
+ogical=20
+media device that describes the topology of the hardware, and then acce=
+sses=20
+individual components directly, from sensor to DMA engine.
+
+> We do it the other way around in OMAP DSS. It's the displays the user=
+ is
+> interested in, so we enumerate the displays, and if the user wants to=
+
+> enable a display, we then follow the links from the display towards t=
+he
+> SoC, configuring and enabling the components on the way.
+
+The logical view of a device from a CPU perspective evolves over time, =
+as APIs=20
+are refactored or created to support new hardware that comes with new=20=
+
+paradigms and additional complexity. The hardware data flow direction,=20=
+
+however, doesn't change. Only modeling the data flow direction in DT mi=
+ght be=20
+tempting but is probably too hasty of a conclusion though : if DT shoul=
+d model=20
+the hardware, it ends up modeling a logical view of the hardware, and i=
+s thus=20
+not as closed as one might believe.
+
+In the particular case of display devices I believe that using the data=
+ flow=20
+direction for links (assuming we can't use bidirectional links in DT) i=
+s a=20
+good model. It would allow parsing the whole graph at a reasonable cost=
+ (still=20
+higher than with bidirectional links) while making clear how to represe=
+nt=20
+links. Let's not forgot that with more complex devices not all componen=
+ts can=20
+be referenced directly from the CPU-side display controller.
+
+> I don't have a strong opinion on the direction, I think both have the=
+ir
+> pros. In any case, that's more of a driver model thing, and I'm fine
+> with linking in the DT outwards from the SoC (presuming the
+> double-linking is not ok, which I still like best).
+>=20
+> > I believe trying to do this according to the flow of data is just w=
+rong.
+> > You should always describe things from the primary device for the C=
+PU
+> > towards the peripheral devices and never the opposite direction.
+>=20
+> In that case there's possibly the issue I mentioned in other email in=
+
+> this thread: an encoder can be used in both a display and a capture
+> pipeline. Describing the links outwards from CPU means that sometimes=
+
+> the encoder's input port is pointed at, and sometimes the encoder's
+> output port is pointed at.
+>=20
+> That's possibly ok, but I think Grant was of the opinion that things
+> should be explicitly described in the binding documentation: either a=
+
+> device's port must contain a 'remote-endpoint' property, or it must n=
+ot,
+> but no "sometimes". But maybe I took his words too literally.
+>=20
+> Then there's also the audio example Philipp mentioned, where there is=
+ no
+> clear "outward from Soc" direction for the link, as the link was
+> bi-directional and between two non-SoC devices.
+
+Even if the link was unidirectional the "outward from SoC" direction is=
+n't=20
+always defined for links between non-SoC devices.
+
+=2D-=20
+Regards,
+
+Laurent Pinchart
+
+--nextPart1849666.9EvsXHZdxQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQEcBAABAgAGBQJTIENCAAoJEIkPb2GL7hl17lQH/Rm/Pc/HzDFWdGyopxEo1uWr
+YfsQ1alEQGavajcKzbQr3w5+8/vVxYIcZ4oyx4MWCIQgoYyBDZo4+4mCkiXmehyp
+Smxlv1gPEJpf8msikaEYoSpkkrxuegAIcB3/P++lmIwp/GbSFKij43T4zVgCtj6o
+Yt9D8Q3Uus/Mf8326daaJ1cWd19OAVMCID/J9plLVF1xoJ7aIVe+DjBb90S3gsH0
+JsFfjqHNaDIgiyUIWPytiLlEJsOmZp7OJmrysLn4hhxIkPSThA/dMxrLg/he97mS
+okP9SJiI79pLGEEmpczMp+ficX+c3U/9tjP/LyfDp+r8QTyqtBqE6GNRbUb9o2Y=
+=iCfR
+-----END PGP SIGNATURE-----
+
+--nextPart1849666.9EvsXHZdxQ--
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
