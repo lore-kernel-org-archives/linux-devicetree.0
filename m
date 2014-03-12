@@ -1,56 +1,118 @@
 From: Nicolin Chen <Guangyu.Chen@freescale.com>
-Subject: Re: [PATCH v2] ASoC: cs42888: Add codec driver support
-Date: Wed, 12 Mar 2014 10:03:35 +0800
-Message-ID: <20140312020334.GD1177@MrMyself>
-References: <1394536791-8381-1-git-send-email-Guangyu.Chen@freescale.com>
- <alpine.DEB.2.02.1403111026280.3558@heelrod>
- <531F320E.70605@metafoo.de>
- <20140311184606.GW28112@sirena.org.uk>
- <03E7E694-045D-4C8B-A1A4-98CC306D6D63@cirrus.com>
+Subject: [PATCH v2] ASoC: simple-card: overwrite cpu_dai->fmt with codec_dai->fmt
+Date: Wed, 12 Mar 2014 11:02:11 +0800
+Message-ID: <1394593331-22867-1-git-send-email-Guangyu.Chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
 Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <03E7E694-045D-4C8B-A1A4-98CC306D6D63@cirrus.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: "Austin, Brian" <Brian.Austin@cirrus.com>
-Cc: Mark Brown <broonie@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, "Handrigan, Paul" <Paul.Handrigan@cirrus.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+To: broonie@kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, lgirdwood@gmail.com, kuninori.morimoto.gx@renesas.com, jsarha@ti.com, devicetree@vger.kernel.org, Li.Xiubo@freescale.com, moinejf@free.fr, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+The current simple-card driver separates the daimft for cpu_dai and codec_dai.
+So we might get different values for them (0x4003 and 0x1003 for example):
 
-On Wed, Mar 12, 2014 at 02:05:00AM +0000, Austin, Brian wrote:
-> 
-> 
-> >> On Mar 11, 2014, at 13:46, "Mark Brown" <broonie@kernel.org> wrote:
-> >> 
-> >> On Tue, Mar 11, 2014 at 04:55:58PM +0100, Lars-Peter Clausen wrote:
-> >> On 03/11/2014 04:41 PM, Brian Austin wrote:
-> > 
-> >>> So WRT the CS42888, this is one device in a series of 2 devices that are
-> >>> register compatible with the only difference being that the CS42488 has 2
-> >>> extra ADC's. Same die and same DeviceID.
-> > 
-> >>> Would it make more sense to submit the driver with the extra ADC's to make
-> >>> it feature complete for both devices? Wouldn't be odd to have 2 drivers that
-> >>> do the same for 98% of the code.
-> > 
-> >> This should be in one driver. But support for the second device can
-> >> always be added in a follow up patch.
-> > 
-> > Yes, we can add support later.  It might be helpful to name the driver
-> > with some generic name I guess.
-> CS42xx8 would work.
-> 
-> We have a CS42448 and the CS42888. The difference is the 2 extra ADC's on the CS42448. I can add those later.
-> 
-> I still would like to go over some of the v2 code though before a v3 is sent.
+asoc-simple-card sound-cs42888.12: cpu : 2024000.esai / 4003 / 132000000
+asoc-simple-card sound-cs42888.12: codec : cs42888 / 1003 / 24576000
+asoc-simple-card sound-cs42888.12: cs42888 <-> 2024000.esai mapping ok
 
-Actually I've already sent v3 right after this v2 due to some doc updating.
+This is not allowed at all as we need to keep the DAIFMT settings identical
+for both the ends of the link.
 
-Anyway, I'd love to wait for your comments against the patch before I send v3.
+Thus this patch fixes it by overwriting the cpu_dai->fmt with codec_dai->fmt
+since we defined the DAIFMT_MASTER basing on CODEC at the first place while
+the other bits are same.
 
-Thank you,
-Nicolin
+Signed-off-by: Nicolin Chen <Guangyu.Chen@freescale.com>
+---
+
+Changelog
+v2:
+ * Keep the fmt identical for both CPU and CODEC sides.
+ * Appended warning to binding doc.
+
+ .../devicetree/bindings/sound/simple-card.txt        |  6 ++++++
+ sound/soc/generic/simple-card.c                      | 20 ++++++++++++++------
+ 2 files changed, 20 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
+index b30c222..881914b1 100644
+--- a/Documentation/devicetree/bindings/sound/simple-card.txt
++++ b/Documentation/devicetree/bindings/sound/simple-card.txt
+@@ -43,6 +43,12 @@ Optional CPU/CODEC subnodes properties:
+ 					  clock node (= common clock), or "system-clock-frequency"
+ 					  (if system doens't support common clock)
+ 
++Note:
++ * For 'format', 'frame-master', 'bitclock-master', 'bitclock-inversion' and
++   'frame-inversion', the simple card will use the settings of CODEC for both
++   CPU and CODEC sides as we need to keep the settings identical for both ends
++   of the link.
++
+ Example:
+ 
+ sound {
+diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
+index 5dd4769..09591ab 100644
+--- a/sound/soc/generic/simple-card.c
++++ b/sound/soc/generic/simple-card.c
+@@ -157,6 +157,8 @@ static int asoc_simple_card_parse_of(struct device_node *node,
+ 				     struct device *dev)
+ {
+ 	struct snd_soc_dai_link *dai_link = priv->snd_card.dai_link;
++	struct asoc_simple_dai *codec_dai = &priv->codec_dai;
++	struct asoc_simple_dai *cpu_dai = &priv->cpu_dai;
+ 	struct device_node *np;
+ 	char *name;
+ 	int ret;
+@@ -189,7 +191,7 @@ static int asoc_simple_card_parse_of(struct device_node *node,
+ 	np = of_get_child_by_name(node, "simple-audio-card,cpu");
+ 	if (np)
+ 		ret = asoc_simple_card_sub_parse_of(np, priv->daifmt,
+-						  &priv->cpu_dai,
++						  cpu_dai,
+ 						  &dai_link->cpu_of_node,
+ 						  &dai_link->cpu_dai_name);
+ 	if (ret < 0)
+@@ -200,12 +202,18 @@ static int asoc_simple_card_parse_of(struct device_node *node,
+ 	np = of_get_child_by_name(node, "simple-audio-card,codec");
+ 	if (np)
+ 		ret = asoc_simple_card_sub_parse_of(np, priv->daifmt,
+-						  &priv->codec_dai,
++						  codec_dai,
+ 						  &dai_link->codec_of_node,
+ 						  &dai_link->codec_dai_name);
+ 	if (ret < 0)
+ 		return ret;
+ 
++	/*
++	 * overwrite cpu_dai->fmt as its DAIFMT_MASTER bit is based on CODEC
++	 * while the other bits should be identical unless buggy SW/HW design.
++	 */
++	cpu_dai->fmt = codec_dai->fmt;
++
+ 	if (!dai_link->cpu_dai_name || !dai_link->codec_dai_name)
+ 		return -EINVAL;
+ 
+@@ -227,12 +235,12 @@ static int asoc_simple_card_parse_of(struct device_node *node,
+ 	dev_dbg(dev, "platform : %04x\n", priv->daifmt);
+ 	dev_dbg(dev, "cpu : %s / %04x / %d\n",
+ 		dai_link->cpu_dai_name,
+-		priv->cpu_dai.fmt,
+-		priv->cpu_dai.sysclk);
++		cpu_dai->fmt,
++		cpu_dai->sysclk);
+ 	dev_dbg(dev, "codec : %s / %04x / %d\n",
+ 		dai_link->codec_dai_name,
+-		priv->codec_dai.fmt,
+-		priv->codec_dai.sysclk);
++		codec_dai->fmt,
++		codec_dai->sysclk);
+ 
+ 	/*
+ 	 * soc_bind_dai_link() will check cpu name
+-- 
+1.8.4
 
 
