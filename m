@@ -1,65 +1,71 @@
 From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH v4 2/4] arm64: dts: APM X-Gene PCIe device tree nodes
-Date: Wed, 12 Mar 2014 17:31:25 +0900
-Message-ID: <000001cf3dcd$751a4680$5f4ed380$%han@samsung.com>
-References: <1394085963-27553-1-git-send-email-tinamdar@apm.com>
- <1394085963-27553-3-git-send-email-tinamdar@apm.com>
+Subject: Re: [PATCH v6 3/3] arm64: Add architecture support for PCI
+Date: Wed, 12 Mar 2014 17:41:33 +0900
+Message-ID: <000101cf3dce$df2c1840$9d8448c0$%han@samsung.com>
+References: <1394020150-1875-1-git-send-email-Liviu.Dudau@arm.com>
+ <1394020150-1875-4-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-reply-to: <1394085963-27553-3-git-send-email-tinamdar@apm.com>
+In-reply-to: <1394020150-1875-4-git-send-email-Liviu.Dudau@arm.com>
 Content-language: ko
 Sender: linux-pci-owner@vger.kernel.org
-To: 'Tanmay Inamdar' <tinamdar@apm.com>
-Cc: 'Bjorn Helgaas' <bhelgaas@google.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Grant Likely' <grant.likely@linaro.org>, 'Rob Herring' <robh+dt@kernel.org>, 'Catalin Marinas' <catalin.marinas@arm.com>, 'Rob Landley' <rob@landley.net>, 'Liviu Dudau' <liviu.dudau@arm.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches@apm.com, jcm@redhat.com, 'Jingoo Han' <jg1.han@samsung.com>
+To: 'Liviu Dudau' <Liviu.Dudau@arm.com>
+Cc: 'linux-pci' <linux-pci@vger.kernel.org>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Catalin Marinas' <Catalin.Marinas@arm.com>, 'Will Deacon' <Will.Deacon@arm.com>, 'linaro-kernel' <linaro-kernel@lists.linaro.org>, 'Benjamin Herrenschmidt' <benh@kernel.crashing.org>, 'LKML' <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, 'LAKML' <linux-arm-kernel@lists.infradead.org>, 'Tanmay Inamdar' <tinamdar@apm.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, March 06, 2014 3:06 PM, Tanmay Inamdar wrote:
+On Wednesday, March 05, 2014 8:49 PM, Liviu Dudau wrote:
 > 
-> This patch adds the device tree nodes for APM X-Gene PCIe controller and
-> PCIe clock interface. Since X-Gene SOC supports maximum 5 ports, 5 dts
-> nodes are added.
+> Use the generic host bridge functions to provide support for
+> PCI Express on arm64. There is no support for ISA memory.
 > 
-> Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
+> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> Tested-by: Tanmay Inamdar <tinamdar@apm.com>
 > ---
->  arch/arm64/boot/dts/apm-mustang.dts |    8 ++
->  arch/arm64/boot/dts/apm-storm.dtsi  |  155 +++++++++++++++++++++++++++++++++++
->  2 files changed, 163 insertions(+)
+>  arch/arm64/Kconfig            |  19 +++-
+>  arch/arm64/include/asm/Kbuild |   1 +
+>  arch/arm64/include/asm/io.h   |   3 +-
+>  arch/arm64/include/asm/pci.h  |  49 +++++++++
+>  arch/arm64/kernel/Makefile    |   1 +
+>  arch/arm64/kernel/pci.c       | 173 ++++++++++++++++++++++++++++++++
+>  6 files changed, 244 insertions(+), 2 deletions(-)
+>  create mode 100644 arch/arm64/include/asm/pci.h
+>  create mode 100644 arch/arm64/kernel/pci.c
 
 [.....]
 
-> --- a/arch/arm64/boot/dts/apm-storm.dtsi
-> +++ b/arch/arm64/boot/dts/apm-storm.dtsi
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/pci.h
 
 [.....]
 
 > +
-> +		pcie0: pcie@1f2b0000 {
-> +			status = "disabled";
-> +			device_type = "pci";
-> +			compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
-> +			#interrupt-cells = <1>;
-> +			#size-cells = <2>;
-> +			#address-cells = <3>;
-> +			reg = < 0x00 0x1f2b0000 0x0 0x00010000   /* Controller registers */
-> +				0xe0 0xd0000000 0x0 0x00200000>; /* PCI config space */
-> +			reg-names = "csr", "cfg";
-> +			ranges = <0x01000000 0x00 0x00000000 0xe0 0x00000000 0x00 0x00010000   /* io */
-> +				  0x02000000 0x00 0x10000000 0xe0 0x10000000 0x00 0x80000000>; /* mem */
-                                                                          ^^^
+> +static inline int pci_domain_nr(struct pci_bus *bus)
+> +{
+> +	struct pci_host_bridge *bridge = find_pci_host_bridge(bus);
+> +
+> +	if (bridge)
+> +		return bridge->domain_nr;
+> +
+> +	return 0;
+> +}
 
-I have a question about the fourth number '0xe0' of 'ranges' property.
-Would you let me know what the '0xe0' means?
+Hi Liviu Dudau,
+
+When CONFIG_PCI=n, the following build errors happen. :-(
+Would you confirm this?
+
+In file included from include/linux/pci.h:1393:0,
+                 from drivers/scsi/scsi_lib.c:19:
+arch/arm64/include/asm/pci.h:31:19: error: redefinition of 'pci_domain_nr'
+ static inline int pci_domain_nr(struct pci_bus *bus)
+                   ^
+In file included from drivers/scsi/scsi_lib.c:19:0:
+include/linux/pci.h:1383:19: note: previous definition of 'pci_domain_nr' was here
+ static inline int pci_domain_nr(struct pci_bus *bus) { return 0; }
+                   ^
+             .....
 
 Best regards,
 Jingoo Han
-
-> +			dma-ranges = <0x42000000 0x40 0x00000000 0x40 0x00000000 0x40 0x00000000>;
-> +			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-> +			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xc2 0x1
-> +					 0x0 0x0 0x0 0x2 &gic 0x0 0xc3 0x1
-> +					 0x0 0x0 0x0 0x3 &gic 0x0 0xc4 0x1
-> +					 0x0 0x0 0x0 0x4 &gic 0x0 0xc5 0x1>;
-> +			clocks = <&pcie0clk 0>;
-> +		};
