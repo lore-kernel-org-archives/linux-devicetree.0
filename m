@@ -1,59 +1,45 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v3 0/5] Add USB nodes for am43xx epos and gp evm
-Date: Wed, 12 Mar 2014 10:50:58 -0700
-Message-ID: <20140312175057.GE1996@atomide.com>
-References: <1394193422-18242-1-git-send-email-george.cherian@ti.com>
- <531FE9AD.7050703@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <531FE9AD.7050703@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: George Cherian <george.cherian@ti.com>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, balbi@ti.com, rogerq@ti.com, kishon@ti.com, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, anatol.pomozov@gmail.com, bcousson@baylibre.com
+From: Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/3] xtensa xtfpga SPI controller driver
+Date: Wed, 12 Mar 2014 21:55:23 +0400
+Message-ID: <1394646926-30496-1-git-send-email-jcmvbkbc@gmail.com>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Chris Zankel <chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org>, Marc Gauthier <marc-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* George Cherian <george.cherian@ti.com> [140311 22:02]:
-> Hi Tony,
-> 
-> On 3/7/2014 5:26 PM, George Cherian wrote:
-> >The patch series adds USB dt nodes for am43xx epos and gp evm
-> >
-> >Boot tested with  Benoit's for_3.15 + following patches
-> >
-> >https://patchwork.kernel.org/patch/3600821/
-> >https://patchwork.kernel.org/patch/3600831/
-> >https://patchwork.kernel.org/patch/3600851/
-> >https://patchwork.kernel.org/patch/3600841/
-> >
-> >
-> >Changes from v1 -> v2
-> >	* Reorder "doc: Add "ti,am437x-dwc3" comaptible for dwc3 glue"
-> >	* Address v1 coments on "ARM: dts: AM4372: Add USB nodes"
-> >
-> >Changes from v2 -> v3
-> >	* Removed unwanted dwc3_1 and dwc3_2 nodes from am437x-gp-evm.dts
-> >	  and am43x-epos-evm.dts
-> >
-> >George Cherian (5):
-> >   doc: Add "ti,am437x-dwc3" comaptible for dwc3 glue
-> >   ARM: dts: am43xx clock data
-> >   ARM: dts: AM4372: Add USB nodes
-> >   ARM: dts: am437x-gp-evm: Enable USB
-> >   ARM: dts: am43x-epos-evm: Enable USB
-> >
-> >  Documentation/devicetree/bindings/usb/omap-usb.txt |  4 +-
-> >  arch/arm/boot/dts/am4372.dtsi                      | 95 ++++++++++++++++++++++
-> >  arch/arm/boot/dts/am437x-gp-evm.dts                | 18 ++++
-> >  arch/arm/boot/dts/am43x-epos-evm.dts               | 18 ++++
-> >  arch/arm/boot/dts/am43xx-clocks.dtsi               | 17 ++++
-> >  5 files changed, 151 insertions(+), 1 deletion(-)
-> Can you please take this series.
-> The whole series Reviewed-by: Roger Quadros <rogerq@ti.com>
+Hello,
 
-Hmm I only see ack from Roger on patch 3? 
+this series adds driver for SPI controller used on xtfpga xtensa platform,
+device tree binding documentation and an entry to MAINTAINERS.
 
-Regards,
+Changes v2 -> v3:
+- support all transfer widths in the range 1...16 bit;
+- don't swap bytes of 16 bit transfers.
 
-Tony
+Changes v1 -> v2:
+- support 8 bit transfers;
+- busy-wait for maximum 100 usec (instead of 100 msec) polling BUSY register;
+- use chipselect callback to check transfer size.
+
+Max Filippov (3):
+  spi: add xtfpga SPI controller driver
+  spi/xtensa-xtfpga: add DT binding documentation
+  MAINTAINERS: add xtfpga platform section
+
+ .../devicetree/bindings/spi/spi-xtensa-xtfpga.txt  |   9 ++
+ MAINTAINERS                                        |   6 +
+ drivers/spi/Kconfig                                |  13 ++
+ drivers/spi/Makefile                               |   1 +
+ drivers/spi/spi-xtensa-xtfpga.c                    | 170 +++++++++++++++++++++
+ 5 files changed, 199 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-xtensa-xtfpga.txt
+ create mode 100644 drivers/spi/spi-xtensa-xtfpga.c
+
+-- 
+1.8.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
