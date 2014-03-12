@@ -1,64 +1,151 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCHv2 0/5] ARM: dts: exynos: Add missing dt data to bring
- kernel of Exynos4x12
-Date: Wed, 12 Mar 2014 20:43:55 +0900
-Message-ID: <5320487B.1090908@samsung.com>
-References: <1394605156-7768-1-git-send-email-cw00.choi@samsung.com>
- <53204328.7070607@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <53204328.7070607@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk
+From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH RFC v9 0/6] MPC512x DMA slave s/g support, OF DMA lookup
+Date: Wed, 12 Mar 2014 15:47:49 +0400
+Message-ID: <1394624875-24411-1-git-send-email-a13xp0p0v88@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+2013/7/14 Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>:
+> this series
+> - introduces slave s/g support (that's support for DMA transfers which
+>    involve peripherals in contrast to mem-to-mem transfers)
+> - adds device tree based lookup support for DMA channels
+> - combines floating patches and related feedback which already covered
+>    several aspects of what the suggested LPB driver needs, to demonstrate
+>    how integration might be done
+> - carries Q&D SD card support to enable another DMA client during test,
+>    while this patch needs to get dropped upon pickup
 
-On 03/12/2014 08:21 PM, Tomasz Figa wrote:
-> Hi Chanwoo,
-> 
-> On 12.03.2014 07:19, Chanwoo Choi wrote:
->> This patch add missing dt data of Exynos4x12 to bring up kernel feature and
->> code clean. This patchset is based on 'v3.15-next/dt-clk-exynos' branch.
->> - git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
->>
->> exynos4x12/exynos4412/exynos4212.dtsi
->> - Add ADC (Analog and Digital Converter) to get raw data
->> - Add PMU (Performance Monitoring Unit) for perf event
->> - Add gps_alive power domain to remove power leakage when gps-alive isn't used
->> - Remove duplicate dt data of interrput combiner controller
->>
->> exynos4412-trats.dts
->> - Add ADC dt data with ntc thermistor child to read temperature
->>
->> Changes from v1:
->> - Use clock macro name for Exynos4 instead of constant for ADC
->> - Remove unnecessary description about patch content
->> - Move gps-alive power domain's dt data from exynos4x12.dts to exynos4.dts
->> - Move thermistor dt node outside of ADC dt node and modify node name of thermistor
->>
->> Chanwoo Choi (5):
->>    ARM: dts: exynos4x12: Add ADC's dt data to read raw data
->>    ARM: dts: exynos4x12: Add PMU dt data to support PMU(Perforamnce Monitoring Unit)
->>    ARM: dts: exynos4x12: Add GPS_ALIVE power domain
->>    ARM: dts: exynos: Move common dt data for interrupt combiner controller
->>    ARM: dts: exynos4412-trats2: Add ADC/themistor dt data to get temperature of SoC/battery
->>
->>   arch/arm/boot/dts/exynos4.dtsi          |  5 +++++
->>   arch/arm/boot/dts/exynos4212.dtsi       | 13 ++++---------
->>   arch/arm/boot/dts/exynos4412-trats2.dts | 21 +++++++++++++++++++++
->>   arch/arm/boot/dts/exynos4412.dtsi       | 14 ++++----------
->>   arch/arm/boot/dts/exynos4x12.dtsi       | 26 ++++++++++++++++++++++++++
->>   5 files changed, 60 insertions(+), 19 deletions(-)
->>
-> 
-> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
-> 
+Changes in v2:
+> - re-order mpc8308 related code paths for improved readability, no
+>    change in behaviour, introduction of symbolic channel names here
+>    already
+> - squash 'execute() start condition' and 'terminate all' into the
+>    introduction of 'slave s/g prep' and 'device control' support; refuse
+>    s/g lists with more than one item since slave support is operational
+>    yet proper s/g support is missing (can get addressed later)
+> - always start transfers from software on MPC8308 as there are no
+>    external request lines for peripheral flow control
+> - drop dt-bindings header file and symbolic channel names in OF nodes
 
-Thanks for your review.
+Changes in v3 and v4:
+ Part 1/5:
+ - use #define instead of enum since individual channels don't require
+    special handling.
+ Part 2/5:
+ - add a flag "will_access_peripheral" to DMA transfer descriptor
+    according recommendations of Gerhard Sittig.
+    This flag is set in mpc_dma_prep_memcpy() and mpc_dma_prep_slave_sg()
+    and is evaluated in mpc_dma_execute() to choose a type of start for
+    the transfer.
+ - prevent descriptors of transfers which involve peripherals from
+    being chained together;
+    each of such transfers needs hardware initiated start.
+ - add locking while working with struct mpc_dma_chan
+    according recommendations of Lars-Peter Clausen.
+ - remove default nbytes value. Client kernel modules must set
+    src_maxburst and dst_maxburst fields of struct dma_slave_config (dmaengine.h).
 
-Best Regards,
-Chanwoo Choi
+Changes in v5:
+ Part 2/5:
+ - add and improve comments;
+ - improve the code moving transfer descriptors from 'queued' to 'active' list
+    in mpc_dma_execute();
+ - allow mpc_dma_prep_slave_sg() to run with non-empty 'active' list;
+ - take 'mdesc' back to 'free' list in case of error in mpc_dma_prep_slave_sg();
+ - improve checks of the transfer parameters;
+ - provide the default value for 'maxburst' in mpc_dma_device_control().
+
+Changes in v6:
+ Part 2/5:
+ - remove doubtful comment;
+ - fix coding style issues;
+ - set default value for 'maxburst' to 1 which applies to most cases;
+ Part 3/5:
+ - use dma_get_slave_channel() instead of dma_request_channel()
+    in new function of_dma_xlate_by_chan_id() according recommendations of
+    Arnd Bergmann;
+ Part 4/5:
+ - set DMA_PRIVATE flag for MPC512x DMA controller since its driver relies on
+    of_dma_xlate_by_chan_id() which doesn't use dma_request_channel()
+    any more; (removed in v7)
+ - resolve little patch conflict;
+ Part 5/5:
+ - resolve little patch conflict;
+
+Changes in v7:
+ Part 2:
+ - improve comment;
+ Part 4:
+ - split in two separate patches. Part 4/6 contains device tree
+    binding document and in part 5/6 MPC512x DMA controller is registered
+    for device tree channel lookup;
+ - remove setting DMA_PRIVATE flag for MPC512x DMA controller from part 5/6;
+
+Changes in v8:
+ Part 2:
+ - improve comments;
+ - fix style issues;
+ Part 6:
+ - remove since it has become obsolete;
+
+Changes in v9:
+ A new patch (part 3/6) is added to this series according the
+   feedback of Andy Shevchenko.
+ Part 2/6:
+ - keep style of the comments;
+ - use is_slave_direction() instead of manual checks;
+ - remove redundant else branches of the conditions;
+ - make mpc_dma_device_control() return -ENXIO for unknown command;
+ Part 6/6:
+ - change according the new part 3/6;
+ - fix style issues;
+
+> known issues:
+> - it's yet to get confirmed whether MPC8308 can use slave support or
+>    whether the DMA controller's driver shall actively reject it, the
+>    information that's available so far suggests that peripheral transfers
+>    to IP bus attached I/O is useful and shall not get blocked right away
+ - adding support for transfers which don't increment the RAM address or
+    do increment the peripheral "port's" address is easy with
+    this implementation; but which options of the common API
+    should be used for specifying such transfers?
+2014/02/13 Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>:
+> - The MPC512x DMA completely lacks a binding document, so one
+>    should get added.
+> - The MPC8308 hardware is similar and can re-use the MPC512x
+>    binding, which should be stated.
+> - The Linux implementation currently has no OF based channel
+>    lookup support, so '#dma-cells' is "a future feature".  I guess
+>    the binding can and should already discuss the feature,
+>    regardless of whether all implementations support it.
+
+
+Alexander Popov (5):
+  dma: mpc512x: reorder mpc8308 specific instructions
+  dma: mpc512x: add support for peripheral transfers
+  dma: mpc512x: replace devm_request_irq() with request_irq()
+  dma: of: Add common xlate function for matching by channel id
+  dma: mpc512x: register for device tree channel lookup
+
+Gerhard Sittig (1):
+  dma: mpc512x: add device tree binding document
+
+ .../devicetree/bindings/dma/mpc512x-dma.txt        |  55 ++++
+ arch/powerpc/boot/dts/mpc5121.dtsi                 |   1 +
+ drivers/dma/mpc512x_dma.c                          | 308 +++++++++++++++++++--
+ drivers/dma/of-dma.c                               |  35 +++
+ include/linux/of_dma.h                             |   4 +
+ 5 files changed, 373 insertions(+), 30 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/mpc512x-dma.txt
+
+-- 
+1.8.4.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
