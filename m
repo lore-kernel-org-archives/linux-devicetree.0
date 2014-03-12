@@ -1,47 +1,82 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH trivial 04/16] of: Improve grammar for of_alias_get_id() documentation
-Date: Wed, 12 Mar 2014 15:29:04 +0100
-Message-ID: <CAMuHMdXM2ET281xPjsx0uZis9oC6=g2gvzmQo3m9_WHXwFBrqQ@mail.gmail.com>
-References: <1394533430-4746-1-git-send-email-geert@linux-m68k.org>
-	<1394533430-4746-4-git-send-email-geert@linux-m68k.org>
-	<CAL_JsqLtqpYzes6n4ujaGMnr0-7PhcJpUKc2KtTPigaChkjPkg@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v8 1/2] iio:as3935: Add DT binding docs for AS3935 driver
+Date: Wed, 12 Mar 2014 09:30:54 -0500
+Message-ID: <CAL_JsqKDmDScse0eHr7p6xm6ks30_niH_=z6d5XJhCf-THc2Dw@mail.gmail.com>
+References: <1394628794-7598-1-git-send-email-mranostay@gmail.com>
+	<1394628794-7598-2-git-send-email-mranostay@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLtqpYzes6n4ujaGMnr0-7PhcJpUKc2KtTPigaChkjPkg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jiri Kosina <trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1394628794-7598-2-git-send-email-mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 12, 2014 at 3:17 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Tue, Mar 11, 2014 at 5:23 AM, Geert Uytterhoeven
-> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
->> From: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
->>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
->> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+On Wed, Mar 12, 2014 at 7:53 AM, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Document compatible string, required and optional DT properties for
+> AS3935 chipset driver.
 >
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Thanks!
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> Did you want me to take this or it can go with the rest of the series?
-
-I hope Jiri will take all of them through the trivial tree.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  .../devicetree/bindings/iio/proximity/as3935.txt   | 28 ++++++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>  2 files changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/as3935.txt
+>
+> diff --git a/Documentation/devicetree/bindings/iio/proximity/as3935.txt b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
+> new file mode 100644
+> index 0000000..ae23dd8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
+> @@ -0,0 +1,28 @@
+> +Austrian Microsystems AS3935 Franklin lightning sensor device driver
+> +
+> +Required properties:
+> +       - compatible: must be "ams,as3935"
+> +       - reg: SPI chip select number for the device
+> +       - spi-cpha: SPI Mode 1. Refer to spi/spi-bus.txt for generic SPI
+> +       slave node bindings.
+> +       - interrupt-parent : should be the phandle for the interrupt controller
+> +       - interrupts : the sole interrupt generated by the device
+> +
+> +       Refer to interrupt-controller/interrupts.txt for generic
+> +       interrupt client node bindings.
+> +
+> +Optional properties:
+> +       - ams,tuning-capacitor-pf: Calibration tuning capacitor stepping
+> +         value 0 - 120pF. This will require using the calibration data from
+> +         the manufacturer.
+> +
+> +Example:
+> +
+> +as3935@0 {
+> +       compatible = "ams,as3935";
+> +       reg = <0>;
+> +       spi-cpha;
+> +       interrupt-parent = <&gpio1>;
+> +       interrupts = <16 1>;
+> +       ams,tuning-capacitor-pf = <80>;
+> +};
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 4685ec3..517831d 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -11,6 +11,7 @@ ak    Asahi Kasei Corp.
+>  allwinner      Allwinner Technology Co., Ltd.
+>  altr   Altera Corp.
+>  amcc   Applied Micro Circuits Corporation (APM, formally AMCC)
+> +ams    AMS AG
+>  amstaos        AMS-Taos Inc.
+>  apm    Applied Micro Circuits Corporation (APM)
+>  arm    ARM Ltd.
+> --
+> 1.8.3.2
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
