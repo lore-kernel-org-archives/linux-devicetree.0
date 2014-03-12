@@ -1,7 +1,7 @@
 From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 5/8] watchdog: orion: Add Armada 375/380 SoC support
-Date: Wed, 12 Mar 2014 18:11:52 -0300
-Message-ID: <1394658715-2017-6-git-send-email-ezequiel.garcia@free-electrons.com>
+Subject: [PATCH v3 7/8] ARM: mvebu: Enable Armada 380/385 watchdog in the devicetree
+Date: Wed, 12 Mar 2014 18:11:54 -0300
+Message-ID: <1394658715-2017-8-git-send-email-ezequiel.garcia@free-electrons.com>
 References: <1394658715-2017-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1394658715-2017-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,181 +10,32 @@ To: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29
 Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds support for the Armada 375 and Armada 380 SoCs.
-
-This SoC variant has a second RSTOUT register, in addition to the already
-existent, which is shared with the system-controller. To handle this RSTOUT,
-we introduce a new MMIO register 'rstout_mask' to be required on
-'armada-{375,380}-watchdog' new compatible string.
+Add the DT nodes to enable the watchdog support available on
+Armada 380/385 SoC.
 
 Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/watchdog/orion_wdt.c | 103 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 103 insertions(+)
+ arch/arm/boot/dts/armada-38x.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
-index b255a9e..db8d3e2 100644
---- a/drivers/watchdog/orion_wdt.c
-+++ b/drivers/watchdog/orion_wdt.c
-@@ -56,6 +56,7 @@ struct orion_watchdog_data {
- 	int wdt_counter_offset;
- 	int wdt_enable_bit;
- 	int rstout_enable_bit;
-+	int rstout_mask_bit;
- 	int (*clock_init)(struct platform_device *,
- 			  struct orion_watchdog *);
- 	int (*enabled)(struct orion_watchdog *);
-@@ -67,6 +68,7 @@ struct orion_watchdog {
- 	struct watchdog_device wdt;
- 	void __iomem *reg;
- 	void __iomem *rstout;
-+	void __iomem *rstout_mask;
- 	unsigned long clk_rate;
- 	struct clk *clk;
- 	const struct orion_watchdog_data *data;
-@@ -145,6 +147,31 @@ static int orion_wdt_ping(struct watchdog_device *wdt_dev)
- 	return 0;
- }
+diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
+index 812ce28..2f0ebc6 100644
+--- a/arch/arm/boot/dts/armada-38x.dtsi
++++ b/arch/arm/boot/dts/armada-38x.dtsi
+@@ -267,6 +267,13 @@
+ 				clock-names = "nbclk", "fixed";
+ 			};
  
-+static int armada375_start(struct watchdog_device *wdt_dev)
-+{
-+	struct orion_watchdog *dev = watchdog_get_drvdata(wdt_dev);
-+	u32 reg;
++			watchdog@20300 {
++				compatible = "marvell,armada-380-wdt";
++				reg = <0x20300 0x34>, <0x20704 0x4>, <0x18260 0x4>;
++				clocks = <&coreclk 2>, <&refclk>;
++				clock-names = "nbclk", "fixed";
++			};
 +
-+	/* Set watchdog duration */
-+	writel(dev->clk_rate * wdt_dev->timeout,
-+	       dev->reg + dev->data->wdt_counter_offset);
-+
-+	/* Clear the watchdog expiration bit */
-+	atomic_io_modify(dev->reg + TIMER_A370_STATUS, WDT_A370_EXPIRED, 0);
-+
-+	/* Enable watchdog timer */
-+	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit,
-+						dev->data->wdt_enable_bit);
-+
-+	/* Enable reset on watchdog */
-+	reg = readl(dev->rstout);
-+	reg |= dev->data->rstout_enable_bit;
-+	writel(reg, dev->rstout);
-+
-+	atomic_io_modify(dev->rstout_mask, dev->data->rstout_mask_bit, 0);
-+	return 0;
-+}
-+
- static int armada370_start(struct watchdog_device *wdt_dev)
- {
- 	struct orion_watchdog *dev = watchdog_get_drvdata(wdt_dev);
-@@ -208,6 +235,24 @@ static int orion_stop(struct watchdog_device *wdt_dev)
- 	return 0;
- }
- 
-+static int armada375_stop(struct watchdog_device *wdt_dev)
-+{
-+	struct orion_watchdog *dev = watchdog_get_drvdata(wdt_dev);
-+	u32 reg;
-+
-+	/* Disable reset on watchdog */
-+	atomic_io_modify(dev->rstout_mask, dev->data->rstout_mask_bit,
-+					   dev->data->rstout_mask_bit);
-+	reg = readl(dev->rstout);
-+	reg &= ~dev->data->rstout_enable_bit;
-+	writel(reg, dev->rstout);
-+
-+	/* Disable watchdog timer */
-+	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit, 0);
-+
-+	return 0;
-+}
-+
- static int armada370_stop(struct watchdog_device *wdt_dev)
- {
- 	struct orion_watchdog *dev = watchdog_get_drvdata(wdt_dev);
-@@ -241,6 +286,17 @@ static int orion_enabled(struct orion_watchdog *dev)
- 	return enabled && running;
- }
- 
-+static int armada375_enabled(struct orion_watchdog *dev)
-+{
-+	bool masked, enabled, running;
-+
-+	masked = readl(dev->rstout_mask) & dev->data->rstout_mask_bit;
-+	enabled = readl(dev->rstout) & dev->data->rstout_enable_bit;
-+	running = readl(dev->reg + TIMER_CTRL) & dev->data->wdt_enable_bit;
-+
-+	return !masked && enabled && running;
-+}
-+
- static int orion_wdt_enabled(struct watchdog_device *wdt_dev)
- {
- 	struct orion_watchdog *dev = watchdog_get_drvdata(wdt_dev);
-@@ -334,6 +390,28 @@ static const struct orion_watchdog_data armadaxp_data = {
- 	.stop = armada370_stop,
- };
- 
-+static const struct orion_watchdog_data armada375_data = {
-+	.rstout_enable_bit = BIT(8),
-+	.rstout_mask_bit = BIT(10),
-+	.wdt_enable_bit = BIT(8),
-+	.wdt_counter_offset = 0x34,
-+	.clock_init = armada370_wdt_clock_init,
-+	.enabled = armada375_enabled,
-+	.start = armada375_start,
-+	.stop = armada375_stop,
-+};
-+
-+static const struct orion_watchdog_data armada380_data = {
-+	.rstout_enable_bit = BIT(8),
-+	.rstout_mask_bit = BIT(10),
-+	.wdt_enable_bit = BIT(8),
-+	.wdt_counter_offset = 0x34,
-+	.clock_init = armadaxp_wdt_clock_init,
-+	.enabled = armada375_enabled,
-+	.start = armada375_start,
-+	.stop = armada375_stop,
-+};
-+
- static const struct of_device_id orion_wdt_of_match_table[] = {
- 	{
- 		.compatible = "marvell,orion-wdt",
-@@ -347,6 +425,14 @@ static const struct of_device_id orion_wdt_of_match_table[] = {
- 		.compatible = "marvell,armada-xp-wdt",
- 		.data = &armadaxp_data,
- 	},
-+	{
-+		.compatible = "marvell,armada-375-wdt",
-+		.data = &armada375_data,
-+	},
-+	{
-+		.compatible = "marvell,armada-380-wdt",
-+		.data = &armada380_data,
-+	},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, orion_wdt_of_match_table);
-@@ -400,6 +486,23 @@ static int orion_wdt_probe(struct platform_device *pdev)
- 		if (IS_ERR(dev->rstout))
- 			return PTR_ERR(dev->rstout);
- 
-+	} else if (of_device_is_compatible(node, "marvell,armada-375-wdt") ||
-+		   of_device_is_compatible(node, "marvell,armada-380-wdt")) {
-+
-+		/* Dedicated RSTOUT register, can be requested. */
-+		res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+		dev->rstout = devm_ioremap_resource(&pdev->dev, res);
-+		if (IS_ERR(dev->rstout))
-+			return PTR_ERR(dev->rstout);
-+
-+		res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
-+		if (!res)
-+			return -ENODEV;
-+		dev->rstout_mask = devm_ioremap(&pdev->dev, res->start,
-+						resource_size(res));
-+		if (!dev->rstout_mask)
-+			return -ENOMEM;
-+
- 	} else {
- 		return -ENODEV;
- 	}
+ 			eth1: ethernet@30000 {
+ 				compatible = "marvell,armada-370-neta";
+ 				reg = <0x30000 0x4000>;
 -- 
 1.9.0
 
