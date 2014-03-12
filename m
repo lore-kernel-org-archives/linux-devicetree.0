@@ -1,97 +1,111 @@
-From: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH v2 04/14] mtd: nand: define struct nand_timings
-Date: Wed, 12 Mar 2014 17:46:53 +0100
-Message-ID: <53208F7D.8090104@gmail.com>
-References: <1391006064-28890-1-git-send-email-b.brezillon.dev@gmail.com> <1391006064-28890-5-git-send-email-b.brezillon.dev@gmail.com> <531DC1A4.7010208@gmail.com> <20140311185554.GD31835@obsidianresearch.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [RFC PATCH] edac: zynq: Added EDAC support for zynq ddr ecc controller
+Date: Wed, 12 Mar 2014 17:50:15 +0100
+Message-ID: <345f2b89-660c-4eac-bee2-ea8debdc5fbc@CH1EHSMHS031.ehs.local>
+References: <4adb2b4b-2ad6-42b9-929e-cc062f817245@TX2EHSMHS021.ehs.local> <20140310105655.GH14999@e106331-lin.cambridge.arm.com> <531DA900.5060202@monstr.eu> <fa35006e-055d-4ef2-9b65-a0f8cc6a0c8f@AM1EHSMHS016.ehs.local> <531ECA33.8050803@monstr.eu> <20140311155057.GJ13293@xsjandreislx> <c7840b9d-4c03-4680-9a0e-fb256f3743b4@AM1EHSMHS010.ehs.local> <20140312161344.GA3000@xsjandreislx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDE6NB73YAMBBCE7QKMQKGQEFEGBVVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140311185554.GD31835-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140312161344.GA3000@xsjandreislx>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>
+Cc: Michal Simek <michal.simek@xilinx.com>, Michal Simek <monstr@monstr.eu>, Mark Rutland <mark.rutland@arm.com>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, "dougthompson@xmission.com" <dougthompson@xmission.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "kpc528@gmail.com" <kpc528@gmail.com>, "kalluripunnaiahchoudary@gmail.com" <kalluripunnaiahchoudary>
 List-Id: devicetree@vger.kernel.org
 
-Le 11/03/2014 19:55, Jason Gunthorpe a =E9crit :
-> On Mon, Mar 10, 2014 at 02:44:04PM +0100, Boris BREZILLON wrote:
->
->> Some timings are missing here (see Table 55 in the ONFI spec):
-> Right..
->
-> The 'mode' covers only the raw electrical parameters needed to
-> exchange commands, other timings cover the commands
-> themselves. Notably the timing mode does not alter those parameters.
->
-> To me it seems tidy to keep the 'mode' timings contained in their own
-> struct and find other homes for the other parameters.
->
->> -tR
->> -tBERS
->> -tCCS
->> -tPLEBSY
->> -...
+On 03/12/2014 05:13 PM, S=C3=B6ren Brinkmann wrote:
+> On Wed, 2014-03-12 at 11:27AM +0100, Michal Simek wrote:
+>> On 03/11/2014 04:50 PM, S=C3=B6ren Brinkmann wrote:
+>>> On Tue, 2014-03-11 at 09:32AM +0100, Michal Simek wrote:
+>>>> On 03/10/2014 11:32 PM, S=C3=B6ren Brinkmann wrote:
+>>>>> On Mon, 2014-03-10 at 12:58PM +0100, Michal Simek wrote:
+>>>>>> On 03/10/2014 11:56 AM, Mark Rutland wrote:
+>>>>>>> On Sun, Mar 09, 2014 at 02:57:16AM +0000, Punnaiah Choudary Kal=
+luri wrote:
+>>>>>>>> Added EDAC support for reporting the ecc errors of zynq ddr co=
+ntroller.
+>>>>>>>> The ddr ecc controller corrects single bit errors and detects =
+double bit
+>>>>>>>> errors
+>>>>>>>>
+>>>>>>>> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+>>>>>>>> ---
+>>>>>>>>  .../devicetree/bindings/edac/zynq_edac.txt         |   18 +
+>>>>>>>>  drivers/edac/Kconfig                               |    7 +
+>>>>>>>>  drivers/edac/Makefile                              |    1 +
+>>>>>>>>  drivers/edac/zynq_edac.c                           |  613 +++=
++++++++++++++++++
+>>>>>>>>  4 files changed, 639 insertions(+), 0 deletions(-)
+>>>>>>>>  create mode 100644 Documentation/devicetree/bindings/edac/zyn=
+q_edac.txt
+>>>>>>>>  create mode 100644 drivers/edac/zynq_edac.c
+>>>>>>>>
+>>>>>>>> diff --git a/Documentation/devicetree/bindings/edac/zynq_edac.=
+txt b/Documentation/devicetree/bindings/edac/zynq_edac.txt
+>>>>>>>> new file mode 100644
+>>>>>>>> index 0000000..c21ff83
+>>>>>>>> --- /dev/null
+>>>>>>>> +++ b/Documentation/devicetree/bindings/edac/zynq_edac.txt
+>>>>>>>> @@ -0,0 +1,18 @@
+>>>>>>>> +Zynq EDAC driver, it does reports the DDR ECC single bit erro=
+rs that are
+>>>>>>>> +corrected and double bit ecc errors that are detected by the =
+DDR ECC controller.
+>>>>>>>> +ECC support for DDR is available in half-bus width(16 bit) co=
+nfiguration only.
+>>>>>>>> +
+>>>>>>>> +Required properties:
+>>>>>>>> +- compatible: Should be "xlnx,ps7-ddrc" or "xlnx,ps7-ddrc-1.0=
+0.a"
+>>>>>>>
+>>>>>>> Is this an or or a xor?
+>>>>>>
+>>>>>> Compatible string should be just xlnx,zynq-ddrc-1.00.a.
+>>>>>> Nothing with ps7.
+>>>>>
+>>>>> Isn't this vendor IP? IMHO, this should be something completely
+>>>>> different. Or if you want some Zynq-specific compat string it sho=
+uld
+>>>>> refer to an actual version string associated with Zynq. 1.00.a is=
+ not,
+>>>>> AFAIK.
+>>>>
+>>>> I have checked with Punnaiah that this is Synopsys DDR memory cont=
+roller.
+>>>> Zynq is based on 1.4 version with some customization.
+>>>> It means I think reasonable solution is
+>>>> call it drivers/edac/synopsys_edac.c
+>>>> rename zynq_ in driver to synopsys_ and
+>>>> use xlnx,zynq-ddrc-1.00.a compatible string because zynq is not us=
+ing
+>>>> clean synopsys version.
+>>>>
+>>>> I am not getting point why you don't like 1.00.a suffix here.
+>>>> Because of historical point of view compatible strings should be d=
+ifferent
+>>>> for early silicon, silicon v1, silicon v2, silicon v3, etc
+>>>> but we haven't used it at all that's why we can use xilinx scheme
+>>>> which we are using for our soft IPs.
+>>>
+>>> Well, but you refer to Zynq which has silicon revisions you can use=
+ to
+>>> refer to a specific Zynq version. That matches data sheets. Zynq-1.=
+00.a
+>>> is just completely made up and wouldn't be found in any data sheet.
 >>
->> I see at least 3 of those timings that could be useful (for the moment) =
-:
->> - tR: this one should be used to fill the chip_delay field
->> - tPROG and tBERS: could be used within nand_wait to choose the timeo
->>    value appropriately.
-> IIRC these timing values are really only necessary if the controller
-> does not support the READY/BUSY input, in that case drivers typically
-> seem to use 'chip_delay' which is the maximum possible command
-> execution time (a sleep long enough to guarentee that READY/BUSY is
-> de-asserted).
-You're right about tR (or chip_delay): it's only used when there are no=20
-R/B pin.
-I experienced it when I tried the RB_NONE case in the sunxi driver: the=20
-default
-chip_delay set by the NAND core code was too small to fit the NAND chip=20
-requirements.
+>> I didn't reply this one but we discussed this with Soren over phone.
+>> No problem to use Synopsys version A07 according TRM.
+>>
+>> Then compatible string is
+>> xlnx,zynq-ddrc-A07 and file name is synopsys_edac.c
+>=20
+> This seems to make sense. I'm never sure whether leading zeros are
+> actually needed and tend to remove them, but in general this looks li=
+ke
+> a reasonable string to identify Zynq's DDR controller.
 
-Anyway, I really think the chip_delay field should be set according to=20
-NAND chip
-characteristics not harcoded in NAND controller driver code (as=20
-currently done).
+A07 I found in Zynq TRM and probably has any conection to synopsys vers=
+ion scheme.
 
-tPROG and tBERS, would be used in nand_wait function and do not depend=20
-on the R/B pin.
-These are just used as timeouts.
-
->
->> Or should I create a new struct for these timings ?
->> In the latter case how should I name it ?
-> struct onfi_command_timings ?
-
-I'm not a big fan of this name. I think timing structs should not=20
-contain onfi in their
-names, because these timings are also available on non ONFI chips.
-
-Moreover, these timings are also part of the SDR NAND timings, they are=20
-just retrieved
-using another method when interfacing with an ONFI chip.
-
-Maybe we should change the nand_sdr_timings struct name too.
-
-What do you think ?
-
-Best Regards,
-
-Boris
-
->
-> Regards,
-> Jason
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Thanks,
+Michal
