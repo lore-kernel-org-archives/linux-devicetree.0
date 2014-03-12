@@ -1,39 +1,55 @@
-From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 02/10] ARM: OMAP3: fix iva mmu programming issues
-Date: Wed, 12 Mar 2014 15:15:47 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1403121515280.8574@utopia.booyaka.com>
-References: <1394065459-16409-1-git-send-email-s-anna@ti.com>
-	<1394065459-16409-3-git-send-email-s-anna@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1394065459-16409-3-git-send-email-s-anna-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 0/6] Armada 380 NAND support
+Date: Wed, 12 Mar 2014 12:16:38 -0300
+Message-ID: <1394637404-7651-1-git-send-email-ezequiel.garcia@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Seif Mazareeb <seif-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 5 Mar 2014, Suman Anna wrote:
+This patchset adds support for the NAND on Armada 380/385 SoCs.
 
-> The IVA MMU is not functional when used through the hwmod and
-> omap_device layers. Add fixes to clockdomain and hwmod data
-> to have it functional. The hwmod changes are needed to enable
-> the clock, and the SWSUP change is needed to wakeup the domain
-> because the power domain is programmed to be in RET, and there
-> is no automatic power domain switching to ON.
-> 
-> Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+The first patch adds a new "armada-380-corediv-clock" compatible
+string, with its proper SoC-specific structure, adding the register
+layout for this SoC family.
 
-Acked-by: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+The second and third patches add the devicetree changes to support
+the Core Divider clock.
 
-- Paul
+After adding its clock source, the fourth and fifth patches add
+the NAND devicetree changes. The NAND controller is compatible with
+the Armada 370 controller, so we are currently support it using the
+same compatible string.
+
+The last patch updates the binding documentation for the Core Divider
+clock, which is missing the information about the already supported
+Armada 375 compatible string.
+
+This series is based on linux-next 20140307. I expect it will apply
+cleanly on v3.15-rc1; if that's not the case, I'll send a rebased patchset.
+
+The clock and devicetree changes are mostly independent so they
+can be merged through the clock and mvebu tree respectively.
+
+Ezequiel Garcia (6):
+  clk: mvebu: Support Armada 380 SoC on the core divider clock
+  ARM: mvebu: Add a 2 GHz fixed-clock on Armada 38x SoCs
+  ARM: mvebu: Add the Core Divider clock to Armada 38x SoCs
+  ARM: mvebu: Add support for NAND controller in Armada 38x SoC
+  ARM: mvebu: Enable NAND controller in Armada 385-DB
+  clk: mvebu: Update binding documentation for the core divider clock
+
+ .../bindings/clock/mvebu-corediv-clock.txt         |  5 ++++-
+ arch/arm/boot/dts/armada-385-db.dts                | 21 ++++++++++++++++++
+ arch/arm/boot/dts/armada-38x.dtsi                  | 25 ++++++++++++++++++++++
+ drivers/clk/mvebu/clk-corediv.c                    | 23 ++++++++++++++++++++
+ 4 files changed, 73 insertions(+), 1 deletion(-)
+
+-- 
+1.9.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
