@@ -1,59 +1,29 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 5/6] ARM: mvebu: Enable NAND controller in Armada 385-DB
-Date: Wed, 12 Mar 2014 12:16:43 -0300
-Message-ID: <1394637404-7651-6-git-send-email-ezequiel.garcia@free-electrons.com>
-References: <1394637404-7651-1-git-send-email-ezequiel.garcia@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1394637404-7651-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Seif Mazareeb <seif-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Paul Walmsley <paul@pwsan.com>
+Subject: Re: [PATCH 05/10] ARM: OMAP5: hwmod data: add mmu data for ipu &
+ dsp
+Date: Wed, 12 Mar 2014 15:18:57 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1403121518340.8574@utopia.booyaka.com>
+References: <1394065459-16409-1-git-send-email-s-anna@ti.com> <1394065459-16409-6-git-send-email-s-anna@ti.com>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1394065459-16409-6-git-send-email-s-anna@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Suman Anna <s-anna@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>, Joerg Roedel <joro@8bytes.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-omap@vger.kernel.org, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Armada 385-DB board has a NAND flash, so enable it in the
-devicetree and add the partitions as prepared in the factory images.
+On Wed, 5 Mar 2014, Suman Anna wrote:
 
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/boot/dts/armada-385-db.dts | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+> A new MMU hwmod class and data structures are created
+> to represent the MMUs within the IPU and DSP processor
+> subsystems in OMAP5. The MMUs in OMAP5 are identical to
+> those in OMAP4.
+> 
+> Cc: Paul Walmsley <paul@pwsan.com>
+> Cc: Benoit Cousson <bcousson@baylibre.com>
+> Signed-off-by: Suman Anna <s-anna@ti.com>
 
-diff --git a/arch/arm/boot/dts/armada-385-db.dts b/arch/arm/boot/dts/armada-385-db.dts
-index 9a13642..b21e9b2 100644
---- a/arch/arm/boot/dts/armada-385-db.dts
-+++ b/arch/arm/boot/dts/armada-385-db.dts
-@@ -80,6 +80,27 @@
- 					reg = <1>;
- 				};
- 			};
-+
-+			nand: nand@d0000 {
-+				status = "okay";
-+				num-cs = <1>;
-+				marvell,nand-keep-config;
-+				marvell,nand-enable-arbiter;
-+				nand-on-flash-bbt;
-+
-+				partition@0 {
-+					label = "U-Boot";
-+					reg = <0 0x800000>;
-+				};
-+				partition@800000 {
-+					label = "Linux";
-+					reg = <0x800000 0x800000>;
-+				};
-+				partition@1000000 {
-+					label = "Filesystem";
-+					reg = <0x1000000 0x3f000000>;
-+				};
-+			};
- 		};
- 
- 		pcie-controller {
--- 
-1.9.0
+Acked-by: Paul Walmsley <paul@pwsan.com>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- Paul
