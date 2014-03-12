@@ -1,130 +1,141 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] phy: miphy365x: Add Device Tree bindings for
- the MiPHY365x
-Date: Wed, 12 Mar 2014 11:13:11 +0000
-Message-ID: <20140312111311.GF3263@e106331-lin.cambridge.arm.com>
-References: <1392377036-12816-1-git-send-email-lee.jones@linaro.org>
- <20140310162254.GG13661@lee--X1>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [RFC PATCH v2 00/21] Add DSI display support for Exynos based
+ boards
+Date: Wed, 12 Mar 2014 12:16:10 +0100
+Message-ID: <532041FA.7070300@samsung.com>
+References: <1392204688-4591-1-git-send-email-a.hajda@samsung.com>
+ <CAAQKjZOEAWG3jwTPOP7aBnpjyg8qLfq-Fcv_Mec2+fgmOULqEg@mail.gmail.com>
+ <531998B5.7040002@samsung.com>
+ <CAAQKjZN3PoXoEFRXzHA+vrMCLfTRYJ9g3rFjzodNRNh62hPuDw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140310162254.GG13661@lee--X1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "alexandre.torgue-qxv4g6HH51o@public.gmane.org" <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAAQKjZN3PoXoEFRXzHA+vrMCLfTRYJ9g3rFjzodNRNh62hPuDw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, DRI mailing list <dri-devel@lists.freedesktop.org>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 10, 2014 at 04:22:54PM +0000, Lee Jones wrote:
-> phy: miphy365x: Add Device Tree bindings for the MiPHY365x
->=20
-> The MiPHY365x is a Generic PHY which can serve various SATA or PCIe
-> devices. It has 2 ports which it can use for either; both SATA, both
-> PCIe or one of each in any configuration.
->=20
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On 12.03.2014 11:08, Inki Dae wrote:
+> 2014-03-07 19:00 GMT+09:00 Andrzej Hajda <a.hajda@samsung.com>:
+>> On 03/05/2014 03:56 AM, Inki Dae wrote:
+>>> Hi Andrzej,
+>>>
+>>> Thanks for your contributions.
+>>>
+>>> 2014-02-12 20:31 GMT+09:00 Andrzej Hajda <a.hajda@samsung.com>:
+>>>> Hi,
+>>>>
+>>>> This patchset adds drivers and bindings to the following devices:
+>>>> - Exynos DSI master,
+>>>> - S6E8AA0 DSI panel,
+>>>> - TC358764 DSI/LVDS bridge,
+>>>> - HV070WSA-100 LVDS panel.
+>>>>
+>>>> It adds also display support in DTS files for the following boards:
+>>>> - Exynos4210/Trats,
+>>>> - Exynos4412/Trats2,
+>>>> - Exynos5250/Arndale.
+>>>>
+>>>> Things worth mentioning:
+>>>>
+>>>> 1. I have implemented DSI/LVDS bridge using drm_panel framework, ie.
+>>>> the driver exposes drm_panel interface on DSI side, and interact with
+>>>> panels on LVDS side using drm_panel framework. This approach seems to
+>>>> me simpler and more natural than using drm_bridge.
+>>> Can you give me more details about why you think better to use panel
+>>> framework than using drm_bridge?  "Simpler" and "more natural" are
+>>> ambiguous to me.
+>> In this particular case DSI master expects on the other end
+>> any device having DSI slave interface, it could be panel or bridge.
+>> So it seems natural that both types of slave devices should expose
+>> the same interface also  on programming level.
+>> Another problem with drm_bridge is that it is not scalable -
+>> if some manufacturer will decide to add another block between the bridge
+>> and the panel there is no drm component which can be used for it.
+>> Using drm_panel the way I have used in toshiba bridge makes scalability
+>> possible,
+>> it will be only a matter of adding a driver for new block and making
+>> proper links in device tree, I see no easy way of doing it with
+>> drm_bridge approach.
+>
+> Now drm_bridge may not cover all hardware. However drm_bridge has
+> already been merged to mainline so I think we need to use drm_bridge
+> somehow instead of using other one, and also we could extend
+> drm_bridge if needed. It would be definitely impossible for a new
+> framework to cover all hardware because there may be other hardware
+> not appeared yet. That is what we are doing for mainline until now.
+>
 
->=20
-> diff --git a/Documentation/devicetree/bindings/phy/phy-miphy365x.txt =
-b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
-> new file mode 100644
-> index 0000000..15d105a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
-> @@ -0,0 +1,62 @@
-> +STMicroelectronics STi MIPHY365x PHY binding
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +This binding describes a miphy device that is used to control PHY ha=
-rdware
-> +for SATA and PCIe.
-> +
-> +Required properties:
-> +- compatible :	Should be "st,miphy365x-phy"
-> +- #phy-cells :	Should be 2 (See second example)
-> +		First cell is the port number from:
-> +			- MIPHY_PORT_0
-> +			- MIPHY_PORT_1
-> +		Second cell is device type from:
-> +			- MIPHY_TYPE_SATA
-> +			- MIPHY_TYPE_PCI
-> +- reg       :	Address and length of register sets for each device in
-> +		"reg-names"
-> +- reg-names : 	The names of the register addresses corresponding to =
-the
-> +		registers filled in "reg", from:
-> +			- sata0: For SATA port 0 registers
-> +			- sata1: For SATA port 1 registers
-> +			- pcie0: For PCIE port 0 registers
-> +			- pcie1: For PCIE port 1 registers
-> +- st,syscfg : 	Should be a phandle of the system configuration regis=
-ter group
-> +		which contain the SATA, PCIe mode setting bits
-> +
-> +Optional properties:
-> +- st,sata-gen	     :	Generation of locally attached SATA IP. Expecte=
-d values
-> +			are {1,2,3). If not supplied generation 1 hardware will
-> +			be expected
-> +- st,pcie-tx-pol-inv :	Bool property to invert the polarity PCIe Tx =
-(Txn/Txp)
-> +- st,sata-tx-pol-inv :	Bool property to invert the polarity SATA Tx =
-(Txn/Txp)
-> +
-> +Example:
-> +
-> +	miphy365x_phy: miphy365x@0 {
+Well, maybe drm_bridge has been merged, but so has been drm_panel. 
+Moreover, merged code is not carved in stone, if there is a better 
+option that could replace it, users of it can be converted to the new 
+approach and the old one can be removed.
 
-Please fix the unit-address to match the first reg entry.
+As I believe Andrzej has demonstrated, drm_panel framework is clearly 
+superior over drm_bridge and I can't think of any good reason why it 
+couldn't become more generic and replace drm_bridge. Of course it can be 
+renamed then to something more generic appropriately.
 
-Otherwise this looks fine. With that fixed:
+>>
+>>
+>>>
+>>> Using same drm_panel framework for LDVS bridge and real panel drivers
+>>> isn't reasonable to me as now because drm_panel framework would be for
+>>> real panel device even if the use of drm_panel framework looks like
+>>> suitable to LVDS bridge driver. I thought Sean's way, ptn3460 driver
+>>> using drm_bride stuff, is good enough, and that would be why
+>>> drm_bridge exists and why drm_encoder has drm_bridge.
+>>>
+>>> And I'm finding more generic way, how to handle LVDS bridge using
+>>> super node so that  LVDS bridge driver isn't embedded to connector
+>>> drivers such as eDP and MIPI-DSI, and dt binding of LVDS bridge can be
+>>> done at top level of Exynos drm. Once the binding is done, encoder of
+>>> display bus driver will have drm_bridge object of LVDS bridge driver
+>>> so that display bus driver can handle LVDS bridge driver.
+>> Could you explain what you mean by "dt binding of LVDS bridge can be
+>> done at top level of Exynos drm" ? How it will look like if there
+>> will be more bridges, one for DSI, one for HDMI, etc... What if there
+>> will be two
+>> bridges in one chain. How it will cope with video pipeline bindings?
+>
+> it was just my idea so I have no implementation about it yet.
+>
+> My idea is that crtc and encoder are binded at top level of Exynos drm
+> as is. And for bridge support, the only difference is, in case that
+> encoder driver has bridge, the dt binding of the encoder driver is
+> done once last one between encoder and bridge driver is binded. It
+> would mean that bridge driver can use driver model and it doesn't need
+> to concern about probe order issue.
+>
+> For this, encoder driver with bridge, MIPI-DSI or eDP, would need to
+> use component interfaces specific to Exynos drm. As a result, once the
+> dt bindings of crtc and encoder are completed at top level, encoder
+> driver has its own drm_bridge for bridge, and dt binding you proposed
+> could be used without any change, and drm_panel could also be used
+> only for real lcd panel driver.
+>
+> And below is a block diagram I think,
+>
+>                                    DRM KMS
+>                     /                      |                 \
+>                /                           |                      \
+>           crtc                      encoder              connector
+>             |                           /     \                          |
+>             |                       /             \                      |
+>             |                      |           drm_bridge   drm_panel
+>             |                      |                   |                 |
+>             |                      |                   |                 |
+>          FIMD         MIPI-DSI    LVDS bridge    Panel
+>
 
-Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Hmm, this doesn't seem to be complete. Several bridges can be chained 
+together. Also I believe "Panel" and "drm_panel" on your diagram should 
+be basically the same. This leads to obvious conclusion that drm_bridge 
+and drm_panel should be merged and Andrzej has shown an example (and 
+IMHO good) way to do it, as drm_panel already provides a significant 
+amount of existing infrastructure.
 
-Mark.
-
-> +		compatible =3D "st,miphy365x-phy";
-> +		#phy-cells =3D <2>;
-> +		reg =3D	<0xfe382000 0x100>,
-> +			<0xfe38a000 0x100>,
-> +			<0xfe394000 0x100>,
-> +			<0xfe804000 0x100>;
-> +		reg-names =3D "sata0", "sata1", "pcie0", "pcie1";
-> +		st,syscfg =3D <&syscfg_rear>;
-> +	};
-> +
-> +Specifying phy control of devices
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +Device nodes should specify the configuration required in their "phy=
-s"
-> +property, containing a phandle to the miphy device node, a port numb=
-er
-> +and a device type.
-> +
-> +Example:
-> +
-> +#include <dt-bindings/phy/phy-miphy365x.h>
-> +
-> +	sata0: sata@fe380000 {
-> +		...
-> +		phys	  =3D <&miphy365x_phy MIPHY_PORT_0 MIPHY_TYPE_SATA>;
-> +		...
-> +	};
->=20
-> --=20
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
->=20
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Tomasz
