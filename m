@@ -1,52 +1,62 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [alsa-devel] [PATCH RFC v2 0/2] Fix simple-card *-master DT parameter
- handling
-Date: Wed, 12 Mar 2014 11:27:09 +0200
-Message-ID: <5320286D.6080009@ti.com>
-References: <cover.1394451329.git.jsarha@ti.com>	<877g80rzgg.wl%kuninori.morimoto.gx@gmail.com>	<CAHPCO9FmL__LmUyMRhsy2mnPNAV0h--aMY=GBJjL9TBrAqWSFw@mail.gmail.com> <87wqg0q74d.wl%kuninori.morimoto.gx@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <87wqg0q74d.wl%kuninori.morimoto.gx@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>, Richard Lee <superlibj8301@gmail.com>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, liam.r.girdwood@linux.intel.com, detheridge@ti.com, peter.ujfalusi@ti.com, broonie@kernel.org, bcousson@baylibre.com
+From: Maxime COQUELIN <maxime.coquelin@st.com>
+Subject: [PATCH v4 0/6] Add STiH407 SoC and reference board support
+Date: Wed, 12 Mar 2014 09:50:04 +0100
+Message-ID: <1394614210-15698-1-git-send-email-maxime.coquelin@st.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, Linus Walleij <linus.walleij@linaro.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Maxime Coquelin <maxime.coquelin@st.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+Cc: lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/12/2014 08:11 AM, Kuninori Morimoto wrote:
->
-> Hi Richard
->
->>> but anyway, if my understanding is correct,
->>>
->>>          simple-audio-card,cpu {
->>>                  ...
->>>                  bitclock-master;
->>>                  frame-master;
->>>          };
->>>
->>>          simple-audio-card,codec {
->>>                  ...
->>>                  bitclock-master;
->>>                  frame-master;
->>>          };
->>>
->>> This will be
->>> cpu   : SND_SOC_DAIFMT_CBS_CFS
->>> codec : SND_SOC_DAIFMT_CBM_CFM
->>>
->>
->> Yes, That's also what my understanding of this patches.
->
-> Thank you. I understand.
-> (and I need to send fixup patches :)
->
-> # "codec-is-bitclock-master" seems understandable than
-> # current "bitclock-master"...
->
+This series adds basic support to the STMicroelectronics STiH407 SoC and its
+B2120 reference board. The STiH407 is a dual-core ARM Cortex-A9 CPU aimed at
+STB market.
 
-Sounds great to me!
+Changes since v3:
+-----------------
+	- Removed SOC_STIH407 as unused for now
+	- Cosmetic changes in DT
+	- Added new lines in pinctrl-st around if:s
+	- Use ARRAY_SIZE instead of raw values
 
-Best regards,
-Jyri
+Changes since v2:
+-----------------
+    - Reordered the pinctrl patches
+    - Moved stih407_flashdata to stih407 pinctrl patch
+
+Changes since v1:
+-----------------
+	- Changed patch 2 commit title
+	- Rebased pinctrl patches to linux-pinctrl/devel
+	- Rebased ARM patches to arm_soc/for-next
+
+Giuseppe Cavallaro (2):
+  pinctrl: st: Enhance the controller to manage unavailable registers
+  pinctrl: st: add pinctrl support for the STiH407 SoC
+
+Maxime Coquelin (4):
+  ARM: STi: Add STiH407 SoC support
+  pinctrl: st: Use ARRAY_SIZE instead of raw value for number of delays
+  ARM: dts: Add STiH407 SoC support
+  ARM: dts: STiH407: Add B2120 board support
+
+ Documentation/arm/sti/stih407-overview.txt    |  18 +
+ Documentation/devicetree/bindings/arm/sti.txt |  15 +
+ arch/arm/boot/dts/Makefile                    |   3 +-
+ arch/arm/boot/dts/stih407-b2120.dts           |  78 ++++
+ arch/arm/boot/dts/stih407-clock.dtsi          |  40 ++
+ arch/arm/boot/dts/stih407-pinctrl.dtsi        | 615 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/stih407.dtsi                | 263 +++++++++++
+ arch/arm/mach-sti/board-dt.c                  |   1 +
+ drivers/pinctrl/pinctrl-st.c                  | 125 ++++--
+ 9 files changed, 1112 insertions(+), 46 deletions(-)
+ create mode 100644 Documentation/arm/sti/stih407-overview.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/sti.txt
+ create mode 100644 arch/arm/boot/dts/stih407-b2120.dts
+ create mode 100644 arch/arm/boot/dts/stih407-clock.dtsi
+ create mode 100644 arch/arm/boot/dts/stih407-pinctrl.dtsi
+ create mode 100644 arch/arm/boot/dts/stih407.dtsi
+
+-- 
+1.9.0
+
