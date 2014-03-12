@@ -1,33 +1,40 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 4/6] pinctrl: st: Use ARRAY_SIZE instead of raw value
- for number of delays
-Date: Wed, 12 Mar 2014 09:39:18 +0000
-Message-ID: <20140312093918.GF5672@lee--X1>
-References: <1394614210-15698-1-git-send-email-maxime.coquelin@st.com>
- <1394614210-15698-5-git-send-email-maxime.coquelin@st.com>
+Subject: Re: [PATCH v4 2/5] mfd: add bcm590xx pmu driver
+Date: Wed, 12 Mar 2014 09:46:21 +0000
+Message-ID: <20140312094621.GH5672@lee--X1>
+References: <1394580837-8331-1-git-send-email-mporter@linaro.org>
+ <1394580837-8331-3-git-send-email-mporter@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1394614210-15698-5-git-send-email-maxime.coquelin@st.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Maxime COQUELIN <maxime.coquelin@st.com>
-Cc: Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, Linus Walleij <linus.walleij@linaro.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+In-Reply-To: <1394580837-8331-3-git-send-email-mporter@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matt Porter <mporter@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Christian Daudt <bcm@fixthebug.org>, Devicetree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> This patch replaces the raw values with ARRAY_SIZE for assigning the
-> ninput_delays and noutput_delays fields of STiH416's st_pctl_data str=
-uct.
+> Add a driver for the BCM590xx PMU multi-function devices. The driver
+> initially supports regmap initialization and instantiation of the
+> voltage regulator device function of the PMU.
 >=20
-> CC: Lee Jones <lee.jones@linaro.org>
-> Acked-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
+> Signed-off-by: Matt Porter <mporter@linaro.org>
+> Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
+> Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
 > ---
->  drivers/pinctrl/pinctrl-st.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/mfd/Kconfig          |  8 ++++
+>  drivers/mfd/Makefile         |  1 +
+>  drivers/mfd/bcm590xx.c       | 93 ++++++++++++++++++++++++++++++++++=
+++++++++++
+>  include/linux/mfd/bcm590xx.h | 31 +++++++++++++++
+>  4 files changed, 133 insertions(+)
+>  create mode 100644 drivers/mfd/bcm590xx.c
+>  create mode 100644 include/linux/mfd/bcm590xx.h
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+Ah, you fixed the nit.
+
+Applied this one instead then.
 
 --=20
 Lee Jones
