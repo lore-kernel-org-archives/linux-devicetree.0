@@ -1,200 +1,508 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH] ARM: zynq: Add OCM driver
-Date: Wed, 12 Mar 2014 13:00:51 +0100
-Message-ID: <53204C73.5070807@monstr.eu>
-References: <299e37ab245da9132808c6d4265a17b9a417bf62.1389022555.git.michal.simek@xilinx.com> <CAOesGMiroyjPbcjfG24_sUqCicCD4M7NF2aD=Xi8NVgagZThuA@mail.gmail.com>
-Reply-To: monstr@monstr.eu
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: [PATCH] axs_nand - add driver for NAND controller used on Synopsys
+ AXS dev boards
+Date: Wed, 12 Mar 2014 16:12:29 +0400
+Message-ID: <1394626349-16024-1-git-send-email-abrodkin@synopsys.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="hoO19cCJQIutdIXL24bAu0tLMWQeqQjgo"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAOesGMiroyjPbcjfG24_sUqCicCD4M7NF2aD=Xi8NVgagZThuA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Michal Simek <michal.simek@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Soren Brinkmann <soren.brinkmann@xilinx.com>, Josh Cartwright <josh.cartwright@ni.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: linux-mtd@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Francois.Bedard@synopsys.com, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, linux-kernel@vger.kernel.org, grant.likely@linaro.org, dwmw2@infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---hoO19cCJQIutdIXL24bAu0tLMWQeqQjgo
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
 
-Hi Olof,
+Cc: Vineet Gupta <vgupta@synopsys.com>
+---
+ Documentation/devicetree/bindings/mtd/axs-nand.txt |  17 +
+ drivers/mtd/nand/Kconfig                           |   6 +
+ drivers/mtd/nand/Makefile                          |   1 +
+ drivers/mtd/nand/axs_nand.c                        | 412 +++++++++++++++++++++
+ 4 files changed, 436 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/axs-nand.txt
+ create mode 100644 drivers/mtd/nand/axs_nand.c
 
->> diff --git a/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocm.=
-txt b/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocm.txt
->> new file mode 100644
->> index 0000000..64cb5e8
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocm.txt
->> @@ -0,0 +1,17 @@
->> +Device tree bindings for Zynq's OCM
->> +
->> +The OCM is divided to 4 64kB segments which can be separately configu=
-red
->> +to low or high location. Location is controlled via SLCR.
->> +
->> +Required properties:
->> + compatible: Compatibility string. Must be "xlnx,zynq-ocm-1.0".
->> + reg: Specify the base and size of the OCM registers in the memory ma=
-p.
->> +      E.g.: reg =3D <0xf800c000 0x1000>;
->> +
->> +Example:
->> +ocmc: ocmc@f800c000 {
->> +       compatible =3D  "xlnx,zynq-ocm-1.0";
->> +       interrupt-parent =3D <&intc>;
->> +       interrupts =3D <0 3 4>;
->> +       reg =3D <0xf800c000 0x1000>;
->> +} ;
->> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq=
--7000.dtsi
->> index 1d942e2..4929be5 100644
->> --- a/arch/arm/boot/dts/zynq-7000.dtsi
->> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
->> @@ -66,6 +66,13 @@
->>                         cache-level =3D <2>;
->>                 };
->>
->> +               ocmc: ocmc@f800c000 {
->> +                       compatible =3D "xlnx,zynq-ocm-1.0";
->> +                       interrupt-parent =3D <&intc>;
->> +                       interrupts =3D <0 3 4>;
->> +                       reg =3D <0xf800c000 0x1000>;
->> +               } ;
->> +
->>                 uart0: uart@e0000000 {
->>                         compatible =3D "xlnx,xuartps";
->>                         status =3D "disabled";
->> diff --git a/arch/arm/mach-zynq/Kconfig b/arch/arm/mach-zynq/Kconfig
->> index 323e505..f3e6ce4 100644
->> --- a/arch/arm/mach-zynq/Kconfig
->> +++ b/arch/arm/mach-zynq/Kconfig
->> @@ -15,5 +15,6 @@ config ARCH_ZYNQ
->>         select CADENCE_TTC_TIMER
->>         select ARM_GLOBAL_TIMER
->>         select MFD_SYSCON
->> +       select GENERIC_ALLOCATOR
->>         help
->>           Support for Xilinx Zynq ARM Cortex A9 Platform
->> diff --git a/arch/arm/mach-zynq/Makefile b/arch/arm/mach-zynq/Makefile=
+diff --git a/Documentation/devicetree/bindings/mtd/axs-nand.txt b/Documentation/devicetree/bindings/mtd/axs-nand.txt
+new file mode 100644
+index 0000000..aab5873
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/axs-nand.txt
+@@ -0,0 +1,17 @@
++* Synopsys AXS NAND controller
++
++Required properties:
++  - compatible: must be "snps,axs-nand"
++  - reg: physical base address and size of the registers map
++
++The device tree may optionally contain sub-nodes describing partitions of the
++address space. See partition.txt for more detail.
++
++Examples:
++
++nand: nand@0x16000 {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "snps,axs-nand";
++	reg = < 0x16000 0x200 >;
++};
+diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
+index 93ae6a6..3661822 100644
+--- a/drivers/mtd/nand/Kconfig
++++ b/drivers/mtd/nand/Kconfig
+@@ -510,4 +510,10 @@ config MTD_NAND_XWAY
+ 	  Enables support for NAND Flash chips on Lantiq XWAY SoCs. NAND is attached
+ 	  to the External Bus Unit (EBU).
+ 
++config MTD_NAND_AXS
++	tristate "Support for NAND on Synopsys AXS development board"
++	help
++	  Enables support for NAND Flash chips on Synopsys AXS development
++	  boards.
++
+ endif # MTD_NAND
+diff --git a/drivers/mtd/nand/Makefile b/drivers/mtd/nand/Makefile
+index 542b568..635a918 100644
+--- a/drivers/mtd/nand/Makefile
++++ b/drivers/mtd/nand/Makefile
+@@ -49,5 +49,6 @@ obj-$(CONFIG_MTD_NAND_JZ4740)		+= jz4740_nand.o
+ obj-$(CONFIG_MTD_NAND_GPMI_NAND)	+= gpmi-nand/
+ obj-$(CONFIG_MTD_NAND_XWAY)		+= xway_nand.o
+ obj-$(CONFIG_MTD_NAND_BCM47XXNFLASH)	+= bcm47xxnflash/
++obj-$(CONFIG_MTD_NAND_AXS)		+= axs_nand.o
+ 
+ nand-objs := nand_base.o nand_bbt.o
+diff --git a/drivers/mtd/nand/axs_nand.c b/drivers/mtd/nand/axs_nand.c
+new file mode 100644
+index 0000000..1c87bf0
+--- /dev/null
++++ b/drivers/mtd/nand/axs_nand.c
+@@ -0,0 +1,412 @@
++/*
++ * Copyright (C) 2014 Synopsys, Inc. (www.synopsys.com)
++ *
++ * Driver for NAND controller on Synopsys AXS development board.
++ *
++ * This file is subject to the terms and conditions of the GNU General Public
++ * License v2. See the file COPYING in the main directory of this archive for
++ * more details.
++ */
++
++#include <linux/dma-mapping.h>
++#include <linux/slab.h>
++#include <linux/module.h>
++#include <linux/mtd/mtd.h>
++#include <linux/mtd/nand.h>
++#include <linux/mtd/partitions.h>
++#include <linux/of_address.h>
++#include <linux/of_platform.h>
++#include <linux/io.h>
++
++/*
++ * There's an issue with DMA'd data if data buffer is cached.
++ * So to make NAND storage available for now we'll map data buffer in
++ * uncached memory.
++ *
++ * As soon as issue with cached buffer is resolved following define to be
++ * removed as well as sources it enables.
++ */
++#define DATA_BUFFER_UNCACHED
++
++#define BUS_WIDTH	8		/* AXI data bus width in bytes	*/
++
++/* DMA buffer descriptor masks */
++#define BD_STAT_OWN			(1 << 31)
++#define BD_STAT_BD_FIRST		(1 << 3)
++#define BD_STAT_BD_LAST			(1 << 2)
++#define BD_SIZES_BUFFER1_MASK		0xfff
++
++#define BD_STAT_BD_COMPLETE	(BD_STAT_BD_FIRST | BD_STAT_BD_LAST)
++
++/* Controller command types */
++#define B_CT_ADDRESS	(0x0 << 16)	/* Address operation		*/
++#define B_CT_COMMAND	(0x1 << 16)	/* Command operation		*/
++#define B_CT_WRITE	(0x2 << 16)	/* Write operation		*/
++#define B_CT_READ	(0x3 << 16)	/* Write operation		*/
++
++/* Controller command options */
++#define B_WFR		(1 << 19)	/* 1b - Wait for ready		*/
++#define B_LC		(1 << 18)	/* 1b - Last cycle		*/
++#define B_IWC		(1 << 13)	/* 1b - Interrupt when complete	*/
++
++enum {
++	NAND_ISR_DATAREQUIRED = 0,
++	NAND_ISR_TXUNDERFLOW,
++	NAND_ISR_TXOVERFLOW,
++	NAND_ISR_DATAAVAILABLE,
++	NAND_ISR_RXUNDERFLOW,
++	NAND_ISR_RXOVERFLOW,
++	NAND_ISR_TXDMACOMPLETE,
++	NAND_ISR_RXDMACOMPLETE,
++	NAND_ISR_DESCRIPTORUNAVAILABLE,
++	NAND_ISR_CMDDONE,
++	NAND_ISR_CMDAVAILABLE,
++	NAND_ISR_CMDERROR,
++	NAND_ISR_DATATRANSFEROVER,
++	NAND_ISR_NONE
++};
++
++enum {
++	AC_FIFO = 0,		/* Address and command fifo */
++	IDMAC_BDADDR = 0x18,	/* IDMAC descriptor list base address */
++	INT_STATUS = 0x118,	/* Interrupt status register */
++	INT_CLR_STATUS = 0x120	/* Interrupt clear status register */
++};
++
++#define AXS_BUF_SIZE	(PAGE_ALIGN(NAND_MAX_PAGESIZE + NAND_MAX_OOBSIZE))
++
++struct asx_nand_bd {
++	__le32 status;		/* DES0 */
++	__le32 sizes;		/* DES1 */
++	dma_addr_t buffer_ptr0;	/* DES2 */
++	dma_addr_t buffer_ptr1;	/* DES3 */
++};
++
++struct axs_nand_host {
++	struct nand_chip	nand_chip;
++	struct mtd_info		mtd;
++	void __iomem		*io_base;
++	struct device		*dev;
++	struct asx_nand_bd	*bd;	/* Buffer descriptor */
++	dma_addr_t		bd_dma;	/* DMA handle for buffer descriptor */
++	uint8_t			*db;	/* Data buffer */
++	dma_addr_t		db_dma;	/* DMA handle for data buffer */
++};
++
++/**
++ * reg_set - Sets register with provided value.
++ * @host:	Pointer to private data structure.
++ * @reg:	Register offset from base address.
++ * @value:	Value to set in register.
++ */
++static inline void reg_set(struct axs_nand_host *host, int reg, int value)
++{
++	iowrite32(value, host->io_base + reg);
++}
++
++/**
++ * reg_get - Gets value of specified register.
++ * @priv:	Pointer to private data structure.
++ * @reg:	Register offset from base address.
++ *
++ * returns:	Value of requested register.
++ */
++static inline unsigned int reg_get(struct axs_nand_host *host, int reg)
++{
++	return ioread32(host->io_base + reg);
++}
++
++/**
++ * xplorer_nand_write_buf - write buffer to chip
++ * @mtd:	MTD device structure
++ * @buf:	Data buffer
++ * @len:	Number of bytes to write
++ *
++ * returns:	1 if requested flag is set, otherwise 0
++ */
++static unsigned int axs_flag_is_set(struct axs_nand_host *host, int flag)
++{
++	unsigned int reg = reg_get(host, INT_STATUS);
++
++	if (reg & (1 << flag)) {
++		reg_set(host, INT_CLR_STATUS, 1 << flag);
++		return 1;
++	}
++
++	return 0;
++}
++
++/**
++ * axs_nand_write_buf - write buffer to chip
++ * @mtd:	MTD device structure
++ * @buf:	Data buffer
++ * @len:	Number of bytes to write
++ */
++static void axs_nand_write_buf(struct mtd_info *mtd,
++		const uint8_t *buf, int len)
++{
++	struct nand_chip *this = mtd->priv;
++	struct axs_nand_host *host = this->priv;
++
++	memcpy(host->db, buf, len);
++#ifndef DATA_BUFFER_UNCACHED
++	dma_sync_single_for_device(host->dev, host->db_dma, len, DMA_TO_DEVICE);
++#endif
++
++	/* Setup buffer descriptor */
++	host->bd->status = BD_STAT_OWN | BD_STAT_BD_COMPLETE;
++	host->bd->sizes = cpu_to_le32(ALIGN(len, BUS_WIDTH) &
++				      BD_SIZES_BUFFER1_MASK);
++	host->bd->buffer_ptr0 = cpu_to_le32(host->db_dma);
++	host->bd->buffer_ptr1 = 0;
++
++	/* Issue "write" command */
++	reg_set(host, AC_FIFO, B_CT_WRITE | B_WFR | B_IWC | B_LC | (len - 1));
++
++	/* Wait for NAND command and DMA to complete */
++	while (!axs_flag_is_set(host, NAND_ISR_CMDDONE))
++		;
++	while (!axs_flag_is_set(host, NAND_ISR_TXDMACOMPLETE))
++		;
++}
++
++/**
++ * axs_nand_read_buf -  read chip data into buffer
++ * @mtd:	MTD device structure
++ * @buf:	Buffer to store data
++ * @len:	Number of bytes to read
++ */
++static void axs_nand_read_buf(struct mtd_info *mtd, uint8_t *buf, int len)
++{
++	struct nand_chip *this = mtd->priv;
++	struct axs_nand_host *host = this->priv;
++
++	/* Setup buffer descriptor */
++	host->bd->status = BD_STAT_OWN | BD_STAT_BD_COMPLETE;
++	host->bd->sizes = cpu_to_le32(ALIGN(len, BUS_WIDTH) &
++				      BD_SIZES_BUFFER1_MASK);
++	host->bd->buffer_ptr0 = cpu_to_le32(host->db_dma);
++	host->bd->buffer_ptr1 = 0;
++
++	/* Issue "read" command */
++	reg_set(host, AC_FIFO, B_CT_READ | B_WFR | B_IWC | B_LC | (len - 1));
++
++	/* Wait for NAND command and DMA to complete */
++	while (!axs_flag_is_set(host, NAND_ISR_CMDDONE))
++		;
++	while (!axs_flag_is_set(host, NAND_ISR_RXDMACOMPLETE))
++		;
++
++#ifndef DATA_BUFFER_UNCACHED
++	dma_sync_single_for_cpu(host->dev, host->db_dma, len, DMA_FROM_DEVICE);
++#endif
++	if (buf != host->db)
++		memcpy(buf, host->db, len);
++}
++
++/**
++ * axs_nand_read_byte - read one byte from the chip
++ * @mtd:	MTD device structure
++ *
++ * returns:	read data byte
++ */
++static uint8_t axs_nand_read_byte(struct mtd_info *mtd)
++{
++	struct nand_chip *this = mtd->priv;
++	struct axs_nand_host *host = this->priv;
++
++	axs_nand_read_buf(mtd, host->db, sizeof(uint8_t));
++	return (uint8_t)host->db[0];
++}
++
++/**
++ * axs_nand_read_word - read one word from the chip
++ * @mtd:	MTD device structure
++ *
++ * returns:	read data word
++ */
++static uint16_t axs_nand_read_word(struct mtd_info *mtd)
++{
++	struct nand_chip *this = mtd->priv;
++	struct axs_nand_host *host = this->priv;
++
++	axs_nand_read_buf(mtd, host->db, sizeof(uint16_t));
++	return (uint16_t)host->db[0];
++}
++
++/**
++ * Hardware specific access to control-lines
++ * @mtd:	MTD device structure
++ * @cmd:	NAND command
++ * @ctrl:	NAND control options
++ */
++static void axs_nand_cmd_ctrl(struct mtd_info *mtd, int cmd,
++		unsigned int ctrl)
++{
++	struct nand_chip *nand_chip = mtd->priv;
++	struct axs_nand_host *host = nand_chip->priv;
++
++	if (cmd == NAND_CMD_NONE)
++		return;
++
++	cmd = cmd & 0xff;
++
++	switch (ctrl & (NAND_ALE | NAND_CLE)) {
++	/* Address */
++	case NAND_ALE:
++		cmd |= B_CT_ADDRESS;
++		break;
++
++	/* Command */
++	case NAND_CLE:
++		cmd |= B_CT_COMMAND | B_WFR;
++
++		break;
++
++	default:
++		dev_err(host->dev, "Unknown ctrl %#x\n", ctrl);
++		BUG_ON(1);
++	}
++
++	reg_set(host, AC_FIFO, cmd | B_LC);
++	while (!axs_flag_is_set(host, NAND_ISR_CMDDONE))
++		;
++}
++
++static int axs_nand_probe(struct platform_device *pdev)
++{
++	struct mtd_part_parser_data ppdata;
++	struct nand_chip *nand_chip;
++	struct axs_nand_host *host;
++	struct resource res_regs;
++	struct mtd_info *mtd;
++	int err;
++
++	if (!pdev->dev.of_node)
++		return -ENODEV;
++
++	/* Get registers base address from device tree */
++	err = of_address_to_resource(pdev->dev.of_node, 0, &res_regs);
++	if (err) {
++		dev_err(&pdev->dev, "Failed to retrieve registers base from device tree\n");
++		return -ENODEV;
++	}
++
++	/* Allocate memory for the device structure (and zero it) */
++	host = kzalloc(sizeof(struct axs_nand_host), GFP_KERNEL);
++	if (!host) {
++		dev_err(&pdev->dev, "Failed to allocate device structure.\n");
++		return -ENOMEM;
++	}
++
++	host->io_base = devm_ioremap_resource(&pdev->dev, &res_regs);
++	if (IS_ERR(host->io_base)) {
++		err = PTR_ERR(host->io_base);
++		goto out;
++	}
++	dev_dbg(&pdev->dev, "Registers base address is 0x%p\n", host->io_base);
++
++	host->bd = dmam_alloc_coherent(&pdev->dev, sizeof(struct asx_nand_bd),
++				       &host->bd_dma, GFP_KERNEL);
++	if (!host->bd) {
++		dev_err(&pdev->dev, "Failed to allocate buffer descriptor\n");
++		err = -ENOMEM;
++		goto out;
++	}
++
++	memset(host->bd, 0, sizeof(struct asx_nand_bd));
++
++#ifdef DATA_BUFFER_UNCACHED
++	host->db = dmam_alloc_coherent(&pdev->dev, AXS_BUF_SIZE,
++#else
++	host->db = dmam_alloc_noncoherent(&pdev->dev, AXS_BUF_SIZE,
++#endif
++				       &host->db_dma, GFP_KERNEL);
++	if (!host->db) {
++		dev_err(&pdev->dev, "Failed to allocate data buffer\n");
++		err = -ENOMEM;
++		goto out;
++	}
++	dev_dbg(&pdev->dev, "Data buffer mapped @ %p, DMA @ %x\n", host->db,
++		host->db_dma);
++
++	mtd = &host->mtd;
++	nand_chip = &host->nand_chip;
++	host->dev = &pdev->dev;
++
++	nand_chip->priv = host;
++	mtd->priv = nand_chip;
++	mtd->name = "axs_nand";
++	mtd->owner = THIS_MODULE;
++	mtd->dev.parent = &pdev->dev;
++	ppdata.of_node = pdev->dev.of_node;
++
++	nand_chip->cmd_ctrl = axs_nand_cmd_ctrl;
++	nand_chip->read_byte = axs_nand_read_byte;
++	nand_chip->read_word = axs_nand_read_word;
++	nand_chip->write_buf = axs_nand_write_buf;
++	nand_chip->read_buf = axs_nand_read_buf;
++	nand_chip->ecc.mode = NAND_ECC_SOFT;
++
++	dev_set_drvdata(&pdev->dev, host);
++
++	reg_set(host, IDMAC_BDADDR, host->bd_dma);
++
++	if (nand_scan_ident(mtd, 1, NULL)) {
++		err = -ENXIO;
++		goto out1;
++	}
++
++	if (nand_scan_tail(mtd)) {
++		err = -ENXIO;
++		goto out1;
++	}
++
++	err = mtd_device_parse_register(mtd, NULL, &ppdata, NULL, 0);
++	if (!err)
++		return err;
++
++	nand_release(mtd);
++
++out1:
++	dev_set_drvdata(&pdev->dev, NULL);
++out:
++	kfree(host);
++	return err;
++}
++
++static int axs_nand_remove(struct platform_device *ofdev)
++{
++	struct axs_nand_host *host = dev_get_drvdata(&ofdev->dev);
++	struct mtd_info *mtd = &host->mtd;
++
++	nand_release(mtd);
++	dev_set_drvdata(&ofdev->dev, NULL);
++	iounmap(host->io_base);
++	kfree(host);
++
++	return 0;
++}
++
++static const struct of_device_id axs_nand_dt_ids[] = {
++	{ .compatible = "snps,axs-nand", },
++	{ /* Sentinel */ }
++};
++
++MODULE_DEVICE_TABLE(of, axs_nand_match);
++
++static struct platform_driver axs_nand_driver = {
++	.probe		= axs_nand_probe,
++	.remove		= axs_nand_remove,
++	.driver = {
++		.name = "asx-nand",
++		.owner = THIS_MODULE,
++		.of_match_table = axs_nand_dt_ids,
++	},
++};
++
++module_platform_driver(axs_nand_driver);
++
++MODULE_AUTHOR("Alexey Brodkin <abrodkin@synopsys.com>");
++MODULE_DESCRIPTION("NAND driver for Synopsys AXS development board");
++MODULE_LICENSE("GPL");
+-- 
+1.8.5.3
 
->> index 1b25d92..626f64b 100644
->> --- a/arch/arm/mach-zynq/Makefile
->> +++ b/arch/arm/mach-zynq/Makefile
->> @@ -3,7 +3,7 @@
->>  #
->>
->>  # Common support
->> -obj-y                          :=3D common.o slcr.o
->> +obj-y                          :=3D common.o slcr.o zynq_ocm.o
->>  CFLAGS_REMOVE_hotplug.o                =3D-march=3Darmv6k
->>  CFLAGS_hotplug.o               =3D-Wa,-march=3Darmv7-a -mcpu=3Dcortex=
--a9
->>  obj-$(CONFIG_HOTPLUG_CPU)      +=3D hotplug.o
->> diff --git a/arch/arm/mach-zynq/common.h b/arch/arm/mach-zynq/common.h=
 
->> index b097844..953f6a1 100644
->> --- a/arch/arm/mach-zynq/common.h
->> +++ b/arch/arm/mach-zynq/common.h
->> @@ -24,6 +24,7 @@ extern int zynq_early_slcr_init(void);
->>  extern void zynq_slcr_system_reset(void);
->>  extern void zynq_slcr_cpu_stop(int cpu);
->>  extern void zynq_slcr_cpu_start(int cpu);
->> +extern u32 zynq_slcr_get_ocm_config(void);
->>
->>  #ifdef CONFIG_SMP
->>  extern void secondary_startup(void);
->> diff --git a/arch/arm/mach-zynq/slcr.c b/arch/arm/mach-zynq/slcr.c
->> index c1f1499..9a37ab3 100644
->> --- a/arch/arm/mach-zynq/slcr.c
->> +++ b/arch/arm/mach-zynq/slcr.c
->> @@ -26,6 +26,7 @@
->>  #define SLCR_PS_RST_CTRL_OFFSET                0x200 /* PS Software R=
-eset Control */
->>  #define SLCR_A9_CPU_RST_CTRL_OFFSET    0x244 /* CPU Software Reset Co=
-ntrol */
->>  #define SLCR_REBOOT_STATUS_OFFSET      0x258 /* PS Reboot Status */
->> +#define SLCR_OCM_CFG_OFFSET            0x910 /* OCM Address Mapping *=
-/
->>
->>  #define SLCR_UNLOCK_MAGIC              0xDF0D
->>  #define SLCR_A9_CPU_CLKSTOP            0x10
->> @@ -107,6 +108,20 @@ void zynq_slcr_system_reset(void)
->>  }
->>
->>  /**
->> + * zynq_slcr_get_ocm_config - Get SLCR OCM config
->> + *
->> + * return:     OCM config bits
->> + */
->> +u32 zynq_slcr_get_ocm_config(void)
->> +{
->> +       u32 val;
->> +
->> +       zynq_slcr_read(&val, SLCR_OCM_CFG_OFFSET);
->> +
->> +       return val;
->> +}
->> +
->> +/**
->>   * zynq_slcr_cpu_start - Start cpu
->>   * @cpu:       cpu number
->>   */
->> diff --git a/arch/arm/mach-zynq/zynq_ocm.c b/arch/arm/mach-zynq/zynq_o=
-cm.c
->> new file mode 100644
->> index 0000000..034a65b
->> --- /dev/null
->> +++ b/arch/arm/mach-zynq/zynq_ocm.c
->> @@ -0,0 +1,243 @@
->> +/*
->> + * Copyright (C) 2013 Xilinx
->> + *
->> + * Based on "Generic on-chip SRAM allocation driver"
->=20
-> We're not adding new drivers under arch/arm, so if you need this
-> driver then you should either merge it under drivers/ somewhere, or
-> look at extending the generic driver in a way that you can reuse it.
-
-Driver is reusing ideas from this generic driver but
-incorporation our changes to will be problematic.
-
-It is a shame that you didn't review the rest of code below.
-The reason why I have added this driver to arch/arm/mach-zynq
-was that there is code connection to zynq SMP bootup trampoline
-which has to be added at 0x0 when OCM is placed at 0x0.
-And this memory can't be used for generic purpose.
-If you see any nice way how to it please let me know.
-
-Calling SLCR function is solvable via regmap mapping.
-
-Thanks,
-Michal
-
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---hoO19cCJQIutdIXL24bAu0tLMWQeqQjgo
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlMgTHMACgkQykllyylKDCHGJgCeKkJKunzxqoYnhuOUmLeViMHh
-TxMAniuvSntB/Iz3qK7AWPh0sW3PD42z
-=U90A
------END PGP SIGNATURE-----
-
---hoO19cCJQIutdIXL24bAu0tLMWQeqQjgo--
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
