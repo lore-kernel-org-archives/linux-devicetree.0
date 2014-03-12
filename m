@@ -1,49 +1,83 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH V7 1/1] drivers/gpio: Altera soft IP GPIO driver and
- devicetree binding
-Date: Wed, 12 Mar 2014 15:52:12 +0100
-Message-ID: <CACRpkdZQdz78mdSJYaVsk3Xs1m7Eefh-d1e3LHew9VYxzSkObA@mail.gmail.com>
-References: <1393842463-5206-1-git-send-email-thloh@altera.com>
-	<CACRpkdbwKuaTucbHbuXsKpRAg+kN27K6uN212TT1-h8wxY9YzA@mail.gmail.com>
-	<20140308115045.GL3327@book.gsilab.sittig.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140308115045.GL3327@book.gsilab.sittig.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Gerhard Sittig <gsi@denx.de>
-Cc: Tien Hock Loh <thloh@altera.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Dinh Nguyen <dinguyen@altera.com>, "lftan@altera.com" <lftan@altera.com>, Tien Hock Loh <thloh.linux@gmail.com>
+From: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v5 0/5] clk: exynos: add support for exynos5260 SoC
+Date: Wed, 12 Mar 2014 20:26:43 +0530
+Message-ID: <1394636208-3125-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 8, 2014 at 12:50 PM, Gerhard Sittig <gsi@denx.de> wrote:
-> On Fri, Mar 07, 2014 at 11:31 +0800, Linus Walleij wrote:
->>
->> On Mon, Mar 3, 2014 at 6:27 PM,  <thloh@altera.com> wrote:
->>
->> > From: Tien Hock Loh <thloh@altera.com>
->> >
->> > Add driver support for Altera GPIO soft IP, including interrupts and I/O.
->> > Tested on Altera CV SoC board using dipsw and LED using LED framework.
->> >
->> > Signed-off-by: Tien Hock Loh <thloh@altera.com>
->>
->> Can I get some ACKs on this? Like from Gerhard, DT folks?
->>
->> Or is there still more things to do?
->
-> Sorry, had flagged the patch for review, but did not get around
-> to respond earlier.  No ACK from me for v7 as it is.
+From: Rahul Sharma <Rahul.Sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-OK I'm holding this back.
+Add clock support for exynos5260 SoC.
 
-> Am I supposed to provide ACKs at all, given that I'm a reviewer
-> and fellow developer.  I always understood that Acked-By is
-> something more formal, where one maintainer signals to another
-> maintainer that it's OK to go though a different tree.
+This series is based on Tomasz Figa's samsung-next branch.
 
-In this case I want an Acked-by/Reviewed-by tag (choose!)
-beacuse I trust your ability to review this specific code, as simple as
-that.  :-)
+V5:
+  1) Include S3c2412 and S3c2443 in clock provider patch.
+  2) Added SCLK_TOP_FIMD with CLK_IGNORE_UNUSED due to Suspend
+  failure.
+  3) Moved exynos5260-clk.h to include/dt-bindings/clock.
+  4) Fix exynos5260_clk_sleep_init protoype for PM disabled.
+  5) Moved fixed clock registeration to DT.
+  6) Removed CLK_IGNORE_UNUSED flags from UART clocks. Earlier
+  facing issues because of RFS probing all TTYs.
 
-Yours,
-Linus Walleij
+V4:
+  1) Rework clock file as per Tomasz review comments at
+        http://www.spinics.net/lists/arm-kernel/msg310116.html.
+
+V3:
+  1) Removed "samsung,exynos5260-clock" property from clock files.
+  2) Replaced "__SPIN_LOCK_UNLOCKED(lock)" with spin_lock_init.
+  3) Removed '(' and ')' around numeric constants in macros.
+
+V2:
+  1) Move suspend resume handling to Exynos5410 Clock file.
+  2) Removed Unused Macros and Condition checks for Exynos5260.
+  3) Add spin lock to clock provider context.
+  4) Add clock provider context for Exynos5410.
+  5) Uniform implementation for callbacks for PLL2550xx.
+  6) Split Exynos5260 clock file patch to bring it under 100 Kb limit.
+  7) Replace aclk/pclk/hclk gates with combined gates.
+  8) Remove CLK_IGNORE_UNUSED flag for gate clocks.
+
+Pankaj Dubey (1):
+  clk/samsung: add support for pll2550xx
+
+Rahul Sharma (4):
+  clk/samsung: add support for multiple clock providers
+  clk/samsung: add support for pll2650xx
+  clk/exynos5260: add macros and documentation for exynos5260
+  clk/exynos5260: add clock file for exynos5260
+
+ .../devicetree/bindings/clock/exynos5260-clock.txt |   55 +
+ drivers/clk/samsung/Makefile                       |    1 +
+ drivers/clk/samsung/clk-exynos4.c                  |   47 +-
+ drivers/clk/samsung/clk-exynos5250.c               |   25 +-
+ drivers/clk/samsung/clk-exynos5260.c               | 1805 ++++++++++++++++++++
+ drivers/clk/samsung/clk-exynos5260.h               |  448 +++++
+ drivers/clk/samsung/clk-exynos5420.c               |   24 +-
+ drivers/clk/samsung/clk-exynos5440.c               |   18 +-
+ drivers/clk/samsung/clk-pll.c                      |  223 ++-
+ drivers/clk/samsung/clk-pll.h                      |    2 +
+ drivers/clk/samsung/clk-s3c2412.c                  |   29 +-
+ drivers/clk/samsung/clk-s3c2443.c                  |   46 +-
+ drivers/clk/samsung/clk-s3c64xx.c                  |   44 +-
+ drivers/clk/samsung/clk.c                          |  114 +-
+ drivers/clk/samsung/clk.h                          |   72 +-
+ include/dt-bindings/clock/exynos5260-clk.h         |  233 +++
+ 16 files changed, 3004 insertions(+), 182 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/exynos5260-clock.txt
+ create mode 100644 drivers/clk/samsung/clk-exynos5260.c
+ create mode 100644 drivers/clk/samsung/clk-exynos5260.h
+ create mode 100644 include/dt-bindings/clock/exynos5260-clk.h
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
