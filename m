@@ -1,101 +1,200 @@
-From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH RFC v9 4/6] dma: of: Add common xlate function for matching by channel id
-Date: Wed, 12 Mar 2014 15:47:53 +0400
-Message-ID: <1394624875-24411-5-git-send-email-a13xp0p0v88@gmail.com>
-References: <1394624875-24411-1-git-send-email-a13xp0p0v88@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1394624875-24411-1-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH] ARM: zynq: Add OCM driver
+Date: Wed, 12 Mar 2014 13:00:51 +0100
+Message-ID: <53204C73.5070807@monstr.eu>
+References: <299e37ab245da9132808c6d4265a17b9a417bf62.1389022555.git.michal.simek@xilinx.com> <CAOesGMiroyjPbcjfG24_sUqCicCD4M7NF2aD=Xi8NVgagZThuA@mail.gmail.com>
+Reply-To: monstr@monstr.eu
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="hoO19cCJQIutdIXL24bAu0tLMWQeqQjgo"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAOesGMiroyjPbcjfG24_sUqCicCD4M7NF2aD=Xi8NVgagZThuA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Michal Simek <michal.simek@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Soren Brinkmann <soren.brinkmann@xilinx.com>, Josh Cartwright <josh.cartwright@ni.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a new common OF dma xlate callback function which will match a
-channel by it's id. The binding expects one integer argument which it will use to
-lookup the channel by the id.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--hoO19cCJQIutdIXL24bAu0tLMWQeqQjgo
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Unlike of_dma_simple_xlate this function is able to handle a system with
-multiple DMA controllers. When registering the of dma provider with
-of_dma_controller_register a pointer to the dma_device struct which is
-associated with the dt node needs to passed as the data parameter.
-New function will use this pointer to match only channels which belong to the
-specified DMA controller.
+Hi Olof,
 
-Signed-off-by: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/dma/of-dma.c   | 35 +++++++++++++++++++++++++++++++++++
- include/linux/of_dma.h |  4 ++++
- 2 files changed, 39 insertions(+)
+>> diff --git a/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocm.=
+txt b/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocm.txt
+>> new file mode 100644
+>> index 0000000..64cb5e8
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocm.txt
+>> @@ -0,0 +1,17 @@
+>> +Device tree bindings for Zynq's OCM
+>> +
+>> +The OCM is divided to 4 64kB segments which can be separately configu=
+red
+>> +to low or high location. Location is controlled via SLCR.
+>> +
+>> +Required properties:
+>> + compatible: Compatibility string. Must be "xlnx,zynq-ocm-1.0".
+>> + reg: Specify the base and size of the OCM registers in the memory ma=
+p.
+>> +      E.g.: reg =3D <0xf800c000 0x1000>;
+>> +
+>> +Example:
+>> +ocmc: ocmc@f800c000 {
+>> +       compatible =3D  "xlnx,zynq-ocm-1.0";
+>> +       interrupt-parent =3D <&intc>;
+>> +       interrupts =3D <0 3 4>;
+>> +       reg =3D <0xf800c000 0x1000>;
+>> +} ;
+>> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq=
+-7000.dtsi
+>> index 1d942e2..4929be5 100644
+>> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+>> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+>> @@ -66,6 +66,13 @@
+>>                         cache-level =3D <2>;
+>>                 };
+>>
+>> +               ocmc: ocmc@f800c000 {
+>> +                       compatible =3D "xlnx,zynq-ocm-1.0";
+>> +                       interrupt-parent =3D <&intc>;
+>> +                       interrupts =3D <0 3 4>;
+>> +                       reg =3D <0xf800c000 0x1000>;
+>> +               } ;
+>> +
+>>                 uart0: uart@e0000000 {
+>>                         compatible =3D "xlnx,xuartps";
+>>                         status =3D "disabled";
+>> diff --git a/arch/arm/mach-zynq/Kconfig b/arch/arm/mach-zynq/Kconfig
+>> index 323e505..f3e6ce4 100644
+>> --- a/arch/arm/mach-zynq/Kconfig
+>> +++ b/arch/arm/mach-zynq/Kconfig
+>> @@ -15,5 +15,6 @@ config ARCH_ZYNQ
+>>         select CADENCE_TTC_TIMER
+>>         select ARM_GLOBAL_TIMER
+>>         select MFD_SYSCON
+>> +       select GENERIC_ALLOCATOR
+>>         help
+>>           Support for Xilinx Zynq ARM Cortex A9 Platform
+>> diff --git a/arch/arm/mach-zynq/Makefile b/arch/arm/mach-zynq/Makefile=
 
-diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
-index e8fe9dc..d5fbeaa 100644
---- a/drivers/dma/of-dma.c
-+++ b/drivers/dma/of-dma.c
-@@ -218,3 +218,38 @@ struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
- 			&dma_spec->args[0]);
- }
- EXPORT_SYMBOL_GPL(of_dma_simple_xlate);
-+
-+/**
-+ * of_dma_xlate_by_chan_id - Translate dt property to DMA channel by channel id
-+ * @dma_spec:	pointer to DMA specifier as found in the device tree
-+ * @of_dma:	pointer to DMA controller data
-+ *
-+ * This function can be used as the of xlate callback for DMA driver which wants
-+ * to match the channel based on the channel id. When using this xlate function
-+ * the #dma-cells propety of the DMA controller dt node needs to be set to 1.
-+ * The data parameter of of_dma_controller_register must be a pointer to the
-+ * dma_device struct the function should match upon.
-+ *
-+ * Returns pointer to appropriate dma channel on success or NULL on error.
-+ */
-+struct dma_chan *of_dma_xlate_by_chan_id(struct of_phandle_args *dma_spec,
-+					 struct of_dma *ofdma)
-+{
-+	struct dma_device *dev = ofdma->of_dma_data;
-+	struct dma_chan *chan, *candidate = NULL;
-+
-+	if (!dev || dma_spec->args_count != 1)
-+		return NULL;
-+
-+	list_for_each_entry(chan, &dev->channels, device_node)
-+		if (chan->chan_id == dma_spec->args[0]) {
-+			candidate = chan;
-+			break;
-+		}
-+
-+	if (!candidate)
-+		return NULL;
-+
-+	return dma_get_slave_channel(candidate);
-+}
-+EXPORT_SYMBOL_GPL(of_dma_xlate_by_chan_id);
-diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
-index ae36298..56bc026 100644
---- a/include/linux/of_dma.h
-+++ b/include/linux/of_dma.h
-@@ -41,6 +41,8 @@ extern struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
- 						     const char *name);
- extern struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
- 		struct of_dma *ofdma);
-+extern struct dma_chan *of_dma_xlate_by_chan_id(struct of_phandle_args *dma_spec,
-+		struct of_dma *ofdma);
- #else
- static inline int of_dma_controller_register(struct device_node *np,
- 		struct dma_chan *(*of_dma_xlate)
-@@ -66,6 +68,8 @@ static inline struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_s
- 	return NULL;
- }
- 
-+#define of_dma_xlate_by_chan_id NULL
-+
- #endif
- 
- #endif /* __LINUX_OF_DMA_H */
--- 
-1.8.4.2
+>> index 1b25d92..626f64b 100644
+>> --- a/arch/arm/mach-zynq/Makefile
+>> +++ b/arch/arm/mach-zynq/Makefile
+>> @@ -3,7 +3,7 @@
+>>  #
+>>
+>>  # Common support
+>> -obj-y                          :=3D common.o slcr.o
+>> +obj-y                          :=3D common.o slcr.o zynq_ocm.o
+>>  CFLAGS_REMOVE_hotplug.o                =3D-march=3Darmv6k
+>>  CFLAGS_hotplug.o               =3D-Wa,-march=3Darmv7-a -mcpu=3Dcortex=
+-a9
+>>  obj-$(CONFIG_HOTPLUG_CPU)      +=3D hotplug.o
+>> diff --git a/arch/arm/mach-zynq/common.h b/arch/arm/mach-zynq/common.h=
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> index b097844..953f6a1 100644
+>> --- a/arch/arm/mach-zynq/common.h
+>> +++ b/arch/arm/mach-zynq/common.h
+>> @@ -24,6 +24,7 @@ extern int zynq_early_slcr_init(void);
+>>  extern void zynq_slcr_system_reset(void);
+>>  extern void zynq_slcr_cpu_stop(int cpu);
+>>  extern void zynq_slcr_cpu_start(int cpu);
+>> +extern u32 zynq_slcr_get_ocm_config(void);
+>>
+>>  #ifdef CONFIG_SMP
+>>  extern void secondary_startup(void);
+>> diff --git a/arch/arm/mach-zynq/slcr.c b/arch/arm/mach-zynq/slcr.c
+>> index c1f1499..9a37ab3 100644
+>> --- a/arch/arm/mach-zynq/slcr.c
+>> +++ b/arch/arm/mach-zynq/slcr.c
+>> @@ -26,6 +26,7 @@
+>>  #define SLCR_PS_RST_CTRL_OFFSET                0x200 /* PS Software R=
+eset Control */
+>>  #define SLCR_A9_CPU_RST_CTRL_OFFSET    0x244 /* CPU Software Reset Co=
+ntrol */
+>>  #define SLCR_REBOOT_STATUS_OFFSET      0x258 /* PS Reboot Status */
+>> +#define SLCR_OCM_CFG_OFFSET            0x910 /* OCM Address Mapping *=
+/
+>>
+>>  #define SLCR_UNLOCK_MAGIC              0xDF0D
+>>  #define SLCR_A9_CPU_CLKSTOP            0x10
+>> @@ -107,6 +108,20 @@ void zynq_slcr_system_reset(void)
+>>  }
+>>
+>>  /**
+>> + * zynq_slcr_get_ocm_config - Get SLCR OCM config
+>> + *
+>> + * return:     OCM config bits
+>> + */
+>> +u32 zynq_slcr_get_ocm_config(void)
+>> +{
+>> +       u32 val;
+>> +
+>> +       zynq_slcr_read(&val, SLCR_OCM_CFG_OFFSET);
+>> +
+>> +       return val;
+>> +}
+>> +
+>> +/**
+>>   * zynq_slcr_cpu_start - Start cpu
+>>   * @cpu:       cpu number
+>>   */
+>> diff --git a/arch/arm/mach-zynq/zynq_ocm.c b/arch/arm/mach-zynq/zynq_o=
+cm.c
+>> new file mode 100644
+>> index 0000000..034a65b
+>> --- /dev/null
+>> +++ b/arch/arm/mach-zynq/zynq_ocm.c
+>> @@ -0,0 +1,243 @@
+>> +/*
+>> + * Copyright (C) 2013 Xilinx
+>> + *
+>> + * Based on "Generic on-chip SRAM allocation driver"
+>=20
+> We're not adding new drivers under arch/arm, so if you need this
+> driver then you should either merge it under drivers/ somewhere, or
+> look at extending the generic driver in a way that you can reuse it.
+
+Driver is reusing ideas from this generic driver but
+incorporation our changes to will be problematic.
+
+It is a shame that you didn't review the rest of code below.
+The reason why I have added this driver to arch/arm/mach-zynq
+was that there is code connection to zynq SMP bootup trampoline
+which has to be added at 0x0 when OCM is placed at 0x0.
+And this memory can't be used for generic purpose.
+If you see any nice way how to it please let me know.
+
+Calling SLCR function is solvable via regmap mapping.
+
+Thanks,
+Michal
+
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--hoO19cCJQIutdIXL24bAu0tLMWQeqQjgo
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlMgTHMACgkQykllyylKDCHGJgCeKkJKunzxqoYnhuOUmLeViMHh
+TxMAniuvSntB/Iz3qK7AWPh0sW3PD42z
+=U90A
+-----END PGP SIGNATURE-----
+
+--hoO19cCJQIutdIXL24bAu0tLMWQeqQjgo--
