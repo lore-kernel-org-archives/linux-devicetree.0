@@ -1,105 +1,166 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 1/3] dt-bindings: document gpio-charger bindings
-Date: Wed, 12 Mar 2014 15:57:18 +0100
-Message-ID: <4446481.1MqT47xhP8@phil>
-References: <12569216.pGctOhkhxz@phil> <2194340.F9etmr5mIo@phil> <CAL_JsqKoOhHpJ_OL23WbitQbiJJKLpWrtezT824FP0qtZ2xrEg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKoOhHpJ_OL23WbitQbiJJKLpWrtezT824FP0qtZ2xrEg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Woodhouse <dwmw2@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH v5 2/5] clk/samsung: add support for pll2550xx
+Date: Wed, 12 Mar 2014 20:26:45 +0530
+Message-ID: <1394636208-3125-3-git-send-email-rahul.sharma@samsung.com>
+References: <1394636208-3125-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1394636208-3125-1-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mturquette@linaro.org, kgene.kim@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, pankaj.dubey@samsung.com, Rahul Sharma <rahul.sharma@samsung.com>, Arun Kumar K <arun.kk@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+From: Pankaj Dubey <pankaj.dubey@samsung.com>
 
-Am Mittwoch, 12. M=E4rz 2014, 09:28:46 schrieb Rob Herring:
-> On Wed, Mar 12, 2014 at 8:46 AM, Heiko St=FCbner <heiko@sntech.de> wr=
-ote:
-> > From: Heiko Stuebner <heiko.stuebner@bq.com>
-> >=20
-> > This documents the binding for the gpio-charger power-supply.
->=20
-> How does this relate to what's documented in power_supply.txt and
-> charger-manager.txt? Both have references to USB charging. Doesn't
-> this need some connection to a battery node?
+exynos5260 use pll2550xx and it has different bit fields
+for P,M,S values as compared to pll2550. Support for
+pll2550xx is added here.
 
-Yep, the gpio-charger takes the position of the "some,usb-charger" from=
-=20
-power_supply.txt .
+Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+---
+ drivers/clk/samsung/clk-pll.c |  108 +++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/samsung/clk-pll.h |    1 +
+ 2 files changed, 109 insertions(+)
 
-       usb_charger: charger {
-               compatible =3D "gpio-charger";
-               charger-type =3D "usb-sdp";
-               gpios =3D <&gpf0 2 0 0 0>;
-       }
-
-       battery {
-               power-supplies =3D <&usb_charger>;
-       };
-
-
-I guess the binding doc could reflect this.
-
-
-I haven't deeply looked into what charger-manager does, bit it seems to=
- be a=20
-layer on top of chargers and batteries, controlling them. So it seems t=
-o be=20
-used with more intelligent components.
-
-My setup using gpio-charger for example is vastly simpler, it's just a =
-gpio=20
-reporting charger present (for gpio-charger), an adc reporting the batt=
-ery=20
-voltage and another gpio reporting the charging state (which is already=
-=20
-handled in generic-adc-battery, but needs a dt binding too).
-
-
-Heiko
-
-> > Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
-> > ---
-> >=20
-> >  .../bindings/power_supply/gpio-charger.txt         | 23
-> >  ++++++++++++++++++++++ 1 file changed, 23 insertions(+)
-> >  create mode 100644
-> >  Documentation/devicetree/bindings/power_supply/gpio-charger.txt>=20
-> > diff --git
-> > a/Documentation/devicetree/bindings/power_supply/gpio-charger.txt
-> > b/Documentation/devicetree/bindings/power_supply/gpio-charger.txt n=
-ew
-> > file mode 100644
-> > index 0000000..fad87a4
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/power_supply/gpio-charger.t=
-xt
-> > @@ -0,0 +1,23 @@
-> > +gpio-charger
-> > +
-> > +Required properties :
-> > + - compatible : "gpio-charger"
-> > + - gpios : GPIO indicating the charger presence.
-> > +   See GPIO binding in bindings/gpio/gpio.txt .
-> > + - charger-type : power supply type, one of
-> > +     unknown
-> > +     battery
-> > +     ups
-> > +     mains
-> > +     usb-sdp (USB standard downstream port)
-> > +     usb-dcp (USB dedicated charging port)
-> > +     usb-cdp (USB charging downstream port)
-> > +     usb-aca (USB accessory charger adapter)
-> > +
-> > +Example:
-> > +
-> > +       charger {
-> > +               compatible =3D "gpio-charger";
-> > +               charger-type =3D "usb-sdp";
-> > +               gpios =3D <&gpf0 2 0 0 0>;
-> > +       }
-> > --
-> > 1.8.5.3
+diff --git a/drivers/clk/samsung/clk-pll.c b/drivers/clk/samsung/clk-pll.c
+index 1f310be..18e42ef 100644
+--- a/drivers/clk/samsung/clk-pll.c
++++ b/drivers/clk/samsung/clk-pll.c
+@@ -947,6 +947,108 @@ struct clk * __init samsung_clk_register_pll2550x(const char *name,
+ 	return clk;
+ }
+ 
++/*
++ * PLL2550xx Clock Type
++ */
++
++/* Maximum lock time can be 270 * PDIV cycles */
++#define PLL2550XX_LOCK_FACTOR 270
++
++#define PLL2550XX_M_MASK		0x3FF
++#define PLL2550XX_P_MASK		0x3F
++#define PLL2550XX_S_MASK		0x7
++#define PLL2550XX_LOCK_STAT_MASK	0x1
++#define PLL2550XX_M_SHIFT		9
++#define PLL2550XX_P_SHIFT		3
++#define PLL2550XX_S_SHIFT		0
++#define PLL2550XX_LOCK_STAT_SHIFT	21
++
++static unsigned long samsung_pll2550xx_recalc_rate(struct clk_hw *hw,
++				unsigned long parent_rate)
++{
++	struct samsung_clk_pll *pll = to_clk_pll(hw);
++	u32 mdiv, pdiv, sdiv, pll_con;
++	u64 fvco = parent_rate;
++
++	pll_con = __raw_readl(pll->con_reg);
++	mdiv = (pll_con >> PLL2550XX_M_SHIFT) & PLL2550XX_M_MASK;
++	pdiv = (pll_con >> PLL2550XX_P_SHIFT) & PLL2550XX_P_MASK;
++	sdiv = (pll_con >> PLL2550XX_S_SHIFT) & PLL2550XX_S_MASK;
++
++	fvco *= mdiv;
++	do_div(fvco, (pdiv << sdiv));
++
++	return (unsigned long)fvco;
++}
++
++static inline bool samsung_pll2550xx_mp_change(u32 mdiv, u32 pdiv, u32 pll_con)
++{
++	u32 old_mdiv, old_pdiv;
++
++	old_mdiv = (pll_con >> PLL2550XX_M_SHIFT) & PLL2550XX_M_MASK;
++	old_pdiv = (pll_con >> PLL2550XX_P_SHIFT) & PLL2550XX_P_MASK;
++
++	return mdiv != old_mdiv || pdiv != old_pdiv;
++}
++
++static int samsung_pll2550xx_set_rate(struct clk_hw *hw, unsigned long drate,
++					unsigned long prate)
++{
++	struct samsung_clk_pll *pll = to_clk_pll(hw);
++	const struct samsung_pll_rate_table *rate;
++	u32 tmp;
++
++	/* Get required rate settings from table */
++	rate = samsung_get_pll_settings(pll, drate);
++	if (!rate) {
++		pr_err("%s: Invalid rate : %lu for pll clk %s\n", __func__,
++			drate, __clk_get_name(hw->clk));
++		return -EINVAL;
++	}
++
++	tmp = __raw_readl(pll->con_reg);
++
++	if (!(samsung_pll2550xx_mp_change(rate->mdiv, rate->pdiv, tmp))) {
++		/* If only s change, change just s value only*/
++		tmp &= ~(PLL2550XX_S_MASK << PLL2550XX_S_SHIFT);
++		tmp |= rate->sdiv << PLL2550XX_S_SHIFT;
++		__raw_writel(tmp, pll->con_reg);
++
++		return 0;
++	}
++
++	/* Set PLL lock time. */
++	__raw_writel(rate->pdiv * PLL2550XX_LOCK_FACTOR, pll->lock_reg);
++
++	/* Change PLL PMS values */
++	tmp &= ~((PLL2550XX_M_MASK << PLL2550XX_M_SHIFT) |
++			(PLL2550XX_P_MASK << PLL2550XX_P_SHIFT) |
++			(PLL2550XX_S_MASK << PLL2550XX_S_SHIFT));
++	tmp |= (rate->mdiv << PLL2550XX_M_SHIFT) |
++			(rate->pdiv << PLL2550XX_P_SHIFT) |
++			(rate->sdiv << PLL2550XX_S_SHIFT);
++	__raw_writel(tmp, pll->con_reg);
++
++	/* wait_lock_time */
++	do {
++		cpu_relax();
++		tmp = __raw_readl(pll->con_reg);
++	} while (!(tmp & (PLL2550XX_LOCK_STAT_MASK
++			<< PLL2550XX_LOCK_STAT_SHIFT)));
++
++	return 0;
++}
++
++static const struct clk_ops samsung_pll2550xx_clk_ops = {
++	.recalc_rate = samsung_pll2550xx_recalc_rate,
++	.round_rate = samsung_pll_round_rate,
++	.set_rate = samsung_pll2550xx_set_rate,
++};
++
++static const struct clk_ops samsung_pll2550xx_clk_min_ops = {
++	.recalc_rate = samsung_pll2550xx_recalc_rate,
++};
++
+ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
+ 				struct samsung_pll_clock *pll_clk,
+ 				void __iomem *base)
+@@ -1049,6 +1151,12 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
+ 		else
+ 			init.ops = &samsung_s3c2440_mpll_clk_ops;
+ 		break;
++	case pll_2550xx:
++		if (!pll->rate_table)
++			init.ops = &samsung_pll2550xx_clk_min_ops;
++		else
++			init.ops = &samsung_pll2550xx_clk_ops;
++		break;
+ 	default:
+ 		pr_warn("%s: Unknown pll type for pll clk %s\n",
+ 			__func__, pll_clk->name);
+diff --git a/drivers/clk/samsung/clk-pll.h b/drivers/clk/samsung/clk-pll.h
+index 6428bcc..ec4bc1d 100644
+--- a/drivers/clk/samsung/clk-pll.h
++++ b/drivers/clk/samsung/clk-pll.h
+@@ -31,6 +31,7 @@ enum samsung_pll_type {
+ 	pll_s3c2410_mpll,
+ 	pll_s3c2410_upll,
+ 	pll_s3c2440_mpll,
++	pll_2550xx,
+ };
+ 
+ #define PLL_35XX_RATE(_rate, _m, _p, _s)			\
+-- 
+1.7.9.5
