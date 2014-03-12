@@ -1,43 +1,99 @@
-From: Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 3/3] MAINTAINERS: add xtfpga platform section
-Date: Wed, 12 Mar 2014 21:55:26 +0400
-Message-ID: <1394646926-30496-4-git-send-email-jcmvbkbc@gmail.com>
-References: <1394646926-30496-1-git-send-email-jcmvbkbc@gmail.com>
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1394646926-30496-1-git-send-email-jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Chris Zankel <chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org>, Marc Gauthier <marc-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 1/9] mtd: nand: define struct nand_timings
+Date: Wed, 12 Mar 2014 19:07:36 +0100
+Message-ID: <1394647664-8258-2-git-send-email-b.brezillon.dev@gmail.com>
+References: <1394647664-8258-1-git-send-email-b.brezillon.dev@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDE6NB73YAMBB7OEQKMQKGQEYV55YIQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1394647664-8258-1-git-send-email-b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This section will list xtfpga platform-specific drivers.
+Define a struct containing the standard NAND timings as described in NAND
+datasheets.
 
-Signed-off-by: Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+ include/linux/mtd/nand.h |   49 ++++++++++++++++++++++++++++++++++++++++++=
+++++
+ 1 file changed, 49 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c6d0e93..9f75849 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9768,6 +9768,12 @@ L:	linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
- S:	Maintained
- F:	drivers/tty/serial/uartlite.c
- 
-+XTENSA XTFPGA PLATFORM SUPPORT
-+M:	Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+L:	linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org
-+S:	Maintained
-+F:	drivers/spi/spi-xtensa-xtfpga.c
+diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
+index 389b3c5..f3ff3a3 100644
+--- a/include/linux/mtd/nand.h
++++ b/include/linux/mtd/nand.h
+@@ -846,4 +846,53 @@ static inline bool nand_is_slc(struct nand_chip *chip)
+ {
+ 	return chip->bits_per_cell =3D=3D 1;
+ }
 +
- YAM DRIVER FOR AX.25
- M:	Jean-Paul Roubelat <jpr-3OwtVqItl4LYtjvyW6yDsg@public.gmane.org>
- L:	linux-hams-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
--- 
-1.8.1.4
++/**
++ * struct nand_sdr_timings - SDR NAND chip timings
++ *
++ * This struct defines the timing requirements of a SDR NAND chip.
++ * These informations can be found in every NAND datasheets and the timing=
+s
++ * meaning are described in the ONFI specifications:
++ * www.onfi.org/~/media/ONFI/specs/onfi_3_1_spec.pdf=E2=80=8E (chapter 4.1=
+5 Timing
++ * Parameters)
++ *
++ */
++
++struct nand_sdr_timings {
++	u32 tALH_min;
++	u32 tADL_min;
++	u32 tALS_min;
++	u32 tAR_min;
++	u32 tCEA_max;
++	u32 tCEH_min;
++	u32 tCH_min;
++	u32 tCHZ_max;
++	u32 tCLH_min;
++	u32 tCLR_min;
++	u32 tCLS_min;
++	u32 tCOH_min;
++	u32 tCS_min;
++	u32 tDH_min;
++	u32 tDS_min;
++	u32 tFEAT_max;
++	u32 tIR_min;
++	u32 tITC_max;
++	u32 tRC_min;
++	u32 tREA_max;
++	u32 tREH_min;
++	u32 tRHOH_min;
++	u32 tRHW_min;
++	u32 tRHZ_max;
++	u32 tRLOH_min;
++	u32 tRP_min;
++	u32 tRR_min;
++	u64 tRST_max;
++	u32 tWB_max;
++	u32 tWC_min;
++	u32 tWH_min;
++	u32 tWHR_min;
++	u32 tWP_min;
++	u32 tWW_min;
++};
++
+ #endif /* __LINUX_MTD_NAND_H */
+--=20
+1.7.9.5
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
