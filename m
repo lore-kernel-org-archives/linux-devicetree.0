@@ -1,71 +1,77 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [alsa-devel] [PATCH RFC v2 0/2] Fix simple-card *-master DT
- parameter handling
-Date: Wed, 12 Mar 2014 12:30:23 +0000
-Message-ID: <20140312123023.GP28112@sirena.org.uk>
-References: <cover.1394451329.git.jsarha@ti.com>
- <877g80rzgg.wl%kuninori.morimoto.gx@gmail.com>
- <CAHPCO9FmL__LmUyMRhsy2mnPNAV0h--aMY=GBJjL9TBrAqWSFw@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 1/3] ata: ahci_st: Provide DT bindings for ST's SATA
+ implementation
+Date: Wed, 12 Mar 2014 12:48:35 +0000
+Message-ID: <20140312124835.GA22450@lee--X1>
+References: <1393328481-7251-1-git-send-email-lee.jones@linaro.org>
+ <20140312114257.GA17461@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="X5d84+NUkZX3FbP/"
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHPCO9FmL__LmUyMRhsy2mnPNAV0h--aMY=GBJjL9TBrAqWSFw@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Richard Lee <superlibj8301@gmail.com>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>, Jyri Sarha <jsarha@ti.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, liam.r.girdwood@linux.intel.com, detheridge@ti.com, peter.ujfalusi@ti.com, bcousson@baylibre.com
+In-Reply-To: <20140312114257.GA17461@e106331-lin.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "DCG_UPD_stlinux_kernel@list.st.com" <DCG_UPD_stlinux_kernel@list.st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@st.com>
 List-Id: devicetree@vger.kernel.org
 
-
---X5d84+NUkZX3FbP/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Mar 12, 2014 at 01:00:02PM +0800, Richard Lee wrote:
-
-> But, IMO, if you want the CPU DAI be CBS_CFS and CODEC be CBM_CFM,
-> you could just do it like this:
->          simple-audio-card,cpu {
->                  ...
->          };
+> > +This binding describes a SATA device.
+> > +
+> > +Required properties:
+> > + - compatible	   : Must be "st,ahci"
 >=20
->          simple-audio-card,codec {
->                  ...
->                  bitclock-master;
->                  frame-master;
->          };
+> Is there not a more specific name? This is awfully generic.
 
-> and vice versa.
+There isn't one. ST only have one AHCI driver. The driver is named as
+generically.
 
-> Thanks,
+> > + - reg		   : Physical base addresses and length of register sets
+> > + - interrupts	   : Interrupt associated with the SATA device
+> > + - interrupt-names :   Associated name must be; "hostc"
+> > + - resets	   : The power-down and soft-reset lines of SATA IP
+> > + - reset-names	   :   Associated names must be; "pwr-dwn" and "sw-=
+rst"
+>=20
+> Get rid of the semicolon, it makes this harder to read. Same for the
+> other -names proeprties.
 
-> (I could find this mails in my Freescale acount, so I will reply it here.)
+Sure.
 
-Yes, that'd been what I'd thought the binding did (and it's what Jyri's
-patch makes it do).
+> > + - clocks	   : The phandle for the clock
+> > + - clock-names	   :   Associated name must be; "ahci_clk"
+> > + - phys		   : The phandle for the PHY device
+> > + - phy-names	   :   Associated name must be; "ahci_phy"
+>=20
+> This looks sane, but I'd like to see a more specific description and
+> compatible string.
 
---X5d84+NUkZX3FbP/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Specific description in what sense?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+"This binding describes a SATA device."
 
-iQIcBAEBAgAGBQJTIFNbAAoJELSic+t+oim9xXQP/30AiyGMsrU6iIKlmF+x56xd
-BDcmTNdecYO2SrcY8MkFAZnHqR26gtE0H9QwVCrPXryFy/uICga3P645kvYcvaF6
-c9PPvXX8+U+XOYht8fv3EKt1VBXydCMSQfCTvqJPYFWpS4A7AKzI0PCWX8jT20pf
-4dDFl+YZ3XOqhuXGf1GvnFdm/se6CaJfJBAKvRXNmAI94Grl2XwChqsAkFydxvzc
-Al803SwJMz4oNm1fmCiqniZdLWpPHVgkaKGZu0qshMbxwJgWPBndkQOtFPX9wbpC
-NTURHfaXLlTXx04Abi7lgRREPk/qkPINkVdYN62vXBXSoacacGBjK0H7wF46jvHE
-SoS+7RByiOSxTpb/Ua+Cej77eFe1CCdSJreH4jzFZQ45C8Ld+yAmmcnjJdURFg2A
-HoVsTMIo6vdv9K+8Kc3pvZTDv45pJkwJcROw0pHsHzVU44bjv+iWnCxp9shW8Re+
-EI9GEGxsephhvC82AIRivZ34AlVCQyUd4D7+n14GTb4N+ElgKD1ynDM7mUZ4xGrk
-Up5xCsd6y6RfInCBbRP9+XOqx0hJHYkEYEsvzUf5CKW2oHJQ2gcGccm4S51vbobd
-Br3Pa/XKcea4MNMBWAElgR2BAulClU9nXBFUkEL8dlbA+klCLHeuErUV8ncH0GlL
-3WD4PAhcm0dxDsDgXKGu
-=Dqwd
------END PGP SIGNATURE-----
+to
 
---X5d84+NUkZX3FbP/--
+"This binding describes ST's SATA device." ?
+
+> > +Example:
+> > +
+> > +	sata0: sata@fe380000 {
+> > +		compatible      =3D "st,ahci";
+> > +		reg             =3D <0xfe380000 0x1000>;
+> > +		interrupts      =3D <GIC_SPI 157 IRQ_TYPE_NONE>;
+> > +		interrupt-names =3D "hostc";
+> > +		phys	        =3D <&miphy365x_phy MIPHY_PORT_0 MIPHY_TYPE_SATA>;
+> > +		phy-names       =3D "ahci_phy";
+> > +		resets	        =3D <&powerdown STIH416_SATA0_POWERDOWN>,
+> > +				  <&softreset STIH416_SATA0_SOFTRESET>;
+> > +		reset-names     =3D "pwr-dwn", "sw-rst";
+> > +		clocks	        =3D <&CLK_S_ICN_REG_0>;
+> > +		clock-names     =3D "ahci_clk";
+> > +	};
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
