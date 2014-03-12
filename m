@@ -1,41 +1,75 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 3/3] pinctrl: mvebu: silence WARN to dev_warn
-Date: Wed, 12 Mar 2014 15:02:02 +0100
-Message-ID: <CACRpkdbcbMNim9LRkr75Mk5yHfwbA1OAexByHG50qDUPwts4uQ@mail.gmail.com>
-References: <1393977790-29110-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<1393977790-29110-4-git-send-email-sebastian.hesselbarth@gmail.com>
-	<20140306201803.GL1872@titan.lakedaemon.net>
-	<CACRpkda0JCLZUv_KPmwucDh3ko2YbtG2ukMMscSodAbBpiY+zw@mail.gmail.com>
-	<20140307035056.GQ1872@titan.lakedaemon.net>
-	<CACRpkdbEQSj7jLWT2BFR22m7phwmyKCByhQuFFgHvHoKvQFD5g@mail.gmail.com>
-	<20140307134616.GR1872@titan.lakedaemon.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Matt Porter <mporter@linaro.org>
+Subject: [PATCH v5 0/5] BCM59056 PMU regulator support
+Date: Wed, 12 Mar 2014 10:07:12 -0400
+Message-ID: <1394633237-16837-1-git-send-email-mporter@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140307134616.GR1872@titan.lakedaemon.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Christian Daudt <bcm@fixthebug.org>
+Cc: Devicetree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 7, 2014 at 2:46 PM, Jason Cooper <jason@lakedaemon.net> wrote:
-> On Fri, Mar 07, 2014 at 11:56:11AM +0800, Linus Walleij wrote:
+The BCM59056 is a multi-function power management unit used with the
+BCM281xx family of SoCs. This series adds an MFD and voltage regulator
+driver to support the BCM59056. The bcm28155-ap DT support is updated
+to enable use of regulators on the otg and sdhci peripherals.
 
->> For a single patch?
->
-> Well, just the doc change and WARN change.  I've already taken the dts
-> change into mvebu/dt (for arm-soc).
+Changes since v4:
+	- clarify binding wording: regulators is a child node rather than
+	  a property and the list of ldos/dcdcs are node names
+	- remove unused #address-cells and #size-cells properties from
+	  the binding and dtsi
 
-I've applied this patch [3/3] to the pinctrl tree.
+Changes since v3:
+	- remove needless init of local ret variable in mfd driver probe
 
-> There should be no need for these two to be in mvebu's for-next, so if
-> it's easier for you to pick them, please do so.
->
-> I'll drop them from mvebu/pinctrl and update mvebu's for-next right now.
+Changes since v2:
+	- Move to mfd_add_devices() approach, eliminating representation
+	  of the regulator block as a hardware subdevice. Regulators are
+	  listed in the PMU binding and referenced via the parent device
+	  of_node by the regulator driver.
+	- Allow mfd driver to build as module
+	- Remove regulator constraints from the .dtsi include only the
+	  board-specific constraints in the board .dts.
 
-No, I mean, please apply patch 1/3 and 2/3 to the mvebu tree.
-There is no need to sync DTS and pinctrl driver changes. This
-patch to the pinctrl driver I want to carry however.
+Changes since v1:
+        - renamed to bcm590xx to accomodate future family parts
+        - remove use of subsys_initcall
+        - fix BCM590XX_MAX_REGISTER value
+        - remove unused chip id in mfd of/i2c matching
+        - switch to of_platform_populate() in mfd
+        - update binding to single document with regulators as optional
+          properties in the regulator subdevice IP description
+        - remove unused regulator get/set mode ops
+        - remove unneeded regulator NULL constraint check
+        - regulators property is optional, allow the driver to probe
+          when it is missing
+        - move of_node presence check into bcm590xx_parse_dt_reg_data()
 
-Yours,
-Linus Walleij
+
+Matt Porter (5):
+  mfd: add bcm590xx pmu DT binding
+  mfd: add bcm590xx pmu driver
+  regulator: add bcm590xx regulator driver
+  ARM: configs: bcm_defconfig: enable bcm590xx regulator support
+  ARM: dts: add bcm590xx pmu support and enable for bcm28155-ap
+
+ Documentation/devicetree/bindings/mfd/bcm590xx.txt |  37 ++
+ arch/arm/boot/dts/bcm28155-ap.dts                  |  47 ++-
+ arch/arm/boot/dts/bcm59056.dtsi                    |  74 ++++
+ arch/arm/configs/bcm_defconfig                     |   7 +
+ drivers/mfd/Kconfig                                |   8 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/bcm590xx.c                             |  93 +++++
+ drivers/regulator/Kconfig                          |   8 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/bcm590xx-regulator.c             | 413 +++++++++++++++++++++
+ include/linux/mfd/bcm590xx.h                       |  31 ++
+ 11 files changed, 719 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/bcm590xx.txt
+ create mode 100644 arch/arm/boot/dts/bcm59056.dtsi
+ create mode 100644 drivers/mfd/bcm590xx.c
+ create mode 100644 drivers/regulator/bcm590xx-regulator.c
+ create mode 100644 include/linux/mfd/bcm590xx.h
+
+-- 
+1.8.4
