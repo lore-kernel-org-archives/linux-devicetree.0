@@ -1,64 +1,80 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 0/8] Watchdog support for Armada 375/38x SoC
-Date: Wed, 12 Mar 2014 18:54:56 -0300
-Message-ID: <20140312215456.GA13340@arch.cereza>
-References: <1394658715-2017-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <20140312214312.GA14357@obsidianresearch.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH net-next v3 5/9] Altera TSE: Add Miscellaneous Files for
+ Altera Ethernet Driver
+Date: Wed, 12 Mar 2014 15:26:37 -0700
+Message-ID: <1394663197.3915.61.camel@joe-AO722>
+References: <1394577791-6547-1-git-send-email-vbridgers2013@gmail.com>
+	 <1394577791-6547-6-git-send-email-vbridgers2013@gmail.com>
+	 <1394578747.28839.4.camel@joe-AO722>
+	 <CAOwfj2Ot+ssTZgMoOoShVEUi+RkxjpPpRUfHAkP9RETm3TuUzg@mail.gmail.com>
+	 <1394658856.20857.7.camel@deadeye.wl.decadent.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140312214312.GA14357-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1394658856.20857.7.camel@deadeye.wl.decadent.org.uk>
+Sender: netdev-owner@vger.kernel.org
+To: Ben Hutchings <ben@decadent.org.uk>
+Cc: Vince Bridgers <vbridgers2013@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>
 List-Id: devicetree@vger.kernel.org
 
-On Mar 12, Jason Gunthorpe wrote:
-> On Wed, Mar 12, 2014 at 06:11:47PM -0300, Ezequiel Garcia wrote:
->=20
-> > I've pushed a branch so people can test this easily, e.g. ensuring
-> > no regressions on Dove, Kirkwood and A370/XP:
-> >=20
-> > https://github.com/MISL-EBU-System-SW/mainline-public/tree/wdt_a385=
-_a375_v3
->=20
-> This branch worked for me, the watchdog functioned as expected.
->=20
+On Wed, 2014-03-12 at 21:14 +0000, Ben Hutchings wrote:
+> These look like the statistic names specified in IEEE 802.3.  I would
+> support a general move to using standard names for MAC stats in Ethernet
+> drivers, because they are quite clearly defined and widely implemented
+> in hardware.  However, that is not the current practice in most Linux
+> drivers.
 
-Good to hear. Is that a Tested-by on Kirkwood?
+Hey Ben.
 
-> # killall -STOP wdt...
-> ..
-> .
-> orion_wdt: Oops: Watchdog Timeout
-> CPU: 0 PID: 0 Comm: swapper Not tainted 3.14.0-rc1-00205-g666e53f-dir=
-ty #1
-> [..]
-> <REBOOT>
->=20
-> I got these two oddball messages during boot though:
->=20
-> irq: Cannot allocate irq_descs @ IRQ26, assuming pre-allocated
-> irq: Cannot allocate irq_descs @ IRQ61, assuming pre-allocated
->=20
-> Probably unrelated to the watchdog.. Unfortunately I've run out of
-> time right now to investigate.
->=20
+Maybe something like this would be a start?
 
-Probably. That branch is based on some mvebu/for-next tip, which has al=
-l
-the watchdog and devicetree dependencies for this patchset to apply.
+Change the actual #defines/strings to taste.
 
-I can re-send a series based on v3.15-rc1 and we can check again; maybe
-we're just missing some irq patch.
---=20
-Ezequiel Garc=EDa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maybe this shouldn't be in uapi or maybe in if_ether.h
+
+---
+ include/uapi/linux/ethtool.h | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+
+diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
+index fd161e9..24b8b51 100644
+--- a/include/uapi/linux/ethtool.h
++++ b/include/uapi/linux/ethtool.h
+@@ -498,6 +498,36 @@ struct ethtool_pauseparam {
+ 
+ #define ETH_GSTRING_LEN		32
+ 
++#define ETH_GSTRING_RX_PKTS		"rx_packets"
++#define ETH_GSTRING_RX_BYTES		"rx_bytes"
++#define ETH_GSTRING_RX_TOTAL_BYTES	"rx_total_bytes"
++#define ETH_GSTRING_RX_TOTAL_PKTS	"rx_total_packets"
++#define ETH_GSTRING_RX_CRC_ERRS		"rx_crc_errors"
++#define ETH_GSTRING_RX_ALIGN_ERRS	"rx_align_errors"
++#define ETH_GSTRING_RX_PAUSE		"rx_pause"
++#define ETH_GSTRING_RX_ERRS		"rx_errors"
++#define ETH_GSTRING_RX_UNICAST		"rx_unicast"
++#define ETH_GSTRING_RX_MULTICAST	"rx_multicast"
++#define ETH_GSTRING_RX_BROADCAST	"rx_broadcast"
++#define ETH_GSTRING_RX_FIFO_DROPS	"rx_fifo_drops"
++#define ETH_GSTRING_RX_UNDERSIZE	"rx_undersize"
++#define ETH_GSTRING_RX_OVERSIZE		"rx_oversize"
++#define ETH_GSTRING_RX_DUPLICATES	"rx_duplicates"
++#define ETH_GSTRING_RX_DROPPED		"rx_dropped"
++#define ETH_GSTRING_RX_FRAGMENTS	"rx_fragments"
++
++#define ETH_GSTRING_TX_PKTS		"tx_packets"
++#define ETH_GSTRING_TX_BYTES		"tx_bytes"
++#define ETH_GSTRING_TX_TOTAL_BYTES	"tx_total_bytes"
++#define ETH_GSTRING_TX_TOTAL_PKTS	"tx_total_packets"
++#define ETH_GSTRING_TX_PAUSE		"tx_pause"
++#define ETH_GSTRING_TX_ERRS		"tx_errors"
++#define ETH_GSTRING_TX_DISCARDS		"tx_discards"
++#define ETH_GSTRING_TX_UNICAST		"tx_unicast"
++#define ETH_GSTRING_TX_MULTICAST	"tx_multicast"
++#define ETH_GSTRING_TX_BROADCAST	"tx_broadcast"
++#define ETH_GSTRING_TX_DROPPED		"tx_dropped"
++
+ /**
+  * enum ethtool_stringset - string set ID
+  * @ETH_SS_TEST: Self-test result names, for use with %ETHTOOL_TEST
