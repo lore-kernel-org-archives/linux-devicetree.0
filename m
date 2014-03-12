@@ -1,36 +1,37 @@
-From: Loc Ho <lho@apm.com>
-Subject: Re: [PATCH v15 3/3] arm64: Add APM X-Gene SoC AHCI SATA host
- controller DTS entries
-Date: Wed, 12 Mar 2014 09:32:13 -0700
-Message-ID: <CAPw-ZT=xX9fi6zV8QFmCDAB7dvoLXSh+s1y_k9G0c44ONRbBOg@mail.gmail.com>
-References: <1394059489-30706-1-git-send-email-lho@apm.com>
-	<1394059489-30706-2-git-send-email-lho@apm.com>
-	<1394059489-30706-3-git-send-email-lho@apm.com>
-	<1394059489-30706-4-git-send-email-lho@apm.com>
-	<20140311124943.GD11477@htj.dyndns.org>
-	<CAPw-ZTmBSeOXv5ExVAiSkcU=qH3zHp52eVuGBfYYD=7=sjhVgw@mail.gmail.com>
-	<20140311165548.GA20776@mtj.dyndns.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 1/5] mfd: add bcm590xx pmu DT binding
+Date: Wed, 12 Mar 2014 16:36:33 +0000
+Message-ID: <20140312163633.GC22450@lee--X1>
+References: <1394633237-16837-1-git-send-email-mporter@linaro.org>
+ <1394633237-16837-2-git-send-email-mporter@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20140311165548.GA20776@mtj.dyndns.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1394633237-16837-2-git-send-email-mporter@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matt Porter <mporter@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Christian Daudt <bcm@fixthebug.org>, Devicetree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+> Add a DT binding for the BCM590xx PMUs. The binding inherits from
+> the generic regulator bindings.
+>=20
+> Signed-off-by: Matt Porter <mporter@linaro.org>
+> Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
+> Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/bcm590xx.txt | 37 ++++++++++++=
+++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/bcm590xx.tx=
+t
 
->> Kishon didn't applied the PHY DTS patch. Did you first apply the PHY
->> DTS patch? We agreed that you will first pull in the PHY DTS as well
->> as the host controller patches. I don't see any reason why it wouldn't
->> apply if both DTS is applied. I will pull libata/for-3.15 and check
->> out.
->
-> Can you please repost patches to apply on top of the current
-> libata/for-3.15?
->
+Applied with Mark's Ack.
 
-I posted v16 yetersday with the PHY DTS merged into the SATA host patches.
-
--Loc
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
