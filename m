@@ -1,58 +1,106 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [RFC PATCH] [media]: of: move graph helpers from
-	drivers/media/v4l2-core to drivers/of
-Date: Wed, 12 Mar 2014 10:25:56 +0000
-Message-ID: <20140312102556.GC21483@n2100.arm.linux.org.uk>
-References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> <20140226110114.CF2C7C40A89@trevor.secretlab.ca> <531D916C.2010903@ti.com> <5427810.BUKJ3iUXnO@avalon>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [RFC PATCH] edac: zynq: Added EDAC support for zynq ddr ecc controller
+Date: Wed, 12 Mar 2014 11:27:13 +0100
+Message-ID: <c7840b9d-4c03-4680-9a0e-fb256f3743b4@AM1EHSMHS010.ehs.local>
+References: <4adb2b4b-2ad6-42b9-929e-cc062f817245@TX2EHSMHS021.ehs.local> <20140310105655.GH14999@e106331-lin.cambridge.arm.com> <531DA900.5060202@monstr.eu> <fa35006e-055d-4ef2-9b65-a0f8cc6a0c8f@AM1EHSMHS016.ehs.local> <531ECA33.8050803@monstr.eu> <20140311155057.GJ13293@xsjandreislx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5427810.BUKJ3iUXnO@avalon>
+In-Reply-To: <20140311155057.GJ13293@xsjandreislx>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
+To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>
+Cc: Michal Simek <monstr@monstr.eu>, Mark Rutland <mark.rutland@arm.com>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, "dougthompson@xmission.com" <dougthompson@xmission.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "kpc528@gmail.com" <kpc528@gmail.com>, "kalluripunnaiahchoudary@gmail.com" <kalluripun>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 10, 2014 at 02:52:53PM +0100, Laurent Pinchart wrote:
-> In theory unidirectional links in DT are indeed enough. However, let's not 
-> forget the following.
-> 
-> - There's no such thing as single start points for graphs. Sure, in some 
-> simple cases the graph will have a single start point, but that's not a 
-> generic rule. For instance the camera graphs 
-> http://ideasonboard.org/media/omap3isp.ps and 
-> http://ideasonboard.org/media/eyecam.ps have two camera sensors, and thus two 
-> starting points from a data flow point of view.
+On 03/11/2014 04:50 PM, S=C3=B6ren Brinkmann wrote:
+> On Tue, 2014-03-11 at 09:32AM +0100, Michal Simek wrote:
+>> On 03/10/2014 11:32 PM, S=C3=B6ren Brinkmann wrote:
+>>> On Mon, 2014-03-10 at 12:58PM +0100, Michal Simek wrote:
+>>>> On 03/10/2014 11:56 AM, Mark Rutland wrote:
+>>>>> On Sun, Mar 09, 2014 at 02:57:16AM +0000, Punnaiah Choudary Kallu=
+ri wrote:
+>>>>>> Added EDAC support for reporting the ecc errors of zynq ddr cont=
+roller.
+>>>>>> The ddr ecc controller corrects single bit errors and detects do=
+uble bit
+>>>>>> errors
+>>>>>>
+>>>>>> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+>>>>>> ---
+>>>>>>  .../devicetree/bindings/edac/zynq_edac.txt         |   18 +
+>>>>>>  drivers/edac/Kconfig                               |    7 +
+>>>>>>  drivers/edac/Makefile                              |    1 +
+>>>>>>  drivers/edac/zynq_edac.c                           |  613 +++++=
++++++++++++++++
+>>>>>>  4 files changed, 639 insertions(+), 0 deletions(-)
+>>>>>>  create mode 100644 Documentation/devicetree/bindings/edac/zynq_=
+edac.txt
+>>>>>>  create mode 100644 drivers/edac/zynq_edac.c
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/edac/zynq_edac.tx=
+t b/Documentation/devicetree/bindings/edac/zynq_edac.txt
+>>>>>> new file mode 100644
+>>>>>> index 0000000..c21ff83
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/edac/zynq_edac.txt
+>>>>>> @@ -0,0 +1,18 @@
+>>>>>> +Zynq EDAC driver, it does reports the DDR ECC single bit errors=
+ that are
+>>>>>> +corrected and double bit ecc errors that are detected by the DD=
+R ECC controller.
+>>>>>> +ECC support for DDR is available in half-bus width(16 bit) conf=
+iguration only.
+>>>>>> +
+>>>>>> +Required properties:
+>>>>>> +- compatible: Should be "xlnx,ps7-ddrc" or "xlnx,ps7-ddrc-1.00.=
+a"
+>>>>>
+>>>>> Is this an or or a xor?
+>>>>
+>>>> Compatible string should be just xlnx,zynq-ddrc-1.00.a.
+>>>> Nothing with ps7.
+>>>
+>>> Isn't this vendor IP? IMHO, this should be something completely
+>>> different. Or if you want some Zynq-specific compat string it shoul=
+d
+>>> refer to an actual version string associated with Zynq. 1.00.a is n=
+ot,
+>>> AFAIK.
+>>
+>> I have checked with Punnaiah that this is Synopsys DDR memory contro=
+ller.
+>> Zynq is based on 1.4 version with some customization.
+>> It means I think reasonable solution is
+>> call it drivers/edac/synopsys_edac.c
+>> rename zynq_ in driver to synopsys_ and
+>> use xlnx,zynq-ddrc-1.00.a compatible string because zynq is not usin=
+g
+>> clean synopsys version.
+>>
+>> I am not getting point why you don't like 1.00.a suffix here.
+>> Because of historical point of view compatible strings should be dif=
+ferent
+>> for early silicon, silicon v1, silicon v2, silicon v3, etc
+>> but we haven't used it at all that's why we can use xilinx scheme
+>> which we are using for our soft IPs.
+>=20
+> Well, but you refer to Zynq which has silicon revisions you can use t=
+o
+> refer to a specific Zynq version. That matches data sheets. Zynq-1.00=
+=2Ea
+> is just completely made up and wouldn't be found in any data sheet.
 
-I think we need to stop thinking of a graph linked in terms of data
-flow - that's really not useful.
+I didn't reply this one but we discussed this with Soren over phone.
+No problem to use Synopsys version A07 according TRM.
 
-Consider a display subsystem.  The CRTC is the primary interface for
-the CPU - this is the "most interesting" interface, it's the interface
-which provides access to the picture to be displayed for the CPU.  Other
-interfaces are secondary to that purpose - reading the I2C DDC bus for
-the display information is all secondary to the primary purpose of
-displaying a picture.
+Then compatible string is
+xlnx,zynq-ddrc-A07 and file name is synopsys_edac.c
 
-For a capture subsystem, the primary interface for the CPU is the frame
-grabber (whether it be an already encoded frame or not.)  The sensor
-devices are all secondary to that.
+Soren: please correct me if I DDRC version is wrong.
 
-So, the primary software interface in each case is where the data for
-the primary purpose is transferred.  This is the point at which these
-graphs should commence since this is where we would normally start
-enumeration of the secondary interfaces.
+Regarding silicon revision in compatible string let's start new thread
+out of this ddrc one.
 
-V4L2 even provides interfaces for this: you open the capture device,
-which then allows you to enumerate the capture device's inputs, and
-this in turn allows you to enumerate their properties.  You don't open
-a particular sensor and work back up the tree.
-
-I believe trying to do this according to the flow of data is just wrong.
-You should always describe things from the primary device for the CPU
-towards the peripheral devices and never the opposite direction.
-
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+Thanks,
+Michal
