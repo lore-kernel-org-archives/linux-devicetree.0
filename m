@@ -1,12 +1,14 @@
 From: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 0/9] mtd: nand: add sunxi NAND Flash
- Controller support
-Date: Wed, 12 Mar 2014 19:07:35 +0100
-Message-ID: <1394647664-8258-1-git-send-email-b.brezillon.dev@gmail.com>
+Subject: [PATCH v3 2/9] mtd: nand: add ONFI timing mode to
+ nand_timings converter
+Date: Wed, 12 Mar 2014 19:07:37 +0100
+Message-ID: <1394647664-8258-3-git-send-email-b.brezillon.dev@gmail.com>
+References: <1394647664-8258-1-git-send-email-b.brezillon.dev@gmail.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDE6NB73YAMBB7GEQKMQKGQEC3ABLNQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDE6NB73YAMBBAWFQKMQKGQEERHUGZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1394647664-8258-1-git-send-email-b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi>
@@ -17,63 +19,303 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds support for the sunxi NAND Flash Controller (NFC).
+Add a converter to retrieve NAND timings from an ONFI NAND timing mode.
+This only support SDR NAND timings for now.
 
-I'll split this series for the next round:
-1) NAND timings
-2) sunxi NAND controller driver
-
-But I'd like to have some feedback on the NAND timings stuff before doing this.
-
-Any review on the sunxi driver is welcome (for the moment I only got feedback
-on the NAND timings code).
-
-I also have patches adding support for HW randomizer and per ECC partition
-config that you can find here:
-https://groups.google.com/forum/#!searchin/linux-sunxi/boris/linux-sunxi/s3lBb01I0Js/Bem2X1wKPa4J
-But I'd like to get the sunxi NAND driver mainlined before adding more
-intrusive parts.
-
-Best Regards,
-
-Boris
-
-Changes since v2:
- - merge HW ECC implementation in base implementation patch
- - fix timing config when interfacing with an ONFI compatible chip
-
-Changes since v1:
- - add HW ECC support
- - rework NAND timings retrieval (use ONFI timing mode instead of raw timings)
- - add nand-ecc-level property to specify NAND ECC requirements from DT
-
-
-Boris BREZILLON (9):
-  mtd: nand: define struct nand_timings
-  mtd: nand: add ONFI timing mode to nand_timings converter
-  of: mtd: add NAND timing mode retrieval support
-  of: mtd: add documentation for the ONFI NAND timing mode property
-  mtd: nand: add sunxi NAND flash controller support
-  mtd: nand: add sunxi NFC dt bindings doc
-  ARM: dt/sunxi: add NFC node to Allwinner A20 SoC
-  ARM: dt/sunxi: add A20 NAND controller pin definitions
-  ARM: sunxi/dt: enable NAND on cubietruck board
-
- Documentation/devicetree/bindings/mtd/nand.txt     |    8 +
- .../devicetree/bindings/mtd/sunxi-nand.txt         |   48 +
- arch/arm/boot/dts/sun7i-a20-cubietruck.dts         |   17 +
- arch/arm/boot/dts/sun7i-a20.dtsi                   |   91 ++
- drivers/mtd/nand/Kconfig                           |    6 +
- drivers/mtd/nand/Makefile                          |    3 +-
- drivers/mtd/nand/nand_timings.c                    |  248 ++++
- drivers/mtd/nand/sunxi_nand.c                      | 1276 ++++++++++++++++++++
- drivers/of/of_mtd.c                                |   19 +
- include/linux/mtd/nand.h                           |   53 +
- include/linux/of_mtd.h                             |    8 +
- 11 files changed, 1776 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/mtd/sunxi-nand.txt
+Signed-off-by: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/mtd/nand/Makefile       |    2 +-
+ drivers/mtd/nand/nand_timings.c |  248 +++++++++++++++++++++++++++++++++++++++
+ include/linux/mtd/nand.h        |    4 +
+ 3 files changed, 253 insertions(+), 1 deletion(-)
  create mode 100644 drivers/mtd/nand/nand_timings.c
- create mode 100644 drivers/mtd/nand/sunxi_nand.c
 
+diff --git a/drivers/mtd/nand/Makefile b/drivers/mtd/nand/Makefile
+index c970ce7..0b8a822 100644
+--- a/drivers/mtd/nand/Makefile
++++ b/drivers/mtd/nand/Makefile
+@@ -2,7 +2,7 @@
+ # linux/drivers/nand/Makefile
+ #
+ 
+-obj-$(CONFIG_MTD_NAND)			+= nand.o
++obj-$(CONFIG_MTD_NAND)			+= nand.o nand_timings.o
+ obj-$(CONFIG_MTD_NAND_ECC)		+= nand_ecc.o
+ obj-$(CONFIG_MTD_NAND_BCH)		+= nand_bch.o
+ obj-$(CONFIG_MTD_NAND_IDS)		+= nand_ids.o nand_hynix.o
+diff --git a/drivers/mtd/nand/nand_timings.c b/drivers/mtd/nand/nand_timings.c
+new file mode 100644
+index 0000000..f66fe95
+--- /dev/null
++++ b/drivers/mtd/nand/nand_timings.c
+@@ -0,0 +1,248 @@
++/*
++ *  Copyright (C) 2014 Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ */
++#include <linux/mtd/nand.h>
++
++static const struct nand_sdr_timings onfi_sdr_timings[] = {
++	/* Mode 0 */
++	{
++		.tADL_min = 200000,
++		.tALH_min = 20000,
++		.tALS_min = 50000,
++		.tAR_min = 25000,
++		.tCEA_max = 100000,
++		.tCEH_min = 20000,
++		.tCH_min = 20000,
++		.tCHZ_max = 100000,
++		.tCLH_min = 20000,
++		.tCLR_min = 20000,
++		.tCLS_min = 50000,
++		.tCOH_min = 0,
++		.tCS_min = 70000,
++		.tDH_min = 20000,
++		.tDS_min = 40000,
++		.tFEAT_max = 1000000,
++		.tIR_min = 10000,
++		.tITC_max = 1000000,
++		.tRC_min = 100000,
++		.tREA_max = 40000,
++		.tREH_min = 30000,
++		.tRHOH_min = 0,
++		.tRHW_min = 200000,
++		.tRHZ_max = 200000,
++		.tRLOH_min = 0,
++		.tRP_min = 50000,
++		.tRST_max = 250000000000,
++		.tWB_max = 200000,
++		.tRR_min = 40000,
++		.tWC_min = 100000,
++		.tWH_min = 30000,
++		.tWHR_min = 120000,
++		.tWP_min = 50000,
++		.tWW_min = 100000,
++	},
++	/* Mode 1 */
++	{
++		.tADL_min = 100000,
++		.tALH_min = 10000,
++		.tALS_min = 25000,
++		.tAR_min = 10000,
++		.tCEA_max = 45000,
++		.tCEH_min = 20000,
++		.tCH_min = 10000,
++		.tCHZ_max = 50000,
++		.tCLH_min = 10000,
++		.tCLR_min = 10000,
++		.tCLS_min = 25000,
++		.tCOH_min = 15000,
++		.tCS_min = 35000,
++		.tDH_min = 10000,
++		.tDS_min = 20000,
++		.tFEAT_max = 1000000,
++		.tIR_min = 0,
++		.tITC_max = 1000000,
++		.tRC_min = 50000,
++		.tREA_max = 30000,
++		.tREH_min = 15000,
++		.tRHOH_min = 15000,
++		.tRHW_min = 100000,
++		.tRHZ_max = 100000,
++		.tRLOH_min = 0,
++		.tRP_min = 25000,
++		.tRR_min = 20000,
++		.tRST_max = 500000000,
++		.tWB_max = 100000,
++		.tWC_min = 45000,
++		.tWH_min = 15000,
++		.tWHR_min = 80000,
++		.tWP_min = 25000,
++		.tWW_min = 100000,
++	},
++	/* Mode 2 */
++	{
++		.tADL_min = 100000,
++		.tALH_min = 10000,
++		.tALS_min = 15000,
++		.tAR_min = 10000,
++		.tCEA_max = 30000,
++		.tCEH_min = 20000,
++		.tCH_min = 10000,
++		.tCHZ_max = 50000,
++		.tCLH_min = 10000,
++		.tCLR_min = 10000,
++		.tCLS_min = 15000,
++		.tCOH_min = 15000,
++		.tCS_min = 25000,
++		.tDH_min = 5000,
++		.tDS_min = 15000,
++		.tFEAT_max = 1000000,
++		.tIR_min = 0,
++		.tITC_max = 1000000,
++		.tRC_min = 35000,
++		.tREA_max = 25000,
++		.tREH_min = 15000,
++		.tRHOH_min = 15000,
++		.tRHW_min = 100000,
++		.tRHZ_max = 100000,
++		.tRLOH_min = 0,
++		.tRR_min = 20000,
++		.tRST_max = 500000000,
++		.tWB_max = 100000,
++		.tRP_min = 17000,
++		.tWC_min = 35000,
++		.tWH_min = 15000,
++		.tWHR_min = 80000,
++		.tWP_min = 17000,
++		.tWW_min = 100000,
++	},
++	/* Mode 3 */
++	{
++		.tADL_min = 100000,
++		.tALH_min = 5000,
++		.tALS_min = 10000,
++		.tAR_min = 10000,
++		.tCEA_max = 25000,
++		.tCEH_min = 20000,
++		.tCH_min = 5000,
++		.tCHZ_max = 50000,
++		.tCLH_min = 5000,
++		.tCLR_min = 10000,
++		.tCLS_min = 10000,
++		.tCOH_min = 15000,
++		.tCS_min = 25000,
++		.tDH_min = 5000,
++		.tDS_min = 10000,
++		.tFEAT_max = 1000000,
++		.tIR_min = 0,
++		.tITC_max = 1000000,
++		.tRC_min = 30000,
++		.tREA_max = 20000,
++		.tREH_min = 10000,
++		.tRHOH_min = 15000,
++		.tRHW_min = 100000,
++		.tRHZ_max = 100000,
++		.tRLOH_min = 0,
++		.tRP_min = 15000,
++		.tRR_min = 20000,
++		.tRST_max = 500000000,
++		.tWB_max = 100000,
++		.tWC_min = 30000,
++		.tWH_min = 10000,
++		.tWHR_min = 80000,
++		.tWP_min = 15000,
++		.tWW_min = 100000,
++	},
++	/* Mode 4 */
++	{
++		.tADL_min = 70000,
++		.tALH_min = 5000,
++		.tALS_min = 10000,
++		.tAR_min = 10000,
++		.tCEA_max = 25000,
++		.tCEH_min = 20000,
++		.tCH_min = 5000,
++		.tCHZ_max = 30000,
++		.tCLH_min = 5000,
++		.tCLR_min = 10000,
++		.tCLS_min = 10000,
++		.tCOH_min = 15000,
++		.tCS_min = 20000,
++		.tDH_min = 5000,
++		.tDS_min = 10000,
++		.tFEAT_max = 1000000,
++		.tIR_min = 0,
++		.tITC_max = 1000000,
++		.tRC_min = 25000,
++		.tREA_max = 20000,
++		.tREH_min = 10000,
++		.tRHOH_min = 15000,
++		.tRHW_min = 100000,
++		.tRHZ_max = 100000,
++		.tRLOH_min = 5000,
++		.tRP_min = 12000,
++		.tRR_min = 20000,
++		.tRST_max = 500000000,
++		.tWB_max = 100000,
++		.tWC_min = 25000,
++		.tWH_min = 10000,
++		.tWHR_min = 80000,
++		.tWP_min = 12000,
++		.tWW_min = 100000,
++	},
++	/* Mode 5 */
++	{
++		.tADL_min = 70000,
++		.tALH_min = 5000,
++		.tALS_min = 10000,
++		.tAR_min = 10000,
++		.tCEA_max = 25000,
++		.tCEH_min = 20000,
++		.tCH_min = 5000,
++		.tCHZ_max = 30000,
++		.tCLH_min = 5000,
++		.tCLR_min = 10000,
++		.tCLS_min = 10000,
++		.tCOH_min = 15000,
++		.tCS_min = 15000,
++		.tDH_min = 5000,
++		.tDS_min = 7000,
++		.tFEAT_max = 1000000,
++		.tIR_min = 0,
++		.tITC_max = 1000000,
++		.tRC_min = 20000,
++		.tREA_max = 16000,
++		.tREH_min = 7000,
++		.tRHOH_min = 15000,
++		.tRHW_min = 100000,
++		.tRHZ_max = 100000,
++		.tRLOH_min = 5000,
++		.tRP_min = 10000,
++		.tRR_min = 20000,
++		.tRST_max = 500000000,
++		.tWB_max = 100000,
++		.tWC_min = 20000,
++		.tWH_min = 7000,
++		.tWHR_min = 80000,
++		.tWP_min = 10000,
++		.tWW_min = 100000,
++	},
++};
++
++/**
++ * onfi_async_timing_mode_to_sdr_timings - [NAND Interface] Retrieve NAND
++ * timings according to the given ONFI timing mode
++ * @mode: ONFI timing mode
++ */
++const struct nand_sdr_timings *onfi_async_timing_mode_to_sdr_timings(int mode)
++{
++	if (mode < 0 || mode > ARRAY_SIZE(onfi_sdr_timings))
++		return ERR_PTR(-EINVAL);
++
++	return &onfi_sdr_timings[mode];
++}
++EXPORT_SYMBOL(onfi_async_timing_mode_to_sdr_timings);
+diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
+index f3ff3a3..b8e3c2b 100644
+--- a/include/linux/mtd/nand.h
++++ b/include/linux/mtd/nand.h
+@@ -847,6 +847,7 @@ static inline bool nand_is_slc(struct nand_chip *chip)
+ 	return chip->bits_per_cell == 1;
+ }
+ 
++
+ /**
+  * struct nand_sdr_timings - SDR NAND chip timings
+  *
+@@ -895,4 +896,7 @@ struct nand_sdr_timings {
+ 	u32 tWW_min;
+ };
+ 
++/* convert an ONFI timing mode to its timing characteristics. */
++const struct nand_sdr_timings *onfi_async_timing_mode_to_sdr_timings(int mode);
++
+ #endif /* __LINUX_MTD_NAND_H */
 -- 
 1.7.9.5
