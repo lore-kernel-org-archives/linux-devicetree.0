@@ -1,92 +1,64 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] ata: ahci_st: Provide DT bindings for ST's SATA
- implementation
-Date: Wed, 12 Mar 2014 11:42:57 +0000
-Message-ID: <20140312114257.GA17461@e106331-lin.cambridge.arm.com>
-References: <1393328481-7251-1-git-send-email-lee.jones@linaro.org>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCHv2 0/5] ARM: dts: exynos: Add missing dt data to bring
+ kernel of Exynos4x12
+Date: Wed, 12 Mar 2014 20:43:55 +0900
+Message-ID: <5320487B.1090908@samsung.com>
+References: <1394605156-7768-1-git-send-email-cw00.choi@samsung.com>
+ <53204328.7070607@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1393328481-7251-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "DCG_UPD_stlinux_kernel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org" <DCG_UPD_stlinux_kernel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <53204328.7070607@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 25, 2014 at 11:41:19AM +0000, Lee Jones wrote:
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-> Acked-by: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/ata/ahci-st.txt | 31 +++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ata/ahci-st.txt
+Hi Tomasz,
+
+On 03/12/2014 08:21 PM, Tomasz Figa wrote:
+> Hi Chanwoo,
 > 
-> diff --git a/Documentation/devicetree/bindings/ata/ahci-st.txt b/Documentation/devicetree/bindings/ata/ahci-st.txt
-> new file mode 100644
-> index 0000000..1b69fa9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ata/ahci-st.txt
-> @@ -0,0 +1,31 @@
-> +STMicroelectronics STi SATA controller
-
-Is that a family name or a particular device?
-
-> +
-> +This binding describes a SATA device.
-> +
-> +Required properties:
-> + - compatible	   : Must be "st,ahci"
-
-Is there not a more specific name? This is awfully generic.
-
-> + - reg		   : Physical base addresses and length of register sets
-> + - interrupts	   : Interrupt associated with the SATA device
-> + - interrupt-names :   Associated name must be; "hostc"
-> + - resets	   : The power-down and soft-reset lines of SATA IP
-> + - reset-names	   :   Associated names must be; "pwr-dwn" and "sw-rst"
-
-Get rid of the semicolon, it makes this harder to read. Same for the
-other -names proeprties.
-
-> + - clocks	   : The phandle for the clock
-> + - clock-names	   :   Associated name must be; "ahci_clk"
-> + - phys		   : The phandle for the PHY device
-> + - phy-names	   :   Associated name must be; "ahci_phy"
-
-This looks sane, but I'd like to see a more specific description and
-compatible string.
-
-Cheers,
-Mark.
-
-> +
-> +Example:
-> +
-> +	sata0: sata@fe380000 {
-> +		compatible      = "st,ahci";
-> +		reg             = <0xfe380000 0x1000>;
-> +		interrupts      = <GIC_SPI 157 IRQ_TYPE_NONE>;
-> +		interrupt-names = "hostc";
-> +		phys	        = <&miphy365x_phy MIPHY_PORT_0 MIPHY_TYPE_SATA>;
-> +		phy-names       = "ahci_phy";
-> +		resets	        = <&powerdown STIH416_SATA0_POWERDOWN>,
-> +				  <&softreset STIH416_SATA0_SOFTRESET>;
-> +		reset-names     = "pwr-dwn", "sw-rst";
-> +		clocks	        = <&CLK_S_ICN_REG_0>;
-> +		clock-names     = "ahci_clk";
-> +	};
-> -- 
-> 1.8.3.2
+> On 12.03.2014 07:19, Chanwoo Choi wrote:
+>> This patch add missing dt data of Exynos4x12 to bring up kernel feature and
+>> code clean. This patchset is based on 'v3.15-next/dt-clk-exynos' branch.
+>> - git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
+>>
+>> exynos4x12/exynos4412/exynos4212.dtsi
+>> - Add ADC (Analog and Digital Converter) to get raw data
+>> - Add PMU (Performance Monitoring Unit) for perf event
+>> - Add gps_alive power domain to remove power leakage when gps-alive isn't used
+>> - Remove duplicate dt data of interrput combiner controller
+>>
+>> exynos4412-trats.dts
+>> - Add ADC dt data with ntc thermistor child to read temperature
+>>
+>> Changes from v1:
+>> - Use clock macro name for Exynos4 instead of constant for ADC
+>> - Remove unnecessary description about patch content
+>> - Move gps-alive power domain's dt data from exynos4x12.dts to exynos4.dts
+>> - Move thermistor dt node outside of ADC dt node and modify node name of thermistor
+>>
+>> Chanwoo Choi (5):
+>>    ARM: dts: exynos4x12: Add ADC's dt data to read raw data
+>>    ARM: dts: exynos4x12: Add PMU dt data to support PMU(Perforamnce Monitoring Unit)
+>>    ARM: dts: exynos4x12: Add GPS_ALIVE power domain
+>>    ARM: dts: exynos: Move common dt data for interrupt combiner controller
+>>    ARM: dts: exynos4412-trats2: Add ADC/themistor dt data to get temperature of SoC/battery
+>>
+>>   arch/arm/boot/dts/exynos4.dtsi          |  5 +++++
+>>   arch/arm/boot/dts/exynos4212.dtsi       | 13 ++++---------
+>>   arch/arm/boot/dts/exynos4412-trats2.dts | 21 +++++++++++++++++++++
+>>   arch/arm/boot/dts/exynos4412.dtsi       | 14 ++++----------
+>>   arch/arm/boot/dts/exynos4x12.dtsi       | 26 ++++++++++++++++++++++++++
+>>   5 files changed, 60 insertions(+), 19 deletions(-)
+>>
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Thanks for your review.
+
+Best Regards,
+Chanwoo Choi
