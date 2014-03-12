@@ -1,56 +1,64 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/5] mfd: add bcm590xx pmu driver
-Date: Wed, 12 Mar 2014 09:23:55 +0000
-Message-ID: <20140312092355.GB5672@lee--X1>
-References: <1394552775-31264-1-git-send-email-mporter@linaro.org>
- <1394552775-31264-3-git-send-email-mporter@linaro.org>
- <20140311160837.GP21216@lee--X1>
- <20140311221938.GO25092@beef>
- <20140311224517.GA5672@lee--X1>
- <20140311232545.GP25092@beef>
- <20140312004030.GH28112@sirena.org.uk>
- <20140312005748.GQ25092@beef>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH v2] ASoC: simple-card: overwrite
+	cpu_dai->fmt with codec_dai->fmt
+Date: Wed, 12 Mar 2014 11:25:32 +0200
+Message-ID: <5320280C.6080004@ti.com>
+References: <1394593331-22867-1-git-send-email-Guangyu.Chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140312005748.GQ25092@beef>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1394593331-22867-1-git-send-email-Guangyu.Chen@freescale.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Nicolin Chen <Guangyu.Chen@freescale.com>, broonie@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kuninori.morimoto.gx@renesas.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Li.Xiubo@freescale.com, linux-doc@vger.kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, moinejf@free.fr
 List-Id: devicetree@vger.kernel.org
 
-> > > > Are there any inter-patch dependencies in the set? If so, we sh=
-ould
-> > > > know about them so we can coordinate a sensible solution.
-> >=20
-> > > Yes, the regulator driver (3/5) that Mark applied is dependent on=
- this
-> > > patch...the regulator driver includes include/linux/mfd/bcm590xx.=
-h.
-> >=20
-> > There's no actual dependency though - the regulator driver can only=
- be
-> > built if the MFD is enabled in Kconfig since it depends on it so un=
-til
-> > the MFD is present in the tree it won't get built.
->=20
-> Oh, right. Lee, no dependencies then.
+On 03/12/2014 05:02 AM, Nicolin Chen wrote:
+> The current simple-card driver separates the daimft for cpu_dai and codec_dai.
+> So we might get different values for them (0x4003 and 0x1003 for example):
+>
+> asoc-simple-card sound-cs42888.12: cpu : 2024000.esai / 4003 / 132000000
+> asoc-simple-card sound-cs42888.12: codec : cs42888 / 1003 / 24576000
+> asoc-simple-card sound-cs42888.12: cs42888 <-> 2024000.esai mapping ok
+>
+> This is not allowed at all as we need to keep the DAIFMT settings identical
+> for both the ends of the link.
+>
+> Thus this patch fixes it by overwriting the cpu_dai->fmt with codec_dai->fmt
+> since we defined the DAIFMT_MASTER basing on CODEC at the first place while
+> the other bits are same.
+>
+> Signed-off-by: Nicolin Chen <Guangyu.Chen@freescale.com>
+> ---
+Hi Nicolin,
+This patch is an improvement, but in my opinion the binding is still a 
+bit confusing.
 
-Perfect, I'll just apply the MFD patch.
+How about changing 'frame-master' and 'bitclock-master' to 
+'codec-frame-master' and 'codec-bitclock-master'. We could possibly keep 
+the old names as aliases until all the .dts files out there have been fixed.
 
-We still need the DT guys to look over your document, so nothing will
-be certain until a) we receive their Ack or b) enough time passes, so
-we will review it between ourselves.
+At the same go we could add SND_SOC_DAIFMT_MASTER_MASK here:
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ > /* get CPU/CODEC common format via simple-audio-card,format */
+ > priv->daifmt = snd_soc_of_parse_daifmt(node, "simple-audio-card,") &
+ >		(SND_SOC_DAIFMT_FORMAT_MASK | SND_SOC_DAIFMT_INV_MASK);
+
+or leave the masking out all together. Can't see why 
+SND_SOC_DAIFMT_CONT/GATED could not be defined at dai-link level too.
+
+This way the norm would be defining the daifmt at link level. We could 
+still keep the possibility to overwrite the setting at dai level if 
+there is need for that.
+
+Best regards,
+Jyri
