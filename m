@@ -1,56 +1,41 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: [PATCH 1/3] dt-bindings: document gpio-charger bindings
-Date: Wed, 12 Mar 2014 14:46:32 +0100
-Message-ID: <2194340.F9etmr5mIo@phil>
-References: <12569216.pGctOhkhxz@phil>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/3] pinctrl: mvebu: silence WARN to dev_warn
+Date: Wed, 12 Mar 2014 15:02:02 +0100
+Message-ID: <CACRpkdbcbMNim9LRkr75Mk5yHfwbA1OAexByHG50qDUPwts4uQ@mail.gmail.com>
+References: <1393977790-29110-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<1393977790-29110-4-git-send-email-sebastian.hesselbarth@gmail.com>
+	<20140306201803.GL1872@titan.lakedaemon.net>
+	<CACRpkda0JCLZUv_KPmwucDh3ko2YbtG2ukMMscSodAbBpiY+zw@mail.gmail.com>
+	<20140307035056.GQ1872@titan.lakedaemon.net>
+	<CACRpkdbEQSj7jLWT2BFR22m7phwmyKCByhQuFFgHvHoKvQFD5g@mail.gmail.com>
+	<20140307134616.GR1872@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <12569216.pGctOhkhxz@phil>
+In-Reply-To: <20140307134616.GR1872@titan.lakedaemon.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Woodhouse <dwmw2@infradead.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@bq.com>
+On Fri, Mar 7, 2014 at 2:46 PM, Jason Cooper <jason@lakedaemon.net> wrote:
+> On Fri, Mar 07, 2014 at 11:56:11AM +0800, Linus Walleij wrote:
 
-This documents the binding for the gpio-charger power-supply.
+>> For a single patch?
+>
+> Well, just the doc change and WARN change.  I've already taken the dts
+> change into mvebu/dt (for arm-soc).
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
----
- .../bindings/power_supply/gpio-charger.txt         | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power_supply/gpio-charger.txt
+I've applied this patch [3/3] to the pinctrl tree.
 
-diff --git a/Documentation/devicetree/bindings/power_supply/gpio-charger.txt b/Documentation/devicetree/bindings/power_supply/gpio-charger.txt
-new file mode 100644
-index 0000000..fad87a4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power_supply/gpio-charger.txt
-@@ -0,0 +1,23 @@
-+gpio-charger
-+
-+Required properties :
-+ - compatible : "gpio-charger"
-+ - gpios : GPIO indicating the charger presence.
-+   See GPIO binding in bindings/gpio/gpio.txt .
-+ - charger-type : power supply type, one of
-+     unknown
-+     battery
-+     ups
-+     mains
-+     usb-sdp (USB standard downstream port)
-+     usb-dcp (USB dedicated charging port)
-+     usb-cdp (USB charging downstream port)
-+     usb-aca (USB accessory charger adapter)
-+
-+Example:
-+
-+	charger {
-+		compatible = "gpio-charger";
-+		charger-type = "usb-sdp";
-+		gpios = <&gpf0 2 0 0 0>;
-+	}
--- 
-1.8.5.3
+> There should be no need for these two to be in mvebu's for-next, so if
+> it's easier for you to pick them, please do so.
+>
+> I'll drop them from mvebu/pinctrl and update mvebu's for-next right now.
+
+No, I mean, please apply patch 1/3 and 2/3 to the mvebu tree.
+There is no need to sync DTS and pinctrl driver changes. This
+patch to the pinctrl driver I want to carry however.
+
+Yours,
+Linus Walleij
