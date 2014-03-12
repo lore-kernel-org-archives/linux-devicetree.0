@@ -1,128 +1,73 @@
-From: Vince Bridgers <vbridgers2013@gmail.com>
-Subject: [PATCH net-next V4 0/9] Altera Triple Speed Ethernet (TSE) Driver
-Date: Wed, 12 Mar 2014 15:15:25 -0500
-Message-ID: <1394655334-29547-1-git-send-email-vbridgers2013@gmail.com>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, vbridgers2013@gmail.com
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 4/6] ARM: mvebu: Add support for NAND controller in
+ Armada 38x SoC
+Date: Wed, 12 Mar 2014 17:30:07 -0300
+Message-ID: <20140312203007.GA7396@arch.cereza>
+References: <1394637404-7651-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1394637404-7651-5-git-send-email-ezequiel.garcia@free-electrons.com>
+ <5320CEE7.6020506@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5320CEE7.6020506-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Seif Mazareeb <seif-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is the version 4 submission for the Altera Triple Speed Ethernet (TSE)
-driver. All comments received during the version 2 and 3 submissions have 
-been accepted. Please find the change log and a description of the driver 
-files submission below. 
+On Mar 13, Sergei Shtylyov wrote:
+> On 03/12/2014 06:16 PM, Ezequiel Garcia wrote:
+>=20
+> >The Armada 38x SoC family has a NAND controller, compatible
+> >with the controller in Armada 370/375/XP SoCs. Add support for
+> >it in the devicetree file.
+>=20
+> >Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> >---
+> >  arch/arm/boot/dts/armada-38x.dtsi | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+>=20
+> >diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/a=
+rmada-38x.dtsi
+> >index 76cc27e..18d8f80 100644
+> >--- a/arch/arm/boot/dts/armada-38x.dtsi
+> >+++ b/arch/arm/boot/dts/armada-38x.dtsi
+> >@@ -345,6 +345,16 @@
+> >  				clocks =3D <&mainpll>;
+> >  				clock-output-names =3D "nand";
+> >  			};
+> >+
+> >+			nand@d0000 {
+>=20
+>    ePAPR standard [1] tells us:
+>=20
+> The name of a node should be somewhat generic, reflecting the functio=
+n of
+> the device and not its precise programming model. If appropriate, the=
+ name
+> should be one of the following choices:
+>=20
+> [...]
+> =E2=80=A2 flash
+>=20
 
-Please consider this patch set for inclusion into the Linux kernel. 
+I think 'nand' is generic enough, isn't it?
 
-Vince
+In any case, it seems sane to distinguish a NAND flash from a NOR flash=
+,
+from a SPI flash.
 
-V4: Address comments from V3 review
-    - Change statistics names in ethtool module to follow common use in 
-      other ethernet drivers.
-    - remove an unnecessary case in ethtool module
-    - change logging to use netdev_* where possible instead of dev_*
-    - remove logging for OOM errors since those are already logged
-
-V3: Address comments from V2 review
-    - Reorder patch submission so that net/ethernet Makefile and Kconfig
-      are committed last, thus not breaking bisect
-    - Use of_get_mac_address instead of of_get_property
-    - Change supplemental and hash configuration bindings to boolean/empty,
-      and more meaningful names
-    - Add check for failure from calls to of_phy_connect and 
-      connect_local_phy
-    - Correct code to find mdio child node
-    - Update bindings document 
-    - Remove cast to u64 when not necessary
-    - add use of const for statistics strings
-
-V2: Address comments from initial RFC review.
-    - The driver files were broken up by major sections of functionality.
-      These include MSGDMA, SGDMA, Misc, and Main. 
-    - Add patch for MAINTAINERS file, add the maintainer for this submission
-    - Use 32-bit lower/upper physical address accessor functions so the driver
-      is 64-bit ready.
-    - Use standard bindings where applicable. Especially phy-addr, and change
-      "altr,rx-fifo-depth" to "rx-fifo-depth" and "altr,tx-fifo-depth" to 
-      "tx-fifo-depth".
-    - Add use of max-frame-size property
-    - Update bindings documents accordingly
-    - Correct interrupt handler to use budget parameter in the convential way
-    - Use macros consistently to define bit fields across files
-    - Correct include exclusion macro in altera_msgdmahw.h (typo)
-    - Remove use of barriers, these were not necessary since the DMA APIs
-      ensure memory & buffer consistency
-    - Remove use of netif_carrier_off in driver
-    - move probing of phy from the open function to the probe function
-    - use of_get_phy_mode instead of custom function
-    - Use the .data field in the device structure to obtain a pointer
-      to SGDMA or MSGDMA device specific properties and functions. 
-    - remove custom function to access devicetree since Altera specific
-      bindings requiring it's use have been deprecated in favor of 
-      standard bindings. 
-
-The Altera TSE is a 10/100/1000 Mbps Ethernet soft IP component that can be
-configured and synthesized using Quartus, and programmed into Altera FPGAs.
-Two types of soft DMA IP components are supported by this driver - the Altera
-SGDMA and the MSGDMA. The MSGDMA DMA component is preferred over the SGDMA,
-since the SGDMA will be deprecated in favor of the MSGDMA. Software supporting
-both is provided for customers still using the SGDMA and to demonstrate how
-multiple types of DMA engines may be supported by the TSE driver in the event
-customers wish to develop their own custom soft DMA engine for particular
-applications.
-
-The design has been tested on Altera's Cyclone 4, 5, and Cyclone 5 SOC
-development kits using an ARM A9 processor and an Altera NIOS2 processor.
-Differences in CPU/DMA coherency management and address alignment are
-addressed by proper use of driver APIs and semantics.
-
-Vince Bridgers (9):
-  dts: Add bindings for the Altera Triple Speed Ethernet driver
-  Documentation: networking: Add Altera Ethernet (TSE) Documentation
-  Altera TSE: Add Altera Ethernet Driver MSGDMA File Components
-  Altera TSE: Add Altera Ethernet Driver SGDMA file components
-  Altera TSE: Add Miscellaneous Files for Altera Ethernet Driver
-  Altera TSE: Add main and header file for Altera Ethernet Driver
-  Altera TSE: Add Altera Ethernet Driver Makefile and Kconfig
-  MAINTAINERS: Add entry for Altera Triple Speed Ethernet Driver
-  net: ethernet: Change Ethernet Makefile and Kconfig for Altera TSE
-    driver
-
- .../devicetree/bindings/net/altera_tse.txt         |  114 ++
- Documentation/networking/altera_tse.txt            |  119 ++
- MAINTAINERS                                        |    7 +
- drivers/net/ethernet/Kconfig                       |    1 +
- drivers/net/ethernet/Makefile                      |    1 +
- drivers/net/ethernet/altera/Kconfig                |    8 +
- drivers/net/ethernet/altera/Makefile               |    7 +
- drivers/net/ethernet/altera/altera_msgdma.c        |  203 +++
- drivers/net/ethernet/altera/altera_msgdma.h        |   34 +
- drivers/net/ethernet/altera/altera_msgdmahw.h      |  167 +++
- drivers/net/ethernet/altera/altera_sgdma.c         |  511 +++++++
- drivers/net/ethernet/altera/altera_sgdma.h         |   35 +
- drivers/net/ethernet/altera/altera_sgdmahw.h       |  124 ++
- drivers/net/ethernet/altera/altera_tse.h           |  486 +++++++
- drivers/net/ethernet/altera/altera_tse_ethtool.c   |  226 +++
- drivers/net/ethernet/altera/altera_tse_main.c      | 1535 ++++++++++++++++++++
- drivers/net/ethernet/altera/altera_utils.c         |   44 +
- drivers/net/ethernet/altera/altera_utils.h         |   27 +
- 18 files changed, 3649 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/altera_tse.txt
- create mode 100644 Documentation/networking/altera_tse.txt
- create mode 100644 drivers/net/ethernet/altera/Kconfig
- create mode 100644 drivers/net/ethernet/altera/Makefile
- create mode 100644 drivers/net/ethernet/altera/altera_msgdma.c
- create mode 100644 drivers/net/ethernet/altera/altera_msgdma.h
- create mode 100644 drivers/net/ethernet/altera/altera_msgdmahw.h
- create mode 100644 drivers/net/ethernet/altera/altera_sgdma.c
- create mode 100644 drivers/net/ethernet/altera/altera_sgdma.h
- create mode 100644 drivers/net/ethernet/altera/altera_sgdmahw.h
- create mode 100644 drivers/net/ethernet/altera/altera_tse.h
- create mode 100644 drivers/net/ethernet/altera/altera_tse_ethtool.c
- create mode 100644 drivers/net/ethernet/altera/altera_tse_main.c
- create mode 100644 drivers/net/ethernet/altera/altera_utils.c
- create mode 100644 drivers/net/ethernet/altera/altera_utils.h
-
--- 
-1.7.9.5
+=46WIW, quite a few other SoCs have chosen 'nand' for the node name, in=
+cluding
+the other Armada variants. Was this a wrong choice?
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
