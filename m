@@ -1,118 +1,61 @@
-From: Nicolin Chen <Guangyu.Chen@freescale.com>
-Subject: [PATCH v2] ASoC: simple-card: overwrite cpu_dai->fmt with codec_dai->fmt
-Date: Wed, 12 Mar 2014 11:02:11 +0800
-Message-ID: <1394593331-22867-1-git-send-email-Guangyu.Chen@freescale.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 3/5] ARM: dts: exynos4x12: Add GPS_ALIVE power domain
+Date: Wed, 12 Mar 2014 12:27:36 +0900
+Message-ID: <531FD428.4000008@samsung.com>
+References: <1394524494-30641-1-git-send-email-cw00.choi@samsung.com>
+ <1394524494-30641-4-git-send-email-cw00.choi@samsung.com>
+ <531F0154.9040409@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: broonie@kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, lgirdwood@gmail.com, kuninori.morimoto.gx@renesas.com, jsarha@ti.com, devicetree@vger.kernel.org, Li.Xiubo@freescale.com, moinejf@free.fr, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <531F0154.9040409@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-The current simple-card driver separates the daimft for cpu_dai and codec_dai.
-So we might get different values for them (0x4003 and 0x1003 for example):
+Hi Tomasz,
 
-asoc-simple-card sound-cs42888.12: cpu : 2024000.esai / 4003 / 132000000
-asoc-simple-card sound-cs42888.12: codec : cs42888 / 1003 / 24576000
-asoc-simple-card sound-cs42888.12: cs42888 <-> 2024000.esai mapping ok
+On 03/11/2014 09:28 PM, Tomasz Figa wrote:
+> Hi Chanwoo,
+> 
+> On 11.03.2014 08:54, Chanwoo Choi wrote:
+>> This patch add GPS_ALIVE power domain for Exynos4x12 SoC. GPS_ALIVE power domain
+>> include GPS_BLK for GPS IP. Exynos SoC used generic power-domain driver to
+>> control power domain. After completed kernel booting, Exynos power-domain driver
+>> disable un-used power domain to reduce power-consumption/leak.
+>>
+>> If GPS_ALIVE power domain isn't registered to Exynos power-domain driver,
+>> happen power-leakage because GPS_ALIVE_CONFIGURATION is default power on state.
+>>
+>> - 0x10023D00 : GPS_ALIVE_CONFIGURATION register address
+>>
+>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> ---
+>>   arch/arm/boot/dts/exynos4x12.dtsi | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos4x12.dtsi b/arch/arm/boot/dts/exynos4x12.dtsi
+>> index 1ec77f6..066eb35 100644
+>> --- a/arch/arm/boot/dts/exynos4x12.dtsi
+>> +++ b/arch/arm/boot/dts/exynos4x12.dtsi
+>> @@ -41,6 +41,11 @@
+>>           compatible = "samsung,exynos4210-pd";
+>>           reg = <0x10023CA0 0x20>;
+>>       };
+>> +   
+>> +    pd_gps_alive: gps-alive-power-domain@10023D00 {
+>> +        compatible = "samsung,exynos4210-pd";
+>> +        reg = <0x10023D00 0x20>;
+>> +    };
+>>
+> 
+> Exynos4210 seems to have this power domain as well, so I guess this change should be done to exynos4.dtsi instead.
+> 
 
-This is not allowed at all as we need to keep the DAIFMT settings identical
-for both the ends of the link.
+You are right. I will modify it.
 
-Thus this patch fixes it by overwriting the cpu_dai->fmt with codec_dai->fmt
-since we defined the DAIFMT_MASTER basing on CODEC at the first place while
-the other bits are same.
-
-Signed-off-by: Nicolin Chen <Guangyu.Chen@freescale.com>
----
-
-Changelog
-v2:
- * Keep the fmt identical for both CPU and CODEC sides.
- * Appended warning to binding doc.
-
- .../devicetree/bindings/sound/simple-card.txt        |  6 ++++++
- sound/soc/generic/simple-card.c                      | 20 ++++++++++++++------
- 2 files changed, 20 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
-index b30c222..881914b1 100644
---- a/Documentation/devicetree/bindings/sound/simple-card.txt
-+++ b/Documentation/devicetree/bindings/sound/simple-card.txt
-@@ -43,6 +43,12 @@ Optional CPU/CODEC subnodes properties:
- 					  clock node (= common clock), or "system-clock-frequency"
- 					  (if system doens't support common clock)
- 
-+Note:
-+ * For 'format', 'frame-master', 'bitclock-master', 'bitclock-inversion' and
-+   'frame-inversion', the simple card will use the settings of CODEC for both
-+   CPU and CODEC sides as we need to keep the settings identical for both ends
-+   of the link.
-+
- Example:
- 
- sound {
-diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
-index 5dd4769..09591ab 100644
---- a/sound/soc/generic/simple-card.c
-+++ b/sound/soc/generic/simple-card.c
-@@ -157,6 +157,8 @@ static int asoc_simple_card_parse_of(struct device_node *node,
- 				     struct device *dev)
- {
- 	struct snd_soc_dai_link *dai_link = priv->snd_card.dai_link;
-+	struct asoc_simple_dai *codec_dai = &priv->codec_dai;
-+	struct asoc_simple_dai *cpu_dai = &priv->cpu_dai;
- 	struct device_node *np;
- 	char *name;
- 	int ret;
-@@ -189,7 +191,7 @@ static int asoc_simple_card_parse_of(struct device_node *node,
- 	np = of_get_child_by_name(node, "simple-audio-card,cpu");
- 	if (np)
- 		ret = asoc_simple_card_sub_parse_of(np, priv->daifmt,
--						  &priv->cpu_dai,
-+						  cpu_dai,
- 						  &dai_link->cpu_of_node,
- 						  &dai_link->cpu_dai_name);
- 	if (ret < 0)
-@@ -200,12 +202,18 @@ static int asoc_simple_card_parse_of(struct device_node *node,
- 	np = of_get_child_by_name(node, "simple-audio-card,codec");
- 	if (np)
- 		ret = asoc_simple_card_sub_parse_of(np, priv->daifmt,
--						  &priv->codec_dai,
-+						  codec_dai,
- 						  &dai_link->codec_of_node,
- 						  &dai_link->codec_dai_name);
- 	if (ret < 0)
- 		return ret;
- 
-+	/*
-+	 * overwrite cpu_dai->fmt as its DAIFMT_MASTER bit is based on CODEC
-+	 * while the other bits should be identical unless buggy SW/HW design.
-+	 */
-+	cpu_dai->fmt = codec_dai->fmt;
-+
- 	if (!dai_link->cpu_dai_name || !dai_link->codec_dai_name)
- 		return -EINVAL;
- 
-@@ -227,12 +235,12 @@ static int asoc_simple_card_parse_of(struct device_node *node,
- 	dev_dbg(dev, "platform : %04x\n", priv->daifmt);
- 	dev_dbg(dev, "cpu : %s / %04x / %d\n",
- 		dai_link->cpu_dai_name,
--		priv->cpu_dai.fmt,
--		priv->cpu_dai.sysclk);
-+		cpu_dai->fmt,
-+		cpu_dai->sysclk);
- 	dev_dbg(dev, "codec : %s / %04x / %d\n",
- 		dai_link->codec_dai_name,
--		priv->codec_dai.fmt,
--		priv->codec_dai.sysclk);
-+		codec_dai->fmt,
-+		codec_dai->sysclk);
- 
- 	/*
- 	 * soc_bind_dai_link() will check cpu name
--- 
-1.8.4
-
-
+Thanks,
+Chanwoo Choi
