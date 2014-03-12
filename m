@@ -1,32 +1,43 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v6 10/11] arm64: add support for reserved memory defined
- by device tree
-Date: Wed, 12 Mar 2014 17:04:48 +0000
-Message-ID: <20140312170448.GP17083@arm.com>
-References: <1393594976-16728-1-git-send-email-m.szyprowski@samsung.com>
- <1393594976-16728-11-git-send-email-m.szyprowski@samsung.com>
+From: Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] spi: add xtfpga SPI controller driver
+Date: Wed, 12 Mar 2014 21:13:35 +0400
+Message-ID: <CAMo8Bf+mC_ZfECqJ2Apf5rcTJ10hbE55wN1cT7Jv74kzWFuVTg@mail.gmail.com>
+References: <1394626865-15105-1-git-send-email-jcmvbkbc@gmail.com>
+	<1394626865-15105-2-git-send-email-jcmvbkbc@gmail.com>
+	<20140312124901.GQ28112@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1393594976-16728-11-git-send-email-m.szyprowski@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Tomasz Figa <t.figa@samsung.com>, Will Deacon <Will.Deacon@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Paul Mackerras <paulus@samba.org>, Arnd Bergmann <arnd@arndb.de>, Josh Cartwright <joshc@codeaurora.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laura Abbott <lauraa@codeaurora.org>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Sascha Hauer <s.hauer@pengutronix.de>, Michal Nazarewicz <mina86@mina86.com>, "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>, Marc <marc.ceeeee@gmail.com>, Nishanth Peethambaran <nishanth.p@gmail.com>, Rob Herring <robh+dt@kernel.org>linux-
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140312124901.GQ28112-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org" <linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Zankel <chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org>, Marc Gauthier <marc-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 28, 2014 at 01:42:55PM +0000, Marek Szyprowski wrote:
-> Enable reserved memory initialization from device tree.
-> 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+On Wed, Mar 12, 2014 at 4:49 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Mar 12, 2014 at 04:21:03PM +0400, Max Filippov wrote:
+>
+>> +     case 16:
+>> +             /* Bytes that should go out earlier have lower addresses,
+>> +              * but the hardware operates with 16 bit words and transmits
+>> +              * higher bits first. Thus data in memory is in BE order.
+>> +              */
+>> +             xspi->data = (xspi->data << 16) | be16_to_cpu(v);
+>> +             xspi->data_sz += 2;
+>> +             break;
+>
+> Are you sure you need to do this byte swap?  SPI words are big endian so
+> if you are running on a little endian processor if you are transmitting
+> 16 bit words you should see the data getting swapped on the bus (this is
+> why I say you should never have more than 8 bits per word for regmap).
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Looks like this swap is not needed: I've looked at drivers that set
+bits_per_word = 16, they submit data in cpu endianness. Will fix in v3.
+
+-- 
+Thanks.
+-- Max
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
