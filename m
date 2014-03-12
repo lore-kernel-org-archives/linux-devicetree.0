@@ -1,69 +1,115 @@
-From: Matt Porter <mporter@linaro.org>
-Subject: Re: [PATCH v3 2/5] mfd: add bcm590xx pmu driver
-Date: Tue, 11 Mar 2014 20:57:48 -0400
-Message-ID: <20140312005748.GQ25092@beef>
-References: <1394552775-31264-1-git-send-email-mporter@linaro.org>
- <1394552775-31264-3-git-send-email-mporter@linaro.org>
- <20140311160837.GP21216@lee--X1>
- <20140311221938.GO25092@beef>
- <20140311224517.GA5672@lee--X1>
- <20140311232545.GP25092@beef>
- <20140312004030.GH28112@sirena.org.uk>
+From: Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] spi: add xtfpga SPI controller driver
+Date: Wed, 12 Mar 2014 04:59:47 +0400
+Message-ID: <CAMo8Bf+dePYf0jW6zaH-4Qiy5oF-bBzHjkfzL1u6pyTS1OE46w@mail.gmail.com>
+References: <1394541891-26469-1-git-send-email-jcmvbkbc@gmail.com>
+	<1394541891-26469-2-git-send-email-jcmvbkbc@gmail.com>
+	<20140311194959.GB28112@sirena.org.uk>
+	<CAMo8BfLTn+pneF6_7XkP66+LzpZgcefnAo_FkwxpvtYdt9yduA@mail.gmail.com>
+	<20140312003401.GE28112@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="CGDBiGfvSTbxKZlW"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140312004030.GH28112@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Christian Daudt <bcm@fixthebug.org>, Devicetree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140312003401.GE28112-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org" <linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Zankel <chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org>, Marc Gauthier <marc-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Mar 12, 2014 at 4:34 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Mar 12, 2014 at 12:20:49AM +0400, Max Filippov wrote:
+>> On Tue, Mar 11, 2014 at 11:49 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> > On Tue, Mar 11, 2014 at 04:44:49PM +0400, Max Filippov wrote:
+>
+>> >> +     unsigned long timeout = jiffies + msecs_to_jiffies(100);
+>> >> +     while (xtfpga_spi_read32(xspi, XTFPGA_SPI_BUSY)) {
+>> >> +             if (!time_before(jiffies, timeout))
+>> >> +                     return -EBUSY;
+>> >> +             else
+>> >> +                     cpu_relax();
+>> >> +     }
+>
+>> > So we'll busy wait for up to 100ms - that seems like an awfully long
+>> > time.  Perhaps fall back to msleep() if the delay is non-trivial (or
+>> > just reduce the timeout)?
+>
+>> The timeout is here for the unlikely case everything went wrong. Normally
+>> transfers get completed in about 10 useconds on 50 MHz hardware, it
+>> doesn't seem worth msleeping here. I put the timeout here just because
+>> otherwise infinite loop polling the device register looks scary.
+>
+> I appreciate that but even with 5MHz that's three orders of magnitude
+> longer busy waiting in the error case than the operation is expected to
+> take.  If you must wait for that long busy wait for a bit then start
+> sleeping.
 
---CGDBiGfvSTbxKZlW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ok, I'll fix that.
 
-On Wed, Mar 12, 2014 at 12:40:30AM +0000, Mark Brown wrote:
-> On Tue, Mar 11, 2014 at 07:25:45PM -0400, Matt Porter wrote:
-> > On Tue, Mar 11, 2014 at 10:45:17PM +0000, Lee Jones wrote:
->=20
-> > > Are there any inter-patch dependencies in the set? If so, we should
-> > > know about them so we can coordinate a sensible solution.
->=20
-> > Yes, the regulator driver (3/5) that Mark applied is dependent on this
-> > patch...the regulator driver includes include/linux/mfd/bcm590xx.h.
->=20
-> There's no actual dependency though - the regulator driver can only be
-> built if the MFD is enabled in Kconfig since it depends on it so until
-> the MFD is present in the tree it won't get built.
+>> >> +/* Unused: this device controls its only CS automatically,
+>> >> + * deactivating it after every 16 bit transfer completion.
+>> >> + */
+>
+>> > This is too limited to use with most SPI clients, they'll want to be
+>> > able to transmit more than one word (and the fact that only 16 bit words
+>> > are supported is also an issue, though that's easy enough to handle for
+>> > a bitbanging driver - I'd really strongly suggest supporting 8 bits per
+>> > word as well).  Clients are pretty much going to need to use GPIO based
+>> > chip select, you should make sure that's supported and covered in the
+>> > binding.
+>
+>> There's no hardware for that. This device is really dumb, it is specifically
+>> suited to control TLV320AIC23 which expects exactly 16 bit words, SPI
+>> mode 0.
+>
+> This driver is not actually compatible with the tlv320aic23 driver since
+> it needs 8 bit words, you need to at least support that.  You don't need
 
-Oh, right. Lee, no dependencies then.
+That's strange, because the codec datasheet says the following (section
+3.1.1):
 
--Matt
+A control word consists of 16 bits, starting with the MSB. The data bits are
+latched on the rising edge of SCLK. A rising edge on CS after the 16th rising
+clock edge latches the data word into the AIC (see Figure 3-1).
 
---CGDBiGfvSTbxKZlW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+And tlv320aic23 has the following regmap:
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+const struct regmap_config tlv320aic23_regmap = {
+        .reg_bits = 7,
+        .val_bits = 9,
 
-iQIcBAEBAgAGBQJTH7EMAAoJEOfTILNwq7R4e9sQAIXesbhSk/V4rmkcFBNd62ws
-G/FcWJ6uiMLzmluuoFpbczqIkMe/5EqQlQLs5VJWP7NNbI2YK+LyVOBR3sZDj5uf
-YaqtFDZlZhyhisz4jyfX413Fpuy7V9jEXdJiycf56eC1ulnSeX/HDWV1KS5bJg9L
-paAoe8htqWDKFr58vMiA7gpEiJxdUV/zT9ZoSKhkpohiXTrcugPCOa7XPLs0lHG0
-+VnZ/8Nsf+iUiKnKXZXhh6lc8+GovvG0LAotxeMrVIKgnNTpwyID1PbA6qXIAEd6
-vc5J4vsTA3VvANubjq56FXqtncUEEU5cq7jQUMlF0gEQJF2cZcTYVnYb0Gw2/g73
-MzWMkMleXcCAFjG9BoY7w1/QK2YfIpOmfhsYvP0YHX/N9gd3Z7Ex3EUG4JGjDixV
-jyEBgBkY9AwXCq/r3py7xOKpXAQDHNqrfO4GACO614rjsnp5QFIvMlifEyko/4JL
-xguH3ZtQtky6WXSb3E9NmrkZFMxfT/mq57TH8Y61ETrDIhOvfay4AAR5CxeNp+u6
-hlesUi1NZDCZmxVvRdR77fBNRWupgkpU1Z040oA0mbcShAlVmcx1fHJeLx48erWO
-Vr4AZXpCVGYeOLQhxZpQ09FDrpRGnpIybqYMDtEWW4u0gyWk1Ue0QHg+Ajy+9/PA
-6iXZWkG0JA7ftanyq+op
-=ouhT
------END PGP SIGNATURE-----
+and its SPI interface accordingly does the following in .probe:
 
---CGDBiGfvSTbxKZlW--
+        spi->bits_per_word = 16
+        spi->mode = SPI_MODE_0;
+        ret = spi_setup(spi);
+
+> hardware in the controller to support a GPIO chip select, the whole
+> point is that the controller chip select isn't wired up and a GPIO is
+> used instead.
+
+Actually it's not GPIO. The controller asserts CS line once we set the
+start bit while the busy bit is cleared and deasserts it after 16 SCK
+pulses.
+
+>> >> +static void xtfpga_spi_chipselect(struct spi_device *spi, int is_on)
+>> >> +{
+>> >> +}
+>
+>> > Omit this since it's empty.
+>
+>> The bitbang side doesn't like when this callback is NULL and returns
+>> -EINVAL from spi_bitbang_start.
+>
+> So fix that, but really it's trying to tell you that the hardware is far
+> too limited to work with many things.
+
+Ok. It's not designed to work with many things. Should I just move this
+driver to the rest of the platform code under arch/xtensa/platform/xtfpga?
+
+-- 
+Thanks.
+-- Max
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
