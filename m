@@ -1,15 +1,16 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] irqchip: sun4i: Fix irq 0 not working
-Date: Wed, 12 Mar 2014 11:09:35 +0100
-Message-ID: <20140312100935.GY2815@lukather>
-References: <1394553060-30298-1-git-send-email-hdegoede@redhat.com>
+Subject: Re: [PATCH] irqchip: sun4i: Fix acomment about mask
+ register initialization
+Date: Wed, 12 Mar 2014 11:10:10 +0100
+Message-ID: <20140312101010.GZ2815@lukather>
+References: <1394553273-30473-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Ioq9Y4M6AeSMCjnH"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB7PEQCMQKGQELGL26ZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="pWT/WNRdoJORH3Bm"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBKPHQCMQKGQEWTEOUBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1394553060-30298-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1394553273-30473-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi>
@@ -21,97 +22,45 @@ Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-ke
 List-Id: devicetree@vger.kernel.org
 
 
---Ioq9Y4M6AeSMCjnH
+--pWT/WNRdoJORH3Bm
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Tue, Mar 11, 2014 at 04:51:00PM +0100, Hans de Goede wrote:
-> SUN4I_IRQ_VECTOR_REG containing 0 can mean one of 2 things:
-> 1) irq 0 pending
-> 2) no more irqs pending
->=20
-> So we must loop always atleast once to make irq 0 work, otherwise irq 0
-> will never get serviced and we end up with a hard hang because
-> sun4i_handle_irq gets re-entered constantly.
+On Tue, Mar 11, 2014 at 04:54:33PM +0100, Hans de Goede wrote:
+> The comment was claiming that we were masking all irqs, while the code ac=
+tually
+> *un*masks all of them.
 >=20
 > Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/irqchip/irq-sun4i.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/irqchip/irq-sun4i.c b/drivers/irqchip/irq-sun4i.c
-> index a5438d8..3761bf1 100644
-> --- a/drivers/irqchip/irq-sun4i.c
-> +++ b/drivers/irqchip/irq-sun4i.c
-> @@ -140,10 +140,16 @@ static asmlinkage void __exception_irq_entry sun4i_=
-handle_irq(struct pt_regs *re
->  {
->  	u32 irq, hwirq;
-> =20
-> +	/*
-> +	 * hwirq =3D=3D 0 can mean one of 2 things:
-> +	 * 1) irq 0 pending
-> +	 * 2) no more irqs pending
 
-3) spurious interrupt.
-
-> +	 * So loop always atleast once to make irq 0 work.
-> +	 */
->  	hwirq =3D readl(sun4i_irq_base + SUN4I_IRQ_VECTOR_REG) >> 2;
-> -	while (hwirq !=3D 0) {
-> +	do {
-
-I'd at least lookup in the pending register to see if the interrupt 0
-was actually triggered. Otherwise, you could end up with spurious
-handler calls on the interrupt 0.
-
->  		irq =3D irq_find_mapping(sun4i_irq_domain, hwirq);
->  		handle_IRQ(irq, regs);
->  		hwirq =3D readl(sun4i_irq_base + SUN4I_IRQ_VECTOR_REG) >> 2;
-
-And you end up with the same issue if there's a first !=3D 0 interrupt,
-and then the interrupt 0.
-
-What about something like:
-
-while (1) {
-	hwirq =3D readl(sun4i_irq_base + SUN4I_IRQ_VECTOR_REG) >> 2;
-	if (!hwirq)
-		if (!(readl(sun4i_irq_base + SUN4I_IRQ_PENDING_REG(0)) & BIT(0)))
-			break;
-
-	irq =3D irq_find_mapping(sun4i_irq_domain, hwirq);
-	handle_IRQ(irq, regs);
-}
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
 --=20
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
 
---Ioq9Y4M6AeSMCjnH
+--pWT/WNRdoJORH3Bm
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.14 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTIDJfAAoJEBx+YmzsjxAgon0P/3+ttT/S68xtGVRLLeePAFPW
-Mi4Olug2xNATm7xdi+XIgtjhZAMmHPQrjMmqK9x+NROmdWxi8jT/n1cDBw91yZmR
-fYVHlkreX48OZDDambQxfsapyvM8Framd8orLHMdVIPLIYamQgy/MDYAUMdsX2DL
-OAiSCBV/GTRskSQf7KROICHaiDYUxdd7OQSCPluzUTtmxvJMLXcxDrJ/qHz6+Q63
-Y5f4medmdZTycS194gvw0dD1pABiLZShAm7FpY8d0488XKBLe9THsbwJq4NTFKIT
-tx9VtI2942+c7ubdbX0x4LE1N/RdIUHOSxwbk6K4Z2I1XrxmKl6cItxC1GvGg5io
-j8gFwU/3e6MS1zjGnJT6MBYqRz9L65oYT4rx9dirQKHpyoG6xDqwfojTBTjzMkLc
-q8pzmfBLn7uovODS3aQRg+vzhXZYkIeF+rllK2SXqCBJDUgGaaft70HOwVGfM2Vx
-60ltN3zbRgPx/qCXuf9zVylVU1PlZiPCNPUlyL27ygYP+ZLCfsFXp12wtk9SCsoR
-uDcXua2ZKZnA/j3n7dgdyinsOWo2ybW0S1YtLCnJDCSuss3zSCBC3J9TA7iHuWxp
-RjxkXDxu9GXgcXfthq/B1+7ohFHXC5gKQHJDbl1QwjAvuc6tUNNpFayq4mQj0FI/
-rwLi7yGxOYitch7IO+FF
-=KX9J
+iQIcBAEBAgAGBQJTIDKCAAoJEBx+YmzsjxAgjsQP/iyWBiAdAzIbcaWvjDMnqiTO
+JSYDx3ANyIUt/J9EyfFTcaOjshda6Y6dFqrs+cHn4um2h9+ND+C2O23iurGy8BmF
+zRk8v3o1uUz60+vIVIwLd8Ufcsb6fS/dEEculucE79+LhkkkrE0dl5ZsYkNdmBeA
+Dbqv8nIu2r9N3YOgWeNIpKu+yyfIa8uxvmfTPHrK0inyJlT1qoZFPPR3+qi1FP3C
+iwvLqit7imtKYW2hjTg8bWV49GlNcOUouSpwX7rdVwzLeBvq9PTGsVVHp44F8TVL
+V6lC8VGVt1saR2LvRL+X/Rp90SdH0I4JCAW2iG2hE7P0PQRtApq757wQuJATC/Q+
+g8BX/rIuuHTGty7PhSokfiOvjd0luBszC6j+IujipNPmI154zxfI0j5OkTYbre0a
+tu8lsHZmUY9e8px3NZ3Gw8zvbvotFHXnsA75wk2IGEaQdu/+cWNsecKZRnBJQcSk
+d3pZsx3ahQaLZuB7OYzyniJ/RcWKU1iSPz/QSB52P9fe1zchEvHWtF58yzk9tNOx
+OeSwEl1uM4jsYC+7v/1L5+v/TWuiM5g1UAqTI5iU37A9FhJvB3Aoo26PyLtGQT8D
+zKYNzLmeV1YYnRAQUs2Qp5UxJROCfrEjDLb3HhPmYr05l8VkoH9dMSRQliYKIpWW
+RJSTPhn6AuGSND7i6xT4
+=daao
 -----END PGP SIGNATURE-----
 
---Ioq9Y4M6AeSMCjnH--
+--pWT/WNRdoJORH3Bm--
