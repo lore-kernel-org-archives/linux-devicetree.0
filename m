@@ -1,105 +1,65 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 0/9] Doc/DT: DT bindings for various display components
-Date: Wed, 12 Mar 2014 10:15:47 +0200
-Message-ID: <532017B3.708@ti.com>
-References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH v4 2/4] arm64: dts: APM X-Gene PCIe device tree nodes
+Date: Wed, 12 Mar 2014 17:31:25 +0900
+Message-ID: <000001cf3dcd$751a4680$5f4ed380$%han@samsung.com>
+References: <1394085963-27553-1-git-send-email-tinamdar@apm.com>
+ <1394085963-27553-3-git-send-email-tinamdar@apm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="OEAguIGrXX9Obe3Bm29X5OlauX1ooMdFD"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393590016-9361-1-git-send-email-tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-reply-to: <1394085963-27553-3-git-send-email-tinamdar@apm.com>
+Content-language: ko
+Sender: linux-pci-owner@vger.kernel.org
+To: 'Tanmay Inamdar' <tinamdar@apm.com>
+Cc: 'Bjorn Helgaas' <bhelgaas@google.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Grant Likely' <grant.likely@linaro.org>, 'Rob Herring' <robh+dt@kernel.org>, 'Catalin Marinas' <catalin.marinas@arm.com>, 'Rob Landley' <rob@landley.net>, 'Liviu Dudau' <liviu.dudau@arm.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches@apm.com, jcm@redhat.com, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---OEAguIGrXX9Obe3Bm29X5OlauX1ooMdFD
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Thursday, March 06, 2014 3:06 PM, Tanmay Inamdar wrote:
+> 
+> This patch adds the device tree nodes for APM X-Gene PCIe controller and
+> PCIe clock interface. Since X-Gene SOC supports maximum 5 ports, 5 dts
+> nodes are added.
+> 
+> Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
+> ---
+>  arch/arm64/boot/dts/apm-mustang.dts |    8 ++
+>  arch/arm64/boot/dts/apm-storm.dtsi  |  155 +++++++++++++++++++++++++++++++++++
+>  2 files changed, 163 insertions(+)
 
-Hi Grant,
+[.....]
 
-On 28/02/14 14:20, Tomi Valkeinen wrote:
-> Hi,
->=20
-> This series is a re-send of
-> http://article.gmane.org/gmane.linux.drivers.devicetree/61739
->=20
-> I'm cc'ing more people, and I want to clarify the contents of the serie=
-s:
->=20
-> While this has been developed for OMAP, only the first patch is about O=
-MAP
-> bindings. The rest are generic bindings for video components, which can=
- be used
-> on any platform.
->=20
-> The bindings use the V4L2 style video port/endpoint system, described i=
-n
-> Documentation/devicetree/bindings/media/video-interfaces.txt, to connec=
-t the
-> components. The same port/endpoint bindings are used by Philipp Zabel i=
-n his
-> imx-drm patch series.
+> --- a/arch/arm64/boot/dts/apm-storm.dtsi
+> +++ b/arch/arm64/boot/dts/apm-storm.dtsi
 
-This series is a piece of bigger series, which brings DT support for
-OMAP display subsystem. This uses the same V4L2 style ports/endpoints as
-has been discussed recently regarding the series from Philipp. It
-doesn't use the helper code from Philipp, but a custom one as Philipp's
-code didn't exist when I made this, and also because I needed extra
-functionality not present in Philipp's series (which aimed to just move
-the current V4L2 code to a common place).
+[.....]
 
-The main concerns with the ports/endpoints has been the optional 'port'
-node for the case where we have a single endpoint, and the
-double-linking of the endpoints.
+> +
+> +		pcie0: pcie@1f2b0000 {
+> +			status = "disabled";
+> +			device_type = "pci";
+> +			compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
+> +			#interrupt-cells = <1>;
+> +			#size-cells = <2>;
+> +			#address-cells = <3>;
+> +			reg = < 0x00 0x1f2b0000 0x0 0x00010000   /* Controller registers */
+> +				0xe0 0xd0000000 0x0 0x00200000>; /* PCI config space */
+> +			reg-names = "csr", "cfg";
+> +			ranges = <0x01000000 0x00 0x00000000 0xe0 0x00000000 0x00 0x00010000   /* io */
+> +				  0x02000000 0x00 0x10000000 0xe0 0x10000000 0x00 0x80000000>; /* mem */
+                                                                          ^^^
 
-If I remove the optional 'port' usage from my series, are you ok with me
-proceeding with this series for 3.15, with the double-linked endpoints?
+I have a question about the fourth number '0xe0' of 'ranges' property.
+Would you let me know what the '0xe0' means?
 
-As far as I see, when we come to a conclusion how the linking should be
-made, it's trivial to change the bindings in this series to match it,
-even without needing any compatibility code. I just need to remove the
-other link, and old dts files having double-linking will still work fine.=
+Best regards,
+Jingoo Han
 
-
-The reason I want to push this forward asap is that omap4 and omap5 are
-already DT only, and for omap5 we don't have working display without DT
-support for display. For omap4, we have a really hacky way to add
-display support for a few boards, but that is causing major headaches
-and I want to get rid of it.
-
- Tomi
-
-
-
---OEAguIGrXX9Obe3Bm29X5OlauX1ooMdFD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJTIBezAAoJEPo9qoy8lh71IwoP/0pXrIE6ddjkDeFNaZ5f9Geg
-bBppfIrr3q+N66512wIIJ1dcxGeRa3EdUxE0siD45mvkTu7Z4MeS4xgUOCSi3sN9
-vEFi4KpkQipWfphvzVwDboxZ3cg5zmSv1w+W2GCih6dRu8WJgSDCv3AhterqSrmv
-RXA5P4cI998J2RmKOPLvW9qEysh6AVkQx751ENB9R64+/o7XdgR89uQ7aa6/+lQh
-8e4dtpZBKkbjNkWoL1D3+HNWKeWQ/kWH6rsUieoUuUK0zp9rxRt+LSx8DvSf1gCk
-4pZTj9iGz0FAQlHy8DlUwcvYi1uyat00tmp9dV8V+UJYG0jnL3Fu2YQ9p9sZ1kHn
-zVyi+eTfzzQJMsSp/ke3RNUN3i/S9P76Gc+YsQ59hXZkw9W+Ytl5gapSHGtnLlh5
-GRWrtevZ5pRxp1lr7s8lGWpukQkZnnuM2YNFetJQWfY+5NKRp4vMT9xttn8yVah+
-ChqwNudHo7gxZYJ5gThn3crs/XkOKK4PdhoNtGiYyxSo5LOAzpd5IAP76RH7zSBY
-UEPYLt4PoMHCtJjAkhLyyjLVWIii6pG0X0BxuFdh0jMh8uEJwONicCUGbZ3Fy5qv
-w2opFqZRyoyTq0ONZrU9x6YMsO94oT+1R9pvoFOChIni3iyGyjOSmJDcYqYCT5Vd
-vczZ0oUFXewnJlRDOOrg
-=R9er
------END PGP SIGNATURE-----
-
---OEAguIGrXX9Obe3Bm29X5OlauX1ooMdFD--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +			dma-ranges = <0x42000000 0x40 0x00000000 0x40 0x00000000 0x40 0x00000000>;
+> +			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+> +			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xc2 0x1
+> +					 0x0 0x0 0x0 0x2 &gic 0x0 0xc3 0x1
+> +					 0x0 0x0 0x0 0x3 &gic 0x0 0xc4 0x1
+> +					 0x0 0x0 0x0 0x4 &gic 0x0 0xc5 0x1>;
+> +			clocks = <&pcie0clk 0>;
+> +		};
