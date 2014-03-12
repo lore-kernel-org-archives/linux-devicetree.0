@@ -1,92 +1,141 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v5] can: xilinx CAN controller support.
-Date: Wed, 12 Mar 2014 11:01:44 +0100
-Message-ID: <53203088.2070605@monstr.eu>
-References: <5254bfec-c6fd-4681-a34d-706d51e60fbb@VA3EHSMHS004.ehs.local> <531DD2C4.5060109@pengutronix.de> <f1e2f08f-05fc-40d3-8437-4c6817d631cb@AM1EHSMHS010.ehs.local> <531F0636.4050608@pengutronix.de>
-Reply-To: monstr@monstr.eu
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [RFC PATCH v2 00/21] Add DSI display support for Exynos based
+	boards
+Date: Wed, 12 Mar 2014 19:08:51 +0900
+Message-ID: <CAAQKjZN3PoXoEFRXzHA+vrMCLfTRYJ9g3rFjzodNRNh62hPuDw@mail.gmail.com>
+References: <1392204688-4591-1-git-send-email-a.hajda@samsung.com>
+	<CAAQKjZOEAWG3jwTPOP7aBnpjyg8qLfq-Fcv_Mec2+fgmOULqEg@mail.gmail.com>
+	<531998B5.7040002@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="ldFvFjGoGEJrjV5t1gFhQXOG5BcuKQW8j"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <531F0636.4050608@pengutronix.de>
-Sender: linux-can-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Michal Simek <michals@xilinx.com>, "wg@grandegger.com" <wg@grandegger.com>, "fengguang.wu@intel.com" <fengguang.wu@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <531998B5.7040002@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces@lists.freedesktop.org
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, DRI mailing list <dri-devel@lists.freedesktop.org>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---ldFvFjGoGEJrjV5t1gFhQXOG5BcuKQW8j
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-On 03/11/2014 01:48 PM, Marc Kleine-Budde wrote:
-> On 03/11/2014 01:34 PM, Appana Durga Kedareswara Rao wrote:
->=20
->>>> diff --git a/drivers/net/can/Kconfig b/drivers/net/can/Kconfig index=
-
->>>> 9e7d95d..b180239 100644
->>>> --- a/drivers/net/can/Kconfig
->>>> +++ b/drivers/net/can/Kconfig
->>>> @@ -125,6 +125,13 @@ config CAN_GRCAN
->>>>       endian syntheses of the cores would need some modifications on=
-
->>>>       the hardware level to work.
->>>>
->>>> +config CAN_XILINXCAN
->>>> +   tristate "Xilinx CAN"
->>>> +   depends on ARCH_ZYNQ || MICROBLAZE
+2014-03-07 19:00 GMT+09:00 Andrzej Hajda <a.hajda@samsung.com>:
+> On 03/05/2014 03:56 AM, Inki Dae wrote:
+>> Hi Andrzej,
+>>
+>> Thanks for your contributions.
+>>
+>> 2014-02-12 20:31 GMT+09:00 Andrzej Hajda <a.hajda@samsung.com>:
+>>> Hi,
 >>>
->>> Is Zynq multiarch already?
->> Discussions are going on this
->> So the final thing that Fengguang ( fengguang.wu@intel.com)
->> Proposed is
->>         config CAN_XILINX
->>         tristate "Xilinx CAN"
->>         depends on ARCH_ZYNQ || MICROBLAZE || COMPILE_TEST
->>         depends on COMMON_CLK && HAS_MMIO  # whatever you need for oth=
-er architectures
->=20
->> Are you Ok for this?
->=20
-> You have to fill the 2nd depends on with some sane values, though.
+>>> This patchset adds drivers and bindings to the following devices:
+>>> - Exynos DSI master,
+>>> - S6E8AA0 DSI panel,
+>>> - TC358764 DSI/LVDS bridge,
+>>> - HV070WSA-100 LVDS panel.
+>>>
+>>> It adds also display support in DTS files for the following boards:
+>>> - Exynos4210/Trats,
+>>> - Exynos4412/Trats2,
+>>> - Exynos5250/Arndale.
+>>>
+>>> Things worth mentioning:
+>>>
+>>> 1. I have implemented DSI/LVDS bridge using drm_panel framework, ie.
+>>> the driver exposes drm_panel interface on DSI side, and interact with
+>>> panels on LVDS side using drm_panel framework. This approach seems to
+>>> me simpler and more natural than using drm_bridge.
+>> Can you give me more details about why you think better to use panel
+>> framework than using drm_bridge?  "Simpler" and "more natural" are
+>> ambiguous to me.
+> In this particular case DSI master expects on the other end
+> any device having DSI slave interface, it could be panel or bridge.
+> So it seems natural that both types of slave devices should expose
+> the same interface also  on programming level.
+> Another problem with drm_bridge is that it is not scalable -
+> if some manufacturer will decide to add another block between the bridge
+> and the panel there is no drm component which can be used for it.
+> Using drm_panel the way I have used in toshiba bridge makes scalability
+> possible,
+> it will be only a matter of adding a driver for new block and making
+> proper links in device tree, I see no easy way of doing it with
+> drm_bridge approach.
 
-This should be that one
-config CAN_XILINX
-         tristate "Xilinx CAN"
-         depends on ARCH_ZYNQ || MICROBLAZE || COMPILE_TEST
-         depends on COMMON_CLK && HAS_IOMEM
+Now drm_bridge may not cover all hardware. However drm_bridge has
+already been merged to mainline so I think we need to use drm_bridge
+somehow instead of using other one, and also we could extend
+drm_bridge if needed. It would be definitely impossible for a new
+framework to cover all hardware because there may be other hardware
+not appeared yet. That is what we are doing for mainline until now.
 
+>
+>
+>>
+>> Using same drm_panel framework for LDVS bridge and real panel drivers
+>> isn't reasonable to me as now because drm_panel framework would be for
+>> real panel device even if the use of drm_panel framework looks like
+>> suitable to LVDS bridge driver. I thought Sean's way, ptn3460 driver
+>> using drm_bride stuff, is good enough, and that would be why
+>> drm_bridge exists and why drm_encoder has drm_bridge.
+>>
+>> And I'm finding more generic way, how to handle LVDS bridge using
+>> super node so that  LVDS bridge driver isn't embedded to connector
+>> drivers such as eDP and MIPI-DSI, and dt binding of LVDS bridge can be
+>> done at top level of Exynos drm. Once the binding is done, encoder of
+>> display bus driver will have drm_bridge object of LVDS bridge driver
+>> so that display bus driver can handle LVDS bridge driver.
+> Could you explain what you mean by "dt binding of LVDS bridge can be
+> done at top level of Exynos drm" ? How it will look like if there
+> will be more bridges, one for DSI, one for HDMI, etc... What if there
+> will be two
+> bridges in one chain. How it will cope with video pipeline bindings?
 
-Is there any driver which is in CAN which not use MMIO accesses?
-If not, maybe we should just add dependency to
+it was just my idea so I have no implementation about it yet.
+
+My idea is that crtc and encoder are binded at top level of Exynos drm
+as is. And for bridge support, the only difference is, in case that
+encoder driver has bridge, the dt binding of the encoder driver is
+done once last one between encoder and bridge driver is binded. It
+would mean that bridge driver can use driver model and it doesn't need
+to concern about probe order issue.
+
+For this, encoder driver with bridge, MIPI-DSI or eDP, would need to
+use component interfaces specific to Exynos drm. As a result, once the
+dt bindings of crtc and encoder are completed at top level, encoder
+driver has its own drm_bridge for bridge, and dt binding you proposed
+could be used without any change, and drm_panel could also be used
+only for real lcd panel driver.
+
+And below is a block diagram I think,
+
+                                  DRM KMS
+                   /                      |                 \
+              /                           |                      \
+         crtc                      encoder              connector
+           |                           /     \                          |
+           |                       /             \                      |
+           |                      |           drm_bridge   drm_panel
+           |                      |                   |                 |
+           |                      |                   |                 |
+        FIMD         MIPI-DSI    LVDS bridge    Panel
+
 
 Thanks,
-Michal
+Inki Dae
 
-
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---ldFvFjGoGEJrjV5t1gFhQXOG5BcuKQW8j
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlMgMIgACgkQykllyylKDCEE2QCgjus6aeMcpmM2WD1fQEEEd1/g
-IWMAn2/4zK08QsMZT8fws8gj4gUZQCdM
-=Mwlw
------END PGP SIGNATURE-----
-
---ldFvFjGoGEJrjV5t1gFhQXOG5BcuKQW8j--
+>>
+>> Will review your patch series soon.
+> Thanks in advance.
+>
+> Regards
+> Andrzej
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
