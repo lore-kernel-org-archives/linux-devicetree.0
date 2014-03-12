@@ -1,62 +1,41 @@
-From: Maxime COQUELIN <maxime.coquelin@st.com>
-Subject: [PATCH v4 0/6] Add STiH407 SoC and reference board support
-Date: Wed, 12 Mar 2014 09:50:04 +0100
-Message-ID: <1394614210-15698-1-git-send-email-maxime.coquelin@st.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, Linus Walleij <linus.walleij@linaro.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Maxime Coquelin <maxime.coquelin@st.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
-Cc: lee.jones@linaro.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 2/5] mfd: add bcm590xx pmu driver
+Date: Wed, 12 Mar 2014 09:35:24 +0000
+Message-ID: <20140312093524.GC5672@lee--X1>
+References: <1394552775-31264-1-git-send-email-mporter@linaro.org>
+ <1394552775-31264-3-git-send-email-mporter@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1394552775-31264-3-git-send-email-mporter@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matt Porter <mporter@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Christian Daudt <bcm@fixthebug.org>, Devicetree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This series adds basic support to the STMicroelectronics STiH407 SoC and its
-B2120 reference board. The STiH407 is a dual-core ARM Cortex-A9 CPU aimed at
-STB market.
+> Add a driver for the BCM590xx PMU multi-function devices. The driver
+> initially supports regmap initialization and instantiation of the
+> voltage regulator device function of the PMU.
+>=20
+> Signed-off-by: Matt Porter <mporter@linaro.org>
+> Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
+> Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
+> ---
+>  drivers/mfd/Kconfig          |  8 ++++
+>  drivers/mfd/Makefile         |  1 +
+>  drivers/mfd/bcm590xx.c       | 93 ++++++++++++++++++++++++++++++++++=
+++++++++++
+>  include/linux/mfd/bcm590xx.h | 31 +++++++++++++++
+>  4 files changed, 133 insertions(+)
+>  create mode 100644 drivers/mfd/bcm590xx.c
+>  create mode 100644 include/linux/mfd/bcm590xx.h
 
-Changes since v3:
------------------
-	- Removed SOC_STIH407 as unused for now
-	- Cosmetic changes in DT
-	- Added new lines in pinctrl-st around if:s
-	- Use ARRAY_SIZE instead of raw values
+Applied, thanks.
 
-Changes since v2:
------------------
-    - Reordered the pinctrl patches
-    - Moved stih407_flashdata to stih407 pinctrl patch
-
-Changes since v1:
------------------
-	- Changed patch 2 commit title
-	- Rebased pinctrl patches to linux-pinctrl/devel
-	- Rebased ARM patches to arm_soc/for-next
-
-Giuseppe Cavallaro (2):
-  pinctrl: st: Enhance the controller to manage unavailable registers
-  pinctrl: st: add pinctrl support for the STiH407 SoC
-
-Maxime Coquelin (4):
-  ARM: STi: Add STiH407 SoC support
-  pinctrl: st: Use ARRAY_SIZE instead of raw value for number of delays
-  ARM: dts: Add STiH407 SoC support
-  ARM: dts: STiH407: Add B2120 board support
-
- Documentation/arm/sti/stih407-overview.txt    |  18 +
- Documentation/devicetree/bindings/arm/sti.txt |  15 +
- arch/arm/boot/dts/Makefile                    |   3 +-
- arch/arm/boot/dts/stih407-b2120.dts           |  78 ++++
- arch/arm/boot/dts/stih407-clock.dtsi          |  40 ++
- arch/arm/boot/dts/stih407-pinctrl.dtsi        | 615 ++++++++++++++++++++++++++
- arch/arm/boot/dts/stih407.dtsi                | 263 +++++++++++
- arch/arm/mach-sti/board-dt.c                  |   1 +
- drivers/pinctrl/pinctrl-st.c                  | 125 ++++--
- 9 files changed, 1112 insertions(+), 46 deletions(-)
- create mode 100644 Documentation/arm/sti/stih407-overview.txt
- create mode 100644 Documentation/devicetree/bindings/arm/sti.txt
- create mode 100644 arch/arm/boot/dts/stih407-b2120.dts
- create mode 100644 arch/arm/boot/dts/stih407-clock.dtsi
- create mode 100644 arch/arm/boot/dts/stih407-pinctrl.dtsi
- create mode 100644 arch/arm/boot/dts/stih407.dtsi
-
--- 
-1.9.0
-
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
