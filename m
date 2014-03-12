@@ -1,111 +1,93 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [RFC PATCH] edac: zynq: Added EDAC support for zynq ddr ecc controller
-Date: Wed, 12 Mar 2014 17:50:15 +0100
-Message-ID: <345f2b89-660c-4eac-bee2-ea8debdc5fbc@CH1EHSMHS031.ehs.local>
-References: <4adb2b4b-2ad6-42b9-929e-cc062f817245@TX2EHSMHS021.ehs.local> <20140310105655.GH14999@e106331-lin.cambridge.arm.com> <531DA900.5060202@monstr.eu> <fa35006e-055d-4ef2-9b65-a0f8cc6a0c8f@AM1EHSMHS016.ehs.local> <531ECA33.8050803@monstr.eu> <20140311155057.GJ13293@xsjandreislx> <c7840b9d-4c03-4680-9a0e-fb256f3743b4@AM1EHSMHS010.ehs.local> <20140312161344.GA3000@xsjandreislx>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] arm: boot: dts: build keystone devicetree blob
+Date: Wed, 12 Mar 2014 11:53:58 -0500
+Message-ID: <20140312165358.GE919@saruman.home>
+References: <1394639330-1288-1-git-send-email-balbi@ti.com>
+ <53208CDD.7030106@ti.com>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140312161344.GA3000@xsjandreislx>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>
-Cc: Michal Simek <michal.simek@xilinx.com>, Michal Simek <monstr@monstr.eu>, Mark Rutland <mark.rutland@arm.com>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, "dougthompson@xmission.com" <dougthompson@xmission.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "kpc528@gmail.com" <kpc528@gmail.com>, "kalluripunnaiahchoudary@gmail.com" <kalluripunnaiahchoudary>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="tMbDGjvJuJijemkf"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <53208CDD.7030106-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM Kernel Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/12/2014 05:13 PM, S=C3=B6ren Brinkmann wrote:
-> On Wed, 2014-03-12 at 11:27AM +0100, Michal Simek wrote:
->> On 03/11/2014 04:50 PM, S=C3=B6ren Brinkmann wrote:
->>> On Tue, 2014-03-11 at 09:32AM +0100, Michal Simek wrote:
->>>> On 03/10/2014 11:32 PM, S=C3=B6ren Brinkmann wrote:
->>>>> On Mon, 2014-03-10 at 12:58PM +0100, Michal Simek wrote:
->>>>>> On 03/10/2014 11:56 AM, Mark Rutland wrote:
->>>>>>> On Sun, Mar 09, 2014 at 02:57:16AM +0000, Punnaiah Choudary Kal=
-luri wrote:
->>>>>>>> Added EDAC support for reporting the ecc errors of zynq ddr co=
-ntroller.
->>>>>>>> The ddr ecc controller corrects single bit errors and detects =
-double bit
->>>>>>>> errors
->>>>>>>>
->>>>>>>> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
->>>>>>>> ---
->>>>>>>>  .../devicetree/bindings/edac/zynq_edac.txt         |   18 +
->>>>>>>>  drivers/edac/Kconfig                               |    7 +
->>>>>>>>  drivers/edac/Makefile                              |    1 +
->>>>>>>>  drivers/edac/zynq_edac.c                           |  613 +++=
-+++++++++++++++++
->>>>>>>>  4 files changed, 639 insertions(+), 0 deletions(-)
->>>>>>>>  create mode 100644 Documentation/devicetree/bindings/edac/zyn=
-q_edac.txt
->>>>>>>>  create mode 100644 drivers/edac/zynq_edac.c
->>>>>>>>
->>>>>>>> diff --git a/Documentation/devicetree/bindings/edac/zynq_edac.=
-txt b/Documentation/devicetree/bindings/edac/zynq_edac.txt
->>>>>>>> new file mode 100644
->>>>>>>> index 0000000..c21ff83
->>>>>>>> --- /dev/null
->>>>>>>> +++ b/Documentation/devicetree/bindings/edac/zynq_edac.txt
->>>>>>>> @@ -0,0 +1,18 @@
->>>>>>>> +Zynq EDAC driver, it does reports the DDR ECC single bit erro=
-rs that are
->>>>>>>> +corrected and double bit ecc errors that are detected by the =
-DDR ECC controller.
->>>>>>>> +ECC support for DDR is available in half-bus width(16 bit) co=
-nfiguration only.
->>>>>>>> +
->>>>>>>> +Required properties:
->>>>>>>> +- compatible: Should be "xlnx,ps7-ddrc" or "xlnx,ps7-ddrc-1.0=
-0.a"
->>>>>>>
->>>>>>> Is this an or or a xor?
->>>>>>
->>>>>> Compatible string should be just xlnx,zynq-ddrc-1.00.a.
->>>>>> Nothing with ps7.
->>>>>
->>>>> Isn't this vendor IP? IMHO, this should be something completely
->>>>> different. Or if you want some Zynq-specific compat string it sho=
-uld
->>>>> refer to an actual version string associated with Zynq. 1.00.a is=
- not,
->>>>> AFAIK.
->>>>
->>>> I have checked with Punnaiah that this is Synopsys DDR memory cont=
-roller.
->>>> Zynq is based on 1.4 version with some customization.
->>>> It means I think reasonable solution is
->>>> call it drivers/edac/synopsys_edac.c
->>>> rename zynq_ in driver to synopsys_ and
->>>> use xlnx,zynq-ddrc-1.00.a compatible string because zynq is not us=
-ing
->>>> clean synopsys version.
->>>>
->>>> I am not getting point why you don't like 1.00.a suffix here.
->>>> Because of historical point of view compatible strings should be d=
-ifferent
->>>> for early silicon, silicon v1, silicon v2, silicon v3, etc
->>>> but we haven't used it at all that's why we can use xilinx scheme
->>>> which we are using for our soft IPs.
->>>
->>> Well, but you refer to Zynq which has silicon revisions you can use=
- to
->>> refer to a specific Zynq version. That matches data sheets. Zynq-1.=
-00.a
->>> is just completely made up and wouldn't be found in any data sheet.
->>
->> I didn't reply this one but we discussed this with Soren over phone.
->> No problem to use Synopsys version A07 according TRM.
->>
->> Then compatible string is
->> xlnx,zynq-ddrc-A07 and file name is synopsys_edac.c
+--tMbDGjvJuJijemkf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Mar 13, 2014 at 12:35:41AM +0800, Santosh Shilimkar wrote:
+> On Wednesday 12 March 2014 11:48 PM, Felipe Balbi wrote:
+> > Currently, even when building keystone only
+> > kernel builds, DTB won't get build because
+> > we lack a Makefile rule to get it compiled.
+> >=20
+> > This patch adds that rule so mainline kernel
+> > users have a chance to use up-to-date DTB on
+> > keystone 2 platforms.
+> >=20
+> > Signed-off-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> > ---
+> >
+> We have been building dtbs with explicit command
+> instead of dtbs since it was just one dtb so far
+> supported. Was planning to add the rule once more
+> boards get added. Now with Lamarr and Edision in
+> for next merge window, will do that post 3.15-rc1.
 >=20
-> This seems to make sense. I'm never sure whether leading zeros are
-> actually needed and tend to remove them, but in general this looks li=
-ke
-> a reasonable string to identify Zynq's DDR controller.
+> > note that I just tried this on top of linux-next
+> > (commit 69d5cdda16b3c9767b82d80b07edb9bb056448e3)
+> > and, even though dtb builds fine, I still couldn't
+> > get keystone_defconfig uImage to boot fine.
+> >=20
+> > It's probably my LOADADDR which is wrong.
+> >=20
+> > Santosh, what's the LOADADDR I should be using
+> > for keystone boots ?
+> >
+> LOADADDR is same 0x80008000. You might have missed
 
-A07 I found in Zynq TRM and probably has any conection to synopsys vers=
-ion scheme.
+tried that, didn't help.
 
-Thanks,
-Michal
+> to configure the environment u-boot variable to
+> disable higher address space switch.
+> 'setenv mem_lpae 0'. Also ensure to update
+
+hmm, that might do it. Will try after upgrading u-boot to latest
+release.
+
+--=20
+balbi
+
+--tMbDGjvJuJijemkf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTIJEmAAoJEIaOsuA1yqREFm8QAIgZEiDRPtHAgLAQqzKSZTIN
+08Gk7vUM5yUoR6M69tpHFZsh8QI9YRDOKbsCfBLkv/3HpW5hGRNHafP1ja5F2Yd1
+pvH/crhMMyaEB0+IAk+8Mkj3M+4PjdKRb/gGFBZf+kqKh1rmKgPVYxVle2ZReTAD
+QRm8+NydWwscjGMFgGNv69nF0bS1tLBTJvxFtPMrqb63RzNyWs5VyyERAkoFURLg
+9mMPWwleKylRnV3X5i8iXyFvcnte6jk0zADJtSsOyreFvpYqxYuEvy1XokIoF3dR
+J3AeNaR8fC6l9FGTS5wWO1MmH6pYTVJc6p2BKvZobuDGa/elvI8qH77j3/5t1Qpi
+vvqZq1c1QORG4gzX1IoC1QGtcTvq/qkAYNGu1DM0sndnZbWU3B9QPJGoUGyoaFfL
+HnF9dXSrvbkpZHXg9eu39o/rKaYUWDspP1ACG0eL7cHoFVqbk07nOoX1yZx1pZz+
+zvHaasivCv2BNijOt008hKxy+NUisVnyMpY+9xQs69tcgeiNUMyHrVL+ywrB+vd/
+93WA3Mub9gXYdJVEb5zmYGqAFI80poMDinum9UPGWbZwW89+nQW6iHggVI5iBvXU
+SA6WDm/sToi5kDVMg9vH2DTAbNzLo1tVJr5aYXuEuiplGa3blD/V87de7HJUXLh0
+iP0jfhbOJdiu0NNTlJC3
+=/93K
+-----END PGP SIGNATURE-----
+
+--tMbDGjvJuJijemkf--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
