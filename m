@@ -1,66 +1,90 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/5] mfd: add bcm590xx pmu driver
-Date: Wed, 12 Mar 2014 00:40:30 +0000
-Message-ID: <20140312004030.GH28112@sirena.org.uk>
-References: <1394552775-31264-1-git-send-email-mporter@linaro.org>
- <1394552775-31264-3-git-send-email-mporter@linaro.org>
- <20140311160837.GP21216@lee--X1>
- <20140311221938.GO25092@beef>
- <20140311224517.GA5672@lee--X1>
- <20140311232545.GP25092@beef>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH net-next v3 6/9] Altera TSE: Add main and header file
+ for Altera Ethernet Driver
+Date: Tue, 11 Mar 2014 17:45:44 -0700
+Message-ID: <1394585144.28839.32.camel@joe-AO722>
+References: <1394577791-6547-1-git-send-email-vbridgers2013@gmail.com>
+	 <1394577791-6547-7-git-send-email-vbridgers2013@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UU+P6sd7srm6fAXi"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140311232545.GP25092@beef>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1394577791-6547-7-git-send-email-vbridgers2013@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Vince Bridgers <vbridgers2013@gmail.com>
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-doc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 2014-03-11 at 17:43 -0500, Vince Bridgers wrote:
+> This patch adds the main driver and header file for the Altera Triple
+> Speed Ethernet driver.
 
---UU+P6sd7srm6fAXi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+trivial notes about message logging:
 
-On Tue, Mar 11, 2014 at 07:25:45PM -0400, Matt Porter wrote:
-> On Tue, Mar 11, 2014 at 10:45:17PM +0000, Lee Jones wrote:
+> diff --git a/drivers/net/ethernet/altera/altera_tse_main.c b/drivers/net/ethernet/altera/altera_tse_main.c
+[]
+> +static const u32 default_msg_level = (NETIF_MSG_DRV | NETIF_MSG_PROBE |
+> +					NETIF_MSG_LINK | NETIF_MSG_IFUP |
+> +					NETIF_MSG_IFDOWN);
+[]
+> +static int altera_tse_mdio_create(struct net_device *dev, unsigned int id)
+> +{
+[]
+> +	mdio->irq = kcalloc(PHY_MAX_ADDR, sizeof(int), GFP_KERNEL);
+> +	if (mdio->irq == NULL) {
+> +		dev_err(priv->device, "%s: Cannot allocate memory\n", __func__);
 
-> > Are there any inter-patch dependencies in the set? If so, we should
-> > know about them so we can coordinate a sensible solution.
+OOM messages aren't necessary as all allocs have
+a generic OOM message as well as a dump_stack();
+(well, any alloc without GFP_NOWARN)
 
-> Yes, the regulator driver (3/5) that Mark applied is dependent on this
-> patch...the regulator driver includes include/linux/mfd/bcm590xx.h.
+> +	ret = of_mdiobus_register(mdio, mdio_node);
+> +	if (ret != 0) {
+> +		dev_err(priv->device, "Cannot register MDIO bus %s\n",
+> +			mdio->id);
 
-There's no actual dependency though - the regulator driver can only be
-built if the MFD is enabled in Kconfig since it depends on it so until
-the MFD is present in the tree it won't get built.
+Because you have a struct net_device * available,
+you should probably use that.
 
---UU+P6sd7srm6fAXi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+		netdev_err(dev, "Cannot register MDIO bus %s\n", mdio->id);
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+> +		goto out_free_mdio_irq;
+> +	}
+> +
+> +	if (netif_msg_drv(priv))
+> +		dev_info(priv->device, "MDIO bus %s: created\n", mdio->id);
 
-iQIcBAEBAgAGBQJTH6z7AAoJELSic+t+oim9/k0P/jx0GxmDS7i+kPAtBYWDAwnD
-CSrOzMd63UfJdzXyQ+nt2zfC8FV+g8TGegQjgN3179LuX52zKPo9louXw/YrTTgi
-i+XXh8nr+jCEcktX/wnBcpEcLBma/rWIUa3DWjlXKDXFIhfoPyKVcT5oEoG/sHJj
-RV7PT+7QIk25zAnWo/mMv33l8M3qMwV4j/aeWlFnn5IPEaI3rtU18n/TFl3HnchI
-yKGYyPgFhI7R0gFualm39QNYjGw/xm7u/f3aaP8V1o950H90P43XfgLfSHyCX4j/
-A8F4JTR5q8pQDcfXLA9/GBvDgVkKHgYMQ8GBoLEYOYHyxZPFZ0mwwxoZhxj10ByT
-+kujpqTdbI13QOUtMGz1edMSRRSNsEgSRz0b4qmqma8YYm5OW1z7mUuvhJXY1+V4
-hT/eeP9LIjs0hH+1GgxwvqoVOHRxk+bQrQgIlKbdVAZJCP1+Wgj+Mg+/ZXi3D0k8
-kUvvi1w8NfaCzYydTAHA/XLl/J2RinReS2rSyaV6marlo3epzPo981OYvf9fL1sa
-nhMN7TIzQMke/RjSzEJA1iBoG1q+zg3/QSJR+spZ4lVtQLE/RsFJPRmHKZICjN3V
-JE9I1cJkNgTD6Y23D5fVqkmHNf1IY0Nyq30OVxJsAUkCOvi2juYn1Wpc1tEfNrYz
-HCqWOCo0YgXBtD7MTYSd
-=c9RH
------END PGP SIGNATURE-----
+There are generic functions for this with the struct net_device *
 
---UU+P6sd7srm6fAXi--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	netif_info(priv, drv, dev, "MDIO bus %s: created\n", mdio->id);
+
+> +static void altera_tse_mdio_destroy(struct net_device *dev)
+> +{
+[]
+> +	if (netif_msg_drv(priv))
+> +		dev_info(priv->device, "MDIO bus %s: removed\n",
+> +			 priv->mdio->id);
+
+	netif_info(priv, drv, dev, "MDIO bus %s: removed\n, priv->mdio->id);
+
+[]
+
+> +static int tse_init_rx_buffer(struct altera_tse_private *priv,
+> +			      struct tse_buffer *rxbuffer, int len)
+> +{
+> +	rxbuffer->skb = netdev_alloc_skb_ip_align(priv->dev, len);
+> +	if (!rxbuffer->skb) {
+> +		dev_err(priv->device, "%s: Rx init fails; skb is NULL\n",
+> +			__func__);
+
+		netdev_err(priv->dev, "%s: etc...)
+
+but this is also a generic alloc and will get the same generic OOM.
+
+> +	if (dma_mapping_error(priv->device, rxbuffer->dma_addr)) {
+> +		dev_err(priv->device, "%s: DMA mapping error\n", __func__);
+
+		netdev_err(priv->dev, etc...)
+
+etc...
+
