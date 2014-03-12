@@ -1,122 +1,65 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core
- to drivers/of
-Date: Wed, 12 Mar 2014 12:47:09 +0200
-Message-ID: <53203B2D.6080201@ti.com>
-References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> <20140226110114.CF2C7C40A89@trevor.secretlab.ca> <531D916C.2010903@ti.com> <5427810.BUKJ3iUXnO@avalon> <20140312102556.GC21483@n2100.arm.linux.org.uk>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH] clk: exynos4: Add clock ID for ppmuleft/right
+Date: Wed, 12 Mar 2014 12:03:24 +0100
+Message-ID: <53203EFC.1020109@samsung.com>
+References: <1394608090-25362-1-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="Iv5LSov5aWnroVpD6igHprpuPVbMBmESP"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140312102556.GC21483@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1394608090-25362-1-git-send-email-cw00.choi@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>, t.figa@samsung.com, a.hajda@samsung.com, mturquette@linaro.org, kgene.kim@samsung.com
+Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
---Iv5LSov5aWnroVpD6igHprpuPVbMBmESP
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Hi Chanwoo,
 
-On 12/03/14 12:25, Russell King - ARM Linux wrote:
-> On Mon, Mar 10, 2014 at 02:52:53PM +0100, Laurent Pinchart wrote:
->> In theory unidirectional links in DT are indeed enough. However, let's=
- not=20
->> forget the following.
->>
->> - There's no such thing as single start points for graphs. Sure, in so=
-me=20
->> simple cases the graph will have a single start point, but that's not =
-a=20
->> generic rule. For instance the camera graphs=20
->> http://ideasonboard.org/media/omap3isp.ps and=20
->> http://ideasonboard.org/media/eyecam.ps have two camera sensors, and t=
-hus two=20
->> starting points from a data flow point of view.
->=20
-> I think we need to stop thinking of a graph linked in terms of data
-> flow - that's really not useful.
->=20
-> Consider a display subsystem.  The CRTC is the primary interface for
-> the CPU - this is the "most interesting" interface, it's the interface
-> which provides access to the picture to be displayed for the CPU.  Othe=
-r
-> interfaces are secondary to that purpose - reading the I2C DDC bus for
-> the display information is all secondary to the primary purpose of
-> displaying a picture.
->=20
-> For a capture subsystem, the primary interface for the CPU is the frame=
+On 12/03/14 08:08, Chanwoo Choi wrote:
+> There is no gate for the PPMU Left/Right to the LEFT/RIGHTBUS block.
+> So, this patch add ppmuleft/right clock which is used to calculate memory bus
+> utilization by using PPMU(Performance Profiling Monitoring Unit).
+> 
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+>  drivers/clk/samsung/clk-exynos4.c   |  2 ++
+>  include/dt-bindings/clock/exynos4.h | 26 ++++++++++++++------------
+>  2 files changed, 16 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/clk/samsung/clk-exynos4.c b/drivers/clk/samsung/clk-exynos4.c
+> index 010f071..3819485 100644
+> --- a/drivers/clk/samsung/clk-exynos4.c
+> +++ b/drivers/clk/samsung/clk-exynos4.c
+> @@ -717,6 +717,8 @@ static struct samsung_gate_clock exynos4_gate_clks[] __initdata = {
+>  			0, 0),
+>  	GATE(CLK_AC97, "ac97", "aclk100", GATE_IP_PERIL, 27,
+>  			0, 0),
+> +	GATE(CLK_PPMULEFT, "ppmuleft", "aclk200", GATE_IP_LEFTBUS, 1, 0, 0),
+> +	GATE(CLK_PPMURIGHT, "ppmuright", "aclk200", GATE_IP_RIGHTBUS, 1, 0, 0),
+>  };
+>  
+>  /* list of gate clocks supported in exynos4210 soc */
+> diff --git a/include/dt-bindings/clock/exynos4.h b/include/dt-bindings/clock/exynos4.h
+> index 75aff33..cd7fecf 100644
+> --- a/include/dt-bindings/clock/exynos4.h
+> +++ b/include/dt-bindings/clock/exynos4.h
+> @@ -215,20 +215,22 @@
+>  #define CLK_SPI1_ISP_SCLK	381 /* Exynos4x12 only */
+>  #define CLK_UART_ISP_SCLK	382 /* Exynos4x12 only */
+>  #define CLK_TMU_APBIF		383
+> +#define CLK_PPMULEFT		384
+> +#define CLK_PPMURIGHT		385
+>  
+>  /* mux clocks */
+> -#define CLK_MOUT_FIMC0		384
 
-> grabber (whether it be an already encoded frame or not.)  The sensor
-> devices are all secondary to that.
->=20
-> So, the primary software interface in each case is where the data for
-> the primary purpose is transferred.  This is the point at which these
-> graphs should commence since this is where we would normally start
-> enumeration of the secondary interfaces.
->=20
-> V4L2 even provides interfaces for this: you open the capture device,
-> which then allows you to enumerate the capture device's inputs, and
-> this in turn allows you to enumerate their properties.  You don't open
-> a particular sensor and work back up the tree.
+You must not change the existing clock indices like this, use indexes
+that are currently unused for CLK_PPMU* clocks.
+If you do that the kernel would stop working with existing dtbs.
+This interface is an ABI, so you can't just rearrange the indices
+at will like this.
 
-We do it the other way around in OMAP DSS. It's the displays the user is
-interested in, so we enumerate the displays, and if the user wants to
-enable a display, we then follow the links from the display towards the
-SoC, configuring and enabling the components on the way.
-
-I don't have a strong opinion on the direction, I think both have their
-pros. In any case, that's more of a driver model thing, and I'm fine
-with linking in the DT outwards from the SoC (presuming the
-double-linking is not ok, which I still like best).
-
-> I believe trying to do this according to the flow of data is just wrong=
-=2E
-> You should always describe things from the primary device for the CPU
-> towards the peripheral devices and never the opposite direction.
-
-In that case there's possibly the issue I mentioned in other email in
-this thread: an encoder can be used in both a display and a capture
-pipeline. Describing the links outwards from CPU means that sometimes
-the encoder's input port is pointed at, and sometimes the encoder's
-output port is pointed at.
-
-That's possibly ok, but I think Grant was of the opinion that things
-should be explicitly described in the binding documentation: either a
-device's port must contain a 'remote-endpoint' property, or it must not,
-but no "sometimes". But maybe I took his words too literally.
-
-Then there's also the audio example Philipp mentioned, where there is no
-clear "outward from Soc" direction for the link, as the link was
-bi-directional and between two non-SoC devices.
-
- Tomi
-
-
-
---Iv5LSov5aWnroVpD6igHprpuPVbMBmESP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJTIDstAAoJEPo9qoy8lh71l0oP/R3nG2J/mPrV1Pp97Y1KQOwA
-W0gugFqX6X8RYugVomKVoJf6GMT9wE/CiCF501GkkhZ1KNS5WHQnk1ep+hdmxH0Z
-r8HHgQYE6MiW4mGl5x/FO80GzZCu7o3vx+sTdg6ZeiZ5OJ2XGkZMsYCS81i9/gbN
-U2xbvr8W5/jl8rpdYmLC8mSpdLZ0gExokXxaDgDeLkncT318vtEjwEf1+ZbGpoei
-17AZZRe88oaTff4j7VYnD0beK3wtmFZGJ5ULUuJeZjQi3KM5nyT05iIs4xucwv+J
-A1SkzCDEP9k4OfxwoRzyrtAWKyDjPYYFbxlomNYV33j4ysatX2Hv1wFMLMfwX/de
-QhbQZ3LyZYC+CkhEi/+j/p6Gs+iwyMKjgMSPlKTaZhAapVkGaO+Qmab1j5wbl27j
-jM8+xZCnilpeFO39wFUUCgBhzCksD6SKXwzOd2+3WXNwTvWTUbqmJq+BJeUHl3cK
-kqygpeBpoKV9pgDI+wHtdAIZiqy73JkDa48y+4FUGq7yJB9WfBQygqCTGcvul3hP
-+9HbNdJHfXRS4s2+Gnb7beUYyVU/G5qIS0ebv9j3nIYOYwKrCsRxrRbWqygFJfTF
-X2oESq+k+WZdmz6A3HprztyPi99AbalulVzTO01HiL8PUDbYfops4RLobZCJMPsA
-h3R692R+rXyQEKUhXmjT
-=q9ei
------END PGP SIGNATURE-----
-
---Iv5LSov5aWnroVpD6igHprpuPVbMBmESP--
+--
+Regards,
+Sylwester
