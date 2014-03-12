@@ -1,116 +1,77 @@
-From: Richard Lee <superlibj8301@gmail.com>
-Subject: Re: [alsa-devel] [PATCH RFC v2 0/2] Fix simple-card *-master DT
- parameter handling
-Date: Wed, 12 Mar 2014 13:00:02 +0800
-Message-ID: <CAHPCO9FmL__LmUyMRhsy2mnPNAV0h--aMY=GBJjL9TBrAqWSFw@mail.gmail.com>
-References: <cover.1394451329.git.jsarha@ti.com>
-	<877g80rzgg.wl%kuninori.morimoto.gx@gmail.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v2 7/7] ARM: zynq: DT: Migrate UART to Cadence binding
+Date: Wed, 12 Mar 2014 07:01:38 +0100
+Message-ID: <44c9eddf-9f61-4219-8564-a3019dc0fd87@AM1EHSMHS021.ehs.local>
+References: <1394487610-2419-1-git-send-email-soren.brinkmann@xilinx.com> <1394487610-2419-8-git-send-email-soren.brinkmann@xilinx.com> <62cd32ad-8743-4d49-a1b6-c178054a9756@CO9EHSMHS011.ehs.local> <20140311154847.GI13293@xsjandreislx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <877g80rzgg.wl%kuninori.morimoto.gx@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
-Cc: Jyri Sarha <jsarha@ti.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, liam.r.girdwood@linux.intel.com, detheridge@ti.com, peter.ujfalusi@ti.com, broonie@kernel.org, bcousson@baylibre.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140311154847.GI13293@xsjandreislx>
+Sender: linux-doc-owner@vger.kernel.org
+To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>
+Cc: Michal Simek <michal.simek@xilinx.com>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
- On Wed, Mar 12, 2014 at 9:13 AM, Kuninori Morimoto
-<kuninori.morimoto.gx@gmail.com> wrote:
->
-> Hi Jyri
->
->> Since RFC:
->> - fixed commit msg typo
->> - added include/sound/soc.h changes too
+On 03/11/2014 04:48 PM, S=C3=B6ren Brinkmann wrote:
+> On Tue, 2014-03-11 at 09:52AM +0100, Michal Simek wrote:
+>> On 03/10/2014 10:40 PM, Soren Brinkmann wrote:
+>>> The Zynq UART is Cadence IP and the driver has been renamed accordi=
+ngly.
+>>> Migrate the DT to use the new binding for the UART driver.
+>>>
+>>> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+>>> Acked-by: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
+>>> Acked-by: Rob Herring <robh@kernel.org>
+>>> ---
+>>> This change depends on 'tty: xuartps: Rebrand driver as Cadence UAR=
+T',
+>>> which introduces the new clock-names.
+>>> ---
+>>>  arch/arm/boot/dts/zynq-7000.dtsi | 8 ++++----
+>>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/z=
+ynq-7000.dtsi
+>>> index 8b67b19392ec..0ed0d4b0579a 100644
+>>> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+>>> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+>>> @@ -67,19 +67,19 @@
+>>>  		};
+>>> =20
+>>>  		uart0: uart@e0000000 {
+>>> -			compatible =3D "xlnx,xuartps";
+>>> +			compatible =3D "xlnx,xuartps", "cdns,uart-r1p8";
+>>>  			status =3D "disabled";
+>>>  			clocks =3D <&clkc 23>, <&clkc 40>;
+>>> -			clock-names =3D "ref_clk", "aper_clk";
+>>> +			clock-names =3D "uart_clk", "pclk";
+>>>  			reg =3D <0xE0000000 0x1000>;
+>>>  			interrupts =3D <0 27 4>;
+>>>  		};
+>>> =20
+>>>  		uart1: uart@e0001000 {
+>>> -			compatible =3D "xlnx,xuartps";
+>>> +			compatible =3D "xlnx,xuartps", "cdns,uart-r1p8";
+>>>  			status =3D "disabled";
+>>>  			clocks =3D <&clkc 24>, <&clkc 41>;
+>>> -			clock-names =3D "ref_clk", "aper_clk";
+>>> +			clock-names =3D "uart_clk", "pclk";
+>>>  			reg =3D <0xE0001000 0x1000>;
+>>>  			interrupts =3D <0 50 4>;
+>>>  		};
 >>
->> The sematics of bitclock-master and frame-master DT parameters
->> should depend on whether they are found from a cpu-dai or codec
->> sub-node.
->>
->> - bitclock-master in cpu-dai node means Codec-Bitclock-Slave
->> - frame-master in cpu-dai node means Codec-Frame-Slave
->> - bitclock-master in codec node means Codec-Bitclock-Master
->> - frame-master in codec node means Codec-Frame-Master
->>
->> For example in a cpu-dai mode bitclock-master parameter should produce
->> SND_SOC_DAIFMT_CBS_* daifmt flags and a codec node
->> SND_SOC_DAIFMT_CBM_* flags.
->
-> SND_SOC_DAIFMT_xxx comment indicates "codec clk/FRM" indeed.
-> but does this "codec" means "codec chip" ??
-> I'm not sure.
->
-> but anyway, if my understanding is correct,
->
->         simple-audio-card,cpu {
->                 ...
->                 bitclock-master;
->                 frame-master;
->         };
->
->         simple-audio-card,codec {
->                 ...
->                 bitclock-master;
->                 frame-master;
->         };
->
-> This will be
-> cpu   : SND_SOC_DAIFMT_CBS_CFS
-> codec : SND_SOC_DAIFMT_CBM_CFM
->
+>> This should be at least the part of 5/7 because between 5/7 and 7/7
+>> driver will fail to probe.
+>=20
+> The driver should never fail to probe. The old bindings will continue=
+ to
+> work. So, only dependency for this is, the new clock names must be
+> merged in. So, it has to be rather late in the series.
 
-Yes, That's also what my understanding of this patches.
-
-But, IMO, if you want the CPU DAI be CBS_CFS and CODEC be CBM_CFM,
-you could just do it like this:
-         simple-audio-card,cpu {
-                 ...
-         };
-
-         simple-audio-card,codec {
-                 ...
-                 bitclock-master;
-                 frame-master;
-         };
-
-and vice versa.
+We discussed this over phone and yes, I have missed that.
 
 Thanks,
-
-(I could find this mails in my Freescale acount, so I will reply it here.)
-
---
-Best Regards,
-Xiubo
+Michal
 
 
-> but, it is un-understandable/confusable for me,
-> and it breaks our sound card.
->
->         ${LINUX}/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
->         ${LINUX}/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
->
-> I guess you want like this ?
->
->         codec-bitclock-master;
->         codec-frame-master;
->
->         simple-audio-card,cpu {
->                 ...
->         };
->
->         simple-audio-card,codec {
->                 ...
->         };
->
-> # And I guess [1/2] and [2/2] should be 1 patch.
-> # otherwise, it breaks git-bisect :P
->
->
-> Best regards
-> ---
-> Kuninori Morimoto
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
