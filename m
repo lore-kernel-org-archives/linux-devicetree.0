@@ -1,74 +1,46 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [RFC PATCH v2 04/14] mtd: nand: define struct nand_timings
-Date: Wed, 12 Mar 2014 13:07:37 -0600
-Message-ID: <20140312190737.GA27388@obsidianresearch.com>
-References: <1391006064-28890-1-git-send-email-b.brezillon.dev@gmail.com>
- <1391006064-28890-5-git-send-email-b.brezillon.dev@gmail.com>
- <531DC1A4.7010208@gmail.com>
- <20140311185554.GD31835@obsidianresearch.com>
- <53208F7D.8090104@gmail.com>
+From: Tim Kryger <tim.kryger@linaro.org>
+Subject: [PATCH v3 5/5] ARM: bcm_defconfig: Enable PWM and Backlight
+Date: Wed, 12 Mar 2014 13:15:46 -0700
+Message-ID: <1394655346-30048-6-git-send-email-tim.kryger@linaro.org>
+References: <1394655346-30048-1-git-send-email-tim.kryger@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53208F7D.8090104@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Boris BREZILLON <b.brezillon.dev@gmail.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Brian Norris <computersforpeace@gmail.com>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, dev@linux-sunxi.org
+Content-Type: text/plain
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1394655346-30048-1-git-send-email-tim.kryger@linaro.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Matt Porter <mporter@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Grant Likely <grant.likely@linaro.org>
+Cc: Tim Kryger <tim.kryger@linaro.org>, Linux PWM List <linux-pwm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, Linux Doc List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 12, 2014 at 05:46:53PM +0100, Boris BREZILLON wrote:
+Enable PWM drivers and the PWM-based backlight driver.
 
-> >>I see at least 3 of those timings that could be useful (for the moment) :
-> >>- tR: this one should be used to fill the chip_delay field
-> >>- tPROG and tBERS: could be used within nand_wait to choose the timeo
-> >>   value appropriately.
-> >IIRC these timing values are really only necessary if the controller
-> >does not support the READY/BUSY input, in that case drivers typically
-> >seem to use 'chip_delay' which is the maximum possible command
-> >execution time (a sleep long enough to guarentee that READY/BUSY is
-> >de-asserted).
+Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
+Reviewed-by: Alex Elder <elder@linaro.org>
+Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
+---
+ arch/arm/configs/bcm_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> You're right about tR (or chip_delay): it's only used when there are
-> no R/B pin.  I experienced it when I tried the RB_NONE case in the
-> sunxi driver: the default chip_delay set by the NAND core code was
-> too small to fit the NAND chip requirements.
-> 
-> Anyway, I really think the chip_delay field should be set according
-> to NAND chip characteristics not harcoded in NAND controller driver
-> code (as currently done).
+diff --git a/arch/arm/configs/bcm_defconfig b/arch/arm/configs/bcm_defconfig
+index 2519d6d..b1898c3 100644
+--- a/arch/arm/configs/bcm_defconfig
++++ b/arch/arm/configs/bcm_defconfig
+@@ -84,6 +84,7 @@ CONFIG_FB=y
+ CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_LCD_CLASS_DEVICE=y
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
++CONFIG_BACKLIGHT_PWM=y
+ # CONFIG_USB_SUPPORT is not set
+ CONFIG_MMC=y
+ CONFIG_MMC_UNSAFE_RESUME=y
+@@ -97,6 +98,7 @@ CONFIG_LEDS_TRIGGERS=y
+ CONFIG_LEDS_TRIGGER_TIMER=y
+ CONFIG_LEDS_TRIGGER_HEARTBEAT=y
+ CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
++CONFIG_PWM=y
+ CONFIG_EXT4_FS=y
+ CONFIG_EXT4_FS_POSIX_ACL=y
+ CONFIG_EXT4_FS_SECURITY=y
+-- 
+1.8.0.1
 
-Drivers these days are often taking this value from the DT node
-property 'chip-delay'. I think this would be nice to have in common
-code too...
-
-> tPROG and tBERS, would be used in nand_wait function and do not
-> depend on the R/B pin.  These are just used as timeouts.
-
-tPROG/tBERS have that special mode where R/B remains asserted but you
-can still issue a status read to the chip to check on the command, so
-the timeout required here is just a big number to detect failed NAND
-controllers, it isn't really too important to have an exact value..
-
-> >>Or should I create a new struct for these timings ?
-> >>In the latter case how should I name it ?
-> >struct onfi_command_timings ?
-> 
-> I'm not a big fan of this name. I think timing structs should not
-> contain onfi in their names, because these timings are also
-> available on non ONFI chips.
-
-Explicitly defering to the ONFI spec makes it clear what the
-definition of the timing parameter actually is.
-
-If JEDEC has a different model then drivers will need to configure
-their interfaces a little differently.
-
-So we might end up with a jedec_sdr_timings too :|
-
-> What do you think ?
-
-I'd focus on getting the bus timings working before tackling too much
-more ...
-
-Jason
