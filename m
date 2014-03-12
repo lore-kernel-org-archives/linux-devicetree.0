@@ -1,61 +1,36 @@
 From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH net-next V4 3/9] Altera TSE: Add Altera Ethernet Driver
- MSGDMA File Components
-Date: Wed, 12 Mar 2014 13:31:15 -0700
-Message-ID: <1394656275.3915.32.camel@joe-AO722>
+Subject: Re: [PATCH net-next V4 5/9] Altera TSE: Add Miscellaneous Files for
+ Altera Ethernet Driver
+Date: Wed, 12 Mar 2014 13:34:35 -0700
+Message-ID: <1394656475.3915.35.camel@joe-AO722>
 References: <1394655334-29547-1-git-send-email-vbridgers2013@gmail.com>
-	 <1394655334-29547-4-git-send-email-vbridgers2013@gmail.com>
+	 <1394655334-29547-6-git-send-email-vbridgers2013@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1394655334-29547-4-git-send-email-vbridgers2013@gmail.com>
-Sender: netdev-owner@vger.kernel.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1394655334-29547-6-git-send-email-vbridgers2013@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
 To: Vince Bridgers <vbridgers2013@gmail.com>
 Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-doc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
 List-Id: devicetree@vger.kernel.org
 
 On Wed, 2014-03-12 at 15:15 -0500, Vince Bridgers wrote:
-> This patch adds the MSGDMA soft IP support for the Altera Triple
-> Speed Ethernet driver.
-
-[]
-
+> This patch adds miscellaneous files for the Altera Ethernet Driver,
+> including ethtool support.
+> 
 > Signed-off-by: Vince Bridgers <vbridgers2013@gmail.com>
 > ---
-> V4: - Modify use of dev_* to netdev_* where possible
+> V4: - Change names of statistics to match common usage found in most
+>       drivers instead of TSE databook names.
+>     - Remove unnecessary cast
 
-Hi again Vince.
+thanks, maybe this one thing below:
 
-trivia:
+> diff --git a/drivers/net/ethernet/altera/altera_tse_ethtool.c b/drivers/net/ethernet/altera/altera_tse_ethtool.c
 
-It'd be better to also use the netif_<foo> forms too.
+> +static char const stat_gstrings[][ETH_GSTRING_LEN] = {
 
-This can be done later in a follow-on patch if desired.
+static const char
 
-> diff --git a/drivers/net/ethernet/altera/altera_msgdma.c b/drivers/net/ethernet/altera/altera_msgdma.c
-[]
-> +void msgdma_reset(struct altera_tse_private *priv)
-> +{
-[]
-> +	if ((counter >= ALTERA_TSE_SW_RESET_WATCHDOG_CNTR) &&
-> +	    (netif_msg_drv(priv)))
-> +		netdev_warn(priv->dev,
-> +			    "TSE Rx mSGDMA resetting bit never cleared!\n");
 
-	if (counter >= ALTERA_TSE_SW_RESET_WATCHDOG_CNTR)
-		netif_warn(priv, drv, priv->dev,
-			   "TSE Rx mSGDMA resetting bit never cleared!\n");
-
-[]
-
-> +	if ((counter >= ALTERA_TSE_SW_RESET_WATCHDOG_CNTR) &&
-> +	    (netif_msg_drv(priv)))
-> +		netdev_warn(priv->dev,
-> +			    "TSE Tx mSGDMA resetting bit never cleared!\n");
-
-	if (counter >= ALTERA_TSE_SW_RESET_WATCHDOG_CNTR)
-		netif_warn(priv, drv, priv->dev,
-			   "TSE Tx mSGDMA resetting bit never cleared!\n");
-
-cheers, Joe
