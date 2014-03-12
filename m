@@ -1,80 +1,200 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH net-next v3 5/9] Altera TSE: Add Miscellaneous Files for
- Altera Ethernet Driver
-Date: Wed, 12 Mar 2014 15:26:37 -0700
-Message-ID: <1394663197.3915.61.camel@joe-AO722>
-References: <1394577791-6547-1-git-send-email-vbridgers2013@gmail.com>
-	 <1394577791-6547-6-git-send-email-vbridgers2013@gmail.com>
-	 <1394578747.28839.4.camel@joe-AO722>
-	 <CAOwfj2Ot+ssTZgMoOoShVEUi+RkxjpPpRUfHAkP9RETm3TuUzg@mail.gmail.com>
-	 <1394658856.20857.7.camel@deadeye.wl.decadent.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1394658856.20857.7.camel@deadeye.wl.decadent.org.uk>
-Sender: netdev-owner@vger.kernel.org
-To: Ben Hutchings <ben@decadent.org.uk>
-Cc: Vince Bridgers <vbridgers2013@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] OF: kobj node lifecycle fixes
+Date: Wed, 12 Mar 2014 22:49:40 +0000
+Message-ID: <1394664580-23130-1-git-send-email-grant.likely@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-03-12 at 21:14 +0000, Ben Hutchings wrote:
-> These look like the statistic names specified in IEEE 802.3.  I would
-> support a general move to using standard names for MAC stats in Ethernet
-> drivers, because they are quite clearly defined and widely implemented
-> in hardware.  However, that is not the current practice in most Linux
-> drivers.
+From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 
-Hey Ben.
+After the move to having device nodes be proper kobjects the lifecycle
+of the node needs to be controlled better.
 
-Maybe something like this would be a start?
+At first convert of_add_node() in the unflattened functions to
+of_init_node() which initializes the kobject so that of_node_get/put
+work correctly even before of_init is called.
 
-Change the actual #defines/strings to taste.
+Afterwards introduce of_node_is_initialized & of_node_is_attached that
+query the underlying kobject about the state (attached means kobj
+is visible in sysfs)
 
-Maybe this shouldn't be in uapi or maybe in if_ether.h
+Using that make sure the lifecycle of the tree is correct at all
+times.
 
+Signed-off-by: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+[grant.likely: moved of_node_init() calls, fixed up locking, and
+               dropped __of_populate() hunks]
+Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- include/uapi/linux/ethtool.h | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
 
-diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
-index fd161e9..24b8b51 100644
---- a/include/uapi/linux/ethtool.h
-+++ b/include/uapi/linux/ethtool.h
-@@ -498,6 +498,36 @@ struct ethtool_pauseparam {
- 
- #define ETH_GSTRING_LEN		32
- 
-+#define ETH_GSTRING_RX_PKTS		"rx_packets"
-+#define ETH_GSTRING_RX_BYTES		"rx_bytes"
-+#define ETH_GSTRING_RX_TOTAL_BYTES	"rx_total_bytes"
-+#define ETH_GSTRING_RX_TOTAL_PKTS	"rx_total_packets"
-+#define ETH_GSTRING_RX_CRC_ERRS		"rx_crc_errors"
-+#define ETH_GSTRING_RX_ALIGN_ERRS	"rx_align_errors"
-+#define ETH_GSTRING_RX_PAUSE		"rx_pause"
-+#define ETH_GSTRING_RX_ERRS		"rx_errors"
-+#define ETH_GSTRING_RX_UNICAST		"rx_unicast"
-+#define ETH_GSTRING_RX_MULTICAST	"rx_multicast"
-+#define ETH_GSTRING_RX_BROADCAST	"rx_broadcast"
-+#define ETH_GSTRING_RX_FIFO_DROPS	"rx_fifo_drops"
-+#define ETH_GSTRING_RX_UNDERSIZE	"rx_undersize"
-+#define ETH_GSTRING_RX_OVERSIZE		"rx_oversize"
-+#define ETH_GSTRING_RX_DUPLICATES	"rx_duplicates"
-+#define ETH_GSTRING_RX_DROPPED		"rx_dropped"
-+#define ETH_GSTRING_RX_FRAGMENTS	"rx_fragments"
+I've reworked Pantelis' patch to work on my tree. Here's the result.
+I've already got this in my tree and will be pushing it out shortly.
+
+g.
+
+ drivers/of/base.c  | 35 ++++++++++++++++++++++++++---------
+ drivers/of/fdt.c   |  3 +--
+ drivers/of/pdt.c   |  3 +--
+ include/linux/of.h | 19 +++++++++++++++++++
+ 4 files changed, 47 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index ed3e70b84957..7083fad079a6 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -246,10 +246,19 @@ static int __of_node_add(struct device_node *np)
+ int of_node_add(struct device_node *np)
+ {
+ 	int rc = 0;
+-	kobject_init(&np->kobj, &of_node_ktype);
 +
-+#define ETH_GSTRING_TX_PKTS		"tx_packets"
-+#define ETH_GSTRING_TX_BYTES		"tx_bytes"
-+#define ETH_GSTRING_TX_TOTAL_BYTES	"tx_total_bytes"
-+#define ETH_GSTRING_TX_TOTAL_PKTS	"tx_total_packets"
-+#define ETH_GSTRING_TX_PAUSE		"tx_pause"
-+#define ETH_GSTRING_TX_ERRS		"tx_errors"
-+#define ETH_GSTRING_TX_DISCARDS		"tx_discards"
-+#define ETH_GSTRING_TX_UNICAST		"tx_unicast"
-+#define ETH_GSTRING_TX_MULTICAST	"tx_multicast"
-+#define ETH_GSTRING_TX_BROADCAST	"tx_broadcast"
-+#define ETH_GSTRING_TX_DROPPED		"tx_dropped"
++	BUG_ON(!of_node_is_initialized(np));
 +
- /**
-  * enum ethtool_stringset - string set ID
-  * @ETH_SS_TEST: Self-test result names, for use with %ETHTOOL_TEST
++	/*
++	 * Grab the mutex here so that in a race condition between of_init() and
++	 * of_node_add(), node addition will still be consistent.
++	 */
+ 	mutex_lock(&of_aliases_mutex);
+ 	if (of_kset)
+ 		rc = __of_node_add(np);
++	else
++		/* This scenario may be perfectly valid, but report it anyway */
++		pr_info("of_node_add(%s) before of_init()\n", np->full_name);
+ 	mutex_unlock(&of_aliases_mutex);
+ 	return rc;
+ }
+@@ -259,10 +268,17 @@ static void of_node_remove(struct device_node *np)
+ {
+ 	struct property *pp;
+ 
+-	for_each_property_of_node(np, pp)
+-		sysfs_remove_bin_file(&np->kobj, &pp->attr);
++	BUG_ON(!of_node_is_initialized(np));
++
++	/* only remove properties if on sysfs */
++	if (of_node_is_attached(np)) {
++		for_each_property_of_node(np, pp)
++			sysfs_remove_bin_file(&np->kobj, &pp->attr);
++		kobject_del(&np->kobj);
++	}
+ 
+-	kobject_del(&np->kobj);
++	/* finally remove the kobj_init ref */
++	of_node_put(np);
+ }
+ #endif
+ 
+@@ -1631,6 +1647,10 @@ static int of_property_notify(int action, struct device_node *np,
+ {
+ 	struct of_prop_reconfig pr;
+ 
++	/* only call notifiers if the node is attached */
++	if (!of_node_is_attached(np))
++		return 0;
++
+ 	pr.dn = np;
+ 	pr.prop = prop;
+ 	return of_reconfig_notify(action, &pr);
+@@ -1682,11 +1702,8 @@ int of_add_property(struct device_node *np, struct property *prop)
+ 	if (rc)
+ 		return rc;
+ 
+-	/* at early boot, bail hear and defer setup to of_init() */
+-	if (!of_kset)
+-		return 0;
+-
+-	__of_add_property_sysfs(np, prop);
++	if (of_node_is_attached(np));
++		__of_add_property_sysfs(np, prop);
+ 
+ 	return rc;
+ }
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 96ad1ab7f9d6..70ccc36513e7 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -202,6 +202,7 @@ static void * unflatten_dt_node(struct boot_param_header *blob,
+ 				__alignof__(struct device_node));
+ 	if (allnextpp) {
+ 		char *fn;
++		of_node_init(np);
+ 		np->full_name = fn = ((char *)np) + sizeof(*np);
+ 		if (new_format) {
+ 			/* rebuild full path for new format */
+@@ -326,8 +327,6 @@ static void * unflatten_dt_node(struct boot_param_header *blob,
+ 			np->name = "<NULL>";
+ 		if (!np->type)
+ 			np->type = "<NULL>";
+-
+-		of_node_add(np);
+ 	}
+ 	while (tag == OF_DT_BEGIN_NODE || tag == OF_DT_NOP) {
+ 		if (tag == OF_DT_NOP)
+diff --git a/drivers/of/pdt.c b/drivers/of/pdt.c
+index e64fa3d3da5f..36b4035881b0 100644
+--- a/drivers/of/pdt.c
++++ b/drivers/of/pdt.c
+@@ -176,6 +176,7 @@ static struct device_node * __init of_pdt_create_node(phandle node,
+ 		return NULL;
+ 
+ 	dp = prom_early_alloc(sizeof(*dp));
++	of_node_init(dp);
+ 	of_pdt_incr_unique_id(dp);
+ 	dp->parent = parent;
+ 
+@@ -213,7 +214,6 @@ static struct device_node * __init of_pdt_build_tree(struct device_node *parent,
+ 		*nextp = &dp->allnext;
+ 
+ 		dp->full_name = of_pdt_build_full_name(dp);
+-		of_node_add(dp);
+ 
+ 		dp->child = of_pdt_build_tree(dp,
+ 				of_pdt_prom_ops->getchild(node), nextp);
+@@ -244,7 +244,6 @@ void __init of_pdt_build_devicetree(phandle root_node, struct of_pdt_ops *ops)
+ 	of_allnodes->path_component_name = "";
+ #endif
+ 	of_allnodes->full_name = "/";
+-	of_node_add(of_allnodes);
+ 
+ 	nextp = &of_allnodes->allnext;
+ 	of_allnodes->child = of_pdt_build_tree(of_allnodes,
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 257994a420f3..a8b9dad90c64 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -76,6 +76,25 @@ struct of_phandle_args {
+ 
+ extern int of_node_add(struct device_node *node);
+ 
++/* initialize a node */
++extern struct kobj_type of_node_ktype;
++static inline void of_node_init(struct device_node *node)
++{
++	kobject_init(&node->kobj, &of_node_ktype);
++}
++
++/* true when node is initialized */
++static inline int of_node_is_initialized(struct device_node *node)
++{
++	return node && node->kobj.state_initialized;
++}
++
++/* true when node is attached (i.e. present on sysfs) */
++static inline int of_node_is_attached(struct device_node *node)
++{
++	return node && node->kobj.state_in_sysfs;
++}
++
+ #ifdef CONFIG_OF_DYNAMIC
+ extern struct device_node *of_node_get(struct device_node *node);
+ extern void of_node_put(struct device_node *node);
+-- 
+1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
