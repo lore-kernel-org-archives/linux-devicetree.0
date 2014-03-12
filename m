@@ -1,163 +1,71 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 4/7] of: configure the platform device dma_mask and dma_pfn_offset
-Date: Wed, 12 Mar 2014 15:19:48 +0200
-Message-ID: <53205EF4.3070308@ti.com>
-References: <1394097598-17622-1-git-send-email-santosh.shilimkar@ti.com>	<201403071702.41716.arnd@arndb.de>	<CAL_JsqLu_16p-8FLjBYt7xQA2eAyiprPML2q5R3fnivZPrvPug@mail.gmail.com>	<201403090739.18351.arnd@arndb.de> <CAL_Jsq+KPpqmF3eU49AeWO2Q0d4uBon_67+zUz6dXKtfsjA3Nw@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [alsa-devel] [PATCH RFC v2 0/2] Fix simple-card *-master DT
+ parameter handling
+Date: Wed, 12 Mar 2014 12:30:23 +0000
+Message-ID: <20140312123023.GP28112@sirena.org.uk>
+References: <cover.1394451329.git.jsarha@ti.com>
+ <877g80rzgg.wl%kuninori.morimoto.gx@gmail.com>
+ <CAHPCO9FmL__LmUyMRhsy2mnPNAV0h--aMY=GBJjL9TBrAqWSFw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+KPpqmF3eU49AeWO2Q0d4uBon_67+zUz6dXKtfsjA3Nw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="X5d84+NUkZX3FbP/"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHPCO9FmL__LmUyMRhsy2mnPNAV0h--aMY=GBJjL9TBrAqWSFw@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Richard Lee <superlibj8301@gmail.com>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>, Jyri Sarha <jsarha@ti.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, liam.r.girdwood@linux.intel.com, detheridge@ti.com, peter.ujfalusi@ti.com, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob, Arnd,
 
-On 03/12/2014 02:15 AM, Rob Herring wrote:
-> On Sun, Mar 9, 2014 at 12:39 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->> On Saturday 08 March 2014, Rob Herring wrote:
->>> On Fri, Mar 7, 2014 at 10:02 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->>
->>>> a) Follow what we do for PCI devices: assume that we can do DMA_MASK(32)
->>>> on any device, and have drivers call dma_set_mask(DMA_MASK(64)) on devices
->>>> that would like to do more than that, or call e.g. dma_set_mask(DMA_MASK(28))
->>>> for devices that can do less than 32 bit, as given in the argument. This
->>>> approach would be most consistent with the way PCI works, but it doesn't
->>>> really work well for the case where the mask is less than 32-bit and the
->>>> device driver doesn't know that.
->>>>
->>>> b) Never have to call dma_set_mask() for platform devices and assume that the
->>>> platform code sets it up correctly. This would probably be the simpler
->>>> solution, and I can't think of any downsides at the moment.
->>>
->>> I don't think we want this. In the case of setting up 64-bit masters,
->>> it is typically the device that knows if it can do 64-bit DMA either
->>> thru a capabilities register or compatible value. That device specific
->>> knowledge should really stay within the device's driver.
->>
->> So you think we should still set a 64-bit mask in the "ranges" property
->> for devices that can only do 32-bit and let the driver figure it out?
-> 
-> No, I think option a makes more sense. BTW, don't you mean dma-ranges?
-> A device has it's own mask which is typically going to be 32 or
-> 64-bit. The core code may not know what the device supports, so the
-> device has to set it's own mask. I don't see a way around that. DT is
-> not a good option because it is discoverable in some cases.
-> 
-> Isn't the question here how do we handle restrictions added by the
-> bus? It seems while this series adds support for handling dma-ranges
-> to set the default case, it also needs to handle when the driver sets
-> the mask. Is this not simply a matter of having dma_set_mask also
-> parse dma-ranges (or reuse a saved bus mask)?
-> 
->> I think this approach is much less useful for platform devices than it is
->> for PCI devices, where we don't explicitly describe the "ranges" for each
->> device. Are you thinking of off-chip or on-chip DMA masters here? If
->> on-chip, I don't think it's likely that we would end up with different
->> versions of the chip that have the same device on there but not the
->> same DMA capabilities.
-> 
-> Sounds like a challenge to h/w designers. :)
-> 
-> I'm mainly thinking about the midway case where all masters are 32-bit
-> except AHCI which is 64-bit. The core libahci sets the mask based on
-> the capabilities register regardless of PCI or platform bus. Requiring
-> this to be setup by the platform or in the DT seems like a step
-> backwards. A slightly more complicated case would be something like
-> midway, but with RAM starting at say 2GB and DMA masters have the same
-> view as the cpu (i.e. no offset). Then the platform does need to set
-> the mask to (2^31 -1).
-> 
+--X5d84+NUkZX3FbP/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-mask has to be (2^32 -1).
+On Wed, Mar 12, 2014 at 01:00:02PM +0800, Richard Lee wrote:
 
-I'd like to add my 5 cents here :)
-First of all this solution is pretended to be generic, so by default it
-can't handle all possible cases (corner cases) - only widely used. 
-Arch or driver can always fix up it through bus notifier or driver's probe.
+> But, IMO, if you want the CPU DAI be CBS_CFS and CODEC be CBM_CFM,
+> you could just do it like this:
+>          simple-audio-card,cpu {
+>                  ...
+>          };
+>=20
+>          simple-audio-card,codec {
+>                  ...
+>                  bitclock-master;
+>                  frame-master;
+>          };
 
-Second, it works only for DT-boot case when devices instantiated from DT in generic way.
-So, if any bus creates devices in its own way - proper DMA configuration of such
-devices will be private problem of this bus.
+> and vice versa.
 
-I've tried to formulate possible use cases which can be and can't be covered
-by this approach:
-[1] 32 bit SoC:
-- no DMA range limitation: DMA range has to be absent or be equal to RAM
-  (default DMA configuration will be applied)
+> Thanks,
 
-- DMA range present and It's defined inside RAM (no address translation needed):
-  DMA range can be present and depending on its size
-  dma_mask will be equal or less than DMA_MASK(32).
-  (default DMA configuration will be applied - if DMA range isn't present)
+> (I could find this mails in my Freescale acount, so I will reply it here.)
 
-- DMA range present and It's defined outside of RAM (address translation needed):
-  DMA range has to be present and depending on its size
-  dma_mask will be equal or less than DMA_MASK(32); and dma_pfn_offset will be calculated.
+Yes, that'd been what I'd thought the binding did (and it's what Jyri's
+patch makes it do).
 
-Compatibility issues:
-  - Old DT without DMA properties defined and DMA range is defined outside of RAM:
-  arch or drivers code has to provide proper address translation routines.
+--X5d84+NUkZX3FbP/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-[2] 64 bit SOC (only 64 bit masters):
-- no DMA range limitation: DMA range has to be present and equal to RAM
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-- DMA range present and It's defined inside RAM (no address translation needed):
-  DMA range has to be present and depending on its size
-  dma_mask will be equal or less than DMA_MASK(64).
+iQIcBAEBAgAGBQJTIFNbAAoJELSic+t+oim9xXQP/30AiyGMsrU6iIKlmF+x56xd
+BDcmTNdecYO2SrcY8MkFAZnHqR26gtE0H9QwVCrPXryFy/uICga3P645kvYcvaF6
+c9PPvXX8+U+XOYht8fv3EKt1VBXydCMSQfCTvqJPYFWpS4A7AKzI0PCWX8jT20pf
+4dDFl+YZ3XOqhuXGf1GvnFdm/se6CaJfJBAKvRXNmAI94Grl2XwChqsAkFydxvzc
+Al803SwJMz4oNm1fmCiqniZdLWpPHVgkaKGZu0qshMbxwJgWPBndkQOtFPX9wbpC
+NTURHfaXLlTXx04Abi7lgRREPk/qkPINkVdYN62vXBXSoacacGBjK0H7wF46jvHE
+SoS+7RByiOSxTpb/Ua+Cej77eFe1CCdSJreH4jzFZQ45C8Ld+yAmmcnjJdURFg2A
+HoVsTMIo6vdv9K+8Kc3pvZTDv45pJkwJcROw0pHsHzVU44bjv+iWnCxp9shW8Re+
+EI9GEGxsephhvC82AIRivZ34AlVCQyUd4D7+n14GTb4N+ElgKD1ynDM7mUZ4xGrk
+Up5xCsd6y6RfInCBbRP9+XOqx0hJHYkEYEsvzUf5CKW2oHJQ2gcGccm4S51vbobd
+Br3Pa/XKcea4MNMBWAElgR2BAulClU9nXBFUkEL8dlbA+klCLHeuErUV8ncH0GlL
+3WD4PAhcm0dxDsDgXKGu
+=Dqwd
+-----END PGP SIGNATURE-----
 
-- DMA range present and It's defined outside of RAM (address translation needed):
-  DMA range has to be present and depending on its size
-  dma_mask will be equal or less than DMA_MASK(64); and dma_pfn_offset will be calculated.
-
-Compatibility issues:
-  - Old DT without DMA properties defined: Drivers may still need to call dma_set_mask(DMA_MASK(64)
-  - Old DT without DMA properties defined and DMA range is defined outside of RAM:
-  arch or drivers code still has to provide proper address translation routines.
-
-[3] 64 bit SOC (only 32 bit masters):
-
-- DMA range is present and It's defined inside RAM (no address translation needed):
-  DMA range can be absent - default DMA configuration will be applied.
-
-- DMA range present and It's defined outside of RAM (address translation needed):
-  DMA range has to be present and depending on its size
-  dma_mask will be equal or less than DMA_MASK(32); and dma_pfn_offset will be calculated.
-
-Compatibility issues:
-  - Old DT without DMA properties defined and DMA range is defined outside of RAM:
-  arch or drivers code has to provide proper address translation routines.
-
-
-[4] 64 bit SOC (32 bit and 64 masters):
-- This is combination of above 2,3 cases.
-  The current approach will allow to handle it by defining two buses in DT
-  "simple-bus32" and "simple-bus64", and each one should have its own DMA properties
-  defined in DT.
-
-- The worst case will be if some device is able to change its DMA configuration
-  dynamically by reading its DMA configuration from HW. The main difficulties will
-  be to handle DMA addresses translation properly in this case. But, in my opinion,
-  such behavior will be needed in very rare case as DT has to describe specific SoC
-  and such device has to belong to only one bus as per SoC specification.
-
-Compatibility issues:
-  - Old DT without DMA properties defined and 32 bits DMA range is defined outside of RAM:
-  arch or drivers code has to provide proper address translation routines.
-
-As per above, this approach will allow to handle most of cases and configure DMA properly
-with one exception - device is able to change its DMA configuration dynamically.
-
-Also, for compatibility reasons, arches and drivers may need to continue maintain their own
-DMA addresses translation routines to support the case
-"Old DT without DMA properties defined and DMA range is defined outside of RAM".
-
-Regards,
-- grygorii
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--X5d84+NUkZX3FbP/--
