@@ -1,40 +1,49 @@
-From: Jiri Kosina <jkosina-AlSwsSmVLrQ@public.gmane.org>
-Subject: Re: [PATCH trivial 04/16] of: Improve grammar for of_alias_get_id()
- documentation
-Date: Wed, 12 Mar 2014 15:35:20 +0100 (CET)
-Message-ID: <alpine.LNX.2.00.1403121534490.3690@pobox.suse.cz>
-References: <1394533430-4746-1-git-send-email-geert@linux-m68k.org> <1394533430-4746-4-git-send-email-geert@linux-m68k.org> <CAL_JsqLtqpYzes6n4ujaGMnr0-7PhcJpUKc2KtTPigaChkjPkg@mail.gmail.com>
- <CAMuHMdXM2ET281xPjsx0uZis9oC6=g2gvzmQo3m9_WHXwFBrqQ@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH V7 1/1] drivers/gpio: Altera soft IP GPIO driver and
+ devicetree binding
+Date: Wed, 12 Mar 2014 15:52:12 +0100
+Message-ID: <CACRpkdZQdz78mdSJYaVsk3Xs1m7Eefh-d1e3LHew9VYxzSkObA@mail.gmail.com>
+References: <1393842463-5206-1-git-send-email-thloh@altera.com>
+	<CACRpkdbwKuaTucbHbuXsKpRAg+kN27K6uN212TT1-h8wxY9YzA@mail.gmail.com>
+	<20140308115045.GL3327@book.gsilab.sittig.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdXM2ET281xPjsx0uZis9oC6=g2gvzmQo3m9_WHXwFBrqQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140308115045.GL3327@book.gsilab.sittig.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Gerhard Sittig <gsi@denx.de>
+Cc: Tien Hock Loh <thloh@altera.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Dinh Nguyen <dinguyen@altera.com>, "lftan@altera.com" <lftan@altera.com>, Tien Hock Loh <thloh.linux@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Mar 2014, Geert Uytterhoeven wrote:
+On Sat, Mar 8, 2014 at 12:50 PM, Gerhard Sittig <gsi@denx.de> wrote:
+> On Fri, Mar 07, 2014 at 11:31 +0800, Linus Walleij wrote:
+>>
+>> On Mon, Mar 3, 2014 at 6:27 PM,  <thloh@altera.com> wrote:
+>>
+>> > From: Tien Hock Loh <thloh@altera.com>
+>> >
+>> > Add driver support for Altera GPIO soft IP, including interrupts and I/O.
+>> > Tested on Altera CV SoC board using dipsw and LED using LED framework.
+>> >
+>> > Signed-off-by: Tien Hock Loh <thloh@altera.com>
+>>
+>> Can I get some ACKs on this? Like from Gerhard, DT folks?
+>>
+>> Or is there still more things to do?
+>
+> Sorry, had flagged the patch for review, but did not get around
+> to respond earlier.  No ACK from me for v7 as it is.
 
-> >> Signed-off-by: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> >> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-> Thanks!
-> 
-> > Did you want me to take this or it can go with the rest of the series?
-> 
-> I hope Jiri will take all of them through the trivial tree.
+OK I'm holding this back.
 
-That's the plan -- I am just waiting a little bit more to (a) gather more 
-acks (b) don't apply those that'll be picked by maintainers.
+> Am I supposed to provide ACKs at all, given that I'm a reviewer
+> and fellow developer.  I always understood that Acked-By is
+> something more formal, where one maintainer signals to another
+> maintainer that it's OK to go though a different tree.
 
--- 
-Jiri Kosina
-SUSE Labs
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In this case I want an Acked-by/Reviewed-by tag (choose!)
+beacuse I trust your ability to review this specific code, as simple as
+that.  :-)
+
+Yours,
+Linus Walleij
