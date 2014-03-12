@@ -1,66 +1,119 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] irqchip: sun4i: Fix acomment about mask
- register initialization
-Date: Wed, 12 Mar 2014 11:10:10 +0100
-Message-ID: <20140312101010.GZ2815@lukather>
-References: <1394553273-30473-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH v5] can: xilinx CAN controller support.
+Date: Wed, 12 Mar 2014 11:18:51 +0100
+Message-ID: <5320348B.7030401@monstr.eu>
+References: <5254bfec-c6fd-4681-a34d-706d51e60fbb@VA3EHSMHS004.ehs.local> <531DD2C4.5060109@pengutronix.de> <f1e2f08f-05fc-40d3-8437-4c6817d631cb@AM1EHSMHS010.ehs.local> <531F0636.4050608@pengutronix.de> <a99feda0-7463-4781-bb73-90b99e65b014@CO9EHSMHS028.ehs.local> <531F1E30.4040203@pengutronix.de>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="pWT/WNRdoJORH3Bm"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBKPHQCMQKGQEWTEOUBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1394553273-30473-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+ protocol="application/pgp-signature";
+ boundary="Sgn1ffuOiCEaJoCe2LrWcuSawPMniLp35"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <531F1E30.4040203-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org" <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, "fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---pWT/WNRdoJORH3Bm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--Sgn1ffuOiCEaJoCe2LrWcuSawPMniLp35
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 11, 2014 at 04:54:33PM +0100, Hans de Goede wrote:
-> The comment was claiming that we were masking all irqs, while the code ac=
-tually
-> *un*masks all of them.
->=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Hi guys,
 
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+On 03/11/2014 03:31 PM, Marc Kleine-Budde wrote:
+> On 03/11/2014 03:08 PM, Appana Durga Kedareswara Rao wrote:
+>=20
+>>>>>> +   struct napi_struct napi;
+>>>>>> +   u32 (*read_reg)(const struct xcan_priv *priv, enum xcan_reg re=
+g);
+>>>>>> +   void (*write_reg)(const struct xcan_priv *priv, enum xcan_reg =
+reg,
+>>>>>> +                   u32 val);
+>>>>>> +   struct net_device *dev;
+>>>>>> +   void __iomem *reg_base;
+>>>>>> +   unsigned long irq_flags;
+>>>>>> +   struct clk *aperclk;
+>>>>>> +   struct clk *devclk;
+>>>>>
+>>>>> Please rename the clock variables to match the names in the DT.
+>>>>>
+>>>> The clock names are different for axi CAN and CANPS case.
+>>>> So will make them as busclk and devclk Are you ok with this?
+>>>
+>>> Why not "ref_clk" and "aper_clk" as used in the DT?
+>>>
+>> One of the comments I got from the Soren(sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org)
+>> Is the  clock-names must match the data sheet.
+>> If I Modify the clock names then it is different names for AXI CAN
+>> and CANPS case.
+>=20
+> Sorry, my faul, I thought the names are already these from the
+> datasheet. As S=C3=B6ren pointed out please use 's_axi_aclk' and
+> 'can_clk' for the DT and for the the variable names in the private
+> struct, too.
+>=20
+> The 'official' name of the ip core seems to be axi_can, should we renam=
+e
+> the driver? I suspect, that Michal wants to keep xilinx in the name for=
+
+> marketing reasons :P
+
+I hope that I am not moving to marketing position.  :-)
+
+opb_can, plb_can, axi_can, amba_can are all valid options for this IP.
+
+Maybe in future Xilinx will decide to use different bus and then will jus=
+t move
+all current soft IPs to new bus and drivers will be compatible.
+This is exactly what happened when Xilinx moved from OPB to PLB and then
+from PLB to AXI.
+That's why I think in general having bus name in name doesn't fit for our=
+ case.
+
+The same is for clock name which has bus name in it.
+For PLB it was called SPLB_Clk and I don't have OPB version but
+at least standalone driver points to OPB version where I believe
+SPLB_Clk name was not used.
+
+That's why if you want to reflect that clock is coming from bus
+you should use any generic name. At least for these soft IPs
+and this one is special because it is one which also went to silicon.
+Next example is XADC.
+
+That's why I just don't think we can find out better name than
+xilinx_can.
+
+Thanks,
+Michal
 
 --=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
 
---pWT/WNRdoJORH3Bm
+
+
+--Sgn1ffuOiCEaJoCe2LrWcuSawPMniLp35
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iQIcBAEBAgAGBQJTIDKCAAoJEBx+YmzsjxAgjsQP/iyWBiAdAzIbcaWvjDMnqiTO
-JSYDx3ANyIUt/J9EyfFTcaOjshda6Y6dFqrs+cHn4um2h9+ND+C2O23iurGy8BmF
-zRk8v3o1uUz60+vIVIwLd8Ufcsb6fS/dEEculucE79+LhkkkrE0dl5ZsYkNdmBeA
-Dbqv8nIu2r9N3YOgWeNIpKu+yyfIa8uxvmfTPHrK0inyJlT1qoZFPPR3+qi1FP3C
-iwvLqit7imtKYW2hjTg8bWV49GlNcOUouSpwX7rdVwzLeBvq9PTGsVVHp44F8TVL
-V6lC8VGVt1saR2LvRL+X/Rp90SdH0I4JCAW2iG2hE7P0PQRtApq757wQuJATC/Q+
-g8BX/rIuuHTGty7PhSokfiOvjd0luBszC6j+IujipNPmI154zxfI0j5OkTYbre0a
-tu8lsHZmUY9e8px3NZ3Gw8zvbvotFHXnsA75wk2IGEaQdu/+cWNsecKZRnBJQcSk
-d3pZsx3ahQaLZuB7OYzyniJ/RcWKU1iSPz/QSB52P9fe1zchEvHWtF58yzk9tNOx
-OeSwEl1uM4jsYC+7v/1L5+v/TWuiM5g1UAqTI5iU37A9FhJvB3Aoo26PyLtGQT8D
-zKYNzLmeV1YYnRAQUs2Qp5UxJROCfrEjDLb3HhPmYr05l8VkoH9dMSRQliYKIpWW
-RJSTPhn6AuGSND7i6xT4
-=daao
+iEYEARECAAYFAlMgNIsACgkQykllyylKDCHXSACgmyMdFBH6GwD+LJ0d48RL3/RP
+GvoAn3C02g7HHk2naYPJJiN3eJrwSizK
+=6Dns
 -----END PGP SIGNATURE-----
 
---pWT/WNRdoJORH3Bm--
+--Sgn1ffuOiCEaJoCe2LrWcuSawPMniLp35--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
