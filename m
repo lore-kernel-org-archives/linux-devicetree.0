@@ -1,56 +1,50 @@
 From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 0/7] Watchdog support for Armada 375/38x SoC
-Date: Wed, 12 Mar 2014 18:12:43 -0300
-Message-ID: <20140312211243.GA1853@arch.cereza>
-References: <1393949244-5011-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <20140307001346.GB13690@arch.cereza>
- <20140311214525.GA3564@obsidianresearch.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Subject: [PATCH v3 8/8] ARM: mvebu: Add A375/A380 watchdog binding documentation
+Date: Wed, 12 Mar 2014 18:11:55 -0300
+Message-ID: <1394658715-2017-9-git-send-email-ezequiel.garcia@free-electrons.com>
+References: <1394658715-2017-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140311214525.GA3564-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1394658715-2017-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mar 11, Jason Gunthorpe wrote:
-> On Thu, Mar 06, 2014 at 09:13:46PM -0300, Ezequiel Garcia wrote:
->=20
-> > > On the driver side, we need to implement per-SoC stop() and enabl=
-ed()
-> > > functions. Such somewhat complex infrastructure is needed to ensu=
-re the driver
-> > > performs proper reset of the watchdog timer, by masking and disab=
-ling the
-> > > RSTOUT before the interrupt is enabled.
->=20
-> > JasonG: How does this look now?
->=20
-> A cursory look seems reasonable..
->=20
+This commit documents the new support for "marvell,armada-{375,380}-wdt"
+compatible strings and the extra 'reg' entry requirement.
 
-Good.
+Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ Documentation/devicetree/bindings/watchdog/marvel.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-> > Any chance someone gives a Tested-by on Dove/Kirkwood?
->=20
-> If you have a git I can pull I can try it here.
->=20
+diff --git a/Documentation/devicetree/bindings/watchdog/marvel.txt b/Documentation/devicetree/bindings/watchdog/marvel.txt
+index de11eb4..97223fd 100644
+--- a/Documentation/devicetree/bindings/watchdog/marvel.txt
++++ b/Documentation/devicetree/bindings/watchdog/marvel.txt
+@@ -5,11 +5,18 @@ Required Properties:
+ - Compatibility : "marvell,orion-wdt"
+ 		  "marvell,armada-370-wdt"
+ 		  "marvell,armada-xp-wdt"
++		  "marvell,armada-375-wdt"
++		  "marvell,armada-380-wdt"
+ 
+ - reg		: Should contain two entries: first one with the
+ 		  timer control address, second one with the
+ 		  rstout enable address.
+ 
++For "marvell,armada-375-wdt" and "marvell,armada-380-wdt":
++
++- reg		: A third entry is mandatory and should contain the
++                  shared mask/unmask RSTOUT address.
++
+ Optional properties:
+ 
+ - interrupts	: Contains the IRQ for watchdog expiration
+-- 
+1.9.0
 
-I've just posted a v3 for this series together with a branch:
-
-https://github.com/MISL-EBU-System-SW/mainline-public/tree/wdt_a385_a37=
-5_v3
-
-Thanks!
---=20
-Ezequiel Garc=EDa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
