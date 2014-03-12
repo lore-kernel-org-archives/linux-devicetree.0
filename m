@@ -1,65 +1,53 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] spi: add xtfpga SPI controller driver
-Date: Wed, 12 Mar 2014 12:49:01 +0000
-Message-ID: <20140312124901.GQ28112@sirena.org.uk>
-References: <1394626865-15105-1-git-send-email-jcmvbkbc@gmail.com>
- <1394626865-15105-2-git-send-email-jcmvbkbc@gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="NckIF66D29mqubFO"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1394626865-15105-2-git-send-email-jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Zankel <chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org>, Marc Gauthier <marc-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v8 0/2] AS3935 lightning sensor support
+Date: Wed, 12 Mar 2014 05:53:12 -0700
+Message-ID: <1394628794-7598-1-git-send-email-mranostay@gmail.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This series adds support for the AMS AS3935 lightning sensor that allows
+reporting back estimated storm distance and strike events.
 
---NckIF66D29mqubFO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Changes from v7
 
-On Wed, Mar 12, 2014 at 04:21:03PM +0400, Max Filippov wrote:
+* Added IIO_CHAN_INFO_PROCESSED to report back meter converted
+* Storm out-of-range is reported as -EINVAL instead of mystery value 63000
+* Fixed error unwinding order in as3935_probe()
+* Renamed value gain_boot attribute to sensor_sensitivity
 
-> +	case 16:
-> +		/* Bytes that should go out earlier have lower addresses,
-> +		 * but the hardware operates with 16 bit words and transmits
-> +		 * higher bits first. Thus data in memory is in BE order.
-> +		 */
-> +		xspi->data = (xspi->data << 16) | be16_to_cpu(v);
-> +		xspi->data_sz += 2;
-> +		break;
+Changes from v6
 
-Are you sure you need to do this byte swap?  SPI words are big endian so
-if you are running on a little endian processor if you are transmitting
-16 bit words you should see the data getting swapped on the bus (this is
-why I say you should never have more than 8 bits per word for regmap).
+* Revised binding documents to not use the term "interrupts mapping"
+* Renamed tune-cap property to a more clear tuning-capacitor-pf
 
---NckIF66D29mqubFO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Changes from v5
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+* SPI write cache-aligned issues fixed
+* Fixed mutex_unlock's being missed
+* Reports distance in meters instead of kilometers (1km steps)
+* tune_cap is now in picofarads and not a register value
 
-iQIcBAEBAgAGBQJTIFe5AAoJELSic+t+oim9oVQP/RrJLM2g8TR6xGpJAxppmMIT
-XAy0MDJLEA60MVKEnCZdmvniijoB/hcxBXGoO7prUZNKYXbyHyC9LK4YrdwWW0S3
-xhn2mYMw4GBVxNYK6VQW/AT6gNmqLdcuhBcWzjcrBJKYR2e227ZwhSFzPORYI6rT
-IKUVpBWd4P/tFOZBYtGSJc4/8DMx+aZNbxQqWD62zsu1jNy7375ysvqFfLS5FXxC
-8Hb1S+UjK7pY/zxKxXh6FgIyrtQ6n0CALGC27x1cfMz6LSmbhiyrP7rKSDNZjZ/c
-TNBNJitc2GZmVx8jDGTaCJ4DxPMUhFgSBbgcZ9MZkivz0l+gbTyhOSfQuDYVASLZ
-lRwwi/gscngCR75M0zP4GnXfJdZcwCfUNqx8QXi5sZuEuCCVp5RvU+/qHyT0AmxR
-BiStg9zIaAm2D6IU2zhjigJ0MxTJwm7GwbvihPx76UxiAi1TQ0gY+EnARi7oKRD4
-i+RnWwFi+F3U8uC8WWqb2KfNMn+SV1ZkT/Uzo/bB6ZpAywtU4CE1TYK7RFIYmIIB
-KeZfppHCiIhSjV1naMwENySyhLdvDpm9cwFzGhQrm9B+zsF7k/6D3rwM/1PdqcB5
-LMCfrdYWSxT1RaN0Q6TAR22ZFlyM5hetAbB1hoXzRnLZwHrnNn0YGmc7Rlr57+VJ
-tvEGpdDGbbbwXyP2LIDM
-=QloZ
------END PGP SIGNATURE-----
+Matt Ranostay (2):
+  iio:as3935: Add DT binding docs for AS3935 driver
+  iio: Add AS3935 lightning sensor support
 
---NckIF66D29mqubFO--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../ABI/testing/sysfs-bus-iio-proximity-as3935     |  16 +
+ .../devicetree/bindings/iio/proximity/as3935.txt   |  28 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ drivers/iio/Kconfig                                |   1 +
+ drivers/iio/Makefile                               |   1 +
+ drivers/iio/proximity/Kconfig                      |  19 +
+ drivers/iio/proximity/Makefile                     |   6 +
+ drivers/iio/proximity/as3935.c                     | 456 +++++++++++++++++++++
+ 8 files changed, 528 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-proximity-as3935
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/as3935.txt
+ create mode 100644 drivers/iio/proximity/Kconfig
+ create mode 100644 drivers/iio/proximity/Makefile
+ create mode 100644 drivers/iio/proximity/as3935.c
+
+-- 
+1.8.3.2
