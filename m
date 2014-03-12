@@ -1,25 +1,45 @@
 From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCHv3 1/2] arm: dts: dra7: Add qspi device.
-Date: Wed, 12 Mar 2014 10:34:45 -0700
-Message-ID: <20140312173444.GF30897@atomide.com>
-References: <1394452263-12975-1-git-send-email-sourav.poddar@ti.com>
+Subject: Re: [PATCH] ARM: dts: am335x-evmsk: enable DMA controller for USB
+Date: Wed, 12 Mar 2014 10:39:53 -0700
+Message-ID: <20140312173952.GB1996@atomide.com>
+References: <1394465217-24171-1-git-send-email-yegorslists@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1394452263-12975-1-git-send-email-sourav.poddar@ti.com>
+In-Reply-To: <1394465217-24171-1-git-send-email-yegorslists@googlemail.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Sourav Poddar <sourav.poddar@ti.com>
-Cc: bcousson@baylibre.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+To: yegorslists@googlemail.com
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Sourav Poddar <sourav.poddar@ti.com> [140310 04:54]:
-> These add device tree entry for qspi controller driver on dra7-evm.
+* yegorslists@googlemail.com <yegorslists@googlemail.com> [140310 08:30]:
+> From: Yegor Yefremov <yegorslists@googlemail.com>
+> 
+> Signed-off-by: Yegor Yefremov <yegorslists@googlemail.com>
+> ---
+>  arch/arm/boot/dts/am335x-evmsk.dts |    4 ++++
+>  1 files changed, 4 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
+> index fa19271..ec08f6f 100644
+> --- a/arch/arm/boot/dts/am335x-evmsk.dts
+> +++ b/arch/arm/boot/dts/am335x-evmsk.dts
+> @@ -384,6 +384,10 @@
+>  		status = "okay";
+>  		dr_mode = "host";
+>  	};
+> +
+> +	dma-controller@07402000  {
+> +		status = "okay";
+> +	};
+>  };
+>  
+>  &epwmss2 {
 
-It seems that we need to wait for the crossbar dependencies
-to get cleared in the mainline kernel before we can apply this
-as otherwise the interrupts will be wrong in omap-for-v3.15/dt
-branch.
+Thanks applying into omap-for-v.15/dt with the subject line as
+the description also. No guarantees this will get merged as we're
+so close to the merge window already.
 
 Regards,
 
