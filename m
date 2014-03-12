@@ -1,73 +1,61 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 4/6] ARM: mvebu: Add support for NAND controller in
- Armada 38x SoC
-Date: Wed, 12 Mar 2014 17:30:07 -0300
-Message-ID: <20140312203007.GA7396@arch.cereza>
-References: <1394637404-7651-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1394637404-7651-5-git-send-email-ezequiel.garcia@free-electrons.com>
- <5320CEE7.6020506@cogentembedded.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH net-next V4 3/9] Altera TSE: Add Altera Ethernet Driver
+ MSGDMA File Components
+Date: Wed, 12 Mar 2014 13:31:15 -0700
+Message-ID: <1394656275.3915.32.camel@joe-AO722>
+References: <1394655334-29547-1-git-send-email-vbridgers2013@gmail.com>
+	 <1394655334-29547-4-git-send-email-vbridgers2013@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5320CEE7.6020506-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Seif Mazareeb <seif-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1394655334-29547-4-git-send-email-vbridgers2013@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Vince Bridgers <vbridgers2013@gmail.com>
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-doc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
 List-Id: devicetree@vger.kernel.org
 
-On Mar 13, Sergei Shtylyov wrote:
-> On 03/12/2014 06:16 PM, Ezequiel Garcia wrote:
->=20
-> >The Armada 38x SoC family has a NAND controller, compatible
-> >with the controller in Armada 370/375/XP SoCs. Add support for
-> >it in the devicetree file.
->=20
-> >Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> >---
-> >  arch/arm/boot/dts/armada-38x.dtsi | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
->=20
-> >diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/a=
-rmada-38x.dtsi
-> >index 76cc27e..18d8f80 100644
-> >--- a/arch/arm/boot/dts/armada-38x.dtsi
-> >+++ b/arch/arm/boot/dts/armada-38x.dtsi
-> >@@ -345,6 +345,16 @@
-> >  				clocks =3D <&mainpll>;
-> >  				clock-output-names =3D "nand";
-> >  			};
-> >+
-> >+			nand@d0000 {
->=20
->    ePAPR standard [1] tells us:
->=20
-> The name of a node should be somewhat generic, reflecting the functio=
-n of
-> the device and not its precise programming model. If appropriate, the=
- name
-> should be one of the following choices:
->=20
-> [...]
-> =E2=80=A2 flash
->=20
+On Wed, 2014-03-12 at 15:15 -0500, Vince Bridgers wrote:
+> This patch adds the MSGDMA soft IP support for the Altera Triple
+> Speed Ethernet driver.
 
-I think 'nand' is generic enough, isn't it?
+[]
 
-In any case, it seems sane to distinguish a NAND flash from a NOR flash=
-,
-from a SPI flash.
+> Signed-off-by: Vince Bridgers <vbridgers2013@gmail.com>
+> ---
+> V4: - Modify use of dev_* to netdev_* where possible
 
-=46WIW, quite a few other SoCs have chosen 'nand' for the node name, in=
-cluding
-the other Armada variants. Was this a wrong choice?
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi again Vince.
+
+trivia:
+
+It'd be better to also use the netif_<foo> forms too.
+
+This can be done later in a follow-on patch if desired.
+
+> diff --git a/drivers/net/ethernet/altera/altera_msgdma.c b/drivers/net/ethernet/altera/altera_msgdma.c
+[]
+> +void msgdma_reset(struct altera_tse_private *priv)
+> +{
+[]
+> +	if ((counter >= ALTERA_TSE_SW_RESET_WATCHDOG_CNTR) &&
+> +	    (netif_msg_drv(priv)))
+> +		netdev_warn(priv->dev,
+> +			    "TSE Rx mSGDMA resetting bit never cleared!\n");
+
+	if (counter >= ALTERA_TSE_SW_RESET_WATCHDOG_CNTR)
+		netif_warn(priv, drv, priv->dev,
+			   "TSE Rx mSGDMA resetting bit never cleared!\n");
+
+[]
+
+> +	if ((counter >= ALTERA_TSE_SW_RESET_WATCHDOG_CNTR) &&
+> +	    (netif_msg_drv(priv)))
+> +		netdev_warn(priv->dev,
+> +			    "TSE Tx mSGDMA resetting bit never cleared!\n");
+
+	if (counter >= ALTERA_TSE_SW_RESET_WATCHDOG_CNTR)
+		netif_warn(priv, drv, priv->dev,
+			   "TSE Tx mSGDMA resetting bit never cleared!\n");
+
+cheers, Joe
