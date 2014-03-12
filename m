@@ -1,62 +1,88 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH net-next v3 5/9] Altera TSE: Add Miscellaneous Files for
- Altera Ethernet Driver
-Date: Wed, 12 Mar 2014 14:27:34 -0700
-Message-ID: <1394659654.3915.54.camel@joe-AO722>
-References: <1394577791-6547-1-git-send-email-vbridgers2013@gmail.com>
-	 <1394577791-6547-6-git-send-email-vbridgers2013@gmail.com>
-	 <1394578747.28839.4.camel@joe-AO722>
-	 <CAOwfj2Ot+ssTZgMoOoShVEUi+RkxjpPpRUfHAkP9RETm3TuUzg@mail.gmail.com>
-	 <1394658856.20857.7.camel@deadeye.wl.decadent.org.uk>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 4/6] ARM: mvebu: Add support for NAND controller in
+ Armada 38x SoC
+Date: Wed, 12 Mar 2014 18:29:36 -0300
+Message-ID: <20140312212936.GA2384@arch.cereza>
+References: <1394637404-7651-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1394637404-7651-5-git-send-email-ezequiel.garcia@free-electrons.com>
+ <5320CEE7.6020506@cogentembedded.com>
+ <20140312203007.GA7396@arch.cereza>
+ <5320D3FD.8010704@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1394658856.20857.7.camel@deadeye.wl.decadent.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Ben Hutchings <ben@decadent.org.uk>
-Cc: Vince Bridgers <vbridgers2013@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, David Miller <davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5320D3FD.8010704-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Seif Mazareeb <seif-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-(added David Miller to cc's)
+On Mar 13, Sergei Shtylyov wrote:
+> On 03/12/2014 11:30 PM, Ezequiel Garcia wrote:
+>=20
+> >>>The Armada 38x SoC family has a NAND controller, compatible
+> >>>with the controller in Armada 370/375/XP SoCs. Add support for
+> >>>it in the devicetree file.
+>=20
+> >>>Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org=
+>
+> >>>---
+> >>>  arch/arm/boot/dts/armada-38x.dtsi | 10 ++++++++++
+> >>>  1 file changed, 10 insertions(+)
+>=20
+> >>>diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts=
+/armada-38x.dtsi
+> >>>index 76cc27e..18d8f80 100644
+> >>>--- a/arch/arm/boot/dts/armada-38x.dtsi
+> >>>+++ b/arch/arm/boot/dts/armada-38x.dtsi
+> >>>@@ -345,6 +345,16 @@
+> >>>  				clocks =3D <&mainpll>;
+> >>>  				clock-output-names =3D "nand";
+> >>>  			};
+> >>>+
+> >>>+			nand@d0000 {
+>=20
+> >>    ePAPR standard [1] tells us:
+>=20
+> >>The name of a node should be somewhat generic, reflecting the funct=
+ion of
+> >>the device and not its precise programming model. If appropriate, t=
+he name
+> >>should be one of the following choices:
+>=20
+> >>[...]
+> >>=E2=80=A2 flash
+>=20
+> >I think 'nand' is generic enough, isn't it?
+>=20
+>    It is but not more generic than "flash". :-)
+>=20
 
-On Wed, 2014-03-12 at 21:14 +0000, Ben Hutchings wrote:
-> On Tue, 2014-03-11 at 19:28 -0500, Vince Bridgers wrote:
-> > On Tue, Mar 11, 2014 at 5:59 PM, Joe Perches <joe@perches.com> wrote:
-> > > On Tue, 2014-03-11 at 17:43 -0500, Vince Bridgers wrote:
-> > >> This patch adds miscellaneous files for the Altera Ethernet Driver,
-> > >> including ethtool support.
-> > > trivial notes:
-> > >> diff --git a/drivers/net/ethernet/altera/altera_tse_ethtool.c b/drivers/net/ethernet/altera/altera_tse_ethtool.c
-> > > []
-> > >> +static char const stat_gstrings[][ETH_GSTRING_LEN] = {
-> > > static const char
-> > >> +     "aFramesTransmittedOK",
-> > > Why the prefix with a?
-> > These names follow the names of the statistics found in the databook
-> > for the Altera Triple Speed Ethernet (TSE) soft IP. I'm not
-> > emotionally attached to these names, so will review the statistics
-> > names and follow common usage instead. Thank you for noticing and
-> > commenting.
-> [...]
-> 
-> These look like the statistic names specified in IEEE 802.3.
+Right.
 
-Yup.
+> >FWIW, quite a few other SoCs have chosen 'nand' for the node name, i=
+ncluding
+> >the other Armada variants. Was this a wrong choice?
+>=20
+>    I guess. There's a lot of wrong choices now all over the
+> arch/arm/boot/dts/ because people are probably not aware of the neces=
+sary
+> documentation such as http://devicetree.org/Device_Tree_Usage (pointi=
+ng to
+> ePAPR and having a passage on the generic device names too).
+>=20
 
-> I would
-> support a general move to using standard names for MAC stats in Ethernet
-> drivers, because they are quite clearly defined and widely implemented
-> in hardware.  However, that is not the current practice in most Linux
-> drivers.
-
-It was kind of an odd mix of rfc 2666 and 3635 names.
-
-I think the v4 patch naming is at least more consistent
-with the rest of the kernel and "thanks Vince" for
-changing it.
-
-Maybe it wouldn't hurt to have some more #defines for
-these strings and use them in all the drivers.
-
-
+OK, I guess it's fine. Let's try to do things from now on, at least. I'=
+ll fix
+this and send a new series.
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
