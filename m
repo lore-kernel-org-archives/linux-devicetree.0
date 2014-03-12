@@ -1,44 +1,44 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 1/3] ata: ahci_st: Provide DT bindings for ST's SATA
- implementation
-Date: Wed, 12 Mar 2014 17:14:52 +0000
-Message-ID: <20140312171452.GE22450@lee--X1>
-References: <1393328481-7251-1-git-send-email-lee.jones@linaro.org>
- <20140312114257.GA17461@e106331-lin.cambridge.arm.com>
- <20140312124835.GA22450@lee--X1>
- <7613177.7hd4IoKUr4@wuerfel>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 0/4] irq: sun4i IRQ 0 / ENMI fixes
+Date: Wed, 12 Mar 2014 18:17:03 +0100
+Message-ID: <1394644627-12315-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7613177.7hd4IoKUr4@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "DCG_UPD_stlinux_kernel@list.st.com" <DCG_UPD_stlinux_kernel@list.st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@st.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBGFNQKMQKGQE2ODAE4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> > > > +This binding describes a SATA device.
-> > > > +
-> > > > +Required properties:
-> > > > + - compatible         : Must be "st,ahci"
-> > >=20
-> > > Is there not a more specific name? This is awfully generic.
-> >=20
-> > There isn't one. ST only have one AHCI driver. The driver is named =
-as
-> > generically.
->=20
-> If it is this generic, can't you use the completely generic
-> ahci-platform driver and add a "generic-ahci" compatible string
-> to that?
+Hi All,
 
-It pretty much does. The only 'special' functionality we handle in
-the driver are resets and configuring the OOB. However, both are
-required.
+Here is v2 of my sun4i IRQ 0 / ENMI fixes fixes, changelog below:
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+v2:
+
+PATCH 1/4 irq: Add handle_fasteoi_late_irq irq handler
+New patch by Thomas Gleixner, adding a new irq handler with the "call eoi
+after the irq-handler has run its course" behavior we need to avoid double
+irqs on the ENMI.
+
+PATCH 2/4 irqchip: sun4i: Fix irq 0 not working
+Modified to avoid spurious calls to the irq 0 handler, as suggested by Maxime.
+
+PATCH 3/4 irqchip: sun4i: Fix a comment about mask register
+Added Maxime's Acked-by
+
+PATCH 4/4 irqchip: sun4i: Use handle_fasteoi_late_irq for the
+New patch switching the handler for irq 0 over to the new
+handle_fasteoi_late_irq handler, thereby fixing the double interrupts issue
+
+Thanks for all the help to all involved.
+
+Regards,
+
+Hans
