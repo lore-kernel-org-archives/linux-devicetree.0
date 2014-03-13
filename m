@@ -1,37 +1,70 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v6 10/11] arm64: add support for reserved memory defined
- by device tree
-Date: Thu, 13 Mar 2014 10:52:04 +0000
-Message-ID: <20140313105204.CDC95C40E11@trevor.secretlab.ca>
-References: <1393594976-16728-1-git-send-email-m.szyprowski@samsung.com> <
- 1393594976-16728-11-git-send-email-m.szyprowski@samsung.com> <
- 20140312170448.GP17083@arm.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [GIT PULL] Move device tree graph parsing helpers to drivers/of
+Date: Thu, 13 Mar 2014 12:08:16 +0100
+Message-ID: <1394708896.3577.21.camel@paszta.hi.pengutronix.de>
+References: <1394126000.3622.66.camel@paszta.hi.pengutronix.de>
+	 < 20140307182330.75168C40AE3@trevor.secretlab.ca>
+	 <20140310102630.3cb1bcd7@ samsung.com>
+	 <20140310143758.3734FC405FA@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140312170448.GP17083@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Tomasz Figa <t.figa@samsung.com>, Will Deacon <Will.Deacon@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Paul Mackerras <paulus@samba.org>, Arnd Bergmann <arnd@arndb.de>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laura Abbott <lauraa@codeaurora.org>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Sascha Hauer <s.hauer@pengutronix.de>, Michal Nazarewicz <mina86@mina86.com>, "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>, Marc <marc.ceeeee@gmail.com>, Nishanth Peethambaran <nishanth.p@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@li>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140310143758.3734FC405FA@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Greg KH <gregkh@linuxfoundation.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Mar 2014 17:04:48 +0000, Catalin Marinas <catalin.marinas@arm.com> wrote:
-> On Fri, Feb 28, 2014 at 01:42:55PM +0000, Marek Szyprowski wrote:
-> > Enable reserved memory initialization from device tree.
+Hi,
+
+Am Montag, den 10.03.2014, 14:37 +0000 schrieb Grant Likely:
+> > > Nak. I made comments that haven't been resolved yet. I've replied with
+> > > more detail tonight. The big issues are how drivers handle the optional
+> > > 'ports' node and I do not agree to the double-linkage in the binding
+> > > description.
+
+so as I understand it, nobody is against dropping the double-linkage
+*if* we can agree on a way to recreate the backlinks in the kernel.
+My current suggestion would be to parse the complete device tree into an
+internal graph structure once, at boot to achieve this. This code could
+look for the optional 'ports' node if and only if the parent device node
+contains #address-cells != <1> or #size-cells != <0> properties.
+
+People completely disagree about the direction the phandle links should
+point in. I am still of the opinion that the generic binding should
+describe just the topology, that the endpoint links in the kernel should
+represent an undirected graph and the direction of links should not
+matter at all for the generic graph bindings.
+
+There's also no consensus about the simplified bindings, but this is an
+issue I'd like to separate from this series.
+
+> > If I understood well, you're requesting to revert all those six patches
+> > that were imported via git pull from my tree (and from Greg and Russell),
+> > right?
 > > 
-> > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > E. g. reverting those changesets:
+> > 	d484700a3695 f2a575f67695 4329b93b283c 6ff60d397b17 4d56ed5a009b fd9fdb78a9bf
+> > 
+> > as it seems that there's no easy way to revert a git pull.
 > 
-> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> All trees containing the branch would need to be reverted.
+>
+> > I suspect that this will likely cause some harm when merging from our
+> > trees upstream.
+> 
+> It means any tree containing that branch *must* be rewound. See my reply
+> to rmk.
 
-Thanks Catalin.
+> I've made a proposal on how I could be happy with leaving the
+> branches alone. I'm not particularly happy, but there is a way to
+> resolve things without reverts or rewinds.
 
-g.
+I'm not sure if maybe I misunderstood or missed a mail, but I haven't
+seen a proposal to resolve the situation without rewinds. Given that
+Mauro already reverted the media tree and applied conflicting changes,
+that's probably not going to happen?
+
+regards
+Philipp
