@@ -1,89 +1,60 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RESEND PATCH 1/1] arm: dts: am33xx: correcting dt node unit
- address for usb
-Date: Thu, 13 Mar 2014 13:30:09 -0700
-Message-ID: <20140313203009.GE5981@atomide.com>
-References: <1394109094-19205-1-git-send-email-mugunthanvnm@ti.com>
- <20140306152637.GB25648@saruman.home>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 3/3] irqchip: sun4i: simplify sun4i_irq_ack
+Date: Thu, 13 Mar 2014 20:50:02 +0100
+Message-ID: <1394740202-1952-4-git-send-email-hdegoede@redhat.com>
+References: <1394740202-1952-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20140306152637.GB25648@saruman.home>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Mugunthan V N <mugunthanvnm@ti.com>, devicetree@vger.kernel.org, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-kernel@vger.kernel.org, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBZ5ORCMQKGQED3XUKJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1394740202-1952-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Felipe Balbi <balbi@ti.com> [140306 07:33]:
-> On Thu, Mar 06, 2014 at 06:01:34PM +0530, Mugunthan V N wrote:
-> > DT node's unit address should be its own register offset address to make it a
-> > unique across the system. This patch corrects the incorrect USB entries with
-> > correct register offset for unit address.
-> > 
-> > Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > Cc: Felipe Balbi <balbi@ti.com>
-> > Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
-> 
-> Acked-by: Felipe Balbi <balbi@ti.com>
+Now that we only ack irq 0 the code can be simplified a lot.
 
-Applying into omap-for-v3.15/fixes with cc stable v3.12+. If somebody
-wants it in earlier kernels it needs to be updated and posted
-to the lists.
+Also switch from read / modify / write to a simple write clear:
+1) This is what the android code does (it has a hack for acking irq 0
+  in its unmask code doing this)
+2) read / modify / write simply does not make sense for an irq status
+  register like this, if the other bits are writeable (and the data sheet says
+  they are not) they should be write 1 to clear, since otherwise a read /
+  modify / write can race with a device raising an interrupt and then clear
+  the pending bit unintentionally
 
-Regards,
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/irqchip/irq-sun4i.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-Tony
-
-> > This patch was posted long back (Aug. 30, 2013), below is the archive of the
-> > orginal patch.
-> > https://patchwork.kernel.org/patch/2852163/
-> > 
-> > ---
-> >  arch/arm/boot/dts/am33xx.dtsi | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> > index 7073429..9770e35 100644
-> > --- a/arch/arm/boot/dts/am33xx.dtsi
-> > +++ b/arch/arm/boot/dts/am33xx.dtsi
-> > @@ -453,7 +453,7 @@
-> >  			ti,hwmods = "usb_otg_hs";
-> >  			status = "disabled";
-> >  
-> > -			usb_ctrl_mod: control@44e10000 {
-> > +			usb_ctrl_mod: control@44e10620 {
-> >  				compatible = "ti,am335x-usb-ctrl-module";
-> >  				reg = <0x44e10620 0x10
-> >  					0x44e10648 0x4>;
-> > @@ -556,7 +556,7 @@
-> >  					"tx14", "tx15";
-> >  			};
-> >  
-> > -			cppi41dma: dma-controller@07402000 {
-> > +			cppi41dma: dma-controller@47402000 {
-> >  				compatible = "ti,am3359-cppi41";
-> >  				reg =  <0x47400000 0x1000
-> >  					0x47402000 0x1000
-> > -- 
-> > 1.9.0
-> > 
-> 
-> -- 
-> balbi
-
-
-
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+diff --git a/drivers/irqchip/irq-sun4i.c b/drivers/irqchip/irq-sun4i.c
+index 6a8c88d..75615b5 100644
+--- a/drivers/irqchip/irq-sun4i.c
++++ b/drivers/irqchip/irq-sun4i.c
+@@ -41,16 +41,11 @@ static asmlinkage void __exception_irq_entry sun4i_handle_irq(struct pt_regs *re
+ static void sun4i_irq_ack(struct irq_data *irqd)
+ {
+ 	unsigned int irq = irqd_to_hwirq(irqd);
+-	unsigned int irq_off = irq % 32;
+-	int reg = irq / 32;
+-	u32 val;
+ 
+ 	if (irq != 0)
+ 		return; /* Only IRQ 0 / the ENMI needs to be acked */
+ 
+-	val = readl(sun4i_irq_base + SUN4I_IRQ_PENDING_REG(reg));
+-	writel(val | (1 << irq_off),
+-	       sun4i_irq_base + SUN4I_IRQ_PENDING_REG(reg));
++	writel(BIT(0), sun4i_irq_base + SUN4I_IRQ_PENDING_REG(0));
+ }
+ 
+ static void sun4i_irq_mask(struct irq_data *irqd)
+-- 
+1.9.0
