@@ -1,33 +1,91 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: mach-ux500|nomadik|u300: Align to common DT
-	bindings for mmci
-Date: Thu, 13 Mar 2014 17:47:04 +0000
-Message-ID: <20140313174703.GO21483@n2100.arm.linux.org.uk>
-References: <1394713963-18300-1-git-send-email-ulf.hansson@linaro.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCHv2 8/8] devfreq: exynos4: Add busfreq driver for
+ exynos4210/exynos4x12
+Date: Thu, 13 Mar 2014 17:53:08 +0000
+Message-ID: <20140313175308.GE25870@e106331-lin.cambridge.arm.com>
+References: <1394698649-20996-1-git-send-email-cw00.choi@samsung.com>
+ <1394698649-20996-9-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1394713963-18300-1-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alessandro Rubini <rubini-9wsNiZum9E8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1394698649-20996-9-git-send-email-cw00.choi@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>, "nm@ti.com" <nm@ti.com>, "b.zolnierkie@samsaung.com" <b.zolnierkie@samsaung.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 13, 2014 at 01:32:43PM +0100, Ulf Hansson wrote:
-> As the first step in preparing the mmci driver for converting to the
-> mmc_of_parse API, let's align to the common names of DT bindings for
-> the mmc/sd highspeed modes.
+On Thu, Mar 13, 2014 at 08:17:29AM +0000, Chanwoo Choi wrote:
+> This patch add busfreq driver for Exynos4210/Exynos4x12 memory interface
+> and bus to support DVFS(Dynamic Voltage Frequency Scaling) according to PPMU
+> counters. PPMU (Performance Profiling Monitorings Units) of Exynos4 SoC provides
+> PPMU counters for DMC(Dynamic Memory Controller) to check memory bus utilization
+> and then busfreq driver adjusts dynamically the operating frequency/voltage
+> by using DEVFREQ Subsystem.
+> 
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>  .../devicetree/bindings/devfreq/exynos4_bus.txt    | 49 ++++++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt b/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
+> new file mode 100644
+> index 0000000..2a83fcc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
+> @@ -0,0 +1,49 @@
+> +
+> +Exynos4210/4x12 busfreq driver
+> +-----------------------------
+> +
+> +Exynos4210/4x12 Soc busfreq driver with devfreq for Memory bus frequency/voltage
+> +scaling according to PPMU counters of memory controllers
+> +
+> +Required properties:
+> +- compatible	: should contain Exynos4 SoC type as follwoing:
+> +		  - "samsung,exynos4x12-busfreq" for Exynos4x12
+> +		  - "samsung,exynos4210-busfreq" for Exynos4210
 
-NAK.  These bindings have been documented as being there since March
-14th 2012, and therefore need to be supported for ever by the driver.
-You can _augment_ the bindings with the generic ones, and change the
-DT files, but you can't remove the parsing of the old property names.
+Is there a device called "busfreq"? What device does this binding
+describe?
 
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +- reg		: offset and length of the ppmudmc0/1
+> +		  - PPMU (Performance Profiling Monitoring Units)
+
+You seem to require a particular order here. It would be good to be
+explicit about it.
+
+> +		  : It is to profile performance event of DMC(Dynamic Memory
+> +		  Controller) So, exynos4_bus.c can check memory bus utilization
+> +		  by using PPMU of Exynos4 SoC.
+
+This is superfluous, and Linux-specific. The binding document shouldn't
+need to refer to drivers.
+
+> +- clocks	: clock number of ppmudmc0/1
+> +- clock-names	: clock name of ppmudmc0/1
+
+Are these two clocks, or one clock with a slash in the name?
+
+Please list each name separately.
+
+> +- vdd_int-supply: regulator for interface block of Exynos4
+> +
+> +Optional properties:
+> +- vdd_mif-supply: regulator for DMC block of Exynos4x12 if Exynos4x12 Soc
+> +- regs-name	: register name of ppmudmc0/1
+
+This is completely nonstandard. Did you mean reg-names?
+
+Please be explicit about the names you expect. Write them in full,
+quoted, and describe the relationship to the reg property.
+
+> +
+> +All the required listed above must be defined under code busfreq with devfreq
+
+I'm having some difficulty figuring out what exactly this is intended to
+mean.
+
+Thanks,
+Mark.
