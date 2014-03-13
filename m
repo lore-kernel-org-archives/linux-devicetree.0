@@ -1,43 +1,89 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 6/6] clk: mvebu: Update binding documentation for the core divider clock
-Date: Thu, 13 Mar 2014 17:24:33 -0300
-Message-ID: <1394742273-5113-7-git-send-email-ezequiel.garcia@free-electrons.com>
-References: <1394742273-5113-1-git-send-email-ezequiel.garcia@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1394742273-5113-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Seif Mazareeb <seif-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RESEND PATCH 1/1] arm: dts: am33xx: correcting dt node unit
+ address for usb
+Date: Thu, 13 Mar 2014 13:30:09 -0700
+Message-ID: <20140313203009.GE5981@atomide.com>
+References: <1394109094-19205-1-git-send-email-mugunthanvnm@ti.com>
+ <20140306152637.GB25648@saruman.home>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20140306152637.GB25648@saruman.home>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Mugunthan V N <mugunthanvnm@ti.com>, devicetree@vger.kernel.org, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-kernel@vger.kernel.org, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Core Divider clock support two new compatible strings for Armada
-375 and Armada 380 SoCs. Add the compatible strings to the documentation.
+* Felipe Balbi <balbi@ti.com> [140306 07:33]:
+> On Thu, Mar 06, 2014 at 06:01:34PM +0530, Mugunthan V N wrote:
+> > DT node's unit address should be its own register offset address to make it a
+> > unique across the system. This patch corrects the incorrect USB entries with
+> > correct register offset for unit address.
+> > 
+> > Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > Cc: Felipe Balbi <balbi@ti.com>
+> > Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
+> 
+> Acked-by: Felipe Balbi <balbi@ti.com>
 
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Applying into omap-for-v3.15/fixes with cc stable v3.12+. If somebody
+wants it in earlier kernels it needs to be updated and posted
+to the lists.
 
-diff --git a/Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt b/Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt
-index c62391f..520562a 100644
---- a/Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt
-@@ -4,7 +4,10 @@ The following is a list of provided IDs and clock names on Armada 370/XP:
-  0 = nand (NAND clock)
- 
- Required properties:
--- compatible : must be "marvell,armada-370-corediv-clock"
-+- compatible : must be "marvell,armada-370-corediv-clock",
-+		       "marvell,armada-375-corediv-clock",
-+		       "marvell,armada-380-corediv-clock",
-+
- - reg : must be the register address of Core Divider control register
- - #clock-cells : from common clock binding; shall be set to 1
- - clocks : must be set to the parent's phandle
--- 
-1.9.0
+Regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
+
+> > This patch was posted long back (Aug. 30, 2013), below is the archive of the
+> > orginal patch.
+> > https://patchwork.kernel.org/patch/2852163/
+> > 
+> > ---
+> >  arch/arm/boot/dts/am33xx.dtsi | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+> > index 7073429..9770e35 100644
+> > --- a/arch/arm/boot/dts/am33xx.dtsi
+> > +++ b/arch/arm/boot/dts/am33xx.dtsi
+> > @@ -453,7 +453,7 @@
+> >  			ti,hwmods = "usb_otg_hs";
+> >  			status = "disabled";
+> >  
+> > -			usb_ctrl_mod: control@44e10000 {
+> > +			usb_ctrl_mod: control@44e10620 {
+> >  				compatible = "ti,am335x-usb-ctrl-module";
+> >  				reg = <0x44e10620 0x10
+> >  					0x44e10648 0x4>;
+> > @@ -556,7 +556,7 @@
+> >  					"tx14", "tx15";
+> >  			};
+> >  
+> > -			cppi41dma: dma-controller@07402000 {
+> > +			cppi41dma: dma-controller@47402000 {
+> >  				compatible = "ti,am3359-cppi41";
+> >  				reg =  <0x47400000 0x1000
+> >  					0x47402000 0x1000
+> > -- 
+> > 1.9.0
+> > 
+> 
+> -- 
+> balbi
+
+
+
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
