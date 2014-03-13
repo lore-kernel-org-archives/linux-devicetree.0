@@ -1,40 +1,91 @@
-From: George Cherian <george.cherian@ti.com>
-Subject: [PATCH v4 1/5] doc: Add "ti,am437x-dwc3" comaptible for dwc3 glue
-Date: Thu, 13 Mar 2014 20:41:12 +0530
-Message-ID: <1394723476-8580-2-git-send-email-george.cherian@ti.com>
-References: <1394723476-8580-1-git-send-email-george.cherian@ti.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] irqchip: sun4i: Use
+ handle_fasteoi_late_irq for the ENMI (irq 0)
+Date: Thu, 13 Mar 2014 16:13:22 +0100
+Message-ID: <5321CB12.3090704@redhat.com>
+References: <1394644627-12315-1-git-send-email-hdegoede@redhat.com> <1394644627-12315-5-git-send-email-hdegoede@redhat.com> <alpine.DEB.2.02.1403131542060.18573@ionos.tec.linutronix.de>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1394723476-8580-1-git-send-email-george.cherian@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: balbi@ti.com, rogerq@ti.com, kishon@ti.com, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, tony@atomide.com, anatol.pomozov@gmail.com, bcousson@baylibre.com, George Cherian <george.cherian@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBGMWQ6MQKGQEFBQMBLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1403131542060.18573-3cz04HxQygjZikZi3RtOZ1XZhhPuCNm+@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the compatible "ti,am437x-dwc3" for dwc3 glue driver.
+Hi,
 
-Signed-off-by: George Cherian <george.cherian@ti.com>
-Acked-by: Roger Quadros <rogerq@ti.com>
----
- Documentation/devicetree/bindings/usb/omap-usb.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+On 03/13/2014 03:46 PM, Thomas Gleixner wrote:
+> On Wed, 12 Mar 2014, Hans de Goede wrote:
+> 
+>> The ENMI needs to have the ack done *after* clearing the interrupt source,
+>> otherwise we will get a spurious interrupt for each real interrupt. Switch
+>> to the new handle_fasteoi_late_irq handler which gives us the desired behavior.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  drivers/irqchip/irq-sun4i.c | 11 +++++++++--
+>>  1 file changed, 9 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/irqchip/irq-sun4i.c b/drivers/irqchip/irq-sun4i.c
+>> index 8a2fbee..4b1c874 100644
+>> --- a/drivers/irqchip/irq-sun4i.c
+>> +++ b/drivers/irqchip/irq-sun4i.c
+>> @@ -77,15 +77,22 @@ static void sun4i_irq_unmask(struct irq_data *irqd)
+>>  static struct irq_chip sun4i_irq_chip = {
+>>  	.name		= "sun4i_irq",
+>>  	.irq_ack	= sun4i_irq_ack,
+>> +	.irq_eoi	= sun4i_irq_ack, /* For the ENMI */
+>>  	.irq_mask	= sun4i_irq_mask,
+>>  	.irq_unmask	= sun4i_irq_unmask,
+>> +	.flags		= IRQCHIP_EOI_THREADED, /* Only affects the ENMI */
+> 
+> That's not really true. The flags affect all interrupts which share
+> that chip.
 
-diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documentation/devicetree/bindings/usb/omap-usb.txt
-index 38b2fae..38d9bb8 100644
---- a/Documentation/devicetree/bindings/usb/omap-usb.txt
-+++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
-@@ -44,7 +44,9 @@ Board specific device node entry
- };
- 
- OMAP DWC3 GLUE
-- - compatible : Should be "ti,dwc3"
-+ - compatible : Should be
-+	* "ti,dwc3" for OMAP5 and DRA7
-+	* "ti,am437x-dwc3" for AM437x
-  - ti,hwmods : Should be "usb_otg_ss"
-  - reg : Address and length of the register set for the device.
-  - interrupts : The irq number of this device that is used to interrupt the
--- 
-1.8.3.1
+Yep, I figured out as much myself too while thinking a bit more about this
+this morning.
 
+So what I'm going to do in my next version of this patch is use 2
+irqchip structures for the sun4i irqchip, one to describe the special
+IRQ 0 and for all the others.
+
+> 
+>>  };
+>>  
+>>  static int sun4i_irq_map(struct irq_domain *d, unsigned int virq,
+>>  			 irq_hw_number_t hw)
+>>  {
+>> -	irq_set_chip_and_handler(virq, &sun4i_irq_chip,
+>> -				 handle_level_irq);
+>> +	if (hw == 0) /* IRQ 0, the ENMI needs special handling */
+>> +		irq_set_chip_and_handler(virq, &sun4i_irq_chip,
+>> +					 handle_fasteoi_late_irq);
+>> +	else
+>> +		irq_set_chip_and_handler(virq, &sun4i_irq_chip,
+>> +					 handle_level_irq);
+> 
+> I wonder what happens when you use the fasteoi handler for all of
+> them.
+
+As mentioned in my previous mail doing an ack (or an eio) seems to
+be unnecessary for all but IRQ 0.
+
+I do wonder if handle_level_irq is the right handle*irq function
+to use in this case, since this is strictly used in the non smp
+case I think that the mask / unmask done by handle_level_irq is
+not necessary for non threaded handlers. So what would be the
+correct handle*irq function to use in this case ?
+
+Note the irqs are level irqs. IOW they may stay asserted while
+the handler runs because of the handler and a new irq raising.
+
+Regards,
+
+Hans
