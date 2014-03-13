@@ -1,64 +1,55 @@
-From: George Cherian <george.cherian@ti.com>
-Subject: [PATCH v4 2/5] ARM: dts: am43xx clock data
-Date: Thu, 13 Mar 2014 20:41:13 +0530
-Message-ID: <1394723476-8580-3-git-send-email-george.cherian@ti.com>
-References: <1394723476-8580-1-git-send-email-george.cherian@ti.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v5 1/7] clk: sunxi: Remove calls to clk_put
+Date: Thu, 13 Mar 2014 16:14:13 +0100
+Message-ID: <1394723659-4995-2-git-send-email-maxime.ripard@free-electrons.com>
+References: <1394723659-4995-1-git-send-email-maxime.ripard@free-electrons.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1394723476-8580-1-git-send-email-george.cherian@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: balbi@ti.com, rogerq@ti.com, kishon@ti.com, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, tony@atomide.com, anatol.pomozov@gmail.com, bcousson@baylibre.com, George Cherian <george.cherian@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB7EWQ6MQKGQENSYBMAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1394723659-4995-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add USB and USB PHY reference clock data
+Callers of clk_put must disable the clock first. This also means that as long
+as the clock is enabled the driver should hold a reference to that clock.
+Hence, the call to clk_put here are bogus and should be removed.
 
-Signed-off-by: George Cherian <george.cherian@ti.com>
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/am43xx-clocks.dtsi | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ drivers/clk/sunxi/clk-sunxi.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
-index 142009c..c74d45c 100644
---- a/arch/arm/boot/dts/am43xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
-@@ -653,4 +653,36 @@
- 		clocks = <&clk_32768_ck>, <&clk_32k_tpm_ck>;
- 		reg = <0x4260>;
- 	};
-+
-+	usb_phy0_always_on_clk32k: usb_phy0_always_on_clk32k {
-+		#clock-cells = <0>;
-+		compatible = "fixed-factor-clock";
-+		clocks = <&clk_32768_ck>;
-+		clock-mult = <1>;
-+		clock-div = <1>;
-+	};
-+
-+	usb_phy1_always_on_clk32k: usb_phy1_always_on_clk32k {
-+		#clock-cells = <0>;
-+		compatible = "fixed-factor-clock";
-+		clocks = <&clk_32768_ck>;
-+		clock-mult = <1>;
-+		clock-div = <1>;
-+	};
-+
-+	usb_otg_ss0_refclk960m: usb_otg_ss0_refclk960m {
-+		#clock-cells = <0>;
-+	        compatible = "ti,gate-clock";
-+		clocks = <&dpll_per_clkdcoldo>;
-+	        ti,bit-shift = <8>;
-+	        reg = <0x8a60>;
-+	};
-+
-+	usb_otg_ss1_refclk960m: usb_otg_ss1_refclk960m {
-+		#clock-cells = <0>;
-+	        compatible = "ti,gate-clock";
-+		clocks = <&dpll_per_clkdcoldo>;
-+	        ti,bit-shift = <8>;
-+		reg = <0x8a68>;
-+	};
- };
+diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+index 23baad9d934a..7119c02c9fa8 100644
+--- a/drivers/clk/sunxi/clk-sunxi.c
++++ b/drivers/clk/sunxi/clk-sunxi.c
+@@ -1290,17 +1290,13 @@ static void __init sunxi_clock_protect(void)
+ 
+ 	/* memory bus clock - sun5i+ */
+ 	clk = clk_get(NULL, "mbus");
+-	if (!IS_ERR(clk)) {
++	if (!IS_ERR(clk))
+ 		clk_prepare_enable(clk);
+-		clk_put(clk);
+-	}
+ 
+ 	/* DDR clock - sun4i+ */
+ 	clk = clk_get(NULL, "pll5_ddr");
+-	if (!IS_ERR(clk)) {
++	if (!IS_ERR(clk))
+ 		clk_prepare_enable(clk);
+-		clk_put(clk);
+-	}
+ }
+ 
+ static void __init sunxi_init_clocks(void)
 -- 
-1.8.3.1
+1.9.0
