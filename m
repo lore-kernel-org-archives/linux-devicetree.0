@@ -1,65 +1,67 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] video: ARM CLCD: Add DT support
-Date: Thu, 13 Mar 2014 12:01:37 +0000
-Message-ID: <20140313120136.GN21483@n2100.arm.linux.org.uk>
-References: <1394036606-17784-1-git-send-email-pawel.moll@arm.com> <53184C2E.3000807@ti.com> <1394119431.4160.84.camel@hornet> <5319AF00.5030602@ti.com> <1394453382.3853.6.camel@hornet> <531DAEB9.3020502@ti.com>
+From: George Cherian <george.cherian@ti.com>
+Subject: Re: [PATCH v3 2/5] ARM: dts: am43xx clock data
+Date: Thu, 13 Mar 2014 17:44:40 +0530
+Message-ID: <5321A130.2060709@ti.com>
+References: <1394193422-18242-1-git-send-email-george.cherian@ti.com> <1394193422-18242-3-git-send-email-george.cherian@ti.com> <532189DB.9080807@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <531DAEB9.3020502-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jonathan Austin <Jonathan.Austin-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <532189DB.9080807@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: balbi@ti.com, kishon@ti.com, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, tony@atomide.com, anatol.pomozov@gmail.com, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 10, 2014 at 02:23:21PM +0200, Tomi Valkeinen wrote:
-> On 10/03/14 14:09, Pawel Moll wrote:
-> 
-> >> Note that the same DT bindings you add here should also work for the DRM
-> >> driver in the future. So, in fact, the question is extended to: will the
-> >> fbdev 
-> > 
-> > No, I don't think so. It's a end of line for it, I believe. From my
-> > personal point of view the main goal is to fill the last gap between DT
-> > and non-DT support on one of the Versatile Express boards - CLCD works
-> > fine when booted with ATAGs, doesn't work when booted with DT. It looks
-> > bad.
-> 
-> The DT describes the hardware, and there should be only one description
-> of it, no matter what the used SW is. I see compatible = "arm,pl111" in
-> the dts. PL111 is the LCD controller, right? What will the DRM driver
-> use, then, if the "arm,pl111" DT data is designed to work only for the
-> fbdev?
+On 3/13/2014 4:05 PM, Roger Quadros wrote:
+> Hi George,
+>
+> On 03/07/2014 01:56 PM, George Cherian wrote:
+>> Add USB reference clock data
+>>
+>> Signed-off-by: George Cherian <george.cherian@ti.com>
+>> ---
+>>   arch/arm/boot/dts/am43xx-clocks.dtsi | 17 +++++++++++++++++
+>>   1 file changed, 17 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
+>> index 142009c..506d036 100644
+>> --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
+>> +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
+>> @@ -653,4 +653,21 @@
+>>   		clocks = <&clk_32768_ck>, <&clk_32k_tpm_ck>;
+>>   		reg = <0x4260>;
+>>   	};
+>> +
+>> +	usb_otg_ss0_refclk960m: usb_otg_ss0_refclk960m {
+>> +		#clock-cells = <0>;
+>> +	        compatible = "ti,gate-clock";
+>> +		clocks = <&dpll_per_clkdcoldo>;
+>> +	        ti,bit-shift = <8>;
+>> +	        reg = <0x8a60>;
+>> +	};
+>> +
+>> +	usb_otg_ss1_refclk960m: usb_otg_ss1_refclk960m {
+>> +		#clock-cells = <0>;
+>> +	        compatible = "ti,gate-clock";
+>> +		clocks = <&dpll_per_clkdcoldo>;
+>> +	        ti,bit-shift = <8>;
+>> +		reg = <0x8a68>;
+>> +	};
+>> +
+>>   };
+>>
+> I was reviewing am43xx usb clock information recently and found out that
+> PHY clock is missing here. e.g. usb_phy0_always_on_clk32k and usb_phy1_always_on_clk32k.
+>
+> Can you please add these clocks?
 
-If we could move forward with things like DT bindings for DRM (which
-seems impossible) then we might be able to move forward with a proper
-DT implementation for componentised video systems which would solve
-this as you'd have the pl111 as just a CRTC component in a larger
-subsystem representation which included things like encoders and
-connectors - even for something as simple as the Versatile Express
-boards.
+okay I will add those and resend the series.
+>
+> cheers,
+> -roger
 
-These boards have a DVI connector which offers analogue (and probably
-digital) output.  Previous boards like Versatile and Integrator have
-offered VGA output and a connector for various LCD panels (sometimes
-the connected LCD panel is identified via a set of GPIOs.)
-
-So, going ahead with some bindings which include stuff like timing
-information in a pl111 node seems wrong and boxes us in if we're going
-to start representing connectors as well - as the timing should be part
-of the panel node or similar.
-
-So basically all movement on display subsystem DT representations is
-now blocked because no one can agree how they should be represented in
-a decent way.
-
-Maybe board files were much better than this frigging DT crap.
 
 -- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-George
+
