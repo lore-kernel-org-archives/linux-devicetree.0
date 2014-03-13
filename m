@@ -1,60 +1,77 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 3/3] irqchip: sun4i: simplify sun4i_irq_ack
-Date: Thu, 13 Mar 2014 20:50:02 +0100
-Message-ID: <1394740202-1952-4-git-send-email-hdegoede@redhat.com>
-References: <1394740202-1952-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Kevin Hilman <khilman@linaro.org>
+Subject: Re: [PATCH v5 09/11] arm: add support for reserved memory defined by
+ device tree
+Date: Thu, 13 Mar 2014 13:46:50 -0700
+Message-ID: <CAGa+x856+YyJ-vyfGoFAKmsqwKD+=Wh0-TT_mAaPStOXjd8eSQ@mail.gmail.com>
+References: <1392985527-6260-1-git-send-email-m.szyprowski@samsung.com>
+ <1392985527-6260-10-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBZ5ORCMQKGQED3XUKJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1394740202-1952-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1392985527-6260-10-git-send-email-m.szyprowski@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Tomasz Figa <t.figa@samsung.com>, Will Deacon <will.deacon@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Paul Mackerras <paulus@samba.org>, Arnd Bergmann <arnd@arndb.de>, Josh Cartwright <joshc@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laura Abbott <lauraa@codeaurora.org>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Sascha Hauer <s.hauer@pengutronix.de>, Michal Nazarewicz <mina86@mina86.com>, linaro-mm-sig@lists.linaro.org, Marc <marc.ceeeee@gmail.com>, Nishanth Peethambaran <nishanth.p@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.in>
 List-Id: devicetree@vger.kernel.org
 
-Now that we only ack irq 0 the code can be simplified a lot.
+On Fri, Feb 21, 2014 at 4:25 AM, Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
+> Enable reserved memory initialization from device tree.
+>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-Also switch from read / modify / write to a simple write clear:
-1) This is what the android code does (it has a hack for acking irq 0
-  in its unmask code doing this)
-2) read / modify / write simply does not make sense for an irq status
-  register like this, if the other bits are writeable (and the data sheet says
-  they are not) they should be write 1 to clear, since otherwise a read /
-  modify / write can race with a device raising an interrupt and then clear
-  the pending bit unintentionally
+This patch has hit -next and several legacy (non-DT) boot failures
+were detected and bisected down to this patch.  A quick scan looks
+like there needs to be some sanity checking whether a DT is even
+present.
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- drivers/irqchip/irq-sun4i.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+Kevin
 
-diff --git a/drivers/irqchip/irq-sun4i.c b/drivers/irqchip/irq-sun4i.c
-index 6a8c88d..75615b5 100644
---- a/drivers/irqchip/irq-sun4i.c
-+++ b/drivers/irqchip/irq-sun4i.c
-@@ -41,16 +41,11 @@ static asmlinkage void __exception_irq_entry sun4i_handle_irq(struct pt_regs *re
- static void sun4i_irq_ack(struct irq_data *irqd)
- {
- 	unsigned int irq = irqd_to_hwirq(irqd);
--	unsigned int irq_off = irq % 32;
--	int reg = irq / 32;
--	u32 val;
- 
- 	if (irq != 0)
- 		return; /* Only IRQ 0 / the ENMI needs to be acked */
- 
--	val = readl(sun4i_irq_base + SUN4I_IRQ_PENDING_REG(reg));
--	writel(val | (1 << irq_off),
--	       sun4i_irq_base + SUN4I_IRQ_PENDING_REG(reg));
-+	writel(BIT(0), sun4i_irq_base + SUN4I_IRQ_PENDING_REG(0));
- }
- 
- static void sun4i_irq_mask(struct irq_data *irqd)
--- 
-1.9.0
+[1] http://lists.linaro.org/pipermail/kernel-build-reports/2014-March/002791.html
+
+>  arch/arm/Kconfig   |    1 +
+>  arch/arm/mm/init.c |    2 ++
+>  2 files changed, 3 insertions(+)
+>
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index e25419817791..d0262bea8020 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -1918,6 +1918,7 @@ config USE_OF
+>         select IRQ_DOMAIN
+>         select OF
+>         select OF_EARLY_FLATTREE
+> +       select OF_RESERVED_MEM
+>         help
+>           Include support for flattened device tree machine descriptions.
+>
+> diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+> index 804d61566a53..2a77ba8796ae 100644
+> --- a/arch/arm/mm/init.c
+> +++ b/arch/arm/mm/init.c
+> @@ -323,6 +323,8 @@ void __init arm_memblock_init(struct meminfo *mi,
+>         if (mdesc->reserve)
+>                 mdesc->reserve();
+>
+> +       early_init_fdt_scan_reserved_mem();
+> +
+>         /*
+>          * reserve memory for DMA contigouos allocations,
+>          * must come from DMA area inside low memory
+> --
+> 1.7.9.5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
