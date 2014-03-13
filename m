@@ -1,55 +1,60 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [GIT PULL] Move device tree graph parsing helpers to drivers/of
-Date: Thu, 13 Mar 2014 11:35:28 +0000
-Message-ID: <20140313113527.GM21483@n2100.arm.linux.org.uk>
-References: <1394126000.3622.66.camel@paszta.hi.pengutronix.de> <20140307182330.75168C40AE3@trevor.secretlab.ca> <20140310102630.3cb1bcd7@samsung.com> <20140310143758.3734FC405FA@trevor.secretlab.ca> <1394708896.3577.21.camel@paszta.hi.pengutronix.de>
+From: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 1/5] doc: Add "ti,am437x-dwc3" comaptible for dwc3
+ glue
+Date: Thu, 13 Mar 2014 17:11:36 +0530
+Message-ID: <53219970.6060002@ti.com>
+References: <1394193422-18242-1-git-send-email-george.cherian@ti.com> <1394193422-18242-2-git-send-email-george.cherian@ti.com> <53218944.7000102@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1394708896.3577.21.camel-+qGW7pzALmz7o/J7KWpOmN53zsg1cpMQ@public.gmane.org>
+In-Reply-To: <53218944.7000102-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: balbi-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, anatol.pomozov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 13, 2014 at 12:08:16PM +0100, Philipp Zabel wrote:
-> I'm not sure if maybe I misunderstood or missed a mail, but I haven't
-> seen a proposal to resolve the situation without rewinds. Given that
-> Mauro already reverted the media tree and applied conflicting changes,
-> that's probably not going to happen?
+On 3/13/2014 4:02 PM, Roger Quadros wrote:
+> Hi George,
+>
+> On 03/07/2014 01:56 PM, George Cherian wrote:
+>> Add the compatible "ti,am437x-dwc3" for dwc3 glue driver.
+>>
+>> Signed-off-by: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
+>> ---
+>>   Documentation/devicetree/bindings/usb/omap-usb.txt | 4 +++-
+>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documentation/devicetree/bindings/usb/omap-usb.txt
+>> index 38b2fae..38d9bb8 100644
+>> --- a/Documentation/devicetree/bindings/usb/omap-usb.txt
+>> +++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
+>> @@ -44,7 +44,9 @@ Board specific device node entry
+>>   };
+>>   
+>>   OMAP DWC3 GLUE
+>> - - compatible : Should be "ti,dwc3"
+>> + - compatible : Should be
+>> +	* "ti,dwc3" for OMAP5 and DRA7
+>> +	* "ti,am437x-dwc3" for AM437x
+> Why do you need a new compatible for am437x? Isn't "ti,dwc3" sufficient?
 
-Grant and myself have exchanged emails in private on this discussing what
-should happen - essentially Grant's position is that he's happy to leave
-this stuff queued provided a resolution to his concerns are forthcoming.
+There is change in register offsets for AM437x as comapred to Omap5 and 
+dra7x.
+The compatible is already added in dwc3-omap.c  This patch just updates 
+the Documentation.
+>
+>>    - ti,hwmods : Should be "usb_otg_ss"
+>>    - reg : Address and length of the register set for the device.
+>>    - interrupts : The irq number of this device that is used to interrupt the
+>>
+> cheers,
+> -roger
 
-However, what I find incredibly unfair is that we're taking the rap for
-these bad bindings.  From what I can see, these bad bindings were merged
-into the V4L2 code with _zero_ review by DT maintainers.  It's quite
-clear that DT maintainers would have objected to them had they seen them,
-but they didn't.  And the lack of documentation of the bindings which
-has been something that's been insisted on is also disgusting.
-
-And now we're now taking the pain for that oversight.
-
-So... frankly, I've walked away from this dysfunctional situation.  I
-don't see imx-drm moving out of drivers/staging due to this debacle for
-many months - possibly never now given that no one can agree on this
-stuff.  This just goes to show what a fscking joke mainline kernels are,
-and why people just give up and go to vendor kernels which offer /much/
-better support all round.
-
-As far as I can see, it's proved impossible to define a set of bindings
-for display devices which satisfy everyone.  So, rather than doing
-/something/ so we can move forward, we end up doing /nothing/.
-
-It's times like this where I start believing that /board files/ were the
-best solution for ARM, because DT just carries soo many thorny issues
-(such as these) and is a continual blocker.
 
 -- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+-George
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
