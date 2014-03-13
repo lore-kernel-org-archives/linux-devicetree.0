@@ -1,57 +1,84 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] irqchip: sun4i: Use
- handle_fasteoi_late_irq for the ENMI (irq 0)
-Date: Thu, 13 Mar 2014 17:27:21 +0100 (CET)
-Message-ID: <alpine.DEB.2.02.1403131725230.18573@ionos.tec.linutronix.de>
-References: <1394644627-12315-1-git-send-email-hdegoede@redhat.com> <1394644627-12315-5-git-send-email-hdegoede@redhat.com> <alpine.DEB.2.02.1403131542060.18573@ionos.tec.linutronix.de> <5321CB12.3090704@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCHv2 0/8] devfreq: exynos4: Support dt and use common ppmu
+ driver
+Date: Thu, 13 Mar 2014 17:43:21 +0100
+Message-ID: <2117336.08cyWySR1X@amdc1032>
+References: <1394698649-20996-1-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDAMN6NI5EERBZFYQ6MQKGQEV6BKGAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <5321CB12.3090704-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <1394698649-20996-1-git-send-email-cw00.choi@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rafael.j.wysocki@intel.com, nm@ti.com, b.zolnierkie@samsung.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 13 Mar 2014, Hans de Goede wrote:
-> On 03/13/2014 03:46 PM, Thomas Gleixner wrote:
-> >>  static int sun4i_irq_map(struct irq_domain *d, unsigned int virq,
-> >>  			 irq_hw_number_t hw)
-> >>  {
-> >> -	irq_set_chip_and_handler(virq, &sun4i_irq_chip,
-> >> -				 handle_level_irq);
-> >> +	if (hw == 0) /* IRQ 0, the ENMI needs special handling */
-> >> +		irq_set_chip_and_handler(virq, &sun4i_irq_chip,
-> >> +					 handle_fasteoi_late_irq);
-> >> +	else
-> >> +		irq_set_chip_and_handler(virq, &sun4i_irq_chip,
-> >> +					 handle_level_irq);
-> > 
-> > I wonder what happens when you use the fasteoi handler for all of
-> > them.
-> 
-> As mentioned in my previous mail doing an ack (or an eio) seems to
-> be unnecessary for all but IRQ 0.
-> 
-> I do wonder if handle_level_irq is the right handle*irq function
-> to use in this case, since this is strictly used in the non smp
-> case I think that the mask / unmask done by handle_level_irq is
-> not necessary for non threaded handlers. So what would be the
-> correct handle*irq function to use in this case ?
-> 
-> Note the irqs are level irqs. IOW they may stay asserted while
-> the handler runs because of the handler and a new irq raising.
 
-Right. You could be creative and use fasteoi plus an empty eoi
-callback in the chip for irq 1-N. That way you only mask and unmask in
-the threaded case.
+Hi,
 
-Thanks,
+On Thursday, March 13, 2014 05:17:21 PM Chanwoo Choi wrote:
+> This patchset support devicetree and use common ppmu driver instead of
+> individual code of exynos4_bus.c to remove duplicate code. Also this patchset
+> get the resources for busfreq from dt data by using DT helper function.
+> - PPMU register address
+> - PPMU clock
+> - Regulator for INT/MIF block
+> 
+> This patchset use SET_SYSTEM_SLEEP_PM_OPS macro intead of legacy method.
+> To remove power-leakage in suspend state, before entering suspend state,
+> disable ppmu clocks.
+> 
+> Changes from v1:
+> - Add exynos4_bus.txt documentation for devicetree guide
+> - Fix probe failure if CONFIG_PM_OPP is disabled
+> - Fix typo and resource leak(regulator/clock/memory) when happening probe failure
+> - Add additionally comment for PPMU usage instead of previous PPC
+> - Split separate patch to remove ambiguous of patch
+> 
+> Chanwoo Choi (8):
+>   devfreq: exynos4: Support devicetree to get device id of Exynos4 SoC
+>   devfreq: exynos4: Use common ppmu driver and get ppmu address from dt data
+>   devfreq: exynos4: Add ppmu's clock control and code clean about regulator control
+>   devfreq: exynos4: Fix bug of resource leak and code clean on probe()
+>   devfreq: exynos4: Use SET_SYSTEM_SLEEP_PM_OPS macro
+>   devfreq: exynos4: Fix power-leakage of clock on suspend state
+>   devfreq: exynos4: Add CONFIG_PM_OPP dependency to fix probe fail
+>   devfreq: exynos4: Add busfreq driver for exynos4210/exynos4x12
+> 
+>  .../devicetree/bindings/devfreq/exynos4_bus.txt    |  49 +++
+>  drivers/devfreq/Kconfig                            |   1 +
+>  drivers/devfreq/exynos/Makefile                    |   2 +-
+>  drivers/devfreq/exynos/exynos4_bus.c               | 415 ++++++++++++++-------
+>  4 files changed, 341 insertions(+), 126 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
 
-	tglx
+Thanks for updating this patchset.  There are still some minor issues
+left though:
+
+- patch #4 should be at beginning of the patch series
+
+- moving of devfreq_unregister_opp_notifier(dev, data->devfreq) from
+  exynos4_bus_exit() to exynos4_busfreq_remove() should be in patch #4
+  (which should really be at the beggining of patch series) not #3
+
+- handling of iounmap(data->ppmu[i].hw_base) should be added to
+  exynos4_bus_exit() in patch #2 not #3
+
+- patch #8 summary and description should mention fact that it adds DT
+  binding documentation (not the driver itself) and the patch itself
+  can be slighlty polished
+
+One important note about this patchset not mentioned in the cover
+letter is that it is improving currently unused driver (because of
+DT-only mach-exynos conversion the only user was removed in June 2013
+and from the reading the code I suspect that even that user hadn't
+worked previously).  As such this patch series should not cause any
+regressions.
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
