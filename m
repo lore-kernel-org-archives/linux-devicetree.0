@@ -1,110 +1,113 @@
-From: Arend van Spriel <arend@broadcom.com>
-Subject: Re: [RFC] dt: bindings: add bindings for Broadcom bcm43xx sdio devices
-Date: Thu, 13 Mar 2014 11:16:05 +0100
-Message-ID: <53218565.6080605@broadcom.com>
-References: <1392059868-8782-1-git-send-email-arend@broadcom.com> <530D1E69.7010504@wwwdotorg.org>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v2 4/4] ARM: DTS: AM43x: Add DSS node
+Date: Thu, 13 Mar 2014 12:21:42 +0200
+Message-ID: <532186B6.3090902@ti.com>
+References: <1394701109-6721-1-git-send-email-sathyap@ti.com> <1394701109-6721-5-git-send-email-sathyap@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <530D1E69.7010504@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Tomasz Figa <tomasz.figa@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="1WjQf6bFHdAbhOgFKrhnxxsJkvXCUkTgk"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1394701109-6721-5-git-send-email-sathyap@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sathya Prakash M R <sathyap@ti.com>
+Cc: tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, paul@pwsan.com
 List-Id: devicetree@vger.kernel.org
 
-On 02/25/2014 11:51 PM, Stephen Warren wrote:
-> On 02/10/2014 12:17 PM, Arend van Spriel wrote:
->> The Broadcom bcm43xx sdio devices are fullmac devices that may be
->> integrated in ARM platforms. Currently, the brcmfmac driver for
->> these devices support use of platform data. This patch specifies
->> the bindings that allow this platform data to be expressed in the
->> devicetree.
-> 
->> diff --git a/Documentation/devicetree/bindings/staging/net/wireless/brcm,bcm43xx-fmac.txt b/Documentation/devicetree/bindings/staging/net/wireless/brcm,bcm43xx-fmac.txt
-> 
->> + - compatible : Should be "brcm,bcm43xx-fmac".
->> + - wlan-supply : phandle for fixed regulator used to control power for
->> +	the device/module.
-> 
-> Ignoring the fact that perhaps this should just be a GPIO instead and
-> assuming it actually make sense for this to be a regulator:
-> 
-> Why "fixed regulator" not just "the regulator". There shouldn't be any
-> requirement for the power supply to the device to be fixed; the driver
-> should (a) set the voltage (which will be a no-op for a fixed regulator
-> already providing that voltage), then (b) enable the regulator. That
-> would allow a PMIC with programmable voltage to be feeding the device.
-> 
-> Now, if this property was really intended to control some enable GPIO on
-> the device, as others have said, this shouldn't be a regulator property
-> but rather a GPIO property. However, there is definitely some power
-> supply fed to the device, so you definitely need /some/ supply property
-> here.
-> 
-> Aren't there other enable GPIOs required? These should be specified in DT.
-> 
-> Doesn't the WiFi chip/module require a (32KHz?) clock? If so, that needs
-> to be represented in DT. Preferably write the binding to require
-> clock-names (name-based lookup) rather than just clocks (index-based
-> lookup).
+--1WjQf6bFHdAbhOgFKrhnxxsJkvXCUkTgk
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Hi Stephen,
+On 13/03/14 10:58, Sathya Prakash M R wrote:
+> Add device node for DSS module for AM4372. Both the
+> AM437x-Gp evm and Am43x-Epos evm use the same LCD panel.
+> The lcd timings are added in respective dts files.
+> Adds display pinctrl and enables required gpio.
+> Also set the right parent clock to the DSS clock.
+>=20
+> Signed-off-by: Sathya Prakash M R <sathyap@ti.com>
+> ---
+>  arch/arm/boot/dts/am4372.dtsi        |   28 +++++++++++++
+>  arch/arm/boot/dts/am437x-gp-evm.dts  |   77 ++++++++++++++++++++++++++=
+++++++++
+>  arch/arm/boot/dts/am43x-epos-evm.dts |   73 ++++++++++++++++++++++++++=
+++++++
+>  arch/arm/boot/dts/am43xx-clocks.dtsi |    2 +
+>  4 files changed, 180 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.d=
+tsi
+> index ea55a4e..b72a7df 100644
+> --- a/arch/arm/boot/dts/am4372.dtsi
+> +++ b/arch/arm/boot/dts/am4372.dtsi
+> @@ -684,6 +684,34 @@
+>  			num-cs =3D <4>;
+>                          status =3D "disabled";
+>                  };
+> +
+> +		dss: dss@4832A000 {
+> +			compatible =3D "ti,omap3-dss", "simple-bus";
+> +			reg =3D <0x4832A000 0x200>;
+> +			ti,hwmods =3D "dss_core";
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <1>;
+> +			ranges;
+> +
+> +			dispc@4832A400 {
+> +				compatible =3D "ti,omap3-dispc";
+> +				reg =3D <0x4832A400 0x400>;
+> +				interrupts =3D <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
+> +				ti,hwmods =3D "dss_dispc";
+> +			};
+> +
+> +			dpi: encoder@0 {
+> +				compatible =3D "ti,omap3-dpi";
+> +			};
+> +
+> +			rfbi: rfbi@4832A800 {
+> +				compatible =3D "ti,omap3-rfbi";
+> +			reg =3D <0x4832A800 0x100>;
+> +				ti,hwmods =3D "dss_rfbi";
+> +			};
+> +
+> +		};
+> +
 
-Thanks for these comments. While I agree with most of them, I am having
-some difficulty with the DT concept. Essentially, a DT node describes a
-part of the system. My scope for this change is probably limited wearing
-my brcmfmac glasses. Am I correct in assuming that a DT node may be
-processed/used by multiple drivers. As an example, the 32 kHz clock is
-not something brcmfmac cares about. It simple needs to be available and
-hooked up to the wlan device. The DT should have another node for this
-clock which a (common) clock driver picks up. So having it referenced in
-this node is purely informational, right?
+This seems to be based on old version of the DSS DT. Please rebase this
+on top of the latest one:
 
-Regards,
-Arend
+git://git.kernel.org/pub/scm/linux/kernel/git/tomba/linux.git work/dss-dt=
 
->> +Optional properties:
->> + - drive-strength : drive strength used for SDIO pins on device (default = 6mA).
-> 
-> As mentioned elsewhere, since that's a binding-specific property, rename
-> it brcm,drive-strength.
-> 
->> + - interrupt-parent : the phandle for the interrupt controller to which the
->> +	device interrupt (HOST_WAKE) is connected.
-> 
-> That's such a common property, individual bindings don't typically
-> mention it.
-> 
->> + - interrupts : interrupt specifier encoded according the interrupt controller
->> +	specified by interrupt-parent property.
-> 
-> The description of the property should say which interrupt (name and/or
-> description) it's describing, even if there's only 1.
-> 
-> 
->> +mmc3: mmc@01c20000 {
->> +	pinctrl-0 = <&mmc3_pins>;
->> +	pinctrl-1 = <&wifi_host_wake>;
->> +	vmmc-supply = <&mmc3_supply>;
->> +	bus-width = <4>;
-> 
-> None of that is really relevant to this binding, and may vary from SDIO
-> controller to SDIO controller, so may end up being wrong.
-> 
-> I'm not sure whether it makes sense to show the example inside some
-> arbitrary SDIO controller node. Perhaps /just/ put the WiFi node in the
-> example? The text above should be enough to describe that the node
-> should be inside an SDIO controller.
-> 
->> +	bcm4335: bcm4335@0 {
->> +		compatible = "brcm,bcm43xx-fmac";
->> +		wlan-supply = <&wlan-reg>;
->> +		drive-strength = <4>;
->> +		interrupt-parent = <&gpx2>;
->> +		interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
->> +		interrupt-names = "HOST_WAKE";
-> 
-> interrupt-names wasn't documented in the list of properties above.
-> Entries in *-names properties are usually lower-case.
-> 
+
+You also need to split this into smaller pieces: the dts clock fix, the
+am4372.dtsi, and the board changes.
+
+ Tomi
+
+
+
+--1WjQf6bFHdAbhOgFKrhnxxsJkvXCUkTgk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJTIYa2AAoJEPo9qoy8lh71aVAP/1wF5Q3ZIDUk/dQfcSepzQkC
+nroXJrl5i3J+/eXKdpSxhYOARN8aeJY59TlIfi0NKb1DsSXbe86CscddQ7v/uP2V
+5OimJHeKp3LnwyI9BJODBYxvu42+HKzEFlKecqRmgTuoVvhzkbR8DoQr1YaXHzzG
+z+wbulMsbMie7eF9glTcbT58aJoTIiBuQeLrmQrhROCmQzzC2mnxFiuh8erUnsaY
+7E6WayLfgFN46+GkhFhXsgKwhvpgYb6P7mMrrJAKZAFGnbJZr7IWA4octgHhstG/
+7J4uG1l1l8QWngl8VKl3QFlG0AYsfu6SmWcqAaGeS2/Jp+u5ciwh6COwv9Z2DoTC
+gMVvqhstwJeGcd7PFMpKu+C+kYQKnVVotQZjBBO/Ef9rLaWgmFTLn2Ti4nRE3Fe8
+dhLz7kORtkW2QZZktQExhShz/JKa7J3emsQcHvCzb267p8+BNzn0fdpnTZj0Casm
+onJTpdKeBkRF0Xjo2rzqe3Xexx0gz3G0XicyLI290i4p8JRX8fRpHkYH6xQbMnTM
+8+k87hfEXiBWMp9/J/gi+yiVopqB/VD8cGiwf2fvZIaCzg6cNR8d8UFOpY0JyWQI
+jUbNBV71u70xgpbM3CF0Vby+P7v/Ac1uxwUIBujeRs/Wec5Dw+RrXY5l2pQlLkk6
+14ofQs2ARUC5cRnPmxjq
+=ekya
+-----END PGP SIGNATURE-----
+
+--1WjQf6bFHdAbhOgFKrhnxxsJkvXCUkTgk--
