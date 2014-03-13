@@ -1,77 +1,53 @@
-From: Kevin Hilman <khilman@linaro.org>
-Subject: Re: [PATCH v5 09/11] arm: add support for reserved memory defined by
- device tree
-Date: Thu, 13 Mar 2014 13:46:50 -0700
-Message-ID: <CAGa+x856+YyJ-vyfGoFAKmsqwKD+=Wh0-TT_mAaPStOXjd8eSQ@mail.gmail.com>
-References: <1392985527-6260-1-git-send-email-m.szyprowski@samsung.com>
- <1392985527-6260-10-git-send-email-m.szyprowski@samsung.com>
+From: Alex Elder <elder-EkmVulN54Sk@public.gmane.org>
+Subject: Re: [PATCH 0/6] ARM: BCM63XX: add support for BCM63138 SoC
+Date: Thu, 13 Mar 2014 16:05:49 -0500
+Message-ID: <53221DAD.4010708@ieee.org>
+References: <1394127959-3159-1-git-send-email-f.fainelli@gmail.com> <53193FEE.4060002@ieee.org> <CAJiQ=7BrCqo3VijjEvt2JLifM0MNGYmAA+VG_YQbSHfyBqsbtg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1392985527-6260-10-git-send-email-m.szyprowski@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Tomasz Figa <t.figa@samsung.com>, Will Deacon <will.deacon@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Paul Mackerras <paulus@samba.org>, Arnd Bergmann <arnd@arndb.de>, Josh Cartwright <joshc@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laura Abbott <lauraa@codeaurora.org>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Sascha Hauer <s.hauer@pengutronix.de>, Michal Nazarewicz <mina86@mina86.com>, linaro-mm-sig@lists.linaro.org, Marc <marc.ceeeee@gmail.com>, Nishanth Peethambaran <nishanth.p@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.in>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJiQ=7BrCqo3VijjEvt2JLifM0MNGYmAA+VG_YQbSHfyBqsbtg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, jpeshkin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 21, 2014 at 4:25 AM, Marek Szyprowski
-<m.szyprowski@samsung.com> wrote:
-> Enable reserved memory initialization from device tree.
->
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+On 03/06/2014 10:44 PM, Kevin Cernekee wrote:
+> On Thu, Mar 6, 2014 at 7:41 PM, Alex Elder <elder-EkmVulN54Sk@public.gmane.org> wrote:
+>>> This patchset adds very minimal support for the BCM63138 SoC which is
+>>> a xDSL SoC using a dual Cortex A9 CPU complex.
+>>
+>>
+>> Why do you use "63xx" for the generic name, when the specific
+>> part you are defining here is 63138?  I would have expected
+>> "63xxx".
+> 
+> The product line has a mix of 4-digit and 5-digit part numbers.  The
+> drivers for onchip peripherals all used "bcm63xx":
 
-This patch has hit -next and several legacy (non-DT) boot failures
-were detected and bisected down to this patch.  A quick scan looks
-like there needs to be some sanity checking whether a DT is even
-present.
+That's too bad.  I would suggest that one or the other be used
+consistently, apparently "63xx" (not 63xxx) would be it.
 
-Kevin
+					-Alex
 
-[1] http://lists.linaro.org/pipermail/kernel-build-reports/2014-March/002791.html
+> $ find drivers/ | grep 63xx
+> drivers/tty/serial/bcm63xx_uart.c
+> drivers/pcmcia/bcm63xx_pcmcia.h
+> drivers/pcmcia/bcm63xx_pcmcia.c
+> drivers/usb/gadget/bcm63xx_udc.c
+> drivers/watchdog/max63xx_wdt.c
+> drivers/watchdog/bcm63xx_wdt.c
+> drivers/char/hw_random/bcm63xx-rng.c
+> drivers/mtd/bcm63xxpart.c
+> drivers/net/phy/bcm63xx.c
+> drivers/net/ethernet/broadcom/bcm63xx_enet.h
+> drivers/net/ethernet/broadcom/bcm63xx_enet.c
+> drivers/spi/spi-bcm63xx.c
+> drivers/spi/spi-bcm63xx-hsspi.c
+> 
 
->  arch/arm/Kconfig   |    1 +
->  arch/arm/mm/init.c |    2 ++
->  2 files changed, 3 insertions(+)
->
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index e25419817791..d0262bea8020 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -1918,6 +1918,7 @@ config USE_OF
->         select IRQ_DOMAIN
->         select OF
->         select OF_EARLY_FLATTREE
-> +       select OF_RESERVED_MEM
->         help
->           Include support for flattened device tree machine descriptions.
->
-> diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-> index 804d61566a53..2a77ba8796ae 100644
-> --- a/arch/arm/mm/init.c
-> +++ b/arch/arm/mm/init.c
-> @@ -323,6 +323,8 @@ void __init arm_memblock_init(struct meminfo *mi,
->         if (mdesc->reserve)
->                 mdesc->reserve();
->
-> +       early_init_fdt_scan_reserved_mem();
-> +
->         /*
->          * reserve memory for DMA contigouos allocations,
->          * must come from DMA area inside low memory
-> --
-> 1.7.9.5
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
