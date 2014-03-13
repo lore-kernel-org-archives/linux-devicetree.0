@@ -1,11 +1,13 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v5 0/7] Add support for the Allwinner A31 DMA Controller
-Date: Thu, 13 Mar 2014 16:14:12 +0100
-Message-ID: <1394723659-4995-1-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH v5 4/7] ARM: sun6i: Protect CPU clock
+Date: Thu, 13 Mar 2014 16:14:16 +0100
+Message-ID: <1394723659-4995-5-git-send-email-maxime.ripard@free-electrons.com>
+References: <1394723659-4995-1-git-send-email-maxime.ripard@free-electrons.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBBUXQ6MQKGQELW742AA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB74WQ6MQKGQEQAD4EUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1394723659-4995-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi>
@@ -16,84 +18,46 @@ To: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Dan Williams 
 Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Right now, AHB is an indirect child clock of the CPU clock. If that happens to
+change, since the CPU clock has no other consumers declared in Linux, it would
+be shut down, which is not really a good idea.
 
-This patchset adds support for the DMA controller found in the
-Allwinner A31 and A23 SoCs.
+Prevent this by forcing it enabled.
 
-This has been tested using the newly introduced SPI driver on an A31
-EVK. Support for DMA-driven SPI transfers will be the subject of
-another patch serie.
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ arch/arm/mach-sunxi/sun6i.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Thanks,
-Maxime
-
-Changes from v4:
-  - Removed the packed attribute on the LLI
-  - Switched to using a NULL device pointer in clk_get on PLL6 and
-    AHB1 mux to make explicit that we are getting global clocks
-  - Switched from spin_lock_irqsave to spin_lock in the interrupt
-    handler
-  - Various nitpicks from Andy Shevchenko:
-    + Switched to using %p printk formats for pointers
-    + Inverted some tests to lose a level of indentation
-    + Dropped ifdef DEBUG protecting calls to dev_dbg
-
-Changes from v3:
-  - A few other comments made by Andy Shevchenko were fixed:
-    + Used references in %pa* printk formats
-    + Used is_slave_direction in prep_slave_sg to make sure we were
-      actually called for something, and to avoid making assumptions
-      that we were actually called with the expected directions
-    + A few others minor fixes: s/pr_err/dev_err/, etc.
-
-Changes from v2:
-  - Removed the clk_put calls in the clock protection functions
-  - Splitted out the sunxi machines into several files
-  - Moved the clock protection code into these new machine files
-  - Moved the PLL6 reparenting to the DMA driver
-  - Addressed various comments from Andy Shevchenko: switched to using
-    devm_kcalloc, used correct printk formats for physical and DMA
-    addresses, etc.
-
-Changes from v1:
-  - Removed the clk_put call in the clocks protecting patches
-  - Minor fixes here and there as suggested by Andy Shevchenko: switch
-    to dmam_pool_create, switch to dev_dbg instead of pr_debug, etc.
-
-Maxime Ripard (7):
-  clk: sunxi: Remove calls to clk_put
-  ARM: sunxi: Split out the various machines into separate files
-  ARM: sunxi: Move the clock protection to machine hooks
-  ARM: sun6i: Protect CPU clock
-  ARM: sun6i: Protect SDRAM gating bit
-  DMA: sun6i: Add driver for the Allwinner A31 DMA controller
-  ARM: sun6i: dt: Add A31 DMA controller to DTSI
-
- .../devicetree/bindings/dma/sun6i-dma.txt          |  45 +
- arch/arm/boot/dts/sun6i-a31.dtsi                   |  29 +
- arch/arm/mach-sunxi/Makefile                       |   6 +-
- arch/arm/mach-sunxi/restart.c                      | 104 +++
- arch/arm/mach-sunxi/restart.h                      |  20 +
- arch/arm/mach-sunxi/sun4i.c                        |  45 +
- arch/arm/mach-sunxi/sun5i.c                        |  51 ++
- arch/arm/mach-sunxi/sun6i.c                        |  63 ++
- arch/arm/mach-sunxi/sun7i.c                        |  50 ++
- arch/arm/mach-sunxi/sunxi.c                        | 164 ----
- drivers/clk/sunxi/clk-sunxi.c                      |  28 -
- drivers/dma/Kconfig                                |   8 +
- drivers/dma/Makefile                               |   1 +
- drivers/dma/sun6i-dma.c                            | 987 +++++++++++++++++++++
- 14 files changed, 1408 insertions(+), 193 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/sun6i-dma.txt
- create mode 100644 arch/arm/mach-sunxi/restart.c
- create mode 100644 arch/arm/mach-sunxi/restart.h
- create mode 100644 arch/arm/mach-sunxi/sun4i.c
- create mode 100644 arch/arm/mach-sunxi/sun5i.c
- create mode 100644 arch/arm/mach-sunxi/sun6i.c
- create mode 100644 arch/arm/mach-sunxi/sun7i.c
- delete mode 100644 arch/arm/mach-sunxi/sunxi.c
- create mode 100644 drivers/dma/sun6i-dma.c
-
+diff --git a/arch/arm/mach-sunxi/sun6i.c b/arch/arm/mach-sunxi/sun6i.c
+index c5dc81988ce9..6b3905505fe0 100644
+--- a/arch/arm/mach-sunxi/sun6i.c
++++ b/arch/arm/mach-sunxi/sun6i.c
+@@ -10,6 +10,7 @@
+  * warranty of any kind, whether express or implied.
+  */
+ 
++#include <linux/clk.h>
+ #include <linux/clk-provider.h>
+ #include <linux/clocksource.h>
+ #include <linux/init.h>
+@@ -22,9 +23,17 @@
+ 
+ static void __init sun6i_dt_init(void)
+ {
++	struct clk *clk;
++
+ 	sunxi_setup_restart();
+ 
+ 	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
++
++	/* Make sure the clocks we absolutely need are enabled */
++	/* CPU clock */
++	clk = clk_get(NULL, "cpu");
++	if (!IS_ERR(clk))
++		clk_prepare_enable(clk);
+ }
+ 
+ extern void __init sun6i_reset_init(void);
 -- 
 1.9.0
