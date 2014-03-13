@@ -1,92 +1,87 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 1/3] ARM: dts: berlin2q: add the Marvell Armada 1500 pro
-Date: Thu, 13 Mar 2014 17:25:46 +0000
-Message-ID: <20140313172546.GB25870@e106331-lin.cambridge.arm.com>
-References: <1394719607-25018-1-git-send-email-antoine.tenart@free-electrons.com>
- <1394719607-25018-2-git-send-email-antoine.tenart@free-electrons.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v4 2/5] ARM: dts: am43xx clock data
+Date: Thu, 13 Mar 2014 19:28:02 +0200
+Message-ID: <5321EAA2.8080807@ti.com>
+References: <1394723476-8580-1-git-send-email-george.cherian@ti.com> <1394723476-8580-3-git-send-email-george.cherian@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1394719607-25018-2-git-send-email-antoine.tenart@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Antoine =?utf-8?Q?T=C3=A9nart?= <antoine.tenart@free-electrons.com>
-Cc: "zmxu@marvell.com" <zmxu@marvell.com>, "jszhang@marvell.com" <jszhang@marvell.com>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1394723476-8580-3-git-send-email-george.cherian@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: George Cherian <george.cherian@ti.com>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: balbi@ti.com, kishon@ti.com, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, tony@atomide.com, anatol.pomozov@gmail.com, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBNYXIgMTMsIDIwMTQgYXQgMDI6MDY6NDVQTSArMDAwMCwgQW50b2luZSBUw6luYXJ0
-IHdyb3RlOgo+IEFkZHMgaW5pdGlhbCBzdXBwb3J0IGZvciB0aGUgTWFydmVsbCBBcm1hZGEgMTUw
-MCBwcm8gKEJHMlEpIFNvQyAoQmVybGluIGZhbWlseSkuCj4gVGhlIFNvQyBoYXMgbm9kZXMgZm9y
-IGNwdSwgbDIgY2FjaGUgY29udHJvbGxlciwgaW50ZXJydXB0IGNvbnRyb2xsZXJzLCBsb2NhbAo+
-IHRpbWVyLCBhcGIgdGltZXJzIGFuZCB1YXJ0cyBmb3Igbm93Lgo+IAo+IFNpZ25lZC1vZmYtYnk6
-IEFudG9pbmUgVMOpbmFydCA8YW50b2luZS50ZW5hcnRAZnJlZS1lbGVjdHJvbnMuY29tPgo+IFNp
-Z25lZC1vZmYtYnk6IEFsZXhhbmRyZSBCZWxsb25pIDxhbGV4YW5kcmUuYmVsbG9uaUBmcmVlLWVs
-ZWN0cm9ucy5jb20+Cj4gLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2JlcmxpbjJxLmR0c2kgfCAx
-NjcgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hh
-bmdlZCwgMTY3IGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jv
-b3QvZHRzL2JlcmxpbjJxLmR0c2kKPiAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMv
-YmVybGluMnEuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JlcmxpbjJxLmR0c2kKPiBuZXcgZmls
-ZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uMWNiNzYwMzFkZmU2Cj4gLS0tIC9k
-ZXYvbnVsbAo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JlcmxpbjJxLmR0c2kKPiBAQCAtMCww
-ICsxLDE2NyBAQAo+ICsvKgo+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTQgQW50b2luZSBUw6luYXJ0
-IDxhbnRvaW5lLnRlbmFydEBmcmVlLWVsZWN0cm9ucy5jb20+Cj4gKyAqCj4gKyAqIFRoaXMgZmls
-ZSBpcyBsaWNlbnNlZCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYwo+
-ICsgKiBMaWNlbnNlIHZlcnNpb24gMi4gVGhpcyBwcm9ncmFtIGlzIGxpY2Vuc2VkICJhcyBpcyIg
-d2l0aG91dCBhbnkKPiArICogd2FycmFudHkgb2YgYW55IGtpbmQsIHdoZXRoZXIgZXhwcmVzcyBv
-ciBpbXBsaWVkLgo+ICsgKi8KPiArCj4gKyNpbmNsdWRlIDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQt
-Y29udHJvbGxlci9hcm0tZ2ljLmg+Cj4gKwo+ICsjaW5jbHVkZSAic2tlbGV0b24uZHRzaSIKPiAr
-Cj4gKy8gewo+ICsJbW9kZWwgPSAiTWFydmVsbCBBcm1hZGEgMTUwMCBwcm8gKEJHMi1RKSBTb0Mi
-Owo+ICsJY29tcGF0aWJsZSA9ICJtYXJ2ZWxsLGJlcmxpbjJxIiwgIm1hcnZlbGwsYmVybGluIjsK
-PiArCj4gKwljcHVzIHsKPiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkjc2l6ZS1jZWxs
-cyA9IDwwPjsKPiArCj4gKwkJY3B1QDAgewo+ICsJCQljb21wYXRpYmxlID0gImFybSxjb3J0ZXgt
-YTkiOwo+ICsJCQlkZXZpY2VfdHlwZSA9ICJjcHUiOwo+ICsJCQluZXh0LWxldmVsLWNhY2hlID0g
-PCZsMj47Cj4gKwkJCXJlZyA9IDwwPjsKPiArCQl9Owo+ICsKPiArCQljcHVAMSB7Cj4gKwkJCWNv
-bXBhdGlibGUgPSAiYXJtLGNvcnRleC1hOSI7Cj4gKwkJCWRldmljZV90eXBlID0gImNwdSI7Cj4g
-KwkJCW5leHQtbGV2ZWwtY2FjaGUgPSA8JmwyPjsKPiArCQkJcmVnID0gPDE+Owo+ICsJCX07Cj4g
-Kwo+ICsJCWNwdUAyIHsKPiArCQkJY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE5IjsKPiArCQkJ
-ZGV2aWNlX3R5cGUgPSAiY3B1IjsKPiArCQkJbmV4dC1sZXZlbC1jYWNoZSA9IDwmbDI+Owo+ICsJ
-CQlyZWcgPSA8Mj47Cj4gKwkJfTsKPiArCj4gKwkJY3B1QDMgewo+ICsJCQljb21wYXRpYmxlID0g
-ImFybSxjb3J0ZXgtYTkiOwo+ICsJCQlkZXZpY2VfdHlwZSA9ICJjcHUiOwo+ICsJCQluZXh0LWxl
-dmVsLWNhY2hlID0gPCZsMj47Cj4gKwkJCXJlZyA9IDwzPjsKPiArCQl9Owo+ICsJfTsKPiArCj4g
-KwljbG9ja3Mgewo+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDA+Owo+ICsJCSNzaXplLWNlbGxzID0g
-PDA+Owo+ICsKPiArCQlzbWNsazogc3lzbWdyLWNsb2NrIHsKPiArCQkJY29tcGF0aWJsZSA9ICJm
-aXhlZC1jbG9jayI7Cj4gKwkJCSNjbG9jay1jZWxscyA9IDwwPjsKPiArCQkJY2xvY2stZnJlcXVl
-bmN5ID0gPDI1MDAwMDAwPjsKPiArCQl9Owo+ICsKPiArCQlzeXNjbGs6IHN5c3RlbS1jbG9jayB7
-Cj4gKwkJCWNvbXBhdGlibGUgPSAiZml4ZWQtY2xvY2siOwo+ICsJCQkjY2xvY2stY2VsbHMgPSA8
-MD47Cj4gKwkJCWNsb2NrLWZyZXF1ZW5jeSA9IDw0MDAwMDAwMDA+Owo+ICsJCX07Cj4gKwl9OwoK
-SSBhbSB2ZXJ5IG11Y2ggbm90IGtlZW4gb24gaGF2aW5nIGNvbnRhaW5lciBub2RlcyBsaWtlIHRo
-aXMuCgpBICJjbG9ja3MiIGNvbnRhaW5lciBpcyBub24tc3RhbmRhcmQsIGFuZCBub3QgZ3VhcmFu
-dGVlIHRvIHByb2JlLiBUaGUKZmFjdCB0aGVzZSBjbG9ja3MgcHJvYmUgY3VycmVudGx5IGlzIGFu
-IGFydGlmYWN0IG9mIHRoZSBjdXJyZW50Cm9yZ2FuaXNhdGlvbiBvZiBMaW51eCByYXRoZXIgdGhh
-biBhbnkgY29uc2Npb3VzIGRlY2lzaW9uLgoKVGhlICNhZGRyZXNzLWNlbGxzIGFuZCAjc2l6ZS1j
-ZWxscyBwcm9wZXJ0aWVzIGFyZSB1c2VsZXNzLCBhcyBubwphZGRyZXNzIHNwYWNlIGlzIGRlZmlu
-ZWQuIFRoZSBub2RlIGlzIG5vdCBhIHNpbXBsZS1idXMsIGhhcyBubyByYW5nZXMsCmFuZCBkb2Vz
-bid0IGhhdmUgYSBjb21wYXRpYmxlIHN0cmluZyB0aGF0IGltcGxpZXMgYW4gYWRkcmVzcyBzcGFj
-ZS4KCklzIHRoZXJlIGFueSByZWFzb24geW91IG5lZWQgdG8gdXNlIGEgY2xvY2tzIGNvbnRhaW5l
-ciBoZXJlIGFuZCBjYW4ndApwdXQgdGhlc2UgZGlyZWN0bHkgdW5kZXIgdGhlIHJvb3Q/Cgo+ICsK
-PiArCXNvYyB7Cj4gKwkJY29tcGF0aWJsZSA9ICJzaW1wbGUtYnVzIjsKPiArCQkjYWRkcmVzcy1j
-ZWxscyA9IDwxPjsKPiArCQkjc2l6ZS1jZWxscyA9IDwxPjsKPiArCj4gKwkJcmFuZ2VzID0gPDAg
-MHhmNzAwMDAwMCAweDEwMDAwMDA+Owo+ICsJCWludGVycnVwdC1wYXJlbnQgPSA8JmdpYz47Cj4g
-Kwo+ICsJCWwyOiBsMi1jYWNoZS1jb250cm9sbGVyQGFjMDAwMCB7Cj4gKwkJCWNvbXBhdGlibGUg
-PSAiYXJtLHBsMzEwLWNhY2hlIjsKPiArCQkJcmVnID0gPDB4YWMwMDAwIDB4MTAwMD47Cj4gKwkJ
-CWNhY2hlLWxldmVsID0gPDI+Owo+ICsJCX07Cj4gKwo+ICsJCWxvY2FsLXRpbWVyQGFkMDYwMCB7
-Cj4gKwkJCWNvbXBhdGlibGUgPSAiYXJtLGNvcnRleC1hOS10d2QtdGltZXIiOwo+ICsJCQlyZWcg
-PSA8MHhhZDA2MDAgMHgyMD47Cj4gKwkJCWNsb2NrcyA9IDwmc3lzY2xrPjsKPiArCQkJaW50ZXJy
-dXB0cyA9IDxHSUNfUFBJIDEzIElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+ICsJCQlzdGF0dXMgPSAi
-b2theSI7CgpHaXZlbiB0aGF0IG5vZGVzIGFyZSBhc3N1bWVkIGJ5IGRlZmF1bHQgdG8gYmUgb2th
-eSwgdGhpcyBjYW4gYmUgZHJvcHBlZC4KCkkgdGhpbmsgaXQgb25seSBtYWtlcyBzZW5zZSB0byBo
-YXZlIGEgc3RhdHVzIHByb3BlcnR5IGluIGEgY29tbW9uIGR0c2kKd2hlcmUgdGhlIHZhbHVlIGlz
-ICJkaXNhYmxlZCIuCgpPdGhlcndpc2UsIHRoaXMgZHRzaSBsb29rcyBzYW5lIHRvIG1lLgoKVGhh
-bmtzLApNYXJrLgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
-bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
-bGludXgtYXJtLWtlcm5lbAo=
+On 03/13/2014 05:11 PM, George Cherian wrote:
+> Add USB and USB PHY reference clock data
+> 
+> Signed-off-by: George Cherian <george.cherian@ti.com>
+> ---
+>  arch/arm/boot/dts/am43xx-clocks.dtsi | 32 ++++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
+> index 142009c..c74d45c 100644
+> --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
+> +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
+> @@ -653,4 +653,36 @@
+>  		clocks = <&clk_32768_ck>, <&clk_32k_tpm_ck>;
+>  		reg = <0x4260>;
+>  	};
+> +
+> +	usb_phy0_always_on_clk32k: usb_phy0_always_on_clk32k {
+> +		#clock-cells = <0>;
+> +		compatible = "fixed-factor-clock";
+> +		clocks = <&clk_32768_ck>;
+> +		clock-mult = <1>;
+> +		clock-div = <1>;
+> +	};
+> +
+> +	usb_phy1_always_on_clk32k: usb_phy1_always_on_clk32k {
+> +		#clock-cells = <0>;
+> +		compatible = "fixed-factor-clock";
+> +		clocks = <&clk_32768_ck>;
+> +		clock-mult = <1>;
+> +		clock-div = <1>;
+> +	};
+
+Shouldn't these be like so?
+
+usb_phy0_always_on_clk32k: usb_phy0_always_on_clk32k {
+        #clock-cells = <0>;
+        compatible = "ti,gate-clock";
+        clocks = <&usbphy_32khz_clkmux>;
+        ti,bit-shift = <8>;
+        reg = <0x2a40>;
+};
+
+usb_phy1_always_on_clk32k: usb_phy1_always_on_clk32k {
+        #clock-cells = <0>;
+        compatible = "ti,gate-clock";
+        clocks = <&usbphy_32khz_clkmux>;
+        ti,bit-shift = <8>;
+        reg = <0x2a48>;
+};
+
+> +
+> +	usb_otg_ss0_refclk960m: usb_otg_ss0_refclk960m {
+> +		#clock-cells = <0>;
+> +	        compatible = "ti,gate-clock";
+> +		clocks = <&dpll_per_clkdcoldo>;
+> +	        ti,bit-shift = <8>;
+> +	        reg = <0x8a60>;
+> +	};
+> +
+> +	usb_otg_ss1_refclk960m: usb_otg_ss1_refclk960m {
+> +		#clock-cells = <0>;
+> +	        compatible = "ti,gate-clock";
+> +		clocks = <&dpll_per_clkdcoldo>;
+> +	        ti,bit-shift = <8>;
+> +		reg = <0x8a68>;
+> +	};
+>  };
+> 
+
+cheers,
+-roger
