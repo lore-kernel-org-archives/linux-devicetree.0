@@ -1,91 +1,60 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCHv2 8/8] devfreq: exynos4: Add busfreq driver for
- exynos4210/exynos4x12
-Date: Thu, 13 Mar 2014 17:53:08 +0000
-Message-ID: <20140313175308.GE25870@e106331-lin.cambridge.arm.com>
-References: <1394698649-20996-1-git-send-email-cw00.choi@samsung.com>
- <1394698649-20996-9-git-send-email-cw00.choi@samsung.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 0/4] irq: sun4i IRQ 0 / ENMI fixes
+Date: Thu, 13 Mar 2014 19:03:50 +0100
+Message-ID: <1394733834-26839-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1394698649-20996-9-git-send-email-cw00.choi@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>, "nm@ti.com" <nm@ti.com>, "b.zolnierkie@samsaung.com" <b.zolnierkie@samsaung.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBEXGQ6MQKGQE5GIENJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 13, 2014 at 08:17:29AM +0000, Chanwoo Choi wrote:
-> This patch add busfreq driver for Exynos4210/Exynos4x12 memory interface
-> and bus to support DVFS(Dynamic Voltage Frequency Scaling) according to PPMU
-> counters. PPMU (Performance Profiling Monitorings Units) of Exynos4 SoC provides
-> PPMU counters for DMC(Dynamic Memory Controller) to check memory bus utilization
-> and then busfreq driver adjusts dynamically the operating frequency/voltage
-> by using DEVFREQ Subsystem.
-> 
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> ---
->  .../devicetree/bindings/devfreq/exynos4_bus.txt    | 49 ++++++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt b/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
-> new file mode 100644
-> index 0000000..2a83fcc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
-> @@ -0,0 +1,49 @@
-> +
-> +Exynos4210/4x12 busfreq driver
-> +-----------------------------
-> +
-> +Exynos4210/4x12 Soc busfreq driver with devfreq for Memory bus frequency/voltage
-> +scaling according to PPMU counters of memory controllers
-> +
-> +Required properties:
-> +- compatible	: should contain Exynos4 SoC type as follwoing:
-> +		  - "samsung,exynos4x12-busfreq" for Exynos4x12
-> +		  - "samsung,exynos4210-busfreq" for Exynos4210
+Hi All,
 
-Is there a device called "busfreq"? What device does this binding
-describe?
+Here is v3 of my sun4i IRQ 0 / ENMI fixes patch-set, changelog below:
 
-> +- reg		: offset and length of the ppmudmc0/1
-> +		  - PPMU (Performance Profiling Monitoring Units)
+v2:
 
-You seem to require a particular order here. It would be good to be
-explicit about it.
+PATCH 1/4 irq: Add handle_fasteoi_late_irq irq handler
+New patch by Thomas Gleixner, adding a new irq handler with the "call eoi
+after the irq-handler has run its course" behavior we need to avoid double
+irqs on the ENMI.
 
-> +		  : It is to profile performance event of DMC(Dynamic Memory
-> +		  Controller) So, exynos4_bus.c can check memory bus utilization
-> +		  by using PPMU of Exynos4 SoC.
+PATCH 2/4 irqchip: sun4i: Fix irq 0 not working
+Modified to avoid spurious calls to the irq 0 handler, as suggested by Maxime.
 
-This is superfluous, and Linux-specific. The binding document shouldn't
-need to refer to drivers.
+PATCH 3/4 irqchip: sun4i: Fix a comment about mask register
+Added Maxime's Acked-by
 
-> +- clocks	: clock number of ppmudmc0/1
-> +- clock-names	: clock name of ppmudmc0/1
+PATCH 4/4 irqchip: sun4i: Use handle_fasteoi_late_irq for the
+New patch switching the handler for irq 0 over to the new
+handle_fasteoi_late_irq handler, thereby fixing the double interrupts issue
 
-Are these two clocks, or one clock with a slash in the name?
 
-Please list each name separately.
+v3:
 
-> +- vdd_int-supply: regulator for interface block of Exynos4
-> +
-> +Optional properties:
-> +- vdd_mif-supply: regulator for DMC block of Exynos4x12 if Exynos4x12 Soc
-> +- regs-name	: register name of ppmudmc0/1
+PATCH 1/4 irq: Add a new IRQCHIP_EOI_THREADED flag
+New patch by Thomas Gleixner, replacing his "irq: Add handle_fasteoi_late_irq
+irq handler" patch.
 
-This is completely nonstandard. Did you mean reg-names?
+PATCH 2/4 irqchip: sun4i: Fix irq 0 not working
+Added Maxime's Acked-by
 
-Please be explicit about the names you expect. Write them in full,
-quoted, and describe the relationship to the reg property.
+PATCH 4/4 irqchip: sun4i: Don't ack IRQs != 0, fix acking of IRQ
+New patch replacing my "irqchip: sun4i: Use handle_fasteoi_late_irq ..."
+patch. This also drops acking for IRQ != 0. I've done both changes in
+one patch to avoid regressing for IRQ 0.
 
-> +
-> +All the required listed above must be defined under code busfreq with devfreq
 
-I'm having some difficulty figuring out what exactly this is intended to
-mean.
+Thanks for all the help to all involved.
 
-Thanks,
-Mark.
+Regards,
+
+Hans
