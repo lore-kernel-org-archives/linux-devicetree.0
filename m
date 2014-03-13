@@ -1,29 +1,68 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 0/3] irqchip: sun4i: various cleanups
-Date: Thu, 13 Mar 2014 20:49:59 +0100
-Message-ID: <1394740202-1952-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBWM7RCMQKGQEWTCS4AA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 0/6] Armada 380 NAND support
+Date: Thu, 13 Mar 2014 17:24:27 -0300
+Message-ID: <1394742273-5113-1-git-send-email-ezequiel.garcia@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Seif Mazareeb <seif-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
+This patchset adds support for the NAND on Armada 380/385 SoCs.
 
-So here is a second patchset for irq-sun4i.c I'm not 100% sure about these
-changes. They all seem the right thing to do, but they definitely need a
-good review first.
+The first patch adds a new "armada-380-corediv-clock" compatible
+string, with its proper SoC-specific structure, adding the register
+layout for this SoC family.
 
-I've run various tests with this set and everything works as advertised.
+The second and third patches add the devicetree changes to support
+the Core Divider clock.
 
-Regards,
+After adding its clock source, the fourth and fifth patches add
+the NAND devicetree changes. The NAND controller is compatible with
+the Armada 370 controller, so we are currently support it using the
+same compatible string.
 
-Hans
+The last patch updates the binding documentation for the Core Divider
+clock, which is missing the information about the already supported
+Armada 375 compatible string.
+
+This series is based on linux-next 20140307. I expect it will apply
+cleanly on v3.15-rc1; if that's not the case, I'll send a rebased patchset.
+
+The clock and devicetree changes are mostly independent so they
+can be merged through the clock and mvebu tree respectively.
+
+Changes from v2:
+
+  * Removed the unneeded 'nand' label from the flash@d0000 node.
+
+  * Renamed 'coredivclk@e4250' to 'clock@e4250' according to
+    ePAPR recomendation, below.
+
+Changes from v1:
+
+  * Changed nand@d0000 with flash@d0000 in the devicetree. The
+    latter is compliant with ePAPR recomendation (see ePAPR v1.1,
+    section 2.2.2, Generic Names Recommendation).
+
+Ezequiel Garcia (6):
+  clk: mvebu: Support Armada 380 SoC on the core divider clock
+  ARM: mvebu: Add a 2 GHz fixed-clock on Armada 38x SoCs
+  ARM: mvebu: Add the Core Divider clock to Armada 38x SoCs
+  ARM: mvebu: Add support for NAND controller in Armada 38x SoC
+  ARM: mvebu: Enable NAND controller in Armada 385-DB
+  clk: mvebu: Update binding documentation for the core divider clock
+
+ .../bindings/clock/mvebu-corediv-clock.txt         |  5 ++++-
+ arch/arm/boot/dts/armada-385-db.dts                | 21 ++++++++++++++++++
+ arch/arm/boot/dts/armada-38x.dtsi                  | 25 ++++++++++++++++++++++
+ drivers/clk/mvebu/clk-corediv.c                    | 23 ++++++++++++++++++++
+ 4 files changed, 73 insertions(+), 1 deletion(-)
+
+-- 
+1.9.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
