@@ -1,78 +1,56 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 5/9] dt-bindings: pci: rcar pcie device tree bindings
-Date: Thu, 13 Mar 2014 12:30:50 +0100
-Message-ID: <25998973.9XJTBOSo8s@wuerfel>
-References: <1394704208-7490-1-git-send-email-phil.edworthy@renesas.com> <33747243.K5i7Ah8L7o@wuerfel> <OFF61489EE.B9ED2F88-ON80257C9A.00386B74-80257C9A.00398025@eu.necel.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [GIT PULL] Move device tree graph parsing helpers to drivers/of
+Date: Thu, 13 Mar 2014 11:35:28 +0000
+Message-ID: <20140313113527.GM21483@n2100.arm.linux.org.uk>
+References: <1394126000.3622.66.camel@paszta.hi.pengutronix.de> <20140307182330.75168C40AE3@trevor.secretlab.ca> <20140310102630.3cb1bcd7@samsung.com> <20140310143758.3734FC405FA@trevor.secretlab.ca> <1394708896.3577.21.camel@paszta.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <OFF61489EE.B9ED2F88-ON80257C9A.00386B74-80257C9A.00398025@eu.necel.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Phil.Edworthy@renesas.com
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Valentine Barshak <valentine.barshak@cogentembedded.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1394708896.3577.21.camel-+qGW7pzALmz7o/J7KWpOmN53zsg1cpMQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 13 March 2014 10:28:03 Phil.Edworthy@renesas.com wrote:
-> On 13/03/2014 10:00, Arnd wrote:
-> > On Thursday 13 March 2014 09:50:04 Phil Edworthy wrote:
-> > 
-> > I see your description and example includes I/O regions, but the driver
-> > claims in a comment that these don't work. Do you also have a patch to
-> > make them work?
-> Are you referring to the comment "The controller does not support/use port 
-> I/O" in the driver for the internal PCI controller (pci-rcar-gen2.c)?
-> This is a separate block of hardware, it's a PCIe controller with external 
-> pins, for which we do support I/O regions.
+On Thu, Mar 13, 2014 at 12:08:16PM +0100, Philipp Zabel wrote:
+> I'm not sure if maybe I misunderstood or missed a mail, but I haven't
+> seen a proposal to resolve the situation without rewinds. Given that
+> Mauro already reverted the media tree and applied conflicting changes,
+> that's probably not going to happen?
 
-Ok, thanks for the clarification.
+Grant and myself have exchanged emails in private on this discussing what
+should happen - essentially Grant's position is that he's happy to leave
+this stuff queued provided a resolution to his concerns are forthcoming.
 
-> > > +- interrupts: interrupt values for MSI interrupt
-> > > +- #interrupt-cells: set to <1>
-> > > +- interrupt-map-mask and interrupt-map: standard PCI properties
-> > > +   to define the mapping of the PCIe interface to interrupt
-> > > +   numbers.
-> > > +- clocks: from common clock binding: handle to pci clock.
-> > > +- clock-names: from common clock binding: should be "pcie"
-> > > +
-> > > +Example:
-> > > +
-> > > +SoC specific DT Entry:
-> > > +
-> > > +   pcie: pcie@0x01000000 {
-> > > +      compatible = "renesas,r8a7790-pcie";
-> > > +      reg = <0 0xfe000000 0 0x80000>;
-> > > +      #address-cells = <3>;
-> > > +      #size-cells = <2>;
-> > > +      device_type = "pci";
-> > > +      ranges = <0x01000000 0 0x00000000 0 0xfe100000 0 0x00100000
-> > > +           0x02000000 0 0xfe200000 0 0xfe200000 0 0x00200000
-> > > +           0x02000000 0 0x30000000 0 0x30000000 0 0x08000000
-> > > +           0x42000000 0 0x38000000 0 0x38000000 0 0x08000000>;
-> > 
-> > I'm curious about why there are two non-prefetchable regions. What is
-> > the significance of this?
->
-> The devices that have this PCIe controller both have a number of fixed, 
-> non-contiguous memory regions that can be used as PCIe windows. The ranges 
-> here map onto those fixed windows, i.e. if the CPU addresses of the ranges 
-> change it won't work. The first couple of windows are small, we use the 
-> first one for I/O, we decided that we may as well use the next small 
-> window for memory - otherwise we need to figure out a way to tell the 
-> driver to skip a window.
+However, what I find incredibly unfair is that we're taking the rap for
+these bad bindings.  From what I can see, these bad bindings were merged
+into the V4L2 code with _zero_ review by DT maintainers.  It's quite
+clear that DT maintainers would have objected to them had they seen them,
+but they didn't.  And the lack of documentation of the bindings which
+has been something that's been insisted on is also disgusting.
 
-Ok, makes sense. Good to know that this actually works. An idea that
-may be helpful in some corner cases: if you can set up the small window as
+And now we're now taking the pain for that oversight.
 
-           0x02000000 0 0 0 0xfe200000 0 0x00200000
+So... frankly, I've walked away from this dysfunctional situation.  I
+don't see imx-drm moving out of drivers/staging due to this debacle for
+many months - possibly never now given that no one can agree on this
+stuff.  This just goes to show what a fscking joke mainline kernels are,
+and why people just give up and go to vendor kernels which offer /much/
+better support all round.
 
-or even
+As far as I can see, it's proved impossible to define a set of bindings
+for display devices which satisfy everyone.  So, rather than doing
+/something/ so we can move forward, we end up doing /nothing/.
 
-           0x02000000 0 0 0 0xfe200000 0 0x00100000
-           0x02000000 0 0x00f00000 0 0xfe200000 0 0x00100000
+It's times like this where I start believing that /board files/ were the
+best solution for ARM, because DT just carries soo many thorny issues
+(such as these) and is a continual blocker.
 
-then you will be able to map devices with legacy nonrelocatable ISA
-memory BARs such as VGA cards that have PCI resources in the first MB
-of bus space, and in the end of the first 16MB.
-
-	Arnd
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
