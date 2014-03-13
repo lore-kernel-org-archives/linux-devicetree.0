@@ -1,79 +1,171 @@
-From: Ben Hutchings <ben@decadent.org.uk>
-Subject: Re: [PATCH net-next v3 5/9] Altera TSE: Add Miscellaneous Files for
- Altera Ethernet Driver
-Date: Thu, 13 Mar 2014 00:28:48 +0000
-Message-ID: <1394670528.20857.10.camel@deadeye.wl.decadent.org.uk>
-References: <1394577791-6547-1-git-send-email-vbridgers2013@gmail.com>
-	 <1394577791-6547-6-git-send-email-vbridgers2013@gmail.com>
-	 <1394578747.28839.4.camel@joe-AO722>
-	 <CAOwfj2Ot+ssTZgMoOoShVEUi+RkxjpPpRUfHAkP9RETm3TuUzg@mail.gmail.com>
-	 <1394658856.20857.7.camel@deadeye.wl.decadent.org.uk>
-	 <1394663197.3915.61.camel@joe-AO722>
+From: Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: Re: [PATCH v5 3/3] ARM: dts: add dts files for xyref5260 board
+Date: Thu, 13 Mar 2014 09:49:16 +0900
+Message-ID: <5321008C.3090203@samsung.com>
+References: <1394637394-3960-1-git-send-email-rahul.sharma@samsung.com>
+ <1394637394-3960-4-git-send-email-rahul.sharma@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-1BTaVrWKtjntL7CKQjqd"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1394663197.3915.61.camel@joe-AO722>
-Sender: netdev-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: Vince Bridgers <vbridgers2013@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1394637394-3960-4-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <rahul.sharma@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Rahul,
 
---=-1BTaVrWKtjntL7CKQjqd
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 03/13/2014 12:16 AM, Rahul Sharma wrote:
+> The patch adds the dts files for xyref5260 board which
+> is based on Exynos5260 Evt0 sample.
+>
+> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+> ---
+>   arch/arm/boot/dts/Makefile                      |    1 +
+>   arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts |  110 +++++++++++++++++++++++
+>   2 files changed, 111 insertions(+)
+>   create mode 100644 arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index b9d6a8b..5a391bf 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -72,6 +72,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
+>   	exynos5250-arndale.dtb \
+>   	exynos5250-smdk5250.dtb \
+>   	exynos5250-snow.dtb \
+> +	exynos5260-xyref5260-evt0.dtb \
+>   	exynos5420-arndale-octa.dtb \
+>   	exynos5420-smdk5420.dtb \
+>   	exynos5440-sd5v1.dtb \
+> diff --git a/arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts b/arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts
+> new file mode 100644
+> index 0000000..d7d0aeb
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts
+> @@ -0,0 +1,110 @@
+> +/*
+> + * SAMSUNG XYREF5260 EVT0 board device tree source
+> + *
+> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
+> + *		http://www.samsung.com
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> +*/
+> +
+> +/dts-v1/;
+> +#include "exynos5260.dtsi"
+> +
+> +/ {
+> +	model = "SAMSUNG XYREF5260 EVT0 board based on EXYNOS5260";
+> +	compatible = "samsung,xyref5260", "samsung,exynos5260";
+> +
+> +	memory {
+> +		reg = <0x20000000 0x80000000>;
+> +	};
+> +
+> +	chosen {
+> +		bootargs = "console=ttySAC2,115200";
+> +	};
+> +
+> +	clocks {
+> +		fin_pll: xxti {
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <24000000>;
+> +			clock-output-names = "fin_pll";
+> +			#clock-cells = <0>;
+> +		};
+> +
+> +		xrtcxti: xrtcxti {
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <32768>;
+> +			clock-output-names = "xrtcxti";
+> +		};
 
-On Wed, 2014-03-12 at 15:26 -0700, Joe Perches wrote:
-> On Wed, 2014-03-12 at 21:14 +0000, Ben Hutchings wrote:
-> > These look like the statistic names specified in IEEE 802.3.  I would
-> > support a general move to using standard names for MAC stats in Etherne=
-t
-> > drivers, because they are quite clearly defined and widely implemented
-> > in hardware.  However, that is not the current practice in most Linux
-> > drivers.
->=20
-> Hey Ben.
->=20
-> Maybe something like this would be a start?
->=20
-> Change the actual #defines/strings to taste.
->=20
-> Maybe this shouldn't be in uapi or maybe in if_ether.h
-[...]
+clock-cells property is missing here.
 
-This is pointless without also nailing down the definition of each
-statistic.  That could be done with reference to standards/RFCs, of
-course.
+> +
+> +		spdif_extclk: ioclk_spdif_extclk {
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <49152000>;
+> +			clock-output-names = "ioclk_spdif_extclk";
+> +		};
 
-Ben.
+ditto.
 
---=20
-Ben Hutchings
-Experience is directly proportional to the value of equipment destroyed.
-                                                         - Carolyn Scheppne=
-r
+> +	};
+> +};
 
---=-1BTaVrWKtjntL7CKQjqd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
+May I know why other phyclocks and ioclks have not been added?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+> +
+> +&pinctrl_0 {
+> +	hdmi_hpd_irq: hdmi-hpd-irq {
+> +		samsung,pins = "gpx3-7";
+> +		samsung,pin-function = <0>;
+> +		samsung,pin-pud = <1>;
+> +		samsung,pin-drv = <0>;
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> +
+> +&uart1 {
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	status = "okay";
+> +};
+> +
+> +&uart3 {
+> +	status = "okay";
+> +};
+> +
+> +&mmc_0 {
+> +	status = "okay";
+> +	num-slots = <1>;
+> +	broken-cd;
+> +	bypass-smu;
+> +	supports-highspeed;
+> +	supports-hs200-mode; /* 200 Mhz */
+> +	card-detect-delay = <200>;
+> +	samsung,dw-mshc-ciu-div = <3>;
+> +	samsung,dw-mshc-sdr-timing = <0 4>;
+> +	samsung,dw-mshc-ddr-timing = <0 2>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sd0_rdqs &sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4 &sd0_bus8>;
+> +
+> +	slot@0 {
+> +		reg = <0>;
+> +		bus-width = <8>;
+> +	};
+> +};
+> +
+> +&mmc_2 {
+> +	status = "okay";
+> +	num-slots = <1>;
+> +	supports-highspeed;
+> +	card-detect-delay = <200>;
+> +	samsung,dw-mshc-ciu-div = <3>;
+> +	samsung,dw-mshc-sdr-timing = <2 3>;
+> +	samsung,dw-mshc-ddr-timing = <1 2>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus1 &sd2_bus4>;
+> +
+> +	slot@0 {
+> +		reg = <0>;
+> +		bus-width = <4>;
+> +		disable-wp;
+> +	};
+> +};
 
-iQIVAwUAUyD7wOe/yOyVhhEJAQoJZBAAjYhkPhYHFb8jMyUbAtW9tZtCe337LRJk
-KI60VOoleg2o4/ElkkhnPywwmfr4hkmza7zwDZMiknzO1MdlDH9ayTq/IGTpUZqu
-Z5OXQe+Arw8m/vIh+9u3hK/ksJ/IQmxmr4KyacEOBPNt9QpGa+9WFstgcw8Jnq4E
-kgfMqgnWRUOcTZM6s07a0JnE82iL5VnxEhoMpp3x4vgg/ew0u1y733oPSSuuC0xR
-YZ0A7bWAnPUlqKchCu+Iyp+K7y7Wj3lx/pmw+/VjERBEAPT4FiwbLOk46PMsYKP2
-gHI3ArrcS/xbhUmDEmJYFMX29e8OqDw1nZUAHgki+gXvLICTIJBol/3Z9hW8HkoG
-QGGsfDP3WBT+SsUapNUKTYiDU6yyObbaMFaQ0v91mwQm5v8t812avjJnaqhqTIXX
-sPvmAjBciM57DiJ97g8WF7xAUrY90SeLutTNC5QSyPKfUzW0ooTc3Wb/AUddzuKi
-dmf1XPp8T8gfOtszas5S0TtL/A1eZxy1Th0PZsK8etYsOJPh4Rv772ZmILCGpWBy
-XU589Cirny8TfMrJDZpY4oGnuCdf5Y3L2wLAdNSX5JGOENTSik+aY1/YwRV0smf7
-+QVVKiIW1/NhINAvCPqJxaMlP4OoyzCGozfUDsxEC5nzGi7xCmh7nXgy/tzYW+4J
-4tTTvk2NcIk=
-=7rZl
------END PGP SIGNATURE-----
 
---=-1BTaVrWKtjntL7CKQjqd--
+-- 
+Best Regards,
+Pankaj Dubey
