@@ -1,181 +1,81 @@
-From: Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: Re: [PATCH v5 3/5] clk/samsung: add support for pll2650xx
-Date: Thu, 13 Mar 2014 19:29:03 +0900
-Message-ID: <CAGcde9FiFkbtuCrG1TWAmbcM-LLMu8fAMKS-L4keZ2ehuEDn=g@mail.gmail.com>
-References: <1394636208-3125-1-git-send-email-rahul.sharma@samsung.com>
- <1394636208-3125-4-git-send-email-rahul.sharma@samsung.com> <532109C6.2060100@samsung.com>
+From: Sathya Prakash <a0393677@ti.com>
+Subject: Re: [PATCH v2 4/4] ARM: DTS: AM43x: Add DSS node
+Date: Thu, 13 Mar 2014 16:00:52 +0530
+Message-ID: <532188DC.2010000@ti.com>
+References: <1394701109-6721-1-git-send-email-sathyap@ti.com> <1394701109-6721-5-git-send-email-sathyap@ti.com> <532186B6.3090902@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <532109C6.2060100@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <rahul.sharma@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@linaro.org>, kgene.kim@samsung.com, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <532186B6.3090902@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Sathya Prakash M R <sathyap@ti.com>, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, paul@pwsan.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 13, 2014 at 10:28 AM, Pankaj Dubey <pankaj.dubey@samsung.com> wrote:
-> Hi Rahul,
->
->
-> On 03/12/2014 11:56 PM, Rahul Sharma wrote:
+On Thursday 13 March 2014 03:51 PM, Tomi Valkeinen wrote:
+> On 13/03/14 10:58, Sathya Prakash M R wrote:
+>> Add device node for DSS module for AM4372. Both the
+>> AM437x-Gp evm and Am43x-Epos evm use the same LCD panel.
+>> The lcd timings are added in respective dts files.
+>> Adds display pinctrl and enables required gpio.
+>> Also set the right parent clock to the DSS clock.
 >>
->> Add support for pll2650xx in samsung pll file. This PLL variant
->> is close to pll36xx but uses CON2 registers instead of CON1.
->>
->> Aud_pll in Exynos5260 is pll2650xx and uses this code.
->>
->> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+>> Signed-off-by: Sathya Prakash M R <sathyap@ti.com>
 >> ---
->>   drivers/clk/samsung/clk-pll.c |  101
->> +++++++++++++++++++++++++++++++++++++++++
->>   drivers/clk/samsung/clk-pll.h |    1 +
->>   2 files changed, 102 insertions(+)
+>>   arch/arm/boot/dts/am4372.dtsi        |   28 +++++++++++++
+>>   arch/arm/boot/dts/am437x-gp-evm.dts  |   77 ++++++++++++++++++++++++++++++++++
+>>   arch/arm/boot/dts/am43x-epos-evm.dts |   73 ++++++++++++++++++++++++++++++++
+>>   arch/arm/boot/dts/am43xx-clocks.dtsi |    2 +
+>>   4 files changed, 180 insertions(+)
 >>
->> diff --git a/drivers/clk/samsung/clk-pll.c b/drivers/clk/samsung/clk-pll.c
->> index 18e42ef..b07fad2 100644
->> --- a/drivers/clk/samsung/clk-pll.c
->> +++ b/drivers/clk/samsung/clk-pll.c
->> @@ -1049,6 +1049,101 @@ static const struct clk_ops
->> samsung_pll2550xx_clk_min_ops = {
->>         .recalc_rate = samsung_pll2550xx_recalc_rate,
->>   };
->>   +/*
->> + * PLL2650XX Clock Type
->> + */
+>> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+>> index ea55a4e..b72a7df 100644
+>> --- a/arch/arm/boot/dts/am4372.dtsi
+>> +++ b/arch/arm/boot/dts/am4372.dtsi
+>> @@ -684,6 +684,34 @@
+>>   			num-cs = <4>;
+>>                           status = "disabled";
+>>                   };
 >> +
->> +/* Maximum lock time can be 3000 * PDIV cycles */
->> +#define PLL2650XX_LOCK_FACTOR 3000
+>> +		dss: dss@4832A000 {
+>> +			compatible = "ti,omap3-dss", "simple-bus";
+>> +			reg = <0x4832A000 0x200>;
+>> +			ti,hwmods = "dss_core";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <1>;
+>> +			ranges;
 >> +
->> +#define PLL2650XX_MDIV_SHIFT           9
->> +#define PLL2650XX_PDIV_SHIFT           3
->> +#define PLL2650XX_SDIV_SHIFT           0
->> +#define PLL2650XX_KDIV_SHIFT           0
->> +#define PLL2650XX_MDIV_MASK            0x1ff
->> +#define PLL2650XX_PDIV_MASK            0x3f
->> +#define PLL2650XX_SDIV_MASK            0x7
->> +#define PLL2650XX_KDIV_MASK            0xffff
->> +#define PLL2650XX_PLL_ENABLE_SHIFT     23
->> +#define PLL2650XX_PLL_LOCKTIME_SHIFT   21
->> +#define PLL2650XX_PLL_FOUTMASK_SHIFT   31
+>> +			dispc@4832A400 {
+>> +				compatible = "ti,omap3-dispc";
+>> +				reg = <0x4832A400 0x400>;
+>> +				interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
+>> +				ti,hwmods = "dss_dispc";
+>> +			};
 >> +
->> +static unsigned long samsung_pll2650xx_recalc_rate(struct clk_hw *hw,
->> +                               unsigned long parent_rate)
->> +{
->> +       struct samsung_clk_pll *pll = to_clk_pll(hw);
->> +       u32 mdiv, pdiv, sdiv, pll_con0, pll_con2;
->> +       s16 kdiv;
->> +       u64 fvco = parent_rate;
+>> +			dpi: encoder@0 {
+>> +				compatible = "ti,omap3-dpi";
+>> +			};
 >> +
->> +       pll_con0 = __raw_readl(pll->con_reg);
->> +       pll_con2 = __raw_readl(pll->con_reg + 8);
->> +       mdiv = (pll_con0 >> PLL2650XX_MDIV_SHIFT) & PLL2650XX_MDIV_MASK;
->> +       pdiv = (pll_con0 >> PLL2650XX_PDIV_SHIFT) & PLL2650XX_PDIV_MASK;
->> +       sdiv = (pll_con0 >> PLL2650XX_SDIV_SHIFT) & PLL2650XX_SDIV_MASK;
->> +       kdiv = (s16)(pll_con2 & PLL2650XX_KDIV_MASK);
+>> +			rfbi: rfbi@4832A800 {
+>> +				compatible = "ti,omap3-rfbi";
+>> +			reg = <0x4832A800 0x100>;
+>> +				ti,hwmods = "dss_rfbi";
+>> +			};
 >> +
->> +       fvco *= (mdiv << 16) + kdiv;
->> +       do_div(fvco, (pdiv << sdiv));
->> +       fvco >>= 16;
+>> +		};
 >> +
->> +       return (unsigned long)fvco;
->> +}
->> +
->> +static int samsung_pll2650xx_set_rate(struct clk_hw *hw, unsigned long
->> drate,
->> +                                       unsigned long parent_rate)
->> +{
->> +       struct samsung_clk_pll *pll = to_clk_pll(hw);
->> +       u32 tmp, pll_con0, pll_con2;
->> +       const struct samsung_pll_rate_table *rate;
->> +
->> +       rate = samsung_get_pll_settings(pll, drate);
->> +       if (!rate) {
->> +               pr_err("%s: Invalid rate : %lu for pll clk %s\n",
->> __func__,
->> +                       drate, __clk_get_name(hw->clk));
->> +               return -EINVAL;
->> +       }
->> +
->> +       pll_con0 = __raw_readl(pll->con_reg);
->> +       pll_con2 = __raw_readl(pll->con_reg + 8);
->> +
->> +        /* Change PLL PMS values */
->> +       pll_con0 &= ~(PLL2650XX_MDIV_MASK << PLL2650XX_MDIV_SHIFT |
->> +                       PLL2650XX_PDIV_MASK << PLL2650XX_PDIV_SHIFT |
->> +                       PLL2650XX_SDIV_MASK << PLL2650XX_SDIV_SHIFT);
->> +       pll_con0 |= rate->mdiv << PLL2650XX_MDIV_SHIFT;
->> +       pll_con0 |= rate->pdiv << PLL2650XX_PDIV_SHIFT;
->> +       pll_con0 |= rate->sdiv << PLL2650XX_SDIV_SHIFT;
->> +       pll_con0 |= 1 << PLL2650XX_PLL_ENABLE_SHIFT;
->> +       pll_con0 |= 1 << PLL2650XX_PLL_FOUTMASK_SHIFT;
->> +
->> +       pll_con2 &= ~(PLL2650XX_KDIV_MASK << PLL2650XX_KDIV_SHIFT);
->> +       pll_con2 |= ((~(rate->kdiv) + 1) & PLL2650XX_KDIV_MASK)
->> +                       << PLL2650XX_KDIV_SHIFT;
->> +
->> +       /* Set PLL lock time. */
->> +       __raw_writel(PLL2650XX_LOCK_FACTOR * rate->pdiv, pll->lock_reg);
->> +
->> +       __raw_writel(pll_con0, pll->con_reg);
->> +       __raw_writel(pll_con2, pll->con_reg + 8);
->> +
->> +       do {
->> +               tmp = __raw_readl(pll->con_reg);
->> +       } while (!(tmp & (0x1 << PLL2650XX_PLL_LOCKTIME_SHIFT)));
->> +
->> +       return 0;
->> +}
->> +
->> +static const struct clk_ops samsung_pll2650xx_clk_ops = {
->> +       .recalc_rate = samsung_pll2650xx_recalc_rate,
->> +       .set_rate = samsung_pll2650xx_set_rate,
->> +       .round_rate = samsung_pll_round_rate,
->> +};
->> +
->> +static const struct clk_ops samsung_pll2650xx_clk_min_ops = {
->> +       .recalc_rate = samsung_pll2650xx_recalc_rate,
->> +};
->> +
->>   static void __init _samsung_clk_register_pll(struct samsung_clk_provider
->> *ctx,
->>                                 struct samsung_pll_clock *pll_clk,
->>                                 void __iomem *base)
->> @@ -1157,6 +1252,12 @@ static void __init _samsung_clk_register_pll(struct
->> samsung_clk_provider *ctx,
->>                 else
->>                         init.ops = &samsung_pll2550xx_clk_ops;
->>                 break;
->> +       case pll_2650xx:
->> +               if (!pll->rate_table)
->> +                       init.ops = &samsung_pll2650xx_clk_min_ops;
->> +               else
->> +                       init.ops = &samsung_pll2650xx_clk_ops;
->> +               break;
->>         default:
->>                 pr_warn("%s: Unknown pll type for pll clk %s\n",
->>                         __func__, pll_clk->name);
->> diff --git a/drivers/clk/samsung/clk-pll.h b/drivers/clk/samsung/clk-pll.h
->> index ec4bc1d..c0ed4d4 100644
->> --- a/drivers/clk/samsung/clk-pll.h
->> +++ b/drivers/clk/samsung/clk-pll.h
->> @@ -32,6 +32,7 @@ enum samsung_pll_type {
->>         pll_s3c2410_upll,
->>         pll_s3c2440_mpll,
->>         pll_2550xx,
->> +       pll_2650xx,
->>   };
->>     #define PLL_35XX_RATE(_rate, _m, _p, _s)                    \
+> This seems to be based on old version of the DSS DT. Please rebase this
+> on top of the latest one:
+>
+> git://git.kernel.org/pub/scm/linux/kernel/git/tomba/linux.git work/dss-dt
+Thanks. maybe i missed couple of changes. Will do that.
+>
+> You also need to split this into smaller pieces: the dts clock fix, the
+> am4372.dtsi, and the board changes.
+ok sure.
+>
+>   Tomi
 >
 >
-> Reviewed-by: Pankaj Dubey <pankaj.dubey@samsung.com>
->
-> --
-> Best Regards,
-> Pankaj Dubey
->
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc"
-> in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
