@@ -1,7 +1,7 @@
 From: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Subject: [PATCH v2 5/6] ARM: mvebu: Enable NAND controller in Armada 385-DB
-Date: Thu, 13 Mar 2014 16:39:01 -0300
-Message-ID: <1394739542-30017-6-git-send-email-ezequiel@vanguardiasur.com.ar>
+Subject: [PATCH v2 6/6] clk: mvebu: Update binding documentation for the core divider clock
+Date: Thu, 13 Mar 2014 16:39:02 -0300
+Message-ID: <1394739542-30017-7-git-send-email-ezequiel@vanguardiasur.com.ar>
 References: <1394739542-30017-1-git-send-email-ezequiel@vanguardiasur.com.ar>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1394739542-30017-1-git-send-email-ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
@@ -12,46 +12,30 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-The Armada 385-DB board has a NAND flash, so enable it in the
-devicetree and add the partitions as prepared in the factory images.
+The Core Divider clock support two new compatible strings for Armada
+375 and Armada 380 SoCs. Add the compatible strings to the documentation.
 
 Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-385-db.dts | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/armada-385-db.dts b/arch/arm/boot/dts/armada-385-db.dts
-index 9a13642..edcf7ff 100644
---- a/arch/arm/boot/dts/armada-385-db.dts
-+++ b/arch/arm/boot/dts/armada-385-db.dts
-@@ -80,6 +80,27 @@
- 					reg = <1>;
- 				};
- 			};
-+
-+			flash: flash@d0000 {
-+				status = "okay";
-+				num-cs = <1>;
-+				marvell,nand-keep-config;
-+				marvell,nand-enable-arbiter;
-+				nand-on-flash-bbt;
-+
-+				partition@0 {
-+					label = "U-Boot";
-+					reg = <0 0x800000>;
-+				};
-+				partition@800000 {
-+					label = "Linux";
-+					reg = <0x800000 0x800000>;
-+				};
-+				partition@1000000 {
-+					label = "Filesystem";
-+					reg = <0x1000000 0x3f000000>;
-+				};
-+			};
- 		};
+diff --git a/Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt b/Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt
+index c62391f..520562a 100644
+--- a/Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt
++++ b/Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt
+@@ -4,7 +4,10 @@ The following is a list of provided IDs and clock names on Armada 370/XP:
+  0 = nand (NAND clock)
  
- 		pcie-controller {
+ Required properties:
+-- compatible : must be "marvell,armada-370-corediv-clock"
++- compatible : must be "marvell,armada-370-corediv-clock",
++		       "marvell,armada-375-corediv-clock",
++		       "marvell,armada-380-corediv-clock",
++
+ - reg : must be the register address of Core Divider control register
+ - #clock-cells : from common clock binding; shall be set to 1
+ - clocks : must be set to the parent's phandle
 -- 
 1.9.0
 
