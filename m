@@ -1,80 +1,57 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [GIT PULL] Move device tree graph parsing helpers to drivers/of
-Date: Thu, 13 Mar 2014 16:37:35 +0100
-Message-ID: <5321D0BF.6080605@samsung.com>
-References: <1394126000.3622.66.camel@paszta.hi.pengutronix.de>
- <20140307182330.75168C40AE3@trevor.secretlab.ca>
- <20140310102630.3cb1bcd7@samsung.com>
- <20140310143758.3734FC405FA@trevor.secretlab.ca>
- <1394708896.3577.21.camel@paszta.hi.pengutronix.de>
- <20140313113527.GM21483@n2100.arm.linux.org.uk> <5321CB04.6090700@samsung.com>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] irqchip: sun4i: Use
+ handle_fasteoi_late_irq for the ENMI (irq 0)
+Date: Thu, 13 Mar 2014 17:27:21 +0100 (CET)
+Message-ID: <alpine.DEB.2.02.1403131725230.18573@ionos.tec.linutronix.de>
+References: <1394644627-12315-1-git-send-email-hdegoede@redhat.com> <1394644627-12315-5-git-send-email-hdegoede@redhat.com> <alpine.DEB.2.02.1403131542060.18573@ionos.tec.linutronix.de> <5321CB12.3090704@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <5321CB04.6090700@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Philipp Zabel <p.zabel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDAMN6NI5EERBZFYQ6MQKGQEV6BKGAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <5321CB12.3090704-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 13/03/14 16:13, Sylwester Nawrocki wrote:
-> On 13/03/14 12:35, Russell King - ARM Linux wrote:
-> [...]
->> > Grant and myself have exchanged emails in private on this discussing what
->> > should happen - essentially Grant's position is that he's happy to leave
->> > this stuff queued provided a resolution to his concerns are forthcoming.
->> > 
->> > However, what I find incredibly unfair is that we're taking the rap for
->> > these bad bindings.  From what I can see, these bad bindings were merged
->> > into the V4L2 code with _zero_ review by DT maintainers.  It's quite
->> > clear that DT maintainers would have objected to them had they seen them,
->
-> Russell, it's just unfair what you're trying to impute here.  These 
-> bindings were floating on the mailing list for _several_ months before 
-> getting merged.
-> They were finally acked by Rob and Grant [1], [2], however it cannot be 
-> seen from the commits as the Ack come late, after I sent a pull request.
+On Thu, 13 Mar 2014, Hans de Goede wrote:
+> On 03/13/2014 03:46 PM, Thomas Gleixner wrote:
+> >>  static int sun4i_irq_map(struct irq_domain *d, unsigned int virq,
+> >>  			 irq_hw_number_t hw)
+> >>  {
+> >> -	irq_set_chip_and_handler(virq, &sun4i_irq_chip,
+> >> -				 handle_level_irq);
+> >> +	if (hw == 0) /* IRQ 0, the ENMI needs special handling */
+> >> +		irq_set_chip_and_handler(virq, &sun4i_irq_chip,
+> >> +					 handle_fasteoi_late_irq);
+> >> +	else
+> >> +		irq_set_chip_and_handler(virq, &sun4i_irq_chip,
+> >> +					 handle_level_irq);
+> > 
+> > I wonder what happens when you use the fasteoi handler for all of
+> > them.
 > 
->> > but they didn't.  And the lack of documentation of the bindings which
->> > has been something that's been insisted on is also disgusting.
->> >
->> > And now we're now taking the pain for that oversight.
->> > 
->> > So... frankly, I've walked away from this dysfunctional situation.  I
->> > don't see imx-drm moving out of drivers/staging due to this debacle for
->> > many months - possibly never now given that no one can agree on this
->> > stuff.  This just goes to show what a fscking joke mainline kernels are,
->> > and why people just give up and go to vendor kernels which offer /much/
->> > better support all round.
->> > 
->> > As far as I can see, it's proved impossible to define a set of bindings
->> > for display devices which satisfy everyone.  So, rather than doing
->> > /something/ so we can move forward, we end up doing /nothing/.
->> > 
->> > It's times like this where I start believing that /board files/ were the
->> > best solution for ARM, because DT just carries soo many thorny issues
->> > (such as these) and is a continual blocker.
->
-> My experience and feelings are similar, I started to treat mainline
-> kernel much less seriously after similar DT related blocking issues.
-> An example is a simple patch series for couple drivers that was first 
-> posted in July 2013 and is still not merged, because the subsystem 
-> maintainer requires a DT binding maintainer Ack for everything and you
-> can wait to death to get one, specially if there are multiple iterations,
-> each needing attention of a DT binding maintainer. I remember opinions, 
-> when the process was being defined during one of the last kernel summits, 
-> that things may get longer to merge upstream, due to DT binding reviews. 
-> And that we must live with that. But these latencies are getting so 
-> ridiculously large that there is nothing left but to move to an 
-> alternative process.
+> As mentioned in my previous mail doing an ack (or an eio) seems to
+> be unnecessary for all but IRQ 0.
 > 
-> Regarding moving forward doing /something/, rather than ending up
-> doing nothing - IMO it's the worst thing to rush DT binding being
-> merged upstream. I don't think an agreement can't be achieved soon, 
-> if not for this release then hopefully for next one.
+> I do wonder if handle_level_irq is the right handle*irq function
+> to use in this case, since this is strictly used in the non smp
+> case I think that the mask / unmask done by handle_level_irq is
+> not necessary for non threaded handlers. So what would be the
+> correct handle*irq function to use in this case ?
+> 
+> Note the irqs are level irqs. IOW they may stay asserted while
+> the handler runs because of the handler and a new irq raising.
 
-Sorry about the missing links:
+Right. You could be creative and use fasteoi plus an empty eoi
+callback in the chip for irq 1-N. That way you only mask and unmask in
+the threaded case.
 
-[1] http://www.spinics.net/lists/linux-media/msg61899.html
-[2] http://www.spinics.net/lists/linux-media/msg62458.html
+Thanks,
+
+	tglx
