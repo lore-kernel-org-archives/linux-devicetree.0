@@ -1,51 +1,48 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] irqchip: sun4i: Use
- handle_fasteoi_late_irq for the ENMI (irq 0)
-Date: Thu, 13 Mar 2014 12:12:50 +0100 (CET)
-Message-ID: <alpine.DEB.2.02.1403131212090.18573@ionos.tec.linutronix.de>
-References: <1394644627-12315-1-git-send-email-hdegoede@redhat.com> <1394644627-12315-5-git-send-email-hdegoede@redhat.com> <20140313093457.GF2815@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Fengguang Wu <fengguang.wu@intel.com>
+Subject: Re: [PATCH v5] can: xilinx CAN controller support.
+Date: Thu, 13 Mar 2014 19:21:12 +0800
+Message-ID: <20140313112112.GB8806@localhost>
+References: <5254bfec-c6fd-4681-a34d-706d51e60fbb@VA3EHSMHS004.ehs.local>
+ <531DD493.3030306@monstr.eu>
+ <531DD5E7.7090406@pengutronix.de>
+ <3245971.RIuVmbVL0Z@wuerfel>
+ <1964213d-6bd9-49fa-805e-42e1e0630fd5@VA3EHSMHS029.ehs.local>
+ <20140311044555.GA12373@localhost>
+ <546dbc60-dd7b-4249-bab8-ad7e008b9aad@AM1EHSMHS001.ehs.local>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDAMN6NI5EERBLNFQ2MQKGQEPGX4YWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140313093457.GF2815@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-can-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <546dbc60-dd7b-4249-bab8-ad7e008b9aad@AM1EHSMHS001.ehs.local>
+Sender: linux-can-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Marc Kleine-Budde <mkl@pengutronix.de>, monstr@monstr.eu, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, robh+dt@kernel.org, Kedareswara rao Appana <appana.durga.rao@xilinx.com>, grant.likely@linaro.org, Kedareswara rao Appana <appanad@xilinx.com>, wg@grandegger.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 13 Mar 2014, Maxime Ripard wrote:
+Hi Michal,
 
-> On Wed, Mar 12, 2014 at 06:17:07PM +0100, Hans de Goede wrote:
-> > The ENMI needs to have the ack done *after* clearing the interrupt source,
-> > otherwise we will get a spurious interrupt for each real interrupt. Switch
-> > to the new handle_fasteoi_late_irq handler which gives us the desired behavior.
+On Tue, Mar 11, 2014 at 10:38:14AM +0100, Michal Simek wrote:
+> On 03/11/2014 05:45 AM, Fengguang Wu wrote:
+> >>> You probably want something like
+> >>>
+> >>> 	config CAN_XILINX
+> >>> 	tristate "Xilinx CAN"
+> >>> 	depends on ARCH_ZYNQ || MICROBLAZE || COMPILE_TEST
+> >>> 	depends on COMMON_CLK && HAS_MMIO  # whatever you need for other architectures
+> >>
+> >> Fengguang: Are you use COMPILE_TEST in zero day testing system?
 > > 
-> > Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  drivers/irqchip/irq-sun4i.c | 11 +++++++++--
-> >  1 file changed, 9 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/irqchip/irq-sun4i.c b/drivers/irqchip/irq-sun4i.c
-> > index 8a2fbee..4b1c874 100644
-> > --- a/drivers/irqchip/irq-sun4i.c
-> > +++ b/drivers/irqchip/irq-sun4i.c
-> > @@ -77,15 +77,22 @@ static void sun4i_irq_unmask(struct irq_data *irqd)
-> >  static struct irq_chip sun4i_irq_chip = {
-> >  	.name		= "sun4i_irq",
-> >  	.irq_ack	= sun4i_irq_ack,
-> > +	.irq_eoi	= sun4i_irq_ack, /* For the ENMI */
+> > Yeah, the randconfig build/boot tests should cover both COMPILE_TEST
+> > and !COMPILE_TEST cases.
 > 
-> Hmmm, I wonder if that actually does something.
-> 
-> There's been a patch floating around that I was sure was merged, but
-> apparently wasn't that remove sun4i_irq_ack, because the register we
-> were writing to are in read only, and it wasn't doing anything.
+> But the point is that randconfig is really random it means it definitely can
+> cover but not there is no certainty that for that build, you are running,
+> has both option for all architectures enabled.
+> Or do I read it wrongly?
 
-Well, it looks like it does something otherwise Hans would not see any
-improvement of the situation.
+Good point!  Since the 0day system is running randconfig tests
+everyday, it has very good opportunity to cover the COMPILE_TEST case.
+But to be sure, I'll explicitly enable COMPILE_TEST in some cases.
+
+Thanks,
+Fengguang
