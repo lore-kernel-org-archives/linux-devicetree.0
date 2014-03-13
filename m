@@ -1,90 +1,110 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 5/9] dt-bindings: pci: rcar pcie device tree bindings
-Date: Thu, 13 Mar 2014 11:00:24 +0100
-Message-ID: <33747243.K5i7Ah8L7o@wuerfel>
-References: <1394704208-7490-1-git-send-email-phil.edworthy@renesas.com> <1394704208-7490-6-git-send-email-phil.edworthy@renesas.com>
+From: Arend van Spriel <arend@broadcom.com>
+Subject: Re: [RFC] dt: bindings: add bindings for Broadcom bcm43xx sdio devices
+Date: Thu, 13 Mar 2014 11:16:05 +0100
+Message-ID: <53218565.6080605@broadcom.com>
+References: <1392059868-8782-1-git-send-email-arend@broadcom.com> <530D1E69.7010504@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1394704208-7490-6-git-send-email-phil.edworthy@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Phil Edworthy <phil.edworthy@renesas.com>
-Cc: linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Valentine Barshak <valentine.barshak@cogentembedded.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <530D1E69.7010504@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 13 March 2014 09:50:04 Phil Edworthy wrote:
-> This patch adds the bindings for the rcar PCIE driver. The driver
-> resides under drivers/pci/host/pcie-rcar.c
+On 02/25/2014 11:51 PM, Stephen Warren wrote:
+> On 02/10/2014 12:17 PM, Arend van Spriel wrote:
+>> The Broadcom bcm43xx sdio devices are fullmac devices that may be
+>> integrated in ARM platforms. Currently, the brcmfmac driver for
+>> these devices support use of platform data. This patch specifies
+>> the bindings that allow this platform data to be expressed in the
+>> devicetree.
 > 
-> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-> ---
->  Documentation/devicetree/bindings/pci/rcar-pci.txt | 40 ++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci.txt
+>> diff --git a/Documentation/devicetree/bindings/staging/net/wireless/brcm,bcm43xx-fmac.txt b/Documentation/devicetree/bindings/staging/net/wireless/brcm,bcm43xx-fmac.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> new file mode 100644
-> index 0000000..0e219b0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> @@ -0,0 +1,40 @@
-> +* Renesas RCar PCIe interface
-> +
-> +Required properties:
-> +- compatible: should contain one of the following
-> +	"renesas,r8a7779-pcie", "renesas,r8a7790-pcie", "renesas,r8a7791-pcie"
-> +- reg: base addresses and lengths of the pcie controller.
-> +- #address-cells: set to <3>
-> +- #size-cells: set to <2>
-> +- device_type: set to "pci"
-> +- ranges: ranges for the PCI memory and I/O regions
+>> + - compatible : Should be "brcm,bcm43xx-fmac".
+>> + - wlan-supply : phandle for fixed regulator used to control power for
+>> +	the device/module.
+> 
+> Ignoring the fact that perhaps this should just be a GPIO instead and
+> assuming it actually make sense for this to be a regulator:
+> 
+> Why "fixed regulator" not just "the regulator". There shouldn't be any
+> requirement for the power supply to the device to be fixed; the driver
+> should (a) set the voltage (which will be a no-op for a fixed regulator
+> already providing that voltage), then (b) enable the regulator. That
+> would allow a PMIC with programmable voltage to be feeding the device.
+> 
+> Now, if this property was really intended to control some enable GPIO on
+> the device, as others have said, this shouldn't be a regulator property
+> but rather a GPIO property. However, there is definitely some power
+> supply fed to the device, so you definitely need /some/ supply property
+> here.
+> 
+> Aren't there other enable GPIOs required? These should be specified in DT.
+> 
+> Doesn't the WiFi chip/module require a (32KHz?) clock? If so, that needs
+> to be represented in DT. Preferably write the binding to require
+> clock-names (name-based lookup) rather than just clocks (index-based
+> lookup).
 
-I see your description and example includes I/O regions, but the driver
-claims in a comment that these don't work. Do you also have a patch to
-make them work?
+Hi Stephen,
 
-In case that patch is part of the 9-patch series, do you mind adding the
-arm kernel mailing list (and maybe me personally) to Cc the next time?
+Thanks for these comments. While I agree with most of them, I am having
+some difficulty with the DT concept. Essentially, a DT node describes a
+part of the system. My scope for this change is probably limited wearing
+my brcmfmac glasses. Am I correct in assuming that a DT node may be
+processed/used by multiple drivers. As an example, the 32 kHz clock is
+not something brcmfmac cares about. It simple needs to be available and
+hooked up to the wlan device. The DT should have another node for this
+clock which a (common) clock driver picks up. So having it referenced in
+this node is purely informational, right?
 
-> +- interrupts: interrupt values for MSI interrupt
-> +- #interrupt-cells: set to <1>
-> +- interrupt-map-mask and interrupt-map: standard PCI properties
-> +	to define the mapping of the PCIe interface to interrupt
-> +	numbers.
-> +- clocks: from common clock binding: handle to pci clock.
-> +- clock-names: from common clock binding: should be "pcie"
-> +
-> +Example:
-> +
-> +SoC specific DT Entry:
-> +
-> +	pcie: pcie@0x01000000 {
-> +		compatible = "renesas,r8a7790-pcie";
-> +		reg = <0 0xfe000000 0 0x80000>;
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +		device_type = "pci";
-> +		ranges = <0x01000000 0 0x00000000 0 0xfe100000 0 0x00100000
-> +			  0x02000000 0 0xfe200000 0 0xfe200000 0 0x00200000
-> +			  0x02000000 0 0x30000000 0 0x30000000 0 0x08000000
-> +			  0x42000000 0 0x38000000 0 0x38000000 0 0x08000000>;
+Regards,
+Arend
 
-I'm curious about why there are two non-prefetchable regions. What is
-the significance of this?
-
-> +		interrupts = <0 116 4>;
-> +		#interrupt-cells = <1>;
-> +		interrupt-map-mask = <0 0 0 0>;
-> +		interrupt-map = <0 0 0 0 &gic 0 116 4>;
-> +		clocks = <&mstp3_clks R8A7790_CLK_PCIE>;
-> +		clock-names = "pcie";
-> +		status = "disabled";
-> +	};
-
-Are you sure that there is only one legacy interrupt?  Most host
-controllers wire up IntA through IntD to different output pins.
-
-Otherwise looks good.
-
-	Arnd
+>> +Optional properties:
+>> + - drive-strength : drive strength used for SDIO pins on device (default = 6mA).
+> 
+> As mentioned elsewhere, since that's a binding-specific property, rename
+> it brcm,drive-strength.
+> 
+>> + - interrupt-parent : the phandle for the interrupt controller to which the
+>> +	device interrupt (HOST_WAKE) is connected.
+> 
+> That's such a common property, individual bindings don't typically
+> mention it.
+> 
+>> + - interrupts : interrupt specifier encoded according the interrupt controller
+>> +	specified by interrupt-parent property.
+> 
+> The description of the property should say which interrupt (name and/or
+> description) it's describing, even if there's only 1.
+> 
+> 
+>> +mmc3: mmc@01c20000 {
+>> +	pinctrl-0 = <&mmc3_pins>;
+>> +	pinctrl-1 = <&wifi_host_wake>;
+>> +	vmmc-supply = <&mmc3_supply>;
+>> +	bus-width = <4>;
+> 
+> None of that is really relevant to this binding, and may vary from SDIO
+> controller to SDIO controller, so may end up being wrong.
+> 
+> I'm not sure whether it makes sense to show the example inside some
+> arbitrary SDIO controller node. Perhaps /just/ put the WiFi node in the
+> example? The text above should be enough to describe that the node
+> should be inside an SDIO controller.
+> 
+>> +	bcm4335: bcm4335@0 {
+>> +		compatible = "brcm,bcm43xx-fmac";
+>> +		wlan-supply = <&wlan-reg>;
+>> +		drive-strength = <4>;
+>> +		interrupt-parent = <&gpx2>;
+>> +		interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
+>> +		interrupt-names = "HOST_WAKE";
+> 
+> interrupt-names wasn't documented in the list of properties above.
+> Entries in *-names properties are usually lower-case.
+> 
