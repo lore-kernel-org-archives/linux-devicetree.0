@@ -1,88 +1,78 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFC PATCH] i2c: new bus driver for efm32
-Date: Fri, 14 Mar 2014 00:19:25 +0100
-Message-ID: <20140313231925.GC15674@pengutronix.de>
-References: <1392027598-29015-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <20140310075558.GD2571@katana>
- <20140313212613.GB15674@pengutronix.de>
- <20140313221433.GI2696@katana>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v3 0/6] Armada 380 NAND support
+Date: Thu, 13 Mar 2014 19:44:48 -0400
+Message-ID: <20140313234448.GB15608@titan.lakedaemon.net>
+References: <1394742273-5113-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140313221433.GI2696@katana>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1394742273-5113-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Seif Mazareeb <seif-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
+On Thu, Mar 13, 2014 at 05:24:27PM -0300, Ezequiel Garcia wrote:
+> This patchset adds support for the NAND on Armada 380/385 SoCs.
+> 
+> The first patch adds a new "armada-380-corediv-clock" compatible
+> string, with its proper SoC-specific structure, adding the register
+> layout for this SoC family.
+> 
+> The second and third patches add the devicetree changes to support
+> the Core Divider clock.
+> 
+> After adding its clock source, the fourth and fifth patches add
+> the NAND devicetree changes. The NAND controller is compatible with
+> the Armada 370 controller, so we are currently support it using the
+> same compatible string.
+> 
+> The last patch updates the binding documentation for the Core Divider
+> clock, which is missing the information about the already supported
+> Armada 375 compatible string.
+> 
+> This series is based on linux-next 20140307. I expect it will apply
+> cleanly on v3.15-rc1; if that's not the case, I'll send a rebased patchset.
+> 
+> The clock and devicetree changes are mostly independent so they
+> can be merged through the clock and mvebu tree respectively.
+> 
+> Changes from v2:
+> 
+>   * Removed the unneeded 'nand' label from the flash@d0000 node.
+> 
+>   * Renamed 'coredivclk@e4250' to 'clock@e4250' according to
+>     ePAPR recomendation, below.
+> 
+> Changes from v1:
+> 
+>   * Changed nand@d0000 with flash@d0000 in the devicetree. The
+>     latter is compliant with ePAPR recomendation (see ePAPR v1.1,
+>     section 2.2.2, Generic Names Recommendation).
+> 
+> Ezequiel Garcia (6):
+>   clk: mvebu: Support Armada 380 SoC on the core divider clock
 
-On Thu, Mar 13, 2014 at 11:14:33PM +0100, Wolfram Sang wrote:
-> > > Huh? Is this an accepted binding? Doesn't look like it because of=
- a
-> > > generic name and IMO a specific use-case. BTW the binding documen=
-tation
-> > > for this driver is missing.
-> > Regarding the generic name: I don't care much, but I don't have a
-> > problem with it. IMHO it's implicitly name-spaced by the compatible
-> > string which starts with "efm32," and so is fine. I'd like to have =
-the
-> > same property name for all efm32 device drivers and "location" matc=
-hes
-> > the hardware reference manual (apart from capitalization).
->=20
-> I would in deed have expected a binding like "efm32,location" to
-> emphasize this is an efm32 specific thing. I know vendor-specific
-> "setup" bindings from elsewhere. Since it has been accepted already i=
-n
-> other places, we should keep it likes this.
-Assuming you know the dt stuff better than me (and noone objects) I'd
-fix the intree drivers to use efm32,location, too.
+Applied to mvebu/clk-3xx
 
-> > > > +	if (resource_size(res) < 0x42) {
-> > > > +		dev_err(&pdev->dev, "memory resource too small\n");
-> > > > +		return -EINVAL;
-> > > > +	}
-> > >=20
-> > > I'd drop this check since, but I won't force you to.
-> > I'd understand your sentence with s/since//, not sure about it as i=
-s.
-> > Anyhow, I like this check.
->=20
-> A leftover. I was about to write "since the check is somewhat heurist=
-ic
-> and does not proof much". But then I decided it is not worth spending
-> too much discussion on it :)
-I'd say it's heuristic to *not* check the boundary. It doesn't apply
-here, but consider a driver using a register space > PAGE_SIZE on an MM=
-U
-platform. It accesses base + PAGE_SIZE + 0x42 even if dt only gave a
-register range of PAGE_SIZE / 2. It's like gets(3).
+>   ARM: mvebu: Add a 2 GHz fixed-clock on Armada 38x SoCs
+>   ARM: mvebu: Add the Core Divider clock to Armada 38x SoCs
+>   ARM: mvebu: Add support for NAND controller in Armada 38x SoC
+>   ARM: mvebu: Enable NAND controller in Armada 385-DB
 
-> > > > +	clkdiv =3D DIV_ROUND_UP(rate, 8 * ddata->pdata.frequency) - 1=
-;
-> > > > +	if (clkdiv >=3D 0x200) {
-> > > > +		dev_err(&pdev->dev,
-> > > > +				"input clock too fast (%lu) to divide down to bus freq (%l=
-u)",
-> > > > +				rate, ddata->pdata.frequency);
-> > > > +		ret =3D -EIO;
-> > > > +		goto err_disable_clk;
-> > > > +	}
-> > >=20
-> > > -EIO for clocks errors? Is this common?
-> > Changed to ENODEV. Ok?
->=20
-> Nope, then the driver core will silent drop the error. -EINVAL?
-agreed
+Applied to mvebu/dt
 
-Uwe
+>   clk: mvebu: Update binding documentation for the core divider clock
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+Applied to mvebu/clk-3xx
+
+I'll push for-next with tonight's additions in an hour or so.
+
+thx,
+
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
