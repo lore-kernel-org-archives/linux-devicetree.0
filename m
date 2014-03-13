@@ -1,193 +1,233 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v5 4/5] clk/exynos5260: add macros and documentation for
- exynos5260
-Date: Thu, 13 Mar 2014 13:36:28 +0100
-Message-ID: <5321A64C.3070902@samsung.com>
-References: <1394636208-3125-1-git-send-email-rahul.sharma@samsung.com>
- <1394636208-3125-5-git-send-email-rahul.sharma@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1394636208-3125-5-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: mturquette@linaro.org, kgene.kim@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, pankaj.dubey@samsung.com
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] OF: kobj node lifecycle fixes
+Date: Thu, 13 Mar 2014 12:38:36 +0000
+Message-ID: <20140313123836.CF666C40E11@trevor.secretlab.ca>
+References: <1386958139-6130-1-git-send-email-panto@antoniou-consulting.com >
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1386958139-6130-1-git-send-email-panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rahul,
+On Fri, 13 Dec 2013 20:08:59 +0200, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+> After the move to having device nodes be proper kobjects the lifecycle
+> of the node needs to be controlled better.
+> 
+> At first convert of_add_node() in the unflattened functions to
+> of_init_node() which initializes the kobject so that of_node_get/put
+> work correctly even before of_init is called.
+> 
+> Afterwards introduce of_node_is_initialized & of_node_is_attached that
+> query the underlying kobject about the state (attached means kobj
+> is visible in sysfs)
+> 
+> Using that make sure the lifecycle of the tree is correct at all
+> times.
+> 
+> Signed-off-by: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 
-On 12.03.2014 15:56, Rahul Sharma wrote:
-> Add macros which are used as Clock IDs in DT and clock file.
-> It also adds the documentation for the exynos5260 clocks.
->
-> Signed-off-by: Rahul Sharma <Rahul.Sharma@samsung.com>
+Merged with some rework, thanks
+
+g.
+
 > ---
->   .../devicetree/bindings/clock/exynos5260-clock.txt |   55 +++++
->   include/dt-bindings/clock/exynos5260-clk.h         |  233 ++++++++++++++++++++
->   2 files changed, 288 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/clock/exynos5260-clock.txt
->   create mode 100644 include/dt-bindings/clock/exynos5260-clk.h
->
-> diff --git a/Documentation/devicetree/bindings/clock/exynos5260-clock.txt b/Documentation/devicetree/bindings/clock/exynos5260-clock.txt
-> new file mode 100644
-> index 0000000..4128892
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/exynos5260-clock.txt
-> @@ -0,0 +1,55 @@
-> +* Samsung Exynos5260 Clock Controller
+>  drivers/of/base.c  | 96 ++++++++++++++++++++++++++++++++++++++++++++----------
+>  drivers/of/fdt.c   |  3 +-
+>  include/linux/of.h | 15 +++++++++
+>  3 files changed, 95 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 78cd546..39dda4c 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -245,45 +245,104 @@ static int __of_node_add(struct device_node *np)
+>  int of_node_add(struct device_node *np)
+>  {
+>  	int rc = 0;
+> -	kobject_init(&np->kobj, &of_node_ktype);
 > +
-> +The Exynos5260 clock controller encapsulate all CMUs which are
-
-s/encapsulate/encapsulates/
-
-Anyway, I don't think there is any global clock controller entity that 
-should be described here. The binding is related to several separate 
-entities found on Exynos5260, i.e. particular CMUs.
-
-> +instantiaited independently from the device-tree. As a whole, these
-
-s/instantiaited/instantiated/
-s/the device-tree/device tree/
-
-> +CMUs generates and supplies clocks to various controllers within
-
-s/generates/generate/
-s/supplies/supply/
-
-> +the Exynos5260 SoC.
+> +	BUG_ON(!of_node_is_initialized(np));
 > +
-> +Required Properties:
+> +	if (!of_kset) {
+> +		pr_warn("%s: of_node_add before of_init on %s\n",
+> +				__func__, np->full_name);
+> +		return 0;
+> +	}
 > +
-> +- compatible: should be one of the following.
-> +	"exynos5260-clock-top"
-> +	"exynos5260-clock-peri"
-> +	"exynos5260-clock-egl"
-> +	"exynos5260-clock-kfc"
-> +	"exynos5260-clock-g2d"
-> +	"exynos5260-clock-mif"
-> +	"exynos5260-clock-mfc"
-> +	"exynos5260-clock-g3d"
-> +	"exynos5260-clock-fsys"
-> +	"exynos5260-clock-aud"
-> +	"exynos5260-clock-isp"
-> +	"exynos5260-clock-gscl"
-> +	"exynos5260-clock-disp"
-
-Compatible strings should be prefixed with Samsung's vendor prefix, i.e. 
-"samsung,".
-
-> +
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +
-> +- #clock-cells: should be 1.
-
-As implemented in patch [1] the clock core will be able to sort out 
-dependencies between particular clock providers based on clock consumer 
-bindings. This means that it would be a good idea to add clock 
-properties to this binding and strictly specify which clocks outside 
-particular CMU block are fed into the block.
-
-So for example, if CMU TOP uses fin_pll clock, its node would need to 
-have "clock-names" property with "fin_pll" entry and "clocks" property 
-with respective entry pointing to the fixed rate clock node.
-
-In general, all external, IO and PHY clocks fed into CMU blocks should 
-be listed this way to have dependencies between clocks properly defined 
-in the system.
-
-[1] http://thread.gmane.org/gmane.linux.kernel/1654635
-
-> +
-> +The following is the list of clocks generated by each controller.
-
-There is no list below. IMHO this sentence should be removed.
-
-> Each
-> +clock is assigned with a MACRO constant. These constants are defined in
-> +"dt-bindings/clk/exynos5260-clk.h". DT client nodes use this MACRO to
-> +specify the clock, which they want to consume.
-
-IMHO the whole paragraph above can be rewritten taking 
-samsung,s3c64xx-clock.txt as an example:
-
-Each clock is assigned an identifier and client nodes can use this 
-identifier to specify the clock which they consume. All available clocks 
-are defined as preprocessor macros in dt-bindings/clock/exynos5260-clk.h 
-header and can be used in device tree sources.
-
-In addition to the above, a list of external clocks that need or may be 
-present should be added. Again, see samsung,s3c64xx-clock.txt for an 
-example.
-
-> +
-> +Example 1: An example of a clock controller node is listed below.
-> +
-> +	cmu_disp: clock-controller@0x14550000 {
-> +		compatible = "exynos5260-clock-disp";
-
-Incorrect compatible string.
-
-> +		reg = <0x14550000 0x10000>;
-> +		#clock-cells = <1>;
-> +	};
-> +
-> +Example 2: UART controller node that consumes the clock generated by the
-> +		peri clock controller. Refer to the standard clock bindings for
-> +		information about 'clocks' and 'clock-names' property.
-> +
-> +	serial@12C00000 {
-> +		compatible = "samsung,exynos4210-uart";
-> +		reg = <0x12C00000 0x100>;
-> +		interrupts = <0 146 0>;
-> +		clocks = <&clock_peri PERI_PCLK_UART0>, <&clock_peri PERI_SCLK_UART0>;
-> +		clock-names = "uart", "clk_uart_baud0";
-> +		status = "disabled";
-> +	};
-> +
-> diff --git a/include/dt-bindings/clock/exynos5260-clk.h b/include/dt-bindings/clock/exynos5260-clk.h
-> new file mode 100644
-> index 0000000..d6f4391
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/exynos5260-clk.h
-> @@ -0,0 +1,233 @@
+>  	mutex_lock(&of_aliases_mutex);
+> -	if (of_kset)
+> -		rc = __of_node_add(np);
+> +	rc = __of_node_add(np);
+>  	mutex_unlock(&of_aliases_mutex);
+>  	return rc;
+>  }
+>  
 > +/*
-> + * Copyright (c) 2014 Samsung Electronics Co., Ltd.
+> + * Initialize a new device node
 > + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * Provides Constants for Exynos5260 clocks.
-> +*/
-> +
-> +#ifndef _DT_BINDINGS_CLK_EXYNOS5260_H
-> +#define _DT_BINDINGS_CLK_EXYNOS5260_H
-> +
-> +/*
-> + * Clock names:	XXXXX_YYYYYY_ZZZZ
-> + *		|---| |----| |--|
-> + *		 cmu   type   IP
+> + * At the moment it is just initializing the kobj of the node.
+> + * This occurs during unflattening and when creating dynamic nodes.
 > + */
+> +void of_node_init(struct device_node *np)
+> +{
+> +	kobject_init(&np->kobj, &of_node_ktype);
+> +}
 > +
-> +/* List Of Clocks For CMU_TOP */
-> +#define FIN_PLL			1
-> +#define TOP_FOUT_DISP_PLL	2
-> +#define TOP_FOUT_AUD_PLL	3
-> +#define TOP_SCLK_MMC0		4
+>  #if defined(CONFIG_OF_DYNAMIC)
+>  static void of_node_remove(struct device_node *np)
+>  {
+>  	struct property *pp;
+>  
+> -	for_each_property_of_node(np, pp)
+> -		sysfs_remove_bin_file(&np->kobj, &pp->attr);
+> +	BUG_ON(!of_node_is_initialized(np));
+> +
+> +	/* only remove properties if on sysfs */
+> +	if (of_node_is_attached(np)) {
+> +		for_each_property_of_node(np, pp)
+> +			sysfs_remove_bin_file(&np->kobj, &pp->attr);
+> +		/* delete from sysfs */
+> +		kobject_del(&np->kobj);
+> +	}
+>  
+> -	kobject_del(&np->kobj);
+> +	/* finally remove the kobj_init ref */
+> +	of_node_put(np);
+>  }
+>  #endif
+>  
+> +/* recursively attach the tree */
+> +static __init int __of_populate(struct device_node *np)
+> +{
+> +	struct device_node *child;
+> +	int rc;
+> +
+> +	/* add the parent first */
+> +	rc = __of_node_add(np);
+> +	if (rc)
+> +		return rc;
+> +
+> +	/* the children afterwards */
+> +	__for_each_child_of_node(np, child) {
+> +		rc = __of_populate(child);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int __init of_init(void)
+>  {
+>  	struct device_node *np;
+> +	int rc;
+>  
+>  	of_kset = kset_create_and_add("devicetree", NULL, firmware_kobj);
+>  	if (!of_kset)
+>  		return -ENOMEM;
+>  
+> -	/* Make sure all nodes added before this time get added to sysfs */
+>  	mutex_lock(&of_aliases_mutex);
+> -	for_each_of_allnodes(np)
+> -		__of_node_add(np);
+> -	mutex_unlock(&of_aliases_mutex);
+> +
+> +	/* find root */
+> +	np = of_find_node_by_path("/");
+> +	if (np == NULL) {
+> +		rc = -EINVAL;
+> +		goto out;
+> +	}
+> +	/* populate */
+> +	rc = __of_populate(np);
+> +	of_node_put(np);
+>  
+>  	/* Symlink in /proc as required by userspace ABI */
+> -	if (of_allnodes)
+> -		proc_symlink("device-tree", NULL, "/sys/firmware/devicetree/base");
+> +	if (rc != 0)
+> +		goto out;
+>  
+> -	return 0;
+> +	proc_symlink("device-tree", NULL, "/sys/firmware/devicetree/base");
+> +
+> +out:
+> +	mutex_unlock(&of_aliases_mutex);
+> +
+> +	return rc;
+>  }
+>  core_initcall(of_init);
+>  
+> @@ -1587,6 +1646,10 @@ static int of_property_notify(int action, struct device_node *np,
+>  {
+>  	struct of_prop_reconfig pr;
+>  
+> +	/* only call notifiers if the node is attached */
+> +	if (!of_node_is_attached(np))
+> +		return 0;
+> +
+>  	pr.dn = np;
+>  	pr.prop = prop;
+>  	return of_reconfig_notify(action, &pr);
+> @@ -1626,11 +1689,8 @@ int of_add_property(struct device_node *np, struct property *prop)
+>  	*next = prop;
+>  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  
+> -	/* at early boot, bail hear and defer setup to of_init() */
+> -	if (!of_kset)
+> -		return 0;
+> -
+> -	__of_add_property(np, prop);
+> +	if (of_node_is_attached(np))
+> +		__of_add_property(np, prop);
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index d5d62cd..3ca75fb 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -327,7 +327,8 @@ static void * unflatten_dt_node(struct boot_param_header *blob,
+>  		if (!np->type)
+>  			np->type = "<NULL>";
+>  
+> -		of_node_add(np);
+> +		/* initialize node (do not add) */
+> +		of_node_init(np);
+>  	}
+>  	while (tag == OF_DT_BEGIN_NODE || tag == OF_DT_NOP) {
+>  		if (tag == OF_DT_NOP)
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index f285222..f13e773 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -76,6 +76,21 @@ struct of_phandle_args {
+>  
+>  extern int of_node_add(struct device_node *node);
+>  
+> +/* initialize a node */
+> +extern void of_node_init(struct device_node *node);
+> +
+> +/* true when node is initialized */
+> +static inline int of_node_is_initialized(struct device_node *node)
+> +{
+> +	return node && node->kobj.state_initialized;
+> +}
+> +
+> +/* true when node is attached (i.e. present on sysfs) */
+> +static inline int of_node_is_attached(struct device_node *node)
+> +{
+> +	return node && node->kobj.state_in_sysfs;
+> +}
+> +
+>  #ifdef CONFIG_OF_DYNAMIC
+>  extern struct device_node *of_node_get(struct device_node *node);
+>  extern void of_node_put(struct device_node *node);
+> -- 
+> 1.7.12
+> 
 
-[snip]
-
-> +#define DISP_CLK_DSIM1		9
-> +#define DISP_CLK_DPPHY		10
-> +#define DISP_CLK_DP		11
-> +#define DISP_SCLK_PIXEL		12
-> +#define DISP_MOUT_HDMI_PHY_PIXEL_USER		13
-> +#define DISP_MOUT_HDMI_PHY_PIXEL	14
-
-nit: Incorrect alignment. Please indent further all the numbers to match 
-the longest indentation level.
-
-Best regards,
-Tomasz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
