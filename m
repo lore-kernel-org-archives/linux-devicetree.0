@@ -1,41 +1,63 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 0/8] mtd: spi-nor: add a new framework for SPI NOR
-Date: Wed, 12 Mar 2014 23:39:40 -0700
-Message-ID: <20140313063940.GU31517@norris-Latitude-E6410>
-References: <1393238262-8622-1-git-send-email-b32955@freescale.com>
- <20140312081350.GC30808@shlinux2.ap.freescale.net>
-Mime-Version: 1.0
+From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Subject: Re: [PATCH] OF: kobj node lifecycle fixes
+Date: Thu, 13 Mar 2014 08:30:37 +0200
+Message-ID: <FF624D4F-D74C-48B1-896B-D0E32CBE7DBF@antoniou-consulting.com>
+References: <1394664580-23130-1-git-send-email-grant.likely@linaro.org>
+Mime-Version: 1.0 (Apple Message framework v1085)
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140312081350.GC30808-Fb7DQEYuewWctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, angus.clark-qxv4g6HH51o@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pekon-l0cyMroinI0@public.gmane.org, sourav.poddar-l0cyMroinI0@public.gmane.org, broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1394664580-23130-1-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 12, 2014 at 04:13:51PM +0800, Huang Shijie wrote:
-> On Mon, Feb 24, 2014 at 06:37:34PM +0800, Huang Shijie wrote:
->    Could you please review this patch set? I really hope it can be merged
->    as soon as possibel.  But now, the patch set has stalled for a long time.
+Hi Grant,
 
-I'm sorry for the delay. Others are in the same position of delay (e.g.,
-Lee's SPI-NOR driver), because I simply have not had the time to really
-devote this the attention it deserves, especially considering how it
-rearchitects such an important, commonly-used driver.
+On Mar 13, 2014, at 12:49 AM, Grant Likely wrote:
 
-Nonetheless, I will try to give your patches some more attention soon.
+> From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+> 
+> After the move to having device nodes be proper kobjects the lifecycle
+> of the node needs to be controlled better.
+> 
+> At first convert of_add_node() in the unflattened functions to
+> of_init_node() which initializes the kobject so that of_node_get/put
+> work correctly even before of_init is called.
+> 
+> Afterwards introduce of_node_is_initialized & of_node_is_attached that
+> query the underlying kobject about the state (attached means kobj
+> is visible in sysfs)
+> 
+> Using that make sure the lifecycle of the tree is correct at all
+> times.
+> 
+> Signed-off-by: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+> [grant.likely: moved of_node_init() calls, fixed up locking, and
+>               dropped __of_populate() hunks]
+> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> 
+> I've reworked Pantelis' patch to work on my tree. Here's the result.
+> I've already got this in my tree and will be pushing it out shortly.
+> 
+> g.
+> 
+> drivers/of/base.c  | 35 ++++++++++++++++++++++++++---------
+> drivers/of/fdt.c   |  3 +--
+> drivers/of/pdt.c   |  3 +--
+> include/linux/of.h | 19 +++++++++++++++++++
+> 4 files changed, 47 insertions(+), 13 deletions(-)
+> 
 
->    Since you have pushed the patches for m25p80.c, i have to rebase this
->    patch set again and again...
+Looks good; booted and tested overlays with no issues.
 
-You mean locally? I promise you, I can handle rebasing on my reviewing
-end for small one-line conflicts like new chip IDs, so don't rebase and
-resend simply for that. Unless I find substantive things that you should
-change, I'd only expect at most one more rebase to be necessary.
+Regards
 
-Brian
+-- Pantelis
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
