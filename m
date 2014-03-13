@@ -1,13 +1,13 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v5 7/7] ARM: sun6i: dt: Add A31 DMA controller
- to DTSI
-Date: Thu, 13 Mar 2014 16:14:19 +0100
-Message-ID: <1394723659-4995-8-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH v5 3/7] ARM: sunxi: Move the clock protection to
+ machine hooks
+Date: Thu, 13 Mar 2014 16:14:15 +0100
+Message-ID: <1394723659-4995-4-git-send-email-maxime.ripard@free-electrons.com>
 References: <1394723659-4995-1-git-send-email-maxime.ripard@free-electrons.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBBMXQ6MQKGQEVREIQJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB7UWQ6MQKGQE6G6IQQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1394723659-4995-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,123 +19,161 @@ To: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Dan Williams 
 Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Now that we have a DMA driver, we can add the DMA bindings in the DTSI for the
-controller and the devices supported that can use DMA.
+Since we start to have a lot of clocks to protect, some of them in a few boards
+only, it becomes difficult to handle the clock protection without having to add
+per machine exceptions.
+
+Move these where they belong, in the machine definition code.
 
 Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/sun6i-a31.dtsi | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ arch/arm/mach-sunxi/sun4i.c   |  9 +++++++++
+ arch/arm/mach-sunxi/sun5i.c   | 14 ++++++++++++++
+ arch/arm/mach-sunxi/sun7i.c   | 14 ++++++++++++++
+ drivers/clk/sunxi/clk-sunxi.c | 24 ------------------------
+ 4 files changed, 37 insertions(+), 24 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index 7fff9a20f079..e687b0d1e838 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -237,6 +237,15 @@
- 		#size-cells = <1>;
- 		ranges;
+diff --git a/arch/arm/mach-sunxi/sun4i.c b/arch/arm/mach-sunxi/sun4i.c
+index fc28b89b3378..3276e63587fb 100644
+--- a/arch/arm/mach-sunxi/sun4i.c
++++ b/arch/arm/mach-sunxi/sun4i.c
+@@ -10,6 +10,7 @@
+  * warranty of any kind, whether express or implied.
+  */
  
-+		dma: dma-controller@01c02000 {
-+			compatible = "allwinner,sun6i-a31-dma";
-+			reg = <0x01c02000 0x1000>;
-+			interrupts = <0 50 4>;
-+			clocks = <&ahb1_gates 6>;
-+			resets = <&ahb1_rst 6>;
-+			#dma-cells = <1>;
-+		};
++#include <linux/clk.h>
+ #include <linux/init.h>
+ #include <linux/of_platform.h>
+ 
+@@ -19,9 +20,17 @@
+ 
+ static void __init sun4i_dt_init(void)
+ {
++	struct clk *clk;
 +
- 		pio: pinctrl@01c20800 {
- 			compatible = "allwinner,sun6i-a31-pinctrl";
- 			reg = <0x01c20800 0x400>;
-@@ -322,6 +331,8 @@
- 			reg-io-width = <4>;
- 			clocks = <&apb2_gates 16>;
- 			resets = <&apb2_rst 16>;
-+			dmas = <&dma 6>, <&dma 6>;
-+			dma-names = "rx", "tx";
- 			status = "disabled";
- 		};
+ 	sunxi_setup_restart();
  
-@@ -333,6 +344,8 @@
- 			reg-io-width = <4>;
- 			clocks = <&apb2_gates 17>;
- 			resets = <&apb2_rst 17>;
-+			dmas = <&dma 7>, <&dma 7>;
-+			dma-names = "rx", "tx";
- 			status = "disabled";
- 		};
+ 	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
++
++	/* Make sure the clocks we absolutely need are enabled */
++	/* DDR clock */
++	clk = clk_get(NULL, "pll5_ddr");
++	if (!IS_ERR(clk))
++		clk_prepare_enable(clk);
+ }
  
-@@ -344,6 +357,8 @@
- 			reg-io-width = <4>;
- 			clocks = <&apb2_gates 18>;
- 			resets = <&apb2_rst 18>;
-+			dmas = <&dma 8>, <&dma 8>;
-+			dma-names = "rx", "tx";
- 			status = "disabled";
- 		};
+ static const char * const sun4i_board_dt_compat[] = {
+diff --git a/arch/arm/mach-sunxi/sun5i.c b/arch/arm/mach-sunxi/sun5i.c
+index 623a95ad93b7..990dcfd42681 100644
+--- a/arch/arm/mach-sunxi/sun5i.c
++++ b/arch/arm/mach-sunxi/sun5i.c
+@@ -10,6 +10,7 @@
+  * warranty of any kind, whether express or implied.
+  */
  
-@@ -355,6 +370,8 @@
- 			reg-io-width = <4>;
- 			clocks = <&apb2_gates 19>;
- 			resets = <&apb2_rst 19>;
-+			dmas = <&dma 9>, <&dma 9>;
-+			dma-names = "rx", "tx";
- 			status = "disabled";
- 		};
++#include <linux/clk.h>
+ #include <linux/init.h>
+ #include <linux/of_platform.h>
  
-@@ -366,6 +383,8 @@
- 			reg-io-width = <4>;
- 			clocks = <&apb2_gates 20>;
- 			resets = <&apb2_rst 20>;
-+			dmas = <&dma 10>, <&dma 10>;
-+			dma-names = "rx", "tx";
- 			status = "disabled";
- 		};
+@@ -19,9 +20,22 @@
  
-@@ -377,6 +396,8 @@
- 			reg-io-width = <4>;
- 			clocks = <&apb2_gates 21>;
- 			resets = <&apb2_rst 21>;
-+			dmas = <&dma 22>, <&dma 22>;
-+			dma-names = "rx", "tx";
- 			status = "disabled";
- 		};
+ static void __init sun5i_dt_init(void)
+ {
++	struct clk *clk;
++
+ 	sunxi_setup_restart();
  
-@@ -426,6 +447,8 @@
- 			interrupts = <0 65 4>;
- 			clocks = <&ahb1_gates 20>, <&spi0_clk>;
- 			clock-names = "ahb", "mod";
-+			dmas = <&dma 23>, <&dma 23>;
-+			dma-names = "rx", "tx";
- 			resets = <&ahb1_rst 20>;
- 			status = "disabled";
- 		};
-@@ -436,6 +459,8 @@
- 			interrupts = <0 66 4>;
- 			clocks = <&ahb1_gates 21>, <&spi1_clk>;
- 			clock-names = "ahb", "mod";
-+			dmas = <&dma 24>, <&dma 24>;
-+			dma-names = "rx", "tx";
- 			resets = <&ahb1_rst 21>;
- 			status = "disabled";
- 		};
-@@ -446,6 +471,8 @@
- 			interrupts = <0 67 4>;
- 			clocks = <&ahb1_gates 22>, <&spi2_clk>;
- 			clock-names = "ahb", "mod";
-+			dmas = <&dma 25>, <&dma 25>;
-+			dma-names = "rx", "tx";
- 			resets = <&ahb1_rst 22>;
- 			status = "disabled";
- 		};
-@@ -456,6 +483,8 @@
- 			interrupts = <0 68 4>;
- 			clocks = <&ahb1_gates 23>, <&spi3_clk>;
- 			clock-names = "ahb", "mod";
-+			dmas = <&dma 26>, <&dma 26>;
-+			dma-names = "rx", "tx";
- 			resets = <&ahb1_rst 23>;
- 			status = "disabled";
- 		};
+ 	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
++
++	/* Make sure the clocks we absolutely need are enabled */
++	/* Memory bus clock */
++	clk = clk_get(NULL, "mbus");
++	if (!IS_ERR(clk))
++		clk_prepare_enable(clk);
++
++	/* DDR clock */
++	clk = clk_get(NULL, "pll5_ddr");
++	if (!IS_ERR(clk))
++		clk_prepare_enable(clk);
+ }
+ 
+ static const char * const sun5i_board_dt_compat[] = {
+diff --git a/arch/arm/mach-sunxi/sun7i.c b/arch/arm/mach-sunxi/sun7i.c
+index 2e6a8ee1966b..48a090b91a90 100644
+--- a/arch/arm/mach-sunxi/sun7i.c
++++ b/arch/arm/mach-sunxi/sun7i.c
+@@ -10,6 +10,7 @@
+  * warranty of any kind, whether express or implied.
+  */
+ 
++#include <linux/clk.h>
+ #include <linux/init.h>
+ #include <linux/of_platform.h>
+ 
+@@ -19,9 +20,22 @@
+ 
+ static void __init sun7i_dt_init(void)
+ {
++	struct clk *clk;
++
+ 	sunxi_setup_restart();
+ 
+ 	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
++
++	/* Make sure the clocks we absolutely need are enabled */
++	/* Memory bus clock */
++	clk = clk_get(NULL, "mbus");
++	if (!IS_ERR(clk))
++		clk_prepare_enable(clk);
++
++	/* DDR clock */
++	clk = clk_get(NULL, "pll5_ddr");
++	if (!IS_ERR(clk))
++		clk_prepare_enable(clk);
+ }
+ 
+ static const char * const sun7i_board_dt_compat[] = {
+diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+index 7119c02c9fa8..27290a0d2624 100644
+--- a/drivers/clk/sunxi/clk-sunxi.c
++++ b/drivers/clk/sunxi/clk-sunxi.c
+@@ -1278,27 +1278,6 @@ static void __init of_sunxi_table_clock_setup(const struct of_device_id *clk_mat
+ 	}
+ }
+ 
+-/**
+- * System clock protection
+- *
+- * By enabling these critical clocks, we prevent their accidental gating
+- * by the framework
+- */
+-static void __init sunxi_clock_protect(void)
+-{
+-	struct clk *clk;
+-
+-	/* memory bus clock - sun5i+ */
+-	clk = clk_get(NULL, "mbus");
+-	if (!IS_ERR(clk))
+-		clk_prepare_enable(clk);
+-
+-	/* DDR clock - sun4i+ */
+-	clk = clk_get(NULL, "pll5_ddr");
+-	if (!IS_ERR(clk))
+-		clk_prepare_enable(clk);
+-}
+-
+ static void __init sunxi_init_clocks(void)
+ {
+ 	/* Register factor clocks */
+@@ -1315,9 +1294,6 @@ static void __init sunxi_init_clocks(void)
+ 
+ 	/* Register gate clocks */
+ 	of_sunxi_table_clock_setup(clk_gates_match, sunxi_gates_clk_setup);
+-
+-	/* Enable core system clocks */
+-	sunxi_clock_protect();
+ }
+ CLK_OF_DECLARE(sun4i_a10_clk_init, "allwinner,sun4i-a10", sunxi_init_clocks);
+ CLK_OF_DECLARE(sun5i_a10s_clk_init, "allwinner,sun5i-a10s", sunxi_init_clocks);
 -- 
 1.9.0
