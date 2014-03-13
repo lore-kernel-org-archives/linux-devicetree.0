@@ -1,47 +1,79 @@
-From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH v2 6/6] PCI: designware: use new OF interrupt mapping when possible
-Date: Thu, 13 Mar 2014 10:41:45 -0700
-Message-ID: <CAJ+vNU2XrAL+BTTB8i4hQhkZ_NfcS0VrWuHUjeFfU9hhGjNXbg@mail.gmail.com>
-References: <1394025951-32438-1-git-send-email-l.stach@pengutronix.de>
-	<1394025951-32438-7-git-send-email-l.stach@pengutronix.de>
-	<000201cf38e6$5b02d6e0$110884a0$%han@samsung.com>
-	<201403061633.31260.marex@denx.de>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 4/4] ARM: DTS: AM43x: Add DSS node
+Date: Thu, 13 Mar 2014 17:46:23 +0000
+Message-ID: <20140313174623.GD25870@e106331-lin.cambridge.arm.com>
+References: <1394701109-6721-1-git-send-email-sathyap@ti.com>
+ <1394701109-6721-5-git-send-email-sathyap@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201403061633.31260.marex-ynQEQJNshbs@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Troy Kisky <troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sh <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-tegra <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mohit KUMAR DCG <Mohit.KUMAR-qxv4g6HH51o@public.gmane.org>, Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>, Richard Zhu <r65037@fr>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1394701109-6721-5-git-send-email-sathyap@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sathya Prakash M R <sathyap@ti.com>
+Cc: "tony@atomide.com" <tony@atomide.com>, "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "paul@pwsan.com" <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 6, 2014 at 7:33 AM, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org> wrote:
-> On Thursday, March 06, 2014 at 03:47:03 AM, Jingoo Han wrote:
->> On Wednesday, March 05, 2014 10:26 PM, Lucas Stach wrote:
->> > This is the recommended method of doing the IRQ
->> > mapping. For old devicetrees we fall back to the
->> > previous practice.
->> >
->> > Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> > Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->>
->> (+cc Mohit KUMAR, Richard Zhu, Pratyush Anand, Marek Vasut,
->>        Kishon Vijay Abraham I)
->>
->> Acked-by: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>
->> It works properly on Exynos platform.
->> Thank you.
->
-> Looks reasonable,
->
-> Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
->
+On Thu, Mar 13, 2014 at 08:58:29AM +0000, Sathya Prakash M R wrote:
+> Add device node for DSS module for AM4372. Both the
+> AM437x-Gp evm and Am43x-Epos evm use the same LCD panel.
+> The lcd timings are added in respective dts files.
+> Adds display pinctrl and enables required gpio.
+> Also set the right parent clock to the DSS clock.
+> 
+> Signed-off-by: Sathya Prakash M R <sathyap@ti.com>
+> ---
+>  arch/arm/boot/dts/am4372.dtsi        |   28 +++++++++++++
+>  arch/arm/boot/dts/am437x-gp-evm.dts  |   77 ++++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/am43x-epos-evm.dts |   73 ++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/am43xx-clocks.dtsi |    2 +
+>  4 files changed, 180 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+> index ea55a4e..b72a7df 100644
+> --- a/arch/arm/boot/dts/am4372.dtsi
+> +++ b/arch/arm/boot/dts/am4372.dtsi
+> @@ -684,6 +684,34 @@
+>  			num-cs = <4>;
+>                          status = "disabled";
+>                  };
+> +
+> +		dss: dss@4832A000 {
+> +			compatible = "ti,omap3-dss", "simple-bus";
 
-I've tested this on the Gateworks Ventana products with P2P bridges
-and with the patch I just submitted here:
-http://thread.gmane.org/gmane.linux.kernel.pci/30017
+This doesn't look right to me. I'm not sure it makes sense for
+"simple-bus" to be in the compatible list.
 
-Tested-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Are the child nodes usable in isolation, or are they dependent on the
+"ti,omap3-dss" node? What exactly does the "ti,omap3-dss" node
+represent?
 
-Tim
+Thanks,
+Mark.
+
+> +			reg = <0x4832A000 0x200>;
+> +			ti,hwmods = "dss_core";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +
+> +			dispc@4832A400 {
+> +				compatible = "ti,omap3-dispc";
+> +				reg = <0x4832A400 0x400>;
+> +				interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
+> +				ti,hwmods = "dss_dispc";
+> +			};
+> +
+> +			dpi: encoder@0 {
+> +				compatible = "ti,omap3-dpi";
+> +			};
+> +
+> +			rfbi: rfbi@4832A800 {
+> +				compatible = "ti,omap3-rfbi";
+> +			reg = <0x4832A800 0x100>;
+> +				ti,hwmods = "dss_rfbi";
+> +			};
+> +
+> +		};
+> +
+>  	};
