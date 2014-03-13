@@ -1,52 +1,47 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v6] ASoC: tlv320aic31xx: Add basic codec driver
- implementation
-Date: Thu, 13 Mar 2014 17:30:52 +0000
-Message-ID: <20140313173052.GA366@sirena.org.uk>
-References: <1394721344-10152-1-git-send-email-jsarha@ti.com>
+From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Subject: Re: [PATCH v2 6/6] PCI: designware: use new OF interrupt mapping when possible
+Date: Thu, 13 Mar 2014 10:41:45 -0700
+Message-ID: <CAJ+vNU2XrAL+BTTB8i4hQhkZ_NfcS0VrWuHUjeFfU9hhGjNXbg@mail.gmail.com>
+References: <1394025951-32438-1-git-send-email-l.stach@pengutronix.de>
+	<1394025951-32438-7-git-send-email-l.stach@pengutronix.de>
+	<000201cf38e6$5b02d6e0$110884a0$%han@samsung.com>
+	<201403061633.31260.marex@denx.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Re7H+V5lQR2Zv/pu"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1394721344-10152-1-git-send-email-jsarha@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jyri Sarha <jsarha@ti.com>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, peter.ujfalusi@ti.com, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, detheridge@ti.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201403061633.31260.marex-ynQEQJNshbs@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Troy Kisky <troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sh <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-tegra <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mohit KUMAR DCG <Mohit.KUMAR-qxv4g6HH51o@public.gmane.org>, Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>, Richard Zhu <r65037@fr>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Mar 6, 2014 at 7:33 AM, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org> wrote:
+> On Thursday, March 06, 2014 at 03:47:03 AM, Jingoo Han wrote:
+>> On Wednesday, March 05, 2014 10:26 PM, Lucas Stach wrote:
+>> > This is the recommended method of doing the IRQ
+>> > mapping. For old devicetrees we fall back to the
+>> > previous practice.
+>> >
+>> > Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> > Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>>
+>> (+cc Mohit KUMAR, Richard Zhu, Pratyush Anand, Marek Vasut,
+>>        Kishon Vijay Abraham I)
+>>
+>> Acked-by: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>
+>> It works properly on Exynos platform.
+>> Thank you.
+>
+> Looks reasonable,
+>
+> Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+>
 
---Re7H+V5lQR2Zv/pu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I've tested this on the Gateworks Ventana products with P2P bridges
+and with the patch I just submitted here:
+http://thread.gmane.org/gmane.linux.kernel.pci/30017
 
-On Thu, Mar 13, 2014 at 04:35:44PM +0200, Jyri Sarha wrote:
-> This commit adds a bare bones driver support for TLV320AIC31XX family
-> audio codecs. The driver adds basic stereo playback trough headphone
-> and speaker outputs and mono capture trough microphone inputs.
+Tested-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
 
-Please don't resend patches that have already been applied.
-
---Re7H+V5lQR2Zv/pu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTIetJAAoJELSic+t+oim9GGcP/jybQ9o+2BSnEWK8ql5FaJDt
-2n0+cb2PLnnBuU3SmftEj92wxgrJMxc+97eKD4Y5GlAsGqtwG5vYb3EqCJgN9ChO
-jezgg3dvfwGlIeQQ/4ijIRSS52BtSimw5CRAYagxculuiiw+sxCR2pQPmCL4WKfW
-FFqBFGofW1ehIEY9U6F1R53oeodk/Oo1cj/pjy4pXajxcmQfCHaW2nd/KS6/kUJQ
-jubttZKlKt3Mv9o0t6mq3M1wXU0ZKpMvWchtbhR67D/blTO0ljNWD2joQa331ZX8
-HLkZpJwxJeOG/0TvJouroXW2B1bgm3cWOphr2wb0UxundW3S9qJuHVUq+d1CnrM+
-QkO3QMLAWfNQ7Bf5Dtkin1quMPALLjjm9/wSzz12uOeV/4vwiPdTvo0Q6pgu2UrP
-BbiHyA9Zq3JIfG54n4xHLjEzSZcHwziJhN/UlZd8ZAE5QnfPVnJxzWm1MoXiQEOp
-+0qCuKGeVMdDBK7mMQwNGG2OQMoaQNyEHGpxyYzuKX95+FjJwPUbAGJxvGV7PScO
-RtqJ95Y9zajnNuhCqNUxypcpaYB5T9qDsDlScE9/se2VO3L0QgFLj3CAU1UrQuKa
-ayA0An8Moi32GAMl5yrzN7xMnVIKj29x3AZOx9d+CCK4TbH4U/dSrszoqx0/1nvN
-3i3HLAz/wS18X3Z+AVQ8
-=kwcD
------END PGP SIGNATURE-----
-
---Re7H+V5lQR2Zv/pu--
+Tim
