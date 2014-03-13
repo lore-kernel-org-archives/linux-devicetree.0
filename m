@@ -1,58 +1,124 @@
-From: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCHv4 4/7] hwspinlock/core: add common OF helpers
-Date: Thu, 13 Mar 2014 11:43:15 -0500
-Message-ID: <20140313164315.GQ18529@joshc.qualcomm.com>
-References: <1389658764-39199-1-git-send-email-s-anna@ti.com>
- <1389658764-39199-5-git-send-email-s-anna@ti.com>
- <CAJAp7Oi7wD+VsMAd37gT04yZ4TH4ygXFmheDhvmWuanUjpBmVQ@mail.gmail.com>
- <52F92524.3080402@ti.com>
- <CAK=WgbY0wDtGCm71E8VXi2g5+VcGogHEy8jdekTRg8xtp6-3rQ@mail.gmail.com>
- <CAJAp7Ohf43hbKatCwS5Y1+OfEkJYWOkuhZhW-E_=t_9mfM+UaA@mail.gmail.com>
- <53160F8F.9060405@ti.com>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCHv2 8/8] devfreq: exynos4: Add busfreq driver for
+ exynos4210/exynos4x12
+Date: Thu, 13 Mar 2014 17:50:57 +0100
+Message-ID: <3380793.YDA220hUJP@amdc1032>
+References: <1394698649-20996-1-git-send-email-cw00.choi@samsung.com>
+ <1394698649-20996-9-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53160F8F.9060405-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Cc: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1394698649-20996-9-git-send-email-cw00.choi@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rafael.j.wysocki@intel.com, nm@ti.com, b.zolnierkie@samsaung.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 04, 2014 at 11:38:23AM -0600, Suman Anna wrote:
-> Hi Ohad,
-> 
-> On 03/02/2014 02:19 PM, Bjorn Andersson wrote:
-> >On Sat, Mar 1, 2014 at 9:14 PM, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org> wrote:
-> >>On Mon, Feb 10, 2014 at 9:14 PM, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> wrote:
-> >>>On 02/07/2014 04:49 PM, Bjorn Andersson wrote:
-> >>>Ohad,
-> >>>Do you have any objections to the return code convention change?
-> >>
-> >>Unless strictly needed, I prefer we don't switch to the ERR_PTR code
-> >>convention, as it reduces code readability and increases chances of
-> >>user bugs.
-> >>
-> >>In our case, switching to ERR_PTR and friends seems only to optimize a
-> >>few error paths, and I'm not sure it's a big win over simplicity.
-> >
-> >When introducing the ability to reference a hwspin lock via a phandle
-> >in device tree it makes a big difference to be able to differ between
-> >the case of "initialization failed" or "device not yet probed"; so
-> >that the client knows if it should fail or retry later.
-> >
-> 
-> Can you confirm the changes you want me to make, so that I can refresh and
-> post a v5 for 3.15?
 
-What's the status on this?  I'm assuming this is going to miss 3.15?
-Having DT support in the core will be useful to move the Qualcomm
-hwspinlock driver forward as well.
+On Thursday, March 13, 2014 05:17:29 PM Chanwoo Choi wrote:
+> This patch add busfreq driver for Exynos4210/Exynos4x12 memory interface
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+This patch adds DT binding documentation not the driver itself.
+
+Same comment for the patch summary line.
+
+> and bus to support DVFS(Dynamic Voltage Frequency Scaling) according to PPMU
+> counters. PPMU (Performance Profiling Monitorings Units) of Exynos4 SoC provides
+> PPMU counters for DMC(Dynamic Memory Controller) to check memory bus utilization
+> and then busfreq driver adjusts dynamically the operating frequency/voltage
+> by using DEVFREQ Subsystem.
+> 
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>  .../devicetree/bindings/devfreq/exynos4_bus.txt    | 49 ++++++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt b/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
+> new file mode 100644
+> index 0000000..2a83fcc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
+> @@ -0,0 +1,49 @@
+> +
+> +Exynos4210/4x12 busfreq driver
+> +-----------------------------
+> +
+> +Exynos4210/4x12 Soc busfreq driver with devfreq for Memory bus frequency/voltage
+
+SoC
+
+> +scaling according to PPMU counters of memory controllers
+> +
+> +Required properties:
+> +- compatible	: should contain Exynos4 SoC type as follwoing:
+
+following
+
+> +		  - "samsung,exynos4x12-busfreq" for Exynos4x12
+> +		  - "samsung,exynos4210-busfreq" for Exynos4210
+> +- reg		: offset and length of the ppmudmc0/1
+> +		  - PPMU (Performance Profiling Monitoring Units)
+> +		  : It is to profile performance event of DMC(Dynamic Memory
+> +		  Controller) So, exynos4_bus.c can check memory bus utilization
+> +		  by using PPMU of Exynos4 SoC.
+
+It can be improved by changing ordering, i.e.
+
+		  : PPMU of Exynos4 SoC is used to profile performance event of DMC (Dynamic
+		  Memory Controller) so the driver can check memory bus utilization.
+
+> +- clocks	: clock number of ppmudmc0/1
+> +- clock-names	: clock name of ppmudmc0/1
+> +- vdd_int-supply: regulator for interface block of Exynos4
+> +
+> +Optional properties:
+> +- vdd_mif-supply: regulator for DMC block of Exynos4x12 if Exynos4x12 Soc
+
+if using Exynos4x12 SoC
+
+> +- regs-name	: register name of ppmudmc0/1
+> +
+> +All the required listed above must be defined under code busfreq with devfreq
+
+required properties
+
+> +Exmaple:
+
+Example:
+
+> +For Exynos4210 busfreq,
+
+please add a newline here
+
+> +	busfreq@106A0000 {
+> +		compatible = "samsung,exynos4210-busfreq";
+> +		reg = <0x106A0000 0x2000>, <0x106B0000 0x2000>;
+> +		regs-name = "PPMU_DMC0", "PPMU_DMC1";
+> +		clocks = <&clock CLK_PPMUDMC0>, <&clock CLK_PPMUDMC1>;
+> +		clock-names = "ppmudmc0", "ppmudmc1";
+> +
+> +		vdd_int-supply = <&buck3_reg>;
+> +	};
+> +
+> +For Exynos4x12 busfreq,
+
+ditto
+
+> +	busfreq@106A0000 {
+> +		compatible = "samsung,exynos4x12-busfreq";
+> +		reg = <0x106A0000 0x2000>, <0x106B0000 0x2000>;
+> +		regs-name = "PPMU_DMC0", "PPMU_DMC1";
+> +		clocks = <&clock CLK_PPMUDMC0>, <&clock CLK_PPMUDMC1>;
+> +		clock-names = "ppmudmc0", "ppmudmc1";
+> +
+> +		vdd_mif-suppy = <&buck1_reg>;
+> +		vdd_int-supply = <&buck3_reg>;
+> +	};
+
+Best regards,
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
