@@ -1,171 +1,66 @@
-From: Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: Re: [PATCH v5 3/3] ARM: dts: add dts files for xyref5260 board
-Date: Thu, 13 Mar 2014 09:49:16 +0900
-Message-ID: <5321008C.3090203@samsung.com>
-References: <1394637394-3960-1-git-send-email-rahul.sharma@samsung.com>
- <1394637394-3960-4-git-send-email-rahul.sharma@samsung.com>
+From: Vince Bridgers <vbridgers2013@gmail.com>
+Subject: Re: [PATCH net-next v3 5/9] Altera TSE: Add Miscellaneous Files for
+ Altera Ethernet Driver
+Date: Wed, 12 Mar 2014 19:42:35 -0500
+Message-ID: <CAOwfj2M6p55s6exrW1y55tddzHd1PvBOW6RpWfFK2hTjmYi=hA@mail.gmail.com>
+References: <1394577791-6547-1-git-send-email-vbridgers2013@gmail.com>
+	<1394577791-6547-6-git-send-email-vbridgers2013@gmail.com>
+	<1394578747.28839.4.camel@joe-AO722>
+	<CAOwfj2Ot+ssTZgMoOoShVEUi+RkxjpPpRUfHAkP9RETm3TuUzg@mail.gmail.com>
+	<1394658856.20857.7.camel@deadeye.wl.decadent.org.uk>
+	<1394663197.3915.61.camel@joe-AO722>
+	<1394670528.20857.10.camel@deadeye.wl.decadent.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1394637394-3960-4-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <rahul.sharma@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1394670528.20857.10.camel@deadeye.wl.decadent.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Ben Hutchings <ben@decadent.org.uk>
+Cc: Joe Perches <joe@perches.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rahul,
-
-On 03/13/2014 12:16 AM, Rahul Sharma wrote:
-> The patch adds the dts files for xyref5260 board which
-> is based on Exynos5260 Evt0 sample.
+On Wed, Mar 12, 2014 at 7:28 PM, Ben Hutchings <ben@decadent.org.uk> wrote:
+> On Wed, 2014-03-12 at 15:26 -0700, Joe Perches wrote:
+>> On Wed, 2014-03-12 at 21:14 +0000, Ben Hutchings wrote:
+>> > These look like the statistic names specified in IEEE 802.3.  I would
+>> > support a general move to using standard names for MAC stats in Ethernet
+>> > drivers, because they are quite clearly defined and widely implemented
+>> > in hardware.  However, that is not the current practice in most Linux
+>> > drivers.
+>>
+>> Hey Ben.
+>>
+>> Maybe something like this would be a start?
+>>
+>> Change the actual #defines/strings to taste.
+>>
+>> Maybe this shouldn't be in uapi or maybe in if_ether.h
+> [...]
 >
-> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-> ---
->   arch/arm/boot/dts/Makefile                      |    1 +
->   arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts |  110 +++++++++++++++++++++++
->   2 files changed, 111 insertions(+)
->   create mode 100644 arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts
+> This is pointless without also nailing down the definition of each
+> statistic.  That could be done with reference to standards/RFCs, of
+> course.
+
+As I was working through the V4 patch and looking at the names used by
+other drivers, it occurred to me it would be useful to create a set of
+standard definitions that referenced the relevant IEEE Specification
+and RFC. I'm willing to take that on for this submission by adding
+those to the driver documentation. I think that would be useful to
+users and could then be moved to a "standard definitions" text file
+that other drivers could reference.
+
+Joe had a few more comments I'd like to address (thanks Joe), I could
+pick this up as part of a V5 submission if you agree, or if you have a
+different suggestion I could possibly take that on as well.
+
 >
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index b9d6a8b..5a391bf 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -72,6 +72,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
->   	exynos5250-arndale.dtb \
->   	exynos5250-smdk5250.dtb \
->   	exynos5250-snow.dtb \
-> +	exynos5260-xyref5260-evt0.dtb \
->   	exynos5420-arndale-octa.dtb \
->   	exynos5420-smdk5420.dtb \
->   	exynos5440-sd5v1.dtb \
-> diff --git a/arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts b/arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts
-> new file mode 100644
-> index 0000000..d7d0aeb
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts
-> @@ -0,0 +1,110 @@
-> +/*
-> + * SAMSUNG XYREF5260 EVT0 board device tree source
-> + *
-> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-> + *		http://www.samsung.com
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> +*/
-> +
-> +/dts-v1/;
-> +#include "exynos5260.dtsi"
-> +
-> +/ {
-> +	model = "SAMSUNG XYREF5260 EVT0 board based on EXYNOS5260";
-> +	compatible = "samsung,xyref5260", "samsung,exynos5260";
-> +
-> +	memory {
-> +		reg = <0x20000000 0x80000000>;
-> +	};
-> +
-> +	chosen {
-> +		bootargs = "console=ttySAC2,115200";
-> +	};
-> +
-> +	clocks {
-> +		fin_pll: xxti {
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <24000000>;
-> +			clock-output-names = "fin_pll";
-> +			#clock-cells = <0>;
-> +		};
-> +
-> +		xrtcxti: xrtcxti {
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <32768>;
-> +			clock-output-names = "xrtcxti";
-> +		};
+> Ben.
+>
+> --
+> Ben Hutchings
+> Experience is directly proportional to the value of equipment destroyed.
+>                                                          - Carolyn Scheppner
 
-clock-cells property is missing here.
+All the best,
 
-> +
-> +		spdif_extclk: ioclk_spdif_extclk {
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <49152000>;
-> +			clock-output-names = "ioclk_spdif_extclk";
-> +		};
-
-ditto.
-
-> +	};
-> +};
-
-May I know why other phyclocks and ioclks have not been added?
-
-> +
-> +&pinctrl_0 {
-> +	hdmi_hpd_irq: hdmi-hpd-irq {
-> +		samsung,pins = "gpx3-7";
-> +		samsung,pin-function = <0>;
-> +		samsung,pin-pud = <1>;
-> +		samsung,pin-drv = <0>;
-> +	};
-> +};
-> +
-> +&uart0 {
-> +	status = "okay";
-> +};
-> +
-> +&uart1 {
-> +	status = "okay";
-> +};
-> +
-> +&uart2 {
-> +	status = "okay";
-> +};
-> +
-> +&uart3 {
-> +	status = "okay";
-> +};
-> +
-> +&mmc_0 {
-> +	status = "okay";
-> +	num-slots = <1>;
-> +	broken-cd;
-> +	bypass-smu;
-> +	supports-highspeed;
-> +	supports-hs200-mode; /* 200 Mhz */
-> +	card-detect-delay = <200>;
-> +	samsung,dw-mshc-ciu-div = <3>;
-> +	samsung,dw-mshc-sdr-timing = <0 4>;
-> +	samsung,dw-mshc-ddr-timing = <0 2>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&sd0_rdqs &sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4 &sd0_bus8>;
-> +
-> +	slot@0 {
-> +		reg = <0>;
-> +		bus-width = <8>;
-> +	};
-> +};
-> +
-> +&mmc_2 {
-> +	status = "okay";
-> +	num-slots = <1>;
-> +	supports-highspeed;
-> +	card-detect-delay = <200>;
-> +	samsung,dw-mshc-ciu-div = <3>;
-> +	samsung,dw-mshc-sdr-timing = <2 3>;
-> +	samsung,dw-mshc-ddr-timing = <1 2>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus1 &sd2_bus4>;
-> +
-> +	slot@0 {
-> +		reg = <0>;
-> +		bus-width = <4>;
-> +		disable-wp;
-> +	};
-> +};
-
-
--- 
-Best Regards,
-Pankaj Dubey
+Vince
