@@ -1,34 +1,62 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v5 3/5] clk/samsung: add support for pll2650xx
-Date: Thu, 13 Mar 2014 15:50:13 +0100
-Message-ID: <5321C5A5.9040808@samsung.com>
-References: <1394636208-3125-1-git-send-email-rahul.sharma@samsung.com>
- <1394636208-3125-4-git-send-email-rahul.sharma@samsung.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] irqchip: sun4i: Use
+ handle_fasteoi_late_irq for the ENMI (irq 0)
+Date: Thu, 13 Mar 2014 16:09:18 +0100
+Message-ID: <5321CA1E.2040504@redhat.com>
+References: <1394644627-12315-1-git-send-email-hdegoede@redhat.com> <1394644627-12315-5-git-send-email-hdegoede@redhat.com> <20140313093457.GF2815@lukather> <alpine.DEB.2.02.1403131212090.18573@ionos.tec.linutronix.de>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1394636208-3125-4-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: mturquette@linaro.org, kgene.kim@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, pankaj.dubey@samsung.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBJEUQ6MQKGQEFORNNNA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1403131212090.18573-3cz04HxQygjZikZi3RtOZ1XZhhPuCNm+@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rahul,
+Hi,
 
-On 12.03.2014 15:56, Rahul Sharma wrote:
-> Add support for pll2650xx in samsung pll file. This PLL variant
-> is close to pll36xx but uses CON2 registers instead of CON1.
->
-> Aud_pll in Exynos5260 is pll2650xx and uses this code.
->
-> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-> ---
->   drivers/clk/samsung/clk-pll.c |  101 +++++++++++++++++++++++++++++++++++++++++
->   drivers/clk/samsung/clk-pll.h |    1 +
->   2 files changed, 102 insertions(+)
+On 03/13/2014 12:12 PM, Thomas Gleixner wrote:
+> On Thu, 13 Mar 2014, Maxime Ripard wrote:
+> 
+>> On Wed, Mar 12, 2014 at 06:17:07PM +0100, Hans de Goede wrote:
+>>> The ENMI needs to have the ack done *after* clearing the interrupt source,
+>>> otherwise we will get a spurious interrupt for each real interrupt. Switch
+>>> to the new handle_fasteoi_late_irq handler which gives us the desired behavior.
+>>>
+>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>>  drivers/irqchip/irq-sun4i.c | 11 +++++++++--
+>>>  1 file changed, 9 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/irqchip/irq-sun4i.c b/drivers/irqchip/irq-sun4i.c
+>>> index 8a2fbee..4b1c874 100644
+>>> --- a/drivers/irqchip/irq-sun4i.c
+>>> +++ b/drivers/irqchip/irq-sun4i.c
+>>> @@ -77,15 +77,22 @@ static void sun4i_irq_unmask(struct irq_data *irqd)
+>>>  static struct irq_chip sun4i_irq_chip = {
+>>>  	.name		= "sun4i_irq",
+>>>  	.irq_ack	= sun4i_irq_ack,
+>>> +	.irq_eoi	= sun4i_irq_ack, /* For the ENMI */
+>>
+>> Hmmm, I wonder if that actually does something.
+>>
+>> There's been a patch floating around that I was sure was merged, but
+>> apparently wasn't that remove sun4i_irq_ack, because the register we
+>> were writing to are in read only, and it wasn't doing anything.
+> 
+> Well, it looks like it does something otherwise Hans would not see any
+> improvement of the situation.
 
-Applied with Pankaj's reviewed-by, thanks.
+Right, I think that what Maxime meant is dropping the ack for all but IRQ 0,
+and I've just run some tests and the ack indeed seems to be unnecessary for
+all the other IRQs on this irqchip.
 
-Best regards,
-Tomasz
+Regards,
+
+Hans
