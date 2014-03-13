@@ -1,83 +1,228 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCHv2 8/8] devfreq: exynos4: Add busfreq driver for
- exynos4210/exynos4x12
-Date: Thu, 13 Mar 2014 17:17:29 +0900
-Message-ID: <1394698649-20996-9-git-send-email-cw00.choi@samsung.com>
-References: <1394698649-20996-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1394698649-20996-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: myungjoo.ham@samsung.com, kyungmin.park@samsung.com
-Cc: rafael.j.wysocki@intel.com, nm@ti.com, b.zolnierkie@samsaung.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>
+From: Cao Minh Hiep <cm-hiep@jinso.co.jp>
+Subject: [RFC] spi: Using Trigger number to transmit/receive data
+Date: Thu, 13 Mar 2014 17:29:24 +0900
+Message-ID: <1394699364-5669-2-git-send-email-cm-hiep@jinso.co.jp>
+References: <1394699364-5669-1-git-send-email-cm-hiep@jinso.co.jp>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1394699364-5669-1-git-send-email-cm-hiep@jinso.co.jp>
+Sender: linux-sh-owner@vger.kernel.org
+To: broonie@kernel.org
+Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, kuninori.morimoto.gx@renesas.com, geert+renesas@linux-m68k.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add busfreq driver for Exynos4210/Exynos4x12 memory interface
-and bus to support DVFS(Dynamic Voltage Frequency Scaling) according to PPMU
-counters. PPMU (Performance Profiling Monitorings Units) of Exynos4 SoC provides
-PPMU counters for DMC(Dynamic Memory Controller) to check memory bus utilization
-and then busfreq driver adjusts dynamically the operating frequency/voltage
-by using DEVFREQ Subsystem.
+From: Hiep Cao Minh <cm-hiep@jinso.co.jp>
 
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+In order to transmit and receive data when have 32 bytes of data that
+ready has prepared on Transmit/Receive Buffer to transmit or receive.
+Instead transmits/receives a byte data using Transmit/Receive Buffer
+Data Triggering Number will improve the speed of transfer data.
+
+Signed-off-by: Hiep Cao Minh <cm-hiep@jinso.co.jp>
 ---
- .../devicetree/bindings/devfreq/exynos4_bus.txt    | 49 ++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
+ drivers/spi/spi-rspi.c |  144 +++++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 124 insertions(+), 20 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt b/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
-new file mode 100644
-index 0000000..2a83fcc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
-@@ -0,0 +1,49 @@
+diff --git a/drivers/spi/spi-rspi.c b/drivers/spi/spi-rspi.c
+index 28987d9..772a942 100644
+--- a/drivers/spi/spi-rspi.c
++++ b/drivers/spi/spi-rspi.c
+@@ -174,6 +174,12 @@
+ #define SPBFCR_RXRST		0x40	/* Receive Buffer Data Reset (qspi only) */
+ #define SPBFCR_TXTRG_MASK	0x30	/* Transmit Buffer Data Triggering Number */
+ #define SPBFCR_RXTRG_MASK	0x07	/* Receive Buffer Data Triggering Number */
++#define SPBFCR_TXTRG_31B	0x00	/* QSPI only */
++#define SPBFCR_TXTRG_0B		0x30	/* QSPI only */
++#define SPBFCR_RXTRG_1B		0x00	/* QSPI only */
++#define SPBFCR_RXTRG_32B	0x07	/* QSPI only */
 +
-+Exynos4210/4x12 busfreq driver
-+-----------------------------
++#define QSPI_BUFFER_SIZE        32
+ 
+ #define DUMMY_DATA		0x00
+ 
+@@ -224,6 +230,16 @@ static u16 rspi_read16(const struct rspi_data *rspi, u16 offset)
+ 	return ioread16(rspi->addr + offset);
+ }
+ 
++static void qspi_update(const struct rspi_data *rspi, u8 mask, u8 val, u8 reg)
++{
++	u8 data;
 +
-+Exynos4210/4x12 Soc busfreq driver with devfreq for Memory bus frequency/voltage
-+scaling according to PPMU counters of memory controllers
++	data = rspi_read8(rspi, reg);
++	data &= ~mask;
++	data |= (val & mask);
++	rspi_write8(rspi, data, reg);
++}
 +
-+Required properties:
-+- compatible	: should contain Exynos4 SoC type as follwoing:
-+		  - "samsung,exynos4x12-busfreq" for Exynos4x12
-+		  - "samsung,exynos4210-busfreq" for Exynos4210
-+- reg		: offset and length of the ppmudmc0/1
-+		  - PPMU (Performance Profiling Monitoring Units)
-+		  : It is to profile performance event of DMC(Dynamic Memory
-+		  Controller) So, exynos4_bus.c can check memory bus utilization
-+		  by using PPMU of Exynos4 SoC.
-+- clocks	: clock number of ppmudmc0/1
-+- clock-names	: clock name of ppmudmc0/1
-+- vdd_int-supply: regulator for interface block of Exynos4
+ /* optional functions */
+ struct spi_ops {
+ 	int (*set_config_register)(const struct rspi_data *rspi,
+@@ -358,6 +374,44 @@ static void rspi_negate_ssl(const struct rspi_data *rspi)
+ 	rspi_write8(rspi, rspi_read8(rspi, RSPI_SPCR) & ~SPCR_SPE, RSPI_SPCR);
+ }
+ 
++static int qspi_set_send_trigger(struct rspi_data *rspi, int remain)
++{
++	int n;
 +
-+Optional properties:
-+- vdd_mif-supply: regulator for DMC block of Exynos4x12 if Exynos4x12 Soc
-+- regs-name	: register name of ppmudmc0/1
++	n = min(remain, QSPI_BUFFER_SIZE);
 +
-+All the required listed above must be defined under code busfreq with devfreq
++	if (remain >= QSPI_BUFFER_SIZE) {
++		/* sets triggering number to 32 bytes */
++		qspi_update(rspi, SPBFCR_TXTRG_MASK,
++			     SPBFCR_TXTRG_0B, QSPI_SPBFCR);
++	} else {
++		/* sets triggering number to 1 byte */
++		qspi_update(rspi, SPBFCR_TXTRG_MASK,
++			     SPBFCR_TXTRG_31B, QSPI_SPBFCR);
++	}
 +
-+Exmaple:
-+For Exynos4210 busfreq,
-+	busfreq@106A0000 {
-+		compatible = "samsung,exynos4210-busfreq";
-+		reg = <0x106A0000 0x2000>, <0x106B0000 0x2000>;
-+		regs-name = "PPMU_DMC0", "PPMU_DMC1";
-+		clocks = <&clock CLK_PPMUDMC0>, <&clock CLK_PPMUDMC1>;
-+		clock-names = "ppmudmc0", "ppmudmc1";
++	return n;
++}
 +
-+		vdd_int-supply = <&buck3_reg>;
-+	};
++static int qspi_set_receive_trigger(struct rspi_data *rspi, int remain)
++{
++	int n;
 +
-+For Exynos4x12 busfreq,
-+	busfreq@106A0000 {
-+		compatible = "samsung,exynos4x12-busfreq";
-+		reg = <0x106A0000 0x2000>, <0x106B0000 0x2000>;
-+		regs-name = "PPMU_DMC0", "PPMU_DMC1";
-+		clocks = <&clock CLK_PPMUDMC0>, <&clock CLK_PPMUDMC1>;
-+		clock-names = "ppmudmc0", "ppmudmc1";
++	n = min(remain, QSPI_BUFFER_SIZE);
 +
-+		vdd_mif-suppy = <&buck1_reg>;
-+		vdd_int-supply = <&buck3_reg>;
-+	};
++	if (remain >= QSPI_BUFFER_SIZE) {
++		/* sets triggering number to 32 bytes */
++		qspi_update(rspi, SPBFCR_RXTRG_MASK,
++			     SPBFCR_RXTRG_32B, QSPI_SPBFCR);
++	} else {
++		/* sets triggering number to 1 byte */
++		qspi_update(rspi, SPBFCR_RXTRG_MASK,
++			     SPBFCR_RXTRG_1B, QSPI_SPBFCR);
++	}
++
++	return n;
++}
++
+ static int rspi_send_pio(struct rspi_data *rspi, struct spi_message *mesg,
+ 			 struct spi_transfer *t)
+ {
+@@ -389,9 +443,10 @@ static int qspi_send_pio(struct rspi_data *rspi, struct spi_message *mesg,
+ {
+ 	int remain = t->len;
+ 	const u8 *data = t->tx_buf;
++	int i, n;
+ 
+ 	rspi_write8(rspi, SPBFCR_TXRST, QSPI_SPBFCR);
+-	rspi_write8(rspi, 0x00, QSPI_SPBFCR);
++	rspi_write8(rspi, DUMMY_DATA, QSPI_SPBFCR);
+ 
+ 	while (remain > 0) {
+ 
+@@ -400,16 +455,38 @@ static int qspi_send_pio(struct rspi_data *rspi, struct spi_message *mesg,
+ 				"%s: tx empty timeout\n", __func__);
+ 			return -ETIMEDOUT;
+ 		}
+-		rspi_write8(rspi, *data++, RSPI_SPDR);
+-
+-		if (rspi_wait_for_interrupt(rspi, SPSR_SPRF, SPCR_SPRIE) < 0) {
+-			dev_err(&rspi->master->dev,
+-				"%s: receive timeout\n", __func__);
+-			return -ETIMEDOUT;
++		n = qspi_set_send_trigger(rspi, remain);
++		if (n >= QSPI_BUFFER_SIZE) {
++			for (i = 0; i < n; i++)
++				rspi_write8(rspi, *data++, RSPI_SPDR);
++			if (rspi_wait_for_interrupt(rspi, SPSR_SPRF,
++						    SPCR_SPRIE) < 0) {
++				dev_err(&rspi->master->dev,
++					"%s: receive timeout\n", __func__);
++				return -ETIMEDOUT;
++			}
++			for (i = 0; i < n; i++)
++				rspi_read8(rspi, RSPI_SPDR);
++		} else {
++			for (i = 0; i < n; i++) {
++				if (rspi_wait_for_interrupt(rspi, SPSR_SPTEF,
++							    SPCR_SPTIE) < 0) {
++					dev_err(&rspi->master->dev,
++					   "%s: tx empty timeout\n", __func__);
++				return -ETIMEDOUT;
++				}
++				rspi_write8(rspi, *data++, RSPI_SPDR);
++
++				if (rspi_wait_for_interrupt(rspi, SPSR_SPRF,
++							    SPCR_SPRIE) < 0) {
++					dev_err(&rspi->master->dev,
++					   "%s: receive timeout\n", __func__);
++				return -ETIMEDOUT;
++				}
++				rspi_read8(rspi, RSPI_SPDR);
++			}
+ 		}
+-		rspi_read8(rspi, RSPI_SPDR);
+-
+-		remain--;
++		remain -= n;
+ 	}
+ 
+ 	/* Waiting for the last transmission */
+@@ -603,6 +680,7 @@ static int qspi_receive_pio(struct rspi_data *rspi, struct spi_message *mesg,
+ {
+ 	int remain = t->len;
+ 	u8 *data;
++	int i, n;
+ 
+ 	qspi_receive_init(rspi);
+ 
+@@ -614,17 +692,43 @@ static int qspi_receive_pio(struct rspi_data *rspi, struct spi_message *mesg,
+ 				"%s: tx empty timeout\n", __func__);
+ 			return -ETIMEDOUT;
+ 		}
+-		/* dummy write for generate clock */
+-		rspi_write8(rspi, DUMMY_DATA, RSPI_SPDR);
+-
+-		if (rspi_wait_for_interrupt(rspi, SPSR_SPRF, SPCR_SPRIE) < 0) {
+-			dev_err(&rspi->master->dev,
+-				"%s: receive timeout\n", __func__);
+-			return -ETIMEDOUT;
++		n = qspi_set_receive_trigger(rspi, remain);
++		if (n >= QSPI_BUFFER_SIZE) {
++			/* dummy write for generate clock */
++			for (i = 0; i < n; i++)
++				rspi_write8(rspi, DUMMY_DATA, RSPI_SPDR);
++
++			if (rspi_wait_for_interrupt(rspi, SPSR_SPRF,
++						    SPCR_SPRIE) < 0) {
++				dev_err(&rspi->master->dev,
++					"%s: receive timeout\n", __func__);
++				return -ETIMEDOUT;
++			}
++			/* SPDR allows 8, 16 or 32-bit access */
++			for (i = 0; i < n; i++)
++				*data++ = rspi_read8(rspi, RSPI_SPDR);
++		} else {
++			for (i = 0; i < n; i++) {
++				if (rspi_wait_for_interrupt(rspi, SPSR_SPTEF,
++							    SPCR_SPTIE) < 0) {
++					dev_err(&rspi->master->dev,
++					   "%s: tx empty timeout\n", __func__);
++					return -ETIMEDOUT;
++				}
++				/* dummy write for generate clock */
++				rspi_write8(rspi, DUMMY_DATA, RSPI_SPDR);
++
++				if (rspi_wait_for_interrupt(rspi, SPSR_SPRF,
++							    SPCR_SPRIE) < 0) {
++					dev_err(&rspi->master->dev,
++					   "%s: receive timeout\n", __func__);
++					return -ETIMEDOUT;
++				}
++				/* SPDR allows 8, 16 or 32-bit access */
++				*data++ = rspi_read8(rspi, RSPI_SPDR);
++			}
+ 		}
+-		/* SPDR allows 8, 16 or 32-bit access */
+-		*data++ = rspi_read8(rspi, RSPI_SPDR);
+-		remain--;
++		remain -= n;
+ 	}
+ 
+ 	return 0;
 -- 
-1.8.0
+1.7.9.5
+
