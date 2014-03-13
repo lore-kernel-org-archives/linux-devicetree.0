@@ -1,245 +1,76 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFC PATCH] i2c: new bus driver for efm32
-Date: Thu, 13 Mar 2014 22:26:13 +0100
-Message-ID: <20140313212613.GB15674@pengutronix.de>
-References: <1392027598-29015-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <20140310075558.GD2571@katana>
+From: Josh Cartwright <joshc@codeaurora.org>
+Subject: Re: [PATCH v5 09/11] arm: add support for reserved memory defined by
+ device tree
+Date: Thu, 13 Mar 2014 16:36:36 -0500
+Message-ID: <20140313213636.GR18529@joshc.qualcomm.com>
+References: <1392985527-6260-1-git-send-email-m.szyprowski@samsung.com>
+ <1392985527-6260-10-git-send-email-m.szyprowski@samsung.com>
+ <CAGa+x856+YyJ-vyfGoFAKmsqwKD+=Wh0-TT_mAaPStOXjd8eSQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20140310075558.GD2571@katana>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CAGa+x856+YyJ-vyfGoFAKmsqwKD+=Wh0-TT_mAaPStOXjd8eSQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kevin Hilman <khilman@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Tomasz Figa <t.figa@samsung.com>, Will Deacon <will.deacon@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Paul Mackerras <paulus@samba.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laura Abbott <lauraa@codeaurora.org>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Sascha Hauer <s.hauer@pengutronix.de>, Michal Nazarewicz <mina86@mina86.com>, linaro-mm-sig@lists.linaro.org, Marc <marc.ceeeee@gmail.com>, Nishanth Peethambaran <nishanth.p@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lis>
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
+On Thu, Mar 13, 2014 at 01:46:50PM -0700, Kevin Hilman wrote:
+> On Fri, Feb 21, 2014 at 4:25 AM, Marek Szyprowski
+> <m.szyprowski@samsung.com> wrote:
+> > Enable reserved memory initialization from device tree.
+> >
+> > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> 
+> This patch has hit -next and several legacy (non-DT) boot failures
+> were detected and bisected down to this patch.  A quick scan looks
+> like there needs to be some sanity checking whether a DT is even
+> present.
 
-On Mon, Mar 10, 2014 at 08:55:58AM +0100, Wolfram Sang wrote:
-> > +#include <linux/platform_data/efm32-i2c.h>
->=20
-> Shouldn't a new platform like efm32 be DT only?
-it is, at least in mainline. My (not very strong) POV is that it's not
-much effort/code size to support both. I dropped the non-DT part, it's
-easily readded if need should arise.
+Hmm.  Yes, the code unconditionally calls of_flat_dt_scan(), which will
+gladly touch initial_boot_params, even though it may be uninitialized.
+The below patch should allow these boards to boot...
 
-> > +
-> > +struct efm32_i2c_ddata {
-> > +	struct i2c_adapter adapter;
-> > +	spinlock_t lock;
->=20
-> No need, see later.
-Ok.
-=20
-> > ...
-> > +static u32 efm32_i2c_read32(struct efm32_i2c_ddata *ddata, unsigne=
-d offset)
-> > +{
-> > +	return readl(ddata->base + offset);
-> > +}
-> > +
-> > +static void efm32_i2c_write32(struct efm32_i2c_ddata *ddata,
-> > +		unsigned offset, u32 value)
-> > +{
-> > +	writel(value, ddata->base + offset);
-> > +}
->=20
-> Do those two really help readability?
-I like them to add debug code, usually trace_printk.
+However, I'm wondering if there is a good reason why we don't parse the
+/reserved-memory nodes at the right after we parse the /memory nodes as
+part of early_init_dt_scan()...
 
-> > +static void efm32_i2c_send_next_msg(struct efm32_i2c_ddata *ddata)
-> > +{
-> > +	struct i2c_msg *cur_msg =3D &ddata->msgs[ddata->current_msg];
-> > +
-> > +	dev_dbg(&ddata->adapter.dev, "send msg %zu/%zu (addr =3D %x, flag=
-s =3D %x, if =3D %08x)\n",
-> > +			ddata->current_msg, ddata->num_msgs, cur_msg->addr,
-> > +			cur_msg->flags, efm32_i2c_read32(ddata, REG_IF));
->=20
-> Remove. We have stuff like this in the core and will soon get tracing
-> functionality.
-ok, dropped with several other dev_dbg.
+Thanks,
+  Josh
 
-> > +	switch (state & REG_STATE_STATE__MASK) {
-> > +	case REG_STATE_STATE_IDLE:
-> > +		/* arbitration lost? */
-> > +		complete(&ddata->done);
->=20
-> If arbitration is lost, you should return -EAGAIN.
-ok.
+--8<--
+Subject: [PATCH] drivers: of: only scan for reserved mem when fdt present
 
-> > +		break;
-> > +	case REG_STATE_STATE_WAIT:
-> > +		/* huh, this shouldn't happen */
-> > +		BUG();
->=20
-> Is this really a reason to halt the kernel?
-No, probably not. What do you suggest? Reinit the hardware, report and
-return an error?
+Reported-by: Kevin Hilman <khilman@linaro.org>
+Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
+---
+ drivers/of/fdt.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> > +static int efm32_i2c_master_xfer(struct i2c_adapter *adap,
-> > +		struct i2c_msg *msgs, int num)
-> > +{
-> > +	struct efm32_i2c_ddata *ddata =3D i2c_get_adapdata(adap);
-> > +	int ret =3D -EBUSY;
-> > +
-> > +	spin_lock_irq(&ddata->lock);
-> > +
-> > +	if (ddata->msgs)
-> > +		/*
-> > +		 * XXX: can .master_xfer be called when the previous is still
-> > +		 * running?
-> > +		 */
->=20
-> Check the core. It has per adapter locks. So the lock can go away.
-ok. So I can also drop the "if (ddata->msgs)" check, right?
-=20
-> > +		goto out_unlock;
-> > +
-> > +	ddata->msgs =3D msgs;
-> > +	ddata->num_msgs =3D num;
-> > +	ddata->current_word =3D 0;
-> > +	ddata->current_msg =3D 0;
-> > +
-> > +	init_completion(&ddata->done);
->=20
-> reinit_completion() here and init_completion() in probe.
-*nod*
-
-> > +
-> > +	dev_dbg(&ddata->adapter.dev, "state: %08x, status: %08x\n",
-> > +			efm32_i2c_read32(ddata, REG_STATE),
-> > +			efm32_i2c_read32(ddata, REG_STATUS));
-> > +
-> > +	efm32_i2c_send_next_msg(ddata);
-> > +
-> > +	spin_unlock_irq(&ddata->lock);
-> > +
-> > +	wait_for_completion(&ddata->done);
-> > +
-> > +	spin_lock_irq(&ddata->lock);
-> > +
-> > +	if (ddata->current_msg >=3D ddata->num_msgs)
-> > +		ret =3D ddata->num_msgs;
-> > +	else
-> > +		ret =3D -EIO;
->=20
-> Check Documentation/i2c/fault-codes for more fine grained responses.
-ok, I have EAGAIN for arbitration lost, ENXIO for NAck in address phase
-and EIO for NAck in data phase now. Sounds good?
-=20
-> > +
-> > +	ddata->msgs =3D NULL;
-> > +
-> > +out_unlock:
-> > +	spin_unlock_irq(&ddata->lock);
-> > +	return ret;
-> > +}
-> > +
-> > +static u32 efm32_i2c_functionality(struct i2c_adapter *adap)
-> > +{
-> > +	/* XXX: some more? */
-> > +	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
->=20
-> That is usually enough. Make sure you checked SMBUS_QUICK, though
-> (i2cdetect -q ...).
-Both -q and -r seem to do the right thing.
-
-> > +	ret =3D of_property_read_u32(np, "location", &location);
->=20
-> Huh? Is this an accepted binding? Doesn't look like it because of a
-> generic name and IMO a specific use-case. BTW the binding documentati=
-on
-> for this driver is missing.
-Well, I got it in for the serial and spi driver. It wasn't without
-discussion, but for lack of better approaches it was accepted. The
-problem is that there are two places to care for to setup the pin muxin=
-g
-on efm32. The pins that are used in the (here) i2c function are
-selected in the ROUTE register in the I2C module's address space.
-Still I need to configure the pins in the GPIO module as
-input; pushpull; open drain or open collector (and a few more details
-like driver strength). You could abstract that with a big list of
-phandles and so have pinmuxing only in the pin controler device, but
-that's ugly, error prone to use and implement, not understandable with
-the hardware reference and (I guess) not how the hardware works
-internally.
-Regarding the generic name: I don't care much, but I don't have a
-problem with it. IMHO it's implicitly name-spaced by the compatible
-string which starts with "efm32," and so is fine. I'd like to have the
-same property name for all efm32 device drivers and "location" matches
-the hardware reference manual (apart from capitalization).
-
-> > ...
-> > +	/* i2c core takes care about bus numbering using an alias */
-> > +	ddata->adapter.nr =3D -1;
->=20
-> In case of DT only, drop this and simply use i2c_add_adapter.
-done
-
->=20
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	if (!res) {
-> > +		dev_err(&pdev->dev, "failed to determine base address\n");
->=20
-> devm_ioremap_resource() checks for a valid resource. Drop this.
-But resource_size doesn't ...
-=20
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	if (resource_size(res) < 0x42) {
-> > +		dev_err(&pdev->dev, "memory resource too small\n");
-> > +		return -EINVAL;
-> > +	}
->=20
-> I'd drop this check since, but I won't force you to.
-I'd understand your sentence with s/since//, not sure about it as is.
-Anyhow, I like this check.
-
-> > +	rate =3D clk_get_rate(ddata->clk);
-> > +	if (!rate) {
-> > +		dev_err(&pdev->dev, "there is no input clock available\n");
-> > +		ret =3D -EIO;
-> > +		goto err_disable_clk;
-> > +	}
-> > +	clkdiv =3D DIV_ROUND_UP(rate, 8 * ddata->pdata.frequency) - 1;
-> > +	if (clkdiv >=3D 0x200) {
-> > +		dev_err(&pdev->dev,
-> > +				"input clock too fast (%lu) to divide down to bus freq (%lu)",
-> > +				rate, ddata->pdata.frequency);
-> > +		ret =3D -EIO;
-> > +		goto err_disable_clk;
-> > +	}
->=20
-> -EIO for clocks errors? Is this common?
-Changed to ENODEV. Ok?
-
-> > +static int efm32_i2c_remove(struct platform_device *pdev)
-> > +{
-> > +	struct efm32_i2c_ddata *ddata =3D platform_get_drvdata(pdev);
-> > +
-> > +	free_irq(ddata->irq, ddata);
-> > +	clk_disable_unprepare(ddata->clk);
->=20
-> No i2c_del_adapter()?
-added.
-
-I fixed the driver in my tree for now, will resend when we settled on
-the things still open.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 510c0d8..501bc83 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -557,6 +557,9 @@ static int __init __fdt_scan_reserved_mem(unsigned long node, const char *uname,
+  */
+ void __init early_init_fdt_scan_reserved_mem(void)
+ {
++	if (!initial_boot_params)
++		return;
++
+ 	of_scan_flat_dt(__fdt_scan_reserved_mem, NULL);
+ 	fdt_init_reserved_mem();
+ }
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
