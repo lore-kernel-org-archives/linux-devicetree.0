@@ -1,59 +1,57 @@
-From: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 1/5] doc: Add "ti,am437x-dwc3" comaptible for dwc3
- glue
-Date: Thu, 13 Mar 2014 17:11:36 +0530
-Message-ID: <53219970.6060002@ti.com>
-References: <1394193422-18242-1-git-send-email-george.cherian@ti.com> <1394193422-18242-2-git-send-email-george.cherian@ti.com> <53218944.7000102@ti.com>
+From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] video: ARM CLCD: Add DT support
+Date: Thu, 13 Mar 2014 11:43:22 +0000
+Message-ID: <1394711002.32336.5.camel@hornet>
+References: <1394036606-17784-1-git-send-email-pawel.moll@arm.com>
+	 <53184C2E.3000807@ti.com>
+	 <CACRpkdYBuxYko5JD5ZCfoQq+PeXtkKP9eprk9HM=ghW2YMoMuA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53218944.7000102-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <CACRpkdYBuxYko5JD5ZCfoQq+PeXtkKP9eprk9HM=ghW2YMoMuA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: balbi-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, anatol.pomozov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jonathan Austin <Jonathan.Austin-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3/13/2014 4:02 PM, Roger Quadros wrote:
-> Hi George,
->
-> On 03/07/2014 01:56 PM, George Cherian wrote:
->> Add the compatible "ti,am437x-dwc3" for dwc3 glue driver.
->>
->> Signed-off-by: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
->> ---
->>   Documentation/devicetree/bindings/usb/omap-usb.txt | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documentation/devicetree/bindings/usb/omap-usb.txt
->> index 38b2fae..38d9bb8 100644
->> --- a/Documentation/devicetree/bindings/usb/omap-usb.txt
->> +++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
->> @@ -44,7 +44,9 @@ Board specific device node entry
->>   };
->>   
->>   OMAP DWC3 GLUE
->> - - compatible : Should be "ti,dwc3"
->> + - compatible : Should be
->> +	* "ti,dwc3" for OMAP5 and DRA7
->> +	* "ti,am437x-dwc3" for AM437x
-> Why do you need a new compatible for am437x? Isn't "ti,dwc3" sufficient?
+On Thu, 2014-03-13 at 09:30 +0000, Linus Walleij wrote:
+> On Thu, Mar 6, 2014 at 11:21 AM, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> wrote:
+> > On 05/03/14 18:23, Pawel Moll wrote:
+> >> This patch adds basic DT bindings for the PL11x CLCD cells
+> >> and make their fbdev driver use them.
+> >
+> > Is this an old HW, and presumably there won't be new users for it?
+> 
+> AFAICT ARM really like to re-synthesize this piece of HW in every
+> new reference design they make. 
 
-There is change in register offsets for AM437x as comapred to Omap5 and 
-dra7x.
-The compatible is already added in dwc3-omap.c  This patch just updates 
-the Documentation.
->
->>    - ti,hwmods : Should be "usb_otg_ss"
->>    - reg : Address and length of the register set for the device.
->>    - interrupts : The irq number of this device that is used to interrupt the
->>
-> cheers,
-> -roger
+Not for long now, hopefully...
 
+> > If
+> > yes, this is probably fine. If not, you might want to look at the video
+> > ports and endpoints, which is used by at least three not-yet-merged series:
+> >
+> > [PATCHv3 00/41] OMAPDSS: DT support v3
+> > [PATCH v5 00/11] imx-drm dt bindings
+> > [RFC PATCH v2 00/21] Add DSI display support for Exynos based boards
+> >
+> > Using bindings like that would be more future proof, even if the current
+> > driver doesn't use them.
+> 
+> I take it that it shouldn't matter if the driver is for framebuffer or
+> DRM (as was implied by some answer here) the hardware
+> description should be the same no matter what, so the more
+> furture-proof the better.
 
--- 
--George
+Again, no argument here - the clcd-specific properties will be of use
+whatever happens in the future (the "immediate" display timing subnode
+is optional and is cloned from other existing bindings, so no new
+problem is introduced here). I'm just shying away from the discussions
+on generic display (or CDF or video or whatever) bindings. Call me
+coward if you wish (maybe just tired to death with this subject ;-)
+
+Pawel
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
