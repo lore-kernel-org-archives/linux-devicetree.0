@@ -1,45 +1,114 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 3/4] irqchip: sun4i: Fix a comment about mask
- register initialization
-Date: Thu, 13 Mar 2014 19:03:53 +0100
-Message-ID: <1394733834-26839-4-git-send-email-hdegoede@redhat.com>
-References: <1394733834-26839-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH RFC v9 5/6] dma: mpc512x: add device tree binding
+ document
+Date: Thu, 13 Mar 2014 18:09:16 +0000
+Message-ID: <20140313180916.GF25870@e106331-lin.cambridge.arm.com>
+References: <1394624875-24411-1-git-send-email-a13xp0p0v88@gmail.com>
+ <1394624875-24411-6-git-send-email-a13xp0p0v88@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBGXGQ6MQKGQEZ7ZZ62A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1394733834-26839-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1394624875-24411-6-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The comment was claiming that we were masking all irqs, while the code actually
-*un*masks all of them.
+On Wed, Mar 12, 2014 at 11:47:54AM +0000, Alexander Popov wrote:
+> From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+> 
+> introduce a device tree binding document for the MPC512x DMA controller
+> 
+> Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+> [ a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org: turn this into a separate patch ]
+> ---
+>  .../devicetree/bindings/dma/mpc512x-dma.txt        | 55 ++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/mpc512x-dma.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/mpc512x-dma.txt b/Documentation/devicetree/bindings/dma/mpc512x-dma.txt
+> new file mode 100644
+> index 0000000..a4867d5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/mpc512x-dma.txt
+> @@ -0,0 +1,55 @@
+> +* Freescale MPC512x DMA Controller
+> +
+> +The DMA controller in the Freescale MPC512x SoC can move blocks of
+> +memory contents between memory and peripherals or memory to memory.
+> +
+> +Refer to the "Generic DMA Controller and DMA request bindings" description
+> +in the dma.txt file for a more detailled discussion of the binding.  The
+> +MPC512x DMA engine binding follows the common scheme, but doesn't provide
+> +support for the optional channels and requests counters (those values are
+> +derived from the detected hardware features) and has a fixed client
+> +specifier length of 1 integer cell (the value is the DMA channel, since
+> +the DMA controller uses a fixed assignment of request lines per channel).
+> +
+> +
+> +DMA controller node properties:
+> +
+> +Required properties:
+> +- compatible:		should be "fsl,mpc5121-dma"
+> +- reg:			address and size of the DMA controller's register set
+> +- interrupts:		interrupt spec for the DMA controller
+> +
+> +Optional properties:
+> +- #dma-cells:		must be <1>, describes the number of integer cells
+> +			needed to specify the 'dmas' property in client nodes,
+> +			strongly recommended since common client helper code
+> +			uses this property
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- drivers/irqchip/irq-sun4i.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Describe what you expect this cell to contain, not the #dma-cells
+binding in general. The DMA bindings already cover that.
 
-diff --git a/drivers/irqchip/irq-sun4i.c b/drivers/irqchip/irq-sun4i.c
-index 5c25048..8a2fbee 100644
---- a/drivers/irqchip/irq-sun4i.c
-+++ b/drivers/irqchip/irq-sun4i.c
-@@ -109,7 +109,7 @@ static int __init sun4i_of_init(struct device_node *node,
- 	writel(0, sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(1));
- 	writel(0, sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(2));
- 
--	/* Mask all the interrupts */
-+	/* Unmask all the interrupts, ENABLE_REG(x) is used for masking */
- 	writel(0, sun4i_irq_base + SUN4I_IRQ_MASK_REG(0));
- 	writel(0, sun4i_irq_base + SUN4I_IRQ_MASK_REG(1));
- 	writel(0, sun4i_irq_base + SUN4I_IRQ_MASK_REG(2));
--- 
-1.9.0
+What are valid value that clients may use, and what do they mean?
+
+> +
+> +Example:
+> +
+> +	dma0: dma@14000 {
+> +		compatible = "fsl,mpc5121-dma";
+> +		reg = <0x14000 0x1800>;
+> +		interrupts = <65 0x8>;
+> +		#dma-cells = <1>;
+> +	};
+> +
+> +
+> +Client node properties:
+> +
+> +Required properties:
+> +- dmas:			list of DMA specifiers, consisting each of a handle
+> +			for the DMA controller and integer cells to specify
+> +			the channel used within the DMA controller
+> +- dma-names:		list of identifier strings for the DMA specifiers,
+> +			client device driver code uses these strings to
+> +			have DMA channels looked up at the controller
+
+List the exact names you expect, or the dma-names property is useless.
+
+Thanks,
+Mark.
+
+> +
+> +Example:
+> +
+> +	sdhc@1500 {
+> +		compatible = "fsl,mpc5121-sdhc";
+> +		/* ... */
+> +		dmas = <&dma0 30>;
+> +		dma-names = "rx-tx";
+> +	};
+> -- 
+> 1.8.4.2
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
