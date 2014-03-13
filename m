@@ -1,114 +1,181 @@
-From: Phil.Edworthy@renesas.com
-Subject: Re: [PATCH 5/9] dt-bindings: pci: rcar pcie device tree bindings
-Date: Thu, 13 Mar 2014 10:28:03 +0000
-Message-ID: <OFF61489EE.B9ED2F88-ON80257C9A.00386B74-80257C9A.00398025@eu.necel.com>
-References: <1394704208-7490-1-git-send-email-phil.edworthy@renesas.com> <1394704208-7490-6-git-send-email-phil.edworthy@renesas.com> <33747243.K5i7Ah8L7o@wuerfel>
+From: Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: Re: [PATCH v5 3/5] clk/samsung: add support for pll2650xx
+Date: Thu, 13 Mar 2014 19:29:03 +0900
+Message-ID: <CAGcde9FiFkbtuCrG1TWAmbcM-LLMu8fAMKS-L4keZ2ehuEDn=g@mail.gmail.com>
+References: <1394636208-3125-1-git-send-email-rahul.sharma@samsung.com>
+ <1394636208-3125-4-git-send-email-rahul.sharma@samsung.com> <532109C6.2060100@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <33747243.K5i7Ah8L7o@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Valentine Barshak <valentine.barshak@cogentembedded.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <532109C6.2060100@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <rahul.sharma@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@linaro.org>, kgene.kim@samsung.com, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-
-Thanks for your review.
-
-On 13/03/2014 10:00, Arnd wrote:
-> On Thursday 13 March 2014 09:50:04 Phil Edworthy wrote:
-> > This patch adds the bindings for the rcar PCIE driver. The driver
-> > resides under drivers/pci/host/pcie-rcar.c
-> > 
-> > Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-> > ---
-> >  Documentation/devicetree/bindings/pci/rcar-pci.txt | 40 
-++++++++++++++++++++++
-> >  1 file changed, 40 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/
-> Documentation/devicetree/bindings/pci/rcar-pci.txt
-> > new file mode 100644
-> > index 0000000..0e219b0
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> > @@ -0,0 +1,40 @@
-> > +* Renesas RCar PCIe interface
-> > +
-> > +Required properties:
-> > +- compatible: should contain one of the following
-> > +   "renesas,r8a7779-pcie", "renesas,r8a7790-pcie", 
-"renesas,r8a7791-pcie"
-> > +- reg: base addresses and lengths of the pcie controller.
-> > +- #address-cells: set to <3>
-> > +- #size-cells: set to <2>
-> > +- device_type: set to "pci"
-> > +- ranges: ranges for the PCI memory and I/O regions
-> 
-> I see your description and example includes I/O regions, but the driver
-> claims in a comment that these don't work. Do you also have a patch to
-> make them work?
-Are you referring to the comment "The controller does not support/use port 
-I/O" in the driver for the internal PCI controller (pci-rcar-gen2.c)?
-This is a separate block of hardware, it's a PCIe controller with external 
-pins, for which we do support I/O regions.
-
-> In case that patch is part of the 9-patch series, do you mind adding the
-> arm kernel mailing list (and maybe me personally) to Cc the next time?
-Sure, the rest of the patch set adds this new PCIe driver and adds it to 
-the R-Car devices & boards.
-
-> > +- interrupts: interrupt values for MSI interrupt
-> > +- #interrupt-cells: set to <1>
-> > +- interrupt-map-mask and interrupt-map: standard PCI properties
-> > +   to define the mapping of the PCIe interface to interrupt
-> > +   numbers.
-> > +- clocks: from common clock binding: handle to pci clock.
-> > +- clock-names: from common clock binding: should be "pcie"
-> > +
-> > +Example:
-> > +
-> > +SoC specific DT Entry:
-> > +
-> > +   pcie: pcie@0x01000000 {
-> > +      compatible = "renesas,r8a7790-pcie";
-> > +      reg = <0 0xfe000000 0 0x80000>;
-> > +      #address-cells = <3>;
-> > +      #size-cells = <2>;
-> > +      device_type = "pci";
-> > +      ranges = <0x01000000 0 0x00000000 0 0xfe100000 0 0x00100000
-> > +           0x02000000 0 0xfe200000 0 0xfe200000 0 0x00200000
-> > +           0x02000000 0 0x30000000 0 0x30000000 0 0x08000000
-> > +           0x42000000 0 0x38000000 0 0x38000000 0 0x08000000>;
-> 
-> I'm curious about why there are two non-prefetchable regions. What is
-> the significance of this?
-The devices that have this PCIe controller both have a number of fixed, 
-non-contiguous memory regions that can be used as PCIe windows. The ranges 
-here map onto those fixed windows, i.e. if the CPU addresses of the ranges 
-change it won't work. The first couple of windows are small, we use the 
-first one for I/O, we decided that we may as well use the next small 
-window for memory - otherwise we need to figure out a way to tell the 
-driver to skip a window.
-
-> > +      interrupts = <0 116 4>;
-> > +      #interrupt-cells = <1>;
-> > +      interrupt-map-mask = <0 0 0 0>;
-> > +      interrupt-map = <0 0 0 0 &gic 0 116 4>;
-> > +      clocks = <&mstp3_clks R8A7790_CLK_PCIE>;
-> > +      clock-names = "pcie";
-> > +      status = "disabled";
-> > +   };
-> 
-> Are you sure that there is only one legacy interrupt?  Most host
-> controllers wire up IntA through IntD to different output pins.
-Yes, and we've tested that as well.
-
-> Otherwise looks good.
-> 
->    Arnd
-
-Thanks
-Phil
+On Thu, Mar 13, 2014 at 10:28 AM, Pankaj Dubey <pankaj.dubey@samsung.com> wrote:
+> Hi Rahul,
+>
+>
+> On 03/12/2014 11:56 PM, Rahul Sharma wrote:
+>>
+>> Add support for pll2650xx in samsung pll file. This PLL variant
+>> is close to pll36xx but uses CON2 registers instead of CON1.
+>>
+>> Aud_pll in Exynos5260 is pll2650xx and uses this code.
+>>
+>> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+>> ---
+>>   drivers/clk/samsung/clk-pll.c |  101
+>> +++++++++++++++++++++++++++++++++++++++++
+>>   drivers/clk/samsung/clk-pll.h |    1 +
+>>   2 files changed, 102 insertions(+)
+>>
+>> diff --git a/drivers/clk/samsung/clk-pll.c b/drivers/clk/samsung/clk-pll.c
+>> index 18e42ef..b07fad2 100644
+>> --- a/drivers/clk/samsung/clk-pll.c
+>> +++ b/drivers/clk/samsung/clk-pll.c
+>> @@ -1049,6 +1049,101 @@ static const struct clk_ops
+>> samsung_pll2550xx_clk_min_ops = {
+>>         .recalc_rate = samsung_pll2550xx_recalc_rate,
+>>   };
+>>   +/*
+>> + * PLL2650XX Clock Type
+>> + */
+>> +
+>> +/* Maximum lock time can be 3000 * PDIV cycles */
+>> +#define PLL2650XX_LOCK_FACTOR 3000
+>> +
+>> +#define PLL2650XX_MDIV_SHIFT           9
+>> +#define PLL2650XX_PDIV_SHIFT           3
+>> +#define PLL2650XX_SDIV_SHIFT           0
+>> +#define PLL2650XX_KDIV_SHIFT           0
+>> +#define PLL2650XX_MDIV_MASK            0x1ff
+>> +#define PLL2650XX_PDIV_MASK            0x3f
+>> +#define PLL2650XX_SDIV_MASK            0x7
+>> +#define PLL2650XX_KDIV_MASK            0xffff
+>> +#define PLL2650XX_PLL_ENABLE_SHIFT     23
+>> +#define PLL2650XX_PLL_LOCKTIME_SHIFT   21
+>> +#define PLL2650XX_PLL_FOUTMASK_SHIFT   31
+>> +
+>> +static unsigned long samsung_pll2650xx_recalc_rate(struct clk_hw *hw,
+>> +                               unsigned long parent_rate)
+>> +{
+>> +       struct samsung_clk_pll *pll = to_clk_pll(hw);
+>> +       u32 mdiv, pdiv, sdiv, pll_con0, pll_con2;
+>> +       s16 kdiv;
+>> +       u64 fvco = parent_rate;
+>> +
+>> +       pll_con0 = __raw_readl(pll->con_reg);
+>> +       pll_con2 = __raw_readl(pll->con_reg + 8);
+>> +       mdiv = (pll_con0 >> PLL2650XX_MDIV_SHIFT) & PLL2650XX_MDIV_MASK;
+>> +       pdiv = (pll_con0 >> PLL2650XX_PDIV_SHIFT) & PLL2650XX_PDIV_MASK;
+>> +       sdiv = (pll_con0 >> PLL2650XX_SDIV_SHIFT) & PLL2650XX_SDIV_MASK;
+>> +       kdiv = (s16)(pll_con2 & PLL2650XX_KDIV_MASK);
+>> +
+>> +       fvco *= (mdiv << 16) + kdiv;
+>> +       do_div(fvco, (pdiv << sdiv));
+>> +       fvco >>= 16;
+>> +
+>> +       return (unsigned long)fvco;
+>> +}
+>> +
+>> +static int samsung_pll2650xx_set_rate(struct clk_hw *hw, unsigned long
+>> drate,
+>> +                                       unsigned long parent_rate)
+>> +{
+>> +       struct samsung_clk_pll *pll = to_clk_pll(hw);
+>> +       u32 tmp, pll_con0, pll_con2;
+>> +       const struct samsung_pll_rate_table *rate;
+>> +
+>> +       rate = samsung_get_pll_settings(pll, drate);
+>> +       if (!rate) {
+>> +               pr_err("%s: Invalid rate : %lu for pll clk %s\n",
+>> __func__,
+>> +                       drate, __clk_get_name(hw->clk));
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       pll_con0 = __raw_readl(pll->con_reg);
+>> +       pll_con2 = __raw_readl(pll->con_reg + 8);
+>> +
+>> +        /* Change PLL PMS values */
+>> +       pll_con0 &= ~(PLL2650XX_MDIV_MASK << PLL2650XX_MDIV_SHIFT |
+>> +                       PLL2650XX_PDIV_MASK << PLL2650XX_PDIV_SHIFT |
+>> +                       PLL2650XX_SDIV_MASK << PLL2650XX_SDIV_SHIFT);
+>> +       pll_con0 |= rate->mdiv << PLL2650XX_MDIV_SHIFT;
+>> +       pll_con0 |= rate->pdiv << PLL2650XX_PDIV_SHIFT;
+>> +       pll_con0 |= rate->sdiv << PLL2650XX_SDIV_SHIFT;
+>> +       pll_con0 |= 1 << PLL2650XX_PLL_ENABLE_SHIFT;
+>> +       pll_con0 |= 1 << PLL2650XX_PLL_FOUTMASK_SHIFT;
+>> +
+>> +       pll_con2 &= ~(PLL2650XX_KDIV_MASK << PLL2650XX_KDIV_SHIFT);
+>> +       pll_con2 |= ((~(rate->kdiv) + 1) & PLL2650XX_KDIV_MASK)
+>> +                       << PLL2650XX_KDIV_SHIFT;
+>> +
+>> +       /* Set PLL lock time. */
+>> +       __raw_writel(PLL2650XX_LOCK_FACTOR * rate->pdiv, pll->lock_reg);
+>> +
+>> +       __raw_writel(pll_con0, pll->con_reg);
+>> +       __raw_writel(pll_con2, pll->con_reg + 8);
+>> +
+>> +       do {
+>> +               tmp = __raw_readl(pll->con_reg);
+>> +       } while (!(tmp & (0x1 << PLL2650XX_PLL_LOCKTIME_SHIFT)));
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static const struct clk_ops samsung_pll2650xx_clk_ops = {
+>> +       .recalc_rate = samsung_pll2650xx_recalc_rate,
+>> +       .set_rate = samsung_pll2650xx_set_rate,
+>> +       .round_rate = samsung_pll_round_rate,
+>> +};
+>> +
+>> +static const struct clk_ops samsung_pll2650xx_clk_min_ops = {
+>> +       .recalc_rate = samsung_pll2650xx_recalc_rate,
+>> +};
+>> +
+>>   static void __init _samsung_clk_register_pll(struct samsung_clk_provider
+>> *ctx,
+>>                                 struct samsung_pll_clock *pll_clk,
+>>                                 void __iomem *base)
+>> @@ -1157,6 +1252,12 @@ static void __init _samsung_clk_register_pll(struct
+>> samsung_clk_provider *ctx,
+>>                 else
+>>                         init.ops = &samsung_pll2550xx_clk_ops;
+>>                 break;
+>> +       case pll_2650xx:
+>> +               if (!pll->rate_table)
+>> +                       init.ops = &samsung_pll2650xx_clk_min_ops;
+>> +               else
+>> +                       init.ops = &samsung_pll2650xx_clk_ops;
+>> +               break;
+>>         default:
+>>                 pr_warn("%s: Unknown pll type for pll clk %s\n",
+>>                         __func__, pll_clk->name);
+>> diff --git a/drivers/clk/samsung/clk-pll.h b/drivers/clk/samsung/clk-pll.h
+>> index ec4bc1d..c0ed4d4 100644
+>> --- a/drivers/clk/samsung/clk-pll.h
+>> +++ b/drivers/clk/samsung/clk-pll.h
+>> @@ -32,6 +32,7 @@ enum samsung_pll_type {
+>>         pll_s3c2410_upll,
+>>         pll_s3c2440_mpll,
+>>         pll_2550xx,
+>> +       pll_2650xx,
+>>   };
+>>     #define PLL_35XX_RATE(_rate, _m, _p, _s)                    \
+>
+>
+> Reviewed-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+>
+> --
+> Best Regards,
+> Pankaj Dubey
+>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc"
+> in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
