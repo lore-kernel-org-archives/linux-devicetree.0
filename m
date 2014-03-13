@@ -1,228 +1,80 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [RFC PATCH v2 00/21] Add DSI display support for Exynos based boards
-Date: Fri, 14 Mar 2014 00:35:24 +0900
-Message-ID: <CAAQKjZNxdfs1aF8_gjj_+HnnkQDvUy-G8fTUP=+sp-SsSCH-iw@mail.gmail.com>
-References: <1392204688-4591-1-git-send-email-a.hajda@samsung.com>
-	<CAAQKjZOEAWG3jwTPOP7aBnpjyg8qLfq-Fcv_Mec2+fgmOULqEg@mail.gmail.com>
-	<531998B5.7040002@samsung.com>
-	<CAAQKjZN3PoXoEFRXzHA+vrMCLfTRYJ9g3rFjzodNRNh62hPuDw@mail.gmail.com>
-	<532041FA.7070300@samsung.com>
-	<CAAQKjZP5we8vdpNaDE87fVQjqxcxT5RF3My-2fJ5wtobC4uvgA@mail.gmail.com>
-	<5321B576.5070409@samsung.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [GIT PULL] Move device tree graph parsing helpers to drivers/of
+Date: Thu, 13 Mar 2014 16:37:35 +0100
+Message-ID: <5321D0BF.6080605@samsung.com>
+References: <1394126000.3622.66.camel@paszta.hi.pengutronix.de>
+ <20140307182330.75168C40AE3@trevor.secretlab.ca>
+ <20140310102630.3cb1bcd7@samsung.com>
+ <20140310143758.3734FC405FA@trevor.secretlab.ca>
+ <1394708896.3577.21.camel@paszta.hi.pengutronix.de>
+ <20140313113527.GM21483@n2100.arm.linux.org.uk> <5321CB04.6090700@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5321B576.5070409@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Tomasz Figa <t.figa@samsung.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, DRI mailing list <dri-devel@lists.freedesktop.org>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <5321CB04.6090700@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Philipp Zabel <p.zabel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2014-03-13 22:41 GMT+09:00 Andrzej Hajda <a.hajda@samsung.com>:
-> On 03/13/2014 08:08 AM, Inki Dae wrote:
->> 2014-03-12 20:16 GMT+09:00 Tomasz Figa <t.figa@samsung.com>:
->>> On 12.03.2014 11:08, Inki Dae wrote:
->>>> 2014-03-07 19:00 GMT+09:00 Andrzej Hajda <a.hajda@samsung.com>:
->>>>> On 03/05/2014 03:56 AM, Inki Dae wrote:
->>>>>> Hi Andrzej,
->>>>>>
->>>>>> Thanks for your contributions.
->>>>>>
->>>>>> 2014-02-12 20:31 GMT+09:00 Andrzej Hajda <a.hajda@samsung.com>:
->>>>>>> Hi,
->>>>>>>
->>>>>>> This patchset adds drivers and bindings to the following devices:
->>>>>>> - Exynos DSI master,
->>>>>>> - S6E8AA0 DSI panel,
->>>>>>> - TC358764 DSI/LVDS bridge,
->>>>>>> - HV070WSA-100 LVDS panel.
->>>>>>>
->>>>>>> It adds also display support in DTS files for the following boards:
->>>>>>> - Exynos4210/Trats,
->>>>>>> - Exynos4412/Trats2,
->>>>>>> - Exynos5250/Arndale.
->>>>>>>
->>>>>>> Things worth mentioning:
->>>>>>>
->>>>>>> 1. I have implemented DSI/LVDS bridge using drm_panel framework, ie.
->>>>>>> the driver exposes drm_panel interface on DSI side, and interact with
->>>>>>> panels on LVDS side using drm_panel framework. This approach seems to
->>>>>>> me simpler and more natural than using drm_bridge.
->>>>>> Can you give me more details about why you think better to use panel
->>>>>> framework than using drm_bridge?  "Simpler" and "more natural" are
->>>>>> ambiguous to me.
->>>>> In this particular case DSI master expects on the other end
->>>>> any device having DSI slave interface, it could be panel or bridge.
->>>>> So it seems natural that both types of slave devices should expose
->>>>> the same interface also  on programming level.
->>>>> Another problem with drm_bridge is that it is not scalable -
->>>>> if some manufacturer will decide to add another block between the bridge
->>>>> and the panel there is no drm component which can be used for it.
->>>>> Using drm_panel the way I have used in toshiba bridge makes scalability
->>>>> possible,
->>>>> it will be only a matter of adding a driver for new block and making
->>>>> proper links in device tree, I see no easy way of doing it with
->>>>> drm_bridge approach.
->>>>
->>>> Now drm_bridge may not cover all hardware. However drm_bridge has
->>>> already been merged to mainline so I think we need to use drm_bridge
->>>> somehow instead of using other one, and also we could extend
->>>> drm_bridge if needed. It would be definitely impossible for a new
->>>> framework to cover all hardware because there may be other hardware
->>>> not appeared yet. That is what we are doing for mainline until now.
->>>>
->>> Well, maybe drm_bridge has been merged, but so has been drm_panel. Moreover,
->>> merged code is not carved in stone, if there is a better option that could
->>> replace it, users of it can be converted to the new approach and the old one
->>> can be removed.
->>>
->>> As I believe Andrzej has demonstrated, drm_panel framework is clearly
->>> superior over drm_bridge and I can't think of any good reason why it
->>> couldn't become more generic and replace drm_bridge. Of course it can be
->>> renamed then to something more generic appropriately.
->>>
->>>
->>>>>
->>>>>> Using same drm_panel framework for LDVS bridge and real panel drivers
->>>>>> isn't reasonable to me as now because drm_panel framework would be for
->>>>>> real panel device even if the use of drm_panel framework looks like
->>>>>> suitable to LVDS bridge driver. I thought Sean's way, ptn3460 driver
->>>>>> using drm_bride stuff, is good enough, and that would be why
->>>>>> drm_bridge exists and why drm_encoder has drm_bridge.
->>>>>>
->>>>>> And I'm finding more generic way, how to handle LVDS bridge using
->>>>>> super node so that  LVDS bridge driver isn't embedded to connector
->>>>>> drivers such as eDP and MIPI-DSI, and dt binding of LVDS bridge can be
->>>>>> done at top level of Exynos drm. Once the binding is done, encoder of
->>>>>> display bus driver will have drm_bridge object of LVDS bridge driver
->>>>>> so that display bus driver can handle LVDS bridge driver.
->>>>> Could you explain what you mean by "dt binding of LVDS bridge can be
->>>>> done at top level of Exynos drm" ? How it will look like if there
->>>>> will be more bridges, one for DSI, one for HDMI, etc... What if there
->>>>> will be two
->>>>> bridges in one chain. How it will cope with video pipeline bindings?
->>>>
->>>> it was just my idea so I have no implementation about it yet.
->>>>
->>>> My idea is that crtc and encoder are binded at top level of Exynos drm
->>>> as is. And for bridge support, the only difference is, in case that
->>>> encoder driver has bridge, the dt binding of the encoder driver is
->>>> done once last one between encoder and bridge driver is binded. It
->>>> would mean that bridge driver can use driver model and it doesn't need
->>>> to concern about probe order issue.
->>>>
->>>> For this, encoder driver with bridge, MIPI-DSI or eDP, would need to
->>>> use component interfaces specific to Exynos drm. As a result, once the
->>>> dt bindings of crtc and encoder are completed at top level, encoder
->>>> driver has its own drm_bridge for bridge, and dt binding you proposed
->>>> could be used without any change, and drm_panel could also be used
->>>> only for real lcd panel driver.
->>>>
->>>> And below is a block diagram I think,
->>>>
->>>>                                    DRM KMS
->>>>                     /                      |                 \
->>>>                /                           |                      \
->>>>           crtc                      encoder              connector
->>>>             |                           /     \                          |
->>>>             |                       /             \                      |
->>>>             |                      |           drm_bridge   drm_panel
->>>>             |                      |                   |                 |
->>>>             |                      |                   |                 |
->>>>          FIMD         MIPI-DSI    LVDS bridge    Panel
->>>>
->>> Hmm, this doesn't seem to be complete. Several bridges can be chained
->>> together. Also I believe "Panel" and "drm_panel" on your diagram should be
->>> basically the same. This leads to obvious conclusion that drm_bridge and
->>> drm_panel should be merged and Andrzej has shown an example (and IMHO good)
->>> way to do it, as drm_panel already provides a significant amount of existing
->>> infrastructure.
->>>
->> Not opposite to using drm_panel framework. What I disagree is to
->> implement encoder/connector to crtc driver, and to use drm_panel
->> framework for bridge device.
->> I tend to believe that obvious fact is that crtc driver, fimd, is not
->> proper place that encoder and connector should be implemented. Is
->> there other SoC using such way? I think other SoC guys had ever
->> agonized about same issue.
-> Quick look at some mobile drm drivers:
-> 1. tegra - in rgb pseudo-driver encoder/connector is bound to crtc device,
->     it is separate file but the same device driver.
-> 2. imx - crtc and encoder are separated, but parallel driver is a pure
->     virtual device driver, no hw associated with it.
-> 3. shmob - crtc, encoder and connector are in the same device.
-> 4. omap - all drm components are created in omap_drv, physical devices
->     are bound to them using internal framework.
+On 13/03/14 16:13, Sylwester Nawrocki wrote:
+> On 13/03/14 12:35, Russell King - ARM Linux wrote:
+> [...]
+>> > Grant and myself have exchanged emails in private on this discussing what
+>> > should happen - essentially Grant's position is that he's happy to leave
+>> > this stuff queued provided a resolution to his concerns are forthcoming.
+>> > 
+>> > However, what I find incredibly unfair is that we're taking the rap for
+>> > these bad bindings.  From what I can see, these bad bindings were merged
+>> > into the V4L2 code with _zero_ review by DT maintainers.  It's quite
+>> > clear that DT maintainers would have objected to them had they seen them,
 >
-> I prefer to avoid creating virtual devices, I think the simpler solution
-> for parallel output for now could be something like in tegra.
+> Russell, it's just unfair what you're trying to impute here.  These 
+> bindings were floating on the mailing list for _several_ months before 
+> getting merged.
+> They were finally acked by Rob and Grant [1], [2], however it cannot be 
+> seen from the commits as the Ack come late, after I sent a pull request.
+> 
+>> > but they didn't.  And the lack of documentation of the bindings which
+>> > has been something that's been insisted on is also disgusting.
+>> >
+>> > And now we're now taking the pain for that oversight.
+>> > 
+>> > So... frankly, I've walked away from this dysfunctional situation.  I
+>> > don't see imx-drm moving out of drivers/staging due to this debacle for
+>> > many months - possibly never now given that no one can agree on this
+>> > stuff.  This just goes to show what a fscking joke mainline kernels are,
+>> > and why people just give up and go to vendor kernels which offer /much/
+>> > better support all round.
+>> > 
+>> > As far as I can see, it's proved impossible to define a set of bindings
+>> > for display devices which satisfy everyone.  So, rather than doing
+>> > /something/ so we can move forward, we end up doing /nothing/.
+>> > 
+>> > It's times like this where I start believing that /board files/ were the
+>> > best solution for ARM, because DT just carries soo many thorny issues
+>> > (such as these) and is a continual blocker.
 >
-> Generally I tend to omap solution but instead of creating internal
-> framework use what we have already, ie drm_panel.
+> My experience and feelings are similar, I started to treat mainline
+> kernel much less seriously after similar DT related blocking issues.
+> An example is a simple patch series for couple drivers that was first 
+> posted in July 2013 and is still not merged, because the subsystem 
+> maintainer requires a DT binding maintainer Ack for everything and you
+> can wait to death to get one, specially if there are multiple iterations,
+> each needing attention of a DT binding maintainer. I remember opinions, 
+> when the process was being defined during one of the last kernel summits, 
+> that things may get longer to merge upstream, due to DT binding reviews. 
+> And that we must live with that. But these latencies are getting so 
+> ridiculously large that there is nothing left but to move to an 
+> alternative process.
+> 
+> Regarding moving forward doing /something/, rather than ending up
+> doing nothing - IMO it's the worst thing to rush DT binding being
+> merged upstream. I don't think an agreement can't be achieved soon, 
+> if not for this release then hopefully for next one.
 
-Doesn't it better to use internal framework like omap did ? Or, I
-think it's better to change drm_panel to more generic name if you want
-to use drm_panel so that drm_panel can be used commonly for other
-hardware block devices. It's curious to control all hardware blocks
-and real panel device using drm_panel.
+Sorry about the missing links:
 
->
-> Btw I do not see drm_panel as sth strange in this context,
-> for example in the chain:
-> FIMD --> DSIM --> DSI/LVDS --> Panel
-> any device in the chain sees device on the right side of the link as a
-> panel. Ie.
-> FIMD sees RGB panel,
-> DSIM sees DSI panel,
-> bridge sees LVDS panel.
->
->>
->> And I'm not sure that how several bridges can be chained together so
->> can you show me the real case, real hardware? If there is my missing
->> something and we cannot really cover such hardware support with
->> drm_bridge framework, I think we could consider to use drm_panel
->> framework instead of drm_bridge. And maybe, we may need opinions from
->> other maintainers.
->
-> Real cases I have showed in another thread:
-> FIMD --> MIE --> DSI --> DSI/LVDS --> Panel
-
-I didn't see these hardware blocks are called bridge. :) Yes, right,
-and also these can be chained together in more various ways.
-
->
-> Five hw devices in the chain, we are not able to map them
-> to 3+1 drm components 1:1, something should be squashed.
-> Probably squashing MIE with FIMD would be a some solution.
-> But in place of MIE there can be also mDNIe --> FIMDlite.
-> So we need another sub-framework or bunch of conditionals
-> to handle it.
-> On the other side drm_panel would solve these problems
-> in generic way.
->
-
-Ok, but for more clear I think we would need to look into how other
-SoC guys are handling similar hardware blocks in drm world.
-
-Thanks,
-Inki Dae
-
-> Regards
-> Andrzej
->
->>
->> Thanks,
->> Inki Dae
->>
->>> Best regards,
->>> Tomasz
->>>
->>> _______________________________________________
->>> dri-devel mailing list
->>> dri-devel@lists.freedesktop.org
->>> http://lists.freedesktop.org/mailman/listinfo/dri-devel
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+[1] http://www.spinics.net/lists/linux-media/msg61899.html
+[2] http://www.spinics.net/lists/linux-media/msg62458.html
