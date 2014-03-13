@@ -1,66 +1,114 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v2 2/4] ARM: AM43xx: fix dpll init in bypass mode
-Date: Thu, 13 Mar 2014 12:24:17 +0200
-Message-ID: <53218751.20900@ti.com>
-References: <1394701109-6721-1-git-send-email-sathyap@ti.com> <1394701109-6721-3-git-send-email-sathyap@ti.com>
+From: Phil.Edworthy@renesas.com
+Subject: Re: [PATCH 5/9] dt-bindings: pci: rcar pcie device tree bindings
+Date: Thu, 13 Mar 2014 10:28:03 +0000
+Message-ID: <OFF61489EE.B9ED2F88-ON80257C9A.00386B74-80257C9A.00398025@eu.necel.com>
+References: <1394704208-7490-1-git-send-email-phil.edworthy@renesas.com> <1394704208-7490-6-git-send-email-phil.edworthy@renesas.com> <33747243.K5i7Ah8L7o@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="5r9jI2w2HRQm7tX8QucB5IAa9x49HNaqn"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1394701109-6721-3-git-send-email-sathyap@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sathya Prakash M R <sathyap@ti.com>
-Cc: tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, paul@pwsan.com
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <33747243.K5i7Ah8L7o@wuerfel>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Valentine Barshak <valentine.barshak@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
---5r9jI2w2HRQm7tX8QucB5IAa9x49HNaqn
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Hi Arnd,
 
-On 13/03/14 10:58, Sathya Prakash M R wrote:
-> From: Tomi Valkeinen <tomi.valkeinen@ti.com>
->=20
-> On AM43xx, if a PLL is in bypass at kernel init, the code in
-> omap2_get_dpll_rate() will not realize this and will try to calculate
-> the clock rate using the multiplier and the divider, resulting in
-> errors.
->=20
-> omap2_init_dpll_parent() has similar issue.
->=20
-> Add the missing soc_is_am43xx() check to make the code work on AM43xx.
->=20
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Thanks for your review.
 
-I see you sent this already in December, and Paul asked for your
-signed-off for it, but you never replied.
+On 13/03/2014 10:00, Arnd wrote:
+> On Thursday 13 March 2014 09:50:04 Phil Edworthy wrote:
+> > This patch adds the bindings for the rcar PCIE driver. The driver
+> > resides under drivers/pci/host/pcie-rcar.c
+> > 
+> > Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+> > ---
+> >  Documentation/devicetree/bindings/pci/rcar-pci.txt | 40 
+++++++++++++++++++++++
+> >  1 file changed, 40 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/
+> Documentation/devicetree/bindings/pci/rcar-pci.txt
+> > new file mode 100644
+> > index 0000000..0e219b0
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> > @@ -0,0 +1,40 @@
+> > +* Renesas RCar PCIe interface
+> > +
+> > +Required properties:
+> > +- compatible: should contain one of the following
+> > +   "renesas,r8a7779-pcie", "renesas,r8a7790-pcie", 
+"renesas,r8a7791-pcie"
+> > +- reg: base addresses and lengths of the pcie controller.
+> > +- #address-cells: set to <3>
+> > +- #size-cells: set to <2>
+> > +- device_type: set to "pci"
+> > +- ranges: ranges for the PCI memory and I/O regions
+> 
+> I see your description and example includes I/O regions, but the driver
+> claims in a comment that these don't work. Do you also have a patch to
+> make them work?
+Are you referring to the comment "The controller does not support/use port 
+I/O" in the driver for the internal PCI controller (pci-rcar-gen2.c)?
+This is a separate block of hardware, it's a PCIe controller with external 
+pins, for which we do support I/O regions.
 
- Tomi
+> In case that patch is part of the 9-patch series, do you mind adding the
+> arm kernel mailing list (and maybe me personally) to Cc the next time?
+Sure, the rest of the patch set adds this new PCIe driver and adds it to 
+the R-Car devices & boards.
 
+> > +- interrupts: interrupt values for MSI interrupt
+> > +- #interrupt-cells: set to <1>
+> > +- interrupt-map-mask and interrupt-map: standard PCI properties
+> > +   to define the mapping of the PCIe interface to interrupt
+> > +   numbers.
+> > +- clocks: from common clock binding: handle to pci clock.
+> > +- clock-names: from common clock binding: should be "pcie"
+> > +
+> > +Example:
+> > +
+> > +SoC specific DT Entry:
+> > +
+> > +   pcie: pcie@0x01000000 {
+> > +      compatible = "renesas,r8a7790-pcie";
+> > +      reg = <0 0xfe000000 0 0x80000>;
+> > +      #address-cells = <3>;
+> > +      #size-cells = <2>;
+> > +      device_type = "pci";
+> > +      ranges = <0x01000000 0 0x00000000 0 0xfe100000 0 0x00100000
+> > +           0x02000000 0 0xfe200000 0 0xfe200000 0 0x00200000
+> > +           0x02000000 0 0x30000000 0 0x30000000 0 0x08000000
+> > +           0x42000000 0 0x38000000 0 0x38000000 0 0x08000000>;
+> 
+> I'm curious about why there are two non-prefetchable regions. What is
+> the significance of this?
+The devices that have this PCIe controller both have a number of fixed, 
+non-contiguous memory regions that can be used as PCIe windows. The ranges 
+here map onto those fixed windows, i.e. if the CPU addresses of the ranges 
+change it won't work. The first couple of windows are small, we use the 
+first one for I/O, we decided that we may as well use the next small 
+window for memory - otherwise we need to figure out a way to tell the 
+driver to skip a window.
 
+> > +      interrupts = <0 116 4>;
+> > +      #interrupt-cells = <1>;
+> > +      interrupt-map-mask = <0 0 0 0>;
+> > +      interrupt-map = <0 0 0 0 &gic 0 116 4>;
+> > +      clocks = <&mstp3_clks R8A7790_CLK_PCIE>;
+> > +      clock-names = "pcie";
+> > +      status = "disabled";
+> > +   };
+> 
+> Are you sure that there is only one legacy interrupt?  Most host
+> controllers wire up IntA through IntD to different output pins.
+Yes, and we've tested that as well.
 
---5r9jI2w2HRQm7tX8QucB5IAa9x49HNaqn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+> Otherwise looks good.
+> 
+>    Arnd
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJTIYdRAAoJEPo9qoy8lh71WjgP/AqccCfSSe03Vr4gQKaShOKf
-O5OidUFStF4QDjpf7L0vFp76G0gg69bPYbAJQ/MttqEMocs/MN/2kyunmVEzrqwe
-lTto2N0jpIRvFcS/ONNMUfPDMWylcj3Ot9IBSrEcBfg/r0TKSDqRkh9NGEHsiXsf
-WwlYNZxBTJtb4dR9fwJ15Va6cqI2abJdj/+Q7qId7NzHTq42X8orDwQHppzcoopW
-l06E9KTUIfkWmFcZWzgqD7tYXQGisv2CKHRCLiS7NeOfPTII8cOXXy/iAJlMTTsW
-5b/RiCyHIwuoFfmpwuZUPXL7Oiwe8OU9/m+aGRCPe5oz0k5esl+3KVs7LuzkLqLh
-ikAJxpJVCCtOXFy2cu6XTYmMkL5uvWXhyf9XhYyHtOy+wFWvBUd0dG3T+WEYl0J0
-Tf25WfsNB2nlLZckUBWIlxyyFQOuUhod3+LXq/LslXmX6NyoG2eyf3yoJQW/wTmS
-rxL7T0OJqebYkHZ9a+Qd+BD2jURCE8tS5x1p/CK9uOIJxWZNxIHFpqbAf75m0ZB3
-GQ6UHQfKNRz9YSzTi3e3sfBdh49P2aS7uNxebUHr4tEY2JoxOKa+jZioma1kb57r
-whNyxolqITwbeNq0GoAhTZhjy7KUBZh17rV+BhRt2VfYc4dp00KYCDYPPRZJq77K
-Dbn2qn1ZnocOWM2TsrGD
-=ChcP
------END PGP SIGNATURE-----
-
---5r9jI2w2HRQm7tX8QucB5IAa9x49HNaqn--
+Thanks
+Phil
