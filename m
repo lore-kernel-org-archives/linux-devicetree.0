@@ -1,48 +1,78 @@
-From: Fengguang Wu <fengguang.wu@intel.com>
-Subject: Re: [PATCH v5] can: xilinx CAN controller support.
-Date: Thu, 13 Mar 2014 19:21:12 +0800
-Message-ID: <20140313112112.GB8806@localhost>
-References: <5254bfec-c6fd-4681-a34d-706d51e60fbb@VA3EHSMHS004.ehs.local>
- <531DD493.3030306@monstr.eu>
- <531DD5E7.7090406@pengutronix.de>
- <3245971.RIuVmbVL0Z@wuerfel>
- <1964213d-6bd9-49fa-805e-42e1e0630fd5@VA3EHSMHS029.ehs.local>
- <20140311044555.GA12373@localhost>
- <546dbc60-dd7b-4249-bab8-ad7e008b9aad@AM1EHSMHS001.ehs.local>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 5/9] dt-bindings: pci: rcar pcie device tree bindings
+Date: Thu, 13 Mar 2014 12:30:50 +0100
+Message-ID: <25998973.9XJTBOSo8s@wuerfel>
+References: <1394704208-7490-1-git-send-email-phil.edworthy@renesas.com> <33747243.K5i7Ah8L7o@wuerfel> <OFF61489EE.B9ED2F88-ON80257C9A.00386B74-80257C9A.00398025@eu.necel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-can-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <546dbc60-dd7b-4249-bab8-ad7e008b9aad@AM1EHSMHS001.ehs.local>
-Sender: linux-can-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Marc Kleine-Budde <mkl@pengutronix.de>, monstr@monstr.eu, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, robh+dt@kernel.org, Kedareswara rao Appana <appana.durga.rao@xilinx.com>, grant.likely@linaro.org, Kedareswara rao Appana <appanad@xilinx.com>, wg@grandegger.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <OFF61489EE.B9ED2F88-ON80257C9A.00386B74-80257C9A.00398025@eu.necel.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Phil.Edworthy@renesas.com
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Valentine Barshak <valentine.barshak@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Michal,
-
-On Tue, Mar 11, 2014 at 10:38:14AM +0100, Michal Simek wrote:
-> On 03/11/2014 05:45 AM, Fengguang Wu wrote:
-> >>> You probably want something like
-> >>>
-> >>> 	config CAN_XILINX
-> >>> 	tristate "Xilinx CAN"
-> >>> 	depends on ARCH_ZYNQ || MICROBLAZE || COMPILE_TEST
-> >>> 	depends on COMMON_CLK && HAS_MMIO  # whatever you need for other architectures
-> >>
-> >> Fengguang: Are you use COMPILE_TEST in zero day testing system?
+On Thursday 13 March 2014 10:28:03 Phil.Edworthy@renesas.com wrote:
+> On 13/03/2014 10:00, Arnd wrote:
+> > On Thursday 13 March 2014 09:50:04 Phil Edworthy wrote:
 > > 
-> > Yeah, the randconfig build/boot tests should cover both COMPILE_TEST
-> > and !COMPILE_TEST cases.
-> 
-> But the point is that randconfig is really random it means it definitely can
-> cover but not there is no certainty that for that build, you are running,
-> has both option for all architectures enabled.
-> Or do I read it wrongly?
+> > I see your description and example includes I/O regions, but the driver
+> > claims in a comment that these don't work. Do you also have a patch to
+> > make them work?
+> Are you referring to the comment "The controller does not support/use port 
+> I/O" in the driver for the internal PCI controller (pci-rcar-gen2.c)?
+> This is a separate block of hardware, it's a PCIe controller with external 
+> pins, for which we do support I/O regions.
 
-Good point!  Since the 0day system is running randconfig tests
-everyday, it has very good opportunity to cover the COMPILE_TEST case.
-But to be sure, I'll explicitly enable COMPILE_TEST in some cases.
+Ok, thanks for the clarification.
 
-Thanks,
-Fengguang
+> > > +- interrupts: interrupt values for MSI interrupt
+> > > +- #interrupt-cells: set to <1>
+> > > +- interrupt-map-mask and interrupt-map: standard PCI properties
+> > > +   to define the mapping of the PCIe interface to interrupt
+> > > +   numbers.
+> > > +- clocks: from common clock binding: handle to pci clock.
+> > > +- clock-names: from common clock binding: should be "pcie"
+> > > +
+> > > +Example:
+> > > +
+> > > +SoC specific DT Entry:
+> > > +
+> > > +   pcie: pcie@0x01000000 {
+> > > +      compatible = "renesas,r8a7790-pcie";
+> > > +      reg = <0 0xfe000000 0 0x80000>;
+> > > +      #address-cells = <3>;
+> > > +      #size-cells = <2>;
+> > > +      device_type = "pci";
+> > > +      ranges = <0x01000000 0 0x00000000 0 0xfe100000 0 0x00100000
+> > > +           0x02000000 0 0xfe200000 0 0xfe200000 0 0x00200000
+> > > +           0x02000000 0 0x30000000 0 0x30000000 0 0x08000000
+> > > +           0x42000000 0 0x38000000 0 0x38000000 0 0x08000000>;
+> > 
+> > I'm curious about why there are two non-prefetchable regions. What is
+> > the significance of this?
+>
+> The devices that have this PCIe controller both have a number of fixed, 
+> non-contiguous memory regions that can be used as PCIe windows. The ranges 
+> here map onto those fixed windows, i.e. if the CPU addresses of the ranges 
+> change it won't work. The first couple of windows are small, we use the 
+> first one for I/O, we decided that we may as well use the next small 
+> window for memory - otherwise we need to figure out a way to tell the 
+> driver to skip a window.
+
+Ok, makes sense. Good to know that this actually works. An idea that
+may be helpful in some corner cases: if you can set up the small window as
+
+           0x02000000 0 0 0 0xfe200000 0 0x00200000
+
+or even
+
+           0x02000000 0 0 0 0xfe200000 0 0x00100000
+           0x02000000 0 0x00f00000 0 0xfe200000 0 0x00100000
+
+then you will be able to map devices with legacy nonrelocatable ISA
+memory BARs such as VGA cards that have PCI resources in the first MB
+of bus space, and in the end of the first 16MB.
+
+	Arnd
