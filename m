@@ -1,78 +1,136 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [GIT PULL] Move device tree graph parsing helpers to drivers/of
-Date: Thu, 13 Mar 2014 16:13:08 +0100
-Message-ID: <5321CB04.6090700@samsung.com>
-References: <1394126000.3622.66.camel@paszta.hi.pengutronix.de>
- <20140307182330.75168C40AE3@trevor.secretlab.ca>
- <20140310102630.3cb1bcd7@samsung.com>
- <20140310143758.3734FC405FA@trevor.secretlab.ca>
- <1394708896.3577.21.camel@paszta.hi.pengutronix.de>
- <20140313113527.GM21483@n2100.arm.linux.org.uk>
+From: George Cherian <george.cherian@ti.com>
+Subject: [PATCH v4 3/5] ARM: dts: AM4372: Add USB nodes
+Date: Thu, 13 Mar 2014 20:41:14 +0530
+Message-ID: <1394723476-8580-4-git-send-email-george.cherian@ti.com>
+References: <1394723476-8580-1-git-send-email-george.cherian@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20140313113527.GM21483-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1394723476-8580-1-git-send-email-george.cherian@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: balbi@ti.com, rogerq@ti.com, kishon@ti.com, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, tony@atomide.com, anatol.pomozov@gmail.com, bcousson@baylibre.com, George Cherian <george.cherian@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 13/03/14 12:35, Russell King - ARM Linux wrote:
-[...]
-> Grant and myself have exchanged emails in private on this discussing what
-> should happen - essentially Grant's position is that he's happy to leave
-> this stuff queued provided a resolution to his concerns are forthcoming.
-> 
-> However, what I find incredibly unfair is that we're taking the rap for
-> these bad bindings.  From what I can see, these bad bindings were merged
-> into the V4L2 code with _zero_ review by DT maintainers.  It's quite
-> clear that DT maintainers would have objected to them had they seen them,
+Add nodes for 2 instances each of
+	- ocp2scp
+	- USB PHY control module
+	- USB PHY
+	- dwc3_omap
+	- USB
 
-Russell, it's just unfair what you're trying to impute here.  These 
-bindings were floating on the mailing list for _several_ months before 
-getting merged.
-They were finally acked by Rob and Grant [1], [2], however it cannot be 
-seen from the commits as the Ack come late, after I sent a pull request.
+for AM43xx.
 
-> but they didn't.  And the lack of documentation of the bindings which
-> has been something that's been insisted on is also disgusting.
->
-> And now we're now taking the pain for that oversight.
-> 
-> So... frankly, I've walked away from this dysfunctional situation.  I
-> don't see imx-drm moving out of drivers/staging due to this debacle for
-> many months - possibly never now given that no one can agree on this
-> stuff.  This just goes to show what a fscking joke mainline kernels are,
-> and why people just give up and go to vendor kernels which offer /much/
-> better support all round.
-> 
-> As far as I can see, it's proved impossible to define a set of bindings
-> for display devices which satisfy everyone.  So, rather than doing
-> /something/ so we can move forward, we end up doing /nothing/.
-> 
-> It's times like this where I start believing that /board files/ were the
-> best solution for ARM, because DT just carries soo many thorny issues
-> (such as these) and is a continual blocker.
+Signed-off-by: George Cherian <george.cherian@ti.com>
+Acked-by: Roger Quadros <rogerq@ti.com>
+---
+ arch/arm/boot/dts/am4372.dtsi | 94 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 94 insertions(+)
 
-My experience and feelings are similar, I started to treat mainline
-kernel much less seriously after similar DT related blocking issues.
-An example is a simple patch series for couple drivers that was first 
-posted in July 2013 and is still not merged, because the subsystem 
-maintainer requires a DT binding maintainer Ack for everything and you
-can wait to death to get one, specially if there are multiple iterations,
-each needing attention of a DT binding maintainer. I remember opinions, 
-when the process was being defined during one of the last kernel summits, 
-that things may get longer to merge upstream, due to DT binding reviews. 
-And that we must live with that. But these latencies are getting so 
-ridiculously large that there is nothing left but to move to an 
-alternative process.
-
-Regarding moving forward doing /something/, rather than ending up
-doing nothing - IMO it's the worst thing to rush DT binding being
-merged upstream. I don't think an agreement can't be achieved soon, 
-if not for this release then hopefully for next one.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+index 36d523a..cedb9d4 100644
+--- a/arch/arm/boot/dts/am4372.dtsi
++++ b/arch/arm/boot/dts/am4372.dtsi
+@@ -735,6 +735,100 @@
+ 			#size-cells = <1>;
+ 			status = "disabled";
+ 		};
++
++		am43xx_control_usb2phy1: control-phy@44e10620 {
++			compatible = "ti,control-phy-usb2-am437";
++			reg = <0x44e10620 0x4>;
++			reg-names = "power";
++		};
++
++		am43xx_control_usb2phy2: control-phy@0x44e10628 {
++			compatible = "ti,control-phy-usb2-am437";
++			reg = <0x44e10628 0x4>;
++			reg-names = "power";
++		};
++
++		ocp2scp0: ocp2scp@483a8000 {
++			compatible = "ti,omap-ocp2scp";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			ti,hwmods = "ocp2scp0";
++
++			usb2_phy1: phy@483a8000 {
++				compatible = "ti,am437x-usb2";
++				reg = <0x483a8000 0x8000>;
++				ctrl-module = <&am43xx_control_usb2phy1>;
++				clocks = <&usb_phy0_always_on_clk32k>,
++					 <&usb_otg_ss0_refclk960m>;
++				clock-names = "wkupclk", "refclk";
++				#phy-cells = <0>;
++				status = "disabled";
++			};
++		};
++
++		ocp2scp1: ocp2scp@483e8000 {
++			compatible = "ti,omap-ocp2scp";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			ti,hwmods = "ocp2scp1";
++
++			usb2_phy2: phy@483e8000 {
++				compatible = "ti,am437x-usb2";
++				reg = <0x483e8000 0x8000>;
++				ctrl-module = <&am43xx_control_usb2phy2>;
++				clocks = <&usb_phy1_always_on_clk32k>,
++					 <&usb_otg_ss1_refclk960m>;
++				clock-names = "wkupclk", "refclk";
++				#phy-cells = <0>;
++				status = "disabled";
++			};
++		};
++
++		dwc3_1: omap_dwc3@48380000 {
++			compatible = "ti,am437x-dwc3";
++			ti,hwmods = "usb_otg_ss0";
++			reg = <0x48380000 0x10000>;
++			interrupts = <GIC_SPI 172 IRQ_TYPE_LEVEL_HIGH>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			utmi-mode = <1>;
++			ranges;
++
++			usb1: usb@48390000 {
++				compatible = "synopsys,dwc3";
++				reg = <0x48390000 0x17000>;
++				interrupts = <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
++				phys = <&usb2_phy1>;
++				phy-names = "usb2-phy";
++				maximum-speed = "high-speed";
++				dr_mode = "otg";
++				status = "disabled";
++			};
++		};
++
++		dwc3_2: omap_dwc3@483c0000 {
++			compatible = "ti,am437x-dwc3";
++			ti,hwmods = "usb_otg_ss1";
++			reg = <0x483c0000 0x10000>;
++			interrupts = <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			utmi-mode = <1>;
++			ranges;
++
++			usb2: usb@483d0000 {
++				compatible = "synopsys,dwc3";
++				reg = <0x483d0000 0x17000>;
++				interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
++				phys = <&usb2_phy2>;
++				phy-names = "usb2-phy";
++				maximum-speed = "high-speed";
++				dr_mode = "otg";
++				status = "disabled";
++			};
++		};
+ 	};
+ };
+ 
+-- 
+1.8.3.1
