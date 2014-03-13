@@ -1,151 +1,68 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v5 3/3] ARM: dts: add dts files for xyref5260 board
-Date: Thu, 13 Mar 2014 19:38:58 +0100
-Message-ID: <5321FB42.5090907@samsung.com>
-References: <1394637394-3960-1-git-send-email-rahul.sharma@samsung.com>
- <1394637394-3960-4-git-send-email-rahul.sharma@samsung.com>
- <5321008C.3090203@samsung.com>
- <CAPdUM4PaXGceKyeO=kXaGy=VqapETg9m4RAMci_BD6=jsW-gNA@mail.gmail.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 0/6] Armada 380 NAND support
+Date: Thu, 13 Mar 2014 15:19:25 -0400
+Message-ID: <20140313191925.GE7811@titan.lakedaemon.net>
+References: <1394637404-7651-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAPdUM4PaXGceKyeO=kXaGy=VqapETg9m4RAMci_BD6=jsW-gNA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <r.sh.open@gmail.com>, Pankaj Dubey <pankaj.dubey@samsung.com>
-Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1394637404-7651-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Seif Mazareeb <seif-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13.03.2014 06:01, Rahul Sharma wrote:
-> Thanks Pankaj,
->
-> On 13 March 2014 06:19, Pankaj Dubey <pankaj.dubey@samsung.com> wrote:
->> Hi Rahul,
->>
->>
->> On 03/13/2014 12:16 AM, Rahul Sharma wrote:
->>>
->>> The patch adds the dts files for xyref5260 board which
->>> is based on Exynos5260 Evt0 sample.
->>>
->>> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
->>> ---
->>>    arch/arm/boot/dts/Makefile                      |    1 +
->>>    arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts |  110
->>> +++++++++++++++++++++++
->>>    2 files changed, 111 insertions(+)
->>>    create mode 100644 arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts
->>>
->>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->>> index b9d6a8b..5a391bf 100644
->>> --- a/arch/arm/boot/dts/Makefile
->>> +++ b/arch/arm/boot/dts/Makefile
->>> @@ -72,6 +72,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
->>>          exynos5250-arndale.dtb \
->>>          exynos5250-smdk5250.dtb \
->>>          exynos5250-snow.dtb \
->>> +       exynos5260-xyref5260-evt0.dtb \
->>>          exynos5420-arndale-octa.dtb \
->>>          exynos5420-smdk5420.dtb \
->>>          exynos5440-sd5v1.dtb \
->>> diff --git a/arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts
->>> b/arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts
->>> new file mode 100644
->>> index 0000000..d7d0aeb
->>> --- /dev/null
->>> +++ b/arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts
->>> @@ -0,0 +1,110 @@
->>> +/*
->>> + * SAMSUNG XYREF5260 EVT0 board device tree source
->>> + *
->>> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
->>> + *             http://www.samsung.com
->>> + *
->>> + * This program is free software; you can redistribute it and/or modify
->>> + * it under the terms of the GNU General Public License version 2 as
->>> + * published by the Free Software Foundation.
->>> +*/
->>> +
->>> +/dts-v1/;
->>> +#include "exynos5260.dtsi"
->>> +
->>> +/ {
->>> +       model = "SAMSUNG XYREF5260 EVT0 board based on EXYNOS5260";
->>> +       compatible = "samsung,xyref5260", "samsung,exynos5260";
->>> +
->>> +       memory {
->>> +               reg = <0x20000000 0x80000000>;
->>> +       };
->>> +
->>> +       chosen {
->>> +               bootargs = "console=ttySAC2,115200";
->>> +       };
->>> +
->>> +       clocks {
->>> +               fin_pll: xxti {
->>> +                       compatible = "fixed-clock";
->>> +                       clock-frequency = <24000000>;
->>> +                       clock-output-names = "fin_pll";
->>> +                       #clock-cells = <0>;
->>> +               };
->>> +
->>> +               xrtcxti: xrtcxti {
->>> +                       compatible = "fixed-clock";
->>> +                       clock-frequency = <32768>;
->>> +                       clock-output-names = "xrtcxti";
->>> +               };
->>
->>
->> clock-cells property is missing here.
->>
->
-> I have added #clock-cells only for clocks which
-> are supposed to be referred. IMO we need it otherwise.
+Ezequiel,
 
-The fixed-clock binding requires the #clock-cells property to be present 
-with value of <0>. It is not a valid fixed-clock otherwise.
+On Wed, Mar 12, 2014 at 12:16:38PM -0300, Ezequiel Garcia wrote:
+> This patchset adds support for the NAND on Armada 380/385 SoCs.
+> 
+> The first patch adds a new "armada-380-corediv-clock" compatible
+> string, with its proper SoC-specific structure, adding the register
+> layout for this SoC family.
+> 
+> The second and third patches add the devicetree changes to support
+> the Core Divider clock.
+> 
+> After adding its clock source, the fourth and fifth patches add
+> the NAND devicetree changes. The NAND controller is compatible with
+> the Armada 370 controller, so we are currently support it using the
+> same compatible string.
+> 
+> The last patch updates the binding documentation for the Core Divider
+> clock, which is missing the information about the already supported
+> Armada 375 compatible string.
+> 
+> This series is based on linux-next 20140307. I expect it will apply
+> cleanly on v3.15-rc1; if that's not the case, I'll send a rebased patchset.
+> 
+> The clock and devicetree changes are mostly independent so they
+> can be merged through the clock and mvebu tree respectively.
+> 
+> Ezequiel Garcia (6):
+>   clk: mvebu: Support Armada 380 SoC on the core divider clock
+>   ARM: mvebu: Add a 2 GHz fixed-clock on Armada 38x SoCs
+>   ARM: mvebu: Add the Core Divider clock to Armada 38x SoCs
+>   ARM: mvebu: Add support for NAND controller in Armada 38x SoC
+>   ARM: mvebu: Enable NAND controller in Armada 385-DB
+>   clk: mvebu: Update binding documentation for the core divider clock
+> 
+>  .../bindings/clock/mvebu-corediv-clock.txt         |  5 ++++-
+>  arch/arm/boot/dts/armada-385-db.dts                | 21 ++++++++++++++++++
+>  arch/arm/boot/dts/armada-38x.dtsi                  | 25 ++++++++++++++++++++++
+>  drivers/clk/mvebu/clk-corediv.c                    | 23 ++++++++++++++++++++
+>  4 files changed, 73 insertions(+), 1 deletion(-)
 
->>
->>> +
->>> +               spdif_extclk: ioclk_spdif_extclk {
->>> +                       compatible = "fixed-clock";
->>> +                       clock-frequency = <49152000>;
->>> +                       clock-output-names = "ioclk_spdif_extclk";
->>> +               };
->>
->>
->> ditto.
->>
->>> +       };
->>> +};
->>
->>
->> May I know why other phyclocks and ioclks have not been added?
->>
->
-> Phyclocks should be added in SoC file. Please refer the other patch.
->
-> Ioclocks have 2 dimensions. 1) A board may or may not have these.
-> But if board doesn't have them, we may end up with orphans in clock
-> tree. 2) Adding them in SoC is not meaningful because rate is board
-> dependent and cannot be mentioned in SoC file. Without rate, probe
-> will not be successful.
->
-> What I followed here is adding IO clocks which are resulting into
-> orphan clocks.
+This clock changes looks really clean and simple.  Mike says he has time
+for one more pull.  Can you fixup the s/nand/flash/ and resend?  I'd
+like to pull this and your fix in and possibly send a pull request for
+v3.15 tomorrow.
 
-Only clocks with active parents set to missing ioclocks will be 
-orphaned. If a mux has an ioclock as its default parent, it can be still 
-reconfigured to another input normally.
+thx,
 
->
-> What we can do is to allow the registration of fixed-io-clocks in clock
-> driver which are provided without RATE? If this looks good, I can post
-> the respective patch for clock driver and dt correction.
-
-I believe ioclocks should be registered properly using DT, only if 
-present. It is important, because such ioclock might not be an always-on 
-fixed rate clock, but instead a configurable external clock generator.
-
-Best regards,
-Tomasz
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
