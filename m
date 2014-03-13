@@ -1,82 +1,70 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 3/3] Documentation: mfd: s2mps11: Describe S5M8767 and
- S2MPS14 clocks
-Date: Thu, 13 Mar 2014 10:37:04 +0100
-Message-ID: <1394703425-6462-4-git-send-email-k.kozlowski@samsung.com>
-References: <1394703425-6462-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1394703425-6462-1-git-send-email-k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sangbeom Kim <sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yadwinder Singh Brar <yadi.brar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Phil Edworthy <phil.edworthy@renesas.com>
+Subject: [PATCH 5/9] dt-bindings: pci: rcar pcie device tree bindings
+Date: Thu, 13 Mar 2014 09:50:04 +0000
+Message-ID: <1394704208-7490-6-git-send-email-phil.edworthy@renesas.com>
+References: <1394704208-7490-1-git-send-email-phil.edworthy@renesas.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1394704208-7490-1-git-send-email-phil.edworthy@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-pci@vger.kernel.org
+Cc: linux-sh@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Valentine Barshak <valentine.barshak@cogentembedded.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Phil Edworthy <phil.edworthy@renesas.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add bindings documentation for clocks on S5M8767 and S2MPS14 devices.
+This patch adds the bindings for the rcar PCIE driver. The driver
+resides under drivers/pci/host/pcie-rcar.c
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
 ---
- Documentation/devicetree/bindings/mfd/s2mps11.txt |   24 +++++++++++++--------
- 1 file changed, 15 insertions(+), 9 deletions(-)
+ Documentation/devicetree/bindings/pci/rcar-pci.txt | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci.txt
 
-diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-index 15ee89c3cc7b..67ea05ca8050 100644
---- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
-+++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-@@ -16,20 +16,25 @@ Optional properties:
- - interrupts: Interrupt specifiers for interrupt sources.
- 
- Optional nodes:
--- clocks: s2mps11 provides three(AP/CP/BT) buffered 32.768 KHz outputs, so to
--  register these as clocks with common clock framework instantiate a sub-node
--  named "clocks". It uses the common clock binding documented in :
-+- clocks: s2mps11 and s5m8767 provide three(AP/CP/BT) buffered 32.768 KHz
-+  outputs, so to register these as clocks with common clock framework
-+  instantiate a sub-node named "clocks". It uses the common clock binding
-+  documented in :
-   [Documentation/devicetree/bindings/clock/clock-bindings.txt]
-+  The s2mps14 provides two (AP/BT) buffered 32.768 KHz outputs.
-   - #clock-cells: should be 1.
- 
-   - The following is the list of clocks generated by the controller. Each clock
-     is assigned an identifier and client nodes use this identifier to specify
-     the clock which they consume.
--    Clock               ID
--    ----------------------
--    32KhzAP		0
--    32KhzCP		1
--    32KhzBT		2
-+    Clock               ID           Devices
-+    ----------------------------------------------------------
-+    32KhzAP		0            S2MPS11, S2MPS14, S5M8767
-+    32KhzCP		1            S2MPS11, S5M8767
-+    32KhzBT		2            S2MPS11, S2MPS14, S5M8767
+diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+new file mode 100644
+index 0000000..0e219b0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+@@ -0,0 +1,40 @@
++* Renesas RCar PCIe interface
 +
-+  - compatible: Should be one of: "samsung,s2mps11-clk", "samsung,s2mps14-clk",
-+		"samsung,s5m8767-clk"
- 
- - regulators: The regulators of s2mps11 that have to be instantiated should be
- included in a sub-node named 'regulators'. Regulator nodes included in this
-@@ -71,7 +76,8 @@ Example:
- 		compatible = "samsung,s2mps11-pmic";
- 		reg = <0x66>;
- 
--		s2m_osc: clocks{
-+		s2m_osc: clocks {
-+			compatible = "samsung,s2mps11-clk";
- 			#clock-cells = 1;
- 			clock-output-names = "xx", "yy", "zz";
- 		};
++Required properties:
++- compatible: should contain one of the following
++	"renesas,r8a7779-pcie", "renesas,r8a7790-pcie", "renesas,r8a7791-pcie"
++- reg: base addresses and lengths of the pcie controller.
++- #address-cells: set to <3>
++- #size-cells: set to <2>
++- device_type: set to "pci"
++- ranges: ranges for the PCI memory and I/O regions
++- interrupts: interrupt values for MSI interrupt
++- #interrupt-cells: set to <1>
++- interrupt-map-mask and interrupt-map: standard PCI properties
++	to define the mapping of the PCIe interface to interrupt
++	numbers.
++- clocks: from common clock binding: handle to pci clock.
++- clock-names: from common clock binding: should be "pcie"
++
++Example:
++
++SoC specific DT Entry:
++
++	pcie: pcie@0x01000000 {
++		compatible = "renesas,r8a7790-pcie";
++		reg = <0 0xfe000000 0 0x80000>;
++		#address-cells = <3>;
++		#size-cells = <2>;
++		device_type = "pci";
++		ranges = <0x01000000 0 0x00000000 0 0xfe100000 0 0x00100000
++			  0x02000000 0 0xfe200000 0 0xfe200000 0 0x00200000
++			  0x02000000 0 0x30000000 0 0x30000000 0 0x08000000
++			  0x42000000 0 0x38000000 0 0x38000000 0 0x08000000>;
++		interrupts = <0 116 4>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 0 0 0>;
++		interrupt-map = <0 0 0 0 &gic 0 116 4>;
++		clocks = <&mstp3_clks R8A7790_CLK_PCIE>;
++		clock-names = "pcie";
++		status = "disabled";
++	};
 -- 
-1.7.9.5
+1.9.0
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
