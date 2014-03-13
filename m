@@ -1,230 +1,74 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v11] clk: add MOXA ART SoCs clock driver
-Date: Thu, 13 Mar 2014 13:27:58 -0700
-Message-ID: <20140313202758.12081.26697@quantum>
-References: <1390308261-4026-1-git-send-email-jonas.jensen@gmail.com>
- <1390907351-28426-1-git-send-email-jonas.jensen@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [alsa-devel] [PATCH v2] ASoC: simple-card: overwrite
+ cpu_dai->fmt with codec_dai->fmt
+Date: Thu, 13 Mar 2014 21:20:55 +0000
+Message-ID: <20140313212055.GN366@sirena.org.uk>
+References: <1394593331-22867-1-git-send-email-Guangyu.Chen@freescale.com>
+ <5320280C.6080004@ti.com>
+ <20140312093353.GH1177@MrMyself>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1390907351-28426-1-git-send-email-jonas.jensen@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, adam.jaremko@gmail.com, linux-kernel@vger.kernel.org, tomasz.figa@gmail.com, arm@kernel.org, Sudeep.Holla@arm.com, sylvester.nawrocki@gmail.com, Jonas Jensen <jonas.jensen@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="c6397Mob2532IpCX"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140312093353.GH1177@MrMyself>
+Sender: linux-doc-owner@vger.kernel.org
+To: Nicolin Chen <Guangyu.Chen@freescale.com>
+Cc: Jyri Sarha <jsarha@ti.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kuninori.morimoto.gx@renesas.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Li.Xiubo@freescale.com, linux-doc@vger.kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, moinejf@free.fr
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jonas Jensen (2014-01-28 03:09:11)
-> MOXA ART SoCs allow to determine PLL output and APB frequencies
-> by reading registers holding multiplier and divisor information.
-> 
-> Add a clock driver for this SoC.
-> 
-> Signed-off-by: Jonas Jensen <jonas.jensen@gmail.com>
 
-Taken into clk-next.
+--c6397Mob2532IpCX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Regards,
-Mike
+On Wed, Mar 12, 2014 at 05:33:54PM +0800, Nicolin Chen wrote:
 
-> ---
-> 
-> Notes:
->     Thanks for the replies,
->     
->     Changes since v10:
->     
->     1. add clock-specifier to DT binding description
->     2. remove local variable "rate"
->     3. add local variable "parent_name"
->     4. use clk_register_fixed_factor() instead of clk_register_fixed_rate()
->     5. remove flag CLK_IS_ROOT
->     
->     Applies to next-20140128
-> 
->  .../bindings/clock/moxa,moxart-clock.txt           | 48 +++++++++++
->  drivers/clk/Makefile                               |  1 +
->  drivers/clk/clk-moxart.c                           | 97 ++++++++++++++++++++++
->  3 files changed, 146 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/moxa,moxart-clock.txt
->  create mode 100644 drivers/clk/clk-moxart.c
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/moxa,moxart-clock.txt b/Documentation/devicetree/bindings/clock/moxa,moxart-clock.txt
-> new file mode 100644
-> index 0000000..fedea84
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/moxa,moxart-clock.txt
-> @@ -0,0 +1,48 @@
-> +Device Tree Clock bindings for arch-moxart
-> +
-> +This binding uses the common clock binding[1].
-> +
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +MOXA ART SoCs allow to determine PLL output and APB frequencies
-> +by reading registers holding multiplier and divisor information.
-> +
-> +
-> +PLL:
-> +
-> +Required properties:
-> +- compatible : Must be "moxa,moxart-pll-clock"
-> +- #clock-cells : Should be 0
-> +- reg : Should contain registers location and length
-> +- clocks : Should contain phandle + clock-specifier for the parent clock
-> +
-> +Optional properties:
-> +- clock-output-names : Should contain clock name
-> +
-> +
-> +APB:
-> +
-> +Required properties:
-> +- compatible : Must be "moxa,moxart-apb-clock"
-> +- #clock-cells : Should be 0
-> +- reg : Should contain registers location and length
-> +- clocks : Should contain phandle + clock-specifier for the parent clock
-> +
-> +Optional properties:
-> +- clock-output-names : Should contain clock name
-> +
-> +
-> +For example:
-> +
-> +       clk_pll: clk_pll@98100000 {
-> +               compatible = "moxa,moxart-pll-clock";
-> +               #clock-cells = <0>;
-> +               reg = <0x98100000 0x34>;
-> +       };
-> +
-> +       clk_apb: clk_apb@98100000 {
-> +               compatible = "moxa,moxart-apb-clock";
-> +               #clock-cells = <0>;
-> +               reg = <0x98100000 0x34>;
-> +               clocks = <&clk_pll>;
-> +       };
-> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> index 0faf730..7940d0c 100644
-> --- a/drivers/clk/Makefile
-> +++ b/drivers/clk/Makefile
-> @@ -12,6 +12,7 @@ obj-$(CONFIG_COMMON_CLK)      += clk-composite.o
->  # SoCs specific
->  obj-$(CONFIG_ARCH_BCM2835)     += clk-bcm2835.o
->  obj-$(CONFIG_ARCH_EFM32)       += clk-efm32gg.o
-> +obj-$(CONFIG_ARCH_MOXART)      += clk-moxart.o
->  obj-$(CONFIG_ARCH_NOMADIK)     += clk-nomadik.o
->  obj-$(CONFIG_ARCH_HIGHBANK)    += clk-highbank.o
->  obj-$(CONFIG_ARCH_HI3xxx)      += hisilicon/
-> diff --git a/drivers/clk/clk-moxart.c b/drivers/clk/clk-moxart.c
-> new file mode 100644
-> index 0000000..30a3b69
-> --- /dev/null
-> +++ b/drivers/clk/clk-moxart.c
-> @@ -0,0 +1,97 @@
-> +/*
-> + * MOXA ART SoCs clock driver.
-> + *
-> + * Copyright (C) 2013 Jonas Jensen
-> + *
-> + * Jonas Jensen <jonas.jensen@gmail.com>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2.  This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/io.h>
-> +#include <linux/of_address.h>
-> +#include <linux/clkdev.h>
-> +
-> +void __init moxart_of_pll_clk_init(struct device_node *node)
-> +{
-> +       static void __iomem *base;
-> +       struct clk *clk, *ref_clk;
-> +       unsigned int mul;
-> +       const char *name = node->name;
-> +       const char *parent_name;
-> +
-> +       of_property_read_string(node, "clock-output-names", &name);
-> +       parent_name = of_clk_get_parent_name(node, 0);
-> +
-> +       base = of_iomap(node, 0);
-> +       if (!base) {
-> +               pr_err("%s: of_iomap failed\n", node->full_name);
-> +               return;
-> +       }
-> +
-> +       mul = readl(base + 0x30) >> 3 & 0x3f;
-> +       iounmap(base);
-> +
-> +       ref_clk = of_clk_get(node, 0);
-> +       if (IS_ERR(ref_clk)) {
-> +               pr_err("%s: of_clk_get failed\n", node->full_name);
-> +               return;
-> +       }
-> +
-> +       clk = clk_register_fixed_factor(NULL, name, parent_name, 0, mul, 1);
-> +       if (IS_ERR(clk)) {
-> +               pr_err("%s: failed to register clock\n", node->full_name);
-> +               return;
-> +       }
-> +
-> +       clk_register_clkdev(clk, NULL, name);
-> +       of_clk_add_provider(node, of_clk_src_simple_get, clk);
-> +}
-> +CLK_OF_DECLARE(moxart_pll_clock, "moxa,moxart-pll-clock",
-> +              moxart_of_pll_clk_init);
-> +
-> +void __init moxart_of_apb_clk_init(struct device_node *node)
-> +{
-> +       static void __iomem *base;
-> +       struct clk *clk, *pll_clk;
-> +       unsigned int div, val;
-> +       unsigned int div_idx[] = { 2, 3, 4, 6, 8};
-> +       const char *name = node->name;
-> +       const char *parent_name;
-> +
-> +       of_property_read_string(node, "clock-output-names", &name);
-> +       parent_name = of_clk_get_parent_name(node, 0);
-> +
-> +       base = of_iomap(node, 0);
-> +       if (!base) {
-> +               pr_err("%s: of_iomap failed\n", node->full_name);
-> +               return;
-> +       }
-> +
-> +       val = readl(base + 0xc) >> 4 & 0x7;
-> +       iounmap(base);
-> +
-> +       if (val > 4)
-> +               val = 0;
-> +       div = div_idx[val] * 2;
-> +
-> +       pll_clk = of_clk_get(node, 0);
-> +       if (IS_ERR(pll_clk)) {
-> +               pr_err("%s: of_clk_get failed\n", node->full_name);
-> +               return;
-> +       }
-> +
-> +       clk = clk_register_fixed_factor(NULL, name, parent_name, 0, 1, div);
-> +       if (IS_ERR(clk)) {
-> +               pr_err("%s: failed to register clock\n", node->full_name);
-> +               return;
-> +       }
-> +
-> +       clk_register_clkdev(clk, NULL, name);
-> +       of_clk_add_provider(node, of_clk_src_simple_get, clk);
-> +}
-> +CLK_OF_DECLARE(moxart_apb_clock, "moxa,moxart-apb-clock",
-> +              moxart_of_apb_clk_init);
-> -- 
-> 1.8.2.1
-> 
+> I'm not sure if there's any defect from this idea, but as long as we
+> keep DAIFMT settings identical for both dai-link ends, it'll be a
+> neater way.
+
+> So I'd like to pend this patch and wait for further solution from that
+> topic.
+
+My understanding of the binding had been that exactly one of the devices
+on the link would have each master flag set and the code was parsing
+both devices together in order to come up with the setting.  Obviously I
+didn't check the code closely enough here.  It seems that the Renesas
+devices actually do this, though just due to a bug in the master/slave
+handling.  The patch you posted would essentially implement that
+(without validating the settings on the CPU side, but that could be
+added).
+
+The above suggestion would also work though it *is* a change in the
+binding and right now we don't have code for it.  We need something here
+very soon, the merge window is going to open shortly and we ought to
+avoid having the problematic code in v3.15 if we can - indeed I'd really
+prefer to get something into v3.14 if possible (though this patch
+doesn't apply cleanly there and it's *very* late).
+
+Thoughts?
+
+--c6397Mob2532IpCX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTIiE0AAoJELSic+t+oim9MTwP/iIqldFiWtJrJf0jh4W9uJ3A
+gl3AVyXfFJ2K9IL/vaOdISreKa8DBqDrXbKTyofGL6WSC79jvKdgVQpOvTH+2fYm
+M6wXR/Z6KZCujdPPbe92W3mbfhvVbJ31tOX/asDn5KkBKxwaYUml0Pxqno1NG7fi
+UuO5biq4t9v7ofdkK99CareN11Lvgn+IFqsafRnT222YJx6bFzCgYgQaftbjxa/9
+NxQvFKYK/SH+PUifH9nnqYKEwZzWmHjPFTNfEE6SuQ5gZ11ZK5/sAeRblgr079YH
+j/8uOuizME3cuwo21qqrRWz72gBOVp5X/pBPFzoalz+Fu5jWtg4xBfwvauileSHJ
+Lgzr+9RlY4JgtAa+7HnHV9QteVCceYbEefe/hEl+AhKiayLUge66+TiUJLhueno6
+Xtiz/syOYirPkBbIRmiJmWLZ0wTb9YMlCh4Wq1lr+KZ+huY/uyrjupRC9DotRPVZ
+YI3DCSxa1H+XhtDTPftcW2Wqg4hrbfoCVQ14Er2Hg/awLsxQ2afdRA8LAMDCN0gX
+C3oItFUSvrnTjnp7W8t7XCuIrvD1cmDGKK71IKdJVMY+R+j4xQgNnUXY/L++gHgZ
+mnqBOe9M3TMRHBrIAnJrEwDgUOfkdybkxuiiSXB8wu0CNfG4IcRiOi4XZNrZgVjh
+EK1ytWVQR3v7tlUYmU+p
+=ZYFF
+-----END PGP SIGNATURE-----
+
+--c6397Mob2532IpCX--
