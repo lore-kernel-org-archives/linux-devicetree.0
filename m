@@ -1,76 +1,169 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v5] ASoC: tlv320aic31xx: Add basic codec driver
- implementation
-Date: Thu, 13 Mar 2014 12:20:07 +0000
-Message-ID: <20140313122007.GQ366@sirena.org.uk>
-References: <1394535452-17865-1-git-send-email-jsarha@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="cnBsrynPgIOyCJkL"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1394535452-17865-1-git-send-email-jsarha@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jyri Sarha <jsarha@ti.com>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, peter.ujfalusi@ti.com, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, detheridge@ti.com
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] ARM: mach-ux500|nomadik|u300: Align to common DT bindings for mmci
+Date: Thu, 13 Mar 2014 13:32:43 +0100
+Message-ID: <1394713963-18300-1-git-send-email-ulf.hansson@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alessandro Rubini <rubini-9wsNiZum9E8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+As the first step in preparing the mmci driver for converting to the
+mmc_of_parse API, let's align to the common names of DT bindings for
+the mmc/sd highspeed modes.
 
---cnBsrynPgIOyCJkL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mmc/mmci.txt |    4 ----
+ arch/arm/boot/dts/ste-ccu9540.dts              |    6 +++---
+ arch/arm/boot/dts/ste-href.dtsi                |    8 ++++----
+ arch/arm/boot/dts/ste-nomadik-stn8815.dtsi     |    4 ++--
+ arch/arm/boot/dts/ste-snowball.dts             |    4 ++--
+ arch/arm/boot/dts/ste-u300.dts                 |    4 ++--
+ drivers/mmc/host/mmci.c                        |    4 ++--
+ 7 files changed, 15 insertions(+), 19 deletions(-)
 
-On Tue, Mar 11, 2014 at 12:57:32PM +0200, Jyri Sarha wrote:
-> This commit adds a bare bones driver support for TLV320AIC31XX family
-> audio codecs. The driver adds basic stereo playback trough headphone
-> and speaker outputs and mono capture trough microphone inputs.
+diff --git a/Documentation/devicetree/bindings/mmc/mmci.txt b/Documentation/devicetree/bindings/mmc/mmci.txt
+index 2b584ca..0c463e0 100644
+--- a/Documentation/devicetree/bindings/mmc/mmci.txt
++++ b/Documentation/devicetree/bindings/mmc/mmci.txt
+@@ -9,7 +9,3 @@ by mmc.txt and the properties used by the mmci driver.
+ Required properties:
+ - compatible             : contains "arm,pl18x", "arm,primecell".
+ - arm,primecell-periphid : contains the PrimeCell Peripheral ID.
+-
+-Optional properties:
+-- mmc-cap-mmc-highspeed  : indicates whether MMC is high speed capable
+-- mmc-cap-sd-highspeed   : indicates whether SD is high speed capable
+diff --git a/arch/arm/boot/dts/ste-ccu9540.dts b/arch/arm/boot/dts/ste-ccu9540.dts
+index 2295087..651c56d 100644
+--- a/arch/arm/boot/dts/ste-ccu9540.dts
++++ b/arch/arm/boot/dts/ste-ccu9540.dts
+@@ -38,8 +38,8 @@
+ 			arm,primecell-periphid = <0x10480180>;
+ 			max-frequency = <100000000>;
+ 			bus-width = <4>;
+-			mmc-cap-sd-highspeed;
+-			mmc-cap-mmc-highspeed;
++			cap-sd-highspeed;
++			cap-mmc-highspeed;
+ 			vmmc-supply = <&ab8500_ldo_aux3_reg>;
+ 
+ 			cd-gpios  = <&gpio7 6 0x4>; // 230
+@@ -63,7 +63,7 @@
+ 			arm,primecell-periphid = <0x10480180>;
+ 		        max-frequency = <100000000>;
+ 			bus-width = <8>;
+-			mmc-cap-mmc-highspeed;
++			cap-mmc-highspeed;
+ 			vmmc-supply = <&ab8500_ldo_aux2_reg>;
+ 
+ 			status = "okay";
+diff --git a/arch/arm/boot/dts/ste-href.dtsi b/arch/arm/boot/dts/ste-href.dtsi
+index 6cb9b68..a5db487 100644
+--- a/arch/arm/boot/dts/ste-href.dtsi
++++ b/arch/arm/boot/dts/ste-href.dtsi
+@@ -116,8 +116,8 @@
+ 			arm,primecell-periphid = <0x10480180>;
+ 			max-frequency = <100000000>;
+ 			bus-width = <4>;
+-			mmc-cap-sd-highspeed;
+-			mmc-cap-mmc-highspeed;
++			cap-sd-highspeed;
++			cap-mmc-highspeed;
+ 			vmmc-supply = <&ab8500_ldo_aux3_reg>;
+ 			vqmmc-supply = <&vmmci>;
+ 			pinctrl-names = "default", "sleep";
+@@ -144,7 +144,7 @@
+ 			arm,primecell-periphid = <0x10480180>;
+ 			max-frequency = <100000000>;
+ 			bus-width = <8>;
+-			mmc-cap-mmc-highspeed;
++			cap-mmc-highspeed;
+ 			pinctrl-names = "default", "sleep";
+ 			pinctrl-0 = <&sdi2_default_mode>;
+ 			pinctrl-1 = <&sdi2_sleep_mode>;
+@@ -157,7 +157,7 @@
+ 			arm,primecell-periphid = <0x10480180>;
+ 		        max-frequency = <100000000>;
+ 			bus-width = <8>;
+-			mmc-cap-mmc-highspeed;
++			cap-mmc-highspeed;
+ 			vmmc-supply = <&ab8500_ldo_aux2_reg>;
+ 			pinctrl-names = "default", "sleep";
+ 			pinctrl-0 = <&sdi4_default_mode>;
+diff --git a/arch/arm/boot/dts/ste-nomadik-stn8815.dtsi b/arch/arm/boot/dts/ste-nomadik-stn8815.dtsi
+index 5acc044..d316c95 100644
+--- a/arch/arm/boot/dts/ste-nomadik-stn8815.dtsi
++++ b/arch/arm/boot/dts/ste-nomadik-stn8815.dtsi
+@@ -840,8 +840,8 @@
+ 			interrupts = <22>;
+ 			max-frequency = <48000000>;
+ 			bus-width = <4>;
+-			mmc-cap-mmc-highspeed;
+-			mmc-cap-sd-highspeed;
++			cap-mmc-highspeed;
++			cap-sd-highspeed;
+ 			cd-gpios = <&gpio3 15 0x1>;
+ 			cd-inverted;
+ 			pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/ste-snowball.dts b/arch/arm/boot/dts/ste-snowball.dts
+index 97d5d21..4add51f 100644
+--- a/arch/arm/boot/dts/ste-snowball.dts
++++ b/arch/arm/boot/dts/ste-snowball.dts
+@@ -155,7 +155,7 @@
+ 			arm,primecell-periphid = <0x10480180>;
+ 			max-frequency = <100000000>;
+ 			bus-width = <4>;
+-			mmc-cap-mmc-highspeed;
++			cap-mmc-highspeed;
+ 			vmmc-supply = <&ab8500_ldo_aux3_reg>;
+ 			vqmmc-supply = <&vmmci>;
+ 			pinctrl-names = "default", "sleep";
+@@ -194,7 +194,7 @@
+ 			arm,primecell-periphid = <0x10480180>;
+ 		        max-frequency = <100000000>;
+ 			bus-width = <8>;
+-			mmc-cap-mmc-highspeed;
++			cap-mmc-highspeed;
+ 			vmmc-supply = <&ab8500_ldo_aux2_reg>;
+ 			pinctrl-names = "default", "sleep";
+ 			pinctrl-0 = <&sdi4_default_mode>;
+diff --git a/arch/arm/boot/dts/ste-u300.dts b/arch/arm/boot/dts/ste-u300.dts
+index a9da480..0a839da 100644
+--- a/arch/arm/boot/dts/ste-u300.dts
++++ b/arch/arm/boot/dts/ste-u300.dts
+@@ -442,8 +442,8 @@
+ 			clock-names = "apb_pclk", "mclk";
+ 			max-frequency = <24000000>;
+ 			bus-width = <4>; // SD-card slot
+-			mmc-cap-mmc-highspeed;
+-			mmc-cap-sd-highspeed;
++			cap-mmc-highspeed;
++			cap-sd-highspeed;
+ 			cd-gpios = <&gpio 12 0x4>;
+ 			cd-inverted;
+ 			vmmc-supply = <&ab3100_ldo_g_reg>;
+diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+index b931226..c321bb6 100644
+--- a/drivers/mmc/host/mmci.c
++++ b/drivers/mmc/host/mmci.c
+@@ -1395,9 +1395,9 @@ static void mmci_dt_populate_generic_pdata(struct device_node *np,
+ 	if (!pdata->f_max)
+ 		pr_warn("%s has no 'max-frequency' property\n", np->full_name);
+ 
+-	if (of_get_property(np, "mmc-cap-mmc-highspeed", NULL))
++	if (of_get_property(np, "cap-mmc-highspeed", NULL))
+ 		pdata->capabilities |= MMC_CAP_MMC_HIGHSPEED;
+-	if (of_get_property(np, "mmc-cap-sd-highspeed", NULL))
++	if (of_get_property(np, "cap-sd-highspeed", NULL))
+ 		pdata->capabilities |= MMC_CAP_SD_HIGHSPEED;
+ 
+ 	of_property_read_u32(np, "bus-width", &bus_width);
+-- 
+1.7.9.5
 
-Applied, thanks.  One thing it'd be good to fix:
-
-> +Optional properties:
-> +
-> +- gpio-reset - gpio pin number used for codec reset
-> +- ai31xx-micbias-vg - MicBias Voltage setting
-
-This is optional but...
-
-> +	of_property_read_u32(np, "ai31xx-micbias-vg", &value);
-> +	switch (value) {
-> +	case MICBIAS_2_0V:
-> +	case MICBIAS_2_5V:
-> +	case MICBIAS_AVDDV:
-> +		aic31xx->pdata.micbias_vg = value;
-> +		break;
-> +	default:
-> +		dev_err(aic31xx->dev,
-> +			"Bad ai31xx-micbias-vg value %d DT\n",
-> +			value);
-> +		aic31xx->pdata.micbias_vg = MICBIAS_2_0V;
-> +	}
-
-...you'll get an error if it's missing (and an uninitialised memory
-read).
-
---cnBsrynPgIOyCJkL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTIaJ0AAoJELSic+t+oim9zFIQAJi/CDeMM6X/riLxySVGLPa8
-gKhESbL6Ka4j9cfI54fdfeDS3KWEB7kW9DhcZoE892Zu9/PyY3RyB13ryQh8YEuX
-B2r4xAVuLdoPn0YMDBNAlATWCJjDJFSFlo6nglCM8jgvoZKVPMPql3mMmxZPP6Mo
-LSOVuj1GyKKa0mfEZEIazuqWaknv183L7nCbKoV+O0Szts/gauWfg/8pE7NhZkYS
-X051Nsn1iYSxgfD3fsABKGR+j7jljxJ04H7QXV77h23prthKmQ7dFGAvJWSACIiD
-zVTjAVd9EeWYl7XAl60tpxBO9FZy04oGnxe4bOUyDsPX4jMQO0Md/dbBAg7iGmm4
-2IdlQR60LzEL6SqkrgMKMU6gh4B7jpDVmh2LztmaN+0w6w5v9Q31UM45DfAoaXze
-Sqd2CAxft8z0HmB6V2rD0HbOBycIDZTaG4PMPCH+kNXvfBYu51Fal48GeB6CvPYa
-6VKEZS/aqSVf7FEe4mQ7qfvF5GjcicwzHmI71gXZ/T9QjOS1zOnnJD1Ifk0pV9oH
-ns+GWnyYBpJOi21nKLGJbmH/iWZQn9llLpg2qHcHF0bH/EqsE2HPkOV8nNXT3w83
-0ycM6VoJbKqaxH15SRTbVv45n/zfsPwIccPL1QqB/g8NAfcbQAsMctc4OfxtyZCC
-oFAon0a8Un3v6drjpo9C
-=ZKc6
------END PGP SIGNATURE-----
-
---cnBsrynPgIOyCJkL--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
