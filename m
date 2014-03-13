@@ -1,58 +1,44 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH v5] ASoC: tlv320aic31xx: Add basic codec driver implementation
-Date: Thu, 13 Mar 2014 17:30:24 +0200
-Message-ID: <5321CF10.3060702@ti.com>
-References: <1394535452-17865-1-git-send-email-jsarha@ti.com> <20140313122007.GQ366@sirena.org.uk>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH v5 2/3] ARM: dts: add dts files for exynos5260 SoC
+Date: Thu, 13 Mar 2014 16:33:57 +0100
+Message-ID: <5321CFE5.2000907@samsung.com>
+References: <1394637394-3960-1-git-send-email-rahul.sharma@samsung.com>
+ <1394637394-3960-3-git-send-email-rahul.sharma@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140313122007.GQ366@sirena.org.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, peter.ujfalusi@ti.com, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, detheridge@ti.com
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1394637394-3960-3-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, pankaj.dubey@samsung.com, Arun Kumar K <arun.kk@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/13/2014 02:20 PM, Mark Brown wrote:
-> On Tue, Mar 11, 2014 at 12:57:32PM +0200, Jyri Sarha wrote:
->> This commit adds a bare bones driver support for TLV320AIC31XX family
->> audio codecs. The driver adds basic stereo playback trough headphone
->> and speaker outputs and mono capture trough microphone inputs.
+Hi,
+
+On 12.03.2014 16:16, Rahul Sharma wrote:
+> The patch adds the dts files for exynos5260.
 >
-> Applied, thanks.  One thing it'd be good to fix:
->
->> +Optional properties:
->> +
->> +- gpio-reset - gpio pin number used for codec reset
->> +- ai31xx-micbias-vg - MicBias Voltage setting
->
-> This is optional but...
->
->> +	of_property_read_u32(np, "ai31xx-micbias-vg", &value);
->> +	switch (value) {
->> +	case MICBIAS_2_0V:
->> +	case MICBIAS_2_5V:
->> +	case MICBIAS_AVDDV:
->> +		aic31xx->pdata.micbias_vg = value;
->> +		break;
->> +	default:
->> +		dev_err(aic31xx->dev,
->> +			"Bad ai31xx-micbias-vg value %d DT\n",
->> +			value);
->> +		aic31xx->pdata.micbias_vg = MICBIAS_2_0V;
->> +	}
->
-> ...you'll get an error if it's missing (and an uninitialised memory
-> read).
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+> ---
+>   arch/arm/boot/dts/exynos5260-pinctrl.dtsi |  574 +++++++++++++++++++++++++++++
+>   arch/arm/boot/dts/exynos5260.dtsi         |  400 ++++++++++++++++++++
+>   2 files changed, 974 insertions(+)
+>   create mode 100644 arch/arm/boot/dts/exynos5260-pinctrl.dtsi
+>   create mode 100644 arch/arm/boot/dts/exynos5260.dtsi
 >
 
-Actually you don't. The value-variable is initialized to MICBIAS_2_0V 
-and if "ai31xx-micbias-vg" is not present of_property_read_u32 leaves 
-the variable untouched, but I'll send a patch for fixing the unused 
-variable working shortly.
+[snip]
 
-Forget about the v6 version of the patch.
 
-Thanks,
-Jyri
+> +		mmc_0: mmc0@12140000 {
 
+Node names should specify type of the device, so unit-specific IDs 
+should be avoided. Please simply use mmc@12140000. The same comment for 
+remaining MMC nodes below.
+
+Best regards,
+Tomasz
