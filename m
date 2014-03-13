@@ -1,124 +1,37 @@
 From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCHv2 8/8] devfreq: exynos4: Add busfreq driver for
- exynos4210/exynos4x12
-Date: Thu, 13 Mar 2014 17:50:57 +0100
-Message-ID: <3380793.YDA220hUJP@amdc1032>
-References: <1394698649-20996-1-git-send-email-cw00.choi@samsung.com>
- <1394698649-20996-9-git-send-email-cw00.choi@samsung.com>
+Subject: Re: [PATCH v17 3/4] ata: Add APM X-Gene SoC AHCI SATA host controller
+ driver
+Date: Thu, 13 Mar 2014 18:01:52 +0100
+Message-ID: <2321534.cVUPvrOVDn@amdc1032>
+References: <1394655573-32645-1-git-send-email-lho@apm.com>
+ <1394655573-32645-3-git-send-email-lho@apm.com>
+ <1394655573-32645-4-git-send-email-lho@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1394698649-20996-9-git-send-email-cw00.choi@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rafael.j.wysocki@intel.com, nm@ti.com, b.zolnierkie@samsaung.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-reply-to: <1394655573-32645-4-git-send-email-lho@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Loc Ho <lho@apm.com>
+Cc: olof@lixom.net, tj@kernel.org, arnd@arndb.de, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-
-On Thursday, March 13, 2014 05:17:29 PM Chanwoo Choi wrote:
-> This patch add busfreq driver for Exynos4210/Exynos4x12 memory interface
-
-This patch adds DT binding documentation not the driver itself.
-
-Same comment for the patch summary line.
-
-> and bus to support DVFS(Dynamic Voltage Frequency Scaling) according to PPMU
-> counters. PPMU (Performance Profiling Monitorings Units) of Exynos4 SoC provides
-> PPMU counters for DMC(Dynamic Memory Controller) to check memory bus utilization
-> and then busfreq driver adjusts dynamically the operating frequency/voltage
-> by using DEVFREQ Subsystem.
+On Wednesday, March 12, 2014 02:19:32 PM Loc Ho wrote:
+> This patch adds support for the APM X-Gene SoC AHCI SATA host controller
+> driver. It requires the corresponding APM X-Gene SoC PHY driver. This
+> initial version only supports Gen3 speed.
 > 
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> ---
->  .../devicetree/bindings/devfreq/exynos4_bus.txt    | 49 ++++++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt b/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
-> new file mode 100644
-> index 0000000..2a83fcc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
-> @@ -0,0 +1,49 @@
-> +
-> +Exynos4210/4x12 busfreq driver
-> +-----------------------------
-> +
-> +Exynos4210/4x12 Soc busfreq driver with devfreq for Memory bus frequency/voltage
+> Signed-off-by: Loc Ho <lho@apm.com>
+> Signed-off-by: Tuan Phan <tphan@apm.com>
+> Signed-off-by: Suman Tripathi <stripathi@apm.com>
 
-SoC
+Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 
-> +scaling according to PPMU counters of memory controllers
-> +
-> +Required properties:
-> +- compatible	: should contain Exynos4 SoC type as follwoing:
-
-following
-
-> +		  - "samsung,exynos4x12-busfreq" for Exynos4x12
-> +		  - "samsung,exynos4210-busfreq" for Exynos4210
-> +- reg		: offset and length of the ppmudmc0/1
-> +		  - PPMU (Performance Profiling Monitoring Units)
-> +		  : It is to profile performance event of DMC(Dynamic Memory
-> +		  Controller) So, exynos4_bus.c can check memory bus utilization
-> +		  by using PPMU of Exynos4 SoC.
-
-It can be improved by changing ordering, i.e.
-
-		  : PPMU of Exynos4 SoC is used to profile performance event of DMC (Dynamic
-		  Memory Controller) so the driver can check memory bus utilization.
-
-> +- clocks	: clock number of ppmudmc0/1
-> +- clock-names	: clock name of ppmudmc0/1
-> +- vdd_int-supply: regulator for interface block of Exynos4
-> +
-> +Optional properties:
-> +- vdd_mif-supply: regulator for DMC block of Exynos4x12 if Exynos4x12 Soc
-
-if using Exynos4x12 SoC
-
-> +- regs-name	: register name of ppmudmc0/1
-> +
-> +All the required listed above must be defined under code busfreq with devfreq
-
-required properties
-
-> +Exmaple:
-
-Example:
-
-> +For Exynos4210 busfreq,
-
-please add a newline here
-
-> +	busfreq@106A0000 {
-> +		compatible = "samsung,exynos4210-busfreq";
-> +		reg = <0x106A0000 0x2000>, <0x106B0000 0x2000>;
-> +		regs-name = "PPMU_DMC0", "PPMU_DMC1";
-> +		clocks = <&clock CLK_PPMUDMC0>, <&clock CLK_PPMUDMC1>;
-> +		clock-names = "ppmudmc0", "ppmudmc1";
-> +
-> +		vdd_int-supply = <&buck3_reg>;
-> +	};
-> +
-> +For Exynos4x12 busfreq,
-
-ditto
-
-> +	busfreq@106A0000 {
-> +		compatible = "samsung,exynos4x12-busfreq";
-> +		reg = <0x106A0000 0x2000>, <0x106B0000 0x2000>;
-> +		regs-name = "PPMU_DMC0", "PPMU_DMC1";
-> +		clocks = <&clock CLK_PPMUDMC0>, <&clock CLK_PPMUDMC1>;
-> +		clock-names = "ppmudmc0", "ppmudmc1";
-> +
-> +		vdd_mif-suppy = <&buck1_reg>;
-> +		vdd_int-supply = <&buck3_reg>;
-> +	};
+Thanks for fixing all the remaining issues.
 
 Best regards,
 --
 Bartlomiej Zolnierkiewicz
 Samsung R&D Institute Poland
 Samsung Electronics
+
