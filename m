@@ -1,104 +1,79 @@
-From: Liviu Dudau <liviu-I3yL/QOVVjH10XsdtD+oqA@public.gmane.org>
-Subject: Re: [PATCH v6 3/3] arm64: Add architecture support for PCI
-Date: Thu, 13 Mar 2014 00:11:09 +0000
-Message-ID: <20140313001109.GA6915@bart.dudau.co.uk>
-References: <1394020150-1875-1-git-send-email-Liviu.Dudau@arm.com>
- <1394020150-1875-4-git-send-email-Liviu.Dudau@arm.com>
- <000101cf3dce$df2c1840$9d8448c0$%han@samsung.com>
+From: Ben Hutchings <ben@decadent.org.uk>
+Subject: Re: [PATCH net-next v3 5/9] Altera TSE: Add Miscellaneous Files for
+ Altera Ethernet Driver
+Date: Thu, 13 Mar 2014 00:28:48 +0000
+Message-ID: <1394670528.20857.10.camel@deadeye.wl.decadent.org.uk>
+References: <1394577791-6547-1-git-send-email-vbridgers2013@gmail.com>
+	 <1394577791-6547-6-git-send-email-vbridgers2013@gmail.com>
+	 <1394578747.28839.4.camel@joe-AO722>
+	 <CAOwfj2Ot+ssTZgMoOoShVEUi+RkxjpPpRUfHAkP9RETm3TuUzg@mail.gmail.com>
+	 <1394658856.20857.7.camel@deadeye.wl.decadent.org.uk>
+	 <1394663197.3915.61.camel@joe-AO722>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <000101cf3dce$df2c1840$9d8448c0$%han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: 'Liviu Dudau' <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, 'linux-pci' <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, 'Bjorn Helgaas' <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, 'Catalin Marinas' <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, 'Will Deacon' <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, 'linaro-kernel' <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, 'Benjamin Herrenschmidt' <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, 'LKML' <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'LAKML' <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, 'Tanmay Inamdar' <tinamdar-qTEPVZfXA3Y@public.gmane.org>, 'Arnd Bergmann' <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-1BTaVrWKtjntL7CKQjqd"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1394663197.3915.61.camel@joe-AO722>
+Sender: netdev-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: Vince Bridgers <vbridgers2013@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 12, 2014 at 05:41:33PM +0900, Jingoo Han wrote:
-> On Wednesday, March 05, 2014 8:49 PM, Liviu Dudau wrote:
-> > 
-> > Use the generic host bridge functions to provide support for
-> > PCI Express on arm64. There is no support for ISA memory.
-> > 
-> > Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-> > Tested-by: Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>
-> > ---
-> >  arch/arm64/Kconfig            |  19 +++-
-> >  arch/arm64/include/asm/Kbuild |   1 +
-> >  arch/arm64/include/asm/io.h   |   3 +-
-> >  arch/arm64/include/asm/pci.h  |  49 +++++++++
-> >  arch/arm64/kernel/Makefile    |   1 +
-> >  arch/arm64/kernel/pci.c       | 173 ++++++++++++++++++++++++++++++++
-> >  6 files changed, 244 insertions(+), 2 deletions(-)
-> >  create mode 100644 arch/arm64/include/asm/pci.h
-> >  create mode 100644 arch/arm64/kernel/pci.c
-> 
-> [.....]
-> 
-> > --- /dev/null
-> > +++ b/arch/arm64/include/asm/pci.h
-> 
-> [.....]
-> 
-> > +
-> > +static inline int pci_domain_nr(struct pci_bus *bus)
-> > +{
-> > +	struct pci_host_bridge *bridge = find_pci_host_bridge(bus);
-> > +
-> > +	if (bridge)
-> > +		return bridge->domain_nr;
-> > +
-> > +	return 0;
-> > +}
-> 
-> Hi Liviu Dudau,
-> 
-> When CONFIG_PCI=n, the following build errors happen. :-(
-> Would you confirm this?
-> 
-> In file included from include/linux/pci.h:1393:0,
->                  from drivers/scsi/scsi_lib.c:19:
-> arch/arm64/include/asm/pci.h:31:19: error: redefinition of 'pci_domain_nr'
->  static inline int pci_domain_nr(struct pci_bus *bus)
->                    ^
-> In file included from drivers/scsi/scsi_lib.c:19:0:
-> include/linux/pci.h:1383:19: note: previous definition of 'pci_domain_nr' was here
->  static inline int pci_domain_nr(struct pci_bus *bus) { return 0; }
->                    ^
->              .....
 
-Hi Jingoo,
+--=-1BTaVrWKtjntL7CKQjqd
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I confirm the build error. Sorry for missing out on this test. I've now got out
-of some more pressing tasks and I will post v7 tomorrow.
+On Wed, 2014-03-12 at 15:26 -0700, Joe Perches wrote:
+> On Wed, 2014-03-12 at 21:14 +0000, Ben Hutchings wrote:
+> > These look like the statistic names specified in IEEE 802.3.  I would
+> > support a general move to using standard names for MAC stats in Etherne=
+t
+> > drivers, because they are quite clearly defined and widely implemented
+> > in hardware.  However, that is not the current practice in most Linux
+> > drivers.
+>=20
+> Hey Ben.
+>=20
+> Maybe something like this would be a start?
+>=20
+> Change the actual #defines/strings to taste.
+>=20
+> Maybe this shouldn't be in uapi or maybe in if_ether.h
+[...]
 
-Best regards,
-Liviu
+This is pointless without also nailing down the definition of each
+statistic.  That could be done with reference to standards/RFCs, of
+course.
 
-> 
-> Best regards,
-> Jingoo Han
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+Ben.
 
--- 
--------------------
-   .oooO
-   (   )
-    \ (  Oooo.
-     \_) (   )
-          ) /
-         (_/
+--=20
+Ben Hutchings
+Experience is directly proportional to the value of equipment destroyed.
+                                                         - Carolyn Scheppne=
+r
 
- One small step
-   for me ...
+--=-1BTaVrWKtjntL7CKQjqd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIVAwUAUyD7wOe/yOyVhhEJAQoJZBAAjYhkPhYHFb8jMyUbAtW9tZtCe337LRJk
+KI60VOoleg2o4/ElkkhnPywwmfr4hkmza7zwDZMiknzO1MdlDH9ayTq/IGTpUZqu
+Z5OXQe+Arw8m/vIh+9u3hK/ksJ/IQmxmr4KyacEOBPNt9QpGa+9WFstgcw8Jnq4E
+kgfMqgnWRUOcTZM6s07a0JnE82iL5VnxEhoMpp3x4vgg/ew0u1y733oPSSuuC0xR
+YZ0A7bWAnPUlqKchCu+Iyp+K7y7Wj3lx/pmw+/VjERBEAPT4FiwbLOk46PMsYKP2
+gHI3ArrcS/xbhUmDEmJYFMX29e8OqDw1nZUAHgki+gXvLICTIJBol/3Z9hW8HkoG
+QGGsfDP3WBT+SsUapNUKTYiDU6yyObbaMFaQ0v91mwQm5v8t812avjJnaqhqTIXX
+sPvmAjBciM57DiJ97g8WF7xAUrY90SeLutTNC5QSyPKfUzW0ooTc3Wb/AUddzuKi
+dmf1XPp8T8gfOtszas5S0TtL/A1eZxy1Th0PZsK8etYsOJPh4Rv772ZmILCGpWBy
+XU589Cirny8TfMrJDZpY4oGnuCdf5Y3L2wLAdNSX5JGOENTSik+aY1/YwRV0smf7
++QVVKiIW1/NhINAvCPqJxaMlP4OoyzCGozfUDsxEC5nzGi7xCmh7nXgy/tzYW+4J
+4tTTvk2NcIk=
+=7rZl
+-----END PGP SIGNATURE-----
+
+--=-1BTaVrWKtjntL7CKQjqd--
