@@ -1,107 +1,82 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] irqchip: sun4i: Use
- handle_fasteoi_late_irq for the ENMI (irq 0)
-Date: Thu, 13 Mar 2014 10:34:57 +0100
-Message-ID: <20140313093457.GF2815@lukather>
-References: <1394644627-12315-1-git-send-email-hdegoede@redhat.com>
- <1394644627-12315-5-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="udOl8koJG4PSVcOF"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBS7XQWMQKGQE2WV4UXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1394644627-12315-5-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 3/3] Documentation: mfd: s2mps11: Describe S5M8767 and
+ S2MPS14 clocks
+Date: Thu, 13 Mar 2014 10:37:04 +0100
+Message-ID: <1394703425-6462-4-git-send-email-k.kozlowski@samsung.com>
+References: <1394703425-6462-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1394703425-6462-1-git-send-email-k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sangbeom Kim <sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yadwinder Singh Brar <yadi.brar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add bindings documentation for clocks on S5M8767 and S2MPS14 devices.
 
---udOl8koJG4PSVcOF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mfd/s2mps11.txt |   24 +++++++++++++--------
+ 1 file changed, 15 insertions(+), 9 deletions(-)
 
-On Wed, Mar 12, 2014 at 06:17:07PM +0100, Hans de Goede wrote:
-> The ENMI needs to have the ack done *after* clearing the interrupt source,
-> otherwise we will get a spurious interrupt for each real interrupt. Switch
-> to the new handle_fasteoi_late_irq handler which gives us the desired beh=
-avior.
->=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/irqchip/irq-sun4i.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/irqchip/irq-sun4i.c b/drivers/irqchip/irq-sun4i.c
-> index 8a2fbee..4b1c874 100644
-> --- a/drivers/irqchip/irq-sun4i.c
-> +++ b/drivers/irqchip/irq-sun4i.c
-> @@ -77,15 +77,22 @@ static void sun4i_irq_unmask(struct irq_data *irqd)
->  static struct irq_chip sun4i_irq_chip =3D {
->  	.name		=3D "sun4i_irq",
->  	.irq_ack	=3D sun4i_irq_ack,
-> +	.irq_eoi	=3D sun4i_irq_ack, /* For the ENMI */
+diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+index 15ee89c3cc7b..67ea05ca8050 100644
+--- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
++++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+@@ -16,20 +16,25 @@ Optional properties:
+ - interrupts: Interrupt specifiers for interrupt sources.
+ 
+ Optional nodes:
+-- clocks: s2mps11 provides three(AP/CP/BT) buffered 32.768 KHz outputs, so to
+-  register these as clocks with common clock framework instantiate a sub-node
+-  named "clocks". It uses the common clock binding documented in :
++- clocks: s2mps11 and s5m8767 provide three(AP/CP/BT) buffered 32.768 KHz
++  outputs, so to register these as clocks with common clock framework
++  instantiate a sub-node named "clocks". It uses the common clock binding
++  documented in :
+   [Documentation/devicetree/bindings/clock/clock-bindings.txt]
++  The s2mps14 provides two (AP/BT) buffered 32.768 KHz outputs.
+   - #clock-cells: should be 1.
+ 
+   - The following is the list of clocks generated by the controller. Each clock
+     is assigned an identifier and client nodes use this identifier to specify
+     the clock which they consume.
+-    Clock               ID
+-    ----------------------
+-    32KhzAP		0
+-    32KhzCP		1
+-    32KhzBT		2
++    Clock               ID           Devices
++    ----------------------------------------------------------
++    32KhzAP		0            S2MPS11, S2MPS14, S5M8767
++    32KhzCP		1            S2MPS11, S5M8767
++    32KhzBT		2            S2MPS11, S2MPS14, S5M8767
++
++  - compatible: Should be one of: "samsung,s2mps11-clk", "samsung,s2mps14-clk",
++		"samsung,s5m8767-clk"
+ 
+ - regulators: The regulators of s2mps11 that have to be instantiated should be
+ included in a sub-node named 'regulators'. Regulator nodes included in this
+@@ -71,7 +76,8 @@ Example:
+ 		compatible = "samsung,s2mps11-pmic";
+ 		reg = <0x66>;
+ 
+-		s2m_osc: clocks{
++		s2m_osc: clocks {
++			compatible = "samsung,s2mps11-clk";
+ 			#clock-cells = 1;
+ 			clock-output-names = "xx", "yy", "zz";
+ 		};
+-- 
+1.7.9.5
 
-Hmmm, I wonder if that actually does something.
-
-There's been a patch floating around that I was sure was merged, but
-apparently wasn't that remove sun4i_irq_ack, because the register we
-were writing to are in read only, and it wasn't doing anything.
-
->  	.irq_mask	=3D sun4i_irq_mask,
->  	.irq_unmask	=3D sun4i_irq_unmask,
-> +	.flags		=3D IRQCHIP_EOI_THREADED, /* Only affects the ENMI */
->  };
-> =20
->  static int sun4i_irq_map(struct irq_domain *d, unsigned int virq,
->  			 irq_hw_number_t hw)
->  {
-> -	irq_set_chip_and_handler(virq, &sun4i_irq_chip,
-> -				 handle_level_irq);
-> +	if (hw =3D=3D 0) /* IRQ 0, the ENMI needs special handling */
-> +		irq_set_chip_and_handler(virq, &sun4i_irq_chip,
-> +					 handle_fasteoi_late_irq);
-> +	else
-> +		irq_set_chip_and_handler(virq, &sun4i_irq_chip,
-> +					 handle_level_irq);
-> +
->  	set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
-
-Could that solve the other NMI-related issue we have with Carlo's
-patches?
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---udOl8koJG4PSVcOF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTIXvBAAoJEBx+YmzsjxAgWN8P/23YLCdpl1U0khg9bQYkTbCa
-BDQWWbK5aXz6pPomk2z3x/iuLqprhx9cloqylzxoJkY0vkHkp350SlL0esh505hk
-f8YI7JRmdOelroANFd0kXdMd2MYM9tpfjR2D1hZxtFxqmMEy1IUDEGMyUi+WzkSV
-NAD8o7cPL1FBY/3NxZebCBYql+9sOkCmV6u1NpZeZlUHod1p5SwBFCwerR55/EL7
-+K8F0UKAedUX2fjNTSdCb4uL27DM+J4usOVVp5c+j/vP9FkYOjVbCDJHp2AfPclX
-JSxHZV3YLf3i9ATs0xej/AxCSmXCsJ0Qm/RUplwIK+bHKdBZpKBjU7JaKbtF/nEK
-AAdpiB/hf18oLswFu67J3H8PhW08ZzsuhjZ0rl7d+fVNVos/FwLI0oV8dDe/Z3EP
-+pkILkvB5bsVtA+Sb32QrzrDSovfkUseQkiIAdwZVcDHw5q2qEGpq/B6QnlPDRrj
-XoFr1Wf80CDm//W5DjVaA2ilVflCe5D0MmvYoIamDxAChWt9dvtqCLbIfk07SOKr
-IJbSBDIEmEf7zK61CHjspHaJ0q25NR6sIXNGil4c+j6yvsfcUxKQoRKzYQ5c6wYo
-3hswunwXfPzLoq9f9pk/tGjvOtMzwK8D7MiS0wp8kG5GqnrWFyGdStHILzBJH6lK
-8w3dUmnY2/R8et6G/II+
-=0JlX
------END PGP SIGNATURE-----
-
---udOl8koJG4PSVcOF--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
