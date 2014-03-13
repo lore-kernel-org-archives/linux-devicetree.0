@@ -1,90 +1,120 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [GIT PULL] Move device tree graph parsing helpers to drivers/of
-Date: Thu, 13 Mar 2014 18:13:46 +0100
-Message-ID: <6341585.ZqkoDDr3Wb@avalon>
-References: <1394126000.3622.66.camel@paszta.hi.pengutronix.de> <20140310143758.3734FC405FA@trevor.secretlab.ca> <1394708896.3577.21.camel@paszta.hi.pengutronix.de>
+From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Subject: RE: [RFC PATCH] edac: zynq: Added EDAC support for zynq ddr ecc
+ controller
+Date: Thu, 13 Mar 2014 17:21:09 +0000
+Message-ID: <5c399e76-42e4-4f8e-852e-91d88b229ae7@TX2EHSMHS006.ehs.local>
+References: <4adb2b4b-2ad6-42b9-929e-cc062f817245@TX2EHSMHS021.ehs.local>
+ <20140310105655.GH14999@e106331-lin.cambridge.arm.com>
+ <531DA900.5060202@monstr.eu>
+ <fa35006e-055d-4ef2-9b65-a0f8cc6a0c8f@AM1EHSMHS016.ehs.local>
+ <531ECA33.8050803@monstr.eu> <20140311155057.GJ13293@xsjandreislx>
+ <c7840b9d-4c03-4680-9a0e-fb256f3743b4@AM1EHSMHS010.ehs.local>
+ <20140312161344.GA3000@xsjandreislx> <53209047.8070308@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1394708896.3577.21.camel@paszta.hi.pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Grant Likely <grant.likely@linaro.org>, Greg KH <gregkh@linuxfoundation.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <53209047.8070308@xilinx.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Soren Brinkmann <sorenb@xilinx.com>
+Cc: Michal Simek <michals@xilinx.com>, "monstr@monstr.eu" <monstr@monstr.eu>, Mark Rutland <mark.rutland@arm.com>, "dougthompson@xmission.com" <dougthompson@xmission.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "kpc528@gmail.com" <kpc528@gmail.com>, "kalluripunnaiahchoudary@gmail.com" <kalluripunnaiahchoudary@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IE1pY2hhbCBTaW1layBbbWFp
+bHRvOm1pY2hhbC5zaW1la0B4aWxpbnguY29tXQ0KPlNlbnQ6IFdlZG5lc2RheSwgTWFyY2ggMTIs
+IDIwMTQgMTA6MjAgUE0NCj5UbzogU29yZW4gQnJpbmttYW5uDQo+Q2M6IE1pY2hhbCBTaW1lazsg
+bW9uc3RyQG1vbnN0ci5ldTsgTWFyayBSdXRsYW5kOyBQdW5uYWlhaCBDaG91ZGFyeQ0KPkthbGx1
+cmk7IGRvdWd0aG9tcHNvbkB4bWlzc2lvbi5jb207IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
+OyBsaW51eC0NCj5kb2NAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
+ZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPmtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWVkYWNA
+dmdlci5rZXJuZWwub3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+UGF3ZWwgTW9sbDsgaWpjK2Rl
+dmljZXRyZWVAaGVsbGlvbi5vcmcudWs7IGdhbGFrQGNvZGVhdXJvcmEub3JnOw0KPnJvYkBsYW5k
+bGV5Lm5ldDsga3BjNTI4QGdtYWlsLmNvbTsga2FsbHVyaXB1bm5haWFoY2hvdWRhcnlAZ21haWwu
+Y29tOw0KPlB1bm5haWFoIENob3VkYXJ5IEthbGx1cmkNCj5TdWJqZWN0OiBSZTogW1JGQyBQQVRD
+SF0gZWRhYzogenlucTogQWRkZWQgRURBQyBzdXBwb3J0IGZvciB6eW5xIGRkciBlY2MNCj5jb250
+cm9sbGVyDQo+DQo+T24gMDMvMTIvMjAxNCAwNToxMyBQTSwgU8O2cmVuIEJyaW5rbWFubiB3cm90
+ZToNCj4+IE9uIFdlZCwgMjAxNC0wMy0xMiBhdCAxMToyN0FNICswMTAwLCBNaWNoYWwgU2ltZWsg
+d3JvdGU6DQo+Pj4gT24gMDMvMTEvMjAxNCAwNDo1MCBQTSwgU8O2cmVuIEJyaW5rbWFubiB3cm90
+ZToNCj4+Pj4gT24gVHVlLCAyMDE0LTAzLTExIGF0IDA5OjMyQU0gKzAxMDAsIE1pY2hhbCBTaW1l
+ayB3cm90ZToNCj4+Pj4+IE9uIDAzLzEwLzIwMTQgMTE6MzIgUE0sIFPDtnJlbiBCcmlua21hbm4g
+d3JvdGU6DQo+Pj4+Pj4gT24gTW9uLCAyMDE0LTAzLTEwIGF0IDEyOjU4UE0gKzAxMDAsIE1pY2hh
+bCBTaW1layB3cm90ZToNCj4+Pj4+Pj4gT24gMDMvMTAvMjAxNCAxMTo1NiBBTSwgTWFyayBSdXRs
+YW5kIHdyb3RlOg0KPj4+Pj4+Pj4gT24gU3VuLCBNYXIgMDksIDIwMTQgYXQgMDI6NTc6MTZBTSAr
+MDAwMCwgUHVubmFpYWggQ2hvdWRhcnkNCj5LYWxsdXJpIHdyb3RlOg0KPj4+Pj4+Pj4+IEFkZGVk
+IEVEQUMgc3VwcG9ydCBmb3IgcmVwb3J0aW5nIHRoZSBlY2MgZXJyb3JzIG9mIHp5bnEgZGRyDQo+
+Y29udHJvbGxlci4NCj4+Pj4+Pj4+PiBUaGUgZGRyIGVjYyBjb250cm9sbGVyIGNvcnJlY3RzIHNp
+bmdsZSBiaXQgZXJyb3JzIGFuZCBkZXRlY3RzIGRvdWJsZQ0KPmJpdA0KPj4+Pj4+Pj4+IGVycm9y
+cw0KPj4+Pj4+Pj4+DQo+Pj4+Pj4+Pj4gU2lnbmVkLW9mZi1ieTogUHVubmFpYWggQ2hvdWRhcnkg
+S2FsbHVyaSA8cHVubmFpYUB4aWxpbnguY29tPg0KPj4+Pj4+Pj4+IC0tLQ0KPj4+Pj4+Pj4+ICAu
+Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9lZGFjL3p5bnFfZWRhYy50eHQgICAgICAgICB8ICAgMTgg
+Kw0KPj4+Pj4+Pj4+ICBkcml2ZXJzL2VkYWMvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICB8ICAgIDcgKw0KPj4+Pj4+Pj4+ICBkcml2ZXJzL2VkYWMvTWFrZWZpbGUgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDEgKw0KPj4+Pj4+Pj4+ICBkcml2ZXJzL2VkYWMv
+enlucV9lZGFjLmMgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICA2MTMNCj4rKysrKysrKysr
+KysrKysrKysrKw0KPj4+Pj4+Pj4+ICA0IGZpbGVzIGNoYW5nZWQsIDYzOSBpbnNlcnRpb25zKCsp
+LCAwIGRlbGV0aW9ucygtKQ0KPj4+Pj4+Pj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCj5Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZWRhYy96eW5xX2VkYWMudHh0DQo+Pj4+Pj4+Pj4g
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2VkYWMvenlucV9lZGFjLmMNCj4+Pj4+Pj4+Pg0K
+Pj4+Pj4+Pj4+IGRpZmYgLS1naXQNCj5hL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9lZGFjL3p5bnFfZWRhYy50eHQNCj5iL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9lZGFjL3p5bnFfZWRhYy50eHQNCj4+Pj4+Pj4+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPj4+
+Pj4+Pj4+IGluZGV4IDAwMDAwMDAuLmMyMWZmODMNCj4+Pj4+Pj4+PiAtLS0gL2Rldi9udWxsDQo+
+Pj4+Pj4+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2VkYWMvenlu
+cV9lZGFjLnR4dA0KPj4+Pj4+Pj4+IEBAIC0wLDAgKzEsMTggQEANCj4+Pj4+Pj4+PiArWnlucSBF
+REFDIGRyaXZlciwgaXQgZG9lcyByZXBvcnRzIHRoZSBERFIgRUNDIHNpbmdsZSBiaXQgZXJyb3Jz
+DQo+dGhhdCBhcmUNCj4+Pj4+Pj4+PiArY29ycmVjdGVkIGFuZCBkb3VibGUgYml0IGVjYyBlcnJv
+cnMgdGhhdCBhcmUgZGV0ZWN0ZWQgYnkgdGhlIEREUg0KPkVDQyBjb250cm9sbGVyLg0KPj4+Pj4+
+Pj4+ICtFQ0Mgc3VwcG9ydCBmb3IgRERSIGlzIGF2YWlsYWJsZSBpbiBoYWxmLWJ1cyB3aWR0aCgx
+NiBiaXQpDQo+Y29uZmlndXJhdGlvbiBvbmx5Lg0KPj4+Pj4+Pj4+ICsNCj4+Pj4+Pj4+PiArUmVx
+dWlyZWQgcHJvcGVydGllczoNCj4+Pj4+Pj4+PiArLSBjb21wYXRpYmxlOiBTaG91bGQgYmUgInhs
+bngscHM3LWRkcmMiIG9yICJ4bG54LHBzNy1kZHJjLTEuMDAuYSINCj4+Pj4+Pj4+DQo+Pj4+Pj4+
+PiBJcyB0aGlzIGFuIG9yIG9yIGEgeG9yPw0KPj4+Pj4+Pg0KPj4+Pj4+PiBDb21wYXRpYmxlIHN0
+cmluZyBzaG91bGQgYmUganVzdCB4bG54LHp5bnEtZGRyYy0xLjAwLmEuDQo+Pj4+Pj4+IE5vdGhp
+bmcgd2l0aCBwczcuDQo+Pj4+Pj4NCj4+Pj4+PiBJc24ndCB0aGlzIHZlbmRvciBJUD8gSU1ITywg
+dGhpcyBzaG91bGQgYmUgc29tZXRoaW5nIGNvbXBsZXRlbHkNCj4+Pj4+PiBkaWZmZXJlbnQuIE9y
+IGlmIHlvdSB3YW50IHNvbWUgWnlucS1zcGVjaWZpYyBjb21wYXQgc3RyaW5nIGl0IHNob3VsZA0K
+Pj4+Pj4+IHJlZmVyIHRvIGFuIGFjdHVhbCB2ZXJzaW9uIHN0cmluZyBhc3NvY2lhdGVkIHdpdGgg
+WnlucS4gMS4wMC5hIGlzIG5vdCwNCj4+Pj4+PiBBRkFJSy4NCj4+Pj4+DQo+Pj4+PiBJIGhhdmUg
+Y2hlY2tlZCB3aXRoIFB1bm5haWFoIHRoYXQgdGhpcyBpcyBTeW5vcHN5cyBERFIgbWVtb3J5DQo+
+Y29udHJvbGxlci4NCj4+Pj4+IFp5bnEgaXMgYmFzZWQgb24gMS40IHZlcnNpb24gd2l0aCBzb21l
+IGN1c3RvbWl6YXRpb24uDQo+Pj4+PiBJdCBtZWFucyBJIHRoaW5rIHJlYXNvbmFibGUgc29sdXRp
+b24gaXMNCj4+Pj4+IGNhbGwgaXQgZHJpdmVycy9lZGFjL3N5bm9wc3lzX2VkYWMuYw0KPj4+Pj4g
+cmVuYW1lIHp5bnFfIGluIGRyaXZlciB0byBzeW5vcHN5c18gYW5kDQo+Pj4+PiB1c2UgeGxueCx6
+eW5xLWRkcmMtMS4wMC5hIGNvbXBhdGlibGUgc3RyaW5nIGJlY2F1c2UgenlucSBpcyBub3QgdXNp
+bmcNCj4+Pj4+IGNsZWFuIHN5bm9wc3lzIHZlcnNpb24uDQo+Pj4+Pg0KPj4+Pj4gSSBhbSBub3Qg
+Z2V0dGluZyBwb2ludCB3aHkgeW91IGRvbid0IGxpa2UgMS4wMC5hIHN1ZmZpeCBoZXJlLg0KPj4+
+Pj4gQmVjYXVzZSBvZiBoaXN0b3JpY2FsIHBvaW50IG9mIHZpZXcgY29tcGF0aWJsZSBzdHJpbmdz
+IHNob3VsZCBiZQ0KPmRpZmZlcmVudA0KPj4+Pj4gZm9yIGVhcmx5IHNpbGljb24sIHNpbGljb24g
+djEsIHNpbGljb24gdjIsIHNpbGljb24gdjMsIGV0Yw0KPj4+Pj4gYnV0IHdlIGhhdmVuJ3QgdXNl
+ZCBpdCBhdCBhbGwgdGhhdCdzIHdoeSB3ZSBjYW4gdXNlIHhpbGlueCBzY2hlbWUNCj4+Pj4+IHdo
+aWNoIHdlIGFyZSB1c2luZyBmb3Igb3VyIHNvZnQgSVBzLg0KPj4+Pg0KPj4+PiBXZWxsLCBidXQg
+eW91IHJlZmVyIHRvIFp5bnEgd2hpY2ggaGFzIHNpbGljb24gcmV2aXNpb25zIHlvdSBjYW4gdXNl
+IHRvDQo+Pj4+IHJlZmVyIHRvIGEgc3BlY2lmaWMgWnlucSB2ZXJzaW9uLiBUaGF0IG1hdGNoZXMg
+ZGF0YSBzaGVldHMuIFp5bnEtMS4wMC5hDQo+Pj4+IGlzIGp1c3QgY29tcGxldGVseSBtYWRlIHVw
+IGFuZCB3b3VsZG4ndCBiZSBmb3VuZCBpbiBhbnkgZGF0YSBzaGVldC4NCj4+Pg0KPj4+IEkgZGlk
+bid0IHJlcGx5IHRoaXMgb25lIGJ1dCB3ZSBkaXNjdXNzZWQgdGhpcyB3aXRoIFNvcmVuIG92ZXIg
+cGhvbmUuDQo+Pj4gTm8gcHJvYmxlbSB0byB1c2UgU3lub3BzeXMgdmVyc2lvbiBBMDcgYWNjb3Jk
+aW5nIFRSTS4NCj4+Pg0KPj4+IFRoZW4gY29tcGF0aWJsZSBzdHJpbmcgaXMNCj4+PiB4bG54LHp5
+bnEtZGRyYy1BMDcgYW5kIGZpbGUgbmFtZSBpcyBzeW5vcHN5c19lZGFjLmMNCj4+DQo+PiBUaGlz
+IHNlZW1zIHRvIG1ha2Ugc2Vuc2UuIEknbSBuZXZlciBzdXJlIHdoZXRoZXIgbGVhZGluZyB6ZXJv
+cyBhcmUNCj4+IGFjdHVhbGx5IG5lZWRlZCBhbmQgdGVuZCB0byByZW1vdmUgdGhlbSwgYnV0IGlu
+IGdlbmVyYWwgdGhpcyBsb29rcyBsaWtlDQo+PiBhIHJlYXNvbmFibGUgc3RyaW5nIHRvIGlkZW50
+aWZ5IFp5bnEncyBERFIgY29udHJvbGxlci4NCj4NCj5BMDcgSSBmb3VuZCBpbiBaeW5xIFRSTSBh
+bmQgcHJvYmFibHkgaGFzIGFueSBjb25lY3Rpb24gdG8gc3lub3BzeXMgdmVyc2lvbg0KPnNjaGVt
+ZS4NCkkgaGF2ZSBkaXNjdXNzZWQgd2l0aCB0aGUgZGVzaWduIHRlYW0gYW5kIGNvbmZpcm1lZCB0
+aGF0IHRoZSBzeW5vcHNpcyBJUA0KdmVyc2lvbiBpcyAxLjQgYW5kIGxvb2tzIGxpa2UgaXQgaXMg
+d3JvbmdseSB1cGRhdGVkIGluIFRSTSBhcyBBMDcuDQpTbywgSSBhbSBnb2luZyB0byB1c2UgY29t
+cGF0aWJsZSBzdHJpbmcgYXMgeGxueCx6eW5xLWRkcmMtMS40IGFuZCBmaWxlIG5hbWUNCmFzIHN5
+bm9wc3lzX2VkYWMuYyBhbmQgc2VuZCB5b3UgdGhlIHVwZGF0ZWQgcGF0Y2ggc29vbi4NClRoYW5r
+cyBmb3IgdGhlIHJldmlldyBhbmQgc3VnZ2VzdGlvbnMNCg0KUmVnYXJkcywNClB1bm5haWFoDQo+
+DQo+VGhhbmtzLA0KPk1pY2hhbA0KPg0KPg0KPg0KDQoNCg0KVGhpcyBlbWFpbCBhbmQgYW55IGF0
+dGFjaG1lbnRzIGFyZSBpbnRlbmRlZCBmb3IgdGhlIHNvbGUgdXNlIG9mIHRoZSBuYW1lZCByZWNp
+cGllbnQocykgYW5kIGNvbnRhaW4ocykgY29uZmlkZW50aWFsIGluZm9ybWF0aW9uIHRoYXQgbWF5
+IGJlIHByb3ByaWV0YXJ5LCBwcml2aWxlZ2VkIG9yIGNvcHlyaWdodGVkIHVuZGVyIGFwcGxpY2Fi
+bGUgbGF3LiBJZiB5b3UgYXJlIG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50LCBkbyBub3QgcmVh
+ZCwgY29weSwgb3IgZm9yd2FyZCB0aGlzIGVtYWlsIG1lc3NhZ2Ugb3IgYW55IGF0dGFjaG1lbnRz
+LiBEZWxldGUgdGhpcyBlbWFpbCBtZXNzYWdlIGFuZCBhbnkgYXR0YWNobWVudHMgaW1tZWRpYXRl
+bHkuDQoNCgoK
 
-On Thursday 13 March 2014 12:08:16 Philipp Zabel wrote:
-> Am Montag, den 10.03.2014, 14:37 +0000 schrieb Grant Likely:
-> > > > Nak. I made comments that haven't been resolved yet. I've replied with
-> > > > more detail tonight. The big issues are how drivers handle the
-> > > > optional 'ports' node and I do not agree to the double-linkage in the
-> > > > binding description.
-> 
-> so as I understand it, nobody is against dropping the double-linkage *if* we
-> can agree on a way to recreate the backlinks in the kernel.
 
-I'm not sure about "nobody", but even though it might not be my favorite 
-option I'd be OK with that.
-
-> My current suggestion would be to parse the complete device tree into an
-> internal graph structure once, at boot to achieve this. This code could
-> look for the optional 'ports' node if and only if the parent device node
-> contains #address-cells != <1> or #size-cells != <0> properties.
-
-With backlinks in DT we can assume that, if a node is the target of a link, it 
-will be compatible with the of-graph bindings, and thus parse the node to 
-locate other ports and other links. This allows parsing the full graph without 
-help of individual drivers.
-
-Without backlinks in DT we need to parse the full DT to reconstruct backlinks 
-in the kernel. One possible issue with that is that we can't know whether a 
-node implements the of-graph bindings. We can use the heuristic you've 
-described above, but I wonder if it could lead to problems. Grant pointed out 
-that the compatibility string defines what binding a node uses, and that we 
-can't thus look for properties randomly. I don't think there's a risk to 
-interpret an unrelated node as part of a graph though.
-
-> People completely disagree about the direction the phandle links should
-> point in. I am still of the opinion that the generic binding should describe
-> just the topology, that the endpoint links in the kernel should represent an
-> undirected graph and the direction of links should not matter at all for the
-> generic graph bindings.
-
-I would also not mandate a specific direction at the of-graph level and leave 
-it to subsystems (or possibly drivers) to specify the direction.
-
-> There's also no consensus about the simplified bindings, but this is an
-> issue I'd like to separate from this series.
-> 
-> > > If I understood well, you're requesting to revert all those six patches
-> > > that were imported via git pull from my tree (and from Greg and
-> > > Russell), right?
-> > > 
-> > > E. g. reverting those changesets:
-> > > 	d484700a3695 f2a575f67695 4329b93b283c 6ff60d397b17 4d56ed5a009b
-> > > 	fd9fdb78a9bf
-> > > as it seems that there's no easy way to revert a git pull.
-> > 
-> > All trees containing the branch would need to be reverted.
-> > 
-> > > I suspect that this will likely cause some harm when merging from our
-> > > trees upstream.
-> > 
-> > It means any tree containing that branch *must* be rewound. See my reply
-> > to rmk.
-> > 
-> > I've made a proposal on how I could be happy with leaving the branches
-> > alone. I'm not particularly happy, but there is a way to resolve things
-> > without reverts or rewinds.
-> 
-> I'm not sure if maybe I misunderstood or missed a mail, but I haven't seen a
-> proposal to resolve the situation without rewinds. Given that Mauro already
-> reverted the media tree and applied conflicting changes, that's probably not
-> going to happen?
-
--- 
-Regards,
-
-Laurent Pinchart
