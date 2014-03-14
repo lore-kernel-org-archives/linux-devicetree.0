@@ -1,116 +1,96 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 7/8] ARM: dts: dra7: Add USB related nodes
-Date: Fri, 14 Mar 2014 16:08:06 +0530
-Message-ID: <5322DC0E.1020600@ti.com>
-References: <1394197751-28984-1-git-send-email-rogerq@ti.com>
- <1394197751-28984-8-git-send-email-rogerq@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/5] drivers: input: keyboard: st-keyscan: add keyscan
+ driver
+Date: Fri, 14 Mar 2014 10:42:22 +0000
+Message-ID: <20140314104222.GB3432@lee--X1>
+References: <1393990772-9567-1-git-send-email-gabriel.fernandez@st.com>
+ <1393990772-9567-2-git-send-email-gabriel.fernandez@st.com>
+ <20140310114819.GO14976@lee--X1>
+ <5322D63D.5030403@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1394197751-28984-8-git-send-email-rogerq@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Roger Quadros <rogerq@ti.com>, balbi@ti.com, tony@atomide.com
-Cc: devicetree@vger.kernel.org, george.cherian@ti.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5322D63D.5030403@st.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Gabriel Fernandez <gabriel.fernandez@st.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, kernel@stlinux.com, Giuseppe Condorelli <giuseppe.condorelli@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Roger,
+> >Sorry for the delay. It was a hectic week last week.
+> >
+> >As promised:
+> >
+> >>This patch adds ST Keyscan driver to use the keypad hw a subset
+> >>of ST boards provide. Specific board setup will be put in the
+> >>given dt.
+> >>
+> >>Signed-off-by: Giuseppe Condorelli <giuseppe.condorelli@st.com>
+> >>Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+> >Are you sure these are in the correct order?
+> ok i change the order
 
-On Friday 07 March 2014 06:39 PM, Roger Quadros wrote:
-> Add nodes for the Super Speed USB controllers, omap-control-usb,
-> USB2 PHY and USB3 PHY devices.
->
-> Remove ocp2scp1 address space from hwmod data as it is
-> now provided via device tree.
->
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
->   arch/arm/boot/dts/dra7.dtsi               | 110 ++++++++++++++++++++++++++++++
->   arch/arm/mach-omap2/omap_hwmod_7xx_data.c |  10 ---
->   2 files changed, 110 insertions(+), 10 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index 597979b..1e73900 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -811,6 +811,116 @@
->   			clocks = <&sata_ref_clk>;
->   			ti,hwmods = "sata";
->   		};
-> +
-> +		omap_control_usb2phy1: control-phy@4a002300 {
-> +			compatible = "ti,control-phy-usb2";
-> +			reg = <0x4a002300 0x4>;
-> +			reg-names = "power";
-> +		};
-> +
-> +		omap_control_usb3phy1: control-phy@4a002370 {
-> +			compatible = "ti,control-phy-pipe3";
-> +			reg = <0x4a002370 0x4>;
-> +			reg-names = "power";
-> +		};
-> +
-> +		omap_control_usb2phy2: control-phy@0x4a002e74 {
-> +			compatible = "ti,control-phy-usb2-dra7";
-> +			reg = <0x4a002e74 0x4>;
-> +			reg-names = "power";
-> +		};
-> +
-> +		/* OCP2SCP1 */
-> +		ocp2scp@4a080000 {
-> +			compatible = "ti,omap-ocp2scp";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +			reg = <0x4a080000 0x20>;
-> +			ti,hwmods = "ocp2scp1";
-> +
-> +			usb2_phy1: phy@4a084000 {
-> +				compatible = "ti,omap-usb2";
-> +				reg = <0x4a084000 0x400>;
-> +				ctrl-module = <&omap_control_usb2phy1>;
-> +				clocks = <&usb_phy1_always_on_clk32k>,
-> +					 <&usb_otg_ss1_refclk960m>;
-> +				clock-names =	"wkupclk",
-> +						"refclk";
-> +				#phy-cells = <0>;
-> +			};
-> +
-> +			usb2_phy2: phy@4a085000 {
-> +				compatible = "ti,omap-usb2";
-> +				reg = <0x4a085000 0x400>;
-> +				ctrl-module = <&omap_control_usb2phy2>;
-> +				clocks = <&usb_phy2_always_on_clk32k>,
-> +					 <&usb_otg_ss2_refclk960m>;
-> +				clock-names =	"wkupclk",
-> +						"refclk";
-> +				#phy-cells = <0>;
-> +			};
-> +
-> +			usb3_phy1: phy@4a084400 {
-> +				compatible = "ti,omap-usb3";
-> +				reg = <0x4a084400 0x80>,
-> +				      <0x4a084800 0x64>,
-> +				      <0x4a084c00 0x40>;
-> +				reg-names = "phy_rx", "phy_tx", "pll_ctrl";
-> +				ctrl-module = <&omap_control_usb3phy1>;
-> +				clocks = <&usb_phy3_always_on_clk32k>,
-> +					 <&sys_clkin1>,
-> +					 <&usb_otg_ss1_refclk960m>,
-> +					 <&dpll_core_h13x2_ck>;
-> +				clock-names =	"wkupclk",
-> +						"sysclk",
-> +						"refclk",
-> +						"optclk";
+I'm not saying they are in the wrong order, I'm just asking. Who wrote
+the patch? Has it changed since?
 
-Do we use this 'optclk' in driver?
+> >>+- linux,keymap: The keymap for keys as described in the binding do=
+cument
+> >>+  devicetree/bindings/input/matrix-keymap.txt.
+> >>+
+> >>+- keypad,num-rows: Number of row lines connected to the keypad con=
+troller.
+> >>+
+> >>+- keypad,num-columns: Number of column lines connected to the keyp=
+ad
+> >>+  controller.
+> >>+
+> >>+- st,debounce_us: Debouncing interval time in microseconds
+> >I'm sure there will be a shared binding for de-bounce.
+> >
+> >If not, there certainly should be.
+>=20
+> you want to refer to "debounce-interval" ?
 
--Kishon
+That sounds more generic, but if it's not documented as such, then
+please consider doing so.
+
+> >+Example:
+> >+
+> >+keyscan: keyscan@fe4b0000 {
+> >+	compatible =3D "st,keypad";
+> >Is there any way we can make this more specific to _this_ IP?
+> for my knowledge this IP is the same for stixxxx platform.
+
+So st,stix-keypad, or st,sti4x-keypad?
+
+I'm just thinking about future proofing the architecture. What if ST
+released stj which has a different keypad IP?
+
+> >>+struct keyscan_priv {
+> >>+	void __iomem *base;
+> >>+	int irq;
+> >>+	struct clk *clk;
+> >>+	struct input_dev *input_dev;
+> >>+	struct keypad_platform_data *config;
+> >>+	unsigned int last_state;
+> >>+	u32 keycodes[ST_KEYSCAN_MAXKEYS];
+> >Seems odd to limit this. Can't the information come from DT
+> >i.e. keypad,num-rows and keypad,num-columns?
+> >
+> i 'll rename 'num_out_pads' into 'n_rows' and 'num_in_pads' into
+> 'n_cols'
+
+That's not quite what I meant, I mean can't ST_KEY_MAXKEYS be more
+dynamic and be obtained from (keypad,num-rows * keypad,num-columns)?
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
