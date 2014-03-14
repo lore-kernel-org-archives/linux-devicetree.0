@@ -1,41 +1,60 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2] gpio: davinci: fix gpio selection for OF
-Date: Fri, 14 Mar 2014 14:54:00 +0100
-Message-ID: <CACRpkdZscprsy7kyqHPUMEMYJ_TKgG2bYR7mdrG4hTDp1w1nDg@mail.gmail.com>
-References: <5316FFCE.1060603@ti.com>
-	<1394018461-757-1-git-send-email-holler@ahsoftware.de>
-	<CACRpkdaF=jc9Z1XZCtH8VPuih01t--qyV-sgH1R_ix0VM4RzVA@mail.gmail.com>
-	<5322D529.4070904@ahsoftware.de>
-	<CACRpkdaghneo1MvNCfxjTED+sJepHgeZCgmKsRteG9qrBNWAfQ@mail.gmail.com>
-	<5322F82A.9000507@ahsoftware.de>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 4/4] ARM: DTS: AM43x: Add DSS node
+Date: Fri, 14 Mar 2014 14:07:45 +0000
+Message-ID: <20140314140745.GL25870@e106331-lin.cambridge.arm.com>
+References: <1394701109-6721-1-git-send-email-sathyap@ti.com>
+ <1394701109-6721-5-git-send-email-sathyap@ti.com>
+ <20140313174623.GD25870@e106331-lin.cambridge.arm.com>
+ <5321F77E.9000302@ti.com>
+ <20140314091002.GG25870@e106331-lin.cambridge.arm.com>
+ <5322CF02.4060705@ti.com>
+ <20140314101405.GI25870@e106331-lin.cambridge.arm.com>
+ <5322D7A4.4090602@ti.com>
+ <5322E2D9.5000509@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <5322F82A.9000507@ahsoftware.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexander Holler <holler@ahsoftware.de>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Sekhar Nori <nsekhar@ti.com>, Prabhakar Lad <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5322E2D9.5000509@ti.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>, "balbi@ti.com" <balbi@ti.com>, "av.tikhomirov@samsung.com" <av.tikhomirov@samsung.com>
+Cc: Sathya Prakash M R <sathyap@ti.com>, "tony@atomide.com" <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "paul@pwsan.com" <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 14, 2014 at 1:38 PM, Alexander Holler <holler@ahsoftware.de> wrote:
+On Fri, Mar 14, 2014 at 11:07:05AM +0000, Tomi Valkeinen wrote:
+> On 14/03/14 12:19, Tomi Valkeinen wrote:
+> > On 14/03/14 12:14, Mark Rutland wrote:
+> > 
+> >> I can't see anything obviously wrong in platform_device_del. Do you have
+> >> a backtrace?
+> > 
+> > Yes, below.
+> > 
+> > I can see at least drivers/usb/dwc3/dwc3-exynos.c doing the exact same thing
+> > I do, so maybe I've got something wrong with the omapdss driver.
+> 
+> Looks to me that the devices created by of_platform_populate() are not
+> unregisterable in all cases. The address resource created via
+> of_platform_populate() had NULL res->parent, which causes
+> release_resource to crash.
 
->> In that case it is hardly a fix that we need to rush out to the entire
->> world.
->
-> And I thought the reason for -rc is actually to fix bugs. But I never
-> understood the magical ways and timings patches make their way into
-> mainline. ;)
+Hmm. I can't see that unregistering such devices ever works as you say,
+given that __release_resource expects a non-NULL parent pointer. Either
+we should be setting the parent pointer when initialising devices from
+dt or we should teach __release_resource to not care. I'll have a go at
+fixing that.
 
-OK so it works like this: early in the -rc cycle we fix any bugs, documentation
-or whatever. At this point it's *regressions* so the fix need to fix something
-that broke in the merge window (or an earlier merge window).
+It looks like drivers/usb/dwc3/dwc3-exynos.c only unregisters the
+top-level device, not children. This top-level device has no
+IORESOURCE_{IO,MEM} resources judging by
+arch/arm/boot/dts/exynos5250.dtsi, which would explain why that driver
+isn't exploding: __release_resource will never get called.
 
-If it is a new feature that never worked in the first place I would
-not call that
-a regression. There are no existing users out there that can experience
-regressions from a previously working system.
+Anton, Felipe: 
 
-So this is why I'm a bit conservative.
+Does unregistering the parent ensure the children get cleaned up, or
+does it leave them dangling in the dwc3-exynos driver?
 
-Yours,
-Linus Walleij
+Cheers,
+Mark.
