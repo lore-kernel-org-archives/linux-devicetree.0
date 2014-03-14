@@ -1,59 +1,74 @@
-From: Hou Zhiqiang <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 2/2] spi/fsl-lib: Get the SPI controller bus number from DTS
-Date: Fri, 14 Mar 2014 17:35:57 +0800
-Message-ID: <1394789757-40732-2-git-send-email-B48286@freescale.com>
-References: <1394789757-40732-1-git-send-email-B48286@freescale.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v2 4/4] ARM: DTS: AM43x: Add DSS node
+Date: Fri, 14 Mar 2014 11:42:26 +0200
+Message-ID: <5322CF02.4060705@ti.com>
+References: <1394701109-6721-1-git-send-email-sathyap@ti.com> <1394701109-6721-5-git-send-email-sathyap@ti.com> <20140313174623.GD25870@e106331-lin.cambridge.arm.com> <5321F77E.9000302@ti.com> <20140314091002.GG25870@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1394789757-40732-1-git-send-email-B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, mingkai.hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Hou Zhiqiang <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="94oWdbDhAN9UXid7fHXh4PWhiLLUktFiG"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140314091002.GG25870@e106331-lin.cambridge.arm.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Sathya Prakash M R <sathyap@ti.com>, "tony@atomide.com" <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "paul@pwsan.com" <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-Get the spi_master's bus_num from DTS to make the spi_master's name
-static. So "mtdparts=spi.bus_num.chip_select:..." in cmdline can be
-used to asign mtd partions of spi flash.
+--94oWdbDhAN9UXid7fHXh4PWhiLLUktFiG
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Hou Zhiqiang <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- drivers/spi/spi-fsl-lib.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+On 14/03/14 11:10, Mark Rutland wrote:
 
-diff --git a/drivers/spi/spi-fsl-lib.c b/drivers/spi/spi-fsl-lib.c
-index 0b75f26..f5f0307b 100644
---- a/drivers/spi/spi-fsl-lib.c
-+++ b/drivers/spi/spi-fsl-lib.c
-@@ -198,7 +198,7 @@ int of_mpc8xxx_spi_probe(struct platform_device *ofdev)
- 	struct mpc8xxx_spi_probe_info *pinfo;
- 	struct fsl_spi_platform_data *pdata;
- 	const void *prop;
--	int ret = -ENOMEM;
-+	int ret = -ENOMEM, bus_num;
- 
- 	pinfo = kzalloc(sizeof(*pinfo), GFP_KERNEL);
- 	if (!pinfo)
-@@ -207,8 +207,12 @@ int of_mpc8xxx_spi_probe(struct platform_device *ofdev)
- 	pdata = &pinfo->pdata;
- 	dev->platform_data = pdata;
- 
--	/* Allocate bus num dynamically. */
--	pdata->bus_num = -1;
-+	ret = of_property_read_u32(np, "bus-num", &bus_num);
-+	if (ret < 0) {
-+		/* Allocate bus num dynamically. */
-+		bus_num = -1;
-+	}
-+	pdata->bus_num = bus_num;
- 
- #ifdef CONFIG_FSL_SOC
- 	/* SPI controller is either clocked from QE or SoC clock. */
--- 
-1.8.5
+> The "simple-bus" compatible string is intended for busses which are
+> transparent (bar some address remapping expressed via ranges), and is
+> not intended as an annotation to get Linux to probe child nodes.
+>=20
+> Any node with a "simple-bus" entry in the compatible list should either=
+
+> be handled as a transparent bus, or optionally as the more specific bus=
+
+> it claims to be (where some hardware configuration may be required
+> before children can be probed). Unfortunately Linux probes chidlren
+> regardless, which is arguable a Linux bug.
+>=20
+> There's no reason to leak this issue into dts files. Please remove the
+> "simple-bus" string, and get the dss driver to probe children as
+> required -- as described above the dss node never makes sense as a
+> simple-bus.
+
+Ok. I'll remove the simple-bus, and make the dss_core register the
+devices. I presume of_platform_populate() is fine for this? Seems to
+work fine for registration, but I haven't figured out yet how to
+unregister the devices (I get a crash in platform_device_del() if I just
+call platform_device_unregister for the submodules).
+
+ Tomi
 
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--94oWdbDhAN9UXid7fHXh4PWhiLLUktFiG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJTIs8FAAoJEPo9qoy8lh71HK8P+gI5LTBKtvGrxIndW4lE1WNr
+qw1qgkyBxPsjx6pLW5BaFrIaw7qZXWmCb9VAt8wG/FLuwrrk0dF7QsJ0azrgjSKs
+gjhigWnfHyxob/62DASfpZ+8+8a1L1fM3w4t/v4A3V2DbVzzxVcELhrAAthIaR1g
+mY4KyVyMAQN8yvWhO0nzjvI3H+xc4xRUvUgSF2juHHowingMvPFSbJzOiHmD88zm
+VoT3EkjYWdN4IrwwyKJuJ4HOBAqjgtjnsEk64E+HLLKzzu8ae0SvLmg5E3JGDBQ2
+fBr+fQs+Py1SWmk4c5lXIyQAx4Y4mabFeqBeqie8czTPiijczEcWrbxeNLiman1m
+0RiWKhGzXCRwp1VVTF6YY9pE/4hdf7HuAmD8QwapUMXiJLZo+35KhMfiiXL97FLH
+1vKVRTEQzKwA1DK9XaQ9/KIf/zx9PKlRXPZKqVIZt6U++VN/ZuW0BurZML5usc2O
+gk1hxWNjzM6+9Nrq8/58VfAEnFEHwAssehr3GyZazx3pGu0gu8LVrrFCEKYb7QBf
+PkFXER0Dtxiq6vEctYG8R9fzSseZuJASDr1EzEs5zQmTAC73olEHHQgJZIsstwpq
+pAxHD9ZtqDnmTtE52gYW6AwrI5BNwV1HoLIsT7ThlpT1e6gR3TLDEDdvsp54jlPu
+wLtrCoV2BsquXX45iV/f
+=kgfZ
+-----END PGP SIGNATURE-----
+
+--94oWdbDhAN9UXid7fHXh4PWhiLLUktFiG--
