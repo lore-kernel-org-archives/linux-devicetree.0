@@ -1,98 +1,25 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v17 3/4] ata: Add APM X-Gene SoC AHCI SATA host controller driver
-Date: Fri, 14 Mar 2014 20:05:52 +0100
-Message-ID: <201403142005.52991.arnd@arndb.de>
-References: <1394655573-32645-1-git-send-email-lho@apm.com> <201403141241.16599.arnd@arndb.de> <CAPw-ZTnVE0B+hJKGX=EPP5mjoA7-diTvi9hxNhBuAFL2hANz+Q@mail.gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH net-next V5 0/9] Altera Triple Speed Ethernet (TSE)
+ Driver
+Date: Fri, 14 Mar 2014 15:07:20 -0400 (EDT)
+Message-ID: <20140314.150720.734350362080616095.davem@davemloft.net>
+References: <1394805887-22030-1-git-send-email-vbridgers2013@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <CAPw-ZTnVE0B+hJKGX=EPP5mjoA7-diTvi9hxNhBuAFL2hANz+Q@mail.gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Loc Ho <lho@apm.com>
-Cc: Olof Johansson <olof@lixom.net>, Tejun Heo <tj@kernel.org>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1394805887-22030-1-git-send-email-vbridgers2013@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: vbridgers2013@gmail.com
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-doc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
 List-Id: devicetree@vger.kernel.org
 
-On Friday 14 March 2014, Loc Ho wrote:
-> > On Wednesday 12 March 2014, Loc Ho wrote:
+From: Vince Bridgers <vbridgers2013@gmail.com>
+Date: Fri, 14 Mar 2014 09:04:38 -0500
 
-> > gets called. Can you clarify what this register access does?
-> > If it's just setting a index into a mux output, would it make
-> > sense to have an optional DT property containing an integer with
-> > the mux setting you want to set? That way you wouldn't even
-> > have to have two compatible strings but just do
-> >
-> >         ret = of_property_read_u32(node, "apm,ahci-mux", &mux);
-> >         if (!ret)
-> >                 xgene_ahci_mux_select(ctx, mux);
-> >
-> 
-> Given that fact that I will break up the resource. Let's just use the
-> resource for the MUX to handle this. For the IP that doesn't existed,
-> I will just not list it.
+> This is the version 5 submission for the Altera Triple Speed Ethernet (TSE)
+> driver. All comments received during the version 2, 3, and 4 submissions have 
+> been accepted. Please find the change log and a description of the submission
+> below. 
 
-Ah, that sounds good. It also means that if the firmware has set up
-the mux already, you don't have to touch it again. That would probably
-be the preferred case.
-
-I'm undecided about the value that you write in there. That could either
-be passed through DT as I suggested above for extra flexibility, or you
-can keep it hardcoded if you are absolutely sure that there will never
-need to be a case where you have to set it to something other than '1',
-
-> > > +     /*
-> > > +      * Can't use devm_ioremap_resource due to overlapping region.
-> > > +      * 0xYYYY.0000 - host core
-> > > +      * 0xYYYY.7000 - Mux (if applicable)
-> > > +      * 0xYYYY.A000 - PHY indirect access
-> > > +      * 0xYYYY.C000 - Clock
-> > > +      * 0xYYYY.D000 - RAM shutdown removal
-> > > +      * As we map the entire region as one, it overlaps with the PHY driver.
-> > > +      */
-> > > +     ctx->csr_base = devm_ioremap(dev, res->start, resource_size(res));
-> > > +     if (!ctx->csr_base) {
-> > > +             dev_err(dev, "can't map %pR\n", res);
-> > > +             return -ENOMEM;
-> > > +     }
-> >
-> > I still think we should try not to have overlapping memory areas here.
-> > Could you split up the registers into another range in the reg property
-> > to leave the PHY registers out?
-> 
-> Let me do this:
-> 
-> 1. One resource for the RAM shutdown
-> 2. One resource for the host controller
-> 3. One optional resource for the MUX if needed.
-> 
-> With #3, this also solved the MUX detection and avoid having another
-> node "apm,ahci-mux".
-
-My suggestion was not to have another device node, just a property that
-contains a value to be written into the mux register if present.
-
-> > Also, please read the thread named "[PATCH 0/7] of: setup dma
-> > parameters using dma-ranges and dma-coherent" and comment there
-> > about what you think we should do here. I assume we will have to
-> > add "dma-ranges" properties in a number of places to get this
-> > all to work fine any 64-bit SoC. Do you know if you have any
-> > DMA master devices in x-gene that are not 64-bit capable?
-> >
-> 
-> I will read and follow later. We do have non-64-bit devices such as
-> SDIO and SPI. But these IP's have translation in the bus similar to
-> PCIe PIM.
-
-Is there also an IOMMU, or just the PIM? If there is no IOMMU,
-we will actually have to use the swiotlb code here, otherwise we
-can rely on the IOMMU to do the translation so we can pretend that
-there is always 64-bit DMA capability.
-
-In theory, the PIM could be dynamically reprogrammed for each
-DMA, as an extremely primitive IOMMU implementation, but I don't
-know what the impact on performance would be from doing that.
-It would also prevent you from starting multiple concurrent DMAs,
-although I suspect that is not an important case for SPI and SDIO.
-
-	Arnd
+Series applied to net-next, thanks.
