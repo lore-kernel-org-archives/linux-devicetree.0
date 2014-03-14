@@ -1,94 +1,87 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] i2c: qup: Add device tree bindings information
-Date: Fri, 14 Mar 2014 09:15:57 -0500
-Message-ID: <CAL_JsqJNp2XZ_EkTFqcsG5RZK0Nm7iquVTb=QX59pa1Z-ODAAQ@mail.gmail.com>
-References: <1394762863-12154-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<1394762863-12154-2-git-send-email-bjorn.andersson@sonymobile.com>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH net-next V5 6/9] Altera TSE: Add main and header file for
+ Altera Ethernet Driver
+Date: Fri, 14 Mar 2014 15:39:18 +0100
+Message-ID: <20140314143918.GA2253@netboy>
+References: <1394805887-22030-1-git-send-email-vbridgers2013@gmail.com>
+ <1394805887-22030-7-git-send-email-vbridgers2013@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1394762863-12154-2-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1394805887-22030-7-git-send-email-vbridgers2013@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Vince Bridgers <vbridgers2013@gmail.com>
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-doc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
 List-Id: devicetree@vger.kernel.org
 
-On March 13, 2014 9:07:42 PM CDT, Bjorn Andersson
-<bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
->From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
->
->The Qualcomm Universal Peripherial (QUP) wraps I2C mini-core and
->provide input and output FIFO's for it. I2C controller can operate
->as master with supported bus speeds of 100Kbps and 400Kbps.
->
->Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
->[bjorn: reformulated part of binding description
->        added version to compatible
->        cleaned up example]
->Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+On Fri, Mar 14, 2014 at 09:04:44AM -0500, Vince Bridgers wrote:
+> +static int tse_start_xmit(struct sk_buff *skb, struct net_device *dev)
+> +{
+> +	struct altera_tse_private *priv = netdev_priv(dev);
+> +	unsigned int txsize = priv->tx_ring_size;
+> +	unsigned int entry;
+> +	struct tse_buffer *buffer = NULL;
+> +	int nfrags = skb_shinfo(skb)->nr_frags;
+> +	unsigned int nopaged_len = skb_headlen(skb);
+> +	enum netdev_tx ret = NETDEV_TX_OK;
+> +	dma_addr_t dma_addr;
+> +	int txcomplete = 0;
+> +
+> +	spin_lock_bh(&priv->tx_lock);
+> +
+> +	if (unlikely(tse_tx_avail(priv) < nfrags + 1)) {
+> +		if (!netif_queue_stopped(dev)) {
+> +			netif_stop_queue(dev);
+> +			/* This is a hard error, log it. */
+> +			netdev_err(priv->dev,
+> +				   "%s: Tx list full when queue awake\n",
+> +				   __func__);
+> +		}
+> +		ret = NETDEV_TX_BUSY;
+> +		goto out;
+> +	}
+> +
+> +	/* Map the first skb fragment */
+> +	entry = priv->tx_prod % txsize;
+> +	buffer = &priv->tx_ring[entry];
+> +
+> +	dma_addr = dma_map_single(priv->device, skb->data, nopaged_len,
+> +				  DMA_TO_DEVICE);
+> +	if (dma_mapping_error(priv->device, dma_addr)) {
+> +		netdev_err(priv->dev, "%s: DMA mapping error\n", __func__);
+> +		ret = NETDEV_TX_OK;
+> +		goto out;
+> +	}
+> +
+> +	buffer->skb = skb;
+> +	buffer->dma_addr = dma_addr;
+> +	buffer->len = nopaged_len;
+> +
+> +	/* Push data out of the cache hierarchy into main memory */
+> +	dma_sync_single_for_device(priv->device, buffer->dma_addr,
+> +				   buffer->len, DMA_TO_DEVICE);
+> +
+> +	txcomplete = priv->dmaops->tx_buffer(priv, buffer);
+> +
+> +	priv->tx_prod++;
+> +	dev->stats.tx_bytes += skb->len;
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+This could use a call to skb_tx_timestamp() somewhere around here.
 
->---
->.../devicetree/bindings/i2c/qcom,i2c-qup.txt       |   46
->++++++++++++++++++++
-> 1 file changed, 46 insertions(+)
->create mode 100644
->Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt
->
->diff --git a/Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt
->b/Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt
->new file mode 100644
->index 0000000..32ef64e
->--- /dev/null
->+++ b/Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt
->@@ -0,0 +1,46 @@
->+Qualcomm Universal Peripheral (QUP) I2C controller
->+
->+Required properties:
->+ - compatible: Should be:
->+   * "qcom,i2c-qup-v1.1.1" for 8660, 8960 and 8064.
->+   * "qcom,i2c-qup-v2.1.1" for 8974 v1.
->+   * "qcom,i2c-qup-v2.2.1" for 8974 v2 and later.
->+ - reg: Should contain QUP register address and length.
->+ - interrupts: Should contain I2C interrupt.
->+
->+ - clocks: A list of phandles + clock-specifiers, one for each entry
->in
->+   clock-names.
->+ - clock-names: Should contain:
->+   * "core" for the core clock
->+   * "iface" for the AHB clock
->+
->+ - #address-cells: Should be <1> Address cells for i2c device address
->+ - #size-cells: Should be <0> as i2c addresses have no size component
->+
->+Optional properties:
->+ - clock-frequency: Should specify the desired i2c bus clock frequency
->in Hz,
->+                    defaults to 100kHz if omitted.
->+
->+Child nodes should conform to i2c bus binding.
->+
->+Example:
->+
->+ i2c@f9924000 {
->+ compatible = "qcom,i2c-qup-v2.2.1";
->+ reg = <0xf9924000 0x1000>;
->+ interrupts = <0 96 0>;
->+
->+ clocks = <&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>, <&gcc
->GCC_BLSP1_AHB_CLK>;
->+ clock-names = "core", "iface";
->+
->+ clock-frequency = <355000>;
->+
->+ #address-cells = <1>;
->+ #size-cells = <0>;
->+
->+ dummy@60 {
->+ compatible = "dummy";
->+ reg = <0x60>;
->+ };
->+ };
->+
+> +
+> +	if (unlikely(tse_tx_avail(priv) <= TXQUEUESTOP_THRESHHOLD)) {
+> +		if (netif_msg_hw(priv))
+> +			netdev_dbg(priv->dev, "%s: stop transmitted packets\n",
+> +				   __func__);
+> +		netif_stop_queue(dev);
+> +	}
+> +
+> +out:
+> +	spin_unlock_bh(&priv->tx_lock);
+> +
+> +	return ret;
+> +}
+
+Thanks,
+Richard
