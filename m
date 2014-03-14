@@ -1,67 +1,42 @@
-From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v11 01/27] iommu/exynos: do not include removed header
-Date: Fri, 14 Mar 2014 17:29:36 +0530
-Message-ID: <CAK9yfHyGfdP+0RKtdSCdU4tO=PX8GbQRQ7ar=ST5B2RenZMMsg@mail.gmail.com>
-References: <20140314140129.68a41cc1bd9e0a48a198ca13@samsung.com>
-	<CAK9yfHzRasE3jroDUZgAa=DN5N=2ZDAxgNiHDCip+f2868BAVQ@mail.gmail.com>
-	<000e01cf3f7b$6edcdfd0$4c969f70$@samsung.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 2/4] arm64: dts: APM X-Gene PCIe device tree nodes
+Date: Fri, 14 Mar 2014 13:07:22 +0100
+Message-ID: <201403141307.23286.arnd@arndb.de>
+References: <1394085963-27553-1-git-send-email-tinamdar@apm.com> <1394085963-27553-3-git-send-email-tinamdar@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <000e01cf3f7b$6edcdfd0$4c969f70$@samsung.com>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Linux DeviceTree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Samsung SOC <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Prathyush <prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Antonios Motakis <a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1394085963-27553-3-git-send-email-tinamdar@apm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Tanmay Inamdar <tinamdar@apm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches@apm.com, jcm@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-On 14 March 2014 17:19, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->> From: Sachin Kamat [mailto:sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org]
->> Sent: Friday, March 14, 2014 7:00 PM
->>
->> On 14 March 2014 10:31, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->> > Commit 25e9d28d92 (ARM: EXYNOS: remove system mmu initialization from
->> > exynos tree) removed arch/arm/mach-exynos/mach/sysmmu.h header without
->> > removing remaining use of it from exynos-iommu driver, thus causing a
->> > compilation error.
->> >
->> > This patch fixes the error by removing respective include line
->> > from exynos-iommu.c.
->> >
->> > CC: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> > Signed-off-by: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> > ---
->> >  drivers/iommu/exynos-iommu.c |    3 +--
->> >  1 file changed, 1 insertion(+), 2 deletions(-)
->> >
->> > diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
->> > index 0740189..4876d35 100644
->> > --- a/drivers/iommu/exynos-iommu.c
->> > +++ b/drivers/iommu/exynos-iommu.c
->> > @@ -12,6 +12,7 @@
->> >  #define DEBUG
->> >  #endif
->> >
->> > +#include <linux/kernel.h>
->>
->> This change doesn't look related to the patch subject/description.
->>
-> Yes. But it is simply added without any side-effect.
-> Do you think it should be in a separate patch?.
-> Actually, the added line is a redundant.
+On Thursday 06 March 2014, Tanmay Inamdar wrote:
+> +		pcie0: pcie@1f2b0000 {
+> +			status = "disabled";
+> +			device_type = "pci";
+> +			compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
+> +			#interrupt-cells = <1>;
+> +			#size-cells = <2>;
+> +			#address-cells = <3>;
+> +			reg = < 0x00 0x1f2b0000 0x0 0x00010000   /* Controller registers */
+> +				0xe0 0xd0000000 0x0 0x00200000>; /* PCI config space */
+> +			reg-names = "csr", "cfg";
+> +			ranges = <0x01000000 0x00 0x00000000 0xe0 0x00000000 0x00 0x00010000   /* io */
+> +				  0x02000000 0x00 0x10000000 0xe0 0x10000000 0x00 0x80000000>; /* mem */
+> +			dma-ranges = <0x42000000 0x40 0x00000000 0x40 0x00000000 0x40 0x00000000>;
+> +			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+> +			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xc2 0x1
+> +					 0x0 0x0 0x0 0x2 &gic 0x0 0xc3 0x1
+> +					 0x0 0x0 0x0 0x3 &gic 0x0 0xc4 0x1
+> +					 0x0 0x0 0x0 0x4 &gic 0x0 0xc5 0x1>;
+> +			clocks = <&pcie0clk 0>;
+> +		};
 
-If it is redundant, then you shouldn't be adding it. If it is
-required, then please
-mention about the need in the commit description if not a separate patch.
+Is 0x40.0x00000000 the start of your RAM? I had expected RAM to start at 0.0,
+and in that case the dma-ranges property would be wrong.
 
--- 
-With warm regards,
-Sachin
+	Arnd
