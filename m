@@ -1,53 +1,70 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2] gpio: davinci: fix gpio selection for OF
-Date: Fri, 14 Mar 2014 12:02:01 +0100
-Message-ID: <CACRpkdaghneo1MvNCfxjTED+sJepHgeZCgmKsRteG9qrBNWAfQ@mail.gmail.com>
-References: <5316FFCE.1060603@ti.com>
-	<1394018461-757-1-git-send-email-holler@ahsoftware.de>
-	<CACRpkdaF=jc9Z1XZCtH8VPuih01t--qyV-sgH1R_ix0VM4RzVA@mail.gmail.com>
-	<5322D529.4070904@ahsoftware.de>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v2 4/4] ARM: DTS: AM43x: Add DSS node
+Date: Fri, 14 Mar 2014 13:07:05 +0200
+Message-ID: <5322E2D9.5000509@ti.com>
+References: <1394701109-6721-1-git-send-email-sathyap@ti.com> <1394701109-6721-5-git-send-email-sathyap@ti.com> <20140313174623.GD25870@e106331-lin.cambridge.arm.com> <5321F77E.9000302@ti.com> <20140314091002.GG25870@e106331-lin.cambridge.arm.com> <5322CF02.4060705@ti.com> <20140314101405.GI25870@e106331-lin.cambridge.arm.com> <5322D7A4.4090602@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <5322D529.4070904@ahsoftware.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexander Holler <holler@ahsoftware.de>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Sekhar Nori <nsekhar@ti.com>, Prabhakar Lad <prabhakar.csengg@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="L0cs3uBaS6ln5lsMIkm261FTu9qqPpUxH"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5322D7A4.4090602@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Sathya Prakash M R <sathyap@ti.com>, "tony@atomide.com" <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "paul@pwsan.com" <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 14, 2014 at 11:08 AM, Alexander Holler <holler@ahsoftware.de> wrote:
-> Am 11.03.2014 11:15, schrieb Linus Walleij:
->> On Wed, Mar 5, 2014 at 12:21 PM, Alexander Holler <holler@ahsoftware.de> wrote:
->>
->>> The driver missed an of_xlate function to translate gpio numbers
->>> as found in the DT to the correct chip and number.
->>>
->>> While there I've set #gpio_cells to a fixed value of 2.
->>>
->>> I've used gpio-pxa.c as template for those changes and tested my changes
->>> successfully on a da850 board using entries for gpio-leds in a DT. So I didn't
->>> reinvent the wheel but just copied and tested stuff.
->>>
->>> Thanks to Grygorii Strashko for the hint to the existing code in gpio-pxa.
->>>
->>> Signed-off-by: Alexander Holler <holler@ahsoftware.de>
->>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->>
->> This v2 version applied, thanks!
->
-> Thanks, but actually that should have been a fix for 3.14 with which the
-> OF functionality for davinci gpio gets introduced. I assum with the
-> patch in for-next, 3.14 will appear with that functionality broken and
-> it will become a candidate for -stable.
+--L0cs3uBaS6ln5lsMIkm261FTu9qqPpUxH
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-I just get the impression that DT support for DaVinci in v3.14 is so risky
-and unstable that noone except those implementing it (i.e. you) is really
-using it, is that correct?
+On 14/03/14 12:19, Tomi Valkeinen wrote:
+> On 14/03/14 12:14, Mark Rutland wrote:
+>=20
+>> I can't see anything obviously wrong in platform_device_del. Do you ha=
+ve
+>> a backtrace?
+>=20
+> Yes, below.
+>=20
+> I can see at least drivers/usb/dwc3/dwc3-exynos.c doing the exact same =
+thing
+> I do, so maybe I've got something wrong with the omapdss driver.
 
-In that case it is hardly a fix that we need to rush out to the entire world.
+Looks to me that the devices created by of_platform_populate() are not
+unregisterable in all cases. The address resource created via
+of_platform_populate() had NULL res->parent, which causes
+release_resource to crash.
 
-But if you have bug reports from DaVinci developers doing advanced DT
-stuff and scratching their heads, then we can push this to fixes.
+I can as well call of_platform_populate() in the platform init code at
+boot time, and create the devices there for now.
 
-Yours,
-Linus Walleij
+ Tomi
+
+
+
+--L0cs3uBaS6ln5lsMIkm261FTu9qqPpUxH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJTIuLZAAoJEPo9qoy8lh71B7UP/3BlNlMcr8SJWqno0DukXTsM
+hF8Frjxfb/80qknVKoueBI2tVKacebaElSaqMlHP70nU8TLMh3PGSvkCN6XYns/K
+v6K0v0GbialJbvngD27TWuJSLn+op5yZEagvuF9XvkMeqTe4cvFxbsVNMfPbxSVl
+wauD9QWeklCb/m0k4hyWKgXQox6fwdRClPctM7cwvrt949pkLg8yinb6u2BTBZF2
+siXAfkNB75WCMubqucviHbJNNY50kGSpjM7+M8+pH9V5oGdOoGdzdaULsMKllKDV
+y6o5yECrc0OLac0+oFNmoTqXXh+AkdSspxvju0JTE5n8IsoLz4Anb9JjoqlrwFdw
+F6bVx1YiZgIG21kzQjES3KuStrm4P3J/3kcCxTpeAKFX425qQTkHbBEROfRWhKEN
++V5j1G1MZA4DOnyxw6HZ8eVxJ1z5OCJPdrvEVcdlcR1+ca2LBIw33cAaThb2LSeB
+Y9GhqnxRDnCeryC3Jd18i67DURJfl0/ItPbq06IIXbZSDlDH43hcnrNHT5KDvyjF
+uYqzqpP7bS0TZwSqmz7nJVGkw2oEWCDNX0/5TjGxKS7euAb0veBJPnzAElA8KGv4
+0sxuelmpfYhmzn2qzYLNV/wXrl1ATJtunRTA9yG0pyKH80ETnkkXuMPVUsjVQLJW
+RGSr99fv8kxLBAyWKfiy
+=Z07S
+-----END PGP SIGNATURE-----
+
+--L0cs3uBaS6ln5lsMIkm261FTu9qqPpUxH--
