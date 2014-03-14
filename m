@@ -1,131 +1,47 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 7/8] ARM: dts: dra7: Add USB related nodes
-Date: Fri, 14 Mar 2014 20:24:33 +0530
-Message-ID: <53231829.3060602@ti.com>
-References: <1394197751-28984-1-git-send-email-rogerq@ti.com>
- <1394197751-28984-8-git-send-email-rogerq@ti.com> <5322DC0E.1020600@ti.com>
- <5322F20C.50600@ti.com>
+From: Ramiro Oliveira <mymailbox14-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: I2C add ov2640 ?
+Date: Fri, 14 Mar 2014 14:02:43 +0000 (UTC)
+Message-ID: <loom.20140314T150021-558@post.gmane.org>
+References: <52784785.1040406@gtsys.com.hk>	<5278C2B4.802@gtsys.com.hk>	<CAOMZO5DdUyvKAJdwYLpVR2+V5HBCt-AqgDxwgkh4AHQsE+evng@mail.gmail.com>	<527B330D.3040704@gtsys.com.hk> <CAOMZO5Acink+VzWZmv_w1dEyp4AU3mS9fHwt82c28h+VHFDmUw@mail.gmail.com> <527C3A66.4010108@gtsys.com.hk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5322F20C.50600@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Roger Quadros <rogerq@ti.com>, balbi@ti.com, tony@atomide.com
-Cc: devicetree@vger.kernel.org, george.cherian@ti.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Chris Ruehl <chris.ruehl@...> writes:
+
+> Hi Fabio,
+> 
+> Thanks for the hint,, found an old thread
+>   https://lkml.org/lkml/2013/7/30/246
+> 
+> where the clock is provided to a sound card via device tree. I will see if 
+I can 
+> make a patch and then I post it again.
+> 
+> Chris
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@...
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
+
+Hi,
+
+Sorry for hijacking this thread, but I'm having some issues with v4l2_clk_get 
+which doesn't seem to support device tree. 
+
+Did you manage to find a solution to your problem?
+
+Thanks,
+Ramiro
 
 
-On Friday 14 March 2014 05:41 PM, Roger Quadros wrote:
-> On 03/14/2014 12:38 PM, Kishon Vijay Abraham I wrote:
->> Hi Roger,
->>
->> On Friday 07 March 2014 06:39 PM, Roger Quadros wrote:
->>> Add nodes for the Super Speed USB controllers, omap-control-usb,
->>> USB2 PHY and USB3 PHY devices.
->>>
->>> Remove ocp2scp1 address space from hwmod data as it is
->>> now provided via device tree.
->>>
->>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>> ---
->>>    arch/arm/boot/dts/dra7.dtsi               | 110 ++++++++++++++++++++++++++++++
->>>    arch/arm/mach-omap2/omap_hwmod_7xx_data.c |  10 ---
->>>    2 files changed, 110 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
->>> index 597979b..1e73900 100644
->>> --- a/arch/arm/boot/dts/dra7.dtsi
->>> +++ b/arch/arm/boot/dts/dra7.dtsi
->>> @@ -811,6 +811,116 @@
->>>                clocks = <&sata_ref_clk>;
->>>                ti,hwmods = "sata";
->>>            };
->>> +
->>> +        omap_control_usb2phy1: control-phy@4a002300 {
->>> +            compatible = "ti,control-phy-usb2";
->>> +            reg = <0x4a002300 0x4>;
->>> +            reg-names = "power";
->>> +        };
->>> +
->>> +        omap_control_usb3phy1: control-phy@4a002370 {
->>> +            compatible = "ti,control-phy-pipe3";
->>> +            reg = <0x4a002370 0x4>;
->>> +            reg-names = "power";
->>> +        };
->>> +
->>> +        omap_control_usb2phy2: control-phy@0x4a002e74 {
->>> +            compatible = "ti,control-phy-usb2-dra7";
->>> +            reg = <0x4a002e74 0x4>;
->>> +            reg-names = "power";
->>> +        };
->>> +
->>> +        /* OCP2SCP1 */
->>> +        ocp2scp@4a080000 {
->>> +            compatible = "ti,omap-ocp2scp";
->>> +            #address-cells = <1>;
->>> +            #size-cells = <1>;
->>> +            ranges;
->>> +            reg = <0x4a080000 0x20>;
->>> +            ti,hwmods = "ocp2scp1";
->>> +
->>> +            usb2_phy1: phy@4a084000 {
->>> +                compatible = "ti,omap-usb2";
->>> +                reg = <0x4a084000 0x400>;
->>> +                ctrl-module = <&omap_control_usb2phy1>;
->>> +                clocks = <&usb_phy1_always_on_clk32k>,
->>> +                     <&usb_otg_ss1_refclk960m>;
->>> +                clock-names =    "wkupclk",
->>> +                        "refclk";
->>> +                #phy-cells = <0>;
->>> +            };
->>> +
->>> +            usb2_phy2: phy@4a085000 {
->>> +                compatible = "ti,omap-usb2";
->>> +                reg = <0x4a085000 0x400>;
->>> +                ctrl-module = <&omap_control_usb2phy2>;
->>> +                clocks = <&usb_phy2_always_on_clk32k>,
->>> +                     <&usb_otg_ss2_refclk960m>;
->>> +                clock-names =    "wkupclk",
->>> +                        "refclk";
->>> +                #phy-cells = <0>;
->>> +            };
->>> +
->>> +            usb3_phy1: phy@4a084400 {
->>> +                compatible = "ti,omap-usb3";
->>> +                reg = <0x4a084400 0x80>,
->>> +                      <0x4a084800 0x64>,
->>> +                      <0x4a084c00 0x40>;
->>> +                reg-names = "phy_rx", "phy_tx", "pll_ctrl";
->>> +                ctrl-module = <&omap_control_usb3phy1>;
->>> +                clocks = <&usb_phy3_always_on_clk32k>,
->>> +                     <&sys_clkin1>,
->>> +                     <&usb_otg_ss1_refclk960m>,
->>> +                     <&dpll_core_h13x2_ck>;
->>> +                clock-names =    "wkupclk",
->>> +                        "sysclk",
->>> +                        "refclk",
->>> +                        "optclk";
->>
->> Do we use this 'optclk' in driver?
->
-> No we don't. Still the device seems to work without it.
-> This is supposed to be USB_LFPS_TX_GFCLK or USB3PHY_REF_CLK.
-
-I think it should be enabled. Did you check the status of this clock in 
-CM_L3INIT_CLKSTCTRL? Moreover USB_LFPS_TX_GFCLK is an interface clock, 
-so IIUC setting the module mode will enable it.
-
-Btw how did you tell dpll_core_h13x2_ck enables USB_LFPS_TX_GFCLK?
-
-Cheers
-Kishon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
