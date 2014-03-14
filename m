@@ -1,74 +1,99 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [PATCH v5 0/2] Qualcomm Universal Peripheral (QUP) I2C controller
-Date: Thu, 13 Mar 2014 19:07:41 -0700
-Message-ID: <1394762863-12154-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCHv2 0/8] devfreq: exynos4: Support dt and use common ppmu
+ driver
+Date: Fri, 14 Mar 2014 12:14:03 +0900
+Message-ID: <532273FB.6040303@samsung.com>
+References: <1394698649-20996-1-git-send-email-cw00.choi@samsung.com>
+ <2117336.08cyWySR1X@amdc1032>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <2117336.08cyWySR1X@amdc1032>
+Sender: linux-doc-owner@vger.kernel.org
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rafael.j.wysocki@intel.com, nm@ti.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This fifth revision of the QUP I2C driver comes with minor fixes, as per review
-comments on the second third revision.
+Hi,
 
-Regards,
-Bjorn
+On 03/14/2014 01:43 AM, Bartlomiej Zolnierkiewicz wrote:
+> 
+> Hi,
+> 
+> On Thursday, March 13, 2014 05:17:21 PM Chanwoo Choi wrote:
+>> This patchset support devicetree and use common ppmu driver instead of
+>> individual code of exynos4_bus.c to remove duplicate code. Also this patchset
+>> get the resources for busfreq from dt data by using DT helper function.
+>> - PPMU register address
+>> - PPMU clock
+>> - Regulator for INT/MIF block
+>>
+>> This patchset use SET_SYSTEM_SLEEP_PM_OPS macro intead of legacy method.
+>> To remove power-leakage in suspend state, before entering suspend state,
+>> disable ppmu clocks.
+>>
+>> Changes from v1:
+>> - Add exynos4_bus.txt documentation for devicetree guide
+>> - Fix probe failure if CONFIG_PM_OPP is disabled
+>> - Fix typo and resource leak(regulator/clock/memory) when happening probe failure
+>> - Add additionally comment for PPMU usage instead of previous PPC
+>> - Split separate patch to remove ambiguous of patch
+>>
+>> Chanwoo Choi (8):
+>>   devfreq: exynos4: Support devicetree to get device id of Exynos4 SoC
+>>   devfreq: exynos4: Use common ppmu driver and get ppmu address from dt data
+>>   devfreq: exynos4: Add ppmu's clock control and code clean about regulator control
+>>   devfreq: exynos4: Fix bug of resource leak and code clean on probe()
+>>   devfreq: exynos4: Use SET_SYSTEM_SLEEP_PM_OPS macro
+>>   devfreq: exynos4: Fix power-leakage of clock on suspend state
+>>   devfreq: exynos4: Add CONFIG_PM_OPP dependency to fix probe fail
+>>   devfreq: exynos4: Add busfreq driver for exynos4210/exynos4x12
+>>
+>>  .../devicetree/bindings/devfreq/exynos4_bus.txt    |  49 +++
+>>  drivers/devfreq/Kconfig                            |   1 +
+>>  drivers/devfreq/exynos/Makefile                    |   2 +-
+>>  drivers/devfreq/exynos/exynos4_bus.c               | 415 ++++++++++++++-------
+>>  4 files changed, 341 insertions(+), 126 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
+> 
+> Thanks for updating this patchset.  There are still some minor issues
+> left though:
+> 
+> - patch #4 should be at beginning of the patch series
+> 
+> - moving of devfreq_unregister_opp_notifier(dev, data->devfreq) from
+>   exynos4_bus_exit() to exynos4_busfreq_remove() should be in patch #4
+>   (which should really be at the beggining of patch series) not #3
+> 
+> - handling of iounmap(data->ppmu[i].hw_base) should be added to
+>   exynos4_bus_exit() in patch #2 not #3
+> 
+> - patch #8 summary and description should mention fact that it adds DT
+>   binding documentation (not the driver itself) and the patch itself
+>   can be slighlty polished
 
-Changes from second v3:
- - Reformat device tree binding description related to clocks
- - Minor cleanup related to dt parsing of clock frequency
- - Properly return EINVAL on dt parse error
- - Use i2c_add_adapter instead of numbered version
- - Call pm_runtime_set_active() before we leave probe with clocks enabled
- - Remove debug prints from suspend and resume
+OK, I'll re-order the sequence of patchset and modify minior issues about your comment.
+Also, I'll modify the patch description for patch8.
 
-Changes from v3:
- - Simplified interrupt handler
- - Corrected the state transition poll timeout
- - Refactored state transition code
- - Refactored the polling functions waiting for transfers to finish
- - Made the write fifo fill function care if there's space
- - Corrected programmed length on writes
- - Made block read and block write work
- - Removed data duplicates from qup_i2c_dev
- - Changed timeout to HZ, to give room for clock stretching
- - Properly reject reads over 256 bytes, as limited by HW
- - Dropped reinitialization of completions
- - Made sure to not re-initiate reads for every block read
- - Added QUP version number to compatible
+> 
+> One important note about this patchset not mentioned in the cover
+> letter is that it is improving currently unused driver (because of
+> DT-only mach-exynos conversion the only user was removed in June 2013
+> and from the reading the code I suspect that even that user hadn't
+> worked previously).  As such this patch series should not cause any
+> regressions.
 
-Changes from v2:
- - Removed unused variables and includes
- - Corrected read logic in irq handler
- - Made the polling loop in qup_i2c_poll_state() less arbitrary
- - Only building suspend/resume if CONFIG_PM_SLEEP
+I don't understand correct your meaning.I explained DT support on upper
+patchset description by using DT helper function and I added PPMU descritpion.
+Also, Each patch include detailed description of patch content.
 
-Changes from v1:
- - Cleaned up device tree binding example.
- - Refrased device tree bindings.
- - Following changes in the i2c framework.
- - Use the core clock to calculate divider for the bus clock, instead of
-   explicitly setting it.
- - Remove explicit pinctrl settting.
- - Split/renamed qup_i2c_enable(bool) into enable/disable functions.
- - Return value was overwritten on error in write_one/read_one.
- - Initialize the i2c core every time, so that we actually can execute
-   more than 1 transmission per xfer.
+What is more needed?
 
-Bjorn Andersson (1):
-  i2c: New bus driver for the Qualcomm QUP I2C controller
+Best Regards,
+Chanwoo Choi
 
-Ivan T. Ivanov (1):
-  i2c: qup: Add device tree bindings information
 
- .../devicetree/bindings/i2c/qcom,i2c-qup.txt       |   46 ++
- drivers/i2c/busses/Kconfig                         |   10 +
- drivers/i2c/busses/Makefile                        |    1 +
- drivers/i2c/busses/i2c-qup.c                       |  768 ++++++++++++++++++++
- 4 files changed, 825 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt
- create mode 100644 drivers/i2c/busses/i2c-qup.c
 
--- 
-1.7.9.5
+
+
