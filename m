@@ -1,88 +1,121 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] irqchip: sun4i: Don't mask + unmask for
- the non oneshot case
-Date: Fri, 14 Mar 2014 12:35:51 +0100 (CET)
-Message-ID: <alpine.DEB.2.02.1403141228290.18573@ionos.tec.linutronix.de>
-References: <1394740202-1952-1-git-send-email-hdegoede@redhat.com> <1394740202-1952-2-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v17 3/4] ata: Add APM X-Gene SoC AHCI SATA host controller driver
+Date: Fri, 14 Mar 2014 12:41:16 +0100
+Message-ID: <201403141241.16599.arnd@arndb.de>
+References: <1394655573-32645-1-git-send-email-lho@apm.com> <1394655573-32645-3-git-send-email-lho@apm.com> <1394655573-32645-4-git-send-email-lho@apm.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDAMN6NI5EERBEWTROMQKGQERU2Z6CY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1394740202-1952-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1394655573-32645-4-git-send-email-lho@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Loc Ho <lho@apm.com>
+Cc: olof@lixom.net, tj@kernel.org, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 13 Mar 2014, Hans de Goede wrote:
-
-> Since sun4i and sun5i are single core SOCs there is no need to mask non
-> oneshot IRQs, to achieve this we use handle_fasteoi_irq with a dummy eoi.
-
-This is slightly wrong :)
-
-Even on a SMP system there is no need to mask the interrupt when the
-controller works like that sunxi one. If the controller is not broken
-beyond repair then it does not deliver the same interrupt to a
-different cpu. Such a thing would always deliver it to all cores and
-those would race to grab the spinlock and mask it. I've seen such
-horror, but don't ask how that performs.
-
-The reason why you can spare the mask/unmask dance is that the
-controller does not require any action and clears the interrupt when
-the level goes back to inactive. That happens when the device handler
-acks it at the device level.
-
-Now there might be the case when the device reactivates the interrupt
-before the RETI. But that does not matter as we run the primary
-interrupt handlers with interrupts disabled.
-
-Thanks,
-
-	tglx
- 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/irqchip/irq-sun4i.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
+On Wednesday 12 March 2014, Loc Ho wrote:
+> This patch adds support for the APM X-Gene SoC AHCI SATA host controller
+> driver. It requires the corresponding APM X-Gene SoC PHY driver. This
+> initial version only supports Gen3 speed.
 > 
-> diff --git a/drivers/irqchip/irq-sun4i.c b/drivers/irqchip/irq-sun4i.c
-> index a0ed1ea..0a71990 100644
-> --- a/drivers/irqchip/irq-sun4i.c
-> +++ b/drivers/irqchip/irq-sun4i.c
-> @@ -74,8 +74,17 @@ static void sun4i_irq_unmask(struct irq_data *irqd)
->  	       sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(reg));
->  }
->  
-> +/*
-> + * Since sun4i and sun5i are single core SOCs there is no need to mask non
-> + * oneshot IRQs, to achieve this we use handle_fasteoi_irq with a dummy eoi.
-> + */
-> +static void sun4i_irq_dummy_eoi(struct irq_data *irqd)
-> +{
-> +}
+> Signed-off-by: Loc Ho <lho@apm.com>
+> Signed-off-by: Tuan Phan <tphan@apm.com>
+> Signed-off-by: Suman Tripathi <stripathi@apm.com>
+
+Sorry I've skipped the last ten review rounds. I'm glad to see the
+code has improved so much in the meantime!
+
+I hope the points I'm making here were not already covered in the
+many previous review rounds.
+
+> +/* Controller who PHY shared with SGMII Ethernet PHY */
+> +#define XGENE_AHCI_SGMII_DTS		"apm,xgene-ahci-sgmii"
 > +
->  static struct irq_chip sun4i_irq_chip = {
->  	.name		= "sun4i_irq",
-> +	.irq_eoi	= sun4i_irq_dummy_eoi,
->  	.irq_mask	= sun4i_irq_mask,
->  	.irq_unmask	= sun4i_irq_unmask,
->  };
-> @@ -97,7 +106,7 @@ static int sun4i_irq_map(struct irq_domain *d, unsigned int virq,
->  					 handle_fasteoi_irq);
->  	else
->  		irq_set_chip_and_handler(virq, &sun4i_irq_chip,
-> -					 handle_level_irq);
-> +					 handle_fasteoi_irq);
->  
->  	set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
->  
-> -- 
-> 1.9.0
-> 
-> 
+> +/* Controller who PHY (internal reference clock macro) shared with PCIe */
+> +#define XGENE_AHCI_PCIE_DTS		"apm,xgene-ahci-pcie"
+
+Please remove these macros, they don't help anything at all
+but make it harder to follow what's going on.
+
+Regarding the actual strings, reflecting them now I think listing 'pcie'
+and 'sgmii' is not really helpful to the reader. The difference to
+the AHCI driver should not be which device it's sharing its PHY with,
+but rather how that looks from software side.
+
+The only difference in your current driver is whether this function
+
++/* MUX CSR */
++#define SATA_ENET_CONFIG_REG           0x00000000
++#define  CFG_SATA_ENET_SELECT_MASK     0x00000001
++static int xgene_ahci_mux_select(struct xgene_ahci_context *ctx)
++{
++       void *mux_csr = ctx->csr_base + SATA_ENET_MUX_OFFSET;
++       u32 val;
++
++       val = readl(mux_csr + SATA_ENET_CONFIG_REG);
++       val &= ~CFG_SATA_ENET_SELECT_MASK;
++       writel(val, mux_csr + SATA_ENET_CONFIG_REG);
++       val = readl(mux_csr + SATA_ENET_CONFIG_REG);
++       return val & CFG_SATA_ENET_SELECT_MASK ? -1 : 0;
++}
+
+gets called. Can you clarify what this register access does?
+If it's just setting a index into a mux output, would it make
+sense to have an optional DT property containing an integer with
+the mux setting you want to set? That way you wouldn't even
+have to have two compatible strings but just do
+
+	ret = of_property_read_u32(node, "apm,ahci-mux", &mux);
+	if (!ret)
+		xgene_ahci_mux_select(ctx, mux);
+
+> +	/*
+> +	 * Can't use devm_ioremap_resource due to overlapping region.
+> +	 * 0xYYYY.0000 - host core
+> +	 * 0xYYYY.7000 - Mux (if applicable)
+> +	 * 0xYYYY.A000 - PHY indirect access
+> +	 * 0xYYYY.C000 - Clock
+> +	 * 0xYYYY.D000 - RAM shutdown removal
+> +	 * As we map the entire region as one, it overlaps with the PHY driver.
+> +	 */
+> +	ctx->csr_base = devm_ioremap(dev, res->start, resource_size(res));
+> +	if (!ctx->csr_base) {
+> +		dev_err(dev, "can't map %pR\n", res);
+> +		return -ENOMEM;
+> +	}
+
+I still think we should try not to have overlapping memory areas here.
+Could you split up the registers into another range in the reg property
+to leave the PHY registers out?
+
+> +	/* Setup DMA mask - 32 for 32-bit system and 64 for 64-bit system */
+> +	rc = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(8*sizeof(void *)));
+> +	if (rc) {
+> +		dev_err(dev, "Unable to set dma mask\n");
+> +		goto disable_resources;
+> +	}
+
+This is something we definitely have to fix properly. We are hitting
+the problem of dma masks for internal devices on arm32 now, and there
+is ongoing discussion about whether a device driver should touch these
+at all, or rather rely on the DT core to set up the masks in a generic
+way. This device is probably the first DMA master capable device we
+have on arm64, other than PCI devices, and we must be careful to get it
+right.
+
+In either way, the mask of the device must *not* depend on sizeof(void*):
+If the device is capable of doing 64-bit DMA, it should also be able
+to do that when running a 32-bit kernel.
+
+Please change this to DMA_BIT_MASK(64) for now, and add a comment
+explaining that it is preliminary.
+
+Also, please read the thread named "[PATCH 0/7] of: setup dma
+parameters using dma-ranges and dma-coherent" and comment there
+about what you think we should do here. I assume we will have to
+add "dma-ranges" properties in a number of places to get this
+all to work fine any 64-bit SoC. Do you know if you have any
+DMA master devices in x-gene that are not 64-bit capable?
+
+	Arnd
