@@ -1,57 +1,42 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v7 3/3] arm64: Add architecture support for PCI
-Date: Fri, 14 Mar 2014 20:10:39 +0100
-Message-ID: <201403142010.39886.arnd@arndb.de>
-References: <1394811258-1500-1-git-send-email-Liviu.Dudau@arm.com> <201403141838.08900.arnd@arndb.de> <20140314180527.GZ6457@e106497-lin.cambridge.arm.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH net-next V5 0/9] Altera Triple Speed Ethernet (TSE)
+ Driver
+Date: Fri, 14 Mar 2014 15:15:24 -0400 (EDT)
+Message-ID: <20140314.151524.753884730788957176.davem@davemloft.net>
+References: <1394805887-22030-1-git-send-email-vbridgers2013@gmail.com>
+	<20140314.150720.734350362080616095.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140314180527.GZ6457@e106497-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Catalin Marinas <Catalin.Marinas@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: Text/Plain; charset=iso-8859-7
+Content-Transfer-Encoding: base64
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20140314.150720.734350362080616095.davem@davemloft.net>
+Sender: netdev-owner@vger.kernel.org
+To: vbridgers2013@gmail.com
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-doc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
 List-Id: devicetree@vger.kernel.org
 
-On Friday 14 March 2014, Liviu Dudau wrote:
-> > 
-> 
-> I haven't seen any reaction from Bjorn on this, so I threaded carefully on that
-> subject. I'm new to this so I don't know how to handle this.
-> 
-> To my mind, and looking at the way every architecture has been setup, the pcibios_*
-> function are intended to be provided by the architecture.
-
-That is definitely correct.
-
-> No matter how much wishful
-> thinking we are going to put in here, it will not change the fact that the non-arm64
-> specific version of pcibios_fixup_bus() that I wrote is not shared by anyone else
-> and it will remain "for arm64 use only" regardless to where it is placed until the
-> next architecture comes into the kernel. And even then its adoption is questionable.
-
-Agreed as well.
-
-> If we are looking for simple and common implementations of this function, maybe we
-> should look at why microblaze and powerpc versions, that are identical, are not being
-> made the default __weak implementation.
-
-Microblaze could most likely just be moved over to your version. The only
-reason it is shared with the powerpc implementation is that they were
-anticipating the code to become shared again and that it was known to
-be working with flattened device tree.
-
-> As for the other two functions, I've no special attachment to where they are present
-> and I'm happy to move them into drivers/pci on the condition that the patchset doesn't
-> double in size. The reason why I'm weary of touching other architectures in a significant
-> way is the current lack of engineering bandwidth and way of testing all the architectures.
-> My low friction approach has been to introduce them in arm64 and then slowly move them
-> into core (and yes, I know about good intentions and the road to hell.)
-
-I think everyone working on PCI is fed up with having arch-specific implementations
-of all these, and Bjorn has been very supportive of generic infrastructure in the
-past. Even just adding a generic infrastructure in a common place that is used
-only by one architecture in my mind would be a significant improvement.
-
-	Arnd
+RnJvbTogRGF2aWQgTWlsbGVyIDxkYXZlbUBkYXZlbWxvZnQubmV0Pg0KRGF0ZTogRnJpLCAxNCBN
+YXIgMjAxNCAxNTowNzoyMCAtMDQwMCAoRURUKQ0KDQo+IEZyb206IFZpbmNlIEJyaWRnZXJzIDx2
+YnJpZGdlcnMyMDEzQGdtYWlsLmNvbT4NCj4gRGF0ZTogRnJpLCAxNCBNYXIgMjAxNCAwOTowNDoz
+OCAtMDUwMA0KPiANCj4+IFRoaXMgaXMgdGhlIHZlcnNpb24gNSBzdWJtaXNzaW9uIGZvciB0aGUg
+QWx0ZXJhIFRyaXBsZSBTcGVlZCBFdGhlcm5ldCAoVFNFKQ0KPj4gZHJpdmVyLiBBbGwgY29tbWVu
+dHMgcmVjZWl2ZWQgZHVyaW5nIHRoZSB2ZXJzaW9uIDIsIDMsIGFuZCA0IHN1Ym1pc3Npb25zIGhh
+dmUgDQo+PiBiZWVuIGFjY2VwdGVkLiBQbGVhc2UgZmluZCB0aGUgY2hhbmdlIGxvZyBhbmQgYSBk
+ZXNjcmlwdGlvbiBvZiB0aGUgc3VibWlzc2lvbg0KPj4gYmVsb3cuIA0KPiANCj4gU2VyaWVzIGFw
+cGxpZWQgdG8gbmV0LW5leHQsIHRoYW5rcy4NCg0KQWN0dWFsbHksIEkgaGFkIHRvIHJldmVydCwg
+eW91ciBkcml2ZXIgYWRkcyBuZXcgd2FybmluZ3MgdG8gdGhlIGJ1aWxkOg0KDQpkcml2ZXJzL25l
+dC9ldGhlcm5ldC9hbHRlcmEvYWx0ZXJhX3RzZV9tYWluLmM6IEluIGZ1bmN0aW9uIKFhbHRlcmFf
+dHNlX3Byb2JlojoNCmRyaXZlcnMvbmV0L2V0aGVybmV0L2FsdGVyYS9hbHRlcmFfdHNlX21haW4u
+YzoxMjM4OjIzOiB3YXJuaW5nOiBjYXN0IHRvIHBvaW50ZXIgZnJvbSBpbnRlZ2VyIG9mIGRpZmZl
+cmVudCBzaXplIFstV2ludC10by1wb2ludGVyLWNhc3RdDQogICBwcml2LT50eF9kbWFfZGVzYyA9
+ICh2b2lkICopZGVzY21hcDsNCiAgICAgICAgICAgICAgICAgICAgICAgXg0KZHJpdmVycy9uZXQv
+ZXRoZXJuZXQvYWx0ZXJhL2FsdGVyYV90c2VfbWFpbi5jOjEyNDI6MjM6IHdhcm5pbmc6IGNhc3Qg
+dG8gcG9pbnRlciBmcm9tIGludGVnZXIgb2YgZGlmZmVyZW50IHNpemUgWy1XaW50LXRvLXBvaW50
+ZXItY2FzdF0NCiAgIHByaXYtPnJ4X2RtYV9kZXNjID0gKHZvaWQgKikoZGVzY21hcCtwcml2LT50
+eGRlc2NtZW0pOw0KICAgICAgICAgICAgICAgICAgICAgICBeDQoNCkEgcG9pbnRlciBjYW4gYmUg
+bGFyZ2VyIHRoYW4gYW4gInVuc2lnbmVkIGludCIsIHlvdSB0aGVyZWZvcmUgY2Fubm90DQpjYXN0
+IGl0IHRvIGEgcG9pbnRlci4NCg0KSW4gZmFjdCB0aGlzIGNvZGUgcGF0aCBoYXMgYSBsb3Qgb2Yg
+cHJvYmxlbXMsIHdlIHBhc3MgYSBwb2ludGVyIHRvIGFuIHVuc2lnbmVkIGludA0KYXMgYSAidm9p
+ZCBfX2lvbWVtICoiIHRvIHJlcXVlc3RfYW5kX21hcCgpLiAgSXQncyBub3QsIGRvbid0IHByZXRl
+bmQgdGhhdCBpdCBpcywNCmFuZCBkb24ndCB1c2UgY2FzdHMgdG8gdHJ5IGFuZCBtYWtlIHRoZSBj
+b21waWxlciBhbHNvIG5vdCBzZWUgdGhlIHByb2JsZW0uDQo=
