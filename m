@@ -1,427 +1,170 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: [RFC 2/9] opp-modifier: Add opp-modifier-reg driver
-Date: Fri, 14 Mar 2014 14:25:28 -0500
-Message-ID: <1394825135-60110-3-git-send-email-d-gerlach@ti.com>
-References: <1394825135-60110-1-git-send-email-d-gerlach@ti.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 7/8] ARM: dts: dra7: Add USB related nodes
+Date: Fri, 14 Mar 2014 14:48:25 -0500
+Message-ID: <20140314194825.GA21808@saruman.home>
+References: <1394197751-28984-1-git-send-email-rogerq@ti.com>
+ <1394197751-28984-8-git-send-email-rogerq@ti.com>
+ <5322DC0E.1020600@ti.com>
+ <5322F20C.50600@ti.com>
+ <53231829.3060602@ti.com>
+ <53232185.6090305@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <1394825135-60110-1-git-send-email-d-gerlach@ti.com>
-Sender: cpufreq-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: cpufreq@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Jisheng Zhang <jszhang@marvell.com>, Anson Huang <Anson.Huang@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Nishanth Menon <nm@ti.com>, Dave Gerlach <d-gerlach@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="8t9RHnE3ZwKMSgU+"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53232185.6090305@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, balbi@ti.com, tony@atomide.com, george.cherian@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Driver to read from a register and depending on either set bits or
-a specific known selectively enable or disable OPPs based on DT node.
+--8t9RHnE3ZwKMSgU+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Can support opp-modifier-reg-bit where single bits within the register
-determine the availability of an OPP or opp-modifier-reg-val where a
-certain value inside the register or a portion of it determine what the
-maximum allowed OPP is.
+On Fri, Mar 14, 2014 at 05:34:29PM +0200, Roger Quadros wrote:
+> On 03/14/2014 04:54 PM, Kishon Vijay Abraham I wrote:
+> >=20
+> >=20
+> > On Friday 14 March 2014 05:41 PM, Roger Quadros wrote:
+> >> On 03/14/2014 12:38 PM, Kishon Vijay Abraham I wrote:
+> >>> Hi Roger,
+> >>>
+> >>> On Friday 07 March 2014 06:39 PM, Roger Quadros wrote:
+> >>>> Add nodes for the Super Speed USB controllers, omap-control-usb,
+> >>>> USB2 PHY and USB3 PHY devices.
+> >>>>
+> >>>> Remove ocp2scp1 address space from hwmod data as it is
+> >>>> now provided via device tree.
+> >>>>
+> >>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> >>>> ---
+> >>>>    arch/arm/boot/dts/dra7.dtsi               | 110 +++++++++++++++++=
++++++++++++++
+> >>>>    arch/arm/mach-omap2/omap_hwmod_7xx_data.c |  10 ---
+> >>>>    2 files changed, 110 insertions(+), 10 deletions(-)
+> >>>>
+> >>>> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dt=
+si
+> >>>> index 597979b..1e73900 100644
+> >>>> --- a/arch/arm/boot/dts/dra7.dtsi
+> >>>> +++ b/arch/arm/boot/dts/dra7.dtsi
+> >>>> @@ -811,6 +811,116 @@
+> >>>>                clocks =3D <&sata_ref_clk>;
+> >>>>                ti,hwmods =3D "sata";
+> >>>>            };
+> >>>> +
+> >>>> +        omap_control_usb2phy1: control-phy@4a002300 {
+> >>>> +            compatible =3D "ti,control-phy-usb2";
+> >>>> +            reg =3D <0x4a002300 0x4>;
+> >>>> +            reg-names =3D "power";
+> >>>> +        };
+> >>>> +
+> >>>> +        omap_control_usb3phy1: control-phy@4a002370 {
+> >>>> +            compatible =3D "ti,control-phy-pipe3";
+> >>>> +            reg =3D <0x4a002370 0x4>;
+> >>>> +            reg-names =3D "power";
+> >>>> +        };
+> >>>> +
+> >>>> +        omap_control_usb2phy2: control-phy@0x4a002e74 {
+> >>>> +            compatible =3D "ti,control-phy-usb2-dra7";
+> >>>> +            reg =3D <0x4a002e74 0x4>;
+> >>>> +            reg-names =3D "power";
+> >>>> +        };
+> >>>> +
+> >>>> +        /* OCP2SCP1 */
+> >>>> +        ocp2scp@4a080000 {
+> >>>> +            compatible =3D "ti,omap-ocp2scp";
+> >>>> +            #address-cells =3D <1>;
+> >>>> +            #size-cells =3D <1>;
+> >>>> +            ranges;
+> >>>> +            reg =3D <0x4a080000 0x20>;
+> >>>> +            ti,hwmods =3D "ocp2scp1";
+> >>>> +
+> >>>> +            usb2_phy1: phy@4a084000 {
+> >>>> +                compatible =3D "ti,omap-usb2";
+> >>>> +                reg =3D <0x4a084000 0x400>;
+> >>>> +                ctrl-module =3D <&omap_control_usb2phy1>;
+> >>>> +                clocks =3D <&usb_phy1_always_on_clk32k>,
+> >>>> +                     <&usb_otg_ss1_refclk960m>;
+> >>>> +                clock-names =3D    "wkupclk",
+> >>>> +                        "refclk";
+> >>>> +                #phy-cells =3D <0>;
+> >>>> +            };
+> >>>> +
+> >>>> +            usb2_phy2: phy@4a085000 {
+> >>>> +                compatible =3D "ti,omap-usb2";
+> >>>> +                reg =3D <0x4a085000 0x400>;
+> >>>> +                ctrl-module =3D <&omap_control_usb2phy2>;
+> >>>> +                clocks =3D <&usb_phy2_always_on_clk32k>,
+> >>>> +                     <&usb_otg_ss2_refclk960m>;
+> >>>> +                clock-names =3D    "wkupclk",
+> >>>> +                        "refclk";
+> >>>> +                #phy-cells =3D <0>;
+> >>>> +            };
+> >>>> +
+> >>>> +            usb3_phy1: phy@4a084400 {
+> >>>> +                compatible =3D "ti,omap-usb3";
+> >>>> +                reg =3D <0x4a084400 0x80>,
+> >>>> +                      <0x4a084800 0x64>,
+> >>>> +                      <0x4a084c00 0x40>;
+> >>>> +                reg-names =3D "phy_rx", "phy_tx", "pll_ctrl";
+> >>>> +                ctrl-module =3D <&omap_control_usb3phy1>;
+> >>>> +                clocks =3D <&usb_phy3_always_on_clk32k>,
+> >>>> +                     <&sys_clkin1>,
+> >>>> +                     <&usb_otg_ss1_refclk960m>,
+> >>>> +                     <&dpll_core_h13x2_ck>;
+> >>>> +                clock-names =3D    "wkupclk",
+> >>>> +                        "sysclk",
+> >>>> +                        "refclk",
+> >>>> +                        "optclk";
+> >>>
+> >>> Do we use this 'optclk' in driver?
+> >>
+> >> No we don't. Still the device seems to work without it.
+> >> This is supposed to be USB_LFPS_TX_GFCLK or USB3PHY_REF_CLK.
+> >=20
+> > I think it should be enabled. Did you check the status of this clock
+> > in CM_L3INIT_CLKSTCTRL? Moreover USB_LFPS_TX_GFCLK is an interface
+> > clock, so IIUC setting the module mode will enable it.
+> >=20
+> > Btw how did you tell dpll_core_h13x2_ck enables USB_LFPS_TX_GFCLK?
+> >=20
+>=20
+> From the clock tree tool. It looks like the clock is gated
+> automatically with the module mode as you suggested. I'll get rid of
+> this clock reference then.
 
-The driver expects a device that has already has its OPPs loaded
-and then will disable the OPPs not matching the criteria specified in
-the opp-modifier table.
+note that we can change the input clock of some parts of dwc3, maybe
+that's why it works without, we're probably using another clock as
+input.
 
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
----
- .../devicetree/bindings/power/opp-modifier.txt     | 111 +++++++++
- drivers/power/opp/Makefile                         |   1 +
- drivers/power/opp/opp-modifier-reg.c               | 259 +++++++++++++++++++++
- 3 files changed, 371 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/opp-modifier.txt
- create mode 100644 drivers/power/opp/opp-modifier-reg.c
+--=20
+balbi
 
-diff --git a/Documentation/devicetree/bindings/power/opp-modifier.txt b/Documentation/devicetree/bindings/power/opp-modifier.txt
-new file mode 100644
-index 0000000..af8a2e9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/opp-modifier.txt
-@@ -0,0 +1,111 @@
-+* OPP-Modifier - opp modifier to selectively enable operating points
-+
-+Many SoCs that have selectively modifiable OPPs can specify
-+all available OPPs in their operating-points listing and then define
-+opp_modifiers to enable or disable the OPPs that are actually available
-+on the specific hardware.
-+
-+* OPP Modifier Provider
-+
-+For single bits that define the availability of an OPP:
-+-------------------------------------------
-+Some SoCs define a bit in a register that indicates whether an OPP is
-+available. This will disable any OPP with a frequency corresponding to
-+the bit given if it is not set appropriately.
-+
-+properties:
-+- compatible : Should be "opp-modifier-reg-bit"
-+- reg : Address and length of the registers needed to identify available
-+	OPPs, here we provide just the register containing OPP data.
-+
-+Optional Properties:
-+- opp,reg-bit-enable-low: Take the complement of register before comparing mask
-+		     defined below under opp-modifier.
-+
-+Sub-nodes:
-+Sub-nodes are defined as a container to hold opp modifier table for a
-+specific device with an operating-points table already defined
-+
-+Sub-node properties:
-+- opp-modifier: A collection of rows consisting of the following entries to
-+		allow specification of available OPPs:
-+	-kHz: The opp to be enabled based on following criteria
-+	-offset: Offset into register where relevant bits are located
-+	-value: Bit that indicates availability of OPP
-+
-+Example:
-+
-+	opp_modifier: opp_modifier@0x44e107fc {
-+		compatible = "opp-modifier-reg-bit";
-+		reg = <0x44e107fc 0x04>;
-+
-+		mpu_opp_modifier: mpu_opp_modifier {
-+			opp-modifier = <
-+			/* kHz   offset  value */
-+			1000000  0	BIT_1
-+			720000   0	BIT_2
-+			>;
-+		};
-+	};
-+
-+For a value that defines the maximum available OPP:
-+-------------------------------------------
-+Some SoCs define a value in a register that corresponds to an OPP. If
-+that value is matched this will disable all OPPs greater than the
-+associated frequency.
-+
-+properties:
-+- compatible : Should be "opp-modifier-reg-val"
-+- reg : Address and length of the registers needed to identify available
-+	OPPs, here we provide just the register containing OPP data.
-+
-+Optional Properties:
-+- opp,reg-mask: Only compare the bits masked off by this value.
-+
-+Sub-nodes:
-+Sub-nodes are defined as a container to hold opp modifier table for a
-+specific device with an operating-points table already defined
-+
-+Sub-node properties:
-+- opp-modifier: A collection of rows consisting of the following entries to
-+		allow specification of available OPPs:
-+	-kHz: The opp to be enabled based on following criteria
-+	-offset: Offset into register where relevant bits are located
-+	-value: Value that indicates maximum available OPP
-+
-+Example:
-+
-+	opp_modifier: opp_modifier@0x44e107fc {
-+		compatible = "opp-modifier-reg-val";
-+		reg = <0x44e107fc 0x04>;
-+
-+		mpu_opp_modifier: mpu_opp_modifier {
-+			opp-modifier = <
-+			/* kHz   offset  value */
-+			1000000  0	VAL_1
-+			720000   0	VAL_2
-+			>;
-+		};
-+	};
-+
-+* OPP Modifier Consumer
-+
-+Properties:
-+- platform-opp-modifier: phandle to the sub-node of the proper opp-modifier
-+		provider that contains the appropriate opp-modifier table
-+
-+Example:
-+
-+cpu@0 {
-+        compatible = "arm,cortex-a8";
-+        device_type = "cpu";
-+
-+        operating-points = <
-+                /* kHz    uV */
-+                1000000 1351000
-+                720000  1285000
-+        >;
-+
-+        platform-opp-modifier = <&mpu_opp_modifier>;
-+};
-+
-diff --git a/drivers/power/opp/Makefile b/drivers/power/opp/Makefile
-index 820eb10..7f60adc 100644
---- a/drivers/power/opp/Makefile
-+++ b/drivers/power/opp/Makefile
-@@ -1 +1,2 @@
- obj-y += core.o
-+obj-y += opp-modifier-reg.o
-diff --git a/drivers/power/opp/opp-modifier-reg.c b/drivers/power/opp/opp-modifier-reg.c
-new file mode 100644
-index 0000000..f4dcf7a
---- /dev/null
-+++ b/drivers/power/opp/opp-modifier-reg.c
-@@ -0,0 +1,259 @@
-+/*
-+ * Single bit OPP Modifier Driver
-+ *
-+ * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
-+ * Dave Gerlach <d-gerlach@ti.com>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/io.h>
-+#include <linux/slab.h>
-+#include <linux/err.h>
-+#include <linux/list.h>
-+
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/pm_opp.h>
-+#include <linux/opp-modifier.h>
-+
-+static struct of_device_id opp_omap_of_match[];
-+
-+struct opp_reg_context {
-+	struct device   *dev;
-+	void __iomem    *reg;
-+	u32	mask;
-+	bool		enable_low;
-+	int (*modify)(struct device *dev, const struct property *prop);
-+};
-+
-+static struct opp_reg_context *opp_reg;
-+
-+static unsigned long opp_reg_read(int offset)
-+{
-+	return readl(opp_reg->reg + offset);
-+}
-+
-+static int opp_modifier_reg_bit_enable(struct device *dev,
-+				       const struct property *prop)
-+{
-+	const __be32 *val;
-+	unsigned long reg_val, freq, offset, bit;
-+	int idx;
-+
-+	val = prop->value;
-+	idx = (prop->length / sizeof(u32)) / 3;
-+	while (idx--) {
-+		freq = be32_to_cpup(val++) * 1000;
-+		offset = be32_to_cpup(val++);
-+		bit = be32_to_cpup(val++);
-+
-+		reg_val = opp_reg_read(offset);
-+
-+		if (opp_reg->enable_low)
-+			reg_val = ~reg_val;
-+
-+		if (!(reg_val & bit))
-+			dev_pm_opp_disable(dev, freq);
-+	}
-+	return 0;
-+}
-+
-+static int opp_modifier_reg_value_enable(struct device *dev,
-+					 const struct property *prop)
-+{
-+	const __be32 *val;
-+	unsigned long reg_val, freq, offset, bits;
-+	unsigned long disable_freq, search_freq;
-+	struct dev_pm_opp *disable_opp;
-+	int idx, i, opp_count;
-+
-+	val = prop->value;
-+	idx = (prop->length / sizeof(u32)) / 3;
-+
-+	while (idx--) {
-+		freq = be32_to_cpup(val++) * 1000;
-+		offset = be32_to_cpup(val++);
-+		bits = be32_to_cpup(val++);
-+
-+		reg_val = opp_reg_read(offset);
-+
-+		if ((reg_val & opp_reg->mask) == bits) {
-+			/*
-+			 * Find all frequencies greater than current freq
-+			 */
-+			search_freq = freq + 1;
-+			rcu_read_lock();
-+			opp_count = dev_pm_opp_get_opp_count(dev);
-+			rcu_read_unlock();
-+
-+			for (i = 0; i < opp_count; i++) {
-+				rcu_read_lock();
-+				disable_opp =
-+					dev_pm_opp_find_freq_ceil(dev,
-+								  &search_freq);
-+				if (IS_ERR(disable_opp)) {
-+					rcu_read_unlock();
-+					break;
-+				}
-+				disable_freq =
-+					dev_pm_opp_get_freq(disable_opp);
-+				rcu_read_unlock();
-+				dev_pm_opp_disable(dev, disable_freq);
-+			}
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int of_opp_check_availability(struct device *dev, struct device_node *np)
-+{
-+	const struct property *prop;
-+	int nr;
-+
-+	if (!dev || !np)
-+		return -EINVAL;
-+
-+	prop = of_find_property(np, "opp-modifier", NULL);
-+	if (!prop)
-+		return -EINVAL;
-+	if (!prop->value)
-+		return -EINVAL;
-+
-+	nr = prop->length / sizeof(u32);
-+	if (nr % 3) {
-+		pr_err("%s: Invalid OPP Available list\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	return opp_reg->modify(dev, prop);
-+}
-+
-+static int opp_modifier_reg_device_modify(struct device *dev)
-+{
-+	struct device_node *np;
-+	int ret;
-+
-+	if (!dev)
-+		return -EINVAL;
-+
-+	np = of_parse_phandle(dev->of_node, "platform-opp-modifier", 0);
-+
-+	if (!np)
-+		return -EINVAL;
-+
-+	ret = of_opp_check_availability(dev, np);
-+
-+	if (ret)
-+		pr_err("Error modifying available OPPs\n");
-+
-+	of_node_put(np);
-+
-+	return ret;
-+}
-+
-+static struct opp_modifier_ops opp_modifier_reg_ops = {
-+	.modify = opp_modifier_reg_device_modify,
-+};
-+
-+static struct opp_modifier_dev opp_modifier_reg_dev = {
-+	.ops = &opp_modifier_reg_ops,
-+};
-+
-+static struct of_device_id opp_modifier_reg_of_match[] = {
-+	{
-+		.compatible = "opp-modifier-reg-bit",
-+		.data = &opp_modifier_reg_bit_enable,
-+	},
-+	{
-+		.compatible = "opp-modifier-reg-val",
-+		.data = &opp_modifier_reg_value_enable,
-+	},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, opp_modifier_reg_of_match);
-+
-+static int opp_modifier_reg_probe(struct platform_device *pdev)
-+{
-+	const struct of_device_id *match;
-+	struct resource *res;
-+	struct device_node *np = pdev->dev.of_node;
-+	int ret = 0;
-+
-+	opp_reg = devm_kzalloc(&pdev->dev, sizeof(*opp_reg), GFP_KERNEL);
-+	if (!opp_reg) {
-+		dev_err(opp_reg->dev, "reg context memory allocation failed\n");
-+		ret = -ENOMEM;
-+		goto err;
-+	}
-+
-+	match = of_match_device(opp_modifier_reg_of_match, &pdev->dev);
-+
-+	if (!match) {
-+		dev_err(&pdev->dev, "Invalid match data value\n");
-+		ret = -EINVAL;
-+		goto err;
-+	}
-+
-+	opp_reg->modify = (void *)match->data;
-+
-+	opp_reg->dev = &pdev->dev;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res) {
-+		dev_err(&pdev->dev, "no memory resource for opp register\n");
-+		ret = -ENXIO;
-+		goto err;
-+	}
-+
-+	opp_reg->reg = devm_request_and_ioremap(opp_reg->dev, res);
-+	if (!opp_reg->reg) {
-+		dev_err(opp_reg->dev, "could not ioremap opp register\n");
-+		ret = -EADDRNOTAVAIL;
-+		goto err;
-+	}
-+
-+	if (of_get_property(np, "opp,reg-bit-enable-low", NULL))
-+		opp_reg->enable_low = true;
-+
-+	of_property_read_u32(np, "opp,reg-mask", &opp_reg->mask);
-+
-+	opp_modifier_reg_dev.ops = &opp_modifier_reg_ops;
-+	opp_modifier_reg_dev.of_node = pdev->dev.of_node;
-+
-+	opp_modifier_register(&opp_modifier_reg_dev);
-+
-+err:
-+	return ret;
-+}
-+
-+static int opp_modifier_reg_remove(struct platform_device *pdev)
-+{
-+	return 0;
-+}
-+
-+static struct platform_driver opp_modifier_reg_driver = {
-+	.probe		= opp_modifier_reg_probe,
-+	.remove		= opp_modifier_reg_remove,
-+	.driver = {
-+		.owner		= THIS_MODULE,
-+		.name		= "opp-modifier-reg",
-+		.of_match_table	= opp_modifier_reg_of_match,
-+	},
-+};
-+
-+module_platform_driver(opp_modifier_reg_driver);
-+
-+MODULE_AUTHOR("Dave Gerlach <d-gerlach@ti.com>");
-+MODULE_DESCRIPTION("OPP Modifier driver for eFuse defined OPPs");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.0
+--8t9RHnE3ZwKMSgU+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTI10IAAoJEIaOsuA1yqREsB0P/Ro1DFR1pM02+qBmrvp5/Khh
+7fz9ScTmjayUDWBMSR1aNQLjm2q/G4sGPgrfbMZZ7WVuyHTQJLKWhR/yJEw+6Ct7
+7kIbHSFGNB/iegC649UYO/qgbjqgA+e4Y9WWsgt1T3REfzHke5M30NlID0VaLw/r
+JM5pCOVblLWt+KM+hyEo3ydZFZsQ0szBOTcY1flCj41Kh/11PX7PQK1X10ryWBHD
+zavhSwSTvjhnbQ7frIKvQ8GqbPpbFDMIakmB+NecWCpPqMc0DD1PNBTWT10F6lqO
+fY+hamslS1/mk7FDmRpOMoT9EqAMs7KhcD+h+iTys5kEWo50QyNxVJM58vGNSnz0
+pAAMl+5Y4LOyocEaE75/hs3JPnPSYXvZ8q0wMGtQ1E7MXwqWCHnNpyuagIX9mLaf
+aQD/tIrW3BTlVnW/xahNNYZSJOGTHNcG4bTYXUO49tZ1OObBPbbDrYL9pAFdGBB/
+ghFgMJzPjzTUV2/b03UfoimczA4N8XLXBUUY2bE+FIr3QYAfX4sg4rpQvfBZOwbB
+x763Js7ng78tyriKRpS92w0CN0P0ZoqXkhI5wDAv20FBbGf9DbtMMgfnqqHJLX11
+GG1DijpemBjHr01yfjuqRS935wt/hXJGlZhOgmYBTJZSOIBwVnsiK8SvA3ebeBOe
+nquSNEHcC12BA3791Q/Q
+=/Gt4
+-----END PGP SIGNATURE-----
+
+--8t9RHnE3ZwKMSgU+--
