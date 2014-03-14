@@ -1,48 +1,77 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH RFC v9 5/6] dma: mpc512x: add device tree binding document
-Date: Fri, 14 Mar 2014 11:43:01 +0100
-Message-ID: <201403141143.01288.arnd@arndb.de>
-References: <1394624875-24411-1-git-send-email-a13xp0p0v88@gmail.com> <1394624875-24411-6-git-send-email-a13xp0p0v88@gmail.com> <20140313180916.GF25870@e106331-lin.cambridge.arm.com>
+From: Zhou Zhu <zzhu3-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] video: mmp: add device tree support
+Date: Fri, 14 Mar 2014 18:43:30 +0800
+Message-ID: <5322DD52.9070107@marvell.com>
+References: <1389698184-28761-1-git-send-email-zzhu3@marvell.com> <1389698184-28761-5-git-send-email-zzhu3@marvell.com> <20140217143736.GC19308@e106331-lin.cambridge.arm.com> <CAJATT-5sQc7vsUhoFKdDnstqjj2R_yQ+Wk1NRf20UTM4-ndMSA@mail.gmail.com> <5316EF76.1050304@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140313180916.GF25870-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+In-Reply-To: <5316EF76.1050304-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Zhou Zhu <zzhu84-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chao Xie <cxie4-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Guoqing Li <ligq-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lisa Du <cldu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yonghai Huang <huangyh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 13 March 2014, Mark Rutland wrote:
-> > +
-> > +Example:
-> > +
-> > +     dma0: dma@14000 {
-> > +             compatible = "fsl,mpc5121-dma";
-> > +             reg = <0x14000 0x1800>;
-> > +             interrupts = <65 0x8>;
-> > +             #dma-cells = <1>;
-> > +     };
-> > +
-> > +
-> > +Client node properties:
-> > +
-> > +Required properties:
-> > +- dmas:                      list of DMA specifiers, consisting each of a handle
-> > +                     for the DMA controller and integer cells to specify
-> > +                     the channel used within the DMA controller
-> > +- dma-names:         list of identifier strings for the DMA specifiers,
-> > +                     client device driver code uses these strings to
-> > +                     have DMA channels looked up at the controller
-> 
-> List the exact names you expect, or the dma-names property is useless.
+Hi, Tomi,
 
-Listing specific names makes no sense in the binding for the provider,
-they should be part of the slave device binding. A reference to the
-generic bindings/dma/dma.txt file should be enough here.
+On 03/05/2014 05:33 PM, Tomi Valkeinen wrote:
+> I would recommend using the same style that is used in the OMAP DSS, imx
+> drm and exynos patches that are introducing DT support. They use ports
+> and endpoints as defined in:
+>
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/media/video-interfaces.txt
+>
+> with the addition of a simplified endpoint format, where the 'port' node
+> is not required.
+>
+> To give an idea what it could look like, I've modified your example
+> above. It's just a rough example, you should study and think how it best
+> fits for mmp.
+>
+> You could use the same format for the internal connections also, but I
+> didn't touch that. I think internal connections can as well be
+> configured separately, in a custom format, because there's no need for
+> external components to connect to the internal links.
+>
+> mmp-disp@d420b000 {
+>      compatible = "marvell,mmp-disp";
+>      reg = <0xd420b000 0x1fc>;
+>      interrupts = <0 41 0x4>;
+>
+>      internal-connections {
+>          pipe1: pn-path {
+>          input = "panel-graphic";
+>          output = &disp_out;
+>          }
+>      }
+>
+> 	disp_out: endpoint {
+> 		remote-endpoint = <&panel_in>;
+> 		marvell,rbswap;
+> 		marvell,spi;
+> 	};
+>
+>      status = "okay";
+> }
+>
+> panel-xxx {
+> 	properties;
+>
+> 	panel_in: endpoint {
+> 		remote-endpoint = <&disp_out>;
+> 	};
+> };
+>
+>   Tomi
+>
+>
+Thank you! I will update patches according to this layout later.
 
-	Arnd
+
+-- 
+Thanks,
+-Zhou
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
