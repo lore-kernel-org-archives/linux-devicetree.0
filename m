@@ -1,42 +1,50 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: [PATCH v7 5/6] pci: Export find_pci_host_bridge() function.
-Date: Fri, 14 Mar 2014 15:34:31 +0000
-Message-ID: <1394811272-1547-6-git-send-email-Liviu.Dudau@arm.com>
-References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
+	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH] spi: efm32: properly namespace location property
+Date: Fri, 14 Mar 2014 17:01:28 +0100
+Message-ID: <1394812888-22697-1-git-send-email-u.kleine-koenig@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is a useful function and we should make it visible outside the
-generic PCI code. Export it as a GPL symbol.
+While reviewing an i2c driver for efm32 that needs a similar property
+Wolfram Sang pointed out that "location" is a too generic name for some=
+thing
+that is efm32 specific. So add an appropriate namespace and fall back t=
+o the
+generic name in case of failure.
 
-Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-Tested-by: Tanmay Inamdar <tinamdar@apm.com>
+Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- drivers/pci/host-bridge.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/spi/spi-efm32.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/host-bridge.c b/drivers/pci/host-bridge.c
-index 06ace62..8708b652 100644
---- a/drivers/pci/host-bridge.c
-+++ b/drivers/pci/host-bridge.c
-@@ -17,12 +17,13 @@ static struct pci_bus *find_pci_root_bus(struct pci_bus *bus)
- 	return bus;
- }
- 
--static struct pci_host_bridge *find_pci_host_bridge(struct pci_bus *bus)
-+struct pci_host_bridge *find_pci_host_bridge(struct pci_bus *bus)
- {
- 	struct pci_bus *root_bus = find_pci_root_bus(bus);
- 
- 	return to_pci_host_bridge(root_bus->bridge);
- }
-+EXPORT_SYMBOL_GPL(find_pci_host_bridge);
- 
- void pci_set_host_bridge_release(struct pci_host_bridge *bridge,
- 				 void (*release_fn)(struct pci_host_bridge *),
--- 
+diff --git a/drivers/spi/spi-efm32.c b/drivers/spi/spi-efm32.c
+index d4d3cc534792..daa73358f92d 100644
+--- a/drivers/spi/spi-efm32.c
++++ b/drivers/spi/spi-efm32.c
+@@ -297,7 +297,10 @@ static int efm32_spi_probe_dt(struct platform_devi=
+ce *pdev,
+ 	if (!np)
+ 		return 1;
+=20
+-	ret =3D of_property_read_u32(np, "location", &location);
++	ret =3D of_property_read_u32(np, "efm32,location", &location);
++	if (ret)
++		/* fall back to old and (wrongly) generic property "location" */
++		ret =3D of_property_read_u32(np, "location", &location);
+ 	if (!ret) {
+ 		dev_dbg(&pdev->dev, "using location %u\n", location);
+ 	} else {
+--=20
 1.9.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
