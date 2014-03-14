@@ -1,114 +1,116 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCHv2 8/8] devfreq: exynos4: Add busfreq driver for
- exynos4210/exynos4x12
-Date: Fri, 14 Mar 2014 10:35:52 +0000
-Message-ID: <20140314103552.GK25870@e106331-lin.cambridge.arm.com>
-References: <1394698649-20996-1-git-send-email-cw00.choi@samsung.com>
- <1394698649-20996-9-git-send-email-cw00.choi@samsung.com>
- <20140313175308.GE25870@e106331-lin.cambridge.arm.com>
- <5322AC5D.9070200@samsung.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 7/8] ARM: dts: dra7: Add USB related nodes
+Date: Fri, 14 Mar 2014 16:08:06 +0530
+Message-ID: <5322DC0E.1020600@ti.com>
+References: <1394197751-28984-1-git-send-email-rogerq@ti.com>
+ <1394197751-28984-8-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5322AC5D.9070200@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>, "nm@ti.com" <nm@ti.com>, "b.zolnierkie@samsaung.com" <b.zolnierkie@samsaung.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1394197751-28984-8-git-send-email-rogerq@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Roger Quadros <rogerq@ti.com>, balbi@ti.com, tony@atomide.com
+Cc: devicetree@vger.kernel.org, george.cherian@ti.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 14, 2014 at 07:14:37AM +0000, Chanwoo Choi wrote:
-> Hi Mark,
-> 
-> On 03/14/2014 02:53 AM, Mark Rutland wrote:
-> > On Thu, Mar 13, 2014 at 08:17:29AM +0000, Chanwoo Choi wrote:
-> >> This patch add busfreq driver for Exynos4210/Exynos4x12 memory interface
-> >> and bus to support DVFS(Dynamic Voltage Frequency Scaling) according to PPMU
-> >> counters. PPMU (Performance Profiling Monitorings Units) of Exynos4 SoC provides
-> >> PPMU counters for DMC(Dynamic Memory Controller) to check memory bus utilization
-> >> and then busfreq driver adjusts dynamically the operating frequency/voltage
-> >> by using DEVFREQ Subsystem.
-> >>
-> >> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> >> ---
-> >>  .../devicetree/bindings/devfreq/exynos4_bus.txt    | 49 ++++++++++++++++++++++
-> >>  1 file changed, 49 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt b/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
-> >> new file mode 100644
-> >> index 0000000..2a83fcc
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
-> >> @@ -0,0 +1,49 @@
-> >> +
-> >> +Exynos4210/4x12 busfreq driver
-> >> +-----------------------------
-> >> +
-> >> +Exynos4210/4x12 Soc busfreq driver with devfreq for Memory bus frequency/voltage
-> >> +scaling according to PPMU counters of memory controllers
-> >> +
-> >> +Required properties:
-> >> +- compatible	: should contain Exynos4 SoC type as follwoing:
-> >> +		  - "samsung,exynos4x12-busfreq" for Exynos4x12
-> >> +		  - "samsung,exynos4210-busfreq" for Exynos4210
-> > 
-> > Is there a device called "busfreq"? What device does this binding
-> > describe?
-> 
-> I'll add detailed description of busfreq as following:
-> 
-> "busfreq(bus frequendcy)" driver means that busfreq driver control dynamically
-> memory bus frequency/voltage by checking memory bus utilization to optimize
-> power-consumption. When checking memeory bus utilization, exynos4_busfreq driver
-> would use PPMU(Performance Profiling Monitoring Units).
+Hi Roger,
 
-This still sounds like a description of the _driver_, not the _device_.
-The binding should describe the hardware, now the high level abstraction
-that software is going to build atop of it.
+On Friday 07 March 2014 06:39 PM, Roger Quadros wrote:
+> Add nodes for the Super Speed USB controllers, omap-control-usb,
+> USB2 PHY and USB3 PHY devices.
+>
+> Remove ocp2scp1 address space from hwmod data as it is
+> now provided via device tree.
+>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+>   arch/arm/boot/dts/dra7.dtsi               | 110 ++++++++++++++++++++++++++++++
+>   arch/arm/mach-omap2/omap_hwmod_7xx_data.c |  10 ---
+>   2 files changed, 110 insertions(+), 10 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> index 597979b..1e73900 100644
+> --- a/arch/arm/boot/dts/dra7.dtsi
+> +++ b/arch/arm/boot/dts/dra7.dtsi
+> @@ -811,6 +811,116 @@
+>   			clocks = <&sata_ref_clk>;
+>   			ti,hwmods = "sata";
+>   		};
+> +
+> +		omap_control_usb2phy1: control-phy@4a002300 {
+> +			compatible = "ti,control-phy-usb2";
+> +			reg = <0x4a002300 0x4>;
+> +			reg-names = "power";
+> +		};
+> +
+> +		omap_control_usb3phy1: control-phy@4a002370 {
+> +			compatible = "ti,control-phy-pipe3";
+> +			reg = <0x4a002370 0x4>;
+> +			reg-names = "power";
+> +		};
+> +
+> +		omap_control_usb2phy2: control-phy@0x4a002e74 {
+> +			compatible = "ti,control-phy-usb2-dra7";
+> +			reg = <0x4a002e74 0x4>;
+> +			reg-names = "power";
+> +		};
+> +
+> +		/* OCP2SCP1 */
+> +		ocp2scp@4a080000 {
+> +			compatible = "ti,omap-ocp2scp";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +			reg = <0x4a080000 0x20>;
+> +			ti,hwmods = "ocp2scp1";
+> +
+> +			usb2_phy1: phy@4a084000 {
+> +				compatible = "ti,omap-usb2";
+> +				reg = <0x4a084000 0x400>;
+> +				ctrl-module = <&omap_control_usb2phy1>;
+> +				clocks = <&usb_phy1_always_on_clk32k>,
+> +					 <&usb_otg_ss1_refclk960m>;
+> +				clock-names =	"wkupclk",
+> +						"refclk";
+> +				#phy-cells = <0>;
+> +			};
+> +
+> +			usb2_phy2: phy@4a085000 {
+> +				compatible = "ti,omap-usb2";
+> +				reg = <0x4a085000 0x400>;
+> +				ctrl-module = <&omap_control_usb2phy2>;
+> +				clocks = <&usb_phy2_always_on_clk32k>,
+> +					 <&usb_otg_ss2_refclk960m>;
+> +				clock-names =	"wkupclk",
+> +						"refclk";
+> +				#phy-cells = <0>;
+> +			};
+> +
+> +			usb3_phy1: phy@4a084400 {
+> +				compatible = "ti,omap-usb3";
+> +				reg = <0x4a084400 0x80>,
+> +				      <0x4a084800 0x64>,
+> +				      <0x4a084c00 0x40>;
+> +				reg-names = "phy_rx", "phy_tx", "pll_ctrl";
+> +				ctrl-module = <&omap_control_usb3phy1>;
+> +				clocks = <&usb_phy3_always_on_clk32k>,
+> +					 <&sys_clkin1>,
+> +					 <&usb_otg_ss1_refclk960m>,
+> +					 <&dpll_core_h13x2_ck>;
+> +				clock-names =	"wkupclk",
+> +						"sysclk",
+> +						"refclk",
+> +						"optclk";
 
-It sounds like this is a binding for the DMC PPMU?
+Do we use this 'optclk' in driver?
 
-Is the PPMU a component of the DMC, or is it bolted on the side?
-
-> 
-> 
-> > 
-> >> +- reg		: offset and length of the ppmudmc0/1
-> >> +		  - PPMU (Performance Profiling Monitoring Units)
-> > 
-> > You seem to require a particular order here. It would be good to be
-> > explicit about it.
-> 
-> OK, I'll modify it as following:
-> the offset and length of the PPMU_DMC0 / PPMU_DMC1
-> PPMU_DMC0/PPMU_DMC1 show memory buy utilization to exynos4_bus driver.
-> 
-> > 
-> >> +		  : It is to profile performance event of DMC(Dynamic Memory
-> >> +		  Controller) So, exynos4_bus.c can check memory bus utilization
-> >> +		  by using PPMU of Exynos4 SoC.
-> > 
-> > This is superfluous, and Linux-specific. The binding document shouldn't
-> > need to refer to drivers.
-> 
-> I'll remove this description.
-> 
-> > 
-> >> +- clocks	: clock number of ppmudmc0/1
-> >> +- clock-names	: clock name of ppmudmc0/1
-> > 
-> > Are these two clocks, or one clock with a slash in the name?
-> > 
-> > Please list each name separately.
-> 
-> I'll expalin clocks as following:
-> 	"ppmudmc0", "ppmudmc1"
-> 
-> > 
-> >> +- vdd_int-supply: regulator for interface block of Exynos4
-
-How does the interface block relate to the DMC / PPMU?
-
-Cheers,
-Mark.
+-Kishon
