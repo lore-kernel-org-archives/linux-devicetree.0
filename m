@@ -1,101 +1,61 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: [RFC 5/9] ARM: dts: AM4372: Add opp-modifier device entry and add higher OPPs
-Date: Fri, 14 Mar 2014 14:25:31 -0500
-Message-ID: <1394825135-60110-6-git-send-email-d-gerlach@ti.com>
-References: <1394825135-60110-1-git-send-email-d-gerlach@ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] spi: efm32: properly namespace location property
+Date: Fri, 14 Mar 2014 19:27:03 +0000
+Message-ID: <20140314192703.GC366@sirena.org.uk>
+References: <1394812888-22697-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1394825135-60110-1-git-send-email-d-gerlach@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: cpufreq@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Jisheng Zhang <jszhang@marvell.com>, Anson Huang <Anson.Huang@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Nishanth Menon <nm@ti.com>, Dave Gerlach <d-gerlach@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="TS2lcZuyPwZjLAUw"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1394812888-22697-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add an entry for opp_modifier which configures OPPs on AM4372. Within
-this, nodes are defined with the opp-modifier propety that are defined as
-a list of frequency, offset from base register, and efuse value.
-The CPU node passes a phandle to the appropriate child node to get the
-correct table.
 
-This patch also adds higher eFused OPPs for AM4372.
+--TS2lcZuyPwZjLAUw
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
----
- arch/arm/boot/dts/am4372.dtsi | 30 ++++++++++++++++++++++++++++++
- include/dt-bindings/opp/ti.h  |  6 ++++++
- 2 files changed, 36 insertions(+)
+On Fri, Mar 14, 2014 at 05:01:28PM +0100, Uwe Kleine-K=F6nig wrote:
+> While reviewing an i2c driver for efm32 that needs a similar property
+> Wolfram Sang pointed out that "location" is a too generic name for someth=
+ing
+> that is efm32 specific. So add an appropriate namespace and fall back to =
+the
+> generic name in case of failure.
 
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index c6bd4d9..dbaa2e3 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -9,6 +9,7 @@
-  */
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/opp/ti.h>
- 
- #include "skeleton.dtsi"
- 
-@@ -33,6 +34,17 @@
- 			compatible = "arm,cortex-a9";
- 			device_type = "cpu";
- 			reg = <0>;
-+
-+			operating-points = <
-+				/* kHz    uV */
-+				300000	950000
-+				600000	1100000
-+				720000	1200000
-+				800000	1260000
-+				1000000 1325000
-+			>;
-+
-+			platform-opp-modifier = <&mpu_opp_modifier>;
- 		};
- 	};
- 
-@@ -662,6 +674,24 @@
- 			dma-names = "tx", "rx";
- 		};
- 
-+		opp_modifier: opp_modifier@0x44e10610 {
-+			compatible = "opp-modifier-reg-bit";
-+			reg = <0x44e10610 0x04>;
-+
-+			opp,reg-bit-enable-low;
-+
-+			mpu_opp_modifier: mpu_opp_modifier {
-+				opp-modifier = <
-+				/* kHz	offset	value */
-+				1000000	0	AM43XX_EFUSE_SMA_OPP_NITRO_1GHZ_BIT
-+				800000	0	AM43XX_EFUSE_SMA_OPP_TURBO_800MHZ_BIT
-+				720000	0	AM43XX_EFUSE_SMA_OPP_120_720MHZ_BIT
-+				600000	0	AM43XX_EFUSE_SMA_OPP_100_600MHZ_BIT
-+				300000	0	AM43XX_EFUSE_SMA_OPP_50_300MHZ_BIT
-+				>;
-+			};
-+		};
-+
- 		mcasp0: mcasp@48038000 {
- 			compatible = "ti,am33xx-mcasp-audio";
- 			ti,hwmods = "mcasp0";
-diff --git a/include/dt-bindings/opp/ti.h b/include/dt-bindings/opp/ti.h
-index 58436c1..d3717be 100644
---- a/include/dt-bindings/opp/ti.h
-+++ b/include/dt-bindings/opp/ti.h
-@@ -19,4 +19,10 @@
- #define AM33XX_EFUSE_SMA_OPP_TURBO_800MHZ_BIT		(1 << 8)
- #define AM33XX_EFUSE_SMA_OPP_NITRO_1GHZ_BIT             (1 << 9)
- 
-+#define AM43XX_EFUSE_SMA_OPP_50_300MHZ_BIT              (1 << 0)
-+#define AM43XX_EFUSE_SMA_OPP_100_600MHZ_BIT             (1 << 2)
-+#define AM43XX_EFUSE_SMA_OPP_120_720MHZ_BIT             (1 << 3)
-+#define AM43XX_EFUSE_SMA_OPP_TURBO_800MHZ_BIT		(1 << 4)
-+#define AM43XX_EFUSE_SMA_OPP_NITRO_1GHZ_BIT             (1 << 5)
-+
- #endif		/* __DT_BINDINGS_OPP_TI_H__ */
--- 
-1.9.0
+This doesn't apply against current code (I expect due to the non-DT
+cleanup from Axel) and like I said earlier needs a binding update.  It
+does make sense - can you respin against my topic/efm32 please?
 
+--TS2lcZuyPwZjLAUw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTI1gEAAoJELSic+t+oim9eSoP/R2k5Xvrponqu92od+RPUKRC
+WCpZ2WxSThZmLChkwzs/AZeLhCWnZAYa44YamJ4P2AGQgJ/DX3FMkOpKzihZo1jn
+Wyehf8e4mdXS4bxVbEMdQnK6S0iA7Rg6Sq6v+zYIb0xxeYZMYNfhhPoadnhWVARb
+fv3VkxEMe5FTDinxQ0YmUSX6ueUXl6h9nFe42jsg4mxxX4tCiarNKXKkxj4xn7dQ
+hn8LPq4KE6RrE9UgUXlfqrW5IHmXF3PP4DJdMk6SibzRbeaAVLeLOTBHX4lX986d
+NLCNHgAzvh05we37wuztn/1kTAjIQ6Yu+TXUMxaeq6yU2A3xluJv0Mg4DGttObX8
+zUf8t0wvZHY/FYjhxvlOy667KeoTXXOMM5P+RKTsmDKItawfeFTBIE7KntF6fDFz
+FchhiVo3oT4Q1Jju20x/CR+xgR4e8/UWB9Qa7k2gnO9E7CzrKzjd4rvDrJmT6qP9
+IrOudWghPFxoD6Znraigfo/JivaFG9Pqtw+72gGhvmrHZGJdCExWxtQRHPFfwLjf
+5kbl0D0gpivs5p3blyXfsmRrHqnSn4ueuPFOInq1fwfZ/t11mHWhLJiyY8E+rc4R
+1rUVnKhi0K2SA8zA4oJKOCj+FXavtAhZI/cqVTN0+1l6MW4/+wS751qKjkZgsXA+
+sIFAsGyG5HWH3onKiOQ1
+=gTht
+-----END PGP SIGNATURE-----
+
+--TS2lcZuyPwZjLAUw--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
