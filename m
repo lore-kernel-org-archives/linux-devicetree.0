@@ -1,20 +1,44 @@
-From: Adrian Bayford <cobrien-1NVZL0Om1tY@public.gmane.org>
-Subject: Contact Mr Adrian on (gadrain-SrY5CIqS7h8@public.gmane.org)
-Date: Fri, 14 Mar 2014 02:46:28 -0400
-Message-ID: <a1b92df5-6da8-4634-a63c-baccb0aef53b@AEMMKEEX.aem.org>
-Reply-To: gadrain-SrY5CIqS7h8@public.gmane.org
+From: Robert Schwebel <r.schwebel@pengutronix.de>
+Subject: Re: [GIT PULL] Move device tree graph parsing helpers to drivers/of
+Date: Fri, 14 Mar 2014 08:05:05 +0100
+Message-ID: <20140314070505.GV1629@pengutronix.de>
+References: <1394126000.3622.66.camel@paszta.hi.pengutronix.de>
+ <20140307182330.75168C40AE3@trevor.secretlab.ca>
+ <20140310102630.3cb1bcd7@samsung.com>
+ <20140310143758.3734FC405FA@trevor.secretlab.ca>
+ <1394708896.3577.21.camel@paszta.hi.pengutronix.de>
+ <20140313113527.GM21483@n2100.arm.linux.org.uk>
+ <5321CB04.6090700@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Description: Mail message body
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Recipients <cobrien-1NVZL0Om1tY@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5321CB04.6090700@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-My wife and i adrian won Jackpot Lottery and Decided to donate 2million dollars to you,
-Contact Mr Adrian on (gadrain-SrY5CIqS7h8@public.gmane.org) For More Info
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi,
+
+On Thu, Mar 13, 2014 at 04:13:08PM +0100, Sylwester Nawrocki wrote:
+> My experience and feelings are similar, I started to treat mainline
+> kernel much less seriously after similar DT related blocking issues.
+
+So how do we proceed now? Philipp implemented any of the suggested
+variants now; nevertheless, there doesn't seem to be a consensus.
+
+However, we really need a decision of the oftree maintainers. I think we
+are fine with almost any of the available variants, as long as there is
+a decision. 
+
+It would be great if we could soon continue to address the technical
+issues with the IPU, instead of turning around oftree bindings. There
+is really enough complexity left :-)
+
+rsc
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
