@@ -1,259 +1,73 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: ventana: fix eth1 pci dev node
-Date: Fri, 14 Mar 2014 21:28:06 +0800
-Message-ID: <20140314132805.GD813@S2101-09.ap.freescale.net>
-References: <1394747064-4106-1-git-send-email-tharvey@gateworks.com>
+From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v11 10/27] iommu/exynos: use managed device helper
+	functions
+Date: Fri, 14 Mar 2014 14:28:36 +0100
+Message-ID: <53230404.6070601@samsung.com>
+References: <20140314140542.f4ded6c50dbd8a1d937bf354@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1394747064-4106-1-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-reply-to: <20140314140542.f4ded6c50dbd8a1d937bf354-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux DeviceTree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Samsung SOC <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Prathyush <prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Antonios Motakis <a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 13, 2014 at 02:44:24PM -0700, Tim Harvey wrote:
-> Properly add the PCI device node for the 2nd GigE port so that the device
-> driver can get its MAC from DT.  Note that the Ventana bootloader uses
-> the ethernet1 alias to populate the MAC address by adding the local-mac-address
-> property.  Also remove the unnecesssary 'sky2' alias.
-> 
-> This is based on Shawn's for-next branch
+Hi KyongHo,
 
-This line shouldn't be necessarily in the commit log.
-
-> 
-> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+On 14.03.2014 06:05, Cho KyongHo wrote:
+> This patch uses managed device helper functions in the probe().
+>
+> Signed-off-by: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 > ---
->  arch/arm/boot/dts/imx6q-gw5400-a.dts  | 40 +++++++++++++++++++++++++++++++----
->  arch/arm/boot/dts/imx6qdl-gw53xx.dtsi | 39 ++++++++++++++++++++++++++++++----
->  arch/arm/boot/dts/imx6qdl-gw54xx.dtsi | 39 ++++++++++++++++++++++++++++++----
->  3 files changed, 106 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6q-gw5400-a.dts b/arch/arm/boot/dts/imx6q-gw5400-a.dts
-> index 902f983..5d2b912 100644
-> --- a/arch/arm/boot/dts/imx6q-gw5400-a.dts
-> +++ b/arch/arm/boot/dts/imx6q-gw5400-a.dts
-> @@ -16,7 +16,7 @@
->  	model = "Gateworks Ventana GW5400-A";
->  	compatible = "gw,imx6q-gw5400-a", "gw,ventana", "fsl,imx6q";
->  
-> -	/* these are used by bootloader for disabling nodes */
-> +	/* these are used by bootloader for configuring nodes */
->  	aliases {
->  		ethernet0 = &fec;
->  		ethernet1 = &eth1;
-> @@ -26,7 +26,7 @@
->  		led0 = &led0;
->  		led1 = &led1;
->  		led2 = &led2;
-> -		sky2 = &eth1;
-> +
+>   drivers/iommu/exynos-iommu.c |   64 +++++++++++++++++-------------------------
+>   1 file changed, 26 insertions(+), 38 deletions(-)
+>
+> diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
+> index 36e6b73..33b424d 100644
+> --- a/drivers/iommu/exynos-iommu.c
+> +++ b/drivers/iommu/exynos-iommu.c
+> @@ -499,51 +499,48 @@ void exynos_sysmmu_tlb_invalidate(struct device *dev)
+>
+>   static int exynos_sysmmu_probe(struct platform_device *pdev)
+>   {
+> -	int ret;
+> +	int irq, ret;
+>   	struct device *dev = &pdev->dev;
+>   	struct sysmmu_drvdata *data;
+>   	struct resource *res;
+>
+> -	data = kzalloc(sizeof(*data), GFP_KERNEL);
+> -	if (!data) {
+> -		dev_dbg(dev, "Not enough memory\n");
+> -		ret = -ENOMEM;
+> -		goto err_alloc;
+> -	}
+> +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+>
+>   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>   	if (!res) {
+> -		dev_dbg(dev, "Unable to find IOMEM region\n");
+> -		ret = -ENOENT;
+> -		goto err_init;
+> +		dev_err(dev, "Unable to find IOMEM region\n");
+> +		return -ENOENT;
+>   	}
 
-No need to add a new line.
+No need to check for error and print message, because 
+devm_ioremap_resource() already checks the passed resource and handles 
+error cases.
 
->  		ssi0 = &ssi1;
->  		spi0 = &ecspi1;
->  		usb0 = &usbh1;
-> @@ -496,8 +496,40 @@
->  	reset-gpio = <&gpio1 29 0>;
->  	status = "okay";
->  
-> -	eth1: sky2@8 { /* MAC/PHY on bus 8 */
-> -		compatible = "marvell,sky2";
-
-So this was just a placeholder and did not actually work in any way,
-right?
-
-> +	pcie@0,0 {
-
-Is this whole bridge/switch hierarchy binding documented somewhere or is
-this just something that work for you?
-
-> +		/* 00:00.0 host-bridge */
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +		device_type = "pci";
-> +		reg = <0x0 0 0 0 0>;
-> +
-> +		/*
-> +		 * GigE PCI dev node needs to be defined so that enet driver
-> +		 * can use it to obtain its boot-loader specified MAC
-> +		 */
-> +		pcie@0,0 {
-> +			/* 01:00.0 PCIe switch */
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			device_type = "pci";
-> +			reg = <0x0 0 0 0 0>;
-> +
-> +			pcie@8,0 {
-
-What's the naming schema for all these pcie nodes?  Generally, we should
-have the numbers encoded in the node name coming from the address cells
-in 'reg' property.
-
-Shawn
-
-> +				/* 02:08.0 PCIe switch port */
-> +				#address-cells = <3>;
-> +				#size-cells = <2>;
-> +				device_type = "pci";
-> +				reg = <0x4000 0 0 0 0>;
-> +				eth1: pcie@0,0 {
-> +					/* 08:00.0 GigE */
-> +					#address-cells = <3>;
-> +					#size-cells = <2>;
-> +					device_type = "pci";
-> +					reg = <0x0 0 0 0 0>;
-> +					compatible = "marvell,sky2";
-> +				};
-> +			};
-> +		};
->  	};
->  };
->  
-> diff --git a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
-> index c8e5ae0..46a8582 100644
-> --- a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
-> @@ -10,7 +10,7 @@
->   */
->  
->  / {
-> -	/* these are used by bootloader for disabling nodes */
-> +	/* these are used by bootloader for configuring nodes */
->  	aliases {
->  		can0 = &can1;
->  		ethernet0 = &fec;
-> @@ -19,7 +19,6 @@
->  		led1 = &led1;
->  		led2 = &led2;
->  		nand = &gpmi;
-> -		sky2 = &eth1;
->  		ssi0 = &ssi1;
->  		usb0 = &usbh1;
->  		usb1 = &usbotg;
-> @@ -503,8 +502,40 @@
->  	reset-gpio = <&gpio1 29 0>;
->  	status = "okay";
->  
-> -	eth1: sky2@8 { /* MAC/PHY on bus 8 */
-> -		compatible = "marvell,sky2";
-> +	/*
-> +	 * GigE PCI dev node needs to be defined so that enet driver
-> +	 * can use it to obtain its boot-loader specified MAC
-> +	 */
-> +	pcie@0,0 {
-> +		/* 00:00.0 root host-bridge */
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +		device_type = "pci";
-> +		reg = <0x0 0 0 0 0>;
-> +
-> +		pcie@0,0 {
-> +			/* 01:00.0 PCIe switch */
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			device_type = "pci";
-> +			reg = <0x0 0 0 0 0>;
-> +
-> +			pcie@4,0 {
-> +				/* 02:04.0 PCIe switch port */
-> +				#address-cells = <3>;
-> +				#size-cells = <2>;
-> +				device_type = "pci";
-> +				reg = <0x2000 0 0 0 0>;
-> +				eth1: pcie@0,0 {
-> +					/* 04:00.0 GigE */
-> +					#address-cells = <3>;
-> +					#size-cells = <2>;
-> +					device_type = "pci";
-> +					reg = <0x0 0 0 0 0>;
-> +					compatible = "marvell,sky2";
-> +				};
-> +			};
-> +		};
->  	};
->  };
->  
-> diff --git a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-> index 2795dfc..697aa67 100644
-> --- a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-> @@ -10,7 +10,7 @@
->   */
->  
->  / {
-> -	/* these are used by bootloader for disabling nodes */
-> +	/* these are used by bootloader for configuring nodes */
->  	aliases {
->  		can0 = &can1;
->  		ethernet0 = &fec;
-> @@ -19,7 +19,6 @@
->  		led1 = &led1;
->  		led2 = &led2;
->  		nand = &gpmi;
-> -		sky2 = &eth1;
->  		ssi0 = &ssi1;
->  		usb0 = &usbh1;
->  		usb1 = &usbotg;
-> @@ -525,8 +524,40 @@
->  	reset-gpio = <&gpio1 29 0>;
->  	status = "okay";
->  
-> -	eth1: sky2@8 { /* MAC/PHY on bus 8 */
-> -		compatible = "marvell,sky2";
-> +	/*
-> +	 * GigE PCI dev node needs to be defined so that enet driver
-> +	 * can use it to obtain its boot-loader specified MAC
-> +	 */
-> +	pcie@0,0 {
-> +		/* 00:00.0 root host-bridge */
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +		device_type = "pci";
-> +		reg = <0x0 0 0 0 0>;
-> +
-> +		pcie@0,0 {
-> +			/* 01:00.0 PCIe switch */
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			device_type = "pci";
-> +			reg = <0x0 0 0 0 0>;
-> +
-> +			pcie@8,0 {
-> +				/* 02:08.0 PCIe switch port */
-> +				#address-cells = <3>;
-> +				#size-cells = <2>;
-> +				device_type = "pci";
-> +				reg = <0x4000 0 0 0 0>;
-> +				eth1: pcie@0,0 {
-> +					/* 08:00.0 GigE */
-> +					#address-cells = <3>;
-> +					#size-cells = <2>;
-> +					device_type = "pci";
-> +					reg = <0x0 0 0 0 0>;
-> +					compatible = "marvell,sky2";
-> +				};
-> +			};
-> +		};
->  	};
->  };
->  
-> -- 
-> 1.8.3.2
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Tomasz
