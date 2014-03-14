@@ -1,60 +1,107 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] spi: dw-mmio: add oftree support
-Date: Fri, 14 Mar 2014 16:30:10 +0000
-Message-ID: <20140314163010.GX366@sirena.org.uk>
-References: <1394787326-14520-1-git-send-email-s.trumtrar@pengutronix.de>
- <20140314161403.GN25870@e106331-lin.cambridge.arm.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v2 4/4] ARM: DTS: AM43x: Add DSS node
+Date: Fri, 14 Mar 2014 18:34:19 +0200
+Message-ID: <53232F8B.5020708@ti.com>
+References: <1394701109-6721-1-git-send-email-sathyap@ti.com> <1394701109-6721-5-git-send-email-sathyap@ti.com> <20140313174623.GD25870@e106331-lin.cambridge.arm.com> <5321F77E.9000302@ti.com> <20140314091002.GG25870@e106331-lin.cambridge.arm.com> <5322CF02.4060705@ti.com> <20140314101405.GI25870@e106331-lin.cambridge.arm.com> <5322D7A4.4090602@ti.com> <5322E2D9.5000509@ti.com> <20140314140745.GL25870@e106331-lin.cambridge.arm.com> <20140314160404.GC21379@saruman.home>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="AG41CdL1ZWVzkk/P"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140314161403.GN25870@e106331-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+	protocol="application/pgp-signature";
+	boundary="fomKPg6KA7SpMomHB1JAHOH7LBFrOsJMr"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140314160404.GC21379@saruman.home>
+Sender: linux-omap-owner@vger.kernel.org
+To: balbi@ti.com, Mark Rutland <mark.rutland@arm.com>
+Cc: "av.tikhomirov@samsung.com" <av.tikhomirov@samsung.com>, Sathya Prakash M R <sathyap@ti.com>, "tony@atomide.com" <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "paul@pwsan.com" <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
+--fomKPg6KA7SpMomHB1JAHOH7LBFrOsJMr
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
---AG41CdL1ZWVzkk/P
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 14/03/14 18:04, Felipe Balbi wrote:
+> On Fri, Mar 14, 2014 at 02:07:45PM +0000, Mark Rutland wrote:
+>> On Fri, Mar 14, 2014 at 11:07:05AM +0000, Tomi Valkeinen wrote:
+>>> On 14/03/14 12:19, Tomi Valkeinen wrote:
+>>>> On 14/03/14 12:14, Mark Rutland wrote:
+>>>>
+>>>>> I can't see anything obviously wrong in platform_device_del. Do you=
+ have
+>>>>> a backtrace?
+>>>>
+>>>> Yes, below.
+>>>>
+>>>> I can see at least drivers/usb/dwc3/dwc3-exynos.c doing the exact sa=
+me thing
+>>>> I do, so maybe I've got something wrong with the omapdss driver.
+>>>
+>>> Looks to me that the devices created by of_platform_populate() are no=
+t
+>>> unregisterable in all cases. The address resource created via
+>>> of_platform_populate() had NULL res->parent, which causes
+>>> release_resource to crash.
+>>
+>> Hmm. I can't see that unregistering such devices ever works as you say=
+,
+>> given that __release_resource expects a non-NULL parent pointer. Eithe=
+r
+>> we should be setting the parent pointer when initialising devices from=
 
-On Fri, Mar 14, 2014 at 04:14:03PM +0000, Mark Rutland wrote:
-> On Fri, Mar 14, 2014 at 08:55:26AM +0000, Steffen Trumtrar wrote:
+>> dt or we should teach __release_resource to not care. I'll have a go a=
+t
+>> fixing that.
+>>
+>> It looks like drivers/usb/dwc3/dwc3-exynos.c only unregisters the
+>> top-level device, not children. This top-level device has no
+>> IORESOURCE_{IO,MEM} resources judging by
+>> arch/arm/boot/dts/exynos5250.dtsi, which would explain why that driver=
 
-> > +Optional properties:
-> > +- num-chipselects : The number of chipselects.
+>> isn't exploding: __release_resource will never get called.
+>>
+>> Anton, Felipe:=20
+>>
+>> Does unregistering the parent ensure the children get cleaned up, or
+>> does it leave them dangling in the dwc3-exynos driver?
+>=20
+> you should platform_device_unregister() for each children and
+> dwc3-exynos does that just fine:
 
-> If this is optional, when wuold I need to set this? What's the default
-> assumption?
+Yes, that's what I do also, and it crashes. What Mark said above about
+unregistering never working for such devices is correct, but I don't
+know why he said dwc3-exynos only unregisters the top level device.
 
-> Mark: I see some bindings have "num-chipselects", and some have
-> "num-cs". Do you have a preferred form that people could align on?
+"such devices" above meaning devices with a 'reg' defined in the DT
+data, if I'm not mistaken.
 
-Probably -cs but the whole thing needs reviewing anyway for handling of
-GPIO based chipselects.
+So at the moment, I think of_platform_populate() and
+platform_device_unregister() combination in a driver is a bit risky.
+Work fine for certain cases, not for some other.
 
---AG41CdL1ZWVzkk/P
+ Tomi
+
+
+
+--fomKPg6KA7SpMomHB1JAHOH7LBFrOsJMr
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iQIcBAEBAgAGBQJTIy6PAAoJELSic+t+oim93OAP/jK08OBIZnIXbqS2KH/Aoer6
-OvJq0y2nGCVE7YxCdr9EQ/oWB2y2TTLD9A0KGyFrcit4+Ebyt8TXt3S+VUUOB2xP
-pUc6H6KKt+ul5mWmsgh+p5R9yORV8caZg4UXtRJ6a+EsGDcLASjlXIhNj23VIYrS
-G32jOtsxguSRl/FM+BpGWubMobj17AgLNC6iFWKaUP8E7ctwDZIO/BEmR8Lf2GJo
-YeSIuFNUcCSXlI/fiKZSVzQLGtil+3PrgnKh1WbdxsB6tIktBHTF+KU3R+gUPlVp
-ZeShi+eiMF0xhMlOIRlLJ1U8eG57VsHTHKzFtSpkfsbPBu/9DTyuf24OxsQqU6SC
-OIuCFlZ59KyNWqChwau8LxVGwtTE2P41tbuQGl1UDOn2vDoDIytep0TGviX027lm
-dB/07+LIiLOtQ+98EERjxWwpd4HLSowGPH7S+HkJNIT9B1Q9ODV91Lif+qgOtwG1
-C6mfUEse9Y044A35tISWy77Y5h5huPQWDhzmIcpl58t5Q2oWRA3u+1s7NaaxnY8R
-UPrncktgllCbc5X/qm7WX8Dxo2GwFZZ7Ts8uWoR02QmVhhQxqZbxDVUUL2qlWztx
-UIP+RjVuNwdlvs3w9ODA3620peoO684jQ8mCNu4n7uh/I8pVJHymAGPk1yqCHi9j
-yCO0AivHOkE0F8Ne1kMW
-=SmBh
+iQIcBAEBAgAGBQJTIy+LAAoJEPo9qoy8lh71xzcQAI0c66vM0Q4bxfOawoRA0Fle
+zkj0rFbLKgk4/C/WNspwV4+Mt9SfRc1H5KlaVyBnvrQo+h68/LT3mZZiUmDQnQi0
+vtAap+t+W37DukozuJ4LtbkbBjYrO44bk/SsA1wMx0lii+WKssTN7wz4du95dMXH
+M4fatj0BgV2n3J9x7yFQ6wI6phHsvpSzAKvdqiwvqHHtg4TWeKw1h+DgYXfbs8mY
+zAjtUDhQsjp7N4j7ejbBY7AoGqBoqI9eABp0K1RFHfUn1Q3j46QoKb9QyewUq20U
+CmZZrb2RtXni+dpbrHmfkKRxwDKyePfr7dl8mi05HCDrs6Uh1sNXxeKmQpXp1MOo
+IVfJddzUp1nwz7bpFFqUYRGyWRfOpJZiZ5sgiv4VRDEHg/MjxP9drgq//DhaE+7D
+5pGbG82QOdpX/oxTptE986AEPtNziQxuvh7jHO7zCJDfWvOgnuhGaXAZorEPtxpl
+4/e3JVNrv/B14b6Fs/dEOJqnmrIV1+KLd6fLnQpuzrOaFP5ogTmb6I0vDdL17I8W
+x23ojDB7T5SFDxJ4CXsvR5Oc9wenrj13e5Fu4CeEYdibILcW0XL1Y2GmamEogRwN
+sYtrp8KQMV6eIy3pQA9FzZhlOcL5NOYZb38+sS1JpcBsEbXJn6tM27e+FbAOEo2P
+qpHAsOUTSpyb99etfqAF
+=efKI
 -----END PGP SIGNATURE-----
 
---AG41CdL1ZWVzkk/P--
+--fomKPg6KA7SpMomHB1JAHOH7LBFrOsJMr--
