@@ -1,70 +1,52 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v2 4/4] ARM: DTS: AM43x: Add DSS node
-Date: Fri, 14 Mar 2014 13:07:05 +0200
-Message-ID: <5322E2D9.5000509@ti.com>
-References: <1394701109-6721-1-git-send-email-sathyap@ti.com> <1394701109-6721-5-git-send-email-sathyap@ti.com> <20140313174623.GD25870@e106331-lin.cambridge.arm.com> <5321F77E.9000302@ti.com> <20140314091002.GG25870@e106331-lin.cambridge.arm.com> <5322CF02.4060705@ti.com> <20140314101405.GI25870@e106331-lin.cambridge.arm.com> <5322D7A4.4090602@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v17 1/4] arm64: Add APM X-Gene SoC 15Gbps Multi-purpose
+ PHY DTS entries
+Date: Fri, 14 Mar 2014 12:08:53 +0100
+Message-ID: <201403141208.53772.arnd@arndb.de>
+References: <1394655573-32645-1-git-send-email-lho@apm.com>
+ <1394655573-32645-2-git-send-email-lho@apm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="L0cs3uBaS6ln5lsMIkm261FTu9qqPpUxH"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <5322D7A4.4090602@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Sathya Prakash M R <sathyap@ti.com>, "tony@atomide.com" <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "paul@pwsan.com" <paul@pwsan.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1394655573-32645-2-git-send-email-lho@apm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Loc Ho <lho@apm.com>
+Cc: devicetree@vger.kernel.org, Suman Tripathi <stripathi@apm.com>, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, jcm@redhat.com, patches@apm.com, tj@kernel.org, ddutile@redhat.com, olof@lixom.net, Tuan Phan <tphan@apm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---L0cs3uBaS6ln5lsMIkm261FTu9qqPpUxH
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Wednesday 12 March 2014, Loc Ho wrote:
+> +                       sataphy1clk: sataphy1clk@1f21c000 {
+> +                               compatible = "apm,xgene-device-clock";
+> +                               #clock-cells = <1>;
+> +                               clocks = <&socplldiv2 0>;
+> +                               clock-names = "socplldiv2";
 
-On 14/03/14 12:19, Tomi Valkeinen wrote:
-> On 14/03/14 12:14, Mark Rutland wrote:
->=20
->> I can't see anything obviously wrong in platform_device_del. Do you ha=
-ve
->> a backtrace?
->=20
-> Yes, below.
->=20
-> I can see at least drivers/usb/dwc3/dwc3-exynos.c doing the exact same =
-thing
-> I do, so maybe I've got something wrong with the omapdss driver.
+I think we still need to resolve the question regarding the
+"clock-names" properties in your clock provider nodes. I've commented
+on this in the past, since it shows up in all the x-gene drivers,
+but it's very inconsistent.
 
-Looks to me that the devices created by of_platform_populate() are not
-unregisterable in all cases. The address resource created via
-of_platform_populate() had NULL res->parent, which causes
-release_resource to crash.
+The binding says
 
-I can as well call of_platform_populate() in the platform init code at
-boot time, and create the devices there for now.
++- clock-names : shall be the name of the device clock. If missing, use the
++                device name.
 
- Tomi
+which to me makes no sense. What will "use the device name", and
+which device? Your clock driver doesn't actually use these strings,
+so could you please fix the binding to remove this, and stop adding
+the strings to any clock nodes?
 
+Since nothing ever used these and they are marked "optional"
+in the binding, I don't think there is a chance of breaking
+anything by changing it now.
 
-
---L0cs3uBaS6ln5lsMIkm261FTu9qqPpUxH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJTIuLZAAoJEPo9qoy8lh71B7UP/3BlNlMcr8SJWqno0DukXTsM
-hF8Frjxfb/80qknVKoueBI2tVKacebaElSaqMlHP70nU8TLMh3PGSvkCN6XYns/K
-v6K0v0GbialJbvngD27TWuJSLn+op5yZEagvuF9XvkMeqTe4cvFxbsVNMfPbxSVl
-wauD9QWeklCb/m0k4hyWKgXQox6fwdRClPctM7cwvrt949pkLg8yinb6u2BTBZF2
-siXAfkNB75WCMubqucviHbJNNY50kGSpjM7+M8+pH9V5oGdOoGdzdaULsMKllKDV
-y6o5yECrc0OLac0+oFNmoTqXXh+AkdSspxvju0JTE5n8IsoLz4Anb9JjoqlrwFdw
-F6bVx1YiZgIG21kzQjES3KuStrm4P3J/3kcCxTpeAKFX425qQTkHbBEROfRWhKEN
-+V5j1G1MZA4DOnyxw6HZ8eVxJ1z5OCJPdrvEVcdlcR1+ca2LBIw33cAaThb2LSeB
-Y9GhqnxRDnCeryC3Jd18i67DURJfl0/ItPbq06IIXbZSDlDH43hcnrNHT5KDvyjF
-uYqzqpP7bS0TZwSqmz7nJVGkw2oEWCDNX0/5TjGxKS7euAb0veBJPnzAElA8KGv4
-0sxuelmpfYhmzn2qzYLNV/wXrl1ATJtunRTA9yG0pyKH80ETnkkXuMPVUsjVQLJW
-RGSr99fv8kxLBAyWKfiy
-=Z07S
------END PGP SIGNATURE-----
-
---L0cs3uBaS6ln5lsMIkm261FTu9qqPpUxH--
+	Arnd
