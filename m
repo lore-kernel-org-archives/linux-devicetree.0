@@ -1,98 +1,165 @@
-From: Vince Bridgers <vbridgers2013@gmail.com>
-Subject: Re: [PATCH net-next V5 6/9] Altera TSE: Add main and header file for
- Altera Ethernet Driver
-Date: Fri, 14 Mar 2014 13:52:04 -0500
-Message-ID: <CAOwfj2NosO9t-C6ArW6WX02nko-7fWyBS3vqYaDQ1-CpbGdH3A@mail.gmail.com>
-References: <1394805887-22030-1-git-send-email-vbridgers2013@gmail.com>
-	<1394805887-22030-7-git-send-email-vbridgers2013@gmail.com>
-	<20140314143918.GA2253@netboy>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v7 2/6] pci: OF: Fix the conversion of IO ranges into IO
+ resources.
+Date: Fri, 14 Mar 2014 19:00:17 +0000
+Message-ID: <20140314190017.GA6457@e106497-lin.cambridge.arm.com>
+References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
+ <201403141805.29204.arnd@arndb.de>
+ <20140314171921.GY6457@e106497-lin.cambridge.arm.com>
+ <201403141946.23921.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140314143918.GA2253@netboy>
-Sender: linux-doc-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <201403141946.23921.arnd@arndb.de>
+Content-Disposition: inline
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Hi Richard,
+On Fri, Mar 14, 2014 at 06:46:23PM +0000, Arnd Bergmann wrote:
+> On Friday 14 March 2014, Liviu Dudau wrote:
+> > You are right, that was lazy of me. What about this version?
+>=20
+> Yes, that seems better. Thanks for fixing it up.
+>=20
+> But back to the more important question that I realized we have
+> not resolved yet:
+>=20
+> You now have two completely independent allocation functions for
+> logical I/O space numbers, and they will return different numbers
+> for any nontrivial scenario.
+>=20
+> > +int of_pci_range_to_resource(struct of_pci_range *range,
+> > +       struct device_node *np, struct resource *res)
+> > +{
+> > +       res->flags =3D range->flags;
+> > +       res->parent =3D res->child =3D res->sibling =3D NULL;
+> > +       res->name =3D np->full_name;
+> > +
+> > +       if (res->flags & IORESOURCE_IO) {
+> > +               unsigned long port =3D -1;
+> > +               int err =3D pci_register_io_range(range->cpu_addr, =
+range->size);
+> > +               if (err)
+> > +                       goto invalid_range;
+> > +               port =3D pci_address_to_pio(range->cpu_addr);
+> > +               if (port =3D=3D (unsigned long)-1) {
+> > +                       err =3D -EINVAL;
+> > +                       goto invalid_range;
+> > +               }
+> > +               res->start =3D port;
+> > +       } else {
+>=20
+> This one concatenates the I/O spaces and assumes that each space star=
+ts
+> at bus address zero, and takes little precaution to avoid filling up =
+IO_SPACE_LIMIT
+> if the sizes are too big.
 
-On Fri, Mar 14, 2014 at 9:39 AM, Richard Cochran
-<richardcochran@gmail.com> wrote:
-> On Fri, Mar 14, 2014 at 09:04:44AM -0500, Vince Bridgers wrote:
->> +static int tse_start_xmit(struct sk_buff *skb, struct net_device *dev)
->> +{
->> +     struct altera_tse_private *priv = netdev_priv(dev);
->> +     unsigned int txsize = priv->tx_ring_size;
->> +     unsigned int entry;
->> +     struct tse_buffer *buffer = NULL;
->> +     int nfrags = skb_shinfo(skb)->nr_frags;
->> +     unsigned int nopaged_len = skb_headlen(skb);
->> +     enum netdev_tx ret = NETDEV_TX_OK;
->> +     dma_addr_t dma_addr;
->> +     int txcomplete = 0;
->> +
->> +     spin_lock_bh(&priv->tx_lock);
->> +
->> +     if (unlikely(tse_tx_avail(priv) < nfrags + 1)) {
->> +             if (!netif_queue_stopped(dev)) {
->> +                     netif_stop_queue(dev);
->> +                     /* This is a hard error, log it. */
->> +                     netdev_err(priv->dev,
->> +                                "%s: Tx list full when queue awake\n",
->> +                                __func__);
->> +             }
->> +             ret = NETDEV_TX_BUSY;
->> +             goto out;
->> +     }
->> +
->> +     /* Map the first skb fragment */
->> +     entry = priv->tx_prod % txsize;
->> +     buffer = &priv->tx_ring[entry];
->> +
->> +     dma_addr = dma_map_single(priv->device, skb->data, nopaged_len,
->> +                               DMA_TO_DEVICE);
->> +     if (dma_mapping_error(priv->device, dma_addr)) {
->> +             netdev_err(priv->dev, "%s: DMA mapping error\n", __func__);
->> +             ret = NETDEV_TX_OK;
->> +             goto out;
->> +     }
->> +
->> +     buffer->skb = skb;
->> +     buffer->dma_addr = dma_addr;
->> +     buffer->len = nopaged_len;
->> +
->> +     /* Push data out of the cache hierarchy into main memory */
->> +     dma_sync_single_for_device(priv->device, buffer->dma_addr,
->> +                                buffer->len, DMA_TO_DEVICE);
->> +
->> +     txcomplete = priv->dmaops->tx_buffer(priv, buffer);
->> +
->> +     priv->tx_prod++;
->> +     dev->stats.tx_bytes += skb->len;
->
-> This could use a call to skb_tx_timestamp() somewhere around here.
+Actually, you are attaching too much meaning to this one. pci_register_=
+io_range()
+only tries to remember the ranges, nothing else. And it *does* check th=
+at the
+total sum of registered ranges does not exceed IO_SPACE_LIMIT. This is =
+used before
+we have any resource mapped for that range (actually it is used to *cre=
+ate* the
+resource for the range) so there is no other helping hand.
 
-Thank you, I'll add the call
+It doesn't assume that space starts at bus address zero, it ignores the=
+ bus address.
+It only handles CPU addresses for the range, to help with generating lo=
+gical IO ports.
+If you have overlapping CPU addresses with different bus addresses it w=
+ill not work,
+but then I guess you will have different problems then.
 
->
->> +
->> +     if (unlikely(tse_tx_avail(priv) <= TXQUEUESTOP_THRESHHOLD)) {
->> +             if (netif_msg_hw(priv))
->> +                     netdev_dbg(priv->dev, "%s: stop transmitted packets\n",
->> +                                __func__);
->> +             netif_stop_queue(dev);
->> +     }
->> +
->> +out:
->> +     spin_unlock_bh(&priv->tx_lock);
->> +
->> +     return ret;
->> +}
->
-> Thanks,
-> Richard
+>=20
+> >+unsigned long pci_ioremap_io(const struct resource *res, phys_addr_=
+t phys_addr)
+> >+{
+> >+       unsigned long start, len, virt_start;
+> >+       int err;
+> >+
+> >+       if (res->end > IO_SPACE_LIMIT)
+> >+               return -EINVAL;
+> >+
+> >+       /*
+> >+        * try finding free space for the whole size first,
+> >+        * fall back to 64K if not available
+> >+        */
+> >+       len =3D resource_size(res);
+> >+       start =3D bitmap_find_next_zero_area(pci_iospace, IO_SPACE_P=
+AGES,
+> >+                               res->start / PAGE_SIZE, len / PAGE_S=
+IZE, 0);
+> >+       if (start =3D=3D IO_SPACE_PAGES && len > SZ_64K) {
+> >+               len =3D SZ_64K;
+> >+               start =3D 0;
+> >+               start =3D bitmap_find_next_zero_area(pci_iospace, IO=
+_SPACE_PAGES,
+> >+                                       start, len / PAGE_SIZE, 0);
+> >+       }
+> >+
+> >+       /* no 64K area found */
+> >+       if (start =3D=3D IO_SPACE_PAGES)
+> >+               return -ENOMEM;
+> >+
+> >+       /* ioremap physical aperture to virtual aperture */
+> >+       virt_start =3D start * PAGE_SIZE + (unsigned long)PCI_IOBASE=
+;
+> >+       err =3D ioremap_page_range(virt_start, virt_start + len,
+> >+                               phys_addr, __pgprot(PROT_DEVICE_nGnR=
+E));
+> >+       if (err)
+> >+               return err;
+> >+
+> >+       bitmap_set(pci_iospace, start, len / PAGE_SIZE);
+> >+
+> >+       /* return io_offset */
+> >+       return start * PAGE_SIZE - res->start;
+> >+}
+>=20
+> While this one will try to fall back to smaller sizes, and will honor=
+ nonzero
+> bus addresses.
 
-All the best,
+Yes, because this one does the actual allocation. And it needs to know =
+how
+the mapping from CPU to bus works.
 
-Vince
+
+>=20
+> I think we shouldn't even try to do the same thing twice, but instead=
+ just
+> use a single allocator. I'd prefer the one I came up with, but I real=
+ize
+> that I am biased here ;-)
+
+I agree, but I think the two functions serve two different and distinct=
+ roles.
+
+Best regards,
+Liviu
+
+
+>=20
+> 	Arnd
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" =
+in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
