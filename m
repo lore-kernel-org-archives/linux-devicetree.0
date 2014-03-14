@@ -1,319 +1,279 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v4 01/19] clk: shmobile: r8a7779: Add clocks support
-Date: Fri, 14 Mar 2014 16:59:40 +0900
-Message-ID: <20140314075939.GA31900@verge.net.au>
-References: <1394701202-25823-1-git-send-email-horms+renesas@verge.net.au>
- <1394701202-25823-2-git-send-email-horms+renesas@verge.net.au>
- <1396603.8zjnV9HRUq@avalon>
+From: Yuvaraj Kumar <yuvaraj.cd@gmail.com>
+Subject: Re: RESEND [PATCH V9 2/2] ARM: dts: exynos5250: Enable ahci sata and
+ sata phy
+Date: Fri, 14 Mar 2014 13:55:35 +0530
+Message-ID: <CAKuRcOLC-2rP1O4Lk=TjsZw4RLx5DzdddU07QRHmsqvzGFB87Q@mail.gmail.com>
+References: <1393931452-18237-1-git-send-email-yuvaraj.cd@samsung.com>
+	<5315D5D6.2070308@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1396603.8zjnV9HRUq@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5315D5D6.2070308@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: "kgene.kim@samsung.com" <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, sunil joshi <joshi@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, "ks.giri@samsung.com" <ks.giri@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Christoffer Dall <christoffer.dall@linaro.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 13, 2014 at 10:34:07AM +0100, Laurent Pinchart wrote:
-> Hi Simon,
-> 
-> Thank you for the patch.
-> 
-> On Thursday 13 March 2014 17:59:44 Simon Horman wrote:
-> > The R8A7779 SoC has several clocks that are too custom to be supported in a
-> > generic driver. Those clocks are all fixed rate clocks with multiplier and
-> > divisor set according to boot mode configuration.
-> > 
-> > Based on work for R-Car Gen2 SoCs by Laurent Pinchart.
-> > 
-> > Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> > 
-> > ---
-> > Under discussion
-> > * Laurent Pinchart would like an "renesas,rcar-gen1-cpg-clocks" compat
-> > string added. I am less enthusiastic.
-> 
-> Apart from this I have just a small comment, please see below. All the rest 
-> looks good to me.
-> 
-> > v4
-> > * As suggested by Geert Uytterhoeven
-> >   - Remove double and from bindings documentation
-> >   - Remove unused CPG_PLL_CONFIG_INDEX and struct cpg_pll_config
-> >   - Correct order of cpg_clk_configs entries
-> > * As suggested by Laurent Pinchart
-> >   - Update copyright to include 2014
-> >   - Remove reference to non-existent divider clocks in changelog
-> >   - Do not map cpg->reg as it is not accessed
-> >   - Return an error for unknown name values in r8a7779_cpg_register_clock()
-> >   - Expose clkb in binding
-> >   - Do not include MSPT registers in register range in binding example
-> > * Write (BIT(2)|BIT(1)) instead of (BIT(1)|BIT(2)) as it is less confusing
-> >   (to me)
-> > v3
-> > * As suggested by Laurent Pinchart
-> >   - Added external clock input
-> >   - Use PLLA ratio set bu MD11 and MD12
-> >   - Add _div suffixes of fields of struct cpt_clk_config
-> >   - Register PLLA as a fixed factor clock
-> >   - Use sizeof() instead of sizeof
-> >   - Use num_clks instead of CPG_NUM_CLOCKS in r8a7779_cpg_clocks_init()
-> > 
-> >   - I kept this as r8a7779 binding rather than moving to a R-Car Gen1
-> >     binding which could be shared with other SoCs as I do not believe that
-> >     the SoCs is are sufficiently similar.
-> > ---
-> >  .../bindings/clock/renesas,r8a7779-cpg-clocks.txt  |  27 +++
-> >  drivers/clk/shmobile/Makefile                      |   1 +
-> >  drivers/clk/shmobile/clk-r8a7779.c                 | 181
-> > +++++++++++++++++++++ include/linux/clk/shmobile.h                       | 
-> >  3 +
-> >  4 files changed, 212 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/clock/renesas,r8a7779-cpg-clocks.txt
-> > create mode 100644 drivers/clk/shmobile/clk-r8a7779.c
-> > 
-> > diff --git
-> > a/Documentation/devicetree/bindings/clock/renesas,r8a7779-cpg-clocks.txt
-> > b/Documentation/devicetree/bindings/clock/renesas,r8a7779-cpg-clocks.txt
-> > new file mode 100644
-> > index 0000000..ed3c8cb
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/clock/renesas,r8a7779-cpg-clocks.txt
-> > @@ -0,0 +1,27 @@
-> > +* Renesas R8A7779 Clock Pulse Generator (CPG)
-> > +
-> > +The CPG generates core clocks for the R8A7779. It includes one PLL and
-> > +several fixed ratio dividers
-> > +
-> > +Required Properties:
-> > +
-> > +  - compatible: Must be "renesas,r8a7779-cpg-clocks"
-> > +  - reg: Base address and length of the memory resource used by the CPG
-> > +
-> > +  - clocks: Reference to the parent clock
-> > +  - #clock-cells: Must be 1
-> > +  - clock-output-names: The names of the clocks. Supported clocks are
-> > "plla", +    "z", "zs", "s", "s1", "p", "b", "out".
-> > +
-> > +
-> > +Example
-> > +-------
-> > +
-> > +	cpg_clocks: cpg_clocks@ffc80000 {
-> > +		compatible = "renesas,r8a7779-cpg-clocks";
-> > +		reg = <0 0xffc80000 0 0x30>;
-> > +		clocks = <&extal_clk>;
-> > +		#clock-cells = <1>;
-> > +		clock-output-names = "plla", "z", "zs", "s", "s1", "p",
-> > +		                     "b", "out";
-> > +	};
-> > diff --git a/drivers/clk/shmobile/Makefile b/drivers/clk/shmobile/Makefile
-> > index 9ecef14..2121ba0 100644
-> > --- a/drivers/clk/shmobile/Makefile
-> > +++ b/drivers/clk/shmobile/Makefile
-> > @@ -1,4 +1,5 @@
-> >  obj-$(CONFIG_ARCH_EMEV2)		+= clk-emev2.o
-> > +obj-$(CONFIG_ARCH_R8A7779)		+= clk-r8a7779.o
-> >  obj-$(CONFIG_ARCH_R8A7790)		+= clk-rcar-gen2.o
-> >  obj-$(CONFIG_ARCH_R8A7791)		+= clk-rcar-gen2.o
-> >  obj-$(CONFIG_ARCH_SHMOBILE_MULTI)	+= clk-div6.o
-> > diff --git a/drivers/clk/shmobile/clk-r8a7779.c
-> > b/drivers/clk/shmobile/clk-r8a7779.c new file mode 100644
-> > index 0000000..8974a41
-> > --- /dev/null
-> > +++ b/drivers/clk/shmobile/clk-r8a7779.c
-> > @@ -0,0 +1,181 @@
-> > +/*
-> > + * r8a7779 Core CPG Clocks
-> > + *
-> > + * Copyright (C) 2013, 2014 Horms Solutions Ltd.
-> > + *
-> > + * Contact: Simon Horman <horms@verge.net.au>
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License as published by
-> > + * the Free Software Foundation; version 2 of the License.
-> > + */
-> > +
-> > +#include <linux/clk-provider.h>
-> > +#include <linux/clkdev.h>
-> > +#include <linux/clk/shmobile.h>
-> > +#include <linux/init.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/spinlock.h>
-> > +
-> > +#include <dt-bindings/clock/r8a7779-clock.h>
-> > +
-> > +#define CPG_NUM_CLOCKS			(R8A7779_CLK_OUT + 1)
-> > +
-> > +struct r8a7779_cpg {
-> > +	struct clk_onecell_data data;
-> > +	spinlock_t lock;
-> > +	void __iomem *reg;
-> > +};
-> > +
-> > +/*
-> > ---------------------------------------------------------------------------
-> > -- + * CPG Clock Data
-> > + */
-> > +
-> > +/*
-> > + *		MD1 = 1			MD1 = 0
-> > + *		(PLLA = 1500)		(PLLA = 1600)
-> > + *		(MHz)			(MHz)
-> > + *------------------------------------------------+--------------------
-> > + * clkz		1000   (2/3)		800   (1/2)
-> > + * clkzs	 250   (1/6)		200   (1/8)
-> > + * clki		 750   (1/2)		800   (1/2)
-> > + * clks		 250   (1/6)		200   (1/8)
-> > + * clks1	 125   (1/12)		100   (1/16)
-> > + * clks3	 187.5 (1/8)		200   (1/8)
-> > + * clks4	  93.7 (1/16)		100   (1/16)
-> > + * clkp		  62.5 (1/24)		 50   (1/32)
-> > + * clkg		  62.5 (1/24)		 66.6 (1/24)
-> > + * clkb, CLKOUT
-> > + * (MD2 = 0)	  62.5 (1/24)		 66.6 (1/24)
-> > + * (MD2 = 1)	  41.6 (1/36)		 50   (1/32)
-> > + */
-> > +
-> > +#define CPG_CLK_CONFIG_INDEX(md)	(((md) & (BIT(2)|BIT(1))) >> 1)
-> > +
-> > +struct cpg_clk_config {
-> > +	unsigned int z_mult;
-> > +	unsigned int z_div;
-> > +	unsigned int zs_and_s_div;
-> > +	unsigned int s1_div;
-> > +	unsigned int p_div;
-> > +	unsigned int b_and_out_div;
-> > +};
-> > +
-> > +static const struct cpg_clk_config cpg_clk_configs[4] __initconst = {
-> > +	{ 1, 2, 8, 16, 32, 24 },
-> > +	{ 2, 3, 6, 12, 24, 24 },
-> > +	{ 1, 2, 8, 16, 32, 32 },
-> > +	{ 2, 3, 6, 12, 24, 36 },
-> > +};
-> > +
-> > +/*
-> > + *   MD		PLLA Ratio
-> > + * 12 11
-> > + *------------------------
-> > + * 0  0		x42
-> > + * 0  1		x48
-> > + * 1  0		x56
-> > + * 1  1		x64
-> > + */
-> > +
-> > +#define CPG_PLLA_MULT_INDEX(md)	(((md) & (BIT(12)|BIT(11))) >> 11)
-> > +
-> > +static const unsigned int cpg_plla_mult[4] __initconst = { 42, 48, 56, 64
-> > }; +
-> > +/*
-> > ---------------------------------------------------------------------------
-> > -- + * Initialization
-> > + */
-> > +
-> > +static u32 cpg_mode __initdata;
-> > +
-> > +static struct clk * __init
-> > +r8a7779_cpg_register_clock(struct device_node *np, struct r8a7779_cpg *cpg,
-> > +			   const struct cpg_clk_config *config,
-> > +			   unsigned int plla_mult, const char *name)
-> > +{
-> > +	const char *parent_name = "plla";
-> > +	unsigned int mult = 1;
-> > +	unsigned int div = 1;
-> > +
-> > +	if (!strcmp(name, "plla")) {
-> > +		parent_name = of_clk_get_parent_name(np, 0);
-> > +		mult = plla_mult;
-> > +	} else if (!strcmp(name, "z")) {
-> > +		div = config->z_div;
-> > +		mult = config->z_mult;
-> > +	} else if (!strcmp(name, "zs") || !strcmp(name, "s")) {
-> > +		div = config->zs_and_s_div;
-> > +	} else if (!strcmp(name, "s1")) {
-> > +		div = config->s1_div;
-> > +	} else if (!strcmp(name, "p")) {
-> > +		div = config->p_div;
-> > +	} else if (!strcmp(name, "b") || !strcmp(name, "out")) {
-> > +		div = config->b_and_out_div;
-> > +	} else {
-> > +		return ERR_PTR(-EINVAL);
-> > +	}
-> > +
-> > +	return clk_register_fixed_factor(NULL, name, parent_name, 0, mult, div);
-> > +}
-> > +
-> > +static void __init r8a7779_cpg_clocks_init(struct device_node *np)
-> > +{
-> > +	const struct cpg_clk_config *config;
-> > +	struct r8a7779_cpg *cpg;
-> > +	struct clk **clks;
-> > +	unsigned int i, plla_mult;
-> > +	int num_clks;
-> > +
-> > +	num_clks = of_property_count_strings(np, "clock-output-names");
-> > +	if (num_clks < 0) {
-> > +		pr_err("%s: failed to count clocks\n", __func__);
-> > +		return;
-> > +	}
-> > +
-> > +	cpg = kzalloc(sizeof(*cpg), GFP_KERNEL);
-> > +	clks = kzalloc(CPG_NUM_CLOCKS * sizeof(*clks), GFP_KERNEL);
-> > +	if (cpg == NULL || clks == NULL) {
-> > +		/* We're leaking memory on purpose, there's no point in cleaning
-> > +		 * up as the system won't boot anyway.
-> > +		 */
-> > +		pr_err("%s: failed to allocate cpg\n", __func__);
-> 
-> It has recently been pointed out to me that kzalloc failures print an OOM 
-> message to the kernel log, so there's no need to duplicate it.
+kgene,
+Please pick this patch.
 
-Thanks, I will remove the pr_err() line.
-
-> 
-> > +		return;
-> > +	}
-> > +
-> > +	spin_lock_init(&cpg->lock);
-> > +
-> > +	cpg->data.clks = clks;
-> > +	cpg->data.clk_num = num_clks;
-> > +
-> > +	config = &cpg_clk_configs[CPG_CLK_CONFIG_INDEX(cpg_mode)];
-> > +	plla_mult = cpg_plla_mult[CPG_PLLA_MULT_INDEX(cpg_mode)];
-> > +
-> > +	for (i = 0; i < num_clks; ++i) {
-> > +		const char *name;
-> > +		struct clk *clk;
-> > +
-> > +		of_property_read_string_index(np, "clock-output-names", i,
-> > +					      &name);
-> > +
-> > +		clk = r8a7779_cpg_register_clock(np, cpg, config,
-> > +						 plla_mult, name);
-> > +		if (IS_ERR(clk))
-> > +			pr_err("%s: failed to register %s %s clock (%ld)\n",
-> > +			       __func__, np->name, name, PTR_ERR(clk));
-> > +		else
-> > +			cpg->data.clks[i] = clk;
-> > +	}
-> > +
-> > +	of_clk_add_provider(np, of_clk_src_onecell_get, &cpg->data);
-> > +}
-> > +CLK_OF_DECLARE(r8a7779_cpg_clks, "renesas,r8a7779-cpg-clocks",
-> > +	       r8a7779_cpg_clocks_init);
-> 
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
-> 
+On Tue, Mar 4, 2014 at 7:02 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>
+>
+> On Tuesday 04 March 2014 04:40 PM, Yuvaraj Kumar C D wrote:
+>>
+>> This patch adds dt entry for ahci sata controller and its
+>> corresponding phy controller.phy node has been added w.r.t
+>> new generic phy framework.
+>>
+>> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+>
+>
+> FWIW
+> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+>
+>> ---
+>>   .../devicetree/bindings/ata/exynos-sata-phy.txt    |   14 --------
+>>   .../devicetree/bindings/ata/exynos-sata.txt        |   25 +++++++++-----
+>>   .../devicetree/bindings/phy/samsung-phy.txt        |   36
+>> ++++++++++++++++++++
+>>   arch/arm/boot/dts/exynos5250-arndale.dts           |   21 ++++++++++++
+>>   arch/arm/boot/dts/exynos5250-smdk5250.dts          |   17 +++++----
+>>   arch/arm/boot/dts/exynos5250.dtsi                  |   18 +++++++---
+>>   6 files changed, 98 insertions(+), 33 deletions(-)
+>>   delete mode 100644
+>> Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
+>> b/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
+>> deleted file mode 100644
+>> index 37824fa..0000000
+>> --- a/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
+>> +++ /dev/null
+>> @@ -1,14 +0,0 @@
+>> -* Samsung SATA PHY Controller
+>> -
+>> -SATA PHY nodes are defined to describe on-chip SATA Physical layer
+>> controllers.
+>> -Each SATA PHY controller should have its own node.
+>> -
+>> -Required properties:
+>> -- compatible        : compatible list, contains
+>> "samsung,exynos5-sata-phy"
+>> -- reg               : <registers mapping>
+>> -
+>> -Example:
+>> -        sata@ffe07000 {
+>> -                compatible = "samsung,exynos5-sata-phy";
+>> -                reg = <0xffe07000 0x1000>;
+>> -        };
+>> diff --git a/Documentation/devicetree/bindings/ata/exynos-sata.txt
+>> b/Documentation/devicetree/bindings/ata/exynos-sata.txt
+>> index 0849f10..b2adb1f 100644
+>> --- a/Documentation/devicetree/bindings/ata/exynos-sata.txt
+>> +++ b/Documentation/devicetree/bindings/ata/exynos-sata.txt
+>> @@ -4,14 +4,21 @@ SATA nodes are defined to describe on-chip Serial ATA
+>> controllers.
+>>   Each SATA controller should have its own node.
+>>
+>>   Required properties:
+>> -- compatible        : compatible list, contains "samsung,exynos5-sata"
+>> -- interrupts        : <interrupt mapping for SATA IRQ>
+>> -- reg               : <registers mapping>
+>> -- samsung,sata-freq : <frequency in MHz>
+>> +- compatible           : compatible list, contains "samsung,exynos5-sata"
+>> +- interrupts           : <interrupt mapping for SATA IRQ>
+>> +- reg                  : <registers mapping>
+>> +- samsung,sata-freq    : <frequency in MHz>
+>> +- phys                 : as mentioned in phy-bindings.txt
+>> +- phy-names            : as mentioned in phy-bindings.txt
+>>
+>>   Example:
+>> -        sata@ffe08000 {
+>> -                compatible = "samsung,exynos5-sata";
+>> -                reg = <0xffe08000 0x1000>;
+>> -                interrupts = <115>;
+>> -        };
+>> +       sata@122f0000 {
+>> +               compatible = "snps,dwc-ahci";
+>> +               samsung,sata-freq = <66>;
+>> +               reg = <0x122f0000 0x1ff>;
+>> +               interrupts = <0 115 0>;
+>> +               clocks = <&clock 277>, <&clock 143>;
+>> +               clock-names = "sata", "sclk_sata";
+>> +               phys = <&sata_phy>;
+>> +               phy-names = "sata-phy";
+>> +       };
+>> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt
+>> b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+>> index c0fccaa..a937f75 100644
+>> --- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
+>> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+>> @@ -20,3 +20,39 @@ Required properties:
+>>   - compatible : should be "samsung,exynos5250-dp-video-phy";
+>>   - reg : offset and length of the Display Port PHY register set;
+>>   - #phy-cells : from the generic PHY bindings, must be 0;
+>> +
+>> +Samsung SATA PHY Controller
+>> +---------------------------
+>> +
+>> +SATA PHY nodes are defined to describe on-chip SATA Physical layer
+>> controllers.
+>> +Each SATA PHY controller should have its own node.
+>> +
+>> +Required properties:
+>> +- compatible        : compatible list, contains
+>> "samsung,exynos5250-sata-phy"
+>> +- reg : offset and length of the SATA PHY register set;
+>> +- #phy-cells : from the generic phy bindings;
+>> +
+>> +Example:
+>> +       sata_phy: sata-phy@12170000 {
+>> +               compatible = "samsung,exynos5250-sata-phy";
+>> +               reg = <0x12170000 0x1ff>;
+>> +               clocks = <&clock 287>;
+>> +               clock-names = "sata_phyctrl";
+>> +               #phy-cells = <0>;
+>> +               samsung,exynos-sataphy-i2c-phandle = <&sata_phy_i2c>;
+>> +               samsung,syscon-phandle = <&pmu_syscon>;
+>> +       };
+>> +
+>> +Device-Tree bindings for sataphy i2c client driver
+>> +--------------------------------------------------
+>> +
+>> +Required properties:
+>> +compatible: Should be "samsung,exynos-sataphy-i2c"
+>> +- reg: I2C address of the sataphy i2c device.
+>> +
+>> +Example:
+>> +
+>> +       sata_phy_i2c:sata-phy@38 {
+>> +               compatible = "samsung,exynos-sataphy-i2c";
+>> +               reg = <0x38>;
+>> +       };
+>> diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts
+>> b/arch/arm/boot/dts/exynos5250-arndale.dts
+>> index 38b96a4..97eef40 100644
+>> --- a/arch/arm/boot/dts/exynos5250-arndale.dts
+>> +++ b/arch/arm/boot/dts/exynos5250-arndale.dts
+>> @@ -375,6 +375,27 @@
+>>                 };
+>>         };
+>>
+>> +       i2c@121D0000 {
+>> +               status = "okay";
+>> +               samsung,i2c-sda-delay = <100>;
+>> +               samsung,i2c-max-bus-freq = <40000>;
+>> +               samsung,i2c-slave-addr = <0x38>;
+>> +
+>> +               sata_phy_i2c:sata-phy@38 {
+>> +                       compatible = "samsung,exynos-sataphy-i2c";
+>> +                       reg = <0x38>;
+>> +               };
+>> +       };
+>> +
+>> +       sata@122F0000 {
+>> +               status = "okay";
+>> +       };
+>> +
+>> +       sata-phy@12170000 {
+>> +               status = "okay";
+>> +               samsung,exynos-sataphy-i2c-phandle = <&sata_phy_i2c>;
+>> +       };
+>> +
+>>         mmc_0: mmc@12200000 {
+>>                 status = "okay";
+>>                 num-slots = <1>;
+>> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts
+>> b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+>> index f76946e..81782c1b 100644
+>> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
+>> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+>> @@ -242,16 +242,12 @@
+>>                 samsung,i2c-slave-addr = <0x38>;
+>>                 status = "okay";
+>>
+>> -               sata-phy {
+>> -                       compatible = "samsung,sata-phy";
+>> +               sata_phy_i2c:sata-phy@38 {
+>> +                       compatible = "samsung,exynos-sataphy-i2c";
+>>                         reg = <0x38>;
+>>                 };
+>>         };
+>>
+>> -       sata@122F0000 {
+>> -               samsung,sata-freq = <66>;
+>> -       };
+>> -
+>>         i2c@12C80000 {
+>>                 samsung,i2c-sda-delay = <100>;
+>>                 samsung,i2c-max-bus-freq = <66000>;
+>> @@ -274,6 +270,15 @@
+>>                 };
+>>         };
+>>
+>> +       sata@122F0000 {
+>> +               status = "okay";
+>> +       };
+>> +
+>> +       sata-phy@12170000 {
+>> +               status = "okay";
+>> +               samsung,exynos-sataphy-i2c-phandle = <&sata_phy_i2c>;
+>> +       };
+>> +
+>>         mmc@12200000 {
+>>                 status = "okay";
+>>                 num-slots = <1>;
+>> diff --git a/arch/arm/boot/dts/exynos5250.dtsi
+>> b/arch/arm/boot/dts/exynos5250.dtsi
+>> index 8f6300f..31f7cab 100644
+>> --- a/arch/arm/boot/dts/exynos5250.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+>> @@ -46,6 +46,7 @@
+>>                 i2c6 = &i2c_6;
+>>                 i2c7 = &i2c_7;
+>>                 i2c8 = &i2c_8;
+>> +               i2c9 = &i2c_9;
+>>                 pinctrl0 = &pinctrl_0;
+>>                 pinctrl1 = &pinctrl_1;
+>>                 pinctrl2 = &pinctrl_2;
+>> @@ -233,16 +234,25 @@
+>>         };
+>>
+>>         sata@122F0000 {
+>> -               compatible = "samsung,exynos5-sata-ahci";
+>> +               compatible = "snps,dwc-ahci";
+>> +               samsung,sata-freq = <66>;
+>>                 reg = <0x122F0000 0x1ff>;
+>>                 interrupts = <0 115 0>;
+>>                 clocks = <&clock 277>, <&clock 143>;
+>>                 clock-names = "sata", "sclk_sata";
+>> +               phys = <&sata_phy>;
+>> +               phy-names = "sata-phy";
+>> +               status = "disabled";
+>>         };
+>>
+>> -       sata-phy@12170000 {
+>> -               compatible = "samsung,exynos5-sata-phy";
+>> +       sata_phy: sata-phy@12170000 {
+>> +               compatible = "samsung,exynos5250-sata-phy";
+>>                 reg = <0x12170000 0x1ff>;
+>> +               clocks = <&clock 287>;
+>> +               clock-names = "sata_phyctrl";
+>> +               #phy-cells = <0>;
+>> +               samsung,syscon-phandle = <&pmu_system_controller>;
+>> +               status = "disabled";
+>>         };
+>>
+>>         i2c_0: i2c@12C60000 {
+>> @@ -360,7 +370,7 @@
+>>                 status = "disabled";
+>>         };
+>>
+>> -       i2c@121D0000 {
+>> +       i2c_9: i2c@121D0000 {
+>>                   compatible = "samsung,exynos5-sata-phy-i2c";
+>>                   reg = <0x121D0000 0x100>;
+>>                   #address-cells = <1>;
+>>
+>
