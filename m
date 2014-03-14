@@ -1,126 +1,77 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC v3 3/3] of: Make of_find_node_by_path() handle /aliases
-Date: Fri, 14 Mar 2014 16:39:38 -0500
-Message-ID: <CAL_JsqLtYFiLnLgdN_GMG33JD53wFdyfhCwLHek3tLBbQB7maQ@mail.gmail.com>
-References: <1394817109-26199-1-git-send-email-grant.likely@linaro.org>
-	<1394817109-26199-4-git-send-email-grant.likely@linaro.org>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v3 0/8] Watchdog support for Armada 375/38x SoC
+Date: Fri, 14 Mar 2014 15:21:30 -0700
+Message-ID: <532380EA.7010809@roeck-us.net>
+References: <1394658715-2017-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1394817109-26199-4-git-send-email-grant.likely@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, David Daney <david.daney@cavium.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1394658715-2017-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 14, 2014 at 12:11 PM, Grant Likely <grant.likely@linaro.org> wrote:
-> Make of_find_node_by_path() handle aliases as prefixes. To make this
-> work the name search is refactored to search by path component instead
-> of by full string. This should be a more efficient search, and it makes
-> it possible to start a search at a subnode of a tree.
+On 03/12/2014 02:11 PM, Ezequiel Garcia wrote:
+> Third round of the patchset adding support for watchdog on Armada 375 and
+> Armada 38x SoCs.
 >
-> Signed-off-by: David Daney <david.daney@cavium.com>
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-> [grant.likely: Rework to not require allocating at runtime]
-> Signed-off-by: Grant Likely <grant.likely@linaro.org>
+> The new Armada 375/385 SoCs have two registers for the watchdog RSTOUT:
+>
+>   1. It has a dedicated register (similar to the one in A370/XP)
+>   2. Also has a bit in a shared RSTOUT register.
+>
+> Therefore, in order to support this two-folded RSTOUT, we extend the 'reg'
+> property in the watchdog devicetree and require a new pair of cells to specify
+> the shared RSTOUT.
+>
+> On the driver side, we need to implement per-SoC stop() and enabled()
+> functions. Such somewhat complex infrastructure is needed to ensure the driver
+> performs proper reset of the watchdog timer, by masking and disabling the
+> RSTOUT before the interrupt is enabled.
+>
+> I've pushed a branch so people can test this easily, e.g. ensuring
+> no regressions on Dove, Kirkwood and A370/XP:
+>
+> https://github.com/MISL-EBU-System-SW/mainline-public/tree/wdt_a385_a375_v3
+>
+> Changes from v2:
+>
+>    * Cleaned-up usage of atomic_io_modify(), using it only when needed.
+>      For instance, the RSTOUT dedicated register on Armada 370/375/380/XP
+>      can be safely access without any lock.
+>
+>    * Use devm_ioremap_resource() for the non-shared registers. The shared
+>      registers need to use devm_ioremap(), which does not request the
+>      memory region.
+>
+> Changes from v1:
+>
+>    * Reworked entirely!
+>
+> Ezequiel Garcia (8):
+>    watchdog: orion: Introduce a SoC-specific RSTOUT mapping
+>    watchdog: orion: Remove unneeded atomic access
+>    watchdog: orion: Introduce per-SoC stop() function
+>    watchdog: orion: Introduce per-SoC enabled() function
+>    watchdog: orion: Add Armada 375/380 SoC support
+>    ARM: mvebu: Enable Armada 375 watchdog in the devicetree
+>    ARM: mvebu: Enable Armada 380/385 watchdog in the devicetree
+>    ARM: mvebu: Add A375/A380 watchdog binding documentation
+>
+>   .../devicetree/bindings/watchdog/marvel.txt        |   7 +
+>   arch/arm/boot/dts/armada-375.dtsi                  |   6 +
+>   arch/arm/boot/dts/armada-38x.dtsi                  |   7 +
+>   drivers/watchdog/orion_wdt.c                       | 180 +++++++++++++++++++--
+>   4 files changed, 188 insertions(+), 12 deletions(-)
+>
+For the series:
+	Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 
-I should have read the comments before trying to figure out why you
-had that "pointless" recursion...
+Guenter
 
-Acked-by: Rob Herring <robh@kernel.org>
-
-> ---
->  drivers/of/base.c | 60 +++++++++++++++++++++++++++++++++++++++++++++++++++----
->  1 file changed, 56 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 7083fad079a6..b8b673526dbd 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -770,9 +770,38 @@ struct device_node *of_get_child_by_name(const struct device_node *node,
->  }
->  EXPORT_SYMBOL(of_get_child_by_name);
->
-> +static struct device_node *__of_find_node_by_path(struct device_node *parent,
-> +                                               const char *path)
-> +{
-> +       struct device_node *child;
-> +       int len = strchrnul(path, '/') - path;
-> +
-> +       if (!len)
-> +               return parent;
-> +
-> +       for_each_child_of_node(parent, child) {
-> +               const char *name = strrchr(child->full_name, '/');
-> +               if (WARN(!name, "malformed device_node %s\n", child->full_name))
-> +                       continue;
-> +               name++;
-> +               if (strncmp(path, name, len) == 0 && (strlen(name) == len))
-> +                       return child;
-> +       }
-> +       return NULL;
-> +}
-> +
->  /**
->   *     of_find_node_by_path - Find a node matching a full OF path
->   *     @path:  The full path to match
-> + *     @path: Either the full path to match, or if the path does not
-> + *            start with '/', the name of a property of the /aliases
-> + *            node (an alias).  In the case of an alias, the node
-> + *            matching the alias' value will be returned.
-> + *
-> + *     Valid paths:
-> + *             /foo/bar        Full path
-> + *             foo             Valid alias
-> + *             foo/bar         Valid alias + relative path
->   *
->   *     Returns a node pointer with refcount incremented, use
->   *     of_node_put() on it when done.
-> @@ -780,13 +809,36 @@ EXPORT_SYMBOL(of_get_child_by_name);
->  struct device_node *of_find_node_by_path(const char *path)
->  {
->         struct device_node *np = of_allnodes;
-> +       struct property *pp;
->         unsigned long flags;
->
-> +       /* The path could begin with an alias */
-> +       if (*path != '/') {
-> +               char *p = strchrnul(path, '/');
-> +               int len = p - path;
-> +
-> +               /* of_aliases must not be NULL */
-> +               if (!of_aliases)
-> +                       return NULL;
-> +
-> +               np = NULL;
-> +               for_each_property_of_node(of_aliases, pp) {
-> +                       if (strlen(pp->name) == len && !strncmp(pp->name, path, len)) {
-> +                               np = of_find_node_by_path(pp->value);
-> +                               break;
-> +                       }
-> +               }
-> +               if (!np)
-> +                       return NULL;
-> +               path = p;
-> +       }
-> +
-> +       /* Step down the tree matching path components */
->         raw_spin_lock_irqsave(&devtree_lock, flags);
-> -       for (; np; np = np->allnext) {
-> -               if (np->full_name && (of_node_cmp(np->full_name, path) == 0)
-> -                   && of_node_get(np))
-> -                       break;
-> +       while (np && *path == '/') {
-> +               path++; /* Increment past '/' delimiter */
-> +               np = __of_find_node_by_path(np, path);
-> +               path = strchrnul(path, '/');
->         }
->         raw_spin_unlock_irqrestore(&devtree_lock, flags);
->         return np;
-> --
-> 1.8.3.2
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
