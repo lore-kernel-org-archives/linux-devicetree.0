@@ -1,53 +1,40 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 4/6] pinctrl: st: Use ARRAY_SIZE instead of raw value
- for number of delays
-Date: Fri, 14 Mar 2014 10:20:55 +0100
-Message-ID: <CACRpkda0Z15zC=d8xe+KyHqgmTCHbnUjL14fBmtscpR-2kHtFQ@mail.gmail.com>
-References: <1394614210-15698-1-git-send-email-maxime.coquelin@st.com>
-	<1394614210-15698-5-git-send-email-maxime.coquelin@st.com>
-	<1394634313.28839.57.camel@joe-AO722>
+From: Rajendra Nayak <rnayak@ti.com>
+Subject: [PATCH 0/3] ARM: DRA7: Add support for DRA72x devices
+Date: Fri, 14 Mar 2014 14:50:38 +0530
+Message-ID: <1394788841-15112-1-git-send-email-rnayak@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1394634313.28839.57.camel@joe-AO722>
-Sender: linux-doc-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: Maxime COQUELIN <maxime.coquelin@st.com>, Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: tony@atomide.com, bcousson@baylibre.com, Rajendra Nayak <rnayak@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 12, 2014 at 3:25 PM, Joe Perches <joe@perches.com> wrote:
-> On Wed, 2014-03-12 at 09:50 +0100, Maxime COQUELIN wrote:
->> This patch replaces the raw values with ARRAY_SIZE for assigning the
->> ninput_delays and noutput_delays fields of STiH416's st_pctl_data struct.
->
-> trivial note:
->
->> diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
-> []
->> @@ -384,9 +384,9 @@ static unsigned int stih416_delays[] = {0, 300, 500, 750, 1000, 1250, 1500,
->>  static const struct st_pctl_data  stih416_data = {
->>       .rt_style       = st_retime_style_dedicated,
->>       .input_delays   = stih416_delays,
->> -     .ninput_delays  = 14,
->> +     .ninput_delays  = ARRAY_SIZE(stih416_delays),
->>       .output_delays  = stih416_delays,
->> -     .noutput_delays = 14,
->> +     .noutput_delays = ARRAY_SIZE(stih416_delays),
->>       .alt = 0, .oe = 40, .pu = 50, .od = 60, .rt = 100,
->>  };
->>
->
-> drivers/pinctrl/pinctrl-st.c-   unsigned int    *input_delays;
-> drivers/pinctrl/pinctrl-st.c-   unsigned int    *output_delays;
->
-> It may be better to change these to const unsigned int *
-> and change
->
-> static unsigned int stih416_delays[] = {
->
-> to static const
+DRA72x devices are single core Cortex A15 devices belonging to the
+DRA7 family (Similar to the DRA75x devices which are dual core Cortex
+A15 based)
 
-Good point. Patches accepted :-)
+The patches add minimal DT/kernel modifications to add boot support for
+DRA72x devices resuing all the kernel data for DRA75x devices.
 
-Yours,
-Linus Walleij
+Rajendra Nayak (3):
+  Documentation: dts: OMAP: Fix typos in DRA752 device name
+  arm: dts: Add support for DRA72x family of devices
+  ARM: OMAP2+: Add machine entry for dra72x devices
+
+ .../devicetree/bindings/arm/omap/omap.txt          |   10 ++++--
+ arch/arm/boot/dts/Makefile                         |    3 +-
+ arch/arm/boot/dts/dra7-evm.dts                     |    4 +--
+ arch/arm/boot/dts/dra7.dtsi                        |   22 ------------
+ arch/arm/boot/dts/dra72-evm.dts                    |   24 +++++++++++++
+ arch/arm/boot/dts/dra72x.dtsi                      |   25 ++++++++++++++
+ arch/arm/boot/dts/dra75x.dtsi                      |   36 ++++++++++++++++++++
+ arch/arm/mach-omap2/board-generic.c                |   18 ++++++++++
+ 8 files changed, 115 insertions(+), 27 deletions(-)
+ create mode 100644 arch/arm/boot/dts/dra72-evm.dts
+ create mode 100644 arch/arm/boot/dts/dra72x.dtsi
+ create mode 100644 arch/arm/boot/dts/dra75x.dtsi
+
+-- 
+1.7.9.5
+
