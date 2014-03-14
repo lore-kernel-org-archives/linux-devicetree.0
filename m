@@ -1,166 +1,301 @@
-From: Vince Bridgers <vbridgers2013@gmail.com>
-Subject: [PATCH net-next V5 1/9] dts: Add bindings for the Altera Triple Speed Ethernet driver
-Date: Fri, 14 Mar 2014 09:04:39 -0500
-Message-ID: <1394805887-22030-2-git-send-email-vbridgers2013@gmail.com>
-References: <1394805887-22030-1-git-send-email-vbridgers2013@gmail.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1394805887-22030-1-git-send-email-vbridgers2013@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, vbridgers2013@gmail.com
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/7] of: configure the platform device dma_mask and dma_pfn_offset
+Date: Fri, 14 Mar 2014 09:14:15 -0500
+Message-ID: <CAL_JsqKbtAxDBrF3O=C8exke9HVU0_ZC-vWZKiiftR+YMaUwMw@mail.gmail.com>
+References: <1394097598-17622-1-git-send-email-santosh.shilimkar@ti.com>
+	<CAL_Jsq+KPpqmF3eU49AeWO2Q0d4uBon_67+zUz6dXKtfsjA3Nw@mail.gmail.com>
+	<53205EF4.3070308@ti.com>
+	<201988591.AhaUZy8EHz@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201988591.AhaUZy8EHz@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a bindings description for the Altera Triple Speed Ethernet
-(TSE) driver. The bindings support the legacy SGDMA soft IP as well as the
-preferred MSGDMA soft IP. The TSE can be configured and synthesized in soft
-logic using Altera's Quartus toolchain. Please consult the bindings document
-for supported options.
+On Wed, Mar 12, 2014 at 11:58 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Wednesday 12 March 2014 15:19:48 Grygorii Strashko wrote:
+>> On 03/12/2014 02:15 AM, Rob Herring wrote:
+>> > On Sun, Mar 9, 2014 at 12:39 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> >> On Saturday 08 March 2014, Rob Herring wrote:
+>> >>> On Fri, Mar 7, 2014 at 10:02 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> >>
+>> >>>> a) Follow what we do for PCI devices: assume that we can do DMA_MASK(32)
+>> >>>> on any device, and have drivers call dma_set_mask(DMA_MASK(64)) on devices
+>> >>>> that would like to do more than that, or call e.g. dma_set_mask(DMA_MASK(28))
+>> >>>> for devices that can do less than 32 bit, as given in the argument. This
+>> >>>> approach would be most consistent with the way PCI works, but it doesn't
+>> >>>> really work well for the case where the mask is less than 32-bit and the
+>> >>>> device driver doesn't know that.
+>> >>>>
+>> >>>> b) Never have to call dma_set_mask() for platform devices and assume that the
+>> >>>> platform code sets it up correctly. This would probably be the simpler
+>> >>>> solution, and I can't think of any downsides at the moment.
+>> >>>
+>> >>> I don't think we want this. In the case of setting up 64-bit masters,
+>> >>> it is typically the device that knows if it can do 64-bit DMA either
+>> >>> thru a capabilities register or compatible value. That device specific
+>> >>> knowledge should really stay within the device's driver.
+>> >>
+>> >> So you think we should still set a 64-bit mask in the "ranges" property
+>> >> for devices that can only do 32-bit and let the driver figure it out?
+>> >
+>> > No, I think option a makes more sense.
+>
+> Ok.
+>
+>> > BTW, don't you mean dma-ranges?
+>
+> Yes, sorry about the confusion.
+>
+>> > A device has it's own mask which is typically going to be 32 or
+>> > 64-bit. The core code may not know what the device supports, so the
+>> > device has to set it's own mask. I don't see a way around that. DT is
+>> > not a good option because it is discoverable in some cases.
+>
+> What is "it"? Do you mean the mask of the device is discoverable,
+> or something else?
 
-Signed-off-by: Vince Bridgers <vbridgers2013@gmail.com>
----
-V5: - No changes for V5
+Right, the mask of the device (before applying any restrictions of the
+bus) is discoverable.
 
-V4: - No change to this file for V4
+>> > Isn't the question here how do we handle restrictions added by the
+>> > bus? It seems while this series adds support for handling dma-ranges
+>> > to set the default case, it also needs to handle when the driver sets
+>> > the mask. Is this not simply a matter of having dma_set_mask also
+>> > parse dma-ranges (or reuse a saved bus mask)?
+>
+> With the current proposed implementation, the device also has to set
+> a "dma-ranges" property to get any DMA support, we don't just take
+> the mask of the parent bus. This is important because the translation
+> does not have to be 1:1 but there can be an offset between the device
+> and the parent. I'd prefer to leave this explicit.
 
-V3: - Change order of commits
-    - Change names of enable-sup-addr and enable-hash to
-      has-supplementary-unicast and has-hash-multicast-filter
-      respectively, change interpretation to boolen/empty.
-    - Update devicetree to include commas in unit addresses.
-    - Bracket address lists for consistency
-    - Bracket interrupt list for consistency
-    - Drop unit address from mdio node
+But according to Ben H, dma-ranges is a bridge (i.e. parent) property
+and not a device property[1]. So I don't think the device's mask
+(again, before any bus restrictions) belongs in DT. A given IP block
+is going to have some number of address bits for DMA. How it is hooked
+up into an SOC is a separate issue. The driver should know its mask
+whether it is fixed, discoverable, or tied to the compatible string.
 
-V2: - Update bindings to use standard Ethernet and Phy bindings.
-      Use standard "phy-addr" instead of Altera's "phy-addr".
-      Use "rx-fifo-depth" and "tx-fifo-depth" instead of versions
-      prepended with "altr," in units of 32-bit quantities.
-      Add missing bindings to describe "altr,enable-hash" and
-      "altr,enable-sup-addr".
----
- .../devicetree/bindings/net/altera_tse.txt         |  114 ++++++++++++++++++++
- 1 file changed, 114 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/altera_tse.txt
+Santosh's patch only looks for dma-ranges in parent nodes which I
+believe is correct.
 
-diff --git a/Documentation/devicetree/bindings/net/altera_tse.txt b/Documentation/devicetree/bindings/net/altera_tse.txt
-new file mode 100644
-index 0000000..a706297
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/altera_tse.txt
-@@ -0,0 +1,114 @@
-+* Altera Triple-Speed Ethernet MAC driver (TSE)
-+
-+Required properties:
-+- compatible: Should be "altr,tse-1.0" for legacy SGDMA based TSE, and should
-+		be "altr,tse-msgdma-1.0" for the preferred MSGDMA based TSE.
-+		ALTR is supported for legacy device trees, but is deprecated.
-+		altr should be used for all new designs.
-+- reg: Address and length of the register set for the device. It contains
-+  the information of registers in the same order as described by reg-names
-+- reg-names: Should contain the reg names
-+  "control_port": MAC configuration space region
-+  "tx_csr":       xDMA Tx dispatcher control and status space region
-+  "tx_desc":      MSGDMA Tx dispatcher descriptor space region
-+  "rx_csr" :      xDMA Rx dispatcher control and status space region
-+  "rx_desc":      MSGDMA Rx dispatcher descriptor space region
-+  "rx_resp":      MSGDMA Rx dispatcher response space region
-+  "s1":		  SGDMA descriptor memory
-+- interrupts: Should contain the TSE interrupts and it's mode.
-+- interrupt-names: Should contain the interrupt names
-+  "rx_irq":       xDMA Rx dispatcher interrupt
-+  "tx_irq":       xDMA Tx dispatcher interrupt
-+- rx-fifo-depth: MAC receive FIFO buffer depth in bytes
-+- tx-fifo-depth: MAC transmit FIFO buffer depth in bytes
-+- phy-mode: See ethernet.txt in the same directory.
-+- phy-handle: See ethernet.txt in the same directory.
-+- phy-addr: See ethernet.txt in the same directory. A configuration should
-+		include phy-handle or phy-addr.
-+- altr,has-supplementary-unicast:
-+		If present, TSE supports additional unicast addresses.
-+		Otherwise additional unicast addresses are not supported.
-+- altr,has-hash-multicast-filter:
-+		If present, TSE supports a hash based multicast filter.
-+		Otherwise, hash-based multicast filtering is not supported.
-+
-+- mdio device tree subnode: When the TSE has a phy connected to its local
-+		mdio, there must be device tree subnode with the following
-+		required properties:
-+
-+	- compatible: Must be "altr,tse-mdio".
-+	- #address-cells: Must be <1>.
-+	- #size-cells: Must be <0>.
-+
-+	For each phy on the mdio bus, there must be a node with the following
-+	fields:
-+
-+	- reg: phy id used to communicate to phy.
-+	- device_type: Must be "ethernet-phy".
-+
-+Optional properties:
-+- local-mac-address: See ethernet.txt in the same directory.
-+- max-frame-size: See ethernet.txt in the same directory.
-+
-+Example:
-+
-+	tse_sub_0_eth_tse_0: ethernet@0x1,00000000 {
-+		compatible = "altr,tse-msgdma-1.0";
-+		reg =	<0x00000001 0x00000000 0x00000400>,
-+			<0x00000001 0x00000460 0x00000020>,
-+			<0x00000001 0x00000480 0x00000020>,
-+			<0x00000001 0x000004A0 0x00000008>,
-+			<0x00000001 0x00000400 0x00000020>,
-+			<0x00000001 0x00000420 0x00000020>;
-+		reg-names = "control_port", "rx_csr", "rx_desc", "rx_resp", "tx_csr", "tx_desc";
-+		interrupt-parent = <&hps_0_arm_gic_0>;
-+		interrupts = <0 41 4>, <0 40 4>;
-+		interrupt-names = "rx_irq", "tx_irq";
-+		rx-fifo-depth = <2048>;
-+		tx-fifo-depth = <2048>;
-+		address-bits = <48>;
-+		max-frame-size = <1500>;
-+		local-mac-address = [ 00 00 00 00 00 00 ];
-+		phy-mode = "gmii";
-+		altr,has-supplementary-unicast;
-+		altr,has-hash-multicast-filter;
-+		phy-handle = <&phy0>;
-+		mdio {
-+			compatible = "altr,tse-mdio";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			phy0: ethernet-phy@0 {
-+				reg = <0x0>;
-+				device_type = "ethernet-phy";
-+			};
-+
-+			phy1: ethernet-phy@1 {
-+				reg = <0x1>;
-+				device_type = "ethernet-phy";
-+			};
-+
-+		};
-+	};
-+
-+	tse_sub_1_eth_tse_0: ethernet@0x1,00001000 {
-+		compatible = "altr,tse-msgdma-1.0";
-+		reg = 	<0x00000001 0x00001000 0x00000400>,
-+			<0x00000001 0x00001460 0x00000020>,
-+			<0x00000001 0x00001480 0x00000020>,
-+			<0x00000001 0x000014A0 0x00000008>,
-+			<0x00000001 0x00001400 0x00000020>,
-+			<0x00000001 0x00001420 0x00000020>;
-+		reg-names = "control_port", "rx_csr", "rx_desc", "rx_resp", "tx_csr", "tx_desc";
-+		interrupt-parent = <&hps_0_arm_gic_0>;
-+		interrupts = <0 43 4>, <0 42 4>;
-+		interrupt-names = "rx_irq", "tx_irq";
-+		rx-fifo-depth = <2048>;
-+		tx-fifo-depth = <2048>;
-+		address-bits = <48>;
-+		max-frame-size = <1500>;
-+		local-mac-address = [ 00 00 00 00 00 00 ];
-+		phy-mode = "gmii";
-+		altr,has-supplementary-unicast;
-+		altr,has-hash-multicast-filter;
-+		phy-handle = <&phy1>;
-+	};
--- 
-1.7.9.5
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2012-March/088881.html
+
+>> >> I think this approach is much less useful for platform devices than it is
+>> >> for PCI devices, where we don't explicitly describe the "ranges" for each
+>> >> device. Are you thinking of off-chip or on-chip DMA masters here? If
+>> >> on-chip, I don't think it's likely that we would end up with different
+>> >> versions of the chip that have the same device on there but not the
+>> >> same DMA capabilities.
+>> >
+>> > Sounds like a challenge to h/w designers. :)
+>> >
+>> > I'm mainly thinking about the midway case where all masters are 32-bit
+>> > except AHCI which is 64-bit. The core libahci sets the mask based on
+>> > the capabilities register regardless of PCI or platform bus. Requiring
+>> > this to be setup by the platform or in the DT seems like a step
+>> > backwards. A slightly more complicated case would be something like
+>> > midway, but with RAM starting at say 2GB and DMA masters have the same
+>> > view as the cpu (i.e. no offset). Then the platform does need to set
+>> > the mask to (2^31 -1).
+>
+> So how would you show this in DT? I'd assume that some of the other
+> devices on midway have drivers that may also try to set a 64-bit mask,
+> like EHCI for instance does. Is AHCI the only one that sits on a 64-bit
+> wide bus, like this?
+>
+>         axi {
+>                 #address-cells = <2>;
+>                 #size-cells = <2>;
+>                 dma-ranges = <0 0 0 0 0x100 0>; /* max phys address space */
+>
+>                 ahci {
+>                         dma-ranges = <0 0  0 0  0x100 0>;
+
+There is no point to this dma-ranges here. Based on the capabilities
+reg, we know that we can do either 32 or 64 bit DMA. In the case of
+64-bit DMA, the device should try to set its mask to DMA_MASK(64), but
+the parent dma-ranges should restrict that to DMA_MASK(40).
+
+>                         ...
+>                 };
+>
+>                 ahb {
+>                         #address-cells = <1>;
+>                         #size-cells = <1>;
+
+This would need to be 2. ePAPR says the size cells size is determined
+by #size-cells in the same node.
+
+>                         dma-ranges = <0 0  0  0x1 0>; /* only 4GB */
+>
+>                         ehci {
+>                                 dma-ranges = <0  0  0xffffffff>;
+
+Again, I don't think this is needed. Here, regardless of the device's
+capabilities, the bus is restricting the mask to DMA_MASK(32).
+
+>                                 /* side-question: is that the right way
+>                                   to describe 4GB length? it seems missing
+>                                   a byte */
+>                         };
+>                 };
+>         };
+>
+> BTW, I hope I understood you right that you wouldn't actually trust the
+> capabilities register by itself but only allow setting the 64-bit mask
+> in the arch code if the DT doesn't have any information about the
+> bus being incapable of doing this, right?
+
+Ideally no, but it appears we are ATM for midway. We get away with it
+since it is midway/highbank specific driver setup and know there are
+not any restrictions in addressing RAM. I think we have to keep bus
+and device masks separate and the final mask is the AND of them. There
+isn't really a construct to do this currently AFAICT. dma_set_mask
+could be modified to adjust the mask, but that would be a change in
+how dma_set_mask works as it is supposed to fail if the requested mask
+cannot be supported.
+
+Perhaps using dma_get_required_mask to parse dma-ranges would be
+appropriate here? It doesn't seem widely used though.
+
+>
+>> mask has to be (2^32 -1).
+>
+> Right.
+>
+>> I'd like to add my 5 cents here :)
+>> First of all this solution is pretended to be generic, so by default it
+>> can't handle all possible cases (corner cases) - only widely used.
+>> Arch or driver can always fix up it through bus notifier or driver's probe.
+>
+> Right, but we should strive to avoid that.
+>
+>> Second, it works only for DT-boot case when devices instantiated from DT in generic way.
+>> So, if any bus creates devices in its own way - proper DMA configuration of such
+>> devices will be private problem of this bus.
+>
+> True as well. Do you see any buses besides platform, amba and PCI that need
+> to describe bus masters?
+>
+>> I've tried to formulate possible use cases which can be and can't be covered
+>> by this approach:
+>> [1] 32 bit SoC:
+>> - no DMA range limitation: DMA range has to be absent or be equal to RAM
+>>   (default DMA configuration will be applied)
+>>
+>> - DMA range present and It's defined inside RAM (no address translation needed):
+>>   DMA range can be present and depending on its size
+>>   dma_mask will be equal or less than DMA_MASK(32).
+>>   (default DMA configuration will be applied - if DMA range isn't present)
+>>
+>> - DMA range present and It's defined outside of RAM (address translation needed):
+>>   DMA range has to be present and depending on its size
+>>   dma_mask will be equal or less than DMA_MASK(32); and dma_pfn_offset will be calculated.
+>>
+>> Compatibility issues:
+>>   - Old DT without DMA properties defined and DMA range is defined outside of RAM:
+>>   arch or drivers code has to provide proper address translation routines.
+>
+> Can you clarify what you mean by "outside of RAM"? Is this the IOMMU case, no-IOMMU
+> but offset, or both?
+>
+>> [2] 64 bit SOC (only 64 bit masters):
+>> - no DMA range limitation: DMA range has to be present and equal to RAM
+>>
+>> - DMA range present and It's defined inside RAM (no address translation needed):
+>>   DMA range has to be present and depending on its size
+>>   dma_mask will be equal or less than DMA_MASK(64).
+>>
+>> - DMA range present and It's defined outside of RAM (address translation needed):
+>>   DMA range has to be present and depending on its size
+>>   dma_mask will be equal or less than DMA_MASK(64); and dma_pfn_offset will be calculated.
+>>
+>> Compatibility issues:
+>>   - Old DT without DMA properties defined: Drivers may still need to call dma_set_mask(DMA_MASK(64)
+>>   - Old DT without DMA properties defined and DMA range is defined outside of RAM:
+>>   arch or drivers code still has to provide proper address translation routines.
+>
+> 64-bit SOC includes 32-bit CPU with LPAE, right?
+>
+> Would you want to allow dma_set_mask(DMA_MASK(64)) to succeed in the absence
+> of the dma-ranges properties?
+
+Yes, because the default should be no restrictions are imposed by the
+bus. DT should describe the restrictions or translations. The default
+should be masters have the same view of memory map as the cpu and can
+use all address bits the device has.
+
+>
+>> [3] 64 bit SOC (only 32 bit masters):
+>>
+>> - DMA range is present and It's defined inside RAM (no address translation needed):
+>>   DMA range can be absent - default DMA configuration will be applied.
+>>
+>> - DMA range present and It's defined outside of RAM (address translation needed):
+>>   DMA range has to be present and depending on its size
+>>   dma_mask will be equal or less than DMA_MASK(32); and dma_pfn_offset will be calculated.
+>>
+>> Compatibility issues:
+>>   - Old DT without DMA properties defined and DMA range is defined outside of RAM:
+>>   arch or drivers code has to provide proper address translation routines.
+>>
+>>
+>> [4] 64 bit SOC (32 bit and 64 masters):
+>> - This is combination of above 2,3 cases.
+>>   The current approach will allow to handle it by defining two buses in DT
+>>   "simple-bus32" and "simple-bus64", and each one should have its own DMA properties
+>>   defined in DT.
+>
+> We already try to describe the hierarchy of the buses, and only AXI4 buses can be
+> 64-bit, unlike AHB or other types of AMBA buses AFAIK. We should just call them
+> what they are.
+
+I don't think we do describe the hierarchy. We are describing the
+slave side which is not necessarily the same as the master side.
+Internal buses are also much more complex than any of the SOCs
+describe in their DT.
+
+>
+>> - The worst case will be if some device is able to change its DMA configuration
+>>   dynamically by reading its DMA configuration from HW. The main difficulties will
+>>   be to handle DMA addresses translation properly in this case. But, in my opinion,
+>>   such behavior will be needed in very rare case as DT has to describe specific SoC
+>>   and such device has to belong to only one bus as per SoC specification.
+>>
+>> Compatibility issues:
+>>   - Old DT without DMA properties defined and 32 bits DMA range is defined outside of RAM:
+>>   arch or drivers code has to provide proper address translation routines.
+>>
+>> As per above, this approach will allow to handle most of cases and configure DMA properly
+>> with one exception - device is able to change its DMA configuration dynamically.
+>>
+>> Also, for compatibility reasons, arches and drivers may need to continue maintain their own
+>> DMA addresses translation routines to support the case
+>> "Old DT without DMA properties defined and DMA range is defined outside of RAM".
+>
+> Can we try to list all the platforms we already support in Linux? There should not be
+> a lot of examples of 64-bit SoCs, as we don't really support any /hardware/ in arm64
+> properly (apm xgene is incomplete enough that we don't have to worry about breaking it).
+>
+> The ones I see are
+>
+> midway
+> armada xp
+> keystone 2
+> r-car
+>
+> It may be easier to see what their individual requirements are for backwards
+> compatibility. Some might never have shipped with more than 4GB, and in that
+> case we don't care at all. I believe exynos5 and tc2 are in that category,
+> so I didn't even list them.
+>
+>         Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
