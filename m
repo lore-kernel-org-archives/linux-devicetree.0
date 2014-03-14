@@ -1,49 +1,88 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3][ 3/9] usb: chipidea: Use standard usb-phy property.
-Date: Fri, 14 Mar 2014 15:21:59 +0400
-Message-ID: <5322E657.8030905@cogentembedded.com>
-References: <1394618518-13803-1-git-send-email-denis@eukrea.com> <1394618518-13803-3-git-send-email-denis@eukrea.com> <edb50dd0d88541c39fc4b5def88b7f58@BL2PR03MB226.namprd03.prod.outlook.com> <5321CF4B.9000308@cogentembedded.com> <171967ece1414f9ba0e80664777892cb@BL2PR03MB226.namprd03.prod.outlook.com>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] irqchip: sun4i: Don't mask + unmask for
+ the non oneshot case
+Date: Fri, 14 Mar 2014 12:35:51 +0100 (CET)
+Message-ID: <alpine.DEB.2.02.1403141228290.18573@ionos.tec.linutronix.de>
+References: <1394740202-1952-1-git-send-email-hdegoede@redhat.com> <1394740202-1952-2-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <171967ece1414f9ba0e80664777892cb-AZ66ij2kwaYFgBIGFwYtMOO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: =?ISO-8859-1?Q?Eric_B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDAMN6NI5EERBEWTROMQKGQERU2Z6CY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1394740202-1952-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Thu, 13 Mar 2014, Hans de Goede wrote:
 
-On 14-03-2014 5:57, Peter Chen wrote:
+> Since sun4i and sun5i are single core SOCs there is no need to mask non
+> oneshot IRQs, to achieve this we use handle_fasteoi_irq with a dummy eoi.
 
->>> According to Power_ePAPR_APPROVED_v1.1.pdf "ethernet-phy" is the node
->>> name, it is the same with Sergei's suggestion.
+This is slightly wrong :)
 
->>      Nobody's talking about "ehternet-phy" here.
+Even on a SMP system there is no need to mask the interrupt when the
+controller works like that sunxi one. If the controller is not broken
+beyond repair then it does not deliver the same interrupt to a
+different cpu. Such a thing would always deliver it to all cores and
+those would race to grab the spinlock and mask it. I've seen such
+horror, but don't ask how that performs.
 
-> Hmm, you take "ethernet-phy" as an example, and suggest changing to "usb-phy" at last email.
+The reason why you can spare the mask/unmask dance is that the
+controller does not require any action and clears the interrupt when
+the level goes back to inactive. That happens when the device handler
+acks it at the device level.
 
-    Then it's a wrong mail. I'm not mixing nodes and properties.
+Now there might be the case when the device reactivates the interrupt
+before the RETI. But that does not matter as we run the primary
+interrupt handlers with interrupts disabled.
 
->>> But you have changed the property name at this patch, in fact,
->> "fsl,usbphy"
->>> is ok for property name, "fsl,usb-phy" may be better, but not worth a
->>> patch to change it.
+Thanks,
 
->>      No, it's not better and both are not OK because they're still
->> Freescale specific while the de-facto standard property "usb-phy" is
->> already used by other USB drivers for the same purpose.
-
-> Am I missing something, property name should be the same for all platforms?
-
-    If they're doing the same standard thing, yes.
-
-> Peter
-
-WBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	tglx
+ 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/irqchip/irq-sun4i.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/irqchip/irq-sun4i.c b/drivers/irqchip/irq-sun4i.c
+> index a0ed1ea..0a71990 100644
+> --- a/drivers/irqchip/irq-sun4i.c
+> +++ b/drivers/irqchip/irq-sun4i.c
+> @@ -74,8 +74,17 @@ static void sun4i_irq_unmask(struct irq_data *irqd)
+>  	       sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(reg));
+>  }
+>  
+> +/*
+> + * Since sun4i and sun5i are single core SOCs there is no need to mask non
+> + * oneshot IRQs, to achieve this we use handle_fasteoi_irq with a dummy eoi.
+> + */
+> +static void sun4i_irq_dummy_eoi(struct irq_data *irqd)
+> +{
+> +}
+> +
+>  static struct irq_chip sun4i_irq_chip = {
+>  	.name		= "sun4i_irq",
+> +	.irq_eoi	= sun4i_irq_dummy_eoi,
+>  	.irq_mask	= sun4i_irq_mask,
+>  	.irq_unmask	= sun4i_irq_unmask,
+>  };
+> @@ -97,7 +106,7 @@ static int sun4i_irq_map(struct irq_domain *d, unsigned int virq,
+>  					 handle_fasteoi_irq);
+>  	else
+>  		irq_set_chip_and_handler(virq, &sun4i_irq_chip,
+> -					 handle_level_irq);
+> +					 handle_fasteoi_irq);
+>  
+>  	set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
+>  
+> -- 
+> 1.9.0
+> 
+> 
