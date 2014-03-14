@@ -1,46 +1,50 @@
-From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Subject: Re: [PATCH v2] gpio: davinci: fix gpio selection for OF
-Date: Fri, 14 Mar 2014 11:08:41 +0100
-Message-ID: <5322D529.4070904@ahsoftware.de>
-References: <5316FFCE.1060603@ti.com>	<1394018461-757-1-git-send-email-holler@ahsoftware.de> <CACRpkdaF=jc9Z1XZCtH8VPuih01t--qyV-sgH1R_ix0VM4RzVA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdaF=jc9Z1XZCtH8VPuih01t--qyV-sgH1R_ix0VM4RzVA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Robert Baldyga <r.baldyga@samsung.com>
+Subject: [PATCH] ARM: dts: exynos4210-trats: add max8997 IRQ
+Date: Fri, 14 Mar 2014 11:13:21 +0100
+Message-ID: <1394792001-7837-1-git-send-email-r.baldyga@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: ben-linux@fluff.org, kgene.kim@samsung.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, m.szyprowski@samsung.com, t.figa@samsung.com, Robert Baldyga <r.baldyga@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 11.03.2014 11:15, schrieb Linus Walleij:
-> On Wed, Mar 5, 2014 at 12:21 PM, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
-> 
->> The driver missed an of_xlate function to translate gpio numbers
->> as found in the DT to the correct chip and number.
->>
->> While there I've set #gpio_cells to a fixed value of 2.
->>
->> I've used gpio-pxa.c as template for those changes and tested my changes
->> successfully on a da850 board using entries for gpio-leds in a DT. So I didn't
->> reinvent the wheel but just copied and tested stuff.
->>
->> Thanks to Grygorii Strashko for the hint to the existing code in gpio-pxa.
->>
->> Signed-off-by: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
->> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-> 
-> This v2 version applied, thanks!
+This patch adds device tree node for IRQ used by max8997.
 
-Thanks, but actually that should have been a fix for 3.14 with which the
-OF functionality for davinci gpio gets introduced. I assum with the
-patch in for-next, 3.14 will appear with that functionality broken and
-it will become a candidate for -stable.
+Signed-off-by: Robert Baldyga <r.baldyga@samsung.com>
+---
+ arch/arm/boot/dts/exynos4210-trats.dts |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Regards,
-
-Alexander Holler
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/exynos4210-trats.dts b/arch/arm/boot/dts/exynos4210-trats.dts
+index 1d18428..0e1fc19 100644
+--- a/arch/arm/boot/dts/exynos4210-trats.dts
++++ b/arch/arm/boot/dts/exynos4210-trats.dts
+@@ -148,6 +148,14 @@
+ 		};
+ 	};
+ 
++	pinctrl@11000000 {
++		max8997_irq: max8997-irq {
++			samsung,pins = "gpx0-7";
++			samsung,pin-pud = <3>;
++			samsung,pin-drv = <0>;
++		};
++	};
++
+ 	i2c@13890000 {
+ 		samsung,i2c-sda-delay = <100>;
+ 		samsung,i2c-slave-addr = <0x10>;
+@@ -179,6 +187,11 @@
+ 		max8997_pmic@66 {
+ 			compatible = "maxim,max8997-pmic";
+ 
++			pinctrl-0 = <&max8997_irq>;
++			pinctrl-names = "default";
++
++			interrupt-parent = <&gpx0>;
++			interrupts = <7 0>;
+ 			reg = <0x66>;
+ 
+ 			max8997,pmic-buck1-uses-gpio-dvs;
+-- 
+1.7.9.5
