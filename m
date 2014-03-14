@@ -1,101 +1,99 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/3] irqchip: sun4i: Don't mask + unmask for
- the non oneshot case
-Date: Fri, 14 Mar 2014 19:42:00 +0100
-Message-ID: <53234D78.5050901@redhat.com>
-References: <1394740202-1952-1-git-send-email-hdegoede@redhat.com> <1394740202-1952-2-git-send-email-hdegoede@redhat.com> <alpine.DEB.2.02.1403141228290.18573@ionos.tec.linutronix.de>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v7 2/6] pci: OF: Fix the conversion of IO ranges into IO resources.
+Date: Fri, 14 Mar 2014 19:46:23 +0100
+Message-ID: <201403141946.23921.arnd@arndb.de>
+References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com> <201403141805.29204.arnd@arndb.de> <20140314171921.GY6457@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRB7M2RWMQKGQE3DDFFYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1403141228290.18573-3cz04HxQygjZikZi3RtOZ1XZhhPuCNm+@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20140314171921.GY6457@e106497-lin.cambridge.arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Friday 14 March 2014, Liviu Dudau wrote:
+> You are right, that was lazy of me. What about this version?
 
-On 03/14/2014 12:35 PM, Thomas Gleixner wrote:
-> On Thu, 13 Mar 2014, Hans de Goede wrote:
-> 
->> Since sun4i and sun5i are single core SOCs there is no need to mask non
->> oneshot IRQs, to achieve this we use handle_fasteoi_irq with a dummy eoi.
-> 
-> This is slightly wrong :)
-> 
-> Even on a SMP system there is no need to mask the interrupt when the
-> controller works like that sunxi one. If the controller is not broken
-> beyond repair then it does not deliver the same interrupt to a
-> different cpu. Such a thing would always deliver it to all cores and
-> those would race to grab the spinlock and mask it. I've seen such
-> horror, but don't ask how that performs.
-> 
-> The reason why you can spare the mask/unmask dance is that the
-> controller does not require any action and clears the interrupt when
-> the level goes back to inactive. That happens when the device handler
-> acks it at the device level.
-> 
-> Now there might be the case when the device reactivates the interrupt
-> before the RETI. But that does not matter as we run the primary
-> interrupt handlers with interrupts disabled.
+Yes, that seems better. Thanks for fixing it up.
 
-Ok, I'm going to wait a bit to see if Maxime has anything to say
-to this second series, and then I'll do a v2 with the commit msg
-fixed.
+But back to the more important question that I realized we have
+not resolved yet:
 
-Regards,
+You now have two completely independent allocation functions for
+logical I/O space numbers, and they will return different numbers
+for any nontrivial scenario.
 
-Hans
+> +int of_pci_range_to_resource(struct of_pci_range *range,
+> +       struct device_node *np, struct resource *res)
+> +{
+> +       res->flags = range->flags;
+> +       res->parent = res->child = res->sibling = NULL;
+> +       res->name = np->full_name;
+> +
+> +       if (res->flags & IORESOURCE_IO) {
+> +               unsigned long port = -1;
+> +               int err = pci_register_io_range(range->cpu_addr, range->size);
+> +               if (err)
+> +                       goto invalid_range;
+> +               port = pci_address_to_pio(range->cpu_addr);
+> +               if (port == (unsigned long)-1) {
+> +                       err = -EINVAL;
+> +                       goto invalid_range;
+> +               }
+> +               res->start = port;
+> +       } else {
 
+This one concatenates the I/O spaces and assumes that each space starts
+at bus address zero, and takes little precaution to avoid filling up IO_SPACE_LIMIT
+if the sizes are too big.
 
-> 
-> Thanks,
-> 
-> 	tglx
->  
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>  drivers/irqchip/irq-sun4i.c | 11 ++++++++++-
->>  1 file changed, 10 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/irqchip/irq-sun4i.c b/drivers/irqchip/irq-sun4i.c
->> index a0ed1ea..0a71990 100644
->> --- a/drivers/irqchip/irq-sun4i.c
->> +++ b/drivers/irqchip/irq-sun4i.c
->> @@ -74,8 +74,17 @@ static void sun4i_irq_unmask(struct irq_data *irqd)
->>  	       sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(reg));
->>  }
->>  
->> +/*
->> + * Since sun4i and sun5i are single core SOCs there is no need to mask non
->> + * oneshot IRQs, to achieve this we use handle_fasteoi_irq with a dummy eoi.
->> + */
->> +static void sun4i_irq_dummy_eoi(struct irq_data *irqd)
->> +{
->> +}
->> +
->>  static struct irq_chip sun4i_irq_chip = {
->>  	.name		= "sun4i_irq",
->> +	.irq_eoi	= sun4i_irq_dummy_eoi,
->>  	.irq_mask	= sun4i_irq_mask,
->>  	.irq_unmask	= sun4i_irq_unmask,
->>  };
->> @@ -97,7 +106,7 @@ static int sun4i_irq_map(struct irq_domain *d, unsigned int virq,
->>  					 handle_fasteoi_irq);
->>  	else
->>  		irq_set_chip_and_handler(virq, &sun4i_irq_chip,
->> -					 handle_level_irq);
->> +					 handle_fasteoi_irq);
->>  
->>  	set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
->>  
->> -- 
->> 1.9.0
->>
->>
+>+unsigned long pci_ioremap_io(const struct resource *res, phys_addr_t phys_addr)
+>+{
+>+       unsigned long start, len, virt_start;
+>+       int err;
+>+
+>+       if (res->end > IO_SPACE_LIMIT)
+>+               return -EINVAL;
+>+
+>+       /*
+>+        * try finding free space for the whole size first,
+>+        * fall back to 64K if not available
+>+        */
+>+       len = resource_size(res);
+>+       start = bitmap_find_next_zero_area(pci_iospace, IO_SPACE_PAGES,
+>+                               res->start / PAGE_SIZE, len / PAGE_SIZE, 0);
+>+       if (start == IO_SPACE_PAGES && len > SZ_64K) {
+>+               len = SZ_64K;
+>+               start = 0;
+>+               start = bitmap_find_next_zero_area(pci_iospace, IO_SPACE_PAGES,
+>+                                       start, len / PAGE_SIZE, 0);
+>+       }
+>+
+>+       /* no 64K area found */
+>+       if (start == IO_SPACE_PAGES)
+>+               return -ENOMEM;
+>+
+>+       /* ioremap physical aperture to virtual aperture */
+>+       virt_start = start * PAGE_SIZE + (unsigned long)PCI_IOBASE;
+>+       err = ioremap_page_range(virt_start, virt_start + len,
+>+                               phys_addr, __pgprot(PROT_DEVICE_nGnRE));
+>+       if (err)
+>+               return err;
+>+
+>+       bitmap_set(pci_iospace, start, len / PAGE_SIZE);
+>+
+>+       /* return io_offset */
+>+       return start * PAGE_SIZE - res->start;
+>+}
+
+While this one will try to fall back to smaller sizes, and will honor nonzero
+bus addresses.
+
+I think we shouldn't even try to do the same thing twice, but instead just
+use a single allocator. I'd prefer the one I came up with, but I realize
+that I am biased here ;-)
+
+	Arnd
