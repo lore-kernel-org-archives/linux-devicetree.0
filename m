@@ -1,96 +1,47 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v7 3/3] arm64: Add architecture support for PCI
-Date: Fri, 14 Mar 2014 18:05:27 +0000
-Message-ID: <20140314180527.GZ6457@e106497-lin.cambridge.arm.com>
-References: <1394811258-1500-1-git-send-email-Liviu.Dudau@arm.com>
- <1394811258-1500-4-git-send-email-Liviu.Dudau@arm.com>
- <20140314171457.GK18126@arm.com>
- <201403141838.08900.arnd@arndb.de>
+From: Alexander Holler <holler@ahsoftware.de>
+Subject: Re: [PATCH v2] gpio: davinci: fix gpio selection for OF
+Date: Fri, 14 Mar 2014 19:33:12 +0100
+Message-ID: <53234B68.5090300@ahsoftware.de>
+References: <5316FFCE.1060603@ti.com>	<1394018461-757-1-git-send-email-holler@ahsoftware.de>	<CACRpkdaF=jc9Z1XZCtH8VPuih01t--qyV-sgH1R_ix0VM4RzVA@mail.gmail.com>	<5322D529.4070904@ahsoftware.de>	<CACRpkdaghneo1MvNCfxjTED+sJepHgeZCgmKsRteG9qrBNWAfQ@mail.gmail.com>	<5322F82A.9000507@ahsoftware.de> <CACRpkdZscprsy7kyqHPUMEMYJ_TKgG2bYR7mdrG4hTDp1w1nDg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201403141838.08900.arnd@arndb.de>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Catalin Marinas <Catalin.Marinas@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZscprsy7kyqHPUMEMYJ_TKgG2bYR7mdrG4hTDp1w1nDg@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Sekhar Nori <nsekhar@ti.com>, Prabhakar Lad <prabhakar.csengg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 14, 2014 at 05:38:08PM +0000, Arnd Bergmann wrote:
-> On Friday 14 March 2014, Catalin Marinas wrote:
-> > On Fri, Mar 14, 2014 at 03:34:18PM +0000, Liviu Dudau wrote:
-> > > --- /dev/null
-> > > +++ b/arch/arm64/kernel/pci.c
-> > [...]
-> > > +int pci_register_io_range(phys_addr_t address, resource_size_t s=
-ize)
-> > [...]
-> > > +unsigned long pci_address_to_pio(phys_addr_t address)
-> > [...]
-> > > +void pcibios_fixup_bus(struct pci_bus *bus)
-> > [ actually most of this file ]
-> >=20
-> > Maybe it was raised before already but can we have __weak generic
-> > definitions of these functions? They don't seem to be arm64 specifi=
-c in
-> > any way.
-> >=20
->=20
-> I would definitely prefer that.
->=20
-> 	Arnd
->=20
+Am 14.03.2014 14:54, schrieb Linus Walleij:
+> On Fri, Mar 14, 2014 at 1:38 PM, Alexander Holler <holler@ahsoftware.de> wrote:
+>
+>>> In that case it is hardly a fix that we need to rush out to the entire
+>>> world.
+>>
+>> And I thought the reason for -rc is actually to fix bugs. But I never
+>> understood the magical ways and timings patches make their way into
+>> mainline. ;)
+>
+> OK so it works like this: early in the -rc cycle we fix any bugs, documentation
+> or whatever. At this point it's *regressions* so the fix need to fix something
+> that broke in the merge window (or an earlier merge window).
 
-I haven't seen any reaction from Bjorn on this, so I threaded carefully=
- on that
-subject. I'm new to this so I don't know how to handle this.
+Sorry, but I don't believe that. It's always time to fix regressions and 
+bugs.
 
-To my mind, and looking at the way every architecture has been setup, t=
-he pcibios_*
-function are intended to be provided by the architecture. No matter how=
- much wishful
-thinking we are going to put in here, it will not change the fact that =
-the non-arm64
-specific version of pcibios_fixup_bus() that I wrote is not shared by a=
-nyone else
-and it will remain "for arm64 use only" regardless to where it is place=
-d until the
-next architecture comes into the kernel. And even then its adoption is =
-questionable.
-If we are looking for simple and common implementations of this functio=
-n, maybe we
-should look at why microblaze and powerpc versions, that are identical,=
- are not being
-made the default __weak implementation.
+> If it is a new feature that never worked in the first place I would
+> not call that
+> a regression. There are no existing users out there that can experience
+> regressions from a previously working system.
 
-As for the other two functions, I've no special attachment to where the=
-y are present
-and I'm happy to move them into drivers/pci on the condition that the p=
-atchset doesn't
-double in size. The reason why I'm weary of touching other architecture=
-s in a significant
-way is the current lack of engineering bandwidth and way of testing all=
- the architectures.
-My low friction approach has been to introduce them in arm64 and then s=
-lowly move them
-into core (and yes, I know about good intentions and the road to hell.)
+I believe that no (stable) kernel should introduce new known bugs (if 
+fixes are available) and I wouldn't make a difference if it's a new 
+feature or not. Usually people don't care if something is new or not if 
+it has bugs
 
-Catalin, if you are happy to ask for ACKs from all arch maintainers tha=
-t might get
-affected by our custom version of pci_address_to_pio() before you can p=
-ull PCI support
-for arm64 then I can propose a new patchset.
+Anyway, I'm just curious and try to understand, I have a fix. ;)
 
-Best regards,
-Liviu=20
+Regards,
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+Alexander Holler
