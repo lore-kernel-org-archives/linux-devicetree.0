@@ -1,96 +1,49 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/5] drivers: input: keyboard: st-keyscan: add keyscan
- driver
-Date: Fri, 14 Mar 2014 10:42:22 +0000
-Message-ID: <20140314104222.GB3432@lee--X1>
-References: <1393990772-9567-1-git-send-email-gabriel.fernandez@st.com>
- <1393990772-9567-2-git-send-email-gabriel.fernandez@st.com>
- <20140310114819.GO14976@lee--X1>
- <5322D63D.5030403@st.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH RFC v9 5/6] dma: mpc512x: add device tree binding document
+Date: Fri, 14 Mar 2014 11:43:01 +0100
+Message-ID: <201403141143.01288.arnd@arndb.de>
+References: <1394624875-24411-1-git-send-email-a13xp0p0v88@gmail.com> <1394624875-24411-6-git-send-email-a13xp0p0v88@gmail.com> <20140313180916.GF25870@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5322D63D.5030403@st.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Gabriel Fernandez <gabriel.fernandez@st.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, kernel@stlinux.com, Giuseppe Condorelli <giuseppe.condorelli@st.com>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140313180916.GF25870-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> >Sorry for the delay. It was a hectic week last week.
-> >
-> >As promised:
-> >
-> >>This patch adds ST Keyscan driver to use the keypad hw a subset
-> >>of ST boards provide. Specific board setup will be put in the
-> >>given dt.
-> >>
-> >>Signed-off-by: Giuseppe Condorelli <giuseppe.condorelli@st.com>
-> >>Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
-> >Are you sure these are in the correct order?
-> ok i change the order
+On Thursday 13 March 2014, Mark Rutland wrote:
+> > +
+> > +Example:
+> > +
+> > +     dma0: dma@14000 {
+> > +             compatible = "fsl,mpc5121-dma";
+> > +             reg = <0x14000 0x1800>;
+> > +             interrupts = <65 0x8>;
+> > +             #dma-cells = <1>;
+> > +     };
+> > +
+> > +
+> > +Client node properties:
+> > +
+> > +Required properties:
+> > +- dmas:                      list of DMA specifiers, consisting each of a handle
+> > +                     for the DMA controller and integer cells to specify
+> > +                     the channel used within the DMA controller
+> > +- dma-names:         list of identifier strings for the DMA specifiers,
+> > +                     client device driver code uses these strings to
+> > +                     have DMA channels looked up at the controller
+> 
+> List the exact names you expect, or the dma-names property is useless.
 
-I'm not saying they are in the wrong order, I'm just asking. Who wrote
-the patch? Has it changed since?
+Listing specific names makes no sense in the binding for the provider,
+they should be part of the slave device binding. A reference to the
+generic bindings/dma/dma.txt file should be enough here.
 
-> >>+- linux,keymap: The keymap for keys as described in the binding do=
-cument
-> >>+  devicetree/bindings/input/matrix-keymap.txt.
-> >>+
-> >>+- keypad,num-rows: Number of row lines connected to the keypad con=
-troller.
-> >>+
-> >>+- keypad,num-columns: Number of column lines connected to the keyp=
-ad
-> >>+  controller.
-> >>+
-> >>+- st,debounce_us: Debouncing interval time in microseconds
-> >I'm sure there will be a shared binding for de-bounce.
-> >
-> >If not, there certainly should be.
->=20
-> you want to refer to "debounce-interval" ?
-
-That sounds more generic, but if it's not documented as such, then
-please consider doing so.
-
-> >+Example:
-> >+
-> >+keyscan: keyscan@fe4b0000 {
-> >+	compatible =3D "st,keypad";
-> >Is there any way we can make this more specific to _this_ IP?
-> for my knowledge this IP is the same for stixxxx platform.
-
-So st,stix-keypad, or st,sti4x-keypad?
-
-I'm just thinking about future proofing the architecture. What if ST
-released stj which has a different keypad IP?
-
-> >>+struct keyscan_priv {
-> >>+	void __iomem *base;
-> >>+	int irq;
-> >>+	struct clk *clk;
-> >>+	struct input_dev *input_dev;
-> >>+	struct keypad_platform_data *config;
-> >>+	unsigned int last_state;
-> >>+	u32 keycodes[ST_KEYSCAN_MAXKEYS];
-> >Seems odd to limit this. Can't the information come from DT
-> >i.e. keypad,num-rows and keypad,num-columns?
-> >
-> i 'll rename 'num_out_pads' into 'n_rows' and 'num_in_pads' into
-> 'n_cols'
-
-That's not quite what I meant, I mean can't ST_KEY_MAXKEYS be more
-dynamic and be obtained from (keypad,num-rows * keypad,num-columns)?
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
