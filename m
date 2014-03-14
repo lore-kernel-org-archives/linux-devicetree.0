@@ -1,63 +1,126 @@
-From: Loc Ho <lho@apm.com>
-Subject: Re: [PATCH v17 3/4] ata: Add APM X-Gene SoC AHCI SATA host controller driver
-Date: Fri, 14 Mar 2014 14:38:57 -0700
-Message-ID: <CAPw-ZTkk3n_6wh-bWnaMf0aL6mgZWxNH7Sf=J9ucv0uvH2trVw@mail.gmail.com>
-References: <1394655573-32645-1-git-send-email-lho@apm.com>
-	<201403142005.52991.arnd@arndb.de>
-	<CAPw-ZT=1KWEowD_i=qoWwg372XdzC4p227rpNo7ov+NwOYFUDA@mail.gmail.com>
-	<201403142206.36611.arnd@arndb.de>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC v3 3/3] of: Make of_find_node_by_path() handle /aliases
+Date: Fri, 14 Mar 2014 16:39:38 -0500
+Message-ID: <CAL_JsqLtYFiLnLgdN_GMG33JD53wFdyfhCwLHek3tLBbQB7maQ@mail.gmail.com>
+References: <1394817109-26199-1-git-send-email-grant.likely@linaro.org>
+	<1394817109-26199-4-git-send-email-grant.likely@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <201403142206.36611.arnd@arndb.de>
-Sender: linux-ide-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Olof Johansson <olof@lixom.net>, Tejun Heo <tj@kernel.org>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1394817109-26199-4-git-send-email-grant.likely@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+On Fri, Mar 14, 2014 at 12:11 PM, Grant Likely <grant.likely@linaro.org> wrote:
+> Make of_find_node_by_path() handle aliases as prefixes. To make this
+> work the name search is refactored to search by path component instead
+> of by full string. This should be a more efficient search, and it makes
+> it possible to start a search at a subnode of a tree.
+>
+> Signed-off-by: David Daney <david.daney@cavium.com>
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+> [grant.likely: Rework to not require allocating at runtime]
+> Signed-off-by: Grant Likely <grant.likely@linaro.org>
 
->> >> > gets called. Can you clarify what this register access does?
->> >> > If it's just setting a index into a mux output, would it make
->> >> > sense to have an optional DT property containing an integer with
->> >> > the mux setting you want to set? That way you wouldn't even
->> >> > have to have two compatible strings but just do
->> >> >
->> >> >         ret = of_property_read_u32(node, "apm,ahci-mux", &mux);
->> >> >         if (!ret)
->> >> >                 xgene_ahci_mux_select(ctx, mux);
->> >> >
->> >>
->> >> Given that fact that I will break up the resource. Let's just use the
->> >> resource for the MUX to handle this. For the IP that doesn't existed,
->> >> I will just not list it.
->> >
->> > Ah, that sounds good. It also means that if the firmware has set up
->> > the mux already, you don't have to touch it again. That would probably
->> > be the preferred case.
->> >
->> > I'm undecided about the value that you write in there. That could either
->> > be passed through DT as I suggested above for extra flexibility, or you
->> > can keep it hardcoded if you are absolutely sure that there will never
->> > need to be a case where you have to set it to something other than '1',
->>
->> It is only a mux between two IP's. Writing 1 is fine. For ACPI, it can
->> be missing and handled by the firmware or can be handled just like the
->> DTS way.
->
-> Why can't you have it handled by the firmware in the DTS case?
->
-> I still think it's rather unlikely that we will actually see ACPI support
-> on your platform, btw.
->
-> I'm willing to look at the patches you need for it, but I'm not very
-> optimistic, in particular because of the kind of hacks you need
-> for random bits of hardware.
->
+I should have read the comments before trying to figure out why you
+had that "pointless" recursion...
 
-I am about to post another version. Can you look at the next version?
-If you still think it needs to be moved to the FW (either U-Boot or
-Tianocore UEFI boot loader), I will then move out of the Linux driver
-code.
+Acked-by: Rob Herring <robh@kernel.org>
 
--Loc
+> ---
+>  drivers/of/base.c | 60 +++++++++++++++++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 56 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 7083fad079a6..b8b673526dbd 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -770,9 +770,38 @@ struct device_node *of_get_child_by_name(const struct device_node *node,
+>  }
+>  EXPORT_SYMBOL(of_get_child_by_name);
+>
+> +static struct device_node *__of_find_node_by_path(struct device_node *parent,
+> +                                               const char *path)
+> +{
+> +       struct device_node *child;
+> +       int len = strchrnul(path, '/') - path;
+> +
+> +       if (!len)
+> +               return parent;
+> +
+> +       for_each_child_of_node(parent, child) {
+> +               const char *name = strrchr(child->full_name, '/');
+> +               if (WARN(!name, "malformed device_node %s\n", child->full_name))
+> +                       continue;
+> +               name++;
+> +               if (strncmp(path, name, len) == 0 && (strlen(name) == len))
+> +                       return child;
+> +       }
+> +       return NULL;
+> +}
+> +
+>  /**
+>   *     of_find_node_by_path - Find a node matching a full OF path
+>   *     @path:  The full path to match
+> + *     @path: Either the full path to match, or if the path does not
+> + *            start with '/', the name of a property of the /aliases
+> + *            node (an alias).  In the case of an alias, the node
+> + *            matching the alias' value will be returned.
+> + *
+> + *     Valid paths:
+> + *             /foo/bar        Full path
+> + *             foo             Valid alias
+> + *             foo/bar         Valid alias + relative path
+>   *
+>   *     Returns a node pointer with refcount incremented, use
+>   *     of_node_put() on it when done.
+> @@ -780,13 +809,36 @@ EXPORT_SYMBOL(of_get_child_by_name);
+>  struct device_node *of_find_node_by_path(const char *path)
+>  {
+>         struct device_node *np = of_allnodes;
+> +       struct property *pp;
+>         unsigned long flags;
+>
+> +       /* The path could begin with an alias */
+> +       if (*path != '/') {
+> +               char *p = strchrnul(path, '/');
+> +               int len = p - path;
+> +
+> +               /* of_aliases must not be NULL */
+> +               if (!of_aliases)
+> +                       return NULL;
+> +
+> +               np = NULL;
+> +               for_each_property_of_node(of_aliases, pp) {
+> +                       if (strlen(pp->name) == len && !strncmp(pp->name, path, len)) {
+> +                               np = of_find_node_by_path(pp->value);
+> +                               break;
+> +                       }
+> +               }
+> +               if (!np)
+> +                       return NULL;
+> +               path = p;
+> +       }
+> +
+> +       /* Step down the tree matching path components */
+>         raw_spin_lock_irqsave(&devtree_lock, flags);
+> -       for (; np; np = np->allnext) {
+> -               if (np->full_name && (of_node_cmp(np->full_name, path) == 0)
+> -                   && of_node_get(np))
+> -                       break;
+> +       while (np && *path == '/') {
+> +               path++; /* Increment past '/' delimiter */
+> +               np = __of_find_node_by_path(np, path);
+> +               path = strchrnul(path, '/');
+>         }
+>         raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>         return np;
+> --
+> 1.8.3.2
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
