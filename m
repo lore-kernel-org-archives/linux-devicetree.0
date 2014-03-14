@@ -1,65 +1,50 @@
-From: Maxime Coquelin <maxime.coquelin@st.com>
+From: srinivas kandagatla <srinivas.kandagatla@st.com>
 Subject: Re: [PATCH v4 4/6] pinctrl: st: Use ARRAY_SIZE instead of raw value
  for number of delays
-Date: Fri, 14 Mar 2014 10:44:39 +0100
-Message-ID: <5322CF87.5000301@st.com>
-References: <1394614210-15698-1-git-send-email-maxime.coquelin@st.com>	<1394614210-15698-5-git-send-email-maxime.coquelin@st.com>	<1394634313.28839.57.camel@joe-AO722> <CACRpkda0Z15zC=d8xe+KyHqgmTCHbnUjL14fBmtscpR-2kHtFQ@mail.gmail.com>
+Date: Fri, 14 Mar 2014 09:46:49 +0000
+Message-ID: <5322D009.3090000@st.com>
+References: <1394614210-15698-1-git-send-email-maxime.coquelin@st.com>	<1394614210-15698-5-git-send-email-maxime.coquelin@st.com>	<1394634313.28839.57.camel@joe-AO722>
+ <CACRpkda0Z15zC=d8xe+KyHqgmTCHbnUjL14fBmtscpR-2kHtFQ@mail.gmail.com>
+ <5322CF87.5000301@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkda0Z15zC=d8xe+KyHqgmTCHbnUjL14fBmtscpR-2kHtFQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Joe Perches <joe@perches.com>
-Cc: Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5322CF87.5000301@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Coquelin <maxime.coquelin@st.com>, Linus Walleij <linus.walleij@linaro.org>, Joe Perches <joe@perches.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, kernel@stlinux.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stuart Menefy <stuart.menefy@st.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 03/14/2014 10:20 AM, Linus Walleij wrote:
-> On Wed, Mar 12, 2014 at 3:25 PM, Joe Perches <joe@perches.com> wrote:
->> On Wed, 2014-03-12 at 09:50 +0100, Maxime COQUELIN wrote:
->>> This patch replaces the raw values with ARRAY_SIZE for assigning the
->>> ninput_delays and noutput_delays fields of STiH416's st_pctl_data struct.
->>
->> trivial note:
->>
->>> diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
->> []
->>> @@ -384,9 +384,9 @@ static unsigned int stih416_delays[] = {0, 300, 500, 750, 1000, 1250, 1500,
->>>   static const struct st_pctl_data  stih416_data = {
->>>        .rt_style       = st_retime_style_dedicated,
->>>        .input_delays   = stih416_delays,
->>> -     .ninput_delays  = 14,
->>> +     .ninput_delays  = ARRAY_SIZE(stih416_delays),
->>>        .output_delays  = stih416_delays,
->>> -     .noutput_delays = 14,
->>> +     .noutput_delays = ARRAY_SIZE(stih416_delays),
->>>        .alt = 0, .oe = 40, .pu = 50, .od = 60, .rt = 100,
->>>   };
+On 14/03/14 09:44, Maxime Coquelin wrote:
 >>>
+>>> drivers/pinctrl/pinctrl-st.c-   unsigned int    *input_delays;
+>>> drivers/pinctrl/pinctrl-st.c-   unsigned int    *output_delays;
+>>>
+>>> It may be better to change these to const unsigned int *
+>>> and change
+>>>
+>>> static unsigned int stih416_delays[] = {
+>>>
+>>> to static const
 >>
->> drivers/pinctrl/pinctrl-st.c-   unsigned int    *input_delays;
->> drivers/pinctrl/pinctrl-st.c-   unsigned int    *output_delays;
->>
->> It may be better to change these to const unsigned int *
->> and change
->>
->> static unsigned int stih416_delays[] = {
->>
->> to static const
->
-> Good point. Patches accepted :-)
+>> Good point. Patches accepted :-)
+> 
+> Sorry Joe, I forgot to reply.
+> 
+> I added this to my todo list.
+> I will provide the change before end of next week.
+> 
+Thanks Maxime for taking care of this...
 
-Sorry Joe, I forgot to reply.
-
-I added this to my todo list.
-I will provide the change before end of next week.
-
-Thanks,
-Maxime
-
->
-> Yours,
-> Linus Walleij
->
+--srini
+> Thanks,
+> Maxime
