@@ -1,56 +1,61 @@
-From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v11 20/27] iommu/exynos: allow having multiple System MMUs
-	for a master H/W
-Date: Fri, 14 Mar 2014 17:12:03 +0100
-Message-ID: <53232A53.4040708@samsung.com>
-References: <20140314141050.c8bedcb66532d277c496796d@samsung.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] spi: dw-mmio: add oftree support
+Date: Fri, 14 Mar 2014 16:14:03 +0000
+Message-ID: <20140314161403.GN25870@e106331-lin.cambridge.arm.com>
+References: <1394787326-14520-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-reply-to: <20140314141050.c8bedcb66532d277c496796d-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux DeviceTree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Samsung SOC <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Prathyush <prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Antonios Motakis <a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1394787326-14520-1-git-send-email-s.trumtrar@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi KyongHo,
+On Fri, Mar 14, 2014 at 08:55:26AM +0000, Steffen Trumtrar wrote:
+> Allow probing the dw-mmio from devicetree.
+> 
+> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> ---
+> This was tested on Socfpga and v3.14-rc6
+> 
+>  .../devicetree/bindings/spi/spi-dw-mmio.txt        | 25 ++++++++++++++++++++++
+>  drivers/spi/spi-dw-mmio.c                          | 19 +++++++++++++++-
+>  2 files changed, 43 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-dw-mmio.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/spi-dw-mmio.txt b/Documentation/devicetree/bindings/spi/spi-dw-mmio.txt
+> new file mode 100644
+> index 0000000..2b9bb90
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-dw-mmio.txt
+> @@ -0,0 +1,25 @@
+> +Synopsys DesignWare SPI master controller.
+> +
+> +Required properties:
+> +- compatible : "snps,dw-spi-mmio"
 
-On 14.03.2014 06:10, Cho KyongHo wrote:
-> Some master device descriptor like fimc-is which is an abstraction
-> of very complex H/W may have multiple System MMUs. For those devices,
-> the design of the link between System MMU and its master H/W is needed
-> to be reconsidered.
->
-> A link structure, sysmmu_list_data is introduced that provides a link
-> to master H/W and that has a pointer to the device descriptor of a
-> System MMU. Given a device descriptor of a master H/W, it is possible
-> to traverse all System MMUs that must be controlled along with the
-> master H/W.
+Is there not a better name than "dw-spi-mmio"?
 
-NAK.
+What's the full name of the device, as on a datasheet? Is there no model
+number?
 
-A device driver should handle particular hardware instances separately, 
-without abstracting a virtual hardware instance consisting of multiple 
-physical ones.
+Otherwise this looks ok.
 
-If such abstraction is needed, it should be done above the exynos-iommu 
-driver, e.g. by something like iommu-composite driver that would 
-aggregate several IOMMUs. Keep in mind that such IOMMUs in a group could 
-be different, e.g. different Exynos SysMMU versions or even completely 
-different IPs handled by different drivers.
+> +- reg : The register base for the controller.
+> +- interrupts : One interrupt, used by the controller.
+> +- #address-cells : <1>, as required by generic SPI binding.
+> +- #size-cells : <0>, also as required by generic SPI binding.
+> +
+> +Optional properties:
+> +- num-chipselects : The number of chipselects.
 
-Still, I don't think there is a real need for such abstraction. Instead, 
-related drivers shall be fixed to properly handle multiple memory 
-masters and their IOMMUs.
+If this is optional, when wuold I need to set this? What's the default
+assumption?
 
-Best regards,
-Tomasz
+Mark: I see some bindings have "num-chipselects", and some have
+"num-cs". Do you have a preferred form that people could align on?
+
+Cheers,
+Mark.
