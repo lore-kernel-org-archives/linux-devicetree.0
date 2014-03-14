@@ -1,102 +1,134 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: [PATCH v7 2/6] pci: OF: Fix the conversion of IO ranges into IO resources.
-Date: Fri, 14 Mar 2014 15:34:28 +0000
-Message-ID: <1394811272-1547-3-git-send-email-Liviu.Dudau@arm.com>
-References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 7/8] ARM: dts: dra7: Add USB related nodes
+Date: Fri, 14 Mar 2014 17:34:29 +0200
+Message-ID: <53232185.6090305@ti.com>
+References: <1394197751-28984-1-git-send-email-rogerq@ti.com>
+ <1394197751-28984-8-git-send-email-rogerq@ti.com> <5322DC0E.1020600@ti.com>
+ <5322F20C.50600@ti.com> <53231829.3060602@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <53231829.3060602@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, balbi@ti.com, tony@atomide.com
+Cc: devicetree@vger.kernel.org, george.cherian@ti.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The ranges property for a host bridge controller in DT describes
-the mapping between the PCI bus address and the CPU physical address.
-The resources framework however expects that the IO resources start
-at a pseudo "port" address 0 (zero) and have a maximum size of IO_SPACE_LIMIT.
-The conversion from pci ranges to resources failed to take that into account.
+On 03/14/2014 04:54 PM, Kishon Vijay Abraham I wrote:
+> 
+> 
+> On Friday 14 March 2014 05:41 PM, Roger Quadros wrote:
+>> On 03/14/2014 12:38 PM, Kishon Vijay Abraham I wrote:
+>>> Hi Roger,
+>>>
+>>> On Friday 07 March 2014 06:39 PM, Roger Quadros wrote:
+>>>> Add nodes for the Super Speed USB controllers, omap-control-usb,
+>>>> USB2 PHY and USB3 PHY devices.
+>>>>
+>>>> Remove ocp2scp1 address space from hwmod data as it is
+>>>> now provided via device tree.
+>>>>
+>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>>>> ---
+>>>>    arch/arm/boot/dts/dra7.dtsi               | 110 ++++++++++++++++++++++++++++++
+>>>>    arch/arm/mach-omap2/omap_hwmod_7xx_data.c |  10 ---
+>>>>    2 files changed, 110 insertions(+), 10 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+>>>> index 597979b..1e73900 100644
+>>>> --- a/arch/arm/boot/dts/dra7.dtsi
+>>>> +++ b/arch/arm/boot/dts/dra7.dtsi
+>>>> @@ -811,6 +811,116 @@
+>>>>                clocks = <&sata_ref_clk>;
+>>>>                ti,hwmods = "sata";
+>>>>            };
+>>>> +
+>>>> +        omap_control_usb2phy1: control-phy@4a002300 {
+>>>> +            compatible = "ti,control-phy-usb2";
+>>>> +            reg = <0x4a002300 0x4>;
+>>>> +            reg-names = "power";
+>>>> +        };
+>>>> +
+>>>> +        omap_control_usb3phy1: control-phy@4a002370 {
+>>>> +            compatible = "ti,control-phy-pipe3";
+>>>> +            reg = <0x4a002370 0x4>;
+>>>> +            reg-names = "power";
+>>>> +        };
+>>>> +
+>>>> +        omap_control_usb2phy2: control-phy@0x4a002e74 {
+>>>> +            compatible = "ti,control-phy-usb2-dra7";
+>>>> +            reg = <0x4a002e74 0x4>;
+>>>> +            reg-names = "power";
+>>>> +        };
+>>>> +
+>>>> +        /* OCP2SCP1 */
+>>>> +        ocp2scp@4a080000 {
+>>>> +            compatible = "ti,omap-ocp2scp";
+>>>> +            #address-cells = <1>;
+>>>> +            #size-cells = <1>;
+>>>> +            ranges;
+>>>> +            reg = <0x4a080000 0x20>;
+>>>> +            ti,hwmods = "ocp2scp1";
+>>>> +
+>>>> +            usb2_phy1: phy@4a084000 {
+>>>> +                compatible = "ti,omap-usb2";
+>>>> +                reg = <0x4a084000 0x400>;
+>>>> +                ctrl-module = <&omap_control_usb2phy1>;
+>>>> +                clocks = <&usb_phy1_always_on_clk32k>,
+>>>> +                     <&usb_otg_ss1_refclk960m>;
+>>>> +                clock-names =    "wkupclk",
+>>>> +                        "refclk";
+>>>> +                #phy-cells = <0>;
+>>>> +            };
+>>>> +
+>>>> +            usb2_phy2: phy@4a085000 {
+>>>> +                compatible = "ti,omap-usb2";
+>>>> +                reg = <0x4a085000 0x400>;
+>>>> +                ctrl-module = <&omap_control_usb2phy2>;
+>>>> +                clocks = <&usb_phy2_always_on_clk32k>,
+>>>> +                     <&usb_otg_ss2_refclk960m>;
+>>>> +                clock-names =    "wkupclk",
+>>>> +                        "refclk";
+>>>> +                #phy-cells = <0>;
+>>>> +            };
+>>>> +
+>>>> +            usb3_phy1: phy@4a084400 {
+>>>> +                compatible = "ti,omap-usb3";
+>>>> +                reg = <0x4a084400 0x80>,
+>>>> +                      <0x4a084800 0x64>,
+>>>> +                      <0x4a084c00 0x40>;
+>>>> +                reg-names = "phy_rx", "phy_tx", "pll_ctrl";
+>>>> +                ctrl-module = <&omap_control_usb3phy1>;
+>>>> +                clocks = <&usb_phy3_always_on_clk32k>,
+>>>> +                     <&sys_clkin1>,
+>>>> +                     <&usb_otg_ss1_refclk960m>,
+>>>> +                     <&dpll_core_h13x2_ck>;
+>>>> +                clock-names =    "wkupclk",
+>>>> +                        "sysclk",
+>>>> +                        "refclk",
+>>>> +                        "optclk";
+>>>
+>>> Do we use this 'optclk' in driver?
+>>
+>> No we don't. Still the device seems to work without it.
+>> This is supposed to be USB_LFPS_TX_GFCLK or USB3PHY_REF_CLK.
+> 
+> I think it should be enabled. Did you check the status of this clock in CM_L3INIT_CLKSTCTRL? Moreover USB_LFPS_TX_GFCLK is an interface clock, so IIUC setting the module mode will enable it.
+> 
+> Btw how did you tell dpll_core_h13x2_ck enables USB_LFPS_TX_GFCLK?
+> 
 
-In the process move the function into drivers/of/address.c as it now
-depends on pci_address_to_pio() code and make it return an error message.
+>From the clock tree tool. It looks like the clock is gated automatically with the module mode
+as you suggested. I'll get rid of this clock reference then.
 
-Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-Tested-by: Tanmay Inamdar <tinamdar@apm.com>
----
- drivers/of/address.c       | 40 ++++++++++++++++++++++++++++++++++++
- include/linux/of_address.h | 13 ++----------
- 2 files changed, 42 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index be958ed..4eabd30 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -728,3 +728,43 @@ void __iomem *of_iomap(struct device_node *np, int index)
- 	return ioremap(res.start, resource_size(&res));
- }
- EXPORT_SYMBOL(of_iomap);
-+
-+/**
-+ * of_pci_range_to_resource - Create a resource from an of_pci_range
-+ * @range:	the PCI range that describes the resource
-+ * @np:		device node where the range belongs to
-+ * @res:	pointer to a valid resource that will be updated to
-+ *              reflect the values contained in the range.
-+ *
-+ * Returns EINVAL if the range cannot be converted to resource.
-+ *
-+ * Note that if the range is an IO range, the resource will be converted
-+ * using pci_address_to_pio() which can fail if it is called too early or
-+ * if the range cannot be matched to any host bridge IO space (our case here).
-+ * To guard against that we try to register the IO range first.
-+ * If that fails we know that pci_address_to_pio() will do too.
-+ */
-+int of_pci_range_to_resource(struct of_pci_range *range,
-+	struct device_node *np, struct resource *res)
-+{
-+	res->flags = range->flags;
-+	if (res->flags & IORESOURCE_IO) {
-+		unsigned long port = -1;
-+		int err = pci_register_io_range(range->cpu_addr, range->size);
-+		if (err)
-+			return err;
-+		port = pci_address_to_pio(range->cpu_addr);
-+		if (port == (unsigned long)-1) {
-+			res->start = (resource_size_t)OF_BAD_ADDR;
-+			res->end = (resource_size_t)OF_BAD_ADDR;
-+			return -EINVAL;
-+		}
-+		res->start = port;
-+	} else {
-+		res->start = range->cpu_addr;
-+	}
-+	res->end = res->start + range->size - 1;
-+	res->parent = res->child = res->sibling = NULL;
-+	res->name = np->full_name;
-+	return 0;
-+}
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index 40c418d..a4b400d 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -23,17 +23,8 @@ struct of_pci_range {
- #define for_each_of_pci_range(parser, range) \
- 	for (; of_pci_range_parser_one(parser, range);)
- 
--static inline void of_pci_range_to_resource(struct of_pci_range *range,
--					    struct device_node *np,
--					    struct resource *res)
--{
--	res->flags = range->flags;
--	res->start = range->cpu_addr;
--	res->end = range->cpu_addr + range->size - 1;
--	res->parent = res->child = res->sibling = NULL;
--	res->name = np->full_name;
--}
--
-+extern int of_pci_range_to_resource(struct of_pci_range *range,
-+		struct device_node *np, struct resource *res);
- /* Translate a DMA address from device space to CPU space */
- extern u64 of_translate_dma_address(struct device_node *dev,
- 				    const __be32 *in_addr);
--- 
-1.9.0
+cheers,
+-roger
