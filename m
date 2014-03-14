@@ -1,152 +1,78 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 1/4] pci: APM X-Gene PCIe controller driver
-Date: Fri, 14 Mar 2014 13:18:26 +0100
-Message-ID: <201403141318.27183.arnd@arndb.de>
-References: <1394085963-27553-1-git-send-email-tinamdar@apm.com>
- <1394085963-27553-2-git-send-email-tinamdar@apm.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [GIT PULL] Move device tree graph parsing helpers to drivers/of
+Date: Fri, 14 Mar 2014 13:19:39 +0100
+Message-ID: <1394799579.3710.24.camel@paszta.hi.pengutronix.de>
+References: <1394126000.3622.66.camel@paszta.hi.pengutronix.de>
+	 <20140310143758.3734FC405FA@trevor.secretlab.ca>
+	 <1394708896.3577.21.camel@paszta.hi.pengutronix.de>
+	 <6341585.ZqkoDDr3Wb@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1394085963-27553-2-git-send-email-tinamdar@apm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tanmay Inamdar <tinamdar@apm.com>
-Cc: devicetree@vger.kernel.org, jcm@redhat.com, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, patches@apm.com, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6341585.ZqkoDDr3Wb@avalon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Greg KH <gregkh@linuxfoundation.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 06 March 2014, Tanmay Inamdar wrote:
+Hi Laurent,
 
-> +static inline void xgene_pcie_cfg_out16(void __iomem *addr, u16 val)
-> +{
-> +	u64 temp_addr = (u64)addr & ~0x3;
+Am Donnerstag, den 13.03.2014, 18:13 +0100 schrieb Laurent Pinchart:
+> Hi Philipp,
+> 
+> On Thursday 13 March 2014 12:08:16 Philipp Zabel wrote:
+> > Am Montag, den 10.03.2014, 14:37 +0000 schrieb Grant Likely:
+> > > > > Nak. I made comments that haven't been resolved yet. I've replied with
+> > > > > more detail tonight. The big issues are how drivers handle the
+> > > > > optional 'ports' node and I do not agree to the double-linkage in the
+> > > > > binding description.
+> > 
+> > so as I understand it, nobody is against dropping the double-linkage *if* we
+> > can agree on a way to recreate the backlinks in the kernel.
+> 
+> I'm not sure about "nobody", but even though it might not be my favorite 
+> option I'd be OK with that.
 
-Please use 'unsigned long' as the type for calculations like this one,
-to make the code more portable. You mentioned before that the same PCI
-host controller is used on some ppc4xx, and we may want to share the
-code later.
+Ok, I make that assumption going by the discussion about link direction
+that ensued.
 
-> +static int xgene_pcie_read_config(struct pci_bus *bus, unsigned int devfn,
-> +				  int offset, int len, u32 *val)
-> +{
-> +	struct xgene_pcie_port *port = bus->sysdata;
-> +	void __iomem *addr;
-> +	u8 val8;
-> +	u16 val16;
-> +
-> +	if ((pci_is_root_bus(bus) && devfn != 0) || !port->link_up)
-> +		return PCIBIOS_DEVICE_NOT_FOUND;
-> +
-> +	xgene_pcie_set_rtdid_reg(bus, devfn);
-> +	addr = xgene_pcie_get_cfg_base(bus);
-> +	switch (len) {
-> +	case 1:
-> +		xgene_pcie_cfg_in8(addr + offset, &val8);
-> +		*val = val8;
-> +		break;
+> > My current suggestion would be to parse the complete device tree into an
+> > internal graph structure once, at boot to achieve this. This code could
+> > look for the optional 'ports' node if and only if the parent device node
+> > contains #address-cells != <1> or #size-cells != <0> properties.
+> 
+> With backlinks in DT we can assume that, if a node is the target of a link, it 
+> will be compatible with the of-graph bindings, and thus parse the node to 
+> locate other ports and other links. This allows parsing the full graph without 
+> help of individual drivers.
 
-Actually it would be better to just pass both addr and offset
-down into the low-level accessors and then do the calculation
-on 'offset', which is already a scalar.
+Yes.
 
-> +static void xgene_pcie_poll_linkup(struct xgene_pcie_port *port,
-> +				   u32 *lanes, u32 *speed)
-> +{
-> +	void __iomem *csr_base = port->csr_base;
-> +	u32 val32;
-> +	u64 start_time, time;
-> +
-> +	/*
-> +	 * A component enters the LTSSM Detect state within
-> +	 * 20ms of the end of fundamental core reset.
-> +	 */
-> +	msleep(XGENE_LTSSM_DETECT_WAIT);
-> +	port->link_up = 0;
-> +	start_time = jiffies;
-> +	do {
-> +		val32 = readl(csr_base + PCIECORE_CTLANDSTATUS);
-> +		if (val32 & LINK_UP_MASK) {
-> +			port->link_up = 1;
-> +			*speed = PIPE_PHY_RATE_RD(val32);
-> +			val32 = readl(csr_base + BRIDGE_STATUS_0);
-> +			*lanes = val32 >> 26;
-> +			break;
-> +		}
-> +		msleep(1);
-> +		time = jiffies_to_msecs(jiffies - start_time);
-> +	} while (time <= XGENE_LTSSM_L0_WAIT);
-> +}
+> Without backlinks in DT we need to parse the full DT to reconstruct backlinks 
+> in the kernel. One possible issue with that is that we can't know whether a 
+> node implements the of-graph bindings. We can use the heuristic you've 
+> described above, but I wonder if it could lead to problems. Grant pointed out 
+> that the compatibility string defines what binding a node uses, and that we 
+> can't thus look for properties randomly. I don't think there's a risk to 
+> interpret an unrelated node as part of a graph though.
 
-This can be written ina simpler way using 'time_before()'.
+False positives would just take up a bit of space in the endpoint lists,
+but otherwise should be no problem, as they would only be used when
+either a driver implementing the bindings is bound, or when they are
+connected to other endpoints. Whether or not we scan the whole tree,
+using this heuristic, is more a matter of principle.
 
-> +/* Return 0 on success */
-> +static int xgene_pcie_init_ecc(struct xgene_pcie_port *port)
-> +{
-> +	void __iomem *csr_base = port->csr_base;
-> +	u64 start_time, time = 0;
-> +	u32 val;
-> +
-> +	val = readl(csr_base + MEM_RAM_SHUTDOWN);
-> +	if (!val)
-> +		return 0;
-> +	writel(0x0, csr_base + MEM_RAM_SHUTDOWN);
-> +	start_time = jiffies;
-> +	do {
-> +		val = readl(csr_base + BLOCK_MEM_RDY);
-> +		if (val == BLOCK_MEM_RDY_VAL)
-> +			break;
-> +		msleep(1);
-> +		time = jiffies_to_msecs(jiffies - start_time);
-> +	} while (time < XGENE_PCIE_ECC_TIMEOUT);
+> > People completely disagree about the direction the phandle links should
+> > point in. I am still of the opinion that the generic binding should describe
+> > just the topology, that the endpoint links in the kernel should represent an
+> > undirected graph and the direction of links should not matter at all for the
+> > generic graph bindings.
+> 
+> I would also not mandate a specific direction at the of-graph level and leave 
+> it to subsystems (or possibly drivers) to specify the direction.
 
-Same here.
+Thank you. Can everybody live with this?
 
-> +static int xgene_pcie_init_port(struct xgene_pcie_port *port)
-> +{
-> +	int rc;
-> +
-> +	port->clk = clk_get(port->dev, NULL);
-> +	if (IS_ERR_OR_NULL(port->clk)) {
-> +		dev_err(port->dev, "clock not available\n");
-> +		return -ENODEV;
-> +	}
-
-Practically every use of IS_ERR_OR_NULL() is a bug, don't do that.
-NULL is a valid return code from clk_get(), and should not be
-treated as an error.
-
-
-> +static int xgene_pcie_map_ranges(struct xgene_pcie_port *port,
-> +				 struct pci_host_bridge *bridge,
-> +				 u64 cfg_addr)
-> +{
-> +	struct device *dev = port->dev;
-> +	struct pci_host_bridge_window *window;
-> +
-> +	list_for_each_entry(window, &bridge->windows, list) {
-> +		struct resource *res = window->res;
-> +		u64 restype = resource_type(res);
-> +		dev_dbg(port->dev, "0x%08lx 0x%016llx...0x%016llx\n",
-> +			res->flags, res->start, res->end);
-> +
-> +		switch (restype) {
-> +		case IORESOURCE_IO:
-> +			xgene_pcie_setup_ob_reg(port, res, OMR2BARL,
-> +						bridge->io_base);
-> +			BUG_ON(pci_ioremap_io(res, bridge->io_base) < 0);
-> +			break;
-
-No need to BUG_ON() here, this is not a fatal condition, just
-don't register the I/O space resource if this fails.
-
-I think as the PCI base support patch series evolves, you will actually
-not have to do this at all.
-
-	Arnd
+regards
+Philipp
