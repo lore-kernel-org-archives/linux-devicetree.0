@@ -1,207 +1,133 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 4/7] of: configure the platform device dma_mask and dma_pfn_offset
-Date: Fri, 14 Mar 2014 18:25:07 +0100
-Message-ID: <201403141825.07705.arnd@arndb.de>
-References: <1394097598-17622-1-git-send-email-santosh.shilimkar@ti.com> <201988591.AhaUZy8EHz@wuerfel> <CAL_JsqKbtAxDBrF3O=C8exke9HVU0_ZC-vWZKiiftR+YMaUwMw@mail.gmail.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCHv2 8/8] devfreq: exynos4: Add busfreq driver for
+ exynos4210/exynos4x12
+Date: Fri, 14 Mar 2014 18:35:35 +0100
+Message-ID: <53233DE7.2030902@samsung.com>
+References: <1394698649-20996-1-git-send-email-cw00.choi@samsung.com>
+ <1394698649-20996-9-git-send-email-cw00.choi@samsung.com>
+ <20140313175308.GE25870@e106331-lin.cambridge.arm.com>
+ <5322AC5D.9070200@samsung.com>
+ <20140314103552.GK25870@e106331-lin.cambridge.arm.com>
+ <5322E04D.2060801@samsung.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKbtAxDBrF3O=C8exke9HVU0_ZC-vWZKiiftR+YMaUwMw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <5322E04D.2060801@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>, "nm@ti.com" <nm@ti.com>, "b.zolnierkie@samsaung.com" <b.zolnierkie@samsaung.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 14 March 2014, Rob Herring wrote:
-> On Wed, Mar 12, 2014 at 11:58 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Wednesday 12 March 2014 15:19:48 Grygorii Strashko wrote:
-> >> > Isn't the question here how do we handle restrictions added by the
-> >> > bus? It seems while this series adds support for handling dma-ranges
-> >> > to set the default case, it also needs to handle when the driver sets
-> >> > the mask. Is this not simply a matter of having dma_set_mask also
-> >> > parse dma-ranges (or reuse a saved bus mask)?
-> >
-> > With the current proposed implementation, the device also has to set
-> > a "dma-ranges" property to get any DMA support, we don't just take
-> > the mask of the parent bus. This is important because the translation
-> > does not have to be 1:1 but there can be an offset between the device
-> > and the parent. I'd prefer to leave this explicit.
-> 
-> But according to Ben H, dma-ranges is a bridge (i.e. parent) property
-> and not a device property[1]. So I don't think the device's mask
-> (again, before any bus restrictions) belongs in DT. A given IP block
-> is going to have some number of address bits for DMA. How it is hooked
-> up into an SOC is a separate issue. The driver should know its mask
-> whether it is fixed, discoverable, or tied to the compatible string.
-> 
-> Santosh's patch only looks for dma-ranges in parent nodes which I
-> believe is correct.
+Hi Chanwoo, Mark,
 
-Ok, good point.
+On 14.03.2014 11:56, Chanwoo Choi wrote:
+> Hi Mark,
+>
+> On 03/14/2014 07:35 PM, Mark Rutland wrote:
+>> On Fri, Mar 14, 2014 at 07:14:37AM +0000, Chanwoo Choi wrote:
+>>> Hi Mark,
+>>>
+>>> On 03/14/2014 02:53 AM, Mark Rutland wrote:
+>>>> On Thu, Mar 13, 2014 at 08:17:29AM +0000, Chanwoo Choi wrote:
+>>>>> This patch add busfreq driver for Exynos4210/Exynos4x12 memory interface
+>>>>> and bus to support DVFS(Dynamic Voltage Frequency Scaling) according to PPMU
+>>>>> counters. PPMU (Performance Profiling Monitorings Units) of Exynos4 SoC provides
+>>>>> PPMU counters for DMC(Dynamic Memory Controller) to check memory bus utilization
+>>>>> and then busfreq driver adjusts dynamically the operating frequency/voltage
+>>>>> by using DEVFREQ Subsystem.
+>>>>>
+>>>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>>>> ---
+>>>>>   .../devicetree/bindings/devfreq/exynos4_bus.txt    | 49 ++++++++++++++++++++++
+>>>>>   1 file changed, 49 insertions(+)
+>>>>>   create mode 100644 Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt b/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
+>>>>> new file mode 100644
+>>>>> index 0000000..2a83fcc
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
+>>>>> @@ -0,0 +1,49 @@
+>>>>> +
+>>>>> +Exynos4210/4x12 busfreq driver
+>>>>> +-----------------------------
+>>>>> +
+>>>>> +Exynos4210/4x12 Soc busfreq driver with devfreq for Memory bus frequency/voltage
+>>>>> +scaling according to PPMU counters of memory controllers
+>>>>> +
+>>>>> +Required properties:
+>>>>> +- compatible	: should contain Exynos4 SoC type as follwoing:
+>>>>> +		  - "samsung,exynos4x12-busfreq" for Exynos4x12
+>>>>> +		  - "samsung,exynos4210-busfreq" for Exynos4210
+>>>>
+>>>> Is there a device called "busfreq"? What device does this binding
+>>>> describe?
+>>>
+>>> I'll add detailed description of busfreq as following:
+>>>
+>>> "busfreq(bus frequendcy)" driver means that busfreq driver control dynamically
+>>> memory bus frequency/voltage by checking memory bus utilization to optimize
+>>> power-consumption. When checking memeory bus utilization, exynos4_busfreq driver
+>>> would use PPMU(Performance Profiling Monitoring Units).
+>>
+>> This still sounds like a description of the _driver_, not the _device_.
+>> The binding should describe the hardware, now the high level abstraction
+>> that software is going to build atop of it.
+>>
+>> It sounds like this is a binding for the DMC PPMU?
+>>
+>> Is the PPMU a component of the DMC, or is it bolted on the side?
+>
+> PPMU(Performance Profiling Monitoring Unit) is to profile performance event of
+> various IP on Exynos4. Each PPMU provide perforamnce event for each IP.
+> We can check various PPMU as following:
+>
+> PPMU_3D
+> PPMU_ACP
+> PPMU_CAMIF
+> PPMU_CPU
+> PPMU_DMC0
+> PPMU_DMC1
+> PPMU_FSYS
+> PPMU_IMAGE
+> PPMU_LCD0
+> PPMU_LCD1
+> PPMU_MFC_L
+> PPMU_MFC_R
+> PPMU_TV
+> PPMU_LEFT_BUS
+> PPMU_RIGHT_BUS
+>
+> DMC (Dynamic Memory Controller) control the operation of DRAM in Exynos4 SoC.
+> If we need to get memory bust utilization of DMC, we can get memory bus utilization
+> from PPMU_DMC0/PPMU_DMC1.
+>
+> So, Exynos4's busfreq used two(PPMU_DMC0/PPMU_DMC1) among upper various PPMU list.
 
-> >> >> I think this approach is much less useful for platform devices than it is
-> >> >> for PCI devices, where we don't explicitly describe the "ranges" for each
-> >> >> device. Are you thinking of off-chip or on-chip DMA masters here? If
-> >> >> on-chip, I don't think it's likely that we would end up with different
-> >> >> versions of the chip that have the same device on there but not the
-> >> >> same DMA capabilities.
-> >> >
-> >> > Sounds like a challenge to h/w designers. :)
-> >> >
-> >> > I'm mainly thinking about the midway case where all masters are 32-bit
-> >> > except AHCI which is 64-bit. The core libahci sets the mask based on
-> >> > the capabilities register regardless of PCI or platform bus. Requiring
-> >> > this to be setup by the platform or in the DT seems like a step
-> >> > backwards. A slightly more complicated case would be something like
-> >> > midway, but with RAM starting at say 2GB and DMA masters have the same
-> >> > view as the cpu (i.e. no offset). Then the platform does need to set
-> >> > the mask to (2^31 -1).
-> >
-> > So how would you show this in DT? I'd assume that some of the other
-> > devices on midway have drivers that may also try to set a 64-bit mask,
-> > like EHCI for instance does. Is AHCI the only one that sits on a 64-bit
-> > wide bus, like this?
-> >
-> >         axi {
-> >                 #address-cells = <2>;
-> >                 #size-cells = <2>;
-> >                 dma-ranges = <0 0 0 0 0x100 0>; /* max phys address space */
-> >
-> >                 ahci {
-> >                         dma-ranges = <0 0  0 0  0x100 0>;
-> 
-> There is no point to this dma-ranges here. Based on the capabilities
-> reg, we know that we can do either 32 or 64 bit DMA.
+Well, PPMUs and DMCs are separate hardware blocks found inside Exynos 
+SoCs. Busfreq/devfreq is just a Linux-specific abstraction responsible 
+for collecting data using PPMUs and controlling frequencies and voltages 
+of appropriate power planes, vdd_int responsible for powering DMC0 and 
+DMC1 blocks in this case.
 
-Ok
+I'm afraid that the binding you're proposing is unfortunately incorrect, 
+because it represents the software abstraction, not the real hardware.
 
-> In the case of
-> 64-bit DMA, the device should try to set its mask to DMA_MASK(64), but
-> the parent dma-ranges should restrict that to DMA_MASK(40).
+Instead, this should be separated into several independent bindings:
 
-Now I'm confused about what dma_set_mask is actually supposed to do here.
-I /think/ it should fail the DMA_MASK(64) call if the bus supports
-less than 64 bits as in the above example. However it seems like a
-valid shortcut to always succeed here if the effective mask covers
-all of the installed RAM.
+  - PPMU bindings to list all the PPMU instances present in the SoC and 
+resources they need,
 
-That would mean that even if we only have a 32-bit bus, but all RAM
-resides below 4GB, a call to dma_set_mask using DMA_MASK(64) would
-also succeed.
+  - power plane bindings, which define a power plane in which multiple 
+IP blocks might reside, can be monitored by one or more PPMU units and 
+frequency and voltage of which can be configured according to determined 
+performance level. Needed resources will be clocks and regulators to 
+scale and probably also operating points.
 
-> >                         ...
-> >                 };
-> >
-> >                 ahb {
-> >                         #address-cells = <1>;
-> >                         #size-cells = <1>;
-> 
-> This would need to be 2. ePAPR says the size cells size is determined
-> by #size-cells in the same node.
+Then, exynos-busfreq driver should bind to such power planes, parse 
+necessary data from DT (list of PPMUs and IP blocks, clocks, regulators 
+and operating points) and register a devfreq entity.
 
-Ah, of course.
-
-> >                         dma-ranges = <0 0  0  0x1 0>; /* only 4GB */
-> >
-> >                         ehci {
-> >                                 dma-ranges = <0  0  0xffffffff>;
-> 
-> Again, I don't think this is needed. Here, regardless of the device's
-> capabilities, the bus is restricting the mask to DMA_MASK(32).
-
-Right.
-
-> >                                 /* side-question: is that the right way
-> >                                   to describe 4GB length? it seems missing
-> >                                   a byte */
-> >                         };
-> >                 };
-> >         };
-> >
-> > BTW, I hope I understood you right that you wouldn't actually trust the
-> > capabilities register by itself but only allow setting the 64-bit mask
-> > in the arch code if the DT doesn't have any information about the
-> > bus being incapable of doing this, right?
-> 
-> Ideally no, but it appears we are ATM for midway. We get away with it
-> since it is midway/highbank specific driver setup and know there are
-> not any restrictions in addressing RAM. I think we have to keep bus
-> and device masks separate and the final mask is the AND of them. There
-> isn't really a construct to do this currently AFAICT. dma_set_mask
-> could be modified to adjust the mask, but that would be a change in
-> how dma_set_mask works as it is supposed to fail if the requested mask
-> cannot be supported.
-> 
-> Perhaps using dma_get_required_mask to parse dma-ranges would be
-> appropriate here? It doesn't seem widely used though.
-
-Hmm, I've never even heard of that interface.
-
-> >> Compatibility issues:
-> >>   - Old DT without DMA properties defined: Drivers may still need to call dma_set_mask(DMA_MASK(64)
-> >>   - Old DT without DMA properties defined and DMA range is defined outside of RAM:
-> >>   arch or drivers code still has to provide proper address translation routines.
-> >
-> > 64-bit SOC includes 32-bit CPU with LPAE, right?
-> >
-> > Would you want to allow dma_set_mask(DMA_MASK(64)) to succeed in the absence
-> > of the dma-ranges properties?
-> 
-> Yes, because the default should be no restrictions are imposed by the
-> bus. DT should describe the restrictions or translations. The default
-> should be masters have the same view of memory map as the cpu and can
-> use all address bits the device has.
-
-Hmm, I was rather thinking we should mirror what we have for the "ranges"
-property where an empty property signifies that there are no restrictions
-and the parent and child bus have the same view.
-
-In case of "ranges", the absence of the property means that there is
-no possible translation, but we can't do that for "dma-ranges" because
-that would break every single 32-bit SoC in existence today.
-
-Defining this case to mean "only 32-bit translations are possible" is
-a bit hacky but I think it would be a more pragmatic approach.
-
-> >> [3] 64 bit SOC (only 32 bit masters):
-> >>
-> >> - DMA range is present and It's defined inside RAM (no address translation needed):
-> >>   DMA range can be absent - default DMA configuration will be applied.
-> >>
-> >> - DMA range present and It's defined outside of RAM (address translation needed):
-> >>   DMA range has to be present and depending on its size
-> >>   dma_mask will be equal or less than DMA_MASK(32); and dma_pfn_offset will be calculated.
-> >>
-> >> Compatibility issues:
-> >>   - Old DT without DMA properties defined and DMA range is defined outside of RAM:
-> >>   arch or drivers code has to provide proper address translation routines.
-> >>
-> >>
-> >> [4] 64 bit SOC (32 bit and 64 masters):
-> >> - This is combination of above 2,3 cases.
-> >>   The current approach will allow to handle it by defining two buses in DT
-> >>   "simple-bus32" and "simple-bus64", and each one should have its own DMA properties
-> >>   defined in DT.
-> >
-> > We already try to describe the hierarchy of the buses, and only AXI4 buses can be
-> > 64-bit, unlike AHB or other types of AMBA buses AFAIK. We should just call them
-> > what they are.
-> 
-> I don't think we do describe the hierarchy. We are describing the
-> slave side which is not necessarily the same as the master side.
-> Internal buses are also much more complex than any of the SOCs
-> describe in their DT.
-
-I think we try to describe them as good as we can if we have access to
-the documentation. I keep hearing people mention the case where the
-slave side is different from the master side, but is that actually
-a common scenario? If it's as rare as I suspect, we can fake a hierarchy
-for the cases we need, but describe most of them correctly.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Tomasz
