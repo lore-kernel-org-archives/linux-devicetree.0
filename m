@@ -1,66 +1,107 @@
-From: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv4 0/7] omap hwspinlock dt support
-Date: Fri, 14 Mar 2014 22:10:00 +0200
-Message-ID: <CAK=WgbZp_RQPCeZJyMRkNTQxaJsnGZ3DnjhSkYYR_-PAE_Kp4g@mail.gmail.com>
-References: <1389658764-39199-1-git-send-email-s-anna@ti.com>
- <52F9282B.5000702@ti.com> <530B8C00.8020001@ti.com>
+From: Loc Ho <lho@apm.com>
+Subject: Re: [PATCH v17 3/4] ata: Add APM X-Gene SoC AHCI SATA host controller driver
+Date: Fri, 14 Mar 2014 13:27:23 -0700
+Message-ID: <CAPw-ZT=1KWEowD_i=qoWwg372XdzC4p227rpNo7ov+NwOYFUDA@mail.gmail.com>
+References: <1394655573-32645-1-git-send-email-lho@apm.com>
+	<201403141241.16599.arnd@arndb.de>
+	<CAPw-ZTnVE0B+hJKGX=EPP5mjoA7-diTvi9hxNhBuAFL2hANz+Q@mail.gmail.com>
+	<201403142005.52991.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <530B8C00.8020001-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <201403142005.52991.arnd@arndb.de>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Olof Johansson <olof@lixom.net>, Tejun Heo <tj@kernel.org>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Suman, Mark,
+Hi,
 
-On Mon, Feb 24, 2014 at 8:14 PM, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> wrote:
-> Mark, Ohad,
-...
-> Gentle reminder, can you provide your acks/comments?
+>> > gets called. Can you clarify what this register access does?
+>> > If it's just setting a index into a mux output, would it make
+>> > sense to have an optional DT property containing an integer with
+>> > the mux setting you want to set? That way you wouldn't even
+>> > have to have two compatible strings but just do
+>> >
+>> >         ret = of_property_read_u32(node, "apm,ahci-mux", &mux);
+>> >         if (!ret)
+>> >                 xgene_ahci_mux_select(ctx, mux);
+>> >
+>>
+>> Given that fact that I will break up the resource. Let's just use the
+>> resource for the MUX to handle this. For the IP that doesn't existed,
+>> I will just not list it.
+>
+> Ah, that sounds good. It also means that if the firmware has set up
+> the mux already, you don't have to touch it again. That would probably
+> be the preferred case.
+>
+> I'm undecided about the value that you write in there. That could either
+> be passed through DT as I suggested above for extra flexibility, or you
+> can keep it hardcoded if you are absolutely sure that there will never
+> need to be a case where you have to set it to something other than '1',
 
-Sorry for the late jump in.
+It is only a mux between two IP's. Writing 1 is fine. For ACPI, it can
+be missing and handled by the firmware or can be handled just like the
+DTS way.
 
-I have a few comments:
+>
+>> > > +     /*
+>> > > +      * Can't use devm_ioremap_resource due to overlapping region.
+>> > > +      * 0xYYYY.0000 - host core
+>> > > +      * 0xYYYY.7000 - Mux (if applicable)
+>> > > +      * 0xYYYY.A000 - PHY indirect access
+>> > > +      * 0xYYYY.C000 - Clock
+>> > > +      * 0xYYYY.D000 - RAM shutdown removal
+>> > > +      * As we map the entire region as one, it overlaps with the PHY driver.
+>> > > +      */
+>> > > +     ctx->csr_base = devm_ioremap(dev, res->start, resource_size(res));
+>> > > +     if (!ctx->csr_base) {
+>> > > +             dev_err(dev, "can't map %pR\n", res);
+>> > > +             return -ENOMEM;
+>> > > +     }
+>> >
+>> > I still think we should try not to have overlapping memory areas here.
+>> > Could you split up the registers into another range in the reg property
+>> > to leave the PHY registers out?
+>>
+>> Let me do this:
+>>
+>> 1. One resource for the RAM shutdown
+>> 2. One resource for the host controller
+>> 3. One optional resource for the MUX if needed.
+>>
+>> With #3, this also solved the MUX detection and avoid having another
+>> node "apm,ahci-mux".
+>
+> My suggestion was not to have another device node, just a property that
+> contains a value to be written into the mux register if present.
+>
+>> > Also, please read the thread named "[PATCH 0/7] of: setup dma
+>> > parameters using dma-ranges and dma-coherent" and comment there
+>> > about what you think we should do here. I assume we will have to
+>> > add "dma-ranges" properties in a number of places to get this
+>> > all to work fine any 64-bit SoC. Do you know if you have any
+>> > DMA master devices in x-gene that are not 64-bit capable?
+>> >
+>>
+>> I will read and follow later. We do have non-64-bit devices such as
+>> SDIO and SPI. But these IP's have translation in the bus similar to
+>> PCIe PIM.
+>
+> Is there also an IOMMU, or just the PIM? If there is no IOMMU,
+> we will actually have to use the swiotlb code here, otherwise we
+> can rely on the IOMMU to do the translation so we can pretend that
+> there is always 64-bit DMA capability.
+>
+> In theory, the PIM could be dynamically reprogrammed for each
+> DMA, as an extremely primitive IOMMU implementation, but I don't
+> know what the impact on performance would be from doing that.
+> It would also prevent you from starting multiple concurrent DMAs,
+> although I suspect that is not an important case for SPI and SDIO.
 
-- Hardware spinlocks must have global and system-wide id numbers;
-these numbers cannot be maintained internally by the Linux Kernel.
-Think of an SoC with several asynchronous heterogeneous processors,
-each of which is running a different OS, and they all need to use a
-specific hardware spinlock in order to share some resource. For that
-to happen, every hwlock must have a predefined and deterministic id
-number which is global in the system. We can't have those id numbers
-be relative to an hwlock "controller", and we can't have two hwlock
-"controllers" share the same id numbers.
+This first generation don't support IOMMU and rely on swiotlb. In any
+case, for SDIO, the solution is to reprogram the PIM and limit to SDMA
+- single buffer - for each operation.
 
-- I suspect the simplest and most straight forward way to achieve this
-is by (a) bringing back the concept of the base_id property, and (b)
-letting the global hwlock id be the DT identifier (plus the base_id)
-and then providing it directly to the drivers when needed. The latter
-is required in order to support dynamically allocation of hwlocks, in
-which case Linux must know the global system-wide id number, and then
-share it with the other asynchronous OSes via some IPC.
-
-- If we feel there's no way any system is going to have more than a
-single hwlock controller, then we can live without a base_id property,
-but then this needs to be clearly documented and prohibited. Today
-both the hwlock DT representation, and the coupled kernel code,
-implicitly allow this anomaly to exist.
-
-- Hwlock controller nodes should have a list of reserved locks (those
-locks for which other nodes have a phandle+identifier pointing at) to
-prevent those locks from being dynamically allocated by eager drivers.
-
-Most of these issues were discussed Arnd, Benoit and myself back then,
-please see below:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2011-September/064265.html
-
-Let's discuss,
-
-Thanks,
-Ohad.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Loc
