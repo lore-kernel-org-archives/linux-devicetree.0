@@ -1,48 +1,96 @@
-From: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] i2c: New bus driver for the Qualcomm QUP I2C
- controller
-Date: Fri, 14 Mar 2014 13:00:38 -0500
-Message-ID: <20140314180038.GT18529@joshc.qualcomm.com>
-References: <1394762863-12154-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1394762863-12154-3-git-send-email-bjorn.andersson@sonymobile.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v7 3/3] arm64: Add architecture support for PCI
+Date: Fri, 14 Mar 2014 18:05:27 +0000
+Message-ID: <20140314180527.GZ6457@e106497-lin.cambridge.arm.com>
+References: <1394811258-1500-1-git-send-email-Liviu.Dudau@arm.com>
+ <1394811258-1500-4-git-send-email-Liviu.Dudau@arm.com>
+ <20140314171457.GK18126@arm.com>
+ <201403141838.08900.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201403141838.08900.arnd@arndb.de>
 Content-Disposition: inline
-In-Reply-To: <1394762863-12154-3-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Catalin Marinas <Catalin.Marinas@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 13, 2014 at 07:07:43PM -0700, Bjorn Andersson wrote:
-> This bus driver supports the QUP i2c hardware controller in the Qualcomm SOCs.
-> The Qualcomm Universal Peripheral Engine (QUP) is a general purpose data path
-> engine with input/output FIFOs and an embedded i2c mini-core. The driver
-> supports FIFO mode (for low bandwidth applications) and block mode (interrupt
-> generated for each block-size data transfer).
-> 
-> Cc: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> +++ b/drivers/i2c/busses/i2c-qup.c
-[..]
-> +static int qup_i2c_xfer(struct i2c_adapter *adap,
-> +			struct i2c_msg msgs[],
-> +			int num)
-> +{
-> +	struct qup_i2c_dev *qup = i2c_get_adapdata(adap);
-> +	int ret, idx;
-> +
-> +	ret = pm_runtime_get_sync(qup->dev);
-> +	if (IS_ERR_VALUE(ret))
-> +		goto out;
+On Fri, Mar 14, 2014 at 05:38:08PM +0000, Arnd Bergmann wrote:
+> On Friday 14 March 2014, Catalin Marinas wrote:
+> > On Fri, Mar 14, 2014 at 03:34:18PM +0000, Liviu Dudau wrote:
+> > > --- /dev/null
+> > > +++ b/arch/arm64/kernel/pci.c
+> > [...]
+> > > +int pci_register_io_range(phys_addr_t address, resource_size_t s=
+ize)
+> > [...]
+> > > +unsigned long pci_address_to_pio(phys_addr_t address)
+> > [...]
+> > > +void pcibios_fixup_bus(struct pci_bus *bus)
+> > [ actually most of this file ]
+> >=20
+> > Maybe it was raised before already but can we have __weak generic
+> > definitions of these functions? They don't seem to be arm64 specifi=
+c in
+> > any way.
+> >=20
+>=20
+> I would definitely prefer that.
+>=20
+> 	Arnd
+>=20
 
-General i2c question: is there a reason why the core isn't responsible
-for ensuring a device is not suspended before invoking ->master_xfer
-(and smbus_xfer)?
+I haven't seen any reaction from Bjorn on this, so I threaded carefully=
+ on that
+subject. I'm new to this so I don't know how to handle this.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+To my mind, and looking at the way every architecture has been setup, t=
+he pcibios_*
+function are intended to be provided by the architecture. No matter how=
+ much wishful
+thinking we are going to put in here, it will not change the fact that =
+the non-arm64
+specific version of pcibios_fixup_bus() that I wrote is not shared by a=
+nyone else
+and it will remain "for arm64 use only" regardless to where it is place=
+d until the
+next architecture comes into the kernel. And even then its adoption is =
+questionable.
+If we are looking for simple and common implementations of this functio=
+n, maybe we
+should look at why microblaze and powerpc versions, that are identical,=
+ are not being
+made the default __weak implementation.
+
+As for the other two functions, I've no special attachment to where the=
+y are present
+and I'm happy to move them into drivers/pci on the condition that the p=
+atchset doesn't
+double in size. The reason why I'm weary of touching other architecture=
+s in a significant
+way is the current lack of engineering bandwidth and way of testing all=
+ the architectures.
+My low friction approach has been to introduce them in arm64 and then s=
+lowly move them
+into core (and yes, I know about good intentions and the road to hell.)
+
+Catalin, if you are happy to ask for ACKs from all arch maintainers tha=
+t might get
+affected by our custom version of pci_address_to_pio() before you can p=
+ull PCI support
+for arm64 then I can propose a new patchset.
+
+Best regards,
+Liviu=20
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
