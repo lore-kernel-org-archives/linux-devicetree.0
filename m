@@ -1,106 +1,156 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH v11 13/27] iommu/exynos: support for device tree
-Date: Fri, 14 Mar 2014 20:57:42 +0530
-Message-ID: <CAK9yfHx_FUaUcA_tpsJ73i0iJmczOp7K8gC6sMGHQ6c50i46=A@mail.gmail.com>
-References: <20140314140935.e0652b58ce16591b54d0e10b@samsung.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: [PATCH v7 0/3]  Add support for PCI in AArch64
+Date: Fri, 14 Mar 2014 15:34:15 +0000
+Message-ID: <1394811258-1500-1-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140314140935.e0652b58ce16591b54d0e10b@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Cho KyongHo <pullip.cho@samsung.com>
-Cc: Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Linux DeviceTree <devicetree@vger.kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>, Antonios Motakis <a.motakis@virtualopensystems.com>, Grant Grundler <grundler@chromium.org>, Joerg Roedel <joro@8bytes.org>, Kukjin Kim <kgene.kim@samsung.com>, Prathyush <prathyush.k@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Varun Sethi <Varun.Sethi@freescale.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Grant Likely <grant.likely@secretlab.ca>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi KyongHo,
+Hi,
 
-On 14 March 2014 10:39, Cho KyongHo <pullip.cho@samsung.com> wrote:
-> This commit adds device tree support for System MMU.
->
-> Signed-off-by: Cho KyongHo <pullip.cho@samsung.com>
-> ---
->  drivers/iommu/Kconfig        |    5 ++---
->  drivers/iommu/exynos-iommu.c |   21 +++++++++++++++++----
->  2 files changed, 19 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> index df56e4c..22af807 100644
-> --- a/drivers/iommu/Kconfig
-> +++ b/drivers/iommu/Kconfig
-> @@ -178,16 +178,15 @@ config TEGRA_IOMMU_SMMU
->
->  config EXYNOS_IOMMU
->         bool "Exynos IOMMU Support"
-> -       depends on ARCH_EXYNOS && EXYNOS_DEV_SYSMMU
-> +       depends on ARCH_EXYNOS
->         select IOMMU_API
-> +       default n
+This patch adds support for PCI to AArch64. It is based on my v7 patch
+that adds support for creating generic host bridge structure from
+device tree. With that in place, I was able to boot a platform that
+has PCIe host bridge support and use a PCIe network card.
 
-This is not needed as it is the default choice.
+I have dropped the RFC tag from the subject as I now have the ambitious goal
+of trying to get it mainlined.
 
->         help
->           Support for the IOMMU(System MMU) of Samsung Exynos application
->           processor family. This enables H/W multimedia accellerators to see
->           non-linear physical memory chunks as a linear memory in their
->           address spaces
->
-> -         If unsure, say N here.
-> -
->  config EXYNOS_IOMMU_DEBUG
->         bool "Debugging log for Exynos IOMMU"
->         depends on EXYNOS_IOMMU
-> diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
-> index 33b424d..34feb04 100644
-> --- a/drivers/iommu/exynos-iommu.c
-> +++ b/drivers/iommu/exynos-iommu.c
-> @@ -26,6 +26,7 @@
->  #include <linux/list.h>
->  #include <linux/memblock.h>
->  #include <linux/export.h>
-> +#include <linux/of.h>
->
->  #include <asm/cacheflush.h>
->  #include <asm/pgtable.h>
-> @@ -497,7 +498,7 @@ void exynos_sysmmu_tlb_invalidate(struct device *dev)
->         read_unlock_irqrestore(&data->lock, flags);
->  }
->
-> -static int exynos_sysmmu_probe(struct platform_device *pdev)
-> +static int __init exynos_sysmmu_probe(struct platform_device *pdev)
->  {
->         int irq, ret;
->         struct device *dev = &pdev->dev;
-> @@ -557,11 +558,23 @@ static int exynos_sysmmu_probe(struct platform_device *pdev)
->         return 0;
->  }
->
-> -static struct platform_driver exynos_sysmmu_driver = {
-> -       .probe          = exynos_sysmmu_probe,
-> -       .driver         = {
-> +#ifdef CONFIG_OF
+Changes from v6:
+  - Guard the pci_domain_nr() inline implementation with #ifdef CONFIG_PCI as
+    to avoid conflict with default empty version present in include/linux/pci.h.
+    Thanks to Jingoo Han for catching this.
 
-This is not needed as Exynos is DT only platform.
+Changes from v5:
+  - Removed pcibios_fixup_bridge_ranges() as the week default version is fine.
+  - Removed the ALIGN() call in pcibios_align_resource()
+  - Stopped exporting pcibios_align_resource()
 
-> +static struct of_device_id sysmmu_of_match[] __initconst = {
-> +       { .compatible   = "samsung,sysmmu-v1", },
-> +       { .compatible   = "samsung,sysmmu-v2", },
-> +       { .compatible   = "samsung,sysmmu-v3.1", },
-> +       { .compatible   = "samsung,sysmmu-v3.2", },
-> +       { .compatible   = "samsung,sysmmu-v3.3", },
-> +       { },
-> +};
-> +#endif
-> +
-> +static struct platform_driver exynos_sysmmu_driver __refdata = {
-> +       .probe  = exynos_sysmmu_probe,
-> +       .driver = {
->                 .owner          = THIS_MODULE,
->                 .name           = "exynos-sysmmu",
-> +               .of_match_table = of_match_ptr(sysmmu_of_match),
+Changes from v4:
+  - Fixed the pci_domain_nr() implementation for arm64. Now we use
+    find_pci_host_bride() to find the host bridge before we retrieve
+    the domain number.
 
-of_match_ptr is not needed for the same reason as above.
+Changes from v3:
+  - Added Acks accumulated so far ;)
+  - Still carrying Catalin's patch for moving the PCI_IO_BASE until it
+    lands in linux-next or mainline, in order to ease applying the series
 
+Changes from v2:
+  - Implement an arch specific version of pci_register_io_range() and
+    pci_address_to_pio().
+  - Return 1 from pci_proc_domain().
+
+Changes from v1:
+  - Added Catalin's patch for moving the PCI_IO_BASE location and extend
+    its size to 16MB
+  - Integrated Arnd's version of pci_ioremap_io that uses a bitmap for
+    keeping track of assigned IO space and returns an io_offset. At the
+    moment the code is added in arch/arm64 but it can be moved in drivers/pci.
+  - Added a fix for the generic ioport_map() function when !CONFIG_GENERIC_IOMAP
+    as suggested by Arnd.
+
+v6 thread here: https://lkml.org/lkml/2014/3/5/41
+v5 thread here: https://lkml.org/lkml/2014/3/4/307
+v4 thread here: https://lkml.org/lkml/2014/3/3/298
+v3 thread here: https://lkml.org/lkml/2014/2/28/211
+v2 thread here: https://lkml.org/lkml/2014/2/27/255
+v1 thread here: https://lkml.org/lkml/2014/2/3/389
+
+
+The API used is different from the one used by ARM architecture. There is
+no pci_common_init_dev() function and no hw_pci structure, as that is no
+longer needed. Once the last signature is added to the legal agreement, I
+will post the host bridge driver code that I am using. Meanwhile, here
+is an example of what the probe function looks like, posted as an example:
+
+static int myhostbridge_probe(struct platform_device *pdev)
+{
+	int err;
+	struct device_node *dev;
+	struct pci_host_bridge *bridge;
+	struct myhostbridge_port *pp;
+	resource_size_t lastbus;
+
+	dev = pdev->dev.of_node;
+
+	if (!of_device_is_available(dev)) {
+		pr_warn("%s: disabled\n", dev->full_name);
+		return -ENODEV;
+	}
+
+	pp = kzalloc(sizeof(struct myhostbridge_port), GFP_KERNEL);
+	if (!pp)
+		return -ENOMEM;
+
+	bridge = of_create_pci_host_bridge(&pdev->dev, &myhostbridge_ops, pp);
+	if (IS_ERR(bridge)) {
+		err = PTR_ERR(bridge);
+		goto bridge_create_fail;
+	}
+
+	err = myhostbridge_setup(bridge->bus);
+	if (err)
+		goto bridge_setup_fail;
+
+	/* We always enable PCI domains and we keep domain 0 backward
+	 * compatible in /proc for video cards
+	 */
+	pci_add_flags(PCI_ENABLE_PROC_DOMAINS);
+	pci_add_flags(PCI_REASSIGN_ALL_BUS | PCI_REASSIGN_ALL_RSRC);
+
+	lastbus = pci_scan_child_bus(bridge->bus);
+	pci_bus_update_busn_res_end(bridge->bus, lastbus);
+
+	pci_assign_unassigned_bus_resources(bridge->bus);
+
+	pci_bus_add_devices(bridge->bus);
+
+	return 0;
+
+bridge_setup_fail:
+	put_device(&bridge->dev);
+	device_unregister(&bridge->dev);
+bridge_create_fail:
+	kfree(pp);
+	return err;
+}
+
+Best regards,
+Liviu
+
+
+Catalin Marinas (1):
+  arm64: Extend the PCI I/O space to 16MB
+
+Liviu Dudau (2):
+  Fix ioport_map() for !CONFIG_GENERIC_IOMAP cases.
+  arm64: Add architecture support for PCI
+
+ Documentation/arm64/memory.txt |  16 +--
+ arch/arm64/Kconfig             |  19 +++-
+ arch/arm64/include/asm/Kbuild  |   1 +
+ arch/arm64/include/asm/io.h    |   5 +-
+ arch/arm64/include/asm/pci.h   |  51 +++++++++
+ arch/arm64/kernel/Makefile     |   1 +
+ arch/arm64/kernel/pci.c        | 173 +++++++++++++++++++++++++++++++
+ include/asm-generic/io.h       |   2 +-
+ 8 files changed, 258 insertions(+), 10 deletions(-)
+ create mode 100644 arch/arm64/include/asm/pci.h
+ create mode 100644 arch/arm64/kernel/pci.c
 
 -- 
-With warm regards,
-Sachin
+1.9.0
