@@ -1,66 +1,50 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCHv3 6/8] devfreq: exynos4: Fix power-leakage of clock on suspend
- state
-Date: Fri, 14 Mar 2014 18:30:06 +0900
-Message-ID: <1394789408-14648-7-git-send-email-cw00.choi@samsung.com>
-References: <1394789408-14648-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1394789408-14648-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: myungjoo.ham@samsung.com, kyungmin.park@samsung.com
-Cc: rafael.j.wysocki@intel.com, nm@ti.com, b.zolnierkie@samsaung.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>
+From: Hou Zhiqiang <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 1/2] powerpc/85xx: Add a property bus-num for espi controller
+Date: Fri, 14 Mar 2014 17:35:56 +0800
+Message-ID: <1394789757-40732-1-git-send-email-B48286@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, mingkai.hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Hou Zhiqiang <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch disable ppmu clocks before entering suspend state to remove
-power-leakage and enable ppmu clocks on resume function.
+To use "mtdparts=..." in cmdline, the spi_master bus_num must be static.
+This property is use to asign a static bus number for spi_master other than
+allocate dynamically.
 
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Hou Zhiqiang <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/devfreq/exynos/exynos4_bus.c | 25 ++++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
+ arch/powerpc/boot/dts/fsl/pq3-espi-0.dtsi   | 1 +
+ arch/powerpc/boot/dts/fsl/qoriq-espi-0.dtsi | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/devfreq/exynos/exynos4_bus.c b/drivers/devfreq/exynos/exynos4_bus.c
-index e5d2c5a..65e097a 100644
---- a/drivers/devfreq/exynos/exynos4_bus.c
-+++ b/drivers/devfreq/exynos/exynos4_bus.c
-@@ -1251,14 +1251,37 @@ static int exynos4_busfreq_remove(struct platform_device *pdev)
- static int exynos4_busfreq_resume(struct device *dev)
- {
- 	struct busfreq_data *data = dev_get_drvdata(dev);
-+	int i;
-+
-+	/* Enable clock after wake-up from suspend state */
-+	for (i = 0; i < PPMU_END; i++)
-+		clk_prepare_enable(data->clk_ppmu[i]);
-+
-+	/* Reset PPMU to check utilization again */
- 
- 	busfreq_mon_reset(data);
-+
- 	return 0;
- }
-+
-+static int exynos4_busfreq_suspend(struct device *dev)
-+{
-+	struct busfreq_data *data = dev_get_drvdata(dev);
-+	int i;
-+
-+	/*
-+	 * Disable clock before entering suspend state
-+	 * to reduce leakage power on suspend state.
-+	 */
-+	for (i = 0; i < PPMU_END; i++)
-+		clk_disable_unprepare(data->clk_ppmu[i]);
-+
-+	return 0;
-+};
- #endif
- 
- static const struct dev_pm_ops exynos4_busfreq_pm = {
--	SET_SYSTEM_SLEEP_PM_OPS(NULL, exynos4_busfreq_resume)
-+	SET_SYSTEM_SLEEP_PM_OPS(exynos4_busfreq_suspend, exynos4_busfreq_resume)
+diff --git a/arch/powerpc/boot/dts/fsl/pq3-espi-0.dtsi b/arch/powerpc/boot/dts/fsl/pq3-espi-0.dtsi
+index 75854b2..cb4d488 100644
+--- a/arch/powerpc/boot/dts/fsl/pq3-espi-0.dtsi
++++ b/arch/powerpc/boot/dts/fsl/pq3-espi-0.dtsi
+@@ -38,4 +38,5 @@ spi@7000 {
+ 	compatible = "fsl,mpc8536-espi";
+ 	reg = <0x7000 0x1000>;
+ 	interrupts = <59 0x2 0 0>;
++	bus-num = <0>;
  };
- 
- static const struct platform_device_id exynos4_busfreq_id[] = {
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-espi-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-espi-0.dtsi
+index 6db0697..54358f3 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-espi-0.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-espi-0.dtsi
+@@ -38,4 +38,5 @@ spi@110000 {
+ 	compatible = "fsl,mpc8536-espi";
+ 	reg = <0x110000 0x1000>;
+ 	interrupts = <53 0x2 0 0>;
++	bus-num = <0>;
+ };
 -- 
-1.8.0
+1.8.5
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
