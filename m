@@ -1,33 +1,177 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH] ARM: dts: exynos5250: turn on the LDO10 on SMDK5250
-Date: Fri, 14 Mar 2014 18:18:35 +0100
-Message-ID: <532339EB.5090304@samsung.com>
-References: <1393845310-1898-1-git-send-email-yuvaraj.cd@samsung.com>
- <CAKuRcO+vudiKC1SRGMWgb3Ec0-JrVNeCxM5g5eTNR3OnQmmMTQ@mail.gmail.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v7 2/6] pci: OF: Fix the conversion of IO ranges into IO
+ resources.
+Date: Fri, 14 Mar 2014 17:19:22 +0000
+Message-ID: <20140314171921.GY6457@e106497-lin.cambridge.arm.com>
+References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
+ <1394811272-1547-3-git-send-email-Liviu.Dudau@arm.com>
+ <201403141805.29204.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <CAKuRcO+vudiKC1SRGMWgb3Ec0-JrVNeCxM5g5eTNR3OnQmmMTQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Yuvaraj Kumar <yuvaraj.cd@gmail.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Jingoo Han <jg1.han@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, sunil joshi <joshi@samsung.com>, "ks.giri@samsung.com" <ks.giri@samsung.com>, thomas.ab@samsung.com, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <201403141805.29204.arnd@arndb.de>
+Content-Disposition: inline
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Hi Yuvaraj,
+On Fri, Mar 14, 2014 at 05:05:28PM +0000, Arnd Bergmann wrote:
+> On Friday 14 March 2014, Liviu Dudau wrote:
+> > +int of_pci_range_to_resource(struct of_pci_range *range,
+> > +       struct device_node *np, struct resource *res)
+> > +{
+> > +       res->flags =3D range->flags;
+> > +       if (res->flags & IORESOURCE_IO) {
+> > +               unsigned long port =3D -1;
+> > +               int err =3D pci_register_io_range(range->cpu_addr, =
+range->size);
+> > +               if (err)
+> > +                       return err;
+> > +               port =3D pci_address_to_pio(range->cpu_addr);
+> > +               if (port =3D=3D (unsigned long)-1) {
+> > +                       res->start =3D (resource_size_t)OF_BAD_ADDR=
+;
+> > +                       res->end =3D (resource_size_t)OF_BAD_ADDR;
+> > +                       return -EINVAL;
+> > +               }
+>=20
+> The error handling is inconsistent here: in one case you set the reso=
+urce
+> to OF_BAD_ADDR, in the other one you don't.
+>=20
+> 	Arnd
+>=20
 
-On 14.03.2014 09:26, Yuvaraj Kumar wrote:
-> Any comments on this?
->
-> On Mon, Mar 3, 2014 at 4:45 PM, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com> wrote:
->> Commit 275dcd2 "ARM: dts: add max77686 pmic node for smdk5250" added
->> required LDO's for SMDK5250 boards.Currently LDO10 is turned off.As LDO10,
->> enable/disable the LDO22 which is required for VDDQ_MMC2_AP.So this patch
->> makes LDO10 turn's on always.
+You are right, that was lazy of me. What about this version?
 
-This does not seem right to me. Why a regulator used by MMC should be 
-always enabled? Shouldn't it be specified as one of the MMC regulators 
-in corresponding MMC controller node?
+8<----------------------------------------------------
+
+=46rom acfd63b5c48b4a9066ab0b373633c5bb4feaadf5 Mon Sep 17 00:00:00 200=
+1
+=46rom: Liviu Dudau <Liviu.Dudau@arm.com>
+Date: Fri, 28 Feb 2014 12:40:46 +0000
+Subject: [PATCH v7 2/6] pci: OF: Fix the conversion of IO ranges into I=
+O
+ resources.
+
+The ranges property for a host bridge controller in DT describes
+the mapping between the PCI bus address and the CPU physical address.
+The resources framework however expects that the IO resources start
+at a pseudo "port" address 0 (zero) and have a maximum size of IO_SPACE=
+_LIMIT.
+The conversion from pci ranges to resources failed to take that into ac=
+count.
+
+In the process move the function into drivers/of/address.c as it now
+depends on pci_address_to_pio() code and make it return an error messag=
+e.
+
+Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+Tested-by: Tanmay Inamdar <tinamdar@apm.com>
+---
+ drivers/of/address.c       | 45 ++++++++++++++++++++++++++++++++++++
+ include/linux/of_address.h | 13 ++---------
+ 2 files changed, 47 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index be958ed..673c050 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -728,3 +728,48 @@ void __iomem *of_iomap(struct device_node *np, int=
+ index)
+ 	return ioremap(res.start, resource_size(&res));
+ }
+ EXPORT_SYMBOL(of_iomap);
++
++/**
++ * of_pci_range_to_resource - Create a resource from an of_pci_range
++ * @range:	the PCI range that describes the resource
++ * @np:		device node where the range belongs to
++ * @res:	pointer to a valid resource that will be updated to
++ *              reflect the values contained in the range.
++ *
++ * Returns EINVAL if the range cannot be converted to resource.
++ *
++ * Note that if the range is an IO range, the resource will be convert=
+ed
++ * using pci_address_to_pio() which can fail if it is called too early=
+ or
++ * if the range cannot be matched to any host bridge IO space (our cas=
+e here).
++ * To guard against that we try to register the IO range first.
++ * If that fails we know that pci_address_to_pio() will do too.
++ */
++int of_pci_range_to_resource(struct of_pci_range *range,
++	struct device_node *np, struct resource *res)
++{
++	res->flags =3D range->flags;
++	res->parent =3D res->child =3D res->sibling =3D NULL;
++	res->name =3D np->full_name;
++
++	if (res->flags & IORESOURCE_IO) {
++		unsigned long port =3D -1;
++		int err =3D pci_register_io_range(range->cpu_addr, range->size);
++		if (err)
++			goto invalid_range;
++		port =3D pci_address_to_pio(range->cpu_addr);
++		if (port =3D=3D (unsigned long)-1) {
++			err =3D -EINVAL;
++			goto invalid_range;
++		}
++		res->start =3D port;
++	} else {
++		res->start =3D range->cpu_addr;
++	}
++	res->end =3D res->start + range->size - 1;
++	return 0;
++
++invalid_range:
++	res->start =3D (resource_size_t)OF_BAD_ADDR;
++	res->end =3D (resource_size_t)OF_BAD_ADDR;
++	return err;
++}
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index 40c418d..a4b400d 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -23,17 +23,8 @@ struct of_pci_range {
+ #define for_each_of_pci_range(parser, range) \
+ 	for (; of_pci_range_parser_one(parser, range);)
+=20
+-static inline void of_pci_range_to_resource(struct of_pci_range *range=
+,
+-					    struct device_node *np,
+-					    struct resource *res)
+-{
+-	res->flags =3D range->flags;
+-	res->start =3D range->cpu_addr;
+-	res->end =3D range->cpu_addr + range->size - 1;
+-	res->parent =3D res->child =3D res->sibling =3D NULL;
+-	res->name =3D np->full_name;
+-}
+-
++extern int of_pci_range_to_resource(struct of_pci_range *range,
++		struct device_node *np, struct resource *res);
+ /* Translate a DMA address from device space to CPU space */
+ extern u64 of_translate_dma_address(struct device_node *dev,
+ 				    const __be32 *in_addr);
+--=20
+1.9.0
+
+>8--------------------------------------------------------
 
 Best regards,
-Tomasz
+Liviu
+
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
