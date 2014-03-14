@@ -1,78 +1,109 @@
-From: Zhou Zhu <zzhu3-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] video: mmp: add device tree support
-Date: Fri, 14 Mar 2014 18:43:30 +0800
-Message-ID: <5322DD52.9070107@marvell.com>
-References: <1389698184-28761-1-git-send-email-zzhu3@marvell.com> <1389698184-28761-5-git-send-email-zzhu3@marvell.com> <20140217143736.GC19308@e106331-lin.cambridge.arm.com> <CAJATT-5sQc7vsUhoFKdDnstqjj2R_yQ+Wk1NRf20UTM4-ndMSA@mail.gmail.com> <5316EF76.1050304@ti.com>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCHv2 0/8] devfreq: exynos4: Support dt and use common ppmu
+ driver
+Date: Fri, 14 Mar 2014 11:47:50 +0100
+Message-ID: <2149456.oUDFM14jk3@amdc1032>
+References: <1394698649-20996-1-git-send-email-cw00.choi@samsung.com>
+ <2117336.08cyWySR1X@amdc1032> <532273FB.6040303@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5316EF76.1050304-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Zhou Zhu <zzhu84-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chao Xie <cxie4-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Guoqing Li <ligq-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lisa Du <cldu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yonghai Huang <huangyh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <532273FB.6040303@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rafael.j.wysocki@intel.com, nm@ti.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Tomi,
+On Friday, March 14, 2014 12:14:03 PM Chanwoo Choi wrote:
+> Hi,
+> 
+> On 03/14/2014 01:43 AM, Bartlomiej Zolnierkiewicz wrote:
+> > 
+> > Hi,
+> > 
+> > On Thursday, March 13, 2014 05:17:21 PM Chanwoo Choi wrote:
+> >> This patchset support devicetree and use common ppmu driver instead of
+> >> individual code of exynos4_bus.c to remove duplicate code. Also this patchset
+> >> get the resources for busfreq from dt data by using DT helper function.
+> >> - PPMU register address
+> >> - PPMU clock
+> >> - Regulator for INT/MIF block
+> >>
+> >> This patchset use SET_SYSTEM_SLEEP_PM_OPS macro intead of legacy method.
+> >> To remove power-leakage in suspend state, before entering suspend state,
+> >> disable ppmu clocks.
+> >>
+> >> Changes from v1:
+> >> - Add exynos4_bus.txt documentation for devicetree guide
+> >> - Fix probe failure if CONFIG_PM_OPP is disabled
+> >> - Fix typo and resource leak(regulator/clock/memory) when happening probe failure
+> >> - Add additionally comment for PPMU usage instead of previous PPC
+> >> - Split separate patch to remove ambiguous of patch
+> >>
+> >> Chanwoo Choi (8):
+> >>   devfreq: exynos4: Support devicetree to get device id of Exynos4 SoC
+> >>   devfreq: exynos4: Use common ppmu driver and get ppmu address from dt data
+> >>   devfreq: exynos4: Add ppmu's clock control and code clean about regulator control
+> >>   devfreq: exynos4: Fix bug of resource leak and code clean on probe()
+> >>   devfreq: exynos4: Use SET_SYSTEM_SLEEP_PM_OPS macro
+> >>   devfreq: exynos4: Fix power-leakage of clock on suspend state
+> >>   devfreq: exynos4: Add CONFIG_PM_OPP dependency to fix probe fail
+> >>   devfreq: exynos4: Add busfreq driver for exynos4210/exynos4x12
+> >>
+> >>  .../devicetree/bindings/devfreq/exynos4_bus.txt    |  49 +++
+> >>  drivers/devfreq/Kconfig                            |   1 +
+> >>  drivers/devfreq/exynos/Makefile                    |   2 +-
+> >>  drivers/devfreq/exynos/exynos4_bus.c               | 415 ++++++++++++++-------
+> >>  4 files changed, 341 insertions(+), 126 deletions(-)
+> >>  create mode 100644 Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
+> > 
+> > Thanks for updating this patchset.  There are still some minor issues
+> > left though:
+> > 
+> > - patch #4 should be at beginning of the patch series
+> > 
+> > - moving of devfreq_unregister_opp_notifier(dev, data->devfreq) from
+> >   exynos4_bus_exit() to exynos4_busfreq_remove() should be in patch #4
+> >   (which should really be at the beggining of patch series) not #3
+> > 
+> > - handling of iounmap(data->ppmu[i].hw_base) should be added to
+> >   exynos4_bus_exit() in patch #2 not #3
+> > 
+> > - patch #8 summary and description should mention fact that it adds DT
+> >   binding documentation (not the driver itself) and the patch itself
+> >   can be slighlty polished
+> 
+> OK, I'll re-order the sequence of patchset and modify minior issues about your comment.
+> Also, I'll modify the patch description for patch8.
+> 
+> > 
+> > One important note about this patchset not mentioned in the cover
+> > letter is that it is improving currently unused driver (because of
+> > DT-only mach-exynos conversion the only user was removed in June 2013
+> > and from the reading the code I suspect that even that user hadn't
+> > worked previously).  As such this patch series should not cause any
+> > regressions.
+> 
+> I don't understand correct your meaning.I explained DT support on upper
+> patchset description by using DT helper function and I added PPMU descritpion.
+> Also, Each patch include detailed description of patch content.
 
-On 03/05/2014 05:33 PM, Tomi Valkeinen wrote:
-> I would recommend using the same style that is used in the OMAP DSS, imx
-> drm and exynos patches that are introducing DT support. They use ports
-> and endpoints as defined in:
->
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/media/video-interfaces.txt
->
-> with the addition of a simplified endpoint format, where the 'port' node
-> is not required.
->
-> To give an idea what it could look like, I've modified your example
-> above. It's just a rough example, you should study and think how it best
-> fits for mmp.
->
-> You could use the same format for the internal connections also, but I
-> didn't touch that. I think internal connections can as well be
-> configured separately, in a custom format, because there's no need for
-> external components to connect to the internal links.
->
-> mmp-disp@d420b000 {
->      compatible = "marvell,mmp-disp";
->      reg = <0xd420b000 0x1fc>;
->      interrupts = <0 41 0x4>;
->
->      internal-connections {
->          pipe1: pn-path {
->          input = "panel-graphic";
->          output = &disp_out;
->          }
->      }
->
-> 	disp_out: endpoint {
-> 		remote-endpoint = <&panel_in>;
-> 		marvell,rbswap;
-> 		marvell,spi;
-> 	};
->
->      status = "okay";
-> }
->
-> panel-xxx {
-> 	properties;
->
-> 	panel_in: endpoint {
-> 		remote-endpoint = <&disp_out>;
-> 	};
-> };
->
->   Tomi
->
->
-Thank you! I will update patches according to this layout later.
+Everything is okay, I just noted that since there are no users of this
+driver currently (the only user was NURI and it was removed by DT
+conversion of mach-exynos) it should be okay to merge the patch series
+quickly once reviewed and acked by the respective maintainers.
 
+> What is more needed?
 
--- 
-Thanks,
--Zhou
+Users of the driver? ;)
+
+Your patchset adds DT support and fixes to the driver but it doesn't
+add actual users of the driver to arch/arm/boot/dts/ files.
+
+Best regards,
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
