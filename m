@@ -1,124 +1,53 @@
-From: Loc Ho <lho@apm.com>
-Subject: [PATCH v18 4/4] arm64: Add APM X-Gene SoC AHCI SATA host controller DTS entries
-Date: Fri, 14 Mar 2014 17:53:21 -0600
-Message-ID: <1394841201-29495-5-git-send-email-lho@apm.com>
-References: <1394841201-29495-1-git-send-email-lho@apm.com>
- <1394841201-29495-2-git-send-email-lho@apm.com>
- <1394841201-29495-3-git-send-email-lho@apm.com>
- <1394841201-29495-4-git-send-email-lho@apm.com>
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <1394841201-29495-4-git-send-email-lho@apm.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+From: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm/xen: Don't use xen DMA ops when the device is
+ protected by an IOMMU
+Date: Fri, 14 Mar 2014 23:56:37 +0000
+Message-ID: <20140314235637.GA5687@kroah.com>
+References: <1392913301-25524-1-git-send-email-julien.grall@linaro.org>
+ <1392914159.32657.18.camel@kazak.uk.xensource.com>
+ <alpine.DEB.2.02.1402241214570.4471@kaball.uk.xensource.com>
+ <20140224151636.GA13489@kroah.com>
+ <alpine.DEB.2.02.1402242036490.31489@kaball.uk.xensource.com>
+ <5323334F.90700@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5323334F.90700-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Julien Grall <julien.grall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xen-devel-GuqFBffKawtpuQazS67q72D2FQJk+8+b@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds APM X-Gene SoC AHCI SATA host controller DTS entries.
+On Fri, Mar 14, 2014 at 04:50:23PM +0000, Julien Grall wrote:
+> On 02/24/2014 08:49 PM, Stefano Stabellini wrote:
+> > On Mon, 24 Feb 2014, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org wrote: 
+> > Julien is proposing to store the list of "safe" devices on an hash table
+> > in the Xen specific code (in arch/arm/xen/enlighten.c, see
+> > http://marc.info/?l=linux-kernel&m=139291370526082&w=2).
+> > Whenever Linux is about to do DMA, we would check in the hashtable to
+> > figure out whether we need to go through the swiotlb or we can simply
+> > use the native dma_ops.
+> > 
+> > Ian and I were thinking that it would be much easier and faster to have
+> > a "xen_safe_device" parameter in struct device and just check for that.
+> > It doesn't actually need to be in struct device, it could simply be a
+> > flag in struct device_dma_parameters as Ian was suggesting.
+> > 
+> > Julien, could you please come up with a simple patch to demonstrate the
+> > concept?
+> 
+> Hello Stefano and Greg,
+> 
+> Sorry for the late answer. I wrote a simple patch which depend on patch #1.
+> Let me know if it's the right direction.
 
-Signed-off-by: Loc Ho <lho@apm.com>
-Signed-off-by: Tuan Phan <tphan@apm.com>
-Signed-off-by: Suman Tripathi <stripathi@apm.com>
----
- arch/arm64/boot/dts/apm-storm.dtsi |   80 ++++++++++++++++++++++++++++++++++++
- 1 files changed, 80 insertions(+), 0 deletions(-)
+I have no context here, care to start the patch series over?
 
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index 6d4f493..93f4b2d 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -218,6 +218,45 @@
- 				enable-offset = <0x0>;
- 				enable-mask = <0x06>;
- 			};
-+
-+			sata01clk: sata01clk@1f21c000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f21c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "sata01clk";
-+				csr-offset = <0x4>;
-+				csr-mask = <0x05>;
-+				enable-offset = <0x0>;
-+				enable-mask = <0x39>;
-+			};
-+
-+			sata23clk: sata23clk@1f22c000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f22c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "sata23clk";
-+				csr-offset = <0x4>;
-+				csr-mask = <0x05>;
-+				enable-offset = <0x0>;
-+				enable-mask = <0x39>;
-+			};
-+
-+			sata45clk: sata45clk@1f23c000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f23c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "sata45clk";
-+				csr-offset = <0x4>;
-+				csr-mask = <0x05>;
-+				enable-offset = <0x0>;
-+				enable-mask = <0x39>;
-+			};
- 		};
- 
- 		serial0: serial@1c020000 {
-@@ -259,5 +298,46 @@
- 			apm,tx-boost-gain = <31 31 31 31 31 31>;
- 			apm,tx-eye-tuning = <2 10 10 2 10 10>;
- 		};
-+
-+		sata1: sata@1a000000 {
-+			compatible = "apm,xgene-ahci";
-+			reg = <0x0 0x1a000000 0x0 0x1000>,
-+			      <0x0 0x1f210000 0x0 0x1000>,
-+			      <0x0 0x1f21d000 0x0 0x1000>,
-+			      <0x0 0x1f21e000 0x0 0x1000>,
-+			      <0x0 0x1f217000 0x0 0x1000>;
-+			interrupts = <0x0 0x86 0x4>;
-+			status = "disabled";
-+			clocks = <&sata01clk 0>;
-+			phys = <&phy1 0>;
-+			phy-names = "sata-phy";
-+		};
-+
-+		sata2: sata@1a400000 {
-+			compatible = "apm,xgene-ahci";
-+			reg = <0x0 0x1a400000 0x0 0x1000>,
-+			      <0x0 0x1f220000 0x0 0x1000>,
-+			      <0x0 0x1f22d000 0x0 0x1000>,
-+			      <0x0 0x1f22e000 0x0 0x1000>,
-+			      <0x0 0x1f227000 0x0 0x1000>;
-+			interrupts = <0x0 0x87 0x4>;
-+			status = "ok";
-+			clocks = <&sata23clk 0>;
-+			phys = <&phy2 0>;
-+			phy-names = "sata-phy";
-+		};
-+
-+		sata3: sata@1a800000 {
-+			compatible = "apm,xgene-ahci";
-+			reg = <0x0 0x1a800000 0x0 0x1000>,
-+			      <0x0 0x1f230000 0x0 0x1000>,
-+			      <0x0 0x1f23d000 0x0 0x1000>,
-+			      <0x0 0x1f23e000 0x0 0x1000>;
-+			interrupts = <0x0 0x88 0x4>;
-+			status = "ok";
-+			clocks = <&sata45clk 0>;
-+			phys = <&phy3 0>;
-+			phy-names = "sata-phy";
-+		};
- 	};
- };
--- 
-1.5.5
+thanks,
 
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
