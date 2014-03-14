@@ -1,119 +1,63 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 7/8] ARM: dts: dra7: Add USB related nodes
-Date: Fri, 14 Mar 2014 14:11:56 +0200
-Message-ID: <5322F20C.50600@ti.com>
-References: <1394197751-28984-1-git-send-email-rogerq@ti.com> <1394197751-28984-8-git-send-email-rogerq@ti.com> <5322DC0E.1020600@ti.com>
+From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v11 11/27] clk: exynos: add gate clock descriptions of
+	System MMU
+Date: Fri, 14 Mar 2014 13:17:26 +0100
+Message-ID: <5322F356.6030608@samsung.com>
+References: <20140314140621.14df1e40601c4f6a2487b5a8@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5322DC0E.1020600-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: george.cherian-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-reply-to: <20140314140621.14df1e40601c4f6a2487b5a8-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux DeviceTree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Samsung SOC <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Prathyush <prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Antonios Motakis <a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/14/2014 12:38 PM, Kishon Vijay Abraham I wrote:
-> Hi Roger,
-> 
-> On Friday 07 March 2014 06:39 PM, Roger Quadros wrote:
->> Add nodes for the Super Speed USB controllers, omap-control-usb,
->> USB2 PHY and USB3 PHY devices.
->>
->> Remove ocp2scp1 address space from hwmod data as it is
->> now provided via device tree.
->>
->> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/dra7.dtsi               | 110 ++++++++++++++++++++++++++++++
->>   arch/arm/mach-omap2/omap_hwmod_7xx_data.c |  10 ---
->>   2 files changed, 110 insertions(+), 10 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
->> index 597979b..1e73900 100644
->> --- a/arch/arm/boot/dts/dra7.dtsi
->> +++ b/arch/arm/boot/dts/dra7.dtsi
->> @@ -811,6 +811,116 @@
->>               clocks = <&sata_ref_clk>;
->>               ti,hwmods = "sata";
->>           };
->> +
->> +        omap_control_usb2phy1: control-phy@4a002300 {
->> +            compatible = "ti,control-phy-usb2";
->> +            reg = <0x4a002300 0x4>;
->> +            reg-names = "power";
->> +        };
->> +
->> +        omap_control_usb3phy1: control-phy@4a002370 {
->> +            compatible = "ti,control-phy-pipe3";
->> +            reg = <0x4a002370 0x4>;
->> +            reg-names = "power";
->> +        };
->> +
->> +        omap_control_usb2phy2: control-phy@0x4a002e74 {
->> +            compatible = "ti,control-phy-usb2-dra7";
->> +            reg = <0x4a002e74 0x4>;
->> +            reg-names = "power";
->> +        };
->> +
->> +        /* OCP2SCP1 */
->> +        ocp2scp@4a080000 {
->> +            compatible = "ti,omap-ocp2scp";
->> +            #address-cells = <1>;
->> +            #size-cells = <1>;
->> +            ranges;
->> +            reg = <0x4a080000 0x20>;
->> +            ti,hwmods = "ocp2scp1";
->> +
->> +            usb2_phy1: phy@4a084000 {
->> +                compatible = "ti,omap-usb2";
->> +                reg = <0x4a084000 0x400>;
->> +                ctrl-module = <&omap_control_usb2phy1>;
->> +                clocks = <&usb_phy1_always_on_clk32k>,
->> +                     <&usb_otg_ss1_refclk960m>;
->> +                clock-names =    "wkupclk",
->> +                        "refclk";
->> +                #phy-cells = <0>;
->> +            };
->> +
->> +            usb2_phy2: phy@4a085000 {
->> +                compatible = "ti,omap-usb2";
->> +                reg = <0x4a085000 0x400>;
->> +                ctrl-module = <&omap_control_usb2phy2>;
->> +                clocks = <&usb_phy2_always_on_clk32k>,
->> +                     <&usb_otg_ss2_refclk960m>;
->> +                clock-names =    "wkupclk",
->> +                        "refclk";
->> +                #phy-cells = <0>;
->> +            };
->> +
->> +            usb3_phy1: phy@4a084400 {
->> +                compatible = "ti,omap-usb3";
->> +                reg = <0x4a084400 0x80>,
->> +                      <0x4a084800 0x64>,
->> +                      <0x4a084c00 0x40>;
->> +                reg-names = "phy_rx", "phy_tx", "pll_ctrl";
->> +                ctrl-module = <&omap_control_usb3phy1>;
->> +                clocks = <&usb_phy3_always_on_clk32k>,
->> +                     <&sys_clkin1>,
->> +                     <&usb_otg_ss1_refclk960m>,
->> +                     <&dpll_core_h13x2_ck>;
->> +                clock-names =    "wkupclk",
->> +                        "sysclk",
->> +                        "refclk",
->> +                        "optclk";
-> 
-> Do we use this 'optclk' in driver?
+Hi KyongHo,
 
-No we don't. Still the device seems to work without it.
-This is supposed to be USB_LFPS_TX_GFCLK or USB3PHY_REF_CLK.
+On 14.03.2014 06:06, Cho KyongHo wrote:
+> This adds gate clocks of all System MMUs and their master IPs
+> that are not apeared in clk-exynos5250.c and clk-exynos5420.c
+> Also fixes GATE_IP_ACP to 0x18800 and changed GATE_DA to GATE
+> for System MMU clocks in clk-exynos4.c
+>
+> Signed-off-by: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>   .../devicetree/bindings/clock/exynos5250-clock.txt |    3 +++
+>   .../devicetree/bindings/clock/exynos5420-clock.txt |    6 +++++-
+>   drivers/clk/samsung/clk-exynos5250.c               |    5 +++++
+>   drivers/clk/samsung/clk-exynos5420.c               |   13 +++++++++++--
+>   include/dt-bindings/clock/exynos5250.h             |    4 ++++
+>   include/dt-bindings/clock/exynos5420.h             |    6 +++++-
+>   6 files changed, 33 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
+> index 72ce617..67e50ba 100644
+> --- a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
+> +++ b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
+> @@ -162,6 +162,9 @@ clock which they consume.
+>     g2d			345
+>     mdma0			346
+>     smmu_mdma0		347
+> +  smmu_tv		348
+> +  smmu_fimd1		349
+> +  smmu_2d		350
+>
 
-Any idea why it works without that on OMAP5 as well?
+This patch should be rebased on top of Andrzej Hajda's patches removing 
+these clock ID listings and reworking dts files to use defined macros. 
+They are present in v3.15-next/dt-clk-exynos branch of linux-samsung 
+tree, but I have asked Kukjin to merge them to his for-next branch, so 
+they could show up in linux-next tree.
 
-cheers,
--roger
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Tomasz
