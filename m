@@ -1,63 +1,152 @@
-From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v11 11/27] clk: exynos: add gate clock descriptions of
-	System MMU
-Date: Fri, 14 Mar 2014 13:17:26 +0100
-Message-ID: <5322F356.6030608@samsung.com>
-References: <20140314140621.14df1e40601c4f6a2487b5a8@samsung.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 1/4] pci: APM X-Gene PCIe controller driver
+Date: Fri, 14 Mar 2014 13:18:26 +0100
+Message-ID: <201403141318.27183.arnd@arndb.de>
+References: <1394085963-27553-1-git-send-email-tinamdar@apm.com>
+ <1394085963-27553-2-git-send-email-tinamdar@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-reply-to: <20140314140621.14df1e40601c4f6a2487b5a8-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux DeviceTree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Samsung SOC <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Prathyush <prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Antonios Motakis <a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1394085963-27553-2-git-send-email-tinamdar@apm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tanmay Inamdar <tinamdar@apm.com>
+Cc: devicetree@vger.kernel.org, jcm@redhat.com, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, patches@apm.com, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi KyongHo,
+On Thursday 06 March 2014, Tanmay Inamdar wrote:
 
-On 14.03.2014 06:06, Cho KyongHo wrote:
-> This adds gate clocks of all System MMUs and their master IPs
-> that are not apeared in clk-exynos5250.c and clk-exynos5420.c
-> Also fixes GATE_IP_ACP to 0x18800 and changed GATE_DA to GATE
-> for System MMU clocks in clk-exynos4.c
->
-> Signed-off-by: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->   .../devicetree/bindings/clock/exynos5250-clock.txt |    3 +++
->   .../devicetree/bindings/clock/exynos5420-clock.txt |    6 +++++-
->   drivers/clk/samsung/clk-exynos5250.c               |    5 +++++
->   drivers/clk/samsung/clk-exynos5420.c               |   13 +++++++++++--
->   include/dt-bindings/clock/exynos5250.h             |    4 ++++
->   include/dt-bindings/clock/exynos5420.h             |    6 +++++-
->   6 files changed, 33 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
-> index 72ce617..67e50ba 100644
-> --- a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
-> +++ b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
-> @@ -162,6 +162,9 @@ clock which they consume.
->     g2d			345
->     mdma0			346
->     smmu_mdma0		347
-> +  smmu_tv		348
-> +  smmu_fimd1		349
-> +  smmu_2d		350
->
+> +static inline void xgene_pcie_cfg_out16(void __iomem *addr, u16 val)
+> +{
+> +	u64 temp_addr = (u64)addr & ~0x3;
 
-This patch should be rebased on top of Andrzej Hajda's patches removing 
-these clock ID listings and reworking dts files to use defined macros. 
-They are present in v3.15-next/dt-clk-exynos branch of linux-samsung 
-tree, but I have asked Kukjin to merge them to his for-next branch, so 
-they could show up in linux-next tree.
+Please use 'unsigned long' as the type for calculations like this one,
+to make the code more portable. You mentioned before that the same PCI
+host controller is used on some ppc4xx, and we may want to share the
+code later.
 
-Best regards,
-Tomasz
+> +static int xgene_pcie_read_config(struct pci_bus *bus, unsigned int devfn,
+> +				  int offset, int len, u32 *val)
+> +{
+> +	struct xgene_pcie_port *port = bus->sysdata;
+> +	void __iomem *addr;
+> +	u8 val8;
+> +	u16 val16;
+> +
+> +	if ((pci_is_root_bus(bus) && devfn != 0) || !port->link_up)
+> +		return PCIBIOS_DEVICE_NOT_FOUND;
+> +
+> +	xgene_pcie_set_rtdid_reg(bus, devfn);
+> +	addr = xgene_pcie_get_cfg_base(bus);
+> +	switch (len) {
+> +	case 1:
+> +		xgene_pcie_cfg_in8(addr + offset, &val8);
+> +		*val = val8;
+> +		break;
+
+Actually it would be better to just pass both addr and offset
+down into the low-level accessors and then do the calculation
+on 'offset', which is already a scalar.
+
+> +static void xgene_pcie_poll_linkup(struct xgene_pcie_port *port,
+> +				   u32 *lanes, u32 *speed)
+> +{
+> +	void __iomem *csr_base = port->csr_base;
+> +	u32 val32;
+> +	u64 start_time, time;
+> +
+> +	/*
+> +	 * A component enters the LTSSM Detect state within
+> +	 * 20ms of the end of fundamental core reset.
+> +	 */
+> +	msleep(XGENE_LTSSM_DETECT_WAIT);
+> +	port->link_up = 0;
+> +	start_time = jiffies;
+> +	do {
+> +		val32 = readl(csr_base + PCIECORE_CTLANDSTATUS);
+> +		if (val32 & LINK_UP_MASK) {
+> +			port->link_up = 1;
+> +			*speed = PIPE_PHY_RATE_RD(val32);
+> +			val32 = readl(csr_base + BRIDGE_STATUS_0);
+> +			*lanes = val32 >> 26;
+> +			break;
+> +		}
+> +		msleep(1);
+> +		time = jiffies_to_msecs(jiffies - start_time);
+> +	} while (time <= XGENE_LTSSM_L0_WAIT);
+> +}
+
+This can be written ina simpler way using 'time_before()'.
+
+> +/* Return 0 on success */
+> +static int xgene_pcie_init_ecc(struct xgene_pcie_port *port)
+> +{
+> +	void __iomem *csr_base = port->csr_base;
+> +	u64 start_time, time = 0;
+> +	u32 val;
+> +
+> +	val = readl(csr_base + MEM_RAM_SHUTDOWN);
+> +	if (!val)
+> +		return 0;
+> +	writel(0x0, csr_base + MEM_RAM_SHUTDOWN);
+> +	start_time = jiffies;
+> +	do {
+> +		val = readl(csr_base + BLOCK_MEM_RDY);
+> +		if (val == BLOCK_MEM_RDY_VAL)
+> +			break;
+> +		msleep(1);
+> +		time = jiffies_to_msecs(jiffies - start_time);
+> +	} while (time < XGENE_PCIE_ECC_TIMEOUT);
+
+Same here.
+
+> +static int xgene_pcie_init_port(struct xgene_pcie_port *port)
+> +{
+> +	int rc;
+> +
+> +	port->clk = clk_get(port->dev, NULL);
+> +	if (IS_ERR_OR_NULL(port->clk)) {
+> +		dev_err(port->dev, "clock not available\n");
+> +		return -ENODEV;
+> +	}
+
+Practically every use of IS_ERR_OR_NULL() is a bug, don't do that.
+NULL is a valid return code from clk_get(), and should not be
+treated as an error.
+
+
+> +static int xgene_pcie_map_ranges(struct xgene_pcie_port *port,
+> +				 struct pci_host_bridge *bridge,
+> +				 u64 cfg_addr)
+> +{
+> +	struct device *dev = port->dev;
+> +	struct pci_host_bridge_window *window;
+> +
+> +	list_for_each_entry(window, &bridge->windows, list) {
+> +		struct resource *res = window->res;
+> +		u64 restype = resource_type(res);
+> +		dev_dbg(port->dev, "0x%08lx 0x%016llx...0x%016llx\n",
+> +			res->flags, res->start, res->end);
+> +
+> +		switch (restype) {
+> +		case IORESOURCE_IO:
+> +			xgene_pcie_setup_ob_reg(port, res, OMR2BARL,
+> +						bridge->io_base);
+> +			BUG_ON(pci_ioremap_io(res, bridge->io_base) < 0);
+> +			break;
+
+No need to BUG_ON() here, this is not a fatal condition, just
+don't register the I/O space resource if this fails.
+
+I think as the PCI base support patch series evolves, you will actually
+not have to do this at all.
+
+	Arnd
