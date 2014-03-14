@@ -1,47 +1,101 @@
-From: Alexander Holler <holler@ahsoftware.de>
-Subject: Re: [PATCH v2] gpio: davinci: fix gpio selection for OF
-Date: Fri, 14 Mar 2014 19:33:12 +0100
-Message-ID: <53234B68.5090300@ahsoftware.de>
-References: <5316FFCE.1060603@ti.com>	<1394018461-757-1-git-send-email-holler@ahsoftware.de>	<CACRpkdaF=jc9Z1XZCtH8VPuih01t--qyV-sgH1R_ix0VM4RzVA@mail.gmail.com>	<5322D529.4070904@ahsoftware.de>	<CACRpkdaghneo1MvNCfxjTED+sJepHgeZCgmKsRteG9qrBNWAfQ@mail.gmail.com>	<5322F82A.9000507@ahsoftware.de> <CACRpkdZscprsy7kyqHPUMEMYJ_TKgG2bYR7mdrG4hTDp1w1nDg@mail.gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/3] irqchip: sun4i: Don't mask + unmask for
+ the non oneshot case
+Date: Fri, 14 Mar 2014 19:42:00 +0100
+Message-ID: <53234D78.5050901@redhat.com>
+References: <1394740202-1952-1-git-send-email-hdegoede@redhat.com> <1394740202-1952-2-git-send-email-hdegoede@redhat.com> <alpine.DEB.2.02.1403141228290.18573@ionos.tec.linutronix.de>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZscprsy7kyqHPUMEMYJ_TKgG2bYR7mdrG4hTDp1w1nDg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Sekhar Nori <nsekhar@ti.com>, Prabhakar Lad <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRB7M2RWMQKGQE3DDFFYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1403141228290.18573-3cz04HxQygjZikZi3RtOZ1XZhhPuCNm+@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am 14.03.2014 14:54, schrieb Linus Walleij:
-> On Fri, Mar 14, 2014 at 1:38 PM, Alexander Holler <holler@ahsoftware.de> wrote:
->
->>> In that case it is hardly a fix that we need to rush out to the entire
->>> world.
->>
->> And I thought the reason for -rc is actually to fix bugs. But I never
->> understood the magical ways and timings patches make their way into
->> mainline. ;)
->
-> OK so it works like this: early in the -rc cycle we fix any bugs, documentation
-> or whatever. At this point it's *regressions* so the fix need to fix something
-> that broke in the merge window (or an earlier merge window).
+Hi,
 
-Sorry, but I don't believe that. It's always time to fix regressions and 
-bugs.
+On 03/14/2014 12:35 PM, Thomas Gleixner wrote:
+> On Thu, 13 Mar 2014, Hans de Goede wrote:
+> 
+>> Since sun4i and sun5i are single core SOCs there is no need to mask non
+>> oneshot IRQs, to achieve this we use handle_fasteoi_irq with a dummy eoi.
+> 
+> This is slightly wrong :)
+> 
+> Even on a SMP system there is no need to mask the interrupt when the
+> controller works like that sunxi one. If the controller is not broken
+> beyond repair then it does not deliver the same interrupt to a
+> different cpu. Such a thing would always deliver it to all cores and
+> those would race to grab the spinlock and mask it. I've seen such
+> horror, but don't ask how that performs.
+> 
+> The reason why you can spare the mask/unmask dance is that the
+> controller does not require any action and clears the interrupt when
+> the level goes back to inactive. That happens when the device handler
+> acks it at the device level.
+> 
+> Now there might be the case when the device reactivates the interrupt
+> before the RETI. But that does not matter as we run the primary
+> interrupt handlers with interrupts disabled.
 
-> If it is a new feature that never worked in the first place I would
-> not call that
-> a regression. There are no existing users out there that can experience
-> regressions from a previously working system.
-
-I believe that no (stable) kernel should introduce new known bugs (if 
-fixes are available) and I wouldn't make a difference if it's a new 
-feature or not. Usually people don't care if something is new or not if 
-it has bugs
-
-Anyway, I'm just curious and try to understand, I have a fix. ;)
+Ok, I'm going to wait a bit to see if Maxime has anything to say
+to this second series, and then I'll do a v2 with the commit msg
+fixed.
 
 Regards,
 
-Alexander Holler
+Hans
+
+
+> 
+> Thanks,
+> 
+> 	tglx
+>  
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  drivers/irqchip/irq-sun4i.c | 11 ++++++++++-
+>>  1 file changed, 10 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/irqchip/irq-sun4i.c b/drivers/irqchip/irq-sun4i.c
+>> index a0ed1ea..0a71990 100644
+>> --- a/drivers/irqchip/irq-sun4i.c
+>> +++ b/drivers/irqchip/irq-sun4i.c
+>> @@ -74,8 +74,17 @@ static void sun4i_irq_unmask(struct irq_data *irqd)
+>>  	       sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(reg));
+>>  }
+>>  
+>> +/*
+>> + * Since sun4i and sun5i are single core SOCs there is no need to mask non
+>> + * oneshot IRQs, to achieve this we use handle_fasteoi_irq with a dummy eoi.
+>> + */
+>> +static void sun4i_irq_dummy_eoi(struct irq_data *irqd)
+>> +{
+>> +}
+>> +
+>>  static struct irq_chip sun4i_irq_chip = {
+>>  	.name		= "sun4i_irq",
+>> +	.irq_eoi	= sun4i_irq_dummy_eoi,
+>>  	.irq_mask	= sun4i_irq_mask,
+>>  	.irq_unmask	= sun4i_irq_unmask,
+>>  };
+>> @@ -97,7 +106,7 @@ static int sun4i_irq_map(struct irq_domain *d, unsigned int virq,
+>>  					 handle_fasteoi_irq);
+>>  	else
+>>  		irq_set_chip_and_handler(virq, &sun4i_irq_chip,
+>> -					 handle_level_irq);
+>> +					 handle_fasteoi_irq);
+>>  
+>>  	set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
+>>  
+>> -- 
+>> 1.9.0
+>>
+>>
