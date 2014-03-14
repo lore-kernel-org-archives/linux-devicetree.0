@@ -1,26 +1,60 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] gpio: gpio-dwapb size-cells should be two
-Date: Fri, 14 Mar 2014 17:27:37 +0100
-Message-ID: <CACRpkdbeDbr+tH4xb_MUNSLCcTYpdHNjkBN5uPjHcSm9sWAQBA@mail.gmail.com>
-References: <1394813334-22549-1-git-send-email-delicious.quinoa@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] spi: dw-mmio: add oftree support
+Date: Fri, 14 Mar 2014 16:30:10 +0000
+Message-ID: <20140314163010.GX366@sirena.org.uk>
+References: <1394787326-14520-1-git-send-email-s.trumtrar@pengutronix.de>
+ <20140314161403.GN25870@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1394813334-22549-1-git-send-email-delicious.quinoa@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Alan Tull <delicious.quinoa@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.com>, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@secretlab.ca>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Jamie Iles <jamie@jamieiles.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Yves Vandervennet <rocket.yvanderv@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="AG41CdL1ZWVzkk/P"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140314161403.GN25870@e106331-lin.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 14, 2014 at 5:08 PM, Alan Tull <delicious.quinoa@gmail.com> wrote:
 
-> From: Alan Tull <atull@altera.com>
->
-> Fix size-cells to show use of OF_GPIO_ACTIVE_LOW flag.
->
-> Signed-off-by: Alan Tull <atull@altera.com>
+--AG41CdL1ZWVzkk/P
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-OK patch applied.
+On Fri, Mar 14, 2014 at 04:14:03PM +0000, Mark Rutland wrote:
+> On Fri, Mar 14, 2014 at 08:55:26AM +0000, Steffen Trumtrar wrote:
 
-Yours,
-Linus Walleij
+> > +Optional properties:
+> > +- num-chipselects : The number of chipselects.
+
+> If this is optional, when wuold I need to set this? What's the default
+> assumption?
+
+> Mark: I see some bindings have "num-chipselects", and some have
+> "num-cs". Do you have a preferred form that people could align on?
+
+Probably -cs but the whole thing needs reviewing anyway for handling of
+GPIO based chipselects.
+
+--AG41CdL1ZWVzkk/P
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTIy6PAAoJELSic+t+oim93OAP/jK08OBIZnIXbqS2KH/Aoer6
+OvJq0y2nGCVE7YxCdr9EQ/oWB2y2TTLD9A0KGyFrcit4+Ebyt8TXt3S+VUUOB2xP
+pUc6H6KKt+ul5mWmsgh+p5R9yORV8caZg4UXtRJ6a+EsGDcLASjlXIhNj23VIYrS
+G32jOtsxguSRl/FM+BpGWubMobj17AgLNC6iFWKaUP8E7ctwDZIO/BEmR8Lf2GJo
+YeSIuFNUcCSXlI/fiKZSVzQLGtil+3PrgnKh1WbdxsB6tIktBHTF+KU3R+gUPlVp
+ZeShi+eiMF0xhMlOIRlLJ1U8eG57VsHTHKzFtSpkfsbPBu/9DTyuf24OxsQqU6SC
+OIuCFlZ59KyNWqChwau8LxVGwtTE2P41tbuQGl1UDOn2vDoDIytep0TGviX027lm
+dB/07+LIiLOtQ+98EERjxWwpd4HLSowGPH7S+HkJNIT9B1Q9ODV91Lif+qgOtwG1
+C6mfUEse9Y044A35tISWy77Y5h5huPQWDhzmIcpl58t5Q2oWRA3u+1s7NaaxnY8R
+UPrncktgllCbc5X/qm7WX8Dxo2GwFZZ7Ts8uWoR02QmVhhQxqZbxDVUUL2qlWztx
+UIP+RjVuNwdlvs3w9ODA3620peoO684jQ8mCNu4n7uh/I8pVJHymAGPk1yqCHi9j
+yCO0AivHOkE0F8Ne1kMW
+=SmBh
+-----END PGP SIGNATURE-----
+
+--AG41CdL1ZWVzkk/P--
