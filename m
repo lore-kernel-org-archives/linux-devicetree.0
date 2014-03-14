@@ -1,62 +1,88 @@
-From: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v11 01/27] iommu/exynos: do not include removed header
-Date: Fri, 14 Mar 2014 20:49:18 +0900
-Message-ID: <000e01cf3f7b$6edcdfd0$4c969f70$@samsung.com>
-References: <20140314140129.68a41cc1bd9e0a48a198ca13@samsung.com>
-	<CAK9yfHzRasE3jroDUZgAa=DN5N=2ZDAxgNiHDCip+f2868BAVQ@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6 1/3] Fix ioport_map() for !CONFIG_GENERIC_IOMAP cases.
+Date: Fri, 14 Mar 2014 12:54:17 +0100
+Message-ID: <201403141254.17572.arnd@arndb.de>
+References: <1394020150-1875-1-git-send-email-Liviu.Dudau@arm.com>
+ <201403070137.38621.arnd@arndb.de>
+ <20140307010950.GE21483@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-reply-to: <CAK9yfHzRasE3jroDUZgAa=DN5N=2ZDAxgNiHDCip+f2868BAVQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-language: ko
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: 'Sachin Kamat' <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: 'Linux DeviceTree' <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, 'Linux Samsung SOC' <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, 'Prathyush' <prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Grant Grundler' <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, 'Linux Kernel' <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, 'Linux IOMMU' <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, 'Kukjin Kim' <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Sylwester Nawrocki' <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Varun Sethi' <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, 'Antonios Motakis' <a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, 'Tomasz Figa' <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Linux ARM Kernel' <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, 'Rahul Sharma' <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140307010950.GE21483@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Uwe
+ =?iso-8859-1?q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci <linux-pci@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Tanmay Inamdar <tinamdar@apm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-> From: Sachin Kamat [mailto:sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org]
-> Sent: Friday, March 14, 2014 7:00 PM
-> 
-> On 14 March 2014 10:31, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> > Commit 25e9d28d92 (ARM: EXYNOS: remove system mmu initialization from
-> > exynos tree) removed arch/arm/mach-exynos/mach/sysmmu.h header without
-> > removing remaining use of it from exynos-iommu driver, thus causing a
-> > compilation error.
-> >
-> > This patch fixes the error by removing respective include line
-> > from exynos-iommu.c.
-> >
-> > CC: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > Signed-off-by: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> >  drivers/iommu/exynos-iommu.c |    3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
-> > index 0740189..4876d35 100644
-> > --- a/drivers/iommu/exynos-iommu.c
-> > +++ b/drivers/iommu/exynos-iommu.c
-> > @@ -12,6 +12,7 @@
-> >  #define DEBUG
-> >  #endif
-> >
-> > +#include <linux/kernel.h>
-> 
-> This change doesn't look related to the patch subject/description.
-> 
-Yes. But it is simply added without any side-effect.
-Do you think it should be in a separate patch?.
-Actually, the added line is a redundant.
+On Friday 07 March 2014, Russell King - ARM Linux wrote:
+> On Fri, Mar 07, 2014 at 01:37:38AM +0100, Arnd Bergmann wrote:
+> > On Thursday 06 March 2014, Russell King - ARM Linux wrote:
 
-Regards,
+> > > arch/microblaze/include/asm/io.h:/* from asm-generic/io.h */
+> > =
 
-KyongHo.
+> > PCI_IOBASE=3D0, IO_SPACE_LIMIT=3D0xffffffff, so no change.
+> =
+
+> Seems to define _IO_BASE not PCI_IOBASE.
+
+It gets the implicit PCI_IOBASE from asm-generic/io.h at the moment.
+
+> > =
+
+> > PCI_IOBASE=3D0, IO_SPACE_LIMIT=3D0xffffffff, so no change.
+> =
+
+> Doesn't appear to define PCI_IOBASE.
+
+Same here.
+
+> > For most of these, I assume we actually want to remove support
+> > for inb/outb as they don't support I/O space accesses. The other
+> > ones look correct to me.
+> =
+
+> Right, so:
+> =
+
+> #ifdef CONFIG_HAS_IOPORT
+> #ifndef CONFIG_GENERIC_IOMAP
+> static inline void __iomem *ioport_map(unsigned long port, unsigned int n=
+r)
+> {
+>         return (void __iomem *) port;
+> }
+> =
+
+> changing that to include PCI_IOBASE in there will result in a build
+> failure if the C compiler sees that.  In other words, when HAS_IOPORT=3Dy
+> and GENERIC_IOMAP=3Dn.
+> =
+
+> HAS_IOPORT is set when HAS_IOMEM is also set and NO_IOPORT unset.
+> =
+
+> It looks to me like blackfin doesn't set NO_IOPORT nor NO_IOMEM, so
+> this would have HAS_IOPORT set, and from what I can see doesn't set
+> GENERIC_IOMAP.  So, this change probably breaks blackfin.
+
+I also see the same thing that Liviu mentioned, that PCI_IOBASE=3D0
+is always provided by asm-generic/io.h if not set otherwise.
+
+On a related topic, Uwe Kleine-K=F6nig has submitted a patch to
+rename CONFIG_HAS_IOPORT to CONFIG_HAS_IOPORT_MAP to clarify what
+it does, and to allow us to add a new CONFIG_HAS_IOPORT option
+that will let us remove all the I/O port handling code for
+architectures that don't have any I/O access method.
+
+	Arnd
