@@ -1,39 +1,57 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: [PATCH v2 1/5] net: cpsw: document mac-address being optional
-Date: Sat, 15 Mar 2014 14:07:40 +0100
-Message-ID: <1394888864-11007-2-git-send-email-mpa@pengutronix.de>
-References: <1394888864-11007-1-git-send-email-mpa@pengutronix.de>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1394888864-11007-1-git-send-email-mpa@pengutronix.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, Markus Pargmann <mpa@pengutronix.de>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v6 0/3] ARM: sun7i/sun6i: irqchip: Irqchip
+ driver for NMI controller
+Date: Sat, 15 Mar 2014 14:40:58 +0100
+Message-ID: <1394890861-18347-1-git-send-email-carlo@caione.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDWJTUUC5UCBBN5QSGMQKGQEQKHAJHA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-mac-address is an optional property. If no mac-address is set, a random
-mac-address will be generated.
+Allwinner A20/A31 SoCs have a special interrupt controller for managing NMI.
+Three register are present to (un)mask, control and acknowledge NMI.
+These two patches add a new irqchip driver in cascade with GIC.
 
-Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
----
- Documentation/devicetree/bindings/net/cpsw.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes since v1:
+	- added binding document
 
-diff --git a/Documentation/devicetree/bindings/net/cpsw.txt b/Documentation/devicetree/bindings/net/cpsw.txt
-index 05d660e..c39f077 100644
---- a/Documentation/devicetree/bindings/net/cpsw.txt
-+++ b/Documentation/devicetree/bindings/net/cpsw.txt
-@@ -30,10 +30,10 @@ Required properties:
- - phy_id		: Specifies slave phy id
- - phy-mode		: The interface between the SoC and the PHY (a string
- 			  that of_get_phy_mode() can understand)
--- mac-address		: Specifies slave MAC address
- 
- Optional properties:
- - dual_emac_res_vlan	: Specifies VID to be used to segregate the ports
-+- mac-address		: Specifies slave MAC address
- 
- Note: "ti,hwmods" field is used to fetch the base address and irq
- resources from TI, omap hwmod data base during device registration.
+Changes since v2:
+	- fixed trigger type in DTS
+	- new explanations in binding documentation
+	- added support for A31 (sun6i)
+
+Changes since v3:
+	- changed compatibles
+
+Changes since v4:
+	- fixed binding documentation
+
+Changes since v5:
+	- switched to handle_fasteoi_irq handler to avoid the double
+	  interrupts issue
+
+Carlo Caione (3):
+  ARM: sun7i/sun6i: irqchip: Add irqchip driver for NMI controller
+  ARM: sun7i/sun6i: dts: Add NMI irqchip support
+  ARM: sun7i/sun6i: irqchip: Update the documentation
+
+ .../allwinner,sun67i-sc-nmi.txt                    |  27 +++
+ arch/arm/boot/dts/sun6i-a31.dtsi                   |   9 +
+ arch/arm/boot/dts/sun7i-a20.dtsi                   |   9 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-sunxi-nmi.c                    | 208 +++++++++++++++++++++
+ 5 files changed, 254 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/allwinner,sun67i-sc-nmi.txt
+ create mode 100644 drivers/irqchip/irq-sunxi-nmi.c
+
 -- 
-1.9.0
-
+1.8.3.2
