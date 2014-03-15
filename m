@@ -1,137 +1,185 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC v3 3/3] of: Make of_find_node_by_path() handle /aliases
-Date: Sat, 15 Mar 2014 12:33:31 +0000
-Message-ID: <20140315123331.7351DC40A1B@trevor.secretlab.ca>
-References: <1394817109-26199-1-git-send-email-grant.likely@linaro.org> < 1394817109-26199-4-git-send-email-grant.likely@linaro.org> < CAL_JsqLtYFiLnLgdN_GMG33JD53wFdyfhCwLHek3tLBbQB7maQ@mail.gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLtYFiLnLgdN_GMG33JD53wFdyfhCwLHek3tLBbQB7maQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCHv2 8/8] devfreq: exynos4: Add busfreq driver for exynos4210/exynos4x12
+Date: Sat, 15 Mar 2014 13:41:44 +0100
+Message-ID: <53244A88.9070806@gmail.com>
+References: <1394698649-20996-1-git-send-email-cw00.choi@samsung.com>	<1394698649-20996-9-git-send-email-cw00.choi@samsung.com>	<20140313175308.GE25870@e106331-lin.cambridge.arm.com>	<5322AC5D.9070200@samsung.com>	<20140314103552.GK25870@e106331-lin.cambridge.arm.com>	<5322E04D.2060801@samsung.com>	<53233DE7.2030902@samsung.com> <CAH9JG2WV-y+9wMyu0_6WSRXMWZmCWmxHnWot9APKUo6eFkZS5A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAH9JG2WV-y+9wMyu0_6WSRXMWZmCWmxHnWot9APKUo6eFkZS5A@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kyungmin Park <kmpark@infradead.org>, Tomasz Figa <t.figa@samsung.com>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, Mark Rutland <mark.rutland@arm.com>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>, "nm@ti.com" <nm@ti.com>, "b.zolnierkie@samsaung.com" <b.zolnierkie@samsaung.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 14 Mar 2014 16:39:38 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Fri, Mar 14, 2014 at 12:11 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > Make of_find_node_by_path() handle aliases as prefixes. To make this
-> > work the name search is refactored to search by path component instead
-> > of by full string. This should be a more efficient search, and it makes
-> > it possible to start a search at a subnode of a tree.
-> >
-> > Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> > Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> > [grant.likely: Rework to not require allocating at runtime]
-> > Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> I should have read the comments before trying to figure out why you
-> had that "pointless" recursion...
+On 15.03.2014 12:36, Kyungmin Park wrote:
+> On Sat, Mar 15, 2014 at 2:35 AM, Tomasz Figa <t.figa@samsung.com> wrote:
+>> Hi Chanwoo, Mark,
+>>
+>>
+>> On 14.03.2014 11:56, Chanwoo Choi wrote:
+>>>
+>>> Hi Mark,
+>>>
+>>> On 03/14/2014 07:35 PM, Mark Rutland wrote:
+>>>>
+>>>> On Fri, Mar 14, 2014 at 07:14:37AM +0000, Chanwoo Choi wrote:
+>>>>>
+>>>>> Hi Mark,
+>>>>>
+>>>>> On 03/14/2014 02:53 AM, Mark Rutland wrote:
+>>>>>>
+>>>>>> On Thu, Mar 13, 2014 at 08:17:29AM +0000, Chanwoo Choi wrote:
+>>>>>>>
+>>>>>>> This patch add busfreq driver for Exynos4210/Exynos4x12 memory
+>>>>>>> interface
+>>>>>>> and bus to support DVFS(Dynamic Voltage Frequency Scaling) according
+>>>>>>> to PPMU
+>>>>>>> counters. PPMU (Performance Profiling Monitorings Units) of Exynos4
+>>>>>>> SoC provides
+>>>>>>> PPMU counters for DMC(Dynamic Memory Controller) to check memory bus
+>>>>>>> utilization
+>>>>>>> and then busfreq driver adjusts dynamically the operating
+>>>>>>> frequency/voltage
+>>>>>>> by using DEVFREQ Subsystem.
+>>>>>>>
+>>>>>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>>>>>> ---
+>>>>>>>    .../devicetree/bindings/devfreq/exynos4_bus.txt    | 49
+>>>>>>> ++++++++++++++++++++++
+>>>>>>>    1 file changed, 49 insertions(+)
+>>>>>>>    create mode 100644
+>>>>>>> Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
+>>>>>>>
+>>>>>>> diff --git a/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
+>>>>>>> b/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
+>>>>>>> new file mode 100644
+>>>>>>> index 0000000..2a83fcc
+>>>>>>> --- /dev/null
+>>>>>>> +++ b/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
+>>>>>>> @@ -0,0 +1,49 @@
+>>>>>>> +
+>>>>>>> +Exynos4210/4x12 busfreq driver
+>>>>>>> +-----------------------------
+>>>>>>> +
+>>>>>>> +Exynos4210/4x12 Soc busfreq driver with devfreq for Memory bus
+>>>>>>> frequency/voltage
+>>>>>>> +scaling according to PPMU counters of memory controllers
+>>>>>>> +
+>>>>>>> +Required properties:
+>>>>>>> +- compatible   : should contain Exynos4 SoC type as follwoing:
+>>>>>>> +                 - "samsung,exynos4x12-busfreq" for Exynos4x12
+>>>>>>> +                 - "samsung,exynos4210-busfreq" for Exynos4210
+>>>>>>
+>>>>>>
+>>>>>> Is there a device called "busfreq"? What device does this binding
+>>>>>> describe?
+>>>>>
+>>>>>
+>>>>> I'll add detailed description of busfreq as following:
+>>>>>
+>>>>> "busfreq(bus frequendcy)" driver means that busfreq driver control
+>>>>> dynamically
+>>>>> memory bus frequency/voltage by checking memory bus utilization to
+>>>>> optimize
+>>>>> power-consumption. When checking memeory bus utilization,
+>>>>> exynos4_busfreq driver
+>>>>> would use PPMU(Performance Profiling Monitoring Units).
+>>>>
+>>>>
+>>>> This still sounds like a description of the _driver_, not the _device_.
+>>>> The binding should describe the hardware, now the high level abstraction
+>>>> that software is going to build atop of it.
+>>>>
+>>>> It sounds like this is a binding for the DMC PPMU?
+>>>>
+>>>> Is the PPMU a component of the DMC, or is it bolted on the side?
+>>>
+>>>
+>>> PPMU(Performance Profiling Monitoring Unit) is to profile performance
+>>> event of
+>>> various IP on Exynos4. Each PPMU provide perforamnce event for each IP.
+>>> We can check various PPMU as following:
+>>>
+>>> PPMU_3D
+>>> PPMU_ACP
+>>> PPMU_CAMIF
+>>> PPMU_CPU
+>>> PPMU_DMC0
+>>> PPMU_DMC1
+>>> PPMU_FSYS
+>>> PPMU_IMAGE
+>>> PPMU_LCD0
+>>> PPMU_LCD1
+>>> PPMU_MFC_L
+>>> PPMU_MFC_R
+>>> PPMU_TV
+>>> PPMU_LEFT_BUS
+>>> PPMU_RIGHT_BUS
+>>>
+>>> DMC (Dynamic Memory Controller) control the operation of DRAM in Exynos4
+>>> SoC.
+>>> If we need to get memory bust utilization of DMC, we can get memory bus
+>>> utilization
+>>> from PPMU_DMC0/PPMU_DMC1.
+>>>
+>>> So, Exynos4's busfreq used two(PPMU_DMC0/PPMU_DMC1) among upper various
+>>> PPMU list.
+>>
+>>
+>> Well, PPMUs and DMCs are separate hardware blocks found inside Exynos SoCs.
+>> Busfreq/devfreq is just a Linux-specific abstraction responsible for
+>> collecting data using PPMUs and controlling frequencies and voltages of
+>> appropriate power planes, vdd_int responsible for powering DMC0 and DMC1
+>> blocks in this case.
+>>
+>> I'm afraid that the binding you're proposing is unfortunately incorrect,
+>> because it represents the software abstraction, not the real hardware.
+>>
+>> Instead, this should be separated into several independent bindings:
+>>
+>>   - PPMU bindings to list all the PPMU instances present in the SoC and
+>> resources they need,
+>>
+>>   - power plane bindings, which define a power plane in which multiple IP
+>> blocks might reside, can be monitored by one or more PPMU units and
+>> frequency and voltage of which can be configured according to determined
+>> performance level. Needed resources will be clocks and regulators to scale
+>> and probably also operating points.
+>>
+>> Then, exynos-busfreq driver should bind to such power planes, parse
+>> necessary data from DT (list of PPMUs and IP blocks, clocks, regulators and
+>> operating points) and register a devfreq entity.
+>
+> How about to use component DT like DRM?
 
-Hi Rob,
+Well, basically this is what I proposed. Each "power plane" would be a 
+"subsystem" built from components - PPMUs, IP blocks, clocks, 
+regulators, etc, specified in DT by existing means, e.g.
 
-Thanks for the review. However, I'm a little slow this morning and I
-don't understand what you mean. Did I miss an early comment?
+ppmu_disp: ppmu@12340000 {
+	/* Resources of PPMU */
+}
 
-g.
+fimd: fimd@23450000 {
+	/* Resources of FIMD */
+};
 
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-> > ---
-> >  drivers/of/base.c | 60 +++++++++++++++++++++++++++++++++++++++++++++++++++----
-> >  1 file changed, 56 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/of/base.c b/drivers/of/base.c
-> > index 7083fad079a6..b8b673526dbd 100644
-> > --- a/drivers/of/base.c
-> > +++ b/drivers/of/base.c
-> > @@ -770,9 +770,38 @@ struct device_node *of_get_child_by_name(const struct device_node *node,
-> >  }
-> >  EXPORT_SYMBOL(of_get_child_by_name);
-> >
-> > +static struct device_node *__of_find_node_by_path(struct device_node *parent,
-> > +                                               const char *path)
-> > +{
-> > +       struct device_node *child;
-> > +       int len = strchrnul(path, '/') - path;
-> > +
-> > +       if (!len)
-> > +               return parent;
-> > +
-> > +       for_each_child_of_node(parent, child) {
-> > +               const char *name = strrchr(child->full_name, '/');
-> > +               if (WARN(!name, "malformed device_node %s\n", child->full_name))
-> > +                       continue;
-> > +               name++;
-> > +               if (strncmp(path, name, len) == 0 && (strlen(name) == len))
-> > +                       return child;
-> > +       }
-> > +       return NULL;
-> > +}
-> > +
-> >  /**
-> >   *     of_find_node_by_path - Find a node matching a full OF path
-> >   *     @path:  The full path to match
-> > + *     @path: Either the full path to match, or if the path does not
-> > + *            start with '/', the name of a property of the /aliases
-> > + *            node (an alias).  In the case of an alias, the node
-> > + *            matching the alias' value will be returned.
-> > + *
-> > + *     Valid paths:
-> > + *             /foo/bar        Full path
-> > + *             foo             Valid alias
-> > + *             foo/bar         Valid alias + relative path
-> >   *
-> >   *     Returns a node pointer with refcount incremented, use
-> >   *     of_node_put() on it when done.
-> > @@ -780,13 +809,36 @@ EXPORT_SYMBOL(of_get_child_by_name);
-> >  struct device_node *of_find_node_by_path(const char *path)
-> >  {
-> >         struct device_node *np = of_allnodes;
-> > +       struct property *pp;
-> >         unsigned long flags;
-> >
-> > +       /* The path could begin with an alias */
-> > +       if (*path != '/') {
-> > +               char *p = strchrnul(path, '/');
-> > +               int len = p - path;
-> > +
-> > +               /* of_aliases must not be NULL */
-> > +               if (!of_aliases)
-> > +                       return NULL;
-> > +
-> > +               np = NULL;
-> > +               for_each_property_of_node(of_aliases, pp) {
-> > +                       if (strlen(pp->name) == len && !strncmp(pp->name, path, len)) {
-> > +                               np = of_find_node_by_path(pp->value);
-> > +                               break;
-> > +                       }
-> > +               }
-> > +               if (!np)
-> > +                       return NULL;
-> > +               path = p;
-> > +       }
-> > +
-> > +       /* Step down the tree matching path components */
-> >         raw_spin_lock_irqsave(&devtree_lock, flags);
-> > -       for (; np; np = np->allnext) {
-> > -               if (np->full_name && (of_node_cmp(np->full_name, path) == 0)
-> > -                   && of_node_get(np))
-> > -                       break;
-> > +       while (np && *path == '/') {
-> > +               path++; /* Increment past '/' delimiter */
-> > +               np = __of_find_node_by_path(np, path);
-> > +               path = strchrnul(path, '/');
-> >         }
-> >         raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> >         return np;
-> > --
-> > 1.8.3.2
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+power-plane-display {
+	compatible = "samsung,power-plane";
+	samsung,ppmus = <&ppmu_disp>, ...;
+	samsung,devices = <&fimd>, ...;
+	clock-names = "aclk_xxx", "sclk_xxx", ...;
+	clocks = ...;
+	vdd_xxx-supply = ...;
+};
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+However I'm still wondering whether there shouldn't be a relation 
+between power planes and power domains and simply existing power domain 
+nodes shouldn't be extended with the data I put above in 
+power-plane-display node. I need to check this in the documentation back 
+at work on Monday.
+
+Best regards,
+Tomasz
