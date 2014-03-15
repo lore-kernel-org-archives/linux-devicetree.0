@@ -1,61 +1,54 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH 3/3] ARM: OMAP2+: Add machine entry for dra72x devices
-Date: Fri, 14 Mar 2014 21:21:00 -0500
-Message-ID: <5323B90C.80803@ti.com>
-References: <1394788841-15112-1-git-send-email-rnayak@ti.com> <1394788841-15112-4-git-send-email-rnayak@ti.com>
+From: Tanmay Inamdar <tinamdar@apm.com>
+Subject: Re: [PATCH v4 2/4] arm64: dts: APM X-Gene PCIe device tree nodes
+Date: Fri, 14 Mar 2014 20:27:12 -0700
+Message-ID: <CACoXjc=t1SuyE5jzHjGk7eNUjVCNW9_iqOTru8PQ191h=pP1sw@mail.gmail.com>
+References: <1394085963-27553-1-git-send-email-tinamdar@apm.com>
+	<1394085963-27553-3-git-send-email-tinamdar@apm.com>
+	<201403141307.23286.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1394788841-15112-4-git-send-email-rnayak@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Nayak, Rajendra" <rnayak@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "tony@atomide.com" <tony@atomide.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <201403141307.23286.arnd@arndb.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches <patches@apm.com>, Jon Masters <jcm@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rajendra,
-
-On 03/14/2014 04:20 AM, Nayak, Rajendra wrote:
-> The only difference from the dra75x devices is the missing .smp entry.
+On Fri, Mar 14, 2014 at 5:07 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Thursday 06 March 2014, Tanmay Inamdar wrote:
+>> +             pcie0: pcie@1f2b0000 {
+>> +                     status = "disabled";
+>> +                     device_type = "pci";
+>> +                     compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
+>> +                     #interrupt-cells = <1>;
+>> +                     #size-cells = <2>;
+>> +                     #address-cells = <3>;
+>> +                     reg = < 0x00 0x1f2b0000 0x0 0x00010000   /* Controller registers */
+>> +                             0xe0 0xd0000000 0x0 0x00200000>; /* PCI config space */
+>> +                     reg-names = "csr", "cfg";
+>> +                     ranges = <0x01000000 0x00 0x00000000 0xe0 0x00000000 0x00 0x00010000   /* io */
+>> +                               0x02000000 0x00 0x10000000 0xe0 0x10000000 0x00 0x80000000>; /* mem */
+>> +                     dma-ranges = <0x42000000 0x40 0x00000000 0x40 0x00000000 0x40 0x00000000>;
+>> +                     interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+>> +                     interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xc2 0x1
+>> +                                      0x0 0x0 0x0 0x2 &gic 0x0 0xc3 0x1
+>> +                                      0x0 0x0 0x0 0x3 &gic 0x0 0xc4 0x1
+>> +                                      0x0 0x0 0x0 0x4 &gic 0x0 0xc5 0x1>;
+>> +                     clocks = <&pcie0clk 0>;
+>> +             };
 >
-> Signed-off-by: Rajendra Nayak <rnayak@ti.com>
-> ---
->   arch/arm/mach-omap2/board-generic.c |   18 ++++++++++++++++++
->   1 file changed, 18 insertions(+)
+> Is 0x40.0x00000000 the start of your RAM? I had expected RAM to start at 0.0,
+> and in that case the dma-ranges property would be wrong.
+
+RAM starting address is 0x40_00000000.
+
 >
-> diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
-> index 8e3daa1..d803d99 100644
-> --- a/arch/arm/mach-omap2/board-generic.c
-> +++ b/arch/arm/mach-omap2/board-generic.c
-> @@ -253,4 +253,22 @@ DT_MACHINE_START(DRA7XX_DT, "Generic DRA7XX (Flattened Device Tree)")
->   	.dt_compat	= dra7xx_boards_compat,
->   	.restart	= omap44xx_restart,
->   MACHINE_END
-> +
-> +static const char *dra72_boards_compat[] __initdata = {
-
-How about using dra72x_ instead of dra72_ and keeping it consistent
-at the other places as well?
-
-regards
-Suman
-
-> +	"ti,dra72x",
-> +	"ti,dra7",
-> +	NULL,
-> +};
-> +
-> +DT_MACHINE_START(DRA72_DT, "Generic DRA72 (Flattened Device Tree)")
-> +	.reserve	= omap_reserve,
-> +	.map_io		= omap5_map_io,
-> +	.init_early	= dra7xx_init_early,
-> +	.init_late	= dra7xx_init_late,
-> +	.init_irq	= omap_gic_of_init,
-> +	.init_machine	= omap_generic_init,
-> +	.init_time	= omap5_realtime_timer_init,
-> +	.dt_compat	= dra72_boards_compat,
-> +	.restart	= omap44xx_restart,
-> +MACHINE_END
->   #endif
+>         Arnd
+> CONFIDENTIALITY NOTICE: This e-mail message, including any attachments,
+> is for the sole use of the intended recipient(s) and contains information
+> that is confidential and proprietary to Applied Micro Circuits Corporation or its subsidiaries.
+> It is to be used solely for the purpose of furthering the parties' business relationship.
+> All unauthorized review, use, disclosure or distribution is prohibited.
+> If you are not the intended recipient, please contact the sender by reply e-mail
+> and destroy all copies of the original message.
 >
-
