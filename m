@@ -1,45 +1,79 @@
-From: Ohad Ben-Cohen <ohad@wizery.com>
-Subject: Re: [PATCHv4 4/7] hwspinlock/core: add common OF helpers
-Date: Sat, 15 Mar 2014 19:32:05 +0200
-Message-ID: <CAK=WgbZWqih3R36wYzo2uaw1-C3S_RHx7mrtFTnQxLhww0AWnw@mail.gmail.com>
-References: <1389658764-39199-1-git-send-email-s-anna@ti.com>
- <1389658764-39199-5-git-send-email-s-anna@ti.com> <CAJAp7Oi7wD+VsMAd37gT04yZ4TH4ygXFmheDhvmWuanUjpBmVQ@mail.gmail.com>
- <52F92524.3080402@ti.com> <CAK=WgbY0wDtGCm71E8VXi2g5+VcGogHEy8jdekTRg8xtp6-3rQ@mail.gmail.com>
- <CAJAp7Ohf43hbKatCwS5Y1+OfEkJYWOkuhZhW-E_=t_9mfM+UaA@mail.gmail.com>
- <CAK=WgbYS+eJSTBXF=OeWjuL6iSbH+Y1RYewARKh9yAXHKKZ_cA@mail.gmail.com> <20140314152304.GS18529@joshc.qualcomm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140314152304.GS18529@joshc.qualcomm.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Josh Cartwright <joshc@codeaurora.org>
-Cc: Bjorn Andersson <bjorn@kryo.se>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Suman Anna <s-anna@ti.com>, Tony Lindgren <tony@atomide.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Kumar Gala <galak@codeaurora.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 0/9] Watchdog support for Armada 375/38x SoC
+Date: Sat, 15 Mar 2014 15:17:55 -0300
+Message-ID: <1394907484-26002-1-git-send-email-ezequiel.garcia@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 14, 2014 at 5:23 PM, Josh Cartwright <joshc@codeaurora.org> wrote:
-> So, are you suggesting that because fatal errors should be "extremely
-> rare", a consuming driver should just assume that if NULL is returned
-> from a hwspin_lock_request*() function that it was the "device not yet
-> probed" case that was hit?
+Fourth round of the patchset adding support for watchdog on Armada 375 and
+Armada 38x SoCs.
 
-No - it's not the scarcity, it's the severity.
+The new Armada 375/385 SoCs have two registers for the watchdog RSTOUT:
 
-The error path that will be optimized here is an invalid id. If this
-happens, the consumer will crash and burn, and I'm not sure that
-slightly optimizing his death is very interesting?
+ 1. It has a dedicated register (similar to the one in A370/XP)
+ 2. Also has a bit in a shared RSTOUT register.
 
-BTW the hwspinlock core once did use ERR_PTR and friends, and it was
-changed due to convincing arguments against that methodology on this
-mailing list. We can change it back but we need a strong(er) case.
+Therefore, in order to support this two-folded RSTOUT, we extend the 'reg'
+property in the watchdog devicetree and require a new pair of cells to specify
+the shared RSTOUT.
 
-> Note that having the consumer/hwspinlock device relationship modeled in
-> devicetree introduces more potential failure cases...
+On the driver side, we need to implement per-SoC stop() and enabled()
+functions. Such somewhat complex infrastructure is needed to ensure the driver
+performs proper reset of the watchdog timer, by masking and disabling the
+RSTOUT before the interrupt is enabled.
 
-Yeah. Even the error above, presumed to be EPROBE_DEFER, may be a
-symptom of some other fatal error that occurred, and we can't be sure
-that a future request will surely be satisfied. So before we bloat our
-code, I suggest that we wait for consumers to show up and see if
-there's real benefit.
+I've pushed a branch so people can test this easily, e.g. ensuring
+no regressions on Dove, Kirkwood and A370/XP:
 
-Thanks,
-Ohad.
+https://github.com/MISL-EBU-System-SW/mainline-public/tree/wdt_a385_a375_v4
+
+Series based on today's mvebu for-next. Will send a rebased version on top of
+v3.15-rc1. Tested on A375-DB, A385-DB, A370-RD and Dove Cubox.
+
+Changes from v3:
+
+  * Added orion_wdt_get_regs() to do the ioremap'ing (and region request
+    for non-shared regions), as previously suggested by Guenter. The probe()
+    function is a bit more readable after this.
+
+Changes from v2:
+
+  * Cleaned-up usage of atomic_io_modify(), using it only when needed.
+    For instance, the RSTOUT dedicated register on Armada 370/375/380/XP
+    can be safely access without any lock.
+
+  * Use devm_ioremap_resource() for the non-shared registers. The shared
+    registers need to use devm_ioremap(), which does not request the
+    memory region.
+
+Changes from v1:
+
+  * Reworked entirely!
+
+Ezequiel Garcia (9):
+  watchdog: orion: Move the register ioremap'ing to its own function
+  watchdog: orion: Introduce a SoC-specific RSTOUT mapping
+  watchdog: orion: Remove unneeded atomic access
+  watchdog: orion: Introduce per-SoC stop() function
+  watchdog: orion: Introduce per-SoC enabled() function
+  watchdog: orion: Add Armada 375/380 SoC support
+  ARM: mvebu: Enable Armada 375 watchdog in the devicetree
+  ARM: mvebu: Enable Armada 380/385 watchdog in the devicetree
+  ARM: mvebu: Add A375/A380 watchdog binding documentation
+
+ .../devicetree/bindings/watchdog/marvel.txt        |   7 +
+ arch/arm/boot/dts/armada-375.dtsi                  |   6 +
+ arch/arm/boot/dts/armada-38x.dtsi                  |   7 +
+ drivers/watchdog/orion_wdt.c                       | 213 ++++++++++++++++++---
+ 4 files changed, 210 insertions(+), 23 deletions(-)
+
+-- 
+1.9.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
