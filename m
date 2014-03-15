@@ -1,150 +1,68 @@
-From: Tanmay Inamdar <tinamdar@apm.com>
-Subject: Re: [PATCH v4 1/4] pci: APM X-Gene PCIe controller driver
-Date: Fri, 14 Mar 2014 20:29:13 -0700
-Message-ID: <CACoXjcm8TugNdPd=gUB7cFpFgraPa=B1eR5Pxmf=y1-2aTzGvw@mail.gmail.com>
-References: <1394085963-27553-1-git-send-email-tinamdar@apm.com>
-	<1394085963-27553-2-git-send-email-tinamdar@apm.com>
-	<201403141318.27183.arnd@arndb.de>
+From: Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v11 02/27] iommu/exynos: add missing cache flush for
+	removed page table entries
+Date: Fri, 14 Mar 2014 23:35:59 -0700
+Message-ID: <CANEJEGvkoUEWoJ4Y5sXwAr2KHW0MESj-1cHQ31AVRasG0P8pzg@mail.gmail.com>
+References: <20140314140234.c972b52a96a4fe39acd09fe0@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <201403141318.27183.arnd@arndb.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches <patches@apm.com>, Jon Masters <jcm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20140314140234.c972b52a96a4fe39acd09fe0-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Linux DeviceTree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Samsung SOC <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Prathyush <prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Antonios Motakis <a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the review and comments. I will incorporate the comments
-from you and Jingoo Han in next version.
+Please apply this. It's way overdue.  It fixes customer kernel crashes
+we've seen in the field.
 
--Tanmay
+I'd also advocate for seeing this be applied to stable kernels.
 
-On Fri, Mar 14, 2014 at 5:18 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Thursday 06 March 2014, Tanmay Inamdar wrote:
+thanks,
+grant
+
+On Thu, Mar 13, 2014 at 10:02 PM, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> This commit adds cache flush for removed small and large page entries
+> in exynos_iommu_unmap(). Missing cache flush of removed page table
+> entries can cause missing page fault interrupt when a master IP
+> accesses an unmapped area.
 >
->> +static inline void xgene_pcie_cfg_out16(void __iomem *addr, u16 val)
->> +{
->> +     u64 temp_addr = (u64)addr & ~0x3;
+> Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Tested-by: Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/iommu/exynos-iommu.c |    2 ++
+>  1 file changed, 2 insertions(+)
 >
-> Please use 'unsigned long' as the type for calculations like this one,
-> to make the code more portable. You mentioned before that the same PCI
-> host controller is used on some ppc4xx, and we may want to share the
-> code later.
+> diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
+> index 4876d35..1c3a397 100644
+> --- a/drivers/iommu/exynos-iommu.c
+> +++ b/drivers/iommu/exynos-iommu.c
+> @@ -958,6 +958,7 @@ static size_t exynos_iommu_unmap(struct iommu_domain *domain,
+>         if (lv2ent_small(ent)) {
+>                 *ent = 0;
+>                 size = SPAGE_SIZE;
+> +               pgtable_flush(ent, ent + 1);
+>                 priv->lv2entcnt[lv1ent_offset(iova)] += 1;
+>                 goto done;
+>         }
+> @@ -966,6 +967,7 @@ static size_t exynos_iommu_unmap(struct iommu_domain *domain,
+>         BUG_ON(size < LPAGE_SIZE);
 >
->> +static int xgene_pcie_read_config(struct pci_bus *bus, unsigned int devfn,
->> +                               int offset, int len, u32 *val)
->> +{
->> +     struct xgene_pcie_port *port = bus->sysdata;
->> +     void __iomem *addr;
->> +     u8 val8;
->> +     u16 val16;
->> +
->> +     if ((pci_is_root_bus(bus) && devfn != 0) || !port->link_up)
->> +             return PCIBIOS_DEVICE_NOT_FOUND;
->> +
->> +     xgene_pcie_set_rtdid_reg(bus, devfn);
->> +     addr = xgene_pcie_get_cfg_base(bus);
->> +     switch (len) {
->> +     case 1:
->> +             xgene_pcie_cfg_in8(addr + offset, &val8);
->> +             *val = val8;
->> +             break;
+>         memset(ent, 0, sizeof(*ent) * SPAGES_PER_LPAGE);
+> +       pgtable_flush(ent, ent + SPAGES_PER_LPAGE);
 >
-> Actually it would be better to just pass both addr and offset
-> down into the low-level accessors and then do the calculation
-> on 'offset', which is already a scalar.
+>         size = LPAGE_SIZE;
+>         priv->lv2entcnt[lv1ent_offset(iova)] += SPAGES_PER_LPAGE;
+> --
+> 1.7.9.5
 >
->> +static void xgene_pcie_poll_linkup(struct xgene_pcie_port *port,
->> +                                u32 *lanes, u32 *speed)
->> +{
->> +     void __iomem *csr_base = port->csr_base;
->> +     u32 val32;
->> +     u64 start_time, time;
->> +
->> +     /*
->> +      * A component enters the LTSSM Detect state within
->> +      * 20ms of the end of fundamental core reset.
->> +      */
->> +     msleep(XGENE_LTSSM_DETECT_WAIT);
->> +     port->link_up = 0;
->> +     start_time = jiffies;
->> +     do {
->> +             val32 = readl(csr_base + PCIECORE_CTLANDSTATUS);
->> +             if (val32 & LINK_UP_MASK) {
->> +                     port->link_up = 1;
->> +                     *speed = PIPE_PHY_RATE_RD(val32);
->> +                     val32 = readl(csr_base + BRIDGE_STATUS_0);
->> +                     *lanes = val32 >> 26;
->> +                     break;
->> +             }
->> +             msleep(1);
->> +             time = jiffies_to_msecs(jiffies - start_time);
->> +     } while (time <= XGENE_LTSSM_L0_WAIT);
->> +}
->
-> This can be written ina simpler way using 'time_before()'.
->
->> +/* Return 0 on success */
->> +static int xgene_pcie_init_ecc(struct xgene_pcie_port *port)
->> +{
->> +     void __iomem *csr_base = port->csr_base;
->> +     u64 start_time, time = 0;
->> +     u32 val;
->> +
->> +     val = readl(csr_base + MEM_RAM_SHUTDOWN);
->> +     if (!val)
->> +             return 0;
->> +     writel(0x0, csr_base + MEM_RAM_SHUTDOWN);
->> +     start_time = jiffies;
->> +     do {
->> +             val = readl(csr_base + BLOCK_MEM_RDY);
->> +             if (val == BLOCK_MEM_RDY_VAL)
->> +                     break;
->> +             msleep(1);
->> +             time = jiffies_to_msecs(jiffies - start_time);
->> +     } while (time < XGENE_PCIE_ECC_TIMEOUT);
->
-> Same here.
->
->> +static int xgene_pcie_init_port(struct xgene_pcie_port *port)
->> +{
->> +     int rc;
->> +
->> +     port->clk = clk_get(port->dev, NULL);
->> +     if (IS_ERR_OR_NULL(port->clk)) {
->> +             dev_err(port->dev, "clock not available\n");
->> +             return -ENODEV;
->> +     }
->
-> Practically every use of IS_ERR_OR_NULL() is a bug, don't do that.
-> NULL is a valid return code from clk_get(), and should not be
-> treated as an error.
->
->
->> +static int xgene_pcie_map_ranges(struct xgene_pcie_port *port,
->> +                              struct pci_host_bridge *bridge,
->> +                              u64 cfg_addr)
->> +{
->> +     struct device *dev = port->dev;
->> +     struct pci_host_bridge_window *window;
->> +
->> +     list_for_each_entry(window, &bridge->windows, list) {
->> +             struct resource *res = window->res;
->> +             u64 restype = resource_type(res);
->> +             dev_dbg(port->dev, "0x%08lx 0x%016llx...0x%016llx\n",
->> +                     res->flags, res->start, res->end);
->> +
->> +             switch (restype) {
->> +             case IORESOURCE_IO:
->> +                     xgene_pcie_setup_ob_reg(port, res, OMR2BARL,
->> +                                             bridge->io_base);
->> +                     BUG_ON(pci_ioremap_io(res, bridge->io_base) < 0);
->> +                     break;
->
-> No need to BUG_ON() here, this is not a fatal condition, just
-> don't register the I/O space resource if this fails.
->
-> I think as the PCI base support patch series evolves, you will actually
-> not have to do this at all.
->
->         Arnd
