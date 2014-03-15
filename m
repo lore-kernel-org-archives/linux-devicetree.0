@@ -1,49 +1,40 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 2/4] arm64: dts: APM X-Gene PCIe device tree nodes
-Date: Sat, 15 Mar 2014 09:58:52 +0100
-Message-ID: <201403150958.52419.arnd@arndb.de>
-References: <1394085963-27553-1-git-send-email-tinamdar@apm.com> <201403141307.23286.arnd@arndb.de> <CACoXjc=t1SuyE5jzHjGk7eNUjVCNW9_iqOTru8PQ191h=pP1sw@mail.gmail.com>
+Subject: Re: [PATCH v17 3/4] ata: Add APM X-Gene SoC AHCI SATA host controller driver
+Date: Sat, 15 Mar 2014 10:01:40 +0100
+Message-ID: <201403151001.40400.arnd@arndb.de>
+References: <1394655573-32645-1-git-send-email-lho@apm.com> <201403142206.36611.arnd@arndb.de> <CAPw-ZTkk3n_6wh-bWnaMf0aL6mgZWxNH7Sf=J9ucv0uvH2trVw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
-  charset="utf-8"
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACoXjc=t1SuyE5jzHjGk7eNUjVCNW9_iqOTru8PQ191h=pP1sw@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tanmay Inamdar <tinamdar@apm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches <patches@apm.com>, Jon Masters <jcm@redhat.com>
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <CAPw-ZTkk3n_6wh-bWnaMf0aL6mgZWxNH7Sf=J9ucv0uvH2trVw@mail.gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Loc Ho <lho@apm.com>
+Cc: Olof Johansson <olof@lixom.net>, Tejun Heo <tj@kernel.org>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 15 March 2014, Tanmay Inamdar wrote:
-> On Fri, Mar 14, 2014 at 5:07 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Thursday 06 March 2014, Tanmay Inamdar wrote:
-> >> +             pcie0: pcie@1f2b0000 {
-> >> +                     status = "disabled";
-> >> +                     device_type = "pci";
-> >> +                     compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
-> >> +                     #interrupt-cells = <1>;
-> >> +                     #size-cells = <2>;
-> >> +                     #address-cells = <3>;
-> >> +                     reg = < 0x00 0x1f2b0000 0x0 0x00010000   /* Controller registers */
-> >> +                             0xe0 0xd0000000 0x0 0x00200000>; /* PCI config space */
-> >> +                     reg-names = "csr", "cfg";
-> >> +                     ranges = <0x01000000 0x00 0x00000000 0xe0 0x00000000 0x00 0x00010000   /* io */
-> >> +                               0x02000000 0x00 0x10000000 0xe0 0x10000000 0x00 0x80000000>; /* mem */
-> >> +                     dma-ranges = <0x42000000 0x40 0x00000000 0x40 0x00000000 0x40 0x00000000>;
-> >> +                     interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-> >> +                     interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xc2 0x1
-> >> +                                      0x0 0x0 0x0 0x2 &gic 0x0 0xc3 0x1
-> >> +                                      0x0 0x0 0x0 0x3 &gic 0x0 0xc4 0x1
-> >> +                                      0x0 0x0 0x0 0x4 &gic 0x0 0xc5 0x1>;
-> >> +                     clocks = <&pcie0clk 0>;
-> >> +             };
-> >
-> > Is 0x40.0x00000000 the start of your RAM? I had expected RAM to start at 0.0,
-> > and in that case the dma-ranges property would be wrong.
-> 
-> RAM starting address is 0x40_00000000.
+On Friday 14 March 2014, Loc Ho wrote:
 
-Ok, it's good then. Thanks for the clarification, I keep losing track of how each of
-the ~40 SoCs I'm dealing with handles these things.
+> > I still think it's rather unlikely that we will actually see ACPI support
+> > on your platform, btw.
+> >
+> > I'm willing to look at the patches you need for it, but I'm not very
+> > optimistic, in particular because of the kind of hacks you need
+> > for random bits of hardware.
+> >
+> 
+> I am about to post another version. Can you look at the next version?
+> If you still think it needs to be moved to the FW (either U-Boot or
+> Tianocore UEFI boot loader), I will then move out of the Linux driver
+> code.
+
+I would certainly be happier if it could just be moved into the
+firmware or boot loader all the time. The only times we actually
+want to do this stuff in the kernel is when we can't trust the
+boot loader to get it right, or when the kernel has to support
+alternative configurations that the boot loader is not aware of,
+e.g. when you can plug in different kinds of extension boards but
+the boot loader doesn't know which one you have.
 
 	Arnd
