@@ -1,63 +1,94 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v6 3/3] ARM: sun7i/sun6i: irqchip: Update the documentation
-Date: Sat, 15 Mar 2014 14:41:01 +0100
-Message-ID: <1394890861-18347-4-git-send-email-carlo@caione.org>
-References: <1394890861-18347-1-git-send-email-carlo@caione.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 1/2] iio:as3935: Add DT binding docs for AS3935 driver
+Date: Sat, 15 Mar 2014 14:58:21 +0000
+Message-ID: <53246A8D.1010804@kernel.org>
+References: <1394628794-7598-1-git-send-email-mranostay@gmail.com>	<1394628794-7598-2-git-send-email-mranostay@gmail.com> <CAL_JsqKDmDScse0eHr7p6xm6ks30_niH_=z6d5XJhCf-THc2Dw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDWJTUUC5UCBBPFQSGMQKGQEGK7S2II-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1394890861-18347-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKDmDScse0eHr7p6xm6ks30_niH_=z6d5XJhCf-THc2Dw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Added documentation for NMI irqchip.
+On 12/03/14 14:30, Rob Herring wrote:
+> On Wed, Mar 12, 2014 at 7:53 AM, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Document compatible string, required and optional DT properties for
+>> AS3935 chipset driver.
+>>
+>> Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Applied to the togreg branch of iio.git (probably pushed out as testing
+first to allow the autobuilders to play.
 
-Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
----
- .../allwinner,sun67i-sc-nmi.txt                    | 27 ++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/allwinner,sun67i-sc-nmi.txt
+Thanks
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun67i-sc-nmi.txt b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun67i-sc-nmi.txt
-new file mode 100644
-index 0000000..d1c5cda
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun67i-sc-nmi.txt
-@@ -0,0 +1,27 @@
-+Allwinner Sunxi NMI Controller
-+==============================
-+
-+Required properties:
-+
-+- compatible : should be "allwinner,sun7i-a20-sc-nmi" or
-+  "allwinner,sun6i-a31-sc-nmi"
-+- reg : Specifies base physical address and size of the registers.
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- #interrupt-cells : Specifies the number of cells needed to encode an
-+  interrupt source. The value shall be 2. The first cell is the IRQ number, the
-+  second cell the trigger type as defined in interrupt.txt in this directory.
-+- interrupt-parent: Specifies the parent interrupt controller.
-+- interrupts: Specifies the interrupt line (NMI) which is handled by
-+  the interrupt controller in the parent controller's notation. This value
-+  shall be the NMI.
-+
-+Example:
-+
-+sc-nmi-intc@01c00030 {
-+	compatible = "allwinner,sun7i-a20-sc-nmi";
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+	reg = <0x01c00030 0x0c>;
-+	interrupt-parent = <&gic>;
-+	interrupts = <0 0 4>;
-+};
--- 
-1.8.3.2
+Jonathan
+>
+>> ---
+>>   .../devicetree/bindings/iio/proximity/as3935.txt   | 28 ++++++++++++++++++++++
+>>   .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>>   2 files changed, 29 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/iio/proximity/as3935.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/proximity/as3935.txt b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
+>> new file mode 100644
+>> index 0000000..ae23dd8
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
+>> @@ -0,0 +1,28 @@
+>> +Austrian Microsystems AS3935 Franklin lightning sensor device driver
+>> +
+>> +Required properties:
+>> +       - compatible: must be "ams,as3935"
+>> +       - reg: SPI chip select number for the device
+>> +       - spi-cpha: SPI Mode 1. Refer to spi/spi-bus.txt for generic SPI
+>> +       slave node bindings.
+>> +       - interrupt-parent : should be the phandle for the interrupt controller
+>> +       - interrupts : the sole interrupt generated by the device
+>> +
+>> +       Refer to interrupt-controller/interrupts.txt for generic
+>> +       interrupt client node bindings.
+>> +
+>> +Optional properties:
+>> +       - ams,tuning-capacitor-pf: Calibration tuning capacitor stepping
+>> +         value 0 - 120pF. This will require using the calibration data from
+>> +         the manufacturer.
+>> +
+>> +Example:
+>> +
+>> +as3935@0 {
+>> +       compatible = "ams,as3935";
+>> +       reg = <0>;
+>> +       spi-cpha;
+>> +       interrupt-parent = <&gpio1>;
+>> +       interrupts = <16 1>;
+>> +       ams,tuning-capacitor-pf = <80>;
+>> +};
+>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> index 4685ec3..517831d 100644
+>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> @@ -11,6 +11,7 @@ ak    Asahi Kasei Corp.
+>>   allwinner      Allwinner Technology Co., Ltd.
+>>   altr   Altera Corp.
+>>   amcc   Applied Micro Circuits Corporation (APM, formally AMCC)
+>> +ams    AMS AG
+>>   amstaos        AMS-Taos Inc.
+>>   apm    Applied Micro Circuits Corporation (APM)
+>>   arm    ARM Ltd.
+>> --
+>> 1.8.3.2
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
