@@ -1,85 +1,96 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCHv3 9/9] iio: inkern: add iio_read_channel_average_raw
-Date: Sat, 15 Mar 2014 15:42:25 +0000
-Message-ID: <532474E1.1090904@kernel.org>
-References: <1394472329-15485-1-git-send-email-sre@debian.org> <1394472329-15485-10-git-send-email-sre@debian.org>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 0/8] mfd: AXP20x: Add support for AXP202 and AXP209
+Date: Sat, 15 Mar 2014 16:43:37 +0100
+Message-ID: <1394898225-28452-1-git-send-email-carlo@caione.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1394472329-15485-10-git-send-email-sre@debian.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>, Sebastian Reichel <sre@ring0.de>, Marek Belisko <marek@goldelico.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDWJTUUC5UCBB7HJSGMQKGQEIF6LFXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/03/14 17:25, Sebastian Reichel wrote:
-> Add iio_read_channel_average_raw to support reading
-> averaged raw values in consumer drivers.
->
-> Signed-off-by: Sebastian Reichel <sre@debian.org>
-As this one also stands fine on it's own and isn't actually used
-by the rest of the patch set - applied to the togreg branch of iio.git
-This will get pushed out initially as 'testing' for the autobuilders
-to play.
+AXP209 and AXP202 are the PMUs (Power Management Unit) used by A10, A13
+and A20 SoCs and developed by X-Powers, a sister company of Allwinner.
+AXP20x comprises an adaptive USB-Compatible PWM charger, 2 BUCK DC-DC
+converters, 5 LDOs, multiple 12-bit ADCs of voltage, current and temperature
+as well as 4 configurable GPIOs. 
 
-Jonathan
-> ---
->   drivers/iio/inkern.c         | 18 ++++++++++++++++++
->   include/linux/iio/consumer.h | 13 +++++++++++++
->   2 files changed, 31 insertions(+)
->
-> diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
-> index 0cf5f8e..adeba5a 100644
-> --- a/drivers/iio/inkern.c
-> +++ b/drivers/iio/inkern.c
-> @@ -443,6 +443,24 @@ err_unlock:
->   }
->   EXPORT_SYMBOL_GPL(iio_read_channel_raw);
->
-> +int iio_read_channel_average_raw(struct iio_channel *chan, int *val)
-> +{
-> +	int ret;
-> +
-> +	mutex_lock(&chan->indio_dev->info_exist_lock);
-> +	if (chan->indio_dev->info == NULL) {
-> +		ret = -ENODEV;
-> +		goto err_unlock;
-> +	}
-> +
-> +	ret = iio_channel_read(chan, val, NULL, IIO_CHAN_INFO_AVERAGE_RAW);
-> +err_unlock:
-> +	mutex_unlock(&chan->indio_dev->info_exist_lock);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(iio_read_channel_average_raw);
-> +
->   static int iio_convert_raw_to_processed_unlocked(struct iio_channel *chan,
->   	int raw, int *processed, unsigned int scale)
->   {
-> diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
-> index 2752b1f..651f9a0 100644
-> --- a/include/linux/iio/consumer.h
-> +++ b/include/linux/iio/consumer.h
-> @@ -123,6 +123,19 @@ int iio_read_channel_raw(struct iio_channel *chan,
->   			 int *val);
->
->   /**
-> + * iio_read_channel_average_raw() - read from a given channel
-> + * @chan:		The channel being queried.
-> + * @val:		Value read back.
-> + *
-> + * Note raw reads from iio channels are in adc counts and hence
-> + * scale will need to be applied if standard units required.
-> + *
-> + * In opposit to the normal iio_read_channel_raw this function
-> + * returns the average of multiple reads.
-> + */
-> +int iio_read_channel_average_raw(struct iio_channel *chan, int *val);
-> +
-> +/**
->    * iio_read_channel_processed() - read processed value from a given channel
->    * @chan:		The channel being queried.
->    * @val:		Value read back.
->
+This set of patches introduces the core driver and support for two different
+subsystems:
+	- Regulators
+	- PEK (Power Enable Key)
+
+This patchset depends on patchsets:
+	irq: sun4i IRQ 0 / ENMI fixes (Hans de Goede)
+	ARM: sun7i/sun6i: irqchip: Irqchip driver for NMI controller (Carlo Caione)
+
+Changes since v1:
+	- Added a new standalone patch for defconfig
+
+	- MFD core:
+	  * Removed axp,system-power-controller property
+
+	- Bindings documentation:
+	  * Corrected description for dcdc-workmode property
+	  * Removed unused axp20x-pek compatible
+
+	- Input misc PEK driver:
+	  * Fixed seconds in lower case
+
+	- Regulators subsystem:
+	  * Fixed axp20x_set_suspend_voltage()
+	  * Switched to using multi-bit control for regulators
+	  * When "regulators" node is not found driver doesn't quit
+	  * Driver is now using devm_regulator_register()
+	  * Added module_platform_driver() instead of subsys_initcall()
+
+	- DT:
+	  * Added new DTSI for AXP209
+	  * Added support for cubietruck and olinuxino-micro
+
+Carlo Caione (8):
+  mfd: AXP20x: Add mfd driver for AXP20x PMIC
+  mfd: AXP20x: Add bindings documentation
+  input: misc: Add driver for AXP20x Power Enable Key
+  input: misc: Add ABI docs for AXP20x PEK
+  regulator: AXP20x: Add support for regulators subsystem
+  ARM: sunxi: dt: Add x-powers-axp209.dtsi file
+  ARM: sun7i: dt: Add AXP209 support to various boards
+  ARM: sunxi: Add AXP20x support in defconfig
+
+ .../ABI/testing/sysfs-driver-input-axp-pek         |  11 +
+ Documentation/devicetree/bindings/mfd/axp20x.txt   |  83 ++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm/boot/dts/sun7i-a20-cubieboard2.dts        |  12 +
+ arch/arm/boot/dts/sun7i-a20-cubietruck.dts         |  13 +
+ arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts    |  12 +
+ arch/arm/boot/dts/x-powers-axp209.dtsi             |  60 +++++
+ arch/arm/configs/sunxi_defconfig                   |   4 +
+ drivers/input/misc/Kconfig                         |  11 +
+ drivers/input/misc/Makefile                        |   1 +
+ drivers/input/misc/axp20x-pek.c                    | 267 +++++++++++++++++++
+ drivers/mfd/Kconfig                                |  12 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/axp20x.c                               | 247 +++++++++++++++++
+ drivers/regulator/Kconfig                          |   7 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/axp20x-regulator.c               | 293 +++++++++++++++++++++
+ include/linux/mfd/axp20x.h                         | 179 +++++++++++++
+ 18 files changed, 1215 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-input-axp-pek
+ create mode 100644 Documentation/devicetree/bindings/mfd/axp20x.txt
+ create mode 100644 arch/arm/boot/dts/x-powers-axp209.dtsi
+ create mode 100644 drivers/input/misc/axp20x-pek.c
+ create mode 100644 drivers/mfd/axp20x.c
+ create mode 100644 drivers/regulator/axp20x-regulator.c
+ create mode 100644 include/linux/mfd/axp20x.h
+
+-- 
+1.8.3.2
