@@ -1,49 +1,85 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv3 8/9] iio: documentation: Add ABI documentation for *_mean_raw
-Date: Sat, 15 Mar 2014 15:40:42 +0000
-Message-ID: <5324747A.8030507@kernel.org>
-References: <1394472329-15485-1-git-send-email-sre@debian.org> <1394472329-15485-9-git-send-email-sre@debian.org>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCHv3 9/9] iio: inkern: add iio_read_channel_average_raw
+Date: Sat, 15 Mar 2014 15:42:25 +0000
+Message-ID: <532474E1.1090904@kernel.org>
+References: <1394472329-15485-1-git-send-email-sre@debian.org> <1394472329-15485-10-git-send-email-sre@debian.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1394472329-15485-9-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1394472329-15485-10-git-send-email-sre@debian.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@debian.org>, Sebastian Reichel <sre@ring0.de>, Marek Belisko <marek@goldelico.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On 10/03/14 17:25, Sebastian Reichel wrote:
-> Add ABI documentation for in_*_mean_raw files, which are
-> already supported and used in the kernel for some time.
+> Add iio_read_channel_average_raw to support reading
+> averaged raw values in consumer drivers.
 >
-> Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-As this one stands fine on it's own...
+> Signed-off-by: Sebastian Reichel <sre@debian.org>
+As this one also stands fine on it's own and isn't actually used
+by the rest of the patch set - applied to the togreg branch of iio.git
+This will get pushed out initially as 'testing' for the autobuilders
+to play.
 
-Applied to the togreg branch of iio.git
-
-Thanks
+Jonathan
 > ---
->   Documentation/ABI/testing/sysfs-bus-iio | 8 ++++++++
->   1 file changed, 8 insertions(+)
+>   drivers/iio/inkern.c         | 18 ++++++++++++++++++
+>   include/linux/iio/consumer.h | 13 +++++++++++++
+>   2 files changed, 31 insertions(+)
 >
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-> index 6e02c50..58ba333 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-iio
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio
-> @@ -210,6 +210,14 @@ Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->   Description:
->   		Scaled humidity measurement in milli percent.
+> diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
+> index 0cf5f8e..adeba5a 100644
+> --- a/drivers/iio/inkern.c
+> +++ b/drivers/iio/inkern.c
+> @@ -443,6 +443,24 @@ err_unlock:
+>   }
+>   EXPORT_SYMBOL_GPL(iio_read_channel_raw);
 >
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_X_mean_raw
-> +KernelVersion:	3.5
-> +Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> +Description:
-> +		Averaged raw measurement from channel X. The number of values
-> +		used for averaging is device specific. The converting rules for
-> +		normal raw values also applies to the averaged raw values.
+> +int iio_read_channel_average_raw(struct iio_channel *chan, int *val)
+> +{
+> +	int ret;
 > +
->   What:		/sys/bus/iio/devices/iio:deviceX/in_accel_offset
->   What:		/sys/bus/iio/devices/iio:deviceX/in_accel_x_offset
->   What:		/sys/bus/iio/devices/iio:deviceX/in_accel_y_offset
+> +	mutex_lock(&chan->indio_dev->info_exist_lock);
+> +	if (chan->indio_dev->info == NULL) {
+> +		ret = -ENODEV;
+> +		goto err_unlock;
+> +	}
+> +
+> +	ret = iio_channel_read(chan, val, NULL, IIO_CHAN_INFO_AVERAGE_RAW);
+> +err_unlock:
+> +	mutex_unlock(&chan->indio_dev->info_exist_lock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(iio_read_channel_average_raw);
+> +
+>   static int iio_convert_raw_to_processed_unlocked(struct iio_channel *chan,
+>   	int raw, int *processed, unsigned int scale)
+>   {
+> diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
+> index 2752b1f..651f9a0 100644
+> --- a/include/linux/iio/consumer.h
+> +++ b/include/linux/iio/consumer.h
+> @@ -123,6 +123,19 @@ int iio_read_channel_raw(struct iio_channel *chan,
+>   			 int *val);
+>
+>   /**
+> + * iio_read_channel_average_raw() - read from a given channel
+> + * @chan:		The channel being queried.
+> + * @val:		Value read back.
+> + *
+> + * Note raw reads from iio channels are in adc counts and hence
+> + * scale will need to be applied if standard units required.
+> + *
+> + * In opposit to the normal iio_read_channel_raw this function
+> + * returns the average of multiple reads.
+> + */
+> +int iio_read_channel_average_raw(struct iio_channel *chan, int *val);
+> +
+> +/**
+>    * iio_read_channel_processed() - read processed value from a given channel
+>    * @chan:		The channel being queried.
+>    * @val:		Value read back.
 >
