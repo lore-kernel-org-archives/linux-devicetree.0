@@ -1,344 +1,49 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv3 3/9] mfd: twl4030-madc: Cleanup driver
-Date: Sat, 15 Mar 2014 15:39:07 +0000
-Message-ID: <5324741B.1080106@kernel.org>
-References: <1394472329-15485-1-git-send-email-sre@debian.org> <1394472329-15485-4-git-send-email-sre@debian.org>
+Subject: Re: [PATCHv3 8/9] iio: documentation: Add ABI documentation for *_mean_raw
+Date: Sat, 15 Mar 2014 15:40:42 +0000
+Message-ID: <5324747A.8030507@kernel.org>
+References: <1394472329-15485-1-git-send-email-sre@debian.org> <1394472329-15485-9-git-send-email-sre@debian.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1394472329-15485-4-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1394472329-15485-9-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On 10/03/14 17:25, Sebastian Reichel wrote:
-> Some style fixes in twl4030-madc driver.
+> Add ABI documentation for in_*_mean_raw files, which are
+> already supported and used in the kernel for some time.
 >
-> Reported-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Reported-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Tested-by: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+As this one stands fine on it's own...
 
-One, whilst you are here request below.
+Applied to the togreg branch of iio.git
+
+Thanks
 > ---
->   drivers/mfd/twl4030-madc.c       | 127 +++++++++++++++++++--------------------
->   include/linux/i2c/twl4030-madc.h |   2 +-
->   2 files changed, 62 insertions(+), 67 deletions(-)
+>   Documentation/ABI/testing/sysfs-bus-iio | 8 ++++++++
+>   1 file changed, 8 insertions(+)
 >
-> diff --git a/drivers/mfd/twl4030-madc.c b/drivers/mfd/twl4030-madc.c
-> index 1c5c4db..890d520 100644
-> --- a/drivers/mfd/twl4030-madc.c
-> +++ b/drivers/mfd/twl4030-madc.c
-> @@ -49,22 +49,22 @@
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+> index 6e02c50..58ba333 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-iio
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio
+> @@ -210,6 +210,14 @@ Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>   Description:
+>   		Scaled humidity measurement in milli percent.
 >
->   #include <linux/iio/iio.h>
->
-> -/*
-> +/**
->    * struct twl4030_madc_data - a container for madc info
-> - * @dev - pointer to device structure for madc
-> - * @lock - mutex protecting this data structure
-> - * @requests - Array of request struct corresponding to SW1, SW2 and RT
-> - * @use_second_irq - IRQ selection (main or co-processor)
-> - * @imr - Interrupt mask register of MADC
-> - * @isr - Interrupt status register of MADC
-> + * @dev:		Pointer to device structure for madc
-> + * @lock:		Mutex protecting this data structure
-> + * @requests:		Array of request struct corresponding to SW1, SW2 and RT
-> + * @use_second_irq:	IRQ selection (main or co-processor)
-> + * @imr:		Interrupt mask register of MADC
-> + * @isr:		Interrupt status register of MADC
->    */
->   struct twl4030_madc_data {
->   	struct device *dev;
->   	struct mutex lock;	/* mutex protecting this data structure */
->   	struct twl4030_madc_request requests[TWL4030_MADC_NUM_METHODS];
->   	bool use_second_irq;
-> -	int imr;
-> -	int isr;
-> +	u8 imr;
-> +	u8 isr;
->   };
->
->   static int twl4030_madc_read(struct iio_dev *iio_dev,
-> @@ -155,17 +155,16 @@ twl4030_divider_ratios[16] = {
->   };
->
->
-> -/*
-> - * Conversion table from -3 to 55 degree Celcius
-> - */
-> -static int therm_tbl[] = {
-> -30800,	29500,	28300,	27100,
-> -26000,	24900,	23900,	22900,	22000,	21100,	20300,	19400,	18700,	17900,
-> -17200,	16500,	15900,	15300,	14700,	14100,	13600,	13100,	12600,	12100,
-> -11600,	11200,	10800,	10400,	10000,	9630,	9280,	8950,	8620,	8310,
-> -8020,	7730,	7460,	7200,	6950,	6710,	6470,	6250,	6040,	5830,
-> -5640,	5450,	5260,	5090,	4920,	4760,	4600,	4450,	4310,	4170,
-> -4040,	3910,	3790,	3670,	3550
-> +/* Conversion table from -3 to 55 degrees Celcius */
-> +static int twl4030_therm_tbl[] = {
-> +	30800,	29500,	28300,	27100,
-> +	26000,	24900,	23900,	22900,	22000,	21100,	20300,	19400,	18700,
-> +	17900,	17200,	16500,	15900,	15300,	14700,	14100,	13600,	13100,
-> +	12600,	12100,	11600,	11200,	10800,	10400,	10000,	9630,	9280,
-> +	8950,	8620,	8310,	8020,	7730,	7460,	7200,	6950,	6710,
-> +	6470,	6250,	6040,	5830,	5640,	5450,	5260,	5090,	4920,
-> +	4760,	4600,	4450,	4310,	4170,	4040,	3910,	3790,	3670,
-> +	3550
->   };
->
->   /*
-> @@ -197,11 +196,12 @@ const struct twl4030_madc_conversion_method twl4030_conversion_methods[] = {
->   			      },
->   };
->
-> -/*
-> - * Function to read a particular channel value.
-> - * @madc - pointer to struct twl4030_madc_data
-> - * @reg - lsb of ADC Channel
-> - * If the i2c read fails it returns an error else returns 0.
-> +/**
-> + * twl4030_madc_channel_raw_read() - Function to read a particular channel value
-> + * @madc:	pointer to struct twl4030_madc_data
-> + * @reg:	lsb of ADC Channel
-> + *
-> + * Return: 0 on success, an error code otherwise.
->    */
->   static int twl4030_madc_channel_raw_read(struct twl4030_madc_data *madc, u8 reg)
->   {
-> @@ -227,7 +227,7 @@ static int twl4030_madc_channel_raw_read(struct twl4030_madc_data *madc, u8 reg)
->   }
->
->   /*
-> - * Return battery temperature
-> + * Return battery temperature in degrees Celsius
->    * Or < 0 on failure.
->    */
->   static int twl4030battery_temperature(int raw_volt)
-> @@ -236,18 +236,18 @@ static int twl4030battery_temperature(int raw_volt)
->   	int temp, curr, volt, res, ret;
->
->   	volt = (raw_volt * TEMP_STEP_SIZE) / TEMP_PSR_R;
-> -	/* Getting and calculating the supply current in micro ampers */
-> +	/* Getting and calculating the supply current in micro amperes */
->   	ret = twl_i2c_read_u8(TWL_MODULE_MAIN_CHARGE, &val,
->   		REG_BCICTL2);
->   	if (ret < 0)
->   		return ret;
+> +What:		/sys/bus/iio/devices/iio:deviceX/in_X_mean_raw
+> +KernelVersion:	3.5
+> +Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> +Description:
+> +		Averaged raw measurement from channel X. The number of values
+> +		used for averaging is device specific. The converting rules for
+> +		normal raw values also applies to the averaged raw values.
 > +
->   	curr = ((val & TWL4030_BCI_ITHEN) + 1) * 10;
->   	/* Getting and calculating the thermistor resistance in ohms */
->   	res = volt * 1000 / curr;
->   	/* calculating temperature */
->   	for (temp = 58; temp >= 0; temp--) {
-> -		int actual = therm_tbl[temp];
-> -
-> +		int actual = twl4030_therm_tbl[temp];
->   		if ((actual - res) >= 0)
->   			break;
->   	}
-> @@ -269,11 +269,12 @@ static int twl4030battery_current(int raw_volt)
->   	else /* slope of 0.88 mV/mA */
->   		return (raw_volt * CURR_STEP_SIZE) / CURR_PSR_R2;
->   }
-> +
->   /*
->    * Function to read channel values
->    * @madc - pointer to twl4030_madc_data struct
->    * @reg_base - Base address of the first channel
-> - * @Channels - 16 bit bitmap. If the bit is set, channel value is read
-> + * @Channels - 16 bit bitmap. If the bit is set, channel's value is read
->    * @buf - The channel values are stored here. if read fails error
->    * @raw - Return raw values without conversion
->    * value is stored
-> @@ -284,17 +285,17 @@ static int twl4030_madc_read_channels(struct twl4030_madc_data *madc,
->   				      long channels, int *buf,
->   				      bool raw)
->   {
-> -	int count = 0, count_req = 0, i;
-> +	int count = 0;
-> +	int i;
->   	u8 reg;
->
->   	for_each_set_bit(i, &channels, TWL4030_MADC_MAX_CHANNELS) {
-> -		reg = reg_base + 2 * i;
-> +		reg = reg_base + (2 * i);
->   		buf[i] = twl4030_madc_channel_raw_read(madc, reg);
->   		if (buf[i] < 0) {
-> -			dev_err(madc->dev,
-> -				"Unable to read register 0x%X\n", reg);
-> -			count_req++;
-> -			continue;
-> +			dev_err(madc->dev, "Unable to read register 0x%X\n",
-> +				reg);
-> +			return buf[i];
->   		}
->   		if (raw) {
->   			count++;
-> @@ -305,7 +306,7 @@ static int twl4030_madc_read_channels(struct twl4030_madc_data *madc,
->   			buf[i] = twl4030battery_current(buf[i]);
->   			if (buf[i] < 0) {
->   				dev_err(madc->dev, "err reading current\n");
-> -				count_req++;
-> +				return buf[i];
->   			} else {
->   				count++;
->   				buf[i] = buf[i] - 750;
-> @@ -315,7 +316,7 @@ static int twl4030_madc_read_channels(struct twl4030_madc_data *madc,
->   			buf[i] = twl4030battery_temperature(buf[i]);
->   			if (buf[i] < 0) {
->   				dev_err(madc->dev, "err reading temperature\n");
-> -				count_req++;
-> +				return buf[i];
->   			} else {
->   				buf[i] -= 3;
->   				count++;
-> @@ -336,8 +337,6 @@ static int twl4030_madc_read_channels(struct twl4030_madc_data *madc,
->   				twl4030_divider_ratios[i].numerator);
->   		}
->   	}
-> -	if (count_req)
-> -		dev_err(madc->dev, "%d channel conversion failed\n", count_req);
->
->   	return count;
->   }
-> @@ -361,13 +360,13 @@ static int twl4030_madc_enable_irq(struct twl4030_madc_data *madc, u8 id)
->   			madc->imr);
->   		return ret;
->   	}
-> +
->   	val &= ~(1 << id);
->   	ret = twl_i2c_write_u8(TWL4030_MODULE_MADC, val, madc->imr);
->   	if (ret) {
->   		dev_err(madc->dev,
->   			"unable to write imr register 0x%X\n", madc->imr);
->   		return ret;
-> -
->   	}
->
->   	return 0;
-> @@ -430,7 +429,7 @@ static irqreturn_t twl4030_madc_threaded_irq_handler(int irq, void *_madc)
->   			continue;
->   		ret = twl4030_madc_disable_irq(madc, i);
->   		if (ret < 0)
-> -			dev_dbg(madc->dev, "Disable interrupt failed%d\n", i);
-> +			dev_dbg(madc->dev, "Disable interrupt failed %d\n", i);
->   		madc->requests[i].result_pending = 1;
->   	}
->   	for (i = 0; i < TWL4030_MADC_NUM_METHODS; i++) {
-> @@ -512,21 +511,17 @@ static int twl4030_madc_start_conversion(struct twl4030_madc_data *madc,
->   {
->   	const struct twl4030_madc_conversion_method *method;
->   	int ret = 0;
-> +
-> +	if (conv_method != TWL4030_MADC_SW1 && conv_method != TWL4030_MADC_SW2)
-> +		return -ENOTSUPP;
-> +
->   	method = &twl4030_conversion_methods[conv_method];
-> -	switch (conv_method) {
-> -	case TWL4030_MADC_SW1:
-> -	case TWL4030_MADC_SW2:
-> -		ret = twl_i2c_write_u8(TWL4030_MODULE_MADC,
-> -				       TWL4030_MADC_SW_START, method->ctrl);
-> -		if (ret) {
-> -			dev_err(madc->dev,
-> -				"unable to write ctrl register 0x%X\n",
-> -				method->ctrl);
-> -			return ret;
-> -		}
-> -		break;
-> -	default:
-> -		break;
-> +	ret = twl_i2c_write_u8(TWL4030_MODULE_MADC, TWL4030_MADC_SW_START,
-> +			       method->ctrl);
-> +	if (ret) {
-> +		dev_err(madc->dev, "unable to write ctrl register 0x%X\n",
-> +			method->ctrl);
-> +		return ret;
->   	}
->
->   	return 0;
-> @@ -623,8 +618,8 @@ int twl4030_madc_conversion(struct twl4030_madc_request *req)
->   				       ch_lsb, method->avg);
->   		if (ret) {
->   			dev_err(twl4030_madc->dev,
-> -				"unable to write sel reg 0x%X\n",
-> -				method->sel + 1);
-> +				"unable to write avg reg 0x%X\n",
-> +				method->avg);
->   			goto out;
->   		}
->   	}
-> @@ -665,10 +660,6 @@ out:
->   }
->   EXPORT_SYMBOL_GPL(twl4030_madc_conversion);
->
-> -/*
-> - * Return channel value
-> - * Or < 0 on failure.
-> - */
->   int twl4030_get_madc_conversion(int channel_no)
->   {
->   	struct twl4030_madc_request req;
-> @@ -703,6 +694,7 @@ static int twl4030_madc_set_current_generator(struct twl4030_madc_data *madc,
->   					      int chan, int on)
->   {
->   	int ret;
-> +	int regmask;
->   	u8 regval;
->
->   	ret = twl_i2c_read_u8(TWL_MODULE_MAIN_CHARGE,
-> @@ -712,10 +704,13 @@ static int twl4030_madc_set_current_generator(struct twl4030_madc_data *madc,
->   			TWL4030_BCI_BCICTL1);
->   		return ret;
->   	}
-> +
-> +	regmask = chan ? TWL4030_BCI_ITHEN : TWL4030_BCI_TYPEN;
->   	if (on)
-> -		regval |= chan ? TWL4030_BCI_ITHEN : TWL4030_BCI_TYPEN;
-> +		regval |= regmask;
->   	else
-> -		regval &= chan ? ~TWL4030_BCI_ITHEN : ~TWL4030_BCI_TYPEN;
-> +		regval &= ~regmask;
-> +
->   	ret = twl_i2c_write_u8(TWL_MODULE_MAIN_CHARGE,
->   			       regval, TWL4030_BCI_BCICTL1);
->   	if (ret) {
-> @@ -730,7 +725,7 @@ static int twl4030_madc_set_current_generator(struct twl4030_madc_data *madc,
-Would be nice if this one was also in kernel-doc format :)
->   /*
->    * Function that sets MADC software power on bit to enable MADC
->    * @madc - pointer to twl4030_madc_data struct
-> - * @on - Enable or disable MADC software powen on bit.
-> + * @on - Enable or disable MADC software power on bit.
->    * returns error if i2c read/write fails else 0
->    */
->   static int twl4030_madc_set_power(struct twl4030_madc_data *madc, int on)
-> @@ -909,7 +904,7 @@ static struct platform_driver twl4030_madc_driver = {
->   		   .name = "twl4030_madc",
->   		   .owner = THIS_MODULE,
->   		   .of_match_table = of_match_ptr(twl_madc_of_match),
-> -		   },
-> +	},
->   };
->
->   module_platform_driver(twl4030_madc_driver);
-> diff --git a/include/linux/i2c/twl4030-madc.h b/include/linux/i2c/twl4030-madc.h
-> index 01f5951..1c0134d 100644
-> --- a/include/linux/i2c/twl4030-madc.h
-> +++ b/include/linux/i2c/twl4030-madc.h
-> @@ -44,7 +44,7 @@ struct twl4030_madc_conversion_method {
->
->   struct twl4030_madc_request {
->   	unsigned long channels;
-> -	u16 do_avg;
-> +	bool do_avg;
->   	u16 method;
->   	u16 type;
->   	bool active;
+>   What:		/sys/bus/iio/devices/iio:deviceX/in_accel_offset
+>   What:		/sys/bus/iio/devices/iio:deviceX/in_accel_x_offset
+>   What:		/sys/bus/iio/devices/iio:deviceX/in_accel_y_offset
 >
