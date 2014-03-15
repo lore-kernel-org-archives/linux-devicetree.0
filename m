@@ -1,45 +1,57 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC v3 3/3] of: Make of_find_node_by_path() handle /aliases
-Date: Sat, 15 Mar 2014 14:44:02 -0500
-Message-ID: <CAL_JsqLxexGWALTVb4BEzqpxj_iOnrHA3XtRNxbP1HRSOJeByg@mail.gmail.com>
-References: <1394817109-26199-1-git-send-email-grant.likely@linaro.org>
-	<CAL_JsqLtYFiLnLgdN_GMG33JD53wFdyfhCwLHek3tLBbQB7maQ@mail.gmail.com>
-	<20140315123331.7351DC40A1B@trevor.secretlab.ca>
+From: Vince Bridgers <vbridgers2013@gmail.com>
+Subject: Re: [PATCH net-next V5 0/9] Altera Triple Speed Ethernet (TSE) Driver
+Date: Sat, 15 Mar 2014 15:52:15 -0500
+Message-ID: <CAOwfj2P4EWHmVgOVM=seUnwBpHupyGoeh5aM-X-tC8tXhWTjkQ@mail.gmail.com>
+References: <1394805887-22030-1-git-send-email-vbridgers2013@gmail.com>
+	<20140314.150720.734350362080616095.davem@davemloft.net>
+	<20140314.151524.753884730788957176.davem@davemloft.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140315123331.7351DC40A1B-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140314.151524.753884730788957176.davem@davemloft.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 15, 2014 at 7:33 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, 14 Mar 2014 16:39:38 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Fri, Mar 14, 2014 at 12:11 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> > Make of_find_node_by_path() handle aliases as prefixes. To make this
->> > work the name search is refactored to search by path component instead
->> > of by full string. This should be a more efficient search, and it makes
->> > it possible to start a search at a subnode of a tree.
->> >
->> > Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->> > Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->> > [grant.likely: Rework to not require allocating at runtime]
->> > Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Hi Dave
+
+On Fri, Mar 14, 2014 at 2:15 PM, David Miller <davem@davemloft.net> wrote:
+> From: David Miller <davem@davemloft.net>
+> Date: Fri, 14 Mar 2014 15:07:20 -0400 (EDT)
+>
+>> From: Vince Bridgers <vbridgers2013@gmail.com>
+>> Date: Fri, 14 Mar 2014 09:04:38 -0500
 >>
->> I should have read the comments before trying to figure out why you
->> had that "pointless" recursion...
+>>> This is the version 5 submission for the Altera Triple Speed Ethernet (TSE)
+>>> driver. All comments received during the version 2, 3, and 4 submissions have
+>>> been accepted. Please find the change log and a description of the submission
+>>> below.
+>>
+>> Series applied to net-next, thanks.
 >
-> Hi Rob,
+> Actually, I had to revert, your driver adds new warnings to the build:
 >
-> Thanks for the review. However, I'm a little slow this morning and I
-> don't understand what you mean. Did I miss an early comment?
+> drivers/net/ethernet/altera/altera_tse_main.c: In function 'altera_tse_probe':
+> drivers/net/ethernet/altera/altera_tse_main.c:1238:23: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+>    priv->tx_dma_desc = (void *)descmap;
+>                        ^
+> drivers/net/ethernet/altera/altera_tse_main.c:1242:23: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+>    priv->rx_dma_desc = (void *)(descmap+priv->txdescmem);
+>                        ^
+>
+> A pointer can be larger than an "unsigned int", you therefore cannot
+> cast it to a pointer.
+>
+> In fact this code path has a lot of problems, we pass a pointer to an unsigned int
+> as a "void __iomem *" to request_and_map().  It's not, don't pretend that it is,
+> and don't use casts to try and make the compiler also not see the problem.
 
-No, it's me that was being slow. At first glance I was thinking the
-recursion was pointless until I saw the alias + path case.
+Thank for catching this, another oversight on my part. I'll address
+the issue in our pre-submission process, correct the problem and
+resubmit. For what it's worth, we did not see the compiler warnings
+before submitting.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+All the best,
+
+Vince
