@@ -1,28 +1,49 @@
-From: Alexander Holler <holler@ahsoftware.de>
-Subject: Re: [PATCH v2] gpio: davinci: fix gpio selection for OF
-Date: Sat, 15 Mar 2014 08:37:11 +0100
-Message-ID: <53240327.8070507@ahsoftware.de>
-References: <5316FFCE.1060603@ti.com>	<1394018461-757-1-git-send-email-holler@ahsoftware.de>	<CACRpkdaF=jc9Z1XZCtH8VPuih01t--qyV-sgH1R_ix0VM4RzVA@mail.gmail.com>	<5322D529.4070904@ahsoftware.de>	<CACRpkdaghneo1MvNCfxjTED+sJepHgeZCgmKsRteG9qrBNWAfQ@mail.gmail.com>	<5322F82A.9000507@ahsoftware.de>	<CACRpkdZscprsy7kyqHPUMEMYJ_TKgG2bYR7mdrG4hTDp1w1nDg@mail.gmail.com>	<53234B68.5090300@ahsoftware.de> <CACRpkdZ2+kfOim1OEWbYR_Tj36i+8HmYXh+nqO9h1Em8gqy=3Q@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 2/4] arm64: dts: APM X-Gene PCIe device tree nodes
+Date: Sat, 15 Mar 2014 09:58:52 +0100
+Message-ID: <201403150958.52419.arnd@arndb.de>
+References: <1394085963-27553-1-git-send-email-tinamdar@apm.com> <201403141307.23286.arnd@arndb.de> <CACoXjc=t1SuyE5jzHjGk7eNUjVCNW9_iqOTru8PQ191h=pP1sw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: Text/Plain;
+  charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZ2+kfOim1OEWbYR_Tj36i+8HmYXh+nqO9h1Em8gqy=3Q@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Sekhar Nori <nsekhar@ti.com>, Prabhakar Lad <prabhakar.csengg@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CACoXjc=t1SuyE5jzHjGk7eNUjVCNW9_iqOTru8PQ191h=pP1sw@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tanmay Inamdar <tinamdar@apm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches <patches@apm.com>, Jon Masters <jcm@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 14.03.2014 20:52, schrieb Linus Walleij:
+On Saturday 15 March 2014, Tanmay Inamdar wrote:
+> On Fri, Mar 14, 2014 at 5:07 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Thursday 06 March 2014, Tanmay Inamdar wrote:
+> >> +             pcie0: pcie@1f2b0000 {
+> >> +                     status = "disabled";
+> >> +                     device_type = "pci";
+> >> +                     compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
+> >> +                     #interrupt-cells = <1>;
+> >> +                     #size-cells = <2>;
+> >> +                     #address-cells = <3>;
+> >> +                     reg = < 0x00 0x1f2b0000 0x0 0x00010000   /* Controller registers */
+> >> +                             0xe0 0xd0000000 0x0 0x00200000>; /* PCI config space */
+> >> +                     reg-names = "csr", "cfg";
+> >> +                     ranges = <0x01000000 0x00 0x00000000 0xe0 0x00000000 0x00 0x00010000   /* io */
+> >> +                               0x02000000 0x00 0x10000000 0xe0 0x10000000 0x00 0x80000000>; /* mem */
+> >> +                     dma-ranges = <0x42000000 0x40 0x00000000 0x40 0x00000000 0x40 0x00000000>;
+> >> +                     interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+> >> +                     interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xc2 0x1
+> >> +                                      0x0 0x0 0x0 0x2 &gic 0x0 0xc3 0x1
+> >> +                                      0x0 0x0 0x0 0x3 &gic 0x0 0xc4 0x1
+> >> +                                      0x0 0x0 0x0 0x4 &gic 0x0 0xc5 0x1>;
+> >> +                     clocks = <&pcie0clk 0>;
+> >> +             };
+> >
+> > Is 0x40.0x00000000 the start of your RAM? I had expected RAM to start at 0.0,
+> > and in that case the dma-ranges property would be wrong.
+> 
+> RAM starting address is 0x40_00000000.
 
-> So a few Tested-by's from the people using this driver would for
-> example convince me that it is solving a real problem for them
-> and it needs to go into fixes.
+Ok, it's good then. Thanks for the clarification, I keep losing track of how each of
+the ~40 SoCs I'm dealing with handles these things.
 
-2001: a space odyssey is fast action movie compared with the movie 
-kernel bug fixing. And 2001 is a masterpiece of slowness.
-
-Regards,
-
-Alexander Holler
-
+	Arnd
