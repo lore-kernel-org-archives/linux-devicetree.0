@@ -1,59 +1,77 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v7 3/3] arm64: Add architecture support for PCI
-Date: Sun, 16 Mar 2014 17:22:26 +1100
-Message-ID: <1394950946.15098.111.camel@pasglop>
-References: <1394811258-1500-1-git-send-email-Liviu.Dudau@arm.com>
- <201403141838.08900.arnd@arndb.de>
- <20140314180527.GZ6457@e106497-lin.cambridge.arm.com>
- <201403142010.39886.arnd@arndb.de>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv4 0/7] Convert twl4030-madc to IIO API and add DT support
+Date: Sun, 16 Mar 2014 17:46:47 +0000
+Message-ID: <5325E387.3040503@kernel.org>
+References: <1394934211-21605-1-git-send-email-sre@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201403142010.39886.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Tanmay Inamdar <tinamdar@apm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1394934211-21605-1-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2014-03-14 at 20:10 +0100, Arnd Bergmann wrote:
-> > As for the other two functions, I've no special attachment to where they are present
-> > and I'm happy to move them into drivers/pci on the condition that the patchset doesn't
-> > double in size. The reason why I'm weary of touching other architectures in a significant
-> > way is the current lack of engineering bandwidth and way of testing all the architectures.
-> > My low friction approach has been to introduce them in arm64 and then slowly move them
-> > into core (and yes, I know about good intentions and the road to hell.)
-> 
-> I think everyone working on PCI is fed up with having arch-specific implementations
-> of all these, and Bjorn has been very supportive of generic infrastructure in the
-> past. Even just adding a generic infrastructure in a common place that is used
-> only by one architecture in my mind would be a significant improvement.
+Hi Lee,
 
-I agree, it's a reasonable approach and microblaze which is simple and just "copied"
-powerpc originally would be a good one to move over as well.
+I'm happy with whole lot and looks like you are as well.
+The only outstanding delaying element I can see is the lack
+of a device tree ack. That patch has been the same for over
+a month though....
 
-powerpc itself has many historical quirks and while I'm interested in a common
-implementation, it will take me a bit of spare time to get through things and
-figure out what can be done there and what "hooks" might still be necessary.
+Lots more possible cleanup in this driver though for Sebastian
+or anyone else to take on when they are bored!
 
-At this point, it's mostly a matter of:
+Jonathan
 
- - I'm the one who knows the most about the powerpc PCI code as I wrote large
-chunks of it
-
- - I'm very very very busy with some other things at the moment
-
-So don't take my silence on these matters as a lack of interest, I think it's
-definitely all going in the right direction, I just don't have much bandwidth
-to consider the move of powerpc over just yet.
-
-Cheers,
-Ben.
+On 16/03/14 01:43, Sebastian Reichel wrote:
+> Hi,
+>
+> This is PATCHv4 for converting twl4030-madc to the IIO API and
+> adding DT support. The plan is to remove the private twl4030-madc
+> API once all users have been removed or converted to the IIO API.
+> The patchset compiles and has been tested on my Nokia N900.
+>
+> Changes since PATCHv3 [0]:
+>   * Dropped the following patches (applied in iio tree)
+>    - iio: documentation: Add ABI documentation for *_mean_raw
+>    - iio: inkern: add iio_read_channel_average_raw
+>   * Added some more Acked-by from Jonathan Cameron
+>    - one of them on the basis of "Reorder that and I'm happy".
+>   * Changed some minor stuff requested by Jonathan
+>    - reorder cleanup calls in driver's remove function
+>    - convert another comment to kerneldoc
+>
+> Status:
+>   * Only feedback from DT binding maintainers is missing.
+>     side note: The binding & the corresponding binding documentation
+>     patch has not changed since 2014-02-13. So depending on when the
+>     time frame starts the three weeks are over already ;)
+>   * It would be nice to see this patchset in 3.15.
+>
+> [0] https://lkml.org/lkml/2014/3/10/727
+>
+> -- Sebastian
+>
+> Sebastian Reichel (7):
+>    mfd: twl4030-madc: Use managed resources
+>    mfd: twl4030-madc: Add DT support and convert to IIO framework
+>    mfd: twl4030-madc: Cleanup driver
+>    mfd: twl-core: Add twl_i2c_read/write_u16
+>    mfd: twl4030-madc: Use twl_i2c_read/write_u16 for 16 bit registers
+>    Documentation: DT: Document twl4030-madc binding
+>    mfd: twl4030-madc: Move driver to drivers/iio/adc
+>
+>   .../devicetree/bindings/iio/adc/twl4030-madc.txt   |  24 ++
+>   drivers/iio/adc/Kconfig                            |  10 +
+>   drivers/iio/adc/Makefile                           |   1 +
+>   drivers/{mfd => iio/adc}/twl4030-madc.c            | 320 +++++++++++++--------
+>   drivers/mfd/Kconfig                                |  10 -
+>   drivers/mfd/Makefile                               |   1 -
+>   include/linux/i2c/twl.h                            |  12 +
+>   include/linux/i2c/twl4030-madc.h                   |   2 +-
+>   8 files changed, 247 insertions(+), 133 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/iio/adc/twl4030-madc.txt
+>   rename drivers/{mfd => iio/adc}/twl4030-madc.c (74%)
+>
