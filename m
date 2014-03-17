@@ -1,72 +1,230 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 7/8] ASoC: atmel: document clock properties of the wm8904
- driver
-Date: Mon, 17 Mar 2014 15:28:47 +0000
-Message-ID: <20140317152847.GI11706@sirena.org.uk>
-References: <1395049541-28128-1-git-send-email-voice.shen@atmel.com>
- <1395049541-28128-8-git-send-email-voice.shen@atmel.com>
- <20140317115518.GD11706@sirena.org.uk>
- <5326FC20.9020304@gmail.com>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH] ARM: zynq: Add OCM driver
+Date: Mon, 17 Mar 2014 16:35:13 +0100
+Message-ID: <53271631.4090205@monstr.eu>
+References: <299e37ab245da9132808c6d4265a17b9a417bf62.1389022555.git.michal.simek@xilinx.com> <CAOesGMiroyjPbcjfG24_sUqCicCD4M7NF2aD=Xi8NVgagZThuA@mail.gmail.com> <53204C73.5070807@monstr.eu> <20140317044830.GA18269@quad.lixom.net>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="U3s59FfKcByyGl+j"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5326FC20.9020304@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris BREZILLON <b.brezillon.dev@gmail.com>
-Cc: Bo Shen <voice.shen@atmel.com>, nicolas.ferre@atmel.com, Boris BREZILLON <b.brezillon@overkiz.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>
+ protocol="application/pgp-signature";
+ boundary="ucmjQ2B2sGkk5urmBnnkJFgno5v3nhslH"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140317044830.GA18269@quad.lixom.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Michal Simek <michal.simek@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Soren Brinkmann <soren.brinkmann@xilinx.com>, Josh Cartwright <josh.cartwright@ni.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---U3s59FfKcByyGl+j
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--ucmjQ2B2sGkk5urmBnnkJFgno5v3nhslH
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 17, 2014 at 02:44:00PM +0100, Boris BREZILLON wrote:
-> Le 17/03/2014 12:55, Mark Brown a =E9crit :
-> >On Mon, Mar 17, 2014 at 05:45:40PM +0800, Bo Shen wrote:
+On 03/17/2014 05:48 AM, Olof Johansson wrote:
+> On Wed, Mar 12, 2014 at 01:00:51PM +0100, Michal Simek wrote:
+>> Hi Olof,
+>>
+>>>> diff --git a/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-oc=
+m.txt b/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocm.txt
+>>>> new file mode 100644
+>>>> index 0000000..64cb5e8
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocm.txt
+>>>> @@ -0,0 +1,17 @@
+>>>> +Device tree bindings for Zynq's OCM
+>>>> +
+>>>> +The OCM is divided to 4 64kB segments which can be separately confi=
+gured
+>>>> +to low or high location. Location is controlled via SLCR.
+>>>> +
+>>>> +Required properties:
+>>>> + compatible: Compatibility string. Must be "xlnx,zynq-ocm-1.0".
+>>>> + reg: Specify the base and size of the OCM registers in the memory =
+map.
+>>>> +      E.g.: reg =3D <0xf800c000 0x1000>;
+>>>> +
+>>>> +Example:
+>>>> +ocmc: ocmc@f800c000 {
+>>>> +       compatible =3D  "xlnx,zynq-ocm-1.0";
+>>>> +       interrupt-parent =3D <&intc>;
+>>>> +       interrupts =3D <0 3 4>;
+>>>> +       reg =3D <0xf800c000 0x1000>;
+>>>> +} ;
+>>>> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zy=
+nq-7000.dtsi
+>>>> index 1d942e2..4929be5 100644
+>>>> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+>>>> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+>>>> @@ -66,6 +66,13 @@
+>>>>                         cache-level =3D <2>;
+>>>>                 };
+>>>>
+>>>> +               ocmc: ocmc@f800c000 {
+>>>> +                       compatible =3D "xlnx,zynq-ocm-1.0";
+>>>> +                       interrupt-parent =3D <&intc>;
+>>>> +                       interrupts =3D <0 3 4>;
+>>>> +                       reg =3D <0xf800c000 0x1000>;
+>>>> +               } ;
+>>>> +
+>>>>                 uart0: uart@e0000000 {
+>>>>                         compatible =3D "xlnx,xuartps";
+>>>>                         status =3D "disabled";
+>>>> diff --git a/arch/arm/mach-zynq/Kconfig b/arch/arm/mach-zynq/Kconfig=
 
-> >If this is a clock for the CODEC it should be documented as part of the
-> >binding for the CODEC and connected to the CODEC in the device tree
-> >rather than being part of a machine driver binding.
+>>>> index 323e505..f3e6ce4 100644
+>>>> --- a/arch/arm/mach-zynq/Kconfig
+>>>> +++ b/arch/arm/mach-zynq/Kconfig
+>>>> @@ -15,5 +15,6 @@ config ARCH_ZYNQ
+>>>>         select CADENCE_TTC_TIMER
+>>>>         select ARM_GLOBAL_TIMER
+>>>>         select MFD_SYSCON
+>>>> +       select GENERIC_ALLOCATOR
+>>>>         help
+>>>>           Support for Xilinx Zynq ARM Cortex A9 Platform
+>>>> diff --git a/arch/arm/mach-zynq/Makefile b/arch/arm/mach-zynq/Makefi=
+le
+>>>> index 1b25d92..626f64b 100644
+>>>> --- a/arch/arm/mach-zynq/Makefile
+>>>> +++ b/arch/arm/mach-zynq/Makefile
+>>>> @@ -3,7 +3,7 @@
+>>>>  #
+>>>>
+>>>>  # Common support
+>>>> -obj-y                          :=3D common.o slcr.o
+>>>> +obj-y                          :=3D common.o slcr.o zynq_ocm.o
+>>>>  CFLAGS_REMOVE_hotplug.o                =3D-march=3Darmv6k
+>>>>  CFLAGS_hotplug.o               =3D-Wa,-march=3Darmv7-a -mcpu=3Dcort=
+ex-a9
+>>>>  obj-$(CONFIG_HOTPLUG_CPU)      +=3D hotplug.o
+>>>> diff --git a/arch/arm/mach-zynq/common.h b/arch/arm/mach-zynq/common=
+=2Eh
+>>>> index b097844..953f6a1 100644
+>>>> --- a/arch/arm/mach-zynq/common.h
+>>>> +++ b/arch/arm/mach-zynq/common.h
+>>>> @@ -24,6 +24,7 @@ extern int zynq_early_slcr_init(void);
+>>>>  extern void zynq_slcr_system_reset(void);
+>>>>  extern void zynq_slcr_cpu_stop(int cpu);
+>>>>  extern void zynq_slcr_cpu_start(int cpu);
+>>>> +extern u32 zynq_slcr_get_ocm_config(void);
+>>>>
+>>>>  #ifdef CONFIG_SMP
+>>>>  extern void secondary_startup(void);
+>>>> diff --git a/arch/arm/mach-zynq/slcr.c b/arch/arm/mach-zynq/slcr.c
+>>>> index c1f1499..9a37ab3 100644
+>>>> --- a/arch/arm/mach-zynq/slcr.c
+>>>> +++ b/arch/arm/mach-zynq/slcr.c
+>>>> @@ -26,6 +26,7 @@
+>>>>  #define SLCR_PS_RST_CTRL_OFFSET                0x200 /* PS Software=
+ Reset Control */
+>>>>  #define SLCR_A9_CPU_RST_CTRL_OFFSET    0x244 /* CPU Software Reset =
+Control */
+>>>>  #define SLCR_REBOOT_STATUS_OFFSET      0x258 /* PS Reboot Status */=
 
-> Tell me if I'm mistaken, but doing this would implies a lot of changes.
-> The current wm8904 driver does not handle clk retrieval and configuration,
-> and I'm afraid that introducing these concepts would break other drivers
-> (those
-> connecting to a wm8904 codec).
+>>>> +#define SLCR_OCM_CFG_OFFSET            0x910 /* OCM Address Mapping=
+ */
+>>>>
+>>>>  #define SLCR_UNLOCK_MAGIC              0xDF0D
+>>>>  #define SLCR_A9_CPU_CLKSTOP            0x10
+>>>> @@ -107,6 +108,20 @@ void zynq_slcr_system_reset(void)
+>>>>  }
+>>>>
+>>>>  /**
+>>>> + * zynq_slcr_get_ocm_config - Get SLCR OCM config
+>>>> + *
+>>>> + * return:     OCM config bits
+>>>> + */
+>>>> +u32 zynq_slcr_get_ocm_config(void)
+>>>> +{
+>>>> +       u32 val;
+>>>> +
+>>>> +       zynq_slcr_read(&val, SLCR_OCM_CFG_OFFSET);
+>>>> +
+>>>> +       return val;
+>>>> +}
+>>>> +
+>>>> +/**
+>>>>   * zynq_slcr_cpu_start - Start cpu
+>>>>   * @cpu:       cpu number
+>>>>   */
+>>>> diff --git a/arch/arm/mach-zynq/zynq_ocm.c b/arch/arm/mach-zynq/zynq=
+_ocm.c
+>>>> new file mode 100644
+>>>> index 0000000..034a65b
+>>>> --- /dev/null
+>>>> +++ b/arch/arm/mach-zynq/zynq_ocm.c
+>>>> @@ -0,0 +1,243 @@
+>>>> +/*
+>>>> + * Copyright (C) 2013 Xilinx
+>>>> + *
+>>>> + * Based on "Generic on-chip SRAM allocation driver"
+>>>
+>>> We're not adding new drivers under arch/arm, so if you need this
+>>> driver then you should either merge it under drivers/ somewhere, or
+>>> look at extending the generic driver in a way that you can reuse it.
+>>
+>> Driver is reusing ideas from this generic driver but
+>> incorporation our changes to will be problematic.
+>>
+>> It is a shame that you didn't review the rest of code below.
+>> The reason why I have added this driver to arch/arm/mach-zynq
+>> was that there is code connection to zynq SMP bootup trampoline
+>> which has to be added at 0x0 when OCM is placed at 0x0.
+>> And this memory can't be used for generic purpose.
+>> If you see any nice way how to it please let me know.
+>=20
+> Rockchip just went through some of the same discussions -- they need to=
 
-Currently the only mainline users of the device are the Atmel drivers.
+> use onchip SRAM for SMP spin-up. You should look at that patchset and
+> see if you can solve it in a similar manner, the needs seem to be quite=
 
-> How about adding CCF support as proposed in this series and think about a
-> cleaner
-> solution for a future release ?
+> similar.
 
-No, DT is an ABI so you can't do that - once something is in DT we're
-stuck supporting it so we can't do quick hacks so easily.
+I found that
+http://www.spinics.net/lists/arm-kernel/msg310761.html
+it is definitely good starting point. Thanks for that.
 
---U3s59FfKcByyGl+j
+The solution which I have in my mind because of autodetection
+via slcr is to build up that node in zynq code from controller
+and support ranges in node just because of not copy that node
+in worst case 4 times.
+
+               sram: sram@0 {
+                       compatible =3D "mmio-sram";
+                       reg =3D <0x0 0x20000 0xfffe0000 0x20000>;
+                       #address-cells =3D <1>;
+                       #size-cells =3D <1>;
+                       ranges;
+
+                       smp-sram@0 {
+                               compatible =3D "xlnx,zynq-smp-sram";
+                               reg =3D <0x0 0x50>;
+                       };
+               };
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--ucmjQ2B2sGkk5urmBnnkJFgno5v3nhslH
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iQIcBAEBAgAGBQJTJxSsAAoJELSic+t+oim9mVsP/2bBtrLwcabPJhC0LRrqF+OY
-shd/AOMYOl4OxnBPEmSQ59RIpTEXA67xzCdUY5qF8EP8bJHA/SWgwPQUyROoDgAW
-gwH6Kejpt7LnEUxJuDcJLnVPEDva+xI0Q4fRc2fyk6u/QuJ0/0nuJDKVdsHaCOqF
-ziIUbmvMx1Romv8FpN2ghKMQ/JL+FMYEeCTIeOzQtc9Xqdrnee912kHLhEu6qDU3
-QQq7EitZk+h85bmLgg7KoNSLWnYy1iNrjU6sfRyCXiJjWSVQIUXFJe/yhS4pUOwS
-HF0rVQWag/OwzeExEIMlrwZHA07Xlm3621RMPxfnWAQntXtA+PQc+0DyXyQIKY4V
-xmM7sdGHo9GqCnL5KDEMCQfRsshU6HRbArOZFVGl1YhxggGUVRdsQ6w7fe7TRM1I
-cIkiDLG5KYxiugQriZUTNoGcun5q4txdu78JHHyfQDk3I9xHSQkjAdy9DPf/xALt
-ZREvC2zDvp16ymLS0isVbymsu3aEy1DxbI5MDyAvkeL4SQzGYtAaFtL/rAAKj9ni
-UEkKex1gDrWXzpIdS+ML0qNKyg5UhT81L6p3Su+OA4S7tW5d2ArEuNh3eAkpglmv
-4kXygma0CNLqpd+uzFmDulueL2u3QzmawhZVQ1QOFN6fkHw+BYD7m3L+oxXdJHGf
-XTrum79Xk7gZVOdAqweY
-=WISg
+iEYEARECAAYFAlMnFjEACgkQykllyylKDCEQRgCcCH0gflDxXH2VxIM8vsWpCqIp
+GSMAoIZtckeapPHf9SbfhFE0grFtMhbV
+=CvCm
 -----END PGP SIGNATURE-----
 
---U3s59FfKcByyGl+j--
+--ucmjQ2B2sGkk5urmBnnkJFgno5v3nhslH--
