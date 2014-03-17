@@ -1,86 +1,64 @@
-From: Byungho An <bh74.an@samsung.com>
-Subject: [PATCH V3 1/8] sxgbe: Add device-tree binding support document
-Date: Mon, 17 Mar 2014 13:43:37 -0700
-Message-ID: <00c001cf4221$96e667f0$c4b337d0$@samsung.com>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 0/9] Watchdog support for Armada 375/38x SoC
+Date: Mon, 17 Mar 2014 17:47:06 -0300
+Message-ID: <20140317204706.GB1118@arch.cereza>
+References: <1394907484-26002-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <532748C2.9030009@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-Content-language: en-us
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: davem@davemloft.net, siva.kallam@samsung.com, vipul.pandya@samsung.com, ks.giri@samsung.com, ilho215.lee@samsung.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <532748C2.9030009-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Siva Reddy <siva.kallam@samsung.com>
+On Mar 17, Sebastian Hesselbarth wrote:
+> On 03/15/2014 07:17 PM, Ezequiel Garcia wrote:
+> >Fourth round of the patchset adding support for watchdog on Armada 3=
+75 and
+> >Armada 38x SoCs.
+> >
+> >The new Armada 375/385 SoCs have two registers for the watchdog RSTO=
+UT:
+> >
+> >  1. It has a dedicated register (similar to the one in A370/XP)
+> >  2. Also has a bit in a shared RSTOUT register.
+> >
+> >Therefore, in order to support this two-folded RSTOUT, we extend the=
+ 'reg'
+> >property in the watchdog devicetree and require a new pair of cells =
+to specify
+> >the shared RSTOUT.
+> >
+> >On the driver side, we need to implement per-SoC stop() and enabled(=
+)
+> >functions. Such somewhat complex infrastructure is needed to ensure =
+the driver
+> >performs proper reset of the watchdog timer, by masking and disablin=
+g the
+> >RSTOUT before the interrupt is enabled.
+> >
+> >I've pushed a branch so people can test this easily, e.g. ensuring
+> >no regressions on Dove, Kirkwood and A370/XP:
+>=20
+> Ezequiel,
+>=20
+> Although, I just saw below that you actually already tested on Dove,
+> you can add my
+>=20
+> Tested-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>=20
 
-This patch adds binding document for SXGBE ethernet driver via device-tree.
-
-Signed-off-by: Siva Reddy Kallam <siva.kallam@samsung.com>
-Signed-off-by: Byungho An <bh74.an@samsung.com>
----
- .../devicetree/bindings/net/samsung-sxgbe.txt      |   53 ++++++++++++++++++++
- 1 file changed, 53 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/samsung-sxgbe.txt
-
-diff --git a/Documentation/devicetree/bindings/net/samsung-sxgbe.txt b/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
-new file mode 100644
-index 0000000..ca27947
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
-@@ -0,0 +1,53 @@
-+* Samsung 10G Ethernet driver (SXGBE)
-+
-+Required properties:
-+- compatible: Should be "samsung,sxgbe-v2.0a"
-+- reg: Address and length of the register set for the device
-+- interrupt-parent: Should be the phandle for the interrupt controller
-+  that services interrupts for this device
-+- interrupts: Should contain the SXGBE interrupts
-+  These interrupts are ordered by fixed and follows variable
-+  trasmit DMA interrupts, receive DMA interrupts and lpi interrupt.
-+  index 0 - this is fixed common interrupt of SXGBE and it is always
-+  available.
-+  index 1 to 25 - 8 variable trasmit interrupts, variable 16 receive interrupts
-+  and 1 optional lpi interrupt.
-+- phy-mode: String, operation mode of the PHY interface.
-+  Supported values are: "xaui", "gmii".
-+- samsung,pbl: Integer, Programmable Burst Length.
-+  Supported values are 1, 2, 4, 8, 16, or 32.
-+- samsung,fixed-burst: Boolean, Program the DMA to use the fixed burst mode
-+- samsung,burst-map: Integer, Program the possible bursts supported by sxgbe
-+  This is an interger and represents allowable DMA bursts when fixed burst.
-+  Allowable range is 0x00-0x3F. This field is valid only when fixed burst is
-+  enabled, otherwise ignored.
-+- samsung,adv-addr-mode: Boolean, Program the DMA to use Enhanced address mode.
-+- samsung,force_thresh_dma_mode: Boolean, Force DMA to use the threshold mode
-+  for both tx and rx
-+- samsung,force_sf_dma_mode: Boolean, Force DMA to use the Store and Forward
-+  mode for both tx and rx. This flag is ignored if force_thresh_dma_mode is set.
-+- samsung,phy-addr: Integer, Address of the PHY attached with SXGBE.
-+
-+Optional properties:
-+- mac-address: 6 bytes, mac address
-+
-+Example:
-+
-+	aliases {
-+		ethernet0 = <&sxgbe0>;
-+	};
-+
-+	sxgbe0: ethernet@1a040000 {
-+		compatible = "samsung,sxgbe-v2.0a";
-+		reg = <0 0x1a040000 0 0x10000>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 209 4>, <0 185 4>, <0 186 4>, <0 187 4>,
-+			     <0 188 4>, <0 189 4>, <0 190 4>, <0 191 4>,
-+			     <0 192 4>, <0 193 4>, <0 194 4>, <0 195 4>,
-+			     <0 196 4>, <0 197 4>, <0 198 4>, <0 199 4>,
-+			     <0 200 4>, <0 201 4>, <0 202 4>, <0 203 4>,
-+			     <0 204 4>, <0 205 4>, <0 206 4>, <0 207 4>,
-+			     <0 208 4>, <0 210 4>;
-+		mac-address = [000000000000]; /* Filled in by U-Boot */
-+		phy-mode = "xaui";
-+	};
--- 
-1.7.10.4
+Great, thanks!
+--=20
+Ezequiel Garc=EDa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
