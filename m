@@ -1,132 +1,64 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCHv2 4/8] devfreq: exynos4: Fix bug of resource leak and code
- clean on probe()
-Date: Mon, 17 Mar 2014 14:05:44 +0900
-Message-ID: <532682A8.2030300@samsung.com>
-References: <1394698649-20996-1-git-send-email-cw00.choi@samsung.com>
- <1394698649-20996-5-git-send-email-cw00.choi@samsung.com>
- <53234132.8080202@samsung.com>
+From: "B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH 2/2] spi/fsl-lib: Get the SPI controller bus number from
+ DTS
+Date: Mon, 17 Mar 2014 05:11:11 +0000
+Message-ID: <c4b28b01b2f544ca9d264eaee2542257@DM2PR03MB301.namprd03.prod.outlook.com>
+References: <1394789757-40732-1-git-send-email-B48286@freescale.com>
+ <1394789757-40732-2-git-send-email-B48286@freescale.com>
+ <20140314191922.GA366@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <53234132.8080202@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rafael.j.wysocki@intel.com, nm@ti.com, b.zolnierkie@samsaung.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140314191922.GA366-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Language: en-US
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Mark Brown' <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
 
-On 03/15/2014 02:49 AM, Tomasz Figa wrote:
-> Hi Chanwoo,
+
+> -----Original Message-----
+> From: Mark Brown [mailto:broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> Sent: Saturday, March 15, 2014 3:19 AM
+> To: Hou Zhiqiang-B48286
+> Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org; pawel.moll-5wv7dgnIgG8@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
+> ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org; galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org;
+> grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org; Wood Scott-B07421; Hu Mingkai-B21284
+> Subject: Re: [PATCH 2/2] spi/fsl-lib: Get the SPI controller bus number
+> from DTS
 > 
-> On 13.03.2014 09:17, Chanwoo Choi wrote:
->> This patch fix bug about resource leak when happening probe fail and code clean
->> to add debug message.
->>
->> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->> ---
->>   drivers/devfreq/exynos/exynos4_bus.c | 32 ++++++++++++++++++++++++++------
->>   1 file changed, 26 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/devfreq/exynos/exynos4_bus.c b/drivers/devfreq/exynos/exynos4_bus.c
->> index a2a3a47..152a3e9 100644
->> --- a/drivers/devfreq/exynos/exynos4_bus.c
->> +++ b/drivers/devfreq/exynos/exynos4_bus.c
->> @@ -1152,8 +1152,11 @@ static int exynos4_busfreq_probe(struct platform_device *pdev)
->>           dev_err(dev, "Cannot determine the device id %d\n", data->type);
->>           err = -EINVAL;
->>       }
->> -    if (err)
->> +    if (err) {
->> +        dev_err(dev, "Cannot initialize busfreq table %d\n",
->> +                 data->type);
->>           return err;
->> +    }
->>
->>       rcu_read_lock();
->>       opp = dev_pm_opp_find_freq_floor(dev,
->> @@ -1176,7 +1179,7 @@ static int exynos4_busfreq_probe(struct platform_device *pdev)
->>       if (IS_ERR(data->devfreq)) {
->>           dev_err(dev, "Failed to add devfreq device\n");
->>           err = PTR_ERR(data->devfreq);
->> -        goto err_opp;
->> +        goto err_devfreq;
->>       }
->>
->>       /*
->> @@ -1185,18 +1188,35 @@ static int exynos4_busfreq_probe(struct platform_device *pdev)
->>        */
->>       busfreq_mon_reset(data);
->>
->> -    devfreq_register_opp_notifier(dev, data->devfreq);
->> +    /* Register opp_notifier for Exynos4 busfreq */
->> +    err = devfreq_register_opp_notifier(dev, data->devfreq);
->> +    if (err < 0) {
->> +        dev_err(dev, "Failed to register opp notifier\n");
->> +        goto err_notifier_opp;
->> +    }
->>
->> +    /* Register pm_notifier for Exynos4 busfreq */
->>       err = register_pm_notifier(&data->pm_notifier);
->>       if (err) {
->>           dev_err(dev, "Failed to setup pm notifier\n");
->> -        devfreq_remove_device(data->devfreq);
->> -        return err;
->> +        goto err_notifier_pm;
->>       }
->>
->>       return 0;
->>
->> -err_opp:
->> +err_notifier_pm:
->> +    devfreq_unregister_opp_notifier(dev, data->devfreq);
->> +err_notifier_opp:
->> +    /*
->> +     * The devfreq_remove_device() would execute finally devfreq->profile
->> +     * ->exit(). To avoid duplicate resource free operation, return directly
->> +     * before executing resource free below 'err_devfreq' goto statement.
->> +     */
+> On Fri, Mar 14, 2014 at 05:35:57PM +0800, Hou Zhiqiang wrote:
+> > Get the spi_master's bus_num from DTS to make the spi_master's name
+> > static. So "mtdparts=spi.bus_num.chip_select:..." in cmdline can be
+> > used to asign mtd partions of spi flash.
 > 
-> I'm not quite sure about this. I believe that in this case devfreq->profile->exit() would be exynos4_bus_exit() and all it does is devfreq_unregister_opp_notifier(dev, data->devfreq), so all remaining resources (regulators, clocks, etc.) would get leaked.
+> If we are going to do this it shouldn't be device specific (it should be
+> done in the framework since nothing is specific to the controller there)
+> but I'm not convinced that we should be doing it - this is all very Linux
+> specific.
 
-This patch execute following sequence to probe exynos4_busfreq.c:
-
-1. Parse dt node to get resource(regulator/clock/memory address).
-2. Enable regulator/clock and map memory.
-3. Add devfreq device using devfreq_add_device().
-   The devfreq_add_device() return devfreq instance(data->devfreq).
-4. Register opp_notifier using devfreq instance(data->devfreq) which is created in sequence #3.
-
-Case 1,
-If an error happens in sequence #3 for registering devfreq_add_device(),
-
-this case can't execute devfreq->profile->exit() to free resource
-because this case has failed to register devfreq->profile to devfreq_list.
-
-So, must goto 'err_devfreq' statement to free resource(regulator/clock/memory).
-
-
-Case 2,
-If an error happens in sequence #4 for registering opp_notifier,
-
-In contrast
-this case can execute devfreq->profile->exit() to free resource.
-But, After executed devfreq->profile->exit(),
-should not execute 'err_devfreq' statement to free resource.
-In case, will operate twice of resource.
-
-If my explanation is wrong, please reply your comment.
+This patch just assign a bus number to the controller. It is driver's 
+responsibility to distribute a bus number to spi_master and the definition
+of bus_num is used to distinguish controllers. So, it is specific for the
+controller and doesn't affect the framework. 
 
 > 
-> I believe the correct thing to do would be to remove the .exit() callback from exynos4_devfreq_profile struct and handle all the clean-up here in error path.
-> 
+> The DT already has support for specifying flash layouts, can't those be
+> used (for example via chosen if they're not fixed for the board)?  Or if
+> it's just picking the correct filesystem then UUIDs and labels are the
+> standard way to do things.
 
-Best Regards,
-Chanwoo Choi
+The DT specifying flash layouts is ok. There is another way to make the
+flash layouts using command line, but it is not safe because of the dynamic
+bus_num. It is not the reason that the way of DT is supported flash layouts,
+to live the other way unsafe, right?
 
-
-
-
-
+Thanks,
+Zhiqiang
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
