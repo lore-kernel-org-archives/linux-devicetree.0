@@ -1,64 +1,137 @@
-From: "B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH 2/2] spi/fsl-lib: Get the SPI controller bus number from
- DTS
-Date: Mon, 17 Mar 2014 05:11:11 +0000
-Message-ID: <c4b28b01b2f544ca9d264eaee2542257@DM2PR03MB301.namprd03.prod.outlook.com>
-References: <1394789757-40732-1-git-send-email-B48286@freescale.com>
- <1394789757-40732-2-git-send-email-B48286@freescale.com>
- <20140314191922.GA366@sirena.org.uk>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCHv2 8/8] devfreq: exynos4: Add busfreq driver for
+ exynos4210/exynos4x12
+Date: Mon, 17 Mar 2014 14:19:28 +0900
+Message-ID: <532685E0.6040405@samsung.com>
+References: <1394698649-20996-1-git-send-email-cw00.choi@samsung.com>
+ <1394698649-20996-9-git-send-email-cw00.choi@samsung.com>
+ <20140313175308.GE25870@e106331-lin.cambridge.arm.com>
+ <5322AC5D.9070200@samsung.com>
+ <20140314103552.GK25870@e106331-lin.cambridge.arm.com>
+ <5322E04D.2060801@samsung.com> <53233DE7.2030902@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140314191922.GA366-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Content-Language: en-US
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Mark Brown' <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <53233DE7.2030902@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>, "nm@ti.com" <nm@ti.com>, "b.zolnierkie@samsaung.com" <b.zolnierkie@samsaung.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Tomasz,
 
-
-> -----Original Message-----
-> From: Mark Brown [mailto:broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> Sent: Saturday, March 15, 2014 3:19 AM
-> To: Hou Zhiqiang-B48286
-> Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org; pawel.moll-5wv7dgnIgG8@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
-> ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org; galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org;
-> grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org; Wood Scott-B07421; Hu Mingkai-B21284
-> Subject: Re: [PATCH 2/2] spi/fsl-lib: Get the SPI controller bus number
-> from DTS
+On 03/15/2014 02:35 AM, Tomasz Figa wrote:
+> Hi Chanwoo, Mark,
 > 
-> On Fri, Mar 14, 2014 at 05:35:57PM +0800, Hou Zhiqiang wrote:
-> > Get the spi_master's bus_num from DTS to make the spi_master's name
-> > static. So "mtdparts=spi.bus_num.chip_select:..." in cmdline can be
-> > used to asign mtd partions of spi flash.
+> On 14.03.2014 11:56, Chanwoo Choi wrote:
+>> Hi Mark,
+>>
+>> On 03/14/2014 07:35 PM, Mark Rutland wrote:
+>>> On Fri, Mar 14, 2014 at 07:14:37AM +0000, Chanwoo Choi wrote:
+>>>> Hi Mark,
+>>>>
+>>>> On 03/14/2014 02:53 AM, Mark Rutland wrote:
+>>>>> On Thu, Mar 13, 2014 at 08:17:29AM +0000, Chanwoo Choi wrote:
+>>>>>> This patch add busfreq driver for Exynos4210/Exynos4x12 memory interface
+>>>>>> and bus to support DVFS(Dynamic Voltage Frequency Scaling) according to PPMU
+>>>>>> counters. PPMU (Performance Profiling Monitorings Units) of Exynos4 SoC provides
+>>>>>> PPMU counters for DMC(Dynamic Memory Controller) to check memory bus utilization
+>>>>>> and then busfreq driver adjusts dynamically the operating frequency/voltage
+>>>>>> by using DEVFREQ Subsystem.
+>>>>>>
+>>>>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>>>>> ---
+>>>>>>   .../devicetree/bindings/devfreq/exynos4_bus.txt    | 49 ++++++++++++++++++++++
+>>>>>>   1 file changed, 49 insertions(+)
+>>>>>>   create mode 100644 Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt b/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
+>>>>>> new file mode 100644
+>>>>>> index 0000000..2a83fcc
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
+>>>>>> @@ -0,0 +1,49 @@
+>>>>>> +
+>>>>>> +Exynos4210/4x12 busfreq driver
+>>>>>> +-----------------------------
+>>>>>> +
+>>>>>> +Exynos4210/4x12 Soc busfreq driver with devfreq for Memory bus frequency/voltage
+>>>>>> +scaling according to PPMU counters of memory controllers
+>>>>>> +
+>>>>>> +Required properties:
+>>>>>> +- compatible    : should contain Exynos4 SoC type as follwoing:
+>>>>>> +          - "samsung,exynos4x12-busfreq" for Exynos4x12
+>>>>>> +          - "samsung,exynos4210-busfreq" for Exynos4210
+>>>>>
+>>>>> Is there a device called "busfreq"? What device does this binding
+>>>>> describe?
+>>>>
+>>>> I'll add detailed description of busfreq as following:
+>>>>
+>>>> "busfreq(bus frequendcy)" driver means that busfreq driver control dynamically
+>>>> memory bus frequency/voltage by checking memory bus utilization to optimize
+>>>> power-consumption. When checking memeory bus utilization, exynos4_busfreq driver
+>>>> would use PPMU(Performance Profiling Monitoring Units).
+>>>
+>>> This still sounds like a description of the _driver_, not the _device_.
+>>> The binding should describe the hardware, now the high level abstraction
+>>> that software is going to build atop of it.
+>>>
+>>> It sounds like this is a binding for the DMC PPMU?
+>>>
+>>> Is the PPMU a component of the DMC, or is it bolted on the side?
+>>
+>> PPMU(Performance Profiling Monitoring Unit) is to profile performance event of
+>> various IP on Exynos4. Each PPMU provide perforamnce event for each IP.
+>> We can check various PPMU as following:
+>>
+>> PPMU_3D
+>> PPMU_ACP
+>> PPMU_CAMIF
+>> PPMU_CPU
+>> PPMU_DMC0
+>> PPMU_DMC1
+>> PPMU_FSYS
+>> PPMU_IMAGE
+>> PPMU_LCD0
+>> PPMU_LCD1
+>> PPMU_MFC_L
+>> PPMU_MFC_R
+>> PPMU_TV
+>> PPMU_LEFT_BUS
+>> PPMU_RIGHT_BUS
+>>
+>> DMC (Dynamic Memory Controller) control the operation of DRAM in Exynos4 SoC.
+>> If we need to get memory bust utilization of DMC, we can get memory bus utilization
+>> from PPMU_DMC0/PPMU_DMC1.
+>>
+>> So, Exynos4's busfreq used two(PPMU_DMC0/PPMU_DMC1) among upper various PPMU list.
 > 
-> If we are going to do this it shouldn't be device specific (it should be
-> done in the framework since nothing is specific to the controller there)
-> but I'm not convinced that we should be doing it - this is all very Linux
-> specific.
+> Well, PPMUs and DMCs are separate hardware blocks found inside Exynos SoCs. Busfreq/devfreq is just a Linux-specific abstraction responsible for collecting data using PPMUs and controlling frequencies and voltages of appropriate power planes, vdd_int responsible for powering DMC0 and DMC1 blocks in this case.
+> 
 
-This patch just assign a bus number to the controller. It is driver's 
-responsibility to distribute a bus number to spi_master and the definition
-of bus_num is used to distinguish controllers. So, it is specific for the
-controller and doesn't affect the framework. 
+I knew already.
+
+> I'm afraid that the binding you're proposing is unfortunately incorrect, because it represents the software abstraction, not the real hardware.
+
+What is exactly incorrect part of this patch?
 
 > 
-> The DT already has support for specifying flash layouts, can't those be
-> used (for example via chosen if they're not fixed for the board)?  Or if
-> it's just picking the correct filesystem then UUIDs and labels are the
-> standard way to do things.
+> Instead, this should be separated into several independent bindings:
+> 
+>  - PPMU bindings to list all the PPMU instances present in the SoC and resources they need,
+> 
+>  - power plane bindings, which define a power plane in which multiple IP blocks might reside, can be monitored by one or more PPMU units and frequency and voltage of which can be configured according to determined performance level. Needed resources will be clocks and regulators to scale and probably also operating points.
+> 
+> Then, exynos-busfreq driver should bind to such power planes, parse necessary data from DT (list of PPMUs and IP blocks, clocks, regulators and operating points) and register a devfreq entity.
 
-The DT specifying flash layouts is ok. There is another way to make the
-flash layouts using command line, but it is not safe because of the dynamic
-bus_num. It is not the reason that the way of DT is supported flash layouts,
-to live the other way unsafe, right?
+What is 'power plane'? I don't know 'power plane'.
+If you suggest 'power plane' concept and then merge this concept to mainline,
+After merged 'power plane' concept, I will apply 'power plane' concept to Exynos4's busfreq driver.
 
-Thanks,
-Zhiqiang
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I prefer to handle 'power plane' concept on other patchset for Exynos4's busfreq driver.
+
+Best Regards,
+Chanwoo Choi
+
