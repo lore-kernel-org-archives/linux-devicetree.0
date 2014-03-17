@@ -1,76 +1,78 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: exynos: added mailbox node
-Date: Mon, 17 Mar 2014 20:28:07 +0530
-Message-ID: <CABb+yY0XXMQaEuDV0FeURjOijYEUKyqU9Dr6XTDRcxc1qaBu9g@mail.gmail.com>
-References: <1395057839-23871-1-git-send-email-ks.giri@samsung.com>
-	<1395057839-23871-3-git-send-email-ks.giri@samsung.com>
-	<5346848.pBsh8NcQja@wuerfel>
+From: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
+Subject: Re: [PATCH v2] dt: platform driver: Fill the resources before probe
+ and defer if needed
+Date: Mon, 17 Mar 2014 16:20:03 +0100
+Message-ID: <CACh+v5M+0+C2JJwLqcp6erWa81kt=j1HucHiE52ufj1SO9F75w@mail.gmail.com>
+References: <20140220153042.DF053C4050F@trevor.secretlab.ca>
+	<CACh+v5P=tcc-h_9r7Btwyu+jWjwH2ocmW4VCgDYqY7VMWsHuOA@mail.gmail.com>
+	<20140317142443.A2447C40A85@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5346848.pBsh8NcQja@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Girish K S <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Ilho Lee <ilho215.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140317142443.A2447C40A85@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Jean-Jacques Hiblot <jjhiblot@traphandler.com>, devicetree <devicetree@vger.kernel.org>, gregkh <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, robh+dt <robh+dt@kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 17, 2014 at 5:45 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Monday 17 March 2014 17:33:59 Girish K S wrote:
->> +Samsung Mailbox Driver
->> +
->> +Required properties:
->> +- compatible:          Should be one of the following,
->> +                           "samsung,gh7-mailbox" for
->> +                               Samsung GH7 SoC series
->> +                           "samsung,exynos-mailbox" for
->> +                               exynosx SoC series
->> +- reg:                 Contains the mailbox register address range (base address
->> +                       and length)
->> +- interrupts:          Contains the interrupt information for the mailbox
->> +                       device.
->> +- samsung,mbox-names:  Array of the names of the mailboxes
+2014-03-17 15:24 GMT+01:00 Grant Likely <grant.likely@secretlab.ca>:
+> On Mon, 17 Mar 2014 12:07:37 +0100, Jean-Jacques Hiblot <jjhiblot@traphandler.com> wrote:
+>> Hi Grant,
 >>
+>> Sorry for the delay, I was having nice vacations.
+>>
+>> 2014-03-08 8:37 GMT+01:00 Grant Likely <grant.likely@linaro.org>:
+>> > On Fri, 21 Feb 2014 14:18:40 +0100, Jean-Jacques Hiblot <jjhiblot@traphandler.com> wrote:
+>> >> The goal of this patch is to allow drivers to be probed even if at the time of
+>> >> the DT parsing some of their ressources are not available yet.
+>> >
+>> > Hi Jean-Jacques
+>> >
+>> > [...]
+>> >> +int of_platform_device_prepare(struct platform_device *dev)
+>> >> +{
+>> >> +     struct device_node *np;
+>> >> +     int i, irq_index;
+>> >> +     struct resource *res;
+>> >> +
+>> >> +     /*
+>> >> +      * This function applies only devices described in the DT.
+>> >> +      * Other platform devices have their ressources already populated.
+>> >> +      */
+>> >> +     np = dev->dev.of_node;
+>> >> +     if (!np)
+>> >> +             return 0;
+>> >
+>> > I believe we already talked about the above test. This function must
+>> > only process devices created by of_platform_populate(). Merely checking
+>> > the of_node pointer is not a sufficient test because there are other
+>> > paths in the kernel for creating platform_devices that might get a node
+>> > pointer attached to it.
+>> Yes we talked about this, but only to move it into of_platform_device_prepare().
+>> Is there an existing way to know for sure that the device has been
+>> created by of_platform_populate() ? I could not find one.
 >
-> I think we should not allow new mailbox drivers that don't conform to
-> the framework that is currently under discussion. In particular, this
-> means don't do a "samsung,mbox-names" property. The current consensus
-> seems to be to have a #mbox-cells" property that allows to pass extra
-> parameters from the client driver, and uses an "mboxes" property
-> to reference the mailbox provided.
+> No there isn't. That information is used at population time and then
+> discarded. We'd need to add a flag or registry to mark those devices.
+OK. As I see it, this could be done either by adding a new flag to
+struct device or by maintaining a private list of "of created" devices
+in of/platform.c.
+I favor modifying struct device as it's is by far the simplest but
+it's also more intrusive. Any advice ?
+
+Jean-Jacques
+
 >
-> It would be good if you follow up for the subsystem discussion and
-> ensure it gets merged in time, and supports all the use cases you are
-> interested in. The interface is not entirely nailed down yet, so
-> it's a good time to contribute. However, I can already promise that
-> it won't use matching by strings.
+> g.
 >
-I was just about to submit next revision of framework that this
-Samsung driver conforms to. Now I think I need some expert opinion ...
-(sorry if following is repetition)
-
-  As Kumar Gala pointed out in the other thread, the mailbox/ipc chain
-is going to be _very_ platform specific so much so that one rethinks
-if a common api is even warranted : because the client driver will be
-different even if just the remote api(which is going to be
-proprietary) changes, keeping everything else same. For example, a
-client driver for Highbank is highly unlikely to be reusable on
-Exynos, even if both used the same mailbox controller. By my limited
-foresight, mailbox assignment via DT doesn't bring us much benefit but
-only ritual code.
-
-  Perhaps the mailbox controller driver should name its links as it
-wants. By how the remote works with the mailbox links, the client
-driver asks for a specific mailbox link (which maybe a hardcoded
-string in the driver or be gotten alongside other data via client's
-DT) ?
-
-  IOW we can't have a generic API/DT-bindings that could get us
-reusable client drivers. But only common framework/code that would
-otherwise be duplicated by every platform.
-
-Thanks
-Jassi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>> Jean-Jacques
+>> >
+>> > g.
+>> >
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
