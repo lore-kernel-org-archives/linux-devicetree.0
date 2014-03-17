@@ -1,47 +1,39 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 7/8] ASoC: atmel: document clock properties of the
- wm8904 driver
-Date: Mon, 17 Mar 2014 10:02:19 +0000
-Message-ID: <20140317100219.GB8070@e106331-lin.cambridge.arm.com>
+From: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 2/8] ARM: at91: sama5d3: disable sound by default
+Date: Mon, 17 Mar 2014 17:45:35 +0800
+Message-ID: <1395049541-28128-3-git-send-email-voice.shen@atmel.com>
 References: <1395049541-28128-1-git-send-email-voice.shen@atmel.com>
- <1395049541-28128-8-git-send-email-voice.shen@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1395049541-28128-8-git-send-email-voice.shen@atmel.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: Mark Brown <broonie@kernel.org>, "nicolas.ferre@atmel.com" <nicolas.ferre@atmel.com>, Boris BREZILLON <b.brezillon@overkiz.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Mark Brown <broonie@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1395049541-28128-1-git-send-email-voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
+Cc: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 17, 2014 at 09:45:40AM +0000, Bo Shen wrote:
-> From: Boris BREZILLON <b.brezillon@overkiz.com>
-> 
-> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
-> Signed-off-by: Bo Shen <voice.shen@atmel.com>
-> ---
-> 
->  Documentation/devicetree/bindings/sound/atmel-wm8904.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/atmel-wm8904.txt b/Documentation/devicetree/bindings/sound/atmel-wm8904.txt
-> index 8bbe50c..aca341c 100644
-> --- a/Documentation/devicetree/bindings/sound/atmel-wm8904.txt
-> +++ b/Documentation/devicetree/bindings/sound/atmel-wm8904.txt
-> @@ -3,6 +3,8 @@ Atmel ASoC driver with wm8904 audio codec complex
->  Required properties:
->    - compatible: "atmel,asoc-wm8904"
->    - atmel,model: The user-visible name of this sound complex.
-> +  - clocks: A list of clocks needed by the wm8904 chip.
-> +  - clock-output-names: Driver related clock names. Shall contain "pck0".
+Make the sound device in disabled status by default
 
-The word "driver"  doesn't need to appear in biding documents, and this
-fails to describe what it sets out to. How about the following:
+Signed-off-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+---
 
-- clocks: a list of phandle + clock-specifier pairs, one for each entry
-  in clock-names.
-- clock-names: Should contain "pck0"
+ arch/arm/boot/dts/sama5d3xmb.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks,
-Mark.
+diff --git a/arch/arm/boot/dts/sama5d3xmb.dtsi b/arch/arm/boot/dts/sama5d3xmb.dtsi
+index dba739b..2938605 100644
+--- a/arch/arm/boot/dts/sama5d3xmb.dtsi
++++ b/arch/arm/boot/dts/sama5d3xmb.dtsi
+@@ -170,5 +170,7 @@
+ 
+ 		atmel,ssc-controller = <&ssc0>;
+ 		atmel,audio-codec = <&wm8904>;
++
++		status = "disabled";
+ 	};
+ };
+-- 
+1.8.5.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
