@@ -1,58 +1,86 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC] spi: Using Trigger number to transmit/receive data
-Date: Mon, 17 Mar 2014 20:32:25 +0000
-Message-ID: <20140317203225.GZ11706@sirena.org.uk>
-References: <1394699364-5669-1-git-send-email-cm-hiep@jinso.co.jp>
- <1394699364-5669-2-git-send-email-cm-hiep@jinso.co.jp>
- <CAMuHMdUpm_4f7LynObRA+NDn4vqeUc0a2XZW-E=4LKL_Ro3XZw@mail.gmail.com>
- <53264BA4.3000401@jinso.co.jp>
- <CAMuHMdWP-tNCtnwP6=XZ1BNacWretVYjrpbT3R+KTEO=047+Nw@mail.gmail.com>
- <5326E424.9040709@jinso.co.jp>
- <CAMuHMdWbxCDGBsBo-QfFheVQFCvhWaTan2yejqSsZByrmsmjCQ@mail.gmail.com>
+From: Byungho An <bh74.an@samsung.com>
+Subject: [PATCH V3 1/8] sxgbe: Add device-tree binding support document
+Date: Mon, 17 Mar 2014 13:43:37 -0700
+Message-ID: <00c001cf4221$96e667f0$c4b337d0$@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="nktOf83SvqltY3iw"
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWbxCDGBsBo-QfFheVQFCvhWaTan2yejqSsZByrmsmjCQ@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Cao Minh Hiep <cm-hiep@jinso.co.jp>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Geert Uytterhoeven <geert+renesas@linux-m68k.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+Content-language: en-us
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: davem@davemloft.net, siva.kallam@samsung.com, vipul.pandya@samsung.com, ks.giri@samsung.com, ilho215.lee@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+From: Siva Reddy <siva.kallam@samsung.com>
 
---nktOf83SvqltY3iw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This patch adds binding document for SXGBE ethernet driver via device-tree.
 
-On Mon, Mar 17, 2014 at 08:48:43PM +0100, Geert Uytterhoeven wrote:
+Signed-off-by: Siva Reddy Kallam <siva.kallam@samsung.com>
+Signed-off-by: Byungho An <bh74.an@samsung.com>
+---
+ .../devicetree/bindings/net/samsung-sxgbe.txt      |   53 ++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/samsung-sxgbe.txt
 
-> I gave your patch a try on a v3.14-rc5 kernel on r8a7791/Koelsch,
-> and it increased Single SPI read transfer speed from ca. 1 Mbps to 11 Mbps.
-> So I'm looking forward to an updated version.
-
-Nice!
-
---nktOf83SvqltY3iw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTJ1vWAAoJELSic+t+oim94I8QAII4J0SNej94Tvn2b1RJhlwZ
-2mmb6VPl6x8yJotMxTp8RGhVFVIbvVCgvJ2kDbKMuCI6TKfmV6TzBiSK/kxWgDSa
-ZFFYJT3yV3AL/XSsc3+3UedJLq1FNDKxedcv/Be3cCo4ywHAnuz0rbHhCKDorpqA
-FHY2FtsgS51m3XvX7wHr3qUk/S65ENq6H5vL9LN+HyO2jF2g1dhrusRmP5OJ/OL2
-1krIY5nV1sZzrTRiFzGjQCrda1eoU3MCzXdGenjM3zvD73b9bH7qsjtYkdbMGNCs
-4T5ogtY92VNdjSc8dwjFG3ZV8/qL8/e7mZ+3BcTicOwA6mEWbzC7qcc3122vUUC0
-+BAWiKX7nh7CBVNP6Znv+ppnySWa+rersoDRBisVxadzC4se+8f0BQnoPYaZWRIE
-NmNarM9EFMZxeqlOHuIewAO+M3VhIujfzMc6G+L9sSWSXKhYrn3VySCYZY3vLytn
-Srr2Y0LCVaYXMuY07FoGgQu1+4FNiDMZBmZRihzHBDX/sznYfZqL463LwaVsc8na
-s5HoiQJ7zhMWhYR/BEt28o43VfUElK+pVegR5kCbpmM8mRLPifj8/7w6tUxRcXkN
-RJU3citjZqN8ONLJg1HvDKnqAOrji3q1KRRalV1AUPk239tv+z4oQZgaf9stxwCk
-lxrGtnpqDyIK8lbcGkfr
-=h97d
------END PGP SIGNATURE-----
-
---nktOf83SvqltY3iw--
+diff --git a/Documentation/devicetree/bindings/net/samsung-sxgbe.txt b/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
+new file mode 100644
+index 0000000..ca27947
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
+@@ -0,0 +1,53 @@
++* Samsung 10G Ethernet driver (SXGBE)
++
++Required properties:
++- compatible: Should be "samsung,sxgbe-v2.0a"
++- reg: Address and length of the register set for the device
++- interrupt-parent: Should be the phandle for the interrupt controller
++  that services interrupts for this device
++- interrupts: Should contain the SXGBE interrupts
++  These interrupts are ordered by fixed and follows variable
++  trasmit DMA interrupts, receive DMA interrupts and lpi interrupt.
++  index 0 - this is fixed common interrupt of SXGBE and it is always
++  available.
++  index 1 to 25 - 8 variable trasmit interrupts, variable 16 receive interrupts
++  and 1 optional lpi interrupt.
++- phy-mode: String, operation mode of the PHY interface.
++  Supported values are: "xaui", "gmii".
++- samsung,pbl: Integer, Programmable Burst Length.
++  Supported values are 1, 2, 4, 8, 16, or 32.
++- samsung,fixed-burst: Boolean, Program the DMA to use the fixed burst mode
++- samsung,burst-map: Integer, Program the possible bursts supported by sxgbe
++  This is an interger and represents allowable DMA bursts when fixed burst.
++  Allowable range is 0x00-0x3F. This field is valid only when fixed burst is
++  enabled, otherwise ignored.
++- samsung,adv-addr-mode: Boolean, Program the DMA to use Enhanced address mode.
++- samsung,force_thresh_dma_mode: Boolean, Force DMA to use the threshold mode
++  for both tx and rx
++- samsung,force_sf_dma_mode: Boolean, Force DMA to use the Store and Forward
++  mode for both tx and rx. This flag is ignored if force_thresh_dma_mode is set.
++- samsung,phy-addr: Integer, Address of the PHY attached with SXGBE.
++
++Optional properties:
++- mac-address: 6 bytes, mac address
++
++Example:
++
++	aliases {
++		ethernet0 = <&sxgbe0>;
++	};
++
++	sxgbe0: ethernet@1a040000 {
++		compatible = "samsung,sxgbe-v2.0a";
++		reg = <0 0x1a040000 0 0x10000>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 209 4>, <0 185 4>, <0 186 4>, <0 187 4>,
++			     <0 188 4>, <0 189 4>, <0 190 4>, <0 191 4>,
++			     <0 192 4>, <0 193 4>, <0 194 4>, <0 195 4>,
++			     <0 196 4>, <0 197 4>, <0 198 4>, <0 199 4>,
++			     <0 200 4>, <0 201 4>, <0 202 4>, <0 203 4>,
++			     <0 204 4>, <0 205 4>, <0 206 4>, <0 207 4>,
++			     <0 208 4>, <0 210 4>;
++		mac-address = [000000000000]; /* Filled in by U-Boot */
++		phy-mode = "xaui";
++	};
+-- 
+1.7.10.4
