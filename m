@@ -1,94 +1,91 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v7 3/3] arm64: Add architecture support for PCI
-Date: Mon, 17 Mar 2014 16:22:11 +0000
-Message-ID: <20140317162211.GH6457@e106497-lin.cambridge.arm.com>
-References: <1394811258-1500-1-git-send-email-Liviu.Dudau@arm.com>
- <1394811258-1500-4-git-send-email-Liviu.Dudau@arm.com>
- <CAL_Jsq+9X-9VahsP79mtHN0RC64vRA_2R3ucjX0LefO6q2YN3Q@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] ASoC: simple-card: Add DT documentation for
+ multi-DAI links
+Date: Mon, 17 Mar 2014 16:43:39 +0000
+Message-ID: <20140317164339.GR11706@sirena.org.uk>
+References: <cover.1394883134.git.moinejf@free.fr>
+ <d054780a0edf4b2338a52e48bff9144e19aa614f.1394883134.git.moinejf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+9X-9VahsP79mtHN0RC64vRA_2R3ucjX0LefO6q2YN3Q@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="xJjS+Ds6jmpBvWv0"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>
+In-Reply-To: <d054780a0edf4b2338a52e48bff9144e19aa614f.1394883134.git.moinejf-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 17, 2014 at 04:05:38PM +0000, Rob Herring wrote:
-> On Fri, Mar 14, 2014 at 10:34 AM, Liviu Dudau <Liviu.Dudau@arm.com> w=
-rote:
-> > Use the generic host bridge functions to provide support for
-> > PCI Express on arm64. There is no support for ISA memory.
-> >
-> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> > Tested-by: Tanmay Inamdar <tinamdar@apm.com>
-> > ---
-> >  arch/arm64/Kconfig            |  19 +++-
-> >  arch/arm64/include/asm/Kbuild |   1 +
-> >  arch/arm64/include/asm/io.h   |   3 +-
-> >  arch/arm64/include/asm/pci.h  |  51 ++++++++++
-> >  arch/arm64/kernel/Makefile    |   1 +
-> >  arch/arm64/kernel/pci.c       | 173 ++++++++++++++++++++++++++++++=
-++
-> >  6 files changed, 246 insertions(+), 2 deletions(-)
-> >  create mode 100644 arch/arm64/include/asm/pci.h
-> >  create mode 100644 arch/arm64/kernel/pci.c
->=20
-> [snip]
->=20
-> > +#endif
-> > +
-> > +extern unsigned long pci_ioremap_io(const struct resource *res, ph=
-ys_addr_t phys_addr);
->=20
-> Can we at least align the function definition across architectures if
-> not the implementation.
 
-The choice of names is unfortunate. We are trying to follow the spirit =
-of the
-arch/arm function, not the implementation, and for RFC that served the =
-purpose.
+--xJjS+Ds6jmpBvWv0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I'll come up with a better name as I don't intend to share the implemen=
-tation
-with arch/arm here.
+On Sat, Mar 15, 2014 at 12:30:05PM +0100, Jean-Francois Moine wrote:
+> There may be many couples of CPU/CODEC DAI links.
+> The example 2 is extracted from the Cubox DT.
 
-Best regards,
-Liviu
+Oh, here's some documentation - please include the documentation
+before the code, without the documentation the reader is going to have
+no idea what the code is supposed to be implementing.
 
->=20
->=20
-> > +int pci_register_io_range(phys_addr_t address, resource_size_t siz=
-e)
-> > +{
-> > +       struct ioresource *res;
-> > +       resource_size_t allocated_size =3D 0;
-> > +
-> > +       /* find if the range has not been already allocated */
-> > +       list_for_each_entry(res, &io_list, list) {
-> > +               if (address >=3D res->start &&
-> > +                       address + size <=3D res->start + size)
-> > +                       return 0;
-> > +               allocated_size +=3D res->size;
-> > +       }
-> > +
-> > +       /* range not already registered, check for space */
-> > +       if (allocated_size + size > IO_SPACE_LIMIT)
->=20
-> I believe this needs to be "allocated_size + size - 1".
->=20
-> > +               return -E2BIG;
-> > +
->=20
+> +  There may be one or many couples (simple-audio-card,cpu, simple-audio-card,codec)
+> +  (see example 2).
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+This doesn't mention how they're matched up.
+
+> +sound {
+> +	compatible = "simple-audio-card";
+> +	simple-audio-card,name = "Cubox Audio";
+> +
+> +	simple-audio-card,cpu@0 {		/* I2S - HDMI */
+> +		sound-dai = <&audio1 0>;
+> +		format = "i2s";
+> +	};
+> +	simple-audio-card,codec@0 {
+> +		sound-dai = <&tda998x 0>;
+> +	};
+> +
+> +	simple-audio-card,cpu@1 {		/* S/PDIF - HDMI */
+> +		sound-dai = <&audio1 1>;
+> +	};
+> +	simple-audio-card,codec@1 {
+> +		sound-dai = <&tda998x 1>;
+> +	};
+
+So, this is not exactly pretty as a binding.  I would expect to see the
+links explicitly represented in the DT so you see the two DAIs in each
+link grouped into a container, the above isn't very easy to read and as
+Jyri says this lack of clarity also causes practical problems in that
+there's nowhere to place link specific parameters.
+
+I think what I'd expect to see here is that the simple card can either
+be a container with a link in it directly or a container of links.
+
+--xJjS+Ds6jmpBvWv0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTJyY4AAoJELSic+t+oim9OS4P/2khiA2POaSMU0iHK/NHMpS0
+w0OGadBvfHJT+zLr1L8wC/RCxtkWQh58nGLpf6a2YoOtH3YM/tCT+RjQAc+N7zuq
+IjKQUKUNmLGhFoLvJcIyO6ivaMoAiAFSLFkcwOvf4AMiYkgtxgYZ3wAXJok2rs6N
+Ubpr+wyPCz6omF9jYIvNHVkh5nGvGZuNHemZDx0CnnmICAfXsdb4tA3nrE98Qfbv
+ouIC3mlMZgddxRzmyMM4OyoIL2bxnykhtf3WZkd35IrRGoVrALF7k4/C7o2OlqFX
+OfrhgtzaM6IUjyZmu4q2DvvAsnEuYKtqxDSzOEMK/4a9/+zIEs+veMY41JTkrjUL
+01J4jEm1k7qZtOYQbRdbxrj78K+nzCwd4gelBqVzz37cjgj/OegMpQibgLFHrIGl
+8tndd6Dw35+EpKzIfLe4yQAXgJpxconRu8KC1Y5CWT78ZtCO/HvM6I8oYAwv/r/h
+zaykERe5sEgj5l0KANI8AsZ0vdQkIDIsYG2bJzMuOTutnsrRXIhxaT4m8O/jF55Y
+JM9+xaurD4v4eAxg/eotpx2Vfyj68ekiZxGhytkaEAKTq0JH+UzKSyv4OUiVwmPI
+h5KTNpSZhTq1ZdQxk1wAbq1dbh+qgT1GqYpU5BPZ64W9TfJKT09WWQG+MP+DqDse
+y08KQgCQhsweq0ZdBPWZ
+=DYEL
+-----END PGP SIGNATURE-----
+
+--xJjS+Ds6jmpBvWv0--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
