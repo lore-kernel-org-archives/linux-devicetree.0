@@ -1,55 +1,33 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v7 3/3] arm64: Add architecture support for PCI
-Date: Mon, 17 Mar 2014 17:38:21 +0000
-Message-ID: <20140317173821.GJ24070@arm.com>
-References: <1394811258-1500-1-git-send-email-Liviu.Dudau@arm.com>
- <1394811258-1500-4-git-send-email-Liviu.Dudau@arm.com>
- <20140314171457.GK18126@arm.com> <201403141838.08900.arnd@arndb.de>
- <20140314180527.GZ6457@e106497-lin.cambridge.arm.com>
+From: Josh Cartwright <joshc@codeaurora.org>
+Subject: Re: [PATCH] SPI: Add driver for Cadence SPI controller
+Date: Mon, 17 Mar 2014 12:59:11 -0500
+Message-ID: <20140317175911.GU18529@joshc.qualcomm.com>
+References: <1395057936-8643-1-git-send-email-harinik@xilinx.com>
+ <20140317173017.GW11706@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140314180527.GZ6457@e106497-lin.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
+In-Reply-To: <20140317173017.GW11706@sirena.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Harini Katakam <harinik@xilinx.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, michals@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 14, 2014 at 06:05:27PM +0000, Liviu Dudau wrote:
-> On Fri, Mar 14, 2014 at 05:38:08PM +0000, Arnd Bergmann wrote:
-> > On Friday 14 March 2014, Catalin Marinas wrote:
-> > > On Fri, Mar 14, 2014 at 03:34:18PM +0000, Liviu Dudau wrote:
-> > > > --- /dev/null
-> > > > +++ b/arch/arm64/kernel/pci.c
-> > > [...]
-> > > > +int pci_register_io_range(phys_addr_t address, resource_size_t size)
-> > > [...]
-> > > > +unsigned long pci_address_to_pio(phys_addr_t address)
-> > > [...]
-> > > > +void pcibios_fixup_bus(struct pci_bus *bus)
-> > > [ actually most of this file ]
-> > > 
-> > > Maybe it was raised before already but can we have __weak generic
-> > > definitions of these functions? They don't seem to be arm64 specific in
-> > > any way.
-[...]
-> Catalin, if you are happy to ask for ACKs from all arch maintainers that might get
-> affected by our custom version of pci_address_to_pio() before you can pull PCI support
-> for arm64 then I can propose a new patchset.
+On Mon, Mar 17, 2014 at 05:30:17PM +0000, Mark Brown wrote:
+> On Mon, Mar 17, 2014 at 05:35:36PM +0530, Harini Katakam wrote:
+[..]
+> > +static int __maybe_unused cdns_spi_suspend(struct device *dev)
+> > +{
+> 
+> This needs to call spi_master_suspend() as well (and similarly on
+> resume).
 
-You don't need to change the other architectures, that's the point of a
-__weak definition, it will be automatically overridden. If you want, you
-can even place a GENERIC_PCI or whatever config option that is only
-selected by arm64 for the time being.
+I'm not that familiar with the SPI core, but this seems like an
+inversion.  Is there a reason why the SPI master class doesn't implement
+suspend/resume() callbacks which handle stopping/starting the queue
+automatically for all masters?
 
 -- 
-Catalin
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
