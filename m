@@ -1,66 +1,46 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [RFC] spi: Using Trigger number to transmit/receive data
-Date: Mon, 17 Mar 2014 08:54:12 +0100
-Message-ID: <CAMuHMdWP-tNCtnwP6=XZ1BNacWretVYjrpbT3R+KTEO=047+Nw@mail.gmail.com>
-References: <1394699364-5669-1-git-send-email-cm-hiep@jinso.co.jp>
-	<1394699364-5669-2-git-send-email-cm-hiep@jinso.co.jp>
-	<CAMuHMdUpm_4f7LynObRA+NDn4vqeUc0a2XZW-E=4LKL_Ro3XZw@mail.gmail.com>
-	<53264BA4.3000401@jinso.co.jp>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH] spi: dw-mmio: add oftree support
+Date: Mon, 17 Mar 2014 09:17:07 +0100
+Message-ID: <20140317081707.GQ27506@pengutronix.de>
+References: <1394787326-14520-1-git-send-email-s.trumtrar@pengutronix.de>
+ <20140314161403.GN25870@e106331-lin.cambridge.arm.com>
+ <20140314162614.GW366@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <53264BA4.3000401@jinso.co.jp>
-Sender: linux-sh-owner@vger.kernel.org
-To: Cao Minh Hiep <cm-hiep@jinso.co.jp>
-Cc: Mark Brown <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Geert Uytterhoeven <geert+renesas@linux-m68k.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140314162614.GW366@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hiep,
+Hi!
 
-On Mon, Mar 17, 2014 at 2:11 AM, =E3=82=AB=E3=82=AA=E3=80=80=E3=83=9F=E3=
-=83=B3=E3=80=80=E3=83=92=E3=82=A7=E3=83=83=E3=83=97 <cm-hiep@jinso.co.j=
-p> wrote:
-> On 03/13/2014 06:23 PM, Geert Uytterhoeven wrote:
->> On Thu, Mar 13, 2014 at 9:29 AM, Cao Minh Hiep <cm-hiep@jinso.co.jp>
->> wrote:
->>> In order to transmit and receive data when have 32 bytes of data th=
-at
->>> ready has prepared on Transmit/Receive Buffer to transmit or receiv=
-e.
->>> Instead transmits/receives a byte data using Transmit/Receive Buffe=
-r
->>> Data Triggering Number will improve the speed of transfer data.
->>
->> Thanks for your patch, this looks like a valuable improvement!
->>
->> Unfortunately your patch doesn't apply against spi/for-next anymore,=
- as
->> the driver has changed a lot lately, due to the addition of RZ/A1H a=
-nd
->> Quad/Dual support.
->>
-> Thanks, Do you mean this patch did not need for next and I don't mind=
- about
-> it?
+On Fri, Mar 14, 2014 at 04:26:14PM +0000, Mark Brown wrote:
+> On Fri, Mar 14, 2014 at 04:14:03PM +0000, Mark Rutland wrote:
+> 
+> > > +Synopsys DesignWare SPI master controller.
+> > > +
+> > > +Required properties:
+> > > +- compatible : "snps,dw-spi-mmio"
+> 
+> > Is there not a better name than "dw-spi-mmio"?
+> 
+> > What's the full name of the device, as on a datasheet? Is there no model
+> > number?
+> 
+> It's a Synopsis Designware IP block rather than a part - Google suggests
+> DW_apb_ssi.
 
-It means you will have to rework your patch to apply on top of
-https://git.kernel.org/cgit/linux/kernel/git/broonie/spi.git/tree/drive=
-rs/spi?h=3Dfor-next
-before the SPI maintainer can accept it.
+That seems to be the correct IP block, so I will change the compatible to
+"snps,dw-apb-ssi".
 
-Thanks!
+Thanks,
+Steffen
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
-m68k.org
-
-In personal conversations with technical people, I call myself a hacker=
-=2E But
-when I'm talking to journalists I just say "programmer" or something li=
-ke that.
-                                -- Linus Torvalds
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
