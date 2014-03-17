@@ -1,70 +1,83 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] SPI: Add driver for Cadence SPI controller
-Date: Mon, 17 Mar 2014 18:14:40 +0000
-Message-ID: <20140317181440.GY11706@sirena.org.uk>
-References: <1395057936-8643-1-git-send-email-harinik@xilinx.com>
- <20140317173017.GW11706@sirena.org.uk>
- <20140317175911.GU18529@joshc.qualcomm.com>
+From: Antti P Miettinen <ananaza@iki.fi>
+Subject: Re: [PATCH RFC v4 3/3] Documentation: arm: define DT idle states
+ bindings
+Date: Mon, 17 Mar 2014 20:26:38 +0200 (EET)
+Message-ID: <20140317.202638.1149319857823818469.apm@brigitte.kvy.fi>
+References: <20140317115303.GB28453@e102568-lin.cambridge.arm.com>
+	<20140317.154940.169167846103479320.apm@brigitte.kvy.fi>
+	<20140317144515.GC28453@e102568-lin.cambridge.arm.com>
+Reply-To: ananaza@iki.fi
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="kigERAySUJmIn/9g"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140317175911.GU18529@joshc.qualcomm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Josh Cartwright <joshc@codeaurora.org>
-Cc: Harini Katakam <harinik@xilinx.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, michals@xilinx.com
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140317144515.GC28453@e102568-lin.cambridge.arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: lorenzo.pieralisi@arm.com
+Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Dave.Martin@arm.com, Mark.Rutland@arm.com, Sudeep.Holla@arm.com, Charles.Garcia-Tobin@arm.com, nico@linaro.org, robh+dt@kernel.org, pdeschrijver@nvidia.com, grant.likely@linaro.org, galak@codeaurora.org, santosh.shilimkar@ti.com, linux@arm.linux.org.uk, mark.hambleton@broadcom.com, hanjun.guo@linaro.org, daniel.lezcano@linaro.org, amit.kucheria@linaro.org, vincent.guittot@linaro.org, sboyd@codeaurora.org, t.figa@samsung.com, khilman@linaro.org, mturquette@linaro.org, broonie@kernel.org, sebastian.capella@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> When we make a decision on what idle state to enter all we do, and
+> that's OS agnostic, is predicting (+checking the next event) the next IRQ and
+> see if it is worth entering a state or not. We have to compare it against
+> a baseline, which is the processor being in standbywfi and that's what
+> these bindings define.
+> 
+> I do not understand why you want to define min-residency against the
+> previous shallower state.
+> 
+> What this binding says is: standbywfi is the shallower idle state in
+> power consumption terms. Deeper idle states save more power than
+> standbywfi if the residency in that state is at least min-residency.
+> 
+> I do not see where the problem is to be honest, maybe I need an example.
+> 
+> Thanks!
+> Lorenzo
 
---kigERAySUJmIn/9g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Sorry, I should have explained myself more clearly. I've been
+pondering about these issues somewhat lately so I'm perhaps suffering
+from a bit of a tunnel vision.
 
-On Mon, Mar 17, 2014 at 12:59:11PM -0500, Josh Cartwright wrote:
-> On Mon, Mar 17, 2014 at 05:30:17PM +0000, Mark Brown wrote:
-> > On Mon, Mar 17, 2014 at 05:35:36PM +0530, Harini Katakam wrote:
+In short, when we choose an idle state based on expected idle duration
+we are not comparing wfi against all possible idle states in turn and
+making a decision between wfi and state X. Instead we want to choose
+among all states the one that gives minimum energy for the expected
+idle time. I'll try to elaborate..
 
-> > > +static int __maybe_unused cdns_spi_suspend(struct device *dev)
-> > > +{
+Entering and exiting idle states takes time at nonzero power. To make
+up for this lost energy we indeed want the time in the idle state to
+be sufficiently long to make up for the lost energy. Now the important
+question here is "make up compared to what?".
 
-> > This needs to call spi_master_suspend() as well (and similarly on
-> > resume).
+The energy over the idle time can be also interpreted as average
+power. When the idle time increases the average power for a state
+approaches the in-state power. A deeper idle state would be a state
+with lower in-state power and longer entry/exit time. Therefore the
+average power for a deeper idle state drops slower as function of idle
+time than the average power for a shallower idle state. If we'd plot
+the average power for a number of idle states as function of idle
+duration, we'd get a set of "constant over idle time plus constant"
+style curves. Average power for state 0 will drop fastest close to the
+in-state power of state 0. Average power for state 1 will drop slower
+and approach the in-state power of state 1, average power for state 2
+will drop even slower and approach the in-state power of state 3.
 
-> I'm not that familiar with the SPI core, but this seems like an
-> inversion.  Is there a reason why the SPI master class doesn't implement
-> suspend/resume() callbacks which handle stopping/starting the queue
-> automatically for all masters?
+To define that the min-residency is the breakeven time against state 0
+means that we are looking at the curves and asking "when does the
+average power for state X cross the average power for state 0?". But
+that would be the guideline for making a decision between state 0 and
+the state in question. Even if average power for state 2 is below
+the average power of state 0 it is not necessarily yet below the
+average power of state 1. To break even against state 1 the idle
+duration needs to be longer.
 
-This is for users of an optional feature of the infrastructure.  We
-probably should just call it anyway since it does have checks for the
-feature being used (but given all the open coding around this stuff I'd
-need to verify that the class callbacks would reliably get called).
+Yet another way to look at this: for three states we can define three
+times of interest:
+- t1: the time when state1 breaks even against state0
+- t2: the time when state2 breaks even against state0
+- t3: the time when state2 breaks even against state1
+and t3 would typically be larger than t2.
 
-In any case that's not happening now and the driver as it stands is
-buggy since it's trampling all over the hardware without syncing with
-anything that isn't ongoing.
-
---kigERAySUJmIn/9g
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTJzuMAAoJELSic+t+oim9ZGMP/iMA13Ug+kBvAWKjqod06Ph8
-kBgZ38Llih+cwSsMYfeQ2Eyc+FMcWFA5/JOpxQOoEB4HFyGdUr99uo9CmbUwYsBO
-ynA0vMfcHFQ16mQPtRa9GnCzrZR6Vhbml8CtX6Q8ol+mys4y3S0l2DRS1BqdoaIv
-gP0W+aqyqYMCAIKz+bJ3+R4KjFOJ/gqMg4PizB0Zaacqmx0sxvFaYhGTNClH2ldu
-/hBXBUMK6EqKONRtTO7wHRMZgPEX7KveIOSeecpZnbiKKcvEYOGxpGWXP5yO7Zwh
-un53dHmsKmoAHPK+KX6NOsYLh3QgpwNgtYu4BJqK4HXVmdU5DdVSqSDBSVTXANe2
-KP97QeOF3Hy829VKJsVrOU2cPbZ5SeA55ri+FD6SdQ8OkAsuUX9DWkoLCtlpUBHH
-0SlfJHNOVAKE2s+y4xbGYR93tRsi4+8nw+4Zj80FHdkutykuK87FkCekrbJ0bUqc
-cxaHkTKLqZVSRRpXlvqbyZq1ONlvjZLHrKwyyrnyV86EJ1D0Ijh6G4uuxI5vjs03
-qgnAOMOMQdc2Fsfwpj6M93TOElYrYlBirSQ2pKa5Gi6HNQtzchyKSD5sBWf+wEbp
-q9y8smKiT/wvhwYtZMuVes3JlkJTRctJ59mTjldx2MfWCEQBsZi1NNZFWvXxDMWN
-KNqmdVzcYXDqxcI5VTno
-=G5Dg
------END PGP SIGNATURE-----
-
---kigERAySUJmIn/9g--
+	--Antti
