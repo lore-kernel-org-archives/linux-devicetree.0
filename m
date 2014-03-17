@@ -1,127 +1,72 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH V2 1/7] net: sxgbe: add basic framework for Samsung
- 10Gb ethernet driver
-Date: Mon, 17 Mar 2014 09:59:52 +0000
-Message-ID: <20140317095941.GA8070@e106331-lin.cambridge.arm.com>
-References: <005101cf3df6$e37664f0$aa632ed0$%an@samsung.com>
- <20140312151008.GA5035@e106331-lin.cambridge.arm.com>
- <005701cf41a4$eee0ddf0$cca299d0$@samsung.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH] ARM: mach-ux500|nomadik|u300: Align to common DT bindings
+ for mmci
+Date: Mon, 17 Mar 2014 11:01:49 +0100
+Message-ID: <CAPDyKFpJDKXK7siVMnB5umv6PnYAyNmto1yq9unxDaD9BP=oBQ@mail.gmail.com>
+References: <1394713963-18300-1-git-send-email-ulf.hansson@linaro.org>
+ <20140313174703.GO21483@n2100.arm.linux.org.uk>
+ <CAPDyKFrw092mbirDBffF6TraUoXDLh5movp_sf9PYERG88P-Qw@mail.gmail.com>
+ <CACRpkdZzObyJQmbAvovcor9NXeVnhEFO82jtxLZOdm48TPnudQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <005701cf41a4$eee0ddf0$cca299d0$@samsung.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Byungho An <bh74.an@samsung.com>, grant.likely@linaro.org
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "siva.kallam@samsung.com" <siva.kallam@samsung.com>, "vipul.pandya@samsung.com" <vipul.pandya@samsung.com>, "ks.giri@samsung.com" <ks.giri@samsung.com>, "ilho215.lee@samsung.com" <ilho215.lee@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdZzObyJQmbAvovcor9NXeVnhEFO82jtxLZOdm48TPnudQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alessandro Rubini <rubini@unipv.it>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 17, 2014 at 05:51:21AM +0000, Byungho An wrote:
-> Mark Rutland <mark.rutland@arm.com> :
-> > On Wed, Mar 12, 2014 at 01:28:00PM +0000, Byungho An wrote:
-> > > From: Siva Reddy <siva.kallam@samsung.com>
-> > >
-> > > This patch adds support for Samsung 10Gb ethernet driver(sxgbe).
-> > >
-> > > - sxgbe core initialization
-> > > - Tx and Rx support
-> > > - MDIO support
-> > > - ISRs for Tx and Rx
-> > > - ifconfig support to driver
-> > >
-> > > Signed-off-by: Siva Reddy Kallam <siva.kallam@samsung.com>
-> > > Signed-off-by: Vipul Pandya <vipul.pandya@samsung.com>
-> > > Signed-off-by: Girish K S <ks.giri@samsung.com>
-> > > Neatening-by: Joe Perches <joe@perches.com>
-> > > Signed-off-by: Byungho An <bh74.an@samsung.com>
+On 14 March 2014 11:58, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Fri, Mar 14, 2014 at 8:27 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>> On 13 March 2014 18:47, Russell King - ARM Linux <linux@arm.linux.org.uk> wrote:
+>>> On Thu, Mar 13, 2014 at 01:32:43PM +0100, Ulf Hansson wrote:
+>>>> As the first step in preparing the mmci driver for converting to the
+>>>> mmc_of_parse API, let's align to the common names of DT bindings for
+>>>> the mmc/sd highspeed modes.
+>>>
+>>> NAK.  These bindings have been documented as being there since March
+>>> 14th 2012, and therefore need to be supported for ever by the driver.
+>>> You can _augment_ the bindings with the generic ones, and change the
+>>> DT files, but you can't remove the parsing of the old property names.
+>>
+>> I was kind of expecting this response. :-)
+>>
+>> So, since we made a mistake about adding these DT bindings we are now
+>> unable to remove them, is there really no way back?
+>>
+>> In this particular case, I am confident that it should be safe to
+>> remove them, but I guess this is more matter of principle, right?
+>
+> I can guarantee that there are no deployed U300, Nomadik or
+> Ux500 systems out there with DTBs deployed in them, and
+> for certain no products. At one point that was the criterion...
+> All setups actually use the appended device tree.
 
-[...]
+It sure seems like it's safe to remove them.
 
-> > > +static int sxgbe_probe_config_dt(struct platform_device *pdev,
-> > > +                                struct sxgbe_plat_data *plat,
-> > > +                                const char **mac) {
-> > > +       struct device_node *np = pdev->dev.of_node;
-> > > +       struct sxgbe_dma_cfg *dma_cfg;
-> > > +       u32 phy_addr;
-> > > +
-> > > +       if (!np)
-> > > +               return -ENODEV;
-> > > +
-> > > +       *mac = of_get_mac_address(np);
-> >
-> > I see that of_get_mac_address returns a *void rather than *char, but it's
-> > always a string of hex digits. Would it make sense to change the
-> > of_get_mac_address prototype to return a char* ?
-> This implementation is of_ specific, our driver only uses it.
+If you decide to accept the patch, could we queue it through ARM SOC
+with your help Linus? Maybe even for 3.15 as the sooner the better!?
 
-Sure, this was a general observation that wasn't specific to this
-driver.
+>
+> In worst case I guess mmc-cap-sd-highspeed and
+> mmc-cap-mmc-highspeed could be put as aliases into the
+> generic parser?
 
-> 
-> >
-> > > +       plat->interface = of_get_phy_mode(np);
-> > > +
-> > > +       plat->bus_id = of_alias_get_id(np, "ethernet");
-> > > +       if (plat->bus_id < 0)
-> > > +               plat->bus_id = 0;
-> >
-> > This wasn't mentioned in the binding.
-> It doesn't need to  be in the binding document, because we get the alias id
-> by passing the node name. Here ethernet is not a property it is the dt node
-> name
-> e.g.
->  ethernet@xxxxx {
-> 
-> };
+That's an option - and maybe mark them as deprecated. Still I would
+prefer if we could remove them instead.
 
-Huh?
+Kind regards
+Ulf Hansson
 
-The acquisition of the alias ID is not performed based on the node name,
-but rather the node and stem of the entry in the /alias node that points
-to it.
-
-Consider this dts fragment:
-
-/ {
-	...
-
-	alias {
-		ethernet5 = "/bus/arbitrarily_named_sxgbe@deadbeef";
-	};
-
-	bus {
-		...
-
-		arbtirarily_named_sxgbe@0xdeadbeef {
-			compatible = "samsung,sxgbe-v2.0a";
-			reg = <0xdeadbeef 0>, ... ;
-			...
-		};
-	};
-}
-
-The above call to of_alias_get_id(np, "ethernet") would return 5 for the
-sxgbe node, despite the node name being completely arbitrary.  While the
-node should probably be named "ethernet", this doesn't matter for the
-purpose of alias id handling.
-
-If your binding has a particular form of alias, please document it so DT
-authors can be aware of it and make use of it.
-
-That said we probably need better guidance on the use of aliases. The
-usage model is undocumented beyond aliases being informational, which is
-somewhat vague. Unfortunately the description in ePAPR also glosses over
-the expected usage.
-
-Grant, would you be able to elaborate on the expected usage of aliases?
-
-Should alias names always be from a standard set (e.g. "ethernet",
-"serial", "pci" per ePAPR), or are binding-specific names (e.g. the
-Exynos S-Scalar's "gsc") something we're happy with?
-
-Are aliases allowed to be required, or are they always supposed to be an
-optional hint to the OS?
-
-Cheers,
-Mark.
+>
+> Yours,
+> Linus Walleij
