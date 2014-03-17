@@ -1,39 +1,48 @@
-From: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/8] ARM: at91: sama5d3: disable sound by default
-Date: Mon, 17 Mar 2014 17:45:35 +0800
-Message-ID: <1395049541-28128-3-git-send-email-voice.shen@atmel.com>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: [PATCH 3/8] ARM: at91: sama5d3: correct the sound compatible string
+Date: Mon, 17 Mar 2014 17:45:36 +0800
+Message-ID: <1395049541-28128-4-git-send-email-voice.shen@atmel.com>
 References: <1395049541-28128-1-git-send-email-voice.shen@atmel.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1395049541-28128-1-git-send-email-voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
-Cc: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1395049541-28128-1-git-send-email-voice.shen@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>, nicolas.ferre@atmel.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Bo Shen <voice.shen@atmel.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Make the sound device in disabled status by default
+As the sama5d3 dtsi file in go into mainline before sound driver,
+and, the sound compatible string is changed when go into mainline.
+Add this patch to correct the sound compatible string.
 
-Signed-off-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Bo Shen <voice.shen@atmel.com>
 ---
 
- arch/arm/boot/dts/sama5d3xmb.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/sama5d3xmb.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/sama5d3xmb.dtsi b/arch/arm/boot/dts/sama5d3xmb.dtsi
-index dba739b..2938605 100644
+index 2938605..e1bd5767 100644
 --- a/arch/arm/boot/dts/sama5d3xmb.dtsi
 +++ b/arch/arm/boot/dts/sama5d3xmb.dtsi
-@@ -170,5 +170,7 @@
- 
- 		atmel,ssc-controller = <&ssc0>;
- 		atmel,audio-codec = <&wm8904>;
-+
-+		status = "disabled";
+@@ -156,7 +156,7 @@
  	};
- };
+ 
+ 	sound {
+-		compatible = "atmel,sama5d3ek-wm8904";
++		compatible = "atmel,asoc-wm8904";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_pck0_as_audio_mck>;
+ 
 -- 
 1.8.5.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
