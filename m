@@ -1,162 +1,49 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH] ARM: zynq: Add OCM driver
-Date: Sun, 16 Mar 2014 21:48:30 -0700
-Message-ID: <20140317044830.GA18269@quad.lixom.net>
-References: <299e37ab245da9132808c6d4265a17b9a417bf62.1389022555.git.michal.simek@xilinx.com>
- <CAOesGMiroyjPbcjfG24_sUqCicCD4M7NF2aD=Xi8NVgagZThuA@mail.gmail.com>
- <53204C73.5070807@monstr.eu>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4] dmaengine: sirf: enable generic dt binding for dma
+ channels
+Date: Mon, 17 Mar 2014 10:21:05 +0530
+Message-ID: <20140317045105.GB1976@intel.com>
+References: <1389190369-2012-1-git-send-email-21cnbao@gmail.com>
+ <20140120074857.GJ26823@intel.com>
+ <CAGsJ_4zcwCx0RNMNx8YaDBFtGE=02-B79+WKDGeky80X5agcuw@mail.gmail.com>
+ <CAGsJ_4zMYGTS4CyCsTAH_5PMK3v4Pr+e88YjXL=d3A=EjPf9rQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <53204C73.5070807@monstr.eu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <monstr@monstr.eu>
-Cc: Michal Simek <michal.simek@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Soren Brinkmann <soren.brinkmann@xilinx.com>, Josh Cartwright <josh.cartwright@ni.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <CAGsJ_4zMYGTS4CyCsTAH_5PMK3v4Pr+e88YjXL=d3A=EjPf9rQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DL-SHA-WorkGroupLinux <workgroup.linux-kQvG35nSl+M@public.gmane.org>, Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 12, 2014 at 01:00:51PM +0100, Michal Simek wrote:
-> Hi Olof,
+On Sat, Mar 01, 2014 at 10:49:18AM +0800, Barry Song wrote:
+> 2014-01-20 17:35 GMT+08:00 Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> > 2014/1/20 Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>:
+> >> On Wed, Jan 08, 2014 at 10:12:49PM +0800, Barry Song wrote:
+> >>> From: Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
+> >>>
+> >>> move to support of_dma_request_slave_channel() and dma_request_slave_channel.
+> >>> we add a xlate() to let dma clients be able to find right dma_chan by generic
+> >>> "dmas" properties in dts.
+> >>>
+> >>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> >>> Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+> >>> Signed-off-by: Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
+> >> Look okay, need an ACk from DT maintainers before I can apply...
 > 
-> >> diff --git a/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocm.txt b/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocm.txt
-> >> new file mode 100644
-> >> index 0000000..64cb5e8
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/arm/zynq/xlnx,zynq-ocm.txt
-> >> @@ -0,0 +1,17 @@
-> >> +Device tree bindings for Zynq's OCM
-> >> +
-> >> +The OCM is divided to 4 64kB segments which can be separately configured
-> >> +to low or high location. Location is controlled via SLCR.
-> >> +
-> >> +Required properties:
-> >> + compatible: Compatibility string. Must be "xlnx,zynq-ocm-1.0".
-> >> + reg: Specify the base and size of the OCM registers in the memory map.
-> >> +      E.g.: reg = <0xf800c000 0x1000>;
-> >> +
-> >> +Example:
-> >> +ocmc: ocmc@f800c000 {
-> >> +       compatible =  "xlnx,zynq-ocm-1.0";
-> >> +       interrupt-parent = <&intc>;
-> >> +       interrupts = <0 3 4>;
-> >> +       reg = <0xf800c000 0x1000>;
-> >> +} ;
-> >> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-> >> index 1d942e2..4929be5 100644
-> >> --- a/arch/arm/boot/dts/zynq-7000.dtsi
-> >> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
-> >> @@ -66,6 +66,13 @@
-> >>                         cache-level = <2>;
-> >>                 };
-> >>
-> >> +               ocmc: ocmc@f800c000 {
-> >> +                       compatible = "xlnx,zynq-ocm-1.0";
-> >> +                       interrupt-parent = <&intc>;
-> >> +                       interrupts = <0 3 4>;
-> >> +                       reg = <0xf800c000 0x1000>;
-> >> +               } ;
-> >> +
-> >>                 uart0: uart@e0000000 {
-> >>                         compatible = "xlnx,xuartps";
-> >>                         status = "disabled";
-> >> diff --git a/arch/arm/mach-zynq/Kconfig b/arch/arm/mach-zynq/Kconfig
-> >> index 323e505..f3e6ce4 100644
-> >> --- a/arch/arm/mach-zynq/Kconfig
-> >> +++ b/arch/arm/mach-zynq/Kconfig
-> >> @@ -15,5 +15,6 @@ config ARCH_ZYNQ
-> >>         select CADENCE_TTC_TIMER
-> >>         select ARM_GLOBAL_TIMER
-> >>         select MFD_SYSCON
-> >> +       select GENERIC_ALLOCATOR
-> >>         help
-> >>           Support for Xilinx Zynq ARM Cortex A9 Platform
-> >> diff --git a/arch/arm/mach-zynq/Makefile b/arch/arm/mach-zynq/Makefile
-> >> index 1b25d92..626f64b 100644
-> >> --- a/arch/arm/mach-zynq/Makefile
-> >> +++ b/arch/arm/mach-zynq/Makefile
-> >> @@ -3,7 +3,7 @@
-> >>  #
-> >>
-> >>  # Common support
-> >> -obj-y                          := common.o slcr.o
-> >> +obj-y                          := common.o slcr.o zynq_ocm.o
-> >>  CFLAGS_REMOVE_hotplug.o                =-march=armv6k
-> >>  CFLAGS_hotplug.o               =-Wa,-march=armv7-a -mcpu=cortex-a9
-> >>  obj-$(CONFIG_HOTPLUG_CPU)      += hotplug.o
-> >> diff --git a/arch/arm/mach-zynq/common.h b/arch/arm/mach-zynq/common.h
-> >> index b097844..953f6a1 100644
-> >> --- a/arch/arm/mach-zynq/common.h
-> >> +++ b/arch/arm/mach-zynq/common.h
-> >> @@ -24,6 +24,7 @@ extern int zynq_early_slcr_init(void);
-> >>  extern void zynq_slcr_system_reset(void);
-> >>  extern void zynq_slcr_cpu_stop(int cpu);
-> >>  extern void zynq_slcr_cpu_start(int cpu);
-> >> +extern u32 zynq_slcr_get_ocm_config(void);
-> >>
-> >>  #ifdef CONFIG_SMP
-> >>  extern void secondary_startup(void);
-> >> diff --git a/arch/arm/mach-zynq/slcr.c b/arch/arm/mach-zynq/slcr.c
-> >> index c1f1499..9a37ab3 100644
-> >> --- a/arch/arm/mach-zynq/slcr.c
-> >> +++ b/arch/arm/mach-zynq/slcr.c
-> >> @@ -26,6 +26,7 @@
-> >>  #define SLCR_PS_RST_CTRL_OFFSET                0x200 /* PS Software Reset Control */
-> >>  #define SLCR_A9_CPU_RST_CTRL_OFFSET    0x244 /* CPU Software Reset Control */
-> >>  #define SLCR_REBOOT_STATUS_OFFSET      0x258 /* PS Reboot Status */
-> >> +#define SLCR_OCM_CFG_OFFSET            0x910 /* OCM Address Mapping */
-> >>
-> >>  #define SLCR_UNLOCK_MAGIC              0xDF0D
-> >>  #define SLCR_A9_CPU_CLKSTOP            0x10
-> >> @@ -107,6 +108,20 @@ void zynq_slcr_system_reset(void)
-> >>  }
-> >>
-> >>  /**
-> >> + * zynq_slcr_get_ocm_config - Get SLCR OCM config
-> >> + *
-> >> + * return:     OCM config bits
-> >> + */
-> >> +u32 zynq_slcr_get_ocm_config(void)
-> >> +{
-> >> +       u32 val;
-> >> +
-> >> +       zynq_slcr_read(&val, SLCR_OCM_CFG_OFFSET);
-> >> +
-> >> +       return val;
-> >> +}
-> >> +
-> >> +/**
-> >>   * zynq_slcr_cpu_start - Start cpu
-> >>   * @cpu:       cpu number
-> >>   */
-> >> diff --git a/arch/arm/mach-zynq/zynq_ocm.c b/arch/arm/mach-zynq/zynq_ocm.c
-> >> new file mode 100644
-> >> index 0000000..034a65b
-> >> --- /dev/null
-> >> +++ b/arch/arm/mach-zynq/zynq_ocm.c
-> >> @@ -0,0 +1,243 @@
-> >> +/*
-> >> + * Copyright (C) 2013 Xilinx
-> >> + *
-> >> + * Based on "Generic on-chip SRAM allocation driver"
-> > 
-> > We're not adding new drivers under arch/arm, so if you need this
-> > driver then you should either merge it under drivers/ somewhere, or
-> > look at extending the generic driver in a way that you can reuse it.
-> 
-> Driver is reusing ideas from this generic driver but
-> incorporation our changes to will be problematic.
-> 
-> It is a shame that you didn't review the rest of code below.
-> The reason why I have added this driver to arch/arm/mach-zynq
-> was that there is code connection to zynq SMP bootup trampoline
-> which has to be added at 0x0 when OCM is placed at 0x0.
-> And this memory can't be used for generic purpose.
-> If you see any nice way how to it please let me know.
+> Hi Vinod,
+> v5 is sent to devicetree list and there is no object.
+> http://www.spinics.net/lists/devicetree/msg19677.html
+> this patch is using general dt-binding for dma completely same with
+> other dma drivers, there is no special binding here.
+> so i think there is no reason to wait for merging since now updates
+> for its clients e.g. SPI, UART have been in 3.14-rc.
+I still need the ack for DT folks... Seems still missing :(
 
-Rockchip just went through some of the same discussions -- they need to
-use onchip SRAM for SMP spin-up. You should look at that patchset and
-see if you can solve it in a similar manner, the needs seem to be quite
-similar.
-
-
--Olof
+-- 
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
