@@ -1,46 +1,60 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: [PATCH 1/8] ARM: at91: sama5d3: add DMA property for SSC devices
-Date: Mon, 17 Mar 2014 17:45:34 +0800
-Message-ID: <1395049541-28128-2-git-send-email-voice.shen@atmel.com>
-References: <1395049541-28128-1-git-send-email-voice.shen@atmel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1395049541-28128-1-git-send-email-voice.shen@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, nicolas.ferre@atmel.com
-Cc: Bo Shen <voice.shen@atmel.com>, Andrew Victor <linux@maxim.org.za>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v3 4/4] ASoC: simple-card: Add DT
+ documentation for multi-DAI links
+Date: Mon, 17 Mar 2014 12:19:46 +0200
+Message-ID: <190d334218a324f12078f81d769322ca@kapsi.fi>
+References: <cover.1394883134.git.moinejf@free.fr>
+ <d054780a0edf4b2338a52e48bff9144e19aa614f.1394883134.git.moinejf@free.fr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d054780a0edf4b2338a52e48bff9144e19aa614f.1394883134.git.moinejf-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DMA property for SSC devices on SAMA5D3 SoC.
+On 2014-03-15 13:30, Jean-Francois Moine wrote:
+> There may be many couples of CPU/CODEC DAI links.
+> The example 2 is extracted from the Cubox DT.
+> 
+> Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+> ---
+[...]
 
-Signed-off-by: Bo Shen <voice.shen@atmel.com>
----
+This binding forces all the dai links to share the same card level 
+properties. I find it problematic in these cases:
 
- arch/arm/boot/dts/sama5d3.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+>> - simple-audio-card,format		: CPU/CODEC common audio format.
+>> 					  "i2s", "right_j", "left_j" , "dsp_a"
+>> 					  "dsp_b", "ac97", "pdm", "msb", "lsb"
 
-diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index 3d5faf8..3e753e1 100644
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -113,6 +113,9 @@
- 				compatible = "atmel,at91sam9g45-ssc";
- 				reg = <0xf0008000 0x4000>;
- 				interrupts = <38 IRQ_TYPE_LEVEL_HIGH 4>;
-+				dmas = <&dma0 2 AT91_DMA_CFG_PER_ID(13)>,
-+				       <&dma0 2 AT91_DMA_CFG_PER_ID(14)>;
-+				dma-names = "tx", "rx";
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_ssc0_tx &pinctrl_ssc0_rx>;
- 				clocks = <&ssc0_clk>;
-@@ -231,6 +234,9 @@
- 				compatible = "atmel,at91sam9g45-ssc";
- 				reg = <0xf800c000 0x4000>;
- 				interrupts = <39 IRQ_TYPE_LEVEL_HIGH 4>;
-+				dmas = <&dma1 2 AT91_DMA_CFG_PER_ID(3)>,
-+				       <&dma1 2 AT91_DMA_CFG_PER_ID(4)>;
-+				dma-names = "tx", "rx";
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_ssc1_tx &pinctrl_ssc1_rx>;
- 				clocks = <&ssc1_clk>;
--- 
-1.8.5.2
+The code allows having the format parameter in sub nodes too, but the 
+document does no mention it. Adding a mention would solve this problem 
+at least partly.
+
+Neither does the document mention that 
+"simple-audio-card,bitclock-inversion" and 
+"simple-audio-card,frame-inversion" are also allowed in card level. 
+Currently the code uses simple bit-wise-or from card-level and dai-level 
+daifmt parameters, which may lead to broken daifmt setting. However, 
+this on directly related to this patch.
+
+>> - dai-tdm-slot-num			: Please refer to tdm-slot.txt.
+>> - dai-tdm-slot-width			: Please refer to tdm-slot.txt.
+
+These properties are actually only taken from sub-nodes so the document 
+is broken but the code is ok.
+
+In general this binding would look better if another sub-node level 
+would added for dai-link related properties, including the cpu and codec 
+sub-nodes, but that would break the backwards compatibility.
+
+Best regards,
+Jyri
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
