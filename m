@@ -1,239 +1,66 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCHv2 3/8] devfreq: exynos4: Add ppmu's clock control and code
- clean about regulator control
-Date: Mon, 17 Mar 2014 14:59:36 +0900
-Message-ID: <53268F48.8060704@samsung.com>
-References: <1394698649-20996-1-git-send-email-cw00.choi@samsung.com>
- <1394698649-20996-4-git-send-email-cw00.choi@samsung.com>
- <53233F78.8020500@samsung.com> <5326632A.8030801@samsung.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [RFC] spi: Using Trigger number to transmit/receive data
+Date: Mon, 17 Mar 2014 08:54:12 +0100
+Message-ID: <CAMuHMdWP-tNCtnwP6=XZ1BNacWretVYjrpbT3R+KTEO=047+Nw@mail.gmail.com>
+References: <1394699364-5669-1-git-send-email-cm-hiep@jinso.co.jp>
+	<1394699364-5669-2-git-send-email-cm-hiep@jinso.co.jp>
+	<CAMuHMdUpm_4f7LynObRA+NDn4vqeUc0a2XZW-E=4LKL_Ro3XZw@mail.gmail.com>
+	<53264BA4.3000401@jinso.co.jp>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <5326632A.8030801@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rafael.j.wysocki@intel.com, nm@ti.com, b.zolnierkie@samsaung.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <53264BA4.3000401@jinso.co.jp>
+Sender: linux-sh-owner@vger.kernel.org
+To: Cao Minh Hiep <cm-hiep@jinso.co.jp>
+Cc: Mark Brown <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Geert Uytterhoeven <geert+renesas@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+Hi Hiep,
 
-On 03/17/2014 11:51 AM, Chanwoo Choi wrote:
-> Hi Tomasz,
-> 
-> On 03/15/2014 02:42 AM, Tomasz Figa wrote:
->> Hi Chanwoo,
+On Mon, Mar 17, 2014 at 2:11 AM, =E3=82=AB=E3=82=AA=E3=80=80=E3=83=9F=E3=
+=83=B3=E3=80=80=E3=83=92=E3=82=A7=E3=83=83=E3=83=97 <cm-hiep@jinso.co.j=
+p> wrote:
+> On 03/13/2014 06:23 PM, Geert Uytterhoeven wrote:
+>> On Thu, Mar 13, 2014 at 9:29 AM, Cao Minh Hiep <cm-hiep@jinso.co.jp>
+>> wrote:
+>>> In order to transmit and receive data when have 32 bytes of data th=
+at
+>>> ready has prepared on Transmit/Receive Buffer to transmit or receiv=
+e.
+>>> Instead transmits/receives a byte data using Transmit/Receive Buffe=
+r
+>>> Data Triggering Number will improve the speed of transfer data.
 >>
->> On 13.03.2014 09:17, Chanwoo Choi wrote:
->>> There are not the clock controller of ppmudmc0/1. This patch control the clock
->>> of ppmudmc0/1 which is used for monitoring memory bus utilization.
->>>
->>> Also, this patch code clean about regulator control and free resource
->>> when calling exit/remove function.
->>>
->>> For example,
->>> busfreq@106A0000 {
->>>     compatible = "samsung,exynos4x12-busfreq";
->>>
->>>     /* Clock for PPMUDMC0/1 */
->>>     clocks = <&clock CLK_PPMUDMC0>, <&clock CLK_PPMUDMC1>;
->>>     clock-names = "ppmudmc0", "ppmudmc1";
->>>
->>>     /* Regulator for MIF/INT block */
->>>     vdd_mif-supply = <&buck1_reg>;
->>>     vdd_int-supply = <&buck3_reg>;
->>> };
->>>
->>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> Thanks for your patch, this looks like a valuable improvement!
+>>
+>> Unfortunately your patch doesn't apply against spi/for-next anymore,=
+ as
+>> the driver has changed a lot lately, due to the addition of RZ/A1H a=
+nd
+>> Quad/Dual support.
+>>
+> Thanks, Do you mean this patch did not need for next and I don't mind=
+ about
+> it?
 
-I modify this patch according your comment as following:
+It means you will have to rework your patch to apply on top of
+https://git.kernel.org/cgit/linux/kernel/git/broonie/spi.git/tree/drive=
+rs/spi?h=3Dfor-next
+before the SPI maintainer can accept it.
 
-Best Regards,
-Chanwoo Choi
+Thanks!
 
->From c8f2fbc4c1166ec02fb2ad46164bc7ed9118721b Mon Sep 17 00:00:00 2001
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Date: Fri, 14 Mar 2014 12:05:54 +0900
-Subject: [PATCH] devfreq: exynos4: Add ppmu's clock control and code clean
- about regulator control
+Gr{oetje,eeting}s,
 
-There are not the clock controller of ppmudmc0/1. This patch control the clock
-of ppmudmc0/1 which is used for monitoring memory bus utilization.
+                        Geert
 
-Also, this patch code clean about regulator control and free resource
-when calling exit/remove function.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
+m68k.org
 
-For example,
-busfreq@106A0000 {
-	compatible = "samsung,exynos4x12-busfreq";
-
-	/* Clock for PPMUDMC0/1 */
-	clocks = <&clock CLK_PPMUDMC0>, <&clock CLK_PPMUDMC1>;
-	clock-names = "ppmudmc0", "ppmudmc1";
-
-	/* Regulator for MIF/INT block */
-	vdd_mif-supply = <&buck1_reg>;
-	vdd_int-supply = <&buck3_reg>;
-};
-
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
----
- drivers/devfreq/exynos/exynos4_bus.c | 97 +++++++++++++++++++++++++++++++-----
- 1 file changed, 84 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/devfreq/exynos/exynos4_bus.c b/drivers/devfreq/exynos/exynos4_bus.c
-index 4c630fb..3956bcc 100644
---- a/drivers/devfreq/exynos/exynos4_bus.c
-+++ b/drivers/devfreq/exynos/exynos4_bus.c
-@@ -62,6 +62,11 @@ enum exynos_ppmu_idx {
- 	PPMU_END,
- };
- 
-+static const char *exynos_ppmu_clk_name[] = {
-+	[PPMU_DMC0]	= "ppmudmc0",
-+	[PPMU_DMC1]	= "ppmudmc1",
-+};
-+
- #define EX4210_LV_MAX	LV_2
- #define EX4x12_LV_MAX	LV_4
- #define EX4210_LV_NUM	(LV_2 + 1)
-@@ -86,6 +91,7 @@ struct busfreq_data {
- 	struct regulator *vdd_mif; /* Exynos4412/4212 only */
- 	struct busfreq_opp_info curr_oppinfo;
- 	struct exynos_ppmu ppmu[PPMU_END];
-+	struct clk *clk_ppmu[PPMU_END];
- 
- 	struct notifier_block pm_notifier;
- 	struct mutex lock;
-@@ -724,6 +730,17 @@ static void exynos4_bus_exit(struct device *dev)
- 	struct busfreq_data *data = dev_get_drvdata(dev);
- 	int i;
- 
-+	/*
-+	 * Un-map memory map and disable regulator/clocks
-+	 * to prevent power leakage.
-+	 */
-+	regulator_disable(data->vdd_int);
-+	if (data->type == TYPE_BUSF_EXYNOS4x12)
-+		regulator_disable(data->vdd_mif);
-+
-+	for (i = 0; i < PPMU_END; i++)
-+		clk_disable_unprepare(data->clk_ppmu[i]);
-+
- 	for (i = 0; i < PPMU_END; i++)
- 		iounmap(data->ppmu[i].hw_base);
- }
-@@ -989,6 +1006,7 @@ static int exynos4_busfreq_parse_dt(struct busfreq_data *data)
- {
- 	struct device *dev = data->dev;
- 	struct device_node *np = dev->of_node;
-+	const char **clk_name = exynos_ppmu_clk_name;
- 	int i, ret = 0;
- 
- 	if (!np) {
-@@ -1006,8 +1024,67 @@ static int exynos4_busfreq_parse_dt(struct busfreq_data *data)
- 		}
- 	}
- 
-+	for (i = 0; i < PPMU_END; i++) {
-+		data->clk_ppmu[i] = devm_clk_get(dev, clk_name[i]);
-+		if (IS_ERR(data->clk_ppmu[i])) {
-+			dev_warn(dev, "Failed to get %s clock\n", clk_name[i]);
-+			goto err_clocks;
-+		}
-+
-+		ret = clk_prepare_enable(data->clk_ppmu[i]);
-+		if (ret < 0) {
-+			dev_warn(dev, "Failed to enable %s clock\n", clk_name[i]);
-+			data->clk_ppmu[i] = NULL;
-+			goto err_clocks;
-+		}
-+	}
-+
-+	/* Get regulator to control voltage of int block */
-+	data->vdd_int = devm_regulator_get(dev, "vdd_int");
-+	if (IS_ERR(data->vdd_int)) {
-+		dev_err(dev, "Failed to get the regulator of vdd_int\n");
-+		ret = PTR_ERR(data->vdd_int);
-+		goto err_clocks;
-+	}
-+	ret = regulator_enable(data->vdd_int);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to enable regulator of vdd_int\n");
-+		goto err_clocks;
-+	}
-+
-+	switch (data->type) {
-+	case TYPE_BUSF_EXYNOS4210:
-+		break;
-+	case TYPE_BUSF_EXYNOS4x12:
-+		/* Get regulator to control voltage of mif blk if Exynos4x12 */
-+		data->vdd_mif = devm_regulator_get(dev, "vdd_mif");
-+		if (IS_ERR(data->vdd_mif)) {
-+			dev_err(dev, "Failed to get the regulator vdd_mif\n");
-+			ret = PTR_ERR(data->vdd_mif);
-+			goto err_regulator;
-+		}
-+		ret = regulator_enable(data->vdd_mif);
-+		if (ret < 0) {
-+			dev_err(dev, "Failed to enable regulator of vdd_mif\n");
-+			goto err_regulator;
-+		}
-+		break;
-+	default:
-+		dev_err(dev, "Unknown device type : %d\n", data->type);
-+		return -EINVAL;
-+	};
-+
- 	return 0;
- 
-+err_regulator:
-+	regulator_disable(data->vdd_int);
-+err_clocks:
-+	for (i = 0; i < PPMU_END; i++) {
-+		if (IS_ERR(data->clk_ppmu[i]))
-+			continue;
-+		else
-+			clk_disable_unprepare(data->clk_ppmu[i]);
-+	}
- err_iomap:
- 	for (i = 0; i < PPMU_END; i++) {
- 		if (IS_ERR_OR_NULL(data->ppmu[i].hw_base))
-@@ -1074,19 +1151,6 @@ static int exynos4_busfreq_probe(struct platform_device *pdev)
- 		return err;
- 	}
- 
--	data->vdd_int = devm_regulator_get(dev, "vdd_int");
--	if (IS_ERR(data->vdd_int)) {
--		dev_err(dev, "Cannot get the regulator \"vdd_int\"\n");
--		return PTR_ERR(data->vdd_int);
--	}
--	if (data->type == TYPE_BUSF_EXYNOS4x12) {
--		data->vdd_mif = devm_regulator_get(dev, "vdd_mif");
--		if (IS_ERR(data->vdd_mif)) {
--			dev_err(dev, "Cannot get the regulator \"vdd_mif\"\n");
--			return PTR_ERR(data->vdd_mif);
--		}
--	}
--
- 	rcu_read_lock();
- 	opp = dev_pm_opp_find_freq_floor(dev,
- 					 &exynos4_devfreq_profile.initial_freq);
-@@ -1146,6 +1210,13 @@ err_notifier_opp:
- 	return err;
- 
- err_devfreq:
-+	regulator_disable(data->vdd_int);
-+	if (data->type == TYPE_BUSF_EXYNOS4x12)
-+		regulator_disable(data->vdd_mif);
-+
-+	for (i = 0; i < PPMU_END; i++)
-+		clk_disable_unprepare(data->clk_ppmu[i]);
-+
- 	for (i = 0; i < PPMU_END; i++)
- 		iounmap(data->ppmu[i].hw_base);
- 
--- 
-1.8.0
-
-
+In personal conversations with technical people, I call myself a hacker=
+=2E But
+when I'm talking to journalists I just say "programmer" or something li=
+ke that.
+                                -- Linus Torvalds
