@@ -1,145 +1,78 @@
-From: Vikas Sajjan <vikas.sajjan@samsung.com>
-Subject: [PATCH v2 3/3] arm: exynos5260: add support for S2R
-Date: Mon, 17 Mar 2014 18:39:55 +0530
-Message-ID: <1395061795-17777-4-git-send-email-vikas.sajjan@samsung.com>
-References: <1395061795-17777-1-git-send-email-vikas.sajjan@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1395061795-17777-1-git-send-email-vikas.sajjan@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: vikas.sajjan@samsung.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: kgene.kim@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, Abhilash Kesavan <a.kesavan@samsung.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] SPI: Add driver for Cadence SPI controller
+Date: Mon, 17 Mar 2014 13:14:53 +0000
+Message-ID: <20140317131453.GF11706@sirena.org.uk>
+References: <1395057936-8643-1-git-send-email-harinik@xilinx.com>
+ <CAL_JsqKacetGytGUJir7ky3qOgCy-3ny1pT_Bx4eCYV2wMgcTg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="nYySOmuH/HDX6pKp"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKacetGytGUJir7ky3qOgCy-3ny1pT_Bx4eCYV2wMgcTg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Adds Suspend to RAM (S2R) support to exynos5260.
 
-Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
-Signed-off-by: Vikas Sajjan <vikas.sajjan@samsung.com>
----
- arch/arm/mach-exynos/pm.c       |   62 +++++++++++++++++++++++++++++++--------
- arch/arm/mach-exynos/regs-pmu.h |   12 ++++++++
- 2 files changed, 61 insertions(+), 13 deletions(-)
+--nYySOmuH/HDX6pKp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/mach-exynos/pm.c b/arch/arm/mach-exynos/pm.c
-index dbe9670..12cc241 100644
---- a/arch/arm/mach-exynos/pm.c
-+++ b/arch/arm/mach-exynos/pm.c
-@@ -77,12 +77,20 @@ static const struct exynos_wkup_irq exynos5250_wkup_irq[] = {
- 	{ /* sentinel */ },
- };
- 
-+static const struct exynos_wkup_irq exynos5260_wkup_irq[] = {
-+	{ 105, BIT(1) }, /* RTC alarm */
-+	{ 106, BIT(2) }, /* RTC tick */
-+	{ /* sentinel */ },
-+};
-+
- static int exynos_irq_set_wake(struct irq_data *data, unsigned int state)
- {
- 	const struct exynos_wkup_irq *wkup_irq;
- 
- 	if (soc_is_exynos5250())
- 		wkup_irq = exynos5250_wkup_irq;
-+	else if (soc_is_exynos5260())
-+		wkup_irq = exynos5260_wkup_irq;
- 	else
- 		wkup_irq = exynos4_wkup_irq;
- 
-@@ -124,10 +132,20 @@ static void exynos_pm_prepare(void)
- 	unsigned int tmp;
- 
- 	/* Set wake-up mask registers */
--	__raw_writel(exynos_get_eint_wake_mask(), S5P_EINT_WAKEUP_MASK);
--	__raw_writel(exynos_irqwake_intmask & ~(1 << 31), S5P_WAKEUP_MASK);
-+	if (soc_is_exynos5260()) {
-+		__raw_writel(exynos_get_eint_wake_mask(),
-+					EXYNOS5260_EINT_WAKEUP_MASK);
-+		__raw_writel(exynos_irqwake_intmask & ~(1 << 31),
-+					EXYNOS5260_WAKEUP_MASK);
-+	} else {
-+		__raw_writel(exynos_get_eint_wake_mask(),
-+					S5P_EINT_WAKEUP_MASK);
-+		__raw_writel(exynos_irqwake_intmask & ~(1 << 31),
-+					S5P_WAKEUP_MASK);
-+	}
- 
--	s3c_pm_do_save(exynos_core_save, ARRAY_SIZE(exynos_core_save));
-+	if (!soc_is_exynos5260())
-+		s3c_pm_do_save(exynos_core_save, ARRAY_SIZE(exynos_core_save));
- 
- 	if (soc_is_exynos5250()) {
- 		s3c_pm_do_save(exynos5_sys_save, ARRAY_SIZE(exynos5_sys_save));
-@@ -221,21 +239,39 @@ static void exynos_pm_resume(void)
- 			      : "cc");
- 	}
- 
--	/* For release retention */
--
--	__raw_writel((1 << 28), S5P_PAD_RET_MAUDIO_OPTION);
--	__raw_writel((1 << 28), S5P_PAD_RET_GPIO_OPTION);
--	__raw_writel((1 << 28), S5P_PAD_RET_UART_OPTION);
--	__raw_writel((1 << 28), S5P_PAD_RET_MMCA_OPTION);
--	__raw_writel((1 << 28), S5P_PAD_RET_MMCB_OPTION);
--	__raw_writel((1 << 28), S5P_PAD_RET_EBIA_OPTION);
--	__raw_writel((1 << 28), S5P_PAD_RET_EBIB_OPTION);
-+	if (soc_is_exynos5250()) {
-+		/* For release retention */
-+
-+		__raw_writel((1 << 28), S5P_PAD_RET_MAUDIO_OPTION);
-+		__raw_writel((1 << 28), S5P_PAD_RET_GPIO_OPTION);
-+		__raw_writel((1 << 28), S5P_PAD_RET_UART_OPTION);
-+		__raw_writel((1 << 28), S5P_PAD_RET_MMCA_OPTION);
-+		__raw_writel((1 << 28), S5P_PAD_RET_MMCB_OPTION);
-+		__raw_writel((1 << 28), S5P_PAD_RET_EBIA_OPTION);
-+		__raw_writel((1 << 28), S5P_PAD_RET_EBIB_OPTION);
-+	} else if (soc_is_exynos5260()) {
-+		/* For release retention */
-+		__raw_writel((1 << 28), EXYNOS5260_PAD_RETENTION_LPDDR3_OPTION);
-+		__raw_writel((1 << 28), EXYNOS5260_PAD_RET_MAUDIO_OPTION);
-+		__raw_writel((1 << 28), EXYNOS5260_PAD_RET_JTAG_OPTION);
-+		__raw_writel((1 << 28), EXYNOS5260_PAD_RETENTION_MMC2_OPTION);
-+		__raw_writel((1 << 28), EXYNOS5260_PAD_RETENTION_TOP_OPTION);
-+		__raw_writel((1 << 28), EXYNOS5260_PAD_RETENTION_UART_OPTION);
-+		__raw_writel((1 << 28), EXYNOS5260_PAD_RETENTION_MMC0_OPTION);
-+		__raw_writel((1 << 28), EXYNOS5260_PAD_RETENTION_MMC1_OPTION);
-+		__raw_writel((1 << 28), EXYNOS5260_PAD_RETENTION_SPI_OPTION);
-+		__raw_writel((1 << 28), EXYNOS5260_PAD_RETENTION_MIF_OPTION);
-+		__raw_writel((1 << 28),
-+				EXYNOS5260_PAD_RETENTION_BOOTLDO_OPTION);
-+	}
- 
- 	if (soc_is_exynos5250())
- 		s3c_pm_do_restore(exynos5_sys_save,
- 			ARRAY_SIZE(exynos5_sys_save));
- 
--	s3c_pm_do_restore_core(exynos_core_save, ARRAY_SIZE(exynos_core_save));
-+	if (!soc_is_exynos5260())
-+		s3c_pm_do_restore_core(exynos_core_save,
-+				ARRAY_SIZE(exynos_core_save));
- 
- 	if (IS_ENABLED(CONFIG_SMP) && !soc_is_exynos5250())
- 		scu_enable(S5P_VA_SCU);
-diff --git a/arch/arm/mach-exynos/regs-pmu.h b/arch/arm/mach-exynos/regs-pmu.h
-index a81926b..906dc1e 100644
---- a/arch/arm/mach-exynos/regs-pmu.h
-+++ b/arch/arm/mach-exynos/regs-pmu.h
-@@ -532,6 +532,18 @@
- #define EXYNOS5260_EAGLE_L2_STATUS			S5P_PMUREG(0x2604)
- #define EXYNOS5260_KFC_L2_STATUS			S5P_PMUREG(0x2624)
- 
-+#define EXYNOS5260_PAD_RETENTION_LPDDR3_OPTION	S5P_PMUREG(0x3008)
-+#define EXYNOS5260_PAD_RET_MAUDIO_OPTION	S5P_PMUREG(0x3028)
-+#define EXYNOS5260_PAD_RET_JTAG_OPTION		S5P_PMUREG(0x3048)
-+#define EXYNOS5260_PAD_RETENTION_MMC2_OPTION	S5P_PMUREG(0x30C8)
-+#define EXYNOS5260_PAD_RETENTION_TOP_OPTION	S5P_PMUREG(0x3108)
-+#define EXYNOS5260_PAD_RETENTION_UART_OPTION	S5P_PMUREG(0x3128)
-+#define EXYNOS5260_PAD_RETENTION_MMC0_OPTION	S5P_PMUREG(0x3148)
-+#define EXYNOS5260_PAD_RETENTION_MMC1_OPTION	S5P_PMUREG(0x3168)
-+#define EXYNOS5260_PAD_RETENTION_SPI_OPTION	S5P_PMUREG(0x31C8)
-+#define EXYNOS5260_PAD_RETENTION_MIF_OPTION	S5P_PMUREG(0x31E8)
-+#define EXYNOS5260_PAD_RETENTION_BOOTLDO_OPTION	S5P_PMUREG(0x3248)
-+
- /* CENTRAL_SEQ_OPTION */
- #define EXYNOS5260_ARM_USE_STANDBY_WFI0			(1 << 16)
- #define EXYNOS5260_ARM_USE_STANDBY_WFI1			(1 << 17)
--- 
-1.7.9.5
+On Mon, Mar 17, 2014 at 07:47:24AM -0500, Rob Herring wrote:
+
+Please delete irrelevant context from your replies, it makes it easier
+to find the new content.
+
+> On Mon, Mar 17, 2014 at 7:05 AM, Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+
+> > +/* Macros for the SPI controller read/write */
+> > +#define cdns_spi_read(addr)    readl_relaxed(addr)
+> > +#define cdns_spi_write(addr, val)      writel_relaxed((val), (addr))
+
+> Just use readl/writel directly.
+
+Or make them static inline structures which take the driver data
+structure and an offset within the register map for the device and do
+the maths to resolve the actual address.
+
+> > +static SIMPLE_DEV_PM_OPS(cdns_spi_dev_pm_ops, cdns_spi_suspend,
+> > +                        cdns_spi_resume);
+
+> > +/* Work with hotplug and coldplug */
+> > +MODULE_ALIAS("platform:" CDNS_SPI_NAME);
+
+> Not sure, but I don't think this should be needed.
+
+It won't be used by DT systems but it is good practice, especially with
+something like this that clearly is a generic IP which could be used on
+non-DT systems too (it's not like it costs anything meaningful).
+
+--nYySOmuH/HDX6pKp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTJvVKAAoJELSic+t+oim9NoMP/3CVL2JtmNVGnAlppFjd9mMJ
+LtioqcpAiBYfuq/ayoHIQ1JaZYmjTPMvMty9TFetCAhGy2g6lFnlNll15vtnKj/g
+Y9El2X3L8HwNw48jkcV180vBxi5yxGtWjoaM4o1wCewsTwhNiZwC5F0M/ytagORb
+BUJgptmgAv9/dF1Nq+nxJONmJ8avR48PKPeY06950oWtrwWFNJ05g0yC04ZQCzoF
+w3yoPdYXQANLT4HMI4St7qVu+CO6+q/0u+sqB9Ugi5aQijF7Q5kA7/mZHxtXAvif
+mrBHru2O/Qh2E76rzu98xyq79IJ8Jb5vYR+hLauvPsO1wB1xmQ+iNu8bZc62fyId
+APABMGlqcB+o/PbbQ1znnAjuaXWOs06nIGv62MEpI1ar+vrwgwVVow/rc8FN9K5o
+OrzSYSdAR71CmLnW4upTnOsnV2TyBrwTEFt4cLQXsXWuo4g7Qg04DbPmILS5UYjM
+NCkww40V+lnETl/IWUeVoIYzm+hU6Nr9J69oKAmt6XKbTkWl7lk4LQGM23rN6/po
+4+ui+gkkHzeJfJS3RQGZNi2QVxjPWV6IEbBOaWVaGmxOPmI/CH5JS331pwSSLY0S
+2oaY0MgLrsmtLACJn3G3iFfJ5PLalenlr1JKERm4LTCwLgvcLtVdQwSMn7kjhCFL
+K5N9uzM0yG3kkWZHuQTJ
+=ISNL
+-----END PGP SIGNATURE-----
+
+--nYySOmuH/HDX6pKp--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
