@@ -1,78 +1,72 @@
-From: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
-Subject: Re: [PATCH v2] dt: platform driver: Fill the resources before probe
- and defer if needed
-Date: Mon, 17 Mar 2014 16:20:03 +0100
-Message-ID: <CACh+v5M+0+C2JJwLqcp6erWa81kt=j1HucHiE52ufj1SO9F75w@mail.gmail.com>
-References: <20140220153042.DF053C4050F@trevor.secretlab.ca>
-	<CACh+v5P=tcc-h_9r7Btwyu+jWjwH2ocmW4VCgDYqY7VMWsHuOA@mail.gmail.com>
-	<20140317142443.A2447C40A85@trevor.secretlab.ca>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 7/8] ASoC: atmel: document clock properties of the wm8904
+ driver
+Date: Mon, 17 Mar 2014 15:28:47 +0000
+Message-ID: <20140317152847.GI11706@sirena.org.uk>
+References: <1395049541-28128-1-git-send-email-voice.shen@atmel.com>
+ <1395049541-28128-8-git-send-email-voice.shen@atmel.com>
+ <20140317115518.GD11706@sirena.org.uk>
+ <5326FC20.9020304@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="U3s59FfKcByyGl+j"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140317142443.A2447C40A85@trevor.secretlab.ca>
+Content-Disposition: inline
+In-Reply-To: <5326FC20.9020304@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Jean-Jacques Hiblot <jjhiblot@traphandler.com>, devicetree <devicetree@vger.kernel.org>, gregkh <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, robh+dt <robh+dt@kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Boris BREZILLON <b.brezillon.dev@gmail.com>
+Cc: Bo Shen <voice.shen@atmel.com>, nicolas.ferre@atmel.com, Boris BREZILLON <b.brezillon@overkiz.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-2014-03-17 15:24 GMT+01:00 Grant Likely <grant.likely@secretlab.ca>:
-> On Mon, 17 Mar 2014 12:07:37 +0100, Jean-Jacques Hiblot <jjhiblot@traphandler.com> wrote:
->> Hi Grant,
->>
->> Sorry for the delay, I was having nice vacations.
->>
->> 2014-03-08 8:37 GMT+01:00 Grant Likely <grant.likely@linaro.org>:
->> > On Fri, 21 Feb 2014 14:18:40 +0100, Jean-Jacques Hiblot <jjhiblot@traphandler.com> wrote:
->> >> The goal of this patch is to allow drivers to be probed even if at the time of
->> >> the DT parsing some of their ressources are not available yet.
->> >
->> > Hi Jean-Jacques
->> >
->> > [...]
->> >> +int of_platform_device_prepare(struct platform_device *dev)
->> >> +{
->> >> +     struct device_node *np;
->> >> +     int i, irq_index;
->> >> +     struct resource *res;
->> >> +
->> >> +     /*
->> >> +      * This function applies only devices described in the DT.
->> >> +      * Other platform devices have their ressources already populated.
->> >> +      */
->> >> +     np = dev->dev.of_node;
->> >> +     if (!np)
->> >> +             return 0;
->> >
->> > I believe we already talked about the above test. This function must
->> > only process devices created by of_platform_populate(). Merely checking
->> > the of_node pointer is not a sufficient test because there are other
->> > paths in the kernel for creating platform_devices that might get a node
->> > pointer attached to it.
->> Yes we talked about this, but only to move it into of_platform_device_prepare().
->> Is there an existing way to know for sure that the device has been
->> created by of_platform_populate() ? I could not find one.
->
-> No there isn't. That information is used at population time and then
-> discarded. We'd need to add a flag or registry to mark those devices.
-OK. As I see it, this could be done either by adding a new flag to
-struct device or by maintaining a private list of "of created" devices
-in of/platform.c.
-I favor modifying struct device as it's is by far the simplest but
-it's also more intrusive. Any advice ?
 
-Jean-Jacques
+--U3s59FfKcByyGl+j
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
-> g.
->
->>
->> Jean-Jacques
->> >
->> > g.
->> >
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
+On Mon, Mar 17, 2014 at 02:44:00PM +0100, Boris BREZILLON wrote:
+> Le 17/03/2014 12:55, Mark Brown a =E9crit :
+> >On Mon, Mar 17, 2014 at 05:45:40PM +0800, Bo Shen wrote:
+
+> >If this is a clock for the CODEC it should be documented as part of the
+> >binding for the CODEC and connected to the CODEC in the device tree
+> >rather than being part of a machine driver binding.
+
+> Tell me if I'm mistaken, but doing this would implies a lot of changes.
+> The current wm8904 driver does not handle clk retrieval and configuration,
+> and I'm afraid that introducing these concepts would break other drivers
+> (those
+> connecting to a wm8904 codec).
+
+Currently the only mainline users of the device are the Atmel drivers.
+
+> How about adding CCF support as proposed in this series and think about a
+> cleaner
+> solution for a future release ?
+
+No, DT is an ABI so you can't do that - once something is in DT we're
+stuck supporting it so we can't do quick hacks so easily.
+
+--U3s59FfKcByyGl+j
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTJxSsAAoJELSic+t+oim9mVsP/2bBtrLwcabPJhC0LRrqF+OY
+shd/AOMYOl4OxnBPEmSQ59RIpTEXA67xzCdUY5qF8EP8bJHA/SWgwPQUyROoDgAW
+gwH6Kejpt7LnEUxJuDcJLnVPEDva+xI0Q4fRc2fyk6u/QuJ0/0nuJDKVdsHaCOqF
+ziIUbmvMx1Romv8FpN2ghKMQ/JL+FMYEeCTIeOzQtc9Xqdrnee912kHLhEu6qDU3
+QQq7EitZk+h85bmLgg7KoNSLWnYy1iNrjU6sfRyCXiJjWSVQIUXFJe/yhS4pUOwS
+HF0rVQWag/OwzeExEIMlrwZHA07Xlm3621RMPxfnWAQntXtA+PQc+0DyXyQIKY4V
+xmM7sdGHo9GqCnL5KDEMCQfRsshU6HRbArOZFVGl1YhxggGUVRdsQ6w7fe7TRM1I
+cIkiDLG5KYxiugQriZUTNoGcun5q4txdu78JHHyfQDk3I9xHSQkjAdy9DPf/xALt
+ZREvC2zDvp16ymLS0isVbymsu3aEy1DxbI5MDyAvkeL4SQzGYtAaFtL/rAAKj9ni
+UEkKex1gDrWXzpIdS+ML0qNKyg5UhT81L6p3Su+OA4S7tW5d2ArEuNh3eAkpglmv
+4kXygma0CNLqpd+uzFmDulueL2u3QzmawhZVQ1QOFN6fkHw+BYD7m3L+oxXdJHGf
+XTrum79Xk7gZVOdAqweY
+=WISg
+-----END PGP SIGNATURE-----
+
+--U3s59FfKcByyGl+j--
