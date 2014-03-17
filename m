@@ -1,19 +1,76 @@
-From: Santander Group <finance10-4xpy/TY5ttq9kPmOeW8C2+VHTGEOqg1L0E9HWUfgJXw@public.gmane.org>
-Subject: Financial Assistant /Loan Offer
-Date: Mon, 17 Mar 2014 21:48:46 +0100
-Message-ID: <aa8be39a-234c-4d7b-aa80-8d296398b94c@AMSPR02MB216.eurprd02.prod.outlook.com>
-Reply-To: <asloan01.loan-YDxpq3io04c@public.gmane.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v5 0/9] Use regmap+devm+DT in pm8xxx input drivers
+Date: Mon, 17 Mar 2014 14:17:44 -0700
+Message-ID: <53276678.6060000@codeaurora.org>
+References: <1393958088-1456-1-git-send-email-sboyd@codeaurora.org> <531F4CC8.5010202@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Description: Mail message body
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Recipients <finance10-4xpy/TY5ttq9kPmOeW8C2+VHTGEOqg1L0E9HWUfgJXw@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <531F4CC8.5010202@codeaurora.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Josh Cartwright <joshc@codeaurora.org>, linux-input@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-We offer all purpose loan at 3% interest rate. Contact Us for more details by Email:santafinance4-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ping?
+
+On 03/11/14 10:50, Stephen Boyd wrote:
+> ping?
+>
+> On 03/04/14 10:34, Stephen Boyd wrote:
+>> These patches move the pm8xxx input drivers over to use devm_* APIs
+>> and regmap. This breaks the dependency of these drivers on the pm8xxx
+>> specific read/write calls and also simplifies the probe code a bit.
+>> Finally we add devicetree support to these drivers so they can be probed
+>> on the platforms that are supported upstream.
+>>
+>> Changes since v4:
+>>  * Added reg property to bindings
+>>  * Added linux,* properties to keypad binding
+>>
+>> Changes since v3:
+>>  * Dropped devm conversion patch for pwrkey
+>>  * Fixed compilation of keypad
+>>
+>> Changes since v2:
+>>  * Rebased to v3.14-rc3
+>>
+>> Changes since v1:
+>>  * Picked up Dmitry's version of devm for pwrkey
+>>  * Added DT bindings and parsing patches
+>>  * Dropped patches picked up by Dmitry
+>>
+>> Stephen Boyd (9):
+>>   Input: pmic8xxx-keypad - Fix build by removing gpio configuration
+>>   Input: pmic8xxx-keypad - Migrate to devm_* APIs
+>>   Input: pmic8xxx-keypad - Migrate to regmap APIs
+>>   Input: pmic8xxx-keypad - Migrate to DT
+>>   Input: pmic8xxx-pwrkey - Migrate to DT
+>>   Input: pm8xxx-vibrator - Add DT match table
+>>   devicetree: bindings: Document PM8921/8058 keypads
+>>   devicetree: bindings: Document PM8921/8058 power keys
+>>   devicetree: bindings: Document PM8921/8058 vibrators
+>>
+>>  .../bindings/input/qcom,pm8xxx-keypad.txt          |  89 ++++++
+>>  .../bindings/input/qcom,pm8xxx-pwrkey.txt          |  46 +++
+>>  .../devicetree/bindings/input/qcom,pm8xxx-vib.txt  |  22 ++
+>>  drivers/input/keyboard/pmic8xxx-keypad.c           | 348 ++++++++-------------
+>>  drivers/input/misc/pm8xxx-vibrator.c               |   8 +
+>>  drivers/input/misc/pmic8xxx-pwrkey.c               |  33 +-
+>>  include/linux/input/pmic8xxx-keypad.h              |  52 ---
+>>  include/linux/input/pmic8xxx-pwrkey.h              |  31 --
+>>  8 files changed, 316 insertions(+), 313 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/input/qcom,pm8xxx-keypad.txt
+>>  create mode 100644 Documentation/devicetree/bindings/input/qcom,pm8xxx-pwrkey.txt
+>>  create mode 100644 Documentation/devicetree/bindings/input/qcom,pm8xxx-vib.txt
+>>  delete mode 100644 include/linux/input/pmic8xxx-keypad.h
+>>  delete mode 100644 include/linux/input/pmic8xxx-pwrkey.h
+>>
+>
+
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
+
