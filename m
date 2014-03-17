@@ -1,98 +1,155 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v6 2/3] ARM: sun7i/sun6i: dts: Add NMI
- irqchip support
-Date: Mon, 17 Mar 2014 14:30:58 +0100
-Message-ID: <20140317133057.GK27873@lukather>
-References: <1394890861-18347-1-git-send-email-carlo@caione.org>
- <1394890861-18347-3-git-send-email-carlo@caione.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v7 2/6] pci: OF: Fix the conversion of IO ranges into IO
+ resources.
+Date: Mon, 17 Mar 2014 13:41:03 +0000
+Message-ID: <20140317134103.GD6457@e106497-lin.cambridge.arm.com>
+References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
+ <201403141946.23921.arnd@arndb.de>
+ <20140314190017.GA6457@e106497-lin.cambridge.arm.com>
+ <201403142016.11105.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="RNRUMt0ZF5Yaq/Aq"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBCHUTOMQKGQEFQXHJBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201403142016.11105.arnd@arndb.de>
 Content-Disposition: inline
-In-Reply-To: <1394890861-18347-3-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-
---RNRUMt0ZF5Yaq/Aq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, Mar 15, 2014 at 02:41:00PM +0100, Carlo Caione wrote:
-> This patch adds DTS entries for NMI controller as child of GIC.
+On Fri, Mar 14, 2014 at 07:16:10PM +0000, Arnd Bergmann wrote:
+> On Friday 14 March 2014, Liviu Dudau wrote:
+> > On Fri, Mar 14, 2014 at 06:46:23PM +0000, Arnd Bergmann wrote:
+> > > On Friday 14 March 2014, Liviu Dudau wrote:
+> > >=20
+> > > > +int of_pci_range_to_resource(struct of_pci_range *range,
+> > > > +       struct device_node *np, struct resource *res)
+> > > > +{
+> > > > +       res->flags =3D range->flags;
+> > > > +       res->parent =3D res->child =3D res->sibling =3D NULL;
+> > > > +       res->name =3D np->full_name;
+> > > > +
+> > > > +       if (res->flags & IORESOURCE_IO) {
+> > > > +               unsigned long port =3D -1;
+> > > > +               int err =3D pci_register_io_range(range->cpu_ad=
+dr, range->size);
+> > > > +               if (err)
+> > > > +                       goto invalid_range;
+> > > > +               port =3D pci_address_to_pio(range->cpu_addr);
+> > > > +               if (port =3D=3D (unsigned long)-1) {
+> > > > +                       err =3D -EINVAL;
+> > > > +                       goto invalid_range;
+> > > > +               }
+> > > > +               res->start =3D port;
+> > > > +       } else {
+> > >=20
+> > > This one concatenates the I/O spaces and assumes that each space =
+starts
+> > > at bus address zero, and takes little precaution to avoid filling=
+ up IO_SPACE_LIMIT
+> > > if the sizes are too big.
+> >=20
+> > Actually, you are attaching too much meaning to this one. pci_regis=
+ter_io_range()
+> > only tries to remember the ranges, nothing else. And it *does* chec=
+k that the
+> > total sum of registered ranges does not exceed IO_SPACE_LIMIT. This=
+ is used before
+> > we have any resource mapped for that range (actually it is used to =
+*create* the
+> > resource for the range) so there is no other helping hand.
+> >=20
+> > It doesn't assume that space starts at bus address zero, it ignores=
+ the bus address.
+> > It only handles CPU addresses for the range, to help with generatin=
+g logical IO ports.
+> > If you have overlapping CPU addresses with different bus addresses =
+it will not work,
+> > but then I guess you will have different problems then.
 >=20
-> Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun6i-a31.dtsi | 9 +++++++++
->  arch/arm/boot/dts/sun7i-a20.dtsi | 9 +++++++++
->  2 files changed, 18 insertions(+)
+> The problem is that it tries to set up a mapping so that pci_address_=
+to_pio
+> returns the actual port number, but the port that you assign to res->=
+start
+> above is assumed to match the 'start' variable below. If the value en=
+ds
+> up different, the BARs that get set by the PCI bus scan are not in th=
+e
+> same place that got ioremapped into the virtual I/O aperture.
+
+Yes, after writting a reply trying to justify why it would actually wor=
+k I've realised
+where the fault of my logic stands (short version, two host controllers=
+ will get different
+io_offsets but the ports numbers will start from zero leading to confus=
+ion about which
+host controller the resource belongs to).
+
+I will try to split your function into two parts, one that calculates t=
+he io_offset and
+another that does the ioremap_page_range() side and replace my cooked f=
+unction.
+
+Best regards,
+Liviu
+
 >=20
-> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a=
-31.dtsi
-> index 5256ad9..4a5050c 100644
-> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
-> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-> @@ -190,6 +190,15 @@
->  		#size-cells =3D <1>;
->  		ranges;
-> =20
-> +		nmi_intc: sc-nmi-intc@01f00c0c {
-
-It should be interrupt-controller@01f00c0c, according to the ePAPR.
-
-> +			compatible =3D "allwinner,sun6i-a31-sc-nmi";
-
-I'm curious, what is the "sc" for?
-
-> +			interrupt-controller;
-> +			#interrupt-cells =3D <2>;
-> +			reg =3D <0x01f00c0c 0x38>;
-> +			interrupt-parent =3D <&gic>;
-
-This is actually the default.
-
-> +			interrupts =3D <0 0 4>;
-> +		};
-> +
-
-Thanks!
-Maxime
+> > > >+unsigned long pci_ioremap_io(const struct resource *res, phys_a=
+ddr_t phys_addr)
+> > > >+{
+> > > >+       unsigned long start, len, virt_start;
+> > > >+       int err;
+> > > >+
+> > > >+       if (res->end > IO_SPACE_LIMIT)
+> > > >+               return -EINVAL;
+> > > >+
+> > > >+       /*
+> > > >+        * try finding free space for the whole size first,
+> > > >+        * fall back to 64K if not available
+> > > >+        */
+> > > >+       len =3D resource_size(res);
+> > > >+       start =3D bitmap_find_next_zero_area(pci_iospace, IO_SPA=
+CE_PAGES,
+> > > >+                               res->start / PAGE_SIZE, len / PA=
+GE_SIZE, 0);
+> > > >+       if (start =3D=3D IO_SPACE_PAGES && len > SZ_64K) {
+> > > >+               len =3D SZ_64K;
+> > > >+               start =3D 0;
+> > > >+               start =3D bitmap_find_next_zero_area(pci_iospace=
+, IO_SPACE_PAGES,
+> > > >+                                       start, len / PAGE_SIZE, =
+0);
+> > > >+       }
+> > > >+
+> > > >+       /* no 64K area found */
+> > > >+       if (start =3D=3D IO_SPACE_PAGES)
+> > > >+               return -ENOMEM;
+> > > >+
+> > > >+       /* ioremap physical aperture to virtual aperture */
+> > > >+       virt_start =3D start * PAGE_SIZE + (unsigned long)PCI_IO=
+BASE;
+> > > >+       err =3D ioremap_page_range(virt_start, virt_start + len,
+> > > >+                               phys_addr, __pgprot(PROT_DEVICE_=
+nGnRE));
+> > > >+       if (err)
+> > > >+               return err;
+> > > >+
+> > > >+       bitmap_set(pci_iospace, start, len / PAGE_SIZE);
+> > > >+
+> > > >+       /* return io_offset */
+> > > >+       return start * PAGE_SIZE - res->start;
+> > > >+}
+>=20
+> 	Arnd
+>=20
 
 --=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---RNRUMt0ZF5Yaq/Aq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTJvkRAAoJEBx+YmzsjxAgOXEP/3DXSA61Vp504CnLz7a36ZEr
-WphG47eJugMxvc2k+qX6mkBqbt1bAbLsVTnNKtW8H7Nj6yroeBosfE7evWzsaNT+
-SBivEkPU6hK/psJrCCjeoKKBMD6oj3kl5lssk9Wg1SQiL8vOmL7eRtfEmzKGyqj0
-R60lj9NQZx81nimGIr7/5bzpmMaWs16+HmkaAhWy73LOjdhtKemKozYZxgSNg4kG
-u4qKhZAFzgozQrio4BRYlNLCEYL3H5Q9i/CumpZ0EarZSUbmbu5hXIpW5VZr2vEW
-DC2Q9vbxdSH8VSC0p1S+FzRSosvcxlEcj/Hhz8eJkvZlg30FP1746p7CYPIOykvO
-O7blO3EZNRpWwI9iDZ6RTh1bIbC68lidmt7RXdB0d9l+mMvcn6llagCNPxVsTP/N
-HZfMWAOXOLuGhHlIVIuyUMpsleN/PHXQsNqbITdB9Xkes7OmVxxMKa5Ffl2onhcC
-h5reSdVeSMmLu6H76cx0/CvJRaSDWOxe+6gaQdme+NfLKFiAq6lpR55UA0E/cwX5
-nsJyCbgpPJyNjL1r/yA4TIr9doYRvI5OXNvWeDU2zHEMsS5nDPwZsfgtk9RN1AtK
-rJpJFPHd3TS+X/aTaqLZO6cTHC5m1T/XmTzoXASTnMiGbtZAKqrJlCgbLnM66xTC
-gLpi+tYoBdLWi4C23o7x
-=ZzvX
------END PGP SIGNATURE-----
-
---RNRUMt0ZF5Yaq/Aq--
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
