@@ -1,74 +1,78 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v2 3/5] net: cpsw: Add control-module macid driver
-Date: Mon, 17 Mar 2014 10:05:08 +0100
-Message-ID: <20140317090508.GN15674@pengutronix.de>
-References: <1394888864-11007-1-git-send-email-mpa@pengutronix.de>
- <1394888864-11007-4-git-send-email-mpa@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1394888864-11007-4-git-send-email-mpa@pengutronix.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: "David S. Miller" <davem@davemloft.net>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH v3 3/3] Documentation: mfd: s2mps11: Describe S5M8767 and
+ S2MPS14 clocks
+Date: Mon, 17 Mar 2014 10:19:18 +0100
+Message-ID: <1395047958-17953-4-git-send-email-k.kozlowski@samsung.com>
+References: <1395047958-17953-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1395047958-17953-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, Sangbeom Kim <sbkim73@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: Tushar Behera <tushar.behera@linaro.org>, Yadwinder Singh Brar <yadi.brar@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Markus,
+Add bindings documentation for clocks on S5M8767 and S2MPS14 devices.
 
-On Sat, Mar 15, 2014 at 02:07:42PM +0100, Markus Pargmann wrote:
-> This driver extracts the hardware macid from the control module of
-> am335x processors. It exports a function cpsw_ctrl_macid_read for cps=
-w
-> to get the macid from within the processor.
->=20
-> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-> ---
->  .../devicetree/bindings/net/cpsw-ctrl-macid.txt    |  32 +++++
->  drivers/net/ethernet/ti/Kconfig                    |   1 +
->  drivers/net/ethernet/ti/Makefile                   |   2 +-
->  drivers/net/ethernet/ti/cpsw-ctrl-macid.c          | 138 +++++++++++=
-++++++++++
->  4 files changed, 172 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/net/cpsw-ctrl-m=
-acid.txt
->  create mode 100644 drivers/net/ethernet/ti/cpsw-ctrl-macid.c
->=20
-> diff --git a/Documentation/devicetree/bindings/net/cpsw-ctrl-macid.tx=
-t b/Documentation/devicetree/bindings/net/cpsw-ctrl-macid.txt
-> new file mode 100644
-> index 0000000..4eb39f6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/cpsw-ctrl-macid.txt
-> @@ -0,0 +1,32 @@
-> +TI CPSW ctrl macid Devicetree bindings
-> +--------------------------------------
-> +
-> +Required properties:
-> + - compatible		: Should be "ti,am3352-cpsw-ctrl-macid"
-this is called am3352-..., still you add it (in patch 5) to am33xx.dtsi
-and in the commit log you wrote about am335x. Looks abstruse.
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Tomasz Figa <t.figa@samsung.com>
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+---
+ Documentation/devicetree/bindings/mfd/s2mps11.txt |   24 +++++++++++++--------
+ 1 file changed, 15 insertions(+), 9 deletions(-)
 
-> + - reg			: physical base address and size of the cpsw
-> +			  registers map
-> + - reg-names		: names of the register map given in "reg" node
-> + - #ti,mac-address-ctrl-cells	: Should be <1>
-Would be sensible to drop this property, or at least let it default to =
-1
-if missing?
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+index 15ee89c3cc7b..67ea05ca8050 100644
+--- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
++++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+@@ -16,20 +16,25 @@ Optional properties:
+ - interrupts: Interrupt specifiers for interrupt sources.
+ 
+ Optional nodes:
+-- clocks: s2mps11 provides three(AP/CP/BT) buffered 32.768 KHz outputs, so to
+-  register these as clocks with common clock framework instantiate a sub-node
+-  named "clocks". It uses the common clock binding documented in :
++- clocks: s2mps11 and s5m8767 provide three(AP/CP/BT) buffered 32.768 KHz
++  outputs, so to register these as clocks with common clock framework
++  instantiate a sub-node named "clocks". It uses the common clock binding
++  documented in :
+   [Documentation/devicetree/bindings/clock/clock-bindings.txt]
++  The s2mps14 provides two (AP/BT) buffered 32.768 KHz outputs.
+   - #clock-cells: should be 1.
+ 
+   - The following is the list of clocks generated by the controller. Each clock
+     is assigned an identifier and client nodes use this identifier to specify
+     the clock which they consume.
+-    Clock               ID
+-    ----------------------
+-    32KhzAP		0
+-    32KhzCP		1
+-    32KhzBT		2
++    Clock               ID           Devices
++    ----------------------------------------------------------
++    32KhzAP		0            S2MPS11, S2MPS14, S5M8767
++    32KhzCP		1            S2MPS11, S5M8767
++    32KhzBT		2            S2MPS11, S2MPS14, S5M8767
++
++  - compatible: Should be one of: "samsung,s2mps11-clk", "samsung,s2mps14-clk",
++		"samsung,s5m8767-clk"
+ 
+ - regulators: The regulators of s2mps11 that have to be instantiated should be
+ included in a sub-node named 'regulators'. Regulator nodes included in this
+@@ -71,7 +76,8 @@ Example:
+ 		compatible = "samsung,s2mps11-pmic";
+ 		reg = <0x66>;
+ 
+-		s2m_osc: clocks{
++		s2m_osc: clocks {
++			compatible = "samsung,s2mps11-clk";
+ 			#clock-cells = 1;
+ 			clock-output-names = "xx", "yy", "zz";
+ 		};
+-- 
+1.7.9.5
