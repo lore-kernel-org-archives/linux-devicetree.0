@@ -1,71 +1,55 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 5/8] regulator: AXP20x: Add support for
- regulators subsystem
-Date: Mon, 17 Mar 2014 17:33:07 +0000
-Message-ID: <20140317173307.GX11706@sirena.org.uk>
-References: <1394898225-28452-1-git-send-email-carlo@caione.org>
- <1394898225-28452-6-git-send-email-carlo@caione.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v7 3/3] arm64: Add architecture support for PCI
+Date: Mon, 17 Mar 2014 17:38:21 +0000
+Message-ID: <20140317173821.GJ24070@arm.com>
+References: <1394811258-1500-1-git-send-email-Liviu.Dudau@arm.com>
+ <1394811258-1500-4-git-send-email-Liviu.Dudau@arm.com>
+ <20140314171457.GK18126@arm.com> <201403141838.08900.arnd@arndb.de>
+ <20140314180527.GZ6457@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5FFaGRZUwcpbKFrw"
-Return-path: <linux-sunxi+bncBDQ2L75W5QGBB3XDTSMQKGQEZXF2BSQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1394898225-28452-6-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+In-Reply-To: <20140314180527.GZ6457@e106497-lin.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Mar 14, 2014 at 06:05:27PM +0000, Liviu Dudau wrote:
+> On Fri, Mar 14, 2014 at 05:38:08PM +0000, Arnd Bergmann wrote:
+> > On Friday 14 March 2014, Catalin Marinas wrote:
+> > > On Fri, Mar 14, 2014 at 03:34:18PM +0000, Liviu Dudau wrote:
+> > > > --- /dev/null
+> > > > +++ b/arch/arm64/kernel/pci.c
+> > > [...]
+> > > > +int pci_register_io_range(phys_addr_t address, resource_size_t size)
+> > > [...]
+> > > > +unsigned long pci_address_to_pio(phys_addr_t address)
+> > > [...]
+> > > > +void pcibios_fixup_bus(struct pci_bus *bus)
+> > > [ actually most of this file ]
+> > > 
+> > > Maybe it was raised before already but can we have __weak generic
+> > > definitions of these functions? They don't seem to be arm64 specific in
+> > > any way.
+[...]
+> Catalin, if you are happy to ask for ACKs from all arch maintainers that might get
+> affected by our custom version of pci_address_to_pio() before you can pull PCI support
+> for arm64 then I can propose a new patchset.
 
---5FFaGRZUwcpbKFrw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+You don't need to change the other architectures, that's the point of a
+__weak definition, it will be automatically overridden. If you want, you
+can even place a GENERIC_PCI or whatever config option that is only
+selected by arm64 for the time being.
 
-On Sat, Mar 15, 2014 at 04:43:42PM +0100, Carlo Caione wrote:
-> AXP202 and AXP209 come with two synchronous step-down DC-DCs and five
-> LDOs. This patch introduces basic support for those regulators.
-
-This is mostly fine apart from the things Krzysztof mentioned and...
-
-> +static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
-> +{
-> +	struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
-> +
-> +	if (dcdcfreq < 750)
-> +		dcdcfreq = 750;
-> +
-> +	if (dcdcfreq > 1875)
-> +		dcdcfreq = 1875;
-
-I'd expect at least a warning on out of spec values being specified
-here.
-
---5FFaGRZUwcpbKFrw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTJzHQAAoJELSic+t+oim9kboQAJ35OxlOtD6lEQoSOmRZP6In
-zxPccnmam12tid7Pb7zWdYzwTUmiMKNeWeAavU58plKnNqC8qyW2n5lr3WIE5fue
-ARPpOolPSntEme8wAZ1Bj/QP+Ztur08c69dVx/E4Z5kAH6UdH056fsEoxjEVSjsv
-AVe9i44eq02PY0ui5P00VGu4oftk60Fr01qWiXLqqnJzVs7fYsR0Sh3O1EdsjWcI
-QNfaWOzE1EBU+4XegAjJlp+RYb3tdx6l0MXi6O309s4bDzVx4btDjDd+PLy5uPSz
-0TaecECOPWaQcU5FDIoMbWOZ+vbF5epM8GlFeBlt6a7GrzLD5+mAAByCY1D9d8SD
-FAIlSV7Cd01fqBDU1cN9yQgjDiIDaQrYt0h/WfkSpBuDaHWogb2HriGM1V8x6Qic
-5xSUHL9On3dNtj+YhAImYBylYzcx2cWgnLMF/dv8JZI5gxGsEdIAPDMYm0sNZ03Z
-y/v3L1hAiotd7Y+S14NWCsBO10T3YnEtLMJZug5LAAsBHaDcRniF9Ac0ez31ymBR
-EqujHtaWf/wGvzDIqswKtGmAXabvwApEy2VQnE9L5ZxeuHhewiZGLJoerqPvDfhN
-Ux9uS0/oZCziCD6DGp0hrP+FmUSuk9LhTk36aoZoLqD07WOOa1s6dm5wgin0vKB3
-OCtkTDMXzcWQYmMnIfRB
-=9ub5
------END PGP SIGNATURE-----
-
---5FFaGRZUwcpbKFrw--
+-- 
+Catalin
