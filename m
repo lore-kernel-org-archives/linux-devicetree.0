@@ -1,123 +1,55 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: [PATCH RFC 5/5] ARM: AM33XX: dts: Change the tda998x description
-Date: Mon, 17 Mar 2014 09:52:29 +0100
-Message-ID: <11bf968ac586e4a06d56c97d150ecf2c4afd8f27.1395049204.git.moinejf@free.fr>
-References: <cover.1395049204.git.moinejf@free.fr>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: Re: [PATCH 8/8] ARM: at91/dt: add clock properties to the wm8904
+ codec node
+Date: Mon, 17 Mar 2014 17:55:22 +0800
+Message-ID: <5326C68A.50307@atmel.com>
+References: <1395049541-28128-1-git-send-email-voice.shen@atmel.com>
+ <1395049541-28128-9-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.1395049204.git.moinejf@free.fr>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1395049541-28128-9-git-send-email-voice.shen@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>, nicolas.ferre@atmel.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Boris BREZILLON <b.brezillon@overkiz.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The tda998x being moved from a 'slave encoder' to a normal DRM
-encoder/connector and the tilcdc_slave glue being removed, the
-declaration of the HDMI transmitter description must be changed in
-the associated DTs.
+On 03/17/2014 05:45 PM, Bo Shen wrote:
+> From: Boris BREZILLON <b.brezillon@overkiz.com>
+>
+> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+> Signed-off-by: Bo Shen <voice.shen@atmel.com>
 
-Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
----
- arch/arm/boot/dts/am335x-base0033.dts  | 28 +++++++++++++++++++---------
- arch/arm/boot/dts/am335x-boneblack.dts | 21 ++++++++++++++++-----
- 2 files changed, 35 insertions(+), 14 deletions(-)
+Oh, sorry for my SOB. Please remove it when apply.
 
-diff --git a/arch/arm/boot/dts/am335x-base0033.dts b/arch/arm/boot/dts/am335x-base0033.dts
-index 72a9b3f..93cd40b 100644
---- a/arch/arm/boot/dts/am335x-base0033.dts
-+++ b/arch/arm/boot/dts/am335x-base0033.dts
-@@ -14,15 +14,6 @@
- 	model = "IGEP COM AM335x on AQUILA Expansion";
- 	compatible = "isee,am335x-base0033", "isee,am335x-igep0033", "ti,am33xx";
- 
--	hdmi {
--		compatible = "ti,tilcdc,slave";
--		i2c = <&i2c0>;
--		pinctrl-names = "default", "off";
--		pinctrl-0 = <&nxp_hdmi_pins>;
--		pinctrl-1 = <&nxp_hdmi_off_pins>;
--		status = "okay";
--	};
--
- 	leds_base {
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&leds_base_pins>;
-@@ -85,6 +76,11 @@
- 
- &lcdc {
- 	status = "okay";
-+	port {
-+		lcd_0: endpoint@0 {
-+			remote-endpoint = <&tda998x_0>;
-+		};
-+	};
- };
- 
- &i2c0 {
-@@ -92,4 +88,18 @@
- 		compatible = "at,24c256";
- 		reg = <0x50>;
- 	};
-+	tda998x: hdmi-encoder {
-+		compatible = "nxp,tda998x";
-+		reg = <0x70>;
-+
-+		pinctrl-names = "default", "off";
-+		pinctrl-0 = <&nxp_hdmi_pins>;
-+		pinctrl-1 = <&nxp_hdmi_off_pins>;
-+
-+		port {
-+			tda998x_0: endpoint@0 {
-+				remote-endpoint = <&lcd_0>;
-+			};
-+		};
-+	};
- };
-diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
-index 6b71ad9..a530bcb 100644
---- a/arch/arm/boot/dts/am335x-boneblack.dts
-+++ b/arch/arm/boot/dts/am335x-boneblack.dts
-@@ -64,15 +64,26 @@
- 
- &lcdc {
- 	status = "okay";
-+	port {
-+		lcd_0: endpoint@0 {
-+			remote-endpoint = <&tda998x_0>;
-+		};
-+	};
- };
- 
--/ {
--	hdmi {
--		compatible = "ti,tilcdc,slave";
--		i2c = <&i2c0>;
-+&i2c0 {
-+	tda998x: hdmi-encoder {
-+		compatible = "nxp,tda998x";
-+		reg = <0x70>;
-+
- 		pinctrl-names = "default", "off";
- 		pinctrl-0 = <&nxp_hdmi_bonelt_pins>;
- 		pinctrl-1 = <&nxp_hdmi_bonelt_off_pins>;
--		status = "okay";
-+
-+		port {
-+			tda998x_0: endpoint@0 {
-+				remote-endpoint = <&lcd_0>;
-+			};
-+		};
- 	};
- };
--- 
-1.9.0
+> ---
+>
+>   arch/arm/boot/dts/sama5d3xmb.dtsi | 2 ++
+>   1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/sama5d3xmb.dtsi b/arch/arm/boot/dts/sama5d3xmb.dtsi
+> index 306eef0..d9bb413 100644
+> --- a/arch/arm/boot/dts/sama5d3xmb.dtsi
+> +++ b/arch/arm/boot/dts/sama5d3xmb.dtsi
+> @@ -163,6 +163,8 @@
+>   		compatible = "atmel,asoc-wm8904";
+>   		pinctrl-names = "default";
+>   		pinctrl-0 = <&pinctrl_pck0_as_audio_mck>;
+> +		clocks = <&pck0>;
+> +		clock-names = "pck0";
+>
+>   		atmel,model = "wm8904 @ SAMA5D3EK";
+>   		atmel,audio-routing =
+>
+
+Best Regards,
+Bo Shen
