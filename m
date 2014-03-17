@@ -1,80 +1,211 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: [PATCH v2 9/9] drm/exynos/fimd: remove unused variable
-Date: Mon, 17 Mar 2014 14:16:12 +0100
-Message-ID: <1395062172-19756-1-git-send-email-a.hajda@samsung.com>
-References: <1395052045-23848-10-git-send-email-a.hajda@samsung.com>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH] SPI: Add driver for Cadence SPI controller
+Date: Mon, 17 Mar 2014 14:22:54 +0100
+Message-ID: <5326F72E.7010401@monstr.eu>
+References: <1395057936-8643-1-git-send-email-harinik@xilinx.com> <CAL_JsqKacetGytGUJir7ky3qOgCy-3ny1pT_Bx4eCYV2wMgcTg@mail.gmail.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1395052045-23848-10-git-send-email-a.hajda@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Denis Carikli <denis@eukrea.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="bnFEqD74vhxnPfpNcloCjqowcFUGmafpM"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKacetGytGUJir7ky3qOgCy-3ny1pT_Bx4eCYV2wMgcTg@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Harini Katakam <harinik@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch removes unused vidcon0 field from fimd_context structure.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--bnFEqD74vhxnPfpNcloCjqowcFUGmafpM
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
----
-v2:
-- corrected vidcon0 calculation
----
- drivers/gpu/drm/exynos/exynos_drm_fimd.c | 20 ++++++--------------
- 1 file changed, 6 insertions(+), 14 deletions(-)
+Hi Rob,
 
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_fimd.c b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
-index dbfad4e..158d53a 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_fimd.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
-@@ -114,7 +114,6 @@ struct fimd_context {
- 	struct fimd_win_data		win_data[WINDOWS_NR];
- 	unsigned int			default_win;
- 	unsigned long			irq_flags;
--	u32				vidcon0;
- 	bool				suspended;
- 	int				pipe;
- 	wait_queue_head_t		wait_vsync_queue;
-@@ -269,26 +268,19 @@ static void fimd_commit(struct exynos_drm_manager *mgr)
- 	       VIDTCON2_HOZVAL_E(mode->hdisplay - 1);
- 	writel(val, ctx->regs + driver_data->timing_base + VIDTCON2);
- 
--	/* setup clock source, clock divider, enable dma. */
--	val = ctx->vidcon0;
--	val &= ~(VIDCON0_CLKVAL_F_MASK | VIDCON0_CLKDIR);
-+	/*
-+	 * fields of register with prefix '_F' would be updated
-+	 * at vsync(same as dma start)
-+	 */
-+	val = VIDCON0_ENVID | VIDCON0_ENVID_F;
- 
--	if (ctx->driver_data->has_clksel) {
--		val &= ~VIDCON0_CLKSEL_MASK;
-+	if (ctx->driver_data->has_clksel)
- 		val |= VIDCON0_CLKSEL_LCD;
--	}
- 
- 	clkdiv = fimd_calc_clkdiv(ctx, mode);
- 	if (clkdiv > 1)
- 		val |= VIDCON0_CLKVAL_F(clkdiv - 1) | VIDCON0_CLKDIR;
--	else
--		val &= ~VIDCON0_CLKDIR;	/* 1:1 clock */
- 
--	/*
--	 * fields of register with prefix '_F' would be updated
--	 * at vsync(same as dma start)
--	 */
--	val |= VIDCON0_ENVID | VIDCON0_ENVID_F;
- 	writel(val, ctx->regs + VIDCON0);
- }
- 
--- 
-1.8.3.2
+On 03/17/2014 01:47 PM, Rob Herring wrote:
+> On Mon, Mar 17, 2014 at 7:05 AM, Harini Katakam <harinik@xilinx.com> wr=
+ote:
+>> Add driver for Cadence SPI controller. This is used in Xilinx Zynq.
+>>
+>> Signed-off-by: Harini Katakam <harinik@xilinx.com>
+>> ---
+>>  .../devicetree/bindings/spi/spi-cadence.txt        |   25 +
+>=20
+> We prefer binding docs in separate patch.
+
+I have heard several times that also for binding review you need driver
+to look if this binding make sense that's why Harini sent this together.
+It means 2 emails instead of one.
+But if you wish to have this in two files no problem to split it
+but then I believe both should be copied to DT mailing list.
+
+
+>>  drivers/spi/Kconfig                                |    7 +
+>>  drivers/spi/Makefile                               |    1 +
+>>  drivers/spi/spi-cadence.c                          |  804 +++++++++++=
++++++++++
+>>  4 files changed, 837 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/spi/spi-cadence.=
+txt
+>>  create mode 100644 drivers/spi/spi-cadence.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/spi/spi-cadence.txt b/D=
+ocumentation/devicetree/bindings/spi/spi-cadence.txt
+>> new file mode 100644
+>> index 0000000..d25bc2d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/spi/spi-cadence.txt
+>> @@ -0,0 +1,25 @@
+>> +Cadence SPI controller Device Tree Bindings
+>> +-------------------------------------------
+>> +
+>> +Required properties:
+>> +- compatible           : Should be "cdns,spi-r1p6".
+>=20
+> One problem with using IP vendor info in the compatible string is an
+> IP block typically has a variety of configuration options so the
+> actual implementations may be very different. I would recommend adding
+> a Xilinx compatible string as well even if you don't use it now.
+
+It means xlnx,zynq-spi-r1p6 should be fine.
+
+>=20
+>> +- reg                  : Physical base address and size of SPI regist=
+ers map.
+>> +- interrupts           : Property with a value describing the interru=
+pt
+>> +                         number.
+>> +- interrupt-parent     : Must be core interrupt controller
+>> +- clock-names          : List of input clock names - "ref_clk", "pclk=
+"
+>> +                         (See clock bindings for details).
+>> +- clocks               : Clock phandles (see clock bindings for detai=
+ls).
+>> +- num-chip-select      : Number of chip selects used.
+>=20
+> See Documentation/devicetree/bindings/spi/spi-bus.txt. Use "num-cs" her=
+e.
+>=20
+>> +
+>> +Example:
+>> +
+>> +       spi@e0007000 {
+>> +               clock-names =3D "ref_clk", "pclk";
+>> +               clocks =3D <&clkc 26>, <&clkc 35>;
+>> +               compatible =3D "cdns,spi-r1p6";
+>=20
+> Nit. We usually put compatible first in the node.
+
+Our device-tree generator sorts them that's why it is just like this
+but not a problem to fix just in documentation.
+
+
+>> +               interrupt-parent =3D <&intc>;
+>> +               interrupts =3D <0 49 4>;
+>> +               num-chip-select =3D /bits/ 16 <4>;
+
+I was expecting you will comment this a little bit. :-)
+Because all just reading this num-cs as 32bit and then
+assigning this value to master->num_chipselect which is 16bit.
+
+<snip>
+
+>> +/* Macros for the SPI controller read/write */
+>> +#define cdns_spi_read(addr)    readl_relaxed(addr)
+>> +#define cdns_spi_write(addr, val)      writel_relaxed((val), (addr))
+>=20
+> Just use readl/writel directly.
+
+There shouldn't be any problem to use these helper macros
+and even I think this is better than using readl/writel directly
+because you are more flexible if you want to change it to different
+IO.
+
+<snip>
+
+>> +/**
+>> + * cdns_spi_probe - Probe method for the SPI driver
+>> + * @pdev:      Pointer to the platform_device structure
+>> + *
+>> + * This function initializes the driver data structures and the hardw=
+are.
+>> + *
+>> + * Return:     0 on success and error value on error
+>> + */
+>> +static int cdns_spi_probe(struct platform_device *pdev)
+>> +{
+>> +       int ret =3D 0, irq;
+>> +       struct spi_master *master;
+>> +       struct cdns_spi *xspi;
+>> +       struct resource *res;
+>> +
+>> +       master =3D spi_alloc_master(&pdev->dev, sizeof(*xspi));
+>> +       if (master =3D=3D NULL)
+>> +               return -ENOMEM;
+>> +
+>> +       xspi =3D spi_master_get_devdata(master);
+>> +       master->dev.of_node =3D pdev->dev.of_node;
+>> +       platform_set_drvdata(pdev, master);
+>> +
+>> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +       xspi->regs =3D devm_ioremap_resource(&pdev->dev, res);
+>> +       if (IS_ERR(xspi->regs)) {
+>> +               ret =3D PTR_ERR(xspi->regs);
+>> +               goto remove_master;
+>> +       }
+>> +
+>> +       irq =3D platform_get_irq(pdev, 0);
+>> +       if (irq < 0) {
+>=20
+> I believe this returns NO_IRQ which could be 0.
+>=20
+> s/</<=3D/
+
+Are you sure regarding this?
+NO_IRQ on ARM is -1.
+And IRC irq =3D 0 should be just valid number.
+
+But if you are right then others drivers have to fixed too.
+
+
+>> +       return 0;
+>> +}
+>> +
+>> +static SIMPLE_DEV_PM_OPS(cdns_spi_dev_pm_ops, cdns_spi_suspend,
+>> +                        cdns_spi_resume);
+>> +
+>> +/* Work with hotplug and coldplug */
+>> +MODULE_ALIAS("platform:" CDNS_SPI_NAME);
+>=20
+> Not sure, but I don't think this should be needed.
+
+I don't know too.
+
+Thanks for review,
+Michal
+
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--bnFEqD74vhxnPfpNcloCjqowcFUGmafpM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlMm9y8ACgkQykllyylKDCFmlwCeMf+C+ERZGSfSJyxD2MNGJ17n
+vCwAnjX+inZ+weyZbeW593UxcKLc/RMm
+=m+Xi
+-----END PGP SIGNATURE-----
+
+--bnFEqD74vhxnPfpNcloCjqowcFUGmafpM--
