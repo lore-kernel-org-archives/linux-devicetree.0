@@ -1,70 +1,57 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH RFC v4 3/3] Documentation: arm: define DT idle states
- bindings
-Date: Mon, 17 Mar 2014 11:53:03 +0000
-Message-ID: <20140317115303.GB28453@e102568-lin.cambridge.arm.com>
-References: <1392724051-11950-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1392724051-11950-4-git-send-email-lorenzo.pieralisi@arm.com>
- <20140317.131507.1338341364843764791.apm@brigitte.kvy.fi>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 7/8] ASoC: atmel: document clock properties of the wm8904
+ driver
+Date: Mon, 17 Mar 2014 11:55:18 +0000
+Message-ID: <20140317115518.GD11706@sirena.org.uk>
+References: <1395049541-28128-1-git-send-email-voice.shen@atmel.com>
+ <1395049541-28128-8-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140317.131507.1338341364843764791.apm@brigitte.kvy.fi>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="11Y7aswkeuHtSBEs"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Antti P Miettinen <ananaza@iki.fi>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "mturquette@linaro.org" <mturquette@linaro.org>, "t.figa@samsung.com" <t.figa@samsung.com>, "mark.hambleton@broadcom.com" <mark.hambleton@broadcom.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "nico@linaro.org" <nico@linaro.org>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "sebastian.capella@linaro.org" <sebastian.capella@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Dave P Martin <Dave.Martin@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "khilman@linaro.org" <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>, linux-arm-kernel@lists.infradea
+In-Reply-To: <1395049541-28128-8-git-send-email-voice.shen@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: nicolas.ferre@atmel.com, Boris BREZILLON <b.brezillon@overkiz.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Antti,
 
-On Mon, Mar 17, 2014 at 11:15:07AM +0000, Antti P Miettinen wrote:
-> Sorry for having been lazy in commenting..
+--11Y7aswkeuHtSBEs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-No worries, comments always welcome.
+On Mon, Mar 17, 2014 at 05:45:40PM +0800, Bo Shen wrote:
 
-> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Date: Tue, 18 Feb 2014 11:47:31 +0000
-> > +	- min-residency
-> > +		Usage: Required
-> > +		Value type: <prop-encoded-array>
-> > +		Definition: u32 value representing time in microseconds
-> > +			    required for the CPU to be in the idle state to
-> > +			    break even in power consumption terms compared
-> > +			    to idle state idle_standby ([4][5]).
-> 
-> To me this continues to be a bit illdefined. Say we have three states:
-> 0,1,2. State 0 is the idle_standby. Providing a minimum residency for
-> state 1 compared to state 0 sort of makes sense, but if we provide a
-> minimum residency for state 2 compared to state 0 the break even time
-> is going to be smaller than break even when comparing state 1 and
-> state 2. With this data we'd enter state 2 when we'd be better off
-> entering state 1.
+>    - compatible: "atmel,asoc-wm8904"
+>    - atmel,model: The user-visible name of this sound complex.
+> +  - clocks: A list of clocks needed by the wm8904 chip.
+> +  - clock-output-names: Driver related clock names. Shall contain "pck0".
 
-I am not sure I got your reply right, but min-residency for
-state 2 will be higher than state 1, since it has to cater for the
-dynamic power consumed by entering the state (but burns less power
-than state 1 when _in_ the state).
+If this is a clock for the CODEC it should be documented as part of the
+binding for the CODEC and connected to the CODEC in the device tree
+rather than being part of a machine driver binding.
 
-Entering a state has a power cost and min-residency should take that into
-account, worst-case as per other stats.
+--11Y7aswkeuHtSBEs
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-min-residency (and so the break-even) should take into account that
-entering the state is not for free.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-I think that comparing against idle_standby is the only sane way we can
-define that parameter, either that or we remove it.
+iQIcBAEBAgAGBQJTJuKjAAoJELSic+t+oim9ZiAP/jR39IUYtk7IKqBgV0K7XNpD
+q0M0ebzD5GOn60zrRepSVThsOK+tslzW/hIEQiRtJ/YDHyP5kNxXcBrhQd16xhT7
+2JlgF15o2oO5sc3lwbF7wzytulSMGn+qhRCybqJliZUBROGI48HaQH6ANX1yTlrq
+DZt+K6YWUJNeJBCU2XFYCOrGmi29PbBjl+Li8PX3zcoBG0LO/gKAxIi7xS+suMEj
+C3CxSEkv2E210CJ4Ienx1amOmNTwiOOM3cjy5d66bQIGvYxfAzaMwB9ptLZjm8S0
+wjTIQWz3ICo3vncsnl8Vur8b0WJmv2KXFM773JwDloCLwNUZGotEaT4JCExTVZ0d
+4gMbjUcnHKxaUZYgq5RryilS9GWoSoM0PB5z0vDJ5yur4JZq9k0zzPf5nh2/yzrt
+BNYjgxfdx3oWkqZBpekVkGZ2IagFiOoC+94mfjuxKwE0Llw4C4y82zcVmtzRzgh1
+nh36QnYWbwzMz/uADbn36pC3ww70c4lxXOujP1MPdFqs1zOQtpS+wOuhN+9IcGR8
+05W8KEbkDGteg4JcSq0GX0L+6H7uDPtI3VCFXEsw6es4OKMp5RsWVLblsm5hntja
+GYNg891vXRGj8idTz6iWLL5kjCRWi84RnFvV4ZMn8PXYpvW+IrComI9QHhrM4L/B
+IBesqsKPO9XX9opHtYDH
+=W3NA
+-----END PGP SIGNATURE-----
 
-Does it make sense ?
-
-Thanks !
-Lorenzo
+--11Y7aswkeuHtSBEs--
