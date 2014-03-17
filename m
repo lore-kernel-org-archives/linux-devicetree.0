@@ -1,78 +1,48 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH v3 3/3] Documentation: mfd: s2mps11: Describe S5M8767 and
- S2MPS14 clocks
-Date: Mon, 17 Mar 2014 10:19:18 +0100
-Message-ID: <1395047958-17953-4-git-send-email-k.kozlowski@samsung.com>
-References: <1395047958-17953-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1395047958-17953-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, Sangbeom Kim <sbkim73@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: Tushar Behera <tushar.behera@linaro.org>, Yadwinder Singh Brar <yadi.brar@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: [PATCH 0/8] ARM: at91: sama5d3: enable sound support
+Date: Mon, 17 Mar 2014 17:45:33 +0800
+Message-ID: <1395049541-28128-1-git-send-email-voice.shen@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>, nicolas.ferre@atmel.com
+Cc: Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, Mark Brown <broonie@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, Linus Walleij <linus.walleij@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Bo Shen <voice.shen@atmel.com>, Russell King <linux@arm.linux.org.uk>, linux-doc@vger.kernel.org, Boris BREZILLON <b.brezillon@overkiz.com>, Takashi Iwai <tiwai@suse.de>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add bindings documentation for clocks on S5M8767 and S2MPS14 devices.
+This patch add sound support on sama5d3xek board.
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Tomasz Figa <t.figa@samsung.com>
-Cc: devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
----
- Documentation/devicetree/bindings/mfd/s2mps11.txt |   24 +++++++++++++--------
- 1 file changed, 15 insertions(+), 9 deletions(-)
+This patch series based on the following patch set:
+  clk: at91: better support for the PCKs
+  http://comments.gmane.org/gmane.linux.kernel/1664477
 
-diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-index 15ee89c3cc7b..67ea05ca8050 100644
---- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
-+++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-@@ -16,20 +16,25 @@ Optional properties:
- - interrupts: Interrupt specifiers for interrupt sources.
- 
- Optional nodes:
--- clocks: s2mps11 provides three(AP/CP/BT) buffered 32.768 KHz outputs, so to
--  register these as clocks with common clock framework instantiate a sub-node
--  named "clocks". It uses the common clock binding documented in :
-+- clocks: s2mps11 and s5m8767 provide three(AP/CP/BT) buffered 32.768 KHz
-+  outputs, so to register these as clocks with common clock framework
-+  instantiate a sub-node named "clocks". It uses the common clock binding
-+  documented in :
-   [Documentation/devicetree/bindings/clock/clock-bindings.txt]
-+  The s2mps14 provides two (AP/BT) buffered 32.768 KHz outputs.
-   - #clock-cells: should be 1.
- 
-   - The following is the list of clocks generated by the controller. Each clock
-     is assigned an identifier and client nodes use this identifier to specify
-     the clock which they consume.
--    Clock               ID
--    ----------------------
--    32KhzAP		0
--    32KhzCP		1
--    32KhzBT		2
-+    Clock               ID           Devices
-+    ----------------------------------------------------------
-+    32KhzAP		0            S2MPS11, S2MPS14, S5M8767
-+    32KhzCP		1            S2MPS11, S5M8767
-+    32KhzBT		2            S2MPS11, S2MPS14, S5M8767
-+
-+  - compatible: Should be one of: "samsung,s2mps11-clk", "samsung,s2mps14-clk",
-+		"samsung,s5m8767-clk"
- 
- - regulators: The regulators of s2mps11 that have to be instantiated should be
- included in a sub-node named 'regulators'. Regulator nodes included in this
-@@ -71,7 +76,8 @@ Example:
- 		compatible = "samsung,s2mps11-pmic";
- 		reg = <0x66>;
- 
--		s2m_osc: clocks{
-+		s2m_osc: clocks {
-+			compatible = "samsung,s2mps11-clk";
- 			#clock-cells = 1;
- 			clock-output-names = "xx", "yy", "zz";
- 		};
+
+Bo Shen (5):
+  ARM: at91: sama5d3: add DMA property for SSC devices
+  ARM: at91: sama5d3: disable sound by default
+  ARM: at91: sama5d3: correct the sound compatible string
+  ARM: at91: sama5d3: add the missing property
+  ARM: at91: sama5d3: clock for ssc from rk pin
+
+Boris BREZILLON (3):
+  ASoC: atmel: support CCF based clks
+  ASoC: atmel: document clock properties of the wm8904 driver
+  ARM: at91/dt: add clock properties to the wm8904 codec node
+
+ .../devicetree/bindings/sound/atmel-wm8904.txt     |  2 ++
+ arch/arm/boot/dts/sama5d3.dtsi                     |  6 ++++++
+ arch/arm/boot/dts/sama5d3xmb.dtsi                  | 11 +++++++++-
+ sound/soc/atmel/atmel_wm8904.c                     | 25 +++++++++++-----------
+ 4 files changed, 31 insertions(+), 13 deletions(-)
+
 -- 
-1.7.9.5
+1.8.5.2
