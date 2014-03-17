@@ -1,188 +1,67 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH] dtc: add ability to make nodes conditional on them being referenced
-Date: Sun, 16 Mar 2014 22:22:02 +0100
-Message-ID: <199290403.sj4aYrj8FC@diego>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCHv3 5/8] devfreq: exynos4: Use SET_SYSTEM_SLEEP_PM_OPS macro
+Date: Mon, 17 Mar 2014 09:17:10 +0900
+Message-ID: <001501cf4176$3d23daa0$b76b8fe0$%han@samsung.com>
+References: <1394789408-14648-1-git-send-email-cw00.choi@samsung.com>
+ <1394789408-14648-6-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <1394789408-14648-6-git-send-email-cw00.choi@samsung.com>
+Content-language: ko
+Sender: linux-doc-owner@vger.kernel.org
+To: 'Chanwoo Choi' <cw00.choi@samsung.com>
+Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rafael.j.wysocki@intel.com, nm@ti.com, b.zolnierkie@samsaung.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner-K3U4GQvHnyU@public.gmane.org>
+On Friday, March 14, 2014 6:30 PM, Chanwoo Choi wrote:
+> 
+> This patch use SET_SYSTEM_SLEEP_PM_OPS macro instead of legacy method.
+> 
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>  drivers/devfreq/exynos/exynos4_bus.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/devfreq/exynos/exynos4_bus.c b/drivers/devfreq/exynos/exynos4_bus.c
+> index 60539e8..e5d2c5a 100644
+> --- a/drivers/devfreq/exynos/exynos4_bus.c
+> +++ b/drivers/devfreq/exynos/exynos4_bus.c
+> @@ -1247,6 +1247,7 @@ static int exynos4_busfreq_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+> 
+> +#ifdef CONFIG_PM_SLEEP
+>  static int exynos4_busfreq_resume(struct device *dev)
+>  {
+>  	struct busfreq_data *data = dev_get_drvdata(dev);
+> @@ -1254,9 +1255,10 @@ static int exynos4_busfreq_resume(struct device *dev)
+>  	busfreq_mon_reset(data);
+>  	return 0;
+>  }
+> +#endif
+> 
+>  static const struct dev_pm_ops exynos4_busfreq_pm = {
+> -	.resume	= exynos4_busfreq_resume,
+> +	SET_SYSTEM_SLEEP_PM_OPS(NULL, exynos4_busfreq_resume)
 
-On i.MX, which carries a lot of pin-groups of which most are unused on
-individual boards, they noticed that this plethora of nodes also results
-in the runtime-lookup-performance also degrading [0].
+Hi Chanwoo Choi,
 
-A i.MX-specific solution defining the pingroups in the board files but
-using macros to reference the pingroup-data was not well received.
+How about using SIMPLE_DEV_PM_OPS instead of SET_SYSTEM_SLEEP_PM_OPS?
+SIMPLE_DEV_PM_OPS is simpler as below.
 
-This patch is trying to solve this issue in a more general way, by
-adding the ability to mark nodes as needing to be referenced somewhere
-in the tree.
+static SIMPLE_DEV_PM_OPS(exynos4_busfreq_pm, NULL, exynos4_busfreq_resume);
 
-To mark a node a needing to be referenced it must be prefixed with
-/delete-unreferenced/. This makes dtc check the nodes reference-status
-when creating the flattened tree, dropping it if unreferenced.
+However, if runtime pm functions will be added later,
+SIMPLE_DEV_PM_OPS is not necessary.
 
-For example, the i.MX6SL pingroup
+Best regards,
+Jingoo Han
 
-	/delete-unreferenced/ pinctrl_ecspi1_1: ecspi1grp-1 {
-		fsl,pins = <
-			MX6SL_PAD_ECSPI1_MISO__ECSPI1_MISO 0x100b1
-			MX6SL_PAD_ECSPI1_MOSI__ECSPI1_MOSI 0x100b1
-			MX6SL_PAD_ECSPI1_SCLK__ECSPI1_SCLK 0x100b1
-		>;
-	};
+>  };
+> 
+>  static const struct platform_device_id exynos4_busfreq_id[] = {
+> --
+> 1.8.0
 
-would only be included in the dtb if it got referenced somewhere
-as pingroup via
-
-	node {
-		pinctrl-0 <&pinctrl_ecscpi1_1>;
-	};
-
-[0] http://thread.gmane.org/gmane.linux.ports.arm.kernel/275912/
-
-Signed-off-by: Heiko Stuebner <heiko.stuebner-K3U4GQvHnyU@public.gmane.org>
----
-A sample implementation using the in-tree dtc in the linux kernel can
-be found at [1] and the very first rfc at [2].
-
-[1] http://comments.gmane.org/gmane.linux.drivers.devicetree/62357
-[2] http://comments.gmane.org/gmane.linux.drivers.devicetree/60145
-
- checks.c     |  2 ++
- dtc-lexer.l  |  7 +++++++
- dtc-parser.y |  5 +++++
- dtc.h        |  4 ++++
- flattree.c   |  3 +++
- livetree.c   | 14 ++++++++++++++
- 6 files changed, 35 insertions(+)
-
-diff --git a/checks.c b/checks.c
-index 47eda65..a82ba8d 100644
---- a/checks.c
-+++ b/checks.c
-@@ -472,6 +472,8 @@ static void fixup_phandle_references(struct check *c, struct node *dt,
- 
- 		phandle = get_node_phandle(dt, refnode);
- 		*((cell_t *)(prop->val.val + m->offset)) = cpu_to_fdt32(phandle);
-+
-+		reference_node(refnode);
- 	}
- }
- ERROR(phandle_references, NULL, NULL, fixup_phandle_references, NULL,
-diff --git a/dtc-lexer.l b/dtc-lexer.l
-index 0821bde..6d7865d 100644
---- a/dtc-lexer.l
-+++ b/dtc-lexer.l
-@@ -140,6 +140,13 @@ static void lexical_error(const char *fmt, ...);
- 			return DT_DEL_NODE;
- 		}
- 
-+<*>"/delete-unreferenced/"	{
-+			DPRINT("Keyword: /delete-unreferenced/\n");
-+			DPRINT("<PROPNODENAME>\n");
-+			BEGIN(PROPNODENAME);
-+			return DT_DEL_UNREFERENCED;
-+		}
-+
- <*>{LABEL}:	{
- 			DPRINT("Label: %s\n", yytext);
- 			yylval.labelref = xstrdup(yytext);
-diff --git a/dtc-parser.y b/dtc-parser.y
-index ea57e0a..a203bed 100644
---- a/dtc-parser.y
-+++ b/dtc-parser.y
-@@ -60,6 +60,7 @@ extern bool treesource_error;
- %token DT_BITS
- %token DT_DEL_PROP
- %token DT_DEL_NODE
-+%token DT_DEL_UNREFERENCED
- %token <propnodename> DT_PROPNODENAME
- %token <integer> DT_LITERAL
- %token <integer> DT_CHAR_LITERAL
-@@ -450,6 +451,10 @@ subnode:
- 		{
- 			$$ = name_node(build_node_delete(), $2);
- 		}
-+	| DT_DEL_UNREFERENCED subnode
-+		{
-+			$$ = check_node_referenced($2);
-+		}
- 	| DT_LABEL subnode
- 		{
- 			add_label(&$2->labels, $1);
-diff --git a/dtc.h b/dtc.h
-index 20de073..ff45059 100644
---- a/dtc.h
-+++ b/dtc.h
-@@ -158,6 +158,8 @@ struct node {
- 	int addr_cells, size_cells;
- 
- 	struct label *labels;
-+
-+	int needs_reference, is_referenced;
- };
- 
- #define for_each_label_withdel(l0, l) \
-@@ -192,6 +194,8 @@ struct property *reverse_properties(struct property *first);
- struct node *build_node(struct property *proplist, struct node *children);
- struct node *build_node_delete(void);
- struct node *name_node(struct node *node, char *name);
-+struct node *check_node_referenced(struct node *node);
-+struct node *reference_node(struct node *node);
- struct node *chain_node(struct node *first, struct node *list);
- struct node *merge_nodes(struct node *old_node, struct node *new_node);
- 
-diff --git a/flattree.c b/flattree.c
-index bd99fa2..105e8fa 100644
---- a/flattree.c
-+++ b/flattree.c
-@@ -266,6 +266,9 @@ static void flatten_tree(struct node *tree, struct emitter *emit,
- 	if (tree->deleted)
- 		return;
- 
-+	if (tree->needs_reference && !tree->is_referenced)
-+		return;
-+
- 	emit->beginnode(etarget, tree->labels);
- 
- 	if (vi->flags & FTF_FULLPATH)
-diff --git a/livetree.c b/livetree.c
-index b61465f..98bb33d 100644
---- a/livetree.c
-+++ b/livetree.c
-@@ -134,6 +134,20 @@ struct node *name_node(struct node *node, char *name)
- 	return node;
- }
- 
-+struct node *check_node_referenced(struct node *node)
-+{
-+	node->needs_reference = 1;
-+
-+	return node;
-+}
-+
-+struct node *reference_node(struct node *node)
-+{
-+	node->is_referenced = 1;
-+
-+	return node;
-+}
-+
- struct node *merge_nodes(struct node *old_node, struct node *new_node)
- {
- 	struct property *new_prop, *old_prop;
--- 
-1.9.0
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
