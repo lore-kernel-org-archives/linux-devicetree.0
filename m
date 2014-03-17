@@ -1,32 +1,68 @@
-From: =?UTF-8?B?44Kr44Kq44CA44Of44Oz44CA44OS44Kn44OD44OX?=
-	<cm-hiep@jinso.co.jp>
-Subject: Re: [RFC] spi: Using Trigger number to transmit/receive data
-Date: Mon, 17 Mar 2014 10:16:03 +0900
-Message-ID: <53264CD3.2040205@jinso.co.jp>
-References: <1394699364-5669-1-git-send-email-cm-hiep@jinso.co.jp> <20140313141722.GY366@sirena.org.uk>
-Reply-To: cm-hiep@jinso.co.jp
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCHv3 5/8] devfreq: exynos4: Use SET_SYSTEM_SLEEP_PM_OPS macro
+Date: Mon, 17 Mar 2014 10:34:37 +0900
+Message-ID: <5326512D.9010500@samsung.com>
+References: <1394789408-14648-1-git-send-email-cw00.choi@samsung.com>
+ <1394789408-14648-6-git-send-email-cw00.choi@samsung.com>
+ <001501cf4176$3d23daa0$b76b8fe0$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20140313141722.GY366@sirena.org.uk>
-Sender: linux-sh-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, kuninori.morimoto.gx@renesas.com, geert+renesas@linux-m68k.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <001501cf4176$3d23daa0$b76b8fe0$%han@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rafael.j.wysocki@intel.com, nm@ti.com, b.zolnierkie@samsaung.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/13/2014 11:17 PM, Mark Brown wrote:
-> On Thu, Mar 13, 2014 at 05:29:23PM +0900, Cao Minh Hiep wrote:
->> From: Hiep Cao Minh <cm-hiep@jinso.co.jp>
+Hi Jingoo,
+
+On 03/17/2014 09:17 AM, Jingoo Han wrote:
+> On Friday, March 14, 2014 6:30 PM, Chanwoo Choi wrote:
 >>
->> Hi,
+>> This patch use SET_SYSTEM_SLEEP_PM_OPS macro instead of legacy method.
 >>
->> This is the patch of QSPI that support for r8a7790 SOC. The pupose of
->> this patch is to transmit and receive the 32 bytes of data when the data
->> already has prepared on Transmit/Receive Buffer. Using Transmit/Receive
->> Buffer Data Trigger Number to do that instead transmits/receives a byte
->> of data. With this patch will improve the speed of transfer data.
-> Please don't send cover letters for single patches, if there's anything
-> that needs to be said put it in the changelog or after the --- in the
-> patch.  That way important information won't get lost from history.
-Thanks, I will do so in next time.
+>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> ---
+>>  drivers/devfreq/exynos/exynos4_bus.c | 4 +++-
+>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/devfreq/exynos/exynos4_bus.c b/drivers/devfreq/exynos/exynos4_bus.c
+>> index 60539e8..e5d2c5a 100644
+>> --- a/drivers/devfreq/exynos/exynos4_bus.c
+>> +++ b/drivers/devfreq/exynos/exynos4_bus.c
+>> @@ -1247,6 +1247,7 @@ static int exynos4_busfreq_remove(struct platform_device *pdev)
+>>  	return 0;
+>>  }
+>>
+>> +#ifdef CONFIG_PM_SLEEP
+>>  static int exynos4_busfreq_resume(struct device *dev)
+>>  {
+>>  	struct busfreq_data *data = dev_get_drvdata(dev);
+>> @@ -1254,9 +1255,10 @@ static int exynos4_busfreq_resume(struct device *dev)
+>>  	busfreq_mon_reset(data);
+>>  	return 0;
+>>  }
+>> +#endif
+>>
+>>  static const struct dev_pm_ops exynos4_busfreq_pm = {
+>> -	.resume	= exynos4_busfreq_resume,
+>> +	SET_SYSTEM_SLEEP_PM_OPS(NULL, exynos4_busfreq_resume)
+> 
+> Hi Chanwoo Choi,
+> 
+> How about using SIMPLE_DEV_PM_OPS instead of SET_SYSTEM_SLEEP_PM_OPS?
+> SIMPLE_DEV_PM_OPS is simpler as below.
+> 
+> static SIMPLE_DEV_PM_OPS(exynos4_busfreq_pm, NULL, exynos4_busfreq_resume);
+> 
+> However, if runtime pm functions will be added later,
+> SIMPLE_DEV_PM_OPS is not necessary.
+> 
+
+OK, I'll use SIMPLE_DEV_PM_OPS on next patchset.
+
+Best Regards,
+Chanwoo Choi
+
+
