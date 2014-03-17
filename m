@@ -1,78 +1,80 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] SPI: Add driver for Cadence SPI controller
-Date: Mon, 17 Mar 2014 13:14:53 +0000
-Message-ID: <20140317131453.GF11706@sirena.org.uk>
-References: <1395057936-8643-1-git-send-email-harinik@xilinx.com>
- <CAL_JsqKacetGytGUJir7ky3qOgCy-3ny1pT_Bx4eCYV2wMgcTg@mail.gmail.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: [PATCH v2 9/9] drm/exynos/fimd: remove unused variable
+Date: Mon, 17 Mar 2014 14:16:12 +0100
+Message-ID: <1395062172-19756-1-git-send-email-a.hajda@samsung.com>
+References: <1395052045-23848-10-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="nYySOmuH/HDX6pKp"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKacetGytGUJir7ky3qOgCy-3ny1pT_Bx4eCYV2wMgcTg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1395052045-23848-10-git-send-email-a.hajda@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Denis Carikli <denis@eukrea.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+The patch removes unused vidcon0 field from fimd_context structure.
 
---nYySOmuH/HDX6pKp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+---
+v2:
+- corrected vidcon0 calculation
+---
+ drivers/gpu/drm/exynos/exynos_drm_fimd.c | 20 ++++++--------------
+ 1 file changed, 6 insertions(+), 14 deletions(-)
 
-On Mon, Mar 17, 2014 at 07:47:24AM -0500, Rob Herring wrote:
-
-Please delete irrelevant context from your replies, it makes it easier
-to find the new content.
-
-> On Mon, Mar 17, 2014 at 7:05 AM, Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-
-> > +/* Macros for the SPI controller read/write */
-> > +#define cdns_spi_read(addr)    readl_relaxed(addr)
-> > +#define cdns_spi_write(addr, val)      writel_relaxed((val), (addr))
-
-> Just use readl/writel directly.
-
-Or make them static inline structures which take the driver data
-structure and an offset within the register map for the device and do
-the maths to resolve the actual address.
-
-> > +static SIMPLE_DEV_PM_OPS(cdns_spi_dev_pm_ops, cdns_spi_suspend,
-> > +                        cdns_spi_resume);
-
-> > +/* Work with hotplug and coldplug */
-> > +MODULE_ALIAS("platform:" CDNS_SPI_NAME);
-
-> Not sure, but I don't think this should be needed.
-
-It won't be used by DT systems but it is good practice, especially with
-something like this that clearly is a generic IP which could be used on
-non-DT systems too (it's not like it costs anything meaningful).
-
---nYySOmuH/HDX6pKp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTJvVKAAoJELSic+t+oim9NoMP/3CVL2JtmNVGnAlppFjd9mMJ
-LtioqcpAiBYfuq/ayoHIQ1JaZYmjTPMvMty9TFetCAhGy2g6lFnlNll15vtnKj/g
-Y9El2X3L8HwNw48jkcV180vBxi5yxGtWjoaM4o1wCewsTwhNiZwC5F0M/ytagORb
-BUJgptmgAv9/dF1Nq+nxJONmJ8avR48PKPeY06950oWtrwWFNJ05g0yC04ZQCzoF
-w3yoPdYXQANLT4HMI4St7qVu+CO6+q/0u+sqB9Ugi5aQijF7Q5kA7/mZHxtXAvif
-mrBHru2O/Qh2E76rzu98xyq79IJ8Jb5vYR+hLauvPsO1wB1xmQ+iNu8bZc62fyId
-APABMGlqcB+o/PbbQ1znnAjuaXWOs06nIGv62MEpI1ar+vrwgwVVow/rc8FN9K5o
-OrzSYSdAR71CmLnW4upTnOsnV2TyBrwTEFt4cLQXsXWuo4g7Qg04DbPmILS5UYjM
-NCkww40V+lnETl/IWUeVoIYzm+hU6Nr9J69oKAmt6XKbTkWl7lk4LQGM23rN6/po
-4+ui+gkkHzeJfJS3RQGZNi2QVxjPWV6IEbBOaWVaGmxOPmI/CH5JS331pwSSLY0S
-2oaY0MgLrsmtLACJn3G3iFfJ5PLalenlr1JKERm4LTCwLgvcLtVdQwSMn7kjhCFL
-K5N9uzM0yG3kkWZHuQTJ
-=ISNL
------END PGP SIGNATURE-----
-
---nYySOmuH/HDX6pKp--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_fimd.c b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
+index dbfad4e..158d53a 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_fimd.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
+@@ -114,7 +114,6 @@ struct fimd_context {
+ 	struct fimd_win_data		win_data[WINDOWS_NR];
+ 	unsigned int			default_win;
+ 	unsigned long			irq_flags;
+-	u32				vidcon0;
+ 	bool				suspended;
+ 	int				pipe;
+ 	wait_queue_head_t		wait_vsync_queue;
+@@ -269,26 +268,19 @@ static void fimd_commit(struct exynos_drm_manager *mgr)
+ 	       VIDTCON2_HOZVAL_E(mode->hdisplay - 1);
+ 	writel(val, ctx->regs + driver_data->timing_base + VIDTCON2);
+ 
+-	/* setup clock source, clock divider, enable dma. */
+-	val = ctx->vidcon0;
+-	val &= ~(VIDCON0_CLKVAL_F_MASK | VIDCON0_CLKDIR);
++	/*
++	 * fields of register with prefix '_F' would be updated
++	 * at vsync(same as dma start)
++	 */
++	val = VIDCON0_ENVID | VIDCON0_ENVID_F;
+ 
+-	if (ctx->driver_data->has_clksel) {
+-		val &= ~VIDCON0_CLKSEL_MASK;
++	if (ctx->driver_data->has_clksel)
+ 		val |= VIDCON0_CLKSEL_LCD;
+-	}
+ 
+ 	clkdiv = fimd_calc_clkdiv(ctx, mode);
+ 	if (clkdiv > 1)
+ 		val |= VIDCON0_CLKVAL_F(clkdiv - 1) | VIDCON0_CLKDIR;
+-	else
+-		val &= ~VIDCON0_CLKDIR;	/* 1:1 clock */
+ 
+-	/*
+-	 * fields of register with prefix '_F' would be updated
+-	 * at vsync(same as dma start)
+-	 */
+-	val |= VIDCON0_ENVID | VIDCON0_ENVID_F;
+ 	writel(val, ctx->regs + VIDCON0);
+ }
+ 
+-- 
+1.8.3.2
