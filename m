@@ -1,107 +1,107 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv4 0/7] omap hwspinlock dt support
-Date: Mon, 17 Mar 2014 14:10:47 -0500
-Message-ID: <532748B7.1080606@ti.com>
-References: <1389658764-39199-1-git-send-email-s-anna@ti.com> <52F9282B.5000702@ti.com> <530B8C00.8020001@ti.com> <CAK=WgbZp_RQPCeZJyMRkNTQxaJsnGZ3DnjhSkYYR_-PAE_Kp4g@mail.gmail.com> <53239789.40600@ti.com> <CAK=WgbZCzA7JovSxnysHCQRZZWc3Z2j3AS8ekpM9fOZ160rmCA@mail.gmail.com>
-Reply-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH RFC v4 3/3] Documentation: arm: define DT idle states
+ bindings
+Date: Mon, 17 Mar 2014 19:24:23 +0000
+Message-ID: <20140317192422.GD28453@e102568-lin.cambridge.arm.com>
+References: <20140317115303.GB28453@e102568-lin.cambridge.arm.com>
+ <20140317.154940.169167846103479320.apm@brigitte.kvy.fi>
+ <20140317144515.GC28453@e102568-lin.cambridge.arm.com>
+ <20140317.202638.1149319857823818469.apm@brigitte.kvy.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK=WgbZCzA7JovSxnysHCQRZZWc3Z2j3AS8ekpM9fOZ160rmCA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140317.202638.1149319857823818469.apm@brigitte.kvy.fi>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Antti P Miettinen <ananaza@iki.fi>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "mturquette@linaro.org" <mturquette@linaro.org>, "t.figa@samsung.com" <t.figa@samsung.com>, "mark.hambleton@broadcom.com" <mark.hambleton@broadcom.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "nico@linaro.org" <nico@linaro.org>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "sebastian.capella@linaro.org" <sebastian.capella@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Dave P Martin <Dave.Martin@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "khilman@linaro.org" <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>, linux-arm-kernel@lists.infradea
 List-Id: devicetree@vger.kernel.org
 
-Hi Ohad,
+On Mon, Mar 17, 2014 at 06:26:38PM +0000, Antti P Miettinen wrote:
+> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > When we make a decision on what idle state to enter all we do, and
+> > that's OS agnostic, is predicting (+checking the next event) the next IRQ and
+> > see if it is worth entering a state or not. We have to compare it against
+> > a baseline, which is the processor being in standbywfi and that's what
+> > these bindings define.
+> > 
+> > I do not understand why you want to define min-residency against the
+> > previous shallower state.
+> > 
+> > What this binding says is: standbywfi is the shallower idle state in
+> > power consumption terms. Deeper idle states save more power than
+> > standbywfi if the residency in that state is at least min-residency.
+> > 
+> > I do not see where the problem is to be honest, maybe I need an example.
+> > 
+> > Thanks!
+> > Lorenzo
+> 
+> Sorry, I should have explained myself more clearly. I've been
+> pondering about these issues somewhat lately so I'm perhaps suffering
+> from a bit of a tunnel vision.
+> 
+> In short, when we choose an idle state based on expected idle duration
+> we are not comparing wfi against all possible idle states in turn and
+> making a decision between wfi and state X. Instead we want to choose
+> among all states the one that gives minimum energy for the expected
+> idle time. I'll try to elaborate..
+> 
+> Entering and exiting idle states takes time at nonzero power. To make
+> up for this lost energy we indeed want the time in the idle state to
+> be sufficiently long to make up for the lost energy. Now the important
+> question here is "make up compared to what?".
+> 
+> The energy over the idle time can be also interpreted as average
+> power. When the idle time increases the average power for a state
+> approaches the in-state power. A deeper idle state would be a state
+> with lower in-state power and longer entry/exit time. Therefore the
+> average power for a deeper idle state drops slower as function of idle
+> time than the average power for a shallower idle state. If we'd plot
+> the average power for a number of idle states as function of idle
+> duration, we'd get a set of "constant over idle time plus constant"
+> style curves. Average power for state 0 will drop fastest close to the
+> in-state power of state 0. Average power for state 1 will drop slower
+> and approach the in-state power of state 1, average power for state 2
+> will drop even slower and approach the in-state power of state 3.
+> 
+> To define that the min-residency is the breakeven time against state 0
+> means that we are looking at the curves and asking "when does the
+> average power for state X cross the average power for state 0?". But
+> that would be the guideline for making a decision between state 0 and
+> the state in question. Even if average power for state 2 is below
+> the average power of state 0 it is not necessarily yet below the
+> average power of state 1. To break even against state 1 the idle
+> duration needs to be longer.
+> 
+> Yet another way to look at this: for three states we can define three
+> times of interest:
+> - t1: the time when state1 breaks even against state0
+> - t2: the time when state2 breaks even against state0
+> - t3: the time when state2 breaks even against state1
+> and t3 would typically be larger than t2.
 
-On 03/17/2014 09:23 AM, Ohad Ben-Cohen wrote:
-> Hi Suman,
->
-> On Sat, Mar 15, 2014 at 1:58 AM, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> wrote:
->> The series doesn't change the semantics of hwspinlock registration or adds a
->> new OF controller registration function. Implementations would still need to
->> register a controller using a base_id and number of locks. The series rather
->> adds a DT-friendly function _ONLY_ for requesting a specific hwlock, and
->> there are no restrictions on the args specifier being relative id numbers.
->> Though this is what the simple default xlate helper does (most common
->> usage), the added xlate ops and #hwlock-cells should allow individual
->> implementation drivers to adjust any variations, and return a relative lock
->> w.r.t its registered base_id, as this is how a lock gets registered in the
->> first place.
->
-> I might be missing something, but why can't we have the
-> specifier+base_id be the hwlock id and then we can entirely drop most
-> of the core changes in this patch-set?
+Now it is crystal clear, and you are absolutely right, sorry for
+misunderstanding.
 
-base_id would be a property (if added) of the hwspinlock controller 
-node, and from DT perspective, we will be using the phandle for the 
-controller anyway. So, using a base_id+specifier seems redundant, as the 
-specifier is already w.r.t a hwspinlock controller node.  It is best to 
-leave the base_id out, just use the specifier. This is pretty much the 
-standard practice (GPIOs, DMAs, etc all follow this). Please see the 
-comments from Mark regarding the same on an earlier version.
+Help me define it then please:
 
-http://marc.info/?l=linux-omap&m=138135487703774&w=2
+- min-residency-us
 
-> I realize we couldn't easily
-> support sparse id numbers, but not sure this is relevant to
-> hwspinlocks? do we have a use case that couldn't be supported in this
-> case?
+"u32 value representing time in microseconds required for the CPU to be in
+the idle state to guarantee power savings maximization".
 
-I agree on the  sparse id numbers on hwspinlock, I don't see a need for it.
+Rather vague (on purpose), if anyone comes up with a better definition please
+shout.
 
->
->> I actually started out this series with the base_id property, and dropped it
->> in v3 based on comments looking at it from the request-specific-lock
->> semantics with DT. That said, the drivers still need to manage a 'base_id'
->> needed for registration when they get probed for multiple controllers.
->> Getting the base_id from DT _may_ be useful just for registration purposes,
->> but for requesting a hwlock, a controller phandle and an implementation
->> defined args-specifier should suffice IMHO.
->
-> How could drivers know what the base_id is if DT doesn't provide it?
-> please note that we can't depend on order of controller probing; the
-> hwlock id numbers cannot depend on implementation details.
-
-Yes, I agree this is an issue if we have to have the base_ids fixed per 
-controller. But I don't think it makes any difference from requesting a 
-lock from a client DTS node. I can bring it back if Mark agrees.
-
->
->> The exact notion of informing the hwspinlock core about a list of reserved
->> locks is missing at the moment (even in the non-DT case). I am not sure if
->> this got lost during the conversion of the registration from per lock to
->> registering a bank of locks together, or if it is implied by the base_id +
->> num_locks combination. The core today supports requesting only those locks
->> that were actually registered, whether allocating a free one dynamically or
->> giving a specific one.
->
-> Before DT came along, early board code could have reserved specific
-> hwspinlocks if needed. Now with DT, we should add the list of reserved
-> locks to the controller node, in order to prevent them from being
-> dynamically allocated by others.
-
-But that strictly relied on the order of requests without any core 
-changes in the hwspinlock core, right. Also mandates that unique locks 
-were requested for different clients (left to board integration). The 
-early board code also has to pass on the reserved hwspinlock information 
-to the actual client driver somehow (platform data).
-
-With DT, the early board code is much simplified. Looking at the same 
-scenario from DT case, it seems kinda redundant to specify a set of 
-reserved locks both in the controller node, as well as the respective 
-client drivers, as there is almost no platform data with DT. The only 
-use case for DT client nodes would be for requesting specific locks. I 
-agree with the problem you described, and I think it will require a 
-different set of changes to the core.
-
-regards
-Suman
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks !
+Lorenzo
