@@ -1,82 +1,139 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCHv2 0/8] devfreq: exynos4: Support dt and use common ppmu
- driver
-Date: Mon, 17 Mar 2014 10:58:09 +0900
-Message-ID: <532656B1.2010907@samsung.com>
-References: <1394698649-20996-1-git-send-email-cw00.choi@samsung.com>
- <5323432E.5060005@samsung.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH resend v3 1/2] ARM: shmobile: r8a7778/r8a7779 dtsi:
+ Improve and correct HSPI nodes
+Date: Mon, 17 Mar 2014 11:28:45 +0900
+Message-ID: <20140317022844.GB20793@verge.net.au>
+References: <1394791601-25317-1-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <5323432E.5060005@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rafael.j.wysocki@intel.com, nm@ti.com, b.zolnierkie@samsaung.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1394791601-25317-1-git-send-email-geert@linux-m68k.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
-
-On 03/15/2014 02:58 AM, Tomasz Figa wrote:
-> Hi Chanwoo,
+On Fri, Mar 14, 2014 at 11:06:40AM +0100, Geert Uytterhoeven wrote:
+> From: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
 > 
-> On 13.03.2014 09:17, Chanwoo Choi wrote:
->> This patchset support devicetree and use common ppmu driver instead of
->> individual code of exynos4_bus.c to remove duplicate code. Also this patchset
->> get the resources for busfreq from dt data by using DT helper function.
->> - PPMU register address
->> - PPMU clock
->> - Regulator for INT/MIF block
->>
->> This patchset use SET_SYSTEM_SLEEP_PM_OPS macro intead of legacy method.
->> To remove power-leakage in suspend state, before entering suspend state,
->> disable ppmu clocks.
->>
->> Changes from v1:
->> - Add exynos4_bus.txt documentation for devicetree guide
->> - Fix probe failure if CONFIG_PM_OPP is disabled
->> - Fix typo and resource leak(regulator/clock/memory) when happening probe failure
->> - Add additionally comment for PPMU usage instead of previous PPC
->> - Split separate patch to remove ambiguous of patch
->>
->> Chanwoo Choi (8):
->>    devfreq: exynos4: Support devicetree to get device id of Exynos4 SoC
->>    devfreq: exynos4: Use common ppmu driver and get ppmu address from dt data
->>    devfreq: exynos4: Add ppmu's clock control and code clean about regulator control
->>    devfreq: exynos4: Fix bug of resource leak and code clean on probe()
->>    devfreq: exynos4: Use SET_SYSTEM_SLEEP_PM_OPS macro
->>    devfreq: exynos4: Fix power-leakage of clock on suspend state
->>    devfreq: exynos4: Add CONFIG_PM_OPP dependency to fix probe fail
->>    devfreq: exynos4: Add busfreq driver for exynos4210/exynos4x12
->>
->>   .../devicetree/bindings/devfreq/exynos4_bus.txt    |  49 +++
->>   drivers/devfreq/Kconfig                            |   1 +
->>   drivers/devfreq/exynos/Makefile                    |   2 +-
->>   drivers/devfreq/exynos/exynos4_bus.c               | 415 ++++++++++++++-------
->>   4 files changed, 341 insertions(+), 126 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
->>
+>   - Add "renesas,hspi-r8a7778" resp. "renesas,hspi-r8a7779" compatible
+>     values,
+>   - Correct reference to parent interrupt controller
+>     (use "interrupt-parent" instead of "interrupt-controller"),
+>   - Add missing "#address-cells" and "#size-cells" properties, which are
+>     needed when populating the SPI buses.
 > 
-> I have reviewed this series and there are several comments that I'd like to ask you to address. Please see my replies to particular patches.
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
+> Tested-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> ---
+> resend:
+>   - Simon: The bindings updates (formerly 1/3) are now in spi/for-next,
+>     so please apply. Thanks!
 
-OK, I'll fix it about your comment.
+Thanks.
 
+I have taken the liberty of splitting this patch into two: An r8a7778
+patch and an r8a7779 patch. I have queued up the result and
+will push it shortly.
+
+> v3:
+>   - Split in two patches: bindings and dtsi updates
+> v2:
+>   - Add Tested-by
+>   - List full example compatible properties with soctypes instead of just
+>     the soctypes, so checkpatch can validate DTSes.
 > 
-> However, this driver, even after applying your series, is still far from a state that would allow it to be enabled. The most important issue is direct access to CMU registers, based on static mapping, which is not allowed on multiplatform kernels and multiplatform-awareness for drivers is currently a must.
+>  arch/arm/boot/dts/r8a7778.dtsi |   18 ++++++++++++------
+>  arch/arm/boot/dts/r8a7779.dtsi |   18 ++++++++++++------
+>  2 files changed, 24 insertions(+), 12 deletions(-)
 > 
-> To allow this driver to be enabled, it needs to be converted to use common clock framework functions to configure all clocks, e.g. clk_set_rate(), clk_set_parent(), etc., without accessing CMU registers directly.
+> diff --git a/arch/arm/boot/dts/r8a7778.dtsi b/arch/arm/boot/dts/r8a7778.dtsi
+> index 85c5b3b99f5e..3c6fab5c9702 100644
+> --- a/arch/arm/boot/dts/r8a7778.dtsi
+> +++ b/arch/arm/boot/dts/r8a7778.dtsi
+> @@ -204,26 +204,32 @@
+>  	};
+>  
+>  	hspi0: spi@fffc7000 {
+> -		compatible = "renesas,hspi";
+> +		compatible = "renesas,hspi-r8a7778", "renesas,hspi";
+>  		reg = <0xfffc7000 0x18>;
+> -		interrupt-controller = <&gic>;
+> +		interrupt-parent = <&gic>;
+>  		interrupts = <0 63 IRQ_TYPE_LEVEL_HIGH>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+>  		status = "disabled";
+>  	};
+>  
+>  	hspi1: spi@fffc8000 {
+> -		compatible = "renesas,hspi";
+> +		compatible = "renesas,hspi-r8a7778", "renesas,hspi";
+>  		reg = <0xfffc8000 0x18>;
+> -		interrupt-controller = <&gic>;
+> +		interrupt-parent = <&gic>;
+>  		interrupts = <0 84 IRQ_TYPE_LEVEL_HIGH>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+>  		status = "disabled";
+>  	};
+>  
+>  	hspi2: spi@fffc6000 {
+> -		compatible = "renesas,hspi";
+> +		compatible = "renesas,hspi-r8a7778", "renesas,hspi";
+>  		reg = <0xfffc6000 0x18>;
+> -		interrupt-controller = <&gic>;
+> +		interrupt-parent = <&gic>;
+>  		interrupts = <0 85 IRQ_TYPE_LEVEL_HIGH>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+>  		status = "disabled";
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+> index d0561d4c7c46..8b1a336ee401 100644
+> --- a/arch/arm/boot/dts/r8a7779.dtsi
+> +++ b/arch/arm/boot/dts/r8a7779.dtsi
+> @@ -256,26 +256,32 @@
+>  	};
+>  
+>  	hspi0: spi@fffc7000 {
+> -		compatible = "renesas,hspi";
+> +		compatible = "renesas,hspi-r8a7779", "renesas,hspi";
+>  		reg = <0xfffc7000 0x18>;
+> -		interrupt-controller = <&gic>;
+> +		interrupt-parent = <&gic>;
+>  		interrupts = <0 73 IRQ_TYPE_LEVEL_HIGH>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+>  		status = "disabled";
+>  	};
+>  
+>  	hspi1: spi@fffc8000 {
+> -		compatible = "renesas,hspi";
+> +		compatible = "renesas,hspi-r8a7779", "renesas,hspi";
+>  		reg = <0xfffc8000 0x18>;
+> -		interrupt-controller = <&gic>;
+> +		interrupt-parent = <&gic>;
+>  		interrupts = <0 74 IRQ_TYPE_LEVEL_HIGH>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+>  		status = "disabled";
+>  	};
+>  
+>  	hspi2: spi@fffc6000 {
+> -		compatible = "renesas,hspi";
+> +		compatible = "renesas,hspi-r8a7779", "renesas,hspi";
+>  		reg = <0xfffc6000 0x18>;
+> -		interrupt-controller = <&gic>;
+> +		interrupt-parent = <&gic>;
+>  		interrupts = <0 75 IRQ_TYPE_LEVEL_HIGH>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+>  		status = "disabled";
+>  	};
+>  };
+> -- 
+> 1.7.9.5
 > 
-> Of course as long as the driver is effectively unusable, to keep development, we can proceed with refactoring it step-by-step and your series would be basically the first step, after addressing the review comments.
-> 
-
-I agree your opinion. When setting frequency of memory bus, this driver access
-directly to CMU registers. I know it should be modified by using common clk
-framework as your comment.
-
-I'll send patch set about using common clk framework instead of CMU register
-based on static mapping after finished the review and apply of this patch set as next step.
-
-Thanks for your review.
-
-Best Regards,
-Chanwoo Choi
