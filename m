@@ -1,86 +1,58 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 6/9] Doc/DT: Add DT binding documentation for MIPI DSI CM
- Panel
-Date: Mon, 17 Mar 2014 15:22:10 +0100
-Message-ID: <4670830.fkS1noPxcd@avalon>
-References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
- <1393590016-9361-7-git-send-email-tomi.valkeinen@ti.com>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH v2 1/3] ARM: EXYNOS: Map PMU address through DT
+Date: Mon, 17 Mar 2014 19:53:10 +0530
+Message-ID: <CAK9yfHyF9t0fsO86cqHvAzaWKa17=2MkFq6mhoL0-mwjw6OXQQ@mail.gmail.com>
+References: <1395061795-17777-1-git-send-email-vikas.sajjan@samsung.com>
+	<1395061795-17777-2-git-send-email-vikas.sajjan@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1393590016-9361-7-git-send-email-tomi.valkeinen@ti.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, dri-devel@lists.freedesktop.org, Andrzej Hajda <a.hajda@samsung.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1395061795-17777-2-git-send-email-vikas.sajjan@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vikas Sajjan <vikas.sajjan@samsung.com>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomi,
+Hi Vikas,
 
-Thank you for the patch.
-
-On Friday 28 February 2014 14:20:13 Tomi Valkeinen wrote:
-> Add DT binding documentation for MIPI DSI Command Mode Panel.
-> 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Reviewed-by: Archit Taneja <archit@ti.com>
+On 17 March 2014 18:39, Vikas Sajjan <vikas.sajjan@samsung.com> wrote:
+> Instead of hardcoding the PMU details for each SoC, pass this information
+> through device tree (DT).
+>
+> Signed-off-by: Vikas Sajjan <vikas.sajjan@samsung.com>
 > ---
->  .../devicetree/bindings/video/panel-dsi-cm.txt     | 26 +++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/video/panel-dsi-cm.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/video/panel-dsi-cm.txt
-> b/Documentation/devicetree/bindings/video/panel-dsi-cm.txt new file mode
-> 100644
-> index 000000000000..73f422556d4f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/panel-dsi-cm.txt
-> @@ -0,0 +1,26 @@
-> +Generic MIPI DSI Command Mode Panel
-> +===================================
-> +
-> +Required properties:
-> +- compatible: "panel-dsi-cm"
-> +
-> +Optional properties:
-> +- label: a symbolic name for the panel
-> +- gpios: panel reset gpio and TE gpio
-> +
-> +Required nodes:
-> +- Video port for DSI input
-> +
-> +Example
-> +-------
-> +
-> +lcd0: display {
-> +	compatible = "tpo,taal", "panel-dsi-cm";
-> +	label = "lcd0";
-> +
-> +	gpios = <&gpio4 6 GPIO_ACTIVE_HIGH>;	/* 102, reset */
+>  .../devicetree/bindings/arm/samsung/pmu.txt        |    5 +-
+>  arch/arm/boot/dts/exynos4.dtsi                     |    5 ++
+>  arch/arm/boot/dts/exynos5260.dtsi                  |    5 ++
+>  arch/arm/mach-exynos/common.c                      |   51 +++++++++++++-------
+>  arch/arm/mach-exynos/include/mach/map.h            |    3 --
+>  5 files changed, 47 insertions(+), 22 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+> index f1f1552..667a7f0 100644
+> --- a/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+> +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+> @@ -2,14 +2,15 @@ SAMSUNG Exynos SoC series PMU Registers
+>
+>  Properties:
+>   - compatible : should contain two values. First value must be one from following list:
+> +                  - "samsung,exynos4210-pmu" - for Exynos4210 and Exynos4x12 SoC,
+>                    - "samsung,exynos5250-pmu" - for Exynos5250 SoC,
+> -                  - "samsung,exynos5420-pmu" - for Exynos5420 SoC.
+> +                  - "samsung,exynos5420-pmu" - for Exynos5420 and Exynos5260 SoC.
+>                 second value must be always "syscon".
+>
+>   - reg : offset and length of the register set.
+>
+>  Example :
+>  pmu_system_controller: system-controller@10040000 {
+> -       compatible = "samsung,exynos5250-pmu", "syscon";
+> +       compatible = "samsung,exynos5250-pmu";
 
-If the panel uses a TE GPIO but no reset GPIO, do you plan to express this 
-with a "hole" for the reset GPIO ? e.g. something like
-
-	gpios = <0>, <&gpio4 6 GPIO_ACTIVE_HIGH>;
-
-Wouldn't it be better to split the gpios property into "reset-gpios" and "te-
-gpios" ?
-
-> +
-> +	lcd0_in: endpoint {
-> +		remote-endpoint = <&dsi1_out_ep>;
-> +	};
-> +};
+If you have removed "syscon" deliberately above, then you should also
+remove the same in the
+binding description which says "second value must be always "syscon".".
 
 -- 
-Regards,
-
-Laurent Pinchart
+With warm regards,
+Sachin
