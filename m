@@ -1,96 +1,198 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] spi/fsl-lib: Get the SPI controller bus number from
- DTS
-Date: Mon, 17 Mar 2014 13:01:09 +0000
-Message-ID: <20140317130109.GE11706@sirena.org.uk>
-References: <1394789757-40732-1-git-send-email-B48286@freescale.com>
- <1394789757-40732-2-git-send-email-B48286@freescale.com>
- <20140314191922.GA366@sirena.org.uk>
- <c4b28b01b2f544ca9d264eaee2542257@DM2PR03MB301.namprd03.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="kA1LkgxZ0NN7Mz3A"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <c4b28b01b2f544ca9d264eaee2542257-ufbTtyGzTTTk7ZsBhlipOOO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Vikas Sajjan <vikas.sajjan@samsung.com>
+Subject: [PATCH v2 1/3] ARM: EXYNOS: Map PMU address through DT
+Date: Mon, 17 Mar 2014 18:39:53 +0530
+Message-ID: <1395061795-17777-2-git-send-email-vikas.sajjan@samsung.com>
+References: <1395061795-17777-1-git-send-email-vikas.sajjan@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1395061795-17777-1-git-send-email-vikas.sajjan@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: vikas.sajjan@samsung.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: kgene.kim@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+Instead of hardcoding the PMU details for each SoC, pass this information
+through device tree (DT).
 
---kA1LkgxZ0NN7Mz3A
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Vikas Sajjan <vikas.sajjan@samsung.com>
+---
+ .../devicetree/bindings/arm/samsung/pmu.txt        |    5 +-
+ arch/arm/boot/dts/exynos4.dtsi                     |    5 ++
+ arch/arm/boot/dts/exynos5260.dtsi                  |    5 ++
+ arch/arm/mach-exynos/common.c                      |   51 +++++++++++++-------
+ arch/arm/mach-exynos/include/mach/map.h            |    3 --
+ 5 files changed, 47 insertions(+), 22 deletions(-)
 
-On Mon, Mar 17, 2014 at 05:11:11AM +0000, B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
-> > On Fri, Mar 14, 2014 at 05:35:57PM +0800, Hou Zhiqiang wrote:
-> > > Get the spi_master's bus_num from DTS to make the spi_master's name
-> > > static. So "mtdparts=3Dspi.bus_num.chip_select:..." in cmdline can be
-> > > used to asign mtd partions of spi flash.
-
-> > If we are going to do this it shouldn't be device specific (it should be
-> > done in the framework since nothing is specific to the controller there)
-> > but I'm not convinced that we should be doing it - this is all very Lin=
-ux
-> > specific.
-
-> This patch just assign a bus number to the controller. It is driver's=20
-> responsibility to distribute a bus number to spi_master and the definition
-> of bus_num is used to distinguish controllers. So, it is specific for the
-> controller and doesn't affect the framework.=20
-
-You are adding a property to specify a bus number.  There is no reason
-why such a property should be specific to a single controller, every
-controller in every system has a bus number assigned to it so if we have
-a way to specify one controller via the device tree we should have a way
-to specify it for all.
-
-> > The DT already has support for specifying flash layouts, can't those be
-> > used (for example via chosen if they're not fixed for the board)?  Or if
-> > it's just picking the correct filesystem then UUIDs and labels are the
-> > standard way to do things.
-
-> The DT specifying flash layouts is ok. There is another way to make the
-> flash layouts using command line, but it is not safe because of the dynam=
-ic
-> bus_num. It is not the reason that the way of DT is supported flash layou=
-ts,
-> to live the other way unsafe, right?
-
-This sounds to me like we need a better way of talking about flash
-device names on the Linux command line rather than a way to fix the bus
-number - for example, being able to refer to them using a fixed property
-like the physical address.  Being able to refer to devices via an alias
-assigned in the DT would also be useful (and more readable), I think
-there may already be a mechanism for doing that which would need to be
-plumbed in but I'm not 100% sure.
-
---kA1LkgxZ0NN7Mz3A
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTJvIRAAoJELSic+t+oim9QpkQAIkRSGJNK6SxGWOCkdPIThke
-EGrtLdsUkJ20IPZ1vP73uk1WlmtIk4D800pmqjltcSQr89RD+ohzQX4iOVoBQcuQ
-xt0JuS/lnrzkT7q4vuDurva/9mNEj+LiCzwpn9yTqYGmgG8Jmc+7pgMByLGZt6bi
-iLVg0E+/011lAP1phfRXzFa8eJEIO6mVRRR7ZBQONy9nB5BLxFrtwf1kUZgH1V2c
-QF0yIb29bZLBau0gY7ohEQhkrGq90myMCDvao0uiwlkYNeDxUqqnAYPQnH3DKegc
-lZLJrR22shrWJaOZWZtfTZrmt27MbQjChSqsMaSHdTctnB0+/pHhUSMf3z0kn6vV
-4iCSF7RJXFLOUEjTHDVSRyvWCITn+OigWoP0oUwRi3Lfmzxq9FDH8Gm1y82+nO2C
-rigmz7FrwRSTOoN4I+d5a/1UY1LtNSJAHti8oL1EmzUFPkUWDR/5EC3VNCfaihfB
-blN5aYKIi3xrR+MYRQFLM6xmnPH0FhlcrlKLdCMMfPqz9IGGdUeDD0ON3KmDxIcK
-y+Yi6KdGiTd4UH3WemN/qbVMD8VK6+DgrwI37beVD+kq4hDUi58mCgPuBHIKdjXK
-gSCyktwk8UDjT+o0aXaPWsfTZDbvBjpD15JETjBFQOKIMgkBEwKPhfgv2NfzScDt
-dwUowp8RGevH3fy2MbMy
-=E8xC
------END PGP SIGNATURE-----
-
---kA1LkgxZ0NN7Mz3A--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+index f1f1552..667a7f0 100644
+--- a/Documentation/devicetree/bindings/arm/samsung/pmu.txt
++++ b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+@@ -2,14 +2,15 @@ SAMSUNG Exynos SoC series PMU Registers
+ 
+ Properties:
+  - compatible : should contain two values. First value must be one from following list:
++		   - "samsung,exynos4210-pmu" - for Exynos4210 and Exynos4x12 SoC,
+ 		   - "samsung,exynos5250-pmu" - for Exynos5250 SoC,
+-		   - "samsung,exynos5420-pmu" - for Exynos5420 SoC.
++		   - "samsung,exynos5420-pmu" - for Exynos5420 and Exynos5260 SoC.
+ 		second value must be always "syscon".
+ 
+  - reg : offset and length of the register set.
+ 
+ Example :
+ pmu_system_controller: system-controller@10040000 {
+-	compatible = "samsung,exynos5250-pmu", "syscon";
++	compatible = "samsung,exynos5250-pmu";
+ 	reg = <0x10040000 0x5000>;
+ };
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index 08452e1..94cbafa 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -55,6 +55,11 @@
+ 		#phy-cells = <1>;
+ 	};
+ 
++	pmu_system_controller: system-controller@10020000 {
++		compatible = "samsung,exynos4210-pmu";
++		reg = <0x10020000 0x4000>;
++	};
++
+ 	pd_mfc: mfc-power-domain@10023C40 {
+ 		compatible = "samsung,exynos4210-pd";
+ 		reg = <0x10023C40 0x20>;
+diff --git a/arch/arm/boot/dts/exynos5260.dtsi b/arch/arm/boot/dts/exynos5260.dtsi
+index a93fea8..2a4dace 100644
+--- a/arch/arm/boot/dts/exynos5260.dtsi
++++ b/arch/arm/boot/dts/exynos5260.dtsi
+@@ -264,6 +264,11 @@
+ 			};
+ 		};
+ 
++		pmu_system_controller: system-controller@10D50000 {
++			compatible = "samsung,exynos5420-pmu";
++			reg = <0x10D50000 0x5000>;
++		};
++
+ 		pinctrl_0: pinctrl@11600000 {
+ 			compatible = "samsung,exynos5260-pinctrl";
+ 			reg = <0x11600000 0x1000>;
+diff --git a/arch/arm/mach-exynos/common.c b/arch/arm/mach-exynos/common.c
+index 1df81ff..c75733b 100644
+--- a/arch/arm/mach-exynos/common.c
++++ b/arch/arm/mach-exynos/common.c
+@@ -79,11 +79,6 @@ static struct map_desc exynos4_iodesc[] __initdata = {
+ 		.length		= SZ_4K,
+ 		.type		= MT_DEVICE,
+ 	}, {
+-		.virtual	= (unsigned long)S5P_VA_PMU,
+-		.pfn		= __phys_to_pfn(EXYNOS4_PA_PMU),
+-		.length		= SZ_64K,
+-		.type		= MT_DEVICE,
+-	}, {
+ 		.virtual	= (unsigned long)S5P_VA_COMBINER_BASE,
+ 		.pfn		= __phys_to_pfn(EXYNOS4_PA_COMBINER),
+ 		.length		= SZ_4K,
+@@ -157,11 +152,6 @@ static struct map_desc exynos5_iodesc[] __initdata = {
+ 		.pfn		= __phys_to_pfn(EXYNOS5_PA_CMU),
+ 		.length		= 144 * SZ_1K,
+ 		.type		= MT_DEVICE,
+-	}, {
+-		.virtual	= (unsigned long)S5P_VA_PMU,
+-		.pfn		= __phys_to_pfn(EXYNOS5_PA_PMU),
+-		.length		= SZ_64K,
+-		.type		= MT_DEVICE,
+ 	},
+ };
+ 
+@@ -243,12 +233,12 @@ static int __init exynos_fdt_map_chipid(unsigned long node, const char *uname,
+ 	return 1;
+ }
+ 
+-struct __sysram_desc {
++struct __exynos_reg_desc {
+ 	char name[32];
+ 	unsigned long addr;
+ };
+ 
+-static struct __sysram_desc sysram_desc[] __initdata = {
++static struct __exynos_reg_desc exynos_sysram_desc[] __initdata = {
+ 	{
+ 		.name = "samsung,exynos4210-sysram",
+ 		.addr = (unsigned long)S5P_VA_SYSRAM,
+@@ -258,7 +248,20 @@ static struct __sysram_desc sysram_desc[] __initdata = {
+ 	},
+ };
+ 
+-static int __init exynos_fdt_map_sysram(unsigned long node, const char *uname,
++static struct __exynos_reg_desc exynos_pmu_desc[] __initdata = {
++	{
++		.name = "samsung,exynos4210-pmu",
++		.addr = (unsigned long)S5P_VA_PMU,
++	}, {
++		.name = "samsung,exynos5250-pmu",
++		.addr = (unsigned long)S5P_VA_PMU,
++	}, {
++		.name = "samsung,exynos5420-pmu",
++		.addr = (unsigned long)S5P_VA_PMU,
++	},
++};
++
++static int __init exynos_fdt_map_reg(unsigned long node, const char *uname,
+ 					int depth, void *data)
+ {
+ 	struct map_desc iodesc;
+@@ -266,12 +269,26 @@ static int __init exynos_fdt_map_sysram(unsigned long node, const char *uname,
+ 	unsigned long len;
+ 	int i;
+ 
+-	for (i = 0; i < ARRAY_SIZE(sysram_desc); i++) {
+-		if (of_flat_dt_is_compatible(node, sysram_desc[i].name)) {
++	for (i = 0; i < ARRAY_SIZE(exynos_sysram_desc); i++) {
++		if (of_flat_dt_is_compatible(node,
++					exynos_sysram_desc[i].name)) {
++			reg = of_get_flat_dt_prop(node, "reg", &len);
++			if (!reg || len != (sizeof(unsigned long) * 2))
++				return -ENODEV;
++			iodesc.virtual = exynos_sysram_desc[i].addr;
++			iodesc.pfn = __phys_to_pfn(be32_to_cpu(reg[0]));
++			iodesc.length = be32_to_cpu(reg[1]);
++			iodesc.type = MT_DEVICE;
++			iotable_init(&iodesc, 1);
++		}
++	}
++
++	for (i = 0; i < ARRAY_SIZE(exynos_pmu_desc); i++) {
++		if (of_flat_dt_is_compatible(node, exynos_pmu_desc[i].name)) {
+ 			reg = of_get_flat_dt_prop(node, "reg", &len);
+ 			if (!reg || len != (sizeof(unsigned long) * 2))
+ 				return -ENODEV;
+-			iodesc.virtual = sysram_desc[i].addr;
++			iodesc.virtual = exynos_pmu_desc[i].addr;
+ 			iodesc.pfn = __phys_to_pfn(be32_to_cpu(reg[0]));
+ 			iodesc.length = be32_to_cpu(reg[1]);
+ 			iodesc.type = MT_DEVICE;
+@@ -298,7 +315,7 @@ void __init exynos_init_io(void)
+ 
+ 	exynos_map_io();
+ 
+-	of_scan_flat_dt(exynos_fdt_map_sysram, NULL);
++	of_scan_flat_dt(exynos_fdt_map_reg, NULL);
+ }
+ 
+ static void __init exynos_map_io(void)
+diff --git a/arch/arm/mach-exynos/include/mach/map.h b/arch/arm/mach-exynos/include/mach/map.h
+index 548269a..34eee6e 100644
+--- a/arch/arm/mach-exynos/include/mach/map.h
++++ b/arch/arm/mach-exynos/include/mach/map.h
+@@ -28,9 +28,6 @@
+ #define EXYNOS4_PA_SYSCON		0x10010000
+ #define EXYNOS5_PA_SYSCON		0x10050100
+ 
+-#define EXYNOS4_PA_PMU			0x10020000
+-#define EXYNOS5_PA_PMU			0x10040000
+-
+ #define EXYNOS4_PA_CMU			0x10030000
+ #define EXYNOS5_PA_CMU			0x10010000
+ 
+-- 
+1.7.9.5
