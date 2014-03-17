@@ -1,60 +1,59 @@
-From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v3 4/4] ASoC: simple-card: Add DT
- documentation for multi-DAI links
-Date: Mon, 17 Mar 2014 12:19:46 +0200
-Message-ID: <190d334218a324f12078f81d769322ca@kapsi.fi>
-References: <cover.1394883134.git.moinejf@free.fr>
- <d054780a0edf4b2338a52e48bff9144e19aa614f.1394883134.git.moinejf@free.fr>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: [PATCH 0/9] Restore parallel display support for Exynos based boards
+Date: Mon, 17 Mar 2014 11:27:16 +0100
+Message-ID: <1395052045-23848-1-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d054780a0edf4b2338a52e48bff9144e19aa614f.1394883134.git.moinejf-GANU6spQydw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Denis Carikli <denis@eukrea.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2014-03-15 13:30, Jean-Francois Moine wrote:
-> There may be many couples of CPU/CODEC DAI links.
-> The example 2 is extracted from the Cubox DT.
-> 
-> Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-> ---
-[...]
+Hi,
 
-This binding forces all the dai links to share the same card level 
-properties. I find it problematic in these cases:
+This patch set restores parallel display support removed during exynos
+refactorization. It is rebased on the latest exynos-drm-next branch plus patch
+adding polarization flags to drm_display_mode [1].
 
->> - simple-audio-card,format		: CPU/CODEC common audio format.
->> 					  "i2s", "right_j", "left_j" , "dsp_a"
->> 					  "dsp_b", "ac97", "pdm", "msb", "lsb"
+[1]: http://permalink.gmane.org/gmane.linux.drivers.driver-project.devel/47216
 
-The code allows having the format parameter in sub nodes too, but the 
-document does no mention it. Adding a mention would solve this problem 
-at least partly.
+Regards
+Andrzej
 
-Neither does the document mention that 
-"simple-audio-card,bitclock-inversion" and 
-"simple-audio-card,frame-inversion" are also allowed in card level. 
-Currently the code uses simple bit-wise-or from card-level and dai-level 
-daifmt parameters, which may lead to broken daifmt setting. However, 
-this on directly related to this patch.
 
->> - dai-tdm-slot-num			: Please refer to tdm-slot.txt.
->> - dai-tdm-slot-width			: Please refer to tdm-slot.txt.
+Andrzej Hajda (9):
+  drm/exynos: delay fbdev initialization until an output is connected
+  drm/exynos: init kms poll after creation of connectors
+  drm/exynos: correct timing porch conversion
+  exynos/fimd: add parallel output related bindings
+  drm/exynos: restore parallel output interface support
+  ARM: dts: exynos4210-universal: add exynos/fimd node
+  drm/modes: add polarization handling to mode conversion
+  drm/exynos/fimd: use polarization flags provided by drm_display_mode
+  drm/exynos/fimd: remove unused variable
 
-These properties are actually only taken from sub-nodes so the document 
-is broken but the code is ok.
+ .../devicetree/bindings/video/samsung-fimd.txt     |  15 +
+ arch/arm/boot/dts/exynos4210-universal_c210.dts    |  25 ++
+ drivers/gpu/drm/drm_modes.c                        |  11 +
+ drivers/gpu/drm/exynos/Kconfig                     |   8 +
+ drivers/gpu/drm/exynos/Makefile                    |   1 +
+ drivers/gpu/drm/exynos/exynos_drm_dpi.c            | 339 +++++++++++++++++++++
+ drivers/gpu/drm/exynos/exynos_drm_drv.c            |  22 +-
+ drivers/gpu/drm/exynos/exynos_drm_drv.h            |   8 +
+ drivers/gpu/drm/exynos/exynos_drm_fb.c             |   3 +
+ drivers/gpu/drm/exynos/exynos_drm_fimd.c           |  32 +-
+ 10 files changed, 432 insertions(+), 32 deletions(-)
+ create mode 100644 drivers/gpu/drm/exynos/exynos_drm_dpi.c
 
-In general this binding would look better if another sub-node level 
-would added for dai-link related properties, including the cpu and codec 
-sub-nodes, but that would break the backwards compatibility.
-
-Best regards,
-Jyri
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.8.3.2
