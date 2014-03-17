@@ -1,15 +1,15 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 5/9] Doc/DT: Add DT binding documentation for MIPI DPI
+Subject: Re: [PATCH 6/9] Doc/DT: Add DT binding documentation for MIPI DSI CM
  Panel
-Date: Mon, 17 Mar 2014 15:19:32 +0100
-Message-ID: <3721050.m43feCICLQ@avalon>
+Date: Mon, 17 Mar 2014 15:22:10 +0100
+Message-ID: <4670830.fkS1noPxcd@avalon>
 References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
- <1393590016-9361-6-git-send-email-tomi.valkeinen@ti.com>
+ <1393590016-9361-7-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1393590016-9361-6-git-send-email-tomi.valkeinen@ti.com>
+In-Reply-To: <1393590016-9361-7-git-send-email-tomi.valkeinen@ti.com>
 List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
@@ -27,71 +27,57 @@ Hi Tomi,
 
 Thank you for the patch.
 
-On Friday 28 February 2014 14:20:12 Tomi Valkeinen wrote:
-> Add DT binding documentation for MIPI DPI Panel.
+On Friday 28 February 2014 14:20:13 Tomi Valkeinen wrote:
+> Add DT binding documentation for MIPI DSI Command Mode Panel.
 > 
 > Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 > Reviewed-by: Archit Taneja <archit@ti.com>
 > ---
->  .../devicetree/bindings/video/panel-dpi.txt        | 43 +++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/video/panel-dpi.txt
+>  .../devicetree/bindings/video/panel-dsi-cm.txt     | 26 +++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/video/panel-dsi-cm.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/video/panel-dpi.txt
-> b/Documentation/devicetree/bindings/video/panel-dpi.txt new file mode
+> diff --git a/Documentation/devicetree/bindings/video/panel-dsi-cm.txt
+> b/Documentation/devicetree/bindings/video/panel-dsi-cm.txt new file mode
 > 100644
-> index 000000000000..72636c6f1c67
+> index 000000000000..73f422556d4f
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/panel-dpi.txt
-> @@ -0,0 +1,43 @@
-> +Generic MIPI DPI Panel
-> +======================
+> +++ b/Documentation/devicetree/bindings/video/panel-dsi-cm.txt
+> @@ -0,0 +1,26 @@
+> +Generic MIPI DSI Command Mode Panel
+> +===================================
 > +
 > +Required properties:
-> +- compatible: "panel-dpi"
+> +- compatible: "panel-dsi-cm"
 > +
 > +Optional properties:
 > +- label: a symbolic name for the panel
-> +- gpios: panel enable gpio and backlight enable gpio
-
-While integrated in the panel module, the backlight is a separate piece of 
-hardware, which could be controlled through other means (I2C for instance). 
-Wouldn't it be better to add an explicit DT node for the backlight device and 
-reference that node from the panel node ?
-
+> +- gpios: panel reset gpio and TE gpio
 > +
 > +Required nodes:
-> +- "panel-timing" containing video timings
-> +  (Documentation/devicetree/bindings/video/display-timing.txt)
-> +- Video port for DPI input
+> +- Video port for DSI input
 > +
 > +Example
 > +-------
 > +
-> +lcd0: display@0 {
-> +        compatible = "samsung,lte430wq-f0c", "panel-dpi";
-> +        label = "lcd";
+> +lcd0: display {
+> +	compatible = "tpo,taal", "panel-dsi-cm";
+> +	label = "lcd0";
 > +
-> +        lcd_in: endpoint {
-> +                remote-endpoint = <&dpi_out>;
-> +        };
+> +	gpios = <&gpio4 6 GPIO_ACTIVE_HIGH>;	/* 102, reset */
+
+If the panel uses a TE GPIO but no reset GPIO, do you plan to express this 
+with a "hole" for the reset GPIO ? e.g. something like
+
+	gpios = <0>, <&gpio4 6 GPIO_ACTIVE_HIGH>;
+
+Wouldn't it be better to split the gpios property into "reset-gpios" and "te-
+gpios" ?
+
 > +
-> +        panel-timing {
-> +                clock-frequency = <9200000>;
-> +                hactive = <480>;
-> +                vactive = <272>;
-> +                hfront-porch = <8>;
-> +                hback-porch = <4>;
-> +                hsync-len = <41>;
-> +                vback-porch = <2>;
-> +                vfront-porch = <4>;
-> +                vsync-len = <10>;
-> +
-> +                hsync-active = <0>;
-> +                vsync-active = <0>;
-> +                de-active = <1>;
-> +                pixelclk-active = <1>;
-> +        };
+> +	lcd0_in: endpoint {
+> +		remote-endpoint = <&dsi1_out_ep>;
+> +	};
 > +};
 
 -- 
