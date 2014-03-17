@@ -1,91 +1,47 @@
-From: Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
-Subject: Re: [PATCH v5 3/9] at91: pinctrl: don't request GPIOs used for
- interrupts but lock them as IRQ
-Date: Mon, 17 Mar 2014 12:14:50 +0100
-Message-ID: <CACh+v5N+Ms9ZVFN=F_sQQhRbwhiYFg6LO+383UL8iw7qYaPKtQ@mail.gmail.com>
-References: <1393841162-25339-1-git-send-email-jjhiblot@traphandler.com>
-	<1393841162-25339-4-git-send-email-jjhiblot@traphandler.com>
-	<53205A46.6000304@gmail.com>
+From: Antti P Miettinen <ananaza@iki.fi>
+Subject: Re: [PATCH RFC v4 3/3] Documentation: arm: define DT idle states
+ bindings
+Date: Mon, 17 Mar 2014 13:15:07 +0200 (EET)
+Message-ID: <20140317.131507.1338341364843764791.apm@brigitte.kvy.fi>
+References: <1392724051-11950-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1392724051-11950-4-git-send-email-lorenzo.pieralisi@arm.com>
+Reply-To: ananaza@iki.fi
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53205A46.6000304-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1392724051-11950-4-git-send-email-lorenzo.pieralisi@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: lorenzo.pieralisi@arm.com
+Cc: mark.rutland@arm.com, mturquette@linaro.org, t.figa@samsung.com, mark.hambleton@broadcom.com, linux@arm.linux.org.uk, nico@linaro.org, daniel.lezcano@linaro.org, sebastian.capella@linaro.org, grant.likely@linaro.org, dave.martin@arm.com, Charles.Garcia-Tobin@arm.com, devicetree@vger.kernel.org, khilman@linaro.org, linux-pm@vger.kernel.org, galak@codeaurora.org, robh+dt@kernel.org, vincent.guittot@linaro.org, linux-arm-kernel@lists.infradead.org, pdeschrijver@nvidia.com, sboyd@codeaurora.org, amit.kucheria@linaro.org, broonie@kernel.org, santosh.shilimkar@ti.com, hanjun.guo@linaro.org, sudeep.holla@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+Sorry for having been lazy in commenting..
 
-Sorry for being late, I was on vacation.
-Yes this patch can be dropped from the serie.
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Date: Tue, 18 Feb 2014 11:47:31 +0000
+> +	- min-residency
+> +		Usage: Required
+> +		Value type: <prop-encoded-array>
+> +		Definition: u32 value representing time in microseconds
+> +			    required for the CPU to be in the idle state to
+> +			    break even in power consumption terms compared
+> +			    to idle state idle_standby ([4][5]).
 
-2014-03-12 13:59 GMT+01:00 Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> Hi JJ,
->
-> IIRC this patch was necessary for the DM9000 device, which is not def=
-ined
-> in this series anymore.
-> And, correct me if I'm wrong, but there's still a discussion about ho=
-w
-> this should be fixed properly (https://lkml.org/lkml/2014/2/25/388).
->
-> As a result, shouldn't we remove this patch from this series ?
->
-> Best Regards,
->
-> Boris
->
-> Le 03/03/2014 11:05, Jean-Jacques Hiblot a =E9crit :
->
->> During the xlate stage of the DT interrupt parsing, the at91 pinctrl
->> driver
->> requests the GPIOs that are described as interrupt sources. This pre=
-vents
->> a
->> driver to request the gpio later to get its electrical value.
->> This patch replaces the gpio_request with a gpio_lock_as_irq to prev=
-ent
->> the
->> gpio to be set as an ouput while allowing a subsequent gpio_request =
-to
->> succeed
->>
->> Signed-off-by: Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
->> ---
->>   drivers/pinctrl/pinctrl-at91.c | 5 ++---
->>   1 file changed, 2 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/pinctrl/pinctrl-at91.c
->> b/drivers/pinctrl/pinctrl-at91.c
->> index d990e33..db55b96 100644
->> --- a/drivers/pinctrl/pinctrl-at91.c
->> +++ b/drivers/pinctrl/pinctrl-at91.c
->> @@ -1478,18 +1478,17 @@ static int at91_gpio_irq_domain_xlate(struct
->> irq_domain *d,
->>   {
->>         struct at91_gpio_chip *at91_gpio =3D d->host_data;
->>         int ret;
->> -       int pin =3D at91_gpio->chip.base + intspec[0];
->>         if (WARN_ON(intsize < 2))
->>                 return -EINVAL;
->>         *out_hwirq =3D intspec[0];
->>         *out_type =3D intspec[1] & IRQ_TYPE_SENSE_MASK;
->>   -     ret =3D gpio_request(pin, ctrlr->full_name);
->> +       ret =3D gpio_lock_as_irq(&at91_gpio->chip, intspec[0]);
->>         if (ret)
->>                 return ret;
->>   -     ret =3D gpio_direction_input(pin);
->> +       ret =3D at91_gpio_direction_input(&at91_gpio->chip, intspec[=
-0]);
->>         if (ret)
->>                 return ret;
->>
->
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+To me this continues to be a bit illdefined. Say we have three states:
+0,1,2. State 0 is the idle_standby. Providing a minimum residency for
+state 1 compared to state 0 sort of makes sense, but if we provide a
+minimum residency for state 2 compared to state 0 the break even time
+is going to be smaller than break even when comparing state 1 and
+state 2. With this data we'd enter state 2 when we'd be better off
+entering state 1.
+
+	--Antti
