@@ -1,81 +1,70 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 4/9] at91: dt: Add at91sam9261 dt SoC support
-Date: Mon, 17 Mar 2014 12:48:41 +0100
-Message-ID: <20140317114840.GD12021@piout.net>
-References: <1393841162-25339-1-git-send-email-jjhiblot@traphandler.com>
- <1393841162-25339-5-git-send-email-jjhiblot@traphandler.com>
- <20140317114018.GE9558@ns203013.ovh.net>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH RFC v4 3/3] Documentation: arm: define DT idle states
+ bindings
+Date: Mon, 17 Mar 2014 11:53:03 +0000
+Message-ID: <20140317115303.GB28453@e102568-lin.cambridge.arm.com>
+References: <1392724051-11950-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1392724051-11950-4-git-send-email-lorenzo.pieralisi@arm.com>
+ <20140317.131507.1338341364843764791.apm@brigitte.kvy.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140317.131507.1338341364843764791.apm@brigitte.kvy.fi>
 Content-Disposition: inline
-In-Reply-To: <20140317114018.GE9558-HVbc7XotTAhnXn40ka+A6Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Antti P Miettinen <ananaza@iki.fi>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "mturquette@linaro.org" <mturquette@linaro.org>, "t.figa@samsung.com" <t.figa@samsung.com>, "mark.hambleton@broadcom.com" <mark.hambleton@broadcom.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "nico@linaro.org" <nico@linaro.org>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "sebastian.capella@linaro.org" <sebastian.capella@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Dave P Martin <Dave.Martin@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "khilman@linaro.org" <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>, linux-arm-kernel@lists.infradea
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean-Christophe,
+Hi Antti,
 
-I think you are a bit late and the series got taken by Nicolas. Anyway, most of
-your comments have been taken care of.
+On Mon, Mar 17, 2014 at 11:15:07AM +0000, Antti P Miettinen wrote:
+> Sorry for having been lazy in commenting..
 
-On 17/03/2014 at 12:40:18 +0100, Jean-Christophe PLAGNIOL-VILLARD wrote :
-> On 11:05 Mon 03 Mar     , Jean-Jacques Hiblot wrote:
-> > +		usb0: ohci@00500000 {
-> > +			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
-> > +			reg = <0x00500000 0x100000>;
-> > +			interrupts = <20 IRQ_TYPE_LEVEL_HIGH 2>;
+No worries, comments always welcome.
+
+> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Date: Tue, 18 Feb 2014 11:47:31 +0000
+> > +	- min-residency
+> > +		Usage: Required
+> > +		Value type: <prop-encoded-array>
+> > +		Definition: u32 value representing time in microseconds
+> > +			    required for the CPU to be in the idle state to
+> > +			    break even in power consumption terms compared
+> > +			    to idle state idle_standby ([4][5]).
 > 
-> for 5th time NACK
-> 
-> stop using interrupts une interrupts-extended
+> To me this continues to be a bit illdefined. Say we have three states:
+> 0,1,2. State 0 is the idle_standby. Providing a minimum residency for
+> state 1 compared to state 0 sort of makes sense, but if we provide a
+> minimum residency for state 2 compared to state 0 the break even time
+> is going to be smaller than break even when comparing state 1 and
+> state 2. With this data we'd enter state 2 when we'd be better off
+> entering state 1.
 
-As there is only one interrupt controller, I don't see why we would
-absolutely need to specify the interrupt controller here.
+I am not sure I got your reply right, but min-residency for
+state 2 will be higher than state 1, since it has to cater for the
+dynamic power consumed by entering the state (but burns less power
+than state 1 when _in_ the state).
 
-> > +			clocks = <&usb>, <&ohci_clk>, <&hclk0>, <&uhpck>;
-> > +			clock-names = "usb_clk", "ohci_clk", "hclk", "uhpck";
-> > +			status = "disabled";
-> > +		};
-> > diff --git a/arch/arm/mach-at91/at91sam9261.c b/arch/arm/mach-at91/at91sam9261.c
-> > index 6276b4c..5c90581 100644
-> > --- a/arch/arm/mach-at91/at91sam9261.c
-> > +++ b/arch/arm/mach-at91/at91sam9261.c
-> > @@ -189,6 +189,23 @@ static struct clk_lookup periph_clocks_lookups[] = {
-> >  	CLKDEV_CON_ID("pioA", &pioA_clk),
-> >  	CLKDEV_CON_ID("pioB", &pioB_clk),
-> >  	CLKDEV_CON_ID("pioC", &pioC_clk),
-> > +	/* more lookup table for DT entries */
-> > +	CLKDEV_CON_DEV_ID("usart", "fffff200.serial", &mck),
-> > +	CLKDEV_CON_DEV_ID("usart", "fffb0000.serial", &usart0_clk),
-> > +	CLKDEV_CON_DEV_ID("usart", "ffffb400.serial", &usart1_clk),
-> > +	CLKDEV_CON_DEV_ID("usart", "fff94000.serial", &usart2_clk),
-> > +	CLKDEV_CON_DEV_ID("t0_clk", "fffa0000.timer", &tc0_clk),
-> > +	CLKDEV_CON_DEV_ID("t1_clk", "fffa0000.timer", &tc1_clk),
-> > +	CLKDEV_CON_DEV_ID("t2_clk", "fffa0000.timer", &tc2_clk),
-> > +	CLKDEV_CON_DEV_ID("hclk", "500000.ohci", &hck0),
-> > +	CLKDEV_CON_DEV_ID("hclk", "600000.fb", &hck1),
-> > +	CLKDEV_CON_DEV_ID("spi_clk", "fffc8000.spi", &spi0_clk),
-> > +	CLKDEV_CON_DEV_ID("spi_clk", "fffcc000.spi", &spi1_clk),
-> > +	CLKDEV_CON_DEV_ID("mci_clk", "fffa8000.mmc", &mmc_clk),
-> > +	CLKDEV_CON_DEV_ID(NULL, "fffac000.i2c", &twi_clk),
-> > +	CLKDEV_CON_DEV_ID(NULL, "fffff400.gpio", &pioA_clk),
-> > +	CLKDEV_CON_DEV_ID(NULL, "fffff600.gpio", &pioB_clk),
-> > +	CLKDEV_CON_DEV_ID(NULL, "fffff800.gpio", &pioC_clk),
-> 
-> do we really need this?
+Entering a state has a power cost and min-residency should take that into
+account, worst-case as per other stats.
 
-Yes, until all the SoCs are switch to the CCF, we may build kernel
-supporting multiple sam9 SoCs without CCF.
+min-residency (and so the break-even) should take into account that
+entering the state is not for free.
 
-Best regards,
+I think that comparing against idle_standby is the only sane way we can
+define that parameter, either that or we remove it.
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Does it make sense ?
+
+Thanks !
+Lorenzo
