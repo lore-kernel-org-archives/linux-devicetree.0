@@ -1,146 +1,118 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC 2/9] opp-modifier: Add opp-modifier-reg driver
-Date: Mon, 17 Mar 2014 13:37:56 -0500
-Message-ID: <CAL_JsqLSq+ZhwgOoH7uvh-Otod6iECWTkDMyEvO6MjmdnJ-3Kw@mail.gmail.com>
-References: <1394825135-60110-1-git-send-email-d-gerlach@ti.com>
-	<1394825135-60110-3-git-send-email-d-gerlach@ti.com>
-	<CAL_Jsq+BzJeaiPwJsH5bFmtsxCPOspEjnmMLdAVyLAriQTF+kw@mail.gmail.com>
-	<53270710.4060206@ti.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] SPI: Add driver for Cadence SPI controller
+Date: Mon, 17 Mar 2014 14:00:05 -0500
+Message-ID: <CAL_JsqL9z_4T+cz425bHHpwx_dXaZjJEHwZKFCOibWYuWM4rkA@mail.gmail.com>
+References: <1395057936-8643-1-git-send-email-harinik@xilinx.com>
+	<CAL_JsqKacetGytGUJir7ky3qOgCy-3ny1pT_Bx4eCYV2wMgcTg@mail.gmail.com>
+	<5326F72E.7010401@monstr.eu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <53270710.4060206@ti.com>
-Sender: cpufreq-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Dave Gerlach <d-gerlach@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Jisheng Zhang <jszhang@marvell.com>, Anson Huang <Anson.Huang@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5326F72E.7010401-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Cc: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 17, 2014 at 9:30 AM, Nishanth Menon <nm@ti.com> wrote:
-> On 03/14/2014 04:00 PM, Rob Herring wrote:
->> On Fri, Mar 14, 2014 at 2:25 PM, Dave Gerlach <d-gerlach@ti.com> wrote:
->>> Driver to read from a register and depending on either set bits or
->>> a specific known selectively enable or disable OPPs based on DT node.
+On Mon, Mar 17, 2014 at 8:22 AM, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org> wrote:
+> Hi Rob,
+>
+> On 03/17/2014 01:47 PM, Rob Herring wrote:
+>> On Mon, Mar 17, 2014 at 7:05 AM, Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+>>> Add driver for Cadence SPI controller. This is used in Xilinx Zynq.
 >>>
->>> Can support opp-modifier-reg-bit where single bits within the register
->>> determine the availability of an OPP or opp-modifier-reg-val where a
->>> certain value inside the register or a portion of it determine what the
->>> maximum allowed OPP is.
->>>
->>> The driver expects a device that has already has its OPPs loaded
->>> and then will disable the OPPs not matching the criteria specified in
->>> the opp-modifier table.
->>>
->>> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+>>> Signed-off-by: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 >>> ---
->>>  .../devicetree/bindings/power/opp-modifier.txt     | 111 +++++++++
->>>  drivers/power/opp/Makefile                         |   1 +
->>>  drivers/power/opp/opp-modifier-reg.c               | 259 +++++++++++++++++++++
->>>  3 files changed, 371 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/power/opp-modifier.txt
->>>  create mode 100644 drivers/power/opp/opp-modifier-reg.c
->>>
->>> diff --git a/Documentation/devicetree/bindings/power/opp-modifier.txt b/Documentation/devicetree/bindings/power/opp-modifier.txt
->>> new file mode 100644
->>> index 0000000..af8a2e9
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/power/opp-modifier.txt
->>> @@ -0,0 +1,111 @@
->>> +* OPP-Modifier - opp modifier to selectively enable operating points
->>> +
->>> +Many SoCs that have selectively modifiable OPPs can specify
->>> +all available OPPs in their operating-points listing and then define
->>> +opp_modifiers to enable or disable the OPPs that are actually available
->>> +on the specific hardware.
->>> +
->>> +* OPP Modifier Provider
+>>>  .../devicetree/bindings/spi/spi-cadence.txt        |   25 +
 >>
->> Uggg. Please stop designing around the current OPP binding which has
->> the problem that the OPP table is not extensible to add more data.
->> Define a new OPP binding that solves these problems. This is at least
-> Generically, there are three different issues with current OPP bindings:
-> a) ability to enable disable certain OPPs depending on SoC OTP/Efuse
-> settings.
-
-More generically: ...depending on variety of factors.
-
-> b) ability to reuse OPPs defined for one device node for another (cpu1
-> to reuse OPP definitions of cpu0)
-> c) ability to add additional information per OPP. we can argue this is
-> a superset of (a), but really, the problems are different.
-
-It is all additional data per OPP. Additional different information is
-of course for different problems. That doesn't mean we need different
-solutions.
-
-> Previous proposals include making each OPP as a phandle, but there
-> does not seem much traction in that direction either. - proposal here
-> has nothing to do with (b) or (c).
-
-They may have nothing to do with each other, but they all have to do
-with the OPP binding. If we're going to change/extend the binding,
-then all issues need to be taken into account.
-
->> the 3rd OPP related binding addition I've seen recently. But I
->> wouldn't spend a lot of effort on a new OPP binding just to add the
->> functionality you are adding here because I don't like the whole
->> concept in general. This might be a common way to determine valid OPPs
->> on TI chips, but I think it is too low level and I don't want to see
+>> We prefer binding docs in separate patch.
 >
-> Not just TI chips, but iMX, now, Marvell, Xilinx as well. potentially
-> more as well. doing OTP/Efuse based decision on which OPPs are valid
-> on a chip is not a TI specific thing. This was the reason for us to
-> try to define something generic enough to be reused by more SoCs than
-> just TI.
+> I have heard several times that also for binding review you need driver
+> to look if this binding make sense that's why Harini sent this together.
+> It means 2 emails instead of one.
+> But if you wish to have this in two files no problem to split it
+> but then I believe both should be copied to DT mailing list.
 
-Agreed, but I'm not convinced how different SOCs determine valid OPPs
-is common enough. Certainly how to mark an entry disabled is common
-though.
+Yes, for 2 reasons:
+- To prepare for DT bindings to get merged to separate repo if we ever
+get there.
+- So DT maintainers can review/ack just the bindings.
 
->> bindings for every different possible way. Just add platform code to
->> do the OPP setup you need.
-> Errr.. adding platform code means the hardware description goes back
-> to kernel. is'nt that giving up on device tree binding for describing
-> hardware?
 
-We're always going to have some platform code. I'm not saying you have
-to in this case. I'm saying either come up with an OPP binding
-addressing all these issues or live with the existing one and fix it
-up in the kernel or bootloader.
-
->> Frankly, I prefer the bootloader/firmware fixup the OPP table approach
->> mentioned in the cpufreq-cpu0 thread. Somewhat less desirable, but the
->> kernel could do the fixups as well (via of_update_property).
+>>> +- reg                  : Physical base address and size of SPI registers map.
+>>> +- interrupts           : Property with a value describing the interrupt
+>>> +                         number.
+>>> +- interrupt-parent     : Must be core interrupt controller
+>>> +- clock-names          : List of input clock names - "ref_clk", "pclk"
+>>> +                         (See clock bindings for details).
+>>> +- clocks               : Clock phandles (see clock bindings for details).
+>>> +- num-chip-select      : Number of chip selects used.
+>>
+>> See Documentation/devicetree/bindings/spi/spi-bus.txt. Use "num-cs" here.
+>>
+>>> +
+>>> +Example:
+>>> +
+>>> +       spi@e0007000 {
+>>> +               clock-names = "ref_clk", "pclk";
+>>> +               clocks = <&clkc 26>, <&clkc 35>;
+>>> +               compatible = "cdns,spi-r1p6";
+>>
+>> Nit. We usually put compatible first in the node.
 >
-> a) Trying to move the hardware definition away from device tree seems
-> to me a major step backwards.
-> b) Allowing for definitions in platform code is a step backwards again
-> for a generic solution that works for more than 1 vendor.
-> c) moving the logic away to bootloader when it can easily be done in
-> kernel again is adding burden to bootloader for data it does need to
-> handle.
+> Our device-tree generator sorts them that's why it is just like this
+> but not a problem to fix just in documentation.
+>
+>
+>>> +               interrupt-parent = <&intc>;
+>>> +               interrupts = <0 49 4>;
+>>> +               num-chip-select = /bits/ 16 <4>;
+>
+> I was expecting you will comment this a little bit. :-)
+> Because all just reading this num-cs as 32bit and then
+> assigning this value to master->num_chipselect which is 16bit.
 
-The burden has to be somewhere. Maintaining a binding forever in the
-kernel is a burden as well if it is poorly designed.
+Well, everyone else has that problem then. Obviously it takes a bit
+more care than just reading into a u32, but that is a kernel problem
+and not a problem of the binding.
 
-Valid OPPs are not going to just be random. There's probably on a few
-combinations and they'll be based on part# or speed grade or something
-(which in turn defines the efuses in your case). While a dev board may
-have random parts on it, an actual product would not. I could argue
-that your DTB just needs to be correct to begin with for a given
-part/design. Obviously, managing minor differences in a DTB like this
-can be a pain. This is why firmware or bootloaders do adjustments to
-the DTB at runtime and it is quite common.
+>>> +/* Macros for the SPI controller read/write */
+>>> +#define cdns_spi_read(addr)    readl_relaxed(addr)
+>>> +#define cdns_spi_write(addr, val)      writel_relaxed((val), (addr))
+>>
+>> Just use readl/writel directly.
+>
+> There shouldn't be any problem to use these helper macros
+> and even I think this is better than using readl/writel directly
+> because you are more flexible if you want to change it to different
+> IO.
 
-> OPP is a hardware behavior, which OPPs are enabled are described in
-> hardware on certain SoCs. the current proposal is to provide a generic
-> solution for those devices that allow for dynamic definition of OPPs
-> based on SoC efuse definition.
+Then when I read the code I have to go lookup what they do while I
+know exactly what writel/readl do already. It is really the same
+reasons as why the kernel doesn't have register set and clear bits
+accessors.
 
-What if the decision is not based on a single register bit? Perhaps
-efuses are not directly memory mapped. Maybe it is based on Si
-revision. Or you need to limit frequency because a certain board can't
-supply adequate current. You call this generic, but it is not. It
-doesn't even solve the part that is generic which is marking some OPPs
-disabled.
+
+>>> +       irq = platform_get_irq(pdev, 0);
+>>> +       if (irq < 0) {
+>>
+>> I believe this returns NO_IRQ which could be 0.
+>>
+>> s/</<=/
+>
+> Are you sure regarding this?
+> NO_IRQ on ARM is -1.
+> And IRC irq = 0 should be just valid number.
+>
+> But if you are right then others drivers have to fixed too.
+
+The definition varies by arch being 0 or -1, so drivers need to deal
+with both. The preference is 0 is NO_IRQ. It has been decreed by
+Linus. ARM is actually pretty close to being able to change NO_IRQ to
+0.
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
