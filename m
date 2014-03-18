@@ -1,123 +1,128 @@
-From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] mailbox: samsung: added support for samsung mailbox
-Date: Tue, 18 Mar 2014 03:56:48 -0700
-Message-ID: <1395140208.2812.15.camel@joe-AO722>
-References: <1395057839-23871-1-git-send-email-ks.giri@samsung.com>
-	 <1395057839-23871-2-git-send-email-ks.giri@samsung.com>
-	 <CAKrE-KcA6VUUwUjAGuW+nYsFg0qknfZwECtdVS8ZtZb4GYoCvA@mail.gmail.com>
+From: Sathya Prakash <a0393677@ti.com>
+Subject: Re: [PATCH 2/2] ARM: DTS: AM43x: Add sii9022 dt information
+Date: Tue, 18 Mar 2014 16:27:16 +0530
+Message-ID: <5328268C.1030306@ti.com>
+References: <1395137278-5065-1-git-send-email-sathyap@ti.com> <1395137278-5065-3-git-send-email-sathyap@ti.com> <53282082.1000208@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKrE-KcA6VUUwUjAGuW+nYsFg0qknfZwECtdVS8ZtZb4GYoCvA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Girish KS <girishks2000-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Girish K S <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jassi Singh <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, Ilho Lee <ilho215.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <53282082.1000208@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Sathya Prakash M R <sathyap@ti.com>, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, pawel.moll@arm.com, paul@pwsan.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-03-18 at 15:52 +0530, Girish KS wrote:
-> On Mon, Mar 17, 2014 at 5:33 PM, Girish K S <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+On Tuesday 18 March 2014 04:01 PM, Tomi Valkeinen wrote:
+> On 18/03/14 12:07, Sathya Prakash M R wrote:
+>> AM43x-epos and AM437x-gp device use external sii9022
+>> DPI to HDMI encoder.
+>> Sii9022 use i2c for communication.
+>> Sii9022 dt entries are added to corresponding dts.
+>>
+>> Signed-off-by: Sathya prakash M R <sathyap@ti.com>
+>> ---
+>>   arch/arm/boot/dts/am437x-gp-evm.dts  |   58 +++++++++++++++++++++++++++++++--
+>>   arch/arm/boot/dts/am43x-epos-evm.dts |   59 ++++++++++++++++++++++++++++++++--
+>>   2 files changed, 111 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
+>> index a178e8d..c4225b1 100644
+>> --- a/arch/arm/boot/dts/am437x-gp-evm.dts
+>> +++ b/arch/arm/boot/dts/am437x-gp-evm.dts
+>> @@ -51,6 +51,41 @@
+>>   			remote-endpoint = <&dpi_out>;
+>>   		};
+>>   	};
+>> +
+>> +	sii9022: encoder@0 {
+>> +		compatible = "sii,sii9022";
+> See Documentation/devicetree/bindings/vendor-prefixes.txt
+>
+> The vendor prefix is "sil".
+My bad. that was typo.
+>
+>> +		reset-gpio = <&gpio5 8 GPIO_ACTIVE_LOW>;/* 'SelLCDorHDMI' Gpio, LOW to select HDMI */
+>> +
+>> +		ports {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +
+>> +			port@0 {
+>> +				reg = <0>;
+>> +
+>> +				sii9022_in: endpoint@0 {
+>> +					remote-endpoint = <&dpi_out>;
+>> +				};
+>> +			};
+>> +
+>> +			port@1 {
+>> +				reg = <1>;
+>> +
+>> +				sii9022_out: endpoint@0 {
+>> +					remote-endpoint = <&hdmi_connector_in>;
+>> +				};
+>> +			};
+>> +		};
+>> +	};
+>> +
+>> +	hdmi0: connector@0 {
+>> +		compatible = "hdmi-connector";
+>> +		label = "hdmi";
+>> +
+>> +		hdmi_connector_in: endpoint {
+>> +			remote-endpoint = <&sil9022_out>;
+>> +		};
+>> +	};
+>>   };
+>>   
+>>   &am43xx_pinmux {
+>> @@ -119,6 +154,9 @@
+>>           status = "okay";
+>>           pinctrl-names = "default";
+>>           pinctrl-0 = <&i2c1_pins>;
+>> +	&sii9022 {
+>> +		reg = <0x3b>;
+>> +	}
+> This looks very very odd... The whole sii9022 node should be here.
+ok. i was also bit confused with this placement.
 
-Hi, just some trivial notes about the patch
+>
+>>   };
+>>   
+>>   &epwmss0 {
+>> @@ -141,8 +179,22 @@
+>>   	pinctrl-names = "default";
+>>   	pinctrl-0 = <&dss_pinctrl>;
+>>   
+>> -	dpi_out: endpoint@0 {
+>> -		remote-endpoint = <&lcd_in>;
+>> -		data-lines = <24>;
+>> +	ports {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		port@0 {
+>> +			reg = <0>;
+>> +			dpi_out: endpoint@0 {
+>> +				remote-endpoint = <&lcd_in>;
+>> +				data-lines = <24>;
+>> +			};
+>> +
+>> +			dpi_out:endpoint@1 {
+>> +				remote-endpoint = <&sii9022_in>;
+>> +				data-lines = <24>;
+>> +
+>> +			};
+> You add the same label, "dpi_out" to both endpoints. Does this even compile?
+>
+> As there's just one port, you can leave out the 'ports' node.
+Will check. the ports was added as per documentation in video-interfaces.txt
+Can you suggest how to add the 2 dpi_out endpoints?
+Thanks
 
-> > diff --git a/drivers/mailbox/mailbox-samsung.c b/drivers/mailbox/mailbox-samsung.c
-[]
-> > @@ -0,0 +1,354 @@
-> > +/*
-> > + * Copyright 2013 Samsung Electronics Co. Ltd.
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify it
-> > + * under the terms and conditions of the GNU General Public License,
-> > + * version 2, as published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope it will be useful, but WITHOUT
-> > + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> > + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> > + * more details.
-> > + *
-> > + * You should have received a copy of the GNU General Public License along with
-> > + * this program.  If not, see <http://www.gnu.org/licenses/>.
-> > + */
+>
+>   Tomi
+>
+Sathya
 
-Please add
-
-#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-
-before any #include so that error messages are
-prefixed in the output with "samsung-mailbox: "
-and the reader of the log has an idea what subsystem
-is emitting messages.
-
-> > +#include <linux/err.h>
-> > +#include <linux/module.h>
-> > +#include <linux/slab.h>
-[]
-> > +static int samsung_mbox_send_data(struct ipc_link *link, void *msg)
-> > +{
-[]
-> > +       /* Lock the mailbox for this transaction with the client id */
-> > +       writel(val, ipc_base + MBOX_REG_TXLOCK);
-> > +       do {
-> > +               if (time_after(jiffies, timeout)) {
-> > +                       pr_err("cannot aquire the lock\n");
-
-This would be prefixed appropriately via pr_fmt.
-Also, there's a typo of aquire here: acquire
-
-> > +static int samsung_mbox_startup(struct ipc_link *link, void *ignored)
-> > +{
-[]
-> > +       ret = devm_request_irq(dev, samsung_link->irq, samsung_ipc_handler,
-> > +                                       IRQF_SHARED, link->link_name,
-> > +                                       samsung_link);
-> > +       if (unlikely(ret)) {
-> > +               pr_err("failed to register mailbox interrupt:%d\n", ret);
-
-Here too it would be prefixed
-
-> > +static int samsung_mbox_probe(struct platform_device *pdev)
-> > +{
-> > +       struct samsung_mbox *samsung_mbox;
-> > +       struct samsung_mlink *mbox_link;
-> > +       struct resource res;
-> > +       struct ipc_link **link;
-> > +       int loop, count, ret = 0;
-> > +       struct device_node *node = pdev->dev.of_node;
-> > +
-> > +       if (!node) {
-> > +               dev_err(&pdev->dev, "driver doesnt support"
-> > +                               "non-dt devices\n");
-
-Please coalesce the format fragments.
-
-You would notice the missing space between
-"support" and "non-dt"
-
-		dev_err(&pdev->dev, "driver does not support non-dt devices\n");
-
-It's OK to exceed 80 columns for these format strings.
-
-> > diff --git a/include/linux/mailbox-samsung.h b/include/linux/mailbox-samsung.h
-[]
-> > +static inline unsigned long get_alligned_buffer(void)
-
-Typo: There's one l in aligned
-
-> > +{
-> > +       return __get_free_pages(GFP_KERNEL, REQUEST_PAGE_ORDER);
-> > +}
-> > +
-> > +static inline void put_alligned_buffer(unsigned long addr)
-> > +{
-
-here too
-
-> > +       free_pages(addr, REQUEST_PAGE_ORDER);
-> > +}
-> > +
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
