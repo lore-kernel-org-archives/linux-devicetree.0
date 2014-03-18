@@ -1,111 +1,44 @@
 From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: [PATCH] ARM: dts: keystone: use common "ti,keystone" compatible instead of -evm
-Date: Tue, 18 Mar 2014 15:12:34 +0200
-Message-ID: <1395148354-22412-1-git-send-email-ivan.khoronzhuk@ti.com>
+Subject: [PATCH] ARM: dts: keystone: Fix domain register range for clkfftc1
+Date: Tue, 18 Mar 2014 15:18:17 +0200
+Message-ID: <1395148697-22481-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: santosh.shilimkar@ti.com
-Cc: olof@lixom.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grygorii.strashko@ti.com, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-As suggested by Olof Johansson at
-http://www.spinics.net/lists/arm-kernel/msg314009.html.
-It be better just keeping a "ti,keystone" top-level compatible and
-just using that to probe. If so we don't have to touch the file
-for new boards in the future.
-
-So use common "ti,keystone" compatible in keystone.c for all boards.
-
-Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Olof Johansson <olof@lixom.net>
+The domain register range for clkfftc1 has to be 0x0235004c
+instead of 0x023504c0.
 
 Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 ---
+ arch/arm/boot/dts/k2hk-clocks.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Based on linux-next/master
-
- Documentation/devicetree/bindings/arm/keystone/keystone.txt | 6 +++---
- arch/arm/boot/dts/k2e-evm.dts                               | 2 +-
- arch/arm/boot/dts/k2hk-evm.dts                              | 2 +-
- arch/arm/boot/dts/k2l-evm.dts                               | 2 +-
- arch/arm/mach-keystone/keystone.c                           | 5 +----
- 5 files changed, 7 insertions(+), 10 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/arm/keystone/keystone.txt b/Documentation/devicetree/bindings/arm/keystone/keystone.txt
-index ad16e7a..59d7a46 100644
---- a/Documentation/devicetree/bindings/arm/keystone/keystone.txt
-+++ b/Documentation/devicetree/bindings/arm/keystone/keystone.txt
-@@ -11,10 +11,10 @@ Required properties:
- 
- Boards:
- -  Keystone 2 Hawking/Kepler EVM
--   compatible = "ti,k2hk-evm"
-+   compatible = "ti,k2hk-evm","ti,keystone"
- 
- -  Keystone 2 Lamarr EVM
--   compatible = "ti,k2l-evm"
-+   compatible = "ti,k2l-evm","ti,keystone"
- 
- -  Keystone 2 Edison EVM
--   compatible = "ti,k2e-evm"
-+   compatible = "ti,k2e-evm","ti,keystone"
-diff --git a/arch/arm/boot/dts/k2e-evm.dts b/arch/arm/boot/dts/k2e-evm.dts
-index bb8faeb..74b3b63 100644
---- a/arch/arm/boot/dts/k2e-evm.dts
-+++ b/arch/arm/boot/dts/k2e-evm.dts
-@@ -13,7 +13,7 @@
- #include "k2e.dtsi"
- 
- / {
--	compatible =  "ti,k2e-evm";
-+	compatible =  "ti,k2e-evm","ti,keystone";
- 	model = "Texas Instruments Keystone 2 Edison EVM";
- 
- 	soc {
-diff --git a/arch/arm/boot/dts/k2hk-evm.dts b/arch/arm/boot/dts/k2hk-evm.dts
-index 1a1335b..f2a6658 100644
---- a/arch/arm/boot/dts/k2hk-evm.dts
-+++ b/arch/arm/boot/dts/k2hk-evm.dts
-@@ -13,7 +13,7 @@
- #include "k2hk.dtsi"
- 
- / {
--	compatible =  "ti,k2hk-evm";
-+	compatible =  "ti,k2hk-evm","ti,keystone";
- 	model = "Texas Instruments Keystone 2 Kepler/Hawking EVM";
- 
- 	soc {
-diff --git a/arch/arm/boot/dts/k2l-evm.dts b/arch/arm/boot/dts/k2l-evm.dts
-index ebf316a..50a7013 100644
---- a/arch/arm/boot/dts/k2l-evm.dts
-+++ b/arch/arm/boot/dts/k2l-evm.dts
-@@ -13,7 +13,7 @@
- #include "k2l.dtsi"
- 
- / {
--	compatible =  "ti,k2l-evm";
-+	compatible =  "ti,k2l-evm","ti,keystone";
- 	model = "Texas Instruments Keystone 2 Lamarr EVM";
- 
- 	soc {
-diff --git a/arch/arm/mach-keystone/keystone.c b/arch/arm/mach-keystone/keystone.c
-index aa0d212..e0b9e1b 100644
---- a/arch/arm/mach-keystone/keystone.c
-+++ b/arch/arm/mach-keystone/keystone.c
-@@ -46,10 +46,7 @@ static void __init keystone_init(void)
- }
- 
- static const char *keystone_match[] __initconst = {
--	"ti,keystone-evm",
--	"ti,k2hk-evm",
--	"ti,k2l-evm",
--	"ti,k2e-evm",
-+	"ti,keystone",
- 	NULL,
- };
- 
+diff --git a/arch/arm/boot/dts/k2hk-clocks.dtsi b/arch/arm/boot/dts/k2hk-clocks.dtsi
+index 8855b1f..96e6536 100644
+--- a/arch/arm/boot/dts/k2hk-clocks.dtsi
++++ b/arch/arm/boot/dts/k2hk-clocks.dtsi
+@@ -209,7 +209,7 @@ clocks {
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk13>;
+ 		clock-output-names = "fftc-1";
+-		reg = <0x02350074 0xb00>, <0x023504c0 0x400>;
++		reg = <0x02350074 0xb00>, <0x0235004c 0x400>;
+ 		reg-names = "control", "domain";
+ 		domain-id = <19>;
+ 	};
 -- 
 1.8.3.2
-
