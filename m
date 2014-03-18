@@ -1,200 +1,77 @@
-From: Sathya Prakash M R <sathyap@ti.com>
-Subject: [PATCH 2/2] ARM: DTS: AM43x: Add sii9022 dt information
-Date: Tue, 18 Mar 2014 15:37:57 +0530
-Message-ID: <1395137278-5065-3-git-send-email-sathyap@ti.com>
-References: <1395137278-5065-1-git-send-email-sathyap@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1395137278-5065-1-git-send-email-sathyap@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: tony@atomide.com, tomi.valkeinen@ti.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, pawel.moll@arm.com, paul@pwsan.com
-Cc: Sathya Prakash M R <sathyap@ti.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH RFC 0/4] arm64: generic idle states
+Date: Tue, 18 Mar 2014 10:20:24 +0000
+Message-ID: <1395138028-19630-1-git-send-email-lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebastian.capella@linaro.org>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-AM43x-epos and AM437x-gp device use external sii9022
-DPI to HDMI encoder.
-Sii9022 use i2c for communication.
-Sii9022 dt entries are added to corresponding dts.
+Idle states on most ARM platforms can be characterized by a set of
+parameters that are platform agnostic and describe the HW idle states
+features. So far, CPU idle drivers for ARM platforms required the definitio=
+n
+of parameters through static tables, duplicating control data for different
+platforms. Moreover, the lack of standardization on firmware interfaces
+hampered any standardization effort, resulting in CPU idle drivers for ARM
+platforms containing duplicated code and platform specific power down routi=
+nes.
 
-Signed-off-by: Sathya prakash M R <sathyap@ti.com>
----
- arch/arm/boot/dts/am437x-gp-evm.dts  |   58 +++++++++++++++++++++++++++++++--
- arch/arm/boot/dts/am43x-epos-evm.dts |   59 ++++++++++++++++++++++++++++++++--
- 2 files changed, 111 insertions(+), 6 deletions(-)
+The introduction of the PSCI firmware interface, and more in general, well
+defined suspend back-ends, allows the definition of generic idle states and
+the respective kernel infrastructure to support them.
 
-diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-index a178e8d..c4225b1 100644
---- a/arch/arm/boot/dts/am437x-gp-evm.dts
-+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-@@ -51,6 +51,41 @@
- 			remote-endpoint = <&dpi_out>;
- 		};
- 	};
-+
-+	sii9022: encoder@0 {
-+		compatible = "sii,sii9022";
-+		reset-gpio = <&gpio5 8 GPIO_ACTIVE_LOW>;/* 'SelLCDorHDMI' Gpio, LOW to select HDMI */
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				sii9022_in: endpoint@0 {
-+					remote-endpoint = <&dpi_out>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+
-+				sii9022_out: endpoint@0 {
-+					remote-endpoint = <&hdmi_connector_in>;
-+				};
-+			};
-+		};
-+	};
-+
-+	hdmi0: connector@0 {
-+		compatible = "hdmi-connector";
-+		label = "hdmi";
-+
-+		hdmi_connector_in: endpoint {
-+			remote-endpoint = <&sil9022_out>;
-+		};
-+	};
- };
- 
- &am43xx_pinmux {
-@@ -119,6 +154,9 @@
-         status = "okay";
-         pinctrl-names = "default";
-         pinctrl-0 = <&i2c1_pins>;
-+	&sii9022 {
-+		reg = <0x3b>;
-+	}
- };
- 
- &epwmss0 {
-@@ -141,8 +179,22 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&dss_pinctrl>;
- 
--	dpi_out: endpoint@0 {
--		remote-endpoint = <&lcd_in>;
--		data-lines = <24>;
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+			dpi_out: endpoint@0 {
-+				remote-endpoint = <&lcd_in>;
-+				data-lines = <24>;
-+			};
-+
-+			dpi_out:endpoint@1 {
-+				remote-endpoint = <&sii9022_in>;
-+				data-lines = <24>;
-+
-+			};
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
-index 3f9643b..22bfa5e 100644
---- a/arch/arm/boot/dts/am43x-epos-evm.dts
-+++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-@@ -29,6 +29,7 @@
- 
- 	aliases {
- 		display0 = &lcd0;
-+		display1 = &hdmi0;
- 	};
- 
- 	lcd0: display {
-@@ -54,6 +55,41 @@
- 		};
- 	};
- 
-+	sii9022: encoder@0 {
-+		compatible = "sii,sii9022";
-+		reset-gpio = <&gpio2 1 GPIO_ACTIVE_LOW>;/* 65'SelLCDorHDMI' Gpio, LOW to select HDMI */
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				sii9022_in: endpoint@0 {
-+					remote-endpoint = <&dpi_out>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+
-+				sii9022_out: endpoint@0 {
-+					remote-endpoint = <&hdmi_connector_in>;
-+				};
-+			};
-+		};
-+	};
-+
-+	hdmi0: connector@0 {
-+		compatible = "hdmi-connector";
-+		label = "hdmi";
-+
-+		hdmi_connector_in: endpoint {
-+			remote-endpoint = <&sil9022_out>;
-+		};
-+	};
-+
- 	am43xx_pinmux: pinmux@44e10800 {
- 		cpsw_default: cpsw_default {
- 			pinctrl-single,pins = <
-@@ -284,6 +320,9 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c2_pins>;
- 	status = "okay";
-+	&sii9022 {
-+		reg = <0x3b>;
-+	}
- };
- 
- &gpio0 {
-@@ -347,8 +386,22 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&dss_pinctrl>;
- 
--	dpi_out: endpoint@0 {
--		remote-endpoint = <&lcd_in>;
--		data-lines = <24>;
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+			dpi_out: endpoint@0 {
-+				remote-endpoint = <&lcd_in>;
-+				data-lines = <24>;
-+			};
-+
-+			dpi_out:endpoint@1 {
-+				remote-endpoint = <&sii9022_in>;
-+				data-lines = <24>;
-+
-+			};
-+		};
- 	};
- };
--- 
-1.7.9.5
+Building on top of DT idle states bindings[1], that standardize idle states
+parameters and corresponding suspend back-ends, this patchset provides code
+that parses DT idle states nodes and builds at run-time the control data
+infrastructure required by the generic ARM64 CPU idle driver, that just
+becomes a container for idle states storage.
+
+Idle states define an entry method (eg PSCI), that requires the respective
+kernel back-end to be invoked to initialize idle states parameters, so that
+when the idle driver executes the back-end specific entry method a table
+look-up can be carried out to retrieve the corresponding idle state paramet=
+er.
+
+The idle states bindings can be extended with new back-ends; the idle
+states parser must be updated accordingly so that the corresponding back
+end initializer can be invoked at boot time for parameters initialization.
+
+Patchset has been tested on AEM v8 models, on top of the bootwrapper PSCI C=
+PU
+SUSPEND implementation which provides simulated core power gating.
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-February/233=
+478.html
+
+Lorenzo Pieralisi (4):
+  arm64: kernel: implement DT based idle states infrastructure
+  arm64: add PSCI CPU_SUSPEND based cpu_suspend support
+  drivers: cpuidle: CPU idle ARM64 driver
+  arm64: boot: dts: update rtsm aemv8 dts with PSCI and idle states
+
+ arch/arm64/Kconfig                     |   4 +
+ arch/arm64/boot/dts/rtsm_ve-aemv8a.dts |  50 ++++-
+ arch/arm64/include/asm/idle_states.h   |  20 ++
+ arch/arm64/include/asm/psci.h          |   6 +
+ arch/arm64/kernel/Makefile             |   1 +
+ arch/arm64/kernel/idle_states.c        | 398 +++++++++++++++++++++++++++++=
+++++
+ arch/arm64/kernel/psci.c               |  84 +++++++
+ drivers/cpuidle/Kconfig                |   5 +
+ drivers/cpuidle/Kconfig.arm64          |  13 ++
+ drivers/cpuidle/Makefile               |   4 +
+ drivers/cpuidle/cpuidle-arm64.c        |  41 ++++
+ 11 files changed, 618 insertions(+), 8 deletions(-)
+ create mode 100644 arch/arm64/include/asm/idle_states.h
+ create mode 100644 arch/arm64/kernel/idle_states.c
+ create mode 100644 drivers/cpuidle/Kconfig.arm64
+ create mode 100644 drivers/cpuidle/cpuidle-arm64.c
+
+--=20
+1.8.4
+
 
