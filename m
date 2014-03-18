@@ -1,58 +1,110 @@
-From: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv4 0/7] omap hwspinlock dt support
-Date: Tue, 18 Mar 2014 15:35:32 +0200
-Message-ID: <CAK=WgbZ1M0JZE2BH0ukNo33hBuffTGbd3-DD0WCiwZ-akgvQ-Q@mail.gmail.com>
-References: <1389658764-39199-1-git-send-email-s-anna@ti.com>
- <52F9282B.5000702@ti.com> <530B8C00.8020001@ti.com> <CAK=WgbZp_RQPCeZJyMRkNTQxaJsnGZ3DnjhSkYYR_-PAE_Kp4g@mail.gmail.com>
- <53239789.40600@ti.com> <CAK=WgbZCzA7JovSxnysHCQRZZWc3Z2j3AS8ekpM9fOZ160rmCA@mail.gmail.com>
- <532748B7.1080606@ti.com> <CAK=WgbYjtw+cxy5wX6pjK=Rpj6wOk6Cu+GrPuFN+sqtgDAY=_Q@mail.gmail.com>
- <53278950.5030905@ti.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 3/8] input: misc: Add driver for AXP20x Power Enable
+ Key
+Date: Tue, 18 Mar 2014 15:03:23 +0100
+Message-ID: <20140318140323.GB27873@lukather>
+References: <1394898225-28452-1-git-send-email-carlo@caione.org>
+ <1394898225-28452-4-git-send-email-carlo@caione.org>
+ <20140318090013.GU27873@lukather>
+ <20140318095002.GM25478@lee--X1>
+ <20140318101554.GZ27873@lukather>
+ <20140318105851.GO25478@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53278950.5030905-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ViWwB84N1zFtNiVD"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140318105851.GO25478@lee--X1>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Carlo Caione <carlo@caione.org>, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, hdegoede@redhat.com, emilio@elopez.com.ar, wens@csie.org, sameo@linux.intel.com, devicetree@vger.kernel.org, dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, linux-doc@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Suman,
 
-On Tue, Mar 18, 2014 at 1:46 AM, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> wrote:
-> So far, we have not come across multiple controllers. I see your point,
-> and I think this also depends on the semantics of how you exchange the
-> lock id number. The agreement at the moment is on base_ids across
-> multiple SoC components. If the semantics involve exchanging the
-> controller instance, for example, then we might get away with it. But
-> that probably involves adding additional helpers to retrieve controller
-> instance in addition to lock number, or some other similar functions.
+--ViWwB84N1zFtNiVD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes, this could be done too, but I agree it is less simple with no real win.
+On Tue, Mar 18, 2014 at 10:58:51AM +0000, Lee Jones wrote:
+> > > > > This patch add support for the Power Enable Key found on MFD AXP2=
+02 and
+> > > > > AXP209. Besides the basic support for the button, the driver adds=
+ two
+> > > > > entries in sysfs to configure the time delay for power on/off.
+> > > > >=20
+> > > > > Signed-off-by: Carlo Caione <carlo@caione.org>
+> > > > > ---
+> > > > >  drivers/input/misc/Kconfig      |  11 ++
+> > > > >  drivers/input/misc/Makefile     |   1 +
+> > > > >  drivers/input/misc/axp20x-pek.c | 267 ++++++++++++++++++++++++++=
+++++++++++++++
+> > > > >  3 files changed, 279 insertions(+)
+> > > > >  create mode 100644 drivers/input/misc/axp20x-pek.c
+> > > >=20
+> > > > From what I understood of the MFD framework, you usually have a MFD
+> > > > core driver that gets loaded from the DT and instantiate its various
+> > > > functions through sub-devices, that are registered through
+> > > > mfd_add_devices, and the drivers for these sub-devices are supported
+> > > > in sub-drivers that are located in the driver/mfd, alongside the co=
+re
+> > > > driver.
+> > > >=20
+> > > > I believe that such a pattern allows for two interesting things:
+> > > >   - You don't have to search around the whole kernel tree to find
+> > > >     where a given sub-feature is supported.
+> > > >   - You don't have to cripple your DT with instantiation of all the
+> > > >     subcomponents, while you only really have one device.
+> > > >=20
+> > > > Do you have a reason for not following this pattern?
+> > >=20
+> > > Sorry Maxime, this is not the case.
+> > >=20
+> > > If an MFD contains Regulators and USB & GPIO Controllers, I'd expect
+> > > to see the device represented in the following way:
+> > >=20
+> > >   drivers/mfd/<id>.c
+> > >   drivers/{gpio,pinctrl}/{gpio,pinctrl}-<id>.c
+> > >   drivers/regulator/<id>-regulator.c
+> > >   drivers/usb/host/<id>.c
+> >=20
+> > Oh, ok. Nevermind then :)
+> >=20
+> > Just out of curiosity, some drivers at least seem to follow that trend
+> > in drivers/mfd, is there any reason for this (other than historical) ?
+>=20
+> Would you mind providing an example?
 
-> Sorry, I should have rephrased it better - by order, I meant the
-> inherent order between board early code and other drivers. With DT, we
-> cannot guarantee that right, as specific locks are requested from drivers.
+I was under this impression given the naming scheme that they were
+using. Looking into it just proved me how wrong I was :)
 
-Yeah.
+Sorry for the noise.
 
-> Understood. And we may have to assign the client association with a lock
-> as well. These are core changes that were actually not needed in the
-> non-DT case due to the inherent order as stated above. So, are you
-> suggesting that we add one more property to the controller node to mark
-> which are reserved, or rely on constructing this through DT tree parsing?
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-I guess this is a question to the DT folks; both approaches work from
-hwspinlock perspective.
+--ViWwB84N1zFtNiVD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-In the past Arnd Benoit and myself were happy with adding one more
-property to the controller node, but this might be somewhat error
-prone as it leaves room for mistakes - developers can add hwlock
-phandles and forget to update the reserved property in the controller
-node.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
 
-Thanks,
-Ohad.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAEBAgAGBQJTKFIrAAoJEBx+YmzsjxAg7KkP/j2mh9oDFJIT4wey7kUkqUL4
+kOrO458skjeue6NjbyKwapYmZIz1PPmzkWAnHDJoI3mvW2shYS6WdnQ3/kYnSHyR
+OTZyVOjKoy/QWRlgd4AmfF5/rg5e9nQ9+F5sW77FWbfA8yduKaQjDya+nPHmZmEI
+OY6m7/o3qSqRvm5TSvDnO+RUKBaG2vKYMmQnqh3Up90P4MU1Ew9o43x+2xplmJiX
+rtNpuWjrKeZu4oX+q7i39lxhGgo1+DJtguBKgUU9RBxKUWkiG6mOBIEuNaelpBFJ
+YdfFRaiGiOllDI5RDw//BurHOjBhbQXR1uyS0fJafvHiAICfxzLi46d14A5qLySy
+rVshtd2XUgBBGf8MsJ5tN/znW+qubrv+d23wRyrcsBWlfZtX7VU9mMSVvqm96T9X
+TJT7gnqRpCj56ZmCx6A/t+UWjk+tyJocSoUu8zZbCJkLpaF6BdntAdBEVG4SG2Gq
+2jrGMlXgMBwvySoRUFx/tNMXKGPdPsFDNYe8a76uUUC6EcpjrziB4KNWR65/csmN
+QN+oOtUTTcPJswcVb464CjXiLjuRhFSFai91cHSFIetH/oEYWNzwlUGBk2D1qvPx
+gNGYVDoWG+Dbs9aHBrYb6iGKlvLxrxj72Ttl/tH/riBQaXimm6LeHGpOINAvraeS
++Ipt8uvrYoa5wE3nSH6Q
+=+Kem
+-----END PGP SIGNATURE-----
+
+--ViWwB84N1zFtNiVD--
