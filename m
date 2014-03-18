@@ -1,110 +1,88 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 3/8] input: misc: Add driver for AXP20x Power Enable
- Key
-Date: Tue, 18 Mar 2014 15:03:23 +0100
-Message-ID: <20140318140323.GB27873@lukather>
-References: <1394898225-28452-1-git-send-email-carlo@caione.org>
- <1394898225-28452-4-git-send-email-carlo@caione.org>
- <20140318090013.GU27873@lukather>
- <20140318095002.GM25478@lee--X1>
- <20140318101554.GZ27873@lukather>
- <20140318105851.GO25478@lee--X1>
+From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v11 20/27] iommu/exynos: allow having multiple System MMUs
+	for a master H/W
+Date: Tue, 18 Mar 2014 15:26:48 +0100
+Message-ID: <532857A8.5060000@samsung.com>
+References: <20140314141050.c8bedcb66532d277c496796d@samsung.com>
+	<53232A53.4040708@samsung.com>
+	<20140318220128.564740c88d06b86c9c5c10e3@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ViWwB84N1zFtNiVD"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140318105851.GO25478@lee--X1>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Carlo Caione <carlo@caione.org>, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, hdegoede@redhat.com, emilio@elopez.com.ar, wens@csie.org, sameo@linux.intel.com, devicetree@vger.kernel.org, dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, linux-doc@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-reply-to: <20140318220128.564740c88d06b86c9c5c10e3-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Linux DeviceTree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Samsung SOC <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Prathyush <prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Antonios Motakis <a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---ViWwB84N1zFtNiVD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 18, 2014 at 10:58:51AM +0000, Lee Jones wrote:
-> > > > > This patch add support for the Power Enable Key found on MFD AXP2=
-02 and
-> > > > > AXP209. Besides the basic support for the button, the driver adds=
- two
-> > > > > entries in sysfs to configure the time delay for power on/off.
-> > > > >=20
-> > > > > Signed-off-by: Carlo Caione <carlo@caione.org>
-> > > > > ---
-> > > > >  drivers/input/misc/Kconfig      |  11 ++
-> > > > >  drivers/input/misc/Makefile     |   1 +
-> > > > >  drivers/input/misc/axp20x-pek.c | 267 ++++++++++++++++++++++++++=
-++++++++++++++
-> > > > >  3 files changed, 279 insertions(+)
-> > > > >  create mode 100644 drivers/input/misc/axp20x-pek.c
-> > > >=20
-> > > > From what I understood of the MFD framework, you usually have a MFD
-> > > > core driver that gets loaded from the DT and instantiate its various
-> > > > functions through sub-devices, that are registered through
-> > > > mfd_add_devices, and the drivers for these sub-devices are supported
-> > > > in sub-drivers that are located in the driver/mfd, alongside the co=
-re
-> > > > driver.
-> > > >=20
-> > > > I believe that such a pattern allows for two interesting things:
-> > > >   - You don't have to search around the whole kernel tree to find
-> > > >     where a given sub-feature is supported.
-> > > >   - You don't have to cripple your DT with instantiation of all the
-> > > >     subcomponents, while you only really have one device.
-> > > >=20
-> > > > Do you have a reason for not following this pattern?
-> > >=20
-> > > Sorry Maxime, this is not the case.
-> > >=20
-> > > If an MFD contains Regulators and USB & GPIO Controllers, I'd expect
-> > > to see the device represented in the following way:
-> > >=20
-> > >   drivers/mfd/<id>.c
-> > >   drivers/{gpio,pinctrl}/{gpio,pinctrl}-<id>.c
-> > >   drivers/regulator/<id>-regulator.c
-> > >   drivers/usb/host/<id>.c
-> >=20
-> > Oh, ok. Nevermind then :)
-> >=20
-> > Just out of curiosity, some drivers at least seem to follow that trend
-> > in drivers/mfd, is there any reason for this (other than historical) ?
->=20
-> Would you mind providing an example?
+On 18.03.2014 14:01, Cho KyongHo wrote:
+> On Fri, 14 Mar 2014 17:12:03 +0100, Tomasz Figa wrote:
+>> Hi KyongHo,
+>>
+>> On 14.03.2014 06:10, Cho KyongHo wrote:
+>>> Some master device descriptor like fimc-is which is an abstraction
+>>> of very complex H/W may have multiple System MMUs. For those devices,
+>>> the design of the link between System MMU and its master H/W is needed
+>>> to be reconsidered.
+>>>
+>>> A link structure, sysmmu_list_data is introduced that provides a link
+>>> to master H/W and that has a pointer to the device descriptor of a
+>>> System MMU. Given a device descriptor of a master H/W, it is possible
+>>> to traverse all System MMUs that must be controlled along with the
+>>> master H/W.
+>>
+>> NAK.
+>>
+>> A device driver should handle particular hardware instances separately,
+>> without abstracting a virtual hardware instance consisting of multiple
+>> physical ones.
+>>
+>> If such abstraction is needed, it should be done above the exynos-iommu
+>> driver, e.g. by something like iommu-composite driver that would
+>> aggregate several IOMMUs. Keep in mind that such IOMMUs in a group could
+>> be different, e.g. different Exynos SysMMU versions or even completely
+>> different IPs handled by different drivers.
+>>
+>> Still, I don't think there is a real need for such abstraction. Instead,
+>> related drivers shall be fixed to properly handle multiple memory
+>> masters and their IOMMUs.
+>>
+>
+> G2D, Scalers and FIMD of Exynos5420 has 2 System MMUs while aother SoC like
+> Exynos5250 does not.
+>
+> I don't understand why you are negative to this approach.
+> This is the simplest than the others.
+>
+> Let me show you an example.
+> FIMC-IS driver just controls MCU in FIMC-IS subsystem and the firmware of
+> the MCU controls all other peripherals in the subsystem. Each peripherals
+> have their own System MMU. Moreover, the configuration of the peripherals
+> varies according to the SoCs.
+>
+> If System MMU driver accepts multiple masters, everything is done in DT.
+> But I worry that it is not easy if System MMU driver does not support
+> multiple masters.
 
-I was under this impression given the naming scheme that they were
-using. Looking into it just proved me how wrong I was :)
+I believe I have stated enough reasons why this kind of implementation 
+is bad. I'm not going to waste time repeating myself.
 
-Sorry for the noise.
+Your concerns presented above are valid, however they are not related to 
+what is wrong with this patch. I have given you two proper ways to 
+handle this, none should be forced upon particular IOMMU master drivers 
+- their authors should have the chance to select the method that works 
+best for them.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---ViWwB84N1zFtNiVD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTKFIrAAoJEBx+YmzsjxAg7KkP/j2mh9oDFJIT4wey7kUkqUL4
-kOrO458skjeue6NjbyKwapYmZIz1PPmzkWAnHDJoI3mvW2shYS6WdnQ3/kYnSHyR
-OTZyVOjKoy/QWRlgd4AmfF5/rg5e9nQ9+F5sW77FWbfA8yduKaQjDya+nPHmZmEI
-OY6m7/o3qSqRvm5TSvDnO+RUKBaG2vKYMmQnqh3Up90P4MU1Ew9o43x+2xplmJiX
-rtNpuWjrKeZu4oX+q7i39lxhGgo1+DJtguBKgUU9RBxKUWkiG6mOBIEuNaelpBFJ
-YdfFRaiGiOllDI5RDw//BurHOjBhbQXR1uyS0fJafvHiAICfxzLi46d14A5qLySy
-rVshtd2XUgBBGf8MsJ5tN/znW+qubrv+d23wRyrcsBWlfZtX7VU9mMSVvqm96T9X
-TJT7gnqRpCj56ZmCx6A/t+UWjk+tyJocSoUu8zZbCJkLpaF6BdntAdBEVG4SG2Gq
-2jrGMlXgMBwvySoRUFx/tNMXKGPdPsFDNYe8a76uUUC6EcpjrziB4KNWR65/csmN
-QN+oOtUTTcPJswcVb464CjXiLjuRhFSFai91cHSFIetH/oEYWNzwlUGBk2D1qvPx
-gNGYVDoWG+Dbs9aHBrYb6iGKlvLxrxj72Ttl/tH/riBQaXimm6LeHGpOINAvraeS
-+Ipt8uvrYoa5wE3nSH6Q
-=+Kem
------END PGP SIGNATURE-----
-
---ViWwB84N1zFtNiVD--
+Best regards,
+Tomasz
