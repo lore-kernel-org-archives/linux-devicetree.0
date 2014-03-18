@@ -1,76 +1,71 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [PATCHv2 0/8] Doc/DT: DT bindings for various display components
-Date: Tue, 18 Mar 2014 10:15:39 +0200
-Message-ID: <1395130547-18633-1-git-send-email-tomi.valkeinen@ti.com>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: [PATCHv2 3/8] Doc/DT: Add DT binding documentation for DVI Connector
+Date: Tue, 18 Mar 2014 10:15:42 +0200
+Message-ID: <1395130547-18633-4-git-send-email-tomi.valkeinen@ti.com>
+References: <1395130547-18633-1-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Daniel Vetter <daniel@ffwll.ch>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Sascha Hauer <s.hauer@pengutronix.de>, Tomasz Figa <tomasz.figa@gmail.com>, Archit Taneja <archit@ti.com>, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Rob Clark <robdclark@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1395130547-18633-1-git-send-email-tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Archit Taneja <archit-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add DT binding documentation for DVI Connector.
 
-This is v2 of the series adding DT bindings for various display components. The
-v1 can be found from [1].
-
-The changes for v2:
-
-* abbreviated endpoint format dropped (nacked)
-* MIPI DPI panel dropped (missing backlight handling, delayed to 3.16)
-* dvi-connector: add properties for analog/digital/dual-link
-* hdmi-connector: add connector type
-* split 'gpios' property to named gpios
-* use 'clocks' properties for OMAP DSS components
-* removed 'simple-bus' from OMAP DSS Core's compatible strings
-
-[1] http://article.gmane.org/gmane.linux.drivers.devicetree/63885
-
- Tomi
-
-Tomi Valkeinen (8):
-  Doc/DT: Add DT binding documentation for OMAP DSS
-  Doc/DT: Add DT binding documentation for Analog TV Connector
-  Doc/DT: Add DT binding documentation for DVI Connector
-  Doc/DT: Add DT binding documentation for HDMI Connector
-  Doc/DT: Add DT binding documentation for MIPI DSI CM Panel
-  Doc/DT: Add DT binding documentation for Sony acx565akm panel
-  Doc/DT: Add DT binding documentation for TFP410 encoder
-  Doc/DT: Add DT binding documentation for tpd12s015 encoder
-
- .../bindings/video/analog-tv-connector.txt         |  25 +++
- .../devicetree/bindings/video/dvi-connector.txt    |  35 ++++
- .../devicetree/bindings/video/hdmi-connector.txt   |  28 +++
- .../devicetree/bindings/video/panel-dsi-cm.txt     |  29 +++
- .../devicetree/bindings/video/sony,acx565akm.txt   |  30 +++
- .../devicetree/bindings/video/ti,omap-dss.txt      | 211 +++++++++++++++++++++
- .../devicetree/bindings/video/ti,omap2-dss.txt     |  54 ++++++
- .../devicetree/bindings/video/ti,omap3-dss.txt     |  83 ++++++++
- .../devicetree/bindings/video/ti,omap4-dss.txt     | 111 +++++++++++
- .../devicetree/bindings/video/ti,tfp410.txt        |  41 ++++
- .../devicetree/bindings/video/ti,tpd12s015.txt     |  44 +++++
- 11 files changed, 691 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/analog-tv-connector.txt
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Reviewed-by: Archit Taneja <archit-l0cyMroinI0@public.gmane.org>
+---
+ .../devicetree/bindings/video/dvi-connector.txt    | 35 ++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/video/dvi-connector.txt
- create mode 100644 Documentation/devicetree/bindings/video/hdmi-connector.txt
- create mode 100644 Documentation/devicetree/bindings/video/panel-dsi-cm.txt
- create mode 100644 Documentation/devicetree/bindings/video/sony,acx565akm.txt
- create mode 100644 Documentation/devicetree/bindings/video/ti,omap-dss.txt
- create mode 100644 Documentation/devicetree/bindings/video/ti,omap2-dss.txt
- create mode 100644 Documentation/devicetree/bindings/video/ti,omap3-dss.txt
- create mode 100644 Documentation/devicetree/bindings/video/ti,omap4-dss.txt
- create mode 100644 Documentation/devicetree/bindings/video/ti,tfp410.txt
- create mode 100644 Documentation/devicetree/bindings/video/ti,tpd12s015.txt
 
+diff --git a/Documentation/devicetree/bindings/video/dvi-connector.txt b/Documentation/devicetree/bindings/video/dvi-connector.txt
+new file mode 100644
+index 000000000000..fc53f7c60bc6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/dvi-connector.txt
+@@ -0,0 +1,35 @@
++DVI Connector
++==============
++
++Required properties:
++- compatible: "dvi-connector"
++
++Optional properties:
++- label: a symbolic name for the connector
++- ddc-i2c-bus: phandle to the i2c bus that is connected to DVI DDC
++- analog: the connector has DVI analog pins
++- digital: the connector has DVI digital pins
++- dual-link: the connector has pins for DVI dual-link
++
++Required nodes:
++- Video port for DVI input
++
++Note: One (or both) of 'analog' or 'digital' must be set.
++
++Example
++-------
++
++dvi0: connector@0 {
++	compatible = "dvi-connector";
++	label = "dvi";
++
++	digital;
++
++	ddc-i2c-bus = <&i2c3>;
++
++	port {
++		dvi_connector_in: endpoint {
++			remote-endpoint = <&tfp410_out>;
++		};
++	};
++};
 -- 
 1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
