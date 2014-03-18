@@ -1,88 +1,38 @@
-From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v11 20/27] iommu/exynos: allow having multiple System MMUs
-	for a master H/W
-Date: Tue, 18 Mar 2014 15:26:48 +0100
-Message-ID: <532857A8.5060000@samsung.com>
-References: <20140314141050.c8bedcb66532d277c496796d@samsung.com>
-	<53232A53.4040708@samsung.com>
-	<20140318220128.564740c88d06b86c9c5c10e3@samsung.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH 2/2] dt-bindings: clock: Move exynos-audss-clk.h to
+ dt-bindings/clock
+Date: Tue, 18 Mar 2014 15:32:07 +0100
+Message-ID: <532858E7.3040802@samsung.com>
+References: <1394085884-13081-1-git-send-email-tushar.behera@linaro.org>
+ <1394085884-13081-3-git-send-email-tushar.behera@linaro.org>
+ <531D054E.70008@gmail.com> <53277548.60300@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-reply-to: <20140318220128.564740c88d06b86c9c5c10e3-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Linux DeviceTree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Samsung SOC <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Prathyush <prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Antonios Motakis <a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <53277548.60300@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Tushar Behera <tushar.behera@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, plagnioj@jcrosoft.com, linux@maxim.org.za, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 18.03.2014 14:01, Cho KyongHo wrote:
-> On Fri, 14 Mar 2014 17:12:03 +0100, Tomasz Figa wrote:
->> Hi KyongHo,
->>
->> On 14.03.2014 06:10, Cho KyongHo wrote:
->>> Some master device descriptor like fimc-is which is an abstraction
->>> of very complex H/W may have multiple System MMUs. For those devices,
->>> the design of the link between System MMU and its master H/W is needed
->>> to be reconsidered.
+On 17.03.2014 23:20, Kukjin Kim wrote:
+> On 03/10/14 09:20, Tomasz Figa wrote:
+>> On 06.03.2014 07:04, Tushar Behera wrote:
+>>> Most of the clock related dt-binding header files are located in
+>>> dt-bindings/clock folder. It would be good to keep all the similar
+>>> header files at a single location.
 >>>
->>> A link structure, sysmmu_list_data is introduced that provides a link
->>> to master H/W and that has a pointer to the device descriptor of a
->>> System MMU. Given a device descriptor of a master H/W, it is possible
->>> to traverse all System MMUs that must be controlled along with the
->>> master H/W.
->>
->> NAK.
->>
->> A device driver should handle particular hardware instances separately,
->> without abstracting a virtual hardware instance consisting of multiple
->> physical ones.
->>
->> If such abstraction is needed, it should be done above the exynos-iommu
->> driver, e.g. by something like iommu-composite driver that would
->> aggregate several IOMMUs. Keep in mind that such IOMMUs in a group could
->> be different, e.g. different Exynos SysMMU versions or even completely
->> different IPs handled by different drivers.
->>
->> Still, I don't think there is a real need for such abstraction. Instead,
->> related drivers shall be fixed to properly handle multiple memory
->> masters and their IOMMUs.
->>
+>>> Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
+>>> CC: Kukjin Kim <kgene.kim@samsung.com>
 >
-> G2D, Scalers and FIMD of Exynos5420 has 2 System MMUs while aother SoC like
-> Exynos5250 does not.
+> Acked-by: Kukjin Kim <kgene.kim@samsung.com>
 >
-> I don't understand why you are negative to this approach.
-> This is the simplest than the others.
->
-> Let me show you an example.
-> FIMC-IS driver just controls MCU in FIMC-IS subsystem and the firmware of
-> the MCU controls all other peripherals in the subsystem. Each peripherals
-> have their own System MMU. Moreover, the configuration of the peripherals
-> varies according to the SoCs.
->
-> If System MMU driver accepts multiple masters, everything is done in DT.
-> But I worry that it is not easy if System MMU driver does not support
-> multiple masters.
+> Or shall I take this into samsung tree?
 
-I believe I have stated enough reasons why this kind of implementation 
-is bad. I'm not going to waste time repeating myself.
+I guess so.
 
-Your concerns presented above are valid, however they are not related to 
-what is wrong with this patch. I have given you two proper ways to 
-handle this, none should be forced upon particular IOMMU master drivers 
-- their authors should have the chance to select the method that works 
-best for them.
+Or should this whole series go through DT tree?
 
 Best regards,
 Tomasz
