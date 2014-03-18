@@ -1,37 +1,82 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: [PATCH] twl4030-madc device tree support
-Date: Wed, 19 Mar 2014 00:13:45 +0100
-Message-ID: <1395184426-316-1-git-send-email-sre@debian.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCHv2 4/8] Doc/DT: Add DT binding documentation for HDMI
+ Connector
+Date: Wed, 19 Mar 2014 00:43:33 +0100
+Message-ID: <1664822.t9aWz7hh4g@avalon>
+References: <1395130547-18633-1-git-send-email-tomi.valkeinen@ti.com>
+ <1395130547-18633-5-git-send-email-tomi.valkeinen@ti.com>
+ <1395132234.4134.1.camel@paszta.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sebastian Reichel <sre@ring0.de>, Tony Lindgren <tony@atomide.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Sebastian Reichel <sre@debian.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1395132234.4134.1.camel@paszta.hi.pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, dri-devel@lists.freedesktop.org, Andrzej Hajda <a.hajda@samsung.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robherring2@gmail.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony/Beno=C3=AEt,
+Hello,
 
-The DT support for twl4030-madc has been added to mfd queue [0],
-so I guess it's safe to merge the following DTS addition for 3.15.
+On Tuesday 18 March 2014 09:43:54 Philipp Zabel wrote:
+> Am Dienstag, den 18.03.2014, 10:15 +0200 schrieb Tomi Valkeinen:
+> > Add DT binding documentation for HDMI Connector.
+> > 
+> > Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> > Reviewed-by: Archit Taneja <archit@ti.com>
+> > ---
+> > 
+> >  .../devicetree/bindings/video/hdmi-connector.txt   | 28 +++++++++++++++++
+> >  1 file changed, 28 insertions(+)
+> >  create mode 100644
+> >  Documentation/devicetree/bindings/video/hdmi-connector.txt> 
+> > diff --git a/Documentation/devicetree/bindings/video/hdmi-connector.txt
+> > b/Documentation/devicetree/bindings/video/hdmi-connector.txt new file
+> > mode 100644
+> > index 000000000000..ccccc19e2573
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/video/hdmi-connector.txt
+> > @@ -0,0 +1,28 @@
+> > +HDMI Connector
+> > +==============
+> > +
+> > +Required properties:
+> > +- compatible: "hdmi-connector"
+> > +- type: the HDMI connector type: "a", "b", "c", "d" or "e"
+> > +
+> > +Optional properties:
+> > +- label: a symbolic name for the connector
+> > +
+> > +Required nodes:
+> > +- Video port for HDMI input
+> 
+> Geert's comment also applies to all other connector types. These can be
+> input connectors, too.
 
-[0] https://git.kernel.org/cgit/linux/kernel/git/lee/mfd.git/commit/?h=3D=
-ib-mfd-io-3.15&id=3D2f39b70fef194a54c9decd8687bb05d576afebe5
+We might not need to define all the properties required by input connectors 
+now, but we need to make sure that future extensions will be backward-
+compatible. I don't see a problem in making the connector DT bindings depend 
+on the direction as long as the direction is specified in the DT node, either 
+explicitly or implicitly.
 
--- Sebastian
+An obvious solution would be to have separate "hdmi-input-connector" and 
+"hdmi-output-connector" compatible strings but I don't like that, as there's 
+no difference in the HDMI connector itself, only in the usage.
 
-Sebastian Reichel (1):
-  DTS: ARM: TWL4030: Add madc
+We could also add a "direction" property (possibly later, with a default value 
+of "output" in that case), or rely on the link direction, but in the latter 
+case that would require reaching an agreement in the current link directions 
+debate.
 
- arch/arm/boot/dts/twl4030.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+-- 
+Regards,
 
---=20
-1.9.0
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
