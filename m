@@ -1,69 +1,120 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH] dma: Add Keystone Packet DMA Engine driver
-Date: Tue, 18 Mar 2014 12:19:31 -0400
-Message-ID: <53287213.3060705@ti.com>
-References: <1393628200-12317-1-git-send-email-santosh.shilimkar@ti.com>
- <20140311102357.GR1976@intel.com> <531F6908.4010104@ti.com>
- <20140312160017.GY1976@intel.com> <5320CEC4.1060306@ti.com>
- <20140317044223.GA1976@intel.com> <53274F0B.5070201@ti.com>
- <20140318152444.GC1976@intel.com>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: Re: [PATCH] phy: micrel: add of configuration for LED mode
+Date: Tue, 18 Mar 2014 17:21:04 +0100
+Message-ID: <53287270.1020908@codethink.co.uk>
+References: <1393415280-10227-1-git-send-email-ben.dooks@codethink.co.uk> <530F13DB.90009@codethink.co.uk> <6677304.0KbXKA76PZ@avalon> <4129596.cD1CsNElkT@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140318152444.GC1976@intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, Sandeep Nair <sandeep_n@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <4129596.cD1CsNElkT@avalon>
+Sender: netdev-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "linux-kernel@lists.codethink.co.uk" <linux-kernel@lists.codethink.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 18 March 2014 11:24 AM, Vinod Koul wrote:
-> On Mon, Mar 17, 2014 at 03:37:47PM -0400, Santosh Shilimkar wrote:
->>>> To simplify this bit more, you can think of this as DMA channels, flows
->>>> are allocated and DMA channels are enabled by DMA engine and they remains
->>>> enabled always as long as the channel in use. Enablling dma channel
->>>> actually don't start the DMA transfer but just sets up the connection/pipe
->>>> with peripheral and memory and vice a versa.
+On 18/03/14 17:11, Laurent Pinchart wrote:
+> Hi Ben,
+>
+> On Tuesday 18 March 2014 16:56:06 Laurent Pinchart wrote:
+>> On Thursday 27 February 2014 10:30:51 Ben Dooks wrote:
+>>> On 27/02/14 09:15, Mark Rutland wrote:
+>>>> On Wed, Feb 26, 2014 at 11:48:00AM +0000, Ben Dooks wrote:
+>>>>> Add support for the led-mode property for the following PHYs
+>>>>> which have a single LED mode configuration value.
+>>>>>
+>>>>> KSZ8001 and KSZ8041 which both use register 0x1e bits 15,14 and
+>>>>> KSZ8021, KSZ8031 and KSZ8051 which use register 0x1f bits 5,4
+>>>>> to control the LED configuration.
+>>>>>
+>>>>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>>>> ---
+>>>>>
+>>>>>   Documentation/devicetree/bindings/net/micrel.txt | 18 +++++++++
+>>>>>   drivers/net/phy/micrel.c                         | 49 ++++++++++++++--
+>>>>>   2 files changed, 63 insertions(+), 4 deletions(-)
+>>>>>   create mode 100644 Documentation/devicetree/bindings/net/micrel.txt
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/net/micrel.txt
+>>>>> b/Documentation/devicetree/bindings/net/micrel.txt new file mode 100644
+>>>>> index 0000000..98a3e61
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/net/micrel.txt
+>>>>> @@ -0,0 +1,18 @@
+>>>>> +Micrel PHY properties.
+>>>>> +
+>>>>> +These properties cover the base properties Micrel PHYs.
+>>>>> +
+>>>>> +Optional properties:
+>>>>> +
+>>>>> + - micrel,led-mode : LED mode value to set for PHYs with configurable
+>>>>> LEDs.
+>>>>> +
+>>>>> +              Configure the LED mode with single value. The list of
+>>>>> PHYs and
+>>>>> +	      the bits that are currently supported:
+>>>>> +
+>>>>> +	      KSZ8001: register 0x1e, bits 15..14
+>>>>> +	      KSZ8041: register 0x1e, bits 15..14
+>>>>> +	      KSZ8021: register 0x1f, bits 5..4
+>>>>> +	      KSZ8031: register 0x1f, bits 5..4
+>>>>> +	      KSZ8051: register 0x1f, bits 5..4
+>>>>> +
+>>>>> +              See the respective PHY datasheet for the mode values.
 >>>>
->>>> All the descriptor management, triggering, sending completion interrupt or
->>>> hardware signal to DMAEngine all managed by centralised QMSS.
->>>>
->>>> Actual copy of data is still done by DMA hardware but its completely
->>>> transparent to software. DMAEngine hardware takes care of that in the
->>>> backyard.
->>> So you will use the dmaengine just for setting up the controller. Not for actual
->>> transfers. Those would be governed by the QMSS, right?
+>>>> What do these mean, roughly,, and why can the kernel not decide how to
+>>>> cnofigure these?
 >>>
->> Correct.
->>  
->>> This means that someone expecting to use dmaengine API will get confused about
->>> this and doing part (alloc) thru dmaengine and rest (transfers) using some other
->>> API. This brings to me the design approach, does it really make sense creating
->>> dmaengine driver for this when we are not fully complying to the API
+>>> Board specific, in the case of the Lager one of the LEDs is connected
+>>> to the ethernet mac block to indicate link, however the default mode
+>>> is not for just "Link" so we have to change it.
 >>>
->> Thats fair. The rationale behind usage of DMEngine was that its the closest
->> available subsystem which can be leveraged for this hardware. We can
->> pretty much use all the standard DMAEngine device tree parsing as well as
->> the config API to setup DMAs. 
+>>>> In general we prefer to not place raw register values in the DT, and I'd
+>>>> like to know why we'd have to here.
+>>>
+>>> I could copy out stuff from the data-sheet, but I was trying to avoid a
+>>> copy and paste job.
 >>
->> I think you made your stand clear, just to confirm, you don't prefer this
->> driver to be a DMAEngine driver considering it doesn't fully complying to
->> the APIs. We could document the deviation of 'transfer' handling to avoid
->> any confusion.
-> Yup, a user will just get confused as the driver doenst conform the dmaengine
-> API. Unless someone comes up witha  strong argument on why it should be
-> dmaengine driver and what befits we see form such a model, i would like a
-> damengine driver to comply to standard API and usage.
-> 
-OK thanks !!
+>> I quite agree with Mark here, I would prefer not to list register values in
+>> DT bindings. However, the hardware hardware diversity doesn't help us
+>> abstracting LED modes.
+>>
+>> The following table summarizes LED usage options.
+>>
+>> Device              Mode LED usage
+>> ----------------------------------------------------------------------------
+>> 8001 (LED[3:0])     00   Collision / Full-Duplex / Speed / Link/Activity
+>>                      01   Activity / Full-Duplex/Collision / Speed / Link
+>>                      10   Activity / Full-Duplex / 100Mbps Link / 10Mbps Link
+>>                      11   Reserved
+>> 80[23]1 (LED[0])    00   Link/Activity
+>>                      01   Link
+>>                      10   Reserved
+>>                      11   Reserved
+>> 80[45]1 (LED[1:0])  00   Speed / Link/Activity
+>>                      01   Activity / Link
+>>                      10   Reserved
+>>                      11   Reserved
+>>
+>> While LED mode could be described by LED0 mode using "link-activity" or
+>> "link" strings for the 80[2345]1 chips, the 8001 makes that slightly more
+>> complex and shows that future chips might not conform to any scheme we come
+>> up with now.
+>>
+>> I thus have no strong preference for a string-based mode description over
+>> using an integer. However, if we keep the integer value, I wouldn't use the
+>> register value directly, but would instead use the mode field value as an
+>> integer in the 0-3 range. This would remove knowledge of the PHY control
+>> register layout from the DT node content, and bring more consistency to the
+>> values.
+>
+> And I realize that this is what you've done already in the implementation :-/
+> I'll send a patch to clarify the DT bindings documentation if you don't mind,
+> after hearing Mark's opinion on the issue.
 
-Regards,
-Santosh
+Do we need strings for what is basically a single-setup post reset
+which it makes no sense for the user to ever update?
+
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
