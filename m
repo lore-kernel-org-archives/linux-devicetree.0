@@ -1,65 +1,117 @@
-From: Harini Katakam <harini.katakam@xilinx.com>
-Subject: RE: [PATCH] SPI: Add driver for Cadence SPI controller
-Date: Tue, 18 Mar 2014 05:22:37 +0000
-Message-ID: <554ccbca-f92e-454c-90c0-b8a4ddddf3fd@CH1EHSMHS001.ehs.local>
-References: <1395057936-8643-1-git-send-email-harinik@xilinx.com>
- <20140317173017.GW11706@sirena.org.uk>
- <20140317175911.GU18529@joshc.qualcomm.com>
- <20140317181440.GY11706@sirena.org.uk>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [GIT PULL] Move device tree graph parsing helpers to drivers/of
+Date: Tue, 18 Mar 2014 08:27:22 +0200
+Message-ID: <5327E74A.8030705@ti.com>
+References: <1394126000.3622.66.camel@paszta.hi.pengutronix.de> <5321CB04.6090700@samsung.com> <20140314070505.GV1629@pengutronix.de> <5247436.pV9jXGKXCJ@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140317181440.GY11706@sirena.org.uk>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Josh Cartwright <joshc@codeaurora.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Michal Simek <michals@xilinx.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="HuPr66pmeGGMMPoRd6Wom8fe3jAgko9Fm"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5247436.pV9jXGKXCJ@avalon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Robert Schwebel <r.schwebel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Philipp Zabel <p.zabel@pengutronix.de>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+--HuPr66pmeGGMMPoRd6Wom8fe3jAgko9Fm
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-> -----Original Message-----
-> From: Mark Brown [mailto:broonie@kernel.org]
-> Sent: Monday, March 17, 2014 11:45 PM
-> To: Josh Cartwright
-> Cc: Harini Katakam; robh+dt@kernel.org; pawel.moll@arm.com;
-> mark.rutland@arm.com; ijc+devicetree@hellion.org.uk;
-> galak@codeaurora.org; rob@landley.net; grant.likely@linaro.org;
-> devicetree@vger.kernel.org; linux-doc@vger.kernel.org; linux-
-> kernel@vger.kernel.org; linux-spi@vger.kernel.org; Michal Simek
-> Subject: Re: [PATCH] SPI: Add driver for Cadence SPI controller
-> 
-> On Mon, Mar 17, 2014 at 12:59:11PM -0500, Josh Cartwright wrote:
-> > On Mon, Mar 17, 2014 at 05:30:17PM +0000, Mark Brown wrote:
-> > > On Mon, Mar 17, 2014 at 05:35:36PM +0530, Harini Katakam wrote:
-> 
-> > > > +static int __maybe_unused cdns_spi_suspend(struct device *dev) {
-> 
-> > > This needs to call spi_master_suspend() as well (and similarly on
-> > > resume).
-> 
-> > I'm not that familiar with the SPI core, but this seems like an
-> > inversion.  Is there a reason why the SPI master class doesn't
-> > implement
-> > suspend/resume() callbacks which handle stopping/starting the queue
-> > automatically for all masters?
-> 
-> This is for users of an optional feature of the infrastructure.  We probably
-> should just call it anyway since it does have checks for the feature being
-> used (but given all the open coding around this stuff I'd need to verify that
-> the class callbacks would reliably get called).
-> 
-> In any case that's not happening now and the driver as it stands is buggy
-> since it's trampling all over the hardware without syncing with anything that
-> isn't ongoing.
+On 18/03/14 01:30, Laurent Pinchart wrote:
 
-In case of a suspend, we are stopping an ongoing transfer and disabling the interface.
-In case I add clock disable and anything else to unprepared too, it will be a cleaner 
-exit but it will still stop the transfer right? What do you suggest?
-Should we wait for transfer to complete or a timeout to occur?
+> I agree with you. I know that DT bindings review takes too much time, s=
+lows=20
+> development down and is just generally painful. I'm trying to reply to =
+this e-
+> mail thread as fast as possible, but I'm also busy with other tasks :-/=
 
-Regards,
-Harini
+>=20
+> The lack of formal consensus comes partly from the fact that people are=
+ busy=20
+> and that the mail thread is growing big. There's still two open questio=
+ns from=20
+> my view of the whole discussion:
+>=20
+> - Do we really want to drop bidirectional links ? Grant has been pretty=
+ vocal=20
+> about that, but there has been several replies with arguments for=20
+> bidirectional links, and no reply from him afterwards. Even though that=
+=20
+> wouldn't be the preferred solution for everybody, there doesn't seem to=
+ be a=20
+> strong disagreement about dropping bidirectional links, as long as we c=
+an come=20
+> up with a reasonable implementation.
+>=20
+> - If we drop bidirectional links, what link direction do we use ? There=
+ has=20
+> been several proposals (including "north", which I think isn't future-p=
+roof as=20
+> it assumes an earth-centric model) and no real agreement, although ther=
+e seems=20
+> to be a consensus among several developers that the core OF graph bindi=
+ngs=20
+> could leave that to be specified by subsystem bindings. We would still =
+have to=20
+> agree on a direction for the display subsystem of course.
+>=20
+> If my above explanation isn't too far from the reality the next step co=
+uld be=20
+> to send a new version of the DT bindings proposal as a ping.
+
+I agree with the above.
+
+However, I also think we should just go forward with the bidirectional
+links for now. The bindings for bidir links are already in the mainline
+kernel, so they can't be seen as broken.
+
+When we have an agreement about the direction, and we've got common
+parsing code, it's trivial to convert the existing links to single
+direction links, and the old dts files with bidir links continue to work
+fine.
+
+This is what I'm planning to do with OMAP display subsystem, as I
+_really_ want to get the DT support merged for 3.15. The current mix of
+pdata + DT that we have for OMAP display is an unmaintainable mess.
+
+So unless I get a nack from someone (I've pinged Grant twice about
+this), or someone explains why it's a bad idea, I'll push the OMAP
+display bindings [1] for 3.15 with bidir bindings, and change them to
+single-dir later.
+
+Note that I did remove the abbreviated endpoint format that I had there
+earlier, so now the bindings are fully compatible with the v4l2 bindings.=
 
 
+ Tomi
+
+[1] http://article.gmane.org/gmane.linux.drivers.devicetree/63885
+
+
+
+--HuPr66pmeGGMMPoRd6Wom8fe3jAgko9Fm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJTJ+dLAAoJEPo9qoy8lh711zsP/RpStdfq4S+pzU/vDxItiGos
+y1i+9WQMNBWXRHhx8ZYYnF8NaDsLoIxGfcInMeH9jSxkkvcqnfcZP5teSKdZrhQF
+HxyiL4KZF2Fv4K2dDOKzTKttSFLKI6eDxsfO3uKibU2jBx3/tRpZoS6ha2ZoU0Bq
+pxjLXbhVzIGkTzPjByy5eTmaMretDAzmSNnRZOhrN2eBINnLnPOfG/7cd3NfgeZv
+N6J8H2TVtPAyT5RBwuqgqu9Nn8iVGt6H/JmvobKblBF+4Jmf1CGGOWGnI/gL8kjd
+iQ9vVJyb2hKYaNFDmwtXuHX6I7nJnVAzhjZ42fvCgbMIR48Yc4VE5KiQ7QONQB7n
+ff6zaPRdeTgQJ01+3yKmD/X2MO+TPfKQbDOKKVZfXSbNdVP4vYldzFKs503pmh1d
+oYndnQkEigTdZlxo9X9u2asc8KOquSyiTc0UvcN4F6zRNH7Od/uc+8BRO+ASK5s0
+Mq2Vo78+JPGbmHygsHoxPpwUxJCywOLTWxZoOkic4bV5LyLhJXfmpTgj2+MoXtI/
+HyhUc4Z7a4sRTspkGf8kFqonJCo6k0x1M4CnxBiZ2l3pck0chYKe5MhCzkYaIm/m
+sg2ec0WO18NKVZGABCBOoUozIbcASc0KWPpDmcdVDePQW2bxgN+ihPxC1OpiKWj+
+UXqlJN6TtZ2tDVNQBVb5
+=NAN+
+-----END PGP SIGNATURE-----
+
+--HuPr66pmeGGMMPoRd6Wom8fe3jAgko9Fm--
