@@ -1,34 +1,81 @@
-From: Loc Ho <lho@apm.com>
-Subject: [PATCH] ata: Fix compiler warning with APM X-Gene host controller driver
-Date: Tue, 18 Mar 2014 12:14:37 -0600
-Message-ID: <1395166477-26408-1-git-send-email-lho@apm.com>
-Return-path: <linux-scsi-owner@vger.kernel.org>
-Sender: linux-scsi-owner@vger.kernel.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>
+From: Byungho An <bh74.an@samsung.com>
+Subject: [PATCH V5 0/8] add new Samsung SXGBE driver
+Date: Tue, 18 Mar 2014 11:19:18 -0700
+Message-ID: <002101cf42d6$97677c90$c63675b0$@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-language: en-us
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: netdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: davem@davemloft.net, ks.giri@samsung.com, siva.kallam@samsung.com, vipul.pandya@samsung.com, ilho215.lee@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes an compiler warning with APM X-Gene host controller
-driver when compiled with DEBUG enabled.
+Hi all,
 
-Signed-off-by: Loc Ho <lho@apm.com>
----
- drivers/ata/ahci_xgene.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+This is 5th posting for SAMSUNG SXGBE driver.
 
-diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
-index fcf21f1..77c89bf 100644
---- a/drivers/ata/ahci_xgene.c
-+++ b/drivers/ata/ahci_xgene.c
-@@ -329,7 +329,7 @@ static int xgene_ahci_hw_init(struct ahci_host_priv *hpriv)
- 	writel(0xffffffff, hpriv->mmio + HOST_IRQ_STAT);
- 	readl(hpriv->mmio + HOST_IRQ_STAT); /* Force a barrier */
- 	writel(0, ctx->csr_core + INTSTATUSMASK);
--	readl(ctx->csr_core + INTSTATUSMASK); /* Force a barrier */
-+	val = readl(ctx->csr_core + INTSTATUSMASK); /* Force a barrier */
- 	dev_dbg(ctx->dev, "top level interrupt mask 0x%X value 0x%08X\n",
- 		INTSTATUSMASK, val);
- 
--- 
-1.5.5
+Changes since v1:
+- changed name of driver to SXGbE as per Ben's comment
+- squashed Joe's neatening for many stuff in original patches
 
+Changes since v2:
+- updated and splited binding document as per Mark's comment
+- clean up codes as per Joe's comment
+- removed unused fields and clean up codes as per Froancois's comment
+- removed module parameters as per Dave's comment
+- moved driver directory to samsung/sxgbe/
+
+Changes since v3:
+- fixed Missing a blank line after declarations as per Dave's comment
+- clean up codes as per Joe's comment
+- removed reference of net_device.{irq, base_addr}
+
+Changes since v4:
+- updated binding document and DT related function per Mark's comment
+
+Byungho An (1):
+      MAINTAINERS: add maintainer for Samsung sxgbe driver
+
+Girish K S (2):
+      net: sxgbe: add EEE(Energy Efficient Ethernet) for Samsung sxgbe
+      net: sxgbe: add WOL(Wakeup-On-Lan)support for Samsung sxgbe
+
+Siva Reddy (2):
+      sxgbe: Add device-tree binding support document
+      net: sxgbe: add basic framework for Samsung 10Gb ethernet driver
+
+Vipul Pandya (3):
+      net: sxgbe: add TSO support for Samsung sxgbe
+      net: sxgbe: add Checksum offload support for Samsung sxgbe
+      net: sxgbe: add ethtool related functions support Samsung sxgbe
+
+ .../devicetree/bindings/net/samsung-sxgbe.txt      |   52 +
+ MAINTAINERS                                        |    9 +
+ drivers/net/ethernet/Kconfig                       |    1 +
+ drivers/net/ethernet/Makefile                      |    1 +
+ drivers/net/ethernet/samsung/Kconfig               |   20 +
+ drivers/net/ethernet/samsung/Makefile              |    5 +
+ drivers/net/ethernet/samsung/sxgbe/Kconfig         |    9 +
+ drivers/net/ethernet/samsung/sxgbe/Makefile        |    4 +
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h  |  553 +++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_core.c    |  290 +++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_desc.c    |  515 +++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_desc.h    |  298 +++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_dma.c     |  387 ++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_dma.h     |   51 +
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c |  634 ++++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c    | 2382 ++++++++++++++++++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_mdio.c    |  274 +++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_mtl.c     |  293 +++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_mtl.h     |  108 +
+ .../net/ethernet/samsung/sxgbe/sxgbe_platform.c    |  268 +++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_reg.h     |  491 ++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_xpcs.c    |   92 +
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_xpcs.h    |   38 +
+ include/linux/sxgbe_platform.h                     |   54 +
+ 24 files changed, 6829 insertions(+)
+
+Thanks,
+Byungho An
