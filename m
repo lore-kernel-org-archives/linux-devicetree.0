@@ -1,112 +1,88 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 5/9] Doc/DT: Add DT binding documentation for MIPI DPI
- Panel
-Date: Tue, 18 Mar 2014 09:06:16 +0200
-Message-ID: <5327F068.7010100@ti.com>
-References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
- <1393590016-9361-6-git-send-email-tomi.valkeinen@ti.com>
- <3721050.m43feCICLQ@avalon> <5327EAB3.8080405@ti.com>
+From: "B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH 2/2] spi/fsl-lib: Get the SPI controller bus number from
+ DTS
+Date: Tue, 18 Mar 2014 07:40:28 +0000
+Message-ID: <9186860716f446f9a5773e7e47d39114@DM2PR03MB301.namprd03.prod.outlook.com>
+References: <1394789757-40732-1-git-send-email-B48286@freescale.com>
+ <1394789757-40732-2-git-send-email-B48286@freescale.com>
+ <20140314191922.GA366@sirena.org.uk>
+ <c4b28b01b2f544ca9d264eaee2542257@DM2PR03MB301.namprd03.prod.outlook.com>
+ <20140317130109.GE11706@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8232105112622697795=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5327EAB3.8080405@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Tomasz Figa <tomasz.figa@gmail.com>, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Rob Clark <robdclark@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140317130109.GE11706-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Language: en-US
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Mark Brown' <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============8232105112622697795==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="e2lmthRX2peGv5gJFecsMSCJFNR8KJ98E"
-
---e2lmthRX2peGv5gJFecsMSCJFNR8KJ98E
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-On 18/03/14 08:41, Tomi Valkeinen wrote:
-> On 17/03/14 16:19, Laurent Pinchart wrote:
->=20
->>> +Generic MIPI DPI Panel
->>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>> +
->>> +Required properties:
->>> +- compatible: "panel-dpi"
->>> +
->>> +Optional properties:
->>> +- label: a symbolic name for the panel
->>> +- gpios: panel enable gpio and backlight enable gpio
->>
->> While integrated in the panel module, the backlight is a separate piec=
-e of=20
->> hardware, which could be controlled through other means (I2C for insta=
-nce).=20
->> Wouldn't it be better to add an explicit DT node for the backlight dev=
-ice and=20
->> reference that node from the panel node ?
->=20
-> Yes, I agree, but do we have the infrastructure or bindings for that?
->=20
-> Ah, I see we now do have a gpio-backlight driver, but it doesn't have D=
-T
-> bindings.
-
-Seems there's a patch from Denis Carikli for this, which will probably
-be merged for 3.15.
-
-I realized I don't actually use panel-dpi at the moment in my OMAP DSS
-DT series, as I dropped the board changes that used panel-dpi. So I'll
-drop panel-dpi bindings from my series, and the backlight for panel-dpi
-can then be fixed for 3.16.
-
- Tomi
 
 
+> -----Original Message-----
+> From: Mark Brown [mailto:broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> Sent: Monday, March 17, 2014 9:01 PM
+> To: Hou Zhiqiang-B48286
+> Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org; pawel.moll-5wv7dgnIgG8@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
+> ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org; galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org;
+> grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org; Wood Scott-B07421; Hu Mingkai-B21284
+> Subject: Re: [PATCH 2/2] spi/fsl-lib: Get the SPI controller bus number
+> from DTS
+> 
+> On Mon, Mar 17, 2014 at 05:11:11AM +0000, B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
+> > > On Fri, Mar 14, 2014 at 05:35:57PM +0800, Hou Zhiqiang wrote:
+> > > > Get the spi_master's bus_num from DTS to make the spi_master's
+> > > > name static. So "mtdparts=spi.bus_num.chip_select:..." in cmdline
+> > > > can be used to asign mtd partions of spi flash.
+> 
+> > > If we are going to do this it shouldn't be device specific (it
+> > > should be done in the framework since nothing is specific to the
+> > > controller there) but I'm not convinced that we should be doing it -
+> > > this is all very Linux specific.
+> 
+> > This patch just assign a bus number to the controller. It is driver's
+> > responsibility to distribute a bus number to spi_master and the
+> > definition of bus_num is used to distinguish controllers. So, it is
+> > specific for the controller and doesn't affect the framework.
+> 
+> You are adding a property to specify a bus number.  There is no reason
+> why such a property should be specific to a single controller, every
+> controller in every system has a bus number assigned to it so if we have
+> a way to specify one controller via the device tree we should have a way
+> to specify it for all.
+> 
 
---e2lmthRX2peGv5gJFecsMSCJFNR8KJ98E
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+The reason to specify a bus number to a single controller is to avoid 
+allocating one dynamically, so we know the bus number before booting up the
+kernel. If there are several controllers, you should add this property to all
+of them. But it is unnecessary to add this property, if you do not care about
+the bus number, and it will be allocated dynamically. 
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+> > > The DT already has support for specifying flash layouts, can't those
+> > > be used (for example via chosen if they're not fixed for the board)?
+> > > Or if it's just picking the correct filesystem then UUIDs and labels
+> > > are the standard way to do things.
+> 
+> > The DT specifying flash layouts is ok. There is another way to make
+> > the flash layouts using command line, but it is not safe because of
+> > the dynamic bus_num. It is not the reason that the way of DT is
+> > supported flash layouts, to live the other way unsafe, right?
+> 
+> This sounds to me like we need a better way of talking about flash device
+> names on the Linux command line rather than a way to fix the bus number -
+> for example, being able to refer to them using a fixed property like the
+> physical address.  Being able to refer to devices via an alias assigned
+> in the DT would also be useful (and more readable), I think there may
+> already be a mechanism for doing that which would need to be plumbed in
+> but I'm not 100% sure.
 
-iQIcBAEBAgAGBQJTJ/BoAAoJEPo9qoy8lh71lHMQAKpLuDMvq0XbZ5igX2V+DnJ7
-rrUOBNbRBIhnxFvUuxzd27fVBgDMA4wW8cwowygosjegCrS/Yc8xLeQINhxcAI+e
-4tjRsUUNFf3ZbyDxLMX7wcyAig+R0AV8SDKQa/eanuRKa5i7MzOIVONz4tOvKlsQ
-jCz9GgSR88h5XILiu5DoLXsli+x8XwhwJ545w31YKF2OYIKV5bghCnTb8L5iJpOG
-h4NLc1HwUx8uIzoK8vqIjdOlkgm5skZlwlp/EMseSfo0gtmAf9exQ3ITN1M5LVDw
-puxDAiav2EN3513GPch9fSzpc6hwruvVM6ULnu6pp9vrvGywQoZ3AQC7sOp/BwlU
-PYSIofGgFWLoJ0q+LoXzquCDe13OFsbTy7KJS9wgL6kpnT41AQG5BB/IGGl9ElPu
-rJzJ89P7nk/QoA+7JhqtWSDrJyUsU+lKrxrU+9HsGwSRxZWCNBDlEJJXS778WCdm
-qbjxARIsckUAqfFUgqSHey0XelrLnyoiaULvhFeFn7NuNshI+GWxQpg5Lycqy0Pt
-IkC2XjA3C93fPm7L8lLqTlpqQKMP9zFY0/X0BEJdBpfYEl0HN87IpdaHPupRPqmW
-XUXgkUoy8b54NRR1TK77psv71DvN0r+kbDcmjaT+++EGbajD0YpitNP2rhs9NC56
-cz1tKqVtDQFu2rAG8jOh
-=h/3y
------END PGP SIGNATURE-----
-
---e2lmthRX2peGv5gJFecsMSCJFNR8KJ98E--
-
-
---===============8232105112622697795==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============8232105112622697795==--
+The bus number is the variable designed to distinguish one spi controller
+from others. Why spi controller's physical address must be use instead of
+bus number?
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
