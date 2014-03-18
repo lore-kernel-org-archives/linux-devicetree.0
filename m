@@ -1,71 +1,85 @@
-From: Cho KyongHo <pullip.cho@samsung.com>
-Subject: Re: [PATCH v11 10/27] iommu/exynos: use managed device helper functions
-Date: Tue, 18 Mar 2014 19:38:17 +0900
-Message-ID: <20140318193817.3448387b75e109e814b9c025@samsung.com>
-References: <20140314140542.f4ded6c50dbd8a1d937bf354@samsung.com>
- <53230404.6070601@samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 4/4] ASoC: simple-card: Add DT
+ documentation for multi-DAI links
+Date: Tue, 18 Mar 2014 10:41:59 +0000
+Message-ID: <20140318104159.GF11706@sirena.org.uk>
+References: <cover.1394883134.git.moinejf@free.fr>
+ <d054780a0edf4b2338a52e48bff9144e19aa614f.1394883134.git.moinejf@free.fr>
+ <20140317164339.GR11706@sirena.org.uk>
+ <20140318091728.1d2240ca@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <53230404.6070601@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Linux DeviceTree <devicetree@vger.kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>, Antonios Motakis <a.motakis@virtualopensystems.com>, Grant Grundler <grundler@chromium.org>, Joerg Roedel <joro@8bytes.org>, Kukjin Kim <kgene.kim@samsung.com>, Prathyush <prathyush.k@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Varun Sethi <Varun.Sethi@freescale.com>
+Content-Type: multipart/mixed; boundary="===============6369137305049575965=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20140318091728.1d2240ca@armhf>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Xiubo Li <Li.Xiubo@freescale.com>, linux-kernel@vger.kernel.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 14 Mar 2014 14:28:36 +0100, Tomasz Figa wrote:
-> Hi KyongHo,
-> 
-> On 14.03.2014 06:05, Cho KyongHo wrote:
-> > This patch uses managed device helper functions in the probe().
-> >
-> > Signed-off-by: Cho KyongHo <pullip.cho@samsung.com>
-> > ---
-> >   drivers/iommu/exynos-iommu.c |   64 +++++++++++++++++-------------------------
-> >   1 file changed, 26 insertions(+), 38 deletions(-)
-> >
-> > diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
-> > index 36e6b73..33b424d 100644
-> > --- a/drivers/iommu/exynos-iommu.c
-> > +++ b/drivers/iommu/exynos-iommu.c
-> > @@ -499,51 +499,48 @@ void exynos_sysmmu_tlb_invalidate(struct device *dev)
-> >
-> >   static int exynos_sysmmu_probe(struct platform_device *pdev)
-> >   {
-> > -	int ret;
-> > +	int irq, ret;
-> >   	struct device *dev = &pdev->dev;
-> >   	struct sysmmu_drvdata *data;
-> >   	struct resource *res;
-> >
-> > -	data = kzalloc(sizeof(*data), GFP_KERNEL);
-> > -	if (!data) {
-> > -		dev_dbg(dev, "Not enough memory\n");
-> > -		ret = -ENOMEM;
-> > -		goto err_alloc;
-> > -	}
-> > +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-> > +	if (!data)
-> > +		return -ENOMEM;
-> >
-> >   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >   	if (!res) {
-> > -		dev_dbg(dev, "Unable to find IOMEM region\n");
-> > -		ret = -ENOENT;
-> > -		goto err_init;
-> > +		dev_err(dev, "Unable to find IOMEM region\n");
-> > +		return -ENOENT;
-> >   	}
-> 
-> No need to check for error and print message, because 
-> devm_ioremap_resource() already checks the passed resource and handles 
-> error cases.
-> 
 
-Yes but devm_ioremap_resource() just tells that the given 'res' is not
-correct. I think the message in the driver is more informative.
+--===============6369137305049575965==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="MZQ2DoTi1EizrxJt"
+Content-Disposition: inline
 
-Thanks.
 
-KyongHo
+--MZQ2DoTi1EizrxJt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Mar 18, 2014 at 09:17:28AM +0100, Jean-Francois Moine wrote:
+
+> The 2nd syntax is simpler and clearer, but the properties of the CPU
+> DAI and of the CODEC DAI are the same in the container (format, clock
+> and PCM slots). Is this a problem?
+
+Yes, things like clocks might be different.  We need a way to specify
+DAI specific properties.
+
+> BTW, there is a 'dai_fmt' in the DAI link, but this format is not used
+> in the simple-card. Why?
+
+Could you be more specific please?  If you mean the dai_fmt feature of
+the generic dai_link struct then because of the confusion about what
+the DAI formats mean which you'll have seen on the list.
+
+--MZQ2DoTi1EizrxJt
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTKCL0AAoJELSic+t+oim9M9cP/1CXPHzDtDYkZAMh6E3JSpuV
+u8dazvw2YmRyXYu9B7LSFdpSz9Rb+vi0zM7cwmWAvGjZNvvyKbV4lEliWiYzKh7f
+pctkya3dYjn2wB1791Z2/CqMQ5NNyRK7Lf1D07uD34/B0A4Dcew7LxhI7uifd28q
+mFl9IbWQ7IK6rSpwMxfiQQj8H0P3FnkwfrJVZRSUxTDxpwSIXyPXAQm9jKebpwpl
+pGIZWd6khDLv/L3AlEHpw/2Nv38FvnALYCvVpqHwnHkWmqokP3Lv0dTD9JWTukHn
+VyKfO2b6IfM3nAHCTJpK/HsO7QG76O0euf0Cg7KS5wdFT2Yc0FZdH0qSJZva+UIv
+b75paYe3atp+Fs2yf1VD/tlxp64nMxdXPUTt2jUz8TAQKlM+s6jl9pdf5wdl75IY
+eblnyQYG9TXUjz7U19A9r9yu6cGQOuY1OO2bkKnuPi1cqy72fVwRIF+myPYZ7TmZ
+UqCJ2vrpyGfoqe/TuZjOFwS4TqeSoFgKDbb+iYZKqAqILG1q4LlaCsVcHa5IYikl
+7pDPnydTqt2UDixIMBf3iw4X/1fRiW473Vga6um4TOcEEfwXo8KxjPhfSm/wG1aL
+cgAGtxWAnyaJ3I0xnP26GqnsJDtsUXkQ+rI+ZjjkzJPCQ6H2+smb8Pt9LGfmAjfL
+BwN+6BlI+RASVHpBBi+l
+=ZG4j
+-----END PGP SIGNATURE-----
+
+--MZQ2DoTi1EizrxJt--
+
+--===============6369137305049575965==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============6369137305049575965==--
