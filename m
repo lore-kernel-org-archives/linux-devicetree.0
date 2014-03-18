@@ -1,102 +1,91 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 5/9] Doc/DT: Add DT binding documentation for MIPI DPI
- Panel
-Date: Tue, 18 Mar 2014 08:41:55 +0200
-Message-ID: <5327EAB3.8080405@ti.com>
-References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
- <1393590016-9361-6-git-send-email-tomi.valkeinen@ti.com>
- <3721050.m43feCICLQ@avalon>
+From: Byungho An <bh74.an@samsung.com>
+Subject: [PATCH V4 1/8] sxgbe: Add device-tree binding support document
+Date: Mon, 17 Mar 2014 23:47:13 -0700
+Message-ID: <00f801cf4275$e7e2a1b0$b7a7e510$@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8749660239434561692=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <3721050.m43feCICLQ@avalon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Tomasz Figa <tomasz.figa@gmail.com>, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Rob Clark <robdclark@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+Content-language: en-us
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: davem@davemloft.net, ilho215.lee@samsung.com, siva.kallam@samsung.com, vipul.pandya@samsung.com, ks.giri@samsung.com
 List-Id: devicetree@vger.kernel.org
 
---===============8749660239434561692==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="IiEVc4tMT8q1jBQnUrSuMGVbheetlKngH"
+From: Siva Reddy <siva.kallam@samsung.com>
 
---IiEVc4tMT8q1jBQnUrSuMGVbheetlKngH
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+This patch adds binding document for SXGBE ethernet driver via device-tree.
 
-On 17/03/14 16:19, Laurent Pinchart wrote:
+Signed-off-by: Siva Reddy Kallam <siva.kallam@samsung.com>
+Signed-off-by: Byungho An <bh74.an@samsung.com>
+---
+ .../devicetree/bindings/net/samsung-sxgbe.txt      |   53
+++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/samsung-sxgbe.txt
 
->> +Generic MIPI DPI Panel
->> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> +
->> +Required properties:
->> +- compatible: "panel-dpi"
->> +
->> +Optional properties:
->> +- label: a symbolic name for the panel
->> +- gpios: panel enable gpio and backlight enable gpio
->=20
-> While integrated in the panel module, the backlight is a separate piece=
- of=20
-> hardware, which could be controlled through other means (I2C for instan=
-ce).=20
-> Wouldn't it be better to add an explicit DT node for the backlight devi=
-ce and=20
-> reference that node from the panel node ?
-
-Yes, I agree, but do we have the infrastructure or bindings for that?
-
-Ah, I see we now do have a gpio-backlight driver, but it doesn't have DT
-bindings.
-
- Tomi
-
-
-
---IiEVc4tMT8q1jBQnUrSuMGVbheetlKngH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJTJ+qzAAoJEPo9qoy8lh71R/0P/3N5qpEut3bGbyfPGd4xtjj9
-E13b+bc89sbDTXUevxWaR2rgrqwi+Lt/isCczm5R3af5wHsAFSKC2sTKEz+AtlAu
-TeilEjRmYmhiVewwU8tM/tWToUu6Qkcke3c6Z6DpDjphqQVPJX5/KoA8TLkUGNoY
-TeDbktiG/sWHnTAvhp4x7nuEPuAv2xO3Zu9QlYIui7dAo/v2sDElfdtf0IChR3oX
-r1oXFxYpMom9Oc74yh8LHGzCxEYfc+SRo9nwqIOgXVN673xRensFUbkIh4b0w0wA
-irSuI2LbwsMvtMVt38TX2+WV/oJKeU/Av5Ge9i02rjC9GOx/ClpujznUSGhJFbaU
-mLeknL9BJrY55wUCmFv/aG2zud4W4ICvwgcU/jELNx2s4wOfO30IzAnX14dK1Tuc
-K+ER5A7gfVaSrSNRgVZuQ4kax3sNJtSi+j9VHgFWHq8m2+vk3rD9J8QeMTC0lGkp
-OMmaexE5MrjYaD1R5Xk13XdG1YSs9hN8Xda42OQyMo5dVcTFyqbaJym7HAAUbegi
-vqpbc0S63BEK4TGTrhU9fH7VtT2XR51QNIK3gfTjVLtqgzs1QeVWZmQ6hGjh6hN3
-TuLZ8Pu152UwbJ8nRYBDIwxWI2jYrpD0W9VJMKPB6+84x5I+zAyxHpsvQduhiYtu
-FSEFWEeeUAUJvrot/J/g
-=ACUE
------END PGP SIGNATURE-----
-
---IiEVc4tMT8q1jBQnUrSuMGVbheetlKngH--
-
-
---===============8749660239434561692==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============8749660239434561692==--
+diff --git a/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
+b/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
+new file mode 100644
+index 0000000..ca27947
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
+@@ -0,0 +1,53 @@
++* Samsung 10G Ethernet driver (SXGBE)
++
++Required properties:
++- compatible: Should be "samsung,sxgbe-v2.0a"
++- reg: Address and length of the register set for the device
++- interrupt-parent: Should be the phandle for the interrupt controller
++  that services interrupts for this device
++- interrupts: Should contain the SXGBE interrupts
++  These interrupts are ordered by fixed and follows variable
++  trasmit DMA interrupts, receive DMA interrupts and lpi interrupt.
++  index 0 - this is fixed common interrupt of SXGBE and it is always
++  available.
++  index 1 to 25 - 8 variable trasmit interrupts, variable 16 receive
+interrupts
++  and 1 optional lpi interrupt.
++- phy-mode: String, operation mode of the PHY interface.
++  Supported values are: "xaui", "gmii".
++- samsung,pbl: Integer, Programmable Burst Length.
++  Supported values are 1, 2, 4, 8, 16, or 32.
++- samsung,fixed-burst: Boolean, Program the DMA to use the fixed burst mode
++- samsung,burst-map: Integer, Program the possible bursts supported by sxgbe
++  This is an interger and represents allowable DMA bursts when fixed burst.
++  Allowable range is 0x00-0x3F. This field is valid only when fixed burst is
++  enabled, otherwise ignored.
++- samsung,adv-addr-mode: Boolean, Program the DMA to use Enhanced address
+mode.
++- samsung,force_thresh_dma_mode: Boolean, Force DMA to use the threshold mode
++  for both tx and rx
++- samsung,force_sf_dma_mode: Boolean, Force DMA to use the Store and Forward
++  mode for both tx and rx. This flag is ignored if force_thresh_dma_mode is
+set.
++- samsung,phy-addr: Integer, Address of the PHY attached with SXGBE.
++
++Optional properties:
++- mac-address: 6 bytes, mac address
++
++Example:
++
++	aliases {
++		ethernet0 = <&sxgbe0>;
++	};
++
++	sxgbe0: ethernet@1a040000 {
++		compatible = "samsung,sxgbe-v2.0a";
++		reg = <0 0x1a040000 0 0x10000>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 209 4>, <0 185 4>, <0 186 4>, <0 187 4>,
++			     <0 188 4>, <0 189 4>, <0 190 4>, <0 191 4>,
++			     <0 192 4>, <0 193 4>, <0 194 4>, <0 195 4>,
++			     <0 196 4>, <0 197 4>, <0 198 4>, <0 199 4>,
++			     <0 200 4>, <0 201 4>, <0 202 4>, <0 203 4>,
++			     <0 204 4>, <0 205 4>, <0 206 4>, <0 207 4>,
++			     <0 208 4>, <0 210 4>;
++		mac-address = [000000000000]; /* Filled in by U-Boot */
++		phy-mode = "xaui";
++	};
+-- 
+1.7.10.4
