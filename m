@@ -1,69 +1,77 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] SPI: Add driver for Cadence SPI controller
-Date: Tue, 18 Mar 2014 12:33:48 +0000
-Message-ID: <20140318123348.GR11706@sirena.org.uk>
-References: <1395057936-8643-1-git-send-email-harinik@xilinx.com>
- <20140317173017.GW11706@sirena.org.uk>
- <255edf4f-05a8-4d9a-b32d-1a4a8ddaffb5@CH1EHSMHS004.ehs.local>
- <20140318110401.GH11706@sirena.org.uk>
- <d7cf691a-c9cb-4a8a-bf5c-eae952a5d729@VA3EHSMHS045.ehs.local>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/3] Documentation: add Device tree bindings for
+ Hisilicon hip04 ethernet
+Date: Tue, 18 Mar 2014 12:34:51 +0000
+Message-ID: <20140318123451.GA2941@e106331-lin.cambridge.arm.com>
+References: <1395132017-15928-1-git-send-email-zhangfei.gao@linaro.org>
+ <1395132017-15928-2-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="45nhIriPRwzWsBkh"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <d7cf691a-c9cb-4a8a-bf5c-eae952a5d729@VA3EHSMHS045.ehs.local>
-Sender: linux-doc-owner@vger.kernel.org
-To: Harini Katakam <harini.katakam@xilinx.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Michal Simek <michals@xilinx.com>
+In-Reply-To: <1395132017-15928-2-git-send-email-zhangfei.gao@linaro.org>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc: "David S. Miller" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Mar 18, 2014 at 08:40:15AM +0000, Zhangfei Gao wrote:
+> This patch adds the Device Tree bindings for the Hisilicon hip04
+> Ethernet controller, including 100M / 1000M controller.
+> 
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> ---
+>  .../bindings/net/hisilicon-hip04-net.txt           |   74 ++++++++++++++++++++
+>  1 file changed, 74 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt b/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
+> new file mode 100644
+> index 0000000..c918f08
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
+> @@ -0,0 +1,74 @@
+> +Hisilicon hip04 Ethernet Controller
+> +
+> +* Ethernet controller node
+> +
+> +Required properties:
+> +- compatible: should be "hisilicon,hip04-mac".
+> +- reg: address and length of the register set for the device.
+> +- interrupts: interrupt for the device.
+> +- port: ppe port number connected to the controller: range from 0 to 31.
 
---45nhIriPRwzWsBkh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+ppe?
 
-On Tue, Mar 18, 2014 at 12:13:45PM +0000, Harini Katakam wrote:
+Will there ever be more than one ppe? If so, describing the linkage to
+the ppe with a phandle + args approach is preferable.
 
-> I'm going to remove the bits_per_word check anyway.
-> But the clock configuration still needs to be done.
-> Where should it be done spi_setup() or transfer?
+> +- speed: 100 (100M) or 1000 (1000M).
 
-It needs to be done on the transfer - that is required anyway since the
-clock rate is specified per transfer.
+Can you not query this from the hardware?
 
-> > > In this case both possible interrupt conditions are handled.
+> +- id: should be different and fe should be 0.
 
-> > Are you sure that's the case, and even if you are that's still not
-> > handling the case where the device isn't flagging an interrupt at all.
+This description is useless.
 
-> The IXR_ALL mask is only used to disable all the interrupts in the beginning.
-> These two are the only interrupts enabled.
-> And RXNEMPTY status is just polled. That interrupt is not enabled either
+What is this for, and why does this need to be in the dt? What is "fe"?
 
-This is all going to be fragile in the face of bugs or changes in the
-code though and like I keep saying it doesn't handle interrupt sharing.
+> +
+> +Optional Properties:
+> +- phy-handle : the phandle to a PHY node
+> +
+> +
+> +* Ethernet ppe node: control rx & tx fifos of all ethernet controllers
+> +
+> +Required properties:
+> +- compatible: should be "hisilicon,hip04-ppebase".
 
---45nhIriPRwzWsBkh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Why "ppebase" rather than "ppe"?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+> +- reg: address and length of the register set for the node.
 
-iQIcBAEBAgAGBQJTKD0oAAoJELSic+t+oim9ztUP/2qzLnUv/CjnBMQIs1UG8qz6
-iTi++PrZKQyr/IxTctAIQjsZNO8EtFVkTvTYMShwIPQogcQR74ltZIl/QWxRbRPi
-ezSiifH+c9VhVNr4aIOSumNJqVSlgPgkBn0ceEw0PG8qG8L8Ur/Hnu1K/0D9KvsX
-A0XcnNJdAfOE613wT3sB4FWDt7hsw9H54dnvsKGRgsUpffZstSCngohXH9sibdxV
-VgquocRL9uQukO175LevtdhsmF6IIPrQ4zPT732FyjWQD60+yJzs3dX+m2Pa/7/q
-n9YV5O3+bKBMZ+Og9H313bvtulGHY/sUjlMtFUq04pg+nKjbJiMhk3I+2iJDnPq3
-7Uq/njbXZS9AXpoG/F2Behw8MwRHziV4dRpHbOUyIhma6muGdIyFOqEg609bgCYx
-LvaBVRp5b6ttnnMyuc8Ha86WQwjCYK/EcsRFM25sHYO0TBxCyJ3vGtmSXDVq2Mvp
-redCyrvMMjVOXx4zUqLVGBwi9YfakwaqpKMwGCaljjUppRbCNi6rb0cfZ5HyDsfB
-u0bJAmdKDUlESPnuPTvPoUKP3XUnuXKmhXEs0xg7UVCa/zH4AhdF2SZYqoXjC01h
-aFrJcPxxSGLfoJ73qgx8/lqHP33YKl2SuR2koQcswUF86WcfEaov+b4EMnqyZVff
-v7w6LvpWfDiceNqx+rkL
-=vdSr
------END PGP SIGNATURE-----
+s/node/device/
 
---45nhIriPRwzWsBkh--
+Cheers,
+Mark.
