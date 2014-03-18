@@ -1,106 +1,56 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 6/9] Doc/DT: Add DT binding documentation for MIPI DSI CM
- Panel
-Date: Tue, 18 Mar 2014 13:43:05 +0100
-Message-ID: <3793066.CEaE5qMjRq@avalon>
-References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
- <4670830.fkS1noPxcd@avalon> <5327E8D3.5010907@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 1/3] Documentation: add Device tree bindings for Hisilicon
+ hip04 ethernet
+Date: Tue, 18 Mar 2014 16:51:04 +0400
+Message-ID: <53284138.9030809@cogentembedded.com>
+References: <1395132017-15928-1-git-send-email-zhangfei.gao@linaro.org> <1395132017-15928-2-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0442712071=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <5327E8D3.5010907@ti.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, dri-devel@lists.freedesktop.org, Andrzej Hajda <a.hajda@samsung.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1395132017-15928-2-git-send-email-zhangfei.gao@linaro.org>
+Sender: netdev-owner@vger.kernel.org
+To: Zhangfei Gao <zhangfei.gao@linaro.org>, "David S. Miller" <davem@davemloft.net>
+Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hello.
 
---===============0442712071==
-Content-Type: multipart/signed; boundary="nextPart3999461.FK4J4kLf1C"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+On 18-03-2014 12:40, Zhangfei Gao wrote:
 
+> This patch adds the Device Tree bindings for the Hisilicon hip04
+> Ethernet controller, including 100M / 1000M controller.
 
---nextPart3999461.FK4J4kLf1C
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="us-ascii"
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> ---
+>   .../bindings/net/hisilicon-hip04-net.txt           |   74 ++++++++++++++++++++
+>   1 file changed, 74 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
 
-Hi Tomi,
+> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt b/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
+> new file mode 100644
+> index 0000000..c918f08
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
+> @@ -0,0 +1,74 @@
+> +Hisilicon hip04 Ethernet Controller
+> +
+> +* Ethernet controller node
+> +
+> +Required properties:
+> +- compatible: should be "hisilicon,hip04-mac".
+> +- reg: address and length of the register set for the device.
+> +- interrupts: interrupt for the device.
+> +- port: ppe port number connected to the controller: range from 0 to 31.
+> +- speed: 100 (100M) or 1000 (1000M).
 
-On Tuesday 18 March 2014 08:33:55 Tomi Valkeinen wrote:
-> On 17/03/14 16:22, Laurent Pinchart wrote:
-> >> +Example
-> >> +-------
-> >> +
-> >> +lcd0: display {
-> >> +=09compatible =3D "tpo,taal", "panel-dsi-cm";
-> >> +=09label =3D "lcd0";
-> >> +
-> >> +=09gpios =3D <&gpio4 6 GPIO_ACTIVE_HIGH>;=09/* 102, reset */
-> >=20
-> > If the panel uses a TE GPIO but no reset GPIO, do you plan to expre=
-ss this
-> > with a "hole" for the reset GPIO ? e.g. something like
-> >=20
-> > =09gpios =3D <0>, <&gpio4 6 GPIO_ACTIVE_HIGH>;
->=20
-> Yes.
->=20
-> > Wouldn't it be better to split the gpios property into "reset-gpios=
-" and
-> > "te- gpios" ?
->=20
-> Yes, I can change it. I don't have a strong preference.
->=20
-> I've gotten similar comments for other bindings also, so I guess the
-> preferred way is to use named "-gpios" properties for everything exce=
-pt
-> the case where you really have multiple gpios with the same purpose?
+    There's standard "max-speed" property for that, see 
+Documentation/devicetree/bindings/net/ethernet.txt in the 'net-next.git' repo.
 
-That's my understanding, yes.
+> +Optional Properties:
+> +- phy-handle : the phandle to a PHY node
 
-> The gpio binding documentation doesn't give much guidance on this.
+    Please refer instead to the above mentioned file for this standard 
+property -- it is already described there. See other binding files as the example.
 
-=2D-=20
-Regards,
-
-Laurent Pinchart
-
---nextPart3999461.FK4J4kLf1C
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQEcBAABAgAGBQJTKD9ZAAoJEIkPb2GL7hl1TjkH/2Kb7C78gRRuNUFQude2TXRI
-cO+TV41Ern3vnapcqpQm08SHf7tD4bfF73ANrgcTA0s/GO6irUrLtWTKyqC6IB4E
-6xo6jFXMdZGNMbfhG3ZqmMRjg9axobDYX3EnHGUO2hxHcM4wOBRJwxSwr5M5t/qZ
-uEvpqgvM+jVAkfxDRJpJ4wDLEEGWWnfCteE2ASvyvKenYVys7HZdql/UtxOUl2za
-Tz1vi4NB5xRghUL/Vd0ZzCbgC8IYVEsOQa46skTGdFUQw0zRM8nxbYh3mUzj7mOC
-bqz3EO3PO0XNawf9k+Jg2auIm5tL/XHJogBzMPF6y8C7TfRNIh1fKMdj8pyRVvY=
-=P+Dj
------END PGP SIGNATURE-----
-
---nextPart3999461.FK4J4kLf1C--
-
-
---===============0442712071==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============0442712071==--
+WBR, Sergei
