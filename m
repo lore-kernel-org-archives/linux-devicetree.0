@@ -1,109 +1,76 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: Re: [PATCH v2 3/5] net: cpsw: Add control-module macid driver
-Date: Tue, 18 Mar 2014 09:06:41 +0100
-Message-ID: <20140318080641.GI11360@pengutronix.de>
-References: <1394888864-11007-1-git-send-email-mpa@pengutronix.de>
- <1394888864-11007-4-git-send-email-mpa@pengutronix.de>
- <20140317090508.GN15674@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HKEL+t8MFpg/ASTE"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140317090508.GN15674@pengutronix.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: "David S. Miller" <davem@davemloft.net>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
+From: Michael Opdenacker <michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] [RESEND] drivers: bus: omap_l3: remove deprecated IRQF_DISABLED
+Date: Tue, 18 Mar 2014 09:10:17 +0100
+Message-ID: <1395130217-17828-1-git-send-email-michael.opdenacker@free-electrons.com>
+References: <1393995663-2966-1-git-send-email-michael.opdenacker@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1393995663-2966-1-git-send-email-michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Opdenacker <michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This patch removes the use of the IRQF_DISABLED flag
+from drivers/bus/omap_l3_*
 
---HKEL+t8MFpg/ASTE
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It's a NOOP since 2.6.35 and it will be removed one day.
 
-Hi Uwe,
+Signed-off-by: Michael Opdenacker <michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ drivers/bus/omap_l3_noc.c | 4 ++--
+ drivers/bus/omap_l3_smx.c | 6 ++----
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
-On Mon, Mar 17, 2014 at 10:05:08AM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> Hello Markus,
->=20
-> On Sat, Mar 15, 2014 at 02:07:42PM +0100, Markus Pargmann wrote:
-> > This driver extracts the hardware macid from the control module of
-> > am335x processors. It exports a function cpsw_ctrl_macid_read for cpsw
-> > to get the macid from within the processor.
-> >=20
-> > Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-> > ---
-> >  .../devicetree/bindings/net/cpsw-ctrl-macid.txt    |  32 +++++
-> >  drivers/net/ethernet/ti/Kconfig                    |   1 +
-> >  drivers/net/ethernet/ti/Makefile                   |   2 +-
-> >  drivers/net/ethernet/ti/cpsw-ctrl-macid.c          | 138 +++++++++++++=
-++++++++
-> >  4 files changed, 172 insertions(+), 1 deletion(-)
-> >  create mode 100644 Documentation/devicetree/bindings/net/cpsw-ctrl-mac=
-id.txt
-> >  create mode 100644 drivers/net/ethernet/ti/cpsw-ctrl-macid.c
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/net/cpsw-ctrl-macid.txt =
-b/Documentation/devicetree/bindings/net/cpsw-ctrl-macid.txt
-> > new file mode 100644
-> > index 0000000..4eb39f6
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/cpsw-ctrl-macid.txt
-> > @@ -0,0 +1,32 @@
-> > +TI CPSW ctrl macid Devicetree bindings
-> > +--------------------------------------
-> > +
-> > +Required properties:
-> > + - compatible		: Should be "ti,am3352-cpsw-ctrl-macid"
-> this is called am3352-..., still you add it (in patch 5) to am33xx.dtsi
-> and in the commit log you wrote about am335x. Looks abstruse.
+diff --git a/drivers/bus/omap_l3_noc.c b/drivers/bus/omap_l3_noc.c
+index feeecae623f6..6ada27a911d1 100644
+--- a/drivers/bus/omap_l3_noc.c
++++ b/drivers/bus/omap_l3_noc.c
+@@ -187,7 +187,7 @@ static int omap4_l3_probe(struct platform_device *pdev)
+ 	l3->debug_irq = platform_get_irq(pdev, 0);
+ 	ret = request_irq(l3->debug_irq,
+ 			l3_interrupt_handler,
+-			IRQF_DISABLED, "l3-dbg-irq", l3);
++			0, "l3-dbg-irq", l3);
+ 	if (ret) {
+ 		pr_crit("L3: request_irq failed to register for 0x%x\n",
+ 						l3->debug_irq);
+@@ -197,7 +197,7 @@ static int omap4_l3_probe(struct platform_device *pdev)
+ 	l3->app_irq = platform_get_irq(pdev, 1);
+ 	ret = request_irq(l3->app_irq,
+ 			l3_interrupt_handler,
+-			IRQF_DISABLED, "l3-app-irq", l3);
++			0, "l3-app-irq", l3);
+ 	if (ret) {
+ 		pr_crit("L3: request_irq failed to register for 0x%x\n",
+ 						l3->app_irq);
+diff --git a/drivers/bus/omap_l3_smx.c b/drivers/bus/omap_l3_smx.c
+index acc216491b8a..769d64c0b0fe 100644
+--- a/drivers/bus/omap_l3_smx.c
++++ b/drivers/bus/omap_l3_smx.c
+@@ -238,8 +238,7 @@ static int __init omap3_l3_probe(struct platform_device *pdev)
+ 
+ 	l3->debug_irq = platform_get_irq(pdev, 0);
+ 	ret = request_irq(l3->debug_irq, omap3_l3_app_irq,
+-		IRQF_DISABLED | IRQF_TRIGGER_RISING,
+-		"l3-debug-irq", l3);
++		IRQF_TRIGGER_RISING, "l3-debug-irq", l3);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "couldn't request debug irq\n");
+ 		goto err1;
+@@ -247,8 +246,7 @@ static int __init omap3_l3_probe(struct platform_device *pdev)
+ 
+ 	l3->app_irq = platform_get_irq(pdev, 1);
+ 	ret = request_irq(l3->app_irq, omap3_l3_app_irq,
+-		IRQF_DISABLED | IRQF_TRIGGER_RISING,
+-		"l3-app-irq", l3);
++		IRQF_TRIGGER_RISING, "l3-app-irq", l3);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "couldn't request app irq\n");
+ 		goto err2;
+-- 
+1.8.3.2
 
-This is of course for the whole am335x series. But as the cpsw phy_sel
-driver already uses "ti,am3352-cpsw-phy-sel" as compatible, I didn't
-want to create more confusion about the bindings and stick with a
-similar compatible pattern.
-
->=20
-> > + - reg			: physical base address and size of the cpsw
-> > +			  registers map
-> > + - reg-names		: names of the register map given in "reg" node
-> > + - #ti,mac-address-ctrl-cells	: Should be <1>
-> Would be sensible to drop this property, or at least let it default to 1
-> if missing?
-
-I would actually prefer to have this property here. But I will implement
-a default value for this in the driver.
-
-Thanks,
-
-Markus
---=20
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---HKEL+t8MFpg/ASTE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTJ/6RAAoJEEpcgKtcEGQQsFcQAIQrkJ5ktLfPNvnEWl6Nug+Z
-gZLWILA0qS251lA0STN3HJHnoJmpOI34Co1rlZe9Ed4gQJuCx21UZvtJv7TrdLas
-emkVq5WPhzx+moYkMOVtuGSl2eD8IznC7jUCi2lHjGXS6q0qaDDg1flQ5CzYdtr+
-pDtwXQFh/EfG7mEbBl0IR7L6asMbSX/kRxugqeJ8MEyT7gRuvPjLSyYjgjLv9zgZ
-KMmDTeRI5tXtlWUEB+ZEJv7Kg1JrZf9cfdVe2pvKkJwE98KN4/TxiI8IwwY+qJp1
-sZvmwjQs/EnfUCib7ZUP3YBSwzT/WRnIE5ZuS1igMec5v6eqyuol6/inkUnidpYV
-3V6hPrmJny5lxtDeCWwJAFkIY32FNZzLoJuBiB+IgZ3O0Q7qNIU5Ip4Pe/7XnzbJ
-FeDsbdvban0YBb14b8iXu0smLjURUUKFB0dwhHLFU5Xqgt2vsPUrR0smW1RBaO6g
-hIMWEFATe44/aKyQ/t+vmEsg1YYW6s0Gqcq742SoCrXxTBrQlpPb/qLprVTTDuun
-pKcwgKI9BN7l8vzSJy7T0aA7cz95Px2GdUljCJxcrjm9oGs5tozcApggJhi7DB47
-7Mi9+qeMn+g7C2GSTRf4478SnpBdkJwpgSB5OXvfHjONdFa97hX0lRztU5iZtZ6m
-8IlhPrQ2VPmPy3hklp3S
-=GQDr
------END PGP SIGNATURE-----
-
---HKEL+t8MFpg/ASTE--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
