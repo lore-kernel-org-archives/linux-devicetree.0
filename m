@@ -1,120 +1,86 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCHv4 0/7] omap hwspinlock dt support
-Date: Mon, 17 Mar 2014 18:46:24 -0500
-Message-ID: <53278950.5030905@ti.com>
-References: <1389658764-39199-1-git-send-email-s-anna@ti.com>
- <52F9282B.5000702@ti.com> <530B8C00.8020001@ti.com>
- <CAK=WgbZp_RQPCeZJyMRkNTQxaJsnGZ3DnjhSkYYR_-PAE_Kp4g@mail.gmail.com>
- <53239789.40600@ti.com>
- <CAK=WgbZCzA7JovSxnysHCQRZZWc3Z2j3AS8ekpM9fOZ160rmCA@mail.gmail.com>
- <532748B7.1080606@ti.com>
- <CAK=WgbYjtw+cxy5wX6pjK=Rpj6wOk6Cu+GrPuFN+sqtgDAY=_Q@mail.gmail.com>
+From: Francois Romieu <romieu@fr.zoreil.com>
+Subject: Re: [PATCH net-next V6 6/9] Altera TSE: Add main and header file for
+ Altera Ethernet Driver
+Date: Tue, 18 Mar 2014 01:19:21 +0100
+Message-ID: <20140318001921.GA18556@electric-eye.fr.zoreil.com>
+References: <1395096761-15407-1-git-send-email-vbridgers2013@gmail.com>
+ <1395096761-15407-7-git-send-email-vbridgers2013@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAK=WgbYjtw+cxy5wX6pjK=Rpj6wOk6Cu+GrPuFN+sqtgDAY=_Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1395096761-15407-7-git-send-email-vbridgers2013@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Vince Bridgers <vbridgers2013@gmail.com>
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-doc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
 List-Id: devicetree@vger.kernel.org
 
-Hi Ohad,
+Vince Bridgers <vbridgers2013@gmail.com> :
+[...]
+> diff --git a/drivers/net/ethernet/altera/altera_tse_main.c b/drivers/net/ethernet/altera/altera_tse_main.c
+> new file mode 100644
+> index 0000000..6006ef2
+> --- /dev/null
+> +++ b/drivers/net/ethernet/altera/altera_tse_main.c
+[...]
+> +static int tse_tx_complete(struct altera_tse_private *priv)
+> +{
+> +	unsigned int txsize = priv->tx_ring_size;
+> +	u32 ready;
+> +	unsigned int entry;
+> +	struct tse_buffer *tx_buff;
+> +	int txcomplete = 0;
+> +
+> +	spin_lock(&priv->tx_lock);
+> +
+> +	ready = priv->dmaops->tx_completions(priv);
+> +
+> +	/* Free sent buffers */
+> +	while (ready && (priv->tx_cons != priv->tx_prod)) {
+> +		entry = priv->tx_cons % txsize;
+> +		tx_buff = &priv->tx_ring[entry];
+> +
+> +		if (netif_msg_tx_done(priv))
+> +			netdev_dbg(priv->dev, "%s: curr %d, dirty %d\n",
+> +				   __func__, priv->tx_prod, priv->tx_cons);
+> +
+> +		if (likely(tx_buff->skb))
+> +			priv->dev->stats.tx_packets++;
+> +
+> +		tse_free_tx_buffer(priv, tx_buff);
+> +		priv->tx_cons++;
+> +
+> +		txcomplete++;
+> +		ready--;
+> +	}
+> +
+> +	if (unlikely(netif_queue_stopped(priv->dev) &&
+> +		     tse_tx_avail(priv) > TSE_TX_THRESH(priv))) {
+> +		netif_tx_lock(priv->dev);
 
-On 03/17/2014 02:47 PM, Ohad Ben-Cohen wrote:
-> Hi Suman,
-> 
-> On Mon, Mar 17, 2014 at 9:10 PM, Suman Anna <s-anna@ti.com> wrote:
->> base_id would be a property (if added) of the hwspinlock controller node,
->> and from DT perspective, we will be using the phandle for the controller
->> anyway. So, using a base_id+specifier seems redundant, as the specifier is
->> already w.r.t a hwspinlock controller node.  It is best to leave the base_id
->> out, just use the specifier. This is pretty much the standard practice
->> (GPIOs, DMAs, etc all follow this).
-> 
-> Do you mean hwspin_lock_get_id() will return just the specifier
-> instead of base_id+specifier? This is problematic, because Linux will
-> not be able to communicate this lock id outside to a different core
-> running a different OS: that OS will have no idea what hwlock
-> controller this is relative to.
+This code runs under device tx_lock. You don't need both and you should
+be able to avoid tx_lock completely. See drivers/net/ethernet/broadcom/tg3.c
+for instance.
 
-The behavior of hwspin_lock_get_id() is unchanged, so you will still get
-the global lock id back. The hwspin_lock_request_specific() (note: not
-the OF one) will also still be operating on the global lock id.
+[...]
+> +static int tse_start_xmit(struct sk_buff *skb, struct net_device *dev)
+> +{
+> +	struct altera_tse_private *priv = netdev_priv(dev);
+> +	unsigned int txsize = priv->tx_ring_size;
+> +	unsigned int entry;
+> +	struct tse_buffer *buffer = NULL;
+> +	int nfrags = skb_shinfo(skb)->nr_frags;
+> +	unsigned int nopaged_len = skb_headlen(skb);
+> +	enum netdev_tx ret = NETDEV_TX_OK;
+> +	dma_addr_t dma_addr;
+> +	int txcomplete = 0;
+> +
+> +	spin_lock_bh(&priv->tx_lock);
 
-> 
->> Please see the comments from Mark regarding the same on an earlier version.
-> 
-> I think I understand and agree with Mark generally, but in this case,
-> the hwlock id is not an implementation detail. Unlike GPIOs/DMAs, this
-> id number is global and system-wide (Linux is just one component in
-> the system, and must use the same predefined id numbers all other
-> cores use, otherwise it will be impossible to use those hwlocks for
-> multi-core synchronization).
-> 
->> Yes, I agree this is an issue if we have to have the base_ids fixed per
->> controller.
-> 
-> Do you see any other way this could work if the base_ids were not
-> predefined? Linux and some other core running a different OS must
-> agree on the id numbers of the hardware locks we have in the system.
+See above.
 
-So far, we have not come across multiple controllers. I see your point,
-and I think this also depends on the semantics of how you exchange the
-lock id number. The agreement at the moment is on base_ids across
-multiple SoC components. If the semantics involve exchanging the
-controller instance, for example, then we might get away with it. But
-that probably involves adding additional helpers to retrieve controller
-instance in addition to lock number, or some other similar functions.
-I can add back the hwlock-base-id binding to the controller node.
+Nit: start_xmit runs with locally disabled softirq. _bh wouldn't be
+needed anyway.
 
-Mark, Kumar,
-Do you have any issues adding back this element for registration purposes?
-
-> 
->>> Before DT came along, early board code could have reserved specific
->>> hwspinlocks if needed. Now with DT, we should add the list of reserved
->>> locks to the controller node, in order to prevent them from being
->>> dynamically allocated by others.
->>
->>
->> But that strictly relied on the order of requests without any core changes
->> in the hwspinlock core, right.
-> 
-> I don't think so, you could request a specific lock by id number.
-
-Sorry, I should have rephrased it better - by order, I meant the
-inherent order between board early code and other drivers. With DT, we
-cannot guarantee that right, as specific locks are requested from drivers.
-
-> 
->> With DT, the early board code is much simplified. Looking at the same
->> scenario from DT case, it seems kinda redundant to specify a set of reserved
->> locks both in the controller node, as well as the respective client drivers,
->> as there is almost no platform data with DT. The only use case for DT client
->> nodes would be for requesting specific locks. I agree with the problem you
->> described, and I think it will require a different set of changes to the
->> core.
-> 
-> Exactly. The platform-specific hwspinlock driver will have to inform
-> the core, upon registration, which of the locks are already reserved.
-> In turn, the core will never provide them to clients that dynamically
-> allocate an hwlock: they will be provided only to clients that ask for
-> them specifically (using phandle+specifier).
-
-Understood. And we may have to assign the client association with a lock
-as well. These are core changes that were actually not needed in the
-non-DT case due to the inherent order as stated above. So, are you
-suggesting that we add one more property to the controller node to mark
-which are reserved, or rely on constructing this through DT tree parsing?
-
-regards
-Suman
+-- 
+Ueimor
