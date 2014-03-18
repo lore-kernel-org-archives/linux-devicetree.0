@@ -1,38 +1,35 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 2/2] dt-bindings: clock: Move exynos-audss-clk.h to
- dt-bindings/clock
-Date: Tue, 18 Mar 2014 15:32:07 +0100
-Message-ID: <532858E7.3040802@samsung.com>
-References: <1394085884-13081-1-git-send-email-tushar.behera@linaro.org>
- <1394085884-13081-3-git-send-email-tushar.behera@linaro.org>
- <531D054E.70008@gmail.com> <53277548.60300@samsung.com>
+From: Brian Austin <brian.austin@cirrus.com>
+Subject: Re: [PATCH v3] ASoC: cs42888: Add codec driver support
+Date: Tue, 18 Mar 2014 09:37:52 -0500
+Message-ID: <alpine.DEB.2.02.1403180936200.14838@heelrod>
+References: <1394538091-19513-1-git-send-email-Guangyu.Chen@freescale.com>
+ <20140318131033.GC11706@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <53277548.60300@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Tushar Behera <tushar.behera@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, plagnioj@jcrosoft.com, linux@maxim.org.za, Grant Likely <grant.likely@secretlab.ca>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20140318131033.GC11706@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, brian.austin@cirrus.com, lars@metafoo.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-doc@vger.kernel.org, lgirdwood@gmail.com, Paul.Handrigan@cirrus.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, rob@landley.net, Nicolin Chen <Guangyu.Chen@freescale.com>, grant.likely@linaro.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On 17.03.2014 23:20, Kukjin Kim wrote:
-> On 03/10/14 09:20, Tomasz Figa wrote:
->> On 06.03.2014 07:04, Tushar Behera wrote:
->>> Most of the clock related dt-binding header files are located in
->>> dt-bindings/clock folder. It would be good to keep all the similar
->>> header files at a single location.
->>>
->>> Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
->>> CC: Kukjin Kim <kgene.kim@samsung.com>
+On Tue, 18 Mar 2014, Mark Brown wrote:
+
+> On Tue, Mar 11, 2014 at 07:41:31PM +0800, Nicolin Chen wrote:
+>> This patch adds support for the Cirrus Logic CS42888 Audio CODEC that
+>> has four 24-bit A/D and eight 24-bit D/A converters.
 >
-> Acked-by: Kukjin Kim <kgene.kim@samsung.com>
+> Brian, Paul - any review comments on this?
 >
-> Or shall I take this into samsung tree?
-
-I guess so.
-
-Or should this whole series go through DT tree?
-
-Best regards,
-Tomasz
+Driver looks good to me. I think we should name it the cs42xx8 since this 
+actually covers CS42448 and CS42888. The CS42888 is derived from the 
+CS42448.
