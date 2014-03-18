@@ -1,137 +1,53 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCHv2 4/8] devfreq: exynos4: Fix bug of resource leak and code
- clean on probe()
-Date: Tue, 18 Mar 2014 13:18:45 +0100
-Message-ID: <532839A5.8020505@samsung.com>
-References: <1394698649-20996-1-git-send-email-cw00.choi@samsung.com>
- <1394698649-20996-5-git-send-email-cw00.choi@samsung.com>
- <53234132.8080202@samsung.com> <532682A8.2030300@samsung.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v4] dmaengine: sirf: enable generic dt binding for dma channels
+Date: Tue, 18 Mar 2014 13:20:01 +0100
+Message-ID: <201403181320.01858.arnd@arndb.de>
+References: <1389190369-2012-1-git-send-email-21cnbao@gmail.com> <CAGsJ_4zMYGTS4CyCsTAH_5PMK3v4Pr+e88YjXL=d3A=EjPf9rQ@mail.gmail.com> <20140317045105.GB1976@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <532682A8.2030300@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rafael.j.wysocki@intel.com, nm@ti.com, b.zolnierkie@samsaung.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140317045105.GB1976-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, DL-SHA-WorkGroupLinux <workgroup.linux-kQvG35nSl+M@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17.03.2014 06:05, Chanwoo Choi wrote:
-> Hi Tomasz,
->
-> On 03/15/2014 02:49 AM, Tomasz Figa wrote:
->> Hi Chanwoo,
->>
->> On 13.03.2014 09:17, Chanwoo Choi wrote:
->>> This patch fix bug about resource leak when happening probe fail and code clean
->>> to add debug message.
->>>
->>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->>> ---
->>>    drivers/devfreq/exynos/exynos4_bus.c | 32 ++++++++++++++++++++++++++------
->>>    1 file changed, 26 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/drivers/devfreq/exynos/exynos4_bus.c b/drivers/devfreq/exynos/exynos4_bus.c
->>> index a2a3a47..152a3e9 100644
->>> --- a/drivers/devfreq/exynos/exynos4_bus.c
->>> +++ b/drivers/devfreq/exynos/exynos4_bus.c
->>> @@ -1152,8 +1152,11 @@ static int exynos4_busfreq_probe(struct platform_device *pdev)
->>>            dev_err(dev, "Cannot determine the device id %d\n", data->type);
->>>            err = -EINVAL;
->>>        }
->>> -    if (err)
->>> +    if (err) {
->>> +        dev_err(dev, "Cannot initialize busfreq table %d\n",
->>> +                 data->type);
->>>            return err;
->>> +    }
->>>
->>>        rcu_read_lock();
->>>        opp = dev_pm_opp_find_freq_floor(dev,
->>> @@ -1176,7 +1179,7 @@ static int exynos4_busfreq_probe(struct platform_device *pdev)
->>>        if (IS_ERR(data->devfreq)) {
->>>            dev_err(dev, "Failed to add devfreq device\n");
->>>            err = PTR_ERR(data->devfreq);
->>> -        goto err_opp;
->>> +        goto err_devfreq;
->>>        }
->>>
->>>        /*
->>> @@ -1185,18 +1188,35 @@ static int exynos4_busfreq_probe(struct platform_device *pdev)
->>>         */
->>>        busfreq_mon_reset(data);
->>>
->>> -    devfreq_register_opp_notifier(dev, data->devfreq);
->>> +    /* Register opp_notifier for Exynos4 busfreq */
->>> +    err = devfreq_register_opp_notifier(dev, data->devfreq);
->>> +    if (err < 0) {
->>> +        dev_err(dev, "Failed to register opp notifier\n");
->>> +        goto err_notifier_opp;
->>> +    }
->>>
->>> +    /* Register pm_notifier for Exynos4 busfreq */
->>>        err = register_pm_notifier(&data->pm_notifier);
->>>        if (err) {
->>>            dev_err(dev, "Failed to setup pm notifier\n");
->>> -        devfreq_remove_device(data->devfreq);
->>> -        return err;
->>> +        goto err_notifier_pm;
->>>        }
->>>
->>>        return 0;
->>>
->>> -err_opp:
->>> +err_notifier_pm:
->>> +    devfreq_unregister_opp_notifier(dev, data->devfreq);
->>> +err_notifier_opp:
->>> +    /*
->>> +     * The devfreq_remove_device() would execute finally devfreq->profile
->>> +     * ->exit(). To avoid duplicate resource free operation, return directly
->>> +     * before executing resource free below 'err_devfreq' goto statement.
->>> +     */
->>
->> I'm not quite sure about this. I believe that in this case devfreq->profile->exit() would be exynos4_bus_exit() and all it does is devfreq_unregister_opp_notifier(dev, data->devfreq), so all remaining resources (regulators, clocks, etc.) would get leaked.
->
-> This patch execute following sequence to probe exynos4_busfreq.c:
->
-> 1. Parse dt node to get resource(regulator/clock/memory address).
-> 2. Enable regulator/clock and map memory.
-> 3. Add devfreq device using devfreq_add_device().
->     The devfreq_add_device() return devfreq instance(data->devfreq).
-> 4. Register opp_notifier using devfreq instance(data->devfreq) which is created in sequence #3.
->
-> Case 1,
-> If an error happens in sequence #3 for registering devfreq_add_device(),
->
-> this case can't execute devfreq->profile->exit() to free resource
-> because this case has failed to register devfreq->profile to devfreq_list.
->
-> So, must goto 'err_devfreq' statement to free resource(regulator/clock/memory).
->
->
-> Case 2,
-> If an error happens in sequence #4 for registering opp_notifier,
->
-> In contrast
-> this case can execute devfreq->profile->exit() to free resource.
-> But, After executed devfreq->profile->exit(),
-> should not execute 'err_devfreq' statement to free resource.
-> In case, will operate twice of resource.
->
-> If my explanation is wrong, please reply your comment.
->
+On Monday 17 March 2014, Vinod Koul wrote:
+> On Sat, Mar 01, 2014 at 10:49:18AM +0800, Barry Song wrote:
+> > 2014-01-20 17:35 GMT+08:00 Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> > > 2014/1/20 Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>:
+> > >> On Wed, Jan 08, 2014 at 10:12:49PM +0800, Barry Song wrote:
+> > >>> From: Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
+> > >>>
+> > >>> move to support of_dma_request_slave_channel() and dma_request_slave_channel.
+> > >>> we add a xlate() to let dma clients be able to find right dma_chan by generic
+> > >>> "dmas" properties in dts.
+> > >>>
+> > >>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > >>> Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+> > >>> Signed-off-by: Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
+> > >> Look okay, need an ACk from DT maintainers before I can apply...
+> > 
+> > Hi Vinod,
+> > v5 is sent to devicetree list and there is no object.
+> > http://www.spinics.net/lists/devicetree/msg19677.html
+> > this patch is using general dt-binding for dma completely same with
+> > other dma drivers, there is no special binding here.
+> > so i think there is no reason to wait for merging since now updates
+> > for its clients e.g. SPI, UART have been in 3.14-rc.
+> I still need the ack for DT folks... Seems still missing :(
 
-OK, it will work indeed, however the code is barely readable with this.
+I thought I'd looked at it before.  The wording of the binding document
+could be clarified a little, but the binding itself is absolutely
+reasonable and the implementation looks correct. I would suggest you
+merge it as is.
 
-For consistency (and readability), resources acquired in platform 
-driver's .probe() should be freed in .remove() and error path of 
-.probe() should not rely on external code to do the clean-up.
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 
-So, as I proposed in my previous reply:
-
->>
->> I believe the correct thing to do would be to remove the .exit() callback from exynos4_devfreq_profile struct and handle all the clean-up here in error path.
->>
-
-Best regards,
-Tomasz
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
