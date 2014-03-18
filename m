@@ -1,76 +1,76 @@
-From: Michael Opdenacker <michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH] [RESEND] drivers: bus: omap_l3: remove deprecated IRQF_DISABLED
-Date: Tue, 18 Mar 2014 09:10:17 +0100
-Message-ID: <1395130217-17828-1-git-send-email-michael.opdenacker@free-electrons.com>
-References: <1393995663-2966-1-git-send-email-michael.opdenacker@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393995663-2966-1-git-send-email-michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Opdenacker <michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [PATCHv2 0/8] Doc/DT: DT bindings for various display components
+Date: Tue, 18 Mar 2014 10:15:39 +0200
+Message-ID: <1395130547-18633-1-git-send-email-tomi.valkeinen@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Daniel Vetter <daniel@ffwll.ch>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Sascha Hauer <s.hauer@pengutronix.de>, Tomasz Figa <tomasz.figa@gmail.com>, Archit Taneja <archit@ti.com>, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Rob Clark <robdclark@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch removes the use of the IRQF_DISABLED flag
-from drivers/bus/omap_l3_*
+Hi,
 
-It's a NOOP since 2.6.35 and it will be removed one day.
+This is v2 of the series adding DT bindings for various display components. The
+v1 can be found from [1].
 
-Signed-off-by: Michael Opdenacker <michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- drivers/bus/omap_l3_noc.c | 4 ++--
- drivers/bus/omap_l3_smx.c | 6 ++----
- 2 files changed, 4 insertions(+), 6 deletions(-)
+The changes for v2:
 
-diff --git a/drivers/bus/omap_l3_noc.c b/drivers/bus/omap_l3_noc.c
-index feeecae623f6..6ada27a911d1 100644
---- a/drivers/bus/omap_l3_noc.c
-+++ b/drivers/bus/omap_l3_noc.c
-@@ -187,7 +187,7 @@ static int omap4_l3_probe(struct platform_device *pdev)
- 	l3->debug_irq = platform_get_irq(pdev, 0);
- 	ret = request_irq(l3->debug_irq,
- 			l3_interrupt_handler,
--			IRQF_DISABLED, "l3-dbg-irq", l3);
-+			0, "l3-dbg-irq", l3);
- 	if (ret) {
- 		pr_crit("L3: request_irq failed to register for 0x%x\n",
- 						l3->debug_irq);
-@@ -197,7 +197,7 @@ static int omap4_l3_probe(struct platform_device *pdev)
- 	l3->app_irq = platform_get_irq(pdev, 1);
- 	ret = request_irq(l3->app_irq,
- 			l3_interrupt_handler,
--			IRQF_DISABLED, "l3-app-irq", l3);
-+			0, "l3-app-irq", l3);
- 	if (ret) {
- 		pr_crit("L3: request_irq failed to register for 0x%x\n",
- 						l3->app_irq);
-diff --git a/drivers/bus/omap_l3_smx.c b/drivers/bus/omap_l3_smx.c
-index acc216491b8a..769d64c0b0fe 100644
---- a/drivers/bus/omap_l3_smx.c
-+++ b/drivers/bus/omap_l3_smx.c
-@@ -238,8 +238,7 @@ static int __init omap3_l3_probe(struct platform_device *pdev)
- 
- 	l3->debug_irq = platform_get_irq(pdev, 0);
- 	ret = request_irq(l3->debug_irq, omap3_l3_app_irq,
--		IRQF_DISABLED | IRQF_TRIGGER_RISING,
--		"l3-debug-irq", l3);
-+		IRQF_TRIGGER_RISING, "l3-debug-irq", l3);
- 	if (ret) {
- 		dev_err(&pdev->dev, "couldn't request debug irq\n");
- 		goto err1;
-@@ -247,8 +246,7 @@ static int __init omap3_l3_probe(struct platform_device *pdev)
- 
- 	l3->app_irq = platform_get_irq(pdev, 1);
- 	ret = request_irq(l3->app_irq, omap3_l3_app_irq,
--		IRQF_DISABLED | IRQF_TRIGGER_RISING,
--		"l3-app-irq", l3);
-+		IRQF_TRIGGER_RISING, "l3-app-irq", l3);
- 	if (ret) {
- 		dev_err(&pdev->dev, "couldn't request app irq\n");
- 		goto err2;
+* abbreviated endpoint format dropped (nacked)
+* MIPI DPI panel dropped (missing backlight handling, delayed to 3.16)
+* dvi-connector: add properties for analog/digital/dual-link
+* hdmi-connector: add connector type
+* split 'gpios' property to named gpios
+* use 'clocks' properties for OMAP DSS components
+* removed 'simple-bus' from OMAP DSS Core's compatible strings
+
+[1] http://article.gmane.org/gmane.linux.drivers.devicetree/63885
+
+ Tomi
+
+Tomi Valkeinen (8):
+  Doc/DT: Add DT binding documentation for OMAP DSS
+  Doc/DT: Add DT binding documentation for Analog TV Connector
+  Doc/DT: Add DT binding documentation for DVI Connector
+  Doc/DT: Add DT binding documentation for HDMI Connector
+  Doc/DT: Add DT binding documentation for MIPI DSI CM Panel
+  Doc/DT: Add DT binding documentation for Sony acx565akm panel
+  Doc/DT: Add DT binding documentation for TFP410 encoder
+  Doc/DT: Add DT binding documentation for tpd12s015 encoder
+
+ .../bindings/video/analog-tv-connector.txt         |  25 +++
+ .../devicetree/bindings/video/dvi-connector.txt    |  35 ++++
+ .../devicetree/bindings/video/hdmi-connector.txt   |  28 +++
+ .../devicetree/bindings/video/panel-dsi-cm.txt     |  29 +++
+ .../devicetree/bindings/video/sony,acx565akm.txt   |  30 +++
+ .../devicetree/bindings/video/ti,omap-dss.txt      | 211 +++++++++++++++++++++
+ .../devicetree/bindings/video/ti,omap2-dss.txt     |  54 ++++++
+ .../devicetree/bindings/video/ti,omap3-dss.txt     |  83 ++++++++
+ .../devicetree/bindings/video/ti,omap4-dss.txt     | 111 +++++++++++
+ .../devicetree/bindings/video/ti,tfp410.txt        |  41 ++++
+ .../devicetree/bindings/video/ti,tpd12s015.txt     |  44 +++++
+ 11 files changed, 691 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/analog-tv-connector.txt
+ create mode 100644 Documentation/devicetree/bindings/video/dvi-connector.txt
+ create mode 100644 Documentation/devicetree/bindings/video/hdmi-connector.txt
+ create mode 100644 Documentation/devicetree/bindings/video/panel-dsi-cm.txt
+ create mode 100644 Documentation/devicetree/bindings/video/sony,acx565akm.txt
+ create mode 100644 Documentation/devicetree/bindings/video/ti,omap-dss.txt
+ create mode 100644 Documentation/devicetree/bindings/video/ti,omap2-dss.txt
+ create mode 100644 Documentation/devicetree/bindings/video/ti,omap3-dss.txt
+ create mode 100644 Documentation/devicetree/bindings/video/ti,omap4-dss.txt
+ create mode 100644 Documentation/devicetree/bindings/video/ti,tfp410.txt
+ create mode 100644 Documentation/devicetree/bindings/video/ti,tpd12s015.txt
+
 -- 
 1.8.3.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
