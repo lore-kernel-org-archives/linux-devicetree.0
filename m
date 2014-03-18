@@ -1,136 +1,76 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH V4 1/8] sxgbe: Add device-tree binding support document
-Date: Tue, 18 Mar 2014 09:18:53 +0000
-Message-ID: <20140318091852.GA8043@e106331-lin.cambridge.arm.com>
-References: <00f801cf4275$e7e2a1b0$b7a7e510$@samsung.com>
+From: "B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH 2/2] spi/fsl-lib: Get the SPI controller bus number from
+ DTS
+Date: Tue, 18 Mar 2014 09:34:46 +0000
+Message-ID: <01e4d20dc3d94e2f8f7252225932c774@DM2PR03MB301.namprd03.prod.outlook.com>
+References: <1394789757-40732-1-git-send-email-B48286@freescale.com>
+	<1394789757-40732-2-git-send-email-B48286@freescale.com>
+	<20140314191922.GA366@sirena.org.uk>
+	<c4b28b01b2f544ca9d264eaee2542257@DM2PR03MB301.namprd03.prod.outlook.com>
+	<20140317130109.GE11706@sirena.org.uk>
+	<9186860716f446f9a5773e7e47d39114@DM2PR03MB301.namprd03.prod.outlook.com>
+ <CAMuHMdWHSVPDZ9q9rw0FZqNrR+E0q9pQcYLRiseopoM-K-5svg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <00f801cf4275$e7e2a1b0$b7a7e510$@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Byungho An <bh74.an@samsung.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "ilho215.lee@samsung.com" <ilho215.lee@samsung.com>, "siva.kallam@samsung.com" <siva.kallam@samsung.com>, "vipul.pandya@samsung.com" <vipul.pandya@samsung.com>, "ks.giri@samsung.com" <ks.giri@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdWHSVPDZ9q9rw0FZqNrR+E0q9pQcYLRiseopoM-K-5svg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Geert Uytterhoeven' <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-As a general note it's helpful for devicetree to be Cc'd on the entire
-series (though the binding document should be a separate patch) as it
-provides useful context for reviewing the binding.
-
-On Tue, Mar 18, 2014 at 06:47:13AM +0000, Byungho An wrote:
-> From: Siva Reddy <siva.kallam@samsung.com>
-> 
-> This patch adds binding document for SXGBE ethernet driver via device-tree.
-> 
-> Signed-off-by: Siva Reddy Kallam <siva.kallam@samsung.com>
-> Signed-off-by: Byungho An <bh74.an@samsung.com>
-> ---
->  .../devicetree/bindings/net/samsung-sxgbe.txt      |   53
-> ++++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/samsung-sxgbe.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
-> b/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
-> new file mode 100644
-> index 0000000..ca27947
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
-> @@ -0,0 +1,53 @@
-> +* Samsung 10G Ethernet driver (SXGBE)
-> +
-> +Required properties:
-> +- compatible: Should be "samsung,sxgbe-v2.0a"
-> +- reg: Address and length of the register set for the device
-> +- interrupt-parent: Should be the phandle for the interrupt controller
-> +  that services interrupts for this device
-> +- interrupts: Should contain the SXGBE interrupts
-> +  These interrupts are ordered by fixed and follows variable
-> +  trasmit DMA interrupts, receive DMA interrupts and lpi interrupt.
-> +  index 0 - this is fixed common interrupt of SXGBE and it is always
-> +  available.
-> +  index 1 to 25 - 8 variable trasmit interrupts, variable 16 receive
-> interrupts
-> +  and 1 optional lpi interrupt.
-> +- phy-mode: String, operation mode of the PHY interface.
-> +  Supported values are: "xaui", "gmii".
-> +- samsung,pbl: Integer, Programmable Burst Length.
-> +  Supported values are 1, 2, 4, 8, 16, or 32.
-
-There's no need to abbreviate to "pbl".
-
-Is this a property of the hardware, or configuration that the kernel
-will program in? If the latter, why can the kernel not choose?
-
-> +- samsung,fixed-burst: Boolean, Program the DMA to use the fixed burst mode
-> +- samsung,burst-map: Integer, Program the possible bursts supported by sxgbe
-> +  This is an interger and represents allowable DMA bursts when fixed burst.
-> +  Allowable range is 0x00-0x3F. This field is valid only when fixed burst is
-> +  enabled, otherwise ignored.
-
-If that's the case, why not have just this property and have it imply
-the use of fixed burst mode?
-
-When is it necessary to use fixed burst mode?
-
-> +- samsung,adv-addr-mode: Boolean, Program the DMA to use Enhanced address
-> mode.
-
-When would this be selected, and why can the kernel not choose?
-
-> +- samsung,force_thresh_dma_mode: Boolean, Force DMA to use the threshold mode
-> +  for both tx and rx
-
-s/_/-/ in property names.
-
-Likewise, why can the kernel not choose.
-
-> +- samsung,force_sf_dma_mode: Boolean, Force DMA to use the Store and Forward
-> +  mode for both tx and rx. This flag is ignored if force_thresh_dma_mode is
-> set.
-
-Likewise for both points.
-
-> +- samsung,phy-addr: Integer, Address of the PHY attached with SXGBE.
-
-Some of these properties appear to be missing from the example. Are they
-required or optional?
-
-Thanks,
-Mark.
-
-> +
-> +Optional properties:
-> +- mac-address: 6 bytes, mac address
-> +
-> +Example:
-> +
-> +	aliases {
-> +		ethernet0 = <&sxgbe0>;
-> +	};
-> +
-> +	sxgbe0: ethernet@1a040000 {
-> +		compatible = "samsung,sxgbe-v2.0a";
-> +		reg = <0 0x1a040000 0 0x10000>;
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <0 209 4>, <0 185 4>, <0 186 4>, <0 187 4>,
-> +			     <0 188 4>, <0 189 4>, <0 190 4>, <0 191 4>,
-> +			     <0 192 4>, <0 193 4>, <0 194 4>, <0 195 4>,
-> +			     <0 196 4>, <0 197 4>, <0 198 4>, <0 199 4>,
-> +			     <0 200 4>, <0 201 4>, <0 202 4>, <0 203 4>,
-> +			     <0 204 4>, <0 205 4>, <0 206 4>, <0 207 4>,
-> +			     <0 208 4>, <0 210 4>;
-> +		mac-address = [000000000000]; /* Filled in by U-Boot */
-> +		phy-mode = "xaui";
-> +	};
-> -- 
-> 1.7.10.4
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogZ2VlcnQudXl0dGVyaG9l
+dmVuQGdtYWlsLmNvbSBbbWFpbHRvOmdlZXJ0LnV5dHRlcmhvZXZlbkBnbWFpbC5jb21dDQo+IE9u
+IEJlaGFsZiBPZiBHZWVydCBVeXR0ZXJob2V2ZW4NCj4gU2VudDogVHVlc2RheSwgTWFyY2ggMTgs
+IDIwMTQgNDo1NiBQTQ0KPiBUbzogSG91IFpoaXFpYW5nLUI0ODI4Ng0KPiBDYzogTWFyayBCcm93
+bjsgbGludXgtc3BpQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
+DQo+IHJvYi5oZXJyaW5nQGNhbHhlZGEuY29tOyBwYXdlbC5tb2xsQGFybS5jb207IG1hcmsucnV0
+bGFuZEBhcm0uY29tOw0KPiBpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51azsgZ2FsYWtAY29k
+ZWF1cm9yYS5vcmc7DQo+IGdyYW50Lmxpa2VseUBzZWNyZXRsYWIuY2E7IFdvb2QgU2NvdHQtQjA3
+NDIxOyBIdSBNaW5na2FpLUIyMTI4NA0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDIvMl0gc3BpL2Zz
+bC1saWI6IEdldCB0aGUgU1BJIGNvbnRyb2xsZXIgYnVzIG51bWJlcg0KPiBmcm9tIERUUw0KPiAN
+Cj4gT24gVHVlLCBNYXIgMTgsIDIwMTQgYXQgODo0MCBBTSwgQjQ4Mjg2QGZyZWVzY2FsZS5jb20N
+Cj4gPEI0ODI4NkBmcmVlc2NhbGUuY29tPiB3cm90ZToNCj4gPj4gPiA+IFRoZSBEVCBhbHJlYWR5
+IGhhcyBzdXBwb3J0IGZvciBzcGVjaWZ5aW5nIGZsYXNoIGxheW91dHMsIGNhbid0DQo+ID4+ID4g
+PiB0aG9zZSBiZSB1c2VkIChmb3IgZXhhbXBsZSB2aWEgY2hvc2VuIGlmIHRoZXkncmUgbm90IGZp
+eGVkIGZvciB0aGUNCj4gYm9hcmQpPw0KPiA+PiA+ID4gT3IgaWYgaXQncyBqdXN0IHBpY2tpbmcg
+dGhlIGNvcnJlY3QgZmlsZXN5c3RlbSB0aGVuIFVVSURzIGFuZA0KPiA+PiA+ID4gbGFiZWxzIGFy
+ZSB0aGUgc3RhbmRhcmQgd2F5IHRvIGRvIHRoaW5ncy4NCj4gPj4NCj4gPj4gPiBUaGUgRFQgc3Bl
+Y2lmeWluZyBmbGFzaCBsYXlvdXRzIGlzIG9rLiBUaGVyZSBpcyBhbm90aGVyIHdheSB0byBtYWtl
+DQo+ID4+ID4gdGhlIGZsYXNoIGxheW91dHMgdXNpbmcgY29tbWFuZCBsaW5lLCBidXQgaXQgaXMg
+bm90IHNhZmUgYmVjYXVzZSBvZg0KPiA+PiA+IHRoZSBkeW5hbWljIGJ1c19udW0uIEl0IGlzIG5v
+dCB0aGUgcmVhc29uIHRoYXQgdGhlIHdheSBvZiBEVCBpcw0KPiA+PiA+IHN1cHBvcnRlZCBmbGFz
+aCBsYXlvdXRzLCB0byBsaXZlIHRoZSBvdGhlciB3YXkgdW5zYWZlLCByaWdodD8NCj4gPj4NCj4g
+Pj4gVGhpcyBzb3VuZHMgdG8gbWUgbGlrZSB3ZSBuZWVkIGEgYmV0dGVyIHdheSBvZiB0YWxraW5n
+IGFib3V0IGZsYXNoDQo+ID4+IGRldmljZSBuYW1lcyBvbiB0aGUgTGludXggY29tbWFuZCBsaW5l
+IHJhdGhlciB0aGFuIGEgd2F5IHRvIGZpeCB0aGUNCj4gPj4gYnVzIG51bWJlciAtIGZvciBleGFt
+cGxlLCBiZWluZyBhYmxlIHRvIHJlZmVyIHRvIHRoZW0gdXNpbmcgYSBmaXhlZA0KPiA+PiBwcm9w
+ZXJ0eSBsaWtlIHRoZSBwaHlzaWNhbCBhZGRyZXNzLiAgQmVpbmcgYWJsZSB0byByZWZlciB0byBk
+ZXZpY2VzDQo+ID4+IHZpYSBhbiBhbGlhcyBhc3NpZ25lZCBpbiB0aGUgRFQgd291bGQgYWxzbyBi
+ZSB1c2VmdWwgKGFuZCBtb3JlDQo+ID4+IHJlYWRhYmxlKSwgSSB0aGluayB0aGVyZSBtYXkgYWxy
+ZWFkeSBiZSBhIG1lY2hhbmlzbSBmb3IgZG9pbmcgdGhhdA0KPiA+PiB3aGljaCB3b3VsZCBuZWVk
+IHRvIGJlIHBsdW1iZWQgaW4gYnV0IEknbSBub3QgMTAwJSBzdXJlLg0KPiA+DQo+ID4gVGhlIGJ1
+cyBudW1iZXIgaXMgdGhlIHZhcmlhYmxlIGRlc2lnbmVkIHRvIGRpc3Rpbmd1aXNoIG9uZSBzcGkN
+Cj4gPiBjb250cm9sbGVyIGZyb20gb3RoZXJzLiBXaHkgc3BpIGNvbnRyb2xsZXIncyBwaHlzaWNh
+bCBhZGRyZXNzIG11c3QgYmUNCj4gPiB1c2UgaW5zdGVhZCBvZiBidXMgbnVtYmVyPw0KPiANCj4g
+QmVjYXVzZSB0aGUgYnVzIG51bWJlciBpcyBkeW5hbWljLCB3aGlsZSB0aGUgcGh5c2ljYWwgYWRk
+cmVzcyBkb2Vzbid0DQo+IGNoYW5nZSwgc28gaXQgY2FuIGJlIHVzZWQgdG8gdW5pcWVseSBpZGVu
+dGlmeSB0aGUgZGV2aWNlIGJlZm9yZSBib290aW5nDQo+IHRoZSBrZXJuZWwuDQo+IENmci4gInNw
+aTEiIHZzLiAiZTZlMjAwMDAuc3BpIi4NCj4gDQoNClRoZSBwcmVjb25kaXRpb24gb2YgZHluYW1p
+YyBidXMgbnVtYmVyIGlzIGluaXRpYWwgaXQgd2l0aCAtMSBpbiB0aGUgY29udHJvbGxlcg0KZHJp
+dmVyLiBCdXQgbm93IEkgbmVlZCBhIHJlYXNvbmFibGUgYnVzIG51bWJlciwgSSBkb24ndCB3YW50
+IGEgZHluYW1pYyBvbmUuDQpXaHkgZG9lcyB1c2UgdGhlIGNvbnRyb2xsZXIncyBwaHlzaWNhbCBh
+ZGRyZXNzIHRvIHRha2UgdGhlIHJvbGUgb2YgYnVzIG51bWJlcg0KdG8gZGlzdGluZ3Vpc2ggY29u
+dHJvbGxlcnMuIA0KDQo+IEdye29ldGplLGVldGluZ31zLA0KPiANCj4gICAgICAgICAgICAgICAg
+ICAgICAgICAgR2VlcnQNCj4gDQo+IC0tDQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdz
+IGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGludXgtDQo+IG02OGsub3JnDQo+
+IA0KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBj
+YWxsIG15c2VsZiBhIGhhY2tlci4NCj4gQnV0IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlz
+dHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nDQo+IGxpa2UgdGhhdC4NCj4g
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0KPiANCg0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
