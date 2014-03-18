@@ -1,848 +1,1325 @@
-From: Kevin Tsai <ktsai@capellamicro.com>
-Subject: [PATCH V1 1/1] iio: add Capella cm3218x ambient light sensor driver.
-Date: Tue, 18 Mar 2014 14:51:06 -0700
-Message-ID: <1395179466-15821-1-git-send-email-ktsai@capellamicro.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Jonathan Cameron <jic23@kernel.org>, Grant Likely <grant.likely@linaro.org>, Peter Huewe <peter.huewe@infineon.com>, Arnaud Ebalard <arno@natisbad.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@linaro.org>, Kevin Tsai <ktsai@capellamicro.com>, Peter Meerwald <pmeerw@pmeerw.net>, Lars-Peter Clausen <lars@metafoo.de>, Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>, Jacek Anaszewski <j.anaszewski@samsung.com>, Beomho Seo <beomho.seo@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-iio@vger.kernel.org
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: [PATCH v3 2/7] OF: Introduce DT overlay support.
+Date: Tue, 18 Mar 2014 23:56:01 +0200
+Message-ID: <1395179766-31575-3-git-send-email-pantelis.antoniou@konsulko.com>
+References: <1395179766-31575-1-git-send-email-pantelis.antoniou@konsulko.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1395179766-31575-1-git-send-email-pantelis.antoniou@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 List-Id: devicetree@vger.kernel.org
 
-Add Capella Microsystem CM3218x family Ambient Light Sensor IIO driver.
-This driver will convert raw data to lux value.  Default parameters are
-for reference only.  It will detect ACPI table to load per-system manufacturing
-parameters.
+Introduce DT overlay support.
+Using this functionality it is possible to dynamically overlay a part of
+the kernel's tree with another tree that's been dynamically loaded.
+It is also possible to remove node and properties.
 
-Signed-off-by: Kevin Tsai <ktsai@capellamicro.com>
+The creation/destruction of the devices is handled by calling in to
+bus specific handlers which can deal with the peculiarities of each
+device.
+
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 ---
- .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
- drivers/iio/light/Kconfig                          |  11 +
- drivers/iio/light/Makefile                         |   1 +
- drivers/iio/light/cm3218x.c                        | 769 +++++++++++++++++++++
- 4 files changed, 782 insertions(+)
- create mode 100644 drivers/iio/light/cm3218x.c
+ Documentation/devicetree/overlay-notes.txt | 187 ++++++
+ drivers/of/Kconfig                         |  10 +
+ drivers/of/Makefile                        |   1 +
+ drivers/of/overlay.c                       | 895 +++++++++++++++++++++++++++++
+ include/linux/of.h                         | 153 +++++
+ 5 files changed, 1246 insertions(+)
+ create mode 100644 Documentation/devicetree/overlay-notes.txt
+ create mode 100644 drivers/of/overlay.c
 
-diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-index 1a1ac2e..29e7eae 100644
---- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-@@ -17,6 +17,7 @@ at,24c08		i2c serial eeprom  (24cxx)
- atmel,24c02		i2c serial eeprom  (24cxx)
- atmel,at97sc3204t	i2c trusted platform module (TPM)
- capella,cm32181		CM32181: Ambient Light Sensor
-+capella,cm3218x		CM3218x: Ambient Light Sensor
- catalyst,24c32		i2c serial eeprom
- dallas,ds1307		64 x 8, Serial, I2C Real-Time Clock
- dallas,ds1338		I2C RTC with 56-Byte NV RAM
-diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
-index d12b2a0..45a22a6 100644
---- a/drivers/iio/light/Kconfig
-+++ b/drivers/iio/light/Kconfig
-@@ -38,6 +38,17 @@ config CM32181
- 	 To compile this driver as a module, choose M here:
- 	 the module will be called cm32181.
- 
-+config CM3218X
-+	depends on I2C
-+	tristate "CM3218x driver"
-+	help
-+	 Say Y here if you use cm3218x.
-+	 This option enables ambient light sensor using
-+	 Capella cm3218x device driver.
-+
-+	 To compile this driver as a module, choose M here:
-+	 the module will be called cm3218x.
-+
- config CM36651
- 	depends on I2C
- 	tristate "CM36651 driver"
-diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
-index 60e35ac..a506c23 100644
---- a/drivers/iio/light/Makefile
-+++ b/drivers/iio/light/Makefile
-@@ -6,6 +6,7 @@
- obj-$(CONFIG_ADJD_S311)		+= adjd_s311.o
- obj-$(CONFIG_APDS9300)		+= apds9300.o
- obj-$(CONFIG_CM32181)		+= cm32181.o
-+obj-$(CONFIG_CM3218X)		+= cm3218x.o
- obj-$(CONFIG_CM36651)		+= cm36651.o
- obj-$(CONFIG_GP2AP020A00F)	+= gp2ap020a00f.o
- obj-$(CONFIG_HID_SENSOR_ALS)	+= hid-sensor-als.o
-diff --git a/drivers/iio/light/cm3218x.c b/drivers/iio/light/cm3218x.c
+diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentation/devicetree/overlay-notes.txt
 new file mode 100644
-index 0000000..e422f68
+index 0000000..882d512
 --- /dev/null
-+++ b/drivers/iio/light/cm3218x.c
-@@ -0,0 +1,769 @@
++++ b/Documentation/devicetree/overlay-notes.txt
+@@ -0,0 +1,187 @@
++Device Tree Overlay Notes
++-------------------------
++
++This document describes the implementation of the in-kernel
++device tree overlay functionality residing in drivers/of/overlay.c and is a
++companion document to Documentation/devicetree/dt-object-internal.txt[1] &
++Documentation/devicetree/dynamic-resolution-notes.txt[2]
++
++How overlays work
++-----------------
++
++A Device Tree's overlay purpose is to modify the kernel's live tree, and
++have the modification affecting the state of the the kernel in a way that
++is reflecting the changes.
++Since the kernel mainly deals with devices, any new device node that result
++in an active device should have it created while if the device node is either
++disabled or removed all together, the affected device should be deregistered.
++
++Lets take an example where we have a foo board with the following base tree
++which is taken from [1].
++
++---- foo.dts -----------------------------------------------------------------
++	/* FOO platform */
++	/ {
++		compatible = "corp,foo";
++
++		/* shared resources */
++		res: res {
++		};
++
++		/* On chip peripherals */
++		ocp: ocp {
++			/* peripherals that are always instantiated */
++			peripheral1 { ... };
++		}
++	};
++---- foo.dts -----------------------------------------------------------------
++
++The overlay bar.dts, when loaded (and resolved as described in [2]) should
++
++---- bar.dts -----------------------------------------------------------------
++/plugin/;	/* allow undefined label references and record them */
++/ {
++	....	/* various properties for loader use; i.e. part id etc. */
++	fragment@0 {
++		target = <&ocp>;
++		__overlay__ {
++			/* bar peripheral */
++			bar {
++				compatible = "corp,bar";
++				... /* various properties and child nodes */
++			}
++		};
++	};
++};
++---- bar.dts -----------------------------------------------------------------
++
++result in foo+bar.dts
++
++---- foo+bar.dts -------------------------------------------------------------
++	/* FOO platform + bar peripheral */
++	/ {
++		compatible = "corp,foo";
++
++		/* shared resources */
++		res: res {
++		};
++
++		/* On chip peripherals */
++		ocp: ocp {
++			/* peripherals that are always instantiated */
++			peripheral1 { ... };
++
++			/* bar peripheral */
++			bar {
++				compatible = "corp,bar";
++				... /* various properties and child nodes */
++			}
++		}
++	};
++---- foo+bar.dts -------------------------------------------------------------
++
++As a result of the the overlay, a new device node (bar) has been created
++so a bar platform device will be registered and if a matching device driver
++is loaded the device will be created as expected.
++
++Overlay in-kernel API
++---------------------
++
++The steps typically required to get an overlay to work are as follows:
++
++1. Use of_build_overlay_info() to create an array of initialized and
++ready to use of_overlay_info structures.
++2. Call of_overlay() to apply the overlays declared in the array.
++3. If the overlay needs to be removed, call of_overlay_revert().
++4. Finally release the memory taken by the overlay info array by
++of_free_overlay_info().
++
++/**
++ * of_build_overlay_info	- Build an overlay info array
++ * @tree:	Device node containing all the overlays
++ * @cntp:	Pointer to where the overlay info count will be help
++ * @ovinfop:	Pointer to the pointer of an overlay info structure.
++ *
++ * Helper function that given a tree containing overlay information,
++ * allocates and builds an overlay info array containing it, ready
++ * for use using of_overlay.
++ *
++ * Returns 0 on success with the @cntp @ovinfop pointers valid,
++ * while on error a negative error value is returned.
++ */
++int of_build_overlay_info(struct device_node *tree,
++		int *cntp, struct of_overlay_info **ovinfop);
++
++/**
++ * of_free_overlay_info	- Free an overlay info array
++ * @count:	Number of of_overlay_info's
++ * @ovinfo_tab:	Array of overlay_info's to free
++ *
++ * Releases the memory of a previously allocate ovinfo array
++ * by of_build_overlay_info.
++ * Returns 0, or an error if the arguments are bogus.
++ */
++int of_free_overlay_info(int count, struct of_overlay_info *ovinfo_tab);
++
++/**
++ * of_overlay	- Apply @count overlays pointed at by @ovinfo_tab
++ * @count:	Number of of_overlay_info's
++ * @ovinfo_tab:	Array of overlay_info's to apply
++ *
++ * Applies the overlays given, while handling all error conditions
++ * appropriately. Either the operation succeeds, or if it fails the
++ * live tree is reverted to the state before the attempt.
++ * Returns 0, or an error if the overlay attempt failed.
++ */
++int of_overlay(int count, struct of_overlay_info *ovinfo_tab);
++
++/**
++ * of_overlay_revert	- Revert a previously applied overlay
++ * @count:	Number of of_overlay_info's
++ * @ovinfo_tab:	Array of overlay_info's to apply
++ *
++ * Revert a previous overlay. The state of the live tree
++ * is reverted to the one before the overlay.
++ * Returns 0, or an error if the overlay table is not given.
++ */
++int of_overlay_revert(int count, struct of_overlay_info *ovinfo_tab);
++
++Overlay DTS Format
++------------------
++
++The DTS of an overlay should have the following format:
++
++{
++	/* ignored properties by the overlay */
++
++	fragment@0 {	/* first child node */
++
++		target=<phandle>;	/* phandle target of the overlay */
++	or
++		target-path="/path";	/* target path of the overlay */
++	or
++		target-alias="alias";	/* target alias of the overlay */
++		__overlay__ {
++			property-a;	/* add property-a to the target */
++			-property-b;	/* remove property-b from target */
++			node-a {	/* add to an existing, or create a node-a */
++				...
++			};
++			-node-b {	/* remove an existing node-b */
++				...
++			};
++		};
++	}
++	fragment@1 {	/* second child node */
++		...
++	};
++	/* more fragments follow */
++}
++
++It should be noted that the DT overlay format described is the one expected
++by the of_build_overlay_info() function, which is a helper function. There
++is nothing stopping someone coming up with his own DTS format and that will
++end up filling in the fields of the of_overlay_info array.
++
++Using the non-phandle based target method allows one to use a base DT which does
++not contain a __symbols__ now, i.e. it was not compiled with the -@ option.
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index 33a8fef..7517be2 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -86,4 +86,14 @@ config OF_RESOLVE
+ 	  Enable OF dynamic resolution support. This allows you to
+ 	  load Device Tree object fragments are run time.
+ 
++config OF_OVERLAY
++	bool "OF overlay support"
++	depends on OF
++	select OF_DYNAMIC
++	select OF_DEVICE
++	select OF_RESOLVE
++	help
++	  OpenFirmware overlay support. Allows you to modify on runtime the
++	  live tree using overlays.
++
+ endmenu # OF
+diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+index c241e79..d2a6e0d 100644
+--- a/drivers/of/Makefile
++++ b/drivers/of/Makefile
+@@ -11,3 +11,4 @@ obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+ obj-$(CONFIG_OF_MTD)	+= of_mtd.o
+ obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
+ obj-$(CONFIG_OF_RESOLVE)  += resolver.o
++obj-$(CONFIG_OF_OVERLAY) += overlay.o
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+new file mode 100644
+index 0000000..2179b9f
+--- /dev/null
++++ b/drivers/of/overlay.c
+@@ -0,0 +1,895 @@
 +/*
-+ * Copyright (C) 2014 Capella Microsystems Inc.
-+ * Author: Kevin Tsai <ktsai@capellamicro.com>
++ * Functions for working with device tree overlays
 + *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2, as published
-+ * by the Free Software Foundation.
++ * Copyright (C) 2012 Pantelis Antoniou <panto@antoniou-consulting.com>
++ * Copyright (C) 2012 Texas Instruments Inc.
 + *
-+ * Special thanks Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-+ * help to add ACPI support.
-+ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * version 2 as published by the Free Software Foundation.
 + */
-+
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/mutex.h>
++#undef DEBUG
++#include <linux/kernel.h>
 +#include <linux/module.h>
-+#include <linux/interrupt.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+#include <linux/iio/events.h>
-+#include <linux/init.h>
-+#include <linux/acpi.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/string.h>
++#include <linux/ctype.h>
++#include <linux/errno.h>
++#include <linux/string.h>
++#include <linux/slab.h>
++#include <linux/err.h>
 +
-+/* Registers Address */
-+#define CM3218x_REG_ADDR_CMD		0x00
-+#define	CM3218x_REG_ADDR_WH		0x01
-+#define	CM3218x_REG_ADDR_WL		0x02
-+#define	CM3218x_REG_ADDR_TEST		0x03
-+#define CM3218x_REG_ADDR_ALS		0x04
-+#define CM3218x_REG_ADDR_STATUS		0x06
-+#define CM3218x_REG_ADDR_ID		0x07
++/* protect the handlers list */
++static DEFINE_MUTEX(of_handler_mutex);
++static struct list_head of_handler_list = LIST_HEAD_INIT(of_handler_list);
 +
-+/* Number of Configurable Registers */
-+#define CM3218x_CONF_REG_NUM		16
-+
-+/* CMD register */
-+#define CM3218x_CMD_ALS_DISABLE		0x01
-+#define CM3218x_CMD_ALS_INT_EN		0x02
-+#define	CM3218x_CMD_ALS_THRES_WINDOW	0x04
-+
-+#define	CM3218x_CMD_ALS_PERS_SHIFT	4
-+#define	CM3218x_CMD_ALS_PERS_MASK	(0x03 << CM3218x_CMD_ALS_PERS_SHIFT)
-+#define	CM3218x_CMD_ALS_PERS_DEFAULT	(0x01 << CM3218x_CMD_ALS_PERS_SHIFT)
-+
-+#define CM3218x_CMD_ALS_IT_SHIFT	6
-+#define CM3218x_CMD_ALS_IT_MASK		(0x0F << CM3218x_CMD_ALS_IT_SHIFT)
-+#define CM3218x_CMD_ALS_IT_DEFAULT	(0x01 << CM3218x_CMD_ALS_IT_SHIFT)
-+
-+#define CM3218x_CMD_ALS_HS_SHIFT	11
-+#define CM3218x_CMD_ALS_HS_MASK		(0x01 << CM3218x_CMD_ALS_HS_SHIFT)
-+#define CM3218x_CMD_ALS_HS_DEFAULT	(0x00 << CM3218x_CMD_ALS_HS_SHIFT)
-+
-+#define	CM3218x_CMD_DEFAULT		(CM3218x_CMD_ALS_THRES_WINDOW |\
-+					CM3218x_CMD_ALS_PERS_DEFAULT |\
-+					CM3218x_CMD_ALS_IT_DEFAULT |\
-+					CM3218x_CMD_ALS_HS_DEFAULT)
-+
-+#define	CM3218x_WH_DEFAULT		0xFFFF
-+#define	CM3218x_WL_DEFAULT		0x0000
-+
-+#define CM3218x_CALIBSCALE_DEFAULT	100000
-+#define CM3218x_CALIBSCALE_RESOLUTION	100000
-+#define MLUX_PER_LUX			1000
-+#define CM3218x_THRESHOLD_PERCENT	10	/* 10 percent */
-+
-+/* CM3218 Family */
-+#define CM3218_MLUX_PER_BIT_DEFAULT	5	/* Depend on system */
-+#define CM3218_MLUX_PER_BIT_BASE_IT	800000
-+static int CM3218_als_it_bits[] = {0, 1, 2, 3};
-+static int CM3218_als_it_values[] = {100000, 200000, 400000, 800000};
-+
-+/* CM32181 Family */
-+#define CM32181_MLUX_PER_BIT_DEFAULT	5
-+#define CM32181_MLUX_PER_BIT_BASE_IT	800000
-+static int CM32181_als_it_bits[] = {12, 8, 0, 1, 2, 3};
-+static int CM32181_als_it_values[] = {
-+			25000, 50000, 100000, 200000, 400000, 800000};
-+
-+/* CM32182 Family */
-+#define CM32182_MLUX_PER_BIT_DEFAULT	5
-+#define CM32182_MLUX_PER_BIT_BASE_IT	800000
-+static int CM32182_als_it_bits[] = {12, 8, 0, 1, 2, 3};
-+static int CM32182_als_it_values[] = {
-+			25000, 50000, 100000, 200000, 400000, 800000};
-+
-+struct cmdev {
-+	u32 family_id;
-+	int int_type;
-+#define	INT_TYPE_SMBUS			0
-+#define	INT_TYPE_I2C			1
-+	int regs_bmp;
-+	int calibscale;
-+	int mlux_per_bit;
-+	int mlux_per_bit_base_it;
-+	int *als_it_bits;
-+	int *als_it_values;
-+	int num_als_it;
-+};
-+
-+static struct cmdev cm3218 = {
-+	3218, INT_TYPE_SMBUS, 0x0F, CM3218x_CALIBSCALE_DEFAULT,
-+	CM3218_MLUX_PER_BIT_DEFAULT, CM3218_MLUX_PER_BIT_BASE_IT,
-+	CM3218_als_it_bits, CM3218_als_it_values,
-+	ARRAY_SIZE(CM3218_als_it_bits)};
-+
-+static struct cmdev cm32181 = {
-+	32181, INT_TYPE_I2C, 0x0F, CM3218x_CALIBSCALE_DEFAULT,
-+	CM32181_MLUX_PER_BIT_DEFAULT, CM32181_MLUX_PER_BIT_BASE_IT,
-+	CM32181_als_it_bits, CM32181_als_it_values,
-+	ARRAY_SIZE(CM32181_als_it_bits)};
-+
-+static struct cmdev cm32182 = {
-+	32182, INT_TYPE_I2C, 0x0F, CM3218x_CALIBSCALE_DEFAULT,
-+	CM32182_MLUX_PER_BIT_DEFAULT, CM32182_MLUX_PER_BIT_BASE_IT,
-+	CM32182_als_it_bits, CM32182_als_it_values,
-+	ARRAY_SIZE(CM32182_als_it_bits)};
-+
-+struct cm3218x_chip {
-+	struct i2c_client *client;
-+	struct cmdev *cmdev;
-+	struct mutex lock;
-+	u16 conf_regs[CM3218x_CONF_REG_NUM];
-+	int als_raw;
-+};
-+
-+static int cm3218x_get_lux(struct cm3218x_chip *chip);
-+static int cm3218x_threshold_update(struct cm3218x_chip *chip, int percent);
-+static int cm3218x_read_als_it(struct cm3218x_chip *chip, int *val2);
-+
-+/**
-+ * cm3218x_read_ara() - Read ARA register
-+ * @cm3218x:	pointer of struct cm3218x.
-+ *
-+ * Following SMBus protocol, ARA register is available only when interrupt
-+ * event happened.  Read it to clean interrupt event.  Otherwise, other
-+ * device address/registers will be blocked during interrupt event.
-+ *
-+ * Return: 0 for success; otherwise for error code.
-+ */
-+static int cm3218x_read_ara(struct cm3218x_chip *chip)
++int of_overlay_handler_register(struct of_overlay_handler *handler)
 +{
-+	struct i2c_client *client = chip->client;
-+	int status;
-+	unsigned short addr;
++	/* guard against bad data */
++	if (!handler || !handler->name || !handler->ops ||
++		!handler->ops->create || !handler->ops->remove)
++		return -EINVAL;
 +
-+	addr = client->addr;
-+	client->addr = 0x0C;
-+	status = i2c_smbus_read_byte(client);
-+	client->addr = addr;
-+
-+	if (status < 0)
-+		return -ENODEV;
-+
-+	return status;
-+}
-+
-+/**
-+ * cm3218x_interrupt_config() - Enable/Disable CM3218x interrupt
-+ * @cm3218x:	pointer of struct cm3218x.
-+ * @enable:	0 to disable; otherwise to enable
-+ *
-+ * Config CM3218x interrupt control bit.
-+ *
-+ * Return: 0 for success; otherwise for error code.
-+ */
-+static int cm3218x_interrupt_config(struct cm3218x_chip *chip, int enable)
-+{
-+	struct i2c_client *client = chip->client;
-+	struct cmdev *cmdev = chip->cmdev;
-+	int status;
-+
-+	if (!cmdev)
-+		return -ENODEV;
-+
-+	/* Force to clean interrupt */
-+	if (cmdev->int_type == INT_TYPE_I2C) {
-+		status = i2c_smbus_read_word_data(client,
-+				CM3218x_REG_ADDR_STATUS);
-+		if (status < 0)
-+			cmdev->int_type = INT_TYPE_SMBUS;
-+	}
-+	if (cmdev->int_type == INT_TYPE_SMBUS)
-+		cm3218x_read_ara(chip);
-+
-+	if (enable)
-+		chip->conf_regs[CM3218x_REG_ADDR_CMD] |=
-+			CM3218x_CMD_ALS_INT_EN;
-+	else
-+		chip->conf_regs[CM3218x_REG_ADDR_CMD] &=
-+			~CM3218x_CMD_ALS_INT_EN;
-+
-+	status = i2c_smbus_write_word_data(client, CM3218x_REG_ADDR_CMD,
-+		chip->conf_regs[CM3218x_REG_ADDR_CMD]);
-+
-+	if (status < 0)
-+		return -ENODEV;
-+
-+	return status;
-+}
-+
-+/**
-+ * cm3218x_acpi_get_cpm_info() - Get CPM object from ACPI
-+ * @client	pointer of struct i2c_client.
-+ * @obj_name	pointer of ACPI object name.
-+ * @count	maximum size of return array.
-+ * @vals	pointer of array for return elements.
-+ *
-+ * Convert ACPI CPM table to array. Special thanks Srinivas Pandruvada's
-+ * help to implement this routine.
-+ *
-+ * Return: -ENODEV for fail.  Otherwise is number of elements.
-+ */
-+static int cm3218x_acpi_get_cpm_info(struct i2c_client *client, char *obj_name,
-+							int count, u64 *vals)
-+{
-+	acpi_handle handle;
-+	struct acpi_buffer buffer = {ACPI_ALLOCATE_BUFFER, NULL};
-+	int i;
-+	acpi_status status;
-+	union acpi_object *cpm = NULL;
-+
-+	handle = ACPI_HANDLE(&client->dev);
-+	if (!handle)
-+		return -ENODEV;
-+
-+	status = acpi_evaluate_object(handle, obj_name, NULL, &buffer);
-+	if (ACPI_FAILURE(status)) {
-+		dev_err(&client->dev, "object %s not found\n", obj_name);
-+		return -ENODEV;
-+	}
-+
-+	cpm = buffer.pointer;
-+	for (i = 0; i < cpm->package.count && i < count; ++i) {
-+		union acpi_object *elem;
-+		elem = &(cpm->package.elements[i]);
-+		vals[i] = elem->integer.value;
-+	}
-+
-+	kfree(buffer.pointer);
-+
-+	return cpm->package.count;
-+}
-+
-+/**
-+ * cm3218x_reg_init() - Initialize CM3218x registers
-+ * @cm3218x:	pointer of struct cm3218x.
-+ *
-+ * Initialize CM3218x ambient light sensor register to default values.
-+ *
-+  Return: 0 for success; otherwise for error code.
-+ */
-+static int cm3218x_reg_init(struct cm3218x_chip *chip)
-+{
-+	struct i2c_client *client = chip->client;
-+	int i;
-+	s32 ret;
-+	int cpm_elem_count;
-+	u64 cpm_elems[20];
-+	struct cmdev *cmdev;
-+
-+	/* Default device */
-+	chip->cmdev = &cm3218;
-+	chip->conf_regs[CM3218x_REG_ADDR_CMD] = CM3218x_CMD_DEFAULT;
-+	chip->conf_regs[CM3218x_REG_ADDR_WH] = CM3218x_WH_DEFAULT;
-+	chip->conf_regs[CM3218x_REG_ADDR_WL] = CM3218x_WL_DEFAULT;
-+
-+	/* Disable interrupt */
-+	cm3218x_interrupt_config(chip, 0);
-+
-+	/* Disable Test Mode */
-+	i2c_smbus_write_word_data(client, CM3218x_REG_ADDR_TEST, 0x0000);
-+
-+	/* Disable device */
-+	i2c_smbus_write_word_data(client, CM3218x_REG_ADDR_CMD,
-+		CM3218x_CMD_ALS_DISABLE);
-+
-+	/* Identify device */
-+	ret = i2c_smbus_read_word_data(client, CM3218x_REG_ADDR_ID);
-+	if (ret < 0)
-+		return ret;
-+	switch (ret & 0xFF) {
-+	case 0x18:
-+		cmdev = chip->cmdev = &cm3218;
-+		if (ret & 0x0800)
-+			cmdev->int_type = INT_TYPE_I2C;
-+		else
-+			cmdev->int_type = INT_TYPE_SMBUS;
-+		break;
-+	case 0x81:
-+		cmdev = chip->cmdev = &cm32181;
-+		break;
-+	case 0x82:
-+		cmdev = chip->cmdev = &cm32182;
-+		break;
-+	default:
-+		return -ENODEV;
-+	}
-+
-+	if (ACPI_HANDLE(&client->dev)) {
-+		/* Load from ACPI */
-+		cpm_elem_count = cm3218x_acpi_get_cpm_info(client, "CPM0",
-+							ARRAY_SIZE(cpm_elems),
-+							cpm_elems);
-+		if (cpm_elem_count > 0) {
-+			int header_num = 3;
-+			int reg_num = cpm_elem_count - header_num;
-+
-+			cmdev->regs_bmp = cpm_elems[2];
-+			for (i = 0; i < reg_num; i++)
-+				if (cmdev->regs_bmp & (1<<i))
-+					chip->conf_regs[i] =
-+						cpm_elems[header_num+i];
-+		}
-+
-+		cpm_elem_count = cm3218x_acpi_get_cpm_info(client, "CPM1",
-+							ARRAY_SIZE(cpm_elems),
-+							cpm_elems);
-+		if (cpm_elem_count > 0) {
-+			cmdev->mlux_per_bit = (int)cpm_elems[0] / 100;
-+			cmdev->calibscale = (int)cpm_elems[1];
-+		}
-+	}
-+
-+	/* Force to disable interrupt */
-+	chip->conf_regs[CM3218x_REG_ADDR_CMD] &= ~CM3218x_CMD_ALS_INT_EN;
-+
-+	/* Initialize registers*/
-+	for (i = 0; i < CM3218x_CONF_REG_NUM; i++) {
-+		if (cmdev->regs_bmp & (1<<i)) {
-+			ret = i2c_smbus_write_word_data(client, i,
-+						chip->conf_regs[i]);
-+			if (ret < 0)
-+				return ret;
-+		}
-+	}
++	mutex_lock(&of_handler_mutex);
++	list_add_tail(&handler->list, &of_handler_list);
++	mutex_unlock(&of_handler_mutex);
 +
 +	return 0;
 +}
++EXPORT_SYMBOL_GPL(of_overlay_handler_register);
 +
-+/**
-+ *  cm3218x_read_als_it() - Get sensor integration time (ms)
-+ *  @cm3218x:	pointer of struct cm3218x
-+ *  @val2:	pointer of int to load the als_it value.
-+ *
-+ *  Report the current integartion time by millisecond.
-+ *
-+ *  Return: IIO_VAL_INT_PLUS_MICRO for success, otherwise -EINVAL.
-+ */
-+static int cm3218x_read_als_it(struct cm3218x_chip *chip, int *val2)
++void of_overlay_handler_unregister(struct of_overlay_handler *handler)
 +{
-+	struct cmdev *cmdev = chip->cmdev;
-+	u16 als_it;
-+	int i;
++	struct of_overlay_handler *curr;
 +
-+	als_it = chip->conf_regs[CM3218x_REG_ADDR_CMD];
-+	als_it &= CM3218x_CMD_ALS_IT_MASK;
-+	als_it >>= CM3218x_CMD_ALS_IT_SHIFT;
-+	for (i = 0; i < cmdev->num_als_it; i++) {
-+		if (als_it == cmdev->als_it_bits[i]) {
-+			*val2 = cmdev->als_it_values[i];
-+			return IIO_VAL_INT_PLUS_MICRO;
++	mutex_lock(&of_handler_mutex);
++	list_for_each_entry(curr, &of_handler_list, list) {
++		if (handler == curr) {
++			list_del(&handler->list);
++			break;
 +		}
 +	}
++	mutex_unlock(&of_handler_mutex);
++}
++EXPORT_SYMBOL_GPL(of_overlay_handler_unregister);
 +
-+	return -EINVAL;
++static int handler_create(struct of_overlay_device_entry *entry, int revert)
++{
++	struct of_overlay_handler *handler;
++	int ret;
++
++	mutex_lock(&of_handler_mutex);
++	list_for_each_entry(handler, &of_handler_list, list) {
++		ret = (*handler->ops->create)(entry, revert);
++		/* ENOTSUPP means try next */
++		if (ret == -ENOTSUPP)
++			continue;
++		/* anything else means something happened */
++		break;
++	}
++	mutex_unlock(&of_handler_mutex);
++
++	return ret;
 +}
 +
-+/**
-+ * cm3218x_write_als_it() - Write sensor integration time
-+ * @cm3218x:	pointer of struct cm3218x.
-+ * @val:	integration time by millisecond.
-+ *
-+ * Convert integration time (ms) to sensor value.
-+ *
-+ * Return: i2c_smbus_write_word_data command return value.
-+ */
-+static int cm3218x_write_als_it(struct cm3218x_chip *chip, int val)
++static int handler_remove(struct of_overlay_device_entry *entry, int revert)
 +{
-+	struct i2c_client *client = chip->client;
-+	struct cmdev *cmdev = chip->cmdev;
-+	u16 als_it;
-+	int ret, i;
++	struct of_overlay_handler *handler;
++	int ret;
 +
-+	for (i = 0; i < cmdev->num_als_it; i++)
-+		if (val <= cmdev->als_it_values[i])
-+			break;
-+	if (i >= cmdev->num_als_it)
-+		i = cmdev->num_als_it - 1;
-+
-+	als_it = cmdev->als_it_bits[i];
-+	als_it <<= CM3218x_CMD_ALS_IT_SHIFT;
-+
-+	mutex_lock(&chip->lock);
-+	chip->conf_regs[CM3218x_REG_ADDR_CMD] &=
-+			~CM3218x_CMD_ALS_IT_MASK;
-+	chip->conf_regs[CM3218x_REG_ADDR_CMD] |=
-+			als_it;
-+	ret = i2c_smbus_write_word_data(client, CM3218x_REG_ADDR_CMD,
-+			chip->conf_regs[CM3218x_REG_ADDR_CMD]);
-+	mutex_unlock(&chip->lock);
++	mutex_lock(&of_handler_mutex);
++	list_for_each_entry(handler, &of_handler_list, list) {
++		ret = (*handler->ops->remove)(entry, revert);
++		/* ENOTSUPP means try next */
++		if (ret == -ENOTSUPP)
++			continue;
++		/* anything else means something happened */
++		break;
++	}
++	mutex_unlock(&of_handler_mutex);
 +
 +	return ret;
 +}
 +
 +/**
-+ * cm3218x_get_lux() - report current lux value
-+ * @cm3218x:	pointer of struct cm3218x.
++ * Apply a single overlay node recursively.
 + *
-+ * Convert sensor raw data to lux.  It depends on integration
-+ * time and claibscale variable.
++ * Property or node names that start with '-' signal that
++ * the property/node is to be removed.
 + *
-+ * Return: Positive value is lux, otherwise is error code.
++ * All the property notifiers are appropriately called.
++ * Note that the in case of an error the target node is left
++ * in a inconsistent state. Error recovery should be performed
++ * by recording the modification using the of notifiers.
 + */
-+static int cm3218x_get_lux(struct cm3218x_chip *chip)
++static int of_overlay_apply_one(struct device_node *target,
++		const struct device_node *overlay)
 +{
-+	struct i2c_client *client = chip->client;
-+	struct cmdev *cmdev = chip->cmdev;
++	const char *pname, *cname;
++	struct device_node *child, *tchild;
++	struct property *prop, *propn, *tprop;
++	int remove;
++	char *full_name;
++	const char *suffix;
 +	int ret;
-+	int als_it;
-+	int lux;
-+	u64 tmp;
 +
-+	/* Calculate mlux per bit based on als_it */
-+	ret = cm3218x_read_als_it(chip, &als_it);
-+	if (ret < 0)
++	/* sanity checks */
++	if (target == NULL || overlay == NULL)
 +		return -EINVAL;
-+	tmp = (__force u64)cmdev->mlux_per_bit;
-+	tmp *= cmdev->mlux_per_bit_base_it;
-+	tmp = div_u64(tmp, als_it);
 +
-+	/* Get als_raw */
-+	if (!(chip->conf_regs[CM3218x_REG_ADDR_CMD] & CM3218x_CMD_ALS_INT_EN))
-+		chip->als_raw = i2c_smbus_read_word_data(
-+					client,
-+					CM3218x_REG_ADDR_ALS);
-+	if (chip->als_raw < 0)
-+		return chip->als_raw;
++	for_each_property_of_node(overlay, prop) {
 +
-+	tmp *= chip->als_raw;
-+	tmp *= cmdev->calibscale;
-+	tmp = div_u64(tmp, CM3218x_CALIBSCALE_RESOLUTION);
-+	tmp = div_u64(tmp, MLUX_PER_LUX);
++		/* don't touch, 'name' */
++		if (of_prop_cmp(prop->name, "name") == 0)
++			continue;
 +
-+	if (tmp > 0xFFFF)
-+		tmp = 0xFFFF;
++		/* default is add */
++		remove = 0;
++		pname = prop->name;
++		if (*pname == '-') {	/* skip, - notes removal */
++			pname++;
++			remove = 1;
++			propn = NULL;
++		} else {
++			propn = __of_copy_property(prop, GFP_KERNEL,
++					OF_PROP_ALLOCALL);
++			if (propn == NULL)
++				return -ENOMEM;
++		}
 +
-+	lux = (int)tmp;
-+	return lux;
-+}
++		tprop = of_find_property(target, pname, NULL);
 +
-+static int cm3218x_read_raw(struct iio_dev *indio_dev,
-+			struct iio_chan_spec const *chan,
-+			int *val, int *val2, long mask)
-+{
-+	struct cm3218x_chip *chip = iio_priv(indio_dev);
-+	struct cmdev *cmdev = chip->cmdev;
-+	int ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_PROCESSED:
-+		ret = cm3218x_get_lux(chip);
-+		if (ret < 0)
++		/* found? */
++		if (tprop != NULL) {
++			if (propn != NULL)
++				ret = of_update_property(target, propn);
++			else
++				ret = of_remove_property(target, tprop);
++		} else {
++			if (propn != NULL)
++				ret = of_add_property(target, propn);
++			else
++				ret = 0;
++		}
++		if (ret != 0)
 +			return ret;
-+		*val = ret;
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_CALIBSCALE:
-+		*val = cmdev->calibscale;
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_INT_TIME:
-+		*val = 0;
-+		ret = cm3218x_read_als_it(chip, val2);
-+		return ret;
 +	}
 +
-+	return -EINVAL;
-+}
++	__for_each_child_of_node(overlay, child) {
 +
-+static int cm3218x_write_raw(struct iio_dev *indio_dev,
-+			struct iio_chan_spec const *chan,
-+			int val, int val2, long mask)
-+{
-+	struct cm3218x_chip *chip = iio_priv(indio_dev);
-+	struct cmdev *cmdev = chip->cmdev;
-+	int ret;
++		/* default is add */
++		remove = 0;
++		cname = child->name;
++		if (*cname == '-') {	/* skip, - notes removal */
++			cname++;
++			remove = 1;
++		}
 +
-+	switch (mask) {
-+	case IIO_CHAN_INFO_CALIBSCALE:
-+		cmdev->calibscale = val;
-+		return val;
-+	case IIO_CHAN_INFO_INT_TIME:
-+		ret = cm3218x_write_als_it(chip, val2);
-+		return ret;
++		/* special case for nodes with a suffix */
++		suffix = strrchr(child->full_name, '@');
++		if (suffix != NULL) {
++			cname = kbasename(child->full_name);
++			WARN_ON(cname == NULL);	/* sanity check */
++			if (cname == NULL)
++				continue;
++			if (*cname == '-')
++				cname++;
++		}
++
++		tchild = of_get_child_by_name(target, cname);
++		if (tchild != NULL) {
++
++			if (!remove) {
++
++				/* apply overlay recursively */
++				ret = of_overlay_apply_one(tchild, child);
++				of_node_put(tchild);
++
++				if (ret != 0)
++					return ret;
++
++			} else {
++
++				ret = of_detach_node(tchild);
++				of_node_put(tchild);
++			}
++
++		} else {
++
++			if (!remove) {
++				full_name = kasprintf(GFP_KERNEL, "%s/%s",
++						target->full_name, cname);
++				if (full_name == NULL)
++					return -ENOMEM;
++
++				/* create empty tree as a target */
++				tchild = __of_create_empty_node(cname,
++						child->type, full_name,
++						child->phandle, GFP_KERNEL,
++						OF_NODE_ALLOCALL);
++
++				/* free either way */
++				kfree(full_name);
++
++				if (tchild == NULL)
++					return -ENOMEM;
++
++				/* point to parent */
++				tchild->parent = target;
++
++				ret = of_attach_node(tchild);
++				if (ret != 0)
++					return ret;
++
++				/* apply the overlay */
++				ret = of_overlay_apply_one(tchild, child);
++				if (ret != 0) {
++					__of_free_tree(tchild);
++					return ret;
++				}
++			}
++		}
 +	}
-+
-+	return -EINVAL;
-+}
-+
-+/**
-+ * cm3218x_get_it_available() - Get available ALS IT value
-+ * @dev:	pointer of struct device.
-+ * @attr:	pointer of struct device_attribute.
-+ * @buf:	pointer of return string buffer.
-+ *
-+ * Display the available integration time values by millisecond.
-+ *
-+ * Return: string length.
-+ */
-+static ssize_t cm3218x_get_it_available(struct device *dev,
-+			struct device_attribute *attr, char *buf)
-+{
-+	struct cm3218x_chip *chip = iio_priv(dev_to_iio_dev(dev));
-+	struct cmdev *cmdev = chip->cmdev;
-+	int i, len;
-+
-+	for (i = 0, len = 0; i < cmdev->num_als_it; i++)
-+		len += sprintf(buf + len, "0.%06u ", cmdev->als_it_values[i]);
-+	return len + sprintf(buf + len, "\n");
-+}
-+
-+/**
-+ * cm3218x_threshold_update() - Update the threshold registers.
-+ * @dev:	pointer of struct cm3218x_chip.
-+ * @percent:	+/- percent.
-+ *
-+ * Based on the current ALS value, tupdate the hi and low threshold registers.
-+ *
-+ * Return: string length.
-+ */
-+static int cm3218x_threshold_update(struct cm3218x_chip *chip, int percent)
-+{
-+	struct i2c_client *client = chip->client;
-+	int ret;
-+	int wh, wl;
-+
-+	ret = chip->als_raw = i2c_smbus_read_word_data(client,
-+					CM3218x_REG_ADDR_ALS);
-+	if (ret < 0)
-+		return ret;
-+
-+	wh = wl = ret;
-+	ret *= percent;
-+	ret /= 100;
-+	if (ret < 1)
-+		ret = 1;
-+	wh += ret;
-+	wl -= ret;
-+	if (wh > 65535)
-+		wh = 65535;
-+	if (wl < 0)
-+		wl = 0;
-+
-+	chip->conf_regs[CM3218x_REG_ADDR_WH] = wh;
-+	ret = i2c_smbus_write_word_data(
-+		client,
-+		CM3218x_REG_ADDR_WH,
-+		chip->conf_regs[CM3218x_REG_ADDR_WH]);
-+	if (ret < 0)
-+		return ret;
-+
-+	chip->conf_regs[CM3218x_REG_ADDR_WL] = wl;
-+	ret = i2c_smbus_write_word_data(
-+		client,
-+		CM3218x_REG_ADDR_WL,
-+		chip->conf_regs[CM3218x_REG_ADDR_WL]);
-+	if (ret < 0)
-+		return ret;
 +
 +	return 0;
 +}
 +
 +/**
-+ * cm3218x_event_handler() - Interrupt handling routine.
-+ * @irq:	irq number.
-+ * @private:	pointer of void.
-+ *
-+ * Clean interrupt and reset threshold registers.
-+ *
-+ * Return: string length.
++ * Lookup an overlay device entry
 + */
-+static irqreturn_t cm3218x_event_handler(int irq, void *private)
++struct of_overlay_device_entry *of_overlay_device_entry_lookup(
++		struct of_overlay_info *ovinfo, struct device_node *node)
 +{
-+	struct iio_dev *dev_info = private;
-+	struct cm3218x_chip *chip = iio_priv(dev_info);
-+	int ret;
++	struct of_overlay_device_entry *de;
 +
-+	mutex_lock(&chip->lock);
-+
-+	/* Disable interrupt */
-+	ret = cm3218x_interrupt_config(chip, 0);
-+	if (ret < 0)
-+		goto error_handler_unlock;
-+
-+	/* Update Hi/Lo windows */
-+	ret = cm3218x_threshold_update(chip, CM3218x_THRESHOLD_PERCENT);
-+	if (ret < 0)
-+		goto error_handler_unlock;
-+
-+	/* Enable interrupt */
-+	ret = cm3218x_interrupt_config(chip, 1);
-+	if (ret < 0)
-+		goto error_handler_unlock;
-+
-+	mutex_unlock(&chip->lock);
-+
-+	return IRQ_HANDLED;
-+
-+error_handler_unlock:
-+	mutex_unlock(&chip->lock);
-+	return IRQ_NONE;
++	/* no need for locks, we'de under the ovinfo->lock */
++	list_for_each_entry(de, &ovinfo->de_list, node) {
++		if (de->np == node)
++			return de;
++	}
++	return NULL;
 +}
 +
-+static const struct iio_chan_spec cm3218x_channels[] = {
-+	{
-+		.type = IIO_LIGHT,
-+		.info_mask_separate =
-+			BIT(IIO_CHAN_INFO_PROCESSED) |
-+			BIT(IIO_CHAN_INFO_CALIBSCALE) |
-+			BIT(IIO_CHAN_INFO_INT_TIME),
-+	}
-+};
-+
-+static IIO_DEVICE_ATTR(in_illuminance_integration_time_available,
-+			S_IRUGO, cm3218x_get_it_available, NULL, 0);
-+
-+static struct attribute *cm3218x_attributes[] = {
-+	&iio_dev_attr_in_illuminance_integration_time_available.dev_attr.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group cm3218x_attribute_group = {
-+	.attrs = cm3218x_attributes
-+};
-+
-+static const struct iio_info cm3218x_info = {
-+	.driver_module		= THIS_MODULE,
-+	.read_raw		= &cm3218x_read_raw,
-+	.write_raw		= &cm3218x_write_raw,
-+	.attrs			= &cm3218x_attribute_group,
-+};
-+
-+static int cm3218x_probe(struct i2c_client *client,
-+			const struct i2c_device_id *id)
++/**
++ * Add an overlay log entry
++ */
++static int of_overlay_log_entry_entry_add(struct of_overlay_info *ovinfo,
++		unsigned long action, struct device_node *dn,
++		struct property *prop)
 +{
-+	struct cm3218x_chip *chip;
-+	struct iio_dev *indio_dev;
-+	int ret;
++	struct of_overlay_log_entry *le;
 +
-+	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*chip));
-+	if (!indio_dev) {
-+		dev_err(&client->dev, "devm_iio_device_alloc failed\n");
++	/* check */
++	if (ovinfo == NULL || dn == NULL)
++		return -EINVAL;
++
++	le = kzalloc(sizeof(*le), GFP_KERNEL);
++	if (le == NULL) {
++		pr_err("%s: Failed to allocate\n", __func__);
 +		return -ENOMEM;
 +	}
 +
-+	chip = iio_priv(indio_dev);
-+	i2c_set_clientdata(client, indio_dev);
-+	chip->client = client;
++	/* get a reference to the node */
++	le->action = action;
++	le->np = of_node_get(dn);
++	le->prop = prop;
 +
-+	mutex_init(&chip->lock);
-+	indio_dev->dev.parent = &client->dev;
-+	indio_dev->channels = cm3218x_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(cm3218x_channels);
-+	indio_dev->info = &cm3218x_info;
-+	if (id && id->name)
-+		indio_dev->name = id->name;
-+	else
-+		indio_dev->name = (char *)dev_name(&client->dev);
-+	indio_dev->modes = INDIO_DIRECT_MODE;
++	if (action == OF_RECONFIG_UPDATE_PROPERTY && prop)
++		le->old_prop = of_find_property(dn, prop->name, NULL);
 +
-+	ret = cm3218x_reg_init(chip);
-+	if (ret) {
-+		dev_err(&client->dev,
-+			"%s: register init failed\n",
-+			__func__);
-+		return ret;
++	list_add_tail(&le->node, &ovinfo->le_list);
++
++	return 0;
++}
++
++/**
++ * Add an overlay device entry
++ */
++static void of_overlay_device_entry_entry_add(struct of_overlay_info *ovinfo,
++		struct device_node *node,
++		int prevstate, int state)
++{
++	struct of_overlay_device_entry *de;
++	int fresh;
++
++	/* check */
++	if (ovinfo == NULL)
++		return;
++
++	fresh = 0;
++	de = of_overlay_device_entry_lookup(ovinfo, node);
++	if (de == NULL) {
++		de = kzalloc(sizeof(*de), GFP_KERNEL);
++		if (de == NULL) {
++			pr_err("%s: Failed to allocate\n", __func__);
++			return;
++		}
++		fresh = 1;
++		de->prevstate = -1;
 +	}
 +
-+	if (client->irq) {
-+		ret = request_threaded_irq(client->irq,
-+					NULL,
-+					cm3218x_event_handler,
-+					IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+					"cm3218x_event",
-+					indio_dev);
++	if (de->np == NULL)
++		de->np = of_node_get(node);
++	if (fresh)
++		de->prevstate = prevstate;
++	de->state = state;
 +
-+		if (ret < 0) {
-+			dev_err(&client->dev, "irq request error %d\n",
-+				-ret);
-+			goto error_disable_int;
++	if (fresh)
++		list_add_tail(&de->node, &ovinfo->de_list);
++}
++
++/**
++ * Overlay OF notifier
++ *
++ * Called every time there's a property/node modification
++ * Every modification causes a log entry addition, while
++ * any modification that causes a node's state to change
++ * from/to disabled to/from enabled causes a device entry
++ * addition.
++ */
++static int of_overlay_notify(struct notifier_block *nb,
++				unsigned long action, void *arg)
++{
++	struct of_overlay_info *ovinfo;
++	struct device_node *node;
++	struct property *prop, *sprop, *cprop;
++	struct of_prop_reconfig *pr;
++	struct device_node *tnode;
++	int depth;
++	int prevstate, state;
++	int err = 0;
++
++	ovinfo = container_of(nb, struct of_overlay_info, notifier);
++
++	/* prep vars */
++	switch (action) {
++	case OF_RECONFIG_ATTACH_NODE:
++	case OF_RECONFIG_DETACH_NODE:
++		node = arg;
++		if (node == NULL)
++			return notifier_from_errno(-EINVAL);
++		prop = NULL;
++		break;
++	case OF_RECONFIG_ADD_PROPERTY:
++	case OF_RECONFIG_REMOVE_PROPERTY:
++	case OF_RECONFIG_UPDATE_PROPERTY:
++		pr = arg;
++		if (pr == NULL)
++			return notifier_from_errno(-EINVAL);
++		node = pr->dn;
++		if (node == NULL)
++			return notifier_from_errno(-EINVAL);
++		prop = pr->prop;
++		if (prop == NULL)
++			return notifier_from_errno(-EINVAL);
++		break;
++	default:
++		return notifier_from_errno(0);
++	}
++
++	/* add to the log */
++	err = of_overlay_log_entry_entry_add(ovinfo, action, node, prop);
++	if (err != 0)
++		return notifier_from_errno(err);
++
++	/* come up with the device entry (if any) */
++	state = 0;
++	prevstate = 0;
++
++	/* determine the state the node will end up */
++	switch (action) {
++	case OF_RECONFIG_ATTACH_NODE:
++		/* we demand that a compatible node is present */
++		state = of_find_property(node, "compatible", NULL) &&
++			of_device_is_available(node);
++		break;
++	case OF_RECONFIG_DETACH_NODE:
++		prevstate = of_find_property(node, "compatible", NULL) &&
++			of_device_is_available(node);
++		state = 0;
++		break;
++	case OF_RECONFIG_ADD_PROPERTY:
++	case OF_RECONFIG_REMOVE_PROPERTY:
++	case OF_RECONFIG_UPDATE_PROPERTY:
++		/* either one cause a change in state */
++		if (strcmp(prop->name, "status") != 0 &&
++				strcmp(prop->name, "compatible") != 0)
++			return notifier_from_errno(0);
++
++		if (strcmp(prop->name, "status") == 0) {
++			/* status */
++			cprop = of_find_property(node, "compatible", NULL);
++			sprop = action != OF_RECONFIG_REMOVE_PROPERTY ?
++				prop : NULL;
++		} else {
++			/* compatible */
++			sprop = of_find_property(node, "status", NULL);
++			cprop = action != OF_RECONFIG_REMOVE_PROPERTY ?
++				prop : NULL;
++		}
++
++		prevstate = of_find_property(node, "compatible", NULL) &&
++			of_device_is_available(node);
++		state = cprop && cprop->length > 0 &&
++			    (!sprop || (sprop->length > 0 &&
++				(strcmp(sprop->value, "okay") == 0 ||
++				 strcmp(sprop->value, "ok") == 0)));
++		break;
++
++	default:
++		return notifier_from_errno(0);
++	}
++
++	/* find depth */
++	depth = 1;
++	tnode = node;
++	while (tnode != NULL && tnode != ovinfo->target) {
++		tnode = tnode->parent;
++		depth++;
++	}
++
++	/* respect overlay's maximum depth */
++	if (ovinfo->device_depth != 0 && depth > ovinfo->device_depth) {
++		pr_debug("OF: skipping device creation for node=%s depth=%d\n",
++				node->name, depth);
++		goto out;
++	}
++
++	of_overlay_device_entry_entry_add(ovinfo, node, prevstate, state);
++out:
++
++	return notifier_from_errno(err);
++}
++
++/**
++ * Prepare for the overlay, for now it just registers the
++ * notifier.
++ */
++static int of_overlay_prep_one(struct of_overlay_info *ovinfo)
++{
++	int err;
++
++	err = of_reconfig_notifier_register(&ovinfo->notifier);
++	if (err != 0) {
++		pr_err("%s: failed to register notifier for '%s'\n",
++			__func__, ovinfo->target->full_name);
++		return err;
++	}
++	return 0;
++}
++
++static int of_overlay_device_entry_change(struct of_overlay_info *ovinfo,
++		struct of_overlay_device_entry *de, int revert)
++{
++	int state;
++	int ret;
++
++	state = !!de->state ^ !!revert;
++
++	if (state)
++		ret = handler_create(de, revert);
++	else
++		ret = handler_remove(de, revert);
++
++	if (ret != 0 && ret != -ENOTSUPP)
++		pr_warn("%s: Failed to %s device "
++				"for node '%s'\n", __func__,
++				state ? "create" : "remove",
++				de->np->full_name);
++	return 0;
++}
++
++/**
++ * Revert one overlay
++ * Either due to an error, or due to normal overlay removal.
++ * Using the log entries, we revert any change to the live tree.
++ * In the same manner, using the device entries we enable/disable
++ * the devices appropriately.
++ */
++static void of_overlay_revert_one(struct of_overlay_info *ovinfo)
++{
++	struct of_overlay_device_entry *de, *den;
++	struct of_overlay_log_entry *le, *len;
++	struct property *prop, **propp;
++	struct device_node *np;
++	int ret;
++	unsigned long flags;
++
++	if (!ovinfo || !ovinfo->target || !ovinfo->overlay)
++		return;
++
++	pr_debug("%s: Reverting overlay on '%s'\n", __func__,
++			ovinfo->target->full_name);
++
++	/* overlay applied correctly, now create/destroy pdevs */
++	list_for_each_entry_safe_reverse(de, den, &ovinfo->de_list, node) {
++		of_overlay_device_entry_change(ovinfo, de, 1);
++		of_node_put(de->np);
++		list_del(&de->node);
++		kfree(de);
++	}
++
++	list_for_each_entry_safe_reverse(le, len, &ovinfo->le_list, node) {
++
++		/* get node and immediately put */
++		np = le->np;
++		of_node_put(le->np);
++		le->np = NULL;
++
++		ret = 0;
++		switch (le->action) {
++		case OF_RECONFIG_ATTACH_NODE:
++			pr_debug("Reverting ATTACH_NODE %s\n",
++					np->full_name);
++			ret = of_detach_node(np);
++			break;
++
++		case OF_RECONFIG_DETACH_NODE:
++			pr_debug("Reverting DETACH_NODE %s\n",
++					np->full_name);
++			ret = of_attach_node(np);
++			break;
++
++		case OF_RECONFIG_ADD_PROPERTY:
++			pr_debug("Reverting ADD_PROPERTY %s %s\n",
++					np->full_name, le->prop->name);
++			ret = of_remove_property(np, le->prop);
++			break;
++
++		case OF_RECONFIG_REMOVE_PROPERTY:
++		case OF_RECONFIG_UPDATE_PROPERTY:
++
++			pr_debug("Reverting %s_PROPERTY %s %s\n",
++				le->action == OF_RECONFIG_REMOVE_PROPERTY ?
++					"REMOVE" : "UPDATE",
++					np->full_name, le->prop->name);
++
++			/* property is possibly on deadprops (avoid alloc) */
++			raw_spin_lock_irqsave(&devtree_lock, flags);
++			prop = le->action == OF_RECONFIG_REMOVE_PROPERTY ?
++				le->prop : le->old_prop;
++			propp = &np->deadprops;
++			while (*propp != NULL) {
++				if (*propp == prop)
++					break;
++				propp = &(*propp)->next;
++			}
++			if (*propp != NULL) {
++				/* remove it from deadprops */
++				(*propp)->next = prop->next;
++				raw_spin_unlock_irqrestore(&devtree_lock,
++						flags);
++			} else {
++				raw_spin_unlock_irqrestore(&devtree_lock,
++						flags);
++				/* not found, just make a copy */
++				prop = __of_copy_property(prop, GFP_KERNEL,
++						OF_PROP_ALLOCALL);
++				if (prop == NULL) {
++					pr_err("%s: Failed to copy property\n",
++							__func__);
++					break;
++				}
++			}
++
++			if (le->action == OF_RECONFIG_REMOVE_PROPERTY)
++				ret = of_add_property(np, prop);
++			else
++				ret = of_update_property(np, prop);
++			break;
++
++		default:
++			/* nothing */
++			break;
++		}
++
++		if (ret != 0)
++			pr_err("%s: revert on node %s Failed!\n",
++					__func__, np->full_name);
++
++		list_del(&le->node);
++
++		kfree(le);
++	}
++}
++
++/**
++ * Perform the post overlay work.
++ *
++ * We unregister the notifier, and in the case on an error we
++ * revert the overlay.
++ * If the overlay applied correctly, we iterare over the device entries
++ * and create/destroy the devices appropriately.
++ */
++static int of_overlay_post_one(struct of_overlay_info *ovinfo, int err)
++{
++	struct of_overlay_device_entry *de, *den;
++
++	of_reconfig_notifier_unregister(&ovinfo->notifier);
++
++	if (err != 0) {
++		/* revert this (possible partially applied) overlay */
++		of_overlay_revert_one(ovinfo);
++		return 0;
++	}
++
++	/* overlay applied correctly, now create/destroy pdevs */
++	list_for_each_entry_safe(de, den, &ovinfo->de_list, node) {
++
++		/* no state change? just remove this entry */
++		if (de->prevstate == de->state) {
++			of_node_put(de->np);
++			list_del(&de->node);
++			kfree(de);
++			continue;
++		}
++
++		of_overlay_device_entry_change(ovinfo, de, 0);
++	}
++
++	return 0;
++}
++
++/**
++ * of_overlay	- Apply @count overlays pointed at by @ovinfo_tab
++ * @count:	Number of of_overlay_info's
++ * @ovinfo_tab:	Array of overlay_info's to apply
++ *
++ * Applies the overlays given, while handling all error conditions
++ * appropriately. Either the operation succeeds, or if it fails the
++ * live tree is reverted to the state before the attempt.
++ * Returns 0, or an error if the overlay attempt failed.
++ */
++int of_overlay(int count, struct of_overlay_info *ovinfo_tab)
++{
++	struct of_overlay_info *ovinfo;
++	int i, err;
++
++	if (!ovinfo_tab)
++		return -EINVAL;
++
++	/* first we apply the overlays atomically */
++	for (i = 0; i < count; i++) {
++
++		ovinfo = &ovinfo_tab[i];
++
++		mutex_lock(&ovinfo->lock);
++
++		err = of_overlay_prep_one(ovinfo);
++		if (err == 0)
++			err = of_overlay_apply_one(ovinfo->target,
++					ovinfo->overlay);
++		of_overlay_post_one(ovinfo, err);
++
++		mutex_unlock(&ovinfo->lock);
++
++		if (err != 0) {
++			pr_err("%s: overlay failed '%s'\n",
++				__func__, ovinfo->target->full_name);
++			goto err_fail;
 +		}
 +	}
 +
-+	ret = iio_device_register(indio_dev);
-+	if (ret < 0) {
-+		dev_err(&client->dev,
-+			"%s: regist device failed\n",
-+			__func__);
-+		goto error_free_irq;
-+	}
-+
-+	if (client->irq) {
-+		ret = cm3218x_threshold_update(chip, CM3218x_THRESHOLD_PERCENT);
-+		if (ret < 0)
-+			goto error_free_irq;
-+
-+		ret = cm3218x_interrupt_config(chip, 1);
-+		if (ret < 0)
-+			goto error_free_irq;
-+	}
-+
 +	return 0;
 +
-+error_free_irq:
-+	free_irq(client->irq, indio_dev);
-+error_disable_int:
-+	cm3218x_interrupt_config(chip, 0);
-+	return ret;
-+}
++err_fail:
++	while (--i >= 0) {
++		ovinfo = &ovinfo_tab[i];
 +
-+static int cm3218x_remove(struct i2c_client *client)
++		mutex_lock(&ovinfo->lock);
++		of_overlay_revert_one(ovinfo);
++		mutex_unlock(&ovinfo->lock);
++	}
++
++	return err;
++}
++EXPORT_SYMBOL_GPL(of_overlay);
++
++/**
++ * of_overlay_revert	- Revert a previously applied overlay
++ * @count:	Number of of_overlay_info's
++ * @ovinfo_tab:	Array of overlay_info's to apply
++ *
++ * Revert a previous overlay. The state of the live tree
++ * is reverted to the one before the overlay.
++ * Returns 0, or an error if the overlay table is not given.
++ */
++int of_overlay_revert(int count, struct of_overlay_info *ovinfo_tab)
 +{
-+	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-+	struct cm3218x_chip *chip = iio_priv(indio_dev);
++	struct of_overlay_info *ovinfo;
++	int i;
 +
-+	cm3218x_interrupt_config(chip, 0);
-+	if (client->irq)
-+		free_irq(client->irq, indio_dev);
-+	iio_device_unregister(indio_dev);
++	if (!ovinfo_tab)
++		return -EINVAL;
++
++	/* revert the overlays in reverse */
++	for (i = count - 1; i >= 0; i--) {
++
++		ovinfo = &ovinfo_tab[i];
++
++		mutex_lock(&ovinfo->lock);
++		of_overlay_revert_one(ovinfo);
++		mutex_unlock(&ovinfo->lock);
++
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(of_overlay_revert);
++
++/**
++ * of_init_overlay_info	- Initialize a single of_overlay_info structure
++ * @ovinfo:	Pointer to the overlay info structure to initialize
++ *
++ * Initialize a single overlay info structure.
++ */
++void of_init_overlay_info(struct of_overlay_info *ovinfo)
++{
++	memset(ovinfo, 0, sizeof(ovinfo));
++	mutex_init(&ovinfo->lock);
++	INIT_LIST_HEAD(&ovinfo->de_list);
++	INIT_LIST_HEAD(&ovinfo->le_list);
++
++	ovinfo->notifier.notifier_call = of_overlay_notify;
++}
++
++/*
++ * Find the target node using a number of different strategies
++ * in order of preference
++ *
++ * "target" property containing the phandle of the target
++ * "target-path" property containing the path of the target
++ *
++ */
++struct device_node *find_target_node(struct device_node *info_node)
++{
++	const char *path;
++	u32 val;
++	int ret;
++
++	/* first try to go by using the target as a phandle */
++	ret = of_property_read_u32(info_node, "target", &val);
++	if (ret == 0)
++		return of_find_node_by_phandle(val);
++
++	/* now try to locate by path */
++	ret = of_property_read_string(info_node, "target-path", &path);
++	if (ret == 0)
++		return of_find_node_by_path(path);
++
++	pr_err("%s: Failed to find target for node %p (%s)\n", __func__,
++			info_node, info_node->name);
++
++	return NULL;
++}
++
++/**
++ * of_fill_overlay_info	- Fill an overlay info structure
++ * @info_node:	Device node containing the overlay
++ * @ovinfo:	Pointer to the overlay info structure to fill
++ *
++ * Fills an overlay info structure with the overlay information
++ * from a device node. This device node must have a target property
++ * which contains a phandle of the overlay target node, and an
++ * __overlay__ child node which has the overlay contents.
++ * Both ovinfo->target & ovinfo->overlay have their references taken.
++ *
++ * Returns 0 on success, or a negative error value.
++ */
++int of_fill_overlay_info(struct device_node *info_node,
++		struct of_overlay_info *ovinfo)
++{
++	u32 val;
++	int ret;
++
++	if (!info_node || !ovinfo)
++		return -EINVAL;
++
++	ovinfo->overlay = of_get_child_by_name(info_node, "__overlay__");
++	if (ovinfo->overlay == NULL)
++		goto err_fail;
++
++	ovinfo->target = find_target_node(info_node);
++	if (ovinfo->target == NULL)
++		goto err_fail;
++
++	ret = of_property_read_u32(info_node, "depth", &val);
++	if (ret == 0)
++		ovinfo->device_depth = val;
++	else
++		ovinfo->device_depth = 0;
++
++	return 0;
++
++err_fail:
++	of_node_put(ovinfo->target);
++	of_node_put(ovinfo->overlay);
++
++	memset(ovinfo, 0, sizeof(*ovinfo));
++	return -EINVAL;
++}
++
++/**
++ * of_build_overlay_info	- Build an overlay info array
++ * @tree:	Device node containing all the overlays
++ * @cntp:	Pointer to where the overlay info count will be help
++ * @ovinfop:	Pointer to the pointer of an overlay info structure.
++ *
++ * Helper function that given a tree containing overlay information,
++ * allocates and builds an overlay info array containing it, ready
++ * for use using of_overlay.
++ *
++ * Returns 0 on success with the @cntp @ovinfop pointers valid,
++ * while on error a negative error value is returned.
++ */
++int of_build_overlay_info(struct device_node *tree,
++		int *cntp, struct of_overlay_info **ovinfop)
++{
++	struct device_node *node;
++	struct of_overlay_info *ovinfo;
++	int cnt, err;
++
++	if (tree == NULL || cntp == NULL || ovinfop == NULL)
++		return -EINVAL;
++
++	/* worst case; every child is a node */
++	cnt = 0;
++	for_each_child_of_node(tree, node)
++		cnt++;
++
++	ovinfo = kzalloc(cnt * sizeof(*ovinfo), GFP_KERNEL);
++	if (ovinfo == NULL)
++		return -ENOMEM;
++
++	cnt = 0;
++	for_each_child_of_node(tree, node) {
++
++		of_init_overlay_info(&ovinfo[cnt]);
++		err = of_fill_overlay_info(node, &ovinfo[cnt]);
++		if (err == 0)
++			cnt++;
++	}
++
++	/* if nothing filled, return error */
++	if (cnt == 0) {
++		kfree(ovinfo);
++		return -ENODEV;
++	}
++
++	*cntp = cnt;
++	*ovinfop = ovinfo;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(of_build_overlay_info);
++
++/**
++ * of_free_overlay_info	- Free an overlay info array
++ * @count:	Number of of_overlay_info's
++ * @ovinfo_tab:	Array of overlay_info's to free
++ *
++ * Releases the memory of a previously allocate ovinfo array
++ * by of_build_overlay_info.
++ * Returns 0, or an error if the arguments are bogus.
++ */
++int of_free_overlay_info(int count, struct of_overlay_info *ovinfo_tab)
++{
++	struct of_overlay_info *ovinfo;
++	int i;
++
++	if (!ovinfo_tab || count < 0)
++		return -EINVAL;
++
++	/* do it in reverse */
++	for (i = count - 1; i >= 0; i--) {
++		ovinfo = &ovinfo_tab[i];
++
++		of_node_put(ovinfo->target);
++		of_node_put(ovinfo->overlay);
++	}
++	kfree(ovinfo_tab);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(of_free_overlay_info);
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 4932a8f..7c1a6f6 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -23,6 +23,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/topology.h>
+ #include <linux/notifier.h>
++#include <linux/list.h>
+ 
+ #include <asm/byteorder.h>
+ #include <asm/errno.h>
+@@ -752,4 +753,156 @@ static inline int of_resolve(struct device_node *resolve)
+ 
+ #endif
+ 
++/**
++ * Overlay support
++ */
++
++/**
++ * struct of_overlay_log_entry	- Holds a DT log entry
++ * @node:	list_head for the log list
++ * @action:	notifier action
++ * @np:		pointer to the device node affected
++ * @prop:	pointer to the property affected
++ * @old_prop:	hold a pointer to the original property
++ *
++ * Every modification of the device tree during application of the
++ * overlay is held in a list of of_overlay_log_entry structures.
++ * That way we can recover from a partial application, or we can
++ * revert the overlay properly.
++ */
++struct of_overlay_log_entry {
++	struct list_head node;
++	unsigned long action;
++	struct device_node *np;
++	struct property *prop;
++	struct property *old_prop;
++};
++
++struct of_overlay_device_entry;
++
++/**
++ * struct of_overlay_handler_ops	- Overlay device handler ops
++ * @create:	method to be called to create a device
++ * @remove:	method to be called to destroy a device
++ *
++ * Both these functions return 0 on success, ENOTSUPP if the
++ * device entry does not match, and an error code otherwise.
++ */
++struct of_overlay_handler_ops {
++	int (*create)(struct of_overlay_device_entry *entry, int revert);
++	int (*remove)(struct of_overlay_device_entry *entry, int revert);
++};
++
++/**
++ * struct of_overlay_handler	- Overlay device handler
++ * @list:	list links for all handlers
++ * @name:	name of this handler
++ * @ops:	ops member functions
++ *
++ * The handler is registered by each bus that supports
++ * dynamic creation/removal of devices
++ */
++struct of_overlay_handler {
++	struct list_head list;
++	const char *name;
++	const struct of_overlay_handler_ops *ops;
++};
++
++/**
++ * struct of_overlay_device_entry	- Holds an overlay device entry
++ * @node:	list_head for the device list
++ * @np:		device node pointer to the device node affected
++ * @state:	new device state
++ * @prevstate:	previous device state
++ * @priv:	private pointer for use by bus handlers
++ *
++ * When the overlay results in a device node's state to change this
++ * fact is recorded in a list of device entries. After the overlay
++ * is applied we can create/destroy the devices according
++ * to the new state of the live tree.
++ */
++struct of_overlay_device_entry {
++	struct list_head node;
++	struct device_node *np;
++	int prevstate;
++	int state;
++	void *priv;
++};
++
++/**
++ * struct of_overlay_info	- Holds a single overlay info
++ * @target:	target of the overlay operation
++ * @overlay:	pointer to the overlay contents node
++ * @lock:	Lock to hold when accessing the lists
++ * @le_list:	List of the overlay logs
++ * @de_list:	List of the overlay records
++ * @notifier:	of reconfiguration notifier
++ *
++ * Holds a single overlay state, including all the overlay logs &
++ * records.
++ */
++struct of_overlay_info {
++	struct device_node *target;
++	struct device_node *overlay;
++	struct mutex lock;
++	struct list_head le_list;
++	struct list_head de_list;
++	struct notifier_block notifier;
++	int device_depth;
++};
++
++#ifdef CONFIG_OF_OVERLAY
++
++int of_overlay(int count, struct of_overlay_info *ovinfo_tab);
++int of_overlay_revert(int count, struct of_overlay_info *ovinfo_tab);
++
++int of_fill_overlay_info(struct device_node *info_node,
++		struct of_overlay_info *ovinfo);
++int of_build_overlay_info(struct device_node *tree,
++		int *cntp, struct of_overlay_info **ovinfop);
++int of_free_overlay_info(int cnt, struct of_overlay_info *ovinfo);
++
++int of_overlay_handler_register(struct of_overlay_handler *handler);
++void of_overlay_handler_unregister(struct of_overlay_handler *handler);
++
++#else
++
++static inline int of_overlay(int count, struct of_overlay_info *ovinfo_tab)
++{
++	return -ENOTSUPP;
++}
++
++static inline int of_overlay_revert(int count, struct of_overlay_info *ovinfo_tab)
++{
++	return -ENOTSUPP;
++}
++
++static inline int of_fill_overlay_info(struct device_node *info_node,
++		struct of_overlay_info *ovinfo)
++{
++	return -ENOTSUPP;
++}
++
++static inline int of_build_overlay_info(struct device_node *tree,
++		int *cntp, struct of_overlay_info **ovinfop)
++{
++	return -ENOTSUPP;
++}
++
++static inline int of_free_overlay_info(int cnt, struct of_overlay_info *ovinfo)
++{
++	return -ENOTSUPP;
++}
++
++static inline int of_overlay_handler_register(struct of_overlay_handler *handler)
++{
 +	return 0;
 +}
 +
-+static const struct i2c_device_id cm3218x_id[] = {
-+	{ "cm3218x", 0},
-+	{ }
-+};
++static inline void of_overlay_handler_unregister(struct of_overlay_handler *handler)
++{
++}
 +
-+MODULE_DEVICE_TABLE(i2c, cm3218x_id);
++#endif
 +
-+static const struct of_device_id cm3218x_of_match[] = {
-+	{ .compatible = "capella,cm3218x" },
-+	{ }
-+};
-+
-+static const struct acpi_device_id cm3218x_acpi_match[] = {
-+	{ "CPLM3218", 0},
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(acpi, cm3218x_acpi_match);
-+
-+static struct i2c_driver cm3218x_driver = {
-+	.driver = {
-+		.name	= "cm3218x",
-+		.acpi_match_table = ACPI_PTR(cm3218x_acpi_match),
-+		.of_match_table = of_match_ptr(cm3218x_of_match),
-+		.owner	= THIS_MODULE,
-+	},
-+	.id_table	= cm3218x_id,
-+	.probe		= cm3218x_probe,
-+	.remove		= cm3218x_remove,
-+};
-+
-+module_i2c_driver(cm3218x_driver);
-+
-+MODULE_AUTHOR("Kevin Tsai <ktsai@capellamicro.com>");
-+MODULE_DESCRIPTION("CM3218x ambient light sensor driver");
-+MODULE_LICENSE("GPL");
+ #endif /* _LINUX_OF_H */
 -- 
-1.8.3.1
-
+1.7.12
