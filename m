@@ -1,35 +1,66 @@
-From: Brian Austin <brian.austin@cirrus.com>
-Subject: Re: [PATCH v3] ASoC: cs42888: Add codec driver support
-Date: Tue, 18 Mar 2014 09:37:52 -0500
-Message-ID: <alpine.DEB.2.02.1403180936200.14838@heelrod>
-References: <1394538091-19513-1-git-send-email-Guangyu.Chen@freescale.com>
- <20140318131033.GC11706@sirena.org.uk>
+From: Harini Katakam <harini.katakam@xilinx.com>
+Subject: RE: [PATCH] SPI: Add driver for Cadence SPI controller
+Date: Tue, 18 Mar 2014 14:45:09 +0000
+Message-ID: <aa8486d2-8571-4b31-8980-78806a80e600@CH1EHSMHS031.ehs.local>
+References: <1395057936-8643-1-git-send-email-harinik@xilinx.com>
+ <20140317173017.GW11706@sirena.org.uk>
+ <255edf4f-05a8-4d9a-b32d-1a4a8ddaffb5@CH1EHSMHS004.ehs.local>
+ <20140318110401.GH11706@sirena.org.uk>
+ <d7cf691a-c9cb-4a8a-bf5c-eae952a5d729@VA3EHSMHS045.ehs.local>
+ <20140318123348.GR11706@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20140318131033.GC11706@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140318123348.GR11706@sirena.org.uk>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
 To: Mark Brown <broonie@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, brian.austin@cirrus.com, lars@metafoo.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-doc@vger.kernel.org, lgirdwood@gmail.com, Paul.Handrigan@cirrus.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, rob@landley.net, Nicolin Chen <Guangyu.Chen@freescale.com>, grant.likely@linaro.org, alsa-devel@alsa-project.org
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Michal Simek <michals@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 18 Mar 2014, Mark Brown wrote:
+HI Mark,
 
-> On Tue, Mar 11, 2014 at 07:41:31PM +0800, Nicolin Chen wrote:
->> This patch adds support for the Cirrus Logic CS42888 Audio CODEC that
->> has four 24-bit A/D and eight 24-bit D/A converters.
->
-> Brian, Paul - any review comments on this?
->
-Driver looks good to me. I think we should name it the cs42xx8 since this 
-actually covers CS42448 and CS42888. The CS42888 is derived from the 
-CS42448.
+> -----Original Message-----
+> From: Mark Brown [mailto:broonie@kernel.org]
+> Sent: Tuesday, March 18, 2014 6:04 PM
+> To: Harini Katakam
+> Cc: robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com;
+> ijc+devicetree@hellion.org.uk; galak@codeaurora.org; rob@landley.net;
+> grant.likely@linaro.org; devicetree@vger.kernel.org; linux-
+> doc@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> spi@vger.kernel.org; Michal Simek
+> Subject: Re: [PATCH] SPI: Add driver for Cadence SPI controller
+> 
+> On Tue, Mar 18, 2014 at 12:13:45PM +0000, Harini Katakam wrote:
+> 
+> 
+> > > > In this case both possible interrupt conditions are handled.
+> 
+> > > Are you sure that's the case, and even if you are that's still not
+> > > handling the case where the device isn't flagging an interrupt at all.
+> 
+> > The IXR_ALL mask is only used to disable all the interrupts in the
+> beginning.
+> > These two are the only interrupts enabled.
+> > And RXNEMPTY status is just polled. That interrupt is not enabled either
+> 
+> This is all going to be fragile in the face of bugs or changes in the
+> code though and like I keep saying it doesn't handle interrupt sharing.
+
+OK. I dint consider interrupt sharing. 
+Do you think the following implementation would be better?
+
+status = IRQ_NONE;
+if (intr_status & CDNS_SPI_IXR_MODF_MASK) {
+	/* Handle this interrupt here */
+	status = IRQ_HANDLED;
+} else if (intr_status & CDNS_SPI_IXR_TXOW_MASK) {
+	/* Handle this interrupt here */
+	status = IRQ_HANDLED;
+}
+
+return status;
+
+Regards,
+Harini
