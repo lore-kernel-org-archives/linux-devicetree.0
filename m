@@ -1,77 +1,65 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: [PATCHv2 7/8] Doc/DT: Add DT binding documentation for TFP410 encoder
-Date: Tue, 18 Mar 2014 10:15:46 +0200
-Message-ID: <1395130547-18633-8-git-send-email-tomi.valkeinen@ti.com>
-References: <1395130547-18633-1-git-send-email-tomi.valkeinen@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [GIT PULL] mfd: Immutable branch for Sebastian Reichel's work on
+ mfd->io driver conversion
+Date: Tue, 18 Mar 2014 08:21:26 +0000
+Message-ID: <20140318082126.GA25478@lee--X1>
+References: <1394934211-21605-1-git-send-email-sre@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1395130547-18633-1-git-send-email-tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Archit Taneja <archit-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1394934211-21605-1-git-send-email-sre@debian.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-iio@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>
+Cc: Sebastian Reichel <sre@ring0.de>, Marek Belisko <marek@goldelico.com>, Samuel Ortiz <sameo@linux.intel.com>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sre@debian.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT binding documentation for TFP410 encoder
+The following changes since commit 0414855fdc4a40da05221fc6062cccbc0c30=
+f169:
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Reviewed-by: Archit Taneja <archit-l0cyMroinI0@public.gmane.org>
----
- .../devicetree/bindings/video/ti,tfp410.txt        | 41 ++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/ti,tfp410.txt
+  Linux 3.14-rc5 (2014-03-02 18:56:16 -0800)
 
-diff --git a/Documentation/devicetree/bindings/video/ti,tfp410.txt b/Documentation/devicetree/bindings/video/ti,tfp410.txt
-new file mode 100644
-index 000000000000..2cbe32a3d0bb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/ti,tfp410.txt
-@@ -0,0 +1,41 @@
-+TFP410 DPI to DVI encoder
-+=========================
-+
-+Required properties:
-+- compatible: "ti,tfp410"
-+
-+Optional properties:
-+- powerdown-gpios: power-down gpio
-+
-+Required nodes:
-+- Video port 0 for DPI input
-+- Video port 1 for DVI output
-+
-+Example
-+-------
-+
-+tfp410: encoder@0 {
-+	compatible = "ti,tfp410";
-+	powerdown-gpios = <&twl_gpio 2 GPIO_ACTIVE_LOW>;
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			tfp410_in: endpoint@0 {
-+				remote-endpoint = <&dpi_out>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			tfp410_out: endpoint@0 {
-+				remote-endpoint = <&dvi_connector_in>;
-+			};
-+		};
-+	};
-+};
--- 
-1.8.3.2
+are available in the git repository at:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-io-3=
+=2E15
+
+for you to fetch changes up to b2931b98cebfb30d940f248d2054b5268eae87a4=
+:
+
+  mfd: twl4030-madc: Move driver to drivers/iio/adc (2014-03-18 08:16:2=
+0 +0000)
+
+----------------------------------------------------------------
+Sebastian Reichel (7):
+      mfd: twl4030-madc: Use managed resources
+      mfd: twl4030-madc: Add DT support and convert to IIO framework
+      mfd: twl4030-madc: Cleanup driver
+      mfd: twl-core: Add twl_i2c_read/write_u16
+      mfd: twl4030-madc: Use twl_i2c_read/write_u16 for 16 bit register=
+s
+      Documentation: DT: Document twl4030-madc binding
+      mfd: twl4030-madc: Move driver to drivers/iio/adc
+
+ Documentation/devicetree/bindings/iio/adc/twl4030-madc.txt |  24 +++++=
+++++
+ drivers/iio/adc/Kconfig                                    |  10 ++++
+ drivers/iio/adc/Makefile                                   |   1 +
+ drivers/{mfd =3D> iio/adc}/twl4030-madc.c                    | 320 +++=
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------=
+----------------------------------
+ drivers/mfd/Kconfig                                        |  10 ----
+ drivers/mfd/Makefile                                       |   1 -
+ include/linux/i2c/twl.h                                    |  12 +++++
+ include/linux/i2c/twl4030-madc.h                           |   2 +-
+ 8 files changed, 247 insertions(+), 133 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/twl4030-m=
+adc.txt
+ rename drivers/{mfd =3D> iio/adc}/twl4030-madc.c (74%)
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
