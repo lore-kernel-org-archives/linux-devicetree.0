@@ -1,39 +1,91 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv4 7/7] mfd: twl4030-madc: Move driver to drivers/iio/adc
-Date: Tue, 18 Mar 2014 08:02:55 +0000
-Message-ID: <20140318080255.GG25324@lee--X1>
-References: <1394934211-21605-1-git-send-email-sre@debian.org>
- <1394934211-21605-8-git-send-email-sre@debian.org>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCH v2 3/5] net: cpsw: Add control-module macid driver
+Date: Tue, 18 Mar 2014 09:04:43 +0100
+Message-ID: <20140318080443.GH11360@pengutronix.de>
+References: <1394888864-11007-1-git-send-email-mpa@pengutronix.de>
+ <1394888864-11007-4-git-send-email-mpa@pengutronix.de>
+ <20140317171136.GC30471@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ni93GHxFvA+th69W"
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1394934211-21605-8-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20140317171136.GC30471@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: "David S. Miller" <davem@davemloft.net>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-> This is a driver for an A/D converter, which belongs into
-> drivers/iio/adc.
->=20
-> Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/iio/adc/Kconfig                 | 10 ++++++++++
->  drivers/iio/adc/Makefile                |  1 +
->  drivers/{mfd =3D> iio/adc}/twl4030-madc.c |  0
->  drivers/mfd/Kconfig                     | 10 ----------
->  drivers/mfd/Makefile                    |  1 -
->  5 files changed, 11 insertions(+), 11 deletions(-)
->  rename drivers/{mfd =3D> iio/adc}/twl4030-madc.c (100%)
 
-Applied, thanks.
+--ni93GHxFvA+th69W
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Mon, Mar 17, 2014 at 10:11:36AM -0700, Tony Lindgren wrote:
+> Hi,
+>=20
+> * Markus Pargmann <mpa@pengutronix.de> [140315 06:12]:
+> > This driver extracts the hardware macid from the control module of
+> > am335x processors. It exports a function cpsw_ctrl_macid_read for cpsw
+> > to get the macid from within the processor.
+>=20
+> Few things have improved recently :) This can be now implemented
+> in a much cleaner way using regmap against the already defined syscon
+> node.
+>=20
+> For an example, see how the MMC PBIAS regulator is using regmap
+> in Linux next:
+>=20
+> 11469e0bb1 (regulator: add pbias regulator support)
+> cd042fe5c1 (ARM: dts: add pbias dt node)
+>=20
+> That avoids the problem of the tinkering with SoC specific registers
+> that belong to another device.
+>=20
+> So please update this series for regmap, let's not add more mapping
+> of system control module registers to the drivers.
+
+Thanks, I will have a look into this and update the series.
+
+Regards,
+
+Markus
+
+>=20
+> Regards,
+>=20
+> Tony
+>=20
 
 --=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--ni93GHxFvA+th69W
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTJ/4bAAoJEEpcgKtcEGQQckEP/2Iz88huJVYH/GBCBdm390NH
+AlEZg5mQ0ZQUehpseUQxnMqD7IqfYBEY8dGwMYxrFeQ6MqPXhqwVxnXZnftVHX4P
+koN35d7okMBtL67vycjC8qFcGjHGHnw8A1avema2jy6Z35SQ5a5YOigVkmyf/zRX
+N79cL4FHFlog3ReuQZBZZuOqBBwu1OMkgad9yz0i5OeyHqSm+xd5Q0DYYNTjv3H1
++R9IexU7ii1fAomzYRTZW0BFys8pdTz1o0/NoS7HcUzwG0UycagOKo51nL3Qt7G4
+LkFaDNmhj0wy5VQztgoAPYYrmwR0omX6ZGqwfFoJ+Y/DRsRMmfeee/Mv8LuJexeg
+OnUgXVSpbngHIz+Qu1TIKZxsQ5TMQE5rJuSVkJ5tQ/5/wfIc3XSIQxb/jk9yzXWf
+KfPB4qVE/H5cfv9sACAdlbzRLIcq7l1kxWNopqYLQAaH9VA83rKR0wfVHbqC6hlk
+mrr1+tw91X3/sF0V1ekZkfWXVQAFGEzWIgdqQe+rki+s3+p3HznSclaoq73mK2fm
+JKLpb33k/Ob6qsjUp49H7mwimrhrO3U6SlcQAlrSZE4RbAgk7NpJya+rQr9re/NH
+lynAU/85xTI42wCia7gg1K28TrHv+GN4Qs2M+btxL0IVXKfdxVyN+PL3itHwm1qf
+Uv1BIpckPcV7TgGlQoof
+=1gRq
+-----END PGP SIGNATURE-----
+
+--ni93GHxFvA+th69W--
