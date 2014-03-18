@@ -1,90 +1,56 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH] ARM: mach-ux500|nomadik|u300: Align to common DT bindings
- for mmci
-Date: Tue, 18 Mar 2014 09:23:58 +0100
-Message-ID: <CAPDyKFpYygnBPAOJCYN=DugJyjQZ9uYdO0AMmwBGsWnSnDVz8w@mail.gmail.com>
-References: <1394713963-18300-1-git-send-email-ulf.hansson@linaro.org>
- <20140313174703.GO21483@n2100.arm.linux.org.uk>
- <CAPDyKFrw092mbirDBffF6TraUoXDLh5movp_sf9PYERG88P-Qw@mail.gmail.com>
- <CACRpkdZzObyJQmbAvovcor9NXeVnhEFO82jtxLZOdm48TPnudQ@mail.gmail.com>
- <CAPDyKFpJDKXK7siVMnB5umv6PnYAyNmto1yq9unxDaD9BP=oBQ@mail.gmail.com>
- <CACRpkdYPHkEMBu7KMp25veTfXtpWZOOz39n-+jCZ+hTQMK2=Tw@mail.gmail.com>
- <20140317161509.GA32708@e106331-lin.cambridge.arm.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2] gpio: davinci: fix gpio selection for OF
+Date: Tue, 18 Mar 2014 14:07:02 +0530
+Message-ID: <532805AE.9000806@ti.com>
+References: <5316FFCE.1060603@ti.com>
+	<1394018461-757-1-git-send-email-holler@ahsoftware.de>
+	<CACRpkdaF=jc9Z1XZCtH8VPuih01t--qyV-sgH1R_ix0VM4RzVA@mail.gmail.com>
+	<5322D529.4070904@ahsoftware.de>
+	<CACRpkdaghneo1MvNCfxjTED+sJepHgeZCgmKsRteG9qrBNWAfQ@mail.gmail.com>
+	<5326F8C5.5090406@ti.com>
+	<CACRpkdYZMzw31NkA4uSq+ZowzOnZgZthXhZri-eJY2Ozb8aNRQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140317161509.GA32708@e106331-lin.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alessandro Rubini <rubini@unipv.it>
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <CACRpkdYZMzw31NkA4uSq+ZowzOnZgZthXhZri-eJY2Ozb8aNRQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17 March 2014 17:15, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Mon, Mar 17, 2014 at 02:00:58PM +0000, Linus Walleij wrote:
->> On Mon, Mar 17, 2014 at 11:01 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->> > On 14 March 2014 11:58, Linus Walleij <linus.walleij@linaro.org> wrote:
->> >> On Fri, Mar 14, 2014 at 8:27 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->> >>> On 13 March 2014 18:47, Russell King - ARM Linux <linux@arm.linux.org.uk> wrote:
+On Monday 17 March 2014 07:35 PM, Linus Walleij wrote:
+> On Mon, Mar 17, 2014 at 2:29 PM, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org> wrote:
+> 
+>> One thing to note is that this driver is used by keystone too and all
+>> its users are DT-only. Although I do not see any in-kernel DT GPIO users
+>> even there.
 >>
->> >>>> NAK.  These bindings have been documented as being there since March
->> >>>> 14th 2012, and therefore need to be supported for ever by the driver.
->> >>>> You can _augment_ the bindings with the generic ones, and change the
->> >>>> DT files, but you can't remove the parsing of the old property names.
->> >>>
->> >>> I was kind of expecting this response. :-)
->> >>>
->> >>> So, since we made a mistake about adding these DT bindings we are now
->> >>> unable to remove them, is there really no way back?
->> >>>
->> >>> In this particular case, I am confident that it should be safe to
->> >>> remove them, but I guess this is more matter of principle, right?
->
-> Basically, yes.
->
-> Our default position is to not break existing DTBs. In general that's
-> beneficial, ensures stability, and keeps people in the right mindset.
-> Sticking to the position even where we could be a little softer is a way
-> of keeping people honest -- practically everyone has a binding (or
-> seventy) which they hate and would love to change, sticking to the rules
-> (even when painful) saves us from endless churn for little benefit.
->
-> In this case the binding isn't broken; it provides the information we
-> need, but just not with our preferred names. As Russell has pointed out,
-> we can support the more standard names in addition to the current ones
-> (which we can deprecate for new DTs). Forcibly breaking existing DTBs is
-> not necessary, and I'm not sure if it's worthwhile for the sake of a few
-> bytes.
+>> I can confirm the patch does not break my gpiolib based test module
+>> (test with and without DT), but then it did not have an issue even before.
+> 
+> Is that a Tested-by tag? :-)
 
-I get the idea, let's keep the bindings then.
+Yes.
 
->
-> There are bindings out there which are fundamentally broken, which are
-> always reliant on platform data or just don't currently work. Those are
-> what we need to focus on fixing to ensure long-term support.
->
-> We also need a strategy for binding deprecation, which we do not have
-> currently. There was talk of unstable bindings at the last mini-summit
-> to allow people to tinker without committing to long-term support of
-> bindings, but nothing seems to have happened on that front. It would be
-> nice to have a plan for dealing with all these vestigal bits long term.
+Tested-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 
-I suppose adding a comment about a binding being deprecated in the
-documentation - is the best we can do for now?
+> 
+> If you're also convinced that fix is safe I'll push it as a fix to v3.14-rcN
+> if for nothing else so for getting Mr. Holler to stop poking me in the
+> chest.
 
-Thanks for your response Mark!
+It is safe - at the least it does not break anything that is already
+working. I guess the decision to put it into -rc depends on whether you
+consider out of tree dtbs to be a valid usecase for the kernel.
 
-Kind regards
-Ulf Hansson
-
->
-> Thanks,
-> Mark.
+Thanks,
+Sekhar
