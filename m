@@ -1,124 +1,62 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCHv2 2/8] Doc/DT: Add DT binding documentation for Analog
- TV Connector
-Date: Tue, 18 Mar 2014 10:52:59 +0200
-Message-ID: <5328096B.5080206@ti.com>
-References: <1395130547-18633-1-git-send-email-tomi.valkeinen@ti.com>	<1395130547-18633-3-git-send-email-tomi.valkeinen@ti.com>
- <CAMuHMdVhh_qqXvUP9zUo0iCJ=O6bLqp-qTdaMQNLNcVgAgROBg@mail.gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 2/2] spi/fsl-lib: Get the SPI controller bus number from DTS
+Date: Tue, 18 Mar 2014 09:55:58 +0100
+Message-ID: <CAMuHMdWHSVPDZ9q9rw0FZqNrR+E0q9pQcYLRiseopoM-K-5svg@mail.gmail.com>
+References: <1394789757-40732-1-git-send-email-B48286@freescale.com>
+	<1394789757-40732-2-git-send-email-B48286@freescale.com>
+	<20140314191922.GA366@sirena.org.uk>
+	<c4b28b01b2f544ca9d264eaee2542257@DM2PR03MB301.namprd03.prod.outlook.com>
+	<20140317130109.GE11706@sirena.org.uk>
+	<9186860716f446f9a5773e7e47d39114@DM2PR03MB301.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0627212253004205992=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAMuHMdVhh_qqXvUP9zUo0iCJ=O6bLqp-qTdaMQNLNcVgAgROBg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Tomasz Figa <tomasz.figa@gmail.com>, DRI Development <dri-devel@lists.freedesktop.org>, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Rob Clark <robdclark@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel@ffwll.ch>, Archit Taneja <archit@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9186860716f446f9a5773e7e47d39114-ufbTtyGzTTTk7ZsBhlipOOO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============0627212253004205992==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="Tb4lt1J47FAALJ0ASOTug7o3Hs1T3fQxt"
+On Tue, Mar 18, 2014 at 8:40 AM, B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+<B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+>> > > The DT already has support for specifying flash layouts, can't those
+>> > > be used (for example via chosen if they're not fixed for the board)?
+>> > > Or if it's just picking the correct filesystem then UUIDs and labels
+>> > > are the standard way to do things.
+>>
+>> > The DT specifying flash layouts is ok. There is another way to make
+>> > the flash layouts using command line, but it is not safe because of
+>> > the dynamic bus_num. It is not the reason that the way of DT is
+>> > supported flash layouts, to live the other way unsafe, right?
+>>
+>> This sounds to me like we need a better way of talking about flash device
+>> names on the Linux command line rather than a way to fix the bus number -
+>> for example, being able to refer to them using a fixed property like the
+>> physical address.  Being able to refer to devices via an alias assigned
+>> in the DT would also be useful (and more readable), I think there may
+>> already be a mechanism for doing that which would need to be plumbed in
+>> but I'm not 100% sure.
+>
+> The bus number is the variable designed to distinguish one spi controller
+> from others. Why spi controller's physical address must be use instead of
+> bus number?
 
---Tb4lt1J47FAALJ0ASOTug7o3Hs1T3fQxt
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Because the bus number is dynamic, while the physical address doesn't
+change, so it can be used to uniqely identify the device before booting the
+kernel.
+Cfr. "spi1" vs. "e6e20000.spi".
 
-On 18/03/14 10:40, Geert Uytterhoeven wrote:
-> Hi Tomi,
->=20
-> On Tue, Mar 18, 2014 at 9:15 AM, Tomi Valkeinen <tomi.valkeinen@ti.com>=
- wrote:
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/video/analog-tv-connector.txt
->> @@ -0,0 +1,25 @@
->> +Analog TV Connector
->> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> +
->> +Required properties:
->> +- compatible: "composite-connector" or "svideo-connector"
->> +
->> +Optional properties:
->> +- label: a symbolic name for the connector
->> +
->> +Required nodes:
->> +- Video port for TV input
->=20
-> Only input, not output?
+Gr{oetje,eeting}s,
 
-Yes, I have only made the bindings for display. I have no experience on
-the capture side. I can change the port bindings for the connectors to
-say they may be input or output, but I have to say I have no idea
-whether the bindings work for capture.
+                        Geert
 
-But this is also something that I think could be extended in the future,
-when we have some code to actually use them on capture pipeline. For now
-it may be safer to keep them only for display.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-> Have you considered adding bindings for other analog connector types?
->   - composite (YCbCr),
->   - component with and without sync-on-green (RGB and RGBHV),
->   - D-terminal (D1/D2/D3/D4/D5).
->=20
-> Am I missing some?
-
-No, I haven't. I have no experience on those, and generally very little
-experience on analog video. I've added bindings only for the hardware I
-have.
-
-If there are lots of different analog TV connectors, should I just split
-the current "analog-tv-connector" into separate composite and svideo,
-instead of trying to manage them with a single one? The reason I
-combined composite and svideo was that there didn't seem anything else
-to specify than the connector type.
-
- Tomi
-
-
-
---Tb4lt1J47FAALJ0ASOTug7o3Hs1T3fQxt
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJTKAlrAAoJEPo9qoy8lh71cPkP/3ckNqL1kJhu34umjw3sGScV
-rg+JGEwEebt4Wjk8AAFjJcTsNo0TzrlYQL21JSZs7VsZEznTfdcUoiTNrD0Qi/Ck
-UMxsPLazmH9ysgP4s1dtdJqxV+Ns7dnNWf3RQvgqKqj1Y9lsjiSTTcDtfdJAeOBG
-ZIRC1DGGbJTv6GR06km1jvd+SrA7o4aWULbgMGwfxhuHjRlM8BanMeFraShjnKU6
-Ph7g1bkcMmP/kj5qH1/l0bXef6hrsRc3sp3vVdNpqBFIkK62gQ09MCWTfAfLTwe1
-1XMH6q3tP4xq6SKdvU88jhMKEYvfu/DDyoM/h6exdLczcSmu5XTM+YTX8h34a2D0
-OGe9ZULLRzjJwPjkgik7uXl+g853UxoXDOaMJeS5q/jrwujHcKamDYfY0/m8Hezf
-9gg8yJ6l20+eB3vcSxhrEDF4xa3xu05rmGWsd5+2rQmvQSgbbJDihIsMNxD03x2r
-6tidgHDwQPrKx09VkI/8IAePS9NDDfDWQbsaUohKQ6XNZRiMVNilNlBLT7odPhhS
-OHzzWM32KeNALb0+9iASf8CzSfmeL5DW+9eGaJHBXZeDy1Yz0YH1TSlyBApD2sIF
-fq4174AXEAfJnl2TL1uUltz/aF899PHddb+CDNAsNxCO5cAUTMzhxQeRHfmk+8K/
-uDXR/jiIVjV2B4G2qV2I
-=LRhV
------END PGP SIGNATURE-----
-
---Tb4lt1J47FAALJ0ASOTug7o3Hs1T3fQxt--
-
-
---===============0627212253004205992==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============0627212253004205992==--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
