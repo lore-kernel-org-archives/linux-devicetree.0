@@ -1,115 +1,123 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v8 3/10] Documentation: devicetree: Update Samsung FIMC DT
- binding
-Date: Tue, 18 Mar 2014 12:31:29 +0100
-Message-ID: <53282E91.5020009@samsung.com>
-References: <1823087.0J3KNi6X3C@avalon>
- <1394555670-14155-1-git-send-email-s.nawrocki@samsung.com>
- <20140318100213.GC8043@e106331-lin.cambridge.arm.com>
+From: Harini Katakam <harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH] SPI: Add driver for Cadence SPI controller
+Date: Tue, 18 Mar 2014 12:13:45 +0000
+Message-ID: <d7cf691a-c9cb-4a8a-bf5c-eae952a5d729@VA3EHSMHS045.ehs.local>
+References: <1395057936-8643-1-git-send-email-harinik@xilinx.com>
+ <20140317173017.GW11706@sirena.org.uk>
+ <255edf4f-05a8-4d9a-b32d-1a4a8ddaffb5@CH1EHSMHS004.ehs.local>
+ <20140318110401.GH11706@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <20140318100213.GC8043@e106331-lin.cambridge.arm.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140318110401.GH11706-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Language: en-US
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Mark,
 
-Thanks for your review.
-
-On 18/03/14 11:02, Mark Rutland wrote:
-> On Tue, Mar 11, 2014 at 04:34:30PM +0000, Sylwester Nawrocki wrote:
->> > This patch documents following updates of the Exynos4 SoC camera subsystem
->> > devicetree binding:
->> > 
->> >  - addition of #clock-cells and clock-output-names properties to 'camera'
->> >    node - these are now needed so the image sensor sub-devices can reference
->> >    clocks provided by the camera host interface,
->> >  - dropped a note about required clock-frequency properties at the
->> >    image sensor nodes; the sensor devices can now control their clock
->> >    explicitly through the clk API and there is no need to require this
->> >    property in the camera host interface binding.
->> > 
->> > Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
->> > ---
->> > Changes since v7:
->> >  - dropped a note about clock-frequency property in sensor nodes.
->> > 
->> > Changes since v6:
->> >  - #clock-cells, clock-output-names documented as mandatory properties;
->> >  - renamed "cam_mclk_{a,b}" to "cam_{a,b}_clkout in the example dts,
->> >    this now matches changes in exynos4.dtsi further in the patch series;
->> >  - marked "samsung,camclk-out" property as deprecated.
->> > 
->> > Changes since v5:
->> >  - none.
->> > 
->> > Changes since v4:
->> >  - dropped a requirement of specific order of values in clocks/
->> >    clock-names properties (Mark) and reference to clock-names in
->> >    clock-output-names property description (Mark).
->> > ---
->> >  .../devicetree/bindings/media/samsung-fimc.txt     |   44 +++++++++++++-------
->> >  1 file changed, 29 insertions(+), 15 deletions(-)
->> > 
->> > diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
->> > index 96312f6..922d6f8 100644
->> > --- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
->> > +++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
->> > @@ -15,11 +15,21 @@ Common 'camera' node
->> > 
->> >  Required properties:
->> > 
->> > -- compatible	: must be "samsung,fimc", "simple-bus"
+> -----Original Message-----
+> From: Mark Brown [mailto:broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> Sent: Tuesday, March 18, 2014 4:34 PM
+> To: Harini Katakam
+> Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; pawel.moll-5wv7dgnIgG8@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
+> ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org; galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org; rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org;
+> grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
+> doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
+> spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Michal Simek
+> Subject: Re: [PATCH] SPI: Add driver for Cadence SPI controller
 >
-> While it was already the case, why is "samsung,fimc" also a simple bus?
-
-IIRC the main reason was to have children automatically instantiated
-in Linux, also "samsung,fimc" is a master node gathering the all related
-camera subsystem memory mapped IP blocks.
-
-> If it has any properties which are required for the correct use of the
-> child nodes, it is _not_ a simple-bus.
-
-Then this can be considered a separate issue, and could be addressed
-in a separate patch ?
-
->> > -- clocks	: list of clock specifiers, corresponding to entries in
->> > -		  the clock-names property;
->> > -- clock-names	: must contain "sclk_cam0", "sclk_cam1", "pxl_async0",
->> > -		  "pxl_async1" entries, matching entries in the clocks property.
->> > +- compatible: must be "samsung,fimc", "simple-bus"
->> > +- clocks: list of clock specifiers, corresponding to entries in
->> > +  the clock-names property;
->> > +- clock-names : must contain "sclk_cam0", "sclk_cam1", "pxl_async0",
->> > +  "pxl_async1" entries, matching entries in the clocks property.
->> > +
->> > +- #clock-cells: from the common clock bindings (../clock/clock-bindings.txt),
->> > +  must be 1. A clock provider is associated with the 'camera' node and it should
->> > +  be referenced by external sensors that use clocks provided by the SoC on
->> > +  CAM_*_CLKOUT pins. The clock specifier cell stores an index of a clock.
->> > +  The indices are 0, 1 for CAM_A_CLKOUT, CAM_B_CLKOUT clocks respectively.
->> > +
->> > +- clock-output-names: from the common clock bindings, should contain names of
->> > +  clocks registered by the camera subsystem corresponding to CAM_A_CLKOUT,
->> > +  CAM_B_CLKOUT output clocks respectively.
+> On Tue, Mar 18, 2014 at 05:16:26AM +0000, Harini Katakam wrote:
 >
-> And if we're adding more stuff required by child nodes it's definitely
-> not a simple-bus.
-> 
-> Get rid of simple-bus. Get the driver for "samsung,fimc" to probe its
-> children once it has set up.
-> 
-> Apologies for the late reply, and sorry to have to be negative on this.
+> Please fix your mailer to word wrap within paragraphs, this will make
+> your mail much more legible.
+>
+> > > > +       if (bits_per_word != 8) {
+> > > > +               dev_err(&spi->dev, "%s, unsupported bits per word %x\n",
+> > > > +                       __func__, spi->bits_per_word);
+> > > > +               return -EINVAL;
+> > > > +       }
+>
+> > > The core will check this for you.
+>
+> > I dint find that the core does this.
+>
+> bpw_mask.
+>
 
-While I agree with you that the "simple-bus" might not be a best idea,
-I can't see how your suggestion could be now implemented in Linux, since
-AFAIK there is no API like of_platform_unpopulate(), so device objects
-can be removed upon the driver module removal.
+OK. Will set master->bits_per_word_mask.
+
+> > > It's not clear to me why this has been split into a separate function and
+> the
+> > > function will write to the hardware which you're not allowed to do in
+> > > setup() if it might affect an ongoing transfer.
+>
+> > Are you saying  that there's a chance cdns_spi_setup() will be called
+> > when there's an ongoing transfer?  In that case I have to remove the
+> > cdns_setup_transfer() call from here but then there's nothing left to
+> > do in setup.
+>
+> yes.
+>
+
+I'm going to remove the bits_per_word check anyway.
+But the clock configuration still needs to be done.
+Where should it be done spi_setup() or transfer?
+
+Can you please comment on this?
+
+"The function was split into two because cdns_spi_setup_transfer() is called internally by transfer_one_message() everytime.
+Is it always possible that the spi_transfer paramters will remain the same?
+In that case this call is probably not necessary in transfer_one_message."
+
+> > > I see from further up the file that there are error interrupt states which
+> > > might be flagged but these are just being ignored.
+>
+> > I'm not sure I understand what you are referring to -
+> > The only interrupts enabled (See CNDS_IXR_DEFAULT_MASK) are TXOW
+> and MODF.
+>
+> The code had:
+>
+> > +#define CDNS_SPI_IXR_TXOW_MASK 0x00000004 /* SPI TX FIFO
+> Overwater */
+> > +#define CDNS_SPI_IXR_MODF_MASK 0x00000002 /* SPI Mode Fault */
+> > +#define CDNS_SPI_IXR_RXNEMTY_MASK 0x00000010 /* SPI RX FIFO Not
+> Empty */
+>
+> > +#define CDNS_SPI_IXR_TXFULL_MASK       0x00000008 /* SPI TX Full */
+>
+> and defined:
+>
+> > +#define CDNS_SPI_IXR_ALL_MASK  0x0000007F /* SPI all interrupts */
+>
+> > > > +       return IRQ_HANDLED;
+>
+> > > This should only be returned if an interrupt was actually handled - if the
+> line
+> > > is shared in some system this will break.
+>
+> > In this case both possible interrupt conditions are handled.
+>
+> Are you sure that's the case, and even if you are that's still not
+> handling the case where the device isn't flagging an interrupt at all.
+>
+
+The IXR_ALL mask is only used to disable all the interrupts in the beginning.
+These two are the only interrupts enabled.
+And RXNEMPTY status is just polled. That interrupt is not enabled either
+
+Regards,
+Harini
+
+
+This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
+
 
 --
-Regards,
-Sylwester
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
