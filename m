@@ -1,158 +1,73 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 1/3] Documentation: add Device tree bindings for Hisilicon
- hip04 ethernet
-Date: Tue, 18 Mar 2014 10:39:05 -0700
-Message-ID: <CAGVrzcZY4Z6kFRUP54PtaZUAX0+cEmYfnunJQFN8TC66xooLeg@mail.gmail.com>
-References: <1395132017-15928-1-git-send-email-zhangfei.gao@linaro.org> <1395132017-15928-2-git-send-email-zhangfei.gao@linaro.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 1/5] drivers: input: keyboard: st-keyscan: add
+ keyscan driver
+Date: Tue, 18 Mar 2014 17:51:33 +0000
+Message-ID: <20140318175133.GE2941@e106331-lin.cambridge.arm.com>
+References: <1395154806-2810-1-git-send-email-gabriel.fernandez@st.com>
+ <1395154806-2810-2-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1395132017-15928-2-git-send-email-zhangfei.gao@linaro.org>
-Sender: netdev-owner@vger.kernel.org
-To: Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc: "David S. Miller" <davem@davemloft.net>, netdev <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1395154806-2810-2-git-send-email-gabriel.fernandez@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "kernel@stlinux.com" <kernel@stlinux.com>, Lee Jones <lee.jones@linaro.org>, Giuseppe Condorelli <giuseppe.condorelli@st.com>
 List-Id: devicetree@vger.kernel.org
 
-2014-03-18 1:40 GMT-07:00 Zhangfei Gao <zhangfei.gao@linaro.org>:
-> This patch adds the Device Tree bindings for the Hisilicon hip04
-> Ethernet controller, including 100M / 1000M controller.
->
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+On Tue, Mar 18, 2014 at 03:00:02PM +0000, Gabriel FERNANDEZ wrote:
+> This patch adds ST Keyscan driver to use the keypad hw a subset
+> of ST boards provide. Specific board setup will be put in the
+> given dt.
+> 
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+> Signed-off-by: Giuseppe Condorelli <giuseppe.condorelli@st.com>
 > ---
->  .../bindings/net/hisilicon-hip04-net.txt           |   74 ++++++++++++++++++++
->  1 file changed, 74 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
->
-> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt b/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
+>  .../devicetree/bindings/input/st-keyscan.txt       |  60 +++++
+>  drivers/input/keyboard/Kconfig                     |  12 +
+>  drivers/input/keyboard/Makefile                    |   1 +
+>  drivers/input/keyboard/st-keyscan.c                | 260 +++++++++++++++++++++
+>  4 files changed, 333 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/st-keyscan.txt
+>  create mode 100644 drivers/input/keyboard/st-keyscan.c
+> 
+> diff --git a/Documentation/devicetree/bindings/input/st-keyscan.txt b/Documentation/devicetree/bindings/input/st-keyscan.txt
 > new file mode 100644
-> index 0000000..c918f08
+> index 0000000..51eb428
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
-> @@ -0,0 +1,74 @@
-> +Hisilicon hip04 Ethernet Controller
+> +++ b/Documentation/devicetree/bindings/input/st-keyscan.txt
+> @@ -0,0 +1,60 @@
+> +* ST Keyscan controller Device Tree bindings
 > +
-> +* Ethernet controller node
-> +
-> +Required properties:
-> +- compatible: should be "hisilicon,hip04-mac".
-> +- reg: address and length of the register set for the device.
-> +- interrupts: interrupt for the device.
-> +- port: ppe port number connected to the controller: range from 0 to 31.
-> +- speed: 100 (100M) or 1000 (1000M).
-> +- id: should be different and fe should be 0.
-> +
-> +Optional Properties:
-> +- phy-handle : the phandle to a PHY node
-> +
-> +
-> +* Ethernet ppe node: control rx & tx fifos of all ethernet controllers
+> +The ST keyscan controller Device Tree binding is based on the
+> +matrix-keymap.
 > +
 > +Required properties:
-> +- compatible: should be "hisilicon,hip04-ppebase".
-> +- reg: address and length of the register set for the node.
+> +- compatible: "st,sti-keyscan"
 > +
+> +- reg: Register base address and size of st-keyscan controller.
 > +
-> +* MDIO bus node:
+> +- interrupts: Interrupt number for the st-keyscan controller.
 > +
-> +Required properties:
+> +- clocks: Must contain one entry, for the module clock.
+> +  See ../clocks/clock-bindings.txt for details.
 > +
-> +- compatible: "hisilicon,hip04-mdio"
-> +- Inherets from MDIO bus node binding[1]
-> +[1] Documentation/devicetree/bindings/net/phy.txt
+> +- pinctrl: Should specify pin control groups used for this controller.
+> +  See ../pinctrl/pinctrl-bindings.txt for details.
 > +
-> +Example:
-> +       mdio {
-> +               compatible = "hisilicon,hip04-mdio";
-> +               reg = <0x28f1000 0x1000>;
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
+> +- linux,keymap: The keymap for keys as described in the binding document
+> +  devicetree/bindings/input/matrix-keymap.txt.
 > +
-> +               phy0: ethernet-phy@0 {
-> +                       reg = <0>;
-> +                       marvell,reg-init = <18 0x14 0 0x8001>;
-> +                       device_type = "ethernet-phy";
-
-You are missing a compatible string such as
-"ethernet-phy-ieee802.3-c22", please take a look at
-Documentation/devicetree/bindings/net/phy.txt for an example.
-
-device_type is deprecated and should be removed.
-
-> +               };
+> +- keypad,num-rows: Number of row lines connected to the keypad controller.
 > +
-> +               phy1: ethernet-phy@1 {
-> +                       reg = <1>;
-> +                       marvell,reg-init = <18 0x14 0 0x8001>;
-> +                       device_type = "ethernet-phy";
-> +               };
-> +       };
+> +- keypad,num-columns: Number of column lines connected to the keypad
+> +  controller.
 > +
-> +       ppebase: ppebase@28c0000 {
-> +               compatible = "hisilicon,hip04-ppebase";
-> +               reg = <0x28c0000 0x10000>;
+> +Optional property:
+> +- st,debounce_us: Debouncing interval time in microseconds
 
-This should probably look like:
+s/_/-/ here, please.
 
-                    #address-cells = <0>;
-                    #size-cells = <0>;
+Otherwise this looks ok.
 
-                    eth0_port: port@0 {
-                         reg = <0>;
-                    };
-
-                    eth1_port: port@1f {
-                         reg = <31>;
-                    };
-
-This looks like something similar to mv643xx_eth, you should see
-Documentation/devicetree/bindings/marvell.txt for hints on how to
-model the representation in a similar fashion.
-
-> +       };
-> +
-> +       fe: ethernet@28b0000 {
-> +               compatible = "hisilicon,hip04-mac";
-> +               reg = <0x28b0000 0x10000>;
-> +               interrupts = <0 413 4>;
-> +               port = <31>;
-
-I do not think this is the right way to expose that, port should be
-specialized to e.g: hisilicon,port, or you should use a phandle to the
-"ppebase" node which exposes differents ports as subnodes:
-
-                    hisilicon,port-handle = <&eth0_port>;
-
-> +               speed = <100>;
-
-max-speed is the standard property for this
-
-> +               id = <0>;
-
-id here is a software concept, either you create properly numbered
-aliases for these nodes, and use of_alias_get_id(), or you do not use
-these identifiers at all.
-
-> +       };
-> +
-> +       ge0: ethernet@2800000 {
-> +               compatible = "hisilicon,hip04-mac";
-> +               reg = <0x2800000 0x10000>;
-> +               interrupts = <0 402 4>;
-> +               port = <0>;
-> +               speed = <1000>;
-> +               id = <1>;
-> +               phy-handle = <&phy0>;
-> +       };
-> --
-> 1.7.9.5
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-
-
--- 
-Florian
+Mark.
