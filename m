@@ -1,418 +1,274 @@
-From: Cho KyongHo <pullip.cho@samsung.com>
-Subject: Re: [PATCH v11 19/27] iommu/exynos: add support for power management
- subsystems.
-Date: Tue, 18 Mar 2014 20:23:20 +0900
-Message-ID: <20140318202320.a3101304bbc51cc9f169cdaa@samsung.com>
-References: <20140314141028.4b0b62d895905988ab5dda88@samsung.com>
- <53232959.7020306@samsung.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
+Date: Tue, 18 Mar 2014 12:25:16 +0100
+Message-ID: <4611515.XyVGvsaLcW@wuerfel>
+References: <1395132017-15928-1-git-send-email-zhangfei.gao@linaro.org> <1395132017-15928-4-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <53232959.7020306@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Linux DeviceTree <devicetree@vger.kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>, Antonios Motakis <a.motakis@virtualopensystems.com>, Grant Grundler <grundler@chromium.org>, Joerg Roedel <joro@8bytes.org>, Kukjin Kim <kgene.kim@samsung.com>, Prathyush <prathyush.k@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Varun Sethi <Varun.Sethi@freescale.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1395132017-15928-4-git-send-email-zhangfei.gao@linaro.org>
+Sender: netdev-owner@vger.kernel.org
+To: Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc: "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 14 Mar 2014 17:07:53 +0100, Tomasz Figa wrote:
-> Hi KyongHo,
-> 
-> On 14.03.2014 06:10, Cho KyongHo wrote:
-> > This adds support for Suspend to RAM and Runtime Power Management.
-> >
-> > Since System MMU is located in the same local power domain of its
-> > master H/W, System MMU must be initialized before it is working if
-> > its power domain was ever turned off. TLB invalidation according to
-> > unmapping on page tables must also be performed while power domain is
-> > turned on.
-> >
-> > This patch ensures that resume and runtime_resume(restore_state)
-> > functions in this driver is called before the calls to resume and
-> > runtime_resume callback functions in the drivers of master H/Ws.
-> > Likewise, suspend and runtime_suspend(save_state) functions in this
-> > driver is called after the calls to suspend and runtime_suspend in the
-> > drivers of master H/Ws.
-> >
-> > In order to get benefit of this support, the master H/W and its System
-> > MMU must resides in the same power domain in terms of Linux kernel. If
-> > a master H/W does not use generic I/O power domain, its driver must
-> > call iommu_attach_device() after its local power domain is turned on,
-> > iommu_detach_device before turned off.
-> >
-> > Signed-off-by: Cho KyongHo <pullip.cho@samsung.com>
-> > ---
-> >   drivers/iommu/exynos-iommu.c |  220 ++++++++++++++++++++++++++++++++++++++----
-> >   1 file changed, 201 insertions(+), 19 deletions(-)
-> >
-> > diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
-> > index 9037da0..84ba29a 100644
-> > --- a/drivers/iommu/exynos-iommu.c
-> > +++ b/drivers/iommu/exynos-iommu.c
-> > @@ -28,6 +28,7 @@
-> >   #include <linux/export.h>
-> >   #include <linux/of.h>
-> >   #include <linux/of_platform.h>
-> > +#include <linux/pm_domain.h>
-> >   #include <linux/notifier.h>
-> >
-> >   #include <asm/cacheflush.h>
-> > @@ -203,6 +204,7 @@ struct sysmmu_drvdata {
-> >   	int activations;
-> >   	rwlock_t lock;
-> >   	struct iommu_domain *domain;
-> > +	bool runtime_active;
-> >   	unsigned long pgtable;
-> >   };
-> >
-> > @@ -388,7 +390,8 @@ static bool __sysmmu_disable(struct sysmmu_drvdata *data)
-> >   		data->pgtable = 0;
-> >   		data->domain = NULL;
-> >
-> > -		__sysmmu_disable_nocount(data);
-> > +		if (data->runtime_active)
-> > +			__sysmmu_disable_nocount(data);
-> >
-> >   		dev_dbg(data->sysmmu, "Disabled\n");
-> >   	} else  {
-> > @@ -449,7 +452,8 @@ static int __sysmmu_enable(struct sysmmu_drvdata *data,
-> >   		data->pgtable = pgtable;
-> >   		data->domain = domain;
-> >
-> > -		__sysmmu_enable_nocount(data);
-> > +		if (data->runtime_active)
-> > +			__sysmmu_enable_nocount(data);
-> >
-> >   		dev_dbg(data->sysmmu, "Enabled\n");
-> >   	} else {
-> > @@ -534,13 +538,11 @@ static void sysmmu_tlb_invalidate_entry(struct device *dev, unsigned long iova,
-> >   	data = dev_get_drvdata(owner->sysmmu);
-> >
-> >   	read_lock_irqsave(&data->lock, flags);
-> > -	if (is_sysmmu_active(data)) {
-> > -		unsigned int maj;
-> > +	if (is_sysmmu_active(data) && data->runtime_active) {
-> >   		unsigned int num_inv = 1;
-> >
-> >   		__master_clk_enable(data);
-> >
-> > -		maj = __raw_readl(data->sfrbase + REG_MMU_VERSION);
-> >   		/*
-> >   		 * L2TLB invalidation required
-> >   		 * 4KB page: 1 invalidation
-> > @@ -551,7 +553,7 @@ static void sysmmu_tlb_invalidate_entry(struct device *dev, unsigned long iova,
-> >   		 * 1MB page can be cached in one of all sets.
-> >   		 * 64KB page can be one of 16 consecutive sets.
-> >   		 */
-> > -		if ((maj >> 28) == 2) /* major version number */
-> > +		if (__sysmmu_version(data, NULL) == 2) /* major version number */
-> >   			num_inv = min_t(unsigned int, size / PAGE_SIZE, 64);
-> >
-> >   		if (sysmmu_block(data->sfrbase)) {
-> > @@ -576,7 +578,7 @@ void exynos_sysmmu_tlb_invalidate(struct device *dev)
-> >   	data = dev_get_drvdata(owner->sysmmu);
-> >
-> >   	read_lock_irqsave(&data->lock, flags);
-> > -	if (is_sysmmu_active(data)) {
-> > +	if (is_sysmmu_active(data) && data->runtime_active) {
-> >   		__master_clk_enable(data);
-> >   		if (sysmmu_block(data->sfrbase)) {
-> >   			__sysmmu_tlb_invalidate(data->sfrbase);
-> > @@ -677,11 +679,40 @@ static int __init exynos_sysmmu_probe(struct platform_device *pdev)
-> >   	platform_set_drvdata(pdev, data);
-> >
-> >   	pm_runtime_enable(dev);
-> > +	data->runtime_active = !pm_runtime_enabled(dev);
-> 
-> Hmm, this seems to be a bit misleading. The field is named 
-> runtime_active, but the assignment makes it true if PM runtime is _not_ 
-> enabled (i.e. inactive). Is this correct?
-> 
+On Tuesday 18 March 2014 16:40:17 Zhangfei Gao wrote:
 
-I agree that it may lead misunderstood.
-data->runtime_active actually indicates if electric power is asserted
-to the System MMU. pm_runtime_enable() call must enable runtime pm
-for the given device. If runtime pm is not enabled although pm_runtime_enable()
-is called, CONFIG_PM_RUNTIME is not configured.
+> +
+> +static void __iomem *ppebase;
 
-Actually, it is replacible with 
-if (IS_ENABLED(CONFIG_PM_RUNTIME)) 
-    data->runtime_active = true;
+The global 'ppebase' seems hacky. Isn't that a SoC-specific register area, while
+the rest of the driver is reusable across SoCs?
 
-> >
-> >   	dev_dbg(dev, "Probed and initialized\n");
-> >   	return 0;
-> >   }
-> >
-> > +#ifdef CONFIG_PM_SLEEP
-> > +static int sysmmu_suspend(struct device *dev)
-> > +{
-> > +	struct sysmmu_drvdata *data = dev_get_drvdata(dev);
-> > +	unsigned long flags;
-> > +	read_lock_irqsave(&data->lock, flags);
-> > +	if (is_sysmmu_active(data) &&
-> > +		(!pm_runtime_enabled(dev) || data->runtime_active))
-> > +		__sysmmu_disable_nocount(data);
-> > +	read_unlock_irqrestore(&data->lock, flags);
-> > +	return 0;
-> > +}
-> > +
-> > +static int sysmmu_resume(struct device *dev)
-> > +{
-> > +	struct sysmmu_drvdata *data = dev_get_drvdata(dev);
-> > +	unsigned long flags;
-> > +	read_lock_irqsave(&data->lock, flags);
-> > +	if (is_sysmmu_active(data) &&
-> > +		(!pm_runtime_enabled(dev) || data->runtime_active))
-> > +		__sysmmu_enable_nocount(data);
-> > +	read_unlock_irqrestore(&data->lock, flags);
-> > +	return 0;
-> > +}
-> > +#endif
-> > +
-> > +static SIMPLE_DEV_PM_OPS(sysmmu_pm_ops, sysmmu_suspend, sysmmu_resume);
-> > +
-> >   #ifdef CONFIG_OF
-> >   static struct of_device_id sysmmu_of_match[] __initconst = {
-> >   	{ .compatible	= "samsung,sysmmu-v1", },
-> > @@ -698,6 +729,7 @@ static struct platform_driver exynos_sysmmu_driver __refdata = {
-> >   	.driver	= {
-> >   		.owner		= THIS_MODULE,
-> >   		.name		= "exynos-sysmmu",
-> > +		.pm		= &sysmmu_pm_ops,
-> >   		.of_match_table	= of_match_ptr(sysmmu_of_match),
-> >   	}
-> >   };
-> > @@ -1111,24 +1143,152 @@ err_reg_driver:
-> >   }
-> >   subsys_initcall(exynos_iommu_init);
-> >
-> > +#ifdef CONFIG_PM_SLEEP
-> > +static int sysmmu_pm_genpd_suspend(struct device *dev)
-> > +{
-> > +	struct exynos_iommu_owner *owner = dev->archdata.iommu;
-> > +	int ret;
-> > +
-> > +	ret = pm_generic_suspend(dev);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return pm_generic_suspend(owner->sysmmu);
-> > +}
-> > +
-> > +static int sysmmu_pm_genpd_resume(struct device *dev)
-> > +{
-> > +	struct exynos_iommu_owner *owner = dev->archdata.iommu;
-> > +	int ret;
-> > +
-> > +	ret = pm_generic_resume(owner->sysmmu);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return pm_generic_resume(dev);
-> > +}
-> > +#endif
-> > +
-> > +#ifdef CONFIG_PM_RUNTIME
-> > +static void sysmmu_restore_state(struct device *sysmmu)
-> > +{
-> > +	struct sysmmu_drvdata *data = dev_get_drvdata(sysmmu);
-> > +	unsigned long flags;
-> > +
-> > +	spin_lock_irqsave(&data->lock, flags);
-> > +	data->runtime_active = true;
-> > +	if (is_sysmmu_active(data))
-> > +		__sysmmu_enable_nocount(data);
-> > +	spin_unlock_irqrestore(&data->lock, flags);
-> > +}
-> > +
-> > +static void sysmmu_save_state(struct device *sysmmu)
-> > +{
-> > +	struct sysmmu_drvdata *data = dev_get_drvdata(sysmmu);
-> > +	unsigned long flags;
-> > +
-> > +	spin_lock_irqsave(&data->lock, flags);
-> > +	if (is_sysmmu_active(data))
-> > +		__sysmmu_disable_nocount(data);
-> > +	data->runtime_active = false;
-> > +	spin_unlock_irqrestore(&data->lock, flags);
-> > +}
-> > +
-> > +static int sysmmu_pm_genpd_save_state(struct device *dev)
-> > +{
-> > +	struct exynos_iommu_client *client = dev->archdata.iommu;
-> > +	int (*cb)(struct device *__dev);
-> > +	int ret = 0;
-> > +
-> > +	if (dev->type && dev->type->pm)
-> > +		cb = dev->type->pm->runtime_suspend;
-> > +	else if (dev->class && dev->class->pm)
-> > +		cb = dev->class->pm->runtime_suspend;
-> > +	else if (dev->bus && dev->bus->pm)
-> > +		cb = dev->bus->pm->runtime_suspend;
-> > +	else
-> > +		cb = NULL;
-> > +
-> > +	if (!cb && dev->driver && dev->driver->pm)
-> > +		cb = dev->driver->pm->runtime_suspend;
-> > +
-> > +	if (cb)
-> > +		ret = cb(dev);
-> > +
-> > +	if (ret == 0)
-> > +		sysmmu_save_state(client->sysmmu);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int sysmmu_pm_genpd_restore_state(struct device *dev)
-> > +{
-> > +	struct exynos_iommu_client *client = dev->archdata.iommu;
-> > +	int (*cb)(struct device *__dev);
-> > +	int ret = 0;
-> > +
-> > +	if (dev->type && dev->type->pm)
-> > +		cb = dev->type->pm->runtime_resume;
-> > +	else if (dev->class && dev->class->pm)
-> > +		cb = dev->class->pm->runtime_resume;
-> > +	else if (dev->bus && dev->bus->pm)
-> > +		cb = dev->bus->pm->runtime_resume;
-> > +	else
-> > +		cb = NULL;
-> > +
-> > +	if (!cb && dev->driver && dev->driver->pm)
-> > +		cb = dev->driver->pm->runtime_resume;
-> > +
-> > +	sysmmu_restore_state(client->sysmmu);
-> > +
-> > +	if (cb)
-> > +		ret = cb(dev);
-> > +
-> > +	if (ret)
-> > +		sysmmu_save_state(client->sysmmu);
-> > +
-> > +	return ret;
-> > +}
-> > +#endif
-> > +
-> > +#ifdef CONFIG_PM_GENERIC_DOMAINS
-> > +struct gpd_dev_ops sysmmu_devpm_ops = {
-> > +#ifdef CONFIG_PM_RUNTIME
-> > +	.save_state = &sysmmu_pm_genpd_save_state,
-> > +	.restore_state = &sysmmu_pm_genpd_restore_state,
-> > +#endif
-> > +#ifdef CONFIG_PM_SLEEP
-> > +	.suspend = &sysmmu_pm_genpd_suspend,
-> > +	.resume = &sysmmu_pm_genpd_resume,
-> > +#endif
-> > +};
-> > +#endif /* CONFIG_PM_GENERIC_DOMAINS */
-> > +
-> >   static int sysmmu_hook_driver_register(struct notifier_block *nb,
-> >   					unsigned long val,
-> >   					void *p)
-> >   {
-> >   	struct device *dev = p;
-> >
-> > +	/*
-> > +	 * No System MMU assigned even though in the initial state.
-> > +	 * See exynos_sysmmu_probe().
-> > +	 */
-> > +	if (dev->archdata.iommu == NULL)
-> > +		return 0;
-> > +
-> >   	switch (val) {
-> >   	case BUS_NOTIFY_BIND_DRIVER:
-> >   	{
-> >   		struct exynos_iommu_owner *owner;
-> > +		int ret;
-> >
-> > -		/* No System MMU assigned. See exynos_sysmmu_probe(). */
-> > -		if (dev->archdata.iommu == NULL)
-> > -			break;
-> > +		BUG_ON(!dev_get_drvdata(dev->archdata.iommu));
-> >
-> >   		owner = devm_kzalloc(dev, sizeof(*owner), GFP_KERNEL);
-> >   		if (!owner) {
-> >   			dev_err(dev, "No Memory for exynos_iommu_owner\n");
-> > +			dev->archdata.iommu = NULL;
-> >   			return -ENOMEM;
-> >   		}
-> >
-> > @@ -1136,22 +1296,44 @@ static int sysmmu_hook_driver_register(struct notifier_block *nb,
-> >   		INIT_LIST_HEAD(&owner->client);
-> >   		owner->sysmmu = dev->archdata.iommu;
-> >
-> > +		ret = pm_genpd_add_callbacks(dev, &sysmmu_devpm_ops, NULL);
-> > +		if (ret && (ret != -ENOSYS)) {
-> > +			dev_err(dev,
-> > +				"Failed to register 'dev_pm_ops' for iommu\n");
-> > +			devm_kfree(dev, owner);
-> > +			dev->archdata.iommu = NULL;
-> > +			return ret;
-> > +		}
-> > +
-> >   		dev->archdata.iommu = owner;
-> >   		break;
-> >   	}
-> > -	case BUS_NOTIFY_UNBOUND_DRIVER:
-> > +	case BUS_NOTIFY_BOUND_DRIVER:
-> >   	{
-> >   		struct exynos_iommu_owner *owner = dev->archdata.iommu;
-> > -		if (owner) {
-> > -			struct device *sysmmu = owner->sysmmu;
-> > -			/* if still attached to an iommu_domain. */
-> > -			if (WARN_ON(!list_empty(&owner->client)))
-> > -				iommu_detach_device(owner->domain, owner->dev);
-> > -			devm_kfree(dev, owner);
-> > -			dev->archdata.iommu = sysmmu;
-> > +		if (!pm_runtime_enabled(dev)) {
-> > +			struct sysmmu_drvdata *data =
-> > +					dev_get_drvdata(owner->sysmmu);
-> > +			if (pm_runtime_enabled(data->sysmmu)) {
-> > +				data->runtime_active = true;
-> > +				if (is_sysmmu_active(data))
-> > +					__sysmmu_enable_nocount(data);
-> > +				pm_runtime_disable(data->sysmmu);
-> > +			}
-> >   		}
-> >   		break;
-> >   	}
-> > +	case BUS_NOTIFY_UNBOUND_DRIVER:
-> > +	{
-> > +		struct exynos_iommu_owner *owner = dev->archdata.iommu;
-> > +		struct device *sysmmu = owner->sysmmu;
-> > +		if (WARN_ON(!list_empty(&owner->client)))
-> > +			iommu_detach_device(owner->domain, dev);
-> > +		__pm_genpd_remove_callbacks(dev, false);
-> > +		devm_kfree(dev, owner);
-> > +		dev->archdata.iommu = sysmmu;
-> > +		break;
-> > +	}
-> >   	} /* switch (val) */
-> >
-> >   	return 0;
-> > @@ -1165,4 +1347,4 @@ static int __init exynos_iommu_prepare(void)
-> >   {
-> >   	return bus_register_notifier(&platform_bus_type, &sysmmu_notifier);
-> >   }
-> > -arch_initcall(exynos_iommu_prepare);
-> > +subsys_initcall_sync(exynos_iommu_prepare);
-> 
-> Again, initcall is not quite right way to handle platform-specific 
-> things, considering that we are going to have a multiplatform kernel.
-> 
-> Anyway, I'm not sure if genpd is the right place to plug into with IOMMU 
-> power management. Marek Szyprowski has already solved this issue without 
-> hacks like this in our internal code, he's on holidays right now, but I 
-> added him on Cc and also Bartlomiej Zolnierkiewicz, who may also know 
-> something about this. Also added some PM guys on Cc.
-> 
+What does 'ppe' stand for?
 
-Thank you for the information.
+What if there are multiple instances of this, which each have their own ppebase?
 
-I am wating for the reply from Marek.
+> +static void hip04_config_port(struct hip04_priv *priv, u32 speed, u32 duplex)
+> +{
+> +	u32 val;
+> +
+> +	priv->speed = speed;
+> +	priv->duplex = duplex;
+> +
+> +	switch (speed) {
+> +	case SPEED_1000:
+> +		val = 8;
+> +		break;
+> +	case SPEED_100:
+> +		if (priv->id)
+> +			val = 7;
+> +		else
+> +			val = 1;
+> +		break;
+> +	default:
+> +		val = 0;
+> +		break;
+> +	}
+> +	writel_relaxed(val, priv->base + GE_PORT_MODE)
 
-Regards,
+This also seems to encode knowledge about a particular implementation
+into the driver. Maybe it's better to add a property for the port
+mode?
 
-KyongHo
+
+> +static void hip04_set_xmit_desc(struct hip04_priv *priv, dma_addr_t phys)
+> +{
+> +	writel_relaxed(phys, priv->base + PPE_CFG_TX_PKT_BD_ADDR);
+> +}
+> +
+> +static void hip04_set_recv_desc(struct hip04_priv *priv, dma_addr_t phys)
+> +{
+> +	writel_relaxed(phys, ppebase + priv->port * 4 + PPE_CFG_RX_CFF_ADDR);
+> +}
+> +
+> +static u32 hip04_recv_cnt(struct hip04_priv *priv)
+> +{
+> +	return readl_relaxed(priv->base + PPE_HIS_RX_PKT_CNT);
+> +}
+
+At the very least, the hip04_set_xmit_desc() function needs to use 'writel'
+rather than 'writel_relaxed'. Otherwise data that is being sent out
+can be stuck in the CPU's write buffers and you send stale data on the wire.
+
+For the receive path, you may or may not need to use 'readl', depending
+on how DMA is serialized by this device. If you have MSI interrupts, the
+interrupt message should already do the serialization, but if you have
+edge or level triggered interrupts, you normally need to have one readl()
+from the device register between the IRQ and the data access.
+
+
+> +static void endian_change(void *p, int size)
+> +{
+> +	unsigned int *to_cover = (unsigned int *)p;
+> +	int i;
+> +
+> +	size = size >> 2;
+> +	for (i = 0; i < size; i++)
+> +		*(to_cover+i) = htonl(*(to_cover+i));
+> +}
+> +
+> +static int hip04_rx_poll(struct napi_struct *napi, int budget)
+> +{
+> +	struct hip04_priv *priv = container_of(napi,
+> +			      struct hip04_priv, napi);
+> +	struct net_device *ndev = priv->ndev;
+> +	struct sk_buff *skb;
+> +	struct rx_desc *desc;
+> +	unsigned char *buf;
+> +	int rx = 0;
+> +	unsigned int cnt = hip04_recv_cnt(priv);
+> +	unsigned int len, tmp[16];
+> +
+> +	while (cnt) {
+> +		buf = priv->rx_buf[priv->rx_head];
+> +		skb = build_skb(buf, priv->rx_buf_size);
+> +		if (unlikely(!skb))
+> +			net_dbg_ratelimited("build_skb failed\n");
+> +		dma_map_single(&ndev->dev, skb->data,
+> +			RX_BUF_SIZE, DMA_FROM_DEVICE);
+> +		memcpy(tmp, skb->data, 64);
+> +		endian_change((void *)tmp, 64);
+> +		desc = (struct rx_desc *)tmp;
+> +		len = desc->pkt_len;
+
+The dma_map_single() seems misplaced here, for all I can tell, the
+data has already been transferred. Maybe you mean dma_unmap_single?
+
+I don't see why you copy 64 bytes out of the buffer using endian_change,
+rather than just looking at the first word, which seems to have the
+only value you are interested in.
+
+> +		if (len > RX_BUF_SIZE)
+> +			len = RX_BUF_SIZE;
+> +		if (0 == len)
+> +			break;
+> +
+> +		skb_reserve(skb, NET_SKB_PAD + NET_IP_ALIGN);
+> +		skb_put(skb, len);
+> +		skb->protocol = eth_type_trans(skb, ndev);
+> +		napi_gro_receive(&priv->napi, skb);
+> +
+> +		buf = netdev_alloc_frag(priv->rx_buf_size);
+> +		if (!buf)
+> +			return -ENOMEM;
+> +		priv->rx_buf[priv->rx_head] = buf;
+> +		dma_map_single(&ndev->dev, buf, RX_BUF_SIZE, DMA_TO_DEVICE);
+
+Maybe you mean DMA_FROM_DEVICE? The call here doesn't seem to make any
+sense. You also need to use the return value of dma_map_single() every
+time you call it.
+
+> +		hip04_set_recv_desc(priv, virt_to_phys(buf));
+
+and put it right here in the next line. virt_to_phys() is not the correct
+function call, that is what dma_map_single() is meant for.
+
+> +		priv->rx_head = RX_NEXT(priv->rx_head);
+> +		if (rx++ >= budget)
+> +			break;
+> +
+> +		if (--cnt == 0)
+> +			cnt = hip04_recv_cnt(priv);
+> +	}
+> +
+> +	if (rx < budget) {
+> +		napi_gro_flush(napi, false);
+> +		__napi_complete(napi);
+> +	}
+> +
+> +	/* enable rx interrupt */
+> +	priv->reg_inten |= RCV_INT | RCV_NOBUF;
+> +	writel_relaxed(priv->reg_inten, priv->base + PPE_INTEN);
+
+
+Why do you unconditionally turn on interrupts here? Shouldn't you
+only do that after calling napi_complete()?
+
+
+> +
+> +static int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+> +{
+> +	struct hip04_priv *priv = netdev_priv(ndev);
+> +	struct tx_desc *desc = priv->td_ring[priv->tx_head];
+> +	unsigned int tx_head = priv->tx_head;
+> +	int ret;
+> +
+> +	hip04_tx_reclaim(ndev, false);
+> +
+> +	spin_lock_irq(&priv->txlock);
+> +	if (priv->tx_count++ >= TX_DESC_NUM) {
+> +		net_dbg_ratelimited("no TX space for packet\n");
+> +		netif_stop_queue(ndev);
+> +		ret = NETDEV_TX_BUSY;
+> +		goto out_unlock;
+> +	}
+> +
+> +	priv->tx_skb[tx_head] = skb;
+> +	dma_map_single(&ndev->dev, skb->data, skb->len, DMA_TO_DEVICE);
+> +	memset((void *)desc, 0, sizeof(*desc));
+> +	desc->send_addr = (unsigned int)virt_to_phys(skb->data);
+
+Just like above: you must not use virt_to_phys here, but rather use
+the output of dma_map_single.
+
+IIRC, you can't generally call dma_map_single() under a spinlock, so
+better move that ahead. It may also be a slow operation.
+
+> +
+> +static int hip04_mac_open(struct net_device *ndev)
+> +{
+> +	struct hip04_priv *priv = netdev_priv(ndev);
+> +	int i;
+> +
+> +	hip04_reset_ppe(priv);
+> +	for (i = 0; i < RX_DESC_NUM; i++) {
+> +		dma_map_single(&ndev->dev, priv->rx_buf[i],
+> +				RX_BUF_SIZE, DMA_TO_DEVICE);
+> +		hip04_set_recv_desc(priv, virt_to_phys(priv->rx_buf[i]));
+> +	}
+
+And one more. Also DMA_FROM_DEVICE.
+
+> +static int hip04_alloc_ring(struct net_device *ndev, struct device *d)
+> +{
+> +	struct hip04_priv *priv = netdev_priv(ndev);
+> +	int i;
+> +
+> +	priv->rx_buf_size = RX_BUF_SIZE +
+> +			    SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+> +
+> +	priv->desc_pool = dma_pool_create(DRV_NAME, d, sizeof(struct tx_desc),
+> +				SKB_DATA_ALIGN(sizeof(struct tx_desc)),	0);
+> +	if (!priv->desc_pool)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < TX_DESC_NUM; i++) {
+> +		priv->td_ring[i] = dma_pool_alloc(priv->desc_pool,
+> +					GFP_ATOMIC, &priv->td_phys[i]);
+> +		if (!priv->td_ring[i])
+> +			return -ENOMEM;
+> +	}
+
+Why do you create a dma pool here, when you do all the allocations upfront?
+
+It looks to me like you could simply turn the td_ring array of pointers
+to tx descriptors into a an array of tx descriptors (no pointers) and allocate
+that one using dma_alloc_coherent.
+
+
+> +	if (!ppebase) {
+> +		struct device_node *n;
+> +
+> +		n = of_find_compatible_node(NULL, NULL, "hisilicon,hip04-ppebase");
+> +		if (!n) {
+> +			ret = -EINVAL;
+> +			netdev_err(ndev, "not find hisilicon,ppebase\n");
+> +			goto init_fail;
+> +		}
+> +		ppebase = of_iomap(n, 0);
+> +	}
+
+How about using syscon_regmap_lookup_by_phandle() here? That way, you can have
+a more generic abstraction of the ppe, and stick the port and id in there as
+well, e.g.
+
+	ppe-syscon = <&hip04ppe 1 4>; // ppe, port, id 
+
+> +	ret = of_property_read_u32(node, "speed", &val);
+> +	if (ret) {
+> +		dev_warn(d, "not find speed info\n");
+> +		priv->speed = SPEED_1000;
+> +	}
+> +
+> +	if (SPEED_100 == val)
+> +		priv->speed = SPEED_100;
+> +	else
+> +		priv->speed = SPEED_1000;
+> +	priv->duplex = DUPLEX_FULL;
+
+Why do you even need the speed here, shouldn't you get that information
+from the phy through hip04_adjust_link?
+
+	Arnd
