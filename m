@@ -1,107 +1,143 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v4 2/4] pwm: sirf: add dt-binding document
-Date: Tue, 18 Mar 2014 22:13:40 +0100
-Message-ID: <20140318211340.GF5917@mithrandir>
-References: <1394013583-6352-1-git-send-email-21cnbao@gmail.com>
+From: Byungho An <bh74.an@samsung.com>
+Subject: RE: [PATCH V5 1/8] sxgbe: Add device-tree binding support document
+Date: Tue, 18 Mar 2014 14:16:28 -0700
+Message-ID: <003a01cf42ef$57c32ee0$07498ca0$@samsung.com>
+References: <002d01cf42d6$a3fd3a30$ebf7ae90$@samsung.com>
+ <CAGVrzcbY61dtBLzYRY4xYg9CrTuMHBWCcJ+-hNLH_EvQ80xGCw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Y/WcH0a6A93yCHGr"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1394013583-6352-1-git-send-email-21cnbao@gmail.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Barry Song <21cnbao@gmail.com>
-Cc: linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, workgroup.linux@csr.com, devicetree@vger.kernel.org, Barry Song <Baohua.Song@csr.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAGVrzcbY61dtBLzYRY4xYg9CrTuMHBWCcJ+-hNLH_EvQ80xGCw@mail.gmail.com>
+Content-language: en-us
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Florian Fainelli' <f.fainelli@gmail.com>
+Cc: 'netdev' <netdev@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 'David Miller' <davem@davemloft.net>, siva.kallam@samsung.com, ilho215.lee@samsung.com, ks.giri@samsung.com, vipul.pandya@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+Florian Fainelli <f.fainelli@gmail.com> wrote :
+> 2014-03-18 11:19 GMT-07:00 Byungho An <bh74.an@samsung.com>:
+> > From: Siva Reddy <siva.kallam@samsung.com>
+> >
+> > This patch adds binding document for SXGBE ethernet driver via device-tree.
+> >
+> > Signed-off-by: Siva Reddy Kallam <siva.kallam@samsung.com>
+> > Signed-off-by: Byungho An <bh74.an@samsung.com>
+> > ---
+> >  .../devicetree/bindings/net/samsung-sxgbe.txt      |   52 ++++++++++++++++++++
+> >  1 file changed, 52 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/net/samsung-sxgbe.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
+> > b/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
+> > new file mode 100644
+> > index 0000000..340eff6
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
+> > @@ -0,0 +1,52 @@
+> > +* Samsung 10G Ethernet driver (SXGBE)
+> > +
+> > +Required properties:
+> > +- compatible: Should be "samsung,sxgbe-v2.0a"
+> > +- reg: Address and length of the register set for the device
+> > +- interrupt-parent: Should be the phandle for the interrupt
+> > +controller
+> > +  that services interrupts for this device
+> > +- interrupts: Should contain the SXGBE interrupts
+> > +  These interrupts are ordered by fixed and follows variable
+> > +  trasmit DMA interrupts, receive DMA interrupts and lpi interrupt.
+> > +  index 0 - this is fixed common interrupt of SXGBE and it is always
+> > +  available.
+> > +  index 1 to 25 - 8 variable trasmit interrupts, variable 16 receive
+> > +interrupts
+> > +  and 1 optional lpi interrupt.
+> > +- phy-mode: String, operation mode of the PHY interface.
+> 
+> You should reference
+> Documentation/devicetree/bindings/net/ethernet.txt which is more thorough about what this is about.
+OK.
 
---Y/WcH0a6A93yCHGr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> 
+> > +  Supported values are: "xaui", "gmii".
+> 
+> xaui is not documented in
+> Documentation/devicetree/bindings/net/ethernet.txt, nor is it supported in include/linux/phy.h and drivers/of/of_net.c, that should
+> be part of the patchset.
+OK.  It will be changed to xgmii and xaui support patch will be posted later.
 
-On Wed, Mar 05, 2014 at 05:59:43PM +0800, Barry Song wrote:
-> From: Barry Song <Baohua.Song@csr.com>
->=20
-> this patch adds dt-binding document for pwm-sirf. here the controller clo=
-ck
-> can't generate PWM signals, so we need seperate clock as signal source.
+> 
+> > +- samsung,pbl: Integer, Programmable Burst Length.
+> > +  Supported values are 1, 2, 4, 8, 16, or 32.
+> > +- samsung,burst-map: Integer, Program the possible bursts supported
+> > +by sxgbe
+> > +  This is an interger and represents allowable DMA bursts when fixed burst.
+> > +  Allowable range is 0x00-0x3F. This field is valid only when fixed
+> > +burst is
+> > +  enabled, otherwise ignored.
+> > +- samsung,adv-addr-mode: Boolean, Program the DMA to use Enhanced address mode.
+> > +- samsung,force-thresh-dma-mode: Boolean, Force DMA to use the
+> > +threshold mode
+> > +  for both tx and rx
+> > +- samsung,force-sf-dma-mode: Boolean, Force DMA to use the Store and
+> > +Forward
+> > +  mode for both tx and rx. This flag is ignored if force-thresh-dma-mode is set.
+> > +- samsung,phy-addr: Integer, Address of the PHY attached with SXGBE.
+> 
+> Please don't use a custom property for that, use a phy-handle which points to an ePAPR compliant Ethernet PHY device tree node as
+> described in Documentation/devicetree/bindings/net/phy.txt.
+OK.
 
-Please capitalize properly. Also since the binding document should be OS
-agnostic, it shouldn't be using the name of the driver in the Linux
-kernel.
+> 
+> > +
+> > +Optional properties:
+> > +- mac-address: 6 bytes, mac address
+> 
+> Did you intend to use 'local-mac-address'. 'mac-address' is described by ePAPR as:
+> 
+> "Specifies the MAC address that was last used by the boot program.
+> This property should be
+> used in cases where the MAC address assigned to the device by the boot program is different from the local-mac-address property.
+> This property shall be used only if the value differs from local-mac-address property value."
+> 
+> Does your bootloader really do something which falls into that description? If not, use 'local-mac-address'.
+In my case, bootloader assigns mac address so mac-address is suitable according to Documentation/devicetree/binings/net/ethernet.txt.
 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-sirf.txt b/Documen=
-tation/devicetree/bindings/pwm/pwm-sirf.txt
-> new file mode 100644
-> index 0000000..47851ea
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-sirf.txt
-> @@ -0,0 +1,23 @@
-> +SiRF prima2 & atlas6 PWM drivers
-> +
-> +Required properties:
-> +- compatible: "sirf,prima2-pwm"
-> +- reg: physical base address and length of the controller's registers
-> +- #pwm-cells: should be 2.  The first cell specifies the per-chip index =
-of the
-> +  PWM to use and the second cell is the period in nanoseconds.
+> 
+> > +
+> > +Example:
+> > +
+> > +       aliases {
+> > +               ethernet0 = <&sxgbe0>;
+> > +       };
+> > +
+> > +       sxgbe0: ethernet@1a040000 {
+> > +               compatible = "samsung,sxgbe-v2.0a";
+> > +               reg = <0 0x1a040000 0 0x10000>;
+> > +               interrupt-parent = <&gic>;
+> > +               interrupts = <0 209 4>, <0 185 4>, <0 186 4>, <0 187 4>,
+> > +                            <0 188 4>, <0 189 4>, <0 190 4>, <0 191 4>,
+> > +                            <0 192 4>, <0 193 4>, <0 194 4>, <0 195 4>,
+> > +                            <0 196 4>, <0 197 4>, <0 198 4>, <0 199 4>,
+> > +                            <0 200 4>, <0 201 4>, <0 202 4>, <0 203 4>,
+> > +                            <0 204 4>, <0 205 4>, <0 206 4>, <0 207 4>,
+> > +                            <0 208 4>, <0 210 4>;
+> > +               mac-address = [000000000000]; /* Filled in by U-Boot
+> > + */
+> 
+> The preferred way to format this is:
+>                     mac-address = [ 00 00 00 00 00 00 ]; even better is something directly usable in case people copy/paste this example such as
+> 00 11 22 33 44 55.
+OK.
 
-The canonical way to describe this property is:
+> 
+> > +               phy-mode = "xaui";
+> 
+> Your example is lacking a corresponding Ethernet PHY address/node.
+OK. Will be updated.
 
-	- #pwm-cells: Should be 2. See pwm.txt in this directory for a description=
- of
-	  the cells format.
-
-> +- clocks: from common clock binding: the 1st clock is for PWM controller=
- the
-> +  other clocks are the sources to generate PWM signals
-> +- clock-names : The first one is the name of the clock for PWM, others a=
-re names
-> +  of clock sources to generate PWM signal, e.g.sigsrc0 ~sigsrc4. For pri=
-ma2 and
-> +  atlas6, sigsrc0 is OSC with 26MHz, sigsrc3 is RTC with 32KHz, others a=
-re PLLs.
-> +  Generally, PWM module uses the OSC as clock source to generate PWM sig=
-nals.
-
-I think a more common way to write this is:
-
-	- clocks: Must contain an entry for each entry in clock-names.
-	  See ../clocks/clock-bindings.txt for details.
-	- clock-names: Must include the following entries:
-	  - pwmc: PWM controller clock
-	  - sigsrc0: source clock for ???
-	  - ...
-	  - sigsrc4: source clock for ???
-
-And perhaps given the requirements on prima2 and atlas6 (are those SoC
-generations or boards?) specify what each clock should be set to.
-
-If prima2 and atlas6 are boards, then the binding shouldn't mention them
-at all.
-
-Thierry
-
---Y/WcH0a6A93yCHGr
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTKLcEAAoJEN0jrNd/PrOhSPUP/i8aDvt+bY26YlenxOh8GDlX
-XP4ld9YezlCpV2QUroPBsx+h3beuoIBcHKhnhcdrtnrTyzp+gOvwANr8rEqWPoZg
-QjRnx9Bw4YumpIlY7yBaVbOYewfVHcIsbQK4BuQV7Ow50AZHiaan77L43lolLXiM
-rN0T6UUjp2z3TJBpEuZtHQF2zBiMVgxu0sLQqCHABs8rmnvXLtJse9j/lMHPzxWG
-x07egdG+hYxs8XkUm43/jzJ5qzdnuOCPkAj85Xb3lM5P/MSNy6bpr3L/wviKtYNb
-fXCLY0vxiF/evTneA/HVolTByIAC5jtkrJbUiXBQQGZgW4eWgfkxoZ9ycUL3OKuo
-4Wt6Apj0VZorAJ0bzhDSI0+M0l17VXaIpxDqPyzlcp1uZG9qgegkRhO5gbXScaRJ
-8Wp/6OBL5op3uflvAvivUwfTXfCTFpq4fDoS//rMxYXPra8SvppOIJSErobprsqW
-Qyr/lAi5k9Z7m6fHmeWtvfW7Tznc2RB9+n73g5LKzalBRCwAtPXVjC5Cdi87A60y
-+NJiOMXBqwpM8z0tFqUtkCiOOZzKd2YsK/r4X8v1iB+8PHrtnvoMzgc0yax44qtM
-7gFg2H7ljFRGlb02hcK6wzhY2Dkx8ZbPtGKP0bwqpn79sw46wCxadzRWuW5J3oNS
-XbtbW+B6kHcNq26Fs+lB
-=52Rr
------END PGP SIGNATURE-----
-
---Y/WcH0a6A93yCHGr--
+> --
+> Florian
+> --
+> To unsubscribe from this list: send the line "unsubscribe netdev" in the body of a message to majordomo@vger.kernel.org More
+> majordomo info at  http://vger.kernel.org/majordomo-info.html
