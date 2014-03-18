@@ -1,37 +1,136 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 3/3] Documentation: mfd: Add binding document for
- S2MPA01
-Date: Tue, 18 Mar 2014 09:13:30 +0000
-Message-ID: <20140318091330.GJ25478@lee--X1>
-References: <1394797919-24642-1-git-send-email-sachin.kamat@linaro.org>
- <1394797919-24642-3-git-send-email-sachin.kamat@linaro.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH V4 1/8] sxgbe: Add device-tree binding support document
+Date: Tue, 18 Mar 2014 09:18:53 +0000
+Message-ID: <20140318091852.GA8043@e106331-lin.cambridge.arm.com>
+References: <00f801cf4275$e7e2a1b0$b7a7e510$@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1394797919-24642-3-git-send-email-sachin.kamat@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: linux-kernel@vger.kernel.org, broonie@kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <00f801cf4275$e7e2a1b0$b7a7e510$@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Byungho An <bh74.an@samsung.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "ilho215.lee@samsung.com" <ilho215.lee@samsung.com>, "siva.kallam@samsung.com" <siva.kallam@samsung.com>, "vipul.pandya@samsung.com" <vipul.pandya@samsung.com>, "ks.giri@samsung.com" <ks.giri@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-> Added initial binding documentation for S2MPA01 MFD.
->=20
-> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-> Acked-by: Mark Brown <broonie@linaro.org>
-> ---
-> No changes since v3.
-> ---
->  Documentation/devicetree/bindings/mfd/s2mpa01.txt |   90 +++++++++++=
-++++++++++
->  1 file changed, 90 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/s2mpa01.txt
+Hi,
 
-Applied, thanks.
+As a general note it's helpful for devicetree to be Cc'd on the entire
+series (though the binding document should be a separate patch) as it
+provides useful context for reviewing the binding.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+On Tue, Mar 18, 2014 at 06:47:13AM +0000, Byungho An wrote:
+> From: Siva Reddy <siva.kallam@samsung.com>
+> 
+> This patch adds binding document for SXGBE ethernet driver via device-tree.
+> 
+> Signed-off-by: Siva Reddy Kallam <siva.kallam@samsung.com>
+> Signed-off-by: Byungho An <bh74.an@samsung.com>
+> ---
+>  .../devicetree/bindings/net/samsung-sxgbe.txt      |   53
+> ++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/samsung-sxgbe.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
+> b/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
+> new file mode 100644
+> index 0000000..ca27947
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
+> @@ -0,0 +1,53 @@
+> +* Samsung 10G Ethernet driver (SXGBE)
+> +
+> +Required properties:
+> +- compatible: Should be "samsung,sxgbe-v2.0a"
+> +- reg: Address and length of the register set for the device
+> +- interrupt-parent: Should be the phandle for the interrupt controller
+> +  that services interrupts for this device
+> +- interrupts: Should contain the SXGBE interrupts
+> +  These interrupts are ordered by fixed and follows variable
+> +  trasmit DMA interrupts, receive DMA interrupts and lpi interrupt.
+> +  index 0 - this is fixed common interrupt of SXGBE and it is always
+> +  available.
+> +  index 1 to 25 - 8 variable trasmit interrupts, variable 16 receive
+> interrupts
+> +  and 1 optional lpi interrupt.
+> +- phy-mode: String, operation mode of the PHY interface.
+> +  Supported values are: "xaui", "gmii".
+> +- samsung,pbl: Integer, Programmable Burst Length.
+> +  Supported values are 1, 2, 4, 8, 16, or 32.
+
+There's no need to abbreviate to "pbl".
+
+Is this a property of the hardware, or configuration that the kernel
+will program in? If the latter, why can the kernel not choose?
+
+> +- samsung,fixed-burst: Boolean, Program the DMA to use the fixed burst mode
+> +- samsung,burst-map: Integer, Program the possible bursts supported by sxgbe
+> +  This is an interger and represents allowable DMA bursts when fixed burst.
+> +  Allowable range is 0x00-0x3F. This field is valid only when fixed burst is
+> +  enabled, otherwise ignored.
+
+If that's the case, why not have just this property and have it imply
+the use of fixed burst mode?
+
+When is it necessary to use fixed burst mode?
+
+> +- samsung,adv-addr-mode: Boolean, Program the DMA to use Enhanced address
+> mode.
+
+When would this be selected, and why can the kernel not choose?
+
+> +- samsung,force_thresh_dma_mode: Boolean, Force DMA to use the threshold mode
+> +  for both tx and rx
+
+s/_/-/ in property names.
+
+Likewise, why can the kernel not choose.
+
+> +- samsung,force_sf_dma_mode: Boolean, Force DMA to use the Store and Forward
+> +  mode for both tx and rx. This flag is ignored if force_thresh_dma_mode is
+> set.
+
+Likewise for both points.
+
+> +- samsung,phy-addr: Integer, Address of the PHY attached with SXGBE.
+
+Some of these properties appear to be missing from the example. Are they
+required or optional?
+
+Thanks,
+Mark.
+
+> +
+> +Optional properties:
+> +- mac-address: 6 bytes, mac address
+> +
+> +Example:
+> +
+> +	aliases {
+> +		ethernet0 = <&sxgbe0>;
+> +	};
+> +
+> +	sxgbe0: ethernet@1a040000 {
+> +		compatible = "samsung,sxgbe-v2.0a";
+> +		reg = <0 0x1a040000 0 0x10000>;
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <0 209 4>, <0 185 4>, <0 186 4>, <0 187 4>,
+> +			     <0 188 4>, <0 189 4>, <0 190 4>, <0 191 4>,
+> +			     <0 192 4>, <0 193 4>, <0 194 4>, <0 195 4>,
+> +			     <0 196 4>, <0 197 4>, <0 198 4>, <0 199 4>,
+> +			     <0 200 4>, <0 201 4>, <0 202 4>, <0 203 4>,
+> +			     <0 204 4>, <0 205 4>, <0 206 4>, <0 207 4>,
+> +			     <0 208 4>, <0 210 4>;
+> +		mac-address = [000000000000]; /* Filled in by U-Boot */
+> +		phy-mode = "xaui";
+> +	};
+> -- 
+> 1.7.10.4
+> 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
