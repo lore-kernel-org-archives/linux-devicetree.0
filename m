@@ -1,31 +1,62 @@
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: [PATCH 0/3] add hisilicon hip04 ethernet driver
-Date: Tue, 18 Mar 2014 16:40:14 +0800
-Message-ID: <1395132017-15928-1-git-send-email-zhangfei.gao@linaro.org>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>
-Cc: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Zhangfei Gao <zhangfei.gao@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCHv2 2/8] Doc/DT: Add DT binding documentation for Analog TV
+ Connector
+Date: Tue, 18 Mar 2014 09:40:52 +0100
+Message-ID: <CAMuHMdVhh_qqXvUP9zUo0iCJ=O6bLqp-qTdaMQNLNcVgAgROBg@mail.gmail.com>
+References: <1395130547-18633-1-git-send-email-tomi.valkeinen@ti.com>
+ <1395130547-18633-3-git-send-email-tomi.valkeinen@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1395130547-18633-3-git-send-email-tomi.valkeinen@ti.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, DRI Development <dri-devel@lists.freedesktop.org>, Andrzej Hajda <a.hajda@samsung.com>, Rob Herring <robherring2@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Zhangfei Gao (3):
-  Documentation: add Device tree bindings for Hisilicon hip04 ethernet
-  net: hisilicon: new hip04 MDIO driver
-  net: hisilicon: new hip04 ethernet driver
+Hi Tomi,
 
- .../bindings/net/hisilicon-hip04-net.txt           |   74 ++
- drivers/net/ethernet/Kconfig                       |    1 +
- drivers/net/ethernet/Makefile                      |    1 +
- drivers/net/ethernet/hisilicon/Kconfig             |   31 +
- drivers/net/ethernet/hisilicon/Makefile            |    5 +
- drivers/net/ethernet/hisilicon/hip04_eth.c         |  717 ++++++++++++++++++++
- drivers/net/ethernet/hisilicon/hip04_mdio.c        |  190 ++++++
- 7 files changed, 1019 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
- create mode 100644 drivers/net/ethernet/hisilicon/Kconfig
- create mode 100644 drivers/net/ethernet/hisilicon/Makefile
- create mode 100644 drivers/net/ethernet/hisilicon/hip04_eth.c
- create mode 100644 drivers/net/ethernet/hisilicon/hip04_mdio.c
+On Tue, Mar 18, 2014 at 9:15 AM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/analog-tv-connector.txt
+> @@ -0,0 +1,25 @@
+> +Analog TV Connector
+> +===================
+> +
+> +Required properties:
+> +- compatible: "composite-connector" or "svideo-connector"
+> +
+> +Optional properties:
+> +- label: a symbolic name for the connector
+> +
+> +Required nodes:
+> +- Video port for TV input
 
--- 
-1.7.9.5
+Only input, not output?
+
+Have you considered adding bindings for other analog connector types?
+  - composite (YCbCr),
+  - component with and without sync-on-green (RGB and RGBHV),
+  - D-terminal (D1/D2/D3/D4/D5).
+
+Am I missing some?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
