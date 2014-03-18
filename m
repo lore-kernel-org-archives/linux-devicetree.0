@@ -1,58 +1,67 @@
-From: Tim Kryger <tim.kryger@linaro.org>
-Subject: Re: [PATCH v3 1/5] Documentation: dt: Add Kona PWM binding
-Date: Tue, 18 Mar 2014 14:47:36 -0700
-Message-ID: <CAAYSxhq5gdK9b50GuWqsVBmW0H+KjcRutkWK026WjP5b1HkiDA@mail.gmail.com>
-References: <1394655346-30048-1-git-send-email-tim.kryger@linaro.org>
-	<1394655346-30048-2-git-send-email-tim.kryger@linaro.org>
-	<20140318211806.GG5917@mithrandir>
+From: Sebastian Capella <sebastian.capella@linaro.org>
+Subject: Re: [PATCH RFC 1/4] arm64: kernel: implement DT based idle states infrastructure
+Date: Tue, 18 Mar 2014 14:49:12 -0700
+Message-ID: <CADHgK6uwUDndVHQaWU=3R7A16hc4PYJCAfMLi3uBnrDjYidPXg@mail.gmail.com>
+References: <1395138028-19630-1-git-send-email-lorenzo.pieralisi@arm.com>
+	<1395138028-19630-2-git-send-email-lorenzo.pieralisi@arm.com>
+	<CAL_Jsq+M8fCreXrd7R1m=3_LKD_+jma3Pha06hRoTPMpcOb1_g@mail.gmail.com>
+	<20140318180856.GB792@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140318211806.GG5917@mithrandir>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Matt Porter <mporter@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Grant Likely <grant.likely@linaro.org>, Linux PWM List <linux-pwm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, Linux Doc List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140318180856.GB792@e102568-lin.cambridge.arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Rob Herring <robherring2@gmail.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Tomasz Figa <t.figa@samsu>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 18, 2014 at 2:18 PM, Thierry Reding
-<thierry.reding@gmail.com> wrote:
-> On Wed, Mar 12, 2014 at 01:15:42PM -0700, Tim Kryger wrote:
+On 18 March 2014 11:08, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+>> > +        * When we reach the max number of CPU idle states or
+>> > +        * head_idx == curr_idx (empty nodes queue) we are done.
+>> > +        */
+>> > +       head_idx = curr_idx = cnt;
+>> > +
+>> > +       do {
+>> > +               curr_idx = parse_idle_states_node(curr, curr_idx, cpus);
+>> > +               if (curr_idx == CPUIDLE_STATE_MAX || head_idx == curr_idx)
+>> > +                       break;
+>> > +               /*
+>> > +                * idle_states array is updated by parse_idle_states_node(),
+>> > +                * we can use the initialized states as a queue of nodes
+>> > +                * that need to be checked for their idle states siblings.
+>> > +                * head_idx works as a pointer into the queue to get the
+>> > +                * next node to be parsed.
+>> > +                */
+>> > +               curr = idle_states[head_idx++].node;
+>> > +       } while (curr);
+>>
+>> I still object to index property and this is why. You need to be able
+>> to determine state order by actual h/w properties. That is what you
+>> are doing in your head when you define the indexes.
+>>
+>> You really want a linked list here that you can sort as you go and not
+>> care what order you parse DT nodes. Not to mention you don't know how
+>> many states you will have.
+>
+> This code does not care about the order of nodes, the index is just there
+> to keep track of nodes that have still to be parsed. Sorting is done later,
+> using the index property (totally unrelated to the {head/curr}_idx) which I
+> understand is frowned upon in DT world (but in this case I think it could be
+> accepted, certainly it would make my life easier).
+>
+> Having said that, I like the idea of implementing it with a linked list and
+> sorting states while parsing them. I will remove that index property and
+> replace it with an actual hw property: power_consumption ? Or should I just
+> use min_residency (the higher the required residency the deeper the idle
+> state) ? Defining the power consumption (or better savings) for a state is
+> an _outright_ can of worms, that's why using an index is easier.
+>
+> Thoughts ?
 
->> @@ -0,0 +1,24 @@
->> +Broadcom Kona PWM controller device tree bindings
->> +
->> +This controller has 6 channels.
->> +
->> +Required Properties :
->> +- compatible: should be "brcm,kona-pwm"
->
-> This is somewhat inconsistent because the example below clearly doesn't
-> set the compatible property to "brcm,kona-pwm". Perhaps better wording
-> would be:
->
->         - compatible: should contain "brcm,kona-pwm"
-
-Agreed, what you wrote is more accurate.  I will update it.
-
->> +- reg: physical base address and length of the controller's registers
->> +- clocks: phandle + clock specifier pair for the external clock
->> +- #pwm-cells: should be 3.  The first cell specifies the per-chip index
->> +  of the PWM to use, the second cell is the period in nanoseconds, and
->> +  the third cell is the flags.
->
-> Please use the canonical description for this:
->
->         - #pwm-cells: Should be 3. See pwm.txt in this directory for a
->           description of the cells format.
->
->> +Refer to pwm/pwm.txt for generic pwm controller node properties.
->
-> With the above, this line should go away. But still: "pwm controller" ->
-> "PWM controller".
-
-Okay.  I will use the text you provided and drop the other line.
-
-Sorry for missing the capitalization.  I thought I had fixed them all.
+How about something like rank, power_rank or power_score since it's
+neither an index nor a physical value but a value for sorting states
+relative to each other?
 
 Thanks,
-Tim
+
+Sebastian
