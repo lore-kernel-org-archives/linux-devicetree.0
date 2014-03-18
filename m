@@ -1,7 +1,7 @@
 From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: [PATCHv2 8/8] Doc/DT: Add DT binding documentation for tpd12s015 encoder
-Date: Tue, 18 Mar 2014 10:15:47 +0200
-Message-ID: <1395130547-18633-9-git-send-email-tomi.valkeinen@ti.com>
+Subject: [PATCHv2 6/8] Doc/DT: Add DT binding documentation for Sony acx565akm panel
+Date: Tue, 18 Mar 2014 10:15:45 +0200
+Message-ID: <1395130547-18633-7-git-send-email-tomi.valkeinen@ti.com>
 References: <1395130547-18633-1-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,62 +12,49 @@ To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNg
 Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Archit Taneja <archit-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT binding documentation for tpd12s015 encoder
+Add DT binding documentation for Sony acx565akm panel
 
 Signed-off-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Reviewed-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 Reviewed-by: Archit Taneja <archit-l0cyMroinI0@public.gmane.org>
 ---
- .../devicetree/bindings/video/ti,tpd12s015.txt     | 44 ++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/ti,tpd12s015.txt
+ .../devicetree/bindings/video/sony,acx565akm.txt   | 30 ++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/sony,acx565akm.txt
 
-diff --git a/Documentation/devicetree/bindings/video/ti,tpd12s015.txt b/Documentation/devicetree/bindings/video/ti,tpd12s015.txt
+diff --git a/Documentation/devicetree/bindings/video/sony,acx565akm.txt b/Documentation/devicetree/bindings/video/sony,acx565akm.txt
 new file mode 100644
-index 000000000000..26e6d32e3f20
+index 000000000000..e12333280749
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/video/ti,tpd12s015.txt
-@@ -0,0 +1,44 @@
-+TPD12S015 HDMI level shifter and ESD protection chip
-+====================================================
++++ b/Documentation/devicetree/bindings/video/sony,acx565akm.txt
+@@ -0,0 +1,30 @@
++Sony ACX565AKM SDI Panel
++========================
 +
 +Required properties:
-+- compatible: "ti,tpd12s015"
++- compatible: "sony,acx565akm"
 +
 +Optional properties:
-+- gpios: CT CP HPD, LS OE and HPD gpios
++- label: a symbolic name for the panel
++- reset-gpios: panel reset gpio
 +
 +Required nodes:
-+- Video port 0 for HDMI input
-+- Video port 1 for HDMI output
++- Video port for SDI input
 +
 +Example
 +-------
 +
-+tpd12s015: encoder@1 {
-+	compatible = "ti,tpd12s015";
++acx565akm@2 {
++	compatible = "sony,acx565akm";
++	spi-max-frequency = <6000000>;
++	reg = <2>;
 +
-+	gpios = <&gpio2 28 GPIO_ACTIVE_HIGH>,	/* 60, CT CP HPD */
-+		<&gpio2 9 GPIO_ACTIVE_HIGH>,	/* 41, LS OE */
-+		<&gpio2 31 GPIO_ACTIVE_HIGH>;	/* 63, HPD */
++	label = "lcd";
++	reset-gpios = <&gpio3 26 GPIO_ACTIVE_HIGH>; /* 90 */
 +
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			tpd12s015_in: endpoint@0 {
-+				remote-endpoint = <&hdmi_out>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			tpd12s015_out: endpoint@0 {
-+				remote-endpoint = <&hdmi_connector_in>;
-+			};
++	port {
++		lcd_in: endpoint {
++			remote-endpoint = <&sdi_out>;
 +		};
 +	};
 +};
