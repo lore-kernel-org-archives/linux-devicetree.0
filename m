@@ -1,102 +1,50 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [GIT PULL] mfd: regulator: S2MPA01 device support IB for Mark Brown
-Date: Tue, 18 Mar 2014 14:10:33 +0100
-Message-ID: <1395148233.24909.2.camel@AMDC1943>
-References: <1394797919-24642-1-git-send-email-sachin.kamat@linaro.org>
- <20140318110947.GR25478@lee--X1>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3] ASoC: cs42888: Add codec driver support
+Date: Tue, 18 Mar 2014 13:10:33 +0000
+Message-ID: <20140318131033.GC11706@sirena.org.uk>
+References: <1394538091-19513-1-git-send-email-Guangyu.Chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20140318110947.GR25478@lee--X1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qmxOb2Rj2UkcatHw"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1394538091-19513-1-git-send-email-Guangyu.Chen@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Nicolin Chen <Guangyu.Chen@freescale.com>
+Cc: brian.austin@cirrus.com, Paul.Handrigan@cirrus.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, lgirdwood@gmail.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, lars@metafoo.de
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-It seems that Sachin's and my patches (mfd: sec: Add support for
-S2MPS14) are not in sync. Now the error appears:
+--qmxOb2Rj2UkcatHw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-drivers/mfd/sec-core.c:342:45: warning: =E2=80=98regmap_rtc=E2=80=99 ma=
-y be used
-uninitialized in this function [-Wuninitialized]
+On Tue, Mar 11, 2014 at 07:41:31PM +0800, Nicolin Chen wrote:
+> This patch adds support for the Cirrus Logic CS42888 Audio CODEC that
+> has four 24-bit A/D and eight 24-bit D/A converters.
 
-I'll send a quick fix for it but in a longterm the rtc-s5m driver shoul=
-d
-initialize his regmap on his own.
+Brian, Paul - any review comments on this?
 
-Best regards,
-Krzysztof
+--qmxOb2Rj2UkcatHw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-O
-n Tue, 2014-03-18 at 11:09 +0000, Lee Jones wrote:
-> FAO Mark,
->=20
-> The following changes since commit 0414855fdc4a40da05221fc6062cccbc0c=
-30f169:
->=20
->   Linux 3.14-rc5 (2014-03-02 18:56:16 -0800)
->=20
-> are available in the git repository at:
->=20
->   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-re=
-gulator-3.15
->=20
-> for you to fetch changes up to ba3e31f87e8b736adf01f1dc09cd5618966ee1=
-93:
->=20
->   Documentation: mfd: Add binding document for S2MPA01 (2014-03-18 10=
-:56:45 +0000)
->=20
-> ----------------------------------------------------------------
-> Krzysztof Kozlowski (5):
->       mfd: sec-core: Add maximum RTC register for regmap config
->       mfd: sec-core: Select different RTC regmaps for devices
->       mfd: sec-irq: Use consistent S2MPS11 RTC alarm interrupt indexe=
-s
->       mfd: sec: Add support for S2MPS14
->       mfd: sec-core: Fix possible NULL pointer dereference when i2c_n=
-ew_dummy error
->=20
-> Pankaj Dubey (1):
->       mfd: sec-core: Silence compiler warning
->=20
-> Sachin Kamat (3):
->       mfd: Add support for S2MPA01 device
->       regulator: Add support for S2MPA01 regulator
->       Documentation: mfd: Add binding document for S2MPA01
->=20
->  Documentation/devicetree/bindings/mfd/s2mpa01.txt |  90 ++++++++++++=
-++++++++++++++
->  drivers/mfd/sec-core.c                            | 112 ++++++++++++=
-+++++++++++++++++---
->  drivers/mfd/sec-irq.c                             |  97 ++++++++++++=
-++++++++++++++--
->  drivers/regulator/Kconfig                         |   7 ++
->  drivers/regulator/Makefile                        |   1 +
->  drivers/regulator/s2mpa01.c                       | 481 ++++++++++++=
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/samsung/core.h                  |  19 ++++--
->  include/linux/mfd/samsung/irq.h                   |  81 ++++++++++++=
-+++++++++++-
->  include/linux/mfd/samsung/rtc.h                   |  57 ++++++++++++=
-+++--
->  include/linux/mfd/samsung/s2mpa01.h               | 192 ++++++++++++=
-+++++++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/samsung/s2mps14.h               | 152 ++++++++++++=
-++++++++++++++++++++++++++++++++
->  11 files changed, 1260 insertions(+), 29 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/s2mpa01.txt
->  create mode 100644 drivers/regulator/s2mpa01.c
->  create mode 100644 include/linux/mfd/samsung/s2mpa01.h
->  create mode 100644 include/linux/mfd/samsung/s2mps14.h
->=20
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAEBAgAGBQJTKEXGAAoJELSic+t+oim9H10P/3U4FQW+bXFpOhAYpOB9WIWa
+zkI7sUWKN53Ok64Q5Q1iPP5jVW4gRzyt/P/RVLemqNNkl64SaOMwR34DraSoY350
+R2g5tJD4xn/zLN9TI5/fAvPgQEi58pXsmA15IpwT0i7VHwt35Ezn76tleurldinv
+NYyFF0PkT2HNg37kmXaytRXyy2U8H/GKGPSsxnw+gkJR1CzGEPUczBgNFALP9edV
+rcf+H1sIERaaVTfB4z+HrDnfMEJIVX+cxmRBYwiX79hQtMCWHh2DvvYk3gWwAOsO
+GDpw3y2iXquUA7SL8hTxUK0fAPtp/VeCnfQNEdr419vY+V1w7ELzIwtnPUPbdN9/
+sQX1V1n1Yd6BOkWE9zkKT4+SeGkKqBfv75bZYatOCZqgSMdG1O8FkMCn93+YigYu
+1q7j75jPn5ItLNJOMlE6UZppvyKxMdaNQZJ4l/qfqDC0FVW7qEWOnvVasckwhixu
++3VvtkrFmtXhMs9p4iUEJSZme5Zs111EcDskeJgvLYS/ipzbS0u1VKqfdWAHpRuK
+Jm3dSuiv1btcSxXcDGQUqKXeENDS9CyOVJ1sF1STi+0N7aKBnXeTYvVrxOUXx9S/
+A23iDtjTMOzqE22DE7RXos6PnzuXgAU9DarBsrMzFVDSzlKgtivc9FD2u90vRsS6
+1WIFGF07W5SOVN4vsKzH
+=onGK
+-----END PGP SIGNATURE-----
+
+--qmxOb2Rj2UkcatHw--
