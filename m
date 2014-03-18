@@ -1,118 +1,59 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] phy: micrel: add of configuration for LED mode
-Date: Tue, 18 Mar 2014 23:39:54 +0300
-Message-ID: <5328AF1A.3090008@cogentembedded.com>
-References: <1393415280-10227-1-git-send-email-ben.dooks@codethink.co.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3] ASoC: cs42888: Add codec driver support
+Date: Tue, 18 Mar 2014 19:51:59 +0000
+Message-ID: <20140318195159.GQ11706@sirena.org.uk>
+References: <1394538091-19513-1-git-send-email-Guangyu.Chen@freescale.com>
+ <20140318131033.GC11706@sirena.org.uk>
+ <alpine.DEB.2.02.1403180936200.14838@heelrod>
+ <alpine.DEB.2.00.1403181202310.7177@phandrigan-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1393415280-10227-1-git-send-email-ben.dooks@codethink.co.uk>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ben Dooks <ben.dooks@codethink.co.uk>, linux-kernel@lists.codethink.co.uk, devicetree@vger.kernel.org, netdev@vger.kernel.org
-Cc: f.fainelli@gmail.com, linux-sh@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="W2IRJ2e1E3eviBXu"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.00.1403181202310.7177@phandrigan-desktop>
+Sender: linux-doc-owner@vger.kernel.org
+To: Paul Handrigan <paul.handrigan@cirrus.com>
+Cc: Brian Austin <brian.austin@cirrus.com>, Nicolin Chen <Guangyu.Chen@freescale.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, lgirdwood@gmail.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, lars@metafoo.de
 List-Id: devicetree@vger.kernel.org
 
-Hello.
 
-On 02/26/2014 02:48 PM, Ben Dooks wrote:
+--W2IRJ2e1E3eviBXu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Add support for the led-mode property for the following PHYs
-> which have a single LED mode configuration value.
+On Tue, Mar 18, 2014 at 12:08:02PM -0500, Paul Handrigan wrote:
+> On Tue, 18 Mar 2014, Brian Austin wrote:
 
-> KSZ8001 and KSZ8041 which both use register 0x1e bits 15,14 and
-> KSZ8021, KSZ8031 and KSZ8051 which use register 0x1f bits 5,4
-> to control the LED configuration.
+> >Driver looks good to me. I think we should name it the cs42xx8 since this
+> >actually covers CS42448 and CS42888. The CS42888 is derived from the
+> >CS42448.
 
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-[...]
+> V3 looks good. As Brian said, the name should be changed to cs42xx8.
 
-    Missed this patch, unfortunately and now it has been merged already... doh.
+Great, so if Nicolin resubmits with the rename when he gets back he can
+add acks from both of you?  The driver looked fine to me too.
 
-> diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-> index 5a8993b..0c9e434 100644
-> --- a/drivers/net/phy/micrel.c
-> +++ b/drivers/net/phy/micrel.c
-> @@ -148,15 +148,52 @@ static int ks8737_config_intr(struct phy_device *phydev)
->   	return rc < 0 ? rc : 0;
->   }
->
-> +static int kszphy_setup_led(struct phy_device *phydev,
-> +			    unsigned int reg, unsigned int shift)
-> +{
-> +
-> +	struct device *dev = &phydev->dev;
-> +	struct device_node *of_node = dev->of_node;
-> +	int rc, temp;
-> +	u32 val;
-> +
-> +	if (!of_node && dev->parent->of_node)
-> +		of_node = dev->parent->of_node;
-> +
-> +	if (of_property_read_u32(of_node, "micrel,led-mode", &val))
-> +		return 0;
-> +
-> +	temp = phy_read(phydev, reg);
-> +	if (temp < 0)
-> +		return temp;
-> +
-> +	temp &= 3 << shift;
+--W2IRJ2e1E3eviBXu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-    Hm, I guess you meant ~(3 << shift), else it wouldn't work as expected if 
-the LED field is currently non-zero. Also, I think you didn't want to mask off 
-unrelated bits. I'm surprised nobody has noticed this before...
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-> +	temp |= val << shift;
-> +	rc = phy_write(phydev, reg, temp);
-> +
-> +	return rc < 0 ? rc : 0;
-> +}
-> +
->   static int kszphy_config_init(struct phy_device *phydev)
->   {
->   	return 0;
->   }
->
-> +static int kszphy_config_init_led8041(struct phy_device *phydev)
+iQIcBAEBAgAGBQJTKKPcAAoJELSic+t+oim9Hf0P/3rELI7VwR3LxlMlYZU+9r6B
+sgnvrD/uHk5LbNY5qAflhMdPFZ21652qQ7gMFZWuvU/TslS56B3vh5Ps79AyxLt3
+IjjWPZcjYR/FOdZYEikh6eSuWzBXXZhlJovCLI7Bk5yikpgqO2BoJvSfllfPq6MO
+6azixef+wLPYqxmb7SDQVPWEggwOm49D/8OaG4rrneSGWJ0rheH7OxQOBXXixjO1
+RxY5riSQuMXNeYwuO05MueNtMfMZR83ZFMKrR6h34oqEWEoEG69fCCas7lwoSW5X
+ZqrTOuaWn1N0eq1UqH8X6WRthrbTK9XYldAmee7VY78E+9rCyPz9EjfUE/tzdAzH
+OlYMGKlxb6Q06shngFL/6jNbqd3hKQtTmyJSupWsWka4WxcR7gzh+E8HiLtDlNgq
+L9+ub00dXyqWBzTYpUAiCRq7WxyRsjOU1YWrkFO97txWnp+KP2fRTY8ApkKkV1La
+f5yduYlsw1wS3NDTlL5R9x58XRtJXxfkpjgl+T/mRFyzMOA/HGpQ4M8qPaIeC4td
+MpQiPAwbuazUlXTOg0dni/FjQAii0ZAw+euY1YFRmOLsE8fEfXOc2eo2pmjgTM+R
+56kOa0q3qbUW4Q7qYzWMM8Gi8EFWwg4YBnM1ZtLhvRoDMjeIGwdk4Zq+ldU4AzQM
+8cAd0dPkmZAgjZVcNXcc
+=+khg
+-----END PGP SIGNATURE-----
 
-    Why not ksz8041_config_init() like other names in this file?
-Why mention LED in the name at all?
-
-> +{
-> +	/* single led control, register 0x1e bits 15..14 */
-> +	return kszphy_setup_led(phydev, 0x1e, 14);
-> +}
-> +
->   static int ksz8021_config_init(struct phy_device *phydev)
->   {
-> -	int rc;
->   	const u16 val = KSZPHY_OMSO_B_CAST_OFF | KSZPHY_OMSO_RMII_OVERRIDE;
-> +	int rc;
-> +
-> +	rc = kszphy_setup_led(phydev, 0x1f, 4);
-> +	if (rc)
-> +		dev_err(&phydev->dev, "failed to set led mode\n");
-
-    LED.
-
-> +
->   	phy_write(phydev, MII_KSZPHY_OMSO, val);
->   	rc = ksz_config_flags(phydev);
->   	return rc < 0 ? rc : 0;
-> @@ -166,6 +203,10 @@ static int ks8051_config_init(struct phy_device *phydev)
->   {
->   	int rc;
->
-> +	rc = kszphy_setup_led(phydev, 0x1f, 4);
-> +	if (rc)
-> +		dev_err(&phydev->dev, "failed to set led mode\n");
-
-    LED.
-
-> +
->   	rc = ksz_config_flags(phydev);
->   	return rc < 0 ? rc : 0;
->   }
-
-WBR, Sergei
-
+--W2IRJ2e1E3eviBXu--
