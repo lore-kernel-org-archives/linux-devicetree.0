@@ -1,137 +1,848 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 5/7] OF: i2c: Add overlay bus handler
-Date: Tue, 18 Mar 2014 23:56:04 +0200
-Message-ID: <1395179766-31575-6-git-send-email-pantelis.antoniou@konsulko.com>
-References: <1395179766-31575-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1395179766-31575-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Georgi Vlaev <georgi.vlaev-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+From: Kevin Tsai <ktsai@capellamicro.com>
+Subject: [PATCH V1 1/1] iio: add Capella cm3218x ambient light sensor driver.
+Date: Tue, 18 Mar 2014 14:51:06 -0700
+Message-ID: <1395179466-15821-1-git-send-email-ktsai@capellamicro.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Jonathan Cameron <jic23@kernel.org>, Grant Likely <grant.likely@linaro.org>, Peter Huewe <peter.huewe@infineon.com>, Arnaud Ebalard <arno@natisbad.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@linaro.org>, Kevin Tsai <ktsai@capellamicro.com>, Peter Meerwald <pmeerw@pmeerw.net>, Lars-Peter Clausen <lars@metafoo.de>, Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>, Jacek Anaszewski <j.anaszewski@samsung.com>, Beomho Seo <beomho.seo@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the bus handler registration needed for performing overlays
-containing i2c devices.
+Add Capella Microsystem CM3218x family Ambient Light Sensor IIO driver.
+This driver will convert raw data to lux value.  Default parameters are
+for reference only.  It will detect ACPI table to load per-system manufacturing
+parameters.
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Kevin Tsai <ktsai@capellamicro.com>
 ---
- drivers/i2c/i2c-core.c | 87 +++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 86 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
+ drivers/iio/light/Kconfig                          |  11 +
+ drivers/iio/light/Makefile                         |   1 +
+ drivers/iio/light/cm3218x.c                        | 769 +++++++++++++++++++++
+ 4 files changed, 782 insertions(+)
+ create mode 100644 drivers/iio/light/cm3218x.c
 
-diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
-index 5fb80b8..5120d28 100644
---- a/drivers/i2c/i2c-core.c
-+++ b/drivers/i2c/i2c-core.c
-@@ -1073,10 +1073,89 @@ struct i2c_adapter *of_find_i2c_adapter_by_node(struct device_node *node)
- 	return i2c_verify_adapter(dev);
- }
- EXPORT_SYMBOL(of_find_i2c_adapter_by_node);
+diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+index 1a1ac2e..29e7eae 100644
+--- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
++++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+@@ -17,6 +17,7 @@ at,24c08		i2c serial eeprom  (24cxx)
+ atmel,24c02		i2c serial eeprom  (24cxx)
+ atmel,at97sc3204t	i2c trusted platform module (TPM)
+ capella,cm32181		CM32181: Ambient Light Sensor
++capella,cm3218x		CM3218x: Ambient Light Sensor
+ catalyst,24c32		i2c serial eeprom
+ dallas,ds1307		64 x 8, Serial, I2C Real-Time Clock
+ dallas,ds1338		I2C RTC with 56-Byte NV RAM
+diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
+index d12b2a0..45a22a6 100644
+--- a/drivers/iio/light/Kconfig
++++ b/drivers/iio/light/Kconfig
+@@ -38,6 +38,17 @@ config CM32181
+ 	 To compile this driver as a module, choose M here:
+ 	 the module will be called cm32181.
+ 
++config CM3218X
++	depends on I2C
++	tristate "CM3218x driver"
++	help
++	 Say Y here if you use cm3218x.
++	 This option enables ambient light sensor using
++	 Capella cm3218x device driver.
 +
-+#ifdef CONFIG_OF_OVERLAY
-+static int i2c_handler_create(struct of_overlay_device_entry *de,
-+		int revert)
-+{
-+	struct device_node *dn;
-+	struct i2c_adapter *adap;
++	 To compile this driver as a module, choose M here:
++	 the module will be called cm3218x.
++
+ config CM36651
+ 	depends on I2C
+ 	tristate "CM36651 driver"
+diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
+index 60e35ac..a506c23 100644
+--- a/drivers/iio/light/Makefile
++++ b/drivers/iio/light/Makefile
+@@ -6,6 +6,7 @@
+ obj-$(CONFIG_ADJD_S311)		+= adjd_s311.o
+ obj-$(CONFIG_APDS9300)		+= apds9300.o
+ obj-$(CONFIG_CM32181)		+= cm32181.o
++obj-$(CONFIG_CM3218X)		+= cm3218x.o
+ obj-$(CONFIG_CM36651)		+= cm36651.o
+ obj-$(CONFIG_GP2AP020A00F)	+= gp2ap020a00f.o
+ obj-$(CONFIG_HID_SENSOR_ALS)	+= hid-sensor-als.o
+diff --git a/drivers/iio/light/cm3218x.c b/drivers/iio/light/cm3218x.c
+new file mode 100644
+index 0000000..e422f68
+--- /dev/null
++++ b/drivers/iio/light/cm3218x.c
+@@ -0,0 +1,769 @@
++/*
++ * Copyright (C) 2014 Capella Microsystems Inc.
++ * Author: Kevin Tsai <ktsai@capellamicro.com>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2, as published
++ * by the Free Software Foundation.
++ *
++ * Special thanks Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
++ * help to add ACPI support.
++ *
++ */
++
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/i2c.h>
++#include <linux/mutex.h>
++#include <linux/module.h>
++#include <linux/interrupt.h>
++#include <linux/regulator/consumer.h>
++#include <linux/iio/iio.h>
++#include <linux/iio/sysfs.h>
++#include <linux/iio/events.h>
++#include <linux/init.h>
++#include <linux/acpi.h>
++
++/* Registers Address */
++#define CM3218x_REG_ADDR_CMD		0x00
++#define	CM3218x_REG_ADDR_WH		0x01
++#define	CM3218x_REG_ADDR_WL		0x02
++#define	CM3218x_REG_ADDR_TEST		0x03
++#define CM3218x_REG_ADDR_ALS		0x04
++#define CM3218x_REG_ADDR_STATUS		0x06
++#define CM3218x_REG_ADDR_ID		0x07
++
++/* Number of Configurable Registers */
++#define CM3218x_CONF_REG_NUM		16
++
++/* CMD register */
++#define CM3218x_CMD_ALS_DISABLE		0x01
++#define CM3218x_CMD_ALS_INT_EN		0x02
++#define	CM3218x_CMD_ALS_THRES_WINDOW	0x04
++
++#define	CM3218x_CMD_ALS_PERS_SHIFT	4
++#define	CM3218x_CMD_ALS_PERS_MASK	(0x03 << CM3218x_CMD_ALS_PERS_SHIFT)
++#define	CM3218x_CMD_ALS_PERS_DEFAULT	(0x01 << CM3218x_CMD_ALS_PERS_SHIFT)
++
++#define CM3218x_CMD_ALS_IT_SHIFT	6
++#define CM3218x_CMD_ALS_IT_MASK		(0x0F << CM3218x_CMD_ALS_IT_SHIFT)
++#define CM3218x_CMD_ALS_IT_DEFAULT	(0x01 << CM3218x_CMD_ALS_IT_SHIFT)
++
++#define CM3218x_CMD_ALS_HS_SHIFT	11
++#define CM3218x_CMD_ALS_HS_MASK		(0x01 << CM3218x_CMD_ALS_HS_SHIFT)
++#define CM3218x_CMD_ALS_HS_DEFAULT	(0x00 << CM3218x_CMD_ALS_HS_SHIFT)
++
++#define	CM3218x_CMD_DEFAULT		(CM3218x_CMD_ALS_THRES_WINDOW |\
++					CM3218x_CMD_ALS_PERS_DEFAULT |\
++					CM3218x_CMD_ALS_IT_DEFAULT |\
++					CM3218x_CMD_ALS_HS_DEFAULT)
++
++#define	CM3218x_WH_DEFAULT		0xFFFF
++#define	CM3218x_WL_DEFAULT		0x0000
++
++#define CM3218x_CALIBSCALE_DEFAULT	100000
++#define CM3218x_CALIBSCALE_RESOLUTION	100000
++#define MLUX_PER_LUX			1000
++#define CM3218x_THRESHOLD_PERCENT	10	/* 10 percent */
++
++/* CM3218 Family */
++#define CM3218_MLUX_PER_BIT_DEFAULT	5	/* Depend on system */
++#define CM3218_MLUX_PER_BIT_BASE_IT	800000
++static int CM3218_als_it_bits[] = {0, 1, 2, 3};
++static int CM3218_als_it_values[] = {100000, 200000, 400000, 800000};
++
++/* CM32181 Family */
++#define CM32181_MLUX_PER_BIT_DEFAULT	5
++#define CM32181_MLUX_PER_BIT_BASE_IT	800000
++static int CM32181_als_it_bits[] = {12, 8, 0, 1, 2, 3};
++static int CM32181_als_it_values[] = {
++			25000, 50000, 100000, 200000, 400000, 800000};
++
++/* CM32182 Family */
++#define CM32182_MLUX_PER_BIT_DEFAULT	5
++#define CM32182_MLUX_PER_BIT_BASE_IT	800000
++static int CM32182_als_it_bits[] = {12, 8, 0, 1, 2, 3};
++static int CM32182_als_it_values[] = {
++			25000, 50000, 100000, 200000, 400000, 800000};
++
++struct cmdev {
++	u32 family_id;
++	int int_type;
++#define	INT_TYPE_SMBUS			0
++#define	INT_TYPE_I2C			1
++	int regs_bmp;
++	int calibscale;
++	int mlux_per_bit;
++	int mlux_per_bit_base_it;
++	int *als_it_bits;
++	int *als_it_values;
++	int num_als_it;
++};
++
++static struct cmdev cm3218 = {
++	3218, INT_TYPE_SMBUS, 0x0F, CM3218x_CALIBSCALE_DEFAULT,
++	CM3218_MLUX_PER_BIT_DEFAULT, CM3218_MLUX_PER_BIT_BASE_IT,
++	CM3218_als_it_bits, CM3218_als_it_values,
++	ARRAY_SIZE(CM3218_als_it_bits)};
++
++static struct cmdev cm32181 = {
++	32181, INT_TYPE_I2C, 0x0F, CM3218x_CALIBSCALE_DEFAULT,
++	CM32181_MLUX_PER_BIT_DEFAULT, CM32181_MLUX_PER_BIT_BASE_IT,
++	CM32181_als_it_bits, CM32181_als_it_values,
++	ARRAY_SIZE(CM32181_als_it_bits)};
++
++static struct cmdev cm32182 = {
++	32182, INT_TYPE_I2C, 0x0F, CM3218x_CALIBSCALE_DEFAULT,
++	CM32182_MLUX_PER_BIT_DEFAULT, CM32182_MLUX_PER_BIT_BASE_IT,
++	CM32182_als_it_bits, CM32182_als_it_values,
++	ARRAY_SIZE(CM32182_als_it_bits)};
++
++struct cm3218x_chip {
 +	struct i2c_client *client;
++	struct cmdev *cmdev;
++	struct mutex lock;
++	u16 conf_regs[CM3218x_CONF_REG_NUM];
++	int als_raw;
++};
 +
-+	if (!de || !de->np)
-+		return -ENOTSUPP;
++static int cm3218x_get_lux(struct cm3218x_chip *chip);
++static int cm3218x_threshold_update(struct cm3218x_chip *chip, int percent);
++static int cm3218x_read_als_it(struct cm3218x_chip *chip, int *val2);
 +
-+	dn = de->np;
++/**
++ * cm3218x_read_ara() - Read ARA register
++ * @cm3218x:	pointer of struct cm3218x.
++ *
++ * Following SMBus protocol, ARA register is available only when interrupt
++ * event happened.  Read it to clean interrupt event.  Otherwise, other
++ * device address/registers will be blocked during interrupt event.
++ *
++ * Return: 0 for success; otherwise for error code.
++ */
++static int cm3218x_read_ara(struct cm3218x_chip *chip)
++{
++	struct i2c_client *client = chip->client;
++	int status;
++	unsigned short addr;
 +
-+	adap = of_find_i2c_adapter_by_node(dn->parent);
-+	if (adap == NULL)
-+		return -ENOTSUPP;
++	addr = client->addr;
++	client->addr = 0x0C;
++	status = i2c_smbus_read_byte(client);
++	client->addr = addr;
 +
-+	client = of_i2c_register_device(adap, dn);
-+	put_device(&adap->dev);
++	if (status < 0)
++		return -ENODEV;
 +
-+	if (client == NULL) {
-+		pr_err("%s: failed to create i2c client device "
-+				"for '%s'\n",
-+				__func__, dn->full_name);
-+		/* of_i2c_device_create tosses the real error code */
-+		return -EINVAL;
++	return status;
++}
++
++/**
++ * cm3218x_interrupt_config() - Enable/Disable CM3218x interrupt
++ * @cm3218x:	pointer of struct cm3218x.
++ * @enable:	0 to disable; otherwise to enable
++ *
++ * Config CM3218x interrupt control bit.
++ *
++ * Return: 0 for success; otherwise for error code.
++ */
++static int cm3218x_interrupt_config(struct cm3218x_chip *chip, int enable)
++{
++	struct i2c_client *client = chip->client;
++	struct cmdev *cmdev = chip->cmdev;
++	int status;
++
++	if (!cmdev)
++		return -ENODEV;
++
++	/* Force to clean interrupt */
++	if (cmdev->int_type == INT_TYPE_I2C) {
++		status = i2c_smbus_read_word_data(client,
++				CM3218x_REG_ADDR_STATUS);
++		if (status < 0)
++			cmdev->int_type = INT_TYPE_SMBUS;
++	}
++	if (cmdev->int_type == INT_TYPE_SMBUS)
++		cm3218x_read_ara(chip);
++
++	if (enable)
++		chip->conf_regs[CM3218x_REG_ADDR_CMD] |=
++			CM3218x_CMD_ALS_INT_EN;
++	else
++		chip->conf_regs[CM3218x_REG_ADDR_CMD] &=
++			~CM3218x_CMD_ALS_INT_EN;
++
++	status = i2c_smbus_write_word_data(client, CM3218x_REG_ADDR_CMD,
++		chip->conf_regs[CM3218x_REG_ADDR_CMD]);
++
++	if (status < 0)
++		return -ENODEV;
++
++	return status;
++}
++
++/**
++ * cm3218x_acpi_get_cpm_info() - Get CPM object from ACPI
++ * @client	pointer of struct i2c_client.
++ * @obj_name	pointer of ACPI object name.
++ * @count	maximum size of return array.
++ * @vals	pointer of array for return elements.
++ *
++ * Convert ACPI CPM table to array. Special thanks Srinivas Pandruvada's
++ * help to implement this routine.
++ *
++ * Return: -ENODEV for fail.  Otherwise is number of elements.
++ */
++static int cm3218x_acpi_get_cpm_info(struct i2c_client *client, char *obj_name,
++							int count, u64 *vals)
++{
++	acpi_handle handle;
++	struct acpi_buffer buffer = {ACPI_ALLOCATE_BUFFER, NULL};
++	int i;
++	acpi_status status;
++	union acpi_object *cpm = NULL;
++
++	handle = ACPI_HANDLE(&client->dev);
++	if (!handle)
++		return -ENODEV;
++
++	status = acpi_evaluate_object(handle, obj_name, NULL, &buffer);
++	if (ACPI_FAILURE(status)) {
++		dev_err(&client->dev, "object %s not found\n", obj_name);
++		return -ENODEV;
++	}
++
++	cpm = buffer.pointer;
++	for (i = 0; i < cpm->package.count && i < count; ++i) {
++		union acpi_object *elem;
++		elem = &(cpm->package.elements[i]);
++		vals[i] = elem->integer.value;
++	}
++
++	kfree(buffer.pointer);
++
++	return cpm->package.count;
++}
++
++/**
++ * cm3218x_reg_init() - Initialize CM3218x registers
++ * @cm3218x:	pointer of struct cm3218x.
++ *
++ * Initialize CM3218x ambient light sensor register to default values.
++ *
++  Return: 0 for success; otherwise for error code.
++ */
++static int cm3218x_reg_init(struct cm3218x_chip *chip)
++{
++	struct i2c_client *client = chip->client;
++	int i;
++	s32 ret;
++	int cpm_elem_count;
++	u64 cpm_elems[20];
++	struct cmdev *cmdev;
++
++	/* Default device */
++	chip->cmdev = &cm3218;
++	chip->conf_regs[CM3218x_REG_ADDR_CMD] = CM3218x_CMD_DEFAULT;
++	chip->conf_regs[CM3218x_REG_ADDR_WH] = CM3218x_WH_DEFAULT;
++	chip->conf_regs[CM3218x_REG_ADDR_WL] = CM3218x_WL_DEFAULT;
++
++	/* Disable interrupt */
++	cm3218x_interrupt_config(chip, 0);
++
++	/* Disable Test Mode */
++	i2c_smbus_write_word_data(client, CM3218x_REG_ADDR_TEST, 0x0000);
++
++	/* Disable device */
++	i2c_smbus_write_word_data(client, CM3218x_REG_ADDR_CMD,
++		CM3218x_CMD_ALS_DISABLE);
++
++	/* Identify device */
++	ret = i2c_smbus_read_word_data(client, CM3218x_REG_ADDR_ID);
++	if (ret < 0)
++		return ret;
++	switch (ret & 0xFF) {
++	case 0x18:
++		cmdev = chip->cmdev = &cm3218;
++		if (ret & 0x0800)
++			cmdev->int_type = INT_TYPE_I2C;
++		else
++			cmdev->int_type = INT_TYPE_SMBUS;
++		break;
++	case 0x81:
++		cmdev = chip->cmdev = &cm32181;
++		break;
++	case 0x82:
++		cmdev = chip->cmdev = &cm32182;
++		break;
++	default:
++		return -ENODEV;
++	}
++
++	if (ACPI_HANDLE(&client->dev)) {
++		/* Load from ACPI */
++		cpm_elem_count = cm3218x_acpi_get_cpm_info(client, "CPM0",
++							ARRAY_SIZE(cpm_elems),
++							cpm_elems);
++		if (cpm_elem_count > 0) {
++			int header_num = 3;
++			int reg_num = cpm_elem_count - header_num;
++
++			cmdev->regs_bmp = cpm_elems[2];
++			for (i = 0; i < reg_num; i++)
++				if (cmdev->regs_bmp & (1<<i))
++					chip->conf_regs[i] =
++						cpm_elems[header_num+i];
++		}
++
++		cpm_elem_count = cm3218x_acpi_get_cpm_info(client, "CPM1",
++							ARRAY_SIZE(cpm_elems),
++							cpm_elems);
++		if (cpm_elem_count > 0) {
++			cmdev->mlux_per_bit = (int)cpm_elems[0] / 100;
++			cmdev->calibscale = (int)cpm_elems[1];
++		}
++	}
++
++	/* Force to disable interrupt */
++	chip->conf_regs[CM3218x_REG_ADDR_CMD] &= ~CM3218x_CMD_ALS_INT_EN;
++
++	/* Initialize registers*/
++	for (i = 0; i < CM3218x_CONF_REG_NUM; i++) {
++		if (cmdev->regs_bmp & (1<<i)) {
++			ret = i2c_smbus_write_word_data(client, i,
++						chip->conf_regs[i]);
++			if (ret < 0)
++				return ret;
++		}
 +	}
 +
 +	return 0;
 +}
 +
-+static int i2c_handler_remove(struct of_overlay_device_entry *de,
-+		int revert)
++/**
++ *  cm3218x_read_als_it() - Get sensor integration time (ms)
++ *  @cm3218x:	pointer of struct cm3218x
++ *  @val2:	pointer of int to load the als_it value.
++ *
++ *  Report the current integartion time by millisecond.
++ *
++ *  Return: IIO_VAL_INT_PLUS_MICRO for success, otherwise -EINVAL.
++ */
++static int cm3218x_read_als_it(struct cm3218x_chip *chip, int *val2)
 +{
-+	struct device_node *dn;
-+	struct i2c_client *client;
++	struct cmdev *cmdev = chip->cmdev;
++	u16 als_it;
++	int i;
 +
-+	if (!de || !de->np)
-+		return -ENOTSUPP;
++	als_it = chip->conf_regs[CM3218x_REG_ADDR_CMD];
++	als_it &= CM3218x_CMD_ALS_IT_MASK;
++	als_it >>= CM3218x_CMD_ALS_IT_SHIFT;
++	for (i = 0; i < cmdev->num_als_it; i++) {
++		if (als_it == cmdev->als_it_bits[i]) {
++			*val2 = cmdev->als_it_values[i];
++			return IIO_VAL_INT_PLUS_MICRO;
++		}
++	}
 +
-+	dn = de->np;
++	return -EINVAL;
++}
 +
-+	client = of_find_i2c_device_by_node(dn);
-+	if (client == NULL)
-+		return -ENOTSUPP;
++/**
++ * cm3218x_write_als_it() - Write sensor integration time
++ * @cm3218x:	pointer of struct cm3218x.
++ * @val:	integration time by millisecond.
++ *
++ * Convert integration time (ms) to sensor value.
++ *
++ * Return: i2c_smbus_write_word_data command return value.
++ */
++static int cm3218x_write_als_it(struct cm3218x_chip *chip, int val)
++{
++	struct i2c_client *client = chip->client;
++	struct cmdev *cmdev = chip->cmdev;
++	u16 als_it;
++	int ret, i;
 +
-+	/* unregister takes one ref away */
-+	i2c_unregister_device(client);
++	for (i = 0; i < cmdev->num_als_it; i++)
++		if (val <= cmdev->als_it_values[i])
++			break;
++	if (i >= cmdev->num_als_it)
++		i = cmdev->num_als_it - 1;
 +
-+	/* and put the reference of the find */
-+	put_device(&client->dev);
++	als_it = cmdev->als_it_bits[i];
++	als_it <<= CM3218x_CMD_ALS_IT_SHIFT;
++
++	mutex_lock(&chip->lock);
++	chip->conf_regs[CM3218x_REG_ADDR_CMD] &=
++			~CM3218x_CMD_ALS_IT_MASK;
++	chip->conf_regs[CM3218x_REG_ADDR_CMD] |=
++			als_it;
++	ret = i2c_smbus_write_word_data(client, CM3218x_REG_ADDR_CMD,
++			chip->conf_regs[CM3218x_REG_ADDR_CMD]);
++	mutex_unlock(&chip->lock);
++
++	return ret;
++}
++
++/**
++ * cm3218x_get_lux() - report current lux value
++ * @cm3218x:	pointer of struct cm3218x.
++ *
++ * Convert sensor raw data to lux.  It depends on integration
++ * time and claibscale variable.
++ *
++ * Return: Positive value is lux, otherwise is error code.
++ */
++static int cm3218x_get_lux(struct cm3218x_chip *chip)
++{
++	struct i2c_client *client = chip->client;
++	struct cmdev *cmdev = chip->cmdev;
++	int ret;
++	int als_it;
++	int lux;
++	u64 tmp;
++
++	/* Calculate mlux per bit based on als_it */
++	ret = cm3218x_read_als_it(chip, &als_it);
++	if (ret < 0)
++		return -EINVAL;
++	tmp = (__force u64)cmdev->mlux_per_bit;
++	tmp *= cmdev->mlux_per_bit_base_it;
++	tmp = div_u64(tmp, als_it);
++
++	/* Get als_raw */
++	if (!(chip->conf_regs[CM3218x_REG_ADDR_CMD] & CM3218x_CMD_ALS_INT_EN))
++		chip->als_raw = i2c_smbus_read_word_data(
++					client,
++					CM3218x_REG_ADDR_ALS);
++	if (chip->als_raw < 0)
++		return chip->als_raw;
++
++	tmp *= chip->als_raw;
++	tmp *= cmdev->calibscale;
++	tmp = div_u64(tmp, CM3218x_CALIBSCALE_RESOLUTION);
++	tmp = div_u64(tmp, MLUX_PER_LUX);
++
++	if (tmp > 0xFFFF)
++		tmp = 0xFFFF;
++
++	lux = (int)tmp;
++	return lux;
++}
++
++static int cm3218x_read_raw(struct iio_dev *indio_dev,
++			struct iio_chan_spec const *chan,
++			int *val, int *val2, long mask)
++{
++	struct cm3218x_chip *chip = iio_priv(indio_dev);
++	struct cmdev *cmdev = chip->cmdev;
++	int ret;
++
++	switch (mask) {
++	case IIO_CHAN_INFO_PROCESSED:
++		ret = cm3218x_get_lux(chip);
++		if (ret < 0)
++			return ret;
++		*val = ret;
++		return IIO_VAL_INT;
++	case IIO_CHAN_INFO_CALIBSCALE:
++		*val = cmdev->calibscale;
++		return IIO_VAL_INT;
++	case IIO_CHAN_INFO_INT_TIME:
++		*val = 0;
++		ret = cm3218x_read_als_it(chip, val2);
++		return ret;
++	}
++
++	return -EINVAL;
++}
++
++static int cm3218x_write_raw(struct iio_dev *indio_dev,
++			struct iio_chan_spec const *chan,
++			int val, int val2, long mask)
++{
++	struct cm3218x_chip *chip = iio_priv(indio_dev);
++	struct cmdev *cmdev = chip->cmdev;
++	int ret;
++
++	switch (mask) {
++	case IIO_CHAN_INFO_CALIBSCALE:
++		cmdev->calibscale = val;
++		return val;
++	case IIO_CHAN_INFO_INT_TIME:
++		ret = cm3218x_write_als_it(chip, val2);
++		return ret;
++	}
++
++	return -EINVAL;
++}
++
++/**
++ * cm3218x_get_it_available() - Get available ALS IT value
++ * @dev:	pointer of struct device.
++ * @attr:	pointer of struct device_attribute.
++ * @buf:	pointer of return string buffer.
++ *
++ * Display the available integration time values by millisecond.
++ *
++ * Return: string length.
++ */
++static ssize_t cm3218x_get_it_available(struct device *dev,
++			struct device_attribute *attr, char *buf)
++{
++	struct cm3218x_chip *chip = iio_priv(dev_to_iio_dev(dev));
++	struct cmdev *cmdev = chip->cmdev;
++	int i, len;
++
++	for (i = 0, len = 0; i < cmdev->num_als_it; i++)
++		len += sprintf(buf + len, "0.%06u ", cmdev->als_it_values[i]);
++	return len + sprintf(buf + len, "\n");
++}
++
++/**
++ * cm3218x_threshold_update() - Update the threshold registers.
++ * @dev:	pointer of struct cm3218x_chip.
++ * @percent:	+/- percent.
++ *
++ * Based on the current ALS value, tupdate the hi and low threshold registers.
++ *
++ * Return: string length.
++ */
++static int cm3218x_threshold_update(struct cm3218x_chip *chip, int percent)
++{
++	struct i2c_client *client = chip->client;
++	int ret;
++	int wh, wl;
++
++	ret = chip->als_raw = i2c_smbus_read_word_data(client,
++					CM3218x_REG_ADDR_ALS);
++	if (ret < 0)
++		return ret;
++
++	wh = wl = ret;
++	ret *= percent;
++	ret /= 100;
++	if (ret < 1)
++		ret = 1;
++	wh += ret;
++	wl -= ret;
++	if (wh > 65535)
++		wh = 65535;
++	if (wl < 0)
++		wl = 0;
++
++	chip->conf_regs[CM3218x_REG_ADDR_WH] = wh;
++	ret = i2c_smbus_write_word_data(
++		client,
++		CM3218x_REG_ADDR_WH,
++		chip->conf_regs[CM3218x_REG_ADDR_WH]);
++	if (ret < 0)
++		return ret;
++
++	chip->conf_regs[CM3218x_REG_ADDR_WL] = wl;
++	ret = i2c_smbus_write_word_data(
++		client,
++		CM3218x_REG_ADDR_WL,
++		chip->conf_regs[CM3218x_REG_ADDR_WL]);
++	if (ret < 0)
++		return ret;
 +
 +	return 0;
 +}
 +
-+static const struct of_overlay_handler_ops i2c_handler_ops = {
-+	.create	= i2c_handler_create,
-+	.remove = i2c_handler_remove,
++/**
++ * cm3218x_event_handler() - Interrupt handling routine.
++ * @irq:	irq number.
++ * @private:	pointer of void.
++ *
++ * Clean interrupt and reset threshold registers.
++ *
++ * Return: string length.
++ */
++static irqreturn_t cm3218x_event_handler(int irq, void *private)
++{
++	struct iio_dev *dev_info = private;
++	struct cm3218x_chip *chip = iio_priv(dev_info);
++	int ret;
++
++	mutex_lock(&chip->lock);
++
++	/* Disable interrupt */
++	ret = cm3218x_interrupt_config(chip, 0);
++	if (ret < 0)
++		goto error_handler_unlock;
++
++	/* Update Hi/Lo windows */
++	ret = cm3218x_threshold_update(chip, CM3218x_THRESHOLD_PERCENT);
++	if (ret < 0)
++		goto error_handler_unlock;
++
++	/* Enable interrupt */
++	ret = cm3218x_interrupt_config(chip, 1);
++	if (ret < 0)
++		goto error_handler_unlock;
++
++	mutex_unlock(&chip->lock);
++
++	return IRQ_HANDLED;
++
++error_handler_unlock:
++	mutex_unlock(&chip->lock);
++	return IRQ_NONE;
++}
++
++static const struct iio_chan_spec cm3218x_channels[] = {
++	{
++		.type = IIO_LIGHT,
++		.info_mask_separate =
++			BIT(IIO_CHAN_INFO_PROCESSED) |
++			BIT(IIO_CHAN_INFO_CALIBSCALE) |
++			BIT(IIO_CHAN_INFO_INT_TIME),
++	}
 +};
 +
-+static struct of_overlay_handler i2c_handler = {
-+	.name = "i2c",
-+	.ops = &i2c_handler_ops,
++static IIO_DEVICE_ATTR(in_illuminance_integration_time_available,
++			S_IRUGO, cm3218x_get_it_available, NULL, 0);
++
++static struct attribute *cm3218x_attributes[] = {
++	&iio_dev_attr_in_illuminance_integration_time_available.dev_attr.attr,
++	NULL,
 +};
 +
-+static int __init i2c_bus_handler_register(void)
-+{
-+	return of_overlay_handler_register(&i2c_handler);
-+}
-+#endif
++static const struct attribute_group cm3218x_attribute_group = {
++	.attrs = cm3218x_attributes
++};
 +
- #else
- static void of_i2c_register_devices(struct i2c_adapter *adap) { }
- #endif /* CONFIG_OF */
- 
-+#if !defined(CONFIG_OF) || !defined(CONFIG_OF_OVERLAY)
-+static inline int i2c_bus_handler_register(void)
++static const struct iio_info cm3218x_info = {
++	.driver_module		= THIS_MODULE,
++	.read_raw		= &cm3218x_read_raw,
++	.write_raw		= &cm3218x_write_raw,
++	.attrs			= &cm3218x_attribute_group,
++};
++
++static int cm3218x_probe(struct i2c_client *client,
++			const struct i2c_device_id *id)
 +{
++	struct cm3218x_chip *chip;
++	struct iio_dev *indio_dev;
++	int ret;
++
++	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*chip));
++	if (!indio_dev) {
++		dev_err(&client->dev, "devm_iio_device_alloc failed\n");
++		return -ENOMEM;
++	}
++
++	chip = iio_priv(indio_dev);
++	i2c_set_clientdata(client, indio_dev);
++	chip->client = client;
++
++	mutex_init(&chip->lock);
++	indio_dev->dev.parent = &client->dev;
++	indio_dev->channels = cm3218x_channels;
++	indio_dev->num_channels = ARRAY_SIZE(cm3218x_channels);
++	indio_dev->info = &cm3218x_info;
++	if (id && id->name)
++		indio_dev->name = id->name;
++	else
++		indio_dev->name = (char *)dev_name(&client->dev);
++	indio_dev->modes = INDIO_DIRECT_MODE;
++
++	ret = cm3218x_reg_init(chip);
++	if (ret) {
++		dev_err(&client->dev,
++			"%s: register init failed\n",
++			__func__);
++		return ret;
++	}
++
++	if (client->irq) {
++		ret = request_threaded_irq(client->irq,
++					NULL,
++					cm3218x_event_handler,
++					IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
++					"cm3218x_event",
++					indio_dev);
++
++		if (ret < 0) {
++			dev_err(&client->dev, "irq request error %d\n",
++				-ret);
++			goto error_disable_int;
++		}
++	}
++
++	ret = iio_device_register(indio_dev);
++	if (ret < 0) {
++		dev_err(&client->dev,
++			"%s: regist device failed\n",
++			__func__);
++		goto error_free_irq;
++	}
++
++	if (client->irq) {
++		ret = cm3218x_threshold_update(chip, CM3218x_THRESHOLD_PERCENT);
++		if (ret < 0)
++			goto error_free_irq;
++
++		ret = cm3218x_interrupt_config(chip, 1);
++		if (ret < 0)
++			goto error_free_irq;
++	}
++
++	return 0;
++
++error_free_irq:
++	free_irq(client->irq, indio_dev);
++error_disable_int:
++	cm3218x_interrupt_config(chip, 0);
++	return ret;
++}
++
++static int cm3218x_remove(struct i2c_client *client)
++{
++	struct iio_dev *indio_dev = i2c_get_clientdata(client);
++	struct cm3218x_chip *chip = iio_priv(indio_dev);
++
++	cm3218x_interrupt_config(chip, 0);
++	if (client->irq)
++		free_irq(client->irq, indio_dev);
++	iio_device_unregister(indio_dev);
 +	return 0;
 +}
-+#endif
 +
- /* ACPI support code */
- 
- #if IS_ENABLED(CONFIG_ACPI)
-@@ -1668,8 +1747,14 @@ static int __init i2c_init(void)
- 	retval = i2c_add_driver(&dummy_driver);
- 	if (retval)
- 		goto class_err;
--	return 0;
- 
-+	retval = i2c_bus_handler_register();
-+	if (retval)
-+		goto bus_handler_err;
++static const struct i2c_device_id cm3218x_id[] = {
++	{ "cm3218x", 0},
++	{ }
++};
 +
-+	return 0;
-+bus_handler_err:
-+	i2c_del_driver(&dummy_driver);
- class_err:
- #ifdef CONFIG_I2C_COMPAT
- 	class_compat_unregister(i2c_adapter_compat_class);
++MODULE_DEVICE_TABLE(i2c, cm3218x_id);
++
++static const struct of_device_id cm3218x_of_match[] = {
++	{ .compatible = "capella,cm3218x" },
++	{ }
++};
++
++static const struct acpi_device_id cm3218x_acpi_match[] = {
++	{ "CPLM3218", 0},
++	{},
++};
++
++MODULE_DEVICE_TABLE(acpi, cm3218x_acpi_match);
++
++static struct i2c_driver cm3218x_driver = {
++	.driver = {
++		.name	= "cm3218x",
++		.acpi_match_table = ACPI_PTR(cm3218x_acpi_match),
++		.of_match_table = of_match_ptr(cm3218x_of_match),
++		.owner	= THIS_MODULE,
++	},
++	.id_table	= cm3218x_id,
++	.probe		= cm3218x_probe,
++	.remove		= cm3218x_remove,
++};
++
++module_i2c_driver(cm3218x_driver);
++
++MODULE_AUTHOR("Kevin Tsai <ktsai@capellamicro.com>");
++MODULE_DESCRIPTION("CM3218x ambient light sensor driver");
++MODULE_LICENSE("GPL");
 -- 
-1.7.12
+1.8.3.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
