@@ -1,44 +1,153 @@
-From: Brian Austin <brian.austin@cirrus.com>
-Subject: Re: [PATCH v3] ASoC: cs42888: Add codec driver support
-Date: Tue, 18 Mar 2014 14:55:03 -0500
-Message-ID: <alpine.DEB.2.02.1403181454470.14838@heelrod>
-References: <1394538091-19513-1-git-send-email-Guangyu.Chen@freescale.com>
- <20140318131033.GC11706@sirena.org.uk>
- <alpine.DEB.2.02.1403180936200.14838@heelrod>
- <alpine.DEB.2.00.1403181202310.7177@phandrigan-desktop>
- <20140318195159.GQ11706@sirena.org.uk>
+From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: ventana: fix eth1 pci dev node
+Date: Tue, 18 Mar 2014 13:02:55 -0700
+Message-ID: <CAJ+vNU2Av-n1-efbFbXNvO4SmoobL_WpQKApFRS1Zjy0egLLzw@mail.gmail.com>
+References: <1394747064-4106-1-git-send-email-tharvey@gateworks.com>
+	<20140314132805.GD813@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20140318195159.GQ11706@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Brian Austin <brian.austin@cirrus.com>, lars@metafoo.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-doc@vger.kernel.org, lgirdwood@gmail.com, Paul Handrigan <paul.handrigan@cirrus.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, rob@landley.net, Nicolin Chen <Guangyu.Chen@freescale.com>, grant.likely@linaro.org, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140314132805.GD813-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Mar 14, 2014 at 6:28 AM, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> On Thu, Mar 13, 2014 at 02:44:24PM -0700, Tim Harvey wrote:
+>> Properly add the PCI device node for the 2nd GigE port so that the device
+>> driver can get its MAC from DT.  Note that the Ventana bootloader uses
+>> the ethernet1 alias to populate the MAC address by adding the local-mac-address
+>> property.  Also remove the unnecesssary 'sky2' alias.
+>>
+>> This is based on Shawn's for-next branch
+>
+> This line shouldn't be necessarily in the commit log.
 
+ok
 
-On Tue, 18 Mar 2014, Mark Brown wrote:
+>
+>>
+>> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/imx6q-gw5400-a.dts  | 40 +++++++++++++++++++++++++++++++----
+>>  arch/arm/boot/dts/imx6qdl-gw53xx.dtsi | 39 ++++++++++++++++++++++++++++++----
+>>  arch/arm/boot/dts/imx6qdl-gw54xx.dtsi | 39 ++++++++++++++++++++++++++++++----
+>>  3 files changed, 106 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/imx6q-gw5400-a.dts b/arch/arm/boot/dts/imx6q-gw5400-a.dts
+>> index 902f983..5d2b912 100644
+>> --- a/arch/arm/boot/dts/imx6q-gw5400-a.dts
+>> +++ b/arch/arm/boot/dts/imx6q-gw5400-a.dts
+>> @@ -16,7 +16,7 @@
+>>       model = "Gateworks Ventana GW5400-A";
+>>       compatible = "gw,imx6q-gw5400-a", "gw,ventana", "fsl,imx6q";
+>>
+>> -     /* these are used by bootloader for disabling nodes */
+>> +     /* these are used by bootloader for configuring nodes */
+>>       aliases {
+>>               ethernet0 = &fec;
+>>               ethernet1 = &eth1;
+>> @@ -26,7 +26,7 @@
+>>               led0 = &led0;
+>>               led1 = &led1;
+>>               led2 = &led2;
+>> -             sky2 = &eth1;
+>> +
+>
+> No need to add a new line.
 
-> On Tue, Mar 18, 2014 at 12:08:02PM -0500, Paul Handrigan wrote:
->> On Tue, 18 Mar 2014, Brian Austin wrote:
+oops - will remove
+
 >
->>> Driver looks good to me. I think we should name it the cs42xx8 since this
->>> actually covers CS42448 and CS42888. The CS42888 is derived from the
->>> CS42448.
+>>               ssi0 = &ssi1;
+>>               spi0 = &ecspi1;
+>>               usb0 = &usbh1;
+>> @@ -496,8 +496,40 @@
+>>       reset-gpio = <&gpio1 29 0>;
+>>       status = "okay";
+>>
+>> -     eth1: sky2@8 { /* MAC/PHY on bus 8 */
+>> -             compatible = "marvell,sky2";
 >
->> V3 looks good. As Brian said, the name should be changed to cs42xx8.
+> So this was just a placeholder and did not actually work in any way,
+> right?
+
+Kind of - it worked with a non-upstream patch against the sky2 driver
+which used the dt alias of 'sky2' to get to its mac address.  I've
+since learned how to reference PCI dt nodes properly and have patched
+the sky2 driver the proper way (see
+http://git.kernel.org/cgit/linux/kernel/git/davem/net-next.git/commit/drivers/net/ethernet/marvell/sky2.c?id=3ee2f8ce1ab8f235bda164295fa0cf39ec1c2400).
+ So now, I'm 'fixing' the improper way I did it before.
+
 >
-> Great, so if Nicolin resubmits with the rename when he gets back he can
-> add acks from both of you?  The driver looked fine to me too.
+>> +     pcie@0,0 {
 >
-Yes sir
+> Is this whole bridge/switch hierarchy binding documented somewhere or is
+> this just something that work for you?
+
+I'm not sure where its 'best' documented, but it is the way the kernel works.
+
+>
+>> +             /* 00:00.0 host-bridge */
+>> +             #address-cells = <3>;
+>> +             #size-cells = <2>;
+>> +             device_type = "pci";
+>> +             reg = <0x0 0 0 0 0>;
+>> +
+>> +             /*
+>> +              * GigE PCI dev node needs to be defined so that enet driver
+>> +              * can use it to obtain its boot-loader specified MAC
+>> +              */
+>> +             pcie@0,0 {
+>> +                     /* 01:00.0 PCIe switch */
+>> +                     #address-cells = <3>;
+>> +                     #size-cells = <2>;
+>> +                     device_type = "pci";
+>> +                     reg = <0x0 0 0 0 0>;
+>> +
+>> +                     pcie@8,0 {
+>
+> What's the naming schema for all these pcie nodes?  Generally, we should
+> have the numbers encoded in the node name coming from the address cells
+> in 'reg' property.
+>
+> Shawn
+
+I'm cc'ing Jason as some of his comments to another thread helped me
+understand how to define a PCI device node off a bus in dt properly -
+perhaps he knows where its best documented.
+
+I was hoping there was a way to reference PCI nodes by BDF values as
+I'm simply trying to define a marvell,sky2 device at 08:00.0.  I found
+that the kernel's OF parsing code for PCI requires you to nest the
+nodes to match the bus hierarchy.  In order to map a dt node to a PCI
+device, the bus the device is on must have a dt node itself, which is
+what creates the need for the nesting.  Note that the bus topology
+here rc -> P2P bridge -> GigE.
+
+Tim
+
+>
+>> +                             /* 02:08.0 PCIe switch port */
+>> +                             #address-cells = <3>;
+>> +                             #size-cells = <2>;
+>> +                             device_type = "pci";
+>> +                             reg = <0x4000 0 0 0 0>;
+>> +                             eth1: pcie@0,0 {
+>> +                                     /* 08:00.0 GigE */
+>> +                                     #address-cells = <3>;
+>> +                                     #size-cells = <2>;
+>> +                                     device_type = "pci";
+>> +                                     reg = <0x0 0 0 0 0>;
+>> +                                     compatible = "marvell,sky2";
+>> +                             };
+>> +                     };
+>> +             };
+>>       };
+>>  };
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
