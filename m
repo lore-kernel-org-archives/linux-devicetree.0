@@ -1,55 +1,58 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2] gpio: davinci: fix gpio selection for OF
-Date: Tue, 18 Mar 2014 16:24:17 +0530
-Message-ID: <532825D9.4050708@ti.com>
-References: <5316FFCE.1060603@ti.com>
-	<1394018461-757-1-git-send-email-holler@ahsoftware.de>
-	<CACRpkdaF=jc9Z1XZCtH8VPuih01t--qyV-sgH1R_ix0VM4RzVA@mail.gmail.com>
-	<5322D529.4070904@ahsoftware.de>
-	<CACRpkdaghneo1MvNCfxjTED+sJepHgeZCgmKsRteG9qrBNWAfQ@mail.gmail.com>
-	<5326F8C5.5090406@ti.com>
-	<CACRpkdYZMzw31NkA4uSq+ZowzOnZgZthXhZri-eJY2Ozb8aNRQ@mail.gmail.com>
-	<532805AE.9000806@ti.com> <532815A8.9090807@ahsoftware.de>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RFC PATCH 0/2] Sil9022 DPI to HDMI Encoder
+Date: Tue, 18 Mar 2014 10:56:40 +0000
+Message-ID: <20140318105640.GE8043@e106331-lin.cambridge.arm.com>
+References: <1395137278-5065-1-git-send-email-sathyap@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <532815A8.9090807-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1395137278-5065-1-git-send-email-sathyap@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sathya Prakash M R <sathyap@ti.com>
+Cc: "tony@atomide.com" <tony@atomide.com>, "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "paul@pwsan.com" <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexander,
-
-On Tuesday 18 March 2014 03:15 PM, Alexander Holler wrote:
-> Am 18.03.2014 09:37, schrieb Sekhar Nori:
+On Tue, Mar 18, 2014 at 10:07:55AM +0000, Sathya Prakash M R wrote:
+> This patch series adds the Silicon Image Sil9022 driver.
 > 
->> It is safe - at the least it does not break anything that is already
->> working. I guess the decision to put it into -rc depends on whether you
->> consider out of tree dtbs to be a valid usecase for the kernel.
+> Sil9022 is HDMI Transmitter compliant to HDMI 1.2a and DVI 1.0.
+> It supports 1080p and UXGA. It has single slave I2C from Host,
+> passing through to master I2C interface for DDC Connection.
+> It provides Transmitter Programming Interface (TPI) for simplified API programming.
+> Product brief:
+> http://www.semiconductorstore.com/pdf/newsite/siliconimage/SiI9022a_pb.pdf
 > 
-> That's all DT is about, getting rid of the necessity for in-tree
-> hw-descriptions. ;)
+> Current driver is tested on AM43x SOC.
 > 
-> But I don't need any rush here, I'm just unable to understand why the
-> -rc phase isn't used for bug fixing as I believe that's what this phase
-> is for.
+> This series is on top of series posted to add DSS support on AM43x [2]
+> [2] https://patchwork.kernel.org/patch/3822691/
+> 
+> This is initial driver supporting limited features.
+> 
+> TODO ->
+> Audio Support
+> Detailed Hot Plug event handling and also routing the hot plug event to host processor
+> 
+> These features will be added in future.
+> 
+> Sathya Prakash M R (2):
+>   OMAPDSS: Add Sil9022 DPI-HDMI Encoder Driver
+>   ARM: DTS: AM43x: Add sii9022 dt information
+> 
+>  arch/arm/boot/dts/am437x-gp-evm.dts                |   58 +-
+>  arch/arm/boot/dts/am43x-epos-evm.dts               |   59 +-
+>  drivers/video/omap2/displays-new/Kconfig           |    8 +
+>  drivers/video/omap2/displays-new/Makefile          |    1 +
+>  drivers/video/omap2/displays-new/encoder-sil9022.c |  748 ++++++++++++++++++++
+>  drivers/video/omap2/displays-new/encoder-sil9022.h |  105 +++
+>  6 files changed, 973 insertions(+), 6 deletions(-)
+>  create mode 100644 drivers/video/omap2/displays-new/encoder-sil9022.c
+>  create mode 100644 drivers/video/omap2/displays-new/encoder-sil9022.h
 
-The push back you are seeing is because this is pretty late in -rc
-cycle. If this push back was not there the bug fix cycle would probably
-never close.
+Is there already a binding document?
 
-In all probability, if this was -rc2 or even -rc3 there would not be so
-much discussion.
+If not, please add one.
 
-Thanks,
-Sekhar
+Cheers,
+Mark.
