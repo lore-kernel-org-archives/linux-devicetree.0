@@ -1,49 +1,111 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH] mfd: sec-core: Fix uninitialized 'regmap_rtc' on S2MPA01
-Date: Tue, 18 Mar 2014 14:11:26 +0100
-Message-ID: <1395148286-32002-1-git-send-email-k.kozlowski@samsung.com>
-References: <20140318110947.GR25478@lee--X1>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Subject: [PATCH] ARM: dts: keystone: use common "ti,keystone" compatible instead of -evm
+Date: Tue, 18 Mar 2014 15:12:34 +0200
+Message-ID: <1395148354-22412-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20140318110947.GR25478@lee--X1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Sachin Kamat <sachin.kamat@linaro.org>, broonie@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: santosh.shilimkar@ti.com
+Cc: olof@lixom.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grygorii.strashko@ti.com, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Initialize the 'regmap_rtc' on S2MPA01 to some sane value. Sane at leas=
-t
-for S5M87X chipsets, not S2MPS/S2MPA but it won't be used because
-rtc-s5m driver does not support S2MPA01.
+As suggested by Olof Johansson at
+http://www.spinics.net/lists/arm-kernel/msg314009.html.
+It be better just keeping a "ti,keystone" top-level compatible and
+just using that to probe. If so we don't have to touch the file
+for new boards in the future.
 
-This fixes following error:
-drivers/mfd/sec-core.c:342:45: warning: =E2=80=98regmap_rtc=E2=80=99 ma=
-y be used uninitialized in this function [-Wuninitialized]
+So use common "ti,keystone" compatible in keystone.c for all boards.
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: Olof Johansson <olof@lixom.net>
+
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 ---
- drivers/mfd/sec-core.c |    7 +++++++
- 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/mfd/sec-core.c b/drivers/mfd/sec-core.c
-index 281a827..f5e09d0 100644
---- a/drivers/mfd/sec-core.c
-+++ b/drivers/mfd/sec-core.c
-@@ -295,6 +295,13 @@ static int sec_pmic_probe(struct i2c_client *i2c,
- 	switch (sec_pmic->device_type) {
- 	case S2MPA01:
- 		regmap =3D &s2mpa01_regmap_config;
-+		/*
-+		 * The rtc-s5m driver does not support S2MPA01 and there
-+		 * is no mfd_cell for S2MPA01 RTC device.
-+		 * However we must pass something to devm_regmap_init_i2c()
-+		 * so use S5M-like regmap config even though it wouldn't work.
-+		 */
-+		regmap_rtc =3D &s5m_rtc_regmap_config;
- 		break;
- 	case S2MPS11X:
- 		regmap =3D &s2mps11_regmap_config;
---=20
-1.7.9.5
+Based on linux-next/master
+
+ Documentation/devicetree/bindings/arm/keystone/keystone.txt | 6 +++---
+ arch/arm/boot/dts/k2e-evm.dts                               | 2 +-
+ arch/arm/boot/dts/k2hk-evm.dts                              | 2 +-
+ arch/arm/boot/dts/k2l-evm.dts                               | 2 +-
+ arch/arm/mach-keystone/keystone.c                           | 5 +----
+ 5 files changed, 7 insertions(+), 10 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/keystone/keystone.txt b/Documentation/devicetree/bindings/arm/keystone/keystone.txt
+index ad16e7a..59d7a46 100644
+--- a/Documentation/devicetree/bindings/arm/keystone/keystone.txt
++++ b/Documentation/devicetree/bindings/arm/keystone/keystone.txt
+@@ -11,10 +11,10 @@ Required properties:
+ 
+ Boards:
+ -  Keystone 2 Hawking/Kepler EVM
+-   compatible = "ti,k2hk-evm"
++   compatible = "ti,k2hk-evm","ti,keystone"
+ 
+ -  Keystone 2 Lamarr EVM
+-   compatible = "ti,k2l-evm"
++   compatible = "ti,k2l-evm","ti,keystone"
+ 
+ -  Keystone 2 Edison EVM
+-   compatible = "ti,k2e-evm"
++   compatible = "ti,k2e-evm","ti,keystone"
+diff --git a/arch/arm/boot/dts/k2e-evm.dts b/arch/arm/boot/dts/k2e-evm.dts
+index bb8faeb..74b3b63 100644
+--- a/arch/arm/boot/dts/k2e-evm.dts
++++ b/arch/arm/boot/dts/k2e-evm.dts
+@@ -13,7 +13,7 @@
+ #include "k2e.dtsi"
+ 
+ / {
+-	compatible =  "ti,k2e-evm";
++	compatible =  "ti,k2e-evm","ti,keystone";
+ 	model = "Texas Instruments Keystone 2 Edison EVM";
+ 
+ 	soc {
+diff --git a/arch/arm/boot/dts/k2hk-evm.dts b/arch/arm/boot/dts/k2hk-evm.dts
+index 1a1335b..f2a6658 100644
+--- a/arch/arm/boot/dts/k2hk-evm.dts
++++ b/arch/arm/boot/dts/k2hk-evm.dts
+@@ -13,7 +13,7 @@
+ #include "k2hk.dtsi"
+ 
+ / {
+-	compatible =  "ti,k2hk-evm";
++	compatible =  "ti,k2hk-evm","ti,keystone";
+ 	model = "Texas Instruments Keystone 2 Kepler/Hawking EVM";
+ 
+ 	soc {
+diff --git a/arch/arm/boot/dts/k2l-evm.dts b/arch/arm/boot/dts/k2l-evm.dts
+index ebf316a..50a7013 100644
+--- a/arch/arm/boot/dts/k2l-evm.dts
++++ b/arch/arm/boot/dts/k2l-evm.dts
+@@ -13,7 +13,7 @@
+ #include "k2l.dtsi"
+ 
+ / {
+-	compatible =  "ti,k2l-evm";
++	compatible =  "ti,k2l-evm","ti,keystone";
+ 	model = "Texas Instruments Keystone 2 Lamarr EVM";
+ 
+ 	soc {
+diff --git a/arch/arm/mach-keystone/keystone.c b/arch/arm/mach-keystone/keystone.c
+index aa0d212..e0b9e1b 100644
+--- a/arch/arm/mach-keystone/keystone.c
++++ b/arch/arm/mach-keystone/keystone.c
+@@ -46,10 +46,7 @@ static void __init keystone_init(void)
+ }
+ 
+ static const char *keystone_match[] __initconst = {
+-	"ti,keystone-evm",
+-	"ti,k2hk-evm",
+-	"ti,k2l-evm",
+-	"ti,k2e-evm",
++	"ti,keystone",
+ 	NULL,
+ };
+ 
+-- 
+1.8.3.2
+
