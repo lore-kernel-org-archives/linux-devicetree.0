@@ -1,85 +1,122 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCHv2 0/8] devfreq: exynos4: Support dt and use common ppmu
- driver
-Date: Tue, 18 Mar 2014 16:47:38 +0100
-Message-ID: <53286A9A.1040207@samsung.com>
-References: <1394698649-20996-1-git-send-email-cw00.choi@samsung.com>
- <5323432E.5060005@samsung.com> <532656B1.2010907@samsung.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH] phy: micrel: add of configuration for LED mode
+Date: Tue, 18 Mar 2014 16:56:06 +0100
+Message-ID: <6677304.0KbXKA76PZ@avalon>
+References: <1393415280-10227-1-git-send-email-ben.dooks@codethink.co.uk> <20140227091505.GA6945@e106331-lin.cambridge.arm.com> <530F13DB.90009@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <532656B1.2010907@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rafael.j.wysocki@intel.com, nm@ti.com, b.zolnierkie@samsaung.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <530F13DB.90009-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org" <linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Ben,
 
+A bit of a late reply, I had missed this patch, sorry.
 
-On 17.03.2014 02:58, Chanwoo Choi wrote:
-> Hi Tomasz,
->
-> On 03/15/2014 02:58 AM, Tomasz Figa wrote:
->> Hi Chanwoo,
->>
->> On 13.03.2014 09:17, Chanwoo Choi wrote:
->>> This patchset support devicetree and use common ppmu driver instead of
->>> individual code of exynos4_bus.c to remove duplicate code. Also this patchset
->>> get the resources for busfreq from dt data by using DT helper function.
->>> - PPMU register address
->>> - PPMU clock
->>> - Regulator for INT/MIF block
->>>
->>> This patchset use SET_SYSTEM_SLEEP_PM_OPS macro intead of legacy method.
->>> To remove power-leakage in suspend state, before entering suspend state,
->>> disable ppmu clocks.
->>>
->>> Changes from v1:
->>> - Add exynos4_bus.txt documentation for devicetree guide
->>> - Fix probe failure if CONFIG_PM_OPP is disabled
->>> - Fix typo and resource leak(regulator/clock/memory) when happening probe failure
->>> - Add additionally comment for PPMU usage instead of previous PPC
->>> - Split separate patch to remove ambiguous of patch
->>>
->>> Chanwoo Choi (8):
->>>     devfreq: exynos4: Support devicetree to get device id of Exynos4 SoC
->>>     devfreq: exynos4: Use common ppmu driver and get ppmu address from dt data
->>>     devfreq: exynos4: Add ppmu's clock control and code clean about regulator control
->>>     devfreq: exynos4: Fix bug of resource leak and code clean on probe()
->>>     devfreq: exynos4: Use SET_SYSTEM_SLEEP_PM_OPS macro
->>>     devfreq: exynos4: Fix power-leakage of clock on suspend state
->>>     devfreq: exynos4: Add CONFIG_PM_OPP dependency to fix probe fail
->>>     devfreq: exynos4: Add busfreq driver for exynos4210/exynos4x12
->>>
->>>    .../devicetree/bindings/devfreq/exynos4_bus.txt    |  49 +++
->>>    drivers/devfreq/Kconfig                            |   1 +
->>>    drivers/devfreq/exynos/Makefile                    |   2 +-
->>>    drivers/devfreq/exynos/exynos4_bus.c               | 415 ++++++++++++++-------
->>>    4 files changed, 341 insertions(+), 126 deletions(-)
->>>    create mode 100644 Documentation/devicetree/bindings/devfreq/exynos4_bus.txt
->>>
->>
->> I have reviewed this series and there are several comments that I'd like to ask you to address. Please see my replies to particular patches.
->
-> OK, I'll fix it about your comment.
->
->>
->> However, this driver, even after applying your series, is still far from a state that would allow it to be enabled. The most important issue is direct access to CMU registers, based on static mapping, which is not allowed on multiplatform kernels and multiplatform-awareness for drivers is currently a must.
->>
->> To allow this driver to be enabled, it needs to be converted to use common clock framework functions to configure all clocks, e.g. clk_set_rate(), clk_set_parent(), etc., without accessing CMU registers directly.
->>
->> Of course as long as the driver is effectively unusable, to keep development, we can proceed with refactoring it step-by-step and your series would be basically the first step, after addressing the review comments.
->>
->
-> I agree your opinion. When setting frequency of memory bus, this driver access
-> directly to CMU registers. I know it should be modified by using common clk
-> framework as your comment.
->
-> I'll send patch set about using common clk framework instead of CMU register
-> based on static mapping after finished the review and apply of this patch set as next step.
+On Thursday 27 February 2014 10:30:51 Ben Dooks wrote:
+> On 27/02/14 09:15, Mark Rutland wrote:
+> > On Wed, Feb 26, 2014 at 11:48:00AM +0000, Ben Dooks wrote:
+> >> Add support for the led-mode property for the following PHYs
+> >> which have a single LED mode configuration value.
+> >> 
+> >> KSZ8001 and KSZ8041 which both use register 0x1e bits 15,14 and
+> >> KSZ8021, KSZ8031 and KSZ8051 which use register 0x1f bits 5,4
+> >> to control the LED configuration.
+> >> 
+> >> Signed-off-by: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+> >> ---
+> >> 
+> >>  Documentation/devicetree/bindings/net/micrel.txt | 18 +++++++++
+> >>  drivers/net/phy/micrel.c                         | 49 ++++++++++++++++--
+> >>  2 files changed, 63 insertions(+), 4 deletions(-)
+> >>  create mode 100644 Documentation/devicetree/bindings/net/micrel.txt
+> >> 
+> >> diff --git a/Documentation/devicetree/bindings/net/micrel.txt
+> >> b/Documentation/devicetree/bindings/net/micrel.txt new file mode 100644
+> >> index 0000000..98a3e61
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/net/micrel.txt
+> >> @@ -0,0 +1,18 @@
+> >> +Micrel PHY properties.
+> >> +
+> >> +These properties cover the base properties Micrel PHYs.
+> >> +
+> >> +Optional properties:
+> >> +
+> >> + - micrel,led-mode : LED mode value to set for PHYs with configurable
+> >> LEDs.
+> >> +
+> >> +              Configure the LED mode with single value. The list of PHYs
+> >> and
+> >> +	      the bits that are currently supported:
+> >> +
+> >> +	      KSZ8001: register 0x1e, bits 15..14
+> >> +	      KSZ8041: register 0x1e, bits 15..14
+> >> +	      KSZ8021: register 0x1f, bits 5..4
+> >> +	      KSZ8031: register 0x1f, bits 5..4
+> >> +	      KSZ8051: register 0x1f, bits 5..4
+> >> +
+> >> +              See the respective PHY datasheet for the mode values.
+> > 
+> > What do these mean, roughly,, and why can the kernel not decide how to
+> > cnofigure these?
+> 
+> Board specific, in the case of the Lager one of the LEDs is connected
+> to the ethernet mac block to indicate link, however the default mode
+> is not for just "Link" so we have to change it.
+> 
+> > In general we prefer to not place raw register values in the DT, and I'd
+> > like to know why we'd have to here.
+> 
+> I could copy out stuff from the data-sheet, but I was trying to avoid a
+> copy and paste job.
 
-OK. I'm looking forward for patches sorting this out.
+I quite agree with Mark here, I would prefer not to list register values in DT 
+bindings. However, the hardware hardware diversity doesn't help us abstracting 
+LED modes.
 
-Best regards,
-Tomasz
+The following table summarizes LED usage options.
+
+Device              Mode   LED usage
+-----------------------------------------------------------------------------
+8001 (LED[3:0])     00     Collision / Full-Duplex / Speed / Link/Activity
+                    01     Activity / Full-Duplex/Collision / Speed / Link
+                    10     Activity / Full-Duplex / 100Mbps Link / 10Mbps Link
+                    11     Reserved
+80[23]1 (LED[0])    00     Link/Activity
+                    01     Link
+                    10     Reserved
+                    11     Reserved
+80[45]1 (LED[1:0])  00     Speed / Link/Activity
+                    01     Activity / Link
+                    10     Reserved
+                    11     Reserved
+
+While LED mode could be described by LED0 mode using "link-activity" or "link" 
+strings for the 80[2345]1 chips, the 8001 makes that slightly more complex and 
+shows that future chips might not conform to any scheme we come up with now.
+
+I thus have no strong preference for a string-based mode description over 
+using an integer. However, if we keep the integer value, I wouldn't use the 
+register value directly, but would instead use the mode field value as an 
+integer in the 0-3 range. This would remove knowledge of the PHY control 
+register layout from the DT node content, and bring more consistency to the 
+values.
+
+Mark, what's your opinion on this ? I know that David has already applied the 
+patch to his tree, but we can still fix this before v3.16. I can submit a 
+patch.
+
+-- 
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
