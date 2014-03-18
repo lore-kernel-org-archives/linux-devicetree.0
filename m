@@ -1,138 +1,102 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [PATCH RFC 3/4] drivers: cpuidle: CPU idle ARM64 driver
-Date: Tue, 18 Mar 2014 10:20:27 +0000
-Message-ID: <1395138028-19630-4-git-send-email-lorenzo.pieralisi@arm.com>
-References: <1395138028-19630-1-git-send-email-lorenzo.pieralisi@arm.com>
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1395138028-19630-1-git-send-email-lorenzo.pieralisi@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebastian.capella@linaro.org>, Tomasz Figa <t.figa@samsung.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 3/8] input: misc: Add driver for AXP20x Power Enable
+ Key
+Date: Tue, 18 Mar 2014 11:15:54 +0100
+Message-ID: <20140318101554.GZ27873@lukather>
+References: <1394898225-28452-1-git-send-email-carlo@caione.org>
+ <1394898225-28452-4-git-send-email-carlo@caione.org>
+ <20140318090013.GU27873@lukather>
+ <20140318095002.GM25478@lee--X1>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="EH85xkKza2NXtwkF"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140318095002.GM25478@lee--X1>
+Sender: linux-input-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Carlo Caione <carlo@caione.org>, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, hdegoede@redhat.com, emilio@elopez.com.ar, wens@csie.org, sameo@linux.intel.com, devicetree@vger.kernel.org, dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, linux-doc@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch implements a generic CPU idle driver for ARM64 machines.
 
-It relies on the ARM idle states infrastructure to initialize idle
-states count and respective parameters. Current code assumes the driver
-is managing idle states on all possible CPUs but can be easily
-generalized to support heterogenous systems and build cpumasks at
-runtime using MIDRs or DT cpu nodes compatible properties.
+--EH85xkKza2NXtwkF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
----
- drivers/cpuidle/Kconfig         |  5 +++++
- drivers/cpuidle/Kconfig.arm64   | 13 +++++++++++++
- drivers/cpuidle/Makefile        |  4 ++++
- drivers/cpuidle/cpuidle-arm64.c | 41 +++++++++++++++++++++++++++++++++++++=
-++++
- 4 files changed, 63 insertions(+)
- create mode 100644 drivers/cpuidle/Kconfig.arm64
- create mode 100644 drivers/cpuidle/cpuidle-arm64.c
+On Tue, Mar 18, 2014 at 09:50:02AM +0000, Lee Jones wrote:
+> > > This patch add support for the Power Enable Key found on MFD AXP202 a=
+nd
+> > > AXP209. Besides the basic support for the button, the driver adds two
+> > > entries in sysfs to configure the time delay for power on/off.
+> > >=20
+> > > Signed-off-by: Carlo Caione <carlo@caione.org>
+> > > ---
+> > >  drivers/input/misc/Kconfig      |  11 ++
+> > >  drivers/input/misc/Makefile     |   1 +
+> > >  drivers/input/misc/axp20x-pek.c | 267 ++++++++++++++++++++++++++++++=
+++++++++++
+> > >  3 files changed, 279 insertions(+)
+> > >  create mode 100644 drivers/input/misc/axp20x-pek.c
+> >=20
+> > From what I understood of the MFD framework, you usually have a MFD
+> > core driver that gets loaded from the DT and instantiate its various
+> > functions through sub-devices, that are registered through
+> > mfd_add_devices, and the drivers for these sub-devices are supported
+> > in sub-drivers that are located in the driver/mfd, alongside the core
+> > driver.
+> >=20
+> > I believe that such a pattern allows for two interesting things:
+> >   - You don't have to search around the whole kernel tree to find
+> >     where a given sub-feature is supported.
+> >   - You don't have to cripple your DT with instantiation of all the
+> >     subcomponents, while you only really have one device.
+> >=20
+> > Do you have a reason for not following this pattern?
+>=20
+> Sorry Maxime, this is not the case.
+>=20
+> If an MFD contains Regulators and USB & GPIO Controllers, I'd expect
+> to see the device represented in the following way:
+>=20
+>   drivers/mfd/<id>.c
+>   drivers/{gpio,pinctrl}/{gpio,pinctrl}-<id>.c
+>   drivers/regulator/<id>-regulator.c
+>   drivers/usb/host/<id>.c
 
-diff --git a/drivers/cpuidle/Kconfig b/drivers/cpuidle/Kconfig
-index f04e25f..9b3f613 100644
---- a/drivers/cpuidle/Kconfig
-+++ b/drivers/cpuidle/Kconfig
-@@ -35,6 +35,11 @@ depends on ARM
- source "drivers/cpuidle/Kconfig.arm"
- endmenu
-=20
-+menu "ARM64 CPU Idle Drivers"
-+depends on ARM64
-+source "drivers/cpuidle/Kconfig.arm64"
-+endmenu
-+
- menu "POWERPC CPU Idle Drivers"
- depends on PPC
- source "drivers/cpuidle/Kconfig.powerpc"
-diff --git a/drivers/cpuidle/Kconfig.arm64 b/drivers/cpuidle/Kconfig.arm64
-new file mode 100644
-index 0000000..42af83a
---- /dev/null
-+++ b/drivers/cpuidle/Kconfig.arm64
-@@ -0,0 +1,13 @@
-+#
-+# ARM64 CPU Idle drivers
-+#
-+
-+config ARM64_CPUIDLE
-+=09bool "Generic ARM64 CPU idle Driver"
-+=09select ARM64_IDLE_STATES
-+=09help
-+=09  Select this to enable generic cpuidle driver for ARM v8.
-+=09  It provides a generic idle driver whose idle states are configured
-+=09  at run-time through DT nodes. Idle protocol backends are initialized
-+=09  by the device tree parsing code on matching the entry method for
-+=09  the respective protocol.
-diff --git a/drivers/cpuidle/Makefile b/drivers/cpuidle/Makefile
-index f71ae1b..4051b37 100644
---- a/drivers/cpuidle/Makefile
-+++ b/drivers/cpuidle/Makefile
-@@ -15,6 +15,10 @@ obj-$(CONFIG_ARM_U8500_CPUIDLE)         +=3D cpuidle-ux5=
-00.o
- obj-$(CONFIG_ARM_AT91_CPUIDLE)          +=3D cpuidle-at91.o
-=20
- ##########################################################################=
-#####
-+# ARM64 drivers
-+obj-$(CONFIG_ARM64_CPUIDLE)=09=09+=3D cpuidle-arm64.o
-+
-+##########################################################################=
-#####
- # POWERPC drivers
- obj-$(CONFIG_PSERIES_CPUIDLE)=09=09+=3D cpuidle-pseries.o
- obj-$(CONFIG_POWERNV_CPUIDLE)=09=09+=3D cpuidle-powernv.o
-diff --git a/drivers/cpuidle/cpuidle-arm64.c b/drivers/cpuidle/cpuidle-arm6=
-4.c
-new file mode 100644
-index 0000000..08ffe16
---- /dev/null
-+++ b/drivers/cpuidle/cpuidle-arm64.c
-@@ -0,0 +1,41 @@
-+/*
-+ * ARM64 generic CPU idle driver.
-+ *
-+ * Copyright (C) 2014 ARM Ltd.
-+ * Author: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/cpuidle.h>
-+#include <linux/cpumask.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+
-+#include <asm/idle_states.h>
-+
-+struct cpuidle_driver arm64_idle_driver =3D {
-+=09.name =3D "arm64_idle",
-+=09.owner =3D THIS_MODULE,
-+};
-+
-+/*
-+ * arm64_idle_init
-+ *
-+ * Registers the arm specific cpuidle driver with the cpuidle
-+ * framework. It relies on core code to parse the idle states
-+ * and initialize them in the driver accordingly.
-+ */
-+static int __init arm64_idle_init(void)
-+{
-+=09int ret;
-+
-+=09arm64_idle_driver.cpumask =3D (struct cpumask *) cpu_possible_mask;
-+=09ret =3D arm_init_idle_driver(&arm64_idle_driver);
-+=09if (ret)
-+=09=09return ret;
-+=09return cpuidle_register(&arm64_idle_driver, NULL);
-+}
-+device_initcall(arm64_idle_init);
+Oh, ok. Nevermind then :)
+
+Just out of curiosity, some drivers at least seem to follow that trend
+in drivers/mfd, is there any reason for this (other than historical) ?
+
+Thanks,
+Maxime
+
 --=20
-1.8.4
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
+--EH85xkKza2NXtwkF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTKBzZAAoJEBx+YmzsjxAgha4P/RMnn3WZFtdczUuSi/7cHVEq
+DgCdQhtnckl7GGa518/QE6XEX3Vdw1PRsj9ZgYFX+64N3kbc7ul1ix3RAxIzd+AV
+eiYtHp6D2RS69l6va2M+Pz6x3+Eb3PjjaJIGJyONFXTKvxRHxFDobqlokQe0jPU+
+HH7mb4vKGaqaJFXhfY5yp83PvIfpuueZb1py+q0xG2egtS5jXfgW7qNmoPciHChm
+whgGNyzz3b9XwFbV5hgARQALkxtW1fmMOqFa+LwBmkctXVo2O0NibRk5uF/tpuWM
+isFwDwVp/IgvHr8x87h841MTwnNX0M6WXI0DB/cHTxF7awUsmoXb1+JyCJSEZ2gA
+YYQFaEMm4GtGCdG+jpjUGbwQdgwS2vtUV1ZhgnHkJql5oIHBOpVAxMRI0S2EwFXV
+1bxYeYychiiCFVaCpuKI2nB2wiGkyVKQc8M5bvE2BLg6HtTxDZVPIGVnUBuE9dci
+ngloCRk/aNTouZLbt9qV4XvsNRx3XekWJi6ZoGIj8Xnj/g2e6yAGKNcJBut04t6/
+qKxPmg53Niy3ZV8TsHoLkS1ZBtIbKFKIraTkmKHFgGSYTpST5zHolPGnWHQBTNbX
+xQ3s4EnaaWO68h/k2idXdYecppJK0OwYX+85PBXt0576mJCHthsjS9grEp1LLGgp
+aV7MyUlATCt91UcpHjkj
+=rdFw
+-----END PGP SIGNATURE-----
+
+--EH85xkKza2NXtwkF--
