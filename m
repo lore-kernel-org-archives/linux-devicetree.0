@@ -1,7 +1,7 @@
 From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: [PATCH] ARM: dts: keystone: Fix domain register range for clkfftc1
-Date: Tue, 18 Mar 2014 15:18:17 +0200
-Message-ID: <1395148697-22481-1-git-send-email-ivan.khoronzhuk@ti.com>
+Subject: [PATCH] ARM: dts: keystone: Fix control register range for clktsip
+Date: Tue, 18 Mar 2014 15:23:11 +0200
+Message-ID: <1395148991-22538-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -19,26 +19,29 @@ To: santosh.shilimkar@ti.com
 Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The domain register range for clkfftc1 has to be 0x0235004c
-instead of 0x023504c0.
+The control register range for clktsio interferes with clkaemifspi clock.
+And it causes issues for NAND/AEMIF. So fix it.
 
 Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 ---
+
+Only comment is corrected.
+
  arch/arm/boot/dts/k2hk-clocks.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/k2hk-clocks.dtsi b/arch/arm/boot/dts/k2hk-clocks.dtsi
-index 8855b1f..96e6536 100644
+index a71aa29..8855b1f 100644
 --- a/arch/arm/boot/dts/k2hk-clocks.dtsi
 +++ b/arch/arm/boot/dts/k2hk-clocks.dtsi
-@@ -209,7 +209,7 @@ clocks {
+@@ -59,7 +59,7 @@ clocks {
  		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk13>;
- 		clock-output-names = "fftc-1";
--		reg = <0x02350074 0xb00>, <0x023504c0 0x400>;
-+		reg = <0x02350074 0xb00>, <0x0235004c 0x400>;
+ 		clocks = <&chipclk16>;
+ 		clock-output-names = "tsip";
+-		reg = <0x0235000c 0xb00>, <0x02350000 0x400>;
++		reg = <0x02350000 0xb00>, <0x02350000 0x400>;
  		reg-names = "control", "domain";
- 		domain-id = <19>;
+ 		domain-id = <0>;
  	};
 -- 
 1.8.3.2
