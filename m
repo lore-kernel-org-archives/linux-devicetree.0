@@ -1,65 +1,90 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [GIT PULL] mfd: Immutable branch for Sebastian Reichel's work on
- mfd->io driver conversion
-Date: Tue, 18 Mar 2014 08:21:26 +0000
-Message-ID: <20140318082126.GA25478@lee--X1>
-References: <1394934211-21605-1-git-send-email-sre@debian.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH] ARM: mach-ux500|nomadik|u300: Align to common DT bindings
+ for mmci
+Date: Tue, 18 Mar 2014 09:23:58 +0100
+Message-ID: <CAPDyKFpYygnBPAOJCYN=DugJyjQZ9uYdO0AMmwBGsWnSnDVz8w@mail.gmail.com>
+References: <1394713963-18300-1-git-send-email-ulf.hansson@linaro.org>
+ <20140313174703.GO21483@n2100.arm.linux.org.uk>
+ <CAPDyKFrw092mbirDBffF6TraUoXDLh5movp_sf9PYERG88P-Qw@mail.gmail.com>
+ <CACRpkdZzObyJQmbAvovcor9NXeVnhEFO82jtxLZOdm48TPnudQ@mail.gmail.com>
+ <CAPDyKFpJDKXK7siVMnB5umv6PnYAyNmto1yq9unxDaD9BP=oBQ@mail.gmail.com>
+ <CACRpkdYPHkEMBu7KMp25veTfXtpWZOOz39n-+jCZ+hTQMK2=Tw@mail.gmail.com>
+ <20140317161509.GA32708@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1394934211-21605-1-git-send-email-sre@debian.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-iio@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>
-Cc: Sebastian Reichel <sre@ring0.de>, Marek Belisko <marek@goldelico.com>, Samuel Ortiz <sameo@linux.intel.com>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sre@debian.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140317161509.GA32708@e106331-lin.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alessandro Rubini <rubini@unipv.it>
 List-Id: devicetree@vger.kernel.org
 
-The following changes since commit 0414855fdc4a40da05221fc6062cccbc0c30=
-f169:
+On 17 March 2014 17:15, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Mon, Mar 17, 2014 at 02:00:58PM +0000, Linus Walleij wrote:
+>> On Mon, Mar 17, 2014 at 11:01 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>> > On 14 March 2014 11:58, Linus Walleij <linus.walleij@linaro.org> wrote:
+>> >> On Fri, Mar 14, 2014 at 8:27 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>> >>> On 13 March 2014 18:47, Russell King - ARM Linux <linux@arm.linux.org.uk> wrote:
+>>
+>> >>>> NAK.  These bindings have been documented as being there since March
+>> >>>> 14th 2012, and therefore need to be supported for ever by the driver.
+>> >>>> You can _augment_ the bindings with the generic ones, and change the
+>> >>>> DT files, but you can't remove the parsing of the old property names.
+>> >>>
+>> >>> I was kind of expecting this response. :-)
+>> >>>
+>> >>> So, since we made a mistake about adding these DT bindings we are now
+>> >>> unable to remove them, is there really no way back?
+>> >>>
+>> >>> In this particular case, I am confident that it should be safe to
+>> >>> remove them, but I guess this is more matter of principle, right?
+>
+> Basically, yes.
+>
+> Our default position is to not break existing DTBs. In general that's
+> beneficial, ensures stability, and keeps people in the right mindset.
+> Sticking to the position even where we could be a little softer is a way
+> of keeping people honest -- practically everyone has a binding (or
+> seventy) which they hate and would love to change, sticking to the rules
+> (even when painful) saves us from endless churn for little benefit.
+>
+> In this case the binding isn't broken; it provides the information we
+> need, but just not with our preferred names. As Russell has pointed out,
+> we can support the more standard names in addition to the current ones
+> (which we can deprecate for new DTs). Forcibly breaking existing DTBs is
+> not necessary, and I'm not sure if it's worthwhile for the sake of a few
+> bytes.
 
-  Linux 3.14-rc5 (2014-03-02 18:56:16 -0800)
+I get the idea, let's keep the bindings then.
 
-are available in the git repository at:
+>
+> There are bindings out there which are fundamentally broken, which are
+> always reliant on platform data or just don't currently work. Those are
+> what we need to focus on fixing to ensure long-term support.
+>
+> We also need a strategy for binding deprecation, which we do not have
+> currently. There was talk of unstable bindings at the last mini-summit
+> to allow people to tinker without committing to long-term support of
+> bindings, but nothing seems to have happened on that front. It would be
+> nice to have a plan for dealing with all these vestigal bits long term.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-io-3=
-=2E15
+I suppose adding a comment about a binding being deprecated in the
+documentation - is the best we can do for now?
 
-for you to fetch changes up to b2931b98cebfb30d940f248d2054b5268eae87a4=
-:
+Thanks for your response Mark!
 
-  mfd: twl4030-madc: Move driver to drivers/iio/adc (2014-03-18 08:16:2=
-0 +0000)
+Kind regards
+Ulf Hansson
 
-----------------------------------------------------------------
-Sebastian Reichel (7):
-      mfd: twl4030-madc: Use managed resources
-      mfd: twl4030-madc: Add DT support and convert to IIO framework
-      mfd: twl4030-madc: Cleanup driver
-      mfd: twl-core: Add twl_i2c_read/write_u16
-      mfd: twl4030-madc: Use twl_i2c_read/write_u16 for 16 bit register=
-s
-      Documentation: DT: Document twl4030-madc binding
-      mfd: twl4030-madc: Move driver to drivers/iio/adc
-
- Documentation/devicetree/bindings/iio/adc/twl4030-madc.txt |  24 +++++=
-++++
- drivers/iio/adc/Kconfig                                    |  10 ++++
- drivers/iio/adc/Makefile                                   |   1 +
- drivers/{mfd =3D> iio/adc}/twl4030-madc.c                    | 320 +++=
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------=
-----------------------------------
- drivers/mfd/Kconfig                                        |  10 ----
- drivers/mfd/Makefile                                       |   1 -
- include/linux/i2c/twl.h                                    |  12 +++++
- include/linux/i2c/twl4030-madc.h                           |   2 +-
- 8 files changed, 247 insertions(+), 133 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/twl4030-m=
-adc.txt
- rename drivers/{mfd =3D> iio/adc}/twl4030-madc.c (74%)
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+>
+> Thanks,
+> Mark.
