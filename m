@@ -1,96 +1,73 @@
 From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [GIT PULL] Move device tree graph parsing helpers to drivers/of
-Date: Tue, 18 Mar 2014 08:27:22 +0200
-Message-ID: <5327E74A.8030705@ti.com>
-References: <1394126000.3622.66.camel@paszta.hi.pengutronix.de> <5321CB04.6090700@samsung.com> <20140314070505.GV1629@pengutronix.de> <5247436.pV9jXGKXCJ@avalon>
+Subject: Re: [PATCH 6/9] Doc/DT: Add DT binding documentation for MIPI DSI
+ CM Panel
+Date: Tue, 18 Mar 2014 08:33:55 +0200
+Message-ID: <5327E8D3.5010907@ti.com>
+References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
+ <1393590016-9361-7-git-send-email-tomi.valkeinen@ti.com>
+ <4670830.fkS1noPxcd@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="HuPr66pmeGGMMPoRd6Wom8fe3jAgko9Fm"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5247436.pV9jXGKXCJ@avalon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Robert Schwebel <r.schwebel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Philipp Zabel <p.zabel@pengutronix.de>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============5318794597823187147=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4670830.fkS1noPxcd@avalon>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Tomasz Figa <tomasz.figa@gmail.com>, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Rob Clark <robdclark@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
---HuPr66pmeGGMMPoRd6Wom8fe3jAgko9Fm
+--===============5318794597823187147==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="aTlV2D2po9mTkpS714eEiAlWlbPXu4XuO"
+
+--aTlV2D2po9mTkpS714eEiAlWlbPXu4XuO
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-On 18/03/14 01:30, Laurent Pinchart wrote:
+On 17/03/14 16:22, Laurent Pinchart wrote:
 
-> I agree with you. I know that DT bindings review takes too much time, s=
-lows=20
-> development down and is just generally painful. I'm trying to reply to =
-this e-
-> mail thread as fast as possible, but I'm also busy with other tasks :-/=
-
+>> +Example
+>> +-------
+>> +
+>> +lcd0: display {
+>> +	compatible =3D "tpo,taal", "panel-dsi-cm";
+>> +	label =3D "lcd0";
+>> +
+>> +	gpios =3D <&gpio4 6 GPIO_ACTIVE_HIGH>;	/* 102, reset */
 >=20
-> The lack of formal consensus comes partly from the fact that people are=
- busy=20
-> and that the mail thread is growing big. There's still two open questio=
-ns from=20
-> my view of the whole discussion:
+> If the panel uses a TE GPIO but no reset GPIO, do you plan to express t=
+his=20
+> with a "hole" for the reset GPIO ? e.g. something like
 >=20
-> - Do we really want to drop bidirectional links ? Grant has been pretty=
- vocal=20
-> about that, but there has been several replies with arguments for=20
-> bidirectional links, and no reply from him afterwards. Even though that=
-=20
-> wouldn't be the preferred solution for everybody, there doesn't seem to=
- be a=20
-> strong disagreement about dropping bidirectional links, as long as we c=
-an come=20
-> up with a reasonable implementation.
->=20
-> - If we drop bidirectional links, what link direction do we use ? There=
- has=20
-> been several proposals (including "north", which I think isn't future-p=
-roof as=20
-> it assumes an earth-centric model) and no real agreement, although ther=
-e seems=20
-> to be a consensus among several developers that the core OF graph bindi=
-ngs=20
-> could leave that to be specified by subsystem bindings. We would still =
-have to=20
-> agree on a direction for the display subsystem of course.
->=20
-> If my above explanation isn't too far from the reality the next step co=
-uld be=20
-> to send a new version of the DT bindings proposal as a ping.
+> 	gpios =3D <0>, <&gpio4 6 GPIO_ACTIVE_HIGH>;
 
-I agree with the above.
+Yes.
 
-However, I also think we should just go forward with the bidirectional
-links for now. The bindings for bidir links are already in the mainline
-kernel, so they can't be seen as broken.
+> Wouldn't it be better to split the gpios property into "reset-gpios" an=
+d "te-
+> gpios" ?
 
-When we have an agreement about the direction, and we've got common
-parsing code, it's trivial to convert the existing links to single
-direction links, and the old dts files with bidir links continue to work
-fine.
+Yes, I can change it. I don't have a strong preference.
 
-This is what I'm planning to do with OMAP display subsystem, as I
-_really_ want to get the DT support merged for 3.15. The current mix of
-pdata + DT that we have for OMAP display is an unmaintainable mess.
+I've gotten similar comments for other bindings also, so I guess the
+preferred way is to use named "-gpios" properties for everything except
+the case where you really have multiple gpios with the same purpose?
 
-So unless I get a nack from someone (I've pinged Grant twice about
-this), or someone explains why it's a bad idea, I'll push the OMAP
-display bindings [1] for 3.15 with bidir bindings, and change them to
-single-dir later.
-
-Note that I did remove the abbreviated endpoint format that I had there
-earlier, so now the bindings are fully compatible with the v4l2 bindings.=
-
+The gpio binding documentation doesn't give much guidance on this.
 
  Tomi
 
-[1] http://article.gmane.org/gmane.linux.drivers.devicetree/63885
 
 
-
---HuPr66pmeGGMMPoRd6Wom8fe3jAgko9Fm
+--aTlV2D2po9mTkpS714eEiAlWlbPXu4XuO
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
@@ -99,19 +76,33 @@ Content-Disposition: attachment; filename="signature.asc"
 Version: GnuPG v1.4.14 (GNU/Linux)
 Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iQIcBAEBAgAGBQJTJ+dLAAoJEPo9qoy8lh711zsP/RpStdfq4S+pzU/vDxItiGos
-y1i+9WQMNBWXRHhx8ZYYnF8NaDsLoIxGfcInMeH9jSxkkvcqnfcZP5teSKdZrhQF
-HxyiL4KZF2Fv4K2dDOKzTKttSFLKI6eDxsfO3uKibU2jBx3/tRpZoS6ha2ZoU0Bq
-pxjLXbhVzIGkTzPjByy5eTmaMretDAzmSNnRZOhrN2eBINnLnPOfG/7cd3NfgeZv
-N6J8H2TVtPAyT5RBwuqgqu9Nn8iVGt6H/JmvobKblBF+4Jmf1CGGOWGnI/gL8kjd
-iQ9vVJyb2hKYaNFDmwtXuHX6I7nJnVAzhjZ42fvCgbMIR48Yc4VE5KiQ7QONQB7n
-ff6zaPRdeTgQJ01+3yKmD/X2MO+TPfKQbDOKKVZfXSbNdVP4vYldzFKs503pmh1d
-oYndnQkEigTdZlxo9X9u2asc8KOquSyiTc0UvcN4F6zRNH7Od/uc+8BRO+ASK5s0
-Mq2Vo78+JPGbmHygsHoxPpwUxJCywOLTWxZoOkic4bV5LyLhJXfmpTgj2+MoXtI/
-HyhUc4Z7a4sRTspkGf8kFqonJCo6k0x1M4CnxBiZ2l3pck0chYKe5MhCzkYaIm/m
-sg2ec0WO18NKVZGABCBOoUozIbcASc0KWPpDmcdVDePQW2bxgN+ihPxC1OpiKWj+
-UXqlJN6TtZ2tDVNQBVb5
-=NAN+
+iQIcBAEBAgAGBQJTJ+jTAAoJEPo9qoy8lh714mkP/Rz4sZKoJ56Wxt2bFMR/arkt
+snypct4nSm444/zeo08sRQd4ftbWHBOwyuiTcmTY9bf4zWUvHsSVHw3K+TsiL0rT
+zHvO07skSZUCTHsuvPU0ngRJVKKSAZNv00Ii6vualS1afba+wn/fDsJofMo5WOxS
+SkDiL9rfWkRFse3pFLjKNU8K36bjpcan5HEQkLxArDPgJ66LsUcQRebF76SSVuMH
+kwZ7NInbTZiCNflpO5eh9+Pz55dk3KxWT4BrheIg1YgRIt4+npjP2hDcwewjTcRX
+jT6dXoXjxckQgQSSfo/eJ0gtOcEkU9vmcDIvQtylK8AhjGvV9GxynV4kLK40KFHS
+z5wVaQQUZ/woVLSLpZ/uPaaKs83yqPM4GkE+IwmarM7KVKnO/Cx8fyGtJFACZZXC
+bKqJuzT6KveIyTxg203oGVgo3sVen6jy2An7n/CF2J3pcjlr/9mRaLXbWp1hjoTr
+JTB8EWiJsJLVhYXXDiqVbsQmMa45junt3sxGvNqwZd7ghwVdvPh6WS0lFPuZMzz4
+E9iHOKpZd5dFlxliRUsFQyM7j3g5RFEevsAAC1olUrTEBFrqFKRqzvPf/yvbgNlU
+6WhwxUvub2nG4uDcmQqpCV99FeLoGnK/0c46LTQyK743ohfQvFmf1RggQK8JXbTg
+H7CB+3R0Vi+TToASGw27
+=/McC
 -----END PGP SIGNATURE-----
 
---HuPr66pmeGGMMPoRd6Wom8fe3jAgko9Fm--
+--aTlV2D2po9mTkpS714eEiAlWlbPXu4XuO--
+
+
+--===============5318794597823187147==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============5318794597823187147==--
