@@ -1,86 +1,155 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 2/2] ARM: DTS: AM43x: Add sii9022 dt information
-Date: Tue, 18 Mar 2014 13:03:26 +0200
-Message-ID: <532827FE.30203@ti.com>
-References: <1395137278-5065-1-git-send-email-sathyap@ti.com> <1395137278-5065-3-git-send-email-sathyap@ti.com> <53282082.1000208@ti.com> <5328268C.1030306@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] SPI: Add driver for Cadence SPI controller
+Date: Tue, 18 Mar 2014 11:04:01 +0000
+Message-ID: <20140318110401.GH11706@sirena.org.uk>
+References: <1395057936-8643-1-git-send-email-harinik@xilinx.com>
+ <20140317173017.GW11706@sirena.org.uk>
+ <255edf4f-05a8-4d9a-b32d-1a4a8ddaffb5@CH1EHSMHS004.ehs.local>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="hQQuqVRWLgS3qvNEqLd4cxSdFMgHskO09"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <5328268C.1030306@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sathya Prakash <a0393677@ti.com>
-Cc: Sathya Prakash M R <sathyap@ti.com>, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, pawel.moll@arm.com, paul@pwsan.com
+	protocol="application/pgp-signature"; boundary="PBu/a+gn9/ndsyD5"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <255edf4f-05a8-4d9a-b32d-1a4a8ddaffb5@CH1EHSMHS004.ehs.local>
+Sender: linux-doc-owner@vger.kernel.org
+To: Harini Katakam <harini.katakam@xilinx.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Michal Simek <michals@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
---hQQuqVRWLgS3qvNEqLd4cxSdFMgHskO09
-Content-Type: text/plain; charset=ISO-8859-1
+
+--PBu/a+gn9/ndsyD5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On 18/03/14 12:57, Sathya Prakash wrote:
+On Tue, Mar 18, 2014 at 05:16:26AM +0000, Harini Katakam wrote:
 
->> You add the same label, "dpi_out" to both endpoints. Does this even
->> compile?
->>
->> As there's just one port, you can leave out the 'ports' node.
-> Will check. the ports was added as per documentation in
-> video-interfaces.txt
+Please fix your mailer to word wrap within paragraphs, this will make
+your mail much more legible.
 
-It mentions that the 'ports' is optional.
+> > > +	if (bits_per_word !=3D 8) {
+> > > +		dev_err(&spi->dev, "%s, unsupported bits per word %x\n",
+> > > +			__func__, spi->bits_per_word);
+> > > +		return -EINVAL;
+> > > +	}
 
-> Can you suggest how to add the 2 dpi_out endpoints?
+> > The core will check this for you.
 
-Didn't try, but:
+> I dint find that the core does this.
 
-port {
-	#address-cells =3D <1>;
-	#size-cells =3D <0>;
+bpw_mask.
 
-	dpi_lcd_out: endpoint@0 {
-		reg =3D <0>;
-		remote-endpoint =3D <&lcd_in>;
-		data-lines =3D <24>;
-	};
+> > It's not clear to me why this has been split into a separate function a=
+nd the
+> > function will write to the hardware which you're not allowed to do in
+> > setup() if it might affect an ongoing transfer.
 
-	dpi_sii_out: endpoint@1 {
-		reg =3D <1>;
-		remote-endpoint =3D <&sii9022_in>;
-		data-lines =3D <24>;
-	};
-};
+> Are you saying  that there's a chance cdns_spi_setup() will be called
+> when there's an ongoing transfer?  In that case I have to remove the
+> cdns_setup_transfer() call from here but then there's nothing left to
+> do in setup.
 
-However, we still need to handle the GPIO which is used to select the
-LCD or HDMI. So, maybe the above works, but we should try the
-encoder-gpio-switch to handle the GPIO, which we discussed about earlier.=
+yes.
 
+> > I see from further up the file that there are error interrupt states wh=
+ich
+> > might be flagged but these are just being ignored.
 
- Tomi
+> I'm not sure I understand what you are referring to -
+> The only interrupts enabled (See CNDS_IXR_DEFAULT_MASK) are TXOW and MODF.
 
+The code had:
 
+> +#define CDNS_SPI_IXR_TXOW_MASK 0x00000004 /* SPI TX FIFO Overwater */
+> +#define CDNS_SPI_IXR_MODF_MASK 0x00000002 /* SPI Mode Fault */
+> +#define CDNS_SPI_IXR_RXNEMTY_MASK 0x00000010 /* SPI RX FIFO Not Empty */
 
---hQQuqVRWLgS3qvNEqLd4cxSdFMgHskO09
+> +#define CDNS_SPI_IXR_TXFULL_MASK       0x00000008 /* SPI TX Full */
+
+and defined:
+
+> +#define CDNS_SPI_IXR_ALL_MASK  0x0000007F /* SPI all interrupts */
+
+> > > +	return IRQ_HANDLED;
+
+> > This should only be returned if an interrupt was actually handled - if =
+the line
+> > is shared in some system this will break.
+
+> In this case both possible interrupt conditions are handled.
+
+Are you sure that's the case, and even if you are that's still not
+handling the case where the device isn't flagging an interrupt at all.
+
+> > > +	cdns_spi_write(xspi->regs + CDNS_SPI_IER_OFFSET,
+> > > +		       CDNS_SPI_IXR_DEFAULT_MASK);
+> > > +
+> > > +	ret =3D wait_for_completion_interruptible_timeout(&xspi->done,
+> > > +							CDNS_SPI_TIMEOUT);
+> > > +	if (ret < 1) {
+
+> > If you return a positive value from transfer_one() the core will wait f=
+or you.
+
+> I don't understand. Here, if the ret from
+> wait_for_completion_interruptible_timeout is positive, then this
+> function (spi_start_transfer) will return (transfer->len) -
+> (xspi->remaining_bytes) to cdns_transfer_one_message(the calling
+> funtion). Which will just use this return as information on how many
+> bytes were transferred (see variable length).=20
+> cdns_transfer_one_messag() only returns 0 or error value (-ve) (see
+> variable status).  It doesn't return positive value to core.
+
+I'm saying you should be implementing a transfer_one() operation and
+returning a positive value from it so the core can do the delay for you.
+
+> > > +	ret =3D of_property_read_u16(pdev->dev.of_node, "num-chip-select",
+> > > +				   &master->num_chipselect);
+> > > +	if (ret < 0) {
+> > > +		dev_err(&pdev->dev, "couldn't determine num-chip-
+> > select\n");
+> > > +		goto clk_dis_all;
+> > > +	}
+
+> > Is there no reasonable default?
+
+> Are you saying if I cant read num-chipselect from dts,=20
+> I should set it to a default (that will be 4) and proceed?
+
+Yes.
+
+> > > +	/* Set to default valid value */
+> > > +	xspi->speed_hz =3D clk_get_rate(xspi->ref_clk) / 4;
+
+> > The driver should set max_speed_hz as well.
+
+> This is the max_speed_hz - 4 is the lowest divisor possible. 2 is invalid.
+> It is set in init_hw (see config register default mask).
+
+I'm saying you should set max_speed_hz, not set speed_hz to the maximum
+value.  This tells the core what the maximum speed is so it can error
+check the driver operations.
+
+--PBu/a+gn9/ndsyD5
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTKCf+AAoJEPo9qoy8lh711P4QAK9RGbbstK+L5eQM8q3H6+5g
-Xqnop0Uycg0zFob6X9pHuppbJhnCLS8+Zk88Yn4TEZjlXBNvgz9G+N/OOiCMCPFl
-hYCd9GQr9TIOiYhd9YklZfXkS4ZkTNlabVT3CePx03iaXPwpAsAiyq0rExaEtzb0
-v1pVYHYm9/SeiJPDrvpQwT3J3FtxaF1cNmev06pjEtMNAt8h8OqJNM2vJ5uh0m5s
-0WgQ4+YTuG5zbB0RRdyCUrrvU1QzJ5jXvZe+FHqEjUKn5hLlIEBIfpVKrx6rKXuY
-CHGxqMkrJNiKdw1FA3eeAJABo1LUIZnPULBRWcHdOxFVNSkKcbPintIERsxOI4X3
-viF/S8pID3vp7HjVIK99ny0mahOiwNUSHEpg95mRpdqrCJLViRcZficOq+srT8w2
-56aZaQrSvf3g2ScQUNRnKxQ3KhonUHcgZJe6aUJOS8a4bLzurqq0/DDlG5BuUPSj
-FDnoLBvEh/vM38O/6k7dS5HQhrOOOE6gIUoDAfFJh/AADBZp1amxKXUcJta9Ee9L
-S/H9QzujM4ybeUVSt2LsSETb9aju+bUePGCziHNIxRLILk3Ve5UOo9s1UTgBK8oG
-tn9Ztk/Egb3GargIzMSNfUFthzyPUNhkXQRnOnUiOQNsmV0wtghOJORCPaiypjtr
-1jqas7IX1fJWAWZn2IK5
-=2aKR
+iQIcBAEBAgAGBQJTKCgeAAoJELSic+t+oim9XN8QAIH4OFQRrDRwa/1eQb8K+LEA
+a0fZiNPZbIr7YMAAbLFSJtAEH0uJH9dZrjH0oJsEEHct7x/UIdhk8JNmXYK540Ra
+LyGq2RmiQ86fzeU/P41a/5BnWmliNdOZgh65OUUHOhT8Biv9AR+/D5O7tUVGt/cY
+jCdkrmYFjOWwemPOC2hWoAXY5GsrMmu0HWL7bGXMUPdsvf95QVkikrYxUcadoQwQ
+9Co9WHCir7Y0C8BZqOKfde9tPP4+cXsyyMsEW/jFNXyyBXUybs6X3ppyQLu1MJI1
+J4lGwwVTRM6mw+tygKkoqsAxb12j2waezSF1pWBGDRQ1IDsYSfCAf3hhJa4gIs9d
+84/shG5schnvkhTDCwNMgidOF8mwBZ9KVB4fKDS2Uy1EoocG2EX/Y27MZS2H3Xmb
+sJzXa76TrkyVPzWy1rELEPMx1ezdGSq3VpymXJ/v7y5prBb1g8I1wnbOH2jzIPTU
+mnq0a+v5/zaB/1sETYdvUTR09b/EtUUDt6hXsie1p9QWd8qO1GaHScUBCCE8yqvN
+0cJs0waK+61Pzeufp2wYKcZVfe7ad6siurI0oqk4Y9YDTAHnuku+MoDYkC7Jc+82
+lslZ0NIYhicGTqVdcG9V9q2LRT5P9mY5xLEtzPdB/HLsQULexwWOiwk3kjssmSsz
+SRFnCtZoekI1F2nOGmqU
+=0b0f
 -----END PGP SIGNATURE-----
 
---hQQuqVRWLgS3qvNEqLd4cxSdFMgHskO09--
+--PBu/a+gn9/ndsyD5--
