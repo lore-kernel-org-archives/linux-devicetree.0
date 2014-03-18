@@ -1,122 +1,296 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] of: Make of_find_node_by_path() handle /aliases
-Date: Tue, 18 Mar 2014 23:52:29 +0200
-Message-ID: <1395179549-31345-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Georgi Vlaev <georgi.vlaev-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v3 2/5] pwm: kona: Introduce Kona PWM controller support
+Date: Tue, 18 Mar 2014 22:52:32 +0100
+Message-ID: <20140318215231.GH5917@mithrandir>
+References: <1394655346-30048-1-git-send-email-tim.kryger@linaro.org>
+ <1394655346-30048-3-git-send-email-tim.kryger@linaro.org>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============2645285547936396969=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1394655346-30048-3-git-send-email-tim.kryger@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tim Kryger <tim.kryger@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Linux PWM List <linux-pwm@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Linux Doc List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Matt Porter <mporter@linaro.org>, Device Tree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Make of_find_node_by_path() handle aliases as prefixes.
 
-Originally by David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, but
-reworked according to remark by Grant Likely.
+--===============2645285547936396969==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="aF3LVLvitz/VQU3c"
+Content-Disposition: inline
 
-Handles all cases without allocating memory as requested by
-Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
----
- drivers/of/base.c | 69 +++++++++++++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 65 insertions(+), 4 deletions(-)
+--aF3LVLvitz/VQU3c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 7083fad..19bcdb4 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -773,22 +773,83 @@ EXPORT_SYMBOL(of_get_child_by_name);
- /**
-  *	of_find_node_by_path - Find a node matching a full OF path
-  *	@path:	The full path to match
-+ *	@path: Either the full path to match, or if the path does not
-+ *	       start with '/', the name of a property of the /aliases
-+ *	       node (an alias).  In the case of an alias, the node
-+ *	       matching the alias' value will be returned.
-+ *
-+ *	Valid paths:
-+ *		/foo/bar	Full path
-+ *		foo		Valid alias
-+ *		foo/bar		Valid alias + relative path
-  *
-  *	Returns a node pointer with refcount incremented, use
-  *	of_node_put() on it when done.
-  */
- struct device_node *of_find_node_by_path(const char *path)
- {
--	struct device_node *np = of_allnodes;
-+	struct device_node *np = NULL;
-+	int len;
-+	const char *p = NULL;
-+	struct property *prop;
- 	unsigned long flags;
- 
-+	/* under lock (not very nice) */
- 	raw_spin_lock_irqsave(&devtree_lock, flags);
--	for (; np; np = np->allnext) {
--		if (np->full_name && (of_node_cmp(np->full_name, path) == 0)
--		    && of_node_get(np))
-+
-+	len = strlen(path);
-+
-+	/* path begins with an alias */
-+	if (path[0] != '/') {
-+
-+		/* now find the relative path (if any)*/
-+		p = strchr(path, '/');
-+		if (p != NULL)
-+			len = p - path;
-+
-+		/* of_aliases must not be NULL */
-+		if (!of_aliases)
-+			goto out;
-+
-+		/* find matching alias */
-+		for_each_property_of_node(of_aliases, prop)
-+			if (strlen(prop->name) == len &&
-+					strncmp(prop->name, path, len) == 0)
-+				break;
-+
-+		/* not found; bail */
-+		if (prop == NULL)
-+			goto out;
-+
-+		path = prop->value;
-+	}
-+
-+	/* path lookup */
-+	for_each_of_allnodes(np) {
-+
-+		if (!np->full_name)
-+			continue;
-+
-+		if (p == NULL) {
-+			/* full component */
-+			if (strcasecmp(np->full_name, path) != 0)
-+				continue;
-+		} else {
-+			/* last component (including '/') */
-+			if (strncasecmp(np->full_name, path, len) != 0)
-+				continue;
-+
-+			if (strcasecmp(np->full_name + len, p) != 0)
-+				continue;
-+		}
-+
-+		if (of_node_get(np))
- 			break;
- 	}
-+
-+out:
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-+
- 	return np;
- }
- EXPORT_SYMBOL(of_find_node_by_path);
--- 
-1.7.12
+On Wed, Mar 12, 2014 at 01:15:43PM -0700, Tim Kryger wrote:
+[...]
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 22f2f28..1fd42af 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -62,6 +62,16 @@ config PWM_ATMEL_TCB
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-atmel-tcb.
+> =20
+> +config PWM_BCM_KONA
+> +	tristate "Kona PWM support"
+> +	depends on ARCH_BCM_MOBILE
+> +	default y
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+No "default y", please.
+
+> diff --git a/drivers/pwm/pwm-bcm-kona.c b/drivers/pwm/pwm-bcm-kona.c
+[...]
+> +static void kona_pwmc_apply_settings(struct kona_pwmc *kp, unsigned int =
+chan)
+> +{
+> +	unsigned long value =3D readl(kp->base + PWM_CONTROL_OFFSET);
+> +
+> +	/*
+> +	 * New duty and period settings are only reflected in the PWM output
+> +	 * after a rising edge of the enable bit.  When smooth bit is set, the
+> +	 * new settings are delayed until the prior PWM period has completed.
+> +	 * Furthermore, if the smooth bit is set, the PWM continues to output a
+> +	 * waveform based on the old settings during the time that the enable
+> +	 * bit is low.  Otherwise the output is a constant high signal while
+> +	 * the enable bit is low.
+> +	 */
+> +
+> +	/* clear enable bit but set smooth bit to maintain old output */
+> +	value |=3D (1 << PWM_CONTROL_SMOOTH_SHIFT(chan));
+
+There's no need for the parentheses here.
+
+> +	value &=3D ~(1 << PWM_CONTROL_ENABLE_SHIFT(chan));
+> +	writel(value, kp->base + PWM_CONTROL_OFFSET);
+> +
+> +	/* set enable bit and clear smooth bit to apply new settings */
+> +	value &=3D ~(1 << PWM_CONTROL_SMOOTH_SHIFT(chan));
+> +	value |=3D (1 << PWM_CONTROL_ENABLE_SHIFT(chan));
+
+Nor here.
+
+> +	writel(value, kp->base + PWM_CONTROL_OFFSET);
+
+I'm curious about how this work. The above writes the control register
+once with smooth set and enable cleared, then immediately rewrites it
+again with smooth cleared and enable set. Are these writes somehow
+queued in hardware, so that the subsequent write becomes active only
+after the current period?
+
+> +static int kona_pwmc_config(struct pwm_chip *chip, struct pwm_device *pw=
+m,
+> +				int duty_ns, int period_ns)
+
+Please align arguments on subsequent lines with those on the first line.
+
+> +{
+> +	struct kona_pwmc *kp =3D dev_get_drvdata(chip->dev);
+
+The proper way to do this would be upcasting using container_of().
+Better yet, define a static inline function that wraps container_of(),
+just like very other driver does.
+
+> +	u64 val, div, clk_rate;
+> +	unsigned long prescale =3D PRESCALE_MIN, pc, dc;
+> +	unsigned int value, chan =3D pwm->hwpwm;
+> +
+> +	/*
+> +	 * Find period count, duty count and prescale to suit duty_ns and
+> +	 * period_ns. This is done according to formulas described below:
+> +	 *
+> +	 * period_ns =3D 10^9 * (PRESCALE + 1) * PC / PWM_CLK_RATE
+> +	 * duty_ns =3D 10^9 * (PRESCALE + 1) * DC / PWM_CLK_RATE
+> +	 *
+> +	 * PC =3D (PWM_CLK_RATE * period_ns) / (10^9 * (PRESCALE + 1))
+> +	 * DC =3D (PWM_CLK_RATE * duty_ns) / (10^9 * (PRESCALE + 1))
+> +	 */
+> +
+> +	clk_rate =3D clk_get_rate(kp->clk);
+
+"rate" is 50% shorter and would do equally well.
+
+> +
+> +	/* There is polarity support in HW but it is easier to manage in SW */
+> +	if (pwm->polarity =3D=3D PWM_POLARITY_INVERSED)
+> +		duty_ns =3D period_ns - duty_ns;
+
+No, this is wrong. You're not actually changing the *polarity* here.
+
+Also I think this is missing a pair of clk_prepare_enable() and
+clk_disable_unprepare().
+
+> +static int kona_pwmc_set_polarity(struct pwm_chip *chip, struct pwm_devi=
+ce *pwm,
+> +				  enum pwm_polarity polarity)
+> +{
+> +	/*
+> +	 * The framework only allows the polarity to be changed when a PWM is
+> +	 * disabled so no immediate action is required here.  When a channel is
+> +	 * enabled, the polarity gets handled as part of the re-config step.
+> +	 */
+> +
+> +	return 0;
+> +}
+
+See above. If you don't want to implement the hardware support for
+inversed polarity, then simply don't implement this.
+
+> +static int kona_pwmc_enable(struct pwm_chip *chip, struct pwm_device *pw=
+m)
+> +{
+> +	struct kona_pwmc *kp =3D dev_get_drvdata(chip->dev);
+> +	int ret;
+> +
+> +	/*
+> +	 * The PWM framework does not clear the enable bit in the flags if an
+> +	 * error is returned from a PWM driver's enable function so it must be
+> +	 * cleared here if any trouble is encountered.
+> +	 */
+> +
+> +	ret =3D clk_prepare_enable(kp->clk);
+> +	if (ret < 0) {
+> +		dev_err(chip->dev, "failed to enable clock: %d\n", ret);
+> +		clear_bit(PWMF_ENABLED, &pwm->flags);
+
+You're not supposed to touch these. This is a bug in the core, and it
+should be fixed in the core.
+
+> +		return ret;
+> +	}
+> +
+> +	ret =3D kona_pwmc_config(chip, pwm, pwm->duty_cycle, pwm->period);
+> +	if (ret < 0) {
+> +		clk_disable_unprepare(kp->clk);
+> +		clear_bit(PWMF_ENABLED, &pwm->flags);
+> +		return ret;
+> +	}
+
+Why are you doing this? .config() should be setting everything up
+according to the given duty cycle and period and .enable() should only
+be enabling a specific channel. Please don't conflate the two.
+
+> +static void kona_pwmc_disable(struct pwm_chip *chip, struct pwm_device *=
+pwm)
+> +{
+> +	struct kona_pwmc *kp =3D dev_get_drvdata(chip->dev);
+> +	unsigned int chan =3D pwm->hwpwm;
+> +
+> +	/*
+> +	 * The "enable" bits in the control register only affect when settings
+> +	 * start to take effect so the only real way to disable the PWM output
+> +	 * is to program a zero duty cycle.
+> +	 */
+
+What's wrong about waiting for the settings to take effect? There's
+nothing about disable that says it should happen *immediately*.
+
+> +
+> +	writel(0, kp->base + DUTY_CYCLE_HIGH_OFFSET(chan));
+> +	kona_pwmc_apply_settings(kp, chan);
+> +
+> +	/*
+> +	 * When the PWM clock is disabled, the output is pegged high or low
+> +	 * depending on its state at that instant.  To guarantee that the new
+> +	 * settings have taken effect and the output is low a delay of 400ns is
+> +	 * required.
+> +	 */
+> +
+> +	ndelay(400);
+
+Where does this number come from?
+
+> +static int kona_pwmc_probe(struct platform_device *pdev)
+> +{
+> +	struct kona_pwmc *kp;
+> +	struct resource *res;
+> +	unsigned int chan, value;
+[...]
+> +	/* Set smooth mode, push/pull, and normal polarity for all channels */
+> +	for (value =3D 0, chan =3D 0; chan < kp->chip.npwm; chan++) {
+
+Can't you initialize value to 0 when you declare it? That way the for
+loop becomes much more idiomatic.
+
+> +		value |=3D (1 << PWM_CONTROL_SMOOTH_SHIFT(chan));
+> +		value |=3D (1 << PWM_CONTROL_TYPE_SHIFT(chan));
+> +		value |=3D (1 << PWM_CONTROL_POLARITY_SHIFT(chan));
+> +	}
+> +	writel(value, kp->base + PWM_CONTROL_OFFSET);
+
+I'd prefer a blank line between the above two for readability.
+
+> +static struct platform_driver kona_pwmc_driver =3D {
+> +
+
+Gratuitous blank line.
+
+> +	.driver =3D {
+> +		.name =3D "bcm-kona-pwm",
+> +		.of_match_table =3D bcm_kona_pwmc_dt,
+> +	},
+> +	.probe =3D kona_pwmc_probe,
+> +	.remove =3D kona_pwmc_remove,
+> +};
+> +
+
+And here.
+
+> +module_platform_driver(kona_pwmc_driver);
+> +
+> +MODULE_AUTHOR("Broadcom Corporation <bcm-kernel-feedback-list@broadcom.c=
+om>");
+> +MODULE_AUTHOR("Tim Kryger <tkryger@broadcom.com>");
+> +MODULE_DESCRIPTION("Driver for Kona PWM controller");
+
+Perhaps "Broadcom Kona PWM"?
+
+Thierry
+
+--aF3LVLvitz/VQU3c
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTKMAfAAoJEN0jrNd/PrOh4jQP/2odnLmSg16B3QgPA/DZkZGl
+7/j0LSH26gNzBuI4Yc8+gubY+f7CWO8CMS74JNIaBsir9YalVM38evnPAnAD8Xmz
+fd8sXlAIakjlNtgmYulUYt5b1BX2SQBeDruLSydmbpD9Dq7Z5XjQyRCl/h2nBDTO
+Qsnz7OEywCrn/mOP2l0g6L6JDI5jywVGV560NNQECXjYjRjjI8ueHn97IvtO3PVD
+Ej7vwK6ApDHtmCPS9u++AwkyuMATsEBNjXElQYi5X4nnTnKht3WzZHBqL2PXWAoU
+aKNsMCzBKhG2Usit6kjYlagCaYTQkkY6lbRv+8Eoa69tM5wbtU8rp/CGTcEqmJwH
+t0jJ/yMsm5e7Hn8fJvSVWyzMrA7bqxoS2fN48XMZAyXM8pUx3zr1GoyVp7gpkTGZ
+uYBdRP2aDL7RxwSK3ry5HPq5xr5gsQXMj7ZoSQW+knQsWzBrD3xgzrP020q4eciS
+b1xQFFpIzgPUnqK8lgGUx/hRM+ewbqTiD/+NnbBdpH7hoecBHbyLW5cuDElyWXsX
++xj5HP7+pW+sIcLsMTC95cNRbvpz9hhVhLY3iocART5SodG+YBSzVAFAMyfoOwC5
+DKiHkIxsaOq6Ty+GO5W0Kz9Qhy0F6vnNYirVV973AGN1D5S/cjeriZ7mqR/EtHeb
+210zuKWZKrxn/9yVk7da
+=EcSh
+-----END PGP SIGNATURE-----
+
+--aF3LVLvitz/VQU3c--
+
+
+--===============2645285547936396969==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============2645285547936396969==--
