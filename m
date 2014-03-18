@@ -1,85 +1,86 @@
-From: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v11 15/27] iommu/exynos: use convenient macro to handle
-	gate clocks
-Date: Tue, 18 Mar 2014 20:03:29 +0900
-Message-ID: <20140318200329.cc1dca7541b4b1916e5d9d48@samsung.com>
-References: <20140314140951.3d443a3096e80297c9fecef0@samsung.com>
-	<5323078E.4060903@samsung.com>
-	<CAK9yfHx_=Os1G46nNO1HDA3tigkRNeHKN1KGCvuN=w7dRTkfjg@mail.gmail.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 2/2] ARM: DTS: AM43x: Add sii9022 dt information
+Date: Tue, 18 Mar 2014 13:03:26 +0200
+Message-ID: <532827FE.30203@ti.com>
+References: <1395137278-5065-1-git-send-email-sathyap@ti.com> <1395137278-5065-3-git-send-email-sathyap@ti.com> <53282082.1000208@ti.com> <5328268C.1030306@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-reply-to: <CAK9yfHx_=Os1G46nNO1HDA3tigkRNeHKN1KGCvuN=w7dRTkfjg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Linux DeviceTree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Samsung SOC <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Prathyush <prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Antonios Motakis <a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="hQQuqVRWLgS3qvNEqLd4cxSdFMgHskO09"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5328268C.1030306@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sathya Prakash <a0393677@ti.com>
+Cc: Sathya Prakash M R <sathyap@ti.com>, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, pawel.moll@arm.com, paul@pwsan.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 14 Mar 2014 22:27:59 +0530, Sachin Kamat wrote:
->  Hi KyongHo,
-> 
-> On 14 March 2014 19:13, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> > Hi KyongHo,
-> >
-> >
-> > On 14.03.2014 06:09, Cho KyongHo wrote:
-> >>
-> >> exynos-iommu driver must care about master H/W's gate clock as well as
-> >> System MMU's gate clock. To enhance readability of the source code,
-> >> macros to gate/ungate those clocks are defined.
-> >>
-> >> Signed-off-by: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> >> ---
-> >>   drivers/iommu/exynos-iommu.c |   34 ++++++++++++++++++++++------------
-> >>   1 file changed, 22 insertions(+), 12 deletions(-)
-> >>
-> >> diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
-> >> index 71e77f1..cef62d0 100644
-> >> --- a/drivers/iommu/exynos-iommu.c
-> >> +++ b/drivers/iommu/exynos-iommu.c
-> >> @@ -101,6 +101,16 @@
-> >>   #define REG_PB1_SADDR         0x054
-> >>   #define REG_PB1_EADDR         0x058
-> >>
-> >> +#define __clk_gate_ctrl(data, clk, en) do {            \
-> >> +               if (data->clk)                          \
-> >> +                       clk_##en##able(data->clk);      \
-> >> +       } while (0)
-> >> +
-> >> +#define __sysmmu_clk_enable(data)      __clk_gate_ctrl(data, clk, en)
-> >> +#define __sysmmu_clk_disable(data)     __clk_gate_ctrl(data, clk, dis)
-> >> +#define __master_clk_enable(data)      __clk_gate_ctrl(data, clk_master,
-> >> en)
-> >> +#define __master_clk_disable(data)     __clk_gate_ctrl(data, clk_master,
-> >> dis)
-> >> +
-> >
-> >
-> > I'd say that such macros only obfuscate code, without any gains, as you can
-> > see in diffstat - this patch adds more lines than it removes.
-> >
-> > Please drop this change.
-> 
->  I agree with Tomasz here.
-> 
+--hQQuqVRWLgS3qvNEqLd4cxSdFMgHskO09
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Are you concerning about using macros or more insertions than deletions?
+On 18/03/14 12:57, Sathya Prakash wrote:
 
-The deletions in this patch are only clk_enable() and clk_disable()
-but they must be
-"if (!IS_ERR(clk)) clk_enable(clk)" and "if (!IS_ERR(clk)) clk_disable(clk)".
+>> You add the same label, "dpi_out" to both endpoints. Does this even
+>> compile?
+>>
+>> As there's just one port, you can leave out the 'ports' node.
+> Will check. the ports was added as per documentation in
+> video-interfaces.txt
 
-I think use of macro is fancier in that case.
+It mentions that the 'ports' is optional.
 
-Thank you.
+> Can you suggest how to add the 2 dpi_out endpoints?
 
-KyongHo.
+Didn't try, but:
+
+port {
+	#address-cells =3D <1>;
+	#size-cells =3D <0>;
+
+	dpi_lcd_out: endpoint@0 {
+		reg =3D <0>;
+		remote-endpoint =3D <&lcd_in>;
+		data-lines =3D <24>;
+	};
+
+	dpi_sii_out: endpoint@1 {
+		reg =3D <1>;
+		remote-endpoint =3D <&sii9022_in>;
+		data-lines =3D <24>;
+	};
+};
+
+However, we still need to handle the GPIO which is used to select the
+LCD or HDMI. So, maybe the above works, but we should try the
+encoder-gpio-switch to handle the GPIO, which we discussed about earlier.=
+
+
+ Tomi
+
+
+
+--hQQuqVRWLgS3qvNEqLd4cxSdFMgHskO09
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJTKCf+AAoJEPo9qoy8lh711P4QAK9RGbbstK+L5eQM8q3H6+5g
+Xqnop0Uycg0zFob6X9pHuppbJhnCLS8+Zk88Yn4TEZjlXBNvgz9G+N/OOiCMCPFl
+hYCd9GQr9TIOiYhd9YklZfXkS4ZkTNlabVT3CePx03iaXPwpAsAiyq0rExaEtzb0
+v1pVYHYm9/SeiJPDrvpQwT3J3FtxaF1cNmev06pjEtMNAt8h8OqJNM2vJ5uh0m5s
+0WgQ4+YTuG5zbB0RRdyCUrrvU1QzJ5jXvZe+FHqEjUKn5hLlIEBIfpVKrx6rKXuY
+CHGxqMkrJNiKdw1FA3eeAJABo1LUIZnPULBRWcHdOxFVNSkKcbPintIERsxOI4X3
+viF/S8pID3vp7HjVIK99ny0mahOiwNUSHEpg95mRpdqrCJLViRcZficOq+srT8w2
+56aZaQrSvf3g2ScQUNRnKxQ3KhonUHcgZJe6aUJOS8a4bLzurqq0/DDlG5BuUPSj
+FDnoLBvEh/vM38O/6k7dS5HQhrOOOE6gIUoDAfFJh/AADBZp1amxKXUcJta9Ee9L
+S/H9QzujM4ybeUVSt2LsSETb9aju+bUePGCziHNIxRLILk3Ve5UOo9s1UTgBK8oG
+tn9Ztk/Egb3GargIzMSNfUFthzyPUNhkXQRnOnUiOQNsmV0wtghOJORCPaiypjtr
+1jqas7IX1fJWAWZn2IK5
+=2aKR
+-----END PGP SIGNATURE-----
+
+--hQQuqVRWLgS3qvNEqLd4cxSdFMgHskO09--
