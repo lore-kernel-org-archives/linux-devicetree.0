@@ -1,121 +1,45 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] phy: micrel: add of configuration for LED mode
-Date: Tue, 18 Mar 2014 17:11:42 +0100
-Message-ID: <4129596.cD1CsNElkT@avalon>
-References: <1393415280-10227-1-git-send-email-ben.dooks@codethink.co.uk> <530F13DB.90009@codethink.co.uk> <6677304.0KbXKA76PZ@avalon>
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: keystone: Fix domain register range for clkfftc1
+Date: Tue, 18 Mar 2014 12:09:22 -0400
+Message-ID: <53286FB2.1040903@ti.com>
+References: <1395148697-22481-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <6677304.0KbXKA76PZ@avalon>
-Sender: netdev-owner@vger.kernel.org
-To: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, "linux-kernel@lists.codethink.co.uk" <linux-kernel@lists.codethink.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1395148697-22481-1-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ben,
-
-On Tuesday 18 March 2014 16:56:06 Laurent Pinchart wrote:
-> On Thursday 27 February 2014 10:30:51 Ben Dooks wrote:
-> > On 27/02/14 09:15, Mark Rutland wrote:
-> > > On Wed, Feb 26, 2014 at 11:48:00AM +0000, Ben Dooks wrote:
-> > >> Add support for the led-mode property for the following PHYs
-> > >> which have a single LED mode configuration value.
-> > >> 
-> > >> KSZ8001 and KSZ8041 which both use register 0x1e bits 15,14 and
-> > >> KSZ8021, KSZ8031 and KSZ8051 which use register 0x1f bits 5,4
-> > >> to control the LED configuration.
-> > >> 
-> > >> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> > >> ---
-> > >> 
-> > >>  Documentation/devicetree/bindings/net/micrel.txt | 18 +++++++++
-> > >>  drivers/net/phy/micrel.c                         | 49 ++++++++++++++--
-> > >>  2 files changed, 63 insertions(+), 4 deletions(-)
-> > >>  create mode 100644 Documentation/devicetree/bindings/net/micrel.txt
-> > >> 
-> > >> diff --git a/Documentation/devicetree/bindings/net/micrel.txt
-> > >> b/Documentation/devicetree/bindings/net/micrel.txt new file mode 100644
-> > >> index 0000000..98a3e61
-> > >> --- /dev/null
-> > >> +++ b/Documentation/devicetree/bindings/net/micrel.txt
-> > >> @@ -0,0 +1,18 @@
-> > >> +Micrel PHY properties.
-> > >> +
-> > >> +These properties cover the base properties Micrel PHYs.
-> > >> +
-> > >> +Optional properties:
-> > >> +
-> > >> + - micrel,led-mode : LED mode value to set for PHYs with configurable
-> > >> LEDs.
-> > >> +
-> > >> +              Configure the LED mode with single value. The list of
-> > >> PHYs and
-> > >> +	      the bits that are currently supported:
-> > >> +
-> > >> +	      KSZ8001: register 0x1e, bits 15..14
-> > >> +	      KSZ8041: register 0x1e, bits 15..14
-> > >> +	      KSZ8021: register 0x1f, bits 5..4
-> > >> +	      KSZ8031: register 0x1f, bits 5..4
-> > >> +	      KSZ8051: register 0x1f, bits 5..4
-> > >> +
-> > >> +              See the respective PHY datasheet for the mode values.
-> > > 
-> > > What do these mean, roughly,, and why can the kernel not decide how to
-> > > cnofigure these?
-> > 
-> > Board specific, in the case of the Lager one of the LEDs is connected
-> > to the ethernet mac block to indicate link, however the default mode
-> > is not for just "Link" so we have to change it.
-> > 
-> > > In general we prefer to not place raw register values in the DT, and I'd
-> > > like to know why we'd have to here.
-> > 
-> > I could copy out stuff from the data-sheet, but I was trying to avoid a
-> > copy and paste job.
+On Tuesday 18 March 2014 09:18 AM, Ivan Khoronzhuk wrote:
+> The domain register range for clkfftc1 has to be 0x0235004c
+> instead of 0x023504c0.
 > 
-> I quite agree with Mark here, I would prefer not to list register values in
-> DT bindings. However, the hardware hardware diversity doesn't help us
-> abstracting LED modes.
-> 
-> The following table summarizes LED usage options.
-> 
-> Device              Mode LED usage
-> ----------------------------------------------------------------------------
-> 8001 (LED[3:0])     00   Collision / Full-Duplex / Speed / Link/Activity
->                     01   Activity / Full-Duplex/Collision / Speed / Link
->                     10   Activity / Full-Duplex / 100Mbps Link / 10Mbps Link
->                     11   Reserved
-> 80[23]1 (LED[0])    00   Link/Activity
->                     01   Link
->                     10   Reserved
->                     11   Reserved
-> 80[45]1 (LED[1:0])  00   Speed / Link/Activity
->                     01   Activity / Link
->                     10   Reserved
->                     11   Reserved
-> 
-> While LED mode could be described by LED0 mode using "link-activity" or
-> "link" strings for the 80[2345]1 chips, the 8001 makes that slightly more
-> complex and shows that future chips might not conform to any scheme we come
-> up with now.
-> 
-> I thus have no strong preference for a string-based mode description over
-> using an integer. However, if we keep the integer value, I wouldn't use the
-> register value directly, but would instead use the mode field value as an
-> integer in the 0-3 range. This would remove knowledge of the PHY control
-> register layout from the DT node content, and bring more consistency to the
-> values.
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+> ---
+Thanks .. Applying for 3.15-fixes
 
-And I realize that this is what you've done already in the implementation :-/ 
-I'll send a patch to clarify the DT bindings documentation if you don't mind, 
-after hearing Mark's opinion on the issue.
+>  arch/arm/boot/dts/k2hk-clocks.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/k2hk-clocks.dtsi b/arch/arm/boot/dts/k2hk-clocks.dtsi
+> index 8855b1f..96e6536 100644
+> --- a/arch/arm/boot/dts/k2hk-clocks.dtsi
+> +++ b/arch/arm/boot/dts/k2hk-clocks.dtsi
+> @@ -209,7 +209,7 @@ clocks {
+>  		compatible = "ti,keystone,psc-clock";
+>  		clocks = <&chipclk13>;
+>  		clock-output-names = "fftc-1";
+> -		reg = <0x02350074 0xb00>, <0x023504c0 0x400>;
+> +		reg = <0x02350074 0xb00>, <0x0235004c 0x400>;
+>  		reg-names = "control", "domain";
+>  		domain-id = <19>;
+>  	};
+> 
 
-> Mark, what's your opinion on this ? I know that David has already applied
-> the patch to his tree, but we can still fix this before v3.16. I can submit
-> a patch.
-
--- 
-Regards,
-
-Laurent Pinchart
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
