@@ -1,58 +1,123 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC PATCH 0/2] Sil9022 DPI to HDMI Encoder
-Date: Tue, 18 Mar 2014 10:56:40 +0000
-Message-ID: <20140318105640.GE8043@e106331-lin.cambridge.arm.com>
-References: <1395137278-5065-1-git-send-email-sathyap@ti.com>
+From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] mailbox: samsung: added support for samsung mailbox
+Date: Tue, 18 Mar 2014 03:56:48 -0700
+Message-ID: <1395140208.2812.15.camel@joe-AO722>
+References: <1395057839-23871-1-git-send-email-ks.giri@samsung.com>
+	 <1395057839-23871-2-git-send-email-ks.giri@samsung.com>
+	 <CAKrE-KcA6VUUwUjAGuW+nYsFg0qknfZwECtdVS8ZtZb4GYoCvA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1395137278-5065-1-git-send-email-sathyap@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sathya Prakash M R <sathyap@ti.com>
-Cc: "tony@atomide.com" <tony@atomide.com>, "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "paul@pwsan.com" <paul@pwsan.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAKrE-KcA6VUUwUjAGuW+nYsFg0qknfZwECtdVS8ZtZb4GYoCvA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Girish KS <girishks2000-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Girish K S <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jassi Singh <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, Ilho Lee <ilho215.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 18, 2014 at 10:07:55AM +0000, Sathya Prakash M R wrote:
-> This patch series adds the Silicon Image Sil9022 driver.
-> 
-> Sil9022 is HDMI Transmitter compliant to HDMI 1.2a and DVI 1.0.
-> It supports 1080p and UXGA. It has single slave I2C from Host,
-> passing through to master I2C interface for DDC Connection.
-> It provides Transmitter Programming Interface (TPI) for simplified API programming.
-> Product brief:
-> http://www.semiconductorstore.com/pdf/newsite/siliconimage/SiI9022a_pb.pdf
-> 
-> Current driver is tested on AM43x SOC.
-> 
-> This series is on top of series posted to add DSS support on AM43x [2]
-> [2] https://patchwork.kernel.org/patch/3822691/
-> 
-> This is initial driver supporting limited features.
-> 
-> TODO ->
-> Audio Support
-> Detailed Hot Plug event handling and also routing the hot plug event to host processor
-> 
-> These features will be added in future.
-> 
-> Sathya Prakash M R (2):
->   OMAPDSS: Add Sil9022 DPI-HDMI Encoder Driver
->   ARM: DTS: AM43x: Add sii9022 dt information
-> 
->  arch/arm/boot/dts/am437x-gp-evm.dts                |   58 +-
->  arch/arm/boot/dts/am43x-epos-evm.dts               |   59 +-
->  drivers/video/omap2/displays-new/Kconfig           |    8 +
->  drivers/video/omap2/displays-new/Makefile          |    1 +
->  drivers/video/omap2/displays-new/encoder-sil9022.c |  748 ++++++++++++++++++++
->  drivers/video/omap2/displays-new/encoder-sil9022.h |  105 +++
->  6 files changed, 973 insertions(+), 6 deletions(-)
->  create mode 100644 drivers/video/omap2/displays-new/encoder-sil9022.c
->  create mode 100644 drivers/video/omap2/displays-new/encoder-sil9022.h
+On Tue, 2014-03-18 at 15:52 +0530, Girish KS wrote:
+> On Mon, Mar 17, 2014 at 5:33 PM, Girish K S <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
 
-Is there already a binding document?
+Hi, just some trivial notes about the patch
 
-If not, please add one.
+> > diff --git a/drivers/mailbox/mailbox-samsung.c b/drivers/mailbox/mailbox-samsung.c
+[]
+> > @@ -0,0 +1,354 @@
+> > +/*
+> > + * Copyright 2013 Samsung Electronics Co. Ltd.
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify it
+> > + * under the terms and conditions of the GNU General Public License,
+> > + * version 2, as published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope it will be useful, but WITHOUT
+> > + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> > + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> > + * more details.
+> > + *
+> > + * You should have received a copy of the GNU General Public License along with
+> > + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> > + */
 
-Cheers,
-Mark.
+Please add
+
+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+
+before any #include so that error messages are
+prefixed in the output with "samsung-mailbox: "
+and the reader of the log has an idea what subsystem
+is emitting messages.
+
+> > +#include <linux/err.h>
+> > +#include <linux/module.h>
+> > +#include <linux/slab.h>
+[]
+> > +static int samsung_mbox_send_data(struct ipc_link *link, void *msg)
+> > +{
+[]
+> > +       /* Lock the mailbox for this transaction with the client id */
+> > +       writel(val, ipc_base + MBOX_REG_TXLOCK);
+> > +       do {
+> > +               if (time_after(jiffies, timeout)) {
+> > +                       pr_err("cannot aquire the lock\n");
+
+This would be prefixed appropriately via pr_fmt.
+Also, there's a typo of aquire here: acquire
+
+> > +static int samsung_mbox_startup(struct ipc_link *link, void *ignored)
+> > +{
+[]
+> > +       ret = devm_request_irq(dev, samsung_link->irq, samsung_ipc_handler,
+> > +                                       IRQF_SHARED, link->link_name,
+> > +                                       samsung_link);
+> > +       if (unlikely(ret)) {
+> > +               pr_err("failed to register mailbox interrupt:%d\n", ret);
+
+Here too it would be prefixed
+
+> > +static int samsung_mbox_probe(struct platform_device *pdev)
+> > +{
+> > +       struct samsung_mbox *samsung_mbox;
+> > +       struct samsung_mlink *mbox_link;
+> > +       struct resource res;
+> > +       struct ipc_link **link;
+> > +       int loop, count, ret = 0;
+> > +       struct device_node *node = pdev->dev.of_node;
+> > +
+> > +       if (!node) {
+> > +               dev_err(&pdev->dev, "driver doesnt support"
+> > +                               "non-dt devices\n");
+
+Please coalesce the format fragments.
+
+You would notice the missing space between
+"support" and "non-dt"
+
+		dev_err(&pdev->dev, "driver does not support non-dt devices\n");
+
+It's OK to exceed 80 columns for these format strings.
+
+> > diff --git a/include/linux/mailbox-samsung.h b/include/linux/mailbox-samsung.h
+[]
+> > +static inline unsigned long get_alligned_buffer(void)
+
+Typo: There's one l in aligned
+
+> > +{
+> > +       return __get_free_pages(GFP_KERNEL, REQUEST_PAGE_ORDER);
+> > +}
+> > +
+> > +static inline void put_alligned_buffer(unsigned long addr)
+> > +{
+
+here too
+
+> > +       free_pages(addr, REQUEST_PAGE_ORDER);
+> > +}
+> > +
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
