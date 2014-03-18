@@ -1,75 +1,43 @@
-From: "B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH 2/2] spi/fsl-lib: Get the SPI controller bus number from
- DTS
-Date: Tue, 18 Mar 2014 09:34:46 +0000
-Message-ID: <01e4d20dc3d94e2f8f7252225932c774@DM2PR03MB301.namprd03.prod.outlook.com>
-References: <1394789757-40732-1-git-send-email-B48286@freescale.com>
-	<1394789757-40732-2-git-send-email-B48286@freescale.com>
-	<20140314191922.GA366@sirena.org.uk>
-	<c4b28b01b2f544ca9d264eaee2542257@DM2PR03MB301.namprd03.prod.outlook.com>
-	<20140317130109.GE11706@sirena.org.uk>
-	<9186860716f446f9a5773e7e47d39114@DM2PR03MB301.namprd03.prod.outlook.com>
- <CAMuHMdWHSVPDZ9q9rw0FZqNrR+E0q9pQcYLRiseopoM-K-5svg@mail.gmail.com>
+From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Subject: Re: [PATCH v2] gpio: davinci: fix gpio selection for OF
+Date: Tue, 18 Mar 2014 10:45:12 +0100
+Message-ID: <532815A8.9090807@ahsoftware.de>
+References: <5316FFCE.1060603@ti.com> <1394018461-757-1-git-send-email-holler@ahsoftware.de> <CACRpkdaF=jc9Z1XZCtH8VPuih01t--qyV-sgH1R_ix0VM4RzVA@mail.gmail.com> <5322D529.4070904@ahsoftware.de> <CACRpkdaghneo1MvNCfxjTED+sJepHgeZCgmKsRteG9qrBNWAfQ@mail.gmail.com> <5326F8C5.5090406@ti.com> <CACRpkdYZMzw31NkA4uSq+ZowzOnZgZthXhZri-eJY2Ozb8aNRQ@mail.gmail.com> <532805AE.9000806@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdWHSVPDZ9q9rw0FZqNrR+E0q9pQcYLRiseopoM-K-5svg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <532805AE.9000806-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Geert Uytterhoeven' <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogZ2VlcnQudXl0dGVyaG9l
-dmVuQGdtYWlsLmNvbSBbbWFpbHRvOmdlZXJ0LnV5dHRlcmhvZXZlbkBnbWFpbC5jb21dDQo+IE9u
-IEJlaGFsZiBPZiBHZWVydCBVeXR0ZXJob2V2ZW4NCj4gU2VudDogVHVlc2RheSwgTWFyY2ggMTgs
-IDIwMTQgNDo1NiBQTQ0KPiBUbzogSG91IFpoaXFpYW5nLUI0ODI4Ng0KPiBDYzogTWFyayBCcm93
-bjsgbGludXgtc3BpQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
-DQo+IHJvYi5oZXJyaW5nQGNhbHhlZGEuY29tOyBwYXdlbC5tb2xsQGFybS5jb207IG1hcmsucnV0
-bGFuZEBhcm0uY29tOw0KPiBpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51azsgZ2FsYWtAY29k
-ZWF1cm9yYS5vcmc7DQo+IGdyYW50Lmxpa2VseUBzZWNyZXRsYWIuY2E7IFdvb2QgU2NvdHQtQjA3
-NDIxOyBIdSBNaW5na2FpLUIyMTI4NA0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDIvMl0gc3BpL2Zz
-bC1saWI6IEdldCB0aGUgU1BJIGNvbnRyb2xsZXIgYnVzIG51bWJlcg0KPiBmcm9tIERUUw0KPiAN
-Cj4gT24gVHVlLCBNYXIgMTgsIDIwMTQgYXQgODo0MCBBTSwgQjQ4Mjg2QGZyZWVzY2FsZS5jb20N
-Cj4gPEI0ODI4NkBmcmVlc2NhbGUuY29tPiB3cm90ZToNCj4gPj4gPiA+IFRoZSBEVCBhbHJlYWR5
-IGhhcyBzdXBwb3J0IGZvciBzcGVjaWZ5aW5nIGZsYXNoIGxheW91dHMsIGNhbid0DQo+ID4+ID4g
-PiB0aG9zZSBiZSB1c2VkIChmb3IgZXhhbXBsZSB2aWEgY2hvc2VuIGlmIHRoZXkncmUgbm90IGZp
-eGVkIGZvciB0aGUNCj4gYm9hcmQpPw0KPiA+PiA+ID4gT3IgaWYgaXQncyBqdXN0IHBpY2tpbmcg
-dGhlIGNvcnJlY3QgZmlsZXN5c3RlbSB0aGVuIFVVSURzIGFuZA0KPiA+PiA+ID4gbGFiZWxzIGFy
-ZSB0aGUgc3RhbmRhcmQgd2F5IHRvIGRvIHRoaW5ncy4NCj4gPj4NCj4gPj4gPiBUaGUgRFQgc3Bl
-Y2lmeWluZyBmbGFzaCBsYXlvdXRzIGlzIG9rLiBUaGVyZSBpcyBhbm90aGVyIHdheSB0byBtYWtl
-DQo+ID4+ID4gdGhlIGZsYXNoIGxheW91dHMgdXNpbmcgY29tbWFuZCBsaW5lLCBidXQgaXQgaXMg
-bm90IHNhZmUgYmVjYXVzZSBvZg0KPiA+PiA+IHRoZSBkeW5hbWljIGJ1c19udW0uIEl0IGlzIG5v
-dCB0aGUgcmVhc29uIHRoYXQgdGhlIHdheSBvZiBEVCBpcw0KPiA+PiA+IHN1cHBvcnRlZCBmbGFz
-aCBsYXlvdXRzLCB0byBsaXZlIHRoZSBvdGhlciB3YXkgdW5zYWZlLCByaWdodD8NCj4gPj4NCj4g
-Pj4gVGhpcyBzb3VuZHMgdG8gbWUgbGlrZSB3ZSBuZWVkIGEgYmV0dGVyIHdheSBvZiB0YWxraW5n
-IGFib3V0IGZsYXNoDQo+ID4+IGRldmljZSBuYW1lcyBvbiB0aGUgTGludXggY29tbWFuZCBsaW5l
-IHJhdGhlciB0aGFuIGEgd2F5IHRvIGZpeCB0aGUNCj4gPj4gYnVzIG51bWJlciAtIGZvciBleGFt
-cGxlLCBiZWluZyBhYmxlIHRvIHJlZmVyIHRvIHRoZW0gdXNpbmcgYSBmaXhlZA0KPiA+PiBwcm9w
-ZXJ0eSBsaWtlIHRoZSBwaHlzaWNhbCBhZGRyZXNzLiAgQmVpbmcgYWJsZSB0byByZWZlciB0byBk
-ZXZpY2VzDQo+ID4+IHZpYSBhbiBhbGlhcyBhc3NpZ25lZCBpbiB0aGUgRFQgd291bGQgYWxzbyBi
-ZSB1c2VmdWwgKGFuZCBtb3JlDQo+ID4+IHJlYWRhYmxlKSwgSSB0aGluayB0aGVyZSBtYXkgYWxy
-ZWFkeSBiZSBhIG1lY2hhbmlzbSBmb3IgZG9pbmcgdGhhdA0KPiA+PiB3aGljaCB3b3VsZCBuZWVk
-IHRvIGJlIHBsdW1iZWQgaW4gYnV0IEknbSBub3QgMTAwJSBzdXJlLg0KPiA+DQo+ID4gVGhlIGJ1
-cyBudW1iZXIgaXMgdGhlIHZhcmlhYmxlIGRlc2lnbmVkIHRvIGRpc3Rpbmd1aXNoIG9uZSBzcGkN
-Cj4gPiBjb250cm9sbGVyIGZyb20gb3RoZXJzLiBXaHkgc3BpIGNvbnRyb2xsZXIncyBwaHlzaWNh
-bCBhZGRyZXNzIG11c3QgYmUNCj4gPiB1c2UgaW5zdGVhZCBvZiBidXMgbnVtYmVyPw0KPiANCj4g
-QmVjYXVzZSB0aGUgYnVzIG51bWJlciBpcyBkeW5hbWljLCB3aGlsZSB0aGUgcGh5c2ljYWwgYWRk
-cmVzcyBkb2Vzbid0DQo+IGNoYW5nZSwgc28gaXQgY2FuIGJlIHVzZWQgdG8gdW5pcWVseSBpZGVu
-dGlmeSB0aGUgZGV2aWNlIGJlZm9yZSBib290aW5nDQo+IHRoZSBrZXJuZWwuDQo+IENmci4gInNw
-aTEiIHZzLiAiZTZlMjAwMDAuc3BpIi4NCj4gDQoNClRoZSBwcmVjb25kaXRpb24gb2YgZHluYW1p
-YyBidXMgbnVtYmVyIGlzIGluaXRpYWwgaXQgd2l0aCAtMSBpbiB0aGUgY29udHJvbGxlcg0KZHJp
-dmVyLiBCdXQgbm93IEkgbmVlZCBhIHJlYXNvbmFibGUgYnVzIG51bWJlciwgSSBkb24ndCB3YW50
-IGEgZHluYW1pYyBvbmUuDQpXaHkgZG9lcyB1c2UgdGhlIGNvbnRyb2xsZXIncyBwaHlzaWNhbCBh
-ZGRyZXNzIHRvIHRha2UgdGhlIHJvbGUgb2YgYnVzIG51bWJlcg0KdG8gZGlzdGluZ3Vpc2ggY29u
-dHJvbGxlcnMuIA0KDQo+IEdye29ldGplLGVldGluZ31zLA0KPiANCj4gICAgICAgICAgICAgICAg
-ICAgICAgICAgR2VlcnQNCj4gDQo+IC0tDQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdz
-IGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGludXgtDQo+IG02OGsub3JnDQo+
-IA0KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBj
-YWxsIG15c2VsZiBhIGhhY2tlci4NCj4gQnV0IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlz
-dHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nDQo+IGxpa2UgdGhhdC4NCj4g
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0KPiANCg0K
+Am 18.03.2014 09:37, schrieb Sekhar Nori:
+
+> It is safe - at the least it does not break anything that is already
+> working. I guess the decision to put it into -rc depends on whether you
+> consider out of tree dtbs to be a valid usecase for the kernel.
+
+That's all DT is about, getting rid of the necessity for in-tree 
+hw-descriptions. ;)
+
+But I don't need any rush here, I'm just unable to understand why the 
+-rc phase isn't used for bug fixing as I believe that's what this phase 
+is for.
+
+Most people are unable to track the various -next trees, therefor many 
+failures only come up when stuff reaches mainline where it might be 
+tested by some more people. And if all bugs found in the -rc phase are 
+fixed in -next only, the -rc phase would be useless.
+
+And it just happened to me too often, that even silly bugfixes (like 
+oneliners) needed between 5 and 9 months to reach a stable kernel and 
+thus users.
+
+Regards,
+
+Alexander Holler
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
