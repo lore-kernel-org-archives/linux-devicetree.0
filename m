@@ -1,168 +1,68 @@
-From: Josh Wu <josh.wu@atmel.com>
-Subject: [PATCH 3/3] [media] atmel-isi: add primary DT support
-Date: Tue, 18 Mar 2014 19:19:54 +0800
-Message-ID: <1395141594-6065-1-git-send-email-josh.wu@atmel.com>
-References: <1395141238-5948-1-git-send-email-josh.wu@atmel.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH RFC v5 1/3] Documentation: devicetree: psci: define CPU
+ suspend parameter
+Date: Tue, 18 Mar 2014 11:28:50 +0000
+Message-ID: <1395142132-20788-2-git-send-email-lorenzo.pieralisi@arm.com>
+References: <1395142132-20788-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1395141238-5948-1-git-send-email-josh.wu@atmel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: g.liakhovetski@gmx.de
-Cc: linux-media@vger.kernel.org, m.chehab@samsung.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, grant.likely@linaro.org, galak@codeaurora.org, rob@landley.net, mark.rutland@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, pawel.moll@arm.com, devicetree@vger.kernel.org, Josh Wu <josh.wu@atmel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1395142132-20788-1-git-send-email-lorenzo.pieralisi@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Mark Hambleton <mark.hambleton@broadcom.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Sebastian Capella <sebastian.capella@linaro.org>, Nicolas Pitre <nico@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Martin <dave.martin@arm.com>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Kevin Hilman <khilman@linaro.org>, linux-pm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen Boyd <sboyd@codeaurora.org>, Amit Kucheria <amit.kucheria@linaro.org>Mark
 List-Id: devicetree@vger.kernel.org
 
-This patch add the DT support for Atmel ISI driver.
-It use the same v4l2 DT interface that defined in video-interfaces.txt.
+OS layers built on top of PSCI to enter low-power states require the
+power_state parameter to be passed to the PSCI CPU suspend method.
 
-Signed-off-by: Josh Wu <josh.wu@atmel.com>
-Cc: devicetree@vger.kernel.org
+This parameter is specific to a power state and platform specific,
+therefore must be provided by firmware to the OS in order to enable
+proper call sequence.
+
+This patch adds a property in the PSCI bindings that describes how
+the CPU suspend power_state parameter should be defined in DT in
+all device nodes that rely on PSCI CPU suspend method usage.
+
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 ---
- .../devicetree/bindings/media/atmel-isi.txt        |   51 ++++++++++++++++++++
- drivers/media/platform/soc_camera/atmel-isi.c      |   33 ++++++++++++-
- 2 files changed, 82 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/atmel-isi.txt
+ Documentation/devicetree/bindings/arm/psci.txt | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/atmel-isi.txt b/Documentation/devicetree/bindings/media/atmel-isi.txt
-new file mode 100644
-index 0000000..07f00eb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/atmel-isi.txt
-@@ -0,0 +1,51 @@
-+Atmel Image Sensor Interface (ISI) SoC Camera Subsystem
-+----------------------------------------------
-+
-+Required properties:
-+- compatible: must be "atmel,at91sam9g45-isi"
-+- reg: physical base address and length of the registers set for the device;
-+- interrupts: should contain IRQ line for the ISI;
-+- clocks: list of clock specifiers, corresponding to entries in
-+          the clock-names property;
-+- clock-names: must contain "isi_clk", which is the isi peripherial clock.
-+               "isi_mck" is optinal, it is the master clock output to sensor.
-+
-+Optional properties:
-+- atmel,isi-disable-preview: a boolean property to disable the preview channel;
-+
-+Example:
-+	isi: isi@f0034000 {
-+		compatible = "atmel,at91sam9g45-isi";
-+		reg = <0xf0034000 0x4000>;
-+		interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
-+
-+		clocks = <&isi_clk>, <&pck1>;
-+		clock-names = "isi_clk", "isi_mck";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_isi &pinctrl_pck1_as_isi_mck>;
-+
-+		port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			isi_0: endpoint {
-+				remote-endpoint = <&ov2640_0>;
-+			};
-+		};
-+	};
-+
-+	i2c1: i2c@f0018000 {
-+		ov2640: camera@0x30 {
-+			compatible = "omnivision,ov2640";
-+			reg = <0x30>;
-+
-+			port {
-+				ov2640_0: endpoint {
-+					remote-endpoint = <&isi_0>;
-+					bus-width = <8>;
-+				};
-+			};
-+		};
-+	};
-+
-diff --git a/drivers/media/platform/soc_camera/atmel-isi.c b/drivers/media/platform/soc_camera/atmel-isi.c
-index 93bf1cb..1822129 100644
---- a/drivers/media/platform/soc_camera/atmel-isi.c
-+++ b/drivers/media/platform/soc_camera/atmel-isi.c
-@@ -19,6 +19,7 @@
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
+diff --git a/Documentation/devicetree/bindings/arm/psci.txt b/Documentation/devicetree/bindings/arm/psci.txt
+index 433afe9..797c48f 100644
+--- a/Documentation/devicetree/bindings/arm/psci.txt
++++ b/Documentation/devicetree/bindings/arm/psci.txt
+@@ -42,6 +42,14 @@ Main node optional properties:
  
-@@ -33,6 +34,7 @@
- #define VID_LIMIT_BYTES			(16 * 1024 * 1024)
- #define MIN_FRAME_RATE			15
- #define FRAME_INTERVAL_MILLI_SEC	(1000 / MIN_FRAME_RATE)
-+#define ISI_DEFAULT_MCLK_FREQ		25000000
+  - migrate       : Function ID for MIGRATE operation
  
- /* Frame buffer descriptor */
- struct fbd {
-@@ -878,6 +880,22 @@ static int atmel_isi_remove(struct platform_device *pdev)
- 	return 0;
- }
++Device tree nodes that require usage of PSCI CPU_SUSPEND function (ie idle
++states bindings[1]) must specify the following properties:
++
++- entry-method-param
++		Usage: Required for idle states bindings [1].
++		Value type: <u32>
++		Definition: power_state parameter to pass to the PSCI
++			    suspend call.
  
-+static int atmel_isi_probe_dt(struct atmel_isi *isi,
-+			struct platform_device *pdev)
-+{
-+	struct device_node *node = pdev->dev.of_node;
-+
-+	isi->pdata.full_mode = !of_property_read_bool(node,
-+			"atmel,isi-disable-preview");
-+
-+	/* Default settings for ISI */
-+	isi->pdata.mck_hz = ISI_DEFAULT_MCLK_FREQ;
-+	isi->pdata.frate = ISI_CFG1_FRATE_CAPTURE_ALL;
-+	isi->pdata.data_width_flags = ISI_DATAWIDTH_8 | ISI_DATAWIDTH_10;
-+
-+	return 0;
-+}
-+
- static int atmel_isi_probe(struct platform_device *pdev)
- {
- 	unsigned int irq;
-@@ -889,7 +907,7 @@ static int atmel_isi_probe(struct platform_device *pdev)
- 	struct isi_platform_data *pdata;
+ Example:
  
- 	pdata = dev->platform_data;
--	if (!pdata || !pdata->data_width_flags) {
-+	if ((!pdata || !pdata->data_width_flags) && !pdev->dev.of_node) {
- 		dev_err(&pdev->dev,
- 			"No config available for Atmel ISI\n");
- 		return -EINVAL;
-@@ -905,7 +923,11 @@ static int atmel_isi_probe(struct platform_device *pdev)
- 	if (IS_ERR(isi->pclk))
- 		return PTR_ERR(isi->pclk);
- 
--	memcpy(&isi->pdata, pdata, sizeof(struct isi_platform_data));
-+	if (pdata)
-+		memcpy(&isi->pdata, pdata, sizeof(struct isi_platform_data));
-+	else	/* dt probe */
-+		atmel_isi_probe_dt(isi, pdev);
+@@ -53,3 +61,6 @@ Example:
+ 		cpu_on		= <0x95c10002>;
+ 		migrate		= <0x95c10003>;
+ 	};
 +
- 	isi->active = NULL;
- 	spin_lock_init(&isi->lock);
- 	INIT_LIST_HEAD(&isi->video_buffer_list);
-@@ -1007,11 +1029,18 @@ err_alloc_ctx:
- 	return ret;
- }
- 
-+static const struct of_device_id atmel_isi_of_match[] = {
-+	{ .compatible = "atmel,at91sam9g45-isi" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, atmel_isi_of_match);
-+
- static struct platform_driver atmel_isi_driver = {
- 	.remove		= atmel_isi_remove,
- 	.driver		= {
- 		.name = "atmel_isi",
- 		.owner = THIS_MODULE,
-+		.of_match_table = atmel_isi_of_match,
- 	},
- };
- 
++[1] Kernel documentation - ARM idle states bindings
++    Documentation/devicetree/bindings/arm/idle-states.txt
 -- 
-1.7.9.5
+1.8.4
