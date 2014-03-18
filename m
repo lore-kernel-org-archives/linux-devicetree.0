@@ -1,7 +1,7 @@
 From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH v3 3/7] OF: DT-Overlay configfs interface
-Date: Tue, 18 Mar 2014 23:56:02 +0200
-Message-ID: <1395179766-31575-4-git-send-email-pantelis.antoniou@konsulko.com>
+Subject: [PATCH v3 6/7] OF: spi: Add overlay bus handler
+Date: Tue, 18 Mar 2014 23:56:05 +0200
+Message-ID: <1395179766-31575-7-git-send-email-pantelis.antoniou@konsulko.com>
 References: <1395179766-31575-1-git-send-email-pantelis.antoniou@konsulko.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1395179766-31575-1-git-send-email-pantelis.antoniou@konsulko.com>
@@ -10,341 +10,400 @@ To: Grant Likely <grant.likely@secretlab.ca>
 Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a runtime interface to using configfs for generic device tree overlay
-usage.
-
-A device-tree configfs entry is created in /config/device-tree/overlays
-
-To create an overlay you mkdir the directory and then echo the overlay
-firmware file to the path property file.
-
-	# mkdir /config/device-tree/overlays/foo
-	# echo foo.dtbo >/config/device-tree/overlays/foo/path
-
-The overlay file will be loaded using the standard firmware loader
-and will be applied.
-
-To remove it simply rmdir the directory.
-
-	# rmdir /config/device-tree/overlays/foo
+Add the bus handler registration needed for performing overlays
+containing spi devices.
 
 Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 ---
- drivers/of/Kconfig    |   5 +
- drivers/of/Makefile   |   1 +
- drivers/of/configfs.c | 272 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 278 insertions(+)
- create mode 100644 drivers/of/configfs.c
+ drivers/spi/spi.c | 345 ++++++++++++++++++++++++++++++++++++++----------------
+ 1 file changed, 242 insertions(+), 103 deletions(-)
 
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index 7517be2..fc0e3ec 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -77,6 +77,10 @@ config OF_RESERVED_MEM
- 	help
- 	  Helpers to allow for reservation of memory regions
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index d0b28bb..2d7037b 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -993,6 +993,123 @@ err_init_queue:
+ /*-------------------------------------------------------------------------*/
  
-+config OF_CONFIGFS
-+	select CONFIGFS_FS
-+	def_bool n
+ #if defined(CONFIG_OF)
 +
- config OF_RESOLVE
- 	bool "OF Dynamic resolution support"
- 	depends on OF
-@@ -92,6 +96,7 @@ config OF_OVERLAY
- 	select OF_DYNAMIC
- 	select OF_DEVICE
- 	select OF_RESOLVE
-+	select OF_CONFIGFS
- 	help
- 	  OpenFirmware overlay support. Allows you to modify on runtime the
- 	  live tree using overlays.
-diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-index d2a6e0d..4efa17b 100644
---- a/drivers/of/Makefile
-+++ b/drivers/of/Makefile
-@@ -12,3 +12,4 @@ obj-$(CONFIG_OF_MTD)	+= of_mtd.o
- obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
- obj-$(CONFIG_OF_RESOLVE)  += resolver.o
- obj-$(CONFIG_OF_OVERLAY) += overlay.o
-+obj-$(CONFIG_OF_CONFIGFS) += configfs.o
-diff --git a/drivers/of/configfs.c b/drivers/of/configfs.c
-new file mode 100644
-index 0000000..a494643
---- /dev/null
-+++ b/drivers/of/configfs.c
-@@ -0,0 +1,272 @@
-+/*
-+ * Configfs entries for device-tree
-+ *
-+ * Copyright (C) 2013 - Pantelis Antoniou <panto@antoniou-consulting.com>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version
-+ * 2 of the License, or (at your option) any later version.
-+ */
-+#include <linux/ctype.h>
-+#include <linux/cpu.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_fdt.h>
-+#include <linux/spinlock.h>
-+#include <linux/slab.h>
-+#include <linux/proc_fs.h>
-+#include <linux/configfs.h>
-+#include <linux/types.h>
-+#include <linux/stat.h>
-+#include <linux/limits.h>
-+#include <linux/file.h>
-+#include <linux/vmalloc.h>
-+#include <linux/firmware.h>
-+
-+#include "of_private.h"
-+
-+#ifdef CONFIG_OF_OVERLAY
-+
-+struct cfs_overlay_item {
-+	struct config_item 	item;
-+
-+	char			path[PATH_MAX];
-+
-+	const struct firmware	*fw;
-+	struct device_node	*overlay;
-+	int			ovinfo_cnt;
-+	struct of_overlay_info	*ovinfo;
-+	unsigned int		applied : 1;
-+};
-+
-+static inline struct cfs_overlay_item *to_cfs_overlay_item(struct config_item *item)
++static struct spi_device *
++of_register_spi_device(struct spi_master *master, struct device_node *node)
 +{
-+	return item ? container_of(item, struct cfs_overlay_item, item) : NULL;
-+}
-+
-+CONFIGFS_ATTR_STRUCT(cfs_overlay_item);
-+#define CFS_OVERLAY_ITEM_ATTR(_name, _mode, _show, _store)	\
-+struct cfs_overlay_item_attribute cfs_overlay_item_attr_##_name = \
-+	__CONFIGFS_ATTR(_name, _mode, _show, _store)
-+#define CFS_OVERLAY_ITEM_ATTR_RO(_name, _show)	\
-+struct cfs_overlay_item_attribute cfs_overlay_item_attr_##_name = \
-+	__CONFIGFS_ATTR_RO(_name, _show)
-+
-+static ssize_t cfs_overlay_item_path_show(struct cfs_overlay_item *overlay,
-+		char *page)
-+{
-+	return sprintf(page, "%s\n", overlay->path);
-+}
-+
-+static ssize_t cfs_overlay_item_path_store(struct cfs_overlay_item *overlay,
-+		const char *page, size_t count)
-+{
-+	const char *p = page;
-+	char *s;
++	struct spi_device *spi;
++	struct device_node *nc;
 +	int err;
++	u32 value;
 +
-+	/* if it's set do not allow changes */
-+	if (overlay->path[0] != '\0')
-+		return -EPERM;
-+
-+	/* copy to path buffer (and make sure it's always zero terminated */
-+	count = snprintf(overlay->path, sizeof(overlay->path) - 1, "%s", p);
-+	overlay->path[sizeof(overlay->path) - 1] = '\0';
-+
-+	/* strip trailing newlines */
-+	s = overlay->path + strlen(overlay->path);
-+	while (s > overlay->path && *--s == '\n')
-+		*s = '\0';
-+
-+	pr_debug("%s: path is '%s'\n", __func__, overlay->path);
-+
-+	err = request_firmware(&overlay->fw, overlay->path, NULL);
-+	if (err != 0)
-+		goto out_err;
-+
-+	/* unflatten the tree */
-+	of_fdt_unflatten_tree((void *)overlay->fw->data, &overlay->overlay);
-+	if (overlay->overlay == NULL) {
-+		pr_err("%s: failed to unflatten tree\n", __func__);
-+		err = -EINVAL;
-+		goto out_err;
-+	}
-+	pr_debug("%s: unflattened OK\n", __func__);
-+
-+	/* mark it as detached */
-+	of_node_set_flag(overlay->overlay, OF_DETACHED);
-+
-+	/* perform resolution */
-+	err = of_resolve(overlay->overlay);
-+	if (err != 0) {
-+		pr_err("%s: Failed to resolve tree\n", __func__);
-+		goto out_err;
-+	}
-+	pr_debug("%s: resolved OK\n", __func__);
-+
-+	/* now build an overlay info array */
-+	err = of_build_overlay_info(overlay->overlay,
-+			&overlay->ovinfo_cnt, &overlay->ovinfo);
-+	if (err != 0) {
-+		pr_err("%s: Failed to build overlay info\n", __func__);
-+		goto out_err;
++	/* Alloc an spi_device */
++	spi = spi_alloc_device(master);
++	if (!spi) {
++		dev_err(&master->dev, "spi_device alloc error for %s\n",
++			nc->full_name);
++		err = -ENOMEM;
++		goto err_out;
 +	}
 +
-+	pr_debug("%s: built %d overlay segments\n", __func__,
-+			overlay->ovinfo_cnt);
-+
-+	err = of_overlay(overlay->ovinfo_cnt, overlay->ovinfo);
-+	if (err != 0) {
-+		pr_err("%s: Failed to apply overlay\n", __func__);
-+		goto out_err;
++	/* Select device driver */
++	err = of_modalias_node(nc, spi->modalias,
++				sizeof(spi->modalias));
++	if (err) {
++		dev_err(&master->dev, "cannot find modalias for %s\n",
++			nc->full_name);
++		goto err_out;
 +	}
 +
-+	overlay->applied = 1;
++	/* Device address */
++	err = of_property_read_u32(nc, "reg", &value);
++	if (err) {
++		dev_err(&master->dev, "%s has no valid 'reg' property (%d)\n",
++			nc->full_name, err);
++		goto err_out;
++	}
++	spi->chip_select = value;
 +
-+	pr_debug("%s: Applied #%d overlay segments\n", __func__,
-+			overlay->ovinfo_cnt);
++	/* Mode (clock phase/polarity/etc.) */
++	if (of_find_property(nc, "spi-cpha", NULL))
++		spi->mode |= SPI_CPHA;
++	if (of_find_property(nc, "spi-cpol", NULL))
++		spi->mode |= SPI_CPOL;
++	if (of_find_property(nc, "spi-cs-high", NULL))
++		spi->mode |= SPI_CS_HIGH;
++	if (of_find_property(nc, "spi-3wire", NULL))
++		spi->mode |= SPI_3WIRE;
 +
-+	return count;
++	/* Device DUAL/QUAD mode */
++	if (!of_property_read_u32(nc, "spi-tx-bus-width", &value)) {
++		switch (value) {
++		case 1:
++			break;
++		case 2:
++			spi->mode |= SPI_TX_DUAL;
++			break;
++		case 4:
++			spi->mode |= SPI_TX_QUAD;
++			break;
++		default:
++			dev_err(&master->dev,
++				"spi-tx-bus-width %d not supported\n",
++				value);
++			err = -EINVAL;
++			goto err_out;
++		}
++	}
 +
-+out_err:
-+	if (overlay->applied)
-+		of_overlay_revert(overlay->ovinfo_cnt, overlay->ovinfo);
-+	overlay->applied = 0;
++	if (!of_property_read_u32(nc, "spi-rx-bus-width", &value)) {
++		switch (value) {
++		case 1:
++			break;
++		case 2:
++			spi->mode |= SPI_RX_DUAL;
++			break;
++		case 4:
++			spi->mode |= SPI_RX_QUAD;
++			break;
++		default:
++			dev_err(&master->dev,
++				"spi-rx-bus-width %d not supported\n",
++				value);
++			err = -EINVAL;
++			goto err_out;
++		}
++	}
 +
-+	if (overlay->ovinfo)
-+		of_free_overlay_info(overlay->ovinfo_cnt, overlay->ovinfo);
-+	overlay->ovinfo = NULL;
-+	overlay->ovinfo_cnt = 0;
++	/* Device speed */
++	err = of_property_read_u32(nc, "spi-max-frequency", &value);
++	if (err) {
++		dev_err(&master->dev, "%s has no valid 'spi-max-frequency' property (%d)\n",
++			nc->full_name, err);
++		goto err_out;
++	}
++	spi->max_speed_hz = value;
 +
-+	release_firmware(overlay->fw);
-+	overlay->fw = NULL;
++	/* IRQ */
++	spi->irq = irq_of_parse_and_map(nc, 0);
 +
-+	overlay->path[0] = '\0';
-+	return err;
++	/* Store a pointer to the node in the device structure */
++	of_node_get(nc);
++	spi->dev.of_node = nc;
++
++	/* Register the new device */
++	request_module("%s%s", SPI_MODULE_PREFIX, spi->modalias);
++	err = spi_add_device(spi);
++	if (err) {
++		dev_err(&master->dev, "spi_device register error %s\n",
++			nc->full_name);
++		goto err_out;
++	}
++
++	return spi;
++
++err_out:
++	spi_dev_put(spi);
++	return ERR_PTR(err);
 +}
 +
-+static ssize_t cfs_overlay_item_status_show(struct cfs_overlay_item *overlay,
-+		char *page)
+ /**
+  * of_register_spi_devices() - Register child devices onto the SPI bus
+  * @master:	Pointer to spi_master device
+@@ -1002,124 +1119,140 @@ err_init_queue:
+  */
+ static void of_register_spi_devices(struct spi_master *master)
+ {
+-	struct spi_device *spi;
+ 	struct device_node *nc;
+-	int rc;
+-	u32 value;
+ 
+ 	if (!master->dev.of_node)
+ 		return;
+ 
+-	for_each_available_child_of_node(master->dev.of_node, nc) {
+-		/* Alloc an spi_device */
+-		spi = spi_alloc_device(master);
+-		if (!spi) {
+-			dev_err(&master->dev, "spi_device alloc error for %s\n",
+-				nc->full_name);
+-			spi_dev_put(spi);
+-			continue;
+-		}
++	for_each_available_child_of_node(master->dev.of_node, nc)
++		of_register_spi_device(master, nc);
++}
+ 
+-		/* Select device driver */
+-		if (of_modalias_node(nc, spi->modalias,
+-				     sizeof(spi->modalias)) < 0) {
+-			dev_err(&master->dev, "cannot find modalias for %s\n",
+-				nc->full_name);
+-			spi_dev_put(spi);
+-			continue;
+-		}
++static int of_dev_node_match(struct device *dev, void *data)
 +{
-+	return sprintf(page, "%s\n",
-+			overlay->applied ? "applied" : "unapplied");
++	return dev->of_node == data;
 +}
-+
-+CFS_OVERLAY_ITEM_ATTR(path, S_IRUGO | S_IWUSR, \
-+		cfs_overlay_item_path_show, cfs_overlay_item_path_store);
-+CFS_OVERLAY_ITEM_ATTR_RO(status, cfs_overlay_item_status_show);
-+
-+static struct configfs_attribute *cfs_overlay_attrs[] = {
-+	&cfs_overlay_item_attr_path.attr,
-+	&cfs_overlay_item_attr_status.attr,
-+	NULL,
-+};
-+
-+static void cfs_overlay_release(struct config_item *item)
+ 
+-		/* Device address */
+-		rc = of_property_read_u32(nc, "reg", &value);
+-		if (rc) {
+-			dev_err(&master->dev, "%s has no valid 'reg' property (%d)\n",
+-				nc->full_name, rc);
+-			spi_dev_put(spi);
+-			continue;
+-		}
+-		spi->chip_select = value;
+-
+-		/* Mode (clock phase/polarity/etc.) */
+-		if (of_find_property(nc, "spi-cpha", NULL))
+-			spi->mode |= SPI_CPHA;
+-		if (of_find_property(nc, "spi-cpol", NULL))
+-			spi->mode |= SPI_CPOL;
+-		if (of_find_property(nc, "spi-cs-high", NULL))
+-			spi->mode |= SPI_CS_HIGH;
+-		if (of_find_property(nc, "spi-3wire", NULL))
+-			spi->mode |= SPI_3WIRE;
+-
+-		/* Device DUAL/QUAD mode */
+-		if (!of_property_read_u32(nc, "spi-tx-bus-width", &value)) {
+-			switch (value) {
+-			case 1:
+-				break;
+-			case 2:
+-				spi->mode |= SPI_TX_DUAL;
+-				break;
+-			case 4:
+-				spi->mode |= SPI_TX_QUAD;
+-				break;
+-			default:
+-				dev_err(&master->dev,
+-					"spi-tx-bus-width %d not supported\n",
+-					value);
+-				spi_dev_put(spi);
+-				continue;
+-			}
+-		}
++/* bah; the match functions differ just by const-ness */
++static int of_dev_node_match_const(struct device *dev, const void *data)
 +{
-+	struct cfs_overlay_item *overlay = to_cfs_overlay_item(item);
-+
-+	if (overlay->applied)
-+		of_overlay_revert(overlay->ovinfo_cnt, overlay->ovinfo);
-+	if (overlay->ovinfo)
-+		of_free_overlay_info(overlay->ovinfo_cnt, overlay->ovinfo);
-+	if (overlay->fw)
-+		release_firmware(overlay->fw);
-+	kfree(overlay);
++	return dev->of_node == data;
 +}
-+
-+CONFIGFS_ATTR_OPS(cfs_overlay_item);
-+static struct configfs_item_operations cfs_overlay_item_ops = {
-+	.release		= cfs_overlay_release,
-+	.show_attribute		= cfs_overlay_item_attr_show,
-+	.store_attribute	= cfs_overlay_item_attr_store,
-+};
-+
-+static struct config_item_type cfs_overlay_type = {
-+	.ct_item_ops	= &cfs_overlay_item_ops,
-+	.ct_attrs	= cfs_overlay_attrs,
-+	.ct_owner	= THIS_MODULE,
-+};
-+
-+static struct config_item *cfs_overlay_group_make_item(struct config_group *group, const char *name)
+ 
+-		if (!of_property_read_u32(nc, "spi-rx-bus-width", &value)) {
+-			switch (value) {
+-			case 1:
+-				break;
+-			case 2:
+-				spi->mode |= SPI_RX_DUAL;
+-				break;
+-			case 4:
+-				spi->mode |= SPI_RX_QUAD;
+-				break;
+-			default:
+-				dev_err(&master->dev,
+-					"spi-rx-bus-width %d not supported\n",
+-					value);
+-				spi_dev_put(spi);
+-				continue;
+-			}
+-		}
++/* must call put_device() when done with returned spi_device device */
++struct spi_device *of_find_spi_device_by_node(struct device_node *node)
 +{
-+	struct cfs_overlay_item *overlay;
++	struct device *dev;
+ 
+-		/* Device speed */
+-		rc = of_property_read_u32(nc, "spi-max-frequency", &value);
+-		if (rc) {
+-			dev_err(&master->dev, "%s has no valid 'spi-max-frequency' property (%d)\n",
+-				nc->full_name, rc);
+-			spi_dev_put(spi);
+-			continue;
+-		}
+-		spi->max_speed_hz = value;
+-
+-		/* IRQ */
+-		spi->irq = irq_of_parse_and_map(nc, 0);
+-
+-		/* Store a pointer to the node in the device structure */
+-		of_node_get(nc);
+-		spi->dev.of_node = nc;
+-
+-		/* Register the new device */
+-		request_module("%s%s", SPI_MODULE_PREFIX, spi->modalias);
+-		rc = spi_add_device(spi);
+-		if (rc) {
+-			dev_err(&master->dev, "spi_device register error %s\n",
+-				nc->full_name);
+-			spi_dev_put(spi);
+-		}
++	dev = bus_find_device(&spi_bus_type, NULL, node,
++					 of_dev_node_match);
++	if (!dev)
++		return NULL;
 +
-+	overlay = kzalloc(sizeof(*overlay), GFP_KERNEL);
-+	if (!overlay)
-+		return ERR_PTR(-ENOMEM);
-+
-+	config_item_init_type_name(&overlay->item, name, &cfs_overlay_type);
-+	return &overlay->item;
++	return to_spi_device(dev);
 +}
++EXPORT_SYMBOL(of_find_spi_device_by_node);
+ 
++/* forward decl */
++static struct class spi_master_class;
 +
-+static void cfs_overlay_group_drop_item(struct config_group *group, struct config_item *item)
++/* the spi masters are not using spi_bus, so we have to find it some other way */
++struct spi_master *of_find_spi_master_by_node(struct device_node *node)
 +{
-+	struct cfs_overlay_item *overlay = to_cfs_overlay_item(item);
++	struct device *dev;
 +
-+	config_item_put(&overlay->item);
++	dev = class_find_device(&spi_master_class, NULL, node,
++				of_dev_node_match_const);
++	if (!dev)
++		return NULL;
++
++	/* reference got in class_find_device */
++	return container_of(dev, struct spi_master, dev);
 +}
++EXPORT_SYMBOL(of_find_spi_master_by_node);
 +
-+static struct configfs_group_operations overlays_ops = {
-+	.make_item	= cfs_overlay_group_make_item,
-+	.drop_item	= cfs_overlay_group_drop_item,
-+};
-+
-+static struct config_item_type overlays_type = {
-+	.ct_group_ops   = &overlays_ops,
-+	.ct_owner       = THIS_MODULE,
-+};
-+
-+#endif /* CONFIG_OF_OVERLAY */
-+
-+static struct configfs_group_operations of_cfs_ops = {
-+	/* empty - we don't allow anything to be created */
-+};
-+
-+static struct config_item_type of_cfs_type = {
-+	.ct_group_ops   = &of_cfs_ops,
-+	.ct_owner       = THIS_MODULE,
-+};
-+
-+struct config_group of_cfs_overlay_group;
-+
-+struct config_group *of_cfs_def_groups[] = {
 +#ifdef CONFIG_OF_OVERLAY
-+	&of_cfs_overlay_group,
-+#endif
-+	NULL
-+};
-+
-+static struct configfs_subsystem of_cfs_subsys = {
-+	.su_group = {
-+		.cg_item = {
-+			.ci_namebuf = "device-tree",
-+			.ci_type = &of_cfs_type,
-+		},
-+		.default_groups = of_cfs_def_groups,
-+	},
-+	.su_mutex = __MUTEX_INITIALIZER(of_cfs_subsys.su_mutex),
-+};
-+
-+static int __init of_cfs_init(void)
++static int spi_handler_create(struct of_overlay_device_entry *de,
++		int revert)
 +{
-+	int ret;
++	struct device_node *dn;
++	struct spi_master *master;
++	struct spi_device *spi;
 +
-+	pr_info("%s\n", __func__);
++	if (!de || !de->np)
++		return -ENOTSUPP;
 +
-+	config_group_init(&of_cfs_subsys.su_group);
-+#ifdef CONFIG_OF_OVERLAY
-+	config_group_init_type_name(&of_cfs_overlay_group, "overlays", &overlays_type);
++	dn = de->np;
++
++	master = of_find_spi_master_by_node(dn->parent);
++	if (master == NULL)
++		return -ENOTSUPP;
++
++	spi = of_register_spi_device(master, dn);
++	put_device(&master->dev);
++
++	if (spi == NULL) {
++		pr_err("%s: failed to create spi device "
++				"for '%s'\n",
++				__func__, dn->full_name);
++		/* of_register_spi_device tosses the real error code */
++		return -EINVAL;
+ 	}
++
++	return 0;
+ }
++
++static int spi_handler_remove(struct of_overlay_device_entry *de,
++		int revert)
++{
++	struct device_node *dn;
++	struct spi_device *spi;
++
++	if (!de || !de->np)
++		return -ENOTSUPP;
++
++	dn = de->np;
++
++	spi = of_find_spi_device_by_node(dn);
++	if (spi == NULL)
++		return -ENOTSUPP;
++
++	/* unregister takes one ref away */
++	spi_unregister_device(spi);
++
++	/* and put the reference of the find */
++	put_device(&spi->dev);
++
++	return 0;
++}
++
++static const struct of_overlay_handler_ops spi_handler_ops = {
++	.create	= spi_handler_create,
++	.remove = spi_handler_remove,
++};
++
++static struct of_overlay_handler spi_handler = {
++	.name = "spi",
++	.ops = &spi_handler_ops,
++};
++
++static int __init spi_bus_handler_register(void)
++{
++	return of_overlay_handler_register(&spi_handler);
++}
 +#endif
 +
-+	ret = configfs_register_subsystem(&of_cfs_subsys);
-+	if (ret != 0) {
-+		pr_err("%s: failed to register subsys\n", __func__);
-+		goto out;
-+	}
-+	pr_info("%s: OK\n", __func__);
-+out:
-+	return ret;
+ #else
+ static void of_register_spi_devices(struct spi_master *master) { }
+ #endif
+ 
++#if !defined(CONFIG_OF) || !defined(CONFIG_OF_OVERLAY)
++static inline int spi_bus_handler_register(void)
++{
++	return 0;
 +}
-+late_initcall(of_cfs_init);
++#endif
++
+ #ifdef CONFIG_ACPI
+ static int acpi_spi_add_resource(struct acpi_resource *ares, void *data)
+ {
+@@ -2067,8 +2200,14 @@ static int __init spi_init(void)
+ 	status = class_register(&spi_master_class);
+ 	if (status < 0)
+ 		goto err2;
+-	return 0;
+ 
++	status = spi_bus_handler_register();
++	if (status < 0)
++		goto err3;
++
++	return 0;
++err3:
++	class_unregister(&spi_master_class);
+ err2:
+ 	bus_unregister(&spi_bus_type);
+ err1:
 -- 
 1.7.12
