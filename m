@@ -1,80 +1,55 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: ventana: fix eth1 pci dev node
-Date: Tue, 18 Mar 2014 14:15:19 -0600
-Message-ID: <20140318201519.GA8637@obsidianresearch.com>
-References: <1394747064-4106-1-git-send-email-tharvey@gateworks.com>
- <20140314132805.GD813@S2101-09.ap.freescale.net>
- <CAJ+vNU2Av-n1-efbFbXNvO4SmoobL_WpQKApFRS1Zjy0egLLzw@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2] ASoC: simple-card: overwrite cpu_dai->fmt with
+ codec_dai->fmt
+Date: Tue, 18 Mar 2014 20:18:29 +0000
+Message-ID: <20140318201829.GR11706@sirena.org.uk>
+References: <1394593331-22867-1-git-send-email-Guangyu.Chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="9+r891pQCxLAqAJT"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAJ+vNU2Av-n1-efbFbXNvO4SmoobL_WpQKApFRS1Zjy0egLLzw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1394593331-22867-1-git-send-email-Guangyu.Chen@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Nicolin Chen <Guangyu.Chen@freescale.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, lgirdwood@gmail.com, kuninori.morimoto.gx@renesas.com, jsarha@ti.com, devicetree@vger.kernel.org, Li.Xiubo@freescale.com, moinejf@free.fr, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 18, 2014 at 01:02:55PM -0700, Tim Harvey wrote:
-> > Is this whole bridge/switch hierarchy binding documented somewhere
-> > or is this just something that work for you?
-> 
-> I'm not sure where its 'best' documented, but it is the way the
-> kernel works.
 
-It is documented in the 'PCI Bus Binding to Open Firware'
-publication from IEEE.
+--9+r891pQCxLAqAJT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> >> +             pcie@0,0 {
-> >> +                     /* 01:00.0 PCIe switch */
-> >> +                     #address-cells = <3>;
-> >> +                     #size-cells = <2>;
-> >> +                     device_type = "pci";
-> >> +                     reg = <0x0 0 0 0 0>;
-> >> +
-> >> +                     pcie@8,0 {
-> >
-> > What's the naming schema for all these pcie nodes?  Generally, we should
-> > have the numbers encoded in the node name coming from the address cells
-> > in 'reg' property.
+On Wed, Mar 12, 2014 at 11:02:11AM +0800, Nicolin Chen wrote:
 
-The 'reg' property for PCI encodes the device and function number, and
-the suffix in the device path is of the form @DEVICE,FUNCTION (see
-2.2.1.3 of the spec)
+> The current simple-card driver separates the daimft for cpu_dai and codec_dai.
+> So we might get different values for them (0x4003 and 0x1003 for example):
 
-So device=8, function=0 is @8,0 and reg = 0x4000.
+Since I really want to see some sort of fix in v3.15 that allows
+sensible looking DTs to be written I've gone ahead and applied this.
+I'd expect we'll change it again but this at least lets us only set the
+master flag on one end of the link.
 
-> I was hoping there was a way to reference PCI nodes by BDF values as
-> I'm simply trying to define a marvell,sky2 device at 08:00.0.  I found
-> that the kernel's OF parsing code for PCI requires you to nest the
-> nodes to match the bus hierarchy.  In order to map a dt node to a PCI
-> device, the bus the device is on must have a dt node itself, which is
-> what creates the need for the nesting.  Note that the bus topology
-> here rc -> P2P bridge -> GigE.
+--9+r891pQCxLAqAJT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Right, otherwise the kernel and firmware would have to agree on bus
-numbering. With nesting it only has to agree on the device numbering,
-which is a fixed property of PCI.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-> >> +                             /* 02:08.0 PCIe switch port */
-> >> +                             #address-cells = <3>;
-> >> +                             #size-cells = <2>;
-> >> +                             device_type = "pci";
-> >> +                             reg = <0x4000 0 0 0 0>;
-> >> +                             eth1: pcie@0,0 {
-> >> +                                     /* 08:00.0 GigE */
-> >> +                                     #address-cells = <3>;
-> >> +                                     #size-cells = <2>;
-> >> +                                     device_type = "pci";
-> >> +                                     reg = <0x0 0 0 0 0>;
-> >> +                                     compatible = "marvell,sky2";
-> >> +                             };
+iQIcBAEBAgAGBQJTKKoSAAoJELSic+t+oim9lM0P/jpv+JMyZ5oul2TmwMnK/Hhb
+uGzFyGhPAtrG3HxmSP94k9l+ufMIYD1dyc2Bdi9dpcIetLCqjYmRt0Z07M+hEg+Z
+kgsOte7Yre95AENq1/hLyViRfOwN6j5IOj48z4EbGTAx5wt8m3P45KEKu3jYLCp5
+acQFuQMClMXUvSMfvio1QGpbhYf6PFlcKnqaglrpR0v5gBCv+aWKbZ61CqCy+wCk
+sgcWRUSg7XOMhReSMUsg7K/rJDMpZ0sRI+v2ux8OS/0riYyqWmOK/EcFU/tbVrZz
+KoOKIIdOAlfYD802JDpHMx7wcCn+ZAarUmuS2/K9olfzNpBs9AE7ZHtP3+gbJ3h+
+hDKAw/UXw+pOt3Z/nRuNFh2NqTKRAuZSmcAqJ87trGBCThRQRXIJ/d2tl6rwrJhF
+5Z2jpPnFl7Chb/ftlZDSTZsDjnC206vTnpGj/YjArnEEtTmH7W8AqI5e4dBEeiXM
+sxjkkvJXFP4beIobZzrn6jlMtMk8jf6B+O8TgWmaGIjrq65lNC2ce1g2CA7I/uU1
+i2l+WQZ5Bh2n6D/JraNtaEghRSTXN6l5oiMSaGZXeOtEUri5pAK9w6H9N9fjPJ1e
+L1oJ7YV7IihfblWQRxUnEBF91ATm3WQCIa9wlVrPls3jUSwEtuRx8lWfbed47IH4
+V+OX6req3q9prJ1KcsqH
+=/7wV
+-----END PGP SIGNATURE-----
 
-Don't forget your interrupts and interrupt-map - every DT nodes need
-to describe how its interrupts are routed.
-
-Jason
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--9+r891pQCxLAqAJT--
