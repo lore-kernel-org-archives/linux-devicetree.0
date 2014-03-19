@@ -1,77 +1,159 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] spi/fsl-lib: Get the SPI controller bus number from
- DTS
-Date: Wed, 19 Mar 2014 10:37:28 +0000
-Message-ID: <20140319103728.GX11706@sirena.org.uk>
-References: <1394789757-40732-1-git-send-email-B48286@freescale.com>
- <1394789757-40732-2-git-send-email-B48286@freescale.com>
- <20140314191922.GA366@sirena.org.uk>
- <c4b28b01b2f544ca9d264eaee2542257@DM2PR03MB301.namprd03.prod.outlook.com>
- <20140317130109.GE11706@sirena.org.uk>
- <9186860716f446f9a5773e7e47d39114@DM2PR03MB301.namprd03.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="uR7YiQvNOb/8Y6Dg"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <9186860716f446f9a5773e7e47d39114-ufbTtyGzTTTk7ZsBhlipOOO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: [PATCH v2] Documentation: dt: list all compatible strings for at91
+Date: Wed, 19 Mar 2014 11:59:20 +0100
+Message-ID: <1395226760-11446-1-git-send-email-alexandre.belloni@free-electrons.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh@kernel.org>, Joe Perches <joe@perches.com>, Grant Likely <grant.likely@linaro.org>, Andy Whitcroft <apw@canonical.com>
 List-Id: devicetree@vger.kernel.org
 
+Avoids getting the newly introduced warning:
+WARNING: DT compatible string "atmel,at91sam9g45-adc" appears un-documented -- check ./Documentation/devicetree/bindings/
++				compatible = "atmel,at91sam9g45-adc";
 
---uR7YiQvNOb/8Y6Dg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Introduced by:
+bff5da433525 checkpatch: add DT compatible string documentation checks
 
-On Tue, Mar 18, 2014 at 07:40:28AM +0000, B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
+Cc: Rob Herring <robh@kernel.org>
+Cc: Joe Perches <joe@perches.com>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Andy Whitcroft <apw@canonical.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 
-> > You are adding a property to specify a bus number.  There is no reason
-> > why such a property should be specific to a single controller, every
-> > controller in every system has a bus number assigned to it so if we have
-> > a way to specify one controller via the device tree we should have a way
-> > to specify it for all.
+---
 
-> The reason to specify a bus number to a single controller is to avoid=20
-> allocating one dynamically, so we know the bus number before booting up t=
-he
-> kernel. If there are several controllers, you should add this property to=
- all
-> of them. But it is unnecessary to add this property, if you do not care a=
-bout
-> the bus number, and it will be allocated dynamically.=20
+Changes in v2:
+ - add the devicetree maintainers in copy
+ - acked by Nicolas
 
-Please re-read what I wrote above, you're completely missing the point.
-The problem above is that you are adding this in driver specific code,
-even if this is a good idea there's nothing specific to this device
-about it so we shouldn't be doing it in a driver.
+ Documentation/devicetree/bindings/arm/atmel-aic.txt      |  3 +--
+ Documentation/devicetree/bindings/arm/atmel-at91.txt     | 10 ++++------
+ Documentation/devicetree/bindings/dma/atmel-dma.txt      |  2 +-
+ Documentation/devicetree/bindings/gpio/gpio_atmel.txt    |  2 +-
+ Documentation/devicetree/bindings/iio/adc/at91_adc.txt   |  4 ++--
+ Documentation/devicetree/bindings/serial/atmel-usart.txt | 10 ++++------
+ 6 files changed, 13 insertions(+), 18 deletions(-)
 
---uR7YiQvNOb/8Y6Dg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+diff --git a/Documentation/devicetree/bindings/arm/atmel-aic.txt b/Documentation/devicetree/bindings/arm/atmel-aic.txt
+index 2742e9cfd6b1..95f75fd097ba 100644
+--- a/Documentation/devicetree/bindings/arm/atmel-aic.txt
++++ b/Documentation/devicetree/bindings/arm/atmel-aic.txt
+@@ -1,8 +1,7 @@
+ * Advanced Interrupt Controller (AIC)
+ 
+ Required properties:
+-- compatible: Should be "atmel,<chip>-aic"
+-  <chip> can be "at91rm9200" or "sama5d3"
++- compatible: "atmel,at91rm9200-aic", "atmel,sama5d3-aic"
+ - interrupt-controller: Identifies the node as an interrupt controller.
+ - interrupt-parent: For single AIC system, it is an empty property.
+ - #interrupt-cells: The number of cells to define the interrupts. It should be 3.
+diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+index 16f60b41c147..e79a33315e4f 100644
+--- a/Documentation/devicetree/bindings/arm/atmel-at91.txt
++++ b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+@@ -14,8 +14,7 @@ System Timer (ST) required properties:
+   shared across all System Controller members.
+ 
+ TC/TCLIB Timer required properties:
+-- compatible: Should be "atmel,<chip>-tcb".
+-  <chip> can be "at91rm9200" or "at91sam9x5"
++- compatible: "atmel,at91rm9200-tcb", "atmel,at91sam9x5-tcb"
+ - reg: Should contain registers location and length
+ - interrupts: Should contain all interrupts for the TC block
+   Note that you can specify several interrupt cells if the TC
+@@ -46,8 +45,7 @@ One interrupt per TC channel in a TC block:
+ 	};
+ 
+ RSTC Reset Controller required properties:
+-- compatible: Should be "atmel,<chip>-rstc".
+-  <chip> can be "at91sam9260" or "at91sam9g45"
++- compatible: "atmel,at91sam9260-rstc", "atmel,at91sam9g45-rstc"
+ - reg: Should contain registers location and length
+ 
+ Example:
+@@ -80,8 +78,8 @@ Examples:
+ SHDWC Shutdown Controller
+ 
+ required properties:
+-- compatible: Should be "atmel,<chip>-shdwc".
+-  <chip> can be "at91sam9260", "at91sam9rl" or "at91sam9x5".
++- compatible: "atmel,at91sam9260-shdwc", "atmel,at91sam9rl-shdwc",
++	"atmel,at91sam9x5-shdwc"
+ - reg: Should contain registers location and length
+ 
+ optional properties:
+diff --git a/Documentation/devicetree/bindings/dma/atmel-dma.txt b/Documentation/devicetree/bindings/dma/atmel-dma.txt
+index f69bcf5a6343..410bff989949 100644
+--- a/Documentation/devicetree/bindings/dma/atmel-dma.txt
++++ b/Documentation/devicetree/bindings/dma/atmel-dma.txt
+@@ -1,7 +1,7 @@
+ * Atmel Direct Memory Access Controller (DMA)
+ 
+ Required properties:
+-- compatible: Should be "atmel,<chip>-dma".
++- compatible: "atmel,at91sam9rl-dma", "atmel,at91sam9g45-dma"
+ - reg: Should contain DMA registers location and length.
+ - interrupts: Should contain DMA interrupt.
+ - #dma-cells: Must be <2>, used to represent the number of integer cells in
+diff --git a/Documentation/devicetree/bindings/gpio/gpio_atmel.txt b/Documentation/devicetree/bindings/gpio/gpio_atmel.txt
+index 85f8c0d084fa..1fa10565adcc 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio_atmel.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio_atmel.txt
+@@ -1,7 +1,7 @@
+ * Atmel GPIO controller (PIO)
+ 
+ Required properties:
+-- compatible: "atmel,<chip>-gpio", where <chip> is at91rm9200 or at91sam9x5.
++- compatible: "atmel,at91rm9200-gpio", "atmel,at91rm9x5-gpio"
+ - reg: Should contain GPIO controller registers location and length
+ - interrupts: Should be the port interrupt shared by all the pins.
+ - #gpio-cells: Should be two.  The first cell is the pin number and
+diff --git a/Documentation/devicetree/bindings/iio/adc/at91_adc.txt b/Documentation/devicetree/bindings/iio/adc/at91_adc.txt
+index 82061c7e4fea..ac26cc13dd9f 100644
+--- a/Documentation/devicetree/bindings/iio/adc/at91_adc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/at91_adc.txt
+@@ -1,8 +1,8 @@
+ * AT91's Analog to Digital Converter (ADC)
+ 
+ Required properties:
+-  - compatible: Should be "atmel,<chip>-adc"
+-    <chip> can be "at91sam9260", "at91sam9g45" or "at91sam9x5"
++  - compatible: "atmel,at91sam9260-adc", "atmel,at91sam9rl-adc",
++  		"atmel,at91sam9g45-adc", "atmel,at91sam9x5-adc",
+   - reg: Should contain ADC registers location and length
+   - interrupts: Should contain the IRQ line for the ADC
+   - atmel,adc-channels-used: Bitmask of the channels muxed and enabled for this
+diff --git a/Documentation/devicetree/bindings/serial/atmel-usart.txt b/Documentation/devicetree/bindings/serial/atmel-usart.txt
+index 9c5d19ac935c..ebc5b0cb7669 100644
+--- a/Documentation/devicetree/bindings/serial/atmel-usart.txt
++++ b/Documentation/devicetree/bindings/serial/atmel-usart.txt
+@@ -1,9 +1,7 @@
+ * Atmel Universal Synchronous Asynchronous Receiver/Transmitter (USART)
+ 
+ Required properties:
+-- compatible: Should be "atmel,<chip>-usart"
+-  The compatible <chip> indicated will be the first SoC to support an
+-  additional mode or an USART new feature.
++- compatible: Should be "atmel,at91rm9200-usart", "atmel,at91sam9260-usart",
+ - reg: Should contain registers location and length
+ - interrupts: Should contain interrupt
+ - clock-names: tuple listing input clock names.
+@@ -19,9 +17,9 @@ Optional properties:
+ 		Refer to dma.txt and atmel-dma.txt for details.
+ 	- dma-names: "rx" for RX channel, "tx" for TX channel.
+ 
+-<chip> compatible description:
+-- at91rm9200:  legacy USART support
+-- at91sam9260: generic USART implementation for SAM9 SoCs
++compatible description:
++- atmel,at91rm9200-usart:  legacy USART support
++- atmel,at91sam9260-usart: generic USART implementation for SAM9 SoCs
+ 
+ Example:
+ - use PDC:
+-- 
+1.8.3.2
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTKXNkAAoJELSic+t+oim9cqcQAIEZJ13/8vKnoNlq+4iIi6JI
-4lipNvyaoGdKAeIWVl00ZxFpvKHTlu+ya2r0ijHoUl07MEmdSAxTrOsG5OjaK5zO
-KVJlT6s9SXrutCc4SoC/CK2QY7MRCGjj8V0Kn1+ncRr8lM5jmh2ARo0K7f1VeitP
-aIhUhLxOx6qX81xfAP3pXWRB53X//Uusq7Y5f7S+cRCVuIZFwhKA26vDMmUwHlnG
-f+gLIy76U2eUXwpvO0DZ6r5wgm2Tt9XSafafWXrKfoLqVNvYhda94DO9QDtS6SGX
-wGBwFGtI8l+b3xm5GorTt3Zmc3f7xIh9CCHQOPlEbzTcD2n1fhA/daZWKFm7A+oH
-8PF7pnjYxT29NjraJXAKeXcszcxr3zxudiFkvhzYSanbp1PAOaUWpM0scapWj2zF
-RMUMs9F1du+e8ACyAZgF2e3WZPA69KuEjJqUjqWVgAjYDKrMyxd96Xh9F1+yP42w
-aRL4NOZwwWJTxuJNPs40mP3GonRGBvSliREAi2X+9SNFrsjsBQ7k8QP/epHkpF0y
-8JgOGk3nvoCDI5xzAuQXzP9xmf+/zG6y7iPw3ZIMrcC3sEes5J81rmFiXALzDiKx
-/o4arhxQjFwMDoreyVj3hM7B3PoAT7eHa1WmzUaMtYcZ32PeGiDYIPpGTy2neaHW
-SzpOccsRU7kjL/C7YyMt
-=5Juc
------END PGP SIGNATURE-----
-
---uR7YiQvNOb/8Y6Dg--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
