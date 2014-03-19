@@ -1,58 +1,45 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] ASoC: simple-card: Add DT documentation for
- multi-DAI links
-Date: Wed, 19 Mar 2014 17:07:10 +0100
-Message-ID: <20140319170710.19fc5a1d@armhf>
-References: <cover.1394883134.git.moinejf@free.fr>
-	<d054780a0edf4b2338a52e48bff9144e19aa614f.1394883134.git.moinejf@free.fr>
-	<20140317164339.GR11706@sirena.org.uk>
-	<20140318091728.1d2240ca@armhf>
-	<53296CB7.1000909@ti.com>
+From: Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v11 17/27] iommu/exynos: remove calls to Runtime PM API
+	functions
+Date: Wed, 19 Mar 2014 09:54:39 -0700
+Message-ID: <CANEJEGtK-XfTef3ko+Yq2RNFXohhuQjgamr-DRBmxR-SNzgkJg@mail.gmail.com>
+References: <20140314140843.ba055f28dd7ed59c46088029@samsung.com>
+	<5322FD14.5090602@samsung.com>
+	<20140318185605.0380c8dfe6559c06183092e5@samsung.com>
+	<532861BE.7020601@samsung.com>
+	<20140319100304.5e26fa43ccdfc29178b058e1@samsung.com>
+	<532997D7.6090608@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53296CB7.1000909-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <532997D7.6090608-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Linux DeviceTree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Samsung SOC <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Prathyush <prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Antonios Motakis <a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 19 Mar 2014 12:08:55 +0200
-Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org> wrote:
+On Wed, Mar 19, 2014 at 6:12 AM, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+...
+>> Device driver is not only for the scholarship but also for the real use.
+>
+> Huh? I'm not sure what kind of comment is this.
 
-> sound {
-> 	compatible =3D "simple-audio-card";
-> 	simple-audio-card,name =3D "Simple Audio";
-> 	simple-audio-card,widgets =3D ...
-> 	simple-audio-card,routing =3D ...
->=20
-> 	simple-audio-card,dai-link@0 {		/* I2S - codec */
-> 		format =3D "i2s";
-> 		bitclock-master =3D "codec";
-> 		frame-master =3D "codec";
-> 		bitclock-inversion =3D <1>;
-> 		simple-audio-card,cpu {
-> 			sound-dai =3D <&audio1 0>;
-> 			bitclock-inversion =3D <0>;
-> 		};
-> 		simple-audio-card,codec {
-> 			sound-dai =3D <&codec 0>;
-> 			system-clock-frequency =3D <12000000>;
-> 		};
-> 	};
-> ...
->=20
-> I can participate in the implementation too.
+I'm guessing Cho meant: "This isn't an academic exercise - I have a
+real use case that requires reference counting."
 
-Thanks. I will prepare the multi DAI links and send you the first
-patches.
+Cho needs to be more specific about his "Some driver needs enabling
+sysmmu" example. Then others would understand why/when the reference
+counting is needed. Ie walk through a real driver that exists today
+that depends on reference counting.
 
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cheers,
+grant
