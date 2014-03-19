@@ -1,478 +1,541 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: stmmac-socfpga breakage in arm-soc
-Date: Wed, 19 Mar 2014 16:07:21 +0100
-Message-ID: <4171731.dt8xNWCpb2@wuerfel>
-References: <201403191333.01095.arnd@arndb.de> <4337501.shzGE38xmF@wuerfel> <5329A7A1.20606@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5329A7A1.20606-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [RFC PATCH 1/3] of: Parse OF graph into graph structure
+Date: Wed, 19 Mar 2014 16:12:02 +0100
+Message-ID: <1395241924-9675-2-git-send-email-p.zabel@pengutronix.de>
+References: <1395241924-9675-1-git-send-email-p.zabel@pengutronix.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1395241924-9675-1-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 19 March 2014 09:20:17 Dinh Nguyen wrote:
-> 
-> Peppe asked me to remove DWMAC_SOCFPGA Koption and take the dwmac-sti.c
-> file as an example, which I did. The original patch for dwmac-sti.c had 
-> just a CONFIG_ARCH_STI Kconfig option and not CONFIG_DWMAC_STI.
-> 
-> http://marc.info/?l=linux-netdev&m=138426461307138&w=2
-> 
-> I'm sorry I did not follow the later versions of dwmac-sti.c.
+This patch adds a function of_graph_populate() that parses the complete
+device tree for port and endpoint nodes and stores them in a graph structure.
+The internal graph structure is not exported, the API still uses struct
+device_node pointers as handles.
+At the same time, of_graph_get_next_endpoint is changed to drop the reference
+count of its prev parameter, so it can be used in a for_each_endpoint_of_node
+macro, which is added to conveniently iterate over all endpoints of a node.
 
-Ok, so the two of you basically moved in opposite directions where
-Srinivas started out with the method you ended up with and vice versa.
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+ drivers/of/base.c        | 403 ++++++++++++++++++++++++++++++++++++++---------
+ include/linux/of_graph.h |  12 ++
+ 2 files changed, 337 insertions(+), 78 deletions(-)
 
-I think we've almost sorted things out now. I'll put this patch
-into a temporary branch now so it shows up in tomorrow's linux-next,
-and hopefully give us a working 'allmodconfig' build, but I'd hope
-to get some more Acks for the final version, especially since the
-patch is becoming larger than I hoped for now and we're very close
-to the merge window.
-
-	Arnd
-
-
-
->From b3bd053625ce2632eea035de4b320d32f14ef615 Mon Sep 17 00:00:00 2001
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Date: Wed, 19 Mar 2014 12:57:05 +0100
-Subject: [PATCH] net: stmmac: improve binding and fix build
-
-The new stmmac front-end for socfpga caused build failures
-for modular drivers, e.g. 'make allmodconfig', which prompted
-me to look closer into it. I found that both the DT binding
-and the implementation of the driver are rather nonstandard
-and do things very different from the other SoC specific glue
-drivers for stmmac.
-
-This puts things back in order, hopefully fixing all the
-important issues:
-
-* Replaced the parent/child DT nodes with a combined node
-* Renamed the device node from 'ethernet0' to 'ethernet'
-  as the standard name.
-* Documented the clock-names string.
-* Added a new DWMAC_SOCFPGA Kconfig symbol to control
-  compilation of this driver
-* Removed code related to scanning the DT nodes that
-  are no longer there.
-* Replaced platform_driver and module stuff with call from
-  main stmmac driver.
-* Removed bogus of_machine_is_compatible("altr,socfpga-vt"))
-  check that should be handled through separate compatible
-  properties of the dwmac node itself.
-
-Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-
-diff --git a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-index d53d376..f7aa231 100644
---- a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-+++ b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-@@ -1,35 +1,27 @@
- Altera SOCFPGA SoC DWMAC controller
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index fd4b9c2..abfc462 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -28,7 +28,70 @@
  
--The device node has following properties.
-+This is a variant of the dwmac/stmmac driver an inherits all descriptions
-+present in Documentation/devicetree/bindings/net/stmmac.txt.
+ #include "of_private.h"
+ 
++/**
++ * struct of_graph_entity - In-kernel representation of a node with ports
++ *
++ * @of_node: The corresponding device node in the device tree.
++ * @list: List head in the global graph entity list.
++ * @ports: List of ports contained in this entity.
++ *
++ * This is a shortcut directly containing a list of pe-parsed ports, whether
++ * they are contained in a 'ports' subnode, or whether they are direct children
++ * of the device node. While the of_graph_entity usually will correspond to a
++ * struct device with the same of_node, this is not always the case.
++ */
++struct of_graph_entity {
++	struct device_node *of_node;
++	struct list_head list;
++	struct list_head ports;
++};
 +
-+The device node has additional properties:
- 
- Required properties:
-- - compatible	: Should contain "altr,socfpga-stmmac"
-+ - compatible	: Should contain "altr,socfpga-stmmac" along with
-+		  "snps,dwmac" and any applicable more detailed
-+		  designware version numbers documented in stmmac.txt
-  - altr,sysmgr-syscon : Should be the phandle to the system manager node that
-    encompasses the glue register, and the register offset.
- 
--Sub-nodes:
--The dwmac core should be added as subnode to SOCFPGA dwmac glue.
--- dwmac :	The binding details of dwmac can be found in
--  Documentation/devicetree/bindings/net/stmmac.txt
--
- Example:
- 
--ethernet0: ethernet0 {
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--	compatible = "altr,socfpga-stmmac";
-+gmac0: ethernet@ff700000 {
-+	compatible = "altr,socfpga-stmmac", "snps,dwmac-3.70a", "snps,dwmac";
- 	altr,sysmgr-syscon = <&sysmgr 0x60>;
- 	status = "disabled";
--	ranges;
--
--	gmac0: gmac0@ff700000 {
--		compatible = "snps,dwmac-3.70a", "snps,dwmac";
--		reg = <0xff700000 0x2000>;
--		interrupts = <0 115 4>;
--		interrupt-names = "macirq";
--		mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
--		clocks = <&emac0_clk>;
--		clock-names = "stmmaceth";
--	};
-+	reg = <0xff700000 0x2000>;
-+	interrupts = <0 115 4>;
-+	interrupt-names = "macirq";
-+	mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
-+	clocks = <&emac0_clk>;
-+	clocks-names = ""stmmaceth";
- };
-diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-index 5748351..19d5648 100644
---- a/Documentation/devicetree/bindings/net/stmmac.txt
-+++ b/Documentation/devicetree/bindings/net/stmmac.txt
-@@ -31,6 +31,10 @@ Optional properties:
- - reset-names: Should contain the reset signal name "stmmaceth", if a
- 	reset phandle is given
- - max-frame-size: See ethernet.txt file in the same directory
-+- clocks: If present, the first clock should be the GMAC main clock,
-+  further clocks may be specified in derived bindings
-+- clock-names: One name for each entry in the clocks property, the
-+  first one should be "stmmaceth".
- 
- Examples:
- 
-@@ -43,4 +47,6 @@ Examples:
- 		mac-address = [000000000000]; /* Filled in by U-Boot */
- 		max-frame-size = <3800>;
- 		phy-mode = "gmii";
-+		clocks = <&clock>;
-+		clock-names = "stmmaceth">
- 	};
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 6d7eaa4..982649e 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -451,43 +451,28 @@
- 				};
- 			};
- 
--		ethernet0: ethernet0 {
--			#address-cells = <1>;
--			#size-cells = <1>;
--			compatible = "altr,socfpga-stmmac";
--			altr,sysmgr-syscon = <&sysmgr 0x60>;
-+		gmac0: ethernet@ff700000 {
-+			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.70a", "snps,dwmac";
- 			status = "disabled";
--			ranges;
--
--			gmac0: gmac0@ff700000 {
--				compatible = "snps,dwmac-3.70a", "snps,dwmac";
--				reg = <0xff700000 0x2000>;
--				interrupts = <0 115 4>;
--				interrupt-names = "macirq";
--				mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
--				clocks = <&emac0_clk>;
--				clock-names = "stmmaceth";
--			};
-+			altr,sysmgr-syscon = <&sysmgr 0x60>;
-+			reg = <0xff700000 0x2000>;
-+			interrupts = <0 115 4>;
-+			interrupt-names = "macirq";
-+			mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
-+			clocks = <&emac0_clk>;
-+			clock-names = "stmmaceth";
- 		};
- 
--		ethernet1: ethernet1 {
--			#address-cells = <1>;
--			#size-cells = <1>;
--			compatible = "altr,socfpga-stmmac";
--			altr,sysmgr-syscon = <&sysmgr 0x60>;
-+		gmac1: ethernet@ff702000 {
-+			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.70a", "snps,dwmac";
- 			status = "disabled";
--			ranges;
--
--			gmac1: gmac1@ff702000 {
--				device_type = "network";
--				compatible = "snps,dwmac-3.70a", "snps,dwmac";
--				reg = <0xff702000 0x2000>;
--				interrupts = <0 120 4>;
--				interrupt-names = "macirq";
--				mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
--				clocks = <&emac1_clk>;
--				clock-names = "stmmaceth";
--			};
-+			altr,sysmgr-syscon = <&sysmgr 0x60>;
-+			reg = <0xff702000 0x2000>;
-+			interrupts = <0 120 4>;
-+			interrupt-names = "macirq";
-+			mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
-+			clocks = <&emac1_clk>;
-+			clock-names = "stmmaceth";
- 		};
- 
- 		L2: l2-cache@fffef000 {
-diff --git a/arch/arm/boot/dts/socfpga_arria5_socdk.dts b/arch/arm/boot/dts/socfpga_arria5_socdk.dts
-index 2d6b38b..a87ee1c 100644
---- a/arch/arm/boot/dts/socfpga_arria5_socdk.dts
-+++ b/arch/arm/boot/dts/socfpga_arria5_socdk.dts
-@@ -46,11 +46,8 @@
- 	};
- };
- 
--&ethernet1 {
--	status = "okay";
--};
--
- &gmac1 {
-+	status = "okay";
- 	phy-mode = "rgmii";
- 
- 	rxd0-skew-ps = <0>;
-diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
-index 26c63a0..ae16d97 100644
---- a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
-+++ b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
-@@ -39,11 +39,8 @@
- 	};
- };
- 
--&ethernet1 {
--	status = "okay";
--};
--
- &gmac1 {
-+	status = "okay";
- 	phy-mode = "rgmii";
- 
- 	rxd0-skew-ps = <0>;
-diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
-index 469bb5c..b79e2a2 100644
---- a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
-+++ b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
-@@ -39,11 +39,8 @@
- 	};
- };
- 
--&ethernet1 {
--	status = "okay";
--};
--
- &gmac1 {
-+	status = "okay";
- 	phy-mode = "rgmii";
- 
- 	rxd0-skew-ps = <0>;
-diff --git a/arch/arm/boot/dts/socfpga_vt.dts b/arch/arm/boot/dts/socfpga_vt.dts
-index 91f6ccf..0f33f2f 100644
---- a/arch/arm/boot/dts/socfpga_vt.dts
-+++ b/arch/arm/boot/dts/socfpga_vt.dts
-@@ -87,10 +87,7 @@
- 	};
- };
- 
--&ethernet0 {
--        status = "okay";
--};
--
- &gmac0 {
-+        status = "okay";
- 	phy-mode = "gmii";
- };
-diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-index f2d7c70..f8d5112 100644
---- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
-+++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-@@ -26,6 +26,16 @@ config STMMAC_PLATFORM
- 
- 	  If unsure, say N.
- 
-+config DWMAC_SOCFPGA
-+	bool "SOCFPGA dwmac support"
-+	depends on STMMAC_PLATFORM && MFD_SYSCON && (ARCH_SOCFPGA || COMPILE_TEST)
-+	help
-+	  Support for ethernet controller on Altera SOCFPGA
++/**
++ * struct of_graph_port - In-kernel representation of a port node
++ *
++ * @of_node: The corresponding port node in the device tree.
++ * @parent: The in-kernel representation of the parent device_node.
++ *	This is either a direct parent of the of_node, or its grandparent,
++ *	if the parent is a 'ports' node.
++ * @list: List head in the parent entity 'ports' list.
++ * @endpoints: List of endpoints contained in this port.
++ * @id: Index of the port in the device_node, set by the 'reg' property.
++ */
++struct of_graph_port {
++	struct device_node *of_node;
++	struct of_graph_entity *parent;
++	struct list_head list;
++	struct list_head endpoints;
++	int id;
++};
 +
-+	  This selects the Altera SOCFGA SoC glue layer support
-+	  for the stmmac device driver. This driver is used for
-+	  arria5 and cyclone5 FPGA SoCs.
++/**
++ * struct of_graph_endpoint - In-kernel representation of an endpoint node
++ *
++ * @of_node: The corresponding endpoint node in the device tree.
++ * @parent: The in-kernel port representation of the parent port node.
++ * @list: List head in the parent port 'endpoints' list.
++ * @global_list: List head in the global endpoint list.
++ * @remote_node: Remote endpoint node, which either is pointed to by the local
++ *	'remote-endpoint' phandle property, or which points to the
++ *	local endpoint node this way.
++ * @remote_endpoint: Pointer to remote in-kernel endpoint representation after
++ *	linking of endpoint nodes.
++ * @id: Index of the endpoint in the port, set by the 'reg' property.
++ */
++struct of_graph_endpoint {
++	struct device_node *of_node;
++	struct of_graph_port *parent;
++	struct list_head list;
++	struct list_head global_list;
++	struct device_node *remote_node;
++	struct of_graph_endpoint *remote_endpoint;
++	int id;
++};
 +
- config DWMAC_SUNXI
- 	bool "Allwinner GMAC support"
- 	depends on STMMAC_PLATFORM && ARCH_SUNXI
-diff --git a/drivers/net/ethernet/stmicro/stmmac/Makefile b/drivers/net/ethernet/stmicro/stmmac/Makefile
-index fd5e48d..18695eb 100644
---- a/drivers/net/ethernet/stmicro/stmmac/Makefile
-+++ b/drivers/net/ethernet/stmicro/stmmac/Makefile
-@@ -1,9 +1,9 @@
- obj-$(CONFIG_STMMAC_ETH) += stmmac.o
--stmmac-$(CONFIG_ARCH_SOCFPGA) += dwmac-socfpga.o
- stmmac-$(CONFIG_STMMAC_PLATFORM) += stmmac_platform.o
- stmmac-$(CONFIG_STMMAC_PCI) += stmmac_pci.o
- stmmac-$(CONFIG_DWMAC_SUNXI) += dwmac-sunxi.o
- stmmac-$(CONFIG_DWMAC_STI) += dwmac-sti.o
-+stmmac-$(CONFIG_DWMAC_SOCFPGA) += dwmac-socfpga.o
- stmmac-objs:= stmmac_main.o stmmac_ethtool.o stmmac_mdio.o ring_mode.o	\
- 	      chain_mode.o dwmac_lib.o dwmac1000_core.o  dwmac1000_dma.o \
- 	      dwmac100_core.o dwmac100_dma.o enh_desc.o  norm_desc.o \
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-index c7f034b..dd3de82 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-@@ -40,30 +40,16 @@ struct socfpga_dwmac {
- 	u32	reg_offset;
- 	struct	device *dev;
- 	struct regmap *sys_mgr_base_addr;
--	struct	device_node *dwmac_np;
- };
+ LIST_HEAD(aliases_lookup);
++LIST_HEAD(entity_list);
++LIST_HEAD(endpoint_list);
  
- static int socfpga_dwmac_parse_data(struct socfpga_dwmac *dwmac, struct device *dev)
- {
- 	struct device_node *np	= dev->of_node;
--	struct device_node *stmmac_np;
- 	struct regmap *sys_mgr_base_addr;
- 	u32 reg_offset;
- 	int ret;
- 
--	stmmac_np = of_get_next_available_child(np, NULL);
--	if (!stmmac_np) {
--		dev_info(dev, "No dwmac node found\n");
--		return -EINVAL;
--	}
--
--	if (!of_device_is_compatible(stmmac_np, "snps,dwmac")) {
--		dev_info(dev, "dwmac node isn't compatible with snps,dwmac\n");
--		return -EINVAL;
--	}
--
--	dwmac->interface = of_get_phy_mode(stmmac_np);
--	of_node_put(stmmac_np);
-+	dwmac->interface = of_get_phy_mode(np);
- 
- 	sys_mgr_base_addr = syscon_regmap_lookup_by_phandle(np, "altr,sysmgr-syscon");
- 	if (IS_ERR(sys_mgr_base_addr)) {
-@@ -79,7 +65,6 @@ static int socfpga_dwmac_parse_data(struct socfpga_dwmac *dwmac, struct device *
- 
- 	dwmac->reg_offset = reg_offset;
- 	dwmac->sys_mgr_base_addr = sys_mgr_base_addr;
--	dwmac->dwmac_np = stmmac_np;
- 	dwmac->dev = dev;
- 
- 	return 0;
-@@ -92,9 +77,6 @@ static int socfpga_dwmac_setup(struct socfpga_dwmac *dwmac)
- 	u32 reg_offset = dwmac->reg_offset;
- 	u32 ctrl, val, shift = 0;
- 
--	if (of_machine_is_compatible("altr,socfpga-vt"))
--		return 0;
--
- 	switch (phymode) {
- 	case PHY_INTERFACE_MODE_RGMII:
- 		val = SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_RGMII;
-@@ -116,68 +98,31 @@ static int socfpga_dwmac_setup(struct socfpga_dwmac *dwmac)
- 	return 0;
+ struct device_node *of_allnodes;
+ EXPORT_SYMBOL(of_allnodes);
+@@ -1984,6 +2047,32 @@ struct device_node *of_find_next_cache_node(const struct device_node *np)
+ 	return NULL;
  }
  
--static int socfpga_dwmac_probe(struct platform_device *pdev)
-+static void *socfpga_dwmac_probe(struct platform_device *pdev)
++static struct of_graph_entity *__of_graph_lookup_entity(
++					const struct device_node *node)
++{
++	struct of_graph_entity *entity;
++
++	list_for_each_entry(entity, &entity_list, list) {
++		if (entity->of_node == node)
++			return entity;
++	}
++
++	return NULL;
++}
++
++static struct of_graph_endpoint *__of_graph_lookup_endpoint(
++					const struct device_node *node)
++{
++	struct of_graph_endpoint *endpoint;
++
++	list_for_each_entry(endpoint, &endpoint_list, global_list) {
++		if (endpoint->of_node == node)
++			return endpoint;
++	}
++
++	return NULL;
++}
++
+ /**
+  * of_graph_parse_endpoint() - parse common endpoint node properties
+  * @node: pointer to endpoint device_node
+@@ -1994,22 +2083,17 @@ struct device_node *of_find_next_cache_node(const struct device_node *np)
+ int of_graph_parse_endpoint(const struct device_node *node,
+ 			    struct of_endpoint *endpoint)
  {
- 	struct device		*dev = &pdev->dev;
--	struct device_node	*node = dev->of_node;
--	int			ret = -ENOMEM;
-+	int			ret;
- 	struct socfpga_dwmac	*dwmac;
+-	struct device_node *port_node = of_get_parent(node);
+-
+-	WARN_ONCE(!port_node, "%s(): endpoint %s has no parent node\n",
+-		  __func__, node->full_name);
++	struct of_graph_endpoint *ep;
  
- 	dwmac = devm_kzalloc(dev, sizeof(*dwmac), GFP_KERNEL);
- 	if (!dwmac)
--		return -ENOMEM;
-+		return ERR_PTR(-ENOMEM);
+ 	memset(endpoint, 0, sizeof(*endpoint));
  
- 	ret = socfpga_dwmac_parse_data(dwmac, dev);
- 	if (ret) {
- 		dev_err(dev, "Unable to parse OF data\n");
--		return ret;
-+		return ERR_PTR(ret);
+-	endpoint->local_node = node;
+-	/*
+-	 * It doesn't matter whether the two calls below succeed.
+-	 * If they don't then the default value 0 is used.
+-	 */
+-	of_property_read_u32(port_node, "reg", &endpoint->port);
+-	of_property_read_u32(node, "reg", &endpoint->id);
++	ep = __of_graph_lookup_endpoint(node);
++	if (!ep || !ep->parent)
++		return -EINVAL;
+ 
+-	of_node_put(port_node);
++	endpoint->local_node = ep->of_node;
++	endpoint->port = ep->parent->id;
++	endpoint->id = ep->id;
+ 
+ 	return 0;
+ }
+@@ -2017,75 +2101,63 @@ EXPORT_SYMBOL(of_graph_parse_endpoint);
+ 
+ /**
+  * of_graph_get_next_endpoint() - get next endpoint node
++ *
+  * @parent: pointer to the parent device node
+  * @prev: previous endpoint node, or NULL to get first
+  *
+- * Return: An 'endpoint' node pointer with refcount incremented. Refcount
+- * of the passed @prev node is not decremented, the caller have to use
+- * of_node_put() on it when done.
++ * Return: An 'endpoint' node pointer with refcount incremented. The caller
++ * has to use of_node_put() on it when done.
+  */
+ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
+-					struct device_node *prev)
++					       struct device_node *prev)
+ {
+-	struct device_node *endpoint;
+-	struct device_node *port = NULL;
++	struct of_graph_entity *entity;
++	struct of_graph_port *port;
++	struct of_graph_endpoint *endpoint = NULL;
+ 
+ 	if (!parent)
+ 		return NULL;
+ 
+ 	if (!prev) {
+-		struct device_node *node;
+-		/*
+-		 * It's the first call, we have to find a port subnode
+-		 * within this node or within an optional 'ports' node.
+-		 */
+-		node = of_get_child_by_name(parent, "ports");
+-		if (node)
+-			parent = node;
++		/* It's the first call, we have to find the first port. */
++		entity = __of_graph_lookup_entity(parent);
++		if (WARN_ONCE(!entity || list_empty(&entity->ports),
++				"%s(): no ports specified for %s\n",
++				__func__, parent->full_name))
++			return NULL;
+ 
+-		port = of_get_child_by_name(parent, "port");
++		port = list_first_entry(&entity->ports,
++					struct of_graph_port, list);
++	} else {
++		endpoint = __of_graph_lookup_endpoint(prev);
++		of_node_put(prev);
++		if (WARN_ONCE(!endpoint, "%s(): endpoint %s not in global list\n",
++			      __func__, prev->full_name))
++			return NULL;
++		port = endpoint->parent;
++	}
+ 
+-		if (port) {
+-			/* Found a port, get an endpoint. */
+-			endpoint = of_get_next_child(port, NULL);
+-			of_node_put(port);
++	entity = port->parent;
++	list_for_each_entry_from(port, &entity->ports, list) {
++		if (!endpoint) {
++			endpoint = list_first_entry(&port->endpoints,
++					struct of_graph_endpoint, list);
++		} else if (endpoint != list_last_entry(&port->endpoints,
++					struct of_graph_endpoint, list)) {
++			endpoint = list_next_entry(endpoint, list);
+ 		} else {
++			/*
++			 * The previous endpoint is the port's last one,
++			 * continue with the next port.
++			 */
+ 			endpoint = NULL;
++			continue;
+ 		}
+ 
+-		if (!endpoint)
+-			pr_err("%s(): no endpoint nodes specified for %s\n",
+-			       __func__, parent->full_name);
+-		of_node_put(node);
+-
+-		return endpoint;
++		return of_node_get(endpoint->of_node);
  	}
  
- 	ret = socfpga_dwmac_setup(dwmac);
- 	if (ret) {
- 		dev_err(dev, "couldn't setup SoC glue (%d)\n", ret);
--		return ret;
+-	port = of_get_parent(prev);
+-	if (WARN_ONCE(!port, "%s(): endpoint %s has no parent node\n",
+-		      __func__, prev->full_name))
+-		return NULL;
+-
+-	/* Avoid dropping prev node refcount to 0. */
+-	of_node_get(prev);
+-	endpoint = of_get_next_child(port, prev);
+-	if (endpoint) {
+-		of_node_put(port);
+-		return endpoint;
 -	}
 -
--	if (node) {
--		ret = of_platform_populate(node, NULL, NULL, dev);
--		if (ret) {
--			dev_err(dev, "failed to add dwmac core\n");
--			return ret;
--		}
--	} else {
--		dev_err(dev, "no device node, failed to add dwmac core\n");
--		return -ENODEV;
-+		return ERR_PTR(ret);
- 	}
- 
--	platform_set_drvdata(pdev, dwmac);
+-	/* No more endpoints under this port, try the next one. */
+-	do {
+-		port = of_get_next_child(parent, port);
+-		if (!port)
+-			return NULL;
+-	} while (of_node_cmp(port->name, "port"));
 -
--	return 0;
-+	return dwmac;
+-	/* Pick up the first endpoint in this port. */
+-	endpoint = of_get_next_child(port, NULL);
+-	of_node_put(port);
+-
+-	return endpoint;
++	return NULL;
+ }
+ EXPORT_SYMBOL(of_graph_get_next_endpoint);
+ 
+@@ -2099,19 +2171,16 @@ EXPORT_SYMBOL(of_graph_get_next_endpoint);
+ struct device_node *of_graph_get_remote_port_parent(
+ 			       const struct device_node *node)
+ {
+-	struct device_node *np;
+-	unsigned int depth;
++	struct of_graph_port *port;
++	struct of_graph_endpoint *ep  = __of_graph_lookup_endpoint(node);
++	if (!ep || !ep->remote_endpoint)
++		return NULL;
+ 
+-	/* Get remote endpoint node. */
+-	np = of_parse_phandle(node, "remote-endpoint", 0);
++	port = ep->remote_endpoint->parent;
++	if (!port || !port->parent)
++		return NULL;
+ 
+-	/* Walk 3 levels up only if there is 'ports' node. */
+-	for (depth = 3; depth && np; depth--) {
+-		np = of_get_next_parent(np);
+-		if (depth == 2 && of_node_cmp(np->name, "ports"))
+-			break;
+-	}
+-	return np;
++	return port->parent->of_node;
+ }
+ EXPORT_SYMBOL(of_graph_get_remote_port_parent);
+ 
+@@ -2124,12 +2193,190 @@ EXPORT_SYMBOL(of_graph_get_remote_port_parent);
+  */
+ struct device_node *of_graph_get_remote_port(const struct device_node *node)
+ {
+-	struct device_node *np;
++	struct of_graph_endpoint *ep;
+ 
+-	/* Get remote endpoint node. */
+-	np = of_parse_phandle(node, "remote-endpoint", 0);
+-	if (!np)
++	ep = __of_graph_lookup_endpoint(node);
++	if (!ep || !ep->remote_endpoint || !ep->remote_endpoint->parent)
+ 		return NULL;
+-	return of_get_next_parent(np);
++
++	return ep->remote_endpoint->parent->of_node;
+ }
+ EXPORT_SYMBOL(of_graph_get_remote_port);
++
++static int of_graph_add_endpoint(struct of_graph_port *port,
++				struct device_node *node)
++{
++	struct of_graph_endpoint *ep = kzalloc(sizeof(*ep), GFP_KERNEL);
++	if (!ep)
++		return -ENOMEM;
++
++	ep->of_node = node;
++	ep->parent = port;
++	of_property_read_u32(node, "reg", &ep->id);
++	ep->remote_node = of_parse_phandle(node, "remote-endpoint", 0);
++
++	list_add_tail(&ep->global_list, &endpoint_list);
++	list_add_tail(&ep->list, &port->endpoints);
++	return 0;
++}
++
++static int of_graph_add_port(struct of_graph_entity *entity,
++				struct device_node *node)
++{
++	struct device_node *child;
++	struct of_graph_port *port = kzalloc(sizeof(*port), GFP_KERNEL);
++	if (!port)
++		return -ENOMEM;
++
++	port->of_node = node;
++	port->parent = entity;
++	of_property_read_u32(node, "reg", &port->id);
++	INIT_LIST_HEAD(&port->endpoints);
++
++	for_each_child_of_node(node, child) {
++		int rc;
++		if (of_node_cmp(child->name, "endpoint") != 0) {
++			pr_warn("%s(): non-endpoint node inside port %s\n",
++				__func__, node->full_name);
++			continue;
++		}
++
++		rc = of_graph_add_endpoint(port, child);
++		if (rc)
++			return rc;
++	}
++
++	list_add_tail(&port->list, &entity->ports);
++	return 0;
++}
++
++/**
++ * of_graph_entity() - parse all ports contained in a node
++ *
++ * @node: The parent node containing the ports.
++ * @child: Either the 'ports' node or the first 'port' node contained in node.
++ * @ports_node: If true, child is a 'ports' node, otherwise it is the first
++ *	'port'.
++ *
++ * This function is given either the 'ports' node or the first 'port' as
++ * second parameter so the parsing that was already done in of_graph_recurse
++ * does not have to be repeated. It parses all ports and collects them in an
++ * of_graph_entity structure that is added to the global entity_list.
++ *
++ * Returns zero on success, an error value otherwise.
++ */
++static int of_graph_add_entity(struct device_node *node,
++				struct device_node *child, bool ports_node)
++{
++	struct device_node *parent = node;
++	struct of_graph_entity *entity;
++	int rc = 0;
++
++	entity = kzalloc(sizeof(*entity), GFP_KERNEL);
++	if (!entity)
++		return -ENOMEM;
++
++	entity->of_node = node;
++	INIT_LIST_HEAD(&entity->ports);
++
++	if (ports_node) {
++		parent = child;
++		child = of_get_next_child(parent, NULL);
++	}
++	while (child) {
++		rc = of_graph_add_port(entity, child);
++		if (rc)
++			return rc;
++
++		do {
++			child = of_get_next_child(parent, child);
++			if (!child)
++				break;
++		} while (of_node_cmp(child->name, "port"));
++	}
++
++	list_add_tail(&entity->list, &entity_list);
++	return 0;
++}
++
++static int of_graph_recurse(struct device_node *node)
++{
++	struct device_node *child;
++	int rc = 0;
++
++	for_each_child_of_node(node, child) {
++		/*
++		 * Find the first 'ports' or 'port' subnode. If one is found,
++		 * parse all ports contained in the node
++		 */
++		if ((of_node_cmp(child->name, "ports") == 0) &&
++		    (!of_find_property(child, "compatible", NULL))) {
++			rc = of_graph_add_entity(node, child, true);
++			break;
++		} else if ((of_node_cmp(child->name, "port") == 0) &&
++			   (!of_find_property(child, "compatible", NULL))) {
++			rc = of_graph_add_entity(node, child, false);
++			break;
++		} else {
++			rc = of_graph_recurse(child);
++		}
++	}
++
++	return rc;
++}
++
++/**
++ * of_graph_populate() - populates the of graph from the device tree
++ *
++ * @root: Root node of the device tree.
++ *
++ * This function scans the device tree for port and endpoint nodes and
++ * generates the of graph from that, linking together endpoints that point
++ * at each other.
++ *
++ * Returns zero on success, an error value otherwise.
++ */
++int of_graph_populate(struct device_node *root)
++{
++	struct of_graph_endpoint *ep1, *ep2;
++	int rc = 0;
++
++	/* Skip if the graph is already populated */
++	if (!list_empty(&endpoint_list))
++		return 0;
++
++	root = root ? of_node_get(root) : of_find_node_by_path("/");
++
++	/* Parse device tree */
++	rc = of_graph_recurse(root);
++	if (rc)
++		return rc;
++
++	/* Connect endpoints */
++	list_for_each_entry(ep1, &endpoint_list, global_list) {
++		ep2 = ep1;
++		list_for_each_entry_continue(ep2, &endpoint_list, global_list) {
++			struct of_graph_endpoint *from, *to;
++
++			if (ep1->remote_node) {
++				from = ep1;
++				to = ep2;
++			} else {
++				from = ep2;
++				to = ep1;
++			}
++			if (from->remote_node &&
++			    from->remote_node == to->of_node) {
++				WARN_ON(to->remote_node &&
++					to->remote_node != from->of_node);
++				to->remote_node = from->of_node;
++				to->remote_endpoint = from;
++				from->remote_endpoint = to;
++			}
++		}
++	}
++
++	of_node_put(root);
++	return rc;
++}
++EXPORT_SYMBOL(of_graph_populate);
+diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
+index befef42..b6dd55b 100644
+--- a/include/linux/of_graph.h
++++ b/include/linux/of_graph.h
+@@ -26,6 +26,10 @@ struct of_endpoint {
+ 	const struct device_node *local_node;
+ };
+ 
++#define for_each_endpoint_of_node(dn, ep) \
++	for (ep = of_graph_get_next_endpoint(dn, NULL); ep != NULL; \
++	     ep = of_graph_get_next_endpoint(dn, ep))
++
+ #ifdef CONFIG_OF
+ int of_graph_parse_endpoint(const struct device_node *node,
+ 				struct of_endpoint *endpoint);
+@@ -34,6 +38,9 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
+ struct device_node *of_graph_get_remote_port_parent(
+ 					const struct device_node *node);
+ struct device_node *of_graph_get_remote_port(const struct device_node *node);
++
++int of_graph_populate(struct device_node *root);
++
+ #else
+ 
+ static inline int of_graph_parse_endpoint(const struct device_node *node,
+@@ -61,6 +68,11 @@ static inline struct device_node *of_graph_get_remote_port(
+ 	return NULL;
  }
  
--static int socfpga_dwmac_remove(struct platform_device *pdev)
--{
--	return 0;
--}
--
--static const struct of_device_id socfpga_dwmac_match[] = {
--	{ .compatible = "altr,socfpga-stmmac" },
--	{},
--};
--MODULE_DEVICE_TABLE(of, socfpga_dwmac_match);
--
--static struct platform_driver socfpga_dwmac_driver = {
--	.probe		= socfpga_dwmac_probe,
--	.remove		= socfpga_dwmac_remove,
--	.driver		= {
--		.name	= "socfpga-dwmac",
--		.of_match_table = of_match_ptr(socfpga_dwmac_match),
--	},
-+const struct stmmac_of_data socfpga_gmac_data = {
-+	.setup = socfpga_dwmac_probe,	
- };
--
--module_platform_driver(socfpga_dwmac_driver);
--
--MODULE_ALIAS("platform:socfpga-dwmac");
--MODULE_AUTHOR("Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>");
--MODULE_LICENSE("GPL v2");
--MODULE_DESCRIPTION("Altera SOCFPGA DWMAC Glue Layer");
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-index f9e60d7..cd2f6a1 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-@@ -136,6 +136,7 @@ extern const struct stmmac_of_data sun7i_gmac_data;
- #ifdef CONFIG_DWMAC_STI
- extern const struct stmmac_of_data sti_gmac_data;
- #endif
-+extern const struct stmmac_of_data socfpga_gmac_data;
- extern struct platform_driver stmmac_pltfr_driver;
- static inline int stmmac_register_platform(void)
- {
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-index 8fb32a8..46aef510 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-@@ -38,6 +38,9 @@ static const struct of_device_id stmmac_dt_ids[] = {
- 	{ .compatible = "st,stih416-dwmac", .data = &sti_gmac_data},
- 	{ .compatible = "st,stid127-dwmac", .data = &sti_gmac_data},
- #endif
-+#ifdef CONFIG_DWMAC_SOCFPGA
-+	{ .compatible = "altr,socfpga-stmmac", .data = &socfpga_gmac_data },
-+#endif
- 	/* SoC specific glue layers should come before generic bindings */
- 	{ .compatible = "st,spear600-gmac"},
- 	{ .compatible = "snps,dwmac-3.610"},
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
++static inline int of_graph_populate(struct device_node *root)
++{
++	return -ENOSYS;
++}
++
+ #endif /* CONFIG_OF */
+ 
+ #endif /* __LINUX_OF_GRAPH_H */
+-- 
+1.9.0
