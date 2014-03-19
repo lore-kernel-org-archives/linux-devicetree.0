@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCH 4/5] ARM: dts: tx53: add simple-panel support
-Date: Wed, 19 Mar 2014 14:28:40 +0100
-Message-ID: <1395235721-13847-4-git-send-email-LW@KARO-electronics.de>
+Subject: [PATCH 5/5] ARM: dts: tx53: Add IPU DI ports and endpoints
+Date: Wed, 19 Mar 2014 14:28:41 +0100
+Message-ID: <1395235721-13847-5-git-send-email-LW@KARO-electronics.de>
 References: <1395235721-13847-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,32 +15,32 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
 ---
- arch/arm/boot/dts/imx53-tx53-x13x.dts |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm/boot/dts/imx53-tx53-x03x.dts |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx53-tx53-x13x.dts b/arch/arm/boot/dts/=
-imx53-tx53-x13x.dts
-index 26b918e..86a964d 100644
---- a/arch/arm/boot/dts/imx53-tx53-x13x.dts
-+++ b/arch/arm/boot/dts/imx53-tx53-x13x.dts
-@@ -63,6 +63,18 @@
- 		default-brightness-level =3D <50>;
- 	};
+diff --git a/arch/arm/boot/dts/imx53-tx53-x03x.dts b/arch/arm/boot/dts/=
+imx53-tx53-x03x.dts
+index 0217dde3..43b4b7b 100644
+--- a/arch/arm/boot/dts/imx53-tx53-x03x.dts
++++ b/arch/arm/boot/dts/imx53-tx53-x03x.dts
+@@ -25,12 +25,17 @@
+ 	soc {
+ 		display: display@di0 {
+ 			compatible =3D "fsl,imx-parallel-display";
+-			crtcs =3D <&ipu 0>;
+ 			interface-pix-fmt =3D "rgb24";
+ 			pinctrl-names =3D "default";
+ 			pinctrl-0 =3D <&pinctrl_rgb24_vga1>;
+ 			status =3D "okay";
 =20
-+	panel0 {
-+		compatible =3D "simple-panel";
-+		power-supply =3D <&reg_lcd_pwr0>;
-+		backlight =3D <&backlight0>;
-+	};
++			port {
++				display0_in: endpoint {
++					remote-endpoint =3D <&ipu_di0_disp0>;
++				};
++			};
 +
-+	panel1 {
-+		compatible =3D "simple-panel";
-+		power-supply =3D <&reg_lcd_pwr1>;
-+		backlight =3D <&backlight1>;
-+	};
-+
- 	regulators {
- 		reg_lcd_pwr0: regulator@5 {
- 			compatible =3D "regulator-fixed";
+ 			display-timings {
+ 				VGA {
+ 					clock-frequency =3D <25200000>;
 --=20
 1.7.10.4
