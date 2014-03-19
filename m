@@ -1,138 +1,102 @@
-From: Girish KS <girishks2000-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] mailbox: samsung: added support for samsung mailbox
-Date: Wed, 19 Mar 2014 09:19:36 +0530
-Message-ID: <CAKrE-KcMMtFT-aL8wFeKiFkr1LCnsvcewHGK1WYSP+HnynO61A@mail.gmail.com>
+From: Girish KS <girishks2000@gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: exynos: added mailbox node
+Date: Wed, 19 Mar 2014 09:36:40 +0530
+Message-ID: <CAKrE-KeJPqFC__mNhFV6qexL0+E_B6Fm+u8S4iKnCR8vibCseA@mail.gmail.com>
 References: <1395057839-23871-1-git-send-email-ks.giri@samsung.com>
-	<1395057839-23871-2-git-send-email-ks.giri@samsung.com>
-	<CAKrE-KcA6VUUwUjAGuW+nYsFg0qknfZwECtdVS8ZtZb4GYoCvA@mail.gmail.com>
-	<1395140208.2812.15.camel@joe-AO722>
+	<1395057839-23871-3-git-send-email-ks.giri@samsung.com>
+	<20140317140625.GJ8070@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1395140208.2812.15.camel@joe-AO722>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: Girish K S <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jassi Singh <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, Ilho Lee <ilho215.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140317140625.GJ8070@e106331-lin.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Girish K S <ks.giri@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ilho215.lee@samsung.com" <ilho215.lee@samsung.com>, "s-anna@ti.com" <s-anna@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 18, 2014 at 4:26 PM, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org> wrote:
-> On Tue, 2014-03-18 at 15:52 +0530, Girish KS wrote:
->> On Mon, Mar 17, 2014 at 5:33 PM, Girish K S <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+On Mon, Mar 17, 2014 at 7:36 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Mon, Mar 17, 2014 at 12:03:59PM +0000, Girish K S wrote:
+>> This patch adds the dt node for the mailbox IP
+>>
+>> Signed-off-by: Girish K S <ks.giri@samsung.com>
+>>
+>> Change-Id: I35e45e9a62592887a84a909aee54f259a2f731fa
+>> ---
+>>  .../bindings/mailbox/samsung-mailbox.txt           |   24 +++++++
+>>  arch/arm64/boot/dts/samsung-gh7.dtsi               |   66 ++++++++++++++++++++
+>>  arch/arm64/boot/dts/samsung-ssdk-gh7.dts           |    3 +
+>>  3 files changed, 93 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mailbox/samsung-mailbox.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mailbox/samsung-mailbox.txt b/Documentation/devicetree/bindings/mailbox/samsung-mailbox.txt
+>> new file mode 100644
+>> index 0000000..1908d71
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mailbox/samsung-mailbox.txt
+>> @@ -0,0 +1,24 @@
+>> +
+>> +Samsung Mailbox Driver
+>> +
+>> +Required properties:
+>> +- compatible:                Should be one of the following,
+>> +                         "samsung,gh7-mailbox" for
+>> +                             Samsung GH7 SoC series
+>> +                         "samsung,exynos-mailbox" for
+>> +                             exynosx SoC series
+>> +- reg:                       Contains the mailbox register address range (base address
+>> +                     and length)
+>> +- interrupts:                Contains the interrupt information for the mailbox
+>> +                     device.
 >
-> Hi, just some trivial notes about the patch
+> How many interrupts?
+just one receive interrupt
+I will update this detail in binding doc
 >
->> > diff --git a/drivers/mailbox/mailbox-samsung.c b/drivers/mailbox/mailbox-samsung.c
-> []
->> > @@ -0,0 +1,354 @@
->> > +/*
->> > + * Copyright 2013 Samsung Electronics Co. Ltd.
->> > + *
->> > + * This program is free software; you can redistribute it and/or modify it
->> > + * under the terms and conditions of the GNU General Public License,
->> > + * version 2, as published by the Free Software Foundation.
->> > + *
->> > + * This program is distributed in the hope it will be useful, but WITHOUT
->> > + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
->> > + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
->> > + * more details.
->> > + *
->> > + * You should have received a copy of the GNU General Public License along with
->> > + * this program.  If not, see <http://www.gnu.org/licenses/>.
->> > + */
+> What are they for?
+It is only for receive from remote processor
 >
-> Please add
+>> +- samsung,mbox-names:        Array of the names of the mailboxes
 >
-> #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> Juding by the code there is one name per reg entry, but the description
+> above implies a single entry (as all the dt fragments have).
 >
-> before any #include so that error messages are
-> prefixed in the output with "samsung-mailbox: "
-> and the reader of the log has an idea what subsystem
-> is emitting messages.
+> What values are expected? What is the consumer of these values? What are
+> they used for?
+These names are used to mention the links in the platform. tx and rx
+link via mailbox.
+i can mention of 2 consumers now. the ipmi driver and the cpu freq
+driver. They are used
+to exchange information with the remote processor
 >
-Sure will do it
+>> +
+>> +Example:
+>> +
+>> +/* Samsung GH7 SoC */
+>> +mailbox@100a0000 {
+>> +     compatible = "samsung,gh7-mailbox";
+>> +     reg = <0x0 0x100a0000 0x0 0x1000>;
+>> +     interrupts = <0 310 0>;
+>> +     samsung,mbox-names = "a7q-scp";
+>> +};
+>> diff --git a/arch/arm64/boot/dts/samsung-gh7.dtsi b/arch/arm64/boot/dts/samsung-gh7.dtsi
+>> index c3610bd..be4cce9 100644
+>> --- a/arch/arm64/boot/dts/samsung-gh7.dtsi
+>> +++ b/arch/arm64/boot/dts/samsung-gh7.dtsi
+>> @@ -107,5 +107,71 @@
+>>                       interrupts = <0 420 0>;
+>>                       arm,primecell-periphid = <0x341011>; /* HACK */
+>
+> This looks odd.
+>
+> What tree is this against?
 
->> > +#include <linux/err.h>
->> > +#include <linux/module.h>
->> > +#include <linux/slab.h>
-> []
->> > +static int samsung_mbox_send_data(struct ipc_link *link, void *msg)
->> > +{
-> []
->> > +       /* Lock the mailbox for this transaction with the client id */
->> > +       writel(val, ipc_base + MBOX_REG_TXLOCK);
->> > +       do {
->> > +               if (time_after(jiffies, timeout)) {
->> > +                       pr_err("cannot aquire the lock\n");
->
-> This would be prefixed appropriately via pr_fmt.
-> Also, there's a typo of aquire here: acquire
-
-OK
-
->
->> > +static int samsung_mbox_startup(struct ipc_link *link, void *ignored)
->> > +{
-> []
->> > +       ret = devm_request_irq(dev, samsung_link->irq, samsung_ipc_handler,
->> > +                                       IRQF_SHARED, link->link_name,
->> > +                                       samsung_link);
->> > +       if (unlikely(ret)) {
->> > +               pr_err("failed to register mailbox interrupt:%d\n", ret);
->
-> Here too it would be prefixed
-
-ok
-
->
->> > +static int samsung_mbox_probe(struct platform_device *pdev)
->> > +{
->> > +       struct samsung_mbox *samsung_mbox;
->> > +       struct samsung_mlink *mbox_link;
->> > +       struct resource res;
->> > +       struct ipc_link **link;
->> > +       int loop, count, ret = 0;
->> > +       struct device_node *node = pdev->dev.of_node;
->> > +
->> > +       if (!node) {
->> > +               dev_err(&pdev->dev, "driver doesnt support"
->> > +                               "non-dt devices\n");
->
-> Please coalesce the format fragments.
->
-> You would notice the missing space between
-> "support" and "non-dt"
-
-ok
+Sorry this was based on a internal tree. Will base it on Kukjin's gh7 base patch
 
 >
->                 dev_err(&pdev->dev, "driver does not support non-dt devices\n");
+> Cheers,
+> Mark.
 >
-> It's OK to exceed 80 columns for these format strings.
->
->> > diff --git a/include/linux/mailbox-samsung.h b/include/linux/mailbox-samsung.h
-> []
->> > +static inline unsigned long get_alligned_buffer(void)
->
-> Typo: There's one l in aligned
-
-will do it
-
->
->> > +{
->> > +       return __get_free_pages(GFP_KERNEL, REQUEST_PAGE_ORDER);
->> > +}
->> > +
->> > +static inline void put_alligned_buffer(unsigned long addr)
->> > +{
->
-> here too
->
->> > +       free_pages(addr, REQUEST_PAGE_ORDER);
->> > +}
->> > +
->
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
