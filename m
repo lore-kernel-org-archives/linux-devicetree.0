@@ -1,67 +1,133 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v11 10/27] iommu/exynos: use managed device helper functions
-Date: Wed, 19 Mar 2014 13:08:42 +0100
-Message-ID: <532988CA.4000008@samsung.com>
-References: <20140314140542.f4ded6c50dbd8a1d937bf354@samsung.com>
- <CAK9yfHw7zYaX9EYFE+m3Mh-u8Uiyubx-cS0EwPmfW+0weLiBKw@mail.gmail.com>
- <20140318200915.7dd833ce0fddbbd6ecd8dac9@samsung.com>
- <532862ED.8040809@samsung.com>
- <20140319175927.a3feadcacbffe80eca1d3421@samsung.com>
- <CAK9yfHxxo2eFh38gPZkpYf1ueBWySWqPzgLV_tSSykzHhNzN8g@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] OF: Add [__]of_find_node_by_full_name
+Date: Wed, 19 Mar 2014 07:26:16 -0500
+Message-ID: <CAL_Jsq+cpgnTYUxe1FRgVDak963y3E5_EFqc=fBM-3hq4wgqbg@mail.gmail.com>
+References: <1395179560-31384-1-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAK9yfHxxo2eFh38gPZkpYf1ueBWySWqPzgLV_tSSykzHhNzN8g@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>, Cho KyongHo <pullip.cho@samsung.com>
-Cc: Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Linux DeviceTree <devicetree@vger.kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>, Antonios Motakis <a.motakis@virtualopensystems.com>, Grant Grundler <grundler@chromium.org>, Joerg Roedel <joro@8bytes.org>, Kukjin Kim <kgene.kim@samsung.com>, Prathyush <prathyush.k@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Varun Sethi <Varun.Sethi@freescale.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1395179560-31384-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Georgi Vlaev <georgi.vlaev@kons>
 List-Id: devicetree@vger.kernel.org
 
-On 19.03.2014 10:01, Sachin Kamat wrote:
-> On 19 March 2014 14:29, Cho KyongHo <pullip.cho@samsung.com> wrote:
->> On Tue, 18 Mar 2014 16:14:53 +0100, Tomasz Figa wrote:
->>> On 18.03.2014 12:09, Cho KyongHo wrote:
->>>> On Fri, 14 Mar 2014 20:52:43 +0530, Sachin Kamat wrote:
->>>>> Hi KyongHo,
->>>>>
->>>>> On 14 March 2014 10:35, Cho KyongHo <pullip.cho@samsung.com> wrote:
->>>>>> This patch uses managed device helper functions in the probe().
->>>>>>
->>>>>> Signed-off-by: Cho KyongHo <pullip.cho@samsung.com>
->>>>>> ---
->>>>> [snip]
->>>>>
->>>>>> +       data->clk = devm_clk_get(dev, "sysmmu");
->>>>>> +       if (IS_ERR(data->clk)) {
->>>>>> +               dev_info(dev, "No gate clock found!\n");
->>>>>> +               data->clk = NULL;
->>>>>> +       }
->>>>>
->>>>> Why aren't you returning from here upon error?
->>>>
->>>> It is for the case of a System MMU which does not need clock gating.
->>>>
->>>
->>> Are there really such cases?
->>>
->>
->> Yes.
->> Especially in the case of initial stage of new SoC development.
->>
->> I have experianced some software workaround for H/W restriction
->> needs prevention of clock gating for some devices.
+On Tue, Mar 18, 2014 at 4:52 PM, Pantelis Antoniou
+<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> __of_find_node_by_full_name recursively searches for a matching node
+> with the given full name without taking any locks.
 >
-> So aren't these basically some exceptions/hacks rather than the usual way
-> of functioning of the device?
+> of_find_node_by_full_name takes locks and takes a reference on the
+> matching node.
 >
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/of/base.c  | 58 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of.h |  4 ++++
+>  2 files changed, 62 insertions(+)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 19bcdb4..08156e6 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1142,6 +1142,64 @@ static void *of_find_property_value_of_size(const struct device_node *np,
+>  }
+>
+>  /**
+> + * __of_find_node_by_full_name - Find a node with the full name recursively
+> + * @node:      Root of the tree to perform the search
+> + * @full_name: Full name of the node to find.
+> + *
+> + * Find a node with the give full name by recursively following any of
+> + * the child node links.
+> + * Returns the matching node, or NULL if not found.
+> + * Note that the devtree lock is not taken, so this function is only
+> + * safe to call on either detached trees, or when devtree lock is already
+> + * taken.
+> + */
+> +struct device_node *__of_find_node_by_full_name(struct device_node *node,
+> +               const char *full_name)
+> +{
+> +       struct device_node *child, *found;
+> +
+> +       if (node == NULL)
 
-This actually raises a good question, whether we really need to support 
-such early development SoC versions in mainline.
+Just !node is preferred.
 
-Another thing is that if you need to assure that a clock is ungated, you 
-must acquire it and prepare_enable explicitly, so I don't think this 
-kind of handling is correct.
+> +               return NULL;
+> +
+> +       /* check */
+> +       if (of_node_cmp(node->full_name, full_name) == 0)
+> +               return node;
+> +
+> +       __for_each_child_of_node(node, child) {
+> +               found = __of_find_node_by_full_name(child, full_name);
+> +               if (found != NULL)
 
-Best regards,
-Tomasz
+"if (found)" is preferred.
+
+> +                       return found;
+> +       }
+> +
+> +       return NULL;
+> +}
+> +EXPORT_SYMBOL(__of_find_node_by_full_name);
+
+Does this need to be exported?
+
+In any case, use EXPORT_SYMBOL_GPL.
+
+> +
+> +/**
+> + * of_find_node_by_full_name - Find a node with the full name recursively
+> + * @node:      Root of the tree to perform the search
+> + * @full_name: Full name of the node to find.
+> + *
+> + * Find a node with the give full name by recursively following any of
+> + * the child node links.
+> + * Returns the matching node (with a ref taken), or NULL if not found.
+> + */
+> +struct device_node *of_find_node_by_full_name(struct device_node *node,
+> +               const char *full_name)
+> +{
+> +       unsigned long flags;
+> +       struct device_node *np;
+> +
+> +       raw_spin_lock_irqsave(&devtree_lock, flags);
+> +       np = of_find_node_by_full_name(node, full_name);
+
+Don't you need __of_find_node_by_full_name here.
+
+> +       of_node_get(np);
+> +       raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> +
+> +       return np;
+> +}
+> +EXPORT_SYMBOL(of_find_node_by_full_name);
+> +
+> +/**
+>   * of_property_read_u32_index - Find and read a u32 from a multi-value property.
+>   *
+>   * @np:                device node from which the property value is to be read.
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index a8b9dad..bef3d5b 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -223,6 +223,10 @@ extern struct device_node *of_find_matching_node_and_match(
+>
+>  extern struct device_node *of_find_node_by_path(const char *path);
+>  extern struct device_node *of_find_node_by_phandle(phandle handle);
+> +struct device_node *__of_find_node_by_full_name(struct device_node *node,
+> +                                               const char *full_name);
+> +struct device_node *of_find_node_by_full_name(struct device_node *node,
+> +                                               const char *full_name);
+>  extern struct device_node *of_get_parent(const struct device_node *node);
+>  extern struct device_node *of_get_next_parent(struct device_node *node);
+>  extern struct device_node *of_get_next_child(const struct device_node *node,
+> --
+> 1.7.12
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
