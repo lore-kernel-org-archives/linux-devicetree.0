@@ -1,75 +1,82 @@
-Return-Path: <linux-arm-kernel-bounces+robherring2=gmail.com@lists.infradead.org>
+Return-Path: <LW@karo-electronics.de>
 From: y@karo-electronics.de
 Subject: [PATCH] mtd: gpmi: make blockmark swapping optional
 Date: Wed, 19 Mar 2014 14:23:26 +0100
-Message-Id: <53299b4a.0954c20a.5a69.ffff9d96SMTPIN_ADDED_BROKEN@mx.google.com>
+Message-Id: <53299ad7.c83e440a.18d9.4e58SMTPIN_ADDED_BROKEN@mx.google.com>
 MIME-Version: 1.0
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+robherring2=gmail.com@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 To: Arnd Bergmann <arnd@arndb.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Fabio Estevam <fabio.estevam@freescale.com>, Huang Shijie <b32955@freescale.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-RnJvbTogTG90aGFyIFdhw59tYW5uIDxMV0BLQVJPLWVsZWN0cm9uaWNzLmRlPgoKV2l0aCBhIGZs
-YXNoLWJhc2VkIEJCVCB0aGVyZSBpcyBubyByZWFzb24gdG8gbW92ZSB0aGUgRmFjdG9yeSBCYWQK
-QmxvY2sgTWFya2VyIGZyb20gdGhlIGRhdGEgYXJlYSBidWZmZXIgKHRvIHdoZXJlIGl0IGlzIG1h
-cHBlZCBieSB0aGUKR1BNSSBOQU5EIGNvbnRyb2xsZXIpIHRvIHRoZSBPT0IgYnVmZmVyLiBUaHVz
-LCBtYWtlIHRoaXMgZmVhdHVyZQpjb25maWd1cmFibGUgdmlhIERULiBUaGlzIGlzIHJlcXVpcmVk
-IGZvciB0aGUgS2EtUm8gZWxlY3Ryb25pY3MKcGxhdGZvcm1zLgoKU2lnbmVkLW9mZi1ieTogTG90
-aGFyIFdhw59tYW5uIDxMV0BLQVJPLWVsZWN0cm9uaWNzLmRlPgotLS0KIERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvZ3BtaS1uYW5kLnR4dCB8ICAgIDMgKysrCiBhcmNoL2Fy
-bS9ib290L2R0cy9pbXgyOC10eDI4LmR0cyAgICAgICAgICAgICAgICAgICAgfCAgICAxICsKIGRy
-aXZlcnMvbXRkL25hbmQvZ3BtaS1uYW5kL2dwbWktbmFuZC5jICAgICAgICAgICAgICB8ICAgMTAg
-KysrKysrKy0tLQogMyBmaWxlcyBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9u
-cygtKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQv
-Z3BtaS1uYW5kLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvZ3Bt
-aS1uYW5kLnR4dAppbmRleCA0NThkNTk2Li5mMjg5NDlhIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2dwbWktbmFuZC50eHQKKysrIGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9ncG1pLW5hbmQudHh0CkBAIC0yNSw2ICsyNSw5
-IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6CiAgICAgICAgICAgICAgICAgICAgICAgIGRpc2NvdmVy
-YWJsZSBvciB0aGlzIHByb3BlcnR5IGlzIG5vdCBlbmFibGVkLAogICAgICAgICAgICAgICAgICAg
-ICAgICB0aGUgc29mdHdhcmUgbWF5IGNob29zZXMgYW4gaW1wbGVtZW50YXRpb24tZGVmaW5lZAog
-ICAgICAgICAgICAgICAgICAgICAgICBFQ0Mgc2NoZW1lLgorICAtIGZzbCxuby1ibG9ja21hcmst
-c3dhcDogRG9uJ3Qgc3dhcCB0aGUgYmFkIGJsb2NrIG1hcmtlciBmcm9tIHRoZSBPT0IKKyAgICAg
-ICAgICAgICAgICAgICAgICAgYXJlYSB3aXRoIHRoZSBieXRlIGluIHRoZSBkYXRhIGFyZWEgYnV0
-IHJlbHkgb24gdGhlCisgICAgICAgICAgICAgICAgICAgICAgIEJCVCBmb3IgaWRlbnRpZnlpbmcg
-YmFkIGJsb2Nrcy4KIAogVGhlIGRldmljZSB0cmVlIG1heSBvcHRpb25hbGx5IGNvbnRhaW4gc3Vi
-LW5vZGVzIGRlc2NyaWJpbmcgcGFydGl0aW9ucyBvZiB0aGUKIGFkZHJlc3Mgc3BhY2UuIFNlZSBw
-YXJ0aXRpb24udHh0IGZvciBtb3JlIGRldGFpbC4KZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2lteDI4LXR4MjguZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14MjgtdHgyOC5kdHMKaW5k
-ZXggZTE0YmQ4Ni4uN2QyYmVhOCAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14Mjgt
-dHgyOC5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14MjgtdHgyOC5kdHMKQEAgLTI0Nyw2
-ICsyNDcsNyBAQAogJmdwbWkgewogCXBpbmN0cmwtMCA9IDwmZ3BtaV9waW5zX2EgJmdwbWlfc3Rh
-dHVzX2NmZz47CiAJbmFuZC1vbi1mbGFzaC1iYnQ7CisJZnNsLG5vLWJsb2NrbWFyay1zd2FwOwog
-CXN0YXR1cyA9ICJva2F5IjsKIH07CiAKZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL25hbmQvZ3Bt
-aS1uYW5kL2dwbWktbmFuZC5jIGIvZHJpdmVycy9tdGQvbmFuZC9ncG1pLW5hbmQvZ3BtaS1uYW5k
-LmMKaW5kZXggYmI3N2Y3NS4uOTg1NjJlYiAxMDA2NDQKLS0tIGEvZHJpdmVycy9tdGQvbmFuZC9n
-cG1pLW5hbmQvZ3BtaS1uYW5kLmMKKysrIGIvZHJpdmVycy9tdGQvbmFuZC9ncG1pLW5hbmQvZ3Bt
-aS1uYW5kLmMKQEAgLTE2MzIsOSArMTYzMiw2IEBAIHN0YXRpYyBpbnQgZ3BtaV9pbml0X2xhc3Qo
-c3RydWN0IGdwbWlfbmFuZF9kYXRhICp0aGlzKQogCXN0cnVjdCBiY2hfZ2VvbWV0cnkgKmJjaF9n
-ZW8gPSAmdGhpcy0+YmNoX2dlb21ldHJ5OwogCWludCByZXQ7CiAKLQkvKiBTZXQgdXAgc3dhcF9i
-bG9ja19tYXJrLCBtdXN0IGJlIHNldCBiZWZvcmUgdGhlIGdwbWlfc2V0X2dlb21ldHJ5KCkgKi8K
-LQl0aGlzLT5zd2FwX2Jsb2NrX21hcmsgPSAhR1BNSV9JU19NWDIzKHRoaXMpOwotCiAJLyogU2V0
-IHVwIHRoZSBtZWRpdW0gZ2VvbWV0cnkgKi8KIAlyZXQgPSBncG1pX3NldF9nZW9tZXRyeSh0aGlz
-KTsKIAlpZiAocmV0KQpAQCAtMTcwMSw2ICsxNjk4LDEzIEBAIHN0YXRpYyBpbnQgZ3BtaV9uYW5k
-X2luaXQoc3RydWN0IGdwbWlfbmFuZF9kYXRhICp0aGlzKQogCWlmIChvZl9nZXRfbmFuZF9vbl9m
-bGFzaF9iYnQodGhpcy0+ZGV2LT5vZl9ub2RlKSkKIAkJY2hpcC0+YmJ0X29wdGlvbnMgfD0gTkFO
-RF9CQlRfVVNFX0ZMQVNIIHwgTkFORF9CQlRfTk9fT09COwogCisJLyogU2V0IHVwIHN3YXBfYmxv
-Y2tfbWFyaywgbXVzdCBiZSBzZXQgYmVmb3JlIHRoZSBncG1pX3NldF9nZW9tZXRyeSgpICovCisJ
-aWYgKCFvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wodGhpcy0+ZGV2LT5vZl9ub2RlLCAiZnNsLG5vLWJs
-b2NrbWFyay1zd2FwIikpCisJCXRoaXMtPnN3YXBfYmxvY2tfbWFyayA9ICFHUE1JX0lTX01YMjMo
-dGhpcyk7CisKKwlkZXZfZGJnKHRoaXMtPmRldiwgIkJsb2NrbWFyayBzd2FwcGluZyAlc2FibGVk
-XG4iLAorCQl0aGlzLT5zd2FwX2Jsb2NrX21hcmsgPyAiZW4iIDogImRpcyIpOworCiAJLyoKIAkg
-KiBBbGxvY2F0ZSBhIHRlbXBvcmFyeSBETUEgYnVmZmVyIGZvciByZWFkaW5nIElEIGluIHRoZQog
-CSAqIG5hbmRfc2Nhbl9pZGVudCgpLgotLSAKMS43LjEwLjQKCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
-dApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+From: Lothar Waßmann <LW@KARO-electronics.de>
+
+With a flash-based BBT there is no reason to move the Factory Bad
+Block Marker from the data area buffer (to where it is mapped by the
+GPMI NAND controller) to the OOB buffer. Thus, make this feature
+configurable via DT. This is required for the Ka-Ro electronics
+platforms.
+
+Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
+---
+ Documentation/devicetree/bindings/mtd/gpmi-nand.txt |    3 +++
+ arch/arm/boot/dts/imx28-tx28.dts                    |    1 +
+ drivers/mtd/nand/gpmi-nand/gpmi-nand.c              |   10 +++++++---
+ 3 files changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
+index 458d596..f28949a 100644
+--- a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
+@@ -25,6 +25,9 @@ Optional properties:
+                        discoverable or this property is not enabled,
+                        the software may chooses an implementation-defined
+                        ECC scheme.
++  - fsl,no-blockmark-swap: Don't swap the bad block marker from the OOB
++                       area with the byte in the data area but rely on the
++                       BBT for identifying bad blocks.
+ 
+ The device tree may optionally contain sub-nodes describing partitions of the
+ address space. See partition.txt for more detail.
+diff --git a/arch/arm/boot/dts/imx28-tx28.dts b/arch/arm/boot/dts/imx28-tx28.dts
+index e14bd86..7d2bea8 100644
+--- a/arch/arm/boot/dts/imx28-tx28.dts
++++ b/arch/arm/boot/dts/imx28-tx28.dts
+@@ -247,6 +247,7 @@
+ &gpmi {
+ 	pinctrl-0 = <&gpmi_pins_a &gpmi_status_cfg>;
+ 	nand-on-flash-bbt;
++	fsl,no-blockmark-swap;
+ 	status = "okay";
+ };
+ 
+diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+index bb77f75..98562eb 100644
+--- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
++++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+@@ -1632,9 +1632,6 @@ static int gpmi_init_last(struct gpmi_nand_data *this)
+ 	struct bch_geometry *bch_geo = &this->bch_geometry;
+ 	int ret;
+ 
+-	/* Set up swap_block_mark, must be set before the gpmi_set_geometry() */
+-	this->swap_block_mark = !GPMI_IS_MX23(this);
+-
+ 	/* Set up the medium geometry */
+ 	ret = gpmi_set_geometry(this);
+ 	if (ret)
+@@ -1701,6 +1698,13 @@ static int gpmi_nand_init(struct gpmi_nand_data *this)
+ 	if (of_get_nand_on_flash_bbt(this->dev->of_node))
+ 		chip->bbt_options |= NAND_BBT_USE_FLASH | NAND_BBT_NO_OOB;
+ 
++	/* Set up swap_block_mark, must be set before the gpmi_set_geometry() */
++	if (!of_property_read_bool(this->dev->of_node, "fsl,no-blockmark-swap"))
++		this->swap_block_mark = !GPMI_IS_MX23(this);
++
++	dev_dbg(this->dev, "Blockmark swapping %sabled\n",
++		this->swap_block_mark ? "en" : "dis");
++
+ 	/*
+ 	 * Allocate a temporary DMA buffer for reading ID in the
+ 	 * nand_scan_ident().
+-- 
+1.7.10.4
