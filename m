@@ -1,102 +1,157 @@
-From: Girish KS <girishks2000@gmail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: exynos: added mailbox node
-Date: Wed, 19 Mar 2014 09:36:40 +0530
-Message-ID: <CAKrE-KeJPqFC__mNhFV6qexL0+E_B6Fm+u8S4iKnCR8vibCseA@mail.gmail.com>
-References: <1395057839-23871-1-git-send-email-ks.giri@samsung.com>
-	<1395057839-23871-3-git-send-email-ks.giri@samsung.com>
-	<20140317140625.GJ8070@e106331-lin.cambridge.arm.com>
+From: Peter Chen <Peter.Chen@freescale.com>
+Subject: RE: [lnxrevli] [PATCH 5/9] usb: doc: rename ci13xxx-imx.txt to
+ ci-hdrc-imx.txt
+Date: Wed, 19 Mar 2014 04:53:59 +0000
+Message-ID: <60f38225bd2e446b9e18e7074562b995@BL2PR03MB226.namprd03.prod.outlook.com>
+References: <1395194298-25529-1-git-send-email-peter.chen@freescale.com>
+ <3.18.2014-freescale.mail.onmicrosoft.com-24-6353076962365976748976-4673@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140317140625.GJ8070@e106331-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Girish K S <ks.giri@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ilho215.lee@samsung.com" <ilho215.lee@samsung.com>, "s-anna@ti.com" <s-anna@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <3.18.2014-freescale.mail.onmicrosoft.com-24-6353076962365976748976-4673@freescale.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter Chen <Peter.Chen@freescale.com>, "B47624@freescale.com" <B47624@freescale.com>
+Cc: "LNXREVLI@freescale.com" <LNXREVLI@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 17, 2014 at 7:36 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Mon, Mar 17, 2014 at 12:03:59PM +0000, Girish K S wrote:
->> This patch adds the dt node for the mailbox IP
->>
->> Signed-off-by: Girish K S <ks.giri@samsung.com>
->>
->> Change-Id: I35e45e9a62592887a84a909aee54f259a2f731fa
->> ---
->>  .../bindings/mailbox/samsung-mailbox.txt           |   24 +++++++
->>  arch/arm64/boot/dts/samsung-gh7.dtsi               |   66 ++++++++++++++++++++
->>  arch/arm64/boot/dts/samsung-ssdk-gh7.dts           |    3 +
->>  3 files changed, 93 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mailbox/samsung-mailbox.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mailbox/samsung-mailbox.txt b/Documentation/devicetree/bindings/mailbox/samsung-mailbox.txt
->> new file mode 100644
->> index 0000000..1908d71
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mailbox/samsung-mailbox.txt
->> @@ -0,0 +1,24 @@
->> +
->> +Samsung Mailbox Driver
->> +
->> +Required properties:
->> +- compatible:                Should be one of the following,
->> +                         "samsung,gh7-mailbox" for
->> +                             Samsung GH7 SoC series
->> +                         "samsung,exynos-mailbox" for
->> +                             exynosx SoC series
->> +- reg:                       Contains the mailbox register address range (base address
->> +                     and length)
->> +- interrupts:                Contains the interrupt information for the mailbox
->> +                     device.
->
-> How many interrupts?
-just one receive interrupt
-I will update this detail in binding doc
->
-> What are they for?
-It is only for receive from remote processor
->
->> +- samsung,mbox-names:        Array of the names of the mailboxes
->
-> Juding by the code there is one name per reg entry, but the description
-> above implies a single entry (as all the dt fragments have).
->
-> What values are expected? What is the consumer of these values? What are
-> they used for?
-These names are used to mention the links in the platform. tx and rx
-link via mailbox.
-i can mention of 2 consumers now. the ipmi driver and the cpu freq
-driver. They are used
-to exchange information with the remote processor
->
->> +
->> +Example:
->> +
->> +/* Samsung GH7 SoC */
->> +mailbox@100a0000 {
->> +     compatible = "samsung,gh7-mailbox";
->> +     reg = <0x0 0x100a0000 0x0 0x1000>;
->> +     interrupts = <0 310 0>;
->> +     samsung,mbox-names = "a7q-scp";
->> +};
->> diff --git a/arch/arm64/boot/dts/samsung-gh7.dtsi b/arch/arm64/boot/dts/samsung-gh7.dtsi
->> index c3610bd..be4cce9 100644
->> --- a/arch/arm64/boot/dts/samsung-gh7.dtsi
->> +++ b/arch/arm64/boot/dts/samsung-gh7.dtsi
->> @@ -107,5 +107,71 @@
->>                       interrupts = <0 420 0>;
->>                       arm,primecell-periphid = <0x341011>; /* HACK */
->
-> This looks odd.
->
-> What tree is this against?
+ 
+> We have already renamed the file name, change doc name at this patch.
+> 
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-doc@vger.kernel.org
+> Signed-off-by: Peter Chen <peter.chen@freescale.com>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  .../devicetree/bindings/usb/ci-hdrc-imx.txt        |   51
+> ++++++++++++++++++++
+>  .../devicetree/bindings/usb/ci13xxx-imx.txt        |   51 --------------
+> ------
+>  2 files changed, 51 insertions(+), 51 deletions(-)  create mode 100644
+> Documentation/devicetree/bindings/usb/ci-hdrc-imx.txt
+>  delete mode 100644 Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-imx.txt
+> b/Documentation/devicetree/bindings/usb/ci-hdrc-imx.txt
+> new file mode 100644
+> index 0000000..881901a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-imx.txt
+> @@ -0,0 +1,51 @@
+> +* Freescale i.MX ci13xxx usb controllers
+> +
+> +Required properties:
+> +- compatible: Should be "fsl,imx27-usb"
+> +- reg: Should contain registers location and length
+> +- interrupts: Should contain controller interrupt
+> +
+> +Recommended properies:
+> +- phy_type: the type of the phy connected to the core. Should be one
+> +  of "utmi", "utmi_wide", "ulpi", "serial" or "hsic". Without this
+> +  property the PORTSC register won't be touched
+> +- dr_mode: One of "host", "peripheral" or "otg". Defaults to "otg"
+> +
+> +Optional properties:
+> +- fsl,usbphy: phandler of usb phy that connects to the only one port
+> +- fsl,usbmisc: phandler of non-core register device, with one argument
+> +  that indicate usb controller index
+> +- vbus-supply: regulator for vbus
+> +- disable-over-current: disable over current detect
+> +- external-vbus-divider: enables off-chip resistor divider for Vbus
+> +- imx6-usb-charger-detection: enable imx6 usb charger detect function,
+> +only set it when the user wants SoC usb charger detection capabilities.
+> +If the user wants to use charger IC's usb charger detection
+> +capabilities, please do not set it.
+> +- fsl,anatop: phandle for anatop module, anatop module is only existed
+> +at imx6 SoC series
+> +- pinctrl-names: for names of hsic pin group
+> +- pinctrl-0: hsic "idle" pin group
+> +- pinctrl-1: hsic "active" pin group
+> +- osc-clkgate-delay: the delay between powering up the xtal 24MHz clock
+> +  and release the clock to the digital logic inside the analog block,
+> +  0 <= osc-clkgate-delay <= 7.
+> +- maximum-speed: limit the maximum connection speed to "full-speed".
+> +
+> +Examples:
+> +usb@02184000 { /* USB OTG */
+> +	compatible = "fsl,imx6q-usb", "fsl,imx27-usb";
+> +	reg = <0x02184000 0x200>;
+> +	interrupts = <0 43 0x04>;
+> +	fsl,usbphy = <&usbphy1>;
+> +	fsl,usbmisc = <&usbmisc 0>;
+> +	disable-over-current;
+> +	external-vbus-divider;
+> +	imx6-usb-charger-detection;
+> +	fsl,anatop = <&anatop>;
+> +	pinctrl-names = "idle", "active";
+> +	pinctrl-0 = <&pinctrl_usbh2_1>;
+> +	pinctrl-1 = <&pinctrl_usbh2_2>;
+> +	osc-clkgate-delay = <0x3>;
+> +	maximum-speed = "full-speed";
+> +};
+> diff --git a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+> b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+> deleted file mode 100644
+> index 881901a..0000000
+> --- a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+> +++ /dev/null
+> @@ -1,51 +0,0 @@
+> -* Freescale i.MX ci13xxx usb controllers
+> -
+> -Required properties:
+> -- compatible: Should be "fsl,imx27-usb"
+> -- reg: Should contain registers location and length
+> -- interrupts: Should contain controller interrupt
+> -
+> -Recommended properies:
+> -- phy_type: the type of the phy connected to the core. Should be one
+> -  of "utmi", "utmi_wide", "ulpi", "serial" or "hsic". Without this
+> -  property the PORTSC register won't be touched
+> -- dr_mode: One of "host", "peripheral" or "otg". Defaults to "otg"
+> -
+> -Optional properties:
+> -- fsl,usbphy: phandler of usb phy that connects to the only one port
+> -- fsl,usbmisc: phandler of non-core register device, with one argument
+> -  that indicate usb controller index
+> -- vbus-supply: regulator for vbus
+> -- disable-over-current: disable over current detect
+> -- external-vbus-divider: enables off-chip resistor divider for Vbus
+> -- imx6-usb-charger-detection: enable imx6 usb charger detect function, -
+> only set it when the user wants SoC usb charger detection capabilities.
+> -If the user wants to use charger IC's usb charger detection capabilities,
+> -please do not set it.
+> -- fsl,anatop: phandle for anatop module, anatop module is only existed -
+> at imx6 SoC series
+> -- pinctrl-names: for names of hsic pin group
+> -- pinctrl-0: hsic "idle" pin group
+> -- pinctrl-1: hsic "active" pin group
+> -- osc-clkgate-delay: the delay between powering up the xtal 24MHz clock
+> -  and release the clock to the digital logic inside the analog block,
+> -  0 <= osc-clkgate-delay <= 7.
+> -- maximum-speed: limit the maximum connection speed to "full-speed".
+> -
+> -Examples:
+> -usb@02184000 { /* USB OTG */
+> -	compatible = "fsl,imx6q-usb", "fsl,imx27-usb";
+> -	reg = <0x02184000 0x200>;
+> -	interrupts = <0 43 0x04>;
+> -	fsl,usbphy = <&usbphy1>;
+> -	fsl,usbmisc = <&usbmisc 0>;
+> -	disable-over-current;
+> -	external-vbus-divider;
+> -	imx6-usb-charger-detection;
+> -	fsl,anatop = <&anatop>;
+> -	pinctrl-names = "idle", "active";
+> -	pinctrl-0 = <&pinctrl_usbh2_1>;
+> -	pinctrl-1 = <&pinctrl_usbh2_2>;
+> -	osc-clkgate-delay = <0x3>;
+> -	maximum-speed = "full-speed";
+> -};
+> --
 
-Sorry this was based on a internal tree. Will base it on Kukjin's gh7 base patch
+Sorry, forget it please. I cherry-pick them to freescale internal tree,
+and forget to skip sob and cc in commit log.
 
->
-> Cheers,
-> Mark.
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Peter
+
