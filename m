@@ -1,74 +1,52 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH v3 4/4] ASoC: simple-card: Add DT
- documentation for multi-DAI links
-Date: Wed, 19 Mar 2014 20:32:06 +0200
-Message-ID: <5329E2A6.2040605@ti.com>
-References: <cover.1394883134.git.moinejf@free.fr>
- <d054780a0edf4b2338a52e48bff9144e19aa614f.1394883134.git.moinejf@free.fr>
- <20140317164339.GR11706@sirena.org.uk> <20140318091728.1d2240ca@armhf>
- <53296CB7.1000909@ti.com> <20140319134625.GN11706@sirena.org.uk>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v7 3/3] arm64: Add architecture support for PCI
+Date: Wed, 19 Mar 2014 19:36:10 +0100
+Message-ID: <14992874.y2jPSm88bi@wuerfel>
+References: <1394811258-1500-1-git-send-email-Liviu.Dudau@arm.com> <20140319172140.GA16328@e106497-lin.cambridge.arm.com> <CAL_JsqJCa6kz8H_W7vz4YW5eOrOZ43kwxQq9Uh-M0qpCtW_pQQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20140319134625.GN11706@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Jean-Francois Moine <moinejf@free.fr>, alsa-devel@alsa-project.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Xiubo Li <Li.Xiubo@freescale.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJCa6kz8H_W7vz4YW5eOrOZ43kwxQq9Uh-M0qpCtW_pQQ@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linaro-kernel@lists.linaro.org
+Cc: Rob Herring <robherring2@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On 03/19/2014 03:46 PM, Mark Brown wrote:
-> On Wed, Mar 19, 2014 at 12:08:55PM +0200, Jyri Sarha wrote:
->
->> While we are at it we could update the bitclock-master and frame-master
->> syntax to be like this:
->
->> bitclock-master = "cpu"
->> frame-master = "codec"
->
->> With the above explicit definition all the daifmt settings could be defined
->> in link level. For backwards compatibility we could still define that
->> omitting the value equals "codec" and omitting the property equals "cpu".
->
-> It seems it'd be a bit more idiomatic to do that with a phandle rather
-> than with a string in order to allow extensions for things like TDM (the
-> I2S to mono speaker driver use case for example).
->
+On Wednesday 19 March 2014 12:53:11 Rob Herring wrote:
+> I've successfully used the preceeding series on ARM converting the
+> Versatile PCI support to use it. The main part of the process was just
+> copying this arm64 code to arm which tells me the code is in the wrong
+> place. There are still some differences in pcibios_fixup_bus, and it
+> is not clear to me whether the arm version should be doing all the
+> things the arm64 version does and vice-versa. Certainly that should be
+> sorted out. The other issues I see is pci_ioremap_io still has to be
+> called by the driver and is not aligned at least for the prototype as
+> I pointed out. Seems all these issues could be fixed with a simple
+> CONFIG_ARCH_HAS_MMIO_IOSPACE kconfig option.
 
-You mean a like this:
+I don't even think we need a CONFIG option: Any architecture that wants
+to provide pci_ioremap_io (or whatever we end up calling the new version)
+needs to pass the virtual base address to the common code, and the
+easiest way to do that is using a macro  (e.g. PCI_IO_VIRT_BASE).
 
-sound {
-     compatible = "simple-audio-card";
-     simple-audio-card,name = "Simple Audio";
-     simple-audio-card,widgets = ...
-     simple-audio-card,routing = ...
+What I think we should end up with is a generic implementation like
 
-     simple-audio-card,dai-link@0 {        /* I2S - codec */
-         format = "i2s";
-         bitclock-master = <&codec 0>
-         frame-master = <&codec 0>;
-         bitclock-inversion = <1>;
-         simple-audio-card,cpu {
-             sound-dai = <&audio1 0>;
-             bitclock-inversion = <0>;
-         };
-         simple-audio-card,codec {
-             sound-dai = <&codec 0>;
-             system-clock-frequency = <12000000>;
-         };
-     };
-...
+/* 
+ * architectures with special needs may provide their own version,
+ * but most should be able to use this one.
+ */
+unsigned long __weak pci_ioremap_iospace(struct resource *bus, unsigned long cpu)
+{
+#ifdef PCI_IO_VIRT_BASE
+	/* find free space, ioremap the bus address, return the offset */
+	...
+#endif
 
-Yep, that makes sense when considering tdm setups with multiple codecs 
-on the same wires.
+	/* this architecture doesn't have memory mapped I/O space,
+	   so this function should never be called */
+	WARN_ON(1);
+	return -ENODEV;
+}
 
-Best regards,
-Jyri
+	Arnd
