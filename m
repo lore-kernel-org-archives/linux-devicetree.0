@@ -1,37 +1,37 @@
 From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: [PATCH 0/2] Disable subpage write for k2hk-evm
-Date: Thu, 20 Mar 2014 00:15:43 +0200
-Message-ID: <1395267345-27795-1-git-send-email-ivan.khoronzhuk@ti.com>
+Subject: [PATCH 2/2] ARM: dts: keystone: disable subpage write for davinci nand device
+Date: Thu, 20 Mar 2014 00:15:45 +0200
+Message-ID: <1395267345-27795-3-git-send-email-ivan.khoronzhuk@ti.com>
+References: <1395267345-27795-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1395267345-27795-1-git-send-email-ivan.khoronzhuk@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: santosh.shilimkar@ti.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, linux-arm-kernel@lists.infradead.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, grygorii.strashko@ti.com, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, Murali Karicheri <m-karicheri2@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-These patches disable subpage write for k2hk-evm.
+Add the property davinci-no-subpage-write to disable sub page write in the
+nand driver.
 
-Based on linux-next
-tag: next-20140319
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+---
+ arch/arm/boot/dts/k2hk-evm.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-Ivan Khoronzhuk (2):
-  mtd: davinci-nand: add dts property for NAND_NO_SUBPAGE_WRITE option
-  ARM: dts: keystone: disable subpage write for davinci nand device
-
- Documentation/devicetree/bindings/mtd/davinci-nand.txt | 2 ++
- arch/arm/boot/dts/k2hk-evm.dts                         | 1 +
- drivers/mtd/nand/davinci_nand.c                        | 3 +++
- 3 files changed, 6 insertions(+)
-
+diff --git a/arch/arm/boot/dts/k2hk-evm.dts b/arch/arm/boot/dts/k2hk-evm.dts
+index 1a1335b..624520f 100644
+--- a/arch/arm/boot/dts/k2hk-evm.dts
++++ b/arch/arm/boot/dts/k2hk-evm.dts
+@@ -118,6 +118,7 @@
+ 			nand-ecc-mode = "hw";
+ 			ti,davinci-ecc-bits = <4>;
+ 			nand-on-flash-bbt;
++			ti,davinci-no-subpage-write;
+ 
+ 			partition@0 {
+ 				label = "u-boot";
 -- 
 1.8.3.2
