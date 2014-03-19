@@ -1,52 +1,63 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v7 3/3] arm64: Add architecture support for PCI
-Date: Wed, 19 Mar 2014 19:36:10 +0100
-Message-ID: <14992874.y2jPSm88bi@wuerfel>
-References: <1394811258-1500-1-git-send-email-Liviu.Dudau@arm.com> <20140319172140.GA16328@e106497-lin.cambridge.arm.com> <CAL_JsqJCa6kz8H_W7vz4YW5eOrOZ43kwxQq9Uh-M0qpCtW_pQQ@mail.gmail.com>
+From: Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v11 17/27] iommu/exynos: remove calls to Runtime PM API
+	functions
+Date: Wed, 19 Mar 2014 11:37:57 -0700
+Message-ID: <CANEJEGtCdMmWXwpoky8USLOBw7jAt1bRw8or-mDK7twxAzhWpA@mail.gmail.com>
+References: <20140314140843.ba055f28dd7ed59c46088029@samsung.com>
+	<5322FD14.5090602@samsung.com>
+	<20140318185605.0380c8dfe6559c06183092e5@samsung.com>
+	<532861BE.7020601@samsung.com>
+	<20140319100304.5e26fa43ccdfc29178b058e1@samsung.com>
+	<532997D7.6090608@samsung.com>
+	<CANEJEGuYz28dGT+264CYtG+Tk6htOq=u-t4PWMtsij32X0vJFA@mail.gmail.com>
+	<5329D426.9020706@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJCa6kz8H_W7vz4YW5eOrOZ43kwxQq9Uh-M0qpCtW_pQQ@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linaro-kernel@lists.linaro.org
-Cc: Rob Herring <robherring2@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <5329D426.9020706-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Linux DeviceTree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Samsung SOC <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Prathyush <prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Antonios Motakis <a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 19 March 2014 12:53:11 Rob Herring wrote:
-> I've successfully used the preceeding series on ARM converting the
-> Versatile PCI support to use it. The main part of the process was just
-> copying this arm64 code to arm which tells me the code is in the wrong
-> place. There are still some differences in pcibios_fixup_bus, and it
-> is not clear to me whether the arm version should be doing all the
-> things the arm64 version does and vice-versa. Certainly that should be
-> sorted out. The other issues I see is pci_ioremap_io still has to be
-> called by the driver and is not aligned at least for the prototype as
-> I pointed out. Seems all these issues could be fixed with a simple
-> CONFIG_ARCH_HAS_MMIO_IOSPACE kconfig option.
+On Wed, Mar 19, 2014 at 10:30 AM, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+...
+> As I said, AFAIK the trend is to get rid of ordering by initcalls and make
+> sure that drivers can handle missing dependencies properly, even for
+> "services" such as DMA, GPIO, clocks and so on, which after all are provided
+> by normal drivers like other.
 
-I don't even think we need a CONFIG option: Any architecture that wants
-to provide pci_ioremap_io (or whatever we end up calling the new version)
-needs to pass the virtual base address to the common code, and the
-easiest way to do that is using a macro  (e.g. PCI_IO_VIRT_BASE).
+Ok - I'm not following the general kernel dev trends. initcall()
+levels are easy to understand and implement. So I would not be in a
+hurry to replace them.
 
-What I think we should end up with is a generic implementation like
+>> ps. I've written IOMMU support for four different IOMMUs on three
+>> operating systems (See drivers/parisc for two linux examples). But I
+>> still feel like I at best have 80% understanding of how this one is
+>> organized/works. Abstract descriptions and convoluted code have been
+>> handicapping me (and lack of time to dig further).
+>
+>
+> Well, this is one of my concerns with this driver. It isn't easy to read
+> (and so review, maintain, extend and debug found issues).
 
-/* 
- * architectures with special needs may provide their own version,
- * but most should be able to use this one.
- */
-unsigned long __weak pci_ioremap_iospace(struct resource *bus, unsigned long cpu)
-{
-#ifdef PCI_IO_VIRT_BASE
-	/* find free space, ioremap the bus address, return the offset */
-	...
-#endif
+My postscript comment was more to explain why I'm not confident in my
+opinion - not a reason to reject the patch series.  I still consider
+the whole series as a step forward. But I'm not the expert here.
 
-	/* this architecture doesn't have memory mapped I/O space,
-	   so this function should never be called */
-	WARN_ON(1);
-	return -ENODEV;
-}
+Right now, with ~30 patches posted by the exynos iommu (official?)
+maintainer, no one else who has a clue will attempt to fix or clean up
+those kinds of problems.  i.e. it's useful to enable others to fix
+what are essentially unspecified "design pattern" issues.
 
-	Arnd
+cheers,
+grant
