@@ -1,205 +1,164 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5] dmaengine: sirf: enable generic dt binding for dma
- channels
-Date: Wed, 19 Mar 2014 20:13:59 +0530
-Message-ID: <20140319144359.GI1976@intel.com>
-References: <1389190369-2012-1-git-send-email-21cnbao@gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH V4 1/8] sxgbe: Add device-tree binding support document
+Date: Wed, 19 Mar 2014 15:04:02 +0000
+Message-ID: <20140319150402.GC9188@e106331-lin.cambridge.arm.com>
+References: <00f801cf4275$e7e2a1b0$b7a7e510$@samsung.com>
+ <20140318091852.GA8043@e106331-lin.cambridge.arm.com>
+ <001101cf42c7$00d99ba0$028cd2e0$@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1389190369-2012-1-git-send-email-21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, workgroup.linux-kQvG35nSl+M@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
+In-Reply-To: <001101cf42c7$00d99ba0$028cd2e0$@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Byungho An <bh74.an@samsung.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "ilho215.lee@samsung.com" <ilho215.lee@samsung.com>, "siva.kallam@samsung.com" <siva.kallam@samsung.com>, "vipul.pandya@samsung.com" <vipul.pandya@samsung.com>, "ks.giri@samsung.com" <ks.giri@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 26, 2014 at 10:08:45AM +0800, Barry Song wrote:
-> From: Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
+On Tue, Mar 18, 2014 at 04:27:46PM +0000, Byungho An wrote:
+> Mark Rutland <mark.rutland@arm.com> :
+> > Hi,
+> > 
+> > As a general note it's helpful for devicetree to be Cc'd on the entire
+> series
+> > (though the binding document should be a separate patch) as it provides
+> useful
+> > context for reviewing the binding.
+> OK.
 > 
-> move to support of_dma_request_slave_channel() and dma_request_slave_channel.
-> we add a xlate() to let dma clients be able to find right dma_chan by generic
-> "dmas" properties in dts.
-> 
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-> Signed-off-by: Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
+> > 
+> > On Tue, Mar 18, 2014 at 06:47:13AM +0000, Byungho An wrote:
+> > > From: Siva Reddy <siva.kallam@samsung.com>
+> > >
+> > > This patch adds binding document for SXGBE ethernet driver via
+> device-tree.
+> > >
+> > > Signed-off-by: Siva Reddy Kallam <siva.kallam@samsung.com>
+> > > Signed-off-by: Byungho An <bh74.an@samsung.com>
+> > > ---
+> > >  .../devicetree/bindings/net/samsung-sxgbe.txt      |   53
+> > > ++++++++++++++++++++
+> > >  1 file changed, 53 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/net/samsung-sxgbe.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
+> > > b/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
+> > > new file mode 100644
+> > > index 0000000..ca27947
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
+> > > @@ -0,0 +1,53 @@
+> > > +* Samsung 10G Ethernet driver (SXGBE)
+> > > +
+> > > +Required properties:
+> > > +- compatible: Should be "samsung,sxgbe-v2.0a"
+> > > +- reg: Address and length of the register set for the device
+> > > +- interrupt-parent: Should be the phandle for the interrupt
+> > > +controller
+> > > +  that services interrupts for this device
+> > > +- interrupts: Should contain the SXGBE interrupts
+> > > +  These interrupts are ordered by fixed and follows variable
+> > > +  trasmit DMA interrupts, receive DMA interrupts and lpi interrupt.
+> > > +  index 0 - this is fixed common interrupt of SXGBE and it is always
+> > > +  available.
+> > > +  index 1 to 25 - 8 variable trasmit interrupts, variable 16 receive
+> > > interrupts
+> > > +  and 1 optional lpi interrupt.
+> > > +- phy-mode: String, operation mode of the PHY interface.
+> > > +  Supported values are: "xaui", "gmii".
+> > > +- samsung,pbl: Integer, Programmable Burst Length.
+> > > +  Supported values are 1, 2, 4, 8, 16, or 32.
+> > 
+> > There's no need to abbreviate to "pbl".
+> > 
+> > Is this a property of the hardware, or configuration that the kernel will
+> program
+> > in? If the latter, why can the kernel not choose?
+> Yes, this is hardware property
 
-I tried applying this but it failed to apply.
+Ok.
 
-Can you pls rebase quickly and resend. While at it pls add the Acks recived!
+> 
+> > 
+> > > +- samsung,fixed-burst: Boolean, Program the DMA to use the fixed
+> > > +burst mode
+> > > +- samsung,burst-map: Integer, Program the possible bursts supported
+> > > +by sxgbe
+> > > +  This is an interger and represents allowable DMA bursts when fixed
+> burst.
+> > > +  Allowable range is 0x00-0x3F. This field is valid only when fixed
+> > > +burst is
+> > > +  enabled, otherwise ignored.
+> > 
+> > If that's the case, why not have just this property and have it imply the
+> use of
+> > fixed burst mode?
+> OK. It will be implemented in next patch set.
+> 
+> > 
+> > When is it necessary to use fixed burst mode?
+> This is the configurable mode of DMA an used internally by hardware to fetch
+> data from platform bus
 
--- 
-~Vinod
+Sure, but that doesn't describe when it is necessary. Is this the way
+the DMA was configured at integration time, or the way the kernel should
+configure it?
 
-> ---
->  -v5:
->  add Acked-by: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org;
->  cc devicetree guys as Acked from dt was required
-> 
->  .../devicetree/bindings/dma/sirfsoc-dma.txt        |   43 ++++++++++++++++++++
->  arch/arm/boot/dts/atlas6.dtsi                      |    2 +
->  arch/arm/boot/dts/prima2.dtsi                      |    2 +
->  drivers/dma/sirf-dma.c                             |   23 ++++++++++
->  4 files changed, 70 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/dma/sirfsoc-dma.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/sirfsoc-dma.txt b/Documentation/devicetree/bindings/dma/sirfsoc-dma.txt
-> new file mode 100644
-> index 0000000..ecbc96a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/sirfsoc-dma.txt
-> @@ -0,0 +1,43 @@
-> +* CSR SiRFSoC DMA controller
-> +
-> +See dma.txt first
-> +
-> +Required properties:
-> +- compatible: Should be "sirf,prima2-dmac" or "sirf,marco-dmac"
-> +- reg: Should contain DMA registers location and length.
-> +- interrupts: Should contain one interrupt shared by all channel
-> +- #dma-cells: must be <1>. used to represent the number of integer
-> +    cells in the dmas property of client device.
-> +- clocks: clock required
-> +
-> +Example:
-> +
-> +Controller:
-> +dmac0: dma-controller@b00b0000 {
-> +	compatible = "sirf,prima2-dmac";
-> +	reg = <0xb00b0000 0x10000>;
-> +	interrupts = <12>;
-> +	clocks = <&clks 24>;
-> +	#dma-cells = <1>;
-> +};
-> +
-> +
-> +Client:
-> +Fill the specific dma request line in dmas. In the below example, spi0 read
-> +channel request line is 9 of the 2nd dma controller, while write channel uses
-> +4 of the 2nd dma controller; spi1 read channel request line is 12 of the 1st
-> +dma controller, while write channel uses 13 of the 1st dma controller:
-> +
-> +spi0: spi@b00d0000 {
-> +	compatible = "sirf,prima2-spi";
-> +	dmas = <&dmac1 9>,
-> +		<&dmac1 4>;
-> +	dma-names = "rx", "tx";
-> +};
-> +
-> +spi1: spi@b0170000 {
-> +	compatible = "sirf,prima2-spi";
-> +	dmas = <&dmac0 12>,
-> +		<&dmac0 13>;
-> +	dma-names = "rx", "tx";
-> +};
-> diff --git a/arch/arm/boot/dts/atlas6.dtsi b/arch/arm/boot/dts/atlas6.dtsi
-> index b63cfef..4f41f0a 100644
-> --- a/arch/arm/boot/dts/atlas6.dtsi
-> +++ b/arch/arm/boot/dts/atlas6.dtsi
-> @@ -260,6 +260,7 @@
->  				reg = <0xb00b0000 0x10000>;
->  				interrupts = <12>;
->  				clocks = <&clks 24>;
-> +				#dma-cells = <1>;
->  			};
->  
->  			dmac1: dma-controller@b0160000 {
-> @@ -268,6 +269,7 @@
->  				reg = <0xb0160000 0x10000>;
->  				interrupts = <13>;
->  				clocks = <&clks 25>;
-> +				#dma-cells = <1>;
->  			};
->  
->  			vip@b00C0000 {
-> diff --git a/arch/arm/boot/dts/prima2.dtsi b/arch/arm/boot/dts/prima2.dtsi
-> index b292a5c..19e4e22 100644
-> --- a/arch/arm/boot/dts/prima2.dtsi
-> +++ b/arch/arm/boot/dts/prima2.dtsi
-> @@ -277,6 +277,7 @@
->  				reg = <0xb00b0000 0x10000>;
->  				interrupts = <12>;
->  				clocks = <&clks 24>;
-> +				#dma-cells = <1>;
->  			};
->  
->  			dmac1: dma-controller@b0160000 {
-> @@ -285,6 +286,7 @@
->  				reg = <0xb0160000 0x10000>;
->  				interrupts = <13>;
->  				clocks = <&clks 25>;
-> +				#dma-cells = <1>;
->  			};
->  
->  			vip@b00C0000 {
-> diff --git a/drivers/dma/sirf-dma.c b/drivers/dma/sirf-dma.c
-> index 6aec3ad..8b74c0d 100644
-> --- a/drivers/dma/sirf-dma.c
-> +++ b/drivers/dma/sirf-dma.c
-> @@ -18,6 +18,7 @@
->  #include <linux/of_device.h>
->  #include <linux/of_platform.h>
->  #include <linux/clk.h>
-> +#include <linux/of_dma.h>
->  #include <linux/sirfsoc_dma.h>
->  
->  #include "dmaengine.h"
-> @@ -640,6 +641,18 @@ bool sirfsoc_dma_filter_id(struct dma_chan *chan, void *chan_id)
->  }
->  EXPORT_SYMBOL(sirfsoc_dma_filter_id);
->  
-> +static struct dma_chan *of_dma_sirfsoc_xlate(struct of_phandle_args *dma_spec,
-> +	struct of_dma *ofdma)
-> +{
-> +	struct sirfsoc_dma *sdma = ofdma->of_dma_data;
-> +	unsigned int request = dma_spec->args[0];
-> +
-> +	if (request > SIRFSOC_DMA_CHANNELS)
-> +		return NULL;
-> +
-> +	return dma_get_slave_channel(&sdma->channels[request].chan);
-> +}
-> +
->  static int sirfsoc_dma_probe(struct platform_device *op)
->  {
->  	struct device_node *dn = op->dev.of_node;
-> @@ -744,11 +757,20 @@ static int sirfsoc_dma_probe(struct platform_device *op)
->  	if (ret)
->  		goto free_irq;
->  
-> +	/* Device-tree DMA controller registration */
-> +	ret = of_dma_controller_register(dn, of_dma_sirfsoc_xlate, sdma);
-> +	if (ret) {
-> +		dev_err(dev, "failed to register DMA controller\n");
-> +		goto unreg_dma_dev;
-> +	}
-> +
->  	pm_runtime_enable(&op->dev);
->  	dev_info(dev, "initialized SIRFSOC DMAC driver\n");
->  
->  	return 0;
->  
-> +unreg_dma_dev:
-> +	dma_async_device_unregister(dma);
->  free_irq:
->  	free_irq(sdma->irq, sdma);
->  irq_dispose:
-> @@ -761,6 +783,7 @@ static int sirfsoc_dma_remove(struct platform_device *op)
->  	struct device *dev = &op->dev;
->  	struct sirfsoc_dma *sdma = dev_get_drvdata(dev);
->  
-> +	of_dma_controller_free(op->dev.of_node);
->  	dma_async_device_unregister(&sdma->dma);
->  	free_irq(sdma->irq, sdma);
->  	irq_dispose_mapping(sdma->irq);
-> -- 
-> 1.7.5.4
-> 
-> 
+If the latter, is it absolutely necessary for correctness to use
+fixed-burst mode? Or is it just always sensible to use it if available?
 
--- 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+What does the driver do if fixed burst mode is not available? Would this
+work in the presence of fixed-burt mode?
+
+I'm not arguing to remove these properties. I'd just like to understand
+if all you're describing is the presence of a feature or that the use of
+the feature is absolutely necessary for correctness.
+
+I'm perfectly happy for Linux to always decide to use these features if
+available.
+
+> 
+> > 
+> > > +- samsung,adv-addr-mode: Boolean, Program the DMA to use Enhanced
+> > > +address
+> > > mode.
+> > 
+> > When would this be selected, and why can the kernel not choose?
+> Kernel doesn't have the provision to find out a way to select this. So, need
+> to pass from DT
+
+Likewise, it is always absolutely necessary, or just always sensible to
+use enhanced address mode if present?
+
+> 
+> > 
+> > > +- samsung,force_thresh_dma_mode: Boolean, Force DMA to use the
+> > > +threshold mode
+> > > +  for both tx and rx
+> > 
+> > s/_/-/ in property names.
+> OK.
+> 
+> > 
+> > Likewise, why can the kernel not choose.
+> SXGBE h/w registers can't provide information to select this. So, need to pass
+> from DT depend on Platform
+
+Similarly.
+
+> 
+> > 
+> > > +- samsung,force_sf_dma_mode: Boolean, Force DMA to use the Store and
+> > > +Forward
+> > > +  mode for both tx and rx. This flag is ignored if
+> > > +force_thresh_dma_mode is
+> > > set.
+> > 
+> > Likewise for both points.
+> Same above.
+
+And again.
+
+Cheers,
+Mark.
