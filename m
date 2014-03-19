@@ -1,224 +1,59 @@
-From: Byungho An <bh74.an@samsung.com>
-Subject: [PATCH V6 5/8] net: sxgbe: add Checksum offload support for Samsung
- sxgbe
-Date: Tue, 18 Mar 2014 22:32:40 -0700
-Message-ID: <006501cf4334$ac745820$055d0860$@samsung.com>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: Re: [PATCH 7/8] ASoC: atmel: document clock properties of the wm8904
+ driver
+Date: Wed, 19 Mar 2014 13:57:23 +0800
+Message-ID: <532931C3.4080909@atmel.com>
+References: <1395049541-28128-1-git-send-email-voice.shen@atmel.com> <1395049541-28128-8-git-send-email-voice.shen@atmel.com> <20140317115518.GD11706@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-language: en-us
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'netdev' <netdev@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: 'David Miller' <davem@davemloft.net>, "'ks.giri'" <ks.giri@samsung.com>, "'siva.kallam'" <siva.kallam@samsung.com>, "'vipul.pandya'" <vipul.pandya@samsung.com>, "'ilho215.lee'" <ilho215.lee@samsung.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140317115518.GD11706@sirena.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: nicolas.ferre@atmel.com, Boris BREZILLON <b.brezillon@overkiz.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Vipul Pandya <vipul.pandya@samsung.com>
+Hi Mark,
 
-This patch adds TX and RX checksum offload support.
+On 03/17/2014 07:55 PM, Mark Brown wrote:
+> On Mon, Mar 17, 2014 at 05:45:40PM +0800, Bo Shen wrote:
+>
+>>     - compatible: "atmel,asoc-wm8904"
+>>     - atmel,model: The user-visible name of this sound complex.
+>> +  - clocks: A list of clocks needed by the wm8904 chip.
+>> +  - clock-output-names: Driver related clock names. Shall contain "pck0".
+>
+> If this is a clock for the CODEC it should be documented as part of the
+> binding for the CODEC and connected to the CODEC in the device tree
+> rather than being part of a machine driver binding.
 
-Signed-off-by: Vipul Pandya <vipul.pandya@samsung.com>
-Neatening-by: Joe Perches <joe@perches.com>
-Signed-off-by: Byungho An <bh74.an@samsung.com>
----
- drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h |    5 +++
- drivers/net/ethernet/samsung/sxgbe/sxgbe_core.c   |   20 +++++++++
- drivers/net/ethernet/samsung/sxgbe/sxgbe_desc.h   |    6 +--
- drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c   |   46 ++++++++++++++++-----
- 4 files changed, 63 insertions(+), 14 deletions(-)
+This is a optional clock for CODEC which depends on hardware design. 
+There are 3 options for this clock, wm8904 as an example.
+1. Using internal FLL, so won't use this clock.
+2. Using external oscillator, no need to retrieve this clock.
+3. Using SoC provide this clock (we use this case).
 
-diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h b/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h
-index 937969c..7937493 100644
---- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h
-+++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h
-@@ -337,6 +337,10 @@ struct sxgbe_core_ops {
- 	void (*set_eee_timer)(void __iomem *ioaddr, const int ls,
- 			      const int tw);
- 	void (*set_eee_pls)(void __iomem *ioaddr, const int link);
-+
-+	/* Enable disable checksum offload operations */
-+	void (*enable_rx_csum)(void __iomem *ioaddr);
-+	void (*disable_rx_csum)(void __iomem *ioaddr);
- };
- 
- const struct sxgbe_core_ops *sxgbe_get_core_ops(void);
-@@ -448,6 +452,7 @@ struct sxgbe_priv_data {
- 	struct sxgbe_ops *hw;	/* sxgbe specific ops */
- 	int no_csum_insertion;
- 	int irq;
-+	int rxcsum_insertion;
- 	spinlock_t stats_lock;	/* lock for tx/rx statatics */
- 
- 	struct phy_device *phydev;
-diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_core.c b/drivers/net/ethernet/samsung/sxgbe/sxgbe_core.c
-index bf93b16..5885fd6 100644
---- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_core.c
-+++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_core.c
-@@ -217,6 +217,24 @@ static void  sxgbe_set_eee_timer(void __iomem *ioaddr,
- 	writel(value, ioaddr + SXGBE_CORE_LPI_TIMER_CTRL);
- }
- 
-+static void sxgbe_enable_rx_csum(void __iomem *ioaddr)
-+{
-+	u32 ctrl;
-+
-+	ctrl = readl(ioaddr + SXGBE_CORE_RX_CONFIG_REG);
-+	ctrl |= SXGBE_RX_CSUMOFFLOAD_ENABLE;
-+	writel(ctrl, ioaddr + SXGBE_CORE_RX_CONFIG_REG);
-+}
-+
-+static void sxgbe_disable_rx_csum(void __iomem *ioaddr)
-+{
-+	u32 ctrl;
-+
-+	ctrl = readl(ioaddr + SXGBE_CORE_RX_CONFIG_REG);
-+	ctrl &= ~SXGBE_RX_CSUMOFFLOAD_ENABLE;
-+	writel(ctrl, ioaddr + SXGBE_CORE_RX_CONFIG_REG);
-+}
-+
- const struct sxgbe_core_ops core_ops = {
- 	.core_init = sxgbe_core_init,
- 	.dump_regs = sxgbe_core_dump_regs,
-@@ -233,6 +251,8 @@ const struct sxgbe_core_ops core_ops = {
- 	.reset_eee_mode = sxgbe_reset_eee_mode,
- 	.set_eee_timer = sxgbe_set_eee_timer,
- 	.set_eee_pls = sxgbe_set_eee_pls,
-+	.enable_rx_csum = sxgbe_enable_rx_csum,
-+	.disable_rx_csum = sxgbe_disable_rx_csum,
- };
- 
- const struct sxgbe_core_ops *sxgbe_get_core_ops(void)
-diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_desc.h b/drivers/net/ethernet/samsung/sxgbe/sxgbe_desc.h
-index 547edf3..3c0b5a8 100644
---- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_desc.h
-+++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_desc.h
-@@ -113,7 +113,7 @@ struct sxgbe_rx_norm_desc {
- 			/* WB RDES3 */
- 			u32 pkt_len:14;
- 			u32 rdes3_reserved:1;
--			u32 err_summary:15;
-+			u32 err_summary:1;
- 			u32 err_l2_type:4;
- 			u32 layer34_pkt_type:4;
- 			u32 no_coagulation_pkt:1;
-@@ -273,8 +273,8 @@ struct sxgbe_desc_ops {
- 	int (*get_rx_ld_status)(struct sxgbe_rx_norm_desc *p);
- 
- 	/* Return the reception status looking at the RDES1 */
--	void (*rx_wbstatus)(struct sxgbe_rx_norm_desc *p,
--				struct sxgbe_extra_stats *x);
-+	int (*rx_wbstatus)(struct sxgbe_rx_norm_desc *p,
-+			   struct sxgbe_extra_stats *x, int *checksum);
- 
- 	/* Get own bit */
- 	int (*get_rx_ctxt_owner)(struct sxgbe_rx_ctxt_desc *p);
-diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-index 25a7ad5..f0ee143 100644
---- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-+++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-@@ -1255,6 +1255,7 @@ void sxgbe_tso_prepare(struct sxgbe_priv_data *priv,
- static netdev_tx_t sxgbe_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	unsigned int entry, frag_num;
-+	int cksum_flag = 0;
- 	struct netdev_queue *dev_txq;
- 	unsigned txq_index = skb_get_queue_mapping(skb);
- 	struct sxgbe_priv_data *priv = netdev_priv(dev);
-@@ -1326,7 +1327,7 @@ static netdev_tx_t sxgbe_xmit(struct sk_buff *skb, struct net_device *dev)
- 					   __func__);
- 
- 			priv->hw->desc->prepare_tx_desc(tx_desc, 1, no_pagedlen,
--							no_pagedlen);
-+							no_pagedlen, cksum_flag);
- 		}
- 	}
- 
-@@ -1344,7 +1345,7 @@ static netdev_tx_t sxgbe_xmit(struct sk_buff *skb, struct net_device *dev)
- 
- 		/* prepare the descriptor */
- 		priv->hw->desc->prepare_tx_desc(tx_desc, 0, len,
--						len);
-+						len, cksum_flag);
- 		/* memory barrier to flush descriptor */
- 		wmb();
- 
-@@ -1465,6 +1466,8 @@ static int sxgbe_rx(struct sxgbe_priv_data *priv, int limit)
- 	unsigned int entry = priv->rxq[qnum]->cur_rx;
- 	unsigned int next_entry = 0;
- 	unsigned int count = 0;
-+	int checksum;
-+	int status;
- 
- 	while (count < limit) {
- 		struct sxgbe_rx_norm_desc *p;
-@@ -1481,7 +1484,18 @@ static int sxgbe_rx(struct sxgbe_priv_data *priv, int limit)
- 		next_entry = (++priv->rxq[qnum]->cur_rx) % rxsize;
- 		prefetch(priv->rxq[qnum]->dma_rx + next_entry);
- 
--		/*TO DO read the status of the incoming frame */
-+		/* Read the status of the incoming frame and also get checksum
-+		 * value based on whether it is enabled in SXGBE hardware or
-+		 * not.
-+		 */
-+		status = priv->hw->desc->rx_wbstatus(p, &priv->xstats,
-+						     &checksum);
-+		if (unlikely(status < 0)) {
-+			entry = next_entry;
-+			continue;
-+		}
-+		if (unlikely(!priv->rxcsum_insertion))
-+			checksum = CHECKSUM_NONE;
- 
- 		skb = priv->rxq[qnum]->rx_skbuff[entry];
- 
-@@ -1495,7 +1509,11 @@ static int sxgbe_rx(struct sxgbe_priv_data *priv, int limit)
- 
- 		skb_put(skb, frame_len);
- 
--		netif_receive_skb(skb);
-+		skb->ip_summed = checksum;
-+		if (checksum == CHECKSUM_NONE)
-+			netif_receive_skb(skb);
-+		else
-+			napi_gro_receive(&priv->napi, skb);
- 
- 		entry = next_entry;
- 	}
-@@ -1741,15 +1759,15 @@ static int sxgbe_set_features(struct net_device *dev,
- {
- 	struct sxgbe_priv_data *priv = netdev_priv(dev);
- 	netdev_features_t changed = dev->features ^ features;
--	u32 ctrl;
- 
- 	if (changed & NETIF_F_RXCSUM) {
--		ctrl = readl(priv->ioaddr + SXGBE_CORE_RX_CONFIG_REG);
--		if (features & NETIF_F_RXCSUM)
--			ctrl |= SXGBE_RX_CSUMOFFLOAD_ENABLE;
--		else
--			ctrl &= ~SXGBE_RX_CSUMOFFLOAD_ENABLE;
--		writel(ctrl, priv->ioaddr + SXGBE_CORE_RX_CONFIG_REG);
-+		if (features & NETIF_F_RXCSUM) {
-+			priv->hw->mac->enable_rx_csum(priv->ioaddr);
-+			priv->rxcsum_insertion = true;
-+		} else {
-+			priv->hw->mac->disable_rx_csum(priv->ioaddr);
-+			priv->rxcsum_insertion = false;
-+		}
- 	}
- 
- 	return 0;
-@@ -2112,6 +2130,12 @@ struct sxgbe_priv_data *sxgbe_dvr_probe(struct device *device,
- 		}
- 	}
- 
-+	/* Enable Rx checksum offload */
-+	if (priv->hw_cap.rx_csum_offload) {
-+		priv->hw->mac->enable_rx_csum(priv->ioaddr);
-+		priv->rxcsum_insertion = true;
-+	}
-+
- 	/* Rx Watchdog is available, enable depend on platform data */
- 	if (!priv->plat->riwt_off) {
- 		priv->use_riwt = 1;
--- 
-1.7.10.4
+After considering these 3 options, if we put this into CODEC driver to 
+do it, I think it will be more complicate to do logic judgement. Do you 
+think so?
+
+And, in machine driver, it will depends on the clock option to decide 
+whether to call snd_soc_dai_set_pll and snd_soc_dai_set_sysclk.
+
+And also the <Documentation/soud/alsa/soc/machine.txt> mentions the 
+machine drivers responsibility (one is for clocking) as following:
+--->8---
+The ASoC machine (or board) driver is the code that glues together all the
+component drivers (e.g. codecs, platforms and DAIs). It also describes the
+relationships between each componnent which include audio paths, GPIOs,
+interrupts, clocking, jacks and voltage regulators.
+---8<---
+
+So, I think put this into machine driver will be better. Do you have any 
+other idea? Or if I misunderstand something, please point it out.
+
+Thanks.
+
+Best Regards,
+Bo Shen
