@@ -1,143 +1,108 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCHv2 4/8] devfreq: exynos4: Fix bug of resource leak and code
- clean on probe()
-Date: Wed, 19 Mar 2014 11:46:04 +0900
-Message-ID: <532904EC.3090101@samsung.com>
-References: <1394698649-20996-1-git-send-email-cw00.choi@samsung.com>
- <1394698649-20996-5-git-send-email-cw00.choi@samsung.com>
- <53234132.8080202@samsung.com> <532682A8.2030300@samsung.com>
- <532839A5.8020505@samsung.com>
+From: "B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH 2/2] spi/fsl-lib: Get the SPI controller bus number from
+ DTS
+Date: Wed, 19 Mar 2014 02:49:42 +0000
+Message-ID: <83b4fe0227144d3f89543dfa92399dcd@DM2PR03MB301.namprd03.prod.outlook.com>
+References: <1394789757-40732-1-git-send-email-B48286@freescale.com>
+	 <1394789757-40732-2-git-send-email-B48286@freescale.com>
+	 <20140314191922.GA366@sirena.org.uk>
+	 <c4b28b01b2f544ca9d264eaee2542257@DM2PR03MB301.namprd03.prod.outlook.com>
+	 <20140317130109.GE11706@sirena.org.uk>
+	 <9186860716f446f9a5773e7e47d39114@DM2PR03MB301.namprd03.prod.outlook.com>
+	 <CAMuHMdWHSVPDZ9q9rw0FZqNrR+E0q9pQcYLRiseopoM-K-5svg@mail.gmail.com>
+	 <01e4d20dc3d94e2f8f7252225932c774@DM2PR03MB301.namprd03.prod.outlook.com>
+ <1395180522.12479.214.camel@snotra.buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <532839A5.8020505@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rafael.j.wysocki@intel.com, nm@ti.com, b.zolnierkie@samsaung.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1395180522.12479.214.camel-88ow+0ZRuxG2UiBs7uKeOtHuzzzSOjJt@public.gmane.org>
+Content-Language: en-US
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: 'Geert Uytterhoeven' <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
-
-On 03/18/2014 09:18 PM, Tomasz Figa wrote:
-> On 17.03.2014 06:05, Chanwoo Choi wrote:
->> Hi Tomasz,
->>
->> On 03/15/2014 02:49 AM, Tomasz Figa wrote:
->>> Hi Chanwoo,
->>>
->>> On 13.03.2014 09:17, Chanwoo Choi wrote:
->>>> This patch fix bug about resource leak when happening probe fail and code clean
->>>> to add debug message.
->>>>
->>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->>>> ---
->>>>    drivers/devfreq/exynos/exynos4_bus.c | 32 ++++++++++++++++++++++++++------
->>>>    1 file changed, 26 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/drivers/devfreq/exynos/exynos4_bus.c b/drivers/devfreq/exynos/exynos4_bus.c
->>>> index a2a3a47..152a3e9 100644
->>>> --- a/drivers/devfreq/exynos/exynos4_bus.c
->>>> +++ b/drivers/devfreq/exynos/exynos4_bus.c
->>>> @@ -1152,8 +1152,11 @@ static int exynos4_busfreq_probe(struct platform_device *pdev)
->>>>            dev_err(dev, "Cannot determine the device id %d\n", data->type);
->>>>            err = -EINVAL;
->>>>        }
->>>> -    if (err)
->>>> +    if (err) {
->>>> +        dev_err(dev, "Cannot initialize busfreq table %d\n",
->>>> +                 data->type);
->>>>            return err;
->>>> +    }
->>>>
->>>>        rcu_read_lock();
->>>>        opp = dev_pm_opp_find_freq_floor(dev,
->>>> @@ -1176,7 +1179,7 @@ static int exynos4_busfreq_probe(struct platform_device *pdev)
->>>>        if (IS_ERR(data->devfreq)) {
->>>>            dev_err(dev, "Failed to add devfreq device\n");
->>>>            err = PTR_ERR(data->devfreq);
->>>> -        goto err_opp;
->>>> +        goto err_devfreq;
->>>>        }
->>>>
->>>>        /*
->>>> @@ -1185,18 +1188,35 @@ static int exynos4_busfreq_probe(struct platform_device *pdev)
->>>>         */
->>>>        busfreq_mon_reset(data);
->>>>
->>>> -    devfreq_register_opp_notifier(dev, data->devfreq);
->>>> +    /* Register opp_notifier for Exynos4 busfreq */
->>>> +    err = devfreq_register_opp_notifier(dev, data->devfreq);
->>>> +    if (err < 0) {
->>>> +        dev_err(dev, "Failed to register opp notifier\n");
->>>> +        goto err_notifier_opp;
->>>> +    }
->>>>
->>>> +    /* Register pm_notifier for Exynos4 busfreq */
->>>>        err = register_pm_notifier(&data->pm_notifier);
->>>>        if (err) {
->>>>            dev_err(dev, "Failed to setup pm notifier\n");
->>>> -        devfreq_remove_device(data->devfreq);
->>>> -        return err;
->>>> +        goto err_notifier_pm;
->>>>        }
->>>>
->>>>        return 0;
->>>>
->>>> -err_opp:
->>>> +err_notifier_pm:
->>>> +    devfreq_unregister_opp_notifier(dev, data->devfreq);
->>>> +err_notifier_opp:
->>>> +    /*
->>>> +     * The devfreq_remove_device() would execute finally devfreq->profile
->>>> +     * ->exit(). To avoid duplicate resource free operation, return directly
->>>> +     * before executing resource free below 'err_devfreq' goto statement.
->>>> +     */
->>>
->>> I'm not quite sure about this. I believe that in this case devfreq->profile->exit() would be exynos4_bus_exit() and all it does is devfreq_unregister_opp_notifier(dev, data->devfreq), so all remaining resources (regulators, clocks, etc.) would get leaked.
->>
->> This patch execute following sequence to probe exynos4_busfreq.c:
->>
->> 1. Parse dt node to get resource(regulator/clock/memory address).
->> 2. Enable regulator/clock and map memory.
->> 3. Add devfreq device using devfreq_add_device().
->>     The devfreq_add_device() return devfreq instance(data->devfreq).
->> 4. Register opp_notifier using devfreq instance(data->devfreq) which is created in sequence #3.
->>
->> Case 1,
->> If an error happens in sequence #3 for registering devfreq_add_device(),
->>
->> this case can't execute devfreq->profile->exit() to free resource
->> because this case has failed to register devfreq->profile to devfreq_list.
->>
->> So, must goto 'err_devfreq' statement to free resource(regulator/clock/memory).
->>
->>
->> Case 2,
->> If an error happens in sequence #4 for registering opp_notifier,
->>
->> In contrast
->> this case can execute devfreq->profile->exit() to free resource.
->> But, After executed devfreq->profile->exit(),
->> should not execute 'err_devfreq' statement to free resource.
->> In case, will operate twice of resource.
->>
->> If my explanation is wrong, please reply your comment.
->>
-> 
-> OK, it will work indeed, however the code is barely readable with this.
-> 
-> For consistency (and readability), resources acquired in platform driver's .probe() should be freed in .remove() and error path of .probe() should not rely on external code to do the clean-up.
-> 
-> So, as I proposed in my previous reply:
-
-OK, I'll modify it according to your previous comment.
-
-> 
->>>
->>> I believe the correct thing to do would be to remove the .exit() callback from exynos4_devfreq_profile struct and handle all the clean-up here in error path.
->>>
-
-Best Regards,
-Chanwoo Choi
- 
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogV29vZCBTY290dC1CMDc0
+MjENCj4gU2VudDogV2VkbmVzZGF5LCBNYXJjaCAxOSwgMjAxNCA2OjA5IEFNDQo+IFRvOiBIb3Ug
+WmhpcWlhbmctQjQ4Mjg2DQo+IENjOiAnR2VlcnQgVXl0dGVyaG9ldmVuJzsgTWFyayBCcm93bjsg
+bGludXgtc3BpQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
+IHJvYi5oZXJyaW5nQGNhbHhlZGEuY29tOyBwYXdlbC5tb2xsQGFybS5jb207DQo+IG1hcmsucnV0
+bGFuZEBhcm0uY29tOyBpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51azsgZ2FsYWtAY29kZWF1
+cm9yYS5vcmc7DQo+IGdyYW50Lmxpa2VseUBzZWNyZXRsYWIuY2E7IEh1IE1pbmdrYWktQjIxMjg0
+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMi8yXSBzcGkvZnNsLWxpYjogR2V0IHRoZSBTUEkgY29u
+dHJvbGxlciBidXMgbnVtYmVyDQo+IGZyb20gRFRTDQo+IA0KPiBPbiBUdWUsIDIwMTQtMDMtMTgg
+YXQgMDQ6MzQgLTA1MDAsIEhvdSBaaGlxaWFuZy1CNDgyODYgd3JvdGU6DQo+ID4NCj4gPiA+IC0t
+LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBnZWVydC51eXR0ZXJob2V2ZW5A
+Z21haWwuY29tDQo+ID4gPiBbbWFpbHRvOmdlZXJ0LnV5dHRlcmhvZXZlbkBnbWFpbC5jb21dDQo+
+ID4gPiBPbiBCZWhhbGYgT2YgR2VlcnQgVXl0dGVyaG9ldmVuDQo+ID4gPiBTZW50OiBUdWVzZGF5
+LCBNYXJjaCAxOCwgMjAxNCA0OjU2IFBNDQo+ID4gPiBUbzogSG91IFpoaXFpYW5nLUI0ODI4Ng0K
+PiA+ID4gQ2M6IE1hcmsgQnJvd247IGxpbnV4LXNwaUB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gPiBk
+ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgcm9iLmhlcnJpbmdAY2FseGVkYS5jb207DQo+ID4g
+PiBwYXdlbC5tb2xsQGFybS5jb207IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiA+ID4gaWpjK2Rl
+dmljZXRyZWVAaGVsbGlvbi5vcmcudWs7IGdhbGFrQGNvZGVhdXJvcmEub3JnOw0KPiA+ID4gZ3Jh
+bnQubGlrZWx5QHNlY3JldGxhYi5jYTsgV29vZCBTY290dC1CMDc0MjE7IEh1IE1pbmdrYWktQjIx
+Mjg0DQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIIDIvMl0gc3BpL2ZzbC1saWI6IEdldCB0aGUg
+U1BJIGNvbnRyb2xsZXIgYnVzDQo+ID4gPiBudW1iZXIgZnJvbSBEVFMNCj4gPiA+DQo+ID4gPiBP
+biBUdWUsIE1hciAxOCwgMjAxNCBhdCA4OjQwIEFNLCBCNDgyODZAZnJlZXNjYWxlLmNvbQ0KPiA+
+ID4gPEI0ODI4NkBmcmVlc2NhbGUuY29tPiB3cm90ZToNCj4gPiA+ID4+ID4gPiBUaGUgRFQgYWxy
+ZWFkeSBoYXMgc3VwcG9ydCBmb3Igc3BlY2lmeWluZyBmbGFzaCBsYXlvdXRzLA0KPiA+ID4gPj4g
+PiA+IGNhbid0IHRob3NlIGJlIHVzZWQgKGZvciBleGFtcGxlIHZpYSBjaG9zZW4gaWYgdGhleSdy
+ZSBub3QNCj4gPiA+ID4+ID4gPiBmaXhlZCBmb3IgdGhlDQo+ID4gPiBib2FyZCk/DQo+ID4gPiA+
+PiA+ID4gT3IgaWYgaXQncyBqdXN0IHBpY2tpbmcgdGhlIGNvcnJlY3QgZmlsZXN5c3RlbSB0aGVu
+IFVVSURzIGFuZA0KPiA+ID4gPj4gPiA+IGxhYmVscyBhcmUgdGhlIHN0YW5kYXJkIHdheSB0byBk
+byB0aGluZ3MuDQo+ID4gPiA+Pg0KPiA+ID4gPj4gPiBUaGUgRFQgc3BlY2lmeWluZyBmbGFzaCBs
+YXlvdXRzIGlzIG9rLiBUaGVyZSBpcyBhbm90aGVyIHdheSB0bw0KPiA+ID4gPj4gPiBtYWtlIHRo
+ZSBmbGFzaCBsYXlvdXRzIHVzaW5nIGNvbW1hbmQgbGluZSwgYnV0IGl0IGlzIG5vdCBzYWZlDQo+
+ID4gPiA+PiA+IGJlY2F1c2Ugb2YgdGhlIGR5bmFtaWMgYnVzX251bS4gSXQgaXMgbm90IHRoZSBy
+ZWFzb24gdGhhdCB0aGUNCj4gPiA+ID4+ID4gd2F5IG9mIERUIGlzIHN1cHBvcnRlZCBmbGFzaCBs
+YXlvdXRzLCB0byBsaXZlIHRoZSBvdGhlciB3YXkNCj4gdW5zYWZlLCByaWdodD8NCj4gPiA+ID4+
+DQo+ID4gPiA+PiBUaGlzIHNvdW5kcyB0byBtZSBsaWtlIHdlIG5lZWQgYSBiZXR0ZXIgd2F5IG9m
+IHRhbGtpbmcgYWJvdXQNCj4gPiA+ID4+IGZsYXNoIGRldmljZSBuYW1lcyBvbiB0aGUgTGludXgg
+Y29tbWFuZCBsaW5lIHJhdGhlciB0aGFuIGEgd2F5IHRvDQo+ID4gPiA+PiBmaXggdGhlIGJ1cyBu
+dW1iZXIgLSBmb3IgZXhhbXBsZSwgYmVpbmcgYWJsZSB0byByZWZlciB0byB0aGVtDQo+ID4gPiA+
+PiB1c2luZyBhIGZpeGVkIHByb3BlcnR5IGxpa2UgdGhlIHBoeXNpY2FsIGFkZHJlc3MuICBCZWlu
+ZyBhYmxlIHRvDQo+ID4gPiA+PiByZWZlciB0byBkZXZpY2VzIHZpYSBhbiBhbGlhcyBhc3NpZ25l
+ZCBpbiB0aGUgRFQgd291bGQgYWxzbyBiZQ0KPiA+ID4gPj4gdXNlZnVsIChhbmQgbW9yZSByZWFk
+YWJsZSksIEkgdGhpbmsgdGhlcmUgbWF5IGFscmVhZHkgYmUgYQ0KPiA+ID4gPj4gbWVjaGFuaXNt
+IGZvciBkb2luZyB0aGF0IHdoaWNoIHdvdWxkIG5lZWQgdG8gYmUgcGx1bWJlZCBpbiBidXQgSSdt
+DQo+IG5vdCAxMDAlIHN1cmUuDQo+ID4gPiA+DQo+ID4gPiA+IFRoZSBidXMgbnVtYmVyIGlzIHRo
+ZSB2YXJpYWJsZSBkZXNpZ25lZCB0byBkaXN0aW5ndWlzaCBvbmUgc3BpDQo+ID4gPiA+IGNvbnRy
+b2xsZXIgZnJvbSBvdGhlcnMuIFdoeSBzcGkgY29udHJvbGxlcidzIHBoeXNpY2FsIGFkZHJlc3Mg
+bXVzdA0KPiA+ID4gPiBiZSB1c2UgaW5zdGVhZCBvZiBidXMgbnVtYmVyPw0KPiA+ID4NCj4gPiA+
+IEJlY2F1c2UgdGhlIGJ1cyBudW1iZXIgaXMgZHluYW1pYywgd2hpbGUgdGhlIHBoeXNpY2FsIGFk
+ZHJlc3MNCj4gPiA+IGRvZXNuJ3QgY2hhbmdlLCBzbyBpdCBjYW4gYmUgdXNlZCB0byB1bmlxZWx5
+IGlkZW50aWZ5IHRoZSBkZXZpY2UNCj4gPiA+IGJlZm9yZSBib290aW5nIHRoZSBrZXJuZWwuDQo+
+ID4gPiBDZnIuICJzcGkxIiB2cy4gImU2ZTIwMDAwLnNwaSIuDQo+ID4gPg0KPiA+DQo+ID4gVGhl
+IHByZWNvbmRpdGlvbiBvZiBkeW5hbWljIGJ1cyBudW1iZXIgaXMgaW5pdGlhbCBpdCB3aXRoIC0x
+IGluIHRoZQ0KPiA+IGNvbnRyb2xsZXIgZHJpdmVyLiBCdXQgbm93IEkgbmVlZCBhIHJlYXNvbmFi
+bGUgYnVzIG51bWJlciwgSSBkb24ndCB3YW50DQo+IGEgZHluYW1pYyBvbmUuDQo+ID4gV2h5IGRv
+ZXMgdXNlIHRoZSBjb250cm9sbGVyJ3MgcGh5c2ljYWwgYWRkcmVzcyB0byB0YWtlIHRoZSByb2xl
+IG9mIGJ1cw0KPiA+IG51bWJlciB0byBkaXN0aW5ndWlzaCBjb250cm9sbGVycy4NCj4gDQo+IFdo
+ZXJlIGFyZSB5b3UgZ29pbmcgdG8gZ2V0IHRoaXMgInJlYXNvbmFibGUiIG5vbi1keW5hbWljIG51
+bWJlciBmcm9tPw0KPiBIb3cgYXJlIHlvdSBnb2luZyB0byBlbnN1cmUgdGhlcmUgYXJlIG5vIGNv
+bmZsaWN0cyB3aXRoIG90aGVyIFNQSQ0KPiBjb250cm9sbGVycyAoZS5nLiBvbiBhIGR5bmFtaWMg
+YWRkLW9uIGNhcmQpPw0KPiANCiJvdGhlciB0aGFuIG5lZ2F0aXZlICg9PSBhc3NpZ24gb25lIGR5
+bmFtaWNhbGx5KSwgYnVzX251bSBpcyBmdWxseQ0KYm9hcmQtc3BlY2lmaWMuICB1c3VhbGx5IHRo
+YXQgc2ltcGxpZmllcyB0byBiZWluZyBTT0Mtc3BlY2lmaWMuDQpleGFtcGxlOiAgb25lIFNPQyBo
+YXMgdGhyZWUgU1BJIGNvbnRyb2xsZXJzLCBudW1iZXJlZCAwLi4yLA0KYW5kIG9uZSBib2FyZCdz
+IHNjaGVtYXRpY3MgbWlnaHQgc2hvdyBpdCB1c2luZyBTUEktMi4gIHNvZnR3YXJlDQp3b3VsZCBu
+b3JtYWxseSB1c2UgYnVzX251bT0yIGZvciB0aGF0IGNvbnRyb2xsZXIuIg0KVGhlIGFib3ZlIHBh
+cmFncmFwaCBpcyBkZXNjcmlwdGlvbiBvZiBidXNfbnVtIGluIHNwaS5oLiBUaGUgInJlYXNvbmFi
+bGUiDQppcyBmcm9tIGl0Lg0KT3RoZXIgY29udHJvbGxlcnMgc2hvdWxkIGFsc28gaW5jbHVkZSB0
+aGlzIHByb3BlcnR5LCBvdGhlcndpc2UgaXQgd2lsbCBiZQ0KZHluYW1pYy4gU28gdGhlcmUgaXMg
+bm90IGNvbmZsaWN0Lg0KDQo+IFBoeXNpY2FsIGFkZHJlc3NlcyB3b3JrIHdlbGwgYmVjYXVzZSB0
+aGV5IGFyZSB0aWVkIHRvIHNvbWV0aGluZyByZWFsLA0KPiByYXRoZXIgdGhhbiBhbiBhcmJpdHJh
+cnkgZW51bWVyYXRpb24uICBPdXIgTkFORCBjb250cm9sbGVycyB1c2UgdGhlDQo+IHBoeXNpY2Fs
+IGFkZHJlc3MgZm9yIHRoZSBNVEQgbmFtZS4gIERldmljZSB0cmVlIE5PUiBmbGFzaCBhbGxvd3Mg
+dGhlDQo+IGRldmljZSB0cmVlIHRvIHNldCB0aGUgbXRkIG5hbWVbMV0sIGFuZCBvdGhlcndpc2Ug
+ZmFsbHMgYmFjayBvbiB0aGUNCj4gcGxhdGZvcm0gZGV2aWNlIG5hbWUsIHdoaWNoIGNvbnRhaW5z
+IHRoZSBwaHlzaWNhbCBhZGRyZXNzLg0KPg0KSSBrbm93IHRoZSBwaHlzaWNhbCB3b3JrIHdlbGws
+IGJ1dCB0aGVyZSBpcyBhIG1lY2hhbmlzbSBvZiBidXMgbnVtYmVyLg0KQXMgdGhlIGRlc2NyaXB0
+aW9uIHNheSBhYm92ZSwgaXNuJ3QgaXQgcmVhc29uYWJsZT8NCiANCj4gLVNjb3R0DQo+IA0KPiBb
+MV0gVGhpcyB2aW9sYXRlcyB0aGUgImRldmljZSB0cmVlIGRlc2NyaWJlcyBoYXJkd2FyZSByYXRo
+ZXIgdGhhbg0KPiBjb25maWd1cmVzIExpbnV4IiBydWxlLi4uDQo+IA0KDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
