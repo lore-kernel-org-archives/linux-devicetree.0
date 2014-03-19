@@ -1,75 +1,58 @@
-From: y@karo-electronics.de
-Subject: [PATCH] mtd: gpmi: make blockmark swapping optional
-Date: Wed, 19 Mar 2014 14:23:26 +0100
-Message-ID: <35450.2715323635$1395235653@news.gmane.org>
+From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Subject: [PATCH 3/5] ARM: dts: tx53: fix LVDS display mappings
+Date: Wed, 19 Mar 2014 14:28:39 +0100
+Message-ID: <1395235721-13847-3-git-send-email-LW@KARO-electronics.de>
+References: <1395235721-13847-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Fabio Estevam <fabio.estevam@freescale.com>, Huang Shijie <b32955@freescale.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1395235721-13847-1-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogTG90aGFyIFdhw59tYW5uIDxMV0BLQVJPLWVsZWN0cm9uaWNzLmRlPgoKV2l0aCBhIGZs
-YXNoLWJhc2VkIEJCVCB0aGVyZSBpcyBubyByZWFzb24gdG8gbW92ZSB0aGUgRmFjdG9yeSBCYWQK
-QmxvY2sgTWFya2VyIGZyb20gdGhlIGRhdGEgYXJlYSBidWZmZXIgKHRvIHdoZXJlIGl0IGlzIG1h
-cHBlZCBieSB0aGUKR1BNSSBOQU5EIGNvbnRyb2xsZXIpIHRvIHRoZSBPT0IgYnVmZmVyLiBUaHVz
-LCBtYWtlIHRoaXMgZmVhdHVyZQpjb25maWd1cmFibGUgdmlhIERULiBUaGlzIGlzIHJlcXVpcmVk
-IGZvciB0aGUgS2EtUm8gZWxlY3Ryb25pY3MKcGxhdGZvcm1zLgoKU2lnbmVkLW9mZi1ieTogTG90
-aGFyIFdhw59tYW5uIDxMV0BLQVJPLWVsZWN0cm9uaWNzLmRlPgotLS0KIERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvZ3BtaS1uYW5kLnR4dCB8ICAgIDMgKysrCiBhcmNoL2Fy
-bS9ib290L2R0cy9pbXgyOC10eDI4LmR0cyAgICAgICAgICAgICAgICAgICAgfCAgICAxICsKIGRy
-aXZlcnMvbXRkL25hbmQvZ3BtaS1uYW5kL2dwbWktbmFuZC5jICAgICAgICAgICAgICB8ICAgMTAg
-KysrKysrKy0tLQogMyBmaWxlcyBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9u
-cygtKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQv
-Z3BtaS1uYW5kLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvZ3Bt
-aS1uYW5kLnR4dAppbmRleCA0NThkNTk2Li5mMjg5NDlhIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2dwbWktbmFuZC50eHQKKysrIGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9ncG1pLW5hbmQudHh0CkBAIC0yNSw2ICsyNSw5
-IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6CiAgICAgICAgICAgICAgICAgICAgICAgIGRpc2NvdmVy
-YWJsZSBvciB0aGlzIHByb3BlcnR5IGlzIG5vdCBlbmFibGVkLAogICAgICAgICAgICAgICAgICAg
-ICAgICB0aGUgc29mdHdhcmUgbWF5IGNob29zZXMgYW4gaW1wbGVtZW50YXRpb24tZGVmaW5lZAog
-ICAgICAgICAgICAgICAgICAgICAgICBFQ0Mgc2NoZW1lLgorICAtIGZzbCxuby1ibG9ja21hcmst
-c3dhcDogRG9uJ3Qgc3dhcCB0aGUgYmFkIGJsb2NrIG1hcmtlciBmcm9tIHRoZSBPT0IKKyAgICAg
-ICAgICAgICAgICAgICAgICAgYXJlYSB3aXRoIHRoZSBieXRlIGluIHRoZSBkYXRhIGFyZWEgYnV0
-IHJlbHkgb24gdGhlCisgICAgICAgICAgICAgICAgICAgICAgIEJCVCBmb3IgaWRlbnRpZnlpbmcg
-YmFkIGJsb2Nrcy4KIAogVGhlIGRldmljZSB0cmVlIG1heSBvcHRpb25hbGx5IGNvbnRhaW4gc3Vi
-LW5vZGVzIGRlc2NyaWJpbmcgcGFydGl0aW9ucyBvZiB0aGUKIGFkZHJlc3Mgc3BhY2UuIFNlZSBw
-YXJ0aXRpb24udHh0IGZvciBtb3JlIGRldGFpbC4KZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2lteDI4LXR4MjguZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14MjgtdHgyOC5kdHMKaW5k
-ZXggZTE0YmQ4Ni4uN2QyYmVhOCAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14Mjgt
-dHgyOC5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14MjgtdHgyOC5kdHMKQEAgLTI0Nyw2
-ICsyNDcsNyBAQAogJmdwbWkgewogCXBpbmN0cmwtMCA9IDwmZ3BtaV9waW5zX2EgJmdwbWlfc3Rh
-dHVzX2NmZz47CiAJbmFuZC1vbi1mbGFzaC1iYnQ7CisJZnNsLG5vLWJsb2NrbWFyay1zd2FwOwog
-CXN0YXR1cyA9ICJva2F5IjsKIH07CiAKZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL25hbmQvZ3Bt
-aS1uYW5kL2dwbWktbmFuZC5jIGIvZHJpdmVycy9tdGQvbmFuZC9ncG1pLW5hbmQvZ3BtaS1uYW5k
-LmMKaW5kZXggYmI3N2Y3NS4uOTg1NjJlYiAxMDA2NDQKLS0tIGEvZHJpdmVycy9tdGQvbmFuZC9n
-cG1pLW5hbmQvZ3BtaS1uYW5kLmMKKysrIGIvZHJpdmVycy9tdGQvbmFuZC9ncG1pLW5hbmQvZ3Bt
-aS1uYW5kLmMKQEAgLTE2MzIsOSArMTYzMiw2IEBAIHN0YXRpYyBpbnQgZ3BtaV9pbml0X2xhc3Qo
-c3RydWN0IGdwbWlfbmFuZF9kYXRhICp0aGlzKQogCXN0cnVjdCBiY2hfZ2VvbWV0cnkgKmJjaF9n
-ZW8gPSAmdGhpcy0+YmNoX2dlb21ldHJ5OwogCWludCByZXQ7CiAKLQkvKiBTZXQgdXAgc3dhcF9i
-bG9ja19tYXJrLCBtdXN0IGJlIHNldCBiZWZvcmUgdGhlIGdwbWlfc2V0X2dlb21ldHJ5KCkgKi8K
-LQl0aGlzLT5zd2FwX2Jsb2NrX21hcmsgPSAhR1BNSV9JU19NWDIzKHRoaXMpOwotCiAJLyogU2V0
-IHVwIHRoZSBtZWRpdW0gZ2VvbWV0cnkgKi8KIAlyZXQgPSBncG1pX3NldF9nZW9tZXRyeSh0aGlz
-KTsKIAlpZiAocmV0KQpAQCAtMTcwMSw2ICsxNjk4LDEzIEBAIHN0YXRpYyBpbnQgZ3BtaV9uYW5k
-X2luaXQoc3RydWN0IGdwbWlfbmFuZF9kYXRhICp0aGlzKQogCWlmIChvZl9nZXRfbmFuZF9vbl9m
-bGFzaF9iYnQodGhpcy0+ZGV2LT5vZl9ub2RlKSkKIAkJY2hpcC0+YmJ0X29wdGlvbnMgfD0gTkFO
-RF9CQlRfVVNFX0ZMQVNIIHwgTkFORF9CQlRfTk9fT09COwogCisJLyogU2V0IHVwIHN3YXBfYmxv
-Y2tfbWFyaywgbXVzdCBiZSBzZXQgYmVmb3JlIHRoZSBncG1pX3NldF9nZW9tZXRyeSgpICovCisJ
-aWYgKCFvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wodGhpcy0+ZGV2LT5vZl9ub2RlLCAiZnNsLG5vLWJs
-b2NrbWFyay1zd2FwIikpCisJCXRoaXMtPnN3YXBfYmxvY2tfbWFyayA9ICFHUE1JX0lTX01YMjMo
-dGhpcyk7CisKKwlkZXZfZGJnKHRoaXMtPmRldiwgIkJsb2NrbWFyayBzd2FwcGluZyAlc2FibGVk
-XG4iLAorCQl0aGlzLT5zd2FwX2Jsb2NrX21hcmsgPyAiZW4iIDogImRpcyIpOworCiAJLyoKIAkg
-KiBBbGxvY2F0ZSBhIHRlbXBvcmFyeSBETUEgYnVmZmVyIGZvciByZWFkaW5nIElEIGluIHRoZQog
-CSAqIG5hbmRfc2Nhbl9pZGVudCgpLgotLSAKMS43LjEwLjQKCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXggTVREIGRpc2N1c3Npb24g
-bWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
-bGludXgtbXRkLwo=
+The data-mapping and data-width settings were opposite of what the
+display requires. Interestingly, these settings nevertheless produced
+correct results.
+
+Signed-off-by: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+---
+ arch/arm/boot/dts/imx53-tx53-x13x.dts |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx53-tx53-x13x.dts b/arch/arm/boot/dts/=
+imx53-tx53-x13x.dts
+index cd3476b..26b918e 100644
+--- a/arch/arm/boot/dts/imx53-tx53-x13x.dts
++++ b/arch/arm/boot/dts/imx53-tx53-x13x.dts
+@@ -181,8 +181,8 @@
+ 	status =3D "okay";
+=20
+ 	lvds0: lvds-channel@0 {
+-		fsl,data-mapping =3D "jeida";
+-		fsl,data-width =3D <24>;
++		fsl,data-mapping =3D "spwg";
++		fsl,data-width =3D <18>;
+ 		status =3D "okay";
+=20
+ 		display-timings {
+@@ -206,8 +206,8 @@
+ 	};
+=20
+ 	lvds1: lvds-channel@1 {
+-		fsl,data-mapping =3D "jeida";
+-		fsl,data-width =3D <24>;
++		fsl,data-mapping =3D "spwg";
++		fsl,data-width =3D <18>;
+ 		status =3D "okay";
+=20
+ 		display-timings {
+--=20
+1.7.10.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
