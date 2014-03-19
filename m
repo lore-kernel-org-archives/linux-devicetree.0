@@ -1,69 +1,235 @@
-From: =?UTF-8?B?44Kr44Kq44CA44Of44Oz44CA44OS44Kn44OD44OX?=
-	<cm-hiep@jinso.co.jp>
-Subject: Re: [RFC] spi: Using Trigger number to transmit/receive data
-Date: Wed, 19 Mar 2014 09:50:51 +0900
-Message-ID: <5328E9EB.2020809@jinso.co.jp>
-References: <1394699364-5669-1-git-send-email-cm-hiep@jinso.co.jp>	<1394699364-5669-2-git-send-email-cm-hiep@jinso.co.jp>	<CAMuHMdUpm_4f7LynObRA+NDn4vqeUc0a2XZW-E=4LKL_Ro3XZw@mail.gmail.com>	<53264BA4.3000401@jinso.co.jp>	<CAMuHMdWP-tNCtnwP6=XZ1BNacWretVYjrpbT3R+KTEO=047+Nw@mail.gmail.com>	<5326E424.9040709@jinso.co.jp> <CAMuHMdWbxCDGBsBo-QfFheVQFCvhWaTan2yejqSsZByrmsmjCQ@mail.gmail.com>
-Reply-To: cm-hiep@jinso.co.jp
+From: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v11 17/27] iommu/exynos: remove calls to Runtime PM API
+	functions
+Date: Wed, 19 Mar 2014 10:03:04 +0900
+Message-ID: <20140319100304.5e26fa43ccdfc29178b058e1@samsung.com>
+References: <20140314140843.ba055f28dd7ed59c46088029@samsung.com>
+	<5322FD14.5090602@samsung.com>
+	<20140318185605.0380c8dfe6559c06183092e5@samsung.com>
+	<532861BE.7020601@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWbxCDGBsBo-QfFheVQFCvhWaTan2yejqSsZByrmsmjCQ@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mark Brown <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Geert Uytterhoeven <geert+renesas@linux-m68k.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-reply-to: <532861BE.7020601-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Linux DeviceTree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Samsung SOC <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Prathyush <prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Antonios Motakis <a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert
+On Tue, 18 Mar 2014 16:09:50 +0100, Tomasz Figa wrote:
+> On 18.03.2014 10:56, Cho KyongHo wrote:
+> > On Fri, 14 Mar 2014 13:59:00 +0100, Tomasz Figa wrote:
+> >> Hi KyongHo,
+> >>
+> >> On 14.03.2014 06:08, Cho KyongHo wrote:
+> 
+> [snip]
+> 
+> >>> -static bool __exynos_sysmmu_disable(struct sysmmu_drvdata *data)
+> >>> +static void __sysmmu_disable_nocount(struct sysmmu_drvdata *data)
+> >>
+> >> If you are changing the names anyway, it would be probably a good idea
+> >> to reduce code obfuscation a bit and drop the underscores from
+> >> beginnings of function names. Also I'd suggest keeping the "exynos_" prefix.
+> >
+> > Thanks for the suggestion.
+> > __exynos_sysmmu_disable is splitted into 2 functions: __sysmmu_disable
+> > and __sysmmu_disable_nocount.
+> > I agree with you that it is good idea to reduce code obfuscation but
+> > I don't think dropping beginning underscores of function names reduces
+> > obfuscation.
+> >
+> 
+> Well, if you are ending up with a function like 
+> __sysmmu_enable_nocount() below with every line starting with two 
+> underscores, do you think this improves code readability?
+> 
+> Of course this is a minor issue, but let's keep some code quality level 
+> in Linux kernel.
+> 
 
-On 03/18/2014 04:48 AM, Geert Uytterhoeven wrote:
-> Hi Hiep,
->
-> On Mon, Mar 17, 2014 at 1:01 PM, =E3=82=AB=E3=82=AA=E3=80=80=E3=83=9F=
-=E3=83=B3=E3=80=80=E3=83=92=E3=82=A7=E3=83=83=E3=83=97 <cm-hiep@jinso.c=
-o.jp> wrote:
->> On 03/17/2014 04:54 PM, Geert Uytterhoeven wrote:
->>> On Mon, Mar 17, 2014 at 2:11 AM, =E3=82=AB=E3=82=AA=E3=80=80=E3=83=9F=
-=E3=83=B3=E3=80=80=E3=83=92=E3=82=A7=E3=83=83=E3=83=97 <cm-hiep@jinso.c=
-o.jp> wrote:
->>>> On 03/13/2014 06:23 PM, Geert Uytterhoeven wrote:
->>>>> On Thu, Mar 13, 2014 at 9:29 AM, Cao Minh Hiep <cm-hiep@jinso.co.=
-jp>
->>>>> wrote:
->>>>>> In order to transmit and receive data when have 32 bytes of data=
- that
->>>>>> ready has prepared on Transmit/Receive Buffer to transmit or rec=
-eive.
->>>>>> Instead transmits/receives a byte data using Transmit/Receive Bu=
-ffer
->>>>>> Data Triggering Number will improve the speed of transfer data.
->>>>> Thanks for your patch, this looks like a valuable improvement!
->>>>>
->>>>> Unfortunately your patch doesn't apply against spi/for-next anymo=
-re, as
->>>>> the driver has changed a lot lately, due to the addition of RZ/A1=
-H and
->>>>> Quad/Dual support.
->>>>>
->>>> Thanks, Do you mean this patch did not need for next and I don't m=
-ind
->>>> about
->>>> it?
->>> It means you will have to rework your patch to apply on top of
->>>
->>> https://git.kernel.org/cgit/linux/kernel/git/broonie/spi.git/tree/d=
-rivers/spi?h=3Dfor-next
->>> before the SPI maintainer can accept it.
->> Thanks, I understood, I will rework my patch and report to your late=
-r.
-> I gave your patch a try on a v3.14-rc5 kernel on r8a7791/Koelsch,
-> and it increased Single SPI read transfer speed from ca. 1 Mbps to 11=
- Mbps.
-> So I'm looking forward to an updated version.
-Thanks, I am modifying my patch and will send it to you as soon as poss=
-ible.
+Ok. understood what your are concerning about.
 
-Hiep
+> >>
+> >>>    {
+> >>> -	unsigned long flags;
+> >>> -	bool disabled = false;
+> >>> -
+> >>> -	write_lock_irqsave(&data->lock, flags);
+> 
+> [snip]
+> 
+> Here's the function mentioned above:
+> 
+> >>> +
+> >>> +static void __sysmmu_enable_nocount(struct sysmmu_drvdata *data)
+> >>> +{
+> >>> +	__master_clk_enable(data);
+> >>> +	__sysmmu_clk_enable(data);
+> >>> +
+> >>> +	__raw_writel(CTRL_BLOCK, data->sfrbase + REG_MMU_CTRL);
+> >>> +
+> >>> +	__sysmmu_init_config(data);
+> >>> +
+> >>> +	__sysmmu_set_ptbase(data->sfrbase, data->pgtable);
+> >>> +
+> >>> +	__raw_writel(CTRL_ENABLE, data->sfrbase + REG_MMU_CTRL);
+> >>> +
+> >>> +	__master_clk_disable(data);
+> >>> +}
+> >>> +
+> 
+> [snip]
+> 
+> >>>
+> >>> @@ -629,7 +700,7 @@ err_pgtable:
+> >>>    static void exynos_iommu_domain_destroy(struct iommu_domain *domain)
+> >>>    {
+> >>>    	struct exynos_iommu_domain *priv = domain->priv;
+> >>> -	struct sysmmu_drvdata *data;
+> >>> +	struct exynos_iommu_owner *owner;
+> >>>    	unsigned long flags;
+> >>>    	int i;
+> >>>
+> >>> @@ -637,11 +708,14 @@ static void exynos_iommu_domain_destroy(struct iommu_domain *domain)
+> >>>
+> >>>    	spin_lock_irqsave(&priv->lock, flags);
+> >>>
+> >>> -	list_for_each_entry(data, &priv->clients, node) {
+> >>> -		while (!exynos_sysmmu_disable(data->dev))
+> >>> +	list_for_each_entry(owner, &priv->clients, client) {
+> >>> +		while (!exynos_sysmmu_disable(owner->dev))
+> >>>    			; /* until System MMU is actually disabled */
+> >>
+> >> What about using list_for_each_entry_safe() and calling list_del_init()
+> >> here directly?
+> >>
+> >
+> > That require another variable to be defined.
+> 
+> Is it a problem?
+> 
+That is not a problem.
+But I think using list_for_each_entry() is not a problem likewise.
 
+> > I just wanted to avoid that because I think it is prettier.
+> > Moreover, list_del_init() below the empty while() clause may make
+> > the source code readers misunderstood..
+> 
+> This raises another question, why the loop above is even needed. 
+> exynos_sysmmu_disable() should make sure that SYSMMU is actually 
+> disabled, without any need for looping like this.
+
+Some driver needs enabling sysmmu to be counted due to its complex structure.
+It can be also removed by the driver with an extra effort
+but the reality is important.
+Device driver is not only for the scholarship but also for the real use.
+
+> >>>    	}
+> >>>
+> >>> +	while (!list_empty(&priv->clients))
+> >>> +		list_del_init(priv->clients.next);
+> >>> +
+> >>>    	spin_unlock_irqrestore(&priv->lock, flags);
+> >>>
+> >>>    	for (i = 0; i < NUM_LV1ENTRIES; i++)
+> 
+> [snip]
+> 
+> >>> +static int sysmmu_hook_driver_register(struct notifier_block *nb,
+> >>> +					unsigned long val,
+> >>> +					void *p)
+> >>> +{
+> >>> +	struct device *dev = p;
+> >>> +
+> >>> +	switch (val) {
+> >>> +	case BUS_NOTIFY_BIND_DRIVER:
+> >>> +	{
+> >>> +		struct exynos_iommu_owner *owner;
+> >>
+> >> Please move this variable to the top of the function and drop the braces
+> >> around case blocks.
+> >
+> > I don't think it is required because this function is modified
+> > by the following patches.
+> 
+> OK, if so, and similar issue is not present after further patches.
+> 
+> >
+> >>
+> >>> +
+> >>> +		/* No System MMU assigned. See exynos_sysmmu_probe(). */
+> >>> +		if (dev->archdata.iommu == NULL)
+> >>> +			break;
+> >>
+> >> This looks strange... (see below)
+> >>
+> >> Also this looks racy. There are no guarantees about device probing
+> >> order, so you may end up with master devices being probed before the
+> >> IOMMUs. Deferred probing should be used to handle this correctly.
+> >
+> > System MMU driver must be probed earlier than the drivers of master devices
+> > because the drivers may want to use System MMU for their initial task.
+> 
+> As I said, there are no guarantees about platform device probe order in 
+> Linux kernel. Code must be designed to check whether required 
+> dependencies are met and if not, deferred probing must be used.
+> 
+
+I told that System MMU driver must be probed earlier.
+That's why exynos_iommu_init() is called by subsys_initcall level.
+I also noticed that it must be promoted to arch_initcall for some driver.
+
+> >>
+> >>> +
+> >>> +		owner = devm_kzalloc(dev, sizeof(*owner), GFP_KERNEL);
+> >>> +		if (!owner) {
+> >>> +			dev_err(dev, "No Memory for exynos_iommu_owner\n");
+> >>> +			return -ENOMEM;
+> >>> +		}
+> >>> +
+> >>> +		owner->dev = dev;
+> >>> +		INIT_LIST_HEAD(&owner->client);
+> >>> +		owner->sysmmu = dev->archdata.iommu;
+> >>> +
+> >>> +		dev->archdata.iommu = owner;
+> >>
+> >> I don't understand what is happening here in this case statement. There
+> >> is already something assigned to dev->archdata.iommu, but this code
+> >> reassigns something else to this field. This means that you attempt to
+> >> use the same field to store pointers to objects of different types,
+> >> which I believe is broken, because you have no way to check what kind of
+> >> object is currently pointed by such (void *) pointer.
+> >>
+> >
+> > exynos_sysmmu_probe() assigns the device descriptor of the probing System MMU
+> > to archdata.iommu of its master device. The assignment is just a marker that
+> > the device is a master device of a System MMU.
+> > If dev->archdata.iommu has a value in the case of BUS_NOTIFY_BIND_DRIVER,
+> > the 'dev' is a master devices of a System MMU. Then sysmmu_hook_driver_register()
+> > assigns the data structure to handle System MMU to dev->archdata.iommu.
+> 
+> Which is wrong (or even if you don't consider it wrong, it is ugly), 
+> because one (void *) pointer in the same object is used to store 
+> pointers to two completely different types.
+
+archdata.iommu has a pointer to sysmmu descriptor for a very short time
+during booting time to build complete data structure to handle System MMU.
+It is it also a matter?
+
+Anyway, this style of initialization just maintained to make the driver work
+with the old design. It is changed with the following patches.
+
+
+Regards,
+
+KyongHo
