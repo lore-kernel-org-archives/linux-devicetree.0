@@ -1,65 +1,58 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v2 1/3] ARM: EXYNOS: Map PMU address through DT
-Date: Wed, 19 Mar 2014 17:01:25 +0100
-Message-ID: <5329BF55.8000705@samsung.com>
-References: <1395061795-17777-1-git-send-email-vikas.sajjan@samsung.com>
- <1395061795-17777-2-git-send-email-vikas.sajjan@samsung.com>
- <CAK9yfHyF9t0fsO86cqHvAzaWKa17=2MkFq6mhoL0-mwjw6OXQQ@mail.gmail.com>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] ASoC: simple-card: Add DT documentation for
+ multi-DAI links
+Date: Wed, 19 Mar 2014 17:07:10 +0100
+Message-ID: <20140319170710.19fc5a1d@armhf>
+References: <cover.1394883134.git.moinejf@free.fr>
+	<d054780a0edf4b2338a52e48bff9144e19aa614f.1394883134.git.moinejf@free.fr>
+	<20140317164339.GR11706@sirena.org.uk>
+	<20140318091728.1d2240ca@armhf>
+	<53296CB7.1000909@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAK9yfHyF9t0fsO86cqHvAzaWKa17=2MkFq6mhoL0-mwjw6OXQQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>, Vikas Sajjan <vikas.sajjan@samsung.com>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53296CB7.1000909-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17.03.2014 15:23, Sachin Kamat wrote:
-> Hi Vikas,
->
-> On 17 March 2014 18:39, Vikas Sajjan <vikas.sajjan@samsung.com> wrote:
->> Instead of hardcoding the PMU details for each SoC, pass this information
->> through device tree (DT).
->>
->> Signed-off-by: Vikas Sajjan <vikas.sajjan@samsung.com>
->> ---
->>   .../devicetree/bindings/arm/samsung/pmu.txt        |    5 +-
->>   arch/arm/boot/dts/exynos4.dtsi                     |    5 ++
->>   arch/arm/boot/dts/exynos5260.dtsi                  |    5 ++
->>   arch/arm/mach-exynos/common.c                      |   51 +++++++++++++-------
->>   arch/arm/mach-exynos/include/mach/map.h            |    3 --
->>   5 files changed, 47 insertions(+), 22 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
->> index f1f1552..667a7f0 100644
->> --- a/Documentation/devicetree/bindings/arm/samsung/pmu.txt
->> +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
->> @@ -2,14 +2,15 @@ SAMSUNG Exynos SoC series PMU Registers
->>
->>   Properties:
->>    - compatible : should contain two values. First value must be one from following list:
->> +                  - "samsung,exynos4210-pmu" - for Exynos4210 and Exynos4x12 SoC,
->>                     - "samsung,exynos5250-pmu" - for Exynos5250 SoC,
->> -                  - "samsung,exynos5420-pmu" - for Exynos5420 SoC.
->> +                  - "samsung,exynos5420-pmu" - for Exynos5420 and Exynos5260 SoC.
->>                  second value must be always "syscon".
->>
->>    - reg : offset and length of the register set.
->>
->>   Example :
->>   pmu_system_controller: system-controller@10040000 {
->> -       compatible = "samsung,exynos5250-pmu", "syscon";
->> +       compatible = "samsung,exynos5250-pmu";
->
-> If you have removed "syscon" deliberately above, then you should also
-> remove the same in the
-> binding description which says "second value must be always "syscon".".
->
+On Wed, 19 Mar 2014 12:08:55 +0200
+Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org> wrote:
 
-I believe that "syscon" should be still present as I don't see any code 
-providing access to PMU registers to other drivers, that could replace 
-the standard syscon interface, being added by this series.
+> sound {
+> 	compatible =3D "simple-audio-card";
+> 	simple-audio-card,name =3D "Simple Audio";
+> 	simple-audio-card,widgets =3D ...
+> 	simple-audio-card,routing =3D ...
+>=20
+> 	simple-audio-card,dai-link@0 {		/* I2S - codec */
+> 		format =3D "i2s";
+> 		bitclock-master =3D "codec";
+> 		frame-master =3D "codec";
+> 		bitclock-inversion =3D <1>;
+> 		simple-audio-card,cpu {
+> 			sound-dai =3D <&audio1 0>;
+> 			bitclock-inversion =3D <0>;
+> 		};
+> 		simple-audio-card,codec {
+> 			sound-dai =3D <&codec 0>;
+> 			system-clock-frequency =3D <12000000>;
+> 		};
+> 	};
+> ...
+>=20
+> I can participate in the implementation too.
 
-Best regards,
-Tomasz
+Thanks. I will prepare the multi DAI links and send you the first
+patches.
+
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
