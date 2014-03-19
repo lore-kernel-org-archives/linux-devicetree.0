@@ -1,94 +1,74 @@
-From: Byungho An <bh74.an@samsung.com>
-Subject: RE: [PATCH V6 3/8] net: sxgbe: add TSO support for Samsung sxgbe
-Date: Wed, 19 Mar 2014 11:29:40 -0700
-Message-ID: <00aa01cf43a1$32ec0d00$98c42700$@samsung.com>
-References: <006701cf4334$af6d9af0$0e48d0d0$@samsung.com>
- <CAJ3bTp6BSD5qCJEVJX36Xd=-oX6oDkmTXA2NK42g7zUj6dJgjA@mail.gmail.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH v3 4/4] ASoC: simple-card: Add DT
+ documentation for multi-DAI links
+Date: Wed, 19 Mar 2014 20:32:06 +0200
+Message-ID: <5329E2A6.2040605@ti.com>
+References: <cover.1394883134.git.moinejf@free.fr>
+ <d054780a0edf4b2338a52e48bff9144e19aa614f.1394883134.git.moinejf@free.fr>
+ <20140317164339.GR11706@sirena.org.uk> <20140318091728.1d2240ca@armhf>
+ <53296CB7.1000909@ti.com> <20140319134625.GN11706@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-reply-to: <CAJ3bTp6BSD5qCJEVJX36Xd=-oX6oDkmTXA2NK42g7zUj6dJgjA@mail.gmail.com>
-Content-language: en-us
-Sender: netdev-owner@vger.kernel.org
-To: 'Rayagond Kokatanur' <rayagond@vayavyalabs.com>
-Cc: 'netdev' <netdev@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 'David Miller' <davem@davemloft.net>, "'ks.giri'" <ks.giri@samsung.com>, "'siva.kallam'" <siva.kallam@samsung.com>, "'vipul.pandya'" <vipul.pandya@samsung.com>, "'ilho215.lee'" <ilho215.lee@samsung.com>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20140319134625.GN11706@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Jean-Francois Moine <moinejf@free.fr>, alsa-devel@alsa-project.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Xiubo Li <Li.Xiubo@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Rayagond Kokatanur <rayagond@vayavyalabs.com> wrote:
-> On Wed, Mar 19, 2014 at 11:02 AM, Byungho An <bh74.an@samsung.com> wrote:
-[snip]
-> >
-> >         /* save the skb address */
-> >         tqueue->tx_skbuff[entry] = skb;
-> >
-> >         if (!is_jumbo) {
-> > -               tx_desc->tdes01 = dma_map_single(priv->device, skb->data,
-> > -                                                  no_pagedlen,
-DMA_TO_DEVICE);
-> > -               if (dma_mapping_error(priv->device, tx_desc->tdes01))
-> > -                       pr_err("%s: TX dma mapping failed!!\n", __func__);
-> > -
-> > -               priv->hw->desc->prepare_tx_desc(tx_desc, 1, no_pagedlen,
-> > -                                               no_pagedlen);
-> > +               if (likely(skb_is_gso(skb))) {
-> > +                       /* TSO support */
-> > +                       mss = skb_shinfo(skb)->gso_size;
-> > +
-> > + priv->hw->desc->tx_ctxt_desc_set_mss(ctxt_desc, mss);
-> 
-> No need to issue context descriptor for every TSO packets. Program context
-descriptor only if MSS value is value is changed compared
-> to previous TSO packet MSS value. By this way we can reduce the one extra
-descriptor fetch by device and improve the performance.
-OK. This will be applied in the  next post.
+On 03/19/2014 03:46 PM, Mark Brown wrote:
+> On Wed, Mar 19, 2014 at 12:08:55PM +0200, Jyri Sarha wrote:
+>
+>> While we are at it we could update the bitclock-master and frame-master
+>> syntax to be like this:
+>
+>> bitclock-master = "cpu"
+>> frame-master = "codec"
+>
+>> With the above explicit definition all the daifmt settings could be defined
+>> in link level. For backwards compatibility we could still define that
+>> omitting the value equals "codec" and omitting the property equals "cpu".
+>
+> It seems it'd be a bit more idiomatic to do that with a phandle rather
+> than with a string in order to allow extensions for things like TDM (the
+> I2S to mono speaker driver use case for example).
+>
 
-[snip]
-> > @@ -1893,7 +1943,9 @@ struct sxgbe_priv_data *sxgbe_dvr_probe(struct
-> > device *device,
-> >
-> >         ndev->netdev_ops = &sxgbe_netdev_ops;
-> >
-> > -       ndev->hw_features = NETIF_F_SG | NETIF_F_RXCSUM;
-> > +       ndev->hw_features = NETIF_F_SG | NETIF_F_IP_CSUM |
-NETIF_F_IPV6_CSUM |
-> > +               NETIF_F_RXCSUM | NETIF_F_TSO | NETIF_F_TSO6 |
-> > +               NETIF_F_GRO;
-> 
-> Enable TSO only if HW supports, hence we have to check for HW
-feature/capability registers here also.
-OK. Thanks
+You mean a like this:
 
-> 
-> >         ndev->features |= ndev->hw_features | NETIF_F_HIGHDMA;
-> >         ndev->watchdog_timeo = msecs_to_jiffies(TX_TIMEO);
-> >
-> > @@ -1905,6 +1957,13 @@ struct sxgbe_priv_data *sxgbe_dvr_probe(struct
-device *device,
-> >         if (flow_ctrl)
-> >                 priv->flow_ctrl = SXGBE_FLOW_AUTO;      /* RX/TX pause on
-*/
-> >
-> > +       /* Enable TCP segmentation offload for all DMA channels */
-> > +       if (priv->hw_cap.tcpseg_offload) {
-> > +               SXGBE_FOR_EACH_QUEUE(SXGBE_TX_QUEUES, queue_num) {
-> > +                       priv->hw->dma->enable_tso(priv->ioaddr,
-queue_num);
-> > +               }
-> > +       }
-> > +
-> >         /* Rx Watchdog is available, enable depend on platform data */
-> >         if (!priv->plat->riwt_off) {
-> >                 priv->use_riwt = 1;
-> > --
-> > 1.7.10.4
-> >
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe netdev" in
-> > the body of a message to majordomo@vger.kernel.org More majordomo info
-> > at  http://vger.kernel.org/majordomo-info.html
-> --
-> To unsubscribe from this list: send the line "unsubscribe netdev" in the
-body of a message to majordomo@vger.kernel.org More
-> majordomo info at  http://vger.kernel.org/majordomo-info.html
+sound {
+     compatible = "simple-audio-card";
+     simple-audio-card,name = "Simple Audio";
+     simple-audio-card,widgets = ...
+     simple-audio-card,routing = ...
+
+     simple-audio-card,dai-link@0 {        /* I2S - codec */
+         format = "i2s";
+         bitclock-master = <&codec 0>
+         frame-master = <&codec 0>;
+         bitclock-inversion = <1>;
+         simple-audio-card,cpu {
+             sound-dai = <&audio1 0>;
+             bitclock-inversion = <0>;
+         };
+         simple-audio-card,codec {
+             sound-dai = <&codec 0>;
+             system-clock-frequency = <12000000>;
+         };
+     };
+...
+
+Yep, that makes sense when considering tdm setups with multiple codecs 
+on the same wires.
+
+Best regards,
+Jyri
