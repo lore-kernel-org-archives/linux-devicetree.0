@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCH 2/5] ARM: dts: tx53: sort the i2c subnodes by I2C address
-Date: Wed, 19 Mar 2014 14:28:38 +0100
-Message-ID: <1395235721-13847-2-git-send-email-LW@KARO-electronics.de>
+Subject: [PATCH 4/5] ARM: dts: tx53: add simple-panel support
+Date: Wed, 19 Mar 2014 14:28:40 +0100
+Message-ID: <1395235721-13847-4-git-send-email-LW@KARO-electronics.de>
 References: <1395235721-13847-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,43 +15,32 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
 ---
- arch/arm/boot/dts/imx53-tx53-x13x.dts |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ arch/arm/boot/dts/imx53-tx53-x13x.dts |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx53-tx53-x13x.dts b/arch/arm/boot/dts/=
 imx53-tx53-x13x.dts
-index c8a3473..cd3476b 100644
+index 26b918e..86a964d 100644
 --- a/arch/arm/boot/dts/imx53-tx53-x13x.dts
 +++ b/arch/arm/boot/dts/imx53-tx53-x13x.dts
-@@ -108,14 +108,6 @@
- 	pinctrl-0 =3D <&pinctrl_i2c3>;
- 	status =3D "okay";
-=20
--	sgtl5000: codec@0a {
--		compatible =3D "fsl,sgtl5000";
--		reg =3D <0x0a>;
--		VDDA-supply =3D <&reg_2v5>;
--		VDDIO-supply =3D <&reg_3v3>;
--		clocks =3D <&mclk>;
--	};
--
- 	touchscreen1: eeti@04 {
- 		compatible =3D "eeti,egalax_ts";
- 		reg =3D <0x04>;
-@@ -126,6 +118,14 @@
- 		wakeup-gpios =3D <&gpio3 22 GPIO_ACTIVE_HIGH>;
- 		linux,wakeup;
+@@ -63,6 +63,18 @@
+ 		default-brightness-level =3D <50>;
  	};
-+
-+	sgtl5000: codec@0a {
-+		compatible =3D "fsl,sgtl5000";
-+		reg =3D <0x0a>;
-+		VDDA-supply =3D <&reg_2v5>;
-+		VDDIO-supply =3D <&reg_3v3>;
-+		clocks =3D <&mclk>;
-+	};
- };
 =20
- &iomuxc {
++	panel0 {
++		compatible =3D "simple-panel";
++		power-supply =3D <&reg_lcd_pwr0>;
++		backlight =3D <&backlight0>;
++	};
++
++	panel1 {
++		compatible =3D "simple-panel";
++		power-supply =3D <&reg_lcd_pwr1>;
++		backlight =3D <&backlight1>;
++	};
++
+ 	regulators {
+ 		reg_lcd_pwr0: regulator@5 {
+ 			compatible =3D "regulator-fixed";
 --=20
 1.7.10.4
