@@ -1,144 +1,107 @@
-From: Boris BREZILLON <b.brezillon.dev@gmail.com>
-Subject: Re: [PATCH 00/11] ARM: at91: rework main and slow clk implementation
-Date: Wed, 19 Mar 2014 10:48:20 +0100
-Message-ID: <532967E4.8090001@gmail.com>
-References: <1395173924-3648-1-git-send-email-b.brezillon.dev@gmail.com> <3485B87A-1832-4EE3-8613-B5165C282397@jcrosoft.com>
+From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] ASoC: simple-card: Add DT documentation for multi-DAI
+ links
+Date: Wed, 19 Mar 2014 12:08:55 +0200
+Message-ID: <53296CB7.1000909@ti.com>
+References: <cover.1394883134.git.moinejf@free.fr>	<d054780a0edf4b2338a52e48bff9144e19aa614f.1394883134.git.moinejf@free.fr>	<20140317164339.GR11706@sirena.org.uk> <20140318091728.1d2240ca@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <3485B87A-1832-4EE3-8613-B5165C282397@jcrosoft.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Mike Turquette <mturquette@linaro.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140318091728.1d2240ca@armhf>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Jean-Christophe,
-
-Le 19/03/2014 07:06, Jean-Christophe PLAGNIOL-VILLARD a =E9crit :
-> You must keep me in Cc
-
-I always did, this is an oversight.
+On 03/18/2014 10:17 AM, Jean-Francois Moine wrote:
+> On Mon, 17 Mar 2014 16:43:39 +0000
+> Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>
+>> On Sat, Mar 15, 2014 at 12:30:05PM +0100, Jean-Francois Moine wrote:
+> 	[snip]
+...
 
 >
-> first and last warning
-
-Now, this is my turn.
-
-I don't like to be threatened, especially when this message is only sen=
-t=20
-to me.
-BTW, last warning, then what ?
-
-Now let's talk about your attitude.
-
-Regarding this specific series: I sent you several versions of the at91=
-=20
-CCF based
-clk implementation and you never fully reviewed those series (despite=20
-the fact you
-told me you would do it), why are you so interested in the at91 CCF=20
-implementation
-now ?
-
-Moreover, most of the time when you review a patchset your remarks are=20
-far from
-constructive, and we always have to ask you several times to get a real=
-=20
-explanation.
-
-I'm not telling you're wrong when you "NACK" something, but explaining=20
-the reasons
-are part of your maintainer's job.
-
-This being said, I'll take care to keep you in Cc of all at91 related=20
-patches.
-
-Best Regards,
-
-Boris
-
+> I agree. I see two possible syntaxes:
 >
-> On Mar 19, 2014, at 4:18 AM, Boris BREZILLON <brezillonboris@gmail.co=
-m> wrote:
+> 1) keep the same definitions in the containers:
 >
->> Hello,
->>
->> This series introduce the real clock model (as described in atmel da=
-tasheets)
->> for slow and main clocks.
->>
->> The modifications introduced by this series break the DT compat, but=
-, as the
->> at91 CCF based implementation is pretty new (introduced in 3.14 only=
- for sama5
->> eval boards) I think it won't impact a lot of users.
->>
->> I tested it on sama5d3.
->> Alexandre, Jean-Jacques, could you test this series on your eval boa=
-rds
->> (sam9261ek and sam9rlek) so that we can move to this new model and h=
-opefully
->> consider the at91 clk DT binding as (almost :-)) stable.
->>
->> Jean-Jacques, as you can see I reworked my first implementation as y=
-ou
->> suggested, do you want me to add your Signed-off-by in the next vers=
-ion ?
->>
->> Mike, if this series is accepted, I'd like to get it merged as soon =
-as possible
->> to prevent other developpers from using a deprecated DT binding.
->>
->> Best Regards,
->>
->> Boris
->>
->> Boris BREZILLON (11):
->>   clk: at91: rework main clk implementation
->>   clk: at91: update main clk documentation
->>   clk: at91: add slow clks driver
->>   clk: at91: add slow clk documentation
->>   ARM: at91/dt: move sama5d3 SoC to the new main/slow clk model
->>   ARM: at91/dt: add xtal frequencies to sama5d3xcm boards
->>   ARM: at91/dt: add xtal frequencies to sama5d3 xplained board
->>   ARM: at91/dt: move at91sam9261 SoC to the new main clock model
->>   ARM: at91/dt: define main xtal frequency of the at91sam9261ek boar=
-d
->>   ARM: at91/dt: move at91sam9rl SoC to the new slow/main clock model=
-s
->>   ARM: at91/dt: define sam9rlek crystal frequencies
->>
->> .../devicetree/bindings/clock/at91-clock.txt       |  128 ++++-
->> arch/arm/boot/dts/at91-sama5d3_xplained.dts        |   10 +
->> arch/arm/boot/dts/at91sam9261.dtsi                 |   10 +-
->> arch/arm/boot/dts/at91sam9261ek.dts                |    4 +
->> arch/arm/boot/dts/at91sam9rl.dtsi                  |   45 +-
->> arch/arm/boot/dts/at91sam9rlek.dts                 |    8 +
->> arch/arm/boot/dts/sama5d3.dtsi                     |   61 +-
->> arch/arm/boot/dts/sama5d3xcm.dtsi                  |   10 +
->> drivers/clk/at91/Makefile                          |    4 +-
->> drivers/clk/at91/clk-main.c                        |  581 ++++++++++=
-+++++++---
->> drivers/clk/at91/clk-slow.c                        |  467 ++++++++++=
-++++++
->> drivers/clk/at91/pmc.c                             |   12 +
->> drivers/clk/at91/pmc.h                             |    9 +
->> drivers/clk/at91/sckc.c                            |   57 ++
->> drivers/clk/at91/sckc.h                            |   22 +
->> include/linux/clk/at91_pmc.h                       |    1 +
->> 16 files changed, 1342 insertions(+), 87 deletions(-)
->> create mode 100644 drivers/clk/at91/clk-slow.c
->> create mode 100644 drivers/clk/at91/sckc.c
->> create mode 100644 drivers/clk/at91/sckc.h
->>
->> --=20
->> 1.7.9.5
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> sound {
+> 	compatible = "simple-audio-card";
+> 	simple-audio-card,name = "Cubox Audio";
+>
+> 	simple-audio-card,dai-link@0 {		/* I2S - HDMI */
+> 		simple-audio-card,cpu {
+> 			sound-dai = <&audio1 0>;
+> 			format = "i2s";
+> 		};
+> 		simple-audio-card,codec {
+> 			sound-dai = <&tda998x 0>;
+> 		};
+> 	};
+>
+> 	simple-audio-card,dai-link@1 {		/* S/PDIF - HDMI */
+> 		simple-audio-card,cpu {
+> 			sound-dai = <&audio1 1>;
+> 		};
+> 		simple-audio-card,codec {
+> 			sound-dai = <&tda998x 1>;
+> 		}
+> 	};
+> 	...
+>
 
+I vote for the version above. As Mark said there is need for dai 
+specific properties.
+
+While we are at it we could update the bitclock-master and frame-master 
+syntax to be like this:
+
+bitclock-master = "cpu"
+frame-master = "codec"
+
+With the above explicit definition all the daifmt settings could be 
+defined in link level. For backwards compatibility we could still define 
+that omitting the value equals "codec" and omitting the property equals 
+"cpu".
+
+It may sometimes be helpful to allow overwriting link level settings in 
+dai level. In order to do that it should be possible to write all daifmt 
+settings explicitly like this:
+
+bitclock-inversion = <0>; /* <0> = no bitclock-inversion */
+
+If backward compatibility is necessary we could recognize the syntax 
+version from the existence dai-link node.
+
+sound {
+	compatible = "simple-audio-card";
+	simple-audio-card,name = "Simple Audio";
+	simple-audio-card,widgets = ...
+	simple-audio-card,routing = ...
+
+	simple-audio-card,dai-link@0 {		/* I2S - codec */
+		format = "i2s";
+		bitclock-master = "codec";
+		frame-master = "codec";
+		bitclock-inversion = <1>;
+		simple-audio-card,cpu {
+			sound-dai = <&audio1 0>;
+			bitclock-inversion = <0>;
+		};
+		simple-audio-card,codec {
+			sound-dai = <&codec 0>;
+			system-clock-frequency = <12000000>;
+		};
+	};
+...
+
+I can participate in the implementation too.
+
+Best regards,
+Jyro
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
