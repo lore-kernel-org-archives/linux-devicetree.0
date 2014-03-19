@@ -1,69 +1,70 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v2 4/8] Input: pixcir_i2c_ts: Use Type-B Multi-Touch protocol
-Date: Wed, 19 Mar 2014 13:27:25 +0200
-Message-ID: <53297F1D.2050203@ti.com>
-References: <1393428486-15001-1-git-send-email-rogerq@ti.com> <1393428486-15001-5-git-send-email-rogerq@ti.com> <531B3331.9050008@euromail.se> <531D7E66.1070300@ti.com> <20140310163701.GA30397@saruman.home>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v6 1/4] [media] exynos-scaler: Add DT bindings for SCALER driver
+Date: Wed, 19 Mar 2014 12:31:01 +0100
+Message-ID: <4637278.9G3gGkQ5GA@avalon>
+References: <1395213196-25972-1-git-send-email-shaik.ameer@samsung.com> <1395213196-25972-2-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140310163701.GA30397@saruman.home>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Henrik Rydberg <rydberg@euromail.se>
-Cc: balbi@ti.com, dmitry.torokhov@gmail.com, jcbian@pixcir.com.cn, dmurphy@ti.com, mugunthanvnm@ti.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1395213196-25972-2-git-send-email-shaik.ameer@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Cc: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, s.nawrocki@samsung.com, m.chehab@samsung.com, b.zolnierkie@samsung.com, t.figa@samsung.com, k.debski@samsung.com, arun.kk@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Henrik,
+Hi Shaik,
 
-On 03/10/2014 06:37 PM, Felipe Balbi wrote:
-> On Mon, Mar 10, 2014 at 10:57:10AM +0200, Roger Quadros wrote:
->> Hi Henrik,
->>
->> On 03/08/2014 05:11 PM, Henrik Rydberg wrote:
->>> Hi Roger,
->>>
->>> the MT implementation seems mostly fine, just one curiosity:
->>>
->>>>  static irqreturn_t pixcir_ts_isr(int irq, void *dev_id)
->>>>  {
->>>>  	struct pixcir_i2c_ts_data *tsdata = dev_id;
->>>>  	const struct pixcir_ts_platform_data *pdata = tsdata->chip;
->>>> +	struct pixcir_report_data report;
->>>>  
->>>>  	while (!tsdata->exiting) {
->>>> -		pixcir_ts_poscheck(tsdata);
->>>> -
->>>> -		if (gpio_get_value(pdata->gpio_attb))
->>>> +		/* parse packet */
->>>> +		pixcir_ts_parse(tsdata, &report);
->>>> +
->>>> +		/* report it */
->>>> +		pixcir_ts_report(tsdata, &report);
->>>> +
->>>> +		if (gpio_get_value(pdata->gpio_attb)) {
->>>> +			if (report.num_touches) {
->>>> +				/*
->>>> +				 * Last report with no finger up?
->>>> +				 * Do it now then.
->>>> +				 */
->>>> +				input_mt_sync_frame(tsdata->input);
->>>> +				input_sync(tsdata->input);
->>>
->>> Why is this special handling needed?
->>
->> This is needed because the controller doesn't always report when all fingers
->> have left the screen. e.g. report might contain 3 fingers touched and then
->> gpio_attb line is de-asserted. There's no report with 0 fingers touched even
->> if the user's fingers have left the screen. So we never detect a BUTTON_UP.
->>
->> Without this s/w workaround we observe side effects like buttons being pressed
->> but not released. To me it looks like a bug in the controller.
+Thank you for the patch.
+
+On Wednesday 19 March 2014 12:43:13 Shaik Ameer Basha wrote:
+> This patch adds the DT binding documentation for the Exynos5420/5410
+> based SCALER device driver.
 > 
-> the other way would be to *also* use IRQF_TRIGGER_RISING, then you get
-> an IRQ when fingers leave the screen. No ?
+> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+>  .../devicetree/bindings/media/exynos5-scaler.txt   |   24 +++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/media/exynos5-scaler.txt
 > 
+> diff --git a/Documentation/devicetree/bindings/media/exynos5-scaler.txt
+> b/Documentation/devicetree/bindings/media/exynos5-scaler.txt new file mode
+> 100644
+> index 0000000..e1dd465
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/exynos5-scaler.txt
+> @@ -0,0 +1,24 @@
+> +* Samsung Exynos5 SCALER device
+> +
+> +SCALER is used for scaling, blending, color fill and color space
+> +conversion on EXYNOS[5420/5410] SoCs.
+> +
+> +Required properties:
+> +- compatible: should be "samsung,exynos5420-scaler" or
+> +			"samsung,exynos5410-scaler"
+> +- reg: should contain SCALER physical address location and length
+> +- interrupts: should contain SCALER interrupt specifier
+> +- clocks: should contain the SCALER clock phandle and specifier pair for
+> +		each clock listed in clock-names property, according to
+> +		the common clock bindings
+> +- clock-names: should contain exactly one entry
+> +		- "scaler" - IP bus clock
 
-If you are OK with my explanation and the patches, could you please Ack them? Thanks.
+I'm not too familiar with the Exynos platform, but wouldn't it make sense to 
+use a common name across IP cores for interface and function clocks ?
 
-cheers,
--roger
+> +Example:
+> +	scaler_0: scaler@12800000 {
+> +		compatible = "samsung,exynos5420-scaler";
+> +		reg = <0x12800000 0x1000>;
+> +		interrupts = <0 220 0>;
+> +		clocks = <&clock 381>;
+> +		clock-names = "scaler";
+> +	};
+
+-- 
+Regards,
+
+Laurent Pinchart
