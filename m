@@ -1,41 +1,61 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [alsa-devel] [PATCH v3 4/4] ASoC: simple-card: Add DT documentation
- for multi-DAI links
-Date: Wed, 19 Mar 2014 21:15:14 +0200
-Message-ID: <5329ECC2.7040803@ti.com>
-References: <cover.1394883134.git.moinejf@free.fr>	<d054780a0edf4b2338a52e48bff9144e19aa614f.1394883134.git.moinejf@free.fr>	<20140317164339.GR11706@sirena.org.uk> <20140318091728.1d2240ca@armhf> <53296CB7.1000909@ti.com> <5329E749.6070900@metafoo.de>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v7 0/3] ARM: sun7i/sun6i: irqchip: Irqchip
+ driver for NMI controller
+Date: Wed, 19 Mar 2014 20:21:16 +0100
+Message-ID: <1395256879-8475-1-git-send-email-carlo@caione.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5329E749.6070900@metafoo.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Jean-Francois Moine <moinejf@free.fr>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Xiubo Li <Li.Xiubo@freescale.com>, linux-kernel@vger.kernel.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDWJTUUC5UCBBYW3U6MQKGQE66DQJKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/19/2014 08:51 PM, Lars-Peter Clausen wrote:
-> On 03/19/2014 11:08 AM, Jyri Sarha wrote:
-> [...]
->> It may sometimes be helpful to allow overwriting link level settings
->> in dai
->> level. In order to do that it should be possible to write all daifmt
->> settings explicitly like this:
->>
->> bitclock-inversion = <0>; /* <0> = no bitclock-inversion */
->
-> When does this make sense? Either the bitclock is inverted for all of
-> them or for none.
->
+Allwinner A20/A31 SoCs have a special interrupt controller for managing NMI.
+Three register are present to (un)mask, control and acknowledge NMI.
+These two patches add a new irqchip driver in cascade with GIC.
 
-Definition of clock signal and it's inversion varies between chip 
-manufacturers and sometimes it may not be possible to get all the dai 
-drivers to work identically in this respect. Because of this in some 
-cases there may be a need to set the inversion bit only at one end of 
-the link.
+Changes since v1:
+        - added binding document
 
-I think there was an example of this in some mail regarding the 
-simple-card DT-bidings, but I can't find it ATM.
+Changes since v2:
+        - fixed trigger type in DTS
+        - new explanations in binding documentation
+        - added support for A31 (sun6i)
 
-Best regards,
-Jyri
+Changes since v3:
+        - changed compatibles
+
+Changes since v4:
+        - fixed binding documentation
+
+Changes since v5:
+        - switched to handle_fasteoi_irq handler to avoid the double
+          interrupts issue
+
+Changes since v6:
+	- changed node name
+	- deleted defaulted interrupt-parent property
+
+Carlo Caione (3):
+  ARM: sun7i/sun6i: irqchip: Add irqchip driver for NMI controller
+  ARM: sun7i/sun6i: dts: Add NMI irqchip support
+  ARM: sun7i/sun6i: irqchip: Update the documentation
+
+ .../allwinner,sun67i-sc-nmi.txt                    |  27 +++
+ arch/arm/boot/dts/sun6i-a31.dtsi                   |   8 +
+ arch/arm/boot/dts/sun7i-a20.dtsi                   |   8 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-sunxi-nmi.c                    | 208 +++++++++++++++++++++
+ 5 files changed, 252 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/allwinner,sun67i-sc-nmi.txt
+ create mode 100644 drivers/irqchip/irq-sunxi-nmi.c
+
+-- 
+1.8.3.2
