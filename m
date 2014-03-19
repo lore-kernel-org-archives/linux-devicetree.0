@@ -1,81 +1,76 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [RFC PATCH 3/6] PM / Voltagedomain: introduce voltage domain driver
- support
-Date: Wed, 19 Mar 2014 15:35:36 -0700
-Message-ID: <20140319223536.31449.32103@quantum>
-References: <1392755543-28335-1-git-send-email-nm@ti.com>
- <1392755543-28335-4-git-send-email-nm@ti.com>
- <20140224015826.GU25940@sirena.org.uk> <530B594F.2030500@ti.com>
- <20140303035426.GC2411@sirena.org.uk> <531DF250.5060100@ti.com>
- <20140310172221.GT28112@sirena.org.uk> <531DF931.1060108@ti.com>
- <20140310180131.GZ28112@sirena.org.uk> <531E11B7.6080109@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <531E11B7.6080109@ti.com>
-Sender: cpufreq-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, Mark Brown <broonie@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+From: Tanmay Inamdar <tinamdar@apm.com>
+Subject: [PATCH v5 0/4] APM X-Gene PCIe controller
+Date: Wed, 19 Mar 2014 16:12:38 -0700
+Message-ID: <1395270762-6055-1-git-send-email-tinamdar@apm.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches@apm.com, jcm@redhat.com, Tanmay Inamdar <tinamdar@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Nishanth Menon (2014-03-10 12:25:43)
-> On 03/10/2014 01:01 PM, Mark Brown wrote:
-> > On Mon, Mar 10, 2014 at 12:41:05PM -0500, Nishanth Menon wrote:
-> > 
-> >> The only other options are:
-> >> a) Abstract it at a higher level at "user drivers", since they are
-> >> aware of the sequencing needs - but this partially defeats the
-> >> purpose, unless ofcourse, we do a tricky implementation such as:
-> >> clk a, b, c -> prenotifiers in a, postnotifiers in c (which as you
-> >> mentioned is a little trickier to get right).
-> >> b) introduce a higher level generic dvfs function[1] which does not
-> >> seem very attractive either.
+This patch adds support for AppliedMicro X-Gene PCIe host controller. The
+driver is tested on X-Gene platform with different gen1/2/3 PCIe endpoint
+cards.
 
-I disagree that a higher level DVFS interface is unattractive. I think
-it has taken a while to get there but people are finally interested in
-this. A small amount of discussion about this took place at Linaro
-Connect earlier this month (just hallway talk) but we shouldn't rule out
-the idea of a general framework for managing DVFS, which frankly is
-complex enough to merit not being shoved into the clock layer.
+X-Gene PCIe controller driver has depedency on the pcie arm64 arch support.
+Liviu Dudau from ARM has sent a patch set for pcie arm64 arch support and
+support for creating generic pcie bridge from device tree. Liviu's patches
+are available here
+1. https://lkml.org/lkml/2014/3/14/320
+2. https://lkml.org/lkml/2014/3/14/279
 
-> > 
-> >> Any other suggestions other than limiting the usage(and documenting it
-> >> so) and hoping for a future evolution to take this into consideration?
-> > 
-> > Something might be doable with telling the clock API about maintianing
-> > ratios between clocks?  I do think we should have an idea where we'd go
-> > with such requirements, even if we don't currently handle it, so that we
-> > can hopefully avoid another round of refactoring everything but it
-> > doesn't seem 100% essential, just very nice to have.
+If someone wishes to test PCIe on X-Gene with this patch set, above mentioned
+patches from Liviu must be applied before the patches in this patch set.
 
-This sounds reasonable but I must point out that the clock framework
-today (based on the existing clk.h api) does not have a single instance
-of constraint-based logic. For instance there is no clk_set_min_rate or
-clk_set_max_rate or clk_set_rate_range. These have been discussed before
-but I feel that pushing something before now would have been premature
-given that the level of discussion around those features never hit
-critical mass.
+changes since V4:
+1. fix section mismatch warnings
+2. fix the patch description
+3. fix indentation
+4. update read/write cfg functions by passing both addr and offset.
+5. use 'time_before' for timeout.
+6. remove unnecessary 'IS_ERR_OR_NULL'. Keep 'IS_ERR' for 'clk_get'
+7. remove BUG_ON for pci_ioremap_io. 
 
-So the ratio thing is sensible, but it would be the first
-constraint-like mechanism in the clock framework so what that looks like
-bares careful consideration.
+changes since V3:
+1. remove 'struct hw_pci' and supporting ops in hw_pci
+2. add code to create the host bridge from dts
+3. add code to scan the the host bridge
+4. modify outbound windows setup function to get resource information from
+   'bridge->windows'
+5. add compatible string in pcie dts node with current X-Gene SOC name.
 
-> > 
-> Mike,
-> Any suggestions about the above? could we use composite clocks in some
-> manner here(even though I think the original intent of the same was
-> not the same)?
+changes since V2:
+1. redefined each PCI port in different PCI domain correctly.
+2. removed setup_lane and setup_link functions from driver.
+3. removed scan_bus wrapper and set_primary_bus hack.
+4. added pci_ioremap_io for io resources.
 
-NACK. Let's just model the hardware in the clock framework, please. If
-you need to invent fake clocks to represent other constructs then it
-means the framework is missing something (or we're missing an entire
-framework, e.g. DVFS).
+changes since V1:
+1. added PCI domain support
+2. reading cpu and pci addresses from device tree to configure regions.
+3. got rid of unnecessary wrappers for readl and writel.
+4. got rid of endpoint configuration code.
+5. added 'dma-ranges' property support to read inbound region configuration.
+6. renamed host driver file to 'pci-xgene.c' from 'pcie-xgene.c'
+7. dropped 'clock-names' property from bindings
+8. added comments whereever requested.
 
-Regards,
-Mike
+Tanmay Inamdar (4):
+  pci: APM X-Gene PCIe controller driver
+  arm64: dts: APM X-Gene PCIe device tree nodes
+  dt-bindings: pci: xgene pcie device tree bindings
+  MAINTAINERS: entry for APM X-Gene PCIe host driver
 
-> 
-> -- 
-> Regards,
-> Nishanth Menon
+ .../devicetree/bindings/pci/xgene-pci.txt          |   52 ++
+ MAINTAINERS                                        |    7 +
+ arch/arm64/boot/dts/apm-mustang.dts                |    8 +
+ arch/arm64/boot/dts/apm-storm.dtsi                 |  155 +++++
+ drivers/pci/host/Kconfig                           |   10 +
+ drivers/pci/host/Makefile                          |    1 +
+ drivers/pci/host/pci-xgene.c                       |  725 ++++++++++++++++++++
+ 7 files changed, 958 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/xgene-pci.txt
+ create mode 100644 drivers/pci/host/pci-xgene.c
+
+-- 
+1.7.9.5
