@@ -1,43 +1,30 @@
-From: Nathan Lynch <nathan_lynch@mentor.com>
-Subject: [PATCH v2] ARM: dts: OMAP5: add pmu node
-Date: Wed, 19 Mar 2014 10:45:53 -0500
-Message-ID: <1395243953-11856-1-git-send-email-nathan_lynch@mentor.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, bcousson@baylibre.com
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH v11 0/4] thermal: samsung: Clean up and add support for
+ Exynos5420
+Date: Wed, 19 Mar 2014 16:58:04 +0100
+Message-ID: <5329BE8C.8000508@samsung.com>
+References: <1384238132-24515-1-git-send-email-ch.naveen@samsung.com>
+ <1386657640-21481-1-git-send-email-ch.naveen@samsung.com>
+ <CAL1wa8fj+pYN7EOkh0nggkwss2U9pJhGEoaA7TG+7oy0LK3zFQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAL1wa8fj+pYN7EOkh0nggkwss2U9pJhGEoaA7TG+7oy0LK3zFQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Leela Krishna Amudala <leelakrishna.a@gmail.com>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Cc: linux-pm@vger.kernel.org, Naveen Krishna <naveenkrishna.ch@gmail.com>, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, amit.daniel@samsung.com, Kukjin Kim <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, "cpgs ." <cpgs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Expose the PMU on OMAP5.
+Hi Leela,
 
-Tested with perf on OMAP5 uEVM.
+On 19.03.2014 12:19, Leela Krishna Amudala wrote:
+> Hi All,
+>
+> I didn't see this series in mainline, Any comments for this ?
 
-Signed-off-by: Nathan Lynch <nathan_lynch@mentor.com>
----
+Naveen had posted v12 of this series and I believe all the patches got 
+my Reviewed-by.
 
-Changes since v1:
-- Use symbolic constants.
-
- arch/arm/boot/dts/omap5.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index a72813a9663e..ccb38944c85a 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -76,6 +76,12 @@
- 			     <GIC_PPI 10 (GIC_CPU_MASK_RAW(3) | IRQ_TYPE_LEVEL_LOW)>;
- 	};
- 
-+	pmu {
-+		compatible = "arm,cortex-a15-pmu";
-+		interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 132 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
- 	gic: interrupt-controller@48211000 {
- 		compatible = "arm,cortex-a15-gic";
- 		interrupt-controller;
--- 
-1.8.3.1
-
+Best regards,
+Tomasz
