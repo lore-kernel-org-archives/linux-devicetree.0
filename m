@@ -1,28 +1,59 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH v6 0/3] ARM: sun7i/sun6i: irqchip: Irqchip
- driver for NMI controller
-Date: Wed, 19 Mar 2014 12:13:56 +0100 (CET)
-Message-ID: <alpine.DEB.2.02.1403191213240.18573@ionos.tec.linutronix.de>
-References: <1394890861-18347-1-git-send-email-carlo@caione.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Leela Krishna Amudala <leelakrishna.a@gmail.com>
+Subject: Re: [PATCH v11 0/4] thermal: samsung: Clean up and add support for Exynos5420
+Date: Wed, 19 Mar 2014 16:49:36 +0530
+Message-ID: <CAL1wa8fj+pYN7EOkh0nggkwss2U9pJhGEoaA7TG+7oy0LK3zFQ@mail.gmail.com>
+References: <1384238132-24515-1-git-send-email-ch.naveen@samsung.com> <1386657640-21481-1-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDAMN6NI5EERB3PXUWMQKGQEORKQQSA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1394890861-18347-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1386657640-21481-1-git-send-email-ch.naveen@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Cc: linux-pm@vger.kernel.org, Naveen Krishna <naveenkrishna.ch@gmail.com>, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, amit.daniel@samsung.com, Kukjin Kim <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, "cpgs ." <cpgs@samsung.com>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 15 Mar 2014, Carlo Caione wrote:
+Hi All,
 
-> Allwinner A20/A31 SoCs have a special interrupt controller for managing NMI.
-> Three register are present to (un)mask, control and acknowledge NMI.
-> These two patches add a new irqchip driver in cascade with GIC.
+I didn't see this series in mainline, Any comments for this ?
 
-If I get an ack for the DT parts, I'll pick it up.
+Thanks,
+Leela Krishna Amudala.
+
+
+On Tue, Dec 10, 2013 at 12:10 PM, Naveen Krishna Chatradhi
+<ch.naveen@samsung.com> wrote:
+> This patchset does a little clean up of the existing code (linux-soc-thermal)
+> 1.  [v11] thermal: samsung: replace inten_ bit fields with intclr_
+> 2.  [v11] thermal: samsung: change base_common to more meaningful base_second
+>
+> adds support for Exynos5420 in the driver and (linux-soc-thermal)
+> 3.  [v11] thermal: samsung: Add TMU support for Exynos5420 SoCs
+> also adds the device tree nodes for the same to exynos5420.dtsi (linux-samsung.git)
+> 4.  [v11] ARM: dts: Exynos5420: Add device nodes for TMU blocks
+>
+> (linux-soc-thermal)
+> Naveen Krishna Chatradhi (3):
+>   thermal: samsung: replace inten_ bit fields with intclr_
+>   thermal: samsung: change base_common to more meaningful base_second
+>   thermal: samsung: Add TMU support for Exynos5420 SoCs
+>
+>  .../devicetree/bindings/thermal/exynos-thermal.txt |   42 ++++++-
+>  drivers/thermal/samsung/exynos_tmu.c               |   72 +++++++++---
+>  drivers/thermal/samsung/exynos_tmu.h               |   21 ++--
+>  drivers/thermal/samsung/exynos_tmu_data.c          |  119 ++++++++++++++++++--
+>  drivers/thermal/samsung/exynos_tmu_data.h          |   12 +-
+>  5 files changed, 228 insertions(+), 38 deletions(-)
+>
+> (linux-samsung.git)
+> Naveen Krishna Chatradhi (1):
+>   ARM: dts: Exynos5420: Add device nodes for TMU blocks
+>
+>  arch/arm/boot/dts/exynos5420.dtsi |   40 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+> --
+> 1.7.10.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
