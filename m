@@ -1,118 +1,43 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [RFC PATCH 3/3] of: Add OF graph helpers to iterate over ports
-Date: Wed, 19 Mar 2014 16:12:04 +0100
-Message-ID: <1395241924-9675-4-git-send-email-p.zabel@pengutronix.de>
-References: <1395241924-9675-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1395241924-9675-1-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [RFC PATCH 0/3] Parse OF graph and create backlinks internally
+Date: Wed, 19 Mar 2014 16:12:01 +0100
+Message-ID: <1395241924-9675-1-git-send-email-p.zabel@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the of_graph_get_next_port function and a for_each_port_of_node
-macro using it. This allows to iterate over all ports of a given device node.
+Hi,
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
----
- drivers/of/base.c        | 47 +++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/of_graph.h | 12 ++++++++++++
- 2 files changed, 59 insertions(+)
+while I'm eagerly awaiting the outcome of the current situation regarding the
+"Move device tree graph parsing helpers to drivers/of" series, here is a draft
+implementation that parses the whole device tree into a separate graph
+structure, creating the backlinks internally. This way it doesn't matter to
+the code in which direction the phandle links in the device tree are pointing.
+The current code assumes a static device tree and doesn't handle runtime
+changes at all.
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 7ecffbe..364042b 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -2128,6 +2128,53 @@ struct device_node *of_graph_get_port_by_id(struct device_node *node, int id)
- EXPORT_SYMBOL(of_graph_get_port_by_id);
- 
- /**
-+ * of_graph_get_next_port() - get next port node
-+ *
-+ * @parent: pointer to the parent device node
-+ * @prev: previous port node, or NULL to get first
-+ *
-+ * Return: A 'port' node pointer with refcount incremented. The caller
-+ * has to use of_node_put() on it when done.
-+ */
-+
-+struct device_node *of_graph_get_next_port(const struct device_node *parent,
-+					   struct device_node *prev)
-+{
-+	struct of_graph_entity *entity;
-+	struct of_graph_port *port;
-+
-+	if (!parent)
-+		return NULL;
-+
-+	entity = __of_graph_lookup_entity(parent);
-+	if (WARN_ONCE(!entity || list_empty(&entity->ports),
-+		      "%s(): no ports specified for %s\n",
-+		      __func__, parent->full_name))
-+		return NULL;
-+
-+	if (!prev) {
-+		/* It's the first call, we have to find the first port. */
-+		port = list_first_entry(&entity->ports,
-+					struct of_graph_port, list);
-+
-+		return of_node_get(port->of_node);
-+	}
-+
-+	of_node_put(prev);
-+
-+	list_for_each_entry(port, &entity->ports, list) {
-+		if (port->of_node == prev &&
-+		    port != list_last_entry(&entity->ports,
-+					    struct of_graph_port, list)) {
-+			port = list_next_entry(port, list);
-+			return of_node_get(port->of_node);
-+		}
-+	}
-+
-+	return NULL;
-+}
-+
-+/**
-  * of_graph_get_next_endpoint() - get next endpoint node
-  *
-  * @parent: pointer to the parent device node
-diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
-index 2701054..7ed0bfa 100644
---- a/include/linux/of_graph.h
-+++ b/include/linux/of_graph.h
-@@ -26,6 +26,9 @@ struct of_endpoint {
- 	const struct device_node *local_node;
- };
- 
-+#define for_each_port_of_node(dn, pp) \
-+	for (pp = of_graph_get_next_port(dn, NULL); pp != NULL; \
-+	     pp = of_graph_get_next_port(dn, pp))
- #define for_each_endpoint_of_node(dn, ep) \
- 	for (ep = of_graph_get_next_endpoint(dn, NULL); ep != NULL; \
- 	     ep = of_graph_get_next_endpoint(dn, ep))
-@@ -34,6 +37,8 @@ struct of_endpoint {
- int of_graph_parse_endpoint(const struct device_node *node,
- 				struct of_endpoint *endpoint);
- struct device_node *of_graph_get_port_by_id(struct device_node *node, int id);
-+struct device_node *of_graph_get_next_port(const struct device_node *parent,
-+					struct device_node *previous);
- struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
- 					struct device_node *previous);
- struct device_node *of_graph_get_remote_port_parent(
-@@ -56,6 +61,13 @@ static inline struct device_node *of_graph_get_port_by_id(struct device_node *no
- 	return NULL;
- }
- 
-+static inline struct device_node *of_graph_get_next_port(
-+					const struct device_node *parent,
-+					struct device_node *previous)
-+{
-+	return NULL;
-+}
-+
- static inline struct device_node *of_graph_get_next_endpoint(
- 					const struct device_node *parent,
- 					struct device_node *previous)
+I've also added two helpers to iterate over all ports of a device, and to
+obtain a specific port by its id (as contained in the 'reg' property).
+
+These patches are based directly on top of the previous series, which still
+can be found at:
+	git://git.pengutronix.de/git/pza/linux.git topic/of-graph
+
+Philipp Zabel (3):
+  of: Parse OF graph into graph structure
+  of: Add OF graph helper to get a specific port by id
+  of: Add OF graph helpers to iterate over ports
+
+ drivers/of/base.c        | 476 +++++++++++++++++++++++++++++++++++++++--------
+ include/linux/of_graph.h |  31 +++
+ 2 files changed, 430 insertions(+), 77 deletions(-)
+
 -- 
 1.9.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
