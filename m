@@ -1,134 +1,108 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] of: Make of_find_node_by_path() handle /aliases
-Date: Wed, 19 Mar 2014 21:00:55 +0000
-Message-ID: <CACxGe6uceSmCznZxh5NoWTRTMCnN-nNi2NH9PLPx5C4O5Y7G7w@mail.gmail.com>
-References: <1395179549-31345-1-git-send-email-pantelis.antoniou@konsulko.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] OF: Add [__]of_find_node_by_full_name
+Date: Wed, 19 Mar 2014 21:02:32 +0000
+Message-ID: <CACxGe6sg5KUe1c53-LhWSgCU1V0VhHJygfmKpHXomvrrik0Fmg@mail.gmail.com>
+References: <1395179560-31384-1-git-send-email-pantelis.antoniou@konsulko.com> <CAL_Jsq+cpgnTYUxe1FRgVDak963y3E5_EFqc=fBM-3hq4wgqbg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1395179549-31345-1-git-send-email-pantelis.antoniou@konsulko.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+cpgnTYUxe1FRgVDak963y3E5_EFqc=fBM-3hq4wgqbg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Georgi Vlaev <georgi.>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 18, 2014 at 9:52 PM, Pantelis Antoniou
-<pantelis.antoniou@konsulko.com> wrote:
-> Make of_find_node_by_path() handle aliases as prefixes.
+On Wed, Mar 19, 2014 at 12:26 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Mar 18, 2014 at 4:52 PM, Pantelis Antoniou
+> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>> __of_find_node_by_full_name recursively searches for a matching node
+>> with the given full name without taking any locks.
+>>
+>> of_find_node_by_full_name takes locks and takes a reference on the
+>> matching node.
+>>
+>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  drivers/of/base.c  | 58 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>>  include/linux/of.h |  4 ++++
+>>  2 files changed, 62 insertions(+)
+>>
+>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+>> index 19bcdb4..08156e6 100644
+>> --- a/drivers/of/base.c
+>> +++ b/drivers/of/base.c
+>> @@ -1142,6 +1142,64 @@ static void *of_find_property_value_of_size(const struct device_node *np,
+>>  }
+>>
+>>  /**
+>> + * __of_find_node_by_full_name - Find a node with the full name recursively
+>> + * @node:      Root of the tree to perform the search
+>> + * @full_name: Full name of the node to find.
+>> + *
+>> + * Find a node with the give full name by recursively following any of
+>> + * the child node links.
+>> + * Returns the matching node, or NULL if not found.
+>> + * Note that the devtree lock is not taken, so this function is only
+>> + * safe to call on either detached trees, or when devtree lock is already
+>> + * taken.
+>> + */
+>> +struct device_node *__of_find_node_by_full_name(struct device_node *node,
+>> +               const char *full_name)
+>> +{
+>> +       struct device_node *child, *found;
+>> +
+>> +       if (node == NULL)
 >
-> Originally by David Daney <ddaney@caviumnetworks.com>, but
-> reworked according to remark by Grant Likely.
+> Just !node is preferred.
 >
-> Handles all cases without allocating memory as requested by
-> Grant Likely <grant.likely@linaro.org>
+>> +               return NULL;
+>> +
+>> +       /* check */
+>> +       if (of_node_cmp(node->full_name, full_name) == 0)
+>> +               return node;
+>> +
+>> +       __for_each_child_of_node(node, child) {
+>> +               found = __of_find_node_by_full_name(child, full_name);
+>> +               if (found != NULL)
 >
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+> "if (found)" is preferred.
+>
+>> +                       return found;
+>> +       }
+>> +
+>> +       return NULL;
+>> +}
+>> +EXPORT_SYMBOL(__of_find_node_by_full_name);
+>
+> Does this need to be exported?
+>
+> In any case, use EXPORT_SYMBOL_GPL.
+>
+>> +
+>> +/**
+>> + * of_find_node_by_full_name - Find a node with the full name recursively
+>> + * @node:      Root of the tree to perform the search
+>> + * @full_name: Full name of the node to find.
+>> + *
+>> + * Find a node with the give full name by recursively following any of
+>> + * the child node links.
+>> + * Returns the matching node (with a ref taken), or NULL if not found.
+>> + */
+>> +struct device_node *of_find_node_by_full_name(struct device_node *node,
+>> +               const char *full_name)
+>> +{
+>> +       unsigned long flags;
+>> +       struct device_node *np;
+>> +
+>> +       raw_spin_lock_irqsave(&devtree_lock, flags);
+>> +       np = of_find_node_by_full_name(node, full_name);
+>
+> Don't you need __of_find_node_by_full_name here.
 
-I posted a patch that does the same thing with a different method just
-a few days ago:
-
-http://www.spinics.net/lists/devicetree/msg26336.html
-
-The above patch also has the advantage of being a more efficient search.
+!?!  Did this code get tested?
 
 g.
-
-> ---
->  drivers/of/base.c | 69 +++++++++++++++++++++++++++++++++++++++++++++++++++----
->  1 file changed, 65 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 7083fad..19bcdb4 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -773,22 +773,83 @@ EXPORT_SYMBOL(of_get_child_by_name);
->  /**
->   *     of_find_node_by_path - Find a node matching a full OF path
->   *     @path:  The full path to match
-> + *     @path: Either the full path to match, or if the path does not
-> + *            start with '/', the name of a property of the /aliases
-> + *            node (an alias).  In the case of an alias, the node
-> + *            matching the alias' value will be returned.
-> + *
-> + *     Valid paths:
-> + *             /foo/bar        Full path
-> + *             foo             Valid alias
-> + *             foo/bar         Valid alias + relative path
->   *
->   *     Returns a node pointer with refcount incremented, use
->   *     of_node_put() on it when done.
->   */
->  struct device_node *of_find_node_by_path(const char *path)
->  {
-> -       struct device_node *np = of_allnodes;
-> +       struct device_node *np = NULL;
-> +       int len;
-> +       const char *p = NULL;
-> +       struct property *prop;
->         unsigned long flags;
->
-> +       /* under lock (not very nice) */
->         raw_spin_lock_irqsave(&devtree_lock, flags);
-> -       for (; np; np = np->allnext) {
-> -               if (np->full_name && (of_node_cmp(np->full_name, path) == 0)
-> -                   && of_node_get(np))
-> +
-> +       len = strlen(path);
-> +
-> +       /* path begins with an alias */
-> +       if (path[0] != '/') {
-> +
-> +               /* now find the relative path (if any)*/
-> +               p = strchr(path, '/');
-> +               if (p != NULL)
-> +                       len = p - path;
-> +
-> +               /* of_aliases must not be NULL */
-> +               if (!of_aliases)
-> +                       goto out;
-> +
-> +               /* find matching alias */
-> +               for_each_property_of_node(of_aliases, prop)
-> +                       if (strlen(prop->name) == len &&
-> +                                       strncmp(prop->name, path, len) == 0)
-> +                               break;
-> +
-> +               /* not found; bail */
-> +               if (prop == NULL)
-> +                       goto out;
-> +
-> +               path = prop->value;
-> +       }
-> +
-> +       /* path lookup */
-> +       for_each_of_allnodes(np) {
-> +
-> +               if (!np->full_name)
-> +                       continue;
-> +
-> +               if (p == NULL) {
-> +                       /* full component */
-> +                       if (strcasecmp(np->full_name, path) != 0)
-> +                               continue;
-> +               } else {
-> +                       /* last component (including '/') */
-> +                       if (strncasecmp(np->full_name, path, len) != 0)
-> +                               continue;
-> +
-> +                       if (strcasecmp(np->full_name + len, p) != 0)
-> +                               continue;
-> +               }
-> +
-> +               if (of_node_get(np))
->                         break;
->         }
-> +
-> +out:
->         raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +
->         return np;
->  }
->  EXPORT_SYMBOL(of_find_node_by_path);
-> --
-> 1.7.12
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
