@@ -1,133 +1,68 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] OF: Add [__]of_find_node_by_full_name
-Date: Wed, 19 Mar 2014 07:26:16 -0500
-Message-ID: <CAL_Jsq+cpgnTYUxe1FRgVDak963y3E5_EFqc=fBM-3hq4wgqbg@mail.gmail.com>
-References: <1395179560-31384-1-git-send-email-pantelis.antoniou@konsulko.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v6 1/4] [media] exynos-scaler: Add DT bindings for SCALER
+ driver
+Date: Wed, 19 Mar 2014 13:33:03 +0100
+Message-ID: <53298E7F.30603@samsung.com>
+References: <1395213196-25972-1-git-send-email-shaik.ameer@samsung.com>
+ <4637278.9G3gGkQ5GA@avalon> <532985A9.8050101@samsung.com>
+ <1929080.dnr9A8PU43@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1395179560-31384-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Georgi Vlaev <georgi.vlaev@kons>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1929080.dnr9A8PU43@avalon>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Shaik Ameer Basha <shaik.ameer@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, m.chehab@samsung.com, b.zolnierkie@samsung.com, t.figa@samsung.com, k.debski@samsung.com, arun.kk@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 18, 2014 at 4:52 PM, Pantelis Antoniou
-<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> __of_find_node_by_full_name recursively searches for a matching node
-> with the given full name without taking any locks.
+Hi Laurent,
+
+On 19/03/14 12:59, Laurent Pinchart wrote:
+> On Wednesday 19 March 2014 12:55:21 Sylwester Nawrocki wrote:
+>> > On 19/03/14 12:31, Laurent Pinchart wrote:
+>>>> > >> +++ b/Documentation/devicetree/bindings/media/exynos5-scaler.txt
+>>>> > >> 
+>>>>> > >> > @@ -0,0 +1,24 @@
+>>>>> > >> > +* Samsung Exynos5 SCALER device
+>>>>> > >> > +
+>>>>> > >> > +SCALER is used for scaling, blending, color fill and color space
+>>>>> > >> > +conversion on EXYNOS[5420/5410] SoCs.
+>>>>> > >> > +
+>>>>> > >> > +Required properties:
+>>>>> > >> > +- compatible: should be "samsung,exynos5420-scaler" or
+>>>>> > >> > +			"samsung,exynos5410-scaler"
+>>>>> > >> > +- reg: should contain SCALER physical address location and length
+>>>>> > >> > +- interrupts: should contain SCALER interrupt specifier
+>>>>> > >> > +- clocks: should contain the SCALER clock phandle and specifier pair
+>>>>> > >> > for
+>>>>> > >> > +		each clock listed in clock-names property, according to
+>>>>> > >> > +		the common clock bindings
+>>>>> > >> > +- clock-names: should contain exactly one entry
+>>>>> > >> > +		- "scaler" - IP bus clock
+>>> > > 
+>>> > > I'm not too familiar with the Exynos platform, but wouldn't it make sense
+>>> > > to use a common name across IP cores for interface and function clocks ?
+>> > Certainly it would, I proposed that when the exynos clock controller
+>> > driver was posted, quite long time ago. Unfortunately it wasn't followed
+>> > up. One of serious reasons was that there are common drivers for
+>> > multiple Samsung platforms (also the ones not reworked to support dt) and
+>> > thus changing the clock names would be problematic - driver would still
+>> > need to handle multiple clock names.
+>> > But for this driver a common name like "gate" could be better IMHO.
 >
-> of_find_node_by_full_name takes locks and takes a reference on the
-> matching node.
->
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/of/base.c  | 58 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of.h |  4 ++++
->  2 files changed, 62 insertions(+)
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 19bcdb4..08156e6 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1142,6 +1142,64 @@ static void *of_find_property_value_of_size(const struct device_node *np,
->  }
->
->  /**
-> + * __of_find_node_by_full_name - Find a node with the full name recursively
-> + * @node:      Root of the tree to perform the search
-> + * @full_name: Full name of the node to find.
-> + *
-> + * Find a node with the give full name by recursively following any of
-> + * the child node links.
-> + * Returns the matching node, or NULL if not found.
-> + * Note that the devtree lock is not taken, so this function is only
-> + * safe to call on either detached trees, or when devtree lock is already
-> + * taken.
-> + */
-> +struct device_node *__of_find_node_by_full_name(struct device_node *node,
-> +               const char *full_name)
-> +{
-> +       struct device_node *child, *found;
-> +
-> +       if (node == NULL)
+> OMAP uses "ick" for the interface clock and "fck" for the function clock. Do 
+> you think it would make sense to standardize on "fck" across SoC families ?
 
-Just !node is preferred.
+Not sure if it could be future proof, I guess where it isn't bound to other
+issues and the names could be chosen freely - we could try to use standard
+names. OTOH it could obfuscate things a bit. As far as Samsung platforms 
+are concerned, the function clock names are usually in form of SCLK_[IP_NAME],
+"sclk" seems to be an abbreviation of "special clock".
+It is also not always clear which clock is the interface clock and which is
+the function clock. The "special clocks" are generally referred to as the IP 
+block clocks.
 
-> +               return NULL;
-> +
-> +       /* check */
-> +       if (of_node_cmp(node->full_name, full_name) == 0)
-> +               return node;
-> +
-> +       __for_each_child_of_node(node, child) {
-> +               found = __of_find_node_by_full_name(child, full_name);
-> +               if (found != NULL)
-
-"if (found)" is preferred.
-
-> +                       return found;
-> +       }
-> +
-> +       return NULL;
-> +}
-> +EXPORT_SYMBOL(__of_find_node_by_full_name);
-
-Does this need to be exported?
-
-In any case, use EXPORT_SYMBOL_GPL.
-
-> +
-> +/**
-> + * of_find_node_by_full_name - Find a node with the full name recursively
-> + * @node:      Root of the tree to perform the search
-> + * @full_name: Full name of the node to find.
-> + *
-> + * Find a node with the give full name by recursively following any of
-> + * the child node links.
-> + * Returns the matching node (with a ref taken), or NULL if not found.
-> + */
-> +struct device_node *of_find_node_by_full_name(struct device_node *node,
-> +               const char *full_name)
-> +{
-> +       unsigned long flags;
-> +       struct device_node *np;
-> +
-> +       raw_spin_lock_irqsave(&devtree_lock, flags);
-> +       np = of_find_node_by_full_name(node, full_name);
-
-Don't you need __of_find_node_by_full_name here.
-
-> +       of_node_get(np);
-> +       raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +
-> +       return np;
-> +}
-> +EXPORT_SYMBOL(of_find_node_by_full_name);
-> +
-> +/**
->   * of_property_read_u32_index - Find and read a u32 from a multi-value property.
->   *
->   * @np:                device node from which the property value is to be read.
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index a8b9dad..bef3d5b 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -223,6 +223,10 @@ extern struct device_node *of_find_matching_node_and_match(
->
->  extern struct device_node *of_find_node_by_path(const char *path);
->  extern struct device_node *of_find_node_by_phandle(phandle handle);
-> +struct device_node *__of_find_node_by_full_name(struct device_node *node,
-> +                                               const char *full_name);
-> +struct device_node *of_find_node_by_full_name(struct device_node *node,
-> +                                               const char *full_name);
->  extern struct device_node *of_get_parent(const struct device_node *node);
->  extern struct device_node *of_get_next_parent(struct device_node *node);
->  extern struct device_node *of_get_next_child(const struct device_node *node,
-> --
-> 1.7.12
->
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Sylwester
