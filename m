@@ -1,186 +1,77 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: [PATCH Resend 1/3] ARM: EXYNOS: Consolidate Kconfig entries
-Date: Wed, 19 Mar 2014 15:55:03 +0530
-Message-ID: <1395224705-2935-1-git-send-email-sachin.kamat@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, mark.rutland@arm.com, sachin.kamat@linaro.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] spi/fsl-lib: Get the SPI controller bus number from
+ DTS
+Date: Wed, 19 Mar 2014 10:37:28 +0000
+Message-ID: <20140319103728.GX11706@sirena.org.uk>
+References: <1394789757-40732-1-git-send-email-B48286@freescale.com>
+ <1394789757-40732-2-git-send-email-B48286@freescale.com>
+ <20140314191922.GA366@sirena.org.uk>
+ <c4b28b01b2f544ca9d264eaee2542257@DM2PR03MB301.namprd03.prod.outlook.com>
+ <20140317130109.GE11706@sirena.org.uk>
+ <9186860716f446f9a5773e7e47d39114@DM2PR03MB301.namprd03.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="uR7YiQvNOb/8Y6Dg"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <9186860716f446f9a5773e7e47d39114-ufbTtyGzTTTk7ZsBhlipOOO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Instead of repeating the Kconfig entries for every SoC, move them under
-ARCH_EXYNOS4 and 5 and move the entries common to both 4 and 5 under
-ARCH_EXYNOS. Also, since the individual SoCs do not have any specific
-machine/platform code, keep them as boolean symbols instead of user
-selectable and select them from Exynos4 and 5 config symbols. Individual
-SoC symbols can be removed eventually once the driver Kconfig dependencies
-on these symbols are removed.
 
-Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-Acked-by: Tomasz Figa <t.figa@samsung.com>
----
-This is a resend of the series rebased on top of latest linux-next and
-Tomasz Figa's PM consolidation series 1 and 2.
----
- arch/arm/Kconfig             |   10 +++++
- arch/arm/mach-exynos/Kconfig |   89 +++++++++++-------------------------------
- 2 files changed, 33 insertions(+), 66 deletions(-)
+--uR7YiQvNOb/8Y6Dg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index afc751f750b9..e2428a18f2a6 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -821,18 +821,28 @@ config ARCH_S5PV210
- 
- config ARCH_EXYNOS
- 	bool "Samsung EXYNOS"
-+	select ARCH_HAS_BANDGAP
- 	select ARCH_HAS_CPUFREQ
- 	select ARCH_HAS_HOLES_MEMORYMODEL
- 	select ARCH_REQUIRE_GPIOLIB
- 	select ARCH_SPARSEMEM_ENABLE
-+	select ARM_AMBA
- 	select ARM_GIC
-+	select CLKSRC_OF
- 	select COMMON_CLK
- 	select CPU_V7
- 	select GENERIC_CLOCKEVENTS
-+	select HAVE_ARM_SCU if SMP
- 	select HAVE_S3C2410_I2C if I2C
- 	select HAVE_S3C2410_WATCHDOG if WATCHDOG
- 	select HAVE_S3C_RTC if RTC_CLASS
-+	select HAVE_SMP
- 	select NEED_MACH_MEMORY_H
-+	select PINCTRL
-+	select PINCTRL_EXYNOS
-+	select PM_GENERIC_DOMAINS if PM_RUNTIME
-+	select S5P_DEV_MFC
-+	select SAMSUNG_DMADEV
- 	select SPARSE_IRQ
- 	select USE_OF
- 	help
-diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
-index fc8bf18e222d..9398bab87a76 100644
---- a/arch/arm/mach-exynos/Kconfig
-+++ b/arch/arm/mach-exynos/Kconfig
-@@ -14,90 +14,32 @@ menu "SAMSUNG EXYNOS SoCs Support"
- config ARCH_EXYNOS4
- 	bool "SAMSUNG EXYNOS4"
- 	default y
--	select ARM_AMBA
--	select CLKSRC_OF
-+	select ARM_CPU_SUSPEND if PM_SLEEP
- 	select CLKSRC_SAMSUNG_PWM if CPU_EXYNOS4210
- 	select CPU_EXYNOS4210
- 	select GIC_NON_BANKED
- 	select KEYBOARD_SAMSUNG if INPUT_KEYBOARD
--	select HAVE_ARM_SCU if SMP
--	select HAVE_SMP
- 	select MIGHT_HAVE_CACHE_L2X0
--	select PINCTRL
--	select PM_GENERIC_DOMAINS if PM_RUNTIME
--	select S5P_DEV_MFC
-+	select SOC_EXYNOS4212
-+	select SOC_EXYNOS4412
- 	help
--	  Samsung EXYNOS4 SoCs based systems
-+	  Samsung EXYNOS4 (Cortex-A9) SoC based systems
- 
- config ARCH_EXYNOS5
- 	bool "SAMSUNG EXYNOS5"
--	select ARM_AMBA
--	select CLKSRC_OF
--	select HAVE_ARM_SCU if SMP
--	select HAVE_SMP
--	select PINCTRL
--	help
--	  Samsung EXYNOS5 (Cortex-A15) SoC based systems
--
--comment "EXYNOS SoCs"
--
--config CPU_EXYNOS4210
--	bool "SAMSUNG EXYNOS4210"
--	default y
--	depends on ARCH_EXYNOS4
--	select ARCH_HAS_BANDGAP
--	select ARM_CPU_SUSPEND if PM_SLEEP
--	select PINCTRL_EXYNOS
--	select SAMSUNG_DMADEV
--	help
--	  Enable EXYNOS4210 CPU support
--
--config SOC_EXYNOS4212
--	bool "SAMSUNG EXYNOS4212"
- 	default y
--	depends on ARCH_EXYNOS4
--	select ARCH_HAS_BANDGAP
--	select PINCTRL_EXYNOS
--	select SAMSUNG_DMADEV
-+	select SOC_EXYNOS5250
-+	select SOC_EXYNOS5420
- 	help
--	  Enable EXYNOS4212 SoC support
-+	  Samsung EXYNOS5 (Cortex-A15/A7) SoC based systems
- 
--config SOC_EXYNOS4412
--	bool "SAMSUNG EXYNOS4412"
--	default y
--	depends on ARCH_EXYNOS4
--	select ARCH_HAS_BANDGAP
--	select PINCTRL_EXYNOS
--	select SAMSUNG_DMADEV
--	help
--	  Enable EXYNOS4412 SoC support
--
--config SOC_EXYNOS5250
--	bool "SAMSUNG EXYNOS5250"
--	default y
--	depends on ARCH_EXYNOS5
--	select ARCH_HAS_BANDGAP
--	select PINCTRL_EXYNOS
--	select PM_GENERIC_DOMAINS if PM_RUNTIME
--	select S5P_DEV_MFC
--	select SAMSUNG_DMADEV
--	help
--	  Enable EXYNOS5250 SoC support
--
--config SOC_EXYNOS5420
--	bool "SAMSUNG EXYNOS5420"
--	default y
--	depends on ARCH_EXYNOS5
--	select PM_GENERIC_DOMAINS if PM_RUNTIME
--	help
--	  Enable EXYNOS5420 SoC support
-+comment "EXYNOS SoCs"
- 
- config SOC_EXYNOS5440
- 	bool "SAMSUNG EXYNOS5440"
- 	default y
- 	depends on ARCH_EXYNOS5
- 	select ARCH_DMA_ADDR_T_64BIT if ARM_LPAE
--	select ARCH_HAS_BANDGAP
- 	select ARCH_HAS_OPP
- 	select HAVE_ARM_ARCH_TIMER
- 	select AUTO_ZRELADDR
-@@ -110,4 +52,19 @@ config SOC_EXYNOS5440
- 
- endmenu
- 
-+config CPU_EXYNOS4210
-+	bool
-+
-+config SOC_EXYNOS4212
-+	bool
-+
-+config SOC_EXYNOS4412
-+	bool
-+
-+config SOC_EXYNOS5250
-+	bool
-+
-+config SOC_EXYNOS5420
-+	bool
-+
- endif
--- 
-1.7.9.5
+On Tue, Mar 18, 2014 at 07:40:28AM +0000, B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
+
+> > You are adding a property to specify a bus number.  There is no reason
+> > why such a property should be specific to a single controller, every
+> > controller in every system has a bus number assigned to it so if we have
+> > a way to specify one controller via the device tree we should have a way
+> > to specify it for all.
+
+> The reason to specify a bus number to a single controller is to avoid=20
+> allocating one dynamically, so we know the bus number before booting up t=
+he
+> kernel. If there are several controllers, you should add this property to=
+ all
+> of them. But it is unnecessary to add this property, if you do not care a=
+bout
+> the bus number, and it will be allocated dynamically.=20
+
+Please re-read what I wrote above, you're completely missing the point.
+The problem above is that you are adding this in driver specific code,
+even if this is a good idea there's nothing specific to this device
+about it so we shouldn't be doing it in a driver.
+
+--uR7YiQvNOb/8Y6Dg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTKXNkAAoJELSic+t+oim9cqcQAIEZJ13/8vKnoNlq+4iIi6JI
+4lipNvyaoGdKAeIWVl00ZxFpvKHTlu+ya2r0ijHoUl07MEmdSAxTrOsG5OjaK5zO
+KVJlT6s9SXrutCc4SoC/CK2QY7MRCGjj8V0Kn1+ncRr8lM5jmh2ARo0K7f1VeitP
+aIhUhLxOx6qX81xfAP3pXWRB53X//Uusq7Y5f7S+cRCVuIZFwhKA26vDMmUwHlnG
+f+gLIy76U2eUXwpvO0DZ6r5wgm2Tt9XSafafWXrKfoLqVNvYhda94DO9QDtS6SGX
+wGBwFGtI8l+b3xm5GorTt3Zmc3f7xIh9CCHQOPlEbzTcD2n1fhA/daZWKFm7A+oH
+8PF7pnjYxT29NjraJXAKeXcszcxr3zxudiFkvhzYSanbp1PAOaUWpM0scapWj2zF
+RMUMs9F1du+e8ACyAZgF2e3WZPA69KuEjJqUjqWVgAjYDKrMyxd96Xh9F1+yP42w
+aRL4NOZwwWJTxuJNPs40mP3GonRGBvSliREAi2X+9SNFrsjsBQ7k8QP/epHkpF0y
+8JgOGk3nvoCDI5xzAuQXzP9xmf+/zG6y7iPw3ZIMrcC3sEes5J81rmFiXALzDiKx
+/o4arhxQjFwMDoreyVj3hM7B3PoAT7eHa1WmzUaMtYcZ32PeGiDYIPpGTy2neaHW
+SzpOccsRU7kjL/C7YyMt
+=5Juc
+-----END PGP SIGNATURE-----
+
+--uR7YiQvNOb/8Y6Dg--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
