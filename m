@@ -1,93 +1,172 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 7/8] ASoC: atmel: document clock properties of the wm8904
- driver
-Date: Wed, 19 Mar 2014 10:28:00 +0000
-Message-ID: <20140319102800.GW11706@sirena.org.uk>
-References: <1395049541-28128-1-git-send-email-voice.shen@atmel.com>
- <1395049541-28128-8-git-send-email-voice.shen@atmel.com>
- <20140317115518.GD11706@sirena.org.uk>
- <532931C3.4080909@atmel.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Affreb919SiI8I8E"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <532931C3.4080909@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: nicolas.ferre@atmel.com, Boris BREZILLON <b.brezillon@overkiz.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: [PATCH Resend 2/3] ARM: EXYNOS: Consolidate CPU init code
+Date: Wed, 19 Mar 2014 15:55:04 +0530
+Message-ID: <1395224705-2935-2-git-send-email-sachin.kamat@linaro.org>
+References: <1395224705-2935-1-git-send-email-sachin.kamat@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1395224705-2935-1-git-send-email-sachin.kamat@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, mark.rutland@arm.com, sachin.kamat@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+cpu_table was used to distinguish between different Exynos4 and 5
+SoCs and based on the type do the initialization and io mapping.
+exynos_init is dummy and no longer needed as we do a DT based booting.
+By having a common io mapping function we can get rid of the whole
+table and avoid populating it for every SoC.
 
---Affreb919SiI8I8E
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Tested on Exynos4210, 5250 and 5420 based boards.
 
-On Wed, Mar 19, 2014 at 01:57:23PM +0800, Bo Shen wrote:
-> On 03/17/2014 07:55 PM, Mark Brown wrote:
+Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+Tested-by: Tomasz Figa <t.figa@samsung.com>
+---
+ arch/arm/mach-exynos/common.c |  108 +++++++++--------------------------------
+ 1 file changed, 23 insertions(+), 85 deletions(-)
 
-> >If this is a clock for the CODEC it should be documented as part of the
-> >binding for the CODEC and connected to the CODEC in the device tree
-> >rather than being part of a machine driver binding.
-
-> This is a optional clock for CODEC which depends on hardware design. There
-> are 3 options for this clock, wm8904 as an example.
-> 1. Using internal FLL, so won't use this clock.
-> 2. Using external oscillator, no need to retrieve this clock.
-> 3. Using SoC provide this clock (we use this case).
-
-> After considering these 3 options, if we put this into CODEC driver to do
-> it, I think it will be more complicate to do logic judgement. Do you think
-> so?
-
-There shouldn't be any meaningful complexity from the above cases -
-cases 2 and 3 are the same and if the clock isn't used at all then it
-can be omitted.  If the FLL is clocked from MCLK then the CODEC driver
-should be able to work out how to configure it easily, the device isn't=20
-like a digital hub CODEC with lots of clocking options.
-
-> And, in machine driver, it will depends on the clock option to decide
-> whether to call snd_soc_dai_set_pll and snd_soc_dai_set_sysclk.
-
-Some if not all of this logic can be eaten by the CODEC driver,
-especially with a simple device like this.  Realistically the device is
-either going to be clocked from MCLK (with the rate telling us if we
-need the FLL) or from BCLK (if it's slave and there's no MCLK).
-
-> And also the <Documentation/soud/alsa/soc/machine.txt> mentions the machi=
-ne
-> drivers responsibility (one is for clocking) as following:
-> --->8---
-> The ASoC machine (or board) driver is the code that glues together all the
-> component drivers (e.g. codecs, platforms and DAIs). It also describes the
-> relationships between each componnent which include audio paths, GPIOs,
-> interrupts, clocking, jacks and voltage regulators.
-> ---8<---
-
-That's a Linux specific consideration which shouldn't play any part in
-DT design.
-
---Affreb919SiI8I8E
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTKXEsAAoJELSic+t+oim9E3oP/RtcZxGdptmjg1C9jSMGLYEy
-ThfViRTkO9s5XYR7LZCK0q9MgVf/a/P6O6fEGku80jA+TmQwa/eLEXCq/veoWtMU
-mGIX5IhAbeFxwyYYj7G/TJ1kTxz/y2NJnrZQpPWcIDMmpk/OcEyfNjaHZoYySzWl
-tI74SPeJJX0LFI73oYb5Qd+L/49Q+ena12R9qEtapqHgCkn0vBWv44qo4X0Gu8bN
-kFoYmONti+IDruR8kw7NMPdl952FH6c8bd122PP62wX/pqolTrez97tWmVQf4a1c
-DxFFdS8qa07OpDtWxKCPeGPrVGVX7AExjKGJ1EBByPQ1tIwevbYk3CRXUq+P6A0O
-C3rJL6KsjRQaqhhXf0xt3T7GKjeczO5K5YG8Ifb98jWt6pupsRaboBFR8mDNAU9n
-HoNiL+Ok4Fkd/9dtyJTxERgmpDWTn5mYfCSaJf95H0LPeWn/Y2iEo/b4yNKMfYRa
-fCWK/zNl1dIXEejL7sBxrTy+S3K2SZLV5c22yOZZtJZxtzoSEHTFe0NaL0muvgRZ
-raiveuHwzOJf0EMr5XPIStgckmv+xNRIBSzepxyDgADCNTQN0berU73OFggkw1h6
-CuY2QkAnch/DV9/k4X+NUnfyxdIAyU8tex8zWTPhk/6odo1R/m+JqEUcM9PbvdUP
-SDq4JPQtbrBSLabj8GJP
-=iIvX
------END PGP SIGNATURE-----
-
---Affreb919SiI8I8E--
+diff --git a/arch/arm/mach-exynos/common.c b/arch/arm/mach-exynos/common.c
+index e98ddadc5f74..10ed374c0744 100644
+--- a/arch/arm/mach-exynos/common.c
++++ b/arch/arm/mach-exynos/common.c
+@@ -48,56 +48,6 @@
+ #define L2_AUX_VAL 0x7C470001
+ #define L2_AUX_MASK 0xC200ffff
+ 
+-static const char name_exynos4210[] = "EXYNOS4210";
+-static const char name_exynos4212[] = "EXYNOS4212";
+-static const char name_exynos4412[] = "EXYNOS4412";
+-static const char name_exynos5250[] = "EXYNOS5250";
+-static const char name_exynos5420[] = "EXYNOS5420";
+-static const char name_exynos5440[] = "EXYNOS5440";
+-
+-static void exynos4_map_io(void);
+-static void exynos5_map_io(void);
+-static int exynos_init(void);
+-
+-static struct cpu_table cpu_ids[] __initdata = {
+-	{
+-		.idcode		= EXYNOS4210_CPU_ID,
+-		.idmask		= EXYNOS4_CPU_MASK,
+-		.map_io		= exynos4_map_io,
+-		.init		= exynos_init,
+-		.name		= name_exynos4210,
+-	}, {
+-		.idcode		= EXYNOS4212_CPU_ID,
+-		.idmask		= EXYNOS4_CPU_MASK,
+-		.map_io		= exynos4_map_io,
+-		.init		= exynos_init,
+-		.name		= name_exynos4212,
+-	}, {
+-		.idcode		= EXYNOS4412_CPU_ID,
+-		.idmask		= EXYNOS4_CPU_MASK,
+-		.map_io		= exynos4_map_io,
+-		.init		= exynos_init,
+-		.name		= name_exynos4412,
+-	}, {
+-		.idcode		= EXYNOS5250_SOC_ID,
+-		.idmask		= EXYNOS5_SOC_MASK,
+-		.map_io		= exynos5_map_io,
+-		.init		= exynos_init,
+-		.name		= name_exynos5250,
+-	}, {
+-		.idcode		= EXYNOS5420_SOC_ID,
+-		.idmask		= EXYNOS5_SOC_MASK,
+-		.map_io		= exynos5_map_io,
+-		.init		= exynos_init,
+-		.name		= name_exynos5420,
+-	}, {
+-		.idcode		= EXYNOS5440_SOC_ID,
+-		.idmask		= EXYNOS5_SOC_MASK,
+-		.init		= exynos_init,
+-		.name		= name_exynos5440,
+-	},
+-};
+-
+ /* Initial IO mappings */
+ 
+ static struct map_desc exynos4_iodesc[] __initdata = {
+@@ -346,6 +296,28 @@ static int __init exynos_fdt_map_chipid(unsigned long node, const char *uname,
+  *
+  * register the standard cpu IO areas
+  */
++static void __init exynos_map_io(void)
++{
++	if (soc_is_exynos4210() || soc_is_exynos4212() || soc_is_exynos4412())
++		iotable_init(exynos4_iodesc, ARRAY_SIZE(exynos4_iodesc));
++
++	if (soc_is_exynos5250() || soc_is_exynos5420())
++		iotable_init(exynos5_iodesc, ARRAY_SIZE(exynos5_iodesc));
++
++	if (soc_is_exynos4210()) {
++		if (samsung_rev() == EXYNOS4210_REV_0)
++			iotable_init(exynos4_iodesc0,
++						ARRAY_SIZE(exynos4_iodesc0));
++		else
++			iotable_init(exynos4_iodesc1,
++						ARRAY_SIZE(exynos4_iodesc1));
++		iotable_init(exynos4210_iodesc, ARRAY_SIZE(exynos4210_iodesc));
++	}
++	if (soc_is_exynos4212() || soc_is_exynos4412())
++		iotable_init(exynos4x12_iodesc, ARRAY_SIZE(exynos4x12_iodesc));
++	if (soc_is_exynos5250())
++		iotable_init(exynos5250_iodesc, ARRAY_SIZE(exynos5250_iodesc));
++}
+ 
+ void __init exynos_init_io(void)
+ {
+@@ -356,30 +328,7 @@ void __init exynos_init_io(void)
+ 	/* detect cpu id and rev. */
+ 	s5p_init_cpu(S5P_VA_CHIPID);
+ 
+-	s3c_init_cpu(samsung_cpu_id, cpu_ids, ARRAY_SIZE(cpu_ids));
+-}
+-
+-static void __init exynos4_map_io(void)
+-{
+-	iotable_init(exynos4_iodesc, ARRAY_SIZE(exynos4_iodesc));
+-
+-	if (soc_is_exynos4210() && samsung_rev() == EXYNOS4210_REV_0)
+-		iotable_init(exynos4_iodesc0, ARRAY_SIZE(exynos4_iodesc0));
+-	else
+-		iotable_init(exynos4_iodesc1, ARRAY_SIZE(exynos4_iodesc1));
+-
+-	if (soc_is_exynos4210())
+-		iotable_init(exynos4210_iodesc, ARRAY_SIZE(exynos4210_iodesc));
+-	if (soc_is_exynos4212() || soc_is_exynos4412())
+-		iotable_init(exynos4x12_iodesc, ARRAY_SIZE(exynos4x12_iodesc));
+-}
+-
+-static void __init exynos5_map_io(void)
+-{
+-	iotable_init(exynos5_iodesc, ARRAY_SIZE(exynos5_iodesc));
+-
+-	if (soc_is_exynos5250())
+-		iotable_init(exynos5250_iodesc, ARRAY_SIZE(exynos5250_iodesc));
++	exynos_map_io();
+ }
+ 
+ struct bus_type exynos_subsys = {
+@@ -387,10 +336,6 @@ struct bus_type exynos_subsys = {
+ 	.dev_name	= "exynos-core",
+ };
+ 
+-static struct device exynos4_dev = {
+-	.bus	= &exynos_subsys,
+-};
+-
+ static int __init exynos_core_init(void)
+ {
+ 	return subsys_system_register(&exynos_subsys, NULL);
+@@ -410,10 +355,3 @@ static int __init exynos4_l2x0_cache_init(void)
+ 	return 0;
+ }
+ early_initcall(exynos4_l2x0_cache_init);
+-
+-static int __init exynos_init(void)
+-{
+-	printk(KERN_INFO "EXYNOS: Initializing architecture\n");
+-
+-	return device_register(&exynos4_dev);
+-}
+-- 
+1.7.9.5
