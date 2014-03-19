@@ -1,68 +1,70 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v6 1/4] [media] exynos-scaler: Add DT bindings for SCALER
- driver
-Date: Wed, 19 Mar 2014 13:33:03 +0100
-Message-ID: <53298E7F.30603@samsung.com>
-References: <1395213196-25972-1-git-send-email-shaik.ameer@samsung.com>
- <4637278.9G3gGkQ5GA@avalon> <532985A9.8050101@samsung.com>
- <1929080.dnr9A8PU43@avalon>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 0/3] ARM: sun7i/sun6i: irqchip: Irqchip
+ driver for NMI controller
+Date: Wed, 19 Mar 2014 13:32:41 +0100
+Message-ID: <20140319123241.GI27873@lukather>
+References: <1394890861-18347-1-git-send-email-carlo@caione.org>
+ <alpine.DEB.2.02.1403191213240.18573@ionos.tec.linutronix.de>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1929080.dnr9A8PU43@avalon>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Shaik Ameer Basha <shaik.ameer@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, m.chehab@samsung.com, b.zolnierkie@samsung.com, t.figa@samsung.com, k.debski@samsung.com, arun.kk@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="NJ3lxSTgSwfmyg6j"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB6M5U2MQKGQET4WBDCY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.02.1403191213240.18573-3cz04HxQygjZikZi3RtOZ1XZhhPuCNm+@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
 
-On 19/03/14 12:59, Laurent Pinchart wrote:
-> On Wednesday 19 March 2014 12:55:21 Sylwester Nawrocki wrote:
->> > On 19/03/14 12:31, Laurent Pinchart wrote:
->>>> > >> +++ b/Documentation/devicetree/bindings/media/exynos5-scaler.txt
->>>> > >> 
->>>>> > >> > @@ -0,0 +1,24 @@
->>>>> > >> > +* Samsung Exynos5 SCALER device
->>>>> > >> > +
->>>>> > >> > +SCALER is used for scaling, blending, color fill and color space
->>>>> > >> > +conversion on EXYNOS[5420/5410] SoCs.
->>>>> > >> > +
->>>>> > >> > +Required properties:
->>>>> > >> > +- compatible: should be "samsung,exynos5420-scaler" or
->>>>> > >> > +			"samsung,exynos5410-scaler"
->>>>> > >> > +- reg: should contain SCALER physical address location and length
->>>>> > >> > +- interrupts: should contain SCALER interrupt specifier
->>>>> > >> > +- clocks: should contain the SCALER clock phandle and specifier pair
->>>>> > >> > for
->>>>> > >> > +		each clock listed in clock-names property, according to
->>>>> > >> > +		the common clock bindings
->>>>> > >> > +- clock-names: should contain exactly one entry
->>>>> > >> > +		- "scaler" - IP bus clock
->>> > > 
->>> > > I'm not too familiar with the Exynos platform, but wouldn't it make sense
->>> > > to use a common name across IP cores for interface and function clocks ?
->> > Certainly it would, I proposed that when the exynos clock controller
->> > driver was posted, quite long time ago. Unfortunately it wasn't followed
->> > up. One of serious reasons was that there are common drivers for
->> > multiple Samsung platforms (also the ones not reworked to support dt) and
->> > thus changing the clock names would be problematic - driver would still
->> > need to handle multiple clock names.
->> > But for this driver a common name like "gate" could be better IMHO.
->
-> OMAP uses "ick" for the interface clock and "fck" for the function clock. Do 
-> you think it would make sense to standardize on "fck" across SoC families ?
+--NJ3lxSTgSwfmyg6j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Not sure if it could be future proof, I guess where it isn't bound to other
-issues and the names could be chosen freely - we could try to use standard
-names. OTOH it could obfuscate things a bit. As far as Samsung platforms 
-are concerned, the function clock names are usually in form of SCLK_[IP_NAME],
-"sclk" seems to be an abbreviation of "special clock".
-It is also not always clear which clock is the interface clock and which is
-the function clock. The "special clocks" are generally referred to as the IP 
-block clocks.
+On Wed, Mar 19, 2014 at 12:13:56PM +0100, Thomas Gleixner wrote:
+> On Sat, 15 Mar 2014, Carlo Caione wrote:
+>=20
+> > Allwinner A20/A31 SoCs have a special interrupt controller for managing=
+ NMI.
+> > Three register are present to (un)mask, control and acknowledge NMI.
+> > These two patches add a new irqchip driver in cascade with GIC.
+>=20
+> If I get an ack for the DT parts, I'll pick it up.
 
---
-Regards,
-Sylwester
+I had some comments on it, so Carlo will probably resubmit it.
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--NJ3lxSTgSwfmyg6j
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTKY5pAAoJEBx+YmzsjxAggFwQAKkYRM5PLlzz0dGZy8hfz0PL
+I2jE67zZVZfcyHuwH4jFS1y5Ys5e1ikQx2hlXVtqLJ5LP/QOEgmqEjL3PR39QaYi
+BPfemj/X5sNnFogau2SDyqZIhy04FuOvScEaXHwmBVmcXLEIBjvsZMAncy3ExzW2
+vhMazP/5qj4sXM4tGm82RPjJhz2y9C5gIPJdj6mrmF6TfwGAB+Rg8rOQfnHbwkhg
+NSecV0yIp3R+RoC+byLgMKSl3c9efe4zFbipe7PigSrgFLyMTVYW+kkT/IWdYqHc
+/I2+IXEExCk48t528etwIAwxruWr6juldRabcdSIbtWrsB6Tpp5uhFqBwAVXiVvD
+oWZU6sbQdE2WZs10Za+5Oq+i2Utobo0JO7ug8drI4gYxYvyCJfcnbCQaY8uruJWy
+QR2vq31QkqxJ0RYbQGjRsDG6AGKZDkrR1FqUZjyK5A4QxpZhwezQ4aDIB3q0ZSZW
+e34bHZQ89+Ht5VxxAeQU6YriHnvMIULTriThCJE3KIMBW11dfzWJ3XV79IqRGZ3+
+bWk5MNg5C7ehQvNJPUFbzz25MQHpPRRwxJhaa16JorF0iMzSnKPCYWbGfBp/sSqV
++zaj6ldoyF0weCd8Lu+7Iag28lWp+ukRT9hGs6xL5Tb61LKBbyzXq4Tuh/mfCW/X
+SU9dmAIiH8NJgpzHlmlU
+=Gf83
+-----END PGP SIGNATURE-----
+
+--NJ3lxSTgSwfmyg6j--
