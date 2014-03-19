@@ -1,59 +1,69 @@
-From: Leela Krishna Amudala <leelakrishna.a@gmail.com>
-Subject: Re: [PATCH v11 0/4] thermal: samsung: Clean up and add support for Exynos5420
-Date: Wed, 19 Mar 2014 16:49:36 +0530
-Message-ID: <CAL1wa8fj+pYN7EOkh0nggkwss2U9pJhGEoaA7TG+7oy0LK3zFQ@mail.gmail.com>
-References: <1384238132-24515-1-git-send-email-ch.naveen@samsung.com> <1386657640-21481-1-git-send-email-ch.naveen@samsung.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v2 4/8] Input: pixcir_i2c_ts: Use Type-B Multi-Touch protocol
+Date: Wed, 19 Mar 2014 13:27:25 +0200
+Message-ID: <53297F1D.2050203@ti.com>
+References: <1393428486-15001-1-git-send-email-rogerq@ti.com> <1393428486-15001-5-git-send-email-rogerq@ti.com> <531B3331.9050008@euromail.se> <531D7E66.1070300@ti.com> <20140310163701.GA30397@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1386657640-21481-1-git-send-email-ch.naveen@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Cc: linux-pm@vger.kernel.org, Naveen Krishna <naveenkrishna.ch@gmail.com>, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, amit.daniel@samsung.com, Kukjin Kim <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, "cpgs ." <cpgs@samsung.com>, Tomasz Figa <t.figa@samsung.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140310163701.GA30397@saruman.home>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Henrik Rydberg <rydberg@euromail.se>
+Cc: balbi@ti.com, dmitry.torokhov@gmail.com, jcbian@pixcir.com.cn, dmurphy@ti.com, mugunthanvnm@ti.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
+Henrik,
 
-I didn't see this series in mainline, Any comments for this ?
+On 03/10/2014 06:37 PM, Felipe Balbi wrote:
+> On Mon, Mar 10, 2014 at 10:57:10AM +0200, Roger Quadros wrote:
+>> Hi Henrik,
+>>
+>> On 03/08/2014 05:11 PM, Henrik Rydberg wrote:
+>>> Hi Roger,
+>>>
+>>> the MT implementation seems mostly fine, just one curiosity:
+>>>
+>>>>  static irqreturn_t pixcir_ts_isr(int irq, void *dev_id)
+>>>>  {
+>>>>  	struct pixcir_i2c_ts_data *tsdata = dev_id;
+>>>>  	const struct pixcir_ts_platform_data *pdata = tsdata->chip;
+>>>> +	struct pixcir_report_data report;
+>>>>  
+>>>>  	while (!tsdata->exiting) {
+>>>> -		pixcir_ts_poscheck(tsdata);
+>>>> -
+>>>> -		if (gpio_get_value(pdata->gpio_attb))
+>>>> +		/* parse packet */
+>>>> +		pixcir_ts_parse(tsdata, &report);
+>>>> +
+>>>> +		/* report it */
+>>>> +		pixcir_ts_report(tsdata, &report);
+>>>> +
+>>>> +		if (gpio_get_value(pdata->gpio_attb)) {
+>>>> +			if (report.num_touches) {
+>>>> +				/*
+>>>> +				 * Last report with no finger up?
+>>>> +				 * Do it now then.
+>>>> +				 */
+>>>> +				input_mt_sync_frame(tsdata->input);
+>>>> +				input_sync(tsdata->input);
+>>>
+>>> Why is this special handling needed?
+>>
+>> This is needed because the controller doesn't always report when all fingers
+>> have left the screen. e.g. report might contain 3 fingers touched and then
+>> gpio_attb line is de-asserted. There's no report with 0 fingers touched even
+>> if the user's fingers have left the screen. So we never detect a BUTTON_UP.
+>>
+>> Without this s/w workaround we observe side effects like buttons being pressed
+>> but not released. To me it looks like a bug in the controller.
+> 
+> the other way would be to *also* use IRQF_TRIGGER_RISING, then you get
+> an IRQ when fingers leave the screen. No ?
+> 
 
-Thanks,
-Leela Krishna Amudala.
+If you are OK with my explanation and the patches, could you please Ack them? Thanks.
 
-
-On Tue, Dec 10, 2013 at 12:10 PM, Naveen Krishna Chatradhi
-<ch.naveen@samsung.com> wrote:
-> This patchset does a little clean up of the existing code (linux-soc-thermal)
-> 1.  [v11] thermal: samsung: replace inten_ bit fields with intclr_
-> 2.  [v11] thermal: samsung: change base_common to more meaningful base_second
->
-> adds support for Exynos5420 in the driver and (linux-soc-thermal)
-> 3.  [v11] thermal: samsung: Add TMU support for Exynos5420 SoCs
-> also adds the device tree nodes for the same to exynos5420.dtsi (linux-samsung.git)
-> 4.  [v11] ARM: dts: Exynos5420: Add device nodes for TMU blocks
->
-> (linux-soc-thermal)
-> Naveen Krishna Chatradhi (3):
->   thermal: samsung: replace inten_ bit fields with intclr_
->   thermal: samsung: change base_common to more meaningful base_second
->   thermal: samsung: Add TMU support for Exynos5420 SoCs
->
->  .../devicetree/bindings/thermal/exynos-thermal.txt |   42 ++++++-
->  drivers/thermal/samsung/exynos_tmu.c               |   72 +++++++++---
->  drivers/thermal/samsung/exynos_tmu.h               |   21 ++--
->  drivers/thermal/samsung/exynos_tmu_data.c          |  119 ++++++++++++++++++--
->  drivers/thermal/samsung/exynos_tmu_data.h          |   12 +-
->  5 files changed, 228 insertions(+), 38 deletions(-)
->
-> (linux-samsung.git)
-> Naveen Krishna Chatradhi (1):
->   ARM: dts: Exynos5420: Add device nodes for TMU blocks
->
->  arch/arm/boot/dts/exynos5420.dtsi |   40 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
-> --
-> 1.7.10.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cheers,
+-roger
