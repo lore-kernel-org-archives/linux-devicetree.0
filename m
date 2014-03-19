@@ -1,144 +1,93 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 3/3] [media] atmel-isi: add primary DT support
-Date: Wed, 19 Mar 2014 11:28:29 +0100
-Message-ID: <7584711.K3Gu54mB6b@avalon>
-References: <1395141238-5948-1-git-send-email-josh.wu@atmel.com> <2118978.g8dAYX7V8K@avalon> <53296016.5030002@atmel.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 7/8] ASoC: atmel: document clock properties of the wm8904
+ driver
+Date: Wed, 19 Mar 2014 10:28:00 +0000
+Message-ID: <20140319102800.GW11706@sirena.org.uk>
+References: <1395049541-28128-1-git-send-email-voice.shen@atmel.com>
+ <1395049541-28128-8-git-send-email-voice.shen@atmel.com>
+ <20140317115518.GD11706@sirena.org.uk>
+ <532931C3.4080909@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <53296016.5030002@atmel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Josh Wu <josh.wu@atmel.com>
-Cc: g.liakhovetski@gmx.de, linux-media@vger.kernel.org, m.chehab@samsung.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, grant.likely@linaro.org, galak@codeaurora.org, rob@landley.net, mark.rutland@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, pawel.moll@arm.com, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Affreb919SiI8I8E"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <532931C3.4080909@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: nicolas.ferre@atmel.com, Boris BREZILLON <b.brezillon@overkiz.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Josh,
 
-On Wednesday 19 March 2014 17:15:02 Josh Wu wrote:
-> On 3/18/2014 9:36 PM, Laurent Pinchart wrote:
-> > On Tuesday 18 March 2014 19:19:54 Josh Wu wrote:
-> >> This patch add the DT support for Atmel ISI driver.
-> >> It use the same v4l2 DT interface that defined in video-interfaces.txt.
-> >> 
-> >> Signed-off-by: Josh Wu <josh.wu@atmel.com>
-> >> Cc: devicetree@vger.kernel.org
-> >> ---
-> >> 
-> >>  .../devicetree/bindings/media/atmel-isi.txt        |   51 ++++++++++++++
-> >>  drivers/media/platform/soc_camera/atmel-isi.c      |   33 ++++++++++++-
-> >>  2 files changed, 82 insertions(+), 2 deletions(-)
-> >>  create mode 100644
-> >>  Documentation/devicetree/bindings/media/atmel-isi.txt
-> >> 
-> >> diff --git a/Documentation/devicetree/bindings/media/atmel-isi.txt
-> >> b/Documentation/devicetree/bindings/media/atmel-isi.txt new file mode
-> >> 100644
-> >> index 0000000..07f00eb
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/media/atmel-isi.txt
-> >> @@ -0,0 +1,51 @@
-> >> +Atmel Image Sensor Interface (ISI) SoC Camera Subsystem
-> >> +----------------------------------------------
-> >> +
-> >> +Required properties:
-> >> +- compatible: must be "atmel,at91sam9g45-isi"
-> >> +- reg: physical base address and length of the registers set for the
-> >> device;
-> >> +- interrupts: should contain IRQ line for the ISI;
-> >> +- clocks: list of clock specifiers, corresponding to entries in
-> >> +          the clock-names property;
-> >> +- clock-names: must contain "isi_clk", which is the isi peripherial
-> >> clock.
-> >> +               "isi_mck" is optinal, it is the master clock output to
-> >> sensor.
-> > 
-> > The mck clock should be handled by the sensor driver instead. I know we
-> > have a legacy mode in the atmel-isi driver to manage that clock
-> > internally, but let's not propagate that to DT.
-> 
-> I agree with you.
-> 
-> I put the isi_mck as optional here because current the sensor driver
-> code only managed the v4l2 clock not the common clock.
-> There should add additional code to manager mck clock.
-> So if you want to ISI work for now, you should put the isi_mck in
-> atmel-isi DT node.
-> 
-> But for sure I can remove the isi_mck in atmel-isi DT document. In the
-> future it will be add in sensor's DT document.
+--Affreb919SiI8I8E
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think that's the way to go, yes. I know we have existing platforms that 
-require sensor clock management in the ISI driver. That should be fixed, and a 
-move to DT is a perfect opportunity to do so :-)
+On Wed, Mar 19, 2014 at 01:57:23PM +0800, Bo Shen wrote:
+> On 03/17/2014 07:55 PM, Mark Brown wrote:
 
-> > I would also drop the "isi_" prefix from the isi_clk name.
-> 
-> hmm,  I think "isi_clk" indicates it is a ISI peripheral clock. And
-> which is consistent with other peripheral clock name in sama5.
+> >If this is a clock for the CODEC it should be documented as part of the
+> >binding for the CODEC and connected to the CODEC in the device tree
+> >rather than being part of a machine driver binding.
 
-I believe the "isi_" prefix is redundant, given that the clock-names property 
-is inside the ISI DT node. However, if this style matches the rest of the 
-platform there's no need to change it.
+> This is a optional clock for CODEC which depends on hardware design. There
+> are 3 options for this clock, wm8904 as an example.
+> 1. Using internal FLL, so won't use this clock.
+> 2. Using external oscillator, no need to retrieve this clock.
+> 3. Using SoC provide this clock (we use this case).
 
-> > You should also describe the port node. You can just mention the related
-> > bindings document, and state that the ISI has a single port.
-> 
-> OK. will add in the v2.
-> 
-> >> +Optional properties:
-> >> +- atmel,isi-disable-preview: a boolean property to disable the preview
-> >> channel;
-> > 
-> > That doesn't really sound like a hardware property to me. Isn't it full
-> > mode related to software configuration instead, which should be performed
-> > at runtime by userspace ?
-> 
-> yes, this configuration can be disable/enable by driver according to
-> user select format.
-> I will remove it in v2. Thanks.
-> 
-> Best Regards,
-> Josh Wu
-> 
-> >> +
-> >> +Example:
-> >> +	isi: isi@f0034000 {
-> >> +		compatible = "atmel,at91sam9g45-isi";
-> >> +		reg = <0xf0034000 0x4000>;
-> >> +		interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
-> >> +
-> >> +		clocks = <&isi_clk>, <&pck1>;
-> >> +		clock-names = "isi_clk", "isi_mck";
-> >> +
-> >> +		pinctrl-names = "default";
-> >> +		pinctrl-0 = <&pinctrl_isi &pinctrl_pck1_as_isi_mck>;
-> >> +
-> >> +		port {
-> >> +			#address-cells = <1>;
-> >> +			#size-cells = <0>;
-> >> +
-> >> +			isi_0: endpoint {
-> >> +				remote-endpoint = <&ov2640_0>;
-> >> +			};
-> >> +		};
-> >> +	};
-> >> +
-> >> +	i2c1: i2c@f0018000 {
-> >> +		ov2640: camera@0x30 {
-> >> +			compatible = "omnivision,ov2640";
-> >> +			reg = <0x30>;
-> >> +
-> >> +			port {
-> >> +				ov2640_0: endpoint {
-> >> +					remote-endpoint = <&isi_0>;
-> >> +					bus-width = <8>;
-> >> +				};
-> >> +			};
-> >> +		};
-> >> +	};
+> After considering these 3 options, if we put this into CODEC driver to do
+> it, I think it will be more complicate to do logic judgement. Do you think
+> so?
 
--- 
-Regards,
+There shouldn't be any meaningful complexity from the above cases -
+cases 2 and 3 are the same and if the clock isn't used at all then it
+can be omitted.  If the FLL is clocked from MCLK then the CODEC driver
+should be able to work out how to configure it easily, the device isn't=20
+like a digital hub CODEC with lots of clocking options.
 
-Laurent Pinchart
+> And, in machine driver, it will depends on the clock option to decide
+> whether to call snd_soc_dai_set_pll and snd_soc_dai_set_sysclk.
+
+Some if not all of this logic can be eaten by the CODEC driver,
+especially with a simple device like this.  Realistically the device is
+either going to be clocked from MCLK (with the rate telling us if we
+need the FLL) or from BCLK (if it's slave and there's no MCLK).
+
+> And also the <Documentation/soud/alsa/soc/machine.txt> mentions the machi=
+ne
+> drivers responsibility (one is for clocking) as following:
+> --->8---
+> The ASoC machine (or board) driver is the code that glues together all the
+> component drivers (e.g. codecs, platforms and DAIs). It also describes the
+> relationships between each componnent which include audio paths, GPIOs,
+> interrupts, clocking, jacks and voltage regulators.
+> ---8<---
+
+That's a Linux specific consideration which shouldn't play any part in
+DT design.
+
+--Affreb919SiI8I8E
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTKXEsAAoJELSic+t+oim9E3oP/RtcZxGdptmjg1C9jSMGLYEy
+ThfViRTkO9s5XYR7LZCK0q9MgVf/a/P6O6fEGku80jA+TmQwa/eLEXCq/veoWtMU
+mGIX5IhAbeFxwyYYj7G/TJ1kTxz/y2NJnrZQpPWcIDMmpk/OcEyfNjaHZoYySzWl
+tI74SPeJJX0LFI73oYb5Qd+L/49Q+ena12R9qEtapqHgCkn0vBWv44qo4X0Gu8bN
+kFoYmONti+IDruR8kw7NMPdl952FH6c8bd122PP62wX/pqolTrez97tWmVQf4a1c
+DxFFdS8qa07OpDtWxKCPeGPrVGVX7AExjKGJ1EBByPQ1tIwevbYk3CRXUq+P6A0O
+C3rJL6KsjRQaqhhXf0xt3T7GKjeczO5K5YG8Ifb98jWt6pupsRaboBFR8mDNAU9n
+HoNiL+Ok4Fkd/9dtyJTxERgmpDWTn5mYfCSaJf95H0LPeWn/Y2iEo/b4yNKMfYRa
+fCWK/zNl1dIXEejL7sBxrTy+S3K2SZLV5c22yOZZtJZxtzoSEHTFe0NaL0muvgRZ
+raiveuHwzOJf0EMr5XPIStgckmv+xNRIBSzepxyDgADCNTQN0berU73OFggkw1h6
+CuY2QkAnch/DV9/k4X+NUnfyxdIAyU8tex8zWTPhk/6odo1R/m+JqEUcM9PbvdUP
+SDq4JPQtbrBSLabj8GJP
+=iIvX
+-----END PGP SIGNATURE-----
+
+--Affreb919SiI8I8E--
