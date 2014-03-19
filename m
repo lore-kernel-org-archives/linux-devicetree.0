@@ -1,122 +1,96 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v11 20/27] iommu/exynos: allow having multiple System MMUs
- for a master H/W
-Date: Wed, 19 Mar 2014 14:20:34 +0100
-Message-ID: <532999A2.6030107@samsung.com>
-References: <20140314141050.c8bedcb66532d277c496796d@samsung.com>
- <53232A53.4040708@samsung.com>
- <20140318220128.564740c88d06b86c9c5c10e3@samsung.com>
- <532857A8.5060000@samsung.com>
- <20140319093929.d3a7cea131c626cf978e0ff1@samsung.com>
+From: y@karo-electronics.de
+Subject: [PATCH] mtd: gpmi: make blockmark swapping optional
+Date: Wed, 19 Mar 2014 14:23:26 +0100
+Message-ID: <40488.3879273713$1395235612@news.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20140319093929.d3a7cea131c626cf978e0ff1@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Cho KyongHo <pullip.cho@samsung.com>
-Cc: Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Linux DeviceTree <devicetree@vger.kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>, Antonios Motakis <a.motakis@virtualopensystems.com>, Grant Grundler <grundler@chromium.org>, Joerg Roedel <joro@8bytes.org>, Kukjin Kim <kgene.kim@samsung.com>, Prathyush <prathyush.k@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Varun Sethi <Varun.Sethi@freescale.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Fabio Estevam <fabio.estevam@freescale.com>, Huang Shijie <b32955@freescale.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 19.03.2014 01:39, Cho KyongHo wrote:
-> On Tue, 18 Mar 2014 15:26:48 +0100, Tomasz Figa wrote:
->>
->>
->> On 18.03.2014 14:01, Cho KyongHo wrote:
->>> On Fri, 14 Mar 2014 17:12:03 +0100, Tomasz Figa wrote:
->>>> Hi KyongHo,
->>>>
->>>> On 14.03.2014 06:10, Cho KyongHo wrote:
->>>>> Some master device descriptor like fimc-is which is an abstraction
->>>>> of very complex H/W may have multiple System MMUs. For those devices,
->>>>> the design of the link between System MMU and its master H/W is needed
->>>>> to be reconsidered.
->>>>>
->>>>> A link structure, sysmmu_list_data is introduced that provides a link
->>>>> to master H/W and that has a pointer to the device descriptor of a
->>>>> System MMU. Given a device descriptor of a master H/W, it is possible
->>>>> to traverse all System MMUs that must be controlled along with the
->>>>> master H/W.
->>>>
->>>> NAK.
->>>>
->>>> A device driver should handle particular hardware instances separately,
->>>> without abstracting a virtual hardware instance consisting of multiple
->>>> physical ones.
->>>>
->>>> If such abstraction is needed, it should be done above the exynos-iommu
->>>> driver, e.g. by something like iommu-composite driver that would
->>>> aggregate several IOMMUs. Keep in mind that such IOMMUs in a group could
->>>> be different, e.g. different Exynos SysMMU versions or even completely
->>>> different IPs handled by different drivers.
->>>>
->>>> Still, I don't think there is a real need for such abstraction. Instead,
->>>> related drivers shall be fixed to properly handle multiple memory
->>>> masters and their IOMMUs.
->>>>
->>>
->>> G2D, Scalers and FIMD of Exynos5420 has 2 System MMUs while aother SoC like
->>> Exynos5250 does not.
->>>
->>> I don't understand why you are negative to this approach.
->>> This is the simplest than the others.
->>>
->>> Let me show you an example.
->>> FIMC-IS driver just controls MCU in FIMC-IS subsystem and the firmware of
->>> the MCU controls all other peripherals in the subsystem. Each peripherals
->>> have their own System MMU. Moreover, the configuration of the peripherals
->>> varies according to the SoCs.
->>>
->>> If System MMU driver accepts multiple masters, everything is done in DT.
->>> But I worry that it is not easy if System MMU driver does not support
->>> multiple masters.
->>
->> I believe I have stated enough reasons why this kind of implementation
->> is bad. I'm not going to waste time repeating myself.
->>
->> Your concerns presented above are valid, however they are not related to
->> what is wrong with this patch. I have given you two proper ways to
->> handle this, none should be forced upon particular IOMMU master drivers
->> - their authors should have the chance to select the method that works
->> best for them.
->>
->
-> I don't still understand why you think this patch is wrong.
-> I think this is the best way not to think for all the driver developers
-> about other things than their business logic.
+=46rom: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
 
-I agree, but one of the ways I proposed (an iommu-composite layer above 
-the IOMMU low level drivers) doesn't add any extra responsibility of 
-driver developers.
+With a flash-based BBT there is no reason to move the Factory Bad
+Block Marker from the data area buffer (to where it is mapped by the
+GPMI NAND controller) to the OOB buffer. Thus, make this feature
+configurable via DT. This is required for the Ka-Ro electronics
+platforms.
 
-Moreover, it's this kind of business logic in low level drivers that is 
-adding more responsibility, because it introduces additional complexity 
-and makes the driver harder to read, maintain and extend in future.
+Signed-off-by: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
+---
+ Documentation/devicetree/bindings/mtd/gpmi-nand.txt |    3 +++
+ arch/arm/boot/dts/imx28-tx28.dts                    |    1 +
+ drivers/mtd/nand/gpmi-nand/gpmi-nand.c              |   10 +++++++---
+ 3 files changed, 11 insertions(+), 3 deletions(-)
 
->
-> This does not hurt anyone and I think this is good enough.
->
+diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt b/Docu=
+mentation/devicetree/bindings/mtd/gpmi-nand.txt
+index 458d596..f28949a 100644
+--- a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
+@@ -25,6 +25,9 @@ Optional properties:
+                        discoverable or this property is not enabled,
+                        the software may chooses an implementation-defi=
+ned
+                        ECC scheme.
++  - fsl,no-blockmark-swap: Don't swap the bad block marker from the OO=
+B
++                       area with the byte in the data area but rely on=
+ the
++                       BBT for identifying bad blocks.
+=20
+ The device tree may optionally contain sub-nodes describing partitions=
+ of the
+ address space. See partition.txt for more detail.
+diff --git a/arch/arm/boot/dts/imx28-tx28.dts b/arch/arm/boot/dts/imx28=
+-tx28.dts
+index e14bd86..7d2bea8 100644
+--- a/arch/arm/boot/dts/imx28-tx28.dts
++++ b/arch/arm/boot/dts/imx28-tx28.dts
+@@ -247,6 +247,7 @@
+ &gpmi {
+ 	pinctrl-0 =3D <&gpmi_pins_a &gpmi_status_cfg>;
+ 	nand-on-flash-bbt;
++	fsl,no-blockmark-swap;
+ 	status =3D "okay";
+ };
+=20
+diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/=
+gpmi-nand/gpmi-nand.c
+index bb77f75..98562eb 100644
+--- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
++++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+@@ -1632,9 +1632,6 @@ static int gpmi_init_last(struct gpmi_nand_data *=
+this)
+ 	struct bch_geometry *bch_geo =3D &this->bch_geometry;
+ 	int ret;
+=20
+-	/* Set up swap_block_mark, must be set before the gpmi_set_geometry()=
+ */
+-	this->swap_block_mark =3D !GPMI_IS_MX23(this);
+-
+ 	/* Set up the medium geometry */
+ 	ret =3D gpmi_set_geometry(this);
+ 	if (ret)
+@@ -1701,6 +1698,13 @@ static int gpmi_nand_init(struct gpmi_nand_data =
+*this)
+ 	if (of_get_nand_on_flash_bbt(this->dev->of_node))
+ 		chip->bbt_options |=3D NAND_BBT_USE_FLASH | NAND_BBT_NO_OOB;
+=20
++	/* Set up swap_block_mark, must be set before the gpmi_set_geometry()=
+ */
++	if (!of_property_read_bool(this->dev->of_node, "fsl,no-blockmark-swap=
+"))
++		this->swap_block_mark =3D !GPMI_IS_MX23(this);
++
++	dev_dbg(this->dev, "Blockmark swapping %sabled\n",
++		this->swap_block_mark ? "en" : "dis");
++
+ 	/*
+ 	 * Allocate a temporary DMA buffer for reading ID in the
+ 	 * nand_scan_ident().
+--=20
+1.7.10.4
 
-Well, it is barely good enough. It is a good practice to make a low 
-level driver handle a single device instance and this is how Linux 
-driver model is designed.
-
-Moreover, a single device tree node _must_ represent a single hardware 
-block, so you can't group multiple SysMMUs into a single device tree node.
-
-Furthermore, if you force grouping of SysMMUs into a single virtual one, 
-you enforce using the same address space for all masters of some 
-particular hardware blocks, while potentially driver developers would 
-like to separate them.
-
-A good interface design should not enforce any particular implementation 
-and this is what we should stick to in this case as well.
-
-> If you want to provide another layer between master device and system mmu
-> as you mentioned, you do that. This patch does not restrict it.
-
-It does, as mentioned above. With a device tree listing multiple SysMMUs 
-as one, you can't separate them.
-
-Best regards,
-Tomasz
