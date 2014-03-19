@@ -1,46 +1,56 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 0/3] ARM: sun7i/sun6i: irqchip: Irqchip
- driver for NMI controller
-Date: Wed, 19 Mar 2014 13:49:57 +0100
-Message-ID: <CAOQ7t2ZBayBmKL2O+__u-1zJ2tfoSn0f+0nEBpifTUf7wwLXwQ@mail.gmail.com>
-References: <1394890861-18347-1-git-send-email-carlo@caione.org>
-	<alpine.DEB.2.02.1403191213240.18573@ionos.tec.linutronix.de>
-	<20140319123241.GI27873@lukather>
-	<alpine.DEB.2.02.1403191341070.18573@ionos.tec.linutronix.de>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [GIT PULL] mfd: regulator: S2MPA01 device support IB for Mark
+ Brown
+Date: Wed, 19 Mar 2014 12:55:23 +0000
+Message-ID: <20140319125523.GE11706@sirena.org.uk>
+References: <1394797919-24642-1-git-send-email-sachin.kamat@linaro.org>
+ <20140318110947.GR25478@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDWJTUUC5UCBBDVFU2MQKGQESWFNR4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1403191341070.18573-3cz04HxQygjZikZi3RtOZ1XZhhPuCNm+@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="v5AHGbzes1vG2y0k"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140318110947.GR25478@lee--X1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Sachin Kamat <sachin.kamat@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 19, 2014 at 1:41 PM, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org> wrote:
-> On Wed, 19 Mar 2014, Maxime Ripard wrote:
->
->> On Wed, Mar 19, 2014 at 12:13:56PM +0100, Thomas Gleixner wrote:
->> > On Sat, 15 Mar 2014, Carlo Caione wrote:
->> >
->> > > Allwinner A20/A31 SoCs have a special interrupt controller for managing NMI.
->> > > Three register are present to (un)mask, control and acknowledge NMI.
->> > > These two patches add a new irqchip driver in cascade with GIC.
->> >
->> > If I get an ack for the DT parts, I'll pick it up.
->>
->> I had some comments on it, so Carlo will probably resubmit it.
->
-> That's the resubmit as far as I can tell.
 
-I'll submit a v7 addressing the Maxime's comments on DT part.
+--v5AHGbzes1vG2y0k
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Regards,
+On Tue, Mar 18, 2014 at 11:09:47AM +0000, Lee Jones wrote:
 
--- 
-Carlo Caione
+> are available in the git repository at:
+
+>   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-regulator-3.15
+
+Pulled now, thanks - please use signed tags for pull requests, it's the
+standard thing now and gets your changelog in the pull automatically
+which is nice.
+
+--v5AHGbzes1vG2y0k
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTKZO4AAoJELSic+t+oim9b3YP/3XoZGRgZpt+8qmp5NPZo6yI
+qp6amiI5sRv7gQIm8phsh1EiNIJLHG74XHPvYNt1yFlSEjlQoZ8TnbGLtwC6Sl9I
+9WPZdJXVLCDrZm5akCkBsaWV4rbFrKRfOisvAumPNmcTi+YHinsLPihWGAXE2hKQ
+jSIFls+y1i6hcreWSiGFQK5pM3e8jthBFJN/d/shWEG/o3+IU9pSdUMsm7M5xi0l
+PdXxW5Qsb/qee/INqH+KPHnUcOsqfXYC8/8yTp+/zGXLPmcqh6WKdEWt2HRfFsAi
+bOui1rO/nZOCmt4S/4mMysIlQjw9l55S5Y6K3u10d9Tz7shHcjRJrXmASI/NPoEn
+AP8UxbIDJm3/bCLx1QalH816fPZb/Frpby/NQ7Jg9UrB7RqDa7Kktsm3BXV78JAg
+2Fm4XtOPnbdfueXxf9wmpOXaGpRVqPJJzmF6X3l1ICfmbNgR1LU3m0z3Muq+HGJM
+DJCE87R9oK1BNMqYkj+wRstYCzJJilfToPmRL9pDdv4y2KkcglXJBSm7ggyXguqP
+//qlWsWaTVKBf/GlY8X9T5HGAM7/0RZSlDJl3i2BZ5d2GVgw0xPhWfzKuaMnMPv0
+ZSOVE+4CyooBuWtmFYCrRlGePtnVP0ZDaXE7yjvZWgiXL1Q+hk8Alv8BK31UbQnI
+7AU8q3NvDiMnrm1AnXiQ
+=sCh+
+-----END PGP SIGNATURE-----
+
+--v5AHGbzes1vG2y0k--
