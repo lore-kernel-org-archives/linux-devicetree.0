@@ -1,164 +1,94 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] [media] of: move graph helpers from drivers/media/v4l2-core to drivers/of
-Date: Thu, 20 Mar 2014 22:33:02 +0000
-Message-ID: <20140320223302.490D6C412EA@trevor.secretlab.ca>
-References: <1393340304-19005-1-git-send-email-p.zabel@pengutronix.de> < 1393428297.3248.92.camel@paszta.hi.pengutronix.de> <20140307171804. EF245C40A32@trevor.secretlab.ca> < CA+gwMcfgKre8S4KHPvTVuAuz672aehGrN1UfFpwKAueTAcrMZQ@mail.gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+gwMcfgKre8S4KHPvTVuAuz672aehGrN1UfFpwKAueTAcrMZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core to drivers/of
+Date: Thu, 20 Mar 2014 23:12:50 +0000
+Message-ID: <20140320231250.8F0E0C412EA@trevor.secretlab.ca>
+References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> < 20140320153804.35d5b835@samsung.com> <20140320184816.7AB02C4067A@trevor. secretlab.ca> <12151803.GHyzFUphWh@avalon>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <12151803.GHyzFUphWh@avalon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 8 Mar 2014 13:07:23 +0100, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Grant,
+On Thu, 20 Mar 2014 19:52:53 +0100, Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+> On Thursday 20 March 2014 18:48:16 Grant Likely wrote:
+> > On Thu, 20 Mar 2014 15:38:04 -0300, Mauro Carvalho Chehab wrote:
+> > > Em Thu, 20 Mar 2014 17:54:31 +0000 Grant Likely escreveu:
+> > > > On Wed, 12 Mar 2014 10:25:56 +0000, Russell King - ARM Linux wrote:
+> > > > > On Mon, Mar 10, 2014 at 02:52:53PM +0100, Laurent Pinchart wrote:
+> > > > > > In theory unidirectional links in DT are indeed enough. However,
+> > > > > > let's not forget the following.
+> > > > > > 
+> > > > > > - There's no such thing as single start points for graphs. Sure, in
+> > > > > > some simple cases the graph will have a single start point, but
+> > > > > > that's not a generic rule. For instance the camera graphs
+> > > > > > http://ideasonboard.org/media/omap3isp.ps and
+> > > > > > http://ideasonboard.org/media/eyecam.ps have two camera sensors, and
+> > > > > > thus two starting points from a data flow point of view.
+> > > > > 
+> > > > > I think we need to stop thinking of a graph linked in terms of data
+> > > > > flow - that's really not useful.
+> > > > > 
+> > > > > Consider a display subsystem.  The CRTC is the primary interface for
+> > > > > the CPU - this is the "most interesting" interface, it's the interface
+> > > > > which provides access to the picture to be displayed for the CPU. 
+> > > > > Other interfaces are secondary to that purpose - reading the I2C DDC
+> > > > > bus for the display information is all secondary to the primary
+> > > > > purpose of displaying a picture.
+> > > > > 
+> > > > > For a capture subsystem, the primary interface for the CPU is the
+> > > > > frame grabber (whether it be an already encoded frame or not.)  The
+> > > > > sensor devices are all secondary to that.
+> > > > > 
+> > > > > So, the primary software interface in each case is where the data for
+> > > > > the primary purpose is transferred.  This is the point at which these
+> > > > > graphs should commence since this is where we would normally start
+> > > > > enumeration of the secondary interfaces.
+> > > > > 
+> > > > > V4L2 even provides interfaces for this: you open the capture device,
+> > > > > which then allows you to enumerate the capture device's inputs, and
+> > > > > this in turn allows you to enumerate their properties.  You don't open
+> > > > > a particular sensor and work back up the tree.
+> > > > > 
+> > > > > I believe trying to do this according to the flow of data is just
+> > > > > wrong. You should always describe things from the primary device for
+> > > > > the CPU towards the peripheral devices and never the opposite
+> > > > > direction.
+> > > > 
+> > > > Agreed.
+> > > 
+> > > I don't agree, as what's the primary device is relative.
+> > > 
+> > > Actually, in the case of a media data flow, the CPU is generally not
+> > > the primary device.
+> > > 
+> > > Even on general purpose computers, if the full data flow is taken into
+> > > the account, the CPU is a mere device that will just be used to copy
+> > > data either to GPU and speakers or to disk, eventually doing format
+> > > conversions, when the hardware is cheap and don't provide format
+> > > converters.
+> > > 
+> > > On more complex devices, like the ones we want to solve with the
+> > > media controller, like an embedded hardware like a TV or a STB, the CPU
+> > > is just an ancillary component that could even hang without stopping
+> > > TV reception, as the data flow can be fully done inside the chipset.
+> > 
+> > We're talking about wiring up device drivers here, not data flow. Yes, I
+> > completely understand that data flow is often not even remotely
+> > cpu-centric. However, device drivers are, and the kernel needs to know
+> > the dependency graph for choosing what devices depend on other devices.
 > 
-> On Fri, Mar 7, 2014 at 6:18 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > On Wed, 26 Feb 2014 16:24:57 +0100, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> >> The 'ports' node is optional. It is only needed if the parent node has
-> >> its own #address-cells and #size-cells properties. If the ports are
-> >> direct children of the device node, there might be other nodes than
-> >> ports:
-> >>
-> >>       device {
-> >>               #address-cells = <1>;
-> >>               #size-cells = <0>;
-> >>
-> >>               port@0 {
-> >>                       endpoint { ... };
-> >>               };
-> >>               port@1 {
-> >>                       endpoint { ... };
-> >>               };
-> >>
-> >>               some-other-child { ... };
-> >>       };
-> >>
-> >>       device {
-> >>               #address-cells = <x>;
-> >>               #size-cells = <y>;
-> >>
-> >>               ports {
-> >>                       #address-cells = <1>;
-> >>                       #size-cells = <0>;
-> >>
-> >>                       port@0 {
-> >>                               endpoint { ... };
-> >>                       };
-> >>                       port@1 {
-> >>                               endpoint { ... };
-> >>                       };
-> >>               };
-> >>
-> >>               some-other-child { ... };
-> >>       };
-> >
-> > From a pattern perspective I have no problem with that.... From an
-> > individual driver binding perspective that is just dumb! It's fine for
-> > the ports node to be optional, but an individual driver using the
-> > binding should be explicit about which it will accept. Please use either
-> > a flag or a separate wrapper so that the driver can select the
-> > behaviour.
-> 
-> If the generic binding exists in both forms, most drivers should be
-> able to cope with both. Maybe it should be mentioned in the bindings
-> that the short form without ports node should be used where possible
-> (i.e. for devices that don't already have #address,size-cells != 1,0).
+> Then we might not be talking about the same thing. I'm talking about DT 
+> bindings to represent the topology of the device, not how drivers are wired 
+> together.
 
-I would rephrase that: (ie. for devices that have other child nodes that
-aren't ports.) It isn't about the #address/size-cells values. It is
-about how the driver interprets child nodes.
+Possibly. I'm certainly confused now. You brought up the component
+helpers in drivers/base/component.c, so I thought working out
+dependencies is part of the purpose of this binding. Everything I've
+heard so far has given me the impression that the graph binding is tied
+up with knowing when all of the devices exist.
 
-> 
-> Having a separate wrapper to enforce the ports node for devices that
-> need it might be useful.
-
-Or the other way around. Make the core function only handle an explicit
-location and use a v4l2 wrapper to preserve the current behaviour. That
-will encourage stricter usage.
-
-> >> The helper should find the two endpoints in both cases.
-> >> Tomi suggests an even more compact form for devices with just one port:
-> >>
-> >>       device {
-> >>               endpoint { ... };
-> >>
-> >>               some-other-child { ... };
-> >>       };
-> >
-> > That's fine. In that case the driver would specifically require the
-> > endpoint to be that one node.... although the above looks a little weird
-> > to me. I would recommend that if there are other non-port child nodes
-> > then the ports should still be encapsulated by a ports node.  The device
-> > binding should not be ambiguous about which nodes are ports.
-> 
-> Sylwester suggested as an alternative, if I understood correctly, to
-> drop the endpoint node and instead keep the port:
-> 
->     device-a {
->         implicit_output_ep: port {
->             remote-endpoint = <&explicit_input_ep>;
->         };
->     };
-> 
->     device-b {
->         port {
->             explicit_input_ep: endpoint {
->                 remote-endpoint = <&implicit_output_ep>;
->             };
->         };
->     };
-> 
-> This would have the advantage to reduce verbosity for devices with multiple
-> ports that are only connected via one endport each, and you'd always have
-> the connected ports in the device tree as 'port' nodes.
-
-It sounds like that is a closer description of the hardware, so I agree.
-
-> 
-> >> > It seems that this function is merely a helper to get all grandchildren
-> >> > of a node (with some very minor constraints). That could be generalized
-> >> > and simplified. If the function takes the "ports" node as an argument
-> >> > instead of the parent, then there is a greater likelyhood that other
-> >> > code can make use of it...
-> >> >
-> >> > Thinking further. I think the semantics of this whole feature basically
-> >> > boil down to this:
-> >> >
-> >> > #define for_each_grandchild_of_node(parent, child, grandchild) \
-> >> >     for_each_child_of_node(parent, child) \
-> >> >             for_each_child_of_node(child, grandchild)
-> >> >
-> >> > Correct? Or in this specific case:
-> >> >
-> >> >     parent = of_get_child_by_name(np, "ports")
-> >> >     for_each_grandchild_of_node(parent, child, grandchild) {
-> >> >             ...
-> >> >     }
-> >>
-> >> Hmm, that would indeed be a bit more generic, but it doesn't handle the
-> >> optional 'ports' subnode and doesn't allow for other child nodes in the
-> >> device node.
-> >
-> > See above. The no-ports-node version could be the
-> > for_each_grandchild_of_node() block, and the yes-ports-node version
-> > could be a wrapper around that.
-> 
-> For the yes-ports-node version I see no problem, but without the ports node,
-> for_each_grandchild_of_node would also collect the children of non-port
-> child nodes.
-> The port and endpoint nodes in this binding are identified by their name,
-> so maybe adding of_get_next_child_by_name() /
-> for_each_named_child_of_node() could be helpful here.
-
-Generally I would avoid mixing child nodes of different purposes. If you
-are in that situation, the recommendation should be to use a ports node.
-If there are any current users for which that doesn't work, only then
-would I do the child_by_name approach.
+How device drivers get connected together may not strictly be a property
+of hardware, but it absolutely is informed by hardware topology.
 
 g.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
