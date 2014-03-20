@@ -1,58 +1,63 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 2/3] net: hisilicon: new hip04 MDIO driver
-Date: Thu, 20 Mar 2014 10:59:57 -0700
-Message-ID: <CAGVrzcZ4K2gvQ8f=uMTf4+jm29e3FQXL-a-wc9xgumyHpH6+UA@mail.gmail.com>
-References: <1395132017-15928-1-git-send-email-zhangfei.gao@linaro.org>
- <1395132017-15928-3-git-send-email-zhangfei.gao@linaro.org>
- <CAGVrzcY4SBKFfTvjB0TTvgpAOwCt30C6LjYf9e9E4ciMDVmp-w@mail.gmail.com> <CAMj5Bkjm3G=K=fqas6VG5NXroofWijN_sc7XGLzT5jVehwTd0Q@mail.gmail.com>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH 2/3] mtd: davinci-nand: add dts property for
+ NAND_NO_SUBPAGE_WRITE option
+Date: Thu, 20 Mar 2014 14:02:39 -0400
+Message-ID: <532B2D3F.6050004@ti.com>
+References: <1395335184-4745-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <1395335184-4745-3-git-send-email-ivan.khoronzhuk@ti.com>
+ <532B2183.2080309@ti.com> <20140320172912.GW31517@norris-Latitude-E6410>
+ <532B2766.6090506@ti.com> <D69011BE-C37F-4085-B992-45F6F32AF1D0@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAMj5Bkjm3G=K=fqas6VG5NXroofWijN_sc7XGLzT5jVehwTd0Q@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Zhangfei Gao <zhangfei.gao@gmail.com>
-Cc: Zhangfei Gao <zhangfei.gao@linaro.org>, netdev <netdev@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <D69011BE-C37F-4085-B992-45F6F32AF1D0@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Warner Losh <imp@bsdimp.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, Russell King - ARM Linux <linux@arm.linux.org.uk>, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, Murali Karicheri <m-karicheri2@ti.com>, rob@landley.net, galak@codeaurora.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-2014-03-20 3:53 GMT-07:00 Zhangfei Gao <zhangfei.gao@gmail.com>:
-> Dear Florian
->
-> On Wed, Mar 19, 2014 at 1:28 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
->> 2014-03-18 1:40 GMT-07:00 Zhangfei Gao <zhangfei.gao@linaro.org>:
->
->>> +static int hip04_mdio_reset(struct mii_bus *bus)
->>> +{
->>> +       int temp, err, i;
->>> +
->>> +       for (i = 0; i < 2; i++) {
->>> +               hip04_mdio_write(bus, i, 22, 0);
->>> +               temp = hip04_mdio_read(bus, i, MII_BMCR);
->>> +               temp |= BMCR_RESET;
->>> +               err = hip04_mdio_write(bus, i, MII_BMCR, temp);
->>> +               if (err < 0)
->>> +                       return err;
->>> +       }
->>> +
->>> +       mdelay(500);
+On Thursday 20 March 2014 01:44 PM, Warner Losh wrote:
+> 
+> On Mar 20, 2014, at 11:37 AM, Santosh Shilimkar <santosh.shilimkar@ti.com> wrote:
+> 
 >>
->> This does not look correct, you should iterate over all possible PHYs:
->> PHY_MAX_ADDR instead of hardcoding the loop to 2.
->
-> OK, got it.
-> Use 2 is since only have 2 phy in the board, will use PHY_MAX_ADDR instead.
 >>
->> I think we might want to remove the mdio bus reset callback in general
->> as the PHY library should already take care of software resetting the
->> PHY to put it in a sane state, as well as waiting for the appropriate
->> delay before using, unlike here, where you do not poll for BMCR_RESET
->> to be cleared by the PHY.
+>> On Thursday 20 March 2014 01:29 PM, Brian Norris wrote:
+>>> On Thu, Mar 20, 2014 at 01:12:35PM -0400, Santosh Shilimkar wrote:
+>>>> Boris,
+>>>
+>>> Who's Boris? And why should Boris be taking this patch? It's an MTD
+>>> patch.
+>>>
+>> I got your name completely wrong. Sorry....
 >>
-> Do you mean will move BMCR_RESET to common code, that's would be great.
-> The mdio_reset is added here to get phy_id, otherwise the phy_id can
-> not be read as well as detection.
+>>>> On Thursday 20 March 2014 01:06 PM, Ivan Khoronzhuk wrote:
+>>>>> From: Murali Karicheri <m-karicheri2@ti.com>
+>>>>>
+>>>>> After testing NAND flash with ubifs for k2hk-emv board were committed
+>>>>> that flash doesn't support subpage writing, so we can fix it by
+>>>>> adding a property to disable subpage write.
+>>>
+>>> What flash? We try to autodetect NAND as much as possible. Perhaps we
+>>> should be adding infrastructure support instead of hacking it with a DT
+>>> property.
+>>>
+>> We can't auto detect it and thats why the DT approach was taken. We
+>> will double check that.
+> 
+> I though sub page writing was one of the fields in the onfi and/or jedec(toggle) meta data structures. Have you looked there?
+> 
+Am not sure if I follow you. The limitation is from the TI NAND controller(AEMIF) and
+not the NAND memory. 
 
-Oh I see, thanks for mentioning that, this is not properly covered
-here today as we need to get the PHY id before we assign it a
-phy_device structure, let me cook a patch for this.
--- 
-Florian
+regards,
+Santosh
