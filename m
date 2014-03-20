@@ -1,84 +1,57 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH 2/3] mtd: davinci-nand: add dts property for
- NAND_NO_SUBPAGE_WRITE option
-Date: Thu, 20 Mar 2014 10:29:12 -0700
-Message-ID: <20140320172912.GW31517@norris-Latitude-E6410>
-References: <1395335184-4745-1-git-send-email-ivan.khoronzhuk@ti.com>
- <1395335184-4745-3-git-send-email-ivan.khoronzhuk@ti.com>
- <532B2183.2080309@ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/1] regulator: Add new driver for ST's PWM controlled
+ voltage regulators
+Date: Thu, 20 Mar 2014 17:31:55 +0000
+Message-ID: <20140320173155.GG11706@sirena.org.uk>
+References: <1395324654-8235-1-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="XJC8d/km55BuzcCo"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <532B2183.2080309@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, dwmw2@infradead.org, galak@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, rob@landley.net, linux@arm.linux.org.uk, grygorii.strashko@ti.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, Murali Karicheri <m-karicheri2@ti.com>
+In-Reply-To: <1395324654-8235-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 20, 2014 at 01:12:35PM -0400, Santosh Shilimkar wrote:
-> Boris,
 
-Who's Boris? And why should Boris be taking this patch? It's an MTD
-patch.
+--XJC8d/km55BuzcCo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> On Thursday 20 March 2014 01:06 PM, Ivan Khoronzhuk wrote:
-> > From: Murali Karicheri <m-karicheri2@ti.com>
-> > 
-> > After testing NAND flash with ubifs for k2hk-emv board were committed
-> > that flash doesn't support subpage writing, so we can fix it by
-> > adding a property to disable subpage write.
+On Thu, Mar 20, 2014 at 02:10:54PM +0000, Lee Jones wrote:
 
-What flash? We try to autodetect NAND as much as possible. Perhaps we
-should be adding infrastructure support instead of hacking it with a DT
-property.
+> +	dev_info(&pdev->dev, "ST PWM Regulator registered\n");
 
-> > Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-> > Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-> > ---
-> Can you please pick this up for 3.15 fixes ? Ofcourse assuming DT folks
-> are ok with the patch.
-> 
-> I can then take patch 1/3 and 3/3 in my 3.15 fixes queue.
-> 
-> >  Documentation/devicetree/bindings/mtd/davinci-nand.txt | 2 ++
-> >  drivers/mtd/nand/davinci_nand.c                        | 3 +++
-> >  2 files changed, 5 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mtd/davinci-nand.txt b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
-> > index cfb18ab..50af930 100644
-> > --- a/Documentation/devicetree/bindings/mtd/davinci-nand.txt
-> > +++ b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
-> > @@ -53,6 +53,8 @@ Recommended properties :
-> >  				identifier is saved in OOB area. If not present
-> >  				false.
-> >  
-> > +- ti,davinci-nosubpage-write:	disable subpage write for the device
+Remove this, it's not adding anything really (the core is pretty chatty
+already).  Otherwise this all seems fine modulo the issues Josh
+mentioned.
 
-If we really need the DT property, I'd prefer a generic
-"nand-numer-of-partial-programs" or something like that, and if it's
-equal to 1, then the flash doesn't support partial page programming.
+--XJC8d/km55BuzcCo
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-But I'd prefer not to encode that in DT if possible.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-> >  Deprecated properties:
-> >  
-> >  - ti,davinci-ecc-mode:		operation mode of the NAND ecc mode. ECC mode
-> > diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
-> > index 4615d79..3ba058d 100644
-> > --- a/drivers/mtd/nand/davinci_nand.c
-> > +++ b/drivers/mtd/nand/davinci_nand.c
-> > @@ -581,6 +581,9 @@ static struct davinci_nand_pdata
-> >  		    of_property_read_bool(pdev->dev.of_node,
-> >  			"ti,davinci-nand-use-bbt"))
-> >  			pdata->bbt_options = NAND_BBT_USE_FLASH;
-> > +		if (of_property_read_bool(pdev->dev.of_node,
-> > +			"ti,davinci-no-subpage-write"))
-> > +			pdata->options |= NAND_NO_SUBPAGE_WRITE;
-> >  	}
-> >  
-> >  	return dev_get_platdata(&pdev->dev);
-> > 
-> 
+iQIcBAEBAgAGBQJTKyYIAAoJELSic+t+oim96qMP/jxQwZ0by95KLR8s0/Ardnt0
+rPCOD9Khi03/1qoLKkUMn6ScEgwPb2vd4klX2WUtxRJx0UvIaAR9AUHH5+HVtz86
+mTiRXHl0CHwuxY6XihC9VdiJeEAgy/XXSZMqw1Cbdp1aH4x7UL1MdYyvv/4p/lUK
+e6HQeJyPEZBxJqY/jcQFPHM+whGdzyAyTNLEG/OyKAMf5OhQQHgPdKe6zZHypAT/
+H3mfUS7tnrf3+BAszuLnqd/465k2rHfKm4QyxnvAiqlcy1O4WO7LV/g+RRInuI6x
+EPrksoZAq5QRGFpEJM7HeR7wGtmcpePcoBkHercuvQerZOBNrH4mzcTSkBT+X49b
+J7XKS5sgMWRki2UdQBBw/N0r55HLGzrwSRPa7ZPUdw8o3UA7E/0Titf9otLNZxJF
+8KAv75V0aLcs895BCjJdCL4dv7c1qSZSW1ltewvQ0loFbjZJ5w2hDEwJ3L1M7DRi
+GNlmfNC8LUS7c01taBP1OpKujt602FEQqekhKxRti++dp06NCZIH6xxsnfICEa6q
+LsVdY2wAz0au1TWLbDGGYmCiUyeZE9axEbGx1p1KmYeF4d6NBhOrrLSTgBn89fAi
+1YysCtMtxVCeNLl4xfRBvDa7rbUpK7nObWXhWL72pWhYZczdHB6QOObaz1A0S3bx
+WdZLEIokdQR1QryC6T3W
+=+QoK
+-----END PGP SIGNATURE-----
 
-Brian
+--XJC8d/km55BuzcCo--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
