@@ -1,54 +1,61 @@
-From: Vinayak Kale <vkale@apm.com>
-Subject: [PATCH 2/2] arm64: dts: Add PMU node for APM X-Gene Storm SOC
-Date: Thu, 20 Mar 2014 15:17:27 +0530
-Message-ID: <1395308847-16317-3-git-send-email-vkale@apm.com>
-References: <1395308847-16317-1-git-send-email-vkale@apm.com>
+From: Boris BREZILLON <b.brezillon.dev@gmail.com>
+Subject: Re: [PATCH 09/11] ARM: at91/dt: define main xtal frequency of the
+ at91sam9261ek board
+Date: Thu, 20 Mar 2014 10:50:36 +0100
+Message-ID: <532AB9EC.1030507@gmail.com>
+References: <1395173924-3648-1-git-send-email-b.brezillon.dev@gmail.com>	<1395173924-3648-10-git-send-email-b.brezillon.dev@gmail.com> <CACh+v5OF52ZuDBpkqpev1Jxv0DJ1ckRR+DjcX500i3o0o4HE9A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1395308847-16317-1-git-send-email-vkale@apm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Catalin.Marinas@arm.com, patches@apm.com, Vinayak Kale <vkale@apm.com>, will.deacon@arm.com, jcm@redhat.com
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACh+v5OF52ZuDBpkqpev1Jxv0DJ1ckRR+DjcX500i3o0o4HE9A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Boris BREZILLON <brezillonboris@gmail.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Mike Turquette <mturquette@linaro.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the PMU device tree node for APM X-Gene Storm SOC.
+Le 20/03/2014 10:24, Jean-Jacques Hiblot a =E9crit :
+> 2014-03-18 21:18 GMT+01:00 Boris BREZILLON <brezillonboris@gmail.com>=
+:
+>> Define at91sam9261ek main crystal frequency.
+>>
+>> Signed-off-by: Boris BREZILLON <b.brezillon.dev@gmail.com>
+>> ---
+>>   arch/arm/boot/dts/at91sam9261ek.dts |    4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/at91sam9261ek.dts b/arch/arm/boot/dts=
+/at91sam9261ek.dts
+>> index 2ce527e..7175986 100644
+>> --- a/arch/arm/boot/dts/at91sam9261ek.dts
+>> +++ b/arch/arm/boot/dts/at91sam9261ek.dts
+>> @@ -29,6 +29,10 @@
+>>                          compatible =3D "atmel,osc", "fixed-clock";
+>>                          clock-frequency =3D <18432000>;
+>>                  };
+>> +
+>> +               main_xtal: main_xtal {
+>> +                       clock-frequency =3D <18432000>;
+>> +               };
+>>          };
+>>
+>>          ahb {
+>> --
+>> 1.7.9.5
+>>
+> You forgot to remove the old fixed-clock definition for the main_cloc=
+k: clock@0
 
-Please note that this patch has dependancy on a GIC driver patch [1] which is
-yet to be approved by maintainers.
+We need this clock when CCF is disabled (when using the old at91 clk=20
+implementation).
+I'm afraid we'll have to keep it until we move all sam9 SoCs and boards=
+=20
+to CCF (and DT).
 
-[1]- https://lkml.org/lkml/2014/2/27/605
-(irqchip:gic: change access of gicc_ctrl register to read modify write)
+Best Regards,
 
-Signed-off-by: Vinayak Kale <vkale@apm.com>
----
- arch/arm64/boot/dts/apm-storm.dtsi |    5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index d37d736..5edb16a 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -97,6 +97,11 @@
- 		clock-frequency = <50000000>;
- 	};
- 
-+	pmu {
-+		compatible = "apm,potenza-pmu", "arm,armv8-pmuv3";
-+		interrupts = <1 12 0xff04>;
-+	};
-+
- 	soc {
- 		compatible = "simple-bus";
- 		#address-cells = <2>;
--- 
-1.7.9.5
+Boris
+>
+> Otherwise:
+> Acked-by: Jean-Jacques HIBLOT <jjhiblot@traphandler.com>
