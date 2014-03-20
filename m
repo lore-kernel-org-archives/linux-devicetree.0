@@ -1,46 +1,59 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] arm64: dts: exynos: added mailbox node
-Date: Thu, 20 Mar 2014 17:12:46 +0100
-Message-ID: <7073716.9YBOcHOu36@wuerfel>
-References: <1395057839-23871-1-git-send-email-ks.giri@samsung.com> <201403191846.28563.arnd@arndb.de> <CABb+yY1rvozkGS34CHt8YEJqvGRXuHV09=AdS3=zQBx=DjFDCQ@mail.gmail.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH] ASoC: tda998x: Fix lack of required reg in DT
+ documentation
+Date: Thu, 20 Mar 2014 16:22:58 +0000
+Message-ID: <20140320162258.GX7528@n2100.arm.linux.org.uk>
+References: <20140320092639.48F68A6279@smtp3-g21.free.fr>
+ <532ADFD8.80301@gmail.com> <20140320140156.5d768b1f@armhf>
+ <532AEDE2.3080306@gmail.com> <20140320145221.09252bf6@armhf>
+ <20140320143110.GU7528@n2100.arm.linux.org.uk>
+ <20140320155935.7a474173@armhf>
+ <20140320151934.GV7528@n2100.arm.linux.org.uk>
+ <20140320165440.195cd2ea@armhf>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY1rvozkGS34CHt8YEJqvGRXuHV09=AdS3=zQBx=DjFDCQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Girish K S <ks.giri@samsung.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Suman Anna <s-anna@ti.com>, Ilho Lee <ilho215.lee@samsung.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20140320165440.195cd2ea@armhf>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 20 March 2014 21:39:56 Jassi Brar wrote:
-> On Wed, Mar 19, 2014 at 11:16 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Monday 17 March 2014, Jassi Brar wrote:
+On Thu, Mar 20, 2014 at 04:54:40PM +0100, Jean-Francois Moine wrote:
+> On Thu, 20 Mar 2014 15:19:34 +0000
+> Russell King - ARM Linux <linux@arm.linux.org.uk> wrote:
 > 
-> >>   Perhaps the mailbox controller driver should name its links as it
-> >> wants. By how the remote works with the mailbox links, the client
-> >> driver asks for a specific mailbox link (which maybe a hardcoded
-> >> string in the driver or be gotten alongside other data via client's
-> >> DT) ?
-> >
-> > I don't see why we should do it any different from the other bindings.
-> > Let's just stick with mboxes/mbox-names or mailboxes/mailbox-names
-> > if you prefer.
-> >
-> >>   IOW we can't have a generic API/DT-bindings that could get us
-> >> reusable client drivers. But only common framework/code that would
-> >> otherwise be duplicated by every platform.
-> >
-> > That is a major benefit though.
-> > Also even if most drivers won't work across multiple platforms, there
-> > is still a reasonable chance that /some/ drivers will.
-> >
-> It seems those /some/ drivers will have to work with everything same
-> but the channel name (which the client could get from its DT node when
-> the second platform appears).
+> > I'm not saying that it has to match the physical device fitted - I'm
+> > merely suggesting not using nxp,tda1998x which could (and as Sebastian
+> > has found, does) conflict with other devices with different properties.
+> > 
+> > We still auto-detect the exact device type by reading the ID register
+> > because that's the most reliable way to detect exactly what kind of
+> > device is fitted to the board.
+> 
+> I don't see the problem.
+> 
+> Actually the driver handles the tda9989, tda19988 and tda19989 (2
+> variants). If some board has, for example, the tda9983 and if the
+> driver is extended to handle this chip (i.e. mainly ignore the CEC
+> part), setting 'nxp,tda998x' in the associated DT will still work.
 
-Why would you ever have varying channel names? I would expect that
-the name is always fixed in the binding of the client driver, like
-we do for clocks or interrupts for instance.
+So you have to encode in the driver that if you see a tda9983 device,
+you don't touch the CEC part.
 
-	Arnd
+Now think about how you'd handle a tda998x compatible device but with
+the CEC stuff at a different I2C address.
+
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
