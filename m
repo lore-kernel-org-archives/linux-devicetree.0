@@ -1,55 +1,58 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core to drivers/of
-Date: Thu, 20 Mar 2014 17:54:31 +0000
-Message-ID: <20140320175432.0559CC4067A@trevor.secretlab.ca>
-References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> < 20140226110114.CF2C7C40A89@trevor.secretlab.ca> <531D916C.2010903@ti.com> < 5427810.BUKJ3iUXnO@avalon> <20140312102556.GC21483@n2100.arm.linux.org.uk>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20140312102556.GC21483@n2100.arm.linux.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 2/3] net: hisilicon: new hip04 MDIO driver
+Date: Thu, 20 Mar 2014 10:59:57 -0700
+Message-ID: <CAGVrzcZ4K2gvQ8f=uMTf4+jm29e3FQXL-a-wc9xgumyHpH6+UA@mail.gmail.com>
+References: <1395132017-15928-1-git-send-email-zhangfei.gao@linaro.org>
+ <1395132017-15928-3-git-send-email-zhangfei.gao@linaro.org>
+ <CAGVrzcY4SBKFfTvjB0TTvgpAOwCt30C6LjYf9e9E4ciMDVmp-w@mail.gmail.com> <CAMj5Bkjm3G=K=fqas6VG5NXroofWijN_sc7XGLzT5jVehwTd0Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAMj5Bkjm3G=K=fqas6VG5NXroofWijN_sc7XGLzT5jVehwTd0Q@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Zhangfei Gao <zhangfei.gao@gmail.com>
+Cc: Zhangfei Gao <zhangfei.gao@linaro.org>, netdev <netdev@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Mar 2014 10:25:56 +0000, Russell King - ARM Linux <linux@arm.linux.org.uk> wrote:
-> On Mon, Mar 10, 2014 at 02:52:53PM +0100, Laurent Pinchart wrote:
-> > In theory unidirectional links in DT are indeed enough. However, let's not 
-> > forget the following.
-> > 
-> > - There's no such thing as single start points for graphs. Sure, in some 
-> > simple cases the graph will have a single start point, but that's not a 
-> > generic rule. For instance the camera graphs 
-> > http://ideasonboard.org/media/omap3isp.ps and 
-> > http://ideasonboard.org/media/eyecam.ps have two camera sensors, and thus two 
-> > starting points from a data flow point of view.
-> 
-> I think we need to stop thinking of a graph linked in terms of data
-> flow - that's really not useful.
-> 
-> Consider a display subsystem.  The CRTC is the primary interface for
-> the CPU - this is the "most interesting" interface, it's the interface
-> which provides access to the picture to be displayed for the CPU.  Other
-> interfaces are secondary to that purpose - reading the I2C DDC bus for
-> the display information is all secondary to the primary purpose of
-> displaying a picture.
-> 
-> For a capture subsystem, the primary interface for the CPU is the frame
-> grabber (whether it be an already encoded frame or not.)  The sensor
-> devices are all secondary to that.
-> 
-> So, the primary software interface in each case is where the data for
-> the primary purpose is transferred.  This is the point at which these
-> graphs should commence since this is where we would normally start
-> enumeration of the secondary interfaces.
-> 
-> V4L2 even provides interfaces for this: you open the capture device,
-> which then allows you to enumerate the capture device's inputs, and
-> this in turn allows you to enumerate their properties.  You don't open
-> a particular sensor and work back up the tree.
-> 
-> I believe trying to do this according to the flow of data is just wrong.
-> You should always describe things from the primary device for the CPU
-> towards the peripheral devices and never the opposite direction.
+2014-03-20 3:53 GMT-07:00 Zhangfei Gao <zhangfei.gao@gmail.com>:
+> Dear Florian
+>
+> On Wed, Mar 19, 2014 at 1:28 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>> 2014-03-18 1:40 GMT-07:00 Zhangfei Gao <zhangfei.gao@linaro.org>:
+>
+>>> +static int hip04_mdio_reset(struct mii_bus *bus)
+>>> +{
+>>> +       int temp, err, i;
+>>> +
+>>> +       for (i = 0; i < 2; i++) {
+>>> +               hip04_mdio_write(bus, i, 22, 0);
+>>> +               temp = hip04_mdio_read(bus, i, MII_BMCR);
+>>> +               temp |= BMCR_RESET;
+>>> +               err = hip04_mdio_write(bus, i, MII_BMCR, temp);
+>>> +               if (err < 0)
+>>> +                       return err;
+>>> +       }
+>>> +
+>>> +       mdelay(500);
+>>
+>> This does not look correct, you should iterate over all possible PHYs:
+>> PHY_MAX_ADDR instead of hardcoding the loop to 2.
+>
+> OK, got it.
+> Use 2 is since only have 2 phy in the board, will use PHY_MAX_ADDR instead.
+>>
+>> I think we might want to remove the mdio bus reset callback in general
+>> as the PHY library should already take care of software resetting the
+>> PHY to put it in a sane state, as well as waiting for the appropriate
+>> delay before using, unlike here, where you do not poll for BMCR_RESET
+>> to be cleared by the PHY.
+>>
+> Do you mean will move BMCR_RESET to common code, that's would be great.
+> The mdio_reset is added here to get phy_id, otherwise the phy_id can
+> not be read as well as detection.
 
-Agreed.
-
-g.
+Oh I see, thanks for mentioning that, this is not properly covered
+here today as we need to get the PHY id before we assign it a
+phy_device structure, let me cook a patch for this.
+-- 
+Florian
