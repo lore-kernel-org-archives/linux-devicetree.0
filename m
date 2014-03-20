@@ -1,62 +1,96 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC PATCH 0/3] Parse OF graph and create backlinks internally
-Date: Thu, 20 Mar 2014 22:09:14 +0000
-Message-ID: <20140320220914.EDAD7C412EA@trevor.secretlab.ca>
-References: <1395241924-9675-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1395241924-9675-1-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
+From: Byungho An <bh74.an@samsung.com>
+Subject: [PATCH V9 0/7] add new Samsung SXGBE driver
+Date: Thu, 20 Mar 2014 15:23:39 -0700
+Message-ID: <000101cf448b$0ce28b30$26a7a190$@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-language: en-us
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: netdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: 'David Miller' <davem@davemloft.net>, ks.giri@samsung.com, siva.kallam@samsung.com, vipul.pandya@samsung.com, ilho215.lee@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 19 Mar 2014 16:12:01 +0100, Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> Hi,
-> 
-> while I'm eagerly awaiting the outcome of the current situation regarding the
-> "Move device tree graph parsing helpers to drivers/of" series, here is a draft
-> implementation that parses the whole device tree into a separate graph
-> structure, creating the backlinks internally. This way it doesn't matter to
-> the code in which direction the phandle links in the device tree are pointing.
-> The current code assumes a static device tree and doesn't handle runtime
-> changes at all.
+Hi all,
 
-Hi Philipp,
+This is 9th posting for SAMSUNG SXGBE driver.
 
-Nak on this approach. I still think each node has to be explicitly
-processed by a driver that understands its parents compatible property.
-Scanning the whole tree, hoping that it finds nodes that look like the
-graph binding makes too many assumptions about what it will find in the
-tree.
+Changes since v1:
+- changed name of driver to SXGbE as per Ben's comment
+- squashed Joe's neatening for many stuff in original patches
 
-I think your other patch that has each driver register its own endpoints
-is a better solution, and I think it is better suited for handling
-runtime changes.
+Changes since v2:
+- updated and split binding document as per Mark's comment
+- clean up codes as per Joe's comment
+- removed unused fields and clean up codes as per Francois's comment
+- removed module parameters as per Dave's comment
+- moved driver directory to samsung/sxgbe/
 
-g.
+Changes since v3:
+- fixed Missing a blank line after declarations as per Dave's comment
+- clean up codes as per Joe's comment
+- removed reference of net_device.{irq, base_addr} as per Francois's comment
 
-> 
-> I've also added two helpers to iterate over all ports of a device, and to
-> obtain a specific port by its id (as contained in the 'reg' property).
-> 
-> These patches are based directly on top of the previous series, which still
-> can be found at:
-> 	git://git.pengutronix.de/git/pza/linux.git topic/of-graph
-> 
-> Philipp Zabel (3):
->   of: Parse OF graph into graph structure
->   of: Add OF graph helper to get a specific port by id
->   of: Add OF graph helpers to iterate over ports
-> 
->  drivers/of/base.c        | 476 +++++++++++++++++++++++++++++++++++++++--------
->  include/linux/of_graph.h |  31 +++
->  2 files changed, 430 insertions(+), 77 deletions(-)
-> 
-> -- 
-> 1.9.0
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+Changes since v4:
+- updated binding document and DT related function as per Mark's comment
+
+Changes since v5:
+- updated binding document and DT related function as per Florian's comment
+- fixed typo and shortened code as per Joe's comment
+
+Changes since v6:
+- updated TSO related functions as per Rayagond's comment
+- updated binding document as per Mark's comment
+- removed WoL patch from this patch set
+
+Changes since v7:
+- updated TSO related functions as per Rayagond's comment
+
+Changes since v8:
+- removed select and depends statement from vendor sub-section as per 
+  Dave's comment
+
+Byungho An (1):
+      MAINTAINERS: add maintainer for Samsung sxgbe driver
+
+Girish K S (1):
+      net: sxgbe: add EEE(Energy Efficient Ethernet) for Samsung sxgbe
+
+Siva Reddy (2):
+      sxgbe: Add device-tree binding support document
+      net: sxgbe: add basic framework for Samsung 10Gb ethernet driver
+
+Vipul Pandya (3):
+      net: sxgbe: add TSO support for Samsung sxgbe
+      net: sxgbe: add Checksum offload support for Samsung sxgbe
+      net: sxgbe: add ethtool related functions support Samsung sxgbe
+
+ .../devicetree/bindings/net/samsung-sxgbe.txt      |   60 +
+ MAINTAINERS                                        |    9 +
+ drivers/net/ethernet/Kconfig                       |    1 +
+ drivers/net/ethernet/Makefile                      |    1 +
+ drivers/net/ethernet/samsung/Kconfig               |   16 +
+ drivers/net/ethernet/samsung/Makefile              |    5 +
+ drivers/net/ethernet/samsung/sxgbe/Kconfig         |    9 +
+ drivers/net/ethernet/samsung/sxgbe/Makefile        |    4 +
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h  |  539 +++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_core.c    |  261 +++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_desc.c    |  515 +++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_desc.h    |  298 +++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_dma.c     |  387 ++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_dma.h     |   51 +
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c |  588 +++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c    | 2316 ++++++++++++++++++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_mdio.c    |  271 +++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_mtl.c     |  252 +++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_mtl.h     |  104 +
+ .../net/ethernet/samsung/sxgbe/sxgbe_platform.c    |  262 +++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_reg.h     |  488 +++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_xpcs.c    |   92 +
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_xpcs.h    |   38 +
+ include/linux/sxgbe_platform.h                     |   54 +
+ 24 files changed, 6621 insertions(+)
+
+Thanks,
+Byungho An
