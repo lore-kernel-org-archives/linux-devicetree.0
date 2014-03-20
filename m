@@ -1,66 +1,45 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH 2/3] mtd: davinci-nand: add dts property for NAND_NO_SUBPAGE_WRITE
- option
-Date: Thu, 20 Mar 2014 13:12:35 -0400
-Message-ID: <532B2183.2080309@ti.com>
-References: <1395335184-4745-1-git-send-email-ivan.khoronzhuk@ti.com> <1395335184-4745-3-git-send-email-ivan.khoronzhuk@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1395335184-4745-3-git-send-email-ivan.khoronzhuk@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: computersforpeace@gmail.com
-Cc: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, dwmw2@infradead.org, galak@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, rob@landley.net, linux@arm.linux.org.uk, grygorii.strashko@ti.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, Murali Karicheri <m-karicheri2@ti.com>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core to drivers/of
+Date: Thu, 20 Mar 2014 17:23:02 +0000
+Message-ID: <20140320172302.CD320C4067A@trevor.secretlab.ca>
+References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> < 139468148.3QhLg3QYq1@avalon> <531F08A8.300@ti.com> <1883687.VdfitvQEN3@ avalon>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1883687.VdfitvQEN3@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Boris,
-
-On Thursday 20 March 2014 01:06 PM, Ivan Khoronzhuk wrote:
-> From: Murali Karicheri <m-karicheri2@ti.com>
+On Tue, 11 Mar 2014 14:16:37 +0100, Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+> On Tuesday 11 March 2014 14:59:20 Tomi Valkeinen wrote:
+> > So depending on the use case, the endpoints would point to opposite
+> > direction from the encoder's point of view.
+> > 
+> > And if I gathered Grant's opinion correctly (correct me if I'm wrong),
+> > he thinks things should be explicit, i.e. the bindings for, say, an
+> > encoder should state that the encoder's output endpoint _must_ contain a
+> > remote-endpoint property, whereas the encoder's input endpoint _must
+> > not_ contain a remote-endpoint property.
 > 
-> After testing NAND flash with ubifs for k2hk-emv board were committed
-> that flash doesn't support subpage writing, so we can fix it by
-> adding a property to disable subpage write.
-> 
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-> ---
-Can you please pick this up for 3.15 fixes ? Ofcourse assuming DT folks
-are ok with the patch.
+> Actually my understand was that DT links would have the same direction as the 
+> data flow. There would be no ambiguity in that case as the direction of the 
+> data flow is known. What happens for bidirectional data flows still need to be 
+> discussed though. And if we want to use the of-graph bindings to describe 
+> graphs without a data flow, a decision will need to be taken there too.
 
-I can then take patch 1/3 and 3/3 in my 3.15 fixes queue.
+On further thinking, I would say linkage direction should be in the
+direction that would be considered the dependency order... I'm going to
+soften my position though. I think the generic pattern should still
+recommend unidirection links in direction of device dependency, but
+I'm okay with allowing the bidirection option if the helper functions
+are modified to validate the target endpoint. I think it needs to test
+for the following:
+- Make sure the endpoint either:
+  - does not have a backlink, or
+  - the backlink points back to the origin node
+- If the target is an endpoint node, then make sure the parent doesn't
+  have a link of any kind
+- If the target is a port node, make sure it doesn't have any endpoint
+  children nodes at all.
 
->  Documentation/devicetree/bindings/mtd/davinci-nand.txt | 2 ++
->  drivers/mtd/nand/davinci_nand.c                        | 3 +++
->  2 files changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/davinci-nand.txt b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
-> index cfb18ab..50af930 100644
-> --- a/Documentation/devicetree/bindings/mtd/davinci-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
-> @@ -53,6 +53,8 @@ Recommended properties :
->  				identifier is saved in OOB area. If not present
->  				false.
->  
-> +- ti,davinci-nosubpage-write:	disable subpage write for the device
-> +
->  Deprecated properties:
->  
->  - ti,davinci-ecc-mode:		operation mode of the NAND ecc mode. ECC mode
-> diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
-> index 4615d79..3ba058d 100644
-> --- a/drivers/mtd/nand/davinci_nand.c
-> +++ b/drivers/mtd/nand/davinci_nand.c
-> @@ -581,6 +581,9 @@ static struct davinci_nand_pdata
->  		    of_property_read_bool(pdev->dev.of_node,
->  			"ti,davinci-nand-use-bbt"))
->  			pdata->bbt_options = NAND_BBT_USE_FLASH;
-> +		if (of_property_read_bool(pdev->dev.of_node,
-> +			"ti,davinci-no-subpage-write"))
-> +			pdata->options |= NAND_NO_SUBPAGE_WRITE;
->  	}
->  
->  	return dev_get_platdata(&pdev->dev);
-> 
-
+g.
