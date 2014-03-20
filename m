@@ -1,50 +1,50 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH Resend 1/3] ARM: EXYNOS: Consolidate Kconfig entries
-Date: Thu, 20 Mar 2014 14:54:45 +0900
-Message-ID: <02f701cf4400$e561e2c0$b025a840$@samsung.com>
-References: <1395224705-2935-1-git-send-email-sachin.kamat@linaro.org>
+From: Xiubo Li <Li.Xiubo@freescale.com>
+Subject: [PATCH 1/3] ARM: dts: vf610: Add Freescale FTM PWM node.
+Date: Thu, 20 Mar 2014 13:12:03 +0800
+Message-ID: <1395292325-8497-2-git-send-email-Li.Xiubo@freescale.com>
+References: <1395292325-8497-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1395224705-2935-1-git-send-email-sachin.kamat@linaro.org>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Sachin Kamat' <sachin.kamat@linaro.org>, linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1395292325-8497-1-git-send-email-Li.Xiubo@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawn.guo@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Xiubo Li <Li.Xiubo@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Sachin Kamat wrote:
-> 
-> Instead of repeating the Kconfig entries for every SoC, move them under
-> ARCH_EXYNOS4 and 5 and move the entries common to both 4 and 5 under
-> ARCH_EXYNOS. Also, since the individual SoCs do not have any specific
-> machine/platform code, keep them as boolean symbols instead of user
-> selectable and select them from Exynos4 and 5 config symbols. Individual
-> SoC symbols can be removed eventually once the driver Kconfig dependencies
-> on these symbols are removed.
-> 
-> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-> Acked-by: Tomasz Figa <t.figa@samsung.com>
-> ---
-> This is a resend of the series rebased on top of latest linux-next and
-> Tomasz Figa's PM consolidation series 1 and 2.
-> ---
->  arch/arm/Kconfig             |   10 +++++
->  arch/arm/mach-exynos/Kconfig |   89
-+++++++++++---------------------------
-> ----
->  2 files changed, 33 insertions(+), 66 deletions(-)
-> 
-Hmm...I'm still thinking whether we don't need to select some specific
-Exynos SoCs. Because actually we're implement/develop some features based on
-mainline kernel and sometimes the features are not valid on all of Exynos4
-or Exynos5. Even though they are not in mainline, for mass product it's true
-that Samsung needs to do it. It's another thing we have a plan for them or
-not.
+This adds devicetree node for VF610, and there are 8 channels
+supported.
 
-So in my opinion, basically consolidation something is usually good but it's
-not always good so we need to provide a way to use one of both.
+Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
+Reviewed-by: Sascha Hauer <s.hauer@pengutronix.de>
+Reviewed-by: Yuan Yao <yao.yuan@freescale.com>
+---
+ arch/arm/boot/dts/vf610.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Thanks,
-Kukjin
+diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
+index acf544e..ccc6d35 100644
+--- a/arch/arm/boot/dts/vf610.dtsi
++++ b/arch/arm/boot/dts/vf610.dtsi
+@@ -192,6 +192,19 @@
+ 				status = "disabled";
+ 			};
+ 
++			pwm0: pwm@40038000 {
++				compatible = "fsl,vf610-ftm-pwm";
++				#pwm-cells = <3>;
++				reg = <0x40038000 0x1000>;
++				clock-names = "ftm_sys", "ftm_ext",
++					      "ftm_fix", "ftm_cnt_clk_en";
++				clocks = <&clks VF610_CLK_FTM0>,
++					<&clks VF610_CLK_FTM0_EXT_SEL>,
++					<&clks VF610_CLK_FTM0_FIX_SEL>,
++					<&clks VF610_CLK_FTM0_EXT_FIX_EN>;
++				status = "disabled";
++			};
++
+ 			wdog@4003e000 {
+ 				compatible = "fsl,vf610-wdt", "fsl,imx21-wdt";
+ 				reg = <0x4003e000 0x1000>;
+-- 
+1.8.4
