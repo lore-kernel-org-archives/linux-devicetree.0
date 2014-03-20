@@ -1,83 +1,61 @@
-From: Simon Budig <simon.budig-t93Ne7XHvje5bSeCtf/tX7NAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCHv4 2/5] Input: edt-ft5x06: Add DT support
-Date: Thu, 20 Mar 2014 12:18:10 +0100
-Message-ID: <532ACE72.6030807@kernelconcepts.de>
-References: <1395234563-11034-1-git-send-email-LW@KARO-electronics.de> <1395234563-11034-3-git-send-email-LW@KARO-electronics.de> <20140320093719.GB14420@e106331-lin.cambridge.arm.com>
+From: Cho KyongHo <pullip.cho@samsung.com>
+Subject: Re: [PATCH v11 17/27] iommu/exynos: remove calls to Runtime PM API
+ functions
+Date: Thu, 20 Mar 2014 20:55:41 +0900
+Message-ID: <20140320205541.d7ef53fd15d9dcd3cadfd13f@samsung.com>
+References: <20140314140843.ba055f28dd7ed59c46088029@samsung.com>
+ <5322FD14.5090602@samsung.com>
+ <20140318185605.0380c8dfe6559c06183092e5@samsung.com>
+ <532861BE.7020601@samsung.com>
+ <20140319100304.5e26fa43ccdfc29178b058e1@samsung.com>
+ <532997D7.6090608@samsung.com>
+ <CANEJEGtK-XfTef3ko+Yq2RNFXohhuQjgamr-DRBmxR-SNzgkJg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="xqvuqOQtrhkAKdn4NtqigxkfFc2kKccsf"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140320093719.GB14420-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?B?TG90aGFyIFdhw59tYW5u?= <LW-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Henrik Rydberg <rydberg-Hk7bIW8heu4wFerOooGFRg@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CANEJEGtK-XfTef3ko+Yq2RNFXohhuQjgamr-DRBmxR-SNzgkJg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Grant Grundler <grundler@chromium.org>
+Cc: Tomasz Figa <t.figa@samsung.com>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Linux DeviceTree <devicetree@vger.kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>, Antonios Motakis <a.motakis@virtualopensystems.com>, Joerg Roedel <joro@8bytes.org>, Kukjin Kim <kgene.kim@samsung.com>, Prathyush <prathyush.k@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Varun Sethi <Varun.Sethi@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---xqvuqOQtrhkAKdn4NtqigxkfFc2kKccsf
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Wed, 19 Mar 2014 09:54:39 -0700, Grant Grundler wrote:
+> On Wed, Mar 19, 2014 at 6:12 AM, Tomasz Figa <t.figa@samsung.com> wrote:
+> ...
+> >> Device driver is not only for the scholarship but also for the real use.
+> >
+> > Huh? I'm not sure what kind of comment is this.
+> 
+> I'm guessing Cho meant: "This isn't an academic exercise - I have a
+> real use case that requires reference counting."
 
-On 20/03/14 10:37, Mark Rutland wrote:
-> On Wed, Mar 19, 2014 at 01:09:20PM +0000, Lothar Wa=C3=9Fmann wrote:
->> +FocalTech EDT-FT5x06 Polytouch driver
->> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> +
->> +Required properties:
->> + - compatible:  "edt,edt-ft5x06"
->=20
-> Is the 'x' part of a particular product name, or is this a class of
-> devices?
+That is what I meant; Sorry for my poor English :-)
 
-The driver is intended for the EDT "polytouch" family touches, which are
-based on a focaltec controller. The current line of touches uses e.g.
-the ft5306 as well as the ft5406 focaltec controller.
+> Cho needs to be more specific about his "Some driver needs enabling
+> sysmmu" example. Then others would understand why/when the reference
+> counting is needed. Ie walk through a real driver that exists today
+> that depends on reference counting.
+>
 
-> It's preferable to have a specific string which another similar variant=
-s
-> can claim compatibility with (while also additionally having a more
-> specific string), as this makes it possible to handle variants more
-> specially in future, target workarounds, etc.
+One of my recent experience is that a display controller (FIMD) driver
+of a SoC manages two different context of power management:
+One is turning on and off display screen (LCD) (which is as usual as previous SoCs)
+and the other is gating its internal clock including System MMU very
+frequently to reduce power consumption.
+Because System MMU driver holds its clock ungated while it is enabled,
+FIMD driver explicitely disable System MMU.
 
-I chose the driver name since I wanted to differentiate from other EDT
-touches, which used a different controller. With hindsight it was
-unfortunately confusing, since I get quite some request from people, who
-also have a device based on the focaltec controllers, but with a very
-different firmware (and communication protocol). They got tricked into
-thinking that this driver would be suitable...
+Yes, well designed FIMD driver must care about balancing of
+disabling and enabling System MMU between different contexts.
+But the design of some complex driver may be poor in few features due to
+agressive development schedule sometimes.
 
-If I were to chose the name again I'd probably pick "edt-polytouch" or
-something like this. But I doubt that it is useful to change the name now=
-=2E
+Please let me think about the counting.
 
-Bye,
-        Simon
+Now I also think the system mmu driver does not need to make
+an extra effort for some special cases.
 
---=20
-       Simon Budig                        kernel concepts GmbH
-       simon.budig-t93Ne7XHvje5bSeCtf/tX7NAH6kLmebB@public.gmane.org      Sieghuetter Hauptweg 48
-       +49-271-771091-17                  D-57072 Siegen
+Regards,
 
-
-
---xqvuqOQtrhkAKdn4NtqigxkfFc2kKccsf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-Comment: Using GnuPG with Icedove - http://www.enigmail.net/
-
-iEYEARECAAYFAlMqznIACgkQO2O/RXesiHCNyACbBPXVJSQzQv9OvjDS1iKaIFuE
-PtgAn0MD54DVQUguggi+oifaTxLL5xYx
-=QYF/
------END PGP SIGNATURE-----
-
---xqvuqOQtrhkAKdn4NtqigxkfFc2kKccsf--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+KyongHo
