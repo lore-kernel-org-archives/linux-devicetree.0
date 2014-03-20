@@ -1,41 +1,115 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v7 3/3] arm64: Add architecture support for PCI
-Date: Thu, 20 Mar 2014 13:26:02 +0100
-Message-ID: <201403201326.02377.arnd@arndb.de>
-References: <1394811258-1500-1-git-send-email-Liviu.Dudau@arm.com>
- <201403201217.22339.arnd@arndb.de>
- <20140320113820.GH6457@e106497-lin.cambridge.arm.com>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH v2] mmc: sdhci: add quirk for broken write protect detection
+Date: Thu, 20 Mar 2014 13:26:53 +0100
+Message-ID: <532ADE8D.7040900@monstr.eu>
+References: <1393759200-22819-1-git-send-email-eli.billauer@gmail.com> <74003aec-1707-4f43-b947-df148d573fa1@TX2EHSMHS038.ehs.local> <53163247.8000904@gmail.com> <ae0f71ac-c5f7-4af7-a9ba-c019cec19ebf@AM1EHSMHS017.ehs.local> <531878C8.2020001@topic.nl> <ad0a3559-a687-4f51-b284-f515372cfad2@VA3EHSMHS001.ehs.local>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140320113820.GH6457@e106497-lin.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Tanmay Inamdar <tinamdar@apm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="VV9AQjEhgSr0jhWSBLiLlFvWK0tr1t3iL"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ad0a3559-a687-4f51-b284-f515372cfad2-+Ck8Kgl/v09ZbvUCbuG1mrjjLBE8jN/0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, Eli Billauer <eli.billauer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 20 March 2014, Liviu Dudau wrote:
-> > I don't even understand why you want to create a generic pci_address_to_pio
-> > implementation, when we don't need that for arm64 at all. Unless I'm
-> > missing something important, that function is only called in case of
-> > PCI_PROBE_DEVTREE with pci_of_scan on PowerPC. I don't expect any
-> > architecture to do the same thing, and the only other architecture that
-> > needs something like it (sparc) has a different implementation.
-> 
-> Because in my [v7 2/6]* patch for the generic host bridge support I start
-> using pci_address_to_pio to fix the conversion of PCI ranges to resources.
-> That requires an arm64 (or more correctly, an arch with memory mapped IO
-> specific) version of pci_address_to_pio().
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--VV9AQjEhgSr0jhWSBLiLlFvWK0tr1t3iL
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Yes, but why do you use it there?
+Hi,
 
-	Arnd
+On 03/06/2014 05:42 PM, S=C3=B6ren Brinkmann wrote:
+> On Thu, 2014-03-06 at 02:31PM +0100, Mike Looijmans wrote:
+>> On 03/04/2014 10:00 PM, S=C3=B6ren Brinkmann wrote:
+>>> On Tue, 2014-03-04 at 10:06PM +0200, Eli Billauer wrote:
+>>>> Hello S=C3=B6ren,
+>>>>
+>>>> wp-inverted solves the practical problem indeed, and fools the
+>>>> driver into thinking that the card has an inverted write protection
+>>>> sensor, and the logic zero that it finds in the hardware register
+>>>> means that the card isn't write protected.
+>>>>
+>>>> I'm insisting on this patch, because I think that the device tree
+>>>> should describe the hardware as it is, and not fool the driver into
+>>>> behaving the way we want it to. These tricks always bite back later
+>>>> on.
+>>> Well, why is broken-wp more accurate than wp-inverted? Strictly
+>>> speaking the WP is there and working, it's just tied off to some valu=
+e
+>>> you want to have interpreted the other way.
+>>> Anyway, seems like this is solvable with wp-inverted and whether the
+>>> additional quirk is needed I leave to others do decide.
+>>
+>> I've begged for this patch - or a similar one - to be included too,
+>> because on our boards, the "wp" value appears to be sort of random.
+>> Out of 5 prototype boards, 3 would only boot with wp-inverted while
+>> the other 2 wouldn't boot with wp-inverted set.
+>>
+>> In our case I really don't know (and I don't care either) to which
+>> logic level the wp happens to think it's wired. I just want to be
+>> able to tell the driver that the WP line is
+>> free-floating-and-might-have-any-random-value-at-any-given-moment
+>> which is a bit long, so I'd go for disable-wp instead.
+>=20
+> Could you provide the design you use and give more details? According t=
+o
+> the people I talked to, the signal should never float, unless you pin i=
+t
+> out and don't drive it.
+> Actually, you should open a support case for this. It is not supposed t=
+o
+> happen.
+
+we have got this from Mike (we couldn't reply because he has lost this em=
+ail
+thread.
+
+Mike:
+"I think I found the issue. In ps7_init.c as generated by the tools, it s=
+ets the "WP" pin not to EMIO, but to MIO 0. We use pin 0 for a status LED=
+=2E
+
+# devmem 0XF8000830
+0x002E0000
+
+Register 0XF8000830 is SD0_WP_CD_SEL, and 0x002E0000 sets CD to pin 46 an=
+d WP to pin "0", not to EMIO as I specified in the design.
+"
+
+Eli: Maybe you have the same issue as Mike. Can you please check it?
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--VV9AQjEhgSr0jhWSBLiLlFvWK0tr1t3iL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlMq3o0ACgkQykllyylKDCGWGQCfV1xQbJ0sUHFIw42eWJt8/sL/
+gCcAoJm1zK5GDROd7KwULu18A/v5XWD7
+=QGh2
+-----END PGP SIGNATURE-----
+
+--VV9AQjEhgSr0jhWSBLiLlFvWK0tr1t3iL--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
