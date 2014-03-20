@@ -1,201 +1,63 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core to drivers/of
-Date: Thu, 20 Mar 2014 20:27:55 +0100
-Message-ID: <22904541.tzCZUcGtJB@avalon>
-References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> <2161777.L3ZZmhyfM4@avalon> <20140320181820.GY7528@n2100.arm.linux.org.uk>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH 2/3] mtd: davinci-nand: add dts property for NAND_NO_SUBPAGE_WRITE
+ option
+Date: Thu, 20 Mar 2014 15:28:51 -0400
+Message-ID: <532B4173.9010208@ti.com>
+References: <1395335184-4745-1-git-send-email-ivan.khoronzhuk@ti.com> <1395335184-4745-3-git-send-email-ivan.khoronzhuk@ti.com> <532B2183.2080309@ti.com> <20140320172912.GW31517@norris-Latitude-E6410> <532B2766.6090506@ti.com> <D69011BE-C37F-4085-B992-45F6F32AF1D0@gmail.com> <532B2D3F.6050004@ti.com> <20140320185452.GB21018@ld-irv-0074> <532B3D74.6070703@ti.com> <532B40E5.4070201@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140320181820.GY7528@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Grant Likely <grant.likely@linaro.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <532B40E5.4070201@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, Brian Norris <computersforpeace@gmail.com>
+Cc: Warner Losh <imp@bsdimp.com>, David Woodhouse <dwmw2@infradead.org>, galak@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, rob@landley.net, Russell King - ARM Linux <linux@arm.linux.org.uk>, grygorii.strashko@ti.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, Murali Karicheri <m-karicheri2@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
-
-On Thursday 20 March 2014 18:18:20 Russell King - ARM Linux wrote:
-> On Thu, Mar 20, 2014 at 07:16:29PM +0100, Laurent Pinchart wrote:
-> > On Thursday 20 March 2014 17:54:31 Grant Likely wrote:
-> > > On Wed, 12 Mar 2014 10:25:56 +0000, Russell King - ARM Linux wrote:
-> > > > On Mon, Mar 10, 2014 at 02:52:53PM +0100, Laurent Pinchart wrote:
-> > > > > In theory unidirectional links in DT are indeed enough. However,
-> > > > > let's not forget the following.
-> > > > > 
-> > > > > - There's no such thing as single start points for graphs. Sure, in
-> > > > > some simple cases the graph will have a single start point, but
-> > > > > that's not a generic rule. For instance the camera graphs
-> > > > > http://ideasonboard.org/media/omap3isp.ps and
-> > > > > http://ideasonboard.org/media/eyecam.ps have two camera sensors, and
-> > > > > thus two starting points from a data flow point of view.
-> > > > 
-> > > > I think we need to stop thinking of a graph linked in terms of data
-> > > > flow - that's really not useful.
-> > > > 
-> > > > Consider a display subsystem.  The CRTC is the primary interface for
-> > > > the CPU - this is the "most interesting" interface, it's the interface
-> > > > which provides access to the picture to be displayed for the CPU. 
-> > > > Other interfaces are secondary to that purpose - reading the I2C DDC
-> > > > bus for the display information is all secondary to the primary
-> > > > purpose of displaying a picture.
-> > > > 
-> > > > For a capture subsystem, the primary interface for the CPU is the
-> > > > frame grabber (whether it be an already encoded frame or not.)  The
-> > > > sensor devices are all secondary to that.
-> > > > 
-> > > > So, the primary software interface in each case is where the data for
-> > > > the primary purpose is transferred.  This is the point at which these
-> > > > graphs should commence since this is where we would normally start
-> > > > enumeration of the secondary interfaces.
-> > > > 
-> > > > V4L2 even provides interfaces for this: you open the capture device,
-> > > > which then allows you to enumerate the capture device's inputs, and
-> > > > this in turn allows you to enumerate their properties.  You don't open
-> > > > a particular sensor and work back up the tree.
-> > > > 
-> > > > I believe trying to do this according to the flow of data is just
-> > > > wrong. You should always describe things from the primary device for
-> > > > the CPU towards the peripheral devices and never the opposite
-> > > > direction.
-> > > 
-> > > Agreed.
-> > 
-> > Absolutely not agreed. The whole concept of CPU towards peripherals only
-> > makes sense for very simple devices and breaks as soon as the hardware
-> > gets more complex. There's no such thing as CPU towards peripherals when
-> > peripherals communicate directly.
-> > 
-> > Please consider use cases more complex than just a display controller and
-> > an encoder, and you'll realize how messy not being able to parse the
-> > whole graph at once will become. Let's try to improve things, not to make
-> > sure to prevent support for future devices.
+On Thursday 20 March 2014 03:26 PM, Ivan Khoronzhuk wrote:
 > 
-> That's odd, I did.
+> On 03/20/2014 09:11 PM, Santosh Shilimkar wrote:
+>> On Thursday 20 March 2014 02:54 PM, Brian Norris wrote:
+>>> On Thu, Mar 20, 2014 at 02:02:39PM -0400, Santosh Shilimkar wrote:
+>>>> On Thursday 20 March 2014 01:44 PM, Warner Losh wrote:
+>>>>> I though sub page writing was one of the fields in the onfi and/or jedec(toggle) meta data structures. Have you looked there?
+>>>>>
+>>>> Am not sure if I follow you. The limitation is from the TI NAND controller(AEMIF) and
+>>>> not the NAND memory.
+>>> That doesn't match the patch description, which says "that flash doesn't
+>>> support subpage writing". Flash != flash controller.
+>>>
+>> Patch description is indeed doesn't reflect the actual issue.
+>>
+>>> Which one is it? If it's a controller limitation, I think we should be
+>>> able to pull this from a "compatible" property, no?
+>>>
+>> Just to be accurate, the limitation(bug) is on the controller found on Keystone
+>> SOCs. AEMIF controller is also used on DaVinci SOCs which don't seems to have
+>> any issue. So even for compatible, you need to add keystone specific one.
+>> Hence thought dt property is better option.
+>>
+
 > 
-> Please draw some (ascii) diagrams of the situations you're saying this
-> won't work for, because at the moment all I'm seeing is some vague
-> hand-waving rather than anything factual that I can relate to.  Help
-> us to actually _see_ the problem you have with this approach so we can
-> understand it.
+> I will use compatible approach.
+> We have keystone compatible in k2hk-evm.dts,
+> so I need to add it only in the davinci-nand driver.
+> I will add the following:
+> 
+> if (of_device_is_compatible(np, "ti,keystone-nand")) {
+>             pdata->options |= NAND_NO_SUBPAGE_WRITE;
+>  }
+> 
+> ...
+> 
+> static const struct of_device_id davinci_nand_of_match[] = {
+>     {.compatible = "ti,davinci-nand", },
+>     {.compatible = "ti,keystone-nand", },
+>     {},
+> };
+> 
+Looks good. I think you should go ahead and respin the patch
+with above.
 
-I've broken the diagram into pieces as it won't fit in 80 columns. Ports named 
-by a capital letter enclosed in parentheses are connected together. 
-
-Let's start with the on-board input paths, with an HDMI input connector and a 
-camera sensor.
-
- ,-----------.      ,----------.
- | HDMI      |      | ADV7611  |
- | Connector | ---> | HDMI     | ---> (A)
- |           |      | Decoder  |
- `-----------'      `----------'
-
- ,-----------.
- | AR0331    |
- | Camera    | ---> (B)
- | Sensor    |
- `-----------'
-
-We then get to the SoC.
-
-      |
-      |    ,-----------.      ,------------.
-      |    | BT.656    |      | Test       |
-(A) -[0]-> | Decoder   | ---> | Pattern    | ---> (C)
-      |    |           |      | Generator  |
-      |    `-----------'      `------------'
-      |
-      |    ,-----------.      ,------------.      ,------------.
-      |    | CSI-2     |      |            |      | Test       |
-(B) -[1]-> | Receiver  | ---> | Processing | ---> | Pattern    |  ---> (D)
-      |    |           |  `   |            |      | Generator  |
-      |    `-----------'  |   `------------'      `------------'
-      |                   |   ,------------.
-      |                   |   |            |      ,-----.
-      | --SOC--           `-> | Statistics | ---> | DMA |
-      |                       |            |      `-----'
-      |                       `------------'
-
-The blocks named Processing is made of
-
-      ,------------.      ,------------.      ,-------------.
-      | Faulty     |      | Bayer      |      | White       |
- ---> | Pixels     | ---> | to RGB     | ---> | Balance     | ---.
-      | Correction |      | Conversion |      | Correction  |    |
-      `------------'      `------------'      `-------------'    |
-                                                                 |
- ,---------------------------------------------------------------'
- |
- |    ,------------.      ,------------.      ,-------------.
- |    | Gamma      |      | RGB to YUV |      | Image       |
- `--> | Correction | ---> | Conversion | ---> | Enhancement | --->
-      |            |      |            |      |             |
-      `------------'      `------------'      `-------------'
-
-The two flows then go through a crossbar switch.
-
-                                ,--------.
-                                |        |      ,-----.
-           ,-----------.     -> | Scaler | ---> | DMA |
-           |           |   ,'   |        |      `-----'
-           |     ,----[2] -     `--------'
- (C) ---> [0]---'      |
-           |   `,-----[3] ----> (E)
- (D) ---> [1]--'       |
-           |    `-----[4] -
-           |           |   `--> (F)
-           `-----------'
-
-One of the video streams went to memory through DMA. The second one enters the 
-compositor through a scaler, with two additional streams coming from memory.
-
-                  ,------------.       ,--------------.
-     ,-----.      | RGB to YUV |       |              |
-     | DMA | ---> | Conversion | ---> [0]             |
-     `-----'      |            |       |              |
-                  `------------'       |              |
-                  ,--------.           |              |
-     ,-----.      |        |           |  Compositor  |
-     | DMA | ---> | Scaler | -------> [1]            [3] ---> (G)
-     `-----'      |        |           |              |
-                  `--------'           |              |
-                  ,--------.           |              |
-                  |        |           |              |
-     (E) -------> | Scaler | -------> [2]             |
-                  |        |           |              |
-                  `--------'           `--------------'
-
-The remaining video capture stream and the video display stream exit the SoC 
-and are output to HDMI connectors through HDMI encoders.
-
-          |
-          |    ,---------.      ,-----------.
-          |    | ADV7511 |      | HDMI      |
-    (G) -[2]-> | HDMI    | ---> | Output    |
-          |    | Encoder |      | Connector |
-          |    `---------'      `-----------'
-          |
-          |    ,---------.      ,-----------.
-          |    | ADV7511 |      | HDMI      |
-    (F) -[3]-> | HDMI    | ---> | Output    |
-          |    | Encoder |      | Connector |
-  --SOC-- |    `---------'      `-----------'
-          |
-
-Every block in this diagram (including the DMA engines) corresponds to a 
-device instance and has a device node in the device tree.
-
-Note how the same RGB to YUV conversion and scaler blocks are used in both 
-capture and display pipelines, how the capture and display pipelines are 
-merged at the hardware level, and how the same HDMI encoder is used for one 
-video output that comes from the display device (G) and one video output that 
-comes straight from the capture device (F).
-
-I wish this was an example I made up instead of real hardware I need to 
-support.
-
--- 
 Regards,
-
-Laurent Pinchart
+Santosh
