@@ -1,42 +1,46 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCH] mtd: gpmi: make blockmark swapping optional
-Date: Thu, 20 Mar 2014 10:21:53 +0100
-Message-ID: <20140320102153.7106f915@ipc1.ka-ro>
-References: <1395235406-13449-1-git-send-email-y>
-	<532AB1A2.9010702@freescale.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: [PATCH] ASoC: tda998x: Fix lack of required reg in DT documentation
+Date: Thu, 20 Mar 2014 09:58:10 +0100
+Message-ID: <20140320092639.48F68A6279@smtp3-g21.free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <532AB1A2.9010702@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Huang Shijie <b32955@freescale.com>
-Cc: y@karo-electronics.de, Arnd Bergmann <arnd@arndb.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Fabio Estevam <fabio.estevam@freescale.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The I2C address (reg) is required for the TDA998x driver to be loaded
+and initialized.
 
-Huang Shijie wrote:
-> =E4=BA=8E 2014=E5=B9=B403=E6=9C=8819=E6=97=A5 21:23, y@karo-electroni=
-cs.de =E5=86=99=E9=81=93:
-> > configurable via DT. This is required for the Ka-Ro electronics
-> > platforms.
-> >
-> If you disable the swapping, you will disable the NAND boot in actual=
-ly.
->=20
-No. All our modules do boot from NAND and none of them does the
-swapping.
+Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
+---
+This patch applies to linux-next.
+---
+ Documentation/devicetree/bindings/drm/i2c/tda998x.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-
-Lothar Wa=C3=9Fmann
---=20
-___________________________________________________________
-
-Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
-Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
-Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
-Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
-
-www.karo-electronics.de | info@karo-electronics.de
-___________________________________________________________
+diff --git a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
+index d7df01c..fc7effa 100644
+--- a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
++++ b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
+@@ -3,6 +3,8 @@ Device-Tree bindings for the NXP TDA998x HDMI transmitter
+ Required properties;
+   - compatible: must be "nxp,tda998x"
+ 
++  - reg: I2C address - must be <0x70>
++
+ Optional properties:
+   - interrupts: interrupt number and trigger type
+ 	default: polling
+-- 
+1.9.1
