@@ -1,77 +1,51 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCHv4 2/5] Input: edt-ft5x06: Add DT support
-Date: Thu, 20 Mar 2014 12:44:18 +0100
-Message-ID: <20140320124418.55b79a3e@ipc1.ka-ro>
-References: <1395234563-11034-1-git-send-email-LW@KARO-electronics.de>
-	<1395234563-11034-3-git-send-email-LW@KARO-electronics.de>
-	<c9718f7215eb41439606b0107a8e2a02@BLUPR03MB373.namprd03.prod.outlook.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4] ASoC: cs42xx8: Add codec driver support for
+ CS42448/CS42888
+Date: Thu, 20 Mar 2014 11:50:10 +0000
+Message-ID: <20140320115010.GD11706@sirena.org.uk>
+References: <1395310717-2090-1-git-send-email-Guangyu.Chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Mx3Wl9kSzNzqr7Kn"
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <c9718f7215eb41439606b0107a8e2a02@BLUPR03MB373.namprd03.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <1395310717-2090-1-git-send-email-Guangyu.Chen@freescale.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: "fugang.duan@freescale.com" <fugang.duan@freescale.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, Henrik Rydberg <rydberg@euromail.se>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jg1.han@samsung.com>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Sachin Kamat <sachin.kamat@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Simon Budig <simon.budig@kernelconcepts.de>
+To: Nicolin Chen <Guangyu.Chen@freescale.com>
+Cc: brian.austin@cirrus.com, Paul.Handrigan@cirrus.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, lgirdwood@gmail.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-fugang.duan@freescale.com wrote:
-> From: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
-> Data: Wednesday, March 19, 2014 9:09 PM
->=20
-> >To: Dmitry Torokhov; Duan Fugang-B38611; Grant Likely; Henrik Rydber=
-g; Ian
-> >Campbell; Jingoo Han; Kumar Gala; Mark Rutland; Pawel Moll; Rob Herr=
-ing; Rob
-> >Landley; Sachin Kamat; devicetree@vger.kernel.org; linux-doc@vger.ke=
-rnel.org;
-> >linux-input@vger.kernel.org; linux-kernel@vger.kernel.org; Simon Bud=
-ig; Lothar
-> >Wa=C3=9Fmann
-> >Subject: [PATCHv4 2/5] Input: edt-ft5x06: Add DT support
-> >
-> >
-No need to quote the mail headers here.
+--Mx3Wl9kSzNzqr7Kn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-[...]
-> >diff --git a/drivers/input/touchscreen/edt-ft5x06.c
-> >b/drivers/input/touchscreen/edt-ft5x06.c
-> >index 7b4470d..257a1c8 100644
-> >--- a/drivers/input/touchscreen/edt-ft5x06.c
-> >+++ b/drivers/input/touchscreen/edt-ft5x06.c
-> >@@ -33,6 +33,7 @@
-> > #include <linux/debugfs.h>
-> > #include <linux/slab.h>
-> > #include <linux/gpio.h>
-> >+#include <linux/of_gpio.h>
-> > #include <linux/input/mt.h>
-> > #include <linux/input/edt-ft5x06.h>
-> >
-> [...]
-> >+#ifdef CONFIG_OF
-> >+static int edt_ft5x06_i2c_ts_probe_dt(struct device *dev,
-> >+				struct edt_ft5x06_ts_data *tsdata)
-> >+{
-> >+	struct device_node *np =3D dev->of_node;
-> >+
-> >+	if (!np)
-> >+		return -ENODEV;
-> Don't need to check the device node valid. If the device node is not =
-existed, the driver don't run probe.
->=20
-Perfectly right. I'll drop this in the next version.
+On Thu, Mar 20, 2014 at 06:18:37PM +0800, Nicolin Chen wrote:
+> This patch adds support for the Cirrus Logic CS42448/CS42888 Audio CODEC that
+> has six/four 24-bit AD and eight 24-bit DA converters.
 
+Applied, thanks.
 
-Lothar Wa=C3=9Fmann
---=20
-___________________________________________________________
+--Mx3Wl9kSzNzqr7Kn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
-Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
-Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
-Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-www.karo-electronics.de | info@karo-electronics.de
-___________________________________________________________
+iQIcBAEBAgAGBQJTKtXvAAoJELSic+t+oim92oYQAJ4uVmnOH/4eaekP8lsS+Poa
+28nCDZbM2/U5rt2H6Id0b6F6ZnmDfuUN7BKN8TsTFMRUoKf+YZkFJ9cxnLV4Np4u
+6u2DOsSTNyIlQiRODPmQn2XUCFSD+VHxX+w7m85ysUdbO9RoQzpFtd384LLpfrWU
+mUvpc9cJXHy9WtFzJWnyE3Diem1WOk6Y62T0LT5YonMgDpgC9gc95Zk3JcHQOMEc
+/SBlrnezoG9nPmHQmgA5nzgAmhDSL3cPRbHexlRMgaRNW0+w8iMbCBVDUIyE6E95
+0agE16yPjwkSrLgH3IOToWaq5FKHeTZ3x+b/T/WwbWM5vDjqRFmZ14cogx+21E/l
+lw0dVEpKkboOojimcJGNmokxfhSddugr4/yFF531WcTDmxvBSoi7UPKdcLd9tZPX
+qxOZG8AgZ2DgrQNP/Iy03MudzOaM5zD4DbYX54Bdrhf4rLET25mXQmTIGLVJanny
+9hsusNCv9oH/BXp/k/9jhPkYw3vBm0Ops4kzLVWFX53rr6K3I/AXZLlCLM8JU6/t
+RhRL+CLlHwc8tgV3RfcjPUabtgS6s6hDJ4vk4IgbzDcGahV88K0dSnqq+KIdJHez
+GcucK2+k/9M4jvICCioRhdBwsI/O3Wj59ftQ8JurZ6LbxPXHGapZGXC9DHvxF6os
+S8aeytThkzEyycz3tKz5
+=27uM
+-----END PGP SIGNATURE-----
+
+--Mx3Wl9kSzNzqr7Kn--
