@@ -1,51 +1,61 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4] ASoC: cs42xx8: Add codec driver support for
- CS42448/CS42888
-Date: Thu, 20 Mar 2014 11:50:10 +0000
-Message-ID: <20140320115010.GD11706@sirena.org.uk>
-References: <1395310717-2090-1-git-send-email-Guangyu.Chen@freescale.com>
+From: Simon Budig <simon.budig@kernelconcepts.de>
+Subject: Re: [PATCHv4 2/5] Input: edt-ft5x06: Add DT support
+Date: Thu, 20 Mar 2014 12:48:01 +0100
+Message-ID: <532AD571.9000907@kernelconcepts.de>
+References: <1395234563-11034-1-git-send-email-LW@KARO-electronics.de>	<1395234563-11034-3-git-send-email-LW@KARO-electronics.de>	<20140320093719.GB14420@e106331-lin.cambridge.arm.com> <20140320124055.53d469e7@ipc1.ka-ro>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Mx3Wl9kSzNzqr7Kn"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1395310717-2090-1-git-send-email-Guangyu.Chen@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Nicolin Chen <Guangyu.Chen@freescale.com>
-Cc: brian.austin@cirrus.com, Paul.Handrigan@cirrus.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, lgirdwood@gmail.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+ protocol="application/pgp-signature";
+ boundary="HhJx1dDCBmjH17WR1LSIjRhei6Xq3WoSw"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140320124055.53d469e7@ipc1.ka-ro>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?TG90aGFyIFdhw59tYW5u?= <LW@KARO-electronics.de>, Mark Rutland <mark.rutland@arm.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Fugang Duan <B38611@freescale.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Henrik Rydberg <rydberg@euromail.se>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jg1.han@samsung.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <Pawel.Moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Sachin Kamat <sachin.kamat@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--HhJx1dDCBmjH17WR1LSIjRhei6Xq3WoSw
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
---Mx3Wl9kSzNzqr7Kn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 20/03/14 12:40, Lothar Wa=C3=9Fmann wrote:
+> The FT5x06 datasheet lists 3 variants for different panel sizes.
+> I'll add distinct compatible strings for those chips, though their SW
+> interface is (currently) identical:
+> |Required properties:
+> | - compatible:  "edt,edt-ft5206", "edt,edt-ft5x06"
+> |           or:  "edt,edt-ft5306", "edt,edt-ft5x06"
+> |           or:  "edt,edt-ft5406", "edt,edt-ft5x06"
 
-On Thu, Mar 20, 2014 at 06:18:37PM +0800, Nicolin Chen wrote:
-> This patch adds support for the Cirrus Logic CS42448/CS42888 Audio CODEC that
-> has six/four 24-bit AD and eight 24-bit DA converters.
+Please note that the M09 variants of the polytouch family will use the
+same chips, but a different sw protocol (see Patch 5/5).
 
-Applied, thanks.
+I don't know anything about the naming scheme used in the device tree,
+but I am not sure if the chip-ID is actually useful here.
 
---Mx3Wl9kSzNzqr7Kn
+Bye,
+        Simon
+
+--=20
+       Simon Budig                        kernel concepts GmbH
+       simon.budig@kernelconcepts.de      Sieghuetter Hauptweg 48
+       +49-271-771091-17                  D-57072 Siegen
+
+
+
+--HhJx1dDCBmjH17WR1LSIjRhei6Xq3WoSw
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Version: GnuPG v1
+Comment: Using GnuPG with Icedove - http://www.enigmail.net/
 
-iQIcBAEBAgAGBQJTKtXvAAoJELSic+t+oim92oYQAJ4uVmnOH/4eaekP8lsS+Poa
-28nCDZbM2/U5rt2H6Id0b6F6ZnmDfuUN7BKN8TsTFMRUoKf+YZkFJ9cxnLV4Np4u
-6u2DOsSTNyIlQiRODPmQn2XUCFSD+VHxX+w7m85ysUdbO9RoQzpFtd384LLpfrWU
-mUvpc9cJXHy9WtFzJWnyE3Diem1WOk6Y62T0LT5YonMgDpgC9gc95Zk3JcHQOMEc
-/SBlrnezoG9nPmHQmgA5nzgAmhDSL3cPRbHexlRMgaRNW0+w8iMbCBVDUIyE6E95
-0agE16yPjwkSrLgH3IOToWaq5FKHeTZ3x+b/T/WwbWM5vDjqRFmZ14cogx+21E/l
-lw0dVEpKkboOojimcJGNmokxfhSddugr4/yFF531WcTDmxvBSoi7UPKdcLd9tZPX
-qxOZG8AgZ2DgrQNP/Iy03MudzOaM5zD4DbYX54Bdrhf4rLET25mXQmTIGLVJanny
-9hsusNCv9oH/BXp/k/9jhPkYw3vBm0Ops4kzLVWFX53rr6K3I/AXZLlCLM8JU6/t
-RhRL+CLlHwc8tgV3RfcjPUabtgS6s6hDJ4vk4IgbzDcGahV88K0dSnqq+KIdJHez
-GcucK2+k/9M4jvICCioRhdBwsI/O3Wj59ftQ8JurZ6LbxPXHGapZGXC9DHvxF6os
-S8aeytThkzEyycz3tKz5
-=27uM
+iEYEARECAAYFAlMq1XEACgkQO2O/RXesiHBYegCdEhyb5e7+T45ijRYorB0CJ2U/
+yCYAn3VVGHGLx/YQFQ/7csC/vGZzDxqa
+=pegi
 -----END PGP SIGNATURE-----
 
---Mx3Wl9kSzNzqr7Kn--
+--HhJx1dDCBmjH17WR1LSIjRhei6Xq3WoSw--
