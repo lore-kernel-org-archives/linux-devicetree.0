@@ -1,81 +1,37 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [RFC PATCH] [media]: of: move graph helpers from
-	drivers/media/v4l2-core to drivers/of
-Date: Thu, 20 Mar 2014 18:18:20 +0000
-Message-ID: <20140320181820.GY7528@n2100.arm.linux.org.uk>
-References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> <20140312102556.GC21483@n2100.arm.linux.org.uk> <20140320175432.0559CC4067A@trevor.secretlab.ca> <2161777.L3ZZmhyfM4@avalon>
+From: Sebastian Capella <sebastian.capella@linaro.org>
+Subject: Re: [PATCH RFC 1/4] arm64: kernel: implement DT based idle states infrastructure
+Date: Thu, 20 Mar 2014 11:19:40 -0700
+Message-ID: <CADHgK6vGf0gfVoAWO2FiXzCf-Sf_P_u+d7Dg04xn1O5t2LeKwg@mail.gmail.com>
+References: <1395138028-19630-1-git-send-email-lorenzo.pieralisi@arm.com>
+	<1395138028-19630-2-git-send-email-lorenzo.pieralisi@arm.com>
+	<CAL_Jsq+M8fCreXrd7R1m=3_LKD_+jma3Pha06hRoTPMpcOb1_g@mail.gmail.com>
+	<20140318180856.GB792@e102568-lin.cambridge.arm.com>
+	<CADHgK6uwUDndVHQaWU=3R7A16hc4PYJCAfMLi3uBnrDjYidPXg@mail.gmail.com>
+	<20140319172338.GA31368@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2161777.L3ZZmhyfM4@avalon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140319172338.GA31368@e102568-lin.cambridge.arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Rob Herring <robherring2@gmail.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Tomasz Figa <t.figa@samsu>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 20, 2014 at 07:16:29PM +0100, Laurent Pinchart wrote:
-> On Thursday 20 March 2014 17:54:31 Grant Likely wrote:
-> > On Wed, 12 Mar 2014 10:25:56 +0000, Russell King - ARM Linux wrote:
-> > > On Mon, Mar 10, 2014 at 02:52:53PM +0100, Laurent Pinchart wrote:
-> > > > In theory unidirectional links in DT are indeed enough. However, let's
-> > > > not forget the following.
-> > > > 
-> > > > - There's no such thing as single start points for graphs. Sure, in some
-> > > > simple cases the graph will have a single start point, but that's not a
-> > > > generic rule. For instance the camera graphs
-> > > > http://ideasonboard.org/media/omap3isp.ps and
-> > > > http://ideasonboard.org/media/eyecam.ps have two camera sensors, and
-> > > > thus two starting points from a data flow point of view.
-> > > 
-> > > I think we need to stop thinking of a graph linked in terms of data
-> > > flow - that's really not useful.
-> > > 
-> > > Consider a display subsystem.  The CRTC is the primary interface for
-> > > the CPU - this is the "most interesting" interface, it's the interface
-> > > which provides access to the picture to be displayed for the CPU.  Other
-> > > interfaces are secondary to that purpose - reading the I2C DDC bus for
-> > > the display information is all secondary to the primary purpose of
-> > > displaying a picture.
-> > > 
-> > > For a capture subsystem, the primary interface for the CPU is the frame
-> > > grabber (whether it be an already encoded frame or not.)  The sensor
-> > > devices are all secondary to that.
-> > > 
-> > > So, the primary software interface in each case is where the data for
-> > > the primary purpose is transferred.  This is the point at which these
-> > > graphs should commence since this is where we would normally start
-> > > enumeration of the secondary interfaces.
-> > > 
-> > > V4L2 even provides interfaces for this: you open the capture device,
-> > > which then allows you to enumerate the capture device's inputs, and
-> > > this in turn allows you to enumerate their properties.  You don't open
-> > > a particular sensor and work back up the tree.
-> > > 
-> > > I believe trying to do this according to the flow of data is just wrong.
-> > > You should always describe things from the primary device for the CPU
-> > > towards the peripheral devices and never the opposite direction.
-> > 
-> > Agreed.
-> 
-> Absolutely not agreed. The whole concept of CPU towards peripherals only makes 
-> sense for very simple devices and breaks as soon as the hardware gets more 
-> complex. There's no such thing as CPU towards peripherals when peripherals 
-> communicate directly.
-> 
-> Please consider use cases more complex than just a display controller and an 
-> encoder, and you'll realize how messy not being able to parse the whole graph 
-> at once will become. Let's try to improve things, not to make sure to prevent 
-> support for future devices.
+On 19 March 2014 10:23, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+> Rob is asking a property describing hw, and honestly unless we define
+> a power consumption property value (defining what it means will be rather
+> complicated though) I'd rather remove index altogether and use min_residency
+> as a comparison value instead.
 
-That's odd, I did.
+I like having a separate ranking for power to sort the states.  To me
+it seems that min residency could be ambiguous for this.  We could
+have states with inverted min_residencies: where a lower consumption
+state has a lower target residency because the cost is recovered more
+quickly.  Such a state might have higher latency for exit, so even
+though the lower min_residency/lower power state is clearly
+preferable, selection of the lower power state may be prevented by
+kernel latency constraints.
 
-Please draw some (ascii) diagrams of the situations you're saying this
-won't work for, because at the moment all I'm seeing is some vague
-hand-waving rather than anything factual that I can relate to.  Help
-us to actually _see_ the problem you have with this approach so we can
-understand it.
+Thanks,
 
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+Sebastian
