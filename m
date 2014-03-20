@@ -1,65 +1,167 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v7 3/3] ARM: sun7i/sun6i: irqchip: Update
- the documentation
-Date: Thu, 20 Mar 2014 16:17:55 +0100
-Message-ID: <20140320151755.GQ27873@lukather>
-References: <1395256879-8475-1-git-send-email-carlo@caione.org>
- <1395256879-8475-4-git-send-email-carlo@caione.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Josh Cartwright <joshc@codeaurora.org>
+Subject: Re: [PATCH 1/1] regulator: Add new driver for ST's PWM controlled
+ voltage regulators
+Date: Thu, 20 Mar 2014 10:28:37 -0500
+Message-ID: <20140320152837.GW18529@joshc.qualcomm.com>
+References: <1395324654-8235-1-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3w8x3zxtEJX8SUiO"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBKMOVSMQKGQEJX6BO2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1395256879-8475-4-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1395324654-8235-1-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, broonie@kernel.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
+Hey Lee-
 
---3w8x3zxtEJX8SUiO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+A few minor things below.
 
-On Wed, Mar 19, 2014 at 08:21:19PM +0100, Carlo Caione wrote:
-> Added documentation for NMI irqchip.
->=20
-> Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+On Thu, Mar 20, 2014 at 02:10:54PM +0000, Lee Jones wrote:
+> On some STMicroelectronics hardware reside regulators consisting
+> partly of a PWM input connected to the feedback loop. As the PWM
+> duty-cycle is varied the output voltage adapts. This driver
+> allows us to vary the output voltage by adapting the PWM input
+> duty-cycle.
+> 
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> --- /dev/null
+> +++ b/drivers/regulator/st-pwm.c
+> +static int st_pwm_regulator_set_voltage(struct regulator_dev *dev,
+> +					int min_uV, int max_uV,
+> +					unsigned *selector)
+> +{
+> +	struct st_pwm_regulator_data *drvdata = rdev_get_drvdata(dev);
+> +	int dutycycle, best_val = INT_MAX;
+> +	int sel, ret;
+> +
+> +	for (sel = 0; sel < dev->desc->n_voltages; sel++) {
+> +		if (drvdata->duty_cycle_table[sel].uV < best_val &&
+> +		    drvdata->duty_cycle_table[sel].uV >= min_uV &&
+> +		    drvdata->duty_cycle_table[sel].uV <= max_uV) {
+> +			best_val = drvdata->duty_cycle_table[sel].uV;
+> +			if (selector)
+> +				*selector = sel;
+> +		}
+> +	}
 
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+If you implement .set_voltage_sel() instead and set map_voltage to
+regulator_map_voltage_iterate, the core can take care of this.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+> +
+> +	if (best_val == INT_MAX)
+> +		return -EINVAL;
+> +
+> +	dutycycle = (ST_PWM_REG_PERIOD / 100) *
+> +		drvdata->duty_cycle_table[sel].dutycycle;
 
---3w8x3zxtEJX8SUiO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Considering (ST_PWM_REG_PERIOD / 100) is constant, could you get away
+with dropping this calculation by just putting the already-adjusted
+values into your duty cycle table?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
+> +
+> +	ret = pwm_config(drvdata->pwm, dutycycle, ST_PWM_REG_PERIOD);
+> +	if (ret) {
+> +		dev_err(&dev->dev, "Failed to configure PWM\n");
+> +		return ret;
+> +	}
+> +
+> +	drvdata->state = sel;
+> +
+> +	if (!drvdata->enabled) {
+> +		ret = pwm_enable(drvdata->pwm);
+> +		if (ret) {
+> +			dev_err(&dev->dev, "Failed to enable PWM\n");
+> +			return ret;
+> +		}
+> +		drvdata->enabled = true;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int st_pwm_regulator_list_voltage(struct regulator_dev *dev,
+> +					 unsigned selector)
+> +{
+> +	struct st_pwm_regulator_data *drvdata = rdev_get_drvdata(dev);
+> +
+> +	if (selector >= dev->desc->n_voltages)
+> +		return -EINVAL;
+> +
+> +	return drvdata->duty_cycle_table[selector].uV;
+> +}
+> +
+> +static struct regulator_ops st_pwm_regulator_voltage_ops = {
+> +	.get_voltage  = st_pwm_regulator_get_voltage,
+> +	.set_voltage  = st_pwm_regulator_set_voltage,
+> +	.list_voltage = st_pwm_regulator_list_voltage,
+> +};
+> +
+> +static struct st_pwm_voltages b2105_duty_cycle_table[] = {
+> +	{ .uV = 1114000, .dutycycle = 0,  },
+> +	{ .uV = 1095000, .dutycycle = 10, },
+> +	{ .uV = 1076000, .dutycycle = 20, },
+> +	{ .uV = 1056000, .dutycycle = 30, },
+> +	{ .uV = 1036000, .dutycycle = 40, },
+> +	{ .uV =  996000, .dutycycle = 50, },
+> +	/* WARNING: Values above 50% duty-cycle cause boot failures. */
+> +};
+> +
+> +static struct regulator_desc b2105_desc = {
+> +	.name		= "b2105-pwm-regulator",
+> +	.ops		= &st_pwm_regulator_voltage_ops,
+> +	.type		= REGULATOR_VOLTAGE,
+> +	.owner		= THIS_MODULE,
+> +	.n_voltages	= ARRAY_SIZE(b2105_duty_cycle_table),
+> +	.supply_name    = "pwm",
+> +};
+> +
+> +static struct st_pwm_regulator_data b2105_info = {
+> +	.desc		  = &b2105_desc,
+> +	.duty_cycle_table = b2105_duty_cycle_table,
+> +};
+> +
+> +static struct of_device_id st_pwm_of_match[] = {
 
-iQIbBAEBAgAGBQJTKwajAAoJEBx+YmzsjxAgVL8P92Eg3gxZnC987LkY+FpGgcoL
-idwcRhLs7b8evtu1kgroeyuETRIC0mXjyTTc9X3M7JdWV2rhQnZLCsckg5UgTgND
-je1jBwEM8qkieRidPHVD9XTUfPcX25AWpDp9XdnBGqf+Sl0V4b80Eo2DUrbNtLUz
-rzjS1h2s2ISkL4h7j+VgKnWwicxyR/N+Y3lZdRKe3+fvPAK2bHSyKVBGiRx66FgN
-1aqvaf1XZxtr5nk1A2plbr0dhoiDxl0kFnDDts5A98diuVbp8kI4XFfbwy7hTwee
-BaK0f+kS4ZWR522sWkeYUxX93s2qVHXPn50e7VijeMeyhWMaHdl1u7j0oGtDm9MD
-kSK7Ltlj9FGiKnnuedeVLTahC+U27q5SIOaxeBuj8ERKpfgx7R5F72/VNZwwxDwz
-VIprirzLCUf8Wq72rk8KsJn+m4GR3ynrCxB2d4COJuxbexNFv6AbPwZwkhO90XPj
-Q31qqIMArl1cMHVRztxXBeSjhBEXNS0GwFlnfpORE+GyfvW9Akznm0gCRLDyEKBv
-bN6XmCc83vVp6CjC5iSEWVcSJtMYSs2AbyWHXfRq8aAXc0rTKwH/n6RTVUe9pboR
-NGA2rKT0NJ7j1jlKNcaFMpaBIW5gc+Xe1NH8x2oCQzpykU1LurQqX+r4l6dthBu2
-8KGMdns+N3I/kfY7WOk=
-=B1K8
------END PGP SIGNATURE-----
+const.  At least the regulator_desc and duty cycle table should be const
+as well. (see my comments below about b2105_info).
 
---3w8x3zxtEJX8SUiO--
+> +	{ .compatible = "st,b2105-pwm-regulator", .data = &b2105_info, },
+> +	{ },
+> +};
+
+You may want a MODULE_DEVICE_TABLE(of, ...); here if you want to be able
+to be autoloaded.
+
+> +
+> +static int st_pwm_regulator_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct st_pwm_regulator_data *drvdata;
+> +	const struct of_device_id *of_match;
+> +	struct regulator_dev *regulator;
+> +	struct regulator_config config = { };
+> +
+> +	if (!np) {
+> +		dev_err(&pdev->dev, "Device Tree node missing\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	of_match = of_match_device(st_pwm_of_match, &pdev->dev);
+> +	if (!of_match) {
+> +		dev_err(&pdev->dev, "failed to match of device\n");
+> +		return -ENODEV;
+> +	}
+> +	drvdata =  (struct st_pwm_regulator_data *) of_match->data;
+
+Hrm, I typed "cast not necessary here", but then I realized it is
+necessary since you using it to cast away constness.
+
+Are you safe assuming that there will only be one of these devices in a
+system?  It doesn't seem like much a burden to just allocate a new
+object and use it instead of a statically allocated one.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
