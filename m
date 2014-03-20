@@ -1,75 +1,172 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v7 3/3] arm64: Add architecture support for PCI
-Date: Thu, 20 Mar 2014 12:17:22 +0100
-Message-ID: <201403201217.22339.arnd@arndb.de>
-References: <1394811258-1500-1-git-send-email-Liviu.Dudau@arm.com> <8312584.jdZZuHGAjg@wuerfel> <20140320094654.GZ6457@e106497-lin.cambridge.arm.com>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH] SPI: Add driver for Cadence SPI controller
+Date: Thu, 20 Mar 2014 12:23:08 +0100
+Message-ID: <532ACF9C.6030103@monstr.eu>
+References: <1395057936-8643-1-git-send-email-harinik@xilinx.com> <CAL_JsqKacetGytGUJir7ky3qOgCy-3ny1pT_Bx4eCYV2wMgcTg@mail.gmail.com> <5326F72E.7010401@monstr.eu> <CAL_JsqL9z_4T+cz425bHHpwx_dXaZjJEHwZKFCOibWYuWM4rkA@mail.gmail.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140320094654.GZ6457@e106497-lin.cambridge.arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Catalin Marinas <Catalin.Marinas@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="fNuGFPnxXO2HpIKewsvkgWe5ODQjvNcOX"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqL9z_4T+cz425bHHpwx_dXaZjJEHwZKFCOibWYuWM4rkA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Harini Katakam <harinik@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 20 March 2014, Liviu Dudau wrote:
-> On Wed, Mar 19, 2014 at 06:37:51PM +0000, Arnd Bergmann wrote:
-> > On Wednesday 19 March 2014 17:21:41 Liviu Dudau wrote:
-> > > 
-> > > My ultimate point is that no matter how long we argue about the shape of the functions that
-> > > I've added into arch/arm64/kernel/pci.c I don't think we can get away without having that
-> > > file, or at least not in the first phase if we want speedy integration into mainline.
-> > 
-> > Let me simplify the discussion here:
-> > 
-> > NAK to adding yet another architecture specific implementation.
-> 
-> So what would be your approach for handling pci_address_to_pio() in a non-arch specific way?
-> 
-> unsigned long __weak pci_address_to_pio(phys_addr_t address)
-> {
-> #ifdef ARCH_HAS_IOSPACE
->         if (address > IO_SPACE_LIMIT)
->                 return (unsigned long)-1;
-> 
->         return (unsigned long) address;
-> #else
->         struct ioresource *res;
-> 
->         list_for_each_entry(res, &io_list, list) {
->                 if (address >= res->start &&
->                         address < res->start + res->size) {
->                         return res->start - address;
->                 }
->         }
-> 
->         return (unsigned long)-1;
-> #endif
-> }
-> 
-> 
-> Either that, or you have more magic rabbits than me.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--fNuGFPnxXO2HpIKewsvkgWe5ODQjvNcOX
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-I don't even understand why you want to create a generic pci_address_to_pio
-implementation, when we don't need that for arm64 at all. Unless I'm
-missing something important, that function is only called in case of
-PCI_PROBE_DEVTREE with pci_of_scan on PowerPC. I don't expect any
-architecture to do the same thing, and the only other architecture that
-needs something like it (sparc) has a different implementation.
+On 03/17/2014 08:00 PM, Rob Herring wrote:
+> On Mon, Mar 17, 2014 at 8:22 AM, Michal Simek <monstr@monstr.eu> wrote:=
 
-The regular (non-DEVTREE) PCI bus scan should just be able to translate
-the BUS I/O addresses into Linux I/O port numbers using io_offset,
-without going through an intermediate step of translating into a CPU
-physical address first, so the entire lookup method won't get used.
+>> Hi Rob,
+>>
+>> On 03/17/2014 01:47 PM, Rob Herring wrote:
+>>> On Mon, Mar 17, 2014 at 7:05 AM, Harini Katakam <harinik@xilinx.com> =
+wrote:
+>>>> Add driver for Cadence SPI controller. This is used in Xilinx Zynq.
+>>>>
+>>>> Signed-off-by: Harini Katakam <harinik@xilinx.com>
+>>>> ---
+>>>>  .../devicetree/bindings/spi/spi-cadence.txt        |   25 +
+>>>
+>>> We prefer binding docs in separate patch.
+>>
+>> I have heard several times that also for binding review you need drive=
+r
+>> to look if this binding make sense that's why Harini sent this togethe=
+r.
+>> It means 2 emails instead of one.
+>> But if you wish to have this in two files no problem to split it
+>> but then I believe both should be copied to DT mailing list.
+>=20
+> Yes, for 2 reasons:
+> - To prepare for DT bindings to get merged to separate repo if we ever
+> get there.
+> - So DT maintainers can review/ack just the bindings.
 
-The reason why PowerPC needs it is that they traditionally don't
-use PCI config space access to assign or look at resources, but
-instead rely on the firmware to have set it up in advance and then
-put matching information into DT and the BARs. For Solaris and AIX,
-it's probably easier to use the information from DT, but in Linux,
-we already need to implement the manual bus scan, e.g. to do
-PCI device hotplugging if nothing else.
+ok. No problem to divide it.
 
-	Arnd
+>>>> +- reg                  : Physical base address and size of SPI regi=
+sters map.
+>>>> +- interrupts           : Property with a value describing the inter=
+rupt
+>>>> +                         number.
+>>>> +- interrupt-parent     : Must be core interrupt controller
+>>>> +- clock-names          : List of input clock names - "ref_clk", "pc=
+lk"
+>>>> +                         (See clock bindings for details).
+>>>> +- clocks               : Clock phandles (see clock bindings for det=
+ails).
+>>>> +- num-chip-select      : Number of chip selects used.
+>>>
+>>> See Documentation/devicetree/bindings/spi/spi-bus.txt. Use "num-cs" h=
+ere.
+>>>
+>>>> +
+>>>> +Example:
+>>>> +
+>>>> +       spi@e0007000 {
+>>>> +               clock-names =3D "ref_clk", "pclk";
+>>>> +               clocks =3D <&clkc 26>, <&clkc 35>;
+>>>> +               compatible =3D "cdns,spi-r1p6";
+>>>
+>>> Nit. We usually put compatible first in the node.
+>>
+>> Our device-tree generator sorts them that's why it is just like this
+>> but not a problem to fix just in documentation.
+>>
+>>
+>>>> +               interrupt-parent =3D <&intc>;
+>>>> +               interrupts =3D <0 49 4>;
+>>>> +               num-chip-select =3D /bits/ 16 <4>;
+>>
+>> I was expecting you will comment this a little bit. :-)
+>> Because all just reading this num-cs as 32bit and then
+>> assigning this value to master->num_chipselect which is 16bit.
+>=20
+> Well, everyone else has that problem then. Obviously it takes a bit
+> more care than just reading into a u32, but that is a kernel problem
+> and not a problem of the binding.
+
+They are not reading it directly with read_u32 but they are using
+intermediate u32 value which is assigned to u16 which is fine.
+This pattern is in most drivers(maybe all).
+
+The point is if binding should or can't simplify driver code.
+And from your reaction above I expect that it is up to driver
+owner and binding doc how you want to do it.
+
+>>>> +/* Macros for the SPI controller read/write */
+>>>> +#define cdns_spi_read(addr)    readl_relaxed(addr)
+>>>> +#define cdns_spi_write(addr, val)      writel_relaxed((val), (addr)=
+)
+>>>
+>>> Just use readl/writel directly.
+>>
+>> There shouldn't be any problem to use these helper macros
+>> and even I think this is better than using readl/writel directly
+>> because you are more flexible if you want to change it to different
+>> IO.
+>=20
+> Then when I read the code I have to go lookup what they do while I
+> know exactly what writel/readl do already. It is really the same
+> reasons as why the kernel doesn't have register set and clear bits
+> accessors.
+
+I understand your reasons but on the other hand if we want to run
+ARM-BE then using direct readl/writel functions is also not correct.
+Mark proposed one solution and I will see how it looks like.
+
+
+>>>> +       irq =3D platform_get_irq(pdev, 0);
+>>>> +       if (irq < 0) {
+>>>
+>>> I believe this returns NO_IRQ which could be 0.
+>>>
+>>> s/</<=3D/
+>>
+>> Are you sure regarding this?
+>> NO_IRQ on ARM is -1.
+>> And IRC irq =3D 0 should be just valid number.
+>>
+>> But if you are right then others drivers have to fixed too.
+>=20
+> The definition varies by arch being 0 or -1, so drivers need to deal
+> with both. The preference is 0 is NO_IRQ. It has been decreed by
+> Linus. ARM is actually pretty close to being able to change NO_IRQ to
+> 0.
+
+I think that resolution was to completely remove NO_IRQ.
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--fNuGFPnxXO2HpIKewsvkgWe5ODQjvNcOX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlMqz50ACgkQykllyylKDCFYGwCdHcmNkwEAMug41uo8ycDshtbG
+r3YAnRfWyCH4MbkZN1G2KDdbHOzq91WS
+=XRI0
+-----END PGP SIGNATURE-----
+
+--fNuGFPnxXO2HpIKewsvkgWe5ODQjvNcOX--
