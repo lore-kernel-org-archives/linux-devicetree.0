@@ -1,95 +1,69 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: Re: [PATCH v2] mmc: sdhci: add quirk for broken write protect detection
-Date: Thu, 20 Mar 2014 14:04:04 +0100
-Message-ID: <532AE744.6000700@topic.nl>
-References: <1393759200-22819-1-git-send-email-eli.billauer@gmail.com> <74003aec-1707-4f43-b947-df148d573fa1@TX2EHSMHS038.ehs.local> <53163247.8000904@gmail.com> <ae0f71ac-c5f7-4af7-a9ba-c019cec19ebf@AM1EHSMHS017.ehs.local> <531878C8.2020001@topic.nl> <ad0a3559-a687-4f51-b284-f515372cfad2@VA3EHSMHS001.ehs.local> <532ADE8D.7040900@monstr.eu> <532AE17F.9020509@gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCHv4 2/5] Input: edt-ft5x06: Add DT support
+Date: Thu, 20 Mar 2014 13:19:00 +0000
+Message-ID: <20140320131900.GC22115@e106331-lin.cambridge.arm.com>
+References: <1395234563-11034-1-git-send-email-LW@KARO-electronics.de>
+ <1395234563-11034-3-git-send-email-LW@KARO-electronics.de>
+ <20140320093719.GB14420@e106331-lin.cambridge.arm.com>
+ <532ACE72.6030807@kernelconcepts.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <532AE17F.9020509@gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Eli Billauer <eli.billauer@gmail.com>, monstr@monstr.eu
-Cc: =?ISO-8859-1?Q?S=F6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, chris@printf.net, michal.simek@xilinx.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <532ACE72.6030807@kernelconcepts.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Simon Budig <simon.budig@kernelconcepts.de>
+Cc: Lothar =?utf-8?Q?Wa=C3=9Fmann?= <LW@karo-electronics.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Fugang Duan <B38611@freescale.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Henrik Rydberg <rydberg@euromail.se>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jg1.han@samsung.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <Pawel.Moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Sachin Kamat <sachin.kamat@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-=EF=BB=BFI totally agree with Eli. The devicetree should read something=
- like "WP is not=20
-present" (which will be the case on all micro SD readers). Having "WP i=
-s=20
-inverted" there is just misleading.
+On Thu, Mar 20, 2014 at 11:18:10AM +0000, Simon Budig wrote:
+> On 20/03/14 10:37, Mark Rutland wrote:
+> > On Wed, Mar 19, 2014 at 01:09:20PM +0000, Lothar Wa=C3=9Fmann wrote=
+:
+> >> +FocalTech EDT-FT5x06 Polytouch driver
+> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >> +
+> >> +Required properties:
+> >> + - compatible:  "edt,edt-ft5x06"
+> >=20
+> > Is the 'x' part of a particular product name, or is this a class of
+> > devices?
+>=20
+> The driver is intended for the EDT "polytouch" family touches, which =
+are
+> based on a focaltec controller. The current line of touches uses e.g.
+> the ft5306 as well as the ft5406 focaltec controller.
 
-On our boards, I use MIO0 as a "heartbeat" LED. Combined with a quirk i=
-n XPS=20
-and/or Vivado that the pinmuxing for the WP line is actually routed to =
-MIO0=20
-when you request it to be unrouted or to EMIO, this made the WP line on=
- our=20
-systems appear as semi-random.
+Ok. The name of the driver and the strings used in DT bindings don't
+have to be the same. The bindings strings should describe the hardware
+as accurately as possible.
 
-Mike.
+>=20
+> > It's preferable to have a specific string which another similar var=
+iants
+> > can claim compatibility with (while also additionally having a more
+> > specific string), as this makes it possible to handle variants more
+> > specially in future, target workarounds, etc.
+>=20
+> I chose the driver name since I wanted to differentiate from other ED=
+T
+> touches, which used a different controller. With hindsight it was
+> unfortunately confusing, since I get quite some request from people, =
+who
+> also have a device based on the focaltec controllers, but with a very
+> different firmware (and communication protocol). They got tricked int=
+o
+> thinking that this driver would be suitable...
+>=20
+> If I were to chose the name again I'd probably pick "edt-polytouch" o=
+r
+> something like this. But I doubt that it is useful to change the name=
+ now.
 
-On 03/20/2014 01:39 PM, Eli Billauer wrote:
-> Hello Michal.
->
-> The Zybo board doesn't have any WP pin connected to the MicroSD card.=
- There is
-> no physical possibility for the processor to know whether the card is
-> write-protected or not.
->
-> As I mentioned earlier, the practical problem can be worked around by
-> inverting the polarity of the WP bit, using wp-inverted. Practically =
-speaking,
-> there's no need for this patch.
->
-> I insisted on this patch, because I think that the device tree should=
- reflect
-> the hardware as it is, and not contain tricks for fooling the driver =
-into
-> doing what we want. But I guess this wasn't a reason good enough for =
-adding
-> yet another quirk (to the existing 38 or so).
->
-> Regards,
->     Eli
->
-> On 20/03/14 14:26, Michal Simek wrote:
->> we have got this from Mike (we couldn't reply because he has lost th=
-is email
->> thread.
->>
->> Mike:
->> "I think I found the issue. In ps7_init.c as generated by the tools,=
- it sets
->> the "WP" pin not to EMIO, but to MIO 0. We use pin 0 for a status LE=
-D.
->>
->> # devmem 0XF8000830
->> 0x002E0000
->>
->> Register 0XF8000830 is SD0_WP_CD_SEL, and 0x002E0000 sets CD to pin =
-46 and
->> WP to pin "0", not to EMIO as I specified in the design.
->> "
->>
->> Eli: Maybe you have the same issue as Mike. Can you please check it?
->
->
+I'm not arguing to rename the driver. All I want are the compatible
+strings to be as specific as possible.
 
-
-
-Met vriendelijke groet / kind regards,
-
-Mike Looijmans
-
-TOPIC Embedded Systems
-Eindhovenseweg 32-C, NL-5683 KH Best
-Postbus 440, NL-5680 AK Best
-Telefoon: (+31) (0) 499 33 69 79
-Telefax:  (+31) (0) 499 33 69 70
-E-mail: mike.looijmans@topic.nl
-Website: www.topic.nl
-
-Please consider the environment before printing this e-mail
-
+Cheers,
+Mark.
