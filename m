@@ -1,80 +1,72 @@
-From: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 7/8] ASoC: atmel: document clock properties of the wm8904
- driver
-Date: Thu, 20 Mar 2014 10:37:53 +0800
-Message-ID: <532A5481.6000008@atmel.com>
-References: <1395049541-28128-1-git-send-email-voice.shen@atmel.com> <1395049541-28128-8-git-send-email-voice.shen@atmel.com> <20140317115518.GD11706@sirena.org.uk> <532931C3.4080909@atmel.com> <20140319102800.GW11706@sirena.org.uk>
+From: "fugang.duan-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fugang.duan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCHv4 1/5] Input: edt-ft5x06: several cleanups; no
+ functional change
+Date: Thu, 20 Mar 2014 02:42:25 +0000
+Message-ID: <5f82f6ff3c38443f86f4a55c8d435712@BLUPR03MB373.namprd03.prod.outlook.com>
+References: <1395234563-11034-1-git-send-email-LW@KARO-electronics.de>
+ <1395234563-11034-2-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140319102800.GW11706-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <1395234563-11034-2-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?utf-8?B?TG90aGFyIFdhw59tYW5u?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Henrik Rydberg <rydberg-Hk7bIW8heu4wFerOooGFRg@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Simon Budig <simon.budig-t93Ne7XHvje5bSeCtf/tX7NAH6kLmebB@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-On 03/19/2014 06:28 PM, Mark Brown wrote:
-> On Wed, Mar 19, 2014 at 01:57:23PM +0800, Bo Shen wrote:
->> On 03/17/2014 07:55 PM, Mark Brown wrote:
->
->>> If this is a clock for the CODEC it should be documented as part of the
->>> binding for the CODEC and connected to the CODEC in the device tree
->>> rather than being part of a machine driver binding.
->
->> This is a optional clock for CODEC which depends on hardware design. There
->> are 3 options for this clock, wm8904 as an example.
->> 1. Using internal FLL, so won't use this clock.
->> 2. Using external oscillator, no need to retrieve this clock.
->> 3. Using SoC provide this clock (we use this case).
->
->> After considering these 3 options, if we put this into CODEC driver to do
->> it, I think it will be more complicate to do logic judgement. Do you think
->> so?
->
-> There shouldn't be any meaningful complexity from the above cases -
-> cases 2 and 3 are the same and if the clock isn't used at all then it
-> can be omitted.  If the FLL is clocked from MCLK then the CODEC driver
-> should be able to work out how to configure it easily, the device isn't
-> like a digital hub CODEC with lots of clocking options.
-
-For this, in my mind, I think we need add following parameters in DT.
-1. sysclk_src_from_fll --> we need do nothing.
-2. sysclk_src_from_mclk
-    2.1 use_external_xtal --> we need clock_frequency
-    2.2 !use_external_xtal --> we need retrieve clock and clock_frequency.
-
-So, the dt may looks like:
-for case 1:
-wm8904: wm8904@1a {
-	reg = <0x1a>;
-	sysclk_src_from_fll;
-}
-
-for case 2.1:
-wm8904: wm8904@1a {
-	reg = <0x1a>;
-	sysclk_src_from_mclk;
-	use_external_xtal;
-	clock_frequency = 12000000;
-}
-
-for case 2.2:
-wm8904: wm8904@1a {
-	reg = <0x1a>;
-	sysclk_src_from_mclk;
-	clocks = <&pck0>;
-	clock-names = "mclk";
-	clock_frequency = 32768;
-}
-
-Does this acceptable? Or any other better suggestion for this?
-
-Best Regards,
-Bo Shen
-
+RnJvbTogTG90aGFyIFdhw59tYW5uIDxMV0BLQVJPLWVsZWN0cm9uaWNzLmRlPg0KRGF0YTogV2Vk
+bmVzZGF5LCBNYXJjaCAxOSwgMjAxNCA5OjA5IFBNDQoNCj5UbzogRG1pdHJ5IFRvcm9raG92OyBE
+dWFuIEZ1Z2FuZy1CMzg2MTE7IEdyYW50IExpa2VseTsgSGVucmlrIFJ5ZGJlcmc7IElhbg0KPkNh
+bXBiZWxsOyBKaW5nb28gSGFuOyBLdW1hciBHYWxhOyBNYXJrIFJ1dGxhbmQ7IFBhd2VsIE1vbGw7
+IFJvYiBIZXJyaW5nOyBSb2INCj5MYW5kbGV5OyBTYWNoaW4gS2FtYXQ7IGRldmljZXRyZWVAdmdl
+ci5rZXJuZWwub3JnOyBsaW51eC1kb2NAdmdlci5rZXJuZWwub3JnOw0KPmxpbnV4LWlucHV0QHZn
+ZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgU2ltb24gQnVkaWc7
+IExvdGhhcg0KPldhw59tYW5uDQo+U3ViamVjdDogW1BBVENIdjQgMS81XSBJbnB1dDogZWR0LWZ0
+NXgwNjogc2V2ZXJhbCBjbGVhbnVwczsgbm8gZnVuY3Rpb25hbA0KPmNoYW5nZQ0KPg0KPi0gcmVt
+b3ZlIHJlZHVuZGFudCBwYXJlbnMNCj4tIHJlbW92ZSByZWR1bmRhbnQgdHlwZSBjYXN0cw0KPi0g
+Zml4IG1peGVkIHRhYi9zcGFjZSBpbmRlbnRhdGlvbg0KPg0KPlNpZ25lZC1vZmYtYnk6IExvdGhh
+ciBXYcOfbWFubiA8TFdAS0FSTy1lbGVjdHJvbmljcy5kZT4NCj4tLS0NCj4gZHJpdmVycy9pbnB1
+dC90b3VjaHNjcmVlbi9lZHQtZnQ1eDA2LmMgfCAgIDEyICsrKysrKy0tLS0tLQ0KPiAxIGZpbGUg
+Y2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQ0KPg0KPmRpZmYgLS1naXQg
+YS9kcml2ZXJzL2lucHV0L3RvdWNoc2NyZWVuL2VkdC1mdDV4MDYuYw0KPmIvZHJpdmVycy9pbnB1
+dC90b3VjaHNjcmVlbi9lZHQtZnQ1eDA2LmMNCj5pbmRleCA0MTJhODVlLi43YjQ0NzBkIDEwMDY0
+NA0KPi0tLSBhL2RyaXZlcnMvaW5wdXQvdG91Y2hzY3JlZW4vZWR0LWZ0NXgwNi5jDQo+KysrIGIv
+ZHJpdmVycy9pbnB1dC90b3VjaHNjcmVlbi9lZHQtZnQ1eDA2LmMNCj5AQCAtMTczLDcgKzE3Myw3
+IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBlZHRfZnQ1eDA2X3RzX2lzcihpbnQgaXJxLCB2b2lkICpk
+ZXZfaWQpDQo+IAkJeCA9ICgoYnVmWzBdIDw8IDgpIHwgYnVmWzFdKSAmIDB4MGZmZjsNCj4gCQl5
+ID0gKChidWZbMl0gPDwgOCkgfCBidWZbM10pICYgMHgwZmZmOw0KPiAJCWlkID0gKGJ1ZlsyXSA+
+PiA0KSAmIDB4MGY7DQo+LQkJZG93biA9ICh0eXBlICE9IFRPVUNIX0VWRU5UX1VQKTsNCj4rCQlk
+b3duID0gdHlwZSAhPSBUT1VDSF9FVkVOVF9VUDsNCj4NCj4gCQlpbnB1dF9tdF9zbG90KHRzZGF0
+YS0+aW5wdXQsIGlkKTsNCj4gCQlpbnB1dF9tdF9yZXBvcnRfc2xvdF9zdGF0ZSh0c2RhdGEtPmlu
+cHV0LCBNVF9UT09MX0ZJTkdFUiwgZG93bik7DQo+QEAgLTI1Nyw3ICsyNTcsNyBAQCBzdGF0aWMg
+c3NpemVfdCBlZHRfZnQ1eDA2X3NldHRpbmdfc2hvdyhzdHJ1Y3QgZGV2aWNlICpkZXYsDQo+IAlz
+dHJ1Y3QgZWR0X2Z0NXgwNl90c19kYXRhICp0c2RhdGEgPSBpMmNfZ2V0X2NsaWVudGRhdGEoY2xp
+ZW50KTsNCj4gCXN0cnVjdCBlZHRfZnQ1eDA2X2F0dHJpYnV0ZSAqYXR0ciA9DQo+IAkJCWNvbnRh
+aW5lcl9vZihkYXR0ciwgc3RydWN0IGVkdF9mdDV4MDZfYXR0cmlidXRlLCBkYXR0cik7DQo+LQl1
+OCAqZmllbGQgPSAodTggKikoKGNoYXIgKil0c2RhdGEgKyBhdHRyLT5maWVsZF9vZmZzZXQpOw0K
+PisJdTggKmZpZWxkID0gKHU4ICopdHNkYXRhICsgYXR0ci0+ZmllbGRfb2Zmc2V0Ow0KPiAJaW50
+IHZhbDsNCj4gCXNpemVfdCBjb3VudCA9IDA7DQo+IAlpbnQgZXJyb3IgPSAwOw0KPkBAIC0yOTks
+NyArMjk5LDcgQEAgc3RhdGljIHNzaXplX3QgZWR0X2Z0NXgwNl9zZXR0aW5nX3N0b3JlKHN0cnVj
+dCBkZXZpY2UgKmRldiwNCj4gCXN0cnVjdCBlZHRfZnQ1eDA2X3RzX2RhdGEgKnRzZGF0YSA9IGky
+Y19nZXRfY2xpZW50ZGF0YShjbGllbnQpOw0KPiAJc3RydWN0IGVkdF9mdDV4MDZfYXR0cmlidXRl
+ICphdHRyID0NCj4gCQkJY29udGFpbmVyX29mKGRhdHRyLCBzdHJ1Y3QgZWR0X2Z0NXgwNl9hdHRy
+aWJ1dGUsIGRhdHRyKTsNCj4tCXU4ICpmaWVsZCA9ICh1OCAqKSgoY2hhciAqKXRzZGF0YSArIGF0
+dHItPmZpZWxkX29mZnNldCk7DQo+Kwl1OCAqZmllbGQgPSAodTggKil0c2RhdGEgKyBhdHRyLT5m
+aWVsZF9vZmZzZXQ7DQo+IAl1bnNpZ25lZCBpbnQgdmFsOw0KPiAJaW50IGVycm9yOw0KPg0KPkBA
+IC00NzksNyArNDc5LDcgQEAgc3RhdGljIGludCBlZHRfZnQ1eDA2X2RlYnVnZnNfbW9kZV9zZXQo
+dm9pZCAqZGF0YSwgdTY0IG1vZGUpDQo+DQo+IAlpZiAobW9kZSAhPSB0c2RhdGEtPmZhY3Rvcnlf
+bW9kZSkgew0KPiAJCXJldHZhbCA9IG1vZGUgPyBlZHRfZnQ1eDA2X2ZhY3RvcnlfbW9kZSh0c2Rh
+dGEpIDoNCj4tCQkJICAgICAgICBlZHRfZnQ1eDA2X3dvcmtfbW9kZSh0c2RhdGEpOw0KPisJCQkJ
+ZWR0X2Z0NXgwNl93b3JrX21vZGUodHNkYXRhKTsNCj4gCX0NCj4NCj4gCW11dGV4X3VubG9jaygm
+dHNkYXRhLT5tdXRleCk7DQo+QEAgLTg1Miw4ICs4NTIsOCBAQCBzdGF0aWMgU0lNUExFX0RFVl9Q
+TV9PUFMoZWR0X2Z0NXgwNl90c19wbV9vcHMsDQo+IAkJCSBlZHRfZnQ1eDA2X3RzX3N1c3BlbmQs
+IGVkdF9mdDV4MDZfdHNfcmVzdW1lKTsNCj4NCj4gc3RhdGljIGNvbnN0IHN0cnVjdCBpMmNfZGV2
+aWNlX2lkIGVkdF9mdDV4MDZfdHNfaWRbXSA9IHsNCj4tCXsgImVkdC1mdDV4MDYiLCAwIH0sDQo+
+LQl7IH0NCj4rCXsgImVkdC1mdDV4MDYiLCAwLCB9LA0KPisJeyAvKiBzZW50aW5lbCAqLyB9DQo+
+IH07DQo+IE1PRFVMRV9ERVZJQ0VfVEFCTEUoaTJjLCBlZHRfZnQ1eDA2X3RzX2lkKTsNCj4NCj4t
+LQ0KPjEuNy4xMC40DQo+DQo+DQoNCkFja2VkLWJ5OiBGdWdhbmcgRHVhbiA8QjM4NjExQGZyZWVz
+Y2FsZS5jb20+DQo=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
