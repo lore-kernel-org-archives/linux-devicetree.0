@@ -1,75 +1,59 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ASoC: tda998x: Fix lack of required reg in DT documentation
-Date: Thu, 20 Mar 2014 15:19:45 +0100
-Message-ID: <532AF901.3050402@gmail.com>
-References: <20140320092639.48F68A6279@smtp3-g21.free.fr> <532ADFD8.80301@gmail.com> <20140320140156.5d768b1f@armhf> <532AEDE2.3080306@gmail.com> <20140320145221.09252bf6@armhf>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH] ASoC: tda998x: Fix lack of required reg in DT
+ documentation
+Date: Thu, 20 Mar 2014 14:31:10 +0000
+Message-ID: <20140320143110.GU7528@n2100.arm.linux.org.uk>
+References: <20140320092639.48F68A6279@smtp3-g21.free.fr>
+ <532ADFD8.80301@gmail.com> <20140320140156.5d768b1f@armhf>
+ <532AEDE2.3080306@gmail.com> <20140320145221.09252bf6@armhf>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
 In-Reply-To: <20140320145221.09252bf6@armhf>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/20/2014 02:52 PM, Jean-Francois Moine wrote:
-> On Thu, 20 Mar 2014 14:32:18 +0100
-> Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
->> Ok, I had another round of google'ing and found this:
->> http://hipstercircuits.com/wp-content/uploads/2013/05/TDA19988.pdf
->>
->> There, the datasheet specifically for TDA19988 only states 0x70 and
->> 0x34 as the two i2c addresses. Therefore, TDA19988 has fixed i2c
->> addresses while TDA9983b has configurable (main) i2c address.
->>
->> Not as easy as we thought ;)
->>
->> I suggest reword the reg property to:
->> "- reg: shall be set to the I2C address"
->>
->> and optionally list all known addresses for each TDA[1]998x in the
->> binding.
->
+On Thu, Mar 20, 2014 at 02:52:21PM +0100, Jean-Francois Moine wrote:
 > Thanks for the link.
->
+> 
 > OK, then, as the linux tda998x driver handles only the tda 19988 and
 > 19989 chips, the HDMI I2C address is always 0x70.
->
+> 
 > So, question: Russell and Sebastian, do you still want an other patch?
-
-Up to Russell, but reg property is required for i2c slaves and should
-be documented.
-
+> 
 > Other question: the CEC address is hard-coded to 0x34 in the driver.
 > Should it be configurable in the DT?
 
-Looking at nxp's website, detailed information about TDA[1]998x have
-vanished. Luckily, there are some hints in the parametric search:
+As we haven't had a mainline non-rc kernel release with this in yet,
+we have more scope in what we can do to sort this out.  What I'd
+suggest is:
 
-There is TDA998[14] without any CEC support and
-TDA1998[89] with CEC support. Both TDA19988 and TDA19989 have
-fixed i2c addresses 0x70 and 0x34 respectively.
+1. change the DT compatible strings the driver has to accept both
+   nxp,tda19988 and nxp,tda19989, and set the appropriate device
+   in the DT file (tda19988).  I'm a bit nervous about using
+   "nxp,tda1998x" in case we're clashing with devices with different
+   characteristics.
 
-So, the answer is:
+2. specify that the i2c reg address must exist, but not specify what
+   it should be - leave that open.
 
-Let the driver access CEC i2c slave only if it is TDA1998[89]. The
-HDMI part should be quite compatible with TDA998x, so if anyone
-has it on his board, he is invited to add proper support.
+3. assume that there's a CEC at 0x34 for these two devices.
 
-For the binding, reg address should contain reg property to the
-HDMI i2c slave. Add proper compatibles/i2c_ids for nxp,tda19988 and
-nxp,tda19989 and check that to add the CEC i2c slave on 0x34.
+If we wish to extend support to tda998x, then we'd need to modify the
+driver quite a bit anyway.
 
-If, someday there will be a tda19990 with configurable addresses,
-I am sure you can derive it from i2c main address, e.g. 0x70<>0x34,
-0x71<>0x35, aso.
-
-No need to take care of configurable CEC slave address now, neither
-in the driver nor binding.
-
-Sebastian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
