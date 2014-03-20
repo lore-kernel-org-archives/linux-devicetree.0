@@ -1,72 +1,36 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Subject: RE: [PATCH v5] can: xilinx CAN controller support.
-Date: Thu, 20 Mar 2014 04:41:56 +0000
-Message-ID: <45bec219-6349-4bcf-be8a-7ee1dfd1bcb9@TX2EHSMHS014.ehs.local>
-References: <5254bfec-c6fd-4681-a34d-706d51e60fbb@VA3EHSMHS004.ehs.local>
- <531DD2C4.5060109@pengutronix.de>
- <f1e2f08f-05fc-40d3-8437-4c6817d631cb@AM1EHSMHS010.ehs.local>
- <531F0636.4050608@pengutronix.de> <53203088.2070605@monstr.eu>
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [PATCH v5 2/2] i2c: New bus driver for the Qualcomm QUP I2C
+ controller
+Date: Thu, 20 Mar 2014 00:04:37 -0500
+Message-ID: <20140320050437.GA29449@qualcomm.com>
+References: <1394762863-12154-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1394762863-12154-3-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <53203088.2070605@monstr.eu>
-Content-Language: en-US
-Sender: linux-can-owner@vger.kernel.org
-To: "monstr@monstr.eu" <monstr@monstr.eu>, Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Michal Simek <michals@xilinx.com>, "wg@grandegger.com" <wg@grandegger.com>, "fengguang.wu@intel.com" <fengguang.wu@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1394762863-12154-3-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Boyd <sboyd@codeaurora.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyYywNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNaWNoYWwg
-U2ltZWsgW21haWx0bzptb25zdHJAbW9uc3RyLmV1XQ0KPiBTZW50OiBXZWRuZXNkYXksIE1hcmNo
-IDEyLCAyMDE0IDM6MzIgUE0NCj4gVG86IE1hcmMgS2xlaW5lLUJ1ZGRlDQo+IENjOiBBcHBhbmEg
-RHVyZ2EgS2VkYXJlc3dhcmEgUmFvOyBsaW51eC1jYW5Admdlci5rZXJuZWwub3JnOw0KPiBuZXRk
-ZXZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7
-IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVs
-Lm9yZzsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBncmFudC5saWtlbHlAbGluYXJvLm9yZzsgTWlj
-aGFsIFNpbWVrOyB3Z0BncmFuZGVnZ2VyLmNvbTsNCj4gZmVuZ2d1YW5nLnd1QGludGVsLmNvbQ0K
-PiBTdWJqZWN0OiBSZTogW1BBVENIIHY1XSBjYW46IHhpbGlueCBDQU4gY29udHJvbGxlciBzdXBw
-b3J0Lg0KPg0KPiBPbiAwMy8xMS8yMDE0IDAxOjQ4IFBNLCBNYXJjIEtsZWluZS1CdWRkZSB3cm90
-ZToNCj4gPiBPbiAwMy8xMS8yMDE0IDAxOjM0IFBNLCBBcHBhbmEgRHVyZ2EgS2VkYXJlc3dhcmEg
-UmFvIHdyb3RlOg0KPiA+DQo+ID4+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2Nhbi9LY29u
-ZmlnIGIvZHJpdmVycy9uZXQvY2FuL0tjb25maWcNCj4gPj4+PiBpbmRleA0KPiA+Pj4+IDllN2Q5
-NWQuLmIxODAyMzkgMTAwNjQ0DQo+ID4+Pj4gLS0tIGEvZHJpdmVycy9uZXQvY2FuL0tjb25maWcN
-Cj4gPj4+PiArKysgYi9kcml2ZXJzL25ldC9jYW4vS2NvbmZpZw0KPiA+Pj4+IEBAIC0xMjUsNiAr
-MTI1LDEzIEBAIGNvbmZpZyBDQU5fR1JDQU4NCj4gPj4+PiAgICAgICBlbmRpYW4gc3ludGhlc2Vz
-IG9mIHRoZSBjb3JlcyB3b3VsZCBuZWVkIHNvbWUgbW9kaWZpY2F0aW9ucyBvbg0KPiA+Pj4+ICAg
-ICAgIHRoZSBoYXJkd2FyZSBsZXZlbCB0byB3b3JrLg0KPiA+Pj4+DQo+ID4+Pj4gK2NvbmZpZyBD
-QU5fWElMSU5YQ0FODQo+ID4+Pj4gKyAgIHRyaXN0YXRlICJYaWxpbnggQ0FOIg0KPiA+Pj4+ICsg
-ICBkZXBlbmRzIG9uIEFSQ0hfWllOUSB8fCBNSUNST0JMQVpFDQo+ID4+Pg0KPiA+Pj4gSXMgWnlu
-cSBtdWx0aWFyY2ggYWxyZWFkeT8NCj4gPj4gRGlzY3Vzc2lvbnMgYXJlIGdvaW5nIG9uIHRoaXMN
-Cj4gPj4gU28gdGhlIGZpbmFsIHRoaW5nIHRoYXQgRmVuZ2d1YW5nICggZmVuZ2d1YW5nLnd1QGlu
-dGVsLmNvbSkgUHJvcG9zZWQNCj4gPj4gaXMNCj4gPj4gICAgICAgICBjb25maWcgQ0FOX1hJTElO
-WA0KPiA+PiAgICAgICAgIHRyaXN0YXRlICJYaWxpbnggQ0FOIg0KPiA+PiAgICAgICAgIGRlcGVu
-ZHMgb24gQVJDSF9aWU5RIHx8IE1JQ1JPQkxBWkUgfHwgQ09NUElMRV9URVNUDQo+ID4+ICAgICAg
-ICAgZGVwZW5kcyBvbiBDT01NT05fQ0xLICYmIEhBU19NTUlPICAjIHdoYXRldmVyIHlvdSBuZWVk
-IGZvcg0KPiA+PiBvdGhlciBhcmNoaXRlY3R1cmVzDQo+ID4NCj4gPj4gQXJlIHlvdSBPayBmb3Ig
-dGhpcz8NCj4gPg0KPiA+IFlvdSBoYXZlIHRvIGZpbGwgdGhlIDJuZCBkZXBlbmRzIG9uIHdpdGgg
-c29tZSBzYW5lIHZhbHVlcywgdGhvdWdoLg0KPg0KPiBUaGlzIHNob3VsZCBiZSB0aGF0IG9uZQ0K
-PiBjb25maWcgQ0FOX1hJTElOWA0KPiAgICAgICAgICB0cmlzdGF0ZSAiWGlsaW54IENBTiINCj4g
-ICAgICAgICAgZGVwZW5kcyBvbiBBUkNIX1pZTlEgfHwgTUlDUk9CTEFaRSB8fCBDT01QSUxFX1RF
-U1QNCj4gICAgICAgICAgZGVwZW5kcyBvbiBDT01NT05fQ0xLICYmIEhBU19JT01FTQ0KPg0KPg0K
-PiBJcyB0aGVyZSBhbnkgZHJpdmVyIHdoaWNoIGlzIGluIENBTiB3aGljaCBub3QgdXNlIE1NSU8g
-YWNjZXNzZXM/DQo+IElmIG5vdCwgbWF5YmUgd2Ugc2hvdWxkIGp1c3QgYWRkIGRlcGVuZGVuY3kg
-dG8NCg0KDQoNCkNhbiB5b3UgcGxlYXNlIGNvbW1lbnQgb24gdGhpcz8NCkkgaGFkIHVwZGF0ZSBk
-cml2ZXIgd2l0aCBhbGwgdGhlIG90aGVyIGNvbW1lbnRzIEkgaGFkIGEgbGl0dGxlIGNvbmZ1c2lv
-biByZWdhcmRpbmcNCldoaWNoIEtjb25maWcgb3B0aW9ucyBJIG5lZWQgdG8gdXNlLg0KDQpSZWdh
-cmRzLA0KS2VkYXIuDQoNCg0KPiBUaGFua3MsDQo+IE1pY2hhbA0KPg0KPg0KPg0KPiAtLQ0KPiBN
-aWNoYWwgU2ltZWssIEluZy4gKE0uRW5nKSwgT3BlblBHUCAtPiBLZXlJRDogRkUzRDFGOTENCj4g
-dzogd3d3Lm1vbnN0ci5ldSBwOiArNDItMC03MjE4NDI4NTQNCj4gTWFpbnRhaW5lciBvZiBMaW51
-eCBrZXJuZWwgLSBNaWNyb2JsYXplIGNwdSAtIGh0dHA6Ly93d3cubW9uc3RyLmV1L2ZkdC8NCj4g
-TWFpbnRhaW5lciBvZiBMaW51eCBrZXJuZWwgLSBYaWxpbnggWnlucSBBUk0gYXJjaGl0ZWN0dXJl
-IE1pY3JvYmxhemUgVS0NCj4gQk9PVCBjdXN0b2RpYW4gYW5kIHJlc3BvbnNpYmxlIGZvciB1LWJv
-b3QgYXJtIHp5bnEgcGxhdGZvcm0NCj4NCg0KDQoNClRoaXMgZW1haWwgYW5kIGFueSBhdHRhY2ht
-ZW50cyBhcmUgaW50ZW5kZWQgZm9yIHRoZSBzb2xlIHVzZSBvZiB0aGUgbmFtZWQgcmVjaXBpZW50
-KHMpIGFuZCBjb250YWluKHMpIGNvbmZpZGVudGlhbCBpbmZvcm1hdGlvbiB0aGF0IG1heSBiZSBw
-cm9wcmlldGFyeSwgcHJpdmlsZWdlZCBvciBjb3B5cmlnaHRlZCB1bmRlciBhcHBsaWNhYmxlIGxh
-dy4gSWYgeW91IGFyZSBub3QgdGhlIGludGVuZGVkIHJlY2lwaWVudCwgZG8gbm90IHJlYWQsIGNv
-cHksIG9yIGZvcndhcmQgdGhpcyBlbWFpbCBtZXNzYWdlIG9yIGFueSBhdHRhY2htZW50cy4gRGVs
-ZXRlIHRoaXMgZW1haWwgbWVzc2FnZSBhbmQgYW55IGF0dGFjaG1lbnRzIGltbWVkaWF0ZWx5Lg0K
-DQoKCg==
+On Thu, Mar 13, 2014 at 07:07:43PM -0700, Bjorn Andersson wrote:
+> This bus driver supports the QUP i2c hardware controller in the Qualcomm SOCs.
+> The Qualcomm Universal Peripheral Engine (QUP) is a general purpose data path
+> engine with input/output FIFOs and an embedded i2c mini-core. The driver
+> supports FIFO mode (for low bandwidth applications) and block mode (interrupt
+> generated for each block-size data transfer).
+> 
+
+<snip>
 
 
+Looks good.
+
+Reviewed-by: Andy Gross <agross@codeaurora.org>
+
+-- 
+sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
