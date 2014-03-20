@@ -1,93 +1,94 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3 2/5] pwm: kona: Introduce Kona PWM controller support
-Date: Thu, 20 Mar 2014 15:48:38 +0100
-Message-ID: <20140320144833.GA25092@ulmo>
-References: <1394655346-30048-1-git-send-email-tim.kryger@linaro.org>
- <1394655346-30048-3-git-send-email-tim.kryger@linaro.org>
- <20140318215231.GH5917@mithrandir>
- <CAAYSxhri0evgrbCPew6-MTXVmpzm7Oa6TpmJTSGZpTcV=876HQ@mail.gmail.com>
- <CAAYSxhpW-N7UdpsGE7JHvOJxQcvURRPdAOhiVkK=4EHc7E03gQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fUYQa+Pmc3FrFX/N"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAAYSxhpW-N7UdpsGE7JHvOJxQcvURRPdAOhiVkK=4EHc7E03gQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tim Kryger <tim.kryger@linaro.org>
-Cc: Matt Porter <mporter@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Grant Likely <grant.likely@linaro.org>, Linux PWM List <linux-pwm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, Linux Doc List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: [PATCH/RFC 0/8] LED / flash API integration
+Date: Thu, 20 Mar 2014 15:51:02 +0100
+Message-ID: <1395327070-20215-1-git-send-email-j.anaszewski@samsung.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: s.nawrocki@samsung.com, a.hajda@samsung.com, kyungmin.park@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+This patch series is a follow up of the discussion on Media
+summit 2013-10-23, related to the LED / flash API integration.
+The notes from the discussion were enclosed in the message [1],
+paragraph 5. The series is based on linux-next 20140319.
 
---fUYQa+Pmc3FrFX/N
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In order to show the exemplary usage of the proposed mechanism
+the patch series includes implementation of a Flash LED device
+driver along with the suitable modifications in a media controller
+driver.
 
-On Tue, Mar 18, 2014 at 06:06:03PM -0700, Tim Kryger wrote:
-> On Tue, Mar 18, 2014 at 4:47 PM, Tim Kryger <tim.kryger@linaro.org> wrote:
-> > On Tue, Mar 18, 2014 at 2:52 PM, Thierry Reding <thierry.reding@gmail.c=
-om> wrote:
-> >> On Wed, Mar 12, 2014 at 01:15:43PM -0700, Tim Kryger wrote:
-[...]
-> >>> +static int kona_pwmc_set_polarity(struct pwm_chip *chip, struct pwm_=
-device *pwm,
-> >>> +                               enum pwm_polarity polarity)
-> >>> +{
-> >>> +     /*
-> >>> +      * The framework only allows the polarity to be changed when a =
-PWM is
-> >>> +      * disabled so no immediate action is required here.  When a ch=
-annel is
-> >>> +      * enabled, the polarity gets handled as part of the re-config =
-step.
-> >>> +      */
-> >>> +
-> >>> +     return 0;
-> >>> +}
-> >>
-> >> See above. If you don't want to implement the hardware support for
-> >> inversed polarity, then simply don't implement this.
-> >
-> > I had originally planned to omit polarity support but because it
-> > affects the binding (which is treated as ABI), it wouldn't be possible
-> > to add it in later without defining a new compatible string.
->=20
-> I would like to get this right but it occurred to me that there may be
-> a way to defer the implementation of this feature without disrupting
-> the binding.
->=20
-> Would it be acceptable to continue using #pwm-cells =3D <3> and
-> of_pwm_xlate_with_flags but return -EINVAL from kona_pwmc_set_polarity
-> if PWM_POLARITY_INVERSED is specified?
+Description of the proposed modifications according to
+the kernel components they are relevant to:
+    - LED subsystem modifications
+        * added following sysfs attributes:
+            - flash_mode
+            - flash_timeout
+            - max_flash_timeout
+            - flash_fault
+            - hw_triggered
+        * added following public API functions:
+            - led_set_flash_mode
+            - led_set_flash_timeout
+            - led_get_flash_fault
+            - led_set_hw_triggered
+            - led_sysfs_lock
+            - led_sysfs_unlock
+            - led_sysfs_is_locked
+            - led_is_flash_mode
+        * added led_flash structure containing flash specific
+	  ops and flash timeout related data
+	* added led_classdev_init_flash function to be called
+	  by a led driver
+    - Addition of a v4l2_flash helpers
+        * added v4l2-flash.c and v4l2-flash.h files with helper
+          functions that facilitate registration/unregistration
+          of a subdevice, which wrapps a LED subsystem device and
+          exposes V4L2 Flash control interface
+    - exynos4-is media controller modifications
+    - Addition of a driver for the flash cell of the MAX77693 mfd
+        * the driver exploits the newly introduced mechanism
+    - Update of the samsung-fimc.txt DT bindings documentation
+    - Update of the max77693.txt DT bindings documentation
+    - Update of the LED subsystem documentation
 
-This was recently discussed for the pwm-imx driver. And you can easily
-support #pwm-cells =3D <2> and #pwm-cells =3D <3> with the same binding. So
-you could start with #pwm-cells =3D <2>, leaving out .set_polarity() and
-implement it later on, extending the binding in a backwards-compatible
-way to support the polarity flag.
+Thanks,
+Jacek Anaszewski
 
-Thierry
+[1] http://www.spinics.net/lists/linux-media/msg69253.html
 
---fUYQa+Pmc3FrFX/N
-Content-Type: application/pgp-signature
+Jacek Anaszewski (8):
+  leds: Add sysfs and kernel internal API for flash LEDs
+  leds: Improve and export led_update_brightness function
+  Documentation: leds: Add description of flash mode
+  media: Add registration helpers for V4L2 flash sub-devices
+  media: exynos4-is: Add support for v4l2-flash subdevs
+  leds: Add support for max77693 mfd flash cell
+  DT: Add documentation for the mfd Maxim max77693 flash cell
+  DT: Add documentation for exynos4-is camera-flash property
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+ .../devicetree/bindings/media/samsung-fimc.txt     |    3 +
+ Documentation/devicetree/bindings/mfd/max77693.txt |   47 ++
+ Documentation/leds/leds-class.txt                  |   25 +
+ drivers/leds/Kconfig                               |    9 +
+ drivers/leds/Makefile                              |    1 +
+ drivers/leds/led-class.c                           |  222 +++++-
+ drivers/leds/led-core.c                            |  141 +++-
+ drivers/leds/led-triggers.c                        |   17 +-
+ drivers/leds/leds-max77693.c                       |  768 ++++++++++++++++++++
+ drivers/leds/leds.h                                |    9 +
+ drivers/media/platform/exynos4-is/media-dev.c      |   34 +-
+ drivers/media/platform/exynos4-is/media-dev.h      |   14 +-
+ drivers/media/v4l2-core/Makefile                   |    2 +-
+ drivers/media/v4l2-core/v4l2-flash.c               |  320 ++++++++
+ drivers/mfd/max77693.c                             |   21 +-
+ include/linux/leds.h                               |  146 ++++
+ include/linux/mfd/max77693.h                       |   32 +
+ include/media/v4l2-flash.h                         |  102 +++
+ 18 files changed, 1879 insertions(+), 34 deletions(-)
+ create mode 100644 drivers/leds/leds-max77693.c
+ create mode 100644 drivers/media/v4l2-core/v4l2-flash.c
+ create mode 100644 include/media/v4l2-flash.h
 
-iQIcBAEBAgAGBQJTKv/BAAoJEN0jrNd/PrOh2vIP+gJbx4xyYb81pWcYDtkeGDnJ
-UBWg9M3obFI/gdndUQr2LWe9i19sn/W4FCwOwobLI1IOpE1okMvohlggnF/utzE7
-qyPoaHc3W/dV4pAzOxNDbStRA4gEoSnTS4jHHf7a8WgCbau0ywXRDWzpYNt7ZbAo
-XTyN3yQBvdj1uOdvGI+DdI1cegAPNF2kWacY5yS40eFw+rkE1HpHOBshAc7M8Xki
-MK3RUSrGLGzO6QWdoVzov0QX9YxmiScCwJFxyVGbjCu+Pf0ybfPwiKjgrx7/a1eP
-O0Q2N+zY4wU5Lo11pzvihzeNwa9wxYto/4GQdUBpyE5hHpTPZBMLi4jCZDiVM0AZ
-vJmt16nWEuVtcEbNptLph4kyQHMldvwiMVxki+y5IupcQRW2YNHY93Ejqeu5t5Io
-ia7n6x5izERMTgjVV6rDSDy+YhD1wXI7BYvBkc84Ei6owNseJ9mT5k+CfPmajn6m
-+WXiDbXKZeLITjD9kDZuHFqImq6J1xDTcPs8NOu0yfFd8qKgPFpU7EZRD7qBUwwG
-CEvf17UHmjnSckGNI5wakuR01hNuytv37/h1kkzYDiK/THv0WO8FQ9G6t3PJ+UVY
-evmCApac44yeyEfhtWUPlV3iMh2ydGNoCoMIlYFwlK6/eHqwGnoYscfou/NLZgPj
-xZ8BBMXxwb4Qos2daB0U
-=FtTx
------END PGP SIGNATURE-----
-
---fUYQa+Pmc3FrFX/N--
+-- 
+1.7.9.5
