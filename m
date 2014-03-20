@@ -1,42 +1,95 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [PATCH] ASoC: tda998x: Fix lack of required reg in DT
- documentation
-Date: Thu, 20 Mar 2014 14:01:56 +0100
-Message-ID: <20140320140156.5d768b1f@armhf>
-References: <20140320092639.48F68A6279@smtp3-g21.free.fr>
- <532ADFD8.80301@gmail.com>
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Subject: Re: [PATCH v2] mmc: sdhci: add quirk for broken write protect detection
+Date: Thu, 20 Mar 2014 14:04:04 +0100
+Message-ID: <532AE744.6000700@topic.nl>
+References: <1393759200-22819-1-git-send-email-eli.billauer@gmail.com> <74003aec-1707-4f43-b947-df148d573fa1@TX2EHSMHS038.ehs.local> <53163247.8000904@gmail.com> <ae0f71ac-c5f7-4af7-a9ba-c019cec19ebf@AM1EHSMHS017.ehs.local> <531878C8.2020001@topic.nl> <ad0a3559-a687-4f51-b284-f515372cfad2@VA3EHSMHS001.ehs.local> <532ADE8D.7040900@monstr.eu> <532AE17F.9020509@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <532ADFD8.80301@gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <532AE17F.9020509@gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Eli Billauer <eli.billauer@gmail.com>, monstr@monstr.eu
+Cc: =?ISO-8859-1?Q?S=F6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, chris@printf.net, michal.simek@xilinx.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMCBNYXIgMjAxNCAxMzozMjoyNCArMDEwMApTZWJhc3RpYW4gSGVzc2VsYmFydGgg
-PHNlYmFzdGlhbi5oZXNzZWxiYXJ0aEBnbWFpbC5jb20+IHdyb3RlOgoKPiA+ICsgIC0gcmVnOiBJ
-MkMgYWRkcmVzcyAtIG11c3QgYmUgPDB4NzA+ICAKPiAKPiBUREE5OTgzYiBkYXRhc2hlZXQgc2F5
-czoKPiAKPiAiQml0cyBBMCBhbmQgQTEgb2YgdGhlIEkyQy1idXMgZGV2aWNlIGFkZHJlc3MgYXJl
-IGV4dGVybmFsbHkgc2VsZWN0ZWQKPiBieSBwaW5zIEEwIGFuZCBBMS4iCj4gCj4gVGhlcmVmb3Jl
-LCAweDcwLCAweDcxLCAweDcyLCBhbmQgMHg3MyBhcmUgdmFsaWQgaTJjIGFkZHJlc3Nlcy4KClNl
-YmFzdGlhbiwKClRoYXQncyBpbnRlcmVzdGluZyEKCkZvciB0aGUgQ3Vib3ggYW5kIHRoZSBBTVgz
-M1hYIGJvYXJkcywgdGhlIEkyQyBhZGRyZXNzIG9mIHRoZSBIRE1JCnJlZ2lzdGVycyBpcyAweDcw
-LCBhbmQgdGhlIEkyQyBhZGRyZXNzIG9mIHRoZSBDRUMgcmVnaXN0ZXJzIGlzIDB4MzQuCgpGb3Ig
-b3RoZXIgYm9hcmRzIHVzaW5nIHRoZSBUREE5OTh4IGZhbWlseSwgaWYgdGhlIEkyQyBhZGRyZXNz
-IGlzCmRpZmZlcmVudCBmcm9tIDB4NzAsIGhhdmUgeW91IGFuIGlkZWEgYWJvdXQgd2hhdCBjYW4g
-YmUgdGhlIENFQyBJMkMKYWRkcmVzcz8gKHRoaXMgdmFsdWUgaXMgYWN0dWFsbHkgaGFyZC1jb2Rl
-ZCBpbiB0aGUgVERBOTk4eCBkcml2ZXIpCgotLSAKS2VuIGFyIGMnaGVudGHDsQl8CSAgICAgICoq
-IEJyZWl6aCBoYSBMaW51eCBhdGF2ISAqKgpKZWYJCXwJCWh0dHA6Ly9tb2luZWpmLmZyZWUuZnIv
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+=EF=BB=BFI totally agree with Eli. The devicetree should read something=
+ like "WP is not=20
+present" (which will be the case on all micro SD readers). Having "WP i=
+s=20
+inverted" there is just misleading.
+
+On our boards, I use MIO0 as a "heartbeat" LED. Combined with a quirk i=
+n XPS=20
+and/or Vivado that the pinmuxing for the WP line is actually routed to =
+MIO0=20
+when you request it to be unrouted or to EMIO, this made the WP line on=
+ our=20
+systems appear as semi-random.
+
+Mike.
+
+On 03/20/2014 01:39 PM, Eli Billauer wrote:
+> Hello Michal.
+>
+> The Zybo board doesn't have any WP pin connected to the MicroSD card.=
+ There is
+> no physical possibility for the processor to know whether the card is
+> write-protected or not.
+>
+> As I mentioned earlier, the practical problem can be worked around by
+> inverting the polarity of the WP bit, using wp-inverted. Practically =
+speaking,
+> there's no need for this patch.
+>
+> I insisted on this patch, because I think that the device tree should=
+ reflect
+> the hardware as it is, and not contain tricks for fooling the driver =
+into
+> doing what we want. But I guess this wasn't a reason good enough for =
+adding
+> yet another quirk (to the existing 38 or so).
+>
+> Regards,
+>     Eli
+>
+> On 20/03/14 14:26, Michal Simek wrote:
+>> we have got this from Mike (we couldn't reply because he has lost th=
+is email
+>> thread.
+>>
+>> Mike:
+>> "I think I found the issue. In ps7_init.c as generated by the tools,=
+ it sets
+>> the "WP" pin not to EMIO, but to MIO 0. We use pin 0 for a status LE=
+D.
+>>
+>> # devmem 0XF8000830
+>> 0x002E0000
+>>
+>> Register 0XF8000830 is SD0_WP_CD_SEL, and 0x002E0000 sets CD to pin =
+46 and
+>> WP to pin "0", not to EMIO as I specified in the design.
+>> "
+>>
+>> Eli: Maybe you have the same issue as Mike. Can you please check it?
+>
+>
+
+
+
+Met vriendelijke groet / kind regards,
+
+Mike Looijmans
+
+TOPIC Embedded Systems
+Eindhovenseweg 32-C, NL-5683 KH Best
+Postbus 440, NL-5680 AK Best
+Telefoon: (+31) (0) 499 33 69 79
+Telefax:  (+31) (0) 499 33 69 70
+E-mail: mike.looijmans@topic.nl
+Website: www.topic.nl
+
+Please consider the environment before printing this e-mail
+
