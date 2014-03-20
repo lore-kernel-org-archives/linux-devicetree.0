@@ -1,318 +1,167 @@
-From: Byungho An <bh74.an@samsung.com>
-Subject: RE: [PATCH V7 3/7] net: sxgbe: add TSO support for Samsung sxgbe
-Date: Thu, 20 Mar 2014 09:56:56 -0700
-Message-ID: <012b01cf445d$68aba380$3a02ea80$@samsung.com>
-References: <00ec01cf43e3$c64a50b0$52def210$@samsung.com>
- <CAJ3bTp4-k1JnA_ue-TRg4Wda8nHhQymfTUF3hOifh+3C38PvOg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAJ3bTp4-k1JnA_ue-TRg4Wda8nHhQymfTUF3hOifh+3C38PvOg@mail.gmail.com>
-Content-language: en-us
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Rayagond Kokatanur' <rayagond@vayavyalabs.com>
-Cc: 'netdev' <netdev@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 'David Miller' <davem@davemloft.net>, 'GIRISH K S' <ks.giri@samsung.com>, 'SIVAREDDY KALLAM' <siva.kallam@samsung.com>, 'Vipul Chandrakant' <vipul.pandya@samsung.com>, 'Ilho Lee' <ilho215.lee@samsung.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core to drivers/of
+Date: Thu, 20 Mar 2014 17:01:59 +0000
+Message-ID: <20140320170159.A9A87C4067A@trevor.secretlab.ca>
+References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> < 5427810.BUKJ3iUXnO@avalon> <20140310145815.17595C405FA@trevor.secretlab.ca> <4339286.FzhQ2m6hoA@avalon>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4339286.FzhQ2m6hoA@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-Rayagond Kokatanur <rayagond@vayavyalabs.com> wrote :
-> On Thu, Mar 20, 2014 at 7:56 AM, Byungho An <bh74.an@samsung.com> wrote:
-> > From: Vipul Pandya <vipul.pandya@samsung.com>
-> >
-> > Enable TSO during initialization for each DMA channels
-> >
-> > Signed-off-by: Vipul Pandya <vipul.pandya@samsung.com>
-> > Neatening-by: Joe Perches <joe@perches.com>
-> > Signed-off-by: Byungho An <bh74.an@samsung.com>
-> > ---
-> >  drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h |    1 +
-> >  drivers/net/ethernet/samsung/sxgbe/sxgbe_desc.h   |   17 +++--
-> >  drivers/net/ethernet/samsung/sxgbe/sxgbe_dma.c    |   10 +++
-> >  drivers/net/ethernet/samsung/sxgbe/sxgbe_dma.h    |    2 +
-> >  drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c   |   81
-> +++++++++++++++++++--
-> >  5 files changed, 98 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h
-> > b/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h
-> > index 587b691..f8ba7e4 100644
-> > --- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h
-> > +++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h
-> > @@ -327,6 +327,7 @@ struct sxgbe_tx_queue {
-> >         u32 tx_coal_frames;
-> >         u32 tx_coal_timer;
-> >         int hwts_tx_en;
-> > +       u16 prev_mss;
-> >         u8 queue_no;
-> >  };
-> >
-> > diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_desc.h
-> > b/drivers/net/ethernet/samsung/sxgbe/sxgbe_desc.h
-> > index 41844d4..547edf3 100644
-> > --- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_desc.h
-> > +++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_desc.h
-> > @@ -167,8 +167,9 @@ struct sxgbe_desc_ops {
-> >         void (*init_tx_desc)(struct sxgbe_tx_norm_desc *p);
-> >
-> >         /* Invoked by the xmit function to prepare the tx descriptor */
-> > -       void (*tx_enable_tse)(struct sxgbe_tx_norm_desc *p, u8 is_tse,
-> > -                               u32 hdr_len, u32 payload_len);
-> > +       void (*tx_desc_enable_tse)(struct sxgbe_tx_norm_desc *p, u8
-is_tse,
-> > +                                  u32 total_hdr_len, u32 tcp_hdr_len,
-> > +                                  u32 tcp_payload_len);
-> >
-> >         /* Assign buffer lengths for descriptor */
-> >         void (*prepare_tx_desc)(struct sxgbe_tx_norm_desc *p, u8
-> > is_fd, @@ -207,20 +208,26 @@ struct sxgbe_desc_ops {
-> >         int (*get_tx_timestamp_status)(struct sxgbe_tx_norm_desc *p);
-> >
-> >         /* TX Context Descripto Specific */
-> > -       void (*init_tx_ctxt_desc)(struct sxgbe_tx_ctxt_desc *p);
-> > +       void (*tx_ctxt_desc_set_ctxt)(struct sxgbe_tx_ctxt_desc *p);
-> >
-> >         /* Set the owner of the TX context descriptor */
-> > -       void (*set_tx_ctxt_owner)(struct sxgbe_tx_ctxt_desc *p);
-> > +       void (*tx_ctxt_desc_set_owner)(struct sxgbe_tx_ctxt_desc *p);
-> >
-> >         /* Get the owner of the TX context descriptor */
-> >         int (*get_tx_ctxt_owner)(struct sxgbe_tx_ctxt_desc *p);
-> >
-> >         /* Set TX mss */
-> > -       void (*tx_ctxt_desc_setmss)(struct sxgbe_tx_ctxt_desc *p, int
-mss);
-> > +       void (*tx_ctxt_desc_set_mss)(struct sxgbe_tx_ctxt_desc *p, u16
-> > + mss);
-> >
-> >         /* Set TX mss */
-> >         int (*tx_ctxt_desc_get_mss)(struct sxgbe_tx_ctxt_desc *p);
-> >
-> > +       /* Set TX tcmssv */
-> > +       void (*tx_ctxt_desc_set_tcmssv)(struct sxgbe_tx_ctxt_desc *p);
-> > +
-> > +       /* Reset TX ostc */
-> > +       void (*tx_ctxt_desc_reset_ostc)(struct sxgbe_tx_ctxt_desc *p);
-> > +
-> >         /* Set IVLAN information */
-> >         void (*tx_ctxt_desc_set_ivlantag)(struct sxgbe_tx_ctxt_desc *p,
-> >                                           int is_ivlanvalid, int
-> > ivlan_tag, diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_dma.c
-> > b/drivers/net/ethernet/samsung/sxgbe/sxgbe_dma.c
-> > index 1e68ef3..1edc451 100644
-> > --- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_dma.c
-> > +++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_dma.c
-> > @@ -354,6 +354,15 @@ static void sxgbe_dma_rx_watchdog(void __iomem
-> *ioaddr, u32 riwt)
-> >         }
-> >  }
-> >
-> > +static void sxgbe_enable_tso(void __iomem *ioaddr, u8 chan_num) {
-> > +       u32 ctrl;
-> > +
-> > +       ctrl = readl(ioaddr + SXGBE_DMA_CHA_TXCTL_REG(chan_num));
-> > +       ctrl |= SXGBE_DMA_CHA_TXCTL_TSE_ENABLE;
-> > +       writel(ctrl, ioaddr + SXGBE_DMA_CHA_TXCTL_REG(chan_num));
-> > +}
-> > +
-> >  static const struct sxgbe_dma_ops sxgbe_dma_ops = {
-> >         .init = sxgbe_dma_init,
-> >         .cha_init = sxgbe_dma_channel_init, @@ -369,6 +378,7 @@ static
-> > const struct sxgbe_dma_ops sxgbe_dma_ops = {
-> >         .tx_dma_int_status = sxgbe_tx_dma_int_status,
-> >         .rx_dma_int_status = sxgbe_rx_dma_int_status,
-> >         .rx_watchdog = sxgbe_dma_rx_watchdog,
-> > +       .enable_tso = sxgbe_enable_tso,
-> >  };
-> >
-> >  const struct sxgbe_dma_ops *sxgbe_get_dma_ops(void) diff --git
-> > a/drivers/net/ethernet/samsung/sxgbe/sxgbe_dma.h
-> > b/drivers/net/ethernet/samsung/sxgbe/sxgbe_dma.h
-> > index 50c8054..6c070ac 100644
-> > --- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_dma.h
-> > +++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_dma.h
-> > @@ -42,6 +42,8 @@ struct sxgbe_dma_ops {
-> >                                  struct sxgbe_extra_stats *x);
-> >         /* Program the HW RX Watchdog */
-> >         void (*rx_watchdog)(void __iomem *ioaddr, u32 riwt);
-> > +       /* Enable TSO for each DMA channel */
-> > +       void (*enable_tso)(void __iomem *ioaddr, u8 chan_num);
-> >  };
-> >
-> >  const struct sxgbe_dma_ops *sxgbe_get_dma_ops(void); diff --git
-> > a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-> > b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-> > index 1714fd7..dc07ee6 100644
-> > --- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-> > +++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-> > @@ -1099,6 +1099,28 @@ static int sxgbe_release(struct net_device *dev)
-> >         return 0;
-> >  }
-> >
-> > +/* Prepare first Tx descriptor for doing TSO operation */ void
-> > +sxgbe_tso_prepare(struct sxgbe_priv_data *priv,
-> > +                      struct sxgbe_tx_norm_desc *first_desc,
-> > +                      struct sk_buff *skb) {
-> > +       unsigned int total_hdr_len, tcp_hdr_len;
-> > +
-> > +       /* Write first Tx descriptor with appropriate value */
-> > +       tcp_hdr_len = tcp_hdrlen(skb);
-> > +       total_hdr_len = skb_transport_offset(skb) + tcp_hdr_len;
-> > +
-> > +       first_desc->tdes01 = dma_map_single(priv->device, skb->data,
-> > +                                           total_hdr_len, DMA_TO_DEVICE);
-> > +       if (dma_mapping_error(priv->device, first_desc->tdes01))
-> > +               pr_err("%s: TX dma mapping failed!!\n", __func__);
-> > +
-> > +       first_desc->tdes23.tx_rd_des23.first_desc = 1;
-> > +       priv->hw->desc->tx_desc_enable_tse(first_desc, 1, total_hdr_len,
-> > +                                          tcp_hdr_len,
-> > +                                          skb->len - total_hdr_len);
-> > +}
-> > +
-> >  /**
-> >   *  sxgbe_xmit: Tx entry point of the driver
-> >   *  @skb : the socket buffer
-> > @@ -1116,13 +1138,25 @@ static netdev_tx_t sxgbe_xmit(struct sk_buff
-> *skb, struct net_device *dev)
-> >         unsigned int tx_rsize = priv->dma_tx_size;
-> >         struct sxgbe_tx_queue *tqueue = priv->txq[txq_index];
-> >         struct sxgbe_tx_norm_desc *tx_desc, *first_desc;
-> > +       struct sxgbe_tx_ctxt_desc *ctxt_desc = NULL;
-> >         int nr_frags = skb_shinfo(skb)->nr_frags;
-> >         int no_pagedlen = skb_headlen(skb);
-> >         int is_jumbo = 0;
-> > +       u16 mss;
-> > +       u32 ctxt_desc_req = 0;
-> >
-> >         /* get the TX queue handle */
-> >         dev_txq = netdev_get_tx_queue(dev, txq_index);
-> >
-> > +       if (unlikely(skb_is_gso(skb) &&
-> > +                    tqueue->prev_mss != skb_shinfo(skb)->gso_size))
-> > +               ctxt_desc_req = 1;
-> > +
-> > +       if (unlikely(vlan_tx_tag_present(skb) ||
-> > +                    ((skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
-> > +                     tqueue->hwts_tx_en)))
-> > +               ctxt_desc_req = 1;
-> > +
-> >         /* get the spinlock */
-> >         spin_lock(&tqueue->tx_lock);
-> >
-> > @@ -1141,18 +1175,38 @@ static netdev_tx_t sxgbe_xmit(struct sk_buff
-> *skb, struct net_device *dev)
-> >         tx_desc = tqueue->dma_tx + entry;
-> >
-> >         first_desc = tx_desc;
-> > +       if (ctxt_desc_req)
-> > +               ctxt_desc = (struct sxgbe_tx_ctxt_desc *)first_desc;
-> >
-> >         /* save the skb address */
-> >         tqueue->tx_skbuff[entry] = skb;
-> >
-> >         if (!is_jumbo) {
-> > -               tx_desc->tdes01 = dma_map_single(priv->device, skb->data,
-> > -                                                  no_pagedlen,
-DMA_TO_DEVICE);
-> > -               if (dma_mapping_error(priv->device, tx_desc->tdes01))
-> > -                       pr_err("%s: TX dma mapping failed!!\n", __func__);
-> > -
-> > -               priv->hw->desc->prepare_tx_desc(tx_desc, 1, no_pagedlen,
-> > -                                               no_pagedlen);
-> > +               if (likely(skb_is_gso(skb))) {
+On Mon, 10 Mar 2014 16:15:37 +0100, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
+> Hi Grant,
 > 
-> We should also check for prev_mss and current mss also else we try to access
-> null "ctxt_desc_mss" pointer because "ctxt_desc_mss" is initialized only if
-> prev_mss != current mss.
-OK.  It will be included in the next post.
+> On Monday 10 March 2014 14:58:15 Grant Likely wrote:
+> > On Mon, 10 Mar 2014 14:52:53 +0100, Laurent Pinchart wrote:
+> > > On Monday 10 March 2014 12:18:20 Tomi Valkeinen wrote:
+> > > > On 08/03/14 13:41, Grant Likely wrote:
+> > > > >> Ok. If we go for single directional link, the question is then: which
+> > > > >> way? And is the direction different for display and camera, which are
+> > > > >> kind of reflections of each other?
+> > > > > 
+> > > > > In general I would recommend choosing whichever device you would
+> > > > > sensibly think of as a master. In the camera case I would choose the
+> > > > > camera controller node instead of the camera itself, and in the
+> > > > > display case I would choose the display controller instead of the
+> > > > > panel. The binding author needs to choose what she things makes the
+> > > > > most sense, but drivers can still use if it it turns out to be
+> > > > > 'backwards'
+> > > > 
+> > > > I would perhaps choose the same approach, but at the same time I think
+> > > > it's all but clear. The display controller doesn't control the panel any
+> > > > more than a DMA controller controls, say, the display controller.
+> > > > 
+> > > > In fact, in earlier versions of OMAP DSS DT support I had a simpler port
+> > > > description, and in that I had the panel as the master (i.e. link from
+> > > > panel to dispc) because the panel driver uses the display controller's
+> > > > features to provide the panel device a data stream.
+> > > > 
+> > > > And even with the current OMAP DSS DT version, which uses the v4l2 style
+> > > > ports/endpoints, the driver model is still the same, and only links
+> > > > towards upstream are used.
+> > > > 
+> > > > So one reason I'm happy with the dual-linking is that I can easily
+> > > > follow the links from the downstream entities to upstream entities, and
+> > > > other people, who have different driver model, can easily do the
+> > > > opposite.
+> > > > 
+> > > > But I agree that single-linking is enough and this can be handled at
+> > > > runtime, even if it makes the code more complex. And perhaps requires
+> > > > extra data in the dts, to give the start points for the graph.
+> > > 
+> > > In theory unidirectional links in DT are indeed enough. However, let's not
+> > > forget the following.
+> > > 
+> > > - There's no such thing as single start points for graphs. Sure, in some
+> > > simple cases the graph will have a single start point, but that's not a
+> > > generic rule. For instance the camera graphs
+> > > http://ideasonboard.org/media/omap3isp.ps and
+> > > http://ideasonboard.org/media/eyecam.ps have two camera sensors, and thus
+> > > two starting points from a data flow point of view. And if you want a
+> > > better understanding of how complex media graphs can become, have a look
+> > > at http://ideasonboard.org/media/vsp1.0.pdf (that's a real world example,
+> > > albeit all connections are internal to the SoC in that particular case,
+> > > and don't need to be described in DT).
+> > > 
+> > > - There's also no such thing as a master device that can just point to
+> > > slave devices. Once again simple cases exist where that model could work,
+> > > but real world examples exist of complex pipelines with dozens of
+> > > elements all implemented by a separate IP core and handled by separate
+> > > drivers, forming a graph with long chains and branches. We thus need real
+> > > graph bindings.
+> > > 
+> > > - Finally, having no backlinks in DT would make the software
+> > > implementation very complex. We need to be able to walk the graph in a
+> > > generic way without having any of the IP core drivers loaded, and without
+> > > any specific starting point. We would thus need to parse the complete DT
+> > > tree, looking at all nodes and trying to find out whether they're part of
+> > > the graph we're trying to walk. The complexity of the operation would be
+> > > at best quadratic to the number of nodes in the whole DT and to the number
+> > > of nodes in the graph.
+> > 
+> > Not really. To being with, you cannot determine any meaning of a node
+> > across the tree (aside from it being an endpoint)
+> 
+> That's the important part. I can assume the target node of the remote-endpoint 
+> phandle to be an endpoint, and can thus assume that it implements the of-graph 
+> bindings. That's all I need to be able to walk the graph in a generic way.
+
+Yes, you can assume the target node is an endpoint, but you cannot
+assume anything beyond that. It is not a good idea to go looking for
+more endpoint links in the local hierarchy that terminates the link.
 
 > 
-> > +                       /* TSO support */
-> > +                       mss = skb_shinfo(skb)->gso_size;
-> > +                       priv->hw->desc->tx_ctxt_desc_set_mss(ctxt_desc,
-mss);
-> > +
-priv->hw->desc->tx_ctxt_desc_set_tcmssv(ctxt_desc);
-> > +
-priv->hw->desc->tx_ctxt_desc_reset_ostc(ctxt_desc);
-> > +                       priv->hw->desc->tx_ctxt_desc_set_ctxt(ctxt_desc);
-> > +
-> > + priv->hw->desc->tx_ctxt_desc_set_owner(ctxt_desc);
-> > +
-> > +                       entry = (++tqueue->cur_tx) % tx_rsize;
-> > +                       first_desc = tqueue->dma_tx + entry;
-> > +
-> > +                       sxgbe_tso_prepare(priv, first_desc, skb);
-> > +
-> > +                       tqueue->prev_mss = mss;
-> > +               } else {
-> > +                       tx_desc->tdes01 = dma_map_single(priv->device,
-> > +                                                        skb->data,
-no_pagedlen, DMA_TO_DEVICE);
-> > +                       if (dma_mapping_error(priv->device,
-tx_desc->tdes01))
-> > +                               netdev_err(dev, "%s: TX dma mapping
-failed!!\n",
-> > +                                          __func__);
-> > +
-> > +                       priv->hw->desc->prepare_tx_desc(tx_desc, 1,
-no_pagedlen,
-> > +                                                       no_pagedlen);
-> > +               }
-> >         }
-> >
-> >         for (frag_num = 0; frag_num < nr_frags; frag_num++) { @@
-> > -1859,6 +1913,7 @@ struct sxgbe_priv_data *sxgbe_dvr_probe(struct device
-> *device,
-> >         int ret = 0;
-> >         struct net_device *ndev = NULL;
-> >         struct sxgbe_priv_data *priv;
-> > +       u8 queue_num;
-> >
-> >         ndev = alloc_etherdev_mqs(sizeof(struct sxgbe_priv_data),
-> >                                   SXGBE_TX_QUEUES, SXGBE_RX_QUEUES);
-> > @@ -1893,7 +1948,10 @@ struct sxgbe_priv_data *sxgbe_dvr_probe(struct
-> > device *device,
-> >
-> >         ndev->netdev_ops = &sxgbe_netdev_ops;
-> >
-> > -       ndev->hw_features = NETIF_F_SG | NETIF_F_RXCSUM;
-> > +       ndev->hw_features = NETIF_F_SG | NETIF_F_RXCSUM | NETIF_F_GRO;
-> > +       if (priv->hw_cap.tcpseg_offload)
-> > +               ndev->hw_features |= NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM |
-> > +                                    NETIF_F_TSO | NETIF_F_TSO6;
-> >         ndev->features |= ndev->hw_features | NETIF_F_HIGHDMA;
-> >         ndev->watchdog_timeo = msecs_to_jiffies(TX_TIMEO);
-> >
-> > @@ -1905,6 +1963,13 @@ struct sxgbe_priv_data *sxgbe_dvr_probe(struct
-> device *device,
-> >         if (flow_ctrl)
-> >                 priv->flow_ctrl = SXGBE_FLOW_AUTO;      /* RX/TX pause on
-*/
-> >
-> > +       /* Enable TCP segmentation offload for all DMA channels */
-> > +       if (priv->hw_cap.tcpseg_offload) {
-> > +               SXGBE_FOR_EACH_QUEUE(SXGBE_TX_QUEUES, queue_num) {
-> > +                       priv->hw->dma->enable_tso(priv->ioaddr,
-queue_num);
-> > +               }
-> > +       }
-> > +
-> >         /* Rx Watchdog is available, enable depend on platform data */
-> >         if (!priv->plat->riwt_off) {
-> >                 priv->use_riwt = 1;
-> > --
-> > 1.7.10.4
-> >
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe netdev" in
-> > the body of a message to majordomo@vger.kernel.org More majordomo
-> info
-> > at  http://vger.kernel.org/majordomo-info.html
-> --
-> To unsubscribe from this list: send the line "unsubscribe netdev" in the
-body of
-> a message to majordomo@vger.kernel.org More majordomo info at
-> http://vger.kernel.org/majordomo-info.html
+> > without also understanding the binding that the node is a part of. That
+> > means you need to have something matching against the compatible string on
+> > both ends of the linkage. For instance:
+> > 
+> > panel {
+> > 	compatible = "acme,lvds-panel";
+> > 	lvds-port: port {
+> > 	};
+> > };
+> > 
+> > display-controller {
+> > 	compatible = "encom,video";
+> > 	port {
+> > 		remote-endpoint = <&lvds-port>;
+> > 	};
+> > };
+> > 
+> > In the above example, the encom,video driver has absolutely zero
+> > information about what the acme,lvds-panel binding actually implements.
+> > There needs to be both a driver for the "acme,lvds-panel" binding and
+> > one for the "encom,video" binding (even if the acme,lvds-panel binding
+> > is very thin and defers the functionality to the video controller).
+> 
+> I absolutely agree with that. We need a driver for each device (in this case 
+> the acme panel and the encom display controller), and we need those drivers to 
+> register entities (in the generic sense of the term) for them to be able to 
+> communicate with each other. The display controller driver must not try to 
+> parse panel-specific properties from the panel node. However, as described 
+> above, I believe it can parse ports and endpoints to walk the graph.
+
+I think depending on a generic graph walk is where I have the biggest
+concern about the design. I don't think it is a good idea for the master
+device to try a generic walk over the graph looking for other devices
+that might be components because it cannot know whether or not further
+links are relevant, or even if other endpoint nodes in the target
+hierarchy actually conform to the graph binding in the same way.
+
+Consider the example of a system with two video controllers (one
+embedded and one discrete), a display mux, and a panel. The display
+controller depends on the mux, and the mux depends on the panel. It
+would be entirely reasonable to start up the display subsystem with the
+embedded controller without the discrete adapter being available, but
+the way the current graph pattern is proposed there is no dependency
+information between the devices.
+
+I really do think the dependency direction needs to be explicit so that
+a driver knows whether or not a given link is relevant for it to start,
+and there must be driver know that knows how to interpret the target
+node. A device that is a master needs to know which links are
+dependencies, and which are not.
+
+I'm not even talking about the bi-directional link issue. This issue
+remains regardless of whether or not bidirectional links are used.
+
+I would solve it in one of the following two ways:
+
+1) Make masters only look at one level of dependency. Make the component
+driver responsible for checking /its/ dependencies. If its dependencies
+aren't yet met, then don't register the component as ready. We could
+probably make the drivers/base/component code allow components to pull
+in additional components as required. This approach shouldn't even
+require a change to the binding and eliminates any need for walking the
+full graph.
+
+2) Give the master node an explicit list of all devices it depends on. I
+don't like this solution as much, but it does the job.
+
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
