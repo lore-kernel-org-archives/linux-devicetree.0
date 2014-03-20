@@ -1,93 +1,55 @@
-From: Byungho An <bh74.an@samsung.com>
-Subject: [PATCH V9 1/7] sxgbe: Add device-tree binding support document
-Date: Thu, 20 Mar 2014 15:23:42 -0700
-Message-ID: <000201cf448b$0e25b990$2a712cb0$@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-language: en-us
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: netdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: 'David Miller' <davem@davemloft.net>, ks.giri@samsung.com, siva.kallam@samsung.com, vipul.pandya@samsung.com, ilho215.lee@samsung.com
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v4 1/3] [media] of: move graph helpers from drivers/media/v4l2-core to drivers/of
+Date: Thu, 20 Mar 2014 22:26:31 +0000
+Message-ID: <20140320222631.2F0BBC412EA@trevor.secretlab.ca>
+References: <1393340304-19005-1-git-send-email-p.zabel@pengutronix.de> < 1393340304-19005-2-git-send-email-p.zabel@pengutronix.de> <20140226113729. A9D5AC40A89@trevor.secretlab.ca> <1393428297.3248.92.camel@paszta.hi. pengutronix.de> <20140307171804.EF245C40A32@trevor.secretlab.ca> <531AF4ED. 5020608@ti.com> <20140308122321.9D433C40612@trevor.secretlab.ca> <531D5D0E. 8000605@ti.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <531D5D0E.8000605@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Philipp Zabel <philipp.zabel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Siva Reddy <siva.kallam@samsung.com>
+On Mon, 10 Mar 2014 08:34:54 +0200, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+> On 08/03/14 14:23, Grant Likely wrote:
+> 
+> >>> That's fine. In that case the driver would specifically require the
+> >>> endpoint to be that one node.... although the above looks a little weird
+> >>
+> >> The driver can't require that. It's up to the board designer to decide
+> >> how many endpoints are used. A driver may say that it has a single input
+> >> port. But the number of endpoints for that port is up to the use case.
+> > 
+> > Come now, when you're writing a driver you know if it will ever be
+> > possible to have more than one port. If that is the case then the
+> > binding should be specifically laid out for that. If there will never be
+> > multiple ports and the binding is unambiguous, then, and only then,
+> > should the shortcut be used, and only the shortcut should be accepted.
+> 
+> I was talking about endpoints, not ports. There's no unclarity about the
+> number of ports, that comes directly from the hardware for that specific
+> component. The number of endpoints, however, come from the board
+> hardware. The driver writer cannot know that.
 
-This patch adds binding document for SXGBE ethernet driver via device-tree.
+Okay, I understand now.
 
-Signed-off-by: Siva Reddy Kallam <siva.kallam@samsung.com>
-Signed-off-by: Byungho An <bh74.an@samsung.com>
----
- .../devicetree/bindings/net/samsung-sxgbe.txt      |   60 ++++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/samsung-sxgbe.txt
+g.
 
-diff --git a/Documentation/devicetree/bindings/net/samsung-sxgbe.txt b/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
-new file mode 100644
-index 0000000..231acf8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
-@@ -0,0 +1,60 @@
-+* Samsung 10G Ethernet driver (SXGBE)
-+
-+Required properties:
-+- compatible: Should be "samsung,sxgbe-v2.0a"
-+- reg: Address and length of the register set for the device
-+- interrupt-parent: Should be the phandle for the interrupt controller
-+  that services interrupts for this device
-+- interrupts: Should contain the SXGBE interrupts
-+  These interrupts are ordered by fixed and follows variable
-+  trasmit DMA interrupts, receive DMA interrupts and lpi interrupt.
-+  index 0 - this is fixed common interrupt of SXGBE and it is always
-+  available.
-+  index 1 to 25 - 8 variable trasmit interrupts, variable 16 receive interrupts
-+  and 1 optional lpi interrupt.
-+- phy-mode: String, operation mode of the PHY interface.
-+  Supported values are: "sgmii", "xgmii".
-+- samsung,pbl: Integer, Programmable Burst Length.
-+  Supported values are 1, 2, 4, 8, 16, or 32.
-+- samsung,burst-map: Integer, Program the possible bursts supported by sxgbe
-+  This is an interger and represents allowable DMA bursts when fixed burst.
-+  Allowable range is 0x01-0x3F. When this field is set fixed burst is enabled.
-+  When fixed length is needed for burst mode, it can be set within allowable
-+  range.
-+- samsung,adv-addr-mode: Boolean, Program the DMA to use Enhanced address mode.
-+  When enhanced address mode is needed, it can be set.
-+- samsung,force-thresh-dma-mode: Boolean, Force DMA to use the threshold mode
-+  for both tx and rx.
-+- samsung,force-sf-dma-mode: Boolean, Force DMA to use the Store and Forward
-+  mode for both tx and rx. This flag is ignored if force-thresh-dma-mode is set.
-+
-+Optional properties:
-+- mac-address: 6 bytes, mac address
-+- max-frame-size: Maximum Transfer Unit (IEEE defined MTU), rather
-+		  than the maximum frame size.
-+
-+Example:
-+
-+	aliases {
-+		ethernet0 = <&sxgbe0>;
-+	};
-+
-+	sxgbe0: ethernet@1a040000 {
-+		compatible = "samsung,sxgbe-v2.0a";
-+		reg = <0 0x1a040000 0 0x10000>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 209 4>, <0 185 4>, <0 186 4>, <0 187 4>,
-+			     <0 188 4>, <0 189 4>, <0 190 4>, <0 191 4>,
-+			     <0 192 4>, <0 193 4>, <0 194 4>, <0 195 4>,
-+			     <0 196 4>, <0 197 4>, <0 198 4>, <0 199 4>,
-+			     <0 200 4>, <0 201 4>, <0 202 4>, <0 203 4>,
-+			     <0 204 4>, <0 205 4>, <0 206 4>, <0 207 4>,
-+			     <0 208 4>, <0 210 4>;
-+		samsung,pbl = <0x08>
-+		samsung,burst-map = <0x20>
-+		samsung,adv-addr-mode = "true"
-+		samsung,force-sf-dma-mode = "true"
-+		mac-address = [ 00 11 22 33 44 55 ]; /* Filled in by U-Boot */
-+		max-frame-size = <9000>;
-+		phy-mode = "xgmii";
-+	};
--- 
-1.7.10.4
+> > Just to be clear, I have no problem with having the option in the
+> > pattern, but the driver needs to be specific about what layout it
+> > expects.
+> 
+> If we forget the shortened endpoint format, I think it can be quite
+> specific.
+> 
+> A device has either one port, in which case it should require the
+> 'ports' node to be omitted, or the device has more than one port, in
+> which case it should require 'ports' node.
+> 
+> Note that the original v4l2 binding doc says that 'ports' is always
+> optional.
+
+The original v4l2 behaviour doesn't need to change. In fact it should
+not change if it will cause real-world breakage.
+
+g.
