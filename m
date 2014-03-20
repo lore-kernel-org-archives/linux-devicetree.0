@@ -1,55 +1,67 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH] ASoC: tda998x: Fix lack of required reg in DT
- documentation
-Date: Thu, 20 Mar 2014 15:19:34 +0000
-Message-ID: <20140320151934.GV7528@n2100.arm.linux.org.uk>
-References: <20140320092639.48F68A6279@smtp3-g21.free.fr>
- <532ADFD8.80301@gmail.com> <20140320140156.5d768b1f@armhf>
- <532AEDE2.3080306@gmail.com> <20140320145221.09252bf6@armhf>
- <20140320143110.GU7528@n2100.arm.linux.org.uk>
- <20140320155935.7a474173@armhf>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v7 2/3] ARM: sun7i/sun6i: dts: Add NMI
+ irqchip support
+Date: Thu, 20 Mar 2014 16:17:23 +0100
+Message-ID: <20140320151723.GP27873@lukather>
+References: <1395256879-8475-1-git-send-email-carlo@caione.org>
+ <1395256879-8475-3-git-send-email-carlo@caione.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="W/y7qBwfEQL/2otS"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBKEOVSMQKGQEELGIAVA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140320155935.7a474173@armhf>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+In-Reply-To: <1395256879-8475-3-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 20, 2014 at 03:59:35PM +0100, Jean-Francois Moine wrote:
-> On Thu, 20 Mar 2014 14:31:10 +0000
-> Russell King - ARM Linux <linux@arm.linux.org.uk> wrote:
-> 
-> > 1. change the DT compatible strings the driver has to accept both
-> >    nxp,tda19988 and nxp,tda19989, and set the appropriate device
-> >    in the DT file (tda19988).  I'm a bit nervous about using
-> >    "nxp,tda1998x" in case we're clashing with devices with different
-> >    characteristics.
-> 
-> The Cubox is sold with either the TDA19988 or the TDA19989 (I don't
-> know about the AMX33XX boards). Then, setting the exact type in the DT
-> would ask for 2 differents DTs or for having two tda998x definitions in
-> a same DT...
 
-I'm not saying that it has to match the physical device fitted - I'm
-merely suggesting not using nxp,tda1998x which could (and as Sebastian
-has found, does) conflict with other devices with different properties.
+--W/y7qBwfEQL/2otS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-We still auto-detect the exact device type by reading the ID register
-because that's the most reliable way to detect exactly what kind of
-device is fitted to the board.
+On Wed, Mar 19, 2014 at 08:21:18PM +0100, Carlo Caione wrote:
+> This patch adds DTS entries for NMI controller as child of GIC.
+>=20
+> Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+Thanks!
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--W/y7qBwfEQL/2otS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTKwaDAAoJEBx+YmzsjxAgkR4P/i4k/0x8Qn+fgfEkSW4IgStN
+wMrH7iHMOGi5ZyS54JQJ9/LaE0eXOQ3rxRire9HhYtUmD4ieIamNzlUtgrZBmtFM
+nWHR9nAsLaRTZeoZLHNP/VyY25WcYZ5S156SkY+B9V3DDA8WrOOKZl8yIdYSDeht
+JtMHgNJ6Qn0Q6mTXnBG+zi6wKoai7OAww2qH1ILrTPECrGpXtzkgkFxXiGxG+N3R
+IG93+oFBksQTKraim1O1SrzszycsPaq1kIGEmVeHwzSxizD/xRAk/vSQ70u+lMtG
+hz3b2YkNRd+Zxq0pzw5a4uwYrM7uWeAy4PbBuhLConAO5o6Ua/Liv9UKzFvvDK04
+fdwTNM7n8Lau5g3sRLwpxDeWW6FWFl3jaldDyLPiUfwfpluRO7uN3Ua1/2ZSf8+3
+wR+h2HTYVxt+mZ295pYMMYqqbPzZM3TiXQGv6kzW3lE+ozgqBf3MnQOSfKG8TvAg
+ZmY72ji8zwV2QxpSPY4HD1LEqOFOV+JW2vbSlzVlF7Dxd3z/dF+m+IR8Ig4620sg
+YZ6uUyhTKug1WoJAqHZ+R2/SrIaYLj8dKzSysPhqeidKiJ0yraTT26SziOagu4ZY
+xqFcRXfEoAx/zQ//WG2RDRxe2DsRNYIY7gQQbDJkpLdAMrhqb5FcHO2yhO5MYE4A
+TXwRHNHDDWClIWZYV2YV
+=Xmw9
+-----END PGP SIGNATURE-----
+
+--W/y7qBwfEQL/2otS--
