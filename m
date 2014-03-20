@@ -1,56 +1,65 @@
-From: Eli Billauer <eli.billauer@gmail.com>
-Subject: Re: [PATCH v2] mmc: sdhci: add quirk for broken write protect detection
-Date: Thu, 20 Mar 2014 14:39:27 +0200
-Message-ID: <532AE17F.9020509@gmail.com>
-References: <1393759200-22819-1-git-send-email-eli.billauer@gmail.com>
- <74003aec-1707-4f43-b947-df148d573fa1@TX2EHSMHS038.ehs.local>
- <53163247.8000904@gmail.com>
- <ae0f71ac-c5f7-4af7-a9ba-c019cec19ebf@AM1EHSMHS017.ehs.local>
- <531878C8.2020001@topic.nl>
- <ad0a3559-a687-4f51-b284-f515372cfad2@VA3EHSMHS001.ehs.local>
- <532ADE8D.7040900@monstr.eu>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC PATCH v2 0/2] clk: Support for DT assigned clock parents and
+ rates
+Date: Thu, 20 Mar 2014 13:42:33 +0100
+Message-ID: <532AE239.9000800@samsung.com>
+References: <1393870533-20845-1-git-send-email-s.nawrocki@samsung.com>
+ <53187C13.3040202@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; CHARSET=US-ASCII; format=flowed
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <532ADE8D.7040900@monstr.eu>
-Sender: linux-mmc-owner@vger.kernel.org
-To: monstr@monstr.eu
-Cc: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>, Mike Looijmans <mike.looijmans@topic.nl>, chris@printf.net, michal.simek@xilinx.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <53187C13.3040202-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Michal.
+Hi Maxime,
 
-The Zybo board doesn't have any WP pin connected to the MicroSD card. 
-There is no physical possibility for the processor to know whether the 
-card is write-protected or not.
+On 06/03/14 14:45, Maxime Coquelin wrote:
+> Hi Sylwester,
+> 
+> 	I like the principle of your implementation, but I have two questions:
+> 	1 - How can we manage PM with this solution, as the parent/rate will be 
+> set only once at probe time?
+> 	2 - How to set the parent of a parent clock (which can be shared with 
+> other devices)? Same question about the parent rates.
 
-As I mentioned earlier, the practical problem can be worked around by 
-inverting the polarity of the WP bit, using wp-inverted. Practically 
-speaking, there's no need for this patch.
+Thanks for your feedback and apologies for late reply.
 
-I insisted on this patch, because I think that the device tree should 
-reflect the hardware as it is, and not contain tricks for fooling the 
-driver into doing what we want. But I guess this wasn't a reason good 
-enough for adding yet another quirk (to the existing 38 or so).
+IIUC your first concern is about a situation when clocks need to be
+reconfigured upon each resume from system sleep or runtime PM resume ?
+As I mentioned in v1 of the RFC I was considering having individual
+drivers calling explicitly the clocks set up routine. Presumably this
+would allow to resolve the power management related issue.
+One example I'm aware the approach as in this RFC wouldn't work is
+when a device in a SoC belongs to a power domain, which needs to be
+first switched on before we can start setting up and the clocks'
+configuration get lost after the power domain switch off.
 
+OTOH I suspect devices for which one-time clocks setup is sufficient
+will be quite common. And for these there would need to be a single
+call to the setup routine in probe() I guess, since it wouldn't be
+possible to figure out just from the DT data when the actual call
+should be made.
+
+For a global clocks configuration, I thought about specifying that
+in the clocks controller node, and then to have the setup routine
+called e.g. from of_clk_init(). I think that could work well enough,
+together with the patch [1], adding clock dependencies handling.
+But then the clock frequency set up function would need to be
+modified to respect the clock parent relationships, similarly as
+in patch series [2]. A just noticed [2] recently, after posting
+this RFC (adding Tero at Cc).
+
+--
 Regards,
-    Eli
+Sylwester
 
-On 20/03/14 14:26, Michal Simek wrote:
-> we have got this from Mike (we couldn't reply because he has lost this email
-> thread.
->
-> Mike:
-> "I think I found the issue. In ps7_init.c as generated by the tools, it sets the "WP" pin not to EMIO, but to MIO 0. We use pin 0 for a status LED.
->
-> # devmem 0XF8000830
-> 0x002E0000
->
-> Register 0XF8000830 is SD0_WP_CD_SEL, and 0x002E0000 sets CD to pin 46 and WP to pin "0", not to EMIO as I specified in the design.
-> "
->
-> Eli: Maybe you have the same issue as Mike. Can you please check it?
->    
-
-
+[1] http://www.spinics.net/lists/arm-kernel/msg310507.html
+[2] http://www.spinics.net/lists/linux-omap/msg103069.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
