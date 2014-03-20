@@ -1,114 +1,47 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCHv4 2/5] Input: edt-ft5x06: Add DT support
-Date: Thu, 20 Mar 2014 09:37:19 +0000
-Message-ID: <20140320093719.GB14420@e106331-lin.cambridge.arm.com>
-References: <1395234563-11034-1-git-send-email-LW@KARO-electronics.de>
- <1395234563-11034-3-git-send-email-LW@KARO-electronics.de>
+From: Huang Shijie <b32955@freescale.com>
+Subject: Re: [PATCH] mtd: gpmi: make blockmark swapping optional
+Date: Thu, 20 Mar 2014 17:47:57 +0800
+Message-ID: <532AB94D.1050406@freescale.com>
+References: <1395235406-13449-1-git-send-email-y>	<532AB1A2.9010702@freescale.com> <20140320102153.7106f915@ipc1.ka-ro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1395234563-11034-3-git-send-email-LW@KARO-electronics.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Lothar =?utf-8?Q?Wa=C3=9Fmann?= <LW@karo-electronics.de>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Fugang Duan <B38611@freescale.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Henrik Rydberg <rydberg@euromail.se>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jg1.han@samsung.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <Pawel.Moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Sachin Kamat <sachin.kamat@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Simon Budig <simon.budig@kernelconcepts.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140320102153.7106f915@ipc1.ka-ro>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?TG90aGFyIFdhw59tYW5u?= <LW@KARO-electronics.de>
+Cc: y@KARO-electronics.de, Arnd Bergmann <arnd@arndb.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Fabio Estevam <fabio.estevam@freescale.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, b47714@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 19, 2014 at 01:09:20PM +0000, Lothar Wa=C3=9Fmann wrote:
->=20
-> Signed-off-by: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
-> ---
->  .../bindings/input/touchscreen/edt-ft5x06.txt      |   41 ++++++
->  drivers/input/touchscreen/edt-ft5x06.c             |  144 ++++++++++=
-+++++-----
->  2 files changed, 154 insertions(+), 31 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscre=
-en/edt-ft5x06.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-=
-ft5x06.txt b/Documentation/devicetree/bindings/input/touchscreen/edt-ft=
-5x06.txt
-> new file mode 100644
-> index 0000000..e5adc76
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.=
-txt
-> @@ -0,0 +1,41 @@
-> +FocalTech EDT-FT5x06 Polytouch driver
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +Required properties:
-> + - compatible:  "edt,edt-ft5x06"
+=E4=BA=8E 2014=E5=B9=B403=E6=9C=8820=E6=97=A5 17:21, Lothar Wa=C3=9Fman=
+n =E5=86=99=E9=81=93:
+> Hi,
+>
+> Huang Shijie wrote:
+>> =E4=BA=8E 2014=E5=B9=B403=E6=9C=8819=E6=97=A5 21:23, y@karo-electron=
+ics.de =E5=86=99=E9=81=93:
+>>> configurable via DT. This is required for the Ka-Ro electronics
+>>> platforms.
+>>>
+>> If you disable the swapping, you will disable the NAND boot in actua=
+lly.
+>>
+> No. All our modules do boot from NAND and none of them does the
+> swapping.
+>
+>
+It seems the NAND boot runs well by luck.
 
-Is the 'x' part of a particular product name, or is this a class of
-devices?
+The ROM will do the swapping when it reads the BBT table written by the=
+=20
+kobs-ng (or something else?).
 
-It's preferable to have a specific string which another similar variant=
-s
-can claim compatibility with (while also additionally having a more
-specific string), as this makes it possible to handle variants more
-specially in future, target workarounds, etc.
+If the BBT table is small, not bigger then a page, the NAND boot may=20
+runs well when you disable the swapping;
+But it the BBT table is bigger, the ROM will get a corrupted BBT table.
 
-> + - reg:         I2C slave address of the chip (0x38)
-> + - interrupt-parent: a phandle pointing to the interrupt controller
-> +                     serving the interrupt for this chip
-> + - interrupts:       interrupt specification for this chip
 
-How many? What are they for?
 
-> +
-> +Optional properties:
-> + - reset-gpios: GPIO specification for the RESET input
-> + - wake-gpios:  GPIO specification for the WAKE input
-> +
-> + - pinctrl-names: should be "default"
-> + - pinctrl-0:   a phandle pointing to the pin settings for the
-> +                control gpios
-
-These all looks fine.
-
-> +
-> + - threshold:   allows setting the "click"-threshold in the range
-> +                from 20 to 80.
-> +
-> + - gain:        allows setting the sensitivity in the range from 0 t=
-o
-> +                31. Note that lower values indicate higher
-> +                sensitivity.
-> +
-> + - offset:      allows setting the edge compensation in the range fr=
-om
-> +                0 to 31.
-
-I can see why the sane values for these may differ between boards.
-
-> + - report_rate: allows setting the report rate in the range from 3 t=
-o
-> +                14.
-
-However, why can the kernel not decide the report rate? This doesn't
-sound like something that needs to vary per-board.
-
-Also, s/_/-/ in property names, please.
-
-[...]
-
-> +#define EDT_GET_PROP(name, reg) {					\
-> +	const u32 *prop =3D of_get_property(np, #name, NULL);		\
-> +	if (prop)							\
-> +		edt_ft5x06_register_write(tsdata, reg, be32_to_cpu(*prop)); \
-> +}
-
-Use of_property_read_u32, it'll handle endianness conversion for you.
-
-Use of of_get_property is almost always wrong.
-
-Cheers,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+thanks
+Huang Shijie
