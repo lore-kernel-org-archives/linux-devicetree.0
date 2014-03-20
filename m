@@ -1,80 +1,46 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v7 3/3] arm64: Add architecture support for PCI
-Date: Thu, 20 Mar 2014 12:50:04 +0000
-Message-ID: <20140320125004.GK6457@e106497-lin.cambridge.arm.com>
-References: <1394811258-1500-1-git-send-email-Liviu.Dudau@arm.com>
- <201403201217.22339.arnd@arndb.de>
- <20140320113820.GH6457@e106497-lin.cambridge.arm.com>
- <201403201326.02377.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201403201326.02377.arnd@arndb.de>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Catalin Marinas <Catalin.Marinas@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] ARM: topology: Make it clear that all CPUs need to be described
+Date: Thu, 20 Mar 2014 12:59:34 +0000
+Message-ID: <1395320374-29576-1-git-send-email-broonie@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 20, 2014 at 12:26:02PM +0000, Arnd Bergmann wrote:
-> On Thursday 20 March 2014, Liviu Dudau wrote:
-> > > I don't even understand why you want to create a generic pci_addr=
-ess_to_pio
-> > > implementation, when we don't need that for arm64 at all. Unless =
-I'm
-> > > missing something important, that function is only called in case=
- of
-> > > PCI_PROBE_DEVTREE with pci_of_scan on PowerPC. I don't expect any
-> > > architecture to do the same thing, and the only other architectur=
-e that
-> > > needs something like it (sparc) has a different implementation.
-> >=20
-> > Because in my [v7 2/6]* patch for the generic host bridge support I=
- start
-> > using pci_address_to_pio to fix the conversion of PCI ranges to res=
-ources.
-> > That requires an arm64 (or more correctly, an arch with memory mapp=
-ed IO
-> > specific) version of pci_address_to_pio().
->=20
-> Yes, but why do you use it there?
+From: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-I'm parsing the device tree and have reached the PCI IO range for the h=
-ost bridge.
-There is no host bridge created yet for that and hence no mapping. I ne=
-ed to
-take the DT range declaration that gives me   CPU start .. SIZE --> BUS=
- start and
-convert it into   Logical IO port start .. Logical IO port end. While I=
- could've
-come up with (yet) another function that does the conversion from CPU a=
-ddress to
-port IO address, I thought it would be nice to use the existing pci_add=
-ress_to_pio()
-function and adapt it to my needs. It has a __weak implementation anywa=
-y so I
-could overwrite it in the architecture code.
+The ARMv8 code will reject topologies that omit some CPUs (and it's not
+clear that it's ever sensible to do so). Update the binding document to
+make this clear.
 
-To me it looked like a good plan and we had some discussions around my =
-initial
-goofy mistake of using pci_addr as physical address for translation. I =
-never
-thought it was considered a bad idea.
+Signed-off-by: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/topology.txt | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Best regards,
-Liviu
+diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/arm/topology.txt
+index 4aa20e7a424e..1bd5edc225c1 100644
+--- a/Documentation/devicetree/bindings/arm/topology.txt
++++ b/Documentation/devicetree/bindings/arm/topology.txt
+@@ -75,9 +75,10 @@ The cpu-map node can only contain three types of child nodes:
+ 
+ whose bindings are described in paragraph 3.
+ 
+-The nodes describing the CPU topology (cluster/core/thread) can only be
+-defined within the cpu-map node.
+-Any other configuration is consider invalid and therefore must be ignored.
++The nodes describing the CPU topology (cluster/core/thread) can only
++be defined within the cpu-map node and every core/thread in the system
++must be defined within the topology.  Any other configuration is
++consider invalid and therefore must be ignored.
+ 
+ ===========================================
+ 2.1 - cpu-map child nodes naming convention
+-- 
+1.9.1
 
->=20
-> 	Arnd
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
