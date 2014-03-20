@@ -1,60 +1,114 @@
-From: Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
-Subject: Re: [PATCH 08/11] ARM: at91/dt: move at91sam9261 SoC to the new main
- clock model
-Date: Thu, 20 Mar 2014 10:22:51 +0100
-Message-ID: <CACh+v5Ngvdt=FnyzMz4Q0i1U7kNmrgXWDavzi4xvLDJR0qh0WA@mail.gmail.com>
-References: <1395173924-3648-1-git-send-email-b.brezillon.dev@gmail.com>
-	<1395173924-3648-9-git-send-email-b.brezillon.dev@gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCHv4 2/5] Input: edt-ft5x06: Add DT support
+Date: Thu, 20 Mar 2014 09:37:19 +0000
+Message-ID: <20140320093719.GB14420@e106331-lin.cambridge.arm.com>
+References: <1395234563-11034-1-git-send-email-LW@KARO-electronics.de>
+ <1395234563-11034-3-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1395173924-3648-9-git-send-email-b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <brezillonboris-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1395234563-11034-3-git-send-email-LW@KARO-electronics.de>
+Sender: linux-input-owner@vger.kernel.org
+To: Lothar =?utf-8?Q?Wa=C3=9Fmann?= <LW@karo-electronics.de>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Fugang Duan <B38611@freescale.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Henrik Rydberg <rydberg@euromail.se>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jg1.han@samsung.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <Pawel.Moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Sachin Kamat <sachin.kamat@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Simon Budig <simon.budig@kernelconcepts.de>
 List-Id: devicetree@vger.kernel.org
 
-2014-03-18 21:18 GMT+01:00 Boris BREZILLON <brezillonboris-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
->
-> Signed-off-by: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Wed, Mar 19, 2014 at 01:09:20PM +0000, Lothar Wa=C3=9Fmann wrote:
+>=20
+> Signed-off-by: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
 > ---
->  arch/arm/boot/dts/at91sam9261.dtsi |   10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/at91sam9261.dtsi b/arch/arm/boot/dts/at91sam9261.dtsi
-> index e21dda0..e00fabc 100644
-> --- a/arch/arm/boot/dts/at91sam9261.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9261.dtsi
-> @@ -45,6 +45,14 @@
->                 reg = <0x20000000 0x08000000>;
->         };
->
-> +       clocks {
-> +               main_xtal: main_xtal {
-> +                       compatible = "fixed-clock";
-> +                       #clock-cells = <0>;
-> +                       clock-frequency = <0>;
-> +               };
-> +       };
+>  .../bindings/input/touchscreen/edt-ft5x06.txt      |   41 ++++++
+>  drivers/input/touchscreen/edt-ft5x06.c             |  144 ++++++++++=
++++++-----
+>  2 files changed, 154 insertions(+), 31 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscre=
+en/edt-ft5x06.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-=
+ft5x06.txt b/Documentation/devicetree/bindings/input/touchscreen/edt-ft=
+5x06.txt
+> new file mode 100644
+> index 0000000..e5adc76
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.=
+txt
+> @@ -0,0 +1,41 @@
+> +FocalTech EDT-FT5x06 Polytouch driver
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 > +
->         ahb {
->                 compatible = "simple-bus";
->                 #address-cells = <1>;
-> @@ -534,7 +542,7 @@
->                                         compatible = "atmel,at91rm9200-clk-main";
->                                         #clock-cells = <0>;
->                                         interrupts-extended = <&pmc AT91_PMC_MOSCS>;
-> -                                       clocks = <&clk32k>;
-> +                                       clocks = <&main_xtal>;
->                                 };
->
->                                 plla: pllack {
-> --
-> 1.7.9.5
->
+> +Required properties:
+> + - compatible:  "edt,edt-ft5x06"
 
-Acked-by: Jean-Jacques HIBLOT <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
+Is the 'x' part of a particular product name, or is this a class of
+devices?
+
+It's preferable to have a specific string which another similar variant=
+s
+can claim compatibility with (while also additionally having a more
+specific string), as this makes it possible to handle variants more
+specially in future, target workarounds, etc.
+
+> + - reg:         I2C slave address of the chip (0x38)
+> + - interrupt-parent: a phandle pointing to the interrupt controller
+> +                     serving the interrupt for this chip
+> + - interrupts:       interrupt specification for this chip
+
+How many? What are they for?
+
+> +
+> +Optional properties:
+> + - reset-gpios: GPIO specification for the RESET input
+> + - wake-gpios:  GPIO specification for the WAKE input
+> +
+> + - pinctrl-names: should be "default"
+> + - pinctrl-0:   a phandle pointing to the pin settings for the
+> +                control gpios
+
+These all looks fine.
+
+> +
+> + - threshold:   allows setting the "click"-threshold in the range
+> +                from 20 to 80.
+> +
+> + - gain:        allows setting the sensitivity in the range from 0 t=
+o
+> +                31. Note that lower values indicate higher
+> +                sensitivity.
+> +
+> + - offset:      allows setting the edge compensation in the range fr=
+om
+> +                0 to 31.
+
+I can see why the sane values for these may differ between boards.
+
+> + - report_rate: allows setting the report rate in the range from 3 t=
+o
+> +                14.
+
+However, why can the kernel not decide the report rate? This doesn't
+sound like something that needs to vary per-board.
+
+Also, s/_/-/ in property names, please.
+
+[...]
+
+> +#define EDT_GET_PROP(name, reg) {					\
+> +	const u32 *prop =3D of_get_property(np, #name, NULL);		\
+> +	if (prop)							\
+> +		edt_ft5x06_register_write(tsdata, reg, be32_to_cpu(*prop)); \
+> +}
+
+Use of_property_read_u32, it'll handle endianness conversion for you.
+
+Use of of_get_property is almost always wrong.
+
+Cheers,
+Mark.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
