@@ -1,93 +1,84 @@
-From: Byungho An <bh74.an@samsung.com>
-Subject: [PATCH V8 1/7] sxgbe: Add device-tree binding support document
-Date: Thu, 20 Mar 2014 10:25:59 -0700
-Message-ID: <012e01cf4461$79852880$6c8f7980$@samsung.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH 2/3] mtd: davinci-nand: add dts property for
+ NAND_NO_SUBPAGE_WRITE option
+Date: Thu, 20 Mar 2014 10:29:12 -0700
+Message-ID: <20140320172912.GW31517@norris-Latitude-E6410>
+References: <1395335184-4745-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <1395335184-4745-3-git-send-email-ivan.khoronzhuk@ti.com>
+ <532B2183.2080309@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-Content-language: en-us
-Sender: netdev-owner@vger.kernel.org
-To: 'netdev' <netdev@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: 'David Miller' <davem@davemloft.net>, 'GIRISH K S' <ks.giri@samsung.com>, 'SIVAREDDY KALLAM' <siva.kallam@samsung.com>, 'Vipul Chandrakant' <vipul.pandya@samsung.com>, 'Ilho Lee' <ilho215.lee@samsung.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <532B2183.2080309@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, dwmw2@infradead.org, galak@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, rob@landley.net, linux@arm.linux.org.uk, grygorii.strashko@ti.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, Murali Karicheri <m-karicheri2@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Siva Reddy <siva.kallam@samsung.com>
+On Thu, Mar 20, 2014 at 01:12:35PM -0400, Santosh Shilimkar wrote:
+> Boris,
 
-This patch adds binding document for SXGBE ethernet driver via device-tree.
+Who's Boris? And why should Boris be taking this patch? It's an MTD
+patch.
 
-Signed-off-by: Siva Reddy Kallam <siva.kallam@samsung.com>
-Signed-off-by: Byungho An <bh74.an@samsung.com>
----
- .../devicetree/bindings/net/samsung-sxgbe.txt      |   60 ++++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/samsung-sxgbe.txt
+> On Thursday 20 March 2014 01:06 PM, Ivan Khoronzhuk wrote:
+> > From: Murali Karicheri <m-karicheri2@ti.com>
+> > 
+> > After testing NAND flash with ubifs for k2hk-emv board were committed
+> > that flash doesn't support subpage writing, so we can fix it by
+> > adding a property to disable subpage write.
 
-diff --git a/Documentation/devicetree/bindings/net/samsung-sxgbe.txt b/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
-new file mode 100644
-index 0000000..231acf8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
-@@ -0,0 +1,60 @@
-+* Samsung 10G Ethernet driver (SXGBE)
-+
-+Required properties:
-+- compatible: Should be "samsung,sxgbe-v2.0a"
-+- reg: Address and length of the register set for the device
-+- interrupt-parent: Should be the phandle for the interrupt controller
-+  that services interrupts for this device
-+- interrupts: Should contain the SXGBE interrupts
-+  These interrupts are ordered by fixed and follows variable
-+  trasmit DMA interrupts, receive DMA interrupts and lpi interrupt.
-+  index 0 - this is fixed common interrupt of SXGBE and it is always
-+  available.
-+  index 1 to 25 - 8 variable trasmit interrupts, variable 16 receive interrupts
-+  and 1 optional lpi interrupt.
-+- phy-mode: String, operation mode of the PHY interface.
-+  Supported values are: "sgmii", "xgmii".
-+- samsung,pbl: Integer, Programmable Burst Length.
-+  Supported values are 1, 2, 4, 8, 16, or 32.
-+- samsung,burst-map: Integer, Program the possible bursts supported by sxgbe
-+  This is an interger and represents allowable DMA bursts when fixed burst.
-+  Allowable range is 0x01-0x3F. When this field is set fixed burst is enabled.
-+  When fixed length is needed for burst mode, it can be set within allowable
-+  range.
-+- samsung,adv-addr-mode: Boolean, Program the DMA to use Enhanced address mode.
-+  When enhanced address mode is needed, it can be set.
-+- samsung,force-thresh-dma-mode: Boolean, Force DMA to use the threshold mode
-+  for both tx and rx.
-+- samsung,force-sf-dma-mode: Boolean, Force DMA to use the Store and Forward
-+  mode for both tx and rx. This flag is ignored if force-thresh-dma-mode is set.
-+
-+Optional properties:
-+- mac-address: 6 bytes, mac address
-+- max-frame-size: Maximum Transfer Unit (IEEE defined MTU), rather
-+		  than the maximum frame size.
-+
-+Example:
-+
-+	aliases {
-+		ethernet0 = <&sxgbe0>;
-+	};
-+
-+	sxgbe0: ethernet@1a040000 {
-+		compatible = "samsung,sxgbe-v2.0a";
-+		reg = <0 0x1a040000 0 0x10000>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 209 4>, <0 185 4>, <0 186 4>, <0 187 4>,
-+			     <0 188 4>, <0 189 4>, <0 190 4>, <0 191 4>,
-+			     <0 192 4>, <0 193 4>, <0 194 4>, <0 195 4>,
-+			     <0 196 4>, <0 197 4>, <0 198 4>, <0 199 4>,
-+			     <0 200 4>, <0 201 4>, <0 202 4>, <0 203 4>,
-+			     <0 204 4>, <0 205 4>, <0 206 4>, <0 207 4>,
-+			     <0 208 4>, <0 210 4>;
-+		samsung,pbl = <0x08>
-+		samsung,burst-map = <0x20>
-+		samsung,adv-addr-mode = "true"
-+		samsung,force-sf-dma-mode = "true"
-+		mac-address = [ 00 11 22 33 44 55 ]; /* Filled in by U-Boot */
-+		max-frame-size = <9000>;
-+		phy-mode = "xgmii";
-+	};
--- 
-1.7.10.4
+What flash? We try to autodetect NAND as much as possible. Perhaps we
+should be adding infrastructure support instead of hacking it with a DT
+property.
+
+> > Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+> > Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+> > ---
+> Can you please pick this up for 3.15 fixes ? Ofcourse assuming DT folks
+> are ok with the patch.
+> 
+> I can then take patch 1/3 and 3/3 in my 3.15 fixes queue.
+> 
+> >  Documentation/devicetree/bindings/mtd/davinci-nand.txt | 2 ++
+> >  drivers/mtd/nand/davinci_nand.c                        | 3 +++
+> >  2 files changed, 5 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/davinci-nand.txt b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
+> > index cfb18ab..50af930 100644
+> > --- a/Documentation/devicetree/bindings/mtd/davinci-nand.txt
+> > +++ b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
+> > @@ -53,6 +53,8 @@ Recommended properties :
+> >  				identifier is saved in OOB area. If not present
+> >  				false.
+> >  
+> > +- ti,davinci-nosubpage-write:	disable subpage write for the device
+
+If we really need the DT property, I'd prefer a generic
+"nand-numer-of-partial-programs" or something like that, and if it's
+equal to 1, then the flash doesn't support partial page programming.
+
+But I'd prefer not to encode that in DT if possible.
+
+> >  Deprecated properties:
+> >  
+> >  - ti,davinci-ecc-mode:		operation mode of the NAND ecc mode. ECC mode
+> > diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
+> > index 4615d79..3ba058d 100644
+> > --- a/drivers/mtd/nand/davinci_nand.c
+> > +++ b/drivers/mtd/nand/davinci_nand.c
+> > @@ -581,6 +581,9 @@ static struct davinci_nand_pdata
+> >  		    of_property_read_bool(pdev->dev.of_node,
+> >  			"ti,davinci-nand-use-bbt"))
+> >  			pdata->bbt_options = NAND_BBT_USE_FLASH;
+> > +		if (of_property_read_bool(pdev->dev.of_node,
+> > +			"ti,davinci-no-subpage-write"))
+> > +			pdata->options |= NAND_NO_SUBPAGE_WRITE;
+> >  	}
+> >  
+> >  	return dev_get_platdata(&pdev->dev);
+> > 
+> 
+
+Brian
