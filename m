@@ -1,79 +1,53 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v11 10/27] iommu/exynos: use managed device helper functions
-Date: Thu, 20 Mar 2014 11:44:50 +0100
-Message-ID: <532AC6A2.9070307@gmail.com>
-References: <20140314140542.f4ded6c50dbd8a1d937bf354@samsung.com> <CAK9yfHw7zYaX9EYFE+m3Mh-u8Uiyubx-cS0EwPmfW+0weLiBKw@mail.gmail.com> <20140318200915.7dd833ce0fddbbd6ecd8dac9@samsung.com> <532862ED.8040809@samsung.com> <20140319175927.a3feadcacbffe80eca1d3421@samsung.com> <CAK9yfHxxo2eFh38gPZkpYf1ueBWySWqPzgLV_tSSykzHhNzN8g@mail.gmail.com> <532988CA.4000008@samsung.com> <20140320190333.9c3555b097e97d593faddbdd@samsung.com>
+From: Zhangfei Gao <zhangfei.gao@gmail.com>
+Subject: Re: [PATCH 2/3] net: hisilicon: new hip04 MDIO driver
+Date: Thu, 20 Mar 2014 18:53:50 +0800
+Message-ID: <CAMj5Bkjm3G=K=fqas6VG5NXroofWijN_sc7XGLzT5jVehwTd0Q@mail.gmail.com>
+References: <1395132017-15928-1-git-send-email-zhangfei.gao@linaro.org>
+	<1395132017-15928-3-git-send-email-zhangfei.gao@linaro.org>
+	<CAGVrzcY4SBKFfTvjB0TTvgpAOwCt30C6LjYf9e9E4ciMDVmp-w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140320190333.9c3555b097e97d593faddbdd@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Cho KyongHo <pullip.cho@samsung.com>, Tomasz Figa <t.figa@samsung.com>
-Cc: Linux DeviceTree <devicetree@vger.kernel.org>, Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>, Prathyush <prathyush.k@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Joerg Roedel <joro@8bytes.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Grant Grundler <grundler@chromium.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, Kukjin Kim <kgene.kim@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Varun Sethi <Varun.Sethi@freescale.com>, Antonios Motakis <a.motakis@virtualopensystems.com>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Rahul Sharma <rahul.sharma@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAGVrzcY4SBKFfTvjB0TTvgpAOwCt30C6LjYf9e9E4ciMDVmp-w@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Zhangfei Gao <zhangfei.gao@linaro.org>, netdev <netdev@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20.03.2014 11:03, Cho KyongHo wrote:
-> On Wed, 19 Mar 2014 13:08:42 +0100, Tomasz Figa wrote:
->> On 19.03.2014 10:01, Sachin Kamat wrote:
->>> On 19 March 2014 14:29, Cho KyongHo <pullip.cho@samsung.com> wrote:
->>>> On Tue, 18 Mar 2014 16:14:53 +0100, Tomasz Figa wrote:
->>>>> On 18.03.2014 12:09, Cho KyongHo wrote:
->>>>>> On Fri, 14 Mar 2014 20:52:43 +0530, Sachin Kamat wrote:
->>>>>>> Hi KyongHo,
->>>>>>>
->>>>>>> On 14 March 2014 10:35, Cho KyongHo <pullip.cho@samsung.com> wrote:
->>>>>>>> This patch uses managed device helper functions in the probe().
->>>>>>>>
->>>>>>>> Signed-off-by: Cho KyongHo <pullip.cho@samsung.com>
->>>>>>>> ---
->>>>>>> [snip]
->>>>>>>
->>>>>>>> +       data->clk = devm_clk_get(dev, "sysmmu");
->>>>>>>> +       if (IS_ERR(data->clk)) {
->>>>>>>> +               dev_info(dev, "No gate clock found!\n");
->>>>>>>> +               data->clk = NULL;
->>>>>>>> +       }
->>>>>>>
->>>>>>> Why aren't you returning from here upon error?
->>>>>>
->>>>>> It is for the case of a System MMU which does not need clock gating.
->>>>>>
->>>>>
->>>>> Are there really such cases?
->>>>>
->>>>
->>>> Yes.
->>>> Especially in the case of initial stage of new SoC development.
->>>>
->>>> I have experianced some software workaround for H/W restriction
->>>> needs prevention of clock gating for some devices.
->>>
->>> So aren't these basically some exceptions/hacks rather than the usual way
->>> of functioning of the device?
->>>
->>
->> This actually raises a good question, whether we really need to support
->> such early development SoC versions in mainline.
->>
->> Another thing is that if you need to assure that a clock is ungated, you
->> must acquire it and prepare_enable explicitly, so I don't think this
->> kind of handling is correct.
->>
-> On early development step of a new SoC, clock related stuffs and
-> some device drivers like display controller are usually developed in parallel.
+Dear Florian
+
+On Wed, Mar 19, 2014 at 1:28 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> 2014-03-18 1:40 GMT-07:00 Zhangfei Gao <zhangfei.gao@linaro.org>:
+
+>> +static int hip04_mdio_reset(struct mii_bus *bus)
+>> +{
+>> +       int temp, err, i;
+>> +
+>> +       for (i = 0; i < 2; i++) {
+>> +               hip04_mdio_write(bus, i, 22, 0);
+>> +               temp = hip04_mdio_read(bus, i, MII_BMCR);
+>> +               temp |= BMCR_RESET;
+>> +               err = hip04_mdio_write(bus, i, MII_BMCR, temp);
+>> +               if (err < 0)
+>> +                       return err;
+>> +       }
+>> +
+>> +       mdelay(500);
 >
-> In that case, -ENOENT from clk_get() must not treated as an error.
-> "[PATCH v11 20/17] iommu/exynos: allow having multiple System MMUs for a master H/W"
-> patch distinguishes -ENOENT from other error values returned by devm_clk_get().
+> This does not look correct, you should iterate over all possible PHYs:
+> PHY_MAX_ADDR instead of hardcoding the loop to 2.
 
-I still don't think upstream is right place for such development hacks 
-and such assumption will mask potential errors caused by clocks 
-unspecified in DT.
+OK, got it.
+Use 2 is since only have 2 phy in the board, will use PHY_MAX_ADDR instead.
+>
+> I think we might want to remove the mdio bus reset callback in general
+> as the PHY library should already take care of software resetting the
+> PHY to put it in a sane state, as well as waiting for the appropriate
+> delay before using, unlike here, where you do not poll for BMCR_RESET
+> to be cleared by the PHY.
+>
+Do you mean will move BMCR_RESET to common code, that's would be great.
+The mdio_reset is added here to get phy_id, otherwise the phy_id can
+not be read as well as detection.
 
-If such thing is needed for development, an extra patch might be kept in 
-development tree, until clock driver is implemented or a dummy 
-fixed-rate clock might be specified in DT.
-
-Best regards,
-Tomasz
+Thanks
