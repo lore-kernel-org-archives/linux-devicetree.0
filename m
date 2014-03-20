@@ -1,46 +1,54 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [GIT PULL] Move device tree graph parsing helpers to drivers/of
-Date: Thu, 20 Mar 2014 16:03:26 +0000
-Message-ID: <20140320160326.DF57CC4067A@trevor.secretlab.ca>
-References: <1394126000.3622.66.camel@paszta.hi.pengutronix.de> < 20140307182330.75168C40AE3@trevor.secretlab.ca> <20140310102630.3cb1bcd7@ samsung.com> <20140310143758.3734FC405FA@trevor.secretlab.ca> <1394708896. 3577.21.camel@paszta.hi.pengutronix.de> <20140313113527.GM21483@n2100.arm. linux.org.uk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140313113527.GM21483@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: exynos: added mailbox node
+Date: Thu, 20 Mar 2014 21:39:56 +0530
+Message-ID: <CABb+yY1rvozkGS34CHt8YEJqvGRXuHV09=AdS3=zQBx=DjFDCQ@mail.gmail.com>
+References: <1395057839-23871-1-git-send-email-ks.giri@samsung.com>
+	<5346848.pBsh8NcQja@wuerfel>
+	<CABb+yY0XXMQaEuDV0FeURjOijYEUKyqU9Dr6XTDRcxc1qaBu9g@mail.gmail.com>
+	<201403191846.28563.arnd@arndb.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201403191846.28563.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Girish K S <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Ilho Lee <ilho215.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 13 Mar 2014 11:35:28 +0000, Russell King - ARM Linux <linux@arm.linux.org.uk> wrote:
-> On Thu, Mar 13, 2014 at 12:08:16PM +0100, Philipp Zabel wrote:
-> > I'm not sure if maybe I misunderstood or missed a mail, but I haven't
-> > seen a proposal to resolve the situation without rewinds. Given that
-> > Mauro already reverted the media tree and applied conflicting changes,
-> > that's probably not going to happen?
-> 
-> Grant and myself have exchanged emails in private on this discussing what
-> should happen - essentially Grant's position is that he's happy to leave
-> this stuff queued provided a resolution to his concerns are forthcoming.
-> 
-> However, what I find incredibly unfair is that we're taking the rap for
-> these bad bindings.  From what I can see, these bad bindings were merged
-> into the V4L2 code with _zero_ review by DT maintainers.  It's quite
-> clear that DT maintainers would have objected to them had they seen them,
-> but they didn't.  And the lack of documentation of the bindings which
-> has been something that's been insisted on is also disgusting.
+On Wed, Mar 19, 2014 at 11:16 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Monday 17 March 2014, Jassi Brar wrote:
 
-When a binding is limited to a single driver, review isn't critical.
-When it is local to a single subsystem the bar is a little higher. Yes,
-it should have had more review, but the surface area is still minimal.
-By turning the binding into a generic pattern that all subsystems are
-welcome to use the bar becomes higher still. It is not unreasonable for
-a binding a new round of review when it is being adapted to become more
-generic.
+>>   Perhaps the mailbox controller driver should name its links as it
+>> wants. By how the remote works with the mailbox links, the client
+>> driver asks for a specific mailbox link (which maybe a hardcoded
+>> string in the driver or be gotten alongside other data via client's
+>> DT) ?
+>
+> I don't see why we should do it any different from the other bindings.
+> Let's just stick with mboxes/mbox-names or mailboxes/mailbox-names
+> if you prefer.
+>
+>>   IOW we can't have a generic API/DT-bindings that could get us
+>> reusable client drivers. But only common framework/code that would
+>> otherwise be duplicated by every platform.
+>
+> That is a major benefit though.
+> Also even if most drivers won't work across multiple platforms, there
+> is still a reasonable chance that /some/ drivers will.
+>
+It seems those /some/ drivers will have to work with everything same
+but the channel name (which the client could get from its DT node when
+the second platform appears).
 
-V4L2 can and should continue to use what it has. It certainly is not
-okay to break existing platforms. All of my issues are directed toward
-new users.
+Anyways, I accept your opinion and I will specify DT binding for
+mailbox<->client in next revision.
 
-Despite my concerns, I do want this series to get merged in the next
-merge window.
+Also I just read the new requirement of 'peek_message' for QMTM
+driver, which isn't supported atm but should be easy.
 
-g.
+Thanks
+-Jassi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
