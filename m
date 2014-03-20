@@ -1,96 +1,92 @@
-From: Byungho An <bh74.an@samsung.com>
-Subject: [PATCH V9 0/7] add new Samsung SXGBE driver
-Date: Thu, 20 Mar 2014 15:23:39 -0700
-Message-ID: <000101cf448b$0ce28b30$26a7a190$@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-language: en-us
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: netdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: 'David Miller' <davem@davemloft.net>, ks.giri@samsung.com, siva.kallam@samsung.com, vipul.pandya@samsung.com, ilho215.lee@samsung.com
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v4 1/3] [media] of: move graph helpers from drivers/media/v4l2-core to drivers/of
+Date: Thu, 20 Mar 2014 22:23:47 +0000
+Message-ID: <20140320222347.CAB6DC412EA@trevor.secretlab.ca>
+References: <1393340304-19005-1-git-send-email-p.zabel@pengutronix.de> < 20140226113729.A9D5AC40A89@trevor.secretlab.ca> <20140308122321.9D433C40612 @trevor.secretlab.ca> <3632624.gNVi6QOfGx@avalon>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3632624.gNVi6QOfGx@avalon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Philipp Zabel <philipp.zabel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+On Sat, 08 Mar 2014 16:50:33 +0100, Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+> Hi Grant,
+> 
+> On Saturday 08 March 2014 12:23:21 Grant Likely wrote:
+> > On Sat, 8 Mar 2014 12:46:05 +0200, Tomi Valkeinen wrote:
+> > > On 07/03/14 19:18, Grant Likely wrote:
+> > > > From a pattern perspective I have no problem with that.... From an
+> > > > individual driver binding perspective that is just dumb! It's fine for
+> > > > the ports node to be optional, but an individual driver using the
+> > > > binding should be explicit about which it will accept. Please use either
+> > > > a flag or a separate wrapper so that the driver can select the
+> > > > behaviour.
+> > > 
+> > > Why is that? The meaning of the DT data stays the same, regardless of
+> > > the existence of the 'ports' node. The driver uses the graph helpers to
+> > > parse the port/endpoint data, so individual drivers don't even have to
+> > > care about the format used.
+> > 
+> > You don't want to give options to the device tree writer. It should work
+> > one way and one way only. Every different combination is a different
+> > permutation to get wrong. The only time we should be allowing for more
+> > than one way to do it is when there is an existing binding that has
+> > proven to be insufficient and it needs to be extended, such as was done
+> > with interrupts-extended to deal with deficiencies in the interrupts
+> > property.
+> > 
+> > > As I see it, the graph helpers should allow the drivers to iterate the
+> > > ports and the endpoints for a port. These should work the same way, no
+> > > matter which abbreviated format is used in the dts.
+> > > 
+> > > >> The helper should find the two endpoints in both cases.
+> > > >> 
+> > > >> Tomi suggests an even more compact form for devices with just one port:
+> > > >> 	device {
+> > > >> 	
+> > > >> 		endpoint { ... };
+> > > >> 		
+> > > >> 		some-other-child { ... };
+> > > >> 	
+> > > >> 	};
+> > > > 
+> > > > That's fine. In that case the driver would specifically require the
+> > > > endpoint to be that one node.... although the above looks a little weird
+> > > 
+> > > The driver can't require that. It's up to the board designer to decide
+> > > how many endpoints are used. A driver may say that it has a single input
+> > > port. But the number of endpoints for that port is up to the use case.
+> > 
+> > Come now, when you're writing a driver you know if it will ever be
+> > possible to have more than one port. If that is the case then the
+> > binding should be specifically laid out for that. If there will never be
+> > multiple ports and the binding is unambiguous, then, and only then,
+> > should the shortcut be used, and only the shortcut should be accepted.
+> 
+> Whether multiple nodes are possible for a device is indeed known to the driver 
+> author, but the number of endpoints depends on the board. In most cases 
+> multiple endpoints are possible. If we decide that the level of simplification 
+> should be set in stone in the device DT bindings (i.e. making the ports and/or 
+> port nodes required or forbidden, but not optional), then I believe this calls 
+> for always having a port node even when a single port is needed. I'm fine with 
+> leaving the ports node out, but having no port node might be too close to 
+> over-simplification.
 
-This is 9th posting for SAMSUNG SXGBE driver.
+Just to make sure we're on the same page (and that I'm parsing
+correctly): Are you saying the individual 'port' nodes should be
+required? Or that the container 'ports' node should always be required?
 
-Changes since v1:
-- changed name of driver to SXGbE as per Ben's comment
-- squashed Joe's neatening for many stuff in original patches
+If you're saying that the individual port nodes should be required, then
+yes I agree. I'm still a little uncomfortable about there being a choice
+between the link directly in the port node or in a child endpoint node,
+but I'll compromise on this if we put sanity checking into the API (as I
+replied on the other thread).
 
-Changes since v2:
-- updated and split binding document as per Mark's comment
-- clean up codes as per Joe's comment
-- removed unused fields and clean up codes as per Francois's comment
-- removed module parameters as per Dave's comment
-- moved driver directory to samsung/sxgbe/
+Whether or not a container 'ports' node is present I think should be
+defined by the device binding. It really comes down to organization of
+data. If the device is sufficiently complex that it makes sense to group
+the ports together (say, because the device has other children with a
+different purpose), then 'ports' makes absolute sense.
 
-Changes since v3:
-- fixed Missing a blank line after declarations as per Dave's comment
-- clean up codes as per Joe's comment
-- removed reference of net_device.{irq, base_addr} as per Francois's comment
-
-Changes since v4:
-- updated binding document and DT related function as per Mark's comment
-
-Changes since v5:
-- updated binding document and DT related function as per Florian's comment
-- fixed typo and shortened code as per Joe's comment
-
-Changes since v6:
-- updated TSO related functions as per Rayagond's comment
-- updated binding document as per Mark's comment
-- removed WoL patch from this patch set
-
-Changes since v7:
-- updated TSO related functions as per Rayagond's comment
-
-Changes since v8:
-- removed select and depends statement from vendor sub-section as per 
-  Dave's comment
-
-Byungho An (1):
-      MAINTAINERS: add maintainer for Samsung sxgbe driver
-
-Girish K S (1):
-      net: sxgbe: add EEE(Energy Efficient Ethernet) for Samsung sxgbe
-
-Siva Reddy (2):
-      sxgbe: Add device-tree binding support document
-      net: sxgbe: add basic framework for Samsung 10Gb ethernet driver
-
-Vipul Pandya (3):
-      net: sxgbe: add TSO support for Samsung sxgbe
-      net: sxgbe: add Checksum offload support for Samsung sxgbe
-      net: sxgbe: add ethtool related functions support Samsung sxgbe
-
- .../devicetree/bindings/net/samsung-sxgbe.txt      |   60 +
- MAINTAINERS                                        |    9 +
- drivers/net/ethernet/Kconfig                       |    1 +
- drivers/net/ethernet/Makefile                      |    1 +
- drivers/net/ethernet/samsung/Kconfig               |   16 +
- drivers/net/ethernet/samsung/Makefile              |    5 +
- drivers/net/ethernet/samsung/sxgbe/Kconfig         |    9 +
- drivers/net/ethernet/samsung/sxgbe/Makefile        |    4 +
- drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h  |  539 +++++
- drivers/net/ethernet/samsung/sxgbe/sxgbe_core.c    |  261 +++
- drivers/net/ethernet/samsung/sxgbe/sxgbe_desc.c    |  515 +++++
- drivers/net/ethernet/samsung/sxgbe/sxgbe_desc.h    |  298 +++
- drivers/net/ethernet/samsung/sxgbe/sxgbe_dma.c     |  387 ++++
- drivers/net/ethernet/samsung/sxgbe/sxgbe_dma.h     |   51 +
- drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c |  588 +++++
- drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c    | 2316 ++++++++++++++++++++
- drivers/net/ethernet/samsung/sxgbe/sxgbe_mdio.c    |  271 +++
- drivers/net/ethernet/samsung/sxgbe/sxgbe_mtl.c     |  252 +++
- drivers/net/ethernet/samsung/sxgbe/sxgbe_mtl.h     |  104 +
- .../net/ethernet/samsung/sxgbe/sxgbe_platform.c    |  262 +++
- drivers/net/ethernet/samsung/sxgbe/sxgbe_reg.h     |  488 +++++
- drivers/net/ethernet/samsung/sxgbe/sxgbe_xpcs.c    |   92 +
- drivers/net/ethernet/samsung/sxgbe/sxgbe_xpcs.h    |   38 +
- include/linux/sxgbe_platform.h                     |   54 +
- 24 files changed, 6621 insertions(+)
-
-Thanks,
-Byungho An
+g.
