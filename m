@@ -1,114 +1,106 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v7 3/3] arm64: Add architecture support for PCI
-Date: Thu, 20 Mar 2014 11:38:21 +0000
-Message-ID: <20140320113820.GH6457@e106497-lin.cambridge.arm.com>
-References: <1394811258-1500-1-git-send-email-Liviu.Dudau@arm.com>
- <8312584.jdZZuHGAjg@wuerfel>
- <20140320094654.GZ6457@e106497-lin.cambridge.arm.com>
- <201403201217.22339.arnd@arndb.de>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [PATCHv4 2/5] Input: edt-ft5x06: Add DT support
+Date: Thu, 20 Mar 2014 12:40:55 +0100
+Message-ID: <20140320124055.53d469e7@ipc1.ka-ro>
+References: <1395234563-11034-1-git-send-email-LW@KARO-electronics.de>
+	<1395234563-11034-3-git-send-email-LW@KARO-electronics.de>
+	<20140320093719.GB14420@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <201403201217.22339.arnd@arndb.de>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Catalin Marinas <Catalin.Marinas@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140320093719.GB14420@e106331-lin.cambridge.arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Fugang Duan <B38611@freescale.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Henrik Rydberg <rydberg@euromail.se>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jg1.han@samsung.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <Pawel.Moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Sachin Kamat <sachin.kamat@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Simon Budig <simon.budig@kernelconcepts.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 20, 2014 at 11:17:22AM +0000, Arnd Bergmann wrote:
-> On Thursday 20 March 2014, Liviu Dudau wrote:
-> > On Wed, Mar 19, 2014 at 06:37:51PM +0000, Arnd Bergmann wrote:
-> > > On Wednesday 19 March 2014 17:21:41 Liviu Dudau wrote:
-> > > >=20
-> > > > My ultimate point is that no matter how long we argue about the=
- shape of the functions that
-> > > > I've added into arch/arm64/kernel/pci.c I don't think we can ge=
-t away without having that
-> > > > file, or at least not in the first phase if we want speedy inte=
-gration into mainline.
-> > >=20
-> > > Let me simplify the discussion here:
-> > >=20
-> > > NAK to adding yet another architecture specific implementation.
-> >=20
-> > So what would be your approach for handling pci_address_to_pio() in=
- a non-arch specific way?
-> >=20
-> > unsigned long __weak pci_address_to_pio(phys_addr_t address)
-> > {
-> > #ifdef ARCH_HAS_IOSPACE
-> >         if (address > IO_SPACE_LIMIT)
-> >                 return (unsigned long)-1;
-> >=20
-> >         return (unsigned long) address;
-> > #else
-> >         struct ioresource *res;
-> >=20
-> >         list_for_each_entry(res, &io_list, list) {
-> >                 if (address >=3D res->start &&
-> >                         address < res->start + res->size) {
-> >                         return res->start - address;
-> >                 }
-> >         }
-> >=20
-> >         return (unsigned long)-1;
-> > #endif
-> > }
-> >=20
-> >=20
-> > Either that, or you have more magic rabbits than me.
->=20
-> I don't even understand why you want to create a generic pci_address_=
-to_pio
-> implementation, when we don't need that for arm64 at all. Unless I'm
-> missing something important, that function is only called in case of
-> PCI_PROBE_DEVTREE with pci_of_scan on PowerPC. I don't expect any
-> architecture to do the same thing, and the only other architecture th=
-at
-> needs something like it (sparc) has a different implementation.
+Hi,
 
-Because in my [v7 2/6]* patch for the generic host bridge support I sta=
-rt
-using pci_address_to_pio to fix the conversion of PCI ranges to resourc=
-es.
-That requires an arm64 (or more correctly, an arch with memory mapped I=
-O
-specific) version of pci_address_to_pio().
+Mark Rutland wrote:
+> On Wed, Mar 19, 2014 at 01:09:20PM +0000, Lothar Wa=C3=9Fmann wrote:
+> >=20
+> > Signed-off-by: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
+> > ---
+> >  .../bindings/input/touchscreen/edt-ft5x06.txt      |   41 ++++++
+> >  drivers/input/touchscreen/edt-ft5x06.c             |  144 ++++++++=
++++++++-----
+> >  2 files changed, 154 insertions(+), 31 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/input/touchsc=
+reen/edt-ft5x06.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/ed=
+t-ft5x06.txt b/Documentation/devicetree/bindings/input/touchscreen/edt-=
+ft5x06.txt
+> > new file mode 100644
+> > index 0000000..e5adc76
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x0=
+6.txt
+> > @@ -0,0 +1,41 @@
+> > +FocalTech EDT-FT5x06 Polytouch driver
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +Required properties:
+> > + - compatible:  "edt,edt-ft5x06"
+>=20
+> Is the 'x' part of a particular product name, or is this a class of
+> devices?
+>=20
+The FT5x06 datasheet lists 3 variants for different panel sizes.
+I'll add distinct compatible strings for those chips, though their SW
+interface is (currently) identical:
+|Required properties:
+| - compatible:  "edt,edt-ft5206", "edt,edt-ft5x06"
+|           or:  "edt,edt-ft5306", "edt,edt-ft5x06"
+|           or:  "edt,edt-ft5406", "edt,edt-ft5x06"
 
-Best regards,
-Liviu
 
+> > + - reg:         I2C slave address of the chip (0x38)
+> > + - interrupt-parent: a phandle pointing to the interrupt controlle=
+r
+> > +                     serving the interrupt for this chip
+> > + - interrupts:       interrupt specification for this chip
 >=20
-> The regular (non-DEVTREE) PCI bus scan should just be able to transla=
-te
-> the BUS I/O addresses into Linux I/O port numbers using io_offset,
-> without going through an intermediate step of translating into a CPU
-> physical address first, so the entire lookup method won't get used.
->=20
-> The reason why PowerPC needs it is that they traditionally don't
-> use PCI config space access to assign or look at resources, but
-> instead rely on the firmware to have set it up in advance and then
-> put matching information into DT and the BARs. For Solaris and AIX,
-> it's probably easier to use the information from DT, but in Linux,
-> we already need to implement the manual bus scan, e.g. to do
-> PCI device hotplugging if nothing else.
->=20
-> 	Arnd
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" =
-in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
+> How many? What are they for?
+>
+I'll change it to:=20
+| - interrupts:       interrupt specification for the touchdetect
+|                     interrupt
 
+> > + - report_rate: allows setting the report rate in the range from 3=
+ to
+> > +                14.
+>=20
+> However, why can the kernel not decide the report rate? This doesn't
+> sound like something that needs to vary per-board.
+>=20
+> Also, s/_/-/ in property names, please.
+>=20
+OK, I'll drop the property, which also simplyfies the code a bit.
+
+> > +#define EDT_GET_PROP(name, reg) {					\
+> > +	const u32 *prop =3D of_get_property(np, #name, NULL);		\
+> > +	if (prop)							\
+> > +		edt_ft5x06_register_write(tsdata, reg, be32_to_cpu(*prop)); \
+> > +}
+>=20
+> Use of_property_read_u32, it'll handle endianness conversion for you.
+>=20
+> Use of of_get_property is almost always wrong.
+>=20
+Sure.
+
+
+Lothar Wa=C3=9Fmann
 --=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+___________________________________________________________
+
+Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
+Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
+Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
+Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
+
+www.karo-electronics.de | info@karo-electronics.de
+___________________________________________________________
