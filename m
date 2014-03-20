@@ -1,83 +1,79 @@
-From: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v11 10/27] iommu/exynos: use managed device helper functions
-Date: Thu, 20 Mar 2014 19:03:33 +0900
-Message-ID: <20140320190333.9c3555b097e97d593faddbdd@samsung.com>
-References: <20140314140542.f4ded6c50dbd8a1d937bf354@samsung.com>
- <CAK9yfHw7zYaX9EYFE+m3Mh-u8Uiyubx-cS0EwPmfW+0weLiBKw@mail.gmail.com>
- <20140318200915.7dd833ce0fddbbd6ecd8dac9@samsung.com>
- <532862ED.8040809@samsung.com>
- <20140319175927.a3feadcacbffe80eca1d3421@samsung.com>
- <CAK9yfHxxo2eFh38gPZkpYf1ueBWySWqPzgLV_tSSykzHhNzN8g@mail.gmail.com>
- <532988CA.4000008@samsung.com>
+From: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
+Subject: Re: [PATCH 09/11] ARM: at91/dt: define main xtal frequency of the
+ at91sam9261ek board
+Date: Thu, 20 Mar 2014 11:09:53 +0100
+Message-ID: <CACh+v5Psjgs=v2feP3oETXgxUXw6JsVDXBKhEG4OPCP1-YM1aQ@mail.gmail.com>
+References: <1395173924-3648-1-git-send-email-b.brezillon.dev@gmail.com>
+ <1395173924-3648-10-git-send-email-b.brezillon.dev@gmail.com>
+ <CACh+v5OF52ZuDBpkqpev1Jxv0DJ1ckRR+DjcX500i3o0o4HE9A@mail.gmail.com>
+ <532AB9EC.1030507@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <532988CA.4000008-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux DeviceTree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Samsung SOC <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Antonios Motakis <a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Prathyush <prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <532AB9EC.1030507@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Boris BREZILLON <b.brezillon.dev@gmail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, linux-doc@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Mike Turquette <mturquette@linaro.org>, Boris BREZILLON <brezillonboris@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 19 Mar 2014 13:08:42 +0100, Tomasz Figa wrote:
-> On 19.03.2014 10:01, Sachin Kamat wrote:
-> > On 19 March 2014 14:29, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> >> On Tue, 18 Mar 2014 16:14:53 +0100, Tomasz Figa wrote:
-> >>> On 18.03.2014 12:09, Cho KyongHo wrote:
-> >>>> On Fri, 14 Mar 2014 20:52:43 +0530, Sachin Kamat wrote:
-> >>>>> Hi KyongHo,
-> >>>>>
-> >>>>> On 14 March 2014 10:35, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> >>>>>> This patch uses managed device helper functions in the probe().
-> >>>>>>
-> >>>>>> Signed-off-by: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> >>>>>> ---
-> >>>>> [snip]
-> >>>>>
-> >>>>>> +       data->clk = devm_clk_get(dev, "sysmmu");
-> >>>>>> +       if (IS_ERR(data->clk)) {
-> >>>>>> +               dev_info(dev, "No gate clock found!\n");
-> >>>>>> +               data->clk = NULL;
-> >>>>>> +       }
-> >>>>>
-> >>>>> Why aren't you returning from here upon error?
-> >>>>
-> >>>> It is for the case of a System MMU which does not need clock gating.
-> >>>>
-> >>>
-> >>> Are there really such cases?
-> >>>
-> >>
-> >> Yes.
-> >> Especially in the case of initial stage of new SoC development.
-> >>
-> >> I have experianced some software workaround for H/W restriction
-> >> needs prevention of clock gating for some devices.
-> >
-> > So aren't these basically some exceptions/hacks rather than the usual way
-> > of functioning of the device?
-> >
-> 
-> This actually raises a good question, whether we really need to support 
-> such early development SoC versions in mainline.
-> 
-> Another thing is that if you need to assure that a clock is ungated, you 
-> must acquire it and prepare_enable explicitly, so I don't think this 
-> kind of handling is correct.
-> 
-On early development step of a new SoC, clock related stuffs and
-some device drivers like display controller are usually developed in parallel.
+That's right. I keep forgetting this.
 
-In that case, -ENOENT from clk_get() must not treated as an error.
-"[PATCH v11 20/17] iommu/exynos: allow having multiple System MMUs for a master H/W"
-patch distinguishes -ENOENT from other error values returned by devm_clk_get().
-
-Regards,
-
-KyongHo
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2014-03-20 10:50 GMT+01:00 Boris BREZILLON <b.brezillon.dev@gmail.com>:
+>
+> Le 20/03/2014 10:24, Jean-Jacques Hiblot a =E9crit :
+>
+>> 2014-03-18 21:18 GMT+01:00 Boris BREZILLON <brezillonboris@gmail.com>:
+>>>
+>>> Define at91sam9261ek main crystal frequency.
+>>>
+>>> Signed-off-by: Boris BREZILLON <b.brezillon.dev@gmail.com>
+>>> ---
+>>>   arch/arm/boot/dts/at91sam9261ek.dts |    4 ++++
+>>>   1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/at91sam9261ek.dts
+>>> b/arch/arm/boot/dts/at91sam9261ek.dts
+>>> index 2ce527e..7175986 100644
+>>> --- a/arch/arm/boot/dts/at91sam9261ek.dts
+>>> +++ b/arch/arm/boot/dts/at91sam9261ek.dts
+>>> @@ -29,6 +29,10 @@
+>>>                          compatible =3D "atmel,osc", "fixed-clock";
+>>>                          clock-frequency =3D <18432000>;
+>>>                  };
+>>> +
+>>> +               main_xtal: main_xtal {
+>>> +                       clock-frequency =3D <18432000>;
+>>> +               };
+>>>          };
+>>>
+>>>          ahb {
+>>> --
+>>> 1.7.9.5
+>>>
+>> You forgot to remove the old fixed-clock definition for the main_clock:
+>> clock@0
+>
+>
+> We need this clock when CCF is disabled (when using the old at91 clk
+> implementation).
+> I'm afraid we'll have to keep it until we move all sam9 SoCs and boards to
+> CCF (and DT).
+>
+> Best Regards,
+>
+> Boris
+>
+>>
+>> Otherwise:
+>> Acked-by: Jean-Jacques HIBLOT <jjhiblot@traphandler.com>
+>
+>
