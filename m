@@ -1,41 +1,44 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: [PATCH v2] ASoC: tda998x: Fix lack of required reg in DT documentation
-Date: Thu, 20 Mar 2014 18:06:11 +0100
-Message-ID: <20140320180611.6c42bc9e@armhf>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Subject: [PATCH 0/3] Fix NAND propeties for k2hk-evm
+Date: Thu, 20 Mar 2014 19:06:21 +0200
+Message-ID: <1395335184-4745-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: dwmw2@infradead.org, computersforpeace@gmail.com, galak@codeaurora.org, santosh.shilimkar@ti.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, rob@landley.net, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIEkyQyBhZGRyZXNzIChyZWcpIGlzIHJlcXVpcmVkIGZvciB0aGUgVERBOTk4eCBkcml2ZXIg
-dG8gYmUgbG9hZGVkCmFuZCBpbml0aWFsaXplZC4KClNpZ25lZC1vZmYtYnk6IEplYW4tRnJhbmNv
-aXMgTW9pbmUgPG1vaW5lamZAZnJlZS5mcj4KLS0tCi0gdjIKCS0gZG9uJ3QgZm9yY2UgdGhlIEky
-QyBhZGRyZXNzIHRvIGJlIDB4NzAKVGhpcyBwYXRjaCBhcHBsaWVzIHRvIGxpbnV4LW5leHQuCi0t
-LQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9pMmMvdGRhOTk4eC50eHQg
-fCAyICsrCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9pMmMvdGRhOTk4eC50eHQgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2kyYy90ZGE5OTh4LnR4dAppbmRleCBk
-N2RmMDFjLi5mYzdlZmZhIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZHJtL2kyYy90ZGE5OTh4LnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZHJtL2kyYy90ZGE5OTh4LnR4dApAQCAtMyw2ICszLDggQEAgRGV2aWNlLVRyZWUg
-YmluZGluZ3MgZm9yIHRoZSBOWFAgVERBOTk4eCBIRE1JIHRyYW5zbWl0dGVyCiBSZXF1aXJlZCBw
-cm9wZXJ0aWVzOwogICAtIGNvbXBhdGlibGU6IG11c3QgYmUgIm54cCx0ZGE5OTh4IgogCisgIC0g
-cmVnOiBJMkMgYWRkcmVzcworCiBPcHRpb25hbCBwcm9wZXJ0aWVzOgogICAtIGludGVycnVwdHM6
-IGludGVycnVwdCBudW1iZXIgYW5kIHRyaWdnZXIgdHlwZQogCWRlZmF1bHQ6IHBvbGxpbmcKLS0g
-CjEuOS4xCgoKLS0gCktlbiBhciBjJ2hlbnRhw7EJfAkgICAgICAqKiBCcmVpemggaGEgTGludXgg
-YXRhdiEgKioKSmVmCQl8CQlodHRwOi8vbW9pbmVqZi5mcmVlLmZyLwpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+This series is intedent to fix problems founded when checked NAND flash
+for k2hk-emv board rev2.0. Whithout this series we cannot use ubifs and
+whole volume of present NAND memory.
+
+Based on linux-next tag: next-20140320
+
+Murali Karicheri (3):
+  ARM: dts: k2hk-evm: set ubifs partition size for 512M NAND
+  mtd: davinci-nand: add dts property for NAND_NO_SUBPAGE_WRITE option
+  ARM: dts: k2hk-evm: disable subpage write for davinci nand device
+
+ Documentation/devicetree/bindings/mtd/davinci-nand.txt | 2 ++
+ arch/arm/boot/dts/k2hk-evm.dts                         | 3 ++-
+ drivers/mtd/nand/davinci_nand.c                        | 3 +++
+ 3 files changed, 7 insertions(+), 1 deletion(-)
+
+-- 
+1.8.3.2
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
