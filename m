@@ -1,45 +1,92 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core to drivers/of
-Date: Thu, 20 Mar 2014 17:23:02 +0000
-Message-ID: <20140320172302.CD320C4067A@trevor.secretlab.ca>
-References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> < 139468148.3QhLg3QYq1@avalon> <531F08A8.300@ti.com> <1883687.VdfitvQEN3@ avalon>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1883687.VdfitvQEN3@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
+From: Byungho An <bh74.an@samsung.com>
+Subject: [PATCH V8 0/7] add new Samsung SXGBE driver
+Date: Thu, 20 Mar 2014 10:25:54 -0700
+Message-ID: <012c01cf4461$75af8f70$610eae50$@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+Content-language: en-us
+Sender: netdev-owner@vger.kernel.org
+To: 'netdev' <netdev@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: 'David Miller' <davem@davemloft.net>, 'GIRISH K S' <ks.giri@samsung.com>, 'SIVAREDDY KALLAM' <siva.kallam@samsung.com>, 'Vipul Chandrakant' <vipul.pandya@samsung.com>, 'Ilho Lee' <ilho215.lee@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Mar 2014 14:16:37 +0100, Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
-> On Tuesday 11 March 2014 14:59:20 Tomi Valkeinen wrote:
-> > So depending on the use case, the endpoints would point to opposite
-> > direction from the encoder's point of view.
-> > 
-> > And if I gathered Grant's opinion correctly (correct me if I'm wrong),
-> > he thinks things should be explicit, i.e. the bindings for, say, an
-> > encoder should state that the encoder's output endpoint _must_ contain a
-> > remote-endpoint property, whereas the encoder's input endpoint _must
-> > not_ contain a remote-endpoint property.
-> 
-> Actually my understand was that DT links would have the same direction as the 
-> data flow. There would be no ambiguity in that case as the direction of the 
-> data flow is known. What happens for bidirectional data flows still need to be 
-> discussed though. And if we want to use the of-graph bindings to describe 
-> graphs without a data flow, a decision will need to be taken there too.
+Hi all,
 
-On further thinking, I would say linkage direction should be in the
-direction that would be considered the dependency order... I'm going to
-soften my position though. I think the generic pattern should still
-recommend unidirection links in direction of device dependency, but
-I'm okay with allowing the bidirection option if the helper functions
-are modified to validate the target endpoint. I think it needs to test
-for the following:
-- Make sure the endpoint either:
-  - does not have a backlink, or
-  - the backlink points back to the origin node
-- If the target is an endpoint node, then make sure the parent doesn't
-  have a link of any kind
-- If the target is a port node, make sure it doesn't have any endpoint
-  children nodes at all.
+This is 8th posting for SAMSUNG SXGBE driver.
 
-g.
+Changes since v1:
+- changed name of driver to SXGbE as per Ben's comment
+- squashed Joe's neatening for many stuff in original patches
+
+Changes since v2:
+- updated and split binding document as per Mark's comment
+- clean up codes as per Joe's comment
+- removed unused fields and clean up codes as per Francois's comment
+- removed module parameters as per Dave's comment
+- moved driver directory to samsung/sxgbe/
+
+Changes since v3:
+- fixed Missing a blank line after declarations as per Dave's comment
+- clean up codes as per Joe's comment
+- removed reference of net_device.{irq, base_addr} as per Francois's comment
+
+Changes since v4:
+- updated binding document and DT related function as per Mark's comment
+
+Changes since v5:
+- updated binding document and DT related function as per Florian's comment
+- fixed typo and shortened code as per Joe's comment
+
+Changes since v6:
+- updated TSO related functions as per Rayagond's comment
+- updated binding document as per Mark's comment
+- removed WoL patch from this patch set
+
+Changes since v7:
+- updated TSO related functions as per Rayagond's comment
+
+Byungho An (1):
+      MAINTAINERS: add maintainer for Samsung sxgbe driver
+
+Girish K S (1):
+      net: sxgbe: add EEE(Energy Efficient Ethernet) for Samsung sxgbe
+
+Siva Reddy (2):
+      sxgbe: Add device-tree binding support document
+      net: sxgbe: add basic framework for Samsung 10Gb ethernet driver
+
+Vipul Pandya (3):
+      net: sxgbe: add TSO support for Samsung sxgbe
+      net: sxgbe: add Checksum offload support for Samsung sxgbe
+      net: sxgbe: add ethtool related functions support Samsung sxgbe
+
+ .../devicetree/bindings/net/samsung-sxgbe.txt      |   60 +
+ MAINTAINERS                                        |    9 +
+ drivers/net/ethernet/Kconfig                       |    1 +
+ drivers/net/ethernet/Makefile                      |    1 +
+ drivers/net/ethernet/samsung/Kconfig               |   20 +
+ drivers/net/ethernet/samsung/Makefile              |    5 +
+ drivers/net/ethernet/samsung/sxgbe/Kconfig         |    9 +
+ drivers/net/ethernet/samsung/sxgbe/Makefile        |    4 +
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h  |  539 +++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_core.c    |  261 +++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_desc.c    |  515 +++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_desc.h    |  298 +++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_dma.c     |  387 ++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_dma.h     |   51 +
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c |  588 +++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c    | 2316 ++++++++++++++++++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_mdio.c    |  271 +++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_mtl.c     |  252 +++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_mtl.h     |  104 +
+ .../net/ethernet/samsung/sxgbe/sxgbe_platform.c    |  262 +++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_reg.h     |  488 +++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_xpcs.c    |   92 +
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_xpcs.h    |   38 +
+ include/linux/sxgbe_platform.h                     |   54 +
+ 24 files changed, 6625 insertions(+)
+
+Thanks,
+Byungho An
