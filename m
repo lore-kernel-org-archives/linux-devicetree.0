@@ -1,59 +1,79 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH] ASoC: tda998x: Fix lack of required reg in DT
- documentation
-Date: Thu, 20 Mar 2014 16:22:58 +0000
-Message-ID: <20140320162258.GX7528@n2100.arm.linux.org.uk>
-References: <20140320092639.48F68A6279@smtp3-g21.free.fr>
- <532ADFD8.80301@gmail.com> <20140320140156.5d768b1f@armhf>
- <532AEDE2.3080306@gmail.com> <20140320145221.09252bf6@armhf>
- <20140320143110.GU7528@n2100.arm.linux.org.uk>
- <20140320155935.7a474173@armhf>
- <20140320151934.GV7528@n2100.arm.linux.org.uk>
- <20140320165440.195cd2ea@armhf>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20140320165440.195cd2ea@armhf>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: [PATCH 3/3] video: clps711x: Add bindings documentation for CLPS711X framebuffer
+Date: Thu, 20 Mar 2014 20:26:58 +0400
+Message-ID: <1395332818-23193-1-git-send-email-shc_work@mail.ru>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 20, 2014 at 04:54:40PM +0100, Jean-Francois Moine wrote:
-> On Thu, 20 Mar 2014 15:19:34 +0000
-> Russell King - ARM Linux <linux@arm.linux.org.uk> wrote:
-> 
-> > I'm not saying that it has to match the physical device fitted - I'm
-> > merely suggesting not using nxp,tda1998x which could (and as Sebastian
-> > has found, does) conflict with other devices with different properties.
-> > 
-> > We still auto-detect the exact device type by reading the ID register
-> > because that's the most reliable way to detect exactly what kind of
-> > device is fitted to the board.
-> 
-> I don't see the problem.
-> 
-> Actually the driver handles the tda9989, tda19988 and tda19989 (2
-> variants). If some board has, for example, the tda9983 and if the
-> driver is extended to handle this chip (i.e. mainly ignore the CEC
-> part), setting 'nxp,tda998x' in the associated DT will still work.
+Add OF document for Cirrus Logic CLPS711X framebuffer driver.
 
-So you have to encode in the driver that if you see a tda9983 device,
-you don't touch the CEC part.
+Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+---
+ .../bindings/video/cirrus,clps711x-fb.txt          | 48 ++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/cirrus,clps711x-fb.txt
 
-Now think about how you'd handle a tda998x compatible device but with
-the CEC stuff at a different I2C address.
-
+diff --git a/Documentation/devicetree/bindings/video/cirrus,clps711x-fb.txt b/Documentation/devicetree/bindings/video/cirrus,clps711x-fb.txt
+new file mode 100644
+index 0000000..9d59ad3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/cirrus,clps711x-fb.txt
+@@ -0,0 +1,48 @@
++* Currus Logic CLPS711X Framebuffer
++
++Required properties:
++- compatible: Shall contain "cirrus,clps711x-fb".
++- reg: Physical base address and length of the controller's registers +
++   location and size of the framebuffer memory.
++- clocks: phandle + clock specifier pair of the FB reference clock.
++
++Required nodes:
++- display: Phandle to a display node as described in display-timing.txt.
++  Additionally, the display node has to define properties:
++  - bits-per-pixel: Bits per pixel.
++  - ac-prescale: LCD AC bias frequency. This frequency is the required
++     AC bias frequency for a given manufacturer's LCD plate.
++  - cmap-invert: Invert the color levels (Optional).
++
++Optional properties:
++- lcd-supply: Regulator for LCD supply voltage.
++
++Example:
++	fb: fb@800002c0 {
++		compatible = "cirrus,ep7312-fb", "cirrus,clps711x-fb";
++		reg = <0x800002c0 0xd44>, <0x60000000 0xc000>;
++		clocks = <&clks 2>;
++		lcd-supply = <&reg5v0>;
++		display = <&display>;
++	};
++
++	display: display {
++		model = "320x240x4";
++		native-mode = <&timing0>;
++		bits-per-pixel = <4>;
++		ac-prescale = <17>;
++
++		display-timings {
++			timing0: 320x240 {
++				hactive = <320>;
++				hback-porch = <0>;
++				hfront-porch = <0>;
++				hsync-len = <0>;
++				vactive = <240>;
++				vback-porch = <0>;
++				vfront-porch = <0>;
++				vsync-len = <0>;
++				clock-frequency = <6500000>;
++			};
++		};
++	};
 -- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
