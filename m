@@ -1,60 +1,75 @@
-From: Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v3 6/7] OF: spi: Add overlay bus handler
-Date: Thu, 20 Mar 2014 11:51:10 +0100
-Message-ID: <532AC81E.90303@mycable.de>
-References: <1395179766-31575-1-git-send-email-pantelis.antoniou@konsulko.com> <1395179766-31575-7-git-send-email-pantelis.antoniou@konsulko.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v7 3/3] arm64: Add architecture support for PCI
+Date: Thu, 20 Mar 2014 12:17:22 +0100
+Message-ID: <201403201217.22339.arnd@arndb.de>
+References: <1394811258-1500-1-git-send-email-Liviu.Dudau@arm.com> <8312584.jdZZuHGAjg@wuerfel> <20140320094654.GZ6457@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+Content-Type: Text/Plain;
+  charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1395179766-31575-7-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Georgi Vlaev <georgi.vlaev-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20140320094654.GZ6457@e106497-lin.cambridge.arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Catalin Marinas <Catalin.Marinas@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Am 18.03.2014 22:56, schrieb Pantelis Antoniou:
-> Add the bus handler registration needed for performing overlays
-> containing spi devices.
+On Thursday 20 March 2014, Liviu Dudau wrote:
+> On Wed, Mar 19, 2014 at 06:37:51PM +0000, Arnd Bergmann wrote:
+> > On Wednesday 19 March 2014 17:21:41 Liviu Dudau wrote:
+> > > 
+> > > My ultimate point is that no matter how long we argue about the shape of the functions that
+> > > I've added into arch/arm64/kernel/pci.c I don't think we can get away without having that
+> > > file, or at least not in the first phase if we want speedy integration into mainline.
+> > 
+> > Let me simplify the discussion here:
+> > 
+> > NAK to adding yet another architecture specific implementation.
 > 
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/spi/spi.c | 345 ++++++++++++++++++++++++++++++++++++++----------------
->  1 file changed, 242 insertions(+), 103 deletions(-)
+> So what would be your approach for handling pci_address_to_pio() in a non-arch specific way?
 > 
+> unsigned long __weak pci_address_to_pio(phys_addr_t address)
+> {
+> #ifdef ARCH_HAS_IOSPACE
+>         if (address > IO_SPACE_LIMIT)
+>                 return (unsigned long)-1;
+> 
+>         return (unsigned long) address;
+> #else
+>         struct ioresource *res;
+> 
+>         list_for_each_entry(res, &io_list, list) {
+>                 if (address >= res->start &&
+>                         address < res->start + res->size) {
+>                         return res->start - address;
+>                 }
+>         }
+> 
+>         return (unsigned long)-1;
+> #endif
+> }
+> 
+> 
+> Either that, or you have more magic rabbits than me.
 
-nc is not set in of_register_spi_device and causes an Oops.
-Using nc = node works.
-What is the purpose of nc?
+I don't even understand why you want to create a generic pci_address_to_pio
+implementation, when we don't need that for arm64 at all. Unless I'm
+missing something important, that function is only called in case of
+PCI_PROBE_DEVTREE with pci_of_scan on PowerPC. I don't expect any
+architecture to do the same thing, and the only other architecture that
+needs something like it (sparc) has a different implementation.
 
-> +of_register_spi_device(struct spi_master *master, struct device_node *node)
-> +{
-> +	struct spi_device *spi;
-> +	struct device_node *nc;
-> +	int err;
-> +	u32 value;
-> +
-> +	/* Alloc an spi_device */
-> +	spi = spi_alloc_device(master);
-> +	if (!spi) {
-> +		dev_err(&master->dev, "spi_device alloc error for %s\n",
-> +			nc->full_name);
-> +		err = -ENOMEM;
-> +		goto err_out;
-> +	}
-> +
-> +	/* Select device driver */
-> +	err = of_modalias_node(nc, spi->modalias,
-> +				sizeof(spi->modalias));
-> +	if (err) {
-> +		dev_err(&master->dev, "cannot find modalias for %s\n",
-> +			nc->full_name);
-> +		goto err_out;
-> +	}
+The regular (non-DEVTREE) PCI bus scan should just be able to translate
+the BUS I/O addresses into Linux I/O port numbers using io_offset,
+without going through an intermediate step of translating into a CPU
+physical address first, so the entire lookup method won't get used.
 
+The reason why PowerPC needs it is that they traditionally don't
+use PCI config space access to assign or look at resources, but
+instead rely on the firmware to have set it up in advance and then
+put matching information into DT and the BARs. For Solaris and AIX,
+it's probably easier to use the information from DT, but in Linux,
+we already need to implement the manual bus scan, e.g. to do
+PCI device hotplugging if nothing else.
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
