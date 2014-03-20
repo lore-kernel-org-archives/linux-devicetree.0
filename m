@@ -1,55 +1,36 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH] ASoC: tda998x: Fix lack of required reg in DT documentation
-Date: Thu, 20 Mar 2014 14:32:18 +0100
-Message-ID: <532AEDE2.3080306@gmail.com>
-References: <20140320092639.48F68A6279@smtp3-g21.free.fr> <532ADFD8.80301@gmail.com> <20140320140156.5d768b1f@armhf>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Subject: Re: [PATCH 0/2] Disable subpage write for k2hk-evm
+Date: Thu, 20 Mar 2014 15:34:43 +0200
+Message-ID: <532AEE73.4090904@ti.com>
+References: <1395267345-27795-1-git-send-email-ivan.khoronzhuk@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140320140156.5d768b1f@armhf>
+In-Reply-To: <1395267345-27795-1-git-send-email-ivan.khoronzhuk@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: santosh.shilimkar@ti.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, grygorii.strashko@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 03/20/2014 02:01 PM, Jean-Francois Moine wrote:
-> On Thu, 20 Mar 2014 13:32:24 +0100
-> Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
+Please ignore this series
+
+On 03/20/2014 12:15 AM, Ivan Khoronzhuk wrote:
+> These patches disable subpage write for k2hk-evm.
 >
->>> +  - reg: I2C address - must be <0x70>
->>
->> TDA9983b datasheet says:
->>
->> "Bits A0 and A1 of the I2C-bus device address are externally selected
->> by pins A0 and A1."
->>
->> Therefore, 0x70, 0x71, 0x72, and 0x73 are valid i2c addresses.
+> Based on linux-next
+> tag: next-20140319
 >
-> Sebastian,
+> Ivan Khoronzhuk (2):
+>    mtd: davinci-nand: add dts property for NAND_NO_SUBPAGE_WRITE option
+>    ARM: dts: keystone: disable subpage write for davinci nand device
 >
-> That's interesting!
->
-> For the Cubox and the AMX33XX boards, the I2C address of the HDMI
-> registers is 0x70, and the I2C address of the CEC registers is 0x34.
->
-> For other boards using the TDA998x family, if the I2C address is
-> different from 0x70, have you an idea about what can be the CEC I2C
-> address? (this value is actually hard-coded in the TDA998x driver)
+>   Documentation/devicetree/bindings/mtd/davinci-nand.txt | 2 ++
+>   arch/arm/boot/dts/k2hk-evm.dts                         | 1 +
+>   drivers/mtd/nand/davinci_nand.c                        | 3 +++
+>   3 files changed, 6 insertions(+)
 >
 
-Ok, I had another round of google'ing and found this:
-http://hipstercircuits.com/wp-content/uploads/2013/05/TDA19988.pdf
-
-There, the datasheet specifically for TDA19988 only states 0x70 and
-0x34 as the two i2c addresses. Therefore, TDA19988 has fixed i2c
-addresses while TDA9983b has configurable (main) i2c address.
-
-Not as easy as we thought ;)
-
-I suggest reword the reg property to:
-"- reg: shall be set to the I2C address"
-
-and optionally list all known addresses for each TDA[1]998x in the
-binding.
-
-Sebastian
+-- 
+Regards,
+Ivan Khoronzhuk
