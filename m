@@ -1,54 +1,60 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v6 13/36] mtd: st_spi_fsm: Add device-tree binding documentation
-Date: Thu, 20 Mar 2014 09:20:45 +0000
-Message-ID: <1395307268-12721-14-git-send-email-lee.jones@linaro.org>
-References: <1395307268-12721-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1395307268-12721-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, computersforpeace@gmail.com
-Cc: linux-mtd@lists.infradead.org, dwmw2@infradead.org, Angus.Clark@st.com, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org
+From: Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
+Subject: Re: [PATCH 08/11] ARM: at91/dt: move at91sam9261 SoC to the new main
+ clock model
+Date: Thu, 20 Mar 2014 10:22:51 +0100
+Message-ID: <CACh+v5Ngvdt=FnyzMz4Q0i1U7kNmrgXWDavzi4xvLDJR0qh0WA@mail.gmail.com>
+References: <1395173924-3648-1-git-send-email-b.brezillon.dev@gmail.com>
+	<1395173924-3648-9-git-send-email-b.brezillon.dev@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1395173924-3648-9-git-send-email-b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <brezillonboris-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Cc: devicetree@vger.kernel.org
-Acked-by Angus Clark <angus.clark@st.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- Documentation/devicetree/bindings/mtd/st-fsm.txt | 26 ++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/st-fsm.txt
+2014-03-18 21:18 GMT+01:00 Boris BREZILLON <brezillonboris-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+>
+> Signed-off-by: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/at91sam9261.dtsi |   10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/at91sam9261.dtsi b/arch/arm/boot/dts/at91sam9261.dtsi
+> index e21dda0..e00fabc 100644
+> --- a/arch/arm/boot/dts/at91sam9261.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9261.dtsi
+> @@ -45,6 +45,14 @@
+>                 reg = <0x20000000 0x08000000>;
+>         };
+>
+> +       clocks {
+> +               main_xtal: main_xtal {
+> +                       compatible = "fixed-clock";
+> +                       #clock-cells = <0>;
+> +                       clock-frequency = <0>;
+> +               };
+> +       };
+> +
+>         ahb {
+>                 compatible = "simple-bus";
+>                 #address-cells = <1>;
+> @@ -534,7 +542,7 @@
+>                                         compatible = "atmel,at91rm9200-clk-main";
+>                                         #clock-cells = <0>;
+>                                         interrupts-extended = <&pmc AT91_PMC_MOSCS>;
+> -                                       clocks = <&clk32k>;
+> +                                       clocks = <&main_xtal>;
+>                                 };
+>
+>                                 plla: pllack {
+> --
+> 1.7.9.5
+>
 
-diff --git a/Documentation/devicetree/bindings/mtd/st-fsm.txt b/Documentation/devicetree/bindings/mtd/st-fsm.txt
-new file mode 100644
-index 0000000..c248939
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/st-fsm.txt
-@@ -0,0 +1,26 @@
-+* ST-Microelectronics SPI FSM Serial (NOR) Flash Controller
-+
-+Required properties:
-+  - compatible : Should be "st,spi-fsm"
-+  - reg        : Contains register's location and length.
-+  - reg-names  : Should contain the reg names "spi-fsm"
-+  - interrupts : The interrupt number
-+  - pinctrl-0  : Standard Pinctrl phandle (see: pinctrl/pinctrl-bindings.txt)
-+
-+Optional properties:
-+  - st,syscfg          : Phandle to boot-device system configuration registers
-+  - st,boot-device-reg : Address of the aforementioned boot-device register(s)
-+  - st,boot-device-spi : Expected boot-device value if booted via this device
-+
-+Example:
-+	spifsm: spifsm@fe902000{
-+	        compatible         = "st,spi-fsm";
-+	        reg                =  <0xfe902000 0x1000>;
-+	        reg-names          = "spi-fsm";
-+	        pinctrl-0          = <&pinctrl_fsm>;
-+		st,syscfg	   = <&syscfg_rear>;
-+	        st,boot-device-reg = <0x958>;
-+	        st,boot-device-spi = <0x1a>;
-+		status = "okay";
-+	};
-+
--- 
-1.8.3.2
+Acked-by: Jean-Jacques HIBLOT <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
