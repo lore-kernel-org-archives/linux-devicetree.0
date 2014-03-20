@@ -1,101 +1,46 @@
-From: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 1/1] regulator: Add new driver for ST's PWM controlled
- voltage regulators
-Date: Thu, 20 Mar 2014 11:09:03 -0500
-Message-ID: <20140320160903.GX18529@joshc.qualcomm.com>
-References: <1395324654-8235-1-git-send-email-lee.jones@linaro.org>
- <20140320152837.GW18529@joshc.qualcomm.com>
- <20140320154827.GE8207@lee--X1>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/2] arm64: dts: exynos: added mailbox node
+Date: Thu, 20 Mar 2014 17:12:46 +0100
+Message-ID: <7073716.9YBOcHOu36@wuerfel>
+References: <1395057839-23871-1-git-send-email-ks.giri@samsung.com> <201403191846.28563.arnd@arndb.de> <CABb+yY1rvozkGS34CHt8YEJqvGRXuHV09=AdS3=zQBx=DjFDCQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140320154827.GE8207@lee--X1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CABb+yY1rvozkGS34CHt8YEJqvGRXuHV09=AdS3=zQBx=DjFDCQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Girish K S <ks.giri@samsung.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Suman Anna <s-anna@ti.com>, Ilho Lee <ilho215.lee@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 20, 2014 at 03:48:27PM +0000, Lee Jones wrote:
-[..]
-> > > +	dutycycle = (ST_PWM_REG_PERIOD / 100) *
-> > > +		drvdata->duty_cycle_table[sel].dutycycle;
-> > 
-> > Considering (ST_PWM_REG_PERIOD / 100) is constant, could you get away
-> > with dropping this calculation by just putting the already-adjusted
-> > values into your duty cycle table?
+On Thursday 20 March 2014 21:39:56 Jassi Brar wrote:
+> On Wed, Mar 19, 2014 at 11:16 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Monday 17 March 2014, Jassi Brar wrote:
 > 
-> I thought about this, but I settled on this way for clarity. Also,
-> this is only a constant if no one decides to change the period, so the
-> calculation needs to be done somewhere. Did you have something better
-> in mind?
+> >>   Perhaps the mailbox controller driver should name its links as it
+> >> wants. By how the remote works with the mailbox links, the client
+> >> driver asks for a specific mailbox link (which maybe a hardcoded
+> >> string in the driver or be gotten alongside other data via client's
+> >> DT) ?
+> >
+> > I don't see why we should do it any different from the other bindings.
+> > Let's just stick with mboxes/mbox-names or mailboxes/mailbox-names
+> > if you prefer.
+> >
+> >>   IOW we can't have a generic API/DT-bindings that could get us
+> >> reusable client drivers. But only common framework/code that would
+> >> otherwise be duplicated by every platform.
+> >
+> > That is a major benefit though.
+> > Also even if most drivers won't work across multiple platforms, there
+> > is still a reasonable chance that /some/ drivers will.
+> >
+> It seems those /some/ drivers will have to work with everything same
+> but the channel name (which the client could get from its DT node when
+> the second platform appears).
 
-I was merely suggesting something like:
+Why would you ever have varying channel names? I would expect that
+the name is always fixed in the binding of the client driver, like
+we do for clocks or interrupts for instance.
 
-	#define T(uV, _duty) { uV, (ST_PWM_REG_PERIOD / 100) * _duty }
-	
-	static const struct st_pwm_voltages b2105_duty_cycle_table[] = {
-		T(1114000,  0),
-		T(1095000, 10),
-		T(1076000, 20),
-		T(1056000, 30),
-		T(1036000, 40),
-		T( 996000, 50),
-	};
-
-But, meh, it's marginally more complicated and doesn't save much, so
-I'll leave it up to you to decide whether or not you'd want to change
-it.
-
-> > > +static int st_pwm_regulator_probe(struct platform_device *pdev)
-> > > +{
-> > > +	struct device_node *np = pdev->dev.of_node;
-> > > +	struct st_pwm_regulator_data *drvdata;
-> > > +	const struct of_device_id *of_match;
-> > > +	struct regulator_dev *regulator;
-> > > +	struct regulator_config config = { };
-> > > +
-> > > +	if (!np) {
-> > > +		dev_err(&pdev->dev, "Device Tree node missing\n");
-> > > +		return -EINVAL;
-> > > +	}
-> > > +
-> > > +	of_match = of_match_device(st_pwm_of_match, &pdev->dev);
-> > > +	if (!of_match) {
-> > > +		dev_err(&pdev->dev, "failed to match of device\n");
-> > > +		return -ENODEV;
-> > > +	}
-> > > +	drvdata =  (struct st_pwm_regulator_data *) of_match->data;
-> > 
-> > Hrm, I typed "cast not necessary here", but then I realized it is
-> > necessary since you using it to cast away constness.
-> 
-> This is remnant from when I was doing something unessersariy
-> complcated in a previous (unpublished/personal) revision. I'll take a
-> look at this too, thanks.
-> 
-> > Are you safe assuming that there will only be one of these devices in a
-> > system?  It doesn't seem like much a burden to just allocate a new
-> > object and use it instead of a statically allocated one.
-> 
-> I have written this driver to be expandable. We have new systems
-> coming out which contain more than one of these regulators. Unless I'm
-> missing your meaning?
-
-Sorry I was unclear.  I'm really asking about feasibility of multiple
-instances of the same device (in this case the b2105).  The way the
-driver is currently written, this wouldn't work because the instance
-shared in the static b2105_info object.
-
-As long as you've at least thought about this case, then I'm satisfied.
-
-Thanks,
-  Josh
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
