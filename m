@@ -1,79 +1,64 @@
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: Re: [PATCH v6 04/18] ahci-platform: Add support for devices with
- more then 1 clock
-Date: Thu, 20 Mar 2014 13:28:19 +0100
-Message-ID: <532ADEE3.6070901@codethink.co.uk>
-References: <1392811320-3132-1-git-send-email-hdegoede@redhat.com> <1392811320-3132-5-git-send-email-hdegoede@redhat.com> <20140219145203.GC10134@htj.dyndns.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH] ASoC: tda998x: Fix lack of required reg in DT
+ documentation
+Date: Thu, 20 Mar 2014 12:36:40 +0000
+Message-ID: <20140320123640.GR7528@n2100.arm.linux.org.uk>
+References: <20140320092639.48F68A6279@smtp3-g21.free.fr>
+ <532ADFD8.80301@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20140219145203.GC10134@htj.dyndns.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, devicetree <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org, Oliver Schinagl <oliver@schinagl.nl>, Richard Zhu <Hong-Xing.Zhu@freescale.com>, linux-sunxi@googlegroups.com, Maxime Ripard <maxime.ripard@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <532ADFD8.80301@gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 19/02/14 15:52, Tejun Heo wrote:
-> On Wed, Feb 19, 2014 at 01:01:46PM +0100, Hans de Goede wrote:
->> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
->> index 434ab89..aaa0c08 100644
->> --- a/drivers/ata/ahci_platform.c
->> +++ b/drivers/ata/ahci_platform.c
->> @@ -87,6 +87,44 @@ static struct scsi_host_template ahci_platform_sht = {
->>   	AHCI_SHT("ahci_platform"),
->>   };
+On Thu, Mar 20, 2014 at 01:32:24PM +0100, Sebastian Hesselbarth wrote:
+> On 03/20/2014 09:58 AM, Jean-Francois Moine wrote:
+>> The I2C address (reg) is required for the TDA998x driver to be loaded
+>> and initialized.
 >>
->> +
->> +int ahci_platform_enable_clks(struct ahci_host_priv *hpriv)
+>> Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
+>> ---
+>> This patch applies to linux-next.
+>> ---
+>>   Documentation/devicetree/bindings/drm/i2c/tda998x.txt | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
+>> index d7df01c..fc7effa 100644
+>> --- a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
+>> +++ b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
+>> @@ -3,6 +3,8 @@ Device-Tree bindings for the NXP TDA998x HDMI transmitter
+>>   Required properties;
+>>     - compatible: must be "nxp,tda998x"
+>>
+>> +  - reg: I2C address - must be <0x70>
 >
-> Throughout the series, there are mixtures of one and two blank lines
-> in front of functions, let's just do one consistently.  Also, can you
-> please add proper function comments on top of the exported functions?
+> TDA9983b datasheet says:
 >
->> +{
->> +	int c, rc;
->> +
->> +	for (c = 0; c < AHCI_MAX_CLKS && hpriv->clks[c]; c++) {
->> +		rc = clk_prepare_enable(hpriv->clks[c]);
->> +		if (rc)
->> +			goto disable_unprepare_clk;
->> +	}
->> +	return 0;
->> +
->> +disable_unprepare_clk:
->> +	while (--c >= 0)
->> +		clk_disable_unprepare(hpriv->clks[c]);
->> +	return rc;
->> +}
->> +EXPORT_SYMBOL_GPL(ahci_platform_enable_clks);
->> +
->> +void ahci_platform_disable_clks(struct ahci_host_priv *hpriv)
->> +{
->> +	int c;
->> +
->> +	for (c = AHCI_MAX_CLKS - 1; c >= 0; c--)
->> +		if (hpriv->clks[c])
->> +			clk_disable_unprepare(hpriv->clks[c]);
->> +}
->> +EXPORT_SYMBOL_GPL(ahci_platform_disable_clks);
->> +
->> +
->> +static void ahci_put_clks(struct ahci_host_priv *hpriv)
->> +{
->> +	int c;
->> +
->> +	for (c = 0; c < AHCI_MAX_CLKS && hpriv->clks[c]; c++)
->> +		clk_put(hpriv->clks[c]);
->> +}
+> "Bits A0 and A1 of the I2C-bus device address are externally selected
+> by pins A0 and A1."
 >
-> Urgh, clk can't do devm?  ahci_platform itself should be able to build
-> devmized interface using devres_alloc() or devm_add_action().
-> Eh.... maybe later.
+> Therefore, 0x70, 0x71, 0x72, and 0x73 are valid i2c addresses.
 
-There is devm_clk_get()
-
+Thanks Sebastian, those kinds of details are very important to get right
+when it comes to the binding doc, much more so than what's in the code.
+It probably makes more sense not to specify what the address actually is.
+After all, that's a specification by the data sheet and software shouldn't
+really care what that is.
 
 -- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
