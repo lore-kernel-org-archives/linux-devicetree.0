@@ -1,44 +1,41 @@
 From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: [PATCH 0/3] Fix NAND propeties for k2hk-evm
-Date: Thu, 20 Mar 2014 19:06:21 +0200
-Message-ID: <1395335184-4745-1-git-send-email-ivan.khoronzhuk@ti.com>
+Subject: [PATCH 1/3] ARM: dts: k2hk-evm: set ubifs partition size for 512M NAND
+Date: Thu, 20 Mar 2014 19:06:22 +0200
+Message-ID: <1395335184-4745-2-git-send-email-ivan.khoronzhuk@ti.com>
+References: <1395335184-4745-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1395335184-4745-1-git-send-email-ivan.khoronzhuk@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: dwmw2@infradead.org, computersforpeace@gmail.com, galak@codeaurora.org, santosh.shilimkar@ti.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, rob@landley.net, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, linux-arm-kernel@lists.infradead.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, rob@landley.net, linux@arm.linux.org.uk, grygorii.strashko@ti.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, Murali Karicheri <m-karicheri2@ti.com>, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This series is intedent to fix problems founded when checked NAND flash
-for k2hk-emv board rev2.0. Whithout this series we cannot use ubifs and
-whole volume of present NAND memory.
+From: Murali Karicheri <m-karicheri2@ti.com>
 
-Based on linux-next tag: next-20140320
+The UBIFS partition size was incorrectly defined as for 128M NAND,
+but on k2hk-evm installed NAND flash size is 512M.
+Hence, correct it.
 
-Murali Karicheri (3):
-  ARM: dts: k2hk-evm: set ubifs partition size for 512M NAND
-  mtd: davinci-nand: add dts property for NAND_NO_SUBPAGE_WRITE option
-  ARM: dts: k2hk-evm: disable subpage write for davinci nand device
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+---
+ arch/arm/boot/dts/k2hk-evm.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- Documentation/devicetree/bindings/mtd/davinci-nand.txt | 2 ++
- arch/arm/boot/dts/k2hk-evm.dts                         | 3 ++-
- drivers/mtd/nand/davinci_nand.c                        | 3 +++
- 3 files changed, 7 insertions(+), 1 deletion(-)
-
+diff --git a/arch/arm/boot/dts/k2hk-evm.dts b/arch/arm/boot/dts/k2hk-evm.dts
+index 1a1335b..949ef7d 100644
+--- a/arch/arm/boot/dts/k2hk-evm.dts
++++ b/arch/arm/boot/dts/k2hk-evm.dts
+@@ -133,7 +133,7 @@
+ 
+ 			partition@180000 {
+ 				label = "ubifs";
+-				reg = <0x180000 0x7E80000>;
++				reg = <0x180000 0x1fe80000>;
+ 			};
+ 		};
+ 	};
 -- 
 1.8.3.2
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
