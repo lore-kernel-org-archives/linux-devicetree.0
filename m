@@ -1,65 +1,80 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RFC PATCH v2 0/2] clk: Support for DT assigned clock parents and
- rates
-Date: Thu, 20 Mar 2014 13:42:33 +0100
-Message-ID: <532AE239.9000800@samsung.com>
-References: <1393870533-20845-1-git-send-email-s.nawrocki@samsung.com>
- <53187C13.3040202@st.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v7 3/3] arm64: Add architecture support for PCI
+Date: Thu, 20 Mar 2014 12:50:04 +0000
+Message-ID: <20140320125004.GK6457@e106497-lin.cambridge.arm.com>
+References: <1394811258-1500-1-git-send-email-Liviu.Dudau@arm.com>
+ <201403201217.22339.arnd@arndb.de>
+ <20140320113820.GH6457@e106497-lin.cambridge.arm.com>
+ <201403201326.02377.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <53187C13.3040202-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201403201326.02377.arnd@arndb.de>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Catalin Marinas <Catalin.Marinas@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+On Thu, Mar 20, 2014 at 12:26:02PM +0000, Arnd Bergmann wrote:
+> On Thursday 20 March 2014, Liviu Dudau wrote:
+> > > I don't even understand why you want to create a generic pci_addr=
+ess_to_pio
+> > > implementation, when we don't need that for arm64 at all. Unless =
+I'm
+> > > missing something important, that function is only called in case=
+ of
+> > > PCI_PROBE_DEVTREE with pci_of_scan on PowerPC. I don't expect any
+> > > architecture to do the same thing, and the only other architectur=
+e that
+> > > needs something like it (sparc) has a different implementation.
+> >=20
+> > Because in my [v7 2/6]* patch for the generic host bridge support I=
+ start
+> > using pci_address_to_pio to fix the conversion of PCI ranges to res=
+ources.
+> > That requires an arm64 (or more correctly, an arch with memory mapp=
+ed IO
+> > specific) version of pci_address_to_pio().
+>=20
+> Yes, but why do you use it there?
 
-On 06/03/14 14:45, Maxime Coquelin wrote:
-> Hi Sylwester,
-> 
-> 	I like the principle of your implementation, but I have two questions:
-> 	1 - How can we manage PM with this solution, as the parent/rate will be 
-> set only once at probe time?
-> 	2 - How to set the parent of a parent clock (which can be shared with 
-> other devices)? Same question about the parent rates.
+I'm parsing the device tree and have reached the PCI IO range for the h=
+ost bridge.
+There is no host bridge created yet for that and hence no mapping. I ne=
+ed to
+take the DT range declaration that gives me   CPU start .. SIZE --> BUS=
+ start and
+convert it into   Logical IO port start .. Logical IO port end. While I=
+ could've
+come up with (yet) another function that does the conversion from CPU a=
+ddress to
+port IO address, I thought it would be nice to use the existing pci_add=
+ress_to_pio()
+function and adapt it to my needs. It has a __weak implementation anywa=
+y so I
+could overwrite it in the architecture code.
 
-Thanks for your feedback and apologies for late reply.
+To me it looked like a good plan and we had some discussions around my =
+initial
+goofy mistake of using pci_addr as physical address for translation. I =
+never
+thought it was considered a bad idea.
 
-IIUC your first concern is about a situation when clocks need to be
-reconfigured upon each resume from system sleep or runtime PM resume ?
-As I mentioned in v1 of the RFC I was considering having individual
-drivers calling explicitly the clocks set up routine. Presumably this
-would allow to resolve the power management related issue.
-One example I'm aware the approach as in this RFC wouldn't work is
-when a device in a SoC belongs to a power domain, which needs to be
-first switched on before we can start setting up and the clocks'
-configuration get lost after the power domain switch off.
+Best regards,
+Liviu
 
-OTOH I suspect devices for which one-time clocks setup is sufficient
-will be quite common. And for these there would need to be a single
-call to the setup routine in probe() I guess, since it wouldn't be
-possible to figure out just from the DT data when the actual call
-should be made.
+>=20
+> 	Arnd
+>=20
 
-For a global clocks configuration, I thought about specifying that
-in the clocks controller node, and then to have the setup routine
-called e.g. from of_clk_init(). I think that could work well enough,
-together with the patch [1], adding clock dependencies handling.
-But then the clock frequency set up function would need to be
-modified to respect the clock parent relationships, similarly as
-in patch series [2]. A just noticed [2] recently, after posting
-this RFC (adding Tero at Cc).
-
---
-Regards,
-Sylwester
-
-[1] http://www.spinics.net/lists/arm-kernel/msg310507.html
-[2] http://www.spinics.net/lists/linux-omap/msg103069.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
