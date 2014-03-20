@@ -1,36 +1,99 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: Re: [PATCH v5 2/2] i2c: New bus driver for the Qualcomm QUP I2C
- controller
-Date: Thu, 20 Mar 2014 00:04:37 -0500
-Message-ID: <20140320050437.GA29449@qualcomm.com>
-References: <1394762863-12154-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1394762863-12154-3-git-send-email-bjorn.andersson@sonymobile.com>
+From: "fugang.duan@freescale.com" <fugang.duan@freescale.com>
+Subject: RE: [PATCHv4 2/5] Input: edt-ft5x06: Add DT support
+Date: Thu, 20 Mar 2014 05:19:03 +0000
+Message-ID: <c9718f7215eb41439606b0107a8e2a02@BLUPR03MB373.namprd03.prod.outlook.com>
+References: <1395234563-11034-1-git-send-email-LW@KARO-electronics.de>
+ <1395234563-11034-3-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1394762863-12154-3-git-send-email-bjorn.andersson@sonymobile.com>
+In-Reply-To: <1395234563-11034-3-git-send-email-LW@KARO-electronics.de>
+Content-Language: en-US
 Sender: linux-doc-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Boyd <sboyd@codeaurora.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>
+To: =?utf-8?B?TG90aGFyIFdhw59tYW5u?= <LW@KARO-electronics.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, Henrik Rydberg <rydberg@euromail.se>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jg1.han@samsung.com>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Sachin Kamat <sachin.kamat@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Simon Budig <simon.budig@kernelconcepts.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 13, 2014 at 07:07:43PM -0700, Bjorn Andersson wrote:
-> This bus driver supports the QUP i2c hardware controller in the Qualcomm SOCs.
-> The Qualcomm Universal Peripheral Engine (QUP) is a general purpose data path
-> engine with input/output FIFOs and an embedded i2c mini-core. The driver
-> supports FIFO mode (for low bandwidth applications) and block mode (interrupt
-> generated for each block-size data transfer).
-> 
-
-<snip>
-
-
-Looks good.
-
-Reviewed-by: Andy Gross <agross@codeaurora.org>
-
--- 
-sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+RnJvbTogTG90aGFyIFdhw59tYW5uIDxMV0BLQVJPLWVsZWN0cm9uaWNzLmRlPg0KRGF0YTogV2Vk
+bmVzZGF5LCBNYXJjaCAxOSwgMjAxNCA5OjA5IFBNDQoNCj5UbzogRG1pdHJ5IFRvcm9raG92OyBE
+dWFuIEZ1Z2FuZy1CMzg2MTE7IEdyYW50IExpa2VseTsgSGVucmlrIFJ5ZGJlcmc7IElhbg0KPkNh
+bXBiZWxsOyBKaW5nb28gSGFuOyBLdW1hciBHYWxhOyBNYXJrIFJ1dGxhbmQ7IFBhd2VsIE1vbGw7
+IFJvYiBIZXJyaW5nOyBSb2INCj5MYW5kbGV5OyBTYWNoaW4gS2FtYXQ7IGRldmljZXRyZWVAdmdl
+ci5rZXJuZWwub3JnOyBsaW51eC1kb2NAdmdlci5rZXJuZWwub3JnOw0KPmxpbnV4LWlucHV0QHZn
+ZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgU2ltb24gQnVkaWc7
+IExvdGhhcg0KPldhw59tYW5uDQo+U3ViamVjdDogW1BBVENIdjQgMi81XSBJbnB1dDogZWR0LWZ0
+NXgwNjogQWRkIERUIHN1cHBvcnQNCj4NCj4NCj5TaWduZWQtb2ZmLWJ5OiBMb3RoYXIgV2HDn21h
+bm4gPExXQEtBUk8tZWxlY3Ryb25pY3MuZGU+DQo+LS0tDQo+IC4uLi9iaW5kaW5ncy9pbnB1dC90
+b3VjaHNjcmVlbi9lZHQtZnQ1eDA2LnR4dCAgICAgIHwgICA0MSArKysrKysNCj4gZHJpdmVycy9p
+bnB1dC90b3VjaHNjcmVlbi9lZHQtZnQ1eDA2LmMgICAgICAgICAgICAgfCAgMTQ0ICsrKysrKysr
+KysrKysrKy0tLS0tDQo+IDIgZmlsZXMgY2hhbmdlZCwgMTU0IGluc2VydGlvbnMoKyksIDMxIGRl
+bGV0aW9ucygtKSAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2lucHV0L3RvdWNoc2NyZWVuL2VkdC1mdDV4MDYudHh0DQo+DQo+ZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC90b3VjaHNjcmVlbi9l
+ZHQtZnQ1eDA2LnR4dA0KPmIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lucHV0
+L3RvdWNoc2NyZWVuL2VkdC1mdDV4MDYudHh0DQo+bmV3IGZpbGUgbW9kZSAxMDA2NDQNCj5pbmRl
+eCAwMDAwMDAwLi5lNWFkYzc2DQo+LS0tIC9kZXYvbnVsbA0KPisrKyBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC90b3VjaHNjcmVlbi9lZHQtZnQ1eDA2LnR4dA0KPkBA
+IC0wLDAgKzEsNDEgQEANCj4rRm9jYWxUZWNoIEVEVC1GVDV4MDYgUG9seXRvdWNoIGRyaXZlcg0K
+Pis9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQo+Kw0KPitSZXF1aXJlZCBw
+cm9wZXJ0aWVzOg0KPisgLSBjb21wYXRpYmxlOiAgImVkdCxlZHQtZnQ1eDA2Ig0KPisgLSByZWc6
+ICAgICAgICAgSTJDIHNsYXZlIGFkZHJlc3Mgb2YgdGhlIGNoaXAgKDB4MzgpDQo+KyAtIGludGVy
+cnVwdC1wYXJlbnQ6IGEgcGhhbmRsZSBwb2ludGluZyB0byB0aGUgaW50ZXJydXB0IGNvbnRyb2xs
+ZXINCj4rICAgICAgICAgICAgICAgICAgICAgc2VydmluZyB0aGUgaW50ZXJydXB0IGZvciB0aGlz
+IGNoaXANCj4rIC0gaW50ZXJydXB0czogICAgICAgaW50ZXJydXB0IHNwZWNpZmljYXRpb24gZm9y
+IHRoaXMgY2hpcA0KPisNCj4rT3B0aW9uYWwgcHJvcGVydGllczoNCj4rIC0gcmVzZXQtZ3Bpb3M6
+IEdQSU8gc3BlY2lmaWNhdGlvbiBmb3IgdGhlIFJFU0VUIGlucHV0DQo+KyAtIHdha2UtZ3Bpb3M6
+ICBHUElPIHNwZWNpZmljYXRpb24gZm9yIHRoZSBXQUtFIGlucHV0DQo+Kw0KPisgLSBwaW5jdHJs
+LW5hbWVzOiBzaG91bGQgYmUgImRlZmF1bHQiDQo+KyAtIHBpbmN0cmwtMDogICBhIHBoYW5kbGUg
+cG9pbnRpbmcgdG8gdGhlIHBpbiBzZXR0aW5ncyBmb3IgdGhlDQo+KyAgICAgICAgICAgICAgICBj
+b250cm9sIGdwaW9zDQo+Kw0KPisgLSB0aHJlc2hvbGQ6ICAgYWxsb3dzIHNldHRpbmcgdGhlICJj
+bGljayItdGhyZXNob2xkIGluIHRoZSByYW5nZQ0KPisgICAgICAgICAgICAgICAgZnJvbSAyMCB0
+byA4MC4NCj4rDQo+KyAtIGdhaW46ICAgICAgICBhbGxvd3Mgc2V0dGluZyB0aGUgc2Vuc2l0aXZp
+dHkgaW4gdGhlIHJhbmdlIGZyb20gMCB0bw0KPisgICAgICAgICAgICAgICAgMzEuIE5vdGUgdGhh
+dCBsb3dlciB2YWx1ZXMgaW5kaWNhdGUgaGlnaGVyDQo+KyAgICAgICAgICAgICAgICBzZW5zaXRp
+dml0eS4NCj4rDQo+KyAtIG9mZnNldDogICAgICBhbGxvd3Mgc2V0dGluZyB0aGUgZWRnZSBjb21w
+ZW5zYXRpb24gaW4gdGhlIHJhbmdlIGZyb20NCj4rICAgICAgICAgICAgICAgIDAgdG8gMzEuDQo+
+KyAtIHJlcG9ydF9yYXRlOiBhbGxvd3Mgc2V0dGluZyB0aGUgcmVwb3J0IHJhdGUgaW4gdGhlIHJh
+bmdlIGZyb20gMyB0bw0KPisgICAgICAgICAgICAgICAgMTQuDQo+Kw0KPitFeGFtcGxlOg0KPisJ
+cG9seXRvdWNoOiBlZHQtZnQ1eDA2QDM4IHsNCj4rCQljb21wYXRpYmxlID0gImVkdCxlZHQtZnQ1
+eDA2IjsNCj4rCQlyZWcgPSA8MHgzOD47DQo+KwkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsN
+Cj4rCQlwaW5jdHJsLTAgPSA8JmVkdF9mdDV4MDZfcGlucz47DQo+KwkJaW50ZXJydXB0LXBhcmVu
+dCA9IDwmZ3BpbzI+Ow0KPisJCWludGVycnVwdHMgPSA8NSAwPjsNCj4rCQlyZXNldC1ncGlvcyA9
+IDwmZ3BpbzIgNiAxPjsNCj4rCQl3YWtlLWdwaW9zID0gPCZncGlvNCA5IDA+Ow0KPisJfTsNCj5k
+aWZmIC0tZ2l0IGEvZHJpdmVycy9pbnB1dC90b3VjaHNjcmVlbi9lZHQtZnQ1eDA2LmMNCj5iL2Ry
+aXZlcnMvaW5wdXQvdG91Y2hzY3JlZW4vZWR0LWZ0NXgwNi5jDQo+aW5kZXggN2I0NDcwZC4uMjU3
+YTFjOCAxMDA2NDQNCj4tLS0gYS9kcml2ZXJzL2lucHV0L3RvdWNoc2NyZWVuL2VkdC1mdDV4MDYu
+Yw0KPisrKyBiL2RyaXZlcnMvaW5wdXQvdG91Y2hzY3JlZW4vZWR0LWZ0NXgwNi5jDQo+QEAgLTMz
+LDYgKzMzLDcgQEANCj4gI2luY2x1ZGUgPGxpbnV4L2RlYnVnZnMuaD4NCj4gI2luY2x1ZGUgPGxp
+bnV4L3NsYWIuaD4NCj4gI2luY2x1ZGUgPGxpbnV4L2dwaW8uaD4NCj4rI2luY2x1ZGUgPGxpbnV4
+L29mX2dwaW8uaD4NCj4gI2luY2x1ZGUgPGxpbnV4L2lucHV0L210Lmg+DQo+ICNpbmNsdWRlIDxs
+aW51eC9pbnB1dC9lZHQtZnQ1eDA2Lmg+DQo+DQpbLi4uXQ0KPisjaWZkZWYgQ09ORklHX09GDQo+
+K3N0YXRpYyBpbnQgZWR0X2Z0NXgwNl9pMmNfdHNfcHJvYmVfZHQoc3RydWN0IGRldmljZSAqZGV2
+LA0KPisJCQkJc3RydWN0IGVkdF9mdDV4MDZfdHNfZGF0YSAqdHNkYXRhKQ0KPit7DQo+KwlzdHJ1
+Y3QgZGV2aWNlX25vZGUgKm5wID0gZGV2LT5vZl9ub2RlOw0KPisNCj4rCWlmICghbnApDQo+KwkJ
+cmV0dXJuIC1FTk9ERVY7DQpEb24ndCBuZWVkIHRvIGNoZWNrIHRoZSBkZXZpY2Ugbm9kZSB2YWxp
+ZC4gSWYgdGhlIGRldmljZSBub2RlIGlzIG5vdCBleGlzdGVkLCB0aGUgZHJpdmVyIGRvbid0IHJ1
+biBwcm9iZS4NCg0KPisNCj4rCS8qDQo+KwkgKiBpcnFfcGluIGlzIG5vdCBuZWVkZWQgZm9yIERU
+IHNldHVwLg0KPisJICogaXJxIGlzIGFzc29jaWF0ZWQgdmlhICdpbnRlcnJ1cHRzJyBwcm9wZXJ0
+eSBpbiBEVA0KPisJICovDQo+Kwl0c2RhdGEtPmlycV9waW4gPSAtRUlOVkFMOw0KPisJdHNkYXRh
+LT5yZXNldF9waW4gPSBvZl9nZXRfbmFtZWRfZ3BpbyhucCwgInJlc2V0LWdwaW9zIiwgMCk7DQo+
+Kwl0c2RhdGEtPndha2VfcGluID0gb2ZfZ2V0X25hbWVkX2dwaW8obnAsICJ3YWtlLWdwaW9zIiwg
+MCk7DQo+Kw0KPisJcmV0dXJuIDA7DQo+K30NCj4rI2Vsc2UNCj4rc3RhdGljIGlubGluZSBpbnQg
+ZWR0X2Z0NXgwNl9pMmNfdHNfcHJvYmVfZHQoc3RydWN0IGRldmljZSAqZGV2LA0KPisJCQkJCXN0
+cnVjdCBlZHRfZnQ1eDA2X2kyY190c19kYXRhICp0c2RhdGEpIHsNCj4rCXJldHVybiAtRU5PREVW
+Ow0KPit9DQo+KyNlbmRpZg0KPisNCj4gc3RhdGljIGludCBlZHRfZnQ1eDA2X3RzX3Byb2JlKHN0
+cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsDQo+IAkJCQkJIGNvbnN0IHN0cnVjdCBpMmNfZGV2aWNl
+X2lkICppZCkNCj4gew0KPkBAIC03MTQsMzIgKzc3NSw0MCBAQCBzdGF0aWMgaW50IGVkdF9mdDV4
+MDZfdHNfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCwNCj4NCj4gCWRldl9kYmcoJmNs
+aWVudC0+ZGV2LCAicHJvYmluZyBmb3IgRURUIEZUNXgwNiBJMkNcbiIpOw0KPg0KPisJdHNkYXRh
+ID0gZGV2bV9remFsbG9jKCZjbGllbnQtPmRldiwgc2l6ZW9mKCp0c2RhdGEpLCBHRlBfS0VSTkVM
+KTsNCj4rCWlmICghdHNkYXRhKSB7DQo+KwkJZGV2X2VycigmY2xpZW50LT5kZXYsICJmYWlsZWQg
+dG8gYWxsb2NhdGUgZHJpdmVyIGRhdGEuXG4iKTsNCj4rCQlyZXR1cm4gLUVOT01FTTsNCj4rCX0N
+Cj4rDQo+IAlpZiAoIXBkYXRhKSB7DQo+LQkJZGV2X2VycigmY2xpZW50LT5kZXYsICJubyBwbGF0
+Zm9ybSBkYXRhP1xuIik7DQo+LQkJcmV0dXJuIC1FSU5WQUw7DQo+KwkJZXJyb3IgPSBlZHRfZnQ1
+eDA2X2kyY190c19wcm9iZV9kdCgmY2xpZW50LT5kZXYsIHRzZGF0YSk7DQo+KwkJaWYgKGVycm9y
+KSB7DQo+KwkJCWRldl9lcnIoJmNsaWVudC0+ZGV2LA0KPisJCQkJIkRUIHByb2JlIGZhaWxlZCBh
+bmQgbm8gcGxhdGZvcm0gZGF0YSBwcmVzZW50XG4iKTsNCj4rCQkJcmV0dXJuIGVycm9yOw0KPisJ
+CX0NCj4rCX0gZWxzZSB7DQo+KwkJdHNkYXRhLT5yZXNldF9waW4gPSBwZGF0YS0+cmVzZXRfcGlu
+Ow0KPisJCXRzZGF0YS0+aXJxX3BpbiA9IHBkYXRhLT5pcnFfcGluOw0KPisJCXRzZGF0YS0+d2Fr
+ZV9waW4gPSAtRUlOVkFMOw0KPiAJfQ0KWy4uLl0NCg0KVGhhbmtzLA0KQW5keQ0K
