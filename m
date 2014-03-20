@@ -1,370 +1,1395 @@
-From: Zhangfei Gao <zhangfei.gao@gmail.com>
-Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Thu, 20 Mar 2014 22:00:09 +0800
-Message-ID: <CAMj5Bkiaw=BT_EUdjthPjgk_pp0z44yPjh4_AfHXqiJLUiDe=g@mail.gmail.com>
-References: <1395132017-15928-1-git-send-email-zhangfei.gao@linaro.org>
-	<1395132017-15928-4-git-send-email-zhangfei.gao@linaro.org>
-	<4611515.XyVGvsaLcW@wuerfel>
+From: jon@ringle.org
+Subject: [PATCH] tty: serial: sc16is7xx
+Date: Thu, 20 Mar 2014 10:02:57 -0400
+Message-ID: <1395324177-15311-1-git-send-email-jon@ringle.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <4611515.XyVGvsaLcW@wuerfel>
-Sender: netdev-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Zhangfei Gao <zhangfei.gao@linaro.org>, netdev <netdev@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, jslaby@suse.cz, shc_work@mail.ru, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Jon Ringle <jringle@gridpoint.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Arnd
+=46rom: Jon Ringle <jringle@gridpoint.com>
 
-On Tue, Mar 18, 2014 at 7:25 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tuesday 18 March 2014 16:40:17 Zhangfei Gao wrote:
->
->> +
->> +static void __iomem *ppebase;
->
-> The global 'ppebase' seems hacky. Isn't that a SoC-specific register area, while
-> the rest of the driver is reusable across SoCs?
->
-> What does 'ppe' stand for?
->
-> What if there are multiple instances of this, which each have their own ppebase?
+The SC16IS7xx is a slave I2C-bus/SPI interface to a single-channel
+high performance UART. The SC16IS7xx=E2=80=99s internal register set is
+backward-compatible with the widely used and widely popular 16C450.
 
-In this specific platform,
-ppe is the only module controlling all the fifos for all the net controller.
-And each controller connect to specific port.
-ppe has 2048 channels, sharing by all the controller, only if not overlapped.
+The SC16IS7xx also provides additional advanced features such as
+auto hardware and software flow control, automatic RS-485 support, and
+software reset.
 
-So the static ppebase is required, which I don't like too.
-Two inputs required, one is port, which is connect to the controller.
-The other is start channel, currently I use id, and start channel is
-RX_DESC_NUM * priv->id;  /* start_addr */
+Signed-off-by: Jon Ringle <jringle@gridpoint.com>
+---
+ drivers/tty/serial/Kconfig       |   10 +
+ drivers/tty/serial/Makefile      |    1 +
+ drivers/tty/serial/sc16is7xx.c   | 1258 ++++++++++++++++++++++++++++++=
+++++++++
+ include/uapi/linux/serial_core.h |    3 +
+ 4 files changed, 1272 insertions(+)
+ create mode 100644 drivers/tty/serial/sc16is7xx.c
 
->
->> +static void hip04_config_port(struct hip04_priv *priv, u32 speed, u32 duplex)
->> +{
->> +     u32 val;
->> +
->> +     priv->speed = speed;
->> +     priv->duplex = duplex;
->> +
->> +     switch (speed) {
->> +     case SPEED_1000:
->> +             val = 8;
->> +             break;
->> +     case SPEED_100:
->> +             if (priv->id)
->> +                     val = 7;
->> +             else
->> +                     val = 1;
->> +             break;
->> +     default:
->> +             val = 0;
->> +             break;
->> +     }
->> +     writel_relaxed(val, priv->base + GE_PORT_MODE)
->
-> This also seems to encode knowledge about a particular implementation
-> into the driver. Maybe it's better to add a property for the port
-> mode?
-
-After check Documentation/devicetree/bindings/net/ethernet.txt,
-I think phy-mode is more suitable here.
-
-        switch (priv->phy_mode) {
-        case PHY_INTERFACE_MODE_SGMII:
-                if (speed == SPEED_1000)
-                        val = 8;
-                else
-                        val = 7;
-                break;
-        case PHY_INTERFACE_MODE_MII:
-                val = 1;        /* SPEED_100 */
-                break;
-        default:
-                val = 0;
-                break;
-        }
-        writel_relaxed(val, priv->base + GE_PORT_MODE);
-
-probe:
-priv->phy_mode = of_get_phy_mode(node);
-
->
->
->> +static void hip04_set_xmit_desc(struct hip04_priv *priv, dma_addr_t phys)
->> +{
->> +     writel_relaxed(phys, priv->base + PPE_CFG_TX_PKT_BD_ADDR);
->> +}
->> +
->> +static void hip04_set_recv_desc(struct hip04_priv *priv, dma_addr_t phys)
->> +{
->> +     writel_relaxed(phys, ppebase + priv->port * 4 + PPE_CFG_RX_CFF_ADDR);
->> +}
->> +
->> +static u32 hip04_recv_cnt(struct hip04_priv *priv)
->> +{
->> +     return readl_relaxed(priv->base + PPE_HIS_RX_PKT_CNT);
->> +}
->
-> At the very least, the hip04_set_xmit_desc() function needs to use 'writel'
-> rather than 'writel_relaxed'. Otherwise data that is being sent out
-> can be stuck in the CPU's write buffers and you send stale data on the wire.
->
-> For the receive path, you may or may not need to use 'readl', depending
-> on how DMA is serialized by this device. If you have MSI interrupts, the
-> interrupt message should already do the serialization, but if you have
-> edge or level triggered interrupts, you normally need to have one readl()
-> from the device register between the IRQ and the data access.
-
-Really, will update to readl/wirtel in xmit and hip04_rx_poll.
-I just got impression, use *_relaxed as much as possible for better performance.
-
->
->
->> +static void endian_change(void *p, int size)
->> +{
->> +     unsigned int *to_cover = (unsigned int *)p;
->> +     int i;
->> +
->> +     size = size >> 2;
->> +     for (i = 0; i < size; i++)
->> +             *(to_cover+i) = htonl(*(to_cover+i));
->> +}
->> +
->> +static int hip04_rx_poll(struct napi_struct *napi, int budget)
->> +{
->> +     struct hip04_priv *priv = container_of(napi,
->> +                           struct hip04_priv, napi);
->> +     struct net_device *ndev = priv->ndev;
->> +     struct sk_buff *skb;
->> +     struct rx_desc *desc;
->> +     unsigned char *buf;
->> +     int rx = 0;
->> +     unsigned int cnt = hip04_recv_cnt(priv);
->> +     unsigned int len, tmp[16];
->> +
->> +     while (cnt) {
->> +             buf = priv->rx_buf[priv->rx_head];
->> +             skb = build_skb(buf, priv->rx_buf_size);
->> +             if (unlikely(!skb))
->> +                     net_dbg_ratelimited("build_skb failed\n");
->> +             dma_map_single(&ndev->dev, skb->data,
->> +                     RX_BUF_SIZE, DMA_FROM_DEVICE);
->> +             memcpy(tmp, skb->data, 64);
->> +             endian_change((void *)tmp, 64);
->> +             desc = (struct rx_desc *)tmp;
->> +             len = desc->pkt_len;
->
-> The dma_map_single() seems misplaced here, for all I can tell, the
-> data has already been transferred. Maybe you mean dma_unmap_single?
->
-> I don't see why you copy 64 bytes out of the buffer using endian_change,
-> rather than just looking at the first word, which seems to have the
-> only value you are interested in.
-Russell suggested using be16_to_cpu etc to replace memcpy.
-
->
->> +             if (len > RX_BUF_SIZE)
->> +                     len = RX_BUF_SIZE;
->> +             if (0 == len)
->> +                     break;
->> +
->> +             skb_reserve(skb, NET_SKB_PAD + NET_IP_ALIGN);
->> +             skb_put(skb, len);
->> +             skb->protocol = eth_type_trans(skb, ndev);
->> +             napi_gro_receive(&priv->napi, skb);
->> +
->> +             buf = netdev_alloc_frag(priv->rx_buf_size);
->> +             if (!buf)
->> +                     return -ENOMEM;
->> +             priv->rx_buf[priv->rx_head] = buf;
->> +             dma_map_single(&ndev->dev, buf, RX_BUF_SIZE, DMA_TO_DEVICE);
->
-> Maybe you mean DMA_FROM_DEVICE? The call here doesn't seem to make any
-> sense. You also need to use the return value of dma_map_single() every
-> time you call it.
->
->> +             hip04_set_recv_desc(priv, virt_to_phys(buf));
->
-> and put it right here in the next line. virt_to_phys() is not the correct
-> function call, that is what dma_map_single() is meant for.
-
-OK.
->
->> +             priv->rx_head = RX_NEXT(priv->rx_head);
->> +             if (rx++ >= budget)
->> +                     break;
->> +
->> +             if (--cnt == 0)
->> +                     cnt = hip04_recv_cnt(priv);
->> +     }
->> +
->> +     if (rx < budget) {
->> +             napi_gro_flush(napi, false);
->> +             __napi_complete(napi);
->> +     }
->> +
->> +     /* enable rx interrupt */
->> +     priv->reg_inten |= RCV_INT | RCV_NOBUF;
->> +     writel_relaxed(priv->reg_inten, priv->base + PPE_INTEN);
->
->
-> Why do you unconditionally turn on interrupts here? Shouldn't you
-> only do that after calling napi_complete()?
-Yes, right.
-
->
->
->> +
->> +static int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
->> +{
->> +     struct hip04_priv *priv = netdev_priv(ndev);
->> +     struct tx_desc *desc = priv->td_ring[priv->tx_head];
->> +     unsigned int tx_head = priv->tx_head;
->> +     int ret;
->> +
->> +     hip04_tx_reclaim(ndev, false);
->> +
->> +     spin_lock_irq(&priv->txlock);
->> +     if (priv->tx_count++ >= TX_DESC_NUM) {
->> +             net_dbg_ratelimited("no TX space for packet\n");
->> +             netif_stop_queue(ndev);
->> +             ret = NETDEV_TX_BUSY;
->> +             goto out_unlock;
->> +     }
->> +
->> +     priv->tx_skb[tx_head] = skb;
->> +     dma_map_single(&ndev->dev, skb->data, skb->len, DMA_TO_DEVICE);
->> +     memset((void *)desc, 0, sizeof(*desc));
->> +     desc->send_addr = (unsigned int)virt_to_phys(skb->data);
->
-> Just like above: you must not use virt_to_phys here, but rather use
-> the output of dma_map_single.
->
-> IIRC, you can't generally call dma_map_single() under a spinlock, so
-> better move that ahead. It may also be a slow operation.
-The spinlock will be removed here, since it is protected by rcu outside.
-
->
->> +
->> +static int hip04_mac_open(struct net_device *ndev)
->> +{
->> +     struct hip04_priv *priv = netdev_priv(ndev);
->> +     int i;
->> +
->> +     hip04_reset_ppe(priv);
->> +     for (i = 0; i < RX_DESC_NUM; i++) {
->> +             dma_map_single(&ndev->dev, priv->rx_buf[i],
->> +                             RX_BUF_SIZE, DMA_TO_DEVICE);
->> +             hip04_set_recv_desc(priv, virt_to_phys(priv->rx_buf[i]));
->> +     }
->
-> And one more. Also DMA_FROM_DEVICE.
->
->> +static int hip04_alloc_ring(struct net_device *ndev, struct device *d)
->> +{
->> +     struct hip04_priv *priv = netdev_priv(ndev);
->> +     int i;
->> +
->> +     priv->rx_buf_size = RX_BUF_SIZE +
->> +                         SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
->> +
->> +     priv->desc_pool = dma_pool_create(DRV_NAME, d, sizeof(struct tx_desc),
->> +                             SKB_DATA_ALIGN(sizeof(struct tx_desc)), 0);
->> +     if (!priv->desc_pool)
->> +             return -ENOMEM;
->> +
->> +     for (i = 0; i < TX_DESC_NUM; i++) {
->> +             priv->td_ring[i] = dma_pool_alloc(priv->desc_pool,
->> +                                     GFP_ATOMIC, &priv->td_phys[i]);
->> +             if (!priv->td_ring[i])
->> +                     return -ENOMEM;
->> +     }
->
-> Why do you create a dma pool here, when you do all the allocations upfront?
->
-> It looks to me like you could simply turn the td_ring array of pointers
-> to tx descriptors into a an array of tx descriptors (no pointers) and allocate
-> that one using dma_alloc_coherent.
-
-dma pool used here mainly because of alignment,
-the desc has requirement of SKB_DATA_ALIGN,
-so use the simplest way
-        priv->desc_pool = dma_pool_create(DRV_NAME, d, sizeof(struct tx_desc),
-                                SKB_DATA_ALIGN(sizeof(struct tx_desc)), 0);
-
->
->
->> +     if (!ppebase) {
->> +             struct device_node *n;
->> +
->> +             n = of_find_compatible_node(NULL, NULL, "hisilicon,hip04-ppebase");
->> +             if (!n) {
->> +                     ret = -EINVAL;
->> +                     netdev_err(ndev, "not find hisilicon,ppebase\n");
->> +                     goto init_fail;
->> +             }
->> +             ppebase = of_iomap(n, 0);
->> +     }
->
-> How about using syscon_regmap_lookup_by_phandle() here? That way, you can have
-> a more generic abstraction of the ppe, and stick the port and id in there as
-> well, e.g.
->
->         ppe-syscon = <&hip04ppe 1 4>; // ppe, port, id
-
-To be honest, I am not familiar with syscon_regmap_lookup_by_phandle.
-
-Florian has suggested
-              ppe: ppe@28c0000 {
-                        compatible = "hisilicon,hip04-ppe";
-                        reg = <0x28c0000 0x10000>;
-                        #address-cells = <1>;
-                        #size-cells = <0>;
-
-                        eth0_port: port@1f {
-                                reg = <31>;
-                        };
-
-                        eth1_port: port@0 {
-                                reg = <0>;
-                        };
-
-                        eth2_port: port@8 {
-                                reg = <8>;
-                        };
-                };
-                fe: ethernet@28b0000 {
-                        compatible = "hisilicon,hip04-mac";
-                        reg = <0x28b0000 0x10000>;
-                        interrupts = <0 413 4>;
-                        phy-mode = "mii";
-                        port-handle = <&eth0_port>;
-                };
-And the port info can be found from port-handle
-n = of_parse_phandle(node, "port-handle", 0);
-ret = of_property_read_u32(n, "reg", &priv->port);
-
-The id is the controller start channel in ppe, either use alias or
-another property in the port.
-
->
->> +     ret = of_property_read_u32(node, "speed", &val);
->> +     if (ret) {
->> +             dev_warn(d, "not find speed info\n");
->> +             priv->speed = SPEED_1000;
->> +     }
->> +
->> +     if (SPEED_100 == val)
->> +             priv->speed = SPEED_100;
->> +     else
->> +             priv->speed = SPEED_1000;
->> +     priv->duplex = DUPLEX_FULL;
->
-> Why do you even need the speed here, shouldn't you get that information
-> from the phy through hip04_adjust_link?
-
-There still 100M mac does not have phy, as well adjust_link.
-Will use phy-mode instead of speed.
-
-Thanks
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index febd45c..6e8fe23 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -1179,6 +1179,16 @@ config SERIAL_SCCNXP_CONSOLE
+ 	help
+ 	  Support for console on SCCNXP serial ports.
+=20
++config SERIAL_SC16IS7XX
++	tristate "SC16IS7xx serial support"
++	select SERIAL_CORE
++	select REGMAP_I2C if I2C
++	default n
++	help
++	  This selects support for SC16IS7xx serial ports.
++	  Supported ICs are SC16IS740, SC16IS741, SC16IS750, SC16IS752,
++	  SC16IS760 and SC16IS762.
++
+ config SERIAL_BFIN_SPORT
+ 	tristate "Blackfin SPORT emulate UART"
+ 	depends on BLACKFIN
+diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
+index 3068c77..c3bac45 100644
+--- a/drivers/tty/serial/Makefile
++++ b/drivers/tty/serial/Makefile
+@@ -49,6 +49,7 @@ obj-$(CONFIG_SERIAL_SB1250_DUART) +=3D sb1250-duart.o
+ obj-$(CONFIG_ETRAX_SERIAL) +=3D crisv10.o
+ obj-$(CONFIG_SERIAL_SC26XX) +=3D sc26xx.o
+ obj-$(CONFIG_SERIAL_SCCNXP) +=3D sccnxp.o
++obj-$(CONFIG_SERIAL_SC16IS7XX) +=3D sc16is7xx.o
+ obj-$(CONFIG_SERIAL_JSM) +=3D jsm/
+ obj-$(CONFIG_SERIAL_TXX9) +=3D serial_txx9.o
+ obj-$(CONFIG_SERIAL_VR41XX) +=3D vr41xx_siu.o
+diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is=
+7xx.c
+new file mode 100644
+index 0000000..31a8424
+--- /dev/null
++++ b/drivers/tty/serial/sc16is7xx.c
+@@ -0,0 +1,1258 @@
++/*
++ * SC16IS7xx tty serial driver - Copyright (C) 2014 GridPoint
++ * Author: Jon Ringle <jringle@gridpoint.com>
++ *
++ *  Based on max310x.c, by Alexander Shiyan <shc_work@mail.ru>
++ *
++ * This program is free software; you can redistribute it and/or modif=
+y
++ * it under the terms of the GNU General Public License as published b=
+y
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ */
++
++#include <linux/bitops.h>
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/device.h>
++#include <linux/gpio.h>
++#include <linux/i2c.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/regmap.h>
++#include <linux/serial_core.h>
++#include <linux/serial.h>
++#include <linux/spi/spi.h>
++#include <linux/tty.h>
++#include <linux/tty_flip.h>
++
++#define SC16IS7XX_NAME			"sc16is7xx"
++
++/* SC16IS7XX register definitions */
++#define SC16IS7XX_RHR_REG		(0x00) /* RX FIFO */
++#define SC16IS7XX_THR_REG		(0x00) /* TX FIFO */
++#define SC16IS7XX_IER_REG		(0x01) /* Interrupt enable */
++#define SC16IS7XX_IIR_REG		(0x02) /* Interrupt Identification */
++#define SC16IS7XX_FCR_REG		(0x02) /* FIFO control */
++#define SC16IS7XX_LCR_REG		(0x03) /* Line Control */
++#define SC16IS7XX_MCR_REG		(0x04) /* Modem Control */
++#define SC16IS7XX_LSR_REG		(0x05) /* Line Status */
++#define SC16IS7XX_MSR_REG		(0x06) /* Modem Status */
++#define SC16IS7XX_SPR_REG		(0x07) /* Scratch Pad */
++#define SC16IS7XX_TXLVL_REG		(0x08) /* TX FIFO level */
++#define SC16IS7XX_RXLVL_REG		(0x09) /* RX FIFO level */
++#define SC16IS7XX_IODIR_REG		(0x0a) /* I/O Direction
++						* - only on 75x/76x
++						*/
++#define SC16IS7XX_IOSTATE_REG		(0x0b) /* I/O State
++						* - only on 75x/76x
++						*/
++#define SC16IS7XX_IOINTENA_REG		(0x0c) /* I/O Interrupt Enable
++						* - only on 75x/76x
++						*/
++#define SC16IS7XX_IOCONTROL_REG		(0x0e) /* I/O Control
++						* - only on 75x/76x
++						*/
++#define SC16IS7XX_EFCR_REG		(0x0f) /* Extra Features Control */
++
++/* TCR/TLR Register set: Only if ((MCR[2] =3D=3D 1) && (EFR[4] =3D=3D =
+1)) */
++#define SC16IS7XX_TCR_REG		(0x06) /* Transmit control */
++#define SC16IS7XX_TLR_REG		(0x07) /* Trigger level */
++
++/* Special Register set: Only if ((LCR[7] =3D=3D 1) && (LCR !=3D 0xBF)=
+) */
++#define SC16IS7XX_DLL_REG		(0x00) /* Divisor Latch Low */
++#define SC16IS7XX_DLH_REG		(0x01) /* Divisor Latch High */
++
++/* Enhanced Register set: Only if (LCR =3D=3D 0xBF) */
++#define SC16IS7XX_EFR_REG		(0x02) /* Enhanced Features */
++#define SC16IS7XX_XON1_REG		(0x04) /* Xon1 word */
++#define SC16IS7XX_XON2_REG		(0x05) /* Xon2 word */
++#define SC16IS7XX_XOFF1_REG		(0x06) /* Xoff1 word */
++#define SC16IS7XX_XOFF2_REG		(0x07) /* Xoff2 word */
++
++/* IER register bits */
++#define SC16IS7XX_IER_RDI_BIT		(1 << 0) /* Enable RX data interrupt */
++#define SC16IS7XX_IER_THRI_BIT		(1 << 1) /* Enable TX holding register
++						  * interrupt */
++#define SC16IS7XX_IER_RLSI_BIT		(1 << 2) /* Enable RX line status
++						  * interrupt */
++#define SC16IS7XX_IER_MSI_BIT		(1 << 3) /* Enable Modem status
++						  * interrupt */
++
++/* IER register bits - write only if (EFR[4] =3D=3D 1) */
++#define SC16IS7XX_IER_SLEEP_BIT		(1 << 4) /* Enable Sleep mode */
++#define SC16IS7XX_IER_XOFFI_BIT		(1 << 5) /* Enable Xoff interrupt */
++#define SC16IS7XX_IER_RTSI_BIT		(1 << 6) /* Enable nRTS interrupt */
++#define SC16IS7XX_IER_CTSI_BIT		(1 << 7) /* Enable nCTS interrupt */
++
++/* FCR register bits */
++#define SC16IS7XX_FCR_FIFO_BIT		(1 << 0) /* Enable FIFO */
++#define SC16IS7XX_FCR_RXRESET_BIT	(1 << 1) /* Reset RX FIFO */
++#define SC16IS7XX_FCR_TXRESET_BIT	(1 << 2) /* Reset TX FIFO */
++#define SC16IS7XX_FCR_RXLVLL_BIT	(1 << 6) /* RX Trigger level LSB */
++#define SC16IS7XX_FCR_RXLVLH_BIT	(1 << 7) /* RX Trigger level MSB */
++
++/* FCR register bits - write only if (EFR[4] =3D=3D 1) */
++#define SC16IS7XX_FCR_TXLVLL_BIT	(1 << 4) /* TX Trigger level LSB */
++#define SC16IS7XX_FCR_TXLVLH_BIT	(1 << 5) /* TX Trigger level MSB */
++
++/* IIR register bits */
++#define SC16IS7XX_IIR_NO_INT_BIT	(1 << 0) /* No interrupts pending */
++#define SC16IS7XX_IIR_ID_MASK		0x3e     /* Mask for the interrupt ID *=
+/
++#define SC16IS7XX_IIR_THRI_SRC		0x02     /* TX holding register empty =
+*/
++#define SC16IS7XX_IIR_RDI_SRC		0x04     /* RX data interrupt */
++#define SC16IS7XX_IIR_RLSE_SRC		0x06     /* RX line status error */
++#define SC16IS7XX_IIR_RTOI_SRC		0x0c     /* RX time-out interrupt */
++#define SC16IS7XX_IIR_MSI_SRC		0x00     /* Modem status interrupt
++						  * - only on 75x/76x
++						  */
++#define SC16IS7XX_IIR_INPIN_SRC		0x30     /* Input pin change of state
++						  * - only on 75x/76x
++						  */
++#define SC16IS7XX_IIR_XOFFI_SRC		0x10     /* Received Xoff */
++#define SC16IS7XX_IIR_CTSRTS_SRC	0x20     /* nCTS,nRTS change of state
++						  * from active (LOW)
++						  * to inactive (HIGH)
++						  */
++/* LCR register bits */
++#define SC16IS7XX_LCR_LENGTH0_BIT	(1 << 0) /* Word length bit 0 */
++#define SC16IS7XX_LCR_LENGTH1_BIT	(1 << 1) /* Word length bit 1
++						  *
++						  * Word length bits table:
++						  * 00 -> 5 bit words
++						  * 01 -> 6 bit words
++						  * 10 -> 7 bit words
++						  * 11 -> 8 bit words
++						  */
++#define SC16IS7XX_LCR_STOPLEN_BIT	(1 << 2) /* STOP length bit
++						  *
++						  * STOP length bit table:
++						  * 0 -> 1 stop bit
++						  * 1 -> 1-1.5 stop bits if
++						  *      word length is 5,
++						  *      2 stop bits otherwise
++						  */
++#define SC16IS7XX_LCR_PARITY_BIT	(1 << 3) /* Parity bit enable */
++#define SC16IS7XX_LCR_EVENPARITY_BIT	(1 << 4) /* Even parity bit enabl=
+e */
++#define SC16IS7XX_LCR_FORCEPARITY_BIT	(1 << 5) /* 9-bit multidrop pari=
+ty */
++#define SC16IS7XX_LCR_TXBREAK_BIT	(1 << 6) /* TX break enable */
++#define SC16IS7XX_LCR_DLAB_BIT		(1 << 7) /* Divisor Latch enable */
++#define SC16IS7XX_LCR_WORD_LEN_5	(0x00)
++#define SC16IS7XX_LCR_WORD_LEN_6	(0x01)
++#define SC16IS7XX_LCR_WORD_LEN_7	(0x02)
++#define SC16IS7XX_LCR_WORD_LEN_8	(0x03)
++#define SC16IS7XX_LCR_CONF_MODE_A	SC16IS7XX_LCR_DLAB_BIT /* Special
++								* reg set */
++#define SC16IS7XX_LCR_CONF_MODE_B	0xBF                   /* Enhanced
++								* reg set */
++
++/* MCR register bits */
++#define SC16IS7XX_MCR_DTR_BIT		(1 << 0) /* DTR complement
++						  * - only on 75x/76x
++						  */
++#define SC16IS7XX_MCR_RTS_BIT		(1 << 1) /* RTS complement */
++#define SC16IS7XX_MCR_TCRTLR_BIT	(1 << 2) /* TCR/TLR register enable *=
+/
++#define SC16IS7XX_MCR_LOOP_BIT		(1 << 4) /* Enable loopback test mode =
+*/
++#define SC16IS7XX_MCR_XONANY_BIT	(1 << 5) /* Enable Xon Any
++						  * - write enabled
++						  * if (EFR[4] =3D=3D 1)
++						  */
++#define SC16IS7XX_MCR_IRDA_BIT		(1 << 6) /* Enable IrDA mode
++						  * - write enabled
++						  * if (EFR[4] =3D=3D 1)
++						  */
++#define SC16IS7XX_MCR_CLKSEL_BIT	(1 << 7) /* Divide clock by 4
++						  * - write enabled
++						  * if (EFR[4] =3D=3D 1)
++						  */
++
++/* LSR register bits */
++#define SC16IS7XX_LSR_DR_BIT		(1 << 0) /* Receiver data ready */
++#define SC16IS7XX_LSR_OE_BIT		(1 << 1) /* Overrun Error */
++#define SC16IS7XX_LSR_PE_BIT		(1 << 2) /* Parity Error */
++#define SC16IS7XX_LSR_FE_BIT		(1 << 3) /* Frame Error */
++#define SC16IS7XX_LSR_BI_BIT		(1 << 4) /* Break Interrupt */
++#define SC16IS7XX_LSR_BRK_ERROR_MASK	0x1E     /* BI, FE, PE, OE bits *=
+/
++#define SC16IS7XX_LSR_THRE_BIT		(1 << 5) /* TX holding register empty =
+*/
++#define SC16IS7XX_LSR_TEMT_BIT		(1 << 6) /* Transmitter empty */
++#define SC16IS7XX_LSR_FIFOE_BIT		(1 << 7) /* Fifo Error */
++
++/* MSR register bits */
++#define SC16IS7XX_MSR_DCTS_BIT		(1 << 0) /* Delta CTS Clear To Send */
++#define SC16IS7XX_MSR_DDSR_BIT		(1 << 1) /* Delta DSR Data Set Ready
++						  * or (IO4)
++						  * - only on 75x/76x
++						  */
++#define SC16IS7XX_MSR_DRI_BIT		(1 << 2) /* Delta RI Ring Indicator
++						  * or (IO7)
++						  * - only on 75x/76x
++						  */
++#define SC16IS7XX_MSR_DCD_BIT		(1 << 3) /* Delta CD Carrier Detect
++						  * or (IO6)
++						  * - only on 75x/76x
++						  */
++#define SC16IS7XX_MSR_CTS_BIT		(1 << 0) /* CTS */
++#define SC16IS7XX_MSR_DSR_BIT		(1 << 1) /* DSR (IO4)
++						  * - only on 75x/76x
++						  */
++#define SC16IS7XX_MSR_RI_BIT		(1 << 2) /* RI (IO7)
++						  * - only on 75x/76x
++						  */
++#define SC16IS7XX_MSR_CD_BIT		(1 << 3) /* CD (IO6)
++						  * - only on 75x/76x
++						  */
++#define SC16IS7XX_MSR_DELTA_MASK	0x0F     /* Any of the delta bits! */
++
++/*
++ * TCR register bits
++ * TCR trigger levels are available from 0 to 60 characters with a gra=
+nularity
++ * of four.
++ * The programmer must program the TCR such that TCR[3:0] > TCR[7:4]. =
+There is
++ * no built-in hardware check to make sure this condition is met. Also=
+, the TCR
++ * must be programmed with this condition before auto RTS or software =
+flow
++ * control is enabled to avoid spurious operation of the device.
++ */
++#define SC16IS7XX_TCR_RX_HALT(words)	(((words / 4) & 0x0f) << 0)
++#define SC16IS7XX_TCR_RX_RESUME(words)	(((words / 4) & 0x0f) << 4)
++
++/*
++ * TLR register bits
++ * If TLR[3:0] or TLR[7:4] are logical 0, the selectable trigger level=
+s via the
++ * FIFO Control Register (FCR) are used for the transmit and receive F=
+IFO
++ * trigger levels. Trigger levels from 4 characters to 60 characters a=
+re
++ * available with a granularity of four.
++ *
++ * When the trigger level setting in TLR is zero, the SC16IS740/750/76=
+0 uses the
++ * trigger level setting defined in FCR. If TLR has non-zero trigger l=
+evel value
++ * the trigger level defined in FCR is discarded. This applies to both=
+ transmit
++ * FIFO and receive FIFO trigger level setting.
++ *
++ * When TLR is used for RX trigger level control, FCR[7:6] should be l=
+eft at the
++ * default state, that is, =E2=80=9800=E2=80=99.
++ */
++#define SC16IS7XX_TLR_TX_TRIGGER(words)	(((words / 4) & 0x0f) << 0)
++#define SC16IS7XX_TLR_RX_TRIGGER(words)	(((words / 4) & 0x0f) << 4)
++
++/* IOControl register bits (Only 750/760) */
++#define SC16IS7XX_IOCONTROL_LATCH_BIT	(1 << 0) /* Enable input latchin=
+g */
++#define SC16IS7XX_IOCONTROL_GPIO_BIT	(1 << 1) /* Enable GPIO[7:4] */
++#define SC16IS7XX_IOCONTROL_SRESET_BIT	(1 << 3) /* Software Reset */
++
++/* EFCR register bits */
++#define SC16IS7XX_EFCR_9BIT_MODE_BIT	(1 << 0) /* Enable 9-bit or Multi=
+drop
++						  * mode (RS485) */
++#define SC16IS7XX_EFCR_RXDISABLE_BIT	(1 << 1) /* Disable receiver */
++#define SC16IS7XX_EFCR_TXDISABLE_BIT	(1 << 2) /* Disable transmitter *=
+/
++#define SC16IS7XX_EFCR_AUTO_RS485_BIT	(1 << 4) /* Auto RS485 RTS direc=
+tion */
++#define SC16IS7XX_EFCR_RTS_INVERT_BIT	(1 << 5) /* RTS output inversion=
+ */
++#define SC16IS7XX_EFCR_IRDA_MODE_BIT	(1 << 7) /* IrDA mode
++						  * 0 =3D rate upto 115.2 kbit/s
++						  *   - Only 750/760
++						  * 1 =3D rate upto 1.152 Mbit/s
++						  *   - Only 760
++						  */
++
++/* EFR register bits */
++#define SC16IS7XX_EFR_AUTORTS_BIT	(1 << 6) /* Auto RTS flow ctrl enabl=
+e */
++#define SC16IS7XX_EFR_AUTOCTS_BIT	(1 << 7) /* Auto CTS flow ctrl enabl=
+e */
++#define SC16IS7XX_EFR_XOFF2_DETECT_BIT	(1 << 5) /* Enable Xoff2 detect=
+ion */
++#define SC16IS7XX_EFR_ENABLE_BIT	(1 << 4) /* Enable enhanced functions
++						  * and writing to IER[7:4],
++						  * FCR[5:4], MCR[7:5]
++						  */
++#define SC16IS7XX_EFR_SWFLOW3_BIT	(1 << 3) /* SWFLOW bit 3 */
++#define SC16IS7XX_EFR_SWFLOW2_BIT	(1 << 2) /* SWFLOW bit 2
++						  *
++						  * SWFLOW bits 3 & 2 table:
++						  * 00 -> no transmitter flow
++						  *       control
++						  * 01 -> transmitter generates
++						  *       XON2 and XOFF2
++						  * 10 -> transmitter generates
++						  *       XON1 and XOFF1
++						  * 11 -> transmitter generates
++						  *       XON1, XON2, XOFF1 and
++						  *       XOFF2
++						  */
++#define SC16IS7XX_EFR_SWFLOW1_BIT	(1 << 1) /* SWFLOW bit 2 */
++#define SC16IS7XX_EFR_SWFLOW0_BIT	(1 << 0) /* SWFLOW bit 3
++						  *
++						  * SWFLOW bits 3 & 2 table:
++						  * 00 -> no received flow
++						  *       control
++						  * 01 -> receiver compares
++						  *       XON2 and XOFF2
++						  * 10 -> receiver compares
++						  *       XON1 and XOFF1
++						  * 11 -> receiver compares
++						  *       XON1, XON2, XOFF1 and
++						  *       XOFF2
++						  */
++
++/* Misc definitions */
++#define SC16IS7XX_FIFO_SIZE		(64)
++#define SC16IS7XX_REG_SHIFT		2
++
++struct sc16is7xx_devtype {
++	char	name[10];
++	int	nr_gpio;
++	int	nr_uart;
++};
++
++struct sc16is7xx_one {
++	struct uart_port		port;
++	struct work_struct		tx_work;
++	struct work_struct		md_work;
++};
++
++struct sc16is7xx_port {
++	struct uart_driver		uart;
++	struct sc16is7xx_devtype	*devtype;
++	struct regmap			*regmap;
++	struct mutex			mutex;
++	struct clk			*clk;
++#ifdef CONFIG_GPIOLIB
++	struct gpio_chip		gpio;
++#endif
++	struct sc16is7xx_one		p[0];
++};
++
++static u8 sc16is7xx_port_read(struct uart_port *port, u8 reg)
++{
++	struct sc16is7xx_port *s =3D dev_get_drvdata(port->dev);
++	unsigned int val =3D 0;
++
++	regmap_read(s->regmap,
++		    (reg << SC16IS7XX_REG_SHIFT) | port->line, &val);
++
++	return val;
++}
++
++static void sc16is7xx_port_write(struct uart_port *port, u8 reg, u8 va=
+l)
++{
++	struct sc16is7xx_port *s =3D dev_get_drvdata(port->dev);
++
++	regmap_write(s->regmap,
++		     (reg << SC16IS7XX_REG_SHIFT) | port->line, val);
++}
++
++static void sc16is7xx_port_update(struct uart_port *port, u8 reg,
++				  u8 mask, u8 val)
++{
++	struct sc16is7xx_port *s =3D dev_get_drvdata(port->dev);
++
++	regmap_update_bits(s->regmap,
++			   (reg << SC16IS7XX_REG_SHIFT) | port->line,
++			   mask, val);
++}
++
++
++static void sc16is7xx_power(struct uart_port *port, int on)
++{
++	sc16is7xx_port_update(port, SC16IS7XX_IER_REG,
++			      SC16IS7XX_IER_SLEEP_BIT,
++			      on ? 0 : SC16IS7XX_IER_SLEEP_BIT);
++}
++
++static const struct sc16is7xx_devtype sc16is74x_devtype =3D {
++	.name		=3D "SC16IS74X",
++	.nr_gpio	=3D 0,
++	.nr_uart	=3D 1,
++};
++
++static const struct sc16is7xx_devtype sc16is750_devtype =3D {
++	.name		=3D "SC16IS750",
++	.nr_gpio	=3D 8,
++	.nr_uart	=3D 1,
++	.spi_max_hz	=3D 4000000,
++};
++
++static const struct sc16is7xx_devtype sc16is752_devtype =3D {
++	.name		=3D "SC16IS752",
++	.nr_gpio	=3D 8,
++	.nr_uart	=3D 2,
++	.spi_max_hz	=3D 4000000,
++};
++
++static const struct sc16is7xx_devtype sc16is760_devtype =3D {
++	.name		=3D "SC16IS760",
++	.nr_gpio	=3D 8,
++	.nr_uart	=3D 1,
++	.spi_max_hz	=3D 15000000,
++};
++
++static const struct sc16is7xx_devtype sc16is762_devtype =3D {
++	.name		=3D "SC16IS762",
++	.nr_gpio	=3D 8,
++	.nr_uart	=3D 2,
++	.spi_max_hz	=3D 15000000,
++};
++
++static bool sc16is7xx_regmap_writeable(struct device *dev, unsigned in=
+t reg)
++{
++	switch (reg >> SC16IS7XX_REG_SHIFT) {
++	case SC16IS7XX_THR_REG:
++	case SC16IS7XX_IER_REG:
++	case SC16IS7XX_FCR_REG:
++	case SC16IS7XX_LCR_REG:
++	case SC16IS7XX_MCR_REG:
++	case SC16IS7XX_SPR_REG:
++	case SC16IS7XX_IODIR_REG:
++	case SC16IS7XX_IOSTATE_REG:
++	case SC16IS7XX_IOINTENA_REG:
++	case SC16IS7XX_IOCONTROL_REG:
++	case SC16IS7XX_EFCR_REG:
++		return true;
++	default:
++		break;
++	}
++
++	return false;
++}
++
++static bool sc16is7xx_regmap_volatile(struct device *dev, unsigned int=
+ reg)
++{
++	switch (reg >> SC16IS7XX_REG_SHIFT) {
++	case SC16IS7XX_RHR_REG:
++	case SC16IS7XX_IIR_REG:
++	case SC16IS7XX_LSR_REG:
++	case SC16IS7XX_MSR_REG:
++	case SC16IS7XX_TXLVL_REG:
++	case SC16IS7XX_RXLVL_REG:
++	case SC16IS7XX_IOSTATE_REG:
++		return true;
++	default:
++		break;
++	}
++
++	return false;
++}
++
++static bool sc16is7xx_regmap_precious(struct device *dev, unsigned int=
+ reg)
++{
++	switch (reg >> SC16IS7XX_REG_SHIFT) {
++	case SC16IS7XX_RHR_REG:
++		return true;
++	default:
++		break;
++	}
++
++	return false;
++}
++
++static int sc16is7xx_set_baud(struct uart_port *port, int baud)
++{
++	struct sc16is7xx_port *s =3D dev_get_drvdata(port->dev);
++	u8 lcr;
++	u8 prescaler =3D 0;
++	unsigned long clk =3D port->uartclk, div =3D clk / 16 / baud;
++
++	if (div > 0xffff) {
++		prescaler =3D SC16IS7XX_MCR_CLKSEL_BIT;
++		div /=3D 4;
++	}
++
++	lcr =3D sc16is7xx_port_read(port, SC16IS7XX_LCR_REG);
++
++	/* Open the LCR divisors for configuration */
++	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG,
++			     SC16IS7XX_LCR_CONF_MODE_B);
++
++	/* Enable enhanced features */
++	regcache_cache_bypass(s->regmap, true);
++	sc16is7xx_port_write(port, SC16IS7XX_EFR_REG,
++			     SC16IS7XX_EFR_ENABLE_BIT);
++	regcache_cache_bypass(s->regmap, false);
++
++	/* Put LCR back to the normal mode */
++	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG, lcr);
++
++	sc16is7xx_port_update(port, SC16IS7XX_MCR_REG,
++			      SC16IS7XX_MCR_CLKSEL_BIT,
++			      prescaler);
++
++	/* Open the LCR divisors for configuration */
++	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG,
++			     SC16IS7XX_LCR_CONF_MODE_A);
++
++	/* Write the new divisor */
++	regcache_cache_bypass(s->regmap, true);
++	sc16is7xx_port_write(port, SC16IS7XX_DLH_REG, div / 256);
++	sc16is7xx_port_write(port, SC16IS7XX_DLL_REG, div % 256);
++	regcache_cache_bypass(s->regmap, false);
++
++	/* Put LCR back to the normal mode */
++	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG, lcr);
++
++	return DIV_ROUND_CLOSEST(clk / 16, div);
++}
++
++static void sc16is7xx_handle_rx(struct uart_port *port, unsigned int r=
+xlen,
++				unsigned int iir)
++{
++	struct sc16is7xx_port *s =3D dev_get_drvdata(port->dev);
++	unsigned int lsr =3D 0, ch, flag, bytes_read, i;
++	u8 buf[port->fifosize];
++	bool read_lsr =3D (iir =3D=3D SC16IS7XX_IIR_RLSE_SRC) ? true : false;
++
++	if (unlikely(rxlen >=3D port->fifosize)) {
++		dev_warn_ratelimited(port->dev,
++				     "Port %i: Possible RX FIFO overrun: %d\n",
++				     port->line, rxlen);
++		port->icount.buf_overrun++;
++		/* Ensure sanity of RX level */
++		rxlen =3D port->fifosize;
++	}
++
++	while (rxlen) {
++		/* Only read lsr if there are possible errors in FIFO */
++		if (read_lsr) {
++			lsr =3D sc16is7xx_port_read(port, SC16IS7XX_LSR_REG);
++			if (!(lsr & SC16IS7XX_LSR_FIFOE_BIT))
++				read_lsr =3D false; /* No errors left in FIFO */
++		} else
++			lsr =3D 0;
++
++		if (read_lsr) {
++			buf[0] =3D sc16is7xx_port_read(port, SC16IS7XX_RHR_REG);
++			bytes_read =3D 1;
++		} else {
++			regcache_cache_bypass(s->regmap, true);
++			regmap_raw_read(s->regmap, SC16IS7XX_RHR_REG,
++					buf, rxlen);
++			regcache_cache_bypass(s->regmap, false);
++			bytes_read =3D rxlen;
++		}
++
++		lsr &=3D SC16IS7XX_LSR_BRK_ERROR_MASK;
++
++		port->icount.rx++;
++		flag =3D TTY_NORMAL;
++
++		if (unlikely(lsr)) {
++			if (lsr & SC16IS7XX_LSR_BI_BIT) {
++				port->icount.brk++;
++				if (uart_handle_break(port))
++					continue;
++			} else if (lsr & SC16IS7XX_LSR_PE_BIT)
++				port->icount.parity++;
++			else if (lsr & SC16IS7XX_LSR_FE_BIT)
++				port->icount.frame++;
++			else if (lsr & SC16IS7XX_LSR_OE_BIT)
++				port->icount.overrun++;
++
++			lsr &=3D port->read_status_mask;
++			if (lsr & SC16IS7XX_LSR_BI_BIT)
++				flag =3D TTY_BREAK;
++			else if (lsr & SC16IS7XX_LSR_PE_BIT)
++				flag =3D TTY_PARITY;
++			else if (lsr & SC16IS7XX_LSR_FE_BIT)
++				flag =3D TTY_FRAME;
++			else if (lsr & SC16IS7XX_LSR_OE_BIT)
++				flag =3D TTY_OVERRUN;
++		}
++
++		for (i =3D 0; i < bytes_read; ++i) {
++			ch =3D buf[i];
++			if (uart_handle_sysrq_char(port, ch))
++				continue;
++
++			if (lsr & port->ignore_status_mask)
++				continue;
++
++			uart_insert_char(port, lsr, SC16IS7XX_LSR_OE_BIT, ch,
++					 flag);
++		}
++		rxlen -=3D bytes_read;
++	}
++
++	tty_flip_buffer_push(&port->state->port);
++}
++
++static void sc16is7xx_handle_tx(struct uart_port *port)
++{
++	struct sc16is7xx_port *s =3D dev_get_drvdata(port->dev);
++	struct circ_buf *xmit =3D &port->state->xmit;
++	unsigned int txlen, to_send, i;
++	u8 buf[port->fifosize];
++
++	if (unlikely(port->x_char)) {
++		sc16is7xx_port_write(port, SC16IS7XX_THR_REG, port->x_char);
++		port->icount.tx++;
++		port->x_char =3D 0;
++		return;
++	}
++
++	if (uart_circ_empty(xmit) || uart_tx_stopped(port))
++		return;
++
++	/* Get length of data pending in circular buffer */
++	to_send =3D uart_circ_chars_pending(xmit);
++	if (likely(to_send)) {
++		/* Limit to size of TX FIFO */
++		txlen =3D sc16is7xx_port_read(port, SC16IS7XX_TXLVL_REG);
++		to_send =3D (to_send > txlen) ? txlen : to_send;
++
++		/* Add data to send */
++		port->icount.tx +=3D to_send;
++
++		/* Convert to linear buffer */
++		for (i =3D 0; i < to_send; ++i) {
++			buf[i] =3D xmit->buf[xmit->tail];
++			xmit->tail =3D (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
++		}
++		regmap_raw_write(s->regmap, SC16IS7XX_THR_REG, buf, to_send);
++	}
++
++	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
++		uart_write_wakeup(port);
++}
++
++static void sc16is7xx_port_irq(struct sc16is7xx_port *s, int portno)
++{
++	struct uart_port *port =3D &s->p[portno].port;
++
++	do {
++		unsigned int iir, msr, rxlen;
++
++		iir =3D sc16is7xx_port_read(port, SC16IS7XX_IIR_REG);
++		if (iir & SC16IS7XX_IIR_NO_INT_BIT)
++			break;
++
++		iir &=3D SC16IS7XX_IIR_ID_MASK;
++
++		switch (iir) {
++		case SC16IS7XX_IIR_RDI_SRC:
++		case SC16IS7XX_IIR_RLSE_SRC:
++		case SC16IS7XX_IIR_RTOI_SRC:
++		case SC16IS7XX_IIR_XOFFI_SRC:
++			rxlen =3D sc16is7xx_port_read(port, SC16IS7XX_RXLVL_REG);
++			if (rxlen)
++				sc16is7xx_handle_rx(port, rxlen, iir);
++			break;
++
++		case SC16IS7XX_IIR_CTSRTS_SRC:
++			msr =3D sc16is7xx_port_read(port, SC16IS7XX_MSR_REG);
++			uart_handle_cts_change(port,
++					       !!(msr & SC16IS7XX_MSR_CTS_BIT));
++			break;
++		case SC16IS7XX_IIR_THRI_SRC:
++			mutex_lock(&s->mutex);
++			sc16is7xx_handle_tx(port);
++			mutex_unlock(&s->mutex);
++			break;
++		default:
++			dev_err_ratelimited(port->dev,
++					    "Port %i: Unexpected interrupt: %x",
++					    port->line, iir);
++			break;
++		}
++	} while (1);
++}
++
++static irqreturn_t sc16is7xx_ist(int irq, void *dev_id)
++{
++	struct sc16is7xx_port *s =3D (struct sc16is7xx_port *)dev_id;
++	int i;
++
++	for (i =3D 0; i < s->uart.nr; ++i)
++		sc16is7xx_port_irq(s, i);
++
++	return IRQ_HANDLED;
++}
++
++static void sc16is7xx_wq_proc(struct work_struct *ws)
++{
++	struct sc16is7xx_one *one =3D container_of(ws, struct sc16is7xx_one,
++						 tx_work);
++	struct sc16is7xx_port *s =3D dev_get_drvdata(one->port.dev);
++
++	mutex_lock(&s->mutex);
++	sc16is7xx_handle_tx(&one->port);
++	mutex_unlock(&s->mutex);
++}
++
++static void sc16is7xx_start_tx(struct uart_port *port)
++{
++	struct sc16is7xx_one *one =3D container_of(port, struct sc16is7xx_one=
+,
++						 port);
++
++	if (!work_pending(&one->tx_work))
++		schedule_work(&one->tx_work);
++}
++
++static unsigned int sc16is7xx_tx_empty(struct uart_port *port)
++{
++	unsigned int lvl, lsr;
++
++	lvl =3D sc16is7xx_port_read(port, SC16IS7XX_TXLVL_REG);
++	lsr =3D sc16is7xx_port_read(port, SC16IS7XX_LSR_REG);
++
++	return ((lsr & SC16IS7XX_LSR_THRE_BIT) && !lvl) ? TIOCSER_TEMT : 0;
++}
++
++static unsigned int sc16is7xx_get_mctrl(struct uart_port *port)
++{
++	/* DCD and DSR are not wired and CTS/RTS is handled automatically
++	 * so just indicate DSR and CAR asserted
++	 */
++	return TIOCM_DSR | TIOCM_CAR;
++}
++
++static void sc16is7xx_md_proc(struct work_struct *ws)
++{
++	struct sc16is7xx_one *one =3D container_of(ws, struct sc16is7xx_one,
++						 md_work);
++
++	sc16is7xx_port_update(&one->port, SC16IS7XX_MCR_REG,
++			      SC16IS7XX_MCR_LOOP_BIT,
++			      (one->port.mctrl & TIOCM_LOOP) ?
++				      SC16IS7XX_MCR_LOOP_BIT : 0);
++}
++
++static void sc16is7xx_set_mctrl(struct uart_port *port, unsigned int m=
+ctrl)
++{
++	struct sc16is7xx_one *one =3D container_of(port, struct sc16is7xx_one=
+,
++						 port);
++
++	schedule_work(&one->md_work);
++}
++
++static void sc16is7xx_break_ctl(struct uart_port *port, int break_stat=
+e)
++{
++	sc16is7xx_port_update(port, SC16IS7XX_LCR_REG,
++			      SC16IS7XX_LCR_TXBREAK_BIT,
++			      break_state ? SC16IS7XX_LCR_TXBREAK_BIT : 0);
++}
++
++static void sc16is7xx_set_termios(struct uart_port *port,
++				  struct ktermios *termios,
++				  struct ktermios *old)
++{
++	struct sc16is7xx_port *s =3D dev_get_drvdata(port->dev);
++	unsigned int lcr, flow =3D 0;
++	int baud;
++
++	/* Mask termios capabilities we don't support */
++	termios->c_cflag &=3D ~CMSPAR;
++
++	/* Word size */
++	switch (termios->c_cflag & CSIZE) {
++	case CS5:
++		lcr =3D SC16IS7XX_LCR_WORD_LEN_5;
++		break;
++	case CS6:
++		lcr =3D SC16IS7XX_LCR_WORD_LEN_6;
++		break;
++	case CS7:
++		lcr =3D SC16IS7XX_LCR_WORD_LEN_7;
++		break;
++	case CS8:
++		lcr =3D SC16IS7XX_LCR_WORD_LEN_8;
++		break;
++	default:
++		lcr =3D SC16IS7XX_LCR_WORD_LEN_8;
++		termios->c_cflag &=3D ~CSIZE;
++		termios->c_cflag |=3D CS8;
++		break;
++	}
++
++	/* Parity */
++	if (termios->c_cflag & PARENB) {
++		lcr |=3D SC16IS7XX_LCR_PARITY_BIT;
++		if (!(termios->c_cflag & PARODD))
++			lcr |=3D SC16IS7XX_LCR_EVENPARITY_BIT;
++	}
++
++	/* Stop bits */
++	if (termios->c_cflag & CSTOPB)
++		lcr |=3D SC16IS7XX_LCR_STOPLEN_BIT; /* 2 stops */
++
++	/* Set read status mask */
++	port->read_status_mask =3D SC16IS7XX_LSR_OE_BIT;
++	if (termios->c_iflag & INPCK)
++		port->read_status_mask |=3D SC16IS7XX_LSR_PE_BIT |
++					  SC16IS7XX_LSR_FE_BIT;
++	if (termios->c_iflag & (BRKINT | PARMRK))
++		port->read_status_mask |=3D SC16IS7XX_LSR_BI_BIT;
++
++	/* Set status ignore mask */
++	port->ignore_status_mask =3D 0;
++	if (termios->c_iflag & IGNBRK)
++		port->ignore_status_mask |=3D SC16IS7XX_LSR_BI_BIT;
++	if (!(termios->c_cflag & CREAD))
++		port->ignore_status_mask |=3D SC16IS7XX_LSR_BRK_ERROR_MASK;
++
++	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG,
++			     SC16IS7XX_LCR_CONF_MODE_B);
++
++	/* Configure flow control */
++	regcache_cache_bypass(s->regmap, true);
++	sc16is7xx_port_write(port, SC16IS7XX_XON1_REG, termios->c_cc[VSTART])=
+;
++	sc16is7xx_port_write(port, SC16IS7XX_XOFF1_REG, termios->c_cc[VSTOP])=
+;
++	if (termios->c_cflag & CRTSCTS)
++		flow |=3D SC16IS7XX_EFR_AUTOCTS_BIT |
++			SC16IS7XX_EFR_AUTORTS_BIT;
++	if (termios->c_iflag & IXON)
++		flow |=3D SC16IS7XX_EFR_SWFLOW3_BIT;
++	if (termios->c_iflag & IXOFF)
++		flow |=3D SC16IS7XX_EFR_SWFLOW1_BIT;
++
++	sc16is7xx_port_write(port, SC16IS7XX_EFR_REG, flow);
++	regcache_cache_bypass(s->regmap, false);
++
++	/* Update LCR register */
++	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG, lcr);
++
++	/* Get baud rate generator configuration */
++	baud =3D uart_get_baud_rate(port, termios, old,
++				  port->uartclk / 16 / 4 / 0xffff,
++				  port->uartclk / 16);
++
++	/* Setup baudrate generator */
++	baud =3D sc16is7xx_set_baud(port, baud);
++
++	/* Update timeout according to new baud rate */
++	uart_update_timeout(port, termios->c_cflag, baud);
++}
++
++static int sc16is7xx_ioctl(struct uart_port *port, unsigned int cmd,
++			   unsigned long arg)
++{
++#if defined(TIOCSRS485) && defined(TIOCGRS485)
++	struct serial_rs485 rs485;
++	unsigned int val;
++
++	switch (cmd) {
++	case TIOCSRS485:
++		if (copy_from_user(&rs485, (void __user *)arg, sizeof(rs485)))
++			return -EFAULT;
++		if (rs485.flags & SER_RS485_ENABLED) {
++			sc16is7xx_port_update(port, SC16IS7XX_EFCR_REG,
++					      SC16IS7XX_EFCR_AUTO_RS485_BIT,
++					      SC16IS7XX_EFCR_AUTO_RS485_BIT);
++		} else {
++			sc16is7xx_port_update(port, SC16IS7XX_EFCR_REG,
++					      SC16IS7XX_EFCR_AUTO_RS485_BIT,
++					      0);
++		}
++		return 0;
++	case TIOCGRS485:
++		memset(&rs485, 0, sizeof(rs485));
++		val =3D sc16is7xx_port_read(port, SC16IS7XX_EFCR_REG);
++		rs485.flags =3D (val & SC16IS7XX_EFCR_AUTO_RS485_BIT) ?
++				      SER_RS485_ENABLED : 0;
++		rs485.flags |=3D SER_RS485_RTS_ON_SEND;
++		if (copy_to_user((void __user *)arg, &rs485, sizeof(rs485)))
++			return -EFAULT;
++		return 0;
++	default:
++		break;
++	}
++#endif
++
++	return -ENOIOCTLCMD;
++}
++
++static int sc16is7xx_startup(struct uart_port *port)
++{
++	struct sc16is7xx_port *s =3D dev_get_drvdata(port->dev);
++	unsigned int val;
++
++	sc16is7xx_power(port, 1);
++
++	/* Reset FIFOs*/
++	val =3D SC16IS7XX_FCR_RXRESET_BIT | SC16IS7XX_FCR_TXRESET_BIT;
++	sc16is7xx_port_write(port, SC16IS7XX_FCR_REG, val);
++	udelay(5);
++	sc16is7xx_port_write(port, SC16IS7XX_FCR_REG,
++			     SC16IS7XX_FCR_FIFO_BIT);
++
++	/* Enable EFR */
++	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG,
++			     SC16IS7XX_LCR_CONF_MODE_B);
++
++	regcache_cache_bypass(s->regmap, true);
++
++	/* Enable write access to enhanced features and internal clock div */
++	sc16is7xx_port_write(port, SC16IS7XX_EFR_REG,
++			     SC16IS7XX_EFR_ENABLE_BIT);
++
++	/* Enable TCR/TLR */
++	sc16is7xx_port_update(port, SC16IS7XX_MCR_REG,
++			      SC16IS7XX_MCR_TCRTLR_BIT,
++			      SC16IS7XX_MCR_TCRTLR_BIT);
++
++	/* Configure flow control levels */
++	/* Flow control halt level 48, resume level 24 */
++	sc16is7xx_port_write(port, SC16IS7XX_TCR_REG,
++			     SC16IS7XX_TCR_RX_RESUME(24) |
++			     SC16IS7XX_TCR_RX_HALT(48));
++
++	regcache_cache_bypass(s->regmap, false);
++
++	/* Now, initialize the UART */
++	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG, SC16IS7XX_LCR_WORD_LEN_=
+8);
++
++	/* Enable the Rx and Tx FIFO */
++	sc16is7xx_port_update(port, SC16IS7XX_EFCR_REG,
++			      SC16IS7XX_EFCR_RXDISABLE_BIT |
++			      SC16IS7XX_EFCR_TXDISABLE_BIT,
++			      0);
++
++	/* Enable RX, TX, CTS change interrupts */
++	val =3D SC16IS7XX_IER_RDI_BIT | SC16IS7XX_IER_THRI_BIT |
++	      SC16IS7XX_IER_CTSI_BIT;
++	sc16is7xx_port_write(port, SC16IS7XX_IER_REG, val);
++
++	return 0;
++}
++
++static void sc16is7xx_shutdown(struct uart_port *port)
++{
++	/* Disable all interrupts */
++	sc16is7xx_port_write(port, SC16IS7XX_IER_REG, 0);
++	/* Disable TX/RX */
++	sc16is7xx_port_write(port, SC16IS7XX_EFCR_REG,
++			     SC16IS7XX_EFCR_RXDISABLE_BIT |
++			     SC16IS7XX_EFCR_TXDISABLE_BIT);
++
++	sc16is7xx_power(port, 0);
++}
++
++static const char *sc16is7xx_type(struct uart_port *port)
++{
++	struct sc16is7xx_port *s =3D dev_get_drvdata(port->dev);
++
++	return (port->type =3D=3D PORT_SC16IS7XX) ? s->devtype->name : NULL;
++}
++
++static int sc16is7xx_request_port(struct uart_port *port)
++{
++	/* Do nothing */
++	return 0;
++}
++
++static void sc16is7xx_config_port(struct uart_port *port, int flags)
++{
++	if (flags & UART_CONFIG_TYPE)
++		port->type =3D PORT_SC16IS7XX;
++}
++
++static int sc16is7xx_verify_port(struct uart_port *port,
++				 struct serial_struct *s)
++{
++	if ((s->type !=3D PORT_UNKNOWN) && (s->type !=3D PORT_SC16IS7XX))
++		return -EINVAL;
++	if (s->irq !=3D port->irq)
++		return -EINVAL;
++
++	return 0;
++}
++
++static void sc16is7xx_pm(struct uart_port *port, unsigned int state,
++			 unsigned int oldstate)
++{
++	sc16is7xx_power(port, (state =3D=3D UART_PM_STATE_ON) ? 1 : 0);
++}
++
++static void sc16is7xx_null_void(struct uart_port *port)
++{
++	/* Do nothing */
++}
++
++static const struct uart_ops sc16is7xx_ops =3D {
++	.tx_empty	=3D sc16is7xx_tx_empty,
++	.set_mctrl	=3D sc16is7xx_set_mctrl,
++	.get_mctrl	=3D sc16is7xx_get_mctrl,
++	.stop_tx	=3D sc16is7xx_null_void,
++	.start_tx	=3D sc16is7xx_start_tx,
++	.stop_rx	=3D sc16is7xx_null_void,
++	.enable_ms	=3D sc16is7xx_null_void,
++	.break_ctl	=3D sc16is7xx_break_ctl,
++	.startup	=3D sc16is7xx_startup,
++	.shutdown	=3D sc16is7xx_shutdown,
++	.set_termios	=3D sc16is7xx_set_termios,
++	.type		=3D sc16is7xx_type,
++	.request_port	=3D sc16is7xx_request_port,
++	.release_port	=3D sc16is7xx_null_void,
++	.config_port	=3D sc16is7xx_config_port,
++	.verify_port	=3D sc16is7xx_verify_port,
++	.ioctl		=3D sc16is7xx_ioctl,
++	.pm		=3D sc16is7xx_pm,
++};
++
++#ifdef CONFIG_GPIOLIB
++static int sc16is7xx_gpio_get(struct gpio_chip *chip, unsigned offset)
++{
++	unsigned int val;
++	struct sc16is7xx_port *s =3D container_of(chip, struct sc16is7xx_port=
+,
++						gpio);
++	struct uart_port *port =3D &s->p[0].port;
++
++	val =3D sc16is7xx_port_read(port, SC16IS7XX_IOSTATE_REG);
++
++	return !!(val & BIT(offset));
++}
++
++static void sc16is7xx_gpio_set(struct gpio_chip *chip, unsigned offset=
+, int val)
++{
++	struct sc16is7xx_port *s =3D container_of(chip, struct sc16is7xx_port=
+,
++						gpio);
++	struct uart_port *port =3D &s->p[0].port;
++
++	sc16is7xx_port_update(port, SC16IS7XX_IOSTATE_REG, BIT(offset),
++			      val ? BIT(offset) : 0);
++}
++
++static int sc16is7xx_gpio_direction_input(struct gpio_chip *chip,
++					  unsigned offset)
++{
++	struct sc16is7xx_port *s =3D container_of(chip, struct sc16is7xx_port=
+,
++						gpio);
++	struct uart_port *port =3D &s->p[0].port;
++
++	sc16is7xx_port_update(port, SC16IS7XX_IODIR_REG, BIT(offset), 0);
++
++	return 0;
++}
++
++static int sc16is7xx_gpio_direction_output(struct gpio_chip *chip,
++					   unsigned offset, int val)
++{
++	struct sc16is7xx_port *s =3D container_of(chip, struct sc16is7xx_port=
+,
++						gpio);
++	struct uart_port *port =3D &s->p[0].port;
++
++	sc16is7xx_port_update(port, SC16IS7XX_IOSTATE_REG, BIT(offset),
++			      val ? BIT(offset) : 0);
++	sc16is7xx_port_update(port, SC16IS7XX_IODIR_REG, BIT(offset),
++			      BIT(offset));
++
++	return 0;
++}
++#endif
++
++static int sc16is7xx_probe(struct device *dev,
++			   struct sc16is7xx_devtype *devtype,
++			   struct regmap *regmap, int irq, unsigned long flags)
++{
++	unsigned long freq, *pfreq =3D dev_get_platdata(dev);
++	struct clk *clk;
++	int i, ret;
++	struct sc16is7xx_port *s;
++
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
++	/* Alloc port structure */
++	s =3D devm_kzalloc(dev, sizeof(*s) +
++			 sizeof(struct sc16is7xx_one) * devtype->nr_uart,
++			 GFP_KERNEL);
++	if (!s) {
++		dev_err(dev, "Error allocating port structure\n");
++		return -ENOMEM;
++	}
++
++	clk =3D devm_clk_get(dev, NULL);
++	if (IS_ERR(clk)) {
++		if (pfreq)
++			freq =3D *pfreq;
++		else
++			return PTR_ERR(clk);
++	} else {
++		freq =3D clk_get_rate(clk);
++	}
++
++	s->regmap =3D regmap;
++	s->devtype =3D devtype;
++	dev_set_drvdata(dev, s);
++
++	/* Register UART driver */
++	s->uart.owner		=3D THIS_MODULE;
++	s->uart.dev_name	=3D "ttySC";
++	s->uart.nr		=3D devtype->nr_uart;
++	ret =3D uart_register_driver(&s->uart);
++	if (ret) {
++		dev_err(dev, "Registering UART driver failed\n");
++		goto out_clk;
++	}
++
++#ifdef CONFIG_GPIOLIB
++	if (devtype->nr_gpio) {
++		/* Setup GPIO cotroller */
++		s->gpio.owner		 =3D THIS_MODULE;
++		s->gpio.dev		 =3D dev;
++		s->gpio.label		 =3D dev_name(dev);
++		s->gpio.direction_input	 =3D sc16is7xx_gpio_direction_input;
++		s->gpio.get		 =3D sc16is7xx_gpio_get;
++		s->gpio.direction_output =3D sc16is7xx_gpio_direction_output;
++		s->gpio.set		 =3D sc16is7xx_gpio_set;
++		s->gpio.base		 =3D -1;
++		s->gpio.ngpio		 =3D devtype->nr_gpio;
++		s->gpio.can_sleep	 =3D 1;
++		ret =3D gpiochip_add(&s->gpio);
++		if (ret)
++			goto out_uart;
++	}
++#endif
++
++	mutex_init(&s->mutex);
++
++	for (i =3D 0; i < devtype->nr_uart; ++i) {
++		/* Initialize port data */
++		s->p[i].port.line	=3D i;
++		s->p[i].port.dev	=3D dev;
++		s->p[i].port.irq	=3D irq;
++		s->p[i].port.type	=3D PORT_SC16IS7XX;
++		s->p[i].port.fifosize	=3D SC16IS7XX_FIFO_SIZE;
++		s->p[i].port.flags	=3D UPF_FIXED_TYPE | UPF_LOW_LATENCY;
++		s->p[i].port.iotype	=3D UPIO_PORT;
++		s->p[i].port.uartclk	=3D freq;
++		s->p[i].port.ops	=3D &sc16is7xx_ops;
++		/* Disable all interrupts */
++		sc16is7xx_port_write(&s->p[i].port, SC16IS7XX_IER_REG, 0);
++		/* Disable TX/RX */
++		sc16is7xx_port_write(&s->p[i].port, SC16IS7XX_EFCR_REG,
++				     SC16IS7XX_EFCR_RXDISABLE_BIT |
++				     SC16IS7XX_EFCR_TXDISABLE_BIT);
++		/* Initialize queue for start TX */
++		INIT_WORK(&s->p[i].tx_work, sc16is7xx_wq_proc);
++		/* Initialize queue for changing mode */
++		INIT_WORK(&s->p[i].md_work, sc16is7xx_md_proc);
++		/* Register port */
++		uart_add_one_port(&s->uart, &s->p[i].port);
++		/* Go to suspend mode */
++		sc16is7xx_power(&s->p[i].port, 0);
++	}
++
++	/* Setup interrupt */
++	ret =3D devm_request_threaded_irq(dev, irq, NULL, sc16is7xx_ist,
++					IRQF_ONESHOT | flags, dev_name(dev), s);
++	if (!ret)
++		return 0;
++
++	mutex_destroy(&s->mutex);
++
++#ifdef CONFIG_GPIOLIB
++	if (devtype->nr_gpio)
++		WARN_ON(gpiochip_remove(&s->gpio));
++
++out_uart:
++#endif
++	uart_unregister_driver(&s->uart);
++
++out_clk:
++	if (!IS_ERR(s->clk))
++		clk_disable_unprepare(s->clk);
++
++	return ret;
++}
++
++static int sc16is7xx_remove(struct device *dev)
++{
++	struct sc16is7xx_port *s =3D dev_get_drvdata(dev);
++	int i, ret =3D 0;
++
++#ifdef CONFIG_GPIOLIB
++	if (s->devtype->nr_gpio) {
++		ret =3D gpiochip_remove(&s->gpio);
++		if (ret)
++			return ret;
++	}
++#endif
++
++	for (i =3D 0; i < s->uart.nr; i++) {
++		cancel_work_sync(&s->p[i].tx_work);
++		cancel_work_sync(&s->p[i].md_work);
++		uart_remove_one_port(&s->uart, &s->p[i].port);
++		sc16is7xx_power(&s->p[i].port, 0);
++	}
++
++	mutex_destroy(&s->mutex);
++	uart_unregister_driver(&s->uart);
++	if (!IS_ERR(s->clk))
++		clk_disable_unprepare(s->clk);
++
++	return ret;
++}
++
++static const struct of_device_id __maybe_unused sc16is7xx_dt_ids[] =3D=
+ {
++	{ .compatible =3D "nxp,sc16is740",	.data =3D &sc16is74x_devtype, },
++	{ .compatible =3D "nxp,sc16is741",	.data =3D &sc16is74x_devtype, },
++	{ .compatible =3D "nxp,sc16is750",	.data =3D &sc16is750_devtype, },
++	{ .compatible =3D "nxp,sc16is752",	.data =3D &sc16is752_devtype, },
++	{ .compatible =3D "nxp,sc16is760",	.data =3D &sc16is760_devtype, },
++	{ .compatible =3D "nxp,sc16is762",	.data =3D &sc16is762_devtype, },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, sc16is7xx_dt_ids);
++
++static struct regmap_config regcfg =3D {
++	.reg_bits =3D 7,
++	.pad_bits =3D 1,
++	.val_bits =3D 8,
++	.cache_type =3D REGCACHE_RBTREE,
++	.writeable_reg =3D sc16is7xx_regmap_writeable,
++	.volatile_reg =3D sc16is7xx_regmap_volatile,
++	.precious_reg =3D sc16is7xx_regmap_precious,
++};
++
++#ifdef CONFIG_REGMAP_I2C
++static int sc16is7xx_i2c_probe(struct i2c_client *i2c,
++			       const struct i2c_device_id *id)
++{
++	struct sc16is7xx_devtype *devtype;
++	unsigned long flags =3D 0;
++	struct regmap *regmap;
++
++	if (i2c->dev.of_node) {
++		const struct of_device_id *of_id =3D
++				of_match_device(sc16is7xx_dt_ids, &i2c->dev);
++
++		devtype =3D (struct sc16is7xx_devtype *)of_id->data;
++	} else {
++		devtype =3D (struct sc16is7xx_devtype *)id->driver_data;
++		flags =3D IRQF_TRIGGER_FALLING;
++	}
++
++	regcfg.max_register =3D (0xf << SC16IS7XX_REG_SHIFT) |
++			      (devtype->nr_uart - 1);
++	regmap =3D devm_regmap_init_i2c(i2c, &regcfg);
++
++	return sc16is7xx_probe(&i2c->dev, devtype, regmap, i2c->irq, flags);
++}
++
++static int sc16is7xx_i2c_remove(struct i2c_client *client)
++{
++	return sc16is7xx_remove(&client->dev);
++}
++
++static const struct i2c_device_id sc16is7xx_i2c_id_table[] =3D {
++	{ "sc16is74x",	(kernel_ulong_t)&sc16is74x_devtype, },
++	{ "sc16is750",	(kernel_ulong_t)&sc16is750_devtype, },
++	{ "sc16is752",	(kernel_ulong_t)&sc16is752_devtype, },
++	{ "sc16is760",	(kernel_ulong_t)&sc16is760_devtype, },
++	{ "sc16is762",	(kernel_ulong_t)&sc16is762_devtype, },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, sc16is7xx_i2c_id_table);
++
++static struct i2c_driver sc16is7xx_i2c_uart_driver =3D {
++	.driver =3D {
++		.name		=3D SC16IS7XX_NAME,
++		.owner		=3D THIS_MODULE,
++		.of_match_table	=3D of_match_ptr(sc16is7xx_dt_ids),
++	},
++	.probe		=3D sc16is7xx_i2c_probe,
++	.remove		=3D sc16is7xx_i2c_remove,
++	.id_table	=3D sc16is7xx_i2c_id_table,
++};
++module_i2c_driver(sc16is7xx_i2c_uart_driver);
++MODULE_ALIAS("i2c:sc16is7xx");
++#endif
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Jon Ringle <jringle@gridpoint.com>");
++MODULE_DESCRIPTION("SC16IS7XX serial driver");
+diff --git a/include/uapi/linux/serial_core.h b/include/uapi/linux/seri=
+al_core.h
+index b47dba2..a37c79a 100644
+--- a/include/uapi/linux/serial_core.h
++++ b/include/uapi/linux/serial_core.h
+@@ -238,4 +238,7 @@
+ /* Tilera TILE-Gx UART */
+ #define PORT_TILEGX	106
+=20
++/* SC16IS74xx */
++#define PORT_SC16IS7XX   107
++
+ #endif /* _UAPILINUX_SERIAL_CORE_H */
+--=20
+1.8.5.4
