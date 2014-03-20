@@ -1,74 +1,84 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Mon, 24 Mar 2014 09:17:31 -0500
-Message-ID: <CAL_JsqLfH7Er-s5wjA5JGE4+-SGtTOvYTyQ=cYk+1ekHo39Crg@mail.gmail.com>
-References: <1395132017-15928-1-git-send-email-zhangfei.gao@linaro.org>
-	<1395132017-15928-4-git-send-email-zhangfei.gao@linaro.org>
-	<20140318104616.GT21483@n2100.arm.linux.org.uk>
-	<CAMj5BkiCXVZZPS-VyVxejCY0aiGD_HQjUdWd-FKD_ER_y_0wxQ@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v7 1/8] clk: sunxi: factors: automatic
+ reparenting support
+Date: Thu, 20 Mar 2014 10:47:17 +0100
+Message-ID: <20140320094717.GL27873@lukather>
+References: <20140217095907.15040.81893.stgit@pagira.o2s.ch>
+ <20140217100215.15040.63745.stgit@pagira.o2s.ch>
+ <20140218140516.GG3142@lukather>
+ <20140319233945.21989.12073@quantum>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAMj5BkiCXVZZPS-VyVxejCY0aiGD_HQjUdWd-FKD_ER_y_0wxQ@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Zhangfei Gao <zhangfei.gao@gmail.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Zhangfei Gao <zhangfei.gao@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, netdev <netdev@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="n5G3y24fV3/VEqbx"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBPUAYGMQKGQETPXKZAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140319233945.21989.12073@quantum>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, g.liakhovetski-Mmb7MZpHnFY@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 20, 2014 at 4:51 AM, Zhangfei Gao <zhangfei.gao@gmail.com> wrote:
-> Dear Russell
->
-> Thanks for sparing time and giving so many perfect suggestion, really helpful.
->
-> On Tue, Mar 18, 2014 at 6:46 PM, Russell King - ARM Linux
-> <linux@arm.linux.org.uk> wrote:
->> I was just browsing this patch when I noticed some of these issues - I
->> haven't done a full review of this driver, I'm just commenting on the
->> things I've spotted.
 
-[snip]
+--n5G3y24fV3/VEqbx
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->>> +             dma_map_single(&ndev->dev, skb->data,
->>> +                     RX_BUF_SIZE, DMA_FROM_DEVICE);
->>
->> This is incorrect.
->>
->> buf = buffer alloc()
->> /* CPU owns buffer and can read/write it, device does not */
->> dev_addr = dma_map_single(dev, buf, ..., DMA_FROM_DEVICE);
->> /* Device owns buffer and can write it, CPU does not access it */
->> dma_unmap_single(dev, dev_addr, ..., DMA_FROM_DEVICE);
->> /* CPU owns buffer again and can read/write it, device does not */
->>
->> Please turn on DMA API debugging in the kernel debug options and verify
->> whether your driver causes it to complain (it will.)
->
-> Yes, you are right.
-> After change to dma_map/unmap_single, however, still get warning like
-> "DMA-API: device driver failed to check map error", not sure whether
-> it can be ignored?
+On Wed, Mar 19, 2014 at 04:39:45PM -0700, Mike Turquette wrote:
+> Quoting Maxime Ripard (2014-02-18 06:05:16)
+> > On Mon, Feb 17, 2014 at 11:02:15AM +0100, David Lanzend=F6rfer wrote:
+> > > From: Emilio L=F3pez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+> > >=20
+> > > This commit implements .determine_rate, so that our factor clocks can=
+ be
+> > > reparented when needed.
+> > >=20
+> > > Signed-off-by: Emilio L=F3pez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+> >=20
+> > Your signed-off-by is missing here.
+> >=20
+> > Once you added it, you can add my Acked-by
+>=20
+> Yes the patch looks good to me as well. Am I correct in thinking that it
+> is independent of the MMC clock phase discussion? If it is resubmitted
+> with a proper SoB then I can pick it.
 
-If it could be ignored, there would be no warning. So yes you should
-check the error. I guess correct error handling would be throwing away
-the packet.
+Yes, it's completely independant of the MMC phase stuff.
 
+Emilio, or David, could you resend it?
 
->>> +             dma_map_single(&ndev->dev, buf, RX_BUF_SIZE, DMA_TO_DEVICE);
->>> +             hip04_set_recv_desc(priv, virt_to_phys(buf));
->>
->> No need for virt_to_phys() here - dma_map_single() returns the device
->> address.
-> Got it.
-> Use virt_to_phys since find same result come out, it should be
-> different for iommu case.
->
-> In fact, the hardware can help to do the cache flushing, the function
-> still not be enabled now.
-> Then dma_map/unmap_single may be ignored.
+Maxime
 
-If you don't need cache flushing, you should setup different
-dma_map_ops for the device such as arm_coherent_dma_ops. The driver
-should always have the dma_map calls. See highbank and mvebu for
-examples.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-Rob
+--n5G3y24fV3/VEqbx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTKrklAAoJEBx+YmzsjxAgy/gP/21KggiKLJZbO5WGulCJ+yRI
+bQ1WFh08X8ExEko9bvU2PlA90B6XS9ed4+kAmvncIXbTxBelAE7UqyIEyCcXkfPR
+pdZG0TQeZTMvNpK+Ml2G/Ulz4iw0jZ0iTj6RBajh9LjX/LPVlxYYJCfH1H0xkGPm
+zXoKlRe0lFu7YFSmuy7qP4YSf6MSmO4YeRlcJOyCXX7f40w6CJsmBEfj52Wa9lAo
+95fDz1ZhgbFpGHvbBF18q9J8zgZ0gpYH/D2OoSP0wgNAwxnJIz5QFyokYk94+uZh
+WwwsiuIvTdcrnKEy/CQ+biPNhxhWxPVkjM0xhOeH3Dyqqz7NbSfh21RnFsx32WZZ
+Z01OONj+izIhOO/sRCq/VXGNXdwQ7x+QWDmjs+u25//HnMLKU/V9kcts2+as0/H8
+wNyMmHQO8CXYfl7wFD+FWJETjcXf3++Qhzyomldt0CiGqAZLMAj5RaE0LJ9Jh24r
+jwXZrXPx+CszVPe2OGZFcLSWEhi48Qwo7dfakKhCYI/bdfy6BQbwW5StrDHuc+jf
+RA0hhLbRX2vHXH/uRYa3BV1BHm+qoqFDObUg50vJbqblQluzfOzUAPAAcCK79thX
+LnM54cmbSnVeA+ZakWMBPUM2Y9RQcds/HQ+s/sZAb0Z7Zi8jPkP7mdI3ITuypbfy
+K1aMmwOJsrUemyWsSEEp
+=1gCp
+-----END PGP SIGNATURE-----
+
+--n5G3y24fV3/VEqbx--
