@@ -1,49 +1,58 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH V8 1/7] sxgbe: Add device-tree binding support document
-Date: Fri, 21 Mar 2014 11:02:12 +0000
-Message-ID: <20140321110212.GM23372@e106331-lin.cambridge.arm.com>
-References: <012e01cf4461$79852880$6c8f7980$@samsung.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: [PATCH RFC v2 5/6] drm/tilcd: dts: Remove unused slave description
+Date: Fri, 21 Mar 2014 10:31:45 +0100
+Message-ID: <4bde6edb48bad767730b7f909cd61c1ec5bd5ff0.1395397665.git.moinejf@free.fr>
+References: <cover.1395397665.git.moinejf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <012e01cf4461$79852880$6c8f7980$@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Byungho An <bh74.an@samsung.com>
-Cc: 'netdev' <netdev@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 'David Miller' <davem@davemloft.net>, 'GIRISH K S' <ks.giri@samsung.com>, 'SIVAREDDY KALLAM' <siva.kallam@samsung.com>, 'Vipul Chandrakant' <vipul.pandya@samsung.com>, 'Ilho Lee' <ilho215.lee@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.1395397665.git.moinejf@free.fr>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Russell King <rmk+kernel@arm.linux.org.uk>, Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> +Example:
-> +
-> +	aliases {
-> +		ethernet0 = <&sxgbe0>;
-> +	};
-> +
-> +	sxgbe0: ethernet@1a040000 {
-> +		compatible = "samsung,sxgbe-v2.0a";
-> +		reg = <0 0x1a040000 0 0x10000>;
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <0 209 4>, <0 185 4>, <0 186 4>, <0 187 4>,
-> +			     <0 188 4>, <0 189 4>, <0 190 4>, <0 191 4>,
-> +			     <0 192 4>, <0 193 4>, <0 194 4>, <0 195 4>,
-> +			     <0 196 4>, <0 197 4>, <0 198 4>, <0 199 4>,
-> +			     <0 200 4>, <0 201 4>, <0 202 4>, <0 203 4>,
-> +			     <0 204 4>, <0 205 4>, <0 206 4>, <0 207 4>,
-> +			     <0 208 4>, <0 210 4>;
-> +		samsung,pbl = <0x08>
-> +		samsung,burst-map = <0x20>
-> +		samsung,adv-addr-mode = "true"
-> +		samsung,force-sf-dma-mode = "true"
+The tda998x being converted to a normal DRM encoder/connector,
+there is no slave notion anymore.
 
-You don't need these strings for boolean properties. Their presence of
-the property alone (even in the absende of a value) is sufficient. These
-should simply be:
+Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
+---
+ Documentation/devicetree/bindings/drm/tilcdc/slave.txt | 18 ------------------
+ 1 file changed, 18 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/drm/tilcdc/slave.txt
 
-	samsung,adv-addr-map;
-	samsung,force-sf-dma-mode;
-
-It is still an open question as to whether these properties are
-necessary.
-
-Cheers,
-Mark.
+diff --git a/Documentation/devicetree/bindings/drm/tilcdc/slave.txt b/Documentation/devicetree/bindings/drm/tilcdc/slave.txt
+deleted file mode 100644
+index 3d2c524..0000000
+--- a/Documentation/devicetree/bindings/drm/tilcdc/slave.txt
++++ /dev/null
+@@ -1,18 +0,0 @@
+-Device-Tree bindings for tilcdc DRM encoder slave output driver
+-
+-Required properties:
+- - compatible: value should be "ti,tilcdc,slave".
+- - i2c: the phandle for the i2c device the encoder slave is connected to
+-
+-Recommended properties:
+- - pinctrl-names, pinctrl-0: the pincontrol settings to configure
+-   muxing properly for pins that connect to TFP410 device
+-
+-Example:
+-
+-	hdmi {
+-		compatible = "ti,tilcdc,slave";
+-		i2c = <&i2c0>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&nxp_hdmi_bonelt_pins>;
+-	};
+-- 
+1.9.1
