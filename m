@@ -1,115 +1,41 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v3 1/3] arm64: dts: add initial dts for Samsung GH7 SoC and
- SSDK-GH7 board
-Date: Fri, 21 Mar 2014 22:08:30 +0900
-Message-ID: <01e901cf4506$a7c1a5c0$f744f140$@samsung.com>
-References: <1395094477-8921-1-git-send-email-kgene.kim@samsung.com>
- <1395094477-8921-2-git-send-email-kgene.kim@samsung.com>
- <20140321114710.GO23372@e106331-lin.cambridge.arm.com>
+From: One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
+Subject: Re: [PATCH v2] tty: serial: sc16is7xx
+Date: Fri, 21 Mar 2014 13:22:37 +0000
+Message-ID: <20140321132237.7aebefcf@alan.etchedpixels.co.uk>
+References: <1395324333-21221-1-git-send-email-jon@ringle.org>
+	<20140321082609.GA3801@xps8300>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20140321114710.GO23372@e106331-lin.cambridge.arm.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Mark Rutland' <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Thomas Abraham' <thomas.ab@samsung.com>, 'Ilho Lee' <ilho215.lee@samsung.com>, 'Catalin Marinas' <Catalin.Marinas@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140321082609.GA3801@xps8300>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: jon-7zJyie9iPacdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, shc_work-JGs/UdohzUI@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Ringle <jringle-gkqdKIIuv0Hby3iVrkZq2A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Mark Rutland wrote:
-> 
+On Fri, 21 Mar 2014 10:26:09 +0200
+Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+
 > Hi,
-> 
-Hi Mark,
+>=20
+> On Thu, Mar 20, 2014 at 10:05:33AM -0400, jon-7zJyie9iPacdnm+yROfE0A@public.gmane.org wrote:
+> > From: Jon Ringle <jringle-gkqdKIIuv0Hby3iVrkZq2A@public.gmane.org>
+> >=20
+> > The SC16IS7xx is a slave I2C-bus/SPI interface to a single-channel
+> > high performance UART. The SC16IS7xx=E2=80=99s internal register se=
+t is
+> > backward-compatible with the widely used and widely popular 16C450.
+>=20
+> So couldn't this be just a probe driver for 8250?
 
-[...]
+That was my first thought but if you look at 8250 and its locking
+assumptions it is a very poor fit. Better for now it is separate I thin=
+k.
 
-> > +/memreserve/ 0xFEC00000 0x1400000;	/* EL3 monitor, secure intepreter */
-> 
-> As I've mentioned, I'm concerned that this is even in the non-secure
-> address space that the kernel can access. Why is this not hidden from
-> the kernel entirely? Why is it expected to be mapped in and reserved?
-> 
-OK, I will make kernel cannot access the memory area with hiding.
-
-> Additionally, the memory the used by the spin-table (0x0 0x8000fff8) has
-> not been reserved, and thus the kernel is free to clobber it.
-> 
-Oops, I missed. OK I will add following instead of above.
-
-+/memreserve/ 0x80000000 0x00010000;
-
-> [...]
-> 
-> > +	gic: interrupt-controller@1C000000 {
-> > +		compatible = "arm,cortex-a15-gic";
-> 
-> For targeting any future workarounds I would very much prefer a more
-> specific string.
-> 
-If any workarounds are required later, will add specific string then.
-
-> [...]
-> 
-> > +	pmu {
-> > +		compatible = "samsung,gh7-pmu", "armv8-pmuv3";
-> > +		interrupts = <0 294 0>,
-> > +			     <0 295 0>,
-> > +			     <0 296 0>,
-> > +			     <0 297 0>,
-> > +			     <0 298 0>,
-> > +			     <0 299 0>,
-> > +			     <0 300 0>,
-> > +			     <0 301 0>;
-> > +	};
-> 
-> These are all missing a trigger type (thus making them unusable), and as
-> "GH7" is the SoC name rather than the CPU name, the compatible string is
-> somewhat bad.
-> 
-Oops, it should be 8.
-
-And yes, as I've mentioned "GH7" is SoC name not CPU name.
-
-I'm still thinking _really_ I need to use CPU specific name for GH7 SoC because
-we don't need to handle for the specific CPU implementation in kernel even we
-didn't name it.
-
-> > +
-> > +	amba {
-> > +		compatible = "arm,amba-bus";
-> > +		#address-cells = <2>;
-> > +		#size-cells = <2>;
-> > +		ranges;
-> > +
-> > +		serial@12c00000 {
-> > +			compatible = "arm,pl011", "arm,primecell";
-> > +			reg = <0 0x12c00000 0 0x10000>;
-> > +			interrupts = <0 418 0>;
-> > +		};
-> > +
-> > +		serial@12c20000 {
-> > +			compatible = "arm,pl011", "arm,primecell";
-> > +			reg = <0 0x12c20000 0 0x10000>;
-> > +			interrupts = <0 420 0>;
-> > +		};
-> 
-> While the primecell bindings and PL011 bindings state that clocks are
-> optional, the primecell bus code requires a clock named apb_pclk, and
-> the pl011 driver requires a clock (which it expects to be UARTCLK) to
-> acquire the frequency from. As neither are provided I do not see how
-> this DT could possibly be used to boot a usable system.
-> 
-> Additionally the interrupt trigger types are missing.
-> 
-> Given that these are the only IO devices described in the dtsi/dts
-> combination, and they do not appear to be usable, what is the point in
-> merging this?
-> 
-Definitely, it is meaningful because we can enhance everything more based on
-this for the mass product.
-
-Thanks for your time.
-
-- Kukjin
+Alan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
