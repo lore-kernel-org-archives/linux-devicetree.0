@@ -1,87 +1,87 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] [media] of: move graph helpers from drivers/media/v4l2-core to drivers/of
-Date: Fri, 21 Mar 2014 15:30:20 +0100
-Message-ID: <1658201.GilyGRJEEa@avalon>
-References: <1393340304-19005-1-git-send-email-p.zabel@pengutronix.de> <1755937.SSGT2MZJMC@avalon> <532C4B3C.4030406@ti.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v4 5/9] dt-bindings: pci: rcar pcie device tree bindings
+Date: Fri, 21 Mar 2014 15:30:13 +0100
+Message-ID: <1395412213.4554.17.camel@weser.hi.pengutronix.de>
+References: <1395397968-6242-1-git-send-email-phil.edworthy@renesas.com>
+		 <1395397968-6242-6-git-send-email-phil.edworthy@renesas.com>
+	 <1395401031.4554.9.camel@weser.hi.pengutronix.de>
+	 <OF03C9E23D.07B7D998-ON80257CA2.004E5877-80257CA2.004E9BFB@eu.necel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1422452.LVKZ4jzxXA"; micalg="pgp-sha1"; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <532C4B3C.4030406-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <OF03C9E23D.07B7D998-ON80257CA2.004E5877-80257CA2.004E9BFB@eu.necel.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Phil.Edworthy@renesas.com
+Cc: devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, linux-sh@vger.kernel.org, linux-pci@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Valentine Barshak <valentine.barshak@cogentembedded.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Am Freitag, den 21.03.2014, 14:18 +0000 schrieb
+Phil.Edworthy@renesas.com:
+> Hi Lucas,
+> 
+> On 21/03/2014 11:24, Lucas wrote:
+> > Subject: Re: [PATCH v4 5/9] dt-bindings: pci: rcar pcie device tree 
+> bindings
+> > 
+> > Am Freitag, den 21.03.2014, 10:32 +0000 schrieb Phil Edworthy:
+> > > This patch adds the bindings for the rcar PCIE driver. The driver
+> > > resides under drivers/pci/host/pcie-rcar.c
+> > > 
+> > > Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+> > 
+> > I have one question below. If you can answer this with yes after
+> > thinking again about it, this is:
+> > 
+> > Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+> > > ---
+> > >  Documentation/devicetree/bindings/pci/rcar-pci.txt | 40 
+> ++++++++++++++++++++++
+> > >  1 file changed, 40 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/
+> > Documentation/devicetree/bindings/pci/rcar-pci.txt
+> > > new file mode 100644
+> > > index 0000000..0e219b0
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> > > @@ -0,0 +1,40 @@
+> > > +* Renesas RCar PCIe interface
+> > > +
+> > > +Required properties:
+> > > +- compatible: should contain one of the following
+> > > +   "renesas,r8a7779-pcie", "renesas,r8a7790-pcie", 
+> "renesas,r8a7791-pcie"
+> > > +- reg: base addresses and lengths of the pcie controller.
+> > > +- #address-cells: set to <3>
+> > > +- #size-cells: set to <2>
+> > > +- device_type: set to "pci"
+> > > +- ranges: ranges for the PCI memory and I/O regions
+> > > +- interrupts: interrupt values for MSI interrupt
+> > > +- #interrupt-cells: set to <1>
+> > > +- interrupt-map-mask and interrupt-map: standard PCI properties
+> > > +   to define the mapping of the PCIe interface to interrupt
+> > > +   numbers.
+> > > +- clocks: from common clock binding: handle to pci clock.
+> > > +- clock-names: from common clock binding: should be "pcie"
+> > 
+> > You really only have one PCIe clock? So the controller is generating the
+> > PCIe bus clock from it's register clock? No need to enable any other
+> > clock for PCIe to work?
+> Yes, just the one clock. The PCIe bus clock is an external clock dedicated 
+> to PCIe and SATA, and we have no control over it.
+> 
+Is this some kind of always-on clock? If not you probably want a
+reference to it from the PCIe driver even if it's shared between SATA
+and PCIe. After all you don't want to end up unconditionally enabling
+this clock from the board or SoC level just to have PCIe working, right?
 
---nextPart1422452.LVKZ4jzxXA
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="us-ascii"
-
-Hi Tomi,
-
-On Friday 21 March 2014 16:22:52 Tomi Valkeinen wrote:
-> On 21/03/14 16:13, Laurent Pinchart wrote:
-> > On Friday 21 March 2014 15:37:17 Tomi Valkeinen wrote:
-> >> On 21/03/14 00:32, Laurent Pinchart wrote:
-> >>> The OF graph bindings documentation could just specify the ports =
-node as
-> >>> optional and mandate individual device bindings to specify it as
-> >>> mandatory or forbidden (possibly with a default behaviour to avoi=
-d
-> >>> making all device bindings too verbose).
-> >>=20
-> >> Isn't it so that if the device has one port, it can always do with=
-out
-> >> 'ports', but if it has multiple ports, it always has to use 'ports=
-' so
-> >> that #address-cells and #size-cells can be defined?
-> >=20
-> > You can put the #address-cells and #size-cells property in the devi=
-ce node
-> > directly without requiring a ports subnode.
->=20
-> Ah, right. So 'ports' is only needed when the device node has other c=
-hildren
-> nodes than the ports and those nodes need different #address-cells an=
-d
-> #size-cells than the ports.
-
-I would rephrase that as the ports node being required only in that cas=
-e. It=20
-can also be useful to cleanly group ports together when the device node=
- has=20
-other unrelated children, even though no technical requirement exist (y=
-et ?)=20
-in that case.
-
-> In that case it sounds fine to leave it for the driver bindings to de=
-cide.
-
-=2D-=20
 Regards,
+Lucas
+-- 
+Pengutronix e.K.                           | Lucas Stach                 |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-5076 |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
-Laurent Pinchart
-
---nextPart1422452.LVKZ4jzxXA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQEcBAABAgAGBQJTLEz8AAoJEIkPb2GL7hl1VvAIAKrdmomDTdcBJr1NaaefFaQK
-2pA7MWuE/RRkUmMe2HjAfqqapyEW1sMJ9A0R5NUy3JC/7xmu+rEtm6VyBja5v6kZ
-O8bd3mFpER6KPWS8GZPQJ2QT3cnTOQKpuybZRDmIFPMGhfnqq9nfW69U4QjlbfKs
-VFghO8k3I+fUzEql8meii6GRwtSdMWWPsyncf94a8Wj93mY+tNhtibfpeFoxhmU/
-UiKm1+xYcRxJ5gWuG567BMlGACsYaI9uSv/WWDmLZHW0CMJ2J2NWMSYSvxBNFtlm
-+aVRGBHVVMAPfj8zI8LKelHqtz/ieJpDxuyNHWuXE3LJiAhWUPhvW2dkhBCGlWo=
-=Qk0J
------END PGP SIGNATURE-----
-
---nextPart1422452.LVKZ4jzxXA--
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
