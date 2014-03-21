@@ -1,50 +1,38 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH V8 4/7] net: sxgbe: add EEE(Energy Efficient Ethernet)
- for Samsung sxgbe
-Date: Fri, 21 Mar 2014 11:04:23 +0000
-Message-ID: <20140321110423.GN23372@e106331-lin.cambridge.arm.com>
-References: <012f01cf4461$7ac68220$70538660$@samsung.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH RFC v2 0/6] drm/i2c: Move tda998x to a couple
+ encoder/connector
+Date: Fri, 21 Mar 2014 11:21:18 +0000
+Message-ID: <20140321112118.GH7528@n2100.arm.linux.org.uk>
+References: <cover.1395397665.git.moinejf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <012f01cf4461$7ac68220$70538660$@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Byungho An <bh74.an@samsung.com>
-Cc: 'netdev' <netdev@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 'David Miller' <davem@davemloft.net>, 'GIRISH K S' <ks.giri@samsung.com>, 'SIVAREDDY KALLAM' <siva.kallam@samsung.com>, 'Vipul Chandrakant' <vipul.pandya@samsung.com>, 'Ilho Lee' <ilho215.lee@samsung.com>
+In-Reply-To: <cover.1395397665.git.moinejf@free.fr>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 20, 2014 at 05:26:06PM +0000, Byungho An wrote:
-> From: Girish K S <ks.giri@samsung.com>
-> 
-> Added support for the EEE(Energy Efficient Ethernet) in 10G ethernet driver.
-> 
-> Signed-off-by: Girish K S <ks.giri@samsung.com>
-> Neatening-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Byungho An <bh74.an@samsung.com>
-> ---
->  drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h  |   53 +++++++
->  drivers/net/ethernet/samsung/sxgbe/sxgbe_core.c    |   86 +++++++++-
->  drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c |   47 ++++++
->  drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c    |  165 +++++++++++++++++++-
->  .../net/ethernet/samsung/sxgbe/sxgbe_platform.c    |    4 +
->  drivers/net/ethernet/samsung/sxgbe/sxgbe_reg.h     |    5 +
->  6 files changed, 358 insertions(+), 2 deletions(-)
+On Fri, Mar 21, 2014 at 11:27:45AM +0100, Jean-Francois Moine wrote:
+> The 'slave encoder' structure of the tda998x driver asks for glue
+> between the DRM driver and the encoder/connector structures.
 
-[...]
+Given how close we are to the coming merge window, that the discussion
+about the of-graph bindings is still going on without concensus being
+reached, and that this driver is not in staging, this needs to be
+delayed until the following merge window when hopefully we have a
+clearer picture about the DT side of this.
 
-> diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_platform.c b/drivers/net/ethernet/samsung/sxgbe/sxgbe_platform.c
-> index e410d84..b23ec57 100644
-> --- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_platform.c
-> +++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_platform.c
-> @@ -160,6 +160,10 @@ static int sxgbe_platform_probe(struct platform_device *pdev)
->                 }
->         }
-> 
-> +       priv->lpi_irq = irq_of_parse_and_map(dev->of_node, loop++);
-
-You can use platform_get_irq(pdev, loop++) here. The interrupts have
-already been parsed elsewhere.
-
-Cheers,
-Mark.
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
