@@ -1,49 +1,113 @@
-From: Byungho An <bh74.an-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH V10 7/7] MAINTAINERS: add maintainer for Samsung sxgbe driver
-Date: Fri, 21 Mar 2014 11:06:55 -0700
-Message-ID: <005d01cf4530$590cedc0$0b26c940$@samsung.com>
+From: delicious quinoa <delicious.quinoa@gmail.com>
+Subject: Re: [PATCH 3/3] ARM: dts: socfpga: add gpio pieces
+Date: Fri, 21 Mar 2014 13:14:13 -0500
+Message-ID: <CANk1AXRa4V1ADNaT+T3pYF4zyxni9Y8rmU9UYRoA_7NxW8KWEg@mail.gmail.com>
+References: <1395345324-18299-1-git-send-email-bigeasy@linutronix.de>
+	<1395345324-18299-4-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-language: en-us
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: 'David Miller' <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, 'GIRISH K S' <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'SIVAREDDY KALLAM' <siva.kallam-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Vipul Chandrakant' <vipul.pandya-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Ilho Lee' <ilho215.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1395345324-18299-4-git-send-email-bigeasy@linutronix.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Alan Tull <atull@altera.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Dinh Nguyen <dinguyen@altera.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Byungho An <bh74.an-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+On Thu, Mar 20, 2014 at 2:55 PM, Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
+> The cycloneV has three gpio controllers, each one with 29 gpios. This patch
+> adds the three controller with the gpio driver which is now sitting the
+> gpio tree.
+>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+>  arch/arm/boot/dts/socfpga.dtsi | 60 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> index 537f1a5..c3a97e1 100644
+> --- a/arch/arm/boot/dts/socfpga.dtsi
+> +++ b/arch/arm/boot/dts/socfpga.dtsi
+> @@ -463,6 +463,66 @@
+>                         status = "disabled";
+>                 };
+>
+> +               gpio@ff708000 {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       compatible = "snps,dw-apb-gpio";
+> +                       reg = <0xff708000 0x1000>;
+> +                       clocks = <&per_base_clk>;
+> +                       status = "disabled";
+> +
+> +                       gpio0: gpio-controller@0 {
+> +                               compatible = "snps,dw-apb-gpio-port";
+> +                               gpio-controller;
+> +                               #gpio-cells = <1>;
 
-Signed-off-by: Byungho An <bh74.an-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- MAINTAINERS |    9 +++++++++
- 1 file changed, 9 insertions(+)
+#gpio-cells = <2>;
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b7befe7..aeb81f2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7536,6 +7536,15 @@ S:	Supported
- L:	linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (moderated for non-subscribers)
- F:	drivers/clk/samsung/
- 
-+SAMSUNG SXGBE DRIVERS
-+M:	Byungho An <bh74.an-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-+M:	Girish K S <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-+M:	Siva Reddy Kallam <siva.kallam-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-+M:	Vipul Pandya <vipul.pandya-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-+S:	Supported
-+L:	netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+F:	drivers/net/ethernet/samsung/sxgbe/
-+
- SERIAL DRIVERS
- M:	Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
- L:	linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
--- 
-1.7.10.4
+I applied this patch, fixed the gpio-cells, tested on a cyclone5 soc
+devkit, and see that it breaks the interrupts.  Did you test this?
 
+Alan
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +                               snps,nr-gpios = <29>;
+> +                               reg = <0>;
+> +                               interrupt-controller;
+> +                               #interrupt-cells = <2>;
+> +                               interrupts = <0 164 4>;
+> +                       };
+> +               };
+> +
+> +               gpio@ff709000 {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       compatible = "snps,dw-apb-gpio";
+> +                       reg = <0xff709000 0x1000>;
+> +                       clocks = <&per_base_clk>;
+> +                       status = "disabled";
+> +
+> +                       gpio1: gpio-controller@0 {
+> +                               compatible = "snps,dw-apb-gpio-port";
+> +                               gpio-controller;
+> +                               #gpio-cells = <1>;
+> +                               snps,nr-gpios = <29>;
+> +                               reg = <0>;
+> +                               interrupt-controller;
+> +                               #interrupt-cells = <2>;
+> +                               interrupts = <0 165 4>;
+> +                       };
+> +               };
+> +
+> +               gpio@ff70a000 {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       compatible = "snps,dw-apb-gpio";
+> +                       reg = <0xff70a000 0x1000>;
+> +                       clocks = <&per_base_clk>;
+> +                       status = "disabled";
+> +
+> +                       gpio2: gpio-controller@0 {
+> +                               compatible = "snps,dw-apb-gpio-port";
+> +                               gpio-controller;
+> +                               #gpio-cells = <1>;
+> +                               snps,nr-gpios = <29>;
+> +                               reg = <0>;
+> +                               interrupt-controller;
+> +                               #interrupt-cells = <2>;
+> +                               interrupts = <0 166 4>;
+> +                       };
+> +               };
+> +
+>                 L2: l2-cache@fffef000 {
+>                         compatible = "arm,pl310-cache";
+>                         reg = <0xfffef000 0x1000>;
+> --
+> 1.9.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
