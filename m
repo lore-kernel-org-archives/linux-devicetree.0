@@ -1,49 +1,105 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: Re: [PATCH 0/2] ARM: berlin: SMP support
-Date: Fri, 21 Mar 2014 11:14:57 +0800
-Message-ID: <20140321111457.6bed5091@xhacker>
-References: <1395347986-30203-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v11 10/27] iommu/exynos: use managed device helper
+	functions
+Date: Fri, 21 Mar 2014 13:49:00 +0900
+Message-ID: <20140321134900.ef9b7ac83443ae2e0bc5565b@samsung.com>
+References: <20140314140542.f4ded6c50dbd8a1d937bf354@samsung.com>
+	<CAK9yfHw7zYaX9EYFE+m3Mh-u8Uiyubx-cS0EwPmfW+0weLiBKw@mail.gmail.com>
+	<20140318200915.7dd833ce0fddbbd6ecd8dac9@samsung.com>
+	<532862ED.8040809@samsung.com>
+	<20140319175927.a3feadcacbffe80eca1d3421@samsung.com>
+	<CAK9yfHxxo2eFh38gPZkpYf1ueBWySWqPzgLV_tSSykzHhNzN8g@mail.gmail.com>
+	<532988CA.4000008@samsung.com>
+	<20140320190333.9c3555b097e97d593faddbdd@samsung.com>
+	<532AC6A2.9070307@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1395347986-30203-1-git-send-email-sebastian.hesselbarth@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Antoine Tenart <antoine.tenart@free-electrons.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-reply-to: <532AC6A2.9070307-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Linux DeviceTree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Samsung SOC <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Prathyush <prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Antonios Motakis <a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 20 Mar 2014 13:39:44 -0700
-Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
-
-> This is a small patch set for SMP support on Marvell Berlin BG2
-> and recently provided BG2Q. Nothing spectacular, as it basically
-> copies SMP holding pen mechanism from mach-prima2 and plat-versatile
-> with minor Berlin specific code for SCU and general purpose registers
-> used by secondary CPUs to get their boot address.
+On Thu, 20 Mar 2014 11:44:50 +0100, Tomasz Figa wrote:
+> On 20.03.2014 11:03, Cho KyongHo wrote:
+> > On Wed, 19 Mar 2014 13:08:42 +0100, Tomasz Figa wrote:
+> >> On 19.03.2014 10:01, Sachin Kamat wrote:
+> >>> On 19 March 2014 14:29, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> >>>> On Tue, 18 Mar 2014 16:14:53 +0100, Tomasz Figa wrote:
+> >>>>> On 18.03.2014 12:09, Cho KyongHo wrote:
+> >>>>>> On Fri, 14 Mar 2014 20:52:43 +0530, Sachin Kamat wrote:
+> >>>>>>> Hi KyongHo,
+> >>>>>>>
+> >>>>>>> On 14 March 2014 10:35, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> >>>>>>>> This patch uses managed device helper functions in the probe().
+> >>>>>>>>
+> >>>>>>>> Signed-off-by: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> >>>>>>>> ---
+> >>>>>>> [snip]
+> >>>>>>>
+> >>>>>>>> +       data->clk = devm_clk_get(dev, "sysmmu");
+> >>>>>>>> +       if (IS_ERR(data->clk)) {
+> >>>>>>>> +               dev_info(dev, "No gate clock found!\n");
+> >>>>>>>> +               data->clk = NULL;
+> >>>>>>>> +       }
+> >>>>>>>
+> >>>>>>> Why aren't you returning from here upon error?
+> >>>>>>
+> >>>>>> It is for the case of a System MMU which does not need clock gating.
+> >>>>>>
+> >>>>>
+> >>>>> Are there really such cases?
+> >>>>>
+> >>>>
+> >>>> Yes.
+> >>>> Especially in the case of initial stage of new SoC development.
+> >>>>
+> >>>> I have experianced some software workaround for H/W restriction
+> >>>> needs prevention of clock gating for some devices.
+> >>>
+> >>> So aren't these basically some exceptions/hacks rather than the usual way
+> >>> of functioning of the device?
+> >>>
+> >>
+> >> This actually raises a good question, whether we really need to support
+> >> such early development SoC versions in mainline.
+> >>
+> >> Another thing is that if you need to assure that a clock is ungated, you
+> >> must acquire it and prepare_enable explicitly, so I don't think this
+> >> kind of handling is correct.
+> >>
+> > On early development step of a new SoC, clock related stuffs and
+> > some device drivers like display controller are usually developed in parallel.
+> >
+> > In that case, -ENOENT from clk_get() must not treated as an error.
+> > "[PATCH v11 20/17] iommu/exynos: allow having multiple System MMUs for a master H/W"
+> > patch distinguishes -ENOENT from other error values returned by devm_clk_get().
 > 
-> There was some IRC discussion with Alexandre about using
-> scu_get_base() instead of a DT node. Although BG2Q is true A9
-> and provides SCU base; BG2 with PJ4b does not and I decided to
-> depend on a DT node for SCU in both cases, which is fine I guess.
+> I still don't think upstream is right place for such development hacks 
+> and such assumption will mask potential errors caused by clocks 
+> unspecified in DT.
 > 
-> I tested this on BG2, and BG2CD (which is UP). I expect the
-> Free-Electrons guys to test on BG2Q.
+> If such thing is needed for development, an extra patch might be kept in 
+> development tree, until clock driver is implemented or a dummy 
+> fixed-rate clock might be specified in DT.
+> 
 
-Although BG2Q and future SoCs will go through PSCI code path finally. But
-currently, it's OK to use the pen mechanism.
+Ok.
 
-So for both of these two patches, 
+Now I understand.
 
-Acked-by: Jisheng Zhang <jszhang@marvell.com>
+Error from clk_get() will be failure of probe in the next patch series.
 
-Thanks,
-Jisheng
+Thanks.
+
+KyongHo
