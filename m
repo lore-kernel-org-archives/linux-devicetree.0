@@ -1,7 +1,7 @@
 From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 04/20] mmc: mmci: Move signal directions bits into DT include file
-Date: Fri, 21 Mar 2014 13:14:01 +0100
-Message-ID: <1395404057-27835-5-git-send-email-ulf.hansson@linaro.org>
+Subject: [PATCH 07/20] ARM: ux500: Add mmci signal directions in DT for href
+Date: Fri, 21 Mar 2014 13:14:04 +0100
+Message-ID: <1395404057-27835-8-git-send-email-ulf.hansson@linaro.org>
 References: <1395404057-27835-1-git-send-email-ulf.hansson@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1395404057-27835-1-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -10,68 +10,34 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell 
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-These bits is currently used from platform data, but will be needed
-from DT as well, so let's make them available.
-
 Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- include/dt-bindings/mmc/mmci.h |   21 +++++++++++++++++++++
- include/linux/amba/mmci.h      |   14 +-------------
- 2 files changed, 22 insertions(+), 13 deletions(-)
- create mode 100644 include/dt-bindings/mmc/mmci.h
+ arch/arm/boot/dts/ste-href.dtsi |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/include/dt-bindings/mmc/mmci.h b/include/dt-bindings/mmc/mmci.h
-new file mode 100644
-index 0000000..8c55254
---- /dev/null
-+++ b/include/dt-bindings/mmc/mmci.h
-@@ -0,0 +1,21 @@
-+/*
-+ * This header provides constants for the mmci bindings.
-+ *
-+ */
-+
-+#ifndef _DT_BINDINGS_MMC_MMCI_H
-+#define _DT_BINDINGS_MMC_MMCI_H
-+
-+/*
-+ * Bus signal direction bits.
-+ * The ST Micro version does not have ROD and reuse the voltage registers
-+ * for direction settings.
-+ */
-+#define MCI_ST_DATA2DIREN	(1 << 2)
-+#define MCI_ST_CMDDIREN		(1 << 3)
-+#define MCI_ST_DATA0DIREN	(1 << 4)
-+#define MCI_ST_DATA31DIREN	(1 << 5)
-+#define MCI_ST_FBCLKEN		(1 << 7)
-+#define MCI_ST_DATA74DIREN	(1 << 8)
-+
-+#endif
-diff --git a/include/linux/amba/mmci.h b/include/linux/amba/mmci.h
-index 32a89cf..47ff176 100644
---- a/include/linux/amba/mmci.h
-+++ b/include/linux/amba/mmci.h
-@@ -5,19 +5,7 @@
- #define AMBA_MMCI_H
+diff --git a/arch/arm/boot/dts/ste-href.dtsi b/arch/arm/boot/dts/ste-href.dtsi
+index 6cb9b68..d50fe24 100644
+--- a/arch/arm/boot/dts/ste-href.dtsi
++++ b/arch/arm/boot/dts/ste-href.dtsi
+@@ -10,6 +10,7 @@
+  */
  
- #include <linux/mmc/host.h>
--
--
--/*
-- * These defines is places here due to access is needed from machine
-- * configuration files. The ST Micro version does not have ROD and
-- * reuse the voltage registers for direction settings.
-- */
--#define MCI_ST_DATA2DIREN	(1 << 2)
--#define MCI_ST_CMDDIREN		(1 << 3)
--#define MCI_ST_DATA0DIREN	(1 << 4)
--#define MCI_ST_DATA31DIREN	(1 << 5)
--#define MCI_ST_FBCLKEN		(1 << 7)
--#define MCI_ST_DATA74DIREN	(1 << 8)
+ #include <dt-bindings/interrupt-controller/irq.h>
 +#include <dt-bindings/mmc/mmci.h>
+ #include "ste-dbx5x0.dtsi"
+ #include "ste-href-family-pinctrl.dtsi"
  
- /* Just some dummy forwarding */
- struct dma_chan;
+@@ -118,6 +119,10 @@
+ 			bus-width = <4>;
+ 			mmc-cap-sd-highspeed;
+ 			mmc-cap-mmc-highspeed;
++			signal-direction = <(MCI_ST_DATA2DIREN |
++						MCI_ST_CMDDIREN |
++						MCI_ST_DATA0DIREN |
++						MCI_ST_FBCLKEN)>;
+ 			vmmc-supply = <&ab8500_ldo_aux3_reg>;
+ 			vqmmc-supply = <&vmmci>;
+ 			pinctrl-names = "default", "sleep";
 -- 
 1.7.9.5
 
