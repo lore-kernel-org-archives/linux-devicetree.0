@@ -1,28 +1,156 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/9] Doc/DT: DT bindings for various display components
-Date: Fri, 21 Mar 2014 15:37:27 +0000
-Message-ID: <20140321153727.CCD87C405B0@trevor.secretlab.ca>
-References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com> < 532017B3.708@ti.com> <5326FECF.9070104@ti.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5326FECF.9070104-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 1/3] Documentation: add Device tree bindings for Hisilicon
+ hip04 ethernet
+Date: Fri, 21 Mar 2014 09:42:16 -0700
+Message-ID: <CAGVrzcbH6aGC=5PG5rMv7b8+ntF6roWXv_cK1yPa8cQhcHYLkQ@mail.gmail.com>
+References: <1395414570-25515-1-git-send-email-zhangfei.gao@linaro.org> <1395414570-25515-2-git-send-email-zhangfei.gao@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1395414570-25515-2-git-send-email-zhangfei.gao@linaro.org>
+Sender: netdev-owner@vger.kernel.org
+To: Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc: "David S. Miller" <davem@davemloft.net>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Mar 2014 15:55:27 +0200, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> wrote:
-> Hi Grant,
-> 
-> Ping.
-> 
-> Are you fine with me proceeding with the current V4L2 port/endpoint
-> bindings?
+2014-03-21 8:09 GMT-07:00 Zhangfei Gao <zhangfei.gao@linaro.org>:
+> This patch adds the Device Tree bindings for the Hisilicon hip04
+> Ethernet controller, including 100M / 1000M controller.
+>
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> ---
+>  .../bindings/net/hisilicon-hip04-net.txt           |  107 ++++++++++++++++++++
+>  1 file changed, 107 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
+>
+> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt b/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
+> new file mode 100644
+> index 0000000..22838b2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
+> @@ -0,0 +1,107 @@
+> +Hisilicon hip04 Ethernet Controller
+> +
+> +* Ethernet controller node
+> +
+> +Required properties:
+> +- compatible: should be "hisilicon,hip04-mac".
+> +- reg: address and length of the register set for the device.
+> +- interrupts: interrupt for the device.
+> +- port-handle: phandle, specifies a reference to a node representing
+> +  the connected port
+> +- Inherets from ethernet common binding [1]
+> +[1] Documentation/devicetree/bindings/net/ethernet.txt
+> +
+> +
+> +* Ethernet ppe node:
+> +Control rx & tx fifos of all ethernet controllers.
+> +Have 2048 recv channels shared by all ethernet controllers, only if no overlap.
+> +Each controller's start recv channel is alisa_id * RX_DESC_NUM.
+> +
+> +Required properties:
+> +- #address-cells : Should be <1>
+> +- #size-cells : Should be <0>
+> +- compatible: "hisilicon,hip04-ppe"
+> +- reg: address and length of the register set for the device.
+> +
+> +==Child node==
+> +
+> +Required properties:
+> +- reg: port physical number, range from 0 to 0x1f
+> +
+> +
+> +* MDIO bus node:
+> +
+> +Required properties:
+> +
+> +- compatible: should be "hisilicon,hip04-mdio", "ethernet-phy-ieee802.3-c22".
+> +- Inherets from MDIO bus node binding [2]
+> +[2] Documentation/devicetree/bindings/net/phy.txt
+> +
+> +Example:
+> +       aliases {
+> +               ethernet0 = &fe;
+> +               ethernet1 = &ge0;
+> +               ethernet2 = &ge8;
+> +       };
+> +
+> +       mdio {
+> +               compatible = "hisilicon,hip04-mdio", "ethernet-phy-ieee802.3-c22";
 
-Sorry, this thread didn't make it past my email filters. Yes, go ahead.
+That part is not quite correct, the compatible string should only be
+"hisilicon,hip04-mdio", the other compatible string is for the child
+Ethernet nodes below:
 
-g.
+> +               reg = <0x28f1000 0x1000>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               phy0: ethernet-phy@0 {
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This is where you need:
+
+                            compatible = "ethernet-phy-ieee802.3-c22";
+
+> +                       reg = <0>;
+> +                       marvell,reg-init = <18 0x14 0 0x8001>;
+> +               };
+> +
+> +               phy1: ethernet-phy@1 {
+> +                       reg = <1>;
+> +                       marvell,reg-init = <18 0x14 0 0x8001>;
+> +               };
+> +       };
+> +
+> +       ppe: ppe@28c0000 {
+> +               compatible = "hisilicon,hip04-ppe";
+> +               reg = <0x28c0000 0x10000>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               eth0_port: port@1f {
+> +                       reg = <0x1f>;
+> +               };
+> +
+> +               eth1_port: port@0 {
+> +                       reg = <0>;
+> +               };
+> +
+> +               eth2_port: port@8 {
+> +                       reg = <8>;
+> +               };
+> +       };
+> +
+> +       fe: ethernet@28b0000 {
+> +               compatible = "hisilicon,hip04-mac";
+> +               reg = <0x28b0000 0x10000>;
+> +               interrupts = <0 413 4>;
+> +               phy-mode = "mii";
+> +               port-handle = <&eth0_port>;
+> +       };
+> +
+> +       ge0: ethernet@2800000 {
+> +               compatible = "hisilicon,hip04-mac";
+> +               reg = <0x2800000 0x10000>;
+> +               interrupts = <0 402 4>;
+> +               phy-mode = "sgmii";
+> +               port-handle = <&eth1_port>;
+> +               phy-handle = <&phy0>;
+> +       };
+> +
+> +       ge8: ethernet@2880000 {
+> +               compatible = "hisilicon,hip04-mac";
+> +               reg = <0x2880000 0x10000>;
+> +               interrupts = <0 410 4>;
+> +               phy-mode = "sgmii";
+> +               port-handle = <&eth2_port>;
+> +               phy-handle = <&phy1>;
+> +       };
+> --
+> 1.7.9.5
+>
+
+
+
+-- 
+Florian
