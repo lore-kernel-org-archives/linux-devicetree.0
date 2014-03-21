@@ -1,110 +1,77 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: berlin: add scu and chipctrl device nodes for
- BG2/BG2Q
-Date: Fri, 21 Mar 2014 00:33:33 +0100
-Message-ID: <20140320233333.GY12021@piout.net>
-References: <1395347986-30203-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1395347986-30203-2-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH v2 0/2] clk: Support for DT assigned clock parents and rates
+Date: Thu, 20 Mar 2014 18:45:51 -0700
+Message-ID: <20140321014551.21989.57253@quantum>
+References: <1393870533-20845-1-git-send-email-s.nawrocki@samsung.com>
+ <53187C13.3040202@st.com> <532AE239.9000800@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1395347986-30203-2-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <532AE239.9000800-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/03/2014 at 21:39:45 +0100, Sebastian Hesselbarth wrote :
-> This adds scu and general purpose registers device nodes required for
-> SMP on Berlin BG2 and BG2Q SoCs. The secondary CPUs will pick their jump
-> address from general purpose (SW generic) register 1.
+Quoting Sylwester Nawrocki (2014-03-20 05:42:33)
+> Hi Maxime,
 > 
-> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-
-> ---
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  arch/arm/boot/dts/berlin2.dtsi  | 10 ++++++++++
->  arch/arm/boot/dts/berlin2q.dtsi | 10 ++++++++++
->  2 files changed, 20 insertions(+)
+> On 06/03/14 14:45, Maxime Coquelin wrote:
+> > Hi Sylwester,
+> > 
+> >       I like the principle of your implementation, but I have two questions:
+> >       1 - How can we manage PM with this solution, as the parent/rate will be 
+> > set only once at probe time?
+> >       2 - How to set the parent of a parent clock (which can be shared with 
+> > other devices)? Same question about the parent rates.
 > 
-> diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berlin2.dtsi
-> index 56a1af2f1052..4d85312dc17a 100644
-> --- a/arch/arm/boot/dts/berlin2.dtsi
-> +++ b/arch/arm/boot/dts/berlin2.dtsi
-> @@ -72,6 +72,11 @@
->  			cache-level = <2>;
->  		};
->  
-> +		scu: snoop-control-unit@ad0000 {
-> +			compatible = "arm,cortex-a9-scu";
-> +			reg = <0xad0000 0x58>;
-> +		};
-> +
->  		gic: interrupt-controller@ad1000 {
->  			compatible = "arm,cortex-a9-gic";
->  			reg = <0xad1000 0x1000>, <0xad0100 0x0100>;
-> @@ -176,6 +181,11 @@
->  			};
->  		};
->  
-> +		generic-regs@ea0184 {
-> +			compatible = "marvell,berlin-generic-regs", "syscon";
-> +			reg = <0xea0184 0x10>;
-> +		};
-> +
->  		apb@fc0000 {
->  			compatible = "simple-bus";
->  			#address-cells = <1>;
-> diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
-> index 07452a7483fa..86d8a2c49f38 100644
-> --- a/arch/arm/boot/dts/berlin2q.dtsi
-> +++ b/arch/arm/boot/dts/berlin2q.dtsi
-> @@ -87,6 +87,11 @@
->  			cache-level = <2>;
->  		};
->  
-> +		scu: snoop-control-unit@ad0000 {
-> +			compatible = "arm,cortex-a9-scu";
-> +			reg = <0xad0000 0x58>;
-> +		};
-> +
->  		local-timer@ad0600 {
->  			compatible = "arm,cortex-a9-twd-timer";
->  			reg = <0xad0600 0x20>;
-> @@ -183,6 +188,11 @@
->  			};
->  		};
->  
-> +		generic-regs@ea0110 {
-> +			compatible = "marvell,berlin-generic-regs", "syscon";
-> +			reg = <0xea0110 0x10>;
-> +		};
-> +
->  		apb@fc0000 {
->  			compatible = "simple-bus";
->  			#address-cells = <1>;
-> -- 
-> 1.9.0
+> Thanks for your feedback and apologies for late reply.
 > 
+> IIUC your first concern is about a situation when clocks need to be
+> reconfigured upon each resume from system sleep or runtime PM resume ?
+> As I mentioned in v1 of the RFC I was considering having individual
+> drivers calling explicitly the clocks set up routine. Presumably this
+> would allow to resolve the power management related issue.
+> One example I'm aware the approach as in this RFC wouldn't work is
+> when a device in a SoC belongs to a power domain, which needs to be
+> first switched on before we can start setting up and the clocks'
+> configuration get lost after the power domain switch off.
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+I like Sylwester's approach of handling this one-time setup in the
+driver core.
+
+Any kind of fine grained power management should not be hidden by DT,
+and by definition that logic belongs in the device driver. It can still
+be nicely abstracted away by runtime pm[1].
+
+Regards,
+Mike
+
+[1] Message-ID: <20140320114238.GQ7528-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+
+> 
+> OTOH I suspect devices for which one-time clocks setup is sufficient
+> will be quite common. And for these there would need to be a single
+> call to the setup routine in probe() I guess, since it wouldn't be
+> possible to figure out just from the DT data when the actual call
+> should be made.
+> 
+> For a global clocks configuration, I thought about specifying that
+> in the clocks controller node, and then to have the setup routine
+> called e.g. from of_clk_init(). I think that could work well enough,
+> together with the patch [1], adding clock dependencies handling.
+> But then the clock frequency set up function would need to be
+> modified to respect the clock parent relationships, similarly as
+> in patch series [2]. A just noticed [2] recently, after posting
+> this RFC (adding Tero at Cc).
+> 
+> --
+> Regards,
+> Sylwester
+> 
+> [1] http://www.spinics.net/lists/arm-kernel/msg310507.html
+> [2] http://www.spinics.net/lists/linux-omap/msg103069.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
