@@ -1,39 +1,38 @@
 From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 09/20] ARM: nomadik: Convert to the common mmc DT bindings for highspeed mode
-Date: Fri, 21 Mar 2014 13:14:06 +0100
-Message-ID: <1395404057-27835-10-git-send-email-ulf.hansson@linaro.org>
+Subject: [PATCH 10/20] ARM: u300: Convert to the common mmc DT bindings for highspeed mode
+Date: Fri, 21 Mar 2014 13:14:07 +0100
+Message-ID: <1395404057-27835-11-git-send-email-ulf.hansson@linaro.org>
 References: <1395404057-27835-1-git-send-email-ulf.hansson@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1395404057-27835-1-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alessandro Rubini <rubini-9wsNiZum9E8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 The mmci host driver supports the common mmc DT parser, which enables
 us to use the use common names instead.
 
-Cc: Alessandro Rubini <rubini-9wsNiZum9E8@public.gmane.org>
 Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/ste-nomadik-stn8815.dtsi |    4 ++--
+ arch/arm/boot/dts/ste-u300.dts |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/ste-nomadik-stn8815.dtsi b/arch/arm/boot/dts/ste-nomadik-stn8815.dtsi
-index 5acc044..d316c95 100644
---- a/arch/arm/boot/dts/ste-nomadik-stn8815.dtsi
-+++ b/arch/arm/boot/dts/ste-nomadik-stn8815.dtsi
-@@ -840,8 +840,8 @@
- 			interrupts = <22>;
- 			max-frequency = <48000000>;
- 			bus-width = <4>;
+diff --git a/arch/arm/boot/dts/ste-u300.dts b/arch/arm/boot/dts/ste-u300.dts
+index 6fe688e..82a6616 100644
+--- a/arch/arm/boot/dts/ste-u300.dts
++++ b/arch/arm/boot/dts/ste-u300.dts
+@@ -442,8 +442,8 @@
+ 			clock-names = "apb_pclk", "mclk";
+ 			max-frequency = <24000000>;
+ 			bus-width = <4>; // SD-card slot
 -			mmc-cap-mmc-highspeed;
 -			mmc-cap-sd-highspeed;
 +			cap-mmc-highspeed;
 +			cap-sd-highspeed;
- 			cd-gpios = <&gpio3 15 0x1>;
+ 			cd-gpios = <&gpio 12 0x4>;
  			cd-inverted;
- 			pinctrl-names = "default";
+ 			vmmc-supply = <&ab3100_ldo_g_reg>;
 -- 
 1.7.9.5
 
