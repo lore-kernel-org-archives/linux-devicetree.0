@@ -1,64 +1,68 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 18/20] mmc: mmci: Enforce mmc capabilities through DT
-Date: Fri, 21 Mar 2014 13:14:15 +0100
-Message-ID: <1395404057-27835-19-git-send-email-ulf.hansson@linaro.org>
-References: <1395404057-27835-1-git-send-email-ulf.hansson@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1395404057-27835-1-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core
+ to drivers/of
+Date: Fri, 21 Mar 2014 14:16:20 +0200
+Message-ID: <532C2D94.4020705@ti.com>
+References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> < 139468148.3QhLg3QYq1@avalon> <531F08A8.300@ti.com> <1883687.VdfitvQEN3@ samsung.com> <avalon@samsung.com> <20140320172302.CD320C4067A@trevor. secretlab.ca> <532C1808.6090409@samsung.com> <20140321114735.3E132C4052A@trevor.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="9LlUb069OlpdAjBJaW3weLxU5bDgBtkGp"
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20140321114735.3E132C4052A@trevor.secretlab.ca>
+Sender: linux-media-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Remove the option to provide the flags for mmc capabilities as platform
-data, enforce it through DT.
+--9LlUb069OlpdAjBJaW3weLxU5bDgBtkGp
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/mmc/host/mmci.c   |    2 --
- include/linux/amba/mmci.h |    5 -----
- 2 files changed, 7 deletions(-)
+On 21/03/14 13:47, Grant Likely wrote:
 
-diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-index bef3f85..a7bda79 100644
---- a/drivers/mmc/host/mmci.c
-+++ b/drivers/mmc/host/mmci.c
-@@ -1516,8 +1516,6 @@ static int mmci_probe(struct amba_device *dev,
- 		dev_warn(mmc_dev(mmc), "Platform OCR mask is ignored\n");
- 
- 	/* DT takes precedence over platform data. */
--	mmc->caps = np ? mmc->caps : plat->capabilities;
--	mmc->caps2 = np ? mmc->caps2 : plat->capabilities2;
- 	if (!np) {
- 		if (!plat->cd_invert)
- 			mmc->caps2 |= MMC_CAP2_CD_ACTIVE_HIGH;
-diff --git a/include/linux/amba/mmci.h b/include/linux/amba/mmci.h
-index 0d3ff95..b992fc9 100644
---- a/include/linux/amba/mmci.h
-+++ b/include/linux/amba/mmci.h
-@@ -29,9 +29,6 @@ struct dma_chan;
-  * @gpio_wp: read this GPIO pin to see if the card is write protected
-  * @gpio_cd: read this GPIO pin to detect card insertion
-  * @cd_invert: true if the gpio_cd pin value is active low
-- * @capabilities: the capabilities of the block as implemented in
-- * this platform, signify anything MMC_CAP_* from mmc/host.h
-- * @capabilities2: more capabilities, MMC_CAP2_* from mmc/host.h
-  * @dma_filter: function used to select an appropriate RX and TX
-  * DMA channel to be used for DMA, if and only if you're deploying the
-  * generic DMA engine
-@@ -52,8 +49,6 @@ struct mmci_platform_data {
- 	int	gpio_wp;
- 	int	gpio_cd;
- 	bool	cd_invert;
--	unsigned long capabilities;
--	unsigned long capabilities2;
- 	bool (*dma_filter)(struct dma_chan *chan, void *filter_param);
- 	void *dma_rx_param;
- 	void *dma_tx_param;
--- 
-1.7.9.5
+> I'm firm on the opinion that the checking must also happen at runtime.
+> The biggest part of my objection has been how easy it would be to get a=
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> linkage out of sync, and dtc is not necessarily the last tool to touch
+> the dtb before the kernel gets booted. I want the kernel to flat out
+> reject any linkage that is improperly formed.
+
+Isn't it trivial to verify it with the current v4l2 bindings? And
+endpoint must have a 'remote-endpoint' property, and the endpoint on the
+other end must have similar property, pointing in the first endpoint.
+Anything else is an error.
+
+I agree that it's easier to write bad links in the dts with
+double-linking than with single-linking, but it's still trivial to
+verify it in the kernel.
+
+ Tomi
+
+
+
+--9LlUb069OlpdAjBJaW3weLxU5bDgBtkGp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJTLC2UAAoJEPo9qoy8lh718O4P/R4CiDBud/awWEW/w8LmG6P/
+CxswSoraEyr7O2Mbwlq+Dl3jY7B6LK4I6+1TN10ooV4dEQeUbApNg/qin+6mjlum
+GiaQwZuvZ1dT9qAKF3MYkRJa6csRqIwvSgRDF6EH6f5ur5IY8t9hv+Ll/ZsQbkL5
+bsIVgrfcuBgPQiV6+QB+CgzW4xKBbe/6hniiub2y+Yf3gDlTFO4eU07Q26R6kvbM
+89DBo3deSomyRKg2+BKj+xauxz8rysf4Pcog7EZHvR83iegqiqAaw2k5p1DNjhpm
+nGo7rnOoELT9+WeqQ3gcIK5E2FLhag9Iahuzi/6SPEI+kwb7iHc3ENE3qgOtpHVp
+aeqelBgQFX+rDFdM1U8v1HdP71wQ0pHSKQxFSpUE/F+ZoEfxOVQ3cBjm69+jVXAl
+BVbczCSQ/9aMr6KPwJtwDskQqL6LqP/PnMg62T7tBwka0W6pK7zUX9VgmOwQ1ruP
+0M6DGNGzv+kRTO7j8XD1WuHE0aPVHQHLl3ZwZta0tJc1h0tMWR8TbgtavIqqQkwC
+dSKOzEKkEL0Ik0iqthQuZuPtK06hBRKRIpDIUMuB8j/N30F2PlL7xreImvslqgQs
+oi7eHLzTIxnDLDlWVFa/IzRg30I8aA/37iYIS0Ywn0LrgJV88y84CoXrlSDUsPkR
+xaP2jFwuooy8Y4ud8JrS
+=m22+
+-----END PGP SIGNATURE-----
+
+--9LlUb069OlpdAjBJaW3weLxU5bDgBtkGp--
