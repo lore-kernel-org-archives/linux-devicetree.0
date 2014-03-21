@@ -1,127 +1,44 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [RESEND PATCH V2] net: micrel : ks8851-ml: add vdd-supply support
-Date: Fri, 21 Mar 2014 04:41:33 -0500
-Message-ID: <1395394893-32139-1-git-send-email-nm@ti.com>
-References: <20140321085158.GB30910@pengutronix.de>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: Re: [PATCH 0/2] ARM: berlin: SMP support
+Date: Fri, 21 Mar 2014 10:44:23 +0100
+Message-ID: <532C09F7.3010003@codethink.co.uk>
+References: <1395347986-30203-1-git-send-email-sebastian.hesselbarth@gmail.com> <20140321111457.6bed5091@xhacker>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140321085158.GB30910@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "David S. Miller" <davem@davemloft.net>
-Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, netdev@vger.kernel.org, Markus Pargmann <mpa@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140321111457.6bed5091@xhacker>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jisheng Zhang <jszhang@marvell.com>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Antoine Tenart <antoine.tenart@free-electrons.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Few platforms use external regulator to keep the ethernet MAC supplied.
-So, request and enable the regulator for driver functionality.
+On 21/03/14 04:14, Jisheng Zhang wrote:
+> On Thu, 20 Mar 2014 13:39:44 -0700
+> Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
+>
+>> This is a small patch set for SMP support on Marvell Berlin BG2
+>> and recently provided BG2Q. Nothing spectacular, as it basically
+>> copies SMP holding pen mechanism from mach-prima2 and plat-versatile
+>> with minor Berlin specific code for SCU and general purpose registers
+>> used by secondary CPUs to get their boot address.
+>>
+>> There was some IRC discussion with Alexandre about using
+>> scu_get_base() instead of a DT node. Although BG2Q is true A9
+>> and provides SCU base; BG2 with PJ4b does not and I decided to
+>> depend on a DT node for SCU in both cases, which is fine I guess.
+>>
+>> I tested this on BG2, and BG2CD (which is UP). I expect the
+>> Free-Electrons guys to test on BG2Q.
+>
+> Although BG2Q and future SoCs will go through PSCI code path finally. But
+> currently, it's OK to use the pen mechanism.
+>
+> So for both of these two patches,
 
-Fixes: 66fda75f47dc (regulator: core: Replace direct ops->disable usage)
-Reported-by: Russell King <rmk+kernel@arm.linux.org.uk>
-Suggested-by: Markus Pargmann <mpa@pengutronix.de>
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
-This fixes a regression in SDP4430 platform as reported by Russell here:
-http://marc.info/?t=139509918200014&r=1&w=2
+Can you not just avoid starting CPUs until the kernel asks
+them to be booted?
 
-Patch is based on [v3.14-rc7] tag, if it is too late to submit, I can repost
-rebased to git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git
-
-Changes in v2(resend): based on Marcus's comment, switched to managed regulator
-	get, however retained the enable/disable as balanced.
-v1:  https://patchwork.kernel.org/patch/3871401/
-
- .../devicetree/bindings/net/micrel-ks8851.txt      |    1 +
- drivers/net/ethernet/micrel/ks8851.c               |   24 +++++++++++++++++++-
- 2 files changed, 24 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/net/micrel-ks8851.txt b/Documentation/devicetree/bindings/net/micrel-ks8851.txt
-index 11ace3c..4fc3927 100644
---- a/Documentation/devicetree/bindings/net/micrel-ks8851.txt
-+++ b/Documentation/devicetree/bindings/net/micrel-ks8851.txt
-@@ -7,3 +7,4 @@ Required properties:
- 
- Optional properties:
- - local-mac-address : Ethernet mac address to use
-+- vdd-supply:	supply for Ethernet mac
-diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
-index 727b546a..674a58a 100644
---- a/drivers/net/ethernet/micrel/ks8851.c
-+++ b/drivers/net/ethernet/micrel/ks8851.c
-@@ -23,6 +23,7 @@
- #include <linux/crc32.h>
- #include <linux/mii.h>
- #include <linux/eeprom_93cx6.h>
-+#include <linux/regulator/consumer.h>
- 
- #include <linux/spi/spi.h>
- 
-@@ -83,6 +84,7 @@ union ks8851_tx_hdr {
-  * @rc_rxqcr: Cached copy of KS_RXQCR.
-  * @eeprom_size: Companion eeprom size in Bytes, 0 if no eeprom
-  * @eeprom: 93CX6 EEPROM state for accessing on-board EEPROM.
-+ * @vdd_reg:	Optional regulator supplying the chip
-  *
-  * The @lock ensures that the chip is protected when certain operations are
-  * in progress. When the read or write packet transfer is in progress, most
-@@ -130,6 +132,7 @@ struct ks8851_net {
- 	struct spi_transfer	spi_xfer2[2];
- 
- 	struct eeprom_93cx6	eeprom;
-+	struct regulator	*vdd_reg;
- };
- 
- static int msg_enable;
-@@ -1414,6 +1417,20 @@ static int ks8851_probe(struct spi_device *spi)
- 	ks->spidev = spi;
- 	ks->tx_space = 6144;
- 
-+	ks->vdd_reg = devm_regulator_get_optional(&spi->dev, "vdd");
-+	if (IS_ERR(ks->vdd_reg)) {
-+		ret = PTR_ERR(ks->vdd_reg);
-+		if (ret == -EPROBE_DEFER)
-+			goto err_reg;
-+	} else {
-+		ret = regulator_enable(ks->vdd_reg);
-+		if (ret) {
-+			dev_err(&spi->dev, "regulator enable fail: %d\n",
-+				ret);
-+			goto err_reg;
-+		}
-+	}
-+
- 	mutex_init(&ks->lock);
- 	spin_lock_init(&ks->statelock);
- 
-@@ -1508,8 +1525,11 @@ static int ks8851_probe(struct spi_device *spi)
- err_netdev:
- 	free_irq(ndev->irq, ks);
- 
--err_id:
- err_irq:
-+err_id:
-+	if (!IS_ERR(ks->vdd_reg))
-+		regulator_disable(ks->vdd_reg);
-+err_reg:
- 	free_netdev(ndev);
- 	return ret;
- }
-@@ -1523,6 +1543,8 @@ static int ks8851_remove(struct spi_device *spi)
- 
- 	unregister_netdev(priv->netdev);
- 	free_irq(spi->irq, priv);
-+	if (!IS_ERR(priv->vdd_reg))
-+		regulator_disable(priv->vdd_reg);
- 	free_netdev(priv->netdev);
- 
- 	return 0;
 -- 
-1.7.9.5
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
