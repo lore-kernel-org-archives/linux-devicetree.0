@@ -1,51 +1,43 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 6/6] mfd: devicetree: bindings: add pm8xxx RTC
- description
-Date: Fri, 21 Mar 2014 08:12:12 +0000
-Message-ID: <20140321081212.GB15213@lee--X1>
-References: <20140310151807.7274d58d3c50b884585244b6@linux-foundation.org>
- <1394644645-12818-1-git-send-email-joshc@codeaurora.org>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: Re: [PATCH 0/4] clk: dt: add support for default rate/parent
+Date: Fri, 21 Mar 2014 10:12:17 +0200
+Message-ID: <20140321081217.GD26674@tbergstrom-lnx.Nvidia.com>
+References: <1392282048-6284-1-git-send-email-t-kristo@ti.com>
+ <53172239.3030705@ti.com> <20140320212308.21989.36094@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1394644645-12818-1-git-send-email-joshc@codeaurora.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Josh Cartwright <joshc@codeaurora.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Alessandro Zummo <a.zummo@towertech.it>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rtc-linux@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>
+In-Reply-To: <20140320212308.21989.36094@quantum>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Tero Kristo <t-kristo@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-> The PM8xxx family of PMICs contain an RTC.  This RTC is described as =
-a
-> subnode of the PM8xxx.  Document these bindings, and replace the pwrk=
-ey
-> node in the example with the RTC, which is now described in this
-> document.
->=20
-> While we're here, add a short description to the device tree bindings
-> describing what the the PM8xxx devices are and how they are expected =
-to
-> be used.
->=20
-> Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
-> ---
-> Andrew-
->=20
-> Here's a new 6/6.  Like mentioned earlier, this is based on the curre=
-nt MFD
-> document that's in Lee's tree pending for 3.15.  It may be best to ge=
-t yours
-> and Rob's Ack and have Lee take it through his tree.
+On Thu, Mar 20, 2014 at 10:23:08PM +0100, Mike Turquette wrote:
+> Quoting Tero Kristo (2014-03-05 05:10:17)
+> > Ping.
+> > 
+> > Mike, any feedback on this?
+> 
+> Hi Tero,
+> 
+> Have you seen Sylwester's approach[1]? I prefer it since it is more
+> device-oriented and less "centralized". The clock consumer enumerates
+> the default parent or rate of a consumed clock. This can be made to work
 
-After discussing with Andrew, I think this is better to go through my
-tree as you suggested, in order to mitigate any merge conflicts during
-the merge window.
+That assumes driver writers are aware of the clock tree topology. IME that's
+seldomly the case.
 
-Patch applied to the MFD tree with Andrew's Ack, thanks.
+Cheers,
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Peter.
