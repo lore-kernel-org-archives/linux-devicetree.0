@@ -1,88 +1,52 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH/RFC 6/8] leds: Add support for max77693 mfd flash cell
-Date: Fri, 21 Mar 2014 09:22:59 +0100
-Message-ID: <532BF6E3.10003@samsung.com>
-References: <1395327070-20215-1-git-send-email-j.anaszewski@samsung.com>
- <1395327070-20215-7-git-send-email-j.anaszewski@samsung.com>
- <20140320153443.GD8207@lee--X1>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v2] tty: serial: sc16is7xx
+Date: Fri, 21 Mar 2014 10:26:09 +0200
+Message-ID: <20140321082609.GA3801@xps8300>
+References: <1395324333-21221-1-git-send-email-jon@ringle.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20140320153443.GD8207@lee--X1>
-Sender: linux-leds-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, s.nawrocki@samsung.com, a.hajda@samsung.com, kyungmin.park@samsung.com, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, SangYoung Son <hello.son@smasung.com>, Samuel Ortiz <sameo@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1395324333-21221-1-git-send-email-jon@ringle.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: jon@ringle.org
+Cc: gregkh@linuxfoundation.org, jslaby@suse.cz, shc_work@mail.ru, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, Jon Ringle <jringle@gridpoint.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/20/2014 04:34 PM, Lee Jones wrote:
-> On Thu, 20 Mar 2014, Jacek Anaszewski wrote:
->
->> This patch adds led-flash support to Maxim max77693 chipset.
->> Device can be exposed to user space through LED subsystem
->> sysfs interface or through V4L2 subdevice when the support
->> for Multimedia Framework is enabled. Device supports up to
->> two leds which can work in flash and torch mode. Leds can
->> be triggered externally or by software.
->>
->> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
->> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
->> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->> Cc: Bryan Wu <cooloney@gmail.com>
->> Cc: Richard Purdie <rpurdie@rpsys.net>
->> Cc: SangYoung Son <hello.son@smasung.com>
->> Cc: Samuel Ortiz <sameo@linux.intel.com>
->> Cc: Lee Jones <lee.jones@linaro.org>
->> ---
->>   drivers/leds/Kconfig         |    9 +
->>   drivers/leds/Makefile        |    1 +
->>   drivers/leds/leds-max77693.c |  768 ++++++++++++++++++++++++++++++++++++++++++
->>   drivers/mfd/max77693.c       |   21 +-
->>   include/linux/mfd/max77693.h |   32 ++
->>   5 files changed, 825 insertions(+), 6 deletions(-)
->>   create mode 100644 drivers/leds/leds-max77693.c
->
-> [...]
->
->> diff --git a/drivers/mfd/max77693.c b/drivers/mfd/max77693.c
->> index c5535f0..6fa92d3 100644
->> --- a/drivers/mfd/max77693.c
->> +++ b/drivers/mfd/max77693.c
->> @@ -41,12 +41,21 @@
->>   #define I2C_ADDR_MUIC	(0x4A >> 1)
->>   #define I2C_ADDR_HAPTIC	(0x90 >> 1)
->>
->> -static const struct mfd_cell max77693_devs[] = {
->> -	{ .name = "max77693-pmic", },
->> -	{ .name = "max77693-charger", },
->> -	{ .name = "max77693-flash", },
->> -	{ .name = "max77693-muic", },
->> -	{ .name = "max77693-haptic", },
->> +enum mfd_devs_idx {
->> +	IDX_PMIC,
->> +	IDX_CHARGER,
->> +	IDX_LED,
->> +	IDX_MUIC,
->> +	IDX_HAPTIC,
->> +};
->> +
->> +static struct mfd_cell max77693_devs[] = {
->> +	[IDX_PMIC]      = { .name = "max77693-pmic", },
->> +	[IDX_CHARGER]   = { .name = "max77693-charger", },
->> +	[IDX_LED]       = { .name = "max77693-led",
->> +			    .of_compatible = "maxim,max77693-led"},
->> +	[IDX_MUIC]      = { .name = "max77693-muic", },
->> +	[IDX_HAPTIC]    = { .name = "max77693-haptic", },
->>   };
->
-> What is the purpose of this change?
->
+Hi,
 
-Introducing mfd_devs_idx itself is a cosmetic change, which
-actually could be avoided. Initialization of the of_compatible field
-is required for the led driver to get matched properly. And as I've
-just realized also max77693-flash name should be preserved.
-I will fix this in the next version of the patch.
+On Thu, Mar 20, 2014 at 10:05:33AM -0400, jon@ringle.org wrote:
+> From: Jon Ringle <jringle@gridpoint.com>
+>=20
+> The SC16IS7xx is a slave I2C-bus/SPI interface to a single-channel
+> high performance UART. The SC16IS7xx=E2=80=99s internal register set =
+is
+> backward-compatible with the widely used and widely popular 16C450.
+
+So couldn't this be just a probe driver for 8250?
+
+> +/* SC16IS7XX register definitions */
+> +#define SC16IS7XX_RHR_REG		(0x00) /* RX FIFO */
+> +#define SC16IS7XX_THR_REG		(0x00) /* TX FIFO */
+> +#define SC16IS7XX_IER_REG		(0x01) /* Interrupt enable */
+> +#define SC16IS7XX_IIR_REG		(0x02) /* Interrupt Identification */
+> +#define SC16IS7XX_FCR_REG		(0x02) /* FIFO control */
+> +#define SC16IS7XX_LCR_REG		(0x03) /* Line Control */
+> +#define SC16IS7XX_MCR_REG		(0x04) /* Modem Control */
+> +#define SC16IS7XX_LSR_REG		(0x05) /* Line Status */
+> +#define SC16IS7XX_MSR_REG		(0x06) /* Modem Status */
+> +#define SC16IS7XX_SPR_REG		(0x07) /* Scratch Pad */
+
+At least there should not be any need to redefine those register or
+their bits. Just include serial_reg.h.
 
 Thanks,
-Jacek Anaszewski
+
+--=20
+heikki
+--
+To unsubscribe from this list: send the line "unsubscribe linux-serial"=
+ in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
