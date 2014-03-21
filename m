@@ -1,68 +1,59 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core
- to drivers/of
-Date: Fri, 21 Mar 2014 14:16:20 +0200
-Message-ID: <532C2D94.4020705@ti.com>
-References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> < 139468148.3QhLg3QYq1@avalon> <531F08A8.300@ti.com> <1883687.VdfitvQEN3@ samsung.com> <avalon@samsung.com> <20140320172302.CD320C4067A@trevor. secretlab.ca> <532C1808.6090409@samsung.com> <20140321114735.3E132C4052A@trevor.secretlab.ca>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 14/20] regulator: db8500-prcmu: Set 1.8V as a fixed
+ voltage for vsmps2
+Date: Fri, 21 Mar 2014 12:25:45 +0000
+Message-ID: <20140321122545.GP11706@sirena.org.uk>
+References: <1395404057-27835-1-git-send-email-ulf.hansson@linaro.org>
+ <1395404057-27835-15-git-send-email-ulf.hansson@linaro.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="9LlUb069OlpdAjBJaW3weLxU5bDgBtkGp"
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20140321114735.3E132C4052A@trevor.secretlab.ca>
-Sender: linux-media-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
+	protocol="application/pgp-signature"; boundary="oXWu0ZmOTEBdKpMN"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1395404057-27835-15-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---9LlUb069OlpdAjBJaW3weLxU5bDgBtkGp
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
 
-On 21/03/14 13:47, Grant Likely wrote:
+--oXWu0ZmOTEBdKpMN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> I'm firm on the opinion that the checking must also happen at runtime.
-> The biggest part of my objection has been how easy it would be to get a=
+On Fri, Mar 21, 2014 at 01:14:11PM +0100, Ulf Hansson wrote:
 
-> linkage out of sync, and dtc is not necessarily the last tool to touch
-> the dtb before the kernel gets booted. I want the kernel to flat out
-> reject any linkage that is improperly formed.
+> Then intent is to merge this complete patchset all together to not break
+> anything. Thus I only request for an ack for this particular patch.
 
-Isn't it trivial to verify it with the current v4l2 bindings? And
-endpoint must have a 'remote-endpoint' property, and the endpoint on the
-other end must have similar property, pointing in the first endpoint.
-Anything else is an error.
+TBH given that we're at -rc7 and you're unlikely to get the rest of
+whatever this is merged before the merge window it's as easy for me to
+just apply it.  Make sense?
 
-I agree that it's easier to write bad links in the dts with
-double-linking than with single-linking, but it's still trivial to
-verify it in the kernel.
-
- Tomi
-
-
-
---9LlUb069OlpdAjBJaW3weLxU5bDgBtkGp
+--oXWu0ZmOTEBdKpMN
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTLC2UAAoJEPo9qoy8lh718O4P/R4CiDBud/awWEW/w8LmG6P/
-CxswSoraEyr7O2Mbwlq+Dl3jY7B6LK4I6+1TN10ooV4dEQeUbApNg/qin+6mjlum
-GiaQwZuvZ1dT9qAKF3MYkRJa6csRqIwvSgRDF6EH6f5ur5IY8t9hv+Ll/ZsQbkL5
-bsIVgrfcuBgPQiV6+QB+CgzW4xKBbe/6hniiub2y+Yf3gDlTFO4eU07Q26R6kvbM
-89DBo3deSomyRKg2+BKj+xauxz8rysf4Pcog7EZHvR83iegqiqAaw2k5p1DNjhpm
-nGo7rnOoELT9+WeqQ3gcIK5E2FLhag9Iahuzi/6SPEI+kwb7iHc3ENE3qgOtpHVp
-aeqelBgQFX+rDFdM1U8v1HdP71wQ0pHSKQxFSpUE/F+ZoEfxOVQ3cBjm69+jVXAl
-BVbczCSQ/9aMr6KPwJtwDskQqL6LqP/PnMg62T7tBwka0W6pK7zUX9VgmOwQ1ruP
-0M6DGNGzv+kRTO7j8XD1WuHE0aPVHQHLl3ZwZta0tJc1h0tMWR8TbgtavIqqQkwC
-dSKOzEKkEL0Ik0iqthQuZuPtK06hBRKRIpDIUMuB8j/N30F2PlL7xreImvslqgQs
-oi7eHLzTIxnDLDlWVFa/IzRg30I8aA/37iYIS0Ywn0LrgJV88y84CoXrlSDUsPkR
-xaP2jFwuooy8Y4ud8JrS
-=m22+
+iQIcBAEBAgAGBQJTLC/GAAoJELSic+t+oim9lOYP/3GOdW5AcG1zEzMK66hn5ojb
+c0D/rzp+l3aS+aazVmP846d/XztUeEGsFm62X7/tiPEBhbc4Q/COZ66Fkq04EK3C
+Z3CL88FC3aFc+qkMXj4AuvGGfd+opVouox4h2W0vEPzpZsMDnkWMFrTeen5ItGRN
+5PiHT1H0dTvZT/tQzFkrDADDB0KvLQj7kdXAgUa/on6H1ovzUCOyrVQp8TB9hbmM
+BOT+NQmnd6oRQlvkco/I+RKR7t3HT9ebXLr0jA1e9KZ1ChsL37UyL38vsJYphWbq
+Wa9LK7ybuRXniQV0WzJzhc34jNe7bawk0K5YAukaRlqe4m/zrST6S4b686i92YNe
+Rjny+3K5tqGZ1JHfE4NM39zgLxzGoOyR+KvkW8KYkoU7zAwHFiGsv3SNezsUXaAq
+8tDqM8A/HcxzRO4/k/xKwWI36pj9RNUScSE5j9ekEpzIFcOP3Q/kf/w+5m5YeiBD
+G8uhn56jC7rAFEAX1nWHuiErSVMVOYBQtSVltZ1zLN6/+4EzztbaaRd8KOXarRsz
+jYUWZ/S4+MWIqlNlurhcGIeLXBD9myftLE0B6pko3c6k4JzqI/0OIND9Mw62Z6Ar
+elcaOnouzi9luKOWGZ9JHXOT6dGk0dP131MpNeeFaUSZWe57ffv26GvzEa7sIZlo
+dVl6Gv0iF0575Smxc/kN
+=T1pF
 -----END PGP SIGNATURE-----
 
---9LlUb069OlpdAjBJaW3weLxU5bDgBtkGp--
+--oXWu0ZmOTEBdKpMN--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
