@@ -1,61 +1,49 @@
-From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH/RFC 1/8] leds: Add sysfs and kernel internal API for flash
- LEDs
-Date: Fri, 21 Mar 2014 09:27:59 +0100
-Message-ID: <532BF80F.1080602@samsung.com>
-References: <1395327070-20215-1-git-send-email-j.anaszewski@samsung.com>
- <1395327070-20215-2-git-send-email-j.anaszewski@samsung.com>
- <1395329301.27611.4.camel@ted>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] gpio: davinci: fix gpio selection for OF
+Date: Fri, 21 Mar 2014 09:28:16 +0100
+Message-ID: <CACRpkdZwhP-wMDeNTEq6ELPsYC48xmppzGYTRLSzUewbqhrMvg@mail.gmail.com>
+References: <5316FFCE.1060603@ti.com>
+	<1394018461-757-1-git-send-email-holler@ahsoftware.de>
+	<CACRpkdaF=jc9Z1XZCtH8VPuih01t--qyV-sgH1R_ix0VM4RzVA@mail.gmail.com>
+	<5322D529.4070904@ahsoftware.de>
+	<CACRpkdaghneo1MvNCfxjTED+sJepHgeZCgmKsRteG9qrBNWAfQ@mail.gmail.com>
+	<5326F8C5.5090406@ti.com>
+	<CACRpkdYZMzw31NkA4uSq+ZowzOnZgZthXhZri-eJY2Ozb8aNRQ@mail.gmail.com>
+	<532805AE.9000806@ti.com> <532815A8.9090807@ahsoftware.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1395329301.27611.4.camel@ted>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Purdie <richard.purdie-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <532815A8.9090807-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/20/2014 04:28 PM, Richard Purdie wrote:
-> On Thu, 2014-03-20 at 15:51 +0100, Jacek Anaszewski wrote:
->> Some LED devices support two operation modes - torch and
->> flash. This patch provides support for flash LED devices
->> in the LED subsystem by introducing new sysfs attributes
->> and kernel internal interface. The attributes being
->> introduced are: flash_mode, flash_timeout, max_flash_timeout,
->> flash_fault and hw_triggered.
->> The modifications aim to be compatible with V4L2 framework
->> requirements related to the flash devices management. The
->> design assumes that V4L2 driver can take of the LED class
->> device control and communicate with it through the kernel
->> internal interface. The LED sysfs interface is made
->> unavailable then.
->>
->> Signed-off-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
->> ---
->>   drivers/leds/led-class.c    |  216 +++++++++++++++++++++++++++++++++++++++++--
->>   drivers/leds/led-core.c     |  124 +++++++++++++++++++++++--
->>   drivers/leds/led-triggers.c |   17 +++-
->>   drivers/leds/leds.h         |    9 ++
->>   include/linux/leds.h        |  136 +++++++++++++++++++++++++++
->>   5 files changed, 486 insertions(+), 16 deletions(-)
->
-> It seems rather sad to have to insert that amount of code into the core
-> LED files for something which only a small number of LEDs actually use.
-> This will increase the footprint of the core LED code significantly.
->
-> Is it not possible to add this as a module/extension to the LED core
-> rather than completely entangling them?
+On Tue, Mar 18, 2014 at 10:45 AM, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
 
-OK, I'll try to decouple it.
+> But I don't need any rush here, I'm just unable to understand why the -rc
+> phase isn't used for bug fixing as I believe that's what this phase is for.
 
-Thanks,
-Jacek Anaszewski
+Right now it is mostly a practical issue to me, as I applied the patch to
+the devel (for-next) branch, then committed new development on top of
+it.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If I send it for fixes now the same patch will come in two ways as I
+really do not like to rebase my tree at this point.
+
+So I'd prefer to keep this for next and then have it tagged for stable as
+v3.14 is released, if that is OK?
+
+It's as simple as sending a mail to Greg once it's upstream.
+
+Yours,
+Linus Walleij
