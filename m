@@ -1,34 +1,84 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH V2] net: micrel : ks8851-ml: add vdd-supply support
-Date: Fri, 21 Mar 2014 04:30:04 -0500
-Message-ID: <532C069C.7060208@ti.com>
-References: <20140321085158.GB30910@pengutronix.de>
- <1395394080-28964-1-git-send-email-nm@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH/RFC 6/8] leds: Add support for max77693 mfd flash cell
+Date: Fri, 21 Mar 2014 09:36:11 +0000
+Message-ID: <20140321093611.GD15213@lee--X1>
+References: <1395327070-20215-1-git-send-email-j.anaszewski@samsung.com>
+ <1395327070-20215-7-git-send-email-j.anaszewski@samsung.com>
+ <20140320153443.GD8207@lee--X1>
+ <532BF6E3.10003@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1395394080-28964-1-git-send-email-nm@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "David S. Miller" <davem@davemloft.net>
-Cc: devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, netdev@vger.kernel.org, Markus Pargmann <mpa@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <532BF6E3.10003@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, s.nawrocki@samsung.com, a.hajda@samsung.com, kyungmin.park@samsung.com, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, SangYoung Son <hello.son@smasung.com>, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/21/2014 04:28 AM, Nishanth Menon wrote:
+> >>This patch adds led-flash support to Maxim max77693 chipset.
+> >>Device can be exposed to user space through LED subsystem
+> >>sysfs interface or through V4L2 subdevice when the support
+> >>for Multimedia Framework is enabled. Device supports up to
+> >>two leds which can work in flash and torch mode. Leds can
+> >>be triggered externally or by software.
+> >>
+> >>Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> >>Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> >>Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> >>Cc: Bryan Wu <cooloney@gmail.com>
+> >>Cc: Richard Purdie <rpurdie@rpsys.net>
+> >>Cc: SangYoung Son <hello.son@smasung.com>
+> >>Cc: Samuel Ortiz <sameo@linux.intel.com>
+> >>Cc: Lee Jones <lee.jones@linaro.org>
+> >>---
+> >>  drivers/leds/Kconfig         |    9 +
+> >>  drivers/leds/Makefile        |    1 +
+> >>  drivers/leds/leds-max77693.c |  768 +++++++++++++++++++++++++++++=
++++++++++++++
+> >>  drivers/mfd/max77693.c       |   21 +-
+> >>  include/linux/mfd/max77693.h |   32 ++
+> >>  5 files changed, 825 insertions(+), 6 deletions(-)
+> >>  create mode 100644 drivers/leds/leds-max77693.c
+> >
+> >[...]
+> >>-static const struct mfd_cell max77693_devs[] =3D {
+> >>-	{ .name =3D "max77693-pmic", },
+> >>-	{ .name =3D "max77693-charger", },
+> >>-	{ .name =3D "max77693-flash", },
+> >>-	{ .name =3D "max77693-muic", },
+> >>-	{ .name =3D "max77693-haptic", },
+> >>+enum mfd_devs_idx {
+> >>+	IDX_PMIC,
+> >>+	IDX_CHARGER,
+> >>+	IDX_LED,
+> >>+	IDX_MUIC,
+> >>+	IDX_HAPTIC,
+> >>+};
+> >>+
+> >>+static struct mfd_cell max77693_devs[] =3D {
+> >>+	[IDX_PMIC]      =3D { .name =3D "max77693-pmic", },
+> >>+	[IDX_CHARGER]   =3D { .name =3D "max77693-charger", },
+> >>+	[IDX_LED]       =3D { .name =3D "max77693-led",
+> >>+			    .of_compatible =3D "maxim,max77693-led"},
+> >>+	[IDX_MUIC]      =3D { .name =3D "max77693-muic", },
+> >>+	[IDX_HAPTIC]    =3D { .name =3D "max77693-haptic", },
+> >>  };
+> >
+> >What is the purpose of this change?
+> >
+> Introducing mfd_devs_idx itself is a cosmetic change, which
+> actually could be avoided. Initialization of the of_compatible field
+> is required for the led driver to get matched properly. And as I've
+> just realized also max77693-flash name should be preserved.
+> I will fix this in the next version of the patch.
 
-> +	ks->vdd_reg = regulator_get_optional(&spi->dev, "vdd");
-ok, that is unbelievable.. no git commit --amend :(.. Apologies on the
-spam.. will resent.
+I'm happy with the addition of any .of_compatible strings, however
+please leave out the IDXs in your next version(s).
 
-
--- 
-Regards,
-Nishanth Menon
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
