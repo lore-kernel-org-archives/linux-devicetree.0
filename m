@@ -1,119 +1,127 @@
-From: =?UTF-8?B?QW50b2luZSBUw6luYXJ0?=
-	<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: berlin: add scu and chipctrl device nodes for
- BG2/BG2Q
-Date: Fri, 21 Mar 2014 10:20:24 +0100
-Message-ID: <532C0458.1090906@free-electrons.com>
-References: <1395347986-30203-1-git-send-email-sebastian.hesselbarth@gmail.com> <1395347986-30203-2-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH V2] net: micrel : ks8851-ml: add vdd-supply support
+Date: Fri, 21 Mar 2014 04:28:00 -0500
+Message-ID: <1395394080-28964-1-git-send-email-nm@ti.com>
+References: <20140321085158.GB30910@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1395347986-30203-2-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140321085158.GB30910@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "David S. Miller" <davem@davemloft.net>
+Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, netdev@vger.kernel.org, Markus Pargmann <mpa@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/03/2014 21:39, Sebastian Hesselbarth wrote:
-> This adds scu and general purpose registers device nodes required for
-> SMP on Berlin BG2 and BG2Q SoCs. The secondary CPUs will pick their j=
-ump
-> address from general purpose (SW generic) register 1.
->
-> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org=
->
+Few platforms use external regulator to keep the ethernet MAC supplied.
+So, request and enable the regulator for driver functionality.
 
-Acked-by: Antoine T=C3=A9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Fixes: 66fda75f47dc (regulator: core: Replace direct ops->disable usage)
+Reported-by: Russell King <rmk+kernel@arm.linux.org.uk>
+Suggested-by: Markus Pargmann <mpa@pengutronix.de>
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+This fixes a regression in SDP4430 platform as reported by Russel here:
+http://marc.info/?t=139509918200014&r=1&w=2
 
-Also tested on the BG2Q,
+Patch is based on [v3.14-rc7] tag, if it is too late to submit, I can repost
+rebased to git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git
 
-Tested-by: Antoine T=C3=A9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Changes in v2: based on Marcus's comment, switched to managed regulator_get,
+	however retained the enable/disable as balanced.
+v1:  https://patchwork.kernel.org/patch/3871401/
 
-> ---
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->   arch/arm/boot/dts/berlin2.dtsi  | 10 ++++++++++
->   arch/arm/boot/dts/berlin2q.dtsi | 10 ++++++++++
->   2 files changed, 20 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berli=
-n2.dtsi
-> index 56a1af2f1052..4d85312dc17a 100644
-> --- a/arch/arm/boot/dts/berlin2.dtsi
-> +++ b/arch/arm/boot/dts/berlin2.dtsi
-> @@ -72,6 +72,11 @@
->   			cache-level =3D <2>;
->   		};
->
-> +		scu: snoop-control-unit@ad0000 {
-> +			compatible =3D "arm,cortex-a9-scu";
-> +			reg =3D <0xad0000 0x58>;
-> +		};
-> +
->   		gic: interrupt-controller@ad1000 {
->   			compatible =3D "arm,cortex-a9-gic";
->   			reg =3D <0xad1000 0x1000>, <0xad0100 0x0100>;
-> @@ -176,6 +181,11 @@
->   			};
->   		};
->
-> +		generic-regs@ea0184 {
-> +			compatible =3D "marvell,berlin-generic-regs", "syscon";
-> +			reg =3D <0xea0184 0x10>;
-> +		};
-> +
->   		apb@fc0000 {
->   			compatible =3D "simple-bus";
->   			#address-cells =3D <1>;
-> diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berl=
-in2q.dtsi
-> index 07452a7483fa..86d8a2c49f38 100644
-> --- a/arch/arm/boot/dts/berlin2q.dtsi
-> +++ b/arch/arm/boot/dts/berlin2q.dtsi
-> @@ -87,6 +87,11 @@
->   			cache-level =3D <2>;
->   		};
->
-> +		scu: snoop-control-unit@ad0000 {
-> +			compatible =3D "arm,cortex-a9-scu";
-> +			reg =3D <0xad0000 0x58>;
-> +		};
-> +
->   		local-timer@ad0600 {
->   			compatible =3D "arm,cortex-a9-twd-timer";
->   			reg =3D <0xad0600 0x20>;
-> @@ -183,6 +188,11 @@
->   			};
->   		};
->
-> +		generic-regs@ea0110 {
-> +			compatible =3D "marvell,berlin-generic-regs", "syscon";
-> +			reg =3D <0xea0110 0x10>;
-> +		};
-> +
->   		apb@fc0000 {
->   			compatible =3D "simple-bus";
->   			#address-cells =3D <1>;
->
+ .../devicetree/bindings/net/micrel-ks8851.txt      |    1 +
+ drivers/net/ethernet/micrel/ks8851.c               |   24 +++++++++++++++++++-
+ 2 files changed, 24 insertions(+), 1 deletion(-)
 
---=20
-Antoine T=C3=A9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/net/micrel-ks8851.txt b/Documentation/devicetree/bindings/net/micrel-ks8851.txt
+index 11ace3c..4fc3927 100644
+--- a/Documentation/devicetree/bindings/net/micrel-ks8851.txt
++++ b/Documentation/devicetree/bindings/net/micrel-ks8851.txt
+@@ -7,3 +7,4 @@ Required properties:
+ 
+ Optional properties:
+ - local-mac-address : Ethernet mac address to use
++- vdd-supply:	supply for Ethernet mac
+diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
+index 727b546a..44923e0 100644
+--- a/drivers/net/ethernet/micrel/ks8851.c
++++ b/drivers/net/ethernet/micrel/ks8851.c
+@@ -23,6 +23,7 @@
+ #include <linux/crc32.h>
+ #include <linux/mii.h>
+ #include <linux/eeprom_93cx6.h>
++#include <linux/regulator/consumer.h>
+ 
+ #include <linux/spi/spi.h>
+ 
+@@ -83,6 +84,7 @@ union ks8851_tx_hdr {
+  * @rc_rxqcr: Cached copy of KS_RXQCR.
+  * @eeprom_size: Companion eeprom size in Bytes, 0 if no eeprom
+  * @eeprom: 93CX6 EEPROM state for accessing on-board EEPROM.
++ * @vdd_reg:	Optional regulator supplying the chip
+  *
+  * The @lock ensures that the chip is protected when certain operations are
+  * in progress. When the read or write packet transfer is in progress, most
+@@ -130,6 +132,7 @@ struct ks8851_net {
+ 	struct spi_transfer	spi_xfer2[2];
+ 
+ 	struct eeprom_93cx6	eeprom;
++	struct regulator	*vdd_reg;
+ };
+ 
+ static int msg_enable;
+@@ -1414,6 +1417,20 @@ static int ks8851_probe(struct spi_device *spi)
+ 	ks->spidev = spi;
+ 	ks->tx_space = 6144;
+ 
++	ks->vdd_reg = regulator_get_optional(&spi->dev, "vdd");
++	if (IS_ERR(ks->vdd_reg)) {
++		ret = PTR_ERR(ks->vdd_reg);
++		if (ret == -EPROBE_DEFER)
++			goto err_reg;
++	} else {
++		ret = regulator_enable(ks->vdd_reg);
++		if (ret) {
++			dev_err(&spi->dev, "regulator enable fail: %d\n",
++				ret);
++			goto err_reg;
++		}
++	}
++
+ 	mutex_init(&ks->lock);
+ 	spin_lock_init(&ks->statelock);
+ 
+@@ -1508,8 +1525,11 @@ static int ks8851_probe(struct spi_device *spi)
+ err_netdev:
+ 	free_irq(ndev->irq, ks);
+ 
+-err_id:
+ err_irq:
++err_id:
++	if (!IS_ERR(ks->vdd_reg))
++		regulator_disable(ks->vdd_reg);
++err_reg:
+ 	free_netdev(ndev);
+ 	return ret;
+ }
+@@ -1523,6 +1543,8 @@ static int ks8851_remove(struct spi_device *spi)
+ 
+ 	unregister_netdev(priv->netdev);
+ 	free_irq(spi->irq, priv);
++	if (!IS_ERR(priv->vdd_reg))
++		regulator_disable(priv->vdd_reg);
+ 	free_netdev(priv->netdev);
+ 
+ 	return 0;
+-- 
+1.7.9.5
