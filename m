@@ -1,59 +1,64 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 14/20] regulator: db8500-prcmu: Set 1.8V as a fixed
- voltage for vsmps2
-Date: Fri, 21 Mar 2014 12:25:45 +0000
-Message-ID: <20140321122545.GP11706@sirena.org.uk>
-References: <1395404057-27835-1-git-send-email-ulf.hansson@linaro.org>
- <1395404057-27835-15-git-send-email-ulf.hansson@linaro.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core to drivers/of
+Date: Fri, 21 Mar 2014 13:44:12 +0100
+Message-ID: <38763187.gEm4XVJAeX@avalon>
+References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> <20140320153804.35d5b835@samsung.com> <20140321081537.472B2C4085E@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="oXWu0ZmOTEBdKpMN"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1395404057-27835-15-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140321081537.472B2C4085E@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Grant,
 
---oXWu0ZmOTEBdKpMN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Friday 21 March 2014 08:15:34 Grant Likely wrote:
+> On Fri, 21 Mar 2014 00:26:12 +0100, Laurent Pinchart wrote:
+> > On Thursday 20 March 2014 23:12:50 Grant Likely wrote:
+> > > On Thu, 20 Mar 2014 19:52:53 +0100, Laurent Pinchart wrote:
+> > > > Then we might not be talking about the same thing. I'm talking about
+> > > > DT bindings to represent the topology of the device, not how drivers
+> > > > are wired together.
+> > > 
+> > > Possibly. I'm certainly confused now. You brought up the component
+> > > helpers in drivers/base/component.c, so I thought working out
+> > > dependencies is part of the purpose of this binding. Everything I've
+> > > heard so far has given me the impression that the graph binding is tied
+> > > up with knowing when all of the devices exist.
+> > 
+> > The two are related, you're of course right about that.
+> > 
+> > We're not really moving forward here. Part of our disagreement comes in my
+> > opinion from having different requirements and different views of the
+> > problem, caused by experiences with different kind of devices. This is
+> > much easier to solve by sitting around the same table than discussing on
+> > mailing lists. I would propose a meeting at the ELC but that's still a
+> > bit far away and would delay progress by more than one month, which is
+> > probably not acceptable.
+> > 
+> > I can reply to the e-mail where I've drawn one use case I have to deal
+> > with to detail my needs if that can help.
+> > 
+> > Alternatively the UK isn't that far away and I could jump in a train if
+> > you can provide tea for the discussion :-)
+> 
+> I'm game for that, but it is a long train ride. I'm up in Aberdeen which
+> is 8 hours from London by train. Also, I'm travelling next week to
+> California (Collaboration summit), so it will have to be in 2 weeks
+> time.
+> 
+> Why don't we instead try a Google Hangout or a phone call today.
+> Anywhere between 11:30 and 14:00 GMT would work for me. I'd offer to
+> provide the tea, but I haven't quite perfected transporter technology
+> yet.
 
-On Fri, Mar 21, 2014 at 01:14:11PM +0100, Ulf Hansson wrote:
+That would work for me, but not today I'm afraid. Will you already be in 
+California on Monday ?
 
-> Then intent is to merge this complete patchset all together to not break
-> anything. Thus I only request for an ack for this particular patch.
+-- 
+Regards,
 
-TBH given that we're at -rc7 and you're unlikely to get the rest of
-whatever this is merged before the merge window it's as easy for me to
-just apply it.  Make sense?
-
---oXWu0ZmOTEBdKpMN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTLC/GAAoJELSic+t+oim9lOYP/3GOdW5AcG1zEzMK66hn5ojb
-c0D/rzp+l3aS+aazVmP846d/XztUeEGsFm62X7/tiPEBhbc4Q/COZ66Fkq04EK3C
-Z3CL88FC3aFc+qkMXj4AuvGGfd+opVouox4h2W0vEPzpZsMDnkWMFrTeen5ItGRN
-5PiHT1H0dTvZT/tQzFkrDADDB0KvLQj7kdXAgUa/on6H1ovzUCOyrVQp8TB9hbmM
-BOT+NQmnd6oRQlvkco/I+RKR7t3HT9ebXLr0jA1e9KZ1ChsL37UyL38vsJYphWbq
-Wa9LK7ybuRXniQV0WzJzhc34jNe7bawk0K5YAukaRlqe4m/zrST6S4b686i92YNe
-Rjny+3K5tqGZ1JHfE4NM39zgLxzGoOyR+KvkW8KYkoU7zAwHFiGsv3SNezsUXaAq
-8tDqM8A/HcxzRO4/k/xKwWI36pj9RNUScSE5j9ekEpzIFcOP3Q/kf/w+5m5YeiBD
-G8uhn56jC7rAFEAX1nWHuiErSVMVOYBQtSVltZ1zLN6/+4EzztbaaRd8KOXarRsz
-jYUWZ/S4+MWIqlNlurhcGIeLXBD9myftLE0B6pko3c6k4JzqI/0OIND9Mw62Z6Ar
-elcaOnouzi9luKOWGZ9JHXOT6dGk0dP131MpNeeFaUSZWe57ffv26GvzEa7sIZlo
-dVl6Gv0iF0575Smxc/kN
-=T1pF
------END PGP SIGNATURE-----
-
---oXWu0ZmOTEBdKpMN--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
