@@ -1,65 +1,87 @@
-From: Byungho An <bh74.an@samsung.com>
-Subject: RE: [PATCH V8 4/7] net: sxgbe: add EEE(Energy Efficient Ethernet) for
- Samsung sxgbe
-Date: Fri, 21 Mar 2014 07:24:28 -0700
-Message-ID: <004601cf4511$46c8a970$d459fc50$@samsung.com>
-References: <012f01cf4461$7ac68220$70538660$@samsung.com>
- <20140321110423.GN23372@e106331-lin.cambridge.arm.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] [media] of: move graph helpers from drivers/media/v4l2-core to drivers/of
+Date: Fri, 21 Mar 2014 15:30:20 +0100
+Message-ID: <1658201.GilyGRJEEa@avalon>
+References: <1393340304-19005-1-git-send-email-p.zabel@pengutronix.de> <1755937.SSGT2MZJMC@avalon> <532C4B3C.4030406@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-reply-to: <20140321110423.GN23372@e106331-lin.cambridge.arm.com>
-Content-language: en-us
-Sender: netdev-owner@vger.kernel.org
-To: 'Mark Rutland' <mark.rutland@arm.com>
-Cc: 'netdev' <netdev@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 'David Miller' <davem@davemloft.net>, 'GIRISH K S' <ks.giri@samsung.com>, 'SIVAREDDY KALLAM' <siva.kallam@samsung.com>, 'Vipul Chandrakant' <vipul.pandya@samsung.com>, 'Ilho Lee' <ilho215.lee@samsung.com>
+Content-Type: multipart/signed; boundary="nextPart1422452.LVKZ4jzxXA"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <532C4B3C.4030406-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
-Mark Rutland <mark.rutland@arm.com> wrote:
-> On Thu, Mar 20, 2014 at 05:26:06PM +0000, Byungho An wrote:
-> > From: Girish K S <ks.giri@samsung.com>
-> >
-> > Added support for the EEE(Energy Efficient Ethernet) in 10G ethernet
-driver.
-> >
-> > Signed-off-by: Girish K S <ks.giri@samsung.com>
-> > Neatening-by: Joe Perches <joe@perches.com>
-> > Signed-off-by: Byungho An <bh74.an@samsung.com>
-> > ---
-> >  drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h  |   53 +++++++
-> >  drivers/net/ethernet/samsung/sxgbe/sxgbe_core.c    |   86 +++++++++-
-> >  drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c |   47 ++++++
-> >  drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c    |  165
-> +++++++++++++++++++-
-> >  .../net/ethernet/samsung/sxgbe/sxgbe_platform.c    |    4 +
-> >  drivers/net/ethernet/samsung/sxgbe/sxgbe_reg.h     |    5 +
-> >  6 files changed, 358 insertions(+), 2 deletions(-)
-> 
-> [...]
-> 
-> > diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_platform.c
-> > b/drivers/net/ethernet/samsung/sxgbe/sxgbe_platform.c
-> > index e410d84..b23ec57 100644
-> > --- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_platform.c
-> > +++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_platform.c
-> > @@ -160,6 +160,10 @@ static int sxgbe_platform_probe(struct
-> platform_device *pdev)
-> >                 }
-> >         }
-> >
-> > +       priv->lpi_irq = irq_of_parse_and_map(dev->of_node, loop++);
-> 
-> You can use platform_get_irq(pdev, loop++) here. The interrupts have already
-> been parsed elsewhere.
-OK.
+--nextPart1422452.LVKZ4jzxXA
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
 
-> 
-> Cheers,
-> Mark.
-> --
-> To unsubscribe from this list: send the line "unsubscribe netdev" in the
-body of
-> a message to majordomo@vger.kernel.org More majordomo info at
-> http://vger.kernel.org/majordomo-info.html
+Hi Tomi,
+
+On Friday 21 March 2014 16:22:52 Tomi Valkeinen wrote:
+> On 21/03/14 16:13, Laurent Pinchart wrote:
+> > On Friday 21 March 2014 15:37:17 Tomi Valkeinen wrote:
+> >> On 21/03/14 00:32, Laurent Pinchart wrote:
+> >>> The OF graph bindings documentation could just specify the ports =
+node as
+> >>> optional and mandate individual device bindings to specify it as
+> >>> mandatory or forbidden (possibly with a default behaviour to avoi=
+d
+> >>> making all device bindings too verbose).
+> >>=20
+> >> Isn't it so that if the device has one port, it can always do with=
+out
+> >> 'ports', but if it has multiple ports, it always has to use 'ports=
+' so
+> >> that #address-cells and #size-cells can be defined?
+> >=20
+> > You can put the #address-cells and #size-cells property in the devi=
+ce node
+> > directly without requiring a ports subnode.
+>=20
+> Ah, right. So 'ports' is only needed when the device node has other c=
+hildren
+> nodes than the ports and those nodes need different #address-cells an=
+d
+> #size-cells than the ports.
+
+I would rephrase that as the ports node being required only in that cas=
+e. It=20
+can also be useful to cleanly group ports together when the device node=
+ has=20
+other unrelated children, even though no technical requirement exist (y=
+et ?)=20
+in that case.
+
+> In that case it sounds fine to leave it for the driver bindings to de=
+cide.
+
+=2D-=20
+Regards,
+
+Laurent Pinchart
+
+--nextPart1422452.LVKZ4jzxXA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQEcBAABAgAGBQJTLEz8AAoJEIkPb2GL7hl1VvAIAKrdmomDTdcBJr1NaaefFaQK
+2pA7MWuE/RRkUmMe2HjAfqqapyEW1sMJ9A0R5NUy3JC/7xmu+rEtm6VyBja5v6kZ
+O8bd3mFpER6KPWS8GZPQJ2QT3cnTOQKpuybZRDmIFPMGhfnqq9nfW69U4QjlbfKs
+VFghO8k3I+fUzEql8meii6GRwtSdMWWPsyncf94a8Wj93mY+tNhtibfpeFoxhmU/
+UiKm1+xYcRxJ5gWuG567BMlGACsYaI9uSv/WWDmLZHW0CMJ2J2NWMSYSvxBNFtlm
++aVRGBHVVMAPfj8zI8LKelHqtz/ieJpDxuyNHWuXE3LJiAhWUPhvW2dkhBCGlWo=
+=Qk0J
+-----END PGP SIGNATURE-----
+
+--nextPart1422452.LVKZ4jzxXA--
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
