@@ -1,78 +1,45 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH v2 0/2] clk: Support for DT assigned clock parents and rates
-Date: Thu, 20 Mar 2014 18:45:51 -0700
-Message-ID: <20140321014551.21989.57253@quantum>
-References: <1393870533-20845-1-git-send-email-s.nawrocki@samsung.com>
- <53187C13.3040202@st.com> <532AE239.9000800@samsung.com>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: Re: [PATCH 7/8] ASoC: atmel: document clock properties of the wm8904
+ driver
+Date: Fri, 21 Mar 2014 10:48:56 +0800
+Message-ID: <532BA898.90604@atmel.com>
+References: <1395049541-28128-1-git-send-email-voice.shen@atmel.com> <1395049541-28128-8-git-send-email-voice.shen@atmel.com> <20140317115518.GD11706@sirena.org.uk> <532931C3.4080909@atmel.com> <20140319102800.GW11706@sirena.org.uk> <532A5481.6000008@atmel.com> <20140320134744.GF11706@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <532AE239.9000800-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140320134744.GF11706@sirena.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: nicolas.ferre@atmel.com, Boris BREZILLON <b.brezillon@overkiz.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Sylwester Nawrocki (2014-03-20 05:42:33)
-> Hi Maxime,
-> 
-> On 06/03/14 14:45, Maxime Coquelin wrote:
-> > Hi Sylwester,
-> > 
-> >       I like the principle of your implementation, but I have two questions:
-> >       1 - How can we manage PM with this solution, as the parent/rate will be 
-> > set only once at probe time?
-> >       2 - How to set the parent of a parent clock (which can be shared with 
-> > other devices)? Same question about the parent rates.
-> 
-> Thanks for your feedback and apologies for late reply.
-> 
-> IIUC your first concern is about a situation when clocks need to be
-> reconfigured upon each resume from system sleep or runtime PM resume ?
-> As I mentioned in v1 of the RFC I was considering having individual
-> drivers calling explicitly the clocks set up routine. Presumably this
-> would allow to resolve the power management related issue.
-> One example I'm aware the approach as in this RFC wouldn't work is
-> when a device in a SoC belongs to a power domain, which needs to be
-> first switched on before we can start setting up and the clocks'
-> configuration get lost after the power domain switch off.
+Hi Mark Brown,
 
-I like Sylwester's approach of handling this one-time setup in the
-driver core.
+On 03/20/2014 09:47 PM, Mark Brown wrote:
+> On Thu, Mar 20, 2014 at 10:37:53AM +0800, Bo Shen wrote:
+>
+>> For this, in my mind, I think we need add following parameters in DT.
+>> 1. sysclk_src_from_fll --> we need do nothing.
+>
+> No, how would this work?  If nothing else the FLL needs configuration.
 
-Any kind of fine grained power management should not be hidden by DT,
-and by definition that logic belongs in the device driver. It can still
-be nicely abstracted away by runtime pm[1].
+Only configure it in machine driver. Then no DT operation.
 
-Regards,
-Mike
+>> 2. sysclk_src_from_mclk
+>>     2.1 use_external_xtal --> we need clock_frequency
+>>     2.2 !use_external_xtal --> we need retrieve clock and clock_frequency.
+>
+> No, this is all handled in the clock binding.  If there's a fixed rate
+> clock the device tree should have a fixed rate clock provided.
+>
+>> Does this acceptable? Or any other better suggestion for this?
+>
+> Just have the device tree describe the hardware and provide a way of
+> specifying an optional MCLK.
+>
 
-[1] Message-ID: <20140320114238.GQ7528-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+I will implement an RFC patch, please help review it. Thanks.
 
-> 
-> OTOH I suspect devices for which one-time clocks setup is sufficient
-> will be quite common. And for these there would need to be a single
-> call to the setup routine in probe() I guess, since it wouldn't be
-> possible to figure out just from the DT data when the actual call
-> should be made.
-> 
-> For a global clocks configuration, I thought about specifying that
-> in the clocks controller node, and then to have the setup routine
-> called e.g. from of_clk_init(). I think that could work well enough,
-> together with the patch [1], adding clock dependencies handling.
-> But then the clock frequency set up function would need to be
-> modified to respect the clock parent relationships, similarly as
-> in patch series [2]. A just noticed [2] recently, after posting
-> this RFC (adding Tero at Cc).
-> 
-> --
-> Regards,
-> Sylwester
-> 
-> [1] http://www.spinics.net/lists/arm-kernel/msg310507.html
-> [2] http://www.spinics.net/lists/linux-omap/msg103069.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Bo Shen
