@@ -1,120 +1,93 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] arm64: dts: add initial dts for Samsung GH7 SoC
- and SSDK-GH7 board
-Date: Fri, 21 Mar 2014 11:47:10 +0000
-Message-ID: <20140321114710.GO23372@e106331-lin.cambridge.arm.com>
-References: <1395094477-8921-1-git-send-email-kgene.kim@samsung.com>
- <1395094477-8921-2-git-send-email-kgene.kim@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1395094477-8921-2-git-send-email-kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ilho Lee <ilho215.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core to drivers/of
+Date: Fri, 21 Mar 2014 11:47:35 +0000
+Message-ID: <20140321114735.3E132C4052A@trevor.secretlab.ca>
+References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> < 139468148.3QhLg3QYq1@avalon> <531F08A8.300@ti.com> <1883687.VdfitvQEN3@ samsung.com> <avalon@samsung.com> <20140320172302.CD320C4067A@trevor. secretlab.ca> <532C1808.6090409@samsung.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <532C1808.6090409@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Mon, Mar 17, 2014 at 10:14:35PM +0000, Kukjin Kim wrote:
-> Signed-off-by: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/samsung-gh7.dtsi     | 134 +++++++++++++++++++++++++++++++
->  arch/arm64/boot/dts/samsung-ssdk-gh7.dts |  26 ++++++
->  2 files changed, 160 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/samsung-gh7.dtsi
->  create mode 100644 arch/arm64/boot/dts/samsung-ssdk-gh7.dts
+On Fri, 21 Mar 2014 11:44:24 +0100, Andrzej Hajda <a.hajda@samsung.com> wrote:
+> On 03/20/2014 06:23 PM, Grant Likely wrote:
+> > On Tue, 11 Mar 2014 14:16:37 +0100, Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+> >> On Tuesday 11 March 2014 14:59:20 Tomi Valkeinen wrote:
+> >>> So depending on the use case, the endpoints would point to opposite
+> >>> direction from the encoder's point of view.
+> >>>
+> >>> And if I gathered Grant's opinion correctly (correct me if I'm wrong),
+> >>> he thinks things should be explicit, i.e. the bindings for, say, an
+> >>> encoder should state that the encoder's output endpoint _must_ contain a
+> >>> remote-endpoint property, whereas the encoder's input endpoint _must
+> >>> not_ contain a remote-endpoint property.
+> >>
+> >> Actually my understand was that DT links would have the same direction as the 
+> >> data flow. There would be no ambiguity in that case as the direction of the 
+> >> data flow is known. What happens for bidirectional data flows still need to be 
+> >> discussed though. And if we want to use the of-graph bindings to describe 
+> >> graphs without a data flow, a decision will need to be taken there too.
+> > 
+> > On further thinking, I would say linkage direction should be in the
+> > direction that would be considered the dependency order... I'm going to
+> > soften my position though. I think the generic pattern should still
+> > recommend unidirection links in direction of device dependency, but
 > 
-> diff --git a/arch/arm64/boot/dts/samsung-gh7.dtsi b/arch/arm64/boot/dts/samsung-gh7.dtsi
-> new file mode 100644
-> index 0000000..d3ab914
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/samsung-gh7.dtsi
-> @@ -0,0 +1,134 @@
-> +/*
-> + * SAMSUNG GH7 SoC device tree source
-> + *
-> + * Copyright (c) 2014 Samsung Electronics Co., Ltd.
-> + *		http://www.samsung.com
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> +*/
-> +
-> +/memreserve/ 0xFEC00000 0x1400000;	/* EL3 monitor, secure intepreter */
+> I am not sure what you mean by 'device dependency' but I am sure it will
+> not be difficult to present problematic cases, maybe circular
+> dependencies, two-way dependencies, etc.
 
-As I've mentioned, I'm concerned that this is even in the non-secure
-address space that the kernel can access. Why is this not hidden from
-the kernel entirely? Why is it expected to be mapped in and reserved?
+My understanding has been that the link data would be used determine
+when the controller driver can be brought up and active. Certainly both
+sides of a link need to be 'live' before the link can be used. The
+kernel must have a way to resolve the question of "who starts first?",
+whether it be the situation of the consumer starts before the producer,
+or the situation of two components need to start before the controller
+driver can start. That is the dependency chain I'm talking about.
 
-Additionally, the memory the used by the spin-table (0x0 0x8000fff8) has
-not been reserved, and thus the kernel is free to clobber it.
+> The only problem of unidirectional links from programming point of view
+> is that destination port/interface should be exposed using some
+> framework and driver of source link should grab it using the same
+> framework, using port/endpoint node for identification. In case of
+> bi-directional links the same process should happen but DT do not
+> dictates who should expose and who grabs.
+> 
+> So from programming point of view it should be easy to handle
+> unidirectional links regardless of the direction. So I guess the best
+> is to use data flow direction as it seems to be the most natural.
 
-[...]
+right.
 
-> +	gic: interrupt-controller@1C000000 {
-> +		compatible = "arm,cortex-a15-gic";
+> 
+> 
+> > I'm okay with allowing the bidirection option if the helper functions
+> > are modified to validate the target endpoint. I think it needs to test
+> > for the following:
+> > - Make sure the endpoint either:
+> >   - does not have a backlink, or
+> >   - the backlink points back to the origin node
+> > - If the target is an endpoint node, then make sure the parent doesn't
+> >   have a link of any kind
+> > - If the target is a port node, make sure it doesn't have any endpoint
+> >   children nodes at all.
+> 
+> I think link validation can be done at dts compile time.
 
-For targeting any future workarounds I would very much prefer a more
-specific string.
+I'm firm on the opinion that the checking must also happen at runtime.
+The biggest part of my objection has been how easy it would be to get a
+linkage out of sync, and dtc is not necessarily the last tool to touch
+the dtb before the kernel gets booted. I want the kernel to flat out
+reject any linkage that is improperly formed.
 
-[...]
+g.
 
-> +	pmu {
-> +		compatible = "samsung,gh7-pmu", "armv8-pmuv3";
-> +		interrupts = <0 294 0>,
-> +			     <0 295 0>,
-> +			     <0 296 0>,
-> +			     <0 297 0>,
-> +			     <0 298 0>,
-> +			     <0 299 0>,
-> +			     <0 300 0>,
-> +			     <0 301 0>;
-> +	};
-
-These are all missing a trigger type (thus making them unusable), and as
-"GH7" is the SoC name rather than the CPU name, the compatible string is
-somewhat bad.
-
-> +
-> +	amba {
-> +		compatible = "arm,amba-bus";
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		serial@12c00000 {
-> +			compatible = "arm,pl011", "arm,primecell";
-> +			reg = <0 0x12c00000 0 0x10000>;
-> +			interrupts = <0 418 0>;
-> +		};
-> +
-> +		serial@12c20000 {
-> +			compatible = "arm,pl011", "arm,primecell";
-> +			reg = <0 0x12c20000 0 0x10000>;
-> +			interrupts = <0 420 0>;
-> +		};
-
-While the primecell bindings and PL011 bindings state that clocks are
-optional, the primecell bus code requires a clock named apb_pclk, and
-the pl011 driver requires a clock (which it expects to be UARTCLK) to
-acquire the frequency from. As neither are provided I do not see how
-this DT could possibly be used to boot a usable system.
-
-Additionally the interrupt trigger types are missing.
-
-Given that these are the only IO devices described in the dtsi/dts
-combination, and they do not appear to be usable, what is the point in
-merging this?
-
-Cheers,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Regards
+> Andrzej
+> 
+> > 
+> > g.
+> > 
+> > 
+> 
