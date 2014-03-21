@@ -1,58 +1,100 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 14/20] regulator: db8500-prcmu: Set 1.8V as a fixed
- voltage for vsmps2
-Date: Fri, 21 Mar 2014 17:47:12 +0000
-Message-ID: <20140321174712.GD552@sirena.org.uk>
-References: <1395404057-27835-1-git-send-email-ulf.hansson@linaro.org>
- <1395404057-27835-15-git-send-email-ulf.hansson@linaro.org>
+From: Byungho An <bh74.an@samsung.com>
+Subject: [PATCH V10 0/7] add new Samsung SXGBE driver
+Date: Fri, 21 Mar 2014 11:06:46 -0700
+Message-ID: <005901cf4530$545b73a0$fd125ae0$@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="kvUQC+jR9YzypDnK"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1395404057-27835-15-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-language: en-us
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: netdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: 'David Miller' <davem@davemloft.net>, 'GIRISH K S' <ks.giri@samsung.com>, 'SIVAREDDY KALLAM' <siva.kallam@samsung.com>, 'Vipul Chandrakant' <vipul.pandya@samsung.com>, 'Ilho Lee' <ilho215.lee@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi all,
 
---kvUQC+jR9YzypDnK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is 10th posting for SAMSUNG SXGBE driver.
 
-On Fri, Mar 21, 2014 at 01:14:11PM +0100, Ulf Hansson wrote:
-> This regulator is used for system IO and is fixed to 1.8V. Let's give
-> consumers the option to fetch the voltage level.
+Changes since v1:
+- changed name of driver to SXGbE as per Ben's comment
+- squashed Joe's neatening for many stuff in original patches
 
-Applied, thanks.  If the rest of the series can get applied I can
-easily drop this one.=20
+Changes since v2:
+- updated and split binding document as per Mark's comment
+- clean up codes as per Joe's comment
+- removed unused fields and clean up codes as per Francois's comment
+- removed module parameters as per Dave's comment
+- moved driver directory to samsung/sxgbe/
 
---kvUQC+jR9YzypDnK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Changes since v3:
+- fixed Missing a blank line after declarations as per Dave's comment
+- clean up codes as per Joe's comment
+- removed reference of net_device.{irq, base_addr} as per Francois's comment
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Changes since v4:
+- updated binding document and DT related function as per Mark's comment
 
-iQIcBAEBAgAGBQJTLHsdAAoJELSic+t+oim90PIP/jpOicixg1g6fRimCVRISnWE
-3bwxUTQ4oHIJhAcKjKZrD2AkI4ZM1ST13VHm/CIWFj17JulexnzG67rxLilrEYO7
-Qs4npKWAp5azNZHKq+edDJN0jF58A1Rzha76089e5niUg7Cz18j4+UFcGSVeTQCI
-dlXdGXrF6FVAM6ezJ9futvuwo4OGgvYblq8dj0qWrezfTiFUqjM2wM7WHQzBImtz
-gHBliMy1uMLWJF5KAWblK9W/0XO7nxGcYopjkZsFBlZK6UFWA+yWzZBBw4/UTcm1
-/lbMUneuLaMGDlf2RQ1nJQ57QuGIFVjwBLGgFuBuy/uvQDNWhhwCMRyYj8kcUkcr
-VIB8Z+z35XmePc/W3vZAxuhPrF8YqbLPmy/itOj72YysJH4OupOh5bwoj+0tC2S2
-X8mEc0pasAZv+Eys8Sjishz/I5M+39kwPr1eaUbjrFTrBEp9UH4spMqAgzwkefAT
-St/BqE2v5YiNF67hF9nigtZZKTUuP5Vw516LRbk+4obgzS2guECzWFi92Fd2v8Fj
-nZYfd6ZRlY1mziJsTEMH64wI2GADstbphfABZmKvrL3PpDy7uN/ielThpnYYouP/
-9A/3sjhlwm+o3TNreYrjPZcsizkBOL/BpmerDVq5jd8A1VXq9Avbx0L2eFzLmMBA
-i7Ey+VhbLvUlVCwQ3WDV
-=h8G0
------END PGP SIGNATURE-----
+Changes since v5:
+- updated binding document and DT related function as per Florian's comment
+- fixed typo and shortened code as per Joe's comment
 
---kvUQC+jR9YzypDnK--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes since v6:
+- updated TSO related functions as per Rayagond's comment
+- updated binding document as per Mark's comment
+- removed WoL patch from this patch set
+
+Changes since v7:
+- updated TSO related functions as per Rayagond's comment
+
+Changes since v8:
+- removed select and depends statement from vendor sub-section as per 
+  Dave's comment
+
+Changes since v9:
+- removed adv-add-map, force-sf-dma-modei and force-thresh-dma-mode from 
+  binding document and updated platform_get_irq as per Mark's comment
+
+Byungho An (1):
+      MAINTAINERS: add maintainer for Samsung sxgbe driver
+
+Girish K S (1):
+      net: sxgbe: add EEE(Energy Efficient Ethernet) for Samsung sxgbe
+
+Siva Reddy (2):
+      sxgbe: Add device-tree binding support document
+      net: sxgbe: add basic framework for Samsung 10Gb ethernet driver
+
+Vipul Pandya (3):
+      net: sxgbe: add TSO support for Samsung sxgbe
+      net: sxgbe: add Checksum offload support for Samsung sxgbe
+      net: sxgbe: add ethtool related functions support Samsung sxgbe
+
+ .../devicetree/bindings/net/samsung-sxgbe.txt      |   52 +
+ MAINTAINERS                                        |    9 +
+ drivers/net/ethernet/Kconfig                       |    1 +
+ drivers/net/ethernet/Makefile                      |    1 +
+ drivers/net/ethernet/samsung/Kconfig               |   16 +
+ drivers/net/ethernet/samsung/Makefile              |    5 +
+ drivers/net/ethernet/samsung/sxgbe/Kconfig         |    9 +
+ drivers/net/ethernet/samsung/sxgbe/Makefile        |    4 +
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h  |  539 +++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_core.c    |  261 +++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_desc.c    |  515 +++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_desc.h    |  298 +++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_dma.c     |  382 ++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_dma.h     |   50 +
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c |  588 +++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c    | 2313 ++++++++++++++++++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_mdio.c    |  271 +++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_mtl.c     |  252 +++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_mtl.h     |  104 +
+ .../net/ethernet/samsung/sxgbe/sxgbe_platform.c    |  249 +++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_reg.h     |  488 +++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_xpcs.c    |   92 +
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_xpcs.h    |   38 +
+ include/linux/sxgbe_platform.h                     |   54 +
+ 24 files changed, 6591 insertions(+)
+
+Thanks,
+Byungho An
