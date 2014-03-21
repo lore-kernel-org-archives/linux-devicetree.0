@@ -1,88 +1,28 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Fri, 21 Mar 2014 16:27:26 +0100
-Message-ID: <4230433.d0bAGX3bJV@wuerfel>
-References: <1395414570-25515-1-git-send-email-zhangfei.gao@linaro.org>
- <1395414570-25515-4-git-send-email-zhangfei.gao@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1395414570-25515-4-git-send-email-zhangfei.gao@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, f.fainelli@gmail.com, linux@arm.linux.org.uk, sergei.shtylyov@cogentembedded.com, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/9] Doc/DT: DT bindings for various display components
+Date: Fri, 21 Mar 2014 15:37:27 +0000
+Message-ID: <20140321153727.CCD87C405B0@trevor.secretlab.ca>
+References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com> < 532017B3.708@ti.com> <5326FECF.9070104@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5326FECF.9070104-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 21 March 2014 23:09:30 Zhangfei Gao wrote:
+On Mon, 17 Mar 2014 15:55:27 +0200, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> wrote:
+> Hi Grant,
+> 
+> Ping.
+> 
+> Are you fine with me proceeding with the current V4L2 port/endpoint
+> bindings?
 
-> +
-> +static void __iomem *ppebase;
+Sorry, this thread didn't make it past my email filters. Yes, go ahead.
 
-Any reason why you still have this, rather than using a separate
-driver for it as we discussed? If you have comments that you still
-plan to address, please mention those in the introductory mail,
-so you don't get the same review comments multiple times.
+g.
 
-
-> +static void hip04_tx_reclaim(struct net_device *ndev, bool force)
-> +{
-> +	struct hip04_priv *priv = netdev_priv(ndev);
-> +	unsigned tx_head = priv->tx_head;
-> +	unsigned tx_tail = priv->tx_tail;
-> +	struct tx_desc *desc = &priv->tx_desc[priv->tx_tail];
-> +
-> +	while (tx_tail != tx_head) {
-> +		if (desc->send_addr != 0) {
-> +			if (force)
-> +				desc->send_addr = 0;
-> +			else
-> +				break;
-> +		}
-> +		if (priv->tx_phys[tx_tail]) {
-> +			dma_unmap_single(&ndev->dev, priv->tx_phys[tx_tail],
-> +				priv->tx_skb[tx_tail]->len, DMA_TO_DEVICE);
-> +			priv->tx_phys[tx_tail] = 0;
-> +		}
-> +		dev_kfree_skb_irq(priv->tx_skb[tx_tail]);
-> +		priv->tx_skb[tx_tail] = NULL;
-> +		tx_tail = TX_NEXT(tx_tail);
-> +		priv->tx_count--;
-> +	}
-> +	priv->tx_tail = tx_tail;
-> +}
-
-You call this function from start_xmit(), which may be too early, causing the
-dma_unmap_single() and dev_kfree_skb_irq() functions to be called while the
-device is still accessing the data. This is bad.
-
-You have to ensure that you only ever clean up tx buffers that have been
-successfully transmitted. Also, you should use an interrupt to notify you
-of this in case there is no further xmit packet. Otherwise you may have
-a user space program waiting indefinitely for a single packet to get sent
-on a socket.
-
-It's ok to also call the cleanup from start_xmit, but calling it from the
-poll() function or another appropriate place is required.
-
-> +	priv->id = of_alias_get_id(node, "ethernet");
-> +	if (priv->id < 0) {
-> +		dev_warn(d, "no ethernet alias\n");
-> +		ret = -EINVAL;
-> +		goto init_fail;
-> +	}
-
-Apparently you try to rely on the alias to refer to a specific piece
-of hardware, which is not correct. The alias is meant to be selectable
-to match e.g. the numbering written on the external connector, which
-is totally independent of the internal hardware.
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
