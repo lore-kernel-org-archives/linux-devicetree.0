@@ -1,93 +1,79 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core to drivers/of
-Date: Fri, 21 Mar 2014 11:47:35 +0000
-Message-ID: <20140321114735.3E132C4052A@trevor.secretlab.ca>
-References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> < 139468148.3QhLg3QYq1@avalon> <531F08A8.300@ti.com> <1883687.VdfitvQEN3@ samsung.com> <avalon@samsung.com> <20140320172302.CD320C4067A@trevor. secretlab.ca> <532C1808.6090409@samsung.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <532C1808.6090409@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 2/5] clk: berlin: add berlin clocks DT bindings
+ documentation
+Date: Fri, 21 Mar 2014 11:53:18 +0000
+Message-ID: <20140321115318.GP23372@e106331-lin.cambridge.arm.com>
+References: <1395402220-23503-1-git-send-email-alexandre.belloni@free-electrons.com>
+ <1395402220-23503-3-git-send-email-alexandre.belloni@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1395402220-23503-3-git-send-email-alexandre.belloni@free-electrons.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Mike Turquette <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Antoine =?utf-8?Q?T=C3=A9nart?= <antoine.tenart@free-electrons.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 21 Mar 2014 11:44:24 +0100, Andrzej Hajda <a.hajda@samsung.com> wrote:
-> On 03/20/2014 06:23 PM, Grant Likely wrote:
-> > On Tue, 11 Mar 2014 14:16:37 +0100, Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
-> >> On Tuesday 11 March 2014 14:59:20 Tomi Valkeinen wrote:
-> >>> So depending on the use case, the endpoints would point to opposite
-> >>> direction from the encoder's point of view.
-> >>>
-> >>> And if I gathered Grant's opinion correctly (correct me if I'm wrong),
-> >>> he thinks things should be explicit, i.e. the bindings for, say, an
-> >>> encoder should state that the encoder's output endpoint _must_ contain a
-> >>> remote-endpoint property, whereas the encoder's input endpoint _must
-> >>> not_ contain a remote-endpoint property.
-> >>
-> >> Actually my understand was that DT links would have the same direction as the 
-> >> data flow. There would be no ambiguity in that case as the direction of the 
-> >> data flow is known. What happens for bidirectional data flows still need to be 
-> >> discussed though. And if we want to use the of-graph bindings to describe 
-> >> graphs without a data flow, a decision will need to be taken there too.
-> > 
-> > On further thinking, I would say linkage direction should be in the
-> > direction that would be considered the dependency order... I'm going to
-> > soften my position though. I think the generic pattern should still
-> > recommend unidirection links in direction of device dependency, but
+On Fri, Mar 21, 2014 at 11:43:37AM +0000, Alexandre Belloni wrote:
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> ---
+>  .../devicetree/bindings/clock/berlin-clock.txt     | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/berlin-clock.txt
 > 
-> I am not sure what you mean by 'device dependency' but I am sure it will
-> not be difficult to present problematic cases, maybe circular
-> dependencies, two-way dependencies, etc.
+> diff --git a/Documentation/devicetree/bindings/clock/berlin-clock.txt b/Documentation/devicetree/bindings/clock/berlin-clock.txt
+> new file mode 100644
+> index 000000000000..ebc78f9b93a9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/berlin-clock.txt
+> @@ -0,0 +1,29 @@
+> +Device Tree Clock bindings for Marvell Berlin clocks
+> +
+> +This binding uses the common clock binding[1].
+> +
+> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
+> +Required properties:
+> +- compatible : shall be one of the following:
+> +	"marvell,berlin2-pll" or
+> +	"marvell,berlin2q-pll":
+> +		CPU PLL and System PLL
+> +- reg : Address and length of the clock register set.
+> +- #clock-cells : from common clock binding; shall be set to 0.
+> +- clocks : shall be the input parent clock phandle for the clock.
 
-My understanding has been that the link data would be used determine
-when the controller driver can be brought up and active. Certainly both
-sides of a link need to be 'live' before the link can be used. The
-kernel must have a way to resolve the question of "who starts first?",
-whether it be the situation of the consumer starts before the producer,
-or the situation of two components need to start before the controller
-driver can start. That is the dependency chain I'm talking about.
+Nit: clocks aren't just phandles. Either define the full type (phandle +
+clock-specifier pair), or don't define the type at all given it's a
+standard property.
 
-> The only problem of unidirectional links from programming point of view
-> is that destination port/interface should be exposed using some
-> framework and driver of source link should grab it using the same
-> framework, using port/endpoint node for identification. In case of
-> bi-directional links the same process should happen but DT do not
-> dictates who should expose and who grabs.
+Otherwise this looks fine to me.
+
+Cheers,
+Mark.
+
+> +
+> +smclk: sysmgr-clock {
+> +	compatible = "fixed-clock";
+> +	#clock-cells = <0>;
+> +	clock-frequency = <25000000>;
+> +};
+> +
+> +cpupll: cpupll {
+> +	compatible = "marvell,berlin2-pll";
+> +	clocks = <&smclk>;
+> +	#clock-cells = <0>;
+> +	reg = <0xf7ea003c 8>;
+> +};
+> +
+> +
+> -- 
+> 1.8.3.2
 > 
-> So from programming point of view it should be easy to handle
-> unidirectional links regardless of the direction. So I guess the best
-> is to use data flow direction as it seems to be the most natural.
-
-right.
-
 > 
-> 
-> > I'm okay with allowing the bidirection option if the helper functions
-> > are modified to validate the target endpoint. I think it needs to test
-> > for the following:
-> > - Make sure the endpoint either:
-> >   - does not have a backlink, or
-> >   - the backlink points back to the origin node
-> > - If the target is an endpoint node, then make sure the parent doesn't
-> >   have a link of any kind
-> > - If the target is a port node, make sure it doesn't have any endpoint
-> >   children nodes at all.
-> 
-> I think link validation can be done at dts compile time.
-
-I'm firm on the opinion that the checking must also happen at runtime.
-The biggest part of my objection has been how easy it would be to get a
-linkage out of sync, and dtc is not necessarily the last tool to touch
-the dtb before the kernel gets booted. I want the kernel to flat out
-reject any linkage that is improperly formed.
-
-g.
-
-> 
-> Regards
-> Andrzej
-> 
-> > 
-> > g.
-> > 
-> > 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > 
