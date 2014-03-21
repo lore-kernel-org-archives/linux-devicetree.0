@@ -1,101 +1,95 @@
-From: Phil.Edworthy@renesas.com
-Subject: Re: [PATCH v4 5/9] dt-bindings: pci: rcar pcie device tree bindings
-Date: Fri, 21 Mar 2014 15:02:29 +0000
-Message-ID: <OFC7DD5DAC.D378B300-ON80257CA2.0051ECEE-80257CA2.00529F98@eu.necel.com>
-References: <1395397968-6242-1-git-send-email-phil.edworthy@renesas.com>		 <1395397968-6242-6-git-send-email-phil.edworthy@renesas.com>
-	 <1395401031.4554.9.camel@weser.hi.pengutronix.de>	 <OF03C9E23D.07B7D998-ON80257CA2.004E5877-80257CA2.004E9BFB@eu.necel.com> <1395412213.4554.17.camel@weser.hi.pengutronix.de>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 03/20] mmc: mmci: Update DT documentation
+Date: Fri, 21 Mar 2014 10:03:39 -0500
+Message-ID: <CAL_JsqJbaxayELNt+d1VSfFyD58eRYQM=d15RaFcFQKbot3iaw@mail.gmail.com>
+References: <1395404057-27835-1-git-send-email-ulf.hansson@linaro.org>
+	<1395404057-27835-4-git-send-email-ulf.hansson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1395412213.4554.17.camel@weser.hi.pengutronix.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, LAKML <linux-arm-kernel@lists.infradead.org>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Valentine Barshak <valentine.barshak@cogentembedded.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1395404057-27835-4-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lucas,
+On Fri, Mar 21, 2014 at 7:14 AM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Document how to configure the regulator supplies and add an example of
+> a typical mmci DT node.
+>
+> Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mmc/mmci.txt |   35 ++++++++++++++++++++++--
+>  1 file changed, 33 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/mmci.txt b/Documentation/devicetree/bindings/mmc/mmci.txt
+> index 2b584ca..d167562 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmci.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mmci.txt
+> @@ -9,7 +9,38 @@ by mmc.txt and the properties used by the mmci driver.
+>  Required properties:
+>  - compatible             : contains "arm,pl18x", "arm,primecell".
+>  - arm,primecell-periphid : contains the PrimeCell Peripheral ID.
 
-On: 21/03/2014 14:31, Lucas wrote:
-> Subject: Re: [PATCH v4 5/9] dt-bindings: pci: rcar pcie device tree 
-bindings
-> 
-> Am Freitag, den 21.03.2014, 14:18 +0000 schrieb
-> Phil.Edworthy@renesas.com:
-> > Hi Lucas,
-> > 
-> > On 21/03/2014 11:24, Lucas wrote:
-> > > Subject: Re: [PATCH v4 5/9] dt-bindings: pci: rcar pcie device tree 
-> > bindings
-> > > 
-> > > Am Freitag, den 21.03.2014, 10:32 +0000 schrieb Phil Edworthy:
-> > > > This patch adds the bindings for the rcar PCIE driver. The driver
-> > > > resides under drivers/pci/host/pcie-rcar.c
-> > > > 
-> > > > Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-> > > 
-> > > I have one question below. If you can answer this with yes after
-> > > thinking again about it, this is:
-> > > 
-> > > Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/pci/rcar-pci.txt | 40 
-> > ++++++++++++++++++++++
-> > > >  1 file changed, 40 insertions(+)
-> > > >  create mode 100644 
-Documentation/devicetree/bindings/pci/rcar-pci.txt
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/
-> > > Documentation/devicetree/bindings/pci/rcar-pci.txt
-> > > > new file mode 100644
-> > > > index 0000000..0e219b0
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> > > > @@ -0,0 +1,40 @@
-> > > > +* Renesas RCar PCIe interface
-> > > > +
-> > > > +Required properties:
-> > > > +- compatible: should contain one of the following
-> > > > +   "renesas,r8a7779-pcie", "renesas,r8a7790-pcie", 
-> > "renesas,r8a7791-pcie"
-> > > > +- reg: base addresses and lengths of the pcie controller.
-> > > > +- #address-cells: set to <3>
-> > > > +- #size-cells: set to <2>
-> > > > +- device_type: set to "pci"
-> > > > +- ranges: ranges for the PCI memory and I/O regions
-> > > > +- interrupts: interrupt values for MSI interrupt
-> > > > +- #interrupt-cells: set to <1>
-> > > > +- interrupt-map-mask and interrupt-map: standard PCI properties
-> > > > +   to define the mapping of the PCIe interface to interrupt
-> > > > +   numbers.
-> > > > +- clocks: from common clock binding: handle to pci clock.
-> > > > +- clock-names: from common clock binding: should be "pcie"
-> > > 
-> > > You really only have one PCIe clock? So the controller is generating 
-the
-> > > PCIe bus clock from it's register clock? No need to enable any other
-> > > clock for PCIe to work?
-> > Yes, just the one clock. The PCIe bus clock is an external clock 
-dedicated 
-> > to PCIe and SATA, and we have no control over it.
-> > 
-> Is this some kind of always-on clock? If not you probably want a
-> reference to it from the PCIe driver even if it's shared between SATA
-> and PCIe. After all you don't want to end up unconditionally enabling
-> this clock from the board or SoC level just to have PCIe working, right?
-Ok, I see, I'll need a reference to a board clock, even if it's always on 
-for these boards. 
+This should not be required. This is only for if the peripheral ID is
+wrong in the h/w.
 
-> Regards,
-> Lucas
-> -- 
-> Pengutronix e.K.                           | Lucas Stach |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/ 
-|
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-5076 
-|
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 
-|
-> 
+> +- vmmc-supply            : phandle to the regulator device tree node.
 
-Thanks
-Phil
+You cannot add new required properties as that breaks the ABI. The
+exception is if you *know* it is okay to break all users of this
+binding.
+
+>  Optional properties:
+> -- mmc-cap-mmc-highspeed  : indicates whether MMC is high speed capable
+> -- mmc-cap-sd-highspeed   : indicates whether SD is high speed capable
+> +- mmc-cap-mmc-highspeed  : indicates whether MMC is high speed capable.
+> +- mmc-cap-sd-highspeed   : indicates whether SD is high speed capable.
+> +- vqmmc-supply           : phandle to the regulator device tree node.
+
+Is this a standard property? If not, explain what vmmc and vgmmc are
+for and what the difference is.
+
+> +
+> +Example:
+> +
+> +sdi0_per1@80126000 {
+> +       compatible = "arm,pl18x", "arm,primecell";
+> +       arm,primecell-periphid = <0x10480180>;
+
+Drop this from the example.
+
+> +       reg = <0x80126000 0x1000>;
+> +       interrupts = <0 60 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +       dmas = <&dma 29 0 0x2>, /* Logical - DevToMem */
+> +              <&dma 29 0 0x0>; /* Logical - MemToDev */
+> +       dma-names = "rx", "tx";
+> +
+> +       clocks = <&prcc_kclk 1 5>, <&prcc_pclk 1 5>;
+> +       clock-names = "sdi", "apb_pclk";
+> +
+> +       max-frequency = <100000000>;
+> +       bus-width = <4>;
+> +       mmc-cap-sd-highspeed;
+> +       mmc-cap-mmc-highspeed;
+> +       cd-gpios  = <&gpio2 31 0x4>; // 95
+> +
+> +       vmmc-supply = <&ab8500_ldo_aux3_reg>;
+> +       vqmmc-supply = <&vmmci>;
+> +
+> +       pinctrl-names = "default", "sleep";
+> +       pinctrl-0 = <&sdi0_default_mode>;
+> +       pinctrl-1 = <&sdi0_sleep_mode>;
+> +};
+> --
+> 1.7.9.5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
