@@ -1,36 +1,118 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH] [media]: of: move graph helpers from
- drivers/media/v4l2-core to drivers/of
-Date: Fri, 21 Mar 2014 13:26:22 +0000
-Message-ID: <CACxGe6tVymd8qBiEB6WFgV1A_58Y5QrwJs11q-ZG_ivO4ED8FQ@mail.gmail.com>
-References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de>
- <20140320153804.35d5b835@samsung.com> <20140321081537.472B2C4085E@trevor.secretlab.ca>
- <38763187.gEm4XVJAeX@avalon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] drm/i2c: tda998x: Change the compatible strings
+Date: Fri, 21 Mar 2014 14:37:52 +0100
+Message-ID: <532C40B0.3000805@gmail.com>
+References: <20140321115541.01cbbb06@armhf>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <38763187.gEm4XVJAeX@avalon>
+In-Reply-To: <20140321115541.01cbbb06@armhf>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 21, 2014 at 12:44 PM, Laurent Pinchart
-<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
-> Hi Grant,
->
-> On Friday 21 March 2014 08:15:34 Grant Likely wrote:
->> Why don't we instead try a Google Hangout or a phone call today.
->> Anywhere between 11:30 and 14:00 GMT would work for me. I'd offer to
->> provide the tea, but I haven't quite perfected transporter technology
->> yet.
->
-> That would work for me, but not today I'm afraid. Will you already be in
-> California on Monday ?
+On 03/21/2014 11:55 AM, Jean-Francois Moine wrote:
+> The tda998x driver accepts only 3 chips from the TDA998x family.
+> This patch changes the driver compatible strings to these chips.
 
-Yes. Let's try the week after.
+Jean-Francois,
 
-g.
+be careful with building a DT binding from a Linux driver. Although
+we constantly struggle to define a binding independent of Linux, it
+should not reflect what Linux is capable of but describe the HW in
+general.
+
+> Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+> ---
+> v2: change the subject to drm/i2c
+> This patch applies after
+> 	drm/i2c: tda998x: Fix lack of required reg in DT documentation
+> ---
+>   Documentation/devicetree/bindings/drm/i2c/tda998x.txt | 4 ++--
+>   drivers/gpu/drm/i2c/tda998x_drv.c                     | 4 +++-
+>   2 files changed, 5 insertions(+), 3 deletions(-)
+> diff --git a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
+> index fc7effa..e3f3d65 100644
+> --- a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
+> +++ b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
+> @@ -1,7 +1,7 @@
+>   Device-Tree bindings for the NXP TDA998x HDMI transmitter
+>
+>   Required properties;
+> -  - compatible: must be "nxp,tda998x"
+> +  - compatible: may be "nxp,tda9989", "nxp,tda19988" or "nxp,tda19989"
+
+There is a "DT is ABI" policy and although there is no mainline Linux
+user of current compatible, the correct way would be to deprecate
+"nxp,tda998x" and introduce new compatibles.
+
+Also, as long as we don't know about any major differences between
+9989, 1998[89] it is fine to just have one of them defined. As soon
+as we discover any difference that cannot be solved in another way,
+we can add a new compatible.
+
+What we _know_ is that 998[134] are different from 9989,1998[89]
+with respect to additional CEC feature. But we also _know_ that the
+exact version/revision of 9989,1998[89] can be probed from i2c
+registers.
+
+DT maintainers will know better, but as long as we have no prove that
+998[134] can also be properly distinguished by i2c registers, just add
+"nxp,tda9989" (which was probably the first revision released) and
+assume 1998[89] are "compatible enough". Or add all three and make
+"nxp,tda9989" the mandatory compatible.
+
+You can leave out 998[134] for now.
+
+>     - reg: I2C address
+>
+
+The line above and below reg property look like there is a tab. If
+so, can you please get rid of the blank line above and fix the line
+below?
+
+> @@ -20,7 +20,7 @@ Optional properties:
+>   Example:
+>
+>   	tda998x: hdmi-encoder {
+> -		compatible = "nxp,tda998x";
+> +		compatible = "nxp,tda19988";
+
+Depending on above decision this becomes either
+
+compatible = "nxp,tda9989";
+
+or
+
+compatible = "nxp,tda19988", "nxp,tda9989";
+
+>   		reg = <0x70>;
+>   		interrupt-parent = <&gpio0>;
+>   		interrupts = <27 2>;		/* falling edge */
+> diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
+> index 48af5ca..fd6751c 100644
+> --- a/drivers/gpu/drm/i2c/tda998x_drv.c
+> +++ b/drivers/gpu/drm/i2c/tda998x_drv.c
+> @@ -1367,7 +1367,9 @@ fail:
+>
+>   #ifdef CONFIG_OF
+>   static const struct of_device_id tda998x_dt_ids[] = {
+> -	{ .compatible = "nxp,tda998x", },
+> +	{ .compatible = "nxp,tda9989", },
+> +	{ .compatible = "nxp,tda19988", },
+> +	{ .compatible = "nxp,tda19989", },
+
+Independent of the decision above, just "nxp,tda9989" is
+sufficient.
+
+Sebastian
+
+>   	{ }
+>   };
+>   MODULE_DEVICE_TABLE(of, tda998x_dt_ids);
+>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
