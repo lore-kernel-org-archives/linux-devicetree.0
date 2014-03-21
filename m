@@ -1,59 +1,37 @@
-From: Zhangfei Gao <zhangfei.gao@gmail.com>
-Subject: Re: [PATCH 2/3] net: hisilicon: new hip04 MDIO driver
-Date: Fri, 21 Mar 2014 13:27:57 +0800
-Message-ID: <CAMj5BkiUUJUEKJJp-5VOHcEXdjxAfSNKK2QZViRCLPs5yqgEzg@mail.gmail.com>
-References: <1395132017-15928-1-git-send-email-zhangfei.gao@linaro.org>
-	<1395132017-15928-3-git-send-email-zhangfei.gao@linaro.org>
-	<CAGVrzcY4SBKFfTvjB0TTvgpAOwCt30C6LjYf9e9E4ciMDVmp-w@mail.gmail.com>
-	<CAMj5Bkjm3G=K=fqas6VG5NXroofWijN_sc7XGLzT5jVehwTd0Q@mail.gmail.com>
-	<CAGVrzcZ4K2gvQ8f=uMTf4+jm29e3FQXL-a-wc9xgumyHpH6+UA@mail.gmail.com>
+From: Huang Shijie <b32955@freescale.com>
+Subject: Re: [PATCH] mtd: gpmi: make blockmark swapping optional
+Date: Fri, 21 Mar 2014 13:36:12 +0800
+Message-ID: <532BCFCC.4080205@freescale.com>
+References: <1395235406-13449-1-git-send-email-y>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAGVrzcZ4K2gvQ8f=uMTf4+jm29e3FQXL-a-wc9xgumyHpH6+UA@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Zhangfei Gao <zhangfei.gao@linaro.org>, netdev <netdev@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1395235406-13449-1-git-send-email-y>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: y@karo-electronics.de
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>, =?UTF-8?B?TG90aGFyIFdhw59tYW5u?= <LW@karo-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 21, 2014 at 1:59 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> 2014-03-20 3:53 GMT-07:00 Zhangfei Gao <zhangfei.gao@gmail.com>:
->>>> +static int hip04_mdio_reset(struct mii_bus *bus)
->>>> +{
->>>> +       int temp, err, i;
->>>> +
->>>> +       for (i = 0; i < 2; i++) {
->>>> +               hip04_mdio_write(bus, i, 22, 0);
->>>> +               temp = hip04_mdio_read(bus, i, MII_BMCR);
->>>> +               temp |= BMCR_RESET;
->>>> +               err = hip04_mdio_write(bus, i, MII_BMCR, temp);
->>>> +               if (err < 0)
->>>> +                       return err;
->>>> +       }
->>>> +
->>>> +       mdelay(500);
->>>
->>> This does not look correct, you should iterate over all possible PHYs:
->>> PHY_MAX_ADDR instead of hardcoding the loop to 2.
->>
->> OK, got it.
->> Use 2 is since only have 2 phy in the board, will use PHY_MAX_ADDR instead.
->>>
->>> I think we might want to remove the mdio bus reset callback in general
->>> as the PHY library should already take care of software resetting the
->>> PHY to put it in a sane state, as well as waiting for the appropriate
->>> delay before using, unlike here, where you do not poll for BMCR_RESET
->>> to be cleared by the PHY.
->>>
->> Do you mean will move BMCR_RESET to common code, that's would be great.
->> The mdio_reset is added here to get phy_id, otherwise the phy_id can
->> not be read as well as detection.
->
-> Oh I see, thanks for mentioning that, this is not properly covered
-> here today as we need to get the PHY id before we assign it a
-> phy_device structure, let me cook a patch for this.
-> --
-
-Should I keep hip04_mdio_reset in the next submit or remove it directly?
-
-Thanks
+5LqOIDIwMTTlubQwM+aciDE55pelIDIxOjIzLCB5QGthcm8tZWxlY3Ryb25pY3MuZGUg5YaZ6YGT
+Ogo+ICsJLyogU2V0IHVwIHN3YXBfYmxvY2tfbWFyaywgbXVzdCBiZSBzZXQgYmVmb3JlIHRoZSBn
+cG1pX3NldF9nZW9tZXRyeSgpICovCj4gKwlpZiAoIW9mX3Byb3BlcnR5X3JlYWRfYm9vbCh0aGlz
+LT5kZXYtPm9mX25vZGUsICJmc2wsbm8tYmxvY2ttYXJrLXN3YXAiKSkKPiArCQl0aGlzLT5zd2Fw
+X2Jsb2NrX21hcmsgPSAhR1BNSV9JU19NWDIzKHRoaXMpOwoKCk91ciBST00gZ3V5IGhhZCBjb25m
+aXJtZWQgdGhhdCB0aGUgUm9tIHdpbGwgZGlzYWJsZSB0aGUgc3dhcHBpbmcgaWYgd2UgCnNldCB0
+aGUgRElTQkJNIGJpdC4KQnV0IHBsZWFzZSBkbyBub3QgY2hhbmdlIGFueSBsb2dpYyBmb3IgaW14
+MjMvaW14MjguCgpJIHJlYWxseSBkbyBub3Qga25vdyB3aGF0J3MgdGhlIGJlbmVmaXQgd2UgY2Fu
+IGdldCBmcm9tIHRoaXMgcGF0Y2guClBsZWFzZSBzZW5kIHRoZSBuZXcgdmVyc2lvbiBhYm91dCB0
+aGlzIHBhdGNoIGlmIHlvdSB3YW50IHRoaXMgZmVhdHVyZS4KCgp0aGFua3MKSHVhbmcgU2hpamll
+CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgt
+YXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
+b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJt
+LWtlcm5lbAo=
