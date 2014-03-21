@@ -1,69 +1,78 @@
-From: Phil Edworthy <phil.edworthy@renesas.com>
-Subject: [PATCH v4 5/9] dt-bindings: pci: rcar pcie device tree bindings
-Date: Fri, 21 Mar 2014 10:32:44 +0000
-Message-ID: <1395397968-6242-6-git-send-email-phil.edworthy@renesas.com>
-References: <1395397968-6242-1-git-send-email-phil.edworthy@renesas.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1395397968-6242-1-git-send-email-phil.edworthy@renesas.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linux-pci@vger.kernel.org
-Cc: linux-sh@vger.kernel.org, LAKML <linux-arm-kernel@lists.infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, Valentine Barshak <valentine.barshak@cogentembedded.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Phil Edworthy <phil.edworthy@renesas.com>, devicetree@vger.kernel.org
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [RFC PATCH] [media]: of: move graph helpers from
+ drivers/media/v4l2-core to drivers/of
+Date: Fri, 21 Mar 2014 11:44:24 +0100
+Message-ID: <532C1808.6090409@samsung.com>
+References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de>
+ <139468148.3QhLg3QYq1@avalon> <531F08A8.300@ti.com>
+ <1883687.VdfitvQEN3@samsung.com> <avalon@samsung.com>
+ <20140320172302.CD320C4067A@trevor.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <20140320172302.CD320C4067A@trevor.secretlab.ca>
+Sender: linux-media-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the bindings for the rcar PCIE driver. The driver
-resides under drivers/pci/host/pcie-rcar.c
+On 03/20/2014 06:23 PM, Grant Likely wrote:
+> On Tue, 11 Mar 2014 14:16:37 +0100, Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+>> On Tuesday 11 March 2014 14:59:20 Tomi Valkeinen wrote:
+>>> So depending on the use case, the endpoints would point to opposite
+>>> direction from the encoder's point of view.
+>>>
+>>> And if I gathered Grant's opinion correctly (correct me if I'm wrong),
+>>> he thinks things should be explicit, i.e. the bindings for, say, an
+>>> encoder should state that the encoder's output endpoint _must_ contain a
+>>> remote-endpoint property, whereas the encoder's input endpoint _must
+>>> not_ contain a remote-endpoint property.
+>>
+>> Actually my understand was that DT links would have the same direction as the 
+>> data flow. There would be no ambiguity in that case as the direction of the 
+>> data flow is known. What happens for bidirectional data flows still need to be 
+>> discussed though. And if we want to use the of-graph bindings to describe 
+>> graphs without a data flow, a decision will need to be taken there too.
+> 
+> On further thinking, I would say linkage direction should be in the
+> direction that would be considered the dependency order... I'm going to
+> soften my position though. I think the generic pattern should still
+> recommend unidirection links in direction of device dependency, but
 
-Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
----
- Documentation/devicetree/bindings/pci/rcar-pci.txt | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci.txt
+I am not sure what you mean by 'device dependency' but I am sure it will
+not be difficult to present problematic cases, maybe circular
+dependencies, two-way dependencies, etc.
 
-diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-new file mode 100644
-index 0000000..0e219b0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-@@ -0,0 +1,40 @@
-+* Renesas RCar PCIe interface
-+
-+Required properties:
-+- compatible: should contain one of the following
-+	"renesas,r8a7779-pcie", "renesas,r8a7790-pcie", "renesas,r8a7791-pcie"
-+- reg: base addresses and lengths of the pcie controller.
-+- #address-cells: set to <3>
-+- #size-cells: set to <2>
-+- device_type: set to "pci"
-+- ranges: ranges for the PCI memory and I/O regions
-+- interrupts: interrupt values for MSI interrupt
-+- #interrupt-cells: set to <1>
-+- interrupt-map-mask and interrupt-map: standard PCI properties
-+	to define the mapping of the PCIe interface to interrupt
-+	numbers.
-+- clocks: from common clock binding: handle to pci clock.
-+- clock-names: from common clock binding: should be "pcie"
-+
-+Example:
-+
-+SoC specific DT Entry:
-+
-+	pcie: pcie@0x01000000 {
-+		compatible = "renesas,r8a7790-pcie";
-+		reg = <0 0xfe000000 0 0x80000>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		device_type = "pci";
-+		ranges = <0x01000000 0 0x00000000 0 0xfe100000 0 0x00100000
-+			  0x02000000 0 0xfe200000 0 0xfe200000 0 0x00200000
-+			  0x02000000 0 0x30000000 0 0x30000000 0 0x08000000
-+			  0x42000000 0 0x38000000 0 0x38000000 0 0x08000000>;
-+		interrupts = <0 116 4>;
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 0>;
-+		interrupt-map = <0 0 0 0 &gic 0 116 4>;
-+		clocks = <&mstp3_clks R8A7790_CLK_PCIE>;
-+		clock-names = "pcie";
-+		status = "disabled";
-+	};
--- 
-1.9.0
+The only problem of unidirectional links from programming point of view
+is that destination port/interface should be exposed using some
+framework and driver of source link should grab it using the same
+framework, using port/endpoint node for identification. In case of
+bi-directional links the same process should happen but DT do not
+dictates who should expose and who grabs.
+
+So from programming point of view it should be easy to handle
+unidirectional links regardless of the direction. So I guess the best
+is to use data flow direction as it seems to be the most natural.
+
+
+> I'm okay with allowing the bidirection option if the helper functions
+> are modified to validate the target endpoint. I think it needs to test
+> for the following:
+> - Make sure the endpoint either:
+>   - does not have a backlink, or
+>   - the backlink points back to the origin node
+> - If the target is an endpoint node, then make sure the parent doesn't
+>   have a link of any kind
+> - If the target is a port node, make sure it doesn't have any endpoint
+>   children nodes at all.
+
+I think link validation can be done at dts compile time.
+
+Regards
+Andrzej
+
+> 
+> g.
+> 
+> 
