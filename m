@@ -1,45 +1,49 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: Re: [PATCH 7/8] ASoC: atmel: document clock properties of the wm8904
- driver
-Date: Fri, 21 Mar 2014 10:48:56 +0800
-Message-ID: <532BA898.90604@atmel.com>
-References: <1395049541-28128-1-git-send-email-voice.shen@atmel.com> <1395049541-28128-8-git-send-email-voice.shen@atmel.com> <20140317115518.GD11706@sirena.org.uk> <532931C3.4080909@atmel.com> <20140319102800.GW11706@sirena.org.uk> <532A5481.6000008@atmel.com> <20140320134744.GF11706@sirena.org.uk>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: Re: [PATCH 0/2] ARM: berlin: SMP support
+Date: Fri, 21 Mar 2014 11:14:57 +0800
+Message-ID: <20140321111457.6bed5091@xhacker>
+References: <1395347986-30203-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140320134744.GF11706@sirena.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: nicolas.ferre@atmel.com, Boris BREZILLON <b.brezillon@overkiz.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1395347986-30203-1-git-send-email-sebastian.hesselbarth@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Antoine Tenart <antoine.tenart@free-electrons.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark Brown,
+On Thu, 20 Mar 2014 13:39:44 -0700
+Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
 
-On 03/20/2014 09:47 PM, Mark Brown wrote:
-> On Thu, Mar 20, 2014 at 10:37:53AM +0800, Bo Shen wrote:
->
->> For this, in my mind, I think we need add following parameters in DT.
->> 1. sysclk_src_from_fll --> we need do nothing.
->
-> No, how would this work?  If nothing else the FLL needs configuration.
+> This is a small patch set for SMP support on Marvell Berlin BG2
+> and recently provided BG2Q. Nothing spectacular, as it basically
+> copies SMP holding pen mechanism from mach-prima2 and plat-versatile
+> with minor Berlin specific code for SCU and general purpose registers
+> used by secondary CPUs to get their boot address.
+> 
+> There was some IRC discussion with Alexandre about using
+> scu_get_base() instead of a DT node. Although BG2Q is true A9
+> and provides SCU base; BG2 with PJ4b does not and I decided to
+> depend on a DT node for SCU in both cases, which is fine I guess.
+> 
+> I tested this on BG2, and BG2CD (which is UP). I expect the
+> Free-Electrons guys to test on BG2Q.
 
-Only configure it in machine driver. Then no DT operation.
+Although BG2Q and future SoCs will go through PSCI code path finally. But
+currently, it's OK to use the pen mechanism.
 
->> 2. sysclk_src_from_mclk
->>     2.1 use_external_xtal --> we need clock_frequency
->>     2.2 !use_external_xtal --> we need retrieve clock and clock_frequency.
->
-> No, this is all handled in the clock binding.  If there's a fixed rate
-> clock the device tree should have a fixed rate clock provided.
->
->> Does this acceptable? Or any other better suggestion for this?
->
-> Just have the device tree describe the hardware and provide a way of
-> specifying an optional MCLK.
->
+So for both of these two patches, 
 
-I will implement an RFC patch, please help review it. Thanks.
+Acked-by: Jisheng Zhang <jszhang@marvell.com>
 
-Best Regards,
-Bo Shen
+Thanks,
+Jisheng
