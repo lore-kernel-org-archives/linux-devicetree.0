@@ -1,87 +1,38 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v4 5/9] dt-bindings: pci: rcar pcie device tree bindings
-Date: Fri, 21 Mar 2014 15:30:13 +0100
-Message-ID: <1395412213.4554.17.camel@weser.hi.pengutronix.de>
-References: <1395397968-6242-1-git-send-email-phil.edworthy@renesas.com>
-		 <1395397968-6242-6-git-send-email-phil.edworthy@renesas.com>
-	 <1395401031.4554.9.camel@weser.hi.pengutronix.de>
-	 <OF03C9E23D.07B7D998-ON80257CA2.004E5877-80257CA2.004E9BFB@eu.necel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <OF03C9E23D.07B7D998-ON80257CA2.004E5877-80257CA2.004E9BFB@eu.necel.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Phil.Edworthy@renesas.com
-Cc: devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, linux-sh@vger.kernel.org, linux-pci@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Valentine Barshak <valentine.barshak@cogentembedded.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core to drivers/of
+Date: Fri, 21 Mar 2014 14:33:04 +0000
+Message-ID: <20140321143304.D62ADC405B0@trevor.secretlab.ca>
+References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> < 139468148.3QhLg3QYq1@avalon> <531F08A8.300@ti.com> <1883687.VdfitvQEN3@ samsung.com> <avalon@samsung.com> <20140320172302.CD320C4067A@trevor. secretlab.ca> <532C1808.6090409@samsung.com> <20140321114735.3E132C4052A@ trevor.secretlab.ca> <532C2D94.4020705@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <532C2D94.4020705-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 21.03.2014, 14:18 +0000 schrieb
-Phil.Edworthy@renesas.com:
-> Hi Lucas,
+On Fri, 21 Mar 2014 14:16:20 +0200, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> wrote:
+> On 21/03/14 13:47, Grant Likely wrote:
 > 
-> On 21/03/2014 11:24, Lucas wrote:
-> > Subject: Re: [PATCH v4 5/9] dt-bindings: pci: rcar pcie device tree 
-> bindings
-> > 
-> > Am Freitag, den 21.03.2014, 10:32 +0000 schrieb Phil Edworthy:
-> > > This patch adds the bindings for the rcar PCIE driver. The driver
-> > > resides under drivers/pci/host/pcie-rcar.c
-> > > 
-> > > Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-> > 
-> > I have one question below. If you can answer this with yes after
-> > thinking again about it, this is:
-> > 
-> > Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-> > > ---
-> > >  Documentation/devicetree/bindings/pci/rcar-pci.txt | 40 
-> ++++++++++++++++++++++
-> > >  1 file changed, 40 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/
-> > Documentation/devicetree/bindings/pci/rcar-pci.txt
-> > > new file mode 100644
-> > > index 0000000..0e219b0
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> > > @@ -0,0 +1,40 @@
-> > > +* Renesas RCar PCIe interface
-> > > +
-> > > +Required properties:
-> > > +- compatible: should contain one of the following
-> > > +   "renesas,r8a7779-pcie", "renesas,r8a7790-pcie", 
-> "renesas,r8a7791-pcie"
-> > > +- reg: base addresses and lengths of the pcie controller.
-> > > +- #address-cells: set to <3>
-> > > +- #size-cells: set to <2>
-> > > +- device_type: set to "pci"
-> > > +- ranges: ranges for the PCI memory and I/O regions
-> > > +- interrupts: interrupt values for MSI interrupt
-> > > +- #interrupt-cells: set to <1>
-> > > +- interrupt-map-mask and interrupt-map: standard PCI properties
-> > > +   to define the mapping of the PCIe interface to interrupt
-> > > +   numbers.
-> > > +- clocks: from common clock binding: handle to pci clock.
-> > > +- clock-names: from common clock binding: should be "pcie"
-> > 
-> > You really only have one PCIe clock? So the controller is generating the
-> > PCIe bus clock from it's register clock? No need to enable any other
-> > clock for PCIe to work?
-> Yes, just the one clock. The PCIe bus clock is an external clock dedicated 
-> to PCIe and SATA, and we have no control over it.
+> > I'm firm on the opinion that the checking must also happen at runtime.
+> > The biggest part of my objection has been how easy it would be to get a
+> > linkage out of sync, and dtc is not necessarily the last tool to touch
+> > the dtb before the kernel gets booted. I want the kernel to flat out
+> > reject any linkage that is improperly formed.
 > 
-Is this some kind of always-on clock? If not you probably want a
-reference to it from the PCIe driver even if it's shared between SATA
-and PCIe. After all you don't want to end up unconditionally enabling
-this clock from the board or SoC level just to have PCIe working, right?
+> Isn't it trivial to verify it with the current v4l2 bindings? And
+> endpoint must have a 'remote-endpoint' property, and the endpoint on the
+> other end must have similar property, pointing in the first endpoint.
+> Anything else is an error.
+> 
+> I agree that it's easier to write bad links in the dts with
+> double-linking than with single-linking, but it's still trivial to
+> verify it in the kernel.
 
-Regards,
-Lucas
--- 
-Pengutronix e.K.                           | Lucas Stach                 |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-5076 |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Right, which is exactly what I'm asking for.
 
+g.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
