@@ -1,94 +1,38 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v2 2/5] clk: berlin: add berlin clocks DT bindings documentation
-Date: Fri, 21 Mar 2014 22:31:09 +0100
-Message-ID: <532CAF9D.3020303@gmail.com>
-References: <1395432521-11055-1-git-send-email-alexandre.belloni@free-electrons.com> <1395432521-11055-3-git-send-email-alexandre.belloni@free-electrons.com>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1395432521-11055-3-git-send-email-alexandre.belloni@free-electrons.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Mike Turquette <mturquette@linaro.org>
-Cc: Jimmy Xu <zmxu@marvell.com>, Jisheng Zhang <jszhang@marvell.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?ISO-8859-1?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>, devicetree@vger.kernel.org
+From: delicious quinoa <delicious.quinoa@gmail.com>
+Subject: Re: [PATCH 3/3] ARM: dts: socfpga: add gpio pieces
+Date: Fri, 21 Mar 2014 17:06:19 -0500
+Message-ID: <CANk1AXRTaCvFn8yemFEq8c2g=zHzz-Kz_B4XgJsSvSjKsu9RrA@mail.gmail.com>
+References: <1395345324-18299-1-git-send-email-bigeasy@linutronix.de>
+	<1395345324-18299-4-git-send-email-bigeasy@linutronix.de>
+	<20140321172434.GB3998@book.gsilab.sittig.org>
+	<532C8E8B.9080406@linutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <532C8E8B.9080406@linutronix.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Gerhard Sittig <gsi@denx.de>, Alan Tull <atull@altera.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Dinh Nguyen <dinguyen@altera.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/21/2014 09:08 PM, Alexandre Belloni wrote:
-> Document the device tree bindings for the PLLs found on the Marvell Berlin SoCs.
+On Fri, Mar 21, 2014 at 2:10 PM, Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
+> On 03/21/2014 06:24 PM, Gerhard Sittig wrote:
+>> On Thu, Mar 20, 2014 at 20:55 +0100, Sebastian Andrzej Siewior wrote:
+>>>
+>>> The cycloneV has three gpio controllers, each one with 29 gpios. This patch
+>>> adds the three controller with the gpio driver which is now sitting the
+>>> gpio tree.
+>>
+>> The third bank should have 27 pins, only the first two have 29.
 >
-> Cc: devicetree@vger.kernel.org
+> It is not a bank it is a complete controller. Why 27 pins? The
+> reference manual says that there register 0...28.
 
-You forgot to add Mark Rutland's Reviewed-by. He didn't mentioned it
-explicitly but his "Otherwise this looks fine to me" on v1, is as good
-as a Reviewed-by. But, no need to resend, I'll fix it up.
+Hi Sebastian,
 
-Also, everything above the '---' will be part of your commit log. While
-the Signed-off-by and Reviewed-by should be in there, Cc's really don't
-need to.
+The ref manual is wrong.  It is 27.  The last two aren't pinned out.
 
-You can add another '---' to separate commit message and some stuff
-you want to have early in you email with:
-
-Blablabla commit message.
-
-Signed-off-by: ...
-Reviewed-by: ...
----
-Changelog:
-- blabla
-
-Cc: cc-me-recipient
-...
----
-    .../devicetree/bindings/clock/berlin-clock.txt     | 29 
-++++++++++++++++++++++
-    1 file changed, 29 insertions(+)
-    create mode 100644 
-Documentation/devicetree/bindings/clock/berlin-clock.txt
-
-  diff --git a/Documentation/devicetree/bindings/clock/berlin-clock.txt 
-b/Documentation/devicetree/bindings/clock/berlin-clock.txt
-...
-
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> ---
->   .../devicetree/bindings/clock/berlin-clock.txt     | 29 ++++++++++++++++++++++
->   1 file changed, 29 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/clock/berlin-clock.txt
->
-> diff --git a/Documentation/devicetree/bindings/clock/berlin-clock.txt b/Documentation/devicetree/bindings/clock/berlin-clock.txt
-> new file mode 100644
-> index 000000000000..49b7860bffb8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/berlin-clock.txt
-> @@ -0,0 +1,29 @@
-> +Device Tree Clock bindings for Marvell Berlin clocks
-> +
-> +This binding uses the common clock binding[1].
-> +
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +Required properties:
-> +- compatible: shall be one of the following:
-> +	"marvell,berlin2-pll",
-> +	"marvell,berlin2q-pll":
-> +		CPU PLL and System PLL
-> +- reg: Address and length of the clock register set.
-> +- #clock-cells: from common clock binding; shall be set to 0.
-> +- clocks: from common clock binding
-> +
-> +smclk: sysmgr-clock {
-> +	compatible = "fixed-clock";
-> +	#clock-cells = <0>;
-> +	clock-frequency = <25000000>;
-> +};
-> +
-> +cpupll: cpupll@ea003c {
-> +	compatible = "marvell,berlin2-pll";
-> +	clocks = <&smclk>;
-> +	#clock-cells = <0>;
-> +	reg = <0xea003c 0x8>;
-> +};
-> +
-> +
->
-
+Alan Tull
+aka
+delicious quinoa
