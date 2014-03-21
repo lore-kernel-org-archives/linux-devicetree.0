@@ -1,87 +1,72 @@
-From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Subject: [PATCHv2 1/1] mtd: gpmi: make blockmark swapping optional
-Date: Fri, 21 Mar 2014 11:50:17 +0100
-Message-ID: <1395399017-19005-1-git-send-email-LW@KARO-electronics.de>
-References: <532BCFCC.4080205@freescale.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: [PATCH v2] drm/i2c: tda998x: Change the compatible strings
+Date: Fri, 21 Mar 2014 11:55:41 +0100
+Message-ID: <20140321115541.01cbbb06@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <532BCFCC.4080205-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-With a flash-based BBT there is no reason to move the Factory Bad
-Block Marker from the data area buffer (to where it is mapped by the
-GPMI NAND controller) to the OOB buffer. Thus, make this feature
-configurable via DT. This is required for the Ka-Ro electronics
-platforms.
+The tda998x driver accepts only 3 chips from the TDA998x family.
+This patch changes the driver compatible strings to these chips.
 
-Signed-off-by: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
 ---
- Documentation/devicetree/bindings/mtd/gpmi-nand.txt |    3 +++
- drivers/mtd/nand/gpmi-nand/gpmi-nand.c              |   10 +++++++---
- 2 files changed, 10 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt b/Docu=
-mentation/devicetree/bindings/mtd/gpmi-nand.txt
-index 458d596..f28949a 100644
---- a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-@@ -25,6 +25,9 @@ Optional properties:
-                        discoverable or this property is not enabled,
-                        the software may chooses an implementation-defi=
-ned
-                        ECC scheme.
-+  - fsl,no-blockmark-swap: Don't swap the bad block marker from the OO=
-B
-+                       area with the byte in the data area but rely on=
- the
-+                       BBT for identifying bad blocks.
-=20
- The device tree may optionally contain sub-nodes describing partitions=
- of the
- address space. See partition.txt for more detail.
-diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/=
-gpmi-nand/gpmi-nand.c
-index bb77f75..98562eb 100644
---- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-+++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-@@ -1632,9 +1632,6 @@ static int gpmi_init_last(struct gpmi_nand_data *=
-this)
- 	struct bch_geometry *bch_geo =3D &this->bch_geometry;
- 	int ret;
-=20
--	/* Set up swap_block_mark, must be set before the gpmi_set_geometry()=
- */
--	this->swap_block_mark =3D !GPMI_IS_MX23(this);
--
- 	/* Set up the medium geometry */
- 	ret =3D gpmi_set_geometry(this);
- 	if (ret)
-@@ -1701,6 +1698,13 @@ static int gpmi_nand_init(struct gpmi_nand_data =
-*this)
- 	if (of_get_nand_on_flash_bbt(this->dev->of_node))
- 		chip->bbt_options |=3D NAND_BBT_USE_FLASH | NAND_BBT_NO_OOB;
-=20
-+	/* Set up swap_block_mark, must be set before the gpmi_set_geometry()=
- */
-+	if (!of_property_read_bool(this->dev->of_node, "fsl,no-blockmark-swap=
-"))
-+		this->swap_block_mark =3D !GPMI_IS_MX23(this);
-+
-+	dev_dbg(this->dev, "Blockmark swapping %sabled\n",
-+		this->swap_block_mark ? "en" : "dis");
-+
- 	/*
- 	 * Allocate a temporary DMA buffer for reading ID in the
- 	 * nand_scan_ident().
---=20
-1.7.10.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+v2: change the subject to drm/i2c
+This patch applies after
+	drm/i2c: tda998x: Fix lack of required reg in DT documentation
+---
+ Documentation/devicetree/bindings/drm/i2c/tda998x.txt | 4 ++--
+ drivers/gpu/drm/i2c/tda998x_drv.c                     | 4 +++-
+ 2 files changed, 5 insertions(+), 3 deletions(-)
+diff --git a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
+index fc7effa..e3f3d65 100644
+--- a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
++++ b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
+@@ -1,7 +1,7 @@
+ Device-Tree bindings for the NXP TDA998x HDMI transmitter
+ 
+ Required properties;
+-  - compatible: must be "nxp,tda998x"
++  - compatible: may be "nxp,tda9989", "nxp,tda19988" or "nxp,tda19989"
+ 
+   - reg: I2C address
+ 
+@@ -20,7 +20,7 @@ Optional properties:
+ Example:
+ 
+ 	tda998x: hdmi-encoder {
+-		compatible = "nxp,tda998x";
++		compatible = "nxp,tda19988";
+ 		reg = <0x70>;
+ 		interrupt-parent = <&gpio0>;
+ 		interrupts = <27 2>;		/* falling edge */
+diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
+index 48af5ca..fd6751c 100644
+--- a/drivers/gpu/drm/i2c/tda998x_drv.c
++++ b/drivers/gpu/drm/i2c/tda998x_drv.c
+@@ -1367,7 +1367,9 @@ fail:
+ 
+ #ifdef CONFIG_OF
+ static const struct of_device_id tda998x_dt_ids[] = {
+-	{ .compatible = "nxp,tda998x", },
++	{ .compatible = "nxp,tda9989", },
++	{ .compatible = "nxp,tda19988", },
++	{ .compatible = "nxp,tda19989", },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, tda998x_dt_ids);
+-- 
+1.9.1
