@@ -1,57 +1,64 @@
 From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: ventana: fix eth1 pci dev node
-Date: Sat, 22 Mar 2014 14:25:17 +0800
-Message-ID: <20140322062432.GB5938@dragon>
-References: <1394747064-4106-1-git-send-email-tharvey@gateworks.com>
- <20140314132805.GD813@S2101-09.ap.freescale.net>
- <CAJ+vNU2Av-n1-efbFbXNvO4SmoobL_WpQKApFRS1Zjy0egLLzw@mail.gmail.com>
- <20140318201519.GA8637@obsidianresearch.com>
+Subject: Re: [PATCH 4/5] ARM: dts: tx53: add simple-panel support
+Date: Sat, 22 Mar 2014 14:46:54 +0800
+Message-ID: <20140322064653.GC5938@dragon>
+References: <1395235721-13847-1-git-send-email-LW@KARO-electronics.de>
+ <1395235721-13847-4-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140318201519.GA8637-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1395235721-13847-4-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 18, 2014 at 02:15:19PM -0600, Jason Gunthorpe wrote:
-> On Tue, Mar 18, 2014 at 01:02:55PM -0700, Tim Harvey wrote:
-> > > Is this whole bridge/switch hierarchy binding documented somewhere
-> > > or is this just something that work for you?
-> > 
-> > I'm not sure where its 'best' documented, but it is the way the
-> > kernel works.
-> 
-> It is documented in the 'PCI Bus Binding to Open Firware'
-> publication from IEEE.
-> 
-> > >> +             pcie@0,0 {
-> > >> +                     /* 01:00.0 PCIe switch */
-> > >> +                     #address-cells = <3>;
-> > >> +                     #size-cells = <2>;
-> > >> +                     device_type = "pci";
-> > >> +                     reg = <0x0 0 0 0 0>;
-> > >> +
-> > >> +                     pcie@8,0 {
-> > >
-> > > What's the naming schema for all these pcie nodes?  Generally, we should
-> > > have the numbers encoded in the node name coming from the address cells
-> > > in 'reg' property.
-> 
-> The 'reg' property for PCI encodes the device and function number, and
-> the suffix in the device path is of the form @DEVICE,FUNCTION (see
-> 2.2.1.3 of the spec)
-> 
-> So device=8, function=0 is @8,0 and reg = 0x4000.
+On Wed, Mar 19, 2014 at 02:28:40PM +0100, Lothar Wa=DFmann wrote:
+>=20
+> Signed-off-by: Lothar Wa=DFmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx53-tx53-x13x.dts |   12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/imx53-tx53-x13x.dts b/arch/arm/boot/dt=
+s/imx53-tx53-x13x.dts
+> index 26b918e..86a964d 100644
+> --- a/arch/arm/boot/dts/imx53-tx53-x13x.dts
+> +++ b/arch/arm/boot/dts/imx53-tx53-x13x.dts
+> @@ -63,6 +63,18 @@
+>  		default-brightness-level =3D <50>;
+>  	};
+> =20
+> +	panel0 {
+> +		compatible =3D "simple-panel";
 
-Ok, thanks for the info.  I missed the fact the pointer to the spec has
-been there in Documentation/devicetree/bindings/pci/pci.txt.
+=46rom what I can see, "simple-panel" is not a documented compatible.
 
 Shawn
 
+> +		power-supply =3D <&reg_lcd_pwr0>;
+> +		backlight =3D <&backlight0>;
+> +	};
+> +
+> +	panel1 {
+> +		compatible =3D "simple-panel";
+> +		power-supply =3D <&reg_lcd_pwr1>;
+> +		backlight =3D <&backlight1>;
+> +	};
+> +
+>  	regulators {
+>  		reg_lcd_pwr0: regulator@5 {
+>  			compatible =3D "regulator-fixed";
+> --=20
+> 1.7.10.4
+>=20
+>=20
+>=20
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
