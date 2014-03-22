@@ -1,48 +1,127 @@
 From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: [PATCH 0/5] Kirkwood DT Documentation
-Date: Sat, 22 Mar 2014 13:45:55 +0100
-Message-ID: <1395492360-1865-1-git-send-email-andrew@lunn.ch>
+Subject: [PATCH 2/5] DT: bindings: add missing Marvell Kirkwood SoC documentation
+Date: Sat, 22 Mar 2014 13:45:57 +0100
+Message-ID: <1395492360-1865-3-git-send-email-andrew@lunn.ch>
+References: <1395492360-1865-1-git-send-email-andrew@lunn.ch>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1395492360-1865-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset fixes up a number of issues found by checkpatch in the
-kirkwood DT files or binding Documentation. Vendor Prefixes are
-documented, missing prefixes are added, incorrect prefixes are
-corrected, and Kirkwood SoCs are documented.
+Marvell Kirkwood SoC binding have not yet been documented. Add the
+documentation including the supported SoCs and boards.
 
-Note that some of these patches contain UTF-8 characters, which the
-mailing lists sometime don't like. The patches can also be found in
-
-https://github.com/lunn/linux.git v3.14-rc7-next-20140321-dt
-
-which is based on linux-next tag next-20140321.
-
-Andrew Lunn (5):
-  DT: Vendor: Add prefixes used by Kirkwood devices
-  DT: bindings: add missing Marvell Kirkwood SoC documentation
-  ARM: Kirkwood: Fix Atmel vendor prefix
-  DT: I2C: Add trivial bindings used by kirkwood boards
-  ARM: Kirkwood: DT: Add missing vendor prefix
-
+Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+---
  .../devicetree/bindings/arm/marvell,kirkwood.txt   | 97 ++++++++++++++++++++++
- .../devicetree/bindings/i2c/trivial-devices.txt    | 16 ++++
- .../devicetree/bindings/vendor-prefixes.txt        | 13 ++-
- arch/arm/boot/dts/kirkwood-b3.dts                  |  2 +-
- arch/arm/boot/dts/kirkwood-cloudbox.dts            |  2 +-
- arch/arm/boot/dts/kirkwood-dreamplug.dts           |  2 +-
- arch/arm/boot/dts/kirkwood-laplug.dts              |  2 +-
- arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts     |  2 +-
- arch/arm/boot/dts/kirkwood-ns2-common.dtsi         |  4 +-
- arch/arm/boot/dts/kirkwood-nsa310.dts              |  2 +-
- arch/arm/boot/dts/kirkwood-nsa310a.dts             |  2 +-
- arch/arm/boot/dts/kirkwood-openblocks_a6.dts       |  2 +-
- arch/arm/boot/dts/kirkwood-openblocks_a7.dts       |  2 +-
- 13 files changed, 136 insertions(+), 12 deletions(-)
+ 1 file changed, 97 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/arm/marvell,kirkwood.txt
 
+diff --git a/Documentation/devicetree/bindings/arm/marvell,kirkwood.txt b/Documentation/devicetree/bindings/arm/marvell,kirkwood.txt
+new file mode 100644
+index 000000000000..925ecbf6e7b7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/marvell,kirkwood.txt
+@@ -0,0 +1,97 @@
++Marvell Kirkwood SoC Family Device Tree Bindings
++------------------------------------------------
++
++Boards with a SoC of the Marvell Kirkwook family, eg 88f6281
++
++* Required root node properties:
++compatible: must contain "marvell,kirkwood"
++
++In addition, the above compatible shall be extended with the specific
++SoC. Currently known SoC compatibles are:
++
++"marvell,kirkwood-88f6192"
++"marvell,kirkwood-88f6281"
++"marvell,kirkwood-88f6282"
++"marvell,kirkwood-88f6283"
++"marvell,kirkwood-88f6702"
++"marvell,kirkwood-98DX4122"
++
++And in addition, the compatible shall be extended with the specific
++board. Currently known boards are:
++
++"buffalo,lschlv2"
++"buffalo,lsxhl"
++"buffalo,lsxl"
++"dlink,dns-320"
++"dlink,dns-320-a1"
++"dlink,dns-325"
++"dlink,dns-325-a1"
++"dlink,dns-kirkwood"
++"excito,b3"
++"globalscale,dreamplug-003-ds2001"
++"globalscale,guruplug"
++"globalscale,guruplug-server-plus"
++"globalscale,sheevaplug"
++"globalscale,sheevaplug"
++"globalscale,sheevaplug-esata"
++"globalscale,sheevaplug-esata-rev13"
++"iom,iconnect"
++"iom,iconnect-1.1"
++"iom,ix2-200"
++"keymile,km_kirkwood"
++"lacie,cloudbox"
++"lacie,inetspace_v2"
++"lacie,laplug"
++"lacie,netspace_lite_v2"
++"lacie,netspace_max_v2"
++"lacie,netspace_mini_v2"
++"lacie,netspace_v2"
++"marvell,db-88f6281-bp"
++"marvell,db-88f6282-bp"
++"marvell,mv88f6281gtw-ge"
++"marvell,rd88f6281"
++"marvell,rd88f6281"
++"marvell,rd88f6281-a0"
++"marvell,rd88f6281-a1"
++"mpl,cec4"
++"mpl,cec4-10"
++"netgear,readynas"
++"netgear,readynas"
++"netgear,readynas-duo-v2"
++"netgear,readynas-nv+-v2"
++"plathome,openblocks-a6"
++"plathome,openblocks-a7"
++"raidsonic,ib-nas6210"
++"raidsonic,ib-nas6210-b"
++"raidsonic,ib-nas6220"
++"raidsonic,ib-nas6220-b"
++"raidsonic,ib-nas62x0"
++"seagate,dockstar"
++"seagate,goflexnet"
++"synology,ds109"
++"synology,ds110jv10"
++"synology,ds110jv20"
++"synology,ds110jv30"
++"synology,ds111"
++"synology,ds209"
++"synology,ds210jv10"
++"synology,ds210jv20"
++"synology,ds212"
++"synology,ds212jv10"
++"synology,ds212jv20"
++"synology,ds212pv10"
++"synology,ds409"
++"synology,ds409slim"
++"synology,ds410j"
++"synology,ds411"
++"synology,ds411j"
++"synology,ds411slim"
++"synology,ds413jv10"
++"synology,rs212"
++"synology,rs409"
++"synology,rs411"
++"synology,rs812"
++"usi,topkick"
++"usi,topkick-1281P2"
++"zyxel,nsa310"
++"zyxel,nsa310a"
 -- 
 1.9.1
 
