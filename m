@@ -1,85 +1,57 @@
-From: Byungho An <bh74.an@samsung.com>
-Subject: [PATCH V11 1/7] sxgbe: Add device-tree binding support document
-Date: Fri, 21 Mar 2014 23:23:48 -0700
-Message-ID: <008001cf4597$531fe090$f95fa1b0$@samsung.com>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: ventana: fix eth1 pci dev node
+Date: Sat, 22 Mar 2014 14:25:17 +0800
+Message-ID: <20140322062432.GB5938@dragon>
+References: <1394747064-4106-1-git-send-email-tharvey@gateworks.com>
+ <20140314132805.GD813@S2101-09.ap.freescale.net>
+ <CAJ+vNU2Av-n1-efbFbXNvO4SmoobL_WpQKApFRS1Zjy0egLLzw@mail.gmail.com>
+ <20140318201519.GA8637@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-Content-language: en-us
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: 'David Miller' <davem@davemloft.net>, 'GIRISH K S' <ks.giri@samsung.com>, 'SIVAREDDY KALLAM' <siva.kallam@samsung.com>, 'Vipul Chandrakant' <vipul.pandya@samsung.com>, 'Ilho Lee' <ilho215.lee@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140318201519.GA8637-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Siva Reddy <siva.kallam@samsung.com>
+On Tue, Mar 18, 2014 at 02:15:19PM -0600, Jason Gunthorpe wrote:
+> On Tue, Mar 18, 2014 at 01:02:55PM -0700, Tim Harvey wrote:
+> > > Is this whole bridge/switch hierarchy binding documented somewhere
+> > > or is this just something that work for you?
+> > 
+> > I'm not sure where its 'best' documented, but it is the way the
+> > kernel works.
+> 
+> It is documented in the 'PCI Bus Binding to Open Firware'
+> publication from IEEE.
+> 
+> > >> +             pcie@0,0 {
+> > >> +                     /* 01:00.0 PCIe switch */
+> > >> +                     #address-cells = <3>;
+> > >> +                     #size-cells = <2>;
+> > >> +                     device_type = "pci";
+> > >> +                     reg = <0x0 0 0 0 0>;
+> > >> +
+> > >> +                     pcie@8,0 {
+> > >
+> > > What's the naming schema for all these pcie nodes?  Generally, we should
+> > > have the numbers encoded in the node name coming from the address cells
+> > > in 'reg' property.
+> 
+> The 'reg' property for PCI encodes the device and function number, and
+> the suffix in the device path is of the form @DEVICE,FUNCTION (see
+> 2.2.1.3 of the spec)
+> 
+> So device=8, function=0 is @8,0 and reg = 0x4000.
 
-This patch adds binding document for SXGBE ethernet driver via device-tree.
+Ok, thanks for the info.  I missed the fact the pointer to the spec has
+been there in Documentation/devicetree/bindings/pci/pci.txt.
 
-Signed-off-by: Siva Reddy Kallam <siva.kallam@samsung.com>
-Signed-off-by: Byungho An <bh74.an@samsung.com>
----
- .../devicetree/bindings/net/samsung-sxgbe.txt      |   52 ++++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/samsung-sxgbe.txt
+Shawn
 
-diff --git a/Documentation/devicetree/bindings/net/samsung-sxgbe.txt b/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
-new file mode 100644
-index 0000000..989f6c9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
-@@ -0,0 +1,52 @@
-+* Samsung 10G Ethernet driver (SXGBE)
-+
-+Required properties:
-+- compatible: Should be "samsung,sxgbe-v2.0a"
-+- reg: Address and length of the register set for the device
-+- interrupt-parent: Should be the phandle for the interrupt controller
-+  that services interrupts for this device
-+- interrupts: Should contain the SXGBE interrupts
-+  These interrupts are ordered by fixed and follows variable
-+  trasmit DMA interrupts, receive DMA interrupts and lpi interrupt.
-+  index 0 - this is fixed common interrupt of SXGBE and it is always
-+  available.
-+  index 1 to 25 - 8 variable trasmit interrupts, variable 16 receive interrupts
-+  and 1 optional lpi interrupt.
-+- phy-mode: String, operation mode of the PHY interface.
-+  Supported values are: "sgmii", "xgmii".
-+- samsung,pbl: Integer, Programmable Burst Length.
-+  Supported values are 1, 2, 4, 8, 16, or 32.
-+- samsung,burst-map: Integer, Program the possible bursts supported by sxgbe
-+  This is an interger and represents allowable DMA bursts when fixed burst.
-+  Allowable range is 0x01-0x3F. When this field is set fixed burst is enabled.
-+  When fixed length is needed for burst mode, it can be set within allowable
-+  range.
-+
-+Optional properties:
-+- mac-address: 6 bytes, mac address
-+- max-frame-size: Maximum Transfer Unit (IEEE defined MTU), rather
-+		  than the maximum frame size.
-+
-+Example:
-+
-+	aliases {
-+		ethernet0 = <&sxgbe0>;
-+	};
-+
-+	sxgbe0: ethernet@1a040000 {
-+		compatible = "samsung,sxgbe-v2.0a";
-+		reg = <0 0x1a040000 0 0x10000>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 209 4>, <0 185 4>, <0 186 4>, <0 187 4>,
-+			     <0 188 4>, <0 189 4>, <0 190 4>, <0 191 4>,
-+			     <0 192 4>, <0 193 4>, <0 194 4>, <0 195 4>,
-+			     <0 196 4>, <0 197 4>, <0 198 4>, <0 199 4>,
-+			     <0 200 4>, <0 201 4>, <0 202 4>, <0 203 4>,
-+			     <0 204 4>, <0 205 4>, <0 206 4>, <0 207 4>,
-+			     <0 208 4>, <0 210 4>;
-+		samsung,pbl = <0x08>
-+		samsung,burst-map = <0x20>
-+		mac-address = [ 00 11 22 33 44 55 ]; /* Filled in by U-Boot */
-+		max-frame-size = <9000>;
-+		phy-mode = "xgmii";
-+	};
--- 
-1.7.10.4
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
