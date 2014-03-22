@@ -1,111 +1,79 @@
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 1/7] ARM: dts: socfpga: add gpio pieces
-Date: Sat, 22 Mar 2014 17:16:38 +0100
-Message-ID: <1395505004-22650-2-git-send-email-bigeasy@linutronix.de>
-References: <1395505004-22650-1-git-send-email-bigeasy@linutronix.de>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: Re: [PATCH v2 1/8] mfd: AXP20x: Add mfd driver for
+ AXP20x PMIC
+Date: Sat, 22 Mar 2014 17:51:32 +0100
+Message-ID: <20140322165132.GC20668@localhost.fastwebnet.it>
+References: <1394898225-28452-1-git-send-email-carlo@caione.org>
+ <1394898225-28452-2-git-send-email-carlo@caione.org>
+ <20140318155919.GS25478@lee--X1>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1395505004-22650-1-git-send-email-bigeasy@linutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: atull@altera.com
-Cc: linus.walleij@linaro.org, gnurou@gmail.com, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, dinguyen@altera.com, delicious.quinoa@gmail.com, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, devicetree@vger.kernel.org
+Return-path: <linux-sunxi+bncBDWJTUUC5UCBBPP6W2MQKGQERQOIG7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140318155919.GS25478@lee--X1>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The cycloneV has three gpio controllers, the first two with 29 gpios, t=
-he last
-one with 27. This patch adds the three controller with the gpio driver =
-which is
-now sitting the gpio tree.
+On Tue, Mar 18, 2014 at 03:59:19PM +0000, Lee Jones wrote:
+> > +static struct mfd_cell axp20x_cells[] = {
+> > +	{
+> > +		.name		= "axp20x-pek",
+> > +		.num_resources	= ARRAY_SIZE(axp20x_pek_resources),
+> > +		.resources	= axp20x_pek_resources,
+> > +	}, {
+> > +		.name		= "axp20x-regulator",
+> > +	},
+> > +};
+> 
+> nit: The format of these two structs are inconsistent.
 
-Cc: devicetree@vger.kernel.org
-Acked-by: Alan Tull <atull@altera.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
-v1=E2=80=A6v2:
-	- #gpio-cells =3D <2>
-	- third gpio block has now only 27 gpios
+Uhm, what do you mean?
 
- arch/arm/boot/dts/socfpga.dtsi | 64 ++++++++++++++++++++++++++++++++++=
-++++++++
- 1 file changed, 64 insertions(+)
+> > +static int axp20x_i2c_probe(struct i2c_client *i2c,
+> > +			 const struct i2c_device_id *id)
+> > +{
+> > +	struct axp20x_dev *axp20x;
+> > +	const struct of_device_id *of_id;
+> > +	int ret;
+> > +
+> > +	axp20x = devm_kzalloc(&i2c->dev, sizeof(*axp20x), GFP_KERNEL);
+> > +	if (!axp20x)
+> > +		return -ENOMEM;
+> > +
+> > +	of_id = of_match_device(axp20x_of_match, &i2c->dev);
+> > +	if (!of_id) {
+> > +		dev_err(&i2c->dev, "Unable to setup AXP20X data\n");
+> > +		return -ENODEV;
+> > +	}
+> > +	axp20x->variant = (int) of_id->data;
+> 
+> No need to cast from void *.
 
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga=
-=2Edtsi
-index 537f1a5..2a84e67 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -463,6 +463,70 @@
- 			status =3D "disabled";
- 		};
-=20
-+		gpio@ff708000 {
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+			compatible =3D "snps,dw-apb-gpio";
-+			reg =3D <0xff708000 0x1000>;
-+			clocks =3D <&per_base_clk>;
-+			status =3D "disabled";
-+
-+			gpio0: gpio-controller@0 {
-+				compatible =3D "snps,dw-apb-gpio-port";
-+				gpio-controller;
-+				#gpio-cells =3D <2>;
-+				snps,nr-gpios =3D <29>;
-+				reg =3D <0>;
-+				interrupt-controller;
-+				#interrupt-cells =3D <2>;
-+				interrupts =3D <0 164 4>;
-+			};
-+		};
-+
-+		gpio@ff709000 {
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+			compatible =3D "snps,dw-apb-gpio";
-+			reg =3D <0xff709000 0x1000>;
-+			clocks =3D <&per_base_clk>;
-+			status =3D "disabled";
-+
-+			gpio1: gpio-controller@0 {
-+				compatible =3D "snps,dw-apb-gpio-port";
-+				gpio-controller;
-+				#gpio-cells =3D <2>;
-+				snps,nr-gpios =3D <29>;
-+				reg =3D <0>;
-+				interrupt-controller;
-+				#interrupt-cells =3D <2>;
-+				interrupts =3D <0 165 4>;
-+			};
-+		};
-+
-+		gpio@ff70a000 {
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+			compatible =3D "snps,dw-apb-gpio";
-+			reg =3D <0xff70a000 0x1000>;
-+			clocks =3D <&per_base_clk>;
-+			status =3D "disabled";
-+
-+			gpio2: gpio-controller@0 {
-+				compatible =3D "snps,dw-apb-gpio-port";
-+				gpio-controller;
-+				#gpio-cells =3D <2>;
-+				/*
-+				 * Despite what the documentation says here, the
-+				 * third gpio block has only 27 gpios available
-+				 */
-+				snps,nr-gpios =3D <27>;
-+				reg =3D <0>;
-+				interrupt-controller;
-+				#interrupt-cells =3D <2>;
-+				interrupts =3D <0 166 4>;
-+			};
-+		};
-+
- 		L2: l2-cache@fffef000 {
- 			compatible =3D "arm,pl310-cache";
- 			reg =3D <0xfffef000 0x1000>;
---=20
-1.9.1
+My compiler says otherwise :)
+
+> [...]
+> 
+> > +static const struct i2c_device_id axp20x_i2c_id[] = {
+> > +	{ "axp202", AXP202_ID },
+> > +	{ "axp209", AXP209_ID },
+> > +	{ }
+> > +};
+> > +MODULE_DEVICE_TABLE(i2c, axp20x_i2c_id);
+> 
+> Isn't this redundant now that you're using of_id?
+
+It is not. Even it is unused it has to be in the driver otherwise the
+driver is not loaded. Probably it is something wrong in the I2C core.
+
+Best,
+
+-- 
+Carlo Caione
