@@ -1,180 +1,137 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH V11 2/7] net: sxgbe: add basic framework for Samsung 10Gb
- ethernet driver
-Date: Sat, 22 Mar 2014 14:29:22 +0100
-Message-ID: <532D9032.1040209@gmail.com>
-References: <007f01cf4597$50abac40$f20304c0$@samsung.com>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: Re: [PATCH v2 2/8] mfd: AXP20x: Add bindings documentation
+Date: Sat, 22 Mar 2014 15:11:57 +0100
+Message-ID: <20140322141157.GA20668@localhost.fastwebnet.it>
+References: <1394898225-28452-1-git-send-email-carlo@caione.org>
+ <1394898225-28452-3-git-send-email-carlo@caione.org>
+ <20140318084505.GT27873@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <007f01cf4597$50abac40$f20304c0$@samsung.com>
-Sender: netdev-owner@vger.kernel.org
-To: Byungho An <bh74.an@samsung.com>, netdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: 'David Miller' <davem@davemloft.net>, 'GIRISH K S' <ks.giri@samsung.com>, 'SIVAREDDY KALLAM' <siva.kallam@samsung.com>, 'Vipul Chandrakant' <vipul.pandya@samsung.com>, 'Ilho Lee' <ilho215.lee@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDWJTUUC5UCBBV5TW2MQKGQE4MDPKZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140318084505.GT27873@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Mar 18, 2014 at 09:45:05AM +0100, Maxime Ripard wrote:
+> On Sat, Mar 15, 2014 at 04:43:39PM +0100, Carlo Caione wrote:
+> > Bindings documentation for the AXP20x driver. In this file also two
+> > sub-nodes (PEK and regulators) are documented.
+> 
+> PEK doesn't look to be documented, either in this patch, or any other.
 
-I have reviewed the non-net-specific parts of this driver, e.g. platform 
-driver and Device Tree code. Please see my comments inline.
+Residue from v1. To be deleted.
 
-On 22.03.2014 07:23, Byungho An wrote:
-> From: Siva Reddy <siva.kallam@samsung.com>
->
-> This patch adds support for Samsung 10Gb ethernet driver(sxgbe).
->
-> - sxgbe core initialization
-> - Tx and Rx support
-> - MDIO support
-> - ISRs for Tx and Rx
-> - ifconfig support to driver
+> > Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/mfd/axp20x.txt   | 83 ++++++++++++++++++++++
+> >  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+> 
+> I don't really know what the DT maintainers are expecting here, but I
+> would have done two patches.
 
-[snip]
+Uhm, no idea (and no feedback). I'll split it.
 
-> diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_platform.c b/drivers/net/ethernet/samsung/sxgbe/sxgbe_platform.c
-> new file mode 100644
-> index 0000000..95e0977
-> --- /dev/null
-> +++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_platform.c
+> >  2 files changed, 84 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/axp20x.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
+> > new file mode 100644
+> > index 0000000..982aefe
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+> > @@ -0,0 +1,83 @@
+> > +* axp20x device tree bindings
+> > +
+> > +The axp20x family current members :-
+> > +axp202 (X-Powers)
+> > +axp209 (X-Powers)
+> > +
+> > +Required properties:
+> > +- compatible 			: Should be "x-powers,axp202" or "x-powers,axp209"
+> > +- interrupt-controller 		: axp20x has its own internal IRQs
+> > +- #interrupt-cells 		: Should be set to 1
+> > +- interrupt-parent 		: The parent interrupt controller
+> > +- interrupts 			: Interrupt specifiers for interrupt sources
+> > +- reg 				: The I2C slave address for the AXP chip
+> > +
+> > +Sub-nodes:
+> > +* regulators : Contain the regulator nodes. The regulators are bound using
+> > +	       their name as listed here: dcdc2, dcdc3, ldo1, ldo2, ldo3,
+> > +	       ldo4, ldo5.
+> > +	       The bindings details of individual regulator device can be found in:
+> > +	       Documentation/devicetree/bindings/regulator/regulator.txt with the
+> > +	       exception of:
+> > +
+> > +	- dcdc-freq		: defines the work frequency of DC-DC in KHz
+> > +				  (range: 750-1875). Default: 1.5MHz
+> > +	- dcdc-workmode		: Optional. 1 for PWM mode, 0 for AUTO mode
+> > +				  Default: AUTO mode
+> 
+> Those two are x-powers specific, or would it make sense to have them
+> in other drivers too?
+> 
+> If the former, please add the x-powers prefix.
 
-[snip]
+AFAIK this is AXP specific. I'll add the prefix.
 
-> +#ifdef CONFIG_OF
-> +static int sxgbe_probe_config_dt(struct platform_device *pdev,
-> +				 struct sxgbe_plat_data *plat,
-> +				 const char **mac)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct sxgbe_dma_cfg *dma_cfg;
-> +
-> +	if (!np)
-> +		return -ENODEV;
-> +
-> +	*mac = of_get_mac_address(np);
-> +	plat->interface = of_get_phy_mode(np);
-> +
-> +	plat->bus_id = of_alias_get_id(np, "ethernet");
-> +	if (plat->bus_id < 0)
-> +		plat->bus_id = 0;
-> +
-> +	plat->mdio_bus_data = devm_kzalloc(&pdev->dev,
-> +					   sizeof(struct sxgbe_mdio_bus_data),
-> +					   GFP_KERNEL);
+> > +
+> > +Example:
+> > +
+> > +axp: axp20x@34 {
+> > +	reg = <0x34>;
+> > +	interrupt-parent = <&nmi_intc>;
+> > +	interrupts = <0 8>;
+> > +
+> > +	compatible = "x-powers,axp209";
+> > +	interrupt-controller;
+> > +	#interrupt-cells = <1>;
+> > +
+> > +	regulators {
+> 
+> Do we really need that subnode ? it looks useless, and we already know
+> that we are defining regulators here.
 
-If plat->mdio_bus_data is assumed to be of the same type as the data 
-allocated here, then the following would be preferred:
+What do you mean? We are defining the MFD and regulators are just one of
+the subsystem here. Moveover I'm using the "regulators" node in the
+regulators driver (using of_find_node_by_name()) to get the regulators
+configuration.
 
-sizeof(*plat->mdio_bus_data)
+> > +		dcdc-freq = "1500";
+> 
+> That frequency is defined at the same level than the dcdc-workmode
+> property, yet they both seem to be placed at different levels.
 
-Also you should probably check for allocation failure.
+They are at different level. dcdc-freq is valid for all the dcdc,
+whereas dcdc-workmode is dcdc-specific.
+I'll clarify the point.
 
-> +
-> +	dma_cfg = devm_kzalloc(&pdev->dev, sizeof(*dma_cfg), GFP_KERNEL);
-> +	if (!dma_cfg)
-> +		return -ENOMEM;
-> +
-> +	plat->dma_cfg = dma_cfg;
-> +	of_property_read_u32(np, "samsung,pbl", &dma_cfg->pbl);
-> +	if (of_property_read_u32(np, "samsung,burst-map", &dma_cfg->burst_map) == 0)
-> +		dma_cfg->fixed_burst = true;
-> +
-> +	return 0;
-> +}
+> > +
+> > +		axp_dcdc2: dcdc2 {
+> > +			regulator-min-microvolt = <700000>;
+> > +			regulator-max-microvolt = <2275000>;
+> > +			dcdc-workmode = <0>;
+> > +			regulator-always-on;
+> > +		};
+> > +
+> > +		axp_dcdc3: dcdc3 {
+> > +			regulator-min-microvolt = <700000>;
+> > +			regulator-max-microvolt = <3500000>;
+> > +			dcdc-workmode = <0>;
+> 
+> It looks like those are at their default values?
 
-[snip]
+Yes. To be fixed.
 
-> +static int sxgbe_platform_probe(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +	int loop = 0;
-> +	int i, chan;
-> +	struct resource *res;
-> +	struct device *dev = &pdev->dev;
-> +	void __iomem *addr;
-> +	struct sxgbe_priv_data *priv = NULL;
-> +	struct sxgbe_plat_data *plat_dat = NULL;
-> +	const char *mac = NULL;
-> +	struct net_device *ndev = platform_get_drvdata(pdev);
-> +	struct device_node *node = dev->of_node;
-> +
-> +	/* Get memory resource */
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res)
-> +		return -ENODEV;
-> +
-> +	addr = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(addr))
-> +		return PTR_ERR(addr);
-> +
-> +	if (pdev->dev.of_node) {
-> +		plat_dat = devm_kzalloc(&pdev->dev,
-> +					sizeof(struct sxgbe_plat_data),
-> +					GFP_KERNEL);
-> +		if (!plat_dat)
-> +			return  -ENOMEM;
-> +
-> +		ret = sxgbe_probe_config_dt(pdev, plat_dat, &mac);
-> +		if (ret) {
-> +			pr_err("%s: main dt probe failed\n", __func__);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	priv = sxgbe_drv_probe(&(pdev->dev), plat_dat, addr);
-> +	if (!priv) {
-> +		pr_err("%s: main driver probe failed\n", __func__);
-> +		return -ENODEV;
-> +	}
-> +
-> +	/* Get MAC address if available (DT) */
-> +	if (mac)
-> +		ether_addr_copy(priv->dev->dev_addr, mac);
-> +
-> +	/* Get the SXGBE common INT information */
-> +	priv->irq  = platform_get_irq(pdev, loop++);
+Thanks,
 
-The name "loop" of the variable is quite misleading here. Probably 
-something like "irq_num", would be more meaningful.
-
-Anyway, it doesn't look like it's used anywhere else in this function, 
-so platform_get_irq(pdev, 0) could be simply used.
-
-> +	if (priv->irq <= 0) {
-> +		dev_err(dev, "sxgbe common irq parsing failed\n");
-> +		sxgbe_drv_remove(ndev);
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* Get the TX/RX IRQ numbers */
-> +	for (i = 0, chan = 0; i < SXGBE_TX_QUEUES; i++) {
-> +		priv->txq[i]->irq_no = irq_of_parse_and_map(node, chan++);
-
-Hmm, this call looks suspicious. The "chan" variable starts here as 0 
-and so the first call to irq_of_parse_and_map() will end up with parsing 
-the first (zeroth) entry of "interrupts" property, which would be the 
-same as returned by platform_get_irq(..., 0) above. Maybe this was the 
-point where the "loop" variable should be used?
-
-Anyway, why you couldn't simply use platform_get_irq() here as well?
-
-> +		if (priv->txq[i]->irq_no <= 0) {
-> +			dev_err(dev, "sxgbe tx irq parsing failed\n");
-
-Shouldn't you do some clean-up here, like calling sxgbe_drv_remove()? 
-Maybe moving the call to sxgbe_drv_probe() after all the resources are 
-successfully retrieved would be a better idea?
-
-> +			return -EINVAL;
-> +		}
-> +	}
-> +
-> +	for (i = 0; i < SXGBE_RX_QUEUES; i++) {
-> +		priv->rxq[i]->irq_no = irq_of_parse_and_map(node, chan++);
-> +		if (priv->rxq[i]->irq_no <= 0) {
-> +			dev_err(dev, "sxgbe rx irq parsing failed\n");
-
-Same comments as for TX IRQs above.
-
-Best regards,
-Tomasz
+-- 
+Carlo Caione
