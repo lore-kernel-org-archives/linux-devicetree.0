@@ -1,65 +1,90 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 5/5] ARM: dts: tx53: Add IPU DI ports and endpoints
-Date: Sat, 22 Mar 2014 14:50:40 +0800
-Message-ID: <20140322065038.GE5938@dragon>
-References: <1395235721-13847-1-git-send-email-LW@KARO-electronics.de>
- <1395235721-13847-5-git-send-email-LW@KARO-electronics.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
+Date: Sat, 22 Mar 2014 09:08:18 +0100
+Message-ID: <4830403.iGU9jDN0hr@wuerfel>
+References: <1395414570-25515-1-git-send-email-zhangfei.gao@linaro.org> <4230433.d0bAGX3bJV@wuerfel> <532CE4EB.6010305@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1395235721-13847-5-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <532CE4EB.6010305@linaro.org>
+Sender: netdev-owner@vger.kernel.org
+To: zhangfei <zhangfei.gao@linaro.org>
+Cc: "David S. Miller" <davem@davemloft.net>, linux@arm.linux.org.uk, f.fainelli@gmail.com, mark.rutland@arm.com, sergei.shtylyov@cogentembedded.com, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 19, 2014 at 02:28:41PM +0100, Lothar Wa=DFmann wrote:
->=20
-> Signed-off-by: Lothar Wa=DFmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx53-tx53-x03x.dts |    7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm/boot/dts/imx53-tx53-x03x.dts b/arch/arm/boot/dt=
-s/imx53-tx53-x03x.dts
-> index 0217dde3..43b4b7b 100644
-> --- a/arch/arm/boot/dts/imx53-tx53-x03x.dts
-> +++ b/arch/arm/boot/dts/imx53-tx53-x03x.dts
-> @@ -25,12 +25,17 @@
->  	soc {
->  		display: display@di0 {
->  			compatible =3D "fsl,imx-parallel-display";
-> -			crtcs =3D <&ipu 0>;
->  			interface-pix-fmt =3D "rgb24";
->  			pinctrl-names =3D "default";
->  			pinctrl-0 =3D <&pinctrl_rgb24_vga1>;
->  			status =3D "okay";
-> =20
-> +			port {
-> +				display0_in: endpoint {
-> +					remote-endpoint =3D <&ipu_di0_disp0>;
-> +				};
-> +			};
-> +
+On Saturday 22 March 2014 09:18:35 zhangfei wrote:
+> >> +static void hip04_tx_reclaim(struct net_device *ndev, bool force)
+> >> +{
+> >> +	struct hip04_priv *priv = netdev_priv(ndev);
+> >> +	unsigned tx_head = priv->tx_head;
+> >> +	unsigned tx_tail = priv->tx_tail;
+> >> +	struct tx_desc *desc = &priv->tx_desc[priv->tx_tail];
+> >> +
+> >> +	while (tx_tail != tx_head) {
+> >> +		if (desc->send_addr != 0) {
+> >> +			if (force)
+> >> +				desc->send_addr = 0;
+> >> +			else
+> >> +				break;
+> >> +		}
+> >> +		if (priv->tx_phys[tx_tail]) {
+> >> +			dma_unmap_single(&ndev->dev, priv->tx_phys[tx_tail],
+> >> +				priv->tx_skb[tx_tail]->len, DMA_TO_DEVICE);
+> >> +			priv->tx_phys[tx_tail] = 0;
+> >> +		}
+> >> +		dev_kfree_skb_irq(priv->tx_skb[tx_tail]);
+> >> +		priv->tx_skb[tx_tail] = NULL;
+> >> +		tx_tail = TX_NEXT(tx_tail);
+> >> +		priv->tx_count--;
+> >> +	}
+> >> +	priv->tx_tail = tx_tail;
+> >> +}
+> >
+> > You call this function from start_xmit(), which may be too early, causing the
+> > dma_unmap_single() and dev_kfree_skb_irq() functions to be called while the
+> > device is still accessing the data. This is bad.
+> 
+> There is a protection.
+> Only after xmit done, desc->send_addr = 0, which is cleared by hardware.
 
-I shouldn't apply this until I rebase my branch on 3.15-rc1 where
-Philipp's OF graph is to be seen, right?
+Ok, I see.
 
-Shawn
+> > You have to ensure that you only ever clean up tx buffers that have been
+> > successfully transmitted. Also, you should use an interrupt to notify you
+> > of this in case there is no further xmit packet. Otherwise you may have
+> > a user space program waiting indefinitely for a single packet to get sent
+> > on a socket.
+> >
+> > It's ok to also call the cleanup from start_xmit, but calling it from the
+> > poll() function or another appropriate place is required.
+> 
+> There is no transmit done interrupt, so relying on every xmit to reclaim 
+> finished buffer.
+> I thought it would be enough, since there are TX_DESC_NUM descs.
+> It is a good idea also put reclaim in poll, then will add spin lock etc.
 
->  			display-timings {
->  				VGA {
->  					clock-frequency =3D <25200000>;
-> --=20
-> 1.7.10.4
->=20
->=20
->=20
+It may be simpler to call napi_schedule() when you want to do tx descriptor
+cleanup and have the function always be called in one place. If you do this
+carefully, you can probably avoid most of the locking.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >> +	priv->id = of_alias_get_id(node, "ethernet");
+> >> +	if (priv->id < 0) {
+> >> +		dev_warn(d, "no ethernet alias\n");
+> >> +		ret = -EINVAL;
+> >> +		goto init_fail;
+> >> +	}
+> >
+> > Apparently you try to rely on the alias to refer to a specific piece
+> > of hardware, which is not correct. The alias is meant to be selectable
+> > to match e.g. the numbering written on the external connector, which
+> > is totally independent of the internal hardware.
+> 
+> Thanks for clarifying alisa.
+> The id will be used for start channel in ppe, RX_DESC_NUM * priv->id;
+> Is it suitable directly use id in the dts, or other name such as start-chan?
+
+Yes, I think it's best to just pass the id the same way as the channel
+number.
+
+	Arnd
