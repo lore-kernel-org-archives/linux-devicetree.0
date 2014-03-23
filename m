@@ -1,82 +1,49 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v6 0/2] clk: exynos: add support for exynos5260 SoC
-Date: Sun, 23 Mar 2014 23:20:25 +0100
-Message-ID: <532F5E29.3040507@gmail.com>
-References: <1395607554-21373-1-git-send-email-rahul.sharma@samsung.com>
-Mime-Version: 1.0
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] drm/i2c: tda998x: Change the compatible strings
+Date: Sun, 23 Mar 2014 23:44:55 +0100
+Message-ID: <532F63E7.8000708@gmail.com>
+References: <20140321115541.01cbbb06@armhf> <532C40B0.3000805@gmail.com> <20140323111903.51c73c82@armhf> <532F23F5.6020001@gmail.com> <20140323200334.GP7528@n2100.arm.linux.org.uk>
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1395607554-21373-1-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: mturquette@linaro.org, kgene.kim@samsung.com, joshi@samsung.com, r.sh.open@gmail.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140323200334.GP7528-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rahul,
+On 03/23/2014 09:03 PM, Russell King - ARM Linux wrote:
+> On Sun, Mar 23, 2014 at 07:12:05PM +0100, Sebastian Hesselbarth wrote:
+>> On 03/23/2014 11:19 AM, Jean-Francois Moine wrote:
+>>> On Fri, 21 Mar 2014 14:37:52 +0100
+>>> Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>>     Required properties;
+>>>>> -  - compatible: must be "nxp,tda998x"
+>>>>> +  - compatible: may be "nxp,tda9989", "nxp,tda19988" or "nxp,tda19989"
+>>>>
+>>>> There is a "DT is ABI" policy and although there is no mainline Linux
+>>>> user of current compatible, the correct way would be to deprecate
+>>>> "nxp,tda998x" and introduce new compatibles.
+>>>
+>>> Pratically, what is this way?
+>>
+>> Currently, there is no effective way to deprecate a binding or
+>> compatible. You just add the one(s) that are more sensible and
+>> you mark the old one as DEPRECATED by simply writing it in the
+>> binding doc.
+>>
+>> The driver should support the old binding at least for a while.
+>
+> It doesn't need to - it's only been in development trees so far, and
+> never been in a mainline full release.  Until it does, the binding
+> does not become stable.
 
-On 23.03.2014 21:45, Rahul Sharma wrote:
-> From: Rahul Sharma <Rahul.Sharma@samsung.com>
->
-> Add clock support for exynos5260 SoC.
->
-> This series is based on Tomasz Figa's samsung-next branch.
->
-> V6:
->    1) Listed external Clocks in documentation file.
->    2) Listed Input Clocks for each clock controller in exynos5260-clock.txt.
->    3) Added Clock and Clock-names properties.
->    4) Assigned IDs to all clocks in the clock file.
->    5) Moved all PHY clocks as fixed rate to the driver file.
->    6) Reorder clocks to maintain acscending order on the basis of clock
->    register offset and bit numer.
->
-> V5:
->    1) Include S3c2412 and S3c2443 in clock provider patch.
->    2) Added SCLK_TOP_FIMD with CLK_IGNORE_UNUSED due to Suspend
->    failure.
->    3) Moved exynos5260-clk.h to include/dt-bindings/clock.
->    4) Fix exynos5260_clk_sleep_init protoype for PM disabled.W
->    5) Moved fixed clock registeration to DT.
->    6) Removed CLK_IGNORE_UNUSED flags from UART clocks. Earlier
->    facing issues because of RFS probing all TTYs.
->
-> V4:
->    1) Rework clock file as per Tomasz review comments at
->          http://www.spinics.net/lists/arm-kernel/msg310116.html.
->
-> V3:
->    1) Removed "samsung,exynos5260-clock" property from clock files.
->    2) Replaced "__SPIN_LOCK_UNLOCKED(lock)" with spin_lock_init.
->    3) Removed '(' and ')' around numeric constants in macros.
->
-> V2:
->    1) Move suspend resume handling to Exynos5410 Clock file.
->    2) Removed Unused Macros and Condition checks for Exynos5260.
->    3) Add spin lock to clock provider context.
->    4) Add clock provider context for Exynos5410.
->    5) Uniform implementation for callbacks for PLL2550xx.
->    6) Split Exynos5260 clock file patch to bring it under 100 Kb limit.
->    7) Replace aclk/pclk/hclk gates with combined gates.
->    8) Remove CLK_IGNORE_UNUSED flag for gate clocks.
->
-> Rahul Sharma (2):
->    clk/exynos5260: add macros and documentation for exynos5260
->    clk/exynos5260: add clock file for exynos5260
->
->   .../devicetree/bindings/clock/exynos5260-clock.txt |  190 ++
->   drivers/clk/samsung/Makefile                       |    1 +
->   drivers/clk/samsung/clk-exynos5260.c               | 1980 ++++++++++++++++++++
->   drivers/clk/samsung/clk-exynos5260.h               |  459 +++++
->   include/dt-bindings/clock/exynos5260-clk.h         |  469 +++++
->   5 files changed, 3099 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/clock/exynos5260-clock.txt
->   create mode 100644 drivers/clk/samsung/clk-exynos5260.c
->   create mode 100644 drivers/clk/samsung/clk-exynos5260.h
->   create mode 100644 include/dt-bindings/clock/exynos5260-clk.h
->
+Ok, I see. Thanks for the clarification. A note about it would
+have been nice though. Anyway, sorry for the noise.
 
-Looks good to me, will apply if no comments show up for few more days.
+Sebastian
 
-Best regards,
-Tomasz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
