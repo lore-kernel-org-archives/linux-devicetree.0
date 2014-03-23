@@ -1,90 +1,39 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: [PATCH v3] drm/i2c: tda998x: Deprecate "nxp,tda998x" in favour of
- "nxp,tda9989"
-Date: Sun, 23 Mar 2014 18:35:49 +0100
-Message-ID: <20140323180246.1C3E54B0143@smtp2-g21.free.fr>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] drm/i2c: tda998x: Change the compatible strings
+Date: Sun, 23 Mar 2014 19:12:05 +0100
+Message-ID: <532F23F5.6020001@gmail.com>
+References: <20140321115541.01cbbb06@armhf> <532C40B0.3000805@gmail.com> <20140323111903.51c73c82@armhf>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: devicetree@vger.kernel.org, Russell King <rmk+kernel@arm.linux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140323111903.51c73c82@armhf>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The tda998x driver accepts only 3 chips from the TDA998x family.
+On 03/23/2014 11:19 AM, Jean-Francois Moine wrote:
+> On Fri, 21 Mar 2014 14:37:52 +0100
+> Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>    Required properties;
+>>> -  - compatible: must be "nxp,tda998x"
+>>> +  - compatible: may be "nxp,tda9989", "nxp,tda19988" or "nxp,tda19989"
+>>
+>> There is a "DT is ABI" policy and although there is no mainline Linux
+>> user of current compatible, the correct way would be to deprecate
+>> "nxp,tda998x" and introduce new compatibles.
+>
+> Pratically, what is this way?
 
-To avoid confusion with the other TDA998x chips, this patch changes
-the driver compatible string to "nxp,tda9989".
+Currently, there is no effective way to deprecate a binding or
+compatible. You just add the one(s) that are more sensible and
+you mark the old one as DEPRECATED by simply writing it in the
+binding doc.
 
-As the previous compatible string is not actually used in any DT,
-no compatibility is offered.
+The driver should support the old binding at least for a while.
 
-Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
----
-v3:
-  - fix the I2C ID (the OF compatible is not used for such drivers)
-  - define only one compatible (Sebastian Hesselbarth)
-  - change the subject (Sebastian Hesselbarth)
-v2:
-  - change the subject to drm/i2c
-This patch applies after
-	drm/i2c: tda998x: Fix lack of required reg in DT documentation
----
- Documentation/devicetree/bindings/drm/i2c/tda998x.txt | 4 ++--
- drivers/gpu/drm/i2c/tda998x_drv.c                     | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
-index e9e4bce..9b41c7e 100644
---- a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
-+++ b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
-@@ -1,7 +1,7 @@
- Device-Tree bindings for the NXP TDA998x HDMI transmitter
- 
- Required properties;
--  - compatible: must be "nxp,tda998x"
-+  - compatible: must be "nxp,tda9989"
- 
-   - reg: I2C address
- 
-@@ -20,7 +20,7 @@ Optional properties:
- Example:
- 
- 	tda998x: hdmi-encoder {
--		compatible = "nxp,tda998x";
-+		compatible = "nxp,tda9989";
- 		reg = <0x70>;
- 		interrupt-parent = <&gpio0>;
- 		interrupts = <27 2>;		/* falling edge */
-diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
-index 48af5ca..249ef84 100644
---- a/drivers/gpu/drm/i2c/tda998x_drv.c
-+++ b/drivers/gpu/drm/i2c/tda998x_drv.c
-@@ -1367,14 +1367,14 @@ fail:
- 
- #ifdef CONFIG_OF
- static const struct of_device_id tda998x_dt_ids[] = {
--	{ .compatible = "nxp,tda998x", },
-+	{ .compatible = "nxp,tda9989", },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, tda998x_dt_ids);
- #endif
- 
- static struct i2c_device_id tda998x_ids[] = {
--	{ "tda998x", 0 },
-+	{ "tda9989", 0 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, tda998x_ids);
--- 
-1.9.1
+Sebastian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
