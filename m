@@ -1,39 +1,85 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] drm/i2c: tda998x: Change the compatible strings
-Date: Sun, 23 Mar 2014 19:12:05 +0100
-Message-ID: <532F23F5.6020001@gmail.com>
-References: <20140321115541.01cbbb06@armhf> <532C40B0.3000805@gmail.com> <20140323111903.51c73c82@armhf>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140323111903.51c73c82@armhf>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH 2/2] ARM: shmobile: kzm9g-reference dts: Use KEY_* macros for gpio-keys
+Date: Sun, 23 Mar 2014 20:35:02 +0100
+Message-ID: <1395603302-32056-2-git-send-email-geert@linux-m68k.org>
+References: <1395603302-32056-1-git-send-email-geert@linux-m68k.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1395603302-32056-1-git-send-email-geert@linux-m68k.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/23/2014 11:19 AM, Jean-Francois Moine wrote:
-> On Fri, 21 Mar 2014 14:37:52 +0100
-> Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>    Required properties;
->>> -  - compatible: must be "nxp,tda998x"
->>> +  - compatible: may be "nxp,tda9989", "nxp,tda19988" or "nxp,tda19989"
->>
->> There is a "DT is ABI" policy and although there is no mainline Linux
->> user of current compatible, the correct way would be to deprecate
->> "nxp,tda998x" and introduce new compatibles.
->
-> Pratically, what is this way?
+From: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
 
-Currently, there is no effective way to deprecate a binding or
-compatible. You just add the one(s) that are more sensible and
-you mark the old one as DEPRECATED by simply writing it in the
-binding doc.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
+---
+ arch/arm/boot/dts/sh73a0-kzm9g-reference.dts |   15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-The driver should support the old binding at least for a while.
+diff --git a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
+index eb8886b535e4..a99171c8a782 100644
+--- a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
++++ b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
+@@ -14,6 +14,7 @@
+ /dts-v1/;
+ #include "sh73a0.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ 
+ / {
+@@ -112,43 +113,43 @@
+ 
+ 		back-key {
+ 			gpios = <&pcf8575 8 GPIO_ACTIVE_LOW>;
+-			linux,code = <158>;
++			linux,code = <KEY_BACK>;
+ 			label = "SW3";
+ 		};
+ 
+ 		right-key {
+ 			gpios = <&pcf8575 9 GPIO_ACTIVE_LOW>;
+-			linux,code = <106>;
++			linux,code = <KEY_RIGHT>;
+ 			label = "SW2-R";
+ 		};
+ 
+ 		left-key {
+ 			gpios = <&pcf8575 10 GPIO_ACTIVE_LOW>;
+-			linux,code = <105>;
++			linux,code = <KEY_LEFT>;
+ 			label = "SW2-L";
+ 		};
+ 
+ 		enter-key {
+ 			gpios = <&pcf8575 11 GPIO_ACTIVE_LOW>;
+-			linux,code = <28>;
++			linux,code = <KEY_ENTER>;
+ 			label = "SW2-P";
+ 		};
+ 
+ 		up-key {
+ 			gpios = <&pcf8575 12 GPIO_ACTIVE_LOW>;
+-			linux,code = <103>;
++			linux,code = <KEY_UP>;
+ 			label = "SW2-U";
+ 		};
+ 
+ 		down-key {
+ 			gpios = <&pcf8575 13 GPIO_ACTIVE_LOW>;
+-			linux,code = <108>;
++			linux,code = <KEY_DOWN>;
+ 			label = "SW2-D";
+ 		};
+ 
+ 		home-key {
+ 			gpios = <&pcf8575 14 GPIO_ACTIVE_LOW>;
+-			linux,code = <102>;
++			linux,code = <KEY_HOME>;
+ 			label = "SW1";
+ 		};
+ 	};
+-- 
+1.7.9.5
 
-Sebastian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
