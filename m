@@ -1,674 +1,276 @@
-From: Byungho An <bh74.an@samsung.com>
-Subject: [PATCH V12 6/7] net: sxgbe: add ethtool related functions support
- Samsung sxgbe
-Date: Sat, 22 Mar 2014 21:04:50 -0700
-Message-ID: <008f01cf464d$0a48e810$1edab830$@samsung.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH RFC 2/2] ASoC: simple-card: Move dai-link
+ level properties away from dai subnodes
+Date: Sun, 23 Mar 2014 10:54:12 +0100
+Message-ID: <20140323105412.4f312449@armhf>
+References: <cover.1395419906.git.jsarha@ti.com>
+ <0b1c0e2e6766c3a63f598c3b9435d4744b0e2835.1395419906.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-language: en-us
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: netdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: 'David Miller' <davem@davemloft.net>, 'GIRISH K S' <ks.giri@samsung.com>, 'SIVAREDDY KALLAM' <siva.kallam@samsung.com>, 'Vipul Chandrakant' <vipul.pandya@samsung.com>, 'Ilho Lee' <ilho215.lee@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <0b1c0e2e6766c3a63f598c3b9435d4744b0e2835.1395419906.git.jsarha@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jyri Sarha <jsarha@ti.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kuninori.morimoto.gx@renesas.com, liam.r.girdwood@linux.intel.com, Li.Xiubo@freescale.com, peter.ujfalusi@ti.com, detheridge@ti.com, broonie@kernel.org, bcousson@baylibre.com, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Vipul Pandya <vipul.pandya@samsung.com>
-
-This patch adds ethtool related functions.
-
-Signed-off-by: Vipul Pandya <vipul.pandya@samsung.com>
-Neatening-by: Joe Perches <joe@perches.com>
-Signed-off-by: Byungho An <bh74.an@samsung.com>
----
- drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h  |   25 +-
- drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c |  509 +++++++++++++++++++-
- drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c    |    5 +
- drivers/net/ethernet/samsung/sxgbe/sxgbe_reg.h     |    6 +
- 4 files changed, 537 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h b/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h
-index 36a72a3..6e8ef39 100644
---- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h
-+++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h
-@@ -42,8 +42,12 @@ struct sxgbe_mtl_ops;
- #define SXGBE_RX_QUEUES   16
- 
- /* Max/Min RI Watchdog Timer count value */
--#define SXGBE_MAX_DMA_RIWT	0xff
--#define SXGBE_MIN_DMA_RIWT	0x20
-+/* Calculated based how much time does it take to fill 256KB Rx memory
-+ * at 10Gb speed at 156MHz clock rate and considered little less then
-+ * the actual value.
-+ */
-+#define SXGBE_MAX_DMA_RIWT	0x70
-+#define SXGBE_MIN_DMA_RIWT	0x01
- 
- /* Tx coalesce parameters */
- #define SXGBE_COAL_TX_TIMER	40000
-@@ -194,6 +198,20 @@ enum dma_irq_status {
- #define SXGBE_FOR_EACH_QUEUE(max_queues, queue_num)			\
- 	for (queue_num = 0; queue_num < max_queues; queue_num++)
- 
-+#define DRV_VERSION "1.0.0"
-+
-+#define SXGBE_MAX_RX_CHANNELS	16
-+#define SXGBE_MAX_TX_CHANNELS	16
-+
-+#define START_MAC_REG_OFFSET	0x0000
-+#define MAX_MAC_REG_OFFSET	0x0DFC
-+#define START_MTL_REG_OFFSET	0x1000
-+#define MAX_MTL_REG_OFFSET	0x18FC
-+#define START_DMA_REG_OFFSET	0x3000
-+#define MAX_DMA_REG_OFFSET	0x38FC
-+
-+#define REG_SPACE_SIZE		0x2000
-+
- /* sxgbe statistics counters */
- struct sxgbe_extra_stats {
- 	/* TX/RX IRQ events */
-@@ -479,6 +497,7 @@ struct sxgbe_priv_data {
- 	/* advanced time stamp support */
- 	u32 adv_ts;
- 	int use_riwt;
-+	struct ptp_clock *ptp_clock;
- 
- 	/* tc control */
- 	int tx_tc;
-@@ -515,4 +534,6 @@ const struct sxgbe_mtl_ops *sxgbe_get_mtl_ops(void);
- void sxgbe_disable_eee_mode(struct sxgbe_priv_data * const priv);
- bool sxgbe_eee_init(struct sxgbe_priv_data * const priv);
- 
-+int sxgbe_set_flow_ctrl(struct sxgbe_priv_data *priv, int rx, int tx);
-+
- #endif /* __SXGBE_COMMON_H__ */
-diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c b/drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c
-index 9083300..471bc89 100644
---- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c
-+++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c
-@@ -12,11 +12,17 @@
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
-+#include <linux/clk.h>
-+#include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/netdevice.h>
-+#include <linux/net_tstamp.h>
- #include <linux/phy.h>
-+#include <linux/ptp_clock_kernel.h>
- 
- #include "sxgbe_common.h"
-+#include "sxgbe_reg.h"
-+#include "sxgbe_dma.h"
- 
- struct sxgbe_stats {
- 	char stat_string[ETH_GSTRING_LEN];
-@@ -32,16 +38,105 @@ struct sxgbe_stats {
- }
- 
- static const struct sxgbe_stats sxgbe_gstrings_stats[] = {
-+	/* TX/RX IRQ events */
-+	SXGBE_STAT(tx_process_stopped_irq),
-+	SXGBE_STAT(tx_ctxt_desc_err),
-+	SXGBE_STAT(tx_threshold),
-+	SXGBE_STAT(rx_threshold),
-+	SXGBE_STAT(tx_pkt_n),
-+	SXGBE_STAT(rx_pkt_n),
-+	SXGBE_STAT(normal_irq_n),
-+	SXGBE_STAT(tx_normal_irq_n),
-+	SXGBE_STAT(rx_normal_irq_n),
-+	SXGBE_STAT(napi_poll),
-+	SXGBE_STAT(tx_clean),
-+	SXGBE_STAT(tx_reset_ic_bit),
-+	SXGBE_STAT(rx_process_stopped_irq),
-+	SXGBE_STAT(rx_underflow_irq),
-+
-+	/* Bus access errors */
-+	SXGBE_STAT(fatal_bus_error_irq),
-+	SXGBE_STAT(tx_read_transfer_err),
-+	SXGBE_STAT(tx_write_transfer_err),
-+	SXGBE_STAT(tx_desc_access_err),
-+	SXGBE_STAT(tx_buffer_access_err),
-+	SXGBE_STAT(tx_data_transfer_err),
-+	SXGBE_STAT(rx_read_transfer_err),
-+	SXGBE_STAT(rx_write_transfer_err),
-+	SXGBE_STAT(rx_desc_access_err),
-+	SXGBE_STAT(rx_buffer_access_err),
-+	SXGBE_STAT(rx_data_transfer_err),
-+
-+	/* EEE-LPI stats */
- 	SXGBE_STAT(tx_lpi_entry_n),
- 	SXGBE_STAT(tx_lpi_exit_n),
- 	SXGBE_STAT(rx_lpi_entry_n),
- 	SXGBE_STAT(rx_lpi_exit_n),
- 	SXGBE_STAT(eee_wakeup_error_n),
-+
-+	/* RX specific */
-+	/* L2 error */
-+	SXGBE_STAT(rx_code_gmii_err),
-+	SXGBE_STAT(rx_watchdog_err),
-+	SXGBE_STAT(rx_crc_err),
-+	SXGBE_STAT(rx_gaint_pkt_err),
-+	SXGBE_STAT(ip_hdr_err),
-+	SXGBE_STAT(ip_payload_err),
-+	SXGBE_STAT(overflow_error),
-+
-+	/* L2 Pkt type */
-+	SXGBE_STAT(len_pkt),
-+	SXGBE_STAT(mac_ctl_pkt),
-+	SXGBE_STAT(dcb_ctl_pkt),
-+	SXGBE_STAT(arp_pkt),
-+	SXGBE_STAT(oam_pkt),
-+	SXGBE_STAT(untag_okt),
-+	SXGBE_STAT(other_pkt),
-+	SXGBE_STAT(svlan_tag_pkt),
-+	SXGBE_STAT(cvlan_tag_pkt),
-+	SXGBE_STAT(dvlan_ocvlan_icvlan_pkt),
-+	SXGBE_STAT(dvlan_osvlan_isvlan_pkt),
-+	SXGBE_STAT(dvlan_osvlan_icvlan_pkt),
-+	SXGBE_STAT(dvan_ocvlan_icvlan_pkt),
-+
-+	/* L3/L4 Pkt type */
-+	SXGBE_STAT(not_ip_pkt),
-+	SXGBE_STAT(ip4_tcp_pkt),
-+	SXGBE_STAT(ip4_udp_pkt),
-+	SXGBE_STAT(ip4_icmp_pkt),
-+	SXGBE_STAT(ip4_unknown_pkt),
-+	SXGBE_STAT(ip6_tcp_pkt),
-+	SXGBE_STAT(ip6_udp_pkt),
-+	SXGBE_STAT(ip6_icmp_pkt),
-+	SXGBE_STAT(ip6_unknown_pkt),
-+
-+	/* Filter specific */
-+	SXGBE_STAT(vlan_filter_match),
-+	SXGBE_STAT(sa_filter_fail),
-+	SXGBE_STAT(da_filter_fail),
-+	SXGBE_STAT(hash_filter_pass),
-+	SXGBE_STAT(l3_filter_match),
-+	SXGBE_STAT(l4_filter_match),
-+
-+	/* RX context specific */
-+	SXGBE_STAT(timestamp_dropped),
-+	SXGBE_STAT(rx_msg_type_no_ptp),
-+	SXGBE_STAT(rx_ptp_type_sync),
-+	SXGBE_STAT(rx_ptp_type_follow_up),
-+	SXGBE_STAT(rx_ptp_type_delay_req),
-+	SXGBE_STAT(rx_ptp_type_delay_resp),
-+	SXGBE_STAT(rx_ptp_type_pdelay_req),
-+	SXGBE_STAT(rx_ptp_type_pdelay_resp),
-+	SXGBE_STAT(rx_ptp_type_pdelay_follow_up),
-+	SXGBE_STAT(rx_ptp_announce),
-+	SXGBE_STAT(rx_ptp_mgmt),
-+	SXGBE_STAT(rx_ptp_signal),
-+	SXGBE_STAT(rx_ptp_resv_msg_type),
- };
- #define SXGBE_STATS_LEN ARRAY_SIZE(sxgbe_gstrings_stats)
- 
--static int sxgbe_ethtool_get_eee(struct net_device *dev,
--				 struct ethtool_eee *edata)
-+static int sxgbe_get_eee(struct net_device *dev,
-+			 struct ethtool_eee *edata)
- {
- 	struct sxgbe_priv_data *priv = netdev_priv(dev);
- 
-@@ -55,8 +150,8 @@ static int sxgbe_ethtool_get_eee(struct net_device *dev,
- 	return phy_ethtool_get_eee(priv->phydev, edata);
- }
- 
--static int sxgbe_ethtool_set_eee(struct net_device *dev,
--				 struct ethtool_eee *edata)
-+static int sxgbe_set_eee(struct net_device *dev,
-+			 struct ethtool_eee *edata)
- {
- 	struct sxgbe_priv_data *priv = netdev_priv(dev);
- 
-@@ -80,9 +175,411 @@ static int sxgbe_ethtool_set_eee(struct net_device *dev,
- 	return phy_ethtool_set_eee(priv->phydev, edata);
- }
- 
-+static void sxgbe_getdrvinfo(struct net_device *dev,
-+			     struct ethtool_drvinfo *info)
-+{
-+	strlcpy(info->driver, KBUILD_MODNAME, sizeof(info->driver));
-+	strlcpy(info->version, DRV_VERSION, sizeof(info->version));
-+}
-+
-+static int sxgbe_getsettings(struct net_device *dev,
-+			     struct ethtool_cmd *cmd)
-+{
-+	struct sxgbe_priv_data *priv = netdev_priv(dev);
-+
-+	if (priv->phydev)
-+		return phy_ethtool_gset(priv->phydev, cmd);
-+
-+	return -ENODEV;
-+}
-+
-+static int sxgbe_setsettings(struct net_device *dev, struct ethtool_cmd *cmd)
-+{
-+	struct sxgbe_priv_data *priv = netdev_priv(dev);
-+
-+	if (priv->phydev)
-+		return phy_ethtool_sset(priv->phydev, cmd);
-+
-+	return -ENODEV;
-+}
-+
-+static u32 sxgbe_getmsglevel(struct net_device *dev)
-+{
-+	struct sxgbe_priv_data *priv = netdev_priv(dev);
-+	return priv->msg_enable;
-+}
-+
-+static void sxgbe_setmsglevel(struct net_device *dev, u32 level)
-+{
-+	struct sxgbe_priv_data *priv = netdev_priv(dev);
-+	priv->msg_enable = level;
-+}
-+
-+static int sxgbe_get_ts_info(struct net_device *dev,
-+			     struct ethtool_ts_info *info)
-+{
-+	struct sxgbe_priv_data *priv = netdev_priv(dev);
-+
-+	if (!priv->hw_cap.atime_stamp)
-+		return ethtool_op_get_ts_info(dev, info);
-+
-+	info->so_timestamping = (SOF_TIMESTAMPING_TX_SOFTWARE |
-+				 SOF_TIMESTAMPING_RX_SOFTWARE |
-+				 SOF_TIMESTAMPING_SOFTWARE |
-+				 SOF_TIMESTAMPING_TX_HARDWARE |
-+				 SOF_TIMESTAMPING_RX_HARDWARE |
-+				 SOF_TIMESTAMPING_RAW_HARDWARE);
-+
-+	if (priv->ptp_clock)
-+		info->phc_index = ptp_clock_index(priv->ptp_clock);
-+
-+	info->tx_types = ((1 << HWTSTAMP_TX_OFF) |
-+			  (1 << HWTSTAMP_TX_ON) |
-+			  (1 << HWTSTAMP_TX_ONESTEP_SYNC));
-+
-+	info->rx_filters = ((1 << HWTSTAMP_FILTER_NONE) |
-+			    (1 << HWTSTAMP_FILTER_PTP_V1_L4_EVENT) |
-+			    (1 << HWTSTAMP_FILTER_PTP_V1_L4_SYNC) |
-+			    (1 << HWTSTAMP_FILTER_PTP_V1_L4_DELAY_REQ) |
-+			    (1 << HWTSTAMP_FILTER_PTP_V2_L4_EVENT) |
-+			    (1 << HWTSTAMP_FILTER_PTP_V2_L4_SYNC) |
-+			    (1 << HWTSTAMP_FILTER_PTP_V2_L4_DELAY_REQ) |
-+			    (1 << HWTSTAMP_FILTER_PTP_V2_L2_EVENT) |
-+			    (1 << HWTSTAMP_FILTER_PTP_V2_L2_SYNC) |
-+			    (1 << HWTSTAMP_FILTER_PTP_V2_L2_DELAY_REQ) |
-+			    (1 << HWTSTAMP_FILTER_PTP_V2_EVENT) |
-+			    (1 << HWTSTAMP_FILTER_PTP_V2_SYNC) |
-+			    (1 << HWTSTAMP_FILTER_PTP_V2_DELAY_REQ) |
-+			    (1 << HWTSTAMP_FILTER_ALL));
-+	return 0;
-+}
-+
-+int sxgbe_set_flow_ctrl(struct sxgbe_priv_data *priv, int rx, int tx)
-+{
-+	return 0;
-+}
-+
-+static void sxgbe_get_pauseparam(struct net_device *netdev,
-+				 struct ethtool_pauseparam *pause)
-+{
-+	struct sxgbe_priv_data *priv = netdev_priv(netdev);
-+
-+	pause->rx_pause = priv->rx_pause;
-+	pause->tx_pause = priv->tx_pause;
-+}
-+
-+static int sxgbe_set_pauseparam(struct net_device *netdev,
-+				struct ethtool_pauseparam *pause)
-+{
-+	struct sxgbe_priv_data *priv = netdev_priv(netdev);
-+
-+	if (pause->autoneg)
-+		return -EINVAL;
-+
-+	return sxgbe_set_flow_ctrl(priv, pause->rx_pause, pause->tx_pause);
-+}
-+
-+
-+
-+static void sxgbe_get_strings(struct net_device *dev, u32 stringset, u8 *data)
-+{
-+	int i;
-+	u8 *p = data;
-+
-+	switch (stringset) {
-+	case ETH_SS_STATS:
-+		for (i = 0; i < SXGBE_STATS_LEN; i++) {
-+			memcpy(p, sxgbe_gstrings_stats[i].stat_string,
-+			       ETH_GSTRING_LEN);
-+			p += ETH_GSTRING_LEN;
-+		}
-+		break;
-+	default:
-+		WARN_ON(1);
-+		break;
-+	}
-+}
-+
-+static int sxgbe_get_sset_count(struct net_device *netdev, int sset)
-+{
-+	int len;
-+
-+	switch (sset) {
-+	case ETH_SS_STATS:
-+		len = SXGBE_STATS_LEN;
-+		return len;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static void sxgbe_get_ethtool_stats(struct net_device *dev,
-+				    struct ethtool_stats *dummy, u64 *data)
-+{
-+	struct sxgbe_priv_data *priv = netdev_priv(dev);
-+	int i, j = 0;
-+	char *p;
-+
-+	if (priv->eee_enabled) {
-+		int val = phy_get_eee_err(priv->phydev);
-+
-+		if (val)
-+			priv->xstats.eee_wakeup_error_n = val;
-+	}
-+
-+	for (i = 0; i < SXGBE_STATS_LEN; i++) {
-+		p = (char *)priv + sxgbe_gstrings_stats[i].stat_offset;
-+		data[j++] = (sxgbe_gstrings_stats[i].sizeof_stat == sizeof(u64))
-+			? (*(u64 *)p) : (*(u32 *)p);
-+	}
-+}
-+
-+static void sxgbe_get_channels(struct net_device *dev,
-+			       struct ethtool_channels *channel)
-+{
-+	channel->max_rx = SXGBE_MAX_RX_CHANNELS;
-+	channel->max_tx = SXGBE_MAX_TX_CHANNELS;
-+	channel->rx_count = SXGBE_RX_QUEUES;
-+	channel->tx_count = SXGBE_TX_QUEUES;
-+}
-+
-+static u32 sxgbe_riwt2usec(u32 riwt, struct sxgbe_priv_data *priv)
-+{
-+	unsigned long clk = clk_get_rate(priv->sxgbe_clk);
-+
-+	if (!clk)
-+		return 0;
-+
-+	return (riwt * 256) / (clk / 1000000);
-+}
-+
-+static u32 sxgbe_usec2riwt(u32 usec, struct sxgbe_priv_data *priv)
-+{
-+	unsigned long clk = clk_get_rate(priv->sxgbe_clk);
-+
-+	if (!clk)
-+		return 0;
-+
-+	return (usec * (clk / 1000000)) / 256;
-+}
-+
-+static int sxgbe_get_coalesce(struct net_device *dev,
-+			      struct ethtool_coalesce *ec)
-+{
-+	struct sxgbe_priv_data *priv = netdev_priv(dev);
-+
-+	if (priv->use_riwt)
-+		ec->rx_coalesce_usecs = sxgbe_riwt2usec(priv->rx_riwt, priv);
-+
-+	return 0;
-+}
-+
-+static int sxgbe_set_coalesce(struct net_device *dev,
-+			      struct ethtool_coalesce *ec)
-+{
-+	struct sxgbe_priv_data *priv = netdev_priv(dev);
-+	unsigned int rx_riwt;
-+
-+	rx_riwt = sxgbe_usec2riwt(ec->rx_coalesce_usecs, priv);
-+
-+	if ((rx_riwt > SXGBE_MAX_DMA_RIWT) || (rx_riwt < SXGBE_MIN_DMA_RIWT))
-+		return -EINVAL;
-+	else if (!priv->use_riwt)
-+		return -EOPNOTSUPP;
-+
-+	priv->rx_riwt = rx_riwt;
-+	priv->hw->dma->rx_watchdog(priv->ioaddr, priv->rx_riwt);
-+
-+	return 0;
-+}
-+
-+static int sxgbe_get_rss_hash_opts(struct sxgbe_priv_data *priv,
-+				   struct ethtool_rxnfc *cmd)
-+{
-+	cmd->data = 0;
-+
-+	/* Report default options for RSS on sxgbe */
-+	switch (cmd->flow_type) {
-+	case TCP_V4_FLOW:
-+	case UDP_V4_FLOW:
-+		cmd->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3;
-+	case SCTP_V4_FLOW:
-+	case AH_ESP_V4_FLOW:
-+	case AH_V4_FLOW:
-+	case ESP_V4_FLOW:
-+	case IPV4_FLOW:
-+		cmd->data |= RXH_IP_SRC | RXH_IP_DST;
-+		break;
-+	case TCP_V6_FLOW:
-+	case UDP_V6_FLOW:
-+		cmd->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3;
-+	case SCTP_V6_FLOW:
-+	case AH_ESP_V6_FLOW:
-+	case AH_V6_FLOW:
-+	case ESP_V6_FLOW:
-+	case IPV6_FLOW:
-+		cmd->data |= RXH_IP_SRC | RXH_IP_DST;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int sxgbe_get_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd,
-+			   u32 *rule_locs)
-+{
-+	struct sxgbe_priv_data *priv = netdev_priv(dev);
-+	int ret = -EOPNOTSUPP;
-+
-+	switch (cmd->cmd) {
-+	case ETHTOOL_GRXFH:
-+		ret = sxgbe_get_rss_hash_opts(priv, cmd);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
-+static int sxgbe_set_rss_hash_opt(struct sxgbe_priv_data *priv,
-+				  struct ethtool_rxnfc *cmd)
-+{
-+	u32 reg_val = 0;
-+
-+	/* RSS does not support anything other than hashing
-+	 * to queues on src and dst IPs and ports
-+	 */
-+	if (cmd->data & ~(RXH_IP_SRC | RXH_IP_DST |
-+			  RXH_L4_B_0_1 | RXH_L4_B_2_3))
-+		return -EINVAL;
-+
-+	switch (cmd->flow_type) {
-+	case TCP_V4_FLOW:
-+	case TCP_V6_FLOW:
-+		if (!(cmd->data & RXH_IP_SRC) ||
-+		    !(cmd->data & RXH_IP_DST) ||
-+		    !(cmd->data & RXH_L4_B_0_1) ||
-+		    !(cmd->data & RXH_L4_B_2_3))
-+			return -EINVAL;
-+		reg_val = SXGBE_CORE_RSS_CTL_TCP4TE;
-+		break;
-+	case UDP_V4_FLOW:
-+	case UDP_V6_FLOW:
-+		if (!(cmd->data & RXH_IP_SRC) ||
-+		    !(cmd->data & RXH_IP_DST) ||
-+		    !(cmd->data & RXH_L4_B_0_1) ||
-+		    !(cmd->data & RXH_L4_B_2_3))
-+			return -EINVAL;
-+		reg_val = SXGBE_CORE_RSS_CTL_UDP4TE;
-+		break;
-+	case SCTP_V4_FLOW:
-+	case AH_ESP_V4_FLOW:
-+	case AH_V4_FLOW:
-+	case ESP_V4_FLOW:
-+	case AH_ESP_V6_FLOW:
-+	case AH_V6_FLOW:
-+	case ESP_V6_FLOW:
-+	case SCTP_V6_FLOW:
-+	case IPV4_FLOW:
-+	case IPV6_FLOW:
-+		if (!(cmd->data & RXH_IP_SRC) ||
-+		    !(cmd->data & RXH_IP_DST) ||
-+		    (cmd->data & RXH_L4_B_0_1) ||
-+		    (cmd->data & RXH_L4_B_2_3))
-+			return -EINVAL;
-+		reg_val = SXGBE_CORE_RSS_CTL_IP2TE;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	/* Read SXGBE RSS control register and update */
-+	reg_val |= readl(priv->ioaddr + SXGBE_CORE_RSS_CTL_REG);
-+	writel(reg_val, priv->ioaddr + SXGBE_CORE_RSS_CTL_REG);
-+	readl(priv->ioaddr + SXGBE_CORE_RSS_CTL_REG);
-+
-+	return 0;
-+}
-+
-+static int sxgbe_set_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd)
-+{
-+	struct sxgbe_priv_data *priv = netdev_priv(dev);
-+	int ret = -EOPNOTSUPP;
-+
-+	switch (cmd->cmd) {
-+	case ETHTOOL_SRXFH:
-+		ret = sxgbe_set_rss_hash_opt(priv, cmd);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
-+static void sxgbe_get_regs(struct net_device *dev,
-+			   struct ethtool_regs *regs, void *space)
-+{
-+	struct sxgbe_priv_data *priv = netdev_priv(dev);
-+	u32 *reg_space = (u32 *)space;
-+	int reg_offset;
-+	int reg_ix = 0;
-+	void __iomem *ioaddr = priv->ioaddr;
-+
-+	memset(reg_space, 0x0, REG_SPACE_SIZE);
-+
-+	/* MAC registers */
-+	for (reg_offset = START_MAC_REG_OFFSET;
-+	     reg_offset <= MAX_MAC_REG_OFFSET; reg_offset += 4) {
-+		reg_space[reg_ix] = readl(ioaddr + reg_offset);
-+		reg_ix++;
-+	}
-+
-+	/* MTL registers */
-+	for (reg_offset = START_MTL_REG_OFFSET;
-+	     reg_offset <= MAX_MTL_REG_OFFSET; reg_offset += 4) {
-+		reg_space[reg_ix] = readl(ioaddr + reg_offset);
-+		reg_ix++;
-+	}
-+
-+	/* DMA registers */
-+	for (reg_offset = START_DMA_REG_OFFSET;
-+	     reg_offset <= MAX_DMA_REG_OFFSET; reg_offset += 4) {
-+		reg_space[reg_ix] = readl(ioaddr + reg_offset);
-+		reg_ix++;
-+	}
-+}
-+
-+static int sxgbe_get_regs_len(struct net_device *dev)
-+{
-+	return REG_SPACE_SIZE;
-+}
-+
- static const struct ethtool_ops sxgbe_ethtool_ops = {
--	.get_eee = sxgbe_ethtool_get_eee,
--	.set_eee = sxgbe_ethtool_set_eee,
-+	.get_drvinfo = sxgbe_getdrvinfo,
-+	.get_settings = sxgbe_getsettings,
-+	.set_settings = sxgbe_setsettings,
-+	.get_msglevel = sxgbe_getmsglevel,
-+	.set_msglevel = sxgbe_setmsglevel,
-+	.get_link = ethtool_op_get_link,
-+	.get_ts_info = sxgbe_get_ts_info,
-+	.get_pauseparam = sxgbe_get_pauseparam,
-+	.set_pauseparam = sxgbe_set_pauseparam,
-+	.get_strings = sxgbe_get_strings,
-+	.get_ethtool_stats = sxgbe_get_ethtool_stats,
-+	.get_sset_count = sxgbe_get_sset_count,
-+	.get_channels = sxgbe_get_channels,
-+	.get_coalesce = sxgbe_get_coalesce,
-+	.set_coalesce = sxgbe_set_coalesce,
-+	.get_rxnfc = sxgbe_get_rxnfc,
-+	.set_rxnfc = sxgbe_set_rxnfc,
-+	.get_regs = sxgbe_get_regs,
-+	.get_regs_len = sxgbe_get_regs_len,
-+	.get_eee = sxgbe_get_eee,
-+	.set_eee = sxgbe_set_eee,
- };
- 
- void sxgbe_set_ethtool_ops(struct net_device *netdev)
-diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-index e433969..1ef1a15 100644
---- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-+++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-@@ -2137,6 +2137,11 @@ struct sxgbe_priv_data *sxgbe_drv_probe(struct device *device,
- 		priv->rxcsum_insertion = true;
- 	}
- 
-+	/* Initialise pause frame settings */
-+	priv->rx_pause = 1;
-+	priv->tx_pause = 1;
-+	sxgbe_set_flow_ctrl(priv, priv->rx_pause, priv->tx_pause);
-+
- 	/* Rx Watchdog is available, enable depend on platform data */
- 	if (!priv->plat->riwt_off) {
- 		priv->use_riwt = 1;
-diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_reg.h b/drivers/net/ethernet/samsung/sxgbe/sxgbe_reg.h
-index 85a7b31..5a89acb 100644
---- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_reg.h
-+++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_reg.h
-@@ -195,6 +195,12 @@
- #define SXGBE_CORE_RSS_ADD_REG		0x0C88
- #define SXGBE_CORE_RSS_DATA_REG		0x0C8C
- 
-+/* RSS control register bits */
-+#define SXGBE_CORE_RSS_CTL_UDP4TE	BIT(3)
-+#define SXGBE_CORE_RSS_CTL_TCP4TE	BIT(2)
-+#define SXGBE_CORE_RSS_CTL_IP2TE	BIT(1)
-+#define SXGBE_CORE_RSS_CTL_RSSE		BIT(0)
-+
- /* IEEE 1588 registers */
- #define SXGBE_CORE_TSTAMP_CTL_REG	0x0D00
- #define SXGBE_CORE_SUBSEC_INC_REG	0x0D04
--- 
-1.7.10.4
+T24gRnJpLCAyMSBNYXIgMjAxNCAxODo0NzoyMyArMDIwMApKeXJpIFNhcmhhIDxqc2FyaGFAdGku
+Y29tPiB3cm90ZToKCj4gVGhlIHByb3BlcnRpZXMgbGlrZSBmb3JtYXQsIGJpdGNsb2NrLW1hc3Rl
+ciwgZnJhbWUtbWFzdGVyLAo+IGJpdGNsb2NrLWludmVyc2lvbiwgYW5kIGZyYW1lLWludmVyc2lv
+biBzaG91bGQgYmUgY29tbW9uIHRvIHRoZSBkYWlzCj4gY29ubmVjdGVkIHdpdGggYSBkYWktbGlu
+ay4gRm9yIGJpdGNsb2NrLW1hc3RlciBhbmQgZnJhbWUtbWFzdGVyCj4gcHJvcGVydGllcyB0byBi
+ZSB1bmFtYmlndW91cyB0aGV5IG5lZWQgdG8gaW5kaWNhdGUgdGhlIG1hc3RlcmluZyBkYWkKPiBu
+b2RlIHdpdGggYSBwaGFuZGxlLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEp5cmkgU2FyaGEgPGpzYXJo
+YUB0aS5jb20+Cj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL3NpbXBsZS1j
+YXJkLnR4dCAgICAgIHwgICA5MSArKysrLS0tLQo+ICBzb3VuZC9zb2MvZ2VuZXJpYy9zaW1wbGUt
+Y2FyZC5jICAgICAgICAgICAgICAgICAgICB8ICAyMzcgKysrKysrKysrKysrLS0tLS0tLS0KPiAg
+MiBmaWxlcyBjaGFuZ2VkLCAxOTEgaW5zZXJ0aW9ucygrKSwgMTM3IGRlbGV0aW9ucygtKQo+IAo+
+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvc2lt
+cGxlLWNhcmQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL3Np
+bXBsZS1jYXJkLnR4dAo+IGluZGV4IDEzMWFhMmEuLjNjYWZhOWUgMTAwNjQ0Cj4gLS0tIGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL3NpbXBsZS1jYXJkLnR4dAo+ICsr
+KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9zaW1wbGUtY2FyZC50
+eHQKPiBAQCAtMSw2ICsxLDYgQEAKPiAgU2ltcGxlLUNhcmQ6Cj4gIAo+IC1TaW1wbGUtQ2FyZCBz
+cGVjaWZpZXMgYXVkaW8gREFJIGNvbm5lY3Rpb24gb2YgU29DIDwtPiBjb2RlYy4KPiArU2ltcGxl
+LUNhcmQgc3BlY2lmaWVzIGF1ZGlvIERBSSBjb25uZWN0aW9ucyBvZiBTb0MgPC0+IGNvZGVjLgo+
+ICAKPiAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAgCj4gQEAgLTgsMjggKzgsNTQgQEAgUmVxdWly
+ZWQgcHJvcGVydGllczoKPiAgCj4gIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gIAo+IC0tIHNpbXBs
+ZS1hdWRpby1jYXJkLG5hbWUJCTogVXNlciBzcGVjaWZpZWQgYXVkaW8gc291bmQgY2FyZCBuYW1l
+LCBvbmUgc3RyaW5nCj4gKy0gc2ltcGxlLWF1ZGlvLWNhcmQsbmFtZQkJOiBVc2VyIHNwZWNpZmll
+ZCBhdWRpbyBzb3VuZCBjYXJkIG5hbWUsCj4gK29uZSBzdHJpbmcKPiAgCQkJCQkgIHByb3BlcnR5
+Lgo+IC0tIHNpbXBsZS1hdWRpby1jYXJkLGZvcm1hdAkJOiBDUFUvQ09ERUMgY29tbW9uIGF1ZGlv
+IGZvcm1hdC4KPiAtCQkJCQkgICJpMnMiLCAicmlnaHRfaiIsICJsZWZ0X2oiICwgImRzcF9hIgo+
+IC0JCQkJCSAgImRzcF9iIiwgImFjOTciLCAicGRtIiwgIm1zYiIsICJsc2IiCj4gIC0gc2ltcGxl
+LWF1ZGlvLWNhcmQsd2lkZ2V0cwkJOiBQbGVhc2UgcmVmZXIgdG8gd2lkZ2V0cy50eHQuCj4gIC0g
+c2ltcGxlLWF1ZGlvLWNhcmQscm91dGluZwkJOiBBIGxpc3Qgb2YgdGhlIGNvbm5lY3Rpb25zIGJl
+dHdlZW4gYXVkaW8gY29tcG9uZW50cy4KPiAgCQkJCQkgIEVhY2ggZW50cnkgaXMgYSBwYWlyIG9m
+IHN0cmluZ3MsIHRoZSBmaXJzdCBiZWluZyB0aGUKPiAgCQkJCQkgIGNvbm5lY3Rpb24ncyBzaW5r
+LCB0aGUgc2Vjb25kIGJlaW5nIHRoZSBjb25uZWN0aW9uJ3MKPiAgCQkJCQkgIHNvdXJjZS4KPiAt
+LSBkYWktdGRtLXNsb3QtbnVtCQkJOiBQbGVhc2UgcmVmZXIgdG8gdGRtLXNsb3QudHh0Lgo+IC0t
+IGRhaS10ZG0tc2xvdC13aWR0aAkJCTogUGxlYXNlIHJlZmVyIHRvIHRkbS1zbG90LnR4dC4KPiAr
+T3B0aW9uYWwgc3Vibm9kZXM6Cj4gKwo+ICstIHNpbXBsZS1hdWRpby1jYXJkLGRhaS1saW5rCQk6
+IENvbnRhaW5lciBmb3IgZGFpLWxpbmsgbGV2ZWwKPiArCQkJCQkgIHByb3BlcnRpZXMgYW5kIHRo
+ZSBDUFUgYW5kIENPREVDCj4gKwkJCQkJICBzdWItbm9kZXMuIFRoaXMgY29udGFpbmVyIG1heSBi
+ZQo+ICsJCQkJCSAgb21pdHRlZCB3aGVuIHRoZSBjYXJkIGhhcyBvbmx5IG9uZQo+ICsJCQkJCSAg
+REFJIGxpbmsuIFNlZSB0aGUgZXhhbXBsZXMgYW5kIHRoZQo+ICsJCQkJCSAgc2VjdGlvbiBiZWxs
+b3cuCj4gKwo+ICtEYWktbGluayBzdWJub2RlIHByb3BlcnRpZXMgYW5kIHN1Ym5vZGVzOgo+ICsK
+PiArSWYgZGFpLWxpbmsgc3Vibm9kZSBpcyBvbWl0dGVkIGFuZCB0aGUgc3Vibm9kZSBwcm9wZXJ0
+aWVzIGFyZSBkaXJlY3RseQo+ICt1bmRlciAic291bmQiLW5vZGUgdGhlIHN1Ym5vZGUgcHJvcGVy
+dHkgYW5kIHN1Ym5vZGUgbmFtZXMgaGF2ZSB0byBiZQo+ICtwcmVmaXhlZCB3aXRoICJzaW1wbGUt
+YXVkaW8tY2FyZCwiLXByZWZpeC4KPiAgCj4gLVJlcXVpcmVkIHN1Ym5vZGVzOgo+ICtSZXF1cmVk
+IGRhaS1saW5rIHN1Ym5vZGVzOgoKVHlwbzogJ1JlcXVpcmVkJwoKPiAgCj4gLS0gc2ltcGxlLWF1
+ZGlvLWNhcmQsZGFpLWxpbmsJCTogY29udGFpbmVyIGZvciB0aGUgQ1BVIGFuZCBDT0RFQyBzdWIt
+bm9kZXMKPiAtCQkJCQkgIFRoaXMgY29udGFpbmVyIG1heSBiZSBvbWl0dGVkIHdoZW4gdGhlCj4g
+LQkJCQkJICBjYXJkIGhhcyBvbmx5IG9uZSBEQUkgbGluay4KPiAtCQkJCQkgIFNlZSB0aGUgZXhh
+bXBsZXMuCj4gKy0gY3B1CQkJCQk6IENQVSAgIHN1Yi1ub2RlCj4gKy0gY29kZWMJCQkJCTogQ09E
+RUMgc3ViLW5vZGUKPiAgCj4gLS0gc2ltcGxlLWF1ZGlvLWNhcmQsY3B1CQkJOiBDUFUgICBzdWIt
+bm9kZQo+IC0tIHNpbXBsZS1hdWRpby1jYXJkLGNvZGVjCQk6IENPREVDIHN1Yi1ub2RlCj4gK09w
+dGlvbmFsIGRhaS1saW5rIHN1Ym5vZGUgcHJvcGVydGllczoKPiArCj4gKy0gZm9ybWF0CQkJCTog
+Q1BVL0NPREVDIGNvbW1vbiBhdWRpbyBmb3JtYXQuCj4gKwkJCQkJICAiaTJzIiwgInJpZ2h0X2oi
+LCAibGVmdF9qIiAsICJkc3BfYSIKPiArCQkJCQkgICJkc3BfYiIsICJhYzk3IiwgInBkbSIsICJt
+c2IiLCAibHNiIgo+ICstIGZyYW1lLW1hc3RlcgkJCQk6IEluZGljYXRlcyBkYWktbGluayBmcmFt
+ZSBtYXN0ZXIuCj4gKwkJCQkJICBwaGFuZGxlIHRvIGEgY3B1IG9yIGNvZGVjIHN1Ym5vZGUuCj4g
+Ky0gYml0Y2xvY2stbWFzdGVyCQkJOiBJbmRpY2F0ZXMgZGFpLWxpbmsgYml0IGNsb2NrIG1hc3Rl
+ci4KPiArCQkJCQkgIHBoYW5kbGUgdG8gYSBjcHUgb3IgY29kZWMgc3Vibm9kZS4KPiArLSBiaXRj
+bG9jay1pbnZlcnNpb24JCQk6IGJvb2wgcHJvcGVydHkuIEFkZCB0aGlzIGlmIHRoZQo+ICsJCQkJ
+CSAgZGFpLWxpbmsgdXNlcyBiaXQgY2xvY2sgaW52ZXJzaW9uLgo+ICstIGZyYW1lLWludmVyc2lv
+bgkJCTogYm9vbCBwcm9wZXJ0eS4gQWRkIHRoaXMgaWYgdGhlCj4gKwkJCQkJICBkYWktbGluayB1
+c2VzIGZyYW1lIGNsb2NrIGludmVyc2lvbi4KPiArCj4gK0ZvciBiYWNrd2FyZCBjb21wYXRpYmls
+aXR5IHRoZSBmcmFtZS1tYXN0ZXIgYW5kIGJpdGNsb2NrLW1hc3Rlcgo+ICtwcm9wZXJ0aWVzIGNh
+biBiZSB1c2VkIGFzIGJvb2xlYW5zIGluIGNvZGVjIHN1Ym5vZGUgdG8gaW5kaWNhdGUgaWYgdGhl
+Cj4gK2NvZGVjIGlzIHRoZSBkYWktbGluayBmcmFtZSBvciBiaXQgY2xvY2sgbWFzdGVyLiBJbiB0
+aGlzIGNhc2UgdGhlIHNhbWUKPiArcHJvcGVydGllcyBzaG91bGQgbm90IGJlIHByZXNlbnQgYXQg
+ZGFpLWxpbmsgbGV2ZWwgYW5kIHRoZQo+ICtiaXRjbG9jay1pbnZlcnNpb24gYW5kIGZyYW1lLWlu
+dmVyc2lvbiBwcm9wZXJ0aWVzIHNob3VsZCBhbHNvIGJlIHBsYWNlZAo+ICtpbiB0aGUgY29kZWMg
+bm9kZSBpZiBuZWVkZWQuCj4gIAo+ICBSZXF1aXJlZCBDUFUvQ09ERUMgc3Vibm9kZXMgcHJvcGVy
+dGllczoKPiAgCglbc25pcF0KPiBkaWZmIC0tZ2l0IGEvc291bmQvc29jL2dlbmVyaWMvc2ltcGxl
+LWNhcmQuYyBiL3NvdW5kL3NvYy9nZW5lcmljL3NpbXBsZS1jYXJkLmMKPiBpbmRleCAyMWYxY2Ni
+Li5mNDY2M2QwIDEwMDY0NAo+IC0tLSBhL3NvdW5kL3NvYy9nZW5lcmljL3NpbXBsZS1jYXJkLmMK
+PiArKysgYi9zb3VuZC9zb2MvZ2VuZXJpYy9zaW1wbGUtY2FyZC5jCj4gQEAgLTgsNiArOCw3IEBA
+Cj4gICAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vu
+c2UgdmVyc2lvbiAyIGFzCj4gICAqIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3Vu
+ZGF0aW9uLgo+ICAgKi8KPiArI2RlZmluZSBERUJVRwoKU2hvdWxkIGJlIHJlbW92ZWQuCgo+ICAj
+aW5jbHVkZSA8bGludXgvY2xrLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9kZXZpY2UuaD4KPiAgI2lu
+Y2x1ZGUgPGxpbnV4L21vZHVsZS5oPgo+IEBAIC04OCw3ICs4OSw2IEBAIHN0YXRpYyBpbnQgYXNv
+Y19zaW1wbGVfY2FyZF9kYWlfaW5pdChzdHJ1Y3Qgc25kX3NvY19wY21fcnVudGltZSAqcnRkKQo+
+ICAKPiAgc3RhdGljIGludAo+ICBhc29jX3NpbXBsZV9jYXJkX3N1Yl9wYXJzZV9vZihzdHJ1Y3Qg
+ZGV2aWNlX25vZGUgKm5wLAo+IC0JCQkgICAgICB1bnNpZ25lZCBpbnQgZGFpZm10LAo+ICAJCQkg
+ICAgICBzdHJ1Y3QgYXNvY19zaW1wbGVfZGFpICpkYWksCj4gIAkJCSAgICAgIGNvbnN0IHN0cnVj
+dCBkZXZpY2Vfbm9kZSAqKnBfbm9kZSwKPiAgCQkJICAgICAgY29uc3QgY2hhciAqKm5hbWUpCj4g
+QEAgLTExNywxNCArMTE3LDYgQEAgYXNvY19zaW1wbGVfY2FyZF9zdWJfcGFyc2Vfb2Yoc3RydWN0
+IGRldmljZV9ub2RlICpucCwKPiAgCQlyZXR1cm4gcmV0Owo+ICAKPiAgCS8qCj4gLQkgKiBiaXRj
+bG9jay1pbnZlcnNpb24sIGZyYW1lLWludmVyc2lvbgo+IC0JICogYml0Y2xvY2stbWFzdGVyLCAg
+ICBmcmFtZS1tYXN0ZXIKPiAtCSAqIGFuZCBzcGVjaWZpYyAiZm9ybWF0IiBpZiBpdCBoYXMKPiAt
+CSAqLwo+IC0JZGFpLT5mbXQgPSBzbmRfc29jX29mX3BhcnNlX2RhaWZtdChucCwgTlVMTCk7Cj4g
+LQlkYWktPmZtdCB8PSBkYWlmbXQ7Cj4gLQo+IC0JLyoKPiAgCSAqIGRhaS0+c3lzY2xrIGNvbWUg
+ZnJvbQo+ICAJICogICJjbG9ja3MgPSA8Jnh4eD4iIChpZiBzeXN0ZW0gaGFzIGNvbW1vbiBjbG9j
+aykKPiAgCSAqICBvciAic3lzdGVtLWNsb2NrLWZyZXF1ZW5jeSA9IDx4eHg+Igo+IEBAIC0xNTEs
+MzcgKzE0MywxMzQgQEAgYXNvY19zaW1wbGVfY2FyZF9zdWJfcGFyc2Vfb2Yoc3RydWN0IGRldmlj
+ZV9ub2RlICpucCwKPiAgCXJldHVybiAwOwo+ICB9Cj4gIAo+IC1zdGF0aWMgaW50IHNpbXBsZV9j
+YXJkX2NwdV9jb2RlY19vZihzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUsCj4gLQkJCQlpbnQgZGFp
+Zm10LAo+IC0JCQkJc3RydWN0IHNuZF9zb2NfZGFpX2xpbmsgKmRhaV9saW5rLAo+IC0JCQkJc3Ry
+dWN0IHNpbXBsZV9kYWlfcHJvcHMgKmRhaV9wcm9wcykKPiArc3RhdGljIGludCBzaW1wbGVfY2Fy
+ZF9kYWlfbGlua19vZihzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUsCj4gKwkJCQkgICBzdHJ1Y3Qg
+ZGV2aWNlICpkZXYsCj4gKwkJCQkgICBzdHJ1Y3Qgc25kX3NvY19kYWlfbGluayAqZGFpX2xpbmss
+Cj4gKwkJCQkgICBzdHJ1Y3Qgc2ltcGxlX2RhaV9wcm9wcyAqZGFpX3Byb3BzKQo+ICB7Cj4gLQlz
+dHJ1Y3QgZGV2aWNlX25vZGUgKm5wOwo+ICsJc3RydWN0IGRldmljZV9ub2RlICpucCA9IE5VTEw7
+Cj4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKmJpdGNsa21hc3RlciA9IE5VTEw7Cj4gKwlzdHJ1Y3Qg
+ZGV2aWNlX25vZGUgKmZyYW1lbWFzdGVyID0gTlVMTDsKPiArCXVuc2lnbmVkIGludCBkYWlmbXQ7
+Cj4gKwljaGFyICpuYW1lOwo+ICsJY2hhciBwcm9wWzEyOF07Cj4gKwljaGFyICpwcmVmaXggPSAi
+IjsKPiAgCWludCByZXQ7Cj4gIAo+IC0JLyogQ1BVIHN1Yi1ub2RlICovCj4gLQlyZXQgPSAtRUlO
+VkFMOwo+IC0JbnAgPSBvZl9nZXRfY2hpbGRfYnlfbmFtZShub2RlLCAic2ltcGxlLWF1ZGlvLWNh
+cmQsY3B1Iik7Cj4gLQlpZiAobnApIHsKPiAtCQlyZXQgPSBhc29jX3NpbXBsZV9jYXJkX3N1Yl9w
+YXJzZV9vZihucCwgZGFpZm10LAo+IC0JCQkJCQkmZGFpX3Byb3BzLT5jcHVfZGFpLAo+IC0JCQkJ
+CQkmZGFpX2xpbmstPmNwdV9vZl9ub2RlLAo+IC0JCQkJCQkmZGFpX2xpbmstPmNwdV9kYWlfbmFt
+ZSk7Cj4gLQkJb2Zfbm9kZV9wdXQobnApOwo+ICsJaWYgKCFzdHJjbXAoInNvdW5kIiwgbm9kZS0+
+bmFtZSkpCj4gKwkJcHJlZml4ID0gInNpbXBsZS1hdWRpby1jYXJkLCI7Cj4gKwo+ICsJZGFpZm10
+ID0gc25kX3NvY19vZl9wYXJzZV9kYWlmbXQobm9kZSwgcHJlZml4LAo+ICsJCQkJCSAmYml0Y2xr
+bWFzdGVyLCAmZnJhbWVtYXN0ZXIpOwo+ICsJZGFpZm10ICY9IH5TTkRfU09DX0RBSUZNVF9NQVNU
+RVJfTUFTSzsKPiArCj4gKwlzbnByaW50Zihwcm9wLCBzaXplb2YocHJvcCksICIlc2NwdSIsIHBy
+ZWZpeCk7Cj4gKwlucCA9IG9mX2dldF9jaGlsZF9ieV9uYW1lKG5vZGUsIHByb3ApOwo+ICsJaWYg
+KCFucCkgewo+ICsJCXJldCA9IC1FSU5WQUw7Cj4gKwkJZGV2X2VycihkZXYsICIlczogQ2FuJ3Qg
+ZmluZCBzaW1wbGUtYXVkaW8tY2FyZCxjcHUgRFQgbm9kZVxuIiwKPiArCQkJX19mdW5jX18pOwo+
+ICsJCWdvdG8gZGFpX2xpbmtfb2ZfZXJyOwo+ICAJfQo+ICsKPiArCXJldCA9IGFzb2Nfc2ltcGxl
+X2NhcmRfc3ViX3BhcnNlX29mKG5wLCAmZGFpX3Byb3BzLT5jcHVfZGFpLAo+ICsJCQkJCSAgICAm
+ZGFpX2xpbmstPmNwdV9vZl9ub2RlLAo+ICsJCQkJCSAgICAmZGFpX2xpbmstPmNwdV9kYWlfbmFt
+ZSk7Cj4gIAlpZiAocmV0IDwgMCkKPiAtCQlyZXR1cm4gcmV0Owo+ICsJCWdvdG8gZGFpX2xpbmtf
+b2ZfZXJyOwo+ICsKPiArCWRhaV9wcm9wcy0+Y3B1X2RhaS5mbXQgPSBkYWlmbXQ7Cj4gKwlzd2l0
+Y2ggKCgobnAgPT0gYml0Y2xrbWFzdGVyKTw8NCl8KG5wID09IGZyYW1lbWFzdGVyKSkgewo+ICsJ
+Y2FzZSAweDExOgo+ICsJCWRhaV9wcm9wcy0+Y3B1X2RhaS5mbXQgfD0gU05EX1NPQ19EQUlGTVRf
+Q0JTX0NGUzsKPiArCQlicmVhazsKPiArCWNhc2UgMHgxMDoKPiArCQlkYWlfcHJvcHMtPmNwdV9k
+YWkuZm10IHw9IFNORF9TT0NfREFJRk1UX0NCU19DRk07Cj4gKwkJYnJlYWs7Cj4gKwljYXNlIDB4
+MDE6Cj4gKwkJZGFpX3Byb3BzLT5jcHVfZGFpLmZtdCB8PSBTTkRfU09DX0RBSUZNVF9DQk1fQ0ZT
+Owo+ICsJCWJyZWFrOwo+ICsJZGVmYXVsdDoKPiArCQlkYWlfcHJvcHMtPmNwdV9kYWkuZm10IHw9
+IFNORF9TT0NfREFJRk1UX0NCTV9DRk07Cj4gKwkJYnJlYWs7Cj4gKwl9Cj4gIAo+IC0JLyogQ09E
+RUMgc3ViLW5vZGUgKi8KPiAtCXJldCA9IC1FSU5WQUw7Cj4gLQlucCA9IG9mX2dldF9jaGlsZF9i
+eV9uYW1lKG5vZGUsICJzaW1wbGUtYXVkaW8tY2FyZCxjb2RlYyIpOwo+IC0JaWYgKG5wKSB7Cj4g
+LQkJcmV0ID0gYXNvY19zaW1wbGVfY2FyZF9zdWJfcGFyc2Vfb2YobnAsIGRhaWZtdCwKPiAtCQkJ
+CQkJJmRhaV9wcm9wcy0+Y29kZWNfZGFpLAo+IC0JCQkJCQkmZGFpX2xpbmstPmNvZGVjX29mX25v
+ZGUsCj4gLQkJCQkJCSZkYWlfbGluay0+Y29kZWNfZGFpX25hbWUpOwo+IC0JCW9mX25vZGVfcHV0
+KG5wKTsKPiArCW9mX25vZGVfcHV0KG5wKTsKPiArCXNucHJpbnRmKHByb3AsIHNpemVvZihwcm9w
+KSwgIiVzY29kZWMiLCBwcmVmaXgpOwo+ICsJbnAgPSBvZl9nZXRfY2hpbGRfYnlfbmFtZShub2Rl
+LCBwcm9wKTsKPiArCWlmICghbnApIHsKPiArCQlyZXQgPSAtRUlOVkFMOwo+ICsJCWRldl9lcnIo
+ZGV2LCAiJXM6IENhbid0IGZpbmQgc2ltcGxlLWF1ZGlvLWNhcmQsY29kZWMgRFQgbm9kZVxuIiwK
+PiArCQkJX19mdW5jX18pOwo+ICsJCWdvdG8gZGFpX2xpbmtfb2ZfZXJyOwo+ICAJfQo+ICsKPiAr
+CXJldCA9IGFzb2Nfc2ltcGxlX2NhcmRfc3ViX3BhcnNlX29mKG5wLCAmZGFpX3Byb3BzLT5jb2Rl
+Y19kYWksCj4gKwkJCQkJICAgICZkYWlfbGluay0+Y29kZWNfb2Zfbm9kZSwKPiArCQkJCQkgICAg
+JmRhaV9saW5rLT5jb2RlY19kYWlfbmFtZSk7Cj4gKwlpZiAocmV0IDwgMCkKPiArCQlnb3RvIGRh
+aV9saW5rX29mX2VycjsKPiArCj4gKwlpZiAoIWJpdGNsa21hc3RlciAmJiAhZnJhbWVtYXN0ZXIp
+IHsKPiArCQkvKiBNYXN0ZXIgc2V0dGluZyBub3QgZm91bmQgZnJvbSBkYWlfbGluayBsZXZlbCwg
+cmV2ZXJ0IGJhY2sKPiArCQkgICB0byBsZWdhY3kgRFQgcGFyc2luZyBhbmQgdGFrZSBzZXR0aW5n
+cyBmcm9tIGNvZGVjIG5vZGUuICovCj4gKwkJZGV2X2RiZyhkZXYsICIlczogUmV2ZXJ0IHRvIGxl
+Z2FjeSBkYWlmbXQgcGFyc2luZ1xuIiwKPiArCQkJX19mdW5jX18pOwo+ICsJCWRhaV9wcm9wcy0+
+Y3B1X2RhaS5mbXQgPSBkYWlfcHJvcHMtPmNvZGVjX2RhaS5mbXQgPQo+ICsJCQlzbmRfc29jX29m
+X3BhcnNlX2RhaWZtdChucCwgTlVMTCwgTlVMTCwgTlVMTCkgfAo+ICsJCQkoZGFpZm10ICYgflNO
+RF9TT0NfREFJRk1UX0NMT0NLX01BU0spOwoKV2UgYXJlIGhlcmUgZWFjaCB0aW1lIHRoZXJlIGlz
+IG5vIGJpdGNsb2NrLW1hc3RlciBhbmQgbm8gZnJhbWUtbWFzdGVyLAppLmUuIGVhY2ggdGltZSBm
+b3IgbWUuIEl0IGNvdWxkIGJlIHNpbXBsZXIgdG8ga2VlcCB0aGUgZmlyc3QgJ2RhaWZtdCcKaW5z
+dGVhZCBvZiBwYXJzaW5nIGFnYWluLgoKPiArCX0gZWxzZSB7Cj4gKwkJZGFpX3Byb3BzLT5jb2Rl
+Y19kYWkuZm10ID0gZGFpZm10Owo+ICsJCXN3aXRjaCAoKChucCA9PSBiaXRjbGttYXN0ZXIpPDw0
+KXwobnAgPT0gZnJhbWVtYXN0ZXIpKSB7Cj4gKwkJY2FzZSAweDExOgo+ICsJCQlkYWlfcHJvcHMt
+PmNvZGVjX2RhaS5mbXQgfD0gU05EX1NPQ19EQUlGTVRfQ0JNX0NGTTsKPiArCQkJYnJlYWs7Cj4g
+KwkJY2FzZSAweDEwOgo+ICsJCQlkYWlfcHJvcHMtPmNvZGVjX2RhaS5mbXQgfD0gU05EX1NPQ19E
+QUlGTVRfQ0JNX0NGUzsKPiArCQkJYnJlYWs7Cj4gKwkJY2FzZSAweDAxOgo+ICsJCQlkYWlfcHJv
+cHMtPmNvZGVjX2RhaS5mbXQgfD0gU05EX1NPQ19EQUlGTVRfQ0JTX0NGTTsKPiArCQkJYnJlYWs7
+Cj4gKwkJZGVmYXVsdDoKPiArCQkJZGFpX3Byb3BzLT5jb2RlY19kYWkuZm10IHw9IFNORF9TT0Nf
+REFJRk1UX0NCU19DRlM7Cj4gKwkJCWJyZWFrOwo+ICsJCX0KPiArCX0KPiArCj4gKwlpZiAoIWRh
+aV9saW5rLT5jcHVfZGFpX25hbWUgfHwgIWRhaV9saW5rLT5jb2RlY19kYWlfbmFtZSkgewo+ICsJ
+CQlyZXQgPSAtRUlOVkFMOwo+ICsJCQlnb3RvIGRhaV9saW5rX29mX2VycjsKPiArCX0KPiArCj4g
+KwkvKiBzaW1wbGUtY2FyZCBhc3N1bWVzIHBsYXRmb3JtID09IGNwdSAqLwo+ICsJZGFpX2xpbmst
+PnBsYXRmb3JtX29mX25vZGUgPSBkYWlfbGluay0+Y3B1X29mX25vZGU7Cj4gKwo+ICsJLyogTGlu
+ayBuYW1lIGlzIGNyZWF0ZWQgZnJvbSBDUFUvQ09ERUMgZGFpIG5hbWUgKi8KPiArCW5hbWUgPSBk
+ZXZtX2t6YWxsb2MoZGV2LAo+ICsJCQkgICAgc3RybGVuKGRhaV9saW5rLT5jcHVfZGFpX25hbWUp
+ICAgKwo+ICsJCQkgICAgc3RybGVuKGRhaV9saW5rLT5jb2RlY19kYWlfbmFtZSkgKyAyLAo+ICsJ
+CQkgICAgR0ZQX0tFUk5FTCk7Cj4gKwlzcHJpbnRmKG5hbWUsICIlcy0lcyIsIGRhaV9saW5rLT5j
+cHVfZGFpX25hbWUsCj4gKwkJCQlkYWlfbGluay0+Y29kZWNfZGFpX25hbWUpOwo+ICsJZGFpX2xp
+bmstPm5hbWUgPSBkYWlfbGluay0+c3RyZWFtX25hbWUgPSBuYW1lOwo+ICsKPiArCWRldl9kYmco
+ZGV2LCAiXHRuYW1lIDogJXNcbiIsIGRhaV9saW5rLT5zdHJlYW1fbmFtZSk7Cj4gKwlkZXZfZGJn
+KGRldiwgIlx0Y3B1IDogJXMgLyAlMDR4IC8gJWRcbiIsCj4gKwkJZGFpX2xpbmstPmNwdV9kYWlf
+bmFtZSwKPiArCQlkYWlfcHJvcHMtPmNwdV9kYWkuZm10LAo+ICsJCWRhaV9wcm9wcy0+Y3B1X2Rh
+aS5zeXNjbGspOwo+ICsJZGV2X2RiZyhkZXYsICJcdGNvZGVjIDogJXMgLyAlMDR4IC8gJWRcbiIs
+Cj4gKwkJZGFpX2xpbmstPmNvZGVjX2RhaV9uYW1lLAo+ICsJCWRhaV9wcm9wcy0+Y29kZWNfZGFp
+LmZtdCwKPiArCQlkYWlfcHJvcHMtPmNvZGVjX2RhaS5zeXNjbGspOwo+ICsKPiArZGFpX2xpbmtf
+b2ZfZXJyOgo+ICsJaWYgKG5wKQo+ICsJCW9mX25vZGVfcHV0KG5wKTsKPiArCWlmIChiaXRjbGtt
+YXN0ZXIpCj4gKwkJb2Zfbm9kZV9wdXQoYml0Y2xrbWFzdGVyKTsKPiArCWlmIChmcmFtZW1hc3Rl
+cikKPiArCQlvZl9ub2RlX3B1dChmcmFtZW1hc3Rlcik7Cj4gIAlyZXR1cm4gcmV0Owo+ICB9Cj4g
+IAo+IEBAIC0xOTIsMTggKzI4MSwxMSBAQCBzdGF0aWMgaW50IGFzb2Nfc2ltcGxlX2NhcmRfcGFy
+c2Vfb2Yoc3RydWN0IGRldmljZV9ub2RlICpub2RlLAo+ICB7Cj4gIAlzdHJ1Y3Qgc25kX3NvY19k
+YWlfbGluayAqZGFpX2xpbmsgPSBwcml2LT5zbmRfY2FyZC5kYWlfbGluazsKPiAgCXN0cnVjdCBz
+aW1wbGVfZGFpX3Byb3BzICpkYWlfcHJvcHMgPSBwcml2LT5kYWlfcHJvcHM7Cj4gLQlzdHJ1Y3Qg
+ZGV2aWNlX25vZGUgKm5wOwo+IC0JY2hhciAqbmFtZTsKPiAtCXVuc2lnbmVkIGludCBkYWlmbXQ7
+Cj4gIAlpbnQgcmV0Owo+ICAKPiAgCS8qIHBhcnNpbmcgdGhlIGNhcmQgbmFtZSBmcm9tIERUICov
+Cj4gIAlzbmRfc29jX29mX3BhcnNlX2NhcmRfbmFtZSgmcHJpdi0+c25kX2NhcmQsICJzaW1wbGUt
+YXVkaW8tY2FyZCxuYW1lIik7Cj4gIAo+IC0JLyogZ2V0IENQVS9DT0RFQyBjb21tb24gZm9ybWF0
+IHZpYSBzaW1wbGUtYXVkaW8tY2FyZCxmb3JtYXQgKi8KPiAtCWRhaWZtdCA9IHNuZF9zb2Nfb2Zf
+cGFyc2VfZGFpZm10KG5vZGUsICJzaW1wbGUtYXVkaW8tY2FyZCwiKSAmCj4gLQkJKFNORF9TT0Nf
+REFJRk1UX0ZPUk1BVF9NQVNLIHwgU05EX1NPQ19EQUlGTVRfSU5WX01BU0spOwo+IC0KPiAgCS8q
+IG9mZi1jb2RlYyB3aWRnZXRzICovCj4gIAlpZiAob2ZfcHJvcGVydHlfcmVhZF9ib29sKG5vZGUs
+ICJzaW1wbGUtYXVkaW8tY2FyZCx3aWRnZXRzIikpIHsKPiAgCQlyZXQgPSBzbmRfc29jX29mX3Bh
+cnNlX2F1ZGlvX3NpbXBsZV93aWRnZXRzKCZwcml2LT5zbmRfY2FyZCwKPiBAQCAtMjIwLDcxICsz
+MDIsMzAgQEAgc3RhdGljIGludCBhc29jX3NpbXBsZV9jYXJkX3BhcnNlX29mKHN0cnVjdCBkZXZp
+Y2Vfbm9kZSAqbm9kZSwKPiAgCQkJcmV0dXJuIHJldDsKPiAgCX0KPiAgCj4gLQkvKiBsb29wIG9u
+IHRoZSBEQUkgbGlua3MgKi8KPiAtCW5wID0gTlVMTDsKPiAtCWZvciAoOzspIHsKPiAtCQlpZiAo
+bXVsdGkpIHsKPiAtCQkJbnAgPSBvZl9nZXRfbmV4dF9jaGlsZChub2RlLCBucCk7Cj4gLQkJCWlm
+ICghbnApCj4gLQkJCQlicmVhazsKPiAtCQl9Cj4gLQo+IC0JCXJldCA9IHNpbXBsZV9jYXJkX2Nw
+dV9jb2RlY19vZihtdWx0aSA/IG5wIDogbm9kZSwKPiAtCQkJCQlkYWlmbXQsIGRhaV9saW5rLCBk
+YWlfcHJvcHMpOwo+IC0JCWlmIChyZXQgPCAwKQo+IC0JCQlnb3RvIGVycjsKPiAtCj4gLQkJLyoK
+PiAtCQkgKiBvdmVyd3JpdGUgY3B1X2RhaS0+Zm10IGFzIGl0cyBEQUlGTVRfTUFTVEVSIGJpdCBp
+cyBiYXNlZCBvbiBDT0RFQwo+IC0JCSAqIHdoaWxlIHRoZSBvdGhlciBiaXRzIHNob3VsZCBiZSBp
+ZGVudGljYWwgdW5sZXNzIGJ1Z2d5IFNXL0hXIGRlc2lnbi4KPiAtCQkgKi8KPiAtCQlkYWlfcHJv
+cHMtPmNwdV9kYWkuZm10ID0gZGFpX3Byb3BzLT5jb2RlY19kYWkuZm10Owo+ICsJZGV2X2RiZyhk
+ZXYsICJOZXcgc2ltcGxlLWNhcmQ6ICVzXG4iLCBwcml2LT5zbmRfY2FyZC5uYW1lID8KPiArCQlw
+cml2LT5zbmRfY2FyZC5uYW1lIDogIiIpOwo+ICAKPiAtCQlpZiAoIWRhaV9saW5rLT5jcHVfZGFp
+X25hbWUgfHwgIWRhaV9saW5rLT5jb2RlY19kYWlfbmFtZSkgewo+IC0JCQlyZXQgPSAtRUlOVkFM
+Owo+IC0JCQlnb3RvIGVycjsKPiArCWlmIChtdWx0aSkgewo+ICsJCXN0cnVjdCBkZXZpY2Vfbm9k
+ZSAqbnAgPSBOVUxMOwo+ICsJCWludCBpOwo+ICsJCWZvciAoaSA9IDA7IChucCA9IG9mX2dldF9u
+ZXh0X2NoaWxkKG5vZGUsIG5wKSk7IGkrKykgewo+ICsJCQlkZXZfZGJnKGRldiwgIlx0bGluayAl
+ZDpcbiIsIGkpOwo+ICsJCQlyZXQgPSBzaW1wbGVfY2FyZF9kYWlfbGlua19vZihucCwgZGV2LCBk
+YWlfbGluayArIGksCj4gKwkJCQkJCSAgICAgIGRhaV9wcm9wcyArIGkpOwoKSSBmZWVsIHRoYXQg
+bXkgbG9vcCB3YXMgcXVpY2tlcjoKCgkJc3RydWN0IGRldmljZV9ub2RlICpucCA9IE5VTEw7CgoJ
+CWZvciAoOzspIHsKCQkJbnAgPSBvZl9nZXRfbmV4dF9jaGlsZChub2RlLCBucCk7CgkJCWlmICgh
+bnApCgkJCQlicmVhazsKCQkJZGV2X2RiZyhkZXYsICJcdGxpbmsgJWQ6XG4iLCBkYWlfbGluayAt
+IHByaXYtPnNuZF9jYXJkLmRhaV9saW5rKTsKCQkJcmV0ID0gc2ltcGxlX2NhcmRfZGFpX2xpbmtf
+b2YobnAsIGRldiwgZGFpX2xpbmsrKywKCQkJCQkJICAgICAgZGFpX3Byb3BzKyspOwoKCj4gKwkJ
+CW9mX25vZGVfcHV0KG5wKTsKPiArCQkJaWYgKHJldCA8IDApCj4gKwkJCQlyZXR1cm4gcmV0OwoK
+VGhlIG5wIHJlZmVyZW5jZSBjb3VudCBpcyB1cGRhdGVkIGluIG9mX2dldF9uZXh0X2NoaWxkKCks
+IHNvOgoKCQkJaWYgKHJldCA8IDApIHsKCQkJCW9mX25vZGVfcHV0KG5wKTsKCQkJCXJldHVybiBy
+ZXQ7CgkJCX0KCk90aGVyd2lzZSwgaXQgd29ya3MgZm9yIG1lLgoKVGVzdGVkLWJ5OiBKZWFuLUZy
+YW5jb2lzIE1vaW5lIDxtb2luZWpmQGZyZWUuZnI+Cgo+ICAJCX0KPiAtCj4gLQkJLyogc2ltcGxl
+LWNhcmQgYXNzdW1lcyBwbGF0Zm9ybSA9PSBjcHUgKi8KPiAtCQlkYWlfbGluay0+cGxhdGZvcm1f
+b2Zfbm9kZSA9IGRhaV9saW5rLT5jcHVfb2Zfbm9kZTsKPiAtCj4gLQkJbmFtZSA9IGRldm1fa3ph
+bGxvYyhkZXYsCj4gLQkJCQkgICAgc3RybGVuKGRhaV9saW5rLT5jcHVfZGFpX25hbWUpICAgKwo+
+IC0JCQkJICAgIHN0cmxlbihkYWlfbGluay0+Y29kZWNfZGFpX25hbWUpICsgMiwKPiAtCQkJCSAg
+ICBHRlBfS0VSTkVMKTsKPiAtCQlzcHJpbnRmKG5hbWUsICIlcy0lcyIsIGRhaV9saW5rLT5jcHVf
+ZGFpX25hbWUsCj4gLQkJCQkJZGFpX2xpbmstPmNvZGVjX2RhaV9uYW1lKTsKPiAtCQlkYWlfbGlu
+ay0+bmFtZSA9IGRhaV9saW5rLT5zdHJlYW1fbmFtZSA9IG5hbWU7Cj4gLQo+IC0JCWlmICghbXVs
+dGkpCj4gLQkJCWJyZWFrOwo+IC0KPiAtCQlkYWlfbGluaysrOwo+IC0JCWRhaV9wcm9wcysrOwo+
+ICsJfSBlbHNlIHsKPiArCQlyZXQgPSBzaW1wbGVfY2FyZF9kYWlfbGlua19vZihub2RlLCBkZXYs
+IGRhaV9saW5rLCBkYWlfcHJvcHMpOwo+ICsJCWlmIChyZXQgPCAwKQo+ICsJCQlyZXR1cm4gcmV0
+Owo+ICAJfQo+ICAKPiAtCS8qIGNhcmQgbmFtZSBpcyBjcmVhdGVkIGZyb20gQ1BVL0NPREVDIGRh
+aSBuYW1lICovCj4gLQlkYWlfbGluayA9IHByaXYtPnNuZF9jYXJkLmRhaV9saW5rOwo+ICAJaWYg
+KCFwcml2LT5zbmRfY2FyZC5uYW1lKQo+IC0JCXByaXYtPnNuZF9jYXJkLm5hbWUgPSBkYWlfbGlu
+ay0+bmFtZTsKPiAtCj4gLQlkZXZfZGJnKGRldiwgImNhcmQtbmFtZSA6ICVzXG4iLCBwcml2LT5z
+bmRfY2FyZC5uYW1lKTsKPiAtCWRldl9kYmcoZGV2LCAicGxhdGZvcm0gOiAlMDR4XG4iLCBkYWlm
+bXQpOwo+IC0JZGFpX3Byb3BzID0gcHJpdi0+ZGFpX3Byb3BzOwo+IC0JZGV2X2RiZyhkZXYsICJj
+cHUgOiAlcyAvICUwNHggLyAlZFxuIiwKPiAtCQlkYWlfbGluay0+Y3B1X2RhaV9uYW1lLAo+IC0J
+CWRhaV9wcm9wcy0+Y3B1X2RhaS5mbXQsCj4gLQkJZGFpX3Byb3BzLT5jcHVfZGFpLnN5c2Nsayk7
+Cj4gLQlkZXZfZGJnKGRldiwgImNvZGVjIDogJXMgLyAlMDR4IC8gJWRcbiIsCj4gLQkJZGFpX2xp
+bmstPmNvZGVjX2RhaV9uYW1lLAo+IC0JCWRhaV9wcm9wcy0+Y29kZWNfZGFpLmZtdCwKPiAtCQlk
+YWlfcHJvcHMtPmNvZGVjX2RhaS5zeXNjbGspOwo+ICsJCXByaXYtPnNuZF9jYXJkLm5hbWUgPSBw
+cml2LT5zbmRfY2FyZC5kYWlfbGluay0+bmFtZTsKPiAgCj4gIAlyZXR1cm4gMDsKPiAtCj4gLWVy
+cjoKPiAtCW9mX25vZGVfcHV0KG5wKTsKPiAtCXJldHVybiByZXQ7Cj4gIH0KPiAgCj4gIC8qIHVw
+ZGF0ZSB0aGUgcmVmZXJlbmNlIGNvdW50IG9mIHRoZSBkZXZpY2VzIG5vZGVzIGF0IGVuZCBvZiBw
+cm9iZSAqLwoKLS0gCktlbiBhciBjJ2hlbnRhw7EJfAkgICAgICAqKiBCcmVpemggaGEgTGludXgg
+YXRhdiEgKioKSmVmCQl8CQlodHRwOi8vbW9pbmVqZi5mcmVlLmZyLwpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApB
+bHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0cDovL21haWxtYW4uYWxzYS1wcm9qZWN0Lm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2ZWwK
