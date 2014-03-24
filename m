@@ -1,100 +1,60 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH] ARM: dts: am437x-gp-evm: Do not reset gpio5
-Date: Mon, 24 Mar 2014 14:01:30 -0500
-Message-ID: <5330810A.3090004@ti.com>
-References: <1395379213-15451-1-git-send-email-lokeshvutla@ti.com> <20140321055242.GA1959@saruman.home> <53304F76.8090703@ti.com> <20140324185027.GC12500@saruman.home>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v3] i2c: new bus driver for efm32
+Date: Mon, 24 Mar 2014 20:08:56 +0100
+Message-ID: <20140324190856.GA11532@katana>
+References: <1395414236-22647-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <20140324170131.GB7524@katana>
+ <20140324184114.GK23076@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140324185027.GC12500@saruman.home>
-Sender: linux-omap-owner@vger.kernel.org
-To: balbi@ti.com, Dave Gerlach <d-gerlach@ti.com>
-Cc: Lokesh Vutla <lokeshvutla@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org, nsekhar@ti.com, rnayak@ti.com, mark.rutland@arm.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jRHKVT23PllUwdXP"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140324184114.GK23076-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uwe =?iso-8859-15?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/24/2014 01:50 PM, Felipe Balbi wrote:
-> Hi,
-> 
-> On Mon, Mar 24, 2014 at 10:29:58AM -0500, Dave Gerlach wrote:
->> On 03/21/2014 12:52 AM, Felipe Balbi wrote:
->>> On Fri, Mar 21, 2014 at 10:50:13AM +0530, Lokesh Vutla wrote:
->>>> From: Dave Gerlach <d-gerlach@ti.com>
->>>>
->>>> Do not reset GPIO5 at boot-up because GPIO5_7 is used
->>>> on AM437x GP-EVM to control VTT regulators on DDR3.
->>>> Without this some GP-EVM boards will fail to boot because
->>>> of DDR3 corruption.
->>>>
->>>> Reported-by: Nishanth Menon <nm@ti.com>
->>>> Tested-by: Nishanth Menon <nm@ti.com>
->>>> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
->>>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
->>>
->>> every now and again we see a patch like this because yet another board
->>> is using a GPIO to toggle DDR regulators.
->>>
->>> Instead of constantly patching things like this, how about we try
->>> something like below (build-tested only):
->>
->> Why should we change all of them? Is it correct to leave every single GPIO
->> at the mercy of the bootloader in every situation? The reason we see these
-> 
-> it's not leaving anything at the mercy of the bootloader. It's simply
-> looking at the HW itself and asking "what's the current state of this
-> GPIO ?"
 
-And you assume here that every GPIO pin left in what ever state by
-bootloader is the correct state for kernel to function in? that is not
-exactly a good idea from even power consumption perspective - example
-GPIOs used by bootloader to detect board revision is not used in
-kernel, leaving such GPIOs active is not optimal, certain other GPIOs
-used by external peripherals might even be wrongly configured by
-bootloader issues -> the idea of ti,no-reset-on-init is to ensure that
-we *know* which instances "need special handling" and we depend on
-bootloader configuration.
+--jRHKVT23PllUwdXP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Taking it a step further, why is "not doing IP module kernel reset"
-just a constraint for GPIO then? Why not leave every IP module in what
-ever state bootloader left it at?
 
->> patches only every now and again is because it's a special case that should
-> 
-> I wouldn't call it "special". A GPIO block is pretty dumb, its registers
-> only give you current pin state, there's virtually no state machine
-> involved whatsoever.
-> 
->> be handled only for that situation. I also don't think it makes sense
->> to make gpio's a unique case that never gets reset while every other
->> IP does by default.
-> 
-> Well, if it doesn't need to be reset, why would you spend that time
-> resetting it ? In the GPIO case, you gain nothing by resetting the IP,
-> nothing at all, other than "now I'm sure the IP is in
-> no-standby/no-idle" but that can be easily read back from SYS[SC]
-> registers anyway.
+> > > +config I2C_EFM32
+> > > +	tristate "EFM32 I2C controller"
+> > > +	depends on OF && (ARCH_EFM32 || COMPILE_TEST)
+> >=20
+> > Is EFM32 DT only? Do we need the dependency on OF?
+> yes, efm32 is DT only. Still for the COMPILE_TEST branch the OF is
+> needed.
 
-because, you do not know how else the system might be used. instead of
-assuming the bootloader or host OS (in a virtualized environment) will
-always be doing the right thing, kernel takes responsibility of
-peripherals and exceptions are clearly marked (such as with
-ti,no-reset-on-init;).
+Really? of_* functions should have empty templates if OF is not
+selected, I'd think.
 
-> 
-> The point is that we have two choices here:
-> 
-> a) every time a new board comes around using GPIO as an enable signal
-> for DDR, we spend a few days debugging why it's not booting.
 
-yeah - read the darned schematics - this is valid for anyone doing
-board/platform bringup - this is the right way to do it.
+--jRHKVT23PllUwdXP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> 
-> b) make sure no GPIO block is ever reset, so we never go through the
-> debugging cycle again.
-> 
-the holy grail of new bugs! Sigh!
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
 
--- 
-Regards,
-Nishanth Menon
+iQIcBAEBAgAGBQJTMILIAAoJEBQN5MwUoCm2zuQP/jKBuBTWQvOs0YUsKA+waaBh
+a0bgblGdxmD6w/C+Nfc179zz/Ujt6PEH9gxfFLZcoAYeG023PfeRZ/v0cYBr2AIl
+zC+ehPW9r/R06fbJIfMdDUNN1PjY8/JdeKy2haknF+cvythDcP3A9K6QNjIMZFEb
+yd3/u3hrK3Mi+GGvT7JZueR0NNVARCFiaScjFOuv9tGT73DU5Zp+Kb4YV3NaoxGV
+ZuKxjFAUTev24Q7eNtb6bw2sRL1URyRQEHvB7Ixy31WQpVvLBhRjaPmizrK3XGYJ
+xzf3zJNI2dppFJJAGbzyzuHeW2kSlsDZClYtDAT2VSA29Y9i0VlAKZ/H8goGgBz8
+pk1c/v2y0KGzzzfDNBfvlPrBvCokoTZL7TGO15tMg+UkYJtUXLwd6lxTLPqjLcXo
+4ZA6rPj+NkftTwCdSYLMzz8h/83Ux99ITo01m7kjZAxySqSJJIq+yTaRKZ9R94IM
+XiAE3POtiXQS5J9byhxn6NA47aNauSni1igtgEGrKIMvlYHciJ9wQ5pNn3hzlV1J
+rCKgyfdIgHj64AkFVEr8d/RlWenSPW3xRnOE3tCK+HlRgHmbw9ej+iTEmVapDuTy
+lpES1vZz1wFnJH26W2vWlex63fDerj9nwHecbXKfsFgUIN26dEbHV1h5bbiSx5ww
+1TRjm/a4mM3jrjB5Bvm0
+=lBJN
+-----END PGP SIGNATURE-----
+
+--jRHKVT23PllUwdXP--
