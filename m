@@ -1,105 +1,97 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 05/20] mmc: mmci: Add DT bindings for signal direction
-Date: Mon, 24 Mar 2014 10:14:56 +0100
-Message-ID: <CAPDyKFrupT7sbT5eBsTC61ELCp_OZTe==Jc_6KUqo9Wb4Xf5dQ@mail.gmail.com>
-References: <1395404057-27835-1-git-send-email-ulf.hansson@linaro.org>
-	<1395404057-27835-6-git-send-email-ulf.hansson@linaro.org>
-	<CAL_JsqLFJbC=ZVgc1xu9MN6iYN2871mxvZoJnAQJw3BQU07B+w@mail.gmail.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH RFC v2 1/2] ASoC: core: Update snd_soc_of_parse_daifmt() interface
+Date: Mon, 24 Mar 2014 11:16:06 +0200
+Message-ID: <3f19cda3bdd572acc47be478d14eab1ef4942b6a.1395651862.git.jsarha@ti.com>
+References: <cover.1395651862.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLFJbC=ZVgc1xu9MN6iYN2871mxvZoJnAQJw3BQU07B+w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <cover.1395651862.git.jsarha@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: peter.ujfalusi@ti.com, broonie@kernel.org, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, detheridge@ti.com, moinejf@free.fr, Li.Xiubo@freescale.com, kuninori.morimoto.gx@renesas.com, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 21 March 2014 16:20, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Fri, Mar 21, 2014 at 7:14 AM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> Some variants have support for indicating the bus signal directions,
->> which currently are configured through platform data.
->>
->> Add corresponding DT bindings to enable us to move away from using the
->> platform data.
->>
->> Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/mmc/mmci.txt |    4 ++++
->>  drivers/mmc/host/mmci.c                        |    7 +++++++
->>  2 files changed, 11 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/mmci.txt b/Documentation/devicetree/bindings/mmc/mmci.txt
->> index d167562..eb9ad86 100644
->> --- a/Documentation/devicetree/bindings/mmc/mmci.txt
->> +++ b/Documentation/devicetree/bindings/mmc/mmci.txt
->> @@ -15,6 +15,7 @@ Optional properties:
->>  - mmc-cap-mmc-highspeed  : indicates whether MMC is high speed capable.
->>  - mmc-cap-sd-highspeed   : indicates whether SD is high speed capable.
->>  - vqmmc-supply           : phandle to the regulator device tree node.
->> +- signal-direction       : a bit pattern, indicating bus signals directions.
->
-> You need to define the bit positions.
+Adds struct device_node **bitclkmaster and struct device_node **framemaster
+function parameters. With the new syntax bitclock-master and frame-master
+properties can explicitly indicate the dai-link bit-clock and frame masters
+with a phandle. This patch also makes the minimal changes to simple-card
+for it to work with the updated snd_soc_of_parse_daifmt(). Simple-card appears
+to be the only user of snd_soc_of_parse_daifmt() for now.
 
-May I refer to the <dt-bindings/mmc/mmci.h> instead? To me, it seems a
-bit silly to duplicate that information in the documentation.
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+---
+ include/sound/soc.h             |    4 +++-
+ sound/soc/generic/simple-card.c |    4 ++--
+ sound/soc/soc-core.c            |    8 +++++++-
+ 3 files changed, 12 insertions(+), 4 deletions(-)
 
->
->>
->>  Example:
->>
->> @@ -37,6 +38,9 @@ sdi0_per1@80126000 {
->>         mmc-cap-mmc-highspeed;
->>         cd-gpios  = <&gpio2 31 0x4>; // 95
->>
->> +       signal-direction = <(MCI_ST_DATA2DIREN | MCI_ST_CMDDIREN |
->> +                       MCI_ST_DATA0DIREN | MCI_ST_FBCLKEN)>;
->
-> The "ST" here is for STMicro or some ST based company? Use the vendor
-> prefix here.
+diff --git a/include/sound/soc.h b/include/sound/soc.h
+index f7de629..e40713a 100644
+--- a/include/sound/soc.h
++++ b/include/sound/soc.h
+@@ -1228,7 +1228,9 @@ int snd_soc_of_parse_tdm_slot(struct device_node *np,
+ int snd_soc_of_parse_audio_routing(struct snd_soc_card *card,
+ 				   const char *propname);
+ unsigned int snd_soc_of_parse_daifmt(struct device_node *np,
+-				     const char *prefix);
++				     const char *prefix,
++				     struct device_node **bitclkmaster,
++				     struct device_node **framemaster);
+ int snd_soc_of_get_dai_name(struct device_node *of_node,
+ 			    const char **dai_name);
+ 
+diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
+index 21f1ccb..e0cc53b 100644
+--- a/sound/soc/generic/simple-card.c
++++ b/sound/soc/generic/simple-card.c
+@@ -121,7 +121,7 @@ asoc_simple_card_sub_parse_of(struct device_node *np,
+ 	 * bitclock-master,    frame-master
+ 	 * and specific "format" if it has
+ 	 */
+-	dai->fmt = snd_soc_of_parse_daifmt(np, NULL);
++	dai->fmt = snd_soc_of_parse_daifmt(np, NULL, NULL, NULL);
+ 	dai->fmt |= daifmt;
+ 
+ 	/*
+@@ -201,7 +201,7 @@ static int asoc_simple_card_parse_of(struct device_node *node,
+ 	snd_soc_of_parse_card_name(&priv->snd_card, "simple-audio-card,name");
+ 
+ 	/* get CPU/CODEC common format via simple-audio-card,format */
+-	daifmt = snd_soc_of_parse_daifmt(node, "simple-audio-card,") &
++	daifmt = snd_soc_of_parse_daifmt(node, "simple-audio-card,", NULL, NULL)&
+ 		(SND_SOC_DAIFMT_FORMAT_MASK | SND_SOC_DAIFMT_INV_MASK);
+ 
+ 	/* off-codec widgets */
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index b322cf2..7979dcc 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -4560,7 +4560,9 @@ int snd_soc_of_parse_audio_routing(struct snd_soc_card *card,
+ EXPORT_SYMBOL_GPL(snd_soc_of_parse_audio_routing);
+ 
+ unsigned int snd_soc_of_parse_daifmt(struct device_node *np,
+-				     const char *prefix)
++				     const char *prefix,
++				     struct device_node **bitclkmaster,
++				     struct device_node **framemaster)
+ {
+ 	int ret, i;
+ 	char prop[128];
+@@ -4643,9 +4645,13 @@ unsigned int snd_soc_of_parse_daifmt(struct device_node *np,
+ 	 */
+ 	snprintf(prop, sizeof(prop), "%sbitclock-master", prefix);
+ 	bit = !!of_get_property(np, prop, NULL);
++	if (bit && bitclkmaster)
++		*bitclkmaster = of_parse_phandle(np, prop, 0);
+ 
+ 	snprintf(prop, sizeof(prop), "%sframe-master", prefix);
+ 	frame = !!of_get_property(np, prop, NULL);
++	if (frame && framemaster)
++		*framemaster = of_parse_phandle(np, prop, 0);
+ 
+ 	switch ((bit << 4) + frame) {
+ 	case 0x11:
+-- 
+1.7.9.5
 
-We have way back already concluded to use "ST" as prefix for all
-STMicro specific defines used in mmci. Please have a look at
-drivers/mmc/host/mmci.h.
-I would prefer to keep these aligned with the other defines, though if
-you have strong feelings about it, sure I can change them.
-
->
-> I don't really understand why you need to specify the direction here.
-> Data lines are bi-directional and cmd and clk are outputs.
->
-
-These bits are being used when you have an external levelshifter.
-
-Without going into too much details, it all depends on how the
-different pins are connected to the levelshifter, which isn't possible
-to figure out in runtime.
-
->> +
->>         vmmc-supply = <&ab8500_ldo_aux3_reg>;
->>         vqmmc-supply = <&vmmci>;
->>
->> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
->> index d6f20ba..76e41ba 100644
->> --- a/drivers/mmc/host/mmci.c
->> +++ b/drivers/mmc/host/mmci.c
->> @@ -1390,8 +1390,15 @@ static struct mmc_host_ops mmci_ops = {
->>  static void mmci_dt_populate_generic_pdata(struct device_node *np,
->>                                         struct mmci_platform_data *pdata)
->>  {
->> +       u32 sigdir = 0;
->>         int bus_width = 0;
->>
->> +       if (!of_property_read_u32(np, "signal-direction", &sigdir)) {
->> +               sigdir &= MCI_ST_DATA2DIREN|MCI_ST_CMDDIREN|MCI_ST_DATA0DIREN|
->> +                       MCI_ST_DATA31DIREN|MCI_ST_FBCLKEN|MCI_ST_DATA74DIREN;
->
-> Spaces around the '|'.
->
-> Rob
-
-Kind regards
-Ulf Hansson
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
