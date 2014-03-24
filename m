@@ -1,494 +1,179 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: [PATCH RFC v3 2/2] ASoC: simple-card: Move dai-link level properties away from dai subnodes
-Date: Mon, 24 Mar 2014 12:15:25 +0200
-Message-ID: <895e907e9c47da2b4a358a1a2c24435003dea48f.1395655868.git.jsarha@ti.com>
-References: <cover.1395655868.git.jsarha@ti.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] arm64: dts: Add initial dts for Cavium Thunder
+ SoC
+Date: Mon, 24 Mar 2014 10:25:12 +0000
+Message-ID: <20140324102512.GC10341@e106331-lin.cambridge.arm.com>
+References: <1395652179-9216-1-git-send-email-mohun106@gmail.com>
+ <1395652179-9216-3-git-send-email-mohun106@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <cover.1395655868.git.jsarha@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: peter.ujfalusi@ti.com, broonie@kernel.org, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, detheridge@ti.com, moinejf@free.fr, Li.Xiubo@freescale.com, kuninori.morimoto.gx@renesas.com, Jyri Sarha <jsarha@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1395652179-9216-3-git-send-email-mohun106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "mohun106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <mohun106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "pkapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <pkapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The properties like format, bitclock-master, frame-master,
-bitclock-inversion, and frame-inversion should be common to the dais
-connected with a dai-link. For bitclock-master and frame-master
-properties to be unambiguous they need to indicate the mastering dai
-node with a phandle.
+Hi,
 
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
----
- .../devicetree/bindings/sound/simple-card.txt      |   88 +++----
- sound/soc/generic/simple-card.c                    |  239 ++++++++++++--------
- 2 files changed, 190 insertions(+), 137 deletions(-)
+On Mon, Mar 24, 2014 at 09:09:38AM +0000, mohun106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> 
+> Signed-off-by: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/Makefile    |    1 +
+>  arch/arm64/boot/dts/thunder.dts |  160 +++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 161 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+> index c52bdb0..9cc8740 100644
+> --- a/arch/arm64/boot/dts/Makefile
+> +++ b/arch/arm64/boot/dts/Makefile
+> @@ -1,3 +1,4 @@
+> +dtb-$(CONFIG_ARCH_THUNDER) += thunder.dtb
+>  dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb foundation-v8.dtb
+>  dtb-$(CONFIG_ARCH_XGENE) += apm-mustang.dtb
+>  
+> diff --git a/arch/arm64/boot/dts/thunder.dts b/arch/arm64/boot/dts/thunder.dts
+> new file mode 100644
+> index 0000000..190e01a
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/thunder.dts
+> @@ -0,0 +1,160 @@
+> +/*
+> + * Cavium Thunder DTS file
+> + *
+> + * Copyright (C) 2013, Cavium Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation; either version 2 of
+> + * the License, or (at your option) any later version.
+> + */
+> +/dts-v1/;
+> +
+> +/memreserve/ 0x80000000 0x00010000;
 
-diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
-index 131aa2a..9b9df14 100644
---- a/Documentation/devicetree/bindings/sound/simple-card.txt
-+++ b/Documentation/devicetree/bindings/sound/simple-card.txt
-@@ -1,6 +1,6 @@
- Simple-Card:
- 
--Simple-Card specifies audio DAI connection of SoC <-> codec.
-+Simple-Card specifies audio DAI connections of SoC <-> codec.
- 
- Required properties:
- 
-@@ -10,26 +10,51 @@ Optional properties:
- 
- - simple-audio-card,name		: User specified audio sound card name, one string
- 					  property.
--- simple-audio-card,format		: CPU/CODEC common audio format.
--					  "i2s", "right_j", "left_j" , "dsp_a"
--					  "dsp_b", "ac97", "pdm", "msb", "lsb"
- - simple-audio-card,widgets		: Please refer to widgets.txt.
- - simple-audio-card,routing		: A list of the connections between audio components.
- 					  Each entry is a pair of strings, the first being the
- 					  connection's sink, the second being the connection's
- 					  source.
--- dai-tdm-slot-num			: Please refer to tdm-slot.txt.
--- dai-tdm-slot-width			: Please refer to tdm-slot.txt.
-+Optional subnodes:
-+
-+- simple-audio-card,dai-link		: Container for dai-link level
-+					  properties and the CPU and CODEC
-+					  sub-nodes. This container may be
-+					  omitted when the card has only one
-+					  DAI link. See the examples and the
-+					  section bellow.
-+
-+Dai-link subnode properties and subnodes:
-+
-+If dai-link subnode is omitted and the subnode properties are directly
-+under "sound"-node the subnode property and subnode names have to be
-+prefixed with "simple-audio-card,"-prefix.
- 
--Required subnodes:
-+Required dai-link subnodes:
- 
--- simple-audio-card,dai-link		: container for the CPU and CODEC sub-nodes
--					  This container may be omitted when the
--					  card has only one DAI link.
--					  See the examples.
-+- cpu					: CPU   sub-node
-+- codec					: CODEC sub-node
- 
--- simple-audio-card,cpu			: CPU   sub-node
--- simple-audio-card,codec		: CODEC sub-node
-+Optional dai-link subnode properties:
-+
-+- format				: CPU/CODEC common audio format.
-+					  "i2s", "right_j", "left_j" , "dsp_a"
-+					  "dsp_b", "ac97", "pdm", "msb", "lsb"
-+- frame-master				: Indicates dai-link frame master.
-+					  phandle to a cpu or codec subnode.
-+- bitclock-master			: Indicates dai-link bit clock master.
-+					  phandle to a cpu or codec subnode.
-+- bitclock-inversion			: bool property. Add this if the
-+					  dai-link uses bit clock inversion.
-+- frame-inversion			: bool property. Add this if the
-+					  dai-link uses frame clock inversion.
-+
-+For backward compatibility the frame-master and bitclock-master
-+properties can be used as booleans in codec subnode to indicate if the
-+codec is the dai-link frame or bit clock master. In this case there
-+should be no dai-link node, the same properties should not be present
-+at sound-node level, and the bitclock-inversion and frame-inversion
-+properties should also be placed in the codec node if needed.
- 
- Required CPU/CODEC subnodes properties:
- 
-@@ -37,29 +62,21 @@ Required CPU/CODEC subnodes properties:
- 
- Optional CPU/CODEC subnodes properties:
- 
--- format				: CPU/CODEC specific audio format if needed.
--					  see simple-audio-card,format
--- frame-master				: bool property. add this if subnode is frame master
--- bitclock-master			: bool property. add this if subnode is bitclock master
--- bitclock-inversion			: bool property. add this if subnode has clock inversion
--- frame-inversion			: bool property. add this if subnode has frame inversion
-+- dai-tdm-slot-num			: Please refer to tdm-slot.txt.
-+- dai-tdm-slot-width			: Please refer to tdm-slot.txt.
- - clocks / system-clock-frequency	: specify subnode's clock if needed.
- 					  it can be specified via "clocks" if system has
- 					  clock node (= common clock), or "system-clock-frequency"
- 					  (if system doens't support common clock)
- 
--Note:
-- * For 'format', 'frame-master', 'bitclock-master', 'bitclock-inversion' and
--   'frame-inversion', the simple card will use the settings of CODEC for both
--   CPU and CODEC sides as we need to keep the settings identical for both ends
--   of the link.
--
- Example 1 - single DAI link:
- 
- sound {
- 	compatible = "simple-audio-card";
- 	simple-audio-card,name = "VF610-Tower-Sound-Card";
- 	simple-audio-card,format = "left_j";
-+	simple-audio-card,bitclock-master = <&dailink0_master>;
-+	simple-audio-card,frame-master = <&dailink0_master>;
- 	simple-audio-card,widgets =
- 		"Microphone", "Microphone Jack",
- 		"Headphone", "Headphone Jack",
-@@ -69,17 +86,12 @@ sound {
- 		"Headphone Jack", "HP_OUT",
- 		"External Speaker", "LINE_OUT";
- 
--	dai-tdm-slot-num = <2>;
--	dai-tdm-slot-width = <8>;
--
- 	simple-audio-card,cpu {
- 		sound-dai = <&sh_fsi2 0>;
- 	};
- 
--	simple-audio-card,codec {
-+	dailink0_master: simple-audio-card,codec {
- 		sound-dai = <&ak4648>;
--		bitclock-master;
--		frame-master;
- 		clocks = <&osc>;
- 	};
- };
-@@ -105,31 +117,31 @@ Example 2 - many DAI links:
- sound {
- 	compatible = "simple-audio-card";
- 	simple-audio-card,name = "Cubox Audio";
--	simple-audio-card,format = "i2s";
- 
- 	simple-audio-card,dai-link@0 {		/* I2S - HDMI */
--		simple-audio-card,cpu {
-+		format = "i2s";
-+		cpu {
- 			sound-dai = <&audio1 0>;
- 		};
--		simple-audio-card,codec {
-+		codec {
- 			sound-dai = <&tda998x 0>;
- 		};
- 	};
- 
- 	simple-audio-card,dai-link@1 {		/* S/PDIF - HDMI */
--		simple-audio-card,cpu {
-+		cpu {
- 			sound-dai = <&audio1 1>;
- 		};
--		simple-audio-card,codec {
-+		codec {
- 			sound-dai = <&tda998x 1>;
- 		};
- 	};
- 
- 	simple-audio-card,dai-link@2 {		/* S/PDIF - S/PDIF */
--		simple-audio-card,cpu {
-+		cpu {
- 			sound-dai = <&audio1 1>;
- 		};
--		simple-audio-card,codec {
-+		codec {
- 			sound-dai = <&spdif_codec>;
- 		};
- 	};
-diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
-index 835fd02..3f2e580 100644
---- a/sound/soc/generic/simple-card.c
-+++ b/sound/soc/generic/simple-card.c
-@@ -88,7 +88,6 @@ static int asoc_simple_card_dai_init(struct snd_soc_pcm_runtime *rtd)
- 
- static int
- asoc_simple_card_sub_parse_of(struct device_node *np,
--			      unsigned int daifmt,
- 			      struct asoc_simple_dai *dai,
- 			      const struct device_node **p_node,
- 			      const char **name)
-@@ -117,14 +116,6 @@ asoc_simple_card_sub_parse_of(struct device_node *np,
- 		return ret;
- 
- 	/*
--	 * bitclock-inversion, frame-inversion
--	 * bitclock-master,    frame-master
--	 * and specific "format" if it has
--	 */
--	dai->fmt = snd_soc_of_parse_daifmt(np, NULL, NULL, NULL);
--	dai->fmt |= daifmt;
--
--	/*
- 	 * dai->sysclk come from
- 	 *  "clocks = <&xxx>" (if system has common clock)
- 	 *  or "system-clock-frequency = <xxx>"
-@@ -151,37 +142,135 @@ asoc_simple_card_sub_parse_of(struct device_node *np,
- 	return 0;
- }
- 
--static int simple_card_cpu_codec_of(struct device_node *node,
--				int daifmt,
--				struct snd_soc_dai_link *dai_link,
--				struct simple_dai_props *dai_props)
-+static int simple_card_dai_link_of(struct device_node *node,
-+				   struct device *dev,
-+				   struct snd_soc_dai_link *dai_link,
-+				   struct simple_dai_props *dai_props)
- {
--	struct device_node *np;
-+	struct device_node *np = NULL;
-+	struct device_node *bitclkmaster = NULL;
-+	struct device_node *framemaster = NULL;
-+	unsigned int daifmt;
-+	char *name;
-+	char prop[128];
-+	char *prefix = "";
- 	int ret;
- 
--	/* CPU sub-node */
--	ret = -EINVAL;
--	np = of_get_child_by_name(node, "simple-audio-card,cpu");
--	if (np) {
--		ret = asoc_simple_card_sub_parse_of(np, daifmt,
--						&dai_props->cpu_dai,
--						&dai_link->cpu_of_node,
--						&dai_link->cpu_dai_name);
--		of_node_put(np);
-+	if (!strcmp("sound", node->name))
-+		prefix = "simple-audio-card,";
-+
-+	daifmt = snd_soc_of_parse_daifmt(node, prefix,
-+					 &bitclkmaster, &framemaster);
-+	daifmt &= ~SND_SOC_DAIFMT_MASTER_MASK;
-+
-+	snprintf(prop, sizeof(prop), "%scpu", prefix);
-+	np = of_get_child_by_name(node, prop);
-+	if (!np) {
-+		ret = -EINVAL;
-+		dev_err(dev, "%s: Can't find simple-audio-card,cpu DT node\n",
-+			__func__);
-+		goto dai_link_of_err;
- 	}
-+
-+	ret = asoc_simple_card_sub_parse_of(np, &dai_props->cpu_dai,
-+					    &dai_link->cpu_of_node,
-+					    &dai_link->cpu_dai_name);
- 	if (ret < 0)
--		return ret;
-+		goto dai_link_of_err;
-+
-+	dai_props->cpu_dai.fmt = daifmt;
-+	switch (((np == bitclkmaster)<<4)|(np == framemaster)) {
-+	case 0x11:
-+		dai_props->cpu_dai.fmt |= SND_SOC_DAIFMT_CBS_CFS;
-+		break;
-+	case 0x10:
-+		dai_props->cpu_dai.fmt |= SND_SOC_DAIFMT_CBS_CFM;
-+		break;
-+	case 0x01:
-+		dai_props->cpu_dai.fmt |= SND_SOC_DAIFMT_CBM_CFS;
-+		break;
-+	default:
-+		dai_props->cpu_dai.fmt |= SND_SOC_DAIFMT_CBM_CFM;
-+		break;
-+	}
- 
--	/* CODEC sub-node */
--	ret = -EINVAL;
--	np = of_get_child_by_name(node, "simple-audio-card,codec");
--	if (np) {
--		ret = asoc_simple_card_sub_parse_of(np, daifmt,
--						&dai_props->codec_dai,
--						&dai_link->codec_of_node,
--						&dai_link->codec_dai_name);
--		of_node_put(np);
-+	of_node_put(np);
-+	snprintf(prop, sizeof(prop), "%scodec", prefix);
-+	np = of_get_child_by_name(node, prop);
-+	if (!np) {
-+		ret = -EINVAL;
-+		dev_err(dev, "%s: Can't find simple-audio-card,codec DT node\n",
-+			__func__);
-+		goto dai_link_of_err;
-+	}
-+
-+	ret = asoc_simple_card_sub_parse_of(np, &dai_props->codec_dai,
-+					    &dai_link->codec_of_node,
-+					    &dai_link->codec_dai_name);
-+	if (ret < 0)
-+		goto dai_link_of_err;
-+
-+	if (strlen(prefix) && !bitclkmaster && !framemaster) {
-+		/* No dai-link level and master setting was not found from
-+		   sound node level, revert back to legacy DT parsing and
-+		   take the settings from codec node. */
-+		dev_dbg(dev, "%s: Revert to legacy daifmt parsing\n",
-+			__func__);
-+		dai_props->cpu_dai.fmt = dai_props->codec_dai.fmt =
-+			snd_soc_of_parse_daifmt(np, NULL, NULL, NULL) |
-+			(daifmt & ~SND_SOC_DAIFMT_CLOCK_MASK);
-+	} else {
-+		dai_props->codec_dai.fmt = daifmt;
-+		switch (((np == bitclkmaster)<<4)|(np == framemaster)) {
-+		case 0x11:
-+			dai_props->codec_dai.fmt |= SND_SOC_DAIFMT_CBM_CFM;
-+			break;
-+		case 0x10:
-+			dai_props->codec_dai.fmt |= SND_SOC_DAIFMT_CBM_CFS;
-+			break;
-+		case 0x01:
-+			dai_props->codec_dai.fmt |= SND_SOC_DAIFMT_CBS_CFM;
-+			break;
-+		default:
-+			dai_props->codec_dai.fmt |= SND_SOC_DAIFMT_CBS_CFS;
-+			break;
-+		}
-+	}
-+
-+	if (!dai_link->cpu_dai_name || !dai_link->codec_dai_name) {
-+			ret = -EINVAL;
-+			goto dai_link_of_err;
- 	}
-+
-+	/* simple-card assumes platform == cpu */
-+	dai_link->platform_of_node = dai_link->cpu_of_node;
-+
-+	/* Link name is created from CPU/CODEC dai name */
-+	name = devm_kzalloc(dev,
-+			    strlen(dai_link->cpu_dai_name)   +
-+			    strlen(dai_link->codec_dai_name) + 2,
-+			    GFP_KERNEL);
-+	sprintf(name, "%s-%s", dai_link->cpu_dai_name,
-+				dai_link->codec_dai_name);
-+	dai_link->name = dai_link->stream_name = name;
-+
-+	dev_dbg(dev, "\tname : %s\n", dai_link->stream_name);
-+	dev_dbg(dev, "\tcpu : %s / %04x / %d\n",
-+		dai_link->cpu_dai_name,
-+		dai_props->cpu_dai.fmt,
-+		dai_props->cpu_dai.sysclk);
-+	dev_dbg(dev, "\tcodec : %s / %04x / %d\n",
-+		dai_link->codec_dai_name,
-+		dai_props->codec_dai.fmt,
-+		dai_props->codec_dai.sysclk);
-+
-+dai_link_of_err:
-+	if (np)
-+		of_node_put(np);
-+	if (bitclkmaster)
-+		of_node_put(bitclkmaster);
-+	if (framemaster)
-+		of_node_put(framemaster);
- 	return ret;
- }
- 
-@@ -192,19 +281,11 @@ static int asoc_simple_card_parse_of(struct device_node *node,
- {
- 	struct snd_soc_dai_link *dai_link = priv->snd_card.dai_link;
- 	struct simple_dai_props *dai_props = priv->dai_props;
--	struct device_node *np;
--	char *name;
--	unsigned int daifmt;
- 	int ret;
- 
- 	/* parsing the card name from DT */
- 	snd_soc_of_parse_card_name(&priv->snd_card, "simple-audio-card,name");
- 
--	/* get CPU/CODEC common format via simple-audio-card,format */
--	daifmt = snd_soc_of_parse_daifmt(node, "simple-audio-card,", NULL,
--					 NULL) &
--		(SND_SOC_DAIFMT_FORMAT_MASK | SND_SOC_DAIFMT_INV_MASK);
--
- 	/* off-codec widgets */
- 	if (of_property_read_bool(node, "simple-audio-card,widgets")) {
- 		ret = snd_soc_of_parse_audio_simple_widgets(&priv->snd_card,
-@@ -221,71 +302,31 @@ static int asoc_simple_card_parse_of(struct device_node *node,
- 			return ret;
- 	}
- 
--	/* loop on the DAI links */
--	np = NULL;
--	for (;;) {
--		if (multi) {
--			np = of_get_next_child(node, np);
--			if (!np)
--				break;
-+	dev_dbg(dev, "New simple-card: %s\n", priv->snd_card.name ?
-+		priv->snd_card.name : "");
-+
-+	if (multi) {
-+		struct device_node *np = NULL;
-+		int i;
-+		for (i = 0; (np = of_get_next_child(node, np)); i++) {
-+			dev_dbg(dev, "\tlink %d:\n", i);
-+			ret = simple_card_dai_link_of(np, dev, dai_link + i,
-+						      dai_props + i);
-+			if (ret < 0) {
-+				of_node_put(np);
-+				return ret;
-+			}
- 		}
--
--		ret = simple_card_cpu_codec_of(multi ? np : node,
--					daifmt, dai_link, dai_props);
-+	} else {
-+		ret = simple_card_dai_link_of(node, dev, dai_link, dai_props);
- 		if (ret < 0)
--			goto err;
--
--		/*
--		 * overwrite cpu_dai->fmt as its DAIFMT_MASTER bit is based on CODEC
--		 * while the other bits should be identical unless buggy SW/HW design.
--		 */
--		dai_props->cpu_dai.fmt = dai_props->codec_dai.fmt;
--
--		if (!dai_link->cpu_dai_name || !dai_link->codec_dai_name) {
--			ret = -EINVAL;
--			goto err;
--		}
--
--		/* simple-card assumes platform == cpu */
--		dai_link->platform_of_node = dai_link->cpu_of_node;
--
--		name = devm_kzalloc(dev,
--				    strlen(dai_link->cpu_dai_name)   +
--				    strlen(dai_link->codec_dai_name) + 2,
--				    GFP_KERNEL);
--		sprintf(name, "%s-%s", dai_link->cpu_dai_name,
--					dai_link->codec_dai_name);
--		dai_link->name = dai_link->stream_name = name;
--
--		if (!multi)
--			break;
--
--		dai_link++;
--		dai_props++;
-+			return ret;
- 	}
- 
--	/* card name is created from CPU/CODEC dai name */
--	dai_link = priv->snd_card.dai_link;
- 	if (!priv->snd_card.name)
--		priv->snd_card.name = dai_link->name;
--
--	dev_dbg(dev, "card-name : %s\n", priv->snd_card.name);
--	dev_dbg(dev, "platform : %04x\n", daifmt);
--	dai_props = priv->dai_props;
--	dev_dbg(dev, "cpu : %s / %04x / %d\n",
--		dai_link->cpu_dai_name,
--		dai_props->cpu_dai.fmt,
--		dai_props->cpu_dai.sysclk);
--	dev_dbg(dev, "codec : %s / %04x / %d\n",
--		dai_link->codec_dai_name,
--		dai_props->codec_dai.fmt,
--		dai_props->codec_dai.sysclk);
-+		priv->snd_card.name = priv->snd_card.dai_link->name;
- 
- 	return 0;
--
--err:
--	of_node_put(np);
--	return ret;
- }
- 
- /* update the reference count of the devices nodes at end of probe */
--- 
-1.7.9.5
+Please add a comment as to what this is protecting (from the looks of
+it, the spinning CPUs and the cpu release address). We are admittedly
+lacking these on existing DTs (and I'll fix that up), but it would be
+good to get into the habit now given it has been a source of confusion
+for some.
 
+> +
+> +/ {
+> +	model = "Cavium Thunder";
+> +	compatible = "cavium,thunder";
+> +	interrupt-parent = <&gic0>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	aliases {
+> +		serial0 = &uaa0;
+> +		serial1 = &uaa1;
+> +	};
+> +
+> +	cpus {
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +		cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "cavium,thunder", "arm,armv8";
+
+This is the same as the compatible string for the SoC, which isn't a
+good idea. Compatible strings should be globally unique.
+
+As far as I am aware, "Thunder" is the name of the SoC, not the CPU in
+the SoC. Is there a name for the CPU in the Thunder SoC?
+
+Whatever name you have should be documented.
+
+[...]
+
+> +	memory@0 {
+> +		device_type = "memory";
+> +		reg = <0x0 0x0 0x0 0x80000000>;
+> +	};
+> +
+> +	gic0: interrupt-controller@801000000000 {
+
+Please break the 32-bit halves of the unit-address with a comma (e.g.
+8010,00000000); it makes it easier to read the address. If you could
+also do this on other unit-addresses it would be helpful.
+
+> +		compatible = "arm,gic-v3";
+> +		#interrupt-cells = <3>;
+> +		#address-cells = <0>;
+> +		interrupt-controller;
+> +		reg = <0x8010 0x0 0x0 0x10000>,         /* GICD */
+> +		      <0x8010 0x80000000 0x0 0x100000>; /* GICR */
+
+For legibility it would be nice for list entries to be consistently
+padded to the same length.
+
+> +		interrupts = <1 9 0xf04>;
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <1 13 0xff01>,
+> +		             <1 14 0xff01>,
+> +		             <1 11 0xff01>,
+> +		             <1 10 0xff01>;
+> +	};
+> +
+> +	soc {
+> +		compatible = "simple-bus";
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		clocks {
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			ranges;
+> +
+> +			refclk50mhz: refclk50mhz {
+> +				compatible = "fixed-clock";
+> +				#clock-cells = <0>;
+> +				clock-frequency = <50000000>;
+> +				clock-output-names = "refclk50mhz";
+> +			};
+> +		};
+
+I don't think the clocks node adds anything here. It's missing a
+compatible string list, and as clocks isn't a special reserved node
+name, it and its children aren't supposed to be probed.
+
+Why not just put the refclk50mhz directly under the parent node (the soc
+simple-bus)?
+
+[...]
+
+> +		uaa0: uart@87e024000000 {
+> +			compatible = "arm,pl011", "arm,primecell";
+> +			reg = <0x87e0 0x24000000 0x0 0x1000>;
+> +			interrupts = <1 21 4>;
+> +			clocks = <&refclk50mhz>;
+> +			clock-names = "apb_pclk";
+
+Is this also feeding the UARTCLK?
+
+> +		};
+> +
+> +		uaa1: uart@87e025000000 {
+> +			compatible = "arm,pl011", "arm,primecell";
+> +			reg = <0x87e0 0x25000000 0x0 0x1000>;
+> +			interrupts = <1 22 4>;
+> +			clocks = <&refclk50mhz>;
+> +			clock-names = "apb_pclk";
+
+Likewise?
+
+Cheers,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
