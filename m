@@ -1,57 +1,248 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] Documentation: add devicetree bindings for Cavium Thunder SoC
-Date: Mon, 24 Mar 2014 12:00:52 +0100
-Message-ID: <4189666.qlSmlZKNNW@wuerfel>
-References: <1395652179-9216-1-git-send-email-mohun106@gmail.com> <1395652179-9216-4-git-send-email-mohun106@gmail.com>
+From: Sathya Prakash M R <sathyap@ti.com>
+Subject: [PATCH V3 1/6] OMAPDSS: Add DSS features for AM43xx
+Date: Mon, 24 Mar 2014 16:31:51 +0530
+Message-ID: <1395658916-9032-2-git-send-email-sathyap@ti.com>
+References: <1395658916-9032-1-git-send-email-sathyap@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1395652179-9216-4-git-send-email-mohun106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: mohun106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Catalin.Marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, pkapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1395658916-9032-1-git-send-email-sathyap@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: tomi.valkeinen@ti.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: Sathya Prakash M R <sathyap@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 24 March 2014 14:39:39 mohun106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> diff --git a/Documentation/devicetree/bindings/arm/cavium-thunder.txt b/Documentation/devicetree/bindings/arm/cavium-thunder.txt
-> new file mode 100644
-> index 0000000..6ea0a34
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/cavium-thunder.txt
-> @@ -0,0 +1,9 @@
-> +Cavium Thunder platform device tree bindings
-> +---------------------------------------------
-> +
-> +Boards with Cavium's Thunder SoC shall have following properties.
-> +
-> +Root Node
-> +---------
-> +Required root node properties:
-> +    - compatible = "cavium,thunder";
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> index 333f4ae..f6cadf1 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -163,6 +163,7 @@ nodes to be present and contain the properties described below.
->                             "arm,cortex-r4"
->                             "arm,cortex-r5"
->                             "arm,cortex-r7"
-> +                           "cavium,thunder"
->                             "faraday,fa526"
->                             "intel,sa110"
->                             "intel,sa1100"
+Add DSS features for AM43xx.
 
+Signed-off-by: Sathya Prakash M R <sathyap@ti.com>
+---
+ arch/arm/mach-omap2/display.c          |    2 +
+ drivers/video/omap2/dss/dispc.c        |    1 +
+ drivers/video/omap2/dss/dpi.c          |    2 +
+ drivers/video/omap2/dss/dsi.c          |    1 +
+ drivers/video/omap2/dss/dss.c          |   11 ++++++
+ drivers/video/omap2/dss/dss_features.c |   67 ++++++++++++++++++++++++++++++++
+ include/video/omapdss.h                |    1 +
+ 7 files changed, 85 insertions(+)
 
-It seems very confusing to use the same name for both the SoC and the
-CPU core. Can you guarantee that there will never be another SoC with
-the same core, or a different CPU core in a SoC with the same name?
+diff --git a/arch/arm/mach-omap2/display.c b/arch/arm/mach-omap2/display.c
+index a4e536b..d1cac1c 100644
+--- a/arch/arm/mach-omap2/display.c
++++ b/arch/arm/mach-omap2/display.c
+@@ -316,6 +316,8 @@ static enum omapdss_version __init omap_display_get_version(void)
+ 		return OMAPDSS_VER_OMAP4;
+ 	else if (soc_is_omap54xx())
+ 		return OMAPDSS_VER_OMAP5;
++	else if (soc_is_am43xx())
++		return OMAPDSS_VER_AM43xx;
+ 	else
+ 		return OMAPDSS_VER_UNKNOWN;
+ }
+diff --git a/drivers/video/omap2/dss/dispc.c b/drivers/video/omap2/dss/dispc.c
+index 4ec59ca..1b4aed5 100644
+--- a/drivers/video/omap2/dss/dispc.c
++++ b/drivers/video/omap2/dss/dispc.c
+@@ -3622,6 +3622,7 @@ static int __init dispc_init_features(struct platform_device *pdev)
+ 	case OMAPDSS_VER_OMAP34xx_ES3:
+ 	case OMAPDSS_VER_OMAP3630:
+ 	case OMAPDSS_VER_AM35xx:
++	case OMAPDSS_VER_AM43xx:
+ 		src = &omap34xx_rev3_0_dispc_feats;
+ 		break;
+ 
+diff --git a/drivers/video/omap2/dss/dpi.c b/drivers/video/omap2/dss/dpi.c
+index bd48cde..7ee7f86 100644
+--- a/drivers/video/omap2/dss/dpi.c
++++ b/drivers/video/omap2/dss/dpi.c
+@@ -64,6 +64,7 @@ static struct platform_device *dpi_get_dsidev(enum omap_channel channel)
+ 	case OMAPDSS_VER_OMAP34xx_ES3:
+ 	case OMAPDSS_VER_OMAP3630:
+ 	case OMAPDSS_VER_AM35xx:
++	case OMAPDSS_VER_AM43xx:
+ 		return NULL;
+ 
+ 	case OMAPDSS_VER_OMAP4430_ES1:
+@@ -593,6 +594,7 @@ static enum omap_channel dpi_get_channel(void)
+ 	case OMAPDSS_VER_OMAP34xx_ES3:
+ 	case OMAPDSS_VER_OMAP3630:
+ 	case OMAPDSS_VER_AM35xx:
++	case OMAPDSS_VER_AM43xx:
+ 		return OMAP_DSS_CHANNEL_LCD;
+ 
+ 	case OMAPDSS_VER_OMAP4430_ES1:
+diff --git a/drivers/video/omap2/dss/dsi.c b/drivers/video/omap2/dss/dsi.c
+index 6056b27..d68b49b 100644
+--- a/drivers/video/omap2/dss/dsi.c
++++ b/drivers/video/omap2/dss/dsi.c
+@@ -5082,6 +5082,7 @@ static enum omap_channel dsi_get_channel(int module_id)
+ {
+ 	switch (omapdss_get_version()) {
+ 	case OMAPDSS_VER_OMAP24xx:
++	case OMAPDSS_VER_AM43xx:
+ 		DSSWARN("DSI not supported\n");
+ 		return OMAP_DSS_CHANNEL_LCD;
+ 
+diff --git a/drivers/video/omap2/dss/dss.c b/drivers/video/omap2/dss/dss.c
+index bd01608..0b60746 100644
+--- a/drivers/video/omap2/dss/dss.c
++++ b/drivers/video/omap2/dss/dss.c
+@@ -795,6 +795,13 @@ static const struct dss_features omap54xx_dss_feats __initconst = {
+ 	.dpi_select_source	=	&dss_dpi_select_source_omap5,
+ };
+ 
++static const struct dss_features am43xx_dss_feats __initconst = {
++	.fck_div_max		=	0,
++	.dss_fck_multiplier	=	0,
++	.parent_clk_name	=	NULL,
++	.dpi_select_source	=	&dss_dpi_select_source_omap2_omap3,
++};
++
+ static int __init dss_init_features(struct platform_device *pdev)
+ {
+ 	const struct dss_features *src;
+@@ -831,6 +838,10 @@ static int __init dss_init_features(struct platform_device *pdev)
+ 		src = &omap54xx_dss_feats;
+ 		break;
+ 
++	case OMAPDSS_VER_AM43xx:
++		src = &am43xx_dss_feats;
++		break;
++
+ 	default:
+ 		return -ENODEV;
+ 	}
+diff --git a/drivers/video/omap2/dss/dss_features.c b/drivers/video/omap2/dss/dss_features.c
+index f8fd6db..79df1a2 100644
+--- a/drivers/video/omap2/dss/dss_features.c
++++ b/drivers/video/omap2/dss/dss_features.c
+@@ -93,6 +93,17 @@ static const struct dss_reg_field omap3_dss_reg_fields[] = {
+ 	[FEAT_REG_DSIPLL_REGM_DSI]		= { 26, 23 },
+ };
+ 
++static const struct dss_reg_field am43xx_dss_reg_fields[] = {
++	[FEAT_REG_FIRHINC]			= { 12, 0 },
++	[FEAT_REG_FIRVINC]			= { 28, 16 },
++	[FEAT_REG_FIFOLOWTHRESHOLD]	= { 11, 0 },
++	[FEAT_REG_FIFOHIGHTHRESHOLD]		= { 27, 16 },
++	[FEAT_REG_FIFOSIZE]		= { 10, 0 },
++	[FEAT_REG_HORIZONTALACCU]		= { 9, 0 },
++	[FEAT_REG_VERTICALACCU]			= { 25, 16 },
++	[FEAT_REG_DISPC_CLK_SWITCH]		= { 0, 0 },
++};
++
+ static const struct dss_reg_field omap4_dss_reg_fields[] = {
+ 	[FEAT_REG_FIRHINC]			= { 12, 0 },
+ 	[FEAT_REG_FIRVINC]			= { 28, 16 },
+@@ -149,6 +160,11 @@ static const enum omap_display_type omap3630_dss_supported_displays[] = {
+ 	OMAP_DISPLAY_TYPE_VENC,
+ };
+ 
++static const enum omap_display_type am43xx_dss_supported_displays[] = {
++	/* OMAP_DSS_CHANNEL_LCD */
++	OMAP_DISPLAY_TYPE_DPI | OMAP_DISPLAY_TYPE_DBI,
++};
++
+ static const enum omap_display_type omap4_dss_supported_displays[] = {
+ 	/* OMAP_DSS_CHANNEL_LCD */
+ 	OMAP_DISPLAY_TYPE_DBI | OMAP_DISPLAY_TYPE_DSI,
+@@ -200,6 +216,11 @@ static const enum omap_dss_output_id omap3630_dss_supported_outputs[] = {
+ 	OMAP_DSS_OUTPUT_VENC,
+ };
+ 
++static const enum omap_dss_output_id am43xx_dss_supported_outputs[] = {
++	/* OMAP_DSS_CHANNEL_LCD */
++	OMAP_DSS_OUTPUT_DPI | OMAP_DSS_OUTPUT_DBI,
++};
++
+ static const enum omap_dss_output_id omap4_dss_supported_outputs[] = {
+ 	/* OMAP_DSS_CHANNEL_LCD */
+ 	OMAP_DSS_OUTPUT_DBI | OMAP_DSS_OUTPUT_DSI1,
+@@ -444,6 +465,13 @@ static const struct dss_param_range omap3_dss_param_range[] = {
+ 	[FEAT_PARAM_LINEWIDTH]			= { 1, 1024 },
+ };
+ 
++static const struct dss_param_range am43xx_dss_param_range[] = {
++	[FEAT_PARAM_DSS_FCK]			= { 0, 200000000 },
++	[FEAT_PARAM_DSS_PCD]			= { 2, 255 },
++	[FEAT_PARAM_DOWNSCALE]			= { 1, 4 },
++	[FEAT_PARAM_LINEWIDTH]			= { 1, 1024 },
++};
++
+ static const struct dss_param_range omap4_dss_param_range[] = {
+ 	[FEAT_PARAM_DSS_FCK]			= { 0, 186000000 },
+ 	[FEAT_PARAM_DSS_PCD]			= { 1, 255 },
+@@ -520,6 +548,21 @@ static const enum dss_feat_id am35xx_dss_feat_list[] = {
+ 	FEAT_OMAP3_DSI_FIFO_BUG,
+ };
+ 
++static const enum dss_feat_id am43xx_dss_feat_list[] = {
++	FEAT_LCDENABLEPOL,
++	FEAT_LCDENABLESIGNAL,
++	FEAT_PCKFREEENABLE,
++	FEAT_FUNCGATED,
++	FEAT_LINEBUFFERSPLIT,
++	FEAT_ROWREPEATENABLE,
++	FEAT_RESIZECONF,
++	FEAT_CPR,
++	FEAT_PRELOAD,
++	FEAT_FIR_COEF_V,
++	FEAT_ALPHA_FIXED_ZORDER,
++	FEAT_FIFO_MERGE,
++};
++
+ static const enum dss_feat_id omap3630_dss_feat_list[] = {
+ 	FEAT_LCDENABLEPOL,
+ 	FEAT_LCDENABLESIGNAL,
+@@ -681,6 +724,26 @@ static const struct omap_dss_features am35xx_dss_features = {
+ 	.burst_size_unit = 8,
+ };
+ 
++static const struct omap_dss_features am43xx_dss_features = {
++	.reg_fields = am43xx_dss_reg_fields,
++	.num_reg_fields = ARRAY_SIZE(am43xx_dss_reg_fields),
++
++	.features = am43xx_dss_feat_list,
++	.num_features = ARRAY_SIZE(am43xx_dss_feat_list),
++
++	.num_mgrs = 1,
++	.num_ovls = 3,
++	.supported_displays = am43xx_dss_supported_displays,
++	.supported_outputs = am43xx_dss_supported_outputs,
++	.supported_color_modes = omap3_dss_supported_color_modes,
++	.overlay_caps = omap3430_dss_overlay_caps,
++	.clksrc_names = omap2_dss_clk_source_names,
++	.dss_params = am43xx_dss_param_range,
++	.supported_rotation_types = OMAP_DSS_ROT_DMA,
++	.buffer_size_unit = 1,
++	.burst_size_unit = 8,
++};
++
+ static const struct omap_dss_features omap3630_dss_features = {
+ 	.reg_fields = omap3_dss_reg_fields,
+ 	.num_reg_fields = ARRAY_SIZE(omap3_dss_reg_fields),
+@@ -927,6 +990,10 @@ void dss_features_init(enum omapdss_version version)
+ 		omap_current_dss_features = &am35xx_dss_features;
+ 		break;
+ 
++	case OMAPDSS_VER_AM43xx:
++		omap_current_dss_features = &am43xx_dss_features;
++		break;
++
+ 	default:
+ 		DSSWARN("Unsupported OMAP version");
+ 		break;
+diff --git a/include/video/omapdss.h b/include/video/omapdss.h
+index 3d7c51a..7513146 100644
+--- a/include/video/omapdss.h
++++ b/include/video/omapdss.h
+@@ -319,6 +319,7 @@ enum omapdss_version {
+ 	OMAPDSS_VER_OMAP4430_ES2,	/* OMAP4430 ES2.0, 2.1, 2.2 */
+ 	OMAPDSS_VER_OMAP4,		/* All other OMAP4s */
+ 	OMAPDSS_VER_OMAP5,
++	OMAPDSS_VER_AM43xx,
+ };
+ 
+ /* Board specific data */
+-- 
+1.7.9.5
 
-If not, please be more specific here and use the exact model names
-rather than the product names.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
