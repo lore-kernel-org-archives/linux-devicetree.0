@@ -1,100 +1,65 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Mon, 24 Mar 2014 11:02:28 +0100
-Message-ID: <5755212.stImUCLDZi@wuerfel>
-References: <1395132017-15928-1-git-send-email-zhangfei.gao@linaro.org> <201403201531.20416.arnd@arndb.de> <CAMj5Bkgc2ChK48QmqEEMEmxdF6iGZxMX0kVUqGFd8jYhEWCvOA@mail.gmail.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH RFC v3 0/2] Move dai-link level properties away
+	from dai subnodes
+Date: Mon, 24 Mar 2014 12:15:23 +0200
+Message-ID: <cover.1395655868.git.jsarha@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAMj5Bkgc2ChK48QmqEEMEmxdF6iGZxMX0kVUqGFd8jYhEWCvOA@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Zhangfei Gao <zhangfei.gao@gmail.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, netdev <netdev@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: liam.r.girdwood@linux.intel.com, detheridge@ti.com, kuninori.morimoto.gx@renesas.com, moinejf@free.fr, Li.Xiubo@freescale.com, Jyri Sarha <jsarha@ti.com>, peter.ujfalusi@ti.com, broonie@kernel.org, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-On Monday 24 March 2014 16:17:42 Zhangfei Gao wrote:
-> On Thu, Mar 20, 2014 at 10:31 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> >> >
-> >> >> +     if (!ppebase) {
-> >> >> +             struct device_node *n;
-> >> >> +
-> >> >> +             n = of_find_compatible_node(NULL, NULL, "hisilicon,hip04-ppebase");
-> >> >> +             if (!n) {
-> >> >> +                     ret = -EINVAL;
-> >> >> +                     netdev_err(ndev, "not find hisilicon,ppebase\n");
-> >> >> +                     goto init_fail;
-> >> >> +             }
-> >> >> +             ppebase = of_iomap(n, 0);
-> >> >> +     }
-> >> >
-> >> > How about using syscon_regmap_lookup_by_phandle() here? That way, you can have
-> >> > a more generic abstraction of the ppe, and stick the port and id in there as
-> >> > well, e.g.
-> >> >
-> >> >         ppe-syscon = <&hip04ppe 1 4>; // ppe, port, id
-> 
-> Even if using syscon_regmap_lookup_by_phandle, there still have static
-> struct regmap, since three controllers
-> share one regmap.
+This patch is implemented on top of late patches from Jean-Francois
+Moine [1].
 
-The regmap is then owned by the syscon driver, while each controller takes
-a reference to the regmap that it can store in its own private data
-structure. However, as we discussed using a ppe driver sounds nicer than
-regmap.
+These patches implement the main part of the simple-card changes
+discussed in alsa-devel mailing list [2].
 
-> > It's probably a little simpler to avoid the sub-nodes and instead do
-> >
-> >>               ppe: ppe@28c0000 {
-> >>                         compatible = "hisilicon,hip04-ppe";
-> >>                         reg = <0x28c0000 0x10000>;
-> >>                         #address-cells = <1>;
-> >>                         #size-cells = <0>;
-> >>                 };
-> >>                 fe: ethernet@28b0000 {
-> >>                         compatible = "hisilicon,hip04-mac";
-> >>                         reg = <0x28b0000 0x10000>;
-> >>                         interrupts = <0 413 4>;
-> >>                         phy-mode = "mii";
-> >>                         port-handle = <&ppe 31>;
-> >>                 };
-> >
-> > In the code, I would create a simple ppe driver that exports
-> > a few functions. you need. In the ethernet driver probe() function,
-> > you should get a handle to the ppe using
-> >
-> >         /* look up "port-handle" property of the current device, find ppe and port */
-> >         struct hip04_ppe *ppe = hip04_ppe_get(dev->of_node);
-> >         if (IS_ERR(ppe))
-> >                 return PTR_ERR(ptr); /* this handles -EPROBE_DEFER */
-> >
-> > and then in other code you can just do
-> >
-> >         hip04_ppe_set_foo(priv->ppe, foo_config);
-> >
-> > This is a somewhat more high-level abstraction that syscon, which
-> > just gives you a 'struct regmap' structure for doing register-level
-> > configuration like you have today.
-> >
-> 
-> Do you mean create one additional file like ppe.c with some exported
-> function to remove the static ppebase?
+Since RFC v2 version of the patches, address remaining comments from
+Jean-Francois Moine [4]:
+- ASoC: simple-card: Move dai-link level properties away from dai subnodes
+  - Only allow legacy parsing if there is no dai-link node.
+  - Fix double unref in of_card parsing loop.
 
-It doesn't have to be a separate file, as long as you register a
-separate platform_driver for the ppe.
+Since RFC version of the patches:
+- ASoC: core: Update snd_soc_of_parse_daifmt() interface
+  - Make minimal changes to simple-card for it to work with the updated
+    snd_soc_of_parse_daifmt(). (Kuninori Morimoto's comment [3]).
+- ASoC: simple-card: Move dai-link level properties away from dai subnodes
+  - Fix typo in DT binding document (Jean-Francois Moine's comment [4]).
+  - Remove #define DEBUG
+  - Remove accidental line wrap at simple-audio-card,name property descripition
+    in the DT binding document
 
-> Since the ppe is specifically bounded with ethernet, and does not used
-> anywhere else,
-> the exported function may not be used anywhere else.
-> Is it make it more complicated since there are probe, remove etc.
-> 
-> So I may still prefer using "static void __iomem *ppebase", as it is simpler.
+[1] http://mailman.alsa-project.org/pipermail/alsa-devel/2014-March/074592.html
+[2] http://mailman.alsa-project.org/pipermail/alsa-devel/2014-March/074388.html
+[3] http://mailman.alsa-project.org/pipermail/alsa-devel/2014-March/074699.html
+[4] http://mailman.alsa-project.org/pipermail/alsa-devel/2014-March/074697.html
 
-The trouble is that the driver should not rely on being only there
-for a single instance, that's not how we write drivers.
+Best regards,
+Jyri
 
-I'm fine with either a syscon instance (which would be simpler) or a
-separate ppe driver as part of the hip04-mac driver (which would be
-a nicer abstraction).
+Jyri Sarha (2):
+  ASoC: core: Update snd_soc_of_parse_daifmt() interface
+  ASoC: simple-card: Move dai-link level properties away from dai
+    subnodes
 
-	Arnd
+ .../devicetree/bindings/sound/simple-card.txt      |   88 ++++----
+ include/sound/soc.h                                |    4 +-
+ sound/soc/generic/simple-card.c                    |  238 ++++++++++++--------
+ sound/soc/soc-core.c                               |    8 +-
+ 4 files changed, 200 insertions(+), 138 deletions(-)
+
+-- 
+1.7.9.5
