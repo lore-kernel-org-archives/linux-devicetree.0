@@ -1,91 +1,40 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 05/20] mmc: mmci: Add DT bindings for signal direction
-Date: Mon, 24 Mar 2014 08:45:44 -0500
-Message-ID: <CAL_Jsq+=7YTK8p+=QNwatUaTnQsFXXFD3OH+kmqYLF0DYpbTKA@mail.gmail.com>
-References: <1395404057-27835-1-git-send-email-ulf.hansson@linaro.org>
-	<1395404057-27835-6-git-send-email-ulf.hansson@linaro.org>
-	<CAL_JsqLFJbC=ZVgc1xu9MN6iYN2871mxvZoJnAQJw3BQU07B+w@mail.gmail.com>
-	<CAPDyKFrupT7sbT5eBsTC61ELCp_OZTe==Jc_6KUqo9Wb4Xf5dQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPDyKFrupT7sbT5eBsTC61ELCp_OZTe==Jc_6KUqo9Wb4Xf5dQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH v3 0/3] add hisilicon hip04 ethernet driver
+Date: Mon, 24 Mar 2014 22:14:53 +0800
+Message-ID: <1395670496-17381-1-git-send-email-zhangfei.gao@linaro.org>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: davem@davemloft.net, linux@arm.linux.org.uk, arnd@arndb.de, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Zhangfei Gao <zhangfei.gao@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 24, 2014 at 4:14 AM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 21 March 2014 16:20, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Fri, Mar 21, 2014 at 7:14 AM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>> Some variants have support for indicating the bus signal directions,
->>> which currently are configured through platform data.
->>>
->>> Add corresponding DT bindings to enable us to move away from using the
->>> platform data.
->>>
->>> Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> ---
->>>  Documentation/devicetree/bindings/mmc/mmci.txt |    4 ++++
->>>  drivers/mmc/host/mmci.c                        |    7 +++++++
->>>  2 files changed, 11 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/mmc/mmci.txt b/Documentation/devicetree/bindings/mmc/mmci.txt
->>> index d167562..eb9ad86 100644
->>> --- a/Documentation/devicetree/bindings/mmc/mmci.txt
->>> +++ b/Documentation/devicetree/bindings/mmc/mmci.txt
->>> @@ -15,6 +15,7 @@ Optional properties:
->>>  - mmc-cap-mmc-highspeed  : indicates whether MMC is high speed capable.
->>>  - mmc-cap-sd-highspeed   : indicates whether SD is high speed capable.
->>>  - vqmmc-supply           : phandle to the regulator device tree node.
->>> +- signal-direction       : a bit pattern, indicating bus signals directions.
->>
->> You need to define the bit positions.
->
-> May I refer to the <dt-bindings/mmc/mmci.h> instead? To me, it seems a
-> bit silly to duplicate that information in the documentation.
+v3:
+Suggest from Arnd, use syscon & regmap_write/read to replace static void __iomem *ppebase.
+Modify hisilicon-hip04-net.txt accrordingly to suggestion from Florian and Sergei.
 
-We really prefer that the binding doc stand on it's own such that you
-could write the header based on the binding.
+v2:
+Got many suggestions from Russell, Arnd, Florian, Mark and Sergei
+Remove memcpy, use dma_map/unmap_single, use dma_alloc_coherent rather than dma_pool, etc.
+Refer property in ethernet.txt, change ppe description, etc.
 
->>
->>>
->>>  Example:
->>>
->>> @@ -37,6 +38,9 @@ sdi0_per1@80126000 {
->>>         mmc-cap-mmc-highspeed;
->>>         cd-gpios  = <&gpio2 31 0x4>; // 95
->>>
->>> +       signal-direction = <(MCI_ST_DATA2DIREN | MCI_ST_CMDDIREN |
->>> +                       MCI_ST_DATA0DIREN | MCI_ST_FBCLKEN)>;
->>
->> The "ST" here is for STMicro or some ST based company? Use the vendor
->> prefix here.
->
-> We have way back already concluded to use "ST" as prefix for all
-> STMicro specific defines used in mmci. Please have a look at
-> drivers/mmc/host/mmci.h.
-> I would prefer to keep these aligned with the other defines, though if
-> you have strong feelings about it, sure I can change them.
+Zhangfei Gao (3):
+  Documentation: add Device tree bindings for Hisilicon hip04 ethernet
+  net: hisilicon: new hip04 MDIO driver
+  net: hisilicon: new hip04 ethernet driver
 
-I don't mean change the defines. I mean name the property
-"st,signal-direction" and indicate it only applies to the STMicro
-variant.
+ .../bindings/net/hisilicon-hip04-net.txt           |  110 +++
+ drivers/net/ethernet/Kconfig                       |    1 +
+ drivers/net/ethernet/Makefile                      |    1 +
+ drivers/net/ethernet/hisilicon/Kconfig             |   32 +
+ drivers/net/ethernet/hisilicon/Makefile            |    5 +
+ drivers/net/ethernet/hisilicon/hip04_eth.c         |  728 ++++++++++++++++++++
+ drivers/net/ethernet/hisilicon/hip04_mdio.c        |  186 +++++
+ 7 files changed, 1063 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
+ create mode 100644 drivers/net/ethernet/hisilicon/Kconfig
+ create mode 100644 drivers/net/ethernet/hisilicon/Makefile
+ create mode 100644 drivers/net/ethernet/hisilicon/hip04_eth.c
+ create mode 100644 drivers/net/ethernet/hisilicon/hip04_mdio.c
 
->> I don't really understand why you need to specify the direction here.
->> Data lines are bi-directional and cmd and clk are outputs.
->>
->
-> These bits are being used when you have an external levelshifter.
->
-> Without going into too much details, it all depends on how the
-> different pins are connected to the levelshifter, which isn't possible
-> to figure out in runtime.
-
-Okay.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.7.9.5
