@@ -1,77 +1,92 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [alsa-devel] [PATCH RFC 2/2] ASoC: simple-card: Move dai-link
- level	properties away from dai subnodes
-Date: Mon, 24 Mar 2014 11:45:11 +0200
-Message-ID: <532FFEA7.9060406@ti.com>
-References: <cover.1395419906.git.jsarha@ti.com>	<0b1c0e2e6766c3a63f598c3b9435d4744b0e2835.1395419906.git.jsarha@ti.com> <87lhw08nqk.wl%kuninori.morimoto.gx@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] arm64: dts: Add initial dts for Cavium Thunder SoC
+Date: Mon, 24 Mar 2014 10:55:02 +0100
+Message-ID: <4827584.NY6fTFPNNK@wuerfel>
+References: <1395652179-9216-1-git-send-email-mohun106@gmail.com> <1395652179-9216-3-git-send-email-mohun106@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <87lhw08nqk.wl%kuninori.morimoto.gx@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, liam.r.girdwood@linux.intel.com, detheridge@ti.com, kuninori.morimoto.gx@renesas.com, moinejf@free.fr, Li.Xiubo@freescale.com, peter.ujfalusi@ti.com, broonie@kernel.org, bcousson@baylibre.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1395652179-9216-3-git-send-email-mohun106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mohun106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Catalin.Marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pkapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/24/2014 02:05 AM, Kuninori Morimoto wrote:
->
-> Hi Jyri
->
->> The properties like format, bitclock-master, frame-master,
->> bitclock-inversion, and frame-inversion should be common to the dais
->> connected with a dai-link. For bitclock-master and frame-master
->> properties to be unambiguous they need to indicate the mastering dai
->> node with a phandle.
->>
->> Signed-off-by: Jyri Sarha <jsarha@ti.com>
->> ---
-> (snip)
->>   	/*
->> -	 * bitclock-inversion, frame-inversion
->> -	 * bitclock-master,    frame-master
->> -	 * and specific "format" if it has
->> -	 */
->> -	dai->fmt = snd_soc_of_parse_daifmt(np, NULL);
->> -	dai->fmt |= daifmt;
->> -
->> -	/*
->>   	 * dai->sysclk come from
->>   	 *  "clocks = <&xxx>" (if system has common clock)
->>   	 *  or "system-clock-frequency = <xxx>"
->
-> [1/2] patch exchanged snd_soc_of_parse_daifmt() parameter,
-> but, user code exchanged in [2/2].
-> It breaks git-bisect.
->
+On Monday 24 March 2014 14:39:38 mohun106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> +       soc {
+> +               compatible = "simple-bus";
+> +               #address-cells = <2>;
+> +               #size-cells = <2>;
+> +               ranges;
+> +
+> +               clocks {
+> +                       #address-cells = <2>;
+> +                       #size-cells = <2>;
+> +                       ranges;
+> +
+> +                       refclk50mhz: refclk50mhz {
+> +                               compatible = "fixed-clock";
+> +                               #clock-cells = <0>;
+> +                               clock-frequency = <50000000>;
+> +                               clock-output-names = "refclk50mhz";
+> +                       };
+> +               };
+> +
+> +               ahci0: host-bus-adapter@810000000000 {
+> +                       compatible = "snps,spear-ahci";
+> +                       reg = <0x8100 0x0 0x0 0x1100>;
+> +                       interrupts = <1 32 4>;
+> +               };
 
-Fixed that. Thanks!
 
->> +	dai_props->cpu_dai.fmt = daifmt;
->> +	switch (((np == bitclkmaster)<<4)|(np == framemaster)) {
->> +	case 0x11:
->> +		dai_props->cpu_dai.fmt |= SND_SOC_DAIFMT_CBS_CFS;
->> +		break;
->> +	case 0x10:
->> +		dai_props->cpu_dai.fmt |= SND_SOC_DAIFMT_CBS_CFM;
->> +		break;
->> +	case 0x01:
->> +		dai_props->cpu_dai.fmt |= SND_SOC_DAIFMT_CBM_CFS;
->> +		break;
->> +	default:
->> +		dai_props->cpu_dai.fmt |= SND_SOC_DAIFMT_CBM_CFM;
->> +		break;
->> +	}
->
-> The user of snd_soc_of_parse_daifmt() is only simple-card (?)
-> I think SND_SOC_DAIFMT_CBxx_CFx cared by snd_soc_of_parse_daifmt() somehow
-> is very reasonable.
->
+The use of "snps,spear-ahci" by itself seems wrong here: that is
+the specific implementation used in the ST "spear" SoC. I don't know
+why we don't already have a "generic-ahci" binding, but please add
+one so you can match against that.
 
-Yes, that is what git grep tells me. snd_soc_of_parse_daifmt() can still 
-take care of SND_SOC_DAIFMT_CB?_CF? parsing in simple cases. I just felt 
-that adding the full phandle parsing to the function would break its 
-genericity and make the function parameters hard to understand.
+I would also recommend adding a more specific string for your soc.
+If you want to keep compatibility with older kernels, you can keep
+the spear string as well, but it would be nicer to drop that.
+If you can find out what version the synopsys macro has, that would
+be ideal.
 
-Best regards,
-Jyri
+You could end up for instance with
+
+	compatible = "cavium,thunder-123456-ahci", "snps,ahci-1.23.45",
+			"snps,spear-ahci", "generic-ahci";
+
+The driver only needs to match the last one of these, but if we
+find that we have to work around some bug, it's good to have the
+option of determining the exact version.
+
+> +               nic0: ethernet@843000000000 {
+> +                       compatible = "smsc,lan9115";
+> +                       reg-io-width = <4>;
+> +                       reg = <0x8430 0x0 0x0 0x1000>;
+> +                       interrupts = <1 31 4>;
+> +               };
+> +
+> +               uaa0: uart@87e024000000 {
+> +                       compatible = "arm,pl011", "arm,primecell";
+> +                       reg = <0x87e0 0x24000000 0x0 0x1000>;
+> +                       interrupts = <1 21 4>;
+> +                       clocks = <&refclk50mhz>;
+> +                       clock-names = "apb_pclk";
+> +               };
+> +
+> +               uaa1: uart@87e025000000 {
+> +                       compatible = "arm,pl011", "arm,primecell";
+> +                       reg = <0x87e0 0x25000000 0x0 0x1000>;
+> +                       interrupts = <1 22 4>;
+> +                       clocks = <&refclk50mhz>;
+> +                       clock-names = "apb_pclk";
+
+The generic name for uarts in DT is "serial", not "uart" (yes, a
+lot of others get this wrong, too).
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
