@@ -1,148 +1,31 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v3] i2c: new bus driver for efm32
-Date: Mon, 24 Mar 2014 18:01:31 +0100
-Message-ID: <20140324170131.GB7524@katana>
-References: <1395414236-22647-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
+Date: Mon, 24 Mar 2014 18:23:58 +0100
+Message-ID: <4644970.WiIKNXNpdP@wuerfel>
+References: <1395670496-17381-1-git-send-email-zhangfei.gao@linaro.org> <1395670496-17381-4-git-send-email-zhangfei.gao@linaro.org> <CAGVrzcaY257MAjjmkXDi_fD5TxSanmx9Jpvx-yg7vT3-GUjz3A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="i9LlY+UWpKt15+FH"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1395414236-22647-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uwe =?iso-8859-15?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAGVrzcaY257MAjjmkXDi_fD5TxSanmx9Jpvx-yg7vT3-GUjz3A@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Zhangfei Gao <zhangfei.gao@linaro.org>, David Miller <davem@davemloft.net>, Russell King <linux@arm.linux.org.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Monday 24 March 2014 09:32:17 Florian Fainelli wrote:
+> > +       priv->tx_skb[tx_head] = skb;
+> > +       priv->tx_phys[tx_head] = phys;
+> > +       desc->send_addr = cpu_to_be32(phys);
+> > +       desc->send_size = cpu_to_be16(skb->len);
+> > +       desc->cfg = cpu_to_be32(DESC_DEF_CFG);
+> > +       phys = priv->tx_desc_dma + tx_head * sizeof(struct tx_desc);
+> > +       desc->wb_addr = cpu_to_be32(phys);
+> 
+> Don't we need a barrier here to ensure that all stores are completed
+> before we hand this descriptor address to hip40_set_xmit_desc() which
+> should make DMA start processing it?
 
---i9LlY+UWpKt15+FH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I would think the writel() in set_xmit_desc() implies the barrier.
 
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-efm32.txt
-> @@ -0,0 +1,34 @@
-> +* Energymicro efm32 i2c controller
-> +
-> +Required properties :
-> +
-> + - reg : Offset and length of the register set for the device
-> + - compatible : should be "efm32,i2c"
-
-Ehrm, come to think of it, shouldn't that actually be "energymicro, efm32-i2c"
-or similar to match the "vendor,product" pattern?
-
-> +config I2C_EFM32
-> +	tristate "EFM32 I2C controller"
-> +	depends on OF && (ARCH_EFM32 || COMPILE_TEST)
-
-Is EFM32 DT only? Do we need the dependency on OF?
-
-> +	help
-> +	  This driver supports the i2c block found in Energy Micro's EFM32
-> +	  SoCs.
-> +
-
-...
-
-> +static void efm32_i2c_send_next_byte(struct efm32_i2c_ddata *ddata)
-> +{
-> +	struct i2c_msg *cur_msg = &ddata->msgs[ddata->current_msg];
-
-Missing newline.
-
-> +	if (ddata->current_word >= cur_msg->len) {
-> +		/* cur_msg completely transferred */
-> +		ddata->current_word = 0;
-> +		ddata->current_msg += 1;
-> +
-> +		if (ddata->current_msg >= ddata->num_msgs) {
-> +			efm32_i2c_write32(ddata, REG_CMD, REG_CMD_STOP);
-> +			complete(&ddata->done);
-> +		} else {
-> +			efm32_i2c_send_next_msg(ddata);
-> +		}
-> +	} else {
-> +		efm32_i2c_write32(ddata, REG_TXDATA,
-> +				cur_msg->buf[ddata->current_word++]);
-> +	}
-> +}
-> +
-
-...
-
-
-> +static int efm32_i2c_master_xfer(struct i2c_adapter *adap,
-> +		struct i2c_msg *msgs, int num)
-> +{
-> +	struct efm32_i2c_ddata *ddata = i2c_get_adapdata(adap);
-> +	int ret;
-> +
-> +	if (ddata->msgs)
-> +		return -EBUSY;
-> +
-> +	ddata->msgs = msgs;
-> +	ddata->num_msgs = num;
-> +	ddata->current_word = 0;
-> +	ddata->current_msg = 0;
-> +	ddata->retval = -EIO;
-> +
-> +	reinit_completion(&ddata->done);
-> +
-> +	dev_dbg(&ddata->adapter.dev, "state: %08x, status: %08x\n",
-> +			efm32_i2c_read32(ddata, REG_STATE),
-> +			efm32_i2c_read32(ddata, REG_STATUS));
-> +
-> +	efm32_i2c_send_next_msg(ddata);
-> +
-> +	wait_for_completion(&ddata->done);
-> +
-> +	if (ddata->current_msg >= ddata->num_msgs)
-> +		ret = ddata->num_msgs;
-> +	else
-> +		ret = ddata->retval;
-> +
-> +	ddata->msgs = NULL;
-
-Setting NULL should not be needed?
-
-> +
-> +	return ret;
-> +}
-> +
-
-And checkpatch said:
-
-WARNING: braces {} are not necessary for any arm of this statement
-#345: FILE: drivers/i2c/busses/i2c-efm32.c:239:
-+		if (cur_msg->flags & I2C_M_RD) {
-...
-
-Thanks,
-
-   Wolfram
-
-
---i9LlY+UWpKt15+FH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTMGTrAAoJEBQN5MwUoCm2tIUP/3dQVRr0JefR9P4uFdOn7msC
-Glmr1VNGJZ98MtrsK0DuskmEW6o2eV8xhLEDUW+vWPtL6OjfiVtHkQPjMIGuzzMO
-4mif+//zfanaH5RxFpN9Bicdm8XoO790rNtRT++A/K5p/ML6pjWimmcLw0M12Wux
-sal8tvBo7Q7TBgK5HCiCIyG99AkG/lIe3CkKZCO3f973Wany5C/2sftThaGgYdJk
-+iUYoBH+seulhMdFlHmASEmTQvEZnXgPh3KiMNKi5506QneCFZKknj7lE5tkUFvv
-Io5UXghXz7a8VPd/tcHI0AYYzYYQgaMFiuzRM659w3Ll/vHJRTaeupBZ1efkJpfc
-XOiqypfxSJHTNf5ruGDp7j5eCqzZJ7c84QKONlsRBrMsJuP3lQYCpMQcihLrp+l/
-X7/bLy2py/yoYFK8AcnYjZyGWPIM70zESQ24afxDm6tj1+uTSkr8caYI/wCZ15pX
-EkseG1xOUxi0OKcr7QFhaijXaeK3EQJtWEdE0fhaPztQ7iMKLKNPGQSYjjRbMOWU
-8b63v/UFx2L1PD1q0wvu4SXiH/zgv+4Pr4idat5izSele6vm48uFZgTu9lHvc85m
-BkHx8GhWoJl0RCXvqhDTrs9sH/fXyv2+Hc1sk4r3pVL0JmnJrzPtAySpQWQxf+ic
-80LyqJjmEow7BGJnKqjG
-=g+8r
------END PGP SIGNATURE-----
-
---i9LlY+UWpKt15+FH--
+	Arnd
