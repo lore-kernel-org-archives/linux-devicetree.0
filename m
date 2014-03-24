@@ -1,75 +1,88 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 0/5] Kirkwood DT Documentation
-Date: Sun, 23 Mar 2014 20:22:33 -0400
-Message-ID: <20140324002233.GZ15608@titan.lakedaemon.net>
-References: <1395492360-1865-1-git-send-email-andrew@lunn.ch>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH/RFC 8/8] DT: Add documentation for exynos4-is
+ camera-flash property
+Date: Mon, 24 Mar 2014 03:05:34 +0200
+Message-ID: <20140324010534.GA2847@valkosipuli.retiisi.org.uk>
+References: <1395327070-20215-1-git-send-email-j.anaszewski@samsung.com>
+ <1395327070-20215-9-git-send-email-j.anaszewski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1395492360-1865-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+In-Reply-To: <1395327070-20215-9-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, s.nawrocki@samsung.com, a.hajda@samsung.com, kyungmin.park@samsung.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-arm-soc maintainers,
+Hi Jacek,
 
-On Sat, Mar 22, 2014 at 01:45:55PM +0100, Andrew Lunn wrote:
-> This patchset fixes up a number of issues found by checkpatch in the
-> kirkwood DT files or binding Documentation. Vendor Prefixes are
-> documented, missing prefixes are added, incorrect prefixes are
-> corrected, and Kirkwood SoCs are documented.
+On Thu, Mar 20, 2014 at 03:51:10PM +0100, Jacek Anaszewski wrote:
+> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> ---
+>  .../devicetree/bindings/media/samsung-fimc.txt     |    3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> Note that some of these patches contain UTF-8 characters, which the
-> mailing lists sometime don't like. The patches can also be found in
-> 
-> https://github.com/lunn/linux.git v3.14-rc7-next-20140321-dt
-> 
-> which is based on linux-next tag next-20140321.
+> diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+> index 922d6f8..88f9287 100644
+> --- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
+> +++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+> @@ -108,6 +108,8 @@ Image sensor nodes
+>  The sensor device nodes should be added to their control bus controller (e.g.
+>  I2C0) nodes and linked to a port node in the csis or the parallel-ports node,
+>  using the common video interfaces bindings, defined in video-interfaces.txt.
+> +If the sensor device has a led flash device associated with it then its phandle
+> +should be assigned to the camera-flash property.
+>  
+>  Example:
+>  
+> @@ -125,6 +127,7 @@ Example:
+>  			clock-frequency = <24000000>;
+>  			clocks = <&camera 1>;
+>  			clock-names = "mclk";
+> +			camera-flash = <&led_flash>;
+>  
+>  			port {
+>  				s5k6aa_ep: endpoint {
 
-I'd like to take this in as 'fixes-non-critical' for v3.15.  However,
-I'm having trouble finding a stable, conflict-free branch to base it on.
-The main problem seems to be vendor-prefixes.txt.
+It's indeed an interesting idea to declare the flash controller in the
+sensor's properties rather than those of the ISP. The obvious upside is that
+this way it's easy to figure out which subdev group the flash controller
+belongs to.
 
-How would you prefer I handle this?  Or, would you guys just like to
-take the series directly?  I'm fine either way.
+There are a few other things to consider as well:
 
-If taking directly,
+- You can't have a flash without a sensor. I can't think of why this would
+  be a real issue, though.
 
-Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+- Relations other than one-to-one become difficult. One flash but two
+  cameras --- think of stereo cameras.
 
-thx,
+	- One camera and two flashes. I haven't seen any but I don't think
+	  that's unthinkable.
 
-Jason.
+- It's not very nice of the ISP driver to just go and parse the
+  sensor's properties.
 
-> Andrew Lunn (5):
->   DT: Vendor: Add prefixes used by Kirkwood devices
->   DT: bindings: add missing Marvell Kirkwood SoC documentation
->   ARM: Kirkwood: Fix Atmel vendor prefix
->   DT: I2C: Add trivial bindings used by kirkwood boards
->   ARM: Kirkwood: DT: Add missing vendor prefix
-> 
->  .../devicetree/bindings/arm/marvell,kirkwood.txt   | 97 ++++++++++++++++++++++
->  .../devicetree/bindings/i2c/trivial-devices.txt    | 16 ++++
->  .../devicetree/bindings/vendor-prefixes.txt        | 13 ++-
->  arch/arm/boot/dts/kirkwood-b3.dts                  |  2 +-
->  arch/arm/boot/dts/kirkwood-cloudbox.dts            |  2 +-
->  arch/arm/boot/dts/kirkwood-dreamplug.dts           |  2 +-
->  arch/arm/boot/dts/kirkwood-laplug.dts              |  2 +-
->  arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts     |  2 +-
->  arch/arm/boot/dts/kirkwood-ns2-common.dtsi         |  4 +-
->  arch/arm/boot/dts/kirkwood-nsa310.dts              |  2 +-
->  arch/arm/boot/dts/kirkwood-nsa310a.dts             |  2 +-
->  arch/arm/boot/dts/kirkwood-openblocks_a6.dts       |  2 +-
->  arch/arm/boot/dts/kirkwood-openblocks_a7.dts       |  2 +-
->  13 files changed, 136 insertions(+), 12 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/marvell,kirkwood.txt
-> 
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- As the property is FIMC specific, the sensor DT node now carries FIMC
+  related information.
+
+A generic solution would be preferrable as this is not a FIMC related
+problem.
+
+I have to admit that I can't think of a better solution right now than just
+putting a list of the flash device phandles to the ISP device's DT node, and
+then adding information on which sensor (numeric ID) the flash is related to
+as an array. Better ideas would be welcome.
+
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
