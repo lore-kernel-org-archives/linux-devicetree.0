@@ -1,74 +1,126 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Re: [PATCH v2 1/8] mfd: AXP20x: Add mfd driver for
- AXP20x PMIC
-Date: Mon, 24 Mar 2014 08:34:31 +0000
-Message-ID: <20140324083431.GH8541@lee--X1>
-References: <1394898225-28452-1-git-send-email-carlo@caione.org>
- <1394898225-28452-2-git-send-email-carlo@caione.org>
- <20140318155919.GS25478@lee--X1>
- <20140322165132.GC20668@localhost.fastwebnet.it>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Boris BREZILLON <brezillonboris@gmail.com>
+Subject: [PATCH v2 05/11] ARM: at91/dt: move sama5d3 SoC to the new main/slow
+ clk model
+Date: Mon, 24 Mar 2014 09:27:17 +0100
+Message-ID: <1395649643-9146-6-git-send-email-b.brezillon.dev@gmail.com>
+References: <1395649643-9146-1-git-send-email-b.brezillon.dev@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBHG4X6MQKGQETP2PNNY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140322165132.GC20668-bi+AKbBUZKZeIdyRz4JgOMwOAu8XWILU@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1395649643-9146-1-git-send-email-b.brezillon.dev@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, Mike Turquette <mturquette@linaro.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: devicetree@vger.kernel.org, Boris BREZILLON <b.brezillon.dev@gmail.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Boris BREZILLON <b.brezillon@overkiz.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> > > +static struct mfd_cell axp20x_cells[] =3D {
-> > > +	{
-> > > +		.name		=3D "axp20x-pek",
-> > > +		.num_resources	=3D ARRAY_SIZE(axp20x_pek_resources),
-> > > +		.resources	=3D axp20x_pek_resources,
-> > > +	}, {
-> > > +		.name		=3D "axp20x-regulator",
-> > > +	},
-> > > +};
-> >=20
-> > nit: The format of these two structs are inconsistent.
->=20
-> Uhm, what do you mean?
+Replace the old main and clk definitions (fixed rate clk) by the new main and
+slow clk subtree definition (ck = mux(rc_osc, osc)).
 
-Well you've removed the struct above this one in your reply. Take a
-look at my reply to you and see the differences between this _two_
-structs, this being only one of them.
+Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+---
+ arch/arm/boot/dts/sama5d3.dtsi |   61 ++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 55 insertions(+), 6 deletions(-)
 
-[...]
-
-> > > +static const struct i2c_device_id axp20x_i2c_id[] =3D {
-> > > +	{ "axp202", AXP202_ID },
-> > > +	{ "axp209", AXP209_ID },
-> > > +	{ }
-> > > +};
-> > > +MODULE_DEVICE_TABLE(i2c, axp20x_i2c_id);
-> >=20
-> > Isn't this redundant now that you're using of_id?
->=20
-> It is not. Even it is unused it has to be in the driver otherwise the
-> driver is not loaded. Probably it is something wrong in the I2C core.
-
-Sorry, I should have been more specific. The I2C core requires this
-struct, but the IDs are unused and redundant. Best remove them in
-order to mitigate any confusion.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
+index 3d5faf8..015797d 100644
+--- a/arch/arm/boot/dts/sama5d3.dtsi
++++ b/arch/arm/boot/dts/sama5d3.dtsi
+@@ -59,6 +59,18 @@
+ 	};
+ 
+ 	clocks {
++		slow_xtal: slow_xtal {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <0>;
++		};
++
++		main_xtal: main_xtal {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <0>;
++		};
++
+ 		adc_op_clk: adc_op_clk{
+ 			compatible = "fixed-clock";
+ 			#clock-cells = <0>;
+@@ -760,18 +772,29 @@
+ 				#size-cells = <0>;
+ 				#interrupt-cells = <1>;
+ 
+-				clk32k: slck {
+-					compatible = "fixed-clock";
++				main_rc_osc: main_rc_osc {
++					compatible = "atmel,at91sam9x5-clk-main-rc-osc";
+ 					#clock-cells = <0>;
+-					clock-frequency = <32768>;
++					interrupt-parent = <&pmc>;
++					interrupts = <AT91_PMC_MOSCRCS>;
++					clock-frequency = <12000000>;
++					clock-accuracy = <50000000>;
+ 				};
+ 
+-				main: mainck {
+-					compatible = "atmel,at91rm9200-clk-main";
++				main_osc: main_osc {
++					compatible = "atmel,at91rm9200-clk-main-osc";
+ 					#clock-cells = <0>;
+ 					interrupt-parent = <&pmc>;
+ 					interrupts = <AT91_PMC_MOSCS>;
+-					clocks = <&clk32k>;
++					clocks = <&main_xtal>;
++				};
++
++				main: mainck {
++					compatible = "atmel,at91sam9x5-clk-main";
++					#clock-cells = <0>;
++					interrupt-parent = <&pmc>;
++					interrupts = <AT91_PMC_MOSCSELS>;
++					clocks = <&main_rc_osc &main_osc>;
+ 				};
+ 
+ 				plla: pllack {
+@@ -1100,6 +1123,32 @@
+ 				status = "disabled";
+ 			};
+ 
++			sckc@fffffe50 {
++				compatible = "atmel,at91sam9x5-sckc";
++				reg = <0xfffffe50 0x4>;
++
++				slow_rc_osc: slow_rc_osc {
++					compatible = "atmel,at91sam9x5-clk-slow-rc-osc";
++					#clock-cells = <0>;
++					clock-frequency = <32768>;
++					clock-accuracy = <50000000>;
++					atmel,startup-time-usec = <75>;
++				};
++
++				slow_osc: slow_osc {
++					compatible = "atmel,at91sam9x5-clk-slow-osc";
++					#clock-cells = <0>;
++					clocks = <&slow_xtal>;
++					atmel,startup-time-usec = <1200000>;
++				};
++
++				clk32k: slowck {
++					compatible = "atmel,at91sam9x5-clk-slow";
++					#clock-cells = <0>;
++					clocks = <&slow_rc_osc &slow_osc>;
++				};
++			};
++
+ 			rtc@fffffeb0 {
+ 				compatible = "atmel,at91rm9200-rtc";
+ 				reg = <0xfffffeb0 0x30>;
+-- 
+1.7.9.5
