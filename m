@@ -1,7 +1,7 @@
 From: Boris BREZILLON <brezillonboris@gmail.com>
-Subject: [PATCH v2 10/11] ARM: at91/dt: move at91sam9rl SoC to the new slow/main clock models
-Date: Mon, 24 Mar 2014 09:27:22 +0100
-Message-ID: <1395649643-9146-11-git-send-email-b.brezillon.dev@gmail.com>
+Subject: [PATCH v2 08/11] ARM: at91/dt: move at91sam9261 SoC to the new main clock model
+Date: Mon, 24 Mar 2014 09:27:20 +0100
+Message-ID: <1395649643-9146-9-git-send-email-b.brezillon.dev@gmail.com>
 References: <1395649643-9146-1-git-send-email-b.brezillon.dev@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1395649643-9146-1-git-send-email-b.brezillon.dev@gmail.com>
@@ -10,28 +10,21 @@ To: Nicolas Ferre <nicolas.ferre@atmel.com>, Mike Turquette <mturquette@linaro.o
 Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Boris BREZILLON <b.brezillon.dev@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Move at91sam9rl SoC to the new main/slow clock model.
-
 Signed-off-by: Boris BREZILLON <b.brezillon.dev@gmail.com>
+Acked-by: Jean-Jacques HIBLOT <jjhiblot@traphandler.com>
 ---
- arch/arm/boot/dts/at91sam9rl.dtsi |   47 +++++++++++++++++++++++++++++++------
- 1 file changed, 40 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/at91sam9261.dtsi |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/at91sam9rl.dtsi b/arch/arm/boot/dts/at91sam9rl.dtsi
-index 63e1784..56220d8 100644
---- a/arch/arm/boot/dts/at91sam9rl.dtsi
-+++ b/arch/arm/boot/dts/at91sam9rl.dtsi
-@@ -48,6 +48,20 @@
- 		reg = <0x20000000 0x04000000>;
+diff --git a/arch/arm/boot/dts/at91sam9261.dtsi b/arch/arm/boot/dts/at91sam9261.dtsi
+index e21dda0..e00fabc 100644
+--- a/arch/arm/boot/dts/at91sam9261.dtsi
++++ b/arch/arm/boot/dts/at91sam9261.dtsi
+@@ -45,6 +45,14 @@
+ 		reg = <0x20000000 0x08000000>;
  	};
  
 +	clocks {
-+		slow_xtal: slow_xtal {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <0>;
-+		};
-+
 +		main_xtal: main_xtal {
 +			compatible = "fixed-clock";
 +			#clock-cells = <0>;
@@ -42,17 +35,7 @@ index 63e1784..56220d8 100644
  	ahb {
  		compatible = "simple-bus";
  		#address-cells = <1>;
-@@ -548,17 +562,11 @@
- 				#size-cells = <0>;
- 				#interrupt-cells = <1>;
- 
--				clk32k: slck {
--					compatible = "fixed-clock";
--					#clock-cells = <0>;
--					clock-frequency = <32768>;
--				};
--
- 				main: mainck {
+@@ -534,7 +542,7 @@
  					compatible = "atmel,at91rm9200-clk-main";
  					#clock-cells = <0>;
  					interrupts-extended = <&pmc AT91_PMC_MOSCS>;
@@ -61,37 +44,5 @@ index 63e1784..56220d8 100644
  				};
  
  				plla: pllack {
-@@ -769,6 +777,31 @@
- 				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
- 				status = "disabled";
- 			};
-+
-+			sckc@fffffd50 {
-+				compatible = "atmel,at91sam9x5-sckc";
-+
-+				slow_osc: slow_osc {
-+					compatible = "atmel,at91sam9x5-clk-slow-osc";
-+					#clock-cells = <0>;
-+					atmel,startup-time-usec = <1200000>;
-+					clocks = <&slow_xtal>;
-+				};
-+
-+				slow_rc_osc: slow_rc_osc {
-+					compatible = "atmel,at91sam9x5-clk-slow-rc-osc";
-+					#clock-cells = <0>;
-+					atmel,startup-time-usec = <75>;
-+					clock-frequency = <32768>;
-+					clock-accuracy = <50000000>;
-+				};
-+
-+				clk32k: slck {
-+					compatible = "atmel,at91sam9x5-clk-slow";
-+					#clock-cells = <0>;
-+					clocks = <&slow_rc_osc &slow_osc>;
-+				};
-+			};
- 		};
- 	};
- 
 -- 
 1.7.9.5
