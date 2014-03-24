@@ -1,141 +1,71 @@
-From: Phil.Edworthy@renesas.com
-Subject: Re: [PATCH v4 5/9] dt-bindings: pci: rcar pcie device tree bindings
-Date: Mon, 24 Mar 2014 12:46:39 +0000
-Message-ID: <OF01E3AAFE.D9BF866A-ON80257CA5.0045F63A-80257CA5.00463029@eu.necel.com>
-References: <1395397968-6242-1-git-send-email-phil.edworthy@renesas.com>		 <1395397968-6242-6-git-send-email-phil.edworthy@renesas.com>  <1395401031.4554.9.camel@weser.hi.pengutronix.de>
-	 <OF03C9E23D.07B7D998-ON80257CA2.004E5877-80257CA2.004E9BFB@eu.necel.com> <1395412213.4554.17.camel@weser.hi.pengutronix.de> <OFC7DD5DAC.D378B300-ON80257CA2.0051ECEE-80257CA2.00529F98@LocalDomain> <OF9DD6173A.94976872-ON80257CA5.0041752F-80257CA5.0042532C@eu.necel.com> <533021F6.2000702@codethink.co.uk> <OF85DD7B1D.716DE42D-ON80257CA5.00443087-80257CA5.004447DB@LocalDomain>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Subject: Re: [PATCH 5/5] ARM: dts: tx53: Add IPU DI ports and endpoints
+Date: Mon, 24 Mar 2014 13:47:32 +0100
+Message-ID: <20140324134732.43e59627@ipc1.ka-ro>
+References: <1395235721-13847-1-git-send-email-LW@KARO-electronics.de>
+	<1395235721-13847-5-git-send-email-LW@KARO-electronics.de>
+	<20140322065038.GE5938@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <OF85DD7B1D.716DE42D-ON80257CA5.00443087-80257CA5.004447DB@LocalDomain>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, LAKML <linux-arm-kernel@lists.infradead.org>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>, Magnus Damm <magnus.damm@gmail.com>, Valentine Barshak <valentine.barshak@cogentembedded.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140322065038.GE5938@dragon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ben,
+Hi,
 
-On: 24/03/2014 12:25, Phil wrote:
-> Subject: Re: [PATCH v4 5/9] dt-bindings: pci: rcar pcie device tree 
-bindings
-> 
-> Hi Ben,
-> 
-> On: 24/03/2014 12:16, Ben wrote:
-> > Subject: Re: [PATCH v4 5/9] dt-bindings: pci: rcar pcie device tree 
-bindings
-> > 
-> > On 24/03/14 12:04, Phil.Edworthy@renesas.com wrote:
-> > > Hi Lucas,
-> > >
-> > > On: 21/03/2014 15:02, Phil wrote:
-> > >> Subject: Re: [PATCH v4 5/9] dt-bindings: pci: rcar pcie device tree
-> > > bindings
-> > >>
-> > >> Hi Lucas,
-> > >>
-> > >> On: 21/03/2014 14:31, Lucas wrote:
-> > >>> Subject: Re: [PATCH v4 5/9] dt-bindings: pci: rcar pcie device 
-tree
-> > > bindings
-> > >>>
-> > >>> Am Freitag, den 21.03.2014, 14:18 +0000 schrieb
-> > >>> Phil.Edworthy@renesas.com:
-> > >>>> Hi Lucas,
-> > >>>>
-> > >>>> On 21/03/2014 11:24, Lucas wrote:
-> > >>>>> Subject: Re: [PATCH v4 5/9] dt-bindings: pci: rcar pcie device
-> > > tree
-> > >>>> bindings
-> > >>>>>
-> > >>>>> Am Freitag, den 21.03.2014, 10:32 +0000 schrieb Phil Edworthy:
-> > >>>>>> This patch adds the bindings for the rcar PCIE driver. The
-> > > driver
-> > >>>>>> resides under drivers/pci/host/pcie-rcar.c
-> > >>>>>>
-> > >>>>>> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-> > >>>>>
-> > >>>>> I have one question below. If you can answer this with yes after
-> > >>>>> thinking again about it, this is:
-> > >>>>>
-> > >>>>> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-> > >>>>>> ---
-> > >>>>>>   Documentation/devicetree/bindings/pci/rcar-pci.txt | 40
-> > >>>> ++++++++++++++++++++++
-> > >>>>>>   1 file changed, 40 insertions(+)
-> > >>>>>>   create mode 100644
-> > > Documentation/devicetree/bindings/pci/rcar-pci.txt
-> > >>>>>>
-> > >>>>>> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> > > b/
-> > >>>>> Documentation/devicetree/bindings/pci/rcar-pci.txt
-> > >>>>>> new file mode 100644
-> > >>>>>> index 0000000..0e219b0
-> > >>>>>> --- /dev/null
-> > >>>>>> +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> > >>>>>> @@ -0,0 +1,40 @@
-> > >>>>>> +* Renesas RCar PCIe interface
-> > >>>>>> +
-> > >>>>>> +Required properties:
-> > >>>>>> +- compatible: should contain one of the following
-> > >>>>>> +   "renesas,r8a7779-pcie", "renesas,r8a7790-pcie",
-> > >>>> "renesas,r8a7791-pcie"
-> > >>>>>> +- reg: base addresses and lengths of the pcie controller.
-> > >>>>>> +- #address-cells: set to <3>
-> > >>>>>> +- #size-cells: set to <2>
-> > >>>>>> +- device_type: set to "pci"
-> > >>>>>> +- ranges: ranges for the PCI memory and I/O regions
-> > >>>>>> +- interrupts: interrupt values for MSI interrupt
-> > >>>>>> +- #interrupt-cells: set to <1>
-> > >>>>>> +- interrupt-map-mask and interrupt-map: standard PCI 
-properties
-> > >>>>>> +   to define the mapping of the PCIe interface to interrupt
-> > >>>>>> +   numbers.
-> > >>>>>> +- clocks: from common clock binding: handle to pci clock.
-> > >>>>>> +- clock-names: from common clock binding: should be "pcie"
-> > >>>>>
-> > >>>>> You really only have one PCIe clock? So the controller is
-> > > generating the
-> > >>>>> PCIe bus clock from it's register clock? No need to enable any
-> > > other
-> > >>>>> clock for PCIe to work?
-> > >>>> Yes, just the one clock. The PCIe bus clock is an external clock
-> > > dedicated
-> > >>>> to PCIe and SATA, and we have no control over it.
-> > >>>>
-> > >>> Is this some kind of always-on clock? If not you probably want a
-> > >>> reference to it from the PCIe driver even if it's shared between 
-SATA
-> > >>> and PCIe. After all you don't want to end up unconditionally 
-enabling
-> > >>> this clock from the board or SoC level just to have PCIe working,
-> > > right?
-> > >> Ok, I see, I'll need a reference to a board clock, even if it's 
-always
-> > > on for
-> > >> these boards.
-> > > One small question...
-> > >
-> > > The patches added the PCIe host controller to two devices, r8a7790 
-and
-> > > r8a7791. The r8a7790-based Lager board doesn't have the necessary 
-hardware
-> > > to use PCIe, so should I add a dummy pcie_bus clock to the Lager 
-board
-> > > dts, even though PCIe is not used?
-> > >
-> > > I'm just wondering what the dts file looks like for a board that 
-doesn't
-> > > support many interfaces. Does it become littered with dummy clocks 
-and
-> > > regulators?
-> > 
-> > The bridge node should be set to disabled by default so it never gets
-> > probed. Any boards that want to use it can over-ride the status to be
-> > enabled.
-> Ok, thanks.
-Hmm, yes it doesn't get probed, but you still get a build problem as the 
-DT entry references an clock that doesn't exist. Maybe I'm missing 
-something...
+Shawn Guo wrote:
+> On Wed, Mar 19, 2014 at 02:28:41PM +0100, Lothar Wa=C3=9Fmann wrote:
+> >=20
+> > Signed-off-by: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/imx53-tx53-x03x.dts |    7 ++++++-
+> >  1 file changed, 6 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/arch/arm/boot/dts/imx53-tx53-x03x.dts b/arch/arm/boot/=
+dts/imx53-tx53-x03x.dts
+> > index 0217dde3..43b4b7b 100644
+> > --- a/arch/arm/boot/dts/imx53-tx53-x03x.dts
+> > +++ b/arch/arm/boot/dts/imx53-tx53-x03x.dts
+> > @@ -25,12 +25,17 @@
+> >  	soc {
+> >  		display: display@di0 {
+> >  			compatible =3D "fsl,imx-parallel-display";
+> > -			crtcs =3D <&ipu 0>;
+> >  			interface-pix-fmt =3D "rgb24";
+> >  			pinctrl-names =3D "default";
+> >  			pinctrl-0 =3D <&pinctrl_rgb24_vga1>;
+> >  			status =3D "okay";
+> > =20
+> > +			port {
+> > +				display0_in: endpoint {
+> > +					remote-endpoint =3D <&ipu_di0_disp0>;
+> > +				};
+> > +			};
+> > +
+>=20
+> I shouldn't apply this until I rebase my branch on 3.15-rc1 where
+> Philipp's OF graph is to be seen, right?
+>=20
+That's ok with me.
 
-Phil
+
+Lothar Wa=C3=9Fmann
+--=20
+___________________________________________________________
+
+Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
+Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
+Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
+Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
+
+www.karo-electronics.de | info-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org
+___________________________________________________________
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
