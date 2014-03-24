@@ -1,293 +1,148 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Mon, 24 Mar 2014 09:32:17 -0700
-Message-ID: <CAGVrzcaY257MAjjmkXDi_fD5TxSanmx9Jpvx-yg7vT3-GUjz3A@mail.gmail.com>
-References: <1395670496-17381-1-git-send-email-zhangfei.gao@linaro.org> <1395670496-17381-4-git-send-email-zhangfei.gao@linaro.org>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v3] i2c: new bus driver for efm32
+Date: Mon, 24 Mar 2014 18:01:31 +0100
+Message-ID: <20140324170131.GB7524@katana>
+References: <1395414236-22647-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1395670496-17381-4-git-send-email-zhangfei.gao@linaro.org>
-Sender: netdev-owner@vger.kernel.org
-To: Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc: David Miller <davem@davemloft.net>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="i9LlY+UWpKt15+FH"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1395414236-22647-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uwe =?iso-8859-15?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2014-03-24 7:14 GMT-07:00 Zhangfei Gao <zhangfei.gao@linaro.org>:
-> Support Hisilicon hip04 ethernet driver, including 100M / 1000M controller
->
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> ---
->  drivers/net/ethernet/hisilicon/Makefile    |    2 +-
->  drivers/net/ethernet/hisilicon/hip04_eth.c |  728 ++++++++++++++++++++++++++++
->  2 files changed, 729 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/net/ethernet/hisilicon/hip04_eth.c
 
-[snip]
+--i9LlY+UWpKt15+FH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +static void hip04_config_port(struct hip04_priv *priv, u32 speed, u32 duplex)
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-efm32.txt
+> @@ -0,0 +1,34 @@
+> +* Energymicro efm32 i2c controller
+> +
+> +Required properties :
+> +
+> + - reg : Offset and length of the register set for the device
+> + - compatible : should be "efm32,i2c"
+
+Ehrm, come to think of it, shouldn't that actually be "energymicro, efm32-i2c"
+or similar to match the "vendor,product" pattern?
+
+> +config I2C_EFM32
+> +	tristate "EFM32 I2C controller"
+> +	depends on OF && (ARCH_EFM32 || COMPILE_TEST)
+
+Is EFM32 DT only? Do we need the dependency on OF?
+
+> +	help
+> +	  This driver supports the i2c block found in Energy Micro's EFM32
+> +	  SoCs.
+> +
+
+...
+
+> +static void efm32_i2c_send_next_byte(struct efm32_i2c_ddata *ddata)
 > +{
-> +       u32 val;
-> +
-> +       priv->speed = speed;
-> +       priv->duplex = duplex;
-> +
-> +       switch (priv->phy_mode) {
-> +       case PHY_INTERFACE_MODE_SGMII:
-> +               if (speed == SPEED_1000)
-> +                       val = 8;
-> +               else
-> +                       val = 7;
-> +               break;
-> +       case PHY_INTERFACE_MODE_MII:
-> +               val = 1;        /* SPEED_100 */
-> +               break;
-> +       default:
-> +               val = 0;
-> +               break;
+> +	struct i2c_msg *cur_msg = &ddata->msgs[ddata->current_msg];
 
-Is 0 valid for e.g: 10Mbits/sec, regardless of the phy_mode?
+Missing newline.
 
-[snip]
-
+> +	if (ddata->current_word >= cur_msg->len) {
+> +		/* cur_msg completely transferred */
+> +		ddata->current_word = 0;
+> +		ddata->current_msg += 1;
 > +
-> +static void hip04_mac_enable(struct net_device *ndev, bool enable)
-> +{
-> +       struct hip04_priv *priv = netdev_priv(ndev);
-> +       u32 val;
-> +
-> +       if (enable) {
-> +               /* enable tx & rx */
-> +               val = readl_relaxed(priv->base + GE_PORT_EN);
-> +               val |= BIT(1);          /* rx*/
-> +               val |= BIT(2);          /* tx*/
-> +               writel_relaxed(val, priv->base + GE_PORT_EN);
-> +
-> +               /* enable interrupt */
-> +               priv->reg_inten = DEF_INT_MASK;
-> +               writel_relaxed(priv->reg_inten, priv->base + PPE_INTEN);
-> +
-> +               /* clear rx int */
-> +               val = RCV_INT;
-> +               writel_relaxed(val, priv->base + PPE_RINT);
-
-Should not you first clear the interrupt and then DEF_INT_MASK? Why is
-there a RCV_INT applied to PPE_RINT register in the enable path, but
-there is no such thing in the "disable" branch of your function?
-
-> +
-> +               /* config recv int*/
-> +               val = BIT(6);           /* int threshold 1 package */
-> +               val |= 0x4;             /* recv timeout */
-> +               writel_relaxed(val, priv->base + PPE_CFG_RX_PKT_INT);
-> +       } else {
-> +               /* disable int */
-> +               priv->reg_inten &= ~(RCV_INT | RCV_NOBUF);
-> +               writel_relaxed(priv->reg_inten, priv->base + PPE_INTEN);
-> +
-> +               /* disable tx & rx */
-> +               val = readl_relaxed(priv->base + GE_PORT_EN);
-> +               val &= ~(BIT(1));       /* rx*/
-> +               val &= ~(BIT(2));       /* tx*/
-> +               writel_relaxed(val, priv->base + GE_PORT_EN);
-> +       }
-
-There is little to no sharing between the two branches, I would have
-created separate helper functions for the enable/disable logic.
-
+> +		if (ddata->current_msg >= ddata->num_msgs) {
+> +			efm32_i2c_write32(ddata, REG_CMD, REG_CMD_STOP);
+> +			complete(&ddata->done);
+> +		} else {
+> +			efm32_i2c_send_next_msg(ddata);
+> +		}
+> +	} else {
+> +		efm32_i2c_write32(ddata, REG_TXDATA,
+> +				cur_msg->buf[ddata->current_word++]);
+> +	}
 > +}
 > +
-> +static void hip04_set_xmit_desc(struct hip04_priv *priv, dma_addr_t phys)
+
+...
+
+
+> +static int efm32_i2c_master_xfer(struct i2c_adapter *adap,
+> +		struct i2c_msg *msgs, int num)
 > +{
-> +       writel(phys, priv->base + PPE_CFG_TX_PKT_BD_ADDR);
+> +	struct efm32_i2c_ddata *ddata = i2c_get_adapdata(adap);
+> +	int ret;
+> +
+> +	if (ddata->msgs)
+> +		return -EBUSY;
+> +
+> +	ddata->msgs = msgs;
+> +	ddata->num_msgs = num;
+> +	ddata->current_word = 0;
+> +	ddata->current_msg = 0;
+> +	ddata->retval = -EIO;
+> +
+> +	reinit_completion(&ddata->done);
+> +
+> +	dev_dbg(&ddata->adapter.dev, "state: %08x, status: %08x\n",
+> +			efm32_i2c_read32(ddata, REG_STATE),
+> +			efm32_i2c_read32(ddata, REG_STATUS));
+> +
+> +	efm32_i2c_send_next_msg(ddata);
+> +
+> +	wait_for_completion(&ddata->done);
+> +
+> +	if (ddata->current_msg >= ddata->num_msgs)
+> +		ret = ddata->num_msgs;
+> +	else
+> +		ret = ddata->retval;
+> +
+> +	ddata->msgs = NULL;
 
-This is not 64-bits/LPAE safe, do you have a High address part and a
-Low address part for your address in the buffer descriptor address, if
-so, better use it now.
-
-[snip]
-
-> +
-> +static int hip04_rx_poll(struct napi_struct *napi, int budget)
-> +{
-> +       struct hip04_priv *priv = container_of(napi, struct hip04_priv, napi);
-> +       struct net_device *ndev = priv->ndev;
-> +       struct net_device_stats *stats = &ndev->stats;
-> +       unsigned int cnt = hip04_recv_cnt(priv);
-> +       struct sk_buff *skb;
-> +       struct rx_desc *desc;
-> +       unsigned char *buf;
-> +       dma_addr_t phys;
-> +       int rx = 0;
-> +       u16 len;
-> +       u32 err;
-> +
-> +       while (cnt) {
-> +               buf = priv->rx_buf[priv->rx_head];
-> +               skb = build_skb(buf, priv->rx_buf_size);
-> +               if (unlikely(!skb))
-> +                       net_dbg_ratelimited("build_skb failed\n");
-> +
-> +               dma_unmap_single(&ndev->dev, priv->rx_phys[priv->rx_head],
-> +                               RX_BUF_SIZE, DMA_FROM_DEVICE);
-> +               priv->rx_phys[priv->rx_head] = 0;
-> +
-> +               desc = (struct rx_desc *)skb->data;
-> +               len = be16_to_cpu(desc->pkt_len);
-> +               err = be32_to_cpu(desc->pkt_err);
-> +
-> +               if (len > RX_BUF_SIZE)
-> +                       len = RX_BUF_SIZE;
-> +               if (0 == len)
-> +                       break;
-
-Should not this be a continue? This is an error packet, so you should
-keep on processing the others, or does this have a special meaning?
+Setting NULL should not be needed?
 
 > +
-> +               if (err & RX_PKT_ERR) {
-> +                       dev_kfree_skb_any(skb);
-> +                       stats->rx_dropped++;
-> +                       stats->rx_errors++;
-> +                       continue;
-> +               }
-> +
-> +               stats->rx_packets++;
-> +               stats->rx_bytes += len;
-> +
-> +               skb_reserve(skb, NET_SKB_PAD + NET_IP_ALIGN);
-> +               skb_put(skb, len);
-> +               skb->protocol = eth_type_trans(skb, ndev);
-> +               napi_gro_receive(&priv->napi, skb);
-> +
-> +               buf = netdev_alloc_frag(priv->rx_buf_size);
-> +               if (!buf)
-> +                       return -ENOMEM;
-> +               phys = dma_map_single(&ndev->dev, buf,
-> +                               RX_BUF_SIZE, DMA_FROM_DEVICE);
-
-Missing dma_mapping_error() check here.
-
-> +               priv->rx_buf[priv->rx_head] = buf;
-> +               priv->rx_phys[priv->rx_head] = phys;
-> +               hip04_set_recv_desc(priv, phys);
-> +
-> +               priv->rx_head = RX_NEXT(priv->rx_head);
-> +               if (rx++ >= budget)
-> +                       break;
-> +
-> +               if (--cnt == 0)
-> +                       cnt = hip04_recv_cnt(priv);
-
-> +       }
-> +
-> +       if (rx < budget) {
-> +               napi_complete(napi);
-> +
-> +               /* enable rx interrupt */
-> +               priv->reg_inten |= RCV_INT | RCV_NOBUF;
-> +               writel_relaxed(priv->reg_inten, priv->base + PPE_INTEN);
-> +       }
-> +
-> +       return rx;
+> +	return ret;
 > +}
 > +
-> +static irqreturn_t hip04_mac_interrupt(int irq, void *dev_id)
-> +{
-> +       struct net_device *ndev = (struct net_device *) dev_id;
-> +       struct hip04_priv *priv = netdev_priv(ndev);
-> +       u32 ists = readl_relaxed(priv->base + PPE_INTSTS);
-> +       u32 val = DEF_INT_MASK;
-> +
-> +       writel_relaxed(val, priv->base + PPE_RINT);
-> +
-> +       if (ists & (RCV_INT | RCV_NOBUF)) {
-> +               if (napi_schedule_prep(&priv->napi)) {
-> +                       /* disable rx interrupt */
-> +                       priv->reg_inten &= ~(RCV_INT | RCV_NOBUF);
-> +                       writel_relaxed(priv->reg_inten, priv->base + PPE_INTEN);
-> +                       __napi_schedule(&priv->napi);
-> +               }
-> +       }
 
-You should also process TX completion interrupts here
+And checkpatch said:
 
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +static void hip04_tx_reclaim(struct net_device *ndev, bool force)
-> +{
-> +       struct hip04_priv *priv = netdev_priv(ndev);
-> +       unsigned tx_head = priv->tx_head;
-> +       unsigned tx_tail = priv->tx_tail;
-> +       struct tx_desc *desc = &priv->tx_desc[priv->tx_tail];
-> +
-> +       while (tx_tail != tx_head) {
-> +               if (desc->send_addr != 0) {
-> +                       if (force)
-> +                               desc->send_addr = 0;
-> +                       else
-> +                               break;
-> +               }
-> +               if (priv->tx_phys[tx_tail]) {
-> +                       dma_unmap_single(&ndev->dev, priv->tx_phys[tx_tail],
-> +                               priv->tx_skb[tx_tail]->len, DMA_TO_DEVICE);
-> +                       priv->tx_phys[tx_tail] = 0;
-> +               }
-> +               dev_kfree_skb_irq(priv->tx_skb[tx_tail]);
+WARNING: braces {} are not necessary for any arm of this statement
+#345: FILE: drivers/i2c/busses/i2c-efm32.c:239:
++		if (cur_msg->flags & I2C_M_RD) {
+...
 
-dev_kfree_skb_irq() bypasses all sort of SKB tracking, you might want
-to use kfree_skb() here instead.
+Thanks,
 
-> +               priv->tx_skb[tx_tail] = NULL;
-> +               tx_tail = TX_NEXT(tx_tail);
-> +               priv->tx_count--;
-> +       }
-> +       priv->tx_tail = tx_tail;
-> +}
-> +
-> +static int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-> +{
-> +       struct hip04_priv *priv = netdev_priv(ndev);
-> +       struct net_device_stats *stats = &ndev->stats;
-> +       unsigned int tx_head = priv->tx_head;
-> +       struct tx_desc *desc = &priv->tx_desc[tx_head];
-> +       dma_addr_t phys;
-> +
-> +       hip04_tx_reclaim(ndev, false);
-> +
-> +       if (priv->tx_count++ >= TX_DESC_NUM) {
-> +               net_dbg_ratelimited("no TX space for packet\n");
-> +               netif_stop_queue(ndev);
-> +               return NETDEV_TX_BUSY;
-> +       }
-> +
-> +       phys = dma_map_single(&ndev->dev, skb->data, skb->len, DMA_TO_DEVICE);
+   Wolfram
 
-Missing dma_mapping_error() check here
 
-> +       priv->tx_skb[tx_head] = skb;
-> +       priv->tx_phys[tx_head] = phys;
-> +       desc->send_addr = cpu_to_be32(phys);
-> +       desc->send_size = cpu_to_be16(skb->len);
-> +       desc->cfg = cpu_to_be32(DESC_DEF_CFG);
-> +       phys = priv->tx_desc_dma + tx_head * sizeof(struct tx_desc);
-> +       desc->wb_addr = cpu_to_be32(phys);
+--i9LlY+UWpKt15+FH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Don't we need a barrier here to ensure that all stores are completed
-before we hand this descriptor address to hip40_set_xmit_desc() which
-should make DMA start processing it?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
 
-> +       skb_tx_timestamp(skb);
-> +       hip04_set_xmit_desc(priv, phys);
-> +       priv->tx_head = TX_NEXT(tx_head);
-> +
-> +       stats->tx_bytes += skb->len;
-> +       stats->tx_packets++;
+iQIcBAEBAgAGBQJTMGTrAAoJEBQN5MwUoCm2tIUP/3dQVRr0JefR9P4uFdOn7msC
+Glmr1VNGJZ98MtrsK0DuskmEW6o2eV8xhLEDUW+vWPtL6OjfiVtHkQPjMIGuzzMO
+4mif+//zfanaH5RxFpN9Bicdm8XoO790rNtRT++A/K5p/ML6pjWimmcLw0M12Wux
+sal8tvBo7Q7TBgK5HCiCIyG99AkG/lIe3CkKZCO3f973Wany5C/2sftThaGgYdJk
++iUYoBH+seulhMdFlHmASEmTQvEZnXgPh3KiMNKi5506QneCFZKknj7lE5tkUFvv
+Io5UXghXz7a8VPd/tcHI0AYYzYYQgaMFiuzRM659w3Ll/vHJRTaeupBZ1efkJpfc
+XOiqypfxSJHTNf5ruGDp7j5eCqzZJ7c84QKONlsRBrMsJuP3lQYCpMQcihLrp+l/
+X7/bLy2py/yoYFK8AcnYjZyGWPIM70zESQ24afxDm6tj1+uTSkr8caYI/wCZ15pX
+EkseG1xOUxi0OKcr7QFhaijXaeK3EQJtWEdE0fhaPztQ7iMKLKNPGQSYjjRbMOWU
+8b63v/UFx2L1PD1q0wvu4SXiH/zgv+4Pr4idat5izSele6vm48uFZgTu9lHvc85m
+BkHx8GhWoJl0RCXvqhDTrs9sH/fXyv2+Hc1sk4r3pVL0JmnJrzPtAySpQWQxf+ic
+80LyqJjmEow7BGJnKqjG
+=g+8r
+-----END PGP SIGNATURE-----
 
-You cannot update the transmit stats here, what start_xmit() does it
-just queue packets for the DMA engine to process them, but that does
-not mean DMA has completed those. You should update statistics in the
-tx_reclaim() function.
--- 
-Florian
+--i9LlY+UWpKt15+FH--
