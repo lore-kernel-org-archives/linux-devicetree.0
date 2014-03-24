@@ -1,105 +1,146 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Mon, 24 Mar 2014 16:18:01 +0100
-Message-ID: <13743364.WZtdi2BZb3@wuerfel>
-References: <1395670496-17381-1-git-send-email-zhangfei.gao@linaro.org> <1395670496-17381-4-git-send-email-zhangfei.gao@linaro.org>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: Re: [PATCH] ARM: dts: am437x-gp-evm: Do not reset gpio5
+Date: Mon, 24 Mar 2014 10:29:58 -0500
+Message-ID: <53304F76.8090703@ti.com>
+References: <1395379213-15451-1-git-send-email-lokeshvutla@ti.com> <20140321055242.GA1959@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1395670496-17381-4-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140321055242.GA1959@saruman.home>
+Sender: linux-omap-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: Lokesh Vutla <lokeshvutla@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org, nsekhar@ti.com, rnayak@ti.com, nm@ti.com, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Monday 24 March 2014 22:14:56 Zhangfei Gao wrote:
+On 03/21/2014 12:52 AM, Felipe Balbi wrote:
+> On Fri, Mar 21, 2014 at 10:50:13AM +0530, Lokesh Vutla wrote:
+>> From: Dave Gerlach <d-gerlach@ti.com>
+>>
+>> Do not reset GPIO5 at boot-up because GPIO5_7 is used
+>> on AM437x GP-EVM to control VTT regulators on DDR3.
+>> Without this some GP-EVM boards will fail to boot because
+>> of DDR3 corruption.
+>>
+>> Reported-by: Nishanth Menon <nm@ti.com>
+>> Tested-by: Nishanth Menon <nm@ti.com>
+>> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+>
+> every now and again we see a patch like this because yet another board
+> is using a GPIO to toggle DDR regulators.
+>
+> Instead of constantly patching things like this, how about we try
+> something like below (build-tested only):
 
+Why should we change all of them? Is it correct to leave every single 
+GPIO at the mercy of the bootloader in every situation? The reason we 
+see these patches only every now and again is because it's a special 
+case that should be handled only for that situation. I also don't think 
+it makes sense to make gpio's a unique case that never gets reset while 
+every other IP does by default.
+
+Regards,
+Dave
+
+>
+> diff --git a/arch/arm/mach-omap2/omap_hwmod.c b/arch/arm/mach-omap2/omap_hwmod.c
+> index 1f33f5d..f5962ff 100644
+> --- a/arch/arm/mach-omap2/omap_hwmod.c
+> +++ b/arch/arm/mach-omap2/omap_hwmod.c
+> @@ -2610,6 +2610,10 @@ static int __init _setup_reset(struct omap_hwmod *oh)
+>   	if (oh->flags & HWMOD_EXT_OPT_MAIN_CLK)
+>   		return -EPERM;
+>
+> +	/* NEVER reset GPIO blocks */
+> +	if (strncmp(oh->name, "gpio", 4) == 0)
+> +		return 0;
 > +
-> +static void hip04_tx_reclaim(struct net_device *ndev, bool force)
+>   	if (oh->rst_lines_cnt == 0) {
+>   		r = _enable(oh);
+>   		if (r) {
+> diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+> index 4243190..ce8b53a 100644
+> --- a/drivers/gpio/gpio-omap.c
+> +++ b/drivers/gpio/gpio-omap.c
+> @@ -1130,6 +1130,29 @@ static void omap_gpio_chip_init(struct gpio_bank *bank)
+>
+>   static const struct of_device_id omap_gpio_match[];
+>
+> +static void omap_gpio_init_context(struct gpio_bank *p)
 > +{
-> +	struct hip04_priv *priv = netdev_priv(ndev);
-> +	unsigned tx_head = priv->tx_head;
-> +	unsigned tx_tail = priv->tx_tail;
-> +	struct tx_desc *desc = &priv->tx_desc[priv->tx_tail];
+> +	struct omap_gpio_reg_offs *regs = p->regs;
+> +	void __iomem *base = p->base;
 > +
-> +	while (tx_tail != tx_head) {
-> +		if (desc->send_addr != 0) {
-> +			if (force)
-> +				desc->send_addr = 0;
-> +			else
-> +				break;
-> +		}
-> +		if (priv->tx_phys[tx_tail]) {
-> +			dma_unmap_single(&ndev->dev, priv->tx_phys[tx_tail],
-> +				priv->tx_skb[tx_tail]->len, DMA_TO_DEVICE);
-> +			priv->tx_phys[tx_tail] = 0;
-> +		}
-> +		dev_kfree_skb_irq(priv->tx_skb[tx_tail]);
-> +		priv->tx_skb[tx_tail] = NULL;
-> +		tx_tail = TX_NEXT(tx_tail);
-> +		priv->tx_count--;
-> +	}
-> +	priv->tx_tail = tx_tail;
+> +	p->context.ctrl		= readl_relaxed(base + regs->ctrl);
+> +	p->context.oe		= readl_relaxed(base + regs->direction);
+> +	p->context.wake_en	= readl_relaxed(base + regs->wkup_en);
+> +	p->context.leveldetect0	= readl_relaxed(base + regs->leveldetect0);
+> +	p->context.leveldetect1	= readl_relaxed(base + regs->leveldetect1);
+> +	p->context.risingdetect	= readl_relaxed(base + regs->risingdetect);
+> +	p->context.fallingdetect = readl_relaxed(base + regs->fallingdetect);
+> +	p->context.irqenable1	= readl_relaxed(base + regs->irqenable);
+> +	p->context.irqenable2	= readl_relaxed(base + regs->irqenable2);
+> +
+> +	if (regs->set_dataout && p->regs->clr_dataout)
+> +		p->context.dataout = readl_relaxed(base + regs->set_dataout);
+> +	else
+> +		p->context.dataout = readl_relaxed(base + regs->dataout);
+> +
+> +	p->context_valid = true;
 > +}
-
-I think you still need to find a solution to ensure that the tx reclaim is
-called eventually through a method other than start_xmit.
-
 > +
-> +	priv->map = syscon_regmap_lookup_by_compatible("hisilicon,hip04-ppe");
-> +	if (IS_ERR(priv->map)) {
-> +		dev_warn(d, "no hisilicon,hip04-ppe\n");
-> +		ret = PTR_ERR(priv->map);
-> +		goto init_fail;
-> +	}
-> +
-> +	n = of_parse_phandle(node, "port-handle", 0);
-> +	if (n) {
-> +		ret = of_property_read_u32(n, "reg", &priv->port);
-> +		if (ret) {
-> +			dev_warn(d, "no reg info\n");
-> +			goto init_fail;
-> +		}
-> +
-> +		ret = of_property_read_u32(n, "channel", &priv->chan);
-> +		if (ret) {
-> +			dev_warn(d, "no channel info\n");
-> +			goto init_fail;
-> +		}
-> +	} else {
-> +		dev_warn(d, "no port-handle\n");
-> +		ret = -EINVAL;
-> +		goto init_fail;
-> +	}
+>   static int omap_gpio_probe(struct platform_device *pdev)
+>   {
+>   	struct device *dev = &pdev->dev;
+> @@ -1246,6 +1269,7 @@ static int omap_gpio_probe(struct platform_device *pdev)
+>   	omap_gpio_mod_init(bank);
+>   	omap_gpio_chip_init(bank);
+>   	omap_gpio_show_rev(bank);
+> +	omap_gpio_init_context(bank);
+>
+>   	pm_runtime_put(bank->dev);
+>
+> @@ -1325,8 +1349,6 @@ update_gpio_context_count:
+>   	return 0;
+>   }
+>
+> -static void omap_gpio_init_context(struct gpio_bank *p);
+> -
+>   static int omap_gpio_runtime_resume(struct device *dev)
+>   {
+>   	struct platform_device *pdev = to_platform_device(dev);
+> @@ -1466,29 +1488,6 @@ void omap2_gpio_resume_after_idle(void)
+>   }
+>
+>   #if defined(CONFIG_PM_RUNTIME)
+> -static void omap_gpio_init_context(struct gpio_bank *p)
+> -{
+> -	struct omap_gpio_reg_offs *regs = p->regs;
+> -	void __iomem *base = p->base;
+> -
+> -	p->context.ctrl		= readl_relaxed(base + regs->ctrl);
+> -	p->context.oe		= readl_relaxed(base + regs->direction);
+> -	p->context.wake_en	= readl_relaxed(base + regs->wkup_en);
+> -	p->context.leveldetect0	= readl_relaxed(base + regs->leveldetect0);
+> -	p->context.leveldetect1	= readl_relaxed(base + regs->leveldetect1);
+> -	p->context.risingdetect	= readl_relaxed(base + regs->risingdetect);
+> -	p->context.fallingdetect = readl_relaxed(base + regs->fallingdetect);
+> -	p->context.irqenable1	= readl_relaxed(base + regs->irqenable);
+> -	p->context.irqenable2	= readl_relaxed(base + regs->irqenable2);
+> -
+> -	if (regs->set_dataout && p->regs->clr_dataout)
+> -		p->context.dataout = readl_relaxed(base + regs->set_dataout);
+> -	else
+> -		p->context.dataout = readl_relaxed(base + regs->dataout);
+> -
+> -	p->context_valid = true;
+> -}
+> -
+>   static void omap_gpio_restore_context(struct gpio_bank *bank)
+>   {
+>   	writel_relaxed(bank->context.wake_en,
+>
+> Then, we can even remove ti,no-reset flag from all GPIO DT nodes.
+>
 
-Doing the lookup by "compatible" string doesn't really help you
-at solve the problem of single-instance ppe at all, because that
-function will only ever look at the first one. Use
-syscon_regmap_lookup_by_phandle instead and pass the phandle
-you get from the "port-handle" property.
-
-Also, since you decided to treat the ppe as a dump regmap, I would
-recommend moving the 'reg' and 'channel' properties into arguments
-of the port-handle link, and retting rid of the child nodes of
-the ppe, like:
-
-+       ppe: ppe@28c0000 {
-+               compatible = "hisilicon,hip04-ppe", "syscon";
-+               reg = <0x28c0000 0x10000>;
-+       };
-+
-+       fe: ethernet@28b0000 {
-+               compatible = "hisilicon,hip04-mac";
-+               reg = <0x28b0000 0x10000>;
-+               interrupts = <0 413 4>;
-+               phy-mode = "mii";
-+               port-handle = <&ppe 0xf1 0>;
-+       };
-
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
