@@ -1,117 +1,49 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 03/20] mmc: mmci: Update DT documentation
-Date: Mon, 24 Mar 2014 10:03:26 +0100
-Message-ID: <CAPDyKFpHW1TgtNoKieG+7cws-wPwc335sSCNo5LoBixAX=9Fbg@mail.gmail.com>
-References: <1395404057-27835-1-git-send-email-ulf.hansson@linaro.org>
-	<1395404057-27835-4-git-send-email-ulf.hansson@linaro.org>
-	<CAL_JsqJbaxayELNt+d1VSfFyD58eRYQM=d15RaFcFQKbot3iaw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: mohun106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH v2 0/3] Add support for Cavium Thunder ARMv8 platform
+Date: Mon, 24 Mar 2014 14:39:36 +0530
+Message-ID: <1395652179-9216-1-git-send-email-mohun106@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJbaxayELNt+d1VSfFyD58eRYQM=d15RaFcFQKbot3iaw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Catalin.Marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pkapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21 March 2014 16:03, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Fri, Mar 21, 2014 at 7:14 AM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> Document how to configure the regulator supplies and add an example of
->> a typical mmci DT node.
->>
->> Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/mmc/mmci.txt |   35 ++++++++++++++++++++++--
->>  1 file changed, 33 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/mmci.txt b/Documentation/devicetree/bindings/mmc/mmci.txt
->> index 2b584ca..d167562 100644
->> --- a/Documentation/devicetree/bindings/mmc/mmci.txt
->> +++ b/Documentation/devicetree/bindings/mmc/mmci.txt
->> @@ -9,7 +9,38 @@ by mmc.txt and the properties used by the mmci driver.
->>  Required properties:
->>  - compatible             : contains "arm,pl18x", "arm,primecell".
->>  - arm,primecell-periphid : contains the PrimeCell Peripheral ID.
->
-> This should not be required. This is only for if the peripheral ID is
-> wrong in the h/w.
+From: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 
-You are right, I will move it to the optional section and add better
-comment for it.
+This patch series adds preliminary support for Cavium's Thunder SoC
+which is based on ARMv8 core.
 
->
->> +- vmmc-supply            : phandle to the regulator device tree node.
->
-> You cannot add new required properties as that breaks the ABI. The
-> exception is if you *know* it is okay to break all users of this
-> binding.
+This patchset depends on following. They need to be applied before
+working.
 
-It's okay, this is already supported by the users.
+1) Boot time configuration of IPA
+http://www.spinics.net/lists/arm-kernel/msg313723.html
 
->
->>  Optional properties:
->> -- mmc-cap-mmc-highspeed  : indicates whether MMC is high speed capable
->> -- mmc-cap-sd-highspeed   : indicates whether SD is high speed capable
->> +- mmc-cap-mmc-highspeed  : indicates whether MMC is high speed capable.
->> +- mmc-cap-sd-highspeed   : indicates whether SD is high speed capable.
->> +- vqmmc-supply           : phandle to the regulator device tree node.
->
-> Is this a standard property? If not, explain what vmmc and vgmmc are
-> for and what the difference is.
+2) GICv3 driver from Marc Zyngier
+http://www.spinics.net/lists/kvm-arm/msg08544.html
 
-Currently both vqmmc and vmmc are handled through an API provided by
-the mmc core. It's up to each mmc host driver to use it. So, yes -
-this is a standard mmc binding, but it depends on the host if it's
-supported.
+3) GICv3 devicetree bindings from Marc Zyngier
+http://www.spinics.net/lists/kvm-arm/msg08545.html
 
-I suppose I could add it as an optional binding for the generic mmc
-bindings and then keep them here for mmci as well?
+Changes from v1:
+---------------
+- Added documentation for the devicetree bindings used.
+- Changed the Thunder device tree as per documentation.
 
->
->> +
->> +Example:
->> +
->> +sdi0_per1@80126000 {
->> +       compatible = "arm,pl18x", "arm,primecell";
->> +       arm,primecell-periphid = <0x10480180>;
->
-> Drop this from the example.
->
->> +       reg = <0x80126000 0x1000>;
->> +       interrupts = <0 60 IRQ_TYPE_LEVEL_HIGH>;
->> +
->> +       dmas = <&dma 29 0 0x2>, /* Logical - DevToMem */
->> +              <&dma 29 0 0x0>; /* Logical - MemToDev */
->> +       dma-names = "rx", "tx";
->> +
->> +       clocks = <&prcc_kclk 1 5>, <&prcc_pclk 1 5>;
->> +       clock-names = "sdi", "apb_pclk";
->> +
->> +       max-frequency = <100000000>;
->> +       bus-width = <4>;
->> +       mmc-cap-sd-highspeed;
->> +       mmc-cap-mmc-highspeed;
->> +       cd-gpios  = <&gpio2 31 0x4>; // 95
->> +
->> +       vmmc-supply = <&ab8500_ldo_aux3_reg>;
->> +       vqmmc-supply = <&vmmci>;
->> +
->> +       pinctrl-names = "default", "sleep";
->> +       pinctrl-0 = <&sdi0_default_mode>;
->> +       pinctrl-1 = <&sdi0_sleep_mode>;
->> +};
->> --
->> 1.7.9.5
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Radha Mohan Chintakuntla (3):
+  arm64: Add Kconfig option for Cavium Thunder SoC Family
+  arm64: dts: Add initial dts for Cavium Thunder SoC
+  Documentation: add devicetree bindings for Cavium Thunder SoC
 
-Thanks for reviewing!
+ .../devicetree/bindings/arm/cavium-thunder.txt     |    9 +
+ Documentation/devicetree/bindings/arm/cpus.txt     |    1 +
+ arch/arm64/Kconfig                                 |    5 +
+ arch/arm64/boot/dts/Makefile                       |    1 +
+ arch/arm64/boot/dts/thunder.dts                    |  160 ++++++++++++++++++++
+ 5 files changed, 176 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/cavium-thunder.txt
+ create mode 100644 arch/arm64/boot/dts/thunder.dts
 
-Kind regards
-Ulf Hansson
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
