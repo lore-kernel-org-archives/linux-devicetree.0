@@ -1,92 +1,100 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] arm64: dts: Add initial dts for Cavium Thunder SoC
-Date: Mon, 24 Mar 2014 10:55:02 +0100
-Message-ID: <4827584.NY6fTFPNNK@wuerfel>
-References: <1395652179-9216-1-git-send-email-mohun106@gmail.com> <1395652179-9216-3-git-send-email-mohun106@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
+Date: Mon, 24 Mar 2014 11:02:28 +0100
+Message-ID: <5755212.stImUCLDZi@wuerfel>
+References: <1395132017-15928-1-git-send-email-zhangfei.gao@linaro.org> <201403201531.20416.arnd@arndb.de> <CAMj5Bkgc2ChK48QmqEEMEmxdF6iGZxMX0kVUqGFd8jYhEWCvOA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1395652179-9216-3-git-send-email-mohun106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mohun106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Catalin.Marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pkapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAMj5Bkgc2ChK48QmqEEMEmxdF6iGZxMX0kVUqGFd8jYhEWCvOA@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Zhangfei Gao <zhangfei.gao@gmail.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, netdev <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 24 March 2014 14:39:38 mohun106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> +       soc {
-> +               compatible = "simple-bus";
-> +               #address-cells = <2>;
-> +               #size-cells = <2>;
-> +               ranges;
-> +
-> +               clocks {
-> +                       #address-cells = <2>;
-> +                       #size-cells = <2>;
-> +                       ranges;
-> +
-> +                       refclk50mhz: refclk50mhz {
-> +                               compatible = "fixed-clock";
-> +                               #clock-cells = <0>;
-> +                               clock-frequency = <50000000>;
-> +                               clock-output-names = "refclk50mhz";
-> +                       };
-> +               };
-> +
-> +               ahci0: host-bus-adapter@810000000000 {
-> +                       compatible = "snps,spear-ahci";
-> +                       reg = <0x8100 0x0 0x0 0x1100>;
-> +                       interrupts = <1 32 4>;
-> +               };
+On Monday 24 March 2014 16:17:42 Zhangfei Gao wrote:
+> On Thu, Mar 20, 2014 at 10:31 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> >> >
+> >> >> +     if (!ppebase) {
+> >> >> +             struct device_node *n;
+> >> >> +
+> >> >> +             n = of_find_compatible_node(NULL, NULL, "hisilicon,hip04-ppebase");
+> >> >> +             if (!n) {
+> >> >> +                     ret = -EINVAL;
+> >> >> +                     netdev_err(ndev, "not find hisilicon,ppebase\n");
+> >> >> +                     goto init_fail;
+> >> >> +             }
+> >> >> +             ppebase = of_iomap(n, 0);
+> >> >> +     }
+> >> >
+> >> > How about using syscon_regmap_lookup_by_phandle() here? That way, you can have
+> >> > a more generic abstraction of the ppe, and stick the port and id in there as
+> >> > well, e.g.
+> >> >
+> >> >         ppe-syscon = <&hip04ppe 1 4>; // ppe, port, id
+> 
+> Even if using syscon_regmap_lookup_by_phandle, there still have static
+> struct regmap, since three controllers
+> share one regmap.
 
+The regmap is then owned by the syscon driver, while each controller takes
+a reference to the regmap that it can store in its own private data
+structure. However, as we discussed using a ppe driver sounds nicer than
+regmap.
 
-The use of "snps,spear-ahci" by itself seems wrong here: that is
-the specific implementation used in the ST "spear" SoC. I don't know
-why we don't already have a "generic-ahci" binding, but please add
-one so you can match against that.
+> > It's probably a little simpler to avoid the sub-nodes and instead do
+> >
+> >>               ppe: ppe@28c0000 {
+> >>                         compatible = "hisilicon,hip04-ppe";
+> >>                         reg = <0x28c0000 0x10000>;
+> >>                         #address-cells = <1>;
+> >>                         #size-cells = <0>;
+> >>                 };
+> >>                 fe: ethernet@28b0000 {
+> >>                         compatible = "hisilicon,hip04-mac";
+> >>                         reg = <0x28b0000 0x10000>;
+> >>                         interrupts = <0 413 4>;
+> >>                         phy-mode = "mii";
+> >>                         port-handle = <&ppe 31>;
+> >>                 };
+> >
+> > In the code, I would create a simple ppe driver that exports
+> > a few functions. you need. In the ethernet driver probe() function,
+> > you should get a handle to the ppe using
+> >
+> >         /* look up "port-handle" property of the current device, find ppe and port */
+> >         struct hip04_ppe *ppe = hip04_ppe_get(dev->of_node);
+> >         if (IS_ERR(ppe))
+> >                 return PTR_ERR(ptr); /* this handles -EPROBE_DEFER */
+> >
+> > and then in other code you can just do
+> >
+> >         hip04_ppe_set_foo(priv->ppe, foo_config);
+> >
+> > This is a somewhat more high-level abstraction that syscon, which
+> > just gives you a 'struct regmap' structure for doing register-level
+> > configuration like you have today.
+> >
+> 
+> Do you mean create one additional file like ppe.c with some exported
+> function to remove the static ppebase?
 
-I would also recommend adding a more specific string for your soc.
-If you want to keep compatibility with older kernels, you can keep
-the spear string as well, but it would be nicer to drop that.
-If you can find out what version the synopsys macro has, that would
-be ideal.
+It doesn't have to be a separate file, as long as you register a
+separate platform_driver for the ppe.
 
-You could end up for instance with
+> Since the ppe is specifically bounded with ethernet, and does not used
+> anywhere else,
+> the exported function may not be used anywhere else.
+> Is it make it more complicated since there are probe, remove etc.
+> 
+> So I may still prefer using "static void __iomem *ppebase", as it is simpler.
 
-	compatible = "cavium,thunder-123456-ahci", "snps,ahci-1.23.45",
-			"snps,spear-ahci", "generic-ahci";
+The trouble is that the driver should not rely on being only there
+for a single instance, that's not how we write drivers.
 
-The driver only needs to match the last one of these, but if we
-find that we have to work around some bug, it's good to have the
-option of determining the exact version.
-
-> +               nic0: ethernet@843000000000 {
-> +                       compatible = "smsc,lan9115";
-> +                       reg-io-width = <4>;
-> +                       reg = <0x8430 0x0 0x0 0x1000>;
-> +                       interrupts = <1 31 4>;
-> +               };
-> +
-> +               uaa0: uart@87e024000000 {
-> +                       compatible = "arm,pl011", "arm,primecell";
-> +                       reg = <0x87e0 0x24000000 0x0 0x1000>;
-> +                       interrupts = <1 21 4>;
-> +                       clocks = <&refclk50mhz>;
-> +                       clock-names = "apb_pclk";
-> +               };
-> +
-> +               uaa1: uart@87e025000000 {
-> +                       compatible = "arm,pl011", "arm,primecell";
-> +                       reg = <0x87e0 0x25000000 0x0 0x1000>;
-> +                       interrupts = <1 22 4>;
-> +                       clocks = <&refclk50mhz>;
-> +                       clock-names = "apb_pclk";
-
-The generic name for uarts in DT is "serial", not "uart" (yes, a
-lot of others get this wrong, too).
+I'm fine with either a syscon instance (which would be simpler) or a
+separate ppe driver as part of the hip04-mac driver (which would be
+a nicer abstraction).
 
 	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
