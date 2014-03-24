@@ -1,160 +1,380 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH] ARM: dts: am437x-gp-evm: Do not reset gpio5
-Date: Mon, 24 Mar 2014 14:22:13 -0500
-Message-ID: <20140324192213.GG12500@saruman.home>
-References: <1395379213-15451-1-git-send-email-lokeshvutla@ti.com>
- <20140321055242.GA1959@saruman.home>
- <53304F76.8090703@ti.com>
- <20140324185027.GC12500@saruman.home>
- <5330810A.3090004@ti.com>
-Reply-To: <balbi@ti.com>
+From: Ben Hutchings <ben@decadent.org.uk>
+Subject: Re: [PATCH V12 6/7] net: sxgbe: add ethtool related functions
+ support Samsung sxgbe
+Date: Mon, 24 Mar 2014 19:29:37 +0000
+Message-ID: <1395689377.2832.63.camel@deadeye.wl.decadent.org.uk>
+References: <008f01cf464d$0a48e810$1edab830$@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="YrQNB5Deg1WGKZi3"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5330810A.3090004@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: balbi@ti.com, Dave Gerlach <d-gerlach@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org, nsekhar@ti.com, rnayak@ti.com, mark.rutland@arm.com
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-jv3/2i0Sfx9gj5wwQxNz"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <008f01cf464d$0a48e810$1edab830$@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Byungho An <bh74.an@samsung.com>
+Cc: netdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 'David Miller' <davem@davemloft.net>, 'GIRISH K S' <ks.giri@samsung.com>, 'SIVAREDDY KALLAM' <siva.kallam@samsung.com>, 'Vipul Chandrakant' <vipul.pandya@samsung.com>, 'Ilho Lee' <ilho215.lee@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---YrQNB5Deg1WGKZi3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+
+--=-jv3/2i0Sfx9gj5wwQxNz
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Sorry I didn't look over this earlier.
 
-On Mon, Mar 24, 2014 at 02:01:30PM -0500, Nishanth Menon wrote:
-> On 03/24/2014 01:50 PM, Felipe Balbi wrote:
-> > Hi,
-> >=20
-> > On Mon, Mar 24, 2014 at 10:29:58AM -0500, Dave Gerlach wrote:
-> >> On 03/21/2014 12:52 AM, Felipe Balbi wrote:
-> >>> On Fri, Mar 21, 2014 at 10:50:13AM +0530, Lokesh Vutla wrote:
-> >>>> From: Dave Gerlach <d-gerlach@ti.com>
-> >>>>
-> >>>> Do not reset GPIO5 at boot-up because GPIO5_7 is used
-> >>>> on AM437x GP-EVM to control VTT regulators on DDR3.
-> >>>> Without this some GP-EVM boards will fail to boot because
-> >>>> of DDR3 corruption.
-> >>>>
-> >>>> Reported-by: Nishanth Menon <nm@ti.com>
-> >>>> Tested-by: Nishanth Menon <nm@ti.com>
-> >>>> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-> >>>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> >>>
-> >>> every now and again we see a patch like this because yet another board
-> >>> is using a GPIO to toggle DDR regulators.
-> >>>
-> >>> Instead of constantly patching things like this, how about we try
-> >>> something like below (build-tested only):
-> >>
-> >> Why should we change all of them? Is it correct to leave every single =
-GPIO
-> >> at the mercy of the bootloader in every situation? The reason we see t=
-hese
-> >=20
-> > it's not leaving anything at the mercy of the bootloader. It's simply
-> > looking at the HW itself and asking "what's the current state of this
-> > GPIO ?"
->=20
-> And you assume here that every GPIO pin left in what ever state by
-> bootloader is the correct state for kernel to function in? that is not
-> exactly a good idea from even power consumption perspective - example
+On Sat, 2014-03-22 at 21:04 -0700, Byungho An wrote:
+[...]
+> --- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h
+> +++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h
+> @@ -42,8 +42,12 @@ struct sxgbe_mtl_ops;
+>  #define SXGBE_RX_QUEUES   16
+> =20
+>  /* Max/Min RI Watchdog Timer count value */
+> -#define SXGBE_MAX_DMA_RIWT	0xff
+> -#define SXGBE_MIN_DMA_RIWT	0x20
+> +/* Calculated based how much time does it take to fill 256KB Rx memory
+> + * at 10Gb speed at 156MHz clock rate and considered little less then
+> + * the actual value.
+> + */
+> +#define SXGBE_MAX_DMA_RIWT	0x70
+> +#define SXGBE_MIN_DMA_RIWT	0x01
 
-right, it's a much better idea to reset the IP which, well, enables the
-f-ing DDR. Congrats!
+This change should be folded into patch 2/7.
 
-> GPIOs used by bootloader to detect board revision is not used in
-> kernel, leaving such GPIOs active is not optimal, certain other GPIOs
-> used by external peripherals might even be wrongly configured by
-> bootloader issues -> the idea of ti,no-reset-on-init is to ensure that
-> we *know* which instances "need special handling" and we depend on
-> bootloader configuration.
+[...]
+> --- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c
+> +++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c
+[...]
+> -static int sxgbe_ethtool_get_eee(struct net_device *dev,
+> -				 struct ethtool_eee *edata)
+> +static int sxgbe_get_eee(struct net_device *dev,
+> +			 struct ethtool_eee *edata)
+>  {
+>  	struct sxgbe_priv_data *priv =3D netdev_priv(dev);
+> =20
+> @@ -55,8 +150,8 @@ static int sxgbe_ethtool_get_eee(struct net_device *de=
+v,
+>  	return phy_ethtool_get_eee(priv->phydev, edata);
+>  }
+> =20
+> -static int sxgbe_ethtool_set_eee(struct net_device *dev,
+> -				 struct ethtool_eee *edata)
+> +static int sxgbe_set_eee(struct net_device *dev,
+> +			 struct ethtool_eee *edata)
+>  {
+>  	struct sxgbe_priv_data *priv =3D netdev_priv(dev);
+> =20
 
-or you can just make your driver smarter and for GPIOs which are not
-used by the kernel, you ignore context save-restore.
+These name changes should be folded into patch 2/7.
 
-The problem is that our GPIO driver is so fucked up that nobody really
-cares about fixing it. If you really wanted to fix it, it wouldn't be
-really difficult to make use of pm_runtime's (and clock API's) usage
-counters to avoid keeping certain blocks up when not necessary.
+[...]
+> +static int sxgbe_getsettings(struct net_device *dev,
+> +			     struct ethtool_cmd *cmd)
+> +{
+> +	struct sxgbe_priv_data *priv =3D netdev_priv(dev);
+> +
+> +	if (priv->phydev)
+> +		return phy_ethtool_gset(priv->phydev, cmd);
+> +
+> +	return -ENODEV;
+> +}
+> +
+> +static int sxgbe_setsettings(struct net_device *dev, struct ethtool_cmd =
+*cmd)
+> +{
+> +	struct sxgbe_priv_data *priv =3D netdev_priv(dev);
+> +
+> +	if (priv->phydev)
+> +		return phy_ethtool_sset(priv->phydev, cmd);
+> +
+> +	return -ENODEV;
+> +}
 
-> Taking it a step further, why is "not doing IP module kernel reset"
-> just a constraint for GPIO then? Why not leave every IP module in what
-> ever state bootloader left it at?
+I think these two operations should return -EOPNOTSUPP if there is no
+PHY.
 
-yeah, that's exactly what I suggested. Thanks for clarifying what *I*
-*SAID*.
+[...]
+> +static int sxgbe_get_ts_info(struct net_device *dev,
+> +			     struct ethtool_ts_info *info)
+> +{
+> +	struct sxgbe_priv_data *priv =3D netdev_priv(dev);
+> +
+> +	if (!priv->hw_cap.atime_stamp)
+> +		return ethtool_op_get_ts_info(dev, info);
+> +
+> +	info->so_timestamping =3D (SOF_TIMESTAMPING_TX_SOFTWARE |
+> +				 SOF_TIMESTAMPING_RX_SOFTWARE |
+> +				 SOF_TIMESTAMPING_SOFTWARE |
+> +				 SOF_TIMESTAMPING_TX_HARDWARE |
+> +				 SOF_TIMESTAMPING_RX_HARDWARE |
+> +				 SOF_TIMESTAMPING_RAW_HARDWARE);
+> +
+> +	if (priv->ptp_clock)
+> +		info->phc_index =3D ptp_clock_index(priv->ptp_clock);
 
-> >> patches only every now and again is because it's a special case that s=
-hould
-> >=20
-> > I wouldn't call it "special". A GPIO block is pretty dumb, its registers
-> > only give you current pin state, there's virtually no state machine
-> > involved whatsoever.
-> >=20
-> >> be handled only for that situation. I also don't think it makes sense
-> >> to make gpio's a unique case that never gets reset while every other
-> >> IP does by default.
-> >=20
-> > Well, if it doesn't need to be reset, why would you spend that time
-> > resetting it ? In the GPIO case, you gain nothing by resetting the IP,
-> > nothing at all, other than "now I'm sure the IP is in
-> > no-standby/no-idle" but that can be easily read back from SYS[SC]
-> > registers anyway.
->=20
-> because, you do not know how else the system might be used. instead of
-> assuming the bootloader or host OS (in a virtualized environment) will
-> always be doing the right thing, kernel takes responsibility of
-> peripherals and exceptions are clearly marked (such as with
-> ti,no-reset-on-init;).
+priv->ptp_clock doesn't appear to be set anywhere; nor does the driver
+implement SIOCSHWTSTAMP.  So this function should not advertise any
+hardware timestamping features yet.
 
-yada, yada, yada...
+> +	info->tx_types =3D ((1 << HWTSTAMP_TX_OFF) |
+> +			  (1 << HWTSTAMP_TX_ON) |
+> +			  (1 << HWTSTAMP_TX_ONESTEP_SYNC));
+> +
+> +	info->rx_filters =3D ((1 << HWTSTAMP_FILTER_NONE) |
+> +			    (1 << HWTSTAMP_FILTER_PTP_V1_L4_EVENT) |
+> +			    (1 << HWTSTAMP_FILTER_PTP_V1_L4_SYNC) |
+> +			    (1 << HWTSTAMP_FILTER_PTP_V1_L4_DELAY_REQ) |
+> +			    (1 << HWTSTAMP_FILTER_PTP_V2_L4_EVENT) |
+> +			    (1 << HWTSTAMP_FILTER_PTP_V2_L4_SYNC) |
+> +			    (1 << HWTSTAMP_FILTER_PTP_V2_L4_DELAY_REQ) |
+> +			    (1 << HWTSTAMP_FILTER_PTP_V2_L2_EVENT) |
+> +			    (1 << HWTSTAMP_FILTER_PTP_V2_L2_SYNC) |
+> +			    (1 << HWTSTAMP_FILTER_PTP_V2_L2_DELAY_REQ) |
+> +			    (1 << HWTSTAMP_FILTER_PTP_V2_EVENT) |
+> +			    (1 << HWTSTAMP_FILTER_PTP_V2_SYNC) |
+> +			    (1 << HWTSTAMP_FILTER_PTP_V2_DELAY_REQ) |
+> +			    (1 << HWTSTAMP_FILTER_ALL));
+> +	return 0;
+> +}
+> +
+> +int sxgbe_set_flow_ctrl(struct sxgbe_priv_data *priv, int rx, int tx)
+> +{
+> +	return 0;
+> +}
+> +
+> +static void sxgbe_get_pauseparam(struct net_device *netdev,
+> +				 struct ethtool_pauseparam *pause)
+> +{
+> +	struct sxgbe_priv_data *priv =3D netdev_priv(netdev);
+> +
+> +	pause->rx_pause =3D priv->rx_pause;
+> +	pause->tx_pause =3D priv->tx_pause;
+> +}
+> +
+> +static int sxgbe_set_pauseparam(struct net_device *netdev,
+> +				struct ethtool_pauseparam *pause)
+> +{
+> +	struct sxgbe_priv_data *priv =3D netdev_priv(netdev);
+> +
+> +	if (pause->autoneg)
+> +		return -EINVAL;
+> +
+> +	return sxgbe_set_flow_ctrl(priv, pause->rx_pause, pause->tx_pause);
 
-> > The point is that we have two choices here:
-> >=20
-> > a) every time a new board comes around using GPIO as an enable signal
-> > for DDR, we spend a few days debugging why it's not booting.
->=20
-> yeah - read the darned schematics - this is valid for anyone doing
-> board/platform bringup - this is the right way to do it.
+But sxgbe_set_flow_ctrl() is empty, so this isn't a proper
+implementation.
 
-sure, I'll let you handle that next time, be my guest.
+> +}
+[...]
+> +static int sxgbe_get_sset_count(struct net_device *netdev, int sset)
+> +{
+> +	int len;
+> +
+> +	switch (sset) {
+> +	case ETH_SS_STATS:
+> +		len =3D SXGBE_STATS_LEN;
+> +		return len;
+> +	default:
+> +		return -EOPNOTSUPP;
 
-> > b) make sure no GPIO block is ever reset, so we never go through the
-> > debugging cycle again.
-> >=20
-> the holy grail of new bugs! Sigh!
+You implement the operation, just not this particular argument value.
+So return -EINVAL.
 
-right, our code so god-damned perfect, ain't it ? We better not touch it
-anymore. Fair enough, I withdraw my comments, do as you wish.
+> +	}
+> +}
+> +
+> +static void sxgbe_get_ethtool_stats(struct net_device *dev,
+> +				    struct ethtool_stats *dummy, u64 *data)
+> +{
+> +	struct sxgbe_priv_data *priv =3D netdev_priv(dev);
+> +	int i, j =3D 0;
+> +	char *p;
+> +
+> +	if (priv->eee_enabled) {
+> +		int val =3D phy_get_eee_err(priv->phydev);
+> +
+> +		if (val)
+> +			priv->xstats.eee_wakeup_error_n =3D val;
+> +	}
+> +
+> +	for (i =3D 0; i < SXGBE_STATS_LEN; i++) {
+> +		p =3D (char *)priv + sxgbe_gstrings_stats[i].stat_offset;
+> +		data[j++] =3D (sxgbe_gstrings_stats[i].sizeof_stat =3D=3D sizeof(u64))
+> +			? (*(u64 *)p) : (*(u32 *)p);
+> +	}
+> +}
+
+It looks like you will always use the same value of i and j in each
+pass, so you don't need two separate variables.
+
+[...]
+> +static int sxgbe_get_coalesce(struct net_device *dev,
+> +                             struct ethtool_coalesce *ec)
+> +{
+> +       struct sxgbe_priv_data *priv =3D netdev_priv(dev);
+> +
+> +       if (priv->use_riwt)
+> +               ec->rx_coalesce_usecs =3D sxgbe_riwt2usec(priv->rx_riwt, =
+priv);
+
+Also set:
+
+	ec->rx_max_coalesced_frames =3D !priv->use_riwt;
+	ec->tx_coalesce_usecs =3D SXGBE_COAL_TX_TIMER;
+	ec->tx_max_coalesced_frames =3D SXGBE_TX_FRAMES;
+
+> +       return 0;
+> +}
+> +
+> +static int sxgbe_set_coalesce(struct net_device *dev,
+> +			      struct ethtool_coalesce *ec)
+> +{
+> +	struct sxgbe_priv_data *priv =3D netdev_priv(dev);
+> +	unsigned int rx_riwt;
+> +
+> +	rx_riwt =3D sxgbe_usec2riwt(ec->rx_coalesce_usecs, priv);
+> +
+> +	if ((rx_riwt > SXGBE_MAX_DMA_RIWT) || (rx_riwt < SXGBE_MIN_DMA_RIWT))
+> +		return -EINVAL;
+> +	else if (!priv->use_riwt)
+> +		return -EOPNOTSUPP;
+
+Please check for attempts to change unsupported parameters:
+
+	if (ec->rx_max_coalesced_frames !=3D !rx_riwt ||
+	    ec->tx_coalesce_usecs !=3D SXGBE_COAL_TX_TIMER ||
+	    ec->tx_max_coalesced_frames !=3D SXGBE_TX_FRAMES ||
+	    ec->use_adaptive_rx_coalesce ||
+	    ec->use_adaptive_tx_coalesce)
+		return -EINVAL;
+
+> +	priv->rx_riwt =3D rx_riwt;
+> +	priv->hw->dma->rx_watchdog(priv->ioaddr, priv->rx_riwt);
+> +
+> +	return 0;
+> +}
+[...]
+> +static int sxgbe_set_rss_hash_opt(struct sxgbe_priv_data *priv,
+> +				  struct ethtool_rxnfc *cmd)
+> +{
+> +	u32 reg_val =3D 0;
+> +
+> +	/* RSS does not support anything other than hashing
+> +	 * to queues on src and dst IPs and ports
+> +	 */
+> +	if (cmd->data & ~(RXH_IP_SRC | RXH_IP_DST |
+> +			  RXH_L4_B_0_1 | RXH_L4_B_2_3))
+> +		return -EINVAL;
+> +
+> +	switch (cmd->flow_type) {
+> +	case TCP_V4_FLOW:
+> +	case TCP_V6_FLOW:
+> +		if (!(cmd->data & RXH_IP_SRC) ||
+> +		    !(cmd->data & RXH_IP_DST) ||
+> +		    !(cmd->data & RXH_L4_B_0_1) ||
+> +		    !(cmd->data & RXH_L4_B_2_3))
+> +			return -EINVAL;
+> +		reg_val =3D SXGBE_CORE_RSS_CTL_TCP4TE;
+> +		break;
+> +	case UDP_V4_FLOW:
+> +	case UDP_V6_FLOW:
+> +		if (!(cmd->data & RXH_IP_SRC) ||
+> +		    !(cmd->data & RXH_IP_DST) ||
+> +		    !(cmd->data & RXH_L4_B_0_1) ||
+> +		    !(cmd->data & RXH_L4_B_2_3))
+> +			return -EINVAL;
+> +		reg_val =3D SXGBE_CORE_RSS_CTL_UDP4TE;
+> +		break;
+> +	case SCTP_V4_FLOW:
+> +	case AH_ESP_V4_FLOW:
+> +	case AH_V4_FLOW:
+> +	case ESP_V4_FLOW:
+> +	case AH_ESP_V6_FLOW:
+> +	case AH_V6_FLOW:
+> +	case ESP_V6_FLOW:
+> +	case SCTP_V6_FLOW:
+> +	case IPV4_FLOW:
+> +	case IPV6_FLOW:
+> +		if (!(cmd->data & RXH_IP_SRC) ||
+> +		    !(cmd->data & RXH_IP_DST) ||
+> +		    (cmd->data & RXH_L4_B_0_1) ||
+> +		    (cmd->data & RXH_L4_B_2_3))
+> +			return -EINVAL;
+> +		reg_val =3D SXGBE_CORE_RSS_CTL_IP2TE;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+
+Unless I'm missing something, this only accepts the default values, so
+it's not actually possible to change the configuration.  Why are you
+implementing this operation at all?
+
+[...]
+> +static void sxgbe_get_regs(struct net_device *dev,
+> +			   struct ethtool_regs *regs, void *space)
+> +{
+> +	struct sxgbe_priv_data *priv =3D netdev_priv(dev);
+> +	u32 *reg_space =3D (u32 *)space;
+> +	int reg_offset;
+> +	int reg_ix =3D 0;
+> +	void __iomem *ioaddr =3D priv->ioaddr;
+> +
+> +	memset(reg_space, 0x0, REG_SPACE_SIZE);
+> +
+> +	/* MAC registers */
+> +	for (reg_offset =3D START_MAC_REG_OFFSET;
+> +	     reg_offset <=3D MAX_MAC_REG_OFFSET; reg_offset +=3D 4) {
+> +		reg_space[reg_ix] =3D readl(ioaddr + reg_offset);
+> +		reg_ix++;
+> +	}
+> +
+> +	/* MTL registers */
+> +	for (reg_offset =3D START_MTL_REG_OFFSET;
+> +	     reg_offset <=3D MAX_MTL_REG_OFFSET; reg_offset +=3D 4) {
+> +		reg_space[reg_ix] =3D readl(ioaddr + reg_offset);
+> +		reg_ix++;
+> +	}
+> +
+> +	/* DMA registers */
+> +	for (reg_offset =3D START_DMA_REG_OFFSET;
+> +	     reg_offset <=3D MAX_DMA_REG_OFFSET; reg_offset +=3D 4) {
+> +		reg_space[reg_ix] =3D readl(ioaddr + reg_offset);
+> +		reg_ix++;
+> +	}
+[...]
+
+Consider adding an assertion at the end:
+
+	BUG_ON(reg_ix * 4 > REG_SPACE_SIZE);
+
+Ben.
 
 --=20
-balbi
+Ben Hutchings
+Everything should be made as simple as possible, but not simpler.
+                                                           - Albert Einstei=
+n
 
---YrQNB5Deg1WGKZi3
+--=-jv3/2i0Sfx9gj5wwQxNz
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Content-Description: This is a digitally signed message part
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJTMIXlAAoJEIaOsuA1yqREYwwQAINALPIMBxAg3lGMaCtcLSMD
-LC00ZqGbdDoOBz4iSYFR020SHOHFfhiZxBLcjN/Gac+9+7CjgtcHAeuBloKpgf3t
-y6p7e0wWdbe3HTGDFmY5K6PTbpxp99OLKy7DMVJWvRLE5C2BzwohLyuFDemq6jZ9
-K5ZEN38I7JFQAdFwneNJufr1ZYkpoHTH8KRuFXGKJ0eKqtika33YFU8c4+EM8Wfk
-0E+pG0RrFwdzb/kXsR03rxTFH9v0Ip1GFLFhad/Y0grhS+YnQi0BHBb9zwhGLalR
-t1rKH6lkHeDDORZV3b465gACD8X/t4tMT7Dh54QIp7UiLBUVExZ7Us9hzg/bh9QY
-glAAiGp+S+UqMWmSMyNzxn0Tt+x7ysOZSRsaKiGIQEnMRc3/FU+xAUA2XJTsM+Hy
-799NiCQSES8uWwKxa18rpKH79Bh2AhXy8bLaVS6jnIZ5GNWt10RzJCEk95+4A5sY
-BQhGKTXWtw5H4SDTNsDp9MrQ2qRkSvgDHg9xb/zbpW7ldIRXP4bz0fMiAs0VFsbG
-S4EAMFUji4R2fyhgG3FBbITRj5sfFoXrQuycfTSbYmJNEQW/Wmp9e80LSmftYz9T
-e4aUTCBrVPl3ah9lsaz+Wm5D5LIP0031kIPSOF+oJ1n29DSwtNYh3JeY/gPF6h7D
-mlXAAoz/POWipk3PRyY4
-=G323
+iQIVAwUAUzCHoee/yOyVhhEJAQpEdBAAqaLMd3Z90PlZ9WzGGRr2AYkqTYvgVyFM
+9Pg4scP6ossNdoqovZnohUGJeNojcOV5zwA+XuryHMhCwryk/ybbHIP98eu7LIHJ
+ShS04b7AGL/R1KMZ4LKrfrJiUfu40xEWH8nwizMnyXSl9wv92ihfLskvOw0iCyV+
+kFXksbzaP1AWclPx8+wekVaRL5Z4FT7XPCQe19a8BQM35e9/6zjwnteh/+erDDZ6
+n1eVk1CmjSANOgK/5/TDSKud2KICOXIq/iydQDMF5Gw1JTj3mcetEa2GqzrqH3Jo
+vlFfy0nIghBRrlmRZFeIL7Bz+KEkZWfxpiVrKhalARHNX0ih6aWz2/vf5p/K7eu5
+770QkGyhakLHljOUYbyXhoXSZARv6ATPI8d+YFxm4Y4Ghf2ucXZ6JrmOE5//f+Ok
+u7msBygG0xU9fBXsUEWLRaval7KzvQwiU7KekQFioBwXxwWSD2vHTN/oNpE6+SqC
+JwwVYyZcsLpwn0NELZy+OrtzTz6bdfOaVjMP4aYSzYivkO6UU8HJZk4RgU5VIPiV
+p5yz0l2dCltOWwUwL8C6zmGSjPuC0J9qlBC+ZxpIcCdbAiO4WzBQqgGyRwIBrpz0
+EwzgX9dBOV4DsyZmpMIeyPTP2qLKEvvZm2vLKVpdhpvpIBlAGi+J3s2ZWnIKZSvC
+zBA5uCXC6y8=
+=CoGG
 -----END PGP SIGNATURE-----
 
---YrQNB5Deg1WGKZi3--
+--=-jv3/2i0Sfx9gj5wwQxNz--
