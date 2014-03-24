@@ -1,60 +1,91 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v2] spi: efm32: properly namespace location property
-Date: Mon, 24 Mar 2014 14:42:52 +0100
-Message-ID: <20140324134252.GE2631@katana>
-References: <1394829262-28022-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 05/20] mmc: mmci: Add DT bindings for signal direction
+Date: Mon, 24 Mar 2014 08:45:44 -0500
+Message-ID: <CAL_Jsq+=7YTK8p+=QNwatUaTnQsFXXFD3OH+kmqYLF0DYpbTKA@mail.gmail.com>
+References: <1395404057-27835-1-git-send-email-ulf.hansson@linaro.org>
+	<1395404057-27835-6-git-send-email-ulf.hansson@linaro.org>
+	<CAL_JsqLFJbC=ZVgc1xu9MN6iYN2871mxvZoJnAQJw3BQU07B+w@mail.gmail.com>
+	<CAPDyKFrupT7sbT5eBsTC61ELCp_OZTe==Jc_6KUqo9Wb4Xf5dQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6Vw0j8UKbyX0bfpA"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1394829262-28022-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uwe =?iso-8859-15?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPDyKFrupT7sbT5eBsTC61ELCp_OZTe==Jc_6KUqo9Wb4Xf5dQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Mar 24, 2014 at 4:14 AM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 21 March 2014 16:20, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Fri, Mar 21, 2014 at 7:14 AM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>> Some variants have support for indicating the bus signal directions,
+>>> which currently are configured through platform data.
+>>>
+>>> Add corresponding DT bindings to enable us to move away from using the
+>>> platform data.
+>>>
+>>> Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/mmc/mmci.txt |    4 ++++
+>>>  drivers/mmc/host/mmci.c                        |    7 +++++++
+>>>  2 files changed, 11 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mmc/mmci.txt b/Documentation/devicetree/bindings/mmc/mmci.txt
+>>> index d167562..eb9ad86 100644
+>>> --- a/Documentation/devicetree/bindings/mmc/mmci.txt
+>>> +++ b/Documentation/devicetree/bindings/mmc/mmci.txt
+>>> @@ -15,6 +15,7 @@ Optional properties:
+>>>  - mmc-cap-mmc-highspeed  : indicates whether MMC is high speed capable.
+>>>  - mmc-cap-sd-highspeed   : indicates whether SD is high speed capable.
+>>>  - vqmmc-supply           : phandle to the regulator device tree node.
+>>> +- signal-direction       : a bit pattern, indicating bus signals directions.
+>>
+>> You need to define the bit positions.
+>
+> May I refer to the <dt-bindings/mmc/mmci.h> instead? To me, it seems a
+> bit silly to duplicate that information in the documentation.
 
---6Vw0j8UKbyX0bfpA
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+We really prefer that the binding doc stand on it's own such that you
+could write the header based on the binding.
 
-On Fri, Mar 14, 2014 at 09:34:22PM +0100, Uwe Kleine-K=F6nig wrote:
-> While reviewing an i2c driver for efm32 that needs a similar property
-> Wolfram Sang pointed out that "location" is a too generic name for
-> something that is efm32 specific. So add an appropriate namespace and
-> fall back to the generic name in case of failure.
->=20
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>
+>>>
+>>>  Example:
+>>>
+>>> @@ -37,6 +38,9 @@ sdi0_per1@80126000 {
+>>>         mmc-cap-mmc-highspeed;
+>>>         cd-gpios  = <&gpio2 31 0x4>; // 95
+>>>
+>>> +       signal-direction = <(MCI_ST_DATA2DIREN | MCI_ST_CMDDIREN |
+>>> +                       MCI_ST_DATA0DIREN | MCI_ST_FBCLKEN)>;
+>>
+>> The "ST" here is for STMicro or some ST based company? Use the vendor
+>> prefix here.
+>
+> We have way back already concluded to use "ST" as prefix for all
+> STMicro specific defines used in mmci. Please have a look at
+> drivers/mmc/host/mmci.h.
+> I would prefer to keep these aligned with the other defines, though if
+> you have strong feelings about it, sure I can change them.
 
-Acked-by: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+I don't mean change the defines. I mean name the property
+"st,signal-direction" and indicate it only applies to the STMicro
+variant.
 
+>> I don't really understand why you need to specify the direction here.
+>> Data lines are bi-directional and cmd and clk are outputs.
+>>
+>
+> These bits are being used when you have an external levelshifter.
+>
+> Without going into too much details, it all depends on how the
+> different pins are connected to the levelshifter, which isn't possible
+> to figure out in runtime.
 
---6Vw0j8UKbyX0bfpA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Okay.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTMDZcAAoJEBQN5MwUoCm2ig4P/At8aP6cwTiqdwA4KNRYXG5d
-Qoqqjbx/4ihNDUPv5zQNm9QfoUhDT/X0tILFnCMlFfi+yziC+vsw4IIYSqQALuyj
-eXI8qmyuIrNjJcseQLsZyupSbzDDw+dUEA+XyTiKh/hUfEbZb4YxtqTnlfP8Hcsj
-IdDw4dThTh9XaBXdFo76uCXFVGPCWRgP+jczyJTeJ8yUgorh7NAbLr0d/oQvoxKv
-pXSOhaBPxWn9QOm6c4yH21N+Mb35JU7TKc7YW7zF37adc+DC7DOUj7GtCWHm+Ti7
-/0BNbw/GYpROHU5UAL7TBwE7iOXhG67nvWjca66uAkc4R4G8RBe5UhH9cEqNu4jp
-oO14zXx4qKTVOoeqoQYurVRANAgIfrzjWfg8+pm3GS97gTUG6YZ1a3DUYAztqIA0
-/IATJQx8hjwG7N9FXHKPLqTG5tQAt5LoWdlEYIjJDDasXONs+w0JX4xucT9SQ1xS
-zM9dIZi4kPCIBs919x6aXqwoYAhhPaGokrzHlrXA2MDab7GcYuecrVbteOHBa7XK
-7KGd0HOt07bshJrEHbaA+Y96IkD/flvBq15KjYwOb/u7CwJOblhQAmIsaUmJwJvY
-Cj+fskoFcIB1f3sIxy/rah+021AuK+T/FThyycwb2iT39NUkvwPRJHiCb1ggf+cc
-GlYvrPBVG0NCIA7NaHEX
-=+Wnt
------END PGP SIGNATURE-----
-
---6Vw0j8UKbyX0bfpA--
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
