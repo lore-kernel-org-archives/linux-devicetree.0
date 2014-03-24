@@ -1,43 +1,106 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH RFC 1/4] arm64: kernel: implement DT based idle states infrastructure
-Date: Mon, 24 Mar 2014 12:46:47 -0500
-Message-ID: <CAL_JsqJikdsna7KUjEwZ0qj-fdcC50M7e3e1D0LgfQuUuJQ0SA@mail.gmail.com>
-References: <1395138028-19630-1-git-send-email-lorenzo.pieralisi@arm.com>
-	<1395138028-19630-2-git-send-email-lorenzo.pieralisi@arm.com>
-	<CAL_Jsq+M8fCreXrd7R1m=3_LKD_+jma3Pha06hRoTPMpcOb1_g@mail.gmail.com>
-	<20140318180856.GB792@e102568-lin.cambridge.arm.com>
-	<CADHgK6uwUDndVHQaWU=3R7A16hc4PYJCAfMLi3uBnrDjYidPXg@mail.gmail.com>
-	<20140319172338.GA31368@e102568-lin.cambridge.arm.com>
-	<CADHgK6vGf0gfVoAWO2FiXzCf-Sf_P_u+d7Dg04xn1O5t2LeKwg@mail.gmail.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3] i2c: new bus driver for efm32
+Date: Mon, 24 Mar 2014 19:41:14 +0100
+Message-ID: <20140324184114.GK23076@pengutronix.de>
+References: <1395414236-22647-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <20140324170131.GB7524@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CADHgK6vGf0gfVoAWO2FiXzCf-Sf_P_u+d7Dg04xn1O5t2LeKwg@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sebastian Capella <sebastian.capella@linaro.org>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>Tomasz Figa <t.>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140324170131.GB7524@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 20, 2014 at 1:19 PM, Sebastian Capella
-<sebastian.capella@linaro.org> wrote:
-> On 19 March 2014 10:23, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
->> Rob is asking a property describing hw, and honestly unless we define
->> a power consumption property value (defining what it means will be rather
->> complicated though) I'd rather remove index altogether and use min_residency
->> as a comparison value instead.
->
-> I like having a separate ranking for power to sort the states.  To me
-> it seems that min residency could be ambiguous for this.  We could
-> have states with inverted min_residencies: where a lower consumption
-> state has a lower target residency because the cost is recovered more
-> quickly.  Such a state might have higher latency for exit, so even
-> though the lower min_residency/lower power state is clearly
-> preferable, selection of the lower power state may be prevented by
-> kernel latency constraints.
+On Mon, Mar 24, 2014 at 06:01:31PM +0100, Wolfram Sang wrote:
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/i2c/i2c-efm32.txt
+> > @@ -0,0 +1,34 @@
+> > +* Energymicro efm32 i2c controller
+> > +
+> > +Required properties :
+> > +
+> > + - reg : Offset and length of the register set for the device
+> > + - compatible : should be "efm32,i2c"
+>=20
+> Ehrm, come to think of it, shouldn't that actually be "energymicro, e=
+fm32-i2c"
+> or similar to match the "vendor,product" pattern?
+yes.
 
-Perhaps you can add the min residency and exit latency times.
+>=20
+> > +config I2C_EFM32
+> > +	tristate "EFM32 I2C controller"
+> > +	depends on OF && (ARCH_EFM32 || COMPILE_TEST)
+>=20
+> Is EFM32 DT only? Do we need the dependency on OF?
+yes, efm32 is DT only. Still for the COMPILE_TEST branch the OF is
+needed.
+=20
+> > +	help
+> > +	  This driver supports the i2c block found in Energy Micro's EFM3=
+2
+> > +	  SoCs.
+> > +
+>=20
+> ...
+>=20
+> > +static int efm32_i2c_master_xfer(struct i2c_adapter *adap,
+> > +		struct i2c_msg *msgs, int num)
+> > +{
+> > +	struct efm32_i2c_ddata *ddata =3D i2c_get_adapdata(adap);
+> > +	int ret;
+> > +
+> > +	if (ddata->msgs)
+> > +		return -EBUSY;
+> > +
+> > +	ddata->msgs =3D msgs;
+> > +	ddata->num_msgs =3D num;
+> > +	ddata->current_word =3D 0;
+> > +	ddata->current_msg =3D 0;
+> > +	ddata->retval =3D -EIO;
+> > +
+> > +	reinit_completion(&ddata->done);
+> > +
+> > +	dev_dbg(&ddata->adapter.dev, "state: %08x, status: %08x\n",
+> > +			efm32_i2c_read32(ddata, REG_STATE),
+> > +			efm32_i2c_read32(ddata, REG_STATUS));
+> > +
+> > +	efm32_i2c_send_next_msg(ddata);
+> > +
+> > +	wait_for_completion(&ddata->done);
+> > +
+> > +	if (ddata->current_msg >=3D ddata->num_msgs)
+> > +		ret =3D ddata->num_msgs;
+> > +	else
+> > +		ret =3D ddata->retval;
+> > +
+> > +	ddata->msgs =3D NULL;
+>=20
+> Setting NULL should not be needed?
+Right, that's a left over from the locking stuff.
+=20
+> > +
+> > +	return ret;
+> > +}
+> > +
+>=20
+> And checkpatch said:
+>=20
+> WARNING: braces {} are not necessary for any arm of this statement
+> #345: FILE: drivers/i2c/busses/i2c-efm32.c:239:
+> +		if (cur_msg->flags & I2C_M_RD) {
+> ...
+ok.
 
-Another piece to consider is the affinity level of the state should
-probably be the basis for 1st order sorting.
+Uwe
 
-Rob
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
