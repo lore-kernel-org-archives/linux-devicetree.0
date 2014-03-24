@@ -1,37 +1,43 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Mon, 24 Mar 2014 10:35:49 -0700
-Message-ID: <CAGVrzcb0=5qUwEPM-9LeMBU1gFL1UaZF5rzi0NXGPjMUfPDeLA@mail.gmail.com>
-References: <1395670496-17381-1-git-send-email-zhangfei.gao@linaro.org>
- <1395670496-17381-4-git-send-email-zhangfei.gao@linaro.org>
- <CAGVrzcaY257MAjjmkXDi_fD5TxSanmx9Jpvx-yg7vT3-GUjz3A@mail.gmail.com> <4644970.WiIKNXNpdP@wuerfel>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH RFC 1/4] arm64: kernel: implement DT based idle states infrastructure
+Date: Mon, 24 Mar 2014 12:46:47 -0500
+Message-ID: <CAL_JsqJikdsna7KUjEwZ0qj-fdcC50M7e3e1D0LgfQuUuJQ0SA@mail.gmail.com>
+References: <1395138028-19630-1-git-send-email-lorenzo.pieralisi@arm.com>
+	<1395138028-19630-2-git-send-email-lorenzo.pieralisi@arm.com>
+	<CAL_Jsq+M8fCreXrd7R1m=3_LKD_+jma3Pha06hRoTPMpcOb1_g@mail.gmail.com>
+	<20140318180856.GB792@e102568-lin.cambridge.arm.com>
+	<CADHgK6uwUDndVHQaWU=3R7A16hc4PYJCAfMLi3uBnrDjYidPXg@mail.gmail.com>
+	<20140319172338.GA31368@e102568-lin.cambridge.arm.com>
+	<CADHgK6vGf0gfVoAWO2FiXzCf-Sf_P_u+d7Dg04xn1O5t2LeKwg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <4644970.WiIKNXNpdP@wuerfel>
-Sender: netdev-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, netdev <netdev@vger.kernel.org>, Zhangfei Gao <zhangfei.gao@linaro.org>, David Miller <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CADHgK6vGf0gfVoAWO2FiXzCf-Sf_P_u+d7Dg04xn1O5t2LeKwg@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Capella <sebastian.capella@linaro.org>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>Tomasz Figa <t.>
 List-Id: devicetree@vger.kernel.org
 
-2014-03-24 10:23 GMT-07:00 Arnd Bergmann <arnd@arndb.de>:
-> On Monday 24 March 2014 09:32:17 Florian Fainelli wrote:
->> > +       priv->tx_skb[tx_head] = skb;
->> > +       priv->tx_phys[tx_head] = phys;
->> > +       desc->send_addr = cpu_to_be32(phys);
->> > +       desc->send_size = cpu_to_be16(skb->len);
->> > +       desc->cfg = cpu_to_be32(DESC_DEF_CFG);
->> > +       phys = priv->tx_desc_dma + tx_head * sizeof(struct tx_desc);
->> > +       desc->wb_addr = cpu_to_be32(phys);
->>
->> Don't we need a barrier here to ensure that all stores are completed
->> before we hand this descriptor address to hip40_set_xmit_desc() which
->> should make DMA start processing it?
+On Thu, Mar 20, 2014 at 1:19 PM, Sebastian Capella
+<sebastian.capella@linaro.org> wrote:
+> On 19 March 2014 10:23, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+>> Rob is asking a property describing hw, and honestly unless we define
+>> a power consumption property value (defining what it means will be rather
+>> complicated though) I'd rather remove index altogether and use min_residency
+>> as a comparison value instead.
 >
-> I would think the writel() in set_xmit_desc() implies the barrier.
+> I like having a separate ranking for power to sort the states.  To me
+> it seems that min residency could be ambiguous for this.  We could
+> have states with inverted min_residencies: where a lower consumption
+> state has a lower target residency because the cost is recovered more
+> quickly.  Such a state might have higher latency for exit, so even
+> though the lower min_residency/lower power state is clearly
+> preferable, selection of the lower power state may be prevented by
+> kernel latency constraints.
 
-Right, which means that this should be properly documented to make
-sure that this simplification is well understood and produces the
-expected result.
--- 
-Florian
+Perhaps you can add the min residency and exit latency times.
+
+Another piece to consider is the affinity level of the state should
+probably be the basis for 1st order sorting.
+
+Rob
