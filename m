@@ -1,84 +1,101 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v7 1/8] clk: sunxi: factors: automatic
- reparenting support
-Date: Thu, 20 Mar 2014 10:47:17 +0100
-Message-ID: <20140320094717.GL27873@lukather>
-References: <20140217095907.15040.81893.stgit@pagira.o2s.ch>
- <20140217100215.15040.63745.stgit@pagira.o2s.ch>
- <20140218140516.GG3142@lukather>
- <20140319233945.21989.12073@quantum>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
+Subject: [PATCHv6 1/5] Input: edt-ft5x06: several cleanups; no functional change
+Date: Mon, 24 Mar 2014 16:11:06 +0100
+Message-ID: <1395673870-29435-2-git-send-email-LW@KARO-electronics.de>
+References: <1395323075-12146-1-git-send-email-LW@KARO-electronics.de>
+ <1395673870-29435-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="n5G3y24fV3/VEqbx"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBPUAYGMQKGQETPXKZAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140319233945.21989.12073@quantum>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, g.liakhovetski-Mmb7MZpHnFY@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1395673870-29435-1-git-send-email-LW@KARO-electronics.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Fugang Duan <B38611@freescale.com>, Grant Likely <grant.likely@linaro.org>, Henrik Rydberg <rydberg@euromail.se>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jg1.han@samsung.com>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Sachin Kamat <sachin.kamat@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Budig <simon.budig@kernelconcepts.de>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>, Daniel Wagener <daniel.wagener@kernelconcepts.de>
 List-Id: devicetree@vger.kernel.org
 
+- remove redundant parens
+- remove redundant type casts
+- fix mixed tab/space indentation
 
---n5G3y24fV3/VEqbx
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
+---
+ drivers/input/touchscreen/edt-ft5x06.c |   15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-On Wed, Mar 19, 2014 at 04:39:45PM -0700, Mike Turquette wrote:
-> Quoting Maxime Ripard (2014-02-18 06:05:16)
-> > On Mon, Feb 17, 2014 at 11:02:15AM +0100, David Lanzend=F6rfer wrote:
-> > > From: Emilio L=F3pez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
-> > >=20
-> > > This commit implements .determine_rate, so that our factor clocks can=
- be
-> > > reparented when needed.
-> > >=20
-> > > Signed-off-by: Emilio L=F3pez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
-> >=20
-> > Your signed-off-by is missing here.
-> >=20
-> > Once you added it, you can add my Acked-by
->=20
-> Yes the patch looks good to me as well. Am I correct in thinking that it
-> is independent of the MMC clock phase discussion? If it is resubmitted
-> with a proper SoB then I can pick it.
-
-Yes, it's completely independant of the MMC phase stuff.
-
-Emilio, or David, could you resend it?
-
-Maxime
-
+diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/tou=
+chscreen/edt-ft5x06.c
+index 412a85e..155ab3b 100644
+--- a/drivers/input/touchscreen/edt-ft5x06.c
++++ b/drivers/input/touchscreen/edt-ft5x06.c
+@@ -173,7 +173,7 @@ static irqreturn_t edt_ft5x06_ts_isr(int irq, void =
+*dev_id)
+ 		x =3D ((buf[0] << 8) | buf[1]) & 0x0fff;
+ 		y =3D ((buf[2] << 8) | buf[3]) & 0x0fff;
+ 		id =3D (buf[2] >> 4) & 0x0f;
+-		down =3D (type !=3D TOUCH_EVENT_UP);
++		down =3D type !=3D TOUCH_EVENT_UP;
+=20
+ 		input_mt_slot(tsdata->input, id);
+ 		input_mt_report_slot_state(tsdata->input, MT_TOOL_FINGER, down);
+@@ -257,7 +257,7 @@ static ssize_t edt_ft5x06_setting_show(struct devic=
+e *dev,
+ 	struct edt_ft5x06_ts_data *tsdata =3D i2c_get_clientdata(client);
+ 	struct edt_ft5x06_attribute *attr =3D
+ 			container_of(dattr, struct edt_ft5x06_attribute, dattr);
+-	u8 *field =3D (u8 *)((char *)tsdata + attr->field_offset);
++	u8 *field =3D (u8 *)tsdata + attr->field_offset;
+ 	int val;
+ 	size_t count =3D 0;
+ 	int error =3D 0;
+@@ -299,7 +299,7 @@ static ssize_t edt_ft5x06_setting_store(struct devi=
+ce *dev,
+ 	struct edt_ft5x06_ts_data *tsdata =3D i2c_get_clientdata(client);
+ 	struct edt_ft5x06_attribute *attr =3D
+ 			container_of(dattr, struct edt_ft5x06_attribute, dattr);
+-	u8 *field =3D (u8 *)((char *)tsdata + attr->field_offset);
++	u8 *field =3D (u8 *)tsdata + attr->field_offset;
+ 	unsigned int val;
+ 	int error;
+=20
+@@ -479,7 +479,7 @@ static int edt_ft5x06_debugfs_mode_set(void *data, =
+u64 mode)
+=20
+ 	if (mode !=3D tsdata->factory_mode) {
+ 		retval =3D mode ? edt_ft5x06_factory_mode(tsdata) :
+-			        edt_ft5x06_work_mode(tsdata);
++				edt_ft5x06_work_mode(tsdata);
+ 	}
+=20
+ 	mutex_unlock(&tsdata->mutex);
+@@ -568,7 +568,6 @@ out:
+ 	return error ?: read;
+ };
+=20
+-
+ static const struct file_operations debugfs_raw_data_fops =3D {
+ 	.open =3D simple_open,
+ 	.read =3D edt_ft5x06_debugfs_raw_data_read,
+@@ -614,8 +613,6 @@ edt_ft5x06_ts_teardown_debugfs(struct edt_ft5x06_ts=
+_data *tsdata)
+=20
+ #endif /* CONFIG_DEBUGFS */
+=20
+-
+-
+ static int edt_ft5x06_ts_reset(struct i2c_client *client,
+ 					 int reset_pin)
+ {
+@@ -852,8 +849,8 @@ static SIMPLE_DEV_PM_OPS(edt_ft5x06_ts_pm_ops,
+ 			 edt_ft5x06_ts_suspend, edt_ft5x06_ts_resume);
+=20
+ static const struct i2c_device_id edt_ft5x06_ts_id[] =3D {
+-	{ "edt-ft5x06", 0 },
+-	{ }
++	{ "edt-ft5x06", 0, },
++	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(i2c, edt_ft5x06_ts_id);
+=20
 --=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+1.7.10.4
 
---n5G3y24fV3/VEqbx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTKrklAAoJEBx+YmzsjxAgy/gP/21KggiKLJZbO5WGulCJ+yRI
-bQ1WFh08X8ExEko9bvU2PlA90B6XS9ed4+kAmvncIXbTxBelAE7UqyIEyCcXkfPR
-pdZG0TQeZTMvNpK+Ml2G/Ulz4iw0jZ0iTj6RBajh9LjX/LPVlxYYJCfH1H0xkGPm
-zXoKlRe0lFu7YFSmuy7qP4YSf6MSmO4YeRlcJOyCXX7f40w6CJsmBEfj52Wa9lAo
-95fDz1ZhgbFpGHvbBF18q9J8zgZ0gpYH/D2OoSP0wgNAwxnJIz5QFyokYk94+uZh
-WwwsiuIvTdcrnKEy/CQ+biPNhxhWxPVkjM0xhOeH3Dyqqz7NbSfh21RnFsx32WZZ
-Z01OONj+izIhOO/sRCq/VXGNXdwQ7x+QWDmjs+u25//HnMLKU/V9kcts2+as0/H8
-wNyMmHQO8CXYfl7wFD+FWJETjcXf3++Qhzyomldt0CiGqAZLMAj5RaE0LJ9Jh24r
-jwXZrXPx+CszVPe2OGZFcLSWEhi48Qwo7dfakKhCYI/bdfy6BQbwW5StrDHuc+jf
-RA0hhLbRX2vHXH/uRYa3BV1BHm+qoqFDObUg50vJbqblQluzfOzUAPAAcCK79thX
-LnM54cmbSnVeA+ZakWMBPUM2Y9RQcds/HQ+s/sZAb0Z7Zi8jPkP7mdI3ITuypbfy
-K1aMmwOJsrUemyWsSEEp
-=1gCp
------END PGP SIGNATURE-----
-
---n5G3y24fV3/VEqbx--
