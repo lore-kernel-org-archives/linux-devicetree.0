@@ -1,179 +1,121 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] arm64: dts: Add initial dts for Cavium Thunder
- SoC
-Date: Mon, 24 Mar 2014 10:25:12 +0000
-Message-ID: <20140324102512.GC10341@e106331-lin.cambridge.arm.com>
-References: <1395652179-9216-1-git-send-email-mohun106@gmail.com>
- <1395652179-9216-3-git-send-email-mohun106@gmail.com>
+From: Huang Shijie <b32955@freescale.com>
+Subject: Re: [PATCHv2 1/1] mtd: gpmi: make blockmark swapping optional
+Date: Mon, 24 Mar 2014 17:59:03 +0800
+Message-ID: <20140324095902.GB11377@localhost>
+References: <532BCFCC.4080205@freescale.com>
+ <1395399017-19005-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1395652179-9216-3-git-send-email-mohun106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "mohun106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <mohun106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "pkapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <pkapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1395399017-19005-1-git-send-email-LW@KARO-electronics.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: Arnd Bergmann <arnd@arndb.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Fabio Estevam <fabio.estevam@freescale.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Mon, Mar 24, 2014 at 09:09:38AM +0000, mohun106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> 
-> Signed-off-by: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+On Fri, Mar 21, 2014 at 11:50:17AM +0100, Lothar Wa=DFmann wrote:
+> With a flash-based BBT there is no reason to move the Factory Bad
+> Block Marker from the data area buffer (to where it is mapped by the
+> GPMI NAND controller) to the OOB buffer. Thus, make this feature
+> configurable via DT. This is required for the Ka-Ro electronics
+> platforms.
+>=20
+> Signed-off-by: Lothar Wa=DFmann <LW@KARO-electronics.de>
 > ---
->  arch/arm64/boot/dts/Makefile    |    1 +
->  arch/arm64/boot/dts/thunder.dts |  160 +++++++++++++++++++++++++++++++++++++++
->  2 files changed, 161 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
-> index c52bdb0..9cc8740 100644
-> --- a/arch/arm64/boot/dts/Makefile
-> +++ b/arch/arm64/boot/dts/Makefile
-> @@ -1,3 +1,4 @@
-> +dtb-$(CONFIG_ARCH_THUNDER) += thunder.dtb
->  dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb foundation-v8.dtb
->  dtb-$(CONFIG_ARCH_XGENE) += apm-mustang.dtb
->  
-> diff --git a/arch/arm64/boot/dts/thunder.dts b/arch/arm64/boot/dts/thunder.dts
-> new file mode 100644
-> index 0000000..190e01a
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/thunder.dts
-> @@ -0,0 +1,160 @@
-> +/*
-> + * Cavium Thunder DTS file
-> + *
-> + * Copyright (C) 2013, Cavium Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation; either version 2 of
-> + * the License, or (at your option) any later version.
-> + */
-> +/dts-v1/;
+>  Documentation/devicetree/bindings/mtd/gpmi-nand.txt |    3 +++
+>  drivers/mtd/nand/gpmi-nand/gpmi-nand.c              |   10 +++++++--=
+-
+>  2 files changed, 10 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt b/Do=
+cumentation/devicetree/bindings/mtd/gpmi-nand.txt
+> index 458d596..f28949a 100644
+> --- a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
+> @@ -25,6 +25,9 @@ Optional properties:
+>                         discoverable or this property is not enabled,
+>                         the software may chooses an implementation-de=
+fined
+>                         ECC scheme.
+> +  - fsl,no-blockmark-swap: Don't swap the bad block marker from the =
+OOB
+> +                       area with the byte in the data area but rely =
+on the
+> +                       BBT for identifying bad blocks.
+
+Please add the following:
+       "NOTE: This property is not supported by the imx23 and imx28"
+> =20
+>  The device tree may optionally contain sub-nodes describing partitio=
+ns of the
+>  address space. See partition.txt for more detail.
+> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nan=
+d/gpmi-nand/gpmi-nand.c
+> index bb77f75..98562eb 100644
+> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+> @@ -1632,9 +1632,6 @@ static int gpmi_init_last(struct gpmi_nand_data=
+ *this)
+>  	struct bch_geometry *bch_geo =3D &this->bch_geometry;
+>  	int ret;
+> =20
+> -	/* Set up swap_block_mark, must be set before the gpmi_set_geometry=
+() */
+> -	this->swap_block_mark =3D !GPMI_IS_MX23(this);
+> -
+>  	/* Set up the medium geometry */
+>  	ret =3D gpmi_set_geometry(this);
+>  	if (ret)
+> @@ -1701,6 +1698,13 @@ static int gpmi_nand_init(struct gpmi_nand_dat=
+a *this)
+>  	if (of_get_nand_on_flash_bbt(this->dev->of_node))
+>  		chip->bbt_options |=3D NAND_BBT_USE_FLASH | NAND_BBT_NO_OOB;
+> =20
+> +	/* Set up swap_block_mark, must be set before the gpmi_set_geometry=
+() */
+> +	if (!of_property_read_bool(this->dev->of_node, "fsl,no-blockmark-sw=
+ap"))
+> +		this->swap_block_mark =3D !GPMI_IS_MX23(this);
+
+the code should like this:
+----------------------------------------------
+	this->swap_block_mark =3D !GPMI_IS_MX23(this);
+
+	if (!GPMI_IS_IMX23(this) && !GPMI_IS_MX28(this) &&
+		of_property_read_bool(this->dev->of_node, "fsl,no-blockmark-swap"))
+		this->swap_block_mark =3D false;
+----------------------------------------------
+         =20
 > +
-> +/memreserve/ 0x80000000 0x00010000;
-
-Please add a comment as to what this is protecting (from the looks of
-it, the spinning CPUs and the cpu release address). We are admittedly
-lacking these on existing DTs (and I'll fix that up), but it would be
-good to get into the habit now given it has been a source of confusion
-for some.
-
+> +	dev_dbg(this->dev, "Blockmark swapping %sabled\n",
+> +		this->swap_block_mark ? "en" : "dis");
 > +
-> +/ {
-> +	model = "Cavium Thunder";
-> +	compatible = "cavium,thunder";
-> +	interrupt-parent = <&gic0>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	aliases {
-> +		serial0 = &uaa0;
-> +		serial1 = &uaa1;
-> +	};
-> +
-> +	cpus {
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +		cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "cavium,thunder", "arm,armv8";
+>  	/*
+>  	 * Allocate a temporary DMA buffer for reading ID in the
+>  	 * nand_scan_ident().
 
-This is the same as the compatible string for the SoC, which isn't a
-good idea. Compatible strings should be globally unique.
+There are some bugs in the gpmi driver which is caused by the assumptio=
+n that
+we always enable the swapping except the imx23.=20
 
-As far as I am aware, "Thunder" is the name of the SoC, not the CPU in
-the SoC. Is there a name for the CPU in the Thunder SoC?
+So, there are some places should be changed with this patch:
+   [1] the subpage hook,
+        Please also change the gpmi_ecc_read_subpage() too.
 
-Whatever name you have should be documented.
+   [2] the OOB hook,
+   	Please also change the gpmi_ecc_read_oob().=20
 
-[...]
 
-> +	memory@0 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x0 0x0 0x80000000>;
-> +	};
-> +
-> +	gic0: interrupt-controller@801000000000 {
+   [3] the markbad hook,
+   	Please also change the gpmi_block_markbad() .=20
 
-Please break the 32-bit halves of the unit-address with a comma (e.g.
-8010,00000000); it makes it easier to read the address. If you could
-also do this on other unit-addresses it would be helpful.
+thanks
+Huang Shijie
+       =20
 
-> +		compatible = "arm,gic-v3";
-> +		#interrupt-cells = <3>;
-> +		#address-cells = <0>;
-> +		interrupt-controller;
-> +		reg = <0x8010 0x0 0x0 0x10000>,         /* GICD */
-> +		      <0x8010 0x80000000 0x0 0x100000>; /* GICR */
+=09
 
-For legibility it would be nice for list entries to be consistently
-padded to the same length.
 
-> +		interrupts = <1 9 0xf04>;
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <1 13 0xff01>,
-> +		             <1 14 0xff01>,
-> +		             <1 11 0xff01>,
-> +		             <1 10 0xff01>;
-> +	};
-> +
-> +	soc {
-> +		compatible = "simple-bus";
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		clocks {
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			ranges;
-> +
-> +			refclk50mhz: refclk50mhz {
-> +				compatible = "fixed-clock";
-> +				#clock-cells = <0>;
-> +				clock-frequency = <50000000>;
-> +				clock-output-names = "refclk50mhz";
-> +			};
-> +		};
 
-I don't think the clocks node adds anything here. It's missing a
-compatible string list, and as clocks isn't a special reserved node
-name, it and its children aren't supposed to be probed.
-
-Why not just put the refclk50mhz directly under the parent node (the soc
-simple-bus)?
-
-[...]
-
-> +		uaa0: uart@87e024000000 {
-> +			compatible = "arm,pl011", "arm,primecell";
-> +			reg = <0x87e0 0x24000000 0x0 0x1000>;
-> +			interrupts = <1 21 4>;
-> +			clocks = <&refclk50mhz>;
-> +			clock-names = "apb_pclk";
-
-Is this also feeding the UARTCLK?
-
-> +		};
-> +
-> +		uaa1: uart@87e025000000 {
-> +			compatible = "arm,pl011", "arm,primecell";
-> +			reg = <0x87e0 0x25000000 0x0 0x1000>;
-> +			interrupts = <1 22 4>;
-> +			clocks = <&refclk50mhz>;
-> +			clock-names = "apb_pclk";
-
-Likewise?
-
-Cheers,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
