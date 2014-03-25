@@ -1,78 +1,142 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v5 08/14] ARM: dts: mvebu: Introduce a new compatible for the PMSU node
-Date: Tue, 25 Mar 2014 23:48:19 +0100
-Message-ID: <1395787705-31061-9-git-send-email-gregory.clement@free-electrons.com>
-References: <1395787705-31061-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1395787705-31061-1-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH v2 2/2] clk: Add handling of clk parent and rate assigned
+ from DT
+Date: Tue, 25 Mar 2014 15:54:46 -0700
+Message-ID: <20140325225446.5762.15937@quantum>
+References: <1393870533-20845-1-git-send-email-s.nawrocki@samsung.com>
+ <1393870975-21020-1-git-send-email-s.nawrocki@samsung.com>
+ <5331664E.2050008@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5331664E.2050008-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The initial binding for PMSU were wrong. It didn't take into account
-all the registers from the PMSU and in the other hand refereed to
-registers which are not part of PMSU. This commit introduces a new
-compatible for the PMSU node and annotates the previous one as
-obsolete. However we still continue to support it during a few
-releases.
+Quoting Sylwester Nawrocki (2014-03-25 04:19:42)
+> On 03/03/14 19:22, Sylwester Nawrocki wrote:
+> > This function adds a notifier callback run before a driver is bound
+> > to a device. It will configure any parent clocks and clock frequencies
+> > according to values of 'clock-parents' and 'clock-rates' DT properties
+> > respectively.
+> > 
+> > Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> > Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> > Changes since v1:
+> >  - the helper function to parse and set assigned clock parents and
+> >    rates made public so it is available to clock providers to call
+> >    directly;
+> >  - dropped the platform bus notification and call of_clk_device_setup()
+> >    is is now called from the driver core, rather than from the
+> >    notification callback;
+> >  - s/of_clk_get_list_entry/of_clk_get_by_property.
+> > ---
+> >  .../devicetree/bindings/clock/clock-bindings.txt   |   23 ++++++
+> >  drivers/base/dd.c                                  |    5 ++
+> >  drivers/clk/clk.c                                  |   77 ++++++++++++++++++++
+> >  include/linux/clk-provider.h                       |    6 ++
+> >  4 files changed, 111 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > index 7c52c29..eb8d547 100644
+> > --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > @@ -115,3 +115,26 @@ clock signal, and a UART.
+> >    ("pll" and "pll-switched").
+> >  * The UART has its baud clock connected the external oscillator and its
+> >    register clock connected to the PLL clock (the "pll-switched" signal)
+> > +
+> > +==Assigned clock parents and rates==
+> > +
+> > +Some platforms require static configuration of (parts of) the clock controller
+> > +often determined by the board design. Such a configuration can be specified in
+> > +a clock consumer node through clock-parents and clock-rates DT properties.
+> > +The former should contain list of parent clocks in form of phandle and clock
+> > +specifier pairs, the latter the list of assigned clock frequency values
+> > +(one cell each).
+> > +
+> > +    uart@a000 {
+> > +        compatible = "fsl,imx-uart";
+> > +        reg = <0xa000 0x1000>;
+> > +        ...
+> > +        clocks = <&clkcon 0>, <&clkcon 3>;
+> > +        clock-names = "baud", "mux";
+> > +
+> > +        clock-parents = <0>, <&pll 1>;
+> 
+> I have some doubts here, i.e. the order in which clocks are being 
+> configured may be important in some cases. Should the binding then be
+> specifying that the clocks will be configured in a sequence exactly 
+> as listed in the clock-parents property ?
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
----
- .../devicetree/bindings/arm/armada-370-xp-pmsu.txt         | 14 ++++++--------
- arch/arm/boot/dts/armada-xp.dtsi                           | 11 ++++++++---
- 2 files changed, 14 insertions(+), 11 deletions(-)
+That's a good point, and I think we should re-examine the role of a DT
+binding for this purpose. From my limited experience with DT, it seems
+to be really bad at anything involving sequencing. It doesn't give us
+function pointers/callbacks in the way that the old board files used to.
 
-diff --git a/Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt b/Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt
-index 926b4d6aae7e..976188770079 100644
---- a/Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt
-+++ b/Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt
-@@ -4,17 +4,15 @@ Available on Marvell SOCs: Armada 370 and Armada XP
- 
- Required properties:
- 
--- compatible: "marvell,armada-370-xp-pmsu"
-+- compatible: should be "marvell,armada-370-pmsu", whereas
-+  "marvell,armada-370-xp-pmsu" is deprecated and will be removed
- 
--- reg: Should contain PMSU registers location and length. First pair
--  for the per-CPU SW Reset Control registers, second pair for the
--  Power Management Service Unit.
-+- reg: Should contain PMSU registers location and length.
- 
- Example:
- 
--armada-370-xp-pmsu@d0022000 {
--	compatible = "marvell,armada-370-xp-pmsu";
--	reg = <0xd0022100 0x430>,
--	      <0xd0020800 0x20>;
-+armada-370-xp-pmsu@22000 {
-+	compatible = "marvell,armada-370-pmsu";
-+	reg = <0x22000 0x1000>;
- };
- 
-diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
-index abb9f9dcc525..0c455f5458df 100644
---- a/arch/arm/boot/dts/armada-xp.dtsi
-+++ b/arch/arm/boot/dts/armada-xp.dtsi
-@@ -117,9 +117,14 @@
- 				clock-names = "nbclk", "fixed";
- 			};
- 
--			armada-370-xp-pmsu@22000 {
--				compatible = "marvell,armada-370-xp-pmsu";
--				reg = <0x22100 0x400>, <0x20800 0x20>;
-+			cpurst@20800 {
-+				compatible = "marvell,armada-xp-cpu-reset";
-+				reg = <0x20800 0x20>;
-+			};
-+
-+			armada-370-pmsu@22000 {
-+				compatible = "marvell,armada-370-pmsu";
-+				reg = <0x22000 0x400>;
- 			};
- 
- 			eth2: ethernet@30000 {
--- 
-1.8.1.2
+So I think the binding you proposed is still a good idea, but only for
+the very simple case. If your platform has some detailed integration
+requirements that have corner cases like you describe below, then this
+DT binding might not be a good place to put the info.
+
+A platform that provides its own pm runtime backend could neatly manage
+this by having a call to pm_runtime_get deal with these integration
+details such that the driver does not have to be aware of them. (caveat:
+that assumes in the example below that the only thing you want to do is
+set up your clocks once and then never touch them again)
+
+Regards,
+Mike
+
+> 
+> E.g. consider part of a clock controller where one of frequencies fed to
+> a consumer device cannot exceed given value:
+> 
+>                 mux1
+>  200 MHz   0 .--------.
+> ----->-------|--.     |
+>              |   \____|__                    f1 
+>  400 MHz   1 |        |  `-+------------------->--
+> ----->-------|-       |    |
+>              '--------'    |      mux2
+>                            | 0 .---------.
+>                            `---|--.      |   f2
+>                                |   \_____|_,---->--
+>                  100 MHz     1 |         |   (max. 200 MHz)
+>                  ----->--------|         | 
+>                                '---------'              
+> 
+> In this case we want to set frequency f1 to 400 MHz and f2 to 100 MHz.
+> To ensure f2 doesn't exceed 200 MHz at any time, mux2 has to be switched 
+> to position '1' first and then mux 1 to position '1'.
+> 
+> > +        clock-rates = <460800>;
+> 
+> For clock-rates it's a bit more complicated, since it might require
+> setting up frequency of some clocks twice - first to a low and then 
+> to a higher value. Such details could likely be handled by bindings 
+> of individual devices. Also we could assume the clock tree 
+> (re)configuration is being done when any consumer clocks are masked 
+> at the consumer clock gates.
+> 
+> I'm no sure if we should sort the clocks to ensure any parents are set
+> before the child clocks, or should we rely on the sequence specified 
+> in devicetree ? I'd assume sorting it wouldn't hurt, there should not 
+> be relatively many clocks in a single dt node.
+> 
+> > +    };
+> > +
+> > +In this example the pll is set as parent of "mux" clock and frequency of "baud"
+> > +clock is specified as 460800 Hz.
+> 
+> --
+> Thanks,
+> Sylwester
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
