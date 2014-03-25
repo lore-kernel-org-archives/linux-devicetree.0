@@ -1,85 +1,179 @@
-From: Alex Shi <alex.shi@linaro.org>
-Subject: [PATCH 13/19] arm: dts: add omap5 CORE thermal data
-Date: Tue, 25 Mar 2014 18:49:26 +0800
-Message-ID: <1395744572-20014-14-git-send-email-alex.shi@linaro.org>
-References: <1395744572-20014-1-git-send-email-alex.shi@linaro.org>
+From: Josh Wu <josh.wu@atmel.com>
+Subject: [PATCH v2 3/3] [media] atmel-isi: add primary DT support
+Date: Tue, 25 Mar 2014 18:45:20 +0800
+Message-ID: <1395744320-15025-1-git-send-email-josh.wu@atmel.com>
+References: <1395744087-5753-1-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1395744572-20014-1-git-send-email-alex.shi@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mark.hambleton@broadcom.com, mark.brown@linaro.org, eduardo.valentin@ti.com, mporter@linaro.org, lsk-interest@linaro.org, linaro-kernel@linaro.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alex Shi <alex.shi@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1395744087-5753-1-git-send-email-josh.wu@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: g.liakhovetski@gmx.de
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, nicolas.ferre@atmel.com, Josh Wu <josh.wu@atmel.com>, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, rob@landley.net, galak@codeaurora.org, grant.likely@linaro.org, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, m.chehab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-=46rom: Eduardo Valentin <eduardo.valentin@ti.com>
+This patch add the DT support for Atmel ISI driver.
+It use the same v4l2 DT interface that defined in video-interfaces.txt.
 
-This patch changes a dtsi file to contain the thermal data
-for CORE domain on OMAP5 and later SoCs. This data will
-enable a thermal shutdown at 125C.
-
-This thermal data can be reused across TI SoC devices.
-
-Cc: "Beno=C3=AEt Cousson" <bcousson@baylibre.com>
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Ian Campbell <ian.campbell@citrix.com>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: linux-omap@vger.kernel.org
+Signed-off-by: Josh Wu <josh.wu@atmel.com>
 Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
-(cherry picked from commit dcb5004fceeb15f0fdfc4a2b8cd68c6ad515a80b)
-
-Signed-off-by: Alex Shi <alex.shi@linaro.org>
 ---
- arch/arm/boot/dts/omap5-core-thermal.dtsi | 28 +++++++++++++++++++++++=
-+++++
- 1 file changed, 28 insertions(+)
- create mode 100644 arch/arm/boot/dts/omap5-core-thermal.dtsi
+v1 --> v2:
+ refine the binding document.
+ add port node description.
+ removed the optional property.
 
-diff --git a/arch/arm/boot/dts/omap5-core-thermal.dtsi b/arch/arm/boot/=
-dts/omap5-core-thermal.dtsi
+ .../devicetree/bindings/media/atmel-isi.txt        |   50 ++++++++++++++++++++
+ drivers/media/platform/soc_camera/atmel-isi.c      |   31 +++++++++++-
+ 2 files changed, 79 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/atmel-isi.txt
+
+diff --git a/Documentation/devicetree/bindings/media/atmel-isi.txt b/Documentation/devicetree/bindings/media/atmel-isi.txt
 new file mode 100644
-index 0000000..19212ac
+index 0000000..11c98ee
 --- /dev/null
-+++ b/arch/arm/boot/dts/omap5-core-thermal.dtsi
-@@ -0,0 +1,28 @@
-+/*
-+ * Device Tree Source for OMAP543x SoC CORE thermal
-+ *
-+ * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.c=
-om/
-+ * Contact: Eduardo Valentin <eduardo.valentin@ti.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public Lic=
-ense
-+ * version 2.  This program is licensed "as is" without any warranty o=
-f any
-+ * kind, whether express or implied.
-+ */
++++ b/Documentation/devicetree/bindings/media/atmel-isi.txt
+@@ -0,0 +1,50 @@
++Atmel Image Sensor Interface (ISI) SoC Camera Subsystem
++----------------------------------------------
 +
-+#include <dt-bindings/thermal/thermal.h>
++Required properties:
++- compatible: must be "atmel,at91sam9g45-isi"
++- reg: physical base address and length of the registers set for the device;
++- interrupts: should contain IRQ line for the ISI;
++- clocks: list of clock specifiers, corresponding to entries in
++          the clock-names property;
++- clock-names: must contain "isi_clk", which is the isi peripherial clock.
 +
-+core_thermal: core_thermal {
-+	polling-delay-passive =3D <250>; /* milliseconds */
-+	polling-delay =3D <1000>; /* milliseconds */
++ISI supports a single port node with parallel bus. It should contain one
++'port' child node with child 'endpoint' node. Please refer to the bindings
++defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
 +
-+			/* sensor       ID */
-+	thermal-sensors =3D <&bandgap     2>;
++Example:
++	isi: isi@f0034000 {
++		compatible = "atmel,at91sam9g45-isi";
++		reg = <0xf0034000 0x4000>;
++		interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
 +
-+	trips {
-+		core_crit: core_crit {
-+			temperature =3D <125000>; /* milliCelsius */
-+			hysteresis =3D <2000>; /* milliCelsius */
-+			type =3D "critical";
++		clocks = <&isi_clk>;
++		clock-names = "isi_clk";
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_isi>;
++
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			isi_0: endpoint {
++				remote-endpoint = <&ov2640_0>;
++			};
 +		};
 +	};
++
++	i2c1: i2c@f0018000 {
++		ov2640: camera@0x30 {
++			compatible = "omnivision,ov2640";
++			reg = <0x30>;
++
++			port {
++				ov2640_0: endpoint {
++					remote-endpoint = <&isi_0>;
++					bus-width = <8>;
++				};
++			};
++		};
++	};
+diff --git a/drivers/media/platform/soc_camera/atmel-isi.c b/drivers/media/platform/soc_camera/atmel-isi.c
+index f4add0a..d6a1f7b 100644
+--- a/drivers/media/platform/soc_camera/atmel-isi.c
++++ b/drivers/media/platform/soc_camera/atmel-isi.c
+@@ -19,6 +19,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ 
+@@ -33,6 +34,7 @@
+ #define VID_LIMIT_BYTES			(16 * 1024 * 1024)
+ #define MIN_FRAME_RATE			15
+ #define FRAME_INTERVAL_MILLI_SEC	(1000 / MIN_FRAME_RATE)
++#define ISI_DEFAULT_MCLK_FREQ		25000000
+ 
+ /* Frame buffer descriptor */
+ struct fbd {
+@@ -885,6 +887,20 @@ static int atmel_isi_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static int atmel_isi_probe_dt(struct atmel_isi *isi,
++			struct platform_device *pdev)
++{
++	struct device_node *node = pdev->dev.of_node;
++
++	/* Default settings for ISI */
++	isi->pdata.full_mode = 1;
++	isi->pdata.mck_hz = ISI_DEFAULT_MCLK_FREQ;
++	isi->pdata.frate = ISI_CFG1_FRATE_CAPTURE_ALL;
++	isi->pdata.data_width_flags = ISI_DATAWIDTH_8 | ISI_DATAWIDTH_10;
++
++	return 0;
++}
++
+ static int atmel_isi_probe(struct platform_device *pdev)
+ {
+ 	unsigned int irq;
+@@ -896,7 +912,7 @@ static int atmel_isi_probe(struct platform_device *pdev)
+ 	struct isi_platform_data *pdata;
+ 
+ 	pdata = dev->platform_data;
+-	if (!pdata || !pdata->data_width_flags) {
++	if ((!pdata || !pdata->data_width_flags) && !pdev->dev.of_node) {
+ 		dev_err(&pdev->dev,
+ 			"No config available for Atmel ISI\n");
+ 		return -EINVAL;
+@@ -912,7 +928,11 @@ static int atmel_isi_probe(struct platform_device *pdev)
+ 	if (IS_ERR(isi->pclk))
+ 		return PTR_ERR(isi->pclk);
+ 
+-	memcpy(&isi->pdata, pdata, sizeof(struct isi_platform_data));
++	if (pdata)
++		memcpy(&isi->pdata, pdata, sizeof(struct isi_platform_data));
++	else	/* dt probe */
++		atmel_isi_probe_dt(isi, pdev);
++
+ 	isi->active = NULL;
+ 	spin_lock_init(&isi->lock);
+ 	INIT_LIST_HEAD(&isi->video_buffer_list);
+@@ -1014,11 +1034,18 @@ err_alloc_ctx:
+ 	return ret;
+ }
+ 
++static const struct of_device_id atmel_isi_of_match[] = {
++	{ .compatible = "atmel,at91sam9g45-isi" },
++	{ }
 +};
---=20
-1.8.1.2
++MODULE_DEVICE_TABLE(of, atmel_isi_of_match);
++
+ static struct platform_driver atmel_isi_driver = {
+ 	.remove		= atmel_isi_remove,
+ 	.driver		= {
+ 		.name = "atmel_isi",
+ 		.owner = THIS_MODULE,
++		.of_match_table = atmel_isi_of_match,
+ 	},
+ };
+ 
+-- 
+1.7.9.5
