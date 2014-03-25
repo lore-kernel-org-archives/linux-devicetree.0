@@ -1,918 +1,442 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v5 1/4] pci: APM X-Gene PCIe controller driver
-Date: Tue, 25 Mar 2014 14:05:10 +0000
-Message-ID: <20140325140510.GF17163@e106497-lin.cambridge.arm.com>
-References: <1395270762-6055-1-git-send-email-tinamdar@apm.com>
- <1395270762-6055-2-git-send-email-tinamdar@apm.com>
- <CA+sq2CchcWBieGEH33AJFj6HYy-yiJFgzX94Gtsoho2k3z65eA@mail.gmail.com>
- <CACoXjcn2LuhJsNLpCgfvqT6AQEb1pw70N9GNfgCgZ88myGMNBg@mail.gmail.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: [PATCH v2 2/3] drm/panel: add ld9040 driver
+Date: Tue, 25 Mar 2014 15:09:33 +0100
+Message-ID: <1395756573-956-1-git-send-email-a.hajda@samsung.com>
+References: <1395749436-24697-3-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACoXjcn2LuhJsNLpCgfvqT6AQEb1pw70N9GNfgCgZ88myGMNBg@mail.gmail.com>
-Content-Disposition: inline
-Sender: linux-doc-owner@vger.kernel.org
-To: Tanmay Inamdar <tinamdar@apm.com>
-Cc: Sunil Kovvuri <sunil.kovvuri@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Rob Landley <rob@landley.net>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches <patches@apm.com>, "jcm@redhat.com" <jcm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1395749436-24697-3-git-send-email-a.hajda@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "moderated list:ARM/SAMSUNG ARM A..." <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Thierry Reding <treding@nvidia.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 21, 2014 at 06:23:27PM +0000, Tanmay Inamdar wrote:
-> Hi Sunil,
->=20
-> I think 'pci_assign_unassigned_bus_resources' should take care of
-> this. Liviu can comment more.
+The patch adds LD9040 parallel RGB panel driver with SPI control interface.
+The driver uses drm_panel framework.
 
-Tanmay, I think you are right. I'm a bit baffled by pci_claim_resource(=
-)
-as it doesn't seem to be used by some architectures. Does it mean it
-is not needed unless you have some BIOS setting up resources for you
-and in that case you need to go and claim the resource?
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+---
+v2: removed useless include
+---
+ drivers/gpu/drm/panel/Kconfig        |   6 +
+ drivers/gpu/drm/panel/Makefile       |   1 +
+ drivers/gpu/drm/panel/panel-ld9040.c | 376 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 383 insertions(+)
+ create mode 100644 drivers/gpu/drm/panel/panel-ld9040.c
 
-Best regards,
-Liviu
-
->=20
-> Thanks,
-> Tanmay
->=20
-> On Fri, Mar 21, 2014 at 3:15 AM, Sunil Kovvuri <sunil.kovvuri@gmail.c=
-om> wrote:
-> > Hi Tanmay,
-> >
-> > Didn't get how PCI resources are enabled for the device.
-> > Liviu Dudau's ARM64 PCI architecture patch enables device resources
-> > using genenic API.
-> >
-> > https://lkml.org/lkml/2014/3/14/276
-> > + return pci_enable_resources(dev, mask);
-> >
-> > pci_enable_resources() checks if resource->parent is non-NULL.
-> > And at the same time Liviu Dudau's patch doesn't use pci_claim_reso=
-urce.
-> >
-> > Please look into below patches from Bjorn.
-> > https://lkml.org/lkml/2014/2/26/629
-> >
-> > Thanks,
-> > Sunil.
-> >
-> > On Thu, Mar 20, 2014 at 4:42 AM, Tanmay Inamdar <tinamdar@apm.com> =
-wrote:
-> >> This patch adds the AppliedMicro X-Gene SOC PCIe controller driver=
-=2E
-> >> X-Gene PCIe controller supports maximum up to 8 lanes and GEN3 spe=
-ed.
-> >> X-Gene SOC supports maximum 5 PCIe ports.
-> >>
-> >> Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
-> >> ---
-> >>  drivers/pci/host/Kconfig     |   10 +
-> >>  drivers/pci/host/Makefile    |    1 +
-> >>  drivers/pci/host/pci-xgene.c |  725 +++++++++++++++++++++++++++++=
-+++++++++++++
-> >>  3 files changed, 736 insertions(+)
-> >>  create mode 100644 drivers/pci/host/pci-xgene.c
-> >>
-> >> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-> >> index 47d46c6..19ce97d 100644
-> >> --- a/drivers/pci/host/Kconfig
-> >> +++ b/drivers/pci/host/Kconfig
-> >> @@ -33,4 +33,14 @@ config PCI_RCAR_GEN2
-> >>           There are 3 internal PCI controllers available with a si=
-ngle
-> >>           built-in EHCI/OHCI host controller present on each one.
-> >>
-> >> +config PCI_XGENE
-> >> +       bool "X-Gene PCIe controller"
-> >> +       depends on ARCH_XGENE
-> >> +       depends on OF
-> >> +       select PCIEPORTBUS
-> >> +       help
-> >> +         Say Y here if you want internal PCI support on APM X-Gen=
-e SoC.
-> >> +         There are 5 internal PCIe ports available. Each port is =
-GEN3 capable
-> >> +         and have varied lanes from x1 to x8.
-> >> +
-> >>  endmenu
-> >> diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
-> >> index 13fb333..34c7c36 100644
-> >> --- a/drivers/pci/host/Makefile
-> >> +++ b/drivers/pci/host/Makefile
-> >> @@ -4,3 +4,4 @@ obj-$(CONFIG_PCI_IMX6) +=3D pci-imx6.o
-> >>  obj-$(CONFIG_PCI_MVEBU) +=3D pci-mvebu.o
-> >>  obj-$(CONFIG_PCI_TEGRA) +=3D pci-tegra.o
-> >>  obj-$(CONFIG_PCI_RCAR_GEN2) +=3D pci-rcar-gen2.o
-> >> +obj-$(CONFIG_PCI_XGENE) +=3D pci-xgene.o
-> >> diff --git a/drivers/pci/host/pci-xgene.c b/drivers/pci/host/pci-x=
-gene.c
-> >> new file mode 100644
-> >> index 0000000..9e312f6
-> >> --- /dev/null
-> >> +++ b/drivers/pci/host/pci-xgene.c
-> >> @@ -0,0 +1,725 @@
-> >> +/**
-> >> + * APM X-Gene PCIe Driver
-> >> + *
-> >> + * Copyright (c) 2013 Applied Micro Circuits Corporation.
-> >> + *
-> >> + * Author: Tanmay Inamdar <tinamdar@apm.com>.
-> >> + *
-> >> + * This program is free software; you can redistribute  it and/or=
- modify it
-> >> + * under  the terms of  the GNU General  Public License as publis=
-hed by the
-> >> + * Free Software Foundation;  either version 2 of the  License, o=
-r (at your
-> >> + * option) any later version.
-> >> + *
-> >> + * This program is distributed in the hope that it will be useful=
-,
-> >> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> >> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> >> + * GNU General Public License for more details.
-> >> + *
-> >> + */
-> >> +#include <linux/clk-private.h>
-> >> +#include <linux/delay.h>
-> >> +#include <linux/io.h>
-> >> +#include <linux/jiffies.h>
-> >> +#include <linux/memblock.h>
-> >> +#include <linux/module.h>
-> >> +#include <linux/of.h>
-> >> +#include <linux/of_address.h>
-> >> +#include <linux/of_irq.h>
-> >> +#include <linux/of_pci.h>
-> >> +#include <linux/pci.h>
-> >> +#include <linux/platform_device.h>
-> >> +#include <linux/slab.h>
-> >> +
-> >> +#define PCIECORE_LTSSM                 0x4c
-> >> +#define PCIECORE_CTLANDSTATUS          0x50
-> >> +#define INTXSTATUSMASK                 0x6c
-> >> +#define PIM1_1L                                0x80
-> >> +#define IBAR2                          0x98
-> >> +#define IR2MSK                         0x9c
-> >> +#define PIM2_1L                                0xa0
-> >> +#define IBAR3L                         0xb4
-> >> +#define IR3MSKL                                0xbc
-> >> +#define PIM3_1L                                0xc4
-> >> +#define OMR1BARL                       0x100
-> >> +#define OMR2BARL                       0x118
-> >> +#define OMR3BARL                       0x130
-> >> +#define CFGBARL                                0x154
-> >> +#define CFGBARH                                0x158
-> >> +#define CFGCTL                         0x15c
-> >> +#define RTDID                          0x160
-> >> +#define BRIDGE_CFG_0                   0x2000
-> >> +#define BRIDGE_CFG_1                   0x2004
-> >> +#define BRIDGE_CFG_4                   0x2010
-> >> +#define BRIDGE_CFG_32                  0x2030
-> >> +#define BRIDGE_CFG_14                  0x2038
-> >> +#define BRIDGE_CTRL_1                  0x2204
-> >> +#define BRIDGE_CTRL_2                  0x2208
-> >> +#define BRIDGE_CTRL_5                  0x2214
-> >> +#define BRIDGE_STATUS_0                        0x2600
-> >> +#define MEM_RAM_SHUTDOWN                0xd070
-> >> +#define BLOCK_MEM_RDY                   0xd074
-> >> +
-> >> +#define DEVICE_PORT_TYPE_MASK          0x03c00000
-> >> +#define PM_FORCE_RP_MODE_MASK          0x00000400
-> >> +#define SWITCH_PORT_MODE_MASK          0x00000800
-> >> +#define CLASS_CODE_MASK                        0xffffff00
-> >> +#define LINK_UP_MASK                   0x00000100
-> >> +#define AER_OPTIONAL_ERROR_EN          0xffc00000
-> >> +#define XGENE_PCIE_DEV_CTRL            0x2f0f
-> >> +#define AXI_EP_CFG_ACCESS              0x10000
-> >> +#define ENABLE_ASPM                    0x08000000
-> >> +#define XGENE_PORT_TYPE_RC             0x05000000
-> >> +#define BLOCK_MEM_RDY_VAL               0xFFFFFFFF
-> >> +#define EN_COHERENCY                   0xF0000000
-> >> +#define EN_REG                         0x00000001
-> >> +#define OB_LO_IO                       0x00000002
-> >> +#define XGENE_PCIE_VENDORID            0xE008
-> >> +#define XGENE_PCIE_DEVICEID            0xE004
-> >> +#define XGENE_PCIE_ECC_TIMEOUT         10 /* ms */
-> >> +#define XGENE_LTSSM_DETECT_WAIT                20 /* ms */
-> >> +#define XGENE_LTSSM_L0_WAIT            4  /* ms */
-> >> +#define SZ_1T                          (SZ_1G*1024ULL)
-> >> +#define PIPE_PHY_RATE_RD(src)          ((0xc000 & (u32)(src)) >> =
-0xe)
-> >> +
-> >> +struct xgene_pcie_port {
-> >> +       struct device_node      *node;
-> >> +       struct device           *dev;
-> >> +       struct clk              *clk;
-> >> +       void __iomem            *csr_base;
-> >> +       void __iomem            *cfg_base;
-> >> +       u8                      link_up;
-> >> +};
-> >> +
-> >> +static inline u32 pcie_bar_low_val(u32 addr, u32 flags)
-> >> +{
-> >> +       return (addr & PCI_BASE_ADDRESS_MEM_MASK) | flags;
-> >> +}
-> >> +
-> >> +/* PCIE Configuration Out/In */
-> >> +static inline void xgene_pcie_cfg_out32(void __iomem *addr, int o=
-ffset, u32 val)
-> >> +{
-> >> +       writel(val, addr + offset);
-> >> +}
-> >> +
-> >> +static inline void xgene_pcie_cfg_out16(void __iomem *addr, int o=
-ffset, u16 val)
-> >> +{
-> >> +       u32 val32 =3D readl(addr + (offset & ~0x3));
-> >> +
-> >> +       switch (offset & 0x3) {
-> >> +       case 2:
-> >> +               val32 &=3D ~0xFFFF0000;
-> >> +               val32 |=3D (u32)val << 16;
-> >> +               break;
-> >> +       case 0:
-> >> +       default:
-> >> +               val32 &=3D ~0xFFFF;
-> >> +               val32 |=3D val;
-> >> +               break;
-> >> +       }
-> >> +       writel(val32, addr + (offset & ~0x3));
-> >> +}
-> >> +
-> >> +static inline void xgene_pcie_cfg_out8(void __iomem *addr, int of=
-fset, u8 val)
-> >> +{
-> >> +       u32 val32 =3D readl(addr + (offset & ~0x3));
-> >> +
-> >> +       switch (offset & 0x3) {
-> >> +       case 0:
-> >> +               val32 &=3D ~0xFF;
-> >> +               val32 |=3D val;
-> >> +               break;
-> >> +       case 1:
-> >> +               val32 &=3D ~0xFF00;
-> >> +               val32 |=3D (u32)val << 8;
-> >> +               break;
-> >> +       case 2:
-> >> +               val32 &=3D ~0xFF0000;
-> >> +               val32 |=3D (u32)val << 16;
-> >> +               break;
-> >> +       case 3:
-> >> +       default:
-> >> +               val32 &=3D ~0xFF000000;
-> >> +               val32 |=3D (u32)val << 24;
-> >> +               break;
-> >> +       }
-> >> +       writel(val32, addr + (offset & ~0x3));
-> >> +}
-> >> +
-> >> +static inline void xgene_pcie_cfg_in32(void __iomem *addr, int of=
-fset, u32 *val)
-> >> +{
-> >> +       *val =3D readl(addr + offset);
-> >> +}
-> >> +
-> >> +static inline void
-> >> +xgene_pcie_cfg_in16(void __iomem *addr, int offset, u32 *val)
-> >> +{
-> >> +       *val =3D readl(addr + (offset & ~0x3));
-> >> +
-> >> +       switch (offset & 0x3) {
-> >> +       case 2:
-> >> +               *val >>=3D 16;
-> >> +               break;
-> >> +       }
-> >> +
-> >> +       *val &=3D 0xFFFF;
-> >> +}
-> >> +
-> >> +static inline void
-> >> +xgene_pcie_cfg_in8(void __iomem *addr, int offset, u32 *val)
-> >> +{
-> >> +       *val =3D readl(addr + (offset & ~0x3));
-> >> +
-> >> +       switch (offset & 0x3) {
-> >> +       case 3:
-> >> +               *val =3D *val >> 24;
-> >> +               break;
-> >> +       case 2:
-> >> +               *val =3D *val >> 16;
-> >> +               break;
-> >> +       case 1:
-> >> +               *val =3D *val >> 8;
-> >> +               break;
-> >> +       }
-> >> +       *val &=3D 0xFF;
-> >> +}
-> >> +
-> >> +/* When the address bit [17:16] is 2'b01, the Configuration acces=
-s will be
-> >> + * treated as Type 1 and it will be forwarded to external PCIe de=
-vice.
-> >> + */
-> >> +static void __iomem *xgene_pcie_get_cfg_base(struct pci_bus *bus)
-> >> +{
-> >> +       struct xgene_pcie_port *port =3D bus->sysdata;
-> >> +
-> >> +       if (bus->number >=3D (bus->primary + 1))
-> >> +               return port->cfg_base + AXI_EP_CFG_ACCESS;
-> >> +
-> >> +       return port->cfg_base;
-> >> +}
-> >> +
-> >> +/* For Configuration request, RTDID register is used as Bus Numbe=
-r,
-> >> + * Device Number and Function number of the header fields.
-> >> + */
-> >> +static void xgene_pcie_set_rtdid_reg(struct pci_bus *bus, uint de=
-vfn)
-> >> +{
-> >> +       struct xgene_pcie_port *port =3D bus->sysdata;
-> >> +       unsigned int b, d, f;
-> >> +       u32 rtdid_val =3D 0;
-> >> +
-> >> +       b =3D bus->number;
-> >> +       d =3D PCI_SLOT(devfn);
-> >> +       f =3D PCI_FUNC(devfn);
-> >> +
-> >> +       if (!pci_is_root_bus(bus))
-> >> +               rtdid_val =3D (b << 8) | (d << 3) | f;
-> >> +
-> >> +       writel(rtdid_val, port->csr_base + RTDID);
-> >> +       /* read the register back to ensure flush */
-> >> +       readl(port->csr_base + RTDID);
-> >> +}
-> >> +
-> >> +static int xgene_pcie_read_config(struct pci_bus *bus, unsigned i=
-nt devfn,
-> >> +                                 int offset, int len, u32 *val)
-> >> +{
-> >> +       struct xgene_pcie_port *port =3D bus->sysdata;
-> >> +       void __iomem *addr;
-> >> +
-> >> +       if ((pci_is_root_bus(bus) && devfn !=3D 0) || !port->link_=
-up)
-> >> +               return PCIBIOS_DEVICE_NOT_FOUND;
-> >> +
-> >> +       xgene_pcie_set_rtdid_reg(bus, devfn);
-> >> +       addr =3D xgene_pcie_get_cfg_base(bus);
-> >> +       switch (len) {
-> >> +       case 1:
-> >> +               xgene_pcie_cfg_in8(addr, offset, val);
-> >> +               break;
-> >> +       case 2:
-> >> +               xgene_pcie_cfg_in16(addr, offset, val);
-> >> +               break;
-> >> +       default:
-> >> +               xgene_pcie_cfg_in32(addr, offset, val);
-> >> +               break;
-> >> +       }
-> >> +       return PCIBIOS_SUCCESSFUL;
-> >> +}
-> >> +
-> >> +static int xgene_pcie_write_config(struct pci_bus *bus, unsigned =
-int devfn,
-> >> +                                  int offset, int len, u32 val)
-> >> +{
-> >> +       struct xgene_pcie_port *port =3D bus->sysdata;
-> >> +       void __iomem *addr;
-> >> +
-> >> +       if ((pci_is_root_bus(bus) && devfn !=3D 0) || !port->link_=
-up)
-> >> +               return PCIBIOS_DEVICE_NOT_FOUND;
-> >> +
-> >> +       xgene_pcie_set_rtdid_reg(bus, devfn);
-> >> +       addr =3D xgene_pcie_get_cfg_base(bus);
-> >> +       switch (len) {
-> >> +       case 1:
-> >> +               xgene_pcie_cfg_out8(addr, offset, (u8)val);
-> >> +               break;
-> >> +       case 2:
-> >> +               xgene_pcie_cfg_out16(addr, offset, (u16)val);
-> >> +               break;
-> >> +       default:
-> >> +               xgene_pcie_cfg_out32(addr, offset, val);
-> >> +               break;
-> >> +       }
-> >> +       return PCIBIOS_SUCCESSFUL;
-> >> +}
-> >> +
-> >> +static struct pci_ops xgene_pcie_ops =3D {
-> >> +       .read =3D xgene_pcie_read_config,
-> >> +       .write =3D xgene_pcie_write_config
-> >> +};
-> >> +
-> >> +static void xgene_pcie_program_core(void __iomem *csr_base)
-> >> +{
-> >> +       u32 val;
-> >> +
-> >> +       val =3D readl(csr_base + BRIDGE_CFG_0);
-> >> +       val |=3D AER_OPTIONAL_ERROR_EN;
-> >> +       writel(val, csr_base + BRIDGE_CFG_0);
-> >> +       writel(0x0, csr_base + INTXSTATUSMASK);
-> >> +       val =3D readl(csr_base + BRIDGE_CTRL_1);
-> >> +       val =3D (val & ~0xffff) | XGENE_PCIE_DEV_CTRL;
-> >> +       writel(val, csr_base + BRIDGE_CTRL_1);
-> >> +}
-> >> +
-> >> +static u64 xgene_pcie_set_ib_mask(void __iomem *csr_base, u32 add=
-r,
-> >> +                                 u32 flags, u64 size)
-> >> +{
-> >> +       u64 mask =3D (~(size - 1) & PCI_BASE_ADDRESS_MEM_MASK) | f=
-lags;
-> >> +       u32 val32 =3D 0;
-> >> +       u32 val;
-> >> +
-> >> +       val32 =3D readl(csr_base + addr);
-> >> +       val =3D (val32 & 0x0000ffff) | (lower_32_bits(mask) << 16)=
-;
-> >> +       writel(val, csr_base + addr);
-> >> +
-> >> +       val32 =3D readl(csr_base + addr + 0x04);
-> >> +       val =3D (val32 & 0xffff0000) | (lower_32_bits(mask) >> 16)=
-;
-> >> +       writel(val, csr_base + addr + 0x04);
-> >> +
-> >> +       val32 =3D readl(csr_base + addr + 0x04);
-> >> +       val =3D (val32 & 0x0000ffff) | (upper_32_bits(mask) << 16)=
-;
-> >> +       writel(val, csr_base + addr + 0x04);
-> >> +
-> >> +       val32 =3D readl(csr_base + addr + 0x08);
-> >> +       val =3D (val32 & 0xffff0000) | (upper_32_bits(mask) >> 16)=
-;
-> >> +       writel(val, csr_base + addr + 0x08);
-> >> +
-> >> +       return mask;
-> >> +}
-> >> +
-> >> +static void xgene_pcie_poll_linkup(struct xgene_pcie_port *port,
-> >> +                                  u32 *lanes, u32 *speed)
-> >> +{
-> >> +       void __iomem *csr_base =3D port->csr_base;
-> >> +       ulong timeout;
-> >> +       u32 val32;
-> >> +
-> >> +       /*
-> >> +        * A component enters the LTSSM Detect state within
-> >> +        * 20ms of the end of fundamental core reset.
-> >> +        */
-> >> +       msleep(XGENE_LTSSM_DETECT_WAIT);
-> >> +       port->link_up =3D 0;
-> >> +       timeout =3D jiffies + msecs_to_jiffies(XGENE_LTSSM_L0_WAIT=
-);
-> >> +       while (time_before(jiffies, timeout)) {
-> >> +               val32 =3D readl(csr_base + PCIECORE_CTLANDSTATUS);
-> >> +               if (val32 & LINK_UP_MASK) {
-> >> +                       port->link_up =3D 1;
-> >> +                       *speed =3D PIPE_PHY_RATE_RD(val32);
-> >> +                       val32 =3D readl(csr_base + BRIDGE_STATUS_0=
-);
-> >> +                       *lanes =3D val32 >> 26;
-> >> +                       break;
-> >> +               }
-> >> +               msleep(1);
-> >> +       }
-> >> +}
-> >> +
-> >> +static void xgene_pcie_setup_root_complex(struct xgene_pcie_port =
-*port)
-> >> +{
-> >> +       void __iomem *csr_base =3D port->csr_base;
-> >> +       u32 val;
-> >> +
-> >> +       val =3D (XGENE_PCIE_DEVICEID << 16) | XGENE_PCIE_VENDORID;
-> >> +       writel(val, csr_base + BRIDGE_CFG_0);
-> >> +
-> >> +       val =3D readl(csr_base + BRIDGE_CFG_1);
-> >> +       val &=3D ~CLASS_CODE_MASK;
-> >> +       val |=3D PCI_CLASS_BRIDGE_PCI << 16;
-> >> +       writel(val, csr_base + BRIDGE_CFG_1);
-> >> +
-> >> +       val =3D readl(csr_base + BRIDGE_CFG_14);
-> >> +       val |=3D SWITCH_PORT_MODE_MASK;
-> >> +       val &=3D ~PM_FORCE_RP_MODE_MASK;
-> >> +       writel(val, csr_base + BRIDGE_CFG_14);
-> >> +
-> >> +       val =3D readl(csr_base + BRIDGE_CTRL_5);
-> >> +       val &=3D ~DEVICE_PORT_TYPE_MASK;
-> >> +       val |=3D XGENE_PORT_TYPE_RC;
-> >> +       writel(val, csr_base + BRIDGE_CTRL_5);
-> >> +
-> >> +       val =3D readl(csr_base + BRIDGE_CTRL_2);
-> >> +       val |=3D ENABLE_ASPM;
-> >> +       writel(val, csr_base + BRIDGE_CTRL_2);
-> >> +
-> >> +       val =3D readl(csr_base + BRIDGE_CFG_32);
-> >> +       writel(val | (1 << 19), csr_base + BRIDGE_CFG_32);
-> >> +}
-> >> +
-> >> +/* Return 0 on success */
-> >> +static int xgene_pcie_init_ecc(struct xgene_pcie_port *port)
-> >> +{
-> >> +       void __iomem *csr_base =3D port->csr_base;
-> >> +       ulong timeout;
-> >> +       u32 val;
-> >> +
-> >> +       val =3D readl(csr_base + MEM_RAM_SHUTDOWN);
-> >> +       if (!val)
-> >> +               return 0;
-> >> +       writel(0x0, csr_base + MEM_RAM_SHUTDOWN);
-> >> +       timeout =3D jiffies + msecs_to_jiffies(XGENE_PCIE_ECC_TIME=
-OUT);
-> >> +       while (time_before(jiffies, timeout)) {
-> >> +               val =3D readl(csr_base + BLOCK_MEM_RDY);
-> >> +               if (val =3D=3D BLOCK_MEM_RDY_VAL)
-> >> +                       return 0;
-> >> +               msleep(1);
-> >> +       }
-> >> +
-> >> +       return 1;
-> >> +}
-> >> +
-> >> +static int xgene_pcie_init_port(struct xgene_pcie_port *port)
-> >> +{
-> >> +       int rc;
-> >> +
-> >> +       port->clk =3D clk_get(port->dev, NULL);
-> >> +       if (IS_ERR(port->clk)) {
-> >> +               dev_err(port->dev, "clock not available\n");
-> >> +               return -ENODEV;
-> >> +       }
-> >> +
-> >> +       rc =3D clk_prepare_enable(port->clk);
-> >> +       if (rc) {
-> >> +               dev_err(port->dev, "clock enable failed\n");
-> >> +               return rc;
-> >> +       }
-> >> +
-> >> +       rc =3D xgene_pcie_init_ecc(port);
-> >> +       if (rc) {
-> >> +               dev_err(port->dev, "memory init failed\n");
-> >> +               return rc;
-> >> +       }
-> >> +
-> >> +       return 0;
-> >> +}
-> >> +
-> >> +static void xgene_pcie_fixup_bridge(struct pci_dev *dev)
-> >> +{
-> >> +       int i;
-> >> +
-> >> +       /* Hide the PCI host BARs from the kernel as their content=
- doesn't
-> >> +        * fit well in the resource management
-> >> +        */
-> >> +       for (i =3D 0; i < DEVICE_COUNT_RESOURCE; i++) {
-> >> +               dev->resource[i].start =3D dev->resource[i].end =3D=
- 0;
-> >> +               dev->resource[i].flags =3D 0;
-> >> +       }
-> >> +       dev_info(&dev->dev, "Hiding X-Gene pci host bridge resourc=
-es %s\n",
-> >> +                pci_name(dev));
-> >> +}
-> >> +DECLARE_PCI_FIXUP_HEADER(XGENE_PCIE_VENDORID, XGENE_PCIE_DEVICEID=
-,
-> >> +                        xgene_pcie_fixup_bridge);
-> >> +
-> >> +static int xgene_pcie_map_reg(struct xgene_pcie_port *port,
-> >> +                             struct platform_device *pdev, u64 *c=
-fg_addr)
-> >> +{
-> >> +       struct resource *res;
-> >> +
-> >> +       res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM,=
- "csr");
-> >> +       port->csr_base =3D devm_ioremap_resource(port->dev, res);
-> >> +       if (IS_ERR(port->csr_base))
-> >> +               return PTR_ERR(port->csr_base);
-> >> +
-> >> +       res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM,=
- "cfg");
-> >> +       port->cfg_base =3D devm_ioremap_resource(port->dev, res);
-> >> +       if (IS_ERR(port->cfg_base))
-> >> +               return PTR_ERR(port->cfg_base);
-> >> +       *cfg_addr =3D res->start;
-> >> +
-> >> +       return 0;
-> >> +}
-> >> +
-> >> +static void xgene_pcie_setup_ob_reg(struct xgene_pcie_port *port,
-> >> +                                   struct resource *res, u32 offs=
-et, u64 addr)
-> >> +{
-> >> +       void __iomem *base =3D port->csr_base + offset;
-> >> +       resource_size_t size =3D resource_size(res);
-> >> +       u64 restype =3D resource_type(res);
-> >> +       u64 cpu_addr, pci_addr;
-> >> +       u64 mask =3D 0;
-> >> +       u32 min_size;
-> >> +       u32 flag =3D EN_REG;
-> >> +
-> >> +       if (restype =3D=3D IORESOURCE_MEM) {
-> >> +               cpu_addr =3D res->start;
-> >> +               pci_addr =3D addr;
-> >> +               min_size =3D SZ_128M;
-> >> +       } else {
-> >> +               cpu_addr =3D addr;
-> >> +               pci_addr =3D res->start;
-> >> +               min_size =3D 128;
-> >> +               flag |=3D OB_LO_IO;
-> >> +       }
-> >> +       if (size >=3D min_size)
-> >> +               mask =3D ~(size - 1) | flag;
-> >> +       else
-> >> +               dev_warn(port->dev, "res size 0x%llx less than min=
-imum 0x%x\n",
-> >> +                        (u64)size, min_size);
-> >> +       writel(lower_32_bits(cpu_addr), base);
-> >> +       writel(upper_32_bits(cpu_addr), base + 0x04);
-> >> +       writel(lower_32_bits(mask), base + 0x08);
-> >> +       writel(upper_32_bits(mask), base + 0x0c);
-> >> +       writel(lower_32_bits(pci_addr), base + 0x10);
-> >> +       writel(upper_32_bits(pci_addr), base + 0x14);
-> >> +}
-> >> +
-> >> +static void xgene_pcie_setup_cfg_reg(void __iomem *csr_base, u64 =
-addr)
-> >> +{
-> >> +       writel(lower_32_bits(addr), csr_base + CFGBARL);
-> >> +       writel(upper_32_bits(addr), csr_base + CFGBARH);
-> >> +       writel(EN_REG, csr_base + CFGCTL);
-> >> +}
-> >> +
-> >> +static int xgene_pcie_map_ranges(struct xgene_pcie_port *port,
-> >> +                                struct pci_host_bridge *bridge,
-> >> +                                u64 cfg_addr)
-> >> +{
-> >> +       struct device *dev =3D port->dev;
-> >> +       struct pci_host_bridge_window *window;
-> >> +       int ret;
-> >> +
-> >> +       list_for_each_entry(window, &bridge->windows, list) {
-> >> +               struct resource *res =3D window->res;
-> >> +               u64 restype =3D resource_type(res);
-> >> +               dev_dbg(port->dev, "0x%08lx 0x%016llx...0x%016llx\=
-n",
-> >> +                       res->flags, res->start, res->end);
-> >> +
-> >> +               switch (restype) {
-> >> +               case IORESOURCE_IO:
-> >> +                       xgene_pcie_setup_ob_reg(port, res, OMR2BAR=
-L,
-> >> +                                               bridge->io_base);
-> >> +                       ret =3D pci_ioremap_io(res, bridge->io_bas=
-e);
-> >> +                       if (ret < 0)
-> >> +                               return ret;
-> >> +                       break;
-> >> +               case IORESOURCE_MEM:
-> >> +                       xgene_pcie_setup_ob_reg(port, res, OMR3BAR=
-L,
-> >> +                                               res->start - windo=
-w->offset);
-> >> +                       break;
-> >> +               case IORESOURCE_BUS:
-> >> +                       break;
-> >> +               default:
-> >> +                       dev_err(dev, "invalid io resource!");
-> >> +                       return -EINVAL;
-> >> +               }
-> >> +       }
-> >> +       xgene_pcie_setup_cfg_reg(port->csr_base, cfg_addr);
-> >> +       return 0;
-> >> +}
-> >> +
-> >> +static void xgene_pcie_setup_pims(void *addr, u64 pim, u64 size)
-> >> +{
-> >> +       writel(lower_32_bits(pim), addr);
-> >> +       writel(upper_32_bits(pim) | EN_COHERENCY, addr + 0x04);
-> >> +       writel(lower_32_bits(size), addr + 0x10);
-> >> +       writel(upper_32_bits(size), addr + 0x14);
-> >> +}
-> >> +
-> >> +/*
-> >> + * X-Gene PCIe support maximum 3 inbound memory regions
-> >> + * This function helps to select a region based on size of region
-> >> + */
-> >> +static int xgene_pcie_select_ib_reg(u8 *ib_reg_mask, u64 size)
-> >> +{
-> >> +       if ((size > 4) && (size < SZ_16M) && !(*ib_reg_mask & (1 <=
-< 1))) {
-> >> +               *ib_reg_mask |=3D (1 << 1);
-> >> +               return 1;
-> >> +       }
-> >> +
-> >> +       if ((size > SZ_1K) && (size < SZ_1T) && !(*ib_reg_mask & (=
-1 << 0))) {
-> >> +               *ib_reg_mask |=3D (1 << 0);
-> >> +               return 0;
-> >> +       }
-> >> +
-> >> +       if ((size > SZ_1M) && (size < SZ_1T) && !(*ib_reg_mask & (=
-1 << 2))) {
-> >> +               *ib_reg_mask |=3D (1 << 2);
-> >> +               return 2;
-> >> +       }
-> >> +       return -EINVAL;
-> >> +}
-> >> +
-> >> +static void xgene_pcie_setup_ib_reg(struct xgene_pcie_port *port,
-> >> +                                   struct of_pci_range *range, u8=
- *ib_reg_mask)
-> >> +{
-> >> +       void __iomem *csr_base =3D port->csr_base;
-> >> +       void __iomem *cfg_base =3D port->cfg_base;
-> >> +       void *bar_addr;
-> >> +       void *pim_addr;
-> >> +       u64 restype =3D range->flags & IORESOURCE_TYPE_BITS;
-> >> +       u64 cpu_addr =3D range->cpu_addr;
-> >> +       u64 pci_addr =3D range->pci_addr;
-> >> +       u64 size =3D range->size;
-> >> +       u64 mask =3D ~(size - 1) | EN_REG;
-> >> +       u32 flags =3D PCI_BASE_ADDRESS_MEM_TYPE_64;
-> >> +       u32 bar_low;
-> >> +       int region;
-> >> +
-> >> +       region =3D xgene_pcie_select_ib_reg(ib_reg_mask, range->si=
-ze);
-> >> +       if (region < 0) {
-> >> +               dev_warn(port->dev, "invalid pcie dma-range config=
-\n");
-> >> +               return;
-> >> +       }
-> >> +
-> >> +       if (restype =3D=3D PCI_BASE_ADDRESS_MEM_PREFETCH)
-> >> +               flags |=3D PCI_BASE_ADDRESS_MEM_PREFETCH;
-> >> +
-> >> +       bar_low =3D pcie_bar_low_val((u32)cpu_addr, flags);
-> >> +       switch (region) {
-> >> +       case 0:
-> >> +               xgene_pcie_set_ib_mask(csr_base, BRIDGE_CFG_4, fla=
-gs, size);
-> >> +               bar_addr =3D cfg_base + PCI_BASE_ADDRESS_0;
-> >> +               writel(bar_low, bar_addr);
-> >> +               writel(upper_32_bits(cpu_addr), bar_addr + 0x4);
-> >> +               pim_addr =3D csr_base + PIM1_1L;
-> >> +               break;
-> >> +       case 1:
-> >> +               bar_addr =3D csr_base + IBAR2;
-> >> +               writel(bar_low, bar_addr);
-> >> +               writel(lower_32_bits(mask), csr_base + IR2MSK);
-> >> +               pim_addr =3D csr_base + PIM2_1L;
-> >> +               break;
-> >> +       case 2:
-> >> +               bar_addr =3D csr_base + IBAR3L;
-> >> +               writel(bar_low, bar_addr);
-> >> +               writel(upper_32_bits(cpu_addr), bar_addr + 0x4);
-> >> +               writel(lower_32_bits(mask), csr_base + IR3MSKL);
-> >> +               writel(upper_32_bits(mask), csr_base + IR3MSKL + 0=
-x4);
-> >> +               pim_addr =3D csr_base + PIM3_1L;
-> >> +               break;
-> >> +       }
-> >> +
-> >> +       xgene_pcie_setup_pims(pim_addr, pci_addr, size);
-> >> +}
-> >> +
-> >> +static int pci_dma_range_parser_init(struct of_pci_range_parser *=
-parser,
-> >> +                                    struct device_node *node)
-> >> +{
-> >> +       const int na =3D 3, ns =3D 2;
-> >> +       int rlen;
-> >> +
-> >> +       parser->node =3D node;
-> >> +       parser->pna =3D of_n_addr_cells(node);
-> >> +       parser->np =3D parser->pna + na + ns;
-> >> +
-> >> +       parser->range =3D of_get_property(node, "dma-ranges", &rle=
-n);
-> >> +       if (!parser->range)
-> >> +               return -ENOENT;
-> >> +
-> >> +       parser->end =3D parser->range + rlen / sizeof(__be32);
-> >> +       return 0;
-> >> +}
-> >> +
-> >> +static int xgene_pcie_parse_map_dma_ranges(struct xgene_pcie_port=
- *port)
-> >> +{
-> >> +       struct device_node *np =3D port->node;
-> >> +       struct of_pci_range range;
-> >> +       struct of_pci_range_parser parser;
-> >> +       struct device *dev =3D port->dev;
-> >> +       u8 ib_reg_mask =3D 0;
-> >> +
-> >> +       if (pci_dma_range_parser_init(&parser, np)) {
-> >> +               dev_err(dev, "missing dma-ranges property\n");
-> >> +               return -EINVAL;
-> >> +       }
-> >> +
-> >> +       /* Get the dma-ranges from DT */
-> >> +       for_each_of_pci_range(&parser, &range) {
-> >> +               u64 end =3D range.cpu_addr + range.size - 1;
-> >> +               dev_dbg(port->dev, "0x%08x 0x%016llx..0x%016llx ->=
- 0x%016llx\n",
-> >> +                       range.flags, range.cpu_addr, end, range.pc=
-i_addr);
-> >> +               xgene_pcie_setup_ib_reg(port, &range, &ib_reg_mask=
-);
-> >> +       }
-> >> +       return 0;
-> >> +}
-> >> +
-> >> +static int xgene_pcie_probe_bridge(struct platform_device *pdev)
-> >> +{
-> >> +       struct device_node *np =3D of_node_get(pdev->dev.of_node);
-> >> +       struct xgene_pcie_port *port;
-> >> +       struct pci_host_bridge *bridge;
-> >> +       resource_size_t lastbus;
-> >> +       u32 lanes =3D 0, speed =3D 0;
-> >> +       u64 cfg_addr =3D 0;
-> >> +       int ret;
-> >> +
-> >> +       port =3D devm_kzalloc(&pdev->dev, sizeof(*port), GFP_KERNE=
-L);
-> >> +       if (!port)
-> >> +               return -ENOMEM;
-> >> +       port->node =3D np;
-> >> +       port->dev =3D &pdev->dev;
-> >> +
-> >> +       ret =3D xgene_pcie_map_reg(port, pdev, &cfg_addr);
-> >> +       if (ret)
-> >> +               return ret;
-> >> +
-> >> +       ret =3D xgene_pcie_init_port(port);
-> >> +       if (ret)
-> >> +               return ret;
-> >> +       xgene_pcie_program_core(port->csr_base);
-> >> +       xgene_pcie_setup_root_complex(port);
-> >> +
-> >> +       bridge =3D of_create_pci_host_bridge(&pdev->dev, &xgene_pc=
-ie_ops, port);
-> >> +       if (IS_ERR_OR_NULL(bridge))
-> >> +               return PTR_ERR(bridge);
-> >> +
-> >> +       ret =3D xgene_pcie_map_ranges(port, bridge, cfg_addr);
-> >> +       if (ret)
-> >> +               return ret;
-> >> +
-> >> +       ret =3D xgene_pcie_parse_map_dma_ranges(port);
-> >> +       if (ret)
-> >> +               return ret;
-> >> +
-> >> +       xgene_pcie_poll_linkup(port, &lanes, &speed);
-> >> +       if (!port->link_up)
-> >> +               dev_info(port->dev, "(rc) link down\n");
-> >> +       else
-> >> +               dev_info(port->dev, "(rc) x%d gen-%d link up\n",
-> >> +                               lanes, speed + 1);
-> >> +       platform_set_drvdata(pdev, port);
-> >> +       lastbus =3D pci_rescan_bus(bridge->bus);
-> >> +       pci_bus_update_busn_res_end(bridge->bus, lastbus);
-> >> +       return 0;
-> >> +}
-> >> +
-> >> +static const struct of_device_id xgene_pcie_match_table[] =3D {
-> >> +       {.compatible =3D "apm,xgene-pcie",},
-> >> +       {},
-> >> +};
-> >> +
-> >> +static struct platform_driver xgene_pcie_driver =3D {
-> >> +       .driver =3D {
-> >> +                  .name =3D "xgene-pcie",
-> >> +                  .owner =3D THIS_MODULE,
-> >> +                  .of_match_table =3D of_match_ptr(xgene_pcie_mat=
-ch_table),
-> >> +       },
-> >> +       .probe =3D xgene_pcie_probe_bridge,
-> >> +};
-> >> +module_platform_driver(xgene_pcie_driver);
-> >> +
-> >> +MODULE_AUTHOR("Tanmay Inamdar <tinamdar@apm.com>");
-> >> +MODULE_DESCRIPTION("APM X-Gene PCIe driver");
-> >> +MODULE_LICENSE("GPL v2");
-> >> --
-> >> 1.7.9.5
-> >>
-> >> --
-> >> To unsubscribe from this list: send the line "unsubscribe linux-pc=
-i" in
-> >> the body of a message to majordomo@vger.kernel.org
-> >> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
-
+diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+index 3e0f13d..94cc0c7 100644
+--- a/drivers/gpu/drm/panel/Kconfig
++++ b/drivers/gpu/drm/panel/Kconfig
+@@ -16,4 +16,10 @@ config DRM_PANEL_SIMPLE
+ 	  that it can be automatically turned off when the panel goes into a
+ 	  low power state.
+ 
++config DRM_PANEL_LD9040
++	tristate "LD9040 RGB/SPI panel"
++	depends on DRM && DRM_PANEL
++	depends on OF
++	select VIDEOMODE_HELPERS
++
+ endmenu
+diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+index af9dfa2..4f7dfce 100644
+--- a/drivers/gpu/drm/panel/Makefile
++++ b/drivers/gpu/drm/panel/Makefile
+@@ -1 +1,2 @@
+ obj-$(CONFIG_DRM_PANEL_SIMPLE) += panel-simple.o
++obj-$(CONFIG_DRM_PANEL_LD9040) += panel-ld9040.o
+diff --git a/drivers/gpu/drm/panel/panel-ld9040.c b/drivers/gpu/drm/panel/panel-ld9040.c
+new file mode 100644
+index 0000000..1f1f837
+--- /dev/null
++++ b/drivers/gpu/drm/panel/panel-ld9040.c
+@@ -0,0 +1,376 @@
++/*
++ * ld9040 AMOLED LCD drm_panel driver.
++ *
++ * Copyright (c) 2014 Samsung Electronics Co., Ltd
++ * Derived from drivers/video/backlight/ld9040.c
++ *
++ * Andrzej Hajda <a.hajda@samsung.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++*/
++
++#include <drm/drmP.h>
++#include <drm/drm_panel.h>
++
++#include <linux/gpio/consumer.h>
++#include <linux/regulator/consumer.h>
++#include <linux/spi/spi.h>
++
++#include <video/mipi_display.h>
++#include <video/of_videomode.h>
++#include <video/videomode.h>
++
++/* Manufacturer Command Set */
++#define MCS_MANPWR		0xb0
++#define MCS_ELVSS_ON		0xb1
++#define MCS_USER_SETTING	0xf0
++#define MCS_DISPCTL		0xf2
++#define MCS_GTCON		0xf7
++#define MCS_PANEL_CONDITION	0xf8
++#define MCS_GAMMA_SET1		0xf9
++#define MCS_GAMMA_CTRL		0xfb
++
++/* array of gamma tables for gamma value 2.2 */
++static u8 const ld9040_gammas[25][22] = {
++	{ 0xf9, 0x00, 0x13, 0xb2, 0xba, 0xd2, 0x00, 0x30, 0x00, 0xaf, 0xc0,
++	  0xb8, 0xcd, 0x00, 0x3d, 0x00, 0xa8, 0xb8, 0xb7, 0xcd, 0x00, 0x44 },
++	{ 0xf9, 0x00, 0x13, 0xb9, 0xb9, 0xd0, 0x00, 0x3c, 0x00, 0xaf, 0xbf,
++	  0xb6, 0xcb, 0x00, 0x4b, 0x00, 0xa8, 0xb9, 0xb5, 0xcc, 0x00, 0x52 },
++	{ 0xf9, 0x00, 0x13, 0xba, 0xb9, 0xcd, 0x00, 0x41, 0x00, 0xb0, 0xbe,
++	  0xb5, 0xc9, 0x00, 0x51, 0x00, 0xa9, 0xb9, 0xb5, 0xca, 0x00, 0x57 },
++	{ 0xf9, 0x00, 0x13, 0xb9, 0xb8, 0xcd, 0x00, 0x46, 0x00, 0xb1, 0xbc,
++	  0xb5, 0xc8, 0x00, 0x56, 0x00, 0xaa, 0xb8, 0xb4, 0xc9, 0x00, 0x5d },
++	{ 0xf9, 0x00, 0x13, 0xba, 0xb8, 0xcb, 0x00, 0x4b, 0x00, 0xb3, 0xbc,
++	  0xb4, 0xc7, 0x00, 0x5c, 0x00, 0xac, 0xb8, 0xb4, 0xc8, 0x00, 0x62 },
++	{ 0xf9, 0x00, 0x13, 0xbb, 0xb7, 0xca, 0x00, 0x4f, 0x00, 0xb4, 0xbb,
++	  0xb3, 0xc7, 0x00, 0x60, 0x00, 0xad, 0xb8, 0xb4, 0xc7, 0x00, 0x67 },
++	{ 0xf9, 0x00, 0x47, 0xba, 0xb6, 0xca, 0x00, 0x53, 0x00, 0xb5, 0xbb,
++	  0xb3, 0xc6, 0x00, 0x65, 0x00, 0xae, 0xb8, 0xb3, 0xc7, 0x00, 0x6c },
++	{ 0xf9, 0x00, 0x71, 0xbb, 0xb5, 0xc8, 0x00, 0x57, 0x00, 0xb5, 0xbb,
++	  0xb0, 0xc5, 0x00, 0x6a, 0x00, 0xae, 0xb9, 0xb1, 0xc6, 0x00, 0x70 },
++	{ 0xf9, 0x00, 0x7b, 0xbb, 0xb4, 0xc8, 0x00, 0x5b, 0x00, 0xb5, 0xba,
++	  0xb1, 0xc4, 0x00, 0x6e, 0x00, 0xae, 0xb9, 0xb0, 0xc5, 0x00, 0x75 },
++	{ 0xf9, 0x00, 0x82, 0xba, 0xb4, 0xc7, 0x00, 0x5f, 0x00, 0xb5, 0xba,
++	  0xb0, 0xc3, 0x00, 0x72, 0x00, 0xae, 0xb8, 0xb0, 0xc3, 0x00, 0x7a },
++	{ 0xf9, 0x00, 0x89, 0xba, 0xb3, 0xc8, 0x00, 0x62, 0x00, 0xb6, 0xba,
++	  0xaf, 0xc3, 0x00, 0x76, 0x00, 0xaf, 0xb7, 0xae, 0xc4, 0x00, 0x7e },
++	{ 0xf9, 0x00, 0x8b, 0xb9, 0xb3, 0xc7, 0x00, 0x65, 0x00, 0xb7, 0xb8,
++	  0xaf, 0xc3, 0x00, 0x7a, 0x00, 0x80, 0xb6, 0xae, 0xc4, 0x00, 0x81 },
++	{ 0xf9, 0x00, 0x93, 0xba, 0xb3, 0xc5, 0x00, 0x69, 0x00, 0xb8, 0xb9,
++	  0xae, 0xc1, 0x00, 0x7f, 0x00, 0xb0, 0xb6, 0xae, 0xc3, 0x00, 0x85 },
++	{ 0xf9, 0x00, 0x97, 0xba, 0xb2, 0xc5, 0x00, 0x6c, 0x00, 0xb8, 0xb8,
++	  0xae, 0xc1, 0x00, 0x82, 0x00, 0xb0, 0xb6, 0xae, 0xc2, 0x00, 0x89 },
++	{ 0xf9, 0x00, 0x9a, 0xba, 0xb1, 0xc4, 0x00, 0x6f, 0x00, 0xb8, 0xb8,
++	  0xad, 0xc0, 0x00, 0x86, 0x00, 0xb0, 0xb7, 0xad, 0xc0, 0x00, 0x8d },
++	{ 0xf9, 0x00, 0x9c, 0xb9, 0xb0, 0xc4, 0x00, 0x72, 0x00, 0xb8, 0xb8,
++	  0xac, 0xbf, 0x00, 0x8a, 0x00, 0xb0, 0xb6, 0xac, 0xc0, 0x00, 0x91 },
++	{ 0xf9, 0x00, 0x9e, 0xba, 0xb0, 0xc2, 0x00, 0x75, 0x00, 0xb9, 0xb8,
++	  0xab, 0xbe, 0x00, 0x8e, 0x00, 0xb0, 0xb6, 0xac, 0xbf, 0x00, 0x94 },
++	{ 0xf9, 0x00, 0xa0, 0xb9, 0xaf, 0xc3, 0x00, 0x77, 0x00, 0xb9, 0xb7,
++	  0xab, 0xbe, 0x00, 0x90, 0x00, 0xb0, 0xb6, 0xab, 0xbf, 0x00, 0x97 },
++	{ 0xf9, 0x00, 0xa2, 0xb9, 0xaf, 0xc2, 0x00, 0x7a, 0x00, 0xb9, 0xb7,
++	  0xaa, 0xbd, 0x00, 0x94, 0x00, 0xb0, 0xb5, 0xab, 0xbf, 0x00, 0x9a },
++	{ 0xf9, 0x00, 0xa4, 0xb9, 0xaf, 0xc1, 0x00, 0x7d, 0x00, 0xb9, 0xb6,
++	  0xaa, 0xbb, 0x00, 0x97, 0x00, 0xb1, 0xb5, 0xaa, 0xbf, 0x00, 0x9d },
++	{ 0xf9, 0x00, 0xa4, 0xb8, 0xb0, 0xbf, 0x00, 0x80, 0x00, 0xb8, 0xb6,
++	  0xaa, 0xbc, 0x00, 0x9a, 0x00, 0xb0, 0xb5, 0xab, 0xbd, 0x00, 0xa0 },
++	{ 0xf9, 0x00, 0xa8, 0xb8, 0xae, 0xbe, 0x00, 0x84, 0x00, 0xb9, 0xb7,
++	  0xa8, 0xbc, 0x00, 0x9d, 0x00, 0xb2, 0xb5, 0xaa, 0xbc, 0x00, 0xa4 },
++	{ 0xf9, 0x00, 0xa9, 0xb6, 0xad, 0xbf, 0x00, 0x86, 0x00, 0xb8, 0xb5,
++	  0xa8, 0xbc, 0x00, 0xa0, 0x00, 0xb3, 0xb3, 0xa9, 0xbc, 0x00, 0xa7 },
++	{ 0xf9, 0x00, 0xa9, 0xb7, 0xae, 0xbd, 0x00, 0x89, 0x00, 0xb7, 0xb6,
++	  0xa8, 0xba, 0x00, 0xa4, 0x00, 0xb1, 0xb4, 0xaa, 0xbb, 0x00, 0xaa },
++	{ 0xf9, 0x00, 0xa7, 0xb4, 0xae, 0xbf, 0x00, 0x91, 0x00, 0xb2, 0xb4,
++	  0xaa, 0xbb, 0x00, 0xac, 0x00, 0xb3, 0xb1, 0xaa, 0xbc, 0x00, 0xb3 },
++};
++
++struct ld9040 {
++	struct device *dev;
++	struct drm_panel panel;
++
++	struct regulator_bulk_data supplies[2];
++	struct gpio_desc *reset_gpio;
++	u32 power_on_delay;
++	u32 reset_delay;
++	struct videomode vm;
++	u32 width_mm;
++	u32 height_mm;
++
++	int brightness;
++
++	/* This field is tested by functions directly accessing bus before
++	 * transfer, transfer is skipped if it is set. In case of transfer
++	 * failure or unexpected response the field is set to error value.
++	 * Such construct allows to eliminate many checks in higher level
++	 * functions.
++	 */
++	int error;
++};
++
++#define panel_to_ld9040(p) container_of(p, struct ld9040, panel)
++
++static int ld9040_clear_error(struct ld9040 *ctx)
++{
++	int ret = ctx->error;
++
++	ctx->error = 0;
++	return ret;
++}
++
++static int ld9040_spi_write_word(struct ld9040 *ctx, u16 data)
++{
++	struct spi_device *spi = to_spi_device(ctx->dev);
++	struct spi_transfer xfer = {
++		.len		= 2,
++		.tx_buf		= &data,
++	};
++	struct spi_message msg;
++
++	spi_message_init(&msg);
++	spi_message_add_tail(&xfer, &msg);
++
++	return spi_sync(spi, &msg);
++}
++
++static void ld9040_dcs_write(struct ld9040 *ctx, const u8 *data, size_t len)
++{
++	int ret = 0;
++
++	if (ctx->error < 0 || len == 0)
++		return;
++
++	dev_dbg(ctx->dev, "writing dcs seq: %*ph\n", len, data);
++	ret = ld9040_spi_write_word(ctx, *data);
++
++	while (!ret && --len) {
++		++data;
++		ret = ld9040_spi_write_word(ctx, *data | 0x100);
++	}
++
++	if (ret) {
++		dev_err(ctx->dev, "error %d writing dcs seq: %*ph\n", ret, len,
++			data);
++		ctx->error = ret;
++	}
++
++	usleep_range(300, 310);
++}
++
++#define ld9040_dcs_write_seq_static(ctx, seq...) \
++({\
++	static const u8 d[] = { seq };\
++	ld9040_dcs_write(ctx, d, ARRAY_SIZE(d));\
++})
++
++static void ld9040_brightness_set(struct ld9040 *ctx)
++{
++	ld9040_dcs_write(ctx, ld9040_gammas[ctx->brightness],
++			 ARRAY_SIZE(ld9040_gammas[ctx->brightness]));
++
++	ld9040_dcs_write_seq_static(ctx, MCS_GAMMA_CTRL, 0x02, 0x5a);
++}
++
++static void ld9040_init(struct ld9040 *ctx)
++{
++	ld9040_dcs_write_seq_static(ctx, MCS_USER_SETTING, 0x5a, 0x5a);
++	ld9040_dcs_write_seq_static(ctx, MCS_PANEL_CONDITION,
++		0x05, 0x65, 0x96, 0x71, 0x7d, 0x19, 0x3b, 0x0d,
++		0x19, 0x7e, 0x0d, 0xe2, 0x00, 0x00, 0x7e, 0x7d,
++		0x07, 0x07, 0x20, 0x20, 0x20, 0x02, 0x02);
++	ld9040_dcs_write_seq_static(ctx, MCS_DISPCTL,
++		0x02, 0x08, 0x08, 0x10, 0x10);
++	ld9040_dcs_write_seq_static(ctx, MCS_MANPWR, 0x04);
++	ld9040_dcs_write_seq_static(ctx, MCS_ELVSS_ON, 0x0d, 0x00, 0x16);
++	ld9040_dcs_write_seq_static(ctx, MCS_GTCON, 0x09, 0x00, 0x00);
++	ld9040_brightness_set(ctx);
++	ld9040_dcs_write_seq_static(ctx, MIPI_DCS_EXIT_SLEEP_MODE);
++	ld9040_dcs_write_seq_static(ctx, MIPI_DCS_SET_DISPLAY_ON);
++}
++
++static int ld9040_power_on(struct ld9040 *ctx)
++{
++	int ret;
++
++	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
++	if (ret < 0)
++		return ret;
++
++	msleep(ctx->power_on_delay);
++	gpiod_set_value(ctx->reset_gpio, 0);
++	msleep(ctx->reset_delay);
++	gpiod_set_value(ctx->reset_gpio, 1);
++	msleep(ctx->reset_delay);
++
++	return 0;
++}
++
++static int ld9040_power_off(struct ld9040 *ctx)
++{
++	return regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
++}
++
++static int ld9040_disable(struct drm_panel *panel)
++{
++	struct ld9040 *ctx = panel_to_ld9040(panel);
++
++	msleep(120);
++	ld9040_dcs_write_seq_static(ctx, MIPI_DCS_SET_DISPLAY_OFF);
++	ld9040_dcs_write_seq_static(ctx, MIPI_DCS_ENTER_SLEEP_MODE);
++	msleep(40);
++
++	ld9040_clear_error(ctx);
++
++	return ld9040_power_off(ctx);
++}
++
++static int ld9040_enable(struct drm_panel *panel)
++{
++	struct ld9040 *ctx = panel_to_ld9040(panel);
++	int ret;
++
++	ret = ld9040_power_on(ctx);
++	if (ret < 0)
++		return ret;
++
++	ld9040_init(ctx);
++
++	ret = ld9040_clear_error(ctx);
++
++	if (ret < 0)
++		ld9040_disable(panel);
++
++	return ret;
++}
++
++static int ld9040_get_modes(struct drm_panel *panel)
++{
++	struct drm_connector *connector = panel->connector;
++	struct ld9040 *ctx = panel_to_ld9040(panel);
++	struct drm_display_mode *mode;
++
++	mode = drm_mode_create(connector->dev);
++	if (!mode) {
++		DRM_ERROR("failed to create a new display mode\n");
++		return 0;
++	}
++
++	drm_display_mode_from_videomode(&ctx->vm, mode);
++	mode->width_mm = ctx->width_mm;
++	mode->height_mm = ctx->height_mm;
++	connector->display_info.width_mm = mode->width_mm;
++	connector->display_info.height_mm = mode->height_mm;
++
++	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
++	drm_mode_probed_add(connector, mode);
++
++	return 1;
++}
++
++static const struct drm_panel_funcs ld9040_drm_funcs = {
++	.disable = ld9040_disable,
++	.enable = ld9040_enable,
++	.get_modes = ld9040_get_modes,
++};
++
++static int ld9040_parse_dt(struct ld9040 *ctx)
++{
++	struct device *dev = ctx->dev;
++	struct device_node *np = dev->of_node;
++	int ret;
++
++	ret = of_get_videomode(np, &ctx->vm, 0);
++	if (ret < 0)
++		return ret;
++
++	of_property_read_u32(np, "power-on-delay", &ctx->power_on_delay);
++	of_property_read_u32(np, "reset-delay", &ctx->reset_delay);
++	of_property_read_u32(np, "panel-width-mm", &ctx->width_mm);
++	of_property_read_u32(np, "panel-height-mm", &ctx->height_mm);
++
++	return 0;
++}
++
++static int ld9040_probe(struct spi_device *spi)
++{
++	struct device *dev = &spi->dev;
++	struct ld9040 *ctx;
++	int ret;
++
++	ctx = devm_kzalloc(dev, sizeof(struct ld9040), GFP_KERNEL);
++	if (!ctx)
++		return -ENOMEM;
++
++	spi_set_drvdata(spi, ctx);
++
++	ctx->dev = dev;
++	ctx->brightness = ARRAY_SIZE(ld9040_gammas) - 1;
++
++	ret = ld9040_parse_dt(ctx);
++	if (ret < 0)
++		return ret;
++
++	ctx->supplies[0].supply = "vdd3";
++	ctx->supplies[1].supply = "vci";
++	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
++				      ctx->supplies);
++	if (ret < 0)
++		return ret;
++
++	ctx->reset_gpio = devm_gpiod_get(dev, "reset");
++	if (IS_ERR(ctx->reset_gpio)) {
++		dev_err(dev, "cannot get reset-gpios %ld\n",
++			PTR_ERR(ctx->reset_gpio));
++		return PTR_ERR(ctx->reset_gpio);
++	}
++	ret = gpiod_direction_output(ctx->reset_gpio, 1);
++	if (ret < 0) {
++		dev_err(dev, "cannot configure reset-gpios %d\n", ret);
++		return ret;
++	}
++
++	spi->bits_per_word = 9;
++	ret = spi_setup(spi);
++	if (ret < 0) {
++		dev_err(dev, "spi setup failed.\n");
++		return ret;
++	}
++
++	drm_panel_init(&ctx->panel);
++	ctx->panel.dev = dev;
++	ctx->panel.funcs = &ld9040_drm_funcs;
++
++	return drm_panel_add(&ctx->panel);
++}
++
++static int ld9040_remove(struct spi_device *spi)
++{
++	struct ld9040 *ctx = spi_get_drvdata(spi);
++
++	ld9040_power_off(ctx);
++	drm_panel_remove(&ctx->panel);
++
++	return 0;
++}
++
++static struct of_device_id ld9040_of_match[] = {
++	{ .compatible = "samsung,ld9040" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ld9040_of_match);
++
++static struct spi_driver ld9040_driver = {
++	.probe		= ld9040_probe,
++	.remove		= ld9040_remove,
++	.driver = {
++		.name	= "ld9040",
++		.owner	= THIS_MODULE,
++		.of_match_table = ld9040_of_match,
++	},
++};
++module_spi_driver(ld9040_driver);
++
++MODULE_AUTHOR("Andrzej Hajda <a.hajda@samsung.com>");
++MODULE_DESCRIPTION("ld9040 LCD Driver");
++MODULE_LICENSE("GPL v2");
+-- 
+1.8.3.2
