@@ -1,179 +1,108 @@
-From: Josh Wu <josh.wu@atmel.com>
-Subject: [PATCH v2 3/3] [media] atmel-isi: add primary DT support
-Date: Tue, 25 Mar 2014 18:45:20 +0800
-Message-ID: <1395744320-15025-1-git-send-email-josh.wu@atmel.com>
-References: <1395744087-5753-1-git-send-email-josh.wu@atmel.com>
+From: Radha Mohan <mohun106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] arm64: dts: Add initial dts for Cavium Thunder SoC
+Date: Tue, 25 Mar 2014 16:34:49 +0530
+Message-ID: <CAC8NTUUjLotVbrY1h3pv8HcEhxFuOYyaC6o+2FjpTU_X=DCJ=A@mail.gmail.com>
+References: <1395652179-9216-1-git-send-email-mohun106@gmail.com>
+	<1395652179-9216-3-git-send-email-mohun106@gmail.com>
+	<4827584.NY6fTFPNNK@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1395744087-5753-1-git-send-email-josh.wu@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: g.liakhovetski@gmx.de
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, nicolas.ferre@atmel.com, Josh Wu <josh.wu@atmel.com>, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, rob@landley.net, galak@codeaurora.org, grant.likely@linaro.org, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, m.chehab@samsung.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4827584.NY6fTFPNNK@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "pkapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <pkapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch add the DT support for Atmel ISI driver.
-It use the same v4l2 DT interface that defined in video-interfaces.txt.
+Hi Arnd
 
-Signed-off-by: Josh Wu <josh.wu@atmel.com>
-Cc: devicetree@vger.kernel.org
----
-v1 --> v2:
- refine the binding document.
- add port node description.
- removed the optional property.
+On Mon, Mar 24, 2014 at 3:25 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Monday 24 March 2014 14:39:38 mohun106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>> +       soc {
+>> +               compatible = "simple-bus";
+>> +               #address-cells = <2>;
+>> +               #size-cells = <2>;
+>> +               ranges;
+>> +
+>> +               clocks {
+>> +                       #address-cells = <2>;
+>> +                       #size-cells = <2>;
+>> +                       ranges;
+>> +
+>> +                       refclk50mhz: refclk50mhz {
+>> +                               compatible = "fixed-clock";
+>> +                               #clock-cells = <0>;
+>> +                               clock-frequency = <50000000>;
+>> +                               clock-output-names = "refclk50mhz";
+>> +                       };
+>> +               };
+>> +
+>> +               ahci0: host-bus-adapter@810000000000 {
+>> +                       compatible = "snps,spear-ahci";
+>> +                       reg = <0x8100 0x0 0x0 0x1100>;
+>> +                       interrupts = <1 32 4>;
+>> +               };
+>
+>
+> The use of "snps,spear-ahci" by itself seems wrong here: that is
+> the specific implementation used in the ST "spear" SoC. I don't know
+> why we don't already have a "generic-ahci" binding, but please add
+> one so you can match against that.
+>
+> I would also recommend adding a more specific string for your soc.
+> If you want to keep compatibility with older kernels, you can keep
+> the spear string as well, but it would be nicer to drop that.
+> If you can find out what version the synopsys macro has, that would
+> be ideal.
+>
+> You could end up for instance with
+>
+>         compatible = "cavium,thunder-123456-ahci", "snps,ahci-1.23.45",
+>                         "snps,spear-ahci", "generic-ahci";
+>
+> The driver only needs to match the last one of these, but if we
+> find that we have to work around some bug, it's good to have the
+> option of determining the exact version.
 
- .../devicetree/bindings/media/atmel-isi.txt        |   50 ++++++++++++++++++++
- drivers/media/platform/soc_camera/atmel-isi.c      |   31 +++++++++++-
- 2 files changed, 79 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/atmel-isi.txt
+OK.
 
-diff --git a/Documentation/devicetree/bindings/media/atmel-isi.txt b/Documentation/devicetree/bindings/media/atmel-isi.txt
-new file mode 100644
-index 0000000..11c98ee
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/atmel-isi.txt
-@@ -0,0 +1,50 @@
-+Atmel Image Sensor Interface (ISI) SoC Camera Subsystem
-+----------------------------------------------
-+
-+Required properties:
-+- compatible: must be "atmel,at91sam9g45-isi"
-+- reg: physical base address and length of the registers set for the device;
-+- interrupts: should contain IRQ line for the ISI;
-+- clocks: list of clock specifiers, corresponding to entries in
-+          the clock-names property;
-+- clock-names: must contain "isi_clk", which is the isi peripherial clock.
-+
-+ISI supports a single port node with parallel bus. It should contain one
-+'port' child node with child 'endpoint' node. Please refer to the bindings
-+defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Example:
-+	isi: isi@f0034000 {
-+		compatible = "atmel,at91sam9g45-isi";
-+		reg = <0xf0034000 0x4000>;
-+		interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
-+
-+		clocks = <&isi_clk>;
-+		clock-names = "isi_clk";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_isi>;
-+
-+		port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			isi_0: endpoint {
-+				remote-endpoint = <&ov2640_0>;
-+			};
-+		};
-+	};
-+
-+	i2c1: i2c@f0018000 {
-+		ov2640: camera@0x30 {
-+			compatible = "omnivision,ov2640";
-+			reg = <0x30>;
-+
-+			port {
-+				ov2640_0: endpoint {
-+					remote-endpoint = <&isi_0>;
-+					bus-width = <8>;
-+				};
-+			};
-+		};
-+	};
-diff --git a/drivers/media/platform/soc_camera/atmel-isi.c b/drivers/media/platform/soc_camera/atmel-isi.c
-index f4add0a..d6a1f7b 100644
---- a/drivers/media/platform/soc_camera/atmel-isi.c
-+++ b/drivers/media/platform/soc_camera/atmel-isi.c
-@@ -19,6 +19,7 @@
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- 
-@@ -33,6 +34,7 @@
- #define VID_LIMIT_BYTES			(16 * 1024 * 1024)
- #define MIN_FRAME_RATE			15
- #define FRAME_INTERVAL_MILLI_SEC	(1000 / MIN_FRAME_RATE)
-+#define ISI_DEFAULT_MCLK_FREQ		25000000
- 
- /* Frame buffer descriptor */
- struct fbd {
-@@ -885,6 +887,20 @@ static int atmel_isi_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int atmel_isi_probe_dt(struct atmel_isi *isi,
-+			struct platform_device *pdev)
-+{
-+	struct device_node *node = pdev->dev.of_node;
-+
-+	/* Default settings for ISI */
-+	isi->pdata.full_mode = 1;
-+	isi->pdata.mck_hz = ISI_DEFAULT_MCLK_FREQ;
-+	isi->pdata.frate = ISI_CFG1_FRATE_CAPTURE_ALL;
-+	isi->pdata.data_width_flags = ISI_DATAWIDTH_8 | ISI_DATAWIDTH_10;
-+
-+	return 0;
-+}
-+
- static int atmel_isi_probe(struct platform_device *pdev)
- {
- 	unsigned int irq;
-@@ -896,7 +912,7 @@ static int atmel_isi_probe(struct platform_device *pdev)
- 	struct isi_platform_data *pdata;
- 
- 	pdata = dev->platform_data;
--	if (!pdata || !pdata->data_width_flags) {
-+	if ((!pdata || !pdata->data_width_flags) && !pdev->dev.of_node) {
- 		dev_err(&pdev->dev,
- 			"No config available for Atmel ISI\n");
- 		return -EINVAL;
-@@ -912,7 +928,11 @@ static int atmel_isi_probe(struct platform_device *pdev)
- 	if (IS_ERR(isi->pclk))
- 		return PTR_ERR(isi->pclk);
- 
--	memcpy(&isi->pdata, pdata, sizeof(struct isi_platform_data));
-+	if (pdata)
-+		memcpy(&isi->pdata, pdata, sizeof(struct isi_platform_data));
-+	else	/* dt probe */
-+		atmel_isi_probe_dt(isi, pdev);
-+
- 	isi->active = NULL;
- 	spin_lock_init(&isi->lock);
- 	INIT_LIST_HEAD(&isi->video_buffer_list);
-@@ -1014,11 +1034,18 @@ err_alloc_ctx:
- 	return ret;
- }
- 
-+static const struct of_device_id atmel_isi_of_match[] = {
-+	{ .compatible = "atmel,at91sam9g45-isi" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, atmel_isi_of_match);
-+
- static struct platform_driver atmel_isi_driver = {
- 	.remove		= atmel_isi_remove,
- 	.driver		= {
- 		.name = "atmel_isi",
- 		.owner = THIS_MODULE,
-+		.of_match_table = atmel_isi_of_match,
- 	},
- };
- 
--- 
-1.7.9.5
+>
+>> +               nic0: ethernet@843000000000 {
+>> +                       compatible = "smsc,lan9115";
+>> +                       reg-io-width = <4>;
+>> +                       reg = <0x8430 0x0 0x0 0x1000>;
+>> +                       interrupts = <1 31 4>;
+>> +               };
+>> +
+>> +               uaa0: uart@87e024000000 {
+>> +                       compatible = "arm,pl011", "arm,primecell";
+>> +                       reg = <0x87e0 0x24000000 0x0 0x1000>;
+>> +                       interrupts = <1 21 4>;
+>> +                       clocks = <&refclk50mhz>;
+>> +                       clock-names = "apb_pclk";
+>> +               };
+>> +
+>> +               uaa1: uart@87e025000000 {
+>> +                       compatible = "arm,pl011", "arm,primecell";
+>> +                       reg = <0x87e0 0x25000000 0x0 0x1000>;
+>> +                       interrupts = <1 22 4>;
+>> +                       clocks = <&refclk50mhz>;
+>> +                       clock-names = "apb_pclk";
+>
+> The generic name for uarts in DT is "serial", not "uart" (yes, a
+> lot of others get this wrong, too).
+
+OK :)
+But I think lack of consistency in DT among various ARM platforms is
+source of this confusion.
+
+>
+>         Arnd
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
