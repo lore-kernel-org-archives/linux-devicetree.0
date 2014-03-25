@@ -1,58 +1,77 @@
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
-Subject: Re: [PATCH v0 01/15] drivers: clk: st: Support for DIVMUX and PreDiv
- Clocks
-Date: Tue, 25 Mar 2014 09:28:41 +0100
-Message-ID: <53313E39.9080605@st.com>
-References: <1393514668-17440-1-git-send-email-gabriel.fernandez@st.com>
- <1393514668-17440-2-git-send-email-gabriel.fernandez@st.com>
- <20140325052725.32624.39974@quantum>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 1/7] clk: sunxi: Remove calls to clk_put
+Date: Tue, 25 Mar 2014 08:50:59 +0100
+Message-ID: <20140325075059.GL5416@lukather>
+References: <1394723659-4995-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1394723659-4995-2-git-send-email-maxime.ripard@free-electrons.com>
+ <20140324215120.32624.63543@quantum>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140325052725.32624.39974@quantum>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mike Turquette <mturquette@linaro.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Pankaj Dev <pankaj.dev@st.com>, Lee Jones <lee.jones@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ggdAeHltlv4tpqCr"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBUP7YSMQKGQESH6FOJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140324215120.32624.63543@quantum>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
+
+
+--ggdAeHltlv4tpqCr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 Hi Mike,
 
-I want that you take theses patches directly.
+On Mon, Mar 24, 2014 at 02:51:20PM -0700, Mike Turquette wrote:
+> Quoting Maxime Ripard (2014-03-13 08:14:13)
+> > Callers of clk_put must disable the clock first. This also means that a=
+s long
+> > as the clock is enabled the driver should hold a reference to that cloc=
+k.
+> > Hence, the call to clk_put here are bogus and should be removed.
+> >=20
+> > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>=20
+> Looks good to me. There is a balanced clk_put in the module remove
+> function?
 
-Many thanks
+Actually, this is not part of any module, it's part of the function
+called through CLK_OF_DECLARE, so there's never a remove function for
+this code.
 
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-Best regards
+--ggdAeHltlv4tpqCr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Gabriel.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
 
+iQIcBAEBAgAGBQJTMTVjAAoJEBx+YmzsjxAgWkoP/0BFxgIOorhBQum/NS367wak
+6yjebqAwuGWclWlqyLf3d8h6x7Z+x1SCpQtXxunZyLfL0lM7gT1XL7i/JVHkVD6K
+pce0Rx3YbVtrj6Xw+Mk6BJHfrC9W3g8bSGSxABEtOl30UQ0dP8Ko+JXiD4vo+zwz
+CxjGcyyWPNkKf/ZQF1pPBAfMuOv6E1K+0q2JB2nviggyOIttOXAf2/fozDwaW0lF
+r5uhKQGhiaHbwvQfFn+HiXBZDn/3TlLikIQk41B4r++uE5csa4Lle+vJek0CkLcZ
+1fqTZyCHq6aWRWicdACOA2tLYtgZsX+4ZlJ4rF2UTtOF6DqDAJVvRJMhy0U2fuzx
+/cL9mfi3ILcTaWGfvgdy/omhsqBw1Js+btsG0dX8EzqedtU+cuUt0P6l0HFz/wbt
+7cUyosoGAXAy13iW8KHLrjMeydR/vf+7cHUxHhY2/mbyoSaL8orrh0O/gkmxmH3A
+zKJX/y/kuFvorbcRf+64WlXRb3ZVPQxjwGYKcKKCsrjwBjDmaACl8vjsrYAtnXfr
+8azp/SMolKa7HLTsIFhvYBiSBnDcjpHj6cqE/968BGy23vD82fW3KA8Tl/TGarvh
+1FWLJkEIbcC28xYofSmtM8rCnigsFWvUHVwxZyxt6Uxt9pppFMfB1BeonyXA6fsQ
+mUYf7scUM6fiHv1GbrlL
+=N5NY
+-----END PGP SIGNATURE-----
 
-On 03/25/2014 06:27 AM, Mike Turquette wrote:
-> Quoting Gabriel FERNANDEZ (2014-02-27 07:24:14)
->> +/**
->> + * DOC: Clock mux with a programmable divider on each of its three inputs.
->> + *      The mux has an input setting which effectively gates its output.
->> + *
->> + * Traits of this clock:
->> + * prepare - clk_(un)prepare only ensures parent is (un)prepared
-> Minor nitpick but it doesn't look like .prepare or .unprepare are
-> supported below. It looks like this copy/paste comment applies to most
-> of the clk patches as well.
->
-> It's a small problem and doesn't require a patch respin. But perhaps can
-> be cleaned up some day in the future.
->
-> Do you want me to take these patches directly or are you just looking
-> for an Ack?
->
-> Regards,
-> Mike
+--ggdAeHltlv4tpqCr--
