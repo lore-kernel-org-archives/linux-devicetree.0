@@ -1,80 +1,83 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: [PATCH v2] serial: efm32: use $vendor,$device scheme for compatible string
-Date: Tue, 25 Mar 2014 15:53:12 +0100
-Message-ID: <1395759192-10797-1-git-send-email-u.kleine-koenig@pengutronix.de>
-References: <1395755954-18988-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH] ARM: dts: am437x-gp-evm: Do not reset gpio5
+Date: Tue, 25 Mar 2014 10:02:21 -0500
+Message-ID: <53319A7D.1060904@ti.com>
+References: <1395379213-15451-1-git-send-email-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1395755954-18988-1-git-send-email-u.kleine-koenig@pengutronix.de>
-Sender: linux-serial-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: kernel@pengutronix.de, Wolfram Sang <wsa@the-dreams.de>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1395379213-15451-1-git-send-email-lokeshvutla@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Lokesh Vutla <lokeshvutla@ti.com>, linux-omap@vger.kernel.org, bcousson@baylibre.com
+Cc: linux-arm-kernel@lists.infradead.org, tony@atomide.com, devicetree@vger.kernel.org, nsekhar@ti.com, rnayak@ti.com, mark.rutland@arm.com, Dave Gerlach <d-gerlach@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Wolfgang Sang pointed out that "efm32,$device" is non-standard. So use =
-the
-common scheme and prefix device with "efm32-". The old compatible strin=
-g
-is left in place until arch/arm/boot/dts/efm32* is fixed.
+On 03/21/2014 12:20 AM, Lokesh Vutla wrote:
+> From: Dave Gerlach <d-gerlach@ti.com>
+> 
+> Do not reset GPIO5 at boot-up because GPIO5_7 is used
+> on AM437x GP-EVM to control VTT regulators on DDR3.
+> Without this some GP-EVM boards will fail to boot because
+> of DDR3 corruption.
+> 
+> Reported-by: Nishanth Menon <nm@ti.com>
+> Tested-by: Nishanth Menon <nm@ti.com>
+> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> ---
+> This is applied on top of current linux-next.
+> git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+> 
+>  arch/arm/boot/dts/am437x-gp-evm.dts |    5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
+> index df8798e..a055f7f 100644
+> --- a/arch/arm/boot/dts/am437x-gp-evm.dts
+> +++ b/arch/arm/boot/dts/am437x-gp-evm.dts
+> @@ -117,6 +117,11 @@
+>  	status = "okay";
+>  };
+>  
+> +&gpio5 {
+> +	status = "okay";
+> +	ti,no-reset-on-init;
+> +};
+> +
+>  &mmc1 {
+>  	status = "okay";
+>  	vmmc-supply = <&vmmcsd_fixed>;
+> 
 
-Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
----
-Changes since (implicit) v1, sent with
-Message-id:1395755954-18988-1-git-send-email-u.kleine-koenig@pengutroni=
-x.de:
- - fix binding doc accordingly
 
- Documentation/devicetree/bindings/serial/efm32-uart.txt | 4 ++--
- drivers/tty/serial/efm32-uart.c                         | 3 +++
- 2 files changed, 5 insertions(+), 2 deletions(-)
+Tony,
+any chance of having this in 3.15 cycle?
 
-diff --git a/Documentation/devicetree/bindings/serial/efm32-uart.txt b/=
-Documentation/devicetree/bindings/serial/efm32-uart.txt
-index 1984bdfbd545..3ca01336b837 100644
---- a/Documentation/devicetree/bindings/serial/efm32-uart.txt
-+++ b/Documentation/devicetree/bindings/serial/efm32-uart.txt
-@@ -1,7 +1,7 @@
- * Energymicro efm32 UART
-=20
- Required properties:
--- compatible : Should be "efm32,uart"
-+- compatible : Should be "energymicro,efm32-uart"
- - reg : Address and length of the register set
- - interrupts : Should contain uart interrupt
-=20
-@@ -13,7 +13,7 @@ Optional properties:
- Example:
-=20
- uart@0x4000c400 {
--	compatible =3D "efm32,uart";
-+	compatible =3D "energymicro,efm32-uart";
- 	reg =3D <0x4000c400 0x400>;
- 	interrupts =3D <15>;
- 	efm32,location =3D <0>;
-diff --git a/drivers/tty/serial/efm32-uart.c b/drivers/tty/serial/efm32=
--uart.c
-index 028582e924a5..c167a710dc39 100644
---- a/drivers/tty/serial/efm32-uart.c
-+++ b/drivers/tty/serial/efm32-uart.c
-@@ -798,6 +798,9 @@ static int efm32_uart_remove(struct platform_device=
- *pdev)
-=20
- static const struct of_device_id efm32_uart_dt_ids[] =3D {
- 	{
-+		.compatible =3D "energymicro,efm32-uart",
-+	}, {
-+		/* doesn't follow the "vendor,device" scheme, don't use */
- 		.compatible =3D "efm32,uart",
- 	}, {
- 		/* sentinel */
---=20
-1.9.1
+as of today's linux-next tag, the only platform I have that does not
+boot is due to the lack of this patch.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-serial"=
- in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+next-20140325-omap2plus_defconfig
+ 1: am335x-evm:  Boot PASS: http://slexy.org/raw/s20o6CfGL8
+ 2:  am335x-sk:  Boot PASS: http://slexy.org/raw/s2Ogu1zPtD
+ 3: am3517-evm:  Boot PASS: http://slexy.org/raw/s2m2WhHYO8
+ 4:  am37x-evm:  Boot PASS: http://slexy.org/raw/s2jOybaVno
+ 5: am43xx-epos:  Boot PASS: http://slexy.org/raw/s21tt52N4b
+ 6: am43xx-gpevm:  Boot FAIL: http://slexy.org/raw/s21eDQmFWJ
+ 7: beagleboard:  Boot PASS: http://slexy.org/raw/s2q7vzrZHb
+ 8: beaglebone-black:  Boot PASS: http://slexy.org/raw/s2HCAJVz0H
+ 9: beaglebone:  Boot PASS: http://slexy.org/raw/s2NioACYsM
+10: craneboard:  Boot PASS: http://slexy.org/raw/s2s7jyo52c
+11:       dra7:  Boot PASS: http://slexy.org/raw/s2OQ1BMerx
+12:        ldp:  Boot PASS: http://slexy.org/raw/s2cWgQrdjb
+13: pandaboard-es:  Boot PASS: http://slexy.org/raw/s2lOaznVLO
+14:    sdp2430:  Boot PASS: http://slexy.org/raw/s21RCJlUDU
+15:    sdp3430:  Boot PASS: http://slexy.org/raw/s2181J9eWO
+16:    sdp4430:  Boot PASS: http://slexy.org/raw/s20UumAiXK
+17: OMAP5432uEVM:  Boot PASS: http://slexy.org/raw/s21ypXvTNc
+TOTAL = 17 boards, Booted Boards = 16, No Boot boards = 1
+
+-- 
+Regards,
+Nishanth Menon
