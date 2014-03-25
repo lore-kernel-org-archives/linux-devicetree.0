@@ -1,97 +1,27 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v5 5/9] dt-bindings: pci: rcar pcie device tree bindings
-Date: Tue, 25 Mar 2014 23:22:14 +0300
-Message-ID: <5331E576.2000202@cogentembedded.com>
-References: <1395766604-30926-1-git-send-email-phil.edworthy@renesas.com> <1395766604-30926-6-git-send-email-phil.edworthy@renesas.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v5 1/4] pci: APM X-Gene PCIe controller driver
+Date: Tue, 25 Mar 2014 13:56:45 -0600
+Message-ID: <CAErSpo5uyJxvYk42pf0mxRNO6ZSFmQW4AHfe1qGBMDoUiD0BHw@mail.gmail.com>
+References: <1395270762-6055-1-git-send-email-tinamdar@apm.com>
+ <1395270762-6055-2-git-send-email-tinamdar@apm.com> <CA+sq2CchcWBieGEH33AJFj6HYy-yiJFgzX94Gtsoho2k3z65eA@mail.gmail.com>
+ <CACoXjcn2LuhJsNLpCgfvqT6AQEb1pw70N9GNfgCgZ88myGMNBg@mail.gmail.com> <20140325140510.GF17163@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1395766604-30926-6-git-send-email-phil.edworthy@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Phil Edworthy <phil.edworthy@renesas.com>, linux-pci@vger.kernel.org
-Cc: linux-sh@vger.kernel.org, LAKML <linux-arm-kernel@lists.infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, Valentine Barshak <valentine.barshak@cogentembedded.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140325140510.GF17163@e106497-lin.cambridge.arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tanmay Inamdar <tinamdar@apm.com>, Sunil Kovvuri <sunil.kovvuri@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Rob Landley <rob@landley.net>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches <patches@apm.com>, "jcm@redhat.com" <jcm@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Tue, Mar 25, 2014 at 8:05 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
 
-On 03/25/2014 07:56 PM, Phil Edworthy wrote:
+> ... I'm a bit baffled by pci_claim_resource()
+> as it doesn't seem to be used by some architectures. Does it mean it
+> is not needed unless you have some BIOS setting up resources for you
+> and in that case you need to go and claim the resource?
 
-> This patch adds the bindings for the R-Car PCIe driver. The driver
-> resides under drivers/pci/host/pcie-rcar.c
+Many architectures don't use pci_claim_resource() yet.  I'm trying to
+unify this so all architectures do use it, but it's taking me a long
+time to get this done.
 
-> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-> ---
-> v5:
->   - Add PCIe bus clock reference
->   - Add additional interrupt bindings
->   - Use dma-ranges property to specify inbound memory regions
-> ---
->   Documentation/devicetree/bindings/pci/rcar-pci.txt | 44 ++++++++++++++++++++++
->   1 file changed, 44 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci.txt
->
-> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> new file mode 100644
-> index 0000000..61bf5ef
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> @@ -0,0 +1,44 @@
-> +* Renesas RCar PCIe interface
-> +
-> +Required properties:
-> +- compatible: should contain one of the following
-> +	"renesas,pcie-r8a7779", "renesas,pcie-r8a7790", "renesas,pcie-r8a7791"
-> +- reg: base addresses and lengths of the pcie controller.
-
-    Hmm, need "registers" at end. And why plural?
-
-> +- #address-cells: set to <3>
-> +- #size-cells: set to <2>
-> +- device_type: set to "pci"
-> +- ranges: ranges for the PCI memory and I/O regions.
-> +- dma-ranges: ranges for the inbound memory regions.
-> +- interrupts: two interrupt sources for MSI interrupts, followed by interrupt
-> +	source for hardware related interrupts (e.g. link speed change).
-> +- #interrupt-cells: set to <1>
-> +- interrupt-map-mask and interrupt-map: standard PCI properties
-> +	to define the mapping of the PCIe interface to interrupt
-> +	numbers.
-> +- clocks: from common clock binding: handle to pci clock.
-
-    s/handle/phandle/, s/pci/PCI/.
-    Actually, it's a clock specifier consisting not only of phandle but also 
-of clock #. Looking at your example, it's even a pair of clock specifiers.
-
-> +- clock-names: from common clock binding: should be "pcie" and "pcie_bus".
-> +
-> +Example:
-> +
-> +SoC specific DT Entry:
-> +
-> +	pcie: pcie@fe000000 {
-> +		compatible = "renesas,pcie-r8a7791";
-> +		reg = <0 0xfe000000 0 0x80000>;
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +		device_type = "pci";
-> +		ranges = <0x01000000 0 0x00000000 0 0xfe100000 0 0x00100000
-> +			  0x02000000 0 0xfe200000 0 0xfe200000 0 0x00200000
-> +			  0x02000000 0 0x30000000 0 0x30000000 0 0x08000000
-> +			  0x42000000 0 0x38000000 0 0x38000000 0 0x08000000>;
-> +		dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0 0x40000000
-> +			      0x42000000 2 0x00000000 2 0x00000000 0 0x40000000>;
-
-    Hmm, this prop looks board-dependent...
-
-> +		interrupts = <0 116 4 0 117 4 0 118 4>;
-> +		#interrupt-cells = <1>;
-> +		interrupt-map-mask = <0 0 0 0>;
-> +		interrupt-map = <0 0 0 0 &gic 0 116 4>;
-> +		clocks = <&mstp3_clks R8A7791_CLK_PCIE>, <&pcie_bus_clk>;
-> +		clock-names = "pcie", "pcie_bus";
-> +		status = "disabled";
-> +	};
-
-WBR, Sergei
-
+Bjorn
