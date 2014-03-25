@@ -1,63 +1,83 @@
-From: Radha Mohan <mohun106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] Documentation: add devicetree bindings for Cavium
- Thunder SoC
-Date: Tue, 25 Mar 2014 17:00:55 +0530
-Message-ID: <CAC8NTUXBqLbZyBOzq=DZYY4xOMZo0Z4L6VtQUYsmWc2m4onapw@mail.gmail.com>
-References: <1395652179-9216-1-git-send-email-mohun106@gmail.com>
-	<1395652179-9216-4-git-send-email-mohun106@gmail.com>
-	<4189666.qlSmlZKNNW@wuerfel>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH RFC 1/4] arm64: kernel: implement DT based idle states
+ infrastructure
+Date: Tue, 25 Mar 2014 11:51:33 +0000
+Message-ID: <20140325115133.GA17526@e102568-lin.cambridge.arm.com>
+References: <1395138028-19630-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1395138028-19630-2-git-send-email-lorenzo.pieralisi@arm.com>
+ <CAL_Jsq+M8fCreXrd7R1m=3_LKD_+jma3Pha06hRoTPMpcOb1_g@mail.gmail.com>
+ <20140318180856.GB792@e102568-lin.cambridge.arm.com>
+ <CADHgK6uwUDndVHQaWU=3R7A16hc4PYJCAfMLi3uBnrDjYidPXg@mail.gmail.com>
+ <20140319172338.GA31368@e102568-lin.cambridge.arm.com>
+ <CADHgK6vGf0gfVoAWO2FiXzCf-Sf_P_u+d7Dg04xn1O5t2LeKwg@mail.gmail.com>
+ <CAL_JsqJikdsna7KUjEwZ0qj-fdcC50M7e3e1D0LgfQuUuJQ0SA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4189666.qlSmlZKNNW@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "pkapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <pkapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJikdsna7KUjEwZ0qj-fdcC50M7e3e1D0LgfQuUuJQ0SA@mail.gmail.com>
+Content-Disposition: inline
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Sebastian Capella <sebastian.capella@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Tomasz
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 24, 2014 at 4:30 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Monday 24 March 2014 14:39:39 mohun106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->> diff --git a/Documentation/devicetree/bindings/arm/cavium-thunder.txt b/Documentation/devicetree/bindings/arm/cavium-thunder.txt
->> new file mode 100644
->> index 0000000..6ea0a34
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/cavium-thunder.txt
->> @@ -0,0 +1,9 @@
->> +Cavium Thunder platform device tree bindings
->> +---------------------------------------------
->> +
->> +Boards with Cavium's Thunder SoC shall have following properties.
->> +
->> +Root Node
->> +---------
->> +Required root node properties:
->> +    - compatible = "cavium,thunder";
->> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
->> index 333f4ae..f6cadf1 100644
->> --- a/Documentation/devicetree/bindings/arm/cpus.txt
->> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
->> @@ -163,6 +163,7 @@ nodes to be present and contain the properties described below.
->>                             "arm,cortex-r4"
->>                             "arm,cortex-r5"
->>                             "arm,cortex-r7"
->> +                           "cavium,thunder"
->>                             "faraday,fa526"
->>                             "intel,sa110"
->>                             "intel,sa1100"
->
->
-> It seems very confusing to use the same name for both the SoC and the
-> CPU core. Can you guarantee that there will never be another SoC with
-> the same core, or a different CPU core in a SoC with the same name?
->
-> If not, please be more specific here and use the exact model names
-> rather than the product names.
+On Mon, Mar 24, 2014 at 05:46:47PM +0000, Rob Herring wrote:
+> On Thu, Mar 20, 2014 at 1:19 PM, Sebastian Capella
+> <sebastian.capella@linaro.org> wrote:
+> > On 19 March 2014 10:23, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+> >> Rob is asking a property describing hw, and honestly unless we define
+> >> a power consumption property value (defining what it means will be rather
+> >> complicated though) I'd rather remove index altogether and use min_residency
+> >> as a comparison value instead.
+> >
+> > I like having a separate ranking for power to sort the states.  To me
+> > it seems that min residency could be ambiguous for this.  We could
+> > have states with inverted min_residencies: where a lower consumption
+> > state has a lower target residency because the cost is recovered more
+> > quickly.  Such a state might have higher latency for exit, so even
+> > though the lower min_residency/lower power state is clearly
+> > preferable, selection of the lower power state may be prevented by
+> > kernel latency constraints.
+> 
+> Perhaps you can add the min residency and exit latency times.
 
-OK, will fix this once I discuss this internally.
+I do not think we should mix exit latency with power consumption
+ranking, they are used and define different things.
 
->
->         Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The problem is that min_residency is extremely hard to define (see
+discussion below).
+
+http://www.spinics.net/lists/arm-kernel/msg316147.html
+
+What should min_residency represent ? As Anti correctly pointed out, it should
+be compared to a shallower idle state, but to define "shallower" we need
+a ranking, do not we ?
+
+If we say "min_residency is the time required for the processor to stay
+in the idle state in order to maximize power savings" (and I tried to do that),
+that's wrong by definition, because there might be a deeper idle state saving
+more power when entered for a time within the next event.
+
+state 1 - min residency 10 us
+state 2 - min residency 20 us
+
+If we sleep for 1 second, state 2 must be entered, not 1 and the problem
+is always the same, state 1 10us compares to state 0 (break even time
+against state 0).
+
+So, we are back to square one. How should min_residency be defined ?
+If it is the break even time against a shallower idle state, we have
+to know what's the shallower idle state, so we need a power ranking for
+idle states.
+
+> Another piece to consider is the affinity level of the state should
+> probably be the basis for 1st order sorting.
+
+I would like to see the idle states as a flat list, when you say
+affinity you mean a cpumask ? Affinity level in the PSCI power state
+parameter ? In the MPIDR ?
+
+Thanks,
+Lorenzo
+
