@@ -1,65 +1,85 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Subject: Re: [PATCH 4/5] ARM: dts: tx53: add simple-panel support
-Date: Tue, 25 Mar 2014 14:14:07 +0100
-Message-ID: <20140325141407.75b0750e@ipc1.ka-ro>
-References: <1395235721-13847-1-git-send-email-LW@KARO-electronics.de>
- <1395235721-13847-4-git-send-email-LW@KARO-electronics.de>
- <20140322064653.GC5938@dragon>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH] arm: boot: dts: build keystone devicetree blob
+Date: Tue, 25 Mar 2014 09:21:07 -0400
+Message-ID: <533182C3.9060708@ti.com>
+References: <1394639330-1288-1-git-send-email-balbi@ti.com>
+ <53208CDD.7030106@ti.com> <532C4F40.5010903@ti.com>
+ <20140321144328.GC12310@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140322064653.GC5938@dragon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140321144328.GC12310@saruman.home>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: balbi@ti.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, robh+dt@kernel.org, galak@codeaurora.org, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Friday 21 March 2014 10:43 AM, Felipe Balbi wrote:
+> On Fri, Mar 21, 2014 at 10:40:00AM -0400, Santosh Shilimkar wrote:
+>> On Wednesday 12 March 2014 12:35 PM, Santosh Shilimkar wrote:
+>>> On Wednesday 12 March 2014 11:48 PM, Felipe Balbi wrote:
+>>>> Currently, even when building keystone only
+>>>> kernel builds, DTB won't get build because
+>>>> we lack a Makefile rule to get it compiled.
+>>>>
+>>>> This patch adds that rule so mainline kernel
+>>>> users have a chance to use up-to-date DTB on
+>>>> keystone 2 platforms.
+>>>>
+>>>> Signed-off-by: Felipe Balbi <balbi@ti.com>
+>>>> ---
+>>>>
+>>> We have been building dtbs with explicit command
+>>> instead of dtbs since it was just one dtb so far
+>>> supported. Was planning to add the rule once more
+>>> boards get added. Now with Lamarr and Edision in
+>>> for next merge window, will do that post 3.15-rc1.
+>>>
+>> Just to close the loop, I added a patch as part
+>> of my 3.15 fixes which builds all keystone dt
+>> blobs.
+> 
+> cool, thanks
+> 
+Here is the updated patch which I commited to fixes branch.
+Sorry to miss your reported-by tag. I just missed it.
 
-Shawn Guo wrote:
-> On Wed, Mar 19, 2014 at 02:28:40PM +0100, Lothar Wa=C3=9Fmann wrote:
-> >=20
-> > Signed-off-by: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/imx53-tx53-x13x.dts |   12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
-> >=20
-> > diff --git a/arch/arm/boot/dts/imx53-tx53-x13x.dts b/arch/arm/boot/=
-dts/imx53-tx53-x13x.dts
-> > index 26b918e..86a964d 100644
-> > --- a/arch/arm/boot/dts/imx53-tx53-x13x.dts
-> > +++ b/arch/arm/boot/dts/imx53-tx53-x13x.dts
-> > @@ -63,6 +63,18 @@
-> >  		default-brightness-level =3D <50>;
-> >  	};
-> > =20
-> > +	panel0 {
-> > +		compatible =3D "simple-panel";
->=20
-> From what I can see, "simple-panel" is not a documented compatible.
->=20
-There is Documentation/devicetree/bindings/panel/simple-panel.txt
-which describes the bindings for drivers/gpu/drm/panel/panel-simple.c.
-"simple-panel" is the common compatible for all panels that the driver
-supports. If no compatible for a specific panel is given, the
-driver supports a generic panel with an ENABLE GPIO, an attached
-backlight and a regulator. This is what's being used here.=20
+>From 400550ae7e778302a45d2952ac75907903e2610c Mon Sep 17 00:00:00 2001
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Date: Tue, 18 Mar 2014 16:02:34 -0400
+Subject: [PATCH] ARM: dts: Build all keystone dt blobs
 
+Now we have additional two SOC/boards supported, so add
+make file rule so that all device tree blobs can be build
+for keystone with 'make dtbs'.
 
-Lothar Wa=C3=9Fmann
---=20
-___________________________________________________________
+Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+---
+ arch/arm/boot/dts/Makefile |    3 +++
+ 1 file changed, 3 insertions(+)
 
-Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
-Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
-Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
-Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
-
-www.karo-electronics.de | info-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org
-___________________________________________________________
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index b9d6a8b..49ff796 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -81,6 +81,9 @@ dtb-$(CONFIG_ARCH_HIGHBANK) += highbank.dtb \
+ 	ecx-2000.dtb
+ dtb-$(CONFIG_ARCH_INTEGRATOR) += integratorap.dtb \
+ 	integratorcp.dtb
++dtb-$(CONFIG_ARCH_KEYSTONE) += k2hk-evm.dtb \
++	k2l-evm.dtb \
++	k2e-evm.dtb
+ dtb-$(CONFIG_ARCH_LPC32XX) += ea3250.dtb phy3250.dtb
+ dtb-$(CONFIG_ARCH_KIRKWOOD) += kirkwood-cloudbox.dtb \
+ 	kirkwood-db-88f6281.dtb \
+-- 
+1.7.9.5
