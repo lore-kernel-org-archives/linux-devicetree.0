@@ -1,89 +1,73 @@
-From: Romain Baeriswyl <Romain.Baeriswyl-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH V3 2/2] i2c designware add support of I2C standard mode
-Date: Tue, 25 Mar 2014 11:18:52 +0100
-Message-ID: <1395742732-12155-1-git-send-email-romainba@abilis.com>
-References: <20140309080753.GC2575@katana>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140309080753.GC2575@katana>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, StephenWarren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Chiau Ee Chew <chiau.ee.chew-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Shinya Kuribayashi <skuribay-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, romainba-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org, Romain Baeriswyl <Romain.Baeriswyl-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+From: Alex Shi <alex.shi@linaro.org>
+Subject: [PATCH 09/19] arm: dts: add omap4 CPU thermal data
+Date: Tue, 25 Mar 2014 18:49:22 +0800
+Message-ID: <1395744572-20014-10-git-send-email-alex.shi@linaro.org>
+References: <1395744572-20014-1-git-send-email-alex.shi@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1395744572-20014-1-git-send-email-alex.shi@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: mark.hambleton@broadcom.com, mark.brown@linaro.org, eduardo.valentin@ti.com, mporter@linaro.org, lsk-interest@linaro.org, linaro-kernel@linaro.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Alex Shi <alex.shi@linaro.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Romain Baeriswyl <Romain.Baeriswyl-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
-
-Some legacy devices support ony I2C standard mode at 100kHz.
-This patch allows to select the standard mode through the DTS
-with the use of the existing clock-frequency parameter.
-
-When clock-frequency parameter is not set, the fast mode is selected.
-Only when the parameter is set at 100000, the standard mode is selected.
-
-Signed-off-by: Romain Baeriswyl <romainba-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
-Reviewed-by: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
----
- drivers/i2c/busses/i2c-designware-platdrv.c |   23 +++++++++++++++++++++--
- 1 files changed, 21 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index fc24399..3685893 100644
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -122,6 +122,7 @@ static int dw_i2c_probe(struct platform_device *pdev)
- 	struct i2c_adapter *adap;
- 	struct resource *mem;
- 	int irq, r;
-+	u32 clk_freq;
- 
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq < 0) {
-@@ -151,6 +152,9 @@ static int dw_i2c_probe(struct platform_device *pdev)
- 		return PTR_ERR(dev->clk);
- 	clk_prepare_enable(dev->clk);
- 
-+	/* fast mode by default because of legacy reasons */
-+	clk_freq = 400000;
-+
- 	if (pdev->dev.of_node) {
- 		u32 ht = 0;
- 		u32 ic_clk = dev->get_clk_rate_khz(dev);
-@@ -166,6 +170,17 @@ static int dw_i2c_probe(struct platform_device *pdev)
- 		of_property_read_u32(pdev->dev.of_node,
- 				     "i2c-scl-falling-time-ns",
- 				     &dev->scl_falling_time);
-+
-+		of_property_read_u32(pdev->dev.of_node, "clock-frequency",
-+				     &clk_freq);
-+
-+		/* Only standard mode at 100kHz and fast mode at 400kHz
-+		 * are supported.
-+		 */
-+		if (clk_freq != 100000 && clk_freq != 400000) {
-+			dev_err(&pdev->dev, "Only 100kHz and 400kHz supported");
-+			return -EINVAL;
-+		}
- 	}
- 
- 	dev->functionality =
-@@ -175,8 +190,12 @@ static int dw_i2c_probe(struct platform_device *pdev)
- 		I2C_FUNC_SMBUS_BYTE_DATA |
- 		I2C_FUNC_SMBUS_WORD_DATA |
- 		I2C_FUNC_SMBUS_I2C_BLOCK;
--	dev->master_cfg =  DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
--		DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_FAST;
-+	if (clk_freq == 100000)
-+		dev->master_cfg =  DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
-+			DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_STD;
-+	else
-+		dev->master_cfg =  DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
-+			DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_FAST;
- 
- 	/* Try first if we can configure the device from ACPI */
- 	r = dw_i2c_acpi_configure(pdev);
--- 
-1.7.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RnJvbTogRWR1YXJkbyBWYWxlbnRpbiA8ZWR1YXJkby52YWxlbnRpbkB0aS5jb20+CgpUaGlzIHBh
+dGNoIGNoYW5nZXMgYSBkdHNpIGZpbGUgdG8gY29udGFpbiB0aGUgdGhlcm1hbCBkYXRhCmZvciBN
+UFUgZG9tYWluIG9uIE9NQVA0IGFuZCBsYXRlciBTb0NzLiBUaGlzIGRhdGEgd2lsbAplbmFibGUg
+dGhlIHBhc3NpdmUgY29vbGluZyB3aXRoIENQVWZyZXEgY29vbGluZyBkZXZpY2UKYXQgMTAwQyBh
+bmQgdGhlIHN5c3RlbSB3aWxsIGRvIGEgdGhlcm1hbCBzaHV0ZG93biBhdCAxMjVDLgoKVGhpcyB0
+aGVybWFsIGRhdGEgY2FuIGJlIHJldXNlZCBhY3Jvc3MgVEkgU29DIGRldmljZXMuCgpDYzogIkJl
+bm/DrnQgQ291c3NvbiIgPGJjb3Vzc29uQGJheWxpYnJlLmNvbT4KQ2M6IFRvbnkgTGluZGdyZW4g
+PHRvbnlAYXRvbWlkZS5jb20+CkNjOiBSb2IgSGVycmluZyA8cm9iLmhlcnJpbmdAY2FseGVkYS5j
+b20+CkNjOiBQYXdlbCBNb2xsIDxwYXdlbC5tb2xsQGFybS5jb20+CkNjOiBNYXJrIFJ1dGxhbmQg
+PG1hcmsucnV0bGFuZEBhcm0uY29tPgpDYzogU3RlcGhlbiBXYXJyZW4gPHN3YXJyZW5Ad3d3ZG90
+b3JnLm9yZz4KQ2M6IElhbiBDYW1wYmVsbCA8aWFuLmNhbXBiZWxsQGNpdHJpeC5jb20+CkNjOiBS
+dXNzZWxsIEtpbmcgPGxpbnV4QGFybS5saW51eC5vcmcudWs+CkNjOiBsaW51eC1vbWFwQHZnZXIu
+a2VybmVsLm9yZwpDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKQ2M6IGxpbnV4LWFybS1r
+ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
+ZwpTaWduZWQtb2ZmLWJ5OiBFZHVhcmRvIFZhbGVudGluIDxlZHVhcmRvLnZhbGVudGluQHRpLmNv
+bT4KKGNoZXJyeSBwaWNrZWQgZnJvbSBjb21taXQgMGJiZjZjNTRkMTAwODM2ZGI0MGJhMDIwYjdj
+OTc5M2VhM2U2YmUwYikKClNpZ25lZC1vZmYtYnk6IEFsZXggU2hpIDxhbGV4LnNoaUBsaW5hcm8u
+b3JnPgotLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL29tYXA0LWNwdS10aGVybWFsLmR0c2kgfCA0MSAr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDQxIGluc2Vy
+dGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybS9ib290L2R0cy9vbWFwNC1jcHUt
+dGhlcm1hbC5kdHNpCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvb21hcDQtY3B1LXRo
+ZXJtYWwuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXA0LWNwdS10aGVybWFsLmR0c2kKbmV3
+IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uY2I5NDU4ZgotLS0gL2Rldi9udWxsCisr
+KyBiL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXA0LWNwdS10aGVybWFsLmR0c2kKQEAgLTAsMCArMSw0
+MSBAQAorLyoKKyAqIERldmljZSBUcmVlIFNvdXJjZSBmb3IgT01BUDQvNSBTb0MgQ1BVIHRoZXJt
+YWwKKyAqCisgKiBDb3B5cmlnaHQgKEMpIDIwMTMgVGV4YXMgSW5zdHJ1bWVudHMgSW5jb3Jwb3Jh
+dGVkIC0gaHR0cDovL3d3dy50aS5jb20vCisgKiBDb250YWN0OiBFZHVhcmRvIFZhbGVudGluIDxl
+ZHVhcmRvLnZhbGVudGluQHRpLmNvbT4KKyAqCisgKiBUaGlzIGZpbGUgaXMgbGljZW5zZWQgdW5k
+ZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZQorICogdmVyc2lv
+biAyLiAgVGhpcyBwcm9ncmFtIGlzIGxpY2Vuc2VkICJhcyBpcyIgd2l0aG91dCBhbnkgd2FycmFu
+dHkgb2YgYW55CisgKiBraW5kLCB3aGV0aGVyIGV4cHJlc3Mgb3IgaW1wbGllZC4KKyAqLworCisj
+aW5jbHVkZSA8ZHQtYmluZGluZ3MvdGhlcm1hbC90aGVybWFsLmg+CisKK2NwdV90aGVybWFsOiBj
+cHVfdGhlcm1hbCB7CisJcG9sbGluZy1kZWxheS1wYXNzaXZlID0gPDI1MD47IC8qIG1pbGxpc2Vj
+b25kcyAqLworCXBvbGxpbmctZGVsYXkgPSA8MTAwMD47IC8qIG1pbGxpc2Vjb25kcyAqLworCisJ
+CQkvKiBzZW5zb3IgICAgICAgSUQgKi8KKyAgICAgICAgdGhlcm1hbC1zZW5zb3JzID0gPCZiYW5k
+Z2FwICAgICAwPjsKKworICAgICAgICB0cmlwcyB7CisgICAgICAgICAgICAgICAgY3B1X2FsZXJ0
+MDogY3B1X2FsZXJ0IHsKKyAgICAgICAgICAgICAgICAgICAgICAgIHRlbXBlcmF0dXJlID0gPDEw
+MDAwMD47IC8qIG1pbGxpY2Vsc2l1cyAqLworICAgICAgICAgICAgICAgICAgICAgICAgaHlzdGVy
+ZXNpcyA9IDwyMDAwPjsgLyogbWlsbGljZWxzaXVzICovCisgICAgICAgICAgICAgICAgICAgICAg
+ICB0eXBlID0gInBhc3NpdmUiOworICAgICAgICAgICAgICAgIH07CisgICAgICAgICAgICAgICAg
+Y3B1X2NyaXQ6IGNwdV9jcml0IHsKKyAgICAgICAgICAgICAgICAgICAgICAgIHRlbXBlcmF0dXJl
+ID0gPDEyNTAwMD47IC8qIG1pbGxpY2Vsc2l1cyAqLworICAgICAgICAgICAgICAgICAgICAgICAg
+aHlzdGVyZXNpcyA9IDwyMDAwPjsgLyogbWlsbGljZWxzaXVzICovCisgICAgICAgICAgICAgICAg
+ICAgICAgICB0eXBlID0gImNyaXRpY2FsIjsKKyAgICAgICAgICAgICAgICB9OworICAgICAgICB9
+OworCisJY29vbGluZy1tYXBzIHsKKwkJbWFwMCB7CisJCQl0cmlwID0gPCZjcHVfYWxlcnQwPjsK
+KwkJCWNvb2xpbmctZGV2aWNlID0KKwkJCQk8JmNwdTAgVEhFUk1BTF9OT19MSU1JVCBUSEVSTUFM
+X05PX0xJTUlUPjsKKwkJfTsKKwl9OworfTsKLS0gCjEuOC4xLjIKCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
+bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
