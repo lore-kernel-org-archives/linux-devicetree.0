@@ -1,30 +1,56 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/7] gpio: dwapb: correct gpio-cells in binding document
-Date: Tue, 25 Mar 2014 22:00:49 +0100
-Message-ID: <CACRpkdb-ZojPr+u5gYQZ=dWOO07QR2YzCxnmhu80_qvDXC5sPQ@mail.gmail.com>
-References: <1395505004-22650-1-git-send-email-bigeasy@linutronix.de>
-	<1395505004-22650-3-git-send-email-bigeasy@linutronix.de>
-	<CACRpkdaD=hZGJA0r5DcJs-hFnnkKCFeQ9JwJZ4kcLq5Sb+=ZqQ@mail.gmail.com>
-	<5331EDC4.1040104@linutronix.de>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 04/20] mmc: mmci: Move signal directions bits into DT
+ include file
+Date: Tue, 25 Mar 2014 22:22:45 +0100
+Message-ID: <CACRpkdZSr380FVHkx3uOMFKxKYsExoL-1WYhxVpirFMVc+T3Yw@mail.gmail.com>
+References: <1395404057-27835-1-git-send-email-ulf.hansson@linaro.org>
+	<1395404057-27835-5-git-send-email-ulf.hansson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5331EDC4.1040104@linutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Alan Tull <atull@altera.com>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dinh Nguyen <dinguyen@altera.com>, Alan Tull <delicious.quinoa@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1395404057-27835-5-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 25, 2014 at 9:57 PM, Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
-> On 03/25/2014 09:49 PM, Linus Walleij wrote:
+On Fri, Mar 21, 2014 at 1:14 PM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-> Maybe but you can still blame google for loosing your emails.
-> It make it to lkml:
->         https://lkml.org/lkml/2014/3/22/112
+> These bits is currently used from platform data, but will be needed
+> from DT as well, so let's make them available.
+>
+> Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+(...)
+> +#define MCI_ST_DATA31DIREN     (1 << 5)
+> +#define MCI_ST_FBCLKEN         (1 << 7)
+> +#define MCI_ST_DATA74DIREN     (1 << 8)
 
-OK that one should be applied to the ARM SoC tree anyway,
-so I need not worry so much...
+Isn't MCI_ST_FBCLKEN = feedback clock enable and nothing
+to do with directions really?
+
+Or can you convince me ...
+
+Maybe we should just have single strings for these
+things in the binding instead, like:
+
+@@ -118,6 +119,10 @@
+                        bus-width = <4>;
+                        mmc-cap-sd-highspeed;
+                        mmc-cap-mmc-highspeed;
++                       st,signal-direction-data2;
++                       st,signal-direction-cmd;
++                       st,signal-direction-data0;
++                       st,feedback-clock-enable;
+                        vmmc-supply = <&ab8500_ldo_aux3_reg>;
+                        vqmmc-supply = <&vmmci>;
+                        pinctrl-names = "default", "sleep";
+
+And for FBCLKEN is that really something that should
+be configured... in the device tree after all?
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
