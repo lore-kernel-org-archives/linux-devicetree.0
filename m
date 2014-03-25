@@ -1,54 +1,49 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] devicetree: bindings: add Zarlink to the vendor prefixes
-Date: Tue, 25 Mar 2014 08:56:45 -0500
-Message-ID: <CAL_JsqJScfzfaCiNWU5zqjvpebxk3geEnm2pPwvBq+m0mWR07w@mail.gmail.com>
-References: <1395754915-14534-1-git-send-email-valentin.longchamp@keymile.com>
-	<1395754915-14534-2-git-send-email-valentin.longchamp@keymile.com>
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
+	<u.kleine-koenig@pengutronix.de>
+Subject: [PATCH] serial: efm32: use $vendor,$device scheme for compatible string
+Date: Tue, 25 Mar 2014 14:59:14 +0100
+Message-ID: <1395755954-18988-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1395754915-14534-2-git-send-email-valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-serial-owner@vger.kernel.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: kernel@pengutronix.de, Wolfram Sang <wsa@the-dreams.de>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 25, 2014 at 8:41 AM, Valentin Longchamp
-<valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org> wrote:
-> Even though the company belongs to Microsemi, many chips are still
-> labeled as Zarlink. Among them is the family of network clock generators,
-> the zl3034x.
->
-> Signed-off-by: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Wolfgang Sang pointed out that "efm32,$device" is non-standard. So use =
+the
+common scheme and prefix device with "efm32-". The old compatible strin=
+g
+is left in place until arch/arm/boot/dts/efm32* is fixed.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+---
+ drivers/tty/serial/efm32-uart.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
->
-> ---
-> Changes in v3: None
-> Changes in v2:
-> - add a patch so that the Zarlink vendor prefix is defined
->
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 40ce2df..4a6eba0 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -95,3 +95,4 @@ winbond Winbond Electronics corp.
->  wlf    Wolfson Microelectronics
->  wm     Wondermedia Technologies, Inc.
->  xlnx   Xilinx
-> +zarlink        Zarlink Semiconductor
-> --
-> 1.8.0.1
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/tty/serial/efm32-uart.c b/drivers/tty/serial/efm32=
+-uart.c
+index 028582e924a5..c167a710dc39 100644
+--- a/drivers/tty/serial/efm32-uart.c
++++ b/drivers/tty/serial/efm32-uart.c
+@@ -798,6 +798,9 @@ static int efm32_uart_remove(struct platform_device=
+ *pdev)
+=20
+ static const struct of_device_id efm32_uart_dt_ids[] =3D {
+ 	{
++		.compatible =3D "energymicro,efm32-uart",
++	}, {
++		/* doesn't follow the "vendor,device" scheme, don't use */
+ 		.compatible =3D "efm32,uart",
+ 	}, {
+ 		/* sentinel */
+--=20
+1.9.0
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-serial"=
+ in
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
