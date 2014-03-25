@@ -1,64 +1,63 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v2] serial: efm32: use $vendor,$device scheme for
- compatible string
-Date: Tue, 25 Mar 2014 17:19:16 +0100
-Message-ID: <20140325161916.GA6374@katana>
-References: <1395755954-18988-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <1395759192-10797-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v2] spi: efm32: use $vendor,$device scheme for compatible
+ string
+Date: Tue, 25 Mar 2014 17:20:21 +0100
+Message-ID: <20140325162020.GB6374@katana>
+References: <1395756019-23989-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <1395759110-10747-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7AUc2qLy4jB3hD7Z"
-Return-path: <linux-serial-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="xgyAXRrhYN0wYx8y"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1395759192-10797-1-git-send-email-u.kleine-koenig@pengutronix.de>
-Sender: linux-serial-owner@vger.kernel.org
-To: Uwe =?iso-8859-15?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kernel@pengutronix.de, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1395759110-10747-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uwe =?iso-8859-15?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---7AUc2qLy4jB3hD7Z
+--xgyAXRrhYN0wYx8y
 Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 25, 2014 at 03:53:12PM +0100, Uwe Kleine-K=F6nig wrote:
+On Tue, Mar 25, 2014 at 03:51:50PM +0100, Uwe Kleine-K=F6nig wrote:
 > Wolfgang Sang pointed out that "efm32,$device" is non-standard. So use the
-
-"Wolfram", please. BTW, you could also use this to describe that :)
-
-Reported-by: Wolfram Sang <wsa@the-dreams.de>
-
-No need to resend from my side, though.
-
 > common scheme and prefix device with "efm32-". The old compatible string
 > is left in place until arch/arm/boot/dts/efm32* is fixed.
 >=20
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Acked-by: Wolfram Sang <wsa@the-dreams.de>
+"Wolfram" please, next time. No need to resend, though.
+
+Acked-by: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
 
 
---7AUc2qLy4jB3hD7Z
+--xgyAXRrhYN0wYx8y
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.15 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTMayEAAoJEBQN5MwUoCm2CVQP/0R3kJeZ0PEnCWSvV6BbuQVh
-IFA9rcDquAGEs5A8EpOYWZhjBzDdMPCchyyrna6Mj8II2NDjrieJkoboyV6cX6rw
-NE/EU2QYEU5hLRS5TLpWqxldbx7SBgxAFSlPGXpjiEmXn2oB8/qV764KequFGrH+
-sG5cp48CGh0TTsKuK2CSk33l5LeZvDthhTyZOxLTT90aPPqDbtnzbsMwtvaNFLuN
-FBSu+FXCnebg/y4PqX7YkZ9tDJ0b9njPdxPcXa7dlsCi+DnxYJp48y1FwHK7C31Y
-bGiOkckKY8G5nPQDIrAt9+/KKb1TIy0xjA63ldtakLJsyEr12JrqgCpEPrQSCPSj
-gc0Y2J4GkJ8nXYqutfXQjdIrPApab3jf7Cv7H0p7XNmvrKnGbAs+1LHlQfHkDUaJ
-P0Om5R905muU2AGYC3Fi83BapaDRumPklP6+XdRWgzqvE7Al89IVMz5PGIqgtiXt
-NWJXtbDrub6ZTWOUISz8NcqfU7AMKxixySWH0sH9clF0BWgeyYdNzTorDuvR4+qN
-YxRhsO0PNQIA992EF9RALRWHq9+xg1rMPQ2wkYng7GOH5fRiXiis1MRY0EA3BCmS
-4UydfDGAHBKUTdbLS82sZ0dpbGHw8QgGLUHCQX9f3TOjIbM8b3/4sYPJyXE8i37V
-XLB0wZHk4BNR9zIojjlz
-=qVuW
+iQIcBAEBAgAGBQJTMazEAAoJEBQN5MwUoCm2LjEP/iJurDvjfKMWthuf3jtEMS5G
+7il21mLTyYa7hYzdKpsrGFuHPjiAs7t3bnY2odoc6xpR5pweY4HoEIA/dor1u9Nk
+5GH4uEmGICg5rl3VlUzMn44U4JVERyt/2JVmRAAcVbJzUmtUiDwF/Y9zIdUTCS25
+2exJrs6K1b0zrRowF0BdE6CgcQRf72aIHn+yZ/saatKinWN5uby6EOUYJONk20Gq
+mw0ar6D0U6u8etO2TTKrk5LHp1Kcz8Arusmn6cmCw2fYxtZYs4TnOjKX39vdnqwg
+nh+RQfEAEzQ7QtyEhVkJcjMSHUkzGzhTPVlt0iz1ygAxj8mGZZoONhLRbvCaN02w
+J/G/m5Tt9Oh9LOEP1l5kQFtI05Iw2J/e6v1Edi8sd2o5lWtEa8NrKvCrRkTktq5f
+mQD4vw+L6GowT5kYi9OFHQ/2TfIXzRqbS4lUBHukhd/Z7Z8h6q09TV3VYakKnJ9Z
+7+X7/A7ztnHH9p82iip8B7JFwiN1dLq+B2XDIGRJjimbsPs2yIb2803hkHjUXv9p
+l5JF8+NevVvXxcUmHkh4PWSMimzjxNKWn1gpPoPElqVH5PXlQU56xdjhQjyAj7NL
+8JXI1D3xdM+t9+/FZVqZufAigHCkeiJ4QTSvAC3DDklbpYv5iH6BCA/tQ7XKrtaD
+DT0mUYGyLEAOU4WQfxR1
+=+xDn
 -----END PGP SIGNATURE-----
 
---7AUc2qLy4jB3hD7Z--
+--xgyAXRrhYN0wYx8y--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
