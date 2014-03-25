@@ -1,64 +1,58 @@
-From: Eric Dumazet <eric.dumazet@gmail.com>
-Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Tue, 25 Mar 2014 10:21:42 -0700
-Message-ID: <1395768102.12610.159.camel@edumazet-glaptop2.roam.corp.google.com>
-References: <1395670496-17381-1-git-send-email-zhangfei.gao@linaro.org>
- <17142825.cN9DfpvuLc@wuerfel>
- <CAGVrzcbNbc1fyq1cuox8SVZHq1ADNah3CfyXSR--4ZWkf2EtTw@mail.gmail.com>
- <21873900.AIOr1ryy37@wuerfel>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] spi: efm32: use $vendor,$device scheme for compatible
+ string
+Date: Tue, 25 Mar 2014 17:49:58 +0000
+Message-ID: <20140325174957.GA2269@sirena.org.uk>
+References: <1395756019-23989-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <1395759110-10747-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <21873900.AIOr1ryy37@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, netdev <netdev@vger.kernel.org>, Zhangfei Gao <zhangfei.gao@gmail.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="YZa61AII3s1sGKYx"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1395759110-10747-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-03-25 at 18:05 +0100, Arnd Bergmann wrote:
-> On Tuesday 25 March 2014 10:00:30 Florian Fainelli wrote:
-> > 2014-03-25 1:12 GMT-07:00 Arnd Bergmann <arnd@arndb.de>:
-> > > On Tuesday 25 March 2014 12:06:31 Zhangfei Gao wrote:
-> > >> Dear Arnd
-> > >>
-> > >> On Mon, Mar 24, 2014 at 11:18 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > >> > On Monday 24 March 2014 22:14:56 Zhangfei Gao wrote:
-> > >> >
-...
-> > >> > I think you still need to find a solution to ensure that the tx reclaim is
-> > >> > called eventually through a method other than start_xmit.
-> > >>
-> > >> In the iperf stress test, if move reclaim to poll, there is some
-> > >> error, sometimes sending zero packets.
-> > >> While keep reclaim in the xmit to reclaim transmitted packets looks
-> > >> stable in the test,
-> > >> There TX_DESC_NUM desc can be used.
-> > >
-> > > What I meant is that you need a correct implementation, presumably
-> > > you added a bug when you moved the function to poll(), and also you
-> > > forgot to add a timer.
-> > 
-> > Using a timer to ensure completion of TX packets is a trick that
-> > worked in the past, but now that the networking stack got smarter,
-> > this might artificially increase the processing time of packets in the
-> > transmit path, and this will defeat features like TCP small queues
-> > etc.. as could be seen with the mvneta driver [1]. The best way really
-> > is to rely on TX completion interrupts when those exist as they cannot
-> > lie about the hardware status (in theory) and they should provide the
-> > fastest way to complete TX packets.
-> 
-> By as Zhangfei Gao pointed out, this hardware does not have a working
-> TX completion interrupt. Using timers to do this has always just been
-> a workaround for broken hardware IMHO.
 
-For this kind of drivers, calling skb_orphan() from ndo_start_xmit() is
-mandatory.
+--YZa61AII3s1sGKYx
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Mar 25, 2014 at 03:51:50PM +0100, Uwe Kleine-K=F6nig wrote:
+> Wolfgang Sang pointed out that "efm32,$device" is non-standard. So use the
+> common scheme and prefix device with "efm32-". The old compatible string
+> is left in place until arch/arm/boot/dts/efm32* is fixed.
+
+Applied, thanks.
+
+--YZa61AII3s1sGKYx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTMcHCAAoJELSic+t+oim9nBEP/RGmSp/VhdzuelCApbAZWkCQ
+Hh+EUHoOZ3VunuiSQAzwjxipgOqPRegXojz3U/x/8XARIWmbm7ymcyC4VMjeIvhU
+VD77XjKSdmWDTLwe0mWNsYJrw+BibfHp4i60J8Cr/XjBZFqPSABBFnfaE6vKZvhp
+R5DW3ghumQgCre865Djx9DLkuR6UY+keYvTBW9/uJBr9ZR18WED4wvhb4vYiHgIp
+d9RzPkL7KY8jbfiBYxl+fHcV+7+rgjTb2s1JVxIXWDecKaeah6SbU0ehB18sorEd
+1ziT5sb7zTk2G05CHu1KD01xQYbD/eP8iT+O4v81fFgCBy1yGvYUb+B+fjeI2J4e
+7PmnPaqUkEbAZF94sLfTRZ9qgLv3wfuHo05YKJqsVpBrwrGqDWNC89VT/G3hrPj2
+990bdbvLUlJ5qu6WRkztODIP3gjX+pcGEubyIfHPbavsW7ji9ofW3iNyriuE5Yxj
+6Cx9Z9MXBkMUFQcFHf2+Jajp62/CAF6UA8SSsA2JkOkKOLdMws+QQVw99vStTx2N
+KSOwXLspx7BpKtDgtzTfT2g9vBl3KxZMaVLzB9xY88WjTdF4bJVvIKeHFjYnq+nk
+sqtBtmdNHDK1fz9e/A4k/ysioLea28Y6gzPHh/gmsRZnTa4THLma+y99flI4JMMt
+Tso4FAuCvMfZebVDcErh
+=+aie
+-----END PGP SIGNATURE-----
+
+--YZa61AII3s1sGKYx--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
