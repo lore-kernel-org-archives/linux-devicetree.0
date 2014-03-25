@@ -1,80 +1,53 @@
-From: Francois Romieu <romieu@fr.zoreil.com>
-Subject: Re: [PATCH V13 2/7] net: sxgbe: add basic framework for Samsung 10Gb
- ethernet driver
-Date: Tue, 25 Mar 2014 08:05:44 +0100
-Message-ID: <20140325070543.GA26998@electric-eye.fr.zoreil.com>
-References: <00a001cf46d8$f4c38bd0$de4aa370$@samsung.com>
- <20140324234505.GA22059@electric-eye.fr.zoreil.com>
- <015b01cf47d7$8a8e5c40$9fab14c0$@samsung.com>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: Re: [PATCH 0/4] clk: dt: add support for default rate/parent
+Date: Tue, 25 Mar 2014 09:28:01 +0200
+Message-ID: <20140325072801.GH6922@tbergstrom-lnx.Nvidia.com>
+References: <1392282048-6284-1-git-send-email-t-kristo@ti.com>
+ <53172239.3030705@ti.com> <20140320212308.21989.36094@quantum>
+ <20140321081217.GD26674@tbergstrom-lnx.Nvidia.com>
+ <20140325003847.32624.58084@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <015b01cf47d7$8a8e5c40$9fab14c0$@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Byungho An <bh74.an@samsung.com>
-Cc: netdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 'David Miller' <davem@davemloft.net>, 'GIRISH K S' <ks.giri@samsung.com>, 'SIVAREDDY KALLAM' <siva.kallam@samsung.com>, 'Vipul Chandrakant' <vipul.pandya@samsung.com>, 'Ilho Lee' <ilho215.lee@samsung.com>
+In-Reply-To: <20140325003847.32624.58084@quantum>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Tero Kristo <t-kristo@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Byungho An <bh74.an@samsung.com> :
-[...]
-> How about below ?
+On Tue, Mar 25, 2014 at 01:38:47AM +0100, Mike Turquette wrote:
+> Quoting Peter De Schrijver (2014-03-21 01:12:17)
+> > On Thu, Mar 20, 2014 at 10:23:08PM +0100, Mike Turquette wrote:
+> > > Quoting Tero Kristo (2014-03-05 05:10:17)
+> > > > Ping.
+> > > > 
+> > > > Mike, any feedback on this?
+> > > 
+> > > Hi Tero,
+> > > 
+> > > Have you seen Sylwester's approach[1]? I prefer it since it is more
+> > > device-oriented and less "centralized". The clock consumer enumerates
+> > > the default parent or rate of a consumed clock. This can be made to work
+> > 
+> > That assumes driver writers are aware of the clock tree topology. IME that's
+> > seldomly the case.
+> 
+> It assumes no such thing.
+> 
+> The point of Sylwester's patch is that if a driver consumes a clock and
+> needs to do the very typical setup regarding that clock's rate or
+> parent, then we now have a sensible way to express that in DT.
+> 
+> One of the strengths of DT is that the C code does not have to know all
+> of the details about topology or how things are hooked up. We can hide
+> some of those cute embedded nonsense hacks in DTS and the device
+> integrator can manage it there.
 
-The for loops should be unrolled.
+It would be much better to specify this as part of the clock provider binding
+though, as the person writing those, generally knows what topology needs to be
+setup. The driver writer writing the consumer node often doesn't.
 
-(style: no need to join before branching)
+Cheers,
 
-I must go to work, so you'll have to fill the dots in the code below:
-
-        priv = sxgbe_drv_probe(&(pdev->dev), plat_dat, addr);
-        if (!priv) {
-                pr_err("%s: main driver probe failed\n", __func__);
-                goto err_something;
-        }
-
-        /* Get the SXGBE common INT information */
-        priv->irq  = irq_of_parse_and_map(node, 0);
-        if (priv->irq <= 0) {
-                dev_err(dev, "sxgbe common irq parsing failed\n");
-                goto err_drv_remove;
-        }
-
-        /* Get the TX/RX IRQ numbers */
-        for (i = 0, chan = 1; i < SXGBE_TX_QUEUES; i++) {
-                priv->txq[i]->irq_no = irq_of_parse_and_map(node, chan++);
-                if (priv->txq[i]->irq_no <= 0) {
-                        dev_err(dev, "sxgbe tx irq parsing failed\n");
-                        goto err_tx_irq_unmap;
-                }
-        }
-
-        for (i = 0; i < SXGBE_RX_QUEUES; i++) {
-                priv->rxq[i]->irq_no = irq_of_parse_and_map(node, chan++);
-                if (priv->rxq[i]->irq_no <= 0) {
-                        dev_err(dev, "sxgbe rx irq parsing failed\n");
-                        goto err_rx_irq_unmap;
-                }
-        }
-
-        platform_set_drvdata(pdev, priv->dev);
-
-        pr_debug("platform driver registration completed\n");
-
-        return 0;
-
-err_rx_irq_unmap:
-	/* TODO: check that 'i' isn't unsigned. */
-	while (i--)
-		irq_dispose_mapping(priv->rx[i]->irq_no);
-	i = SXGBE_TX_QUEUES;
-err_tx_irq_unmap:
-	while (i--)
-		irq_dispose_mapping(priv->tx[i]->irq_no);
-	irq_dispose_mapping(priv->irq);
-err_drv_remove:
-        sxgbe_drv_remove(ndev);
-err_something:
-	...
-
--- 
-Ueimor
+Peter.
