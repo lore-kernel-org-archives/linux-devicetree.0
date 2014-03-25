@@ -1,27 +1,43 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v5 1/4] pci: APM X-Gene PCIe controller driver
-Date: Tue, 25 Mar 2014 13:56:45 -0600
-Message-ID: <CAErSpo5uyJxvYk42pf0mxRNO6ZSFmQW4AHfe1qGBMDoUiD0BHw@mail.gmail.com>
-References: <1395270762-6055-1-git-send-email-tinamdar@apm.com>
- <1395270762-6055-2-git-send-email-tinamdar@apm.com> <CA+sq2CchcWBieGEH33AJFj6HYy-yiJFgzX94Gtsoho2k3z65eA@mail.gmail.com>
- <CACoXjcn2LuhJsNLpCgfvqT6AQEb1pw70N9GNfgCgZ88myGMNBg@mail.gmail.com> <20140325140510.GF17163@e106497-lin.cambridge.arm.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] of: Add vendor prefix for Energy Micro
+Date: Tue, 25 Mar 2014 20:59:50 +0100
+Message-ID: <20140325195950.GB15793@pengutronix.de>
+References: <1395756677-6166-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <CAL_Jsq+TVKywqbQ4vePQWjgbZ4Zc_d_CUrx6R33-pHtxVtsAzg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140325140510.GF17163@e106497-lin.cambridge.arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tanmay Inamdar <tinamdar@apm.com>, Sunil Kovvuri <sunil.kovvuri@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Rob Landley <rob@landley.net>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches <patches@apm.com>, "jcm@redhat.com" <jcm@redhat.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+TVKywqbQ4vePQWjgbZ4Zc_d_CUrx6R33-pHtxVtsAzg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 25, 2014 at 8:05 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+On Tue, Mar 25, 2014 at 11:51:33AM -0500, Rob Herring wrote:
+> On Tue, Mar 25, 2014 at 9:11 AM, Uwe Kleine-K=F6nig
+> <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> > There are already patches floating around to add
+> > energymicro,efm32-{i2c,serial,spi} as compatible strings.
+>=20
+> "Patches floating around" is not a very convincing argument why
+> "silabs" should not just be used instead. I have no problem taking
+> this, but if changing to silabs is possible, we may want to do that.
+I think energymicro is still the right prefix, because back when efm32
+was created it was still Energy Micro. Or am I wrong here?
 
-> ... I'm a bit baffled by pci_claim_resource()
-> as it doesn't seem to be used by some architectures. Does it mean it
-> is not needed unless you have some BIOS setting up resources for you
-> and in that case you need to go and claim the resource?
+Best regards
+Uwe
 
-Many architectures don't use pci_claim_resource() yet.  I'm trying to
-unify this so all architectures do use it, but it's taking me a long
-time to get this done.
-
-Bjorn
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
