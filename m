@@ -1,83 +1,74 @@
-From: Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v5 5/9] dt-bindings: pci: rcar pcie device tree bindings
-Date: Tue, 25 Mar 2014 16:56:40 +0000
-Message-ID: <1395766604-30926-6-git-send-email-phil.edworthy@renesas.com>
-References: <1395766604-30926-1-git-send-email-phil.edworthy@renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1395766604-30926-1-git-send-email-phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Valentine Barshak <valentine.barshak-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
+Date: Tue, 25 Mar 2014 10:00:30 -0700
+Message-ID: <CAGVrzcbNbc1fyq1cuox8SVZHq1ADNah3CfyXSR--4ZWkf2EtTw@mail.gmail.com>
+References: <1395670496-17381-1-git-send-email-zhangfei.gao@linaro.org>
+ <13743364.WZtdi2BZb3@wuerfel> <CAMj5BkjbrHevQhf4kbFhN5THHLw4nQwdpt2h6WJH02mKhdq8oQ@mail.gmail.com>
+ <17142825.cN9DfpvuLc@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <17142825.cN9DfpvuLc@wuerfel>
+Sender: netdev-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Zhangfei Gao <zhangfei.gao@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, netdev <netdev@vger.kernel.org>, Zhangfei Gao <zhangfei.gao@linaro.org>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the bindings for the R-Car PCIe driver. The driver
-resides under drivers/pci/host/pcie-rcar.c
+2014-03-25 1:12 GMT-07:00 Arnd Bergmann <arnd@arndb.de>:
+> On Tuesday 25 March 2014 12:06:31 Zhangfei Gao wrote:
+>> Dear Arnd
+>>
+>> On Mon, Mar 24, 2014 at 11:18 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> > On Monday 24 March 2014 22:14:56 Zhangfei Gao wrote:
+>> >
+>> >> +
+>> >> +static void hip04_tx_reclaim(struct net_device *ndev, bool force)
+>> >> +{
+>> >> +     struct hip04_priv *priv = netdev_priv(ndev);
+>> >> +     unsigned tx_head = priv->tx_head;
+>> >> +     unsigned tx_tail = priv->tx_tail;
+>> >> +     struct tx_desc *desc = &priv->tx_desc[priv->tx_tail];
+>> >> +
+>> >> +     while (tx_tail != tx_head) {
+>> >> +             if (desc->send_addr != 0) {
+>> >> +                     if (force)
+>> >> +                             desc->send_addr = 0;
+>> >> +                     else
+>> >> +                             break;
+>> >> +             }
+>> >> +             if (priv->tx_phys[tx_tail]) {
+>> >> +                     dma_unmap_single(&ndev->dev, priv->tx_phys[tx_tail],
+>> >> +                             priv->tx_skb[tx_tail]->len, DMA_TO_DEVICE);
+>> >> +                     priv->tx_phys[tx_tail] = 0;
+>> >> +             }
+>> >> +             dev_kfree_skb_irq(priv->tx_skb[tx_tail]);
+>> >> +             priv->tx_skb[tx_tail] = NULL;
+>> >> +             tx_tail = TX_NEXT(tx_tail);
+>> >> +             priv->tx_count--;
+>> >> +     }
+>> >> +     priv->tx_tail = tx_tail;
+>> >> +}
+>> >
+>> > I think you still need to find a solution to ensure that the tx reclaim is
+>> > called eventually through a method other than start_xmit.
+>>
+>> In the iperf stress test, if move reclaim to poll, there is some
+>> error, sometimes sending zero packets.
+>> While keep reclaim in the xmit to reclaim transmitted packets looks
+>> stable in the test,
+>> There TX_DESC_NUM desc can be used.
+>
+> What I meant is that you need a correct implementation, presumably
+> you added a bug when you moved the function to poll(), and also you
+> forgot to add a timer.
 
-Signed-off-by: Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
-v5:
- - Add PCIe bus clock reference
- - Add additional interrupt bindings
- - Use dma-ranges property to specify inbound memory regions
----
- Documentation/devicetree/bindings/pci/rcar-pci.txt | 44 ++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci.txt
-
-diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-new file mode 100644
-index 0000000..61bf5ef
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-@@ -0,0 +1,44 @@
-+* Renesas RCar PCIe interface
-+
-+Required properties:
-+- compatible: should contain one of the following
-+	"renesas,pcie-r8a7779", "renesas,pcie-r8a7790", "renesas,pcie-r8a7791"
-+- reg: base addresses and lengths of the pcie controller.
-+- #address-cells: set to <3>
-+- #size-cells: set to <2>
-+- device_type: set to "pci"
-+- ranges: ranges for the PCI memory and I/O regions.
-+- dma-ranges: ranges for the inbound memory regions.
-+- interrupts: two interrupt sources for MSI interrupts, followed by interrupt
-+	source for hardware related interrupts (e.g. link speed change).
-+- #interrupt-cells: set to <1>
-+- interrupt-map-mask and interrupt-map: standard PCI properties
-+	to define the mapping of the PCIe interface to interrupt
-+	numbers.
-+- clocks: from common clock binding: handle to pci clock.
-+- clock-names: from common clock binding: should be "pcie" and "pcie_bus".
-+
-+Example:
-+
-+SoC specific DT Entry:
-+
-+	pcie: pcie@fe000000 {
-+		compatible = "renesas,pcie-r8a7791";
-+		reg = <0 0xfe000000 0 0x80000>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		device_type = "pci";
-+		ranges = <0x01000000 0 0x00000000 0 0xfe100000 0 0x00100000
-+			  0x02000000 0 0xfe200000 0 0xfe200000 0 0x00200000
-+			  0x02000000 0 0x30000000 0 0x30000000 0 0x08000000
-+			  0x42000000 0 0x38000000 0 0x38000000 0 0x08000000>;
-+		dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0 0x40000000
-+			      0x42000000 2 0x00000000 2 0x00000000 0 0x40000000>;
-+		interrupts = <0 116 4 0 117 4 0 118 4>;
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 0>;
-+		interrupt-map = <0 0 0 0 &gic 0 116 4>;
-+		clocks = <&mstp3_clks R8A7791_CLK_PCIE>, <&pcie_bus_clk>;
-+		clock-names = "pcie", "pcie_bus";
-+		status = "disabled";
-+	};
+Using a timer to ensure completion of TX packets is a trick that
+worked in the past, but now that the networking stack got smarter,
+this might artificially increase the processing time of packets in the
+transmit path, and this will defeat features like TCP small queues
+etc.. as could be seen with the mvneta driver [1]. The best way really
+is to rely on TX completion interrupts when those exist as they cannot
+lie about the hardware status (in theory) and they should provide the
+fastest way to complete TX packets.
 -- 
-1.9.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Florian
