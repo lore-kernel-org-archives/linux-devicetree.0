@@ -1,1393 +1,830 @@
-From: jon@ringle.org
-Subject: [PATCH v2 1/2] serial: sc16is7xx
-Date: Tue, 25 Mar 2014 14:19:23 -0400
-Message-ID: <1395771564-30534-1-git-send-email-jon@ringle.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Jon Ringle <jringle@gridpoint.com>
+From: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
+Subject: [PATCH V3 1/1] iio: add Capella cm3218x ambient light sensor driver.
+Date: Tue, 25 Mar 2014 11:52:18 -0700
+Message-ID: <1395773538-2649-1-git-send-email-ktsai@capellamicro.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Huewe <peter.huewe-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Oleksandr Kravchenko <o.v.kravchenko-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-=46rom: Jon Ringle <jringle@gridpoint.com>
+Add Capella Microsystem CM3218X family Ambient Light Sensor IIO driver.
+This driver will convert raw data to lux value.  Default parameters are
+for reference only.  It will detect ACPI table to load per-system manufacturing
+parameters.
 
-The SC16IS7xx is a slave I2C-bus/SPI interface to a single-channel
-high performance UART. The SC16IS7xx=E2=80=99s internal register set is
-backward-compatible with the widely used and widely popular 16C450.
+V2: Follow Jonathan Cameron's advise to separate device id.
+Also, follow Peter Meerwald's advise to correct whitespace, prefix, and,
+comments.
 
-The SC16IS7xx also provides additional advanced features such as
-auto hardware and software flow control, automatic RS-485 support, and
-software reset.
+V3: Follow Peter Meerwald's advise to create a separated i2c_client handler to
+access SMBus ARA register.
 
-Signed-off-by: Jon Ringle <jringle@gridpoint.com>
+Signed-off-by: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
 ---
- drivers/tty/serial/Kconfig       |   10 +
- drivers/tty/serial/Makefile      |    1 +
- drivers/tty/serial/sc16is7xx.c   | 1256 ++++++++++++++++++++++++++++++=
-++++++++
- include/uapi/linux/serial_core.h |    3 +
- 4 files changed, 1270 insertions(+)
- create mode 100644 drivers/tty/serial/sc16is7xx.c
+ .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
+ drivers/iio/light/Kconfig                          |  11 +
+ drivers/iio/light/Makefile                         |   1 +
+ drivers/iio/light/cm3218x.c                        | 745 +++++++++++++++++++++
+ 4 files changed, 758 insertions(+)
+ create mode 100644 drivers/iio/light/cm3218x.c
 
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index febd45c..6e8fe23 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -1179,6 +1179,16 @@ config SERIAL_SCCNXP_CONSOLE
- 	help
- 	  Support for console on SCCNXP serial ports.
-=20
-+config SERIAL_SC16IS7XX
-+	tristate "SC16IS7xx serial support"
-+	select SERIAL_CORE
-+	select REGMAP_I2C if I2C
-+	default n
+diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+index 1a1ac2e..c3c869b 100644
+--- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
++++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+@@ -17,6 +17,7 @@ at,24c08		i2c serial eeprom  (24cxx)
+ atmel,24c02		i2c serial eeprom  (24cxx)
+ atmel,at97sc3204t	i2c trusted platform module (TPM)
+ capella,cm32181		CM32181: Ambient Light Sensor
++capella,cm3218x		CM3218X: Ambient Light Sensor
+ catalyst,24c32		i2c serial eeprom
+ dallas,ds1307		64 x 8, Serial, I2C Real-Time Clock
+ dallas,ds1338		I2C RTC with 56-Byte NV RAM
+diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
+index d12b2a0..97a341a 100644
+--- a/drivers/iio/light/Kconfig
++++ b/drivers/iio/light/Kconfig
+@@ -38,6 +38,17 @@ config CM32181
+ 	 To compile this driver as a module, choose M here:
+ 	 the module will be called cm32181.
+ 
++config CM3218X
++	depends on I2C
++	tristate "CM3218X driver"
 +	help
-+	  This selects support for SC16IS7xx serial ports.
-+	  Supported ICs are SC16IS740, SC16IS741, SC16IS750, SC16IS752,
-+	  SC16IS760 and SC16IS762.
++	 Say Y here if you use cm3218x.
++	 This option enables ambient light sensor using
++	 Capella cm3218x device driver.
 +
- config SERIAL_BFIN_SPORT
- 	tristate "Blackfin SPORT emulate UART"
- 	depends on BLACKFIN
-diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
-index 3068c77..c3bac45 100644
---- a/drivers/tty/serial/Makefile
-+++ b/drivers/tty/serial/Makefile
-@@ -49,6 +49,7 @@ obj-$(CONFIG_SERIAL_SB1250_DUART) +=3D sb1250-duart.o
- obj-$(CONFIG_ETRAX_SERIAL) +=3D crisv10.o
- obj-$(CONFIG_SERIAL_SC26XX) +=3D sc26xx.o
- obj-$(CONFIG_SERIAL_SCCNXP) +=3D sccnxp.o
-+obj-$(CONFIG_SERIAL_SC16IS7XX) +=3D sc16is7xx.o
- obj-$(CONFIG_SERIAL_JSM) +=3D jsm/
- obj-$(CONFIG_SERIAL_TXX9) +=3D serial_txx9.o
- obj-$(CONFIG_SERIAL_VR41XX) +=3D vr41xx_siu.o
-diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is=
-7xx.c
++	 To compile this driver as a module, choose M here:
++	 the module will be called cm3218x.
++
+ config CM36651
+ 	depends on I2C
+ 	tristate "CM36651 driver"
+diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
+index 60e35ac..a506c23 100644
+--- a/drivers/iio/light/Makefile
++++ b/drivers/iio/light/Makefile
+@@ -6,6 +6,7 @@
+ obj-$(CONFIG_ADJD_S311)		+= adjd_s311.o
+ obj-$(CONFIG_APDS9300)		+= apds9300.o
+ obj-$(CONFIG_CM32181)		+= cm32181.o
++obj-$(CONFIG_CM3218X)		+= cm3218x.o
+ obj-$(CONFIG_CM36651)		+= cm36651.o
+ obj-$(CONFIG_GP2AP020A00F)	+= gp2ap020a00f.o
+ obj-$(CONFIG_HID_SENSOR_ALS)	+= hid-sensor-als.o
+diff --git a/drivers/iio/light/cm3218x.c b/drivers/iio/light/cm3218x.c
 new file mode 100644
-index 0000000..055cf87
+index 0000000..efd0d0a
 --- /dev/null
-+++ b/drivers/tty/serial/sc16is7xx.c
-@@ -0,0 +1,1256 @@
++++ b/drivers/iio/light/cm3218x.c
+@@ -0,0 +1,745 @@
 +/*
-+ * SC16IS7xx tty serial driver - Copyright (C) 2014 GridPoint
-+ * Author: Jon Ringle <jringle@gridpoint.com>
++ * Copyright (C) 2014 Capella Microsystems Inc.
++ * Author: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
 + *
-+ *  Based on max310x.c, by Alexander Shiyan <shc_work@mail.ru>
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2, as published
++ * by the Free Software Foundation.
 + *
-+ * This program is free software; you can redistribute it and/or modif=
-y
-+ * it under the terms of the GNU General Public License as published b=
-y
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
++ * Special thanks Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
++ * help to add ACPI support.
 + *
 + */
 +
-+#include <linux/bitops.h>
-+#include <linux/clk.h>
 +#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/gpio.h>
++#include <linux/err.h>
 +#include <linux/i2c.h>
++#include <linux/mutex.h>
 +#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/regmap.h>
-+#include <linux/serial_core.h>
-+#include <linux/serial.h>
-+#include <linux/spi/spi.h>
-+#include <linux/tty.h>
-+#include <linux/tty_flip.h>
++#include <linux/interrupt.h>
++#include <linux/regulator/consumer.h>
++#include <linux/iio/iio.h>
++#include <linux/iio/sysfs.h>
++#include <linux/iio/events.h>
++#include <linux/init.h>
++#include <linux/acpi.h>
 +
-+#define SC16IS7XX_NAME			"sc16is7xx"
++/* Registers Address */
++#define CM3218X_REG_ADDR_CMD 0x00
++#define CM3218X_REG_ADDR_WH 0x01
++#define CM3218X_REG_ADDR_WL 0x02
++#define CM3218X_REG_ADDR_TEST 0x03
++#define CM3218X_REG_ADDR_ALS 0x04
++#define CM3218X_REG_ADDR_STATUS 0x06
++#define CM3218X_REG_ADDR_ID 0x07
 +
-+/* SC16IS7XX register definitions */
-+#define SC16IS7XX_RHR_REG		(0x00) /* RX FIFO */
-+#define SC16IS7XX_THR_REG		(0x00) /* TX FIFO */
-+#define SC16IS7XX_IER_REG		(0x01) /* Interrupt enable */
-+#define SC16IS7XX_IIR_REG		(0x02) /* Interrupt Identification */
-+#define SC16IS7XX_FCR_REG		(0x02) /* FIFO control */
-+#define SC16IS7XX_LCR_REG		(0x03) /* Line Control */
-+#define SC16IS7XX_MCR_REG		(0x04) /* Modem Control */
-+#define SC16IS7XX_LSR_REG		(0x05) /* Line Status */
-+#define SC16IS7XX_MSR_REG		(0x06) /* Modem Status */
-+#define SC16IS7XX_SPR_REG		(0x07) /* Scratch Pad */
-+#define SC16IS7XX_TXLVL_REG		(0x08) /* TX FIFO level */
-+#define SC16IS7XX_RXLVL_REG		(0x09) /* RX FIFO level */
-+#define SC16IS7XX_IODIR_REG		(0x0a) /* I/O Direction
-+						* - only on 75x/76x
-+						*/
-+#define SC16IS7XX_IOSTATE_REG		(0x0b) /* I/O State
-+						* - only on 75x/76x
-+						*/
-+#define SC16IS7XX_IOINTENA_REG		(0x0c) /* I/O Interrupt Enable
-+						* - only on 75x/76x
-+						*/
-+#define SC16IS7XX_IOCONTROL_REG		(0x0e) /* I/O Control
-+						* - only on 75x/76x
-+						*/
-+#define SC16IS7XX_EFCR_REG		(0x0f) /* Extra Features Control */
++/* Number of Configurable Registers */
++#define CM3218X_CONF_REG_NUM 16
 +
-+/* TCR/TLR Register set: Only if ((MCR[2] =3D=3D 1) && (EFR[4] =3D=3D =
-1)) */
-+#define SC16IS7XX_TCR_REG		(0x06) /* Transmit control */
-+#define SC16IS7XX_TLR_REG		(0x07) /* Trigger level */
++/* CMD register */
++#define CM3218X_CMD_ALS_DISABLE BIT(0)
++#define CM3218X_CMD_ALS_INT_EN BIT(1)
++#define CM3218X_CMD_ALS_THRES_WINDOW BIT(2)
 +
-+/* Special Register set: Only if ((LCR[7] =3D=3D 1) && (LCR !=3D 0xBF)=
-) */
-+#define SC16IS7XX_DLL_REG		(0x00) /* Divisor Latch Low */
-+#define SC16IS7XX_DLH_REG		(0x01) /* Divisor Latch High */
++#define CM3218X_CMD_ALS_PERS_SHIFT 4
++#define CM3218X_CMD_ALS_PERS_MASK (0x03 << CM3218X_CMD_ALS_PERS_SHIFT)
++#define CM3218X_CMD_ALS_PERS_DEFAULT (0x01 << CM3218X_CMD_ALS_PERS_SHIFT)
 +
-+/* Enhanced Register set: Only if (LCR =3D=3D 0xBF) */
-+#define SC16IS7XX_EFR_REG		(0x02) /* Enhanced Features */
-+#define SC16IS7XX_XON1_REG		(0x04) /* Xon1 word */
-+#define SC16IS7XX_XON2_REG		(0x05) /* Xon2 word */
-+#define SC16IS7XX_XOFF1_REG		(0x06) /* Xoff1 word */
-+#define SC16IS7XX_XOFF2_REG		(0x07) /* Xoff2 word */
++#define CM3218X_CMD_ALS_IT_SHIFT 6
++#define CM3218X_CMD_ALS_IT_MASK (0x0F << CM3218X_CMD_ALS_IT_SHIFT)
++#define CM3218X_CMD_ALS_IT_DEFAULT (0x01 << CM3218X_CMD_ALS_IT_SHIFT)
 +
-+/* IER register bits */
-+#define SC16IS7XX_IER_RDI_BIT		(1 << 0) /* Enable RX data interrupt */
-+#define SC16IS7XX_IER_THRI_BIT		(1 << 1) /* Enable TX holding register
-+						  * interrupt */
-+#define SC16IS7XX_IER_RLSI_BIT		(1 << 2) /* Enable RX line status
-+						  * interrupt */
-+#define SC16IS7XX_IER_MSI_BIT		(1 << 3) /* Enable Modem status
-+						  * interrupt */
++#define CM3218X_CMD_ALS_HS_SHIFT 11
++#define CM3218X_CMD_ALS_HS_MASK (0x01 << CM3218X_CMD_ALS_HS_SHIFT)
++#define CM3218X_CMD_ALS_HS_DEFAULT (0x00 << CM3218X_CMD_ALS_HS_SHIFT)
 +
-+/* IER register bits - write only if (EFR[4] =3D=3D 1) */
-+#define SC16IS7XX_IER_SLEEP_BIT		(1 << 4) /* Enable Sleep mode */
-+#define SC16IS7XX_IER_XOFFI_BIT		(1 << 5) /* Enable Xoff interrupt */
-+#define SC16IS7XX_IER_RTSI_BIT		(1 << 6) /* Enable nRTS interrupt */
-+#define SC16IS7XX_IER_CTSI_BIT		(1 << 7) /* Enable nCTS interrupt */
++#define CM3218X_CMD_DEFAULT (CM3218X_CMD_ALS_THRES_WINDOW |\
++		CM3218X_CMD_ALS_PERS_DEFAULT |\
++		CM3218X_CMD_ALS_IT_DEFAULT |\
++		CM3218X_CMD_ALS_HS_DEFAULT)
 +
-+/* FCR register bits */
-+#define SC16IS7XX_FCR_FIFO_BIT		(1 << 0) /* Enable FIFO */
-+#define SC16IS7XX_FCR_RXRESET_BIT	(1 << 1) /* Reset RX FIFO */
-+#define SC16IS7XX_FCR_TXRESET_BIT	(1 << 2) /* Reset TX FIFO */
-+#define SC16IS7XX_FCR_RXLVLL_BIT	(1 << 6) /* RX Trigger level LSB */
-+#define SC16IS7XX_FCR_RXLVLH_BIT	(1 << 7) /* RX Trigger level MSB */
++#define CM3218X_WH_DEFAULT 0xFFFF
++#define CM3218X_WL_DEFAULT 0x0000
 +
-+/* FCR register bits - write only if (EFR[4] =3D=3D 1) */
-+#define SC16IS7XX_FCR_TXLVLL_BIT	(1 << 4) /* TX Trigger level LSB */
-+#define SC16IS7XX_FCR_TXLVLH_BIT	(1 << 5) /* TX Trigger level MSB */
++#define CM3218X_CALIBSCALE_DEFAULT 100000
++#define CM3218X_CALIBSCALE_RESOLUTION 100000
++#define CM3218X_MLUX_PER_LUX 1000
++#define CM3218X_THRESHOLD_PERCENT 10	/* 10 percent */
 +
-+/* IIR register bits */
-+#define SC16IS7XX_IIR_NO_INT_BIT	(1 << 0) /* No interrupts pending */
-+#define SC16IS7XX_IIR_ID_MASK		0x3e     /* Mask for the interrupt ID *=
-/
-+#define SC16IS7XX_IIR_THRI_SRC		0x02     /* TX holding register empty =
-*/
-+#define SC16IS7XX_IIR_RDI_SRC		0x04     /* RX data interrupt */
-+#define SC16IS7XX_IIR_RLSE_SRC		0x06     /* RX line status error */
-+#define SC16IS7XX_IIR_RTOI_SRC		0x0c     /* RX time-out interrupt */
-+#define SC16IS7XX_IIR_MSI_SRC		0x00     /* Modem status interrupt
-+						  * - only on 75x/76x
-+						  */
-+#define SC16IS7XX_IIR_INPIN_SRC		0x30     /* Input pin change of state
-+						  * - only on 75x/76x
-+						  */
-+#define SC16IS7XX_IIR_XOFFI_SRC		0x10     /* Received Xoff */
-+#define SC16IS7XX_IIR_CTSRTS_SRC	0x20     /* nCTS,nRTS change of state
-+						  * from active (LOW)
-+						  * to inactive (HIGH)
-+						  */
-+/* LCR register bits */
-+#define SC16IS7XX_LCR_LENGTH0_BIT	(1 << 0) /* Word length bit 0 */
-+#define SC16IS7XX_LCR_LENGTH1_BIT	(1 << 1) /* Word length bit 1
-+						  *
-+						  * Word length bits table:
-+						  * 00 -> 5 bit words
-+						  * 01 -> 6 bit words
-+						  * 10 -> 7 bit words
-+						  * 11 -> 8 bit words
-+						  */
-+#define SC16IS7XX_LCR_STOPLEN_BIT	(1 << 2) /* STOP length bit
-+						  *
-+						  * STOP length bit table:
-+						  * 0 -> 1 stop bit
-+						  * 1 -> 1-1.5 stop bits if
-+						  *      word length is 5,
-+						  *      2 stop bits otherwise
-+						  */
-+#define SC16IS7XX_LCR_PARITY_BIT	(1 << 3) /* Parity bit enable */
-+#define SC16IS7XX_LCR_EVENPARITY_BIT	(1 << 4) /* Even parity bit enabl=
-e */
-+#define SC16IS7XX_LCR_FORCEPARITY_BIT	(1 << 5) /* 9-bit multidrop pari=
-ty */
-+#define SC16IS7XX_LCR_TXBREAK_BIT	(1 << 6) /* TX break enable */
-+#define SC16IS7XX_LCR_DLAB_BIT		(1 << 7) /* Divisor Latch enable */
-+#define SC16IS7XX_LCR_WORD_LEN_5	(0x00)
-+#define SC16IS7XX_LCR_WORD_LEN_6	(0x01)
-+#define SC16IS7XX_LCR_WORD_LEN_7	(0x02)
-+#define SC16IS7XX_LCR_WORD_LEN_8	(0x03)
-+#define SC16IS7XX_LCR_CONF_MODE_A	SC16IS7XX_LCR_DLAB_BIT /* Special
-+								* reg set */
-+#define SC16IS7XX_LCR_CONF_MODE_B	0xBF                   /* Enhanced
-+								* reg set */
++#define CM3218X_ARA 0x0C
 +
-+/* MCR register bits */
-+#define SC16IS7XX_MCR_DTR_BIT		(1 << 0) /* DTR complement
-+						  * - only on 75x/76x
-+						  */
-+#define SC16IS7XX_MCR_RTS_BIT		(1 << 1) /* RTS complement */
-+#define SC16IS7XX_MCR_TCRTLR_BIT	(1 << 2) /* TCR/TLR register enable *=
-/
-+#define SC16IS7XX_MCR_LOOP_BIT		(1 << 4) /* Enable loopback test mode =
-*/
-+#define SC16IS7XX_MCR_XONANY_BIT	(1 << 5) /* Enable Xon Any
-+						  * - write enabled
-+						  * if (EFR[4] =3D=3D 1)
-+						  */
-+#define SC16IS7XX_MCR_IRDA_BIT		(1 << 6) /* Enable IrDA mode
-+						  * - write enabled
-+						  * if (EFR[4] =3D=3D 1)
-+						  */
-+#define SC16IS7XX_MCR_CLKSEL_BIT	(1 << 7) /* Divide clock by 4
-+						  * - write enabled
-+						  * if (EFR[4] =3D=3D 1)
-+						  */
++/* CM3218X family */
++enum {
++	cm3218,
++	cm32181,
++	cm32182
++};
 +
-+/* LSR register bits */
-+#define SC16IS7XX_LSR_DR_BIT		(1 << 0) /* Receiver data ready */
-+#define SC16IS7XX_LSR_OE_BIT		(1 << 1) /* Overrun Error */
-+#define SC16IS7XX_LSR_PE_BIT		(1 << 2) /* Parity Error */
-+#define SC16IS7XX_LSR_FE_BIT		(1 << 3) /* Frame Error */
-+#define SC16IS7XX_LSR_BI_BIT		(1 << 4) /* Break Interrupt */
-+#define SC16IS7XX_LSR_BRK_ERROR_MASK	0x1E     /* BI, FE, PE, OE bits *=
-/
-+#define SC16IS7XX_LSR_THRE_BIT		(1 << 5) /* TX holding register empty =
-*/
-+#define SC16IS7XX_LSR_TEMT_BIT		(1 << 6) /* Transmitter empty */
-+#define SC16IS7XX_LSR_FIFOE_BIT		(1 << 7) /* Fifo Error */
++/* CM3218 Family */
++#define CM3218_MLUX_PER_BIT_DEFAULT 5	/* Depend on system */
++#define CM3218_MLUX_PER_BIT_BASE_IT 800000
++static const int CM3218_als_it_bits[] = {0, 1, 2, 3};
++static const int CM3218_als_it_values[] = {100000, 200000, 400000, 800000};
 +
-+/* MSR register bits */
-+#define SC16IS7XX_MSR_DCTS_BIT		(1 << 0) /* Delta CTS Clear To Send */
-+#define SC16IS7XX_MSR_DDSR_BIT		(1 << 1) /* Delta DSR Data Set Ready
-+						  * or (IO4)
-+						  * - only on 75x/76x
-+						  */
-+#define SC16IS7XX_MSR_DRI_BIT		(1 << 2) /* Delta RI Ring Indicator
-+						  * or (IO7)
-+						  * - only on 75x/76x
-+						  */
-+#define SC16IS7XX_MSR_DCD_BIT		(1 << 3) /* Delta CD Carrier Detect
-+						  * or (IO6)
-+						  * - only on 75x/76x
-+						  */
-+#define SC16IS7XX_MSR_CTS_BIT		(1 << 0) /* CTS */
-+#define SC16IS7XX_MSR_DSR_BIT		(1 << 1) /* DSR (IO4)
-+						  * - only on 75x/76x
-+						  */
-+#define SC16IS7XX_MSR_RI_BIT		(1 << 2) /* RI (IO7)
-+						  * - only on 75x/76x
-+						  */
-+#define SC16IS7XX_MSR_CD_BIT		(1 << 3) /* CD (IO6)
-+						  * - only on 75x/76x
-+						  */
-+#define SC16IS7XX_MSR_DELTA_MASK	0x0F     /* Any of the delta bits! */
++/* CM32181 Family */
++#define CM32181_MLUX_PER_BIT_DEFAULT 5
++#define CM32181_MLUX_PER_BIT_BASE_IT 800000
++static const int CM32181_als_it_bits[] = {12, 8, 0, 1, 2, 3};
++static const int CM32181_als_it_values[] = {
++			25000, 50000, 100000, 200000, 400000, 800000};
 +
-+/*
-+ * TCR register bits
-+ * TCR trigger levels are available from 0 to 60 characters with a gra=
-nularity
-+ * of four.
-+ * The programmer must program the TCR such that TCR[3:0] > TCR[7:4]. =
-There is
-+ * no built-in hardware check to make sure this condition is met. Also=
-, the TCR
-+ * must be programmed with this condition before auto RTS or software =
-flow
-+ * control is enabled to avoid spurious operation of the device.
-+ */
-+#define SC16IS7XX_TCR_RX_HALT(words)	(((words / 4) & 0x0f) << 0)
-+#define SC16IS7XX_TCR_RX_RESUME(words)	(((words / 4) & 0x0f) << 4)
++struct cm3218x_als_info {
++	u32 id;
++	int int_type;
++#define CM3218X_INT_TYPE_SMBUS 0
++#define CM3218X_INT_TYPE_I2C 1
++	int regs_bmp;
++	int calibscale;
++	int mlux_per_bit;
++	int mlux_per_bit_base_it;
++	const int *als_it_bits;
++	const int *als_it_values;
++	int num_als_it;
++	int als_raw;
++};
 +
-+/*
-+ * TLR register bits
-+ * If TLR[3:0] or TLR[7:4] are logical 0, the selectable trigger level=
-s via the
-+ * FIFO Control Register (FCR) are used for the transmit and receive F=
-IFO
-+ * trigger levels. Trigger levels from 4 characters to 60 characters a=
-re
-+ * available with a granularity of four.
++static struct cm3218x_als_info cm3218_info = {
++	3218, CM3218X_INT_TYPE_SMBUS, 0x0F, CM3218X_CALIBSCALE_DEFAULT,
++	CM3218_MLUX_PER_BIT_DEFAULT, CM3218_MLUX_PER_BIT_BASE_IT,
++	CM3218_als_it_bits, CM3218_als_it_values,
++	ARRAY_SIZE(CM3218_als_it_bits), 0};
++
++static struct cm3218x_als_info cm32181_info = {
++	32181, CM3218X_INT_TYPE_I2C, 0x0F, CM3218X_CALIBSCALE_DEFAULT,
++	CM32181_MLUX_PER_BIT_DEFAULT, CM32181_MLUX_PER_BIT_BASE_IT,
++	CM32181_als_it_bits, CM32181_als_it_values,
++	ARRAY_SIZE(CM32181_als_it_bits), 0};
++
++static struct cm3218x_als_info cm32182_info = {
++	32182, CM3218X_INT_TYPE_I2C, 0x0F, CM3218X_CALIBSCALE_DEFAULT,
++	CM32181_MLUX_PER_BIT_DEFAULT, CM32181_MLUX_PER_BIT_BASE_IT,
++	CM32181_als_it_bits, CM32181_als_it_values,
++	ARRAY_SIZE(CM32181_als_it_bits), 0};
++
++struct cm3218x_chip {
++	struct i2c_client *client;
++	struct i2c_client *ara;
++	struct mutex lock;
++	u16 conf_regs[CM3218X_CONF_REG_NUM];
++	struct cm3218x_als_info *als_info;
++};
++
++static int cm3218x_get_lux(struct cm3218x_chip *chip);
++static int cm3218x_threshold_update(struct cm3218x_chip *chip, int percent);
++static int cm3218x_read_als_it(struct cm3218x_chip *chip, int *val2);
++
++/**
++ * cm3218x_interrupt_config() - Enable/Disable CM3218X interrupt
++ * @chip:	pointer of struct cm3218x.
++ * @enable:	0 to disable; otherwise to enable
 + *
-+ * When the trigger level setting in TLR is zero, the SC16IS740/750/76=
-0 uses the
-+ * trigger level setting defined in FCR. If TLR has non-zero trigger l=
-evel value
-+ * the trigger level defined in FCR is discarded. This applies to both=
- transmit
-+ * FIFO and receive FIFO trigger level setting.
++ * Config CM3218X interrupt control bit.
 + *
-+ * When TLR is used for RX trigger level control, FCR[7:6] should be l=
-eft at the
-+ * default state, that is, =E2=80=9800=E2=80=99.
++ * Return: 0 for success; otherwise for error code.
 + */
-+#define SC16IS7XX_TLR_TX_TRIGGER(words)	(((words / 4) & 0x0f) << 0)
-+#define SC16IS7XX_TLR_RX_TRIGGER(words)	(((words / 4) & 0x0f) << 4)
-+
-+/* IOControl register bits (Only 750/760) */
-+#define SC16IS7XX_IOCONTROL_LATCH_BIT	(1 << 0) /* Enable input latchin=
-g */
-+#define SC16IS7XX_IOCONTROL_GPIO_BIT	(1 << 1) /* Enable GPIO[7:4] */
-+#define SC16IS7XX_IOCONTROL_SRESET_BIT	(1 << 3) /* Software Reset */
-+
-+/* EFCR register bits */
-+#define SC16IS7XX_EFCR_9BIT_MODE_BIT	(1 << 0) /* Enable 9-bit or Multi=
-drop
-+						  * mode (RS485) */
-+#define SC16IS7XX_EFCR_RXDISABLE_BIT	(1 << 1) /* Disable receiver */
-+#define SC16IS7XX_EFCR_TXDISABLE_BIT	(1 << 2) /* Disable transmitter *=
-/
-+#define SC16IS7XX_EFCR_AUTO_RS485_BIT	(1 << 4) /* Auto RS485 RTS direc=
-tion */
-+#define SC16IS7XX_EFCR_RTS_INVERT_BIT	(1 << 5) /* RTS output inversion=
- */
-+#define SC16IS7XX_EFCR_IRDA_MODE_BIT	(1 << 7) /* IrDA mode
-+						  * 0 =3D rate upto 115.2 kbit/s
-+						  *   - Only 750/760
-+						  * 1 =3D rate upto 1.152 Mbit/s
-+						  *   - Only 760
-+						  */
-+
-+/* EFR register bits */
-+#define SC16IS7XX_EFR_AUTORTS_BIT	(1 << 6) /* Auto RTS flow ctrl enabl=
-e */
-+#define SC16IS7XX_EFR_AUTOCTS_BIT	(1 << 7) /* Auto CTS flow ctrl enabl=
-e */
-+#define SC16IS7XX_EFR_XOFF2_DETECT_BIT	(1 << 5) /* Enable Xoff2 detect=
-ion */
-+#define SC16IS7XX_EFR_ENABLE_BIT	(1 << 4) /* Enable enhanced functions
-+						  * and writing to IER[7:4],
-+						  * FCR[5:4], MCR[7:5]
-+						  */
-+#define SC16IS7XX_EFR_SWFLOW3_BIT	(1 << 3) /* SWFLOW bit 3 */
-+#define SC16IS7XX_EFR_SWFLOW2_BIT	(1 << 2) /* SWFLOW bit 2
-+						  *
-+						  * SWFLOW bits 3 & 2 table:
-+						  * 00 -> no transmitter flow
-+						  *       control
-+						  * 01 -> transmitter generates
-+						  *       XON2 and XOFF2
-+						  * 10 -> transmitter generates
-+						  *       XON1 and XOFF1
-+						  * 11 -> transmitter generates
-+						  *       XON1, XON2, XOFF1 and
-+						  *       XOFF2
-+						  */
-+#define SC16IS7XX_EFR_SWFLOW1_BIT	(1 << 1) /* SWFLOW bit 2 */
-+#define SC16IS7XX_EFR_SWFLOW0_BIT	(1 << 0) /* SWFLOW bit 3
-+						  *
-+						  * SWFLOW bits 3 & 2 table:
-+						  * 00 -> no received flow
-+						  *       control
-+						  * 01 -> receiver compares
-+						  *       XON2 and XOFF2
-+						  * 10 -> receiver compares
-+						  *       XON1 and XOFF1
-+						  * 11 -> receiver compares
-+						  *       XON1, XON2, XOFF1 and
-+						  *       XOFF2
-+						  */
-+
-+/* Misc definitions */
-+#define SC16IS7XX_FIFO_SIZE		(64)
-+#define SC16IS7XX_REG_SHIFT		2
-+
-+struct sc16is7xx_devtype {
-+	char	name[10];
-+	int	nr_gpio;
-+	int	nr_uart;
-+};
-+
-+struct sc16is7xx_one {
-+	struct uart_port		port;
-+	struct work_struct		tx_work;
-+	struct work_struct		md_work;
-+};
-+
-+struct sc16is7xx_port {
-+	struct uart_driver		uart;
-+	struct sc16is7xx_devtype	*devtype;
-+	struct regmap			*regmap;
-+	struct mutex			mutex;
-+	struct clk			*clk;
-+#ifdef CONFIG_GPIOLIB
-+	struct gpio_chip		gpio;
-+#endif
-+	struct sc16is7xx_one		p[0];
-+};
-+
-+static u8 sc16is7xx_port_read(struct uart_port *port, u8 reg)
++static int cm3218x_interrupt_config(struct cm3218x_chip *chip, int enable)
 +{
-+	struct sc16is7xx_port *s =3D dev_get_drvdata(port->dev);
-+	unsigned int val =3D 0;
++	struct i2c_client *client = chip->client;
++	struct cm3218x_als_info *als_info = chip->als_info;
++	int status;
 +
-+	regmap_read(s->regmap,
-+		    (reg << SC16IS7XX_REG_SHIFT) | port->line, &val);
++	if (!als_info)
++		return -ENODEV;
 +
-+	return val;
++	/* Force to clean interrupt */
++	if (als_info->int_type == CM3218X_INT_TYPE_I2C) {
++		status = i2c_smbus_read_word_data(client,
++				CM3218X_REG_ADDR_STATUS);
++		if (status < 0)
++			als_info->int_type = CM3218X_INT_TYPE_SMBUS;
++	}
++	if (chip->ara && als_info->int_type == CM3218X_INT_TYPE_SMBUS)
++		i2c_smbus_read_byte(chip->ara);
++
++	if (enable)
++		chip->conf_regs[CM3218X_REG_ADDR_CMD] |=
++			CM3218X_CMD_ALS_INT_EN;
++	else
++		chip->conf_regs[CM3218X_REG_ADDR_CMD] &=
++			~CM3218X_CMD_ALS_INT_EN;
++
++	status = i2c_smbus_write_word_data(client, CM3218X_REG_ADDR_CMD,
++		chip->conf_regs[CM3218X_REG_ADDR_CMD]);
++
++	if (status < 0)
++		return -ENODEV;
++
++	return status;
 +}
 +
-+static void sc16is7xx_port_write(struct uart_port *port, u8 reg, u8 va=
-l)
++/**
++ * cm3218x_acpi_get_cpm_info() - Get CPM object from ACPI
++ * @client	pointer of struct i2c_client.
++ * @obj_name	pointer of ACPI object name.
++ * @count	maximum size of return array.
++ * @vals	pointer of array for return elements.
++ *
++ * Convert ACPI CPM table to array. Special thanks Srinivas Pandruvada's
++ * help to implement this routine.
++ *
++ * Return: -ENODEV for fail.  Otherwise is number of elements.
++ */
++static int cm3218x_acpi_get_cpm_info(struct i2c_client *client, char *obj_name,
++							int count, u64 *vals)
 +{
-+	struct sc16is7xx_port *s =3D dev_get_drvdata(port->dev);
++	acpi_handle handle;
++	struct acpi_buffer buffer = {ACPI_ALLOCATE_BUFFER, NULL};
++	int i;
++	acpi_status status;
++	union acpi_object *cpm;
 +
-+	regmap_write(s->regmap,
-+		     (reg << SC16IS7XX_REG_SHIFT) | port->line, val);
++	handle = ACPI_HANDLE(&client->dev);
++	if (!handle)
++		return -ENODEV;
++
++	status = acpi_evaluate_object(handle, obj_name, NULL, &buffer);
++	if (ACPI_FAILURE(status)) {
++		dev_err(&client->dev, "object %s not found\n", obj_name);
++		return -ENODEV;
++	}
++
++	cpm = buffer.pointer;
++	for (i = 0; i < cpm->package.count && i < count; ++i) {
++		union acpi_object *elem;
++		elem = &(cpm->package.elements[i]);
++		vals[i] = elem->integer.value;
++	}
++
++	kfree(buffer.pointer);
++
++	return cpm->package.count;
 +}
 +
-+static void sc16is7xx_port_update(struct uart_port *port, u8 reg,
-+				  u8 mask, u8 val)
++/**
++ * cm3218x_reg_init() - Initialize CM3218X registers
++ * @chip:	pointer of struct cm3218x.
++ *
++ * Initialize CM3218X ambient light sensor register to default values.
++ *
++  Return: 0 for success; otherwise for error code.
++ */
++static int cm3218x_reg_init(struct cm3218x_chip *chip)
 +{
-+	struct sc16is7xx_port *s =3D dev_get_drvdata(port->dev);
++	struct i2c_client *client = chip->client;
++	int i;
++	s32 ret;
++	int cpm_elem_count;
++	u64 cpm_elems[20];
++	struct cm3218x_als_info *als_info;
 +
-+	regmap_update_bits(s->regmap,
-+			   (reg << SC16IS7XX_REG_SHIFT) | port->line,
-+			   mask, val);
-+}
++	/* Default device */
++	chip->als_info = &cm3218_info;
++	chip->conf_regs[CM3218X_REG_ADDR_CMD] = CM3218X_CMD_DEFAULT;
++	chip->conf_regs[CM3218X_REG_ADDR_WH] = CM3218X_WH_DEFAULT;
++	chip->conf_regs[CM3218X_REG_ADDR_WL] = CM3218X_WL_DEFAULT;
 +
++	/* Disable interrupt */
++	cm3218x_interrupt_config(chip, 0);
 +
-+static void sc16is7xx_power(struct uart_port *port, int on)
-+{
-+	sc16is7xx_port_update(port, SC16IS7XX_IER_REG,
-+			      SC16IS7XX_IER_SLEEP_BIT,
-+			      on ? 0 : SC16IS7XX_IER_SLEEP_BIT);
-+}
++	/* Disable Test Mode */
++	i2c_smbus_write_word_data(client, CM3218X_REG_ADDR_TEST, 0x0000);
 +
-+static const struct sc16is7xx_devtype sc16is74x_devtype =3D {
-+	.name		=3D "SC16IS74X",
-+	.nr_gpio	=3D 0,
-+	.nr_uart	=3D 1,
-+};
++	/* Disable device */
++	i2c_smbus_write_word_data(client, CM3218X_REG_ADDR_CMD,
++		CM3218X_CMD_ALS_DISABLE);
 +
-+static const struct sc16is7xx_devtype sc16is750_devtype =3D {
-+	.name		=3D "SC16IS750",
-+	.nr_gpio	=3D 8,
-+	.nr_uart	=3D 1,
-+};
-+
-+static const struct sc16is7xx_devtype sc16is752_devtype =3D {
-+	.name		=3D "SC16IS752",
-+	.nr_gpio	=3D 8,
-+	.nr_uart	=3D 2,
-+};
-+
-+static const struct sc16is7xx_devtype sc16is760_devtype =3D {
-+	.name		=3D "SC16IS760",
-+	.nr_gpio	=3D 8,
-+	.nr_uart	=3D 1,
-+};
-+
-+static const struct sc16is7xx_devtype sc16is762_devtype =3D {
-+	.name		=3D "SC16IS762",
-+	.nr_gpio	=3D 8,
-+	.nr_uart	=3D 2,
-+};
-+
-+static bool sc16is7xx_regmap_writeable(struct device *dev, unsigned in=
-t reg)
-+{
-+	switch (reg >> SC16IS7XX_REG_SHIFT) {
-+	case SC16IS7XX_THR_REG:
-+	case SC16IS7XX_IER_REG:
-+	case SC16IS7XX_FCR_REG:
-+	case SC16IS7XX_LCR_REG:
-+	case SC16IS7XX_MCR_REG:
-+	case SC16IS7XX_SPR_REG:
-+	case SC16IS7XX_IODIR_REG:
-+	case SC16IS7XX_IOSTATE_REG:
-+	case SC16IS7XX_IOINTENA_REG:
-+	case SC16IS7XX_IOCONTROL_REG:
-+	case SC16IS7XX_EFCR_REG:
-+		return true;
-+	default:
++	/* Identify device */
++	ret = i2c_smbus_read_word_data(client, CM3218X_REG_ADDR_ID);
++	if (ret < 0)
++		return ret;
++	switch (ret & 0xFF) {
++	case 0x18:
++		als_info = chip->als_info = &cm3218_info;
++		if (ret & 0x0800)
++			als_info->int_type = CM3218X_INT_TYPE_I2C;
++		else
++			als_info->int_type = CM3218X_INT_TYPE_SMBUS;
 +		break;
-+	}
-+
-+	return false;
-+}
-+
-+static bool sc16is7xx_regmap_volatile(struct device *dev, unsigned int=
- reg)
-+{
-+	switch (reg >> SC16IS7XX_REG_SHIFT) {
-+	case SC16IS7XX_RHR_REG:
-+	case SC16IS7XX_IIR_REG:
-+	case SC16IS7XX_LSR_REG:
-+	case SC16IS7XX_MSR_REG:
-+	case SC16IS7XX_TXLVL_REG:
-+	case SC16IS7XX_RXLVL_REG:
-+	case SC16IS7XX_IOSTATE_REG:
-+		return true;
-+	default:
++	case 0x81:
++		als_info = chip->als_info = &cm32181_info;
 +		break;
-+	}
-+
-+	return false;
-+}
-+
-+static bool sc16is7xx_regmap_precious(struct device *dev, unsigned int=
- reg)
-+{
-+	switch (reg >> SC16IS7XX_REG_SHIFT) {
-+	case SC16IS7XX_RHR_REG:
-+		return true;
-+	default:
++	case 0x82:
++		als_info = chip->als_info = &cm32182_info;
 +		break;
++	default:
++		return -ENODEV;
 +	}
 +
-+	return false;
-+}
++	if (ACPI_HANDLE(&client->dev)) {
++		/* Load from ACPI */
++		cpm_elem_count = cm3218x_acpi_get_cpm_info(client, "CPM0",
++							ARRAY_SIZE(cpm_elems),
++							cpm_elems);
++		if (cpm_elem_count > 0) {
++			int header_num = 3;
++			int reg_num = cpm_elem_count - header_num;
 +
-+static int sc16is7xx_set_baud(struct uart_port *port, int baud)
-+{
-+	struct sc16is7xx_port *s =3D dev_get_drvdata(port->dev);
-+	u8 lcr;
-+	u8 prescaler =3D 0;
-+	unsigned long clk =3D port->uartclk, div =3D clk / 16 / baud;
-+
-+	if (div > 0xffff) {
-+		prescaler =3D SC16IS7XX_MCR_CLKSEL_BIT;
-+		div /=3D 4;
-+	}
-+
-+	lcr =3D sc16is7xx_port_read(port, SC16IS7XX_LCR_REG);
-+
-+	/* Open the LCR divisors for configuration */
-+	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG,
-+			     SC16IS7XX_LCR_CONF_MODE_B);
-+
-+	/* Enable enhanced features */
-+	regcache_cache_bypass(s->regmap, true);
-+	sc16is7xx_port_write(port, SC16IS7XX_EFR_REG,
-+			     SC16IS7XX_EFR_ENABLE_BIT);
-+	regcache_cache_bypass(s->regmap, false);
-+
-+	/* Put LCR back to the normal mode */
-+	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG, lcr);
-+
-+	sc16is7xx_port_update(port, SC16IS7XX_MCR_REG,
-+			      SC16IS7XX_MCR_CLKSEL_BIT,
-+			      prescaler);
-+
-+	/* Open the LCR divisors for configuration */
-+	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG,
-+			     SC16IS7XX_LCR_CONF_MODE_A);
-+
-+	/* Write the new divisor */
-+	regcache_cache_bypass(s->regmap, true);
-+	sc16is7xx_port_write(port, SC16IS7XX_DLH_REG, div / 256);
-+	sc16is7xx_port_write(port, SC16IS7XX_DLL_REG, div % 256);
-+	regcache_cache_bypass(s->regmap, false);
-+
-+	/* Put LCR back to the normal mode */
-+	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG, lcr);
-+
-+	return DIV_ROUND_CLOSEST(clk / 16, div);
-+}
-+
-+static void sc16is7xx_handle_rx(struct uart_port *port, unsigned int r=
-xlen,
-+				unsigned int iir)
-+{
-+	struct sc16is7xx_port *s =3D dev_get_drvdata(port->dev);
-+	unsigned int lsr =3D 0, ch, flag, bytes_read, i;
-+	u8 buf[port->fifosize];
-+	bool read_lsr =3D (iir =3D=3D SC16IS7XX_IIR_RLSE_SRC) ? true : false;
-+
-+	if (unlikely(rxlen >=3D port->fifosize)) {
-+		dev_warn_ratelimited(port->dev,
-+				     "Port %i: Possible RX FIFO overrun: %d\n",
-+				     port->line, rxlen);
-+		port->icount.buf_overrun++;
-+		/* Ensure sanity of RX level */
-+		rxlen =3D port->fifosize;
-+	}
-+
-+	while (rxlen) {
-+		/* Only read lsr if there are possible errors in FIFO */
-+		if (read_lsr) {
-+			lsr =3D sc16is7xx_port_read(port, SC16IS7XX_LSR_REG);
-+			if (!(lsr & SC16IS7XX_LSR_FIFOE_BIT))
-+				read_lsr =3D false; /* No errors left in FIFO */
-+		} else
-+			lsr =3D 0;
-+
-+		if (read_lsr) {
-+			buf[0] =3D sc16is7xx_port_read(port, SC16IS7XX_RHR_REG);
-+			bytes_read =3D 1;
-+		} else {
-+			regcache_cache_bypass(s->regmap, true);
-+			regmap_raw_read(s->regmap, SC16IS7XX_RHR_REG,
-+					buf, rxlen);
-+			regcache_cache_bypass(s->regmap, false);
-+			bytes_read =3D rxlen;
++			als_info->regs_bmp = cpm_elems[2];
++			for (i = 0; i < reg_num; i++)
++				if (als_info->regs_bmp & (1<<i))
++					chip->conf_regs[i] =
++						cpm_elems[header_num+i];
 +		}
 +
-+		lsr &=3D SC16IS7XX_LSR_BRK_ERROR_MASK;
-+
-+		port->icount.rx++;
-+		flag =3D TTY_NORMAL;
-+
-+		if (unlikely(lsr)) {
-+			if (lsr & SC16IS7XX_LSR_BI_BIT) {
-+				port->icount.brk++;
-+				if (uart_handle_break(port))
-+					continue;
-+			} else if (lsr & SC16IS7XX_LSR_PE_BIT)
-+				port->icount.parity++;
-+			else if (lsr & SC16IS7XX_LSR_FE_BIT)
-+				port->icount.frame++;
-+			else if (lsr & SC16IS7XX_LSR_OE_BIT)
-+				port->icount.overrun++;
-+
-+			lsr &=3D port->read_status_mask;
-+			if (lsr & SC16IS7XX_LSR_BI_BIT)
-+				flag =3D TTY_BREAK;
-+			else if (lsr & SC16IS7XX_LSR_PE_BIT)
-+				flag =3D TTY_PARITY;
-+			else if (lsr & SC16IS7XX_LSR_FE_BIT)
-+				flag =3D TTY_FRAME;
-+			else if (lsr & SC16IS7XX_LSR_OE_BIT)
-+				flag =3D TTY_OVERRUN;
++		cpm_elem_count = cm3218x_acpi_get_cpm_info(client, "CPM1",
++							ARRAY_SIZE(cpm_elems),
++							cpm_elems);
++		if (cpm_elem_count > 0) {
++			als_info->mlux_per_bit = (int)cpm_elems[0] / 100;
++			als_info->calibscale = (int)cpm_elems[1];
 +		}
-+
-+		for (i =3D 0; i < bytes_read; ++i) {
-+			ch =3D buf[i];
-+			if (uart_handle_sysrq_char(port, ch))
-+				continue;
-+
-+			if (lsr & port->ignore_status_mask)
-+				continue;
-+
-+			uart_insert_char(port, lsr, SC16IS7XX_LSR_OE_BIT, ch,
-+					 flag);
-+		}
-+		rxlen -=3D bytes_read;
 +	}
 +
-+	tty_flip_buffer_push(&port->state->port);
-+}
++	/* Force to disable interrupt */
++	chip->conf_regs[CM3218X_REG_ADDR_CMD] &= ~CM3218X_CMD_ALS_INT_EN;
 +
-+static void sc16is7xx_handle_tx(struct uart_port *port)
-+{
-+	struct sc16is7xx_port *s =3D dev_get_drvdata(port->dev);
-+	struct circ_buf *xmit =3D &port->state->xmit;
-+	unsigned int txlen, to_send, i;
-+	u8 buf[port->fifosize];
-+
-+	if (unlikely(port->x_char)) {
-+		sc16is7xx_port_write(port, SC16IS7XX_THR_REG, port->x_char);
-+		port->icount.tx++;
-+		port->x_char =3D 0;
-+		return;
++	/* Initialize registers */
++	for (i = 0; i < CM3218X_CONF_REG_NUM; i++) {
++		if (als_info->regs_bmp & (1<<i)) {
++			ret = i2c_smbus_write_word_data(client, i,
++						chip->conf_regs[i]);
++			if (ret < 0)
++				return ret;
++		}
 +	}
 +
-+	if (uart_circ_empty(xmit) || uart_tx_stopped(port))
-+		return;
-+
-+	/* Get length of data pending in circular buffer */
-+	to_send =3D uart_circ_chars_pending(xmit);
-+	if (likely(to_send)) {
-+		/* Limit to size of TX FIFO */
-+		txlen =3D sc16is7xx_port_read(port, SC16IS7XX_TXLVL_REG);
-+		to_send =3D (to_send > txlen) ? txlen : to_send;
-+
-+		/* Add data to send */
-+		port->icount.tx +=3D to_send;
-+
-+		/* Convert to linear buffer */
-+		for (i =3D 0; i < to_send; ++i) {
-+			buf[i] =3D xmit->buf[xmit->tail];
-+			xmit->tail =3D (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
-+		}
-+		regcache_cache_bypass(s->regmap, true);
-+		regmap_raw_write(s->regmap, SC16IS7XX_THR_REG, buf, to_send);
-+		regcache_cache_bypass(s->regmap, false);
-+	}
-+
-+	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
-+		uart_write_wakeup(port);
++	return 0;
 +}
 +
-+static void sc16is7xx_port_irq(struct sc16is7xx_port *s, int portno)
++/**
++ *  cm3218x_read_als_it() - Get sensor integration time (ms)
++ *  @chip:	pointer of struct cm3218x
++ *  @val2:	pointer of int to load the als_it value.
++ *
++ *  Report the current integartion time in milliseconds.
++ *
++ *  Return: IIO_VAL_INT_PLUS_MICRO for success, otherwise -EINVAL.
++ */
++static int cm3218x_read_als_it(struct cm3218x_chip *chip, int *val2)
 +{
-+	struct uart_port *port =3D &s->p[portno].port;
-+
-+	do {
-+		unsigned int iir, msr, rxlen;
-+
-+		iir =3D sc16is7xx_port_read(port, SC16IS7XX_IIR_REG);
-+		if (iir & SC16IS7XX_IIR_NO_INT_BIT)
-+			break;
-+
-+		iir &=3D SC16IS7XX_IIR_ID_MASK;
-+
-+		switch (iir) {
-+		case SC16IS7XX_IIR_RDI_SRC:
-+		case SC16IS7XX_IIR_RLSE_SRC:
-+		case SC16IS7XX_IIR_RTOI_SRC:
-+		case SC16IS7XX_IIR_XOFFI_SRC:
-+			rxlen =3D sc16is7xx_port_read(port, SC16IS7XX_RXLVL_REG);
-+			if (rxlen)
-+				sc16is7xx_handle_rx(port, rxlen, iir);
-+			break;
-+
-+		case SC16IS7XX_IIR_CTSRTS_SRC:
-+			msr =3D sc16is7xx_port_read(port, SC16IS7XX_MSR_REG);
-+			uart_handle_cts_change(port,
-+					       !!(msr & SC16IS7XX_MSR_CTS_BIT));
-+			break;
-+		case SC16IS7XX_IIR_THRI_SRC:
-+			mutex_lock(&s->mutex);
-+			sc16is7xx_handle_tx(port);
-+			mutex_unlock(&s->mutex);
-+			break;
-+		default:
-+			dev_err_ratelimited(port->dev,
-+					    "Port %i: Unexpected interrupt: %x",
-+					    port->line, iir);
-+			break;
-+		}
-+	} while (1);
-+}
-+
-+static irqreturn_t sc16is7xx_ist(int irq, void *dev_id)
-+{
-+	struct sc16is7xx_port *s =3D (struct sc16is7xx_port *)dev_id;
++	struct cm3218x_als_info *als_info = chip->als_info;
++	u16 als_it;
 +	int i;
 +
-+	for (i =3D 0; i < s->uart.nr; ++i)
-+		sc16is7xx_port_irq(s, i);
++	als_it = chip->conf_regs[CM3218X_REG_ADDR_CMD];
++	als_it &= CM3218X_CMD_ALS_IT_MASK;
++	als_it >>= CM3218X_CMD_ALS_IT_SHIFT;
++	for (i = 0; i < als_info->num_als_it; i++) {
++		if (als_it == als_info->als_it_bits[i]) {
++			*val2 = als_info->als_it_values[i];
++			return IIO_VAL_INT_PLUS_MICRO;
++		}
++	}
 +
++	return -EINVAL;
++}
++
++/**
++ * cm3218x_write_als_it() - Write sensor integration time
++ * @chip:	pointer of struct cm3218x.
++ * @val:	integration time in milliseconds.
++ *
++ * Convert integration time (ms) to sensor value.
++ *
++ * Return: i2c_smbus_write_word_data command return value.
++ */
++static int cm3218x_write_als_it(struct cm3218x_chip *chip, int val)
++{
++	struct i2c_client *client = chip->client;
++	struct cm3218x_als_info *als_info = chip->als_info;
++	u16 als_it;
++	int ret, i;
++
++	for (i = 0; i < als_info->num_als_it; i++)
++		if (val <= als_info->als_it_values[i])
++			break;
++	if (i >= als_info->num_als_it)
++		i = als_info->num_als_it - 1;
++
++	als_it = als_info->als_it_bits[i];
++	als_it <<= CM3218X_CMD_ALS_IT_SHIFT;
++
++	mutex_lock(&chip->lock);
++	chip->conf_regs[CM3218X_REG_ADDR_CMD] &=
++			~CM3218X_CMD_ALS_IT_MASK;
++	chip->conf_regs[CM3218X_REG_ADDR_CMD] |=
++			als_it;
++	ret = i2c_smbus_write_word_data(client, CM3218X_REG_ADDR_CMD,
++			chip->conf_regs[CM3218X_REG_ADDR_CMD]);
++	mutex_unlock(&chip->lock);
++
++	return ret;
++}
++
++/**
++ * cm3218x_get_lux() - report current lux value
++ * @chip:	pointer of struct cm3218x.
++ *
++ * Convert sensor raw data to lux.  It depends on integration
++ * time and calibscale variable.
++ *
++ * Return: Positive value is lux, otherwise is error code.
++ */
++static int cm3218x_get_lux(struct cm3218x_chip *chip)
++{
++	struct i2c_client *client = chip->client;
++	struct cm3218x_als_info *als_info = chip->als_info;
++	int ret;
++	int als_it;
++	u64 tmp;
++
++	/* Calculate mlux per bit based on als_it */
++	ret = cm3218x_read_als_it(chip, &als_it);
++	if (ret < 0)
++		return -EINVAL;
++	tmp = (__force u64)als_info->mlux_per_bit;
++	tmp *= als_info->mlux_per_bit_base_it;
++	tmp = div_u64(tmp, als_it);
++
++	/* Get als_raw */
++	if (!(chip->conf_regs[CM3218X_REG_ADDR_CMD] & CM3218X_CMD_ALS_INT_EN))
++		als_info->als_raw = i2c_smbus_read_word_data(
++					client,
++					CM3218X_REG_ADDR_ALS);
++	if (als_info->als_raw < 0)
++		return als_info->als_raw;
++
++	tmp *= als_info->als_raw;
++	tmp *= als_info->calibscale;
++	tmp = div_u64(tmp, CM3218X_CALIBSCALE_RESOLUTION);
++	tmp = div_u64(tmp, CM3218X_MLUX_PER_LUX);
++
++	if (tmp > 0xFFFF)
++		tmp = 0xFFFF;
++
++	return (int)tmp;
++}
++
++static int cm3218x_read_raw(struct iio_dev *indio_dev,
++			struct iio_chan_spec const *chan,
++			int *val, int *val2, long mask)
++{
++	struct cm3218x_chip *chip = iio_priv(indio_dev);
++	struct cm3218x_als_info *als_info = chip->als_info;
++	int ret;
++
++	switch (mask) {
++	case IIO_CHAN_INFO_PROCESSED:
++		ret = cm3218x_get_lux(chip);
++		if (ret < 0)
++			return ret;
++		*val = ret;
++		return IIO_VAL_INT;
++	case IIO_CHAN_INFO_CALIBSCALE:
++		*val = als_info->calibscale;
++		return IIO_VAL_INT;
++	case IIO_CHAN_INFO_INT_TIME:
++		*val = 0;
++		ret = cm3218x_read_als_it(chip, val2);
++		return ret;
++	}
++
++	return -EINVAL;
++}
++
++static int cm3218x_write_raw(struct iio_dev *indio_dev,
++			struct iio_chan_spec const *chan,
++			int val, int val2, long mask)
++{
++	struct cm3218x_chip *chip = iio_priv(indio_dev);
++	struct cm3218x_als_info *als_info = chip->als_info;
++	long ms;
++
++	switch (mask) {
++	case IIO_CHAN_INFO_CALIBSCALE:
++		als_info->calibscale = val;
++		return val;
++	case IIO_CHAN_INFO_INT_TIME:
++		ms = val * 1000000 + val2;
++		return cm3218x_write_als_it(chip, (int)ms);
++	}
++
++	return -EINVAL;
++}
++
++/**
++ * cm3218x_get_it_available() - Get available ALS IT value
++ * @dev:	pointer of struct device.
++ * @attr:	pointer of struct device_attribute.
++ * @buf:	pointer of return string buffer.
++ *
++ * Display the available integration time in milliseconds.
++ *
++ * Return: string length.
++ */
++static ssize_t cm3218x_get_it_available(struct device *dev,
++			struct device_attribute *attr, char *buf)
++{
++	struct cm3218x_chip *chip = iio_priv(dev_to_iio_dev(dev));
++	struct cm3218x_als_info *als_info = chip->als_info;
++	int i, len;
++
++	for (i = 0, len = 0; i < als_info->num_als_it; i++)
++		len += scnprintf(buf + len, PAGE_SIZE - len, "%u.%06u ",
++			als_info->als_it_values[i]/1000000,
++			als_info->als_it_values[i]%1000000);
++	return len + scnprintf(buf + len, PAGE_SIZE - len, "\n");
++}
++
++/**
++ * cm3218x_threshold_update() - Update the threshold registers.
++ * @chip:	pointer of struct cm3218x_chip.
++ * @percent:	+/- percent.
++ *
++ * Based on the current ALS value, tupdate the hi and low threshold registers.
++ *
++ * Return: 0 for success; otherwise for error code.
++ */
++static int cm3218x_threshold_update(struct cm3218x_chip *chip, int percent)
++{
++	struct i2c_client *client = chip->client;
++	struct cm3218x_als_info *als_info = chip->als_info;
++	int ret;
++	int wh, wl;
++
++	ret = als_info->als_raw = i2c_smbus_read_word_data(client,
++					CM3218X_REG_ADDR_ALS);
++	if (ret < 0)
++		return ret;
++
++	wh = wl = ret;
++	ret *= percent;
++	ret /= 100;
++	if (ret < 1)
++		ret = 1;
++	wh += ret;
++	wl -= ret;
++	if (wh > 65535)
++		wh = 65535;
++	if (wl < 0)
++		wl = 0;
++
++	chip->conf_regs[CM3218X_REG_ADDR_WH] = wh;
++	ret = i2c_smbus_write_word_data(
++		client,
++		CM3218X_REG_ADDR_WH,
++		chip->conf_regs[CM3218X_REG_ADDR_WH]);
++	if (ret < 0)
++		return ret;
++
++	chip->conf_regs[CM3218X_REG_ADDR_WL] = wl;
++	ret = i2c_smbus_write_word_data(
++		client,
++		CM3218X_REG_ADDR_WL,
++		chip->conf_regs[CM3218X_REG_ADDR_WL]);
++
++	return ret;
++}
++
++/**
++ * cm3218x_event_handler() - Interrupt handling routine.
++ * @irq:	irq number.
++ * @private:	pointer of void.
++ *
++ * Clean interrupt and reset threshold registers.
++ *
++ * Return: IRQ_HANDLED.
++ */
++static irqreturn_t cm3218x_event_handler(int irq, void *private)
++{
++	struct iio_dev *dev_info = private;
++	struct cm3218x_chip *chip = iio_priv(dev_info);
++	int ret;
++
++	mutex_lock(&chip->lock);
++
++	/* Disable interrupt */
++	ret = cm3218x_interrupt_config(chip, 0);
++	if (ret < 0)
++		goto error_handler_unlock;
++
++	/* Update Hi/Lo windows */
++	ret = cm3218x_threshold_update(chip, CM3218X_THRESHOLD_PERCENT);
++	if (ret < 0)
++		goto error_handler_unlock;
++
++	/* Enable interrupt */
++	ret = cm3218x_interrupt_config(chip, 1);
++	if (ret < 0)
++		goto error_handler_unlock;
++
++error_handler_unlock:
++	mutex_unlock(&chip->lock);
 +	return IRQ_HANDLED;
 +}
 +
-+static void sc16is7xx_wq_proc(struct work_struct *ws)
-+{
-+	struct sc16is7xx_one *one =3D container_of(ws, struct sc16is7xx_one,
-+						 tx_work);
-+	struct sc16is7xx_port *s =3D dev_get_drvdata(one->port.dev);
-+
-+	mutex_lock(&s->mutex);
-+	sc16is7xx_handle_tx(&one->port);
-+	mutex_unlock(&s->mutex);
-+}
-+
-+static void sc16is7xx_start_tx(struct uart_port *port)
-+{
-+	struct sc16is7xx_one *one =3D container_of(port, struct sc16is7xx_one=
-,
-+						 port);
-+
-+	if (!work_pending(&one->tx_work))
-+		schedule_work(&one->tx_work);
-+}
-+
-+static unsigned int sc16is7xx_tx_empty(struct uart_port *port)
-+{
-+	unsigned int lvl, lsr;
-+
-+	lvl =3D sc16is7xx_port_read(port, SC16IS7XX_TXLVL_REG);
-+	lsr =3D sc16is7xx_port_read(port, SC16IS7XX_LSR_REG);
-+
-+	return ((lsr & SC16IS7XX_LSR_THRE_BIT) && !lvl) ? TIOCSER_TEMT : 0;
-+}
-+
-+static unsigned int sc16is7xx_get_mctrl(struct uart_port *port)
-+{
-+	/* DCD and DSR are not wired and CTS/RTS is handled automatically
-+	 * so just indicate DSR and CAR asserted
-+	 */
-+	return TIOCM_DSR | TIOCM_CAR;
-+}
-+
-+static void sc16is7xx_md_proc(struct work_struct *ws)
-+{
-+	struct sc16is7xx_one *one =3D container_of(ws, struct sc16is7xx_one,
-+						 md_work);
-+
-+	sc16is7xx_port_update(&one->port, SC16IS7XX_MCR_REG,
-+			      SC16IS7XX_MCR_LOOP_BIT,
-+			      (one->port.mctrl & TIOCM_LOOP) ?
-+				      SC16IS7XX_MCR_LOOP_BIT : 0);
-+}
-+
-+static void sc16is7xx_set_mctrl(struct uart_port *port, unsigned int m=
-ctrl)
-+{
-+	struct sc16is7xx_one *one =3D container_of(port, struct sc16is7xx_one=
-,
-+						 port);
-+
-+	schedule_work(&one->md_work);
-+}
-+
-+static void sc16is7xx_break_ctl(struct uart_port *port, int break_stat=
-e)
-+{
-+	sc16is7xx_port_update(port, SC16IS7XX_LCR_REG,
-+			      SC16IS7XX_LCR_TXBREAK_BIT,
-+			      break_state ? SC16IS7XX_LCR_TXBREAK_BIT : 0);
-+}
-+
-+static void sc16is7xx_set_termios(struct uart_port *port,
-+				  struct ktermios *termios,
-+				  struct ktermios *old)
-+{
-+	struct sc16is7xx_port *s =3D dev_get_drvdata(port->dev);
-+	unsigned int lcr, flow =3D 0;
-+	int baud;
-+
-+	/* Mask termios capabilities we don't support */
-+	termios->c_cflag &=3D ~CMSPAR;
-+
-+	/* Word size */
-+	switch (termios->c_cflag & CSIZE) {
-+	case CS5:
-+		lcr =3D SC16IS7XX_LCR_WORD_LEN_5;
-+		break;
-+	case CS6:
-+		lcr =3D SC16IS7XX_LCR_WORD_LEN_6;
-+		break;
-+	case CS7:
-+		lcr =3D SC16IS7XX_LCR_WORD_LEN_7;
-+		break;
-+	case CS8:
-+		lcr =3D SC16IS7XX_LCR_WORD_LEN_8;
-+		break;
-+	default:
-+		lcr =3D SC16IS7XX_LCR_WORD_LEN_8;
-+		termios->c_cflag &=3D ~CSIZE;
-+		termios->c_cflag |=3D CS8;
-+		break;
++static const struct iio_chan_spec cm3218x_channels[] = {
++	{
++		.type = IIO_LIGHT,
++		.info_mask_separate =
++			BIT(IIO_CHAN_INFO_PROCESSED) |
++			BIT(IIO_CHAN_INFO_CALIBSCALE) |
++			BIT(IIO_CHAN_INFO_INT_TIME),
 +	}
-+
-+	/* Parity */
-+	if (termios->c_cflag & PARENB) {
-+		lcr |=3D SC16IS7XX_LCR_PARITY_BIT;
-+		if (!(termios->c_cflag & PARODD))
-+			lcr |=3D SC16IS7XX_LCR_EVENPARITY_BIT;
-+	}
-+
-+	/* Stop bits */
-+	if (termios->c_cflag & CSTOPB)
-+		lcr |=3D SC16IS7XX_LCR_STOPLEN_BIT; /* 2 stops */
-+
-+	/* Set read status mask */
-+	port->read_status_mask =3D SC16IS7XX_LSR_OE_BIT;
-+	if (termios->c_iflag & INPCK)
-+		port->read_status_mask |=3D SC16IS7XX_LSR_PE_BIT |
-+					  SC16IS7XX_LSR_FE_BIT;
-+	if (termios->c_iflag & (BRKINT | PARMRK))
-+		port->read_status_mask |=3D SC16IS7XX_LSR_BI_BIT;
-+
-+	/* Set status ignore mask */
-+	port->ignore_status_mask =3D 0;
-+	if (termios->c_iflag & IGNBRK)
-+		port->ignore_status_mask |=3D SC16IS7XX_LSR_BI_BIT;
-+	if (!(termios->c_cflag & CREAD))
-+		port->ignore_status_mask |=3D SC16IS7XX_LSR_BRK_ERROR_MASK;
-+
-+	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG,
-+			     SC16IS7XX_LCR_CONF_MODE_B);
-+
-+	/* Configure flow control */
-+	regcache_cache_bypass(s->regmap, true);
-+	sc16is7xx_port_write(port, SC16IS7XX_XON1_REG, termios->c_cc[VSTART])=
-;
-+	sc16is7xx_port_write(port, SC16IS7XX_XOFF1_REG, termios->c_cc[VSTOP])=
-;
-+	if (termios->c_cflag & CRTSCTS)
-+		flow |=3D SC16IS7XX_EFR_AUTOCTS_BIT |
-+			SC16IS7XX_EFR_AUTORTS_BIT;
-+	if (termios->c_iflag & IXON)
-+		flow |=3D SC16IS7XX_EFR_SWFLOW3_BIT;
-+	if (termios->c_iflag & IXOFF)
-+		flow |=3D SC16IS7XX_EFR_SWFLOW1_BIT;
-+
-+	sc16is7xx_port_write(port, SC16IS7XX_EFR_REG, flow);
-+	regcache_cache_bypass(s->regmap, false);
-+
-+	/* Update LCR register */
-+	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG, lcr);
-+
-+	/* Get baud rate generator configuration */
-+	baud =3D uart_get_baud_rate(port, termios, old,
-+				  port->uartclk / 16 / 4 / 0xffff,
-+				  port->uartclk / 16);
-+
-+	/* Setup baudrate generator */
-+	baud =3D sc16is7xx_set_baud(port, baud);
-+
-+	/* Update timeout according to new baud rate */
-+	uart_update_timeout(port, termios->c_cflag, baud);
-+}
-+
-+static int sc16is7xx_ioctl(struct uart_port *port, unsigned int cmd,
-+			   unsigned long arg)
-+{
-+#if defined(TIOCSRS485) && defined(TIOCGRS485)
-+	struct serial_rs485 rs485;
-+	unsigned int val;
-+
-+	switch (cmd) {
-+	case TIOCSRS485:
-+		if (copy_from_user(&rs485, (void __user *)arg, sizeof(rs485)))
-+			return -EFAULT;
-+		if (rs485.flags & SER_RS485_ENABLED) {
-+			sc16is7xx_port_update(port, SC16IS7XX_EFCR_REG,
-+					      SC16IS7XX_EFCR_AUTO_RS485_BIT,
-+					      SC16IS7XX_EFCR_AUTO_RS485_BIT);
-+		} else {
-+			sc16is7xx_port_update(port, SC16IS7XX_EFCR_REG,
-+					      SC16IS7XX_EFCR_AUTO_RS485_BIT,
-+					      0);
-+		}
-+		return 0;
-+	case TIOCGRS485:
-+		memset(&rs485, 0, sizeof(rs485));
-+		val =3D sc16is7xx_port_read(port, SC16IS7XX_EFCR_REG);
-+		rs485.flags =3D (val & SC16IS7XX_EFCR_AUTO_RS485_BIT) ?
-+				      SER_RS485_ENABLED : 0;
-+		rs485.flags |=3D SER_RS485_RTS_ON_SEND;
-+		if (copy_to_user((void __user *)arg, &rs485, sizeof(rs485)))
-+			return -EFAULT;
-+		return 0;
-+	default:
-+		break;
-+	}
-+#endif
-+
-+	return -ENOIOCTLCMD;
-+}
-+
-+static int sc16is7xx_startup(struct uart_port *port)
-+{
-+	struct sc16is7xx_port *s =3D dev_get_drvdata(port->dev);
-+	unsigned int val;
-+
-+	sc16is7xx_power(port, 1);
-+
-+	/* Reset FIFOs*/
-+	val =3D SC16IS7XX_FCR_RXRESET_BIT | SC16IS7XX_FCR_TXRESET_BIT;
-+	sc16is7xx_port_write(port, SC16IS7XX_FCR_REG, val);
-+	udelay(5);
-+	sc16is7xx_port_write(port, SC16IS7XX_FCR_REG,
-+			     SC16IS7XX_FCR_FIFO_BIT);
-+
-+	/* Enable EFR */
-+	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG,
-+			     SC16IS7XX_LCR_CONF_MODE_B);
-+
-+	regcache_cache_bypass(s->regmap, true);
-+
-+	/* Enable write access to enhanced features and internal clock div */
-+	sc16is7xx_port_write(port, SC16IS7XX_EFR_REG,
-+			     SC16IS7XX_EFR_ENABLE_BIT);
-+
-+	/* Enable TCR/TLR */
-+	sc16is7xx_port_update(port, SC16IS7XX_MCR_REG,
-+			      SC16IS7XX_MCR_TCRTLR_BIT,
-+			      SC16IS7XX_MCR_TCRTLR_BIT);
-+
-+	/* Configure flow control levels */
-+	/* Flow control halt level 48, resume level 24 */
-+	sc16is7xx_port_write(port, SC16IS7XX_TCR_REG,
-+			     SC16IS7XX_TCR_RX_RESUME(24) |
-+			     SC16IS7XX_TCR_RX_HALT(48));
-+
-+	regcache_cache_bypass(s->regmap, false);
-+
-+	/* Now, initialize the UART */
-+	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG, SC16IS7XX_LCR_WORD_LEN_=
-8);
-+
-+	/* Enable the Rx and Tx FIFO */
-+	sc16is7xx_port_update(port, SC16IS7XX_EFCR_REG,
-+			      SC16IS7XX_EFCR_RXDISABLE_BIT |
-+			      SC16IS7XX_EFCR_TXDISABLE_BIT,
-+			      0);
-+
-+	/* Enable RX, TX, CTS change interrupts */
-+	val =3D SC16IS7XX_IER_RDI_BIT | SC16IS7XX_IER_THRI_BIT |
-+	      SC16IS7XX_IER_CTSI_BIT;
-+	sc16is7xx_port_write(port, SC16IS7XX_IER_REG, val);
-+
-+	return 0;
-+}
-+
-+static void sc16is7xx_shutdown(struct uart_port *port)
-+{
-+	/* Disable all interrupts */
-+	sc16is7xx_port_write(port, SC16IS7XX_IER_REG, 0);
-+	/* Disable TX/RX */
-+	sc16is7xx_port_write(port, SC16IS7XX_EFCR_REG,
-+			     SC16IS7XX_EFCR_RXDISABLE_BIT |
-+			     SC16IS7XX_EFCR_TXDISABLE_BIT);
-+
-+	sc16is7xx_power(port, 0);
-+}
-+
-+static const char *sc16is7xx_type(struct uart_port *port)
-+{
-+	struct sc16is7xx_port *s =3D dev_get_drvdata(port->dev);
-+
-+	return (port->type =3D=3D PORT_SC16IS7XX) ? s->devtype->name : NULL;
-+}
-+
-+static int sc16is7xx_request_port(struct uart_port *port)
-+{
-+	/* Do nothing */
-+	return 0;
-+}
-+
-+static void sc16is7xx_config_port(struct uart_port *port, int flags)
-+{
-+	if (flags & UART_CONFIG_TYPE)
-+		port->type =3D PORT_SC16IS7XX;
-+}
-+
-+static int sc16is7xx_verify_port(struct uart_port *port,
-+				 struct serial_struct *s)
-+{
-+	if ((s->type !=3D PORT_UNKNOWN) && (s->type !=3D PORT_SC16IS7XX))
-+		return -EINVAL;
-+	if (s->irq !=3D port->irq)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static void sc16is7xx_pm(struct uart_port *port, unsigned int state,
-+			 unsigned int oldstate)
-+{
-+	sc16is7xx_power(port, (state =3D=3D UART_PM_STATE_ON) ? 1 : 0);
-+}
-+
-+static void sc16is7xx_null_void(struct uart_port *port)
-+{
-+	/* Do nothing */
-+}
-+
-+static const struct uart_ops sc16is7xx_ops =3D {
-+	.tx_empty	=3D sc16is7xx_tx_empty,
-+	.set_mctrl	=3D sc16is7xx_set_mctrl,
-+	.get_mctrl	=3D sc16is7xx_get_mctrl,
-+	.stop_tx	=3D sc16is7xx_null_void,
-+	.start_tx	=3D sc16is7xx_start_tx,
-+	.stop_rx	=3D sc16is7xx_null_void,
-+	.enable_ms	=3D sc16is7xx_null_void,
-+	.break_ctl	=3D sc16is7xx_break_ctl,
-+	.startup	=3D sc16is7xx_startup,
-+	.shutdown	=3D sc16is7xx_shutdown,
-+	.set_termios	=3D sc16is7xx_set_termios,
-+	.type		=3D sc16is7xx_type,
-+	.request_port	=3D sc16is7xx_request_port,
-+	.release_port	=3D sc16is7xx_null_void,
-+	.config_port	=3D sc16is7xx_config_port,
-+	.verify_port	=3D sc16is7xx_verify_port,
-+	.ioctl		=3D sc16is7xx_ioctl,
-+	.pm		=3D sc16is7xx_pm,
 +};
 +
-+#ifdef CONFIG_GPIOLIB
-+static int sc16is7xx_gpio_get(struct gpio_chip *chip, unsigned offset)
++static IIO_DEVICE_ATTR(in_illuminance_integration_time_available,
++			S_IRUGO, cm3218x_get_it_available, NULL, 0);
++
++static struct attribute *cm3218x_attributes[] = {
++	&iio_dev_attr_in_illuminance_integration_time_available.dev_attr.attr,
++	NULL,
++};
++
++static const struct attribute_group cm3218x_attribute_group = {
++	.attrs = cm3218x_attributes
++};
++
++static const struct iio_info cm3218x_info = {
++	.driver_module		= THIS_MODULE,
++	.read_raw		= &cm3218x_read_raw,
++	.write_raw		= &cm3218x_write_raw,
++	.attrs			= &cm3218x_attribute_group,
++};
++
++static int cm3218x_probe(struct i2c_client *client,
++			const struct i2c_device_id *id)
 +{
-+	unsigned int val;
-+	struct sc16is7xx_port *s =3D container_of(chip, struct sc16is7xx_port=
-,
-+						gpio);
-+	struct uart_port *port =3D &s->p[0].port;
++	struct cm3218x_chip *chip;
++	struct iio_dev *indio_dev;
++	int ret;
 +
-+	val =3D sc16is7xx_port_read(port, SC16IS7XX_IOSTATE_REG);
-+
-+	return !!(val & BIT(offset));
-+}
-+
-+static void sc16is7xx_gpio_set(struct gpio_chip *chip, unsigned offset=
-, int val)
-+{
-+	struct sc16is7xx_port *s =3D container_of(chip, struct sc16is7xx_port=
-,
-+						gpio);
-+	struct uart_port *port =3D &s->p[0].port;
-+
-+	sc16is7xx_port_update(port, SC16IS7XX_IOSTATE_REG, BIT(offset),
-+			      val ? BIT(offset) : 0);
-+}
-+
-+static int sc16is7xx_gpio_direction_input(struct gpio_chip *chip,
-+					  unsigned offset)
-+{
-+	struct sc16is7xx_port *s =3D container_of(chip, struct sc16is7xx_port=
-,
-+						gpio);
-+	struct uart_port *port =3D &s->p[0].port;
-+
-+	sc16is7xx_port_update(port, SC16IS7XX_IODIR_REG, BIT(offset), 0);
-+
-+	return 0;
-+}
-+
-+static int sc16is7xx_gpio_direction_output(struct gpio_chip *chip,
-+					   unsigned offset, int val)
-+{
-+	struct sc16is7xx_port *s =3D container_of(chip, struct sc16is7xx_port=
-,
-+						gpio);
-+	struct uart_port *port =3D &s->p[0].port;
-+
-+	sc16is7xx_port_update(port, SC16IS7XX_IOSTATE_REG, BIT(offset),
-+			      val ? BIT(offset) : 0);
-+	sc16is7xx_port_update(port, SC16IS7XX_IODIR_REG, BIT(offset),
-+			      BIT(offset));
-+
-+	return 0;
-+}
-+#endif
-+
-+static int sc16is7xx_probe(struct device *dev,
-+			   struct sc16is7xx_devtype *devtype,
-+			   struct regmap *regmap, int irq, unsigned long flags)
-+{
-+	unsigned long freq, *pfreq =3D dev_get_platdata(dev);
-+	struct clk *clk;
-+	int i, ret;
-+	struct sc16is7xx_port *s;
-+
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	/* Alloc port structure */
-+	s =3D devm_kzalloc(dev, sizeof(*s) +
-+			 sizeof(struct sc16is7xx_one) * devtype->nr_uart,
-+			 GFP_KERNEL);
-+	if (!s) {
-+		dev_err(dev, "Error allocating port structure\n");
++	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*chip));
++	if (!indio_dev) {
++		dev_err(&client->dev, "devm_iio_device_alloc failed\n");
 +		return -ENOMEM;
 +	}
 +
-+	clk =3D devm_clk_get(dev, NULL);
-+	if (IS_ERR(clk)) {
-+		if (pfreq)
-+			freq =3D *pfreq;
-+		else
-+			return PTR_ERR(clk);
-+	} else {
-+		freq =3D clk_get_rate(clk);
-+	}
++	chip = iio_priv(indio_dev);
++	i2c_set_clientdata(client, indio_dev);
++	chip->client = client;
++	chip->ara = i2c_new_dummy(client->adapter, CM3218X_ARA);
 +
-+	s->regmap =3D regmap;
-+	s->devtype =3D devtype;
-+	dev_set_drvdata(dev, s);
++	mutex_init(&chip->lock);
++	indio_dev->dev.parent = &client->dev;
++	indio_dev->channels = cm3218x_channels;
++	indio_dev->num_channels = ARRAY_SIZE(cm3218x_channels);
++	indio_dev->info = &cm3218x_info;
++	if (id && id->name)
++		indio_dev->name = id->name;
++	else
++		indio_dev->name = (char *)dev_name(&client->dev);
++	indio_dev->modes = INDIO_DIRECT_MODE;
 +
-+	/* Register UART driver */
-+	s->uart.owner		=3D THIS_MODULE;
-+	s->uart.dev_name	=3D "ttySC";
-+	s->uart.nr		=3D devtype->nr_uart;
-+	ret =3D uart_register_driver(&s->uart);
++	ret = cm3218x_reg_init(chip);
 +	if (ret) {
-+		dev_err(dev, "Registering UART driver failed\n");
-+		goto out_clk;
++		dev_err(&client->dev,
++			"%s: register init failed\n",
++			__func__);
++		return ret;
 +	}
 +
-+#ifdef CONFIG_GPIOLIB
-+	if (devtype->nr_gpio) {
-+		/* Setup GPIO cotroller */
-+		s->gpio.owner		 =3D THIS_MODULE;
-+		s->gpio.dev		 =3D dev;
-+		s->gpio.label		 =3D dev_name(dev);
-+		s->gpio.direction_input	 =3D sc16is7xx_gpio_direction_input;
-+		s->gpio.get		 =3D sc16is7xx_gpio_get;
-+		s->gpio.direction_output =3D sc16is7xx_gpio_direction_output;
-+		s->gpio.set		 =3D sc16is7xx_gpio_set;
-+		s->gpio.base		 =3D -1;
-+		s->gpio.ngpio		 =3D devtype->nr_gpio;
-+		s->gpio.can_sleep	 =3D 1;
-+		ret =3D gpiochip_add(&s->gpio);
-+		if (ret)
-+			goto out_uart;
-+	}
-+#endif
++	if (client->irq) {
++		ret = request_threaded_irq(client->irq,
++					NULL,
++					cm3218x_event_handler,
++					IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
++					"cm3218x_event",
++					indio_dev);
 +
-+	mutex_init(&s->mutex);
-+
-+	for (i =3D 0; i < devtype->nr_uart; ++i) {
-+		/* Initialize port data */
-+		s->p[i].port.line	=3D i;
-+		s->p[i].port.dev	=3D dev;
-+		s->p[i].port.irq	=3D irq;
-+		s->p[i].port.type	=3D PORT_SC16IS7XX;
-+		s->p[i].port.fifosize	=3D SC16IS7XX_FIFO_SIZE;
-+		s->p[i].port.flags	=3D UPF_FIXED_TYPE | UPF_LOW_LATENCY;
-+		s->p[i].port.iotype	=3D UPIO_PORT;
-+		s->p[i].port.uartclk	=3D freq;
-+		s->p[i].port.ops	=3D &sc16is7xx_ops;
-+		/* Disable all interrupts */
-+		sc16is7xx_port_write(&s->p[i].port, SC16IS7XX_IER_REG, 0);
-+		/* Disable TX/RX */
-+		sc16is7xx_port_write(&s->p[i].port, SC16IS7XX_EFCR_REG,
-+				     SC16IS7XX_EFCR_RXDISABLE_BIT |
-+				     SC16IS7XX_EFCR_TXDISABLE_BIT);
-+		/* Initialize queue for start TX */
-+		INIT_WORK(&s->p[i].tx_work, sc16is7xx_wq_proc);
-+		/* Initialize queue for changing mode */
-+		INIT_WORK(&s->p[i].md_work, sc16is7xx_md_proc);
-+		/* Register port */
-+		uart_add_one_port(&s->uart, &s->p[i].port);
-+		/* Go to suspend mode */
-+		sc16is7xx_power(&s->p[i].port, 0);
++		if (ret < 0) {
++			dev_err(&client->dev, "irq request error %d\n",
++				-ret);
++			goto error_disable_int;
++		}
 +	}
 +
-+	/* Setup interrupt */
-+	ret =3D devm_request_threaded_irq(dev, irq, NULL, sc16is7xx_ist,
-+					IRQF_ONESHOT | flags, dev_name(dev), s);
-+	if (!ret)
-+		return 0;
++	ret = iio_device_register(indio_dev);
++	if (ret < 0) {
++		dev_err(&client->dev,
++			"%s: regist device failed\n",
++			__func__);
++		goto error_free_irq;
++	}
 +
-+	mutex_destroy(&s->mutex);
++	if (client->irq) {
++		ret = cm3218x_threshold_update(chip, CM3218X_THRESHOLD_PERCENT);
++		if (ret < 0)
++			goto error_free_irq;
 +
-+#ifdef CONFIG_GPIOLIB
-+	if (devtype->nr_gpio)
-+		WARN_ON(gpiochip_remove(&s->gpio));
++		ret = cm3218x_interrupt_config(chip, 1);
++		if (ret < 0)
++			goto error_free_irq;
++	}
 +
-+out_uart:
-+#endif
-+	uart_unregister_driver(&s->uart);
++	return 0;
 +
-+out_clk:
-+	if (!IS_ERR(s->clk))
-+		clk_disable_unprepare(s->clk);
-+
++error_free_irq:
++	free_irq(client->irq, indio_dev);
++error_disable_int:
++	cm3218x_interrupt_config(chip, 0);
 +	return ret;
 +}
 +
-+static int sc16is7xx_remove(struct device *dev)
++static int cm3218x_remove(struct i2c_client *client)
 +{
-+	struct sc16is7xx_port *s =3D dev_get_drvdata(dev);
-+	int i, ret =3D 0;
++	struct iio_dev *indio_dev = i2c_get_clientdata(client);
++	struct cm3218x_chip *chip = iio_priv(indio_dev);
 +
-+#ifdef CONFIG_GPIOLIB
-+	if (s->devtype->nr_gpio) {
-+		ret =3D gpiochip_remove(&s->gpio);
-+		if (ret)
-+			return ret;
-+	}
-+#endif
-+
-+	for (i =3D 0; i < s->uart.nr; i++) {
-+		cancel_work_sync(&s->p[i].tx_work);
-+		cancel_work_sync(&s->p[i].md_work);
-+		uart_remove_one_port(&s->uart, &s->p[i].port);
-+		sc16is7xx_power(&s->p[i].port, 0);
-+	}
-+
-+	mutex_destroy(&s->mutex);
-+	uart_unregister_driver(&s->uart);
-+	if (!IS_ERR(s->clk))
-+		clk_disable_unprepare(s->clk);
-+
-+	return ret;
++	cm3218x_interrupt_config(chip, 0);
++	if (chip->ara)
++		i2c_unregister_device(chip->ara);
++	if (client->irq)
++		free_irq(client->irq, indio_dev);
++	iio_device_unregister(indio_dev);
++	return 0;
 +}
 +
-+static const struct of_device_id __maybe_unused sc16is7xx_dt_ids[] =3D=
- {
-+	{ .compatible =3D "nxp,sc16is740",	.data =3D &sc16is74x_devtype, },
-+	{ .compatible =3D "nxp,sc16is741",	.data =3D &sc16is74x_devtype, },
-+	{ .compatible =3D "nxp,sc16is750",	.data =3D &sc16is750_devtype, },
-+	{ .compatible =3D "nxp,sc16is752",	.data =3D &sc16is752_devtype, },
-+	{ .compatible =3D "nxp,sc16is760",	.data =3D &sc16is760_devtype, },
-+	{ .compatible =3D "nxp,sc16is762",	.data =3D &sc16is762_devtype, },
++static const struct i2c_device_id cm3218x_id[] = {
++	{ "cm3218", cm3218},
++	{ "cm32181", cm32181},
++	{ "cm32182", cm32182},
 +	{ }
 +};
-+MODULE_DEVICE_TABLE(of, sc16is7xx_dt_ids);
 +
-+static struct regmap_config regcfg =3D {
-+	.reg_bits =3D 7,
-+	.pad_bits =3D 1,
-+	.val_bits =3D 8,
-+	.cache_type =3D REGCACHE_RBTREE,
-+	.writeable_reg =3D sc16is7xx_regmap_writeable,
-+	.volatile_reg =3D sc16is7xx_regmap_volatile,
-+	.precious_reg =3D sc16is7xx_regmap_precious,
-+};
++MODULE_DEVICE_TABLE(i2c, cm3218x_id);
 +
-+#ifdef CONFIG_REGMAP_I2C
-+static int sc16is7xx_i2c_probe(struct i2c_client *i2c,
-+			       const struct i2c_device_id *id)
-+{
-+	struct sc16is7xx_devtype *devtype;
-+	unsigned long flags =3D 0;
-+	struct regmap *regmap;
-+
-+	if (i2c->dev.of_node) {
-+		const struct of_device_id *of_id =3D
-+				of_match_device(sc16is7xx_dt_ids, &i2c->dev);
-+
-+		devtype =3D (struct sc16is7xx_devtype *)of_id->data;
-+	} else {
-+		devtype =3D (struct sc16is7xx_devtype *)id->driver_data;
-+		flags =3D IRQF_TRIGGER_FALLING;
-+	}
-+
-+	regcfg.max_register =3D (0xf << SC16IS7XX_REG_SHIFT) |
-+			      (devtype->nr_uart - 1);
-+	regmap =3D devm_regmap_init_i2c(i2c, &regcfg);
-+
-+	return sc16is7xx_probe(&i2c->dev, devtype, regmap, i2c->irq, flags);
-+}
-+
-+static int sc16is7xx_i2c_remove(struct i2c_client *client)
-+{
-+	return sc16is7xx_remove(&client->dev);
-+}
-+
-+static const struct i2c_device_id sc16is7xx_i2c_id_table[] =3D {
-+	{ "sc16is74x",	(kernel_ulong_t)&sc16is74x_devtype, },
-+	{ "sc16is750",	(kernel_ulong_t)&sc16is750_devtype, },
-+	{ "sc16is752",	(kernel_ulong_t)&sc16is752_devtype, },
-+	{ "sc16is760",	(kernel_ulong_t)&sc16is760_devtype, },
-+	{ "sc16is762",	(kernel_ulong_t)&sc16is762_devtype, },
++static const struct of_device_id cm3218x_of_match[] = {
++	{ .compatible = "capella,cm3218" },
 +	{ }
 +};
-+MODULE_DEVICE_TABLE(i2c, sc16is7xx_i2c_id_table);
 +
-+static struct i2c_driver sc16is7xx_i2c_uart_driver =3D {
-+	.driver =3D {
-+		.name		=3D SC16IS7XX_NAME,
-+		.owner		=3D THIS_MODULE,
-+		.of_match_table	=3D of_match_ptr(sc16is7xx_dt_ids),
++static const struct acpi_device_id cm3218x_acpi_match[] = {
++	{ "CPLM3218", 0},
++	{},
++};
++
++MODULE_DEVICE_TABLE(acpi, cm3218x_acpi_match);
++
++static struct i2c_driver cm3218x_driver = {
++	.driver = {
++		.name	= "cm3218x",
++		.acpi_match_table = ACPI_PTR(cm3218x_acpi_match),
++		.of_match_table = of_match_ptr(cm3218x_of_match),
++		.owner	= THIS_MODULE,
 +	},
-+	.probe		=3D sc16is7xx_i2c_probe,
-+	.remove		=3D sc16is7xx_i2c_remove,
-+	.id_table	=3D sc16is7xx_i2c_id_table,
++	.id_table	= cm3218x_id,
++	.probe		= cm3218x_probe,
++	.remove		= cm3218x_remove,
 +};
-+module_i2c_driver(sc16is7xx_i2c_uart_driver);
-+MODULE_ALIAS("i2c:sc16is7xx");
-+#endif
 +
++module_i2c_driver(cm3218x_driver);
++
++MODULE_AUTHOR("Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>");
++MODULE_DESCRIPTION("CM3218X ambient light sensor driver");
 +MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Jon Ringle <jringle@gridpoint.com>");
-+MODULE_DESCRIPTION("SC16IS7XX serial driver");
-diff --git a/include/uapi/linux/serial_core.h b/include/uapi/linux/seri=
-al_core.h
-index b47dba2..a37c79a 100644
---- a/include/uapi/linux/serial_core.h
-+++ b/include/uapi/linux/serial_core.h
-@@ -238,4 +238,7 @@
- /* Tilera TILE-Gx UART */
- #define PORT_TILEGX	106
-=20
-+/* SC16IS74xx */
-+#define PORT_SC16IS7XX   107
-+
- #endif /* _UAPILINUX_SERIAL_CORE_H */
---=20
-1.8.5.4
+-- 
+1.8.3.1
