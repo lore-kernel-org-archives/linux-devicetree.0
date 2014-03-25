@@ -1,65 +1,65 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: rcar: subnode tidyup for renesas,rsnd.txt
-Date: Tue, 25 Mar 2014 13:04:48 +0000
-Message-ID: <20140325130448.GW2269@sirena.org.uk>
-References: <87d2ib90t9.wl%kuninori.morimoto.gx@gmail.com>
- <878usq1scd.wl%kuninori.morimoto.gx@gmail.com>
- <87r46izhv5.wl%kuninori.morimoto.gx@gmail.com>
- <877g89qhdo.wl%kuninori.morimoto.gx@gmail.com>
- <20140310145254.GJ4400@trinity.fluff.org>
- <87fvmlpqi1.wl%kuninori.morimoto.gx@gmail.com>
- <87ob14jl2d.wl%kuninori.morimoto.gx@gmail.com>
- <20140321181813.GP552@sirena.org.uk>
- <87fvm8i8ah.wl%kuninori.morimoto.gx@gmail.com>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Subject: Re: [PATCH 4/5] ARM: dts: tx53: add simple-panel support
+Date: Tue, 25 Mar 2014 14:14:07 +0100
+Message-ID: <20140325141407.75b0750e@ipc1.ka-ro>
+References: <1395235721-13847-1-git-send-email-LW@KARO-electronics.de>
+ <1395235721-13847-4-git-send-email-LW@KARO-electronics.de>
+ <20140322064653.GC5938@dragon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PyWBHxIrsGpYNMFw"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87fvm8i8ah.wl%kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20140322064653.GC5938@dragon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---PyWBHxIrsGpYNMFw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Mar 23, 2014 at 08:29:15PM -0700, Kuninori Morimoto wrote:
-> From: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Shawn Guo wrote:
+> On Wed, Mar 19, 2014 at 02:28:40PM +0100, Lothar Wa=C3=9Fmann wrote:
+> >=20
+> > Signed-off-by: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/imx53-tx53-x13x.dts |   12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> >=20
+> > diff --git a/arch/arm/boot/dts/imx53-tx53-x13x.dts b/arch/arm/boot/=
+dts/imx53-tx53-x13x.dts
+> > index 26b918e..86a964d 100644
+> > --- a/arch/arm/boot/dts/imx53-tx53-x13x.dts
+> > +++ b/arch/arm/boot/dts/imx53-tx53-x13x.dts
+> > @@ -63,6 +63,18 @@
+> >  		default-brightness-level =3D <50>;
+> >  	};
+> > =20
+> > +	panel0 {
+> > +		compatible =3D "simple-panel";
 >=20
-> rcar_sound,ssi/src/dai subnode documentation
-> become more cleaner
+> From what I can see, "simple-panel" is not a documented compatible.
+>=20
+There is Documentation/devicetree/bindings/panel/simple-panel.txt
+which describes the bindings for drivers/gpu/drm/panel/panel-simple.c.
+"simple-panel" is the common compatible for all panels that the driver
+supports. If no compatible for a specific panel is given, the
+driver supports a generic panel with an ENABLE GPIO, an attached
+backlight and a regulator. This is what's being used here.=20
 
-Applied, thanks.
 
---PyWBHxIrsGpYNMFw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Lothar Wa=C3=9Fmann
+--=20
+___________________________________________________________
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
+Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
+Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
+Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
 
-iQIcBAEBAgAGBQJTMX7tAAoJELSic+t+oim9fIAQAIe/ZqhFur3jODail9mwFV2v
-1xCl7qHqjyDK87uZTMKAAtYFETnBlx+np4h1ua1KRNz+lC68CJy6n0XPZOdznk4d
-TMbQWQTYm2qcodigHYG6DxNQVegHXIQLnyktXorQzJrDyhUKkDmlZ+qL3mLyI3no
-Gm/S67EKgYxRwdSIyCH+c4euCjmy2xBgxQahAKWwTEvrAsOX5DZDLG6Qca7RZH/L
-DLPvxw+iqHjFQ2Mz4JEKdV5zjRC96EZ1sGHi0dLcrjoBHErU4ZRJLE5HnQNZ5Y3C
-QZhZMv+zjSRvo6vT8+IHBqj5Cxaod335cVicTIuRj9gJXy8G1vMJKu5cPWWyt4mV
-TNxTC25Tzy57cu77ZvgKnjWwWEgkYIAny8LKEMSgLlC+O5QXY6hX37KGnc8t/fxL
-wA/uZP1lW25xL7IrFDN5voN5HjkrWMXjMmjsMVBZlFgmHaIq4K/lCRkfLjtTZz3f
-/Yx34+HJsJsFVGVBaZ6SzIq173ca8SMQmxtFAWDhj9gM2pJVN37Sbvz67r/gJesr
-VAi6dBV07c7h3nshX5O9jxWr/bUy3oTPIwwW0P5RMLFbxtbt6CLT84n8fTVqeLdS
-nCh9pml09Lv91jrbZkb89G457s62Rix8IQ3hywgDKovB1KU96ee8dHdxZEZA1RXy
-XDg20qdO9ytj6EaJOfHw
-=aVed
------END PGP SIGNATURE-----
-
---PyWBHxIrsGpYNMFw--
+www.karo-electronics.de | info-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org
+___________________________________________________________
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
