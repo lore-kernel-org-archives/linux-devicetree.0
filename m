@@ -1,142 +1,57 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH v2 2/2] clk: Add handling of clk parent and rate assigned
- from DT
-Date: Tue, 25 Mar 2014 15:54:46 -0700
-Message-ID: <20140325225446.5762.15937@quantum>
-References: <1393870533-20845-1-git-send-email-s.nawrocki@samsung.com>
- <1393870975-21020-1-git-send-email-s.nawrocki@samsung.com>
- <5331664E.2050008@samsung.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v0 01/15] drivers: clk: st: Support for DIVMUX and PreDiv Clocks
+Date: Tue, 25 Mar 2014 15:59:46 -0700
+Message-ID: <20140325225946.5762.56339@quantum>
+References: <1393514668-17440-1-git-send-email-gabriel.fernandez@st.com>
+ <1393514668-17440-2-git-send-email-gabriel.fernandez@st.com>
+ <20140325052725.32624.39974@quantum> <53313E39.9080605@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5331664E.2050008-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <53313E39.9080605@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Gabriel Fernandez <gabriel.fernandez@st.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Lee Jones <lee.jones@linaro.org>, Pankaj Dev <pankaj.dev@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Sylwester Nawrocki (2014-03-25 04:19:42)
-> On 03/03/14 19:22, Sylwester Nawrocki wrote:
-> > This function adds a notifier callback run before a driver is bound
-> > to a device. It will configure any parent clocks and clock frequencies
-> > according to values of 'clock-parents' and 'clock-rates' DT properties
-> > respectively.
-> > 
-> > Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> > Changes since v1:
-> >  - the helper function to parse and set assigned clock parents and
-> >    rates made public so it is available to clock providers to call
-> >    directly;
-> >  - dropped the platform bus notification and call of_clk_device_setup()
-> >    is is now called from the driver core, rather than from the
-> >    notification callback;
-> >  - s/of_clk_get_list_entry/of_clk_get_by_property.
-> > ---
-> >  .../devicetree/bindings/clock/clock-bindings.txt   |   23 ++++++
-> >  drivers/base/dd.c                                  |    5 ++
-> >  drivers/clk/clk.c                                  |   77 ++++++++++++++++++++
-> >  include/linux/clk-provider.h                       |    6 ++
-> >  4 files changed, 111 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > index 7c52c29..eb8d547 100644
-> > --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > @@ -115,3 +115,26 @@ clock signal, and a UART.
-> >    ("pll" and "pll-switched").
-> >  * The UART has its baud clock connected the external oscillator and its
-> >    register clock connected to the PLL clock (the "pll-switched" signal)
-> > +
-> > +==Assigned clock parents and rates==
-> > +
-> > +Some platforms require static configuration of (parts of) the clock controller
-> > +often determined by the board design. Such a configuration can be specified in
-> > +a clock consumer node through clock-parents and clock-rates DT properties.
-> > +The former should contain list of parent clocks in form of phandle and clock
-> > +specifier pairs, the latter the list of assigned clock frequency values
-> > +(one cell each).
-> > +
-> > +    uart@a000 {
-> > +        compatible = "fsl,imx-uart";
-> > +        reg = <0xa000 0x1000>;
-> > +        ...
-> > +        clocks = <&clkcon 0>, <&clkcon 3>;
-> > +        clock-names = "baud", "mux";
-> > +
-> > +        clock-parents = <0>, <&pll 1>;
+Quoting Gabriel Fernandez (2014-03-25 01:28:41)
+> Hi Mike,
 > 
-> I have some doubts here, i.e. the order in which clocks are being 
-> configured may be important in some cases. Should the binding then be
-> specifying that the clocks will be configured in a sequence exactly 
-> as listed in the clock-parents property ?
+> I want that you take theses patches directly.
 
-That's a good point, and I think we should re-examine the role of a DT
-binding for this purpose. From my limited experience with DT, it seems
-to be really bad at anything involving sequencing. It doesn't give us
-function pointers/callbacks in the way that the old board files used to.
-
-So I think the binding you proposed is still a good idea, but only for
-the very simple case. If your platform has some detailed integration
-requirements that have corner cases like you describe below, then this
-DT binding might not be a good place to put the info.
-
-A platform that provides its own pm runtime backend could neatly manage
-this by having a call to pm_runtime_get deal with these integration
-details such that the driver does not have to be aware of them. (caveat:
-that assumes in the example below that the only thing you want to do is
-set up your clocks once and then never touch them again)
+Sure, I've taken patches #1-10 into clk-next.
 
 Regards,
 Mike
 
 > 
-> E.g. consider part of a clock controller where one of frequencies fed to
-> a consumer device cannot exceed given value:
+> Many thanks
 > 
->                 mux1
->  200 MHz   0 .--------.
-> ----->-------|--.     |
->              |   \____|__                    f1 
->  400 MHz   1 |        |  `-+------------------->--
-> ----->-------|-       |    |
->              '--------'    |      mux2
->                            | 0 .---------.
->                            `---|--.      |   f2
->                                |   \_____|_,---->--
->                  100 MHz     1 |         |   (max. 200 MHz)
->                  ----->--------|         | 
->                                '---------'              
 > 
-> In this case we want to set frequency f1 to 400 MHz and f2 to 100 MHz.
-> To ensure f2 doesn't exceed 200 MHz at any time, mux2 has to be switched 
-> to position '1' first and then mux 1 to position '1'.
+> Best regards
 > 
-> > +        clock-rates = <460800>;
+> Gabriel.
 > 
-> For clock-rates it's a bit more complicated, since it might require
-> setting up frequency of some clocks twice - first to a low and then 
-> to a higher value. Such details could likely be handled by bindings 
-> of individual devices. Also we could assume the clock tree 
-> (re)configuration is being done when any consumer clocks are masked 
-> at the consumer clock gates.
 > 
-> I'm no sure if we should sort the clocks to ensure any parents are set
-> before the child clocks, or should we rely on the sequence specified 
-> in devicetree ? I'd assume sorting it wouldn't hurt, there should not 
-> be relatively many clocks in a single dt node.
+> On 03/25/2014 06:27 AM, Mike Turquette wrote:
+> > Quoting Gabriel FERNANDEZ (2014-02-27 07:24:14)
+> >> +/**
+> >> + * DOC: Clock mux with a programmable divider on each of its three inputs.
+> >> + *      The mux has an input setting which effectively gates its output.
+> >> + *
+> >> + * Traits of this clock:
+> >> + * prepare - clk_(un)prepare only ensures parent is (un)prepared
+> > Minor nitpick but it doesn't look like .prepare or .unprepare are
+> > supported below. It looks like this copy/paste comment applies to most
+> > of the clk patches as well.
+> >
+> > It's a small problem and doesn't require a patch respin. But perhaps can
+> > be cleaned up some day in the future.
+> >
+> > Do you want me to take these patches directly or are you just looking
+> > for an Ack?
+> >
+> > Regards,
+> > Mike
 > 
-> > +    };
-> > +
-> > +In this example the pll is set as parent of "mux" clock and frequency of "baud"
-> > +clock is specified as 460800 Hz.
-> 
-> --
-> Thanks,
-> Sylwester
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
