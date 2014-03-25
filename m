@@ -1,84 +1,64 @@
-From: Byungho An <bh74.an@samsung.com>
-Subject: RE: [PATCH V13 2/7] net: sxgbe: add basic framework for Samsung 10Gb
- ethernet driver
-Date: Tue, 25 Mar 2014 09:09:18 -0700
-Message-ID: <019901cf4844$956a9580$c03fc080$@samsung.com>
-References: <00a001cf46d8$f4c38bd0$de4aa370$@samsung.com>
- <20140324234505.GA22059@electric-eye.fr.zoreil.com>
- <015b01cf47d7$8a8e5c40$9fab14c0$@samsung.com>
- <20140325070543.GA26998@electric-eye.fr.zoreil.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v2] serial: efm32: use $vendor,$device scheme for
+ compatible string
+Date: Tue, 25 Mar 2014 17:19:16 +0100
+Message-ID: <20140325161916.GA6374@katana>
+References: <1395755954-18988-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <1395759192-10797-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-reply-to: <20140325070543.GA26998@electric-eye.fr.zoreil.com>
-Content-language: en-us
-Sender: netdev-owner@vger.kernel.org
-To: 'Francois Romieu' <romieu@fr.zoreil.com>
-Cc: netdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 'David Miller' <davem@davemloft.net>, 'GIRISH K S' <ks.giri@samsung.com>, 'SIVAREDDY KALLAM' <siva.kallam@samsung.com>, 'Vipul Chandrakant' <vipul.pandya@samsung.com>, 'Ilho Lee' <ilho215.lee@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7AUc2qLy4jB3hD7Z"
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1395759192-10797-1-git-send-email-u.kleine-koenig@pengutronix.de>
+Sender: linux-serial-owner@vger.kernel.org
+To: Uwe =?iso-8859-15?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kernel@pengutronix.de, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Francois Romieu <romieu@fr.zoreil.com>:
-> Byungho An <bh74.an@samsung.com> :
-> [...]
-> > How about below ?
-> 
-> The for loops should be unrolled.
-> 
-> (style: no need to join before branching)
-> 
-> I must go to work, so you'll have to fill the dots in the code below:
-> 
->         priv = sxgbe_drv_probe(&(pdev->dev), plat_dat, addr);
->         if (!priv) {
->                 pr_err("%s: main driver probe failed\n", __func__);
->                 goto err_something;
->         }
-> 
->         /* Get the SXGBE common INT information */
->         priv->irq  = irq_of_parse_and_map(node, 0);
->         if (priv->irq <= 0) {
->                 dev_err(dev, "sxgbe common irq parsing failed\n");
->                 goto err_drv_remove;
->         }
-> 
->         /* Get the TX/RX IRQ numbers */
->         for (i = 0, chan = 1; i < SXGBE_TX_QUEUES; i++) {
->                 priv->txq[i]->irq_no = irq_of_parse_and_map(node, chan++);
->                 if (priv->txq[i]->irq_no <= 0) {
->                         dev_err(dev, "sxgbe tx irq parsing failed\n");
->                         goto err_tx_irq_unmap;
->                 }
->         }
-> 
->         for (i = 0; i < SXGBE_RX_QUEUES; i++) {
->                 priv->rxq[i]->irq_no = irq_of_parse_and_map(node, chan++);
->                 if (priv->rxq[i]->irq_no <= 0) {
->                         dev_err(dev, "sxgbe rx irq parsing failed\n");
->                         goto err_rx_irq_unmap;
->                 }
->         }
-> 
->         platform_set_drvdata(pdev, priv->dev);
-> 
->         pr_debug("platform driver registration completed\n");
-> 
->         return 0;
-> 
-> err_rx_irq_unmap:
-> 	/* TODO: check that 'i' isn't unsigned. */
-> 	while (i--)
-> 		irq_dispose_mapping(priv->rx[i]->irq_no);
-> 	i = SXGBE_TX_QUEUES;
-> err_tx_irq_unmap:
-> 	while (i--)
-> 		irq_dispose_mapping(priv->tx[i]->irq_no);
-> 	irq_dispose_mapping(priv->irq);
-> err_drv_remove:
->         sxgbe_drv_remove(ndev);
-> err_something:
-> 	...
-> 
-OK, thanks
-> --
-> Ueimor
+
+--7AUc2qLy4jB3hD7Z
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Mar 25, 2014 at 03:53:12PM +0100, Uwe Kleine-K=F6nig wrote:
+> Wolfgang Sang pointed out that "efm32,$device" is non-standard. So use the
+
+"Wolfram", please. BTW, you could also use this to describe that :)
+
+Reported-by: Wolfram Sang <wsa@the-dreams.de>
+
+No need to resend from my side, though.
+
+> common scheme and prefix device with "efm32-". The old compatible string
+> is left in place until arch/arm/boot/dts/efm32* is fixed.
+>=20
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+Acked-by: Wolfram Sang <wsa@the-dreams.de>
+
+
+--7AUc2qLy4jB3hD7Z
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTMayEAAoJEBQN5MwUoCm2CVQP/0R3kJeZ0PEnCWSvV6BbuQVh
+IFA9rcDquAGEs5A8EpOYWZhjBzDdMPCchyyrna6Mj8II2NDjrieJkoboyV6cX6rw
+NE/EU2QYEU5hLRS5TLpWqxldbx7SBgxAFSlPGXpjiEmXn2oB8/qV764KequFGrH+
+sG5cp48CGh0TTsKuK2CSk33l5LeZvDthhTyZOxLTT90aPPqDbtnzbsMwtvaNFLuN
+FBSu+FXCnebg/y4PqX7YkZ9tDJ0b9njPdxPcXa7dlsCi+DnxYJp48y1FwHK7C31Y
+bGiOkckKY8G5nPQDIrAt9+/KKb1TIy0xjA63ldtakLJsyEr12JrqgCpEPrQSCPSj
+gc0Y2J4GkJ8nXYqutfXQjdIrPApab3jf7Cv7H0p7XNmvrKnGbAs+1LHlQfHkDUaJ
+P0Om5R905muU2AGYC3Fi83BapaDRumPklP6+XdRWgzqvE7Al89IVMz5PGIqgtiXt
+NWJXtbDrub6ZTWOUISz8NcqfU7AMKxixySWH0sH9clF0BWgeyYdNzTorDuvR4+qN
+YxRhsO0PNQIA992EF9RALRWHq9+xg1rMPQ2wkYng7GOH5fRiXiis1MRY0EA3BCmS
+4UydfDGAHBKUTdbLS82sZ0dpbGHw8QgGLUHCQX9f3TOjIbM8b3/4sYPJyXE8i37V
+XLB0wZHk4BNR9zIojjlz
+=qVuW
+-----END PGP SIGNATURE-----
+
+--7AUc2qLy4jB3hD7Z--
