@@ -1,107 +1,119 @@
-From: Radha Mohan <mohun106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] arm64: dts: Add initial dts for Cavium Thunder SoC
-Date: Tue, 25 Mar 2014 16:34:49 +0530
-Message-ID: <CAC8NTUUjLotVbrY1h3pv8HcEhxFuOYyaC6o+2FjpTU_X=DCJ=A@mail.gmail.com>
-References: <1395652179-9216-1-git-send-email-mohun106@gmail.com>
-	<1395652179-9216-3-git-send-email-mohun106@gmail.com>
-	<4827584.NY6fTFPNNK@wuerfel>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC PATCH v2 2/2] clk: Add handling of clk parent and rate
+ assigned from DT
+Date: Tue, 25 Mar 2014 12:19:42 +0100
+Message-ID: <5331664E.2050008@samsung.com>
+References: <1393870533-20845-1-git-send-email-s.nawrocki@samsung.com>
+ <1393870975-21020-1-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4827584.NY6fTFPNNK@wuerfel>
+In-reply-to: <1393870975-21020-1-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "pkapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <pkapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd
+On 03/03/14 19:22, Sylwester Nawrocki wrote:
+> This function adds a notifier callback run before a driver is bound
+> to a device. It will configure any parent clocks and clock frequencies
+> according to values of 'clock-parents' and 'clock-rates' DT properties
+> respectively.
+> 
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+> Changes since v1:
+>  - the helper function to parse and set assigned clock parents and
+>    rates made public so it is available to clock providers to call
+>    directly;
+>  - dropped the platform bus notification and call of_clk_device_setup()
+>    is is now called from the driver core, rather than from the
+>    notification callback;
+>  - s/of_clk_get_list_entry/of_clk_get_by_property.
+> ---
+>  .../devicetree/bindings/clock/clock-bindings.txt   |   23 ++++++
+>  drivers/base/dd.c                                  |    5 ++
+>  drivers/clk/clk.c                                  |   77 ++++++++++++++++++++
+>  include/linux/clk-provider.h                       |    6 ++
+>  4 files changed, 111 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> index 7c52c29..eb8d547 100644
+> --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> @@ -115,3 +115,26 @@ clock signal, and a UART.
+>    ("pll" and "pll-switched").
+>  * The UART has its baud clock connected the external oscillator and its
+>    register clock connected to the PLL clock (the "pll-switched" signal)
+> +
+> +==Assigned clock parents and rates==
+> +
+> +Some platforms require static configuration of (parts of) the clock controller
+> +often determined by the board design. Such a configuration can be specified in
+> +a clock consumer node through clock-parents and clock-rates DT properties.
+> +The former should contain list of parent clocks in form of phandle and clock
+> +specifier pairs, the latter the list of assigned clock frequency values
+> +(one cell each).
+> +
+> +    uart@a000 {
+> +        compatible = "fsl,imx-uart";
+> +        reg = <0xa000 0x1000>;
+> +        ...
+> +        clocks = <&clkcon 0>, <&clkcon 3>;
+> +        clock-names = "baud", "mux";
+> +
+> +        clock-parents = <0>, <&pll 1>;
 
-On Mon, Mar 24, 2014 at 3:25 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Monday 24 March 2014 14:39:38 mohun106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->> +       soc {
->> +               compatible = "simple-bus";
->> +               #address-cells = <2>;
->> +               #size-cells = <2>;
->> +               ranges;
->> +
->> +               clocks {
->> +                       #address-cells = <2>;
->> +                       #size-cells = <2>;
->> +                       ranges;
->> +
->> +                       refclk50mhz: refclk50mhz {
->> +                               compatible = "fixed-clock";
->> +                               #clock-cells = <0>;
->> +                               clock-frequency = <50000000>;
->> +                               clock-output-names = "refclk50mhz";
->> +                       };
->> +               };
->> +
->> +               ahci0: host-bus-adapter@810000000000 {
->> +                       compatible = "snps,spear-ahci";
->> +                       reg = <0x8100 0x0 0x0 0x1100>;
->> +                       interrupts = <1 32 4>;
->> +               };
->
->
-> The use of "snps,spear-ahci" by itself seems wrong here: that is
-> the specific implementation used in the ST "spear" SoC. I don't know
-> why we don't already have a "generic-ahci" binding, but please add
-> one so you can match against that.
->
-> I would also recommend adding a more specific string for your soc.
-> If you want to keep compatibility with older kernels, you can keep
-> the spear string as well, but it would be nicer to drop that.
-> If you can find out what version the synopsys macro has, that would
-> be ideal.
->
-> You could end up for instance with
->
->         compatible = "cavium,thunder-123456-ahci", "snps,ahci-1.23.45",
->                         "snps,spear-ahci", "generic-ahci";
->
-> The driver only needs to match the last one of these, but if we
-> find that we have to work around some bug, it's good to have the
-> option of determining the exact version.
+I have some doubts here, i.e. the order in which clocks are being 
+configured may be important in some cases. Should the binding then be
+specifying that the clocks will be configured in a sequence exactly 
+as listed in the clock-parents property ?
 
-OK.
+E.g. consider part of a clock controller where one of frequencies fed to
+a consumer device cannot exceed given value:
 
->
->> +               nic0: ethernet@843000000000 {
->> +                       compatible = "smsc,lan9115";
->> +                       reg-io-width = <4>;
->> +                       reg = <0x8430 0x0 0x0 0x1000>;
->> +                       interrupts = <1 31 4>;
->> +               };
->> +
->> +               uaa0: uart@87e024000000 {
->> +                       compatible = "arm,pl011", "arm,primecell";
->> +                       reg = <0x87e0 0x24000000 0x0 0x1000>;
->> +                       interrupts = <1 21 4>;
->> +                       clocks = <&refclk50mhz>;
->> +                       clock-names = "apb_pclk";
->> +               };
->> +
->> +               uaa1: uart@87e025000000 {
->> +                       compatible = "arm,pl011", "arm,primecell";
->> +                       reg = <0x87e0 0x25000000 0x0 0x1000>;
->> +                       interrupts = <1 22 4>;
->> +                       clocks = <&refclk50mhz>;
->> +                       clock-names = "apb_pclk";
->
-> The generic name for uarts in DT is "serial", not "uart" (yes, a
-> lot of others get this wrong, too).
+                mux1
+ 200 MHz   0 .--------.
+----->-------|--.     |
+             |   \____|__                    f1 
+ 400 MHz   1 |        |  `-+------------------->--
+----->-------|-       |    |
+             '--------'	   |	  mux2
+                           | 0 .---------.
+                           `---|--.      |   f2
+                               |   \_____|_,---->--
+                 100 MHz     1 |         |   (max. 200 MHz)
+                 ----->--------|         | 
+                               '---------'		
 
-OK :)
-But I think lack of consistency in DT among various ARM platforms is
-source of this confusion.
+In this case we want to set frequency f1 to 400 MHz and f2 to 100 MHz.
+To ensure f2 doesn't exceed 200 MHz at any time, mux2 has to be switched 
+to position '1' first and then mux 1 to position '1'.
 
->
->         Arnd
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +        clock-rates = <460800>;
+
+For clock-rates it's a bit more complicated, since it might require
+setting up frequency of some clocks twice - first to a low and then 
+to a higher value. Such details could likely be handled by bindings 
+of individual devices. Also we could assume the clock tree 
+(re)configuration is being done when any consumer clocks are masked 
+at the consumer clock gates.
+
+I'm no sure if we should sort the clocks to ensure any parents are set
+before the child clocks, or should we rely on the sequence specified 
+in devicetree ? I'd assume sorting it wouldn't hurt, there should not 
+be relatively many clocks in a single dt node.
+
+> +    };
+> +
+> +In this example the pll is set as parent of "mux" clock and frequency of "baud"
+> +clock is specified as 460800 Hz.
+
+--
+Thanks,
+Sylwester
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
