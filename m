@@ -1,830 +1,571 @@
-From: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
-Subject: [PATCH V3 1/1] iio: add Capella cm3218x ambient light sensor driver.
-Date: Tue, 25 Mar 2014 11:52:18 -0700
-Message-ID: <1395773538-2649-1-git-send-email-ktsai@capellamicro.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Huewe <peter.huewe-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Oleksandr Kravchenko <o.v.kravchenko-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Byungho An <bh74.an@samsung.com>
+Subject: [PATCH V14 6/7] net: sxgbe: add ethtool related functions support
+ Samsung sxgbe
+Date: Tue, 25 Mar 2014 12:11:02 -0700
+Message-ID: <01b101cf485d$f7be5c80$e73b1580$@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+Content-language: en-us
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: 'David Miller' <davem@davemloft.net>, 'GIRISH K S' <ks.giri@samsung.com>, 'SIVAREDDY KALLAM' <siva.kallam@samsung.com>, 'Vipul Chandrakant' <vipul.pandya@samsung.com>, 'Ilho Lee' <ilho215.lee@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Add Capella Microsystem CM3218X family Ambient Light Sensor IIO driver.
-This driver will convert raw data to lux value.  Default parameters are
-for reference only.  It will detect ACPI table to load per-system manufacturing
-parameters.
+From: Vipul Pandya <vipul.pandya@samsung.com>
 
-V2: Follow Jonathan Cameron's advise to separate device id.
-Also, follow Peter Meerwald's advise to correct whitespace, prefix, and,
-comments.
+This patch adds ethtool related functions.
 
-V3: Follow Peter Meerwald's advise to create a separated i2c_client handler to
-access SMBus ARA register.
-
-Signed-off-by: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
+Signed-off-by: Vipul Pandya <vipul.pandya@samsung.com>
+Neatening-by: Joe Perches <joe@perches.com>
+Signed-off-by: Byungho An <bh74.an@samsung.com>
 ---
- .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
- drivers/iio/light/Kconfig                          |  11 +
- drivers/iio/light/Makefile                         |   1 +
- drivers/iio/light/cm3218x.c                        | 745 +++++++++++++++++++++
- 4 files changed, 758 insertions(+)
- create mode 100644 drivers/iio/light/cm3218x.c
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h  |   16 +-
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c |  433 ++++++++++++++++++++
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c    |    4 +
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_reg.h     |    6 +
+ 4 files changed, 458 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-index 1a1ac2e..c3c869b 100644
---- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-@@ -17,6 +17,7 @@ at,24c08		i2c serial eeprom  (24cxx)
- atmel,24c02		i2c serial eeprom  (24cxx)
- atmel,at97sc3204t	i2c trusted platform module (TPM)
- capella,cm32181		CM32181: Ambient Light Sensor
-+capella,cm3218x		CM3218X: Ambient Light Sensor
- catalyst,24c32		i2c serial eeprom
- dallas,ds1307		64 x 8, Serial, I2C Real-Time Clock
- dallas,ds1338		I2C RTC with 56-Byte NV RAM
-diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
-index d12b2a0..97a341a 100644
---- a/drivers/iio/light/Kconfig
-+++ b/drivers/iio/light/Kconfig
-@@ -38,6 +38,17 @@ config CM32181
- 	 To compile this driver as a module, choose M here:
- 	 the module will be called cm32181.
+diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h b/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h
+index 4893cfd..6203c7d 100644
+--- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h
++++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h
+@@ -197,6 +197,20 @@ enum dma_irq_status {
+ #define SXGBE_FOR_EACH_QUEUE(max_queues, queue_num)			\
+ 	for (queue_num = 0; queue_num < max_queues; queue_num++)
  
-+config CM3218X
-+	depends on I2C
-+	tristate "CM3218X driver"
-+	help
-+	 Say Y here if you use cm3218x.
-+	 This option enables ambient light sensor using
-+	 Capella cm3218x device driver.
++#define DRV_VERSION "1.0.0"
 +
-+	 To compile this driver as a module, choose M here:
-+	 the module will be called cm3218x.
++#define SXGBE_MAX_RX_CHANNELS	16
++#define SXGBE_MAX_TX_CHANNELS	16
 +
- config CM36651
- 	depends on I2C
- 	tristate "CM36651 driver"
-diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
-index 60e35ac..a506c23 100644
---- a/drivers/iio/light/Makefile
-+++ b/drivers/iio/light/Makefile
-@@ -6,6 +6,7 @@
- obj-$(CONFIG_ADJD_S311)		+= adjd_s311.o
- obj-$(CONFIG_APDS9300)		+= apds9300.o
- obj-$(CONFIG_CM32181)		+= cm32181.o
-+obj-$(CONFIG_CM3218X)		+= cm3218x.o
- obj-$(CONFIG_CM36651)		+= cm36651.o
- obj-$(CONFIG_GP2AP020A00F)	+= gp2ap020a00f.o
- obj-$(CONFIG_HID_SENSOR_ALS)	+= hid-sensor-als.o
-diff --git a/drivers/iio/light/cm3218x.c b/drivers/iio/light/cm3218x.c
-new file mode 100644
-index 0000000..efd0d0a
---- /dev/null
-+++ b/drivers/iio/light/cm3218x.c
-@@ -0,0 +1,745 @@
-+/*
-+ * Copyright (C) 2014 Capella Microsystems Inc.
-+ * Author: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2, as published
-+ * by the Free Software Foundation.
-+ *
-+ * Special thanks Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-+ * help to add ACPI support.
-+ *
-+ */
++#define START_MAC_REG_OFFSET	0x0000
++#define MAX_MAC_REG_OFFSET	0x0DFC
++#define START_MTL_REG_OFFSET	0x1000
++#define MAX_MTL_REG_OFFSET	0x18FC
++#define START_DMA_REG_OFFSET	0x3000
++#define MAX_DMA_REG_OFFSET	0x38FC
 +
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/mutex.h>
-+#include <linux/module.h>
++#define REG_SPACE_SIZE		0x2000
++
+ /* sxgbe statistics counters */
+ struct sxgbe_extra_stats {
+ 	/* TX/RX IRQ events */
+@@ -482,6 +496,7 @@ struct sxgbe_priv_data {
+ 	/* advanced time stamp support */
+ 	u32 adv_ts;
+ 	int use_riwt;
++	struct ptp_clock *ptp_clock;
+ 
+ 	/* tc control */
+ 	int tx_tc;
+@@ -517,5 +532,4 @@ const struct sxgbe_mtl_ops *sxgbe_get_mtl_ops(void);
+ 
+ void sxgbe_disable_eee_mode(struct sxgbe_priv_data * const priv);
+ bool sxgbe_eee_init(struct sxgbe_priv_data * const priv);
+-
+ #endif /* __SXGBE_COMMON_H__ */
+diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c b/drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c
+index ca95f1d..0415fa5 100644
+--- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c
++++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c
+@@ -12,11 +12,17 @@
+ 
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
++#include <linux/clk.h>
 +#include <linux/interrupt.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+#include <linux/iio/events.h>
-+#include <linux/init.h>
-+#include <linux/acpi.h>
+ #include <linux/kernel.h>
+ #include <linux/netdevice.h>
++#include <linux/net_tstamp.h>
+ #include <linux/phy.h>
++#include <linux/ptp_clock_kernel.h>
+ 
+ #include "sxgbe_common.h"
++#include "sxgbe_reg.h"
++#include "sxgbe_dma.h"
+ 
+ struct sxgbe_stats {
+ 	char stat_string[ETH_GSTRING_LEN];
+@@ -32,11 +38,100 @@ struct sxgbe_stats {
+ }
+ 
+ static const struct sxgbe_stats sxgbe_gstrings_stats[] = {
++	/* TX/RX IRQ events */
++	SXGBE_STAT(tx_process_stopped_irq),
++	SXGBE_STAT(tx_ctxt_desc_err),
++	SXGBE_STAT(tx_threshold),
++	SXGBE_STAT(rx_threshold),
++	SXGBE_STAT(tx_pkt_n),
++	SXGBE_STAT(rx_pkt_n),
++	SXGBE_STAT(normal_irq_n),
++	SXGBE_STAT(tx_normal_irq_n),
++	SXGBE_STAT(rx_normal_irq_n),
++	SXGBE_STAT(napi_poll),
++	SXGBE_STAT(tx_clean),
++	SXGBE_STAT(tx_reset_ic_bit),
++	SXGBE_STAT(rx_process_stopped_irq),
++	SXGBE_STAT(rx_underflow_irq),
 +
-+/* Registers Address */
-+#define CM3218X_REG_ADDR_CMD 0x00
-+#define CM3218X_REG_ADDR_WH 0x01
-+#define CM3218X_REG_ADDR_WL 0x02
-+#define CM3218X_REG_ADDR_TEST 0x03
-+#define CM3218X_REG_ADDR_ALS 0x04
-+#define CM3218X_REG_ADDR_STATUS 0x06
-+#define CM3218X_REG_ADDR_ID 0x07
++	/* Bus access errors */
++	SXGBE_STAT(fatal_bus_error_irq),
++	SXGBE_STAT(tx_read_transfer_err),
++	SXGBE_STAT(tx_write_transfer_err),
++	SXGBE_STAT(tx_desc_access_err),
++	SXGBE_STAT(tx_buffer_access_err),
++	SXGBE_STAT(tx_data_transfer_err),
++	SXGBE_STAT(rx_read_transfer_err),
++	SXGBE_STAT(rx_write_transfer_err),
++	SXGBE_STAT(rx_desc_access_err),
++	SXGBE_STAT(rx_buffer_access_err),
++	SXGBE_STAT(rx_data_transfer_err),
 +
-+/* Number of Configurable Registers */
-+#define CM3218X_CONF_REG_NUM 16
++	/* EEE-LPI stats */
+ 	SXGBE_STAT(tx_lpi_entry_n),
+ 	SXGBE_STAT(tx_lpi_exit_n),
+ 	SXGBE_STAT(rx_lpi_entry_n),
+ 	SXGBE_STAT(rx_lpi_exit_n),
+ 	SXGBE_STAT(eee_wakeup_error_n),
 +
-+/* CMD register */
-+#define CM3218X_CMD_ALS_DISABLE BIT(0)
-+#define CM3218X_CMD_ALS_INT_EN BIT(1)
-+#define CM3218X_CMD_ALS_THRES_WINDOW BIT(2)
++	/* RX specific */
++	/* L2 error */
++	SXGBE_STAT(rx_code_gmii_err),
++	SXGBE_STAT(rx_watchdog_err),
++	SXGBE_STAT(rx_crc_err),
++	SXGBE_STAT(rx_gaint_pkt_err),
++	SXGBE_STAT(ip_hdr_err),
++	SXGBE_STAT(ip_payload_err),
++	SXGBE_STAT(overflow_error),
 +
-+#define CM3218X_CMD_ALS_PERS_SHIFT 4
-+#define CM3218X_CMD_ALS_PERS_MASK (0x03 << CM3218X_CMD_ALS_PERS_SHIFT)
-+#define CM3218X_CMD_ALS_PERS_DEFAULT (0x01 << CM3218X_CMD_ALS_PERS_SHIFT)
++	/* L2 Pkt type */
++	SXGBE_STAT(len_pkt),
++	SXGBE_STAT(mac_ctl_pkt),
++	SXGBE_STAT(dcb_ctl_pkt),
++	SXGBE_STAT(arp_pkt),
++	SXGBE_STAT(oam_pkt),
++	SXGBE_STAT(untag_okt),
++	SXGBE_STAT(other_pkt),
++	SXGBE_STAT(svlan_tag_pkt),
++	SXGBE_STAT(cvlan_tag_pkt),
++	SXGBE_STAT(dvlan_ocvlan_icvlan_pkt),
++	SXGBE_STAT(dvlan_osvlan_isvlan_pkt),
++	SXGBE_STAT(dvlan_osvlan_icvlan_pkt),
++	SXGBE_STAT(dvan_ocvlan_icvlan_pkt),
 +
-+#define CM3218X_CMD_ALS_IT_SHIFT 6
-+#define CM3218X_CMD_ALS_IT_MASK (0x0F << CM3218X_CMD_ALS_IT_SHIFT)
-+#define CM3218X_CMD_ALS_IT_DEFAULT (0x01 << CM3218X_CMD_ALS_IT_SHIFT)
++	/* L3/L4 Pkt type */
++	SXGBE_STAT(not_ip_pkt),
++	SXGBE_STAT(ip4_tcp_pkt),
++	SXGBE_STAT(ip4_udp_pkt),
++	SXGBE_STAT(ip4_icmp_pkt),
++	SXGBE_STAT(ip4_unknown_pkt),
++	SXGBE_STAT(ip6_tcp_pkt),
++	SXGBE_STAT(ip6_udp_pkt),
++	SXGBE_STAT(ip6_icmp_pkt),
++	SXGBE_STAT(ip6_unknown_pkt),
 +
-+#define CM3218X_CMD_ALS_HS_SHIFT 11
-+#define CM3218X_CMD_ALS_HS_MASK (0x01 << CM3218X_CMD_ALS_HS_SHIFT)
-+#define CM3218X_CMD_ALS_HS_DEFAULT (0x00 << CM3218X_CMD_ALS_HS_SHIFT)
++	/* Filter specific */
++	SXGBE_STAT(vlan_filter_match),
++	SXGBE_STAT(sa_filter_fail),
++	SXGBE_STAT(da_filter_fail),
++	SXGBE_STAT(hash_filter_pass),
++	SXGBE_STAT(l3_filter_match),
++	SXGBE_STAT(l4_filter_match),
 +
-+#define CM3218X_CMD_DEFAULT (CM3218X_CMD_ALS_THRES_WINDOW |\
-+		CM3218X_CMD_ALS_PERS_DEFAULT |\
-+		CM3218X_CMD_ALS_IT_DEFAULT |\
-+		CM3218X_CMD_ALS_HS_DEFAULT)
-+
-+#define CM3218X_WH_DEFAULT 0xFFFF
-+#define CM3218X_WL_DEFAULT 0x0000
-+
-+#define CM3218X_CALIBSCALE_DEFAULT 100000
-+#define CM3218X_CALIBSCALE_RESOLUTION 100000
-+#define CM3218X_MLUX_PER_LUX 1000
-+#define CM3218X_THRESHOLD_PERCENT 10	/* 10 percent */
-+
-+#define CM3218X_ARA 0x0C
-+
-+/* CM3218X family */
-+enum {
-+	cm3218,
-+	cm32181,
-+	cm32182
-+};
-+
-+/* CM3218 Family */
-+#define CM3218_MLUX_PER_BIT_DEFAULT 5	/* Depend on system */
-+#define CM3218_MLUX_PER_BIT_BASE_IT 800000
-+static const int CM3218_als_it_bits[] = {0, 1, 2, 3};
-+static const int CM3218_als_it_values[] = {100000, 200000, 400000, 800000};
-+
-+/* CM32181 Family */
-+#define CM32181_MLUX_PER_BIT_DEFAULT 5
-+#define CM32181_MLUX_PER_BIT_BASE_IT 800000
-+static const int CM32181_als_it_bits[] = {12, 8, 0, 1, 2, 3};
-+static const int CM32181_als_it_values[] = {
-+			25000, 50000, 100000, 200000, 400000, 800000};
-+
-+struct cm3218x_als_info {
-+	u32 id;
-+	int int_type;
-+#define CM3218X_INT_TYPE_SMBUS 0
-+#define CM3218X_INT_TYPE_I2C 1
-+	int regs_bmp;
-+	int calibscale;
-+	int mlux_per_bit;
-+	int mlux_per_bit_base_it;
-+	const int *als_it_bits;
-+	const int *als_it_values;
-+	int num_als_it;
-+	int als_raw;
-+};
-+
-+static struct cm3218x_als_info cm3218_info = {
-+	3218, CM3218X_INT_TYPE_SMBUS, 0x0F, CM3218X_CALIBSCALE_DEFAULT,
-+	CM3218_MLUX_PER_BIT_DEFAULT, CM3218_MLUX_PER_BIT_BASE_IT,
-+	CM3218_als_it_bits, CM3218_als_it_values,
-+	ARRAY_SIZE(CM3218_als_it_bits), 0};
-+
-+static struct cm3218x_als_info cm32181_info = {
-+	32181, CM3218X_INT_TYPE_I2C, 0x0F, CM3218X_CALIBSCALE_DEFAULT,
-+	CM32181_MLUX_PER_BIT_DEFAULT, CM32181_MLUX_PER_BIT_BASE_IT,
-+	CM32181_als_it_bits, CM32181_als_it_values,
-+	ARRAY_SIZE(CM32181_als_it_bits), 0};
-+
-+static struct cm3218x_als_info cm32182_info = {
-+	32182, CM3218X_INT_TYPE_I2C, 0x0F, CM3218X_CALIBSCALE_DEFAULT,
-+	CM32181_MLUX_PER_BIT_DEFAULT, CM32181_MLUX_PER_BIT_BASE_IT,
-+	CM32181_als_it_bits, CM32181_als_it_values,
-+	ARRAY_SIZE(CM32181_als_it_bits), 0};
-+
-+struct cm3218x_chip {
-+	struct i2c_client *client;
-+	struct i2c_client *ara;
-+	struct mutex lock;
-+	u16 conf_regs[CM3218X_CONF_REG_NUM];
-+	struct cm3218x_als_info *als_info;
-+};
-+
-+static int cm3218x_get_lux(struct cm3218x_chip *chip);
-+static int cm3218x_threshold_update(struct cm3218x_chip *chip, int percent);
-+static int cm3218x_read_als_it(struct cm3218x_chip *chip, int *val2);
-+
-+/**
-+ * cm3218x_interrupt_config() - Enable/Disable CM3218X interrupt
-+ * @chip:	pointer of struct cm3218x.
-+ * @enable:	0 to disable; otherwise to enable
-+ *
-+ * Config CM3218X interrupt control bit.
-+ *
-+ * Return: 0 for success; otherwise for error code.
-+ */
-+static int cm3218x_interrupt_config(struct cm3218x_chip *chip, int enable)
++	/* RX context specific */
++	SXGBE_STAT(timestamp_dropped),
++	SXGBE_STAT(rx_msg_type_no_ptp),
++	SXGBE_STAT(rx_ptp_type_sync),
++	SXGBE_STAT(rx_ptp_type_follow_up),
++	SXGBE_STAT(rx_ptp_type_delay_req),
++	SXGBE_STAT(rx_ptp_type_delay_resp),
++	SXGBE_STAT(rx_ptp_type_pdelay_req),
++	SXGBE_STAT(rx_ptp_type_pdelay_resp),
++	SXGBE_STAT(rx_ptp_type_pdelay_follow_up),
++	SXGBE_STAT(rx_ptp_announce),
++	SXGBE_STAT(rx_ptp_mgmt),
++	SXGBE_STAT(rx_ptp_signal),
++	SXGBE_STAT(rx_ptp_resv_msg_type),
+ };
+ #define SXGBE_STATS_LEN ARRAY_SIZE(sxgbe_gstrings_stats)
+ 
+@@ -80,7 +175,345 @@ static int sxgbe_set_eee(struct net_device *dev,
+ 	return phy_ethtool_set_eee(priv->phydev, edata);
+ }
+ 
++static void sxgbe_getdrvinfo(struct net_device *dev,
++			     struct ethtool_drvinfo *info)
 +{
-+	struct i2c_client *client = chip->client;
-+	struct cm3218x_als_info *als_info = chip->als_info;
-+	int status;
-+
-+	if (!als_info)
-+		return -ENODEV;
-+
-+	/* Force to clean interrupt */
-+	if (als_info->int_type == CM3218X_INT_TYPE_I2C) {
-+		status = i2c_smbus_read_word_data(client,
-+				CM3218X_REG_ADDR_STATUS);
-+		if (status < 0)
-+			als_info->int_type = CM3218X_INT_TYPE_SMBUS;
-+	}
-+	if (chip->ara && als_info->int_type == CM3218X_INT_TYPE_SMBUS)
-+		i2c_smbus_read_byte(chip->ara);
-+
-+	if (enable)
-+		chip->conf_regs[CM3218X_REG_ADDR_CMD] |=
-+			CM3218X_CMD_ALS_INT_EN;
-+	else
-+		chip->conf_regs[CM3218X_REG_ADDR_CMD] &=
-+			~CM3218X_CMD_ALS_INT_EN;
-+
-+	status = i2c_smbus_write_word_data(client, CM3218X_REG_ADDR_CMD,
-+		chip->conf_regs[CM3218X_REG_ADDR_CMD]);
-+
-+	if (status < 0)
-+		return -ENODEV;
-+
-+	return status;
++	strlcpy(info->driver, KBUILD_MODNAME, sizeof(info->driver));
++	strlcpy(info->version, DRV_VERSION, sizeof(info->version));
 +}
 +
-+/**
-+ * cm3218x_acpi_get_cpm_info() - Get CPM object from ACPI
-+ * @client	pointer of struct i2c_client.
-+ * @obj_name	pointer of ACPI object name.
-+ * @count	maximum size of return array.
-+ * @vals	pointer of array for return elements.
-+ *
-+ * Convert ACPI CPM table to array. Special thanks Srinivas Pandruvada's
-+ * help to implement this routine.
-+ *
-+ * Return: -ENODEV for fail.  Otherwise is number of elements.
-+ */
-+static int cm3218x_acpi_get_cpm_info(struct i2c_client *client, char *obj_name,
-+							int count, u64 *vals)
++static int sxgbe_getsettings(struct net_device *dev,
++			     struct ethtool_cmd *cmd)
 +{
-+	acpi_handle handle;
-+	struct acpi_buffer buffer = {ACPI_ALLOCATE_BUFFER, NULL};
-+	int i;
-+	acpi_status status;
-+	union acpi_object *cpm;
++	struct sxgbe_priv_data *priv = netdev_priv(dev);
 +
-+	handle = ACPI_HANDLE(&client->dev);
-+	if (!handle)
-+		return -ENODEV;
++	if (priv->phydev)
++		return phy_ethtool_gset(priv->phydev, cmd);
 +
-+	status = acpi_evaluate_object(handle, obj_name, NULL, &buffer);
-+	if (ACPI_FAILURE(status)) {
-+		dev_err(&client->dev, "object %s not found\n", obj_name);
-+		return -ENODEV;
-+	}
-+
-+	cpm = buffer.pointer;
-+	for (i = 0; i < cpm->package.count && i < count; ++i) {
-+		union acpi_object *elem;
-+		elem = &(cpm->package.elements[i]);
-+		vals[i] = elem->integer.value;
-+	}
-+
-+	kfree(buffer.pointer);
-+
-+	return cpm->package.count;
++	return -EOPNOTSUPP;
 +}
 +
-+/**
-+ * cm3218x_reg_init() - Initialize CM3218X registers
-+ * @chip:	pointer of struct cm3218x.
-+ *
-+ * Initialize CM3218X ambient light sensor register to default values.
-+ *
-+  Return: 0 for success; otherwise for error code.
-+ */
-+static int cm3218x_reg_init(struct cm3218x_chip *chip)
++static int sxgbe_setsettings(struct net_device *dev, struct ethtool_cmd *cmd)
 +{
-+	struct i2c_client *client = chip->client;
++	struct sxgbe_priv_data *priv = netdev_priv(dev);
++
++	if (priv->phydev)
++		return phy_ethtool_sset(priv->phydev, cmd);
++
++	return -EOPNOTSUPP;
++}
++
++static u32 sxgbe_getmsglevel(struct net_device *dev)
++{
++	struct sxgbe_priv_data *priv = netdev_priv(dev);
++	return priv->msg_enable;
++}
++
++static void sxgbe_setmsglevel(struct net_device *dev, u32 level)
++{
++	struct sxgbe_priv_data *priv = netdev_priv(dev);
++	priv->msg_enable = level;
++}
++
++static void sxgbe_get_strings(struct net_device *dev, u32 stringset, u8 *data)
++{
 +	int i;
-+	s32 ret;
-+	int cpm_elem_count;
-+	u64 cpm_elems[20];
-+	struct cm3218x_als_info *als_info;
++	u8 *p = data;
 +
-+	/* Default device */
-+	chip->als_info = &cm3218_info;
-+	chip->conf_regs[CM3218X_REG_ADDR_CMD] = CM3218X_CMD_DEFAULT;
-+	chip->conf_regs[CM3218X_REG_ADDR_WH] = CM3218X_WH_DEFAULT;
-+	chip->conf_regs[CM3218X_REG_ADDR_WL] = CM3218X_WL_DEFAULT;
-+
-+	/* Disable interrupt */
-+	cm3218x_interrupt_config(chip, 0);
-+
-+	/* Disable Test Mode */
-+	i2c_smbus_write_word_data(client, CM3218X_REG_ADDR_TEST, 0x0000);
-+
-+	/* Disable device */
-+	i2c_smbus_write_word_data(client, CM3218X_REG_ADDR_CMD,
-+		CM3218X_CMD_ALS_DISABLE);
-+
-+	/* Identify device */
-+	ret = i2c_smbus_read_word_data(client, CM3218X_REG_ADDR_ID);
-+	if (ret < 0)
-+		return ret;
-+	switch (ret & 0xFF) {
-+	case 0x18:
-+		als_info = chip->als_info = &cm3218_info;
-+		if (ret & 0x0800)
-+			als_info->int_type = CM3218X_INT_TYPE_I2C;
-+		else
-+			als_info->int_type = CM3218X_INT_TYPE_SMBUS;
-+		break;
-+	case 0x81:
-+		als_info = chip->als_info = &cm32181_info;
-+		break;
-+	case 0x82:
-+		als_info = chip->als_info = &cm32182_info;
++	switch (stringset) {
++	case ETH_SS_STATS:
++		for (i = 0; i < SXGBE_STATS_LEN; i++) {
++			memcpy(p, sxgbe_gstrings_stats[i].stat_string,
++			       ETH_GSTRING_LEN);
++			p += ETH_GSTRING_LEN;
++		}
 +		break;
 +	default:
-+		return -ENODEV;
++		WARN_ON(1);
++		break;
 +	}
-+
-+	if (ACPI_HANDLE(&client->dev)) {
-+		/* Load from ACPI */
-+		cpm_elem_count = cm3218x_acpi_get_cpm_info(client, "CPM0",
-+							ARRAY_SIZE(cpm_elems),
-+							cpm_elems);
-+		if (cpm_elem_count > 0) {
-+			int header_num = 3;
-+			int reg_num = cpm_elem_count - header_num;
-+
-+			als_info->regs_bmp = cpm_elems[2];
-+			for (i = 0; i < reg_num; i++)
-+				if (als_info->regs_bmp & (1<<i))
-+					chip->conf_regs[i] =
-+						cpm_elems[header_num+i];
-+		}
-+
-+		cpm_elem_count = cm3218x_acpi_get_cpm_info(client, "CPM1",
-+							ARRAY_SIZE(cpm_elems),
-+							cpm_elems);
-+		if (cpm_elem_count > 0) {
-+			als_info->mlux_per_bit = (int)cpm_elems[0] / 100;
-+			als_info->calibscale = (int)cpm_elems[1];
-+		}
-+	}
-+
-+	/* Force to disable interrupt */
-+	chip->conf_regs[CM3218X_REG_ADDR_CMD] &= ~CM3218X_CMD_ALS_INT_EN;
-+
-+	/* Initialize registers */
-+	for (i = 0; i < CM3218X_CONF_REG_NUM; i++) {
-+		if (als_info->regs_bmp & (1<<i)) {
-+			ret = i2c_smbus_write_word_data(client, i,
-+						chip->conf_regs[i]);
-+			if (ret < 0)
-+				return ret;
-+		}
-+	}
-+
-+	return 0;
 +}
 +
-+/**
-+ *  cm3218x_read_als_it() - Get sensor integration time (ms)
-+ *  @chip:	pointer of struct cm3218x
-+ *  @val2:	pointer of int to load the als_it value.
-+ *
-+ *  Report the current integartion time in milliseconds.
-+ *
-+ *  Return: IIO_VAL_INT_PLUS_MICRO for success, otherwise -EINVAL.
-+ */
-+static int cm3218x_read_als_it(struct cm3218x_chip *chip, int *val2)
++static int sxgbe_get_sset_count(struct net_device *netdev, int sset)
 +{
-+	struct cm3218x_als_info *als_info = chip->als_info;
-+	u16 als_it;
-+	int i;
++	int len;
 +
-+	als_it = chip->conf_regs[CM3218X_REG_ADDR_CMD];
-+	als_it &= CM3218X_CMD_ALS_IT_MASK;
-+	als_it >>= CM3218X_CMD_ALS_IT_SHIFT;
-+	for (i = 0; i < als_info->num_als_it; i++) {
-+		if (als_it == als_info->als_it_bits[i]) {
-+			*val2 = als_info->als_it_values[i];
-+			return IIO_VAL_INT_PLUS_MICRO;
-+		}
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+/**
-+ * cm3218x_write_als_it() - Write sensor integration time
-+ * @chip:	pointer of struct cm3218x.
-+ * @val:	integration time in milliseconds.
-+ *
-+ * Convert integration time (ms) to sensor value.
-+ *
-+ * Return: i2c_smbus_write_word_data command return value.
-+ */
-+static int cm3218x_write_als_it(struct cm3218x_chip *chip, int val)
-+{
-+	struct i2c_client *client = chip->client;
-+	struct cm3218x_als_info *als_info = chip->als_info;
-+	u16 als_it;
-+	int ret, i;
-+
-+	for (i = 0; i < als_info->num_als_it; i++)
-+		if (val <= als_info->als_it_values[i])
-+			break;
-+	if (i >= als_info->num_als_it)
-+		i = als_info->num_als_it - 1;
-+
-+	als_it = als_info->als_it_bits[i];
-+	als_it <<= CM3218X_CMD_ALS_IT_SHIFT;
-+
-+	mutex_lock(&chip->lock);
-+	chip->conf_regs[CM3218X_REG_ADDR_CMD] &=
-+			~CM3218X_CMD_ALS_IT_MASK;
-+	chip->conf_regs[CM3218X_REG_ADDR_CMD] |=
-+			als_it;
-+	ret = i2c_smbus_write_word_data(client, CM3218X_REG_ADDR_CMD,
-+			chip->conf_regs[CM3218X_REG_ADDR_CMD]);
-+	mutex_unlock(&chip->lock);
-+
-+	return ret;
-+}
-+
-+/**
-+ * cm3218x_get_lux() - report current lux value
-+ * @chip:	pointer of struct cm3218x.
-+ *
-+ * Convert sensor raw data to lux.  It depends on integration
-+ * time and calibscale variable.
-+ *
-+ * Return: Positive value is lux, otherwise is error code.
-+ */
-+static int cm3218x_get_lux(struct cm3218x_chip *chip)
-+{
-+	struct i2c_client *client = chip->client;
-+	struct cm3218x_als_info *als_info = chip->als_info;
-+	int ret;
-+	int als_it;
-+	u64 tmp;
-+
-+	/* Calculate mlux per bit based on als_it */
-+	ret = cm3218x_read_als_it(chip, &als_it);
-+	if (ret < 0)
++	switch (sset) {
++	case ETH_SS_STATS:
++		len = SXGBE_STATS_LEN;
++		return len;
++	default:
 +		return -EINVAL;
-+	tmp = (__force u64)als_info->mlux_per_bit;
-+	tmp *= als_info->mlux_per_bit_base_it;
-+	tmp = div_u64(tmp, als_it);
-+
-+	/* Get als_raw */
-+	if (!(chip->conf_regs[CM3218X_REG_ADDR_CMD] & CM3218X_CMD_ALS_INT_EN))
-+		als_info->als_raw = i2c_smbus_read_word_data(
-+					client,
-+					CM3218X_REG_ADDR_ALS);
-+	if (als_info->als_raw < 0)
-+		return als_info->als_raw;
-+
-+	tmp *= als_info->als_raw;
-+	tmp *= als_info->calibscale;
-+	tmp = div_u64(tmp, CM3218X_CALIBSCALE_RESOLUTION);
-+	tmp = div_u64(tmp, CM3218X_MLUX_PER_LUX);
-+
-+	if (tmp > 0xFFFF)
-+		tmp = 0xFFFF;
-+
-+	return (int)tmp;
++	}
 +}
 +
-+static int cm3218x_read_raw(struct iio_dev *indio_dev,
-+			struct iio_chan_spec const *chan,
-+			int *val, int *val2, long mask)
++static void sxgbe_get_ethtool_stats(struct net_device *dev,
++				    struct ethtool_stats *dummy, u64 *data)
 +{
-+	struct cm3218x_chip *chip = iio_priv(indio_dev);
-+	struct cm3218x_als_info *als_info = chip->als_info;
-+	int ret;
++	struct sxgbe_priv_data *priv = netdev_priv(dev);
++	int i;
++	char *p;
 +
-+	switch (mask) {
-+	case IIO_CHAN_INFO_PROCESSED:
-+		ret = cm3218x_get_lux(chip);
-+		if (ret < 0)
-+			return ret;
-+		*val = ret;
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_CALIBSCALE:
-+		*val = als_info->calibscale;
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_INT_TIME:
-+		*val = 0;
-+		ret = cm3218x_read_als_it(chip, val2);
-+		return ret;
++	if (priv->eee_enabled) {
++		int val = phy_get_eee_err(priv->phydev);
++
++		if (val)
++			priv->xstats.eee_wakeup_error_n = val;
 +	}
 +
-+	return -EINVAL;
++	for (i = 0; i < SXGBE_STATS_LEN; i++) {
++		p = (char *)priv + sxgbe_gstrings_stats[i].stat_offset;
++		data[i] = (sxgbe_gstrings_stats[i].sizeof_stat == sizeof(u64))
++			? (*(u64 *)p) : (*(u32 *)p);
++	}
 +}
 +
-+static int cm3218x_write_raw(struct iio_dev *indio_dev,
-+			struct iio_chan_spec const *chan,
-+			int val, int val2, long mask)
++static void sxgbe_get_channels(struct net_device *dev,
++			       struct ethtool_channels *channel)
 +{
-+	struct cm3218x_chip *chip = iio_priv(indio_dev);
-+	struct cm3218x_als_info *als_info = chip->als_info;
-+	long ms;
++	channel->max_rx = SXGBE_MAX_RX_CHANNELS;
++	channel->max_tx = SXGBE_MAX_TX_CHANNELS;
++	channel->rx_count = SXGBE_RX_QUEUES;
++	channel->tx_count = SXGBE_TX_QUEUES;
++}
 +
-+	switch (mask) {
-+	case IIO_CHAN_INFO_CALIBSCALE:
-+		als_info->calibscale = val;
-+		return val;
-+	case IIO_CHAN_INFO_INT_TIME:
-+		ms = val * 1000000 + val2;
-+		return cm3218x_write_als_it(chip, (int)ms);
++static u32 sxgbe_riwt2usec(u32 riwt, struct sxgbe_priv_data *priv)
++{
++	unsigned long clk = clk_get_rate(priv->sxgbe_clk);
++
++	if (!clk)
++		return 0;
++
++	return (riwt * 256) / (clk / 1000000);
++}
++
++static u32 sxgbe_usec2riwt(u32 usec, struct sxgbe_priv_data *priv)
++{
++	unsigned long clk = clk_get_rate(priv->sxgbe_clk);
++
++	if (!clk)
++		return 0;
++
++	return (usec * (clk / 1000000)) / 256;
++}
++
++static int sxgbe_get_coalesce(struct net_device *dev,
++			      struct ethtool_coalesce *ec)
++{
++	struct sxgbe_priv_data *priv = netdev_priv(dev);
++
++	if (priv->use_riwt)
++		ec->rx_coalesce_usecs = sxgbe_riwt2usec(priv->rx_riwt, priv);
++
++	return 0;
++}
++
++static int sxgbe_set_coalesce(struct net_device *dev,
++			      struct ethtool_coalesce *ec)
++{
++	struct sxgbe_priv_data *priv = netdev_priv(dev);
++	unsigned int rx_riwt;
++
++	if (!ec->rx_coalesce_usecs)
++		return -EINVAL;
++
++	rx_riwt = sxgbe_usec2riwt(ec->rx_coalesce_usecs, priv);
++
++	if ((rx_riwt > SXGBE_MAX_DMA_RIWT) || (rx_riwt < SXGBE_MIN_DMA_RIWT))
++		return -EINVAL;
++	else if (!priv->use_riwt)
++		return -EOPNOTSUPP;
++
++	priv->rx_riwt = rx_riwt;
++	priv->hw->dma->rx_watchdog(priv->ioaddr, priv->rx_riwt);
++
++	return 0;
++}
++
++static int sxgbe_get_rss_hash_opts(struct sxgbe_priv_data *priv,
++				   struct ethtool_rxnfc *cmd)
++{
++	cmd->data = 0;
++
++	/* Report default options for RSS on sxgbe */
++	switch (cmd->flow_type) {
++	case TCP_V4_FLOW:
++	case UDP_V4_FLOW:
++		cmd->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3;
++	case SCTP_V4_FLOW:
++	case AH_ESP_V4_FLOW:
++	case AH_V4_FLOW:
++	case ESP_V4_FLOW:
++	case IPV4_FLOW:
++		cmd->data |= RXH_IP_SRC | RXH_IP_DST;
++		break;
++	case TCP_V6_FLOW:
++	case UDP_V6_FLOW:
++		cmd->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3;
++	case SCTP_V6_FLOW:
++	case AH_ESP_V6_FLOW:
++	case AH_V6_FLOW:
++	case ESP_V6_FLOW:
++	case IPV6_FLOW:
++		cmd->data |= RXH_IP_SRC | RXH_IP_DST;
++		break;
++	default:
++		return -EINVAL;
 +	}
 +
-+	return -EINVAL;
++	return 0;
 +}
 +
-+/**
-+ * cm3218x_get_it_available() - Get available ALS IT value
-+ * @dev:	pointer of struct device.
-+ * @attr:	pointer of struct device_attribute.
-+ * @buf:	pointer of return string buffer.
-+ *
-+ * Display the available integration time in milliseconds.
-+ *
-+ * Return: string length.
-+ */
-+static ssize_t cm3218x_get_it_available(struct device *dev,
-+			struct device_attribute *attr, char *buf)
++static int sxgbe_get_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd,
++			   u32 *rule_locs)
 +{
-+	struct cm3218x_chip *chip = iio_priv(dev_to_iio_dev(dev));
-+	struct cm3218x_als_info *als_info = chip->als_info;
-+	int i, len;
++	struct sxgbe_priv_data *priv = netdev_priv(dev);
++	int ret = -EOPNOTSUPP;
 +
-+	for (i = 0, len = 0; i < als_info->num_als_it; i++)
-+		len += scnprintf(buf + len, PAGE_SIZE - len, "%u.%06u ",
-+			als_info->als_it_values[i]/1000000,
-+			als_info->als_it_values[i]%1000000);
-+	return len + scnprintf(buf + len, PAGE_SIZE - len, "\n");
-+}
-+
-+/**
-+ * cm3218x_threshold_update() - Update the threshold registers.
-+ * @chip:	pointer of struct cm3218x_chip.
-+ * @percent:	+/- percent.
-+ *
-+ * Based on the current ALS value, tupdate the hi and low threshold registers.
-+ *
-+ * Return: 0 for success; otherwise for error code.
-+ */
-+static int cm3218x_threshold_update(struct cm3218x_chip *chip, int percent)
-+{
-+	struct i2c_client *client = chip->client;
-+	struct cm3218x_als_info *als_info = chip->als_info;
-+	int ret;
-+	int wh, wl;
-+
-+	ret = als_info->als_raw = i2c_smbus_read_word_data(client,
-+					CM3218X_REG_ADDR_ALS);
-+	if (ret < 0)
-+		return ret;
-+
-+	wh = wl = ret;
-+	ret *= percent;
-+	ret /= 100;
-+	if (ret < 1)
-+		ret = 1;
-+	wh += ret;
-+	wl -= ret;
-+	if (wh > 65535)
-+		wh = 65535;
-+	if (wl < 0)
-+		wl = 0;
-+
-+	chip->conf_regs[CM3218X_REG_ADDR_WH] = wh;
-+	ret = i2c_smbus_write_word_data(
-+		client,
-+		CM3218X_REG_ADDR_WH,
-+		chip->conf_regs[CM3218X_REG_ADDR_WH]);
-+	if (ret < 0)
-+		return ret;
-+
-+	chip->conf_regs[CM3218X_REG_ADDR_WL] = wl;
-+	ret = i2c_smbus_write_word_data(
-+		client,
-+		CM3218X_REG_ADDR_WL,
-+		chip->conf_regs[CM3218X_REG_ADDR_WL]);
++	switch (cmd->cmd) {
++	case ETHTOOL_GRXFH:
++		ret = sxgbe_get_rss_hash_opts(priv, cmd);
++		break;
++	default:
++		break;
++	}
 +
 +	return ret;
 +}
 +
-+/**
-+ * cm3218x_event_handler() - Interrupt handling routine.
-+ * @irq:	irq number.
-+ * @private:	pointer of void.
-+ *
-+ * Clean interrupt and reset threshold registers.
-+ *
-+ * Return: IRQ_HANDLED.
-+ */
-+static irqreturn_t cm3218x_event_handler(int irq, void *private)
++static int sxgbe_set_rss_hash_opt(struct sxgbe_priv_data *priv,
++				  struct ethtool_rxnfc *cmd)
 +{
-+	struct iio_dev *dev_info = private;
-+	struct cm3218x_chip *chip = iio_priv(dev_info);
-+	int ret;
++	u32 reg_val = 0;
 +
-+	mutex_lock(&chip->lock);
++	/* RSS does not support anything other than hashing
++	 * to queues on src and dst IPs and ports
++	 */
++	if (cmd->data & ~(RXH_IP_SRC | RXH_IP_DST |
++			  RXH_L4_B_0_1 | RXH_L4_B_2_3))
++		return -EINVAL;
 +
-+	/* Disable interrupt */
-+	ret = cm3218x_interrupt_config(chip, 0);
-+	if (ret < 0)
-+		goto error_handler_unlock;
-+
-+	/* Update Hi/Lo windows */
-+	ret = cm3218x_threshold_update(chip, CM3218X_THRESHOLD_PERCENT);
-+	if (ret < 0)
-+		goto error_handler_unlock;
-+
-+	/* Enable interrupt */
-+	ret = cm3218x_interrupt_config(chip, 1);
-+	if (ret < 0)
-+		goto error_handler_unlock;
-+
-+error_handler_unlock:
-+	mutex_unlock(&chip->lock);
-+	return IRQ_HANDLED;
-+}
-+
-+static const struct iio_chan_spec cm3218x_channels[] = {
-+	{
-+		.type = IIO_LIGHT,
-+		.info_mask_separate =
-+			BIT(IIO_CHAN_INFO_PROCESSED) |
-+			BIT(IIO_CHAN_INFO_CALIBSCALE) |
-+			BIT(IIO_CHAN_INFO_INT_TIME),
-+	}
-+};
-+
-+static IIO_DEVICE_ATTR(in_illuminance_integration_time_available,
-+			S_IRUGO, cm3218x_get_it_available, NULL, 0);
-+
-+static struct attribute *cm3218x_attributes[] = {
-+	&iio_dev_attr_in_illuminance_integration_time_available.dev_attr.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group cm3218x_attribute_group = {
-+	.attrs = cm3218x_attributes
-+};
-+
-+static const struct iio_info cm3218x_info = {
-+	.driver_module		= THIS_MODULE,
-+	.read_raw		= &cm3218x_read_raw,
-+	.write_raw		= &cm3218x_write_raw,
-+	.attrs			= &cm3218x_attribute_group,
-+};
-+
-+static int cm3218x_probe(struct i2c_client *client,
-+			const struct i2c_device_id *id)
-+{
-+	struct cm3218x_chip *chip;
-+	struct iio_dev *indio_dev;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*chip));
-+	if (!indio_dev) {
-+		dev_err(&client->dev, "devm_iio_device_alloc failed\n");
-+		return -ENOMEM;
++	switch (cmd->flow_type) {
++	case TCP_V4_FLOW:
++	case TCP_V6_FLOW:
++		if (!(cmd->data & RXH_IP_SRC) ||
++		    !(cmd->data & RXH_IP_DST) ||
++		    !(cmd->data & RXH_L4_B_0_1) ||
++		    !(cmd->data & RXH_L4_B_2_3))
++			return -EINVAL;
++		reg_val = SXGBE_CORE_RSS_CTL_TCP4TE;
++		break;
++	case UDP_V4_FLOW:
++	case UDP_V6_FLOW:
++		if (!(cmd->data & RXH_IP_SRC) ||
++		    !(cmd->data & RXH_IP_DST) ||
++		    !(cmd->data & RXH_L4_B_0_1) ||
++		    !(cmd->data & RXH_L4_B_2_3))
++			return -EINVAL;
++		reg_val = SXGBE_CORE_RSS_CTL_UDP4TE;
++		break;
++	case SCTP_V4_FLOW:
++	case AH_ESP_V4_FLOW:
++	case AH_V4_FLOW:
++	case ESP_V4_FLOW:
++	case AH_ESP_V6_FLOW:
++	case AH_V6_FLOW:
++	case ESP_V6_FLOW:
++	case SCTP_V6_FLOW:
++	case IPV4_FLOW:
++	case IPV6_FLOW:
++		if (!(cmd->data & RXH_IP_SRC) ||
++		    !(cmd->data & RXH_IP_DST) ||
++		    (cmd->data & RXH_L4_B_0_1) ||
++		    (cmd->data & RXH_L4_B_2_3))
++			return -EINVAL;
++		reg_val = SXGBE_CORE_RSS_CTL_IP2TE;
++		break;
++	default:
++		return -EINVAL;
 +	}
 +
-+	chip = iio_priv(indio_dev);
-+	i2c_set_clientdata(client, indio_dev);
-+	chip->client = client;
-+	chip->ara = i2c_new_dummy(client->adapter, CM3218X_ARA);
-+
-+	mutex_init(&chip->lock);
-+	indio_dev->dev.parent = &client->dev;
-+	indio_dev->channels = cm3218x_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(cm3218x_channels);
-+	indio_dev->info = &cm3218x_info;
-+	if (id && id->name)
-+		indio_dev->name = id->name;
-+	else
-+		indio_dev->name = (char *)dev_name(&client->dev);
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	ret = cm3218x_reg_init(chip);
-+	if (ret) {
-+		dev_err(&client->dev,
-+			"%s: register init failed\n",
-+			__func__);
-+		return ret;
-+	}
-+
-+	if (client->irq) {
-+		ret = request_threaded_irq(client->irq,
-+					NULL,
-+					cm3218x_event_handler,
-+					IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+					"cm3218x_event",
-+					indio_dev);
-+
-+		if (ret < 0) {
-+			dev_err(&client->dev, "irq request error %d\n",
-+				-ret);
-+			goto error_disable_int;
-+		}
-+	}
-+
-+	ret = iio_device_register(indio_dev);
-+	if (ret < 0) {
-+		dev_err(&client->dev,
-+			"%s: regist device failed\n",
-+			__func__);
-+		goto error_free_irq;
-+	}
-+
-+	if (client->irq) {
-+		ret = cm3218x_threshold_update(chip, CM3218X_THRESHOLD_PERCENT);
-+		if (ret < 0)
-+			goto error_free_irq;
-+
-+		ret = cm3218x_interrupt_config(chip, 1);
-+		if (ret < 0)
-+			goto error_free_irq;
-+	}
++	/* Read SXGBE RSS control register and update */
++	reg_val |= readl(priv->ioaddr + SXGBE_CORE_RSS_CTL_REG);
++	writel(reg_val, priv->ioaddr + SXGBE_CORE_RSS_CTL_REG);
++	readl(priv->ioaddr + SXGBE_CORE_RSS_CTL_REG);
 +
 +	return 0;
++}
 +
-+error_free_irq:
-+	free_irq(client->irq, indio_dev);
-+error_disable_int:
-+	cm3218x_interrupt_config(chip, 0);
++static int sxgbe_set_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd)
++{
++	struct sxgbe_priv_data *priv = netdev_priv(dev);
++	int ret = -EOPNOTSUPP;
++
++	switch (cmd->cmd) {
++	case ETHTOOL_SRXFH:
++		ret = sxgbe_set_rss_hash_opt(priv, cmd);
++		break;
++	default:
++		break;
++	}
++
 +	return ret;
 +}
 +
-+static int cm3218x_remove(struct i2c_client *client)
++static void sxgbe_get_regs(struct net_device *dev,
++			   struct ethtool_regs *regs, void *space)
 +{
-+	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-+	struct cm3218x_chip *chip = iio_priv(indio_dev);
++	struct sxgbe_priv_data *priv = netdev_priv(dev);
++	u32 *reg_space = (u32 *)space;
++	int reg_offset;
++	int reg_ix = 0;
++	void __iomem *ioaddr = priv->ioaddr;
 +
-+	cm3218x_interrupt_config(chip, 0);
-+	if (chip->ara)
-+		i2c_unregister_device(chip->ara);
-+	if (client->irq)
-+		free_irq(client->irq, indio_dev);
-+	iio_device_unregister(indio_dev);
-+	return 0;
++	memset(reg_space, 0x0, REG_SPACE_SIZE);
++
++	/* MAC registers */
++	for (reg_offset = START_MAC_REG_OFFSET;
++	     reg_offset <= MAX_MAC_REG_OFFSET; reg_offset += 4) {
++		reg_space[reg_ix] = readl(ioaddr + reg_offset);
++		reg_ix++;
++	}
++
++	/* MTL registers */
++	for (reg_offset = START_MTL_REG_OFFSET;
++	     reg_offset <= MAX_MTL_REG_OFFSET; reg_offset += 4) {
++		reg_space[reg_ix] = readl(ioaddr + reg_offset);
++		reg_ix++;
++	}
++
++	/* DMA registers */
++	for (reg_offset = START_DMA_REG_OFFSET;
++	     reg_offset <= MAX_DMA_REG_OFFSET; reg_offset += 4) {
++		reg_space[reg_ix] = readl(ioaddr + reg_offset);
++		reg_ix++;
++	}
++
++	BUG_ON(reg_ix * 4 > REG_SPACE_SIZE);
 +}
 +
-+static const struct i2c_device_id cm3218x_id[] = {
-+	{ "cm3218", cm3218},
-+	{ "cm32181", cm32181},
-+	{ "cm32182", cm32182},
-+	{ }
-+};
++static int sxgbe_get_regs_len(struct net_device *dev)
++{
++	return REG_SPACE_SIZE;
++}
 +
-+MODULE_DEVICE_TABLE(i2c, cm3218x_id);
+ static const struct ethtool_ops sxgbe_ethtool_ops = {
++	.get_drvinfo = sxgbe_getdrvinfo,
++	.get_settings = sxgbe_getsettings,
++	.set_settings = sxgbe_setsettings,
++	.get_msglevel = sxgbe_getmsglevel,
++	.set_msglevel = sxgbe_setmsglevel,
++	.get_link = ethtool_op_get_link,
++	.get_strings = sxgbe_get_strings,
++	.get_ethtool_stats = sxgbe_get_ethtool_stats,
++	.get_sset_count = sxgbe_get_sset_count,
++	.get_channels = sxgbe_get_channels,
++	.get_coalesce = sxgbe_get_coalesce,
++	.set_coalesce = sxgbe_set_coalesce,
++	.get_rxnfc = sxgbe_get_rxnfc,
++	.set_rxnfc = sxgbe_set_rxnfc,
++	.get_regs = sxgbe_get_regs,
++	.get_regs_len = sxgbe_get_regs_len,
+ 	.get_eee = sxgbe_get_eee,
+ 	.set_eee = sxgbe_set_eee,
+ };
+diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
+index 96b4b2c..1869d4c6 100644
+--- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
++++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
+@@ -2139,6 +2139,10 @@ struct sxgbe_priv_data *sxgbe_drv_probe(struct device *device,
+ 		priv->rxcsum_insertion = true;
+ 	}
+ 
++	/* Initialise pause frame settings */
++	priv->rx_pause = 1;
++	priv->tx_pause = 1;
 +
-+static const struct of_device_id cm3218x_of_match[] = {
-+	{ .compatible = "capella,cm3218" },
-+	{ }
-+};
+ 	/* Rx Watchdog is available, enable depend on platform data */
+ 	if (!priv->plat->riwt_off) {
+ 		priv->use_riwt = 1;
+diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_reg.h b/drivers/net/ethernet/samsung/sxgbe/sxgbe_reg.h
+index 85a7b31..5a89acb 100644
+--- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_reg.h
++++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_reg.h
+@@ -195,6 +195,12 @@
+ #define SXGBE_CORE_RSS_ADD_REG		0x0C88
+ #define SXGBE_CORE_RSS_DATA_REG		0x0C8C
+ 
++/* RSS control register bits */
++#define SXGBE_CORE_RSS_CTL_UDP4TE	BIT(3)
++#define SXGBE_CORE_RSS_CTL_TCP4TE	BIT(2)
++#define SXGBE_CORE_RSS_CTL_IP2TE	BIT(1)
++#define SXGBE_CORE_RSS_CTL_RSSE		BIT(0)
 +
-+static const struct acpi_device_id cm3218x_acpi_match[] = {
-+	{ "CPLM3218", 0},
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(acpi, cm3218x_acpi_match);
-+
-+static struct i2c_driver cm3218x_driver = {
-+	.driver = {
-+		.name	= "cm3218x",
-+		.acpi_match_table = ACPI_PTR(cm3218x_acpi_match),
-+		.of_match_table = of_match_ptr(cm3218x_of_match),
-+		.owner	= THIS_MODULE,
-+	},
-+	.id_table	= cm3218x_id,
-+	.probe		= cm3218x_probe,
-+	.remove		= cm3218x_remove,
-+};
-+
-+module_i2c_driver(cm3218x_driver);
-+
-+MODULE_AUTHOR("Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>");
-+MODULE_DESCRIPTION("CM3218X ambient light sensor driver");
-+MODULE_LICENSE("GPL");
+ /* IEEE 1588 registers */
+ #define SXGBE_CORE_TSTAMP_CTL_REG	0x0D00
+ #define SXGBE_CORE_SUBSEC_INC_REG	0x0D04
 -- 
-1.8.3.1
+1.7.10.4
