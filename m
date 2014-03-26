@@ -1,78 +1,47 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v7 2/3] ARM: sun7i/sun6i: dts: Add NMI
- irqchip support
-Date: Wed, 26 Mar 2014 10:39:46 +0100
-Message-ID: <20140326093946.GE6120@lukather>
-References: <1395256879-8475-1-git-send-email-carlo@caione.org>
- <1395256879-8475-3-git-send-email-carlo@caione.org>
- <53329243.8090604@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: David Laight <David.Laight@ACULAB.COM>
+Subject: RE: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
+Date: Wed, 26 Mar 2014 09:55:46 +0000
+Message-ID: <063D6719AE5E284EB5DD2968C1650D6D0F6E9407@AcuExch.aculab.com>
+References: <1395670496-17381-1-git-send-email-zhangfei.gao@linaro.org>
+ <21873900.AIOr1ryy37@wuerfel>
+ <CAGVrzcZNM2gUHqq2m2jcaqs-AoWKo_DszYu5ozs2vTR6kFY0kA@mail.gmail.com>
+ <4392030.XayIa35sfH@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="so9zsI5B81VjUb/o"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB5GAZKMQKGQEHJ3T5KI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53329243.8090604-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <4392030.XayIa35sfH@wuerfel>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: 'Arnd Bergmann' <arnd@arndb.de>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: Zhangfei Gao <zhangfei.gao@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, netdev <netdev@vger.kernel.org>, Zhangfei Gao <zhangfei.gao@linaro.org>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
+From: Arnd Bergmann
+> On Tuesday 25 March 2014 10:16:28 Florian Fainelli wrote:
+> >
+> > Ok, well that's really unfortunate, to achieve the best of everything,
+> > the workaround should probably look like:
+> >
+> > - keep reclaiming TX buffers in ndo_start_xmit() in case you push more
+> > packets to the NICs than your timer can free
+> > - reclaim TX buffers in NAPI poll() context for "symetrical" workloads
+> > where e.g: TCP ACKs received allow you to complete TX buffers
+> > - have a timer like you suggest which should help with transmit only
+> > workloads at a slow rate
+> 
+> Yes, that is what I was thinking, but with orphaning the tx skbs,
+> we can probably be a little smarter. Note that in order to check
+> the state of the queue, we have to do a read from uncached memory,
+> since the hardware also doesn't support cache coherent DMA.
+> We don't want to do that too often.
 
---so9zsI5B81VjUb/o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Possibly you can check for all the pending transmits having
+completed - the most likely case. Instead of checking them
+individually?
 
-On Wed, Mar 26, 2014 at 09:39:31AM +0100, Hans de Goede wrote:
-> Hi,
->=20
-> On 03/19/2014 08:21 PM, Carlo Caione wrote:
-> > This patch adds DTS entries for NMI controller as child of GIC.
-> >=20
-> > Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
->=20
-> Note this breaks the kernel on sun6i / A31 since we don't have a
-> pmic driver there yet, and thus the nmi gets constantly fired without
-> anything clearing it.
->=20
-> So the sun6i section needs a status =3D "disabled"; until we actually hav=
-e pmic
-> support.
+You should limit the number of tx bytes as well as the number
+of tx frames - buffering a ring full of large frames subverts
+some of the algorithms higher up the stack.
 
-I guess it also applies to the A20, since the PMIC patches will
-probably get merged later on?
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---so9zsI5B81VjUb/o
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTMqBiAAoJEBx+YmzsjxAgGrwQAKq7sO9vus0S8JEITfrbDuf+
-lhI+uKqahiXb2SDQHRokfq1L37k6ldfCiME9+e6BFZcAyNvPKL8WbLkgdV7NKED1
-A6lb6GjC2ITriTpalsfaK4B7+Is/gvdWU0bQyPDMsZCtNMKKBgBl3GamjuM7yQIe
-gSzLXbuUQilaA6p+xWWR0c/yNFE1u1NSRFA4I+9YmlmQj3wMyFDm/FX5Nc83QgT4
-wVEK+LzBHF9Lfc544qN+9xgdJ2bKBcnjdpjTeut2a0OtfYwTaedcsEmXrF/AqZb8
-t3pV3zJnXNJWGVhs+6roxlTjgcpFrXWm3kQAqb2AV8SaWG7RTGO8UxoUQzmfej8S
-gRPOUqJC4blGC3mJc7wx63U7Ycn5zZf2WULLKBHARxsCWIOa1WHHgPfGzyr+ASEj
-7YI33MPG9jQc+bUMGWsasxnBEdiqGwJovgDfyCpXHMmxpnVvR4dMjXEGt/6ddvVB
-EaVk9stpXFmztf2kZ62WrpLt3EjrYiAXJiQm/Nn+iNth6aiioePUrhu8dKV6WVDY
-mjNKLGCwFwzahY6ZAdcIECdz5AzGT+mQ3yl6w9jLcn+VmoonDgXubshgtG8wQ555
-uEtygkN/rWxRkx+ZXDXT8mkj7PMwhA2qnJKrcZUPfEmuX6YL4z9TgfQvZkPOX+vq
-OfsWBbkpAUQE1XFQBqS7
-=hp+a
------END PGP SIGNATURE-----
-
---so9zsI5B81VjUb/o--
+	David
