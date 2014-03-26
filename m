@@ -1,115 +1,91 @@
-From: <dinguyen@altera.com>
-Subject: [PATCH 3/3] dts: documentation: Update documentation for the stmmac
- ethernet controller
-Date: Tue, 25 Mar 2014 18:34:42 -0500
-Message-ID: <1395790482-3957-4-git-send-email-dinguyen@altera.com>
-References: <1395790482-3957-1-git-send-email-dinguyen@altera.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v5 08/14] ARM: dts: mvebu: Introduce a new compatible
+ for the PMSU node
+Date: Tue, 25 Mar 2014 20:32:07 -0400
+Message-ID: <20140326003207.GK28304@titan.lakedaemon.net>
+References: <1395787705-31061-1-git-send-email-gregory.clement@free-electrons.com>
+ <1395787705-31061-9-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1395790482-3957-1-git-send-email-dinguyen@altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dinh.linux@gmail.com, arnd@arndb.de, davem@davemloft.net, peppe.cavallaro@st.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, srinivas.kandagatla@st.com, netdev@vger.kernel.org, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, arm@kernel.org, Dinh Nguyen <dinguyen@altera.com>, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1395787705-31061-9-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen@altera.com>
+On Tue, Mar 25, 2014 at 11:48:19PM +0100, Gregory CLEMENT wrote:
+> The initial binding for PMSU were wrong. It didn't take into account
+> all the registers from the PMSU and in the other hand refereed to
+> registers which are not part of PMSU. This commit introduces a new
+> compatible for the PMSU node and annotates the previous one as
+> obsolete. However we still continue to support it during a few
+> releases.
+> 
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  .../devicetree/bindings/arm/armada-370-xp-pmsu.txt         | 14 ++++++--------
+>  arch/arm/boot/dts/armada-xp.dtsi                           | 11 ++++++++---
+>  2 files changed, 14 insertions(+), 11 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt b/Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt
+> index 926b4d6aae7e..976188770079 100644
+> --- a/Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt
+> +++ b/Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt
+> @@ -4,17 +4,15 @@ Available on Marvell SOCs: Armada 370 and Armada XP
+>  
+>  Required properties:
+>  
+> -- compatible: "marvell,armada-370-xp-pmsu"
+> +- compatible: should be "marvell,armada-370-pmsu", whereas
+> +  "marvell,armada-370-xp-pmsu" is deprecated and will be removed
 
-* Add optional clocks and clock-names property into the base stmmac document.
-* Update socfpga-dwmac.txt with new compatible string and example binding.
+:)  ignore my comment on the previous patch.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
----
- .../devicetree/bindings/net/socfpga-dwmac.txt      |   38 ++++++++------------
- Documentation/devicetree/bindings/net/stmmac.txt   |    6 ++++
- 2 files changed, 21 insertions(+), 23 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-index d53d376..1ef6db7 100644
---- a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-+++ b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-@@ -1,35 +1,27 @@
- Altera SOCFPGA SoC DWMAC controller
- 
--The device node has following properties.
-+This is a variant of the dwmac/stmmac driver an inherits all descriptions
-+present in Documentation/devicetree/bindings/net/stmmac.txt.
-+
-+The device node has additional properties:
- 
- Required properties:
-- - compatible	: Should contain "altr,socfpga-stmmac"
-+ - compatible	: Should contain "altr,socfpga-stmmac" along with
-+		  "snps,dwmac" and any applicable more detailed
-+		  designware version numbers documented in stmmac.txt
-  - altr,sysmgr-syscon : Should be the phandle to the system manager node that
-    encompasses the glue register, and the register offset.
- 
--Sub-nodes:
--The dwmac core should be added as subnode to SOCFPGA dwmac glue.
--- dwmac :	The binding details of dwmac can be found in
--  Documentation/devicetree/bindings/net/stmmac.txt
--
- Example:
- 
--ethernet0: ethernet0 {
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--	compatible = "altr,socfpga-stmmac";
-+gmac0: ethernet@ff700000 {
-+	compatible = "altr,socfpga-stmmac", "snps,dwmac-3.70a", "snps,dwmac";
- 	altr,sysmgr-syscon = <&sysmgr 0x60>;
- 	status = "disabled";
--	ranges;
--
--	gmac0: gmac0@ff700000 {
--		compatible = "snps,dwmac-3.70a", "snps,dwmac";
--		reg = <0xff700000 0x2000>;
--		interrupts = <0 115 4>;
--		interrupt-names = "macirq";
--		mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
--		clocks = <&emac0_clk>;
--		clock-names = "stmmaceth";
--	};
-+	reg = <0xff700000 0x2000>;
-+	interrupts = <0 115 4>;
-+	interrupt-names = "macirq";
-+	mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
-+	clocks = <&emac0_clk>;
-+	clocks-names = "stmmaceth";
- };
-diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-index 9d92d42..9a0c1b7 100644
---- a/Documentation/devicetree/bindings/net/stmmac.txt
-+++ b/Documentation/devicetree/bindings/net/stmmac.txt
-@@ -34,6 +34,10 @@ Optional properties:
- 	reset phandle is given
- - max-frame-size:	Maximum Transfer Unit (IEEE defined MTU), rather
- 			than the maximum frame size.
-+- clocks: If present, the first clock should be the GMAC main clock,
-+  further clocks may be specified in derived bindings.
-+- clocks-names: One name for each entry in the clocks property, the
-+  first one should be "stmmaceth".
- 
- Examples:
- 
-@@ -46,4 +50,6 @@ Examples:
- 		mac-address = [000000000000]; /* Filled in by U-Boot */
- 		max-frame-size = <3800>;
- 		phy-mode = "gmii";
-+		clocks = <&clock>;
-+		clock-names = "stmmaceth">;
- 	};
--- 
-1.7.9.5
+> -- reg: Should contain PMSU registers location and length. First pair
+> -  for the per-CPU SW Reset Control registers, second pair for the
+> -  Power Management Service Unit.
+> +- reg: Should contain PMSU registers location and length.
+>  
+>  Example:
+>  
+> -armada-370-xp-pmsu@d0022000 {
+> -	compatible = "marvell,armada-370-xp-pmsu";
+> -	reg = <0xd0022100 0x430>,
+> -	      <0xd0020800 0x20>;
+> +armada-370-xp-pmsu@22000 {
+> +	compatible = "marvell,armada-370-pmsu";
+> +	reg = <0x22000 0x1000>;
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
+> index abb9f9dcc525..0c455f5458df 100644
+> --- a/arch/arm/boot/dts/armada-xp.dtsi
+> +++ b/arch/arm/boot/dts/armada-xp.dtsi
+> @@ -117,9 +117,14 @@
+>  				clock-names = "nbclk", "fixed";
+>  			};
+>  
+> -			armada-370-xp-pmsu@22000 {
+> -				compatible = "marvell,armada-370-xp-pmsu";
+> -				reg = <0x22100 0x400>, <0x20800 0x20>;
+> +			cpurst@20800 {
+> +				compatible = "marvell,armada-xp-cpu-reset";
+> +				reg = <0x20800 0x20>;
+> +			};
+> +
+> +			armada-370-pmsu@22000 {
+> +				compatible = "marvell,armada-370-pmsu";
+> +				reg = <0x22000 0x400>;
+>  			};
+>  
+>  			eth2: ethernet@30000 {
+> -- 
+> 1.8.1.2
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
