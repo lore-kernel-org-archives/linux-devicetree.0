@@ -1,123 +1,64 @@
-From: Phil.Edworthy@renesas.com
-Subject: Re: [PATCH v5 5/9] dt-bindings: pci: rcar pcie device tree bindings
-Date: Wed, 26 Mar 2014 09:12:22 +0000
-Message-ID: <OF926D4427.71CAF95D-ON80257CA7.00321EAE-80257CA7.0032919D@eu.necel.com>
-References: <1395766604-30926-1-git-send-email-phil.edworthy@renesas.com> <1395766604-30926-6-git-send-email-phil.edworthy@renesas.com> <5331E576.2000202@cogentembedded.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 15/20] ARM: ux500: Add a vmmc regulator through DT for the
+ poped eMMC for href
+Date: Wed, 26 Mar 2014 10:27:39 +0100
+Message-ID: <CAPDyKFq3CqSwwJ9F8mAYAckOGqM89aH0OG7jwrA0XaQV1QW3=w@mail.gmail.com>
+References: <1395404057-27835-1-git-send-email-ulf.hansson@linaro.org>
+	<1395404057-27835-16-git-send-email-ulf.hansson@linaro.org>
+	<CACRpkdbFFqQdWXOHyV8qmxnd0z2CKK9gZFS0ys5YLm2dES7bgQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <5331E576.2000202@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, LAKML <linux-arm-kernel@lists.infradead.org>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Valentine Barshak <valentine.barshak@cogentembedded.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdbFFqQdWXOHyV8qmxnd0z2CKK9gZFS0ys5YLm2dES7bgQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+On 25 March 2014 22:45, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Mar 21, 2014 at 1:14 PM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>
+>> Add a node in DT for the proper regulator which means we can move away
+>> from the mmci platform data which currently holds the corresponding OCR
+>> mask.
+>>
+>> The mmci driver can then calculate the OCR mask based on the voltages
+>> supported by the regulator, instead of relying on the platform data.
+>>
+>> Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/ste-href.dtsi |    1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm/boot/dts/ste-href.dtsi b/arch/arm/boot/dts/ste-href.dtsi
+>> index be34beb..bf449de 100644
+>> --- a/arch/arm/boot/dts/ste-href.dtsi
+>> +++ b/arch/arm/boot/dts/ste-href.dtsi
+>> @@ -155,6 +155,7 @@
+>>                         bus-width = <8>;
+>>                         cap-mmc-highspeed;
+>>                         non-removable;
+>> +                       vmmc-supply = <&db8500_vsmps2_reg>;
+>
+> Don't you need a similar oneliner to ste-snowball.dts?
+> That board is not including this file...
 
-On: 25/03/2014 19:22, Sergei wrote:
-> Subject: Re: [PATCH v5 5/9] dt-bindings: pci: rcar pcie device tree 
-bindings
-> 
-> Hello.
-> 
-> On 03/25/2014 07:56 PM, Phil Edworthy wrote:
-> 
-> > This patch adds the bindings for the R-Car PCIe driver. The driver
-> > resides under drivers/pci/host/pcie-rcar.c
-> 
-> > Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-> > ---
-> > v5:
-> >   - Add PCIe bus clock reference
-> >   - Add additional interrupt bindings
-> >   - Use dma-ranges property to specify inbound memory regions
-> > ---
-> >   Documentation/devicetree/bindings/pci/rcar-pci.txt | 44 
-++++++++++++++++++++++
-> >   1 file changed, 44 insertions(+)
-> >   create mode 100644 
-Documentation/devicetree/bindings/pci/rcar-pci.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/
-> Documentation/devicetree/bindings/pci/rcar-pci.txt
-> > new file mode 100644
-> > index 0000000..61bf5ef
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> > @@ -0,0 +1,44 @@
-> > +* Renesas RCar PCIe interface
-> > +
-> > +Required properties:
-> > +- compatible: should contain one of the following
-> > +   "renesas,pcie-r8a7779", "renesas,pcie-r8a7790", 
-"renesas,pcie-r8a7791"
-> > +- reg: base addresses and lengths of the pcie controller.
-> 
->     Hmm, need "registers" at end. And why plural?
-Ok, & yes it should be singular.
+Snowball don't have the poped eMMC, which mean the vsmps2 is not used
+as the vmmc-supply.
 
+I still plan to have a look at snowball, handled as a separate task,
+since I have heard people complaining about the SD card and/or the
+eMMC is working properly.
 
-> > +- #address-cells: set to <3>
-> > +- #size-cells: set to <2>
-> > +- device_type: set to "pci"
-> > +- ranges: ranges for the PCI memory and I/O regions.
-> > +- dma-ranges: ranges for the inbound memory regions.
-> > +- interrupts: two interrupt sources for MSI interrupts, followed by 
-interrupt
-> > +   source for hardware related interrupts (e.g. link speed change).
-> > +- #interrupt-cells: set to <1>
-> > +- interrupt-map-mask and interrupt-map: standard PCI properties
-> > +   to define the mapping of the PCIe interface to interrupt
-> > +   numbers.
-> > +- clocks: from common clock binding: handle to pci clock.
-> 
->     s/handle/phandle/, s/pci/PCI/.
->     Actually, it's a clock specifier consisting not only of phandle but 
-also 
-> of clock #. Looking at your example, it's even a pair of clock 
-specifiers.
-Right, and yes it's two clocks - I missed that when adding the PCI bus 
-clock.
+Kind regards
+Ulf Hansson
 
- 
-> > +- clock-names: from common clock binding: should be "pcie" and 
-"pcie_bus".
-> > +
-> > +Example:
-> > +
-> > +SoC specific DT Entry:
-> > +
-> > +   pcie: pcie@fe000000 {
-> > +      compatible = "renesas,pcie-r8a7791";
-> > +      reg = <0 0xfe000000 0 0x80000>;
-> > +      #address-cells = <3>;
-> > +      #size-cells = <2>;
-> > +      device_type = "pci";
-> > +      ranges = <0x01000000 0 0x00000000 0 0xfe100000 0 0x00100000
-> > +           0x02000000 0 0xfe200000 0 0xfe200000 0 0x00200000
-> > +           0x02000000 0 0x30000000 0 0x30000000 0 0x08000000
-> > +           0x42000000 0 0x38000000 0 0x38000000 0 0x08000000>;
-> > +      dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0 0x40000000
-> > +               0x42000000 2 0x00000000 2 0x00000000 0 0x40000000>;
-> 
->     Hmm, this prop looks board-dependent...
-Initially I thought that it would be board dependent and map the actual 
-DDR available. However, I then considered that it is probably ok to map 
-all possible DDR ranges that the device is capable of using. I'm ok with 
-either approach though...
-
-
-> > +      interrupts = <0 116 4 0 117 4 0 118 4>;
-> > +      #interrupt-cells = <1>;
-> > +      interrupt-map-mask = <0 0 0 0>;
-> > +      interrupt-map = <0 0 0 0 &gic 0 116 4>;
-> > +      clocks = <&mstp3_clks R8A7791_CLK_PCIE>, <&pcie_bus_clk>;
-> > +      clock-names = "pcie", "pcie_bus";
-> > +      status = "disabled";
-> > +   };
-> 
-> WBR, Sergei
-> 
-
-Thanks
-Phil
+>
+> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> Yours,
+> Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
