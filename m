@@ -1,12 +1,13 @@
 From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v8 0/3] ARM: sun7i/sun6i: irqchip: Irqchip
- driver for NMI controller
-Date: Wed, 26 Mar 2014 22:50:45 +0100
-Message-ID: <1395870648-17240-1-git-send-email-carlo@caione.org>
+Subject: [PATCH v8 3/3] ARM: sun7i/sun6i: irqchip: Update the documentation
+Date: Wed, 26 Mar 2014 22:50:48 +0100
+Message-ID: <1395870648-17240-4-git-send-email-carlo@caione.org>
+References: <1395870648-17240-1-git-send-email-carlo@caione.org>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDWJTUUC5UCBBX4WZWMQKGQE3ZSIY4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDWJTUUC5UCBBZEWZWMQKGQEZ4S2DDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1395870648-17240-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi>
@@ -17,49 +18,47 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-su
 Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner A20/A31 SoCs have a special interrupt controller for managing NMI.
-Three register are present to (un)mask, control and acknowledge NMI.
-These two patches add a new irqchip driver in cascade with GIC.
+Added documentation for NMI irqchip.
 
-Changes since v1:
-        - added binding document
-
-Changes since v2:
-        - fixed trigger type in DTS
-        - new explanations in binding documentation
-        - added support for A31 (sun6i)
-
-Changes since v3:
-        - changed compatibles
-
-Changes since v4:
-        - fixed binding documentation
-
-Changes since v5:
-        - switched to handle_fasteoi_irq handler to avoid the double
-          interrupts issue
-
-Changes since v6:
-	- changed node name
-	- deleted defaulted interrupt-parent property
-
-Changes since v7:
-	- fixed IRQ number in sun6i
-	- NMI disabled before registering the IRQ handler
-
-Carlo Caione (3):
-  ARM: sun7i/sun6i: irqchip: Add irqchip driver for NMI controller
-  ARM: sun7i/sun6i: dts: Add NMI irqchip support
-  ARM: sun7i/sun6i: irqchip: Update the documentation
-
- .../allwinner,sun67i-sc-nmi.txt                    |  27 +++
- arch/arm/boot/dts/sun6i-a31.dtsi                   |   8 +
- arch/arm/boot/dts/sun7i-a20.dtsi                   |   8 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-sunxi-nmi.c                    | 208 +++++++++++++++++++++
- 5 files changed, 252 insertions(+)
+Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ .../allwinner,sun67i-sc-nmi.txt                    | 27 ++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/allwinner,sun67i-sc-nmi.txt
- create mode 100644 drivers/irqchip/irq-sunxi-nmi.c
 
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun67i-sc-nmi.txt b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun67i-sc-nmi.txt
+new file mode 100644
+index 0000000..993a68a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun67i-sc-nmi.txt
+@@ -0,0 +1,27 @@
++Allwinner Sunxi NMI Controller
++==============================
++
++Required properties:
++
++- compatible : should be "allwinner,sun7i-a20-sc-nmi" or
++  "allwinner,sun6i-a31-sc-nmi"
++- reg : Specifies base physical address and size of the registers.
++- interrupt-controller : Identifies the node as an interrupt controller
++- #interrupt-cells : Specifies the number of cells needed to encode an
++  interrupt source. The value shall be 2. The first cell is the IRQ number, the
++  second cell the trigger type as defined in interrupt.txt in this directory.
++- interrupt-parent: Specifies the parent interrupt controller.
++- interrupts: Specifies the interrupt line (NMI) which is handled by
++  the interrupt controller in the parent controller's notation. This value
++  shall be the NMI.
++
++Example:
++
++interrupt-controller@01c00030 {
++	compatible = "allwinner,sun7i-a20-sc-nmi";
++	interrupt-controller;
++	#interrupt-cells = <2>;
++	reg = <0x01c00030 0x0c>;
++	interrupt-parent = <&gic>;
++	interrupts = <0 0 4>;
++};
 -- 
 1.8.3.2
