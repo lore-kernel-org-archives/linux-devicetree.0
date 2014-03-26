@@ -1,58 +1,146 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] clk: register fixed-clock only if #clock-cells property
- is present
-Date: Wed, 26 Mar 2014 17:14:28 -0300
-Message-ID: <CAOMZO5AEry8sJW_+0aJS8ush+sYPPWk9LRU0b8RUUGa-hO_G1A@mail.gmail.com>
-References: <1395858127-18730-1-git-send-email-s.nawrocki@samsung.com>
-	<CAOMZO5DJPKvha7A-foktsB2dEw9xGXL_++uBXj_3ScAPTXNOkw@mail.gmail.com>
-	<53333145.4080903@gmail.com>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 2/3] ARM: sun7i/sun6i: dts: Add NMI
+ irqchip support
+Date: Wed, 26 Mar 2014 21:24:41 +0100
+Message-ID: <CAOQ7t2aWfH9Mk=AFqt3aqZs3myPOJVTFg=+u_w95OzVR4gBbPQ@mail.gmail.com>
+References: <1395256879-8475-1-git-send-email-carlo@caione.org>
+	<1395256879-8475-3-git-send-email-carlo@caione.org>
+	<53329243.8090604@redhat.com>
+	<20140326093946.GE6120@lukather>
+	<5332A62D.90302@redhat.com>
+	<5332E64D.6040908@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53333145.4080903-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDWJTUUC5UCBBEPPZSMQKGQEXRZPJJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <5332E64D.6040908-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 26, 2014 at 4:57 PM, Sylwester Nawrocki
-<sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Wed, Mar 26, 2014 at 03:38:05PM +0100, Hans de Goede wrote:
+> Hi,
 
-> Perhaps a change as below helps ?
->
-> From 85ee85e4a92b42442354f3f2454be50c173e1c59 Mon Sep 17 00:00:00 2001
-> From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Date: Wed, 26 Mar 2014 20:54:13 +0100
-> Subject: [PATCH] clk: reverse default clk provider initialization order in
-> of_clk_init()
->
->
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  drivers/clk/clk.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index fb3c40b..d30809c 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -2608,7 +2608,7 @@ void __init of_clk_init(const struct of_device_id
-> *matches)
->
->                 parent->clk_init_cb = match->data;
->                 parent->np = np;
-> -               list_add(&parent->node, &clk_provider_list);
-> +               list_add_tail(&parent->node, &clk_provider_list);
->         }
->
->         while (!list_empty(&clk_provider_list)) {
+Hi Hans,
 
-Thanks, Sylwester!
+> On 03/26/2014 11:04 AM, Hans de Goede wrote:
+> > Hi,
+> >
+> > On 03/26/2014 10:39 AM, Maxime Ripard wrote:
+> >> On Wed, Mar 26, 2014 at 09:39:31AM +0100, Hans de Goede wrote:
+> >>> Hi,
+> >>>
+> >>> On 03/19/2014 08:21 PM, Carlo Caione wrote:
+> >>>> This patch adds DTS entries for NMI controller as child of GIC.
+> >>>>
+> >>>> Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+> >>>
+> >>> Note this breaks the kernel on sun6i / A31 since we don't have a
+> >>> pmic driver there yet, and thus the nmi gets constantly fired without
+> >>> anything clearing it.
+> >>>
+> >>> So the sun6i section needs a status = "disabled"; until we actually have pmic
+> >>> support.
+> >>
+> >> I guess it also applies to the A20, since the PMIC patches will
+> >> probably get merged later on?
+> >
+> > Could be I've never tried it on the A20 without also having the pmic driver
+> > build into the kernel. Thinking more about this, I think this actually is
+> > a bug in the nmi irqchip driver, it should not unmask the gic irq until
+> > it gets an unmask for its child irq itself.
+> >
+> > Otherwise we can still get the same problem if ie the pmic driver is
+> > a module, etc.
+> >
+> > Hmm, looking at the code I see that it already masks (sets enable to 0)
+> > the irq in sunxi_sc_nmi_irq_init. Note that this really should be
+> > done before the irq_set_chained_handler call though, as from then on
+> > the gic irq is unmasked, so we may get spurious irqs until the
+> > sunxi_sc_nmi_write calls are done.
+> >
+> > I don't think this will solve the A31 problem though, I wonder if
+> > the enable reg-offset we've for the A31 is correct, maybe it should
+> > be 8 like with the A20 ?
+> >
+> > I'll give this a try when I can find some time for this.
+>
+> Ok, so I've spend some time debugging this, and the problem is not the
+> disabling of the NMI in the NMI controller itself. The problem is that
+> the irq line used in the sun6i-a31.dtsi is wrong, irq 0 is for uart0
+> the nmi uses irq 32. So this fixes this hang due to unhandled irqs
 
-This makes my imx6q-wandboard to boot again.
+Unfortunately I don't have a A31 board so I couldn't test it :( sorry for
+this mess.
+I have tried with my Cubieboard2 and it seems that I don't have any IRQs
+storm when the PMIC is not compiled in.
 
-Tested-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I've been seeing:
+>
+> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
+> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+> @@ -603,8 +603,7 @@
+>                         interrupt-controller;
+>                         #interrupt-cells = <2>;
+>                         reg = <0x01f00c0c 0x38>;
+> -                       interrupt-parent = <&gic>;
+> -                       interrupts = <0 0 4>;
+> +                       interrupts = <0 32 4>;
+>                 };
+>
+>                 cpucfg@01f01c00 {
+
+Agree. I'll fix it.
+
+> Note I also remove the interrupt-parent as the gic is the
+> default interrupt-parent, and we don't explicitly set that
+> anywhere else either.
+
+Uhm, actually I removed it in v6. Probably you are looking at the wrong
+version.
+
+> Besides that after having looked into this more, I strongly
+> believe that we should disable the NMI before registering the
+> irq handler, as registering the irq handler unmasks the irq
+> on the gic, so if u-boot has left the NMI enabled, and the NMI pin
+> is active we will immediately get an interrupt, before any
+> driver has claimed the downstream interrupt of the NMI.
+>
+> IOW I strongly believe we should do this:
+>
+> --- a/drivers/irqchip/irq-sunxi-nmi.c
+> +++ b/drivers/irqchip/irq-sunxi-nmi.c
+> @@ -179,12 +179,12 @@ static int __init sunxi_sc_nmi_irq_init(struct device_node *node,
+>         gc->chip_types[1].regs.type             = reg_offs->ctrl;
+>         gc->chip_types[1].handler               = handle_edge_irq;
+>
+> -       irq_set_handler_data(irq, domain);
+> -       irq_set_chained_handler(irq, sunxi_sc_nmi_handle_irq);
+> -
+>         sunxi_sc_nmi_write(gc, reg_offs->enable, 0);
+>         sunxi_sc_nmi_write(gc, reg_offs->pend, 0x1);
+>
+> +       irq_set_handler_data(irq, domain);
+> +       irq_set_chained_handler(irq, sunxi_sc_nmi_handle_irq);
+> +
+>         return 0;
+>
+>  fail_irqd_remove:
+
+ACK
+
+>
+> So it looks like we need a v8, sorry for not spotting this sooner.
+
+My bad for not having tested it enough.
+
+Thank you,
+
+-- 
+Carlo Caione
