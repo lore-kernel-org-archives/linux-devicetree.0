@@ -1,76 +1,50 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [RFC PATCH 02/12] pci: host: pcie-dra7xx: add support for pcie-dra7xx
- controller
-Date: Wed, 26 Mar 2014 20:49:54 +0530
-Message-ID: <5332F01A.6090307@ti.com>
-References: <1395842272-15267-1-git-send-email-kishon@ti.com>	<1395842272-15267-3-git-send-email-kishon@ti.com> <CAL_JsqKeQvbU24V2-3KQuFoLwkL31DEcEEVDenfTA0P++Hn_fQ@mail.gmail.com>
+From: Dinh Nguyen <dinh.linux@gmail.com>
+Subject: Re: [PATCH 3/3] ARM: dts: socfpga: add gpio pieces
+Date: Wed, 26 Mar 2014 10:29:34 -0500
+Message-ID: <5332F25E.10104@gmail.com>
+References: <1395345324-18299-1-git-send-email-bigeasy@linutronix.de>	<1395345324-18299-4-git-send-email-bigeasy@linutronix.de>	<CANk1AXRa4V1ADNaT+T3pYF4zyxni9Y8rmU9UYRoA_7NxW8KWEg@mail.gmail.com> <CANk1AXSQVFZvRmvYt+JF+TDVpfX-_RLiUcQXotGzpHoTMUVymQ@mail.gmail.com> <532D73D1.7020408@linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKeQvbU24V2-3KQuFoLwkL31DEcEEVDenfTA0P++Hn_fQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, mohit.kumar@st.com, Jingoo Han <jg1.han@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, rnayak@ti.com, "paul@pwsan.com" <paul@pwsan.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <532D73D1.7020408@linutronix.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, delicious quinoa <delicious.quinoa@gmail.com>
+Cc: Alan Tull <atull@altera.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Dinh Nguyen <dinguyen@altera.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On Wednesday 26 March 2014 08:15 PM, Rob Herring wrote:
-> On Wed, Mar 26, 2014 at 8:57 AM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->> Added support for pcie controller in dra7xx. This driver re-uses
->> the designware core code that is already present in kernel.
+On 03/22/2014 06:28 AM, Sebastian Andrzej Siewior wrote:
+> On 03/21/2014 11:15 PM, delicious quinoa wrote:
+>> snps,nr-gpios = <27>;
 >>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  Documentation/devicetree/bindings/pci/ti-pci.txt |   35 ++
->>  drivers/pci/host/Kconfig                         |   10 +
->>  drivers/pci/host/Makefile                        |    1 +
->>  drivers/pci/host/pcie-dra7xx.c                   |  411 ++++++++++++++++++++++
->>  4 files changed, 457 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pci/ti-pci.txt
->>  create mode 100644 drivers/pci/host/pcie-dra7xx.c
+>> As noted on other thread, gpio2 is 27 wide, despite what the
+>> documentation says.  When I made that change and remove your other two
+>> patches the gpios worked for me on a cyclone5 devkit board.
 >>
->> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
->> new file mode 100644
->> index 0000000..0528c47
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
->> @@ -0,0 +1,35 @@
->> +TI PCI Controllers
->> +
->> +PCIe Designware Controller
->> +This node should have the properties described in "designware-pcie.txt".
->> + - compatible: Should be "ti,dra7xx-pcie""
->> + - reg : Address and length of the register set for the device.
->> + - phys : the phandle for the PHY device (used by generic PHY framework)
->> + - phy-names : the names of the PHY corresponding to the PHYs present in the
->> +   *phy* phandle.
->> + - resets: phandle used if reset is handled be soc
-> 
-> s/be/by/ ?
-> 
->> + - reset-names: name given to the phandle
->> + - ti,device-type: Should be 1 - EP TYPE, 2 - LEG EP TYPE OR 3 - RC TYPE
-> 
-> I don't think this makes sense. I'd imagine we'd need the binding to
-> look quite a bit different if endpoint mode was actually supported. I
+>> So if you fix the "#gpio-cells = <2>;" for all 3 gpios and fix
+>> "snps,nr-gpios = <27>;" for gpio2, then this one patch looks good to
+>> me.  With these changes,
+>
+> Okay will do. And I also add a note that  the reference manual is wrong
+> here.
+>
 
-right, it makes sense to remove the ti,device-type altogether as this driver
-only supports RC.
-> think I would start defining endpoint mode with a different compatible
-> string and go from there.
-> 
->> +
->> +Example:
->> +pcie@51000000 {
->> +       compatible = "ti,dra7xx-pcie";
->> +       reg = <0x51002000 0x14c>, <0x51000000 0x2000>, <0x4A002540 0x1f>, <0x4A003c24 0x4>, <0x4AE07310 0x4>;
-> 
-> This is different number of entries from your actual dts. You need to
-> define how many reg entries, what they are, and the order.
+I've applied this patch to rocketboards/linux-socfpga-next/next-dt. I 
+will take through the arm-soc tree for 3.16.
 
-Ok. Will fix it.
-
-Thanks
-Kishon
+Dinh
+>>
+>> Acked-by: Alan Tull <atull@altera.com>
+>>
+>> Alan Tull
+>> aka
+>> delicous quinoa
+>
+> Sebastian
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
