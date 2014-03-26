@@ -1,75 +1,44 @@
-From: Zhangfei Gao <zhangfei.gao@gmail.com>
-Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Wed, 26 Mar 2014 22:22:35 +0800
-Message-ID: <CAMj5Bkg1_a=tAw1sxOTzSG6eWUHT8QVPXOzx2C+oCyf+dPr7Uw@mail.gmail.com>
-References: <1395132017-15928-1-git-send-email-zhangfei.gao@linaro.org>
-	<1395132017-15928-4-git-send-email-zhangfei.gao@linaro.org>
-	<20140318104616.GT21483@n2100.arm.linux.org.uk>
-	<CAMj5BkiCXVZZPS-VyVxejCY0aiGD_HQjUdWd-FKD_ER_y_0wxQ@mail.gmail.com>
-	<CAL_JsqLfH7Er-s5wjA5JGE4+-SGtTOvYTyQ=cYk+1ekHo39Crg@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v5 2/4] arm64: dts: APM X-Gene PCIe device tree nodes
+Date: Wed, 26 Mar 2014 09:28:42 -0500
+Message-ID: <CAL_Jsq+XxAtUeNKFi0hH=ehb_fhFvkM0U1Zm_j1LdtQZbvSzfA@mail.gmail.com>
+References: <1395270762-6055-1-git-send-email-tinamdar@apm.com>
+	<1395270762-6055-3-git-send-email-tinamdar@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLfH7Er-s5wjA5JGE4+-SGtTOvYTyQ=cYk+1ekHo39Crg@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Zhangfei Gao <zhangfei.gao@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, netdev <netdev@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1395270762-6055-3-git-send-email-tinamdar@apm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Tanmay Inamdar <tinamdar@apm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "patches@apm.com" <patches@apm.com>, "jcm@redhat.com" <jcm@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Rob
+On Wed, Mar 19, 2014 at 6:12 PM, Tanmay Inamdar <tinamdar@apm.com> wrote:
+> This patch adds the device tree nodes for APM X-Gene PCIe controller and
+> PCIe clock interface. Since X-Gene SOC supports maximum 5 ports, 5 dts
+> nodes are added.
 
-On Mon, Mar 24, 2014 at 10:17 PM, Rob Herring <robherring2@gmail.com> wrote:
+[snip]
 
->
->>>> +             dma_map_single(&ndev->dev, skb->data,
->>>> +                     RX_BUF_SIZE, DMA_FROM_DEVICE);
->>>
->>> This is incorrect.
->>>
->>> buf = buffer alloc()
->>> /* CPU owns buffer and can read/write it, device does not */
->>> dev_addr = dma_map_single(dev, buf, ..., DMA_FROM_DEVICE);
->>> /* Device owns buffer and can write it, CPU does not access it */
->>> dma_unmap_single(dev, dev_addr, ..., DMA_FROM_DEVICE);
->>> /* CPU owns buffer again and can read/write it, device does not */
->>>
->>> Please turn on DMA API debugging in the kernel debug options and verify
->>> whether your driver causes it to complain (it will.)
->>
->> Yes, you are right.
->> After change to dma_map/unmap_single, however, still get warning like
->> "DMA-API: device driver failed to check map error", not sure whether
->> it can be ignored?
->
-> If it could be ignored, there would be no warning. So yes you should
-> check the error. I guess correct error handling would be throwing away
-> the packet.
+> +               pcie0: pcie@1f2b0000 {
+> +                       status = "disabled";
+> +                       device_type = "pci";
+> +                       compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
+> +                       #interrupt-cells = <1>;
+> +                       #size-cells = <2>;
+> +                       #address-cells = <3>;
+> +                       reg = < 0x00 0x1f2b0000 0x0 0x00010000   /* Controller registers */
+> +                               0xe0 0xd0000000 0x0 0x00200000>; /* PCI config space */
 
-The warning is solved via adding dma_mapping_error check after every
-dma_map_single.
+Where is the right place for config space? This binding has it here
+and others have it in ranges. Given that config space type is defined
+for ranges, I would think that is the right place. But Liviu's patches
+do not process config space entries in ranges. Perhaps we need a
+config space resource populated in the bridge struct.
 
->
->
->>>> +             dma_map_single(&ndev->dev, buf, RX_BUF_SIZE, DMA_TO_DEVICE);
->>>> +             hip04_set_recv_desc(priv, virt_to_phys(buf));
->>>
->>> No need for virt_to_phys() here - dma_map_single() returns the device
->>> address.
->> Got it.
->> Use virt_to_phys since find same result come out, it should be
->> different for iommu case.
->>
->> In fact, the hardware can help to do the cache flushing, the function
->> still not be enabled now.
->> Then dma_map/unmap_single may be ignored.
->
-> If you don't need cache flushing, you should setup different
-> dma_map_ops for the device such as arm_coherent_dma_ops. The driver
-> should always have the dma_map calls. See highbank and mvebu for
-> examples.
+Rob
 
-That would be very helpful, still not sure how to enable this feature.
-Could you help clarify which file.
-Not find highbank and mvebu under drivers/iommu/.
 
-Thanks
+> +                       reg-names = "csr", "cfg";
+> +                       ranges = <0x01000000 0x00 0x00000000 0xe0 0x00000000 0x00 0x00010000   /* io */
+> +                                 0x02000000 0x00 0x10000000 0xe0 0x10000000 0x00 0x80000000>; /* mem */
