@@ -1,35 +1,81 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [PATCH RFC v3 0/2] Move dai-link level properties away from dai
- subnodes
-Date: Wed, 26 Mar 2014 19:18:48 +0100
-Message-ID: <20140326191848.3af2057a@armhf>
-References: <cover.1395655868.git.jsarha@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <cover.1395655868.git.jsarha@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jyri Sarha <jsarha@ti.com>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, peter.ujfalusi@ti.com, broonie@kernel.org, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, detheridge@ti.com, Li.Xiubo@freescale.com, kuninori.morimoto.gx@renesas.com
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] clk: register fixed-clock only if #clock-cells property is
+ present
+Date: Wed, 26 Mar 2014 19:22:07 +0100
+Message-ID: <1395858127-18730-1-git-send-email-s.nawrocki@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 24 Mar 2014 12:15:23 +0200
-Jyri Sarha <jsarha@ti.com> wrote:
+After commit 1771b10d605d26ccee771a7fb4b08718c124097a
+"clk: respect the clock dependencies in of_clk_init"
+the order of registering clock providers and their corresponding
+clocks may change. This commit currently causes a regression
+on Exynos4 platforms, where fixed clocks are now being registered
+through the standard "fixed-clock" compatible device driver, rather
+than through a custom mechanism within the clk-exynos4 driver.
+Then any attempts to register the fixed clocks in clk-exynos4
+fail, since clocks named "xxti", "xusbxti" are already registered.
+This means that some clock specifiers do not work any more, i.e.
+those with phandle to the main clock controller node and fixed
+indexes. This in turn causes wrong frequency of the root clocks
+and various division by zero errors.
 
-> This patch is implemented on top of late patches from Jean-Francois
-> Moine [1].
->=20
-> These patches implement the main part of the simple-card changes
-> discussed in alsa-devel mailing list [2].
+Hence for old dtbs, where #clock-cells property is missing in the
+fixed-clock DT nodes for exynos4 this patch has a positive side
+effect that the fixed clocks will not get registered through the
+standard mechanism and the required clock names won't be taken
+at the time the main clock controller driver's init callback is
+called.
 
-Acked-by: Jean-Francois Moine <moinejf@free.fr>
+To make exynos use the standard fixed-clock registration mechanism,
+related dts files could be updated, i.e. #clock-cells property
+added together with required dependencies, that is a 'clocks'
+property with phandles to the fixed clock nodes listed in it.
+The dependencies specified in devicetree would then ensure proper
+order of clocks registration.
 
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
+Now the issue is that this patch affects not only exynos, but also
+imx and at91 platforms. However, those use a custom compatible
+string in addition to "fixed-clock" and I suspect registering
+fixed clocks through the drivers/clk/clk-fixed-rate.c driver has
+been  failing silently for them anyway. This patch could be
+actually fixing similar issue as for exynos, seen after commit
+"clk: respect the clock dependencies in of_clk_init".
+
+There is one board that will likely break after this patch, i.e.
+arch/arm/boot/dts/vf610-twr.dts. Nonetheless, it doesn't specify
+the #clock-cells property, which is documented as mandatory in
+Documentation/devicetree/bindings/clock/fixed-clock.txt.
+So perhaps we could add the missing property to dts as a fix.
+
+Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ drivers/clk/clk-fixed-rate.c |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/clk/clk-fixed-rate.c b/drivers/clk/clk-fixed-rate.c
+index 0fc56ab..cbbef2b 100644
+--- a/drivers/clk/clk-fixed-rate.c
++++ b/drivers/clk/clk-fixed-rate.c
+@@ -122,6 +122,11 @@ void of_fixed_clk_setup(struct device_node *node)
+ 	if (of_property_read_u32(node, "clock-frequency", &rate))
+ 		return;
+
++	if (!of_find_property(node, "#clock-cells", NULL)) {
++		pr_warn("clk: missing #clock-cells property at %s\n",
++			node->full_name);
++		return;
++	}
+ 	of_property_read_u32(node, "clock-accuracy", &accuracy);
+
+ 	of_property_read_string(node, "clock-output-names", &clk_name);
 --
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
