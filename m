@@ -1,39 +1,59 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] ARM: realview: basic device tree implementation
-Date: Wed, 26 Mar 2014 15:03:56 +0100
-Message-ID: <9768087.NlERCxKjPM@wuerfel>
-References: <1395826060-26662-1-git-send-email-linus.walleij@linaro.org> <CAL_JsqKYR1aujNhOASivsg-ED6xDPCsSCcGVnQn5vy4sD1PhAQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKYR1aujNhOASivsg-ED6xDPCsSCcGVnQn5vy4sD1PhAQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+From: Alexander Aring <alex.aring@gmail.com>
+Subject: [PATCH net-next 1/6] at86rf230: use dev_* print functions
+Date: Wed, 26 Mar 2014 15:11:52 +0100
+Message-ID: <1395843117-16494-2-git-send-email-alex.aring@gmail.com>
+References: <1395843117-16494-1-git-send-email-alex.aring@gmail.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1395843117-16494-1-git-send-email-alex.aring@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: alex.bluesman.smirnov@gmail.com
+Cc: dbaryshkov@gmail.com, linux-zigbee-devel@lists.sourceforge.net, netdev@vger.kernel.org, devicetree@vger.kernel.org, Alexander Aring <alex.aring@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 26 March 2014 08:59:32 Rob Herring wrote:
-> On Wed, Mar 26, 2014 at 4:27 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> >  menu "RealView platform type"
-> >         depends on ARCH_REALVIEW
-> >
-> > +config REALVIEW_DT
-> > +       bool "Support RealView(R) Device Tree based boot"
-> > +       select ARM_GIC
-> > +       select USE_OF
-> > +       select SOC_BUS
-> > +       select MFD_SYSCON
-> 
-> Sort.
-> 
-> This will probably need to be coordinated with Arnd's cpu selection rework.
+This patch removes the pr_* functions and replace it with the dev_*
+print functions.
 
-Ignore my cpu selection patches here, we'll do those later.
+Signed-off-by: Alexander Aring <alex.aring@gmail.com>
+---
+ drivers/net/ieee802154/at86rf230.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/net/ieee802154/at86rf230.c b/drivers/net/ieee802154/at86rf230.c
+index e8004ef..df290a5 100644
+--- a/drivers/net/ieee802154/at86rf230.c
++++ b/drivers/net/ieee802154/at86rf230.c
+@@ -557,11 +557,12 @@ at86rf230_state(struct ieee802154_dev *dev, int state)
+ 	    (desired_status == STATE_RX_AACK_ON && val == STATE_BUSY_RX_AACK))
+ 		return 0;
+ 
+-	pr_err("unexpected state change: %d, asked for %d\n", val, state);
++	dev_err(&lp->spi->dev, "unexpected state change: %d, asked for %d\n",
++		val, state);
+ 	return -EBUSY;
+ 
+ err:
+-	pr_err("error: %d\n", rc);
++	dev_err(&lp->spi->dev, "error: %d\n", rc);
+ 	return rc;
+ }
+ 
+@@ -699,7 +700,7 @@ at86rf230_xmit(struct ieee802154_dev *dev, struct sk_buff *skb)
+ err_rx:
+ 	at86rf230_start(dev);
+ err:
+-	pr_err("error: %d\n", rc);
++	dev_err(&lp->spi->dev, "error: %d\n", rc);
+ 
+ 	spin_lock_irqsave(&lp->lock, flags);
+ 	lp->is_tx = 0;
+@@ -732,7 +733,7 @@ static int at86rf230_rx(struct at86rf230_local *lp)
+ 
+ 	return 0;
+ err:
+-	pr_debug("received frame is too small\n");
++	dev_dbg(&lp->spi->dev, "received frame is too small\n");
+ 
+ 	kfree_skb(skb);
+ 	return -EINVAL;
+-- 
+1.9.1
