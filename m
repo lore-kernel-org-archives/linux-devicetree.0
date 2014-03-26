@@ -1,186 +1,35 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] ARM: realview: basic device tree implementation
-Date: Wed, 26 Mar 2014 18:09:39 +0100
-Message-ID: <26412341.aCOKep5CZC@wuerfel>
-References: <1395826060-26662-1-git-send-email-linus.walleij@linaro.org> <4327457.yKTHVHA17K@wuerfel>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH RFC v3 0/2] Move dai-link level properties away from dai
+ subnodes
+Date: Wed, 26 Mar 2014 19:18:48 +0100
+Message-ID: <20140326191848.3af2057a@armhf>
+References: <cover.1395655868.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4327457.yKTHVHA17K@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <cover.1395655868.git.jsarha@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jyri Sarha <jsarha@ti.com>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, peter.ujfalusi@ti.com, broonie@kernel.org, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, detheridge@ti.com, Li.Xiubo@freescale.com, kuninori.morimoto.gx@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 26 March 2014 11:56:30 Arnd Bergmann wrote:
-> > +     /*
-> > +      * Generic RealView fixup
-> > +      * Most RealView platforms have 512MB contiguous RAM at 0x70000000.
-> > +      * Half of this is mirrored at 0.
-> > +      */
-> > +     else {
-> > +#ifdef CONFIG_REALVIEW_HIGH_PHYS_OFFSET
-> > +             meminfo->bank[0].start = 0x70000000;
-> > +             meminfo->bank[0].size = SZ_512M;
-> > +             meminfo->nr_banks = 1;
-> > +#else
-> > +             meminfo->bank[0].start = 0;
-> > +             meminfo->bank[0].size = SZ_256M;
-> > +             meminfo->nr_banks = 1;
-> > +#endif
-> > +     }
-> > +}
-> 
-> And this one is where it gets tricky. We don't have a good way
-> to describe memory aliases in DT, but we need the start of memory
-> to match PHYS_OFFSET if CONFIG_SPARSEMEM is set (which implies
-> !CONFIG_REALVIEW_HIGH_PHYS_OFFSET), or if we are running a no-MMU
-> kernel. I have to think about this some more.
-> 
+On Mon, 24 Mar 2014 12:15:23 +0200
+Jyri Sarha <jsarha@ti.com> wrote:
 
-I've thought about it some more. We can actually get rid of the
-CONFIG_REALVIEW_HIGH_PHYS_OFFSET option entirely for any case except
-CONFIG_XIP_KERNEL by using ARM_PATCH_PHYS_VIRT and relying on the
-ATAGS or DT to pass the correct memory location. Unfortunately,
-I don't know if the ATAGS are actually correct in common boot loaders,
-since the kernel has been overriding them for ages.
+> This patch is implemented on top of late patches from Jean-Francois
+> Moine [1].
+>=20
+> These patches implement the main part of the simple-card changes
+> discussed in alsa-devel mailing list [2].
 
-With SPARSEMEM enabled, we already depend on REALVIEW_HIGH_PHYS_OFFSET
-being disabled, and we also use ARM_PATCH_PHYS_VIRT by default (it
-is not disabled in realview_defconfig).
+Acked-by: Jean-Francois Moine <moinejf@free.fr>
 
-The dependencies are really:
-
-* The value of PHYS_OFFSET must match the address to which the kernel
-  is loaded at boot time (currently enforced using 'make uImage').
-
-* We could use SPARSEMEM in order to use all 512MB of RAM on
-  realview-eb/pb11mp/pb-a8, but this is prevented by the definition
-  of __phys_to_virt/__virt_to_phys, since it puts the 0x20000000
-  physical memory segment into the middle! This is in theory fixable,
-  but I'd rather not add more hacks on top. I don't see anything that
-  prevents us from using SPARSEMEM on older realview machines with
-  PHYS_OFFSET=0.
-
-* The board files always ignore the memory passed in the ATAGS and
-  set what they think is correct. I consider this a bad idea,
-  in particular because it prevents us from using the -m option
-  in qemu. We should not do this with DT. If we just trust the
-  DT to contain correct data, we don't actually need the
-  REALVIEW_HIGH_PHYS_OFFSET setting,
-
-Catalin originally added the sparsemem hack. I asked him today about
-it, and he also thinks that sparsemem without the hack should work,
-as long as there is highmem support. I think we can either do away
-with it entirely, or use the patch below to keep it alive.
-
-I'd prefer not to add any memory location fixup to the realview-dt
-implementation, but it seems hard to kill it off for the ATAGS
-based board files, in particular because the information passed
-by qemu seems to be wrong more often than not (at least if I read
-the qemu right), and we never relied on it in the past. We might
-be able to make that a compile-time or boot-time option though.
-
-	Arnd
-
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 7c35c4d..caf9bd3 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -236,7 +236,6 @@ config ARM_PATCH_PHYS_VIRT
- 	bool "Patch physical to virtual translations at runtime" if BROKEN_MULTIPLATFORM
- 	default y
- 	depends on !XIP_KERNEL && MMU
--	depends on !ARCH_REALVIEW || !SPARSEMEM
- 	help
- 	  Patch phys-to-virt and virt-to-phys translation functions at
- 	  boot and module load time according to the position of the
-diff --git a/arch/arm/mach-realview/Kconfig b/arch/arm/mach-realview/Kconfig
-index 297e214..8a92dbf 100644
---- a/arch/arm/mach-realview/Kconfig
-+++ b/arch/arm/mach-realview/Kconfig
-@@ -121,7 +121,7 @@ config MACH_REALVIEW_PBA8
- 
- config MACH_REALVIEW_PBX
- 	bool "Support RealView(R) Platform Baseboard Explore"
--	select ARCH_SPARSEMEM_ENABLE if CPU_V7 && !REALVIEW_HIGH_PHYS_OFFSET
-+	select ARCH_SPARSEMEM_ENABLE if CPU_V7
- 	select ARM_GIC
- 	select HAVE_ARM_SCU if SMP
- 	select HAVE_ARM_TWD if SMP
-@@ -165,7 +165,7 @@ config MACH_REALVIEW_AUTO
- 
- config REALVIEW_HIGH_PHYS_OFFSET
- 	bool "High physical base address for the RealView platform"
--	depends on MMU && !MACH_REALVIEW_PB1176
-+	depends on MMU && !MACH_REALVIEW_PB1176 && !ARM_PATCH_PHYS_VIRT
- 	default y
- 	help
- 	  RealView boards other than PB1176 have the RAM available at
-@@ -175,4 +175,21 @@ config REALVIEW_HIGH_PHYS_OFFSET
- 	  offset. On the PBX board, disabling this option allows 1GB of
- 	  RAM to be used with SPARSEMEM.
- 
-+config REALVIEW_PBX_SPARSEMEM_HACK
-+	bool "Hack to avoid highmem on Realview-PBX"
-+	depends on SPARSEMEM && MMU
-+	depends on MACH_REALVIEW_PBX
-+	depends on !(MACH_REALVIEW_EB || MACH_REALVIEW_PB11MP || MACH_REALVIEW_PBA8 || MACH_REALVIEW_DT)
-+	depends on !REALVIEW_HIGH_PHYS_OFFSET
-+	depends on !ARM_PATCH_PHYS_VIRT
-+	help
-+	  Realview-PBX uses noncontiguous memory that is spread over
-+	  more than 2GB of physical address space, which means that in
-+	  order to access it, we have to either enable HIGHMEM or
-+	  VMSPLIT_1G, both of which come with a performance impact.
-+	  As a third alternative, this rearranges the kernel virtual
-+	  memory space to cover all the discontiguous memory on
-+	  Realview PBX, with the main cost of breaking support for
-+	  any other hardware.
-+
- endmenu
-diff --git a/arch/arm/mach-realview/include/mach/memory.h b/arch/arm/mach-realview/include/mach/memory.h
-index db09170..2b95178 100644
---- a/arch/arm/mach-realview/include/mach/memory.h
-+++ b/arch/arm/mach-realview/include/mach/memory.h
-@@ -31,6 +31,11 @@
- 
- #ifdef CONFIG_SPARSEMEM
- 
-+/* these can be moved to arm/memory.h when we get to support multiplatform */
-+#define MAX_PHYSMEM_BITS	32
-+#define SECTION_SIZE_BITS	28
-+
-+#ifdef CONFIG_REALVIEW_PBX_SPARSEMEM_HACK
- /*
-  * Sparsemem definitions for RealView PBX.
-  *
-@@ -45,13 +50,6 @@
-  * 512MB @ 0x20000000 -> PAGE_OFFSET + 0x10000000
-  * 256MB @ 0x80000000 -> PAGE_OFFSET + 0x30000000
-  */
--#ifdef CONFIG_REALVIEW_HIGH_PHYS_OFFSET
--#error "SPARSEMEM not available with REALVIEW_HIGH_PHYS_OFFSET"
--#endif
--
--#define MAX_PHYSMEM_BITS	32
--#define SECTION_SIZE_BITS	28
--
- /* bank page offsets */
- #define PAGE_OFFSET1	(PAGE_OFFSET + 0x10000000)
- #define PAGE_OFFSET2	(PAGE_OFFSET + 0x30000000)
-@@ -68,6 +66,8 @@
- 	  (virt) >= PAGE_OFFSET1 ? (virt) - PAGE_OFFSET1 + 0x20000000 :	\
- 	  (virt) - PAGE_OFFSET)
- 
-+#endif
-+
- #endif	/* CONFIG_SPARSEMEM */
- 
- #endif
-
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
