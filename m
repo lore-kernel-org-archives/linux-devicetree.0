@@ -1,44 +1,122 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v5 2/4] arm64: dts: APM X-Gene PCIe device tree nodes
-Date: Wed, 26 Mar 2014 09:28:42 -0500
-Message-ID: <CAL_Jsq+XxAtUeNKFi0hH=ehb_fhFvkM0U1Zm_j1LdtQZbvSzfA@mail.gmail.com>
-References: <1395270762-6055-1-git-send-email-tinamdar@apm.com>
-	<1395270762-6055-3-git-send-email-tinamdar@apm.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v7 2/3] ARM: sun7i/sun6i: dts: Add NMI
+ irqchip support
+Date: Wed, 26 Mar 2014 15:38:05 +0100
+Message-ID: <5332E64D.6040908@redhat.com>
+References: <1395256879-8475-1-git-send-email-carlo@caione.org> <1395256879-8475-3-git-send-email-carlo@caione.org> <53329243.8090604@redhat.com> <20140326093946.GE6120@lukather> <5332A62D.90302@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1395270762-6055-3-git-send-email-tinamdar@apm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Tanmay Inamdar <tinamdar@apm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "patches@apm.com" <patches@apm.com>, "jcm@redhat.com" <jcm@redhat.com>
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBWWMZOMQKGQEWOVFQPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <5332A62D.90302-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 19, 2014 at 6:12 PM, Tanmay Inamdar <tinamdar@apm.com> wrote:
-> This patch adds the device tree nodes for APM X-Gene PCIe controller and
-> PCIe clock interface. Since X-Gene SOC supports maximum 5 ports, 5 dts
-> nodes are added.
+Hi,
 
-[snip]
+On 03/26/2014 11:04 AM, Hans de Goede wrote:
+> Hi,
+> 
+> On 03/26/2014 10:39 AM, Maxime Ripard wrote:
+>> On Wed, Mar 26, 2014 at 09:39:31AM +0100, Hans de Goede wrote:
+>>> Hi,
+>>>
+>>> On 03/19/2014 08:21 PM, Carlo Caione wrote:
+>>>> This patch adds DTS entries for NMI controller as child of GIC.
+>>>>
+>>>> Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+>>>
+>>> Note this breaks the kernel on sun6i / A31 since we don't have a
+>>> pmic driver there yet, and thus the nmi gets constantly fired without
+>>> anything clearing it.
+>>>
+>>> So the sun6i section needs a status = "disabled"; until we actually have pmic
+>>> support.
+>>
+>> I guess it also applies to the A20, since the PMIC patches will
+>> probably get merged later on?
+> 
+> Could be I've never tried it on the A20 without also having the pmic driver
+> build into the kernel. Thinking more about this, I think this actually is
+> a bug in the nmi irqchip driver, it should not unmask the gic irq until
+> it gets an unmask for its child irq itself.
+> 
+> Otherwise we can still get the same problem if ie the pmic driver is
+> a module, etc.
+> 
+> Hmm, looking at the code I see that it already masks (sets enable to 0)
+> the irq in sunxi_sc_nmi_irq_init. Note that this really should be
+> done before the irq_set_chained_handler call though, as from then on
+> the gic irq is unmasked, so we may get spurious irqs until the
+> sunxi_sc_nmi_write calls are done.
+> 
+> I don't think this will solve the A31 problem though, I wonder if
+> the enable reg-offset we've for the A31 is correct, maybe it should
+> be 8 like with the A20 ?
+> 
+> I'll give this a try when I can find some time for this.
 
-> +               pcie0: pcie@1f2b0000 {
-> +                       status = "disabled";
-> +                       device_type = "pci";
-> +                       compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
-> +                       #interrupt-cells = <1>;
-> +                       #size-cells = <2>;
-> +                       #address-cells = <3>;
-> +                       reg = < 0x00 0x1f2b0000 0x0 0x00010000   /* Controller registers */
-> +                               0xe0 0xd0000000 0x0 0x00200000>; /* PCI config space */
+Ok, so I've spend some time debugging this, and the problem is not the
+disabling of the NMI in the NMI controller itself. The problem is that
+the irq line used in the sun6i-a31.dtsi is wrong, irq 0 is for uart0
+the nmi uses irq 32. So this fixes this hang due to unhandled irqs
+I've been seeing:
 
-Where is the right place for config space? This binding has it here
-and others have it in ranges. Given that config space type is defined
-for ranges, I would think that is the right place. But Liviu's patches
-do not process config space entries in ranges. Perhaps we need a
-config space resource populated in the bridge struct.
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -603,8 +603,7 @@
+                        interrupt-controller;
+                        #interrupt-cells = <2>;
+                        reg = <0x01f00c0c 0x38>;
+-                       interrupt-parent = <&gic>;
+-                       interrupts = <0 0 4>;
++                       interrupts = <0 32 4>;
+                };
 
-Rob
+                cpucfg@01f01c00 {
+
+Note I also remove the interrupt-parent as the gic is the
+default interrupt-parent, and we don't explicitly set that
+anywhere else either.
+
+Besides that after having looked into this more, I strongly
+believe that we should disable the NMI before registering the
+irq handler, as registering the irq handler unmasks the irq
+on the gic, so if u-boot has left the NMI enabled, and the NMI pin
+is active we will immediately get an interrupt, before any
+driver has claimed the downstream interrupt of the NMI.
+
+IOW I strongly believe we should do this:
+
+--- a/drivers/irqchip/irq-sunxi-nmi.c
++++ b/drivers/irqchip/irq-sunxi-nmi.c
+@@ -179,12 +179,12 @@ static int __init sunxi_sc_nmi_irq_init(struct device_node *node,
+        gc->chip_types[1].regs.type             = reg_offs->ctrl;
+        gc->chip_types[1].handler               = handle_edge_irq;
+
+-       irq_set_handler_data(irq, domain);
+-       irq_set_chained_handler(irq, sunxi_sc_nmi_handle_irq);
+-
+        sunxi_sc_nmi_write(gc, reg_offs->enable, 0);
+        sunxi_sc_nmi_write(gc, reg_offs->pend, 0x1);
+
++       irq_set_handler_data(irq, domain);
++       irq_set_chained_handler(irq, sunxi_sc_nmi_handle_irq);
++
+        return 0;
+
+ fail_irqd_remove:
 
 
-> +                       reg-names = "csr", "cfg";
-> +                       ranges = <0x01000000 0x00 0x00000000 0xe0 0x00000000 0x00 0x00010000   /* io */
-> +                                 0x02000000 0x00 0x10000000 0xe0 0x10000000 0x00 0x80000000>; /* mem */
+So it looks like we need a v8, sorry for not spotting this sooner.
+
+Regards,
+
+Hans
