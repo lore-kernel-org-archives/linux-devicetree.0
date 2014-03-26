@@ -1,40 +1,145 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [PATCH v5 2/4] arm64: dts: APM X-Gene PCIe device tree nodes
-Date: Wed, 26 Mar 2014 10:35:13 -0600
-Message-ID: <20140326163513.GB2440@obsidianresearch.com>
-References: <1395270762-6055-1-git-send-email-tinamdar@apm.com>
- <1395270762-6055-3-git-send-email-tinamdar@apm.com>
- <CAL_Jsq+XxAtUeNKFi0hH=ehb_fhFvkM0U1Zm_j1LdtQZbvSzfA@mail.gmail.com>
+From: Georgi Djakov <gdjakov@mm-sol.com>
+Subject: Re: [PATCH v11 0/3] mmc: sdhci-msm: Add support for Qualcomm chipsets
+Date: Wed, 26 Mar 2014 18:42:47 +0200
+Message-ID: <53330387.7000803@mm-sol.com>
+References: <1394465833-22581-1-git-send-email-gdjakov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+XxAtUeNKFi0hH=ehb_fhFvkM0U1Zm_j1LdtQZbvSzfA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Tanmay Inamdar <tinamdar@apm.com>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "patches@apm.com" <patches@apm.com>, "jcm@redhat.com" <jcm@redhat.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1394465833-22581-1-git-send-email-gdjakov@mm-sol.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org, cjb@laptop.org, ulf.hansson@linaro.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, chris@printf.net
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 26, 2014 at 09:28:42AM -0500, Rob Herring wrote:
+Hello Chris, Ulf,
 
-> Where is the right place for config space? This binding has it here
-> and others have it in ranges. 
+Do you have any comments on the patches?
+The arch code that will use this driver is already in mainline. The 
+regulators support seem to be still on its way, but this driver also 
+works fine with dummy regulators.
 
-I think all the drivers in drivers/pci/host use 'reg', this was
-discussed in the dt-bindings list and AFAIK no new drivers have used
-ranges since it was brought up.
+Thanks,
+Georgi
 
-> Given that config space type is defined for ranges, I would think
-> that is the right place. But Liviu's patches do not process config
-> space entries in ranges. Perhaps we need a config space resource
-> populated in the bridge struct.
 
-When we talked about this earlier on the DT bindings list the
-consensus seemed to be that configuration MMIO ranges should only be
-used if the underlying memory was exactly ECAM, and was not to be used
-for random configuration related register blocks.
-
-The rational being that generic code, upon seeing that ranges entry,
-could just go ahead and assume ECAM mapping.
-
-Jason
+On 03/10/2014 05:37 PM, Georgi Djakov wrote:
+> This patchset adds basic support of the Secure Digital Host Controller
+> Interface compliant controller found in Qualcomm SoCs.
+>
+> Tested with eMMC and various micro SD cards on APQ8074 Dragonboard.
+> Applies to linux-next.
+>
+> Changes from v10:
+> - Make reg-names and interrupt-names optional (suggested by Rob Herring)
+> - Use the common names (vmmc, vqmmc) for regulators (suggested by Ulf Hansson)
+> - Use the sdhci core to take care of regulators and clock (suggested by Ulf
+>    Hansson and Bjorn Andersson)
+> - Cleanup of unused variables and defines
+>
+> Changes from v9:
+> - Make platform_execute_tuning() static (suggested by Josh Cartwright)
+> - Fix buffer size in platform_execute_tuning() (suggested by Josh Cartwright)
+> - Fix typo in patch subject (suggested by Kumar Gala)
+> - Move voltage ranges from DT to the driver (suggested by Bjorn Andersson)
+> - Simplify sdhci_msm_setup_vreg and irq handler (suggested by Bjorn Andersson)
+> - Disable prw irq in sdhci_msm_remove (suggested by Bjorn Andersson)
+> - Fail on peripheral clock errors (suggested by Bjorn Andersson)
+> - Remove unnecessary core_memres assignment (suggested by Bjorn Andersson)
+> - Fixes on freeing resources in probe() (suggested by Bjorn Andersson)
+>
+> Changes from v8:
+> - Added controller version suffix to the DT compatible string.
+> - Switched Kconfig dependency from ARCH_MSM to the new ARCH_QCOM multiplatform.
+> - Addressed comments from Stephen Boyd on the 3rd patch (execute tunning).
+> - Added signed-off-by lines of the initial driver authors.
+> - Picked up tested-by. https://lkml.org/lkml/2013/11/14/85
+> - Minor changes on comments, prints and formatting.
+>
+> Changes from v7:
+> - Added call to sdhci_get_of_property().
+> - Refactored sdhci_msm_dt_parse_vreg_info().
+> - Fixed possible ERR_PTR() dereferencing.
+> - Updated DT binding documentation.
+> - Removed lpm and currents from DT.
+> - Removed bus-speed-mode from DT.
+> - Updated and moved the sanity checks.
+> - Various typo and coding style fixes.
+> - Added platform_execute_tunning implementation.
+>
+> Changes from v6:
+> - Fixed wrong pointer in sdhci_msm_pwr_irq().
+> - Added platform_execute_tuning() callback as the MSM SDHC does not
+>    support tuning as in SDHC 3.0 spec and will need custom implementation
+>    in order to support SDR104, HS200 and HS400.
+> - Removed the always-on devicetree property - if the regulator is
+>    configured as always-on, it will not be disabled anyway.
+> - Removed devm_pinctrl_get_select_default() - the default pins are
+>    already set from the device core.
+> - Removed wrapper function sdhci_msm_set_vdd_io_vol() and enum
+>    vdd_io_level and now calling regulator_set_voltage() directly.
+> - Converted #defines to use BIT() macro.
+> - Added IS_ERR(vreg->reg) check at the beginning of sdhci_msm_vreg
+>    functions.
+> - Do not print errors when regulators init return -EPROBE_DEFER as the
+>    deffered init is not an actual error.
+> - Handle each power irq status bit separately in sdhci_msm_pwr_irq().
+> - Ensure that any pending power irq is acknowledged before enabling it,
+>    otherwise the irq handler will be fired prematurely.
+> - Minor changes.
+>
+> Changes from v5:
+> - Driver is split into multiple patches
+> - Do not initialize variables that are assigned later in code
+> - Remove some useless comments
+> - Use shorter variable names
+> - Change pr_err() to dev_err()
+> - Optimized sdhci_msm_setup_vreg()
+> - Some code alignment fixes
+> - Improved DT values sanity check
+> - Added dev_dbg print for sdhci controller version in probe()
+> - Added usleep_range() after SW reset - it can take some time
+> - Added SDHCI_QUIRK_SINGLE_POWER_WRITE - power handled by PMIC
+> - Renamed DT property vdd-io to vddio
+>
+> Changes from v4:
+> - Simplified sdhci_msm_vreg_disable() and sdhci_msm_set_vdd_io_vol()
+> - Use devm_ioremap_resource() instead of devm_ioremap()
+> - Converted IS_ERR_OR_NULL to IS_ERR
+> - Disable regulators in sdhci_msm_remove()
+> - Check for DT node at the beginning in sdhci_msm_probe()
+> - Removed more redundant code
+> - Changes in some error messages
+> - Minor fixes
+>
+> Changes from v3:
+> - Allocate memory for all required structs at once
+> - Added termination entry in sdhci_msm_dt_match[]
+> - Fixed a missing sdhci_pltfm_free() in probe()
+> - Removed redundant of_match_ptr
+> - Removed the unneeded function sdhci_msm_vreg_reset()
+>
+> Changes from v2:
+> - Added DT bindings for clocks
+> - Moved voltage regulators data to platform data
+> - Removed unneeded includes
+> - Removed obsolete and wrapper functions
+> - Removed error checking where unnecessary
+> - Removed redundant _clk suffix from clock names
+> - Just return instead of goto where possible
+> - Minor fixes
+>
+> Georgi Djakov (3):
+>    mmc: sdhci-msm: Qualcomm SDHCI binding documentation
+>    mmc: sdhci-msm: Initial support for Qualcomm chipsets
+>    mmc: sdhci-msm: Add platform_execute_tuning implementation
+>
+>   .../devicetree/bindings/mmc/sdhci-msm.txt          |   55 ++
+>   drivers/mmc/host/Kconfig                           |   13 +
+>   drivers/mmc/host/Makefile                          |    1 +
+>   drivers/mmc/host/sdhci-msm.c                       |  618 ++++++++++++++++++++
+>   4 files changed, 687 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>   create mode 100644 drivers/mmc/host/sdhci-msm.c
+>
