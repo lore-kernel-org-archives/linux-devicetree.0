@@ -1,477 +1,518 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: realview: basic device tree implementation
-Date: Wed, 26 Mar 2014 08:59:32 -0500
-Message-ID: <CAL_JsqKYR1aujNhOASivsg-ED6xDPCsSCcGVnQn5vy4sD1PhAQ@mail.gmail.com>
-References: <1395826060-26662-1-git-send-email-linus.walleij@linaro.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [RFC PATCH 02/12] pci: host: pcie-dra7xx: add support for pcie-dra7xx controller
+Date: Wed, 26 Mar 2014 19:27:42 +0530
+Message-ID: <1395842272-15267-3-git-send-email-kishon@ti.com>
+References: <1395842272-15267-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1395826060-26662-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1395842272-15267-1-git-send-email-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, mohit.kumar@st.com, jg1.han@samsung.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, paul@pwsan.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 26, 2014 at 4:27 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> This implements basic device tree boot support for the RealView
-> platforms, with a basic device tree for ARM PB1176 as an example.
->
-> The implementation is done with a new DT-specific board file
-> using only pre-existing bindings for the basic IRQ, timer and
-> serial port drivers. A new compatible type is added to the GIC
-> for the ARM1176.
->
-> This implementation uses the MFD syscon handle from day one to
-> access the system controller registers, and register the devices
-> using the SoC bus.
->
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/arm-boards |  53 ++++++
->  arch/arm/boot/dts/Makefile                       |   1 +
->  arch/arm/boot/dts/arm-realview-pb1176.dts        | 165 ++++++++++++++++
->  arch/arm/mach-realview/Kconfig                   |  10 +
->  arch/arm/mach-realview/Makefile                  |   1 +
->  arch/arm/mach-realview/realview-dt.c             | 231 +++++++++++++++++++++++
->  arch/arm/mm/Kconfig                              |   2 +-
->  drivers/irqchip/irq-gic.c                        |   1 +
->  8 files changed, 463 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/arm-realview-pb1176.dts
->  create mode 100644 arch/arm/mach-realview/realview-dt.c
->
-> diff --git a/Documentation/devicetree/bindings/arm/arm-boards b/Documentation/devicetree/bindings/arm/arm-boards
-> index 3509707f9320..22af7ccacb52 100644
-> --- a/Documentation/devicetree/bindings/arm/arm-boards
-> +++ b/Documentation/devicetree/bindings/arm/arm-boards
-> @@ -86,3 +86,56 @@ Interrupt controllers:
->         compatible = "arm,versatile-sic";
->         interrupt-controller;
->         #interrupt-cells = <1>;
-> +
-> +
-> +ARM RealView Boards
-> +-------------------
-> +The RealView boards cover tailored evaluation boards that are used to explore
-> +the ARM11 and Cortex A-8 and Cortex A-9 processors.
-> +
-> +Required properties (in root node):
-> +       /* RealView Emulation Baseboard */
-> +       compatible = "arm,realview-eb";
-> +        /* RealView Platform Baseboard for ARM1176JZF-S */
-> +       compatible = "arm,realview-pb1176";
-> +       /* RealView Platform Baseboard for ARM11 MPCore */
-> +       compatible = "arm,realview-pb11mp";
-> +       /* RealView Platform Baseboard for Cortex A-8 */
-> +       compatible = "arm,realview-pba8";
-> +       /* RealView Platform Baseboard Explore for Cortex A-9 */
-> +       compatible = "arm,realview-pbx";
-> +
-> +Required nodes:
-> +
-> +- syscon: the root node of the Integrator platforms must have a
+Added support for pcie controller in dra7xx. This driver re-uses
+the designware core code that is already present in kernel.
 
-It should not be the root node, but under some bus node. It seems the
-example and actual dts's are correct.
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ Documentation/devicetree/bindings/pci/ti-pci.txt |   35 ++
+ drivers/pci/host/Kconfig                         |   10 +
+ drivers/pci/host/Makefile                        |    1 +
+ drivers/pci/host/pcie-dra7xx.c                   |  411 ++++++++++++++++++++++
+ 4 files changed, 457 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/ti-pci.txt
+ create mode 100644 drivers/pci/host/pcie-dra7xx.c
 
-> +  system controller node pointing to the control registers,
-> +  with the compatible string
-> +  "arm,realview-syscon", "syscon"
-
-As Arnd pointed out, this needs to be more specific. Versatile
-probably needs this too, right? I've left it hard coded so far.
-
-> +
-> +  Required properties for the system controller:
-> +  - regs: the location and size of the system controller registers,
-> +    one range of 0x1000 bytes.
-> +
-> +Example:
-> +
-> +/dts-v1/;
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include "skeleton.dtsi"
-> +
-> +/ {
-> +       model = "ARM RealView PB1176 with device tree";
-> +       compatible = "arm,realview-pb1176";
-> +
-> +       soc {
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               compatible = "simple-bus";
-> +               ranges;
-> +
-> +               syscon: syscon@10000000 {
-> +                       compatible = "arm,realview-syscon", "syscon";
-> +                       reg = <0x10000000 0x1000>;
-> +               };
-> +
-> +       };
-> +};
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 032030361bef..f568746abf91 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -234,6 +234,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
->         dra7-evm.dtb
->  dtb-$(CONFIG_ARCH_ORION5X) += orion5x-lacie-ethernet-disk-mini-v2.dtb
->  dtb-$(CONFIG_ARCH_PRIMA2) += prima2-evb.dtb
-> +dtb-$(CONFIG_ARCH_REALVIEW) += arm-realview-pb1176.dtb
->  dtb-$(CONFIG_ARCH_U8500) += ste-snowball.dtb \
->         ste-hrefprev60-stuib.dtb \
->         ste-hrefprev60-tvk.dtb \
-> diff --git a/arch/arm/boot/dts/arm-realview-pb1176.dts b/arch/arm/boot/dts/arm-realview-pb1176.dts
-> new file mode 100644
-> index 000000000000..3703fca68513
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/arm-realview-pb1176.dts
-> @@ -0,0 +1,165 @@
-> +/*
-> + * Copyright 2014 Linaro Ltd
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-
-We really need to start making dts files BSD licensed. GPL does not
-make sense really if the dtb is part of the firmware.
-
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +
-> +/dts-v1/;
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include "skeleton.dtsi"
-> +
-> +/ {
-> +       model = "ARM RealView PB1176 with device tree";
-> +       compatible = "arm,realview-pb1176";
-> +
-> +       chosen { };
-> +
-> +       aliases {
-> +               serial0 = &pb1176_serial0;
-> +               serial1 = &pb1176_serial1;
-> +               serial2 = &pb1176_serial2;
-> +               serial3 = &pb1176_serial3;
-> +       };
-> +
-> +       memory {
-> +               reg = <0x00000000 0x08000000>;
-> +       };
-> +
-> +       soc {
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               compatible = "simple-bus";
-> +               ranges;
-> +
-> +               syscon: syscon@10000000 {
-> +                       compatible = "arm,realview-syscon", "syscon";
-> +                       reg = <0x10000000 0x1000>;
-> +               };
-> +
-> +               xtal24mhz: xtal24mhz@24M {
-> +                       #clock-cells = <0>;
-> +                       compatible = "fixed-clock";
-> +                       clock-frequency = <24000000>;
-> +               };
-> +
-> +               timclk: timclk@1M {
-> +                       #clock-cells = <0>;
-> +                       compatible = "fixed-factor-clock";
-> +                       clock-div = <24>;
-> +                       clock-mult = <1>;
-> +                       clocks = <&xtal24mhz>;
-> +               };
-> +
-> +               uartclk: uartclk@24M {
-> +                       #clock-cells = <0>;
-> +                       compatible = "fixed-factor-clock";
-> +                       clock-div = <1>;
-> +                       clock-mult = <1>;
-> +                       clocks = <&xtal24mhz>;
-> +               };
-> +
-> +               /* FIXME: this actually hangs off the PLL clocks */
-> +               pclk: pclk@0 {
-> +                       #clock-cells = <0>;
-> +                       compatible = "fixed-clock";
-> +                       clock-frequency = <0>;
-> +               };
-
-I would move the clocks out of the soc node.
-
-> +
-> +               /* Primary DevChip GIC synthesized with the CPU */
-> +               intc_dc1176: interrupt-controller@10120000 {
-> +                       compatible = "arm,arm1176jzf-gic";
-
-This needs to be documented.
-
-> +                       #interrupt-cells = <3>;
-> +                       #address-cells = <1>;
-> +                       interrupt-controller;
-> +                       reg = <0x10121000 0x1000>,
-> +                             <0x10120000 0x100>;
-> +               };
-> +
-> +               /* This GIC on the board is cascaded off the DevChip GIC */
-> +               intc_pb1176: interrupt-controller@10040000 {
-> +                       compatible = "arm,arm1176jzf-gic";
-> +                       #interrupt-cells = <3>;
-> +                       #address-cells = <1>;
-> +                       interrupt-controller;
-> +                       reg = <0x10041000 0x1000>,
-> +                             <0x10040000 0x100>;
-> +                       interrupt-parent = <&intc_dc1176>;
-> +                       interrupts = <0 31 IRQ_TYPE_LEVEL_HIGH>;
-> +               };
-> +
-> +               L2: l2-cache {
-> +                       compatible = "arm,l220-cache";
-> +                       reg = <0x10110000 0x1000>;
-> +                       interrupt-parent = <&intc_dc1176>;
-> +                       interrupts = <0 13 IRQ_TYPE_LEVEL_HIGH>;
-> +                       cache-unified;
-> +                       cache-level = <2>;
-> +               };
-> +
-> +               pmu {
-> +                       compatible = "arm,arm1176-pmu";
-> +                       interrupt-parent = <&intc_dc1176>;
-> +                       interrupts = <0 7 IRQ_TYPE_LEVEL_HIGH>;
-> +               };
-> +
-> +               timer01: timer@10104000 {
-> +                       compatible = "arm,sp804", "arm,primecell";
-> +                       reg = <0x10104000 0x1000>;
-> +                       interrupt-parent = <&intc_dc1176>;
-> +                       interrupts = <0 8 IRQ_TYPE_LEVEL_HIGH>, <0 9 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&timclk>, <&timclk>, <&pclk>;
-> +                       clock-names = "timclk1", "timclk2", "apb_pclk";
-> +               };
-> +
-> +               timer23: timer@10105000 {
-> +                       compatible = "arm,sp804", "arm,primecell";
-> +                       reg = <0x10105000 0x1000>;
-> +                       interrupt-parent = <&intc_dc1176>;
-> +                       interrupts = <0 10 IRQ_TYPE_LEVEL_HIGH>;
-> +                       arm,sp804-has-irq = <1>;
-> +                       clocks = <&timclk>, <&timclk>, <&pclk>;
-> +                       clock-names = "timclk1", "timclk2", "apb_pclk";
-> +               };
-> +
-> +               pb1176_serial0: uart@1010c000 {
-> +                       compatible = "arm,pl011", "arm,primecell";
-> +                       reg = <0x1010c000 0x1000>;
-> +                       interrupt-parent = <&intc_dc1176>;
-> +                       interrupts = <0 18 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&uartclk>, <&pclk>;
-> +                       clock-names = "uartclk", "apb_pclk";
-> +               };
-> +
-> +               pb1176_serial1: uart@1010d000 {
-> +                       compatible = "arm,pl011", "arm,primecell";
-> +                       reg = <0x1010d000 0x1000>;
-> +                       interrupt-parent = <&intc_dc1176>;
-> +                       interrupts = <0 19 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&uartclk>, <&pclk>;
-> +                       clock-names = "uartclk", "apb_pclk";
-> +               };
-> +
-> +               pb1176_serial2: uart@1010e000 {
-> +                       compatible = "arm,pl011", "arm,primecell";
-> +                       reg = <0x1010e000 0x1000>;
-> +                       interrupt-parent = <&intc_dc1176>;
-> +                       interrupts = <0 20 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&uartclk>, <&pclk>;
-> +                       clock-names = "uartclk", "apb_pclk";
-> +               };
-> +
-> +               pb1176_serial3: uart@1010f000 {
-> +                       compatible = "arm,pl011", "arm,primecell";
-> +                       reg = <0x1010f000 0x1000>;
-> +                       interrupt-parent = <&intc_dc1176>;
-> +                       interrupts = <0 21 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&uartclk>, <&pclk>;
-> +                       clock-names = "uartclk", "apb_pclk";
-> +               };
-> +       };
-> +};
-> diff --git a/arch/arm/mach-realview/Kconfig b/arch/arm/mach-realview/Kconfig
-> index 9db2029aa632..2d29649615c7 100644
-> --- a/arch/arm/mach-realview/Kconfig
-> +++ b/arch/arm/mach-realview/Kconfig
-> @@ -1,6 +1,16 @@
->  menu "RealView platform type"
->         depends on ARCH_REALVIEW
->
-> +config REALVIEW_DT
-> +       bool "Support RealView(R) Device Tree based boot"
-> +       select ARM_GIC
-> +       select USE_OF
-> +       select SOC_BUS
-> +       select MFD_SYSCON
-
-Sort.
-
-This will probably need to be coordinated with Arnd's cpu selection rework.
-
-> +       help
-> +         Include support for booting the ARM(R) RealView(R) evaluation
-> +         boards using a device tree machine description.
-> +
->  config MACH_REALVIEW_EB
->         bool "Support RealView(R) Emulation Baseboard"
->         select ARM_GIC
-> diff --git a/arch/arm/mach-realview/Makefile b/arch/arm/mach-realview/Makefile
-> index 541fa4c109ef..e07fdf7ae8a7 100644
-> --- a/arch/arm/mach-realview/Makefile
-> +++ b/arch/arm/mach-realview/Makefile
-> @@ -3,6 +3,7 @@
->  #
->
->  obj-y                                  := core.o
-> +obj-$(CONFIG_REALVIEW_DT)              += realview-dt.o
->  obj-$(CONFIG_MACH_REALVIEW_EB)         += realview_eb.o
->  obj-$(CONFIG_MACH_REALVIEW_PB11MP)     += realview_pb11mp.o
->  obj-$(CONFIG_MACH_REALVIEW_PB1176)     += realview_pb1176.o
-> diff --git a/arch/arm/mach-realview/realview-dt.c b/arch/arm/mach-realview/realview-dt.c
-> new file mode 100644
-> index 000000000000..1b6f4703922c
-> --- /dev/null
-> +++ b/arch/arm/mach-realview/realview-dt.c
-> @@ -0,0 +1,231 @@
-> +/*
-> + * Copyright (C) 2014 Linaro Ltd.
-> + *
-> + * Author: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2, as
-> + * published by the Free Software Foundation.
-> + *
-> + */
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/irqchip.h>
-> +#include <linux/irqchip/arm-gic.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/regmap.h>
-> +#include <linux/sys_soc.h>
-> +#include <linux/slab.h>
-> +#include <asm/mach/map.h>
-> +#include <asm/mach/arch.h>
-> +#include <asm/hardware/cache-l2x0.h>
-> +#include <mach/hardware.h>
-> +#include <mach/platform.h>
-> +#include <mach/board-eb.h>
-> +#include <mach/board-pb1176.h>
-> +#include <mach/board-pb11mp.h>
-> +#include <mach/board-pbx.h>
-> +#include "core.h"
-> +
-> +/* Pointer to the system controller */
-> +struct regmap *syscon_regmap;
-> +
-> +static struct map_desc realview_dt_io_desc[] __initdata = {
-> +       {
-> +               /* FIXME: static map needed for LED driver */
-> +               .virtual        = IO_ADDRESS(REALVIEW_SYS_BASE),
-> +               .pfn            = __phys_to_pfn(REALVIEW_SYS_BASE),
-> +               .length         = SZ_4K,
-> +               .type           = MT_DEVICE,
-> +       },
-> +};
-> +
-> +static void __init realview_dt_map_io(void)
-> +{
-> +       iotable_init(realview_dt_io_desc, ARRAY_SIZE(realview_dt_io_desc));
-> +}
-> +
-> +static const struct of_device_id realview_syscon_match[] = {
-> +       { .compatible = "arm,realview-syscon"},
-> +       { },
-> +};
-> +
-> +static void __init realview_dt_init_machine(void)
-> +{
-> +       struct device_node *root;
-> +       struct device_node *syscon;
-> +       struct soc_device *soc_dev;
-> +       struct soc_device_attribute *soc_dev_attr;
-> +       struct device *parent;
-> +       u32 coreid;
-> +       int ret;
-> +
-> +#ifdef CONFIG_CACHE_L2X0
-
-Use IS_ENABLED
-
-> +       if (of_machine_is_compatible("arm,realview-eb"))
-> +               /*
-> +                * 1MB (128KB/way), 8-way associativity,
-> +                * evmon/parity/share enabled
-> +                * Bits:  .... ...0 0111 1001 0000 .... .... ....
-> +                */
-> +               l2x0_of_init(0x00790000, 0xfe000fff);
-> +       else if (of_machine_is_compatible("arm,realview-pb1176"))
-> +               /*
-> +                * 128Kb (16Kb/way) 8-way associativity.
-> +                * evmon/parity/share enabled.
-> +                */
-> +               l2x0_of_init(0x00730000, 0xfe000fff);
-> +       else if (of_machine_is_compatible("arm,realview-pb11mp"))
-> +               /*
-> +                * 1MB (128KB/way), 8-way associativity,
-> +                * evmon/parity/share enabled
-> +                * Bits:  .... ...0 0111 1001 0000 .... .... ....
-> +                */
-> +               l2x0_of_init(0x00730000, 0xfe000fff);
-> +       else if (of_machine_is_compatible("arm,realview-pbx"))
-> +               /*
-> +                * 16KB way size, 8-way associativity, parity disabled
-> +                * Bits:  .. 0 0 0 0 1 00 1 0 1 001 0 000 0 .... .... ....
-> +                */
-> +               l2x0_of_init(0x02520000, 0xc0000fff);
-> +#endif
-
-As Arnd pointed out, see Russell's recent L2x0 emails. Since these are
-L220s, you do need the way size and associativity to be initialized at
-least. There are standard ePAPR definitions for these which should be
-used.
-
-Documenting the initial and final aux ctrl values on these platforms
-would be helpful for Russell's clean-up.
-
-[snip]
-
-> diff --git a/arch/arm/mm/Kconfig b/arch/arm/mm/Kconfig
-> index 1f8fed94c2a4..3a9266b27d1f 100644
-> --- a/arch/arm/mm/Kconfig
-> +++ b/arch/arm/mm/Kconfig
-> @@ -929,7 +929,7 @@ config ARM_L1_CACHE_SHIFT
->  config ARM_DMA_MEM_BUFFERABLE
->         bool "Use non-cacheable memory for DMA" if (CPU_V6 || CPU_V6K) && !CPU_V7
->         depends on !(MACH_REALVIEW_PB1176 || REALVIEW_EB_ARM11MP || \
-> -                    MACH_REALVIEW_PB11MP)
-> +                    MACH_REALVIEW_PB11MP || REALVIEW_DT)
-
-Couldn't this be simplified to: depends on !(ARCH_REALVIEW && (CPU_V6
-|| CPU_V6K))
-
-However, we probably will want some way to build a v6+v7
-multi-platform kernel and select this option. Perhaps we need a
-kconfig option for "support broken v6 Realview platforms."
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
+new file mode 100644
+index 0000000..0528c47
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
+@@ -0,0 +1,35 @@
++TI PCI Controllers
++
++PCIe Designware Controller
++This node should have the properties described in "designware-pcie.txt".
++ - compatible: Should be "ti,dra7xx-pcie""
++ - reg : Address and length of the register set for the device.
++ - phys : the phandle for the PHY device (used by generic PHY framework)
++ - phy-names : the names of the PHY corresponding to the PHYs present in the
++   *phy* phandle.
++ - resets: phandle used if reset is handled be soc
++ - reset-names: name given to the phandle
++ - ti,device-type: Should be 1 - EP TYPE, 2 - LEG EP TYPE OR 3 - RC TYPE
++
++Example:
++pcie@51000000 {
++	compatible = "ti,dra7xx-pcie";
++	reg = <0x51002000 0x14c>, <0x51000000 0x2000>, <0x4A002540 0x1f>, <0x4A003c24 0x4>, <0x4AE07310 0x4>;
++	interrupts = <0 129 0x4>, <0 134 0x4>;
++	#address-cells = <3>;
++	#size-cells = <2>;
++	device_type = "pci";
++	ti,device_type = <3>;
++	ranges = <0x00000800 0 0x20001000 0x20001000 0 0x00002000  /* Configuration Space */
++		  0x81000000 0 0          0x20003000 0 0x00010000  /* IO Space */
++		  0x82000000 0 0x20013000 0x20013000 0 0xffed000>; /* MEM Space */
++	#interrupt-cells = <1>;
++	num-lanes = <1>;
++	interrupt-map-mask = <0 0 0 0>;
++	interrupt-map = <0x0 0 &gic 134>;
++	ti,hwmods = "pcie1";
++	phys = <&pcie1_phy>;
++	phy-names = "pcie-phy";
++	resets = <&prm_resets &device_reset>;
++	reset-names = "reset";
++};
+diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+index 47d46c6..5066a3c 100644
+--- a/drivers/pci/host/Kconfig
++++ b/drivers/pci/host/Kconfig
+@@ -1,6 +1,16 @@
+ menu "PCI host controller drivers"
+ 	depends on PCI
+ 
++config PCIE_DRA7XX
++	bool "TI DRA7xx PCIe controller"
++	select PCIE_DW
++	depends on OF || HAS_IOMEM || TI_PIPE3
++	help
++	 Enables support for the PCIE controller present in DRA7xx SoC. There
++	 are two instances of PCIE controller in DRA7xx. This controller can
++	 act both as EP and RC. This reuses the same Designware core as used
++	 by other SoCs.
++
+ config PCI_MVEBU
+ 	bool "Marvell EBU PCIe controller"
+ 	depends on ARCH_MVEBU || ARCH_DOVE || ARCH_KIRKWOOD
+diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
+index 13fb333..90a275d 100644
+--- a/drivers/pci/host/Makefile
++++ b/drivers/pci/host/Makefile
+@@ -1,4 +1,5 @@
+ obj-$(CONFIG_PCIE_DW) += pcie-designware.o
++obj-$(CONFIG_PCIE_DRA7XX) += pcie-dra7xx.o
+ obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
+ obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
+ obj-$(CONFIG_PCI_MVEBU) += pci-mvebu.o
+diff --git a/drivers/pci/host/pcie-dra7xx.c b/drivers/pci/host/pcie-dra7xx.c
+new file mode 100644
+index 0000000..69f3720
+--- /dev/null
++++ b/drivers/pci/host/pcie-dra7xx.c
+@@ -0,0 +1,411 @@
++/*
++ * pcie-dra7xx - PCIe controller driver for TI DRA7xx SoCs
++ *
++ * Copyright (C) 2013-2014 Texas Instruments Incorporated - http://www.ti.com
++ *
++ * Authors: Kishon Vijay Abraham I <kishon@ti.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/interrupt.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/pci.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
++#include <linux/reset.h>
++#include <linux/resource.h>
++#include <linux/types.h>
++
++#include "pcie-designware.h"
++
++/* PCIe controller wrapper TI configuration registers */
++
++#define	PCIECTRL_TI_CONF_IRQSTATUS_MAIN		0x0024
++#define	PCIECTRL_TI_CONF_IRQENABLE_SET_MAIN	0x0028
++#define	ERR_SYS					BIT(0)
++#define	ERR_FATAL				BIT(1)
++#define	ERR_NONFATAL				BIT(2)
++#define	ERR_COR					BIT(3)
++#define	ERR_AXI					BIT(4)
++#define	ERR_ECRC				BIT(5)
++#define	PME_TURN_OFF				BIT(8)
++#define	PME_TO_ACK				BIT(9)
++#define	PM_PME					BIT(10)
++#define	LINK_REQ_RST				BIT(11)
++#define	LINK_UP_EVT				BIT(12)
++#define	CFG_BME_EVT				BIT(13)
++#define	CFG_MSE_EVT				BIT(14)
++#define	INTERRUPTS (ERR_SYS | ERR_FATAL | ERR_NONFATAL | ERR_COR | ERR_AXI | \
++			ERR_ECRC | PME_TURN_OFF | PME_TO_ACK | PM_PME | \
++			LINK_REQ_RST | LINK_UP_EVT | CFG_BME_EVT | CFG_MSE_EVT)
++
++#define	PCIECTRL_TI_CONF_IRQSTATUS_MSI		0x0034
++#define	PCIECTRL_TI_CONF_IRQENABLE_SET_MSI	0x0038
++#define	INTA					BIT(0)
++#define	INTB					BIT(1)
++#define	INTC					BIT(2)
++#define	INTD					BIT(3)
++#define	MSI					BIT(4)
++#define	LEG_EP_INTERRUPTS (INTA | INTB | INTC | INTD)
++
++#define	PCIECTRL_TI_CONF_DEVICE_TYPE		0x0100
++#define	DEVICE_TYPE_EP				0x0
++#define	DEVICE_TYPE_LEG_EP			0x1
++#define	DEVICE_TYPE_RC				0x4
++
++#define	PCIECTRL_TI_CONF_DEVICE_CMD		0x0104
++#define	LTSSM_EN				0x1
++
++#define	PCIECTRL_TI_CONF_PHY_CS			0x010C
++#define	LINK_UP					BIT(16)
++
++struct dra7xx_pcie {
++	void __iomem		*base;
++	struct phy		*phy;
++	struct device		*dev;
++	struct pcie_port	pp;
++};
++
++#define to_dra7xx_pcie(x)	container_of((x), struct dra7xx_pcie, pp)
++
++enum dra7xx_pcie_device_type {
++	DRA7XX_PCIE_UNKNOWN_TYPE,
++	DRA7XX_PCIE_EP_TYPE,
++	DRA7XX_PCIE_LEG_EP_TYPE,
++	DRA7XX_PCIE_RC_TYPE,
++};
++
++static inline u32 dra7xx_pcie_readl(void __iomem *base, u32 offset)
++{
++	return readl(base + offset);
++}
++
++static inline void dra7xx_pcie_writel(void __iomem *base, u32 offset, u32 value)
++{
++	writel(value, base + offset);
++}
++
++static int dra7xx_pcie_link_up(struct pcie_port *pp)
++{
++	struct dra7xx_pcie *dra7xx = to_dra7xx_pcie(pp);
++	u32 reg = dra7xx_pcie_readl(dra7xx->base, PCIECTRL_TI_CONF_PHY_CS);
++
++	if (reg & LINK_UP)
++		return true;
++	return false;
++}
++
++static int dra7xx_pcie_establish_link(struct pcie_port *pp)
++{
++	u32 reg;
++	int retries = 1000;
++	struct dra7xx_pcie *dra7xx = to_dra7xx_pcie(pp);
++
++	if (dw_pcie_link_up(pp)) {
++		dev_err(pp->dev, "link is already up\n");
++		return 0;
++	}
++
++	reg = dra7xx_pcie_readl(dra7xx->base, PCIECTRL_TI_CONF_DEVICE_CMD);
++	reg |= LTSSM_EN;
++	dra7xx_pcie_writel(dra7xx->base, PCIECTRL_TI_CONF_DEVICE_CMD, reg);
++
++	while (--retries) {
++		reg = dra7xx_pcie_readl(dra7xx->base, PCIECTRL_TI_CONF_PHY_CS);
++		if (reg & LINK_UP)
++			break;
++		usleep_range(10, 20);
++	}
++
++	if (retries <= 0) {
++		dev_err(pp->dev, "link is not up\n");
++		return -ETIMEDOUT;
++	}
++
++	return 0;
++}
++
++static void dra7xx_pcie_enable_interrupts(struct pcie_port *pp)
++{
++	struct dra7xx_pcie *dra7xx = to_dra7xx_pcie(pp);
++
++	dra7xx_pcie_writel(dra7xx->base, PCIECTRL_TI_CONF_IRQSTATUS_MAIN,
++		~INTERRUPTS);
++	dra7xx_pcie_writel(dra7xx->base, PCIECTRL_TI_CONF_IRQENABLE_SET_MAIN,
++		INTERRUPTS);
++	dra7xx_pcie_writel(dra7xx->base, PCIECTRL_TI_CONF_IRQSTATUS_MSI,
++		~LEG_EP_INTERRUPTS & ~MSI);
++
++	if (IS_ENABLED(CONFIG_PCI_MSI))
++		dra7xx_pcie_writel(dra7xx->base,
++			PCIECTRL_TI_CONF_IRQENABLE_SET_MSI, MSI);
++	else
++		dra7xx_pcie_writel(dra7xx->base,
++			PCIECTRL_TI_CONF_IRQENABLE_SET_MSI, LEG_EP_INTERRUPTS);
++}
++
++static void dra7xx_pcie_host_init(struct pcie_port *pp)
++{
++	dw_pcie_setup_rc(pp);
++	dra7xx_pcie_establish_link(pp);
++	if (IS_ENABLED(CONFIG_PCI_MSI))
++		dw_pcie_msi_init(pp);
++	dra7xx_pcie_enable_interrupts(pp);
++}
++
++static struct pcie_host_ops dra7xx_pcie_host_ops = {
++	.link_up = dra7xx_pcie_link_up,
++	.host_init = dra7xx_pcie_host_init,
++};
++
++static irqreturn_t dra7xx_pcie_msi_irq_handler(int irq, void *arg)
++{
++	struct pcie_port *pp = arg;
++	struct dra7xx_pcie *dra7xx = to_dra7xx_pcie(pp);
++	u32 reg;
++
++	reg = dra7xx_pcie_readl(dra7xx->base, PCIECTRL_TI_CONF_IRQSTATUS_MSI);
++	dw_handle_msi_irq(pp);
++	dra7xx_pcie_writel(dra7xx->base, PCIECTRL_TI_CONF_IRQSTATUS_MSI, reg);
++
++	return IRQ_HANDLED;
++}
++
++
++static irqreturn_t dra7xx_pcie_irq_handler(int irq, void *arg)
++{
++	struct dra7xx_pcie *dra7xx = arg;
++	u32 reg;
++
++	reg = dra7xx_pcie_readl(dra7xx->base, PCIECTRL_TI_CONF_IRQSTATUS_MAIN);
++
++	if (reg & ERR_SYS)
++		dev_dbg(dra7xx->dev, "System Error\n");
++
++	if (reg & ERR_FATAL)
++		dev_dbg(dra7xx->dev, "Fatal Error\n");
++
++	if (reg & ERR_NONFATAL)
++		dev_dbg(dra7xx->dev, "Non Fatal Error\n");
++
++	if (reg & ERR_COR)
++		dev_dbg(dra7xx->dev, "Correctable Error\n");
++
++	if (reg & ERR_AXI)
++		dev_dbg(dra7xx->dev, "AXI tag lookup fatal Error\n");
++
++	if (reg & ERR_ECRC)
++		dev_dbg(dra7xx->dev, "ECRC Error\n");
++
++	if (reg & PME_TURN_OFF)
++		dev_dbg(dra7xx->dev,
++			"Power Management Event Turn-Off message received\n");
++
++	if (reg & PME_TO_ACK)
++		dev_dbg(dra7xx->dev,
++		"Power Management Event Turn-Off Ack message received\n");
++
++	if (reg & PM_PME)
++		dev_dbg(dra7xx->dev,
++			"PM Power Management Event message received\n");
++
++	if (reg & LINK_REQ_RST)
++		dev_dbg(dra7xx->dev, "Link Request Reset\n");
++
++	if (reg & LINK_UP_EVT)
++		dev_dbg(dra7xx->dev, "Link-up state change\n");
++
++	if (reg & CFG_BME_EVT)
++		dev_dbg(dra7xx->dev, "CFG 'Bus Master Enable' change\n");
++
++	if (reg & CFG_MSE_EVT)
++		dev_dbg(dra7xx->dev, "CFG 'Memory Space Enable' change\n");
++
++	dra7xx_pcie_writel(dra7xx->base, PCIECTRL_TI_CONF_IRQSTATUS_MAIN, reg);
++
++	return IRQ_HANDLED;
++}
++
++static int add_pcie_port(struct dra7xx_pcie *dra7xx,
++	struct platform_device *pdev)
++{
++	int ret;
++	struct pcie_port *pp;
++	struct resource *res;
++	struct device *dev = &pdev->dev;
++
++	pp = &dra7xx->pp;
++	pp->dev = dev;
++	pp->ops = &dra7xx_pcie_host_ops;
++
++	spin_lock_init(&pp->conf_lock);
++
++	pp->irq = platform_get_irq(pdev, 1);
++	if (pp->irq < 0) {
++		dev_err(dev, "missing IRQ resource\n");
++		return -EINVAL;
++	}
++
++	if (IS_ENABLED(CONFIG_PCI_MSI)) {
++		ret = devm_request_irq(&pdev->dev, pp->irq,
++				       dra7xx_pcie_msi_irq_handler, IRQF_SHARED,
++				       "pcie-msi", pp);
++		if (ret) {
++			dev_err(&pdev->dev, "failed to request irq\n");
++			return ret;
++		}
++	}
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rc_dbics");
++	pp->dbi_base = devm_ioremap_nocache(dev, res->start,
++		resource_size(res));
++	if (!pp->dbi_base)
++		return -ENOMEM;
++
++	ret = dw_pcie_host_init(pp);
++	if (ret) {
++		dev_err(dra7xx->dev, "failed to initialize host\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static int __init dra7xx_pcie_probe(struct platform_device *pdev)
++{
++	u32 reg;
++	int ret;
++	int irq;
++	struct phy *phy;
++	void __iomem *base;
++	struct resource *res;
++	struct dra7xx_pcie *dra7xx;
++	int device_type = 0;
++	struct device *dev = &pdev->dev;
++	struct device_node *node = pdev->dev.of_node;
++	struct reset_control *rstc;
++
++	dra7xx = devm_kzalloc(&pdev->dev, sizeof(*dra7xx), GFP_KERNEL);
++	if (!dra7xx)
++		return -ENOMEM;
++
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0) {
++		dev_err(dev, "missing IRQ resource\n");
++		return -EINVAL;
++	}
++
++	ret = devm_request_irq(&pdev->dev, irq, dra7xx_pcie_irq_handler,
++			       IRQF_SHARED, "pcie-main", dra7xx);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to request irq\n");
++		return ret;
++	}
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ti_conf");
++	base = devm_ioremap_nocache(dev, res->start, resource_size(res));
++	if (!base)
++		return -ENOMEM;
++
++	rstc = devm_reset_control_get(dev, "reset");
++	if (IS_ERR(rstc))
++		return PTR_ERR(rstc);
++
++	ret = reset_control_deassert(rstc);
++	if (ret)
++		return ret;
++
++	phy = devm_phy_get(dev, "pcie-phy");
++	if (IS_ERR(phy))
++		return PTR_ERR(phy);
++
++	ret = phy_init(phy);
++	if (ret < 0)
++		return ret;
++
++	ret = phy_power_on(phy);
++	if (ret < 0) {
++		phy_exit(phy);
++		return ret;
++	}
++
++	dra7xx->base = base;
++	dra7xx->phy = phy;
++	dra7xx->dev = dev;
++
++	pm_runtime_enable(&pdev->dev);
++	ret = pm_runtime_get_sync(&pdev->dev);
++	if (IS_ERR_VALUE(ret)) {
++		dev_err(dev, "pm_runtime_get_sync failed\n");
++		return ret;
++	}
++
++	of_property_read_u32(node, "ti,device-type", &device_type);
++	switch (device_type) {
++	case DRA7XX_PCIE_RC_TYPE:
++		dra7xx_pcie_writel(dra7xx->base,
++			PCIECTRL_TI_CONF_DEVICE_TYPE, DEVICE_TYPE_RC);
++		break;
++	case DRA7XX_PCIE_EP_TYPE:
++		dra7xx_pcie_writel(dra7xx->base,
++			PCIECTRL_TI_CONF_DEVICE_TYPE, DEVICE_TYPE_EP);
++		break;
++	case DRA7XX_PCIE_LEG_EP_TYPE:
++		dra7xx_pcie_writel(dra7xx->base,
++			PCIECTRL_TI_CONF_DEVICE_TYPE, DEVICE_TYPE_LEG_EP);
++		break;
++	default:
++		dev_dbg(dev, "UNKNOWN device type %d\n", device_type);
++	}
++
++	reg = dra7xx_pcie_readl(dra7xx->base, PCIECTRL_TI_CONF_DEVICE_CMD);
++	reg &= ~LTSSM_EN;
++	dra7xx_pcie_writel(dra7xx->base, PCIECTRL_TI_CONF_DEVICE_CMD, reg);
++
++	ret = add_pcie_port(dra7xx, pdev);
++	if (ret < 0)
++		return ret;
++
++	platform_set_drvdata(pdev, dra7xx);
++	return 0;
++}
++
++static int __exit dra7xx_pcie_remove(struct platform_device *pdev)
++{
++	struct dra7xx_pcie *dra7xx = platform_get_drvdata(pdev);
++
++	pm_runtime_put(&pdev->dev);
++	pm_runtime_disable(&pdev->dev);
++	phy_power_off(dra7xx->phy);
++	phy_exit(dra7xx->phy);
++
++	return 0;
++}
++
++static const struct of_device_id of_dra7xx_pcie_match[] = {
++	{ .compatible = "ti,dra7xx-pcie", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, of_dra7xx_pcie_match);
++
++static struct platform_driver dra7xx_pcie_driver = {
++	.remove		= __exit_p(dra7xx_pcie_remove),
++	.driver = {
++		.name	= "dra7xx-pcie",
++		.owner	= THIS_MODULE,
++		.of_match_table = of_dra7xx_pcie_match,
++	},
++};
++
++module_platform_driver_probe(dra7xx_pcie_driver, dra7xx_pcie_probe);
++
++MODULE_AUTHOR("Kishon Vijay Abraham I <kishon@ti.com>");
++MODULE_DESCRIPTION("TI PCIe controller driver");
++MODULE_LICENSE("GPL v2");
+-- 
+1.7.9.5
