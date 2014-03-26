@@ -1,93 +1,60 @@
-From: Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH] arm64: dts: Add more serial port nodes in APM X-Gene device tree
-Date: Wed, 26 Mar 2014 17:49:06 +0530
-Message-ID: <1395836346-9350-1-git-send-email-vkale@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Catalin.Marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>
+From: Jon Ringle <jon@ringle.org>
+Subject: Re: [PATCH v2 2/2] serial: sc16is7xx: Add bindings documentation for
+ the SC16IS7XX UARTs
+Date: Wed, 26 Mar 2014 08:49:59 -0400
+Message-ID: <CAMwGMjxK2C_ciW6LwdMHE5wYkOHtkP00extF1-qcZ2xYoDr=7g@mail.gmail.com>
+References: <1395771564-30534-1-git-send-email-jon@ringle.org>
+	<1395771564-30534-2-git-send-email-jon@ringle.org>
+	<20140326090855.GP10341@e106331-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140326090855.GP10341@e106331-lin.cambridge.arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jon Ringle <jringle@gridpoint.com>
 List-Id: devicetree@vger.kernel.org
 
-APM X-Gene Storm SoC supports 4 serial ports. This patch adds device nodes
-for serial ports 1 to 3 (a device node for serial port 0 is already present
-in the dts file).
-This patch also sets the compatible property of serial nodes to "ns16550a".
+On Wed, Mar 26, 2014 at 5:08 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Tue, Mar 25, 2014 at 06:19:24PM +0000, jon@ringle.org wrote:
+>> +- interrupt-parent: The phandle for the interrupt controller that
+>> +  services interrupts for this IC.
+>> +- interrupts: Specifies the interrupt source of the parent interrupt
+>> +  controller. The format of the interrupt specifier depends on the
+>> +  parent interrupt controller.
+>
+> Just describe what the device-specific interrupt logically is, not what
+> the interrupts property means in general.
+>
 
-Signed-off-by: Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>
----
- arch/arm64/boot/dts/apm-mustang.dts |  4 ++++
- arch/arm64/boot/dts/apm-storm.dtsi  | 36 +++++++++++++++++++++++++++++++++++-
- 2 files changed, 39 insertions(+), 1 deletion(-)
+Something like this ok?:
 
-diff --git a/arch/arm64/boot/dts/apm-mustang.dts b/arch/arm64/boot/dts/apm-mustang.dts
-index 1247ca1..6541962 100644
---- a/arch/arm64/boot/dts/apm-mustang.dts
-+++ b/arch/arm64/boot/dts/apm-mustang.dts
-@@ -24,3 +24,7 @@
- 		reg = < 0x1 0x00000000 0x0 0x80000000 >; /* Updated by bootloader */
- 	};
- };
-+
-+&serial0 {
-+	status = "ok";
-+};
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index d37d736..2277b5c 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -179,13 +179,47 @@
- 		};
- 
- 		serial0: serial@1c020000 {
-+			status = "disabled";
- 			device_type = "serial";
--			compatible = "ns16550";
-+			compatible = "ns16550a";
- 			reg = <0 0x1c020000 0x0 0x1000>;
- 			reg-shift = <2>;
- 			clock-frequency = <10000000>; /* Updated by bootloader */
- 			interrupt-parent = <&gic>;
- 			interrupts = <0x0 0x4c 0x4>;
- 		};
-+
-+		serial1: serial@1c021000 {
-+			status = "disabled";
-+			device_type = "serial";
-+			compatible = "ns16550a";
-+			reg = <0 0x1c021000 0x0 0x1000>;
-+			reg-shift = <2>;
-+			clock-frequency = <10000000>; /* Updated by bootloader */
-+			interrupt-parent = <&gic>;
-+			interrupts = <0x0 0x4d 0x4>;
-+		};
-+
-+		serial2: serial@1c022000 {
-+			status = "disabled";
-+			device_type = "serial";
-+			compatible = "ns16550a";
-+			reg = <0 0x1c022000 0x0 0x1000>;
-+			reg-shift = <2>;
-+			clock-frequency = <10000000>; /* Updated by bootloader */
-+			interrupt-parent = <&gic>;
-+			interrupts = <0x0 0x4e 0x4>;
-+		};
-+
-+		serial3: serial@1c023000 {
-+			status = "disabled";
-+			device_type = "serial";
-+			compatible = "ns16550a";
-+			reg = <0 0x1c023000 0x0 0x1000>;
-+			reg-shift = <2>;
-+			clock-frequency = <10000000>; /* Updated by bootloader */
-+			interrupt-parent = <&gic>;
-+			interrupts = <0x0 0x4f 0x4>;
-+		};
- 	};
- };
--- 
-1.8.2.1
+-interrupts: Should contain the UART interrupt
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +- clocks: phandle to the IC source clock.
+>
+> Nit: clocks aren't just referred to with phandles; there's a clock
+> specifier too.
+>
+> Either correct the type here or don't mention the type at all, given
+> this is a common property.
+>
+
+I'm not sure what to do here. Many of the other
+devicetree/bindings/serial/*.txt use phandle verbage and also the
+devicetree/bindings/clock-bindings.txt documentation for clocks refers
+the type as phandle too:
+
+==Clock consumers==
+
+Required properties:
+clocks:         List of phandle and clock specifier pairs, one pair
+                for each clock input to the device.  Note: if the
+                clock provider specifies '0' for #clock-cells, then
+                only the phandle portion of the pair will appear.
+
+Is something like this ok?:
+
+clocks: reference to the source clock
+
+Jon
