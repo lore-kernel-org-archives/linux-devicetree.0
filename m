@@ -1,52 +1,47 @@
-From: Harini Katakam <harinik@xilinx.com>
-Subject: [PATCH 2/2] Devicetree: Add Zynq GPIO devicetree bindings documentation
-Date: Thu, 27 Mar 2014 20:55:06 +0530
-Message-ID: <1395933906-2268-2-git-send-email-harinik@xilinx.com>
-References: <1395933906-2268-1-git-send-email-harinik@xilinx.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1395933906-2268-1-git-send-email-harinik@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, gnurou@gmail.com, michal.simek@xilinx.com, grant.likely@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
-Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, michals@xilinx.com, Harini Katakam <harinik@xilinx.com>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: Re: [PATCH] axs_nand - add driver for NAND controller used on
+ Synopsys AXS dev boards
+Date: Thu, 27 Mar 2014 15:27:04 +0000
+Message-ID: <1395934023.3511.1.camel@abrodkin-8560l.internal.synopsys.com>
+References: <1394626349-16024-1-git-send-email-abrodkin@synopsys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1394626349-16024-1-git-send-email-abrodkin@synopsys.com>
+Content-Language: en-US
+Content-ID: <1CFA6DDAFF3CB74B8CBFE99EE64EEDB8@internal.synopsys.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Francois Bedard <Francois.Bedard@synopsys.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add gpio-zynq bindings documentation.
+On Wed, 2014-03-12 at 16:12 +0400, Alexey Brodkin wrote:
+> Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+> 
+> Cc: Vineet Gupta <vgupta@synopsys.com>
+> ---
+>  Documentation/devicetree/bindings/mtd/axs-nand.txt |  17 +
+>  drivers/mtd/nand/Kconfig                           |   6 +
+>  drivers/mtd/nand/Makefile                          |   1 +
+>  drivers/mtd/nand/axs_nand.c                        | 412 +++++++++++++++++++++
+>  4 files changed, 436 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/axs-nand.txt
+>  create mode 100644 drivers/mtd/nand/axs_nand.c
 
-Signed-off-by: Harini Katakam <harinik@xilinx.com>
----
- .../devicetree/bindings/gpio/gpio-zynq.txt         |   24 ++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-zynq.txt
+Any chance to this patch reviewed, commented, accepted?
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-zynq.txt b/Documentation/devicetree/bindings/gpio/gpio-zynq.txt
-new file mode 100644
-index 0000000..1b6e83f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-zynq.txt
-@@ -0,0 +1,24 @@
-+Xilinx Zynq GPIO controller Device Tree Bindings
-+-------------------------------------------
-+
-+Required properties:
-+- #gpio-cells 		: Should be two. First cell is used to mention
-+			  pin number.
-+- compatible		: Should be "xlnx,zynq-gpio-1.0"
-+- clocks		: Clock phandles (see clock bindings for details)
-+- gpio-controller	: Marks the device node as a GPIO controller.
-+- interrupts		: Property with a value describing the interrupt
-+			  number.
-+- interrupt-parent	: Must be core interrupt controller
-+- reg			: Address and length of the register set for the device
-+
-+Example:
-+		gpio@e000a000 {
-+			#gpio-cells = <2>;
-+			compatible = "xlnx,zynq-gpio-1.0";
-+			clocks = <&clkc 42>;
-+			gpio-controller ;
-+			interrupt-parent = <&intc>;
-+			interrupts = <0 20 4>;
-+			reg = <0xe000a000 0x1000>;
-+		} ;
--- 
-1.7.9.5
+Regards,
+Alexey
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
