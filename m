@@ -1,14 +1,11 @@
 From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
-Subject: [PATCH RFC 1/3] Devicetree: Add pl353 smc controller devicetree
- binding information
-Date: Thu, 27 Mar 2014 23:51:05 +0530
-Message-ID: <05521479-afd6-4c52-afbb-ef3fe2dafd18@CH1EHSMHS001.ehs.local>
-References: <1395944467-26291-1-git-send-email-punnaia@xilinx.com>
+Subject: [PATCH RFC 0/3] Add arm pl353 smc driver for xilinx zynq soc
+Date: Thu, 27 Mar 2014 23:51:04 +0530
+Message-ID: <bb33414a-fa06-4aea-af85-143e6dca95c7@CH1EHSMHS001.ehs.local>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1395944467-26291-1-git-send-email-punnaia@xilinx.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
  <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
@@ -22,73 +19,37 @@ To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree
 Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, kalluripunnaiahchoudary@gmail.com, kpc528@gmail.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Add pl353 static memory controller devicetree binding information.
+The following patches add arm pl353 static memory controller driver for
+xilinx zynq soc. The arm pl353 smc supports two interfaces i.e nand and
+nor/sram memory interfaces. The current implementation supports only a
+single SMC instance and nand specific configuration.
 
-Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
----
- .../bindings/memory-controllers/pl353-smc.txt      |   53 ++++++++++++++++++++
- 1 files changed, 53 insertions(+), 0 deletions(-)
+xilinx zynq TRM link:
+http://www.xilinx.com/support/documentation/user_guides/ug585-Zynq-7000-TRM.pdf
+
+ARM pl353 smc TRM link:
+http://infocenter.arm.com/help/topic/com.arm.doc.ddi0380g/
+DDI0380G_smc_pl350_series_r2p1_trm.pdf
+
+Punnaiah Choudary Kalluri (3):
+  Devicetree: Add pl353 smc controller devicetree binding information
+  memory: pl353: Add driver for arm pl353 static memory controller
+  nand: pl353: Add driver for arm pl353 smc nand interface
+
+ .../bindings/memory-controllers/pl353-smc.txt      |   53 +
+ drivers/memory/Kconfig                             |    8 +
+ drivers/memory/Makefile                            |    1 +
+ drivers/memory/pl353-smc.c                         |  560 ++++++++++
+ drivers/mtd/nand/Kconfig                           |    8 +
+ drivers/mtd/nand/Makefile                          |    1 +
+ drivers/mtd/nand/pl353_nand.c                      | 1122 ++++++++++++++++++++
+ include/linux/memory/pl353-smc.h                   |   37 +
+ 8 files changed, 1790 insertions(+), 0 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt
+ create mode 100644 drivers/memory/pl353-smc.c
+ create mode 100644 drivers/mtd/nand/pl353_nand.c
+ create mode 100644 include/linux/memory/pl353-smc.h
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt b/Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt
-new file mode 100644
-index 0000000..623c1c6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt
-@@ -0,0 +1,53 @@
-+Device tree bindings for ARM PL353 static memory controller
-+
-+PL353 static memory controller supports two kinds of memory
-+interfaces.i.e NAND and SRAM/NOR interfaces.
-+The actual devices are instantiated from the child nodes of pl353 smc node.
-+
-+Required properties:
-+- compatible		: Should be "arm,pl353-smc-r2p1"
-+- reg			: Controller registers map and length.
-+- clock-names		: List of input clock names - "ref_clk", "aper_clk"
-+			  (See clock bindings for details).
-+- clocks		: Clock phandles (see clock bindings for details).
-+- address-cells	: Address cells, must be 1.
-+- size-cells		: Size cells. Must be 1.
-+
-+Child nodes:
-+ For NAND the "arm,pl353-nand-r2p1" and for NOR the "cfi-flash" drivers are
-+supported as child nodes.
-+
-+Mandatory timing properties for child nodes:
-+- arm,nand-cycle-t0	: Read cycle time(t_rc).
-+- arm,nand-cycle-t1	: Write cycle time(t_wc).
-+- arm,nand-cycle-t2	: re_n assertion delay(t_rea).
-+- arm,nand-cycle-t3	: we_n de-assertion delay(t_wp).
-+- arm,nand-cycle-t4	: Status read time(t_clr)
-+- arm,nand-cycle-t5	: ID read time(t_ar)
-+- arm,nand-cycle-t6	: busy to re_n(t_rr)
-+
-+for nand partition information please refer the below file
-+Documentation/devicetree/bindings/mtd/partition.txt
-+
-+Example:
-+	pl353smcc_0: pl353smcc@e000e000 {
-+			compatible = "arm,pl353-smcc-r2p1"
-+			clock-names = "memclk", "aclk";
-+			clocks = <&clkc 11>, <&clkc 44>;
-+			reg = <0xe000e000 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+			nand_0: nand@e1000000 {
-+				compatible = "arm,pl353-nand-r2p1"
-+				reg = <0xe1000000 0x1000000>;
-+				arm,nand-cycle-t0 = <0x4>;
-+				arm,nand-cycle-t1 = <0x4>;
-+				arm,nand-cycle-t2 = <0x1>;
-+				arm,nand-cycle-t3 = <0x2>;
-+				arm,nand-cycle-t4 = <0x2>;
-+				arm,nand-cycle-t5 = <0x2>;
-+				arm,nand-cycle-t6 = <0x4>;
-+				(...)
-+			};
-+	};
 -- 
 1.7.4
 
