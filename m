@@ -1,240 +1,107 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Subject: RE: [PATCH v6] can: xilinx CAN controller support
-Date: Thu, 27 Mar 2014 14:21:38 +0000
-Message-ID: <fcc94d34-fb45-4eba-ac83-427c42472b8c@VA3EHSMHS036.ehs.local>
-References: <5ff46a21-3047-40ff-9221-f08e476f9ce6@VA3EHSMHS030.ehs.local>
- <53343256.8020802@monstr.eu>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [RFC] Serial port aliases in DT
+Date: Thu, 27 Mar 2014 15:43:51 +0100
+Message-ID: <2149513.dRBgegNNJX@avalon>
+References: <5448979.WQPtOb56tW@avalon> <9498012.PtNMJ9hipe@avalon> <CAL_Jsq+SWZUz4D+3pdDs5yfi_XbTODC0ytt1S5KpmR_C5vVL=A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <53343256.8020802@monstr.eu>
-Content-Language: en-US
-Sender: linux-can-owner@vger.kernel.org
-To: "monstr@monstr.eu" <monstr@monstr.eu>
-Cc: "wg@grandegger.com" <wg@grandegger.com>, "mkl@pengutronix.de" <mkl@pengutronix.de>, Michal Simek <michals@xilinx.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+SWZUz4D+3pdDs5yfi_XbTODC0ytt1S5KpmR_C5vVL=A@mail.gmail.com>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Michal,
+Hi Rob,
 
+On Thursday 27 March 2014 08:54:09 Rob Herring wrote:
+> On Thu, Mar 27, 2014 at 7:50 AM, Laurent Pinchart wrote:
+> > Hello DT maintainers,
+> > 
+> > Ping ? This issue is blocking the merge of serial port DT support on
+> > Renesas platforms, as we need to decide on how to name the ports.
+> 
+> This seems like a topic for devicetree-spec.
 
-> -----Original Message-----
-> From: Michal Simek [mailto:monstr@monstr.eu]
-> Sent: Thursday, March 27, 2014 7:45 PM
-> To: Appana Durga Kedareswara Rao
-> Cc: wg@grandegger.com; mkl@pengutronix.de; Michal Simek;
-> grant.likely@linaro.org; robh+dt@kernel.org; devicetree@vger.kernel.org;
-> netdev@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> can@vger.kernel.org; Appana Durga Kedareswara Rao; linux-arm-
-> kernel@lists.infradead.org
-> Subject: Re: [PATCH v6] can: xilinx CAN controller support
->
-> Hi Kedar,
->
-> On 03/26/2014 06:26 AM, Kedareswara rao Appana wrote:
-> > This patch adds xilinx CAN controller support.
-> > This driver supports both ZYNQ CANPS and Soft IP AXI CAN controller.
-> >
-> > Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
-> > ---
-> > This patch is rebased on the 3.14 rc8 kernel Chnages for v6:
-> > - Updated the driver with review comments.
-> > - Used the clock names specified in the IP data sheet.
-> > - Updated the devicetree bindings doc as per Rob suggestion.
-> > Changes for v5:
-> > - Updated the driver with the review comments.
-> > - Remove the check for the tx fifo full interrupt condition
-> >   form Tx interrupt routine as we are checking it in the _xmit
-> >   routine.
-> > - Clearing the txok interrupt in the tx interrupt routine for
-> >   every Tx can frame.
-> > Changes for v4:
-> > - Added check for the tx fifo full interrupt condition in
-> >   Tx interrupt routine.
-> > - Added be iohelper functions.
-> > - Moved the clock enable/disable to probe/remove because of
-> >   Added big endian support for AXI CAN controller case(reading
-> >   a register during probe for that we need to enable clock).
-> > Changes for v3:
-> > - Updated the driver with the review comments.
-> > - Modified the tranmit logic as per Marc suggestion.
-> > - Enabling the clock when the interface is up to reduce the
-> >   Power consumption.
-> > Changes for v2:
-> > - Updated with the review comments.
-> > - Removed the unnecessary debug prints.
-> > - include tx,rx fifo depths in ZYNQ CANPS case also.
-> > ---
-> >  .../devicetree/bindings/net/can/xilinx_can.txt     |   44 +
-> >  drivers/net/can/Kconfig                            |    7 +
-> >  drivers/net/can/Makefile                           |    1 +
-> >  drivers/net/can/xilinx_can.c                       | 1179 ++++++++++++++++++++
-> >  4 files changed, 1231 insertions(+), 0 deletions(-)  create mode
-> > 100644 Documentation/devicetree/bindings/net/can/xilinx_can.txt
-> >  create mode 100644 drivers/net/can/xilinx_can.c
-> >
-> > diff --git a/Documentation/devicetree/bindings/net/can/xilinx_can.txt
-> > b/Documentation/devicetree/bindings/net/can/xilinx_can.txt
-> > new file mode 100644
-> > index 0000000..4646396
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/can/xilinx_can.txt
-> > @@ -0,0 +1,44 @@
-> > +Xilinx Axi CAN/Zynq CANPS controller Device Tree Bindings
-> > +---------------------------------------------------------
-> > +
-> > +Required properties:
-> > +- compatible               : Should be "xlnx,zynq-can-1.00.a" for Zynq
-> CAN
->
-> We should do one more change and better now than later.
-> Please use just "xlnx,zynq-can-1.0" compatible string here.
->
-Ok
+Indeed.
 
+> > On Tuesday 11 March 2014 12:57:59 Laurent Pinchart wrote:
+> >> On Monday 10 March 2014 13:57:23 Arnd Bergmann wrote:
+> >> > On Monday 10 March 2014 12:59:03 Laurent Pinchart wrote:
+> >> > > The SoC includes 8 serial ports. They are all disabled in the SoC
+> >> > > .dtsi, and enabled selectively by board DT files. As not all serial
+> >> > > ports are available on all boards, the question was whether to add
+> >> > > aliases for all ports (in the .dtsi in this case) like
+> >> > > 
+> >> > >          serial0 = &scif0;
+> >> > >          serial1 = &scif1;
+> >> > >          serial2 = &scif2;
+> >> > >          serial3 = &scif3;
+> >> > >          serial4 = &scif4;
+> >> > >          serial5 = &scif5;
+> >> > >          serial6 = &scif6;
+> >> > >          serial7 = &scif7;
+> >> > > 
+> >> > > or to just add aliases for the enabled ports (in the board DT file)
+> >> > > like
+> >> > > 
+> >> > >          serial0 = &scif2;
+> >> > >          serial1 = &scif3;
+> >> > > 
+> >> > > Note the numbering in the latter case: as the board doesn't use
+> >> > > serial ports 0 and 1, hardware ports 2 and 3 become logical ports 0
+> >> > > and 1.
+> >> > > 
+> >> > > I considered that having Linux create ttySC0 and ttySC1 devices for
+> >> > > the first two ports of the board, regardless of which hardware ports
+> >> > > are used, is simpler from a user point of view (it allows sharing the
+> >> > > same inittab settings for the console serial port across several
+> >> > > boards for instance). I'd appreciate feedback on that.
+> >> > 
+> >> > I think the traditional interpretation is that we want to use the
+> >> > aliases to reflect the device names in the OS.
+> >> 
+> >> If I interpret this correctly it means that the question boils down to
+> >> whether we want the system to expose ttySC0 and ttySC1 or ttySC2 and
+> >> ttySC3, in case only ports 2 and 3 are enabled.
+> >> 
+> >> Let's note that, despite the above example showing 8 instances of
+> >> identical serial IP cores, the reality is a bit more complex and Renesas
+> >> SoCs usually include different serial IP cores with several instances of
+> >> each of them. Ports of the same time are numbered in the datasheet, but
+> >> there's no standard or natural ordering global to all serial ports.
+> >> 
+> >> This starts to remind me about the whole stable network device name
+> >> changes we went through recently.
+> >> 
+> >> > This however comes back to the more general issue of serial port device
+> >> > naming: Linux traditionally uses separate names per driver (e.g. ttySC0
+> >> > instead of ttyS0).
+> >> > 
+> >> > There has been discussion in the past about changing this to let all
+> >> > drivers use the same namespace, but it's not yet clear to me how we'd
+> >> > do this in a 100% backwards compatible way. Maybe it's best left to
+> >> > udev to figure out the driver independent name, but then we definitely
+> >> > should use the alias for that name.
+> 
+> This discussion has come up in just the last month or so.
+> 
+> My opinion is device name numbering should start at 0 with 0 being the
+> preferred console device. My main reasoning is giving consistent naming
+> across boards and it is more inline with how other devices are named. The
+> aliases are just to give you consistency in the numbering within the 0 to N.
+> Hopefully this is inline with what other platforms have done as above all I
+> think we should be consistent.
 
+That's my preference as well, but not everybody agreed, hence the RFC.
 
-> > +                     controllers and "xlnx,axi-can-1.00.a" for Axi CAN
-> > +                     controllers.
-> > +- reg                      : Physical base address and size of the Axi CAN/Zynq
-> > +                     CANPS registers map.
-> > +- interrupts               : Property with a value describing the interrupt
-> > +                     number.
-> > +- interrupt-parent : Must be core interrupt controller
-> > +- clock-names              : List of input clock names - "can_clk", "pclk"
-> > +                     (For CANPS), "can_clk" , "s_axi_aclk"(For AXI CAN)
-> > +                     (See clock bindings for details).
-> > +- clocks           : Clock phandles (see clock bindings for details).
-> > +- tx-fifo-depth            : Can Tx fifo depth.
-> > +- rx-fifo-depth            : Can Rx fifo depth.
-> > +
-> > +
-> > +Example:
-> > +
-> > +For Zynq CANPS Dts file:
-> > +   zynq_can_0: can@e0008000 {
-> > +                   compatible = "xlnx,zynq-can-1.00.a";
->
-> the same here.
->
-Ok
-
-> > +                   clocks = <&clkc 19>, <&clkc 36>;
-> > +                   clock-names = "can_clk", "pclk";
-> > +                   reg = <0xe0008000 0x1000>;
-> > +                   interrupts = <0 28 4>;
-> > +                   interrupt-parent = <&intc>;
-> > +                   tx-fifo-depth = <0x40>;
-> > +                   rx-fifo-depth = <0x40>;
-> > +           };
-> > +For Axi CAN Dts file:
-> > +   axi_can_0: axi-can@40000000 {
-> > +                   compatible = "xlnx,axi-can-1.00.a";
-> > +                   clocks = <&clkc 0>;
-> > +                   clock-names = "can_clk","s_axi_aclk" ;
-> > +                   reg = <0x40000000 0x10000>;
-> > +                   interrupt-parent = <&intc>;
-> > +                   interrupts = <0 59 1>;
-> > +                   tx-fifo-depth = <0x40>;
-> > +                   rx-fifo-depth = <0x40>;
-> > +           };
->
-> I don't know which thread I discussed this with Rob but please send this
-> binding separately out of this and copy devicetree@vger.kernel.org for this
-> patch.
-> They should give us ACK on device-tree binding.
->
-Ok
-
->
-> > diff --git a/drivers/net/can/Kconfig b/drivers/net/can/Kconfig index
-> > 9e7d95d..9049884 100644
-> > --- a/drivers/net/can/Kconfig
-> > +++ b/drivers/net/can/Kconfig
-> > @@ -125,6 +125,13 @@ config CAN_GRCAN
-> >       endian syntheses of the cores would need some modifications on
-> >       the hardware level to work.
-> >
-> > +config CAN_XILINXCAN
-> > +   tristate "Xilinx CAN"
-> > +   depends on ARCH_ZYNQ || MICROBLAZE || COMPILE_TEST
-> > +   depends on COMMON_CLK && HAS_IOMEM
-> > +   ---help---
-> > +     Xilinx CAN driver. This driver supports both soft AXI CAN IP and
-> > +     Zynq CANPS IP.
-> >  source "drivers/net/can/mscan/Kconfig"
-> >
-> >  source "drivers/net/can/sja1000/Kconfig"
-> > diff --git a/drivers/net/can/Makefile b/drivers/net/can/Makefile index
-> > c744039..0b8e11e 100644
-> > --- a/drivers/net/can/Makefile
-> > +++ b/drivers/net/can/Makefile
-> > @@ -25,5 +25,6 @@ obj-$(CONFIG_CAN_JANZ_ICAN3)      += janz-
-> ican3.o
-> >  obj-$(CONFIG_CAN_FLEXCAN)  += flexcan.o
-> >  obj-$(CONFIG_PCH_CAN)              += pch_can.o
-> >  obj-$(CONFIG_CAN_GRCAN)            += grcan.o
-> > +obj-$(CONFIG_CAN_XILINXCAN)        += xilinx_can.o
-> >
-> >  ccflags-$(CONFIG_CAN_DEBUG_DEVICES) := -DDEBUG diff --git
-> > a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_can.c new file
-> > mode 100644 index 0000000..3bb289c
-> > --- /dev/null
-> > +++ b/drivers/net/can/xilinx_can.c
-> > @@ -0,0 +1,1179 @@
-> > +/* Xilinx CAN device driver
-> > + *
-> > + * Copyright (C) 2012 - 2014 Xilinx, Inc.
-> > + * Copyright (C) 2009 PetaLogix. All rights reserved.
-> > + *
-> > + * Description:
-> > + * This driver is developed for Axi CAN IP and for Zynq CANPS Controller.
-> > + * This program is free software: you can redistribute it and/or
-> > +modify
-> > + * it under the terms of the GNU General Public License as published
-> > +by
-> > + * the Free Software Foundation, either version 2 of the License, or
-> > + * (at your option) any later version.
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > + *
-> > + * You should have received a copy of the GNU General Public License
-> > + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
->
-> Please remove this paragraph. Some testing tools reports this as a
-> problematic part.
->
-> <snip>
->
-Ok
-
-> > +/* Match table for OF platform binding */ static struct of_device_id
-> > +xcan_of_match[] = {
-> > +   { .compatible = "xlnx,zynq-can-1.00.a", },
->
-> And here also xlnx,zynq-can-1.0
->
-Ok Will change
-
+-- 
 Regards,
-Kedar.
 
-> Thanks,
-> Michal
->
-> --
-> Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-> w: www.monstr.eu p: +42-0-721842854
-> Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-> Maintainer of Linux kernel - Xilinx Zynq ARM architecture Microblaze U-
-> BOOT custodian and responsible for u-boot arm zynq platform
->
+Laurent Pinchart
 
-
-
-This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
-
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
