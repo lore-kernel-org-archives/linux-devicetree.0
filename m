@@ -1,49 +1,129 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/2] ARM: sun7i/sun6i: dts: Fix IRQ number for
- sun6i NMI controller
-Date: Thu, 27 Mar 2014 18:02:38 +0100
-Message-ID: <1395939759-11135-2-git-send-email-carlo@caione.org>
-References: <1395939759-11135-1-git-send-email-carlo@caione.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH RFC v3 1/2] clk: Add function parsing arbitrary clock list
+ DT property
+Date: Thu, 27 Mar 2014 18:17:27 +0100
+Message-ID: <3164460.aT5tTxdc17@amdc1032>
+References: <1395922579-28547-1-git-send-email-s.nawrocki@samsung.com>
+ <1395922579-28547-2-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDWJTUUC5UCBBA5T2GMQKGQE5P3VJYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1395939759-11135-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1395922579-28547-2-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-The IRQ line used in sun6i-a31.dtsi for the NMI controller is wrong.
-This causes a IRQ storm since the NMI controller is repeatedly fired.
-This patch fixes this problem assigning the correct IRQ number to the
-NMI controller.
+Hi Sylwester,
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/sun6i-a31.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Thursday, March 27, 2014 01:16:18 PM Sylwester Nawrocki wrote:
+> The of_clk_get_by_property() function added by this patch is similar to
+> of_clk_get(), except it allows to pass name of a DT property containing
+> list of phandles and clock specifiers. For of_clk_get() this has been
+> hard coded to "clocks".
+> 
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+> Changes since v2:
+>  - moved the function declaration from drivers/clk/clk.h to
+>    include/linux/clk.h
+> 
+> Changes since v1:
+>  - s/of_clk_get_list_entry/of_clk_get_by_property.
+> ---
+>  drivers/clk/clkdev.c |   25 +++++++++++++++++++++----
+>  include/linux/clk.h  |    7 +++++++
+>  2 files changed, 28 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
+> index a360b2e..1d41540 100644
+> --- a/drivers/clk/clkdev.c
+> +++ b/drivers/clk/clkdev.c
+> @@ -27,17 +27,28 @@ static LIST_HEAD(clocks);
+>  static DEFINE_MUTEX(clocks_mutex);
+>  
+>  #if defined(CONFIG_OF) && defined(CONFIG_COMMON_CLK)
+> -struct clk *of_clk_get(struct device_node *np, int index)
+> +/**
+> + * of_clk_get_by_property() - Parse and lookup a clock referenced by a device node
+> + * @np: pointer to clock consumer node
+> + * @list_name: name of the clock list property
+> + * @index: index to the clock list
+> + *
+> + * This function parses the @list_name property and together with @index
+> + * value indicating an entry of the list uses it to look up the struct clk
+> + * from the registered list of clock providers.
+> + */
+> +struct clk *of_clk_get_by_property(struct device_node *np,
+> +				   const char *list_name, int index)
+>  {
+>  	struct of_phandle_args clkspec;
+>  	struct clk *clk;
+>  	int rc;
+>  
+> -	if (index < 0)
+> +	if (index < 0 || !list_name)
+>  		return ERR_PTR(-EINVAL);
+>  
+> -	rc = of_parse_phandle_with_args(np, "clocks", "#clock-cells", index,
+> -					&clkspec);
+> +	rc = of_parse_phandle_with_args(np, list_name, "#clock-cells",
+> +					index, &clkspec);
+>  	if (rc)
+>  		return ERR_PTR(rc);
+>  
+> @@ -51,6 +62,12 @@ struct clk *of_clk_get(struct device_node *np, int index)
+>  	of_node_put(clkspec.np);
+>  	return clk;
+>  }
+> +EXPORT_SYMBOL(of_clk_get_by_property);
+> +
+> +struct clk *of_clk_get(struct device_node *np, int index)
+> +{
+> +	return of_clk_get_by_property(np, "clocks", index);
+> +}
+>  EXPORT_SYMBOL(of_clk_get);
+>  
+>  /**
+> diff --git a/include/linux/clk.h b/include/linux/clk.h
+> index 0dd9114..f71235b 100644
+> --- a/include/linux/clk.h
+> +++ b/include/linux/clk.h
+> @@ -383,6 +383,8 @@ struct of_phandle_args;
+>  
+>  #if defined(CONFIG_OF) && defined(CONFIG_COMMON_CLK)
+>  struct clk *of_clk_get(struct device_node *np, int index);
+> +struct clk *of_clk_get_by_property(struct device_node *np,
+> +				   const char *list_name, int index);
+>  struct clk *of_clk_get_by_name(struct device_node *np, const char *name);
+>  struct clk *of_clk_get_from_provider(struct of_phandle_args *clkspec);
+>  #else
+> @@ -395,6 +397,11 @@ static inline struct clk *of_clk_get_by_name(struct device_node *np,
+>  {
+>  	return ERR_PTR(-ENOENT);
+>  }
+> +struct clk *of_clk_get_by_property(struct device_node *np,
 
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index 3b95cb5..38d43fe 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -195,7 +195,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
- 			reg = <0x01f00c0c 0x38>;
--			interrupts = <0 0 4>;
-+			interrupts = <0 32 4>;
- 		};
- 
- 		pio: pinctrl@01c20800 {
--- 
-1.8.4.1
+This causes build brake with s3c6400_defconfig
+(it should be 'static inline').
+
+> +				   const char *list_name, int index)
+> +{
+> +	return ERR_PTR(-ENOENT);
+> +}
+>  #endif
+>  
+>  #endif
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
