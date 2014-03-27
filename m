@@ -1,104 +1,82 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCHv2 1/1] mtd: gpmi: make blockmark swapping optional
-Date: Thu, 27 Mar 2014 13:21:09 +0100
-Message-ID: <20140327132109.06258526@ipc1.ka-ro>
-References: <532BCFCC.4080205@freescale.com>
-	<1395399017-19005-1-git-send-email-LW@KARO-electronics.de>
-	<20140324095902.GB11377@localhost>
-	<20140326095156.3e5585b8@ipc1.ka-ro>
-	<5332AEE7.2040402@freescale.com>
-	<20140326125502.0e8d0657@ipc1.ka-ro>
-	<20140327095956.GA29623@localhost>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC] Serial port aliases in DT
+Date: Thu, 27 Mar 2014 13:50:37 +0100
+Message-ID: <9498012.PtNMJ9hipe@avalon>
+References: <5448979.WQPtOb56tW@avalon> <2488692.p5nEA6pWSY@wuerfel> <1454965.NzCSO7fLpj@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140327095956.GA29623@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Huang Shijie <b32955@freescale.com>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawn.guo@linaro.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1454965.NzCSO7fLpj@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello DT maintainers,
 
-Huang Shijie wrote:
-> > > Please see "Figure 12-13" in the 12.12.1.12:
-> > >    "In order to preserve the BI (bad block information), flash up=
-dater=20
-> > > or gang programmer
-> > > applications need to swap Bad Block Information (BI) data to byte=
- 0 of=20
-> > > metadata area for
-> > > every page before programming NAND Flash. ROM when loading firmwa=
-re,=20
-> > > copies back
-> > > the value at metadata[0] to BI offset in page data. The following=
- figure=20
-> > > shows how the
-> > > factory bad block marker is preserved."
-> > >=20
-> > The inspection of the BB markers is only a fallback for the case th=
-at
-> > there is no DBBT. From the same chapter that you quoted above:
-> > | ROM uses DBBT to skip any bad block that falls within firmware da=
-ta
-> > | on NAND Flash device.
-> > | If the address of DBBT Search Area in FCB is 0, ROM will rely on
-> > | factory marked bad block markers to find out if a block is good o=
-r bad.
-> >=20
-> > Thus, even the boot ROM of i.MX28 can well live without blockmark
-> > swapping.
->=20
-> Assume that there is a NAND block "A",  and the A consist of 256 page=
-s.
-> the uboot is burned to the "A", can occupy 6 pages:
->=20
->   -------------------------------------------------------------------=
-----------
->  | page 0 |  page 1 | page 2 | page 3 | page 4 | page 5 | ... | ... |=
- page 255 |
->   -------------------------------------------------------------------=
-----------
-> =20
->   \-------------------------------------- ---------------------------=
----------/
->                                          V =20
->                                         "A"					=20
->=20
-> The DBBT is used to track if "A" is bad or not.
-> Assume we know that "A" is a good block, ROM then need to read out th=
-e uboot.
-> When the ROM needs to read out the 6 pages one by one. And each time =
-the ROM read
-> the page, it should do the swapping for this page.
->=20
-> In this case, the ROM will do the swapping six times.
->=20
-> Please read the sector again, you will see the "every page" in it:
-> --------------------------------------------------------------------
->    "In order to preserve the BI (bad block information), flash update=
-r=20
-> or gang programmer applications need to swap Bad Block Information (B=
-I) data to byte 0 of=20
-> metadata area for every page before programming NAND Flash. ROM when =
-loading firmware,=20
-> copies back
-> --------------------------------------------------------------------
->
-I can assure you that the >100.000 i.MX28 based modules, that we sold
-up to now boot from NAND just fine without any block mark swapping in
-the U-Boot pages.
+Ping ? This issue is blocking the merge of serial port DT support on Renesas 
+platforms, as we need to decide on how to name the ports.
 
+On Tuesday 11 March 2014 12:57:59 Laurent Pinchart wrote:
+> On Monday 10 March 2014 13:57:23 Arnd Bergmann wrote:
+> > On Monday 10 March 2014 12:59:03 Laurent Pinchart wrote:
+> > > The SoC includes 8 serial ports. They are all disabled in the SoC .dtsi,
+> > > and enabled selectively by board DT files. As not all serial ports are
+> > > available on all boards, the question was whether to add aliases for all
+> > > ports (in the .dtsi in this case) like
+> > > 
+> > >          serial0 = &scif0;
+> > >          serial1 = &scif1;
+> > >          serial2 = &scif2;
+> > >          serial3 = &scif3;
+> > >          serial4 = &scif4;
+> > >          serial5 = &scif5;
+> > >          serial6 = &scif6;
+> > >          serial7 = &scif7;
+> > > 
+> > > or to just add aliases for the enabled ports (in the board DT file) like
+> > > 
+> > >          serial0 = &scif2;
+> > >          serial1 = &scif3;
+> > > 
+> > > Note the numbering in the latter case: as the board doesn't use serial
+> > > ports 0 and 1, hardware ports 2 and 3 become logical ports 0 and 1.
+> > > 
+> > > I considered that having Linux create ttySC0 and ttySC1 devices for the
+> > > first two ports of the board, regardless of which hardware ports are
+> > > used, is simpler from a user point of view (it allows sharing the same
+> > > inittab settings for the console serial port across several boards for
+> > > instance). I'd appreciate feedback on that.
+> > 
+> > I think the traditional interpretation is that we want to use the aliases
+> > to reflect the device names in the OS.
+> 
+> If I interpret this correctly it means that the question boils down to
+> whether we want the system to expose ttySC0 and ttySC1 or ttySC2 and
+> ttySC3, in case only ports 2 and 3 are enabled.
+> 
+> Let's note that, despite the above example showing 8 instances of identical
+> serial IP cores, the reality is a bit more complex and Renesas SoCs usually
+> include different serial IP cores with several instances of each of them.
+> Ports of the same time are numbered in the datasheet, but there's no
+> standard or natural ordering global to all serial ports.
+> 
+> This starts to remind me about the whole stable network device name changes
+> we went through recently.
+> 
+> > This however comes back to the more general issue of serial port device
+> > naming: Linux traditionally uses separate names per driver (e.g. ttySC0
+> > instead of ttyS0).
+> > 
+> > There has been discussion in the past about changing this to let all
+> > drivers use the same namespace, but it's not yet clear to me how we'd do
+> > this in a 100% backwards compatible way. Maybe it's best left to udev to
+> > figure out the driver independent name, but then we definitely should use
+> > the alias for that name.
 
-Lothar Wa=C3=9Fmann
---=20
-___________________________________________________________
+-- 
+Regards,
 
-Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
-Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
-Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
-Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
+Laurent Pinchart
 
-www.karo-electronics.de | info@karo-electronics.de
-___________________________________________________________
