@@ -1,76 +1,83 @@
-From: Boris BREZILLON <b.brezillon.dev@gmail.com>
-Subject: Re: [PATCH] ARM: imx6/dt: add ccm dependency upon ckil, ckih1 and
- osc clocks
-Date: Thu, 27 Mar 2014 09:39:04 +0100
-Message-ID: <5333E3A8.3050405@gmail.com>
-References: <5333DA13.2080505@gmail.com>
- <1395907913-23808-1-git-send-email-b.brezillon.dev@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1395907913-23808-1-git-send-email-b.brezillon.dev@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Boris BREZILLON <brezillonboris@gmail.com>, Fabio Estevam <festevam@gmail.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
-Cc: devicetree@vger.kernel.org, Kevin Hilman <khilman@linaro.org>, Boris BREZILLON <b.brezillon.dev@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Mike Turquette <mturquette@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
+From: Phil Edworthy <phil.edworthy@renesas.com>
+Subject: [PATCH v6 05/10] dt-bindings: pci: rcar pcie device tree bindings
+Date: Thu, 27 Mar 2014 09:26:51 +0000
+Message-ID: <1395912416-20087-6-git-send-email-phil.edworthy@renesas.com>
+References: <1395912416-20087-1-git-send-email-phil.edworthy@renesas.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1395912416-20087-1-git-send-email-phil.edworthy@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-pci@vger.kernel.org
+Cc: linux-sh@vger.kernel.org, LAKML <linux-arm-kernel@lists.infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, Valentine Barshak <valentine.barshak@cogentembedded.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Phil Edworthy <phil.edworthy@renesas.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Le 27/03/2014 09:11, Boris BREZILLON a =E9crit :
-> Signed-off-by: Boris BREZILLON <b.brezillon.dev@gmail.com>
-> ---
->   arch/arm/boot/dts/imx6qdl.dtsi |    4 ++++
->   1 file changed, 4 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.d=
-tsi
-> index cfc85be..060e94c 100644
-> --- a/arch/arm/boot/dts/imx6qdl.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
-> @@ -62,16 +62,19 @@
->   =
+This patch adds the bindings for the R-Car PCIe driver. The driver
+resides under drivers/pci/host/pcie-rcar.c
 
->   		ckil {
-Oops.
-You'll have to change this line into the line below in order to be able =
+Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
 
-to reference this clk.
+v6:
+ - Correct DT bindings description for reg and clocks
 
-                           ckil: ckil {
->   			compatible =3D "fsl,imx-ckil", "fixed-clock";
-> +			#clock-cells =3D <0>;
->   			clock-frequency =3D <32768>;
->   		};
->   =
+v5:
+ - Add PCIe bus clock reference
+ - Add additional interrupt bindings
+ - Use dma-ranges property to specify inbound memory regions
+---
+ Documentation/devicetree/bindings/pci/rcar-pci.txt | 45 ++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci.txt
 
->   		ckih1 {
-ditto
->   			compatible =3D "fsl,imx-ckih1", "fixed-clock";
-> +			#clock-cells =3D <0>;
->   			clock-frequency =3D <0>;
->   		};
->   =
+diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+new file mode 100644
+index 0000000..a97ebe6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+@@ -0,0 +1,45 @@
++* Renesas RCar PCIe interface
++
++Required properties:
++- compatible: should contain one of the following
++	"renesas,pcie-r8a7779", "renesas,pcie-r8a7790", "renesas,pcie-r8a7791"
++- reg: base address and length of the pcie controller registers.
++- #address-cells: set to <3>
++- #size-cells: set to <2>
++- device_type: set to "pci"
++- ranges: ranges for the PCI memory and I/O regions.
++- dma-ranges: ranges for the inbound memory regions.
++- interrupts: two interrupt sources for MSI interrupts, followed by interrupt
++	source for hardware related interrupts (e.g. link speed change).
++- #interrupt-cells: set to <1>
++- interrupt-map-mask and interrupt-map: standard PCI properties
++	to define the mapping of the PCIe interface to interrupt
++	numbers.
++- clocks: from common clock binding: phandles to PCIe controller and PCIe bus
++	clocks.
++- clock-names: from common clock binding: should be "pcie" and "pcie_bus".
++
++Example:
++
++SoC specific DT Entry:
++
++	pcie: pcie@fe000000 {
++		compatible = "renesas,pcie-r8a7791";
++		reg = <0 0xfe000000 0 0x80000>;
++		#address-cells = <3>;
++		#size-cells = <2>;
++		device_type = "pci";
++		ranges = <0x01000000 0 0x00000000 0 0xfe100000 0 0x00100000
++			  0x02000000 0 0xfe200000 0 0xfe200000 0 0x00200000
++			  0x02000000 0 0x30000000 0 0x30000000 0 0x08000000
++			  0x42000000 0 0x38000000 0 0x38000000 0 0x08000000>;
++		dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0 0x40000000
++			      0x42000000 2 0x00000000 2 0x00000000 0 0x40000000>;
++		interrupts = <0 116 4 0 117 4 0 118 4>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 0 0 0>;
++		interrupt-map = <0 0 0 0 &gic 0 116 4>;
++		clocks = <&mstp3_clks R8A7791_CLK_PCIE>, <&pcie_bus_clk>;
++		clock-names = "pcie", "pcie_bus";
++		status = "disabled";
++	};
+-- 
+1.9.0
 
->   		osc {
-ditto
->   			compatible =3D "fsl,imx-osc", "fixed-clock";
-> +			#clock-cells =3D <0>;
->   			clock-frequency =3D <24000000>;
->   		};
->   	};
-> @@ -489,6 +492,7 @@
->   				interrupts =3D <0 87 IRQ_TYPE_LEVEL_HIGH>,
->   					     <0 88 IRQ_TYPE_LEVEL_HIGH>;
->   				#clock-cells =3D <1>;
-> +				clocks =3D <&ckil &ckih1 &osc>;
->   			};
->   =
-
->   			anatop: anatop@020c8000 {
