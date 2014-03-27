@@ -1,39 +1,51 @@
-From: Chris Ball <chris@printf.net>
-Subject: Re: [PATCH v11 0/3] mmc: sdhci-msm: Add support for Qualcomm chipsets
-Date: Thu, 27 Mar 2014 01:31:42 +0000
-Message-ID: <86eh1owhoh.fsf@void.printf.net>
-References: <1394465833-22581-1-git-send-email-gdjakov@mm-sol.com>
-	<53330387.7000803@mm-sol.com>
-	<CAPDyKFqjjgWnH4Lt7vOPSM09ngvY1N6ustaBU41tZCJoKWrkzw@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH RFC v3 0/2] Move dai-link level properties away from dai
+ subnodes
+Date: Thu, 27 Mar 2014 01:31:31 +0000
+Message-ID: <20140327013131.GD30768@sirena.org.uk>
+References: <cover.1395655868.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFqjjgWnH4Lt7vOPSM09ngvY1N6ustaBU41tZCJoKWrkzw@mail.gmail.com>
-	(Ulf Hansson's message of "Thu, 27 Mar 2014 00:09:24 +0100")
-Sender: linux-doc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Georgi Djakov <gdjakov@mm-sol.com>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="48TaNjbzBVislYPb"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1395655868.git.jsarha@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jyri Sarha <jsarha@ti.com>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, peter.ujfalusi@ti.com, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, detheridge@ti.com, moinejf@free.fr, Li.Xiubo@freescale.com, kuninori.morimoto.gx@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Wed, Mar 26 2014, Ulf Hansson wrote:
-> On 26 March 2014 17:42, Georgi Djakov <gdjakov@mm-sol.com> wrote:
->> Hello Chris, Ulf,
->>
->> Do you have any comments on the patches?
->> The arch code that will use this driver is already in mainline. The
->> regulators support seem to be still on its way, but this driver also works
->> fine with dummy regulators.
->
-> Looks good to me!
->
-> For the complete patchset:
->
-> Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+--48TaNjbzBVislYPb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks Georgi and Ulf -- pushed all three patches to mmc-next for 3.15.
+On Mon, Mar 24, 2014 at 12:15:23PM +0200, Jyri Sarha wrote:
+> This patch is implemented on top of late patches from Jean-Francois
+> Moine [1].
 
-- Chris.
--- 
-Chris Ball   <chris@printf.net>   <http://printf.net/>
+Applied both, thanks.
+
+--48TaNjbzBVislYPb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTM39wAAoJELSic+t+oim952EP/jh4IejEW2N8xRZZ/QgDuDA9
+DJT22QiU9PbpjuadW7bxH+rQ4uZ6UBozfrw8XINoV1dpnVCCPMfd4aSL4xekcjRA
+GxySaCVPLbhDI/gWXiYzMVYo6LrcujOQaDlexBERIK4p8cWckeGybNRFjlpT0rWb
+aARyN1oS6KstAymJLmKB3hQW7Pu7Wfq9BPJgda0LrWtxlbwEXwR3sfSQ7JoHGsn2
+QQQlwmlSx2erRNNM+274Hw3GArg4/XLhI/2m/athyE5+gwuVGboMzarF+Z3BIFQR
+D8T6hloL11PtcoI+vXk5Y4fnlAEtnOZtTj4IhdTG3EBLUVgPa27u2fc1TmXq4ybJ
+mLftLZsUOlH3OTp8yASJWkXoAShAIJg0+Hw0VCZOkbvywPndbWLxDjr8OEiwp3UM
+d51InI4xr5ZXcGM6aHWSAZfLXVy2q1OkkGna2aUo+I1j/ADCpylKnw8f5btdn2GY
+Nv34YiPMIXZnCsti/f1zrrjnbqJozrC0iZ+gE385YgfzdFbH7FlkIW9vU4Tku/RJ
+s8GcssjFUOjYBpPCsVf5N8j+LzyE7ow6pAG/yosjrAQv4nTTfc40TWWZSW1z9Pmj
+g4xwRVLXMA1Mhu7/1tLLp9h/Y4p3XJfdVrGzMPbeVufSO6YLPn8CWFDSnd5IDmCi
+osW4QoFyGCNEmRqJJZPG
+=rF06
+-----END PGP SIGNATURE-----
+
+--48TaNjbzBVislYPb--
