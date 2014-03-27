@@ -1,40 +1,40 @@
-From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC] Serial port aliases in DT
-Date: Thu, 27 Mar 2014 18:34:55 +0000
-Message-ID: <1395945295.7339.8.camel@hornet>
-References: <5448979.WQPtOb56tW@avalon>
-	 <CAL_Jsq+SWZUz4D+3pdDs5yfi_XbTODC0ytt1S5KpmR_C5vVL=A@mail.gmail.com>
-	 <20140327151829.GX17250@pengutronix.de> <4966076.uASvrV0Iy2@wuerfel>
+From: Gerhard Sittig <gsi@denx.de>
+Subject: Re: [PATCH v2 3/7] clk: exynos5420: Rename clock IDs
+Date: Thu, 27 Mar 2014 20:49:59 +0100
+Message-ID: <20140327194959.GY3998@book.gsilab.sittig.org>
+References: <1395918470-16374-1-git-send-email-shaik.ameer@samsung.com>
+ <1395918470-16374-4-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4966076.uASvrV0Iy2@wuerfel>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1395918470-16374-4-git-send-email-shaik.ameer@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mturquette@linaro.org, kgene.kim@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, shaik.samsung@gmail.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2014-03-27 at 18:26 +0000, Arnd Bergmann wrote:
-> >  Many
-> > devicetrees specify aliases for i2c/spi/mmc controllers aswell.  Should
-> > they order their i2c controllers in the order of preference now?
-> > 
-> > Most dtsi files in the kernel specify a SoC specific order of aliases
-> > and I think this makes the most sense.
+On Thu, 2014-03-27 at 16:37 +0530, Shaik Ameer Basha wrote:
 > 
-> I disagree with this one: the aliases should be a board specific
-> property, if not settable in the boot loader. This is how it traditionally
-> work on OF, and I think it's the most sensible approach for end users:
-> If the machine has multiple serial ports coming out the back, they are
-> normally numbered in some way, and the numbers should match what you
-> see in the OS, regardless of what the SoC calls them.
+> From: Rahul Sharma <rahul.sharma@samsung.com>
+> 
+> This patch renames the clock IDs used for the DT bindings as
+> per Exynos5420 datasheet.
+> 
+> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+> ---
+>  drivers/clk/samsung/clk-exynos5420.c   |  162 +++++++++++++++++---------------
+>  include/dt-bindings/clock/exynos5420.h |  138 +++++++++++++--------------
+>  2 files changed, 154 insertions(+), 146 deletions(-)
 
-I'm with you on this one, for what it's worth.
+does this break bisection when you rename symbolic identifiers in
+their declaration yet don't update references at the users?
 
-Pawel
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+virtually yours
+Gerhard Sittig
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office@denx.de
