@@ -1,27 +1,97 @@
-From: Alexander Aring <alex.aring@gmail.com>
-Subject: Re: [PATCH net-next 0/6] at86rf230: cleanups and add missing
- devicetree documentation
-Date: Thu, 27 Mar 2014 14:47:38 +0100
-Message-ID: <20140327134736.GD22169@omega.Speedport_W_921V_1_24_000>
-References: <1395843117-16494-1-git-send-email-alex.aring@gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC] Serial port aliases in DT
+Date: Thu, 27 Mar 2014 08:54:09 -0500
+Message-ID: <CAL_Jsq+SWZUz4D+3pdDs5yfi_XbTODC0ytt1S5KpmR_C5vVL=A@mail.gmail.com>
+References: <5448979.WQPtOb56tW@avalon>
+	<2488692.p5nEA6pWSY@wuerfel>
+	<1454965.NzCSO7fLpj@avalon>
+	<9498012.PtNMJ9hipe@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1395843117-16494-1-git-send-email-alex.aring@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: alex.bluesman.smirnov@gmail.com
-Cc: dbaryshkov@gmail.com, linux-zigbee-devel@lists.sourceforge.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9498012.PtNMJ9hipe@avalon>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+On Thu, Mar 27, 2014 at 7:50 AM, Laurent Pinchart
+<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
+> Hello DT maintainers,
+>
+> Ping ? This issue is blocking the merge of serial port DT support on Renesas
+> platforms, as we need to decide on how to name the ports.
 
-please drop this patch-series I found a small issue on while
-unloading the at86rf230 module.
+This seems like a topic for devicetree-spec.
 
-We need to call devm_free_irq in remove callback before flush_work,
-otherwise the interrupt will use some already freed memory.
+> On Tuesday 11 March 2014 12:57:59 Laurent Pinchart wrote:
+>> On Monday 10 March 2014 13:57:23 Arnd Bergmann wrote:
+>> > On Monday 10 March 2014 12:59:03 Laurent Pinchart wrote:
+>> > > The SoC includes 8 serial ports. They are all disabled in the SoC .dtsi,
+>> > > and enabled selectively by board DT files. As not all serial ports are
+>> > > available on all boards, the question was whether to add aliases for all
+>> > > ports (in the .dtsi in this case) like
+>> > >
+>> > >          serial0 = &scif0;
+>> > >          serial1 = &scif1;
+>> > >          serial2 = &scif2;
+>> > >          serial3 = &scif3;
+>> > >          serial4 = &scif4;
+>> > >          serial5 = &scif5;
+>> > >          serial6 = &scif6;
+>> > >          serial7 = &scif7;
+>> > >
+>> > > or to just add aliases for the enabled ports (in the board DT file) like
+>> > >
+>> > >          serial0 = &scif2;
+>> > >          serial1 = &scif3;
+>> > >
+>> > > Note the numbering in the latter case: as the board doesn't use serial
+>> > > ports 0 and 1, hardware ports 2 and 3 become logical ports 0 and 1.
+>> > >
+>> > > I considered that having Linux create ttySC0 and ttySC1 devices for the
+>> > > first two ports of the board, regardless of which hardware ports are
+>> > > used, is simpler from a user point of view (it allows sharing the same
+>> > > inittab settings for the console serial port across several boards for
+>> > > instance). I'd appreciate feedback on that.
+>> >
+>> > I think the traditional interpretation is that we want to use the aliases
+>> > to reflect the device names in the OS.
+>>
+>> If I interpret this correctly it means that the question boils down to
+>> whether we want the system to expose ttySC0 and ttySC1 or ttySC2 and
+>> ttySC3, in case only ports 2 and 3 are enabled.
+>>
+>> Let's note that, despite the above example showing 8 instances of identical
+>> serial IP cores, the reality is a bit more complex and Renesas SoCs usually
+>> include different serial IP cores with several instances of each of them.
+>> Ports of the same time are numbered in the datasheet, but there's no
+>> standard or natural ordering global to all serial ports.
+>>
+>> This starts to remind me about the whole stable network device name changes
+>> we went through recently.
+>>
+>> > This however comes back to the more general issue of serial port device
+>> > naming: Linux traditionally uses separate names per driver (e.g. ttySC0
+>> > instead of ttyS0).
+>> >
+>> > There has been discussion in the past about changing this to let all
+>> > drivers use the same namespace, but it's not yet clear to me how we'd do
+>> > this in a 100% backwards compatible way. Maybe it's best left to udev to
+>> > figure out the driver independent name, but then we definitely should use
+>> > the alias for that name.
 
-I will rework this patch serie and send a v2, sorry.
+This discussion has come up in just the last month or so.
 
-- Alex
+My opinion is device name numbering should start at 0 with 0 being the
+preferred console device. My main reasoning is giving consistent
+naming across boards and it is more inline with how other devices are
+named. The aliases are just to give you consistency in the numbering
+within the 0 to N. Hopefully this is inline with what other platforms
+have done as above all I think we should be consistent.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
