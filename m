@@ -1,82 +1,142 @@
-From: Boris BREZILLON <b.brezillon.dev@gmail.com>
-Subject: Re: [PATCH] clk: register fixed-clock only if #clock-cells property
- is present
-Date: Thu, 27 Mar 2014 08:58:11 +0100
-Message-ID: <5333DA13.2080505@gmail.com>
-References: <1395858127-18730-1-git-send-email-s.nawrocki@samsung.com>	<CAOMZO5DJPKvha7A-foktsB2dEw9xGXL_++uBXj_3ScAPTXNOkw@mail.gmail.com>	<53333145.4080903@gmail.com> <CAOMZO5AEry8sJW_+0aJS8ush+sYPPWk9LRU0b8RUUGa-hO_G1A@mail.gmail.com>
+From: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5] dmaengine: sirf: enable generic dt binding for dma channels
+Date: Thu, 27 Mar 2014 16:03:31 +0800
+Message-ID: <CAGsJ_4yVXN2pT-QCjWLx7bCM7rau=UAnkCY8k9QqEPOkMAcrXA@mail.gmail.com>
+References: <1389190369-2012-1-git-send-email-21cnbao@gmail.com> <20140319144359.GI1976@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5AEry8sJW_+0aJS8ush+sYPPWk9LRU0b8RUUGa-hO_G1A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, t.figa@samsung.com, linux-kernel <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Gregory Clement <gregory.clement@free-electrons.com>
+Content-Type: multipart/mixed; boundary=047d7b15a4c79922f204f59206c1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140319144359.GI1976-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DL-SHA-WorkGroupLinux <workgroup.linux-kQvG35nSl+M@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 26/03/2014 21:14, Fabio Estevam a =C3=A9crit :
-> On Wed, Mar 26, 2014 at 4:57 PM, Sylwester Nawrocki
-> <sylvester.nawrocki@gmail.com> wrote:
+--047d7b15a4c79922f204f59206c1
+Content-Type: text/plain; charset=UTF-8
+
+2014-03-19 22:43 GMT+08:00 Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>:
+> On Sun, Jan 26, 2014 at 10:08:45AM +0800, Barry Song wrote:
+>> From: Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
+>>
+>> move to support of_dma_request_slave_channel() and dma_request_slave_channel.
+>> we add a xlate() to let dma clients be able to find right dma_chan by generic
+>> "dmas" properties in dts.
+>>
+>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+>> Signed-off-by: Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
 >
->> Perhaps a change as below helps ?
->>
->>  From 85ee85e4a92b42442354f3f2454be50c173e1c59 Mon Sep 17 00:00:00 2=
-001
->> From: Sylwester Nawrocki <s.nawrocki@samsung.com>
->> Date: Wed, 26 Mar 2014 20:54:13 +0100
->> Subject: [PATCH] clk: reverse default clk provider initialization or=
-der in
->> of_clk_init()
->>
->>
->> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
->> ---
->>   drivers/clk/clk.c |    2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
->> index fb3c40b..d30809c 100644
->> --- a/drivers/clk/clk.c
->> +++ b/drivers/clk/clk.c
->> @@ -2608,7 +2608,7 @@ void __init of_clk_init(const struct of_device=
-_id
->> *matches)
->>
->>                  parent->clk_init_cb =3D match->data;
->>                  parent->np =3D np;
->> -               list_add(&parent->node, &clk_provider_list);
->> +               list_add_tail(&parent->node, &clk_provider_list);
->>          }
->>
->>          while (!list_empty(&clk_provider_list)) {
-> Thanks, Sylwester!
+> I tried applying this but it failed to apply.
 >
-> This makes my imx6q-wandboard to boot again.
->
-> Tested-by: Fabio Estevam <fabio.estevam@freescale.com>
+> Can you pls rebase quickly and resend. While at it pls add the Acks recived!
 
-This solution solve the problem for this specific case because clks are
-declared in the correct order in imx DTs.
-But, even with your patch I think we could see similar issues by=20
-reordering DT
-nodes...
+Hi Vinod,
+attached see the rebased version for master.
 
-The real problem here is that imx platform does not declare the CCM clo=
-cks
-dependencies upon ckil, ckih1 and osc fixed clocks within the DT [1], a=
-nd
-retrieve these clocks when initializing the CCM clocks ([2] and [3]).
+-barry
 
-We should try to a add these dependencies in the DT and see if it works=
-=2E
+--047d7b15a4c79922f204f59206c1
+Content-Type: text/x-patch; charset=US-ASCII;
+	name="0001-dmaengine-sirf-enable-generic-dt-binding-for-dma-cha.patch"
+Content-Disposition: attachment;
+	filename="0001-dmaengine-sirf-enable-generic-dt-binding-for-dma-cha.patch"
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_ht9r7aqb0
 
-[1] http://lxr.free-electrons.com/source/arch/arm/boot/dts/imx6sl.dtsi#=
-L379
-[2] http://lxr.free-electrons.com/source/arch/arm/mach-imx/clk-imx6q.c#=
-L151
-[3] http://lxr.free-electrons.com/source/arch/arm/mach-imx/clk.c#L30
-
-Best Regards,
-
-Boris
+RnJvbSAzYjcyMGYyMTc4M2YxZGYzMmNlYWVkMzVhYTAxZWUyZGExZDJkMjZhIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBCYXJyeSBTb25nIDxCYW9odWEuU29uZ0Bjc3IuY29tPgpEYXRl
+OiBUaHUsIDI3IE1hciAyMDE0IDE1OjQ5OjMxICswODAwClN1YmplY3Q6IFtQQVRDSF0gZG1hZW5n
+aW5lOiBzaXJmOiBlbmFibGUgZ2VuZXJpYyBkdCBiaW5kaW5nIGZvciBkbWEgY2hhbm5lbHMKCm1v
+dmUgdG8gc3VwcG9ydCBvZl9kbWFfcmVxdWVzdF9zbGF2ZV9jaGFubmVsKCkgYW5kIGRtYV9yZXF1
+ZXN0X3NsYXZlX2NoYW5uZWwuCndlIGFkZCBhIHhsYXRlKCkgdG8gbGV0IGRtYSBjbGllbnRzIGJl
+IGFibGUgdG8gZmluZCByaWdodCBkbWFfY2hhbiBieSBnZW5lcmljCiJkbWFzIiBwcm9wZXJ0aWVz
+IGluIGR0cy4KCkNjOiBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPgpDYzogTGFy
+cy1QZXRlciBDbGF1c2VuIDxsYXJzQG1ldGFmb28uZGU+ClNpZ25lZC1vZmYtYnk6IEJhcnJ5IFNv
+bmcgPEJhb2h1YS5Tb25nQGNzci5jb20+CkFja2VkLWJ5OiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFy
+bmRiLmRlPgotLS0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9zaXJmc29jLWRtYS50eHQg
+ICAgICAgIHwgICA0MyArKysrKysrKysrKysrKysrKysrKwogYXJjaC9hcm0vYm9vdC9kdHMvYXRs
+YXM2LmR0c2kgICAgICAgICAgICAgICAgICAgICAgfCAgICAyICsKIGFyY2gvYXJtL2Jvb3QvZHRz
+L3ByaW1hMi5kdHNpICAgICAgICAgICAgICAgICAgICAgIHwgICAgMiArCiBkcml2ZXJzL2RtYS9z
+aXJmLWRtYS5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMjMgKysrKysrKysrKwog
+NCBmaWxlcyBjaGFuZ2VkLCA3MCBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQogY3JlYXRl
+IG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvc2lyZnNv
+Yy1kbWEudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2RtYS9zaXJmc29jLWRtYS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZG1hL3NpcmZzb2MtZG1hLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi5l
+Y2JjOTZhCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2RtYS9zaXJmc29jLWRtYS50eHQKQEAgLTAsMCArMSw0MyBAQAorKiBDU1IgU2lSRlNvQyBE
+TUEgY29udHJvbGxlcgorCitTZWUgZG1hLnR4dCBmaXJzdAorCitSZXF1aXJlZCBwcm9wZXJ0aWVz
+OgorLSBjb21wYXRpYmxlOiBTaG91bGQgYmUgInNpcmYscHJpbWEyLWRtYWMiIG9yICJzaXJmLG1h
+cmNvLWRtYWMiCistIHJlZzogU2hvdWxkIGNvbnRhaW4gRE1BIHJlZ2lzdGVycyBsb2NhdGlvbiBh
+bmQgbGVuZ3RoLgorLSBpbnRlcnJ1cHRzOiBTaG91bGQgY29udGFpbiBvbmUgaW50ZXJydXB0IHNo
+YXJlZCBieSBhbGwgY2hhbm5lbAorLSAjZG1hLWNlbGxzOiBtdXN0IGJlIDwxPi4gdXNlZCB0byBy
+ZXByZXNlbnQgdGhlIG51bWJlciBvZiBpbnRlZ2VyCisgICAgY2VsbHMgaW4gdGhlIGRtYXMgcHJv
+cGVydHkgb2YgY2xpZW50IGRldmljZS4KKy0gY2xvY2tzOiBjbG9jayByZXF1aXJlZAorCitFeGFt
+cGxlOgorCitDb250cm9sbGVyOgorZG1hYzA6IGRtYS1jb250cm9sbGVyQGIwMGIwMDAwIHsKKwlj
+b21wYXRpYmxlID0gInNpcmYscHJpbWEyLWRtYWMiOworCXJlZyA9IDwweGIwMGIwMDAwIDB4MTAw
+MDA+OworCWludGVycnVwdHMgPSA8MTI+OworCWNsb2NrcyA9IDwmY2xrcyAyND47CisJI2RtYS1j
+ZWxscyA9IDwxPjsKK307CisKKworQ2xpZW50OgorRmlsbCB0aGUgc3BlY2lmaWMgZG1hIHJlcXVl
+c3QgbGluZSBpbiBkbWFzLiBJbiB0aGUgYmVsb3cgZXhhbXBsZSwgc3BpMCByZWFkCitjaGFubmVs
+IHJlcXVlc3QgbGluZSBpcyA5IG9mIHRoZSAybmQgZG1hIGNvbnRyb2xsZXIsIHdoaWxlIHdyaXRl
+IGNoYW5uZWwgdXNlcworNCBvZiB0aGUgMm5kIGRtYSBjb250cm9sbGVyOyBzcGkxIHJlYWQgY2hh
+bm5lbCByZXF1ZXN0IGxpbmUgaXMgMTIgb2YgdGhlIDFzdAorZG1hIGNvbnRyb2xsZXIsIHdoaWxl
+IHdyaXRlIGNoYW5uZWwgdXNlcyAxMyBvZiB0aGUgMXN0IGRtYSBjb250cm9sbGVyOgorCitzcGkw
+OiBzcGlAYjAwZDAwMDAgeworCWNvbXBhdGlibGUgPSAic2lyZixwcmltYTItc3BpIjsKKwlkbWFz
+ID0gPCZkbWFjMSA5PiwKKwkJPCZkbWFjMSA0PjsKKwlkbWEtbmFtZXMgPSAicngiLCAidHgiOwor
+fTsKKworc3BpMTogc3BpQGIwMTcwMDAwIHsKKwljb21wYXRpYmxlID0gInNpcmYscHJpbWEyLXNw
+aSI7CisJZG1hcyA9IDwmZG1hYzAgMTI+LAorCQk8JmRtYWMwIDEzPjsKKwlkbWEtbmFtZXMgPSAi
+cngiLCAidHgiOworfTsKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2F0bGFzNi5kdHNp
+IGIvYXJjaC9hcm0vYm9vdC9kdHMvYXRsYXM2LmR0c2kKaW5kZXggZjg2NzRiYy4uZWMyM2I1YyAx
+MDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvYXRsYXM2LmR0c2kKKysrIGIvYXJjaC9hcm0v
+Ym9vdC9kdHMvYXRsYXM2LmR0c2kKQEAgLTI2OSw2ICsyNjksNyBAQAogCQkJCXJlZyA9IDwweGIw
+MGIwMDAwIDB4MTAwMDA+OwogCQkJCWludGVycnVwdHMgPSA8MTI+OwogCQkJCWNsb2NrcyA9IDwm
+Y2xrcyAyND47CisJCQkJI2RtYS1jZWxscyA9IDwxPjsKIAkJCX07CiAKIAkJCWRtYWMxOiBkbWEt
+Y29udHJvbGxlckBiMDE2MDAwMCB7CkBAIC0yNzcsNiArMjc4LDcgQEAKIAkJCQlyZWcgPSA8MHhi
+MDE2MDAwMCAweDEwMDAwPjsKIAkJCQlpbnRlcnJ1cHRzID0gPDEzPjsKIAkJCQljbG9ja3MgPSA8
+JmNsa3MgMjU+OworCQkJCSNkbWEtY2VsbHMgPSA8MT47CiAJCQl9OwogCiAJCQl2aXBAYjAwQzAw
+MDAgewpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvcHJpbWEyLmR0c2kgYi9hcmNoL2Fy
+bS9ib290L2R0cy9wcmltYTIuZHRzaQppbmRleCAwZTIxOTkzLi4zYTE1ZGVlIDEwMDY0NAotLS0g
+YS9hcmNoL2FybS9ib290L2R0cy9wcmltYTIuZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0cy9w
+cmltYTIuZHRzaQpAQCAtMjg2LDYgKzI4Niw3IEBACiAJCQkJcmVnID0gPDB4YjAwYjAwMDAgMHgx
+MDAwMD47CiAJCQkJaW50ZXJydXB0cyA9IDwxMj47CiAJCQkJY2xvY2tzID0gPCZjbGtzIDI0PjsK
+KwkJCQkjZG1hLWNlbGxzID0gPDE+OwogCQkJfTsKIAogCQkJZG1hYzE6IGRtYS1jb250cm9sbGVy
+QGIwMTYwMDAwIHsKQEAgLTI5NCw2ICsyOTUsNyBAQAogCQkJCXJlZyA9IDwweGIwMTYwMDAwIDB4
+MTAwMDA+OwogCQkJCWludGVycnVwdHMgPSA8MTM+OwogCQkJCWNsb2NrcyA9IDwmY2xrcyAyNT47
+CisJCQkJI2RtYS1jZWxscyA9IDwxPjsKIAkJCX07CiAKIAkJCXZpcEBiMDBDMDAwMCB7CmRpZmYg
+LS1naXQgYS9kcml2ZXJzL2RtYS9zaXJmLWRtYS5jIGIvZHJpdmVycy9kbWEvc2lyZi1kbWEuYwpp
+bmRleCBkNGQzYTMxLi5hMWJkODI5IDEwMDY0NAotLS0gYS9kcml2ZXJzL2RtYS9zaXJmLWRtYS5j
+CisrKyBiL2RyaXZlcnMvZG1hL3NpcmYtZG1hLmMKQEAgLTE4LDYgKzE4LDcgQEAKICNpbmNsdWRl
+IDxsaW51eC9vZl9kZXZpY2UuaD4KICNpbmNsdWRlIDxsaW51eC9vZl9wbGF0Zm9ybS5oPgogI2lu
+Y2x1ZGUgPGxpbnV4L2Nsay5oPgorI2luY2x1ZGUgPGxpbnV4L29mX2RtYS5oPgogI2luY2x1ZGUg
+PGxpbnV4L3NpcmZzb2NfZG1hLmg+CiAKICNpbmNsdWRlICJkbWFlbmdpbmUuaCIKQEAgLTY1OSw2
+ICs2NjAsMTggQEAgc3RhdGljIGludCBzaXJmc29jX2RtYV9kZXZpY2Vfc2xhdmVfY2FwcyhzdHJ1
+Y3QgZG1hX2NoYW4gKmRjaGFuLAogCXJldHVybiAwOwogfQogCitzdGF0aWMgc3RydWN0IGRtYV9j
+aGFuICpvZl9kbWFfc2lyZnNvY194bGF0ZShzdHJ1Y3Qgb2ZfcGhhbmRsZV9hcmdzICpkbWFfc3Bl
+YywKKwlzdHJ1Y3Qgb2ZfZG1hICpvZmRtYSkKK3sKKwlzdHJ1Y3Qgc2lyZnNvY19kbWEgKnNkbWEg
+PSBvZmRtYS0+b2ZfZG1hX2RhdGE7CisJdW5zaWduZWQgaW50IHJlcXVlc3QgPSBkbWFfc3BlYy0+
+YXJnc1swXTsKKworCWlmIChyZXF1ZXN0ID4gU0lSRlNPQ19ETUFfQ0hBTk5FTFMpCisJCXJldHVy
+biBOVUxMOworCisJcmV0dXJuIGRtYV9nZXRfc2xhdmVfY2hhbm5lbCgmc2RtYS0+Y2hhbm5lbHNb
+cmVxdWVzdF0uY2hhbik7Cit9CisKIHN0YXRpYyBpbnQgc2lyZnNvY19kbWFfcHJvYmUoc3RydWN0
+IHBsYXRmb3JtX2RldmljZSAqb3ApCiB7CiAJc3RydWN0IGRldmljZV9ub2RlICpkbiA9IG9wLT5k
+ZXYub2Zfbm9kZTsKQEAgLTc2NCwxMSArNzc3LDIwIEBAIHN0YXRpYyBpbnQgc2lyZnNvY19kbWFf
+cHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqb3ApCiAJaWYgKHJldCkKIAkJZ290byBmcmVl
+X2lycTsKIAorCS8qIERldmljZS10cmVlIERNQSBjb250cm9sbGVyIHJlZ2lzdHJhdGlvbiAqLwor
+CXJldCA9IG9mX2RtYV9jb250cm9sbGVyX3JlZ2lzdGVyKGRuLCBvZl9kbWFfc2lyZnNvY194bGF0
+ZSwgc2RtYSk7CisJaWYgKHJldCkgeworCQlkZXZfZXJyKGRldiwgImZhaWxlZCB0byByZWdpc3Rl
+ciBETUEgY29udHJvbGxlclxuIik7CisJCWdvdG8gdW5yZWdfZG1hX2RldjsKKwl9CisKIAlwbV9y
+dW50aW1lX2VuYWJsZSgmb3AtPmRldik7CiAJZGV2X2luZm8oZGV2LCAiaW5pdGlhbGl6ZWQgU0lS
+RlNPQyBETUFDIGRyaXZlclxuIik7CiAKIAlyZXR1cm4gMDsKIAordW5yZWdfZG1hX2RldjoKKwlk
+bWFfYXN5bmNfZGV2aWNlX3VucmVnaXN0ZXIoZG1hKTsKIGZyZWVfaXJxOgogCWZyZWVfaXJxKHNk
+bWEtPmlycSwgc2RtYSk7CiBpcnFfZGlzcG9zZToKQEAgLTc4MSw2ICs4MDMsNyBAQCBzdGF0aWMg
+aW50IHNpcmZzb2NfZG1hX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpvcCkKIAlzdHJ1
+Y3QgZGV2aWNlICpkZXYgPSAmb3AtPmRldjsKIAlzdHJ1Y3Qgc2lyZnNvY19kbWEgKnNkbWEgPSBk
+ZXZfZ2V0X2RydmRhdGEoZGV2KTsKIAorCW9mX2RtYV9jb250cm9sbGVyX2ZyZWUob3AtPmRldi5v
+Zl9ub2RlKTsKIAlkbWFfYXN5bmNfZGV2aWNlX3VucmVnaXN0ZXIoJnNkbWEtPmRtYSk7CiAJZnJl
+ZV9pcnEoc2RtYS0+aXJxLCBzZG1hKTsKIAlpcnFfZGlzcG9zZV9tYXBwaW5nKHNkbWEtPmlycSk7
+Ci0tIAoxLjcuNS40Cgo=
+--047d7b15a4c79922f204f59206c1--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
