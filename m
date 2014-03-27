@@ -1,33 +1,47 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] clk: register fixed-clock only if #clock-cells property is
- present
-Date: Thu, 27 Mar 2014 11:55:47 +0100
-Message-ID: <533403B3.6070602@samsung.com>
-References: <1395858127-18730-1-git-send-email-s.nawrocki@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1395858127-18730-1-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org
+From: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Subject: [PATCH v2 0/7] exynos5420: clock file cleanup
+Date: Thu, 27 Mar 2014 16:37:43 +0530
+Message-ID: <1395918470-16374-1-git-send-email-shaik.ameer@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mturquette@linaro.org, kgene.kim@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, shaik.samsung@gmail.com, r.sh.open@gmail.com, Shaik Ameer Basha <shaik.ameer@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Mike, please ignore this patch for now. It turns out a less intrusive
-change [1] is enough to fix the regressions on both imx and exynos.
+Many changes/fixes have been identified for clock file for exynos5420.
+These include correct parents, bit fields, new clocks etc. Existing
+files needs some correction in terms of names of the clock and
+indentation. These issues are addressed in this patch series. It also
+replaces the usage of enums with macro as clock ids.
 
-I'm going to address the issue properly for next kernel release and
-make exynos use regular fixed-clock driver, rather than registering
-the external clock generators within the SoC main clock controller
-driver.
+This patch series is rebased on,
+git://git.kernel.org/pub/scm/linux/kernel/git/tfiga/samsung-clk.git:samsung-next
+
+This patch is also dependent on the following patches.
+ARM: dts: Add I2S nodes to exynos5420
+ARM: dts: add dt node for sss module for exynos5250/5420
+ARM: dts: update watchdog device nodes for exynos5250 and exynos5420
+ARM: dts: use macros in clock bindings for exynos5420
+
+Changes since v1:
+-----------------
+1] Addressed review comments from Tomasz Figa.
+    http://www.spinics.net/lists/devicetree/msg16759.html
+    http://www.spinics.net/lists/devicetree/msg16760.html
+
+Rahul Sharma (7):
+  clk: exynos5420: Add more clock register offsets
+  clk: exynos5420: Add more clock IDs
+  clk: exynos5420: Rename clock IDs
+  clk: exynos5420: Rename clock names
+  clk: exynos5420: Add missing clocks
+  clk: exynos5420: Add more registers to restore list
+  ARM: dts: update macros in clock bindings for exynos5420
+
+ arch/arm/boot/dts/exynos5420.dtsi      |   90 +--
+ drivers/clk/samsung/clk-exynos5420.c   | 1029 +++++++++++++++++++++-----------
+ include/dt-bindings/clock/exynos5420.h |  214 ++++---
+ 3 files changed, 871 insertions(+), 462 deletions(-)
 
 -- 
-Thanks,
-Sylwester
-
-[1] http://permalink.gmane.org/gmane.linux.kernel/1673639
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
