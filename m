@@ -1,66 +1,41 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC] Serial port aliases in DT
-Date: Thu, 27 Mar 2014 15:34:52 -0500
-Message-ID: <CAL_JsqLomaOXwzjBiM5ZO8uPCDh1Ue8wv+Gn04B6eKpvzj4OnQ@mail.gmail.com>
-References: <5448979.WQPtOb56tW@avalon>
-	<2488692.p5nEA6pWSY@wuerfel>
-	<1454965.NzCSO7fLpj@avalon>
-	<9498012.PtNMJ9hipe@avalon>
-	<CAL_Jsq+SWZUz4D+3pdDs5yfi_XbTODC0ytt1S5KpmR_C5vVL=A@mail.gmail.com>
-	<20140327151829.GX17250@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140327151829.GX17250-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH 2/7] gpio: rcar: Add optional functional clock to bindings
+Date: Thu, 27 Mar 2014 21:47:37 +0100
+Message-ID: <1395953262-4290-3-git-send-email-geert@linux-m68k.org>
+References: <1395953262-4290-1-git-send-email-geert@linux-m68k.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1395953262-4290-1-git-send-email-geert@linux-m68k.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 27, 2014 at 10:18 AM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> On Thu, Mar 27, 2014 at 08:54:09AM -0500, Rob Herring wrote:
->> >>
->> >> > This however comes back to the more general issue of serial port device
->> >> > naming: Linux traditionally uses separate names per driver (e.g. ttySC0
->> >> > instead of ttyS0).
->> >> >
->> >> > There has been discussion in the past about changing this to let all
->> >> > drivers use the same namespace, but it's not yet clear to me how we'd do
->> >> > this in a 100% backwards compatible way. Maybe it's best left to udev to
->> >> > figure out the driver independent name, but then we definitely should use
->> >> > the alias for that name.
->>
->> This discussion has come up in just the last month or so.
->>
->> My opinion is device name numbering should start at 0 with 0 being the
->> preferred console device.
->
-> That's completely different to everything I've heard and seen so far ;)
->
-> For specifying the console we have the linux,stdout-path property in the
-> chosen node. My preferred console may not be a serial port at all in
-> which case I would end up with a serial0 = &lcd0 alias.  Many
-> devicetrees specify aliases for i2c/spi/mmc controllers aswell.  Should
-> they order their i2c controllers in the order of preference now?
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-I was only referring to serial consoles for this discussion.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc: linux-gpio@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+---
+ .../devicetree/bindings/gpio/renesas,gpio-rcar.txt |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-I don't think expanding aliases usage beyond serial ports is a good
-thing. It may work for fixed h/w, but it won't for hotplug cases. This
-naming issue has been solved in other ways for other devices: udev
-persistent net rules, uuid for disks, etc. It needs to be solved for
-serial devices.
+diff --git a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+index f61cef74a212..9ccbe50dcec2 100644
+--- a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
++++ b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+@@ -21,6 +21,10 @@ Required Properties:
+     GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
+   - gpio-ranges: Range of pins managed by the GPIO controller.
+ 
++Optional properties:
++
++  - clocks: Must contain a reference to the functional clock.
++
+ Please refer to gpio.txt in this directory for details of gpio-ranges property
+ and the common GPIO bindings used by client devices.
+ 
+-- 
+1.7.9.5
 
-> Most dtsi files in the kernel specify a SoC specific order of aliases
-> and I think this makes the most sense.
-
-I agree with Arnd here. If we are going to care about the name, it
-should be something that makes sense to the user of a board, not the
-SOC. Of course, if a board has a serial port labeled "Debug port" or
-something, that doesn't tell you the name or index either.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
