@@ -1,68 +1,92 @@
-From: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 4/7] usb: gadget: gr_udc: Use of_property_read_u32_index to access arrays
-Date: Thu, 27 Mar 2014 16:15:56 +0100
-Message-ID: <1395933359-7109-5-git-send-email-andreas@gaisler.com>
+From: Andreas Larsson <andreas@gaisler.com>
+Subject: [PATCH v2 1/7] usb: gadget: gr_udc: Make struct platform_device variable name clearer and use platform_set/get_drvdata
+Date: Thu, 27 Mar 2014 16:15:53 +0100
+Message-ID: <1395933359-7109-2-git-send-email-andreas@gaisler.com>
 References: <1395933359-7109-1-git-send-email-andreas@gaisler.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1395933359-7109-1-git-send-email-andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1395933359-7109-1-git-send-email-andreas@gaisler.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Dan Carpenter <dan.carpenter@oracle.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, software@gaisler.com
 List-Id: devicetree@vger.kernel.org
 
-Use an appropriate accessor function for property arrays to make the code nicer
-and make the code correct if it would ever run on little endian architectures.
+Rename struct platform_device pointers from ofdev to pdev for clarity.
 Suggested by Mark Rutland.
 
-Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Andreas Larsson <andreas@gaisler.com>
 ---
-Differences since v1: none
+Differences since v1: use platform_set/get_drvdata
 
- drivers/usb/gadget/gr_udc.c |   12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ drivers/usb/gadget/gr_udc.c |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/usb/gadget/gr_udc.c b/drivers/usb/gadget/gr_udc.c
-index 7a99254..0f3a953 100644
+index f984ee7..ae5bebe 100644
 --- a/drivers/usb/gadget/gr_udc.c
 +++ b/drivers/usb/gadget/gr_udc.c
-@@ -2020,9 +2020,7 @@ static int gr_udc_init(struct gr_udc *dev)
- 	u32 dmactrl_val;
- 	int i;
- 	int ret = 0;
--	u32 *bufsizes;
- 	u32 bufsize;
--	int len;
+@@ -2065,9 +2065,9 @@ static int gr_udc_init(struct gr_udc *dev)
+ 	return 0;
+ }
  
- 	gr_set_address(dev, 0);
+-static int gr_remove(struct platform_device *ofdev)
++static int gr_remove(struct platform_device *pdev)
+ {
+-	struct gr_udc *dev = dev_get_drvdata(&ofdev->dev);
++	struct gr_udc *dev = platform_get_drvdata(pdev);
  
-@@ -2033,19 +2031,17 @@ static int gr_udc_init(struct gr_udc *dev)
- 	INIT_LIST_HEAD(&dev->ep_list);
- 	gr_set_ep0state(dev, GR_EP0_DISCONNECT);
+ 	if (dev->added)
+ 		usb_del_gadget_udc(&dev->gadget); /* Shuts everything down */
+@@ -2077,7 +2077,7 @@ static int gr_remove(struct platform_device *ofdev)
+ 	gr_dfs_delete(dev);
+ 	if (dev->desc_pool)
+ 		dma_pool_destroy(dev->desc_pool);
+-	dev_set_drvdata(&ofdev->dev, NULL);
++	platform_set_drvdata(pdev, NULL);
  
--	bufsizes = (u32 *)of_get_property(np, "epobufsizes", &len);
--	len /= sizeof(u32);
- 	for (i = 0; i < dev->nepo; i++) {
--		bufsize = (bufsizes && i < len) ? bufsizes[i] : 1024;
-+		if (of_property_read_u32_index(np, "epobufsizes", i, &bufsize))
-+			bufsize = 1024;
- 		ret = gr_ep_init(dev, i, 0, bufsize);
- 		if (ret)
- 			return ret;
- 	}
+ 	gr_free_request(&dev->epi[0].ep, &dev->ep0reqi->req);
+ 	gr_free_request(&dev->epo[0].ep, &dev->ep0reqo->req);
+@@ -2090,7 +2090,7 @@ static int gr_request_irq(struct gr_udc *dev, int irq)
+ 					 IRQF_SHARED, driver_name, dev);
+ }
  
--	bufsizes = (u32 *)of_get_property(np, "epibufsizes", &len);
--	len /= sizeof(u32);
- 	for (i = 0; i < dev->nepi; i++) {
--		bufsize = (bufsizes && i < len) ? bufsizes[i] : 1024;
-+		if (of_property_read_u32_index(np, "epibufsizes", i, &bufsize))
-+			bufsize = 1024;
- 		ret = gr_ep_init(dev, i, 1, bufsize);
- 		if (ret)
- 			return ret;
+-static int gr_probe(struct platform_device *ofdev)
++static int gr_probe(struct platform_device *pdev)
+ {
+ 	struct gr_udc *dev;
+ 	struct resource *res;
+@@ -2098,12 +2098,12 @@ static int gr_probe(struct platform_device *ofdev)
+ 	int retval;
+ 	u32 status;
+ 
+-	dev = devm_kzalloc(&ofdev->dev, sizeof(*dev), GFP_KERNEL);
++	dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
+ 	if (!dev)
+ 		return -ENOMEM;
+-	dev->dev = &ofdev->dev;
++	dev->dev = &pdev->dev;
+ 
+-	res = platform_get_resource(ofdev, IORESOURCE_MEM, 0);
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	regs = devm_ioremap_resource(dev->dev, res);
+ 	if (IS_ERR(regs))
+ 		return PTR_ERR(regs);
+@@ -2132,7 +2132,7 @@ static int gr_probe(struct platform_device *ofdev)
+ 	spin_lock_init(&dev->lock);
+ 	dev->regs = regs;
+ 
+-	dev_set_drvdata(&ofdev->dev, dev);
++	platform_set_drvdata(pdev, dev);
+ 
+ 	/* Determine number of endpoints and data interface mode */
+ 	status = gr_read32(&dev->regs->status);
+@@ -2204,7 +2204,7 @@ out:
+ 	spin_unlock(&dev->lock);
+ 
+ 	if (retval)
+-		gr_remove(ofdev);
++		gr_remove(pdev);
+ 
+ 	return retval;
+ }
 -- 
 1.7.10.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
