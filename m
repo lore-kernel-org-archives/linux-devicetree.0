@@ -1,60 +1,113 @@
-From: Dinh Nguyen <dinh.linux@gmail.com>
-Subject: Re: [PATCH 2/3] dts: socfpga: Fix ethernet entries for the stmmac
-Date: Wed, 26 Mar 2014 19:05:41 -0500
-Message-ID: <53336B55.7080605@gmail.com>
-References: <1395790482-3957-1-git-send-email-dinguyen@altera.com> <1395790482-3957-3-git-send-email-dinguyen@altera.com> <20140326221225.GP3998@book.gsilab.sittig.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v2] ARM: rockchip: convert smp bringup to CPU_METHOD_OF_DECLARE
+Date: Thu, 27 Mar 2014 01:06:32 +0100
+Message-ID: <1878147.CvhHSZhTas@diego>
+References: <1632873.urGeGsUMPH@diego> <20140326110024.GR10341@e106331-lin.cambridge.arm.com> <2151573.evmqdkWnet@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20140326221225.GP3998@book.gsilab.sittig.org>
-Sender: netdev-owner@vger.kernel.org
-To: Gerhard Sittig <gsi@denx.de>, dinguyen@altera.com
-Cc: arnd@arndb.de, davem@davemloft.net, peppe.cavallaro@st.com, mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, srinivas.kandagatla@st.com, netdev@vger.kernel.org, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, arm@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2151573.evmqdkWnet@diego>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+With the newly introduced CPU_METHOD_OF_DECLARE is not necessary anymore
+to reference the relevant smp_ops in the board file, but instead it can
+simply be set by the enable-method property of the cpu nodes.
+
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+---
+changes since v1:
+  - add a short description to the enable-method binding
+
+ Documentation/devicetree/bindings/arm/cpus.txt | 2 ++
+ arch/arm/boot/dts/rk3066a.dtsi                 | 1 +
+ arch/arm/boot/dts/rk3188.dtsi                  | 1 +
+ arch/arm/mach-rockchip/core.h                  | 2 --
+ arch/arm/mach-rockchip/platsmp.c               | 3 ++-
+ arch/arm/mach-rockchip/rockchip.c              | 1 -
+ 6 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index 333f4ae..f52a9ac 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -185,6 +185,8 @@ nodes to be present and contain the properties described below.
+ 			    "qcom,gcc-msm8660"
+ 			    "qcom,kpss-acc-v1"
+ 			    "qcom,kpss-acc-v2"
++			    "rockchip,rk3066-smp" - cpu-core handling of Socs
++					from Rockchip starting with rk3066
+ 
+ 	- cpu-release-addr
+ 		Usage: required for systems that have an "enable-method"
+diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
+index 4d4dfbb..90b354d 100644
+--- a/arch/arm/boot/dts/rk3066a.dtsi
++++ b/arch/arm/boot/dts/rk3066a.dtsi
+@@ -24,6 +24,7 @@
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		enable-method = "rockchip,rk3066-smp";
+ 
+ 		cpu@0 {
+ 			device_type = "cpu";
+diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
+index bb36596..7ad5103 100644
+--- a/arch/arm/boot/dts/rk3188.dtsi
++++ b/arch/arm/boot/dts/rk3188.dtsi
+@@ -24,6 +24,7 @@
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		enable-method = "rockchip,rk3066-smp";
+ 
+ 		cpu@0 {
+ 			device_type = "cpu";
+diff --git a/arch/arm/mach-rockchip/core.h b/arch/arm/mach-rockchip/core.h
+index e2e7c9d..39bca96 100644
+--- a/arch/arm/mach-rockchip/core.h
++++ b/arch/arm/mach-rockchip/core.h
+@@ -18,5 +18,3 @@ extern char rockchip_secondary_trampoline_end;
+ 
+ extern unsigned long rockchip_boot_fn;
+ extern void rockchip_secondary_startup(void);
+-
+-extern struct smp_operations rockchip_smp_ops;
+diff --git a/arch/arm/mach-rockchip/platsmp.c b/arch/arm/mach-rockchip/platsmp.c
+index dbfa5a2..a18b7f2 100644
+--- a/arch/arm/mach-rockchip/platsmp.c
++++ b/arch/arm/mach-rockchip/platsmp.c
+@@ -178,7 +178,8 @@ static void __init rockchip_smp_prepare_cpus(unsigned int max_cpus)
+ 		pmu_set_power_domain(0 + i, false);
+ }
+ 
+-struct smp_operations rockchip_smp_ops __initdata = {
++static struct smp_operations rockchip_smp_ops __initdata = {
+ 	.smp_prepare_cpus	= rockchip_smp_prepare_cpus,
+ 	.smp_boot_secondary	= rockchip_boot_secondary,
+ };
++CPU_METHOD_OF_DECLARE(rk3066_smp, "rockchip,rk3066-smp", &rockchip_smp_ops);
+diff --git a/arch/arm/mach-rockchip/rockchip.c b/arch/arm/mach-rockchip/rockchip.c
+index d211d6f..4499b0a 100644
+--- a/arch/arm/mach-rockchip/rockchip.c
++++ b/arch/arm/mach-rockchip/rockchip.c
+@@ -39,7 +39,6 @@ static const char * const rockchip_board_dt_compat[] = {
+ };
+ 
+ DT_MACHINE_START(ROCKCHIP_DT, "Rockchip Cortex-A9 (Device Tree)")
+-	.smp		= smp_ops(rockchip_smp_ops),
+ 	.init_machine	= rockchip_dt_init,
+ 	.dt_compat	= rockchip_board_dt_compat,
+ MACHINE_END
+-- 
+1.9.0
 
 
-On 03/26/2014 05:12 PM, Gerhard Sittig wrote:
-> On Tue, 2014-03-25 at 18:34 -0500, dinguyen@altera.com wrote:
->>
->> -			#size-cells = <1>;
->> -			compatible = "altr,socfpga-stmmac";
->> -			altr,sysmgr-syscon = <&sysmgr 0x60>;
->> +		gmac0: ethernet@ff700000 {
->> +			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.70a", "snps,dwmac";
->>   			status = "disabled";
->> -			ranges;
->> -
->> -			gmac0: gmac0@ff700000 {
->> -				compatible = "snps,dwmac-3.70a", "snps,dwmac";
->> -				reg = <0xff700000 0x2000>;
->> -				interrupts = <0 115 4>;
->> -				interrupt-names = "macirq";
->> -				mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
->> -				clocks = <&emac0_clk>;
->> -				clock-names = "stmmaceth";
->> -			};
->> +			altr,sysmgr-syscon = <&sysmgr 0x60>;
->> +			reg = <0xff700000 0x2000>;
->> +			interrupts = <0 115 4>;
->> +			interrupt-names = "macirq";
->> +			mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
->> +			clocks = <&emac0_clk>;
->> +			clock-names = "stmmaceth";
->>   		};
->
-> not strictly related to this patch, but noticed in bypassing:
->
-> is the 'clocks' spec correct?  ISTR that 'emac0_clk' is the PLL
-> output, while the gated clock for the EMAC IP block is named
-> 'emac_0_clk' (note the extra underscore)
->
-
-Yes, you're right. Thanks for catching that.
-
-Dinh
->
-> virtually yours
-> Gerhard Sittig
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
