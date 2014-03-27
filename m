@@ -1,66 +1,108 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] clk: register fixed-clock only if #clock-cells property is
- present
-Date: Thu, 27 Mar 2014 11:01:40 +0100
-Message-ID: <5333F704.7020504@samsung.com>
-References: <1395858127-18730-1-git-send-email-s.nawrocki@samsung.com>
- <CAOMZO5DJPKvha7A-foktsB2dEw9xGXL_++uBXj_3ScAPTXNOkw@mail.gmail.com>
- <53333145.4080903@gmail.com>
- <CAOMZO5AEry8sJW_+0aJS8ush+sYPPWk9LRU0b8RUUGa-hO_G1A@mail.gmail.com>
- <5333DA13.2080505@gmail.com>
+From: Huang Shijie <b32955@freescale.com>
+Subject: Re: [PATCHv2 1/1] mtd: gpmi: make blockmark swapping optional
+Date: Thu, 27 Mar 2014 17:59:58 +0800
+Message-ID: <20140327095956.GA29623@localhost>
+References: <532BCFCC.4080205@freescale.com>
+ <1395399017-19005-1-git-send-email-LW@KARO-electronics.de>
+ <20140324095902.GB11377@localhost>
+ <20140326095156.3e5585b8@ipc1.ka-ro>
+ <5332AEE7.2040402@freescale.com>
+ <20140326125502.0e8d0657@ipc1.ka-ro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <5333DA13.2080505-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, 'Arnd Bergmann' <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140326125502.0e8d0657@ipc1.ka-ro>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawn.guo@linaro.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+On Wed, Mar 26, 2014 at 12:55:02PM +0100, Lothar Wa=C3=9Fmann wrote:
+> Hi,
+>=20
+> Huang Shijie wrote:
+> > =E4=BA=8E 2014=E5=B9=B403=E6=9C=8826=E6=97=A5 16:51, Lothar Wa=C3=9F=
+mann =E5=86=99=E9=81=93:
+> > > I don't see why this should not be supported on i.MX28 (i.MX23 do=
+esn't
+> > > do byteswapping anyway, so this wouldn't change anything for i.MX=
+23).
+> > > The partitions used by Linux need not necessarily be accessible f=
+or the
+> > > Boot ROM code (and vice versa).
+> > But the first partition used to store the u-boot is accessible for =
+the ROM.
+> >=20
+> Whether this partition is available to Linux depends on the partition=
+ table
+> passed in the DT.
+yes, i agree.
 
-On 27/03/14 08:58, Boris BREZILLON wrote:
-> This solution solve the problem for this specific case because clks are
-> declared in the correct order in imx DTs.
-> But, even with your patch I think we could see similar issues by 
-> reordering DT nodes...
-> 
-> The real problem here is that imx platform does not declare the CCM clocks
-> dependencies upon ckil, ckih1 and osc fixed clocks within the DT [1], and
-> retrieve these clocks when initializing the CCM clocks ([2] and [3]).
-> 
-> We should try to a add these dependencies in the DT and see if it works.
+But it is strange if we do not export this partition to Linux.
 
-While presumably all of us agree the dependencies should be correctly
-specified in dts I think we should minimize possible regressions by
-keeping the clocks registration order as before, i.e. as parsed by the
-kernel from DT. Rather than explicitly reversing it, which does not gain
-us anything AFAICS. Instead we are seeing regressions where new kernels
-stop working with old dtbs.
+>=20
+> > Please see "Figure 12-13" in the 12.12.1.12:
+> >    "In order to preserve the BI (bad block information), flash upda=
+ter=20
+> > or gang programmer
+> > applications need to swap Bad Block Information (BI) data to byte 0=
+ of=20
+> > metadata area for
+> > every page before programming NAND Flash. ROM when loading firmware=
+,=20
+> > copies back
+> > the value at metadata[0] to BI offset in page data. The following f=
+igure=20
+> > shows how the
+> > factory bad block marker is preserved."
+> >=20
+> The inspection of the BB markers is only a fallback for the case that
+> there is no DBBT. From the same chapter that you quoted above:
+> | ROM uses DBBT to skip any bad block that falls within firmware data
+> | on NAND Flash device.
+> | If the address of DBBT Search Area in FCB is 0, ROM will rely on
+> | factory marked bad block markers to find out if a block is good or =
+bad.
+>=20
+> Thus, even the boot ROM of i.MX28 can well live without blockmark
+> swapping.
 
-I'm going to resend the patch replacing list_add() with list_add_tail(),
-with this the mvebu platform would work and there should be no regression
-on imx and exynos.
+Assume that there is a NAND block "A",  and the A consist of 256 pages.
+the uboot is burned to the "A", can occupy 6 pages:
 
-Please note that specifying dependencies between CCM on imx and the fixed
-clocks might not be enough. If the fixed clocks get matched on "fixed-clock"
-compatible some clock specifiers (i.e. those using phandle to the CCM) could
-get invalid, since the clocks won't get registered by the ccm driver, but by
-the regular fixed clock driver. That means a phandle to different node would
-need to be used to reference the fixed clock. I'm not sure if this is the case
-for imx, but changes may be needed all over various dts files.
-In addition, we should make sure the kernel works with current and modified
-dtbs.
+  ---------------------------------------------------------------------=
+--------
+ | page 0 |  page 1 | page 2 | page 3 | page 4 | page 5 | ... | ... | p=
+age 255 |
+  ---------------------------------------------------------------------=
+--------
+=20
+  \-------------------------------------- -----------------------------=
+-------/
+                                         V =20
+                                        "A"					=20
 
-> [1] http://lxr.free-electrons.com/source/arch/arm/boot/dts/imx6sl.dtsi#L379
-> [2] http://lxr.free-electrons.com/source/arch/arm/mach-imx/clk-imx6q.c#L151
-> [3] http://lxr.free-electrons.com/source/arch/arm/mach-imx/clk.c#L30
+The DBBT is used to track if "A" is bad or not.
+Assume we know that "A" is a good block, ROM then need to read out the =
+uboot.
+When the ROM needs to read out the 6 pages one by one. And each time th=
+e ROM read
+the page, it should do the swapping for this page.
 
--- 
-Thanks,
-Sylwester
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In this case, the ROM will do the swapping six times.
+
+Please read the sector again, you will see the "every page" in it:
+--------------------------------------------------------------------
+   "In order to preserve the BI (bad block information), flash updater=20
+or gang programmer applications need to swap Bad Block Information (BI)=
+ data to byte 0 of=20
+metadata area for every page before programming NAND Flash. ROM when lo=
+ading firmware,=20
+copies back
+--------------------------------------------------------------------
+
+thanks
+Huang Shijie
+
