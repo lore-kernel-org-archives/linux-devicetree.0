@@ -1,24 +1,82 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: imx6/dt: add ccm dependency upon ckil, ckih1 and osc clocks
-Date: Thu, 27 Mar 2014 08:19:16 -0300
-Message-ID: <CAOMZO5D+rinC8zDMGTS9ACA1nBQvy8X3PqXc7iyWToS54amesw@mail.gmail.com>
-References: <5333DA13.2080505@gmail.com>
-	<1395907913-23808-1-git-send-email-b.brezillon.dev@gmail.com>
+From: Phil.Edworthy@renesas.com
+Subject: Re: [PATCH v6 05/10] dt-bindings: pci: rcar pcie device tree bindings
+Date: Thu, 27 Mar 2014 11:40:24 +0000
+Message-ID: <OF9F94FEE3.D67AC138-ON80257CA8.00401203-80257CA8.00401F68@eu.necel.com>
+References: <1395912416-20087-1-git-send-email-phil.edworthy@renesas.com> <1395912416-20087-6-git-send-email-phil.edworthy@renesas.com> <53340690.20006@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1395907913-23808-1-git-send-email-b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <brezillonboris-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <53340690.20006@cogentembedded.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, LAKML <linux-arm-kernel@lists.infradead.org>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Valentine Barshak <valentine.barshak@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 27, 2014 at 5:11 AM, Boris BREZILLON
-<brezillonboris-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Signed-off-by: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Hi Sergei,
 
-Please provide a commit message, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On: 27/03/2014 11:08, Sergei wrote:
+> Subject: Re: [PATCH v6 05/10] dt-bindings: pci: rcar pcie device tree 
+bindings
+> 
+> Hello.
+> 
+> On 27-03-2014 13:26, Phil Edworthy wrote:
+> 
+> > This patch adds the bindings for the R-Car PCIe driver. The driver
+> > resides under drivers/pci/host/pcie-rcar.c
+> 
+> > Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+> 
+> > v6:
+> >   - Correct DT bindings description for reg and clocks
+> 
+> > v5:
+> >   - Add PCIe bus clock reference
+> >   - Add additional interrupt bindings
+> >   - Use dma-ranges property to specify inbound memory regions
+> 
+>     Put these under --- tear line, please.
+> 
+> > ---
+> >   Documentation/devicetree/bindings/pci/rcar-pci.txt | 45 
+++++++++++++++++++++++
+> >   1 file changed, 45 insertions(+)
+> >   create mode 100644 
+Documentation/devicetree/bindings/pci/rcar-pci.txt
+> 
+> > diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/
+> Documentation/devicetree/bindings/pci/rcar-pci.txt
+> > new file mode 100644
+> > index 0000000..a97ebe6
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> > @@ -0,0 +1,45 @@
+> > +* Renesas RCar PCIe interface
+> > +
+> > +Required properties:
+> > +- compatible: should contain one of the following
+> > +   "renesas,pcie-r8a7779", "renesas,pcie-r8a7790", 
+"renesas,pcie-r8a7791"
+> > +- reg: base address and length of the pcie controller registers.
+> > +- #address-cells: set to <3>
+> > +- #size-cells: set to <2>
+> > +- device_type: set to "pci"
+> > +- ranges: ranges for the PCI memory and I/O regions.
+> > +- dma-ranges: ranges for the inbound memory regions.
+> > +- interrupts: two interrupt sources for MSI interrupts, followed by 
+interrupt
+> > +   source for hardware related interrupts (e.g. link speed change).
+> > +- #interrupt-cells: set to <1>
+> > +- interrupt-map-mask and interrupt-map: standard PCI properties
+> > +   to define the mapping of the PCIe interface to interrupt
+> > +   numbers.
+> > +- clocks: from common clock binding: phandles to PCIe controller and 
+PCIe bus
+> > +   clocks.
+> 
+>     I told it's not only phandles (e.g. &mstp3_clks) but the clock 
+specifiers.
+Ah, yes you did.
+
+Thanks
+Phil
