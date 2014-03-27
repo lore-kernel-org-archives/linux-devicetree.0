@@ -1,148 +1,234 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH RFC v3 2/2] clk: Add handling of clk parent and rate assigned from DT
-Date: Thu, 27 Mar 2014 15:08:10 +0100
-Message-ID: <46532903.ghnH4Us8Zz@avalon>
-References: <1395922579-28547-1-git-send-email-s.nawrocki@samsung.com> <77553409.zvN7VkNGe7@avalon> <53342E64.5060505@samsung.com>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v6] can: xilinx CAN controller support
+Date: Thu, 27 Mar 2014 15:14:46 +0100
+Message-ID: <53343256.8020802@monstr.eu>
+References: <5ff46a21-3047-40ff-9221-f08e476f9ce6@VA3EHSMHS030.ehs.local>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53342E64.5060505-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="1O1wFkfqdC5vAbhH64RkQeBFEONTGuAPS"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <5ff46a21-3047-40ff-9221-f08e476f9ce6@VA3EHSMHS030.ehs.local>
+Sender: linux-can-owner@vger.kernel.org
+To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
+Cc: wg@grandegger.com, mkl@pengutronix.de, michal.simek@xilinx.com, grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-can@vger.kernel.org, Kedareswara rao Appana <appanad@xilinx.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--1O1wFkfqdC5vAbhH64RkQeBFEONTGuAPS
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On Thursday 27 March 2014 14:57:56 Sylwester Nawrocki wrote:
-> On 27/03/14 14:24, Laurent Pinchart wrote:
-> > On Thursday 27 March 2014 13:16:19 Sylwester Nawrocki wrote:
-> >> This function adds a helper function to configure clock parents and rates
-> >> as specified in clock-parents, clock-rates DT properties for a consumer
-> >> device and a call to it before driver is bound to a device.
-> >> 
-> >> Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> >> ---
-> 
-> [...]
-> 
-> >> ---
-> >> 
-> >>  .../devicetree/bindings/clock/clock-bindings.txt   |   26 ++++++
-> >>  drivers/base/dd.c                                  |    7 ++
-> >>  drivers/clk/Makefile                               |    1 +
-> >>  drivers/clk/clk-conf.c                             |   87 ++++++++++++++
-> >>  drivers/clk/clk.c                                  |   10 ++-
-> >>  include/linux/clk/clk-conf.h                       |   19 +++++
-> >>  6 files changed, 149 insertions(+), 1 deletion(-)
-> >>  create mode 100644 drivers/clk/clk-conf.c
-> >>  create mode 100644 include/linux/clk/clk-conf.h
-> >> 
-> >> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> >> b/Documentation/devicetree/bindings/clock/clock-bindings.txt index
-> >> 7c52c29..b452f80 100644
-> >> --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> >> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> >> @@ -115,3 +115,29 @@ clock signal, and a UART.
-> >>    ("pll" and "pll-switched").
-> >>  * The UART has its baud clock connected the external oscillator and its
-> >>    register clock connected to the PLL clock (the "pll-switched" signal)
-> >> +
-> >> +==Assigned clock parents and rates==
-> >> +
-> >> +Some platforms require static initial configuration of parts of the
-> >> clocks
-> >> +controller. Such a configuration can be specified in a clock consumer
-> >> node
-> >> +through clock-parents and clock-rates DT properties. The former should
-> >> contain
-> >> +a list of parent clocks in form of phandle and clock specifier pairs,
-> >> the
-> >> +latter the list of assigned clock frequency values (one cell each).
-> >> +
-> >> +    uart@a000 {
-> >> +        compatible = "fsl,imx-uart";
-> >> +        reg = <0xa000 0x1000>;
-> >> +        ...
-> >> +        clocks = <&clkcon 0>, <&clkcon 3>;
-> >> +        clock-names = "baud", "mux";
-> >> +
-> >> +        clock-parents = <0>, <&pll 1>;
-> >> +        clock-rates = <460800>;
-> >> +    };
-> >> +
-> >> +In this example the pll is set as parent of "mux" clock and frequency of
-> >> "baud"
-> >> +clock is specified as 460800 Hz.
-> > 
-> > I'm curious, what should happen when two devices have conflicting
-> > requirements ? If a different device required the <&clkcon 3> parent to
-> > be set to <&pll 2> for instance, who should win ? Shouldn't a warning be
-> > printed ?
-> 
-> In general, the assumption is that the <&clkcon 3> clock would be used only
-> by the uart@a000 device.
+Hi Kedar,
 
-OK. Removing the problem is a simple way to fix it :-) What about stating this 
-explicitly in the documentation then ? Maybe by prefixing your proposed 
-explanation below with something like
+On 03/26/2014 06:26 AM, Kedareswara rao Appana wrote:
+> This patch adds xilinx CAN controller support.
+> This driver supports both ZYNQ CANPS and Soft IP
+> AXI CAN controller.
+>=20
+> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+> ---
+> This patch is rebased on the 3.14 rc8 kernel
+> Chnages for v6:
+> - Updated the driver with review comments.
+> - Used the clock names specified in the IP data sheet.
+> - Updated the devicetree bindings doc as per Rob suggestion.
+> Changes for v5:
+> - Updated the driver with the review comments.
+> - Remove the check for the tx fifo full interrupt condition
+>   form Tx interrupt routine as we are checking it in the _xmit
+>   routine.
+> - Clearing the txok interrupt in the tx interrupt routine for
+>   every Tx can frame.
+> Changes for v4:
+> - Added check for the tx fifo full interrupt condition in
+>   Tx interrupt routine.
+> - Added be iohelper functions.
+> - Moved the clock enable/disable to probe/remove because of
+>   Added big endian support for AXI CAN controller case(reading
+>   a register during probe for that we need to enable clock).
+> Changes for v3:
+> - Updated the driver with the review comments.
+> - Modified the tranmit logic as per Marc suggestion.
+> - Enabling the clock when the interface is up to reduce the
+>   Power consumption.
+> Changes for v2:
+> - Updated with the review comments.
+> - Removed the unnecessary debug prints.
+> - include tx,rx fifo depths in ZYNQ CANPS case also.
+> ---
+>  .../devicetree/bindings/net/can/xilinx_can.txt     |   44 +
+>  drivers/net/can/Kconfig                            |    7 +
+>  drivers/net/can/Makefile                           |    1 +
+>  drivers/net/can/xilinx_can.c                       | 1179 ++++++++++++=
+++++++++
+>  4 files changed, 1231 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/can/xilinx_ca=
+n.txt
+>  create mode 100644 drivers/net/can/xilinx_can.c
+>=20
+> diff --git a/Documentation/devicetree/bindings/net/can/xilinx_can.txt b=
+/Documentation/devicetree/bindings/net/can/xilinx_can.txt
+> new file mode 100644
+> index 0000000..4646396
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/can/xilinx_can.txt
+> @@ -0,0 +1,44 @@
+> +Xilinx Axi CAN/Zynq CANPS controller Device Tree Bindings
+> +---------------------------------------------------------
+> +
+> +Required properties:
+> +- compatible		: Should be "xlnx,zynq-can-1.00.a" for Zynq CAN
 
-"Configuring a clock parent and rate through the device node that uses the 
-clock is only supported for clocks that have a single user."
+We should do one more change and better now than later.
+Please use just "xlnx,zynq-can-1.0" compatible string here.
 
-> If a clock is shared I'd say it shouldn't be put in a multiple consumer
-> device nodes. Instead it should be put in a clock provider node, as I was
-> trying to explain in the sentence below.
->
-> A warning could be useful, but it could complicate the code. We would need,
-> for example, to store information about already configured clocks in a list
-> and scan it before actually altering any clock parent or rate.
+> +			  controllers and "xlnx,axi-can-1.00.a" for Axi CAN
+> +			  controllers.
+> +- reg			: Physical base address and size of the Axi CAN/Zynq
+> +			  CANPS registers map.
+> +- interrupts		: Property with a value describing the interrupt
+> +			  number.
+> +- interrupt-parent	: Must be core interrupt controller
+> +- clock-names		: List of input clock names - "can_clk", "pclk"
+> +			  (For CANPS), "can_clk" , "s_axi_aclk"(For AXI CAN)
+> +			  (See clock bindings for details).
+> +- clocks		: Clock phandles (see clock bindings for details).
+> +- tx-fifo-depth		: Can Tx fifo depth.
+> +- rx-fifo-depth		: Can Rx fifo depth.
+> +
+> +
+> +Example:
+> +
+> +For Zynq CANPS Dts file:
+> +	zynq_can_0: can@e0008000 {
+> +			compatible =3D "xlnx,zynq-can-1.00.a";
 
-I'm fine with implementing that later if needed, we can keep the initial 
-implementation simple.
+the same here.
 
-> >> +For clocks which are not directly connected to any consumer device
-> >> similarly
-> >> +clocks, clock-parents and/or clock-rates properties should be specified
-> >> in
-> >> +assigned-clocks subnode of a clock controller DT node.
-> > 
-> > It might be that I'm not familiar enough with the clock framework, but
-> > this sounds unclear to me. I'm not sure what you mean exactly.
-> 
-> Sorry about not being precise here, would something like below be more
-> clear ?
-> 
-> "Configuration of common clocks, which affect multiple consumer devices
-> can be specified in a dedicated 'assigned-clocks' subnode of a clock
-> provider node, e.g.:
-> 
->     clkcon {
->         ...
->         #clock-cells = <1>;
-> 
->         assigned-clocks {
->             clocks = <&clkcon 16>, <&clkcon 17>;
->             clock-parents = <0>, <&clkcon 1>;
->             clock-rates = <200000>;
->         };
->     };
-> "
+> +			clocks =3D <&clkc 19>, <&clkc 36>;
+> +			clock-names =3D "can_clk", "pclk";
+> +			reg =3D <0xe0008000 0x1000>;
+> +			interrupts =3D <0 28 4>;
+> +			interrupt-parent =3D <&intc>;
+> +			tx-fifo-depth =3D <0x40>;
+> +			rx-fifo-depth =3D <0x40>;
+> +		};
+> +For Axi CAN Dts file:
+> +	axi_can_0: axi-can@40000000 {
+> +			compatible =3D "xlnx,axi-can-1.00.a";
+> +			clocks =3D <&clkc 0>;
+> +			clock-names =3D "can_clk","s_axi_aclk" ;
+> +			reg =3D <0x40000000 0x10000>;
+> +			interrupt-parent =3D <&intc>;
+> +			interrupts =3D <0 59 1>;
+> +			tx-fifo-depth =3D <0x40>;
+> +			rx-fifo-depth =3D <0x40>;
+> +		};
 
-That's clearer indeed. Can the parents and rates depend on the board, or on 
-the SoC only ? We might be getting dangerously close to specifying platform 
-configuration instead of describing the hardware. A real example might be nice 
-to support the discussion.
+I don't know which thread I discussed this with Rob but please send this =
+binding
+separately out of this and copy devicetree@vger.kernel.org for this patch=
+=2E
+They should give us ACK on device-tree binding.
 
-> Naturally it's this just an RFC, any critics or suggestions are welcome.:)
 
--- 
-Regards,
+> diff --git a/drivers/net/can/Kconfig b/drivers/net/can/Kconfig
+> index 9e7d95d..9049884 100644
+> --- a/drivers/net/can/Kconfig
+> +++ b/drivers/net/can/Kconfig
+> @@ -125,6 +125,13 @@ config CAN_GRCAN
+>  	  endian syntheses of the cores would need some modifications on
+>  	  the hardware level to work.
+> =20
+> +config CAN_XILINXCAN
+> +	tristate "Xilinx CAN"
+> +	depends on ARCH_ZYNQ || MICROBLAZE || COMPILE_TEST
+> +	depends on COMMON_CLK && HAS_IOMEM
+> +	---help---
+> +	  Xilinx CAN driver. This driver supports both soft AXI CAN IP and
+> +	  Zynq CANPS IP.
+>  source "drivers/net/can/mscan/Kconfig"
+> =20
+>  source "drivers/net/can/sja1000/Kconfig"
+> diff --git a/drivers/net/can/Makefile b/drivers/net/can/Makefile
+> index c744039..0b8e11e 100644
+> --- a/drivers/net/can/Makefile
+> +++ b/drivers/net/can/Makefile
+> @@ -25,5 +25,6 @@ obj-$(CONFIG_CAN_JANZ_ICAN3)	+=3D janz-ican3.o
+>  obj-$(CONFIG_CAN_FLEXCAN)	+=3D flexcan.o
+>  obj-$(CONFIG_PCH_CAN)		+=3D pch_can.o
+>  obj-$(CONFIG_CAN_GRCAN)		+=3D grcan.o
+> +obj-$(CONFIG_CAN_XILINXCAN)	+=3D xilinx_can.o
+> =20
+>  ccflags-$(CONFIG_CAN_DEBUG_DEVICES) :=3D -DDEBUG
+> diff --git a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_can.=
+c
+> new file mode 100644
+> index 0000000..3bb289c
+> --- /dev/null
+> +++ b/drivers/net/can/xilinx_can.c
+> @@ -0,0 +1,1179 @@
+> +/* Xilinx CAN device driver
+> + *
+> + * Copyright (C) 2012 - 2014 Xilinx, Inc.
+> + * Copyright (C) 2009 PetaLogix. All rights reserved.
+> + *
+> + * Description:
+> + * This driver is developed for Axi CAN IP and for Zynq CANPS Controll=
+er.
+> + * This program is free software: you can redistribute it and/or modif=
+y
+> + * it under the terms of the GNU General Public License as published b=
+y
+> + * the Free Software Foundation, either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/=
+>.
 
-Laurent Pinchart
+Please remove this paragraph. Some testing tools reports this
+as a problematic part.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+<snip>
+
+> +/* Match table for OF platform binding */
+> +static struct of_device_id xcan_of_match[] =3D {
+> +	{ .compatible =3D "xlnx,zynq-can-1.00.a", },
+
+And here also xlnx,zynq-can-1.0
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--1O1wFkfqdC5vAbhH64RkQeBFEONTGuAPS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlM0MlYACgkQykllyylKDCH9zQCgnIsixyuI2xvQD5kaZb/os8g8
+RzoAn0pWBZzATIe2F2GLy9sl48ralZGq
+=+FL0
+-----END PGP SIGNATURE-----
+
+--1O1wFkfqdC5vAbhH64RkQeBFEONTGuAPS--
