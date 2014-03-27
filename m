@@ -1,51 +1,96 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH RFC v3 0/2] Move dai-link level properties away from dai
- subnodes
-Date: Thu, 27 Mar 2014 01:31:31 +0000
-Message-ID: <20140327013131.GD30768@sirena.org.uk>
-References: <cover.1395655868.git.jsarha@ti.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [RFC PATCH 02/12] pci: host: pcie-dra7xx: add support for
+ pcie-dra7xx controller
+Date: Thu, 27 Mar 2014 12:43:41 +0900
+Message-ID: <000c01cf496e$bf2c85b0$3d859110$%han@samsung.com>
+References: <1395842272-15267-1-git-send-email-kishon@ti.com>
+ <1395842272-15267-3-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="48TaNjbzBVislYPb"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1395655868.git.jsarha@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jyri Sarha <jsarha@ti.com>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, peter.ujfalusi@ti.com, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, detheridge@ti.com, moinejf@free.fr, Li.Xiubo@freescale.com, kuninori.morimoto.gx@renesas.com
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-reply-to: <1395842272-15267-3-git-send-email-kishon@ti.com>
+Content-language: ko
+Sender: linux-pci-owner@vger.kernel.org
+To: 'Kishon Vijay Abraham I' <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, mohit.kumar@st.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, paul@pwsan.com, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wednesday, March 26, 2014 10:58 PM, Kishon Vijay Abraham I wrote:
+> 
+> Added support for pcie controller in dra7xx. This driver re-uses
+> the designware core code that is already present in kernel.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 
---48TaNjbzBVislYPb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Kishon,
+Long time no see! I added trivial comments.
 
-On Mon, Mar 24, 2014 at 12:15:23PM +0200, Jyri Sarha wrote:
-> This patch is implemented on top of late patches from Jean-Francois
-> Moine [1].
+> ---
+>  Documentation/devicetree/bindings/pci/ti-pci.txt |   35 ++
+>  drivers/pci/host/Kconfig                         |   10 +
+>  drivers/pci/host/Makefile                        |    1 +
+>  drivers/pci/host/pcie-dra7xx.c                   |  411 ++++++++++++++++++++++
 
-Applied both, thanks.
+How about using 'pci-' prefix?
+As it was discussed earlier, 'pci-' prefix is more proper.
 
---48TaNjbzBVislYPb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+>  4 files changed, 457 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/ti-pci.txt
+>  create mode 100644 drivers/pci/host/pcie-dra7xx.c
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+[.....]
 
-iQIcBAEBAgAGBQJTM39wAAoJELSic+t+oim952EP/jh4IejEW2N8xRZZ/QgDuDA9
-DJT22QiU9PbpjuadW7bxH+rQ4uZ6UBozfrw8XINoV1dpnVCCPMfd4aSL4xekcjRA
-GxySaCVPLbhDI/gWXiYzMVYo6LrcujOQaDlexBERIK4p8cWckeGybNRFjlpT0rWb
-aARyN1oS6KstAymJLmKB3hQW7Pu7Wfq9BPJgda0LrWtxlbwEXwR3sfSQ7JoHGsn2
-QQQlwmlSx2erRNNM+274Hw3GArg4/XLhI/2m/athyE5+gwuVGboMzarF+Z3BIFQR
-D8T6hloL11PtcoI+vXk5Y4fnlAEtnOZtTj4IhdTG3EBLUVgPa27u2fc1TmXq4ybJ
-mLftLZsUOlH3OTp8yASJWkXoAShAIJg0+Hw0VCZOkbvywPndbWLxDjr8OEiwp3UM
-d51InI4xr5ZXcGM6aHWSAZfLXVy2q1OkkGna2aUo+I1j/ADCpylKnw8f5btdn2GY
-Nv34YiPMIXZnCsti/f1zrrjnbqJozrC0iZ+gE385YgfzdFbH7FlkIW9vU4Tku/RJ
-s8GcssjFUOjYBpPCsVf5N8j+LzyE7ow6pAG/yosjrAQv4nTTfc40TWWZSW1z9Pmj
-g4xwRVLXMA1Mhu7/1tLLp9h/Y4p3XJfdVrGzMPbeVufSO6YLPn8CWFDSnd5IDmCi
-osW4QoFyGCNEmRqJJZPG
-=rF06
------END PGP SIGNATURE-----
+> --- /dev/null
+> +++ b/drivers/pci/host/pcie-dra7xx.c
 
---48TaNjbzBVislYPb--
+[.....]
+
+> +#define	PCIECTRL_TI_CONF_IRQSTATUS_MAIN		0x0024
+> +#define	PCIECTRL_TI_CONF_IRQENABLE_SET_MAIN	0x0028
+
+I don't think that it's good to add vendor names such as TI
+to SFR names.
+
+How about adding 'DRA7XX' or just removing 'TI'?
+
+1. PCIECTRL_DRA7XX_CONF_IRQSTATUS_MAIN
+
+2. PCIECTRL_CONF_IRQSTATUS_MAIN
+
+[.....]
+
+> +enum dra7xx_pcie_device_type {
+> +	DRA7XX_PCIE_UNKNOWN_TYPE,
+> +	DRA7XX_PCIE_EP_TYPE,
+> +	DRA7XX_PCIE_LEG_EP_TYPE,
+> +	DRA7XX_PCIE_RC_TYPE,
+> +};
+
+This driver can support only RC mode, so, these enum can be removed.
+
+[.....]
+
+> +	of_property_read_u32(node, "ti,device-type", &device_type);
+> +	switch (device_type) {
+> +	case DRA7XX_PCIE_RC_TYPE:
+> +		dra7xx_pcie_writel(dra7xx->base,
+> +			PCIECTRL_TI_CONF_DEVICE_TYPE, DEVICE_TYPE_RC);
+> +		break;
+> +	case DRA7XX_PCIE_EP_TYPE:
+> +		dra7xx_pcie_writel(dra7xx->base,
+> +			PCIECTRL_TI_CONF_DEVICE_TYPE, DEVICE_TYPE_EP);
+> +		break;
+> +	case DRA7XX_PCIE_LEG_EP_TYPE:
+> +		dra7xx_pcie_writel(dra7xx->base,
+> +			PCIECTRL_TI_CONF_DEVICE_TYPE, DEVICE_TYPE_LEG_EP);
+> +		break;
+> +	default:
+> +		dev_dbg(dev, "UNKNOWN device type %d\n", device_type);
+> +	}
+
+Thus, this switch can be removed.
+Others look good.
+
+Best regards,
+Jingoo Han
