@@ -1,42 +1,68 @@
 From: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 0/7] usb: gadget: gr_udc: OF and ep.maxpacket_limit improvements and fix of GFP_KERNEL in atomic context
-Date: Thu, 27 Mar 2014 16:15:52 +0100
-Message-ID: <1395933359-7109-1-git-send-email-andreas@gaisler.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [PATCH v2 4/7] usb: gadget: gr_udc: Use of_property_read_u32_index to access arrays
+Date: Thu, 27 Mar 2014 16:15:56 +0100
+Message-ID: <1395933359-7109-5-git-send-email-andreas@gaisler.com>
+References: <1395933359-7109-1-git-send-email-andreas@gaisler.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1395933359-7109-1-git-send-email-andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset:
- - Adds some OF related improvements suggested by Mark
-   Rutland.
- - Adds ep.maxpacket_limit to the debugfs file and adds a check if
-   gr_ep_enable is called with a maxpacket value greater than
-   ep.maxpacket_limit.
- - Fixes a bug where GFP_KERNEL was used in atomic context
+Use an appropriate accessor function for property arrays to make the code nicer
+and make the code correct if it would ever run on little endian architectures.
+Suggested by Mark Rutland.
 
-Andreas Larsson (7):
-  usb: gadget: gr_udc: Make struct platform_device variable name
-    clearer and use platform_set/get_drvdata
-  usb: gadget: gr_udc: Expand devicetree documentation
-  usb: gadget: gr_udc: Use platform_get_irq instead of
-    irq_of_parse_and_map
-  usb: gadget: gr_udc: Use of_property_read_u32_index to access arrays
-  usb: gadget: gr_udc: Add ep.maxpacket_limit to debugfs information
-  usb: gadget: gr_udc: Return error code when trying to set
-    ep.maxpacket > ep.maxpacket_limit
-  usb: gadget: gr_udc: Use GFP_ATOMIC when allocating under help
-    spinlock
+Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+---
+Differences since v1: none
 
- Documentation/devicetree/bindings/usb/gr-udc.txt |   22 +++++----
- drivers/usb/gadget/gr_udc.c                      |   53 ++++++++++++----------
- 2 files changed, 42 insertions(+), 33 deletions(-)
+ drivers/usb/gadget/gr_udc.c |   12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/usb/gadget/gr_udc.c b/drivers/usb/gadget/gr_udc.c
+index 7a99254..0f3a953 100644
+--- a/drivers/usb/gadget/gr_udc.c
++++ b/drivers/usb/gadget/gr_udc.c
+@@ -2020,9 +2020,7 @@ static int gr_udc_init(struct gr_udc *dev)
+ 	u32 dmactrl_val;
+ 	int i;
+ 	int ret = 0;
+-	u32 *bufsizes;
+ 	u32 bufsize;
+-	int len;
+ 
+ 	gr_set_address(dev, 0);
+ 
+@@ -2033,19 +2031,17 @@ static int gr_udc_init(struct gr_udc *dev)
+ 	INIT_LIST_HEAD(&dev->ep_list);
+ 	gr_set_ep0state(dev, GR_EP0_DISCONNECT);
+ 
+-	bufsizes = (u32 *)of_get_property(np, "epobufsizes", &len);
+-	len /= sizeof(u32);
+ 	for (i = 0; i < dev->nepo; i++) {
+-		bufsize = (bufsizes && i < len) ? bufsizes[i] : 1024;
++		if (of_property_read_u32_index(np, "epobufsizes", i, &bufsize))
++			bufsize = 1024;
+ 		ret = gr_ep_init(dev, i, 0, bufsize);
+ 		if (ret)
+ 			return ret;
+ 	}
+ 
+-	bufsizes = (u32 *)of_get_property(np, "epibufsizes", &len);
+-	len /= sizeof(u32);
+ 	for (i = 0; i < dev->nepi; i++) {
+-		bufsize = (bufsizes && i < len) ? bufsizes[i] : 1024;
++		if (of_property_read_u32_index(np, "epibufsizes", i, &bufsize))
++			bufsize = 1024;
+ 		ret = gr_ep_init(dev, i, 1, bufsize);
+ 		if (ret)
+ 			return ret;
 -- 
 1.7.10.4
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
