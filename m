@@ -1,97 +1,123 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC] Serial port aliases in DT
-Date: Thu, 27 Mar 2014 08:54:09 -0500
-Message-ID: <CAL_Jsq+SWZUz4D+3pdDs5yfi_XbTODC0ytt1S5KpmR_C5vVL=A@mail.gmail.com>
-References: <5448979.WQPtOb56tW@avalon>
-	<2488692.p5nEA6pWSY@wuerfel>
-	<1454965.NzCSO7fLpj@avalon>
-	<9498012.PtNMJ9hipe@avalon>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH RFC v3 2/2] clk: Add handling of clk parent and rate
+ assigned from DT
+Date: Thu, 27 Mar 2014 14:57:56 +0100
+Message-ID: <53342E64.5060505@samsung.com>
+References: <1395922579-28547-1-git-send-email-s.nawrocki@samsung.com>
+ <1395922579-28547-3-git-send-email-s.nawrocki@samsung.com>
+ <77553409.zvN7VkNGe7@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9498012.PtNMJ9hipe@avalon>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <77553409.zvN7VkNGe7@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 27, 2014 at 7:50 AM, Laurent Pinchart
-<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
-> Hello DT maintainers,
->
-> Ping ? This issue is blocking the merge of serial port DT support on Renesas
-> platforms, as we need to decide on how to name the ports.
+Hi Laurent,
 
-This seems like a topic for devicetree-spec.
-
-> On Tuesday 11 March 2014 12:57:59 Laurent Pinchart wrote:
->> On Monday 10 March 2014 13:57:23 Arnd Bergmann wrote:
->> > On Monday 10 March 2014 12:59:03 Laurent Pinchart wrote:
->> > > The SoC includes 8 serial ports. They are all disabled in the SoC .dtsi,
->> > > and enabled selectively by board DT files. As not all serial ports are
->> > > available on all boards, the question was whether to add aliases for all
->> > > ports (in the .dtsi in this case) like
->> > >
->> > >          serial0 = &scif0;
->> > >          serial1 = &scif1;
->> > >          serial2 = &scif2;
->> > >          serial3 = &scif3;
->> > >          serial4 = &scif4;
->> > >          serial5 = &scif5;
->> > >          serial6 = &scif6;
->> > >          serial7 = &scif7;
->> > >
->> > > or to just add aliases for the enabled ports (in the board DT file) like
->> > >
->> > >          serial0 = &scif2;
->> > >          serial1 = &scif3;
->> > >
->> > > Note the numbering in the latter case: as the board doesn't use serial
->> > > ports 0 and 1, hardware ports 2 and 3 become logical ports 0 and 1.
->> > >
->> > > I considered that having Linux create ttySC0 and ttySC1 devices for the
->> > > first two ports of the board, regardless of which hardware ports are
->> > > used, is simpler from a user point of view (it allows sharing the same
->> > > inittab settings for the console serial port across several boards for
->> > > instance). I'd appreciate feedback on that.
->> >
->> > I think the traditional interpretation is that we want to use the aliases
->> > to reflect the device names in the OS.
+On 27/03/14 14:24, Laurent Pinchart wrote:
+> On Thursday 27 March 2014 13:16:19 Sylwester Nawrocki wrote:
+>> This function adds a helper function to configure clock parents and rates
+>> as specified in clock-parents, clock-rates DT properties for a consumer
+>> device and a call to it before driver is bound to a device.
 >>
->> If I interpret this correctly it means that the question boils down to
->> whether we want the system to expose ttySC0 and ttySC1 or ttySC2 and
->> ttySC3, in case only ports 2 and 3 are enabled.
+>> Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> ---
+[...]
+>> ---
+>>  .../devicetree/bindings/clock/clock-bindings.txt   |   26 ++++++
+>>  drivers/base/dd.c                                  |    7 ++
+>>  drivers/clk/Makefile                               |    1 +
+>>  drivers/clk/clk-conf.c                             |   87 +++++++++++++++++
+>>  drivers/clk/clk.c                                  |   10 ++-
+>>  include/linux/clk/clk-conf.h                       |   19 +++++
+>>  6 files changed, 149 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/clk/clk-conf.c
+>>  create mode 100644 include/linux/clk/clk-conf.h
 >>
->> Let's note that, despite the above example showing 8 instances of identical
->> serial IP cores, the reality is a bit more complex and Renesas SoCs usually
->> include different serial IP cores with several instances of each of them.
->> Ports of the same time are numbered in the datasheet, but there's no
->> standard or natural ordering global to all serial ports.
->>
->> This starts to remind me about the whole stable network device name changes
->> we went through recently.
->>
->> > This however comes back to the more general issue of serial port device
->> > naming: Linux traditionally uses separate names per driver (e.g. ttySC0
->> > instead of ttyS0).
->> >
->> > There has been discussion in the past about changing this to let all
->> > drivers use the same namespace, but it's not yet clear to me how we'd do
->> > this in a 100% backwards compatible way. Maybe it's best left to udev to
->> > figure out the driver independent name, but then we definitely should use
->> > the alias for that name.
+>> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> b/Documentation/devicetree/bindings/clock/clock-bindings.txt index
+>> 7c52c29..b452f80 100644
+>> --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> @@ -115,3 +115,29 @@ clock signal, and a UART.
+>>    ("pll" and "pll-switched").
+>>  * The UART has its baud clock connected the external oscillator and its
+>>    register clock connected to the PLL clock (the "pll-switched" signal)
+>> +
+>> +==Assigned clock parents and rates==
+>> +
+>> +Some platforms require static initial configuration of parts of the clocks
+>> +controller. Such a configuration can be specified in a clock consumer node
+>> +through clock-parents and clock-rates DT properties. The former should
+>> contain
+>> +a list of parent clocks in form of phandle and clock specifier pairs, the
+>> +latter the list of assigned clock frequency values (one cell each).
+>> +
+>> +    uart@a000 {
+>> +        compatible = "fsl,imx-uart";
+>> +        reg = <0xa000 0x1000>;
+>> +        ...
+>> +        clocks = <&clkcon 0>, <&clkcon 3>;
+>> +        clock-names = "baud", "mux";
+>> +
+>> +        clock-parents = <0>, <&pll 1>;
+>> +        clock-rates = <460800>;
+>> +    };
+>> +
+>> +In this example the pll is set as parent of "mux" clock and frequency of
+>> "baud"
+>> +clock is specified as 460800 Hz.
+> 
+> I'm curious, what should happen when two devices have conflicting requirements 
+> ? If a different device required the <&clkcon 3> parent to be set to <&pll 2> 
+> for instance, who should win ? Shouldn't a warning be printed ?
 
-This discussion has come up in just the last month or so.
+In general, the assumption is that the <&clkcon 3> clock would be used only
+by the uart@a000 device. If a clock is shared I'd say it shouldn't be put
+in a multiple consumer device nodes. Instead it should be put in a clock
+provider node, as I was trying to explain in the sentence below.
 
-My opinion is device name numbering should start at 0 with 0 being the
-preferred console device. My main reasoning is giving consistent
-naming across boards and it is more inline with how other devices are
-named. The aliases are just to give you consistency in the numbering
-within the 0 to N. Hopefully this is inline with what other platforms
-have done as above all I think we should be consistent.
+A warning could be useful, but it could complicate the code. We would need,
+for example, to store information about already configured clocks in a list and
+scan it before actually altering any clock parent or rate.
 
-Rob
+>> +For clocks which are not directly connected to any consumer device
+>> similarly
+>> +clocks, clock-parents and/or clock-rates properties should be specified in
+>> +assigned-clocks subnode of a clock controller DT node.
+> 
+> It might be that I'm not familiar enough with the clock framework, but this 
+> sounds unclear to me. I'm not sure what you mean exactly.
+
+Sorry about not being precise here, would something like below be more
+clear ?
+
+"Configuration of common clocks, which affect multiple consumer devices
+can be specified in a dedicated 'assigned-clocks' subnode of a clock
+provider node, e.g.:
+
+    clkcon {
+        ...
+        #clock-cells = <1>;
+
+        assigned-clocks {
+            clocks = <&clkcon 16>, <&clkcon 17>;
+            clock-parents = <0>, <&clkcon 1>;
+            clock-rates = <200000>;
+        };
+    };	
+"
+
+Naturally it's this just an RFC, any critics or suggestions are welcome.:)
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
+Regards,
+Sylwester
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
