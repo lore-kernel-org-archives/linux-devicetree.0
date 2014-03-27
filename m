@@ -1,82 +1,61 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC] Serial port aliases in DT
-Date: Thu, 27 Mar 2014 13:50:37 +0100
-Message-ID: <9498012.PtNMJ9hipe@avalon>
-References: <5448979.WQPtOb56tW@avalon> <2488692.p5nEA6pWSY@wuerfel> <1454965.NzCSO7fLpj@avalon>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
+Date: Thu, 27 Mar 2014 20:53:00 +0800
+Message-ID: <53341F2C.2030303@linaro.org>
+References: <1395670496-17381-1-git-send-email-zhangfei.gao@linaro.org> <21873900.AIOr1ryy37@wuerfel> <1395768102.12610.159.camel@edumazet-glaptop2.roam.corp.google.com> <7101996.LQrASEuksF@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1454965.NzCSO7fLpj@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <7101996.LQrASEuksF@wuerfel>
+Sender: netdev-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Eric Dumazet <eric.dumazet@gmail.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Zhangfei Gao <zhangfei.gao@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, netdev <netdev@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-Hello DT maintainers,
 
-Ping ? This issue is blocking the merge of serial port DT support on Renesas 
-platforms, as we need to decide on how to name the ports.
 
-On Tuesday 11 March 2014 12:57:59 Laurent Pinchart wrote:
-> On Monday 10 March 2014 13:57:23 Arnd Bergmann wrote:
-> > On Monday 10 March 2014 12:59:03 Laurent Pinchart wrote:
-> > > The SoC includes 8 serial ports. They are all disabled in the SoC .dtsi,
-> > > and enabled selectively by board DT files. As not all serial ports are
-> > > available on all boards, the question was whether to add aliases for all
-> > > ports (in the .dtsi in this case) like
-> > > 
-> > >          serial0 = &scif0;
-> > >          serial1 = &scif1;
-> > >          serial2 = &scif2;
-> > >          serial3 = &scif3;
-> > >          serial4 = &scif4;
-> > >          serial5 = &scif5;
-> > >          serial6 = &scif6;
-> > >          serial7 = &scif7;
-> > > 
-> > > or to just add aliases for the enabled ports (in the board DT file) like
-> > > 
-> > >          serial0 = &scif2;
-> > >          serial1 = &scif3;
-> > > 
-> > > Note the numbering in the latter case: as the board doesn't use serial
-> > > ports 0 and 1, hardware ports 2 and 3 become logical ports 0 and 1.
-> > > 
-> > > I considered that having Linux create ttySC0 and ttySC1 devices for the
-> > > first two ports of the board, regardless of which hardware ports are
-> > > used, is simpler from a user point of view (it allows sharing the same
-> > > inittab settings for the console serial port across several boards for
-> > > instance). I'd appreciate feedback on that.
-> > 
-> > I think the traditional interpretation is that we want to use the aliases
-> > to reflect the device names in the OS.
-> 
-> If I interpret this correctly it means that the question boils down to
-> whether we want the system to expose ttySC0 and ttySC1 or ttySC2 and
-> ttySC3, in case only ports 2 and 3 are enabled.
-> 
-> Let's note that, despite the above example showing 8 instances of identical
-> serial IP cores, the reality is a bit more complex and Renesas SoCs usually
-> include different serial IP cores with several instances of each of them.
-> Ports of the same time are numbered in the datasheet, but there's no
-> standard or natural ordering global to all serial ports.
-> 
-> This starts to remind me about the whole stable network device name changes
-> we went through recently.
-> 
-> > This however comes back to the more general issue of serial port device
-> > naming: Linux traditionally uses separate names per driver (e.g. ttySC0
-> > instead of ttyS0).
-> > 
-> > There has been discussion in the past about changing this to let all
-> > drivers use the same namespace, but it's not yet clear to me how we'd do
-> > this in a 100% backwards compatible way. Maybe it's best left to udev to
-> > figure out the driver independent name, but then we definitely should use
-> > the alias for that name.
+On 03/26/2014 01:54 AM, Arnd Bergmann wrote:
+> On Tuesday 25 March 2014 10:21:42 Eric Dumazet wrote:
+>> On Tue, 2014-03-25 at 18:05 +0100, Arnd Bergmann wrote:
+>>> On Tuesday 25 March 2014 10:00:30 Florian Fainelli wrote:
+>>>
+>>>> Using a timer to ensure completion of TX packets is a trick that
+>>>> worked in the past, but now that the networking stack got smarter,
+>>>> this might artificially increase the processing time of packets in the
+>>>> transmit path, and this will defeat features like TCP small queues
+>>>> etc.. as could be seen with the mvneta driver [1]. The best way really
+>>>> is to rely on TX completion interrupts when those exist as they cannot
+>>>> lie about the hardware status (in theory) and they should provide the
+>>>> fastest way to complete TX packets.
+>>>
+>>> By as Zhangfei Gao pointed out, this hardware does not have a working
+>>> TX completion interrupt. Using timers to do this has always just been
+>>> a workaround for broken hardware IMHO.
+>>
+>> For this kind of drivers, calling skb_orphan() from ndo_start_xmit() is
+>> mandatory.
+>
+> Cool, thanks for the information, I was wondering already if there was
+> a way to deal with hardware like this.
+>
 
--- 
-Regards,
+That's great,
+In the experiment, keeping reclaim in the ndo_start_xmit always get the 
+best throughput, also simpler, even no requirement of spin_lock.
 
-Laurent Pinchart
+By the way, still have confusion about build_skb.
 
+At first, I thought we can malloc n*buffers as a ring and keep using 
+them for dma, every time when packet coming, using build_skb adds a 
+head, send to upper layer.
+After data is consumed, we can continue reuse the buffer next time.
+
+However, in the iperf stress test, always error happen.
+The buffer is released in fact, and we need alloc new buffer for the 
+next transfer.
+
+So the build_skb is not used for reusing buffers, but only for keeping 
+hot data in cache, right?
+
+Thanks
