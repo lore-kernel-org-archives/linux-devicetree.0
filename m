@@ -1,236 +1,39 @@
-From: Chao Xie <xiechao.mail-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/4] clocksource: mmp: add mmp timer driver
-Date: Thu, 27 Mar 2014 09:27:33 +0800
-Message-ID: <CADApbehVviFKV354dARBuGT4aF-Lfg=thH-0pxVGv9A=5dvp2Q@mail.gmail.com>
-References: <1395809563-31872-1-git-send-email-chao.xie@marvell.com>
-	<1395809563-31872-2-git-send-email-chao.xie@marvell.com>
-	<20140326104137.GQ10341@e106331-lin.cambridge.arm.com>
+From: Chris Ball <chris@printf.net>
+Subject: Re: [PATCH v11 0/3] mmc: sdhci-msm: Add support for Qualcomm chipsets
+Date: Thu, 27 Mar 2014 01:31:42 +0000
+Message-ID: <86eh1owhoh.fsf@void.printf.net>
+References: <1394465833-22581-1-git-send-email-gdjakov@mm-sol.com>
+	<53330387.7000803@mm-sol.com>
+	<CAPDyKFqjjgWnH4Lt7vOPSM09ngvY1N6ustaBU41tZCJoKWrkzw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140326104137.GQ10341-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFqjjgWnH4Lt7vOPSM09ngvY1N6ustaBU41tZCJoKWrkzw@mail.gmail.com>
+	(Ulf Hansson's message of "Thu, 27 Mar 2014 00:09:24 +0100")
+Sender: linux-doc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Georgi Djakov <gdjakov@mm-sol.com>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 26, 2014 at 6:41 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Wed, Mar 26, 2014 at 04:52:40AM +0000, Chao Xie wrote:
->> From: Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Hi,
+
+On Wed, Mar 26 2014, Ulf Hansson wrote:
+> On 26 March 2014 17:42, Georgi Djakov <gdjakov@mm-sol.com> wrote:
+>> Hello Chris, Ulf,
 >>
->> MMP timer is attached to APB bus, It has the following
->> limitation.
->> 1. When get count of timer counter, it need some delay
->>    to get a stable count.
->> 2. When set match register, it need disable the counter
->>    first, and enable it after set the match register.
->>    The disabling need wait for 2 clock cycle to take
->>    effect.
->>
->> To improve above #1, shadow register for count is added.
->> To improve above #2, CRSR register is added for quick updating.
->>
->> So there are three types of timer.
->> timer1: old timer.
->> timer2: old timer with shadow register.
->> timer3: old timer with shadow and CRSR register.
->>
->> This timer driver will be used for many SOCes.
->> 1. pxa168, pxa910, pxa988 pxa1088 have only timer1.
->> 2. pxa1L88, pxa1U88 have timer1 and timer3.
->> 3. pxa1928 has timer 2.
->>
->> The driver supports DT and non-DT initialization.
->> The driver supports UP/SMP SOCes and 64 bit core.
->>
->> Signed-off-by: Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
->> ---
->>  .../devicetree/bindings/arm/mrvl/timer.txt         |  73 +-
->>  drivers/clocksource/Makefile                       |   1 +
->>  drivers/clocksource/timer-mmp.c                    | 866 +++++++++++++++++++++
->>  3 files changed, 934 insertions(+), 6 deletions(-)
->>  create mode 100644 drivers/clocksource/timer-mmp.c
->>
->> diff --git a/Documentation/devicetree/bindings/arm/mrvl/timer.txt b/Documentation/devicetree/bindings/arm/mrvl/timer.txt
->> index 9a6e251..b9af4bf 100644
->> --- a/Documentation/devicetree/bindings/arm/mrvl/timer.txt
->> +++ b/Documentation/devicetree/bindings/arm/mrvl/timer.txt
->> @@ -1,13 +1,74 @@
->>  * Marvell MMP Timer controller
->>
->> +Each timer have multiple counters, so the timer DT need include counter's
->> +description.
->> +
->> +1. Timer
->> +
->>  Required properties:
->> -- compatible : Should be "mrvl,mmp-timer".
->> +- compatible : Should be "marvell,mmp-timer".
->>  - reg : Address and length of the register set of timer controller.
->> -- interrupts : Should be the interrupt number.
->> +- marvell,timer-id : The index of the timer. The timer controller may
->> +  include several timers.
+>> Do you have any comments on the patches?
+>> The arch code that will use this driver is already in mainline. The
+>> regulators support seem to be still on its way, but this driver also works
+>> fine with dummy regulators.
 >
-> Is this a single entry or a list?
-
-Generally, the may be 2/3/4 timers, and each timers will have at most
-3 coounters.
-Each counters will have 3 matches. Each counter may have its own
-interrupts, or share same
-interrupts(counter1 has one interrupts, counter2 and 3 share one). It depends on
-how SOC connets the signals.
-
-The DT will be
-timer 0 {
-     ...
-     ...
-     counter0 {
-     };
-     counter2 {
-     };
-}
-
+> Looks good to me!
 >
->> +- marvell,timer-fastclk-frequency : The fast clock frequency of the timer.
->> +  Timer will have several clock inputs: fast clock, 32KHZ, 1KHZ. For all
->> +  SOCes use this timer controller, fast clock may not be same.
->> +- marvell,timer-apb-frequency : The fequency of the apb bus that the timer
->> +  attached to. This frequency and "marvell,timer-fastclk-frequency" are used
->> +  to calculated delay loops for clock operations.
+> For the complete patchset:
 >
-> Wouldn't these be better described as clock inputs?
+> Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-"apb" frequency is only used to calculated the delay loop.
-I do not want to fix the delay loop in the driver.
-So pass it in DT directly will make the things easier to handle.
+Thanks Georgi and Ulf -- pushed all three patches to mmc-next for 3.15.
 
-"fastclk" is a clock input. So waht do you mean "described as clock inputs"?
-
->
->> +
->> +Optional properties:
->> +- marvell,timer-has-crsr : This timer has CRSR register.
->> +- marvell,timer-has-shadow : This timer has shadow register.
->> +
->> +2. Counter
->> +
->> +Required properties:
->> +- compatible : It can be
->> +      "marvell,timer-counter-clkevt" : The counter is used for clock event
->> +                                       device.
->> +      "marvell,timer-counter-clksrc" : The counter is used for clock source.
->> +      "marvell,timer-counter-delay" : The counter is used for delay timer.
->
-> These are _not_ hardware properties. Why can the driver not choose how
-> to use each of the counter sub-blocks?
->
-> How would blocks with each of these strings actually differ?
->
-
-SOCes may have 2 or 3 or 4 timers, some timers may be used by CP not AP but
-AP can still access it.
-There may be UP SOC, or SMP SOC. So there are may be some general usage
-1. UP SOC: need one clocksource, need one clock event device
-2. SMP SOC: need one clocksource, need one broadcast clock event device because
-   arch timer will be shutdown when core is down
-3. SMP SOC: it has bug with arch timer. So need one clock source,
-NR_CPUs clock event
-    device to replace the arch timer. There are may be 2 cores or 4 cores.
-
-
-Above requeimetns are also hardware requriments from SOCes.
-
-The driver will be used for many SOCes, we can not to fix the counter
-usage in driver.
-
-
->> +- marvell,timer-counter-id : The counter index in this timer.
->
-> Perhaps use a reg for this?
->
-
-The counter does not have its own register space. They are belongs to a timer.
-Counter does not need to map the regsiter spance, it is done by timer.
-For example, for counter enable, all coutners share same register. CER
-For interrupt enable, each counter has its own register. IERx
-
-So if we use like "reg = <IERx offset>", i do not see any benefit. while
-direct setting "marvell,timer-counter-id" seems make the DT more clear.
-
->>
->> -Example:
->> -       timer0: timer@d4014000 {
->> -               compatible = "mrvl,mmp-timer";
->> -               reg = <0xd4014000 0x100>;
->> +Optional properties:
->> +- interrupts : The counters may have different IRQs or share same IRQs.
->> +  Only valid for "marvell,timer-counter-clkevt".
->
-> Describe what the interrupt is logically.
->
-> What is the interrupt logically?
->
-
-The interrupt topolog is designed by SOCes.
-Each counter has one interrupt, but SOCes may connects some coutners' interrupt
-into one.
-In timer driver, we do not care about it. We depeneds on IRQ chip to handle it.
-
->> +- marvell,timer-counter-cpu : which CPU the counter is bound. Only valid for
->> +  "marvell,timer-counter-clkevt".
->
-> How is the counter bound to a particular CPU? Is there really a
-> relationship in hardware between a given CPU and counter?
->
-
-For some SMP SOCes, for example, marvell's pxa988/pxa1088/pxa1L88
-They have bug in arch timer. So we make each CPU to have one dedicated
-counter to replace the arch timer.
-
->> +- "marvell,timer-counter-rating" : The rating when register clock event device
->> +  or clock source. Only valid for "marvell,timer-counter-clkevt" and
->> +  "marvell,timer-counter-clksrc".
->
-> What does this mean? This seems like another leak of Linux internals.
-
-It is the rating when register clock source and clock event.
-I think i can fix it in the driver.
-
->
->> +- marvell,timer-counter-broadcast : When this counter acts as clock event
->> +  device. It is broadcast clock event device.
->> +  Only valid for "marvell,timer-counter-clkevt".
->
-> This does not seem like a hardware property. Why can Linux not decide
-> which counter (if any) to use as the broadcast source?
->
-
-For some SMP soces, for example, marvell's pxa988/pxa1088/pxa1L88
-They have bug in arch timer. So we make each CPU to have one dedicated
-counter to replace the arch timer. So for these SOCes, broadcast timer is not
-needed. For these counters, we have to set IRQ affinity to the specific core.
-
-For some SMP soces, for example, they can use arch timer, but we have
-to register
-a clock event device for broadcast because we lose arch timer if core is down.
-For this coutner, we have to set IRQ affinity to ALL cores.
-
->> +- marvell,timer-counter-nodynirq : When this counter acts as broadcast clock
->> +  event device, it cannot switch the IRQ of broadcast clock event to any CPU.
->> +  Only valid for "marvell,timer-counter-clkevt".
->
-> Likewise this does not sound like a hardware property.
-
-For a broadcast timer, there is feature "CLOCK_EVT_FEAT_DYNIRQ".
-This feature is a clock event device's fearture. It means that the
-clock event device's irq can
-be set to any core.
-In fact it does not for all SOCes that the interrupt of the counter
-can be set to any core.
-
->
-> Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- Chris.
+-- 
+Chris Ball   <chris@printf.net>   <http://printf.net/>
