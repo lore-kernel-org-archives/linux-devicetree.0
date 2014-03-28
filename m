@@ -1,46 +1,31 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 1/2] ARM: dt-binding: fix GIC example
-Date: Fri, 28 Mar 2014 17:25:50 +0100
-Message-ID: <1396023951-32383-1-git-send-email-l.stach@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCHv6 2/5] Input: edt-ft5x06: Add DT support
+Date: Fri, 28 Mar 2014 09:26:57 -0700
+Message-ID: <20140328162657.GD22658@core.coreip.homeip.net>
+References: <1395323075-12146-1-git-send-email-LW@KARO-electronics.de>
+ <1395673870-29435-1-git-send-email-LW@KARO-electronics.de>
+ <1395673870-29435-3-git-send-email-LW@KARO-electronics.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1395673870-29435-3-git-send-email-LW@KARO-electronics.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: Fugang Duan <B38611@freescale.com>, Grant Likely <grant.likely@linaro.org>, Henrik Rydberg <rydberg@euromail.se>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jg1.han@samsung.com>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Sachin Kamat <sachin.kamat@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Budig <simon.budig@kernelconcepts.de>, Daniel Wagener <daniel.wagener@kernelconcepts.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Hi Lothar,
 
-When using interrupt-maps, the size of a map entry is #address-cells +
-address-cells should be 0 as this is not used.
+On Mon, Mar 24, 2014 at 04:11:07PM +0100, Lothar Wa=DFmann wrote:
+> +#else
+> +static inline int edt_ft5x06_i2c_ts_probe_dt(struct device *dev,
+> +					struct edt_ft5x06_i2c_ts_data *tsdata)
 
-As #address-cells = <0> is the same as not specifying the
-property, simply remove it.
+This is wrong (not-existant) type for tsdata, I fixed it up.
 
-Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
-v2 lst:
-- completely remove the property
----
- Documentation/devicetree/bindings/arm/gic.txt | 1 -
- 1 file changed, 1 deletion(-)
+Thanks.
 
-diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
-index bae0d87a38b2..42ab3b28a266 100644
---- a/Documentation/devicetree/bindings/arm/gic.txt
-+++ b/Documentation/devicetree/bindings/arm/gic.txt
-@@ -55,7 +55,6 @@ Example:
- 	intc: interrupt-controller@fff11000 {
- 		compatible = "arm,cortex-a9-gic";
- 		#interrupt-cells = <3>;
--		#address-cells = <1>;
- 		interrupt-controller;
- 		reg = <0xfff11000 0x1000>,
- 		      <0xfff10100 0x100>;
--- 
-1.9.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Dmitry
