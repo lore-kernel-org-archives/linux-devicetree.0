@@ -1,70 +1,88 @@
-From: Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC 0/5] of: Automatic console registration cleanups
-Date: Fri, 28 Mar 2014 13:58:36 -0700
-Message-ID: <20140328205836.GN25519@cbox>
-References: <1396022885-6102-1-git-send-email-grant.likely@linaro.org>
- <20140328185653.GB26433@quad.lixom.net>
- <CAL_JsqKFO+OSz83f=XdyKgCqByUvHe7qLzgn5QLU1x1V1A5Fng@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 04/20] mmc: mmci: Move signal directions bits into DT
+ include file
+Date: Fri, 28 Mar 2014 22:03:05 +0100
+Message-ID: <CACRpkdaNY1jM7xN00DEnOMdDxSf==3AqdrkRSXX3dghStvA4hw@mail.gmail.com>
+References: <1395404057-27835-1-git-send-email-ulf.hansson@linaro.org>
+	<1395404057-27835-5-git-send-email-ulf.hansson@linaro.org>
+	<CACRpkdZSr380FVHkx3uOMFKxKYsExoL-1WYhxVpirFMVc+T3Yw@mail.gmail.com>
+	<CAPDyKFq=PUcFkT901W15KXThzS4cKMJvZToW3JDc3SkXck9VHA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKFO+OSz83f=XdyKgCqByUvHe7qLzgn5QLU1x1V1A5Fng-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAPDyKFq=PUcFkT901W15KXThzS4cKMJvZToW3JDc3SkXck9VHA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 28, 2014 at 02:19:23PM -0500, Rob Herring wrote:
-> On Fri, Mar 28, 2014 at 1:56 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
-> > On Fri, Mar 28, 2014 at 09:08:00AM -0700, Grant Likely wrote:
-> >> Hi all,
-> >>
-> >> This is a series that I've been playing with over the last few days to
-> >> clean up the selection of default console devices when using the device
-> >> tree. The device tree defines a way of specifying the console by using a
-> >> "stdout-path" property in the /chosen node, but very few drivers
-> >> actually attempt to use that data, and so for most platforms there needs
-> >> to be a "console=" line in the command line if a serial port is intended
-> >> to be used as the console.
-> >>
-> >> With this series, if there is a /chosen/stdout-path property, and if
-> >> that property points to a serial port node, then when the serial driver
-> >> registers the port, the core uart_add_one_port() function will notice
-> >> and if no console= argument was provided then add it as a preferred
-> >> console.
-> >>
-> >> I've not tested this very extensively yet, but I want to get some
-> >> feedback before I go further.
-> >>
-> >> The one downside with this approach is that it doesn't do anything for
-> >> early console setup. That still needs to be added on a per-driver basis,
-> >> but at least it shouldn't conflict with this approach.
-> 
-> I'm working on the early aspect. I've got things working with either
-> command line (which I sent out recently) and with parsing the FDT
-> (which I haven't sent out yet).
-> 
-> > Looks sane to me (as discussed in person). I gave it a run on PWRficient with
-> > and without console= line (8250-based uart), and it behaved as expected.
-> >
-> > A couple of nits on the series, replied to two of the patches.
-> >
-> > I'll give it a run through the board farm here too, but I'll keep console=
-> > bootargs there for those boots at this time, too much to change to take it out
-> > everywhere. :-)
-> 
-> It would be good to know if removing console= causes userspace any
-> issues. For example, if getty's were setup based on console params. I
-> know ubuntu does some detection of serial ports, but I don't recall
-> what it looks at. Hopefully it's just checking /dev nodes.
-> 
-In Ubuntu, recent versions at least, it's all just hardcoded in
-/etc/init/*.conf files.  The Linaro OE FS does check /proc/cmdline for
-console= in there - not sure if we care, or at least we can have it
-fixed quickly.
+On Wed, Mar 26, 2014 at 12:05 AM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 25 March 2014 22:22, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On Fri, Mar 21, 2014 at 1:14 PM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>
+>>> These bits is currently used from platform data, but will be needed
+>>> from DT as well, so let's make them available.
+>>>
+>>> Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> (...)
+>>> +#define MCI_ST_DATA31DIREN     (1 << 5)
+>>> +#define MCI_ST_FBCLKEN         (1 << 7)
+>>> +#define MCI_ST_DATA74DIREN     (1 << 8)
+>>
+>> Isn't MCI_ST_FBCLKEN = feedback clock enable and nothing
+>> to do with directions really?
+>
+> You do have a point here, but then we are about to go into the details. :-)
+>
+> What MCI_ST_FBCLKEN means, is that the internal logic in the primecell
+> can decide whether to use the signal from clockout pin or the
+> feebackclock pin, when its latching incoming signals on the data bus.
+>
+> That said, we for sure need a dt binding for bit as well, since this
+> is not possible to figure out how pins are routed in runtime.
+>
+> Also, I do believe it is very closely related to the other sigdir
+> pins, since it's all about how pins is being routed, even if it's as
+> you say - in this case a matter of signal directions.
+>
+> So, I guess we have two options here; Either move the MCI_ST_FBCLKEN
+> out of the signal-direction binding and invent a separate binding for
+> it, or just keep them as is.
 
--Christoffer
+If they are very closely related I guess that will become very
+clear when you document it in the requested explicit bindings,
+so no strong opinion here. I'd probably ACK either version.
+
+>> Maybe we should just have single strings for these
+>> things in the binding instead, like:
+>>
+>> @@ -118,6 +119,10 @@
+>>                         bus-width = <4>;
+>>                         mmc-cap-sd-highspeed;
+>>                         mmc-cap-mmc-highspeed;
+>> +                       st,signal-direction-data2;
+>> +                       st,signal-direction-cmd;
+>> +                       st,signal-direction-data0;
+>> +                       st,feedback-clock-enable;
+>>                         vmmc-supply = <&ab8500_ldo_aux3_reg>;
+>>                         vqmmc-supply = <&vmmci>;
+>>                         pinctrl-names = "default", "sleep";
+>
+> I guess this is an option. To me it just seems a bit silly to have one
+> separate binding for each single bit, but maybe it becomes clearer?
+
+The idea with device trees is to be very human-readable, so I guess
+if you have preprocessor macro things |:ing the arguments together
+to a singular 32bit value it serves the same purpose. Arguably this
+version is even easier for a human to read though.
+
+What we should avoid is using magic number assignments to
+save space (e.g. have magic numbers in the tree rather than
+readable strings) so I lean toward this, but it's admittedly in a
+grey area, so again no strong opinion.
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
