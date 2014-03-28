@@ -1,27 +1,38 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC] Serial port aliases in DT
-Date: Fri, 28 Mar 2014 09:30:42 +0100
-Message-ID: <6506478.py2Axu25u1@wuerfel>
-References: <5448979.WQPtOb56tW@avalon> <20140328072827.GY17250@pengutronix.de> <CAMuHMdUaywK4JiiKgr=6=kFoQKQuuh=+_-ThYECr53U1cuVNLA@mail.gmail.com>
+From: Huang Shijie <b32955@freescale.com>
+Subject: Re: [PATCHv2 1/1] mtd: gpmi: make blockmark swapping optional
+Date: Fri, 28 Mar 2014 16:39:00 +0800
+Message-ID: <53353524.9020605@freescale.com>
+References: <532BCFCC.4080205@freescale.com>	<1395399017-19005-1-git-send-email-LW@KARO-electronics.de>	<20140324095902.GB11377@localhost>	<20140326095156.3e5585b8@ipc1.ka-ro>	<5332AEE7.2040402@freescale.com>	<20140326125502.0e8d0657@ipc1.ka-ro>	<20140327095956.GA29623@localhost>	<20140327132109.06258526@ipc1.ka-ro>	<5334D9F7.2030001@freescale.com> <20140328091646.1ce03f90@ipc1.ka-ro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUaywK4JiiKgr=6=kFoQKQuuh=+_-ThYECr53U1cuVNLA@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, devicetree-spec@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140328091646.1ce03f90@ipc1.ka-ro>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?TG90aGFyIFdhw59tYW5u?= <LW@KARO-electronics.de>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Shawn Guo <shawn.guo@freescale.com>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, David Woodhouse <dwmw2@infradead.org>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 28 March 2014 09:09:23 Geert Uytterhoeven wrote:
-> 
-> On the Renesas SoCs, where this thread started, you also have different
-> types of IP blocks providing similar functionality on the same SoC.
-> E.g. 3 types of serial ports, 2 types of i2c, (at least) 2 types of spi...
-> Hence one more level of confusion (is SoC serial0 the first serial port of
-> type A, B, or C?).
+=E4=BA=8E 2014=E5=B9=B403=E6=9C=8828=E6=97=A5 16:16, Lothar Wa=C3=9Fman=
+n =E5=86=99=E9=81=93:
+> Still there is no need for the Linux NAND driver to be able to read o=
+r
+> write partitions in a format that the Boot ROM can understand. Thus i=
+t
+If you do not use the NAND boot, there really no need to do so.
 
-The 'serial' aliases are defined to refer to UARTs only, there is no debate
-about that.
+Since you need the NAND boot, we should enable the swapping for imx28.
+> is perfectly legal to allow disregarding the BB marks and solely rely=
+ on
+> a flash based BBT.
+>
+The BB mark is in the page 0 of a NAND block. But the swapping can occu=
+r=20
+in _each_ page of
+a NAND block, _NOT_ only the page 0.
 
-	Arnd
+I think you are confusing at these two things.
+
+thanks
+Huang Shijie
