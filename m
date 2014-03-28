@@ -1,7 +1,7 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: [RFC 1/5] of: Add support for ePAPR "stdout-path" property
-Date: Fri, 28 Mar 2014 09:08:01 -0700
-Message-ID: <1396022885-6102-2-git-send-email-grant.likely@linaro.org>
+Subject: [RFC 3/5] of: Enable console on serial ports specified by /chosen/stdout-path
+Date: Fri, 28 Mar 2014 09:08:03 -0700
+Message-ID: <1396022885-6102-4-git-send-email-grant.likely@linaro.org>
 References: <1396022885-6102-1-git-send-email-grant.likely@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1396022885-6102-1-git-send-email-grant.likely@linaro.org>
@@ -10,31 +10,41 @@ To: devicetree@vger.kernel.org, christoffer.dall@linaro.org, linux-kernel@vger.k
 Cc: Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-ePAPR 1.1 defines the "stdout-path" property for specifying the console
-device, but Linux currently only handles the older "linux,stdout-path"
-property. This patch adds parsing for the new property name.
+If the devicetree specifies a serial port as a stdout device, then the
+kernel can use it as the default console if nothing else was selected on
+the command line. For any serial port that uses the uart_add_one_port()
+feature, the uart_add_one_port() has all the information needed to
+automatically enable the console device, which is what this patch does.
+
+With this change applied, a device tree platform can be booted without
+any console= parameters on the command line and the kernel will still be
+able to determine its console.
 
 Signed-off-by: Grant Likely <grant.likely@linaro.org>
 ---
- drivers/of/base.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/tty/serial/serial_core.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 418a4ff9d97c..be2861d69b02 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1955,9 +1955,9 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
- 		of_chosen = of_find_node_by_path("/chosen@0");
- 
- 	if (of_chosen) {
--		const char *name;
--
--		name = of_get_property(of_chosen, "linux,stdout-path", NULL);
-+		const char *name = of_get_property(of_chosen, "stdout-path", NULL);
-+		if (!name)
-+			name = of_get_property(of_chosen, "linux,stdout-path", NULL);
- 		if (name)
- 			of_stdout = of_find_node_by_path(name);
+diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+index ece2049bd270..2fac7593d7b2 100644
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -26,6 +26,7 @@
+ #include <linux/slab.h>
+ #include <linux/init.h>
+ #include <linux/console.h>
++#include <linux/of.h>
+ #include <linux/proc_fs.h>
+ #include <linux/seq_file.h>
+ #include <linux/device.h>
+@@ -2604,6 +2605,8 @@ int uart_add_one_port(struct uart_driver *drv, struct uart_port *uport)
+ 		spin_lock_init(&uport->lock);
+ 		lockdep_set_class(&uport->lock, &port_lock_key);
  	}
++	if (uport->cons && uport->dev)
++		of_console_check(uport->dev->of_node, uport->cons->name, uport->line);
+ 
+ 	uart_configure_port(drv, state, uport);
+ 
 -- 
 1.8.3.2
