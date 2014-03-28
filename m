@@ -1,100 +1,98 @@
-From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: [PATCH 59/75] ARM: l2c: prima2: remove cache size override
-Date: Fri, 28 Mar 2014 15:19:28 +0000
-Message-ID: <E1WTYZ6-0007Gr-6r@rmk-PC.arm.linux.org.uk>
+From: Russell King <rmk+kernel@arm.linux.org.uk>
+Subject: [PATCH 68/75] ARM: l2c: add L2C-310 power control DT properties
+Date: Fri, 28 Mar 2014 15:20:14 +0000
+Message-ID: <E1WTYZq-0007HV-6q@rmk-PC.arm.linux.org.uk>
 References: <20140328151249.GJ7528@n2100.arm.linux.org.uk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140328151249.GJ7528-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140328151249.GJ7528@n2100.arm.linux.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
----
- arch/arm/boot/dts/marco.dtsi  |  2 +-
- arch/arm/boot/dts/prima2.dtsi |  2 +-
- arch/arm/mach-prima2/l2x0.c   | 34 +---------------------------------
- 3 files changed, 3 insertions(+), 35 deletions(-)
+Add two new properties for setting thte L3 power control register.  Two
+new properties are added:
 
-diff --git a/arch/arm/boot/dts/marco.dtsi b/arch/arm/boot/dts/marco.dtsi
-index 1579c3491ccd..247879aa1224 100644
---- a/arch/arm/boot/dts/marco.dtsi
-+++ b/arch/arm/boot/dts/marco.dtsi
-@@ -36,7 +36,7 @@
- 		ranges = <0x40000000 0x40000000 0xa0000000>;
+	arm,dynamic-clk-gating
+	arm,standby-mode
+
+iMX6 sets both these, add the properties there.
+
+Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+---
+ Documentation/devicetree/bindings/arm/l2cc.txt |  2 ++
+ arch/arm/boot/dts/imx6qdl.dtsi                 |  2 ++
+ arch/arm/boot/dts/imx6sl.dtsi                  |  2 ++
+ arch/arm/mm/cache-l2x0.c                       | 10 ++++++++++
+ 4 files changed, 16 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+index b513cb8196fe..e0dd400ecea6 100644
+--- a/Documentation/devicetree/bindings/arm/l2cc.txt
++++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+@@ -40,6 +40,8 @@ implementations of the L2 cache controller with compatible programming models.
+ - arm,filter-ranges : <start length> Starting address and length of window to
+   filter. Addresses in the filter window are directed to the M1 port. Other
+   addresses will go to the M0 port.
++- arm,dynamic-clk-gating : Enables dynamic clock gating (PL310)
++- arm,standby-mode : Enables standby mode (PL310)
+ - interrupts : 1 combined interrupt.
+ - cache-id-part: cache id part number to be used if it is not present
+   on hardware
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index fb28b2ecb1db..dea6ee66a01e 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -114,6 +114,8 @@
+ 			cache-level = <2>;
+ 			arm,tag-latency = <4 2 3>;
+ 			arm,data-latency = <4 2 3>;
++			arm,dynamic-clk-gating;
++			arm,standby-mode;
+ 		};
  
- 		l2-cache-controller@c0030000 {
--			compatible = "sirf,marco-pl310-cache", "arm,pl310-cache";
-+			compatible = "arm,pl310-cache";
- 			reg = <0xc0030000 0x1000>;
- 			interrupts = <0 59 0>;
- 			arm,tag-latency = <1 1 1>;
-diff --git a/arch/arm/boot/dts/prima2.dtsi b/arch/arm/boot/dts/prima2.dtsi
-index 0e219932d7cc..29b578727b0a 100644
---- a/arch/arm/boot/dts/prima2.dtsi
-+++ b/arch/arm/boot/dts/prima2.dtsi
-@@ -48,7 +48,7 @@
- 		ranges = <0x40000000 0x40000000 0x80000000>;
+ 		pcie: pcie@0x01000000 {
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index 28558f1aaf2d..8094ac1cedc5 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -81,6 +81,8 @@
+ 			cache-level = <2>;
+ 			arm,tag-latency = <4 2 3>;
+ 			arm,data-latency = <4 2 3>;
++			arm,dynamic-clk-gating;
++			arm,standby-mode;
+ 		};
  
- 		l2-cache-controller@80040000 {
--			compatible = "arm,pl310-cache", "sirf,prima2-pl310-cache";
-+			compatible = "arm,pl310-cache";
- 			reg = <0x80040000 0x1000>;
- 			interrupts = <59>;
- 			arm,tag-latency = <1 1 1>;
-diff --git a/arch/arm/mach-prima2/l2x0.c b/arch/arm/mach-prima2/l2x0.c
-index 3a4eda45171e..09f68f046830 100644
---- a/arch/arm/mach-prima2/l2x0.c
-+++ b/arch/arm/mach-prima2/l2x0.c
-@@ -8,42 +8,10 @@
+ 		pmu {
+diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+index 462675847cb7..655a363918f5 100644
+--- a/arch/arm/mm/cache-l2x0.c
++++ b/arch/arm/mm/cache-l2x0.c
+@@ -906,6 +906,7 @@ static void __init l2c310_of_parse(const struct device_node *np,
+ 	u32 data[3] = { 0, 0, 0 };
+ 	u32 tag[3] = { 0, 0, 0 };
+ 	u32 filter[2] = { 0, 0 };
++	u32 val;
  
- #include <linux/init.h>
- #include <linux/kernel.h>
--#include <linux/of.h>
- #include <asm/hardware/cache-l2x0.h>
- 
--struct l2x0_aux
--{
--	u32 val;
--	u32 mask;
--};
--
--static struct l2x0_aux prima2_l2x0_aux __initconst = {
--	.val = L2C_AUX_CTRL_WAY_SIZE(2),
--	.mask =	0,
--};
--
--static struct l2x0_aux marco_l2x0_aux __initconst = {
--	.val = L2C_AUX_CTRL_WAY_SIZE(2) | L310_AUX_CTRL_ASSOCIATIVITY_16,
--	.mask = L2X0_AUX_CTRL_MASK,
--};
--
--static struct of_device_id sirf_l2x0_ids[] __initconst = {
--	{ .compatible = "sirf,prima2-pl310-cache", .data = &prima2_l2x0_aux, },
--	{ .compatible = "sirf,marco-pl310-cache", .data = &marco_l2x0_aux, },
--	{},
--};
--
- static int __init sirfsoc_l2x0_init(void)
- {
--	struct device_node *np;
--	const struct l2x0_aux *aux;
--
--	np = of_find_matching_node(NULL, sirf_l2x0_ids);
--	if (np) {
--		aux = of_match_node(sirf_l2x0_ids, np)->data;
--		return l2x0_of_init(aux->val, aux->mask);
--	}
--
--	return 0;
-+	return l2x0_of_init(0, ~0);
+ 	of_property_read_u32_array(np, "arm,tag-latency", tag, ARRAY_SIZE(tag));
+ 	if (tag[0] && tag[1] && tag[2])
+@@ -932,6 +933,15 @@ static void __init l2c310_of_parse(const struct device_node *np,
+ 		writel_relaxed((filter[0] & ~(SZ_1M - 1)) | L310_ADDR_FILTER_EN,
+ 			       l2x0_base + L310_ADDR_FILTER_START);
+ 	}
++
++	val = 0;
++	if (of_property_read_bool(np, "arm,dynamic-clk-gating"))
++		val |= L310_DYNAMIC_CLK_GATING_EN;
++	if (of_property_read_bool(np, "arm,standby-mode"))
++		val |= L310_STNDBY_MODE_EN;
++
++	if (val)
++		l2c_write_sec(val, l2x0_base, L310_POWER_CTRL);
  }
- early_initcall(sirfsoc_l2x0_init);
+ 
+ static const struct l2c_init_data of_l2c310_data __initconst = {
 -- 
 1.8.3.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
