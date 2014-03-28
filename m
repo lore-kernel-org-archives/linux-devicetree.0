@@ -1,39 +1,40 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [RFC 4/5] arm/versatile: Add the uart as the stdout device.
-Date: Fri, 28 Mar 2014 09:08:04 -0700
-Message-ID: <1396022885-6102-5-git-send-email-grant.likely@linaro.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: [RFC 1/5] of: Add support for ePAPR "stdout-path" property
+Date: Fri, 28 Mar 2014 09:08:01 -0700
+Message-ID: <1396022885-6102-2-git-send-email-grant.likely@linaro.org>
 References: <1396022885-6102-1-git-send-email-grant.likely@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396022885-6102-1-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1396022885-6102-1-git-send-email-grant.likely@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, christoffer.dall@linaro.org, linux-kernel@vger.kernel.org, olof@lixom.net, benh@kernel.crashing.org, rob.herring@linaro.org
+Cc: Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/versatile-ab.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ePAPR 1.1 defines the "stdout-path" property for specifying the console
+device, but Linux currently only handles the older "linux,stdout-path"
+property. This patch adds parsing for the new property name.
 
-diff --git a/arch/arm/boot/dts/versatile-ab.dts b/arch/arm/boot/dts/versatile-ab.dts
-index e01e5a081def..88e94c5506a1 100644
---- a/arch/arm/boot/dts/versatile-ab.dts
-+++ b/arch/arm/boot/dts/versatile-ab.dts
-@@ -15,6 +15,10 @@
- 		i2c0 = &i2c0;
- 	};
+Signed-off-by: Grant Likely <grant.likely@linaro.org>
+---
+ drivers/of/base.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 418a4ff9d97c..be2861d69b02 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1955,9 +1955,9 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
+ 		of_chosen = of_find_node_by_path("/chosen@0");
  
-+	chosen {
-+		stdout-path = &uart0;
-+	};
-+
- 	memory {
- 		reg = <0x0 0x08000000>;
- 	};
+ 	if (of_chosen) {
+-		const char *name;
+-
+-		name = of_get_property(of_chosen, "linux,stdout-path", NULL);
++		const char *name = of_get_property(of_chosen, "stdout-path", NULL);
++		if (!name)
++			name = of_get_property(of_chosen, "linux,stdout-path", NULL);
+ 		if (name)
+ 			of_stdout = of_find_node_by_path(name);
+ 	}
 -- 
 1.8.3.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
