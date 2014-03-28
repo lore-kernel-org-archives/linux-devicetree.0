@@ -1,83 +1,102 @@
-From: Russell King <rmk+kernel@arm.linux.org.uk>
-Subject: [PATCH 74/75] ARM: l2c: always enable low power modes
-Date: Fri, 28 Mar 2014 15:20:44 +0000
-Message-ID: <E1WTYaK-0007I0-Sm@rmk-PC.arm.linux.org.uk>
-References: <20140328151249.GJ7528@n2100.arm.linux.org.uk>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140328151249.GJ7528@n2100.arm.linux.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: [PATCH/RFC v2 0/8] LED / flash API integration
+Date: Fri, 28 Mar 2014 16:28:57 +0100
+Message-ID: <1396020545-15727-1-git-send-email-j.anaszewski@samsung.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: s.nawrocki@samsung.com, a.hajda@samsung.com, kyungmin.park@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Always enable the L2C low power modes on L2C-310 R3P0 and newer parts.
+This is is a second version of the patch series being a follow up
+of the discussion on Media summit 2013-10-23, related to the
+LED / flash API integration (the notes from the discussion were
+enclosed in the message [1], paragraph 5).
+The series is based on linux-next next-20140328 and contains
+significant number of modifications in comparison to its first
+version (Lee, Richard and Sakari - thanks for the review).
 
-Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
----
- Documentation/devicetree/bindings/arm/l2cc.txt |  2 --
- arch/arm/mm/cache-l2x0.c                       | 22 ++++++++++++----------
- 2 files changed, 12 insertions(+), 12 deletions(-)
+In order to show the exemplary usage of the proposed mechanism
+the patch series includes implementation of a Flash LED device
+driver along with the suitable modifications in a media controller
+driver.
 
-diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
-index e0dd400ecea6..b513cb8196fe 100644
---- a/Documentation/devicetree/bindings/arm/l2cc.txt
-+++ b/Documentation/devicetree/bindings/arm/l2cc.txt
-@@ -40,8 +40,6 @@ implementations of the L2 cache controller with compatible programming models.
- - arm,filter-ranges : <start length> Starting address and length of window to
-   filter. Addresses in the filter window are directed to the M1 port. Other
-   addresses will go to the M0 port.
--- arm,dynamic-clk-gating : Enables dynamic clock gating (PL310)
--- arm,standby-mode : Enables standby mode (PL310)
- - interrupts : 1 combined interrupt.
- - cache-id-part: cache id part number to be used if it is not present
-   on hardware
-diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-index 700a66260f94..b1f103d402be 100644
---- a/arch/arm/mm/cache-l2x0.c
-+++ b/arch/arm/mm/cache-l2x0.c
-@@ -752,6 +752,18 @@ static void __init l2c310_enable(void __iomem *base, u32 aux, unsigned num_lock)
- 			1 + (prefetch & L310_PREFETCH_CTRL_OFFSET_MASK));
- 	}
- 
-+	/* r3p0 or later has power control register */
-+	if (rev >= L310_CACHE_ID_RTL_R3P0) {
-+		u32 power_ctrl;
-+
-+		l2c_write_sec(L310_DYNAMIC_CLK_GATING_EN | L310_STNDBY_MODE_EN,
-+			      base, L310_POWER_CTRL);
-+		power_ctrl = readl_relaxed(base + L310_POWER_CTRL);
-+		pr_info("L2C-310: dynamic clock gating %sabled, standby mode %sabled\n",
-+			power_ctrl & L310_DYNAMIC_CLK_GATING_EN ? "en" : "dis",
-+			power_ctrl & L310_STNDBY_MODE_EN ? "en" : "dis");
-+	}
-+
- 	l2c_enable(base, aux, num_lock);
- 
- 	if (aux & L310_AUX_CTRL_FULL_LINE_ZERO) {
-@@ -1033,7 +1045,6 @@ static void __init l2c310_of_parse(const struct device_node *np,
- 	u32 data[3] = { 0, 0, 0 };
- 	u32 tag[3] = { 0, 0, 0 };
- 	u32 filter[2] = { 0, 0 };
--	u32 val;
- 
- 	of_property_read_u32_array(np, "arm,tag-latency", tag, ARRAY_SIZE(tag));
- 	if (tag[0] && tag[1] && tag[2])
-@@ -1060,15 +1071,6 @@ static void __init l2c310_of_parse(const struct device_node *np,
- 		writel_relaxed((filter[0] & ~(SZ_1M - 1)) | L310_ADDR_FILTER_EN,
- 			       l2x0_base + L310_ADDR_FILTER_START);
- 	}
--
--	val = 0;
--	if (of_property_read_bool(np, "arm,dynamic-clk-gating"))
--		val |= L310_DYNAMIC_CLK_GATING_EN;
--	if (of_property_read_bool(np, "arm,standby-mode"))
--		val |= L310_STNDBY_MODE_EN;
--
--	if (val)
--		l2c_write_sec(val, l2x0_base, L310_POWER_CTRL);
- }
- 
- static const struct l2c_init_data of_l2c310_data __initconst = {
+Description of the proposed modifications according to
+the kernel components they are relevant to:
+    - LED subsystem modifications
+        * added led_flash module which, when enabled in the config,
+	  registers flash specific sysfs attributes:
+            - flash_brightness
+	    - max_flash_brightness
+            - flash_timeout
+            - max_flash_timeout
+	    - flash_strobe
+            - flash_fault
+            - hw_triggered
+	and exposes kernel internal API
+            - led_set_flash_strobe
+            - led_get_flash_strobe
+            - led_set_flash_brightness
+            - led_update_flash_brightness
+            - led_set_flash_timeout
+            - led_get_flash_fault
+            - led_set_hw_triggered
+            - led_sysfs_lock
+            - led_sysfs_unlock
+    - Addition of a V4L2 Flash sub-device registration helpers
+        * added v4l2-flash.c and v4l2-flash.h files with helper
+          functions that facilitate registration/unregistration
+          of a subdevice, which wrapps a LED subsystem device and
+          exposes V4L2 Flash control interface
+    - exynos4-is media controller modifications
+    - Addition of a driver for the flash cell of the MAX77693 mfd
+        * the driver exploits the newly introduced mechanism
+    - Update of the samsung-fimc.txt DT bindings documentation
+    - Update of the max77693.txt DT bindings documentation
+    - Update of the LED subsystem documentation
+
+Thanks,
+Jacek Anaszewski
+
+[1] http://www.spinics.net/lists/linux-media/msg69253.html
+
+Jacek Anaszewski (8):
+  leds: Add sysfs and kernel internal API for flash LEDs
+  leds: Improve and export led_update_brightness function
+  Documentation: leds: Add description of flash mode
+  leds: Add support for max77693 mfd flash cell
+  DT: Add documentation for the mfd Maxim max77693 flash cell
+  media: Add registration helpers for V4L2 flash sub-devices
+  media: exynos4-is: Add support for v4l2-flash subdevs
+  DT: Add documentation for exynos4-is camera-flash property
+
+ .../devicetree/bindings/media/samsung-fimc.txt     |    3 +
+ Documentation/devicetree/bindings/mfd/max77693.txt |   47 ++
+ Documentation/leds/leds-class.txt                  |   52 ++
+ drivers/leds/Kconfig                               |   18 +
+ drivers/leds/Makefile                              |    2 +
+ drivers/leds/led-class.c                           |   62 +-
+ drivers/leds/led-core.c                            |   17 +
+ drivers/leds/led-flash.c                           |  375 +++++++++
+ drivers/leds/led-triggers.c                        |   16 +-
+ drivers/leds/leds-max77693.c                       |  864 ++++++++++++++++++++
+ drivers/leds/leds.h                                |    3 +
+ drivers/media/platform/exynos4-is/media-dev.c      |   34 +-
+ drivers/media/platform/exynos4-is/media-dev.h      |   14 +-
+ drivers/media/v4l2-core/Kconfig                    |   10 +
+ drivers/media/v4l2-core/Makefile                   |    2 +
+ drivers/media/v4l2-core/v4l2-flash.c               |  302 +++++++
+ drivers/mfd/max77693.c                             |    3 +-
+ include/linux/leds.h                               |   34 +-
+ include/linux/leds_flash.h                         |  189 +++++
+ include/linux/mfd/max77693.h                       |   32 +
+ include/media/v4l2-flash.h                         |  104 +++
+ 21 files changed, 2157 insertions(+), 26 deletions(-)
+ create mode 100644 drivers/leds/led-flash.c
+ create mode 100644 drivers/leds/leds-max77693.c
+ create mode 100644 drivers/media/v4l2-core/v4l2-flash.c
+ create mode 100644 include/linux/leds_flash.h
+ create mode 100644 include/media/v4l2-flash.h
+
 -- 
-1.8.3.1
-
+1.7.9.5
