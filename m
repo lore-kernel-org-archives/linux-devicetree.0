@@ -1,33 +1,36 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 74/75] ARM: l2c: always enable low power modes
-Date: Fri, 28 Mar 2014 15:51:27 +0000
-Message-ID: <20140328155127.GL7528@n2100.arm.linux.org.uk>
-References: <20140328151249.GJ7528@n2100.arm.linux.org.uk> <E1WTYaK-0007I0-Sm@rmk-PC.arm.linux.org.uk> <CAL_Jsq+vja-BeNfiVnOicFAa+E6jigDfnb5KWWpxZCZ3eGkJiA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+vja-BeNfiVnOicFAa+E6jigDfnb5KWWpxZCZ3eGkJiA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [RFC 0/5] of: Automatic console registration cleanups
+Date: Fri, 28 Mar 2014 09:08:00 -0700
+Message-ID: <1396022885-6102-1-git-send-email-grant.likely@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 28, 2014 at 10:42:54AM -0500, Rob Herring wrote:
-> On Fri, Mar 28, 2014 at 10:20 AM, Russell King
-> <rmk+kernel@arm.linux.org.uk> wrote:
-> > Always enable the L2C low power modes on L2C-310 R3P0 and newer parts.
-> 
-> I assume you want to squash this with patch 68/75? Or you are still
-> debating whether we want to do this or not? Given that it is r3px
-> only, that should greatly reduce any chance of breakage to newer
-> platforms.
+Hi all,
 
-I will eventually - I've kept it separate for the time being to give
-more options.  Let's see how people get on with it - it'll be running
-through Olof's builder later today, and there's some other people
-wanting to take it for a spin.
+This is a series that I've been playing with over the last few days to
+clean up the selection of default console devices when using the device
+tree. The device tree defines a way of specifying the console by using a
+"stdout-path" property in the /chosen node, but very few drivers
+actually attempt to use that data, and so for most platforms there needs
+to be a "console=" line in the command line if a serial port is intended
+to be used as the console.
 
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+With this series, if there is a /chosen/stdout-path property, and if
+that property points to a serial port node, then when the serial driver
+registers the port, the core uart_add_one_port() function will notice
+and if no console= argument was provided then add it as a preferred
+console.
+
+I've not tested this very extensively yet, but I want to get some
+feedback before I go further.
+
+The one downside with this approach is that it doesn't do anything for
+early console setup. That still needs to be added on a per-driver basis,
+but at least it shouldn't conflict with this approach.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
