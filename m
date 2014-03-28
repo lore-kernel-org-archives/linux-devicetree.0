@@ -1,88 +1,105 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 04/20] mmc: mmci: Move signal directions bits into DT
- include file
-Date: Fri, 28 Mar 2014 22:03:05 +0100
-Message-ID: <CACRpkdaNY1jM7xN00DEnOMdDxSf==3AqdrkRSXX3dghStvA4hw@mail.gmail.com>
-References: <1395404057-27835-1-git-send-email-ulf.hansson@linaro.org>
-	<1395404057-27835-5-git-send-email-ulf.hansson@linaro.org>
-	<CACRpkdZSr380FVHkx3uOMFKxKYsExoL-1WYhxVpirFMVc+T3Yw@mail.gmail.com>
-	<CAPDyKFq=PUcFkT901W15KXThzS4cKMJvZToW3JDc3SkXck9VHA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [RFC PATCH 0/7] ARM: SMP: common "pen" secondary release method
+Date: Fri, 28 Mar 2014 16:12:53 -0500
+Message-ID: <1396041180-29897-1-git-send-email-elder@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPDyKFq=PUcFkT901W15KXThzS4cKMJvZToW3JDc3SkXck9VHA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shiraz.hashim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org
+Cc: spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 26, 2014 at 12:05 AM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 25 March 2014 22:22, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On Fri, Mar 21, 2014 at 1:14 PM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>
->>> These bits is currently used from platform data, but will be needed
->>> from DT as well, so let's make them available.
->>>
->>> Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> (...)
->>> +#define MCI_ST_DATA31DIREN     (1 << 5)
->>> +#define MCI_ST_FBCLKEN         (1 << 7)
->>> +#define MCI_ST_DATA74DIREN     (1 << 8)
->>
->> Isn't MCI_ST_FBCLKEN = feedback clock enable and nothing
->> to do with directions really?
->
-> You do have a point here, but then we are about to go into the details. :-)
->
-> What MCI_ST_FBCLKEN means, is that the internal logic in the primecell
-> can decide whether to use the signal from clockout pin or the
-> feebackclock pin, when its latching incoming signals on the data bus.
->
-> That said, we for sure need a dt binding for bit as well, since this
-> is not possible to figure out how pins are routed in runtime.
->
-> Also, I do believe it is very closely related to the other sigdir
-> pins, since it's all about how pins is being routed, even if it's as
-> you say - in this case a matter of signal directions.
->
-> So, I guess we have two options here; Either move the MCI_ST_FBCLKEN
-> out of the signal-direction binding and invent a separate binding for
-> it, or just keep them as is.
+This series proposes creating a single implementation of the "pen
+release" (or spin-table) mechanism for starting secondary CPUs on
+ARM SMP systems.  This mechanism is currently implemented at least 5
+times in the kernel, each essentially identical to the other.  There
+are other machines that use this method, but slight differences make
+it necessary to incorporate further work in order to accomodate them
+with a single set of functions.
 
-If they are very closely related I guess that will become very
-clear when you document it in the requested explicit bindings,
-so no strong opinion here. I'd probably ACK either version.
+This work began with integrating SMP support for a Broadcom SoC.
+The code I started was another copy of the "pen release" code.
+Looking at how existing systems handled this, the duplication of
+code was obvious, but the fact that implementations were identical
+was less so.  In addition, the arm64 (though not 32-bit arm) code
+supports the ability to define an "enable-method" property for CPUs
+in a machine's device tree (one of which is "spin-table"), allowing
+the secondary startup mechanism to be specified abstractly.
 
->> Maybe we should just have single strings for these
->> things in the binding instead, like:
->>
->> @@ -118,6 +119,10 @@
->>                         bus-width = <4>;
->>                         mmc-cap-sd-highspeed;
->>                         mmc-cap-mmc-highspeed;
->> +                       st,signal-direction-data2;
->> +                       st,signal-direction-cmd;
->> +                       st,signal-direction-data0;
->> +                       st,feedback-clock-enable;
->>                         vmmc-supply = <&ab8500_ldo_aux3_reg>;
->>                         vqmmc-supply = <&vmmci>;
->>                         pinctrl-names = "default", "sleep";
->
-> I guess this is an option. To me it just seems a bit silly to have one
-> separate binding for each single bit, but maybe it becomes clearer?
+My broader goal then was to set up the SMP support for the Broadcom
+SoC such that it could be defined in its device tree using a central
+"spin-table" enable method for secondary CPUs.  The first step was
+to create a central spin-table implementation.  I've tried to do
+this generally so it's usable by as many other platforms as
+possible.  (An alternative would be to define a custom enable method
+for this platform, but I'd prefer to avoid that if I can.)
 
-The idea with device trees is to be very human-readable, so I guess
-if you have preprocessor macro things |:ing the arguments together
-to a singular 32bit value it serves the same purpose. Arguably this
-version is even easier for a human to read though.
+I already have some code for the second step--which supports
+specifying the "spin-table" CPU enable method in device tree files.
+But before presenting that I wanted to post this series to get
+feedback on the approach.
 
-What we should avoid is using magic number assignments to
-save space (e.g. have magic numbers in the tree rather than
-readable strings) so I lean toward this, but it's admittedly in a
-grey area, so again no strong opinion.
+I've provided a little more information for each patch below.
 
-Yours,
-Linus Walleij
+This code is available in the "review/common-spin-code" branch of
+the git repository here:
+    http://git.linaro.org/landing-teams/working/broadcom/kernel.git
+
+
+					-Alex
+
+Alex Elder (7):
+  ARM: allow <asm/cputype.h> inclusion from assembly
+    This patch is done specifically so the next one can use the
+    value of MPIDR_HWID_BITMASK in secondary_holding_pen(), which is
+    defined in asssembly.
+  ARM: SMP: generic SMP spin-table method routines
+    Define the common code (based on any of the others, but
+    reportedly they all derive from ARM Realview.)  Names are
+    changed to be more like arch/arm64/kernel/smp_spin_table.c.
+
+  ARM: realview: use central SMP spin-table routines
+  ARM: vexpress: use central SMP spin-table routines
+  ARM: versatile: kill off SMP support code
+  	The SMP code for realview and vexpress both use SMP code
+	defined under mach-versatile, so these three go together.
+
+  ARM: ux500: use generic SMP spin-table routines
+    This one is a pretty straightforward switch to using
+    the common code.
+  	
+  ARM: spear: use central SMP spin-table routines
+    This is straightforward as well, but it depends on the
+    two prerequisite patches mentioned above (which together
+    make this code roughly identical to the rest).
+
+ arch/arm/include/asm/cputype.h                 |    4 ++
+ arch/arm/include/asm/smp.h                     |    5 ++
+ arch/arm/kernel/head.S                         |   33 +++++++++
+ arch/arm/kernel/smp.c                          |   77 ++++++++++++++++++++
+ arch/arm/mach-realview/platsmp.c               |    8 +--
+ arch/arm/mach-spear/Makefile                   |    2 +-
+ arch/arm/mach-spear/generic.h                  |    1 -
+ arch/arm/mach-spear/headsmp.S                  |   47 ------------
+ arch/arm/mach-spear/platsmp.c                  |   75 +------------------
+ arch/arm/mach-ux500/Makefile                   |    2 +-
+ arch/arm/mach-ux500/headsmp.S                  |   37 ----------
+ arch/arm/mach-ux500/platsmp.c                  |   72 +------------------
+ arch/arm/mach-vexpress/platsmp.c               |    8 +--
+ arch/arm/mach-vexpress/v2m.c                   |    1 -
+ arch/arm/plat-versatile/Makefile               |    1 -
+ arch/arm/plat-versatile/headsmp.S              |   41 -----------
+ arch/arm/plat-versatile/include/plat/platsmp.h |   14 ----
+ arch/arm/plat-versatile/platsmp.c              |   91 ------------------------
+ 18 files changed, 133 insertions(+), 386 deletions(-)
+ delete mode 100644 arch/arm/mach-spear/headsmp.S
+ delete mode 100644 arch/arm/mach-ux500/headsmp.S
+ delete mode 100644 arch/arm/plat-versatile/headsmp.S
+ delete mode 100644 arch/arm/plat-versatile/include/plat/platsmp.h
+ delete mode 100644 arch/arm/plat-versatile/platsmp.c
+
+-- 
+1.7.9.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
