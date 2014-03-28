@@ -1,98 +1,39 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: [RFC 2/5] of: Create of_console_check() for selecting a console specified in /chosen
-Date: Fri, 28 Mar 2014 09:08:02 -0700
-Message-ID: <1396022885-6102-3-git-send-email-grant.likely@linaro.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [RFC 4/5] arm/versatile: Add the uart as the stdout device.
+Date: Fri, 28 Mar 2014 09:08:04 -0700
+Message-ID: <1396022885-6102-5-git-send-email-grant.likely@linaro.org>
 References: <1396022885-6102-1-git-send-email-grant.likely@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1396022885-6102-1-git-send-email-grant.likely@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, christoffer.dall@linaro.org, linux-kernel@vger.kernel.org, olof@lixom.net, benh@kernel.crashing.org, rob.herring@linaro.org
-Cc: Grant Likely <grant.likely@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1396022885-6102-1-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The devicetree has a binding for specifying the console device in the
-/chosen node, but the kernel doesn't use it consistently. This change
-adds an API for testing if a device node is a console, and adds a
-preferred console entry if it is.
-
-At the same time this patch removes the of_device_is_stdout_path() API
-since it is unused.
-
-Signed-off-by: Grant Likely <grant.likely@linaro.org>
+Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/of/base.c  | 23 +++++++++++++----------
- include/linux/of.h |  6 +++---
- 2 files changed, 16 insertions(+), 13 deletions(-)
+ arch/arm/boot/dts/versatile-ab.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index be2861d69b02..a5643badeb1d 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -17,6 +17,7 @@
-  *      as published by the Free Software Foundation; either version
-  *      2 of the License, or (at your option) any later version.
-  */
-+#include <linux/console.h>
- #include <linux/ctype.h>
- #include <linux/cpu.h>
- #include <linux/module.h>
-@@ -2073,20 +2074,22 @@ const char *of_prop_next_string(struct property *prop, const char *cur)
- EXPORT_SYMBOL_GPL(of_prop_next_string);
+diff --git a/arch/arm/boot/dts/versatile-ab.dts b/arch/arm/boot/dts/versatile-ab.dts
+index e01e5a081def..88e94c5506a1 100644
+--- a/arch/arm/boot/dts/versatile-ab.dts
++++ b/arch/arm/boot/dts/versatile-ab.dts
+@@ -15,6 +15,10 @@
+ 		i2c0 = &i2c0;
+ 	};
  
- /**
-- * of_device_is_stdout_path - check if a device node matches the
-- *                            linux,stdout-path property
-- *
-- * Check if this device node matches the linux,stdout-path property
-- * in the chosen node. return true if yes, false otherwise.
-+ * of_console_check() - Test and setup console for DT setup
-+ * @dn - Pointer to device node
-+ * @name - Name to use for preferred console without index. ex. "ttyS"
-+ * @index - Index to use for preferred console.
-+ *
-+ * Check if the given device node matches the stdout-path property in the
-+ * /chosen node. If it does then register it as the preferred console and return
-+ * TRUE. Otherwise return FALSE.
-  */
--int of_device_is_stdout_path(struct device_node *dn)
-+bool of_console_check(struct device_node *dn, char *name, int index)
- {
--	if (!of_stdout)
-+	if (!dn || dn != of_stdout || console_set_on_cmdline)
- 		return false;
--
--	return of_stdout == dn;
-+	return add_preferred_console(name, index, NULL);
- }
--EXPORT_SYMBOL_GPL(of_device_is_stdout_path);
-+EXPORT_SYMBOL_GPL(of_console_check);
- 
- /**
-  *	of_find_next_cache_node - Find a node's subsidiary cache
-diff --git a/include/linux/of.h b/include/linux/of.h
-index a8b9dad90c64..417945ebd8e1 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -343,7 +343,7 @@ const __be32 *of_prop_next_u32(struct property *prop, const __be32 *cur,
-  */
- const char *of_prop_next_string(struct property *prop, const char *cur);
- 
--int of_device_is_stdout_path(struct device_node *dn);
-+bool of_console_check(struct device_node *dn, char *name, int index);
- 
- #else /* CONFIG_OF */
- 
-@@ -544,9 +544,9 @@ static inline int of_machine_is_compatible(const char *compat)
- 	return 0;
- }
- 
--static inline int of_device_is_stdout_path(struct device_node *dn)
-+static bool of_console_check(const struct device_node *dn, const char *name, int index)
- {
--	return 0;
-+	return false;
- }
- 
- static inline const __be32 *of_prop_next_u32(struct property *prop,
++	chosen {
++		stdout-path = &uart0;
++	};
++
+ 	memory {
+ 		reg = <0x0 0x08000000>;
+ 	};
 -- 
 1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
