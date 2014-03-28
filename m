@@ -1,223 +1,88 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v4 1/3] arm64: dts: add initial dts for Samsung GH7 SoC and
- SSDK-GH7 board
-Date: Fri, 28 Mar 2014 17:57:48 +0900
-Message-ID: <023601cf4a63$cb1bfae0$6153f0a0$@samsung.com>
-References: <000301cf4509$2b6400b0$822c0210$@samsung.com>
+From: "Gupta, Pekon" <pekon@ti.com>
+Subject: RE: [PATCH RFC 1/3] Devicetree: Add pl353 smc controller devicetree
+ binding information
+Date: Fri, 28 Mar 2014 08:58:23 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EAB952B@DBDE04.ent.ti.com>
+References: <1395944467-26291-1-git-send-email-punnaia@xilinx.com>
+ <05521479-afd6-4c52-afbb-ef3fe2dafd18@CH1EHSMHS001.ehs.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <000301cf4509$2b6400b0$822c0210$@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: 'Thomas Abraham' <thomas.ab@samsung.com>, mark.rutland@arm.com, 'Catalin Marinas' <Catalin.Marinas@arm.com>, ilho215.lee@samsung.com
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <05521479-afd6-4c52-afbb-ef3fe2dafd18@CH1EHSMHS001.ehs.local>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "ezequiel.garcia@free-electrons.com" <ezequiel.garcia@free-electrons.com>, "arnd@arndb.de" <arnd@arndb.de>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, "jussi.kivilinna@iki.fi" <jussi.kivil>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "kalluripunnaiahchoudary@gmail.com" <kalluripunnaiahchoudary@gmail.com>, "kpc528@gmail.com" <kpc528@gmail.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Kukjin Kim wrote:
-> 
-> 
-> Signed-off-by: Kukjin Kim <kgene.kim@samsung.com>
-> Reviewed-by: Thomas Abraham <thomas.ab@samsung.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> ---
-> 
-> Changes since v3:
-> - addressed comments from Mark
->   : updated reserved memory
->   : fixed interrupt trigger for pmu and serial
-> - removing 'gh7-pmu' from PMU compatible string
-> 
-> Since the patch 2nd and 3rd are same with previous version I'm not re-
-> posting.
-> 
->  arch/arm64/boot/dts/samsung-gh7.dtsi     |  134
-> ++++++++++++++++++++++++++++++
->  arch/arm64/boot/dts/samsung-ssdk-gh7.dts |   26 ++++++
->  2 files changed, 160 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/samsung-gh7.dtsi
->  create mode 100644 arch/arm64/boot/dts/samsung-ssdk-gh7.dts
-> 
-> diff --git a/arch/arm64/boot/dts/samsung-gh7.dtsi
-> b/arch/arm64/boot/dts/samsung-gh7.dtsi
-> new file mode 100644
-> index 0000000..d3ab914
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/samsung-gh7.dtsi
-> @@ -0,0 +1,134 @@
-> +/*
-> + * SAMSUNG GH7 SoC device tree source
-> + *
-> + * Copyright (c) 2014 Samsung Electronics Co., Ltd.
-> + *		http://www.samsung.com
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> +*/
-> +
-> +/memreserve/ 0x80000000 0x00010000;
-> +
-> +/ {
-> +	interrupt-parent = <&gic>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	aliases {
-> +		serial0 = "/amba/uart@12c00000";
-> +	};
-> +
-> +	cpus {
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +
-> +		cpu@000 {
-> +			device_type = "cpu";
-> +			compatible = "arm,armv8";
-> +			reg = <0x0 0x000>;
-> +			enable-method = "spin-table";
-> +			cpu-release-addr = <0x0 0x8000fff8>;
-> +		};
-> +		cpu@001 {
-> +			device_type = "cpu";
-> +			compatible = "arm,armv8";
-> +			reg = <0x0 0x001>;
-> +			enable-method = "spin-table";
-> +			cpu-release-addr = <0x0 0x8000fff8>;
-> +		};
-> +		cpu@002 {
-> +			device_type = "cpu";
-> +			compatible = "arm,armv8";
-> +			reg = <0x0 0x002>;
-> +			enable-method = "spin-table";
-> +			cpu-release-addr = <0x0 0x8000fff8>;
-> +		};
-> +		cpu@003 {
-> +			device_type = "cpu";
-> +			compatible = "arm,armv8";
-> +			reg = <0x0 0x003>;
-> +			enable-method = "spin-table";
-> +			cpu-release-addr = <0x0 0x8000fff8>;
-> +		};
-> +		cpu@100 {
-> +			device_type = "cpu";
-> +			compatible = "arm,armv8";
-> +			reg = <0x0 0x100>;
-> +			enable-method = "spin-table";
-> +			cpu-release-addr = <0x0 0x8000fff8>;
-> +		};
-> +		cpu@101 {
-> +			device_type = "cpu";
-> +			compatible = "arm,armv8";
-> +			reg = <0x0 0x101>;
-> +			enable-method = "spin-table";
-> +			cpu-release-addr = <0x0 0x8000fff8>;
-> +		};
-> +		cpu@102 {
-> +			device_type = "cpu";
-> +			compatible = "arm,armv8";
-> +			reg = <0x0 0x102>;
-> +			enable-method = "spin-table";
-> +			cpu-release-addr = <0x0 0x8000fff8>;
-> +		};
-> +		cpu@103 {
-> +			device_type = "cpu";
-> +			compatible = "arm,armv8";
-> +			reg = <0x0 0x103>;
-> +			enable-method = "spin-table";
-> +			cpu-release-addr = <0x0 0x8000fff8>;
-> +		};
-> +	};
-> +
-> +	gic: interrupt-controller@1C000000 {
-> +		compatible = "arm,cortex-a15-gic";
-> +		#interrupt-cells = <3>;
-> +		interrupt-controller;
-> +		reg = <0x0 0x1C001000 0 0x1000>,	/* GIC Dist */
-> +		      <0x0 0x1C002000 0 0x1000>,	/* GIC CPU */
-> +		      <0x0 0x1C004000 0 0x2000>,	/* GIC VCPU Control
-*/
-> +		      <0x0 0x1C006000 0 0x2000>;	/* GIC VCPU */
-> +		interrupts = <1 9 0xf04>;	/* GIC Maintenence IRQ */
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <1 13 0xff01>,	/* Secure Phys IRQ */
-> +			     <1 14 0xff01>,	/* Non-secure Phys IRQ */
-> +			     <1 11 0xff01>,	/* Virt IRQ */
-> +			     <1 10 0xff01>;	/* Hyp IRQ */
-> +	};
-> +
-> +	pmu {
-> +		compatible = "armv8-pmuv3";
-> +		interrupts = <0 294 8>,
-> +			     <0 295 8>,
-> +			     <0 296 8>,
-> +			     <0 297 8>,
-> +			     <0 298 8>,
-> +			     <0 299 8>,
-> +			     <0 300 8>,
-> +			     <0 301 8>;
-> +	};
-> +
-> +	amba {
-> +		compatible = "arm,amba-bus";
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		serial@12c00000 {
-> +			compatible = "arm,pl011", "arm,primecell";
-> +			reg = <0 0x12c00000 0 0x10000>;
-> +			interrupts = <0 418 4>;
-> +		};
-> +
-> +		serial@12c20000 {
-> +			compatible = "arm,pl011", "arm,primecell";
-> +			reg = <0 0x12c20000 0 0x10000>;
-> +			interrupts = <0 420 4>;
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/samsung-ssdk-gh7.dts
-> b/arch/arm64/boot/dts/samsung-ssdk-gh7.dts
-> new file mode 100644
-> index 0000000..80bd93c
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/samsung-ssdk-gh7.dts
-> @@ -0,0 +1,26 @@
-> +/*
-> + * SAMSUNG SSDK-GH7 board device tree source
-> + *
-> + * Copyright (c) 2014 Samsung Electronics Co., Ltd.
-> + *		http://www.samsung.com
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> +*/
-> +
-> +/dts-v1/;
-> +#include "samsung-gh7.dtsi"
-> +
-> +/ {
-> +	model = "samsung,SSDK-GH7";
-> +	compatible = "samsung,ssdk-gh7", "samsung,gh7";
-> +
-> +	chosen {
-> +	};
-> +
-> +	memory@80000000 {
-> +		device_type = "memory";
-> +		reg = <0x00000000 0x80000000 0 0x80000000>;
-> +	};
-> +};
-> --
-> 1.7.10.4
+>From: Punnaiah Choudary Kalluri [mailto:punnaiah.choudary.kalluri@xilinx.com]
+>
+>Add pl353 static memory controller devicetree binding information.
+>
+>Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+>---
+> .../bindings/memory-controllers/pl353-smc.txt      |   53 ++++++++++++++++++++
+> 1 files changed, 53 insertions(+), 0 deletions(-)
+> create mode 100644 Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt
+>
+>diff --git a/Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt b/Documentation/devicetree/bindings/memory-
+>controllers/pl353-smc.txt
+>new file mode 100644
+>index 0000000..623c1c6
+>--- /dev/null
+>+++ b/Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt
+>@@ -0,0 +1,53 @@
+>+Device tree bindings for ARM PL353 static memory controller
+>+
+>+PL353 static memory controller supports two kinds of memory
+>+interfaces.i.e NAND and SRAM/NOR interfaces.
+>+The actual devices are instantiated from the child nodes of pl353 smc node.
+>+
+>+Required properties:
+>+- compatible		: Should be "arm,pl353-smc-r2p1"
+>+- reg			: Controller registers map and length.
+>+- clock-names		: List of input clock names - "ref_clk", "aper_clk"
+>+			  (See clock bindings for details).
+>+- clocks		: Clock phandles (see clock bindings for details).
+>+- address-cells	: Address cells, must be 1.
+>+- size-cells		: Size cells. Must be 1.
+>+
+>+Child nodes:
+>+ For NAND the "arm,pl353-nand-r2p1" and for NOR the "cfi-flash" drivers are
+>+supported as child nodes.
+>+
+>+Mandatory timing properties for child nodes:
+>+- arm,nand-cycle-t0	: Read cycle time(t_rc).
+>+- arm,nand-cycle-t1	: Write cycle time(t_wc).
+>+- arm,nand-cycle-t2	: re_n assertion delay(t_rea).
+>+- arm,nand-cycle-t3	: we_n de-assertion delay(t_wp).
+>+- arm,nand-cycle-t4	: Status read time(t_clr)
+>+- arm,nand-cycle-t5	: ID read time(t_ar)
+>+- arm,nand-cycle-t6	: busy to re_n(t_rr)
+>+
 
-Ping
+It would be good to have DT-bindings with meaningful names,
+and suffixed with timing units like "ns" | "ps".
+Also, as many of these timing parameters are common across NAND device
+vendors, so why not get them added to  generic NAND bindings list.
+	Documentation/devicetree/bindings/mtd/nand.txt
 
-- Kukjin
+Another driver using similar bindings for NAND device timings
+	[RFC 13/47] mtd: nand: stm_nand_bch: provide Device Tree support
+	http://lists.infradead.org/pipermail/linux-mtd/2014-March/052890.html
+
+
+with regards, pekon
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
