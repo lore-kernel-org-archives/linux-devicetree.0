@@ -1,55 +1,65 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v5 2/2] i2c: New bus driver for the Qualcomm QUP I2C
- controller
-Date: Fri, 28 Mar 2014 23:51:39 +0100
-Message-ID: <20140328225139.GC29200@katana>
-References: <1394762863-12154-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1394762863-12154-3-git-send-email-bjorn.andersson@sonymobile.com>
- <20140314180038.GT18529@joshc.qualcomm.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5G06lTa6Jq83wMTw"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140314180038.GT18529@joshc.qualcomm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Josh Cartwright <joshc@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Andy Gross <agross@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH 0/5] Renesas VMSA-compatible IPMMU DT support
+Date: Sat, 29 Mar 2014 00:36:16 +0100
+Message-ID: <1396049781-12941-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: iommu@lists.linux-foundation.org
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Will Deacon <will.deacon@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
---5G06lTa6Jq83wMTw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This patch set adds DT support to the Renesas VMSA-compatible IPMMU driver.
+The first patch refactors the driver to remove dependencies on platform data,
+the second patch adds the DT bindings documentation and the third patch
+implement them in the driver.
 
+The next two patches show real-life examples for IPMMU DT bindings usage.
+Patch 4/5 adds IPMMU DT nodes to the r8a7791 SoC dtsi file, and patch 5/5
+enables IOMMU support for the VSP1 on the same platform.
 
-> General i2c question: is there a reason why the core isn't responsible
-> for ensuring a device is not suspended before invoking ->master_xfer
-> (and smbus_xfer)?
+The patches are based on top of the IPMMU driver previously submitted to the
+iommu mailing list. The last patch additionally requires to VSP1 DT support
+patch series previously submitted to the linux-media mailing list and is thus
+a test patch only at the moment, not meant to be merged yet.
 
-Can't think of one right now.
+The DT bindings are pretty simple, with only three standard properties in the
+IPMMU DT node. The device to IOMMU association is represented in the bus master
+device nodes using an iommus property, similarly to interrupts or clocks. This
+model departs from the ARM SMMU DT bindings that represent the same information
+inside the IOMMU DT node. I'm not sure what's best, so I'm open to suggestions.
 
+Every IPMMU instance serves multiple bus master devices and implements four
+independent page tables and TLBs. Each bus master can be freely assigned to one
+of the page tables, lowering the risk of TLB miss when multiple bus masters
+require address translation at the same time. I've decided not to express the
+bus master to page table association in DT as this seems to me to be a software
+configuration decision, not a hardware property. Feel free to disagree.
 
---5G06lTa6Jq83wMTw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+As a side note, there's no API at the moment to configure that association. My
+plan is to assign bus masters to page tables automatically in the driver in a
+round-robin way. A more configurable solution might be needed later, but I
+believe that's out of scope of DT.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
+Cc: devicetree@vger.kernel.org
+Cc: Will Deacon <will.deacon@arm.com>
 
-iQIcBAEBAgAGBQJTNfz7AAoJEBQN5MwUoCm2A2YP+wep39VhQGg2HGyEB3+E2LTT
-QWlvKlVg8XMnY/EMmKRWytdw/p/NIOzWytboxYRd4yvRP0KbZj827E3JyGW4aoyJ
-myI6slkxacX2qmxjPoAM0oY83c+qJJfMKzIdINllPGXcSxHgKrANG9r+/TteNSYt
-fam41roINW2aWE7+g1kKsqzNVsaeI+dmJ0mRittgHHoSd7QW1ENCFt+z+GoFW/3M
-NhoqAWpkoamSVoNeqmaJ1Qukk3d1bRwChOBJUdyYgAXPaAl+rxDdOfIiKuu1YhTx
-ysCjW5viAk/30z14afvNRkTic1+L3a8IfywOs78/147Cy5fnkWWIXmE8iFBpAgEo
-HCYxnRhLSoEyTf5dUxLRSvfUxp4/SbVsGECY7sQqbceK/m/kGqo39LNcXIIQJBKE
-DiiTG7+rTnwPTWUestk5hs63o1nPJ96JUodM0s4OhBU2XSC88aB/FohUJmw5tOqZ
-dybv3oVjnBl82KBy7BBSSwmTYYECut3Xv0pbH/6Om1Z4g6yEfaT7ee/Cp9I5YyOe
-vFRTJ0zNJ5SjEAElzXlXWg+0n1gDgy5zbVvyuoH/XpfR1FdugaacnTnR+WYiqEeA
-SQGwzYoS3TDydEi6f1k1i71M/d7xZGX9eSAKx+fo5pjmxDBovhiUpJd+BKCS94+v
-HlllAvUAtrlknr3d+9z5
-=HWUs
------END PGP SIGNATURE-----
+Laurent Pinchart (5):
+  iommu/ipmmu-vmsa: Refactor micro-TLB lookup
+  iommu/ipmmu-vmsa: Add device tree bindings documentation
+  iommu/ipmmu-vmsa: Add device tree support
+  ARM: shmobile: r8a7791: Add IPMMU DT nodes
+  [TEST] ARM: shmobile: r8a7791: Enable IOMMU support for the VSP1
 
---5G06lTa6Jq83wMTw--
+ .../bindings/iommu/renesas,ipmmu-vmsa.txt          |  35 +++++++
+ arch/arm/boot/dts/r8a7791.dtsi                     |  54 ++++++++++
+ drivers/iommu/ipmmu-vmsa.c                         | 115 +++++++++++++--------
+ 3 files changed, 163 insertions(+), 41 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
+
+-- 
+Regards,
+
+Laurent Pinchart
+
