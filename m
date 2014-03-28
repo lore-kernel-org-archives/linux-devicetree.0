@@ -1,64 +1,53 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH 2/5] iommu/ipmmu-vmsa: Add device tree bindings documentation
-Date: Sat, 29 Mar 2014 00:36:18 +0100
-Message-ID: <1396049781-12941-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1396049781-12941-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1396049781-12941-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: iommu@lists.linux-foundation.org
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Will Deacon <will.deacon@arm.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 5/5] tty: Update hypervisor tty drivers to use core stdout parsing code.
+Date: Fri, 28 Mar 2014 14:41:35 -0700
+Message-ID: <20140328214135.36027C41FF4@trevor.secretlab.ca>
+References: <1396022885-6102-1-git-send-email-grant.likely@linaro.org> < 1396022885-6102-6-git-send-email-grant.likely@linaro.org> <20140328185443. GA26433@quad.lixom.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140328185443.GA26433-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Cc: devicetree@vger.kernel.org
-Cc: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
----
- .../bindings/iommu/renesas,ipmmu-vmsa.txt          | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
+On Fri, 28 Mar 2014 11:54:43 -0700, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+> On Fri, Mar 28, 2014 at 09:08:05AM -0700, Grant Likely wrote:
+> > diff --git a/drivers/tty/ehv_bytechan.c b/drivers/tty/ehv_bytechan.c
+> > index 0419b69e270f..4f485e88f60c 100644
+> > --- a/drivers/tty/ehv_bytechan.c
+> > +++ b/drivers/tty/ehv_bytechan.c
+> > @@ -108,55 +108,23 @@ static void disable_tx_interrupt(struct ehv_bc_data *bc)
+> >   *
+> >   * The byte channel to be used for the console is specified via a "stdout"
+> >   * property in the /chosen node.
+> > - *
+> > - * For compatible with legacy device trees, we also look for a "stdout" alias.
+> >   */
+> 
+> Did you mean to remove this /aliases/stdout checking? Based on the comment it
+> seems that some older device trees / platforms might rely on it?
 
-diff --git a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
-new file mode 100644
-index 0000000..72e8590
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
-@@ -0,0 +1,35 @@
-+* Renesas VMSA-Compatible IOMMU
-+
-+The IPMMU is an IOMMU implementation compatible with the ARM VMSA page tables.
-+It provides address translation bus masters outside of the CPU, each connected
-+to the IPMMU through a port called micro-TLB.
-+
-+
-+Required Properties:
-+
-+  - compatible: Must contain "renesas,ipmmu-vmsa".
-+  - reg: Base address and size of the IPMMU registers.
-+  - interrupts: Specifier for the MMU fault interrupt.
-+
-+
-+Each bus master connected to an IPMMU must reference the IPMMU in its device
-+node with the following property:
-+
-+  - iommus: A reference to the IPMMU in two cells. The first cell is a phandle
-+    to the IPMMU and the second cell the number of the micro-TLB that the
-+    device is connected to.
-+
-+
-+Example: R8A7791 IPMMU-MX and VSP1-D0 bus master
-+
-+	ipmmu_mx: mmu@fe951800 {
-+		compatible = "renasas,ipmmu-vmsa";
-+		reg = <0 0xfe951800 0 0x800>;
-+		interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	vsp1@fe928000 {
-+		...
-+		iommus = <&ipmmu_mx 13>;
-+		...
-+	};
--- 
-1.8.3.2
+I moved it to the common code.
 
+> > diff --git a/drivers/tty/hvc/hvc_opal.c b/drivers/tty/hvc/hvc_opal.c
+> > index b01659bd4f7c..0ec1a80dd6a2 100644
+> > --- a/drivers/tty/hvc/hvc_opal.c
+> > +++ b/drivers/tty/hvc/hvc_opal.c
+> > @@ -322,22 +322,14 @@ static void udbg_init_opal_common(void)
+> >  
+> >  void __init hvc_opal_init_early(void)
+> >  {
+> > -	struct device_node *stdout_node = NULL;
+> > +	struct device_node *stdout_node = of_node_get(of_stdout);
+> >  	const __be32 *termno;
+> >  	const char *name = NULL;
+> 
+> Name is no longer used, should be removed.
+
+Fixed, thanks.
+
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
