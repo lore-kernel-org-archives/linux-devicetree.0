@@ -1,38 +1,49 @@
-From: Huang Shijie <b32955@freescale.com>
-Subject: Re: [PATCHv2 1/1] mtd: gpmi: make blockmark swapping optional
-Date: Fri, 28 Mar 2014 16:39:00 +0800
-Message-ID: <53353524.9020605@freescale.com>
-References: <532BCFCC.4080205@freescale.com>	<1395399017-19005-1-git-send-email-LW@KARO-electronics.de>	<20140324095902.GB11377@localhost>	<20140326095156.3e5585b8@ipc1.ka-ro>	<5332AEE7.2040402@freescale.com>	<20140326125502.0e8d0657@ipc1.ka-ro>	<20140327095956.GA29623@localhost>	<20140327132109.06258526@ipc1.ka-ro>	<5334D9F7.2030001@freescale.com> <20140328091646.1ce03f90@ipc1.ka-ro>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [RFC] Serial port aliases in DT
+Date: Fri, 28 Mar 2014 09:39:22 +0100
+Message-ID: <CAMuHMdVYhGGt7+fR4oHzf-hDvTOWbHfhM2g92eo3RqULd6yR2A@mail.gmail.com>
+References: <5448979.WQPtOb56tW@avalon>
+	<20140328072827.GY17250@pengutronix.de>
+	<CAMuHMdUaywK4JiiKgr=6=kFoQKQuuh=+_-ThYECr53U1cuVNLA@mail.gmail.com>
+	<6506478.py2Axu25u1@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140328091646.1ce03f90@ipc1.ka-ro>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?TG90aGFyIFdhw59tYW5u?= <LW@KARO-electronics.de>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Shawn Guo <shawn.guo@freescale.com>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, David Woodhouse <dwmw2@infradead.org>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6506478.py2Axu25u1@wuerfel>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-=E4=BA=8E 2014=E5=B9=B403=E6=9C=8828=E6=97=A5 16:16, Lothar Wa=C3=9Fman=
-n =E5=86=99=E9=81=93:
-> Still there is no need for the Linux NAND driver to be able to read o=
-r
-> write partitions in a format that the Boot ROM can understand. Thus i=
-t
-If you do not use the NAND boot, there really no need to do so.
+Hi Arnd,
 
-Since you need the NAND boot, we should enable the swapping for imx28.
-> is perfectly legal to allow disregarding the BB marks and solely rely=
- on
-> a flash based BBT.
+On Fri, Mar 28, 2014 at 9:30 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Friday 28 March 2014 09:09:23 Geert Uytterhoeven wrote:
+>> On the Renesas SoCs, where this thread started, you also have different
+>> types of IP blocks providing similar functionality on the same SoC.
+>> E.g. 3 types of serial ports, 2 types of i2c, (at least) 2 types of spi...
+>> Hence one more level of confusion (is SoC serial0 the first serial port of
+>> type A, B, or C?).
 >
-The BB mark is in the page 0 of a NAND block. But the swapping can occu=
-r=20
-in _each_ page of
-a NAND block, _NOT_ only the page 0.
+> The 'serial' aliases are defined to refer to UARTs only, there is no debate
+> about that.
 
-I think you are confusing at these two things.
+All 3 serial port types are UARTs.
 
-thanks
-Huang Shijie
+For the serial ports, they are sufficiently similar to use the same driver.
+For i2c and spi, that's not the case, and they use different drivers.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
