@@ -1,49 +1,223 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [RFC] Serial port aliases in DT
-Date: Fri, 28 Mar 2014 09:39:22 +0100
-Message-ID: <CAMuHMdVYhGGt7+fR4oHzf-hDvTOWbHfhM2g92eo3RqULd6yR2A@mail.gmail.com>
-References: <5448979.WQPtOb56tW@avalon>
-	<20140328072827.GY17250@pengutronix.de>
-	<CAMuHMdUaywK4JiiKgr=6=kFoQKQuuh=+_-ThYECr53U1cuVNLA@mail.gmail.com>
-	<6506478.py2Axu25u1@wuerfel>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v4 1/3] arm64: dts: add initial dts for Samsung GH7 SoC and
+ SSDK-GH7 board
+Date: Fri, 28 Mar 2014 17:57:48 +0900
+Message-ID: <023601cf4a63$cb1bfae0$6153f0a0$@samsung.com>
+References: <000301cf4509$2b6400b0$822c0210$@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6506478.py2Axu25u1@wuerfel>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <000301cf4509$2b6400b0$822c0210$@samsung.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: 'Thomas Abraham' <thomas.ab@samsung.com>, mark.rutland@arm.com, 'Catalin Marinas' <Catalin.Marinas@arm.com>, ilho215.lee@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Kukjin Kim wrote:
+> 
+> 
+> Signed-off-by: Kukjin Kim <kgene.kim@samsung.com>
+> Reviewed-by: Thomas Abraham <thomas.ab@samsung.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> ---
+> 
+> Changes since v3:
+> - addressed comments from Mark
+>   : updated reserved memory
+>   : fixed interrupt trigger for pmu and serial
+> - removing 'gh7-pmu' from PMU compatible string
+> 
+> Since the patch 2nd and 3rd are same with previous version I'm not re-
+> posting.
+> 
+>  arch/arm64/boot/dts/samsung-gh7.dtsi     |  134
+> ++++++++++++++++++++++++++++++
+>  arch/arm64/boot/dts/samsung-ssdk-gh7.dts |   26 ++++++
+>  2 files changed, 160 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/samsung-gh7.dtsi
+>  create mode 100644 arch/arm64/boot/dts/samsung-ssdk-gh7.dts
+> 
+> diff --git a/arch/arm64/boot/dts/samsung-gh7.dtsi
+> b/arch/arm64/boot/dts/samsung-gh7.dtsi
+> new file mode 100644
+> index 0000000..d3ab914
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/samsung-gh7.dtsi
+> @@ -0,0 +1,134 @@
+> +/*
+> + * SAMSUNG GH7 SoC device tree source
+> + *
+> + * Copyright (c) 2014 Samsung Electronics Co., Ltd.
+> + *		http://www.samsung.com
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> +*/
+> +
+> +/memreserve/ 0x80000000 0x00010000;
+> +
+> +/ {
+> +	interrupt-parent = <&gic>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	aliases {
+> +		serial0 = "/amba/uart@12c00000";
+> +	};
+> +
+> +	cpus {
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +
+> +		cpu@000 {
+> +			device_type = "cpu";
+> +			compatible = "arm,armv8";
+> +			reg = <0x0 0x000>;
+> +			enable-method = "spin-table";
+> +			cpu-release-addr = <0x0 0x8000fff8>;
+> +		};
+> +		cpu@001 {
+> +			device_type = "cpu";
+> +			compatible = "arm,armv8";
+> +			reg = <0x0 0x001>;
+> +			enable-method = "spin-table";
+> +			cpu-release-addr = <0x0 0x8000fff8>;
+> +		};
+> +		cpu@002 {
+> +			device_type = "cpu";
+> +			compatible = "arm,armv8";
+> +			reg = <0x0 0x002>;
+> +			enable-method = "spin-table";
+> +			cpu-release-addr = <0x0 0x8000fff8>;
+> +		};
+> +		cpu@003 {
+> +			device_type = "cpu";
+> +			compatible = "arm,armv8";
+> +			reg = <0x0 0x003>;
+> +			enable-method = "spin-table";
+> +			cpu-release-addr = <0x0 0x8000fff8>;
+> +		};
+> +		cpu@100 {
+> +			device_type = "cpu";
+> +			compatible = "arm,armv8";
+> +			reg = <0x0 0x100>;
+> +			enable-method = "spin-table";
+> +			cpu-release-addr = <0x0 0x8000fff8>;
+> +		};
+> +		cpu@101 {
+> +			device_type = "cpu";
+> +			compatible = "arm,armv8";
+> +			reg = <0x0 0x101>;
+> +			enable-method = "spin-table";
+> +			cpu-release-addr = <0x0 0x8000fff8>;
+> +		};
+> +		cpu@102 {
+> +			device_type = "cpu";
+> +			compatible = "arm,armv8";
+> +			reg = <0x0 0x102>;
+> +			enable-method = "spin-table";
+> +			cpu-release-addr = <0x0 0x8000fff8>;
+> +		};
+> +		cpu@103 {
+> +			device_type = "cpu";
+> +			compatible = "arm,armv8";
+> +			reg = <0x0 0x103>;
+> +			enable-method = "spin-table";
+> +			cpu-release-addr = <0x0 0x8000fff8>;
+> +		};
+> +	};
+> +
+> +	gic: interrupt-controller@1C000000 {
+> +		compatible = "arm,cortex-a15-gic";
+> +		#interrupt-cells = <3>;
+> +		interrupt-controller;
+> +		reg = <0x0 0x1C001000 0 0x1000>,	/* GIC Dist */
+> +		      <0x0 0x1C002000 0 0x1000>,	/* GIC CPU */
+> +		      <0x0 0x1C004000 0 0x2000>,	/* GIC VCPU Control
+*/
+> +		      <0x0 0x1C006000 0 0x2000>;	/* GIC VCPU */
+> +		interrupts = <1 9 0xf04>;	/* GIC Maintenence IRQ */
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <1 13 0xff01>,	/* Secure Phys IRQ */
+> +			     <1 14 0xff01>,	/* Non-secure Phys IRQ */
+> +			     <1 11 0xff01>,	/* Virt IRQ */
+> +			     <1 10 0xff01>;	/* Hyp IRQ */
+> +	};
+> +
+> +	pmu {
+> +		compatible = "armv8-pmuv3";
+> +		interrupts = <0 294 8>,
+> +			     <0 295 8>,
+> +			     <0 296 8>,
+> +			     <0 297 8>,
+> +			     <0 298 8>,
+> +			     <0 299 8>,
+> +			     <0 300 8>,
+> +			     <0 301 8>;
+> +	};
+> +
+> +	amba {
+> +		compatible = "arm,amba-bus";
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		serial@12c00000 {
+> +			compatible = "arm,pl011", "arm,primecell";
+> +			reg = <0 0x12c00000 0 0x10000>;
+> +			interrupts = <0 418 4>;
+> +		};
+> +
+> +		serial@12c20000 {
+> +			compatible = "arm,pl011", "arm,primecell";
+> +			reg = <0 0x12c20000 0 0x10000>;
+> +			interrupts = <0 420 4>;
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/samsung-ssdk-gh7.dts
+> b/arch/arm64/boot/dts/samsung-ssdk-gh7.dts
+> new file mode 100644
+> index 0000000..80bd93c
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/samsung-ssdk-gh7.dts
+> @@ -0,0 +1,26 @@
+> +/*
+> + * SAMSUNG SSDK-GH7 board device tree source
+> + *
+> + * Copyright (c) 2014 Samsung Electronics Co., Ltd.
+> + *		http://www.samsung.com
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> +*/
+> +
+> +/dts-v1/;
+> +#include "samsung-gh7.dtsi"
+> +
+> +/ {
+> +	model = "samsung,SSDK-GH7";
+> +	compatible = "samsung,ssdk-gh7", "samsung,gh7";
+> +
+> +	chosen {
+> +	};
+> +
+> +	memory@80000000 {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x80000000 0 0x80000000>;
+> +	};
+> +};
+> --
+> 1.7.10.4
 
-On Fri, Mar 28, 2014 at 9:30 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Friday 28 March 2014 09:09:23 Geert Uytterhoeven wrote:
->> On the Renesas SoCs, where this thread started, you also have different
->> types of IP blocks providing similar functionality on the same SoC.
->> E.g. 3 types of serial ports, 2 types of i2c, (at least) 2 types of spi...
->> Hence one more level of confusion (is SoC serial0 the first serial port of
->> type A, B, or C?).
->
-> The 'serial' aliases are defined to refer to UARTs only, there is no debate
-> about that.
+Ping
 
-All 3 serial port types are UARTs.
-
-For the serial ports, they are sufficiently similar to use the same driver.
-For i2c and spi, that's not the case, and they use different drivers.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- Kukjin
