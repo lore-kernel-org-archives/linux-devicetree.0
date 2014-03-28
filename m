@@ -1,92 +1,29 @@
 From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCHv3 2/2] of/mtd/nand: add generic binding and helper for
- NAND_BBT_NO_OOB_BBM
-Date: Fri, 28 Mar 2014 11:35:07 +0100
-Message-ID: <1396002907-17750-3-git-send-email-LW@KARO-electronics.de>
+Subject: [PATCHv3 0/2] mtd: gpmi: make blockmark swapping optional
+Date: Fri, 28 Mar 2014 11:35:05 +0100
+Message-ID: <1396002907-17750-1-git-send-email-LW@KARO-electronics.de>
 References: <1395235406-13449-1-git-send-email-y>
- <1396002907-17750-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1396002907-17750-1-git-send-email-LW@KARO-electronics.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1395235406-13449-1-git-send-email-y>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
 To: Arnd Bergmann <arnd@arndb.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Fabio Estevam <fabio.estevam@freescale.com>, Huang Shijie <b32955@freescale.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Shawn Guo <shawn.guo@linaro.org>, Boris BREZILLON <b.brezillon.dev@gmail.com>, Ezequie
 List-Id: devicetree@vger.kernel.org
 
-YWRkIGEgYm9vbGVhbiBwcm9wZXJ0eSAnbmFuZC1uby1vb2ItYmJtJyBhbmQgaGVscGVyIGZ1bmN0
-aW9uIHRvIGJlCmFibGUgdG8gc2V0IHRoZSBOQU5EX0JCVF9OT19PT0JfQkJNIGZsYWcgaW4gRFQg
-Y2FwYWJsZSBOQU5EIGRyaXZlcnMKYW5kIHVzZSBpdCBmb3IgaS5NWCBhbmQgTVhTIG5hbmQgZHJp
-dmVycy4KClNpZ25lZC1vZmYtYnk6IExvdGhhciBXYcOfbWFubiA8TFdAS0FSTy1lbGVjdHJvbmlj
-cy5kZT4KLS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL25hbmQudHh0
-IHwgICAgMSArCiBkcml2ZXJzL210ZC9uYW5kL2dwbWktbmFuZC9ncG1pLW5hbmQuYyAgICAgICAg
-IHwgICAgMyArKysKIGRyaXZlcnMvbXRkL25hbmQvbXhjX25hbmQuYyAgICAgICAgICAgICAgICAg
-ICAgfCAgICAyICsrCiBkcml2ZXJzL29mL29mX210ZC5jICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHwgICAxMiArKysrKysrKysrKysKIGluY2x1ZGUvbGludXgvb2ZfbXRkLmggICAgICAgICAg
-ICAgICAgICAgICAgICAgfCAgICA2ICsrKysrKwogNSBmaWxlcyBjaGFuZ2VkLCAyNCBpbnNlcnRp
-b25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210
-ZC9uYW5kLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvbmFuZC50
-eHQKaW5kZXggYjUzZjkyZS4uZTQ2YmZiZSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL210ZC9uYW5kLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvbXRkL25hbmQudHh0CkBAIC01LDYgKzUsNyBAQAogICAic29mdF9iY2giLgog
-LSBuYW5kLWJ1cy13aWR0aCA6IDggb3IgMTYgYnVzIHdpZHRoIGlmIG5vdCBwcmVzZW50IDgKIC0g
-bmFuZC1vbi1mbGFzaC1iYnQ6IGJvb2xlYW4gdG8gZW5hYmxlIG9uIGZsYXNoIGJidCBvcHRpb24g
-aWYgbm90IHByZXNlbnQgZmFsc2UKKy0gbmFuZC1uby1vb2ItYmJtOiBib29sZWFuIHRvIGRpc2Fi
-bGUgd3JpdGluZyBiYWQgYmxvY2sgbWFya2VycyB0byBmbGFzaAogCiAtIG5hbmQtZWNjLXN0cmVu
-Z3RoOiBpbnRlZ2VyIHJlcHJlc2VudGluZyB0aGUgbnVtYmVyIG9mIGJpdHMgdG8gY29ycmVjdAog
-CQkgICAgIHBlciBFQ0Mgc3RlcC4KZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL25hbmQvZ3BtaS1u
-YW5kL2dwbWktbmFuZC5jIGIvZHJpdmVycy9tdGQvbmFuZC9ncG1pLW5hbmQvZ3BtaS1uYW5kLmMK
-aW5kZXggMmE0ODliMy4uYzIzZjI3YiAxMDA2NDQKLS0tIGEvZHJpdmVycy9tdGQvbmFuZC9ncG1p
-LW5hbmQvZ3BtaS1uYW5kLmMKKysrIGIvZHJpdmVycy9tdGQvbmFuZC9ncG1pLW5hbmQvZ3BtaS1u
-YW5kLmMKQEAgLTE3MDcsNiArMTcwNyw5IEBAIHN0YXRpYyBpbnQgZ3BtaV9uYW5kX2luaXQoc3Ry
-dWN0IGdwbWlfbmFuZF9kYXRhICp0aGlzKQogCWlmIChvZl9nZXRfbmFuZF9vbl9mbGFzaF9iYnQo
-dGhpcy0+ZGV2LT5vZl9ub2RlKSkgewogCQljaGlwLT5iYnRfb3B0aW9ucyB8PSBOQU5EX0JCVF9V
-U0VfRkxBU0ggfCBOQU5EX0JCVF9OT19PT0I7CiAKKwkJaWYgKG9mX2dldF9uYW5kX25vX29vYl9i
-Ym0odGhpcy0+ZGV2LT5vZl9ub2RlKSkKKwkJCWNoaXAtPmJidF9vcHRpb25zIHw9IE5BTkRfQkJU
-X05PX09PQl9CQk07CisKIAkJaWYgKG9mX3Byb3BlcnR5X3JlYWRfYm9vbCh0aGlzLT5kZXYtPm9m
-X25vZGUsCiAJCQkJCQkiZnNsLG5vLWJsb2NrbWFyay1zd2FwIikpCiAJCQl0aGlzLT5zd2FwX2Js
-b2NrX21hcmsgPSBmYWxzZTsKZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL25hbmQvbXhjX25hbmQu
-YyBiL2RyaXZlcnMvbXRkL25hbmQvbXhjX25hbmQuYwppbmRleCBkYmEyNjJiLi5iYjU0YTJhIDEw
-MDY0NAotLS0gYS9kcml2ZXJzL210ZC9uYW5kL214Y19uYW5kLmMKKysrIGIvZHJpdmVycy9tdGQv
-bmFuZC9teGNfbmFuZC5jCkBAIC0xNDk2LDYgKzE0OTYsOCBAQCBzdGF0aWMgaW50IG14Y25kX3By
-b2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCiAJCXRoaXMtPmJidF9tZCA9ICZiYnRf
-bWlycm9yX2Rlc2NyOwogCQkvKiB1cGRhdGUgZmxhc2ggYmFzZWQgYmJ0ICovCiAJCXRoaXMtPmJi
-dF9vcHRpb25zIHw9IE5BTkRfQkJUX1VTRV9GTEFTSDsKKwkJaWYgKG9mX2dldF9uYW5kX25vX29v
-Yl9iYm0ocGRldi0+ZGV2Lm9mX25vZGUpKQorCQkJdGhpcy0+YmJ0X29wdGlvbnMgfD0gTkFORF9C
-QlRfTk9fT09CX0JCTTsKIAl9CiAKIAlpbml0X2NvbXBsZXRpb24oJmhvc3QtPm9wX2NvbXBsZXRp
-b24pOwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9vZi9vZl9tdGQuYyBiL2RyaXZlcnMvb2Yvb2ZfbXRk
-LmMKaW5kZXggYjczNjFlZC4uZDk0N2FjYyAxMDA2NDQKLS0tIGEvZHJpdmVycy9vZi9vZl9tdGQu
-YworKysgYi9kcml2ZXJzL29mL29mX210ZC5jCkBAIC0xMTcsMyArMTE3LDE1IEBAIGJvb2wgb2Zf
-Z2V0X25hbmRfb25fZmxhc2hfYmJ0KHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnApCiAJcmV0dXJuIG9m
-X3Byb3BlcnR5X3JlYWRfYm9vbChucCwgIm5hbmQtb24tZmxhc2gtYmJ0Iik7CiB9CiBFWFBPUlRf
-U1lNQk9MX0dQTChvZl9nZXRfbmFuZF9vbl9mbGFzaF9iYnQpOworCisvKioKKyAqIG9mX2dldF9u
-YW5kX25vX29vYl9iYm0gLSBHZXQgbmFuZCBubyBvb2IgYmJtIGZvciBnaXZlbiBkZXZpY2Vfbm9k
-ZQorICogQG5wOglQb2ludGVyIHRvIHRoZSBnaXZlbiBkZXZpY2Vfbm9kZQorICoKKyAqIHJldHVy
-biB0cnVlIGlmIHByZXNlbnQsIGZhbHNlIG90aGVyd2lzZQorICovCitib29sIG9mX2dldF9uYW5k
-X25vX29vYl9iYm0oc3RydWN0IGRldmljZV9ub2RlICpucCkKK3sKKwlyZXR1cm4gb2ZfcHJvcGVy
-dHlfcmVhZF9ib29sKG5wLCAibmFuZC1uby1vb2ItYmJtIik7Cit9CitFWFBPUlRfU1lNQk9MX0dQ
-TChvZl9nZXRfbmFuZF9ub19vb2JfYmJtKTsKZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvb2Zf
-bXRkLmggYi9pbmNsdWRlL2xpbnV4L29mX210ZC5oCmluZGV4IGUyNjZjYWEuLjZlY2UxYTkgMTAw
-NjQ0Ci0tLSBhL2luY2x1ZGUvbGludXgvb2ZfbXRkLmgKKysrIGIvaW5jbHVkZS9saW51eC9vZl9t
-dGQuaApAQCAtMTcsNiArMTcsNyBAQCBpbnQgb2ZfZ2V0X25hbmRfZWNjX3N0ZXBfc2l6ZShzdHJ1
-Y3QgZGV2aWNlX25vZGUgKm5wKTsKIGludCBvZl9nZXRfbmFuZF9lY2Nfc3RyZW5ndGgoc3RydWN0
-IGRldmljZV9ub2RlICpucCk7CiBpbnQgb2ZfZ2V0X25hbmRfYnVzX3dpZHRoKHN0cnVjdCBkZXZp
-Y2Vfbm9kZSAqbnApOwogYm9vbCBvZl9nZXRfbmFuZF9vbl9mbGFzaF9iYnQoc3RydWN0IGRldmlj
-ZV9ub2RlICpucCk7Citib29sIG9mX2dldF9uYW5kX25vX29vYl9iYm0oc3RydWN0IGRldmljZV9u
-b2RlICpucCk7CiAKICNlbHNlIC8qIENPTkZJR19PRl9NVEQgKi8KIApAQCAtNDUsNiArNDYsMTEg
-QEAgc3RhdGljIGlubGluZSBib29sIG9mX2dldF9uYW5kX29uX2ZsYXNoX2JidChzdHJ1Y3QgZGV2
-aWNlX25vZGUgKm5wKQogCXJldHVybiBmYWxzZTsKIH0KIAorc3RhdGljIGlubGluZSBib29sIG9m
-X2dldF9uYW5kX25vX29vYl9iYm0oc3RydWN0IGRldmljZV9ub2RlICpucCkKK3sKKwlyZXR1cm4g
-ZmFsc2U7Cit9CisKICNlbmRpZiAvKiBDT05GSUdfT0ZfTVREICovCiAKICNlbmRpZiAvKiBfX0xJ
-TlVYX09GX01URF9IICovCi0tIAoxLjcuMTAuNAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4
-LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+patch added:
+- add an additional option to turn of BB mark writing
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
