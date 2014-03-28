@@ -1,55 +1,72 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCHv6 0/5] Input: edt-ft5x06: Add DT support
-Date: Fri, 28 Mar 2014 09:31:54 -0700
-Message-ID: <20140328163154.GE22658@core.coreip.homeip.net>
-References: <1395323075-12146-1-git-send-email-LW@KARO-electronics.de>
- <1395673870-29435-1-git-send-email-LW@KARO-electronics.de>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH RFC v3 2/2] clk: Add handling of clk parent and rate assigned from DT
+Date: Fri, 28 Mar 2014 17:44:17 +0100
+Message-ID: <2134974.m5sRReBBJh@avalon>
+References: <1395922579-28547-1-git-send-email-s.nawrocki@samsung.com> <46532903.ghnH4Us8Zz@avalon> <20140327144712.GW17250@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1395673870-29435-1-git-send-email-LW@KARO-electronics.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
-Cc: Fugang Duan <B38611@freescale.com>, Grant Likely <grant.likely@linaro.org>, Henrik Rydberg <rydberg@euromail.se>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jg1.han@samsung.com>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Sachin Kamat <sachin.kamat@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Budig <simon.budig@kernelconcepts.de>, Daniel Wagener <daniel.wagener@kernelconcepts.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140327144712.GW17250-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 24, 2014 at 04:11:05PM +0100, Lothar Wa=DFmann wrote:
-> Changes wrt. v1:
-> addressed the comments from Jingoo Han and Mark Rutland
-> - added another patch to convert the driver to use devm_* functions
-> - removed sysfs reference from bindings documentation
-> - changed '_' to '-' in property name
-> - added 'edt,' prefix to properties names
-> - added sanity check for parameters read from DT
-> - cleaned up the gpio handling code
->=20
-> Changes wrt. v2:
-> - fixed the devm_* messup reported by Dmitry Torokhov
-> - added unit for report-rate property to the binding doc
-> - added separate patch to fix the reset delays
->=20
-> Changes wrt: v3:
-> - removed patches that have already been applied in the mean time
-> - ignore touchdown events, since those may report bad coordinates
-> - added support for a new firmware version
->=20
-> Changes wrt: v4:
-> - removed some empty lines in the cleanup patch
-> - addressed comments by Mark Rutland concerning the binding doc
-> - use of_property_read_u32() instead of of_property_get()
-> - dropped the 'report_rate' property
-> - addressed comments by Fugang Duan
-> - added Daniel Wagener and myself to the Copyright header in the
->   source file
-> - use msleep() rather than mdelay() for the reset/wake pin timing
->=20
-> Changes wrt: v5:
-> - added missing '&' to parameter of of_property_read_u32()
->=20
+Hi Sascha,
 
-Applied, thank you.
+On Thursday 27 March 2014 15:47:12 Sascha Hauer wrote:
+> On Thu, Mar 27, 2014 at 03:08:10PM +0100, Laurent Pinchart wrote:
 
---=20
-Dmitry
+[snip]
+
+> > That's clearer indeed. Can the parents and rates depend on the board, or
+> > on the SoC only ? We might be getting dangerously close to specifying
+> > platform configuration instead of describing the hardware. A real example
+> > might be nice to support the discussion.
+> 
+> This patch comes just at the right time. This is what I do with it:
+> 
+> #define cko1_sel 57
+> #define pll4_audio_div 203
+> #define pll4_audio 173
+> #define ssi3_sel 47
+> 
+> &clks {
+> 	assigned-clocks {
+> 		clocks = <&clks cko1_sel>, <&clks ssi3_sel>, <&clks pll4_audio>;
+> 		clock-parents = <&clks pll4_audio_div>, <&clks pll4_audio_div>, <0>;
+> 		clock-rates = <0>, <0>, <786432000>;
+> 	};
+> };
+> 
+> cko1_sel is a clock that can be routed out of the SoC. In my case it is
+> connected the sysclk of an external Audio Codec. ssi3_sel drives my SoC
+> internal I2S unit which I use in master mode. The above makes sure that
+> the I2S unit and the the external codec both get their clock from the
+> audio PLL. The audio PLL is configured to a rate of 786432000Hz which
+> is an exact multiple of the desired audio clock.
+
+Thank you for the example.
+
+Are the cko1_sel and ssi3_sel used only by the external audio codec and 
+internal I2S unit respectively ? If so, it might make sense to move the 
+configuration of their parent to the audio codec and I2S unit DT nodes. 
+However, grouping the parent configuration and the pll4 rate configuration in 
+a single place makes sense as well. Guidelines are probably needed.
+
+I get a slight feeling of uneasiness about this, probably because we're at the 
+boundary between hardware description and system configuration. Encoding in DT 
+that "for this particular board this particular clock must be configured this 
+particular way" sounds fine to me, but we need to make sure it won't turn to 
+software-driven rather than hardware-driven use case descriptions.
+
+-- 
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
