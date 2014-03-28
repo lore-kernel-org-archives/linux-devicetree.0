@@ -1,43 +1,63 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [RFC 1/5] of: Add support for ePAPR "stdout-path" property
-Date: Sat, 29 Mar 2014 08:33:16 +1100
-Message-ID: <1396042396.11529.27.camel@pasglop>
-References: <1396022885-6102-1-git-send-email-grant.likely@linaro.org>
-	 <1396022885-6102-2-git-send-email-grant.likely@linaro.org>
+From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt/bindings: add binding for ARM Versatile
+ character LCD
+Date: Fri, 28 Mar 2014 16:35:24 -0500
+Message-ID: <1396042524.27583.0.camel@linux-builds1>
+References: <1396041629-28820-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396022885-6102-2-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1396041629-28820-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2014-03-28 at 09:08 -0700, Grant Likely wrote:
-> ePAPR 1.1 defines the "stdout-path" property for specifying the console
-> device, but Linux currently only handles the older "linux,stdout-path"
-> property. This patch adds parsing for the new property name.
+On Fri, 2014-03-28 at 16:20 -0500, Rob Herring wrote:
+> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> 
+> Add binding doc for Versatile platforms character LCD controller
+> interface.
+> 
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/misc/arm-charlcd.txt | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/arm-charlcd.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/arm-charlcd.txt b/Documentation/devicetree/bindings/misc/arm-charlcd.txt
+> new file mode 100644
+> index 0000000..e28e2aa
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/arm-charlcd.txt
+> @@ -0,0 +1,18 @@
+> +ARM Versatile Character LCD
+> +-----------------------------------------------------
+> +This binding defines the character LCD interface found on ARM Versatile AB
+> +and PB reference platforms.
+> +
+> +Required properties:
+> +- compatible : "arm,versatile-clcd"
 
-Generally a good idea I think, but of course I need time to review and
-test ... :-)
+Should this be "arm,versatile-lcd"?
 
-One thing that's been annoying me lately with the existing code which
-you don't address is ... in a few cases my consoles are usable *VERY*
-early. For example PAPR hvc and OPAL hvc can be used before we even turn
-the MMU on on powerpc (and thus before we unflatten the device-tree).
-
-It would be nice to be able to have the console going that early,
-unfortunately that would imply using the flat device-tree for the
-parsing / matching of the stdout-path in those drivers.
-
-Right now, I have this explicit config option to hard wire "early debug"
-but there are a few cases of field bugs that can happen in early init
-code which I'd like to see logged properly on those systems, and early
-debug isn't suitable for field use...
-
-Cheers,
-Ben.
+Dinh
+> +- reg : Location and size of character LCD registers
+> +
+> +Optional properties:
+> +- interrupts - single interrupt for character LCD. The character LCD can
+> +  operate in polled mode without an interrupt.
+> +
+> +Example:
+> +	lcd@10008000 {
+> +		compatible = "arm,versatile-lcd";
+> +		reg = <0x10008000 0x1000>;
+> +	};
 
 
 --
