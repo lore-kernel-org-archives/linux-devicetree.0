@@ -1,902 +1,184 @@
-From: Boris BREZILLON <b.brezillon.dev@gmail.com>
-Subject: [RFC PATCH v2 02/10] irqchip: atmel-aic: add new atmel AIC driver
-Date: Fri, 28 Mar 2014 18:59:00 +0100
-Message-ID: <1396029548-10928-3-git-send-email-b.brezillon.dev@gmail.com>
-References: <1396029548-10928-1-git-send-email-b.brezillon.dev@gmail.com>
+From: delicious quinoa <delicious.quinoa@gmail.com>
+Subject: Re: [PATCH v3 0/7] Introducing (yet again) Device Tree Overlays
+Date: Fri, 28 Mar 2014 13:27:30 -0500
+Message-ID: <CANk1AXTb=ob52AfK2z--HvFkxJnjnfYWuTCch_Gw99OCoS1ABg@mail.gmail.com>
+References: <1395179766-31575-1-git-send-email-pantelis.antoniou@konsulko.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1396029548-10928-1-git-send-email-b.brezillon.dev@gmail.com>
+In-Reply-To: <1395179766-31575-1-git-send-email-pantelis.antoniou@konsulko.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Landley <rob@landley.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Thomas Gleixner <tglx@linutronix.de>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Boris BREZILLON <b.brezillon.dev@gmail.com>
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>
 List-Id: devicetree@vger.kernel.org
 
-Add new atmel AIC (Advanced Interrupt Controller) driver based on the
-generic chip infrastructure.
+On Tue, Mar 18, 2014 at 4:55 PM, Pantelis Antoniou
+<pantelis.antoniou@konsulko.com> wrote:
+> The following patchset introduces Device Tree overlays, a method
+> of dynamically altering the kernel's live Device Tree, along with
+> a generic interface to use it in a board agnostic manner.
+>
+> It is dependent on Grant Likely's DT kobjectification patches located
+> in his tree as queued for -next.
+>
+> It relies on the following previously submitted patches/patchsets:
+>
+> * OF: Add [__]of_find_node_by_full_name
+> * OF: Utility helper functions for dynamic nodes
+> * of: Make of_find_node_by_path() handle /aliases
+>
+> To compile overlays you need the DTC compiler patch
+>
+> * "dtc: Dynamic symbols & fixup support (v2)"
+>
+> Changes since V2:
+> * Use of a configfs board agnostic overlay method
+> * Use of per bus handlers instead of hardcoded behaviour
+> * Optional target-path overlay target, which allows one to use standard
+> DTBs without resolution options.
+>
+> Changes since V1:
+>
+> * Removal of any bits related to a specific board (beaglebone).
+> * Introduced a platform agnostic interface using /proc/device-tree-overlay
+> * Various bug fixes related to i2c device handling have been squashed in.
+>
+>
+> Pantelis Antoniou (7):
+>   OF: Introduce Device Tree resolve support.
+>   OF: Introduce DT overlay support.
+>   OF: DT-Overlay configfs interface
+>   OF: platform: Add overlay bus handler
+>   OF: i2c: Add overlay bus handler
+>   OF: spi: Add overlay bus handler
+>   of: i2c: Export single device registration method
+>
+>  .../devicetree/dynamic-resolution-notes.txt        |  25 +
+>  Documentation/devicetree/overlay-notes.txt         | 187 +++++
+>  drivers/base/platform.c                            |  99 ++-
+>  drivers/i2c/i2c-core.c                             | 186 +++--
+>  drivers/of/Kconfig                                 |  24 +
+>  drivers/of/Makefile                                |   3 +
+>  drivers/of/configfs.c                              | 272 +++++++
+>  drivers/of/overlay.c                               | 895 +++++++++++++++++++++
+>  drivers/of/resolver.c                              | 376 +++++++++
+>  drivers/spi/spi.c                                  | 345 +++++---
+>  include/linux/i2c.h                                |  10 +
+>  include/linux/of.h                                 | 170 ++++
+>  12 files changed, 2440 insertions(+), 152 deletions(-)
+>  create mode 100644 Documentation/devicetree/dynamic-resolution-notes.txt
+>  create mode 100644 Documentation/devicetree/overlay-notes.txt
+>  create mode 100644 drivers/of/configfs.c
+>  create mode 100644 drivers/of/overlay.c
+>  create mode 100644 drivers/of/resolver.c
 
-This driver is only compatible with dt enabled board and replaces the old
-implementation found in arch/arm/mach-at91/irq.c.
+I can get a NULL pointer when I apply and remove an overlay and the
+conditions are right.  The overlay applies correctly.  The crash is
+when I do the rmdir.  My overlay is:
 
-It also provides a new way to handle AIC irq line muxing to avoid spurious
-interrupts on startup and shutdown:
- - disable all muxed interrupts during AIC probe
- - disable every muxed interrupt attached to a specific AIC interrupt line
-   when this interrupt is disabled
+/dts-v1/;
+/plugin/;
+/ {
+    fragment@0 {
+        target-path="/soc";
+        __overlay__ {
+            #address-cells = <1>;
+                    #size-cells = <1>;
+            agpio0: agpio0 {
+                compatible = "altr,pio-1.0";
+                reg = <0xff210040 0x10>;
+                interrupts = <0 45 4>;
+                altr,gpio-bank-width = <32>;
+                altr,interrupt_type = <1>;
+                #gpio-cells = <2>;
+                gpio-controller;
+                #interrupt-cells = <1>;
+                interrupt-controller;
+            };
+        };
+    };
+};
 
-Signed-off-by: Boris BREZILLON <b.brezillon.dev@gmail.com>
----
- drivers/irqchip/Makefile        |    1 +
- drivers/irqchip/irq-atmel-aic.c |  851 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 852 insertions(+)
- create mode 100644 drivers/irqchip/irq-atmel-aic.c
+The log info I have is:
 
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 5194afb..b2950860 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -16,6 +16,7 @@ obj-$(CONFIG_ARCH_SPEAR3XX)		+= spear-shirq.o
- obj-$(CONFIG_ARM_GIC)			+= irq-gic.o
- obj-$(CONFIG_ARM_NVIC)			+= irq-nvic.o
- obj-$(CONFIG_ARM_VIC)			+= irq-vic.o
-+obj-$(CONFIG_ATMEL_AIC_IRQ)		+= irq-atmel-aic.o
- obj-$(CONFIG_IMGPDC_IRQ)		+= irq-imgpdc.o
- obj-$(CONFIG_SIRF_IRQ)			+= irq-sirfsoc.o
- obj-$(CONFIG_RENESAS_INTC_IRQPIN)	+= irq-renesas-intc-irqpin.o
-diff --git a/drivers/irqchip/irq-atmel-aic.c b/drivers/irqchip/irq-atmel-aic.c
-new file mode 100644
-index 0000000..4e5feb2
---- /dev/null
-+++ b/drivers/irqchip/irq-atmel-aic.c
-@@ -0,0 +1,851 @@
-+/*
-+ * Atmel AT91 AIC (Advanced Interrupt Controller) driver
-+ *
-+ *  Copyright (C) 2004 SAN People
-+ *  Copyright (C) 2004 ATMEL
-+ *  Copyright (C) Rick Bronson
-+ *  Copyright (C) 2013 Boris BREZILLON <b.brezillon@overkiz.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/mm.h>
-+#include <linux/bitmap.h>
-+#include <linux/types.h>
-+#include <linux/irq.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/err.h>
-+#include <linux/slab.h>
-+#include <linux/io.h>
-+
-+#include <asm/exception.h>
-+#include <asm/mach/irq.h>
-+
-+#include "irqchip.h"
-+
-+/* Number of irq lines managed by AIC */
-+#define NR_AIC_IRQS	32
-+#define NR_AIC5_IRQS	128
-+
-+#define AT91_AIC5_SSR		0x0
-+#define		AT91_AIC5_INTSEL_MSK	(0x7f << 0)
-+
-+#define AT91_AIC_IRQ_MIN_PRIORITY	0
-+#define AT91_AIC_IRQ_MAX_PRIORITY	7
-+
-+#define AT91_AIC_SMR(n)		((n) * 4)
-+#define AT91_AIC5_SMR		0x4
-+#define		AT91_AIC_PRIOR		(7 << 0)
-+#define		AT91_AIC_SRCTYPE	(3 << 5)
-+#define			AT91_AIC_SRCTYPE_LOW		(0 << 5)
-+#define			AT91_AIC_SRCTYPE_FALLING	(1 << 5)
-+#define			AT91_AIC_SRCTYPE_HIGH		(2 << 5)
-+#define			AT91_AIC_SRCTYPE_RISING		(3 << 5)
-+
-+#define AT91_AIC_SVR(n)		(0x80 + ((n) * 4))
-+#define AT91_AIC5_SVR		0x8
-+#define AT91_AIC_IVR		0x100
-+#define AT91_AIC5_IVR		0x10
-+#define AT91_AIC_FVR		0x104
-+#define AT91_AIC5_FVR		0x14
-+#define AT91_AIC_ISR		0x108
-+#define AT91_AIC5_ISR		0x18
-+#define		AT91_AIC_IRQID		(0x1f << 0)
-+
-+#define AT91_AIC_IPR		0x10c
-+#define AT91_AIC5_IPR0		0x20
-+#define AT91_AIC5_IPR1		0x24
-+#define AT91_AIC5_IPR2		0x28
-+#define AT91_AIC5_IPR3		0x2c
-+#define AT91_AIC_IMR		0x110
-+#define AT91_AIC5_IMR		0x30
-+#define AT91_AIC_CISR		0x114
-+#define AT91_AIC5_CISR		0x34
-+#define		AT91_AIC_NFIQ		(1 << 0)
-+#define		AT91_AIC_NIRQ		(1 << 1)
-+
-+#define AT91_AIC_IECR		0x120
-+#define AT91_AIC5_IECR		0x40
-+#define AT91_AIC_IDCR		0x124
-+#define AT91_AIC5_IDCR		0x44
-+#define AT91_AIC_ICCR		0x128
-+#define AT91_AIC5_ICCR		0x48
-+#define AT91_AIC_ISCR		0x12c
-+#define AT91_AIC5_ISCR		0x4c
-+#define AT91_AIC_EOICR		0x130
-+#define AT91_AIC5_EOICR		0x38
-+#define AT91_AIC_SPU		0x134
-+#define AT91_AIC5_SPU		0x3c
-+#define AT91_AIC_DCR		0x138
-+#define AT91_AIC5_DCR		0x6c
-+#define		AT91_AIC_DCR_PROT	(1 << 0)
-+#define		AT91_AIC_DCR_GMSK	(1 << 1)
-+
-+#define AT91_AIC_FFER		0x140
-+#define AT91_AIC5_FFER		0x50
-+#define AT91_AIC_FFDR		0x144
-+#define AT91_AIC5_FFDR		0x54
-+#define AT91_AIC_FFSR		0x148
-+#define AT91_AIC5_FFSR		0x58
-+
-+enum aic_mux_irq_type {
-+	AIC_MUX_1REG_IRQ,
-+	AIC_MUX_3REG_IRQ,
-+};
-+
-+struct aic_mux_irq {
-+	struct list_head node;
-+	enum aic_mux_irq_type type;
-+	void __iomem *regs;
-+	u32 mask;
-+};
-+
-+struct aic_chip_data {
-+	u32 ext_irqs;
-+	struct list_head mux[32];
-+};
-+
-+static struct irq_domain *aic_domain;
-+
-+static asmlinkage void __exception_irq_entry
-+aic_handle(struct pt_regs *regs)
-+{
-+	struct irq_domain_chip_generic *dgc = aic_domain->gc;
-+	struct irq_chip_generic *gc = dgc->gc[0];
-+	u32 irqnr;
-+	u32 irqstat;
-+
-+	irqnr = irq_reg_readl(gc->reg_base + AT91_AIC_IVR);
-+	irqstat = irq_reg_readl(gc->reg_base + AT91_AIC_ISR);
-+
-+	irqnr = irq_find_mapping(aic_domain, irqnr);
-+
-+	if (!irqstat)
-+		irq_reg_writel(0, gc->reg_base + AT91_AIC_EOICR);
-+	else
-+		handle_IRQ(irqnr, regs);
-+}
-+
-+static asmlinkage void __exception_irq_entry
-+aic5_handle(struct pt_regs *regs)
-+{
-+	struct irq_domain_chip_generic *dgc = aic_domain->gc;
-+	struct irq_chip_generic *gc = dgc->gc[0];
-+	u32 irqnr;
-+	u32 irqstat;
-+
-+	irqnr = irq_reg_readl(gc->reg_base + AT91_AIC5_IVR);
-+	irqstat = irq_reg_readl(gc->reg_base + AT91_AIC5_ISR);
-+
-+	irqnr = irq_find_mapping(aic_domain, irqnr);
-+
-+	if (!irqstat)
-+		irq_reg_writel(0, gc->reg_base + AT91_AIC5_EOICR);
-+	else
-+		handle_IRQ(irqnr, regs);
-+}
-+
-+static void aic5_mask(struct irq_data *d)
-+{
-+	struct irq_domain *domain = d->domain;
-+	struct irq_domain_chip_generic *dgc = domain->gc;
-+	struct irq_chip_generic *gc = dgc->gc[0];
-+
-+	/* Disable interrupt on AIC5 */
-+	irq_gc_lock(gc);
-+	irq_reg_writel(d->hwirq, gc->reg_base + AT91_AIC5_SSR);
-+	irq_reg_writel(1, gc->reg_base + AT91_AIC5_IDCR);
-+	gc->mask_cache &= ~d->mask;
-+	irq_gc_unlock(gc);
-+}
-+
-+static void aic5_unmask(struct irq_data *d)
-+{
-+	struct irq_domain *domain = d->domain;
-+	struct irq_domain_chip_generic *dgc = domain->gc;
-+	struct irq_chip_generic *gc = dgc->gc[0];
-+
-+	/* Enable interrupt on AIC5 */
-+	irq_gc_lock(gc);
-+	irq_reg_writel(d->hwirq, gc->reg_base + AT91_AIC5_SSR);
-+	irq_reg_writel(1, gc->reg_base + AT91_AIC5_IECR);
-+	gc->mask_cache |= d->mask;
-+	irq_gc_unlock(gc);
-+}
-+
-+static int aic_retrigger(struct irq_data *d)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+
-+	/* Enable interrupt on AIC5 */
-+	irq_gc_lock(gc);
-+	irq_reg_writel(d->mask, gc->reg_base + AT91_AIC_ISCR);
-+	irq_gc_unlock(gc);
-+
-+	return 0;
-+}
-+
-+static int aic5_retrigger(struct irq_data *d)
-+{
-+	struct irq_domain *domain = d->domain;
-+	struct irq_domain_chip_generic *dgc = domain->gc;
-+	struct irq_chip_generic *gc = dgc->gc[0];
-+
-+	/* Enable interrupt on AIC5 */
-+	irq_gc_lock(gc);
-+	irq_reg_writel(d->hwirq, gc->reg_base + AT91_AIC5_SSR);
-+	irq_reg_writel(1, gc->reg_base + AT91_AIC5_ISCR);
-+	irq_gc_unlock(gc);
-+
-+	return 0;
-+}
-+
-+static int aic_to_srctype(struct irq_data *d, unsigned type)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+	struct aic_chip_data *aic = gc->private;
-+
-+	switch (type) {
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		return AT91_AIC_SRCTYPE_HIGH;
-+	case IRQ_TYPE_EDGE_RISING:
-+		return AT91_AIC_SRCTYPE_RISING;
-+	case IRQ_TYPE_LEVEL_LOW:
-+		if (d->mask & aic->ext_irqs)
-+			return AT91_AIC_SRCTYPE_LOW;
-+		break;
-+	case IRQ_TYPE_EDGE_FALLING:
-+		if (d->mask & aic->ext_irqs)
-+			return AT91_AIC_SRCTYPE_FALLING;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int aic_set_type(struct irq_data *d, unsigned type)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+	unsigned int smr;
-+	int srctype;
-+
-+	srctype = aic_to_srctype(d, type);
-+	if (srctype < 0)
-+		return srctype;
-+
-+	smr = irq_reg_readl(gc->reg_base + AT91_AIC_SMR(d->hwirq)) &
-+	      ~AT91_AIC_SRCTYPE;
-+	irq_reg_writel(smr | srctype, gc->reg_base + AT91_AIC_SMR(d->hwirq));
-+
-+	return 0;
-+}
-+
-+static int aic5_set_type(struct irq_data *d, unsigned type)
-+{
-+	struct irq_domain *domain = d->domain;
-+	struct irq_domain_chip_generic *dgc = domain->gc;
-+	struct irq_chip_generic *gc = dgc->gc[0];
-+	unsigned int smr;
-+	int srctype;
-+
-+	srctype = aic_to_srctype(d, type);
-+	if (srctype < 0)
-+		return srctype;
-+
-+	irq_gc_lock(gc);
-+	irq_reg_writel(d->hwirq, gc->reg_base + AT91_AIC5_SSR);
-+	smr = irq_reg_readl(gc->reg_base + AT91_AIC5_SMR) & ~AT91_AIC_SRCTYPE;
-+	irq_reg_writel(smr | srctype, gc->reg_base + AT91_AIC5_SMR);
-+	irq_gc_unlock(gc);
-+
-+	return 0;
-+}
-+
-+static void aic_mux_disable_irqs(struct list_head *mux_list)
-+{
-+	struct aic_mux_irq *irq;
-+
-+	list_for_each_entry(irq, mux_list, node) {
-+		if (irq->type == AIC_MUX_1REG_IRQ)
-+			writel(readl(irq->regs) & ~irq->mask, irq->regs);
-+		else
-+			writel(irq->mask, irq->regs);
-+	}
-+}
-+
-+static void aic_shutdown(struct irq_data *d)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+	struct irq_chip_type *ct = irq_data_get_chip_type(d);
-+	struct aic_chip_data *aic = gc->private;
-+	int idx = d->hwirq % 32;
-+
-+	aic_mux_disable_irqs(&aic->mux[idx]);
-+	ct->chip.irq_mask(d);
-+}
-+
-+#ifdef CONFIG_PM
-+static void aic_suspend(struct irq_data *d)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+
-+	irq_gc_lock(gc);
-+	irq_reg_writel(gc->mask_cache, gc->reg_base + AT91_AIC_IDCR);
-+	irq_reg_writel(gc->wake_active, gc->reg_base + AT91_AIC_IECR);
-+	irq_gc_unlock(gc);
-+}
-+
-+static void aic5_suspend(struct irq_data *d)
-+{
-+	struct irq_domain *domain = d->domain;
-+	struct irq_domain_chip_generic *dgc = domain->gc;
-+	struct irq_chip_generic *bgc = dgc->gc[0];
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+	int i;
-+	u32 mask;
-+
-+	irq_gc_lock(bgc);
-+	for (i = 0; i < dgc->irqs_per_chip; i++) {
-+		mask = 1 << i;
-+		if ((mask & gc->mask_cache) == (mask & gc->wake_active))
-+			continue;
-+
-+		irq_reg_writel(i + gc->irq_base,
-+			       bgc->reg_base + AT91_AIC5_SSR);
-+		if (mask & gc->wake_active)
-+			irq_reg_writel(1, bgc->reg_base + AT91_AIC5_IECR);
-+		else
-+			irq_reg_writel(1, bgc->reg_base + AT91_AIC5_IDCR);
-+	}
-+	irq_gc_unlock(bgc);
-+}
-+
-+static void aic_resume(struct irq_data *d)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+
-+	irq_gc_lock(gc);
-+	irq_reg_writel(gc->wake_active, gc->reg_base + AT91_AIC_IDCR);
-+	irq_reg_writel(gc->mask_cache, gc->reg_base + AT91_AIC_IECR);
-+	irq_gc_unlock(gc);
-+}
-+
-+static void aic5_resume(struct irq_data *d)
-+{
-+	struct irq_domain *domain = d->domain;
-+	struct irq_domain_chip_generic *dgc = domain->gc;
-+	struct irq_chip_generic *bgc = dgc->gc[0];
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+	int i;
-+	u32 mask;
-+
-+	irq_gc_lock(bgc);
-+	for (i = 0; i < dgc->irqs_per_chip; i++) {
-+		mask = 1 << i;
-+		if ((mask & gc->mask_cache) == (mask & gc->wake_active))
-+			continue;
-+
-+		irq_reg_writel(i + gc->irq_base,
-+			       bgc->reg_base + AT91_AIC5_SSR);
-+		if (mask & gc->mask_cache)
-+			irq_reg_writel(1, bgc->reg_base + AT91_AIC5_IECR);
-+		else
-+			irq_reg_writel(1, bgc->reg_base + AT91_AIC5_IDCR);
-+	}
-+	irq_gc_unlock(bgc);
-+}
-+
-+static void aic_pm_shutdown(struct irq_data *d)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+
-+	irq_gc_lock(gc);
-+	irq_reg_writel(0xffffffff, gc->reg_base + AT91_AIC_IDCR);
-+	irq_reg_writel(0xffffffff, gc->reg_base + AT91_AIC_ICCR);
-+	irq_gc_unlock(gc);
-+}
-+
-+static void aic5_pm_shutdown(struct irq_data *d)
-+{
-+	struct irq_domain *domain = d->domain;
-+	struct irq_domain_chip_generic *dgc = domain->gc;
-+	struct irq_chip_generic *bgc = dgc->gc[0];
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+	int i;
-+
-+	irq_gc_lock(bgc);
-+	for (i = 0; i < dgc->irqs_per_chip; i++) {
-+		irq_reg_writel(i + gc->irq_base,
-+			       bgc->reg_base + AT91_AIC5_SSR);
-+		irq_reg_writel(1, bgc->reg_base + AT91_AIC5_IDCR);
-+		irq_reg_writel(1, bgc->reg_base + AT91_AIC5_ICCR);
-+	}
-+	irq_gc_unlock(bgc);
-+}
-+#else
-+#define aic_suspend		NULL
-+#define aic5_suspend		NULL
-+#define aic_resume		NULL
-+#define aic5_resume		NULL
-+#define aic_pm_shutdown		NULL
-+#define aic5_pm_shutdown	NULL
-+#endif /* CONFIG_PM */
-+
-+static void __init aic_mux_hw_init(struct irq_domain *domain)
-+{
-+	struct aic_chip_data *aic = domain->host_data;
-+	int i;
-+
-+	for (i = 0; i < domain->revmap_size; i++)
-+		aic_mux_disable_irqs(&aic[i / 32].mux[i % 32]);
-+}
-+
-+static void __init aic_hw_init(struct irq_domain *domain)
-+{
-+	struct irq_chip_generic *gc = irq_get_domain_generic_chip(domain, 0);
-+	int i;
-+
-+	/*
-+	 * Perform 8 End Of Interrupt Command to make sure AIC
-+	 * will not Lock out nIRQ
-+	 */
-+	for (i = 0; i < 8; i++)
-+		irq_reg_writel(0, gc->reg_base + AT91_AIC_EOICR);
-+
-+	/*
-+	 * Spurious Interrupt ID in Spurious Vector Register.
-+	 * When there is no current interrupt, the IRQ Vector Register
-+	 * reads the value stored in AIC_SPU
-+	 */
-+	irq_reg_writel(0xffffffff, gc->reg_base + AT91_AIC_SPU);
-+
-+	/* No debugging in AIC: Debug (Protect) Control Register */
-+	irq_reg_writel(0, gc->reg_base + AT91_AIC_DCR);
-+
-+	/* Disable and clear all interrupts initially */
-+	irq_reg_writel(0xffffffff, gc->reg_base + AT91_AIC_IDCR);
-+	irq_reg_writel(0xffffffff, gc->reg_base + AT91_AIC_ICCR);
-+
-+	for (i = 0; i < 32; i++)
-+		irq_reg_writel(i, gc->reg_base + AT91_AIC_SVR(i));
-+
-+	aic_mux_hw_init(domain);
-+}
-+
-+static void __init aic5_hw_init(struct irq_domain *domain)
-+{
-+	struct irq_chip_generic *gc = irq_get_domain_generic_chip(domain, 0);
-+	int i;
-+
-+	/*
-+	 * Perform 8 End Of Interrupt Command to make sure AIC
-+	 * will not Lock out nIRQ
-+	 */
-+	for (i = 0; i < 8; i++)
-+		irq_reg_writel(0, gc->reg_base + AT91_AIC5_EOICR);
-+
-+	/*
-+	 * Spurious Interrupt ID in Spurious Vector Register.
-+	 * When there is no current interrupt, the IRQ Vector Register
-+	 * reads the value stored in AIC_SPU
-+	 */
-+	irq_reg_writel(0xffffffff, gc->reg_base + AT91_AIC5_SPU);
-+
-+	/* No debugging in AIC: Debug (Protect) Control Register */
-+	irq_reg_writel(0, gc->reg_base + AT91_AIC5_DCR);
-+
-+	/* Disable and clear all interrupts initially */
-+	for (i = 0; i < domain->revmap_size; i++) {
-+		irq_reg_writel(i, gc->reg_base + AT91_AIC5_SSR);
-+		irq_reg_writel(i, gc->reg_base + AT91_AIC5_SVR);
-+		irq_reg_writel(1, gc->reg_base + AT91_AIC5_IDCR);
-+		irq_reg_writel(1, gc->reg_base + AT91_AIC5_ICCR);
-+	}
-+
-+	aic_mux_hw_init(domain);
-+}
-+
-+static int at91_aic_common_irq_domain_xlate(struct irq_domain *d,
-+					    struct device_node *ctrlr,
-+					    const u32 *intspec,
-+					    unsigned int intsize,
-+					    irq_hw_number_t *out_hwirq,
-+					    unsigned int *out_type)
-+{
-+	if (WARN_ON(intsize < 3))
-+		return -EINVAL;
-+
-+	if (WARN_ON((intspec[2] < AT91_AIC_IRQ_MIN_PRIORITY) ||
-+		    (intspec[2] > AT91_AIC_IRQ_MAX_PRIORITY)))
-+		return -EINVAL;
-+
-+	*out_hwirq = intspec[0];
-+	*out_type = intspec[1] & IRQ_TYPE_SENSE_MASK;
-+
-+	return 0;
-+}
-+
-+static int aic_irq_domain_xlate(struct irq_domain *d,
-+				struct device_node *ctrlr,
-+				const u32 *intspec, unsigned int intsize,
-+				irq_hw_number_t *out_hwirq,
-+				unsigned int *out_type)
-+{
-+	struct irq_domain_chip_generic *dgc = d->gc;
-+	struct irq_chip_generic *gc;
-+	unsigned long smr;
-+	int idx;
-+	int ret;
-+
-+	if (!dgc)
-+		return -EINVAL;
-+
-+	ret = at91_aic_common_irq_domain_xlate(d, ctrlr, intspec, intsize,
-+					       out_hwirq, out_type);
-+	if (ret)
-+		return ret;
-+
-+	idx = intspec[0] / dgc->irqs_per_chip;
-+	if (idx >= dgc->num_chips)
-+		return -EINVAL;
-+
-+	gc = dgc->gc[idx];
-+
-+	irq_gc_lock(gc);
-+	smr = irq_reg_readl(gc->reg_base + AT91_AIC5_SMR) & ~AT91_AIC_PRIOR;
-+	irq_reg_writel(intspec[2] | smr, gc->reg_base + AT91_AIC5_SMR);
-+	irq_gc_unlock(gc);
-+
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops aic_irq_ops = {
-+	.map	= irq_map_generic_chip,
-+	.xlate	= aic_irq_domain_xlate,
-+};
-+
-+static int aic5_irq_domain_xlate(struct irq_domain *d,
-+				 struct device_node *ctrlr,
-+				 const u32 *intspec, unsigned int intsize,
-+				 irq_hw_number_t *out_hwirq,
-+				 unsigned int *out_type)
-+{
-+	struct irq_domain_chip_generic *dgc = d->gc;
-+	struct irq_chip_generic *gc;
-+	unsigned long smr;
-+	int ret;
-+
-+	if (!dgc)
-+		return -EINVAL;
-+
-+	ret = at91_aic_common_irq_domain_xlate(d, ctrlr, intspec, intsize,
-+					       out_hwirq, out_type);
-+	if (ret)
-+		return ret;
-+
-+	gc = dgc->gc[0];
-+
-+	irq_gc_lock(gc);
-+	irq_reg_writel(*out_hwirq, gc->reg_base + AT91_AIC5_SSR);
-+	smr = irq_reg_readl(gc->reg_base + AT91_AIC5_SMR) & ~AT91_AIC_PRIOR;
-+	irq_reg_writel(intspec[2] | smr, gc->reg_base + AT91_AIC5_SMR);
-+	irq_gc_unlock(gc);
-+
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops aic5_irq_ops = {
-+	.map	= irq_map_generic_chip,
-+	.xlate	= aic5_irq_domain_xlate,
-+};
-+
-+static struct aic_mux_irq *aic_mux_irq_of_init(struct device_node *node)
-+{
-+	struct aic_mux_irq *irq;
-+	void __iomem *regs;
-+	u32 mask;
-+	int ret;
-+
-+	ret = of_property_read_u32(node, "atmel,aic-mux-reg-mask", &mask);
-+	if (ret)
-+		return ERR_PTR(-EINVAL);
-+
-+	regs = of_iomap(node, 0);
-+	if (!regs)
-+		return ERR_PTR(-EINVAL);
-+
-+	irq = kzalloc(sizeof(*irq), GFP_KERNEL);
-+	if (!irq)
-+		return ERR_PTR(-ENOMEM);
-+
-+	INIT_LIST_HEAD(&irq->node);
-+
-+	irq->regs = regs;
-+	irq->mask = mask;
-+
-+	return irq;
-+}
-+
-+static struct aic_mux_irq *aic_mux_1reg_irq_of_init(struct device_node *node)
-+{
-+	struct aic_mux_irq *irq;
-+
-+	irq = aic_mux_irq_of_init(node);
-+	if (!IS_ERR(irq))
-+		irq->type = AIC_MUX_1REG_IRQ;
-+
-+	return irq;
-+}
-+
-+static struct aic_mux_irq *aic_mux_3reg_irq_of_init(struct device_node *node)
-+{
-+	struct aic_mux_irq *irq;
-+
-+	irq = aic_mux_irq_of_init(node);
-+	if (!IS_ERR(irq))
-+		irq->type = AIC_MUX_3REG_IRQ;
-+
-+	return irq;
-+}
-+
-+static const struct of_device_id aic_mux_irq_of_match[] __initconst = {
-+	{
-+		.compatible = "atmel,aic-mux-1reg-irq",
-+		.data = aic_mux_1reg_irq_of_init,
-+	},
-+	{
-+		.compatible = "atmel,aic-mux-3reg-irq",
-+		.data = aic_mux_3reg_irq_of_init,
-+	},
-+	{ /*sentinel*/ }
-+};
-+
-+static void __init aic_ext_irq_of_init(struct irq_domain *domain)
-+{
-+	struct device_node *node = domain->of_node;
-+	struct irq_chip_generic *gc;
-+	struct aic_chip_data *aic;
-+	struct property *prop;
-+	const __be32 *p;
-+	u32 hwirq;
-+
-+	gc = irq_get_domain_generic_chip(aic_domain, 0);
-+
-+	aic = gc->private;
-+	aic->ext_irqs |= 1;
-+
-+	of_property_for_each_u32(node, "atmel,external-irqs", prop, p, hwirq) {
-+		gc = irq_get_domain_generic_chip(aic_domain, hwirq);
-+		if (!gc) {
-+			pr_warn("AIC: external irq %d >= %d skip it\n",
-+				hwirq, domain->revmap_size);
-+			continue;
-+		}
-+
-+		aic = gc->private;
-+		aic->ext_irqs |= (1 << (hwirq % 32));
-+	}
-+}
-+
-+static void __init aic_mux_of_init(struct irq_domain *domain)
-+{
-+	struct device_node *node = domain->of_node;
-+	struct device_node *mux_node;
-+	const struct of_device_id *match;
-+	struct aic_mux_irq *irq;
-+	struct aic_mux_irq * (*mux_of_init)(struct device_node *);
-+	struct irq_chip_generic *gc;
-+	struct aic_chip_data *aic;
-+	struct list_head *mux_list;
-+	u32 hwirq;
-+
-+	for_each_child_of_node(node, mux_node) {
-+		match = of_match_node(aic_mux_irq_of_match, mux_node);
-+		if (!match)
-+			continue;
-+
-+		if (of_property_read_u32(mux_node, "reg", &hwirq)) {
-+			pr_warn("AIC: missing reg property in mux definition\n");
-+			continue;
-+		}
-+
-+		gc = irq_get_domain_generic_chip(aic_domain, hwirq);
-+		if (!gc) {
-+			pr_warn("AIC: irq %d >= %d skip it\n",
-+				hwirq, domain->revmap_size);
-+			continue;
-+		}
-+
-+		aic = gc->private;
-+		mux_list = &aic->mux[hwirq % 32];
-+
-+		mux_of_init = match->data;
-+
-+		irq = mux_of_init(mux_node);
-+		if (IS_ERR(irq))
-+			continue;
-+
-+		list_add_tail(&irq->node, mux_list);
-+	}
-+}
-+
-+static int __init aic_common_of_init(struct device_node *node,
-+				     const struct irq_domain_ops *ops,
-+				     const char *name, int maxirq)
-+{
-+	struct irq_chip_generic *gc;
-+	struct aic_chip_data *aic;
-+	void __iomem *reg_base;
-+	int nirqs = maxirq;
-+	int nchips;
-+	int ret;
-+	int i;
-+	int j;
-+	u32 tmp;
-+
-+	if (aic_domain)
-+		return -EEXIST;
-+
-+	if (of_get_property(node, "atmel,aic-irq-mapping", &tmp))
-+		nirqs = tmp * BITS_PER_BYTE;
-+
-+	nchips = DIV_ROUND_UP(nirqs, 32);
-+
-+	reg_base = of_iomap(node, 0);
-+	if (!reg_base)
-+		return -ENOMEM;
-+
-+	aic = kzalloc(nchips * sizeof(*aic), GFP_KERNEL);
-+	if (!aic) {
-+		ret = -ENOMEM;
-+		goto err_iounmap;
-+	}
-+
-+	aic_domain = irq_domain_add_linear(node, nirqs, ops, aic);
-+	if (!aic_domain) {
-+		ret = -ENOMEM;
-+		goto err_free_aic;
-+	}
-+
-+	ret = irq_alloc_domain_generic_chips(aic_domain, 32, 1, name,
-+					     handle_level_irq, 0, 0,
-+					     IRQCHIP_SKIP_SET_WAKE);
-+	if (ret)
-+		goto err_domain_remove;
-+
-+	for (i = 0; i < nchips; i++) {
-+		gc = irq_get_domain_generic_chip(aic_domain, i * 32);
-+
-+		gc->reg_base = reg_base;
-+
-+		if (!of_property_read_u32_index(node, "atmel,irq-mapping",
-+						i, &tmp)) {
-+			gc->unused = ~tmp;
-+			gc->wake_enabled = tmp;
-+		} else {
-+			gc->unused = 0;
-+			gc->wake_enabled = ~0;
-+		}
-+
-+		gc->chip_types[0].type = IRQ_TYPE_SENSE_MASK;
-+		gc->chip_types[0].handler = handle_fasteoi_irq;
-+		gc->chip_types[0].chip.irq_eoi = irq_gc_eoi;
-+		gc->chip_types[0].chip.irq_set_wake = irq_gc_set_wake;
-+		gc->chip_types[0].chip.irq_shutdown = aic_shutdown;
-+
-+		for (j = 0; j < 32; j++)
-+			INIT_LIST_HEAD(&aic[i].mux[j]);
-+
-+		gc->private = &aic[i];
-+	}
-+
-+	aic_mux_of_init(aic_domain);
-+	aic_ext_irq_of_init(aic_domain);
-+
-+	return 0;
-+
-+err_domain_remove:
-+	irq_domain_remove(aic_domain);
-+
-+err_free_aic:
-+	kfree(aic);
-+
-+err_iounmap:
-+	iounmap(reg_base);
-+
-+	return ret;
-+}
-+
-+static int __init aic_of_init(struct device_node *node,
-+			      struct device_node *parent)
-+{
-+	struct irq_chip_generic *gc;
-+	int ret;
-+
-+	ret = aic_common_of_init(node, &aic_irq_ops, "atmel-aic",
-+				 NR_AIC_IRQS);
-+	if (ret)
-+		return ret;
-+
-+	gc = irq_get_domain_generic_chip(aic_domain, 0);
-+
-+	gc->chip_types[0].regs.eoi = AT91_AIC_EOICR;
-+	gc->chip_types[0].regs.enable = AT91_AIC_IECR;
-+	gc->chip_types[0].regs.disable = AT91_AIC_IDCR;
-+	gc->chip_types[0].chip.irq_mask = irq_gc_mask_disable_reg;
-+	gc->chip_types[0].chip.irq_unmask = irq_gc_unmask_enable_reg;
-+	gc->chip_types[0].chip.irq_retrigger = aic_retrigger;
-+	gc->chip_types[0].chip.irq_set_type = aic_set_type;
-+	gc->chip_types[0].chip.irq_suspend = aic_suspend;
-+	gc->chip_types[0].chip.irq_resume = aic_resume;
-+	gc->chip_types[0].chip.irq_pm_shutdown = aic_pm_shutdown;
-+
-+	aic_hw_init(aic_domain);
-+	set_handle_irq(aic_handle);
-+
-+	return 0;
-+}
-+IRQCHIP_DECLARE(at91_aic, "atmel,at91rm9200-aic", aic_of_init);
-+
-+static int __init aic5_of_init(struct device_node *node,
-+			       struct device_node *parent)
-+{
-+	struct irq_chip_generic *gc;
-+	int ret;
-+	int i;
-+	int nchips;
-+
-+	ret = aic_common_of_init(node, &aic5_irq_ops, "atmel-aic5",
-+				 NR_AIC5_IRQS);
-+	if (ret)
-+		return ret;
-+
-+	nchips = aic_domain->revmap_size / 32;
-+	for (i = 0; i < nchips; i++) {
-+		gc = irq_get_domain_generic_chip(aic_domain, i * 32);
-+
-+		gc->chip_types[0].regs.eoi = AT91_AIC5_EOICR;
-+		gc->chip_types[0].chip.irq_mask = aic5_mask;
-+		gc->chip_types[0].chip.irq_unmask = aic5_unmask;
-+		gc->chip_types[0].chip.irq_retrigger = aic5_retrigger;
-+		gc->chip_types[0].chip.irq_set_type = aic5_set_type;
-+		gc->chip_types[0].chip.irq_suspend = aic5_suspend;
-+		gc->chip_types[0].chip.irq_resume = aic5_resume;
-+		gc->chip_types[0].chip.irq_pm_shutdown = aic5_pm_shutdown;
-+	}
-+
-+	aic5_hw_init(aic_domain);
-+	set_handle_irq(aic5_handle);
-+
-+	return 0;
-+}
-+IRQCHIP_DECLARE(at91_aic5, "atmel,sama5d3-aic", aic5_of_init);
--- 
-1.7.9.5
+root@socfpga_cyclone5:~# ./do-overlay-only
++ mkdir /config/device-tree/overlays/foo
++ echo socfpga_overlay.dtbo
++ rmdir /config/device-tree/overlays/foo
+Unable to handle kernel NULL pointer dereference at virtual address 00000018
+pgd = bf164000
+[00000018] *pgd=3fb9c831, *pte=00000000, *ppte=00000000
+Internal error: Oops: 17 [#1] SMP ARM
+Modules linked in:
+CPU: 1 PID: 175 Comm: rmdir Not tainted 3.13.0-00299-g2e61581 #7
+task: bf00f400 ti: bfba4000 task.ti: bfba4000
+PC is at release_resource+0x24/0x98
+LR is at release_resource+0x20/0x98
+pc : [<800286e0>]    lr : [<800286dc>]    psr: 60000013
+sp : bfba5da0  ip : bfba5da0  fp : bfba5db4
+r10: 00100100  r9 : 00000000  r8 : 00200200
+r7 : 80732ff8  r6 : 00000001  r5 : bfbb8400  r4 : bfbd1100
+r3 : 00000000  r2 : 00000000  r1 : 00000002  r0 : 8074e580
+Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
+Control: 10c5387d  Table: 3f16404a  DAC: 00000015
+Process rmdir (pid: 175, stack limit = 0xbfba4248)
+Stack: (0xbfba5da0 to 0xbfba6000)
+5da0: 00000000 00000001 bfba5dcc bfba5db8 802f2e40 800286c8 bfbb8400 bfb930c0
+5dc0: bfba5de4 bfba5dd0 802f31e0 802f2dd0 bfbb8434 bfbb8400 bfba5dfc bfba5de8
+5de0: 802f3224 802f31d0 802f31ec 807410ac bfba5e24 bfba5e00 803b4f20 802f31f8
+5e00: bfb930c0 bfbe61a8 bfbe61a8 bfbe6180 00200200 00100100 bfba5e4c bfba5e28
+5e20: 803b4fec 803b4e68 bfbe6140 ffffffff bfbe6188 00000000 80782dd4 80741108
+5e40: bfba5e6c bfba5e50 803b51ec 803b4f94 00001040 bf82e000 807410b4 00000000
+5e60: bfba5e84 bfba5e70 803b57f0 803b51b4 803b5778 bf82e018 bfba5ea4 bfba5e88
+5e80: 80161df8 803b5784 00000000 00000000 bf82e000 bfb26070 bfba5eb4 bfba5ea8
+5ea0: 80161e64 80161d9c bfba5eec bfba5eb8 8016071c 80161e28 80110da0 8010efbc
+5ec0: bf59a198 bf59a198 00000000 bf5543f0 7e96ef14 ffffff9c bfba4000 bf59a198
+5ee0: bfba5f0c bfba5ef0 801086e4 8016054c bf5533b8 bf128000 00000000 00000000
+5f00: bfba5f94 bfba5f10 80108870 80108650 bf8e3010 bf5533b8 006f6f66 00000003
+5f20: bf12802d 80107348 00000000 bf576660 bf5543f0 00000000 00000004 00000060
+5f40: 00000000 00000000 bfba5f64 bfba5f58 800fcb1c 8003f114 bfba5f84 bfba5f68
+5f60: 8003f114 804d1630 bfba4000 bfba4000 7e96ef14 00000000 7e96ee28 00000028
+5f80: 8000ece4 00000000 bfba5fa4 bfba5f98 8010a800 8010875c 00000000 bfba5fa8
+5fa0: 8000eac0 8010a7ec 7e96ef14 00000000 7e96ef14 00000000 00000002 7e96ee28
+5fc0: 7e96ef14 00000000 7e96ee28 00000028 00000002 7e96ee24 0006a754 00000000
+5fe0: 76f3d450 7e96ec74 0003c2e5 76f3d45c 80000010 7e96ef14 00000000 00000000
+[<800286e0>] (release_resource+0x24/0x98) from [<802f2e40>]
+(platform_device_del+0x7c/0xac)
+[<802f2e40>] (platform_device_del+0x7c/0xac) from [<802f31e0>]
+(platform_device_unregister+0x1c/0x28)
+[<802f31e0>] (platform_device_unregister+0x1c/0x28) from [<802f3224>]
+(platform_handler_remove+0x38/0x54)
+[<802f3224>] (platform_handler_remove+0x38/0x54) from [<803b4f20>]
+(of_overlay_device_entry_change.isra.0+0xc4/0x12c)
+[<803b4f20>] (of_overlay_device_entry_change.isra.0+0xc4/0x12c) from
+[<803b4fec>] (of_overlay_revert_one+0x64/0x220)
+[<803b4fec>] (of_overlay_revert_one+0x64/0x220) from [<803b51ec>]
+(of_overlay_revert+0x44/0x64)
+[<803b51ec>] (of_overlay_revert+0x44/0x64) from [<803b57f0>]
+(cfs_overlay_release+0x78/0x7c)
+[<803b57f0>] (cfs_overlay_release+0x78/0x7c) from [<80161df8>]
+(config_item_release+0x68/0x8c)
+[<80161df8>] (config_item_release+0x68/0x8c) from [<80161e64>]
+(config_item_put+0x48/0x4c)
+[<80161e64>] (config_item_put+0x48/0x4c) from [<8016071c>]
+(configfs_rmdir+0x1dc/0x264)
+[<8016071c>] (configfs_rmdir+0x1dc/0x264) from [<801086e4>]
+(vfs_rmdir+0xa0/0x10c)
+[<801086e4>] (vfs_rmdir+0xa0/0x10c) from [<80108870>] (do_rmdir+0x120/0x150)
+[<80108870>] (do_rmdir+0x120/0x150) from [<8010a800>] (SyS_rmdir+0x20/0x24)
+[<8010a800>] (SyS_rmdir+0x20/0x24) from [<8000eac0>] (ret_fast_syscall+0x0/0x30)
+Code: e1a04000 e59f0074 eb12b02b e5943010 (e5932018)
+---[ end trace 1b8539e83d8e0ecc ]---
+./do-overlay-only: line 7:   175 Segmentation fault      rmdir
+/config/device-tree/overlays/foo
+root@socfpga_cyclone5:~#
+
+I did some debug, haven't figured anything out yet.
+
+I have been able to successfully add/remove an overlay if it was to a
+fpga node that was at /fpga and used 'target = <&fpga>;'   Also
+'target-path="/fpga";' works fine.
+
+Alan Tull
+aka
+delicious quinoa
