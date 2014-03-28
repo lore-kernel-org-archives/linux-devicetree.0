@@ -1,72 +1,46 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH RFC v3 2/2] clk: Add handling of clk parent and rate assigned from DT
-Date: Fri, 28 Mar 2014 17:44:17 +0100
-Message-ID: <2134974.m5sRReBBJh@avalon>
-References: <1395922579-28547-1-git-send-email-s.nawrocki@samsung.com> <46532903.ghnH4Us8Zz@avalon> <20140327144712.GW17250@pengutronix.de>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH RESEND] input: dts: Add commonly used event types
+Date: Fri, 28 Mar 2014 09:43:00 -0700
+Message-ID: <20140328164300.GB7582@core.coreip.homeip.net>
+References: <1395165888-17434-1-git-send-email-shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140327144712.GW17250-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1395165888-17434-1-git-send-email-shc_work@mail.ru>
+Sender: linux-input-owner@vger.kernel.org
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sascha,
-
-On Thursday 27 March 2014 15:47:12 Sascha Hauer wrote:
-> On Thu, Mar 27, 2014 at 03:08:10PM +0100, Laurent Pinchart wrote:
-
-[snip]
-
-> > That's clearer indeed. Can the parents and rates depend on the board, or
-> > on the SoC only ? We might be getting dangerously close to specifying
-> > platform configuration instead of describing the hardware. A real example
-> > might be nice to support the discussion.
+On Tue, Mar 18, 2014 at 10:04:47PM +0400, Alexander Shiyan wrote:
+> Patch adds commonly used event types (EV_KEY and EV_SW) to
+> devicetree bindings header for input subsystem.
 > 
-> This patch comes just at the right time. This is what I do with it:
+> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+> ---
+>  include/dt-bindings/input/input.h | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> #define cko1_sel 57
-> #define pll4_audio_div 203
-> #define pll4_audio 173
-> #define ssi3_sel 47
+> diff --git a/include/dt-bindings/input/input.h b/include/dt-bindings/input/input.h
+> index 042e7b3..3a141d92 100644
+> --- a/include/dt-bindings/input/input.h
+> +++ b/include/dt-bindings/input/input.h
+> @@ -9,6 +9,9 @@
+>  #ifndef _DT_BINDINGS_INPUT_INPUT_H
+>  #define _DT_BINDINGS_INPUT_INPUT_H
+>  
+> +#define EV_KEY			0x01
+> +#define EV_SW			0x05
+> +
+>  #define KEY_RESERVED		0
+>  #define KEY_ESC			1
+>  #define KEY_1			2
+> -- 
+> 1.8.3.2
 > 
-> &clks {
-> 	assigned-clocks {
-> 		clocks = <&clks cko1_sel>, <&clks ssi3_sel>, <&clks pll4_audio>;
-> 		clock-parents = <&clks pll4_audio_div>, <&clks pll4_audio_div>, <0>;
-> 		clock-rates = <0>, <0>, <786432000>;
-> 	};
-> };
-> 
-> cko1_sel is a clock that can be routed out of the SoC. In my case it is
-> connected the sysclk of an external Audio Codec. ssi3_sel drives my SoC
-> internal I2S unit which I use in master mode. The above makes sure that
-> the I2S unit and the the external codec both get their clock from the
-> audio PLL. The audio PLL is configured to a rate of 786432000Hz which
-> is an exact multiple of the desired audio clock.
 
-Thank you for the example.
-
-Are the cko1_sel and ssi3_sel used only by the external audio codec and 
-internal I2S unit respectively ? If so, it might make sense to move the 
-configuration of their parent to the audio codec and I2S unit DT nodes. 
-However, grouping the parent configuration and the pll4 rate configuration in 
-a single place makes sense as well. Guidelines are probably needed.
-
-I get a slight feeling of uneasiness about this, probably because we're at the 
-boundary between hardware description and system configuration. Encoding in DT 
-that "for this particular board this particular clock must be configured this 
-particular way" sounds fine to me, but we need to make sure it won't turn to 
-software-driven rather than hardware-driven use case descriptions.
+This I believe should go through device tree.
 
 -- 
-Regards,
-
-Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Dmitry
