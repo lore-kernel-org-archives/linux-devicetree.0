@@ -1,75 +1,61 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCHv2 1/1] mtd: gpmi: make blockmark swapping optional
-Date: Fri, 28 Mar 2014 11:18:05 +0100
-Message-ID: <20140328111805.76b6513d@ipc1.ka-ro>
-References: <1395399017-19005-1-git-send-email-LW@KARO-electronics.de>
-	<20140324095902.GB11377@localhost>
-	<20140326095156.3e5585b8@ipc1.ka-ro>
-	<5332AEE7.2040402@freescale.com>
-	<20140326125502.0e8d0657@ipc1.ka-ro>
-	<20140327095956.GA29623@localhost>
-	<20140327132109.06258526@ipc1.ka-ro>
-	<5334D9F7.2030001@freescale.com>
-	<20140328091646.1ce03f90@ipc1.ka-ro>
-	<53353524.9020605@freescale.com>
-	<20140328090023.GB17250@pengutronix.de>
-	<53354057.6030004@freescale.com>
-	<20140328103147.3fdadfd7@ipc1.ka-ro>
-	<53354A46.9040807@freescale.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC] Serial port aliases in DT
+Date: Fri, 28 Mar 2014 11:28:05 +0100
+Message-ID: <14685448.67FSBAE5nm@wuerfel>
+References: <5448979.WQPtOb56tW@avalon> <6506478.py2Axu25u1@wuerfel> <CAMuHMdVYhGGt7+fR4oHzf-hDvTOWbHfhM2g92eo3RqULd6yR2A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <53354A46.9040807@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Huang Shijie <b32955@freescale.com>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <fabio.estevam@freescale.com>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Shawn Guo <shawn.guo@freescale.com>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, David Woodhouse <dwmw2@infradead.org>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdVYhGGt7+fR4oHzf-hDvTOWbHfhM2g92eo3RqULd6yR2A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Huang Shijie wrote:
-> =E4=BA=8E 2014=E5=B9=B403=E6=9C=8828=E6=97=A5 17:31, Lothar Wa=C3=9Fm=
-ann =E5=86=99=E9=81=93:
-> > Hi,
+On Friday 28 March 2014 09:39:22 Geert Uytterhoeven wrote:
+> 
+> On Fri, Mar 28, 2014 at 9:30 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > On Friday 28 March 2014 09:09:23 Geert Uytterhoeven wrote:
+> >> On the Renesas SoCs, where this thread started, you also have different
+> >> types of IP blocks providing similar functionality on the same SoC.
+> >> E.g. 3 types of serial ports, 2 types of i2c, (at least) 2 types of spi...
+> >> Hence one more level of confusion (is SoC serial0 the first serial port of
+> >> type A, B, or C?).
 > >
-> > Huang Shijie wrote:
-> >> =E4=BA=8E 2014=E5=B9=B403=E6=9C=8828=E6=97=A5 17:00, Sascha Hauer =
-=E5=86=99=E9=81=93:
-> >>> - disables swapping of BB marks in the FCB the ROM won't swap byt=
-es.
-> >> We can not disable the swapping in the FCB in the imx28.
-> >> The DISBBM bit in the FCB does _NOT_ exit in the imx28's FCB.
-> >>
-> > The Linux kernel does not have any business with the FCB, so it is
-> > completely irrelevant for Linux whether byte swapping can be disabl=
-ed
-> > in the FCB or not.
-> >
-> But the gpmi is relevant to the ROM.
-> the gpmi driver should keep consistency with the ROM.
->=20
-> I do not object you add the swapping optional the gpmi driver(since i=
-t's=20
-> ok for imx50/imx6q/imx6sx),
-> i just object that you enable this feature for imx28.
->=20
-We are talking about a Linux Kernel Driver here, not about a flashtool
-for i.MX28.
-It is a valid usecase for Linux not being able to write the bootloader,
-so there is no reason to disallow this feature in the driver code.
-Since it is a DT option it can be trivially switched on and off without
-having to change anything in the kernel.
+> > The 'serial' aliases are defined to refer to UARTs only, there is no debate
+> > about that.
+> 
+> All 3 serial port types are UARTs.
+> 
+> For the serial ports, they are sufficiently similar to use the same driver.
+> For i2c and spi, that's not the case, and they use different drivers.
 
+Ok, I see. I just misunderstood what you meant.
 
-Lothar Wa=C3=9Fmann
---=20
-___________________________________________________________
+The aliases are really meant to put all the uarts into a flat numbering space,
+regardless of the driver, and you can mix them them in any possible way. If
+a board uses one uart of each type, then serial0 through serial2 should
+point to the three that are used, but not the ones that aren't connected.
 
-Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
-Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
-Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
-Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
+Unfortunately, the Linux uart naming system doesn't work well with that,
+because you'd end up with something like /dev/ttyA0, /dev/ttyC1, /dev/ttyB2
+for the case that you are using the A, C and B drivers in that order.
+I would argue that we should try to fix it by changing the way that Linux
+allocates the names (in a backwards compatible way of course), not by changing
+the DT binding.
 
-www.karo-electronics.de | info@karo-electronics.de
-___________________________________________________________
+Using a separate name space for each driver keeps causing more problems than
+it solves, and we really should be addressing this. One way to do this
+that I think would handle it nicely is to make it optional for a uart_driver
+to provide a major/minor number range and device name for
+uart_register_driver, and move the ttyS%d namespace handling from the 8250
+driver into serial_core.c. There are a couple of open questions regarding
+how to implement backwards compatibility with the existing behavior, but
+I think it can be done.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
