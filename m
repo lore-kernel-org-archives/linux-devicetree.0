@@ -1,60 +1,33 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v2 0/6] PCI irq mapping fixes and cleanups
-Date: Fri, 28 Mar 2014 16:47:36 +0100
-Message-ID: <1396021656.4563.3.camel@weser.hi.pengutronix.de>
-References: <1394025951-32438-1-git-send-email-l.stach@pengutronix.de>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 74/75] ARM: l2c: always enable low power modes
+Date: Fri, 28 Mar 2014 15:51:27 +0000
+Message-ID: <20140328155127.GL7528@n2100.arm.linux.org.uk>
+References: <20140328151249.GJ7528@n2100.arm.linux.org.uk> <E1WTYaK-0007I0-Sm@rmk-PC.arm.linux.org.uk> <CAL_Jsq+vja-BeNfiVnOicFAa+E6jigDfnb5KWWpxZCZ3eGkJiA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1394025951-32438-1-git-send-email-l.stach@pengutronix.de>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-sh@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Jingoo Han <jg1.han@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, Shawn Guo <shawn.guo@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Thierry Reding <thierry.reding@gmail.com>, Arnd Bergmann <arnd@arndb.de>, kernel@pengutronix.de
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+vja-BeNfiVnOicFAa+E6jigDfnb5KWWpxZCZ3eGkJiA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Friendly ping.
+On Fri, Mar 28, 2014 at 10:42:54AM -0500, Rob Herring wrote:
+> On Fri, Mar 28, 2014 at 10:20 AM, Russell King
+> <rmk+kernel@arm.linux.org.uk> wrote:
+> > Always enable the L2C low power modes on L2C-310 R3P0 and newer parts.
+> 
+> I assume you want to squash this with patch 68/75? Or you are still
+> debating whether we want to do this or not? Given that it is r3px
+> only, that should greatly reduce any chance of breakage to newer
+> platforms.
 
-Bjorn could you please pick the patches labeled "PCI: ..." up? Both the
-Tegra and i.MX dts changes are already queued up for 3.15 and I think
-all patches gathered enough acks and tested-bys for this to be low risk.
-
-Regards,
-Lucas
-
-Am Mittwoch, den 05.03.2014, 14:25 +0100 schrieb Lucas Stach:
-> This series cleans up the PCI irq mapping for all
-> the ARM PCI host drivers, so they handle it in the
-> way defined in the common PCI bindings.
-> 
-> I've worked in all the feedback I received on the first
-> round of this series and left out the i.MX pcie driver
-> changes, as these need more work includig breaking
-> of the existing binding, which I'll send as a separate
-> series.
-> 
-> Lucas Stach (6):
->   ARM: dts: tegra: add PCIe interrupt mapping properties
->   PCI: tegra: use new OF interrupt mapping when possible
->   PCI: rcar: use new OF interrupt mapping when possible
->   ARM: dts: exynos5440: fix PCIe interrupt mapping
->   ARM: dts: imx6: add PCIe interrupt mapping properties
->   PCI: designware: use new OF interrupt mapping when possible
-> 
->  .../devicetree/bindings/pci/nvidia,tegra20-pcie.txt          |  8 ++++++++
->  arch/arm/boot/dts/exynos5440.dtsi                            |  6 ++++--
->  arch/arm/boot/dts/imx6qdl.dtsi                               |  8 ++++++++
->  arch/arm/boot/dts/tegra20.dtsi                               |  4 ++++
->  arch/arm/boot/dts/tegra30.dtsi                               |  4 ++++
->  drivers/pci/host/pci-rcar-gen2.c                             | 12 +++++++++---
->  drivers/pci/host/pci-tegra.c                                 |  7 ++++++-
->  drivers/pci/host/pcie-designware.c                           | 12 +++++++++---
->  8 files changed, 52 insertions(+), 9 deletions(-)
-> 
+I will eventually - I've kept it separate for the time being to give
+more options.  Let's see how people get on with it - it'll be running
+through Olof's builder later today, and there's some other people
+wanting to take it for a spin.
 
 -- 
-Pengutronix e.K.                           | Lucas Stach                 |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-5076 |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
