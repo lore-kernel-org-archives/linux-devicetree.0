@@ -1,27 +1,82 @@
-From: Huang Shijie <b32955@freescale.com>
-Subject: Re: [PATCHv2 1/1] mtd: gpmi: make blockmark swapping optional
-Date: Fri, 28 Mar 2014 10:09:59 +0800
-Message-ID: <5334D9F7.2030001@freescale.com>
-References: <532BCFCC.4080205@freescale.com>	<1395399017-19005-1-git-send-email-LW@KARO-electronics.de>	<20140324095902.GB11377@localhost>	<20140326095156.3e5585b8@ipc1.ka-ro>	<5332AEE7.2040402@freescale.com>	<20140326125502.0e8d0657@ipc1.ka-ro>	<20140327095956.GA29623@localhost> <20140327132109.06258526@ipc1.ka-ro>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [RFC] Serial port aliases in DT
+Date: Fri, 28 Mar 2014 08:28:27 +0100
+Message-ID: <20140328072827.GY17250@pengutronix.de>
+References: <5448979.WQPtOb56tW@avalon>
+ <CAL_Jsq+SWZUz4D+3pdDs5yfi_XbTODC0ytt1S5KpmR_C5vVL=A@mail.gmail.com>
+ <20140327151829.GX17250@pengutronix.de>
+ <4966076.uASvrV0Iy2@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140327132109.06258526@ipc1.ka-ro>
-Sender: linux-doc-owner@vger.kernel.org
-To: =?UTF-8?B?TG90aGFyIFdhw59tYW5u?= <LW@KARO-electronics.de>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawn.guo@linaro.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4966076.uASvrV0Iy2@wuerfel>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-=E4=BA=8E 2014=E5=B9=B403=E6=9C=8827=E6=97=A5 20:21, Lothar Wa=C3=9Fman=
-n =E5=86=99=E9=81=93:
-> I can assure you that the>100.000 i.MX28 based modules, that we sold
-> up to now boot from NAND just fine without any block mark swapping in
-> the U-Boot pages.
->
-Our driver should follow the Reference manual, not the product.
+On Thu, Mar 27, 2014 at 07:26:27PM +0100, Arnd Bergmann wrote:
+> On Thursday 27 March 2014 16:18:29 Sascha Hauer wrote:
+> > On Thu, Mar 27, 2014 at 08:54:09AM -0500, Rob Herring wrote:
+> > > >>
+> > > >> > This however comes back to the more general issue of serial port device
+> > > >> > naming: Linux traditionally uses separate names per driver (e.g. ttySC0
+> > > >> > instead of ttyS0).
+> > > >> >
+> > > >> > There has been discussion in the past about changing this to let all
+> > > >> > drivers use the same namespace, but it's not yet clear to me how we'd do
+> > > >> > this in a 100% backwards compatible way. Maybe it's best left to udev to
+> > > >> > figure out the driver independent name, but then we definitely should use
+> > > >> > the alias for that name.
+> > > 
+> > > This discussion has come up in just the last month or so.
+> > > 
+> > > My opinion is device name numbering should start at 0 with 0 being the
+> > > preferred console device.
+> > 
+> > That's completely different to everything I've heard and seen so far 
+> > 
+> > For specifying the console we have the linux,stdout-path property in the
+> > chosen node. My preferred console may not be a serial port at all in
+> > which case I would end up with a serial0 = &lcd0 alias.
+> 
+> Agreed. Also, don't we already have /dev/console for the preferred console
+> device?
+> 
+> >  Many
+> > devicetrees specify aliases for i2c/spi/mmc controllers aswell.  Should
+> > they order their i2c controllers in the order of preference now?
+> > 
+> > Most dtsi files in the kernel specify a SoC specific order of aliases
+> > and I think this makes the most sense.
+> 
+> I disagree with this one: the aliases should be a board specific
+> property, if not settable in the boot loader. This is how it traditionally
+> work on OF, and I think it's the most sensible approach for end users:
+> If the machine has multiple serial ports coming out the back, they are
+> normally numbered in some way, and the numbers should match what you
+> see in the OS, regardless of what the SoC calls them.
 
-thanks
-Huang Shijie
+Freescale starts numbering the devices at 1, Linux normally starts at 0.
+This leads to enough confusion already. I really don't want to have an
+additional board vendor specific translation. This would mean when
+talking about an UART we would not only have to make clear whether we
+mean freescale numbering or Linux numbering, but also whether we me mean
+board vendor numbering. Things like earlyprintk would still have the SoC
+numbering. Bootloaders which still use the SoC numbering would add to
+the confusion.
+I really don't think making the numbering board specific is going to
+improve the situation.
 
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
