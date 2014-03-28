@@ -1,52 +1,73 @@
 From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC 5/5] tty: Update hypervisor tty drivers to use core stdout parsing code.
-Date: Fri, 28 Mar 2014 14:41:35 -0700
-Message-ID: <20140328214135.36027C41FF4@trevor.secretlab.ca>
-References: <1396022885-6102-1-git-send-email-grant.likely@linaro.org> < 1396022885-6102-6-git-send-email-grant.likely@linaro.org> <20140328185443. GA26433@quad.lixom.net>
+Subject: Re: [RFC 0/5] of: Automatic console registration cleanups
+Date: Fri, 28 Mar 2014 16:50:58 -0700
+Message-ID: <20140328235058.BEAD3C41FF4@trevor.secretlab.ca>
+References: <1396022885-6102-1-git-send-email-grant.likely@linaro.org> < 20140328185653.GB26433@quad.lixom.net> < CAL_JsqKFO+OSz83f=XdyKgCqByUvHe7qLzgn5QLU1x1V1A5Fng@mail.gmail.com> < 20140328205836.GN25519@cbox>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140328185443.GA26433-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
+In-Reply-To: <20140328205836.GN25519@cbox>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 28 Mar 2014 11:54:43 -0700, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
-> On Fri, Mar 28, 2014 at 09:08:05AM -0700, Grant Likely wrote:
-> > diff --git a/drivers/tty/ehv_bytechan.c b/drivers/tty/ehv_bytechan.c
-> > index 0419b69e270f..4f485e88f60c 100644
-> > --- a/drivers/tty/ehv_bytechan.c
-> > +++ b/drivers/tty/ehv_bytechan.c
-> > @@ -108,55 +108,23 @@ static void disable_tx_interrupt(struct ehv_bc_data *bc)
-> >   *
-> >   * The byte channel to be used for the console is specified via a "stdout"
-> >   * property in the /chosen node.
-> > - *
-> > - * For compatible with legacy device trees, we also look for a "stdout" alias.
-> >   */
-> 
-> Did you mean to remove this /aliases/stdout checking? Based on the comment it
-> seems that some older device trees / platforms might rely on it?
+On Fri, 28 Mar 2014 13:58:36 -0700, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Mar 28, 2014 at 02:19:23PM -0500, Rob Herring wrote:
+> > On Fri, Mar 28, 2014 at 1:56 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+> > > On Fri, Mar 28, 2014 at 09:08:00AM -0700, Grant Likely wrote:
+> > >> Hi all,
+> > >>
+> > >> This is a series that I've been playing with over the last few days to
+> > >> clean up the selection of default console devices when using the device
+> > >> tree. The device tree defines a way of specifying the console by using a
+> > >> "stdout-path" property in the /chosen node, but very few drivers
+> > >> actually attempt to use that data, and so for most platforms there needs
+> > >> to be a "console=" line in the command line if a serial port is intended
+> > >> to be used as the console.
+> > >>
+> > >> With this series, if there is a /chosen/stdout-path property, and if
+> > >> that property points to a serial port node, then when the serial driver
+> > >> registers the port, the core uart_add_one_port() function will notice
+> > >> and if no console= argument was provided then add it as a preferred
+> > >> console.
+> > >>
+> > >> I've not tested this very extensively yet, but I want to get some
+> > >> feedback before I go further.
+> > >>
+> > >> The one downside with this approach is that it doesn't do anything for
+> > >> early console setup. That still needs to be added on a per-driver basis,
+> > >> but at least it shouldn't conflict with this approach.
+> > 
+> > I'm working on the early aspect. I've got things working with either
+> > command line (which I sent out recently) and with parsing the FDT
+> > (which I haven't sent out yet).
+> > 
+> > > Looks sane to me (as discussed in person). I gave it a run on PWRficient with
+> > > and without console= line (8250-based uart), and it behaved as expected.
+> > >
+> > > A couple of nits on the series, replied to two of the patches.
+> > >
+> > > I'll give it a run through the board farm here too, but I'll keep console=
+> > > bootargs there for those boots at this time, too much to change to take it out
+> > > everywhere. :-)
+> > 
+> > It would be good to know if removing console= causes userspace any
+> > issues. For example, if getty's were setup based on console params. I
+> > know ubuntu does some detection of serial ports, but I don't recall
+> > what it looks at. Hopefully it's just checking /dev nodes.
+> > 
+> In Ubuntu, recent versions at least, it's all just hardcoded in
+> /etc/init/*.conf files.  The Linaro OE FS does check /proc/cmdline for
+> console= in there - not sure if we care, or at least we can have it
+> fixed quickly.
 
-I moved it to the common code.
-
-> > diff --git a/drivers/tty/hvc/hvc_opal.c b/drivers/tty/hvc/hvc_opal.c
-> > index b01659bd4f7c..0ec1a80dd6a2 100644
-> > --- a/drivers/tty/hvc/hvc_opal.c
-> > +++ b/drivers/tty/hvc/hvc_opal.c
-> > @@ -322,22 +322,14 @@ static void udbg_init_opal_common(void)
-> >  
-> >  void __init hvc_opal_init_early(void)
-> >  {
-> > -	struct device_node *stdout_node = NULL;
-> > +	struct device_node *stdout_node = of_node_get(of_stdout);
-> >  	const __be32 *termno;
-> >  	const char *name = NULL;
-> 
-> Name is no longer used, should be removed.
-
-Fixed, thanks.
+For real hardware using a serial console, I think we want to fix this.
+Right my embedded rootfs (buildroot) isn't portable between machines
+only because the getty device gets hard coded. /proc/cmdline doesn't
+really solve the problem since it doesn't handle non-cmdline selected
+consoles. However, /proc/consoles should do the job.
 
 g.
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
