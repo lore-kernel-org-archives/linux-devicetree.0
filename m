@@ -1,247 +1,60 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH 2/8] PCI: designware: split Exynos and i.MX bindings
-Date: Fri, 28 Mar 2014 17:52:53 +0100
-Message-ID: <1396025579-14344-3-git-send-email-l.stach@pengutronix.de>
-References: <1396025579-14344-1-git-send-email-l.stach@pengutronix.de>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1396025579-14344-1-git-send-email-l.stach@pengutronix.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-pci@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Sean Cross <xobs@kosagi.com>, Marek Vasut <marex@denx.de>, Richard Zhu <r65037@freescale.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Shawn Guo <shawn.guo@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Tim Harvey <tharvey@gateworks.com>, kernel@pengutronix.de
+From: Boris BREZILLON <b.brezillon.dev@gmail.com>
+Subject: [RFC PATCH v2 01/10] genirq: generic chip: export irq_map_generic_chip function
+Date: Fri, 28 Mar 2014 18:58:59 +0100
+Message-ID: <1396029548-10928-2-git-send-email-b.brezillon.dev@gmail.com>
+References: <1396029548-10928-1-git-send-email-b.brezillon.dev@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1396029548-10928-1-git-send-email-b.brezillon.dev@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Landley <rob@landley.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Thomas Gleixner <tglx@linutronix.de>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Boris BREZILLON <b.brezillon.dev@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The glue around the core designware IP is significantly
-different between the Exynos and i.MX implementation,
-which is reflected in the DT bindings.
+Export the generic irq map function in order to provide irq_domain ops with
+generic mapping and specific of xlate function (needed by the new atmel
+AIC driver).
 
-This changes the i.MX6 binding to reuse as much as
-possible from the common designware binding and
-removes old cruft.
-
-I removed the optional GPIOs with the following reasoning:
-- disable-gpio: endpoint specific GPIO, not currently
-  wired up in any code. Should be handled by the PCI device
-  driver, not the host controller driver.
-- wake-up-gpio: same as above.
-- power-on-gpio: No user in any upstream DT. This should
-  be handled by a regulator which shouldn't be controlled
-  by the host driver, but rather by the PCI device driver.
-
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Boris BREZILLON <b.brezillon.dev@gmail.com>
 ---
- .../devicetree/bindings/pci/designware-pcie.txt    | 74 ++--------------------
- .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     | 38 +++++++++++
- .../bindings/pci/samsung,exynos5440-pcie.txt       | 65 +++++++++++++++++++
- 3 files changed, 109 insertions(+), 68 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
- create mode 100644 Documentation/devicetree/bindings/pci/samsung,exynos5440-pcie.txt
+ include/linux/irq.h       |    2 ++
+ kernel/irq/generic-chip.c |    5 +++--
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-index d6fae13ff062..228b37684305 100644
---- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-@@ -1,15 +1,7 @@
- * Synopsys Designware PCIe interface
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index 7dc1003..19b5e3b 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -765,6 +765,8 @@ void irq_gc_eoi(struct irq_data *d);
+ int irq_gc_set_wake(struct irq_data *d, unsigned int on);
  
- Required properties:
--- compatible: should contain "snps,dw-pcie" to identify the
--	core, plus an identifier for the specific instance, such
--	as "samsung,exynos5440-pcie" or "fsl,imx6q-pcie".
--- reg: base addresses and lengths of the pcie controller,
--	the phy controller, additional register for the phy controller.
--- interrupts: interrupt values for level interrupt,
--	pulse interrupt, special interrupt.
--- clocks: from common clock binding: handle to pci clock.
--- clock-names: from common clock binding: should be "pcie" and "pcie_bus".
-+- compatible: should contain "snps,dw-pcie" to identify the core.
- - #address-cells: set to <3>
- - #size-cells: set to <2>
- - device_type: set to "pci"
-@@ -19,65 +11,11 @@ Required properties:
- 	to define the mapping of the PCIe interface to interrupt
- 	numbers.
- - num-lanes: number of lanes to use
-+- clocks: Must contain an entry for each entry in clock-names.
-+	See ../clocks/clock-bindings.txt for details.
-+- clock-names: Must include the following entries: 
-+	- "pcie"
-+	- "pcie_bus"
+ /* Setup functions for irq_chip_generic */
++int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
++			 irq_hw_number_t hw_irq);
+ struct irq_chip_generic *
+ irq_alloc_generic_chip(const char *name, int nr_ct, unsigned int irq_base,
+ 		       void __iomem *reg_base, irq_flow_handler_t handler);
+diff --git a/kernel/irq/generic-chip.c b/kernel/irq/generic-chip.c
+index 452d6f2..cf80e7b 100644
+--- a/kernel/irq/generic-chip.c
++++ b/kernel/irq/generic-chip.c
+@@ -341,8 +341,8 @@ static struct lock_class_key irq_nested_lock_class;
+ /*
+  * irq_map_generic_chip - Map a generic chip for an irq domain
+  */
+-static int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
+-				irq_hw_number_t hw_irq)
++int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
++			 irq_hw_number_t hw_irq)
+ {
+ 	struct irq_data *data = irq_get_irq_data(virq);
+ 	struct irq_domain_chip_generic *dgc = d->gc;
+@@ -394,6 +394,7 @@ static int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
+ 	irq_modify_status(virq, dgc->irq_flags_to_clear, dgc->irq_flags_to_set);
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(irq_map_generic_chip);
  
- Optional properties:
- - reset-gpio: gpio pin number of power good signal
--
--Optional properties for fsl,imx6q-pcie
--- power-on-gpio: gpio pin number of power-enable signal
--- wake-up-gpio: gpio pin number of incoming wakeup signal
--- disable-gpio: gpio pin number of outgoing rfkill/endpoint disable signal
--
--Example:
--
--SoC specific DT Entry:
--
--	pcie@290000 {
--		compatible = "samsung,exynos5440-pcie", "snps,dw-pcie";
--		reg = <0x290000 0x1000
--			0x270000 0x1000
--			0x271000 0x40>;
--		interrupts = <0 20 0>, <0 21 0>, <0 22 0>;
--		clocks = <&clock 28>, <&clock 27>;
--		clock-names = "pcie", "pcie_bus";
--		#address-cells = <3>;
--		#size-cells = <2>;
--		device_type = "pci";
--		ranges = <0x00000800 0 0x40000000 0x40000000 0 0x00001000   /* configuration space */
--			  0x81000000 0 0	  0x40001000 0 0x00010000   /* downstream I/O */
--			  0x82000000 0 0x40011000 0x40011000 0 0x1ffef000>; /* non-prefetchable memory */
--		#interrupt-cells = <1>;
--		interrupt-map-mask = <0 0 0 0>;
--		interrupt-map = <0x0 0 &gic 53>;
--		num-lanes = <4>;
--	};
--
--	pcie@2a0000 {
--		compatible = "samsung,exynos5440-pcie", "snps,dw-pcie";
--		reg = <0x2a0000 0x1000
--			0x272000 0x1000
--			0x271040 0x40>;
--		interrupts = <0 23 0>, <0 24 0>, <0 25 0>;
--		clocks = <&clock 29>, <&clock 27>;
--		clock-names = "pcie", "pcie_bus";
--		#address-cells = <3>;
--		#size-cells = <2>;
--		device_type = "pci";
--		ranges = <0x00000800 0 0x60000000 0x60000000 0 0x00001000   /* configuration space */
--			  0x81000000 0 0	  0x60001000 0 0x00010000   /* downstream I/O */
--			  0x82000000 0 0x60011000 0x60011000 0 0x1ffef000>; /* non-prefetchable memory */
--		#interrupt-cells = <1>;
--		interrupt-map-mask = <0 0 0 0>;
--		interrupt-map = <0x0 0 &gic 56>;
--		num-lanes = <4>;
--	};
--
--Board specific DT Entry:
--
--	pcie@290000 {
--		reset-gpio = <&pin_ctrl 5 0>;
--	};
--
--	pcie@2a0000 {
--		reset-gpio = <&pin_ctrl 22 0>;
--	};
-diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-new file mode 100644
-index 000000000000..cb61578bd346
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-@@ -0,0 +1,38 @@
-+* Freescale i.MX6 PCIe interface
-+
-+This PCIe host controller is based on the Synopsis Designware PCIe IP
-+and thus inherits all the common properties defined in designware-pcie.txt.
-+
-+Required properties:
-+- compatible: "fsl,imx6q-pcie"
-+- reg: base addresse and length of the pcie controller
-+- interrupts: A list of interrupt outputs of the controller. Must contain an
-+  entry for each entry in the interrupt-names property.
-+- interrupt-names: Must include the following entries:
-+	- "msi": The interrupt that is asserted when an MSI is received
-+- clock-names: Must include the following additional entries: 
-+	- "pcie_phy"
-+
-+Example:
-+
-+	pcie@0x01000000 {
-+		compatible = "fsl,imx6q-pcie", "snps,dw-pcie";
-+		reg = <0x01ffc000 0x4000>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		device_type = "pci";
-+		ranges = <0x00000800 0 0x01f00000 0x01f00000 0 0x00080000
-+			  0x81000000 0 0          0x01f80000 0 0x00010000
-+			  0x82000000 0 0x01000000 0x01000000 0 0x00f00000>;
-+		num-lanes = <1>;
-+		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "msi";
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 0x7>;
-+		interrupt-map = <0 0 0 1 &intc GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
-+		                <0 0 0 2 &intc GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
-+		                <0 0 0 3 &intc GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
-+		                <0 0 0 4 &intc GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&clks 144>, <&clks 206>, <&clks 189>;
-+		clock-names = "pcie", "pcie_bus", "pcie_phy";
-+	};
-diff --git a/Documentation/devicetree/bindings/pci/samsung,exynos5440-pcie.txt b/Documentation/devicetree/bindings/pci/samsung,exynos5440-pcie.txt
-new file mode 100644
-index 000000000000..4f9d23d2ed67
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/samsung,exynos5440-pcie.txt
-@@ -0,0 +1,65 @@
-+* Samsung Exynos 5440 PCIe interface
-+
-+This PCIe host controller is based on the Synopsis Designware PCIe IP
-+and thus inherits all the common properties defined in designware-pcie.txt.
-+
-+Required properties:
-+- compatible: "samsung,exynos5440-pcie"
-+- reg: base addresses and lengths of the pcie controller,
-+	the phy controller, additional register for the phy controller.
-+- interrupts: A list of interrupt outputs for level interrupt,
-+	pulse interrupt, special interrupt.
-+
-+Example:
-+
-+SoC specific DT Entry:
-+
-+	pcie@290000 {
-+		compatible = "samsung,exynos5440-pcie", "snps,dw-pcie";
-+		reg = <0x290000 0x1000
-+			0x270000 0x1000
-+			0x271000 0x40>;
-+		interrupts = <0 20 0>, <0 21 0>, <0 22 0>;
-+		clocks = <&clock 28>, <&clock 27>;
-+		clock-names = "pcie", "pcie_bus";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		device_type = "pci";
-+		ranges = <0x00000800 0 0x40000000 0x40000000 0 0x00001000   /* configuration space */
-+			  0x81000000 0 0	  0x40001000 0 0x00010000   /* downstream I/O */
-+			  0x82000000 0 0x40011000 0x40011000 0 0x1ffef000>; /* non-prefetchable memory */
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 0>;
-+		interrupt-map = <0 0 0 0 &gic GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-+		num-lanes = <4>;
-+	};
-+
-+	pcie@2a0000 {
-+		compatible = "samsung,exynos5440-pcie", "snps,dw-pcie";
-+		reg = <0x2a0000 0x1000
-+			0x272000 0x1000
-+			0x271040 0x40>;
-+		interrupts = <0 23 0>, <0 24 0>, <0 25 0>;
-+		clocks = <&clock 29>, <&clock 27>;
-+		clock-names = "pcie", "pcie_bus";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		device_type = "pci";
-+		ranges = <0x00000800 0 0x60000000 0x60000000 0 0x00001000   /* configuration space */
-+			  0x81000000 0 0	  0x60001000 0 0x00010000   /* downstream I/O */
-+			  0x82000000 0 0x60011000 0x60011000 0 0x1ffef000>; /* non-prefetchable memory */
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 0>;
-+		interrupt-map = <0 0 0 0 &gic GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-+		num-lanes = <4>;
-+	};
-+
-+Board specific DT Entry:
-+
-+	pcie@290000 {
-+		reset-gpio = <&pin_ctrl 5 0>;
-+	};
-+
-+	pcie@2a0000 {
-+		reset-gpio = <&pin_ctrl 22 0>;
-+	};
+ struct irq_domain_ops irq_generic_chip_ops = {
+ 	.map	= irq_map_generic_chip,
 -- 
-1.9.0
+1.7.9.5
