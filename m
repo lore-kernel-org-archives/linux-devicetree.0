@@ -1,66 +1,70 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH 3/3] arm64: Add APM X-Gene SoC RTC DTS entry
-Date: Fri, 28 Mar 2014 14:56:38 -0600
-Message-ID: <1396040198-13645-4-git-send-email-lho@apm.com>
-References: <1396040198-13645-1-git-send-email-lho@apm.com>
- <1396040198-13645-2-git-send-email-lho@apm.com>
- <1396040198-13645-3-git-send-email-lho@apm.com>
+From: Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 0/5] of: Automatic console registration cleanups
+Date: Fri, 28 Mar 2014 13:58:36 -0700
+Message-ID: <20140328205836.GN25519@cbox>
+References: <1396022885-6102-1-git-send-email-grant.likely@linaro.org>
+ <20140328185653.GB26433@quad.lixom.net>
+ <CAL_JsqKFO+OSz83f=XdyKgCqByUvHe7qLzgn5QLU1x1V1A5Fng@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396040198-13645-3-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKFO+OSz83f=XdyKgCqByUvHe7qLzgn5QLU1x1V1A5Fng-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds APM X-Gene SoC RTC DTS entry.
+On Fri, Mar 28, 2014 at 02:19:23PM -0500, Rob Herring wrote:
+> On Fri, Mar 28, 2014 at 1:56 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+> > On Fri, Mar 28, 2014 at 09:08:00AM -0700, Grant Likely wrote:
+> >> Hi all,
+> >>
+> >> This is a series that I've been playing with over the last few days to
+> >> clean up the selection of default console devices when using the device
+> >> tree. The device tree defines a way of specifying the console by using a
+> >> "stdout-path" property in the /chosen node, but very few drivers
+> >> actually attempt to use that data, and so for most platforms there needs
+> >> to be a "console=" line in the command line if a serial port is intended
+> >> to be used as the console.
+> >>
+> >> With this series, if there is a /chosen/stdout-path property, and if
+> >> that property points to a serial port node, then when the serial driver
+> >> registers the port, the core uart_add_one_port() function will notice
+> >> and if no console= argument was provided then add it as a preferred
+> >> console.
+> >>
+> >> I've not tested this very extensively yet, but I want to get some
+> >> feedback before I go further.
+> >>
+> >> The one downside with this approach is that it doesn't do anything for
+> >> early console setup. That still needs to be added on a per-driver basis,
+> >> but at least it shouldn't conflict with this approach.
+> 
+> I'm working on the early aspect. I've got things working with either
+> command line (which I sent out recently) and with parsing the FDT
+> (which I haven't sent out yet).
+> 
+> > Looks sane to me (as discussed in person). I gave it a run on PWRficient with
+> > and without console= line (8250-based uart), and it behaved as expected.
+> >
+> > A couple of nits on the series, replied to two of the patches.
+> >
+> > I'll give it a run through the board farm here too, but I'll keep console=
+> > bootargs there for those boots at this time, too much to change to take it out
+> > everywhere. :-)
+> 
+> It would be good to know if removing console= causes userspace any
+> issues. For example, if getty's were setup based on console params. I
+> know ubuntu does some detection of serial ports, but I don't recall
+> what it looks at. Hopefully it's just checking /dev nodes.
+> 
+In Ubuntu, recent versions at least, it's all just hardcoded in
+/etc/init/*.conf files.  The Linaro OE FS does check /proc/cmdline for
+console= in there - not sure if we care, or at least we can have it
+fixed quickly.
 
-Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
----
- arch/arm64/boot/dts/apm-storm.dtsi |   21 +++++++++++++++++++++
- 1 files changed, 21 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index 93f4b2d..4917f3b 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -257,6 +257,19 @@
- 				enable-offset = <0x0>;
- 				enable-mask = <0x39>;
- 			};
-+
-+			rtcclk: rtcclk@17000000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x17000000 0x0 0x2000>;
-+				reg-names = "csr-reg";
-+				csr-offset = <0xc>;
-+				csr-mask = <0x2>;
-+				enable-offset = <0x10>;
-+				enable-mask = <0x2>;
-+				clock-output-names = "rtcclk";
-+			};
- 		};
- 
- 		serial0: serial@1c020000 {
-@@ -339,5 +352,13 @@
- 			phys = <&phy3 0>;
- 			phy-names = "sata-phy";
- 		};
-+
-+		rtc: rtc@10510000 {
-+			compatible = "apm,xgene-rtc";
-+			reg = <0x0 0x10510000 0x0 0x400>;
-+			interrupts = <0x0 0x46 0x4>;
-+			#clock-cells = <1>;
-+			clocks = <&rtcclk 0>;
-+		};
- 	};
- };
--- 
-1.5.5
-
+-Christoffer
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
