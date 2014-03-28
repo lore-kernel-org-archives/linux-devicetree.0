@@ -1,135 +1,81 @@
-From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCHv3 1/2] mtd: gpmi: make blockmark swapping optional
-Date: Fri, 28 Mar 2014 11:35:06 +0100
-Message-ID: <1396002907-17750-2-git-send-email-LW@KARO-electronics.de>
-References: <1395235406-13449-1-git-send-email-y>
- <1396002907-17750-1-git-send-email-LW@KARO-electronics.de>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [RFC] Serial port aliases in DT
+Date: Fri, 28 Mar 2014 11:40:03 +0100
+Message-ID: <CAMuHMdVJ8Jid=bdWLb7g5MP5dFOwDkvoHEbFH4nQD5bWp-2sxw@mail.gmail.com>
+References: <5448979.WQPtOb56tW@avalon>
+	<6506478.py2Axu25u1@wuerfel>
+	<CAMuHMdVYhGGt7+fR4oHzf-hDvTOWbHfhM2g92eo3RqULd6yR2A@mail.gmail.com>
+	<14685448.67FSBAE5nm@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1396002907-17750-1-git-send-email-LW@KARO-electronics.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Fabio Estevam <fabio.estevam@freescale.com>, Huang Shijie <b32955@freescale.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Shawn Guo <shawn.guo@linaro.org>, Boris BREZILLON <b.brezillon.dev@gmail.com>, Ezequie
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <14685448.67FSBAE5nm@wuerfel>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-V2l0aCBhIGZsYXNoLWJhc2VkIEJCVCB0aGVyZSBpcyBubyByZWFzb24gdG8gbW92ZSB0aGUgRmFj
-dG9yeSBCYWQKQmxvY2sgTWFya2VyIGZyb20gdGhlIGRhdGEgYXJlYSBidWZmZXIgKHRvIHdoZXJl
-IGl0IGlzIG1hcHBlZCBieSB0aGUKR1BNSSBOQU5EIGNvbnRyb2xsZXIpIHRvIHRoZSBPT0IgYnVm
-ZmVyLiBUaHVzLCBtYWtlIHRoaXMgZmVhdHVyZQpjb25maWd1cmFibGUgdmlhIERULiBUaGlzIGlz
-IHJlcXVpcmVkIGZvciB0aGUgS2EtUm8gZWxlY3Ryb25pY3MKcGxhdGZvcm1zLgoKSW4gdGhlIG9y
-aWdpbmFsIGNvZGUgJ3RoaXMtPnN3YXBfYmxvY2tfbWFyaycgd2FzIHN5bm9ueW1vdXMgd2l0aAon
-IUdQTUlfSVNfTVgyMygpJywgc28gdXNlIHRoZSBsYXR0ZXIgYXQgdGhlIHJlbGV2YW50IHBsYWNl
-cy4KClNpZ25lZC1vZmYtYnk6IExvdGhhciBXYcOfbWFubiA8TFdAS0FSTy1lbGVjdHJvbmljcy5k
-ZT4KLS0tCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvZ3BtaS1uYW5kLnR4dCAgICAgICAg
-ICB8ICAgMTAgKysrKwogZHJpdmVycy9tdGQvbmFuZC9ncG1pLW5hbmQvZ3BtaS1uYW5kLmMgICAg
-ICAgICAgICAgfCAgIDUxICsrKysrKysrKysrKy0tLS0tLS0tCiAyIGZpbGVzIGNoYW5nZWQsIDQy
-IGluc2VydGlvbnMoKyksIDE5IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvZ3BtaS1uYW5kLnR4dCBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvZ3BtaS1uYW5kLnR4dAppbmRleCA0NThkNTk2Li5hMDEx
-ZmRmIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2dw
-bWktbmFuZC50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9n
-cG1pLW5hbmQudHh0CkBAIC0yNSw2ICsyNSwxNiBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgogICAg
-ICAgICAgICAgICAgICAgICAgICBkaXNjb3ZlcmFibGUgb3IgdGhpcyBwcm9wZXJ0eSBpcyBub3Qg
-ZW5hYmxlZCwKICAgICAgICAgICAgICAgICAgICAgICAgdGhlIHNvZnR3YXJlIG1heSBjaG9vc2Vz
-IGFuIGltcGxlbWVudGF0aW9uLWRlZmluZWQKICAgICAgICAgICAgICAgICAgICAgICAgRUNDIHNj
-aGVtZS4KKyAgLSBmc2wsbm8tYmxvY2ttYXJrLXN3YXA6IERvbid0IHN3YXAgdGhlIGJhZCBibG9j
-ayBtYXJrZXIgZnJvbSB0aGUgT09CCisgICAgICAgICAgICAgICAgICAgICAgIGFyZWEgd2l0aCB0
-aGUgYnl0ZSBpbiB0aGUgZGF0YSBhcmVhIGJ1dCByZWx5IG9uIHRoZQorICAgICAgICAgICAgICAg
-ICAgICAgICBmbGFzaCBiYXNlZCBCQlQgZm9yIGlkZW50aWZ5aW5nIGJhZCBibG9ja3MuCisgICAg
-ICAgICAgICAgICAgICAgICAgIE5PVEU6IHRoaXMgaXMgb25seSB2YWxpZCBpbiBjb25qdW5jdGlv
-biB3aXRoCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICduYW5kLW9uLWZsYXNoLWJidCcu
-CisgICAgICAgICAgICAgICAgICAgICAgIFdBUk5JTkc6IG9uIGkuTVgyOCBibG9ja21hcmsgc3dh
-cHBpbmcgY2Fubm90IGJlCisgICAgICAgICAgICAgICAgICAgICAgIGRpc2FibGVkIGZvciB0aGUg
-Qm9vdFJPTSBpbiB0aGUgRkNCLiBUaHVzLAorICAgICAgICAgICAgICAgICAgICAgICBwYXJ0aXRp
-b25zIHdyaXR0ZW4gZnJvbSBMaW51eCB3aXRoIHRoaXMgZmVhdHVyZQorICAgICAgICAgICAgICAg
-ICAgICAgICB0dXJuZWQgb24gbWF5IG5vdCBiZSBhY2Nlc3NpYmxlIGJ5IHRoZSBCb290Uk9NCisg
-ICAgICAgICAgICAgICAgICAgICAgIGNvZGUuCiAKIFRoZSBkZXZpY2UgdHJlZSBtYXkgb3B0aW9u
-YWxseSBjb250YWluIHN1Yi1ub2RlcyBkZXNjcmliaW5nIHBhcnRpdGlvbnMgb2YgdGhlCiBhZGRy
-ZXNzIHNwYWNlLiBTZWUgcGFydGl0aW9uLnR4dCBmb3IgbW9yZSBkZXRhaWwuCmRpZmYgLS1naXQg
-YS9kcml2ZXJzL210ZC9uYW5kL2dwbWktbmFuZC9ncG1pLW5hbmQuYyBiL2RyaXZlcnMvbXRkL25h
-bmQvZ3BtaS1uYW5kL2dwbWktbmFuZC5jCmluZGV4IGJiNzdmNzUuLjJhNDg5YjMgMTAwNjQ0Ci0t
-LSBhL2RyaXZlcnMvbXRkL25hbmQvZ3BtaS1uYW5kL2dwbWktbmFuZC5jCisrKyBiL2RyaXZlcnMv
-bXRkL25hbmQvZ3BtaS1uYW5kL2dwbWktbmFuZC5jCkBAIC0xMDY1LDYgKzEwNjUsNyBAQCBzdGF0
-aWMgaW50IGdwbWlfZWNjX3JlYWRfc3VicGFnZShzdHJ1Y3QgbXRkX2luZm8gKm10ZCwgc3RydWN0
-IG5hbmRfY2hpcCAqY2hpcCwKIAlpbnQgZmlyc3QsIGxhc3QsIG1hcmtlcl9wb3M7CiAJaW50IGVj
-Y19wYXJpdHlfc2l6ZTsKIAlpbnQgY29sID0gMDsKKwlpbnQgb2xkX3N3YXBfYmxvY2tfbWFyayA9
-IHRoaXMtPnN3YXBfYmxvY2tfbWFyazsKIAogCS8qIFRoZSBzaXplIG9mIEVDQyBwYXJpdHkgKi8K
-IAllY2NfcGFyaXR5X3NpemUgPSBnZW8tPmdmX2xlbiAqIGdlby0+ZWNjX3N0cmVuZ3RoIC8gODsK
-QEAgLTEwNzMsMTcgKzEwNzQsMjEgQEAgc3RhdGljIGludCBncG1pX2VjY19yZWFkX3N1YnBhZ2Uo
-c3RydWN0IG10ZF9pbmZvICptdGQsIHN0cnVjdCBuYW5kX2NoaXAgKmNoaXAsCiAJZmlyc3QgPSBv
-ZmZzIC8gc2l6ZTsKIAlsYXN0ID0gKG9mZnMgKyBsZW4gLSAxKSAvIHNpemU7CiAKLQkvKgotCSAq
-IEZpbmQgdGhlIGNodW5rIHdoaWNoIGNvbnRhaW5zIHRoZSBCbG9jayBNYXJrZXIuIElmIHRoaXMg
-Y2h1bmsgaXMKLQkgKiBpbiB0aGUgcmFuZ2Ugb2YgW2ZpcnN0LCBsYXN0XSwgd2UgaGF2ZSB0byBy
-ZWFkIG91dCB0aGUgd2hvbGUgcGFnZS4KLQkgKiBXaHk/IHNpbmNlIHdlIGhhZCBzd2FwcGVkIHRo
-ZSBkYXRhIGF0IHRoZSBwb3NpdGlvbiBvZiBCbG9jayBNYXJrZXIKLQkgKiB0byB0aGUgbWV0YWRh
-dGEgd2hpY2ggaXMgYm91bmQgd2l0aCB0aGUgY2h1bmsgMC4KLQkgKi8KLQltYXJrZXJfcG9zID0g
-Z2VvLT5ibG9ja19tYXJrX2J5dGVfb2Zmc2V0IC8gc2l6ZTsKLQlpZiAobGFzdCA+PSBtYXJrZXJf
-cG9zICYmIGZpcnN0IDw9IG1hcmtlcl9wb3MpIHsKLQkJZGV2X2RiZyh0aGlzLT5kZXYsICJwYWdl
-OiVkLCBmaXJzdDolZCwgbGFzdDolZCwgbWFya2VyIGF0OiVkXG4iLAorCWlmICh0aGlzLT5zd2Fw
-X2Jsb2NrX21hcmspIHsKKwkJLyoKKwkJICogRmluZCB0aGUgY2h1bmsgd2hpY2ggY29udGFpbnMg
-dGhlIEJsb2NrIE1hcmtlci4KKwkJICogSWYgdGhpcyBjaHVuayBpcyBpbiB0aGUgcmFuZ2Ugb2Yg
-W2ZpcnN0LCBsYXN0XSwKKwkJICogd2UgaGF2ZSB0byByZWFkIG91dCB0aGUgd2hvbGUgcGFnZS4K
-KwkJICogV2h5PyBzaW5jZSB3ZSBoYWQgc3dhcHBlZCB0aGUgZGF0YSBhdCB0aGUgcG9zaXRpb24g
-b2YgQmxvY2sKKwkJICogTWFya2VyIHRvIHRoZSBtZXRhZGF0YSB3aGljaCBpcyBib3VuZCB3aXRo
-IHRoZSBjaHVuayAwLgorCQkgKi8KKwkJbWFya2VyX3BvcyA9IGdlby0+YmxvY2tfbWFya19ieXRl
-X29mZnNldCAvIHNpemU7CisJCWlmIChsYXN0ID49IG1hcmtlcl9wb3MgJiYgZmlyc3QgPD0gbWFy
-a2VyX3BvcykgeworCQkJZGV2X2RiZyh0aGlzLT5kZXYsCisJCQkJInBhZ2U6JWQsIGZpcnN0OiVk
-LCBsYXN0OiVkLCBtYXJrZXIgYXQ6JWRcbiIsCiAJCQkJcGFnZSwgZmlyc3QsIGxhc3QsIG1hcmtl
-cl9wb3MpOwotCQlyZXR1cm4gZ3BtaV9lY2NfcmVhZF9wYWdlKG10ZCwgY2hpcCwgYnVmLCAwLCBw
-YWdlKTsKKwkJCXJldHVybiBncG1pX2VjY19yZWFkX3BhZ2UobXRkLCBjaGlwLCBidWYsIDAsIHBh
-Z2UpOworCQl9CiAJfQogCiAJbWV0YSA9IGdlby0+bWV0YWRhdGFfc2l6ZTsKQEAgLTExMjksNyAr
-MTEzNCw3IEBAIHN0YXRpYyBpbnQgZ3BtaV9lY2NfcmVhZF9zdWJwYWdlKHN0cnVjdCBtdGRfaW5m
-byAqbXRkLCBzdHJ1Y3QgbmFuZF9jaGlwICpjaGlwLAogCXdyaXRlbChyMV9vbGQsIGJjaF9yZWdz
-ICsgSFdfQkNIX0ZMQVNIMExBWU9VVDApOwogCXdyaXRlbChyMl9vbGQsIGJjaF9yZWdzICsgSFdf
-QkNIX0ZMQVNIMExBWU9VVDEpOwogCXRoaXMtPmJjaF9nZW9tZXRyeSA9IG9sZF9nZW87Ci0JdGhp
-cy0+c3dhcF9ibG9ja19tYXJrID0gdHJ1ZTsKKwl0aGlzLT5zd2FwX2Jsb2NrX21hcmsgPSBvbGRf
-c3dhcF9ibG9ja19tYXJrOwogCiAJcmV0dXJuIG1heF9iaXRmbGlwczsKIH0KQEAgLTEyOTMsMTAg
-KzEyOTgsMTAgQEAgc3RhdGljIGludCBncG1pX2VjY19yZWFkX29vYihzdHJ1Y3QgbXRkX2luZm8g
-Km10ZCwgc3RydWN0IG5hbmRfY2hpcCAqY2hpcCwKIAogCS8qCiAJICogTm93LCB3ZSB3YW50IHRv
-IG1ha2Ugc3VyZSB0aGUgYmxvY2sgbWFyayBpcyBjb3JyZWN0LiBJbiB0aGUKLQkgKiBTd2FwcGlu
-Zy9SYXcgY2FzZSwgd2UgYWxyZWFkeSBoYXZlIGl0LiBPdGhlcndpc2UsIHdlIG5lZWQgdG8KLQkg
-KiBleHBsaWNpdGx5IHJlYWQgaXQuCisJICogbm9uLXRyYW5zY3JpYmluZyBjYXNlICghR1BNSV9J
-U19NWDIzKCkpLCB3ZSBhbHJlYWR5IGhhdmUgaXQuCisJICogT3RoZXJ3aXNlLCB3ZSBuZWVkIHRv
-IGV4cGxpY2l0bHkgcmVhZCBpdC4KIAkgKi8KLQlpZiAoIXRoaXMtPnN3YXBfYmxvY2tfbWFyaykg
-eworCWlmIChHUE1JX0lTX01YMjModGhpcykpIHsKIAkJLyogUmVhZCB0aGUgYmxvY2sgbWFyayBp
-bnRvIHRoZSBmaXJzdCBieXRlIG9mIHRoZSBPT0IgYnVmZmVyLiAqLwogCQljaGlwLT5jbWRmdW5j
-KG10ZCwgTkFORF9DTURfUkVBRDAsIDAsIHBhZ2UpOwogCQljaGlwLT5vb2JfcG9pWzBdID0gY2hp
-cC0+cmVhZF9ieXRlKG10ZCk7CkBAIC0xMzM3LDcgKzEzNDIsNyBAQCBzdGF0aWMgaW50IGdwbWlf
-YmxvY2tfbWFya2JhZChzdHJ1Y3QgbXRkX2luZm8gKm10ZCwgbG9mZl90IG9mcykKIAljaGlwbnIg
-PSAoaW50KShvZnMgPj4gY2hpcC0+Y2hpcF9zaGlmdCk7CiAJY2hpcC0+c2VsZWN0X2NoaXAobXRk
-LCBjaGlwbnIpOwogCi0JY29sdW1uID0gdGhpcy0+c3dhcF9ibG9ja19tYXJrID8gbXRkLT53cml0
-ZXNpemUgOiAwOworCWNvbHVtbiA9ICFHUE1JX0lTX01YMjModGhpcykgPyBtdGQtPndyaXRlc2l6
-ZSA6IDA7CiAKIAkvKiBXcml0ZSB0aGUgYmxvY2sgbWFyay4gKi8KIAlibG9ja19tYXJrID0gdGhp
-cy0+ZGF0YV9idWZmZXJfZG1hOwpAQCAtMTYzMiw5ICsxNjM3LDYgQEAgc3RhdGljIGludCBncG1p
-X2luaXRfbGFzdChzdHJ1Y3QgZ3BtaV9uYW5kX2RhdGEgKnRoaXMpCiAJc3RydWN0IGJjaF9nZW9t
-ZXRyeSAqYmNoX2dlbyA9ICZ0aGlzLT5iY2hfZ2VvbWV0cnk7CiAJaW50IHJldDsKIAotCS8qIFNl
-dCB1cCBzd2FwX2Jsb2NrX21hcmssIG11c3QgYmUgc2V0IGJlZm9yZSB0aGUgZ3BtaV9zZXRfZ2Vv
-bWV0cnkoKSAqLwotCXRoaXMtPnN3YXBfYmxvY2tfbWFyayA9ICFHUE1JX0lTX01YMjModGhpcyk7
-Ci0KIAkvKiBTZXQgdXAgdGhlIG1lZGl1bSBnZW9tZXRyeSAqLwogCXJldCA9IGdwbWlfc2V0X2dl
-b21ldHJ5KHRoaXMpOwogCWlmIChyZXQpCkBAIC0xNjk4LDkgKzE3MDAsMjAgQEAgc3RhdGljIGlu
-dCBncG1pX25hbmRfaW5pdChzdHJ1Y3QgZ3BtaV9uYW5kX2RhdGEgKnRoaXMpCiAJY2hpcC0+YmFk
-YmxvY2tfcGF0dGVybgk9ICZncG1pX2JidF9kZXNjcjsKIAljaGlwLT5ibG9ja19tYXJrYmFkCT0g
-Z3BtaV9ibG9ja19tYXJrYmFkOwogCWNoaXAtPm9wdGlvbnMJCXw9IE5BTkRfTk9fU1VCUEFHRV9X
-UklURTsKLQlpZiAob2ZfZ2V0X25hbmRfb25fZmxhc2hfYmJ0KHRoaXMtPmRldi0+b2Zfbm9kZSkp
-CisKKwkvKiBTZXQgdXAgc3dhcF9ibG9ja19tYXJrLCBtdXN0IGJlIHNldCBiZWZvcmUgdGhlIGdw
-bWlfc2V0X2dlb21ldHJ5KCkgKi8KKwl0aGlzLT5zd2FwX2Jsb2NrX21hcmsgPSAhR1BNSV9JU19N
-WDIzKHRoaXMpOworCisJaWYgKG9mX2dldF9uYW5kX29uX2ZsYXNoX2JidCh0aGlzLT5kZXYtPm9m
-X25vZGUpKSB7CiAJCWNoaXAtPmJidF9vcHRpb25zIHw9IE5BTkRfQkJUX1VTRV9GTEFTSCB8IE5B
-TkRfQkJUX05PX09PQjsKIAorCQlpZiAob2ZfcHJvcGVydHlfcmVhZF9ib29sKHRoaXMtPmRldi0+
-b2Zfbm9kZSwKKwkJCQkJCSJmc2wsbm8tYmxvY2ttYXJrLXN3YXAiKSkKKwkJCXRoaXMtPnN3YXBf
-YmxvY2tfbWFyayA9IGZhbHNlOworCX0KKwlkZXZfZGJnKHRoaXMtPmRldiwgIkJsb2NrbWFyayBz
-d2FwcGluZyAlc2FibGVkXG4iLAorCQl0aGlzLT5zd2FwX2Jsb2NrX21hcmsgPyAiZW4iIDogImRp
-cyIpOworCiAJLyoKIAkgKiBBbGxvY2F0ZSBhIHRlbXBvcmFyeSBETUEgYnVmZmVyIGZvciByZWFk
-aW5nIElEIGluIHRoZQogCSAqIG5hbmRfc2Nhbl9pZGVudCgpLgotLSAKMS43LjEwLjQKCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXgg
-TVREIGRpc2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8vbGludXgtbXRkLwo=
+Hi Arnd,
+
+On Fri, Mar 28, 2014 at 11:28 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Friday 28 March 2014 09:39:22 Geert Uytterhoeven wrote:
+>> On Fri, Mar 28, 2014 at 9:30 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> > On Friday 28 March 2014 09:09:23 Geert Uytterhoeven wrote:
+>> >> On the Renesas SoCs, where this thread started, you also have different
+>> >> types of IP blocks providing similar functionality on the same SoC.
+>> >> E.g. 3 types of serial ports, 2 types of i2c, (at least) 2 types of spi...
+>> >> Hence one more level of confusion (is SoC serial0 the first serial port of
+>> >> type A, B, or C?).
+>> >
+>> > The 'serial' aliases are defined to refer to UARTs only, there is no debate
+>> > about that.
+>>
+>> All 3 serial port types are UARTs.
+>>
+>> For the serial ports, they are sufficiently similar to use the same driver.
+>> For i2c and spi, that's not the case, and they use different drivers.
+>
+> Ok, I see. I just misunderstood what you meant.
+>
+> The aliases are really meant to put all the uarts into a flat numbering space,
+> regardless of the driver, and you can mix them them in any possible way. If
+> a board uses one uart of each type, then serial0 through serial2 should
+> point to the three that are used, but not the ones that aren't connected.
+
+So we should move all aliases from *.dtsi to <board>.dts.
+
+> Unfortunately, the Linux uart naming system doesn't work well with that,
+> because you'd end up with something like /dev/ttyA0, /dev/ttyC1, /dev/ttyB2
+> for the case that you are using the A, C and B drivers in that order.
+> I would argue that we should try to fix it by changing the way that Linux
+> allocates the names (in a backwards compatible way of course), not by changing
+> the DT binding.
+
+Yes!
+
+> Using a separate name space for each driver keeps causing more problems than
+> it solves, and we really should be addressing this. One way to do this
+> that I think would handle it nicely is to make it optional for a uart_driver
+> to provide a major/minor number range and device name for
+> uart_register_driver, and move the ttyS%d namespace handling from the 8250
+> driver into serial_core.c. There are a couple of open questions regarding
+> how to implement backwards compatibility with the existing behavior, but
+> I think it can be done.
+
+Not serial_core.c. That's deprecated for new drivers, and we want a common
+namespace across all serial drivers.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
