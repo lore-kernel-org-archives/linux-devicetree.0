@@ -1,50 +1,59 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: [RFC 3/5] of: Enable console on serial ports specified by /chosen/stdout-path
-Date: Fri, 28 Mar 2014 09:08:03 -0700
-Message-ID: <1396022885-6102-4-git-send-email-grant.likely@linaro.org>
-References: <1396022885-6102-1-git-send-email-grant.likely@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1396022885-6102-1-git-send-email-grant.likely@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, christoffer.dall@linaro.org, linux-kernel@vger.kernel.org, olof@lixom.net, benh@kernel.crashing.org, rob.herring@linaro.org
-Cc: Grant Likely <grant.likely@linaro.org>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 2/2] ARM: dts: imx: drop invalid size and address cells properties
+Date: Fri, 28 Mar 2014 17:25:51 +0100
+Message-ID: <1396023951-32383-2-git-send-email-l.stach@pengutronix.de>
+References: <1396023951-32383-1-git-send-email-l.stach@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1396023951-32383-1-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-If the devicetree specifies a serial port as a stdout device, then the
-kernel can use it as the default console if nothing else was selected on
-the command line. For any serial port that uses the uart_add_one_port()
-feature, the uart_add_one_port() has all the information needed to
-automatically enable the console device, which is what this patch does.
+Those two properties should have been set to zero, which
+is the same as not specifying them.
 
-With this change applied, a device tree platform can be booted without
-any console= parameters on the command line and the kernel will still be
-able to determine its console.
+Having address-cells set to 1 causes OF interrupt
+mapping routines to add 1 to the interrupt-cells
+property and as result fail because all calculations
+are off by one.
 
-Signed-off-by: Grant Likely <grant.likely@linaro.org>
+Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- drivers/tty/serial/serial_core.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/imx6qdl.dtsi | 2 --
+ arch/arm/boot/dts/imx6sl.dtsi  | 2 --
+ 2 files changed, 4 deletions(-)
 
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index ece2049bd270..2fac7593d7b2 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -26,6 +26,7 @@
- #include <linux/slab.h>
- #include <linux/init.h>
- #include <linux/console.h>
-+#include <linux/of.h>
- #include <linux/proc_fs.h>
- #include <linux/seq_file.h>
- #include <linux/device.h>
-@@ -2604,6 +2605,8 @@ int uart_add_one_port(struct uart_driver *drv, struct uart_port *uport)
- 		spin_lock_init(&uport->lock);
- 		lockdep_set_class(&uport->lock, &port_lock_key);
- 	}
-+	if (uport->cons && uport->dev)
-+		of_console_check(uport->dev->of_node, uport->cons->name, uport->line);
- 
- 	uart_configure_port(drv, state, uport);
- 
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index fb28b2ecb1db..31bd844798a7 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -38,8 +38,6 @@
+ 	intc: interrupt-controller@00a01000 {
+ 		compatible = "arm,cortex-a9-gic";
+ 		#interrupt-cells = <3>;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+ 		interrupt-controller;
+ 		reg = <0x00a01000 0x1000>,
+ 		      <0x00a00100 0x100>;
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index 28558f1aaf2d..276425089ea0 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -44,8 +44,6 @@
+ 	intc: interrupt-controller@00a01000 {
+ 		compatible = "arm,cortex-a9-gic";
+ 		#interrupt-cells = <3>;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+ 		interrupt-controller;
+ 		reg = <0x00a01000 0x1000>,
+ 		      <0x00a00100 0x100>;
 -- 
-1.8.3.2
+1.9.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
