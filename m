@@ -1,121 +1,38 @@
-MIME-Version: 1.0
-In-Reply-To: <1395138028-19630-5-git-send-email-lorenzo.pieralisi@arm.com>
-References: <1395138028-19630-1-git-send-email-lorenzo.pieralisi@arm.com>
-	<1395138028-19630-5-git-send-email-lorenzo.pieralisi@arm.com>
-Date: Tue, 18 Mar 2014 08:03:12 -0500
-Message-ID: <CAL_JsqJy2pOxhSPLZFe2+4vd5TUkZhN=79kox5sa0xR9uhjW6Q@mail.gmail.com>
-Subject: Re: [PATCH RFC 4/4] arm64: boot: dts: update rtsm aemv8 dts with PSCI
- and idle states
-From: Rob Herring <robherring2@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebastian.capella@linaro.org>, Tomasz Figa <t.figa@samsung.com>
+Return-Path: <shc_work@mail.ru>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmU6IEV4dGVuZGluZyB3ZHQtZ3BpbyB0byBiZSB1c2VkIG9uIG5vbi1vZiAo?=
+ =?UTF-8?B?bm8gRFQpIHBsYXRmb3Jtcw==?=
+Mime-Version: 1.0
+Date: Sat, 29 Mar 2014 16:29:45 +0400
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Message-ID: <1396096185.560264234@f368.i.mail.ru>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+In-Reply-To: <CACna6rwRzw1fo2_DyV3T4fa4+cA3=LTcFHRpRsfZWwR2ugQn_w@mail.gmail.com>
+References: <CACna6rwRzw1fo2_DyV3T4fa4+cA3=LTcFHRpRsfZWwR2ugQn_w@mail.gmail.com>
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: devicetree@vger.kernel.org, =?UTF-8?B?V2ltIFZhbiBTZWJyb2Vjaw==?= <wim@iguana.be>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt@kernel.org>, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <pawel.moll@arm.com>, =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>, =?UTF-8?B?U3RlcGhlbiBXYXJyZW4=?= <swarren@wwwdotorg.org>, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ijc+devicetree@hellion.org.uk>, =?UTF-8?B?R3JhbnQgTGlrZWx5?= <grant.likely@linaro.org>, =?UTF-8?B?SGF1a2UgTWVocnRlbnM=?= <hauke@hauke-m.de>, linux-watchdog@vger.kernel.org, =?UTF-8?B?RmxvcmlhbiBGYWluZWxsaQ==?= <florian@openwrt.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Mar 18, 2014 at 5:20 AM, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
-> This patch updates the RTSM dts file with PSCI bindings and nodes
-> describing the AEMv8 model idle states parameters.
-
-How does one use this? Changing the enable-method implies some firmware/bootloader change.
-
-This demonstates how the dtb must be tied to the firmware and not the kernel. 
-
-Rob
-
->
-> PSCI function IDs compliancy with PSCI v0.2 is still under development
-> so this patch provides PSCI function IDs for demonstration purposes only.
->
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> ---
->  arch/arm64/boot/dts/rtsm_ve-aemv8a.dts | 50 ++++++++++++++++++++++++++++------
->  1 file changed, 42 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts b/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
-> index d79de9c..7e2de34 100644
-> --- a/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
-> +++ b/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
-> @@ -27,37 +27,71 @@
->                 serial3 = &v2m_serial3;
->         };
->
-> +       psci {
-> +               compatible = "arm,psci";
-> +               method = "smc";
-> +               /*
-> +                * Function IDs usage and compliancy with PSCI v0.2 still
-> +                * under discussion.  Current IDs should be considered
-> +                * temporary for demonstration purposes.
-> +                */
-> +               cpu_suspend = <0x84000001>;
-> +               cpu_off = <0x84000002>;
-> +               cpu_on = <0x84000003>;
-> +       };
-> +
->         cpus {
->                 #address-cells = <2>;
->                 #size-cells = <0>;
->
-> +               idle-states {
-> +                       entry-method = "arm,psci";
-> +
-> +                       CLUSTER_SLEEP_0: cluster-sleep-0 {
-> +                               compatible = "arm,idle-state";
-> +                               index = <1>;
-> +                               entry-method-param = <0x1010000>;
-> +                               entry-latency-us = <500>;
-> +                               exit-latency-us = <1000>;
-> +                               min-residency-us = <2500>;
-> +                               CPU_SLEEP_0: cpu-sleep-0 {
-> +                                       compatible = "arm,idle-state";
-> +                                       index = <0>;
-> +                                       entry-method-param = <0x0010000>;
-> +                                       entry-latency-us = <40>;
-> +                                       exit-latency-us = <100>;
-> +                                       min-residency-us = <150>;
-> +                               };
-> +                       };
-> +               };
-> +
->                 cpu@0 {
->                         device_type = "cpu";
->                         compatible = "arm,armv8";
->                         reg = <0x0 0x0>;
-> -                       enable-method = "spin-table";
-> -                       cpu-release-addr = <0x0 0x8000fff8>;
-> +                       enable-method = "psci";
-> +                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
->                 };
->                 cpu@1 {
->                         device_type = "cpu";
->                         compatible = "arm,armv8";
->                         reg = <0x0 0x1>;
-> -                       enable-method = "spin-table";
-> -                       cpu-release-addr = <0x0 0x8000fff8>;
-> +                       enable-method = "psci";
-> +                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
->                 };
->                 cpu@2 {
->                         device_type = "cpu";
->                         compatible = "arm,armv8";
->                         reg = <0x0 0x2>;
-> -                       enable-method = "spin-table";
-> -                       cpu-release-addr = <0x0 0x8000fff8>;
-> +                       enable-method = "psci";
-> +                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
->                 };
->                 cpu@3 {
->                         device_type = "cpu";
->                         compatible = "arm,armv8";
->                         reg = <0x0 0x3>;
-> -                       enable-method = "spin-table";
-> -                       cpu-release-addr = <0x0 0x8000fff8>;
-> +                       enable-method = "psci";
-> +                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
->                 };
->         };
->
-> --
-> 1.8.4
->
->
+U2F0LCAyOSBNYXIgMjAxNCAxMjo1NDo0MCArMDEwMCDQvtGCIFJhZmHFgiBNacWCZWNraSA8emFq
+ZWM1QGdtYWlsLmNvbT46Cj4gSGkgZ3V5cywKPiAKPiBJJ3ZlIG5vdGljZWQgZ3Bpb193ZHQgd2Fz
+IGFkZGVkIHRvIHRoZSBrZXJuZWwgdG8gc3VwcG9ydCBzb21lIGRldmljZXMKPiBiYXNlZCBvbiBk
+ZXZpY2V0cmVlLgo+IFdlIHVzZWQgdG8gaGF2ZSBvdXIgb3duIChub3QgbWFpbmxpbmVkKSBncGlv
+X3dkdCBpbiBPcGVuV3J0IHByb2plY3Q6Cj4gaHR0cDovL2dpdC5vcGVud3J0Lm9yZy8/cD1vcGVu
+d3J0LmdpdDthPWJsb2I7Zj10YXJnZXQvbGludXgvZ2VuZXJpYy9wYXRjaGVzLTMuMTAvOTkwLWdw
+aW9fd2R0LnBhdGNoO2hiPUhFQUQKPiAKPiBUaGUgbWFpbiBkaWZmZXJlbmNlIGlzIHRoYXQgdGhl
+IG1haW5saW5lZCBvbmUgdXNlcyBPRiwgd2hpbGUgT3BlbldydCdzCj4gb25lIHVzZXMgcGxhaW4g
+cGxhdGZvcm0gQVBJICh3aXRoIHN0cnVjdCBncGlvX3dkdF9wbGF0Zm9ybV9kYXRhKS4KPiAKPiBJ
+IHdhbnRlZCB0byBicmluZyBhIHRvcGljIG9mIG1haW5saW5pbmcgT3BlbldydCdzIHNvbHV0aW9u
+LiBXZQo+IGRlZmluaXRlbHkgbmVlZCB0aGF0IGFuZCBhdCB0aGUgc2FtZSB0aW1lIG91ciBkZXZp
+Y2UocykgZG9uJ3QgdXNlIE9GIC8KPiBEVC4KPiAKPiBEbyB5b3UgdGhpbmsgd2Ugc2hvdWxkIGV4
+dGVuZCB3ZHQtZ3BpbyB0byBoYW5kbGUgdGhhdD8gT3IgZG8geW91IHRoaW5rCj4gdGhpcyBkcml2
+ZXIgaXMgc28gc21hbGwsIGl0J3Mgbm90IHdvcnRoIGl0IGFuZCB3ZSBzaG91bGQgc3VibWl0IGEK
+PiBzZXBhcmF0ZWQgb25lPwo+IAo+IEFwYXJ0IGZyb20gQVBJIGJlaW5nIHVzZWQsIG9uZSBvdGhl
+ciBkaWZmZXJlbmNlIEkgc2VlIGlzIE9wZW5XcnQKPiBzdXBwb3J0cyBkaWZmZXJlbnQgdmFsdWVz
+IGZvciAiZmlyc3QgdGljayIgYW5kICJpbnRlcnZhbCIuIEJ1dCB0aGF0Cj4gY291bGQgYmUgZWFz
+aWx5IGhhbmRsZWQuCgpJbiBmYWN0LCB0aGlzIGRyaXZlciBjYW4gYmUgZXh0ZW5kZWQgdG8gbm9u
+LURUIHN1cHBvcnQgd2l0aG91dCBhZGRpbmcKYW55IHBsYXRmb3JtX2RhdGEgaGVhZGVycy4gVGhp
+cyBjYW4gYmUgaW1wbGVtZW50ZWQgYnkgY29udmVydCBkcml2ZXIKdG8gdXNpbmcgZGVzY3JpcHRv
+ci1iYXNlZCBHUElPIGZ1bmN0aW9ucyAoZ3Bpb2Rfe30pLgpIVyB0aW1lb3V0IHZhbHVlIGluIHRo
+aXMgY2FzZSBjYW4gYmUgdGFrZW4gd2l0aCBtb2R1bGVfcGFyYW0oKS4KCi0tLQoK
