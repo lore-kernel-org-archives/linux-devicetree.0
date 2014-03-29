@@ -1,49 +1,37 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC 0/5] of: Automatic console registration cleanups
-Date: Fri, 28 Mar 2014 16:53:15 -0700
-Message-ID: <20140328235316.079E0C41FF4@trevor.secretlab.ca>
-References: <1396022885-6102-1-git-send-email-grant.likely@linaro.org> < 20140328185653.GB26433@quad.lixom.net> < CAL_JsqKFO+OSz83f=XdyKgCqByUvHe7qLzgn5QLU1x1V1A5Fng@mail.gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKFO+OSz83f=XdyKgCqByUvHe7qLzgn5QLU1x1V1A5Fng-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH net-next 0/3] net: stmmac: Add glue layer for socfpga platform
+Date: Sat, 29 Mar 2014 01:18:06 +0100
+Message-ID: <201403290118.07163.arnd@arndb.de>
+References: <1395891912-26855-1-git-send-email-dinguyen@altera.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1395891912-26855-1-git-send-email-dinguyen@altera.com>
+Sender: netdev-owner@vger.kernel.org
+To: dinguyen@altera.com
+Cc: dinh.linux@gmail.com, davem@davemloft.net, peppe.cavallaro@st.com, srinivas.kandagatla@st.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 28 Mar 2014 14:19:23 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Fri, Mar 28, 2014 at 1:56 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
-> > On Fri, Mar 28, 2014 at 09:08:00AM -0700, Grant Likely wrote:
-> >> Hi all,
-> >>
-> >> This is a series that I've been playing with over the last few days to
-> >> clean up the selection of default console devices when using the device
-> >> tree. The device tree defines a way of specifying the console by using a
-> >> "stdout-path" property in the /chosen node, but very few drivers
-> >> actually attempt to use that data, and so for most platforms there needs
-> >> to be a "console=" line in the command line if a serial port is intended
-> >> to be used as the console.
-> >>
-> >> With this series, if there is a /chosen/stdout-path property, and if
-> >> that property points to a serial port node, then when the serial driver
-> >> registers the port, the core uart_add_one_port() function will notice
-> >> and if no console= argument was provided then add it as a preferred
-> >> console.
-> >>
-> >> I've not tested this very extensively yet, but I want to get some
-> >> feedback before I go further.
-> >>
-> >> The one downside with this approach is that it doesn't do anything for
-> >> early console setup. That still needs to be added on a per-driver basis,
-> >> but at least it shouldn't conflict with this approach.
+On Thursday 27 March 2014, dinguyen@altera.com wrote:
+> From: Dinh Nguyen <dinguyen@altera.com>
 > 
-> I'm working on the early aspect. I've got things working with either
-> command line (which I sent out recently) and with parsing the FDT
-> (which I haven't sent out yet).
+> Hi David,
+> 
+> I'm re-submitting the patch series to add the socfpga glue layer for the
+> stmmac ethernet driver. My original patch did not build for kernel module,
+> and I apologize for not testing against that.
+> 
+> This patch is also better aligned with the other stmmac glue
+> layers(sti and sunxi).
+> 
+> I'd like to take the "net: stmmac: Add SOCFPGA glue driver" patch into your
+> tree and the other 2 dts patches through the arm-soc tree.
 
-Oooh, I missed that. I'll take a look through the series and comment.
+I've applied patches 2 and 3 to the arm-soc/next/dt branch now.
 
-g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Unfortunately there is still one trivial conflict against the net-next tree
+left in the binding document, but I'm not too worried about that.
+
+	Arnd
