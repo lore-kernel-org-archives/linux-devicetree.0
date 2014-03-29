@@ -1,135 +1,137 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [GIT PULL 2/2] Samsung 2nd DT updates for v3.15
-Date: Sat, 29 Mar 2014 02:53:14 +0100
-Message-ID: <201403290253.14497.arnd@arndb.de>
-References: <5328549D.1090008@samsung.com>
+From: Harini Katakam <harinikatakamlinux@gmail.com>
+Subject: Re: [PATCH 1/2] GPIO: Add driver for Zynq GPIO controller
+Date: Sat, 29 Mar 2014 10:14:45 +0530
+Message-ID: <CAFcVECJsEp_s2V5=oK_UJahGRUpWYWMCxTMxqdpX+O0qebP41A@mail.gmail.com>
+References: <1395933906-2268-1-git-send-email-harinik@xilinx.com>
+ <CACRpkdbU35xG1QtagB+9e9vxvehf1UQFaF4PikJhsPNAMw=D1Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5328549D.1090008@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: 'Olof Johansson' <olof@lixom.net>, Kevin Hilman <khilman@linaro.org>, arm@kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Device Tree <devicetree@vger.kernel.org>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdbU35xG1QtagB+9e9vxvehf1UQFaF4PikJhsPNAMw=D1Q@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, Pawel Moll <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, michals@xilinx.com, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 18 March 2014, Kukjin Kim wrote:
-> The following changes since commit 86feafebbec2b510daf36ffbdbe10228ed890b00:
-> 
->    ARM: dts: use macros in clock bindings for exynos5440 (2014-02-26 
-> 09:53:31 +0900)
-> 
-> are available in the git repository at:
-> 
->    git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git 
-> tags/samsung-dt-2
-> 
-> for you to fetch changes up to ba0d7ed391b7b3fb5ca98d9cf4d067b7f5ed956b:
-> 
->    ARM: dts: enable ahci sata and sata phy for exynos5250 (2014-03-18 
-> 07:49:14 +0900)
-> 
-> ----------------------------------------------------------------
-> Samsung 2nd DT updates for v3.15
-> - add DT entry for AHCI SATA and SATA PHY with using generic
->    PHY framework for exynos5250 and arndale, smdk5250 boards.
-> - add SSS DT node for exynos5420 and exynos5250
-> - remove leftover spi0 node for smdk5250 board
-> - add ADC and thermistor nodes for exynos4412-trats2 board
-> - move common irq-combiner node for exynos4x12 from exynos4212
->    and exynos4412
-> - add ADC, PMU and GPS_ALIVE power domain nodes for exynos4x12
-> 
-> Note that based on previous tags/samsung-dt and tags/exynos-clk
-> 
-> ----------------------------------------------------------------
-> Chanwoo Choi (5):
->        ARM: dts: Add ADC's dt data to read raw data for exynos4x12
->        ARM: dts: Add PMU dt data to support PMU for exynos4x12
->        ARM: dts: Add GPS_ALIVE power domain for exynos4x12
->        ARM: dts: Move common dt data for interrupt combiner controller 
-> for exynos4x12
->        ARM: dts: Add ADC and themistor nodes for exynos4412-trats2
-> 
-> Mark Brown (1):
->        ARM: dts: Remove leftover spi0 node for smdk5250
-> 
-> Naveen Krishna Chatradhi (1):
->        ARM: dts: add dt node for sss module for exynos5250/5420
-> 
-> Yuvaraj Kumar C D (1):
->        ARM: dts: enable ahci sata and sata phy for exynos5250
-> 
->   .../devicetree/bindings/ata/exynos-sata-phy.txt    | 14 ---------
->   .../devicetree/bindings/ata/exynos-sata.txt        | 25 +++++++++------
->   .../devicetree/bindings/phy/samsung-phy.txt        | 36 
-> ++++++++++++++++++++++
+Hi Linus,
 
-Looking through the branch contents, I noticed that the examples in the
-bindings contain mandatory properties that are not documented.
+On Sat, Mar 29, 2014 at 3:20 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Thu, Mar 27, 2014 at 4:25 PM, Harini Katakam <harinik@xilinx.com> wrote:
+>
+>> Add support for GPIO controller used by Xilinx Zynq
+>>
+>> Signed-off-by: Harini Katakam <harinik@xilinx.com>
+>
+> This will not be integrated before v3.16 so we have some time to
+> think things over.
+>
+>> +config GPIO_ZYNQ
+>> +       bool "Xilinx ZYNQ GPIO support"
+>> +       depends on ARCH_ZYNQ
+>> +       select GENERIC_IRQ_CHIP
+>
+> I think that rather than selecting GENERIC_IRQ_CHIP,
+> select my new GPIOLIB_IRQCHIP and use the new helpers
+> gpiochip_irqchip_add() and gpiochip_set_chained_irqchip().
+>
+> Look in drivers/gpio/gpio-pl061.c for example usage.
+>
+> This is available in the "devel" or "for-next" branch of my
+> gpio tree at
+> https://git.kernel.org/cgit/linux/kernel/git/linusw/linux-gpio.git/
+>
 
-I have merged your branch into next/cleanup3 of the arm-soc tree,
-but I also applied a patch on top to document the missing strings
-and properties. It is currently the top commit on the branch, so
-if anyone spots a mistake, we can probably rectify it.
+OK.
 
-Please be more careful with binding documentation in the future.
-Was this actually reviewed on the devicetree-discuss mailing list?
+<snip>
+>> +/* Read/Write access to the GPIO PS registers */
+>> +static inline u32 zynq_gpio_readreg(void __iomem *offset)
+>> +{
+>> +       return readl_relaxed(offset);
+>> +}
+>> +
+>> +static inline void zynq_gpio_writereg(void __iomem *offset, u32 val)
+>> +{
+>> +       writel_relaxed(val, offset);
+>> +}
+>
+> I think this is unnecessary and confusing indirection.
+> Just use the readl_relaxed/writel_relaxed functions directly in
+> the code.
+>
 
-	Arnd
+This is just to be flexible.
 
-9<-----
->From 9dfbff16b422a4bac7ad309847c7bc5d65653392 Mon Sep 17 00:00:00 2001
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Sat, 29 Mar 2014 02:15:43 +0100
-Subject: [PATCH] devicetree: fix newly added exynos sata bindings
+<snip>
+>> +                       if (!(int_sts & 1))
+>> +                               continue;
+>> +                       gpio_irq_desc = irq_to_desc(gpio_irq);
+>> +                       BUG_ON(!gpio_irq_desc);
+>> +                       chip = irq_desc_get_chip(gpio_irq_desc);
+>> +                       BUG_ON(!chip);
+>> +                       chip->irq_ack(&gpio_irq_desc->irq_data);
+>> +
+>> +                       /* call the pin specific handler */
+>> +                       generic_handle_irq(gpio_irq);
+>> +               }
+>> +               /* shift to first virtual irq of next bank */
+>> +               gpio_irq = gpio->irq_base + zynq_gpio_pin_table[bank_num] + 1;
+>
+> This is also pretty convoluted. Are you sure you don't want to
+> implement one gpiochip per bank instead? I guess the final "+1"
+> means there is actually one IRQ per bank even?
+>
 
-Commit ba0d7ed391b7b "ARM: dts: enable ahci sata and sata phy for
-exynos5250" added a new binding document for the sata phy device,
-and changed the sata controller binding. However, in both cases
-significant aspects of the binding remained undocumented.
-This attempts to reconstruct the actual binding from the usage.
+There is only one IRQ for all four banks.
+I will try to make this logic and other places in the driver you pointed out,
+less convoluted.
+The handling is (very) slightly different for the upper two banks and
+lower two banks.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Cc: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Kukjin Kim <kgene.kim@samsung.com>
+<snip>
+>> +static const struct dev_pm_ops zynq_gpio_dev_pm_ops = {
+>> +       SET_SYSTEM_SLEEP_PM_OPS(zynq_gpio_suspend, zynq_gpio_resume)
+>> +       SET_RUNTIME_PM_OPS(zynq_gpio_runtime_suspend, zynq_gpio_runtime_resume,
+>> +                          zynq_gpio_idle)
+>> +};
+>
+> Is this runtime PM implementation aligned with Ulf Hansson's recent
+> new helpers to simplify suspend+runtime PM coexistance?
+>
 
-diff --git a/Documentation/devicetree/bindings/ata/exynos-sata.txt b/Documentation/devicetree/bindings/ata/exynos-sata.txt
-index b2adb1f..cb48448 100644
---- a/Documentation/devicetree/bindings/ata/exynos-sata.txt
-+++ b/Documentation/devicetree/bindings/ata/exynos-sata.txt
-@@ -8,8 +8,14 @@ Required properties:
- - interrupts		: <interrupt mapping for SATA IRQ>
- - reg			: <registers mapping>
- - samsung,sata-freq	: <frequency in MHz>
--- phys			: as mentioned in phy-bindings.txt
--- phy-names		: as mentioned in phy-bindings.txt
-+- phys			: Must contain exactly one entry as specified
-+			  in phy-bindings.txt
-+- phy-names		: Must be "sata-phy"
-+
-+Optional properties:
-+- clocks		: Must contain an entry for each entry in clock-names.
-+- clock-names		: Shall be "sata" for the external SATA bus clock,
-+			  and "sclk_sata" for the internal controller clock.
- 
- Example:
- 	sata@122f0000 {
-diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-index a937f75..67d38b3 100644
---- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-@@ -30,7 +30,11 @@ Each SATA PHY controller should have its own node.
- Required properties:
- - compatible        : compatible list, contains "samsung,exynos5250-sata-phy"
- - reg : offset and length of the SATA PHY register set;
--- #phy-cells : from the generic phy bindings;
-+- #phy-cells : must be zero
-+- clocks : must be exactly one entry
-+- clock-names : must be "sata_phyctrl"
-+- samsung,exynos-sataphy-i2c-phandle : a phandle to the I2C device, no arguments
-+- samsung,syscon-phandle : a phandle to the PMU system controller, no arguments
- 
- Example:
- 	sata_phy: sata-phy@12170000 {
+I'm sorry i just looked at them -
+pm_runtime_force_suspend/resume are not used here.
+
+>> +       chip->dbg_show = NULL;
+>> +       chip->base = 0;         /* default pin base */
+>
+> The GPIO numberspace is not the same as the pin number space.
+> This is only going to work if you have no other GPIO controllers
+> on your system. Use -1 as base so you get dynamic allocation
+> of a GPIO number range instead.
+>
+> Make sure to use the new descriptor API for defining and accessing
+> GPIOs in all drivers and it will not matter which base you get.
+> (Good eh? :-)
+>
+> As it appears you're using device tree, it is all transparent and
+> you need not worry.
+>
+
+OK.
+
+<snip>
+
+Thanks for the review!
+
+Regards,
+Harini
