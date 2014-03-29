@@ -1,14 +1,15 @@
-From: Harini Katakam <harinikatakamlinux@gmail.com>
-Subject: Re: [PATCH 1/2] GPIO: Add driver for Zynq GPIO controller
-Date: Sat, 29 Mar 2014 10:14:45 +0530
-Message-ID: <CAFcVECJsEp_s2V5=oK_UJahGRUpWYWMCxTMxqdpX+O0qebP41A@mail.gmail.com>
-References: <1395933906-2268-1-git-send-email-harinik@xilinx.com>
- <CACRpkdbU35xG1QtagB+9e9vxvehf1UQFaF4PikJhsPNAMw=D1Q@mail.gmail.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [RFC PATCH v2 03/10] ARM: at91: introduce OLD_IRQ_AT91 Kconfig
+ option
+Date: Sat, 29 Mar 2014 10:06:39 +0100
+Message-ID: <20140329100639.5ea454bc@skate>
+References: <1396029548-10928-1-git-send-email-b.brezillon.dev@gmail.com>
+ <1396029548-10928-4-git-send-email-b.brezillon.dev@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdbU35xG1QtagB+9e9vxvehf1UQFaF4PikJhsPNAMw=D1Q@mail.gmail.com>
+In-Reply-To: <1396029548-10928-4-git-send-email-b.brezillon.dev@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,120 +19,24 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, Pawel Moll <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, michals@xilinx.com, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Boris BREZILLON <b.brezillon.dev@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, Thomas Gleixner <tglx@linutronix.de>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+Dear Boris BREZILLON,
 
-On Sat, Mar 29, 2014 at 3:20 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Thu, Mar 27, 2014 at 4:25 PM, Harini Katakam <harinik@xilinx.com> wrote:
->
->> Add support for GPIO controller used by Xilinx Zynq
->>
->> Signed-off-by: Harini Katakam <harinik@xilinx.com>
->
-> This will not be integrated before v3.16 so we have some time to
-> think things over.
->
->> +config GPIO_ZYNQ
->> +       bool "Xilinx ZYNQ GPIO support"
->> +       depends on ARCH_ZYNQ
->> +       select GENERIC_IRQ_CHIP
->
-> I think that rather than selecting GENERIC_IRQ_CHIP,
-> select my new GPIOLIB_IRQCHIP and use the new helpers
-> gpiochip_irqchip_add() and gpiochip_set_chained_irqchip().
->
-> Look in drivers/gpio/gpio-pl061.c for example usage.
->
-> This is available in the "devel" or "for-next" branch of my
-> gpio tree at
-> https://git.kernel.org/cgit/linux/kernel/git/linusw/linux-gpio.git/
->
+On Fri, 28 Mar 2014 18:59:01 +0100, Boris BREZILLON wrote:
 
-OK.
+> +config OLD_IRQ_AT91
+> +	bool
+> +	default false
 
-<snip>
->> +/* Read/Write access to the GPIO PS registers */
->> +static inline u32 zynq_gpio_readreg(void __iomem *offset)
->> +{
->> +       return readl_relaxed(offset);
->> +}
->> +
->> +static inline void zynq_gpio_writereg(void __iomem *offset, u32 val)
->> +{
->> +       writel_relaxed(val, offset);
->> +}
->
-> I think this is unnecessary and confusing indirection.
-> Just use the readl_relaxed/writel_relaxed functions directly in
-> the code.
->
+I don't think "default false" is a valid Kconfig construct. It could be
+"default n", but that's useless since "default n" is the default
+behavior. So I believe you can simply get rid of that line.
 
-This is just to be flexible.
-
-<snip>
->> +                       if (!(int_sts & 1))
->> +                               continue;
->> +                       gpio_irq_desc = irq_to_desc(gpio_irq);
->> +                       BUG_ON(!gpio_irq_desc);
->> +                       chip = irq_desc_get_chip(gpio_irq_desc);
->> +                       BUG_ON(!chip);
->> +                       chip->irq_ack(&gpio_irq_desc->irq_data);
->> +
->> +                       /* call the pin specific handler */
->> +                       generic_handle_irq(gpio_irq);
->> +               }
->> +               /* shift to first virtual irq of next bank */
->> +               gpio_irq = gpio->irq_base + zynq_gpio_pin_table[bank_num] + 1;
->
-> This is also pretty convoluted. Are you sure you don't want to
-> implement one gpiochip per bank instead? I guess the final "+1"
-> means there is actually one IRQ per bank even?
->
-
-There is only one IRQ for all four banks.
-I will try to make this logic and other places in the driver you pointed out,
-less convoluted.
-The handling is (very) slightly different for the upper two banks and
-lower two banks.
-
-<snip>
->> +static const struct dev_pm_ops zynq_gpio_dev_pm_ops = {
->> +       SET_SYSTEM_SLEEP_PM_OPS(zynq_gpio_suspend, zynq_gpio_resume)
->> +       SET_RUNTIME_PM_OPS(zynq_gpio_runtime_suspend, zynq_gpio_runtime_resume,
->> +                          zynq_gpio_idle)
->> +};
->
-> Is this runtime PM implementation aligned with Ulf Hansson's recent
-> new helpers to simplify suspend+runtime PM coexistance?
->
-
-I'm sorry i just looked at them -
-pm_runtime_force_suspend/resume are not used here.
-
->> +       chip->dbg_show = NULL;
->> +       chip->base = 0;         /* default pin base */
->
-> The GPIO numberspace is not the same as the pin number space.
-> This is only going to work if you have no other GPIO controllers
-> on your system. Use -1 as base so you get dynamic allocation
-> of a GPIO number range instead.
->
-> Make sure to use the new descriptor API for defining and accessing
-> GPIOs in all drivers and it will not matter which base you get.
-> (Good eh? :-)
->
-> As it appears you're using device tree, it is all transparent and
-> you need not worry.
->
-
-OK.
-
-<snip>
-
-Thanks for the review!
-
-Regards,
-Harini
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
