@@ -1,37 +1,52 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH net-next 0/3] net: stmmac: Add glue layer for socfpga platform
-Date: Sat, 29 Mar 2014 01:18:06 +0100
-Message-ID: <201403290118.07163.arnd@arndb.de>
-References: <1395891912-26855-1-git-send-email-dinguyen@altera.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 0/5] Kirkwood DT Documentation
+Date: Sat, 29 Mar 2014 01:22:24 +0100
+Message-ID: <201403290122.24713.arnd@arndb.de>
+References: <1395492360-1865-1-git-send-email-andrew@lunn.ch> <20140324002233.GZ15608@titan.lakedaemon.net>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
-  charset="iso-8859-15"
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1395891912-26855-1-git-send-email-dinguyen@altera.com>
-Sender: netdev-owner@vger.kernel.org
-To: dinguyen@altera.com
-Cc: dinh.linux@gmail.com, davem@davemloft.net, peppe.cavallaro@st.com, srinivas.kandagatla@st.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140324002233.GZ15608-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 27 March 2014, dinguyen@altera.com wrote:
-> From: Dinh Nguyen <dinguyen@altera.com>
+On Monday 24 March 2014, Jason Cooper wrote:
+> arm-soc maintainers,
 > 
-> Hi David,
+> On Sat, Mar 22, 2014 at 01:45:55PM +0100, Andrew Lunn wrote:
+> > This patchset fixes up a number of issues found by checkpatch in the
+> > kirkwood DT files or binding Documentation. Vendor Prefixes are
+> > documented, missing prefixes are added, incorrect prefixes are
+> > corrected, and Kirkwood SoCs are documented.
+> > 
+> > Note that some of these patches contain UTF-8 characters, which the
+> > mailing lists sometime don't like. The patches can also be found in
+> > 
+> > https://github.com/lunn/linux.git v3.14-rc7-next-20140321-dt
+> > 
+> > which is based on linux-next tag next-20140321.
 > 
-> I'm re-submitting the patch series to add the socfpga glue layer for the
-> stmmac ethernet driver. My original patch did not build for kernel module,
-> and I apologize for not testing against that.
+> I'd like to take this in as 'fixes-non-critical' for v3.15.  However,
+> I'm having trouble finding a stable, conflict-free branch to base it on.
+> The main problem seems to be vendor-prefixes.txt.
 > 
-> This patch is also better aligned with the other stmmac glue
-> layers(sti and sunxi).
+> How would you prefer I handle this?  Or, would you guys just like to
+> take the series directly?  I'm fine either way.
 > 
-> I'd like to take the "net: stmmac: Add SOCFPGA glue driver" patch into your
-> tree and the other 2 dts patches through the arm-soc tree.
+> If taking directly,
+> 
+> Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 
-I've applied patches 2 and 3 to the arm-soc/next/dt branch now.
-
-Unfortunately there is still one trivial conflict against the net-next tree
-left in the binding document, but I'm not too worried about that.
+I think Rob should take the binding changes, we can take the dts file
+changes. Can you send them as patches relative to the next/dt branch
+to arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org?
 
 	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
