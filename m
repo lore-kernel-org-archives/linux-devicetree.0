@@ -1,119 +1,28 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 1/9] pci-rcar-gen2: add devicetree support
-Date: Mon, 31 Mar 2014 00:28:53 +0400
-Message-ID: <53387E85.8000207@cogentembedded.com>
-References: <1394128887-4197-1-git-send-email-ben.dooks@codethink.co.uk> <1394128887-4197-2-git-send-email-ben.dooks@codethink.co.uk>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH 1/8] ARM: imx6q-clk: parent lvds_gate from lvds_sel
+Date: Sun, 30 Mar 2014 19:29:29 +0200
+Message-ID: <201403301929.29351.marex@denx.de>
+References: <1396025579-14344-1-git-send-email-l.stach@pengutronix.de> <1396025579-14344-2-git-send-email-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: Text/Plain;
+  charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1394128887-4197-2-git-send-email-ben.dooks@codethink.co.uk>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ben Dooks <ben.dooks@codethink.co.uk>, linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
-Cc: linux-kernel@lists.codethink.co.uk, magnus.damn@opensource.se, horms@verge.net.au, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1396025579-14344-2-git-send-email-l.stach@pengutronix.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Sean Cross <xobs@kosagi.com>, Richard Zhu <r65037@freescale.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Shawn Guo <shawn.guo@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Tim Harvey <tharvey@gateworks.com>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On 03/06/2014 09:01 PM, Ben Dooks wrote:
+On Friday, March 28, 2014 at 05:52:52 PM, Lucas Stach wrote:
+> Allows fror proper refcounting of the parent clocks
+> when enabling the clock output on CLK1/2 pads.
+> 
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 
-> Add OF match table for pci-rcar-gen2 driver for device tree support.
+Looks OK:
 
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> ---
-> Updates since v1:
-> 	- moved documentation into patch
-> 	- moved to using bus-range parsing
-> 	- ensured usb phy can be linked to usb devices
+Reviewed-by: Marek Vasut <marex@denx.de>
 
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Simon Horman <horms@verge.net.au>
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-sh@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> ---
->   .../bindings/pci/renessas,pci-rcar-gen2.txt        | 52 ++++++++++++++++++++++
->   drivers/pci/host/pci-rcar-gen2.c                   | 33 +++++++++++++-
->   2 files changed, 83 insertions(+), 2 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/pci/renessas,pci-rcar-gen2.txt
-
-> diff --git a/Documentation/devicetree/bindings/pci/renessas,pci-rcar-gen2.txt b/Documentation/devicetree/bindings/pci/renessas,pci-rcar-gen2.txt
-> new file mode 100644
-> index 0000000..bd6d291
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/renessas,pci-rcar-gen2.txt
-> @@ -0,0 +1,52 @@
-> +Renesas AHB to PCI bridge
-> +-------------------------
-
-    Perhaps it makes sense to describe PCIe bindings in the same file...
-
-[...]
-
-> +Example SoC configuration:
-> +
-> +	pci0: pci@ee090000  {
-> +		compatible = "renesas,pci-r8a7790";
-> +		clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
-> +		reg = <0x0 0xee090000 0x0 0xc00>,
-> +		      <0x0 0xee080000 0x0 0x1100>;
-> +		interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
-> +		status = "disabled";
-> +
-> +		bus-range = <0 0>;
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +	};
-> +
-> +Example board setup:
-> +
-> +&pci1 {
-> +	status = "okay";
-> +	pinctrl-0 = <&usb1_pins>;
-> +	pinctrl-names = "default";
-> +
-> +	pci@0,1 {
-> +		reg = <0x800 0 0 0 0>;
-> +		device_type = "pci";
-> +		usb-phy = <&usbphy>;
-> +	};
-> +
-> +	pci@0,2 {
-> +		reg = <0x1000 0 0 0 0>;
-> +		device_type = "pci";
-> +		usb-phy = <&usbphy>;
-> +	};
-> +};
-
-    As I said, these PCI sub-nodes belong to the SoC file.
-
-> diff --git a/drivers/pci/host/pci-rcar-gen2.c b/drivers/pci/host/pci-rcar-gen2.c
-> index fd3e3ab..1216784 100644
-> --- a/drivers/pci/host/pci-rcar-gen2.c
-> +++ b/drivers/pci/host/pci-rcar-gen2.c
-[...]
-> @@ -377,11 +396,21 @@ static int rcar_pci_probe(struct platform_device *pdev)
->   	return 0;
->   }
->
-> +#ifdef CONFIG_OF
-
-    I don't think it's really worth it.
-
-> +static struct of_device_id rcar_pci_of_match[] = {
-> +	{ .compatible = "renesas,pci-r8a7790", },
-> +	{ },
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, rcar_pci_of_match);
-> +#endif
-> +
->   static struct platform_driver rcar_pci_driver = {
->   	.driver = {
->   		.name = "pci-rcar-gen2",
->   		.owner = THIS_MODULE,
->   		.suppress_bind_attrs = true,
-> +		.of_match_table = of_match_ptr(rcar_pci_of_match),
-
-    And so, of_match_ptr() is not needed.
-
-WBR, Sergei
-
+Best regards,
+Marek Vasut
