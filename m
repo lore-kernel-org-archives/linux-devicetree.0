@@ -1,19 +1,21 @@
-From: Boris BREZILLON <b.brezillon.dev@gmail.com>
+From: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [RFC PATCH v2 07/10] irqchip: atmel-aic: document new dt properties
  and children nodes
-Date: Sun, 30 Mar 2014 15:27:17 +0200
-Message-ID: <53381BB5.10609@gmail.com>
+Date: Sun, 30 Mar 2014 16:55:48 +0200
+Message-ID: <53383074.40808@gmail.com>
 References: <1396029548-10928-1-git-send-email-b.brezillon.dev@gmail.com>	<1396029548-10928-8-git-send-email-b.brezillon.dev@gmail.com> <20140329101903.65848c12@skate>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1;
 	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20140329101903.65848c12@skate>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Rob Landley <rob@landley.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
+
+
 
 Hello Thomas,
 
@@ -53,8 +55,8 @@ Exactly, muxed irqs are shared irqs.
 > interrupt controller drivers to handle those shared interrupts, and
 > demux them into multiple separate interrupts.
 
-It may work (I'll take a look), but we may have to modify several=20
-drivers (and
+It may work (I'll take a look), but we may have to modify several drive=
+rs (and=20
 it may break the DT ABI).
 
 >
@@ -67,8 +69,8 @@ s
 > understand.
 
 This is clearly not a real bus, but more a virtual/conceptual bus where=
- each
-irq source is a bus device.
+ each irq=20
+source is a bus device.
 
 > So could you give more details about the design of the AIC and these
 > muxed interrupts, to see if the DT binding you're proposing is actual=
@@ -77,43 +79,38 @@ ly
 
 The AIC controller muxes several peripheral irqs to one irq line.
 If a given peripheral has a pending irq, and the driver requesting this=
-=20
-irq is
-not loaded (either because it was not enabled or because it is not=20
-loaded yet)
+ irq is=20
+not loaded (either because it was not enabled or because it is not load=
+ed yet)=20
 it may generate spurious interrupts (or even hang forever), waiting for=
-=20
-someone
+ someone=20
 clearing/reading the interrupt flag(s).
 
-See this thread for an example of what can happen if we don't disable=20
-all muxed
+See this thread for an example of what can happen if we don't disable a=
+ll muxed=20
 interrupts before enabling an IRQ line:
 
 https://lkml.org/lkml/2013/3/8/176
 
-
 In this series' implementation, I define all the muxed (or shared) inte=
-rrupt
+rrupt=20
 entries (using the DT) and let the AIC driver disable all the interrupt=
-=20
-sources
+ sources=20
 when shutting down an interrupt line or before starting the AIC control=
 ler.
 
 This provides a generic solution to avoid these spurious interrupt issu=
-es
+es=20
 instead of adding several hooks in the machine specific code (one for e=
-ach
+ach=20
 impacted peripheral).
 
 
-Please tell me if you see a better solution (but keep in mind, this=20
-should be
+Please tell me if you see a better solution (but keep in mind, this sho=
+uld be=20
 done during early init, because the at91 init timer is using a muxed ir=
-q=20
-line
-on almost all at91 SoCs).
+q line on=20
+almost all at91 SoCs).
 
 Best Regards,
 
@@ -121,3 +118,8 @@ Boris
 >
 > Thomas
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
