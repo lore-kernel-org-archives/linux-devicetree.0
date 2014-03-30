@@ -1,49 +1,199 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH 2/8] PCI: designware: split Exynos and i.MX bindings
-Date: Sun, 30 Mar 2014 19:36:49 +0200
-Message-ID: <201403301936.49692.marex@denx.de>
-References: <1396025579-14344-1-git-send-email-l.stach@pengutronix.de> <1396025579-14344-3-git-send-email-l.stach@pengutronix.de>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH v2 3/3] [media] atmel-isi: add primary DT support
+Date: Sun, 30 Mar 2014 23:20:17 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1403302313290.12008@axis700.grange>
+References: <1395744087-5753-1-git-send-email-josh.wu@atmel.com>
+ <1395744320-15025-1-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1396025579-14344-3-git-send-email-l.stach@pengutronix.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Sean Cross <xobs@kosagi.com>, Richard Zhu <r65037@freescale.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Shawn Guo <shawn.guo@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Tim Harvey <tharvey@gateworks.com>, kernel@pengutronix.de
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1395744320-15025-1-git-send-email-josh.wu@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Josh Wu <josh.wu@atmel.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, nicolas.ferre@atmel.com, robh+dt@kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, rob@landley.net, galak@codeaurora.org, grant.likely@linaro.org, Linux Media Mailing List <linux-media@vger.kernel.org>, Ben Dooks <ben.dooks@codethink.co.uk>, linux-arm-kernel@lists.infradead.org, m.chehab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Friday, March 28, 2014 at 05:52:53 PM, Lucas Stach wrote:
-> The glue around the core designware IP is significantly
-> different between the Exynos and i.MX implementation,
-> which is reflected in the DT bindings.
+Hi Josh,
+
+Please correct me if I'm wrong, but I don't see how this is going to work 
+without the central part - building asynchronous V4L2 data structures from 
+the DT, something that your earlier patch "media: soc-camera: OF cameras" 
+was doing, but which you stopped developing after a discussion with Ben 
+(added to Cc).
+
+Thanks
+Guennadi
+
+On Tue, 25 Mar 2014, Josh Wu wrote:
+
+> This patch add the DT support for Atmel ISI driver.
+> It use the same v4l2 DT interface that defined in video-interfaces.txt.
 > 
-> This changes the i.MX6 binding to reuse as much as
-> possible from the common designware binding and
-> removes old cruft.
+> Signed-off-by: Josh Wu <josh.wu@atmel.com>
+> Cc: devicetree@vger.kernel.org
+> ---
+> v1 --> v2:
+>  refine the binding document.
+>  add port node description.
+>  removed the optional property.
 > 
-> I removed the optional GPIOs with the following reasoning:
-> - disable-gpio: endpoint specific GPIO, not currently
->   wired up in any code. Should be handled by the PCI device
->   driver, not the host controller driver.
-> - wake-up-gpio: same as above.
-> - power-on-gpio: No user in any upstream DT. This should
->   be handled by a regulator which shouldn't be controlled
->   by the host driver, but rather by the PCI device driver.
+>  .../devicetree/bindings/media/atmel-isi.txt        |   50 ++++++++++++++++++++
+>  drivers/media/platform/soc_camera/atmel-isi.c      |   31 +++++++++++-
+>  2 files changed, 79 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/atmel-isi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/atmel-isi.txt b/Documentation/devicetree/bindings/media/atmel-isi.txt
+> new file mode 100644
+> index 0000000..11c98ee
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/atmel-isi.txt
+> @@ -0,0 +1,50 @@
+> +Atmel Image Sensor Interface (ISI) SoC Camera Subsystem
+> +----------------------------------------------
+> +
+> +Required properties:
+> +- compatible: must be "atmel,at91sam9g45-isi"
+> +- reg: physical base address and length of the registers set for the device;
+> +- interrupts: should contain IRQ line for the ISI;
+> +- clocks: list of clock specifiers, corresponding to entries in
+> +          the clock-names property;
+> +- clock-names: must contain "isi_clk", which is the isi peripherial clock.
+> +
+> +ISI supports a single port node with parallel bus. It should contain one
+> +'port' child node with child 'endpoint' node. Please refer to the bindings
+> +defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +Example:
+> +	isi: isi@f0034000 {
+> +		compatible = "atmel,at91sam9g45-isi";
+> +		reg = <0xf0034000 0x4000>;
+> +		interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
+> +
+> +		clocks = <&isi_clk>;
+> +		clock-names = "isi_clk";
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_isi>;
+> +
+> +		port {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			isi_0: endpoint {
+> +				remote-endpoint = <&ov2640_0>;
+> +			};
+> +		};
+> +	};
+> +
+> +	i2c1: i2c@f0018000 {
+> +		ov2640: camera@0x30 {
+> +			compatible = "omnivision,ov2640";
+> +			reg = <0x30>;
+> +
+> +			port {
+> +				ov2640_0: endpoint {
+> +					remote-endpoint = <&isi_0>;
+> +					bus-width = <8>;
+> +				};
+> +			};
+> +		};
+> +	};
+> diff --git a/drivers/media/platform/soc_camera/atmel-isi.c b/drivers/media/platform/soc_camera/atmel-isi.c
+> index f4add0a..d6a1f7b 100644
+> --- a/drivers/media/platform/soc_camera/atmel-isi.c
+> +++ b/drivers/media/platform/soc_camera/atmel-isi.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/of.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/slab.h>
+>  
+> @@ -33,6 +34,7 @@
+>  #define VID_LIMIT_BYTES			(16 * 1024 * 1024)
+>  #define MIN_FRAME_RATE			15
+>  #define FRAME_INTERVAL_MILLI_SEC	(1000 / MIN_FRAME_RATE)
+> +#define ISI_DEFAULT_MCLK_FREQ		25000000
+>  
+>  /* Frame buffer descriptor */
+>  struct fbd {
+> @@ -885,6 +887,20 @@ static int atmel_isi_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static int atmel_isi_probe_dt(struct atmel_isi *isi,
+> +			struct platform_device *pdev)
+> +{
+> +	struct device_node *node = pdev->dev.of_node;
+> +
+> +	/* Default settings for ISI */
+> +	isi->pdata.full_mode = 1;
+> +	isi->pdata.mck_hz = ISI_DEFAULT_MCLK_FREQ;
+> +	isi->pdata.frate = ISI_CFG1_FRATE_CAPTURE_ALL;
+> +	isi->pdata.data_width_flags = ISI_DATAWIDTH_8 | ISI_DATAWIDTH_10;
+> +
+> +	return 0;
+> +}
+> +
+>  static int atmel_isi_probe(struct platform_device *pdev)
+>  {
+>  	unsigned int irq;
+> @@ -896,7 +912,7 @@ static int atmel_isi_probe(struct platform_device *pdev)
+>  	struct isi_platform_data *pdata;
+>  
+>  	pdata = dev->platform_data;
+> -	if (!pdata || !pdata->data_width_flags) {
+> +	if ((!pdata || !pdata->data_width_flags) && !pdev->dev.of_node) {
+>  		dev_err(&pdev->dev,
+>  			"No config available for Atmel ISI\n");
+>  		return -EINVAL;
+> @@ -912,7 +928,11 @@ static int atmel_isi_probe(struct platform_device *pdev)
+>  	if (IS_ERR(isi->pclk))
+>  		return PTR_ERR(isi->pclk);
+>  
+> -	memcpy(&isi->pdata, pdata, sizeof(struct isi_platform_data));
+> +	if (pdata)
+> +		memcpy(&isi->pdata, pdata, sizeof(struct isi_platform_data));
+> +	else	/* dt probe */
+> +		atmel_isi_probe_dt(isi, pdev);
+> +
+>  	isi->active = NULL;
+>  	spin_lock_init(&isi->lock);
+>  	INIT_LIST_HEAD(&isi->video_buffer_list);
+> @@ -1014,11 +1034,18 @@ err_alloc_ctx:
+>  	return ret;
+>  }
+>  
+> +static const struct of_device_id atmel_isi_of_match[] = {
+> +	{ .compatible = "atmel,at91sam9g45-isi" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, atmel_isi_of_match);
+> +
+>  static struct platform_driver atmel_isi_driver = {
+>  	.remove		= atmel_isi_remove,
+>  	.driver		= {
+>  		.name = "atmel_isi",
+>  		.owner = THIS_MODULE,
+> +		.of_match_table = atmel_isi_of_match,
+>  	},
+>  };
+>  
+> -- 
+> 1.7.9.5
+> 
 
-This power-on-gpio should indeed be handled by the regulator, but the regulator 
-cannot be handled by the PCIe device driver. This power-on-gpio must be operated 
-on per-slot basis if I understand it correctly, so it cannot be controlled by 
-the host controller driver either.
-
-The reason why this cannot be controlled by the device driver is that if the 
-device is powered down, it won't be detected on the PCIe bus, thus it cannot 
-enable the regulator which will power up the slot the device is sitting in.
-
-[...]
-
-btw. am I blind or do I just not see devicetree-discuss on CC ?
-
-Best regards,
-Marek Vasut
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
