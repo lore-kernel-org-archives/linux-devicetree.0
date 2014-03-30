@@ -1,36 +1,56 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [RFC 1/5] of: Add support for ePAPR "stdout-path" property
-Date: Sun, 30 Mar 2014 08:16:23 +1100
-Message-ID: <1396127783.11529.55.camel@pasglop>
-References: <1396022885-6102-1-git-send-email-grant.likely@linaro.org>
-	 <1396022885-6102-2-git-send-email-grant.likely@linaro.org>
-	 <1396042396.11529.27.camel@pasglop>
-	 <CAL_Jsq+xTeocLtS9GFWLCkoV+USACma+w0=O_ysekvTGhYVhZg@mail.gmail.com>
+From: Arend van Spriel <arend@broadcom.com>
+Subject: Re: [RFC] dt: bindings: add bindings for Broadcom bcm43xx sdio devices
+Date: Sun, 30 Mar 2014 10:56:14 +0200
+Message-ID: <5337DC2E.5040000@broadcom.com>
+References: <1392059868-8782-1-git-send-email-arend@broadcom.com> <52FC8CB3.4090305@gmail.com> <CAGb2v67za+5yW3RE0pwBWk-NdTUSm-JkKE+j9NLjbBkE_Fc1hQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+xTeocLtS9GFWLCkoV+USACma+w0=O_ysekvTGhYVhZg@mail.gmail.com>
+In-Reply-To: <CAGb2v67za+5yW3RE0pwBWk-NdTUSm-JkKE+j9NLjbBkE_Fc1hQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Christoffer Dall <christoffer.dall@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@linaro.org>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2014-03-28 at 16:56 -0500, Rob Herring wrote:
+On 02/13/14 10:28, Chen-Yu Tsai wrote:
+> Hi,
+>
+> On Thu, Feb 13, 2014 at 5:13 PM, Tomasz Figa<tomasz.figa@gmail.com>  wrote:
+>> Hi Arend,
+>>
+>>
+>> On 10.02.2014 20:17, Arend van Spriel wrote:
 
-> I'm working on getting just that working. See my series for "generic
-> earlycon". I'm working on cleaning up the FDT part still, but have
-> something functional. The "hardest" part with FDT is doing the address
-> translation for serial devices, but I just stole that from u-boot.
-> 
-> > Right now, I have this explicit config option to hard wire "early debug"
-> > but there are a few cases of field bugs that can happen in early init
-> > code which I'd like to see logged properly on those systems, and early
-> > debug isn't suitable for field use...
-> 
-> We have the same issue with multi-platform ARM kernels.
+[...]
 
-Ah excellent, I'll keep an eye on it !
+>>> +
+>>> +Example:
+>>> +
+>>> +mmc3: mmc@01c20000 {
+>>> +       pinctrl-0 =<&mmc3_pins>;
+>>> +       pinctrl-1 =<&wifi_host_wake>;
+>>
+>>
+>> WLAN_HOST_WAKE pin (aka the OOB interrupt) is specific to the WLAN chip, so
+>> this should be rather configured in a pinctrl state of the WLAN chip itself.
 
-Cheers,
-Ben.
+Hi Chen-Yu,
+
+picking up this thread.
+
+> AFAIK, the pinctrl in tied to the device node, and is selected when the device
+> is registered. The MMC subsystem currently does not register child nodes, so
+> this would be useless.
+
+So if MMC does not register child nodes, brcmfmac will not be probed 
+with of_node set? Have there been patches submitted for this in mmc 
+subsystem recently.
+
+> brcmfmac actually has to walk the whole DT to find the node with the right
+> compatible.
+
+Is it just me or should this be avoided? What if there are multiple entries?
+
+Regards,
+Arend
