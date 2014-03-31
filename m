@@ -1,26 +1,66 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 5/9] ARM: shmbobile: r8a7790.dtsi: add pci0/1/2 nodes
-Date: Tue, 01 Apr 2014 02:18:04 +0400
-Message-ID: <5339E99C.3010908@cogentembedded.com>
-References: <1394128887-4197-1-git-send-email-ben.dooks@codethink.co.uk> <1394128887-4197-6-git-send-email-ben.dooks@codethink.co.uk>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCHv4 0/7] omap hwspinlock dt support
+Date: Mon, 31 Mar 2014 17:45:15 -0500
+Message-ID: <5339EFFB.30304@ti.com>
+References: <1389658764-39199-1-git-send-email-s-anna@ti.com> <52F9282B.5000702@ti.com> <530B8C00.8020001@ti.com> <CAK=WgbZp_RQPCeZJyMRkNTQxaJsnGZ3DnjhSkYYR_-PAE_Kp4g@mail.gmail.com> <53239789.40600@ti.com> <CAK=WgbZCzA7JovSxnysHCQRZZWc3Z2j3AS8ekpM9fOZ160rmCA@mail.gmail.com> <532748B7.1080606@ti.com> <CAK=WgbYjtw+cxy5wX6pjK=Rpj6wOk6Cu+GrPuFN+sqtgDAY=_Q@mail.gmail.com> <53278950.5030905@ti.com> <CAK=WgbZ1M0JZE2BH0ukNo33hBuffTGbd3-DD0WCiwZ-akgvQ-Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1394128887-4197-6-git-send-email-ben.dooks@codethink.co.uk>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ben Dooks <ben.dooks@codethink.co.uk>, linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
-Cc: linux-kernel@lists.codethink.co.uk, magnus.damn@opensource.se, horms@verge.net.au, devicetree@vger.kernel.org, horms+renesas@verge.net.au
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CAK=WgbZ1M0JZE2BH0ukNo33hBuffTGbd3-DD0WCiwZ-akgvQ-Q@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>
+Cc: Tony Lindgren <tony@atomide.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/06/2014 09:01 PM, Ben Dooks wrote:
+On 03/18/2014 08:35 AM, Ohad Ben-Cohen wrote:
+> Hi Suman,
+> 
+> On Tue, Mar 18, 2014 at 1:46 AM, Suman Anna <s-anna@ti.com> wrote:
+>> So far, we have not come across multiple controllers. I see your point,
+>> and I think this also depends on the semantics of how you exchange the
+>> lock id number. The agreement at the moment is on base_ids across
+>> multiple SoC components. If the semantics involve exchanging the
+>> controller instance, for example, then we might get away with it. But
+>> that probably involves adding additional helpers to retrieve controller
+>> instance in addition to lock number, or some other similar functions.
+> 
+> Yes, this could be done too, but I agree it is less simple with no real win.
+> 
+>> Sorry, I should have rephrased it better - by order, I meant the
+>> inherent order between board early code and other drivers. With DT, we
+>> cannot guarantee that right, as specific locks are requested from drivers.
+> 
+> Yeah.
+> 
+>> Understood. And we may have to assign the client association with a lock
+>> as well. These are core changes that were actually not needed in the
+>> non-DT case due to the inherent order as stated above. So, are you
+>> suggesting that we add one more property to the controller node to mark
+>> which are reserved, or rely on constructing this through DT tree parsing?
+> 
+> I guess this is a question to the DT folks; both approaches work from
+> hwspinlock perspective.
+> 
+> In the past Arnd Benoit and myself were happy with adding one more
+> property to the controller node, but this might be somewhat error
+> prone as it leaves room for mistakes - developers can add hwlock
+> phandles and forget to update the reserved property in the controller
+> node.
 
-    s/shmbobile/shmobile/ in the subject.
+Ohad,
+I agree that this is the most simplest form (either a reserved number
+starting from base, or a reserved range - I prefer the first). The
+developer errors can be restricted by having the
+of_hwspin_lock_request_specific() return an error if anything outside
+this reserved range is requested.
 
-> Add nodes for USB PCI bridge devices.
+Mark, Kumar,
+Any recommendations/objections on this problem/approach?
 
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
+I also have to bring back the hwlock-base-id property (dropped in v3)
+for registration purposes, so that the registration does not change
+based on the probe order of the multiple controller nodes.
 
-WBR, Sergei
-
+regards
+Suman
