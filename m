@@ -1,104 +1,62 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH 5/6] regulator: arizona-micsupp: Add processing of init_data from device tree
-Date: Mon, 31 Mar 2014 12:59:46 +0100
-Message-ID: <1396267187-30580-6-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-References: <1396267187-30580-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1396267187-30580-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org
-Cc: lee.jones@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, sameo@linux.intel.com, lgirdwood@gmail.com, ckeepax@opensource.wolfsonmicro.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Clement Perrochaud <clement.perrochaud-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH v3 0/2] NFC: pn544_i2c: Add device-tree support to PN544
+Date: Mon, 31 Mar 2014 12:20:13 +0000
+Message-ID: <4742358a45e14bfa8725203d119a48bd@AMXPR04MB136.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org" <linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
----
- drivers/regulator/arizona-micsupp.c |   53 +++++++++++++++++++++++++++++++++++
- 1 files changed, 53 insertions(+), 0 deletions(-)
+This patch brings device-tree support to the pn544_i2c device
+driver.
 
-diff --git a/drivers/regulator/arizona-micsupp.c b/drivers/regulator/arizona-micsupp.c
-index 6fdd9bf..5225470 100644
---- a/drivers/regulator/arizona-micsupp.c
-+++ b/drivers/regulator/arizona-micsupp.c
-@@ -19,6 +19,7 @@
- #include <linux/platform_device.h>
- #include <linux/regulator/driver.h>
- #include <linux/regulator/machine.h>
-+#include <linux/regulator/of_regulator.h>
- #include <linux/gpio.h>
- #include <linux/slab.h>
- #include <linux/workqueue.h>
-@@ -195,6 +196,49 @@ static const struct regulator_init_data arizona_micsupp_ext_default = {
- 	.num_consumer_supplies = 1,
- };
- 
-+#ifdef CONFIG_OF
-+static int arizona_micsupp_of_get_pdata(struct arizona *arizona,
-+					struct regulator_config *config)
-+{
-+	struct arizona_pdata *pdata = &arizona->pdata;
-+	struct arizona_micsupp *micsupp = config->driver_data;
-+	struct device_node *np;
-+	struct regulator_init_data *init_data;
-+
-+	np = of_get_child_by_name(arizona->dev->of_node, "micvdd");
-+
-+	if (np) {
-+		config->of_node = np;
-+
-+		init_data = of_get_regulator_init_data(arizona->dev, np);
-+
-+		if (init_data) {
-+			init_data->consumer_supplies = &micsupp->supply;
-+			init_data->num_consumer_supplies = 1;
-+
-+			pdata->micvdd = init_data;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void arizona_micsupp_of_put_pdata(struct regulator_config *config)
-+{
-+	of_node_put(config->of_node);
-+}
-+#else
-+static inline int arizona_micsupp_of_get_pdata(struct arizona *arizona,
-+					       struct regulator_config *config)
-+{
-+	return 0;
-+}
-+
-+static inline void arizona_micsupp_of_put_pdata(struct regulator_config *config)
-+{
-+}
-+#endif
-+
- static int arizona_micsupp_probe(struct platform_device *pdev)
- {
- 	struct arizona *arizona = dev_get_drvdata(pdev->dev.parent);
-@@ -234,6 +278,12 @@ static int arizona_micsupp_probe(struct platform_device *pdev)
- 	config.driver_data = micsupp;
- 	config.regmap = arizona->regmap;
- 
-+	if (!dev_get_platdata(arizona->dev)) {
-+		ret = arizona_micsupp_of_get_pdata(arizona, &config);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
- 	if (arizona->pdata.micvdd)
- 		config.init_data = arizona->pdata.micvdd;
- 	else
-@@ -253,6 +303,9 @@ static int arizona_micsupp_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	if (!dev_get_platdata(arizona->dev))
-+		arizona_micsupp_of_put_pdata(&config);
-+
- 	platform_set_drvdata(pdev, micsupp);
- 
- 	return 0;
--- 
-1.7.2.5
+It has been successfully tested on a BeagleBone Black board - a
+common ARM-Based SoC - both as a module and built-in.
+Testing involved enabling and disabling the chip, as well as
+reading a Type 4 NFC tag. Firmware download could not be tested
+due to issues in the pn544_i2c device driver unrelated to this
+patch.
+
+The submission is broken into two patches: the first one for code
+itself and the second one for DTS documentation.
+
+It is based on 48761f6db88da9e733e4405ce9842c0769e4d4ac
+(NFC: st21nfca: Implement load_session HCI hook) from the nfc-next mast=
+er
+branch.
+
+Changes from v2:
+ - Forgotten documentation patch has been added.
+ - pn544_hci_i2c_of_request_resources is now static and takes a struct
+i2c_client as argument instead of a struct pn544_i2c_phy.
+ - Spacing around operators has been added.
+ - Test for device-tree use instead of platform data has been improved.
+
+Changes from v1:
+ - Incorrect resource freeing on module removal has been fixed.
+ - Compatibility table variable name has been corrected to match
+standard pattern.
+
+Cl=E9ment Perrochaud (2):
+  NFC: pn544_i2c: Add device-tree (Open Firmware) support to PN544
+  NFC: pn544_i2c: Add DTS Documentation
+
+ .../devicetree/bindings/net/nfc/pn544.txt          |  32 ++++
+ drivers/nfc/pn544/i2c.c                            | 162 +++++++++++++=
++++++---
+ 2 files changed, 177 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/nfc/pn544.txt
+
+--=20
+1.9.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
