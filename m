@@ -1,7 +1,7 @@
 From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH V2 11/19] mmc: mmci: Mark the DT bindings for highspeed mode as deprecated
-Date: Mon, 31 Mar 2014 17:18:12 +0200
-Message-ID: <1396279100-2920-12-git-send-email-ulf.hansson@linaro.org>
+Subject: [PATCH V2 13/19] ARM: ux500: Add the mmc capabilities flags to DT
+Date: Mon, 31 Mar 2014 17:18:14 +0200
+Message-ID: <1396279100-2920-14-git-send-email-ulf.hansson@linaro.org>
 References: <1396279100-2920-1-git-send-email-ulf.hansson@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1396279100-2920-1-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -10,50 +10,50 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell 
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The common mmc DT parser supports bindings for highspeed mode, thus
-there are no need for mmci to provide it's own versions for these. Mark
-them as deprecated in the documentation.
-
 Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/mmc/mmci.txt |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/ste-href.dtsi |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mmc/mmci.txt b/Documentation/devicetree/bindings/mmc/mmci.txt
-index 2c8756f..03796cf 100644
---- a/Documentation/devicetree/bindings/mmc/mmci.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmci.txt
-@@ -15,8 +15,6 @@ Required properties:
- Optional properties:
- - arm,primecell-periphid : contains the PrimeCell Peripheral ID, it overrides
-                            the ID provided by the HW
--- mmc-cap-mmc-highspeed  : indicates whether MMC is high speed capable.
--- mmc-cap-sd-highspeed   : indicates whether SD is high speed capable.
- - vqmmc-supply           : phandle to the regulator device tree node, mentioned
-                            as the VCCQ/VDD_IO supply in the eMMC/SD specs.
- - st,sig-dir-dat0        : bus signal direction pin used for DAT[0].
-@@ -26,6 +24,10 @@ Optional properties:
- - st,sig-dir-cmd         : cmd signal direction pin used for CMD.
- - st,sig-pin-fbclk       : feedback clock signal pin used.
- 
-+Deprecated properties:
-+- mmc-cap-mmc-highspeed  : indicates whether MMC is high speed capable.
-+- mmc-cap-sd-highspeed   : indicates whether SD is high speed capable.
-+
- Example:
- 
- sdi0_per1@80126000 {
-@@ -42,8 +44,8 @@ sdi0_per1@80126000 {
- 
- 	max-frequency = <100000000>;
- 	bus-width = <4>;
--	mmc-cap-sd-highspeed;
--	mmc-cap-mmc-highspeed;
-+	cap-sd-highspeed;
-+	cap-mmc-highspeed;
- 	cd-gpios  = <&gpio2 31 0x4>; // 95
- 	st,sig-dir-dat0;
- 	st,sig-dir-dat2;
+diff --git a/arch/arm/boot/dts/ste-href.dtsi b/arch/arm/boot/dts/ste-href.dtsi
+index 3f07c58..48ea4c1 100644
+--- a/arch/arm/boot/dts/ste-href.dtsi
++++ b/arch/arm/boot/dts/ste-href.dtsi
+@@ -118,6 +118,9 @@
+ 			bus-width = <4>;
+ 			cap-sd-highspeed;
+ 			cap-mmc-highspeed;
++			sd-uhs-sdr12;
++			sd-uhs-sdr25;
++			full-pwr-cycle;
+ 			st,sig-dir-dat0;
+ 			st,sig-dir-dat2;
+ 			st,sig-dir-cmd;
+@@ -136,6 +139,7 @@
+ 			arm,primecell-periphid = <0x10480180>;
+ 			max-frequency = <100000000>;
+ 			bus-width = <4>;
++			non-removable;
+ 			pinctrl-names = "default", "sleep";
+ 			pinctrl-0 = <&sdi1_default_mode>;
+ 			pinctrl-1 = <&sdi1_sleep_mode>;
+@@ -149,6 +153,7 @@
+ 			max-frequency = <100000000>;
+ 			bus-width = <8>;
+ 			cap-mmc-highspeed;
++			non-removable;
+ 			pinctrl-names = "default", "sleep";
+ 			pinctrl-0 = <&sdi2_default_mode>;
+ 			pinctrl-1 = <&sdi2_sleep_mode>;
+@@ -162,6 +167,7 @@
+ 		        max-frequency = <100000000>;
+ 			bus-width = <8>;
+ 			cap-mmc-highspeed;
++			non-removable;
+ 			vmmc-supply = <&ab8500_ldo_aux2_reg>;
+ 			pinctrl-names = "default", "sleep";
+ 			pinctrl-0 = <&sdi4_default_mode>;
 -- 
 1.7.9.5
 
