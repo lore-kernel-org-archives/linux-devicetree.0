@@ -1,113 +1,153 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH RFC 3/3] nand: pl353: Add driver for arm pl353 smc nand
- interface
-Date: Mon, 31 Mar 2014 15:24:37 +0200
-Message-ID: <53396C95.3030005@monstr.eu>
-References: <1395944467-26291-1-git-send-email-punnaia@xilinx.com>
- <04cb5d02-db4c-4a4c-ba3c-3a5958e42324@VA3EHSMHS036.ehs.local>
- <533963AE.30405@monstr.eu>
-Reply-To: monstr@monstr.eu
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v6 00/11] reserved-memory regions/CMA in devicetree, again
+Date: Mon, 31 Mar 2014 06:52:04 -0700
+Message-ID: <CACxGe6snm_D=X0cm3OYkX6gLhpKcu120mikuLX8_vVkNxdrhmA@mail.gmail.com>
+References: <1393594976-16728-1-git-send-email-m.szyprowski@samsung.com> <CACxGe6vbEMgZf6LvpHqsW353rcGVZ9iGFVuir4eP5qreC_eXpQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0880592605911669741=="
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <533963AE.30405@monstr.eu>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: monstr@monstr.eu
-Cc: mark.rutland@arm.com, jussi.kivilinna@iki.fi, linux-doc@vger.kernel.org, artem.bityutskiy@linux.intel.com, linux-mtd@lists.infradead.org, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, arnd@arndb.de, michal.simek@xilinx.com, ezequiel.garcia@free-electrons.com, grant.likely@linaro.org, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, joern@logfs.org, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, robh+dt@kernel.org, acourbot@nvidia.com, pekon@ti.com, kalluripunnaiahchoudary@gmail.com, kpc528@gmail.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, rob@landley.net, galak@codeaurora.org, ivan.khoronzhuk@ti.com, computersforpeace@gmail.com, dwmw2@infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6vbEMgZf6LvpHqsW353rcGVZ9iGFVuir4eP5qreC_eXpQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Catalin Marinas <Catalin.Marinas@arm.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---===============0880592605911669741==
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="dCCb1NKaXCFEPGQLGGSoDEgcdQvE3KB73"
+On Tue, Mar 11, 2014 at 10:37 AM, Grant Likely <grant.likely@linaro.org> wrote:
+> Hi Ben, Russell and Catalin,
+>
+> I've got this series queued up, and I'd like to be ready to merge it
+> in the next merge window. I'm going to queue it up in linux-next. If
+> you have any concerns, please shout and it can be removed. I won't ask
+> Linus to pull it without you giving the okay.
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---dCCb1NKaXCFEPGQLGGSoDEgcdQvE3KB73
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Hi Ben and Russell.
 
-On 03/31/2014 02:46 PM, Michal Simek wrote:
-> On 03/27/2014 07:21 PM, Punnaiah Choudary Kalluri wrote:
->> Add driver for arm pl353 static memory controller nand interface.
->> This controller is used in xilinx zynq soc for interfacing the nand
->> flash memory.
+Any feedback on this? The arch/powerpc and arch/arm patches are a
+single line change each and are easy to revert if they cause problems.
+I'm going to send Linus a pull request tomorrow morning if I don't
+hear anything before then.
+
+g.
+
+> On Fri, Feb 28, 2014 at 1:42 PM, Marek Szyprowski
+> <m.szyprowski@samsung.com> wrote:
+>> Hello again!
 >>
->> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
->> ---
->>  drivers/mtd/nand/Kconfig      |    8 +
->>  drivers/mtd/nand/Makefile     |    1 +
->>  drivers/mtd/nand/pl353_nand.c | 1122 ++++++++++++++++++++++++++++++++=
-+++++++++
->>  3 files changed, 1131 insertions(+), 0 deletions(-)
->>  create mode 100644 drivers/mtd/nand/pl353_nand.c
+>> Here is another update of the support for reserved memory regions in
+>> device tree. I've fixes a few more minor issues pointed by Grant. See
+>> changelog for more details.
 >>
->> diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
->> index 90ff447..31c1d0c 100644
->> --- a/drivers/mtd/nand/Kconfig
->> +++ b/drivers/mtd/nand/Kconfig
->> @@ -510,4 +510,12 @@ config MTD_NAND_XWAY
->>  	  Enables support for NAND Flash chips on Lantiq XWAY SoCs. NAND is =
-attached
->>  	  to the External Bus Unit (EBU).
->> =20
->> +config MTD_NAND_PL353
->> +	tristate "ARM Pl353 NAND flash driver"
->> +	depends on MTD_NAND && ARM
->> +	select PL353_SMC
->=20
-> Here should be probably depends on PL353_SMC.
-> I just found it.
-
-Just to be accurate.
-When MEMORY=3Dn with select PL353_SMC you are not able select PL353_SMC
-and compile it.
-
-Thanks,
-Michal
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---dCCb1NKaXCFEPGQLGGSoDEgcdQvE3KB73
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlM5bJUACgkQykllyylKDCF0qQCcDmHw949CMV8efFU+LmmhfcUv
-qWQAoJJeFYO+0Cc6OIOpYAO7E5Mfwus1
-=1YW9
------END PGP SIGNATURE-----
-
---dCCb1NKaXCFEPGQLGGSoDEgcdQvE3KB73--
-
-
---===============0880592605911669741==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
-
---===============0880592605911669741==--
+>> The initial code for this feature were posted here [1], merged as commit
+>> 9d8eab7af79cb4ce2de5de39f82c455b1f796963 ("drivers: of: add
+>> initialization code for dma reserved memory") and later reverted by
+>> commit 1931ee143b0ab72924944bc06e363d837ba05063. For more information,
+>> see [2]. Finally a new bindings has been proposed [3] and Josh
+>> Cartwright a few days ago prepared some code which implements those
+>> bindings [4]. This finally pushed me again to find some time to finish
+>> this task and review the code. Josh agreed to give me the ownership of
+>> this series to continue preparing them for mainline inclusion.
+>>
+>> For more information please refer to the changlelog and links below.
+>>
+>> [1]: http://lkml.kernel.org/g/1377527959-5080-1-git-send-email-m.szyprowski@samsung.com
+>> [2]: http://lkml.kernel.org/g/1381476448-14548-1-git-send-email-m.szyprowski@samsung.com
+>> [3]: http://lkml.kernel.org/g/20131030134702.19B57C402A0@trevor.secretlab.ca
+>> [4]: http://thread.gmane.org/gmane.linux.documentation/19579
+>>
+>> Changelog:
+>>
+>> v6:
+>> - removed the need for "#memory-region-cells" property
+>> - fixed compilation issues on some systems
+>> - some other minor code cleanups
+>>
+>> v5: https://lkml.org/lkml/2014/2/21/147
+>> - sliced main patch into several smaller patches on Grant's request
+>> - fixed coding style issues pointed by Grant
+>> - use node->phandle value directly instead of parsing properties manually
+>>
+>> v4: https://lkml.org/lkml/2014/2/20/150
+>> - dynamic allocations are processed after all static reservations has been
+>>   done
+>> - moved code for handling static reservations to drivers/of/fdt.c
+>> - removed node matching by string comparison, now phandle values are used
+>>   directly
+>> - moved code for DMA and CMA handling directly to
+>>   drivers/base/dma-{coherent,contiguous}.c
+>> - added checks for proper #size-cells, #address-cells, ranges properties
+>>   in /reserved-memory node
+>> - even more code cleanup
+>> - added init code for ARM64 and PowerPC
+>>
+>> v3: http://article.gmane.org/gmane.linux.documentation/20169/
+>> - refactored memory reservation code, created common code to parse reg, size,
+>>   align, alloc-ranges properties
+>> - added support for multiple tuples in 'reg' property
+>> - memory is reserved regardless of presence of the driver for its compatible
+>> - prepared arch specific hooks for memory reservation (defaults use memblock
+>>   calls)
+>> - removed node matching by string during device initialization
+>> - CMA init code: added checks for required region alignment
+>> - more code cleanup here and there
+>>
+>> v2: http://thread.gmane.org/gmane.linux.documentation/19870/
+>> - removed copying of the node name
+>> - split shared-dma-pool handling into separate files (one for CMA and one
+>>   for dma_declare_coherent based implementations) for making the code easier
+>>   to understand
+>> - added support for AMBA devices, changed prototypes to use struct decice
+>>   instead of struct platform_device
+>> - renamed some functions to better match other names used in drivers/of/
+>> - restructured the rest of the code a bit for better readability
+>> - added 'reusable' property to exmaple linux,cma node in documentation
+>> - exclusive dma (dma_coherent) is used for only handling 'shared-dma-pool'
+>>   regions without 'reusable' property and CMA is used only for handling
+>>   'shared-dma-pool' regions with 'reusable' property.
+>>
+>> v1: http://thread.gmane.org/gmane.linux.documentation/19579
+>> - initial version prepared by Josh Cartwright
+>>
+>> Summary:
+>>
+>> Grant Likely (1):
+>>   of: document bindings for reserved-memory nodes
+>>
+>> Marek Szyprowski (10):
+>>   drivers: of: add initialization code for static reserved memory
+>>   drivers: of: add initialization code for dynamic reserved memory
+>>   drivers: of: add support for custom reserved memory drivers
+>>   drivers: of: add automated assignment of reserved regions to client
+>>     devices
+>>   drivers: of: initialize and assign reserved memory to newly created
+>>     devices
+>>   drivers: dma-coherent: add initialization from device tree
+>>   drivers: dma-contiguous: add initialization from device tree
+>>   arm: add support for reserved memory defined by device tree
+>>   arm64: add support for reserved memory defined by device tree
+>>   powerpc: add support for reserved memory defined by device tree
+>>
+>>  .../bindings/reserved-memory/reserved-memory.txt   |  136 ++++++++++
+>>  arch/arm/Kconfig                                   |    1 +
+>>  arch/arm/mm/init.c                                 |    2 +
+>>  arch/arm64/Kconfig                                 |    1 +
+>>  arch/arm64/mm/init.c                               |    1 +
+>>  arch/powerpc/Kconfig                               |    1 +
+>>  arch/powerpc/kernel/prom.c                         |    3 +
+>>  drivers/base/dma-coherent.c                        |   40 +++
+>>  drivers/base/dma-contiguous.c                      |  129 +++++++--
+>>  drivers/of/Kconfig                                 |    6 +
+>>  drivers/of/Makefile                                |    1 +
+>>  drivers/of/fdt.c                                   |  140 ++++++++++
+>>  drivers/of/of_reserved_mem.c                       |  287 ++++++++++++++++++++
+>>  drivers/of/platform.c                              |    7 +
+>>  include/asm-generic/vmlinux.lds.h                  |   11 +
+>>  include/linux/of_fdt.h                             |    3 +
+>>  include/linux/of_reserved_mem.h                    |   60 ++++
+>>  17 files changed, 807 insertions(+), 22 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+>>  create mode 100644 drivers/of/of_reserved_mem.c
+>>  create mode 100644 include/linux/of_reserved_mem.h
+>>
+>> --
+>> 1.7.9.5
+>>
