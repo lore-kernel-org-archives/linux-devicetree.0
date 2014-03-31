@@ -1,74 +1,88 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: sun7i/sun6i: irqchip: Disable NMI
- before registering the handler
-Date: Mon, 31 Mar 2014 13:06:31 +0200
-Message-ID: <20140331110631.GF26751@lukather>
-References: <1395939759-11135-1-git-send-email-carlo@caione.org>
- <1395939759-11135-3-git-send-email-carlo@caione.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC PATCH v2 2/2] clk: Add handling of clk parent and rate
+ assigned from DT
+Date: Mon, 31 Mar 2014 13:39:52 +0200
+Message-ID: <53395408.9020709@samsung.com>
+References: <1393870533-20845-1-git-send-email-s.nawrocki@samsung.com>
+ <1393870975-21020-1-git-send-email-s.nawrocki@samsung.com>
+ <5331664E.2050008@samsung.com> <20140325225446.5762.15937@quantum>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="p8PhoBjPxaQXD0vg"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBC424WMQKGQECPJR2SY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1395939759-11135-3-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20140325225446.5762.15937@quantum>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Mike,
 
---p8PhoBjPxaQXD0vg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 25/03/14 23:54, Mike Turquette wrote:
+> Quoting Sylwester Nawrocki (2014-03-25 04:19:42)
+>> > On 03/03/14 19:22, Sylwester Nawrocki wrote:
+[...]
+>>> > > diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt 
+>>> > > b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+>>> > > index 7c52c29..eb8d547 100644
+>>> > > --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+>>> > > +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+>>> > > @@ -115,3 +115,26 @@ clock signal, and a UART.
+>>> > >    ("pll" and "pll-switched").
+>>> > >  * The UART has its baud clock connected the external oscillator and its
+>>> > >    register clock connected to the PLL clock (the "pll-switched" signal)
+>>> > > +
+>>> > > +==Assigned clock parents and rates==
+>>> > > +
+>>> > > +Some platforms require static configuration of (parts of) the clock controller
+>>> > > +often determined by the board design. Such a configuration can be specified in
+>>> > > +a clock consumer node through clock-parents and clock-rates DT properties.
+>>> > > +The former should contain list of parent clocks in form of phandle and clock
+>>> > > +specifier pairs, the latter the list of assigned clock frequency values
+>>> > > +(one cell each).
+>>> > > +
+>>> > > +    uart@a000 {
+>>> > > +        compatible = "fsl,imx-uart";
+>>> > > +        reg = <0xa000 0x1000>;
+>>> > > +        ...
+>>> > > +        clocks = <&clkcon 0>, <&clkcon 3>;
+>>> > > +        clock-names = "baud", "mux";
+>>> > > +
+>>> > > +        clock-parents = <0>, <&pll 1>;
+>> > 
+>> > I have some doubts here, i.e. the order in which clocks are being 
+>> > configured may be important in some cases. Should the binding then be
+>> > specifying that the clocks will be configured in a sequence exactly 
+>> > as listed in the clock-parents property ?
+>
+> That's a good point, and I think we should re-examine the role of a DT
+> binding for this purpose. From my limited experience with DT, it seems
+> to be really bad at anything involving sequencing. It doesn't give us
+> function pointers/callbacks in the way that the old board files used to.
+>
+> So I think the binding you proposed is still a good idea, but only for
+> the very simple case. If your platform has some detailed integration
+> requirements that have corner cases like you describe below, then this
+> DT binding might not be a good place to put the info.
+> 
+> A platform that provides its own pm runtime backend could neatly manage
+> this by having a call to pm_runtime_get deal with these integration
+> details such that the driver does not have to be aware of them. (caveat:
+> that assumes in the example below that the only thing you want to do is
+> set up your clocks once and then never touch them again)
 
-On Thu, Mar 27, 2014 at 06:02:39PM +0100, Carlo Caione wrote:
-> From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->=20
-> It is advisable to disable the NMI before registering the IRQ handler as
-> registering the IRQ handler unmasks the IRQ on the GIC, so if U-Boot has
-> left the NMI enabled and the NMI pin is active we will immediately get
-> an interrupt before any driver has claimed the downstream interrupt of
-> the NMI.
->=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+This sounds reasonable, my impression was also that devicetree might be 
+not the best place to put such a sequencing information.
 
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+We would just provide a one-time configuration data, without an indication 
+of how the configuration should be performed when there are multiple 
+clocks listed. As an usual DT practice the order of configuration wouldn't
+be defined by the binding.
 
-Thanks!
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---p8PhoBjPxaQXD0vg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTOUw3AAoJEBx+YmzsjxAgvMUQAJzAORBD0p7bgWS+b4aRbS97
-DWAoh+J1TGRDCCYfHbir6K4GuGHWVqNHwdAr24q3zxWr1hYNpmisBo5eFdbMaYYh
-p3v0ciBVVOV1JMSrP7FQvqlbLeM8kRtIBUnVWjdkkuZudSx9AQxW4I2am+Uq9wi3
-FJqvZL8cq4TZdSkTrK2c068Ebf0vQDGMuRxKEIT8rph4r+hFTEzvpJxwPaZw/M9B
-2U9ktGrGQ7Be+cQYCDaLDkL47NKDSvjVucM1q15xqRuEo9yNNdcjD5gSpA9SMNik
-qnKC1nhm+Ln6tnPkRnYKrph4w+UP3I39s10XgabNEPmgueBzJ7xsFsqavU8gxi2y
-/XhkzsiM9Pu5ss1r3DCmoBD9XU36NPma2RJaFzb56+mOqk0iwXJIwU968WX50AYd
-kUJr0xUahYS4ZjtXFeNB3UwCDpzI3lDGFo3EloggLHrdcDtu6VAYH8idqKeVuDCl
-zYCVbQu7K1JEwWsp2ciaMoNMRXoAYn2hyUJIVRcplOiGGOf5nEjJvRQp3RCzxxQv
-5HMp4pcWMp43FF8gcT+H9a/Caw+9cV1Lt7LS6htIbnZIs+4sk/ajOAV2S8CFTWI0
-ZvoOUxfdBmClzq29HXc3H8MuLS7SdtfetVPeQirOqPOzaZ/2i6wU9iS954mQQn9t
-L3v2cq8Fbvm1GygUWN/E
-=CxKk
------END PGP SIGNATURE-----
-
---p8PhoBjPxaQXD0vg--
+--
+Regards,
+Sylwester
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
