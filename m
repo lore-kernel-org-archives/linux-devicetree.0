@@ -1,60 +1,38 @@
 From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v2 1/3] Documentation: Add documentation for the APM X-Gene SoC RTC DTS binding
-Date: Mon, 31 Mar 2014 11:36:08 -0600
-Message-ID: <1396287370-1011-2-git-send-email-lho@apm.com>
-References: <1396287370-1011-1-git-send-email-lho@apm.com>
+Subject: [PATCH v2 0/3] rtc: Add APM X-Gene SoC RTC driver
+Date: Mon, 31 Mar 2014 11:36:07 -0600
+Message-ID: <1396287370-1011-1-git-send-email-lho@apm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396287370-1011-1-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
 Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation for the APM X-Gene SoC RTC DTS binding.
+This patch adds support for the APM X-Gene SoC RTC driver.
+
+v2
+* Change function xgene_rtc_read_time to return rtc_valid_tm(tm) instead 0
+
+v1
+* Initial version
 
 Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
 Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 ---
- .../devicetree/bindings/rtc/xgene-rtc.txt          |   28 ++++++++++++++++++++
- 1 files changed, 28 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/xgene-rtc.txt
+Loc Ho (3):
+  Documentation: Add documentation for the APM X-Gene SoC RTC DTS
+    binding
+  rtc: Add APM X-Gene SoC RTC driver
+  arm64: Add APM X-Gene SoC RTC DTS entry
 
-diff --git a/Documentation/devicetree/bindings/rtc/xgene-rtc.txt b/Documentation/devicetree/bindings/rtc/xgene-rtc.txt
-new file mode 100644
-index 0000000..fd195c3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/xgene-rtc.txt
-@@ -0,0 +1,28 @@
-+* APM X-Gene Real Time Clock
-+
-+RTC controller for the APM X-Gene Real Time Clock
-+
-+Required properties:
-+- compatible : Should be "apm,xgene-rtc"
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+- interrupts: IRQ line for the RTC.
-+- #clock-cells: Should be 1.
-+- clocks: Reference to the clock entry.
-+
-+Example:
-+
-+rtcclk: rtcclk {
-+	compatible = "fixed-clock";
-+	#clock-cells = <1>;
-+	clock-frequency = <100000000>;
-+	clock-output-names = "rtcclk";
-+};
-+
-+rtc: rtc@10510000 {
-+	compatible = "apm,xgene-rtc";
-+	reg = <0x0 0x10510000 0x0 0x400>;
-+	interrupts = <0x0 0x46 0x4>;
-+	#clock-cells = <1>;
-+	clocks = <&rtcclk 0>;
-+};
--- 
-1.5.5
+ .../devicetree/bindings/rtc/xgene-rtc.txt          |   28 ++
+ arch/arm64/boot/dts/apm-storm.dtsi                 |   21 ++
+ drivers/rtc/Kconfig                                |    9 +
+ drivers/rtc/Makefile                               |    1 +
+ drivers/rtc/rtc-xgene.c                            |  278 ++++++++++++++++++++
+ 5 files changed, 337 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/xgene-rtc.txt
+ create mode 100644 drivers/rtc/rtc-xgene.c
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
