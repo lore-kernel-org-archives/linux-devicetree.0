@@ -1,234 +1,100 @@
 From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 2/7] ARM: SMP: generic SMP spin-table method
- routines
-Date: Mon, 31 Mar 2014 16:21:17 +0100
-Message-ID: <20140331152117.GH6551@e106331-lin.cambridge.arm.com>
-References: <1396041180-29897-1-git-send-email-elder@linaro.org>
- <1396041180-29897-3-git-send-email-elder@linaro.org>
+Subject: Re: [PATCH v3 2/2] NFC: pn544_i2c: Add DTS Documentation
+Date: Mon, 31 Mar 2014 16:25:50 +0100
+Message-ID: <20140331152550.GA15064@e106331-lin.cambridge.arm.com>
+References: <6ec915ed416745248c5ed4aa22dfe0e6@AMXPR04MB136.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1396041180-29897-3-git-send-email-elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <6ec915ed416745248c5ed4aa22dfe0e6-fjMGVQzTDdguRZvghep3ngfhPeD8jYilXA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "shiraz.hashim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <shiraz.hashim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org" <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Clement Perrochaud <clement.perrochaud-3arQi8VN3Tc@public.gmane.org>
+Cc: "linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org" <linux-nfc-y27Ovi1pjclAfugRpC6u6w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alex,
+On Mon, Mar 31, 2014 at 01:22:24PM +0100, Clement Perrochaud wrote:
+> Describe the properties used by the PN544 NFC controller driver.
+>=20
+> Signed-off-by: Cl=C3=A9ment Perrochaud <clement.perrochaud-3arQi8VN3Tc@public.gmane.org>
+> ---
+>  .../devicetree/bindings/net/nfc/pn544.txt          | 32 ++++++++++++=
+++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/nfc/pn544.t=
+xt
+>=20
+> diff --git a/Documentation/devicetree/bindings/net/nfc/pn544.txt b/Do=
+cumentation/devicetree/bindings/net/nfc/pn544.txt
+> new file mode 100644
+> index 0000000..2017ad5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/nfc/pn544.txt
+> @@ -0,0 +1,32 @@
+> +* NXP Semiconductors PN544 NFC Controller
+> +
+> +Required properties:
+> +- compatible: Should be "nxp,pn544_i2c".
 
-On Fri, Mar 28, 2014 at 09:12:55PM +0000, Alex Elder wrote:
-> Implement a centralized version of the spin table (a.k.a. "holding
-> pen") method of secondary CPU initialization.  This is the first
-> step in removing a number of duplicate implementations of this code.
-> 
-> The eventual goal is to allow "enable-method" properties in device
-> tree nodes for CPUs to select and use this common code.  As such,
-> some of the names are selected to match the names used in the SMP
-> spin-table code for ARM64.
+s/_/-/ in compatible strings and property names, please.
 
-Given that there is a fundamental difference to the spin-table protocol
-in use on arm64 (in that here we are required to poke an arbitrary
-interrupt controller to send an SGI rather than just issuing a SEV), I
-would prefer that this had a name other than "spin-table" to
-disambiguate the two protocols.
+> +- clock-frequency: I=C2=B2C work frequency.
+> +- reg: address on the bus
+> +- irq: Input GPIO pin used for interrupt requests from the controlle=
+r
 
-> 
-> Note:
-> Most implementations examine only the bottom 4 bits of the MPIDR in
-> order to determine a CPU's id.  This version looks at the bottom 24
-> bits instead, based on MPIDR_HWID_BITMASK.  If using only 4 bits is
-> a requirement for most of the platforms that might use it I'll
-> switch this use 4 bits instead.
+As this is an interrupt from the point of view of the device, I would
+prefer this described as an interrupt (using the standard interrupts
+property), with the GPIO controller described as an interrupt
+controller.
 
-Given that we require people to describe all of the MPIDR Aff* fields in
-the DT, and can update any board files as necessary, is this a problem?
+> +- en: Output GPIO pin used for enabling/disabling the PN544
 
-IMO Using all the Aff bits is preferable.
+enable-gpios?
+
+> +- fw:Output GPIO pin used to enter firmware download mode
+
+firmware-gpios?
 
 Cheers,
 Mark.
 
-> 
-> Signed-off-by: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm/include/asm/smp.h |    5 +++
->  arch/arm/kernel/head.S     |   33 +++++++++++++++++++
->  arch/arm/kernel/smp.c      |   77 ++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 115 insertions(+)
-> 
-> diff --git a/arch/arm/include/asm/smp.h b/arch/arm/include/asm/smp.h
-> index 22a3b9b..83064d1 100644
-> --- a/arch/arm/include/asm/smp.h
-> +++ b/arch/arm/include/asm/smp.h
-> @@ -75,6 +75,11 @@ struct secondary_data {
->  extern struct secondary_data secondary_data;
->  extern volatile int pen_release;
->  
-> +extern volatile u32 secondary_holding_pen_release;
-> +extern void secondary_holding_pen(void);
-> +extern int smp_boot_secondary(unsigned int cpu, struct task_struct *idle);
-> +extern void smp_secondary_init(unsigned int cpu);
 > +
->  extern int __cpu_disable(void);
->  
->  extern void __cpu_die(unsigned int cpu);
-> diff --git a/arch/arm/kernel/head.S b/arch/arm/kernel/head.S
-> index f5f381d..3340f94 100644
-> --- a/arch/arm/kernel/head.S
-> +++ b/arch/arm/kernel/head.S
-> @@ -22,6 +22,7 @@
->  #include <asm/memory.h>
->  #include <asm/thread_info.h>
->  #include <asm/pgtable.h>
-> +#include <asm/cputype.h>
->  
->  #if defined(CONFIG_DEBUG_LL) && !defined(CONFIG_DEBUG_SEMIHOSTING)
->  #include CONFIG_DEBUG_LL_INCLUDE
-> @@ -402,6 +403,38 @@ __secondary_data:
->  	.long	.
->  	.long	secondary_data
->  	.long	__secondary_switched
+> +Optional SoC Specific Properties:
+> +- pinctrl-names: Contains only one value - "default".
+> +- pintctrl-0: Specifies the pin control groups used for this control=
+ler.
 > +
+> +Example (for ARM-based BeagleBone with PN544 on I2C2):
 > +
-> +	/*
-> +	 * Secondary cores spin in this "holding pen" until they are
-> +	 * signaled to proceed by jumping to secondary_startup
-> +	 * (above).  A core knows to proceed when it finds that the
-> +	 * value of the secondary_holding_pen_release global matches
-> +	 * its (hardware) CPU ID.  The secondary core acknowledges
-> +	 * it has begun executing by writing an invalid value (-1)
-> +	 * back into secondary_holding_pen_release (in
-> +	 * smp_operations->smp_secondary_init).
-> +	 */
-> +ENTRY(secondary_holding_pen)
-> + ARM_BE8(setend	be)
-> +	mrc	p15, 0, r0, c0, c0, 5	@ Get MPIDR and extract CPU id from it
-> +	and	r0, r0, #MPIDR_HWID_BITMASK
-> +	adr	r4, 1f			@ Get secondary_holding_pen_release
-> +	ldmia	r4, {r5, r6}		@ and compute its physical address
-> +	sub	r4, r4, r5
-> +	add	r6, r6, r4
-> +pen:	ldr	r7, [r6]		@ while secondary_holding_pen_release
-> +	cmp	r7, r0			@ doesn't hold our CPU id, spin
-> +	bne	pen
-> +	/*
-> +	 * At this point we have been released from the holding pen;
-> +	 * secondary_stack now contains the SVC stack for this core.
-> +	 */
-> +	b	secondary_startup
-> +ENDPROC(secondary_holding_pen)
-> +	.align
-> +1:	.long	.
-> +	.long	secondary_holding_pen_release
->  #endif /* defined(CONFIG_SMP) */
->  
->  
-> diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
-> index b7b4c86..e18151a 100644
-> --- a/arch/arm/kernel/smp.c
-> +++ b/arch/arm/kernel/smp.c
-> @@ -59,6 +59,8 @@ struct secondary_data secondary_data;
->   * boot "holding pen"
->   */
->  volatile int pen_release = -1;
-> +volatile u32 secondary_holding_pen_release = -1;
-> +static DEFINE_RAW_SPINLOCK(boot_lock);
->  
->  enum ipi_msg_type {
->  	IPI_WAKEUP,
-> @@ -386,6 +388,81 @@ asmlinkage void secondary_start_kernel(void)
->  	cpu_startup_entry(CPUHP_ONLINE);
->  }
->  
-> +static void write_pen_release(int val)
-> +{
-> +	secondary_holding_pen_release = val;
-> +	smp_wmb();
-> +	sync_cache_w(&secondary_holding_pen_release);
-> +}
+> +&i2c2 {
 > +
-> +/*
-> + * This is a smp_operations->smp_boot_secondary function, called by
-> + * boot_secondary() to signal a secondary core spinning in
-> + * secondary_holding_pen() that it should proceed.  The current
-> + * (boot) core writes the secondary's (hardware) CPU ID into
-> + * secondary_holding_pen_release.  The secondary core signals it has
-> + * started running by rewriting an invalid value (-1) back
-> + * into secondary_holding_pen_release.
-> + */
-> +int smp_boot_secondary(unsigned int cpu, struct task_struct *idle)
-> +{
-> +	unsigned long timeout;
+> +	status =3D "okay";
 > +
-> +	/*
-> +	 * The secondary core will wait for this lock after
-> +	 * signaling it has started.  That way we know it won't
-> +	 * proceed until we've recognized the acknowledgement.
-> +	 */
-> +	raw_spin_lock(&boot_lock);
+> +    pn544: pn544@28 {
 > +
-> +	/*
-> +	 * Release the secondary core from its holding pen by
-> +	 * writing its CPU ID into secondary_holding_pen_release.
-> +	 */
-> +	write_pen_release(cpu_logical_map(cpu));
+> +        compatible =3D "nxp,pn544_i2c";
 > +
-> +	/*
-> +	 * Send the secondary CPU a soft interrupt, thereby causing
-> +	 * it to jump to its secondary entry point.
-> +	 */
-> +	arch_send_wakeup_ipi_mask(cpumask_of(cpu));
+> +        reg =3D <0x28>;
+> +        clock-frequency =3D <400000>;
 > +
-> +	/* Give it some time to start running. */
-> +	timeout = jiffies + (1 * HZ);
-> +	while (time_before(jiffies, timeout)) {
-> +		smp_rmb();
-> +		if (secondary_holding_pen_release == -1)
-> +			break;
-> +
-> +		udelay(10);
-> +	}
-> +
-> +	/*
-> +	 * We now know that the secondary core is running (or it
-> +	 * timed out).  Release the lock so it can proceed.
-> +	 */
-> +	raw_spin_unlock(&boot_lock);
-> +
-> +	return secondary_holding_pen_release == -1 ? 0 : -ENOSYS;
-> +}
-> +
-> +/*
-> + * This is a smp_operations->secondary_init function, called by
-> + * secondary_start_kernel() on a newly-booted secondary cpu to do
-> + * some initialization activity.  All we need to do is write
-> + * secondary_holding_pen_release with an invalid value to signal
-> + * we've started executing.  We synchronize with the boot core by
-> + * waiting to acquire the boot lock before continuing.
-> + */
-> +void smp_secondary_init(unsigned int cpu)
-> +{
-> +	/* Let the primary processor know we're out of the pen. */
-> +	write_pen_release(-1);
-> +
-> +	raw_spin_lock(&boot_lock);
-> +	raw_spin_unlock(&boot_lock);
-> +}
-> +
->  void __init smp_cpus_done(unsigned int max_cpus)
->  {
->  	printk(KERN_INFO "SMP: Total of %d processors activated.\n",
-> -- 
-> 1.7.9.5
-> 
+> +        irq  =3D <&gpio1 17 GPIO_ACTIVE_HIGH>;
+> +        en =3D <&gpio3 21 GPIO_ACTIVE_HIGH>;
+> +        fw =3D <&gpio3 19 GPIO_ACTIVE_HIGH>;
+> +    };
+> +};
+> --=20
+> 1.9.0
+>=20
 > --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> To unsubscribe from this list: send the line "unsubscribe devicetree"=
+ in
 > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+>=20
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
