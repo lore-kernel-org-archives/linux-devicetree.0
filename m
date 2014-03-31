@@ -1,54 +1,58 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Subject: Re: [PATCH 2/7] gpio: rcar: Add optional functional clock to bindings
-Date: Mon, 31 Mar 2014 11:55:52 +0200
-Message-ID: <CAMuHMdWmpM1GEWfXeaisY470c9dCDc+0BTAot242=TLHGt7W8Q@mail.gmail.com>
-References: <1395953262-4290-1-git-send-email-geert@linux-m68k.org>
-	<1395953262-4290-3-git-send-email-geert@linux-m68k.org>
-	<1522709.FsOoKumPXz@avalon>
+Date: Mon, 31 Mar 2014 12:15:03 +0200
+Message-ID: <1573661.AM7Sxv0bAK@avalon>
+References: <1395953262-4290-1-git-send-email-geert@linux-m68k.org> <1522709.FsOoKumPXz@avalon> <CAMuHMdWmpM1GEWfXeaisY470c9dCDc+0BTAot242=TLHGt7W8Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1522709.FsOoKumPXz@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdWmpM1GEWfXeaisY470c9dCDc+0BTAot242=TLHGt7W8Q@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
 Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hi Geert,
 
-On Fri, Mar 28, 2014 at 5:53 PM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->> --- a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
->> +++ b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
->> @@ -21,6 +21,10 @@ Required Properties:
->>      GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
->>    - gpio-ranges: Range of pins managed by the GPIO controller.
->>
->> +Optional properties:
->> +
->> +  - clocks: Must contain a reference to the functional clock.
->> +
->
-> I would make the property mandatory. Obviously the driver needs to consider it
-> as optional in order not to break the DT ABI, but the specification should
-> make it mandatory in order to ensure that all future implementations will
-> specify the clock.
+On Monday 31 March 2014 11:55:52 Geert Uytterhoeven wrote:
+> On Fri, Mar 28, 2014 at 5:53 PM, Laurent Pinchart wrote:
+> >> --- a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+> >> +++ b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+> >> 
+> >> @@ -21,6 +21,10 @@ Required Properties:
+> >>      GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
+> >>    - gpio-ranges: Range of pins managed by the GPIO controller.
+> >> 
+> >> +Optional properties:
+> >> +
+> >> +  - clocks: Must contain a reference to the functional clock.
+> >> +
+> > 
+> > I would make the property mandatory. Obviously the driver needs to
+> > consider it as optional in order not to break the DT ABI, but the
+> > specification should make it mandatory in order to ensure that all future
+> > implementations will specify the clock.
+> 
+> I think it has to stay optional: unless I misinterpreted the datasheet,
+> r8a7778 doesn't have MSTP bits for the GPIO modules. I guess it's the same
+> for other R-Car Gen1 like r8a7779. So it looks like the bits were added in
+> R-Car Gen2.
 
-I think it has to stay optional: unless I misinterpreted the datasheet, r8a7778
-doesn't have MSTP bits for the GPIO modules. I guess it's the same for
-other R-Car Gen1 like r8a7779. So it looks like the bits were added in
-R-Car Gen2.
+Good point. It might also be that older SoCs have MSTP bits for the GPIO cores 
+but don't document them. Anyway, we have no information, so we can't specify a 
+clock.
 
-Hence I'll just add ", if present", unless the Best Practice is to put such
-properties under "Required properties" or "Recommended properties"?
+> Hence I'll just add ", if present", unless the Best Practice is to put such
+> properties under "Required properties" or "Recommended properties"?
 
-Gr{oetje,eeting}s,
+I'm fine with keeping in under "Optional Properties". I would phrase it as 
+"Must contain a reference to the functional clock. The property is mandatory 
+if the hardware implements a controllable functional clock for the GPIO 
+instance." (or something similar).
 
-                        Geert
+-- 
+Regards,
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Laurent Pinchart
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
