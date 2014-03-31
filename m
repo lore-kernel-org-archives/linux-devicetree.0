@@ -1,63 +1,89 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC] dt: bindings: add bindings for Broadcom bcm43xx sdio
- devices
-Date: Mon, 31 Mar 2014 17:10:42 +0100
-Message-ID: <20140331161042.GW2269@sirena.org.uk>
-References: <1392059868-8782-1-git-send-email-arend@broadcom.com>
- <52FC8CB3.4090305@gmail.com>
- <52FCB571.4020904@broadcom.com>
- <52FCBC1D.7050501@samsung.com>
- <20140213162249.GT28112@sirena.org.uk>
- <CAPDyKFpU=nQAgfjMm6KNRAEKwChAx_SxFMC-pLbq8yis2mgB=Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Y88ZgXPnK3pWvLGs"
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH RFC v4 0/2] clk: Support for DT assigned clock parents and rates
+Date: Mon, 31 Mar 2014 18:41:54 +0200
+Message-ID: <1396284116-19178-1-git-send-email-s.nawrocki@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFpU=nQAgfjMm6KNRAEKwChAx_SxFMC-pLbq8yis2mgB=Q@mail.gmail.com>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This patch set adds a DT binding documentation for new 'clock-parents'
+and 'clock-rates' DT properties and a helper function to parse them.
+The helper is now being called from within the driver core, similarly
+as it is done for the pins configuration binding to a device.
 
---Y88ZgXPnK3pWvLGs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Patch 1/2 adds a variant of of_clk_get() function which accepts name of
+a DT property containing list of phandle + clock specifier pairs, as
+opposed to hard coded "clocks" property name in of_clk_get().
 
-On Mon, Mar 31, 2014 at 10:24:00AM +0200, Ulf Hansson wrote:
+Patch 2/2 actually adds the code searching for related DT properties
+at device node and performing re-parenting and/or clock frequency
+setting as specified.
 
-> Using a gpio regulator would simplify here, since the driver don't
-> need specific "SDIO hacks" but can use the mmc_regulator_get_supply()
-> API, which calculates the OCR mask, based upon the regulator's
-> supported voltages.
+I didn't add sorting of clocks depending on parentship relation when
+setting the clock rates, it could be added in next iteration if it's
+decided it's required.
 
-If that makes life easier the driver could also just instantiate a fixed
-regulator itself rather than requiring that one be put in the DT?
+Thank you for all the review comments.
 
---Y88ZgXPnK3pWvLGs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Changes since v3:
+ - improved documentation of the DT binding,
+ - fixed build errors for !CONFIG_OF, the parsing helpers are only
+   compiled in if CONFIG_OF is set.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Changes since v2:
+ - code reordering to ensure there is no build errors, the clock
+   configuration code moved to a separate file,
+ - introduced an 'assigned-clocks' DT node which is supposed to contain
+   clocks, clock-parents, clock-rates properties and be child node
+   a clock provider node, and a code parsing it called from of_clk_init();
+   It's for clocks which are not directly connected to consumer devices.
+   An alternative would be to list such assigned clocks in 'clocks'
+   property, along with "proper" parent clocks, but then there would
+   be phandles in clocks property of a node pointing to itself and it
+   would require proper handling in of_clock_init().
+   I actually tried it but it looked a bit ugly and chose this time to
+   use an extra subnode.
 
-iQIcBAEBAgAGBQJTOZN/AAoJELSic+t+oim9AkYP/RqfpNxK6cszxBAoBuMaYWbA
-XjO5rkRzW3reFjkLAm4H1eEMuUG2kGq1hKtEzB5Ou1AWhSSkq15jpD+rI+OdG3js
-R6ZWjkgpebGp250+1oxvgRnGSdbb807OXDINjBkZ3BPHcSIhdVhr9PGnXH+rH2io
-YQjZ6A5nFBNAXYkVyIKQSKXb6JWZJHyM1j+7/7xrTmCUoLESNnhgKmPkF98xD2lc
-hMyzdSLIMO8DRLF04O7BJQ+nUZ4Zi6DZYDzbOV9zShkLPF8qbXfthLE3pGLCvX4t
-larAApYd87tBkfsfzhZLxBjeI7cjhlK9SrrQv5WgqioU9Y4EynfiKHSEX7s8fyOM
-yDOtX3FbK7AT/Teysvyc5ePiJx55fUOz6Lr2BBQN16r9CuYBKtglZKaoynqPBZBH
-TA9/NBYG13xuLWot5b9CcXsGeJ4VVmH7nAmzW+0NDLJE5s2phlVEnrcEwTc3Pj1J
-8OkWgZ/GWuGlqNBILHH21nuAtUhZ83g3d7bBU2j1tH354JlkAK4/dtInYgpS94uQ
-Z9wMwY/MS5KdeDxAcZAJVehu45ICPNXybBQ3idC1TRbWJzuZ9GtdpAdtho8ekfdh
-lwNbowQ7xjER/u1+sTirEvTrMCe3kTrq9F3L+8RFgqMnJr1/lhyQRSbkDPBMBJM6
-e+SZc6T9J4Hjqjehxpxm
-=2aUg
------END PGP SIGNATURE-----
+Changes since v1:
+ - updated DT binding documentation,
+ - dropped the platform bus notifier, the clock setup routine is now
+   being called directly from the driver core before a driver probe() call;
+   this has an advantage such as all bus types are handled and any errors
+   are propagated, so that, for instance a driver probe() can be deferred
+   also when resources specified by clock-parents/clock-rates properties
+   are not yet available; an alternative would be to let drivers call
+   of_clk_device_setup() directly,
+ - dropped the patch adding a macro definition for maximum DT property
+   name length for now.
 
---Y88ZgXPnK3pWvLGs--
+Open issues:
+ - handling of errors from of_clk_get_by_property() could be improved,
+   currently ENOENT is returned by this function not only for a null
+   entry.
+
+This series has been tested on ARM, on Exynos4412 Trats2 board.
+
+Sylwester Nawrocki (2):
+  clk: Add function parsing arbitrary clock list DT property
+  clk: Add handling of clk parent and rate assigned from DT
+
+ .../devicetree/bindings/clock/clock-bindings.txt   |   42 ++++++++++
+ drivers/base/dd.c                                  |    7 ++
+ drivers/clk/Makefile                               |    3 +
+ drivers/clk/clk-conf.c                             |   87 ++++++++++++++++++++
+ drivers/clk/clk.c                                  |   10 ++-
+ drivers/clk/clkdev.c                               |   25 +++++-
+ include/linux/clk.h                                |    7 ++
+ include/linux/clk/clk-conf.h                       |   19 +++++
+ 8 files changed, 195 insertions(+), 5 deletions(-)
+ create mode 100644 drivers/clk/clk-conf.c
+ create mode 100644 include/linux/clk/clk-conf.h
+
+--
+1.7.9.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
