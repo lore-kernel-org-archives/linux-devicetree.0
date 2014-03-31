@@ -1,100 +1,58 @@
 From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] NFC: pn544_i2c: Add DTS Documentation
-Date: Mon, 31 Mar 2014 16:25:50 +0100
-Message-ID: <20140331152550.GA15064@e106331-lin.cambridge.arm.com>
-References: <6ec915ed416745248c5ed4aa22dfe0e6@AMXPR04MB136.eurprd04.prod.outlook.com>
+Subject: Re: [PATCH 4/6] mfd: arizona: Update DT binding to support LDO1
+ init_data
+Date: Mon, 31 Mar 2014 16:30:41 +0100
+Message-ID: <20140331153041.GB15064@e106331-lin.cambridge.arm.com>
+References: <1396267187-30580-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1396267187-30580-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <6ec915ed416745248c5ed4aa22dfe0e6-fjMGVQzTDdguRZvghep3ngfhPeD8jYilXA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+In-Reply-To: <1396267187-30580-5-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Clement Perrochaud <clement.perrochaud-3arQi8VN3Tc@public.gmane.org>
-Cc: "linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org" <linux-nfc-y27Ovi1pjclAfugRpC6u6w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 31, 2014 at 01:22:24PM +0100, Clement Perrochaud wrote:
-> Describe the properties used by the PN544 NFC controller driver.
->=20
-> Signed-off-by: Cl=C3=A9ment Perrochaud <clement.perrochaud-3arQi8VN3Tc@public.gmane.org>
+On Mon, Mar 31, 2014 at 12:59:45PM +0100, Charles Keepax wrote:
+> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 > ---
->  .../devicetree/bindings/net/nfc/pn544.txt          | 32 ++++++++++++=
-++++++++++
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/nfc/pn544.t=
-xt
->=20
-> diff --git a/Documentation/devicetree/bindings/net/nfc/pn544.txt b/Do=
-cumentation/devicetree/bindings/net/nfc/pn544.txt
-> new file mode 100644
-> index 0000000..2017ad5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/nfc/pn544.txt
-> @@ -0,0 +1,32 @@
-> +* NXP Semiconductors PN544 NFC Controller
-> +
-> +Required properties:
-> +- compatible: Should be "nxp,pn544_i2c".
+>  Documentation/devicetree/bindings/mfd/arizona.txt |    7 +++++++
+>  1 files changed, 7 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+> index 0e295c9..c019e73 100644
+> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
+> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+> @@ -40,6 +40,13 @@ Optional properties:
+>      the chip default will be used.  If present exactly five values must
+>      be specified.
+>  
+> +  - ldo1 : Initial data for the LDO1 regulator, as covered in
+> +    Documentation/devicetree/bindings/regulator/regulator.txt
 
-s/_/-/ in compatible strings and property names, please.
+This seems to be a node rather than a property, judging from the code.
+Please describe properties separately from sub-nodes and their
+properties. That also covers the micvdd addition in patch 6.
 
-> +- clock-frequency: I=C2=B2C work frequency.
-> +- reg: address on the bus
-> +- irq: Input GPIO pin used for interrupt requests from the controlle=
-r
-
-As this is an interrupt from the point of view of the device, I would
-prefer this described as an interrupt (using the standard interrupts
-property), with the GPIO controller described as an interrupt
-controller.
-
-> +- en: Output GPIO pin used for enabling/disabling the PN544
-
-enable-gpios?
-
-> +- fw:Output GPIO pin used to enter firmware download mode
-
-firmware-gpios?
-
-Cheers,
+Thanks,
 Mark.
 
 > +
-> +Optional SoC Specific Properties:
-> +- pinctrl-names: Contains only one value - "default".
-> +- pintctrl-0: Specifies the pin control groups used for this control=
-ler.
+> +  - DCVDD-supply : Power supply, only needs to be specified if DCVDD is being
+> +    externally supplied. As covered in
+> +    Documentation/devicetree/bindings/regulator/regulator.txt
 > +
-> +Example (for ARM-based BeagleBone with PN544 on I2C2):
-> +
-> +&i2c2 {
-> +
-> +	status =3D "okay";
-> +
-> +    pn544: pn544@28 {
-> +
-> +        compatible =3D "nxp,pn544_i2c";
-> +
-> +        reg =3D <0x28>;
-> +        clock-frequency =3D <400000>;
-> +
-> +        irq  =3D <&gpio1 17 GPIO_ACTIVE_HIGH>;
-> +        en =3D <&gpio3 21 GPIO_ACTIVE_HIGH>;
-> +        fw =3D <&gpio3 19 GPIO_ACTIVE_HIGH>;
-> +    };
-> +};
-> --=20
-> 1.9.0
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree"=
- in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
+>  Example:
+>  
+>  codec: wm5102@1a {
+> -- 
+> 1.7.2.5
+> 
+> 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
