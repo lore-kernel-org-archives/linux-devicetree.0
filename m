@@ -1,68 +1,89 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] ARM: topology: Make it clear that all CPUs need to be
- described
-Date: Mon, 31 Mar 2014 10:30:47 +0100
-Message-ID: <20140331093046.GA2245@e102568-lin.cambridge.arm.com>
-References: <1396016467-23257-1-git-send-email-broonie@kernel.org>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH 2/8] PCI: designware: split Exynos and i.MX bindings
+Date: Mon, 31 Mar 2014 11:36:49 +0200
+Message-ID: <201403311136.49280.marex@denx.de>
+References: <1396025579-14344-1-git-send-email-l.stach@pengutronix.de> <201403301936.49692.marex@denx.de> <1396258109.5533.11.camel@weser.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396016467-23257-1-git-send-email-broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1396258109.5533.11.camel@weser.hi.pengutronix.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Sean Cross <xobs@kosagi.com>, Richard Zhu <r65037@freescale.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Shawn Guo <shawn.guo@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Tim Harvey <tharvey@gateworks.com>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 28, 2014 at 02:21:07PM +0000, Mark Brown wrote:
-> From: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Monday, March 31, 2014 at 11:28:29 AM, Lucas Stach wrote:
+> Am Sonntag, den 30.03.2014, 19:36 +0200 schrieb Marek Vasut:
+> > On Friday, March 28, 2014 at 05:52:53 PM, Lucas Stach wrote:
+> > > The glue around the core designware IP is significantly
+> > > different between the Exynos and i.MX implementation,
+> > > which is reflected in the DT bindings.
+> > > 
+> > > This changes the i.MX6 binding to reuse as much as
+> > > possible from the common designware binding and
+> > > removes old cruft.
+> > > 
+> > > I removed the optional GPIOs with the following reasoning:
+> > > - disable-gpio: endpoint specific GPIO, not currently
+> > > 
+> > >   wired up in any code. Should be handled by the PCI device
+> > >   driver, not the host controller driver.
+> > > 
+> > > - wake-up-gpio: same as above.
+> > > - power-on-gpio: No user in any upstream DT. This should
+> > > 
+> > >   be handled by a regulator which shouldn't be controlled
+> > >   by the host driver, but rather by the PCI device driver.
+> > 
+> > This power-on-gpio should indeed be handled by the regulator, but the
+> > regulator cannot be handled by the PCIe device driver. This
+> > power-on-gpio must be operated on per-slot basis if I understand it
+> > correctly, so it cannot be controlled by the host controller driver
+> > either.
+> > 
+> > The reason why this cannot be controlled by the device driver is that if
+> > the device is powered down, it won't be detected on the PCIe bus, thus
+> > it cannot enable the regulator which will power up the slot the device
+> > is sitting in.
 > 
-> The ARMv8 code will reject topologies that omit some CPUs (and it's not
-> clear that it's ever sensible to do so). Update the binding document to
-> make this clear.
-> 
-> Since we're reformatting the text also fix incorrect grammar in the
-> final "Any other configuration..." section by removing "consider".
+> So we are on the same page with regard to a GPIO being the wrong
+> abstraction for this, I think.
 
-I think the commit log should be reworded, we update the bindings
-because they are incomplete, not because ARMv8 code decided to reject
-topologies that omit CPUs.
+Yes.
 
-Patch is ok with me, thanks:
+> For the regulator part I would argue that PCI is a bus that is built
+> around the ability to inspect the bus and detect devices on the bus at
+> probe time, so any regulator that's powering a PCI device should be
+> boot-on.
 
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+This thing about regulator being boot-on should really be documented.
 
-> 
-> Signed-off-by: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/topology.txt | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/arm/topology.txt
-> index 4aa20e7..1061faf 100644
-> --- a/Documentation/devicetree/bindings/arm/topology.txt
-> +++ b/Documentation/devicetree/bindings/arm/topology.txt
-> @@ -75,9 +75,10 @@ The cpu-map node can only contain three types of child nodes:
->  
->  whose bindings are described in paragraph 3.
->  
-> -The nodes describing the CPU topology (cluster/core/thread) can only be
-> -defined within the cpu-map node.
-> -Any other configuration is consider invalid and therefore must be ignored.
-> +The nodes describing the CPU topology (cluster/core/thread) can only
-> +be defined within the cpu-map node and every core/thread in the system
-> +must be defined within the topology.  Any other configuration is
-> +invalid and therefore must be ignored.
->  
->  ===========================================
->  2.1 - cpu-map child nodes naming convention
-> -- 
-> 1.9.1
-> 
-> 
+Moreover, I think it's a waste of power to keep the devices ON on boot even if 
+the PCIe bus was not started (yet). The bus might not be started at all and the 
+regulators would still be ON, which would be quite a waste.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Only after the device driver is loaded it should be able to fetch the
+> regulator to power down/up the device as it wishes. In the x86 world
+> this is AFAIK done using ACPI methods.
+> 
+> I think the host controller driver has no business in controlling the
+> device power, more so as there possibly could be a lot of devices on the
+> bus even with a single host lane.
+
+The power should be controlled per-slot, but I don't know how to model that. 
+Note that there might be a PCIe device with a switch popped into a single slot, 
+which makes things much more interesting. In such case, you need to power up the 
+slot and neither of the downstream devices should control the power regulator of 
+that slot.
+
+> > btw. am I blind or do I just not see devicetree-discuss on CC ?
+> 
+> Hm, there is devicetree@vger.kernel.org on CC, which MAINTAINER says is
+> the right list for this stuff.
+
+OK, I was blind, sorry.
+
+Best regards,
+Marek Vasut
