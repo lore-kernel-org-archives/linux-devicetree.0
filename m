@@ -1,55 +1,42 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/7] gpio: rcar: Add optional functional clock to bindings
-Date: Mon, 31 Mar 2014 12:15:03 +0200
-Message-ID: <1573661.AM7Sxv0bAK@avalon>
-References: <1395953262-4290-1-git-send-email-geert@linux-m68k.org> <1522709.FsOoKumPXz@avalon> <CAMuHMdWmpM1GEWfXeaisY470c9dCDc+0BTAot242=TLHGt7W8Q@mail.gmail.com>
+Subject: Re: [PATCH 2/5] iommu/ipmmu-vmsa: Add device tree bindings documentation
+Date: Mon, 31 Mar 2014 12:18:04 +0200
+Message-ID: <2135036.3YMfppXtgo@avalon>
+References: <1396049781-12941-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1396049781-12941-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <CAMuHMdUF6MmH_eK=SbG-q6Kai_q+5ufm-Vsd8z-bYKGj7Z-Spw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWmpM1GEWfXeaisY470c9dCDc+0BTAot242=TLHGt7W8Q@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUF6MmH_eK=SbG-q6Kai_q+5ufm-Vsd8z-bYKGj7Z-Spw@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
 To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, iommu@lists.linux-foundation.org, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Will Deacon <will.deacon@arm.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi Geert,
 
-On Monday 31 March 2014 11:55:52 Geert Uytterhoeven wrote:
-> On Fri, Mar 28, 2014 at 5:53 PM, Laurent Pinchart wrote:
-> >> --- a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-> >> +++ b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-> >> 
-> >> @@ -21,6 +21,10 @@ Required Properties:
-> >>      GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
-> >>    - gpio-ranges: Range of pins managed by the GPIO controller.
-> >> 
-> >> +Optional properties:
-> >> +
-> >> +  - clocks: Must contain a reference to the functional clock.
-> >> +
-> > 
-> > I would make the property mandatory. Obviously the driver needs to
-> > consider it as optional in order not to break the DT ABI, but the
-> > specification should make it mandatory in order to ensure that all future
-> > implementations will specify the clock.
+On Monday 31 March 2014 10:39:48 Geert Uytterhoeven wrote:
+> On Sat, Mar 29, 2014 at 12:36 AM, Laurent Pinchart wrote:
+> > +Required Properties:
+> > +
+> > +  - compatible: Must contain "renesas,ipmmu-vmsa".
+> > +  - reg: Base address and size of the IPMMU registers.
+> > +  - interrupts: Specifier for the MMU fault interrupt.
 > 
-> I think it has to stay optional: unless I misinterpreted the datasheet,
-> r8a7778 doesn't have MSTP bits for the GPIO modules. I guess it's the same
-> for other R-Car Gen1 like r8a7779. So it looks like the bits were added in
-> R-Car Gen2.
+> Does it make sense to have a property for the number of micro-TLBs,
+> or is this handled transparently?
+> 
+> E.g. ipmmu_mx has 24 micro-TLBs, but ipmmu_mp has 30.
 
-Good point. It might also be that older SoCs have MSTP bits for the GPIO cores 
-but don't document them. Anyway, we have no information, so we can't specify a 
-clock.
+The IPMMU driver doesn't need to know the number of micro-TLBs, so we should 
+be fine without specifying it in DT. The micro-TLBs are configured when a bus 
+master device is attached or detached, and at that point the device provides 
+its micro-TLB number.
 
-> Hence I'll just add ", if present", unless the Best Practice is to put such
-> properties under "Required properties" or "Recommended properties"?
-
-I'm fine with keeping in under "Optional Properties". I would phrase it as 
-"Must contain a reference to the functional clock. The property is mandatory 
-if the hardware implements a controllable functional clock for the GPIO 
-instance." (or something similar).
+The only reason I can foresee why the number of micro-TLBs would be useful is 
+to iterate over micro-TLBs when the driver probes the device to disable them 
+all. A mask would probably be better than a number in that case, and I think 
+we can always add that later if we find a need for it.
 
 -- 
 Regards,
