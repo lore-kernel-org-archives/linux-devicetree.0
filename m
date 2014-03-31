@@ -1,101 +1,103 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 04/20] mmc: mmci: Move signal directions bits into DT
- include file
-Date: Mon, 31 Mar 2014 15:56:18 +0200
-Message-ID: <CAPDyKFrey71W5Q3hvsPfvApDNLFjYKLK-pPRpAnFXw5+_HVh=g@mail.gmail.com>
-References: <1395404057-27835-1-git-send-email-ulf.hansson@linaro.org>
-	<1395404057-27835-5-git-send-email-ulf.hansson@linaro.org>
-	<CACRpkdZSr380FVHkx3uOMFKxKYsExoL-1WYhxVpirFMVc+T3Yw@mail.gmail.com>
-	<CAPDyKFq=PUcFkT901W15KXThzS4cKMJvZToW3JDc3SkXck9VHA@mail.gmail.com>
-	<CACRpkdaNY1jM7xN00DEnOMdDxSf==3AqdrkRSXX3dghStvA4hw@mail.gmail.com>
+From: maxime.ripard@free-electrons.com
+Subject: Re: [PATCH 2/4] pwm: sunxi: document OF bindings
+Date: Mon, 31 Mar 2014 16:46:17 +0200
+Message-ID: <20140331144617.GH26751@lukather>
+References: <1396267649-18009-1-git-send-email-alexandre.belloni@free-electrons.com>
+ <1396267649-18009-3-git-send-email-alexandre.belloni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdaNY1jM7xN00DEnOMdDxSf==3AqdrkRSXX3dghStvA4hw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="rCwQ2Y43eQY6RBgR"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1396267649-18009-3-git-send-email-alexandre.belloni@free-electrons.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 28 March 2014 22:03, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Mar 26, 2014 at 12:05 AM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On 25 March 2014 22:22, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>> On Fri, Mar 21, 2014 at 1:14 PM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>
->>>> These bits is currently used from platform data, but will be needed
->>>> from DT as well, so let's make them available.
->>>>
->>>> Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> (...)
->>>> +#define MCI_ST_DATA31DIREN     (1 << 5)
->>>> +#define MCI_ST_FBCLKEN         (1 << 7)
->>>> +#define MCI_ST_DATA74DIREN     (1 << 8)
->>>
->>> Isn't MCI_ST_FBCLKEN = feedback clock enable and nothing
->>> to do with directions really?
->>
->> You do have a point here, but then we are about to go into the details. :-)
->>
->> What MCI_ST_FBCLKEN means, is that the internal logic in the primecell
->> can decide whether to use the signal from clockout pin or the
->> feebackclock pin, when its latching incoming signals on the data bus.
->>
->> That said, we for sure need a dt binding for bit as well, since this
->> is not possible to figure out how pins are routed in runtime.
->>
->> Also, I do believe it is very closely related to the other sigdir
->> pins, since it's all about how pins is being routed, even if it's as
->> you say - in this case a matter of signal directions.
->>
->> So, I guess we have two options here; Either move the MCI_ST_FBCLKEN
->> out of the signal-direction binding and invent a separate binding for
->> it, or just keep them as is.
->
-> If they are very closely related I guess that will become very
-> clear when you document it in the requested explicit bindings,
-> so no strong opinion here. I'd probably ACK either version.
->
->>> Maybe we should just have single strings for these
->>> things in the binding instead, like:
->>>
->>> @@ -118,6 +119,10 @@
->>>                         bus-width = <4>;
->>>                         mmc-cap-sd-highspeed;
->>>                         mmc-cap-mmc-highspeed;
->>> +                       st,signal-direction-data2;
->>> +                       st,signal-direction-cmd;
->>> +                       st,signal-direction-data0;
->>> +                       st,feedback-clock-enable;
->>>                         vmmc-supply = <&ab8500_ldo_aux3_reg>;
->>>                         vqmmc-supply = <&vmmci>;
->>>                         pinctrl-names = "default", "sleep";
->>
->> I guess this is an option. To me it just seems a bit silly to have one
->> separate binding for each single bit, but maybe it becomes clearer?
->
-> The idea with device trees is to be very human-readable, so I guess
-> if you have preprocessor macro things |:ing the arguments together
-> to a singular 32bit value it serves the same purpose. Arguably this
-> version is even easier for a human to read though.
->
-> What we should avoid is using magic number assignments to
-> save space (e.g. have magic numbers in the tree rather than
-> readable strings) so I lean toward this, but it's admittedly in a
-> grey area, so again no strong opinion.
 
-Thanks for your advise. I seems like a good idea to move to use
-readable strings instead.
+--rCwQ2Y43eQY6RBgR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-In that way, we also get the clean cut between signal directions and
-the feedback clock pin.
+On Mon, Mar 31, 2014 at 02:07:27PM +0200, Alexandre Belloni wrote:
+> This is the documentation for the Allwinner Socs PWM bindings.
+>=20
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> ---
+> Cc: devicetree@vger.kernel.org
+>  Documentation/devicetree/bindings/pwm/pwm-sunxi.txt | 19 +++++++++++++++=
+++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sunxi.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-sunxi.txt b/Docume=
+ntation/devicetree/bindings/pwm/pwm-sunxi.txt
+> new file mode 100644
+> index 000000000000..e295a50813af
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-sunxi.txt
+> @@ -0,0 +1,19 @@
+> +Allwinner PWM controller
+> +
+> +Required properties:
+> +  - compatible: should be one of:
+> +    - "allwinner,sun4i-pwm"
+> +    - "allwinner,sun7i-pwm"
+> +  - reg: physical base address and length of the controller's registers
 
-Kind regards
-Ulf Hansson
+You also seem to need a clocks property.
 
->
-> Yours,
-> Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +  - #pwm-cells: should be 3. See pwm.txt in this directory for a descrip=
+tion of
+> +    the cells format.
+> +
+> +Example:
+> +
+> +	pwm: pwm@01c20e00 {
+> +		compatible =3D "allwinner,sun7i-pwm";
+
+Like Emilio pointed out, the compatible pattern is <family>-<soc>-pwm,
+so: sun4i-a10-pwm and sun7i-a20-pwm.
+
+> +		reg =3D <0x01c20e00 0xc>;
+> +		clocks =3D <&osc24M>;
+> +		#pwm-cells =3D <3>;
+> +		status =3D "disabled";
+> +	};
+> --=20
+> 1.8.3.2
+>=20
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--rCwQ2Y43eQY6RBgR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTOX+5AAoJEBx+YmzsjxAgcMwQAL9jdwAz3kZSdoJjR9ZAPwkE
+xh/ngt3FZiQm88wsmHhn/bB/Sk+9QYqMkSEIoHdZjlm8HdN9CxUYIoE2El1hAbnJ
+n4KntRzJ2Q5LoT5gLJgAhvjCg3boUmqlwnjg7zPBWErw2YQXVoVndCHUgiAwAiG4
+i6F6X2jeFxfAYIvuaRyjrDcIw85Af9hc1aIO1eTtp0yyExSNJnrZ6DNAQoyLdahk
+gMI+Sm1/iOhohazagWJ6xN8d4y5Hr4bg8jBBKM1jAB8WdJlcVnIc9FnJxUiYOAdO
+QxNsFyP7l2lQXRRs5+xPTrMbCibVGQC1IcWjKBe7IJVmkzeoJ1ZTiDeECL31f3Gy
+x5Ep6+XnRun0GvjhYKjvmNF0Tn1TCo9FO8DDzSuszRsgWt3Ks5fswCelFKFAg2P5
+FLuW1CRKiZ9Mx/VSsPnKQg5vZ5uCGwdQ9MDFgWKcfUoQfD6+YluOzJJ7yiC56Kcg
+8bp8m+B8uGi/wx6z3lqczZBkwVmSVPZw6w3lDpBdbup6gbERy/9FL8F7UoqMyIo9
+3++Q0oK+a77tYhSfmSzSnmtzNy4jV96Xu6C55U6vAVO2rrQsZxX99vI0+ZR42lpP
+Ras8WQGLgtAUvQsM6e2B+eAIrPC6JTLO4Hyhatf/z1mpcbZDYVOIuk5pmhsUMuja
+G/4y7fP7/D6ScMGxFgTW
+=cKF0
+-----END PGP SIGNATURE-----
+
+--rCwQ2Y43eQY6RBgR--
