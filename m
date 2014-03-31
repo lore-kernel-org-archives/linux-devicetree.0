@@ -1,89 +1,145 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH 2/8] PCI: designware: split Exynos and i.MX bindings
-Date: Mon, 31 Mar 2014 11:36:49 +0200
-Message-ID: <201403311136.49280.marex@denx.de>
-References: <1396025579-14344-1-git-send-email-l.stach@pengutronix.de> <201403301936.49692.marex@denx.de> <1396258109.5533.11.camel@weser.hi.pengutronix.de>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH/RFC 4/8] media: Add registration helpers for V4L2 flash
+ sub-devices
+Date: Mon, 31 Mar 2014 12:37:21 +0300
+Message-ID: <20140331093721.GC4522@valkosipuli.retiisi.org.uk>
+References: <1395327070-20215-1-git-send-email-j.anaszewski@samsung.com>
+ <1395327070-20215-5-git-send-email-j.anaszewski@samsung.com>
+ <20140324000834.GC2054@valkosipuli.retiisi.org.uk>
+ <533595A9.8000904@samsung.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1396258109.5533.11.camel@weser.hi.pengutronix.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Sean Cross <xobs@kosagi.com>, Richard Zhu <r65037@freescale.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Shawn Guo <shawn.guo@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Tim Harvey <tharvey@gateworks.com>, kernel@pengutronix.de
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <533595A9.8000904@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, s.nawrocki@samsung.com, a.hajda@samsung.com, kyungmin.park@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Monday, March 31, 2014 at 11:28:29 AM, Lucas Stach wrote:
-> Am Sonntag, den 30.03.2014, 19:36 +0200 schrieb Marek Vasut:
-> > On Friday, March 28, 2014 at 05:52:53 PM, Lucas Stach wrote:
-> > > The glue around the core designware IP is significantly
-> > > different between the Exynos and i.MX implementation,
-> > > which is reflected in the DT bindings.
-> > > 
-> > > This changes the i.MX6 binding to reuse as much as
-> > > possible from the common designware binding and
-> > > removes old cruft.
-> > > 
-> > > I removed the optional GPIOs with the following reasoning:
-> > > - disable-gpio: endpoint specific GPIO, not currently
-> > > 
-> > >   wired up in any code. Should be handled by the PCI device
-> > >   driver, not the host controller driver.
-> > > 
-> > > - wake-up-gpio: same as above.
-> > > - power-on-gpio: No user in any upstream DT. This should
-> > > 
-> > >   be handled by a regulator which shouldn't be controlled
-> > >   by the host driver, but rather by the PCI device driver.
-> > 
-> > This power-on-gpio should indeed be handled by the regulator, but the
-> > regulator cannot be handled by the PCIe device driver. This
-> > power-on-gpio must be operated on per-slot basis if I understand it
-> > correctly, so it cannot be controlled by the host controller driver
-> > either.
-> > 
-> > The reason why this cannot be controlled by the device driver is that if
-> > the device is powered down, it won't be detected on the PCIe bus, thus
-> > it cannot enable the regulator which will power up the slot the device
-> > is sitting in.
+Hi jacek,
+
+On Fri, Mar 28, 2014 at 04:30:49PM +0100, Jacek Anaszewski wrote:
+...
+> >>+static int v4l2_flash_set_intensity(struct v4l2_flash *flash,
+> >>+				    unsigned int intensity)
+> >>+{
+> >>+	struct led_classdev *led_cdev = flash->led_cdev;
+> >>+	unsigned int fault;
+> >>+	int ret;
+> >>+
+> >>+	ret = led_get_flash_fault(led_cdev, &fault);
+> >>+	if (ret < 0 || fault)
+> >>+		return -EINVAL;
+> >
+> >Is it meaningful to check the faults here?
+> >
+> >The existing flash controller drivers mostly do not. The responsibility is
+> >left to the user --- something the user should probably do after the strobe
+> >has expectedly finished. This isn't particularly very well documented in the
+> >spec, though.
 > 
-> So we are on the same page with regard to a GPIO being the wrong
-> abstraction for this, I think.
+> I was influenced by the documentation which says that sometimes strobing
+> the flash may not be possible due to faults. But I agree that checking
+> the faults should be user's responsibility.
 
-Yes.
+What that means is that the presence of the fault *on the chip* may limit
+the device's willingness to actually strobe. The driver does not need to
+enforce it; the chip does.
 
-> For the regulator part I would argue that PCI is a bus that is built
-> around the ability to inspect the bus and detect devices on the bus at
-> probe time, so any regulator that's powering a PCI device should be
-> boot-on.
-
-This thing about regulator being boot-on should really be documented.
-
-Moreover, I think it's a waste of power to keep the devices ON on boot even if 
-the PCIe bus was not started (yet). The bus might not be started at all and the 
-regulators would still be ON, which would be quite a waste.
-
-> Only after the device driver is loaded it should be able to fetch the
-> regulator to power down/up the device as it wishes. In the x86 world
-> this is AFAIK done using ACPI methods.
+> >Also, the presence of every fault does not prevent using the flash.
+> >
+> >>+	led_set_brightness(led_cdev, intensity);
+> >
+> >Where do you convert between the LED framework brightness and the value used
+> >by the V4L2 controls?
 > 
-> I think the host controller driver has no business in controlling the
-> device power, more so as there possibly could be a lot of devices on the
-> bus even with a single host lane.
+> I think that there is no need for conversion. AFAIK the LED subsystem
+> doesn't specify units of the brightness. It specifies LED_FULL enum
+> value but not all LED drivers stick to it. Moreover it limits
+> brightness resolution to 256 levels.
 
-The power should be controlled per-slot, but I don't know how to model that. 
-Note that there might be a PCIe device with a switch popped into a single slot, 
-which makes things much more interesting. In such case, you need to power up the 
-slot and neither of the downstream devices should control the power regulator of 
-that slot.
+The V4L2 control's unit is mA. Does this mean that the unit in the LED API
+also becomes mA then?
 
-> > btw. am I blind or do I just not see devicetree-discuss on CC ?
+> >>+
+> >>+	return ret;
+> >>+}
+> >>+
+> >>+static int v4l2_flash_s_ctrl(struct v4l2_ctrl *c)
+> >>+{
+> >>+	struct v4l2_flash *flash = ctrl_to_flash(c);
+> >>+	struct led_classdev *led_cdev = flash->led_cdev;
+> >>+	int ret = 0;
+> >>+
+> >>+	switch (c->id) {
+> >>+	case V4L2_CID_FLASH_LED_MODE:
+> >>+		switch (c->val) {
+> >>+		case V4L2_FLASH_LED_MODE_NONE:
+> >>+			/* clear flash mode on releae */
+> >
+> >It's not uncommon for the user to leave the mode to something else than none
+> >when the user goes away. Could there be other ways to mediate access?
 > 
-> Hm, there is devicetree@vger.kernel.org on CC, which MAINTAINER says is
-> the right list for this stuff.
+> IMHO user space application should release the mode on exit as any other
+> resource it acquires. However if it is terminated unexpectedly
 
-OK, I was blind, sorry.
+The application's resources are released by the kernel when the application
+exists but V4L2 control's don't behave that way.
 
-Best regards,
-Marek Vasut
+> the sysfs will remain locked forever. Maybe a dedicated sysfs
+> attribute should be provided in the LED subsystem for controlling the
+> sysfs lock state? It would have to be always available for the user
+> though.
+
+How about using the information on open file handles to the flash sub-device
+instead? If someone holds a file handle there, sure then the device is in
+use by that program? The advantage compared to the control value is that the
+file handles are released when the application quits whether or not any
+cleanup is performed by the application. I don't immediately see other
+reasons to keep a file handle to a V4L2 flash sub-device open, except, well,
+to find about its capabilities.
+
+> >>+static int v4l2_flash_init_controls(struct v4l2_flash *flash,
+> >>+				struct v4l2_flash_ctrl_config *config)
+> >>+
+> >>+{
+> >>+	unsigned int mask;
+> >>+	struct v4l2_ctrl *ctrl;
+> >>+	struct v4l2_ctrl_config *ctrl_cfg;
+> >>+	bool has_flash = config->flags & V4L2_FLASH_CFG_LED_FLASH;
+> >>+	bool has_torch = config->flags & V4L2_FLASH_CFG_LED_TORCH;
+> >>+	int ret, num_ctrls;
+> >>+
+> >>+	if (!has_flash && !has_torch)
+> >>+		return -EINVAL;
+> >>+
+> >>+	num_ctrls = has_flash ? 8 : 2;
+> >>+	if (config->flags & V4L2_FLASH_CFG_FAULTS_MASK)
+> >>+		++num_ctrls;
+> >>+
+> >>+	v4l2_ctrl_handler_init(&flash->hdl, num_ctrls);
+> >>+
+> >>+	mask = 1 << V4L2_FLASH_LED_MODE_NONE;
+> >>+	if (has_flash)
+> >>+		mask |= 1 << V4L2_FLASH_LED_MODE_FLASH;
+> >>+	if (has_torch)
+> >>+		mask |= 1 << V4L2_FLASH_LED_MODE_TORCH;
+> >
+> >I don't expect to see this on LED flash devices. :-)
+> 
+> I don't get your point here. Could you be more specific? :)
+> Torch only mode is supported by V4L2_CID_FLASH_LED_MODE control,
+> isn't it?
+
+Have you seen a LED flash controller which does not implement the torch
+mode?
+
+I have no objections to keeping the check though, but there were more
+important things missing at the time.
+
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
