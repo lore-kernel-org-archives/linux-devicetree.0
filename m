@@ -1,7 +1,7 @@
 From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH V2 15/19] ARM: ux500: Remove redundant board file for mmci platform data
-Date: Mon, 31 Mar 2014 17:18:16 +0200
-Message-ID: <1396279100-2920-16-git-send-email-ulf.hansson@linaro.org>
+Subject: [PATCH V2 19/19] mmc: mmci: Enforce max frequency configuration through DT
+Date: Mon, 31 Mar 2014 17:18:20 +0200
+Message-ID: <1396279100-2920-20-git-send-email-ulf.hansson@linaro.org>
 References: <1396279100-2920-1-git-send-email-ulf.hansson@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1396279100-2920-1-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -10,238 +10,56 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell 
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Since all platform data has been transfered to DT, we don't need the
-container for the mmci platform data anymore. Remove the file and the
-corresponding references to it's data.
+Remove the option to provide a maximum frequency as platform data,
+enforce it through DT.
 
 Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/mach-ux500/Makefile           |    3 +-
- arch/arm/mach-ux500/board-mop500-sdi.c |  166 --------------------------------
- arch/arm/mach-ux500/board-mop500.h     |    5 -
- arch/arm/mach-ux500/cpu-db8500.c       |    4 -
- 4 files changed, 1 insertion(+), 177 deletions(-)
- delete mode 100644 arch/arm/mach-ux500/board-mop500-sdi.c
+ drivers/mmc/host/mmci.c   |    5 +----
+ include/linux/amba/mmci.h |    4 ----
+ 2 files changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/arch/arm/mach-ux500/Makefile b/arch/arm/mach-ux500/Makefile
-index de544aa..9741de95 100644
---- a/arch/arm/mach-ux500/Makefile
-+++ b/arch/arm/mach-ux500/Makefile
-@@ -5,8 +5,7 @@
- obj-y				:= cpu.o id.o timer.o pm.o
- obj-$(CONFIG_CACHE_L2X0)	+= cache-l2x0.o
- obj-$(CONFIG_UX500_SOC_DB8500)	+= cpu-db8500.o
--obj-$(CONFIG_MACH_MOP500)	+= board-mop500-sdi.o \
--				board-mop500-regulators.o \
-+obj-$(CONFIG_MACH_MOP500)	+= board-mop500-regulators.o \
- 				board-mop500-audio.o
- obj-$(CONFIG_SMP)		+= platsmp.o headsmp.o
- obj-$(CONFIG_HOTPLUG_CPU)	+= hotplug.o
-diff --git a/arch/arm/mach-ux500/board-mop500-sdi.c b/arch/arm/mach-ux500/board-mop500-sdi.c
-deleted file mode 100644
-index fcbf3a1..0000000
---- a/arch/arm/mach-ux500/board-mop500-sdi.c
-+++ /dev/null
-@@ -1,166 +0,0 @@
--/*
-- * Copyright (C) ST-Ericsson SA 2010
-- *
-- * Author: Hanumath Prasad <hanumath.prasad-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
-- * License terms: GNU General Public License (GPL) version 2
-- */
--
--#include <linux/kernel.h>
--#include <linux/gpio.h>
--#include <linux/amba/bus.h>
--#include <linux/amba/mmci.h>
--#include <linux/mmc/host.h>
--#include <linux/platform_device.h>
--#include <linux/platform_data/dma-ste-dma40.h>
--
--#include <asm/mach-types.h>
--
--#include "db8500-regs.h"
--#include "board-mop500.h"
--#include "ste-dma40-db8500.h"
--
--/*
-- * v2 has a new version of this block that need to be forced, the number found
-- * in hardware is incorrect
-- */
--#define U8500_SDI_V2_PERIPHID 0x10480180
--
--/*
-- * SDI 0 (MicroSD slot)
-- */
--
--#ifdef CONFIG_STE_DMA40
--struct stedma40_chan_cfg mop500_sdi0_dma_cfg_rx = {
--	.mode = STEDMA40_MODE_LOGICAL,
--	.dir = DMA_DEV_TO_MEM,
--	.dev_type = DB8500_DMA_DEV29_SD_MM0,
--};
--
--static struct stedma40_chan_cfg mop500_sdi0_dma_cfg_tx = {
--	.mode = STEDMA40_MODE_LOGICAL,
--	.dir = DMA_MEM_TO_DEV,
--	.dev_type = DB8500_DMA_DEV29_SD_MM0,
--};
--#endif
--
--struct mmci_platform_data mop500_sdi0_data = {
--	.f_max		= 100000000,
--	.capabilities	= MMC_CAP_4_BIT_DATA |
--				MMC_CAP_SD_HIGHSPEED |
--				MMC_CAP_MMC_HIGHSPEED |
--				MMC_CAP_ERASE |
--				MMC_CAP_UHS_SDR12 |
--				MMC_CAP_UHS_SDR25,
--	.gpio_wp	= -1,
--	.sigdir		= MCI_ST_FBCLKEN |
--				MCI_ST_CMDDIREN |
--				MCI_ST_DATA0DIREN |
--				MCI_ST_DATA2DIREN,
--#ifdef CONFIG_STE_DMA40
--	.dma_filter	= stedma40_filter,
--	.dma_rx_param	= &mop500_sdi0_dma_cfg_rx,
--	.dma_tx_param	= &mop500_sdi0_dma_cfg_tx,
--#endif
--};
--
--/*
-- * SDI1 (SDIO WLAN)
-- */
--#ifdef CONFIG_STE_DMA40
--static struct stedma40_chan_cfg sdi1_dma_cfg_rx = {
--	.mode = STEDMA40_MODE_LOGICAL,
--	.dir = DMA_DEV_TO_MEM,
--	.dev_type = DB8500_DMA_DEV32_SD_MM1,
--};
--
--static struct stedma40_chan_cfg sdi1_dma_cfg_tx = {
--	.mode = STEDMA40_MODE_LOGICAL,
--	.dir = DMA_MEM_TO_DEV,
--	.dev_type = DB8500_DMA_DEV32_SD_MM1,
--};
--#endif
--
--struct mmci_platform_data mop500_sdi1_data = {
--	.ocr_mask	= MMC_VDD_29_30,
--	.f_max		= 100000000,
--	.capabilities	= MMC_CAP_4_BIT_DATA |
--				MMC_CAP_NONREMOVABLE,
--	.gpio_cd	= -1,
--	.gpio_wp	= -1,
--#ifdef CONFIG_STE_DMA40
--	.dma_filter	= stedma40_filter,
--	.dma_rx_param	= &sdi1_dma_cfg_rx,
--	.dma_tx_param	= &sdi1_dma_cfg_tx,
--#endif
--};
--
--/*
-- * SDI 2 (POP eMMC, not on DB8500ed)
-- */
--
--#ifdef CONFIG_STE_DMA40
--struct stedma40_chan_cfg mop500_sdi2_dma_cfg_rx = {
--	.mode = STEDMA40_MODE_LOGICAL,
--	.dir = DMA_DEV_TO_MEM,
--	.dev_type =  DB8500_DMA_DEV28_SD_MM2,
--};
--
--static struct stedma40_chan_cfg mop500_sdi2_dma_cfg_tx = {
--	.mode = STEDMA40_MODE_LOGICAL,
--	.dir = DMA_MEM_TO_DEV,
--	.dev_type = DB8500_DMA_DEV28_SD_MM2,
--};
--#endif
--
--struct mmci_platform_data mop500_sdi2_data = {
--	.ocr_mask	= MMC_VDD_165_195,
--	.f_max		= 100000000,
--	.capabilities	= MMC_CAP_4_BIT_DATA |
--				MMC_CAP_8_BIT_DATA |
--				MMC_CAP_NONREMOVABLE |
--				MMC_CAP_MMC_HIGHSPEED |
--				MMC_CAP_ERASE |
--				MMC_CAP_CMD23,
--	.gpio_cd	= -1,
--	.gpio_wp	= -1,
--#ifdef CONFIG_STE_DMA40
--	.dma_filter	= stedma40_filter,
--	.dma_rx_param	= &mop500_sdi2_dma_cfg_rx,
--	.dma_tx_param	= &mop500_sdi2_dma_cfg_tx,
--#endif
--};
--
--/*
-- * SDI 4 (on-board eMMC)
-- */
--
--#ifdef CONFIG_STE_DMA40
--struct stedma40_chan_cfg mop500_sdi4_dma_cfg_rx = {
--	.mode = STEDMA40_MODE_LOGICAL,
--	.dir = DMA_DEV_TO_MEM,
--	.dev_type =  DB8500_DMA_DEV42_SD_MM4,
--};
--
--static struct stedma40_chan_cfg mop500_sdi4_dma_cfg_tx = {
--	.mode = STEDMA40_MODE_LOGICAL,
--	.dir = DMA_MEM_TO_DEV,
--	.dev_type = DB8500_DMA_DEV42_SD_MM4,
--};
--#endif
--
--struct mmci_platform_data mop500_sdi4_data = {
--	.f_max		= 100000000,
--	.capabilities	= MMC_CAP_4_BIT_DATA |
--				MMC_CAP_8_BIT_DATA |
--				MMC_CAP_NONREMOVABLE |
--				MMC_CAP_MMC_HIGHSPEED |
--				MMC_CAP_ERASE |
--				MMC_CAP_CMD23,
--	.gpio_cd	= -1,
--	.gpio_wp	= -1,
--#ifdef CONFIG_STE_DMA40
--	.dma_filter	= stedma40_filter,
--	.dma_rx_param	= &mop500_sdi4_dma_cfg_rx,
--	.dma_tx_param	= &mop500_sdi4_dma_cfg_tx,
--#endif
--};
-diff --git a/arch/arm/mach-ux500/board-mop500.h b/arch/arm/mach-ux500/board-mop500.h
-index 32cc0d8..7c7b0ad 100644
---- a/arch/arm/mach-ux500/board-mop500.h
-+++ b/arch/arm/mach-ux500/board-mop500.h
-@@ -8,12 +8,7 @@
- #define __BOARD_MOP500_H
- 
- #include <linux/platform_data/asoc-ux500-msp.h>
--#include <linux/amba/mmci.h>
- 
--extern struct mmci_platform_data mop500_sdi0_data;
--extern struct mmci_platform_data mop500_sdi1_data;
--extern struct mmci_platform_data mop500_sdi2_data;
--extern struct mmci_platform_data mop500_sdi4_data;
- extern struct msp_i2s_platform_data msp0_platform_data;
- extern struct msp_i2s_platform_data msp1_platform_data;
- extern struct msp_i2s_platform_data msp2_platform_data;
-diff --git a/arch/arm/mach-ux500/cpu-db8500.c b/arch/arm/mach-ux500/cpu-db8500.c
-index 8820f60..fa308f0 100644
---- a/arch/arm/mach-ux500/cpu-db8500.c
-+++ b/arch/arm/mach-ux500/cpu-db8500.c
-@@ -146,10 +146,6 @@ static struct of_dev_auxdata u8500_auxdata_lookup[] __initdata = {
- 	/* Requires call-back bindings. */
- 	OF_DEV_AUXDATA("arm,cortex-a9-pmu", 0, "arm-pmu", &db8500_pmu_platdata),
- 	/* Requires DMA bindings. */
--	OF_DEV_AUXDATA("arm,pl18x", 0x80126000, "sdi0",  &mop500_sdi0_data),
--	OF_DEV_AUXDATA("arm,pl18x", 0x80118000, "sdi1",  &mop500_sdi1_data),
--	OF_DEV_AUXDATA("arm,pl18x", 0x80005000, "sdi2",  &mop500_sdi2_data),
--	OF_DEV_AUXDATA("arm,pl18x", 0x80114000, "sdi4",  &mop500_sdi4_data),
- 	OF_DEV_AUXDATA("stericsson,ux500-msp-i2s", 0x80123000,
- 		       "ux500-msp-i2s.0", &msp0_platform_data),
- 	OF_DEV_AUXDATA("stericsson,ux500-msp-i2s", 0x80124000,
+diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+index 5cb5a81..3e4bfec 100644
+--- a/drivers/mmc/host/mmci.c
++++ b/drivers/mmc/host/mmci.c
+@@ -1483,13 +1483,10 @@ static int mmci_probe(struct amba_device *dev,
+ 	 * If no maximum operating frequency is supplied, fall back to use
+ 	 * the module parameter, which has a (low) default value in case it
+ 	 * is not specified. Either value must not exceed the clock rate into
+-	 * the block, of course. Also note that DT takes precedence over
+-	 * platform data.
++	 * the block, of course.
+ 	 */
+ 	if (mmc->f_max)
+ 		mmc->f_max = min(host->mclk, mmc->f_max);
+-	else if (plat->f_max)
+-		mmc->f_max = min(host->mclk, plat->f_max);
+ 	else
+ 		mmc->f_max = min(host->mclk, fmax);
+ 	dev_dbg(mmc_dev(mmc), "clocking block at %u Hz\n", mmc->f_max);
+diff --git a/include/linux/amba/mmci.h b/include/linux/amba/mmci.h
+index bf339ff..8c98113 100644
+--- a/include/linux/amba/mmci.h
++++ b/include/linux/amba/mmci.h
+@@ -9,9 +9,6 @@
+ /**
+  * struct mmci_platform_data - platform configuration for the MMCI
+  * (also known as PL180) block.
+- * @f_max: the maximum operational frequency for this host in this
+- * platform configuration. When this is specified it takes precedence
+- * over the module parameter for the same frequency.
+  * @ocr_mask: available voltages on the 4 pins from the block, this
+  * is ignored if a regulator is used, see the MMC_VDD_* masks in
+  * mmc/host.h
+@@ -28,7 +25,6 @@
+  * @cd_invert: true if the gpio_cd pin value is active low
+  */
+ struct mmci_platform_data {
+-	unsigned int f_max;
+ 	unsigned int ocr_mask;
+ 	int (*ios_handler)(struct device *, struct mmc_ios *);
+ 	unsigned int (*status)(struct device *);
 -- 
 1.7.9.5
 
