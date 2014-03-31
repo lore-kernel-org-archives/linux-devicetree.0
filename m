@@ -1,104 +1,74 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH 2/8] PCI: designware: split Exynos and i.MX bindings
-Date: Mon, 31 Mar 2014 12:52:15 +0200
-Message-ID: <201403311252.16096.marex@denx.de>
-References: <1396025579-14344-1-git-send-email-l.stach@pengutronix.de> <201403311136.49280.marex@denx.de> <1396262281.5533.21.camel@weser.hi.pengutronix.de>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: sun7i/sun6i: dts: Fix IRQ number
+ for sun6i NMI controller
+Date: Mon, 31 Mar 2014 13:02:55 +0200
+Message-ID: <20140331110255.GE26751@lukather>
+References: <1395939759-11135-1-git-send-email-carlo@caione.org>
+ <1395939759-11135-2-git-send-email-carlo@caione.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1396262281.5533.21.camel@weser.hi.pengutronix.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Richard Zhu <r65037@freescale.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-pci@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Jingoo Han <jg1.han@samsung.com>, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Bjorn Helgaas <bhelgaas@google.com>, Sean Cross <xobs@kosagi.com>, Shawn Guo <shawn.guo@linaro.org>, Tim Harvey <tharvey@gateworks.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="FEz7ebHBGB6b2e8X"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBYEX4WMQKGQEQFWCCTY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1395939759-11135-2-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, March 31, 2014 at 12:38:01 PM, Lucas Stach wrote:
-> Am Montag, den 31.03.2014, 11:36 +0200 schrieb Marek Vasut:
-> > On Monday, March 31, 2014 at 11:28:29 AM, Lucas Stach wrote:
-> > > Am Sonntag, den 30.03.2014, 19:36 +0200 schrieb Marek Vasut:
-> > > > On Friday, March 28, 2014 at 05:52:53 PM, Lucas Stach wrote:
-> > > > > The glue around the core designware IP is significantly
-> > > > > different between the Exynos and i.MX implementation,
-> > > > > which is reflected in the DT bindings.
-> > > > > 
-> > > > > This changes the i.MX6 binding to reuse as much as
-> > > > > possible from the common designware binding and
-> > > > > removes old cruft.
-> > > > > 
-> > > > > I removed the optional GPIOs with the following reasoning:
-> > > > > - disable-gpio: endpoint specific GPIO, not currently
-> > > > > 
-> > > > >   wired up in any code. Should be handled by the PCI device
-> > > > >   driver, not the host controller driver.
-> > > > > 
-> > > > > - wake-up-gpio: same as above.
-> > > > > - power-on-gpio: No user in any upstream DT. This should
-> > > > > 
-> > > > >   be handled by a regulator which shouldn't be controlled
-> > > > >   by the host driver, but rather by the PCI device driver.
-> > > > 
-> > > > This power-on-gpio should indeed be handled by the regulator, but the
-> > > > regulator cannot be handled by the PCIe device driver. This
-> > > > power-on-gpio must be operated on per-slot basis if I understand it
-> > > > correctly, so it cannot be controlled by the host controller driver
-> > > > either.
-> > > > 
-> > > > The reason why this cannot be controlled by the device driver is that
-> > > > if the device is powered down, it won't be detected on the PCIe bus,
-> > > > thus it cannot enable the regulator which will power up the slot the
-> > > > device is sitting in.
-> > > 
-> > > So we are on the same page with regard to a GPIO being the wrong
-> > > abstraction for this, I think.
-> > 
-> > Yes.
-> > 
-> > > For the regulator part I would argue that PCI is a bus that is built
-> > > around the ability to inspect the bus and detect devices on the bus at
-> > > probe time, so any regulator that's powering a PCI device should be
-> > > boot-on.
-> > 
-> > This thing about regulator being boot-on should really be documented.
-> > 
-> > Moreover, I think it's a waste of power to keep the devices ON on boot
-> > even if the PCIe bus was not started (yet). The bus might not be started
-> > at all and the regulators would still be ON, which would be quite a
-> > waste.
-> 
-> It's the exact same behavior that you get on x86: all devices are
-> powered after boot, once you loaded a device driver it may choose to
-> turn the device off. I don't think it makes sense to deviate here for
-> the sake of being embedded and special.
-> 
-> > > Only after the device driver is loaded it should be able to fetch the
-> > > regulator to power down/up the device as it wishes. In the x86 world
-> > > this is AFAIK done using ACPI methods.
-> > > 
-> > > I think the host controller driver has no business in controlling the
-> > > device power, more so as there possibly could be a lot of devices on
-> > > the bus even with a single host lane.
-> > 
-> > The power should be controlled per-slot, but I don't know how to model
-> > that. Note that there might be a PCIe device with a switch popped into a
-> > single slot, which makes things much more interesting. In such case, you
-> > need to power up the slot and neither of the downstream devices should
-> > control the power regulator of that slot.
-> 
-> We could just add the regulator to the PCI hierarchy in the DT and
-> handle it similar to IRQs where we just walk up the DT starting from the
-> device until we find the matching IRQ/regulator.
-> 
-> Still for this to work with a regulator shared between several devices,
-> all the device drivers have to be aware of the regulator. Otherwise a
-> single device may choose to power down and erroneously cut power to a
-> sibling device, where the driver hasn't requested the regulator.
-> 
-> In all those scenarios the host controller driver still would not have
-> any business dealing with the regulator. Same situation as with the
-> legacy IRQs, that aren't handled by the host driver, but just routed to
-> the right instance through the DT.
 
-OK, it all makes sense. What I find a bit unfortunate is that we loose the Plug-
-n-Play nature of the PCIe here, but I guess that cannot be helped.
+--FEz7ebHBGB6b2e8X
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Mar 27, 2014 at 06:02:38PM +0100, Carlo Caione wrote:
+> From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>=20
+> The IRQ line used in sun6i-a31.dtsi for the NMI controller is wrong.
+> This causes a IRQ storm since the NMI controller is repeatedly fired.
+> This patch fixes this problem assigning the correct IRQ number to the
+> NMI controller.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--FEz7ebHBGB6b2e8X
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTOUtfAAoJEBx+YmzsjxAg40gP/25swJtxDHRf/LeCuTWm3ZCo
+t4vs5FTcDQIrBR0b696TSesHz82RHFhQtj9XRe6xyg12tNW73vwGsVHClF2n4Fak
+IkwtZ/+ks1ACjxqtwdDijX3uIOfqQndQ5MxavRV/5095zBSn8FQThIhvzRPnqljs
+S6Jt/ODSMvabg2XBoT5AOmxY2AgnkzwpAcKS1xQrZ+Rolwhbv5MXBSWhpjUVfhWK
+nw7v5wX8qCAcoPTeUPDNufZSL/7zZW2jnyFhGFkncJeGl3HffLZF1F9hUnf9EJ7J
+Y7dhKh1ZnOynsR5kV8vdRgY4SjweiZXRpyvWemhKoa8pC9b+A2ScxAVd4Z8o5Bj4
+kIWugg4xOYsh12D8g7IM7MtkpD66ClMgndhhNmcLfOJpYE5aqXwcAB08bwQqUGNx
+gwD2UMKjLxcqbu03hVncXgLNNNpKJM2fXeqSsJ6GjOvQvUsYEJvcrbqxeEgfRbsp
+xVKFG4wrYBIH9lxw9KfLwKHViY3rdwtSnqDQDdETgxk4W5AgQYRbB0dZISxFjwKM
+rwNzlTW5G0FGunq2iYBwwGF9HC2CPOW0r7E0xcDqpFb47p0M10GTw7lg2/A4Vt89
+Uwy6t9OdaAhXAaLUQAwmMB5v0bA9lEpGJFJqjzKU4+r9U4m1AnasintR4u4Lic82
+OptUlV9H/B7CqlNPdU5x
+=uCIR
+-----END PGP SIGNATURE-----
+
+--FEz7ebHBGB6b2e8X--
