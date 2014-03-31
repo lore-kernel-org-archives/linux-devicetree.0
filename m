@@ -1,46 +1,48 @@
-From: Huang Shijie <b32955@freescale.com>
-Subject: Re: [PATCHv3 1/2] mtd: gpmi: make blockmark swapping optional
-Date: Mon, 31 Mar 2014 10:06:59 +0800
-Message-ID: <20140331020657.GA32650@localhost>
-References: <1395235406-13449-1-git-send-email-y>
- <1396002907-17750-1-git-send-email-LW@KARO-electronics.de>
- <1396002907-17750-2-git-send-email-LW@KARO-electronics.de>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [RFC 0/5] of: Automatic console registration cleanups
+Date: Mon, 31 Mar 2014 09:10:15 +0200
+Message-ID: <20140331071014.GN17250@pengutronix.de>
+References: <1396022885-6102-1-git-send-email-grant.likely@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1396002907-17750-2-git-send-email-LW@KARO-electronics.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris BREZILLON <b.brezillon.dev@gmail.com>, linux-doc@vger.kernel.org, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Wei Yongjun <yongjun_wei@trendmicro.com.cn>, linux-mtd@lists.infradead.org, Michael Grzeschik <m.grzeschik@pengutronix.de>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jg1.han@samsung.com>, Shawn Guo <shawn.guo@freescale.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Michael Opdenacker <michael.opdenacker@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Fabio Estevam <fabio.estevam@freescale.com>, Brian Norris <computersforpeace@gmail.c>
+In-Reply-To: <1396022885-6102-1-git-send-email-grant.likely@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: devicetree@vger.kernel.org, christoffer.dall@linaro.org, linux-kernel@vger.kernel.org, olof@lixom.net, benh@kernel.crashing.org, rob.herring@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 28, 2014 at 11:35:06AM +0100, Lothar Wa=DFmann wrote:
-> +  - fsl,no-blockmark-swap: Don't swap the bad block marker from the OOB
-> +                       area with the byte in the data area but rely on t=
-he
-> +                       flash based BBT for identifying bad blocks.
-> +                       NOTE: this is only valid in conjunction with
-> +                             'nand-on-flash-bbt'.
-> +                       WARNING: on i.MX28 blockmark swapping cannot be
-> +                       disabled for the BootROM in the FCB. Thus,
-> +                       partitions written from Linux with this feature
-> +                       turned on may not be accessible by the BootROM
-> +                       code.
+On Fri, Mar 28, 2014 at 09:08:00AM -0700, Grant Likely wrote:
+> Hi all,
+> 
+> This is a series that I've been playing with over the last few days to
+> clean up the selection of default console devices when using the device
+> tree. The device tree defines a way of specifying the console by using a
+> "stdout-path" property in the /chosen node, but very few drivers
+> actually attempt to use that data, and so for most platforms there needs
+> to be a "console=" line in the command line if a serial port is intended
+> to be used as the console.
+> 
+> With this series, if there is a /chosen/stdout-path property, and if
+> that property points to a serial port node, then when the serial driver
+> registers the port, the core uart_add_one_port() function will notice
+> and if no console= argument was provided then add it as a preferred
+> console.
+> 
+> I've not tested this very extensively yet, but I want to get some
+> feedback before I go further.
 
-Thanks for adding this warning.
+I gave it a test on i.MX. It works as expected with both
+linux,stdout-path and stdout-path. Specifying a console on the
+commandline still works and overrides the devicetree setting.
 
-Acked-by: Huang Shijie <b32955@freescale.com>
+Tested-by: Sascha Hauer <s.hauer@pengutronix.de>
 
+Sascha
 
-thanks
-Huang Shijie
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
