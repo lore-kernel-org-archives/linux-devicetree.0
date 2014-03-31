@@ -1,7 +1,7 @@
 From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH 6/6] mfd: arizona: Update DT binding to support MICVDD init_data
-Date: Mon, 31 Mar 2014 12:59:47 +0100
-Message-ID: <1396267187-30580-7-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH 5/6] regulator: arizona-micsupp: Add processing of init_data from device tree
+Date: Mon, 31 Mar 2014 12:59:46 +0100
+Message-ID: <1396267187-30580-6-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 References: <1396267187-30580-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1396267187-30580-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
@@ -12,26 +12,93 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
 ---
- Documentation/devicetree/bindings/mfd/arizona.txt |    6 ++++--
- 1 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/regulator/arizona-micsupp.c |   53 +++++++++++++++++++++++++++++++++++
+ 1 files changed, 53 insertions(+), 0 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-index c019e73..0bf69a9 100644
---- a/Documentation/devicetree/bindings/mfd/arizona.txt
-+++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-@@ -42,9 +42,11 @@ Optional properties:
+diff --git a/drivers/regulator/arizona-micsupp.c b/drivers/regulator/arizona-micsupp.c
+index 6fdd9bf..5225470 100644
+--- a/drivers/regulator/arizona-micsupp.c
++++ b/drivers/regulator/arizona-micsupp.c
+@@ -19,6 +19,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/machine.h>
++#include <linux/regulator/of_regulator.h>
+ #include <linux/gpio.h>
+ #include <linux/slab.h>
+ #include <linux/workqueue.h>
+@@ -195,6 +196,49 @@ static const struct regulator_init_data arizona_micsupp_ext_default = {
+ 	.num_consumer_supplies = 1,
+ };
  
-   - ldo1 : Initial data for the LDO1 regulator, as covered in
-     Documentation/devicetree/bindings/regulator/regulator.txt
-+  - micvdd : Initial data for the MICVDD regulator, as covered in
-+    Documentation/devicetree/bindings/regulator/regulator.txt
++#ifdef CONFIG_OF
++static int arizona_micsupp_of_get_pdata(struct arizona *arizona,
++					struct regulator_config *config)
++{
++	struct arizona_pdata *pdata = &arizona->pdata;
++	struct arizona_micsupp *micsupp = config->driver_data;
++	struct device_node *np;
++	struct regulator_init_data *init_data;
++
++	np = of_get_child_by_name(arizona->dev->of_node, "micvdd");
++
++	if (np) {
++		config->of_node = np;
++
++		init_data = of_get_regulator_init_data(arizona->dev, np);
++
++		if (init_data) {
++			init_data->consumer_supplies = &micsupp->supply;
++			init_data->num_consumer_supplies = 1;
++
++			pdata->micvdd = init_data;
++		}
++	}
++
++	return 0;
++}
++
++static void arizona_micsupp_of_put_pdata(struct regulator_config *config)
++{
++	of_node_put(config->of_node);
++}
++#else
++static inline int arizona_micsupp_of_get_pdata(struct arizona *arizona,
++					       struct regulator_config *config)
++{
++	return 0;
++}
++
++static inline void arizona_micsupp_of_put_pdata(struct regulator_config *config)
++{
++}
++#endif
++
+ static int arizona_micsupp_probe(struct platform_device *pdev)
+ {
+ 	struct arizona *arizona = dev_get_drvdata(pdev->dev.parent);
+@@ -234,6 +278,12 @@ static int arizona_micsupp_probe(struct platform_device *pdev)
+ 	config.driver_data = micsupp;
+ 	config.regmap = arizona->regmap;
  
--  - DCVDD-supply : Power supply, only needs to be specified if DCVDD is being
--    externally supplied. As covered in
-+  - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
-+    they are being externally supplied. As covered in
-     Documentation/devicetree/bindings/regulator/regulator.txt
++	if (!dev_get_platdata(arizona->dev)) {
++		ret = arizona_micsupp_of_get_pdata(arizona, &config);
++		if (ret < 0)
++			return ret;
++	}
++
+ 	if (arizona->pdata.micvdd)
+ 		config.init_data = arizona->pdata.micvdd;
+ 	else
+@@ -253,6 +303,9 @@ static int arizona_micsupp_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
  
- Example:
++	if (!dev_get_platdata(arizona->dev))
++		arizona_micsupp_of_put_pdata(&config);
++
+ 	platform_set_drvdata(pdev, micsupp);
+ 
+ 	return 0;
 -- 
 1.7.2.5
