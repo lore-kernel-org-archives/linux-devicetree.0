@@ -1,7 +1,7 @@
 From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH V2 17/19] mmc: mmci: Enforce mmc capabilities through DT
-Date: Mon, 31 Mar 2014 17:18:18 +0200
-Message-ID: <1396279100-2920-18-git-send-email-ulf.hansson@linaro.org>
+Subject: [PATCH V2 14/19] ARM: ux500: Add a vmmc regulator through DT for the poped eMMC for href
+Date: Mon, 31 Mar 2014 17:18:15 +0200
+Message-ID: <1396279100-2920-15-git-send-email-ulf.hansson@linaro.org>
 References: <1396279100-2920-1-git-send-email-ulf.hansson@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1396279100-2920-1-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -10,51 +10,31 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell 
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Remove the option to provide the flags for mmc capabilities as platform
-data, enforce it through DT.
+Add a node in DT for the proper regulator which means we can move away
+from the mmci platform data which currently holds the corresponding OCR
+mask.
+
+The mmci driver can then calculate the OCR mask based on the voltages
+supported by the regulator, instead of relying on the platform data.
 
 Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/mmc/host/mmci.c   |    2 --
- include/linux/amba/mmci.h |    5 -----
- 2 files changed, 7 deletions(-)
+ arch/arm/boot/dts/ste-href.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-index 4a3f582..601e816 100644
---- a/drivers/mmc/host/mmci.c
-+++ b/drivers/mmc/host/mmci.c
-@@ -1524,8 +1524,6 @@ static int mmci_probe(struct amba_device *dev,
- 		dev_warn(mmc_dev(mmc), "Platform OCR mask is ignored\n");
- 
- 	/* DT takes precedence over platform data. */
--	mmc->caps = np ? mmc->caps : plat->capabilities;
--	mmc->caps2 = np ? mmc->caps2 : plat->capabilities2;
- 	if (!np) {
- 		if (!plat->cd_invert)
- 			mmc->caps2 |= MMC_CAP2_CD_ACTIVE_HIGH;
-diff --git a/include/linux/amba/mmci.h b/include/linux/amba/mmci.h
-index 0d3ff95..b992fc9 100644
---- a/include/linux/amba/mmci.h
-+++ b/include/linux/amba/mmci.h
-@@ -29,9 +29,6 @@ struct dma_chan;
-  * @gpio_wp: read this GPIO pin to see if the card is write protected
-  * @gpio_cd: read this GPIO pin to detect card insertion
-  * @cd_invert: true if the gpio_cd pin value is active low
-- * @capabilities: the capabilities of the block as implemented in
-- * this platform, signify anything MMC_CAP_* from mmc/host.h
-- * @capabilities2: more capabilities, MMC_CAP2_* from mmc/host.h
-  * @dma_filter: function used to select an appropriate RX and TX
-  * DMA channel to be used for DMA, if and only if you're deploying the
-  * generic DMA engine
-@@ -52,8 +49,6 @@ struct mmci_platform_data {
- 	int	gpio_wp;
- 	int	gpio_cd;
- 	bool	cd_invert;
--	unsigned long capabilities;
--	unsigned long capabilities2;
- 	bool (*dma_filter)(struct dma_chan *chan, void *filter_param);
- 	void *dma_rx_param;
- 	void *dma_tx_param;
+diff --git a/arch/arm/boot/dts/ste-href.dtsi b/arch/arm/boot/dts/ste-href.dtsi
+index 48ea4c1..bf8f0ed 100644
+--- a/arch/arm/boot/dts/ste-href.dtsi
++++ b/arch/arm/boot/dts/ste-href.dtsi
+@@ -154,6 +154,7 @@
+ 			bus-width = <8>;
+ 			cap-mmc-highspeed;
+ 			non-removable;
++			vmmc-supply = <&db8500_vsmps2_reg>;
+ 			pinctrl-names = "default", "sleep";
+ 			pinctrl-0 = <&sdi2_default_mode>;
+ 			pinctrl-1 = <&sdi2_sleep_mode>;
 -- 
 1.7.9.5
 
