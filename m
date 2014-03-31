@@ -1,66 +1,85 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] of: Add vendor prefix for Energy Micro
-Date: Tue, 1 Apr 2014 00:03:34 +0200
-Message-ID: <20140331220334.GB6045@pengutronix.de>
-References: <1395756677-6166-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <CAL_Jsq+TVKywqbQ4vePQWjgbZ4Zc_d_CUrx6R33-pHtxVtsAzg@mail.gmail.com>
- <20140325195950.GB15793@pengutronix.de>
+From: <tthayer@altera.com>
+Subject: [PATCH 1/2] dts: socfpga: Add bindings for Altera SoC SDRAM controller
+Date: Mon, 31 Mar 2014 17:07:06 -0500
+Message-ID: <1396303627-29198-2-git-send-email-tthayer@altera.com>
+References: <1396303627-29198-1-git-send-email-tthayer@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140325195950.GB15793-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1396303627-29198-1-git-send-email-tthayer@altera.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: dinguyen@altera.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk
+Cc: devicetree@vger.kernel.org, Thor Thayer <tthayer@altera.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+From: Thor Thayer <tthayer@altera.com>
 
-On Tue, Mar 25, 2014 at 08:59:50PM +0100, Uwe Kleine-K=F6nig wrote:
-> On Tue, Mar 25, 2014 at 11:51:33AM -0500, Rob Herring wrote:
-> > On Tue, Mar 25, 2014 at 9:11 AM, Uwe Kleine-K=F6nig
-> > <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > > There are already patches floating around to add
-> > > energymicro,efm32-{i2c,serial,spi} as compatible strings.
-> >=20
-> > "Patches floating around" is not a very convincing argument why
-> > "silabs" should not just be used instead. I have no problem taking
-> > this, but if changing to silabs is possible, we may want to do that=
-=2E
-> I think energymicro is still the right prefix, because back when efm3=
-2
-> was created it was still Energy Micro. Or am I wrong here?
-Some of these patches entered next in the meantime, affected are:
+Addition of the Altera SDRAM controller bindings and device
+tree changes to the Altera SoC project.
 
-	1b5b23718b84 i2c: efm32: new bus driver
-	12f6dd860cf8 spi: efm32: use $vendor,$device scheme for compatible str=
-ing
+Signed-off-by: Thor Thayer <tthayer@altera.com>
+To: Rob Herring <rob.herring@calxeda.com>
+To: Pawel Moll <pawel.moll@arm.com>
+To: Mark Rutland <mark.rutland@arm.com>
+To: Ian Campbell <ijc+devicetree@hellion.org.uk>
+To: Kumar Gala <galak@codeaurora.org>
+To: Rob Landley <rob@landley.net>
+To: Russell King <linux@arm.linux.org.uk>
+To: Dinh Nguyen <dinguyen@altera.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+---
+ .../bindings/arm/altera/socfpga-sdram.txt          |   14 ++++++++++++++
+ arch/arm/boot/dts/socfpga.dtsi                     |    5 +++++
+ 2 files changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
 
-A third patch is in gregkh's queue, Subject: "[PATCH] serial: efm32: us=
-e
-$vendor,$device scheme for compatible string", Message-Id:
-1395755954-18988-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org .
-
-(Wolfram, I just noticed that I failed to fix the binding docs for the
-changed compatible string. Should I send a fixup or a v5?)
-
-If I should better use "silabs,..." instead of "energymicro,..." I'd
-like to have that sorted out before 3.15-rc1.
-
-Thoughts?
-
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+new file mode 100644
+index 0000000..351ab7b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+@@ -0,0 +1,14 @@
++Altera SOCFPGA SDRAM Controller
++
++Required properties:
++- compatible : "altr,sdr-ctl", "syscon";
++                Note that syscon is invoked for this device to support the FPGA
++		bridge driver and possibly other devices in the future.  See
++		also Documentation/devicetree/bindings/mfd/syscon.txt
++- reg : Should contain 1 register ranges(address and length)
++
++Example:
++	sdrctl@0xffc25000 {
++		compatible = "altr,sdr-ctl", "syscon";
++		reg = <0xffc25000 0x1000>;
++	};
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index 9e78c1d..3634de7 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -528,6 +528,11 @@
+ 			reg-io-width = <4>;
+ 		};
+ 
++		sdrctl@0xffc25000 {
++			compatible = "altr,sdr-ctl", "syscon";
++			reg = <0xffc25000 0x1000>;
++		};
++
+ 		rstmgr@ffd05000 {
+ 			compatible = "altr,rst-mgr";
+ 			reg = <0xffd05000 0x1000>;
+-- 
+1.7.9.5
