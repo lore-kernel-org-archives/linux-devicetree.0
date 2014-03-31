@@ -1,7 +1,7 @@
 From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH V2 04/19] mmc: mmci: Add DT bindings for signal direction
-Date: Mon, 31 Mar 2014 17:18:05 +0200
-Message-ID: <1396279100-2920-5-git-send-email-ulf.hansson@linaro.org>
+Subject: [PATCH V2 08/19] ARM: ux500: Convert to the common mmc DT bindings for highspeed mode
+Date: Mon, 31 Mar 2014 17:18:09 +0200
+Message-ID: <1396279100-2920-9-git-send-email-ulf.hansson@linaro.org>
 References: <1396279100-2920-1-git-send-email-ulf.hansson@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1396279100-2920-1-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -10,76 +10,96 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell 
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some variants have support for indicating the bus signal directions,
-which currently are configured through platform data.
-
-Add corresponding DT bindings to enable us to move away from using the
-platform data.
+The mmci host driver supports the common mmc DT parser, which enables
+us to use the use common names instead.
 
 Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/mmc/mmci.txt |   11 ++++++++++-
- drivers/mmc/host/mmci.c                        |   11 +++++++++++
- 2 files changed, 21 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/ste-ccu9540.dts  |    6 +++---
+ arch/arm/boot/dts/ste-href.dtsi    |    8 ++++----
+ arch/arm/boot/dts/ste-snowball.dts |    4 ++--
+ 3 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mmc/mmci.txt b/Documentation/devicetree/bindings/mmc/mmci.txt
-index ff233d1..9bd2ffa 100644
---- a/Documentation/devicetree/bindings/mmc/mmci.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmci.txt
-@@ -4,7 +4,8 @@ The ARM PrimeCell MMCI PL180 and PL181 provides an interface for
- reading and writing to MultiMedia and SD cards alike.
+diff --git a/arch/arm/boot/dts/ste-ccu9540.dts b/arch/arm/boot/dts/ste-ccu9540.dts
+index 2295087..651c56d 100644
+--- a/arch/arm/boot/dts/ste-ccu9540.dts
++++ b/arch/arm/boot/dts/ste-ccu9540.dts
+@@ -38,8 +38,8 @@
+ 			arm,primecell-periphid = <0x10480180>;
+ 			max-frequency = <100000000>;
+ 			bus-width = <4>;
+-			mmc-cap-sd-highspeed;
+-			mmc-cap-mmc-highspeed;
++			cap-sd-highspeed;
++			cap-mmc-highspeed;
+ 			vmmc-supply = <&ab8500_ldo_aux3_reg>;
  
- This file documents differences between the core properties described
--by mmc.txt and the properties used by the mmci driver.
-+by mmc.txt and the properties used by the mmci driver. Using "st" as
-+the prefix for a property, indicates support by the ST Micro variant.
+ 			cd-gpios  = <&gpio7 6 0x4>; // 230
+@@ -63,7 +63,7 @@
+ 			arm,primecell-periphid = <0x10480180>;
+ 		        max-frequency = <100000000>;
+ 			bus-width = <8>;
+-			mmc-cap-mmc-highspeed;
++			cap-mmc-highspeed;
+ 			vmmc-supply = <&ab8500_ldo_aux2_reg>;
  
- Required properties:
- - compatible             : contains "arm,pl18x", "arm,primecell".
-@@ -18,6 +19,11 @@ Optional properties:
- - mmc-cap-sd-highspeed   : indicates whether SD is high speed capable.
- - vqmmc-supply           : phandle to the regulator device tree node, mentioned
-                            as the VCCQ/VDD_IO supply in the eMMC/SD specs.
-+- st,sig-dir-dat0        : bus signal direction pin used for DAT[0].
-+- st,sig-dir-dat2        : bus signal direction pin used for DAT[2].
-+- st,sig-dir-dat31       : bus signal direction pin used for DAT[3] and DAT[1].
-+- st,sig-dir-dat74       : bus signal direction pin used for DAT[4] to DAT[7].
-+- st,sig-dir-cmd         : cmd signal direction pin used for CMD.
- 
- Example:
- 
-@@ -38,6 +44,9 @@ sdi0_per1@80126000 {
- 	mmc-cap-sd-highspeed;
- 	mmc-cap-mmc-highspeed;
- 	cd-gpios  = <&gpio2 31 0x4>; // 95
-+	st,sig-dir-dat0;
-+	st,sig-dir-dat2;
-+	st,sig-dir-cmd;
- 
- 	vmmc-supply = <&ab8500_ldo_aux3_reg>;
- 	vqmmc-supply = <&vmmci>;
-diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-index d6f20ba..c99ec88 100644
---- a/drivers/mmc/host/mmci.c
-+++ b/drivers/mmc/host/mmci.c
-@@ -1392,6 +1392,17 @@ static void mmci_dt_populate_generic_pdata(struct device_node *np,
- {
- 	int bus_width = 0;
- 
-+	if (of_get_property(np, "st,sig-dir-dat0", NULL))
-+		pdata->sigdir |= MCI_ST_DATA0DIREN;
-+	if (of_get_property(np, "st,sig-dir-dat2", NULL))
-+		pdata->sigdir |= MCI_ST_DATA2DIREN;
-+	if (of_get_property(np, "st,sig-dir-dat31", NULL))
-+		pdata->sigdir |= MCI_ST_DATA31DIREN;
-+	if (of_get_property(np, "st,sig-dir-dat74", NULL))
-+		pdata->sigdir |= MCI_ST_DATA74DIREN;
-+	if (of_get_property(np, "st,sig-dir-cmd", NULL))
-+		pdata->sigdir |= MCI_ST_CMDDIREN;
-+
- 	pdata->gpio_wp = of_get_named_gpio(np, "wp-gpios", 0);
- 	pdata->gpio_cd = of_get_named_gpio(np, "cd-gpios", 0);
- 
+ 			status = "okay";
+diff --git a/arch/arm/boot/dts/ste-href.dtsi b/arch/arm/boot/dts/ste-href.dtsi
+index 46dce42..3f07c58 100644
+--- a/arch/arm/boot/dts/ste-href.dtsi
++++ b/arch/arm/boot/dts/ste-href.dtsi
+@@ -116,8 +116,8 @@
+ 			arm,primecell-periphid = <0x10480180>;
+ 			max-frequency = <100000000>;
+ 			bus-width = <4>;
+-			mmc-cap-sd-highspeed;
+-			mmc-cap-mmc-highspeed;
++			cap-sd-highspeed;
++			cap-mmc-highspeed;
+ 			st,sig-dir-dat0;
+ 			st,sig-dir-dat2;
+ 			st,sig-dir-cmd;
+@@ -148,7 +148,7 @@
+ 			arm,primecell-periphid = <0x10480180>;
+ 			max-frequency = <100000000>;
+ 			bus-width = <8>;
+-			mmc-cap-mmc-highspeed;
++			cap-mmc-highspeed;
+ 			pinctrl-names = "default", "sleep";
+ 			pinctrl-0 = <&sdi2_default_mode>;
+ 			pinctrl-1 = <&sdi2_sleep_mode>;
+@@ -161,7 +161,7 @@
+ 			arm,primecell-periphid = <0x10480180>;
+ 		        max-frequency = <100000000>;
+ 			bus-width = <8>;
+-			mmc-cap-mmc-highspeed;
++			cap-mmc-highspeed;
+ 			vmmc-supply = <&ab8500_ldo_aux2_reg>;
+ 			pinctrl-names = "default", "sleep";
+ 			pinctrl-0 = <&sdi4_default_mode>;
+diff --git a/arch/arm/boot/dts/ste-snowball.dts b/arch/arm/boot/dts/ste-snowball.dts
+index a2f632d..474ef832 100644
+--- a/arch/arm/boot/dts/ste-snowball.dts
++++ b/arch/arm/boot/dts/ste-snowball.dts
+@@ -156,7 +156,7 @@
+ 			arm,primecell-periphid = <0x10480180>;
+ 			max-frequency = <100000000>;
+ 			bus-width = <4>;
+-			mmc-cap-mmc-highspeed;
++			cap-mmc-highspeed;
+ 			vmmc-supply = <&ab8500_ldo_aux3_reg>;
+ 			vqmmc-supply = <&vmmci>;
+ 			pinctrl-names = "default", "sleep";
+@@ -195,7 +195,7 @@
+ 			arm,primecell-periphid = <0x10480180>;
+ 		        max-frequency = <100000000>;
+ 			bus-width = <8>;
+-			mmc-cap-mmc-highspeed;
++			cap-mmc-highspeed;
+ 			vmmc-supply = <&ab8500_ldo_aux2_reg>;
+ 			pinctrl-names = "default", "sleep";
+ 			pinctrl-0 = <&sdi4_default_mode>;
 -- 
 1.7.9.5
 
