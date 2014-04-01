@@ -1,53 +1,52 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] NFC: pn544_i2c: Add DTS Documentation
-Date: Tue, 1 Apr 2014 17:05:36 +0100
-Message-ID: <20140401160536.GK16420@e106331-lin.cambridge.arm.com>
-References: <6ec915ed416745248c5ed4aa22dfe0e6@AMXPR04MB136.eurprd04.prod.outlook.com>
- <20140331152550.GA15064@e106331-lin.cambridge.arm.com>
- <ab2e5666063c4ea1937636a911dfca02@AMXPR04MB136.eurprd04.prod.outlook.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH RFC v4 2/2] clk: Add handling of clk parent and rate
+ assigned from DT
+Date: Tue, 1 Apr 2014 09:35:00 -0700
+Message-ID: <20140401163500.GD3842@kroah.com>
+References: <1396284116-19178-1-git-send-email-s.nawrocki@samsung.com>
+ <1396284116-19178-3-git-send-email-s.nawrocki@samsung.com>
+ <20140331200620.GA13881@kroah.com>
+ <533ABCEC.8040701@codethink.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <ab2e5666063c4ea1937636a911dfca02-fjMGVQzTDdguRZvghep3ngfhPeD8jYilXA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Clement Perrochaud <clement.perrochaud-3arQi8VN3Tc@public.gmane.org>
-Cc: "linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org" <linux-nfc-y27Ovi1pjclAfugRpC6u6w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <533ABCEC.8040701@codethink.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mturquette@linaro.org, linux@arm.linux.org.uk, robh+dt@kernel.org, grant.likely@linaro.org, mark.rutland@arm.com, galak@codeaurora.org, kyungmin.park@samsung.com, sw0312.kim@samsung.com, m.szyprowski@samsung.com, t.figa@samsung.com, laurent.pinchart@ideasonboard.com, s.hauer@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 01, 2014 at 02:45:10PM +0100, Clement Perrochaud wrote:
-> Mark Rutland wrote: 
-> > s/_/-/ in compatible strings and property names, please. 
-> >  [...]
-> > As this is an interrupt from the point of view of the device, I would
-> > prefer this described as an interrupt (using the standard interrupts
-> > property), with the GPIO controller described as an interrupt
-> > controller. 
-> >  [...]
-> > enable-gpios? 
-> >  [...]
-> > firmware-gpios? 
+On Tue, Apr 01, 2014 at 02:19:40PM +0100, Ben Dooks wrote:
+> On 31/03/14 21:06, Greg KH wrote:
+> >On Mon, Mar 31, 2014 at 06:41:56PM +0200, Sylwester Nawrocki wrote:
+> >>This function adds a helper function to configure clock parents and rates
+> >>as specified in clock-parents, clock-rates DT properties for a consumer
+> >>device and a call to it before driver is bound to a device.
+> >>
+> >>Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 > 
-> Hi Mark,
+> [snip]
 > 
-> Thank you for your help.
+> >
+> >I don't understand why you need the driver core to initialize this one
+> >type of thing?  That should be in a driver, or in a class, or at worse
+> >case, the platform code.
+> >
+> >What makes clocks so "unique" here?
 > 
-> Where can I find documentation describing these naming conventions?
+> I suppose the issue here is that a lot of drivers currently use
+> clocks and a number of systems have badly setup default clock trees
+> at start time.
 
-Documentation/devicetree/bindings/gpio/gpio.txt:
+Then they should be fixed, why should _all_ Linux devices care about
+such broken devices/systems?
 
-	GPIO properties should be named "[<name>-]gpios".
+> Mark Brown and others have argued that the management of clocks which
+> is common to all devices should not live in the driver.
 
-In general, following existing style is preferred, and "enable-gpios" is
-already relatively common.
+Then put it in the bus that initializes the devices / drivers.
 
-We admittedly have short names like "cs-gpios", but personally I would
-prefer "firmware-gpios" to "fw-gpios" for clarity.
+thanks,
 
-Cheers,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+greg k-h
