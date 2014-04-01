@@ -1,62 +1,114 @@
-From: Zhao Qiang <B45475-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH] spi: add "spi-lsb-first" to devicetree
-Date: Tue, 1 Apr 2014 15:55:31 +0800
-Message-ID: <1396338931-10887-1-git-send-email-B45475@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, wangyuhang2014-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, R63061-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Zhao Qiang <B45475-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: [PATCH 3/6] regulator: arizona-ldo1: Add processing of init_data from device tree
+Date: Tue,  1 Apr 2014 09:27:22 +0100
+Message-ID: <1396340845-24060-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+References: <1396340845-24060-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1396340845-24060-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-add optional property devicetree for SPI slave nodes
-into devicetree so that LSB mode can be enabled by devicetree.
-
-Signed-off-by: Zhao Qiang <B45475-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 ---
- Documentation/devicetree/bindings/spi/spi-bus.txt | 4 ++++
- drivers/spi/spi.c                                 | 2 ++
- 2 files changed, 6 insertions(+)
+ drivers/regulator/arizona-ldo1.c |   47 +++++++++++++++++++++++++++++++++++--
+ 1 files changed, 44 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
-index e5a4d1b..fdd9f15 100644
---- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-@@ -55,11 +55,15 @@ contain the following properties.
-     		chip select active high
- - spi-3wire       - (optional) Empty property indicating device requires
-     		    3-wire mode.
-+- spi-lsb-first   - (optional) Empty property indicating device requires
-+		LSB first mode.
- - spi-tx-bus-width - (optional) The bus width(number of data wires) that
-                       used for MOSI. Defaults to 1 if not present.
- - spi-rx-bus-width - (optional) The bus width(number of data wires) that
-                       used for MISO. Defaults to 1 if not present.
+diff --git a/drivers/regulator/arizona-ldo1.c b/drivers/regulator/arizona-ldo1.c
+index 211af83..e23a95f 100644
+--- a/drivers/regulator/arizona-ldo1.c
++++ b/drivers/regulator/arizona-ldo1.c
+@@ -19,6 +19,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/machine.h>
++#include <linux/regulator/of_regulator.h>
+ #include <linux/gpio.h>
+ #include <linux/slab.h>
  
-+- spi-rx-bus-width - (optional) The bus width(number of data wires) that
-+                      used for MISO. Defaults to 1 if not present.
- Some SPI controllers and devices support Dual and Quad SPI transfer mode.
- It allows data in SPI system transfered in 2 wires(DUAL) or 4 wires(QUAD).
- Now the value that spi-tx-bus-width and spi-rx-bus-width can receive is
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 23756b0..0a20a90 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1050,6 +1050,8 @@ static void of_register_spi_devices(struct spi_master *master)
- 			spi->mode |= SPI_CS_HIGH;
- 		if (of_find_property(nc, "spi-3wire", NULL))
- 			spi->mode |= SPI_3WIRE;
-+		if (of_find_property(nc, "spi-lsb-first", NULL))
-+			spi->mode |= SPI_LSB_FIRST;
+@@ -179,19 +180,56 @@ static const struct regulator_init_data arizona_ldo1_default = {
+ };
  
- 		/* Device DUAL/QUAD mode */
- 		if (!of_property_read_u32(nc, "spi-tx-bus-width", &value)) {
+ #ifdef CONFIG_OF
+-static int arizona_ldo1_of_get_pdata(struct arizona *arizona)
++static int arizona_ldo1_of_get_pdata(struct arizona *arizona,
++				     struct regulator_config *config)
+ {
+ 	struct arizona_pdata *pdata = &arizona->pdata;
++	struct arizona_ldo1 *ldo1 = config->driver_data;
++	struct device_node *init_node, *dcvdd_node;
++	struct regulator_init_data *init_data;
+ 
+ 	arizona_of_get_named_gpio(arizona, "wlf,ldoena", true, &pdata->ldoena);
+ 
++	init_node = of_get_child_by_name(arizona->dev->of_node, "ldo1");
++	dcvdd_node = of_parse_phandle(arizona->dev->of_node, "DCVDD-supply", 0);
++
++	if (init_node) {
++		config->of_node = init_node;
++
++		init_data = of_get_regulator_init_data(arizona->dev, init_node);
++
++		if (init_data) {
++			init_data->consumer_supplies = &ldo1->supply;
++			init_data->num_consumer_supplies = 1;
++
++			if (dcvdd_node && dcvdd_node != init_node)
++				arizona->external_dcvdd = true;
++
++			pdata->ldo1 = init_data;
++		}
++	} else if (dcvdd_node) {
++		arizona->external_dcvdd = true;
++	}
++
++	of_node_put(dcvdd_node);
++
+ 	return 0;
+ }
++
++static void arizona_ldo1_of_put_pdata(struct regulator_config *config)
++{
++	of_node_put(config->of_node);
++}
+ #else
+-static inline int arizona_ldo1_of_get_pdata(struct arizona *arizona)
++static inline int arizona_ldo1_of_get_pdata(struct arizona *arizona,
++					    struct regulator_config *config)
+ {
+ 	return 0;
+ }
++
++static inline void arizona_ldo1_of_put_pdata(struct regulator_config *config)
++{
++}
+ #endif
+ 
+ static int arizona_ldo1_probe(struct platform_device *pdev)
+@@ -236,7 +274,7 @@ static int arizona_ldo1_probe(struct platform_device *pdev)
+ 	config.regmap = arizona->regmap;
+ 
+ 	if (!dev_get_platdata(arizona->dev)) {
+-		ret = arizona_ldo1_of_get_pdata(arizona);
++		ret = arizona_ldo1_of_get_pdata(arizona, &config);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+@@ -263,6 +301,9 @@ static int arizona_ldo1_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	if (!dev_get_platdata(arizona->dev))
++		arizona_ldo1_of_put_pdata(&config);
++
+ 	platform_set_drvdata(pdev, ldo1);
+ 
+ 	return 0;
 -- 
-1.8.5
-
+1.7.2.5
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
