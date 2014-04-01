@@ -1,52 +1,57 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [RFC 0/5] of: Automatic console registration cleanups
-Date: Tue, 01 Apr 2014 10:08:48 +0100
-Message-ID: <20140401090848.E9758C408A6@trevor.secretlab.ca>
-References: <1396022885-6102-1-git-send-email-grant.likely@linaro.org> < 20140331071014.GN17250@pengutronix.de> <20140331094124.6DEF3C408E1@trevor. secretlab.ca> <20140401061216.GQ17250@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140401061216.GQ17250@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: devicetree@vger.kernel.org, christoffer.dall@linaro.org, linux-kernel@vger.kernel.org, olof@lixom.net, benh@kernel.crashing.org, rob.herring@linaro.org
+From: Zhao Qiang <B45475-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v2] spi: add "spi-lsb-first" to devicetree
+Date: Tue, 1 Apr 2014 17:10:50 +0800
+Message-ID: <1396343450-6199-1-git-send-email-B45475@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Cc: baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, wangyuhang2014-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, R63061-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Zhao Qiang <B45475-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 1 Apr 2014 08:12:16 +0200, Sascha Hauer <s.hauer@pengutronix.de> wrote:
-> On Mon, Mar 31, 2014 at 10:41:24AM +0100, Grant Likely wrote:
-> > On Mon, 31 Mar 2014 09:10:15 +0200, Sascha Hauer <s.hauer@pengutronix.de> wrote:
-> > > On Fri, Mar 28, 2014 at 09:08:00AM -0700, Grant Likely wrote:
-> > > > Hi all,
-> > > > 
-> > > > This is a series that I've been playing with over the last few days to
-> > > > clean up the selection of default console devices when using the device
-> > > > tree. The device tree defines a way of specifying the console by using a
-> > > > "stdout-path" property in the /chosen node, but very few drivers
-> > > > actually attempt to use that data, and so for most platforms there needs
-> > > > to be a "console=" line in the command line if a serial port is intended
-> > > > to be used as the console.
-> > > > 
-> > > > With this series, if there is a /chosen/stdout-path property, and if
-> > > > that property points to a serial port node, then when the serial driver
-> > > > registers the port, the core uart_add_one_port() function will notice
-> > > > and if no console= argument was provided then add it as a preferred
-> > > > console.
-> > > > 
-> > > > I've not tested this very extensively yet, but I want to get some
-> > > > feedback before I go further.
-> > > 
-> > > I gave it a test on i.MX. It works as expected with both
-> > > linux,stdout-path and stdout-path. Specifying a console on the
-> > > commandline still works and overrides the devicetree setting.
-> > > 
-> > > Tested-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > 
-> > Brilliant! Thanks Sascha.
-> > 
-> > Can you supply a patch to add stdout to the imx dts files?
-> 
-> The information which console is used on each board is not in the
-> kernel. I can create a patch adding stdout for a handful of boards I
-> know, but I won't catch all.
+add optional property devicetree for SPI slave nodes
+into devicetree so that LSB mode can be enabled by devicetree.
 
-That's all I'm asking for. I don't expect all platforms.
+Signed-off-by: Zhao Qiang <B45475-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+changs for v2:
+	- remove duplicate "spi-rx-bus-width" 
+ Documentation/devicetree/bindings/spi/spi-bus.txt | 2 ++
+ drivers/spi/spi.c                                 | 2 ++
+ 2 files changed, 4 insertions(+)
 
-g.
+diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+index e5a4d1b..22d5740 100644
+--- a/Documentation/devicetree/bindings/spi/spi-bus.txt
++++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+@@ -55,6 +55,8 @@ contain the following properties.
+     		chip select active high
+ - spi-3wire       - (optional) Empty property indicating device requires
+     		    3-wire mode.
++- spi-lsb-first   - (optional) Empty property indicating device requires
++		LSB first mode.
+ - spi-tx-bus-width - (optional) The bus width(number of data wires) that
+                       used for MOSI. Defaults to 1 if not present.
+ - spi-rx-bus-width - (optional) The bus width(number of data wires) that
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 23756b0..0a20a90 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -1050,6 +1050,8 @@ static void of_register_spi_devices(struct spi_master *master)
+ 			spi->mode |= SPI_CS_HIGH;
+ 		if (of_find_property(nc, "spi-3wire", NULL))
+ 			spi->mode |= SPI_3WIRE;
++		if (of_find_property(nc, "spi-lsb-first", NULL))
++			spi->mode |= SPI_LSB_FIRST;
+ 
+ 		/* Device DUAL/QUAD mode */
+ 		if (!of_property_read_u32(nc, "spi-tx-bus-width", &value)) {
+-- 
+1.8.5
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
