@@ -1,87 +1,57 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH 2/2] arm: socfpga: Add support for Altera SoC SDRAM
- controller
-Date: Tue, 1 Apr 2014 07:33:43 +0200
-Message-ID: <20140401053343.GO5052@pengutronix.de>
-References: <1396303627-29198-1-git-send-email-tthayer@altera.com>
- <1396303627-29198-3-git-send-email-tthayer@altera.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [RFC 0/5] of: Automatic console registration cleanups
+Date: Tue, 1 Apr 2014 08:12:16 +0200
+Message-ID: <20140401061216.GQ17250@pengutronix.de>
+References: <1396022885-6102-1-git-send-email-grant.likely@linaro.org>
+ <20140331071014.GN17250@pengutronix.de>
+ <20140331094124.6DEF3C408E1@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1396303627-29198-3-git-send-email-tthayer@altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tthayer@altera.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, linux-doc@vger.kernel.org, devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, rob@landley.net, galak@codeaurora.org, dinguyen@altera.com
+In-Reply-To: <20140331094124.6DEF3C408E1@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: devicetree@vger.kernel.org, christoffer.dall@linaro.org, linux-kernel@vger.kernel.org, olof@lixom.net, benh@kernel.crashing.org, rob.herring@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 31, 2014 at 05:07:07PM -0500, tthayer@altera.com wrote:
-> From: Thor Thayer <tthayer@altera.com>
+On Mon, Mar 31, 2014 at 10:41:24AM +0100, Grant Likely wrote:
+> On Mon, 31 Mar 2014 09:10:15 +0200, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> > On Fri, Mar 28, 2014 at 09:08:00AM -0700, Grant Likely wrote:
+> > > Hi all,
+> > > 
+> > > This is a series that I've been playing with over the last few days to
+> > > clean up the selection of default console devices when using the device
+> > > tree. The device tree defines a way of specifying the console by using a
+> > > "stdout-path" property in the /chosen node, but very few drivers
+> > > actually attempt to use that data, and so for most platforms there needs
+> > > to be a "console=" line in the command line if a serial port is intended
+> > > to be used as the console.
+> > > 
+> > > With this series, if there is a /chosen/stdout-path property, and if
+> > > that property points to a serial port node, then when the serial driver
+> > > registers the port, the core uart_add_one_port() function will notice
+> > > and if no console= argument was provided then add it as a preferred
+> > > console.
+> > > 
+> > > I've not tested this very extensively yet, but I want to get some
+> > > feedback before I go further.
+> > 
+> > I gave it a test on i.MX. It works as expected with both
+> > linux,stdout-path and stdout-path. Specifying a console on the
+> > commandline still works and overrides the devicetree setting.
+> > 
+> > Tested-by: Sascha Hauer <s.hauer@pengutronix.de>
 > 
-> Addition of the Altera SDRAM controller registers to the
-> Altera SoC project. These registers are shared by future
-> drivers such as ECC and the FPGA bridge.
+> Brilliant! Thanks Sascha.
 > 
-> Signed-off-by: Thor Thayer <tthayer@altera.com>
-> To: Rob Herring <rob.herring@calxeda.com>
-> To: Pawel Moll <pawel.moll@arm.com>
-> To: Mark Rutland <mark.rutland@arm.com>
-> To: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> To: Kumar Gala <galak@codeaurora.org>
-> To: Rob Landley <rob@landley.net>
-> To: Russell King <linux@arm.linux.org.uk>
-> To: Dinh Nguyen <dinguyen@altera.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> ---
->  arch/arm/mach-socfpga/socfpga.c |   10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/arch/arm/mach-socfpga/socfpga.c b/arch/arm/mach-socfpga/socfpga.c
-> index 21d6026..d514e8a 100644
-> --- a/arch/arm/mach-socfpga/socfpga.c
-> +++ b/arch/arm/mach-socfpga/socfpga.c
-> @@ -32,6 +32,7 @@
->  void __iomem *socfpga_scu_base_addr = ((void __iomem *)(SOCFPGA_SCU_VIRT_BASE));
->  void __iomem *sys_manager_base_addr;
->  void __iomem *rst_manager_base_addr;
-> +void __iomem *sdr_ctl_base_addr;
->  void __iomem *clk_mgr_base_addr;
->  unsigned long cpu1start_addr;
->  
+> Can you supply a patch to add stdout to the imx dts files?
 
-Can't we get rid of all these global pointers instead of adding to them?
+The information which console is used on each board is not in the
+kernel. I can create a patch adding stdout for a handful of boards I
+know, but I won't catch all.
 
-> @@ -150,6 +151,15 @@ void __init socfpga_sysmgr_init(void)
->  
->  	np = of_find_compatible_node(NULL, NULL, "altr,clk-mgr");
->  	clk_mgr_base_addr = of_iomap(np, 0);
-> +
-> +	np = of_find_compatible_node(NULL, NULL, "altr,sdr-ctl");
-> +	if (!np) {
-> +		pr_err("SOCFPGA: Unable to find sdr-ctl\n");
-> +		return;
-> +	}
-> +
-> +	sdr_ctl_base_addr = of_iomap(np, 0);
-> +	WARN_ON(!sdr_ctl_base_addr);
->  }
->  
->  static void __init socfpga_init_irq(void)
-> -- 
-> 1.7.9.5
-> 
+Sascha
 
 -- 
 Pengutronix e.K.                           |                             |
