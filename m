@@ -1,60 +1,102 @@
-From: Shaik Ameer Basha <shaik.samsung@gmail.com>
-Subject: Re: [PATCH v2 3/7] clk: exynos5420: Rename clock IDs
-Date: Tue, 1 Apr 2014 10:14:54 +0530
-Message-ID: <CAOD6ATo+C2xaR4yZG14LLP=57GKMgUVan4u3MxgxtqDmHjNOCw@mail.gmail.com>
-References: <1395918470-16374-1-git-send-email-shaik.ameer@samsung.com>
-	<1395918470-16374-4-git-send-email-shaik.ameer@samsung.com>
-	<20140327194959.GY3998@book.gsilab.sittig.org>
-	<CAOD6ATqRGgz9MxWYBs6Bo_xh2+N6trVByywXE_dxv9N=tpkTDg@mail.gmail.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH 1/2] dts: socfpga: Add bindings for Altera SoC SDRAM
+ controller
+Date: Tue, 1 Apr 2014 07:28:07 +0200
+Message-ID: <20140401052807.GN5052@pengutronix.de>
+References: <1396303627-29198-1-git-send-email-tthayer@altera.com>
+ <1396303627-29198-2-git-send-email-tthayer@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAOD6ATqRGgz9MxWYBs6Bo_xh2+N6trVByywXE_dxv9N=tpkTDg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Gerhard Sittig <gsi@denx.de>
-Cc: Shaik Ameer Basha <shaik.ameer@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mturquette@linaro.org, Kukjin Kim <kgene.kim@samsung.com>, tomasz.figa@gmail.com, sunil joshi <joshi@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>, Rahul Sharma <rahul.sharma@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1396303627-29198-2-git-send-email-tthayer@altera.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: tthayer@altera.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, linux-doc@vger.kernel.org, devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, rob@landley.net, galak@codeaurora.org, dinguyen@altera.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 1, 2014 at 10:12 AM, Shaik Ameer Basha
-<shaik.samsung@gmail.com> wrote:
-> On Fri, Mar 28, 2014 at 1:19 AM, Gerhard Sittig <gsi@denx.de> wrote:
->> On Thu, 2014-03-27 at 16:37 +0530, Shaik Ameer Basha wrote:
->>>
->>> From: Rahul Sharma <rahul.sharma@samsung.com>
->>>
->>> This patch renames the clock IDs used for the DT bindings as
->>> per Exynos5420 datasheet.
->>>
->>> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
->>> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
->>> ---
->>>  drivers/clk/samsung/clk-exynos5420.c   |  162 +++++++++++++++++---------------
->>>  include/dt-bindings/clock/exynos5420.h |  138 +++++++++++++--------------
->>>  2 files changed, 154 insertions(+), 146 deletions(-)
->>
->> does this break bisection when you rename symbolic identifiers in
->> their declaration yet don't update references at the users?
->
-> Hi Gerhard,
->
-> Thanks for the review.
-> You are right. Actually I check for bisect build when I rebased to
-> linux-next and samsung-clk (of tomasz figa) branches.
->
-> I didn't check for bisect build after rebased to following patch.
-> ARM: dts: use macros in clock bindings for exynos5420
->
+Hi!
 
-Will fix this in the next version of patch series.
+On Mon, Mar 31, 2014 at 05:07:06PM -0500, tthayer@altera.com wrote:
+> From: Thor Thayer <tthayer@altera.com>
+> 
+> Addition of the Altera SDRAM controller bindings and device
+> tree changes to the Altera SoC project.
+> 
+> Signed-off-by: Thor Thayer <tthayer@altera.com>
+> To: Rob Herring <rob.herring@calxeda.com>
+> To: Pawel Moll <pawel.moll@arm.com>
+> To: Mark Rutland <mark.rutland@arm.com>
+> To: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> To: Kumar Gala <galak@codeaurora.org>
+> To: Rob Landley <rob@landley.net>
+> To: Russell King <linux@arm.linux.org.uk>
+> To: Dinh Nguyen <dinguyen@altera.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> ---
+>  .../bindings/arm/altera/socfpga-sdram.txt          |   14 ++++++++++++++
+>  arch/arm/boot/dts/socfpga.dtsi                     |    5 +++++
+>  2 files changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+> new file mode 100644
+> index 0000000..351ab7b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+> @@ -0,0 +1,14 @@
+> +Altera SOCFPGA SDRAM Controller
+> +
+> +Required properties:
+> +- compatible : "altr,sdr-ctl", "syscon";
+> +                Note that syscon is invoked for this device to support the FPGA
+> +		bridge driver and possibly other devices in the future.  See
+> +		also Documentation/devicetree/bindings/mfd/syscon.txt
+
+This note is really linux specific (and specific to some vendor kernel driver
+for that matter). I think you should remove that.
+
+> +- reg : Should contain 1 register ranges(address and length)
+> +
+> +Example:
+> +	sdrctl@0xffc25000 {
+> +		compatible = "altr,sdr-ctl", "syscon";
+> +		reg = <0xffc25000 0x1000>;
+> +	};
+> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> index 9e78c1d..3634de7 100644
+> --- a/arch/arm/boot/dts/socfpga.dtsi
+> +++ b/arch/arm/boot/dts/socfpga.dtsi
+> @@ -528,6 +528,11 @@
+>  			reg-io-width = <4>;
+>  		};
+>  
+> +		sdrctl@0xffc25000 {
+> +			compatible = "altr,sdr-ctl", "syscon";
+> +			reg = <0xffc25000 0x1000>;
+> +		};
+> +
+>  		rstmgr@ffd05000 {
+>  			compatible = "altr,rst-mgr";
+>  			reg = <0xffd05000 0x1000>;
 
 Regards,
-Shaik Ameer Basha
+Steffen
 
->>
->>
->> virtually yours
->> Gerhard Sittig
->> --
->> DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
->> HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
->> Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office@denx.de
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
