@@ -1,108 +1,60 @@
-From: Harini Katakam <harinikatakamlinux@gmail.com>
-Subject: Re: [PATCH 1/2] watchdog: Add Cadence WDT driver
-Date: Tue, 1 Apr 2014 13:05:53 +0530
-Message-ID: <CAFcVECKpcduwJtq7X06NakL8P-aYYoHjS-_nwg+WqF1du7Y8yA@mail.gmail.com>
-References: <1396002720-7105-1-git-send-email-harinik@xilinx.com>
-	<533A0937.9030505@roeck-us.net>
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
+	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH] fixup! i2c: efm32: new bus driver
+Date: Tue,  1 Apr 2014 09:42:20 +0200
+Message-ID: <1396338140-22332-1-git-send-email-u.kleine-koenig@pengutronix.de>
+References: <1395744526-3706-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <533A0937.9030505@roeck-us.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, michals@xilinx.com, linux-watchdog@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Harini Katakam <harinik@xilinx.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1395744526-3706-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+=46ix dt compatible string in the binding document which was changed
+during review in the driver, but it seem I messed up to adapt the
+documentation accordingly.
 
-On Tue, Apr 1, 2014 at 6:02 AM, Guenter Roeck <linux@roeck-us.net> wrote:
-> On 03/28/2014 03:31 AM, Harini Katakam wrote:
->>
->> Add Cadence WDT driver. This is used by Xilinx Zynq.
->>
->> Signed-off-by: Harini Katakam <harinik@xilinx.com>
->> ---
->>   drivers/watchdog/Kconfig       |    7 +
->>   drivers/watchdog/Makefile      |    1 +
->>   drivers/watchdog/cadence_wdt.c |  530
->> ++++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 538 insertions(+)
->>   create mode 100644 drivers/watchdog/cadence_wdt.c
->>
+Also change status from "disabled" to "ok" which makes more sense for a=
+n
+example.
 
-<snip>
+Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/i2c/i2c-efm32.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
->> +
->> +       spin_lock(&wdt->io_lock);
->> +       cdns_wdt_writereg(wdt->regs + CDNS_WDT_ZMR_OFFSET,
->> +                         CDNS_WDT_ZMR_ZKEY_VAL);
->> +
->> +       /* Shift the count value to correct bit positions */
->> +       count = (count << 2) & CDNS_WDT_CCR_CRV_MASK;
->> +
->> +       /* Write counter access key first to be able write to register */
->> +       data = count | CDNS_WDT_REGISTER_ACCESS_KEY | wdt->ctrl_clksel;
->> +       cdns_wdt_writereg(wdt->regs + CDNS_WDT_CCR_OFFSET, data);
->> +       data = CDNS_WDT_ZMR_WDEN_MASK | CDNS_WDT_ZMR_RSTLEN_16 |
->> +              CDNS_WDT_ZMR_ZKEY_VAL;
->> +
->> +       /* Reset on timeout if specified in device tree. */
->> +       if (wdt->rst) {
->> +               data |= CDNS_WDT_ZMR_RSTEN_MASK;
->> +               data &= ~CDNS_WDT_ZMR_IRQEN_MASK;
->> +       } else {
->> +               data &= ~CDNS_WDT_ZMR_RSTEN_MASK;
->> +               data |= CDNS_WDT_ZMR_IRQEN_MASK;
->> +       }
->> +       cdns_wdt_writereg(wdt->regs + CDNS_WDT_ZMR_OFFSET, data);
->> +       spin_unlock(&wdt->io_lock);
->> +       cdns_wdt_writereg(wdt->regs + CDNS_WDT_RESTART_OFFSET,
->> +                         CDNS_WDT_RESTART_KEY);
->> +
->
-> Sometimes you write into this register with lock protection, here without.
->
-> How comes (or, in other words, why does the write have to be spinlock
-> protected above but not here) ?
->
-
-CDNS_WDT_RESTART_OFFSET needs to be written here with lock protection.
-I missed it because it is in wdt_start, but i realise it should be protected.
-Will correct that.
-
-<snip>
-
->> +       /* Initialize the members of cdns_wdt structure */
->> +       cdns_wdt_device->parent = &pdev->dev;
->> +       of_get_property(pdev->dev.of_node, "timeout-sec",
->> +                       &cdns_wdt_device->timeout);
->> +       if (wdt_timeout < CDNS_WDT_MAX_TIMEOUT &&
->> +           wdt_timeout > CDNS_WDT_MIN_TIMEOUT)
->
->
-> Why are CDNS_WDT_MAX_TIMEOUT and CDNS_WDT_MIN_TIMEOUT not acceptable ?
-> Why don't you use watchdog_init_timeout() anyway ?
->
-
-I'll use watchdog_init_timeout.
-
->
->> +               cdns_wdt_device->timeout = wdt_timeout;
->> +       else
->> +               dev_info(&pdev->dev,
->> +                        "timeout limited to 1 - %d sec, using
->> default=%d\n",
->> +                        CDNS_WDT_MAX_TIMEOUT, CDNS_WDT_DEFAULT_TIMEOUT);
->> +
->> +       watchdog_set_nowayout(cdns_wdt_device, nowayout);
->> +       watchdog_set_drvdata(cdns_wdt_device, wdt);
->> +
->
->
-> Set too late (see other e-mail)
->
-
-Will correct order in probe as pointed in other mails.
-
-Regards,
-Harini
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-efm32.txt b/Docu=
+mentation/devicetree/bindings/i2c/i2c-efm32.txt
+index ead4dd33ab66..fc15ac519437 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-efm32.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-efm32.txt
+@@ -3,7 +3,7 @@
+ Required properties :
+=20
+  - reg : Offset and length of the register set for the device
+- - compatible : should be "efm32,i2c"
++ - compatible : should be "energymicro,efm32-i2c"
+  - interrupts : the interrupt number
+  - clocks : reference to the module clock
+=20
+@@ -17,12 +17,12 @@ Example:
+ 	i2c0: i2c@4000a000 {
+ 		#address-cells =3D <1>;
+ 		#size-cells =3D <0>;
+-		compatible =3D "efm32,i2c";
++		compatible =3D "energymicro,efm32-i2c";
+ 		reg =3D <0x4000a000 0x400>;
+ 		interrupts =3D <9>;
+ 		clocks =3D <&cmu clk_HFPERCLKI2C0>;
+ 		clock-frequency =3D <100000>;
+-		status =3D "disabled";
++		status =3D "ok";
+ 		efm32,location =3D <3>;
+=20
+ 		eeprom@50 {
+--=20
+1.9.1
