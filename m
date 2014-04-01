@@ -1,86 +1,68 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 1/1] ARM: dts: omap5: Add clocks to USB3 PHY node
-Date: Tue, 1 Apr 2014 09:13:08 -0500
-Message-ID: <20140401141308.GB4717@saruman.home>
-References: <1396348647-11545-1-git-send-email-rogerq@ti.com>
- <1396348647-11545-2-git-send-email-rogerq@ti.com>
-Reply-To: <balbi@ti.com>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH RFC v4 2/2] clk: Add handling of clk parent and rate
+ assigned from DT
+Date: Tue, 01 Apr 2014 16:23:12 +0200
+Message-ID: <533ACBD0.8030209@samsung.com>
+References: <1396284116-19178-1-git-send-email-s.nawrocki@samsung.com>
+ <1396284116-19178-3-git-send-email-s.nawrocki@samsung.com>
+ <20140331200620.GA13881@kroah.com> <533ABCEC.8040701@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="VrqPEDrXMn8OVzN4"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1396348647-11545-2-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: tony@atomide.com, kishon@ti.com, balbi@ti.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <533ABCEC.8040701-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---VrqPEDrXMn8OVzN4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 01/04/14 15:19, Ben Dooks wrote:
+> On 31/03/14 21:06, Greg KH wrote:
+>> > On Mon, Mar 31, 2014 at 06:41:56PM +0200, Sylwester Nawrocki wrote:
+[...]
+>> > I don't understand why you need the driver core to initialize this one
+>> > type of thing?  That should be in a driver, or in a class, or at worse
+>> > case, the platform code.
+>> >
+>> > What makes clocks so "unique" here?
 
-On Tue, Apr 01, 2014 at 01:37:27PM +0300, Roger Quadros wrote:
-> The USB3 PHY driver (ti-pipe3) was updated so that the relevant
-> clock phandles are expected in the DT node.
-> Provide the necessary clocks.
->=20
-> Reported-by: Kishon Vijay Abraham I <kishon@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
+The reason I put it in the driver core was mainly to avoid having many
+drivers doing same call to this initialization function.
+I was considering moving it to the bus code, still there are several
+buses for which it would need to be repeated.
 
-Great!!!
+Maybe really_probe() is not a best place to put this, nonetheless
+the requirements I could list were:
 
-Acked-by: Felipe Balbi <balbi@ti.com>
+ 1. not involving individual drivers,
+ 2. have such an initialization call done for all devices, irrespective
+    of Linux bus or class type,
+ 3. Handle errors properly, e.g. defer driver probing if a clock for
+   a device is not yet available.
 
-> ---
->  arch/arm/boot/dts/omap5.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-> index 757f0b9..4df1e7a 100644
-> --- a/arch/arm/boot/dts/omap5.dtsi
-> +++ b/arch/arm/boot/dts/omap5.dtsi
-> @@ -794,6 +794,12 @@
->  				      <0x4a084c00 0x40>;
->  				reg-names =3D "phy_rx", "phy_tx", "pll_ctrl";
->  				ctrl-module =3D <&omap_control_usb3phy>;
-> +				clocks =3D <&usb_phy_cm_clk32k>,
-> +					 <&sys_clkin>,
-> +					 <&usb_otg_ss_refclk960m>;
-> +				clock-names =3D	"wkupclk",
-> +						"sysclk",
-> +						"refclk";
->  				#phy-cells =3D <0>;
->  			};
->  		};
-> --=20
-> 1.8.3.2
->=20
+One advantage I could see from making the call from within a device
+driver is that a device could keep using the common DT bindings and
+replace the common initialization function with a private one, if
+there is a need for some quirks handled for a device. With approach
+as in this patch it's difficult to override the default behaviour.
+However then there is a question whether we strive for the clocks
+management to be possibly kept away from device drivers.
 
---=20
-balbi
+> I suppose the issue here is that a lot of drivers currently use
+> clocks and a number of systems have badly setup default clock trees
+> at start time.
+> 
+> Mark Brown and others have argued that the management of clocks which
+> is common to all devices should not live in the driver.
 
---VrqPEDrXMn8OVzN4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+True, motivation behind this patch series was also replacing custom
+code in multiple drivers doing similar clock rate or parent setting
+by a common code, using standardized DT binding.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTOsl0AAoJEIaOsuA1yqREmMEP/RI8II5WwMI1H4LkOnOUQn8E
-2tzg+sL7bGa/IV7GLkyEb6zDAZTzUDsscKNoqu4jfeCAT0Kqs2HOuTXmjIxqTQXU
-L9xoINA0bFuD6lHJpy6fPqM/oKsKMdLkRetcojGD2sCt251TG3Kfjs5czqRtdv6D
-JbEmRpHbocLbNgBJLm0EIXto6IP9MkFugaA6hDDL5H2X0Hoir/ZkqauoYYHiniwL
-KUsf/nDsZ6kSUIMiQsCH8uV7VZWaAAp85aTfJWcjMQ0RyXLw/gK8lTsncQ+th2aJ
-4VN5JZrqVkFgACzJVlwDYkVivWWRd71PUXYyYsyLeV6XINzEr23GEXENwykQd7aM
-anJjmbylXYoOqLPEmgAKAm/Ph/iUS+iRfKcEZV9LOj1Jjs3TRwycpedrB3gI7nrr
-eePp1yBb/rS6AaXkgJYS0SzZ+oHATCFtRsyvweezlp8f6ZIcx+ZAyDX89cSN9/0n
-kKJ0cfyYE6ras1eS59CUZHghaJwfXZeAtiWnMvW79DorK/II9hAy0zj1SXE/WIu8
-rSpT9/hDtuWIhO0VDmPsCDo8Eomu42MbDrcXmPsdRUc1weLSb8UWJ5AT7+gkeVpj
-ShZvxqF6r3bPJl+DduSn1Sy4eOosn3tzSvfKzD08kBJi9hdCIlHOrYJMybgbMsWy
-OKN4rMClzn1kOtjLmaLB
-=rdv8
------END PGP SIGNATURE-----
-
---VrqPEDrXMn8OVzN4--
+--
+Thanks,
+Sylwester
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
