@@ -1,26 +1,51 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [git pull] Devicetree changes for v3.15
-Date: Tue, 01 Apr 2014 21:42:37 +0200
-Message-ID: <1396381357.23763.16.camel@x220>
-References: <CACxGe6vCrkHPL6UNy1p8AO4+z5VFRY6w4_2grQEZQwp_3jJ7Yw@mail.gmail.com>
+From: Thor Thayer - Sendmail <tthayer@altera.com>
+Subject: Re: [PATCH 2/2] arm: socfpga: Add support for Altera SoC SDRAM
+ controller
+Date: Tue, 1 Apr 2014 15:05:12 -0500
+Message-ID: <1396382712.20336.2.camel@dinh-ubuntu>
+References: <1396303627-29198-1-git-send-email-tthayer@altera.com>
+	 <1396303627-29198-3-git-send-email-tthayer@altera.com>
+	 <20140401053343.GO5052@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6vCrkHPL6UNy1p8AO4+z5VFRY6w4_2grQEZQwp_3jJ7Yw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@linaro.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140401053343.GO5052@pengutronix.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: dinguyen@altera.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-04-01 at 11:15 +0100, Grant Likely wrote:
-> Grant Likely (13):
->       [...]
->       of: remove /proc/device-tree
+On Tue, 2014-04-01 at 07:33 +0200, Steffen Trumtrar wrote:
+> On Mon, Mar 31, 2014 at 05:07:07PM -0500, tthayer@altera.com wrote:
+> > From: Thor Thayer <tthayer@altera.com>
+> > 
+<snip>
+> >  
+> 
+> Can't we get rid of all these global pointers instead of adding to them?
 
-That commit leaves a select for PROC_DEVICETREE dangling. See "config
-ARCH_OMAP2PLUS" in arch/arm/mach-omap2/Kconfig. Can that select
-statement just be dropped now or is something more elaborate needed?
+Yes. I will remove this file from the patch. Thanks.
 
+> 
+> > @@ -150,6 +151,15 @@ void __init socfpga_sysmgr_init(void)
+> >  
+> >  	np = of_find_compatible_node(NULL, NULL, "altr,clk-mgr");
+> >  	clk_mgr_base_addr = of_iomap(np, 0);
+> > +
+> > +	np = of_find_compatible_node(NULL, NULL, "altr,sdr-ctl");
+> > +	if (!np) {
+> > +		pr_err("SOCFPGA: Unable to find sdr-ctl\n");
+> > +		return;
+> > +	}
+> > +
+> > +	sdr_ctl_base_addr = of_iomap(np, 0);
+> > +	WARN_ON(!sdr_ctl_base_addr);
+> >  }
+> >  
+> >  static void __init socfpga_init_irq(void)
+> > -- 
+> > 1.7.9.5
+> > 
+> 
 
-Paul Bolle
