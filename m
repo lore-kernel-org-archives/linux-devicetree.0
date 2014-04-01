@@ -1,38 +1,75 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH 4/6] mfd: arizona: Update DT binding to support LDO1 init_data
-Date: Tue,  1 Apr 2014 09:27:23 +0100
-Message-ID: <1396340845-24060-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-References: <1396340845-24060-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1396340845-24060-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org
-Cc: lee.jones@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, sameo@linux.intel.com, lgirdwood@gmail.com, ckeepax@opensource.wolfsonmicro.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Subject: Re: [PATCH] spi: add "spi-lsb-first" to devicetree
+Date: Tue, 1 Apr 2014 11:42:56 +0300
+Message-ID: <20140401084256.GV4579@tarshish>
+References: <1396338931-10887-1-git-send-email-B45475@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1396338931-10887-1-git-send-email-B45475-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhao Qiang <B45475-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org, wangyuhang2014-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, R63061-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
----
- Documentation/devicetree/bindings/mfd/arizona.txt |    8 ++++++++
- 1 files changed, 8 insertions(+), 0 deletions(-)
+Hi Zhao Qiang,
 
-diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-index 0e295c9..aa16489 100644
---- a/Documentation/devicetree/bindings/mfd/arizona.txt
-+++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-@@ -40,6 +40,14 @@ Optional properties:
-     the chip default will be used.  If present exactly five values must
-     be specified.
- 
-+  - DCVDD-supply : Power supply, only needs to be specified if DCVDD is being
-+    externally supplied. As covered in
-+    Documentation/devicetree/bindings/regulator/regulator.txt
-+
-+Optional subnodes:
-+  - ldo1 : Initial data for the LDO1 regulator, as covered in
-+    Documentation/devicetree/bindings/regulator/regulator.txt
-+
- Example:
- 
- codec: wm5102@1a {
+On Tue, Apr 01, 2014 at 03:55:31PM +0800, Zhao Qiang wrote:
+> add optional property devicetree for SPI slave nodes
+> into devicetree so that LSB mode can be enabled by devicetree.
+> 
+> Signed-off-by: Zhao Qiang <B45475-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/spi/spi-bus.txt | 4 ++++
+>  drivers/spi/spi.c                                 | 2 ++
+>  2 files changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> index e5a4d1b..fdd9f15 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> @@ -55,11 +55,15 @@ contain the following properties.
+>      		chip select active high
+>  - spi-3wire       - (optional) Empty property indicating device requires
+>      		    3-wire mode.
+> +- spi-lsb-first   - (optional) Empty property indicating device requires
+> +		LSB first mode.
+>  - spi-tx-bus-width - (optional) The bus width(number of data wires) that
+>                        used for MOSI. Defaults to 1 if not present.
+>  - spi-rx-bus-width - (optional) The bus width(number of data wires) that
+>                        used for MISO. Defaults to 1 if not present.
+>  
+> +- spi-rx-bus-width - (optional) The bus width(number of data wires) that
+> +                      used for MISO. Defaults to 1 if not present.
+
+Is this part intentionally here? It is not mentioned in the commit log, and 
+seems to merit a separate patch.
+
+baruch
+
+>  Some SPI controllers and devices support Dual and Quad SPI transfer mode.
+>  It allows data in SPI system transfered in 2 wires(DUAL) or 4 wires(QUAD).
+>  Now the value that spi-tx-bus-width and spi-rx-bus-width can receive is
+> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+> index 23756b0..0a20a90 100644
+> --- a/drivers/spi/spi.c
+> +++ b/drivers/spi/spi.c
+> @@ -1050,6 +1050,8 @@ static void of_register_spi_devices(struct spi_master *master)
+>  			spi->mode |= SPI_CS_HIGH;
+>  		if (of_find_property(nc, "spi-3wire", NULL))
+>  			spi->mode |= SPI_3WIRE;
+> +		if (of_find_property(nc, "spi-lsb-first", NULL))
+> +			spi->mode |= SPI_LSB_FIRST;
+>  
+>  		/* Device DUAL/QUAD mode */
+>  		if (!of_property_read_u32(nc, "spi-tx-bus-width", &value)) {
+
 -- 
-1.7.2.5
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
