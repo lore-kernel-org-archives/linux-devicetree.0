@@ -1,109 +1,102 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH 1/2] watchdog: Add Cadence WDT driver
-Date: Tue, 01 Apr 2014 13:20:23 +0200
-Message-ID: <533AA0F7.2080304@monstr.eu>
-References: <1396002720-7105-1-git-send-email-harinik@xilinx.com> <533A0937.9030505@roeck-us.net>
-Reply-To: monstr@monstr.eu
+From: Nicolin Chen <Guangyu.Chen@freescale.com>
+Subject: [PATCH] ASoC: fsl_sai: Add imx6sx platform support
+Date: Tue, 1 Apr 2014 19:34:09 +0800
+Message-ID: <1396352049-23554-1-git-send-email-Guangyu.Chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="1UdlIJ8W0cQa8K6g1X9WRF86iF9EJRsnS"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <533A0937.9030505@roeck-us.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Harini Katakam <harinik@xilinx.com>, grant.likely@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michals@xilinx.com, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: broonie@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, linux-doc@vger.kernel.org, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, timur@tabi.org, Li.Xiubo@freescale.com, rob@landley.net, galak@codeaurora.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---1UdlIJ8W0cQa8K6g1X9WRF86iF9EJRsnS
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+The next coming i.MX6 Solo X SoC also contains SAI module while we use
+imp_pcm_init() for i.MX platform.
 
-Hi Guenter,
+So this patch adds one compatible route for imx6sx and updates the DT
+doc accordingly.
 
->> +/**
->> + * struct cdns_wdt - Watchdog device structure
->> + * @regs: baseaddress of device
->> + * @rst: reset flag
->> + * @clk: struct clk * of a clock source
->> + * @prescaler: for saving prescaler value
->> + * @ctrl_clksel: counter clock prescaler selection
->> + * @io_lock: spinlock for IO register access
->> + * @cdns_wdt_device: watchdog device structure
->> + * @cdns_wdt_notifier: notifier structure
->> + *
->> + * Structure containing parameters specific to cadence watchdog.
->> + */
->> +struct cdns_wdt {
->> +    void __iomem        *regs;
->> +    u32            rst;
->> +    struct clk        *clk;
->> +    u32            prescaler;
->> +    u32            ctrl_clksel;
->> +    spinlock_t        io_lock;
->> +    struct watchdog_device    cdns_wdt_device;
->> +    struct notifier_block    cdns_wdt_notifier;
->> +};
->> +
->> +/* Write access to Registers */
->> +static inline void cdns_wdt_writereg(void __iomem *offset, u32 val)
->> +{
->> +    writel_relaxed(val, offset);
->> +}
->> +
->=20
-> Not really sure if this function provides any value.
+Signed-off-by: Nicolin Chen <Guangyu.Chen@freescale.com>
+---
+ Documentation/devicetree/bindings/sound/fsl-sai.txt |  2 +-
+ sound/soc/fsl/fsl_sai.c                             | 12 ++++++++++--
+ sound/soc/fsl/fsl_sai.h                             |  1 +
+ 3 files changed, 12 insertions(+), 3 deletions(-)
 
-I can't see any problem to use this helper IO function
-but maybe we could do it a little bit differently.
-Currently implementation is just passing values to writel_relaxed()
-
-What about to do it like this?
-
-static inline void cdns_wdt_writereg(struct cdns_wdt *wdt, u32 offset, u3=
-2 val)
-{
-    writel_relaxed(val, wdt->regs + offset);
-}
-
-This solution was suggested by Mark here too.
-https://lkml.org/lkml/2014/3/17/234
-
-The reason for having one IO helper function is
-1. Simper debugging when you add printks to one location and
-you get full list for accesses
-2. This driver can be also used by BE Linux on Microblaze in PL
-that's why there could be a need to autodetect endianess directly
-on the IP itself. Then using helper function is necessary.
-3. We have met with secure monitor implementation where all these
-io accesses should be done via smc calls and having
-IO helper function is easier for change.
-
-Thanks,
-Michal
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---1UdlIJ8W0cQa8K6g1X9WRF86iF9EJRsnS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlM6oPcACgkQykllyylKDCGltwCfark82XZsx3xg6RW1TJZq48xk
-tpkAn0em/Tpp9YxxOa5d8fVlcD7JOtJN
-=ihri
------END PGP SIGNATURE-----
-
---1UdlIJ8W0cQa8K6g1X9WRF86iF9EJRsnS--
+diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
+index 98611a6..35c09fe 100644
+--- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
++++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
+@@ -7,7 +7,7 @@ codec/DSP interfaces.
+ 
+ 
+ Required properties:
+-- compatible: Compatible list, contains "fsl,vf610-sai".
++- compatible: Compatible list, contains "fsl,vf610-sai" or "fsl,imx6sx-sai".
+ - reg: Offset and length of the register set for the device.
+ - clocks: Must contain an entry for each entry in clock-names.
+ - clock-names : Must include the "sai" entry.
+diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+index d64c33f..9ed6795 100644
+--- a/sound/soc/fsl/fsl_sai.c
++++ b/sound/soc/fsl/fsl_sai.c
+@@ -22,6 +22,7 @@
+ #include <sound/pcm_params.h>
+ 
+ #include "fsl_sai.h"
++#include "imx-pcm.h"
+ 
+ #define FSL_SAI_FLAGS (FSL_SAI_CSR_SEIE |\
+ 		       FSL_SAI_CSR_FEIE)
+@@ -592,6 +593,9 @@ static int fsl_sai_probe(struct platform_device *pdev)
+ 
+ 	sai->pdev = pdev;
+ 
++	if (of_device_is_compatible(pdev->dev.of_node, "fsl,imx6sx-sai"))
++		sai->sai_on_imx = true;
++
+ 	sai->big_endian_regs = of_property_read_bool(np, "big-endian-regs");
+ 	if (sai->big_endian_regs)
+ 		fsl_sai_regmap_config.val_format_endian = REGMAP_ENDIAN_BIG;
+@@ -634,12 +638,16 @@ static int fsl_sai_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	return devm_snd_dmaengine_pcm_register(&pdev->dev, NULL,
+-			SND_DMAENGINE_PCM_FLAG_NO_RESIDUE);
++	if (sai->sai_on_imx)
++		return imx_pcm_dma_init(pdev);
++	else
++		return devm_snd_dmaengine_pcm_register(&pdev->dev, NULL,
++				SND_DMAENGINE_PCM_FLAG_NO_RESIDUE);
+ }
+ 
+ static const struct of_device_id fsl_sai_ids[] = {
+ 	{ .compatible = "fsl,vf610-sai", },
++	{ .compatible = "fsl,imx6sx-sai", },
+ 	{ /* sentinel */ }
+ };
+ 
+diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
+index be26d46..677670d 100644
+--- a/sound/soc/fsl/fsl_sai.h
++++ b/sound/soc/fsl/fsl_sai.h
+@@ -130,6 +130,7 @@ struct fsl_sai {
+ 	bool big_endian_regs;
+ 	bool big_endian_data;
+ 	bool is_dsp_mode;
++	bool sai_on_imx;
+ 
+ 	struct snd_dmaengine_dai_dma_data dma_params_rx;
+ 	struct snd_dmaengine_dai_dma_data dma_params_tx;
+-- 
+1.8.4
