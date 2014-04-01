@@ -1,91 +1,58 @@
-From: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH] of: fix of_update_property [v2]
-Date: Tue, 1 Apr 2014 13:51:26 +0800
-Message-ID: <1396331486-29354-1-git-send-email-Li.Xiubo@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+Subject: [PATCH] DT: video: atmel_lcdc: Add example of fixed framebuffer memory
+Date: Tue,  1 Apr 2014 08:28:50 +0200
+Message-ID: <1396333730-10592-1-git-send-email-alexander.stein@systec-electronic.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The of_update_property() is intented to update a property in a node
-and if the property does not exist, will add it.
+This drivers allows a fixed framebuffer memory to be set by an additional
+IORESOURCE_MEM resource. Thus add an example to the DT documentation.
 
-The second search of the property is possibly won't be found, that
-maybe removed by other thread just before the second search begain.
-
-Using the __of_find_property() and __of_add_property() instead and
-move them into lock operations.
-
-Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
 ---
- drivers/of/base.c | 24 +++++++++++-------------
- 1 file changed, 11 insertions(+), 13 deletions(-)
+Actually I stumbled myself over this wondering how can I use this specific
+feature. In the end I found it myself my coincidence. So it's best to add
+this as an example for other people maybe not that experienced on
+device-tree.
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 418a4ff9..34acb37 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1767,7 +1767,7 @@ int of_update_property(struct device_node *np, struct property *newprop)
- {
- 	struct property **next, *oldprop;
- 	unsigned long flags;
--	int rc, found = 0;
-+	int rc;
+ Documentation/devicetree/bindings/video/atmel,lcdc.txt | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/video/atmel,lcdc.txt b/Documentation/devicetree/bindings/video/atmel,lcdc.txt
+index 1ec175e..92492b7 100644
+--- a/Documentation/devicetree/bindings/video/atmel,lcdc.txt
++++ b/Documentation/devicetree/bindings/video/atmel,lcdc.txt
+@@ -10,7 +10,9 @@ Required properties:
+ 	"atmel,at91sam9g45es-lcdc" ,
+ 	"atmel,at91sam9rl-lcdc" ,
+ 	"atmel,at32ap-lcdc"
+-- reg : Should contain 1 register ranges(address and length)
++- reg : Should contain 1 register ranges(address and length).
++	Can contain an additional register range(address and length)
++	for fixed framebuffer memory.Usefull for dedicated memories.
+ - interrupts : framebuffer controller interrupt
+ - display: a phandle pointing to the display node
  
- 	rc = of_property_notify(OF_RECONFIG_UPDATE_PROPERTY, np, newprop);
- 	if (rc)
-@@ -1776,25 +1776,26 @@ int of_update_property(struct device_node *np, struct property *newprop)
- 	if (!newprop->name)
- 		return -EINVAL;
+@@ -35,6 +37,14 @@ Example:
  
--	oldprop = of_find_property(np, newprop->name, NULL);
--	if (!oldprop)
--		return of_add_property(np, newprop);
--
- 	raw_spin_lock_irqsave(&devtree_lock, flags);
--	next = &np->properties;
--	while (*next) {
-+	oldprop = __of_find_property(np, newprop->name, NULL);
-+	if (!oldprop) {
-+		/* add the node */
-+		rc = __of_add_property(np, newprop);
-+	} else {
-+		next = &np->properties;
-+		while (*next && *next != oldprop)
-+			next = &(*next)->next;
+ 	};
+ 
++Example for fixed framebuffer memory:
 +
- 		if (*next == oldprop) {
- 			/* found the node */
- 			newprop->next = oldprop->next;
- 			*next = newprop;
- 			oldprop->next = np->deadprops;
- 			np->deadprops = oldprop;
--			found = 1;
--			break;
- 		}
--		next = &(*next)->next;
- 	}
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
++	fb0: fb@0x00500000 {
++		compatible = "atmel,at91sam9263-lcdc";
++		reg = <0x00700000 0x1000 0x70000000 0x200000>;
++		[...]
++	};
 +
- 	if (rc)
- 		return rc;
- 
-@@ -1803,9 +1804,6 @@ int of_update_property(struct device_node *np, struct property *newprop)
- 		sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
- 	__of_add_property_sysfs(np, newprop);
- 
--	if (!found)
--		return -ENODEV;
--
- 	return 0;
- }
- 
+ Atmel LCDC Display
+ -----------------------------------------------------
+ Required properties (as per of_videomode_helper):
 -- 
-1.8.4
-
+1.8.3.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
