@@ -1,66 +1,95 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: Add vendor prefix for Energy Micro
-Date: Tue, 1 Apr 2014 07:10:39 -0500
-Message-ID: <CAL_Jsq+=mCzFiFR3gr3KfBsJ5zGm4ZRRBEwS5VNZ3OA4cQAhmA@mail.gmail.com>
-References: <1395756677-6166-1-git-send-email-u.kleine-koenig@pengutronix.de>
-	<CAL_Jsq+TVKywqbQ4vePQWjgbZ4Zc_d_CUrx6R33-pHtxVtsAzg@mail.gmail.com>
-	<20140325195950.GB15793@pengutronix.de>
-	<20140331220334.GB6045@pengutronix.de>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH v3 00/12] Add DSI display support for Exynos based boards
+Date: Tue, 1 Apr 2014 21:29:39 +0900
+Message-ID: <CAAQKjZN7u1q6jeLCyQ0qe7VDRY3wUv1PjUeZZ6uoWYjo7vdtZQ@mail.gmail.com>
+References: <1396007567-4015-1-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140331220334.GB6045-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?ISO-8859-1?Q?Uwe_Kleine=2DK=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1396007567-4015-1-git-send-email-a.hajda@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: DRI mailing list <dri-devel@lists.freedesktop.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 31, 2014 at 5:03 PM, Uwe Kleine-K=F6nig
-<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> Hello,
->
-> On Tue, Mar 25, 2014 at 08:59:50PM +0100, Uwe Kleine-K=F6nig wrote:
->> On Tue, Mar 25, 2014 at 11:51:33AM -0500, Rob Herring wrote:
->> > On Tue, Mar 25, 2014 at 9:11 AM, Uwe Kleine-K=F6nig
->> > <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
->> > > There are already patches floating around to add
->> > > energymicro,efm32-{i2c,serial,spi} as compatible strings.
->> >
->> > "Patches floating around" is not a very convincing argument why
->> > "silabs" should not just be used instead. I have no problem taking
->> > this, but if changing to silabs is possible, we may want to do tha=
-t.
->> I think energymicro is still the right prefix, because back when efm=
-32
->> was created it was still Energy Micro. Or am I wrong here?
-> Some of these patches entered next in the meantime, affected are:
->
->         1b5b23718b84 i2c: efm32: new bus driver
->         12f6dd860cf8 spi: efm32: use $vendor,$device scheme for compa=
-tible string
->
-> A third patch is in gregkh's queue, Subject: "[PATCH] serial: efm32: =
-use
-> $vendor,$device scheme for compatible string", Message-Id:
-> 1395755954-18988-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org .
->
-> (Wolfram, I just noticed that I failed to fix the binding docs for th=
-e
-> changed compatible string. Should I send a fixup or a v5?)
->
-> If I should better use "silabs,..." instead of "energymicro,..." I'd
-> like to have that sorted out before 3.15-rc1.
->
-> Thoughts?
+Hi Andrzej,
 
-Okay, energymicro is fine.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2014-03-28 20:52 GMT+09:00 Andrzej Hajda <a.hajda@samsung.com>:
+> Hi,
+>
+> This patchset adds drivers and bindings to the following devices:
+> - Exynos DSI master,
+> - S6E8AA0 DSI panel,
+>
+> It adds also display support in DTS files for the following boards:
+> - Exynos4210/Trats,
+> - Exynos4412/Trats2.
+>
+> The patchset is based on exynos_drm_next branch.
+>
+> It is the 3rd iteration of the patches, main changes:
+> - based on exynos_drm_next branch,
+> - added video interface bindings between DSI host and slave,
+>   it seems to me to be redundand, and I hope when video interface bindings
+>   will be stabilized it can become optional,
+> - GPIOs implemented using gpiod framework,
+> - removed controversial stuff (toshiba bridge implementation and arndale support),
+>   it will be send in another set of patches
+>
+> Other changes are described in individual patches.
+>
+> Regards
+> Andrzej
+>
+>
+> Andrzej Hajda (12):
+>   drm/mipi_dsi: add flags to DSI messages
+>   drm/mipi_dsi: create dsi devices only for nodes with reg property
+>   drm/exynos: disallow fbdev initialization if no device is connected
+>   exynos/dsim: add DT bindings
+>   drm/exynos: add DSIM driver
+>   panel/s6e8aa0: add DT bindings
+>   drm/panel: add S6E8AA0 driver
+>   ARM: dts: exynos4: add MIPI DSI Master node
+>   ARM: dts: exynos4210-trats: add panel node
+>   ARM: dts: exynos4412-trats2: add panel node
+>   ARM: dts: exynos4210-trats: enable exynos/fimd node
+>   ARM: dts: exynos4412-trats2: enable exynos/fimd node
+
+Picked up this patch series.
+
+Thanks for your contribution,
+Inki Dae
+
+>
+>  .../devicetree/bindings/panel/samsung,s6e8aa0.txt  |   56 +
+>  .../devicetree/bindings/video/exynos_dsim.txt      |   80 +
+>  arch/arm/boot/dts/exynos4.dtsi                     |   14 +
+>  arch/arm/boot/dts/exynos4210-trats.dts             |   61 +
+>  arch/arm/boot/dts/exynos4412-trats2.dts            |   70 +
+>  drivers/gpu/drm/drm_mipi_dsi.c                     |    6 +-
+>  drivers/gpu/drm/exynos/Kconfig                     |    9 +
+>  drivers/gpu/drm/exynos/Makefile                    |    1 +
+>  drivers/gpu/drm/exynos/exynos_drm_drv.c            |   15 +
+>  drivers/gpu/drm/exynos/exynos_drm_drv.h            |    1 +
+>  drivers/gpu/drm/exynos/exynos_drm_dsi.c            | 1525 ++++++++++++++++++++
+>  drivers/gpu/drm/exynos/exynos_drm_fbdev.c          |   21 +
+>  drivers/gpu/drm/panel/Kconfig                      |    7 +
+>  drivers/gpu/drm/panel/Makefile                     |    1 +
+>  drivers/gpu/drm/panel/panel-s6e8aa0.c              | 1069 ++++++++++++++
+>  include/drm/drm_mipi_dsi.h                         |    6 +
+>  16 files changed, 2941 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/panel/samsung,s6e8aa0.txt
+>  create mode 100644 Documentation/devicetree/bindings/video/exynos_dsim.txt
+>  create mode 100644 drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>  create mode 100644 drivers/gpu/drm/panel/panel-s6e8aa0.c
+>
+> --
+> 1.8.3.2
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
