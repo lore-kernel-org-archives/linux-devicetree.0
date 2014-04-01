@@ -1,135 +1,53 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH RFC v4 2/2] clk: Add handling of clk parent and rate
- assigned from DT
-Date: Tue, 01 Apr 2014 16:52:07 +0200
-Message-ID: <533AD297.2020302@samsung.com>
-References: <1396284116-19178-1-git-send-email-s.nawrocki@samsung.com>
- <1396284116-19178-3-git-send-email-s.nawrocki@samsung.com>
- <1965445.mLnp8rmPxd@avalon>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] NFC: pn544_i2c: Add DTS Documentation
+Date: Tue, 1 Apr 2014 17:05:36 +0100
+Message-ID: <20140401160536.GK16420@e106331-lin.cambridge.arm.com>
+References: <6ec915ed416745248c5ed4aa22dfe0e6@AMXPR04MB136.eurprd04.prod.outlook.com>
+ <20140331152550.GA15064@e106331-lin.cambridge.arm.com>
+ <ab2e5666063c4ea1937636a911dfca02@AMXPR04MB136.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1965445.mLnp8rmPxd@avalon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, mturquette@linaro.org, linux@arm.linux.org.uk, robh+dt@kernel.org, grant.likely@linaro.org, mark.rutland@arm.com, galak@codeaurora.org, kyungmin.park@samsung.com, sw0312.kim@samsung.com, m.szyprowski@samsung.com, t.figa@samsung.com, s.hauer@pengutronix.de
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <ab2e5666063c4ea1937636a911dfca02-fjMGVQzTDdguRZvghep3ngfhPeD8jYilXA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Clement Perrochaud <clement.perrochaud-3arQi8VN3Tc@public.gmane.org>
+Cc: "linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org" <linux-nfc-y27Ovi1pjclAfugRpC6u6w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
-
-On 01/04/14 15:15, Laurent Pinchart wrote:
-[...]
->> +/**
->> + * of_clk_device_init() - parse and set clk configuration assigned to a
->> device
->> + * @node: device node to apply the configuration for
->> + *
->> + * This function parses 'clock-parents' and 'clock-rates' properties and
->> sets
->> + * any specified clock parents and rates.
->> + */
->> +int of_clk_device_init(struct device_node *node)
->> +{
->> +	struct property	*prop;
->> +	const __be32 *cur;
->> +	int rc, index, num_parents;
->> +	struct clk *clk, *pclk;
->> +	u32 rate;
->> +
->> +	num_parents = of_count_phandle_with_args(node, "clock-parents",
->> +						 "#clock-cells");
->> +	if (num_parents == -EINVAL)
->> +		pr_err("clk: Invalid value of clock-parents property at %s\n",
->> +		       node->full_name);
+On Tue, Apr 01, 2014 at 02:45:10PM +0100, Clement Perrochaud wrote:
+> Mark Rutland wrote: 
+> > s/_/-/ in compatible strings and property names, please. 
+> >  [...]
+> > As this is an interrupt from the point of view of the device, I would
+> > prefer this described as an interrupt (using the standard interrupts
+> > property), with the GPIO controller described as an interrupt
+> > controller. 
+> >  [...]
+> > enable-gpios? 
+> >  [...]
+> > firmware-gpios? 
 > 
-> This is an implementation detail, but wouldn't it simplify the code if you 
-> merged the two loops by iterating of the 	clocks property instead of over the 
-> clock-parents and clock-rates properties separately ?
-
-The issue here is that all clock parents should be set before we start setting
-clock rates. Otherwise the clock frequencies could be incorrect if clk_set_rate()
-is followed by clk_set_parent().
-
->> +	for (index = 0; index < num_parents; index++) {
->> +		pclk = of_clk_get_by_property(node, "clock-parents", index);
->> +		if (IS_ERR(pclk)) {
->> +			/* skip empty (null) phandles */
->> +			if (PTR_ERR(pclk) == -ENOENT)
->> +				continue;
->> +
->> +			pr_warn("clk: couldn't get parent clock %d for %s\n",
->> +				index, node->full_name);
->> +			return PTR_ERR(pclk);
->> +		}
->> +
->> +		clk = of_clk_get(node, index);
->> +		if (IS_ERR(clk)) {
->> +			pr_warn("clk: couldn't get clock %d for %s\n",
->> +				index, node->full_name);
->> +			return PTR_ERR(clk);
->> +		}
->> +
->> +		rc = clk_set_parent(clk, pclk);
->> +		if (rc < 0)
->> +			pr_err("clk: failed to reparent %s to %s: %d\n",
->> +			       __clk_get_name(clk), __clk_get_name(pclk), rc);
->> +		else
->> +			pr_debug("clk: set %s as parent of %s\n",
->> +				 __clk_get_name(pclk), __clk_get_name(clk));
->> +	}
->> +
->> +	index = 0;
->> +	of_property_for_each_u32(node, "clock-rates", prop, cur, rate) {
->> +		if (rate) {
->> +			clk = of_clk_get(node, index);
->> +			if (IS_ERR(clk)) {
->> +				pr_warn("clk: couldn't get clock %d for %s\n",
->> +					index, node->full_name);
->> +				return PTR_ERR(clk);
->> +			}
->> +
->> +			rc = clk_set_rate(clk, rate);
->> +			if (rc < 0)
->> +				pr_err("clk: couldn't set %s clock rate: %d\n",
->> +				       __clk_get_name(clk), rc);
->> +			else
->> +				pr_debug("clk: set rate of clock %s to %lu\n",
->> +					 __clk_get_name(clk), clk_get_rate(clk));
->> +		}
->> +		index++;
->> +	}
->> +
->> +	return 0;
->> +}
->> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
->> index dff0373..ea6d8bd 100644
->> --- a/drivers/clk/clk.c
->> +++ b/drivers/clk/clk.c
+> Hi Mark,
 > 
-> [snip]
+> Thank you for your help.
 > 
->> @@ -2620,7 +2621,15 @@ void __init of_clk_init(const struct of_device_id
->> *matches) list_for_each_entry_safe(clk_provider, next,
->>  					&clk_provider_list, node) {
->>  			if (force || parent_ready(clk_provider->np)) {
->> +
->>  				clk_provider->clk_init_cb(clk_provider->np);
->> +
->> +				/* Set any assigned clock parents and rates */
->> +				np = of_get_child_by_name(clk_provider->np,
->> +							  "assigned-clocks");
->> +				if (np)
->> +					of_clk_device_init(np);
-> 
-> Aren't you missing an of_node_put() here ?
+> Where can I find documentation describing these naming conventions?
 
-Indeed, it's missing. Will fix that in next version, thanks for pointing out.
+Documentation/devicetree/bindings/gpio/gpio.txt:
 
->>  				list_del(&clk_provider->node);
->>  				kfree(clk_provider);
->>  				is_init_done = true;
+	GPIO properties should be named "[<name>-]gpios".
 
+In general, following existing style is preferred, and "enable-gpios" is
+already relatively common.
+
+We admittedly have short names like "cs-gpios", but personally I would
+prefer "firmware-gpios" to "fw-gpios" for clarity.
+
+Cheers,
+Mark.
 --
-Regards,
-Sylwester
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
