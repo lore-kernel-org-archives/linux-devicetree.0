@@ -1,102 +1,128 @@
 From: Nicolin Chen <Guangyu.Chen@freescale.com>
-Subject: [PATCH] ASoC: fsl_sai: Add imx6sx platform support
-Date: Tue, 1 Apr 2014 19:34:09 +0800
-Message-ID: <1396352049-23554-1-git-send-email-Guangyu.Chen@freescale.com>
+Subject: [PATCH 1/2] ASoC: fsl_sai: Add clock control for SAI
+Date: Tue, 1 Apr 2014 19:52:52 +0800
+Message-ID: <87d225a25812d730c0865f9d0bb733c67d8b3ed1.1396352401.git.Guangyu.Chen@freescale.com>
+References: <cover.1396352401.git.Guangyu.Chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: broonie@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, linux-doc@vger.kernel.org, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, timur@tabi.org, Li.Xiubo@freescale.com, rob@landley.net, galak@codeaurora.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1396352401.git.Guangyu.Chen@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org, shawn.guo@linaro.org
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, timur@tabi.org, Li.Xiubo@freescale.com, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The next coming i.MX6 Solo X SoC also contains SAI module while we use
-imp_pcm_init() for i.MX platform.
+The SAI mainly has two clocks:
+ipg_clock -- registers access for SoC or DMA to read and write.
+sai_clock -- providing DAI format bit clock and frame clock.
 
-So this patch adds one compatible route for imx6sx and updates the DT
-doc accordingly.
+Thus this patch adds these two clocks to the driver with their clock
+controls and replaces the regmap clock 'sai_clock' with 'ipg_clock'.
 
 Signed-off-by: Nicolin Chen <Guangyu.Chen@freescale.com>
 ---
- Documentation/devicetree/bindings/sound/fsl-sai.txt |  2 +-
- sound/soc/fsl/fsl_sai.c                             | 12 ++++++++++--
- sound/soc/fsl/fsl_sai.h                             |  1 +
- 3 files changed, 12 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/sound/fsl-sai.txt          |  7 ++--
+ sound/soc/fsl/fsl_sai.c                            | 37 ++++++++++++++++++++--
+ sound/soc/fsl/fsl_sai.h                            |  2 ++
+ 3 files changed, 41 insertions(+), 5 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-index 98611a6..35c09fe 100644
+index 35c09fe..bad4453 100644
 --- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
 +++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-@@ -7,7 +7,7 @@ codec/DSP interfaces.
- 
- 
- Required properties:
--- compatible: Compatible list, contains "fsl,vf610-sai".
-+- compatible: Compatible list, contains "fsl,vf610-sai" or "fsl,imx6sx-sai".
+@@ -11,5 +11,6 @@ Required properties:
  - reg: Offset and length of the register set for the device.
  - clocks: Must contain an entry for each entry in clock-names.
- - clock-names : Must include the "sai" entry.
+-- clock-names : Must include the "sai" entry.
++- clock-names : Must include the "ipg" for register access and "sai" for bit
++  clock and frame clock providing.
+ - dmas : Generic dma devicetree binding as described in
+   Documentation/devicetree/bindings/dma/dma.txt.
+@@ -31,6 +32,6 @@ sai2: sai@40031000 {
+ 	      pinctrl-names = "default";
+ 	      pinctrl-0 = <&pinctrl_sai2_1>;
+-	      clocks = <&clks VF610_CLK_SAI2>;
+-	      clock-names = "sai";
++	      clocks = <&clks VF610_CLK_SAI2>, <&clks VF610_CLK_SAI2>;
++	      clock-names = "ipg", "sai";
+ 	      dma-names = "tx", "rx";
+ 	      dmas = <&edma0 0 VF610_EDMA_MUXID0_SAI2_TX>,
 diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-index d64c33f..9ed6795 100644
+index 3847d2a..2d749df 100644
 --- a/sound/soc/fsl/fsl_sai.c
 +++ b/sound/soc/fsl/fsl_sai.c
-@@ -22,6 +22,7 @@
- #include <sound/pcm_params.h>
- 
- #include "fsl_sai.h"
-+#include "imx-pcm.h"
- 
- #define FSL_SAI_FLAGS (FSL_SAI_CSR_SEIE |\
- 		       FSL_SAI_CSR_FEIE)
-@@ -592,6 +593,9 @@ static int fsl_sai_probe(struct platform_device *pdev)
- 
- 	sai->pdev = pdev;
- 
-+	if (of_device_is_compatible(pdev->dev.of_node, "fsl,imx6sx-sai"))
-+		sai->sai_on_imx = true;
+@@ -428,5 +428,18 @@ static int fsl_sai_startup(struct snd_pcm_substream *substream,
+ {
+ 	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
+-	u32 reg;
++	struct device *dev = &sai->pdev->dev;
++	u32 reg, ret;
 +
- 	sai->big_endian_regs = of_property_read_bool(np, "big-endian-regs");
- 	if (sai->big_endian_regs)
- 		fsl_sai_regmap_config.val_format_endian = REGMAP_ENDIAN_BIG;
-@@ -634,12 +638,16 @@ static int fsl_sai_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
++	ret = clk_prepare_enable(sai->ipg_clk);
++	if (ret) {
++		dev_err(dev, "failed to prepare and enable ipg clock\n");
++		return ret;
++	}
++
++	ret = clk_prepare_enable(sai->sai_clk);
++	if (ret) {
++		dev_err(dev, "failed to prepare and enable sai clock\n");
++		goto err;
++	}
  
--	return devm_snd_dmaengine_pcm_register(&pdev->dev, NULL,
--			SND_DMAENGINE_PCM_FLAG_NO_RESIDUE);
-+	if (sai->sai_on_imx)
-+		return imx_pcm_dma_init(pdev);
-+	else
-+		return devm_snd_dmaengine_pcm_register(&pdev->dev, NULL,
-+				SND_DMAENGINE_PCM_FLAG_NO_RESIDUE);
+ 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+@@ -439,4 +452,9 @@ static int fsl_sai_startup(struct snd_pcm_substream *substream,
+ 
+ 	return 0;
++
++err:
++	clk_disable_unprepare(sai->ipg_clk);
++
++	return ret;
  }
  
- static const struct of_device_id fsl_sai_ids[] = {
- 	{ .compatible = "fsl,vf610-sai", },
-+	{ .compatible = "fsl,imx6sx-sai", },
- 	{ /* sentinel */ }
- };
+@@ -454,4 +472,7 @@ static void fsl_sai_shutdown(struct snd_pcm_substream *substream,
+ 	regmap_update_bits(sai->regmap, reg, FSL_SAI_CR3_TRCE,
+ 			   ~FSL_SAI_CR3_TRCE);
++
++	clk_disable_unprepare(sai->sai_clk);
++	clk_disable_unprepare(sai->ipg_clk);
+ }
  
+@@ -609,5 +630,5 @@ static int fsl_sai_probe(struct platform_device *pdev)
+ 
+ 	sai->regmap = devm_regmap_init_mmio_clk(&pdev->dev,
+-			"sai", base, &fsl_sai_regmap_config);
++			"ipg", base, &fsl_sai_regmap_config);
+ 	if (IS_ERR(sai->regmap)) {
+ 		dev_err(&pdev->dev, "regmap init failed\n");
+@@ -615,4 +636,16 @@ static int fsl_sai_probe(struct platform_device *pdev)
+ 	}
+ 
++	sai->ipg_clk = devm_clk_get(&pdev->dev, "ipg");
++	if (IS_ERR(sai->ipg_clk)) {
++		dev_err(&pdev->dev, "failed to get ipg clock\n");
++		return PTR_ERR(sai->ipg_clk);
++	}
++
++	sai->sai_clk = devm_clk_get(&pdev->dev, "sai");
++	if (IS_ERR(sai->sai_clk)) {
++		dev_err(&pdev->dev, "failed to get sai clock\n");
++		return PTR_ERR(sai->sai_clk);
++	}
++
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0) {
 diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
-index be26d46..677670d 100644
+index 677670d..cbaf114 100644
 --- a/sound/soc/fsl/fsl_sai.h
 +++ b/sound/soc/fsl/fsl_sai.h
-@@ -130,6 +130,7 @@ struct fsl_sai {
- 	bool big_endian_regs;
- 	bool big_endian_data;
- 	bool is_dsp_mode;
-+	bool sai_on_imx;
+@@ -127,4 +127,6 @@ struct fsl_sai {
+ 	struct platform_device *pdev;
+ 	struct regmap *regmap;
++	struct clk *ipg_clk;
++	struct clk *sai_clk;
  
- 	struct snd_dmaengine_dai_dma_data dma_params_rx;
- 	struct snd_dmaengine_dai_dma_data dma_params_tx;
+ 	bool big_endian_regs;
 -- 
 1.8.4
