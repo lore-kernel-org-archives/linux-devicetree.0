@@ -1,43 +1,66 @@
-From: Nicolin Chen <Guangyu.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: Add ipg clock for sai2 on VF610 platform
-Date: Tue, 1 Apr 2014 19:52:53 +0800
-Message-ID: <0c5ca85a8d6ab2e8ee5e543d7ab8ec4c2ff5bf2a.1396352401.git.Guangyu.Chen@freescale.com>
-References: <cover.1396352401.git.Guangyu.Chen@freescale.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: Add vendor prefix for Energy Micro
+Date: Tue, 1 Apr 2014 07:10:39 -0500
+Message-ID: <CAL_Jsq+=mCzFiFR3gr3KfBsJ5zGm4ZRRBEwS5VNZ3OA4cQAhmA@mail.gmail.com>
+References: <1395756677-6166-1-git-send-email-u.kleine-koenig@pengutronix.de>
+	<CAL_Jsq+TVKywqbQ4vePQWjgbZ4Zc_d_CUrx6R33-pHtxVtsAzg@mail.gmail.com>
+	<20140325195950.GB15793@pengutronix.de>
+	<20140331220334.GB6045@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1396352401.git.Guangyu.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <20140331220334.GB6045-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, timur-N01EOCouUvQ@public.gmane.org, Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: =?ISO-8859-1?Q?Uwe_Kleine=2DK=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Since we added ipg clock to the DT binding, we should update the current
-SAI dts/dtsi so as not to break their functions.
+On Mon, Mar 31, 2014 at 5:03 PM, Uwe Kleine-K=F6nig
+<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> Hello,
+>
+> On Tue, Mar 25, 2014 at 08:59:50PM +0100, Uwe Kleine-K=F6nig wrote:
+>> On Tue, Mar 25, 2014 at 11:51:33AM -0500, Rob Herring wrote:
+>> > On Tue, Mar 25, 2014 at 9:11 AM, Uwe Kleine-K=F6nig
+>> > <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+>> > > There are already patches floating around to add
+>> > > energymicro,efm32-{i2c,serial,spi} as compatible strings.
+>> >
+>> > "Patches floating around" is not a very convincing argument why
+>> > "silabs" should not just be used instead. I have no problem taking
+>> > this, but if changing to silabs is possible, we may want to do tha=
+t.
+>> I think energymicro is still the right prefix, because back when efm=
+32
+>> was created it was still Energy Micro. Or am I wrong here?
+> Some of these patches entered next in the meantime, affected are:
+>
+>         1b5b23718b84 i2c: efm32: new bus driver
+>         12f6dd860cf8 spi: efm32: use $vendor,$device scheme for compa=
+tible string
+>
+> A third patch is in gregkh's queue, Subject: "[PATCH] serial: efm32: =
+use
+> $vendor,$device scheme for compatible string", Message-Id:
+> 1395755954-18988-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org .
+>
+> (Wolfram, I just noticed that I failed to fix the binding docs for th=
+e
+> changed compatible string. Should I send a fixup or a v5?)
+>
+> If I should better use "silabs,..." instead of "energymicro,..." I'd
+> like to have that sorted out before 3.15-rc1.
+>
+> Thoughts?
 
-Signed-off-by: Nicolin Chen <Guangyu.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- arch/arm/boot/dts/vf610.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Okay, energymicro is fine.
 
-diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
-index d31ce1b..493c498 100644
---- a/arch/arm/boot/dts/vf610.dtsi
-+++ b/arch/arm/boot/dts/vf610.dtsi
-@@ -140,6 +140,6 @@
- 				reg = <0x40031000 0x1000>;
- 				interrupts = <0 86 0x04>;
--				clocks = <&clks VF610_CLK_SAI2>;
--				clock-names = "sai";
-+				clocks = <&clks VF610_CLK_SAI2>, <&clks VF610_CLK_SAI2>;
-+				clock-names = "ipg", "sai";
- 				status = "disabled";
- 			};
--- 
-1.8.4
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
