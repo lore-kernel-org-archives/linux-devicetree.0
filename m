@@ -1,45 +1,54 @@
-From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [linux-nfc] [PATCH v3 1/2] NFC: pn544_i2c: Add device-tree (Open
- Firmware) support to PN544
-Date: Tue, 1 Apr 2014 01:48:59 +0200
-Message-ID: <20140331234859.GA1152@zurbaran>
-References: <92d1a06e7bda4a46a0b6a28ba6ede55b@AMXPR04MB136.eurprd04.prod.outlook.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: Extending wdt-gpio to be used on non-of (no DT) platforms
+Date: Mon, 31 Mar 2014 17:13:53 -0700
+Message-ID: <20140401001353.GB30453@roeck-us.net>
+References: <CACna6rwRzw1fo2_DyV3T4fa4+cA3=LTcFHRpRsfZWwR2ugQn_w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <92d1a06e7bda4a46a0b6a28ba6ede55b-fjMGVQzTDdguRZvghep3ngfhPeD8jYilXA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+In-Reply-To: <CACna6rwRzw1fo2_DyV3T4fa4+cA3=LTcFHRpRsfZWwR2ugQn_w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Clement Perrochaud <clement.perrochaud-3arQi8VN3Tc@public.gmane.org>
-Cc: "linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org" <linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Clement,
+On Sat, Mar 29, 2014 at 12:54:40PM +0100, Rafa=C5=82 Mi=C5=82ecki wrote=
+:
+> Hi guys,
+>=20
+> I've noticed gpio_wdt was added to the kernel to support some devices
+> based on devicetree.
+> We used to have our own (not mainlined) gpio_wdt in OpenWrt project:
+> http://git.openwrt.org/?p=3Dopenwrt.git;a=3Dblob;f=3Dtarget/linux/gen=
+eric/patches-3.10/990-gpio_wdt.patch;hb=3DHEAD
+>=20
+> The main difference is that the mainlined one uses OF, while OpenWrt'=
+s
+> one uses plain platform API (with struct gpio_wdt_platform_data).
+>=20
+> I wanted to bring a topic of mainlining OpenWrt's solution. We
+> definitely need that and at the same time our device(s) don't use OF =
+/
+> DT.
+>=20
+> Do you think we should extend wdt-gpio to handle that? Or do you thin=
+k
+> this driver is so small, it's not worth it and we should submit a
+> separated one?
+>=20
+> Apart from API being used, one other difference I see is OpenWrt
+> supports different values for "first tick" and "interval". But that
+> could be easily handled.
+>=20
+If you can sort out those differences, I would suggest to add platform =
+data
+support to the existing upstream driver.
 
-One more comment:
-
-On Mon, Mar 31, 2014 at 12:21:44PM +0000, Clement Perrochaud wrote:
-> +	/* No platform data, using device tree. */
-> +	if (!pdata && client->dev.of_node) {
-> +		r = pn544_hci_i2c_of_request_resources(client);
-> +		if (r) {
-> +			nfc_err(&client->dev, "No DT data\n");
-> +			return r;
-> +		}
-> +	/* Using platform data. */
-> +	} else {
-That should be: } else if (pdata) {
-as you need to check for pdata before dereferencing it.
-And your final else will handle the error case where both pdata and of_node
-are NULL.
-
-Cheers,
-Samuel.
-
--- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
+Guenter
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
