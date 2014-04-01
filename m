@@ -1,34 +1,26 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: [PATCH] dt: Remove dangling "select PROC_DEVICETREE"
-Date: Tue,  1 Apr 2014 21:36:14 +0100
-Message-ID: <1396384574-30776-1-git-send-email-grant.likely@linaro.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [git pull] Devicetree changes for v3.15
+Date: Tue, 01 Apr 2014 21:32:50 +0100
+Message-ID: <20140401203250.0B2A7C408A6@trevor.secretlab.ca>
+References: <CACxGe6vCrkHPL6UNy1p8AO4+z5VFRY6w4_2grQEZQwp_3jJ7Yw@mail.gmail. com> <1396381357.23763.16.camel@x220>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1396381357.23763.16.camel@x220>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Paul Bolle <pebolle@tiscali.nl>, Rob Herring <rob.herring@linaro.org>
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-CONFIG_PROC_DEVICETREE has been removed from the tree. This commit
-removes a dangling select of the config symbol.
+On Tue, 01 Apr 2014 21:42:37 +0200, Paul Bolle <pebolle@tiscali.nl> wrote:
+> On Tue, 2014-04-01 at 11:15 +0100, Grant Likely wrote:
+> > Grant Likely (13):
+> >       [...]
+> >       of: remove /proc/device-tree
+> 
+> That commit leaves a select for PROC_DEVICETREE dangling. See "config
+> ARCH_OMAP2PLUS" in arch/arm/mach-omap2/Kconfig. Can that select
+> statement just be dropped now or is something more elaborate needed?
 
-Signed-off-by: Grant Likely <grant.likely@linaro.org>
-Cc: Paul Bolle <pebolle@tiscali.nl>
-Cc: Rob Herring <rob.herring@linaro.org>
----
- arch/arm/mach-omap2/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+I'll fix that up and submit a cleanup today. A dangling select should
+not break the build.
 
-diff --git a/arch/arm/mach-omap2/Kconfig b/arch/arm/mach-omap2/Kconfig
-index 0af7ca02314d..07d4bb098a49 100644
---- a/arch/arm/mach-omap2/Kconfig
-+++ b/arch/arm/mach-omap2/Kconfig
-@@ -104,7 +104,6 @@ config ARCH_OMAP2PLUS
- 	select MACH_OMAP_GENERIC
- 	select OMAP_DM_TIMER
- 	select PINCTRL
--	select PROC_DEVICETREE if PROC_FS
- 	select SOC_BUS
- 	select SPARSE_IRQ
- 	select TI_PRIV_EDMA
--- 
-1.8.3.2
+g.
