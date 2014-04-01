@@ -1,54 +1,56 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: Extending wdt-gpio to be used on non-of (no DT) platforms
-Date: Mon, 31 Mar 2014 17:13:53 -0700
-Message-ID: <20140401001353.GB30453@roeck-us.net>
-References: <CACna6rwRzw1fo2_DyV3T4fa4+cA3=LTcFHRpRsfZWwR2ugQn_w@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 1/2] watchdog: Add Cadence WDT driver
+Date: Mon, 31 Mar 2014 17:24:26 -0700
+Message-ID: <533A073A.6060807@roeck-us.net>
+References: <1396002720-7105-1-git-send-email-harinik@xilinx.com> <20140331113020.03be6894@alan.etchedpixels.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACna6rwRzw1fo2_DyV3T4fa4+cA3=LTcFHRpRsfZWwR2ugQn_w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140331113020.03be6894@alan.etchedpixels.co.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Harini Katakam <harinik@xilinx.com>
+Cc: grant.likely@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michals@xilinx.com, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 29, 2014 at 12:54:40PM +0100, Rafa=C5=82 Mi=C5=82ecki wrote=
-:
-> Hi guys,
->=20
-> I've noticed gpio_wdt was added to the kernel to support some devices
-> based on devicetree.
-> We used to have our own (not mainlined) gpio_wdt in OpenWrt project:
-> http://git.openwrt.org/?p=3Dopenwrt.git;a=3Dblob;f=3Dtarget/linux/gen=
-eric/patches-3.10/990-gpio_wdt.patch;hb=3DHEAD
->=20
-> The main difference is that the mainlined one uses OF, while OpenWrt'=
-s
-> one uses plain platform API (with struct gpio_wdt_platform_data).
->=20
-> I wanted to bring a topic of mainlining OpenWrt's solution. We
-> definitely need that and at the same time our device(s) don't use OF =
-/
-> DT.
->=20
-> Do you think we should extend wdt-gpio to handle that? Or do you thin=
-k
-> this driver is so small, it's not worth it and we should submit a
-> separated one?
->=20
-> Apart from API being used, one other difference I see is OpenWrt
-> supports different values for "first tick" and "interval". But that
-> could be easily handled.
->=20
-If you can sort out those differences, I would suggest to add platform =
-data
-support to the existing upstream driver.
+On 03/31/2014 03:30 AM, One Thousand Gnomes wrote:
+>
+>> +	wdt->cdns_wdt_notifier.notifier_call = &cdns_wdt_notify_sys;
+>> +	/* Register the reboot notifier */
+>> +	ret = register_reboot_notifier(&wdt->cdns_wdt_notifier);
+>> +	if (ret != 0) {
+>> +		dev_err(&pdev->dev, "cannot register reboot notifier err=%d)\n",
+>> +			ret);
+>> +		return ret;
+>
+> Your ordering is wrong. If the box reboots between here and the spin lock
+> in it further down it'll crash in your notifier.
+>
+Not only that, the callback also ends up using watchdog_get_drvdata()
+which is only set after registering the notifier.
 
 Guenter
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> As
+>
+>> +	spin_lock_init(&wdt->io_lock);
+>
+> is needed before the code your notifier calls will work.
+>
+>> +	dev_info(&pdev->dev, "Xilinx Watchdog Timer at %p with timeout %ds%s\n",
+>> +		 wdt->regs, cdns_wdt_device->timeout,
+>> +		 nowayout ? ", nowayout" : "");
+>
+> dev_dbg
+>
+> if every driver felt the need to announce itself on boot you'd have pages
+> and pages of junk.
+>
+> Alan
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>
+
