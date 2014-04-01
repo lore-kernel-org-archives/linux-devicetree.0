@@ -1,622 +1,366 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 1/2] watchdog: Add Cadence WDT driver
-Date: Mon, 31 Mar 2014 17:32:55 -0700
-Message-ID: <533A0937.9030505@roeck-us.net>
-References: <1396002720-7105-1-git-send-email-harinik@xilinx.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v3 1/2] i2c: Add driver for Cadence I2C controller
+Date: Tue, 1 Apr 2014 02:50:01 +0200
+Message-ID: <20140401005001.GA3590@katana>
+References: <1394556613-11692-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1396002720-7105-1-git-send-email-harinik@xilinx.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Harini Katakam <harinik@xilinx.com>, grant.likely@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
-Cc: michals@xilinx.com, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============8208431129955508736=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1394556613-11692-1-git-send-email-soren.brinkmann@xilinx.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Harini Katakam <harinik@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mike Looijmans <mike.looijmans@topic.nl>, linux-doc@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/28/2014 03:31 AM, Harini Katakam wrote:
-> Add Cadence WDT driver. This is used by Xilinx Zynq.
->
-> Signed-off-by: Harini Katakam <harinik@xilinx.com>
-> ---
->   drivers/watchdog/Kconfig       |    7 +
->   drivers/watchdog/Makefile      |    1 +
->   drivers/watchdog/cadence_wdt.c |  530 ++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 538 insertions(+)
->   create mode 100644 drivers/watchdog/cadence_wdt.c
->
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 79d2589..13c61d8 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -138,6 +138,13 @@ config AT91SAM9X_WATCHDOG
->   	  Watchdog timer embedded into AT91SAM9X and AT91CAP9 chips. This will
->   	  reboot your system when the timeout is reached.
->
-> +config CADENCE_WATCHDOG
-> +	tristate "Cadence Watchdog Timer"
-> +	select WATCHDOG_CORE
-> +	help
-> +	  Say Y here if you want to include support for the watchdog
-> +	  timer in the Xilinx Zynq.
-> +
->   config 21285_WATCHDOG
->   	tristate "DC21285 watchdog"
->   	depends on FOOTBRIDGE
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index 985a66c..49e3e77 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -32,6 +32,7 @@ obj-$(CONFIG_USBPCWATCHDOG) += pcwd_usb.o
->   obj-$(CONFIG_ARM_SP805_WATCHDOG) += sp805_wdt.o
->   obj-$(CONFIG_AT91RM9200_WATCHDOG) += at91rm9200_wdt.o
->   obj-$(CONFIG_AT91SAM9X_WATCHDOG) += at91sam9_wdt.o
-> +obj-$(CONFIG_CADENCE_WATCHDOG) += cadence_wdt.o
->   obj-$(CONFIG_OMAP_WATCHDOG) += omap_wdt.o
->   obj-$(CONFIG_TWL4030_WATCHDOG) += twl4030_wdt.o
->   obj-$(CONFIG_21285_WATCHDOG) += wdt285.o
-> diff --git a/drivers/watchdog/cadence_wdt.c b/drivers/watchdog/cadence_wdt.c
-> new file mode 100644
-> index 0000000..01e8c78
-> --- /dev/null
-> +++ b/drivers/watchdog/cadence_wdt.c
-> @@ -0,0 +1,530 @@
-> +/*
-> + * Cadence WDT driver - Used by Xilinx Zynq
-> + *
-> + * Copyright (C) 2010 - 2014 Xilinx, Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version
-> + * 2 of the License, or (at your option) any later version.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/init.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/irq.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reboot.h>
-> +#include <linux/watchdog.h>
-> +
-> +#define CDNS_WDT_DEFAULT_TIMEOUT	10
-> +/* Supports 1 - 516 sec */
-> +#define CDNS_WDT_MIN_TIMEOUT	1
-> +#define CDNS_WDT_MAX_TIMEOUT	516
-> +
-> +/* Restart key */
-> +#define CDNS_WDT_RESTART_KEY 0x00001999
-> +
-> +/* Counter register access key */
-> +#define CDNS_WDT_REGISTER_ACCESS_KEY 0x00920000
-> +
-> +/* Counter value divisor */
-> +#define CDNS_WDT_COUNTER_VALUE_DIVISOR 0x1000
-> +
-> +/* Clock prescaler value and selection */
-> +#define CDNS_WDT_PRESCALE_64	64
-> +#define CDNS_WDT_PRESCALE_512	512
-> +#define CDNS_WDT_PRESCALE_4096	4096
-> +#define CDNS_WDT_PRESCALE_SELECT_64	1
-> +#define CDNS_WDT_PRESCALE_SELECT_512	2
-> +#define CDNS_WDT_PRESCALE_SELECT_4096	3
-> +
-> +/* Input clock frequency */
-> +#define CDNS_WDT_CLK_10MHZ	10000000
-> +#define CDNS_WDT_CLK_75MHZ	75000000
-> +
-> +/* Counter maximum value */
-> +#define CDNS_WDT_COUNTER_MAX 0xFFF
-> +
-> +static int wdt_timeout = CDNS_WDT_DEFAULT_TIMEOUT;
-> +static int nowayout = WATCHDOG_NOWAYOUT;
-> +
-> +module_param(wdt_timeout, int, 0);
-> +MODULE_PARM_DESC(wdt_timeout,
-> +		 "Watchdog time in seconds. (default="
-> +		 __MODULE_STRING(CDNS_WDT_DEFAULT_TIMEOUT) ")");
-> +
-> +module_param(nowayout, int, 0);
-> +MODULE_PARM_DESC(nowayout,
-> +		 "Watchdog cannot be stopped once started (default="
-> +		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-> +
-> +/**
-> + * struct cdns_wdt - Watchdog device structure
-> + * @regs: baseaddress of device
-> + * @rst: reset flag
-> + * @clk: struct clk * of a clock source
-> + * @prescaler: for saving prescaler value
-> + * @ctrl_clksel: counter clock prescaler selection
-> + * @io_lock: spinlock for IO register access
-> + * @cdns_wdt_device: watchdog device structure
-> + * @cdns_wdt_notifier: notifier structure
-> + *
-> + * Structure containing parameters specific to cadence watchdog.
-> + */
-> +struct cdns_wdt {
-> +	void __iomem		*regs;
-> +	u32			rst;
-> +	struct clk		*clk;
-> +	u32			prescaler;
-> +	u32			ctrl_clksel;
-> +	spinlock_t		io_lock;
-> +	struct watchdog_device	cdns_wdt_device;
-> +	struct notifier_block	cdns_wdt_notifier;
-> +};
-> +
-> +/* Write access to Registers */
-> +static inline void cdns_wdt_writereg(void __iomem *offset, u32 val)
-> +{
-> +	writel_relaxed(val, offset);
-> +}
-> +
 
-Not really sure if this function provides any value.
+--===============8208431129955508736==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
+Content-Disposition: inline
 
-> +/*************************Register Map**************************************/
-> +
-> +/* Register Offsets for the WDT */
-> +#define CDNS_WDT_ZMR_OFFSET	0x0	/* Zero Mode Register */
-> +#define CDNS_WDT_CCR_OFFSET	0x4	/* Counter Control Register */
-> +#define CDNS_WDT_RESTART_OFFSET	0x8	/* Restart Register */
-> +#define CDNS_WDT_SR_OFFSET	0xC	/* Status Register */
-> +
-> +/*
-> + * Zero Mode Register - This register controls how the time out is indicated
-> + * and also contains the access code to allow writes to the register (0xABC).
-> + */
-> +#define CDNS_WDT_ZMR_WDEN_MASK	0x00000001 /* Enable the WDT */
-> +#define CDNS_WDT_ZMR_RSTEN_MASK	0x00000002 /* Enable the reset output */
-> +#define CDNS_WDT_ZMR_IRQEN_MASK	0x00000004 /* Enable IRQ output */
-> +#define CDNS_WDT_ZMR_RSTLEN_16	0x00000030 /* Reset pulse of 16 pclk cycles */
-> +#define CDNS_WDT_ZMR_ZKEY_VAL	0x00ABC000 /* Access key, 0xABC << 12 */
-> +/*
-> + * Counter Control register - This register controls how fast the timer runs
-> + * and the reset value and also contains the access code to allow writes to
-> + * the register.
-> + */
-> +#define CDNS_WDT_CCR_CRV_MASK	0x00003FFC /* Counter reset value */
-> +
-> +/**
-> + * cdns_wdt_stop - Stop the watchdog.
-> + *
-> + * @wdd: watchdog device
-> + *
-> + * Read the contents of the ZMR register, clear the WDEN bit
-> + * in the register and set the access key for successful write.
-> + *
-> + * Return: always 0
-> + */
-> +static int cdns_wdt_stop(struct watchdog_device *wdd)
+
+--bg08WKrSYDhXBjb5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Mar 11, 2014 at 09:50:12AM -0700, Soren Brinkmann wrote:
+> Add a driver for the Cadence I2C controller. This controller is for
+> example found in Xilinx Zynq.
+>=20
+> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+
+=2E..
+
+> +static irqreturn_t cdns_i2c_isr(int irq, void *ptr)
 > +{
-> +	struct cdns_wdt *wdt = watchdog_get_drvdata(wdd);
+> +	unsigned int isr_status, avail_bytes;
+> +	unsigned int bytes_to_recv, bytes_to_send;
+> +	struct cdns_i2c *id =3D ptr;
+> +	/* Signal completion only after everything is updated */
+> +	int done_flag =3D 0;
 > +
-> +	spin_lock(&wdt->io_lock);
-> +	cdns_wdt_writereg(wdt->regs + CDNS_WDT_ZMR_OFFSET,
-> +			  CDNS_WDT_ZMR_ZKEY_VAL & (~CDNS_WDT_ZMR_WDEN_MASK));
-> +	spin_unlock(&wdt->io_lock);
+> +	isr_status =3D cdns_i2c_readreg(CDNS_I2C_ISR_OFFSET);
+> +
+> +	/* Handling nack and arbitration lost interrupt */
+> +	if (isr_status & (CDNS_I2C_IXR_NACK | CDNS_I2C_IXR_ARB_LOST))
+> +		done_flag =3D 1;
+> +
+> +	/* Handling Data interrupt */
+> +	if ((isr_status & CDNS_I2C_IXR_DATA) &&
+> +			(id->recv_count >=3D CDNS_I2C_DATA_INTR_DEPTH)) {
+> +		/* Always read data interrupt threshold bytes */
+> +		bytes_to_recv =3D CDNS_I2C_DATA_INTR_DEPTH;
+> +		id->recv_count =3D id->recv_count - CDNS_I2C_DATA_INTR_DEPTH;
+
+Use '-=3D'
+
+=2E..
+
+> +static int cdns_i2c_process_msg(struct cdns_i2c *id, struct i2c_msg *msg,
+> +		struct i2c_adapter *adap)
+> +{
+> +	int ret;
+> +	u32 reg;
+> +	bool retry =3D false;
+> +	unsigned retries =3D adap->retries;
+> +
+> +	id->p_msg =3D msg;
+> +	do {
+> +		id->err_status =3D 0;
+> +		init_completion(&id->xfer_done);
+
+reinit_completion. And add init_completion in probe.
+
+> +
+> +		/* Check for the TEN Bit mode on each msg */
+> +		reg =3D cdns_i2c_readreg(CDNS_I2C_CR_OFFSET);
+> +		if (msg->flags & I2C_M_TEN) {
+> +			if (reg & CDNS_I2C_CR_NEA)
+> +				cdns_i2c_writereg(reg & ~CDNS_I2C_CR_NEA,
+> +						CDNS_I2C_CR_OFFSET);
+> +		} else {
+> +			if (!(reg & CDNS_I2C_CR_NEA))
+> +				cdns_i2c_writereg(reg | CDNS_I2C_CR_NEA,
+> +						CDNS_I2C_CR_OFFSET);
+> +		}
+> +
+> +		/* Check for the R/W flag on each msg */
+> +		if (msg->flags & I2C_M_RD)
+> +			cdns_i2c_mrecv(id);
+> +		else
+> +			cdns_i2c_msend(id);
+> +
+> +		/* Wait for the signal of completion */
+> +		ret =3D wait_for_completion_timeout(&id->xfer_done, HZ);
+> +		if (!ret) {
+> +			cdns_i2c_master_reset(adap);
+> +			dev_err(id->adap.dev.parent,
+> +					"timeout waiting on completion\n");
+> +			return -ETIMEDOUT;
+> +		}
+> +
+> +		cdns_i2c_writereg(CDNS_I2C_IXR_ALL_INTR_MASK,
+> +				  CDNS_I2C_IDR_OFFSET);
+> +
+> +		/* If it is bus arbitration error, try again */
+> +		if (id->err_status & CDNS_I2C_IXR_ARB_LOST) {
+
+Just return -EAGAIN here...
+
+> +			dev_dbg(id->adap.dev.parent,
+> +				 "Lost ownership on bus, trying again\n");
+> +			if (retries--) {
+> +				mdelay(2);
+> +				retry =3D true;
+> +			} else {
+> +				dev_err(id->adap.dev.parent,
+> +					 "Retries completed, exit\n");
+> +				return -EREMOTEIO;
+> +			}
+> +		}
+
+=2E.. and you can skip this block since the core will do the retries.
+
+> +	} while (retry);
 > +
 > +	return 0;
 > +}
 > +
 > +/**
-> + * cdns_wdt_reload - Reload the watchdog timer (i.e. pat the watchdog).
+> + * cdns_i2c_master_xfer - The main i2c transfer function
+> + * @adap:	pointer to the i2c adapter driver instance
+> + * @msgs:	pointer to the i2c message structure
+> + * @num:	the number of messages to transfer
 > + *
-> + * @wdd: watchdog device
+> + * Return: number of msgs processed on success, negative error otherwise
 > + *
-> + * Write the restart key value (0x00001999) to the restart register.
-> + *
-> + * Return: always 0
+> + * This function waits for the bus idle condition and updates the timeou=
+t if
+> + * modified by user. Then initiates the send/recv activity based on the
+> + * transfer message received.
 > + */
-> +static int cdns_wdt_reload(struct watchdog_device *wdd)
+> +static int cdns_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg=
+ *msgs,
+> +				int num)
 > +{
-> +	struct cdns_wdt *wdt = watchdog_get_drvdata(wdd);
+> +	struct cdns_i2c *id =3D adap->algo_data;
+> +	unsigned long timeout;
+> +	int ret, count;
+> +	u32 reg;
 > +
-> +	spin_lock(&wdt->io_lock);
-> +	cdns_wdt_writereg(wdt->regs + CDNS_WDT_RESTART_OFFSET,
-> +			  CDNS_WDT_RESTART_KEY);
-> +	spin_unlock(&wdt->io_lock);
+> +	/* Waiting for bus-ready. If bus not ready, it returns after timeout */
+> +	timeout =3D jiffies + CDNS_I2C_TIMEOUT;
+> +	while (cdns_i2c_readreg(CDNS_I2C_SR_OFFSET) & CDNS_I2C_SR_BA) {
+> +		if (time_after(jiffies, timeout)) {
+> +			dev_warn(id->adap.dev.parent,
+> +					"timedout waiting for bus ready\n");
+> +			cdns_i2c_master_reset(adap);
+> +			return -ETIMEDOUT;
+> +		}
+> +		schedule_timeout(1);
+> +	}
 > +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * cdns_wdt_start - Enable and start the watchdog.
-> + *
-> + * @wdd: watchdog device
-> + *
-> + * The counter value is calculated according to the formula:
-> + *		calculated count = (timeout * clock) / prescaler + 1.
-> + * The calculated count is divided by 0x1000 to obtain the field value
-> + * to write to counter control register.
-> + * Clears the contents of prescaler and counter reset value. Sets the
-> + * prescaler to 4096 and the calculated count and access key
-> + * to write to CCR Register.
-> + * Sets the WDT (WDEN bit) and either the Reset signal(RSTEN bit)
-> + * or Interrupt signal(IRQEN) with a specified cycles and the access
-> + * key to write to ZMR Register.
-> + *
-> + * Return: always 0
-> + */
-> +static int cdns_wdt_start(struct watchdog_device *wdd)
-> +{
-> +	struct cdns_wdt *wdt = watchdog_get_drvdata(wdd);
-> +	unsigned int data = 0;
-> +	unsigned short count;
-> +	unsigned long clock_f = clk_get_rate(wdt->clk);
+> +	/* The bus is free. Set the new timeout value if updated */
+> +	if (id->adap.timeout !=3D id->cur_timeout) {
+> +		cdns_i2c_writereg(id->adap.timeout & CDNS_I2C_TIME_OUT_TO_MASK,
+> +					CDNS_I2C_TIME_OUT_OFFSET);
+> +		id->cur_timeout =3D id->adap.timeout;
+> +	}
 > +
 > +	/*
-> +	 * Counter value divisor to obtain the value of
-> +	 * counter reset to be written to control register.
+> +	 * Set the flag to one when multiple messages are to be
+> +	 * processed with a repeated start.
 > +	 */
-> +	count = (wdd->timeout * (clock_f / wdt->prescaler)) /
-> +		 CDNS_WDT_COUNTER_VALUE_DIVISOR + 1;
-> +
-> +	/* Check for boundary conditions of counter value */
-> +	if (count > CDNS_WDT_COUNTER_MAX)
-> +		count = CDNS_WDT_COUNTER_MAX;
-> +
-> +	spin_lock(&wdt->io_lock);
-> +	cdns_wdt_writereg(wdt->regs + CDNS_WDT_ZMR_OFFSET,
-> +			  CDNS_WDT_ZMR_ZKEY_VAL);
-> +
-> +	/* Shift the count value to correct bit positions */
-> +	count = (count << 2) & CDNS_WDT_CCR_CRV_MASK;
-> +
-> +	/* Write counter access key first to be able write to register */
-> +	data = count | CDNS_WDT_REGISTER_ACCESS_KEY | wdt->ctrl_clksel;
-> +	cdns_wdt_writereg(wdt->regs + CDNS_WDT_CCR_OFFSET, data);
-> +	data = CDNS_WDT_ZMR_WDEN_MASK | CDNS_WDT_ZMR_RSTLEN_16 |
-> +	       CDNS_WDT_ZMR_ZKEY_VAL;
-> +
-> +	/* Reset on timeout if specified in device tree. */
-> +	if (wdt->rst) {
-> +		data |= CDNS_WDT_ZMR_RSTEN_MASK;
-> +		data &= ~CDNS_WDT_ZMR_IRQEN_MASK;
+> +	if (num > 1) {
+> +		id->bus_hold_flag =3D 1;
+> +		reg =3D cdns_i2c_readreg(CDNS_I2C_CR_OFFSET);
+> +		reg |=3D CDNS_I2C_CR_HOLD;
+> +		cdns_i2c_writereg(reg, CDNS_I2C_CR_OFFSET);
 > +	} else {
-> +		data &= ~CDNS_WDT_ZMR_RSTEN_MASK;
-> +		data |= CDNS_WDT_ZMR_IRQEN_MASK;
+> +		id->bus_hold_flag =3D 0;
 > +	}
-> +	cdns_wdt_writereg(wdt->regs + CDNS_WDT_ZMR_OFFSET, data);
-> +	spin_unlock(&wdt->io_lock);
-> +	cdns_wdt_writereg(wdt->regs + CDNS_WDT_RESTART_OFFSET,
-> +			  CDNS_WDT_RESTART_KEY);
 > +
-Sometimes you write into this register with lock protection, here without.
-
-How comes (or, in other words, why does the write have to be spinlock
-protected above but not here) ?
-
-> +	return 0;
-> +}
+> +	/* Process the msg one by one */
+> +	for (count =3D 0; count < num; count++, msgs++) {
+> +		if (count =3D=3D (num - 1))
+> +			id->bus_hold_flag =3D 0;
 > +
-> +/**
-> + * cdns_wdt_settimeout - Set a new timeout value for the watchdog device.
-> + *
-> + * @wdd: watchdog device
-> + * @new_time: new timeout value that needs to be set
-> + * Return: 0 on success
-> + *
-> + * Update the watchdog_device timeout with new value which is used when
-> + * cdns_wdt_start is called.
-> + */
-> +static int cdns_wdt_settimeout(struct watchdog_device *wdd,
-> +			       unsigned int new_time)
-> +{
-> +	wdd->timeout = new_time;
-> +
-> +	return cdns_wdt_start(wdd);
-> +}
-> +
-> +/**
-> + * cdns_wdt_irq_handler - Notifies of watchdog timeout.
-> + *
-> + * @irq: interrupt number
-> + * @dev_id: pointer to a platform device structure
-> + * Return: IRQ_HANDLED
-> + *
-> + * The handler is invoked when the watchdog times out and a
-> + * reset on timeout has not been enabled.
-> + */
-> +static irqreturn_t cdns_wdt_irq_handler(int irq, void *dev_id)
-> +{
-> +	struct platform_device *pdev = dev_id;
-> +
-> +	dev_info(&pdev->dev, "Watchdog timed out.\n");
-> +
-Does that really make sense ? What is the purpose of a watchdog
-which does not do anything but display "I timed out" ?
-
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +/*
-> + * Info structure used to indicate the features supported by the device
-> + * to the upper layers. This is defined in watchdog.h header file.
-> + */
-> +static struct watchdog_info cdns_wdt_info = {
-> +	.identity	= "cdns_wdt watchdog",
-> +	.options	= WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
-> +			  WDIOF_MAGICCLOSE,
-> +};
-> +
-> +/* Watchdog Core Ops */
-> +static struct watchdog_ops cdns_wdt_ops = {
-> +	.owner = THIS_MODULE,
-> +	.start = cdns_wdt_start,
-> +	.stop = cdns_wdt_stop,
-> +	.ping = cdns_wdt_reload,
-> +	.set_timeout = cdns_wdt_settimeout,
-> +};
-> +
-> +/**
-> + * cdns_wdt_notify_sys - Notifier for reboot or shutdown.
-> + *
-> + * @this: handle to notifier block
-> + * @code: turn off indicator
-> + * @unused: unused
-> + * Return: NOTIFY_DONE
-> + *
-> + * This notifier is invoked whenever the system reboot or shutdown occur
-> + * because we need to disable the WDT before system goes down as WDT might
-> + * reset on the next boot.
-> + */
-> +static int cdns_wdt_notify_sys(struct notifier_block *this, unsigned long code,
-> +			       void *unused)
-> +{
-> +	struct cdns_wdt *wdt = container_of(this, struct cdns_wdt,
-> +					    cdns_wdt_notifier);
-> +	if (code == SYS_DOWN || code == SYS_HALT)
-> +		/* Stop the watchdog */
-> +		cdns_wdt_stop(&wdt->cdns_wdt_device);
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +/************************Platform Operations*****************************/
-> +/**
-> + * cdns_wdt_probe - Probe call for the device.
-> + *
-> + * @pdev: handle to the platform device structure.
-> + * Return: 0 on success, negative error otherwise.
-> + *
-> + * It does all the memory allocation and registration for the device.
-> + */
-> +static int cdns_wdt_probe(struct platform_device *pdev)
-> +{
-> +	struct resource *res;
-> +	int ret, irq;
-> +	unsigned long clock_f;
-> +	struct cdns_wdt *wdt;
-> +	struct watchdog_device *cdns_wdt_device;
-> +
-> +	/* Allocate an instance of the cdns_wdt structure */
-> +	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-> +	if (!wdt)
-> +		return -ENOMEM;
-> +
-> +	cdns_wdt_device = &wdt->cdns_wdt_device;
-> +	cdns_wdt_device->info = &cdns_wdt_info;
-> +	cdns_wdt_device->ops = &cdns_wdt_ops;
-> +	cdns_wdt_device->timeout = CDNS_WDT_DEFAULT_TIMEOUT;
-> +	cdns_wdt_device->min_timeout = CDNS_WDT_MIN_TIMEOUT;
-> +	cdns_wdt_device->max_timeout = CDNS_WDT_MAX_TIMEOUT;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	wdt->regs = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(wdt->regs))
-> +		return PTR_ERR(wdt->regs);
-> +
-> +	/* Register the interrupt */
-> +	of_property_read_u32(pdev->dev.of_node, "reset", &wdt->rst);
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (!wdt->rst && irq >= 0) {
-> +		ret = devm_request_irq(&pdev->dev, irq, cdns_wdt_irq_handler, 0,
-> +				       pdev->name, pdev);
-> +		if (ret) {
-> +			dev_err(&pdev->dev,
-> +				"cannot register interrupt handler err=%d\n",
-> +				ret);
+> +		ret =3D cdns_i2c_process_msg(id, msgs, adap);
+> +		if (ret)
 > +			return ret;
+> +
+> +		/* Report the other error interrupts to application as EIO */
+> +		if (id->err_status & 0xE4) {
+
+Please replace this magic hex value with something readable.
+
+> +			cdns_i2c_master_reset(adap);
+> +			return -EIO;
 > +		}
 > +	}
 > +
-> +	wdt->cdns_wdt_notifier.notifier_call = &cdns_wdt_notify_sys;
-> +	/* Register the reboot notifier */
-> +	ret = register_reboot_notifier(&wdt->cdns_wdt_notifier);
-> +	if (ret != 0) {
-> +		dev_err(&pdev->dev, "cannot register reboot notifier err=%d)\n",
-> +			ret);
+> +	return num;
+> +}
+> +
+
+=2E..
+
+> +/**
+> + * cdns_i2c_probe - Platform registration call
+> + * @pdev:	Handle to the platform device structure
+> + *
+> + * Return: 0 on success, negative error otherwise
+> + *
+> + * This function does all the memory allocation and registration for the=
+ i2c
+> + * device. User can modify the address mode to 10 bit address mode using=
+ the
+> + * ioctl call with option I2C_TENBIT.
+> + */
+> +static int cdns_i2c_probe(struct platform_device *pdev)
+> +{
+> +	struct resource *r_mem;
+> +	struct cdns_i2c *id;
+> +	int ret;
+> +
+> +	id =3D devm_kzalloc(&pdev->dev, sizeof(*id), GFP_KERNEL);
+> +	if (!id)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, id);
+> +
+> +	r_mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	id->membase =3D devm_ioremap_resource(&pdev->dev, r_mem);
+> +	if (IS_ERR(id->membase))
+> +		return PTR_ERR(id->membase);
+> +
+> +	id->irq =3D platform_get_irq(pdev, 0);
+> +
+> +	id->adap.nr =3D pdev->id;
+
+Drop this line and use i2c_add_adapter() later to let the core handle
+the numbering. This will also take aliases into account.
+
+> +	id->adap.dev.of_node =3D pdev->dev.of_node;
+> +	id->adap.algo =3D &cdns_i2c_algo;
+> +	id->adap.timeout =3D 0x1F;	/* Default timeout value */
+
+This value is in jiffies, so you probably want to use msecs_to_jiffies
+or alike.
+
+> +	id->adap.retries =3D 3;		/* Default retry value. */
+> +	id->adap.algo_data =3D id;
+> +	id->adap.dev.parent =3D &pdev->dev;
+> +	snprintf(id->adap.name, sizeof(id->adap.name),
+> +		 "Cadence I2C at %08lx", (unsigned long)r_mem->start);
+> +
+> +	id->cur_timeout =3D id->adap.timeout;
+> +	id->clk =3D devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(id->clk)) {
+> +		dev_err(&pdev->dev, "input clock not found.\n");
+> +		return PTR_ERR(id->clk);
+> +	}
+> +	ret =3D clk_prepare_enable(id->clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Unable to enable clock.\n");
 > +		return ret;
 > +	}
+> +	id->clk_rate_change_nb.notifier_call =3D cdns_i2c_clk_notifier_cb;
+> +	if (clk_notifier_register(id->clk, &id->clk_rate_change_nb))
+> +		dev_warn(&pdev->dev, "Unable to register clock notifier.\n");
+> +	id->input_clk =3D clk_get_rate(id->clk);
 > +
-> +	/* Initialize the members of cdns_wdt structure */
-> +	cdns_wdt_device->parent = &pdev->dev;
-> +	of_get_property(pdev->dev.of_node, "timeout-sec",
-> +			&cdns_wdt_device->timeout);
-> +	if (wdt_timeout < CDNS_WDT_MAX_TIMEOUT &&
-> +	    wdt_timeout > CDNS_WDT_MIN_TIMEOUT)
-
-Why are CDNS_WDT_MAX_TIMEOUT and CDNS_WDT_MIN_TIMEOUT not acceptable ?
-Why don't you use watchdog_init_timeout() anyway ?
-
-> +		cdns_wdt_device->timeout = wdt_timeout;
-> +	else
-> +		dev_info(&pdev->dev,
-> +			 "timeout limited to 1 - %d sec, using default=%d\n",
-> +			 CDNS_WDT_MAX_TIMEOUT, CDNS_WDT_DEFAULT_TIMEOUT);
+> +	ret =3D of_property_read_u32(pdev->dev.of_node, "clock-frequency",
+> +			&id->i2c_clk);
+> +	if (ret || (id->i2c_clk > CDNS_I2C_SPEED_MAX))
+> +		id->i2c_clk =3D CDNS_I2C_SPEED_MAX;
 > +
-> +	watchdog_set_nowayout(cdns_wdt_device, nowayout);
-> +	watchdog_set_drvdata(cdns_wdt_device, wdt);
-> +
+> +	cdns_i2c_writereg(0xE, CDNS_I2C_CR_OFFSET);
 
-Set too late (see other e-mail)
+Remove magic value. Please check the driver for more, in case I missed
+some.
 
-> +	wdt->clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(wdt->clk)) {
-> +		dev_err(&pdev->dev, "input clock not found\n");
-> +		ret = PTR_ERR(wdt->clk);
-> +		goto err_notifier;
-> +	}
+> +	cdns_i2c_writereg(id->adap.timeout, CDNS_I2C_TIME_OUT_OFFSET);
 > +
-> +	ret = clk_prepare_enable(wdt->clk);
+> +	ret =3D cdns_i2c_setclk(id->input_clk, id);
 > +	if (ret) {
-> +		dev_err(&pdev->dev, "unable to enable clock\n");
-> +		goto err_notifier;
+> +		dev_err(&pdev->dev, "invalid SCL clock: %u Hz\n", id->i2c_clk);
+> +		ret =3D -EINVAL;
+> +		goto err_clk_dis;
 > +	}
 > +
-> +	clock_f = clk_get_rate(wdt->clk);
-> +	if (clock_f <= CDNS_WDT_CLK_75MHZ) {
-> +		wdt->prescaler = CDNS_WDT_PRESCALE_512;
-> +		wdt->ctrl_clksel = CDNS_WDT_PRESCALE_SELECT_512;
-> +	} else {
-> +		wdt->prescaler = CDNS_WDT_PRESCALE_4096;
-> +		wdt->ctrl_clksel = CDNS_WDT_PRESCALE_SELECT_4096;
-> +	}
-> +
-> +	spin_lock_init(&wdt->io_lock);
-> +
-> +	/* Register the WDT */
-> +	ret = watchdog_register_device(cdns_wdt_device);
+> +	ret =3D devm_request_irq(&pdev->dev, id->irq, cdns_i2c_isr, 0,
+> +				 DRIVER_NAME, id);
 > +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to register wdt device\n");
-> +		goto err_clk_disable;
+> +		dev_err(&pdev->dev, "cannot get irq %d\n", id->irq);
+> +		goto err_clk_dis;
 > +	}
-> +	platform_set_drvdata(pdev, wdt);
 > +
-> +	dev_info(&pdev->dev, "Xilinx Watchdog Timer at %p with timeout %ds%s\n",
-> +		 wdt->regs, cdns_wdt_device->timeout,
-> +		 nowayout ? ", nowayout" : "");
+> +	ret =3D i2c_add_numbered_adapter(&id->adap);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "reg adap failed: %d\n", ret);
+> +		goto err_clk_dis;
+> +	}
+> +
+> +	dev_info(&pdev->dev, "%u kHz mmio %08lx irq %d\n",
+> +		 id->i2c_clk / 1000, (unsigned long)r_mem->start, id->irq);
 > +
 > +	return 0;
 > +
-> +err_clk_disable:
-> +	clk_disable_unprepare(wdt->clk);
-> +err_notifier:
-> +	unregister_reboot_notifier(&wdt->cdns_wdt_notifier);
-> +
+> +err_clk_dis:
+> +	clk_disable_unprepare(id->clk);
 > +	return ret;
 > +}
 > +
-> +/**
-> + * cdns_wdt_remove - Probe call for the device.
-> + *
-> + * @pdev: handle to the platform device structure.
-> + * Return: 0 on success, otherwise negative error.
-> + *
-> + * Unregister the device after releasing the resources.
-> + */
-> +static int cdns_wdt_remove(struct platform_device *pdev)
-> +{
-> +	struct cdns_wdt *wdt = platform_get_drvdata(pdev);
-> +
-> +	cdns_wdt_stop(&wdt->cdns_wdt_device);
-> +	watchdog_unregister_device(&wdt->cdns_wdt_device);
-> +	unregister_reboot_notifier(&wdt->cdns_wdt_notifier);
-> +	clk_disable_unprepare(wdt->clk);
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * cdns_wdt_shutdown - Stop the device.
-> + *
-> + * @pdev: handle to the platform structure.
-> + *
-> + */
-> +static void cdns_wdt_shutdown(struct platform_device *pdev)
-> +{
-> +	struct cdns_wdt *wdt = platform_get_drvdata(pdev);
-> +
-> +	/* Stop the device */
 
-Is this cmment really necessary ? Sems to me the function name
-already says it all.
+Thanks,
 
-> +	cdns_wdt_stop(&wdt->cdns_wdt_device);
-> +	clk_disable_unprepare(wdt->clk);
-> +}
-> +
-> +/**
-> + * cdns_wdt_suspend - Stop the device.
-> + *
-> + * @dev: handle to the device structure.
-> + * Return: 0 always.
-> + */
-> +static int __maybe_unused cdns_wdt_suspend(struct device *dev)
-> +{
-> +	struct platform_device *pdev = container_of(dev,
-> +			struct platform_device, dev);
-> +	struct cdns_wdt *wdt = platform_get_drvdata(pdev);
-> +
-> +	/* Stop the device */
+   Wolfram
 
-Pretty value-free comment.
 
-> +	cdns_wdt_stop(&wdt->cdns_wdt_device);
-> +	clk_disable(wdt->clk);
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * cdns_wdt_resume - Resume the device.
-> + *
-> + * @dev: handle to the device structure.
-> + * Return: 0 on success, errno otherwise.
-> + */
-> +static int __maybe_unused cdns_wdt_resume(struct device *dev)
-> +{
-> +	int ret;
-> +	struct platform_device *pdev = container_of(dev,
-> +			struct platform_device, dev);
-> +	struct cdns_wdt *wdt = platform_get_drvdata(pdev);
-> +
-> +	ret = clk_enable(wdt->clk);
-> +	if (ret) {
-> +		dev_err(dev, "unable to enable clock\n");
-> +		return ret;
-> +	}
-> +	/* Start the device */
+--bg08WKrSYDhXBjb5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Same here.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
 
-> +	cdns_wdt_start(&wdt->cdns_wdt_device);
-> +
-> +	return 0;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(cdns_wdt_pm_ops, cdns_wdt_suspend, cdns_wdt_resume);
-> +
-> +static struct of_device_id cdns_wdt_of_match[] = {
-> +	{ .compatible = "xlnx,zynq-wdt-r1p2", },
-> +	{ .compatible = "cdns,wdt-r1p2", },
-> +	{ /* end of table */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, cdns_wdt_of_match);
-> +
-> +/* Driver Structure */
-> +static struct platform_driver cdns_wdt_driver = {
-> +	.probe		= cdns_wdt_probe,
-> +	.remove		= cdns_wdt_remove,
-> +	.shutdown	= cdns_wdt_shutdown,
-> +	.driver		= {
-> +		.name	= "cdns-wdt",
-> +		.owner	= THIS_MODULE,
-> +		.of_match_table = cdns_wdt_of_match,
-> +		.pm	= &cdns_wdt_pm_ops,
-> +	},
-> +};
-> +
-> +module_platform_driver(cdns_wdt_driver);
-> +
-> +MODULE_AUTHOR("Xilinx, Inc.");
-> +MODULE_DESCRIPTION("Watchdog driver for Cadence WDT");
-> +MODULE_LICENSE("GPL");
->
+iQIcBAEBAgAGBQJTOg05AAoJEBQN5MwUoCm2zioQAIvtsNrDx1F7Vrug+iZmtoac
+dOTo2QsG2dh5BcrqS+ggtrTnq5a8mh1yIbDRYgyB4sWbCSIE7J0RG94+ae4JUoIo
+7Cpfhq2nb2cS54OCLyCOUl0FOIHUOn3/8Bk83f7CI9BmPIybLCzRe6aL/uAj4q9D
+R65ZFBF+8SYxUpPpNbjuUVVyAJgJUFA1fbnbWRyDijV4W6w1YmifX6Ka16OK3f3F
+oZH33a8pQI4u3cN8CGWTD0qN7+VJjqTIwj2s2Vrp9nFeQuZhnKOJNnECltoTDUnE
+a7J2WHJ2xGwJkulBe4F3Zkx6YFwIcSuOtfLR8bCfZgelvZ89XMEo8Ao4v4A4pXDk
+wrN45D9JqpGRR7LUMBSi9CmWBaf+EHAN1gmgVo6TXgvvUbuXcv3z1xsTNaKiIVa9
+bx09wOgiNbSoAjI9EnHSAeaxOrbnvRckMZLWIkuzjMzlNZeIW+qRggfFSw6AgmMM
+pd4NqWALhG5wGw0q4Ie9kwSq2apCHwAIPELsgrlDnKULmR4kS+v1AS2Kp9vcTeBY
+GZhb60uty7eEHhA+hPnkB+e230wRatjjFmwQLT6Y8qGQ75LT46nrSomYKA/I5Kbi
+E6RidI87TTnEsZRGc/YqLv5UyajwCpsCWw+UK53zIiSmkNJnXkagg2ye6ZVu5JUI
+GUoPsp60j8zpdZvt2OiW
+=nP/8
+-----END PGP SIGNATURE-----
 
+--bg08WKrSYDhXBjb5--
+
+
+--===============8208431129955508736==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============8208431129955508736==--
