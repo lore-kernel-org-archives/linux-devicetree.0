@@ -1,41 +1,35 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v3 0/3] rtc: Add APM X-Gene SoC RTC driver
-Date: Thu,  3 Apr 2014 00:17:50 -0600
-Message-ID: <1396505873-5507-1-git-send-email-lho@apm.com>
+From: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/3] Add PMU node for Exynos4210, Exynos4412, Exynos4212
+Date: Wed, 02 Apr 2014 17:02:55 +0900
+Message-ID: <1396425778-4379-1-git-send-email-pankaj.dubey@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chow.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the APM X-Gene SoC RTC driver.
+This patch updates Exynos4210, Exynos4412 and Exynos4212 dtsi files
+for adding PMU (Power Management Unit) reg node. Also updated binding
+document for the same. 
+These patches required for using PMU base address via DT for these SoC.
+Patches for using PMU base address via DT are posted here-
 
-v3
-* Remove #clock-cell from binding documentation
+http://www.mail-archive.com/linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg27875.html
 
-v2
-* Change function xgene_rtc_read_time to return rtc_valid_tm(tm) instead 0
+Pankaj Dubey (3):
+  ARM: dts: Add PMU reg node to exynos4210
+  ARM: dts: Add PMU reg node to exynos4212 and exynos4412
+  Documentation: update samsung pmu binding information for
+    Exynos4210/4212/4412
 
-v1
-* Initial version
+ Documentation/devicetree/bindings/arm/samsung/pmu.txt |    3 +++
+ arch/arm/boot/dts/exynos4210.dtsi                     |    5 +++++
+ arch/arm/boot/dts/exynos4212.dtsi                     |    5 +++++
+ arch/arm/boot/dts/exynos4412.dtsi                     |    5 +++++
+ 4 files changed, 18 insertions(+)
 
-Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
----
-Loc Ho (3):
-  Documentation: Add documentation for the APM X-Gene SoC RTC DTS
-    binding
-  rtc: Add APM X-Gene SoC RTC driver
-  arm64: Add APM X-Gene SoC RTC DTS entry
-
- .../devicetree/bindings/rtc/xgene-rtc.txt          |   27 ++
- arch/arm64/boot/dts/apm-storm.dtsi                 |   21 ++
- drivers/rtc/Kconfig                                |    9 +
- drivers/rtc/Makefile                               |    1 +
- drivers/rtc/rtc-xgene.c                            |  278 ++++++++++++++++++++
- 5 files changed, 336 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/xgene-rtc.txt
- create mode 100644 drivers/rtc/rtc-xgene.c
+-- 
+1.7.10.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
