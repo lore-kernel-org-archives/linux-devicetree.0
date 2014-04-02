@@ -1,111 +1,91 @@
-From: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 00/12] Add DSI display support for Exynos based boards
-Date: Wed, 02 Apr 2014 09:24:47 +0200
-Message-ID: <533BBB3F.9060709@samsung.com>
-References: <1396007567-4015-1-git-send-email-a.hajda@samsung.com>
- <CAAQKjZN7u1q6jeLCyQ0qe7VDRY3wUv1PjUeZZ6uoWYjo7vdtZQ@mail.gmail.com>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 3/3] ARM: DTS: dra7/dra7xx-clocks: ATL related changes
+Date: Wed, 2 Apr 2014 16:55:07 +0300
+Message-ID: <1396446907-20383-4-git-send-email-peter.ujfalusi@ti.com>
+References: <1396446907-20383-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <CAAQKjZN7u1q6jeLCyQ0qe7VDRY3wUv1PjUeZZ6uoWYjo7vdtZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1396446907-20383-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: DRI mailing list <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Inki,
+Modify the clock nodes for the ATL clocks to use the ATL clock driver to
+handle them.
 
-I see you have took also ld9040 driver patch [1].
-Could you take the 3rd version of this patch [2].
-It fixes build dependencies.
+Add the ATL device node at the same time for DRA7.
 
-[1]: http://permalink.gmane.org/gmane.comp.video.dri.devel/102592
-[2]: http://permalink.gmane.org/gmane.comp.video.dri.devel/102659
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/dra7.dtsi          | 11 +++++++++++
+ arch/arm/boot/dts/dra7xx-clocks.dtsi | 16 ++++++++--------
+ 2 files changed, 19 insertions(+), 8 deletions(-)
 
-Thanks and Regards
-Andrzej
-
-On 04/01/2014 02:29 PM, Inki Dae wrote:
-> Hi Andrzej,
->
->
->
-> 2014-03-28 20:52 GMT+09:00 Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>:
->> Hi,
->>
->> This patchset adds drivers and bindings to the following devices:
->> - Exynos DSI master,
->> - S6E8AA0 DSI panel,
->>
->> It adds also display support in DTS files for the following boards:
->> - Exynos4210/Trats,
->> - Exynos4412/Trats2.
->>
->> The patchset is based on exynos_drm_next branch.
->>
->> It is the 3rd iteration of the patches, main changes:
->> - based on exynos_drm_next branch,
->> - added video interface bindings between DSI host and slave,
->>   it seems to me to be redundand, and I hope when video interface bindings
->>   will be stabilized it can become optional,
->> - GPIOs implemented using gpiod framework,
->> - removed controversial stuff (toshiba bridge implementation and arndale support),
->>   it will be send in another set of patches
->>
->> Other changes are described in individual patches.
->>
->> Regards
->> Andrzej
->>
->>
->> Andrzej Hajda (12):
->>   drm/mipi_dsi: add flags to DSI messages
->>   drm/mipi_dsi: create dsi devices only for nodes with reg property
->>   drm/exynos: disallow fbdev initialization if no device is connected
->>   exynos/dsim: add DT bindings
->>   drm/exynos: add DSIM driver
->>   panel/s6e8aa0: add DT bindings
->>   drm/panel: add S6E8AA0 driver
->>   ARM: dts: exynos4: add MIPI DSI Master node
->>   ARM: dts: exynos4210-trats: add panel node
->>   ARM: dts: exynos4412-trats2: add panel node
->>   ARM: dts: exynos4210-trats: enable exynos/fimd node
->>   ARM: dts: exynos4412-trats2: enable exynos/fimd node
-> Picked up this patch series.
->
-> Thanks for your contribution,
-> Inki Dae
->
->>  .../devicetree/bindings/panel/samsung,s6e8aa0.txt  |   56 +
->>  .../devicetree/bindings/video/exynos_dsim.txt      |   80 +
->>  arch/arm/boot/dts/exynos4.dtsi                     |   14 +
->>  arch/arm/boot/dts/exynos4210-trats.dts             |   61 +
->>  arch/arm/boot/dts/exynos4412-trats2.dts            |   70 +
->>  drivers/gpu/drm/drm_mipi_dsi.c                     |    6 +-
->>  drivers/gpu/drm/exynos/Kconfig                     |    9 +
->>  drivers/gpu/drm/exynos/Makefile                    |    1 +
->>  drivers/gpu/drm/exynos/exynos_drm_drv.c            |   15 +
->>  drivers/gpu/drm/exynos/exynos_drm_drv.h            |    1 +
->>  drivers/gpu/drm/exynos/exynos_drm_dsi.c            | 1525 ++++++++++++++++++++
->>  drivers/gpu/drm/exynos/exynos_drm_fbdev.c          |   21 +
->>  drivers/gpu/drm/panel/Kconfig                      |    7 +
->>  drivers/gpu/drm/panel/Makefile                     |    1 +
->>  drivers/gpu/drm/panel/panel-s6e8aa0.c              | 1069 ++++++++++++++
->>  include/drm/drm_mipi_dsi.h                         |    6 +
->>  16 files changed, 2941 insertions(+), 1 deletion(-)
->>  create mode 100644 Documentation/devicetree/bindings/panel/samsung,s6e8aa0.txt
->>  create mode 100644 Documentation/devicetree/bindings/video/exynos_dsim.txt
->>  create mode 100644 drivers/gpu/drm/exynos/exynos_drm_dsi.c
->>  create mode 100644 drivers/gpu/drm/panel/panel-s6e8aa0.c
->>
->> --
->> 1.8.3.2
->>
->> _______________________________________________
->> dri-devel mailing list
->> dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
->> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index 1c0f8e1893ae..5e360e939aa7 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -789,6 +789,17 @@
+ 			dma-names = "tx0", "rx0";
+ 			status = "disabled";
+ 		};
++
++		atl: atl@4843c000 {
++			compatible = "ti,dra7-atl";
++			reg = <0x4843c000 0x3ff>;
++			ti,hwmods = "atl";
++			ti,provided-clocks = <&atl_clkin0_ck>, <&atl_clkin1_ck>,
++					     <&atl_clkin2_ck>, <&atl_clkin3_ck>;
++			clocks = <&atl_gfclk_mux>;
++			clock-names = "fck";
++			status = "disabled";
++		};
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+index 30160348934c..789e92cd5595 100644
+--- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
++++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+@@ -10,26 +10,26 @@
+ &cm_core_aon_clocks {
+ 	atl_clkin0_ck: atl_clkin0_ck {
+ 		#clock-cells = <0>;
+-		compatible = "fixed-clock";
+-		clock-frequency = <0>;
++		compatible = "ti,dra7-atl-clock";
++		clocks = <&atl_gfclk_mux>;
+ 	};
+ 
+ 	atl_clkin1_ck: atl_clkin1_ck {
+ 		#clock-cells = <0>;
+-		compatible = "fixed-clock";
+-		clock-frequency = <0>;
++		compatible = "ti,dra7-atl-clock";
++		clocks = <&atl_gfclk_mux>;
+ 	};
+ 
+ 	atl_clkin2_ck: atl_clkin2_ck {
+ 		#clock-cells = <0>;
+-		compatible = "fixed-clock";
+-		clock-frequency = <0>;
++		compatible = "ti,dra7-atl-clock";
++		clocks = <&atl_gfclk_mux>;
+ 	};
+ 
+ 	atl_clkin3_ck: atl_clkin3_ck {
+ 		#clock-cells = <0>;
+-		compatible = "fixed-clock";
+-		clock-frequency = <0>;
++		compatible = "ti,dra7-atl-clock";
++		clocks = <&atl_gfclk_mux>;
+ 	};
+ 
+ 	hdmi_clkin_ck: hdmi_clkin_ck {
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
