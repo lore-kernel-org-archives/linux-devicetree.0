@@ -1,43 +1,82 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH] ARM: dts: stmpe-ts: fix wrong bindings
-Date: Wed, 02 Apr 2014 09:48:58 +0200
-Message-ID: <2acd964e18e59b35996d042a3dd6e99b@agner.ch>
-References: <1386620111-1413-1-git-send-email-stefan@agner.ch>
- <201312092132.29575.marex@denx.de>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 1/2] watchdog: Add Cadence WDT driver
+Date: Tue, 01 Apr 2014 17:32:42 -0700
+Message-ID: <533B5AAA.50707@roeck-us.net>
+References: <1396002720-7105-1-git-send-email-harinik@xilinx.com> <533A0937.9030505@roeck-us.net> <533AA0F7.2080304@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201312092132.29575.marex@denx.de>
+In-Reply-To: <533AA0F7.2080304@monstr.eu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawn.guo@freescale.com
-Cc: viresh.linux@gmail.com, shiraz.hashim@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux@arm.linux.org.uk, linux-kernel@vger.kernel.org, ijc+devicetree@hellion.org.uk, Marek Vasut <marex@denx.de>
+To: monstr@monstr.eu
+Cc: Harini Katakam <harinik@xilinx.com>, grant.likely@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michals@xilinx.com, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am 2013-12-09 21:32, schrieb Marek Vasut:
-> On Monday, December 09, 2013 at 09:15:11 PM, Stefan Agner wrote:
->> Fix bindings for STMPE touchscreen device to match the documented
->> bindings and the actual bindings used by the driver.
+On 04/01/2014 04:20 AM, Michal Simek wrote:
+> Hi Guenter,
+>
+>>> +/**
+>>> + * struct cdns_wdt - Watchdog device structure
+>>> + * @regs: baseaddress of device
+>>> + * @rst: reset flag
+>>> + * @clk: struct clk * of a clock source
+>>> + * @prescaler: for saving prescaler value
+>>> + * @ctrl_clksel: counter clock prescaler selection
+>>> + * @io_lock: spinlock for IO register access
+>>> + * @cdns_wdt_device: watchdog device structure
+>>> + * @cdns_wdt_notifier: notifier structure
+>>> + *
+>>> + * Structure containing parameters specific to cadence watchdog.
+>>> + */
+>>> +struct cdns_wdt {
+>>> +    void __iomem        *regs;
+>>> +    u32            rst;
+>>> +    struct clk        *clk;
+>>> +    u32            prescaler;
+>>> +    u32            ctrl_clksel;
+>>> +    spinlock_t        io_lock;
+>>> +    struct watchdog_device    cdns_wdt_device;
+>>> +    struct notifier_block    cdns_wdt_notifier;
+>>> +};
+>>> +
+>>> +/* Write access to Registers */
+>>> +static inline void cdns_wdt_writereg(void __iomem *offset, u32 val)
+>>> +{
+>>> +    writel_relaxed(val, offset);
+>>> +}
+>>> +
 >>
->> Signed-off-by: Stefan Agner <stefan@agner.ch>
->> ---
->> I don't have any of these hardware, but the error is obvious. The device
->> probably works anyway since the device/driver will use default values.
-> 
-> Full agreement here.
-> 
-> Reviewed-by: Marek Vasut <marex@denx.de>
-> 
-> btw. I plan to rework the STMPE TS as it doesn't work nicely on my device at 
-> all. I am seriously lacking time, but I will try! ;-)
-> 
-> Best regards,
-> Marek Vasut
+>> Not really sure if this function provides any value.
+>
+> I can't see any problem to use this helper IO function
+> but maybe we could do it a little bit differently.
+> Currently implementation is just passing values to writel_relaxed()
+>
+> What about to do it like this?
+>
+> static inline void cdns_wdt_writereg(struct cdns_wdt *wdt, u32 offset, u32 val)
+> {
+>      writel_relaxed(val, wdt->regs + offset);
+> }
+>
+Yes, that would make more sense.
 
-Hi Shawn,
+Guenter
 
-Just noticed that I forgot to add you when sending this patch. I guess
-this should go through your tree...
-
---
-Stefan
+> This solution was suggested by Mark here too.
+> https://lkml.org/lkml/2014/3/17/234
+>
+> The reason for having one IO helper function is
+> 1. Simper debugging when you add printks to one location and
+> you get full list for accesses
+> 2. This driver can be also used by BE Linux on Microblaze in PL
+> that's why there could be a need to autodetect endianess directly
+> on the IP itself. Then using helper function is necessary.
+> 3. We have met with secure monitor implementation where all these
+> io accesses should be done via smc calls and having
+> IO helper function is easier for change.
+>
+> Thanks,
+> Michal
+>
