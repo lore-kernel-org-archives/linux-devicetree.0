@@ -1,174 +1,35 @@
-From: stefan-XLVq0VzYD2Y@public.gmane.org
-Subject: [PATCH 2/2] ARM: dts: add initial Colibri VF61 board support
-Date: Wed,  2 Apr 2014 18:47:27 +0200
-Message-ID: <c8f2d3349233b70e5bd242480ff326b3b728cca3.1396456704.git.stefan@agner.ch>
-References: <cover.1396456704.git.stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1396456704.git.stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org
-Cc: galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH] ARM: DTS: dra7xx-clocks: Correct mcasp2_ahclkx_mux bit-shift
+Date: Wed, 2 Apr 2014 16:46:25 +0300
+Message-ID: <1396446385-20258-1-git-send-email-peter.ujfalusi@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+The correct bit is 24 for AHCLKX.
 
-Add initial Toradex Colibri VF61 board support. Ethernet, UART
-and SDHC cards are working. Cache latencies need to be a bit
-higher than vf610.dtsi suggests. Those values are validated
-by running multiple memory tests.
-
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- arch/arm/boot/dts/Makefile          |   1 +
- arch/arm/boot/dts/vf610-colibri.dts | 123 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 124 insertions(+)
- create mode 100644 arch/arm/boot/dts/vf610-colibri.dts
+ arch/arm/boot/dts/dra7xx-clocks.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 23d7768..81b3885 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -190,6 +190,7 @@ dtb-$(CONFIG_ARCH_MXC) += \
- 	imx6q-udoo.dtb \
- 	imx6q-wandboard.dtb \
- 	imx6sl-evk.dtb \
-+	vf610-colibri.dtb \
- 	vf610-cosmic.dtb \
- 	vf610-twr.dtb
- dtb-$(CONFIG_ARCH_MXS) += imx23-evk.dtb \
-diff --git a/arch/arm/boot/dts/vf610-colibri.dts b/arch/arm/boot/dts/vf610-colibri.dts
-new file mode 100644
-index 0000000..3ac34e6
---- /dev/null
-+++ b/arch/arm/boot/dts/vf610-colibri.dts
-@@ -0,0 +1,123 @@
-+/*
-+ * Copyright 2014 Toradex AG
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+/dts-v1/;
-+#include "vf610.dtsi"
-+
-+/ {
-+	model = "Toradex Colibri VF61 COM";
-+	compatible = "toradex,vf610-colibri", "fsl,vf610";
-+
-+	chosen {
-+		bootargs = "console=ttyLP0,115200";
-+	};
-+
-+	memory {
-+		reg = <0x80000000 0x10000000>;
-+	};
-+
-+	clocks {
-+		enet_ext {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <50000000>;
-+		};
-+	};
-+
-+};
-+
-+&iomuxc {
-+	vf610-colibri {
-+		pinctrl_esdhc1: esdhc1grp {
-+			fsl,fsl,pins = <
-+				VF610_PAD_PTA24__ESDHC1_CLK	0x31ef
-+				VF610_PAD_PTA25__ESDHC1_CMD	0x31ef
-+				VF610_PAD_PTA26__ESDHC1_DAT0	0x31ef
-+				VF610_PAD_PTA27__ESDHC1_DAT1	0x31ef
-+				VF610_PAD_PTA28__ESDHC1_DATA2	0x31ef
-+				VF610_PAD_PTA29__ESDHC1_DAT3	0x31ef
-+				VF610_PAD_PTB20__GPIO_42	0x219d
-+			>;
-+		};
-+
-+		pinctrl_fec1: fec1grp {
-+			fsl,pins = <
-+				VF610_PAD_PTC9__ENET_RMII1_MDC		0x30d2
-+				VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3
-+				VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1
-+				VF610_PAD_PTC12__ENET_RMII_RXD1		0x30d1
-+				VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1
-+				VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1
-+				VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2
-+				VF610_PAD_PTC16__ENET_RMII1_TXD0	0x30d2
-+				VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2
-+			>;
-+		};
-+
-+		pinctrl_uart0: uart0grp {
-+			fsl,pins = <
-+				VF610_PAD_PTB10__UART0_TX		0x21a2
-+				VF610_PAD_PTB11__UART0_RX		0x21a1
-+			>;
-+		};
-+
-+		pinctrl_uart1: uart1grp {
-+			fsl,pins = <
-+				VF610_PAD_PTB4__UART1_TX		0x21a2
-+				VF610_PAD_PTB5__UART1_RX		0x21a1
-+			>;
-+		};
-+
-+		pinctrl_uart2: uart2grp {
-+			fsl,pins = <
-+				VF610_PAD_PTD0__UART2_TX		0x21a2
-+				VF610_PAD_PTD1__UART2_RX		0x21a1
-+				VF610_PAD_PTD2__UART2_RTS		0x21a2
-+				VF610_PAD_PTD3__UART2_CTS		0x21a1
-+			>;
-+		};
-+	};
-+};
-+
-+&esdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_esdhc1>;
-+	bus-width = <4>;
-+	status = "okay";
-+};
-+
-+&fec1 {
-+	phy-mode = "rmii";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_fec1>;
-+	status = "okay";
-+};
-+
-+&L2 {
-+	arm,data-latency = <2 1 2>;
-+	arm,tag-latency = <3 2 3>;
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart0>;
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	status = "okay";
-+};
+diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+index e96da9a898ad..cfb8fc753f50 100644
+--- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
++++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+@@ -1640,7 +1640,7 @@
+ 		#clock-cells = <0>;
+ 		compatible = "ti,mux-clock";
+ 		clocks = <&abe_24m_fclk>, <&abe_sys_clk_div>, <&func_24m_clk>, <&atlclkin3_ck>, <&atl_clkin2_ck>, <&atl_clkin1_ck>, <&atl_clkin0_ck>, <&sys_clkin2>, <&ref_clkin0_ck>, <&ref_clkin1_ck>, <&ref_clkin2_ck>, <&ref_clkin3_ck>, <&mlb_clk>, <&mlbp_clk>;
+-		ti,bit-shift = <28>;
++		ti,bit-shift = <24>;
+ 		reg = <0x1860>;
+ 	};
+ 
 -- 
 1.9.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
