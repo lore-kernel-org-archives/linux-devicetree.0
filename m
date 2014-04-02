@@ -1,23 +1,70 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH 1/8] ARM: imx6q-clk: parent lvds_gate from lvds_sel
-Date: Thu, 3 Apr 2014 14:49:08 +0800
-Message-ID: <20140403064906.GI2801@dragon>
-References: <1396025579-14344-1-git-send-email-l.stach@pengutronix.de>
- <1396025579-14344-2-git-send-email-l.stach@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1396025579-14344-2-git-send-email-l.stach@pengutronix.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Sean Cross <xobs@kosagi.com>, Marek Vasut <marex@denx.de>, Richard Zhu <r65037@freescale.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Tim Harvey <tharvey@gateworks.com>, kernel@pengutronix.de
+From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH RESEND 0/5] clk: bcm21664: add common clock support
+Date: Wed,  2 Apr 2014 14:29:56 -0500
+Message-ID: <1396467001-3551-1-git-send-email-elder@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 28, 2014 at 05:52:52PM +0100, Lucas Stach wrote:
-> Allows fror proper refcounting of the parent clocks
-> when enabling the clock output on CLK1/2 pads.
-> 
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+This series has been rebased but its content has not changed.
 
-Applied, thanks.
+This is series has two parts.  The first two patches are changes
+to the existing Broadcom Kona family clock code to prepare for the
+addition of support for another SoC, bcm21664.
+
+The remaining three define the binding and code for bcm21664, and
+replace the use of "fake" clocks in the device tree with the real
+ones.  This ends up being a fairly straightforward definition of
+the clocks on this SoC; the rest of the clock code is shared with
+other SoCs that use the Kona style clock system.
+
+This series depends on a number of other things that are
+currently queued for Linux 3.15 or have already been sent
+out for review:
+    - Clock support for bcm281xx and initial BCM21664 support,
+      all queued for 3.15:
+        https://github.com/broadcom/mach-bcm/
+	    armsoc/for-3.15/cleanup
+	    armsoc/for-3.15/drivers
+	    armsoc/for-3.15/dt
+	    armsoc/for-3.15/soc-3
+    - Additional clock fixes and features for bcm281xx (out for review)
+	https://lkml.org/lkml/2014/4/1/876
+This prerequisite code appears in the branch (below) as merges
+from other publicly-available git branches where available, or
+cherry-picks otherwise.
+
+This code is available in the "review/bcm21664-clock-rebased" branch
+of the git repository here:
+    http://git.linaro.org/git/landing-teams/working/broadcom/kernel.git
+
+
+					-Alex
+
+Alex Elder (5):
+  clk: bcm281xx: move compatible string definitions
+  ARM: dts: revise kona clock binding document
+  ARM: dts: define clock binding for bcm21664
+  clk: bcm21664: use common clock framework
+  ARM: dts: use real clocks for bcm21664
+
+ .../devicetree/bindings/clock/bcm-kona-clock.txt   |  116 +++++---
+ arch/arm/boot/dts/bcm21664.dtsi                    |  190 ++++++++-----
+ drivers/clk/bcm/Kconfig                            |    2 +-
+ drivers/clk/bcm/Makefile                           |    1 +
+ drivers/clk/bcm/clk-bcm21664.c                     |  290 ++++++++++++++++++++
+ drivers/clk/bcm/clk-bcm281xx.c                     |   12 -
+ include/dt-bindings/clock/bcm21664.h               |   62 +++++
+ include/dt-bindings/clock/bcm281xx.h               |   12 +
+ 8 files changed, 565 insertions(+), 120 deletions(-)
+ create mode 100644 drivers/clk/bcm/clk-bcm21664.c
+ create mode 100644 include/dt-bindings/clock/bcm21664.h
+
+-- 
+1.7.9.5
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
