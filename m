@@ -1,100 +1,55 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH RFC v4 2/2] clk: Add handling of clk parent and rate
- assigned from DT
-Date: Wed, 02 Apr 2014 12:18:37 +0200
-Message-ID: <533BE3FD.8070902@samsung.com>
-References: <1396284116-19178-1-git-send-email-s.nawrocki@samsung.com>
- <1396284116-19178-3-git-send-email-s.nawrocki@samsung.com>
- <20140331200620.GA13881@kroah.com> <533ABCEC.8040701@codethink.co.uk>
- <533ACBD0.8030209@samsung.com> <20140401163744.GE3842@kroah.com>
+From: Tim Kryger <tim.kryger@linaro.org>
+Subject: [RESEND PATCH v5 1/5] Documentation: dt: Add Kona PWM binding
+Date: Wed, 2 Apr 2014 09:27:20 -0700
+Message-ID: <1396456044-19427-2-git-send-email-tim.kryger@linaro.org>
+References: <1396456044-19427-1-git-send-email-tim.kryger@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20140401163744.GE3842@kroah.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mturquette@linaro.org, linux@arm.linux.org.uk, robh+dt@kernel.org, grant.likely@linaro.org, mark.rutland@arm.com, galak@codeaurora.org, kyungmin.park@samsung.com, sw0312.kim@samsung.com, m.szyprowski@samsung.com, t.figa@samsung.com, laurent.pinchart@ideasonboard.com, s.hauer@pengutronix.de
+Content-Type: text/plain
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1396456044-19427-1-git-send-email-tim.kryger@linaro.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Matt Porter <mporter@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Grant Likely <grant.likely@linaro.org>
+Cc: Tim Kryger <tim.kryger@linaro.org>, Linux PWM List <linux-pwm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, Linux Doc List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/04/14 18:37, Greg KH wrote:
-> On Tue, Apr 01, 2014 at 04:23:12PM +0200, Sylwester Nawrocki wrote:
->> On 01/04/14 15:19, Ben Dooks wrote:
->>> On 31/03/14 21:06, Greg KH wrote:
->>>>> On Mon, Mar 31, 2014 at 06:41:56PM +0200, Sylwester Nawrocki wrote:
->> [...]
->>>>> I don't understand why you need the driver core to initialize this one
->>>>> type of thing?  That should be in a driver, or in a class, or at worse
->>>>> case, the platform code.
->>>>>
->>>>> What makes clocks so "unique" here?
->>
->> The reason I put it in the driver core was mainly to avoid having many
->> drivers doing same call to this initialization function.
->> I was considering moving it to the bus code, still there are several
->> buses for which it would need to be repeated.
-> 
-> "several" is how many?  2?  3?  10?
+Add the binding description for the Kona PWM controller found on Broadcom's
+mobile SoCs.
 
-It would be mostly the platform and amba bus, but this clock defaults
-could be useful also for i2c, spi. In general it's about not probable
-devices which may be specified in devicetree.
+Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
+Reviewed-by: Alex Elder <elder@linaro.org>
+Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
+---
+ .../devicetree/bindings/pwm/bcm-kona-pwm.txt       |   21 ++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
 
-> Please fix it "correctly" and don't put it in the driver core just
-> because it seems easier that way.
-> 
->> Maybe really_probe() is not a best place to put this, nonetheless
->> the requirements I could list were:
->>
->>  1. not involving individual drivers,
-> 
-> Why not?
-
-I'd say because this thing can be often considered a platform detail
-which would be better opaque to drivers. It's at the border of a device
-and its integration within a platform.
-
->>  2. have such an initialization call done for all devices, irrespective
->>     of Linux bus or class type,
-> 
-> Why?  Do _all_ devices that Linux supports have this issue to be
-> resolved?
-
-Sorry, certainly not all devices. I think it's only related to the
-non-probable devices which can be specified in DT.
-
->>  3. Handle errors properly, e.g. defer driver probing if a clock for
->>    a device is not yet available.
-> 
-> Then do it in the bus that controls that device, as it knows to defer
-> probing at that point in time.
-
-All right, that would also work. I suspect doing it for platform and
-amba bus might be sufficient in the beginning.
-
->> One advantage I could see from making the call from within a device
->> driver is that a device could keep using the common DT bindings and
->> replace the common initialization function with a private one, if
->> there is a need for some quirks handled for a device. With approach
->> as in this patch it's difficult to override the default behaviour.
->> However then there is a question whether we strive for the clocks
->> management to be possibly kept away from device drivers.
->>
->>> I suppose the issue here is that a lot of drivers currently use
->>> clocks and a number of systems have badly setup default clock trees
->>> at start time.
->>>
->>> Mark Brown and others have argued that the management of clocks which
->>> is common to all devices should not live in the driver.
->>
->> True, motivation behind this patch series was also replacing custom
->> code in multiple drivers doing similar clock rate or parent setting
->> by a common code, using standardized DT binding.
-> 
-> Then put it in the bus that controls these broken devices / platforms.
-
-OK, I'm going to put it in the bus code.
-
+diff --git a/Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt b/Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
+new file mode 100644
+index 0000000..8eae9fe
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
+@@ -0,0 +1,21 @@
++Broadcom Kona PWM controller device tree bindings
++
++This controller has 6 channels.
++
++Required Properties :
++- compatible: should contain "brcm,kona-pwm"
++- reg: physical base address and length of the controller's registers
++- clocks: phandle + clock specifier pair for the external clock
++- #pwm-cells: Should be 3. See pwm.txt in this directory for a
++  description of the cells format.
++
++Refer to clocks/clock-bindings.txt for generic clock consumer properties.
++
++Example:
++
++pwm: pwm@3e01a000 {
++	compatible = "brcm,bcm11351-pwm", "brcm,kona-pwm";
++	reg = <0x3e01a000 0xc4>;
++	clocks = <&pwm_clk>;
++	#pwm-cells = <3>;
++};
 -- 
-Thanks,
-Sylwester
+1.7.9.5
+
