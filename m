@@ -1,86 +1,71 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH 4/8] PCI: imx6: use new clock names
-Date: Thu, 3 Apr 2014 14:50:39 +0800
-Message-ID: <20140403065037.GJ2801@dragon>
-References: <1396025579-14344-1-git-send-email-l.stach@pengutronix.de>
- <1396025579-14344-5-git-send-email-l.stach@pengutronix.de>
+From: Clement Perrochaud <clement.perrochaud-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH v4 0/2] NFC: pn544_i2c: Add device-tree support to PN544
+Date: Wed, 2 Apr 2014 09:01:05 +0000
+Message-ID: <060c5ba8ed98462d835a641ce8d83af9@AMXPR04MB136.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1396025579-14344-5-git-send-email-l.stach@pengutronix.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Sean Cross <xobs@kosagi.com>, Marek Vasut <marex@denx.de>, Richard Zhu <r65037@freescale.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Tim Harvey <tharvey@gateworks.com>, kernel@pengutronix.de
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org" <linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 28, 2014 at 05:52:55PM +0100, Lucas Stach wrote:
-> As defined in the new binding.
-> 
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> ---
->  drivers/pci/host/pci-imx6.c | 74 ++++++++++++++++++---------------------------
->  1 file changed, 29 insertions(+), 45 deletions(-)
-> 
-> diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.c
-> index ee082509b0ba..71730bbcd9a2 100644
-> --- a/drivers/pci/host/pci-imx6.c
-> +++ b/drivers/pci/host/pci-imx6.c
-...
-> @@ -583,32 +574,25 @@ static int __init imx6_pcie_probe(struct platform_device *pdev)
->  	}
->  
->  	/* Fetch clocks */
-> -	imx6_pcie->lvds_gate = devm_clk_get(&pdev->dev, "lvds_gate");
-> -	if (IS_ERR(imx6_pcie->lvds_gate)) {
-> -		dev_err(&pdev->dev,
-> -			"lvds_gate clock select missing or invalid\n");
-> -		return PTR_ERR(imx6_pcie->lvds_gate);
-> -	}
-> -
-> -	imx6_pcie->sata_ref_100m = devm_clk_get(&pdev->dev, "sata_ref_100m");
-> -	if (IS_ERR(imx6_pcie->sata_ref_100m)) {
-> +	imx6_pcie->pcie_phy = devm_clk_get(&pdev->dev, "pcie_phy");
-> +	if (IS_ERR(imx6_pcie->pcie_phy)) {
+This patch brings device-tree support to the pn544_i2c device
+driver.
 
-Won't this break the existing DTBs?
+It has been successfully tested on a BeagleBone Black board - a
+common ARM-Based SoC - both as a module and built-in.
+Testing involved enabling and disabling the chip, as well as
+reading a Type 4 NFC tag. Firmware download has been tested
+successfully but was only possible after heavy code modification
+out of the scope of this patch.
 
-Shawn
+The submission is broken into two patches: one for code itself and
+the second for DTS documentation.
 
->  		dev_err(&pdev->dev,
-> -			"sata_ref_100m clock source missing or invalid\n");
-> -		return PTR_ERR(imx6_pcie->sata_ref_100m);
-> +			"pcie_phy clock source missing or invalid\n");
-> +		return PTR_ERR(imx6_pcie->pcie_phy);
->  	}
->  
-> -	imx6_pcie->pcie_ref_125m = devm_clk_get(&pdev->dev, "pcie_ref_125m");
-> -	if (IS_ERR(imx6_pcie->pcie_ref_125m)) {
-> +	imx6_pcie->pcie_bus = devm_clk_get(&pdev->dev, "pcie_bus");
-> +	if (IS_ERR(imx6_pcie->pcie_bus)) {
->  		dev_err(&pdev->dev,
-> -			"pcie_ref_125m clock source missing or invalid\n");
-> -		return PTR_ERR(imx6_pcie->pcie_ref_125m);
-> +			"pcie_bus clock source missing or invalid\n");
-> +		return PTR_ERR(imx6_pcie->pcie_bus);
->  	}
->  
-> -	imx6_pcie->pcie_axi = devm_clk_get(&pdev->dev, "pcie_axi");
-> -	if (IS_ERR(imx6_pcie->pcie_axi)) {
-> +	imx6_pcie->pcie = devm_clk_get(&pdev->dev, "pcie");
-> +	if (IS_ERR(imx6_pcie->pcie)) {
->  		dev_err(&pdev->dev,
-> -			"pcie_axi clock source missing or invalid\n");
-> -		return PTR_ERR(imx6_pcie->pcie_axi);
-> +			"pcie clock source missing or invalid\n");
-> +		return PTR_ERR(imx6_pcie->pcie);
->  	}
->  
->  	/* Grab GPR config register range */
-> -- 
-> 1.9.0
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It is based on 48761f6db88da9e733e4405ce9842c0769e4d4ac
+(NFC: st21nfca: Implement load_session HCI hook) from the nfc-next mast=
+er
+branch.
+
+Changes from v3:
+ - Better handling of errors in case of absence of both platform-data a=
+nd
+device-tree.
+ - Implementation of Open Firmware interrupts.
+ - Modification if the compatible string to fit device-tree guidelines.
+ - Modification of the properties to fit device-tree naming conventions=
+=2E
+
+Changes from v2:
+ - Forgotten documentation patch has been added.
+ - pn544_hci_i2c_of_request_resources is now static and takes a struct
+i2c_client as argument instead of a struct pn544_i2c_phy.
+ - Spacing around operators has been added.
+ - Test for device-tree use instead of platform data has been improved.
+
+Changes from v1:
+ - Incorrect resource freeing on module removal has been fixed.
+ - Compatibility table variable name has been corrected to match
+standard pattern.
+
+Cl=E9ment Perrochaud (2):
+  NFC: pn544_i2c: Add device-tree (Open Firmware) support to PN544
+  NFC: pn544_i2c: Add DTS Documentation
+
+ .../devicetree/bindings/net/nfc/pn544.txt          |  35 +++++
+ drivers/nfc/pn544/i2c.c                            | 148 +++++++++++++=
++++++---
+ 2 files changed, 166 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/nfc/pn544.txt
+
+--=20
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
