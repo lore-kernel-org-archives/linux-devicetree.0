@@ -1,51 +1,34 @@
-From: Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: [PATCH 2/3] ARM: dts: Add PMU reg node to exynos4212 and exynos4412
-Date: Wed, 02 Apr 2014 17:02:57 +0900
-Message-ID: <1396425778-4379-3-git-send-email-pankaj.dubey@samsung.com>
-References: <1396425778-4379-1-git-send-email-pankaj.dubey@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1396425778-4379-1-git-send-email-pankaj.dubey@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kgene.kim@samsung.com, linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, chow.kim@samsung.com, Pankaj Dubey <pankaj.dubey@samsung.com>
+From: Nicolin Chen <Guangyu.Chen@freescale.com>
+Subject: [PATCH v2 0/2] ASoC: fsl_sai: Add bus clock and mclks with clock controls
+Date: Wed, 2 Apr 2014 18:10:18 +0800
+Message-ID: <cover.1396432924.git.Guangyu.Chen@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: broonie@kernel.org, shawn.guo@linaro.org
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, timur@tabi.org, Li.Xiubo@freescale.com, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds pmu regnode to exynos4212 and exynos4412 dtsi to
-handle PMU register access via DT.
+This series of patches add clock controls to fsl_sai driver and updates
+the vf610.dtsi accordingly.
 
-Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
----
- arch/arm/boot/dts/exynos4212.dtsi |    5 +++++
- arch/arm/boot/dts/exynos4412.dtsi |    5 +++++
- 2 files changed, 10 insertions(+)
+Changelog
+v2:
+ * Appended two extra mclks to the driver since SAI actually has three.
+ * Renamed clock name to 'bus' and 'mclk' according to the reference manual.
 
-diff --git a/arch/arm/boot/dts/exynos4212.dtsi b/arch/arm/boot/dts/exynos4212.dtsi
-index 3c00e6e..4661ffa 100644
---- a/arch/arm/boot/dts/exynos4212.dtsi
-+++ b/arch/arm/boot/dts/exynos4212.dtsi
-@@ -29,4 +29,9 @@
- 	gic: interrupt-controller@10490000 {
- 		cpu-offset = <0x8000>;
- 	};
-+
-+	pmu_system_controller: system-controller@10020000 {
-+		compatible = "samsung,exynos4212-pmu", "syscon";
-+		reg = <0x10020000 0x5000>;
-+	};
- };
-diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
-index 15d3c0a..6f4cb22 100644
---- a/arch/arm/boot/dts/exynos4412.dtsi
-+++ b/arch/arm/boot/dts/exynos4412.dtsi
-@@ -29,4 +29,9 @@
- 	gic: interrupt-controller@10490000 {
- 		cpu-offset = <0x4000>;
- 	};
-+
-+	pmu_system_controller: system-controller@10020000 {
-+		compatible = "samsung,exynos4412-pmu", "syscon";
-+		reg = <0x10020000 0x5000>;
-+	};
- };
+Nicolin Chen (2):
+  ASoC: fsl_sai: Add clock controls for SAI
+  ARM: dts: Append clock bindings for sai2 on VF610 platform
+
+ .../devicetree/bindings/sound/fsl-sai.txt          |  8 ++--
+ arch/arm/boot/dts/vf610.dtsi                       |  6 ++-
+ sound/soc/fsl/fsl_sai.c                            | 50 ++++++++++++++++++++--
+ sound/soc/fsl/fsl_sai.h                            |  4 ++
+ 4 files changed, 59 insertions(+), 9 deletions(-)
+
 -- 
-1.7.10.4
+1.8.4
+
+
