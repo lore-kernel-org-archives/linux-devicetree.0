@@ -1,55 +1,32 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v2 2/2] ARM: dts: Append clock bindings for sai2 on VF610
- platform
-Date: Wed, 2 Apr 2014 21:03:04 +0800
-Message-ID: <20140402130302.GC8558@dragon>
-References: <cover.1396432924.git.Guangyu.Chen@freescale.com>
- <d09da3eb629143abd3f61ae037af4ddaf7286a83.1396432924.git.Guangyu.Chen@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d09da3eb629143abd3f61ae037af4ddaf7286a83.1396432924.git.Guangyu.Chen@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Nicolin Chen <Guangyu.Chen@freescale.com>
-Cc: broonie@kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, timur@tabi.org, Li.Xiubo@freescale.com, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
+From: stefan-XLVq0VzYD2Y@public.gmane.org
+Subject: [PATCH 0/2] ARM: dts: add initial Colibri VF61 board support
+Date: Wed,  2 Apr 2014 18:47:25 +0200
+Message-ID: <cover.1396456704.git.stefan@agner.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org
+Cc: galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 02, 2014 at 06:10:20PM +0800, Nicolin Chen wrote:
-> Since we added fours clock to the DT binding, we should update the current
-> SAI dts/dtsi so as not to break their functions.
-> 
-> Signed-off-by: Nicolin Chen <Guangyu.Chen@freescale.com>
-> ---
->  arch/arm/boot/dts/vf610.dtsi | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
-> index d31ce1b..9fd0007 100644
-> --- a/arch/arm/boot/dts/vf610.dtsi
-> +++ b/arch/arm/boot/dts/vf610.dtsi
-> @@ -139,8 +139,10 @@
->  				compatible = "fsl,vf610-sai";
->  				reg = <0x40031000 0x1000>;
->  				interrupts = <0 86 0x04>;
-> -				clocks = <&clks VF610_CLK_SAI2>;
-> -				clock-names = "sai";
-> +				clocks = <&clks VF610_CLK_SAI2>,
-> +				       <&clks VF610_CLK_SAI2>,
-> +				       <&clks 0>, <&clks 0>;
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 
-So it seems that SAI on vf610 does work with only one clock.  So the
-driver change will break old DTB for vf610?  If that's case, we will
-have to need a new compatible for cases where 4 clocks are needed.
+This patches add initial support for Toradex Colibri VF61
+computer-on-module.
 
-Shawn
+Stefan Agner (2):
+  of: add vendor prefix for Toradex AG
+  ARM: dts: add initial Colibri VF61 board support
 
-> +				clock-names = "bus", "mclk1", "mclk2", "mclk3";
->  				status = "disabled";
->  			};
->  
-> -- 
-> 1.8.4
-> 
-> 
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/vf610-colibri.dts                | 123 +++++++++++++++++++++
+ 3 files changed, 125 insertions(+)
+ create mode 100644 arch/arm/boot/dts/vf610-colibri.dts
 
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
