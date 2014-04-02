@@ -1,103 +1,73 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH 1/2] dts: socfpga: Add bindings for Altera SoC SDRAM
- controller
-Date: Wed, 2 Apr 2014 00:19:13 +0200
-Message-ID: <20140401221913.GR5052@pengutronix.de>
-References: <1396303627-29198-1-git-send-email-tthayer@altera.com>
- <1396303627-29198-2-git-send-email-tthayer@altera.com>
- <20140401052807.GN5052@pengutronix.de>
- <1396383101.20336.6.camel@dinh-ubuntu>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: fsl_sai: Add imx6sx platform support
+Date: Wed, 2 Apr 2014 20:52:08 +0100
+Message-ID: <20140402195208.GM14763@sirena.org.uk>
+References: <1396352049-23554-1-git-send-email-Guangyu.Chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1396383101.20336.6.camel@dinh-ubuntu>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thor Thayer - Sendmail <tthayer@altera.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, linux-doc@vger.kernel.org, devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, rob@landley.net, galak@codeaurora.org, dinguyen@altera.com
+Content-Type: multipart/mixed; boundary="===============7757092715319901619=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1396352049-23554-1-git-send-email-Guangyu.Chen@freescale.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Nicolin Chen <Guangyu.Chen@freescale.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, linux-doc@vger.kernel.org, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, timur@tabi.org, Li.Xiubo@freescale.com, rob@landley.net, galak@codeaurora.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
 
-On Tue, Apr 01, 2014 at 03:11:41PM -0500, Thor Thayer - Sendmail wrote:
-> On Tue, 2014-04-01 at 07:28 +0200, Steffen Trumtrar wrote:
-> > Hi!
-> > 
-> > On Mon, Mar 31, 2014 at 05:07:06PM -0500, tthayer@altera.com wrote:
-> > > From: Thor Thayer <tthayer@altera.com>
-> > > 
-> > > Addition of the Altera SDRAM controller bindings and device
-> > > tree changes to the Altera SoC project.
-> > >
-> 
-> <snip>
-> 
-> > > diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
-> > > new file mode 100644
-> > > index 0000000..351ab7b
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
-> > > @@ -0,0 +1,14 @@
-> > > +Altera SOCFPGA SDRAM Controller
-> > > +
-> > > +Required properties:
-> > > +- compatible : "altr,sdr-ctl", "syscon";
-> > > +                Note that syscon is invoked for this device to support the FPGA
-> > > +		bridge driver and possibly other devices in the future.  See
-> > > +		also Documentation/devicetree/bindings/mfd/syscon.txt
-> > 
-> > This note is really linux specific (and specific to some vendor kernel driver
-> > for that matter). I think you should remove that.
-> 
-> Hi Steffen. Are you asking for the path to syscon.txt to be removed or
-> the entire note? 
-> The note is explaining why the "syscon" tag is used for this Altera IP
-> block (registers shared between multiple drivers).
-> Thanks for the clarification.
-> 
+--===============7757092715319901619==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="L/bWm/e7/ricERqM"
+Content-Disposition: inline
 
-I was referring to the note. I don't know what the current guideline is for
-this type of "devices", but I think referring to the syscon documentation
-is okay.
-The first part however describes a DT binding with things that might or might
-not happen in the future. What I want to say is, I would rather have this
-reworded, to have it just describe the SDRAM controller node as simple as it may
-be.
 
-> > 
-> > > +- reg : Should contain 1 register ranges(address and length)
-> > > +
-> > > +Example:
-> > > +	sdrctl@0xffc25000 {
-> > > +		compatible = "altr,sdr-ctl", "syscon";
-> > > +		reg = <0xffc25000 0x1000>;
-> > > +	};
-> > > diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> > > index 9e78c1d..3634de7 100644
-> > > --- a/arch/arm/boot/dts/socfpga.dtsi
-> > > +++ b/arch/arm/boot/dts/socfpga.dtsi
-> > > @@ -528,6 +528,11 @@
-> > >  			reg-io-width = <4>;
-> > >  		};
-> > >  
-> > > +		sdrctl@0xffc25000 {
-                       ^^
-Oh, and Dinh just mentioned in my patch, that the 0x shall be removed here.
-But I'm not so sure about that. Just FYI.
+--L/bWm/e7/ricERqM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > > +			compatible = "altr,sdr-ctl", "syscon";
-> > > +			reg = <0xffc25000 0x1000>;
-> > > +		};
-> > > +
-> > >  		rstmgr@ffd05000 {
-> > >  			compatible = "altr,rst-mgr";
-> > >  			reg = <0xffd05000 0x1000>;
+On Tue, Apr 01, 2014 at 07:34:09PM +0800, Nicolin Chen wrote:
+> The next coming i.MX6 Solo X SoC also contains SAI module while we use
+> imp_pcm_init() for i.MX platform.
 
-Regards,
-Steffen
+I've applied this, though obviously it'd be better if we had dmaengine
+support for this SoC so that it was just a compatible string update and
+didn't require any code.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--L/bWm/e7/ricERqM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTPGplAAoJELSic+t+oim9WMoP/jw3mYBYR71+bc4LxmhDmoXB
+ZyGam2gLtQ10yNOR/EuH9yKVXS84kw2ixKSC3fUSrlxzpK2KZgei6HvI1jHza2bU
+lbJ2UP5/YgxOAqdwBPLhED100mgSkTbqyZN0YwvzimRfI39VQhKip2EmZ9CASFWt
+td6DydrruAQTwceiu3gyrbQ+K/2PvwNOjRHR7eRplYyM7BpJXRfYrBuy/5EhbJNJ
+X1lZ6tMrIt/ILbHw/3cWS3J+nfKdevY2IUOtipUekj6jO8PeK4VdqT7oXGg1qUvT
+A6IlMLiERc0Y5H6zlP6RA2MKShbh/6qfuJqvJ3pvwD4HnKWgmEIMgGpEmrzUtLRV
+SwYP+L7j7diZJNkD2T3EtlfSXaJzoEHiVEHZeV1vqgiq6E5YY2D/dJZPl2s5Y7vZ
+E5c7s0IOvH0Dr5YbJ9cvU5oQbu13mBTJ/eitqSWzQwR5/rjpi8b27SRBzgovAGzZ
+UIbKP0hpTLHU0c1M26twq5OTIPlBBeuNZjjcKeCPC5hg3PuvLvPNSa9d1W1icFl1
+/LWv5WYiB3OLFdzhQThZk1RMjjCAdQFusOBS7wUqGlPkolr7GVUz+TGLzFYxnpbM
+28o17R2LOjA6CfiQenkuz7kubgSAKI7LKTjyc/aV2xAMAIrO0sbOXWjUczVcrHic
+l+yze0UTzoGYtvc3ipr2
+=5s9g
+-----END PGP SIGNATURE-----
+
+--L/bWm/e7/ricERqM--
+
+--===============7757092715319901619==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============7757092715319901619==--
