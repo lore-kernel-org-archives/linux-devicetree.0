@@ -1,1328 +1,1917 @@
-From: Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: [RFC PATCH 1/2] drivers: mfd: Add support of exynos-pmu driver
-Date: Wed, 02 Apr 2014 17:24:44 +0900
-Message-ID: <1396427085-4696-2-git-send-email-pankaj.dubey@samsung.com>
-References: <1396427085-4696-1-git-send-email-pankaj.dubey@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1396427085-4696-1-git-send-email-pankaj.dubey@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: kgene.kim@samsung.com, linux@arm.linux.org.uk, chow.kim@samsung.com, Younggun Jang <yg1004.jang@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Sangbeom Kim <sbkim73@samsung.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Pankaj Dubey <pankaj.dubey@samsung.com>
+From: Sherman Yin <syin@broadcom.com>
+Subject: [PATCH v3 1/3] pinctrl: Rename Broadcom Capri pinctrl driver
+Date: Wed, 2 Apr 2014 15:40:37 -0700
+Message-ID: <1396478439-16586-2-git-send-email-syin@broadcom.com>
+References: <1390509887-19278-1-git-send-email-syin@broadcom.com>
+ <1396478439-16586-1-git-send-email-syin@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1396478439-16586-1-git-send-email-syin@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, Olof Johansson <olof@lixom.net>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, Sherman Yin <syin@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Younggun Jang <yg1004.jang@samsung.com>
+To be consistent with other Broadcom drivers, the Broadcom Capri pinctrl
+driver and its related CONFIG option are renamed to bcm281xx.
 
-This driver is mainly used for setting misc bits of register from PMU IP
-of Exynos SoC which will be required to configure before Suspend/Resume.
-Currently all these settings are done in "arch/arm/mach-exynos/pmu.c" but
-moving ahead for ARM64 based SoC support, there is a need of DT based
-implementation of PMU driver.
-This driver uses already existing DT binding information.
+Devicetree compatible string and binding documentation use
+"brcm,bcm11351-pinctrl" to match the machine binding here:
+Documentation/devicetree/bindings/arm/bcm/bcm11351.txt
 
-CC: Samuel Ortiz <sameo@linux.intel.com>
-CC: Lee Jones <lee.jones@linaro.org>
-CC: Sangbeom Kim <sbkim73@samsung.com>
-CC: Grant Likely <grant.likely@linaro.org>
-CC: Rob Herring <robh+dt@kernel.org>
-CC: devicetree@vger.kernel.org
-Signed-off-by: Younggun Jang <yg1004.jang@samsung.com>
-Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+This driver supports pinctrl on BCM11130, BCM11140, BCM11351, BCM28145
+and BCM28155 SoCs.
+
+Signed-off-by: Sherman Yin <syin@broadcom.com>
+Reviewed-by: Matt Porter <mporter@linaro.org>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- arch/arm/mach-exynos/common.h               |   22 +-
- arch/arm/mach-exynos/regs-pmu.h             |  310 ----------------
- drivers/mfd/Kconfig                         |    9 +
- drivers/mfd/Makefile                        |    2 +
- drivers/mfd/exynos-pmu.c                    |  534 +++++++++++++++++++++++++++
- include/linux/mfd/samsung/exynos-pmu.h      |   31 ++
- include/linux/mfd/samsung/exynos-regs-pmu.h |  308 +++++++++++++++
- 7 files changed, 888 insertions(+), 328 deletions(-)
- delete mode 100644 arch/arm/mach-exynos/regs-pmu.h
- create mode 100644 drivers/mfd/exynos-pmu.c
- create mode 100644 include/linux/mfd/samsung/exynos-pmu.h
- create mode 100644 include/linux/mfd/samsung/exynos-regs-pmu.h
+ drivers/pinctrl/Kconfig                            |    8 +-
+ drivers/pinctrl/Makefile                           |    2 +-
+ .../{pinctrl-capri.c => pinctrl-bcm281xx.c}        | 1519 ++++++++++----------
+ 3 files changed, 768 insertions(+), 761 deletions(-)
+ rename drivers/pinctrl/{pinctrl-capri.c => pinctrl-bcm281xx.c} (25%)
 
-diff --git a/arch/arm/mach-exynos/common.h b/arch/arm/mach-exynos/common.h
-index 645f4f8..cbe8159 100644
---- a/arch/arm/mach-exynos/common.h
-+++ b/arch/arm/mach-exynos/common.h
-@@ -12,9 +12,12 @@
- #ifndef __ARCH_ARM_MACH_EXYNOS_COMMON_H
- #define __ARCH_ARM_MACH_EXYNOS_COMMON_H
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index 06cee01..d7b9b17 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -104,16 +104,16 @@ config PINCTRL_BCM2835
+ 	select PINMUX
+ 	select PINCONF
  
-+#include <mach/map.h>
-+
- #include <linux/reboot.h>
- #include <linux/of.h>
--#include "regs-pmu.h"
-+#include <linux/mfd/samsung/exynos-pmu.h>
-+#include <linux/mfd/samsung/exynos-regs-pmu.h>
+-config PINCTRL_CAPRI
+-	bool "Broadcom Capri pinctrl driver"
++config PINCTRL_BCM281XX
++	bool "Broadcom BCM281xx pinctrl driver"
+ 	depends on OF
+ 	select PINMUX
+ 	select PINCONF
+ 	select GENERIC_PINCONF
+ 	select REGMAP_MMIO
+ 	help
+-	  Say Y here to support Broadcom Capri pinctrl driver, which is used for
+-	  the BCM281xx SoC family, including BCM11130, BCM11140, BCM11351,
++	  Say Y here to support Broadcom BCM281xx pinctrl driver, which is used
++	  for the BCM281xx SoC family, including BCM11130, BCM11140, BCM11351,
+ 	  BCM28145, and BCM28155 SoCs.  This driver requires the pinctrl
+ 	  framework.  GPIO is provided by a separate GPIO driver.
  
- void exynos_init_io(void);
- void exynos_restart(enum reboot_mode mode, const char *cmd);
-@@ -42,24 +45,7 @@ extern struct smp_operations exynos_smp_ops;
+diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+index 4b83588..6d3fd62 100644
+--- a/drivers/pinctrl/Makefile
++++ b/drivers/pinctrl/Makefile
+@@ -21,7 +21,7 @@ obj-$(CONFIG_PINCTRL_BF60x)	+= pinctrl-adi2-bf60x.o
+ obj-$(CONFIG_PINCTRL_AT91)	+= pinctrl-at91.o
+ obj-$(CONFIG_PINCTRL_BCM2835)	+= pinctrl-bcm2835.o
+ obj-$(CONFIG_PINCTRL_BAYTRAIL)	+= pinctrl-baytrail.o
+-obj-$(CONFIG_PINCTRL_CAPRI)	+= pinctrl-capri.o
++obj-$(CONFIG_PINCTRL_BCM281XX)	+= pinctrl-bcm281xx.o
+ obj-$(CONFIG_PINCTRL_IMX)	+= pinctrl-imx.o
+ obj-$(CONFIG_PINCTRL_IMX1_CORE)	+= pinctrl-imx1-core.o
+ obj-$(CONFIG_PINCTRL_IMX27)	+= pinctrl-imx27.o
+diff --git a/drivers/pinctrl/pinctrl-capri.c b/drivers/pinctrl/pinctrl-bcm281xx.c
+similarity index 25%
+rename from drivers/pinctrl/pinctrl-capri.c
+rename to drivers/pinctrl/pinctrl-bcm281xx.c
+index eb25002..3bed792 100644
+--- a/drivers/pinctrl/pinctrl-capri.c
++++ b/drivers/pinctrl/pinctrl-bcm281xx.c
+@@ -24,75 +24,75 @@
+ #include "core.h"
+ #include "pinctrl-utils.h"
  
- extern void exynos_cpu_die(unsigned int cpu);
+-/* Capri Pin Control Registers Definitions */
++/* BCM281XX Pin Control Registers Definitions */
  
--/* PMU(Power Management Unit) support */
--
--#define PMU_TABLE_END	0xFFFF
--
--enum sys_powerdown {
--	SYS_AFTR,
--	SYS_LPA,
--	SYS_SLEEP,
--	NUM_SYS_POWERDOWN,
--};
--
- extern unsigned long l2x0_regs_phys;
--struct exynos_pmu_conf {
--	unsigned int offset;
--	unsigned int val[NUM_SYS_POWERDOWN];
--};
--
--extern void exynos_sys_powerdown_conf(enum sys_powerdown mode);
+ /* Function Select bits are the same for all pin control registers */
+-#define CAPRI_PIN_REG_F_SEL_MASK		0x0700
+-#define CAPRI_PIN_REG_F_SEL_SHIFT		8
++#define BCM281XX_PIN_REG_F_SEL_MASK		0x0700
++#define BCM281XX_PIN_REG_F_SEL_SHIFT		8
  
- extern void __iomem *get_exynos_pmubase(void);
+ /* Standard pin register */
+-#define CAPRI_STD_PIN_REG_DRV_STR_MASK		0x0007
+-#define CAPRI_STD_PIN_REG_DRV_STR_SHIFT		0
+-#define CAPRI_STD_PIN_REG_INPUT_DIS_MASK	0x0008
+-#define CAPRI_STD_PIN_REG_INPUT_DIS_SHIFT	3
+-#define CAPRI_STD_PIN_REG_SLEW_MASK		0x0010
+-#define CAPRI_STD_PIN_REG_SLEW_SHIFT		4
+-#define CAPRI_STD_PIN_REG_PULL_UP_MASK		0x0020
+-#define CAPRI_STD_PIN_REG_PULL_UP_SHIFT		5
+-#define CAPRI_STD_PIN_REG_PULL_DN_MASK		0x0040
+-#define CAPRI_STD_PIN_REG_PULL_DN_SHIFT		6
+-#define CAPRI_STD_PIN_REG_HYST_MASK		0x0080
+-#define CAPRI_STD_PIN_REG_HYST_SHIFT		7
++#define BCM281XX_STD_PIN_REG_DRV_STR_MASK	0x0007
++#define BCM281XX_STD_PIN_REG_DRV_STR_SHIFT	0
++#define BCM281XX_STD_PIN_REG_INPUT_DIS_MASK	0x0008
++#define BCM281XX_STD_PIN_REG_INPUT_DIS_SHIFT	3
++#define BCM281XX_STD_PIN_REG_SLEW_MASK		0x0010
++#define BCM281XX_STD_PIN_REG_SLEW_SHIFT		4
++#define BCM281XX_STD_PIN_REG_PULL_UP_MASK	0x0020
++#define BCM281XX_STD_PIN_REG_PULL_UP_SHIFT	5
++#define BCM281XX_STD_PIN_REG_PULL_DN_MASK	0x0040
++#define BCM281XX_STD_PIN_REG_PULL_DN_SHIFT	6
++#define BCM281XX_STD_PIN_REG_HYST_MASK		0x0080
++#define BCM281XX_STD_PIN_REG_HYST_SHIFT		7
  
-diff --git a/arch/arm/mach-exynos/regs-pmu.h b/arch/arm/mach-exynos/regs-pmu.h
-deleted file mode 100644
-index 7f3bf65..0000000
---- a/arch/arm/mach-exynos/regs-pmu.h
-+++ /dev/null
-@@ -1,310 +0,0 @@
--/*
-- * Copyright (c) 2010-2012 Samsung Electronics Co., Ltd.
-- *		http://www.samsung.com
-- *
-- * EXYNOS - Power management unit definition
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
--*/
--
--#ifndef __ASM_ARCH_REGS_PMU_H
--#define __ASM_ARCH_REGS_PMU_H __FILE__
--
--#include <mach/map.h>
--
--#define S5P_CENTRAL_SEQ_CONFIGURATION		0x0200
--
--#define S5P_CENTRAL_LOWPWR_CFG			(1 << 16)
--
--#define S5P_CENTRAL_SEQ_OPTION			0x0208
--
--#define S5P_USE_STANDBY_WFI0			(1 << 16)
--#define S5P_USE_STANDBY_WFE0			(1 << 24)
--
--#define EXYNOS_SWRESET				0x0400
--#define EXYNOS5440_SWRESET			0x00C4
--
--#define S5P_WAKEUP_STAT				0x0600
--#define S5P_EINT_WAKEUP_MASK			0x0604
--#define S5P_WAKEUP_MASK				0x0608
--
--#define S5P_INFORM0				0x0800
--#define S5P_INFORM1				0x0804
--#define S5P_INFORM5				0x0814
--#define S5P_INFORM6				0x0818
--#define S5P_INFORM7				0x081C
--
--#define S5P_ARM_CORE0_LOWPWR			0x1000
--#define S5P_DIS_IRQ_CORE0			0x1004
--#define S5P_DIS_IRQ_CENTRAL0			0x1008
--#define S5P_ARM_CORE1_LOWPWR			0x1010
--#define S5P_DIS_IRQ_CORE1			0x1014
--#define S5P_DIS_IRQ_CENTRAL1			0x1018
--#define S5P_ARM_COMMON_LOWPWR			0x1080
--#define S5P_L2_0_LOWPWR				0x10C0
--#define S5P_L2_1_LOWPWR				0x10C4
--#define S5P_CMU_ACLKSTOP_LOWPWR			0x1100
--#define S5P_CMU_SCLKSTOP_LOWPWR			0x1104
--#define S5P_CMU_RESET_LOWPWR			0x110C
--#define S5P_APLL_SYSCLK_LOWPWR			0x1120
--#define S5P_MPLL_SYSCLK_LOWPWR			0x1124
--#define S5P_VPLL_SYSCLK_LOWPWR			0x1128
--#define S5P_EPLL_SYSCLK_LOWPWR			0x112C
--#define S5P_CMU_CLKSTOP_GPS_ALIVE_LOWPWR	0x1138
--#define S5P_CMU_RESET_GPSALIVE_LOWPWR		0x113C
--#define S5P_CMU_CLKSTOP_CAM_LOWPWR		0x1140
--#define S5P_CMU_CLKSTOP_TV_LOWPWR		0x1144
--#define S5P_CMU_CLKSTOP_MFC_LOWPWR		0x1148
--#define S5P_CMU_CLKSTOP_G3D_LOWPWR		0x114C
--#define S5P_CMU_CLKSTOP_LCD0_LOWPWR		0x1150
--#define S5P_CMU_CLKSTOP_MAUDIO_LOWPWR		0x1158
--#define S5P_CMU_CLKSTOP_GPS_LOWPWR		0x115C
--#define S5P_CMU_RESET_CAM_LOWPWR		0x1160
--#define S5P_CMU_RESET_TV_LOWPWR			0x1164
--#define S5P_CMU_RESET_MFC_LOWPWR		0x1168
--#define S5P_CMU_RESET_G3D_LOWPWR		0x116C
--#define S5P_CMU_RESET_LCD0_LOWPWR		0x1170
--#define S5P_CMU_RESET_MAUDIO_LOWPWR		0x1178
--#define S5P_CMU_RESET_GPS_LOWPWR		0x117C
--#define S5P_TOP_BUS_LOWPWR			0x1180
--#define S5P_TOP_RETENTION_LOWPWR		0x1184
--#define S5P_TOP_PWR_LOWPWR			0x1188
--#define S5P_LOGIC_RESET_LOWPWR			0x11A0
--#define S5P_ONENAND_MEM_LOWPWR			0x11C0
--#define S5P_G2D_ACP_MEM_LOWPWR			0x11C8
--#define S5P_USBOTG_MEM_LOWPWR			0x11CC
--#define S5P_HSMMC_MEM_LOWPWR			0x11D0
--#define S5P_CSSYS_MEM_LOWPWR			0x11D4
--#define S5P_SECSS_MEM_LOWPWR			0x11D8
--#define S5P_PAD_RETENTION_DRAM_LOWPWR		0x1200
--#define S5P_PAD_RETENTION_MAUDIO_LOWPWR		0x1204
--#define S5P_PAD_RETENTION_GPIO_LOWPWR		0x1220
--#define S5P_PAD_RETENTION_UART_LOWPWR		0x1224
--#define S5P_PAD_RETENTION_MMCA_LOWPWR		0x1228
--#define S5P_PAD_RETENTION_MMCB_LOWPWR		0x122C
--#define S5P_PAD_RETENTION_EBIA_LOWPWR		0x1230
--#define S5P_PAD_RETENTION_EBIB_LOWPWR		0x1234
--#define S5P_PAD_RETENTION_ISOLATION_LOWPWR	0x1240
--#define S5P_PAD_RETENTION_ALV_SEL_LOWPWR	0x1260
--#define S5P_XUSBXTI_LOWPWR			0x1280
--#define S5P_XXTI_LOWPWR				0x1284
--#define S5P_EXT_REGULATOR_LOWPWR		0x12C0
--#define S5P_GPIO_MODE_LOWPWR			0x1300
--#define S5P_GPIO_MODE_MAUDIO_LOWPWR		0x1340
--#define S5P_CAM_LOWPWR				0x1380
--#define S5P_TV_LOWPWR				0x1384
--#define S5P_MFC_LOWPWR				0x1388
--#define S5P_G3D_LOWPWR				0x138C
--#define S5P_LCD0_LOWPWR				0x1390
--#define S5P_MAUDIO_LOWPWR			0x1398
--#define S5P_GPS_LOWPWR				0x139C
--#define S5P_GPS_ALIVE_LOWPWR			0x13A0
--
--#define S5P_ARM_CORE1_CONFIGURATION		0x2080
--#define S5P_ARM_CORE1_STATUS			0x2084
--
--#define S5P_PAD_RET_MAUDIO_OPTION		0x3028
--#define S5P_PAD_RET_GPIO_OPTION			0x3108
--#define S5P_PAD_RET_UART_OPTION			0x3128
--#define S5P_PAD_RET_MMCA_OPTION			0x3148
--#define S5P_PAD_RET_MMCB_OPTION			0x3168
--#define S5P_PAD_RET_EBIA_OPTION			0x3188
--#define S5P_PAD_RET_EBIB_OPTION			0x31A8
--
--#define S5P_CORE_LOCAL_PWR_EN			0x3
--
--#define S5P_CHECK_SLEEP				0x00000BAD
--
--/* Only for EXYNOS4210 */
--#define S5P_CMU_CLKSTOP_LCD1_LOWPWR	0x1154
--#define S5P_CMU_RESET_LCD1_LOWPWR	0x1174
--#define S5P_MODIMIF_MEM_LOWPWR		0x11C4
--#define S5P_PCIE_MEM_LOWPWR		0x11E0
--#define S5P_SATA_MEM_LOWPWR		0x11E4
--#define S5P_LCD1_LOWPWR			0x1394
--
--/* Only for EXYNOS4x12 */
--#define S5P_ISP_ARM_LOWPWR			0x1050
--#define S5P_DIS_IRQ_ISP_ARM_LOCAL_LOWPWR	0x1054
--#define S5P_DIS_IRQ_ISP_ARM_CENTRAL_LOWPWR	0x1058
--#define S5P_CMU_ACLKSTOP_COREBLK_LOWPWR		0x1110
--#define S5P_CMU_SCLKSTOP_COREBLK_LOWPWR		0x1114
--#define S5P_CMU_RESET_COREBLK_LOWPWR		0x111C
--#define S5P_MPLLUSER_SYSCLK_LOWPWR		0x1130
--#define S5P_CMU_CLKSTOP_ISP_LOWPWR		0x1154
--#define S5P_CMU_RESET_ISP_LOWPWR		0x1174
--#define S5P_TOP_BUS_COREBLK_LOWPWR		0x1190
--#define S5P_TOP_RETENTION_COREBLK_LOWPWR	0x1194
--#define S5P_TOP_PWR_COREBLK_LOWPWR		0x1198
--#define S5P_OSCCLK_GATE_LOWPWR			0x11A4
--#define S5P_LOGIC_RESET_COREBLK_LOWPWR		0x11B0
--#define S5P_OSCCLK_GATE_COREBLK_LOWPWR		0x11B4
--#define S5P_HSI_MEM_LOWPWR			0x11C4
--#define S5P_ROTATOR_MEM_LOWPWR			0x11DC
--#define S5P_PAD_RETENTION_GPIO_COREBLK_LOWPWR	0x123C
--#define S5P_PAD_ISOLATION_COREBLK_LOWPWR	0x1250
--#define S5P_GPIO_MODE_COREBLK_LOWPWR		0x1320
--#define S5P_TOP_ASB_RESET_LOWPWR		0x1344
--#define S5P_TOP_ASB_ISOLATION_LOWPWR		0x1348
--#define S5P_ISP_LOWPWR				0x1394
--#define S5P_DRAM_FREQ_DOWN_LOWPWR		0x13B0
--#define S5P_DDRPHY_DLLOFF_LOWPWR		0x13B4
--#define S5P_CMU_SYSCLK_ISP_LOWPWR		0x13B8
--#define S5P_CMU_SYSCLK_GPS_LOWPWR		0x13BC
--#define S5P_LPDDR_PHY_DLL_LOCK_LOWPWR		0x13C0
--
--#define S5P_ARM_L2_0_OPTION			0x2608
--#define S5P_ARM_L2_1_OPTION			0x2628
--#define S5P_ONENAND_MEM_OPTION			0x2E08
--#define S5P_HSI_MEM_OPTION			0x2E28
--#define S5P_G2D_ACP_MEM_OPTION			0x2E48
--#define S5P_USBOTG_MEM_OPTION			0x2E68
--#define S5P_HSMMC_MEM_OPTION			0x2E88
--#define S5P_CSSYS_MEM_OPTION			0x2EA8
--#define S5P_SECSS_MEM_OPTION			0x2EC8
--#define S5P_ROTATOR_MEM_OPTION			0x2F48
--
--/* Only for EXYNOS4412 */
--#define S5P_ARM_CORE2_LOWPWR			0x1020
--#define S5P_DIS_IRQ_CORE2			0x1024
--#define S5P_DIS_IRQ_CENTRAL2			0x1028
--#define S5P_ARM_CORE3_LOWPWR			0x1030
--#define S5P_DIS_IRQ_CORE3			0x1034
--#define S5P_DIS_IRQ_CENTRAL3			0x1038
--
--/* For EXYNOS5 */
--
--#define EXYNOS5_AUTO_WDTRESET_DISABLE				0x0408
--#define EXYNOS5_MASK_WDTRESET_REQUEST				0x040C
--
--#define EXYNOS5_SYS_WDTRESET					(1 << 20)
--
--#define EXYNOS5_ARM_CORE0_SYS_PWR_REG				0x1000
--#define EXYNOS5_DIS_IRQ_ARM_CORE0_LOCAL_SYS_PWR_REG		0x1004
--#define EXYNOS5_DIS_IRQ_ARM_CORE0_CENTRAL_SYS_PWR_REG		0x1008
--#define EXYNOS5_ARM_CORE1_SYS_PWR_REG				0x1010
--#define EXYNOS5_DIS_IRQ_ARM_CORE1_LOCAL_SYS_PWR_REG		0x1014
--#define EXYNOS5_DIS_IRQ_ARM_CORE1_CENTRAL_SYS_PWR_REG		0x1018
--#define EXYNOS5_FSYS_ARM_SYS_PWR_REG				0x1040
--#define EXYNOS5_DIS_IRQ_FSYS_ARM_CENTRAL_SYS_PWR_REG		0x1048
--#define EXYNOS5_ISP_ARM_SYS_PWR_REG				0x1050
--#define EXYNOS5_DIS_IRQ_ISP_ARM_LOCAL_SYS_PWR_REG		0x1054
--#define EXYNOS5_DIS_IRQ_ISP_ARM_CENTRAL_SYS_PWR_REG		0x1058
--#define EXYNOS5_ARM_COMMON_SYS_PWR_REG				0x1080
--#define EXYNOS5_ARM_L2_SYS_PWR_REG				0x10C0
--#define EXYNOS5_CMU_ACLKSTOP_SYS_PWR_REG			0x1100
--#define EXYNOS5_CMU_SCLKSTOP_SYS_PWR_REG			0x1104
--#define EXYNOS5_CMU_RESET_SYS_PWR_REG				0x110C
--#define EXYNOS5_CMU_ACLKSTOP_SYSMEM_SYS_PWR_REG			0x1120
--#define EXYNOS5_CMU_SCLKSTOP_SYSMEM_SYS_PWR_REG			0x1124
--#define EXYNOS5_CMU_RESET_SYSMEM_SYS_PWR_REG			0x112C
--#define EXYNOS5_DRAM_FREQ_DOWN_SYS_PWR_REG			0x1130
--#define EXYNOS5_DDRPHY_DLLOFF_SYS_PWR_REG			0x1134
--#define EXYNOS5_DDRPHY_DLLLOCK_SYS_PWR_REG			0x1138
--#define EXYNOS5_APLL_SYSCLK_SYS_PWR_REG				0x1140
--#define EXYNOS5_MPLL_SYSCLK_SYS_PWR_REG				0x1144
--#define EXYNOS5_VPLL_SYSCLK_SYS_PWR_REG				0x1148
--#define EXYNOS5_EPLL_SYSCLK_SYS_PWR_REG				0x114C
--#define EXYNOS5_BPLL_SYSCLK_SYS_PWR_REG				0x1150
--#define EXYNOS5_CPLL_SYSCLK_SYS_PWR_REG				0x1154
--#define EXYNOS5_MPLLUSER_SYSCLK_SYS_PWR_REG			0x1164
--#define EXYNOS5_BPLLUSER_SYSCLK_SYS_PWR_REG			0x1170
--#define EXYNOS5_TOP_BUS_SYS_PWR_REG				0x1180
--#define EXYNOS5_TOP_RETENTION_SYS_PWR_REG			0x1184
--#define EXYNOS5_TOP_PWR_SYS_PWR_REG				0x1188
--#define EXYNOS5_TOP_BUS_SYSMEM_SYS_PWR_REG			0x1190
--#define EXYNOS5_TOP_RETENTION_SYSMEM_SYS_PWR_REG		0x1194
--#define EXYNOS5_TOP_PWR_SYSMEM_SYS_PWR_REG			0x1198
--#define EXYNOS5_LOGIC_RESET_SYS_PWR_REG				0x11A0
--#define EXYNOS5_OSCCLK_GATE_SYS_PWR_REG				0x11A4
--#define EXYNOS5_LOGIC_RESET_SYSMEM_SYS_PWR_REG			0x11B0
--#define EXYNOS5_OSCCLK_GATE_SYSMEM_SYS_PWR_REG			0x11B4
--#define EXYNOS5_USBOTG_MEM_SYS_PWR_REG				0x11C0
--#define EXYNOS5_G2D_MEM_SYS_PWR_REG				0x11C8
--#define EXYNOS5_USBDRD_MEM_SYS_PWR_REG				0x11CC
--#define EXYNOS5_SDMMC_MEM_SYS_PWR_REG				0x11D0
--#define EXYNOS5_CSSYS_MEM_SYS_PWR_REG				0x11D4
--#define EXYNOS5_SECSS_MEM_SYS_PWR_REG				0x11D8
--#define EXYNOS5_ROTATOR_MEM_SYS_PWR_REG				0x11DC
--#define EXYNOS5_INTRAM_MEM_SYS_PWR_REG				0x11E0
--#define EXYNOS5_INTROM_MEM_SYS_PWR_REG				0x11E4
--#define EXYNOS5_JPEG_MEM_SYS_PWR_REG				0x11E8
--#define EXYNOS5_HSI_MEM_SYS_PWR_REG				0x11EC
--#define EXYNOS5_MCUIOP_MEM_SYS_PWR_REG				0x11F4
--#define EXYNOS5_SATA_MEM_SYS_PWR_REG				0x11FC
--#define EXYNOS5_PAD_RETENTION_DRAM_SYS_PWR_REG			0x1200
--#define EXYNOS5_PAD_RETENTION_MAU_SYS_PWR_REG			0x1204
--#define EXYNOS5_PAD_RETENTION_EFNAND_SYS_PWR_REG		0x1208
--#define EXYNOS5_PAD_RETENTION_GPIO_SYS_PWR_REG			0x1220
--#define EXYNOS5_PAD_RETENTION_UART_SYS_PWR_REG			0x1224
--#define EXYNOS5_PAD_RETENTION_MMCA_SYS_PWR_REG			0x1228
--#define EXYNOS5_PAD_RETENTION_MMCB_SYS_PWR_REG			0x122C
--#define EXYNOS5_PAD_RETENTION_EBIA_SYS_PWR_REG			0x1230
--#define EXYNOS5_PAD_RETENTION_EBIB_SYS_PWR_REG			0x1234
--#define EXYNOS5_PAD_RETENTION_SPI_SYS_PWR_REG			0x1238
--#define EXYNOS5_PAD_RETENTION_GPIO_SYSMEM_SYS_PWR_REG		0x123C
--#define EXYNOS5_PAD_ISOLATION_SYS_PWR_REG			0x1240
--#define EXYNOS5_PAD_ISOLATION_SYSMEM_SYS_PWR_REG		0x1250
--#define EXYNOS5_PAD_ALV_SEL_SYS_PWR_REG				0x1260
--#define EXYNOS5_XUSBXTI_SYS_PWR_REG				0x1280
--#define EXYNOS5_XXTI_SYS_PWR_REG				0x1284
--#define EXYNOS5_EXT_REGULATOR_SYS_PWR_REG			0x12C0
--#define EXYNOS5_GPIO_MODE_SYS_PWR_REG				0x1300
--#define EXYNOS5_GPIO_MODE_SYSMEM_SYS_PWR_REG			0x1320
--#define EXYNOS5_GPIO_MODE_MAU_SYS_PWR_REG			0x1340
--#define EXYNOS5_TOP_ASB_RESET_SYS_PWR_REG			0x1344
--#define EXYNOS5_TOP_ASB_ISOLATION_SYS_PWR_REG			0x1348
--#define EXYNOS5_GSCL_SYS_PWR_REG				0x1400
--#define EXYNOS5_ISP_SYS_PWR_REG					0x1404
--#define EXYNOS5_MFC_SYS_PWR_REG					0x1408
--#define EXYNOS5_G3D_SYS_PWR_REG					0x140C
--#define EXYNOS5_DISP1_SYS_PWR_REG				0x1414
--#define EXYNOS5_MAU_SYS_PWR_REG					0x1418
--#define EXYNOS5_CMU_CLKSTOP_GSCL_SYS_PWR_REG			0x1480
--#define EXYNOS5_CMU_CLKSTOP_ISP_SYS_PWR_REG			0x1484
--#define EXYNOS5_CMU_CLKSTOP_MFC_SYS_PWR_REG			0x1488
--#define EXYNOS5_CMU_CLKSTOP_G3D_SYS_PWR_REG			0x148C
--#define EXYNOS5_CMU_CLKSTOP_DISP1_SYS_PWR_REG			0x1494
--#define EXYNOS5_CMU_CLKSTOP_MAU_SYS_PWR_REG			0x1498
--#define EXYNOS5_CMU_SYSCLK_GSCL_SYS_PWR_REG			0x14C0
--#define EXYNOS5_CMU_SYSCLK_ISP_SYS_PWR_REG			0x14C4
--#define EXYNOS5_CMU_SYSCLK_MFC_SYS_PWR_REG			0x14C8
--#define EXYNOS5_CMU_SYSCLK_G3D_SYS_PWR_REG			0x14CC
--#define EXYNOS5_CMU_SYSCLK_DISP1_SYS_PWR_REG			0x14D4
--#define EXYNOS5_CMU_SYSCLK_MAU_SYS_PWR_REG			0x14D8
--#define EXYNOS5_CMU_RESET_GSCL_SYS_PWR_REG			0x1580
--#define EXYNOS5_CMU_RESET_ISP_SYS_PWR_REG			0x1584
--#define EXYNOS5_CMU_RESET_MFC_SYS_PWR_REG			0x1588
--#define EXYNOS5_CMU_RESET_G3D_SYS_PWR_REG			0x158C
--#define EXYNOS5_CMU_RESET_DISP1_SYS_PWR_REG			0x1594
--#define EXYNOS5_CMU_RESET_MAU_SYS_PWR_REG			0x1598
--
--#define EXYNOS5_ARM_CORE0_OPTION				0x2008
--#define EXYNOS5_ARM_CORE1_OPTION				0x2088
--#define EXYNOS5_FSYS_ARM_OPTION					0x2208
--#define EXYNOS5_ISP_ARM_OPTION					0x2288
--#define EXYNOS5_ARM_COMMON_OPTION				0x2408
--#define EXYNOS5_ARM_L2_OPTION					0x2608
--#define EXYNOS5_TOP_PWR_OPTION					0x2C48
--#define EXYNOS5_TOP_PWR_SYSMEM_OPTION				0x2CC8
--#define EXYNOS5_JPEG_MEM_OPTION					0x2F48
--#define EXYNOS5_GSCL_OPTION					0x4008
--#define EXYNOS5_ISP_OPTION					0x4028
--#define EXYNOS5_MFC_OPTION					0x4048
--#define EXYNOS5_G3D_OPTION					0x4068
--#define EXYNOS5_DISP1_OPTION					0x40A8
--#define EXYNOS5_MAU_OPTION					0x40C8
--
--#define EXYNOS5_USE_SC_FEEDBACK					(1 << 1)
--#define EXYNOS5_USE_SC_COUNTER					(1 << 0)
--
--#define EXYNOS5_SKIP_DEACTIVATE_ACEACP_IN_PWDN			(1 << 7)
--
--#define EXYNOS5_OPTION_USE_STANDBYWFE				(1 << 24)
--#define EXYNOS5_OPTION_USE_STANDBYWFI				(1 << 16)
--
--#define EXYNOS5_OPTION_USE_RETENTION				(1 << 4)
--
--#endif /* __ASM_ARCH_REGS_PMU_H */
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 49bb445..c89477c 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1193,6 +1193,15 @@ config MFD_STW481X
- 	  in various ST Microelectronics and ST-Ericsson embedded
- 	  Nomadik series.
+ /* I2C pin register */
+-#define CAPRI_I2C_PIN_REG_INPUT_DIS_MASK	0x0004
+-#define CAPRI_I2C_PIN_REG_INPUT_DIS_SHIFT	2
+-#define CAPRI_I2C_PIN_REG_SLEW_MASK		0x0008
+-#define CAPRI_I2C_PIN_REG_SLEW_SHIFT		3
+-#define CAPRI_I2C_PIN_REG_PULL_UP_STR_MASK	0x0070
+-#define CAPRI_I2C_PIN_REG_PULL_UP_STR_SHIFT	4
++#define BCM281XX_I2C_PIN_REG_INPUT_DIS_MASK	0x0004
++#define BCM281XX_I2C_PIN_REG_INPUT_DIS_SHIFT	2
++#define BCM281XX_I2C_PIN_REG_SLEW_MASK		0x0008
++#define BCM281XX_I2C_PIN_REG_SLEW_SHIFT		3
++#define BCM281XX_I2C_PIN_REG_PULL_UP_STR_MASK	0x0070
++#define BCM281XX_I2C_PIN_REG_PULL_UP_STR_SHIFT	4
  
-+config MFD_EXYNOS_PMU
-+	tristate "Support Exynos Power Managment Unit"
-+	depends on ARM || ARM64
-+	help
-+	Exynos SoC have Power Management Unit (PMU) which controls power and
-+	operation state of Exynos SoC in two different ways. This driver
-+	provides impmentation of PMU driver and provides basic functionality
-+	required during these operation state.
-+
- endmenu
- endif
+ /* HDMI pin register */
+-#define CAPRI_HDMI_PIN_REG_INPUT_DIS_MASK	0x0008
+-#define CAPRI_HDMI_PIN_REG_INPUT_DIS_SHIFT	3
+-#define CAPRI_HDMI_PIN_REG_MODE_MASK		0x0010
+-#define CAPRI_HDMI_PIN_REG_MODE_SHIFT		4
++#define BCM281XX_HDMI_PIN_REG_INPUT_DIS_MASK	0x0008
++#define BCM281XX_HDMI_PIN_REG_INPUT_DIS_SHIFT	3
++#define BCM281XX_HDMI_PIN_REG_MODE_MASK		0x0010
++#define BCM281XX_HDMI_PIN_REG_MODE_SHIFT	4
  
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 5aea5ef..64d013b 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -12,6 +12,8 @@ obj-$(CONFIG_MFD_CROS_EC)	+= cros_ec.o
- obj-$(CONFIG_MFD_CROS_EC_I2C)	+= cros_ec_i2c.o
- obj-$(CONFIG_MFD_CROS_EC_SPI)	+= cros_ec_spi.o
+ /**
+- * capri_pin_type - types of pin register
++ * bcm281xx_pin_type - types of pin register
+  */
+-enum capri_pin_type {
+-	CAPRI_PIN_TYPE_UNKNOWN = 0,
+-	CAPRI_PIN_TYPE_STD,
+-	CAPRI_PIN_TYPE_I2C,
+-	CAPRI_PIN_TYPE_HDMI,
++enum bcm281xx_pin_type {
++	BCM281XX_PIN_TYPE_UNKNOWN = 0,
++	BCM281XX_PIN_TYPE_STD,
++	BCM281XX_PIN_TYPE_I2C,
++	BCM281XX_PIN_TYPE_HDMI,
+ };
  
-+obj-$(CONFIG_MFD_EXYNOS_PMU)   += exynos-pmu.o
-+
- rtsx_pci-objs			:= rtsx_pcr.o rts5209.o rts5229.o rtl8411.o rts5227.o rts5249.o
- obj-$(CONFIG_MFD_RTSX_PCI)	+= rtsx_pci.o
+-static enum capri_pin_type std_pin = CAPRI_PIN_TYPE_STD;
+-static enum capri_pin_type i2c_pin = CAPRI_PIN_TYPE_I2C;
+-static enum capri_pin_type hdmi_pin = CAPRI_PIN_TYPE_HDMI;
++static enum bcm281xx_pin_type std_pin = BCM281XX_PIN_TYPE_STD;
++static enum bcm281xx_pin_type i2c_pin = BCM281XX_PIN_TYPE_I2C;
++static enum bcm281xx_pin_type hdmi_pin = BCM281XX_PIN_TYPE_HDMI;
  
-diff --git a/drivers/mfd/exynos-pmu.c b/drivers/mfd/exynos-pmu.c
-new file mode 100644
-index 0000000..24abd9b
---- /dev/null
-+++ b/drivers/mfd/exynos-pmu.c
-@@ -0,0 +1,534 @@
-+/*
-+ * Copyright (c) 2014-2015 Samsung Electronics Co., Ltd.
-+ *		http://www.samsung.com/
-+ *
-+ * EXYNOS - CPU PMU(Power Management Unit) support
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
+ /**
+- * capri_pin_function- define pin function
++ * bcm281xx_pin_function- define pin function
+  */
+-struct capri_pin_function {
++struct bcm281xx_pin_function {
+ 	const char *name;
+ 	const char * const *groups;
+ 	const unsigned ngroups;
+ };
+ 
+ /**
+- * capri_pinctrl_data - Broadcom-specific pinctrl data
++ * bcm281xx_pinctrl_data - Broadcom-specific pinctrl data
+  * @reg_base - base of pinctrl registers
+  */
+-struct capri_pinctrl_data {
++struct bcm281xx_pinctrl_data {
+ 	void __iomem *reg_base;
+ 
+ 	/* List of all pins */
+ 	const struct pinctrl_pin_desc *pins;
+ 	const unsigned npins;
+ 
+-	const struct capri_pin_function *functions;
++	const struct bcm281xx_pin_function *functions;
+ 	const unsigned nfunctions;
+ 
+ 	struct regmap *regmap;
+@@ -102,276 +102,276 @@ struct capri_pinctrl_data {
+  * Pin number definition.  The order here must be the same as defined in the
+  * PADCTRLREG block in the RDB.
+  */
+-#define CAPRI_PIN_ADCSYNC		0
+-#define CAPRI_PIN_BAT_RM		1
+-#define CAPRI_PIN_BSC1_SCL		2
+-#define CAPRI_PIN_BSC1_SDA		3
+-#define CAPRI_PIN_BSC2_SCL		4
+-#define CAPRI_PIN_BSC2_SDA		5
+-#define CAPRI_PIN_CLASSGPWR		6
+-#define CAPRI_PIN_CLK_CX8		7
+-#define CAPRI_PIN_CLKOUT_0		8
+-#define CAPRI_PIN_CLKOUT_1		9
+-#define CAPRI_PIN_CLKOUT_2		10
+-#define CAPRI_PIN_CLKOUT_3		11
+-#define CAPRI_PIN_CLKREQ_IN_0		12
+-#define CAPRI_PIN_CLKREQ_IN_1		13
+-#define CAPRI_PIN_CWS_SYS_REQ1		14
+-#define CAPRI_PIN_CWS_SYS_REQ2		15
+-#define CAPRI_PIN_CWS_SYS_REQ3		16
+-#define CAPRI_PIN_DIGMIC1_CLK		17
+-#define CAPRI_PIN_DIGMIC1_DQ		18
+-#define CAPRI_PIN_DIGMIC2_CLK		19
+-#define CAPRI_PIN_DIGMIC2_DQ		20
+-#define CAPRI_PIN_GPEN13		21
+-#define CAPRI_PIN_GPEN14		22
+-#define CAPRI_PIN_GPEN15		23
+-#define CAPRI_PIN_GPIO00		24
+-#define CAPRI_PIN_GPIO01		25
+-#define CAPRI_PIN_GPIO02		26
+-#define CAPRI_PIN_GPIO03		27
+-#define CAPRI_PIN_GPIO04		28
+-#define CAPRI_PIN_GPIO05		29
+-#define CAPRI_PIN_GPIO06		30
+-#define CAPRI_PIN_GPIO07		31
+-#define CAPRI_PIN_GPIO08		32
+-#define CAPRI_PIN_GPIO09		33
+-#define CAPRI_PIN_GPIO10		34
+-#define CAPRI_PIN_GPIO11		35
+-#define CAPRI_PIN_GPIO12		36
+-#define CAPRI_PIN_GPIO13		37
+-#define CAPRI_PIN_GPIO14		38
+-#define CAPRI_PIN_GPS_PABLANK		39
+-#define CAPRI_PIN_GPS_TMARK		40
+-#define CAPRI_PIN_HDMI_SCL		41
+-#define CAPRI_PIN_HDMI_SDA		42
+-#define CAPRI_PIN_IC_DM			43
+-#define CAPRI_PIN_IC_DP			44
+-#define CAPRI_PIN_KP_COL_IP_0		45
+-#define CAPRI_PIN_KP_COL_IP_1		46
+-#define CAPRI_PIN_KP_COL_IP_2		47
+-#define CAPRI_PIN_KP_COL_IP_3		48
+-#define CAPRI_PIN_KP_ROW_OP_0		49
+-#define CAPRI_PIN_KP_ROW_OP_1		50
+-#define CAPRI_PIN_KP_ROW_OP_2		51
+-#define CAPRI_PIN_KP_ROW_OP_3		52
+-#define CAPRI_PIN_LCD_B_0		53
+-#define CAPRI_PIN_LCD_B_1		54
+-#define CAPRI_PIN_LCD_B_2		55
+-#define CAPRI_PIN_LCD_B_3		56
+-#define CAPRI_PIN_LCD_B_4		57
+-#define CAPRI_PIN_LCD_B_5		58
+-#define CAPRI_PIN_LCD_B_6		59
+-#define CAPRI_PIN_LCD_B_7		60
+-#define CAPRI_PIN_LCD_G_0		61
+-#define CAPRI_PIN_LCD_G_1		62
+-#define CAPRI_PIN_LCD_G_2		63
+-#define CAPRI_PIN_LCD_G_3		64
+-#define CAPRI_PIN_LCD_G_4		65
+-#define CAPRI_PIN_LCD_G_5		66
+-#define CAPRI_PIN_LCD_G_6		67
+-#define CAPRI_PIN_LCD_G_7		68
+-#define CAPRI_PIN_LCD_HSYNC		69
+-#define CAPRI_PIN_LCD_OE		70
+-#define CAPRI_PIN_LCD_PCLK		71
+-#define CAPRI_PIN_LCD_R_0		72
+-#define CAPRI_PIN_LCD_R_1		73
+-#define CAPRI_PIN_LCD_R_2		74
+-#define CAPRI_PIN_LCD_R_3		75
+-#define CAPRI_PIN_LCD_R_4		76
+-#define CAPRI_PIN_LCD_R_5		77
+-#define CAPRI_PIN_LCD_R_6		78
+-#define CAPRI_PIN_LCD_R_7		79
+-#define CAPRI_PIN_LCD_VSYNC		80
+-#define CAPRI_PIN_MDMGPIO0		81
+-#define CAPRI_PIN_MDMGPIO1		82
+-#define CAPRI_PIN_MDMGPIO2		83
+-#define CAPRI_PIN_MDMGPIO3		84
+-#define CAPRI_PIN_MDMGPIO4		85
+-#define CAPRI_PIN_MDMGPIO5		86
+-#define CAPRI_PIN_MDMGPIO6		87
+-#define CAPRI_PIN_MDMGPIO7		88
+-#define CAPRI_PIN_MDMGPIO8		89
+-#define CAPRI_PIN_MPHI_DATA_0		90
+-#define CAPRI_PIN_MPHI_DATA_1		91
+-#define CAPRI_PIN_MPHI_DATA_2		92
+-#define CAPRI_PIN_MPHI_DATA_3		93
+-#define CAPRI_PIN_MPHI_DATA_4		94
+-#define CAPRI_PIN_MPHI_DATA_5		95
+-#define CAPRI_PIN_MPHI_DATA_6		96
+-#define CAPRI_PIN_MPHI_DATA_7		97
+-#define CAPRI_PIN_MPHI_DATA_8		98
+-#define CAPRI_PIN_MPHI_DATA_9		99
+-#define CAPRI_PIN_MPHI_DATA_10		100
+-#define CAPRI_PIN_MPHI_DATA_11		101
+-#define CAPRI_PIN_MPHI_DATA_12		102
+-#define CAPRI_PIN_MPHI_DATA_13		103
+-#define CAPRI_PIN_MPHI_DATA_14		104
+-#define CAPRI_PIN_MPHI_DATA_15		105
+-#define CAPRI_PIN_MPHI_HA0		106
+-#define CAPRI_PIN_MPHI_HAT0		107
+-#define CAPRI_PIN_MPHI_HAT1		108
+-#define CAPRI_PIN_MPHI_HCE0_N		109
+-#define CAPRI_PIN_MPHI_HCE1_N		110
+-#define CAPRI_PIN_MPHI_HRD_N		111
+-#define CAPRI_PIN_MPHI_HWR_N		112
+-#define CAPRI_PIN_MPHI_RUN0		113
+-#define CAPRI_PIN_MPHI_RUN1		114
+-#define CAPRI_PIN_MTX_SCAN_CLK		115
+-#define CAPRI_PIN_MTX_SCAN_DATA		116
+-#define CAPRI_PIN_NAND_AD_0		117
+-#define CAPRI_PIN_NAND_AD_1		118
+-#define CAPRI_PIN_NAND_AD_2		119
+-#define CAPRI_PIN_NAND_AD_3		120
+-#define CAPRI_PIN_NAND_AD_4		121
+-#define CAPRI_PIN_NAND_AD_5		122
+-#define CAPRI_PIN_NAND_AD_6		123
+-#define CAPRI_PIN_NAND_AD_7		124
+-#define CAPRI_PIN_NAND_ALE		125
+-#define CAPRI_PIN_NAND_CEN_0		126
+-#define CAPRI_PIN_NAND_CEN_1		127
+-#define CAPRI_PIN_NAND_CLE		128
+-#define CAPRI_PIN_NAND_OEN		129
+-#define CAPRI_PIN_NAND_RDY_0		130
+-#define CAPRI_PIN_NAND_RDY_1		131
+-#define CAPRI_PIN_NAND_WEN		132
+-#define CAPRI_PIN_NAND_WP		133
+-#define CAPRI_PIN_PC1			134
+-#define CAPRI_PIN_PC2			135
+-#define CAPRI_PIN_PMU_INT		136
+-#define CAPRI_PIN_PMU_SCL		137
+-#define CAPRI_PIN_PMU_SDA		138
+-#define CAPRI_PIN_RFST2G_MTSLOTEN3G	139
+-#define CAPRI_PIN_RGMII_0_RX_CTL	140
+-#define CAPRI_PIN_RGMII_0_RXC		141
+-#define CAPRI_PIN_RGMII_0_RXD_0		142
+-#define CAPRI_PIN_RGMII_0_RXD_1		143
+-#define CAPRI_PIN_RGMII_0_RXD_2		144
+-#define CAPRI_PIN_RGMII_0_RXD_3		145
+-#define CAPRI_PIN_RGMII_0_TX_CTL	146
+-#define CAPRI_PIN_RGMII_0_TXC		147
+-#define CAPRI_PIN_RGMII_0_TXD_0		148
+-#define CAPRI_PIN_RGMII_0_TXD_1		149
+-#define CAPRI_PIN_RGMII_0_TXD_2		150
+-#define CAPRI_PIN_RGMII_0_TXD_3		151
+-#define CAPRI_PIN_RGMII_1_RX_CTL	152
+-#define CAPRI_PIN_RGMII_1_RXC		153
+-#define CAPRI_PIN_RGMII_1_RXD_0		154
+-#define CAPRI_PIN_RGMII_1_RXD_1		155
+-#define CAPRI_PIN_RGMII_1_RXD_2		156
+-#define CAPRI_PIN_RGMII_1_RXD_3		157
+-#define CAPRI_PIN_RGMII_1_TX_CTL	158
+-#define CAPRI_PIN_RGMII_1_TXC		159
+-#define CAPRI_PIN_RGMII_1_TXD_0		160
+-#define CAPRI_PIN_RGMII_1_TXD_1		161
+-#define CAPRI_PIN_RGMII_1_TXD_2		162
+-#define CAPRI_PIN_RGMII_1_TXD_3		163
+-#define CAPRI_PIN_RGMII_GPIO_0		164
+-#define CAPRI_PIN_RGMII_GPIO_1		165
+-#define CAPRI_PIN_RGMII_GPIO_2		166
+-#define CAPRI_PIN_RGMII_GPIO_3		167
+-#define CAPRI_PIN_RTXDATA2G_TXDATA3G1	168
+-#define CAPRI_PIN_RTXEN2G_TXDATA3G2	169
+-#define CAPRI_PIN_RXDATA3G0		170
+-#define CAPRI_PIN_RXDATA3G1		171
+-#define CAPRI_PIN_RXDATA3G2		172
+-#define CAPRI_PIN_SDIO1_CLK		173
+-#define CAPRI_PIN_SDIO1_CMD		174
+-#define CAPRI_PIN_SDIO1_DATA_0		175
+-#define CAPRI_PIN_SDIO1_DATA_1		176
+-#define CAPRI_PIN_SDIO1_DATA_2		177
+-#define CAPRI_PIN_SDIO1_DATA_3		178
+-#define CAPRI_PIN_SDIO4_CLK		179
+-#define CAPRI_PIN_SDIO4_CMD		180
+-#define CAPRI_PIN_SDIO4_DATA_0		181
+-#define CAPRI_PIN_SDIO4_DATA_1		182
+-#define CAPRI_PIN_SDIO4_DATA_2		183
+-#define CAPRI_PIN_SDIO4_DATA_3		184
+-#define CAPRI_PIN_SIM_CLK		185
+-#define CAPRI_PIN_SIM_DATA		186
+-#define CAPRI_PIN_SIM_DET		187
+-#define CAPRI_PIN_SIM_RESETN		188
+-#define CAPRI_PIN_SIM2_CLK		189
+-#define CAPRI_PIN_SIM2_DATA		190
+-#define CAPRI_PIN_SIM2_DET		191
+-#define CAPRI_PIN_SIM2_RESETN		192
+-#define CAPRI_PIN_SRI_C			193
+-#define CAPRI_PIN_SRI_D			194
+-#define CAPRI_PIN_SRI_E			195
+-#define CAPRI_PIN_SSP_EXTCLK		196
+-#define CAPRI_PIN_SSP0_CLK		197
+-#define CAPRI_PIN_SSP0_FS		198
+-#define CAPRI_PIN_SSP0_RXD		199
+-#define CAPRI_PIN_SSP0_TXD		200
+-#define CAPRI_PIN_SSP2_CLK		201
+-#define CAPRI_PIN_SSP2_FS_0		202
+-#define CAPRI_PIN_SSP2_FS_1		203
+-#define CAPRI_PIN_SSP2_FS_2		204
+-#define CAPRI_PIN_SSP2_FS_3		205
+-#define CAPRI_PIN_SSP2_RXD_0		206
+-#define CAPRI_PIN_SSP2_RXD_1		207
+-#define CAPRI_PIN_SSP2_TXD_0		208
+-#define CAPRI_PIN_SSP2_TXD_1		209
+-#define CAPRI_PIN_SSP3_CLK		210
+-#define CAPRI_PIN_SSP3_FS		211
+-#define CAPRI_PIN_SSP3_RXD		212
+-#define CAPRI_PIN_SSP3_TXD		213
+-#define CAPRI_PIN_SSP4_CLK		214
+-#define CAPRI_PIN_SSP4_FS		215
+-#define CAPRI_PIN_SSP4_RXD		216
+-#define CAPRI_PIN_SSP4_TXD		217
+-#define CAPRI_PIN_SSP5_CLK		218
+-#define CAPRI_PIN_SSP5_FS		219
+-#define CAPRI_PIN_SSP5_RXD		220
+-#define CAPRI_PIN_SSP5_TXD		221
+-#define CAPRI_PIN_SSP6_CLK		222
+-#define CAPRI_PIN_SSP6_FS		223
+-#define CAPRI_PIN_SSP6_RXD		224
+-#define CAPRI_PIN_SSP6_TXD		225
+-#define CAPRI_PIN_STAT_1		226
+-#define CAPRI_PIN_STAT_2		227
+-#define CAPRI_PIN_SYSCLKEN		228
+-#define CAPRI_PIN_TRACECLK		229
+-#define CAPRI_PIN_TRACEDT00		230
+-#define CAPRI_PIN_TRACEDT01		231
+-#define CAPRI_PIN_TRACEDT02		232
+-#define CAPRI_PIN_TRACEDT03		233
+-#define CAPRI_PIN_TRACEDT04		234
+-#define CAPRI_PIN_TRACEDT05		235
+-#define CAPRI_PIN_TRACEDT06		236
+-#define CAPRI_PIN_TRACEDT07		237
+-#define CAPRI_PIN_TRACEDT08		238
+-#define CAPRI_PIN_TRACEDT09		239
+-#define CAPRI_PIN_TRACEDT10		240
+-#define CAPRI_PIN_TRACEDT11		241
+-#define CAPRI_PIN_TRACEDT12		242
+-#define CAPRI_PIN_TRACEDT13		243
+-#define CAPRI_PIN_TRACEDT14		244
+-#define CAPRI_PIN_TRACEDT15		245
+-#define CAPRI_PIN_TXDATA3G0		246
+-#define CAPRI_PIN_TXPWRIND		247
+-#define CAPRI_PIN_UARTB1_UCTS		248
+-#define CAPRI_PIN_UARTB1_URTS		249
+-#define CAPRI_PIN_UARTB1_URXD		250
+-#define CAPRI_PIN_UARTB1_UTXD		251
+-#define CAPRI_PIN_UARTB2_URXD		252
+-#define CAPRI_PIN_UARTB2_UTXD		253
+-#define CAPRI_PIN_UARTB3_UCTS		254
+-#define CAPRI_PIN_UARTB3_URTS		255
+-#define CAPRI_PIN_UARTB3_URXD		256
+-#define CAPRI_PIN_UARTB3_UTXD		257
+-#define CAPRI_PIN_UARTB4_UCTS		258
+-#define CAPRI_PIN_UARTB4_URTS		259
+-#define CAPRI_PIN_UARTB4_URXD		260
+-#define CAPRI_PIN_UARTB4_UTXD		261
+-#define CAPRI_PIN_VC_CAM1_SCL		262
+-#define CAPRI_PIN_VC_CAM1_SDA		263
+-#define CAPRI_PIN_VC_CAM2_SCL		264
+-#define CAPRI_PIN_VC_CAM2_SDA		265
+-#define CAPRI_PIN_VC_CAM3_SCL		266
+-#define CAPRI_PIN_VC_CAM3_SDA		267
+-
+-#define CAPRI_PIN_DESC(a, b, c) \
++#define BCM281XX_PIN_ADCSYNC		0
++#define BCM281XX_PIN_BAT_RM		1
++#define BCM281XX_PIN_BSC1_SCL		2
++#define BCM281XX_PIN_BSC1_SDA		3
++#define BCM281XX_PIN_BSC2_SCL		4
++#define BCM281XX_PIN_BSC2_SDA		5
++#define BCM281XX_PIN_CLASSGPWR		6
++#define BCM281XX_PIN_CLK_CX8		7
++#define BCM281XX_PIN_CLKOUT_0		8
++#define BCM281XX_PIN_CLKOUT_1		9
++#define BCM281XX_PIN_CLKOUT_2		10
++#define BCM281XX_PIN_CLKOUT_3		11
++#define BCM281XX_PIN_CLKREQ_IN_0	12
++#define BCM281XX_PIN_CLKREQ_IN_1	13
++#define BCM281XX_PIN_CWS_SYS_REQ1	14
++#define BCM281XX_PIN_CWS_SYS_REQ2	15
++#define BCM281XX_PIN_CWS_SYS_REQ3	16
++#define BCM281XX_PIN_DIGMIC1_CLK	17
++#define BCM281XX_PIN_DIGMIC1_DQ		18
++#define BCM281XX_PIN_DIGMIC2_CLK	19
++#define BCM281XX_PIN_DIGMIC2_DQ		20
++#define BCM281XX_PIN_GPEN13		21
++#define BCM281XX_PIN_GPEN14		22
++#define BCM281XX_PIN_GPEN15		23
++#define BCM281XX_PIN_GPIO00		24
++#define BCM281XX_PIN_GPIO01		25
++#define BCM281XX_PIN_GPIO02		26
++#define BCM281XX_PIN_GPIO03		27
++#define BCM281XX_PIN_GPIO04		28
++#define BCM281XX_PIN_GPIO05		29
++#define BCM281XX_PIN_GPIO06		30
++#define BCM281XX_PIN_GPIO07		31
++#define BCM281XX_PIN_GPIO08		32
++#define BCM281XX_PIN_GPIO09		33
++#define BCM281XX_PIN_GPIO10		34
++#define BCM281XX_PIN_GPIO11		35
++#define BCM281XX_PIN_GPIO12		36
++#define BCM281XX_PIN_GPIO13		37
++#define BCM281XX_PIN_GPIO14		38
++#define BCM281XX_PIN_GPS_PABLANK	39
++#define BCM281XX_PIN_GPS_TMARK		40
++#define BCM281XX_PIN_HDMI_SCL		41
++#define BCM281XX_PIN_HDMI_SDA		42
++#define BCM281XX_PIN_IC_DM		43
++#define BCM281XX_PIN_IC_DP		44
++#define BCM281XX_PIN_KP_COL_IP_0	45
++#define BCM281XX_PIN_KP_COL_IP_1	46
++#define BCM281XX_PIN_KP_COL_IP_2	47
++#define BCM281XX_PIN_KP_COL_IP_3	48
++#define BCM281XX_PIN_KP_ROW_OP_0	49
++#define BCM281XX_PIN_KP_ROW_OP_1	50
++#define BCM281XX_PIN_KP_ROW_OP_2	51
++#define BCM281XX_PIN_KP_ROW_OP_3	52
++#define BCM281XX_PIN_LCD_B_0		53
++#define BCM281XX_PIN_LCD_B_1		54
++#define BCM281XX_PIN_LCD_B_2		55
++#define BCM281XX_PIN_LCD_B_3		56
++#define BCM281XX_PIN_LCD_B_4		57
++#define BCM281XX_PIN_LCD_B_5		58
++#define BCM281XX_PIN_LCD_B_6		59
++#define BCM281XX_PIN_LCD_B_7		60
++#define BCM281XX_PIN_LCD_G_0		61
++#define BCM281XX_PIN_LCD_G_1		62
++#define BCM281XX_PIN_LCD_G_2		63
++#define BCM281XX_PIN_LCD_G_3		64
++#define BCM281XX_PIN_LCD_G_4		65
++#define BCM281XX_PIN_LCD_G_5		66
++#define BCM281XX_PIN_LCD_G_6		67
++#define BCM281XX_PIN_LCD_G_7		68
++#define BCM281XX_PIN_LCD_HSYNC		69
++#define BCM281XX_PIN_LCD_OE		70
++#define BCM281XX_PIN_LCD_PCLK		71
++#define BCM281XX_PIN_LCD_R_0		72
++#define BCM281XX_PIN_LCD_R_1		73
++#define BCM281XX_PIN_LCD_R_2		74
++#define BCM281XX_PIN_LCD_R_3		75
++#define BCM281XX_PIN_LCD_R_4		76
++#define BCM281XX_PIN_LCD_R_5		77
++#define BCM281XX_PIN_LCD_R_6		78
++#define BCM281XX_PIN_LCD_R_7		79
++#define BCM281XX_PIN_LCD_VSYNC		80
++#define BCM281XX_PIN_MDMGPIO0		81
++#define BCM281XX_PIN_MDMGPIO1		82
++#define BCM281XX_PIN_MDMGPIO2		83
++#define BCM281XX_PIN_MDMGPIO3		84
++#define BCM281XX_PIN_MDMGPIO4		85
++#define BCM281XX_PIN_MDMGPIO5		86
++#define BCM281XX_PIN_MDMGPIO6		87
++#define BCM281XX_PIN_MDMGPIO7		88
++#define BCM281XX_PIN_MDMGPIO8		89
++#define BCM281XX_PIN_MPHI_DATA_0	90
++#define BCM281XX_PIN_MPHI_DATA_1	91
++#define BCM281XX_PIN_MPHI_DATA_2	92
++#define BCM281XX_PIN_MPHI_DATA_3	93
++#define BCM281XX_PIN_MPHI_DATA_4	94
++#define BCM281XX_PIN_MPHI_DATA_5	95
++#define BCM281XX_PIN_MPHI_DATA_6	96
++#define BCM281XX_PIN_MPHI_DATA_7	97
++#define BCM281XX_PIN_MPHI_DATA_8	98
++#define BCM281XX_PIN_MPHI_DATA_9	99
++#define BCM281XX_PIN_MPHI_DATA_10	100
++#define BCM281XX_PIN_MPHI_DATA_11	101
++#define BCM281XX_PIN_MPHI_DATA_12	102
++#define BCM281XX_PIN_MPHI_DATA_13	103
++#define BCM281XX_PIN_MPHI_DATA_14	104
++#define BCM281XX_PIN_MPHI_DATA_15	105
++#define BCM281XX_PIN_MPHI_HA0		106
++#define BCM281XX_PIN_MPHI_HAT0		107
++#define BCM281XX_PIN_MPHI_HAT1		108
++#define BCM281XX_PIN_MPHI_HCE0_N	109
++#define BCM281XX_PIN_MPHI_HCE1_N	110
++#define BCM281XX_PIN_MPHI_HRD_N		111
++#define BCM281XX_PIN_MPHI_HWR_N		112
++#define BCM281XX_PIN_MPHI_RUN0		113
++#define BCM281XX_PIN_MPHI_RUN1		114
++#define BCM281XX_PIN_MTX_SCAN_CLK	115
++#define BCM281XX_PIN_MTX_SCAN_DATA	116
++#define BCM281XX_PIN_NAND_AD_0		117
++#define BCM281XX_PIN_NAND_AD_1		118
++#define BCM281XX_PIN_NAND_AD_2		119
++#define BCM281XX_PIN_NAND_AD_3		120
++#define BCM281XX_PIN_NAND_AD_4		121
++#define BCM281XX_PIN_NAND_AD_5		122
++#define BCM281XX_PIN_NAND_AD_6		123
++#define BCM281XX_PIN_NAND_AD_7		124
++#define BCM281XX_PIN_NAND_ALE		125
++#define BCM281XX_PIN_NAND_CEN_0		126
++#define BCM281XX_PIN_NAND_CEN_1		127
++#define BCM281XX_PIN_NAND_CLE		128
++#define BCM281XX_PIN_NAND_OEN		129
++#define BCM281XX_PIN_NAND_RDY_0		130
++#define BCM281XX_PIN_NAND_RDY_1		131
++#define BCM281XX_PIN_NAND_WEN		132
++#define BCM281XX_PIN_NAND_WP		133
++#define BCM281XX_PIN_PC1		134
++#define BCM281XX_PIN_PC2		135
++#define BCM281XX_PIN_PMU_INT		136
++#define BCM281XX_PIN_PMU_SCL		137
++#define BCM281XX_PIN_PMU_SDA		138
++#define BCM281XX_PIN_RFST2G_MTSLOTEN3G	139
++#define BCM281XX_PIN_RGMII_0_RX_CTL	140
++#define BCM281XX_PIN_RGMII_0_RXC	141
++#define BCM281XX_PIN_RGMII_0_RXD_0	142
++#define BCM281XX_PIN_RGMII_0_RXD_1	143
++#define BCM281XX_PIN_RGMII_0_RXD_2	144
++#define BCM281XX_PIN_RGMII_0_RXD_3	145
++#define BCM281XX_PIN_RGMII_0_TX_CTL	146
++#define BCM281XX_PIN_RGMII_0_TXC	147
++#define BCM281XX_PIN_RGMII_0_TXD_0	148
++#define BCM281XX_PIN_RGMII_0_TXD_1	149
++#define BCM281XX_PIN_RGMII_0_TXD_2	150
++#define BCM281XX_PIN_RGMII_0_TXD_3	151
++#define BCM281XX_PIN_RGMII_1_RX_CTL	152
++#define BCM281XX_PIN_RGMII_1_RXC	153
++#define BCM281XX_PIN_RGMII_1_RXD_0	154
++#define BCM281XX_PIN_RGMII_1_RXD_1	155
++#define BCM281XX_PIN_RGMII_1_RXD_2	156
++#define BCM281XX_PIN_RGMII_1_RXD_3	157
++#define BCM281XX_PIN_RGMII_1_TX_CTL	158
++#define BCM281XX_PIN_RGMII_1_TXC	159
++#define BCM281XX_PIN_RGMII_1_TXD_0	160
++#define BCM281XX_PIN_RGMII_1_TXD_1	161
++#define BCM281XX_PIN_RGMII_1_TXD_2	162
++#define BCM281XX_PIN_RGMII_1_TXD_3	163
++#define BCM281XX_PIN_RGMII_GPIO_0	164
++#define BCM281XX_PIN_RGMII_GPIO_1	165
++#define BCM281XX_PIN_RGMII_GPIO_2	166
++#define BCM281XX_PIN_RGMII_GPIO_3	167
++#define BCM281XX_PIN_RTXDATA2G_TXDATA3G1	168
++#define BCM281XX_PIN_RTXEN2G_TXDATA3G2	169
++#define BCM281XX_PIN_RXDATA3G0		170
++#define BCM281XX_PIN_RXDATA3G1		171
++#define BCM281XX_PIN_RXDATA3G2		172
++#define BCM281XX_PIN_SDIO1_CLK		173
++#define BCM281XX_PIN_SDIO1_CMD		174
++#define BCM281XX_PIN_SDIO1_DATA_0	175
++#define BCM281XX_PIN_SDIO1_DATA_1	176
++#define BCM281XX_PIN_SDIO1_DATA_2	177
++#define BCM281XX_PIN_SDIO1_DATA_3	178
++#define BCM281XX_PIN_SDIO4_CLK		179
++#define BCM281XX_PIN_SDIO4_CMD		180
++#define BCM281XX_PIN_SDIO4_DATA_0	181
++#define BCM281XX_PIN_SDIO4_DATA_1	182
++#define BCM281XX_PIN_SDIO4_DATA_2	183
++#define BCM281XX_PIN_SDIO4_DATA_3	184
++#define BCM281XX_PIN_SIM_CLK		185
++#define BCM281XX_PIN_SIM_DATA		186
++#define BCM281XX_PIN_SIM_DET		187
++#define BCM281XX_PIN_SIM_RESETN		188
++#define BCM281XX_PIN_SIM2_CLK		189
++#define BCM281XX_PIN_SIM2_DATA		190
++#define BCM281XX_PIN_SIM2_DET		191
++#define BCM281XX_PIN_SIM2_RESETN	192
++#define BCM281XX_PIN_SRI_C		193
++#define BCM281XX_PIN_SRI_D		194
++#define BCM281XX_PIN_SRI_E		195
++#define BCM281XX_PIN_SSP_EXTCLK		196
++#define BCM281XX_PIN_SSP0_CLK		197
++#define BCM281XX_PIN_SSP0_FS		198
++#define BCM281XX_PIN_SSP0_RXD		199
++#define BCM281XX_PIN_SSP0_TXD		200
++#define BCM281XX_PIN_SSP2_CLK		201
++#define BCM281XX_PIN_SSP2_FS_0		202
++#define BCM281XX_PIN_SSP2_FS_1		203
++#define BCM281XX_PIN_SSP2_FS_2		204
++#define BCM281XX_PIN_SSP2_FS_3		205
++#define BCM281XX_PIN_SSP2_RXD_0		206
++#define BCM281XX_PIN_SSP2_RXD_1		207
++#define BCM281XX_PIN_SSP2_TXD_0		208
++#define BCM281XX_PIN_SSP2_TXD_1		209
++#define BCM281XX_PIN_SSP3_CLK		210
++#define BCM281XX_PIN_SSP3_FS		211
++#define BCM281XX_PIN_SSP3_RXD		212
++#define BCM281XX_PIN_SSP3_TXD		213
++#define BCM281XX_PIN_SSP4_CLK		214
++#define BCM281XX_PIN_SSP4_FS		215
++#define BCM281XX_PIN_SSP4_RXD		216
++#define BCM281XX_PIN_SSP4_TXD		217
++#define BCM281XX_PIN_SSP5_CLK		218
++#define BCM281XX_PIN_SSP5_FS		219
++#define BCM281XX_PIN_SSP5_RXD		220
++#define BCM281XX_PIN_SSP5_TXD		221
++#define BCM281XX_PIN_SSP6_CLK		222
++#define BCM281XX_PIN_SSP6_FS		223
++#define BCM281XX_PIN_SSP6_RXD		224
++#define BCM281XX_PIN_SSP6_TXD		225
++#define BCM281XX_PIN_STAT_1		226
++#define BCM281XX_PIN_STAT_2		227
++#define BCM281XX_PIN_SYSCLKEN		228
++#define BCM281XX_PIN_TRACECLK		229
++#define BCM281XX_PIN_TRACEDT00		230
++#define BCM281XX_PIN_TRACEDT01		231
++#define BCM281XX_PIN_TRACEDT02		232
++#define BCM281XX_PIN_TRACEDT03		233
++#define BCM281XX_PIN_TRACEDT04		234
++#define BCM281XX_PIN_TRACEDT05		235
++#define BCM281XX_PIN_TRACEDT06		236
++#define BCM281XX_PIN_TRACEDT07		237
++#define BCM281XX_PIN_TRACEDT08		238
++#define BCM281XX_PIN_TRACEDT09		239
++#define BCM281XX_PIN_TRACEDT10		240
++#define BCM281XX_PIN_TRACEDT11		241
++#define BCM281XX_PIN_TRACEDT12		242
++#define BCM281XX_PIN_TRACEDT13		243
++#define BCM281XX_PIN_TRACEDT14		244
++#define BCM281XX_PIN_TRACEDT15		245
++#define BCM281XX_PIN_TXDATA3G0		246
++#define BCM281XX_PIN_TXPWRIND		247
++#define BCM281XX_PIN_UARTB1_UCTS	248
++#define BCM281XX_PIN_UARTB1_URTS	249
++#define BCM281XX_PIN_UARTB1_URXD	250
++#define BCM281XX_PIN_UARTB1_UTXD	251
++#define BCM281XX_PIN_UARTB2_URXD	252
++#define BCM281XX_PIN_UARTB2_UTXD	253
++#define BCM281XX_PIN_UARTB3_UCTS	254
++#define BCM281XX_PIN_UARTB3_URTS	255
++#define BCM281XX_PIN_UARTB3_URXD	256
++#define BCM281XX_PIN_UARTB3_UTXD	257
++#define BCM281XX_PIN_UARTB4_UCTS	258
++#define BCM281XX_PIN_UARTB4_URTS	259
++#define BCM281XX_PIN_UARTB4_URXD	260
++#define BCM281XX_PIN_UARTB4_UTXD	261
++#define BCM281XX_PIN_VC_CAM1_SCL	262
++#define BCM281XX_PIN_VC_CAM1_SDA	263
++#define BCM281XX_PIN_VC_CAM2_SCL	264
++#define BCM281XX_PIN_VC_CAM2_SDA	265
++#define BCM281XX_PIN_VC_CAM3_SCL	266
++#define BCM281XX_PIN_VC_CAM3_SDA	267
 +
-+#include <linux/module.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/mfd/samsung/exynos-pmu.h>
-+#include <linux/mfd/samsung/exynos-regs-pmu.h>
-+
-+enum exynos_pmu_id {
-+	PMU_EXYNOS4210,
-+	PMU_EXYNOS4212,
-+	PMU_EXYNOS4412,
-+	PMU_EXYNOS5250,
++#define BCM281XX_PIN_DESC(a, b, c) \
+ 	{ .number = a, .name = b, .drv_data = &c##_pin }
+ 
+ /*
+@@ -379,279 +379,281 @@ struct capri_pinctrl_data {
+  * the PADCTRLREG block in the RDB, since the pin number is used as an index
+  * into this array.
+  */
+-static const struct pinctrl_pin_desc capri_pinctrl_pins[] = {
+-	CAPRI_PIN_DESC(CAPRI_PIN_ADCSYNC, "adcsync", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_BAT_RM, "bat_rm", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_BSC1_SCL, "bsc1_scl", i2c),
+-	CAPRI_PIN_DESC(CAPRI_PIN_BSC1_SDA, "bsc1_sda", i2c),
+-	CAPRI_PIN_DESC(CAPRI_PIN_BSC2_SCL, "bsc2_scl", i2c),
+-	CAPRI_PIN_DESC(CAPRI_PIN_BSC2_SDA, "bsc2_sda", i2c),
+-	CAPRI_PIN_DESC(CAPRI_PIN_CLASSGPWR, "classgpwr", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_CLK_CX8, "clk_cx8", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_CLKOUT_0, "clkout_0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_CLKOUT_1, "clkout_1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_CLKOUT_2, "clkout_2", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_CLKOUT_3, "clkout_3", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_CLKREQ_IN_0, "clkreq_in_0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_CLKREQ_IN_1, "clkreq_in_1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_CWS_SYS_REQ1, "cws_sys_req1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_CWS_SYS_REQ2, "cws_sys_req2", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_CWS_SYS_REQ3, "cws_sys_req3", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_DIGMIC1_CLK, "digmic1_clk", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_DIGMIC1_DQ, "digmic1_dq", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_DIGMIC2_CLK, "digmic2_clk", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_DIGMIC2_DQ, "digmic2_dq", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_GPEN13, "gpen13", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_GPEN14, "gpen14", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_GPEN15, "gpen15", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_GPIO00, "gpio00", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_GPIO01, "gpio01", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_GPIO02, "gpio02", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_GPIO03, "gpio03", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_GPIO04, "gpio04", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_GPIO05, "gpio05", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_GPIO06, "gpio06", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_GPIO07, "gpio07", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_GPIO08, "gpio08", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_GPIO09, "gpio09", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_GPIO10, "gpio10", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_GPIO11, "gpio11", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_GPIO12, "gpio12", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_GPIO13, "gpio13", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_GPIO14, "gpio14", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_GPS_PABLANK, "gps_pablank", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_GPS_TMARK, "gps_tmark", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_HDMI_SCL, "hdmi_scl", hdmi),
+-	CAPRI_PIN_DESC(CAPRI_PIN_HDMI_SDA, "hdmi_sda", hdmi),
+-	CAPRI_PIN_DESC(CAPRI_PIN_IC_DM, "ic_dm", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_IC_DP, "ic_dp", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_KP_COL_IP_0, "kp_col_ip_0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_KP_COL_IP_1, "kp_col_ip_1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_KP_COL_IP_2, "kp_col_ip_2", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_KP_COL_IP_3, "kp_col_ip_3", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_KP_ROW_OP_0, "kp_row_op_0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_KP_ROW_OP_1, "kp_row_op_1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_KP_ROW_OP_2, "kp_row_op_2", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_KP_ROW_OP_3, "kp_row_op_3", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_B_0, "lcd_b_0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_B_1, "lcd_b_1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_B_2, "lcd_b_2", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_B_3, "lcd_b_3", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_B_4, "lcd_b_4", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_B_5, "lcd_b_5", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_B_6, "lcd_b_6", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_B_7, "lcd_b_7", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_G_0, "lcd_g_0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_G_1, "lcd_g_1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_G_2, "lcd_g_2", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_G_3, "lcd_g_3", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_G_4, "lcd_g_4", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_G_5, "lcd_g_5", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_G_6, "lcd_g_6", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_G_7, "lcd_g_7", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_HSYNC, "lcd_hsync", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_OE, "lcd_oe", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_PCLK, "lcd_pclk", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_R_0, "lcd_r_0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_R_1, "lcd_r_1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_R_2, "lcd_r_2", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_R_3, "lcd_r_3", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_R_4, "lcd_r_4", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_R_5, "lcd_r_5", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_R_6, "lcd_r_6", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_R_7, "lcd_r_7", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_LCD_VSYNC, "lcd_vsync", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MDMGPIO0, "mdmgpio0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MDMGPIO1, "mdmgpio1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MDMGPIO2, "mdmgpio2", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MDMGPIO3, "mdmgpio3", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MDMGPIO4, "mdmgpio4", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MDMGPIO5, "mdmgpio5", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MDMGPIO6, "mdmgpio6", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MDMGPIO7, "mdmgpio7", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MDMGPIO8, "mdmgpio8", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_DATA_0, "mphi_data_0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_DATA_1, "mphi_data_1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_DATA_2, "mphi_data_2", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_DATA_3, "mphi_data_3", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_DATA_4, "mphi_data_4", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_DATA_5, "mphi_data_5", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_DATA_6, "mphi_data_6", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_DATA_7, "mphi_data_7", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_DATA_8, "mphi_data_8", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_DATA_9, "mphi_data_9", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_DATA_10, "mphi_data_10", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_DATA_11, "mphi_data_11", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_DATA_12, "mphi_data_12", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_DATA_13, "mphi_data_13", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_DATA_14, "mphi_data_14", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_DATA_15, "mphi_data_15", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_HA0, "mphi_ha0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_HAT0, "mphi_hat0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_HAT1, "mphi_hat1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_HCE0_N, "mphi_hce0_n", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_HCE1_N, "mphi_hce1_n", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_HRD_N, "mphi_hrd_n", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_HWR_N, "mphi_hwr_n", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_RUN0, "mphi_run0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MPHI_RUN1, "mphi_run1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MTX_SCAN_CLK, "mtx_scan_clk", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_MTX_SCAN_DATA, "mtx_scan_data", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_NAND_AD_0, "nand_ad_0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_NAND_AD_1, "nand_ad_1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_NAND_AD_2, "nand_ad_2", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_NAND_AD_3, "nand_ad_3", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_NAND_AD_4, "nand_ad_4", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_NAND_AD_5, "nand_ad_5", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_NAND_AD_6, "nand_ad_6", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_NAND_AD_7, "nand_ad_7", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_NAND_ALE, "nand_ale", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_NAND_CEN_0, "nand_cen_0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_NAND_CEN_1, "nand_cen_1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_NAND_CLE, "nand_cle", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_NAND_OEN, "nand_oen", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_NAND_RDY_0, "nand_rdy_0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_NAND_RDY_1, "nand_rdy_1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_NAND_WEN, "nand_wen", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_NAND_WP, "nand_wp", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_PC1, "pc1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_PC2, "pc2", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_PMU_INT, "pmu_int", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_PMU_SCL, "pmu_scl", i2c),
+-	CAPRI_PIN_DESC(CAPRI_PIN_PMU_SDA, "pmu_sda", i2c),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RFST2G_MTSLOTEN3G, "rfst2g_mtsloten3g", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_0_RX_CTL, "rgmii_0_rx_ctl", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_0_RXC, "rgmii_0_rxc", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_0_RXD_0, "rgmii_0_rxd_0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_0_RXD_1, "rgmii_0_rxd_1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_0_RXD_2, "rgmii_0_rxd_2", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_0_RXD_3, "rgmii_0_rxd_3", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_0_TX_CTL, "rgmii_0_tx_ctl", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_0_TXC, "rgmii_0_txc", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_0_TXD_0, "rgmii_0_txd_0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_0_TXD_1, "rgmii_0_txd_1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_0_TXD_2, "rgmii_0_txd_2", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_0_TXD_3, "rgmii_0_txd_3", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_1_RX_CTL, "rgmii_1_rx_ctl", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_1_RXC, "rgmii_1_rxc", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_1_RXD_0, "rgmii_1_rxd_0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_1_RXD_1, "rgmii_1_rxd_1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_1_RXD_2, "rgmii_1_rxd_2", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_1_RXD_3, "rgmii_1_rxd_3", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_1_TX_CTL, "rgmii_1_tx_ctl", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_1_TXC, "rgmii_1_txc", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_1_TXD_0, "rgmii_1_txd_0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_1_TXD_1, "rgmii_1_txd_1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_1_TXD_2, "rgmii_1_txd_2", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_1_TXD_3, "rgmii_1_txd_3", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_GPIO_0, "rgmii_gpio_0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_GPIO_1, "rgmii_gpio_1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_GPIO_2, "rgmii_gpio_2", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RGMII_GPIO_3, "rgmii_gpio_3", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RTXDATA2G_TXDATA3G1, "rtxdata2g_txdata3g1",
++static const struct pinctrl_pin_desc bcm281xx_pinctrl_pins[] = {
++	BCM281XX_PIN_DESC(BCM281XX_PIN_ADCSYNC, "adcsync", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_BAT_RM, "bat_rm", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_BSC1_SCL, "bsc1_scl", i2c),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_BSC1_SDA, "bsc1_sda", i2c),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_BSC2_SCL, "bsc2_scl", i2c),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_BSC2_SDA, "bsc2_sda", i2c),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_CLASSGPWR, "classgpwr", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_CLK_CX8, "clk_cx8", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_CLKOUT_0, "clkout_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_CLKOUT_1, "clkout_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_CLKOUT_2, "clkout_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_CLKOUT_3, "clkout_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_CLKREQ_IN_0, "clkreq_in_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_CLKREQ_IN_1, "clkreq_in_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_CWS_SYS_REQ1, "cws_sys_req1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_CWS_SYS_REQ2, "cws_sys_req2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_CWS_SYS_REQ3, "cws_sys_req3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_DIGMIC1_CLK, "digmic1_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_DIGMIC1_DQ, "digmic1_dq", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_DIGMIC2_CLK, "digmic2_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_DIGMIC2_DQ, "digmic2_dq", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPEN13, "gpen13", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPEN14, "gpen14", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPEN15, "gpen15", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO00, "gpio00", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO01, "gpio01", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO02, "gpio02", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO03, "gpio03", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO04, "gpio04", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO05, "gpio05", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO06, "gpio06", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO07, "gpio07", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO08, "gpio08", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO09, "gpio09", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO10, "gpio10", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO11, "gpio11", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO12, "gpio12", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO13, "gpio13", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPIO14, "gpio14", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPS_PABLANK, "gps_pablank", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_GPS_TMARK, "gps_tmark", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_HDMI_SCL, "hdmi_scl", hdmi),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_HDMI_SDA, "hdmi_sda", hdmi),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_IC_DM, "ic_dm", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_IC_DP, "ic_dp", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_KP_COL_IP_0, "kp_col_ip_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_KP_COL_IP_1, "kp_col_ip_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_KP_COL_IP_2, "kp_col_ip_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_KP_COL_IP_3, "kp_col_ip_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_KP_ROW_OP_0, "kp_row_op_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_KP_ROW_OP_1, "kp_row_op_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_KP_ROW_OP_2, "kp_row_op_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_KP_ROW_OP_3, "kp_row_op_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_B_0, "lcd_b_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_B_1, "lcd_b_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_B_2, "lcd_b_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_B_3, "lcd_b_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_B_4, "lcd_b_4", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_B_5, "lcd_b_5", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_B_6, "lcd_b_6", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_B_7, "lcd_b_7", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_G_0, "lcd_g_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_G_1, "lcd_g_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_G_2, "lcd_g_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_G_3, "lcd_g_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_G_4, "lcd_g_4", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_G_5, "lcd_g_5", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_G_6, "lcd_g_6", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_G_7, "lcd_g_7", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_HSYNC, "lcd_hsync", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_OE, "lcd_oe", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_PCLK, "lcd_pclk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_R_0, "lcd_r_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_R_1, "lcd_r_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_R_2, "lcd_r_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_R_3, "lcd_r_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_R_4, "lcd_r_4", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_R_5, "lcd_r_5", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_R_6, "lcd_r_6", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_R_7, "lcd_r_7", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_LCD_VSYNC, "lcd_vsync", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO0, "mdmgpio0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO1, "mdmgpio1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO2, "mdmgpio2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO3, "mdmgpio3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO4, "mdmgpio4", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO5, "mdmgpio5", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO6, "mdmgpio6", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO7, "mdmgpio7", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MDMGPIO8, "mdmgpio8", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_0, "mphi_data_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_1, "mphi_data_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_2, "mphi_data_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_3, "mphi_data_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_4, "mphi_data_4", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_5, "mphi_data_5", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_6, "mphi_data_6", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_7, "mphi_data_7", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_8, "mphi_data_8", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_9, "mphi_data_9", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_10, "mphi_data_10", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_11, "mphi_data_11", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_12, "mphi_data_12", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_13, "mphi_data_13", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_14, "mphi_data_14", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_DATA_15, "mphi_data_15", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_HA0, "mphi_ha0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_HAT0, "mphi_hat0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_HAT1, "mphi_hat1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_HCE0_N, "mphi_hce0_n", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_HCE1_N, "mphi_hce1_n", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_HRD_N, "mphi_hrd_n", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_HWR_N, "mphi_hwr_n", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_RUN0, "mphi_run0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MPHI_RUN1, "mphi_run1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MTX_SCAN_CLK, "mtx_scan_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_MTX_SCAN_DATA, "mtx_scan_data", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_AD_0, "nand_ad_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_AD_1, "nand_ad_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_AD_2, "nand_ad_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_AD_3, "nand_ad_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_AD_4, "nand_ad_4", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_AD_5, "nand_ad_5", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_AD_6, "nand_ad_6", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_AD_7, "nand_ad_7", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_ALE, "nand_ale", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_CEN_0, "nand_cen_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_CEN_1, "nand_cen_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_CLE, "nand_cle", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_OEN, "nand_oen", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_RDY_0, "nand_rdy_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_RDY_1, "nand_rdy_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_WEN, "nand_wen", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_NAND_WP, "nand_wp", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_PC1, "pc1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_PC2, "pc2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_PMU_INT, "pmu_int", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_PMU_SCL, "pmu_scl", i2c),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_PMU_SDA, "pmu_sda", i2c),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RFST2G_MTSLOTEN3G, "rfst2g_mtsloten3g",
+ 		std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RTXEN2G_TXDATA3G2, "rtxen2g_txdata3g2", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RXDATA3G0, "rxdata3g0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RXDATA3G1, "rxdata3g1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_RXDATA3G2, "rxdata3g2", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SDIO1_CLK, "sdio1_clk", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SDIO1_CMD, "sdio1_cmd", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SDIO1_DATA_0, "sdio1_data_0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SDIO1_DATA_1, "sdio1_data_1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SDIO1_DATA_2, "sdio1_data_2", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SDIO1_DATA_3, "sdio1_data_3", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SDIO4_CLK, "sdio4_clk", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SDIO4_CMD, "sdio4_cmd", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SDIO4_DATA_0, "sdio4_data_0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SDIO4_DATA_1, "sdio4_data_1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SDIO4_DATA_2, "sdio4_data_2", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SDIO4_DATA_3, "sdio4_data_3", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SIM_CLK, "sim_clk", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SIM_DATA, "sim_data", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SIM_DET, "sim_det", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SIM_RESETN, "sim_resetn", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SIM2_CLK, "sim2_clk", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SIM2_DATA, "sim2_data", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SIM2_DET, "sim2_det", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SIM2_RESETN, "sim2_resetn", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SRI_C, "sri_c", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SRI_D, "sri_d", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SRI_E, "sri_e", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP_EXTCLK, "ssp_extclk", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP0_CLK, "ssp0_clk", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP0_FS, "ssp0_fs", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP0_RXD, "ssp0_rxd", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP0_TXD, "ssp0_txd", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP2_CLK, "ssp2_clk", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP2_FS_0, "ssp2_fs_0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP2_FS_1, "ssp2_fs_1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP2_FS_2, "ssp2_fs_2", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP2_FS_3, "ssp2_fs_3", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP2_RXD_0, "ssp2_rxd_0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP2_RXD_1, "ssp2_rxd_1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP2_TXD_0, "ssp2_txd_0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP2_TXD_1, "ssp2_txd_1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP3_CLK, "ssp3_clk", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP3_FS, "ssp3_fs", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP3_RXD, "ssp3_rxd", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP3_TXD, "ssp3_txd", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP4_CLK, "ssp4_clk", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP4_FS, "ssp4_fs", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP4_RXD, "ssp4_rxd", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP4_TXD, "ssp4_txd", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP5_CLK, "ssp5_clk", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP5_FS, "ssp5_fs", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP5_RXD, "ssp5_rxd", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP5_TXD, "ssp5_txd", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP6_CLK, "ssp6_clk", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP6_FS, "ssp6_fs", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP6_RXD, "ssp6_rxd", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SSP6_TXD, "ssp6_txd", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_STAT_1, "stat_1", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_STAT_2, "stat_2", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_SYSCLKEN, "sysclken", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_TRACECLK, "traceclk", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_TRACEDT00, "tracedt00", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_TRACEDT01, "tracedt01", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_TRACEDT02, "tracedt02", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_TRACEDT03, "tracedt03", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_TRACEDT04, "tracedt04", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_TRACEDT05, "tracedt05", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_TRACEDT06, "tracedt06", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_TRACEDT07, "tracedt07", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_TRACEDT08, "tracedt08", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_TRACEDT09, "tracedt09", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_TRACEDT10, "tracedt10", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_TRACEDT11, "tracedt11", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_TRACEDT12, "tracedt12", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_TRACEDT13, "tracedt13", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_TRACEDT14, "tracedt14", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_TRACEDT15, "tracedt15", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_TXDATA3G0, "txdata3g0", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_TXPWRIND, "txpwrind", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_UARTB1_UCTS, "uartb1_ucts", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_UARTB1_URTS, "uartb1_urts", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_UARTB1_URXD, "uartb1_urxd", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_UARTB1_UTXD, "uartb1_utxd", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_UARTB2_URXD, "uartb2_urxd", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_UARTB2_UTXD, "uartb2_utxd", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_UARTB3_UCTS, "uartb3_ucts", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_UARTB3_URTS, "uartb3_urts", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_UARTB3_URXD, "uartb3_urxd", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_UARTB3_UTXD, "uartb3_utxd", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_UARTB4_UCTS, "uartb4_ucts", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_UARTB4_URTS, "uartb4_urts", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_UARTB4_URXD, "uartb4_urxd", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_UARTB4_UTXD, "uartb4_utxd", std),
+-	CAPRI_PIN_DESC(CAPRI_PIN_VC_CAM1_SCL, "vc_cam1_scl", i2c),
+-	CAPRI_PIN_DESC(CAPRI_PIN_VC_CAM1_SDA, "vc_cam1_sda", i2c),
+-	CAPRI_PIN_DESC(CAPRI_PIN_VC_CAM2_SCL, "vc_cam2_scl", i2c),
+-	CAPRI_PIN_DESC(CAPRI_PIN_VC_CAM2_SDA, "vc_cam2_sda", i2c),
+-	CAPRI_PIN_DESC(CAPRI_PIN_VC_CAM3_SCL, "vc_cam3_scl", i2c),
+-	CAPRI_PIN_DESC(CAPRI_PIN_VC_CAM3_SDA, "vc_cam3_sda", i2c),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_RX_CTL, "rgmii_0_rx_ctl", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_RXC, "rgmii_0_rxc", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_RXD_0, "rgmii_0_rxd_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_RXD_1, "rgmii_0_rxd_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_RXD_2, "rgmii_0_rxd_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_RXD_3, "rgmii_0_rxd_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_TX_CTL, "rgmii_0_tx_ctl", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_TXC, "rgmii_0_txc", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_TXD_0, "rgmii_0_txd_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_TXD_1, "rgmii_0_txd_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_TXD_2, "rgmii_0_txd_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_0_TXD_3, "rgmii_0_txd_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_RX_CTL, "rgmii_1_rx_ctl", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_RXC, "rgmii_1_rxc", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_RXD_0, "rgmii_1_rxd_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_RXD_1, "rgmii_1_rxd_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_RXD_2, "rgmii_1_rxd_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_RXD_3, "rgmii_1_rxd_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_TX_CTL, "rgmii_1_tx_ctl", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_TXC, "rgmii_1_txc", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_TXD_0, "rgmii_1_txd_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_TXD_1, "rgmii_1_txd_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_TXD_2, "rgmii_1_txd_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_1_TXD_3, "rgmii_1_txd_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_GPIO_0, "rgmii_gpio_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_GPIO_1, "rgmii_gpio_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_GPIO_2, "rgmii_gpio_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RGMII_GPIO_3, "rgmii_gpio_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RTXDATA2G_TXDATA3G1,
++		"rtxdata2g_txdata3g1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RTXEN2G_TXDATA3G2, "rtxen2g_txdata3g2",
++		std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RXDATA3G0, "rxdata3g0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RXDATA3G1, "rxdata3g1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_RXDATA3G2, "rxdata3g2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO1_CLK, "sdio1_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO1_CMD, "sdio1_cmd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO1_DATA_0, "sdio1_data_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO1_DATA_1, "sdio1_data_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO1_DATA_2, "sdio1_data_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO1_DATA_3, "sdio1_data_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO4_CLK, "sdio4_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO4_CMD, "sdio4_cmd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO4_DATA_0, "sdio4_data_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO4_DATA_1, "sdio4_data_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO4_DATA_2, "sdio4_data_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SDIO4_DATA_3, "sdio4_data_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SIM_CLK, "sim_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SIM_DATA, "sim_data", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SIM_DET, "sim_det", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SIM_RESETN, "sim_resetn", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SIM2_CLK, "sim2_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SIM2_DATA, "sim2_data", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SIM2_DET, "sim2_det", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SIM2_RESETN, "sim2_resetn", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SRI_C, "sri_c", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SRI_D, "sri_d", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SRI_E, "sri_e", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP_EXTCLK, "ssp_extclk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP0_CLK, "ssp0_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP0_FS, "ssp0_fs", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP0_RXD, "ssp0_rxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP0_TXD, "ssp0_txd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_CLK, "ssp2_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_FS_0, "ssp2_fs_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_FS_1, "ssp2_fs_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_FS_2, "ssp2_fs_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_FS_3, "ssp2_fs_3", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_RXD_0, "ssp2_rxd_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_RXD_1, "ssp2_rxd_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_TXD_0, "ssp2_txd_0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP2_TXD_1, "ssp2_txd_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP3_CLK, "ssp3_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP3_FS, "ssp3_fs", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP3_RXD, "ssp3_rxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP3_TXD, "ssp3_txd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP4_CLK, "ssp4_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP4_FS, "ssp4_fs", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP4_RXD, "ssp4_rxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP4_TXD, "ssp4_txd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP5_CLK, "ssp5_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP5_FS, "ssp5_fs", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP5_RXD, "ssp5_rxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP5_TXD, "ssp5_txd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP6_CLK, "ssp6_clk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP6_FS, "ssp6_fs", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP6_RXD, "ssp6_rxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SSP6_TXD, "ssp6_txd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_STAT_1, "stat_1", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_STAT_2, "stat_2", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_SYSCLKEN, "sysclken", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACECLK, "traceclk", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT00, "tracedt00", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT01, "tracedt01", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT02, "tracedt02", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT03, "tracedt03", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT04, "tracedt04", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT05, "tracedt05", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT06, "tracedt06", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT07, "tracedt07", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT08, "tracedt08", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT09, "tracedt09", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT10, "tracedt10", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT11, "tracedt11", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT12, "tracedt12", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT13, "tracedt13", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT14, "tracedt14", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TRACEDT15, "tracedt15", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TXDATA3G0, "txdata3g0", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_TXPWRIND, "txpwrind", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB1_UCTS, "uartb1_ucts", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB1_URTS, "uartb1_urts", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB1_URXD, "uartb1_urxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB1_UTXD, "uartb1_utxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB2_URXD, "uartb2_urxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB2_UTXD, "uartb2_utxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB3_UCTS, "uartb3_ucts", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB3_URTS, "uartb3_urts", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB3_URXD, "uartb3_urxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB3_UTXD, "uartb3_utxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB4_UCTS, "uartb4_ucts", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB4_URTS, "uartb4_urts", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB4_URXD, "uartb4_urxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_UARTB4_UTXD, "uartb4_utxd", std),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_VC_CAM1_SCL, "vc_cam1_scl", i2c),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_VC_CAM1_SDA, "vc_cam1_sda", i2c),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_VC_CAM2_SCL, "vc_cam2_scl", i2c),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_VC_CAM2_SDA, "vc_cam2_sda", i2c),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_VC_CAM3_SCL, "vc_cam3_scl", i2c),
++	BCM281XX_PIN_DESC(BCM281XX_PIN_VC_CAM3_SDA, "vc_cam3_sda", i2c),
+ };
+ 
+-static const char * const capri_alt_groups[] = {
++static const char * const bcm281xx_alt_groups[] = {
+ 	"adcsync",
+ 	"bat_rm",
+ 	"bsc1_scl",
+@@ -923,84 +925,85 @@ static const char * const capri_alt_groups[] = {
+ };
+ 
+ /* Every pin can implement all ALT1-ALT4 functions */
+-#define CAPRI_PIN_FUNCTION(fcn_name)			\
++#define BCM281XX_PIN_FUNCTION(fcn_name)			\
+ {							\
+ 	.name = #fcn_name,				\
+-	.groups = capri_alt_groups,			\
+-	.ngroups = ARRAY_SIZE(capri_alt_groups),	\
++	.groups = bcm281xx_alt_groups,			\
++	.ngroups = ARRAY_SIZE(bcm281xx_alt_groups),	\
+ }
+ 
+-static const struct capri_pin_function capri_functions[] = {
+-	CAPRI_PIN_FUNCTION(alt1),
+-	CAPRI_PIN_FUNCTION(alt2),
+-	CAPRI_PIN_FUNCTION(alt3),
+-	CAPRI_PIN_FUNCTION(alt4),
++static const struct bcm281xx_pin_function bcm281xx_functions[] = {
++	BCM281XX_PIN_FUNCTION(alt1),
++	BCM281XX_PIN_FUNCTION(alt2),
++	BCM281XX_PIN_FUNCTION(alt3),
++	BCM281XX_PIN_FUNCTION(alt4),
+ };
+ 
+-static struct capri_pinctrl_data capri_pinctrl = {
+-	.pins = capri_pinctrl_pins,
+-	.npins = ARRAY_SIZE(capri_pinctrl_pins),
+-	.functions = capri_functions,
+-	.nfunctions = ARRAY_SIZE(capri_functions),
++static struct bcm281xx_pinctrl_data bcm281xx_pinctrl = {
++	.pins = bcm281xx_pinctrl_pins,
++	.npins = ARRAY_SIZE(bcm281xx_pinctrl_pins),
++	.functions = bcm281xx_functions,
++	.nfunctions = ARRAY_SIZE(bcm281xx_functions),
+ };
+ 
+-static inline enum capri_pin_type pin_type_get(struct pinctrl_dev *pctldev,
+-					       unsigned pin)
++static inline enum bcm281xx_pin_type pin_type_get(struct pinctrl_dev *pctldev,
++						  unsigned pin)
+ {
+-	struct capri_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
++	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+ 
+ 	if (pin >= pdata->npins)
+-		return CAPRI_PIN_TYPE_UNKNOWN;
++		return BCM281XX_PIN_TYPE_UNKNOWN;
+ 
+-	return *(enum capri_pin_type *)(pdata->pins[pin].drv_data);
++	return *(enum bcm281xx_pin_type *)(pdata->pins[pin].drv_data);
+ }
+ 
+-#define CAPRI_PIN_SHIFT(type, param) \
+-	(CAPRI_ ## type ## _PIN_REG_ ## param ## _SHIFT)
++#define BCM281XX_PIN_SHIFT(type, param) \
++	(BCM281XX_ ## type ## _PIN_REG_ ## param ## _SHIFT)
+ 
+-#define CAPRI_PIN_MASK(type, param) \
+-	(CAPRI_ ## type ## _PIN_REG_ ## param ## _MASK)
++#define BCM281XX_PIN_MASK(type, param) \
++	(BCM281XX_ ## type ## _PIN_REG_ ## param ## _MASK)
+ 
+ /*
+  * This helper function is used to build up the value and mask used to write to
+  * a pin register, but does not actually write to the register.
+  */
+-static inline void capri_pin_update(u32 *reg_val, u32 *reg_mask, u32 param_val,
+-				    u32 param_shift, u32 param_mask)
++static inline void bcm281xx_pin_update(u32 *reg_val, u32 *reg_mask,
++				       u32 param_val, u32 param_shift,
++				       u32 param_mask)
+ {
+ 	*reg_val &= ~param_mask;
+ 	*reg_val |= (param_val << param_shift) & param_mask;
+ 	*reg_mask |= param_mask;
+ }
+ 
+-static struct regmap_config capri_pinctrl_regmap_config = {
++static struct regmap_config bcm281xx_pinctrl_regmap_config = {
+ 	.reg_bits = 32,
+ 	.reg_stride = 4,
+ 	.val_bits = 32,
+-	.max_register = CAPRI_PIN_VC_CAM3_SDA,
++	.max_register = BCM281XX_PIN_VC_CAM3_SDA,
+ };
+ 
+-static int capri_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
++static int bcm281xx_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
+ {
+-	struct capri_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
++	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+ 
+ 	return pdata->npins;
+ }
+ 
+-static const char *capri_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
+-						unsigned group)
++static const char *bcm281xx_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
++						   unsigned group)
+ {
+-	struct capri_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
++	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+ 
+ 	return pdata->pins[group].name;
+ }
+ 
+-static int capri_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
+-					unsigned group,
+-					const unsigned **pins,
+-					unsigned *num_pins)
++static int bcm281xx_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
++					   unsigned group,
++					   const unsigned **pins,
++					   unsigned *num_pins)
+ {
+-	struct capri_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
++	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+ 
+ 	*pins = &pdata->pins[group].number;
+ 	*num_pins = 1;
+@@ -1008,43 +1011,43 @@ static int capri_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
+ 	return 0;
+ }
+ 
+-static void capri_pinctrl_pin_dbg_show(struct pinctrl_dev *pctldev,
+-				       struct seq_file *s,
+-				       unsigned offset)
++static void bcm281xx_pinctrl_pin_dbg_show(struct pinctrl_dev *pctldev,
++					  struct seq_file *s,
++					  unsigned offset)
+ {
+ 	seq_printf(s, " %s", dev_name(pctldev->dev));
+ }
+ 
+-static struct pinctrl_ops capri_pinctrl_ops = {
+-	.get_groups_count = capri_pinctrl_get_groups_count,
+-	.get_group_name = capri_pinctrl_get_group_name,
+-	.get_group_pins = capri_pinctrl_get_group_pins,
+-	.pin_dbg_show = capri_pinctrl_pin_dbg_show,
++static struct pinctrl_ops bcm281xx_pinctrl_ops = {
++	.get_groups_count = bcm281xx_pinctrl_get_groups_count,
++	.get_group_name = bcm281xx_pinctrl_get_group_name,
++	.get_group_pins = bcm281xx_pinctrl_get_group_pins,
++	.pin_dbg_show = bcm281xx_pinctrl_pin_dbg_show,
+ 	.dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
+ 	.dt_free_map = pinctrl_utils_dt_free_map,
+ };
+ 
+-static int capri_pinctrl_get_fcns_count(struct pinctrl_dev *pctldev)
++static int bcm281xx_pinctrl_get_fcns_count(struct pinctrl_dev *pctldev)
+ {
+-	struct capri_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
++	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+ 
+ 	return pdata->nfunctions;
+ }
+ 
+-static const char *capri_pinctrl_get_fcn_name(struct pinctrl_dev *pctldev,
+-					      unsigned function)
++static const char *bcm281xx_pinctrl_get_fcn_name(struct pinctrl_dev *pctldev,
++						 unsigned function)
+ {
+-	struct capri_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
++	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+ 
+ 	return pdata->functions[function].name;
+ }
+ 
+-static int capri_pinctrl_get_fcn_groups(struct pinctrl_dev *pctldev,
+-					unsigned function,
+-					const char * const **groups,
+-					unsigned * const num_groups)
++static int bcm281xx_pinctrl_get_fcn_groups(struct pinctrl_dev *pctldev,
++					   unsigned function,
++					   const char * const **groups,
++					   unsigned * const num_groups)
+ {
+-	struct capri_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
++	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+ 
+ 	*groups = pdata->functions[function].groups;
+ 	*num_groups = pdata->functions[function].ngroups;
+@@ -1052,12 +1055,12 @@ static int capri_pinctrl_get_fcn_groups(struct pinctrl_dev *pctldev,
+ 	return 0;
+ }
+ 
+-static int capri_pinmux_enable(struct pinctrl_dev *pctldev,
+-			       unsigned function,
+-			       unsigned group)
++static int bcm281xx_pinmux_enable(struct pinctrl_dev *pctldev,
++				  unsigned function,
++				  unsigned group)
+ {
+-	struct capri_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+-	const struct capri_pin_function *f = &pdata->functions[function];
++	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
++	const struct bcm281xx_pin_function *f = &pdata->functions[function];
+ 	u32 offset = 4 * pdata->pins[group].number;
+ 	int rc = 0;
+ 
+@@ -1066,8 +1069,9 @@ static int capri_pinmux_enable(struct pinctrl_dev *pctldev,
+ 		__func__, f->name, function, pdata->pins[group].name,
+ 		pdata->pins[group].number, offset);
+ 
+-	rc = regmap_update_bits(pdata->regmap, offset, CAPRI_PIN_REG_F_SEL_MASK,
+-			function << CAPRI_PIN_REG_F_SEL_SHIFT);
++	rc = regmap_update_bits(pdata->regmap, offset,
++		BCM281XX_PIN_REG_F_SEL_MASK,
++		function << BCM281XX_PIN_REG_F_SEL_SHIFT);
+ 	if (rc)
+ 		dev_err(pctldev->dev,
+ 			"Error updating register for pin %s (%d).\n",
+@@ -1076,30 +1080,30 @@ static int capri_pinmux_enable(struct pinctrl_dev *pctldev,
+ 	return rc;
+ }
+ 
+-static struct pinmux_ops capri_pinctrl_pinmux_ops = {
+-	.get_functions_count = capri_pinctrl_get_fcns_count,
+-	.get_function_name = capri_pinctrl_get_fcn_name,
+-	.get_function_groups = capri_pinctrl_get_fcn_groups,
+-	.enable = capri_pinmux_enable,
++static struct pinmux_ops bcm281xx_pinctrl_pinmux_ops = {
++	.get_functions_count = bcm281xx_pinctrl_get_fcns_count,
++	.get_function_name = bcm281xx_pinctrl_get_fcn_name,
++	.get_function_groups = bcm281xx_pinctrl_get_fcn_groups,
++	.enable = bcm281xx_pinmux_enable,
+ };
+ 
+-static int capri_pinctrl_pin_config_get(struct pinctrl_dev *pctldev,
+-					unsigned pin,
+-					unsigned long *config)
++static int bcm281xx_pinctrl_pin_config_get(struct pinctrl_dev *pctldev,
++					   unsigned pin,
++					   unsigned long *config)
+ {
+ 	return -ENOTSUPP;
+ }
+ 
+ 
+ /* Goes through the configs and update register val/mask */
+-static int capri_std_pin_update(struct pinctrl_dev *pctldev,
+-				unsigned pin,
+-				unsigned long *configs,
+-				unsigned num_configs,
+-				u32 *val,
+-				u32 *mask)
++static int bcm281xx_std_pin_update(struct pinctrl_dev *pctldev,
++				   unsigned pin,
++				   unsigned long *configs,
++				   unsigned num_configs,
++				   u32 *val,
++				   u32 *mask)
+ {
+-	struct capri_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
++	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+ 	int i;
+ 	enum pin_config_param param;
+ 	u16 arg;
+@@ -1111,9 +1115,9 @@ static int capri_std_pin_update(struct pinctrl_dev *pctldev,
+ 		switch (param) {
+ 		case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+ 			arg = (arg >= 1 ? 1 : 0);
+-			capri_pin_update(val, mask, arg,
+-					CAPRI_PIN_SHIFT(STD, HYST),
+-					CAPRI_PIN_MASK(STD, HYST));
++			bcm281xx_pin_update(val, mask, arg,
++				BCM281XX_PIN_SHIFT(STD, HYST),
++				BCM281XX_PIN_MASK(STD, HYST));
+ 			break;
+ 		/*
+ 		 * The pin bias can only be one of pull-up, pull-down, or
+@@ -1122,45 +1126,45 @@ static int capri_std_pin_update(struct pinctrl_dev *pctldev,
+ 		 * ignored.
+ 		 */
+ 		case PIN_CONFIG_BIAS_DISABLE:
+-			capri_pin_update(val, mask, 0,
+-					CAPRI_PIN_SHIFT(STD, PULL_UP),
+-					CAPRI_PIN_MASK(STD, PULL_UP));
+-			capri_pin_update(val, mask, 0,
+-					CAPRI_PIN_SHIFT(STD, PULL_DN),
+-					CAPRI_PIN_MASK(STD, PULL_DN));
++			bcm281xx_pin_update(val, mask, 0,
++				BCM281XX_PIN_SHIFT(STD, PULL_UP),
++				BCM281XX_PIN_MASK(STD, PULL_UP));
++			bcm281xx_pin_update(val, mask, 0,
++				BCM281XX_PIN_SHIFT(STD, PULL_DN),
++				BCM281XX_PIN_MASK(STD, PULL_DN));
+ 			break;
+ 
+ 		case PIN_CONFIG_BIAS_PULL_UP:
+-			capri_pin_update(val, mask, 1,
+-					CAPRI_PIN_SHIFT(STD, PULL_UP),
+-					CAPRI_PIN_MASK(STD, PULL_UP));
+-			capri_pin_update(val, mask, 0,
+-					CAPRI_PIN_SHIFT(STD, PULL_DN),
+-					CAPRI_PIN_MASK(STD, PULL_DN));
++			bcm281xx_pin_update(val, mask, 1,
++				BCM281XX_PIN_SHIFT(STD, PULL_UP),
++				BCM281XX_PIN_MASK(STD, PULL_UP));
++			bcm281xx_pin_update(val, mask, 0,
++				BCM281XX_PIN_SHIFT(STD, PULL_DN),
++				BCM281XX_PIN_MASK(STD, PULL_DN));
+ 			break;
+ 
+ 		case PIN_CONFIG_BIAS_PULL_DOWN:
+-			capri_pin_update(val, mask, 0,
+-					CAPRI_PIN_SHIFT(STD, PULL_UP),
+-					CAPRI_PIN_MASK(STD, PULL_UP));
+-			capri_pin_update(val, mask, 1,
+-					CAPRI_PIN_SHIFT(STD, PULL_DN),
+-					CAPRI_PIN_MASK(STD, PULL_DN));
++			bcm281xx_pin_update(val, mask, 0,
++				BCM281XX_PIN_SHIFT(STD, PULL_UP),
++				BCM281XX_PIN_MASK(STD, PULL_UP));
++			bcm281xx_pin_update(val, mask, 1,
++				BCM281XX_PIN_SHIFT(STD, PULL_DN),
++				BCM281XX_PIN_MASK(STD, PULL_DN));
+ 			break;
+ 
+ 		case PIN_CONFIG_SLEW_RATE:
+ 			arg = (arg >= 1 ? 1 : 0);
+-			capri_pin_update(val, mask, arg,
+-					CAPRI_PIN_SHIFT(STD, SLEW),
+-					CAPRI_PIN_MASK(STD, SLEW));
++			bcm281xx_pin_update(val, mask, arg,
++				BCM281XX_PIN_SHIFT(STD, SLEW),
++				BCM281XX_PIN_MASK(STD, SLEW));
+ 			break;
+ 
+ 		case PIN_CONFIG_INPUT_ENABLE:
+ 			/* inversed since register is for input _disable_ */
+ 			arg = (arg >= 1 ? 0 : 1);
+-			capri_pin_update(val, mask, arg,
+-					CAPRI_PIN_SHIFT(STD, INPUT_DIS),
+-					CAPRI_PIN_MASK(STD, INPUT_DIS));
++			bcm281xx_pin_update(val, mask, arg,
++				BCM281XX_PIN_SHIFT(STD, INPUT_DIS),
++				BCM281XX_PIN_MASK(STD, INPUT_DIS));
+ 			break;
+ 
+ 		case PIN_CONFIG_DRIVE_STRENGTH:
+@@ -1173,9 +1177,9 @@ static int capri_std_pin_update(struct pinctrl_dev *pctldev,
+ 					arg, pdata->pins[pin].name, pin);
+ 				return -EINVAL;
+ 			}
+-			capri_pin_update(val, mask, (arg/2)-1,
+-					CAPRI_PIN_SHIFT(STD, DRV_STR),
+-					CAPRI_PIN_MASK(STD, DRV_STR));
++			bcm281xx_pin_update(val, mask, (arg/2)-1,
++				BCM281XX_PIN_SHIFT(STD, DRV_STR),
++				BCM281XX_PIN_MASK(STD, DRV_STR));
+ 			break;
+ 
+ 		default:
+@@ -1203,17 +1207,19 @@ static int capri_std_pin_update(struct pinctrl_dev *pctldev,
+  *   0b111: 568 Ohm
+  * This array maps pull-up strength in Ohms to register values (1+index).
+  */
+-static const u16 capri_pullup_map[] = {1200, 1800, 720, 2700, 831, 1080, 568};
++static const u16 bcm281xx_pullup_map[] = {
++	1200, 1800, 720, 2700, 831, 1080, 568
 +};
-+
-+struct exynos_pmu_data {
-+	struct device		*dev;
-+	enum exynos_pmu_id	pmu_id;
-+	void __iomem		*regs;
-+};
-+
-+struct exynos_pmu_data		*pmu_data;
-+const struct exynos_pmu_conf    *exynos_pmu_config;
-+typedef int (*exynos_pmu_init_t)(void);
-+
-+static const struct exynos_pmu_conf exynos4210_pmu_config[] = {
-+	/* { .offset = address, .val = { AFTR, LPA, SLEEP } */
-+	{ S5P_ARM_CORE0_LOWPWR,			{ 0x0, 0x0, 0x2 } },
-+	{ S5P_DIS_IRQ_CORE0,			{ 0x0, 0x0, 0x0 } },
-+	{ S5P_DIS_IRQ_CENTRAL0,			{ 0x0, 0x0, 0x0 } },
-+	{ S5P_ARM_CORE1_LOWPWR,			{ 0x0, 0x0, 0x2 } },
-+	{ S5P_DIS_IRQ_CORE1,			{ 0x0, 0x0, 0x0 } },
-+	{ S5P_DIS_IRQ_CENTRAL1,			{ 0x0, 0x0, 0x0 } },
-+	{ S5P_ARM_COMMON_LOWPWR,		{ 0x0, 0x0, 0x2 } },
-+	{ S5P_L2_0_LOWPWR,			{ 0x2, 0x2, 0x3 } },
-+	{ S5P_L2_1_LOWPWR,			{ 0x2, 0x2, 0x3 } },
-+	{ S5P_CMU_ACLKSTOP_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_CMU_SCLKSTOP_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_CMU_RESET_LOWPWR,			{ 0x1, 0x1, 0x0 } },
-+	{ S5P_APLL_SYSCLK_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_MPLL_SYSCLK_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_VPLL_SYSCLK_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_EPLL_SYSCLK_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_CMU_CLKSTOP_GPS_ALIVE_LOWPWR,	{ 0x1, 0x1, 0x0 } },
-+	{ S5P_CMU_RESET_GPSALIVE_LOWPWR,	{ 0x1, 0x1, 0x0 } },
-+	{ S5P_CMU_CLKSTOP_CAM_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_CMU_CLKSTOP_TV_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_CMU_CLKSTOP_MFC_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_CMU_CLKSTOP_G3D_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_CMU_CLKSTOP_LCD0_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_CMU_CLKSTOP_LCD1_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_CMU_CLKSTOP_MAUDIO_LOWPWR,	{ 0x1, 0x1, 0x0 } },
-+	{ S5P_CMU_CLKSTOP_GPS_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_CMU_RESET_CAM_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_CMU_RESET_TV_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_CMU_RESET_MFC_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_CMU_RESET_G3D_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_CMU_RESET_LCD0_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_CMU_RESET_LCD1_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_CMU_RESET_MAUDIO_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_CMU_RESET_GPS_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_TOP_BUS_LOWPWR,			{ 0x3, 0x0, 0x0 } },
-+	{ S5P_TOP_RETENTION_LOWPWR,		{ 0x1, 0x0, 0x1 } },
-+	{ S5P_TOP_PWR_LOWPWR,			{ 0x3, 0x0, 0x3 } },
-+	{ S5P_LOGIC_RESET_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_ONENAND_MEM_LOWPWR,		{ 0x3, 0x0, 0x0 } },
-+	{ S5P_MODIMIF_MEM_LOWPWR,		{ 0x3, 0x0, 0x0 } },
-+	{ S5P_G2D_ACP_MEM_LOWPWR,		{ 0x3, 0x0, 0x0 } },
-+	{ S5P_USBOTG_MEM_LOWPWR,		{ 0x3, 0x0, 0x0 } },
-+	{ S5P_HSMMC_MEM_LOWPWR,			{ 0x3, 0x0, 0x0 } },
-+	{ S5P_CSSYS_MEM_LOWPWR,			{ 0x3, 0x0, 0x0 } },
-+	{ S5P_SECSS_MEM_LOWPWR,			{ 0x3, 0x0, 0x0 } },
-+	{ S5P_PCIE_MEM_LOWPWR,			{ 0x3, 0x0, 0x0 } },
-+	{ S5P_SATA_MEM_LOWPWR,			{ 0x3, 0x0, 0x0 } },
-+	{ S5P_PAD_RETENTION_DRAM_LOWPWR,	{ 0x1, 0x0, 0x0 } },
-+	{ S5P_PAD_RETENTION_MAUDIO_LOWPWR,	{ 0x1, 0x1, 0x0 } },
-+	{ S5P_PAD_RETENTION_GPIO_LOWPWR,	{ 0x1, 0x0, 0x0 } },
-+	{ S5P_PAD_RETENTION_UART_LOWPWR,	{ 0x1, 0x0, 0x0 } },
-+	{ S5P_PAD_RETENTION_MMCA_LOWPWR,	{ 0x1, 0x0, 0x0 } },
-+	{ S5P_PAD_RETENTION_MMCB_LOWPWR,	{ 0x1, 0x0, 0x0 } },
-+	{ S5P_PAD_RETENTION_EBIA_LOWPWR,	{ 0x1, 0x0, 0x0 } },
-+	{ S5P_PAD_RETENTION_EBIB_LOWPWR,	{ 0x1, 0x0, 0x0 } },
-+	{ S5P_PAD_RETENTION_ISOLATION_LOWPWR,	{ 0x1, 0x0, 0x0 } },
-+	{ S5P_PAD_RETENTION_ALV_SEL_LOWPWR,	{ 0x1, 0x0, 0x0 } },
-+	{ S5P_XUSBXTI_LOWPWR,			{ 0x1, 0x1, 0x0 } },
-+	{ S5P_XXTI_LOWPWR,			{ 0x1, 0x1, 0x0 } },
-+	{ S5P_EXT_REGULATOR_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_GPIO_MODE_LOWPWR,			{ 0x1, 0x0, 0x0 } },
-+	{ S5P_GPIO_MODE_MAUDIO_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_CAM_LOWPWR,			{ 0x7, 0x0, 0x0 } },
-+	{ S5P_TV_LOWPWR,			{ 0x7, 0x0, 0x0 } },
-+	{ S5P_MFC_LOWPWR,			{ 0x7, 0x0, 0x0 } },
-+	{ S5P_G3D_LOWPWR,			{ 0x7, 0x0, 0x0 } },
-+	{ S5P_LCD0_LOWPWR,			{ 0x7, 0x0, 0x0 } },
-+	{ S5P_LCD1_LOWPWR,			{ 0x7, 0x0, 0x0 } },
-+	{ S5P_MAUDIO_LOWPWR,			{ 0x7, 0x7, 0x0 } },
-+	{ S5P_GPS_LOWPWR,			{ 0x7, 0x0, 0x0 } },
-+	{ S5P_GPS_ALIVE_LOWPWR,			{ 0x7, 0x0, 0x0 } },
-+	{ PMU_TABLE_END,},
-+};
-+
-+static const struct exynos_pmu_conf exynos4x12_pmu_config[] = {
-+	{ S5P_ARM_CORE0_LOWPWR,			{ 0x0, 0x0, 0x2 } },
-+	{ S5P_DIS_IRQ_CORE0,			{ 0x0, 0x0, 0x0 } },
-+	{ S5P_DIS_IRQ_CENTRAL0,			{ 0x0, 0x0, 0x0 } },
-+	{ S5P_ARM_CORE1_LOWPWR,			{ 0x0, 0x0, 0x2 } },
-+	{ S5P_DIS_IRQ_CORE1,			{ 0x0, 0x0, 0x0 } },
-+	{ S5P_DIS_IRQ_CENTRAL1,			{ 0x0, 0x0, 0x0 } },
-+	{ S5P_ISP_ARM_LOWPWR,			{ 0x1, 0x0, 0x0 } },
-+	{ S5P_DIS_IRQ_ISP_ARM_LOCAL_LOWPWR,	{ 0x0, 0x0, 0x0 } },
-+	{ S5P_DIS_IRQ_ISP_ARM_CENTRAL_LOWPWR,	{ 0x0, 0x0, 0x0 } },
-+	{ S5P_ARM_COMMON_LOWPWR,		{ 0x0, 0x0, 0x2 } },
-+	{ S5P_L2_0_LOWPWR,			{ 0x0, 0x0, 0x3 } },
-+	/* XXX_OPTION register should be set other field */
-+	{ S5P_ARM_L2_0_OPTION,			{ 0x10, 0x10, 0x0 } },
-+	{ S5P_L2_1_LOWPWR,			{ 0x0, 0x0, 0x3 } },
-+	{ S5P_ARM_L2_1_OPTION,			{ 0x10, 0x10, 0x0 } },
-+	{ S5P_CMU_ACLKSTOP_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_CMU_SCLKSTOP_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_CMU_RESET_LOWPWR,			{ 0x1, 0x1, 0x0 } },
-+	{ S5P_DRAM_FREQ_DOWN_LOWPWR,		{ 0x1, 0x1, 0x1 } },
-+	{ S5P_DDRPHY_DLLOFF_LOWPWR,		{ 0x1, 0x1, 0x1 } },
-+	{ S5P_LPDDR_PHY_DLL_LOCK_LOWPWR,	{ 0x1, 0x1, 0x1 } },
-+	{ S5P_CMU_ACLKSTOP_COREBLK_LOWPWR,	{ 0x1, 0x0, 0x0 } },
-+	{ S5P_CMU_SCLKSTOP_COREBLK_LOWPWR,	{ 0x1, 0x0, 0x0 } },
-+	{ S5P_CMU_RESET_COREBLK_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_APLL_SYSCLK_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_MPLL_SYSCLK_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_VPLL_SYSCLK_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_EPLL_SYSCLK_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_MPLLUSER_SYSCLK_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_CMU_CLKSTOP_GPS_ALIVE_LOWPWR,	{ 0x1, 0x0, 0x0 } },
-+	{ S5P_CMU_RESET_GPSALIVE_LOWPWR,	{ 0x1, 0x0, 0x0 } },
-+	{ S5P_CMU_CLKSTOP_CAM_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_CMU_CLKSTOP_TV_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_CMU_CLKSTOP_MFC_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_CMU_CLKSTOP_G3D_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_CMU_CLKSTOP_LCD0_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_CMU_CLKSTOP_ISP_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_CMU_CLKSTOP_MAUDIO_LOWPWR,	{ 0x1, 0x0, 0x0 } },
-+	{ S5P_CMU_CLKSTOP_GPS_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_CMU_RESET_CAM_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_CMU_RESET_TV_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_CMU_RESET_MFC_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_CMU_RESET_G3D_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_CMU_RESET_LCD0_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_CMU_RESET_ISP_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_CMU_RESET_MAUDIO_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_CMU_RESET_GPS_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_TOP_BUS_LOWPWR,			{ 0x3, 0x0, 0x0 } },
-+	{ S5P_TOP_RETENTION_LOWPWR,		{ 0x1, 0x0, 0x1 } },
-+	{ S5P_TOP_PWR_LOWPWR,			{ 0x3, 0x0, 0x3 } },
-+	{ S5P_TOP_BUS_COREBLK_LOWPWR,		{ 0x3, 0x0, 0x0 } },
-+	{ S5P_TOP_RETENTION_COREBLK_LOWPWR,	{ 0x1, 0x0, 0x1 } },
-+	{ S5P_TOP_PWR_COREBLK_LOWPWR,		{ 0x3, 0x0, 0x3 } },
-+	{ S5P_LOGIC_RESET_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_OSCCLK_GATE_LOWPWR,		{ 0x1, 0x0, 0x1 } },
-+	{ S5P_LOGIC_RESET_COREBLK_LOWPWR,	{ 0x1, 0x1, 0x0 } },
-+	{ S5P_OSCCLK_GATE_COREBLK_LOWPWR,	{ 0x1, 0x0, 0x1 } },
-+	{ S5P_ONENAND_MEM_LOWPWR,		{ 0x3, 0x0, 0x0 } },
-+	{ S5P_ONENAND_MEM_OPTION,		{ 0x10, 0x10, 0x0 } },
-+	{ S5P_HSI_MEM_LOWPWR,			{ 0x3, 0x0, 0x0 } },
-+	{ S5P_HSI_MEM_OPTION,			{ 0x10, 0x10, 0x0 } },
-+	{ S5P_G2D_ACP_MEM_LOWPWR,		{ 0x3, 0x0, 0x0 } },
-+	{ S5P_G2D_ACP_MEM_OPTION,		{ 0x10, 0x10, 0x0 } },
-+	{ S5P_USBOTG_MEM_LOWPWR,		{ 0x3, 0x0, 0x0 } },
-+	{ S5P_USBOTG_MEM_OPTION,		{ 0x10, 0x10, 0x0 } },
-+	{ S5P_HSMMC_MEM_LOWPWR,			{ 0x3, 0x0, 0x0 } },
-+	{ S5P_HSMMC_MEM_OPTION,			{ 0x10, 0x10, 0x0 } },
-+	{ S5P_CSSYS_MEM_LOWPWR,			{ 0x3, 0x0, 0x0 } },
-+	{ S5P_CSSYS_MEM_OPTION,			{ 0x10, 0x10, 0x0 } },
-+	{ S5P_SECSS_MEM_LOWPWR,			{ 0x3, 0x0, 0x0 } },
-+	{ S5P_SECSS_MEM_OPTION,			{ 0x10, 0x10, 0x0 } },
-+	{ S5P_ROTATOR_MEM_LOWPWR,		{ 0x3, 0x0, 0x0 } },
-+	{ S5P_ROTATOR_MEM_OPTION,		{ 0x10, 0x10, 0x0 } },
-+	{ S5P_PAD_RETENTION_DRAM_LOWPWR,	{ 0x1, 0x0, 0x0 } },
-+	{ S5P_PAD_RETENTION_MAUDIO_LOWPWR,	{ 0x1, 0x1, 0x0 } },
-+	{ S5P_PAD_RETENTION_GPIO_LOWPWR,	{ 0x1, 0x0, 0x0 } },
-+	{ S5P_PAD_RETENTION_UART_LOWPWR,	{ 0x1, 0x0, 0x0 } },
-+	{ S5P_PAD_RETENTION_MMCA_LOWPWR,	{ 0x1, 0x0, 0x0 } },
-+	{ S5P_PAD_RETENTION_MMCB_LOWPWR,	{ 0x1, 0x0, 0x0 } },
-+	{ S5P_PAD_RETENTION_EBIA_LOWPWR,	{ 0x1, 0x0, 0x0 } },
-+	{ S5P_PAD_RETENTION_EBIB_LOWPWR,	{ 0x1, 0x0, 0x0 } },
-+	{ S5P_PAD_RETENTION_GPIO_COREBLK_LOWPWR, { 0x1, 0x0, 0x0 } },
-+	{ S5P_PAD_RETENTION_ISOLATION_LOWPWR,	{ 0x1, 0x0, 0x0 } },
-+	{ S5P_PAD_ISOLATION_COREBLK_LOWPWR,	{ 0x1, 0x0, 0x0 } },
-+	{ S5P_PAD_RETENTION_ALV_SEL_LOWPWR,	{ 0x1, 0x0, 0x0 } },
-+	{ S5P_XUSBXTI_LOWPWR,			{ 0x1, 0x1, 0x0 } },
-+	{ S5P_XXTI_LOWPWR,			{ 0x1, 0x1, 0x0 } },
-+	{ S5P_EXT_REGULATOR_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_GPIO_MODE_LOWPWR,			{ 0x1, 0x0, 0x0 } },
-+	{ S5P_GPIO_MODE_COREBLK_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_GPIO_MODE_MAUDIO_LOWPWR,		{ 0x1, 0x1, 0x0 } },
-+	{ S5P_TOP_ASB_RESET_LOWPWR,		{ 0x1, 0x1, 0x1 } },
-+	{ S5P_TOP_ASB_ISOLATION_LOWPWR,		{ 0x1, 0x0, 0x1 } },
-+	{ S5P_CAM_LOWPWR,			{ 0x7, 0x0, 0x0 } },
-+	{ S5P_TV_LOWPWR,			{ 0x7, 0x0, 0x0 } },
-+	{ S5P_MFC_LOWPWR,			{ 0x7, 0x0, 0x0 } },
-+	{ S5P_G3D_LOWPWR,			{ 0x7, 0x0, 0x0 } },
-+	{ S5P_LCD0_LOWPWR,			{ 0x7, 0x0, 0x0 } },
-+	{ S5P_ISP_LOWPWR,			{ 0x7, 0x0, 0x0 } },
-+	{ S5P_MAUDIO_LOWPWR,			{ 0x7, 0x7, 0x0 } },
-+	{ S5P_GPS_LOWPWR,			{ 0x7, 0x0, 0x0 } },
-+	{ S5P_GPS_ALIVE_LOWPWR,			{ 0x7, 0x0, 0x0 } },
-+	{ S5P_CMU_SYSCLK_ISP_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ S5P_CMU_SYSCLK_GPS_LOWPWR,		{ 0x1, 0x0, 0x0 } },
-+	{ PMU_TABLE_END,},
-+};
-+
-+static const struct exynos_pmu_conf exynos4412_pmu_config[] = {
-+	{ S5P_ARM_CORE2_LOWPWR,			{ 0x0, 0x0, 0x2 } },
-+	{ S5P_DIS_IRQ_CORE2,			{ 0x0, 0x0, 0x0 } },
-+	{ S5P_DIS_IRQ_CENTRAL2,			{ 0x0, 0x0, 0x0 } },
-+	{ S5P_ARM_CORE3_LOWPWR,			{ 0x0, 0x0, 0x2 } },
-+	{ S5P_DIS_IRQ_CORE3,			{ 0x0, 0x0, 0x0 } },
-+	{ S5P_DIS_IRQ_CENTRAL3,			{ 0x0, 0x0, 0x0 } },
-+	{ PMU_TABLE_END,},
-+};
-+
-+static const struct exynos_pmu_conf exynos5250_pmu_config[] = {
-+	/* { .offset = address, .val = { AFTR, LPA, SLEEP } */
-+	{ EXYNOS5_ARM_CORE0_SYS_PWR_REG,		{ 0x0, 0x0, 0x2} },
-+	{ EXYNOS5_DIS_IRQ_ARM_CORE0_LOCAL_SYS_PWR_REG,	{ 0x0, 0x0, 0x0} },
-+	{ EXYNOS5_DIS_IRQ_ARM_CORE0_CENTRAL_SYS_PWR_REG, { 0x0, 0x0, 0x0} },
-+	{ EXYNOS5_ARM_CORE1_SYS_PWR_REG,		{ 0x0, 0x0, 0x2} },
-+	{ EXYNOS5_DIS_IRQ_ARM_CORE1_LOCAL_SYS_PWR_REG,	{ 0x0, 0x0, 0x0} },
-+	{ EXYNOS5_DIS_IRQ_ARM_CORE1_CENTRAL_SYS_PWR_REG, { 0x0, 0x0, 0x0} },
-+	{ EXYNOS5_FSYS_ARM_SYS_PWR_REG,			{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_DIS_IRQ_FSYS_ARM_CENTRAL_SYS_PWR_REG,	{ 0x1, 0x1, 0x1} },
-+	{ EXYNOS5_ISP_ARM_SYS_PWR_REG,			{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_DIS_IRQ_ISP_ARM_LOCAL_SYS_PWR_REG,	{ 0x0, 0x0, 0x0} },
-+	{ EXYNOS5_DIS_IRQ_ISP_ARM_CENTRAL_SYS_PWR_REG,	{ 0x0, 0x0, 0x0} },
-+	{ EXYNOS5_ARM_COMMON_SYS_PWR_REG,		{ 0x0, 0x0, 0x2} },
-+	{ EXYNOS5_ARM_L2_SYS_PWR_REG,			{ 0x3, 0x3, 0x3} },
-+	{ EXYNOS5_ARM_L2_OPTION,			{ 0x10, 0x10, 0x0 } },
-+	{ EXYNOS5_CMU_ACLKSTOP_SYS_PWR_REG,		{ 0x1, 0x0, 0x1} },
-+	{ EXYNOS5_CMU_SCLKSTOP_SYS_PWR_REG,		{ 0x1, 0x0, 0x1} },
-+	{ EXYNOS5_CMU_RESET_SYS_PWR_REG,		{ 0x1, 0x1, 0x0} },
-+	{ EXYNOS5_CMU_ACLKSTOP_SYSMEM_SYS_PWR_REG,	{ 0x1, 0x0, 0x1} },
-+	{ EXYNOS5_CMU_SCLKSTOP_SYSMEM_SYS_PWR_REG,	{ 0x1, 0x0, 0x1} },
-+	{ EXYNOS5_CMU_RESET_SYSMEM_SYS_PWR_REG,		{ 0x1, 0x1, 0x0} },
-+	{ EXYNOS5_DRAM_FREQ_DOWN_SYS_PWR_REG,		{ 0x1, 0x1, 0x1} },
-+	{ EXYNOS5_DDRPHY_DLLOFF_SYS_PWR_REG,		{ 0x1, 0x1, 0x1} },
-+	{ EXYNOS5_DDRPHY_DLLLOCK_SYS_PWR_REG,		{ 0x1, 0x1, 0x1} },
-+	{ EXYNOS5_APLL_SYSCLK_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_MPLL_SYSCLK_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_VPLL_SYSCLK_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_EPLL_SYSCLK_SYS_PWR_REG,		{ 0x1, 0x1, 0x0} },
-+	{ EXYNOS5_BPLL_SYSCLK_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_CPLL_SYSCLK_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_MPLLUSER_SYSCLK_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_BPLLUSER_SYSCLK_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_TOP_BUS_SYS_PWR_REG,			{ 0x3, 0x0, 0x0} },
-+	{ EXYNOS5_TOP_RETENTION_SYS_PWR_REG,		{ 0x1, 0x0, 0x1} },
-+	{ EXYNOS5_TOP_PWR_SYS_PWR_REG,			{ 0x3, 0x0, 0x3} },
-+	{ EXYNOS5_TOP_BUS_SYSMEM_SYS_PWR_REG,		{ 0x3, 0x0, 0x0} },
-+	{ EXYNOS5_TOP_RETENTION_SYSMEM_SYS_PWR_REG,	{ 0x1, 0x0, 0x1} },
-+	{ EXYNOS5_TOP_PWR_SYSMEM_SYS_PWR_REG,		{ 0x3, 0x0, 0x3} },
-+	{ EXYNOS5_LOGIC_RESET_SYS_PWR_REG,		{ 0x1, 0x1, 0x0} },
-+	{ EXYNOS5_OSCCLK_GATE_SYS_PWR_REG,		{ 0x1, 0x0, 0x1} },
-+	{ EXYNOS5_LOGIC_RESET_SYSMEM_SYS_PWR_REG,	{ 0x1, 0x1, 0x0} },
-+	{ EXYNOS5_OSCCLK_GATE_SYSMEM_SYS_PWR_REG,	{ 0x1, 0x0, 0x1} },
-+	{ EXYNOS5_USBOTG_MEM_SYS_PWR_REG,		{ 0x3, 0x0, 0x0} },
-+	{ EXYNOS5_G2D_MEM_SYS_PWR_REG,			{ 0x3, 0x0, 0x0} },
-+	{ EXYNOS5_USBDRD_MEM_SYS_PWR_REG,		{ 0x3, 0x0, 0x0} },
-+	{ EXYNOS5_SDMMC_MEM_SYS_PWR_REG,		{ 0x3, 0x0, 0x0} },
-+	{ EXYNOS5_CSSYS_MEM_SYS_PWR_REG,		{ 0x3, 0x0, 0x0} },
-+	{ EXYNOS5_SECSS_MEM_SYS_PWR_REG,		{ 0x3, 0x0, 0x0} },
-+	{ EXYNOS5_ROTATOR_MEM_SYS_PWR_REG,		{ 0x3, 0x0, 0x0} },
-+	{ EXYNOS5_INTRAM_MEM_SYS_PWR_REG,		{ 0x3, 0x0, 0x0} },
-+	{ EXYNOS5_INTROM_MEM_SYS_PWR_REG,		{ 0x3, 0x0, 0x0} },
-+	{ EXYNOS5_JPEG_MEM_SYS_PWR_REG,			{ 0x3, 0x0, 0x0} },
-+	{ EXYNOS5_HSI_MEM_SYS_PWR_REG,			{ 0x3, 0x0, 0x0} },
-+	{ EXYNOS5_MCUIOP_MEM_SYS_PWR_REG,		{ 0x3, 0x0, 0x0} },
-+	{ EXYNOS5_SATA_MEM_SYS_PWR_REG,			{ 0x3, 0x0, 0x0} },
-+	{ EXYNOS5_PAD_RETENTION_DRAM_SYS_PWR_REG,	{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_PAD_RETENTION_MAU_SYS_PWR_REG,	{ 0x1, 0x1, 0x0} },
-+	{ EXYNOS5_PAD_RETENTION_GPIO_SYS_PWR_REG,	{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_PAD_RETENTION_UART_SYS_PWR_REG,	{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_PAD_RETENTION_MMCA_SYS_PWR_REG,	{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_PAD_RETENTION_MMCB_SYS_PWR_REG,	{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_PAD_RETENTION_EBIA_SYS_PWR_REG,	{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_PAD_RETENTION_EBIB_SYS_PWR_REG,	{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_PAD_RETENTION_SPI_SYS_PWR_REG,	{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_PAD_RETENTION_GPIO_SYSMEM_SYS_PWR_REG, { 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_PAD_ISOLATION_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_PAD_ISOLATION_SYSMEM_SYS_PWR_REG,	{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_PAD_ALV_SEL_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_XUSBXTI_SYS_PWR_REG,			{ 0x1, 0x1, 0x1} },
-+	{ EXYNOS5_XXTI_SYS_PWR_REG,			{ 0x1, 0x1, 0x0} },
-+	{ EXYNOS5_EXT_REGULATOR_SYS_PWR_REG,		{ 0x1, 0x1, 0x0} },
-+	{ EXYNOS5_GPIO_MODE_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_GPIO_MODE_SYSMEM_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_GPIO_MODE_MAU_SYS_PWR_REG,		{ 0x1, 0x1, 0x0} },
-+	{ EXYNOS5_TOP_ASB_RESET_SYS_PWR_REG,		{ 0x1, 0x1, 0x1} },
-+	{ EXYNOS5_TOP_ASB_ISOLATION_SYS_PWR_REG,	{ 0x1, 0x0, 0x1} },
-+	{ EXYNOS5_GSCL_SYS_PWR_REG,			{ 0x7, 0x0, 0x0} },
-+	{ EXYNOS5_ISP_SYS_PWR_REG,			{ 0x7, 0x0, 0x0} },
-+	{ EXYNOS5_MFC_SYS_PWR_REG,			{ 0x7, 0x0, 0x0} },
-+	{ EXYNOS5_G3D_SYS_PWR_REG,			{ 0x7, 0x0, 0x0} },
-+	{ EXYNOS5_DISP1_SYS_PWR_REG,			{ 0x7, 0x0, 0x0} },
-+	{ EXYNOS5_MAU_SYS_PWR_REG,			{ 0x7, 0x7, 0x0} },
-+	{ EXYNOS5_CMU_CLKSTOP_GSCL_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_CMU_CLKSTOP_ISP_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_CMU_CLKSTOP_MFC_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_CMU_CLKSTOP_G3D_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_CMU_CLKSTOP_DISP1_SYS_PWR_REG,	{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_CMU_CLKSTOP_MAU_SYS_PWR_REG,		{ 0x1, 0x1, 0x0} },
-+	{ EXYNOS5_CMU_SYSCLK_GSCL_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_CMU_SYSCLK_ISP_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_CMU_SYSCLK_MFC_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_CMU_SYSCLK_G3D_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_CMU_SYSCLK_DISP1_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_CMU_SYSCLK_MAU_SYS_PWR_REG,		{ 0x1, 0x1, 0x0} },
-+	{ EXYNOS5_CMU_RESET_GSCL_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_CMU_RESET_ISP_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_CMU_RESET_MFC_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_CMU_RESET_G3D_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_CMU_RESET_DISP1_SYS_PWR_REG,		{ 0x1, 0x0, 0x0} },
-+	{ EXYNOS5_CMU_RESET_MAU_SYS_PWR_REG,		{ 0x1, 0x1, 0x0} },
-+	{ PMU_TABLE_END,},
-+};
-+
-+static unsigned int const exynos5_list_both_cnt_feed[] = {
-+	EXYNOS5_ARM_CORE0_OPTION,
-+	EXYNOS5_ARM_CORE1_OPTION,
-+	EXYNOS5_ARM_COMMON_OPTION,
-+	EXYNOS5_GSCL_OPTION,
-+	EXYNOS5_ISP_OPTION,
-+	EXYNOS5_MFC_OPTION,
-+	EXYNOS5_G3D_OPTION,
-+	EXYNOS5_DISP1_OPTION,
-+	EXYNOS5_MAU_OPTION,
-+	EXYNOS5_TOP_PWR_OPTION,
-+	EXYNOS5_TOP_PWR_SYSMEM_OPTION,
-+};
-+
-+static unsigned int const exynos5_list_diable_wfi_wfe[] = {
-+	EXYNOS5_ARM_CORE1_OPTION,
-+	EXYNOS5_FSYS_ARM_OPTION,
-+	EXYNOS5_ISP_ARM_OPTION,
-+};
-+
-+static void exynos5_init_pmu(void)
-+{
-+	unsigned int i;
-+	unsigned int val;
-+
-+	/*
-+	 * Enable both SC_FEEDBACK and SC_COUNTER
-+	 */
-+	for (i = 0 ; i < ARRAY_SIZE(exynos5_list_both_cnt_feed) ; i++) {
-+		val = __raw_readl(pmu_data->regs +
-+				exynos5_list_both_cnt_feed[i]);
-+		val |= (EXYNOS5_USE_SC_FEEDBACK |
-+			EXYNOS5_USE_SC_COUNTER);
-+		__raw_writel(val, pmu_data->regs +
-+				exynos5_list_both_cnt_feed[i]);
-+	}
-+
-+	/*
-+	 * SKIP_DEACTIVATE_ACEACP_IN_PWDN_BITFIELD Enable
-+	 */
-+	val = __raw_readl(pmu_data->regs + EXYNOS5_ARM_COMMON_OPTION);
-+	val |= EXYNOS5_SKIP_DEACTIVATE_ACEACP_IN_PWDN;
-+	__raw_writel(val, pmu_data->regs + EXYNOS5_ARM_COMMON_OPTION);
-+
-+	/*
-+	 * Disable WFI/WFE on XXX_OPTION
-+	 */
-+	for (i = 0 ; i < ARRAY_SIZE(exynos5_list_diable_wfi_wfe) ; i++) {
-+		val = __raw_readl(pmu_data->regs +
-+				exynos5_list_diable_wfi_wfe[i]);
-+		val &= ~(EXYNOS5_OPTION_USE_STANDBYWFE |
-+			 EXYNOS5_OPTION_USE_STANDBYWFI);
-+		__raw_writel(val, pmu_data->regs +
-+				exynos5_list_diable_wfi_wfe[i]);
-+	}
-+}
-+
-+void exynos_sys_powerdown_conf(enum sys_powerdown mode)
-+{
-+	unsigned int i;
-+
-+	if (pmu_data->pmu_id == PMU_EXYNOS5250)
-+		exynos5_init_pmu();
-+
-+	for (i = 0; (exynos_pmu_config[i].offset != PMU_TABLE_END); i++)
-+		__raw_writel(exynos_pmu_config[i].val[mode],
-+				pmu_data->regs + exynos_pmu_config[i].offset);
-+
-+	if (pmu_data->pmu_id == PMU_EXYNOS4412) {
-+		exynos_pmu_config = exynos4412_pmu_config;
-+		for (i = 0; exynos_pmu_config[i].offset != PMU_TABLE_END; i++)
-+			__raw_writel(exynos_pmu_config[i].val[mode],
-+				pmu_data->regs + exynos_pmu_config[i].offset);
-+	}
-+}
-+
-+static int __init exynos4210_pmu_init(void)
-+{
-+	exynos_pmu_config = exynos4210_pmu_config;
-+	pmu_data->pmu_id = PMU_EXYNOS4210;
-+	pr_info("EXYNOS4210 PMU Initialize\n");
-+
-+	return 0;
-+}
-+
-+static int __init exynos4212_pmu_init(void)
-+{
-+	exynos_pmu_config = exynos4x12_pmu_config;
-+	pmu_data->pmu_id = PMU_EXYNOS4212;
-+	pr_info("EXYNOS4x12 PMU Initialize\n");
-+
-+	return 0;
-+}
-+
-+static int __init exynos4412_pmu_init(void)
-+{
-+	exynos_pmu_config = exynos4x12_pmu_config;
-+	pmu_data->pmu_id = PMU_EXYNOS4412;
-+	pr_info("EXYNOS4412 PMU Initialize\n");
-+
-+	return 0;
-+}
-+
-+static int __init exynos5250_pmu_init(void)
-+{
-+	unsigned int value;
-+
-+	/*
-+	 * When SYS_WDTRESET is set, watchdog timer reset request
-+	 * is ignored by power management unit.
-+	 */
-+	value = __raw_readl(pmu_data->regs + EXYNOS5_AUTO_WDTRESET_DISABLE);
-+	value &= ~EXYNOS5_SYS_WDTRESET;
-+	__raw_writel(value, pmu_data->regs + EXYNOS5_AUTO_WDTRESET_DISABLE);
-+
-+	value = __raw_readl(pmu_data->regs + EXYNOS5_MASK_WDTRESET_REQUEST);
-+	value &= ~EXYNOS5_SYS_WDTRESET;
-+	__raw_writel(value, pmu_data->regs + EXYNOS5_MASK_WDTRESET_REQUEST);
-+
-+	exynos_pmu_config = exynos5250_pmu_config;
-+	pmu_data->pmu_id = PMU_EXYNOS5250;
-+	pr_info("EXYNOS5250 PMU Initialize\n");
-+
-+	return 0;
-+}
-+
-+/*
-+ * PMU platform driver and devicetree bindings.
-+ */
-+static struct of_device_id exynos_pmu_of_device_ids[] = {
-+	{
-+		.compatible = "samsung,exynos4210-pmu",
-+		.data = (void *)exynos4210_pmu_init
-+	},
-+	{
-+		.compatible = "samsung,exynos4212-pmu",
-+		.data = (void *)exynos4212_pmu_init
-+	},
-+	{
-+		.compatible = "samsung,exynos4412-pmu",
-+		.data = (void *)exynos4412_pmu_init
-+	},
-+	{
-+		.compatible = "samsung,exynos5250-pmu",
-+		.data = (void *)exynos5250_pmu_init
-+	},
-+	{},
-+};
-+
-+static int exynos_pmu_probe(struct platform_device *pdev)
-+{
-+	const struct of_device_id *match;
-+	exynos_pmu_init_t exynos_pmu_init;
-+	struct resource *res;
-+
-+	pmu_data = devm_kzalloc(&pdev->dev,
-+			sizeof(struct exynos_pmu_data), GFP_KERNEL);
-+	if (!pmu_data) {
-+		dev_err(&pdev->dev, "exynos_pmu driver probe failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	pmu_data->dev = &pdev->dev;
-+
-+	match = of_match_node(exynos_pmu_of_device_ids, pdev->dev.of_node);
-+	exynos_pmu_init = match->data;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	pmu_data->regs = devm_ioremap_resource(&pdev->dev, res);
-+
-+	exynos_pmu_init();
-+
-+	return 0;
-+};
-+
-+static int exynos_pmu_remove(struct platform_device *pdev)
-+{
-+	exynos_pmu_config = NULL;
-+
-+	return 0;
-+}
-+
-+static struct platform_driver exynos_pmu_driver = {
-+	.driver  = {
-+		.name   = "exynos-pmu",
-+		.of_match_table = exynos_pmu_of_device_ids,
-+	},
-+	.probe = exynos_pmu_probe,
-+	.remove = exynos_pmu_remove,
-+};
-+
-+static int __init exynos_pmu_driver_init(void)
-+{
-+	return platform_driver_register(&exynos_pmu_driver);
-+}
-+arch_initcall(exynos_pmu_driver_init);
-+
-+MODULE_AUTHOR("Younggun Jang <yg1004.jang@samsung.com");
-+MODULE_DESCRIPTION("Exynos PMU driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/mfd/samsung/exynos-pmu.h b/include/linux/mfd/samsung/exynos-pmu.h
-new file mode 100644
-index 0000000..1cc857b
---- /dev/null
-+++ b/include/linux/mfd/samsung/exynos-pmu.h
-@@ -0,0 +1,31 @@
-+/*
-+ * Copyright (c) 2014 Samsung Electronics Co., Ltd.
-+ *		http://www.samsung.com
-+ *
-+ * Header for EXYNOS PMU Driver support
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#ifndef __EXYNOS_PMU_H
-+#define __EXYNOS_PMU_H
-+
-+#define PMU_TABLE_END	0xFFFF
-+
-+enum sys_powerdown {
-+	SYS_AFTR,
-+	SYS_LPA,
-+	SYS_SLEEP,
-+	NUM_SYS_POWERDOWN,
-+};
-+
-+struct exynos_pmu_conf {
-+	unsigned int offset;
-+	unsigned int val[NUM_SYS_POWERDOWN];
-+};
-+
-+extern void exynos_sys_powerdown_conf(enum sys_powerdown mode);
-+
-+#endif /* __EXYNOS_PMU_H */
-diff --git a/include/linux/mfd/samsung/exynos-regs-pmu.h b/include/linux/mfd/samsung/exynos-regs-pmu.h
-new file mode 100644
-index 0000000..ed8259d
---- /dev/null
-+++ b/include/linux/mfd/samsung/exynos-regs-pmu.h
-@@ -0,0 +1,308 @@
-+/*
-+ * Copyright (c) 2014-2015 Samsung Electronics Co., Ltd.
-+ *		http://www.samsung.com
-+ *
-+ * EXYNOS - Power management unit definition
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+*/
-+
-+#ifndef __EXYNOS_REGS_PMU_H
-+#define __EXYNOS_REGS_PMU_H __FILE__
-+
-+#define S5P_CENTRAL_SEQ_CONFIGURATION		0x0200
-+
-+#define S5P_CENTRAL_LOWPWR_CFG			(1 << 16)
-+
-+#define S5P_CENTRAL_SEQ_OPTION			0x0208
-+
-+#define S5P_USE_STANDBY_WFI0			(1 << 16)
-+#define S5P_USE_STANDBY_WFE0			(1 << 24)
-+
-+#define EXYNOS_SWRESET				0x0400
-+#define EXYNOS5440_SWRESET			0x00C4
-+
-+#define S5P_WAKEUP_STAT				0x0600
-+#define S5P_EINT_WAKEUP_MASK			0x0604
-+#define S5P_WAKEUP_MASK				0x0608
-+
-+#define S5P_INFORM0				0x0800
-+#define S5P_INFORM1				0x0804
-+#define S5P_INFORM5				0x0814
-+#define S5P_INFORM6				0x0818
-+#define S5P_INFORM7				0x081C
-+
-+#define S5P_ARM_CORE0_LOWPWR			0x1000
-+#define S5P_DIS_IRQ_CORE0			0x1004
-+#define S5P_DIS_IRQ_CENTRAL0			0x1008
-+#define S5P_ARM_CORE1_LOWPWR			0x1010
-+#define S5P_DIS_IRQ_CORE1			0x1014
-+#define S5P_DIS_IRQ_CENTRAL1			0x1018
-+#define S5P_ARM_COMMON_LOWPWR			0x1080
-+#define S5P_L2_0_LOWPWR				0x10C0
-+#define S5P_L2_1_LOWPWR				0x10C4
-+#define S5P_CMU_ACLKSTOP_LOWPWR			0x1100
-+#define S5P_CMU_SCLKSTOP_LOWPWR			0x1104
-+#define S5P_CMU_RESET_LOWPWR			0x110C
-+#define S5P_APLL_SYSCLK_LOWPWR			0x1120
-+#define S5P_MPLL_SYSCLK_LOWPWR			0x1124
-+#define S5P_VPLL_SYSCLK_LOWPWR			0x1128
-+#define S5P_EPLL_SYSCLK_LOWPWR			0x112C
-+#define S5P_CMU_CLKSTOP_GPS_ALIVE_LOWPWR	0x1138
-+#define S5P_CMU_RESET_GPSALIVE_LOWPWR		0x113C
-+#define S5P_CMU_CLKSTOP_CAM_LOWPWR		0x1140
-+#define S5P_CMU_CLKSTOP_TV_LOWPWR		0x1144
-+#define S5P_CMU_CLKSTOP_MFC_LOWPWR		0x1148
-+#define S5P_CMU_CLKSTOP_G3D_LOWPWR		0x114C
-+#define S5P_CMU_CLKSTOP_LCD0_LOWPWR		0x1150
-+#define S5P_CMU_CLKSTOP_MAUDIO_LOWPWR		0x1158
-+#define S5P_CMU_CLKSTOP_GPS_LOWPWR		0x115C
-+#define S5P_CMU_RESET_CAM_LOWPWR		0x1160
-+#define S5P_CMU_RESET_TV_LOWPWR			0x1164
-+#define S5P_CMU_RESET_MFC_LOWPWR		0x1168
-+#define S5P_CMU_RESET_G3D_LOWPWR		0x116C
-+#define S5P_CMU_RESET_LCD0_LOWPWR		0x1170
-+#define S5P_CMU_RESET_MAUDIO_LOWPWR		0x1178
-+#define S5P_CMU_RESET_GPS_LOWPWR		0x117C
-+#define S5P_TOP_BUS_LOWPWR			0x1180
-+#define S5P_TOP_RETENTION_LOWPWR		0x1184
-+#define S5P_TOP_PWR_LOWPWR			0x1188
-+#define S5P_LOGIC_RESET_LOWPWR			0x11A0
-+#define S5P_ONENAND_MEM_LOWPWR			0x11C0
-+#define S5P_G2D_ACP_MEM_LOWPWR			0x11C8
-+#define S5P_USBOTG_MEM_LOWPWR			0x11CC
-+#define S5P_HSMMC_MEM_LOWPWR			0x11D0
-+#define S5P_CSSYS_MEM_LOWPWR			0x11D4
-+#define S5P_SECSS_MEM_LOWPWR			0x11D8
-+#define S5P_PAD_RETENTION_DRAM_LOWPWR		0x1200
-+#define S5P_PAD_RETENTION_MAUDIO_LOWPWR		0x1204
-+#define S5P_PAD_RETENTION_GPIO_LOWPWR		0x1220
-+#define S5P_PAD_RETENTION_UART_LOWPWR		0x1224
-+#define S5P_PAD_RETENTION_MMCA_LOWPWR		0x1228
-+#define S5P_PAD_RETENTION_MMCB_LOWPWR		0x122C
-+#define S5P_PAD_RETENTION_EBIA_LOWPWR		0x1230
-+#define S5P_PAD_RETENTION_EBIB_LOWPWR		0x1234
-+#define S5P_PAD_RETENTION_ISOLATION_LOWPWR	0x1240
-+#define S5P_PAD_RETENTION_ALV_SEL_LOWPWR	0x1260
-+#define S5P_XUSBXTI_LOWPWR			0x1280
-+#define S5P_XXTI_LOWPWR				0x1284
-+#define S5P_EXT_REGULATOR_LOWPWR		0x12C0
-+#define S5P_GPIO_MODE_LOWPWR			0x1300
-+#define S5P_GPIO_MODE_MAUDIO_LOWPWR		0x1340
-+#define S5P_CAM_LOWPWR				0x1380
-+#define S5P_TV_LOWPWR				0x1384
-+#define S5P_MFC_LOWPWR				0x1388
-+#define S5P_G3D_LOWPWR				0x138C
-+#define S5P_LCD0_LOWPWR				0x1390
-+#define S5P_MAUDIO_LOWPWR			0x1398
-+#define S5P_GPS_LOWPWR				0x139C
-+#define S5P_GPS_ALIVE_LOWPWR			0x13A0
-+
-+#define S5P_ARM_CORE1_CONFIGURATION		0x2080
-+#define S5P_ARM_CORE1_STATUS			0x2084
-+
-+#define S5P_PAD_RET_MAUDIO_OPTION		0x3028
-+#define S5P_PAD_RET_GPIO_OPTION			0x3108
-+#define S5P_PAD_RET_UART_OPTION			0x3128
-+#define S5P_PAD_RET_MMCA_OPTION			0x3148
-+#define S5P_PAD_RET_MMCB_OPTION			0x3168
-+#define S5P_PAD_RET_EBIA_OPTION			0x3188
-+#define S5P_PAD_RET_EBIB_OPTION			0x31A8
-+
-+#define S5P_CORE_LOCAL_PWR_EN			0x3
-+
-+#define S5P_CHECK_SLEEP				0x00000BAD
-+
-+/* Only for EXYNOS4210 */
-+#define S5P_CMU_CLKSTOP_LCD1_LOWPWR	0x1154
-+#define S5P_CMU_RESET_LCD1_LOWPWR	0x1174
-+#define S5P_MODIMIF_MEM_LOWPWR		0x11C4
-+#define S5P_PCIE_MEM_LOWPWR		0x11E0
-+#define S5P_SATA_MEM_LOWPWR		0x11E4
-+#define S5P_LCD1_LOWPWR			0x1394
-+
-+/* Only for EXYNOS4x12 */
-+#define S5P_ISP_ARM_LOWPWR			0x1050
-+#define S5P_DIS_IRQ_ISP_ARM_LOCAL_LOWPWR	0x1054
-+#define S5P_DIS_IRQ_ISP_ARM_CENTRAL_LOWPWR	0x1058
-+#define S5P_CMU_ACLKSTOP_COREBLK_LOWPWR		0x1110
-+#define S5P_CMU_SCLKSTOP_COREBLK_LOWPWR		0x1114
-+#define S5P_CMU_RESET_COREBLK_LOWPWR		0x111C
-+#define S5P_MPLLUSER_SYSCLK_LOWPWR		0x1130
-+#define S5P_CMU_CLKSTOP_ISP_LOWPWR		0x1154
-+#define S5P_CMU_RESET_ISP_LOWPWR		0x1174
-+#define S5P_TOP_BUS_COREBLK_LOWPWR		0x1190
-+#define S5P_TOP_RETENTION_COREBLK_LOWPWR	0x1194
-+#define S5P_TOP_PWR_COREBLK_LOWPWR		0x1198
-+#define S5P_OSCCLK_GATE_LOWPWR			0x11A4
-+#define S5P_LOGIC_RESET_COREBLK_LOWPWR		0x11B0
-+#define S5P_OSCCLK_GATE_COREBLK_LOWPWR		0x11B4
-+#define S5P_HSI_MEM_LOWPWR			0x11C4
-+#define S5P_ROTATOR_MEM_LOWPWR			0x11DC
-+#define S5P_PAD_RETENTION_GPIO_COREBLK_LOWPWR	0x123C
-+#define S5P_PAD_ISOLATION_COREBLK_LOWPWR	0x1250
-+#define S5P_GPIO_MODE_COREBLK_LOWPWR		0x1320
-+#define S5P_TOP_ASB_RESET_LOWPWR		0x1344
-+#define S5P_TOP_ASB_ISOLATION_LOWPWR		0x1348
-+#define S5P_ISP_LOWPWR				0x1394
-+#define S5P_DRAM_FREQ_DOWN_LOWPWR		0x13B0
-+#define S5P_DDRPHY_DLLOFF_LOWPWR		0x13B4
-+#define S5P_CMU_SYSCLK_ISP_LOWPWR		0x13B8
-+#define S5P_CMU_SYSCLK_GPS_LOWPWR		0x13BC
-+#define S5P_LPDDR_PHY_DLL_LOCK_LOWPWR		0x13C0
-+
-+#define S5P_ARM_L2_0_OPTION			0x2608
-+#define S5P_ARM_L2_1_OPTION			0x2628
-+#define S5P_ONENAND_MEM_OPTION			0x2E08
-+#define S5P_HSI_MEM_OPTION			0x2E28
-+#define S5P_G2D_ACP_MEM_OPTION			0x2E48
-+#define S5P_USBOTG_MEM_OPTION			0x2E68
-+#define S5P_HSMMC_MEM_OPTION			0x2E88
-+#define S5P_CSSYS_MEM_OPTION			0x2EA8
-+#define S5P_SECSS_MEM_OPTION			0x2EC8
-+#define S5P_ROTATOR_MEM_OPTION			0x2F48
-+
-+/* Only for EXYNOS4412 */
-+#define S5P_ARM_CORE2_LOWPWR			0x1020
-+#define S5P_DIS_IRQ_CORE2			0x1024
-+#define S5P_DIS_IRQ_CENTRAL2			0x1028
-+#define S5P_ARM_CORE3_LOWPWR			0x1030
-+#define S5P_DIS_IRQ_CORE3			0x1034
-+#define S5P_DIS_IRQ_CENTRAL3			0x1038
-+
-+/* For EXYNOS5 */
-+
-+#define EXYNOS5_AUTO_WDTRESET_DISABLE				0x0408
-+#define EXYNOS5_MASK_WDTRESET_REQUEST				0x040C
-+
-+#define EXYNOS5_SYS_WDTRESET					(1 << 20)
-+
-+#define EXYNOS5_ARM_CORE0_SYS_PWR_REG				0x1000
-+#define EXYNOS5_DIS_IRQ_ARM_CORE0_LOCAL_SYS_PWR_REG		0x1004
-+#define EXYNOS5_DIS_IRQ_ARM_CORE0_CENTRAL_SYS_PWR_REG		0x1008
-+#define EXYNOS5_ARM_CORE1_SYS_PWR_REG				0x1010
-+#define EXYNOS5_DIS_IRQ_ARM_CORE1_LOCAL_SYS_PWR_REG		0x1014
-+#define EXYNOS5_DIS_IRQ_ARM_CORE1_CENTRAL_SYS_PWR_REG		0x1018
-+#define EXYNOS5_FSYS_ARM_SYS_PWR_REG				0x1040
-+#define EXYNOS5_DIS_IRQ_FSYS_ARM_CENTRAL_SYS_PWR_REG		0x1048
-+#define EXYNOS5_ISP_ARM_SYS_PWR_REG				0x1050
-+#define EXYNOS5_DIS_IRQ_ISP_ARM_LOCAL_SYS_PWR_REG		0x1054
-+#define EXYNOS5_DIS_IRQ_ISP_ARM_CENTRAL_SYS_PWR_REG		0x1058
-+#define EXYNOS5_ARM_COMMON_SYS_PWR_REG				0x1080
-+#define EXYNOS5_ARM_L2_SYS_PWR_REG				0x10C0
-+#define EXYNOS5_CMU_ACLKSTOP_SYS_PWR_REG			0x1100
-+#define EXYNOS5_CMU_SCLKSTOP_SYS_PWR_REG			0x1104
-+#define EXYNOS5_CMU_RESET_SYS_PWR_REG				0x110C
-+#define EXYNOS5_CMU_ACLKSTOP_SYSMEM_SYS_PWR_REG			0x1120
-+#define EXYNOS5_CMU_SCLKSTOP_SYSMEM_SYS_PWR_REG			0x1124
-+#define EXYNOS5_CMU_RESET_SYSMEM_SYS_PWR_REG			0x112C
-+#define EXYNOS5_DRAM_FREQ_DOWN_SYS_PWR_REG			0x1130
-+#define EXYNOS5_DDRPHY_DLLOFF_SYS_PWR_REG			0x1134
-+#define EXYNOS5_DDRPHY_DLLLOCK_SYS_PWR_REG			0x1138
-+#define EXYNOS5_APLL_SYSCLK_SYS_PWR_REG				0x1140
-+#define EXYNOS5_MPLL_SYSCLK_SYS_PWR_REG				0x1144
-+#define EXYNOS5_VPLL_SYSCLK_SYS_PWR_REG				0x1148
-+#define EXYNOS5_EPLL_SYSCLK_SYS_PWR_REG				0x114C
-+#define EXYNOS5_BPLL_SYSCLK_SYS_PWR_REG				0x1150
-+#define EXYNOS5_CPLL_SYSCLK_SYS_PWR_REG				0x1154
-+#define EXYNOS5_MPLLUSER_SYSCLK_SYS_PWR_REG			0x1164
-+#define EXYNOS5_BPLLUSER_SYSCLK_SYS_PWR_REG			0x1170
-+#define EXYNOS5_TOP_BUS_SYS_PWR_REG				0x1180
-+#define EXYNOS5_TOP_RETENTION_SYS_PWR_REG			0x1184
-+#define EXYNOS5_TOP_PWR_SYS_PWR_REG				0x1188
-+#define EXYNOS5_TOP_BUS_SYSMEM_SYS_PWR_REG			0x1190
-+#define EXYNOS5_TOP_RETENTION_SYSMEM_SYS_PWR_REG		0x1194
-+#define EXYNOS5_TOP_PWR_SYSMEM_SYS_PWR_REG			0x1198
-+#define EXYNOS5_LOGIC_RESET_SYS_PWR_REG				0x11A0
-+#define EXYNOS5_OSCCLK_GATE_SYS_PWR_REG				0x11A4
-+#define EXYNOS5_LOGIC_RESET_SYSMEM_SYS_PWR_REG			0x11B0
-+#define EXYNOS5_OSCCLK_GATE_SYSMEM_SYS_PWR_REG			0x11B4
-+#define EXYNOS5_USBOTG_MEM_SYS_PWR_REG				0x11C0
-+#define EXYNOS5_G2D_MEM_SYS_PWR_REG				0x11C8
-+#define EXYNOS5_USBDRD_MEM_SYS_PWR_REG				0x11CC
-+#define EXYNOS5_SDMMC_MEM_SYS_PWR_REG				0x11D0
-+#define EXYNOS5_CSSYS_MEM_SYS_PWR_REG				0x11D4
-+#define EXYNOS5_SECSS_MEM_SYS_PWR_REG				0x11D8
-+#define EXYNOS5_ROTATOR_MEM_SYS_PWR_REG				0x11DC
-+#define EXYNOS5_INTRAM_MEM_SYS_PWR_REG				0x11E0
-+#define EXYNOS5_INTROM_MEM_SYS_PWR_REG				0x11E4
-+#define EXYNOS5_JPEG_MEM_SYS_PWR_REG				0x11E8
-+#define EXYNOS5_HSI_MEM_SYS_PWR_REG				0x11EC
-+#define EXYNOS5_MCUIOP_MEM_SYS_PWR_REG				0x11F4
-+#define EXYNOS5_SATA_MEM_SYS_PWR_REG				0x11FC
-+#define EXYNOS5_PAD_RETENTION_DRAM_SYS_PWR_REG			0x1200
-+#define EXYNOS5_PAD_RETENTION_MAU_SYS_PWR_REG			0x1204
-+#define EXYNOS5_PAD_RETENTION_EFNAND_SYS_PWR_REG		0x1208
-+#define EXYNOS5_PAD_RETENTION_GPIO_SYS_PWR_REG			0x1220
-+#define EXYNOS5_PAD_RETENTION_UART_SYS_PWR_REG			0x1224
-+#define EXYNOS5_PAD_RETENTION_MMCA_SYS_PWR_REG			0x1228
-+#define EXYNOS5_PAD_RETENTION_MMCB_SYS_PWR_REG			0x122C
-+#define EXYNOS5_PAD_RETENTION_EBIA_SYS_PWR_REG			0x1230
-+#define EXYNOS5_PAD_RETENTION_EBIB_SYS_PWR_REG			0x1234
-+#define EXYNOS5_PAD_RETENTION_SPI_SYS_PWR_REG			0x1238
-+#define EXYNOS5_PAD_RETENTION_GPIO_SYSMEM_SYS_PWR_REG		0x123C
-+#define EXYNOS5_PAD_ISOLATION_SYS_PWR_REG			0x1240
-+#define EXYNOS5_PAD_ISOLATION_SYSMEM_SYS_PWR_REG		0x1250
-+#define EXYNOS5_PAD_ALV_SEL_SYS_PWR_REG				0x1260
-+#define EXYNOS5_XUSBXTI_SYS_PWR_REG				0x1280
-+#define EXYNOS5_XXTI_SYS_PWR_REG				0x1284
-+#define EXYNOS5_EXT_REGULATOR_SYS_PWR_REG			0x12C0
-+#define EXYNOS5_GPIO_MODE_SYS_PWR_REG				0x1300
-+#define EXYNOS5_GPIO_MODE_SYSMEM_SYS_PWR_REG			0x1320
-+#define EXYNOS5_GPIO_MODE_MAU_SYS_PWR_REG			0x1340
-+#define EXYNOS5_TOP_ASB_RESET_SYS_PWR_REG			0x1344
-+#define EXYNOS5_TOP_ASB_ISOLATION_SYS_PWR_REG			0x1348
-+#define EXYNOS5_GSCL_SYS_PWR_REG				0x1400
-+#define EXYNOS5_ISP_SYS_PWR_REG					0x1404
-+#define EXYNOS5_MFC_SYS_PWR_REG					0x1408
-+#define EXYNOS5_G3D_SYS_PWR_REG					0x140C
-+#define EXYNOS5_DISP1_SYS_PWR_REG				0x1414
-+#define EXYNOS5_MAU_SYS_PWR_REG					0x1418
-+#define EXYNOS5_CMU_CLKSTOP_GSCL_SYS_PWR_REG			0x1480
-+#define EXYNOS5_CMU_CLKSTOP_ISP_SYS_PWR_REG			0x1484
-+#define EXYNOS5_CMU_CLKSTOP_MFC_SYS_PWR_REG			0x1488
-+#define EXYNOS5_CMU_CLKSTOP_G3D_SYS_PWR_REG			0x148C
-+#define EXYNOS5_CMU_CLKSTOP_DISP1_SYS_PWR_REG			0x1494
-+#define EXYNOS5_CMU_CLKSTOP_MAU_SYS_PWR_REG			0x1498
-+#define EXYNOS5_CMU_SYSCLK_GSCL_SYS_PWR_REG			0x14C0
-+#define EXYNOS5_CMU_SYSCLK_ISP_SYS_PWR_REG			0x14C4
-+#define EXYNOS5_CMU_SYSCLK_MFC_SYS_PWR_REG			0x14C8
-+#define EXYNOS5_CMU_SYSCLK_G3D_SYS_PWR_REG			0x14CC
-+#define EXYNOS5_CMU_SYSCLK_DISP1_SYS_PWR_REG			0x14D4
-+#define EXYNOS5_CMU_SYSCLK_MAU_SYS_PWR_REG			0x14D8
-+#define EXYNOS5_CMU_RESET_GSCL_SYS_PWR_REG			0x1580
-+#define EXYNOS5_CMU_RESET_ISP_SYS_PWR_REG			0x1584
-+#define EXYNOS5_CMU_RESET_MFC_SYS_PWR_REG			0x1588
-+#define EXYNOS5_CMU_RESET_G3D_SYS_PWR_REG			0x158C
-+#define EXYNOS5_CMU_RESET_DISP1_SYS_PWR_REG			0x1594
-+#define EXYNOS5_CMU_RESET_MAU_SYS_PWR_REG			0x1598
-+
-+#define EXYNOS5_ARM_CORE0_OPTION				0x2008
-+#define EXYNOS5_ARM_CORE1_OPTION				0x2088
-+#define EXYNOS5_FSYS_ARM_OPTION					0x2208
-+#define EXYNOS5_ISP_ARM_OPTION					0x2288
-+#define EXYNOS5_ARM_COMMON_OPTION				0x2408
-+#define EXYNOS5_ARM_L2_OPTION					0x2608
-+#define EXYNOS5_TOP_PWR_OPTION					0x2C48
-+#define EXYNOS5_TOP_PWR_SYSMEM_OPTION				0x2CC8
-+#define EXYNOS5_JPEG_MEM_OPTION					0x2F48
-+#define EXYNOS5_GSCL_OPTION					0x4008
-+#define EXYNOS5_ISP_OPTION					0x4028
-+#define EXYNOS5_MFC_OPTION					0x4048
-+#define EXYNOS5_G3D_OPTION					0x4068
-+#define EXYNOS5_DISP1_OPTION					0x40A8
-+#define EXYNOS5_MAU_OPTION					0x40C8
-+
-+#define EXYNOS5_USE_SC_FEEDBACK					(1 << 1)
-+#define EXYNOS5_USE_SC_COUNTER					(1 << 0)
-+
-+#define EXYNOS5_SKIP_DEACTIVATE_ACEACP_IN_PWDN			(1 << 7)
-+
-+#define EXYNOS5_OPTION_USE_STANDBYWFE				(1 << 24)
-+#define EXYNOS5_OPTION_USE_STANDBYWFI				(1 << 16)
-+
-+#define EXYNOS5_OPTION_USE_RETENTION				(1 << 4)
-+
-+#endif /* __EXYNOS_REGS_PMU_H */
+ 
+ /* Goes through the configs and update register val/mask */
+-static int capri_i2c_pin_update(struct pinctrl_dev *pctldev,
+-				unsigned pin,
+-				unsigned long *configs,
+-				unsigned num_configs,
+-				u32 *val,
+-				u32 *mask)
++static int bcm281xx_i2c_pin_update(struct pinctrl_dev *pctldev,
++				   unsigned pin,
++				   unsigned long *configs,
++				   unsigned num_configs,
++				   u32 *val,
++				   u32 *mask)
+ {
+-	struct capri_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
++	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+ 	int i, j;
+ 	enum pin_config_param param;
+ 	u16 arg;
+@@ -1224,11 +1230,11 @@ static int capri_i2c_pin_update(struct pinctrl_dev *pctldev,
+ 
+ 		switch (param) {
+ 		case PIN_CONFIG_BIAS_PULL_UP:
+-			for (j = 0; j < ARRAY_SIZE(capri_pullup_map); j++)
+-				if (capri_pullup_map[j] == arg)
++			for (j = 0; j < ARRAY_SIZE(bcm281xx_pullup_map); j++)
++				if (bcm281xx_pullup_map[j] == arg)
+ 					break;
+ 
+-			if (j == ARRAY_SIZE(capri_pullup_map)) {
++			if (j == ARRAY_SIZE(bcm281xx_pullup_map)) {
+ 				dev_err(pctldev->dev,
+ 					"Invalid pull-up value (%d) for pin %s "
+ 					"(%d). Valid values are 568, 720, 831, "
+@@ -1237,30 +1243,30 @@ static int capri_i2c_pin_update(struct pinctrl_dev *pctldev,
+ 				return -EINVAL;
+ 			}
+ 
+-			capri_pin_update(val, mask, j+1,
+-					CAPRI_PIN_SHIFT(I2C, PULL_UP_STR),
+-					CAPRI_PIN_MASK(I2C, PULL_UP_STR));
++			bcm281xx_pin_update(val, mask, j+1,
++				BCM281XX_PIN_SHIFT(I2C, PULL_UP_STR),
++				BCM281XX_PIN_MASK(I2C, PULL_UP_STR));
+ 			break;
+ 
+ 		case PIN_CONFIG_BIAS_DISABLE:
+-			capri_pin_update(val, mask, 0,
+-					CAPRI_PIN_SHIFT(I2C, PULL_UP_STR),
+-					CAPRI_PIN_MASK(I2C, PULL_UP_STR));
++			bcm281xx_pin_update(val, mask, 0,
++				BCM281XX_PIN_SHIFT(I2C, PULL_UP_STR),
++				BCM281XX_PIN_MASK(I2C, PULL_UP_STR));
+ 			break;
+ 
+ 		case PIN_CONFIG_SLEW_RATE:
+ 			arg = (arg >= 1 ? 1 : 0);
+-			capri_pin_update(val, mask, arg,
+-					CAPRI_PIN_SHIFT(I2C, SLEW),
+-					CAPRI_PIN_MASK(I2C, SLEW));
++			bcm281xx_pin_update(val, mask, arg,
++				BCM281XX_PIN_SHIFT(I2C, SLEW),
++				BCM281XX_PIN_MASK(I2C, SLEW));
+ 			break;
+ 
+ 		case PIN_CONFIG_INPUT_ENABLE:
+ 			/* inversed since register is for input _disable_ */
+ 			arg = (arg >= 1 ? 0 : 1);
+-			capri_pin_update(val, mask, arg,
+-					CAPRI_PIN_SHIFT(I2C, INPUT_DIS),
+-					CAPRI_PIN_MASK(I2C, INPUT_DIS));
++			bcm281xx_pin_update(val, mask, arg,
++				BCM281XX_PIN_SHIFT(I2C, INPUT_DIS),
++				BCM281XX_PIN_MASK(I2C, INPUT_DIS));
+ 			break;
+ 
+ 		default:
+@@ -1276,14 +1282,14 @@ static int capri_i2c_pin_update(struct pinctrl_dev *pctldev,
+ }
+ 
+ /* Goes through the configs and update register val/mask */
+-static int capri_hdmi_pin_update(struct pinctrl_dev *pctldev,
+-				 unsigned pin,
+-				 unsigned long *configs,
+-				 unsigned num_configs,
+-				 u32 *val,
+-				 u32 *mask)
++static int bcm281xx_hdmi_pin_update(struct pinctrl_dev *pctldev,
++				    unsigned pin,
++				    unsigned long *configs,
++				    unsigned num_configs,
++				    u32 *val,
++				    u32 *mask)
+ {
+-	struct capri_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
++	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+ 	int i;
+ 	enum pin_config_param param;
+ 	u16 arg;
+@@ -1295,17 +1301,17 @@ static int capri_hdmi_pin_update(struct pinctrl_dev *pctldev,
+ 		switch (param) {
+ 		case PIN_CONFIG_SLEW_RATE:
+ 			arg = (arg >= 1 ? 1 : 0);
+-			capri_pin_update(val, mask, arg,
+-					CAPRI_PIN_SHIFT(HDMI, MODE),
+-					CAPRI_PIN_MASK(HDMI, MODE));
++			bcm281xx_pin_update(val, mask, arg,
++				BCM281XX_PIN_SHIFT(HDMI, MODE),
++				BCM281XX_PIN_MASK(HDMI, MODE));
+ 			break;
+ 
+ 		case PIN_CONFIG_INPUT_ENABLE:
+ 			/* inversed since register is for input _disable_ */
+ 			arg = (arg >= 1 ? 0 : 1);
+-			capri_pin_update(val, mask, arg,
+-					CAPRI_PIN_SHIFT(HDMI, INPUT_DIS),
+-					CAPRI_PIN_MASK(HDMI, INPUT_DIS));
++			bcm281xx_pin_update(val, mask, arg,
++				BCM281XX_PIN_SHIFT(HDMI, INPUT_DIS),
++				BCM281XX_PIN_MASK(HDMI, INPUT_DIS));
+ 			break;
+ 
+ 		default:
+@@ -1320,13 +1326,13 @@ static int capri_hdmi_pin_update(struct pinctrl_dev *pctldev,
+ 	return 0;
+ }
+ 
+-static int capri_pinctrl_pin_config_set(struct pinctrl_dev *pctldev,
+-					unsigned pin,
+-					unsigned long *configs,
+-					unsigned num_configs)
++static int bcm281xx_pinctrl_pin_config_set(struct pinctrl_dev *pctldev,
++					   unsigned pin,
++					   unsigned long *configs,
++					   unsigned num_configs)
+ {
+-	struct capri_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+-	enum capri_pin_type pin_type;
++	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
++	enum bcm281xx_pin_type pin_type;
+ 	u32 offset = 4 * pin;
+ 	u32 cfg_val, cfg_mask;
+ 	int rc;
+@@ -1337,19 +1343,19 @@ static int capri_pinctrl_pin_config_set(struct pinctrl_dev *pctldev,
+ 
+ 	/* Different pins have different configuration options */
+ 	switch (pin_type) {
+-	case CAPRI_PIN_TYPE_STD:
+-		rc = capri_std_pin_update(pctldev, pin, configs, num_configs,
+-			&cfg_val, &cfg_mask);
++	case BCM281XX_PIN_TYPE_STD:
++		rc = bcm281xx_std_pin_update(pctldev, pin, configs,
++			num_configs, &cfg_val, &cfg_mask);
+ 		break;
+ 
+-	case CAPRI_PIN_TYPE_I2C:
+-		rc = capri_i2c_pin_update(pctldev, pin, configs, num_configs,
+-			&cfg_val, &cfg_mask);
++	case BCM281XX_PIN_TYPE_I2C:
++		rc = bcm281xx_i2c_pin_update(pctldev, pin, configs,
++			num_configs, &cfg_val, &cfg_mask);
+ 		break;
+ 
+-	case CAPRI_PIN_TYPE_HDMI:
+-		rc = capri_hdmi_pin_update(pctldev, pin, configs, num_configs,
+-			&cfg_val, &cfg_mask);
++	case BCM281XX_PIN_TYPE_HDMI:
++		rc = bcm281xx_hdmi_pin_update(pctldev, pin, configs,
++			num_configs, &cfg_val, &cfg_mask);
+ 		break;
+ 
+ 	default:
+@@ -1377,22 +1383,22 @@ static int capri_pinctrl_pin_config_set(struct pinctrl_dev *pctldev,
+ 	return 0;
+ }
+ 
+-static struct pinconf_ops capri_pinctrl_pinconf_ops = {
+-	.pin_config_get = capri_pinctrl_pin_config_get,
+-	.pin_config_set = capri_pinctrl_pin_config_set,
++static struct pinconf_ops bcm281xx_pinctrl_pinconf_ops = {
++	.pin_config_get = bcm281xx_pinctrl_pin_config_get,
++	.pin_config_set = bcm281xx_pinctrl_pin_config_set,
+ };
+ 
+-static struct pinctrl_desc capri_pinctrl_desc = {
++static struct pinctrl_desc bcm281xx_pinctrl_desc = {
+ 	/* name, pins, npins members initialized in probe function */
+-	.pctlops = &capri_pinctrl_ops,
+-	.pmxops = &capri_pinctrl_pinmux_ops,
+-	.confops = &capri_pinctrl_pinconf_ops,
++	.pctlops = &bcm281xx_pinctrl_ops,
++	.pmxops = &bcm281xx_pinctrl_pinmux_ops,
++	.confops = &bcm281xx_pinctrl_pinconf_ops,
+ 	.owner = THIS_MODULE,
+ };
+ 
+-int __init capri_pinctrl_probe(struct platform_device *pdev)
++int __init bcm281xx_pinctrl_probe(struct platform_device *pdev)
+ {
+-	struct capri_pinctrl_data *pdata = &capri_pinctrl;
++	struct bcm281xx_pinctrl_data *pdata = &bcm281xx_pinctrl;
+ 	struct resource *res;
+ 	struct pinctrl_dev *pctl;
+ 
+@@ -1411,17 +1417,17 @@ int __init capri_pinctrl_probe(struct platform_device *pdev)
+ 
+ 	/* Initialize the dynamic part of pinctrl_desc */
+ 	pdata->regmap = devm_regmap_init_mmio(&pdev->dev, pdata->reg_base,
+-		&capri_pinctrl_regmap_config);
++		&bcm281xx_pinctrl_regmap_config);
+ 	if (IS_ERR(pdata->regmap)) {
+ 		dev_err(&pdev->dev, "Regmap MMIO init failed.\n");
+ 		return -ENODEV;
+ 	}
+ 
+-	capri_pinctrl_desc.name = dev_name(&pdev->dev);
+-	capri_pinctrl_desc.pins = capri_pinctrl.pins;
+-	capri_pinctrl_desc.npins = capri_pinctrl.npins;
++	bcm281xx_pinctrl_desc.name = dev_name(&pdev->dev);
++	bcm281xx_pinctrl_desc.pins = bcm281xx_pinctrl.pins;
++	bcm281xx_pinctrl_desc.npins = bcm281xx_pinctrl.npins;
+ 
+-	pctl = pinctrl_register(&capri_pinctrl_desc,
++	pctl = pinctrl_register(&bcm281xx_pinctrl_desc,
+ 				&pdev->dev,
+ 				pdata);
+ 	if (!pctl) {
+@@ -1434,21 +1440,22 @@ int __init capri_pinctrl_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static struct of_device_id capri_pinctrl_of_match[] = {
++static struct of_device_id bcm281xx_pinctrl_of_match[] = {
+ 	{ .compatible = "brcm,bcm11351-pinctrl", },
+ 	{ },
+ };
+ 
+-static struct platform_driver capri_pinctrl_driver = {
++static struct platform_driver bcm281xx_pinctrl_driver = {
+ 	.driver = {
+-		.name = "bcm-capri-pinctrl",
++		.name = "bcm281xx-pinctrl",
+ 		.owner = THIS_MODULE,
+-		.of_match_table = capri_pinctrl_of_match,
++		.of_match_table = bcm281xx_pinctrl_of_match,
+ 	},
+ };
+ 
+-module_platform_driver_probe(capri_pinctrl_driver, capri_pinctrl_probe);
++module_platform_driver_probe(bcm281xx_pinctrl_driver, bcm281xx_pinctrl_probe);
+ 
++MODULE_AUTHOR("Broadcom Corporation <bcm-kernel-feedback-list@broadcom.com>");
+ MODULE_AUTHOR("Sherman Yin <syin@broadcom.com>");
+-MODULE_DESCRIPTION("Broadcom Capri pinctrl driver");
++MODULE_DESCRIPTION("Broadcom BCM281xx pinctrl driver");
+ MODULE_LICENSE("GPL v2");
 -- 
-1.7.10.4
+1.7.9.5
