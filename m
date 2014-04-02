@@ -1,59 +1,115 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v3 1/3] Documentation: Add documentation for the APM X-Gene SoC RTC DTS binding
-Date: Thu,  3 Apr 2014 00:17:51 -0600
-Message-ID: <1396505873-5507-2-git-send-email-lho@apm.com>
-References: <1396505873-5507-1-git-send-email-lho@apm.com>
+From: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [GIT PULL 2/2] Samsung 2nd DT updates for v3.15
+Date: Wed, 02 Apr 2014 13:29:04 +0900
+Message-ID: <012501cf4e2c$149943f0$3dcbcbd0$@samsung.com>
+References: <5328549D.1090008@samsung.com> <201403290253.14497.arnd@arndb.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396505873-5507-1-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
+In-reply-to: <201403290253.14497.arnd-r2nGTMty4D4@public.gmane.org>
+Content-language: ko
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+To: 'Arnd Bergmann' <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: 'Olof Johansson' <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, 'Kevin Hilman' <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Device Tree' <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, 'Yuvaraj Kumar C D' <yuvaraj.cd-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Kishon Vijay Abraham I' <kishon-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation for the APM X-Gene SoC RTC DTS binding.
+Arnd Bergmann wrote:
+> 
 
-Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
----
- .../devicetree/bindings/rtc/xgene-rtc.txt          |   27 ++++++++++++++++++++
- 1 files changed, 27 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/xgene-rtc.txt
+[...]
 
-diff --git a/Documentation/devicetree/bindings/rtc/xgene-rtc.txt b/Documentation/devicetree/bindings/rtc/xgene-rtc.txt
-new file mode 100644
-index 0000000..2e9c503
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/xgene-rtc.txt
-@@ -0,0 +1,27 @@
-+* APM X-Gene Real Time Clock
-+
-+RTC controller for the APM X-Gene Real Time Clock
-+
-+Required properties:
-+- compatible : Should be "apm,xgene-rtc"
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+- interrupts: IRQ line for the RTC.
-+- clocks: Reference to the clock entry.
-+
-+Example:
-+
-+rtcclk: rtcclk {
-+	compatible = "fixed-clock";
-+	#clock-cells = <1>;
-+	clock-frequency = <100000000>;
-+	clock-output-names = "rtcclk";
-+};
-+
-+rtc: rtc@10510000 {
-+	compatible = "apm,xgene-rtc";
-+	reg = <0x0 0x10510000 0x0 0x400>;
-+	interrupts = <0x0 0x46 0x4>;
-+	#clock-cells = <1>;
-+	clocks = <&rtcclk 0>;
-+};
--- 
-1.5.5
+> >
+> >   .../devicetree/bindings/ata/exynos-sata-phy.txt    | 14 ---------
+> >   .../devicetree/bindings/ata/exynos-sata.txt        | 25
++++++++++------
+> >   .../devicetree/bindings/phy/samsung-phy.txt        | 36
+> > ++++++++++++++++++++++
+> 
+> Looking through the branch contents, I noticed that the examples in the
+> bindings contain mandatory properties that are not documented.
+> 
+Oops, sorry.
+
+> I have merged your branch into next/cleanup3 of the arm-soc tree,
+> but I also applied a patch on top to document the missing strings
+> and properties. It is currently the top commit on the branch, so
+> if anyone spots a mistake, we can probably rectify it.
+> 
+Thanks a lot :-)
+
+> Please be more careful with binding documentation in the future.
+> Was this actually reviewed on the devicetree-discuss mailing list?
+> 
+Sure.
+
+- Kukjin
+
+> 	Arnd
+> 
+> 9<-----
+> From 9dfbff16b422a4bac7ad309847c7bc5d65653392 Mon Sep 17 00:00:00 2001
+> From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Date: Sat, 29 Mar 2014 02:15:43 +0100
+> Subject: [PATCH] devicetree: fix newly added exynos sata bindings
+> 
+> Commit ba0d7ed391b7b "ARM: dts: enable ahci sata and sata phy for
+> exynos5250" added a new binding document for the sata phy device,
+> and changed the sata controller binding. However, in both cases
+> significant aspects of the binding remained undocumented.
+> This attempts to reconstruct the actual binding from the usage.
+> 
+> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Cc: Yuvaraj Kumar C D <yuvaraj.cd-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+> Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> 
+> diff --git a/Documentation/devicetree/bindings/ata/exynos-sata.txt
+> b/Documentation/devicetree/bindings/ata/exynos-sata.txt
+> index b2adb1f..cb48448 100644
+> --- a/Documentation/devicetree/bindings/ata/exynos-sata.txt
+> +++ b/Documentation/devicetree/bindings/ata/exynos-sata.txt
+> @@ -8,8 +8,14 @@ Required properties:
+>  - interrupts		: <interrupt mapping for SATA IRQ>
+>  - reg			: <registers mapping>
+>  - samsung,sata-freq	: <frequency in MHz>
+> -- phys			: as mentioned in phy-bindings.txt
+> -- phy-names		: as mentioned in phy-bindings.txt
+> +- phys			: Must contain exactly one entry as
+specified
+> +			  in phy-bindings.txt
+> +- phy-names		: Must be "sata-phy"
+> +
+> +Optional properties:
+> +- clocks		: Must contain an entry for each entry in
+clock-names.
+> +- clock-names		: Shall be "sata" for the external SATA bus
+> clock,
+> +			  and "sclk_sata" for the internal controller clock.
+> 
+>  Example:
+>  	sata@122f0000 {
+> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt
+> b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+> index a937f75..67d38b3 100644
+> --- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+> @@ -30,7 +30,11 @@ Each SATA PHY controller should have its own node.
+>  Required properties:
+>  - compatible        : compatible list, contains "samsung,exynos5250-sata-
+> phy"
+>  - reg : offset and length of the SATA PHY register set;
+> -- #phy-cells : from the generic phy bindings;
+> +- #phy-cells : must be zero
+> +- clocks : must be exactly one entry
+> +- clock-names : must be "sata_phyctrl"
+> +- samsung,exynos-sataphy-i2c-phandle : a phandle to the I2C device, no
+> arguments
+> +- samsung,syscon-phandle : a phandle to the PMU system controller, no
+> arguments
+> 
+>  Example:
+>  	sata_phy: sata-phy@12170000 {
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
