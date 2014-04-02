@@ -1,75 +1,121 @@
-From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH RESEND 3/5] ARM: dts: define clock binding for bcm21664
-Date: Wed,  2 Apr 2014 14:29:59 -0500
-Message-ID: <1396467001-3551-4-git-send-email-elder@linaro.org>
-References: <1396467001-3551-1-git-send-email-elder@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396467001-3551-1-git-send-email-elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
+Date: Wed, 02 Apr 2014 17:24:24 +0200
+Message-ID: <4242558.6NaQec4f7j@wuerfel>
+References: <1396358832-15828-1-git-send-email-zhangfei.gao@linaro.org> <9532591.5yuCbpL4pV@wuerfel> <533BDDBA.1060800@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <533BDDBA.1060800@linaro.org>
+Sender: netdev-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: zhangfei <zhangfei.gao@linaro.org>, mark.rutland@arm.com, devicetree@vger.kernel.org, f.fainelli@gmail.com, linux@arm.linux.org.uk, eric.dumazet@gmail.com, sergei.shtylyov@cogentembedded.com, netdev@vger.kernel.org, David.Laight@aculab.com, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-Document the device tree binding for Broadcom BCM28164 clock control
-units and clocks.  This SoC uses Kona CCUs, similar to the BCM281XX
-SoC family.
+On Wednesday 02 April 2014 17:51:54 zhangfei wrote:
+> Dear Arnd
+> 
+> On 04/02/2014 05:21 PM, Arnd Bergmann wrote:
+> > On Tuesday 01 April 2014 21:27:12 Zhangfei Gao wrote:
+> >> +static int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+> >
+> > While it looks like there are no serious functionality bugs left, this
+> > function is rather inefficient, as has been pointed out before:
+> 
+> Yes, still need more performance tuning in the next step.
+> We need to enable the hardware feature of cache flush, under help of 
+> arm-smmu, as a result dma_map_single etc can be removed.
 
-Signed-off-by: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/clock/bcm-kona-clock.txt   |   39 ++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+You cannot remove the dma_map_single call here, but the implementation
+of that function will be different when you use the iommu_coherent_ops:
+Instead of flushing the caches, it will create or remove an iommu entry
+and return the bus address.
 
-diff --git a/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt b/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
-index ebe3ab6..5286e26 100644
---- a/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
-@@ -98,3 +98,42 @@ be used.  These specifiers are defined in:
-     slave   bsc2            peri      7     BCM281XX_SLAVE_CCU_BSC2
-     slave   bsc3            peri      8     BCM281XX_SLAVE_CCU_BSC3
-     slave   pwm             peri      9     BCM281XX_SLAVE_CCU_PWM
-+
-+
-+BCM21664 family
-+---------------
-+CCU compatible string values for SoCs in the BCM21664 family are:
-+    "brcm,bcm21664-root-ccu"
-+    "brcm,bcm21664-aon-ccu"
-+    "brcm,bcm21664-master-ccu"
-+    "brcm,bcm21664-slave-ccu"
-+
-+The following table defines the set of CCUs and clock specifiers for
-+BCM21664 family clocks.  When a clock consumer references a clocks,
-+its symbolic specifier (rather than its numeric index value) should
-+be used.  These specifiers are defined in:
-+    "include/dt-bindings/clock/bcm21664.h"
-+
-+    CCU     Clock           Type    Index   Specifier
-+    ---     -----           ----    -----   ---------
-+    root    frac_1m         peri      0     BCM21664_ROOT_CCU_FRAC_1M
-+
-+    aon     hub_timer       peri      0     BCM21664_AON_CCU_HUB_TIMER
-+
-+    master  sdio1           peri      0     BCM21664_MASTER_CCU_SDIO1
-+    master  sdio2           peri      1     BCM21664_MASTER_CCU_SDIO2
-+    master  sdio3           peri      2     BCM21664_MASTER_CCU_SDIO3
-+    master  sdio4           peri      3     BCM21664_MASTER_CCU_SDIO4
-+    master  sdio1_sleep     peri      4     BCM21664_MASTER_CCU_SDIO1_SLEEP
-+    master  sdio2_sleep     peri      5     BCM21664_MASTER_CCU_SDIO2_SLEEP
-+    master  sdio3_sleep     peri      6     BCM21664_MASTER_CCU_SDIO3_SLEEP
-+    master  sdio4_sleep     peri      7     BCM21664_MASTER_CCU_SDIO4_SLEEP
-+
-+    slave   uartb           peri      0     BCM21664_SLAVE_CCU_UARTB
-+    slave   uartb2          peri      1     BCM21664_SLAVE_CCU_UARTB2
-+    slave   uartb3          peri      2     BCM21664_SLAVE_CCU_UARTB3
-+    slave   uartb4          peri      3     BCM21664_SLAVE_CCU_UARTB4
-+    slave   bsc1            peri      4     BCM21664_SLAVE_CCU_BSC1
-+    slave   bsc2            peri      5     BCM21664_SLAVE_CCU_BSC2
-+    slave   bsc3            peri      6     BCM21664_SLAVE_CCU_BSC3
-+    slave   bsc4            peri      7     BCM21664_SLAVE_CCU_BSC4
--- 
-1.7.9.5
+I remember you mentioned before that using the iommu on this particular
+SoC actually gives you cache-coherent DMA, so you may also be able
+to use arm_coherent_dma_ops if you can set up a static 1:1 mapping 
+between bus and phys addresses.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >> +{
+> >> +       struct hip04_priv *priv = netdev_priv(ndev);
+> >> +       struct net_device_stats *stats = &ndev->stats;
+> >> +       unsigned int tx_head = priv->tx_head;
+> >> +       struct tx_desc *desc = &priv->tx_desc[tx_head];
+> >> +       dma_addr_t phys;
+> >> +
+> >> +       hip04_tx_reclaim(ndev, false);
+> >> +       mod_timer(&priv->txtimer, jiffies + RECLAIM_PERIOD);
+> >> +
+> >> +       if (priv->tx_count >= TX_DESC_NUM) {
+> >> +               netif_stop_queue(ndev);
+> >> +               return NETDEV_TX_BUSY;
+> >> +       }
+> >
+> > This is where you have two problems:
+> >
+> > - if the descriptor ring is full, you wait for RECLAIM_PERIOD,
+> >    which is far too long at 500ms, because during that time you
+> >    are not able to add further data to the stopped queue.
+> 
+> Understand
+> The idea here is not using the timer as much as possible.
+> As experiment shows, only xmit reclaim buffers, the best throughput can 
+> be achieved.
+
+I'm only talking about the case where that doesn't work: once you stop
+the queue, the xmit function won't get called again until the timer
+causes the reclaim be done and restart the queue.
+
+> > - As David Laight pointed out earlier, you must also ensure that
+> >    you don't have too much /data/ pending in the descriptor ring
+> >    when you stop the queue. For a 10mbit connection, you have already
+> >    tested (as we discussed on IRC) that 64 descriptors with 1500 byte
+> >    frames gives you a 68ms round-trip ping time, which is too much.
+> 
+> When iperf & ping running together and only ping, it is 0.7 ms.
+> 
+> >    Conversely, on 1gbit, having only 64 descriptors actually seems
+> >    a little low, and you may be able to get better throughput if
+> >    you extend the ring to e.g. 512 descriptors.
+> 
+> OK, Will check throughput of upgrade xmit descriptors.
+> But is it said not using too much descripors for xmit since no xmit 
+> interrupt?
+
+The important part is to limit the time that data spends in the queue,
+which is a function of the interface tx speed and the number of bytes
+in the queue.
+
+> >> +       phys = dma_map_single(&ndev->dev, skb->data, skb->len, DMA_TO_DEVICE);
+> >> +       if (dma_mapping_error(&ndev->dev, phys)) {
+> >> +               dev_kfree_skb(skb);
+> >> +               return NETDEV_TX_OK;
+> >> +       }
+> >> +
+> >> +       priv->tx_skb[tx_head] = skb;
+> >> +       priv->tx_phys[tx_head] = phys;
+> >> +       desc->send_addr = cpu_to_be32(phys);
+> >> +       desc->send_size = cpu_to_be16(skb->len);
+> >> +       desc->cfg = cpu_to_be32(DESC_DEF_CFG);
+> >> +       phys = priv->tx_desc_dma + tx_head * sizeof(struct tx_desc);
+> >> +       desc->wb_addr = cpu_to_be32(phys);
+> >
+> > One detail: since you don't have cache-coherent DMA, "desc" will
+> > reside in uncached memory, so you try to minimize the number of accesses.
+> > It's probably faster if you build the descriptor on the stack and
+> > then atomically copy it over, rather than assigning each member at
+> > a time.
+> 
+> I am sorry, not quite understand, could you clarify more?
+> The phys and size etc of skb->data is changing, so need to assign.
+> If member contents keep constant, it can be set when initializing.
+
+I meant you should use 64-bit accesses here instead of multiple 32 and
+16 bit accesses, but as David noted, it's actually not that much of
+a deal for the writes as it is for the reads from uncached memory.
+
+The important part is to avoid the line where you do 'if (desc->send_addr
+!= 0)' as much as possible.
+
+	Arnd
