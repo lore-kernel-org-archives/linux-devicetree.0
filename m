@@ -1,113 +1,77 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH 1/2] GPIO: Add driver for Zynq GPIO controller
-Date: Wed, 02 Apr 2014 07:56:11 +0200
-Message-ID: <533BA67B.6070905@monstr.eu>
-References: <1395933906-2268-1-git-send-email-harinik@xilinx.com> <CACRpkdbU35xG1QtagB+9e9vxvehf1UQFaF4PikJhsPNAMw=D1Q@mail.gmail.com> <CAFcVECJsEp_s2V5=oK_UJahGRUpWYWMCxTMxqdpX+O0qebP41A@mail.gmail.com> <CACRpkdZEFsJubRVwCp6nTie7s7+DZOym6SWsA2ZynN_devi-2Q@mail.gmail.com>
-Reply-To: monstr@monstr.eu
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="r2KnN0hcoO0hcQAeq1QDjdmSoPJFmgSJH"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZEFsJubRVwCp6nTie7s7+DZOym6SWsA2ZynN_devi-2Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Harini Katakam <harinikatakamlinux@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, michals@xilinx.com, Ulf Hansson <ulf.hansson@linaro.org>
+From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH RESEND 1/5] clk: bcm281xx: move compatible string definitions
+Date: Wed,  2 Apr 2014 14:29:57 -0500
+Message-ID: <1396467001-3551-2-git-send-email-elder@linaro.org>
+References: <1396467001-3551-1-git-send-email-elder@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1396467001-3551-1-git-send-email-elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---r2KnN0hcoO0hcQAeq1QDjdmSoPJFmgSJH
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+The Broadcom 281xx clock code uses a #define for the compatible
+string for it's clock control units (CCUs).  Rather than defining
+those in the C source file, define them in the header file that's
+shared by both the code and the device tree source file (along with
+all the clock ids).
 
-Hi Linus,
+Signed-off-by: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/clk/bcm/clk-bcm281xx.c       |   12 ------------
+ include/dt-bindings/clock/bcm281xx.h |   12 ++++++++++++
+ 2 files changed, 12 insertions(+), 12 deletions(-)
 
-On 03/31/2014 10:22 AM, Linus Walleij wrote:
-> On Sat, Mar 29, 2014 at 5:44 AM, Harini Katakam
-> <harinikatakamlinux@gmail.com> wrote:
->> On Sat, Mar 29, 2014 at 3:20 AM, Linus Walleij <linus.walleij@linaro.o=
-rg> wrote:
->>> On Thu, Mar 27, 2014 at 4:25 PM, Harini Katakam <harinik@xilinx.com> =
-wrote:
->=20
->>>> +/* Read/Write access to the GPIO PS registers */
->>>> +static inline u32 zynq_gpio_readreg(void __iomem *offset)
->>>> +{
->>>> +       return readl_relaxed(offset);
->>>> +}
->>>> +
->>>> +static inline void zynq_gpio_writereg(void __iomem *offset, u32 val=
-)
->>>> +{
->>>> +       writel_relaxed(val, offset);
->>>> +}
->>>
->>> I think this is unnecessary and confusing indirection.
->>> Just use the readl_relaxed/writel_relaxed functions directly in
->>> the code.
->>>
->>
->> This is just to be flexible.
->=20
-> Define exactly what you mean with "flexible" in this context. I
-> only see unnecessary overhead and hard-to-read code.
+diff --git a/drivers/clk/bcm/clk-bcm281xx.c b/drivers/clk/bcm/clk-bcm281xx.c
+index 71a65a4..502a487 100644
+--- a/drivers/clk/bcm/clk-bcm281xx.c
++++ b/drivers/clk/bcm/clk-bcm281xx.c
+@@ -18,18 +18,6 @@
+ #define BCM281XX_CCU_COMMON(_name, _ucase_name) \
+ 	KONA_CCU_COMMON(BCM281XX, _name, _ucase_name)
+ 
+-/*
+- * These are the bcm281xx CCU device tree "compatible" strings.
+- * We're stuck with using "bcm11351" in the string because wild
+- * cards aren't allowed, and that name was the first one defined
+- * in this family of devices.
+- */
+-#define BCM281XX_DT_ROOT_CCU_COMPAT	"brcm,bcm11351-root-ccu"
+-#define BCM281XX_DT_AON_CCU_COMPAT	"brcm,bcm11351-aon-ccu"
+-#define BCM281XX_DT_HUB_CCU_COMPAT	"brcm,bcm11351-hub-ccu"
+-#define BCM281XX_DT_MASTER_CCU_COMPAT	"brcm,bcm11351-master-ccu"
+-#define BCM281XX_DT_SLAVE_CCU_COMPAT	"brcm,bcm11351-slave-ccu"
+-
+ /* Root CCU */
+ 
+ static struct peri_clk_data frac_1m_data = {
+diff --git a/include/dt-bindings/clock/bcm281xx.h b/include/dt-bindings/clock/bcm281xx.h
+index e009694..a763460 100644
+--- a/include/dt-bindings/clock/bcm281xx.h
++++ b/include/dt-bindings/clock/bcm281xx.h
+@@ -20,6 +20,18 @@
+  * the clock control units (CCUs) on Broadcom BCM281XX family SoCs.
+  */
+ 
++/*
++ * These are the bcm281xx CCU device tree "compatible" strings.
++ * We're stuck with using "bcm11351" in the string because wild
++ * cards aren't allowed, and that name was the first one defined
++ * in this family of devices.
++ */
++#define BCM281XX_DT_ROOT_CCU_COMPAT	"brcm,bcm11351-root-ccu"
++#define BCM281XX_DT_AON_CCU_COMPAT	"brcm,bcm11351-aon-ccu"
++#define BCM281XX_DT_HUB_CCU_COMPAT	"brcm,bcm11351-hub-ccu"
++#define BCM281XX_DT_MASTER_CCU_COMPAT	"brcm,bcm11351-master-ccu"
++#define BCM281XX_DT_SLAVE_CCU_COMPAT	"brcm,bcm11351-slave-ccu"
++
+ /* root CCU clock ids */
+ 
+ #define BCM281XX_ROOT_CCU_FRAC_1M		0
+-- 
+1.7.9.5
 
-We have just passed this discussion for watchdog driver
-here: https://lkml.org/lkml/2014/4/1/843
-
-Are you ok with doing it in this way?
-
-static inline u32 zynq_gpio_readreg(struct zynq_gpio *gpio, u32 offset)
-{
-       return readl_relaxed(gpio->base_addr + offset);
-}
-
-static inline void zynq_gpio_writereg(struct zynq_gpio *gpio, u32 offset,=
- u32 val)
-{
-      writel_relaxed(val, gpio->base_addr + offset);
-}
-
-Or even like this to be able to handle error cases.
-
-static inline int zynq_gpio_readreg(struct zynq_gpio *gpio, u32 offset, u=
-32 *val)
-{
-	*val =3D readl_relaxed(gpio->base_addr + offset);
-	return 0;
-}
-
-static inline int zynq_gpio_writereg(struct zynq_gpio *gpio, u32 offset, =
-u32 val)
-{
-	writel_relaxed(val, gpio->base_addr + offset);
-	return 0;
-}
-
-Thanks,
-Michal
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---r2KnN0hcoO0hcQAeq1QDjdmSoPJFmgSJH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlM7pnsACgkQykllyylKDCEp3gCfQ7mVJJXVhKELQsvo1vn7O1Hc
-u0MAoIXoytmGzpDKyLSLfMrxWooULvxR
-=ixQs
------END PGP SIGNATURE-----
-
---r2KnN0hcoO0hcQAeq1QDjdmSoPJFmgSJH--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
