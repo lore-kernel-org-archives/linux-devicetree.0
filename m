@@ -1,144 +1,73 @@
-From: Alex Elder <elder@linaro.org>
-Subject: [PATCH RESEND 2/5] ARM: dts: revise kona clock binding document
-Date: Wed,  2 Apr 2014 14:29:58 -0500
-Message-ID: <1396467001-3551-3-git-send-email-elder@linaro.org>
-References: <1396467001-3551-1-git-send-email-elder@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1396467001-3551-1-git-send-email-elder@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@linaro.org, bcm@fixthebug.org, mporter@linaro.org, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Nicolin Chen <Guangyu.Chen@freescale.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: Append clock bindings for sai2 on VF610
+ platform
+Date: Wed, 2 Apr 2014 21:39:56 +0800
+Message-ID: <20140402133955.GB29440@MrMyself>
+References: <cover.1396432924.git.Guangyu.Chen@freescale.com>
+ <d09da3eb629143abd3f61ae037af4ddaf7286a83.1396432924.git.Guangyu.Chen@freescale.com>
+ <20140402130302.GC8558@dragon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140402130302.GC8558@dragon>
+Sender: linux-doc-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: broonie@kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, timur@tabi.org, Li.Xiubo@freescale.com, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The next patch defines a binding for a new Broadcom SoC that uses
-Kona style CCUs for its clocks.  Update the generic Kona clock
-binding document so it's more natural to accomodate the definitions
-of additional SoC families.
+Hi Shawn,
 
-Specifically:
-    - Define the compatible string values generically, referring
-      to specific per-model values later in the document.
-    - Put the device tree example immediately after the required
-      properties listing, before the tables of SoC-specific values.
-    - Clearly identify the start of the section defining specific
-      values related to the BCM281XX family
-    - Add a list of the specific BCM281XX family compatible strings.
-    - Reword the description of the table slightly.
+   Thanks for the comments, but...
 
-Signed-off-by: Alex Elder <elder@linaro.org>
----
- .../devicetree/bindings/clock/bcm-kona-clock.txt   |   87 +++++++++++---------
- 1 file changed, 47 insertions(+), 40 deletions(-)
+On Wed, Apr 02, 2014 at 09:03:04PM +0800, Shawn Guo wrote:
+> On Wed, Apr 02, 2014 at 06:10:20PM +0800, Nicolin Chen wrote:
+> > Since we added fours clock to the DT binding, we should update the current
+> > SAI dts/dtsi so as not to break their functions.
+> > 
+> > Signed-off-by: Nicolin Chen <Guangyu.Chen@freescale.com>
+> > ---
+> >  arch/arm/boot/dts/vf610.dtsi | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
+> > index d31ce1b..9fd0007 100644
+> > --- a/arch/arm/boot/dts/vf610.dtsi
+> > +++ b/arch/arm/boot/dts/vf610.dtsi
+> > @@ -139,8 +139,10 @@
+> >  				compatible = "fsl,vf610-sai";
+> >  				reg = <0x40031000 0x1000>;
+> >  				interrupts = <0 86 0x04>;
+> > -				clocks = <&clks VF610_CLK_SAI2>;
+> > -				clock-names = "sai";
+> > +				clocks = <&clks VF610_CLK_SAI2>,
+> > +				       <&clks VF610_CLK_SAI2>,
+> > +				       <&clks 0>, <&clks 0>;
+> 
+> So it seems that SAI on vf610 does work with only one clock.  So the
+> driver change will break old DTB for vf610?  If that's case, we will
+> have to need a new compatible for cases where 4 clocks are needed.
 
-diff --git a/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt b/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
-index 56d1f49..ebe3ab6 100644
---- a/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
-@@ -10,12 +10,12 @@ This binding uses the common clock binding:
- 
- Required properties:
- - compatible
--	Shall have one of the following values:
--	- "brcm,bcm11351-root-ccu"
--	- "brcm,bcm11351-aon-ccu"
--	- "brcm,bcm11351-hub-ccu"
--	- "brcm,bcm11351-master-ccu"
--	- "brcm,bcm11351-slave-ccu"
-+	Shall have a value of the form "brcm,<model>-<which>-ccu",
-+	where <model> is a Broadcom SoC model number and <which> is
-+	the name of a defined CCU.  For example:
-+	    "brcm,bcm11351-root-ccu"
-+	The compatible strings used for each supported SoC family
-+	are defined below.
- - reg
- 	Shall define the base and range of the address space
- 	containing clock control registers
-@@ -26,12 +26,48 @@ Required properties:
- 	Shall be an ordered list of strings defining the names of
- 	the clocks provided by the CCU.
- 
-+Device tree example:
- 
--BCM281XX family SoCs use Kona CCUs.  The following table defines
--the set of CCUs and clock specifiers for BCM281XX clocks.  When
--a clock consumer references a clocks, its symbolic specifier
--(rather than its numeric index value) should be used.  These
--specifiers are defined in "include/dt-bindings/clock/bcm281xx.h".
-+	slave_ccu: slave_ccu {
-+		compatible = "brcm,bcm11351-slave-ccu";
-+		reg = <0x3e011000 0x0f00>;
-+		#clock-cells = <1>;
-+		clock-output-names = "uartb",
-+				     "uartb2",
-+				     "uartb3",
-+				     "uartb4";
-+	};
-+
-+	ref_crystal_clk: ref_crystal {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <26000000>;
-+	};
-+
-+	uart@3e002000 {
-+		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
-+		status = "disabled";
-+		reg = <0x3e002000 0x1000>;
-+		clocks = <&slave_ccu BCM281XX_SLAVE_CCU_UARTB3>;
-+		interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+	};
-+
-+BCM281XX family
-+---------------
-+CCU compatible string values for SoCs in the BCM281XX family are:
-+    "brcm,bcm11351-root-ccu"
-+    "brcm,bcm11351-aon-ccu"
-+    "brcm,bcm11351-hub-ccu"
-+    "brcm,bcm11351-master-ccu"
-+    "brcm,bcm11351-slave-ccu"
-+
-+The following table defines the set of CCUs and clock specifiers for
-+BCM281XX family clocks.  When a clock consumer references a clocks,
-+its symbolic specifier (rather than its numeric index value) should
-+be used.  These specifiers are defined in:
-+    "include/dt-bindings/clock/bcm281xx.h"
- 
-     CCU     Clock           Type    Index   Specifier
-     ---     -----           ----    -----   ---------
-@@ -62,32 +98,3 @@ specifiers are defined in "include/dt-bindings/clock/bcm281xx.h".
-     slave   bsc2            peri      7     BCM281XX_SLAVE_CCU_BSC2
-     slave   bsc3            peri      8     BCM281XX_SLAVE_CCU_BSC3
-     slave   pwm             peri      9     BCM281XX_SLAVE_CCU_PWM
--
--
--Device tree example:
--
--	slave_ccu: slave_ccu {
--		compatible = "brcm,bcm11351-slave-ccu";
--		reg = <0x3e011000 0x0f00>;
--		#clock-cells = <1>;
--		clock-output-names = "uartb",
--				     "uartb2",
--				     "uartb3",
--				     "uartb4";
--	};
--
--	ref_crystal_clk: ref_crystal {
--		#clock-cells = <0>;
--		compatible = "fixed-clock";
--		clock-frequency = <26000000>;
--	};
--
--	uart@3e002000 {
--		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
--		status = "disabled";
--		reg = <0x3e002000 0x1000>;
--		clocks = <&slave_ccu BCM281XX_SLAVE_CCU_UARTB3>;
--		interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
--		reg-shift = <2>;
--		reg-io-width = <4>;
--	};
--- 
-1.7.9.5
+According to Vybrid's RM Chapter 9.11.12 SAI clocking, the SoC actually
+connects SAI with two clocks: SAI_CLK and Platform Bus Clock. So the DT
+binding here still needs to be corrected even if ignoring driver change.
+
+Besides, I've checked both SAI on imx and vf610 and found that they are
+seemly identical, especially for the clock part -- "The transmitter and
+receiver can independently select between the bus clock and up to three
+audio master clocks to generate the bit clock." And the driver that was
+designed for vf610 already contains the code to switch the clock between
+Bus Clock and Three MCLKs. What I want to say is, even if SAI on vf610
+does work with only one clock, it still doesn't have the full function
+on vf610 -- driving clock from Platform Bus Clock unless we make this
+improvement to the DT binding.
+
+So I think it's fair to complete the code here for both platforms, even
+though we might take the risk of merging conflict. And I understand
+your point to avoid function break on those platform both of us aren't
+convenient to test. But I've already involved Xiubo in the list. And
+we can wait for his test result.
+
+Hope you can understand the circumstance,
+Nicolin
+
