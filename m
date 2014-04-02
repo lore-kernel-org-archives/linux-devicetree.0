@@ -1,30 +1,93 @@
-From: stefan@agner.ch
-Subject: [PATCH v2 0/2] ARM: dts: fix wrong stmpe-ts bindings
-Date: Wed,  2 Apr 2014 19:05:36 +0200
-Message-ID: <cover.1396457876.git.stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawn.guo@freescale.com, kernel@pengutronix.de, viresh.linux@gmail.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan@agner.ch
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
+Date: Wed, 02 Apr 2014 11:21:45 +0200
+Message-ID: <9532591.5yuCbpL4pV@wuerfel>
+References: <1396358832-15828-1-git-send-email-zhangfei.gao@linaro.org> <1396358832-15828-4-git-send-email-zhangfei.gao@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1396358832-15828-4-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org, eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stefan Agner <stefan@agner.ch>
+On Tuesday 01 April 2014 21:27:12 Zhangfei Gao wrote:
+> +static int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
 
-I don't have any of these hardware, but the error is obvious. The device
-probably works anyway since the device/driver will use default values.
+While it looks like there are no serious functionality bugs left, this
+function is rather inefficient, as has been pointed out before:
 
-Changes since v1:
-- Split patch in two for i.MX/SPEAr
+> +{
+> +       struct hip04_priv *priv = netdev_priv(ndev);
+> +       struct net_device_stats *stats = &ndev->stats;
+> +       unsigned int tx_head = priv->tx_head;
+> +       struct tx_desc *desc = &priv->tx_desc[tx_head];
+> +       dma_addr_t phys;
+> +
+> +       hip04_tx_reclaim(ndev, false);
+> +       mod_timer(&priv->txtimer, jiffies + RECLAIM_PERIOD);
+> +
+> +       if (priv->tx_count >= TX_DESC_NUM) {
+> +               netif_stop_queue(ndev);
+> +               return NETDEV_TX_BUSY;
+> +       }
 
-Stefan Agner (2):
-  ARM: dts: mx5: fix wrong stmpe-ts bindings
-  ARM: dts: SPEAr: fix wrong stmpe-ts bindings
+This is where you have two problems:
 
- arch/arm/boot/dts/imx53-m53evk.dts  | 20 ++++++++++----------
- arch/arm/boot/dts/spear1310-evb.dts | 18 +++++++++---------
- arch/arm/boot/dts/spear1340-evb.dts | 18 +++++++++---------
- arch/arm/boot/dts/spear320-hmi.dts  | 20 ++++++++++----------
- 4 files changed, 38 insertions(+), 38 deletions(-)
+- if the descriptor ring is full, you wait for RECLAIM_PERIOD,
+  which is far too long at 500ms, because during that time you
+  are not able to add further data to the stopped queue.
 
--- 
-1.9.1
+- As David Laight pointed out earlier, you must also ensure that
+  you don't have too much /data/ pending in the descriptor ring
+  when you stop the queue. For a 10mbit connection, you have already
+  tested (as we discussed on IRC) that 64 descriptors with 1500 byte
+  frames gives you a 68ms round-trip ping time, which is too much.
+  Conversely, on 1gbit, having only 64 descriptors actually seems
+  a little low, and you may be able to get better throughput if
+  you extend the ring to e.g. 512 descriptors.
+
+> +       phys = dma_map_single(&ndev->dev, skb->data, skb->len, DMA_TO_DEVICE);
+> +       if (dma_mapping_error(&ndev->dev, phys)) {
+> +               dev_kfree_skb(skb);
+> +               return NETDEV_TX_OK;
+> +       }
+> +
+> +       priv->tx_skb[tx_head] = skb;
+> +       priv->tx_phys[tx_head] = phys;
+> +       desc->send_addr = cpu_to_be32(phys);
+> +       desc->send_size = cpu_to_be16(skb->len);
+> +       desc->cfg = cpu_to_be32(DESC_DEF_CFG);
+> +       phys = priv->tx_desc_dma + tx_head * sizeof(struct tx_desc);
+> +       desc->wb_addr = cpu_to_be32(phys);
+
+One detail: since you don't have cache-coherent DMA, "desc" will
+reside in uncached memory, so you try to minimize the number of accesses.
+It's probably faster if you build the descriptor on the stack and
+then atomically copy it over, rather than assigning each member at
+a time.
+
+The same would be true for the rx descriptors.
+
+> +       skb_tx_timestamp(skb);
+> +
+> +       /* Don't wait up for transmitted skbs to be freed. */
+> +       skb_orphan(skb);
+> +
+> +       hip04_set_xmit_desc(priv, phys);
+> +       priv->tx_head = TX_NEXT(tx_head);
+> +
+> +       stats->tx_bytes += skb->len;
+> +       stats->tx_packets++;
+> +       priv->tx_count++;
+> +
+> +       return NETDEV_TX_OK;
+> +}
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
