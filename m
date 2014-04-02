@@ -1,73 +1,194 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 4/8] PCI: imx6: use new clock names
-Date: Thu, 03 Apr 2014 10:51:29 +0200
-Message-ID: <1396515089.5057.14.camel@weser.hi.pengutronix.de>
-References: <1396025579-14344-1-git-send-email-l.stach@pengutronix.de>
-	 <1396025579-14344-5-git-send-email-l.stach@pengutronix.de>
-	 <20140403065037.GJ2801@dragon>
-	 <1396513265.5057.7.camel@weser.hi.pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: [PATCH v2 4/6] v4l: vsp1: Add DT support
+Date: Wed,  2 Apr 2014 20:01:30 +0200
+Message-ID: <1396461690-2334-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396513265.5057.7.camel-WzVe3FnzCwFR6QfukMTsflXZhhPuCNm+@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Richard Zhu <r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 03.04.2014, 10:21 +0200 schrieb Lucas Stach:
-> Hi Shawn,
-> 
-> Am Donnerstag, den 03.04.2014, 14:50 +0800 schrieb Shawn Guo:
-> > On Fri, Mar 28, 2014 at 05:52:55PM +0100, Lucas Stach wrote:
-> > > As defined in the new binding.
-> > > 
-> > > Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > > ---
-> > >  drivers/pci/host/pci-imx6.c | 74 ++++++++++++++++++---------------------------
-> > >  1 file changed, 29 insertions(+), 45 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.c
-> > > index ee082509b0ba..71730bbcd9a2 100644
-> > > --- a/drivers/pci/host/pci-imx6.c
-> > > +++ b/drivers/pci/host/pci-imx6.c
-> > ...
-> > > @@ -583,32 +574,25 @@ static int __init imx6_pcie_probe(struct platform_device *pdev)
-> > >  	}
-> > >  
-> > >  	/* Fetch clocks */
-> > > -	imx6_pcie->lvds_gate = devm_clk_get(&pdev->dev, "lvds_gate");
-> > > -	if (IS_ERR(imx6_pcie->lvds_gate)) {
-> > > -		dev_err(&pdev->dev,
-> > > -			"lvds_gate clock select missing or invalid\n");
-> > > -		return PTR_ERR(imx6_pcie->lvds_gate);
-> > > -	}
-> > > -
-> > > -	imx6_pcie->sata_ref_100m = devm_clk_get(&pdev->dev, "sata_ref_100m");
-> > > -	if (IS_ERR(imx6_pcie->sata_ref_100m)) {
-> > > +	imx6_pcie->pcie_phy = devm_clk_get(&pdev->dev, "pcie_phy");
-> > > +	if (IS_ERR(imx6_pcie->pcie_phy)) {
-> > 
-> > Won't this break the existing DTBs?
-> > 
-> Yes, it will. But I think it's justified to break the binding,
-> considering how much brokenness was in there and the relatively few
-> number of users right now.
-> 
-> All these patches depend on agreement of the new binding, as laid out in
-> patch 2/8. I don't think it makes much sense in keeping the old cruft
-> around given that the old binding was properly reviewed by PCI experts.
-                                    ^ wasn't (obviously)
-> 
-> Regards,
-> Lucas
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+---
+ .../devicetree/bindings/media/renesas,vsp1.txt     | 43 ++++++++++++++++++
+ drivers/media/platform/vsp1/vsp1_drv.c             | 52 ++++++++++++++++++----
+ 2 files changed, 87 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/renesas,vsp1.txt
 
+Hi,
+
+This is the last call for DT bindings review, with a small change to the
+bindings compared to v1. If I don't get any reply I'll assume that those
+(pretty simple) bindings are perfect :-)
+
+Changes since v1:
+
+- Drop the clock-names property, as the VSP1 uses a single clock
+
+diff --git a/Documentation/devicetree/bindings/media/renesas,vsp1.txt b/Documentation/devicetree/bindings/media/renesas,vsp1.txt
+new file mode 100644
+index 0000000..45c1d3c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/renesas,vsp1.txt
+@@ -0,0 +1,43 @@
++* Renesas VSP1 Video Processing Engine
++
++The VSP1 is a video processing engine that supports up-/down-scaling, alpha
++blending, color space conversion and various other image processing features.
++It can be found in the Renesas R-Car second generation SoCs.
++
++Required properties:
++
++  - compatible: Must contain "renesas,vsp1"
++
++  - reg: Base address and length of the registers block for the VSP1.
++  - interrupt-parent, interrupts: Specifier for the VSP1 interrupt.
++  - clocks: A phandle + clock-specifier pair for the VSP1 functional clock.
++
++  - renesas,#rpf: Number of Read Pixel Formatter (RPF) modules in the VSP1.
++  - renesas,#uds: Number of Up Down Scaler (UDS) modules in the VSP1.
++  - renesas,#wpf: Number of Write Pixel Formatter (WPF) modules in the VSP1.
++
++
++Optional properties:
++
++  - renesas,has-lif: Boolean, indicates that the LCD Interface (LIF) module is
++    available.
++  - renesas,has-lut: Boolean, indicates that the Look Up Table (LUT) module is
++    available.
++  - renesas,has-sru: Boolean, indicates that the Super Resolution Unit (SRU)
++    module is available.
++
++
++Example: R8A7790 (R-Car H2) VSP1-S node
++
++	vsp1@fe928000 {
++		compatible = "renesas,vsp1";
++		reg = <0 0xfe928000 0 0x8000>;
++		interrupts = <0 267 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp1_clks R8A7790_CLK_VSP1_S>;
++
++		renesas,has-lut;
++		renesas,has-sru;
++		renesas,#rpf = <5>;
++		renesas,#uds = <3>;
++		renesas,#wpf = <4>;
++	};
+diff --git a/drivers/media/platform/vsp1/vsp1_drv.c b/drivers/media/platform/vsp1/vsp1_drv.c
+index 28e1de3..644650f 100644
+--- a/drivers/media/platform/vsp1/vsp1_drv.c
++++ b/drivers/media/platform/vsp1/vsp1_drv.c
+@@ -16,6 +16,7 @@
+ #include <linux/device.h>
+ #include <linux/interrupt.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/videodev2.h>
+ 
+@@ -431,34 +432,59 @@ static const struct dev_pm_ops vsp1_pm_ops = {
+  * Platform Driver
+  */
+ 
+-static struct vsp1_platform_data *
+-vsp1_get_platform_data(struct platform_device *pdev)
++static int vsp1_validate_platform_data(struct platform_device *pdev,
++				       struct vsp1_platform_data *pdata)
+ {
+-	struct vsp1_platform_data *pdata = pdev->dev.platform_data;
+-
+ 	if (pdata == NULL) {
+ 		dev_err(&pdev->dev, "missing platform data\n");
+-		return NULL;
++		return -EINVAL;
+ 	}
+ 
+ 	if (pdata->rpf_count <= 0 || pdata->rpf_count > VPS1_MAX_RPF) {
+ 		dev_err(&pdev->dev, "invalid number of RPF (%u)\n",
+ 			pdata->rpf_count);
+-		return NULL;
++		return -EINVAL;
+ 	}
+ 
+ 	if (pdata->uds_count <= 0 || pdata->uds_count > VPS1_MAX_UDS) {
+ 		dev_err(&pdev->dev, "invalid number of UDS (%u)\n",
+ 			pdata->uds_count);
+-		return NULL;
++		return -EINVAL;
+ 	}
+ 
+ 	if (pdata->wpf_count <= 0 || pdata->wpf_count > VPS1_MAX_WPF) {
+ 		dev_err(&pdev->dev, "invalid number of WPF (%u)\n",
+ 			pdata->wpf_count);
+-		return NULL;
++		return -EINVAL;
+ 	}
+ 
++	return 0;
++}
++
++static struct vsp1_platform_data *
++vsp1_get_platform_data(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct vsp1_platform_data *pdata;
++
++	if (!IS_ENABLED(CONFIG_OF) || np == NULL)
++		return pdev->dev.platform_data;
++
++	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++	if (pdata == NULL)
++		return NULL;
++
++	if (of_property_read_bool(np, "renesas,has-lif"))
++		pdata->features |= VSP1_HAS_LIF;
++	if (of_property_read_bool(np, "renesas,has-lut"))
++		pdata->features |= VSP1_HAS_LUT;
++	if (of_property_read_bool(np, "renesas,has-sru"))
++		pdata->features |= VSP1_HAS_SRU;
++
++	of_property_read_u32(np, "renesas,#rpf", &pdata->rpf_count);
++	of_property_read_u32(np, "renesas,#uds", &pdata->uds_count);
++	of_property_read_u32(np, "renesas,#wpf", &pdata->wpf_count);
++
+ 	return pdata;
+ }
+ 
+@@ -481,6 +507,10 @@ static int vsp1_probe(struct platform_device *pdev)
+ 	if (vsp1->pdata == NULL)
+ 		return -ENODEV;
+ 
++	ret = vsp1_validate_platform_data(pdev, vsp1->pdata);
++	if (ret < 0)
++		return ret;
++
+ 	/* I/O, IRQ and clock resources */
+ 	io = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	vsp1->mmio = devm_ioremap_resource(&pdev->dev, io);
+@@ -527,6 +557,11 @@ static int vsp1_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id vsp1_of_match[] = {
++	{ .compatible = "renesas,vsp1" },
++	{ },
++};
++
+ static struct platform_driver vsp1_platform_driver = {
+ 	.probe		= vsp1_probe,
+ 	.remove		= vsp1_remove,
+@@ -534,6 +569,7 @@ static struct platform_driver vsp1_platform_driver = {
+ 		.owner	= THIS_MODULE,
+ 		.name	= "vsp1",
+ 		.pm	= &vsp1_pm_ops,
++		.of_match_table = of_match_ptr(vsp1_of_match),
+ 	},
+ };
+ 
 -- 
-Pengutronix e.K.                           | Lucas Stach                 |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-5076 |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Regards,
+
+Laurent Pinchart
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
