@@ -1,68 +1,100 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
 Subject: Re: [PATCH RFC v4 2/2] clk: Add handling of clk parent and rate
  assigned from DT
-Date: Wed, 02 Apr 2014 15:02:15 +0200
-Message-ID: <533C0A57.50102@samsung.com>
+Date: Wed, 02 Apr 2014 12:18:37 +0200
+Message-ID: <533BE3FD.8070902@samsung.com>
 References: <1396284116-19178-1-git-send-email-s.nawrocki@samsung.com>
  <1396284116-19178-3-git-send-email-s.nawrocki@samsung.com>
  <20140331200620.GA13881@kroah.com> <533ABCEC.8040701@codethink.co.uk>
- <20140402080102.GK2931@tbergstrom-lnx.Nvidia.com>
+ <533ACBD0.8030209@samsung.com> <20140401163744.GE3842@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20140402080102.GK2931-Rysk9IDjsxmJz7etNGeUX8VPkgjIgRvpAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <m.szy>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20140401163744.GE3842@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mturquette@linaro.org, linux@arm.linux.org.uk, robh+dt@kernel.org, grant.likely@linaro.org, mark.rutland@arm.com, galak@codeaurora.org, kyungmin.park@samsung.com, sw0312.kim@samsung.com, m.szyprowski@samsung.com, t.figa@samsung.com, laurent.pinchart@ideasonboard.com, s.hauer@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On 02/04/14 10:01, Peter De Schrijver wrote:
-> On Tue, Apr 01, 2014 at 03:19:40PM +0200, Ben Dooks wrote:
->> On 31/03/14 21:06, Greg KH wrote:
->>> On Mon, Mar 31, 2014 at 06:41:56PM +0200, Sylwester Nawrocki wrote:
->>>> This function adds a helper function to configure clock parents and rates
->>>> as specified in clock-parents, clock-rates DT properties for a consumer
->>>> device and a call to it before driver is bound to a device.
->>>>
->>>> Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+On 01/04/14 18:37, Greg KH wrote:
+> On Tue, Apr 01, 2014 at 04:23:12PM +0200, Sylwester Nawrocki wrote:
+>> On 01/04/14 15:19, Ben Dooks wrote:
+>>> On 31/03/14 21:06, Greg KH wrote:
+>>>>> On Mon, Mar 31, 2014 at 06:41:56PM +0200, Sylwester Nawrocki wrote:
+>> [...]
+>>>>> I don't understand why you need the driver core to initialize this one
+>>>>> type of thing?  That should be in a driver, or in a class, or at worse
+>>>>> case, the platform code.
+>>>>>
+>>>>> What makes clocks so "unique" here?
 >>
->> [snip]
->>
->>> I don't understand why you need the driver core to initialize this one
->>> type of thing?  That should be in a driver, or in a class, or at worse
->>> case, the platform code.
->>>
->>> What makes clocks so "unique" here?
->>
->> I suppose the issue here is that a lot of drivers currently use
->> clocks and a number of systems have badly setup default clock trees
->> at start time.
->>
->> Mark Brown and others have argued that the management of clocks which
->> is common to all devices should not live in the driver.
+>> The reason I put it in the driver core was mainly to avoid having many
+>> drivers doing same call to this initialization function.
+>> I was considering moving it to the bus code, still there are several
+>> buses for which it would need to be repeated.
 > 
-> Exactly, this data should be part of the clock provider DT nodes, not
-> of the device nodes. 
+> "several" is how many?  2?  3?  10?
 
-Why not in the device nodes, when often this data is closely related
-to a device ? I'd prefer to keep the ability to also specify it at
-the consumer nodes. IMHO the DT binding would be more explicit and
-less error prone this way. E.g. clock-rates may refer directly to the
-consumer clocks, so why we should be specifying it for all devices in
-a single DT node ?
+It would be mostly the platform and amba bus, but this clock defaults
+could be useful also for i2c, spi. In general it's about not probable
+devices which may be specified in devicetree.
 
-Also I'm not sure if a fact that something shouldn't be handled in
-a device driver necessarily means that related data shouldn't be put
-in the device node.
+> Please fix it "correctly" and don't put it in the driver core just
+> because it seems easier that way.
+> 
+>> Maybe really_probe() is not a best place to put this, nonetheless
+>> the requirements I could list were:
+>>
+>>  1. not involving individual drivers,
+> 
+> Why not?
 
-It would be nice to hear more opinions, it seems now there is
-roughly same number of proponents and opponents of each option.
+I'd say because this thing can be often considered a platform detail
+which would be better opaque to drivers. It's at the border of a device
+and its integration within a platform.
 
---
+>>  2. have such an initialization call done for all devices, irrespective
+>>     of Linux bus or class type,
+> 
+> Why?  Do _all_ devices that Linux supports have this issue to be
+> resolved?
+
+Sorry, certainly not all devices. I think it's only related to the
+non-probable devices which can be specified in DT.
+
+>>  3. Handle errors properly, e.g. defer driver probing if a clock for
+>>    a device is not yet available.
+> 
+> Then do it in the bus that controls that device, as it knows to defer
+> probing at that point in time.
+
+All right, that would also work. I suspect doing it for platform and
+amba bus might be sufficient in the beginning.
+
+>> One advantage I could see from making the call from within a device
+>> driver is that a device could keep using the common DT bindings and
+>> replace the common initialization function with a private one, if
+>> there is a need for some quirks handled for a device. With approach
+>> as in this patch it's difficult to override the default behaviour.
+>> However then there is a question whether we strive for the clocks
+>> management to be possibly kept away from device drivers.
+>>
+>>> I suppose the issue here is that a lot of drivers currently use
+>>> clocks and a number of systems have badly setup default clock trees
+>>> at start time.
+>>>
+>>> Mark Brown and others have argued that the management of clocks which
+>>> is common to all devices should not live in the driver.
+>>
+>> True, motivation behind this patch series was also replacing custom
+>> code in multiple drivers doing similar clock rate or parent setting
+>> by a common code, using standardized DT binding.
+> 
+> Then put it in the bus that controls these broken devices / platforms.
+
+OK, I'm going to put it in the bus code.
+
+-- 
 Thanks,
 Sylwester
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
