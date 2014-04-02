@@ -1,61 +1,71 @@
-From: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v6 1/3] ARM: EXYNOS: initial board support for exynos5260 SoC
-Date: Thu, 03 Apr 2014 10:47:55 +0530
-Message-ID: <1396502277-19588-2-git-send-email-rahul.sharma@samsung.com>
-References: <1396502277-19588-1-git-send-email-rahul.sharma@samsung.com>
+From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH RESEND 3/5] ARM: dts: define clock binding for bcm21664
+Date: Wed,  2 Apr 2014 14:29:59 -0500
+Message-ID: <1396467001-3551-4-git-send-email-elder@linaro.org>
+References: <1396467001-3551-1-git-send-email-elder@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1396502277-19588-1-git-send-email-rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1396467001-3551-1-git-send-email-elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Document the device tree binding for Broadcom BCM28164 clock control
+units and clocks.  This SoC uses Kona CCUs, similar to the BCM281XX
+SoC family.
 
-This patch add basic arch side support for exynos5260 SoC.
-
-Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/mach-exynos/Kconfig           |    4 ++++
- arch/arm/mach-exynos/mach-exynos5-dt.c |    1 +
- 2 files changed, 5 insertions(+)
+ .../devicetree/bindings/clock/bcm-kona-clock.txt   |   39 ++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
-index 54162ef..69c00ca 100644
---- a/arch/arm/mach-exynos/Kconfig
-+++ b/arch/arm/mach-exynos/Kconfig
-@@ -29,6 +29,7 @@ config ARCH_EXYNOS5
- 	bool "SAMSUNG EXYNOS5"
- 	default y
- 	select SOC_EXYNOS5250
-+	select SOC_EXYNOS5260
- 	select SOC_EXYNOS5420
- 	select USB_ARCH_HAS_XHCI
- 	help
-@@ -65,6 +66,9 @@ config SOC_EXYNOS4412
- config SOC_EXYNOS5250
- 	bool
- 
-+config SOC_EXYNOS5260
-+	bool
+diff --git a/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt b/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
+index ebe3ab6..5286e26 100644
+--- a/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
++++ b/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
+@@ -98,3 +98,42 @@ be used.  These specifiers are defined in:
+     slave   bsc2            peri      7     BCM281XX_SLAVE_CCU_BSC2
+     slave   bsc3            peri      8     BCM281XX_SLAVE_CCU_BSC3
+     slave   pwm             peri      9     BCM281XX_SLAVE_CCU_PWM
 +
- config SOC_EXYNOS5420
- 	bool
- 
-diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
-index 37ea261..790009e 100644
---- a/arch/arm/mach-exynos/mach-exynos5-dt.c
-+++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
-@@ -51,6 +51,7 @@ static void __init exynos5_dt_machine_init(void)
- 
- static char const *exynos5_dt_compat[] __initdata = {
- 	"samsung,exynos5250",
-+	"samsung,exynos5260",
- 	"samsung,exynos5420",
- 	"samsung,exynos5440",
- 	NULL
++
++BCM21664 family
++---------------
++CCU compatible string values for SoCs in the BCM21664 family are:
++    "brcm,bcm21664-root-ccu"
++    "brcm,bcm21664-aon-ccu"
++    "brcm,bcm21664-master-ccu"
++    "brcm,bcm21664-slave-ccu"
++
++The following table defines the set of CCUs and clock specifiers for
++BCM21664 family clocks.  When a clock consumer references a clocks,
++its symbolic specifier (rather than its numeric index value) should
++be used.  These specifiers are defined in:
++    "include/dt-bindings/clock/bcm21664.h"
++
++    CCU     Clock           Type    Index   Specifier
++    ---     -----           ----    -----   ---------
++    root    frac_1m         peri      0     BCM21664_ROOT_CCU_FRAC_1M
++
++    aon     hub_timer       peri      0     BCM21664_AON_CCU_HUB_TIMER
++
++    master  sdio1           peri      0     BCM21664_MASTER_CCU_SDIO1
++    master  sdio2           peri      1     BCM21664_MASTER_CCU_SDIO2
++    master  sdio3           peri      2     BCM21664_MASTER_CCU_SDIO3
++    master  sdio4           peri      3     BCM21664_MASTER_CCU_SDIO4
++    master  sdio1_sleep     peri      4     BCM21664_MASTER_CCU_SDIO1_SLEEP
++    master  sdio2_sleep     peri      5     BCM21664_MASTER_CCU_SDIO2_SLEEP
++    master  sdio3_sleep     peri      6     BCM21664_MASTER_CCU_SDIO3_SLEEP
++    master  sdio4_sleep     peri      7     BCM21664_MASTER_CCU_SDIO4_SLEEP
++
++    slave   uartb           peri      0     BCM21664_SLAVE_CCU_UARTB
++    slave   uartb2          peri      1     BCM21664_SLAVE_CCU_UARTB2
++    slave   uartb3          peri      2     BCM21664_SLAVE_CCU_UARTB3
++    slave   uartb4          peri      3     BCM21664_SLAVE_CCU_UARTB4
++    slave   bsc1            peri      4     BCM21664_SLAVE_CCU_BSC1
++    slave   bsc2            peri      5     BCM21664_SLAVE_CCU_BSC2
++    slave   bsc3            peri      6     BCM21664_SLAVE_CCU_BSC3
++    slave   bsc4            peri      7     BCM21664_SLAVE_CCU_BSC4
 -- 
 1.7.9.5
 
