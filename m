@@ -1,38 +1,110 @@
-From: Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: [PATCH 1/3] ARM: dts: Add PMU reg node to exynos4210
-Date: Wed, 02 Apr 2014 17:02:56 +0900
-Message-ID: <1396425778-4379-2-git-send-email-pankaj.dubey@samsung.com>
-References: <1396425778-4379-1-git-send-email-pankaj.dubey@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1396425778-4379-1-git-send-email-pankaj.dubey@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kgene.kim@samsung.com, linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, chow.kim@samsung.com, Pankaj Dubey <pankaj.dubey@samsung.com>
+From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] of: fix of_update_property [v2]
+Date: Wed, 2 Apr 2014 05:29:53 +0000
+Message-ID: <9622800c30f5412a9bbb9dfd95def751@BY2PR03MB505.namprd03.prod.outlook.com>
+References: <1396331486-29354-1-git-send-email-Li.Xiubo@freescale.com>
+ <20140401091920.E8E45C408A6@trevor.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140401091920.E8E45C408A6-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds pmu regnode to exynos4210 dtsi to handle
-PMU register access via DT.
 
-Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
----
- arch/arm/boot/dts/exynos4210.dtsi |    5 +++++
- 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
-index cacf614..0a2c0fe 100644
---- a/arch/arm/boot/dts/exynos4210.dtsi
-+++ b/arch/arm/boot/dts/exynos4210.dtsi
-@@ -81,6 +81,11 @@
- 		interrupts = <2 2>, <3 2>;
- 	};
+> > @@ -1776,25 +1776,26 @@ int of_update_property(struct device_node *np,
+> struct property *newprop)
+> >  	if (!newprop->name)
+> >  		return -EINVAL;
+> >
+> > -	oldprop = of_find_property(np, newprop->name, NULL);
+> > -	if (!oldprop)
+> > -		return of_add_property(np, newprop);
+> > -
+> >  	raw_spin_lock_irqsave(&devtree_lock, flags);
+> > -	next = &np->properties;
+> > -	while (*next) {
+> > +	oldprop = __of_find_property(np, newprop->name, NULL);
+> > +	if (!oldprop) {
+> > +		/* add the node */
+> > +		rc = __of_add_property(np, newprop);
+> > +	} else {
+> 
+> if you changed this line to:
+> 	} else while (*next) {
+> then most of the other changes go away. You don't need the separate
+> while loop 
+
+Yes, I will fix this.
+
+
+> and the function remains largely identical aside from moving
+> the __of_find_property() into the spinlock.
+>
+
+But, from the following codes, we can see that, if oldprop !=  NULL 
+Meaning that we have found it, and should just do the updatation later:
++++++++++++++++
+	oldprop = of_find_property(np, newprop->name, NULL);
+	if (!oldprop)
+		return of_add_property(np, newprop);
+---------------
+
+
  
-+	pmu_system_controller: system-controller@10020000 {
-+		compatible = "samsung,exynos4210-pmu", "syscon";
-+		reg = <0x10020000 0x5000>;
-+	};
-+
- 	pinctrl_0: pinctrl@11400000 {
- 		compatible = "samsung,exynos4210-pinctrl";
- 		reg = <0x11400000 0x1000>;
--- 
-1.7.10.4
+> >  			/* found the node */
+> >  			newprop->next = oldprop->next;
+> >  			*next = newprop;
+> >  			oldprop->next = np->deadprops;
+> >  			np->deadprops = oldprop;
+> > -			found = 1;
+
+And why the 'found' flag is here is that the oldprop maybe removed
+just before the spin_lock and after of_find_property().
+
+And so use and move __of_find_property() and __of_add_property() into
+the spinlock could avoid this...
+
+
+Thanks,
+--
+
+BRs,
+Xiubo
+
+
+> > -			break;
+> >  		}
+> > -		next = &(*next)->next;
+> >  	}
+> >  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> > +
+> >  	if (rc)
+> >  		return rc;
+> >
+> > @@ -1803,9 +1804,6 @@ int of_update_property(struct device_node *np, struct
+> property *newprop)
+> >  		sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
+> >  	__of_add_property_sysfs(np, newprop);
+> >
+> > -	if (!found)
+> > -		return -ENODEV;
+> > -
+> >  	return 0;
+> >  }
+> >
+> > --
+> > 1.8.4
+> >
+> >
+> 
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
