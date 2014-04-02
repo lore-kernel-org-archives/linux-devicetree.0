@@ -1,15 +1,14 @@
 From: Nicolin Chen <Guangyu.Chen@freescale.com>
-Subject: Re: [PATCH] ASoC: fsl_sai: Add imx6sx platform support
-Date: Thu, 3 Apr 2014 11:11:18 +0800
-Message-ID: <20140403031116.GA31246@MrMyself>
-References: <1396352049-23554-1-git-send-email-Guangyu.Chen@freescale.com>
- <20140402195208.GM14763@sirena.org.uk>
+Subject: [PATCH v2 2/2] ARM: dts: Append clock bindings for
+	sai2 on VF610 platform
+Date: Wed, 2 Apr 2014 18:10:20 +0800
+Message-ID: <d09da3eb629143abd3f61ae037af4ddaf7286a83.1396432924.git.Guangyu.Chen@freescale.com>
+References: <cover.1396432924.git.Guangyu.Chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20140402195208.GM14763@sirena.org.uk>
+In-Reply-To: <cover.1396432924.git.Guangyu.Chen@freescale.com>
 List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
 List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
@@ -19,26 +18,34 @@ List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
 Errors-To: alsa-devel-bounces@alsa-project.org
 Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
+To: broonie@kernel.org, shawn.guo@linaro.org
 Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, linux-doc@vger.kernel.org, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, timur@tabi.org, Li.Xiubo@freescale.com, rob@landley.net, galak@codeaurora.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 02, 2014 at 08:52:08PM +0100, Mark Brown wrote:
-> On Tue, Apr 01, 2014 at 07:34:09PM +0800, Nicolin Chen wrote:
-> > The next coming i.MX6 Solo X SoC also contains SAI module while we use
-> > imp_pcm_init() for i.MX platform.
-> 
-> I've applied this, though obviously it'd be better if we had dmaengine
-> support for this SoC so that it was just a compatible string update and
-> didn't require any code.
+Since we added fours clock to the DT binding, we should update the current
+SAI dts/dtsi so as not to break their functions.
 
-Hmm...actually imx_pcm_init() is just a shell calling dmaengine while it
-has its own config and flags. So we still need to extinguish these two
-elements for them even if using devm_snd_dmaengine_pcm_register() eventually.
+Signed-off-by: Nicolin Chen <Guangyu.Chen@freescale.com>
+---
+ arch/arm/boot/dts/vf610.dtsi | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-But the idea to merge them into one entry should be great for 3rd platform
-or even further one. And a patch for imx-pcm-dma and all callers of it
-would be needed then.
-
-Thank you,
-Nicolin
+diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
+index d31ce1b..9fd0007 100644
+--- a/arch/arm/boot/dts/vf610.dtsi
++++ b/arch/arm/boot/dts/vf610.dtsi
+@@ -139,8 +139,10 @@
+ 				compatible = "fsl,vf610-sai";
+ 				reg = <0x40031000 0x1000>;
+ 				interrupts = <0 86 0x04>;
+-				clocks = <&clks VF610_CLK_SAI2>;
+-				clock-names = "sai";
++				clocks = <&clks VF610_CLK_SAI2>,
++				       <&clks VF610_CLK_SAI2>,
++				       <&clks 0>, <&clks 0>;
++				clock-names = "bus", "mclk1", "mclk2", "mclk3";
+ 				status = "disabled";
+ 			};
+ 
+-- 
+1.8.4
