@@ -1,93 +1,74 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Wed, 02 Apr 2014 11:21:45 +0200
-Message-ID: <9532591.5yuCbpL4pV@wuerfel>
-References: <1396358832-15828-1-git-send-email-zhangfei.gao@linaro.org> <1396358832-15828-4-git-send-email-zhangfei.gao@linaro.org>
+From: Clement Perrochaud <clement.perrochaud-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH v4 2/2] NFC: pn544_i2c: Add DTS Documentation
+Date: Wed, 2 Apr 2014 09:03:27 +0000
+Message-ID: <f8420dc39bb74443b49e6e05d4a96fd0@AMXPR04MB136.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396358832-15828-4-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org, eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Clement Perrochaud <clement.perrochaud-3arQi8VN3Tc@public.gmane.org>, "linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org" <linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 01 April 2014 21:27:12 Zhangfei Gao wrote:
-> +static int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+Describe the properties used by the PN544 NFC controller driver.
 
-While it looks like there are no serious functionality bugs left, this
-function is rather inefficient, as has been pointed out before:
+Signed-off-by: Cl=E9ment Perrochaud <clement.perrochaud-3arQi8VN3Tc@public.gmane.org>
+---
+ .../devicetree/bindings/net/nfc/pn544.txt          | 35 ++++++++++++++=
+++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/nfc/pn544.txt
 
-> +{
-> +       struct hip04_priv *priv = netdev_priv(ndev);
-> +       struct net_device_stats *stats = &ndev->stats;
-> +       unsigned int tx_head = priv->tx_head;
-> +       struct tx_desc *desc = &priv->tx_desc[tx_head];
-> +       dma_addr_t phys;
-> +
-> +       hip04_tx_reclaim(ndev, false);
-> +       mod_timer(&priv->txtimer, jiffies + RECLAIM_PERIOD);
-> +
-> +       if (priv->tx_count >= TX_DESC_NUM) {
-> +               netif_stop_queue(ndev);
-> +               return NETDEV_TX_BUSY;
-> +       }
+diff --git a/Documentation/devicetree/bindings/net/nfc/pn544.txt b/Docu=
+mentation/devicetree/bindings/net/nfc/pn544.txt
+new file mode 100644
+index 0000000..642ff5c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/nfc/pn544.txt
+@@ -0,0 +1,35 @@
++* NXP Semiconductors PN544 NFC Controller
++
++Required properties:
++- compatible: Should be "nxp,pn544-i2c".
++- clock-frequency: I=B2C work frequency.
++- reg: address on the bus
++- interrupt-parent: phandle for the interrupt gpio controller
++- interrupts: GPIO interrupt to which the chip is connected
++- enable-gpios: Output GPIO pin used for enabling/disabling the PN544
++- firmware-gpios: Output GPIO pin used to enter firmware download mode
++
++Optional SoC Specific Properties:
++- pinctrl-names: Contains only one value - "default".
++- pintctrl-0: Specifies the pin control groups used for this controlle=
+r.
++
++Example (for ARM-based BeagleBone with PN544 on I2C2):
++
++&i2c2 {
++
++	status =3D "okay";
++
++	pn544: pn544@28 {
++
++		compatible =3D "nxp,pn544-i2c";
++
++		reg =3D <0x28>;
++		clock-frequency =3D <400000>;
++
++		interrupt-parent =3D <&gpio1>;
++		interrupts =3D <17 GPIO_ACTIVE_HIGH>;
++
++		enable-gpios =3D <&gpio3 21 GPIO_ACTIVE_HIGH>;
++		firmware-gpios =3D <&gpio3 19 GPIO_ACTIVE_HIGH>;
++	};
++};
+--=20
+1.9.1
 
-This is where you have two problems:
-
-- if the descriptor ring is full, you wait for RECLAIM_PERIOD,
-  which is far too long at 500ms, because during that time you
-  are not able to add further data to the stopped queue.
-
-- As David Laight pointed out earlier, you must also ensure that
-  you don't have too much /data/ pending in the descriptor ring
-  when you stop the queue. For a 10mbit connection, you have already
-  tested (as we discussed on IRC) that 64 descriptors with 1500 byte
-  frames gives you a 68ms round-trip ping time, which is too much.
-  Conversely, on 1gbit, having only 64 descriptors actually seems
-  a little low, and you may be able to get better throughput if
-  you extend the ring to e.g. 512 descriptors.
-
-> +       phys = dma_map_single(&ndev->dev, skb->data, skb->len, DMA_TO_DEVICE);
-> +       if (dma_mapping_error(&ndev->dev, phys)) {
-> +               dev_kfree_skb(skb);
-> +               return NETDEV_TX_OK;
-> +       }
-> +
-> +       priv->tx_skb[tx_head] = skb;
-> +       priv->tx_phys[tx_head] = phys;
-> +       desc->send_addr = cpu_to_be32(phys);
-> +       desc->send_size = cpu_to_be16(skb->len);
-> +       desc->cfg = cpu_to_be32(DESC_DEF_CFG);
-> +       phys = priv->tx_desc_dma + tx_head * sizeof(struct tx_desc);
-> +       desc->wb_addr = cpu_to_be32(phys);
-
-One detail: since you don't have cache-coherent DMA, "desc" will
-reside in uncached memory, so you try to minimize the number of accesses.
-It's probably faster if you build the descriptor on the stack and
-then atomically copy it over, rather than assigning each member at
-a time.
-
-The same would be true for the rx descriptors.
-
-> +       skb_tx_timestamp(skb);
-> +
-> +       /* Don't wait up for transmitted skbs to be freed. */
-> +       skb_orphan(skb);
-> +
-> +       hip04_set_xmit_desc(priv, phys);
-> +       priv->tx_head = TX_NEXT(tx_head);
-> +
-> +       stats->tx_bytes += skb->len;
-> +       stats->tx_packets++;
-> +       priv->tx_count++;
-> +
-> +       return NETDEV_TX_OK;
-> +}
-
-	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
