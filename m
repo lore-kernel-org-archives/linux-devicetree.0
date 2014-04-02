@@ -1,142 +1,45 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 1/3] ARM: dts: dra7xx-clocks: Correct name for atl clkin3 clock
-Date: Wed, 2 Apr 2014 16:55:05 +0300
-Message-ID: <1396446907-20383-2-git-send-email-peter.ujfalusi@ti.com>
-References: <1396446907-20383-1-git-send-email-peter.ujfalusi@ti.com>
+From: Tim Kryger <tim.kryger@linaro.org>
+Subject: [RESEND PATCH v5 3/5] ARM: dts: Declare the PWM for bcm11351 (bcm281xx)
+Date: Wed, 2 Apr 2014 09:27:22 -0700
+Message-ID: <1396456044-19427-4-git-send-email-tim.kryger@linaro.org>
+References: <1396456044-19427-1-git-send-email-tim.kryger@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1396446907-20383-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>, Mike Turquette <mturquette@linaro.org>
-Cc: Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1396456044-19427-1-git-send-email-tim.kryger@linaro.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Matt Porter <mporter@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Grant Likely <grant.likely@linaro.org>
+Cc: Tim Kryger <tim.kryger@linaro.org>, Linux PWM List <linux-pwm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, Linux Doc List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-To allign the name with the other atl clock names:
-atlclkin3_ck -> atl_clkin3_ck
+Add the device tree node for the PWM on bcm11351 SoCs.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
+Reviewed-by: Alex Elder <elder@linaro.org>
+Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
 ---
- arch/arm/boot/dts/dra7xx-clocks.dtsi | 22 +++++++++++-----------
- drivers/clk/ti/clk-7xx.c             |  2 +-
- 2 files changed, 12 insertions(+), 12 deletions(-)
+ arch/arm/boot/dts/bcm11351.dtsi |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-index cfb8fc753f50..30160348934c 100644
---- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-@@ -26,7 +26,7 @@
- 		clock-frequency = <0>;
+diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
+index 64d069b..6b05ae6 100644
+--- a/arch/arm/boot/dts/bcm11351.dtsi
++++ b/arch/arm/boot/dts/bcm11351.dtsi
+@@ -193,6 +193,14 @@
+ 		status = "disabled";
  	};
  
--	atlclkin3_ck: atlclkin3_ck {
-+	atl_clkin3_ck: atl_clkin3_ck {
- 		#clock-cells = <0>;
- 		compatible = "fixed-clock";
- 		clock-frequency = <0>;
-@@ -730,7 +730,7 @@
- 	mcasp1_ahclkr_mux: mcasp1_ahclkr_mux {
- 		#clock-cells = <0>;
- 		compatible = "ti,mux-clock";
--		clocks = <&abe_24m_fclk>, <&abe_sys_clk_div>, <&func_24m_clk>, <&atlclkin3_ck>, <&atl_clkin2_ck>, <&atl_clkin1_ck>, <&atl_clkin0_ck>, <&sys_clkin2>, <&ref_clkin0_ck>, <&ref_clkin1_ck>, <&ref_clkin2_ck>, <&ref_clkin3_ck>, <&mlb_clk>, <&mlbp_clk>;
-+		clocks = <&abe_24m_fclk>, <&abe_sys_clk_div>, <&func_24m_clk>, <&atl_clkin3_ck>, <&atl_clkin2_ck>, <&atl_clkin1_ck>, <&atl_clkin0_ck>, <&sys_clkin2>, <&ref_clkin0_ck>, <&ref_clkin1_ck>, <&ref_clkin2_ck>, <&ref_clkin3_ck>, <&mlb_clk>, <&mlbp_clk>;
- 		ti,bit-shift = <28>;
- 		reg = <0x0550>;
- 	};
-@@ -738,7 +738,7 @@
- 	mcasp1_ahclkx_mux: mcasp1_ahclkx_mux {
- 		#clock-cells = <0>;
- 		compatible = "ti,mux-clock";
--		clocks = <&abe_24m_fclk>, <&abe_sys_clk_div>, <&func_24m_clk>, <&atlclkin3_ck>, <&atl_clkin2_ck>, <&atl_clkin1_ck>, <&atl_clkin0_ck>, <&sys_clkin2>, <&ref_clkin0_ck>, <&ref_clkin1_ck>, <&ref_clkin2_ck>, <&ref_clkin3_ck>, <&mlb_clk>, <&mlbp_clk>;
-+		clocks = <&abe_24m_fclk>, <&abe_sys_clk_div>, <&func_24m_clk>, <&atl_clkin3_ck>, <&atl_clkin2_ck>, <&atl_clkin1_ck>, <&atl_clkin0_ck>, <&sys_clkin2>, <&ref_clkin0_ck>, <&ref_clkin1_ck>, <&ref_clkin2_ck>, <&ref_clkin3_ck>, <&mlb_clk>, <&mlbp_clk>;
- 		ti,bit-shift = <24>;
- 		reg = <0x0550>;
- 	};
-@@ -1631,7 +1631,7 @@
- 	mcasp2_ahclkr_mux: mcasp2_ahclkr_mux {
- 		#clock-cells = <0>;
- 		compatible = "ti,mux-clock";
--		clocks = <&abe_24m_fclk>, <&abe_sys_clk_div>, <&func_24m_clk>, <&atlclkin3_ck>, <&atl_clkin2_ck>, <&atl_clkin1_ck>, <&atl_clkin0_ck>, <&sys_clkin2>, <&ref_clkin0_ck>, <&ref_clkin1_ck>, <&ref_clkin2_ck>, <&ref_clkin3_ck>, <&mlb_clk>, <&mlbp_clk>;
-+		clocks = <&abe_24m_fclk>, <&abe_sys_clk_div>, <&func_24m_clk>, <&atl_clkin3_ck>, <&atl_clkin2_ck>, <&atl_clkin1_ck>, <&atl_clkin0_ck>, <&sys_clkin2>, <&ref_clkin0_ck>, <&ref_clkin1_ck>, <&ref_clkin2_ck>, <&ref_clkin3_ck>, <&mlb_clk>, <&mlbp_clk>;
- 		ti,bit-shift = <28>;
- 		reg = <0x1860>;
- 	};
-@@ -1639,7 +1639,7 @@
- 	mcasp2_ahclkx_mux: mcasp2_ahclkx_mux {
- 		#clock-cells = <0>;
- 		compatible = "ti,mux-clock";
--		clocks = <&abe_24m_fclk>, <&abe_sys_clk_div>, <&func_24m_clk>, <&atlclkin3_ck>, <&atl_clkin2_ck>, <&atl_clkin1_ck>, <&atl_clkin0_ck>, <&sys_clkin2>, <&ref_clkin0_ck>, <&ref_clkin1_ck>, <&ref_clkin2_ck>, <&ref_clkin3_ck>, <&mlb_clk>, <&mlbp_clk>;
-+		clocks = <&abe_24m_fclk>, <&abe_sys_clk_div>, <&func_24m_clk>, <&atl_clkin3_ck>, <&atl_clkin2_ck>, <&atl_clkin1_ck>, <&atl_clkin0_ck>, <&sys_clkin2>, <&ref_clkin0_ck>, <&ref_clkin1_ck>, <&ref_clkin2_ck>, <&ref_clkin3_ck>, <&mlb_clk>, <&mlbp_clk>;
- 		ti,bit-shift = <24>;
- 		reg = <0x1860>;
- 	};
-@@ -1655,7 +1655,7 @@
- 	mcasp3_ahclkx_mux: mcasp3_ahclkx_mux {
- 		#clock-cells = <0>;
- 		compatible = "ti,mux-clock";
--		clocks = <&abe_24m_fclk>, <&abe_sys_clk_div>, <&func_24m_clk>, <&atlclkin3_ck>, <&atl_clkin2_ck>, <&atl_clkin1_ck>, <&atl_clkin0_ck>, <&sys_clkin2>, <&ref_clkin0_ck>, <&ref_clkin1_ck>, <&ref_clkin2_ck>, <&ref_clkin3_ck>, <&mlb_clk>, <&mlbp_clk>;
-+		clocks = <&abe_24m_fclk>, <&abe_sys_clk_div>, <&func_24m_clk>, <&atl_clkin3_ck>, <&atl_clkin2_ck>, <&atl_clkin1_ck>, <&atl_clkin0_ck>, <&sys_clkin2>, <&ref_clkin0_ck>, <&ref_clkin1_ck>, <&ref_clkin2_ck>, <&ref_clkin3_ck>, <&mlb_clk>, <&mlbp_clk>;
- 		ti,bit-shift = <24>;
- 		reg = <0x1868>;
- 	};
-@@ -1671,7 +1671,7 @@
- 	mcasp4_ahclkx_mux: mcasp4_ahclkx_mux {
- 		#clock-cells = <0>;
- 		compatible = "ti,mux-clock";
--		clocks = <&abe_24m_fclk>, <&abe_sys_clk_div>, <&func_24m_clk>, <&atlclkin3_ck>, <&atl_clkin2_ck>, <&atl_clkin1_ck>, <&atl_clkin0_ck>, <&sys_clkin2>, <&ref_clkin0_ck>, <&ref_clkin1_ck>, <&ref_clkin2_ck>, <&ref_clkin3_ck>, <&mlb_clk>, <&mlbp_clk>;
-+		clocks = <&abe_24m_fclk>, <&abe_sys_clk_div>, <&func_24m_clk>, <&atl_clkin3_ck>, <&atl_clkin2_ck>, <&atl_clkin1_ck>, <&atl_clkin0_ck>, <&sys_clkin2>, <&ref_clkin0_ck>, <&ref_clkin1_ck>, <&ref_clkin2_ck>, <&ref_clkin3_ck>, <&mlb_clk>, <&mlbp_clk>;
- 		ti,bit-shift = <24>;
- 		reg = <0x1898>;
- 	};
-@@ -1687,7 +1687,7 @@
- 	mcasp5_ahclkx_mux: mcasp5_ahclkx_mux {
- 		#clock-cells = <0>;
- 		compatible = "ti,mux-clock";
--		clocks = <&abe_24m_fclk>, <&abe_sys_clk_div>, <&func_24m_clk>, <&atlclkin3_ck>, <&atl_clkin2_ck>, <&atl_clkin1_ck>, <&atl_clkin0_ck>, <&sys_clkin2>, <&ref_clkin0_ck>, <&ref_clkin1_ck>, <&ref_clkin2_ck>, <&ref_clkin3_ck>, <&mlb_clk>, <&mlbp_clk>;
-+		clocks = <&abe_24m_fclk>, <&abe_sys_clk_div>, <&func_24m_clk>, <&atl_clkin3_ck>, <&atl_clkin2_ck>, <&atl_clkin1_ck>, <&atl_clkin0_ck>, <&sys_clkin2>, <&ref_clkin0_ck>, <&ref_clkin1_ck>, <&ref_clkin2_ck>, <&ref_clkin3_ck>, <&mlb_clk>, <&mlbp_clk>;
- 		ti,bit-shift = <24>;
- 		reg = <0x1878>;
- 	};
-@@ -1703,7 +1703,7 @@
- 	mcasp6_ahclkx_mux: mcasp6_ahclkx_mux {
- 		#clock-cells = <0>;
- 		compatible = "ti,mux-clock";
--		clocks = <&abe_24m_fclk>, <&abe_sys_clk_div>, <&func_24m_clk>, <&atlclkin3_ck>, <&atl_clkin2_ck>, <&atl_clkin1_ck>, <&atl_clkin0_ck>, <&sys_clkin2>, <&ref_clkin0_ck>, <&ref_clkin1_ck>, <&ref_clkin2_ck>, <&ref_clkin3_ck>, <&mlb_clk>, <&mlbp_clk>;
-+		clocks = <&abe_24m_fclk>, <&abe_sys_clk_div>, <&func_24m_clk>, <&atl_clkin3_ck>, <&atl_clkin2_ck>, <&atl_clkin1_ck>, <&atl_clkin0_ck>, <&sys_clkin2>, <&ref_clkin0_ck>, <&ref_clkin1_ck>, <&ref_clkin2_ck>, <&ref_clkin3_ck>, <&mlb_clk>, <&mlbp_clk>;
- 		ti,bit-shift = <24>;
- 		reg = <0x1904>;
- 	};
-@@ -1719,7 +1719,7 @@
- 	mcasp7_ahclkx_mux: mcasp7_ahclkx_mux {
- 		#clock-cells = <0>;
- 		compatible = "ti,mux-clock";
--		clocks = <&abe_24m_fclk>, <&abe_sys_clk_div>, <&func_24m_clk>, <&atlclkin3_ck>, <&atl_clkin2_ck>, <&atl_clkin1_ck>, <&atl_clkin0_ck>, <&sys_clkin2>, <&ref_clkin0_ck>, <&ref_clkin1_ck>, <&ref_clkin2_ck>, <&ref_clkin3_ck>, <&mlb_clk>, <&mlbp_clk>;
-+		clocks = <&abe_24m_fclk>, <&abe_sys_clk_div>, <&func_24m_clk>, <&atl_clkin3_ck>, <&atl_clkin2_ck>, <&atl_clkin1_ck>, <&atl_clkin0_ck>, <&sys_clkin2>, <&ref_clkin0_ck>, <&ref_clkin1_ck>, <&ref_clkin2_ck>, <&ref_clkin3_ck>, <&mlb_clk>, <&mlbp_clk>;
- 		ti,bit-shift = <24>;
- 		reg = <0x1908>;
- 	};
-@@ -1735,7 +1735,7 @@
- 	mcasp8_ahclk_mux: mcasp8_ahclk_mux {
- 		#clock-cells = <0>;
- 		compatible = "ti,mux-clock";
--		clocks = <&abe_24m_fclk>, <&abe_sys_clk_div>, <&func_24m_clk>, <&atlclkin3_ck>, <&atl_clkin2_ck>, <&atl_clkin1_ck>, <&atl_clkin0_ck>, <&sys_clkin2>, <&ref_clkin0_ck>, <&ref_clkin1_ck>, <&ref_clkin2_ck>, <&ref_clkin3_ck>, <&mlb_clk>, <&mlbp_clk>;
-+		clocks = <&abe_24m_fclk>, <&abe_sys_clk_div>, <&func_24m_clk>, <&atl_clkin3_ck>, <&atl_clkin2_ck>, <&atl_clkin1_ck>, <&atl_clkin0_ck>, <&sys_clkin2>, <&ref_clkin0_ck>, <&ref_clkin1_ck>, <&ref_clkin2_ck>, <&ref_clkin3_ck>, <&mlb_clk>, <&mlbp_clk>;
- 		ti,bit-shift = <22>;
- 		reg = <0x1890>;
- 	};
-diff --git a/drivers/clk/ti/clk-7xx.c b/drivers/clk/ti/clk-7xx.c
-index 19a55bf407dd..cb8e6f14e880 100644
---- a/drivers/clk/ti/clk-7xx.c
-+++ b/drivers/clk/ti/clk-7xx.c
-@@ -24,7 +24,7 @@ static struct ti_dt_clk dra7xx_clks[] = {
- 	DT_CLK(NULL, "atl_clkin0_ck", "atl_clkin0_ck"),
- 	DT_CLK(NULL, "atl_clkin1_ck", "atl_clkin1_ck"),
- 	DT_CLK(NULL, "atl_clkin2_ck", "atl_clkin2_ck"),
--	DT_CLK(NULL, "atlclkin3_ck", "atlclkin3_ck"),
-+	DT_CLK(NULL, "atl_clkin3_ck", "atl_clkin3_ck"),
- 	DT_CLK(NULL, "hdmi_clkin_ck", "hdmi_clkin_ck"),
- 	DT_CLK(NULL, "mlb_clkin_ck", "mlb_clkin_ck"),
- 	DT_CLK(NULL, "mlbp_clkin_ck", "mlbp_clkin_ck"),
++	pwm: pwm@3e01a000 {
++		compatible = "brcm,bcm11351-pwm", "brcm,kona-pwm";
++		reg = <0x3e01a000 0xcc>;
++		clocks = <&slave_ccu BCM281XX_SLAVE_CCU_PWM>;
++		#pwm-cells = <3>;
++		status = "disabled";
++	};
++
+ 	clocks {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 -- 
-1.9.1
+1.7.9.5
 
