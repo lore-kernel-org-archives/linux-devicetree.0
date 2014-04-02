@@ -1,75 +1,51 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2] spi: add "spi-lsb-first" to devicetree
-Date: Wed, 2 Apr 2014 20:39:45 +0100
-Message-ID: <20140402193945.GH14763@sirena.org.uk>
-References: <1396343450-6199-1-git-send-email-B45475@freescale.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7161828105168566941=="
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1396343450-6199-1-git-send-email-B45475@freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-To: Zhao Qiang <B45475@freescale.com>
-Cc: B07421@freescale.com, baruch@tkos.co.il, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, R63061@freescale.com, linuxppc-dev@lists.ozlabs.org, wangyuhang2014@gmail.com
+From: Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: [PATCH 2/3] ARM: dts: Add PMU reg node to exynos4212 and exynos4412
+Date: Wed, 02 Apr 2014 17:02:57 +0900
+Message-ID: <1396425778-4379-3-git-send-email-pankaj.dubey@samsung.com>
+References: <1396425778-4379-1-git-send-email-pankaj.dubey@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1396425778-4379-1-git-send-email-pankaj.dubey@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kgene.kim@samsung.com, linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, chow.kim@samsung.com, Pankaj Dubey <pankaj.dubey@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+This patch adds pmu regnode to exynos4212 and exynos4412 dtsi to
+handle PMU register access via DT.
 
---===============7161828105168566941==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7J16OGEJ/mt06A90"
-Content-Disposition: inline
+Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+---
+ arch/arm/boot/dts/exynos4212.dtsi |    5 +++++
+ arch/arm/boot/dts/exynos4412.dtsi |    5 +++++
+ 2 files changed, 10 insertions(+)
 
-
---7J16OGEJ/mt06A90
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Apr 01, 2014 at 05:10:50PM +0800, Zhao Qiang wrote:
-> add optional property devicetree for SPI slave nodes
-> into devicetree so that LSB mode can be enabled by devicetree.
-
-Applied, thanks.
-
---7J16OGEJ/mt06A90
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTPGd+AAoJELSic+t+oim9AS0QAIpuDugLQoc6QM4BDNSTaSQQ
-xrJO1C8WdLdU9raGKErnFdIGwiuuEeqXGsRzB1Quq27xq2eRgt5RTHICBwkNIL0r
-ASXF494at1tapvoO7Z4jjaW+tsDpH3o1ZFgWBcD9JfVPvY8KnJWYaY+MzJaXXd0f
-cL7qKP3yQ21/OS8WDgouPCkjRHV8R3a3bPD4286JL46gboNszPaRWuFAMaaF93Ul
-KBTRGZAAELZBcXdfZqfD5D1cow9FYZFSQLgRADxI/WSgPbstOfbJuI3HmFd0HFgr
-AhZY+j6i4qTchoQGklpMXfGQLPq+eC+VHVdK88axJqONUMPPBDbv8LLTk21ET/ce
-US2P5HdxWDKLxQY0Fh/nBMtjrmVYpP7YzfmmpiyL6aZqy1EAw5hvM6h+Fcw+VT/y
-nWcMaOKRHhMc7wOH5CyLndvK63LXpLUtbW8WOSqywm4wCTpGRMmviW24y0E/XaB1
-MhStyJ1iRVdBDMFsEZlmRB3+WnUZ5EftKnlImox9o4oZB7oPCuAJnz80Ca3PJcwf
-XccsRs/nNOjnwagZe+9CZzg5KWwlkKoTZmTnRxmYJ6GRrLFG4SkbJcTRtjlljrEn
-t0qeyjEc3cU8bO4NGLCdnu5abt+nc+Jr1kSXFY4UwhJQZ6Nqi4WC5XI+bmYbTMct
-enNvk2w/EqJcnK3B8cru
-=13uQ
------END PGP SIGNATURE-----
-
---7J16OGEJ/mt06A90--
-
---===============7161828105168566941==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMt
-ZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xp
-c3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
-
---===============7161828105168566941==--
+diff --git a/arch/arm/boot/dts/exynos4212.dtsi b/arch/arm/boot/dts/exynos4212.dtsi
+index 3c00e6e..4661ffa 100644
+--- a/arch/arm/boot/dts/exynos4212.dtsi
++++ b/arch/arm/boot/dts/exynos4212.dtsi
+@@ -29,4 +29,9 @@
+ 	gic: interrupt-controller@10490000 {
+ 		cpu-offset = <0x8000>;
+ 	};
++
++	pmu_system_controller: system-controller@10020000 {
++		compatible = "samsung,exynos4212-pmu", "syscon";
++		reg = <0x10020000 0x5000>;
++	};
+ };
+diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
+index 15d3c0a..6f4cb22 100644
+--- a/arch/arm/boot/dts/exynos4412.dtsi
++++ b/arch/arm/boot/dts/exynos4412.dtsi
+@@ -29,4 +29,9 @@
+ 	gic: interrupt-controller@10490000 {
+ 		cpu-offset = <0x4000>;
+ 	};
++
++	pmu_system_controller: system-controller@10020000 {
++		compatible = "samsung,exynos4412-pmu", "syscon";
++		reg = <0x10020000 0x5000>;
++	};
+ };
+-- 
+1.7.10.4
