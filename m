@@ -1,71 +1,122 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Wed, 02 Apr 2014 17:49:05 +0200
-Message-ID: <4698724.S4F2PxkdOH@wuerfel>
-References: <1396358832-15828-1-git-send-email-zhangfei.gao@linaro.org> <9532591.5yuCbpL4pV@wuerfel> <063D6719AE5E284EB5DD2968C1650D6D0F6EE729@AcuExch.aculab.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <063D6719AE5E284EB5DD2968C1650D6D0F6EE729@AcuExch.aculab.com>
-Sender: netdev-owner@vger.kernel.org
-To: David Laight <David.Laight@aculab.com>
-Cc: Zhangfei Gao <zhangfei.gao@linaro.org>, "davem@davemloft.net" <davem@davemloft.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "eric.dumazet@gmail.com" <eric.dumazet@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: stefan-XLVq0VzYD2Y@public.gmane.org
+Subject: [PATCH v2 2/2] ARM: dts: SPEAr: fix wrong stmpe-ts bindings
+Date: Wed,  2 Apr 2014 19:05:38 +0200
+Message-ID: <d4a7f6bcdf6ec00970aabb9ff501c7d342f37bd7.1396457876.git.stefan@agner.ch>
+References: <cover.1396457876.git.stefan@agner.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1396457876.git.stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 02 April 2014 10:04:34 David Laight wrote:
-> From: Arnd Bergmann
-> > On Tuesday 01 April 2014 21:27:12 Zhangfei Gao wrote:
-> > > +       phys = dma_map_single(&ndev->dev, skb->data, skb->len, DMA_TO_DEVICE);
-> > > +       if (dma_mapping_error(&ndev->dev, phys)) {
-> > > +               dev_kfree_skb(skb);
-> > > +               return NETDEV_TX_OK;
-> > > +       }
-> > > +
-> > > +       priv->tx_skb[tx_head] = skb;
-> > > +       priv->tx_phys[tx_head] = phys;
-> > > +       desc->send_addr = cpu_to_be32(phys);
-> > > +       desc->send_size = cpu_to_be16(skb->len);
-> > > +       desc->cfg = cpu_to_be32(DESC_DEF_CFG);
-> > > +       phys = priv->tx_desc_dma + tx_head * sizeof(struct tx_desc);
-> > > +       desc->wb_addr = cpu_to_be32(phys);
-> > 
-> > One detail: since you don't have cache-coherent DMA, "desc" will
-> > reside in uncached memory, so you try to minimize the number of accesses.
-> > It's probably faster if you build the descriptor on the stack and
-> > then atomically copy it over, rather than assigning each member at
-> > a time.
-> 
-> I'm not sure, the writes to uncached memory will probably be
-> asynchronous, but you may avoid a stall by separating the
-> cycles in time.
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 
-Right.
+Fix bindings for STMPE touchscreen controller to match the documented
+bindings and the actual bindings used by the driver.
 
-> What you need to avoid is reads from uncached memory.
-> It may well beneficial for the tx reclaim code to first
-> check whether all the transmits have completed (likely)
-> instead of testing each descriptor in turn.
+Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+---
+ arch/arm/boot/dts/spear1310-evb.dts | 18 +++++++++---------
+ arch/arm/boot/dts/spear1340-evb.dts | 18 +++++++++---------
+ arch/arm/boot/dts/spear320-hmi.dts  | 20 ++++++++++----------
+ 3 files changed, 28 insertions(+), 28 deletions(-)
 
-Good point, reading from noncached memory is actually the
-part that matters. For slow networks (e.g. 10mbit), checking if
-all of the descriptors have finished is not quite as likely to succeed
-as for fast (gbit), especially if the timeout is set to expire
-before all descriptors have completed.
+diff --git a/arch/arm/boot/dts/spear1310-evb.dts b/arch/arm/boot/dts/spear1310-evb.dts
+index b56a801..fe2ece2 100644
+--- a/arch/arm/boot/dts/spear1310-evb.dts
++++ b/arch/arm/boot/dts/spear1310-evb.dts
+@@ -369,15 +369,15 @@
+ 
+ 					stmpe_touchscreen {
+ 						compatible = "st,stmpe-ts";
+-						ts,sample-time = <4>;
+-						ts,mod-12b = <1>;
+-						ts,ref-sel = <0>;
+-						ts,adc-freq = <1>;
+-						ts,ave-ctrl = <1>;
+-						ts,touch-det-delay = <2>;
+-						ts,settling = <2>;
+-						ts,fraction-z = <7>;
+-						ts,i-drive = <1>;
++						st,sample-time = <4>;
++						st,mod-12b = <1>;
++						st,ref-sel = <0>;
++						st,adc-freq = <1>;
++						st,ave-ctrl = <1>;
++						st,touch-det-delay = <2>;
++						st,settling = <2>;
++						st,fraction-z = <7>;
++						st,i-drive = <1>;
+ 					};
+ 				};
+ 
+diff --git a/arch/arm/boot/dts/spear1340-evb.dts b/arch/arm/boot/dts/spear1340-evb.dts
+index d6c30ae..d3dcba9 100644
+--- a/arch/arm/boot/dts/spear1340-evb.dts
++++ b/arch/arm/boot/dts/spear1340-evb.dts
+@@ -480,15 +480,15 @@
+ 
+ 					stmpe_touchscreen {
+ 						compatible = "st,stmpe-ts";
+-						ts,sample-time = <4>;
+-						ts,mod-12b = <1>;
+-						ts,ref-sel = <0>;
+-						ts,adc-freq = <1>;
+-						ts,ave-ctrl = <1>;
+-						ts,touch-det-delay = <2>;
+-						ts,settling = <2>;
+-						ts,fraction-z = <7>;
+-						ts,i-drive = <1>;
++						st,sample-time = <4>;
++						st,mod-12b = <1>;
++						st,ref-sel = <0>;
++						st,adc-freq = <1>;
++						st,ave-ctrl = <1>;
++						st,touch-det-delay = <2>;
++						st,settling = <2>;
++						st,fraction-z = <7>;
++						st,i-drive = <1>;
+ 					};
+ 				};
+ 
+diff --git a/arch/arm/boot/dts/spear320-hmi.dts b/arch/arm/boot/dts/spear320-hmi.dts
+index 3075d2d..2a5d013 100644
+--- a/arch/arm/boot/dts/spear320-hmi.dts
++++ b/arch/arm/boot/dts/spear320-hmi.dts
+@@ -256,17 +256,17 @@
+ 					};
+ 
+ 					stmpe610-ts {
+-						compatible = "stmpe,ts";
++						compatible = "st,stmpe-ts";
+ 						reg = <0>;
+-						ts,sample-time = <4>;
+-						ts,mod-12b = <1>;
+-						ts,ref-sel = <0>;
+-						ts,adc-freq = <1>;
+-						ts,ave-ctrl = <1>;
+-						ts,touch-det-delay = <3>;
+-						ts,settling = <4>;
+-						ts,fraction-z = <7>;
+-						ts,i-drive = <1>;
++						st,sample-time = <4>;
++						st,mod-12b = <1>;
++						st,ref-sel = <0>;
++						st,adc-freq = <1>;
++						st,ave-ctrl = <1>;
++						st,touch-det-delay = <3>;
++						st,settling = <4>;
++						st,fraction-z = <7>;
++						st,i-drive = <1>;
+ 					};
+ 				};
+ 			};
+-- 
+1.9.1
 
-If it makes a lot of difference to performance, one could use
-a binary search over the outstanding descriptors rather than looking
-just at the last one.
-
-> > The same would be true for the rx descriptors.
-> 
-> Actually it is reasonably feasible to put the rx descriptors
-> in cacheable memory and to flush the cache lines after adding
-> new entries.
-> You just need to add the entries one cache line full at a time
-> (and ensure that the rx processing code doesn't dirty the line).
-
-rx descriptors are already using the streaming mapping, so ignore
-what I said about them.
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
