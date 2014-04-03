@@ -1,54 +1,86 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: [PATCH 9/9] ARM: DT: qcom: Add Qualcomm crypto driver binding document
-Date: Thu,  3 Apr 2014 19:18:06 +0300
-Message-ID: <1396541886-10966-10-git-send-email-svarbanov@mm-sol.com>
-References: <1396541886-10966-1-git-send-email-svarbanov@mm-sol.com>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1396541886-10966-1-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>
-Cc: Stanimir Varbanov <svarbanov@mm-sol.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [rtc-linux] [PATCH v3 2/3] rtc: Add APM X-Gene SoC RTC driver
+Date: Thu, 3 Apr 2014 17:26:48 +0100
+Message-ID: <20140403162648.GW14763@sirena.org.uk>
+References: <1396505873-5507-1-git-send-email-lho@apm.com>
+ <1396505873-5507-2-git-send-email-lho@apm.com>
+ <1396505873-5507-3-git-send-email-lho@apm.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="w1TwAseT95X423KH"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1396505873-5507-3-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Here is Qualcomm crypto driver device tree binding documentation
-to used as a reference example.
 
-Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
----
- .../devicetree/bindings/crypto/qcom-qce.txt        | 25 ++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/crypto/qcom-qce.txt
+--w1TwAseT95X423KH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/crypto/qcom-qce.txt b/Documentation/devicetree/bindings/crypto/qcom-qce.txt
-new file mode 100644
-index 000000000000..7ec67c90d2d1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/qcom-qce.txt
-@@ -0,0 +1,25 @@
-+Qualcomm crypto engine driver
-+
-+Required properties:
-+
-+- compatible  : should be "qcom,crypto-v5.1"
-+- reg         : specifies base physical address and size of the registers map
-+- clocks      : phandle to clock-controller plus clock-specifier pair
-+- clock-names : "iface" clocks register interface
-+		"bus" clocks data transfer interface
-+		"core" clocks reset of the crypto block
-+- dmas        : DMA specifiers for tx and rx dma channels. For more see
-+		Documentation/devicetree/bindings/dma/dma.txt
-+- dma-names   : DMA request names should be "rx" and "tx"
-+
-+Example:
-+	crypto@fd45a000 {
-+		compatible = "qcom,crypto-v5.1";
-+		reg = <0xfd45a000 0x6000>;
-+		clocks = <&gcc GCC_CE2_AHB_CLK>,
-+			 <&gcc GCC_CE2_AXI_CLK>,
-+			 <&gcc GCC_CE2_CLK>;
-+		clock-names = "iface", "bus", "core";
-+		dmas = <&cryptobam 2>, <&cryptobam 3>;
-+		dma-names = "rx", "tx";
-+	};
--- 
-1.8.4.4
+On Thu, Apr 03, 2014 at 12:17:52AM -0600, Loc Ho wrote:
+
+> +static int xgene_rtc_suspend(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct xgene_rtc_dev *pdata = platform_get_drvdata(pdev);
+> +	int irq;
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (device_may_wakeup(&pdev->dev)) {
+> +		if (!enable_irq_wake(irq))
+> +			pdata->irq_wake = 1;
+> +	} else {
+> +		xgene_rtc_alarm_irq_enable(dev, 0);
+> +		clk_disable(pdata->clk);
+> +	}
+
+Why does the driver only disable the clock over suspend rather than also
+unpreparing it?
+
+> +	if (device_may_wakeup(&pdev->dev)) {
+> +		if (pdata->irq_wake) {
+> +			disable_irq_wake(irq);
+> +			pdata->irq_wake = 0;
+> +		}
+> +	} else {
+> +		clk_enable(pdata->clk);
+
+It's also not checking for errors here.
+
+> +		xgene_rtc_alarm_irq_enable(dev, 1);
+> +	}
+
+Won't this unconditionally enable the interrupt regardless of what the
+setting was prior to suspend?
+
+--w1TwAseT95X423KH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTPYvFAAoJELSic+t+oim9iscP/3kSyNrczAuScRgPz7oXWux3
+Kca5fqQnf1vhE/Zd5XzSi339yjwn3Q/q8dqPQrkhLigu/cKN1cdKLGzVBY+oFeIR
+qEbQafxJDzRgjgaXsDUCKa49+xAJDcOAnTIAIwCUtu95OrBwyL/lKeM/ZUtE/vM7
+u30AUTNR9oHS3SwW1bW3vN9EU0WMqzIKkiE51AaB7wkN0YcaBXPcN+46VvPqOs69
+Cq+I1uOiw4Z/LR0WHg98jR2umvhymXa22dGlB8l8rLqhNWTd+VnSMAj9HpzRbiKn
+JAWoacnEel7+q7BgQ2yh8tyW+7DAdE3lK8MapWdlvhLQ9XZ8sv8N+c5/iDeQLDS2
+YP57PKMFCh6l3PIBM/LYkJr/JF3nPXoEIMuKdLOhp+BHg0CydZ/+xUotySMc93sj
+Y/EcqwacRu/cfG8Mwv8AxBm5Tmdeb2nZIPb4RLGIPkioGdPp/NvM1+QTJa5BbP/r
+Arc5SKyrFq3gmK35z+khYeoBI/GeQFQKpp2aA8EmFkvJOZd3lcS0z9VvghLyI5RY
+xHZcYdo6b9ONcB0cGm0XhieNrHRoRqb/v8CR2nunwQLm/7l97xhzhSpiUvON1FT0
+JUOn9TBO8Wd1313xGbhxr5toyazbJ4nIIAOdYS2KCscrjRlo7FU4pj9/K6GkyVKI
+n9xqK8ydkmECgjoOhKt2
+=78fN
+-----END PGP SIGNATURE-----
+
+--w1TwAseT95X423KH--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
