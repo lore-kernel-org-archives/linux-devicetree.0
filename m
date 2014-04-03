@@ -1,61 +1,61 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: Re: [PATCH 0/2] Add ipg clock control to sai driver
-Date: Wed, 2 Apr 2014 16:01:43 +0800
-Message-ID: <CAGoOwPQXw82ZgK=ovmBxPifVT-3mC0a0o0GDtZd=AHRfCf3Q_w@mail.gmail.com>
-References: <cover.1396352401.git.Guangyu.Chen@freescale.com>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: Re: [PATCH 2/3] ARM: dts: document the berlin enable-method
+ property
+Date: Thu, 3 Apr 2014 17:14:15 +0800
+Message-ID: <20140403171415.13adae45@xhacker>
+References: <1396512496-8030-1-git-send-email-antoine.tenart@free-electrons.com>
+	<1396512496-8030-3-git-send-email-antoine.tenart@free-electrons.com>
+	<20140403162202.79b63729@xhacker>
+	<533D21AF.2070508@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <cover.1396352401.git.Guangyu.Chen@freescale.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Nicolin Chen <Guangyu.Chen@freescale.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, linux-doc@vger.kernel.org, Li.Xiubo@freescale.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Timur Tabi <timur@tabi.org>, broonie@kernel.org, rob@landley.net, galak@codeaurora.org, Shawn Guo <shawn.guo@linaro.org>, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <533D21AF.2070508@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Antoine =?UTF-8?B?VMOpbmFydA==?= <antoine.tenart@free-electrons.com>
+Cc: "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, Jimmy Xu <zmxu@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Please disregard this version.
+Hi Antoine,
 
-SAI actually has three master clocks and one bus clock.
-So the patch should have added three sai_clks to the driver.
-I'll later send v2 to append the other two.
+On Thu, 3 Apr 2014 01:54:07 -0700
+Antoine T=C3=A9nart <antoine.tenart@free-electrons.com> wrote:
 
-Thank you.
+> Jisheng,
+>=20
+> On 03/04/2014 10:22, Jisheng Zhang wrote:
+> > Hi,
+> >
+> > On Thu, 3 Apr 2014 01:08:15 -0700
+> > Antoine T=C3=A9nart <antoine.tenart@free-electrons.com> wrote:
+> >
+> >> Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.=
+com>
+> >> ---
+> >>   Documentation/devicetree/bindings/arm/cpus.txt | 2 ++
+> >>   1 file changed, 2 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt
+> >> b/Documentation/devicetree/bindings/arm/cpus.txt index
+> >> 333f4aea3029..a9e42a2dbc99 100644 ---
+> >> a/Documentation/devicetree/bindings/arm/cpus.txt +++
+> >> b/Documentation/devicetree/bindings/arm/cpus.txt @@ -185,6 +185,8 =
+@@
+> >> nodes to be present and contain the properties described below.
+> >> "qcom,gcc-msm8660" "qcom,kpss-acc-v1"
+> >>   			    "qcom,kpss-acc-v2"
+> >> +			    "marvell,88de31-smp" - cpu-core handling for
+> >
+> > why not "marvell,berlin-smp"?
+>=20
+> We have SMP on the BG2 and the BG2Q currently. Future boards may not =
+be=20
+> compatible with this method (BG3 ?), I think "marvell,berlin-smp" is =
+too=20
 
+Yes. It's not compatible. But it will be PSCI. FWICT, current smp metho=
+d
+would be only used for BG2/BG2CT.
 
-On Tue, Apr 1, 2014 at 7:52 PM, Nicolin Chen <Guangyu.Chen@freescale.com>wrote:
-
-> This series of patches add ipg clock control to fsl_sai driver and updates
-> the vf610.dtsi accordingly.
->
-> @Shawn
-> I'm not sure if VF610 currently does full works with SAI audio function.
-> The PATCH-2 is based on broonie/for-next.
->
-> Nicolin Chen (2):
->   ASoC: fsl_sai: Add clock control for SAI
->   ARM: dts: Add ipg clock for sai2 on VF610 platform
->
->  .../devicetree/bindings/sound/fsl-sai.txt          |  7 ++--
->  arch/arm/boot/dts/vf610.dtsi                       |  4 +--
->  sound/soc/fsl/fsl_sai.c                            | 37
-> ++++++++++++++++++++--
->  sound/soc/fsl/fsl_sai.h                            |  2 ++
->  4 files changed, 43 insertions(+), 7 deletions(-)
->
-> --
-> 1.8.4
->
->
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
->
+Thanks
