@@ -1,64 +1,31 @@
-From: jon@ringle.org
-Subject: [PATCH v5 2/2] serial: sc16is7xx: Add bindings documentation for the SC16IS7XX UARTs
-Date: Thu,  3 Apr 2014 11:23:35 -0400
-Message-ID: <1396538615-9128-2-git-send-email-jon@ringle.org>
-References: <1396538615-9128-1-git-send-email-jon@ringle.org>
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1396538615-9128-1-git-send-email-jon@ringle.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Jon Ringle <jringle@gridpoint.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [RFC PATCH] edac: add support for ARM PL310 L2 cache parity
+Date: Thu, 3 Apr 2014 17:24:25 +0200
+Message-ID: <20140403152425.GH9616@pd.tnic>
+References: <1393770760-32550-1-git-send-email-punnaia@xilinx.com>
+ <a1a9e47a-069c-4285-9899-d5a58cf532c2@CO9EHSMHS003.ehs.local>
+ <533D7806.8070002@monstr.eu>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <533D7806.8070002@monstr.eu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <monstr@monstr.eu>
+Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, dougthompson@xmission.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, michal.simek@xilinx.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, punnaia@xilinx.com, Borislav Petkov <bp@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Jon Ringle <jringle@gridpoint.com>
+On Thu, Apr 03, 2014 at 05:02:30PM +0200, Michal Simek wrote:
+> Any comment about this driver?
 
-This patch adds the devicetree documentation for the NXP SC16IS7XX UARTs.
+It is all on the TODO list. I'll take a look after the merge window
+closes.
 
-Signed-off-by: Jon Ringle <jringle@gridpoint.com>
----
- .../devicetree/bindings/serial/nxp,sc16is7xx.txt   | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
+Thanks.
 
-diff --git a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
-new file mode 100644
-index 0000000..246c795
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
-@@ -0,0 +1,33 @@
-+* NXP SC16IS7xx advanced Universal Asynchronous Receiver-Transmitter (UART)
-+
-+Required properties:
-+- compatible: Should be one of the following:
-+  - "nxp,sc16is740" for NXP SC16IS740,
-+  - "nxp,sc16is741" for NXP SC16IS741,
-+  - "nxp,sc16is750" for NXP SC16IS750,
-+  - "nxp,sc16is752" for NXP SC16IS752,
-+  - "nxp,sc16is760" for NXP SC16IS760,
-+  - "nxp,sc16is762" for NXP SC16IS762.
-+- reg: I2C address of the SC16IS7xx device.
-+- interrupt-parent: The phandle for the interrupt controller that
-+  services interrupts for this IC.
-+- interrupts: Should contain the UART interrupt
-+- clocks: Reference to the IC source clock.
-+
-+Optional properties:
-+- gpio-controller: Marks the device node as a GPIO controller.
-+- #gpio-cells: Should be two. The first cell is the GPIO number and
-+  the second cell is used to specify the GPIO polarity:
-+    0 = active high,
-+    1 = active low.
-+
-+Example:
-+        sc16is750: sc16is750@51 {
-+                compatible = "nxp,sc16is750";
-+                reg = <0x51>;
-+                clocks = <&clk20m>;
-+                interrupt-parent = <&gpio3>;
-+                interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
-+                gpio-controller;
-+                #gpio-cells = <2>;
-+        };
 -- 
-1.8.5.4
+Regards/Gruss,
+    Boris.
 
+Sent from a fat crate under my desk. Formatting is fine.
+--
