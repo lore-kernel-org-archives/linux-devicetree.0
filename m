@@ -1,83 +1,86 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/6] ARM: BCM63XX: add support for BCM63138 SoC
-Date: Wed, 2 Apr 2014 12:41:28 -0700
-Message-ID: <CAGVrzcb-xay4QCLwxWnzDhC+fvr5eJVEBmWbTC6XkKS0SQzwWg@mail.gmail.com>
-References: <1394127959-3159-1-git-send-email-f.fainelli@gmail.com> <CAGVrzcbxmWE+1drcyNK7K1a4ta6Pp1-Kc4xv7x0vDSumZen1fg@mail.gmail.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH 4/8] PCI: imx6: use new clock names
+Date: Thu, 3 Apr 2014 14:50:39 +0800
+Message-ID: <20140403065037.GJ2801@dragon>
+References: <1396025579-14344-1-git-send-email-l.stach@pengutronix.de>
+ <1396025579-14344-5-git-send-email-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGVrzcbxmWE+1drcyNK7K1a4ta6Pp1-Kc4xv7x0vDSumZen1fg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, mbizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, jpeshkin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1396025579-14344-5-git-send-email-l.stach@pengutronix.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Sean Cross <xobs@kosagi.com>, Marek Vasut <marex@denx.de>, Richard Zhu <r65037@freescale.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Tim Harvey <tharvey@gateworks.com>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+On Fri, Mar 28, 2014 at 05:52:55PM +0100, Lucas Stach wrote:
+> As defined in the new binding.
+> 
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> ---
+>  drivers/pci/host/pci-imx6.c | 74 ++++++++++++++++++---------------------------
+>  1 file changed, 29 insertions(+), 45 deletions(-)
+> 
+> diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.c
+> index ee082509b0ba..71730bbcd9a2 100644
+> --- a/drivers/pci/host/pci-imx6.c
+> +++ b/drivers/pci/host/pci-imx6.c
+...
+> @@ -583,32 +574,25 @@ static int __init imx6_pcie_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	/* Fetch clocks */
+> -	imx6_pcie->lvds_gate = devm_clk_get(&pdev->dev, "lvds_gate");
+> -	if (IS_ERR(imx6_pcie->lvds_gate)) {
+> -		dev_err(&pdev->dev,
+> -			"lvds_gate clock select missing or invalid\n");
+> -		return PTR_ERR(imx6_pcie->lvds_gate);
+> -	}
+> -
+> -	imx6_pcie->sata_ref_100m = devm_clk_get(&pdev->dev, "sata_ref_100m");
+> -	if (IS_ERR(imx6_pcie->sata_ref_100m)) {
+> +	imx6_pcie->pcie_phy = devm_clk_get(&pdev->dev, "pcie_phy");
+> +	if (IS_ERR(imx6_pcie->pcie_phy)) {
 
-2014-03-11 10:10 GMT-07:00 Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> 2014-03-06 9:45 GMT-08:00 Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
->> Hi all,
->>
->> This patchset adds very minimal support for the BCM63138 SoC which is
->> a xDSL SoC using a dual Cortex A9 CPU complex.
->>
->> Future work will focus on:
->>
->> - clock device/driver/providers
->> - SMP support (already working)
->> - DT'fying drivers/tty/serial/bcm63xx_uart.c to be usable
->
-> Gentle ping, patch 2 should not be too controversial and could
-> probably be queued for a next 3.14-rc pull request?
+Won't this break the existing DTBs?
 
-Thanks for merging patch 2, can I borrow some of your bandwidth to
-review the remainder of the patches?
+Shawn
 
-Thanks!
-
->
->>
->> Florian Fainelli (6):
->>   ARM: BCM63XX: add basic support for the Broadcom BCM63138 DSL SoC
->>   ARM: restrict BCM_KONA_UART to ARCH_BCM_MOBILE
->>   ARM: BCM63XX: add low-level UART debug support
->>   ARM: BCM63XX: add BCM63138 minimal Device Tree
->>   ARM: BCM63XX: add BCM963138DVT Reference platform DTS
->>   MAINTAINERS: add entry for the Broadcom BCM63xx ARM SoCs
->>
->>  .../devicetree/bindings/arm/bcm/bcm63138.txt       |   9 ++
->>  MAINTAINERS                                        |  10 ++
->>  arch/arm/Kconfig.debug                             |  20 +++-
->>  arch/arm/boot/dts/Makefile                         |   1 +
->>  arch/arm/boot/dts/bcm63138.dtsi                    | 109 +++++++++++++++++++++
->>  arch/arm/boot/dts/bcm63138dvt.dts                  |  18 ++++
->>  arch/arm/include/debug/bcm63xxx.S                  |  33 +++++++
->>  arch/arm/mach-bcm/Kconfig                          |  20 ++++
->>  arch/arm/mach-bcm/Makefile                         |   2 +
->>  arch/arm/mach-bcm/bcm63xx.h                        |  29 ++++++
->>  arch/arm/mach-bcm/board_bcm63xx.c                  |  94 ++++++++++++++++++
->>  11 files changed, 342 insertions(+), 3 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/arm/bcm/bcm63138.txt
->>  create mode 100644 arch/arm/boot/dts/bcm63138.dtsi
->>  create mode 100644 arch/arm/boot/dts/bcm63138dvt.dts
->>  create mode 100644 arch/arm/include/debug/bcm63xxx.S
->>  create mode 100644 arch/arm/mach-bcm/bcm63xx.h
->>  create mode 100644 arch/arm/mach-bcm/board_bcm63xx.c
->>
->> --
->> 1.8.3.2
->>
->
->
->
+>  		dev_err(&pdev->dev,
+> -			"sata_ref_100m clock source missing or invalid\n");
+> -		return PTR_ERR(imx6_pcie->sata_ref_100m);
+> +			"pcie_phy clock source missing or invalid\n");
+> +		return PTR_ERR(imx6_pcie->pcie_phy);
+>  	}
+>  
+> -	imx6_pcie->pcie_ref_125m = devm_clk_get(&pdev->dev, "pcie_ref_125m");
+> -	if (IS_ERR(imx6_pcie->pcie_ref_125m)) {
+> +	imx6_pcie->pcie_bus = devm_clk_get(&pdev->dev, "pcie_bus");
+> +	if (IS_ERR(imx6_pcie->pcie_bus)) {
+>  		dev_err(&pdev->dev,
+> -			"pcie_ref_125m clock source missing or invalid\n");
+> -		return PTR_ERR(imx6_pcie->pcie_ref_125m);
+> +			"pcie_bus clock source missing or invalid\n");
+> +		return PTR_ERR(imx6_pcie->pcie_bus);
+>  	}
+>  
+> -	imx6_pcie->pcie_axi = devm_clk_get(&pdev->dev, "pcie_axi");
+> -	if (IS_ERR(imx6_pcie->pcie_axi)) {
+> +	imx6_pcie->pcie = devm_clk_get(&pdev->dev, "pcie");
+> +	if (IS_ERR(imx6_pcie->pcie)) {
+>  		dev_err(&pdev->dev,
+> -			"pcie_axi clock source missing or invalid\n");
+> -		return PTR_ERR(imx6_pcie->pcie_axi);
+> +			"pcie clock source missing or invalid\n");
+> +		return PTR_ERR(imx6_pcie->pcie);
+>  	}
+>  
+>  	/* Grab GPR config register range */
+> -- 
+> 1.9.0
+> 
 > --
-> Florian
-
-
-
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
