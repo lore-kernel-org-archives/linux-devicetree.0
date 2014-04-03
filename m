@@ -1,56 +1,58 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] Allow to specify an ECC scheme through DT
-Date: Thu, 3 Apr 2014 12:19:41 -0300
-Message-ID: <20140403151941.GA21114@arch.cereza>
-References: <1395401690-25221-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <20140401100417.GI27979@kw.sim.vm.gnt>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
+Date: Thu, 03 Apr 2014 11:22:33 -0400 (EDT)
+Message-ID: <20140403.112233.2042790497591275140.davem@davemloft.net>
+References: <1396358832-15828-4-git-send-email-zhangfei.gao@linaro.org>
+	<9532591.5yuCbpL4pV@wuerfel>
+	<063D6719AE5E284EB5DD2968C1650D6D0F6EE729@AcuExch.aculab.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140401100417.GI27979-tZfvYpCFA3RN6yImKYG91Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Seif Mazareeb <seif-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Simon Guinot <sguinot-D+JDLXUtGQkAvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Willy Tarreau <w@1wt.eu>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <063D6719AE5E284EB5DD2968C1650D6D0F6EE729@AcuExch.aculab.com>
+Sender: netdev-owner@vger.kernel.org
+To: David.Laight@ACULAB.COM
+Cc: arnd@arndb.de, zhangfei.gao@linaro.org, linux@arm.linux.org.uk, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, eric.dumazet@gmail.com, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Apr 01, Simon Guinot wrote:
-> On Fri, Mar 21, 2014 at 08:34:46AM -0300, Ezequiel Garcia wrote:
-> > Now that we have agreed on the ECC devicetree binding, here's a pat=
-chset
-> > that makes pxa3xx-nand driver use it.
-> >=20
-> > This work is required on platforms where the flash device reports a=
- required
-> > ECC strength, but that are capable of handling a stronger one. Simo=
-n Guinot
-> > reported a situation where the vendor provided a bootloader configu=
-red with
-> > a stronger than required ECC scheme. Without this patches, such a s=
-ituation
-> > would require a hack to make the driver use a specific ECC scheme.
-> >=20
-> > (Simon: it would be great if you can confirm this allows you to rem=
-ove any hacks).
->=20
-> Hi Ezequiel,
->=20
-> I confirm this allows me to configure the ECC strength and step size
-> from DT.
->=20
-> Tested-by: Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>
->=20
+From: David Laight <David.Laight@ACULAB.COM>
+Date: Wed, 2 Apr 2014 10:04:34 +0000
 
-Thanks a lot for the test.
+> From: Arnd Bergmann
+>> On Tuesday 01 April 2014 21:27:12 Zhangfei Gao wrote:
+>> > +static int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+>> 
+>> While it looks like there are no serious functionality bugs left, this
+>> function is rather inefficient, as has been pointed out before:
+>> 
+>> > +{
+>> > +       struct hip04_priv *priv = netdev_priv(ndev);
+>> > +       struct net_device_stats *stats = &ndev->stats;
+>> > +       unsigned int tx_head = priv->tx_head;
+>> > +       struct tx_desc *desc = &priv->tx_desc[tx_head];
+>> > +       dma_addr_t phys;
+>> > +
+>> > +       hip04_tx_reclaim(ndev, false);
+>> > +       mod_timer(&priv->txtimer, jiffies + RECLAIM_PERIOD);
+>> > +
+>> > +       if (priv->tx_count >= TX_DESC_NUM) {
+>> > +               netif_stop_queue(ndev);
+>> > +               return NETDEV_TX_BUSY;
+>> > +       }
+>> 
+>> This is where you have two problems:
+>> 
+>> - if the descriptor ring is full, you wait for RECLAIM_PERIOD,
+>>   which is far too long at 500ms, because during that time you
+>>   are not able to add further data to the stopped queue.
+> 
+> Best to have some idea how long it will take for the ring to empty.
+> IIRC you need a count of the bytes in the tx ring anyway.
+> There isn't much point waking up until most of the queued
+> transmits have had time to complete.
 
-Brian, any comments?
---=20
-Ezequiel Garc=EDa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+There is absolutely no doubt in my mind that you cannot use timers
+for this, it simply will never work properly.
+
+There needs to be a real notification from the device of some
+sort, and I don't care what form that comes in.
