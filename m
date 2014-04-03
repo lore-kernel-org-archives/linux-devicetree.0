@@ -1,58 +1,96 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Thu, 03 Apr 2014 11:22:33 -0400 (EDT)
-Message-ID: <20140403.112233.2042790497591275140.davem@davemloft.net>
-References: <1396358832-15828-4-git-send-email-zhangfei.gao@linaro.org>
-	<9532591.5yuCbpL4pV@wuerfel>
-	<063D6719AE5E284EB5DD2968C1650D6D0F6EE729@AcuExch.aculab.com>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] usb: gadget: Add xilinx axi usb2 device support
+Date: Thu, 03 Apr 2014 17:23:28 +0200
+Message-ID: <533D7CF0.2000702@monstr.eu>
+References: <1396510519-8555-1-git-send-email-sbhatta@xilinx.com> <113d0620-4003-417d-806b-0b79ae692829@VA3EHSMHS023.ehs.local> <20140403145853.GD14162@saruman.home>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <063D6719AE5E284EB5DD2968C1650D6D0F6EE729@AcuExch.aculab.com>
-Sender: netdev-owner@vger.kernel.org
-To: David.Laight@ACULAB.COM
-Cc: arnd@arndb.de, zhangfei.gao@linaro.org, linux@arm.linux.org.uk, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, eric.dumazet@gmail.com, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="Qmqqjql0u45rP78ulg2Rt6JUj4mdnbQ3g"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140403145853.GD14162-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: David Laight <David.Laight@ACULAB.COM>
-Date: Wed, 2 Apr 2014 10:04:34 +0000
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--Qmqqjql0u45rP78ulg2Rt6JUj4mdnbQ3g
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-> From: Arnd Bergmann
->> On Tuesday 01 April 2014 21:27:12 Zhangfei Gao wrote:
->> > +static int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
->> 
->> While it looks like there are no serious functionality bugs left, this
->> function is rather inefficient, as has been pointed out before:
->> 
->> > +{
->> > +       struct hip04_priv *priv = netdev_priv(ndev);
->> > +       struct net_device_stats *stats = &ndev->stats;
->> > +       unsigned int tx_head = priv->tx_head;
->> > +       struct tx_desc *desc = &priv->tx_desc[tx_head];
->> > +       dma_addr_t phys;
->> > +
->> > +       hip04_tx_reclaim(ndev, false);
->> > +       mod_timer(&priv->txtimer, jiffies + RECLAIM_PERIOD);
->> > +
->> > +       if (priv->tx_count >= TX_DESC_NUM) {
->> > +               netif_stop_queue(ndev);
->> > +               return NETDEV_TX_BUSY;
->> > +       }
->> 
->> This is where you have two problems:
->> 
->> - if the descriptor ring is full, you wait for RECLAIM_PERIOD,
->>   which is far too long at 500ms, because during that time you
->>   are not able to add further data to the stopped queue.
-> 
-> Best to have some idea how long it will take for the ring to empty.
-> IIRC you need a count of the bytes in the tx ring anyway.
-> There isn't much point waking up until most of the queued
-> transmits have had time to complete.
+>> +struct xusb_udc {
+>> +	struct usb_gadget gadget;
+>> +	struct xusb_ep ep[8];
+>> +	struct usb_gadget_driver *driver;
+>> +	struct cmdbuf ch9cmd;
+>> +	u32 usb_state;
+>> +	u32 remote_wkp;
+>> +	unsigned int (*read_fn)(void __iomem *);
+>> +	void (*write_fn)(void __iomem *, u32, u32);
+>=20
+> why do you need these to be function pointers ? Because of endianness ?=
 
-There is absolutely no doubt in my mind that you cannot use timers
-for this, it simply will never work properly.
+> generic readl()/writel() already take care of that.
 
-There needs to be a real notification from the device of some
-sort, and I don't care what form that comes in.
+readl from asm-generic/io.h is converting value from little endian IO
+to cpu endianness.
+This IP exists also in big endian version.
+It means we have to support all possible combinations.
+IP little and reading it on little or big endian CPU
+IP big and reading it on little or big endian CPU.
+
+Look below.
+
+>> +	spin_lock_init(&udc->lock);
+>> +
+>> +	/* Check for IP endianness */
+>> +	udc->write_fn =3D xudc_write32_be;
+>> +	udc->read_fn =3D xudc_read32_be;
+>> +	udc->write_fn(udc->base_address, XUSB_TESTMODE_OFFSET, TEST_J);
+>> +	if ((udc->read_fn(udc->base_address + XUSB_TESTMODE_OFFSET))
+>> +			!=3D TEST_J) {
+>> +		udc->write_fn =3D xudc_write32;
+>> +		udc->read_fn =3D xudc_read32;
+>> +	}
+>=20
+> hmm... isn't there a configuration register to check this out ?
+
+Sundeep can tell us if there is any configuration register but
+I don't think so in connection to my experience with Xilinx soft IPs.
+
+Endian detection directly on IP itself came from my discussion
+on drivers/spi/spi-xilinx.c that this is only one way how to do it.
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--Qmqqjql0u45rP78ulg2Rt6JUj4mdnbQ3g
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlM9fPAACgkQykllyylKDCFJrQCggMKoMv6XE196Um8z0I95Yh6P
+o+EAnAu61OcHvjfvWdSMduA2uC6YLCSX
+=D8lF
+-----END PGP SIGNATURE-----
+
+--Qmqqjql0u45rP78ulg2Rt6JUj4mdnbQ3g--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
