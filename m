@@ -1,71 +1,55 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Thu, 03 Apr 2014 19:57:53 +0200
-Message-ID: <5153369.PcVDn1cGQl@wuerfel>
-References: <1396358832-15828-1-git-send-email-zhangfei.gao@linaro.org> <9532591.5yuCbpL4pV@wuerfel> <20140403152746.GQ7528@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20140403152746.GQ7528@n2100.arm.linux.org.uk>
-Sender: netdev-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Zhangfei Gao <zhangfei.gao@linaro.org>, davem@davemloft.net, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@aculab.com, eric.dumazet@gmail.com, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
+From: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v4 1/3] i2c: cadence: Document device tree bindings
+Date: Thu,  3 Apr 2014 10:59:25 -0700
+Message-ID: <1396547967-19260-1-git-send-email-soren.brinkmann@xilinx.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 03 April 2014 16:27:46 Russell King - ARM Linux wrote:
-> On Wed, Apr 02, 2014 at 11:21:45AM +0200, Arnd Bergmann wrote:
-> > - As David Laight pointed out earlier, you must also ensure that
-> >   you don't have too much /data/ pending in the descriptor ring
-> >   when you stop the queue. For a 10mbit connection, you have already
-> >   tested (as we discussed on IRC) that 64 descriptors with 1500 byte
-> >   frames gives you a 68ms round-trip ping time, which is too much.
-> >   Conversely, on 1gbit, having only 64 descriptors actually seems
-> >   a little low, and you may be able to get better throughput if
-> >   you extend the ring to e.g. 512 descriptors.
-> 
-> You don't manage that by stopping the queue - there's separate interfaces
-> where you report how many bytes you've queued (netdev_sent_queue()) and
-> how many bytes/packets you've sent (netdev_tx_completed_queue()).  This
-> allows the netdev schedulers to limit how much data is held in the queue,
-> preserving interactivity while allowing the advantages of larger rings.
+Add device tree binding documentation for the Cadence I2C controller.
 
-Ah, I didn't know about these.  However, reading through the dql code,
-it seems that will not work if the tx reclaim is triggered by a timer,
-since it expects to get feedback from the actual hardware behavior. :(
+Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
 
-I guess this is (part of) what David Miller also meant by saying it won't
-ever work properly. 
+Changes in v4:
+ - moved adding DT docs into this dedicated patch
 
-> > > +       phys = dma_map_single(&ndev->dev, skb->data, skb->len, DMA_TO_DEVICE);
-> > > +       if (dma_mapping_error(&ndev->dev, phys)) {
-> > > +               dev_kfree_skb(skb);
-> > > +               return NETDEV_TX_OK;
-> > > +       }
-> > > +
-> > > +       priv->tx_skb[tx_head] = skb;
-> > > +       priv->tx_phys[tx_head] = phys;
-> > > +       desc->send_addr = cpu_to_be32(phys);
-> > > +       desc->send_size = cpu_to_be16(skb->len);
-> > > +       desc->cfg = cpu_to_be32(DESC_DEF_CFG);
-> > > +       phys = priv->tx_desc_dma + tx_head * sizeof(struct tx_desc);
-> > > +       desc->wb_addr = cpu_to_be32(phys);
-> > 
-> > One detail: since you don't have cache-coherent DMA, "desc" will
-> > reside in uncached memory, so you try to minimize the number of accesses.
-> > It's probably faster if you build the descriptor on the stack and
-> > then atomically copy it over, rather than assigning each member at
-> > a time.
-> 
-> DMA coherent memory is write combining, so multiple writes will be
-> coalesced.  This also means that barriers may be required to ensure the
-> descriptors are pushed out in a timely manner if something like writel()
-> is not used in the transmit-triggering path.
+Changes in v3: None
+Changes in v2: None
 
-Right, makes sense. There is a writel() right after this, so no need
-for extra barriers. We already concluded that the store operation on
-uncached memory isn't actually a problem, and Zhangfei Gao did some
-measurements to check the overhead of the one read from uncached
-memory that is in the tx path, which was lost in the noise.
+---
+ .../devicetree/bindings/i2c/i2c-cadence.txt         | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-cadence.txt
 
-	Arnd
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-cadence.txt b/Documentation/devicetree/bindings/i2c/i2c-cadence.txt
+new file mode 100644
+index 000000000000..685adf513111
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-cadence.txt
+@@ -0,0 +1,21 @@
++Binding for the Cadence I2C controller
++
++Required properties:
++  compatible: Compatibility string. Must be 'cdns,i2c-r1p10'.
++  clocks: From common clock bindings. Phandle to input clock.
++
++Optional properties:
++  clock-frequency: Desired operating frequency, in Hz, of the bus (actual may
++		   be lower). Defaults to 400000 if not specified.
++
++Example:
++
++	i2c@e0004000 {
++		compatible = "cdns,i2c-r1p10";
++		clocks = <&clkc 38>;
++		interrupts = <0 25 4>;
++		reg = <0xE0004000 0x1000>;
++		clock-frequency = <400000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
+-- 
+1.9.1.1.gbb9f595
