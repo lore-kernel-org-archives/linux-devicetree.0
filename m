@@ -1,67 +1,48 @@
-From: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 2/2] devicetree: Add devicetree bindings documentation for Cadence SPI
-Date: Thu,  3 Apr 2014 16:40:31 +0530
-Message-ID: <1396523431-14519-2-git-send-email-harinik@xilinx.com>
-References: <1396523431-14519-1-git-send-email-harinik@xilinx.com>
+From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: document the berlin enable-method
+ property
+Date: Thu, 3 Apr 2014 16:22:02 +0800
+Message-ID: <20140403162202.79b63729@xhacker>
+References: <1396512496-8030-1-git-send-email-antoine.tenart@free-electrons.com>
+	<1396512496-8030-3-git-send-email-antoine.tenart@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396523431-14519-1-git-send-email-harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1396512496-8030-3-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Antoine =?UTF-8?B?VMOpbmFydA==?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: "sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add spi-cadence bindings documentation.
+Hi,
 
-Signed-off-by: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
----
+On Thu, 3 Apr 2014 01:08:15 -0700
+Antoine T=C3=A9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-v2 changes:
-- Separate patch for bindings.
-- Add xilinx compatible string; Make compatible string first in the node.
-- Use property name num-cs. Make this property optional.
+> Signed-off-by: Antoine T=C3=A9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org=
+>
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt
+> b/Documentation/devicetree/bindings/arm/cpus.txt index
+> 333f4aea3029..a9e42a2dbc99 100644 ---
+> a/Documentation/devicetree/bindings/arm/cpus.txt +++
+> b/Documentation/devicetree/bindings/arm/cpus.txt @@ -185,6 +185,8 @@ =
+nodes
+> to be present and contain the properties described below. "qcom,gcc-m=
+sm8660"
+>  			    "qcom,kpss-acc-v1"
+>  			    "qcom,kpss-acc-v2"
+> +			    "marvell,88de31-smp" - cpu-core handling for
 
----
- .../devicetree/bindings/spi/spi-cadence.txt        |   27 ++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-cadence.txt
+why not "marvell,berlin-smp"?=20
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-cadence.txt b/Documentation/devicetree/bindings/spi/spi-cadence.txt
-new file mode 100644
-index 0000000..ccb7599
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-cadence.txt
-@@ -0,0 +1,27 @@
-+Cadence SPI controller Device Tree Bindings
-+-------------------------------------------
-+
-+Required properties:
-+- compatible		: Should be "cdns,spi-r1p6" or "xlnx,zynq-spi-r1p6".
-+- reg			: Physical base address and size of SPI registers map.
-+- interrupts		: Property with a value describing the interrupt
-+			  number.
-+- interrupt-parent	: Must be core interrupt controller
-+- clock-names		: List of input clock names - "ref_clk", "pclk"
-+			  (See clock bindings for details).
-+- clocks		: Clock phandles (see clock bindings for details).
-+
-+Optional properties:
-+- num-cs		: Number of chip selects used.
-+
-+Example:
-+
-+	spi@e0007000 {
-+		compatible = "xlnx,zynq-spi-r1p6";
-+		clock-names = "ref_clk", "pclk";
-+		clocks = <&clkc 26>, <&clkc 35>;
-+		interrupt-parent = <&intc>;
-+		interrupts = <0 49 4>;
-+		num-cs = /bits/ 16 <4>;
-+		reg = <0xe0007000 0x1000>;
-+	} ;
--- 
-1.7.9.5
-
+Thanks
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
