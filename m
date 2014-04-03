@@ -1,68 +1,64 @@
-From: Tim Kryger <tim.kryger@linaro.org>
-Subject: [RESEND PATCH v5 0/5] Add Broadcom Kona PWM Support
-Date: Wed, 2 Apr 2014 09:27:19 -0700
-Message-ID: <1396456044-19427-1-git-send-email-tim.kryger@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Matt Porter <mporter@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Grant Likely <grant.likely@linaro.org>
-Cc: Tim Kryger <tim.kryger@linaro.org>, Linux PWM List <linux-pwm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, Linux Doc List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+From: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v6 0/3] exynos: arch: add support for exynos5260 SoC
+Date: Thu, 03 Apr 2014 10:47:54 +0530
+Message-ID: <1396502277-19588-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series introduces the driver for the Kona PWM controller found in
-Broadcom mobile SoCs like bcm281xx and updates the device tree and the
-defconfig to enable use of this hardware on the bcm28155 AP board.
+From: Rahul Sharma <Rahul.Sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-Changes since v4:
-  - Added in real polarity support
-  - Labeled trigger bits as such rather than use the name from hw docs
-  - Listed unsual hardware characteristics at the top of the file
-  - Removed default from Kconfig and update defconfig accordingly
-  - Always use unsigned int for temporary register values
+V6:
+  1) Renamed mmc nodes.
+  2) Removed PHY clocks from DT and put them inside clock driver.
+  3) Added clock-cells property for all fixed clocks.
+  4) Removed spdif_ext_clk fixed rate clock.
 
-Changes since v3:
-  - Removed polarity support for now
-  - Cleaned up whitespace issues, shortened some variable names
-  - Use container_of instead of dev_get_drvdata to get private data
-  - Removed workaround for PWM framework bug
-  - Reworded some binding documentation
+V5:
+  1) Removed SYSRAM related code.
+  2) Fixed mct clocks.
+  3) Add SoC and Board specifc fixed-rate clocks in respective files.
 
-Changes since v2:
-  - SoC DTS file updated to use real clock's phandle + specifier
-  - Toggle smooth mode off during apply so new settings take immediately
+V4:
+  1) Removed duplicate MMC Soc property from Board file.
 
-Changes since v1:
-  - Fixed up macros to be clearer and more complete
-  - Corrected spelling and punctuation mistakes
-  - Added support for polarity
-  - Made peripheral clock use more efficient
-  - Made prescale and duty computation clearer
-  - Moved Makefile addition to keep alphabetical
-  - Split complex lines into multiple steps
+V3:
+  1) Addressed review comments from Tomasz figa.
 
-Dependencies:
-The "ARM: dts: Declare the PWM for bcm11351 (bcm281xx)" patch depends
-upon "ARM: dts: bcm281xx: define real clocks" which is queued up in
-for-next of arm-soc. See https://lkml.org/lkml/2014/2/14/451
+V2:
+  1) Split up DT patch into SoC and Board patch.
 
-Tim Kryger (5):
-  Documentation: dt: Add Kona PWM binding
-  pwm: kona: Introduce Kona PWM controller support
-  ARM: dts: Declare the PWM for bcm11351 (bcm281xx)
-  ARM: dts: Enable the PWM for bcm28155 AP board
-  ARM: bcm_defconfig: Enable PWM and Backlight
+This series is dependent on Sachin's patch
+"ARM: EXYNOS: Consolidate CPU init code" at
+http://comments.gmane.org/gmane.linux.kernel.samsung-soc/26560
 
- .../devicetree/bindings/pwm/bcm-kona-pwm.txt       |   21 ++
- arch/arm/boot/dts/bcm11351.dtsi                    |    8 +
- arch/arm/boot/dts/bcm28155-ap.dts                  |    4 +
- arch/arm/configs/bcm_defconfig                     |    3 +
- drivers/pwm/Kconfig                                |    9 +
- drivers/pwm/Makefile                               |    1 +
- drivers/pwm/pwm-bcm-kona.c                         |  319 ++++++++++++++++++++
- 7 files changed, 365 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
- create mode 100644 drivers/pwm/pwm-bcm-kona.c
+This series is based on Kukjin's for-next branch at
+http://git.kernel.org/?p=linux/kernel/git/kgene/linux-samsung.git
+
+Pankaj Dubey (1):
+  ARM: EXYNOS: initial board support for exynos5260 SoC
+
+Rahul Sharma (2):
+  ARM: dts: add dts files for exynos5260 SoC
+  ARM: dts: add dts files for xyref5260 board
+
+ arch/arm/boot/dts/Makefile                      |    1 +
+ arch/arm/boot/dts/exynos5260-pinctrl.dtsi       |  574 +++++++++++++++++++++++
+ arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts |  103 ++++
+ arch/arm/boot/dts/exynos5260.dtsi               |  304 ++++++++++++
+ arch/arm/mach-exynos/Kconfig                    |    4 +
+ arch/arm/mach-exynos/mach-exynos5-dt.c          |    1 +
+ 6 files changed, 987 insertions(+)
+ create mode 100644 arch/arm/boot/dts/exynos5260-pinctrl.dtsi
+ create mode 100644 arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts
+ create mode 100644 arch/arm/boot/dts/exynos5260.dtsi
 
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
