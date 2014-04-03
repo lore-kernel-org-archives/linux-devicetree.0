@@ -1,57 +1,59 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [RFC PATCH] edac: add support for ARM PL310 L2 cache parity
-Date: Thu, 03 Apr 2014 17:25:07 +0200
-Message-ID: <533D7D53.80301@monstr.eu>
-References: <1393770760-32550-1-git-send-email-punnaia@xilinx.com> <a1a9e47a-069c-4285-9899-d5a58cf532c2@CO9EHSMHS003.ehs.local> <533D7806.8070002@monstr.eu> <20140403152425.GH9616@pd.tnic>
-Reply-To: monstr@monstr.eu
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
+Date: Thu, 3 Apr 2014 16:27:46 +0100
+Message-ID: <20140403152746.GQ7528@n2100.arm.linux.org.uk>
+References: <1396358832-15828-1-git-send-email-zhangfei.gao@linaro.org> <1396358832-15828-4-git-send-email-zhangfei.gao@linaro.org> <9532591.5yuCbpL4pV@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="95U8XeOrD7Ta3uBGChsef1kILHeIAM7Ci"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140403152425.GH9616@pd.tnic>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, dougthompson@xmission.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, michal.simek@xilinx.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, punnaia@xilinx.com, Borislav Petkov <bp@suse.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <9532591.5yuCbpL4pV@wuerfel>
+Sender: netdev-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Zhangfei Gao <zhangfei.gao@linaro.org>, davem@davemloft.net, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@aculab.com, eric.dumazet@gmail.com, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---95U8XeOrD7Ta3uBGChsef1kILHeIAM7Ci
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Wed, Apr 02, 2014 at 11:21:45AM +0200, Arnd Bergmann wrote:
+> - As David Laight pointed out earlier, you must also ensure that
+>   you don't have too much /data/ pending in the descriptor ring
+>   when you stop the queue. For a 10mbit connection, you have already
+>   tested (as we discussed on IRC) that 64 descriptors with 1500 byte
+>   frames gives you a 68ms round-trip ping time, which is too much.
+>   Conversely, on 1gbit, having only 64 descriptors actually seems
+>   a little low, and you may be able to get better throughput if
+>   you extend the ring to e.g. 512 descriptors.
 
-On 04/03/2014 05:24 PM, Borislav Petkov wrote:
-> On Thu, Apr 03, 2014 at 05:02:30PM +0200, Michal Simek wrote:
->> Any comment about this driver?
->=20
-> It is all on the TODO list. I'll take a look after the merge window
-> closes.
+You don't manage that by stopping the queue - there's separate interfaces
+where you report how many bytes you've queued (netdev_sent_queue()) and
+how many bytes/packets you've sent (netdev_tx_completed_queue()).  This
+allows the netdev schedulers to limit how much data is held in the queue,
+preserving interactivity while allowing the advantages of larger rings.
 
-Ok. Thank you,
-Michal
+> > +       phys = dma_map_single(&ndev->dev, skb->data, skb->len, DMA_TO_DEVICE);
+> > +       if (dma_mapping_error(&ndev->dev, phys)) {
+> > +               dev_kfree_skb(skb);
+> > +               return NETDEV_TX_OK;
+> > +       }
+> > +
+> > +       priv->tx_skb[tx_head] = skb;
+> > +       priv->tx_phys[tx_head] = phys;
+> > +       desc->send_addr = cpu_to_be32(phys);
+> > +       desc->send_size = cpu_to_be16(skb->len);
+> > +       desc->cfg = cpu_to_be32(DESC_DEF_CFG);
+> > +       phys = priv->tx_desc_dma + tx_head * sizeof(struct tx_desc);
+> > +       desc->wb_addr = cpu_to_be32(phys);
+> 
+> One detail: since you don't have cache-coherent DMA, "desc" will
+> reside in uncached memory, so you try to minimize the number of accesses.
+> It's probably faster if you build the descriptor on the stack and
+> then atomically copy it over, rather than assigning each member at
+> a time.
 
+DMA coherent memory is write combining, so multiple writes will be
+coalesced.  This also means that barriers may be required to ensure the
+descriptors are pushed out in a timely manner if something like writel()
+is not used in the transmit-triggering path.
 
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---95U8XeOrD7Ta3uBGChsef1kILHeIAM7Ci
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlM9fVMACgkQykllyylKDCHQugCcDByygIyqIadBFJ95SEgasKBp
-1jcAoIaZVy199rYYAuEwel1SPq75+hsa
-=F9wx
------END PGP SIGNATURE-----
-
---95U8XeOrD7Ta3uBGChsef1kILHeIAM7Ci--
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
