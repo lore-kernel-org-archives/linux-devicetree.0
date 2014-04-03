@@ -1,49 +1,77 @@
-From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] of: Use NULL for pointers
-Date: Wed, 2 Apr 2014 09:47:01 +0200
-Message-ID: <1396424821-1963-1-git-send-email-treding@nvidia.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] ARM: shmobile: armadillo-reference dts: enable RTC
+Date: Thu, 3 Apr 2014 11:42:46 +0200
+Message-ID: <CAMuHMdXci6w1eXcs0sDKQqPDSYq531UJLqGmk_+CUM0nNRfX0A@mail.gmail.com>
+References: <1396280300-7016-1-git-send-email-ulrich.hecht@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1396280300-7016-1-git-send-email-ulrich.hecht@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ulrich Hecht <ulrich.hecht@gmail.com>
+Cc: Linux-sh list <linux-sh@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Commit 4485681939b9 (of/fdt: Clean up casting in unflattening path)
-modified unflatten_dt_node() to take a void * for the mem parameter
-instead of an unsigned long. One of the call sites wasn't updated.
+(cc devicetree)
 
-Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- drivers/of/fdt.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On Mon, Mar 31, 2014 at 5:38 PM, Ulrich Hecht <ulrich.hecht@gmail.com> wrote:
+> This enables the Seiko real-time clock that is attached to a couple of
+> GPIO pins.
+>
+> Signed-off-by: Ulrich Hecht <ulrich.hecht@gmail.com>
+> ---
+>  .../arm/boot/dts/r8a7740-armadillo800eva-reference.dts | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+> index b79ea51..ac352ef 100644
+> --- a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+> +++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+> @@ -118,6 +118,16 @@
+>                 };
+>         };
+>
+> +       i2c2: i2c@2 {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               compatible = "i2c-gpio";
+> +               gpios = <&pfc 208 GPIO_ACTIVE_HIGH /* sda */
+> +                        &pfc 91 GPIO_ACTIVE_HIGH /* scl */
+> +                       >;
+> +               i2c-gpio,delay-us = <5>;
+> +       };
+> +
+>         backlight {
+>                 compatible = "pwm-backlight";
+>                 pwms = <&tpu 2 33333 PWM_POLARITY_INVERTED>;
+> @@ -178,6 +188,14 @@
+>         };
+>  };
+>
+> +&i2c2 {
+> +       status = "okay";
+> +       rtc@30 {
+> +               compatible = "seiko,s35390a";
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index fa16a912a927..383c6e665d13 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -385,7 +385,8 @@ static void __unflatten_device_tree(struct boot_param_header *blob,
- 
- 	/* First pass, scan for size */
- 	start = ((void *)blob) + be32_to_cpu(blob->off_dt_struct);
--	size = (unsigned long)unflatten_dt_node(blob, 0, &start, NULL, NULL, 0);
-+	size = (unsigned long)unflatten_dt_node(blob, NULL, &start, NULL, NULL,
-+						0);
- 	size = ALIGN(size, 4);
- 
- 	pr_debug("  size is %lx, allocating...\n", size);
--- 
-1.9.1
+I think this should be "sii,s35390a", for Seiko Instruments Inc.
 
+> +               reg = <0x30>;
+> +       };
+> +};
+> +
+>  &pfc {
+>         pinctrl-0 = <&scifa1_pins>;
+>         pinctrl-names = "default";
+> --
+> 1.8.4.5
 
------------------------------------------------------------------------------------
-This email message is for the sole use of the intended recipient(s) and may contain
-confidential information.  Any unauthorized review, use, disclosure or distribution
-is prohibited.  If you are not the intended recipient, please contact the sender by
-reply email and destroy all copies of the original message.
------------------------------------------------------------------------------------
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
