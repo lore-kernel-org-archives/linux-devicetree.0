@@ -1,85 +1,53 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH 1/2] devicetree: Add devicetree bindings documentation
- for Zynq Quad SPI
-Date: Thu, 3 Apr 2014 11:54:30 -0700
-Message-ID: <be8aa6d9-c9a3-4ea8-85fe-d5600e3ff749@TX2EHSMHS019.ehs.local>
-References: <ee057d8c-50d9-4d4b-ac86-d7c5fc44b1b0@TX2EHSMHS034.ehs.local>
- <46a3a23e-786e-4acf-aa42-c3808b1a46d3@CH1EHSMHS028.ehs.local>
- <CAFcVECLoB8BR0PVfV=1EVQub8weOOYustg-1DqOevaihCT3JqQ@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v4 1/3] i2c: cadence: Document device tree bindings
+Date: Thu, 3 Apr 2014 14:51:09 -0500
+Message-ID: <CAL_Jsq+vOHzca_wT9ADHRxhR9dT8FYGP-iTvd5=zKrRVBZz-cw@mail.gmail.com>
+References: <1396547967-19260-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFcVECLoB8BR0PVfV=1EVQub8weOOYustg-1DqOevaihCT3JqQ@mail.gmail.com>
+In-Reply-To: <1396547967-19260-1-git-send-email-soren.brinkmann@xilinx.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Harini Katakam <harinikatakamlinux@gmail.com>
-Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, broonie@kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-spi@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, Punnaiah Choudary <kpc528@gmail.com>, kalluripunnaiahchoudary@gmail.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, Harini Katakam <harinik@xilinx.com>
+To: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, Michal Simek <michal.simek@xilinx.com>, Mike Looijmans <mike.looijmans@topic.nl>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Harini Katakam <harinik@xilinx.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2014-04-04 at 12:15AM +0530, Harini Katakam wrote:
-> Hi Soren
->=20
-> On Thu, Apr 3, 2014 at 11:20 PM, S=C3=B6ren Brinkmann
-> <soren.brinkmann@xilinx.com> wrote:
-> > Hi Punnaiah,
-> >
-> > On Thu, 2014-04-03 at 10:33PM +0530, Punnaiah Choudary Kalluri wrot=
-e:
-> >> Add bindings documentation for Zynq Quad SPI driver.
-> >>
-> >> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
-> >> ---
-> >>  .../devicetree/bindings/spi/spi-zynq-qspi.txt      |   26 +++++++=
-+++++++++++++
-> >>  1 file changed, 26 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/spi/spi-zynq=
--qspi.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/spi/spi-zynq-qspi.t=
-xt b/Documentation/devicetree/bindings/spi/spi-zynq-qspi.txt
-> >> new file mode 100644
-> >> index 0000000..88e00f8
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/spi/spi-zynq-qspi.txt
-> >> @@ -0,0 +1,26 @@
-> >> +Xilinx Zynq QSPI controller Device Tree Bindings
-> >> +-------------------------------------------------
-> >> +
-> >> +Required properties:
-> >> +- compatible         : Should be "xlnx,zynq-qspi-1.0".
-> >> +- reg                        : Physical base address and size of =
-QSPI registers map.
-> >> +- interrupts         : Property with a value describing the inter=
-rupt
-> >> +                       number.
-> >> +- interrupt-parent   : Must be core interrupt controller
-> >> +- clock-names                : List of input clock names - "ref_c=
-lk", "aper_clk"
-> >> +                       (See clock bindings for details).
-> >> +- clocks             : Clock phandles (see clock bindings for det=
-ails).
-> >> +
-> >> +Optional properties:
-> >> +- num-cs             : Number of chip selects used.
-> >> +
-> >> +Example:
-> >> +     qspi@e000d000 {
-> >> +             compatible =3D "xlnx,zynq-qspi-1.0";
-> >> +             clock-names =3D "ref_clk", "aper_clk";
-> >
-> > These seem to be the SOC names of the clocks. Doesn't have the IP i=
-ts
-> > own naming for these clock inputs?
-> >
->=20
-> The IP design spec uses the name ref_clk.
-> There is no particular clock name used for for APB clock.
-> So I think aper_clk is a valid name to use.
+On Thu, Apr 3, 2014 at 12:59 PM, Soren Brinkmann
+<soren.brinkmann@xilinx.com> wrote:
+> Add device tree binding documentation for the Cadence I2C controller.
+>
+> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> ---
+>
+> Changes in v4:
+>  - moved adding DT docs into this dedicated patch
+>
+> Changes in v3: None
+> Changes in v2: None
+>
+> ---
+>  .../devicetree/bindings/i2c/i2c-cadence.txt         | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-cadence.txt
+>
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-cadence.txt b/Documentation/devicetree/bindings/i2c/i2c-cadence.txt
+> new file mode 100644
+> index 000000000000..685adf513111
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-cadence.txt
+> @@ -0,0 +1,21 @@
+> +Binding for the Cadence I2C controller
+> +
+> +Required properties:
+> +  compatible: Compatibility string. Must be 'cdns,i2c-r1p10'.
+> +  clocks: From common clock bindings. Phandle to input clock.
+> +
+> +Optional properties:
+> +  clock-frequency: Desired operating frequency, in Hz, of the bus (actual may
+> +                  be lower). Defaults to 400000 if not specified.
 
-aper is a Zynq-ism, IMHO. I think 'pclk', 'apbclk' or
-something like that is more appropriate.
+Since not all devices support 400kHz, I would prefer that the default
+be 100kHz. Also, it would be good if what speed the default is
+consistent across i2c drivers.
 
-	S=C3=B6ren
-
-
+Rob
