@@ -1,95 +1,62 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH] mfd: twl6040: Optional clk32k clock handling
-Date: Thu, 3 Apr 2014 13:54:41 +0300
-Message-ID: <1396522482-32036-1-git-send-email-peter.ujfalusi@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
+Date: Thu, 03 Apr 2014 10:35:11 +0200
+Message-ID: <7201300.YltrNpx6X5@wuerfel>
+References: <1396358832-15828-1-git-send-email-zhangfei.gao@linaro.org> <4698724.S4F2PxkdOH@wuerfel> <CAMj5BkgfwE1hHpVeqH9WRitwCB30x3c4w0qw7sXT3PiOV-QcPQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org
-Cc: sameo@linux.intel.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMj5BkgfwE1hHpVeqH9WRitwCB30x3c4w0qw7sXT3PiOV-QcPQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhangfei Gao <zhangfei.gao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Laight <David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org" <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-In certain boards the source for the clk32k clock can be gated. In these
-boards the clk32k clock can be provided to the driver and it is going to be
-enabled/disabled when it is needed.
-If the clk32k clock is not provided the driver will assume that it is always
-running.
+On Thursday 03 April 2014 14:24:25 Zhangfei Gao wrote:
+> On Wed, Apr 2, 2014 at 11:49 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > On Wednesday 02 April 2014 10:04:34 David Laight wrote:
+> >> What you need to avoid is reads from uncached memory.
+> >> It may well beneficial for the tx reclaim code to first
+> >> check whether all the transmits have completed (likely)
+> >> instead of testing each descriptor in turn.
+> >
+> > Good point, reading from noncached memory is actually the
+> > part that matters. For slow networks (e.g. 10mbit), checking if
+> > all of the descriptors have finished is not quite as likely to succeed
+> > as for fast (gbit), especially if the timeout is set to expire
+> > before all descriptors have completed.
+> >
+> > If it makes a lot of difference to performance, one could use
+> > a binary search over the outstanding descriptors rather than looking
+> > just at the last one.
+> >
+> 
+> I am afraid, there may no simple way to check whether all transmits completed.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- Documentation/devicetree/bindings/mfd/twl6040.txt |  2 ++
- drivers/mfd/twl6040.c                             | 10 ++++++++++
- include/linux/mfd/twl6040.h                       |  2 ++
- 3 files changed, 14 insertions(+)
+Why can't you do the trivial change that David suggested above? It
+sounds like a three line change to your current code. No need to do
+the binary change at first, just see what difference it makes.
 
-diff --git a/Documentation/devicetree/bindings/mfd/twl6040.txt b/Documentation/devicetree/bindings/mfd/twl6040.txt
-index 0f5dd709d752..a41157b5d930 100644
---- a/Documentation/devicetree/bindings/mfd/twl6040.txt
-+++ b/Documentation/devicetree/bindings/mfd/twl6040.txt
-@@ -19,6 +19,8 @@ Required properties:
- 
- Optional properties, nodes:
- - enable-active-high: To power on the twl6040 during boot.
-+- clocks: phandle to the clk32k clock provider
-+- clock-names: Must be "clk32k"
- 
- Vibra functionality
- Required properties:
-diff --git a/drivers/mfd/twl6040.c b/drivers/mfd/twl6040.c
-index 2e6504a8e1e3..12b314ea48dc 100644
---- a/drivers/mfd/twl6040.c
-+++ b/drivers/mfd/twl6040.c
-@@ -291,6 +291,8 @@ int twl6040_power(struct twl6040 *twl6040, int on)
- 		if (twl6040->power_count++)
- 			goto out;
- 
-+		clk_prepare_enable(twl6040->clk32k);
-+
- 		/* Allow writes to the chip */
- 		regcache_cache_only(twl6040->regmap, false);
- 
-@@ -346,6 +348,8 @@ int twl6040_power(struct twl6040 *twl6040, int on)
- 
- 		twl6040->sysclk = 0;
- 		twl6040->mclk = 0;
-+
-+		clk_disable_unprepare(twl6040->clk32k);
- 	}
- 
- out:
-@@ -644,6 +648,12 @@ static int twl6040_probe(struct i2c_client *client,
- 
- 	i2c_set_clientdata(client, twl6040);
- 
-+	twl6040->clk32k = devm_clk_get(&client->dev, "clk32k");
-+	if (IS_ERR(twl6040->clk32k)) {
-+		dev_info(&client->dev, "clk32k is not handled\n");
-+		twl6040->clk32k = NULL;
-+	}
-+
- 	twl6040->supplies[0].supply = "vio";
- 	twl6040->supplies[1].supply = "v2v1";
- 	ret = devm_regulator_bulk_get(&client->dev, TWL6040_NUM_SUPPLIES,
-diff --git a/include/linux/mfd/twl6040.h b/include/linux/mfd/twl6040.h
-index a69d16b30c18..8f9fc3d26e6d 100644
---- a/include/linux/mfd/twl6040.h
-+++ b/include/linux/mfd/twl6040.h
-@@ -28,6 +28,7 @@
- #include <linux/interrupt.h>
- #include <linux/mfd/core.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/clk.h>
- 
- #define TWL6040_REG_ASICID		0x01
- #define TWL6040_REG_ASICREV		0x02
-@@ -223,6 +224,7 @@ struct twl6040 {
- 	struct regmap *regmap;
- 	struct regmap_irq_chip_data *irq_data;
- 	struct regulator_bulk_data supplies[2]; /* supplies for vio, v2v1 */
-+	struct clk *clk32k;
- 	struct mutex mutex;
- 	struct mutex irq_mutex;
- 	struct mfd_cell cells[TWL6040_CELLS];
--- 
-1.9.1
+> Still want enable the cache coherent feature first.
+> Then two benefits:
+> 1. dma buffer cacheable.
+> 2. descriptor can directly use cacheable memory, so the performance
+> concern here may be solved accordingly.
+> 
+> So how about using this version as first version, while tuning the
+> performance in the next step.
+> Currently, the gbit interface can reach 420M bits/s in iperf, and the
+> 100M interface can reach 94M bits/s.
+
+It sounds like a very simple thing to try and you'd know immediately
+if it helps or not.
+
+Besides, you still have to change the other two issues I mentioned
+regarding the tx reclaim, so you can do all three at once.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
