@@ -1,145 +1,155 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH v7 3/3] ARM: dts: add dts files for xyref5260 board
-Date: Thu, 03 Apr 2014 15:30:24 +0530
-Message-ID: <1396519224-18712-4-git-send-email-rahul.sharma@samsung.com>
-References: <1396519224-18712-1-git-send-email-rahul.sharma@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1396519224-18712-1-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 01/11] base: power: Add generic OF-based power domain look-up
+Date: Thu, 3 Apr 2014 15:32:48 +0200
+Message-ID: <CAPDyKFp-5A+7CZmzZbkLRyBS5zB7gc2cLgV0wuwwQtGAOaGZhQ@mail.gmail.com>
+References: <1393862536-9842-1-git-send-email-tomasz.figa@gmail.com>
+	<1393862536-9842-2-git-send-email-tomasz.figa@gmail.com>
+	<CAPDyKFoxTAHyX7SQAMsvt=OttHs22oMSB8XrRUDDJ06qO0Fc2w@mail.gmail.com>
+	<533D547A.7080900@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <533D547A.7080900@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene.kim@samsung.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@kernel.org>Stephen
 List-Id: devicetree@vger.kernel.org
 
-The patch adds the dts files for xyref5260 board which
-is based on Exynos5260 Evt0 sample.
+On 3 April 2014 14:30, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> Hi Ulf,
+>
+>
+> On 03.04.2014 14:16, Ulf Hansson wrote:
+>>
+>> On 3 March 2014 17:02, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+>>>
+>>> This patch introduces generic code to perform power domain look-up using
+>>> device tree and automatically bind devices to their power domains.
+>>> Generic device tree binding is introduced to specify power domains of
+>>> devices in their device tree nodes.
+>>>
+>>> Backwards compatibility with legacy Samsung-specific power domain
+>>> bindings is provided, but for now the new code is not compiled when
+>>> CONFIG_ARCH_EXYNOS is selected to avoid collision with legacy code. This
+>>> will change as soon as Exynos power domain code gets converted to use
+>>> the generic framework in further patch.
+>>>
+>>> Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
+>>> ---
+>>>   .../devicetree/bindings/power/power_domain.txt     |  51 ++++
+>>>   drivers/base/power/domain.c                        | 298
+>>> +++++++++++++++++++++
+>>>   include/linux/pm_domain.h                          |  46 ++++
+>>>   kernel/power/Kconfig                               |   4 +
+>>>   4 files changed, 399 insertions(+)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/power/power_domain.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt
+>>> b/Documentation/devicetree/bindings/power/power_domain.txt
+>>> new file mode 100644
+>>> index 0000000..93be5d9
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
+>>> @@ -0,0 +1,51 @@
+>>> +* Generic power domains
+>>> +
+>>> +System on chip designs are often divided into multiple power domains
+>>> that
+>>> +can be used for power gating of selected IP blocks for power saving by
+>>> +reduced leakage current.
+>>> +
+>>> +This device tree binding can be used to bind power domain consumer
+>>> devices
+>>> +with their power domains provided by power domain providers. A power
+>>> domain
+>>> +provider can be represented by any node in the device tree and can
+>>> provide
+>>> +one or more power domains. A consumer node can refer to the provider by
+>>> +a phandle and a set of phandle arguments (so called power domain
+>>> specifier)
+>>> +of length specified by #power-domain-cells property in the power domain
+>>> +provider node.
+>>> +
+>>> +==Power domain providers==
+>>> +
+>>> +Required properties:
+>>> + - #power-domain-cells : Number of cells in a power domain specifier;
+>>> +   Typically 0 for nodes representing a single power domain and 1 for
+>>> nodes
+>>> +   providing multiple power domains (e.g. power controllers), but can be
+>>> +   any value as specified by device tree binding documentation of
+>>> particular
+>>> +   provider.
+>>
+>>
+>> I am trying to understand if using a value > 1, ever would make sense.
+>> Wouldn't that mean each consumer (device) would actually be a part of
+>> more than one power domain? That won't work, right!?
+>
+>
+> Not exactly. Each phandle + #power-domain-cells cells are used just for
+> single power domain.
+>
+> The cells here are used merely as the identifier used by power domain driver
+> to translate a power domain specifier from DT to a kernel pointer. It's up
+> to driver bindings to select the number of cells to properly identify a
+> power domain.
+>
+> As an example (from different world, but showing the same mechanism), let's
+> see a common pattern of GPIO banks on some SoC:
+>
+> GPA0
+> GPA1
+> GPB0
+> GPB1
+> GPC0
+> GPC1
+>
+> One might assign a single-cell ID to each bank ending with a namespace of
+> integers from 0 to 5 that would be used as follows:
+>
+> #define GPA0 0
+> #define GPA1 1
+> #define GPB0 2
+> #define GPB1 3
+> #define GPC0 4
+> #define GPC1 5
+>
+> reset-gpios = <&gpio GPA0 4>;
+>
+> However one might also consider assigning one cell to bank set (e.g. GPA)
+> and one cell to identify the bank inside of a set, like on the following
+> example:
+>
+> #define GPA 0
+> #define GPB 1
+> #define GPC 2
+>
+> reset-gpios = <&gpio GPA 0 4>;
+>
+> Good bindings should allow arbitrary identification schemes to let a driver
+> developer use the one that suits the hardware he's working on.
+>
+>
+>>
+>> Additionally, there are no corresponding parsing method (like
+>> of_genpd_xlate_onecell() ) that support more than one cell.
+>
+>
+> There are two generic xlate helpers provided for the most common cases that
+> are likely to be reused by most drivers. For more complex cases it's up to
+> the driver to implement its own mapping function. It can be promoted to a
+> generic one later if such need shows up.
+>
+> Best regards,
+> Tomasz
 
-Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
----
- arch/arm/boot/dts/Makefile                 |    1 +
- arch/arm/boot/dts/exynos5260-xyref5260.dts |  103 ++++++++++++++++++++++++++++
- 2 files changed, 104 insertions(+)
- create mode 100644 arch/arm/boot/dts/exynos5260-xyref5260.dts
+Tomasz, thanks for the clarification! I still have more to learn about DT. :-)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b9d6a8b..477723b 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -72,6 +72,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
- 	exynos5250-arndale.dtb \
- 	exynos5250-smdk5250.dtb \
- 	exynos5250-snow.dtb \
-+	exynos5260-xyref5260.dtb \
- 	exynos5420-arndale-octa.dtb \
- 	exynos5420-smdk5420.dtb \
- 	exynos5440-sd5v1.dtb \
-diff --git a/arch/arm/boot/dts/exynos5260-xyref5260.dts b/arch/arm/boot/dts/exynos5260-xyref5260.dts
-new file mode 100644
-index 0000000..fb1b0ee
---- /dev/null
-+++ b/arch/arm/boot/dts/exynos5260-xyref5260.dts
-@@ -0,0 +1,103 @@
-+/*
-+ * SAMSUNG XYREF5260 EVT0 board device tree source
-+ *
-+ * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-+ *		http://www.samsung.com
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+*/
-+
-+/dts-v1/;
-+#include "exynos5260.dtsi"
-+
-+/ {
-+	model = "SAMSUNG XYREF5260 EVT0 board based on EXYNOS5260";
-+	compatible = "samsung,xyref5260", "samsung,exynos5260";
-+
-+	memory {
-+		reg = <0x20000000 0x80000000>;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttySAC2,115200";
-+	};
-+
-+	fin_pll: xxti {
-+		compatible = "fixed-clock";
-+		clock-frequency = <24000000>;
-+		clock-output-names = "fin_pll";
-+		#clock-cells = <0>;
-+	};
-+
-+	xrtcxti: xrtcxti {
-+		compatible = "fixed-clock";
-+		clock-frequency = <32768>;
-+		clock-output-names = "xrtcxti";
-+		#clock-cells = <0>;
-+	};
-+};
-+
-+&pinctrl_0 {
-+	hdmi_hpd_irq: hdmi-hpd-irq {
-+		samsung,pins = "gpx3-7";
-+		samsung,pin-function = <0>;
-+		samsung,pin-pud = <1>;
-+		samsung,pin-drv = <0>;
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	status = "okay";
-+};
-+
-+&mmc_0 {
-+	status = "okay";
-+	num-slots = <1>;
-+	broken-cd;
-+	bypass-smu;
-+	supports-highspeed;
-+	supports-hs200-mode; /* 200 Mhz */
-+	card-detect-delay = <200>;
-+	samsung,dw-mshc-ciu-div = <3>;
-+	samsung,dw-mshc-sdr-timing = <0 4>;
-+	samsung,dw-mshc-ddr-timing = <0 2>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd0_rdqs &sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4 &sd0_bus8>;
-+
-+	slot@0 {
-+		reg = <0>;
-+		bus-width = <8>;
-+	};
-+};
-+
-+&mmc_2 {
-+	status = "okay";
-+	num-slots = <1>;
-+	supports-highspeed;
-+	card-detect-delay = <200>;
-+	samsung,dw-mshc-ciu-div = <3>;
-+	samsung,dw-mshc-sdr-timing = <2 3>;
-+	samsung,dw-mshc-ddr-timing = <1 2>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus1 &sd2_bus4>;
-+
-+	slot@0 {
-+		reg = <0>;
-+		bus-width = <4>;
-+		disable-wp;
-+	};
-+};
--- 
-1.7.9.5
+Not sure if some additional comments would make this more clear though
+- or if it's juts my untrained eye that had a few problems
+understanding.
+
+Kind regards
+Ulf Hansson
