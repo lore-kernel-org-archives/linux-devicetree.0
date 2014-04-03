@@ -1,190 +1,224 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: add initial Colibri VF61 board support
-Date: Thu, 3 Apr 2014 10:32:27 +0800
-Message-ID: <20140403023224.GC2801@dragon>
-References: <cover.1396456704.git.stefan@agner.ch>
- <c8f2d3349233b70e5bd242480ff326b3b728cca3.1396456704.git.stefan@agner.ch>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [RFC PATCH 1/2] drivers: mfd: Add support of exynos-pmu driver
+Date: Thu, 03 Apr 2014 13:56:57 +0200
+Message-ID: <4187440.t3CeqIPlpy@amdc1032>
+References: <1396427085-4696-1-git-send-email-pankaj.dubey@samsung.com>
+ <1396427085-4696-2-git-send-email-pankaj.dubey@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <c8f2d3349233b70e5bd242480ff326b3b728cca3.1396456704.git.stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: stefan-XLVq0VzYD2Y@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1396427085-4696-2-git-send-email-pankaj.dubey@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Pankaj Dubey <pankaj.dubey@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, linux@arm.linux.org.uk, chow.kim@samsung.com, Younggun Jang <yg1004.jang@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Sangbeom Kim <sbkim73@samsung.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 02, 2014 at 06:47:27PM +0200, stefan-XLVq0VzYD2Y@public.gmane.org wrote:
-> From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-> 
-> Add initial Toradex Colibri VF61 board support. Ethernet, UART
-> and SDHC cards are working. Cache latencies need to be a bit
-> higher than vf610.dtsi suggests. Those values are validated
-> by running multiple memory tests.
-> 
-> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 
-Looks good to me.  Only one minor comment below.
+Hi,
 
-> ---
->  arch/arm/boot/dts/Makefile          |   1 +
->  arch/arm/boot/dts/vf610-colibri.dts | 123 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 124 insertions(+)
->  create mode 100644 arch/arm/boot/dts/vf610-colibri.dts
+On Wednesday, April 02, 2014 05:24:44 PM Pankaj Dubey wrote:
+> From: Younggun Jang <yg1004.jang@samsung.com>
 > 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 23d7768..81b3885 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -190,6 +190,7 @@ dtb-$(CONFIG_ARCH_MXC) += \
->  	imx6q-udoo.dtb \
->  	imx6q-wandboard.dtb \
->  	imx6sl-evk.dtb \
-> +	vf610-colibri.dtb \
->  	vf610-cosmic.dtb \
->  	vf610-twr.dtb
->  dtb-$(CONFIG_ARCH_MXS) += imx23-evk.dtb \
-> diff --git a/arch/arm/boot/dts/vf610-colibri.dts b/arch/arm/boot/dts/vf610-colibri.dts
+> This driver is mainly used for setting misc bits of register from PMU IP
+> of Exynos SoC which will be required to configure before Suspend/Resume.
+> Currently all these settings are done in "arch/arm/mach-exynos/pmu.c" but
+> moving ahead for ARM64 based SoC support, there is a need of DT based
+> implementation of PMU driver.
+
+PMU support for ARM32 EXYNOS SoCs is heavily SoC dependent and there
+is very little code shared between diffirent SoCs.  Unless PMU setup
+for Samsung ARM64 SoCs is similar to some existing ARM32 EXYNOS SoCs
+it may be better to just add a separate PMU driver for Samsung ARM64
+SoCs. IOW it would be best to show that this patch series is really
+useful before merging it.
+
+When it comes to the current patches it would be better to do changes
+converting PMU support to be a platform driver first for the existing
+arch/arm/mach-exynos/pmu.c file and then move+rename this file in
+the separate patch.  Currently the code changes are done at the same
+time as the code movement which makes them difficult to review/verify.
+
+There are also some minor issues with the new code:
+
+[...]
+
+> diff --git a/drivers/mfd/exynos-pmu.c b/drivers/mfd/exynos-pmu.c
 > new file mode 100644
-> index 0000000..3ac34e6
+> index 0000000..24abd9b
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/vf610-colibri.dts
-> @@ -0,0 +1,123 @@
+> +++ b/drivers/mfd/exynos-pmu.c
+> @@ -0,0 +1,534 @@
 > +/*
-> + * Copyright 2014 Toradex AG
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
+> + * Copyright (c) 2014-2015 Samsung Electronics Co., Ltd.
+> + *		http://www.samsung.com/
+
+2015?
+
+[...]
+
+> +static int __init exynos4210_pmu_init(void)
+> +{
+> +	exynos_pmu_config = exynos4210_pmu_config;
+> +	pmu_data->pmu_id = PMU_EXYNOS4210;
+> +	pr_info("EXYNOS4210 PMU Initialize\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init exynos4212_pmu_init(void)
+> +{
+> +	exynos_pmu_config = exynos4x12_pmu_config;
+> +	pmu_data->pmu_id = PMU_EXYNOS4212;
+> +	pr_info("EXYNOS4x12 PMU Initialize\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init exynos4412_pmu_init(void)
+> +{
+> +	exynos_pmu_config = exynos4x12_pmu_config;
+> +	pmu_data->pmu_id = PMU_EXYNOS4412;
+> +	pr_info("EXYNOS4412 PMU Initialize\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init exynos5250_pmu_init(void)
+> +{
+> +	unsigned int value;
+> +
+> +	/*
+> +	 * When SYS_WDTRESET is set, watchdog timer reset request
+> +	 * is ignored by power management unit.
+> +	 */
+> +	value = __raw_readl(pmu_data->regs + EXYNOS5_AUTO_WDTRESET_DISABLE);
+> +	value &= ~EXYNOS5_SYS_WDTRESET;
+> +	__raw_writel(value, pmu_data->regs + EXYNOS5_AUTO_WDTRESET_DISABLE);
+> +
+> +	value = __raw_readl(pmu_data->regs + EXYNOS5_MASK_WDTRESET_REQUEST);
+> +	value &= ~EXYNOS5_SYS_WDTRESET;
+> +	__raw_writel(value, pmu_data->regs + EXYNOS5_MASK_WDTRESET_REQUEST);
+> +
+> +	exynos_pmu_config = exynos5250_pmu_config;
+> +	pmu_data->pmu_id = PMU_EXYNOS5250;
+> +	pr_info("EXYNOS5250 PMU Initialize\n");
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * PMU platform driver and devicetree bindings.
 > + */
-> +
-> +/dts-v1/;
-> +#include "vf610.dtsi"
-> +
-> +/ {
-> +	model = "Toradex Colibri VF61 COM";
-> +	compatible = "toradex,vf610-colibri", "fsl,vf610";
-> +
-> +	chosen {
-> +		bootargs = "console=ttyLP0,115200";
-> +	};
-> +
-> +	memory {
-> +		reg = <0x80000000 0x10000000>;
-> +	};
-> +
-> +	clocks {
-> +		enet_ext {
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <0>;
-> +			clock-frequency = <50000000>;
-> +		};
-> +	};
-> +
+> +static struct of_device_id exynos_pmu_of_device_ids[] = {
+> +	{
+> +		.compatible = "samsung,exynos4210-pmu",
+> +		.data = (void *)exynos4210_pmu_init
+> +	},
+> +	{
+> +		.compatible = "samsung,exynos4212-pmu",
+> +		.data = (void *)exynos4212_pmu_init
+> +	},
+> +	{
+> +		.compatible = "samsung,exynos4412-pmu",
+> +		.data = (void *)exynos4412_pmu_init
+> +	},
+> +	{
+> +		.compatible = "samsung,exynos5250-pmu",
+> +		.data = (void *)exynos5250_pmu_init
+> +	},
+> +	{},
 > +};
 > +
-> +&iomuxc {
+> +static int exynos_pmu_probe(struct platform_device *pdev)
+> +{
+> +	const struct of_device_id *match;
+> +	exynos_pmu_init_t exynos_pmu_init;
+> +	struct resource *res;
+> +
+> +	pmu_data = devm_kzalloc(&pdev->dev,
+> +			sizeof(struct exynos_pmu_data), GFP_KERNEL);
+> +	if (!pmu_data) {
+> +		dev_err(&pdev->dev, "exynos_pmu driver probe failed\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	pmu_data->dev = &pdev->dev;
+> +
+> +	match = of_match_node(exynos_pmu_of_device_ids, pdev->dev.of_node);
+> +	exynos_pmu_init = match->data;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	pmu_data->regs = devm_ioremap_resource(&pdev->dev, res);
 
-I would suggest to put this node at the bottom of the file, since it
-will have a lot more data than other nodes.  Doing so will make reading
-of the file a little easier.
+devm_ioremap_resouce() return value should be checked for errors with
 
-Shawn
+if (IS_ERR(pmu_data->regs))
+	return PTR_ERR(pmu_data->regs);
 
-> +	vf610-colibri {
-> +		pinctrl_esdhc1: esdhc1grp {
-> +			fsl,fsl,pins = <
-> +				VF610_PAD_PTA24__ESDHC1_CLK	0x31ef
-> +				VF610_PAD_PTA25__ESDHC1_CMD	0x31ef
-> +				VF610_PAD_PTA26__ESDHC1_DAT0	0x31ef
-> +				VF610_PAD_PTA27__ESDHC1_DAT1	0x31ef
-> +				VF610_PAD_PTA28__ESDHC1_DATA2	0x31ef
-> +				VF610_PAD_PTA29__ESDHC1_DAT3	0x31ef
-> +				VF610_PAD_PTB20__GPIO_42	0x219d
-> +			>;
-> +		};
 > +
-> +		pinctrl_fec1: fec1grp {
-> +			fsl,pins = <
-> +				VF610_PAD_PTC9__ENET_RMII1_MDC		0x30d2
-> +				VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3
-> +				VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1
-> +				VF610_PAD_PTC12__ENET_RMII_RXD1		0x30d1
-> +				VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1
-> +				VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1
-> +				VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2
-> +				VF610_PAD_PTC16__ENET_RMII1_TXD0	0x30d2
-> +				VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2
-> +			>;
-> +		};
-> +
-> +		pinctrl_uart0: uart0grp {
-> +			fsl,pins = <
-> +				VF610_PAD_PTB10__UART0_TX		0x21a2
-> +				VF610_PAD_PTB11__UART0_RX		0x21a1
-> +			>;
-> +		};
-> +
-> +		pinctrl_uart1: uart1grp {
-> +			fsl,pins = <
-> +				VF610_PAD_PTB4__UART1_TX		0x21a2
-> +				VF610_PAD_PTB5__UART1_RX		0x21a1
-> +			>;
-> +		};
-> +
-> +		pinctrl_uart2: uart2grp {
-> +			fsl,pins = <
-> +				VF610_PAD_PTD0__UART2_TX		0x21a2
-> +				VF610_PAD_PTD1__UART2_RX		0x21a1
-> +				VF610_PAD_PTD2__UART2_RTS		0x21a2
-> +				VF610_PAD_PTD3__UART2_CTS		0x21a1
-> +			>;
-> +		};
-> +	};
-> +};
-> +
-> +&esdhc1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_esdhc1>;
-> +	bus-width = <4>;
-> +	status = "okay";
-> +};
-> +
-> +&fec1 {
-> +	phy-mode = "rmii";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_fec1>;
-> +	status = "okay";
-> +};
-> +
-> +&L2 {
-> +	arm,data-latency = <2 1 2>;
-> +	arm,tag-latency = <3 2 3>;
-> +};
-> +
-> +&uart0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart0>;
-> +	status = "okay";
-> +};
-> +
-> +&uart1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart1>;
-> +	status = "okay";
-> +};
-> +
-> +&uart2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart2>;
-> +	status = "okay";
-> +};
-> -- 
-> 1.9.1
-> 
+> +	exynos_pmu_init();
 
+exynos*_pmu_init() methods should be void as they always return 0 and
+the return value is ignored anyway.
+
+Also they cannot be marked with __init as the driver probe function
+itself is not marked with __init (it cannot be beacuse of possibility
+of doing unbind/bind through sysfs).
+
+> +
+> +	return 0;
+> +};
+> +
+> +static int exynos_pmu_remove(struct platform_device *pdev)
+> +{
+> +	exynos_pmu_config = NULL;
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver exynos_pmu_driver = {
+> +	.driver  = {
+> +		.name   = "exynos-pmu",
+> +		.of_match_table = exynos_pmu_of_device_ids,
+> +	},
+> +	.probe = exynos_pmu_probe,
+> +	.remove = exynos_pmu_remove,
+> +};
+> +
+> +static int __init exynos_pmu_driver_init(void)
+> +{
+> +	return platform_driver_register(&exynos_pmu_driver);
+> +}
+> +arch_initcall(exynos_pmu_driver_init);
+> +
+> +MODULE_AUTHOR("Younggun Jang <yg1004.jang@samsung.com");
+> +MODULE_DESCRIPTION("Exynos PMU driver");
+> +MODULE_LICENSE("GPL v2");
+
+This driver can be build as module now but:
+- exynos_sys_powerdown_conf() is not exported
+- there is no exynos_pmu_driver_exit()
+
+Also it is not clear what happens if exynos_sys_powerdown_conf() is called
+while there are no platform devices binded to a driver but driver itself is
+loaded.
+
+[...]
+
+> diff --git a/include/linux/mfd/samsung/exynos-regs-pmu.h b/include/linux/mfd/samsung/exynos-regs-pmu.h
+> new file mode 100644
+> index 0000000..ed8259d
+> --- /dev/null
+> +++ b/include/linux/mfd/samsung/exynos-regs-pmu.h
+> @@ -0,0 +1,308 @@
+> +/*
+> + * Copyright (c) 2014-2015 Samsung Electronics Co., Ltd.
+
+2015?
+
+Best regards,
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
