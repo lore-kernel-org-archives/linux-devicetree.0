@@ -1,61 +1,119 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Thu, 03 Apr 2014 10:35:11 +0200
-Message-ID: <7201300.YltrNpx6X5@wuerfel>
-References: <1396358832-15828-1-git-send-email-zhangfei.gao@linaro.org> <4698724.S4F2PxkdOH@wuerfel> <CAMj5BkgfwE1hHpVeqH9WRitwCB30x3c4w0qw7sXT3PiOV-QcPQ@mail.gmail.com>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] i2c: Add driver for Cadence I2C controller
+Date: Thu, 03 Apr 2014 09:25:47 +0200
+Message-ID: <533D0CFB.7050707@monstr.eu>
+References: <1394556613-11692-1-git-send-email-soren.brinkmann@xilinx.com> <533CF913.4020308@monstr.eu> <20140403071004.GA2571@katana>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="uRFjPXGuh6ecXObbHBHLfOOWu4XTNMNbB"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMj5BkgfwE1hHpVeqH9WRitwCB30x3c4w0qw7sXT3PiOV-QcPQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20140403071004.GA2571@katana>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhangfei Gao <zhangfei.gao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Laight <David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org" <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 03 April 2014 14:24:25 Zhangfei Gao wrote:
-> On Wed, Apr 2, 2014 at 11:49 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Wednesday 02 April 2014 10:04:34 David Laight wrote:
-> >> What you need to avoid is reads from uncached memory.
-> >> It may well beneficial for the tx reclaim code to first
-> >> check whether all the transmits have completed (likely)
-> >> instead of testing each descriptor in turn.
-> >
-> > Good point, reading from noncached memory is actually the
-> > part that matters. For slow networks (e.g. 10mbit), checking if
-> > all of the descriptors have finished is not quite as likely to succeed
-> > as for fast (gbit), especially if the timeout is set to expire
-> > before all descriptors have completed.
-> >
-> > If it makes a lot of difference to performance, one could use
-> > a binary search over the outstanding descriptors rather than looking
-> > just at the last one.
-> >
-> 
-> I am afraid, there may no simple way to check whether all transmits completed.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--uRFjPXGuh6ecXObbHBHLfOOWu4XTNMNbB
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Why can't you do the trivial change that David suggested above? It
-sounds like a three line change to your current code. No need to do
-the binary change at first, just see what difference it makes.
+On 04/03/2014 09:10 AM, Wolfram Sang wrote:
+>=20
+> Please don't quote large parts of the message f you are not referring t=
+o
+> it.
 
-> Still want enable the cache coherent feature first.
-> Then two benefits:
-> 1. dma buffer cacheable.
-> 2. descriptor can directly use cacheable memory, so the performance
-> concern here may be solved accordingly.
-> 
-> So how about using this version as first version, while tuning the
-> performance in the next step.
-> Currently, the gbit interface can reach 420M bits/s in iperf, and the
-> 100M interface can reach 94M bits/s.
+Normally I do it. Forgot sorry.
 
-It sounds like a very simple thing to try and you'd know immediately
-if it helps or not.
+>>> +#ifdef CONFIG_PM_SLEEP
+>>> +/**
+>>> + * cdns_i2c_suspend - Suspend method for the driver
+>>> + * @_dev:	Address of the platform_device structure
+>>> + * Return: 0 always
+>>> + *
+>>> + * Put the driver into low power mode.
+>>> + */
+>>> +static int cdns_i2c_suspend(struct device *_dev)
+>>> +{
+>>> +	struct platform_device *pdev =3D container_of(_dev,
+>>> +			struct platform_device, dev);
+>>> +	struct cdns_i2c *xi2c =3D platform_get_drvdata(pdev);
+>>> +
+>>> +	clk_disable(xi2c->clk);
+>>> +	xi2c->suspended =3D 1;
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +/**
+>>> + * cdns_i2c_resume - Resume from suspend
+>>> + * @_dev:	Address of the platform_device structure
+>>> + * Return: 0 on success and error value on error
+>>> + *
+>>> + * Resume operation after suspend.
+>>> + */
+>>> +static int cdns_i2c_resume(struct device *_dev)
+>>> +{
+>>> +	struct platform_device *pdev =3D container_of(_dev,
+>>> +			struct platform_device, dev);
+>>> +	struct cdns_i2c *xi2c =3D platform_get_drvdata(pdev);
+>>> +	int ret;
+>>> +
+>>> +	ret =3D clk_enable(xi2c->clk);
+>>> +	if (ret) {
+>>> +		dev_err(_dev, "Cannot enable clock.\n");
+>>> +		return ret;
+>>> +	}
+>>> +
+>>> +	xi2c->suspended =3D 0;
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +#endif
+>>
+>> Can you also please remove this #ifdef and use __maybe_used
+>> instead? Better not to have any ifdef in the code.
+>=20
+> Is this a new pattern? For PM_SLEEP, #ifdef seems to be quite common.
 
-Besides, you still have to change the other two issues I mentioned
-regarding the tx reclaim, so you can do all three at once.
+The first suggestion to do it came from CAN maintainer.
+It is valid in general for ifdef.
+I have checked all our drivers and we are changing them to use __maybe_us=
+ed
+because then we can easily find out if there is any problem
+when function prototype has changed.
 
-	Arnd
+Thanks,
+Michal
+
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--uRFjPXGuh6ecXObbHBHLfOOWu4XTNMNbB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlM9DPsACgkQykllyylKDCEcfwCfQsLUeOED+rmyClPSDfDT/DKn
+EgEAnjgSaJsz0mfHflcF8d2GEZwYhQGL
+=hV/7
+-----END PGP SIGNATURE-----
+
+--uRFjPXGuh6ecXObbHBHLfOOWu4XTNMNbB--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
