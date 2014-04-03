@@ -1,71 +1,55 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 4/8] PCI: imx6: use new clock names
-Date: Thu, 03 Apr 2014 10:21:05 +0200
-Message-ID: <1396513265.5057.7.camel@weser.hi.pengutronix.de>
-References: <1396025579-14344-1-git-send-email-l.stach@pengutronix.de>
-	 <1396025579-14344-5-git-send-email-l.stach@pengutronix.de>
-	 <20140403065037.GJ2801@dragon>
+From: Alexander Popov <a13xp0p0v88@gmail.com>
+Subject: Re: [PATCH RFC v10 0/6] MPC512x DMA slave s/g support, OF DMA lookup
+Date: Thu, 3 Apr 2014 14:59:31 +0400
+Message-ID: <CAF0T0X5hAp8R3Pg5b+JaCH0r2JedjaFXCFqwb=CAXuXjvUyEhQ@mail.gmail.com>
+References: <1395326878-25243-1-git-send-email-a13xp0p0v88@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140403065037.GJ2801@dragon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Richard Zhu <r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1395326878-25243-1-git-send-email-a13xp0p0v88@gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Gerhard Sittig <gsi@denx.de>, Dan Williams <dan.j.williams@intel.com>, Vinod Koul <vinod.koul@intel.com>, Lars-Peter Clausen <lars@metafoo.de>, Arnd Bergmann <arnd@arndb.de>, Anatolij Gustschin <agust@denx.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Alexander Popov <a13xp0p0v88@gmail.com>, linuxppc-dev@lists.ozlabs.org, dmaengine@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
-
-Am Donnerstag, den 03.04.2014, 14:50 +0800 schrieb Shawn Guo:
-> On Fri, Mar 28, 2014 at 05:52:55PM +0100, Lucas Stach wrote:
-> > As defined in the new binding.
-> > 
-> > Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
-> >  drivers/pci/host/pci-imx6.c | 74 ++++++++++++++++++---------------------------
-> >  1 file changed, 29 insertions(+), 45 deletions(-)
-> > 
-> > diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.c
-> > index ee082509b0ba..71730bbcd9a2 100644
-> > --- a/drivers/pci/host/pci-imx6.c
-> > +++ b/drivers/pci/host/pci-imx6.c
-> ...
-> > @@ -583,32 +574,25 @@ static int __init imx6_pcie_probe(struct platform_device *pdev)
-> >  	}
-> >  
-> >  	/* Fetch clocks */
-> > -	imx6_pcie->lvds_gate = devm_clk_get(&pdev->dev, "lvds_gate");
-> > -	if (IS_ERR(imx6_pcie->lvds_gate)) {
-> > -		dev_err(&pdev->dev,
-> > -			"lvds_gate clock select missing or invalid\n");
-> > -		return PTR_ERR(imx6_pcie->lvds_gate);
-> > -	}
-> > -
-> > -	imx6_pcie->sata_ref_100m = devm_clk_get(&pdev->dev, "sata_ref_100m");
-> > -	if (IS_ERR(imx6_pcie->sata_ref_100m)) {
-> > +	imx6_pcie->pcie_phy = devm_clk_get(&pdev->dev, "pcie_phy");
-> > +	if (IS_ERR(imx6_pcie->pcie_phy)) {
-> 
-> Won't this break the existing DTBs?
-> 
-Yes, it will. But I think it's justified to break the binding,
-considering how much brokenness was in there and the relatively few
-number of users right now.
-
-All these patches depend on agreement of the new binding, as laid out in
-patch 2/8. I don't think it makes much sense in keeping the old cruft
-around given that the old binding was properly reviewed by PCI experts.
-
-Regards,
-Lucas
--- 
-Pengutronix e.K.                           | Lucas Stach                 |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-5076 |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGVsbG8sCgoyMDE0LTAzLTIwIDE4OjQ3IEdNVCswNDowMCBBbGV4YW5kZXIgUG9wb3YgPGExM3hw
+MHAwdjg4QGdtYWlsLmNvbT46Cj4gQ2hhbmdlcyBpbiB2MTA6Cj4gIFBhcnQgMi82Ogo+ICAtIGRv
+bid0IHVzZSBkaXJlY3Rpb24gZmllbGQgb2YgZG1hX3NsYXZlX2NvbmZpZyBpbiBtcGNfZG1hX2Rl
+dmljZV9jb250cm9sKCkKPiAgICAgYnV0IHN0b3JlIHNldHRpbmdzIGluIG1wY19kbWFfY2hhbiBm
+b3IgYm90aCBETUFfREVWX1RPX01FTSBhbmQKPiAgICAgRE1BX01FTV9UT19ERVYgY2FzZXM7IHRo
+ZW4gcmV0cmlldmUgdGhlIG5lZWRlZCB2YWx1ZXMgaW4KPiAgICAgbXBjX2RtYV9wcmVwX3NsYXZl
+X3NnKCk7Cj4gIC0gZml4IHN0eWxlIGlzc3VlIGFuZCBwdXQgMjAxNCBpbnN0ZWFkIG9mIDIwMTM7
+Cj4gIFBhcnQgMy82Ogo+ICAtIGZpeCBtcGNfZG1hX3Byb2JlKCkgZXJyb3IgcGF0aCBhbmQgbXBj
+X2RtYV9yZW1vdmUoKTogbWFudWFsbHkgZnJlZSBJUlFzIGFuZAo+ICAgICBkaXNwb3NlIElSUSBt
+YXBwaW5ncyBiZWZvcmUgZGV2bV8qIHRha2VzIGNhcmUgb2Ygb3RoZXIgcmVzb3VyY2VzOwo+ICBQ
+YXJ0IDYvNjoKPiAgLSBjaGFuZ2UgYWNjb3JkaW5nIHRoZSBuZXcgcGFydCAzLzY7Cj4gIC0gZml4
+IHN0eWxlIGlzc3VlOwoKRXhjdXNlIG1lLCBjb3VsZCBJIGhhdmUgYSBmZWVkYmFjaz8KVGhhbmtz
+IQoKPiBBbGV4YW5kZXIgUG9wb3YgKDUpOgo+ICAgZG1hOiBtcGM1MTJ4OiByZW9yZGVyIG1wYzgz
+MDggc3BlY2lmaWMgaW5zdHJ1Y3Rpb25zCj4gICBkbWE6IG1wYzUxMng6IGFkZCBzdXBwb3J0IGZv
+ciBwZXJpcGhlcmFsIHRyYW5zZmVycwo+ICAgZG1hOiBtcGM1MTJ4OiBmaXggZnJlZWluZyByZXNv
+dXJjZXMgaW4gbXBjX2RtYV9wcm9iZSgpIGFuZAo+ICAgICBtcGNfZG1hX3JlbW92ZSgpCj4gICBk
+bWE6IG9mOiBBZGQgY29tbW9uIHhsYXRlIGZ1bmN0aW9uIGZvciBtYXRjaGluZyBieSBjaGFubmVs
+IGlkCj4gICBkbWE6IG1wYzUxMng6IHJlZ2lzdGVyIGZvciBkZXZpY2UgdHJlZSBjaGFubmVsIGxv
+b2t1cAo+Cj4gR2VyaGFyZCBTaXR0aWcgKDEpOgo+ICAgZG1hOiBtcGM1MTJ4OiBhZGQgZGV2aWNl
+IHRyZWUgYmluZGluZyBkb2N1bWVudAo+Cj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9t
+cGM1MTJ4LWRtYS50eHQgICAgICAgIHwgIDU1ICsrKysKPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRz
+L21wYzUxMjEuZHRzaSAgICAgICAgICAgICAgICAgfCAgIDEgKwo+ICBkcml2ZXJzL2RtYS9tcGM1
+MTJ4X2RtYS5jICAgICAgICAgICAgICAgICAgICAgICAgICB8IDM0NSArKysrKysrKysrKysrKysr
+KystLS0KPiAgZHJpdmVycy9kbWEvb2YtZG1hLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgfCAgMzUgKysrCj4gIGluY2x1ZGUvbGludXgvb2ZfZG1hLmggICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIHwgICA0ICsKPiAgNSBmaWxlcyBjaGFuZ2VkLCA0MDIgaW5zZXJ0aW9ucygrKSwg
+MzggZGVsZXRpb25zKC0pCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZG1hL21wYzUxMngtZG1hLnR4dAo+Cj4gLS0KPiAxLjguNC4yCgpCZXN0
+IHJlZ2FyZHMsCkFsZXhhbmRlcgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5v
+emxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
