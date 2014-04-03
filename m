@@ -1,55 +1,134 @@
-From: Alexander Popov <a13xp0p0v88@gmail.com>
-Subject: Re: [PATCH RFC v10 0/6] MPC512x DMA slave s/g support, OF DMA lookup
-Date: Thu, 3 Apr 2014 14:59:31 +0400
-Message-ID: <CAF0T0X5hAp8R3Pg5b+JaCH0r2JedjaFXCFqwb=CAXuXjvUyEhQ@mail.gmail.com>
-References: <1395326878-25243-1-git-send-email-a13xp0p0v88@gmail.com>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH v3 00/12] Add DSI display support for Exynos based boards
+Date: Thu, 3 Apr 2014 15:54:39 +0900
+Message-ID: <CAAQKjZOexrC3b6dirwu=mZfeSLgWL9-CGPb=8DmyqnFaVSVscg@mail.gmail.com>
+References: <1396007567-4015-1-git-send-email-a.hajda@samsung.com>
+	<CAAQKjZN7u1q6jeLCyQ0qe7VDRY3wUv1PjUeZZ6uoWYjo7vdtZQ@mail.gmail.com>
+	<533BBB3F.9060709@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1395326878-25243-1-git-send-email-a13xp0p0v88@gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Gerhard Sittig <gsi@denx.de>, Dan Williams <dan.j.williams@intel.com>, Vinod Koul <vinod.koul@intel.com>, Lars-Peter Clausen <lars@metafoo.de>, Arnd Bergmann <arnd@arndb.de>, Anatolij Gustschin <agust@denx.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Alexander Popov <a13xp0p0v88@gmail.com>, linuxppc-dev@lists.ozlabs.org, dmaengine@vger.kernel.org
-Cc: devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <533BBB3F.9060709@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, DRI mailing list <dri-devel@lists.freedesktop.org>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8sCgoyMDE0LTAzLTIwIDE4OjQ3IEdNVCswNDowMCBBbGV4YW5kZXIgUG9wb3YgPGExM3hw
-MHAwdjg4QGdtYWlsLmNvbT46Cj4gQ2hhbmdlcyBpbiB2MTA6Cj4gIFBhcnQgMi82Ogo+ICAtIGRv
-bid0IHVzZSBkaXJlY3Rpb24gZmllbGQgb2YgZG1hX3NsYXZlX2NvbmZpZyBpbiBtcGNfZG1hX2Rl
-dmljZV9jb250cm9sKCkKPiAgICAgYnV0IHN0b3JlIHNldHRpbmdzIGluIG1wY19kbWFfY2hhbiBm
-b3IgYm90aCBETUFfREVWX1RPX01FTSBhbmQKPiAgICAgRE1BX01FTV9UT19ERVYgY2FzZXM7IHRo
-ZW4gcmV0cmlldmUgdGhlIG5lZWRlZCB2YWx1ZXMgaW4KPiAgICAgbXBjX2RtYV9wcmVwX3NsYXZl
-X3NnKCk7Cj4gIC0gZml4IHN0eWxlIGlzc3VlIGFuZCBwdXQgMjAxNCBpbnN0ZWFkIG9mIDIwMTM7
-Cj4gIFBhcnQgMy82Ogo+ICAtIGZpeCBtcGNfZG1hX3Byb2JlKCkgZXJyb3IgcGF0aCBhbmQgbXBj
-X2RtYV9yZW1vdmUoKTogbWFudWFsbHkgZnJlZSBJUlFzIGFuZAo+ICAgICBkaXNwb3NlIElSUSBt
-YXBwaW5ncyBiZWZvcmUgZGV2bV8qIHRha2VzIGNhcmUgb2Ygb3RoZXIgcmVzb3VyY2VzOwo+ICBQ
-YXJ0IDYvNjoKPiAgLSBjaGFuZ2UgYWNjb3JkaW5nIHRoZSBuZXcgcGFydCAzLzY7Cj4gIC0gZml4
-IHN0eWxlIGlzc3VlOwoKRXhjdXNlIG1lLCBjb3VsZCBJIGhhdmUgYSBmZWVkYmFjaz8KVGhhbmtz
-IQoKPiBBbGV4YW5kZXIgUG9wb3YgKDUpOgo+ICAgZG1hOiBtcGM1MTJ4OiByZW9yZGVyIG1wYzgz
-MDggc3BlY2lmaWMgaW5zdHJ1Y3Rpb25zCj4gICBkbWE6IG1wYzUxMng6IGFkZCBzdXBwb3J0IGZv
-ciBwZXJpcGhlcmFsIHRyYW5zZmVycwo+ICAgZG1hOiBtcGM1MTJ4OiBmaXggZnJlZWluZyByZXNv
-dXJjZXMgaW4gbXBjX2RtYV9wcm9iZSgpIGFuZAo+ICAgICBtcGNfZG1hX3JlbW92ZSgpCj4gICBk
-bWE6IG9mOiBBZGQgY29tbW9uIHhsYXRlIGZ1bmN0aW9uIGZvciBtYXRjaGluZyBieSBjaGFubmVs
-IGlkCj4gICBkbWE6IG1wYzUxMng6IHJlZ2lzdGVyIGZvciBkZXZpY2UgdHJlZSBjaGFubmVsIGxv
-b2t1cAo+Cj4gR2VyaGFyZCBTaXR0aWcgKDEpOgo+ICAgZG1hOiBtcGM1MTJ4OiBhZGQgZGV2aWNl
-IHRyZWUgYmluZGluZyBkb2N1bWVudAo+Cj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9t
-cGM1MTJ4LWRtYS50eHQgICAgICAgIHwgIDU1ICsrKysKPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRz
-L21wYzUxMjEuZHRzaSAgICAgICAgICAgICAgICAgfCAgIDEgKwo+ICBkcml2ZXJzL2RtYS9tcGM1
-MTJ4X2RtYS5jICAgICAgICAgICAgICAgICAgICAgICAgICB8IDM0NSArKysrKysrKysrKysrKysr
-KystLS0KPiAgZHJpdmVycy9kbWEvb2YtZG1hLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgfCAgMzUgKysrCj4gIGluY2x1ZGUvbGludXgvb2ZfZG1hLmggICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHwgICA0ICsKPiAgNSBmaWxlcyBjaGFuZ2VkLCA0MDIgaW5zZXJ0aW9ucygrKSwg
-MzggZGVsZXRpb25zKC0pCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZG1hL21wYzUxMngtZG1hLnR4dAo+Cj4gLS0KPiAxLjguNC4yCgpCZXN0
-IHJlZ2FyZHMsCkFsZXhhbmRlcgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5v
-emxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
+Hi Andrzej,
+
+2014-04-02 16:24 GMT+09:00, Andrzej Hajda <a.hajda@samsung.com>:
+> Hi Inki,
+>
+> I see you have took also ld9040 driver patch [1].
+
+I think this patch should have included your DSI display support
+series because the patch series includes dt binding for ld9040 driver
+but has no ld9040 driver.
+
+
+> Could you take the 3rd version of this patch [2].
+> It fixes build dependencies.
+
+Sorry for missing. Applied.
+
+Thanks,
+Inki Dae
+>
+> [1]: http://permalink.gmane.org/gmane.comp.video.dri.devel/102592
+> [2]: http://permalink.gmane.org/gmane.comp.video.dri.devel/102659
+>
+> Thanks and Regards
+> Andrzej
+>
+> On 04/01/2014 02:29 PM, Inki Dae wrote:
+>> Hi Andrzej,
+>>
+>>
+>>
+>> 2014-03-28 20:52 GMT+09:00 Andrzej Hajda <a.hajda@samsung.com>:
+>>> Hi,
+>>>
+>>> This patchset adds drivers and bindings to the following devices:
+>>> - Exynos DSI master,
+>>> - S6E8AA0 DSI panel,
+>>>
+>>> It adds also display support in DTS files for the following boards:
+>>> - Exynos4210/Trats,
+>>> - Exynos4412/Trats2.
+>>>
+>>> The patchset is based on exynos_drm_next branch.
+>>>
+>>> It is the 3rd iteration of the patches, main changes:
+>>> - based on exynos_drm_next branch,
+>>> - added video interface bindings between DSI host and slave,
+>>>   it seems to me to be redundand, and I hope when video interface
+>>> bindings
+>>>   will be stabilized it can become optional,
+>>> - GPIOs implemented using gpiod framework,
+>>> - removed controversial stuff (toshiba bridge implementation and arndale
+>>> support),
+>>>   it will be send in another set of patches
+>>>
+>>> Other changes are described in individual patches.
+>>>
+>>> Regards
+>>> Andrzej
+>>>
+>>>
+>>> Andrzej Hajda (12):
+>>>   drm/mipi_dsi: add flags to DSI messages
+>>>   drm/mipi_dsi: create dsi devices only for nodes with reg property
+>>>   drm/exynos: disallow fbdev initialization if no device is connected
+>>>   exynos/dsim: add DT bindings
+>>>   drm/exynos: add DSIM driver
+>>>   panel/s6e8aa0: add DT bindings
+>>>   drm/panel: add S6E8AA0 driver
+>>>   ARM: dts: exynos4: add MIPI DSI Master node
+>>>   ARM: dts: exynos4210-trats: add panel node
+>>>   ARM: dts: exynos4412-trats2: add panel node
+>>>   ARM: dts: exynos4210-trats: enable exynos/fimd node
+>>>   ARM: dts: exynos4412-trats2: enable exynos/fimd node
+>> Picked up this patch series.
+>>
+>> Thanks for your contribution,
+>> Inki Dae
+>>
+>>>  .../devicetree/bindings/panel/samsung,s6e8aa0.txt  |   56 +
+>>>  .../devicetree/bindings/video/exynos_dsim.txt      |   80 +
+>>>  arch/arm/boot/dts/exynos4.dtsi                     |   14 +
+>>>  arch/arm/boot/dts/exynos4210-trats.dts             |   61 +
+>>>  arch/arm/boot/dts/exynos4412-trats2.dts            |   70 +
+>>>  drivers/gpu/drm/drm_mipi_dsi.c                     |    6 +-
+>>>  drivers/gpu/drm/exynos/Kconfig                     |    9 +
+>>>  drivers/gpu/drm/exynos/Makefile                    |    1 +
+>>>  drivers/gpu/drm/exynos/exynos_drm_drv.c            |   15 +
+>>>  drivers/gpu/drm/exynos/exynos_drm_drv.h            |    1 +
+>>>  drivers/gpu/drm/exynos/exynos_drm_dsi.c            | 1525
+>>> ++++++++++++++++++++
+>>>  drivers/gpu/drm/exynos/exynos_drm_fbdev.c          |   21 +
+>>>  drivers/gpu/drm/panel/Kconfig                      |    7 +
+>>>  drivers/gpu/drm/panel/Makefile                     |    1 +
+>>>  drivers/gpu/drm/panel/panel-s6e8aa0.c              | 1069
+>>> ++++++++++++++
+>>>  include/drm/drm_mipi_dsi.h                         |    6 +
+>>>  16 files changed, 2941 insertions(+), 1 deletion(-)
+>>>  create mode 100644
+>>> Documentation/devicetree/bindings/panel/samsung,s6e8aa0.txt
+>>>  create mode 100644
+>>> Documentation/devicetree/bindings/video/exynos_dsim.txt
+>>>  create mode 100644 drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>>>  create mode 100644 drivers/gpu/drm/panel/panel-s6e8aa0.c
+>>>
+>>> --
+>>> 1.8.3.2
+>>>
+>>> _______________________________________________
+>>> dri-devel mailing list
+>>> dri-devel@lists.freedesktop.org
+>>> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+>
