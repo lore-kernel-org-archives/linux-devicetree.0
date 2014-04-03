@@ -1,202 +1,76 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: Re: [PATCH 1/9] crypto: qce: Add core driver implementation
-Date: Thu, 3 Apr 2014 13:19:14 -0500
-Message-ID: <20140403181914.GG28265@joshc.qualcomm.com>
-References: <1396541886-10966-1-git-send-email-svarbanov@mm-sol.com>
- <1396541886-10966-2-git-send-email-svarbanov@mm-sol.com>
+From: Harini Katakam <harinikatakamlinux@gmail.com>
+Subject: Re: [PATCH 1/2] devicetree: Add devicetree bindings documentation for
+ Zynq Quad SPI
+Date: Fri, 4 Apr 2014 00:15:17 +0530
+Message-ID: <CAFcVECLoB8BR0PVfV=1EVQub8weOOYustg-1DqOevaihCT3JqQ@mail.gmail.com>
+References: <ee057d8c-50d9-4d4b-ac86-d7c5fc44b1b0@TX2EHSMHS034.ehs.local>
+	<46a3a23e-786e-4acf-aa42-c3808b1a46d3@CH1EHSMHS028.ehs.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1396541886-10966-2-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <46a3a23e-786e-4acf-aa42-c3808b1a46d3@CH1EHSMHS028.ehs.local>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?ISO-8859-1?Q?S=F6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
+Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, broonie@kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-spi@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, Punnaiah Choudary <kpc528@gmail.com>, kalluripunnaiahchoudary@gmail.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, Harini Katakam <harinik@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hey Stanimir-
+Hi Soren
 
-Just a few comments/questions from a quick scan of your patchset:
+On Thu, Apr 3, 2014 at 11:20 PM, S=F6ren Brinkmann
+<soren.brinkmann@xilinx.com> wrote:
+> Hi Punnaiah,
+>
+> On Thu, 2014-04-03 at 10:33PM +0530, Punnaiah Choudary Kalluri wrote:
+>> Add bindings documentation for Zynq Quad SPI driver.
+>>
+>> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+>> ---
+>>  .../devicetree/bindings/spi/spi-zynq-qspi.txt      |   26 +++++++++=
++++++++++++
+>>  1 file changed, 26 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/spi/spi-zynq-q=
+spi.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/spi/spi-zynq-qspi.txt=
+ b/Documentation/devicetree/bindings/spi/spi-zynq-qspi.txt
+>> new file mode 100644
+>> index 0000000..88e00f8
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/spi/spi-zynq-qspi.txt
+>> @@ -0,0 +1,26 @@
+>> +Xilinx Zynq QSPI controller Device Tree Bindings
+>> +-------------------------------------------------
+>> +
+>> +Required properties:
+>> +- compatible         : Should be "xlnx,zynq-qspi-1.0".
+>> +- reg                        : Physical base address and size of QS=
+PI registers map.
+>> +- interrupts         : Property with a value describing the interru=
+pt
+>> +                       number.
+>> +- interrupt-parent   : Must be core interrupt controller
+>> +- clock-names                : List of input clock names - "ref_clk=
+", "aper_clk"
+>> +                       (See clock bindings for details).
+>> +- clocks             : Clock phandles (see clock bindings for detai=
+ls).
+>> +
+>> +Optional properties:
+>> +- num-cs             : Number of chip selects used.
+>> +
+>> +Example:
+>> +     qspi@e000d000 {
+>> +             compatible =3D "xlnx,zynq-qspi-1.0";
+>> +             clock-names =3D "ref_clk", "aper_clk";
+>
+> These seem to be the SOC names of the clocks. Doesn't have the IP its
+> own naming for these clock inputs?
+>
 
-On Thu, Apr 03, 2014 at 07:17:58PM +0300, Stanimir Varbanov wrote:
-[..]
-> +++ b/drivers/crypto/qce/core.c
-[..]
-> +
-> +static struct qce_algo_ops qce_ops[] = {
-> +	{
-> +		.type = CRYPTO_ALG_TYPE_ABLKCIPHER,
-> +		.register_alg = qce_ablkcipher_register,
-> +	},
-> +	{
-> +		.type = CRYPTO_ALG_TYPE_AHASH,
-> +		.register_alg = qce_ahash_register,
-> +	},
-> +};
-> +
-> +static void qce_unregister_algs(struct qce_device *qce)
-> +{
-> +	struct qce_alg_template *tmpl, *n;
-> +
-> +	list_for_each_entry_safe(tmpl, n, &qce->alg_list, entry) {
-> +		if (tmpl->crypto_alg_type == CRYPTO_ALG_TYPE_AHASH)
-> +			crypto_unregister_ahash(&tmpl->alg.ahash);
-> +		else
-> +			crypto_unregister_alg(&tmpl->alg.crypto);
+The IP design spec uses the name ref_clk.
+There is no particular clock name used for for APB clock.
+So I think aper_clk is a valid name to use.
 
-Why no 'unregister_alg' member in qce_algo_ops?
-
-> +
-> +		list_del(&tmpl->entry);
-> +		kfree(tmpl);
-> +	}
-> +}
-> +
-> +static int qce_register_algs(struct qce_device *qce)
-> +{
-> +	struct qce_algo_ops *ops;
-> +	int i, rc = -ENODEV;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(qce_ops); i++) {
-> +		ops = &qce_ops[i];
-> +		ops->async_req_queue = qce_async_request_queue;
-> +		ops->async_req_done = qce_async_request_done;
-
-Why not set these statically?
-
-> +		rc = ops->register_alg(qce, ops);
-> +		if (rc)
-> +			break;
-> +	}
-> +
-> +	if (rc)
-> +		qce_unregister_algs(qce);
-> +
-> +	return rc;
-> +}
-[..]
-> +static int qce_get_version(struct qce_device *qce)
-> +{
-> +	u32 major, minor, step;
-> +	u32 val;
-> +
-> +	val = readl(qce->base + REG_VERSION);
-> +	major = (val & CORE_MAJOR_REV_MASK) >> CORE_MAJOR_REV;
-> +	minor = (val & CORE_MINOR_REV_MASK) >> CORE_MINOR_REV;
-> +	step = (val & CORE_STEP_REV_MASK) >> CORE_STEP_REV;
-> +
-> +	/*
-> +	 * the driver does not support v5 with minor 0 because it has special
-> +	 * alignment requirements.
-> +	 */
-> +	if (major < QCE_MAJOR_VERSION5 && minor == 0)
-> +		return -ENODEV;
-> +
-> +	qce->burst_size = QCE_BAM_BURST_SIZE;
-> +	qce->pipe_pair_index = 1;
-> +
-> +	dev_info(qce->dev, "Crypto device found, version %d.%d.%d\n",
-> +		 major, minor, step);
-
-I'd suggest dev_dbg().  Kernel boot is chatty enough.
-
-[..]
-> +static int qce_clks_enable(struct qce_device *qce, int enable)
-> +{
-> +	int rc = 0;
-> +	int i;
-> +
-> +	for (i = 0; i < QCE_CLKS_NUM; i++) {
-> +		if (enable)
-> +			rc = clk_prepare_enable(qce->clks[i]);
-> +		else
-> +			clk_disable_unprepare(qce->clks[i]);
-> +
-> +		if (rc)
-> +			break;
-> +	}
-> +
-> +	if (rc)
-> +		do
-> +			clk_disable_unprepare(qce->clks[i]);
-> +		while (--i >= 0);
-> +
-> +	return rc;
-> +}
-
-See my below comment about lumping clocks together.
-
-[..]
-> +static int qce_crypto_remove(struct platform_device *pdev)
-> +{
-> +	struct qce_device *qce = platform_get_drvdata(pdev);
-> +
-> +	cancel_work_sync(&qce->queue_work);
-> +	destroy_workqueue(qce->queue_wq);
-> +	tasklet_kill(&qce->done_tasklet);
-> +	qce_unregister_algs(qce);
-> +	qce_dma_release(&qce->dma);
-> +	qce_clks_enable(qce, 0);
-
-qce_clks_enable(qce, 0) is really confusing....I'd suggest creating
-separate qce_clks_enable() and qce_clks_disable() functions.
-
-[..]
-> +static const struct of_device_id qce_crypto_of_match[] = {
-> +	{ .compatible = "qcom,crypto-v5.1", },
-> +	{}
-> +};
-
-MODULE_DEVICE_TABLE()?
-
-[..]
-> +++ b/drivers/crypto/qce/core.h
-> @@ -0,0 +1,69 @@
-> +/*
-> + * Copyright (c) 2010-2014, The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#ifndef _CORE_H_
-> +#define _CORE_H_
-> +
-> +static const char * const clk_names[] = {
-> +	"core",		/* GCC_CE_CLK */
-> +	"iface",	/* GCC_CE_AHB_CLK */
-> +	"bus",		/* GCC_CE_AXI_CLK */
-> +};
-
-You probably don't want this in a header file, as now each compilation
-unit will have a copy :(.
-
-Lumping all the clocks together assumes that you will only ever have all
-clocks enabled, or all clocks disabled, are you sure that's what you
-want?
-
-[..]
-> +struct qce_algo_ops {
-> +	u32 type;
-> +	int (*register_alg)(struct qce_device *qce, struct qce_algo_ops *ops);
-> +	int (*async_req_queue)(struct qce_device *qce,
-> +			       struct crypto_async_request *req);
-> +	void (*async_req_done)(struct qce_device *qce, int ret);
-
-What is the relationship between qce_algo_ops and the qce_alg_template
-(which has these same two identically named callbacks)?
-
-> +	int (*async_req_handle)(struct crypto_async_request *async_req);
-> +};
-> +
-> +#endif /* _CORE_H_ */
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Regards,
+Harini
