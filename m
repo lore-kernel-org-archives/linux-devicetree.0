@@ -1,59 +1,44 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/3] ARM: dts: document the berlin enable-method
- property
-Date: Thu, 3 Apr 2014 10:02:47 +0100
-Message-ID: <20140403090247.GM16420@e106331-lin.cambridge.arm.com>
+From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
+	<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 2/3] ARM: dts: document the berlin enable-method property
+Date: Thu,  3 Apr 2014 10:08:15 +0200
+Message-ID: <1396512496-8030-3-git-send-email-antoine.tenart@free-electrons.com>
 References: <1396512496-8030-1-git-send-email-antoine.tenart@free-electrons.com>
- <1396512496-8030-3-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1396512496-8030-3-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Antoine =?utf-8?Q?T=C3=A9nart?= <antoine.tenart@free-electrons.com>
-Cc: "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>, "zmxu@marvell.com" <zmxu@marvell.com>, "jszhang@marvell.com" <jszhang@marvell.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1396512496-8030-1-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 03, 2014 at 09:08:15AM +0100, Antoine T=C3=A9nart wrote:
-> Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com=
->
-> ---
->  Documentation/devicetree/bindings/arm/cpus.txt | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documen=
-tation/devicetree/bindings/arm/cpus.txt
-> index 333f4aea3029..a9e42a2dbc99 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -185,6 +185,8 @@ nodes to be present and contain the properties de=
-scribed below.
->  			    "qcom,gcc-msm8660"
->  			    "qcom,kpss-acc-v1"
->  			    "qcom,kpss-acc-v2"
-> +			    "marvell,88de31-smp" - cpu-core handling for Berlin
-> +					SoC from Marvell starting with 88de31
+Signed-off-by: Antoine T=C3=A9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/cpus.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-It would probably be best to add an enable-method directory and documen=
-t
-what each of these mean (what's expected of the platform, what steps an
-OS should make to bring up and/or tear down CPUs).
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documenta=
+tion/devicetree/bindings/arm/cpus.txt
+index 333f4aea3029..a9e42a2dbc99 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -185,6 +185,8 @@ nodes to be present and contain the properties desc=
+ribed below.
+ 			    "qcom,gcc-msm8660"
+ 			    "qcom,kpss-acc-v1"
+ 			    "qcom,kpss-acc-v2"
++			    "marvell,88de31-smp" - cpu-core handling for Berlin
++					SoC from Marvell starting with 88de31
+=20
+ 	- cpu-release-addr
+ 		Usage: required for systems that have an "enable-method"
+--=20
+1.8.3.2
 
-While it's nice to factor this out of the kernel, I'd like this to be
-better-defined such that it's clear what the expectations of each
-enable-method are. That ways it iss possible for OSs other than Linux t=
-o
-make use of the enable-method information (as it won't be an opaque
-reference to Linux internals), and we can have a clear definition of
-each enable-method independent of any implementation details.
-
-Going forward I would like to see fewer implementation-specific
-protocols for bringing up secondaries, and a move to fewer more
-standardised mechanisms like PSCI. I realise that might not be possible
-in all cases, but it would be nice to avoid a proliferation of
-enable-methods with single users.
-
-Cheers,
-Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
