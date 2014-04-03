@@ -1,41 +1,74 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Thu, 3 Apr 2014 16:50:37 +0100
-Message-ID: <20140403155037.GR7528@n2100.arm.linux.org.uk>
-References: <1396358832-15828-1-git-send-email-zhangfei.gao@linaro.org> <1396358832-15828-4-git-send-email-zhangfei.gao@linaro.org> <9532591.5yuCbpL4pV@wuerfel> <20140403152746.GQ7528@n2100.arm.linux.org.uk> <063D6719AE5E284EB5DD2968C1650D6D0F6EF663@AcuExch.aculab.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <063D6719AE5E284EB5DD2968C1650D6D0F6EF663@AcuExch.aculab.com>
-Sender: netdev-owner@vger.kernel.org
-To: David Laight <David.Laight@ACULAB.COM>
-Cc: Arnd Bergmann <arnd@arndb.de>, Zhangfei Gao <zhangfei.gao@linaro.org>, "davem@davemloft.net" <davem@davemloft.net>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "eric.dumazet@gmail.com" <eric.dumazet@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: [PATCH 0/9] Add Qualcomm crypto driver
+Date: Thu,  3 Apr 2014 19:17:57 +0300
+Message-ID: <1396541886-10966-1-git-send-email-svarbanov@mm-sol.com>
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Grant Likely <grant.likely@linaro.org>
+Cc: Stanimir Varbanov <svarbanov@mm-sol.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 03, 2014 at 03:42:00PM +0000, David Laight wrote:
-> From: Russell King - ARM Linux
-> > DMA coherent memory is write combining, so multiple writes will be
-> > coalesced.  This also means that barriers may be required to ensure the
-> > descriptors are pushed out in a timely manner if something like writel()
-> > is not used in the transmit-triggering path.
-> 
-> You also have to ensure that the write that changes the 'owner'
-> bit is the one that happens last.
-> 
-> If (for example) a descriptor has two words, one containing the
-> buffer address and the other containing the length and flags,
-> then you have to absolutely ensure that the hardware will not
-> read the new 'flags' with the old 'buffer address'.
-> Any write to tell the hardware to look at the tx ring won't
-> help you - the hardware might be reading the descriptor anyway.
-> 
-> Even if the accesses are uncached, you need the appropriate
-> barrier (or volatiles) to stop gcc reordering the writes.
-> (I think accesses to volatiles can't be reordered - check.)
+Hi,
 
-Exactly... I wish Freescale were as thoughtful as you are on this point. :)
+The following patch set implements support for Qualcomm
+crypto hardware accelerator driver. It registers itself
+to the crypto subsystem and adds the following operations
+for encryption/decription - AES with ECB CBC CTR XTS modes,
+DES with ECB CBC modes, and 3DES ECB CBC modes.
+For hashing and MAC it adds support for sha1 sha256,
+hmac(sha1) hmac(sha256).
+
+The version of the driver is reworked by me and it is based
+on Codeaurora's qcrypto driver. The proposed version has many
+coding style fixes, re-factored files, separated by
+functionality. I wanted to make the driver more readable and
+easier for review, hope I done well. I'll appreciate any review
+comments which will help me to make this code clear and ready
+for mainline kernel.
+
+regards,
+Stan
+
+Stanimir Varbanov (9):
+  crypto: qce: Add core driver implementation
+  crypto: qce: Add register defines
+  crypto: qce: Add dma and sg helpers
+  crypto: qce: Add ablkcipher algorithms
+  crypto: qce: Adds sha and hmac transforms
+  crypto: qce: Adds infrastructure to setup the crypto block
+  crypto: qce: Adds Makefile to build the driver
+  crypto: qce: Build Qualcomm qce driver
+  ARM: DT: qcom: Add Qualcomm crypto driver binding document
+
+ .../devicetree/bindings/crypto/qcom-qce.txt        |  25 +
+ drivers/crypto/Kconfig                             |  10 +
+ drivers/crypto/Makefile                            |   1 +
+ drivers/crypto/qce/Makefile                        |   6 +
+ drivers/crypto/qce/ablkcipher.c                    | 397 ++++++++++++++
+ drivers/crypto/qce/cipher.h                        |  62 +++
+ drivers/crypto/qce/common.c                        | 424 +++++++++++++++
+ drivers/crypto/qce/common.h                        | 111 ++++
+ drivers/crypto/qce/core.c                          | 333 ++++++++++++
+ drivers/crypto/qce/core.h                          |  69 +++
+ drivers/crypto/qce/dma.c                           | 201 +++++++
+ drivers/crypto/qce/dma.h                           |  57 ++
+ drivers/crypto/qce/regs-v5.h                       | 327 +++++++++++
+ drivers/crypto/qce/sha.c                           | 595 +++++++++++++++++++++
+ drivers/crypto/qce/sha.h                           |  74 +++
+ 15 files changed, 2692 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/qcom-qce.txt
+ create mode 100644 drivers/crypto/qce/Makefile
+ create mode 100644 drivers/crypto/qce/ablkcipher.c
+ create mode 100644 drivers/crypto/qce/cipher.h
+ create mode 100644 drivers/crypto/qce/common.c
+ create mode 100644 drivers/crypto/qce/common.h
+ create mode 100644 drivers/crypto/qce/core.c
+ create mode 100644 drivers/crypto/qce/core.h
+ create mode 100644 drivers/crypto/qce/dma.c
+ create mode 100644 drivers/crypto/qce/dma.h
+ create mode 100644 drivers/crypto/qce/regs-v5.h
+ create mode 100644 drivers/crypto/qce/sha.c
+ create mode 100644 drivers/crypto/qce/sha.h
 
 -- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+1.8.4.4
