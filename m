@@ -1,33 +1,32 @@
-From: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 0/3] Add PMU node for Exynos4210, Exynos4412, Exynos4212
-Date: Wed, 02 Apr 2014 17:02:55 +0900
-Message-ID: <1396425778-4379-1-git-send-email-pankaj.dubey@samsung.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: [PATCH] of: add vendor prefix for I2SE GmbH
+Date: Thu,  3 Apr 2014 10:33:49 +0200
+Message-ID: <1396514029-5769-1-git-send-email-stefan.wahren@i2se.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chow.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch updates Exynos4210, Exynos4412 and Exynos4212 dtsi files
-for adding PMU (Power Management Unit) reg node. Also updated binding
-document for the same. 
-These patches required for using PMU base address via DT for these SoC.
-Patches for using PMU base address via DT are posted here-
+Add i2se to the list of DT vendor prefixes.
 
-http://www.mail-archive.com/linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg27875.html
+Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt |    1 +
+ 1 file changed, 1 insertion(+)
 
-Pankaj Dubey (3):
-  ARM: dts: Add PMU reg node to exynos4210
-  ARM: dts: Add PMU reg node to exynos4212 and exynos4412
-  Documentation: update samsung pmu binding information for
-    Exynos4210/4212/4412
-
- Documentation/devicetree/bindings/arm/samsung/pmu.txt |    3 +++
- arch/arm/boot/dts/exynos4210.dtsi                     |    5 +++++
- arch/arm/boot/dts/exynos4212.dtsi                     |    5 +++++
- arch/arm/boot/dts/exynos4412.dtsi                     |    5 +++++
- 4 files changed, 18 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index e9d19e2..f27f6c9 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -45,6 +45,7 @@ haoyu	Haoyu Microelectronic Co. Ltd.
+ hisilicon	Hisilicon Limited.
+ honeywell	Honeywell
+ hp	Hewlett Packard
++i2se	I2SE GmbH
+ ibm	International Business Machines (IBM)
+ idt	Integrated Device Technologies, Inc.
+ img	Imagination Technologies Ltd.
 -- 
 1.7.10.4
 
