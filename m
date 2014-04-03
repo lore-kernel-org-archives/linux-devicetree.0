@@ -1,40 +1,66 @@
-From: Sherman Yin <syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 3/3] pinctrl: fix typo in bindings documentation
-Date: Wed, 2 Apr 2014 15:40:39 -0700
-Message-ID: <1396478439-16586-4-git-send-email-syin@broadcom.com>
-References: <1390509887-19278-1-git-send-email-syin@broadcom.com>
- <1396478439-16586-1-git-send-email-syin@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: jon-7zJyie9iPacdnm+yROfE0A@public.gmane.org
+Subject: [PATCH v4 2/2] serial: sc16is7xx: Add bindings documentation for the SC16IS7XX UARTs
+Date: Thu,  3 Apr 2014 00:49:15 -0400
+Message-ID: <1396500555-28873-2-git-send-email-jon@ringle.org>
+References: <1396500555-28873-1-git-send-email-jon@ringle.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396478439-16586-1-git-send-email-syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1396500555-28873-1-git-send-email-jon-7zJyie9iPacdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sherman Yin <syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jon Ringle <jringle-gkqdKIIuv0Hby3iVrkZq2A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Fixed the missing comma in DT node example.
+From: Jon Ringle <jringle-gkqdKIIuv0Hby3iVrkZq2A@public.gmane.org>
 
-Signed-off-by: Sherman Yin <syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+This patch adds the devicetree documentation for the NXP SC16IS7XX UARTs.
+
+Signed-off-by: Jon Ringle <jringle-gkqdKIIuv0Hby3iVrkZq2A@public.gmane.org>
 ---
- .../bindings/pinctrl/brcm,bcm11351-pinctrl.txt     |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../devicetree/bindings/serial/nxp,sc16is7xx.txt   | 33 ++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm11351-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/brcm,bcm11351-pinctrl.txt
-index c119deb..67a5db9 100644
---- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm11351-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm11351-pinctrl.txt
-@@ -119,7 +119,7 @@ Optional Properties (for HDMI pins):
- Example:
- // pin controller node
- pinctrl@35004800 {
--	compatible = "brcmbcm11351-pinctrl";
-+	compatible = "brcm,bcm11351-pinctrl";
- 	reg = <0x35004800 0x430>;
- 
- 	// pin configuration node
+diff --git a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
+new file mode 100644
+index 0000000..246c795
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
+@@ -0,0 +1,33 @@
++* NXP SC16IS7xx advanced Universal Asynchronous Receiver-Transmitter (UART)
++
++Required properties:
++- compatible: Should be one of the following:
++  - "nxp,sc16is740" for NXP SC16IS740,
++  - "nxp,sc16is741" for NXP SC16IS741,
++  - "nxp,sc16is750" for NXP SC16IS750,
++  - "nxp,sc16is752" for NXP SC16IS752,
++  - "nxp,sc16is760" for NXP SC16IS760,
++  - "nxp,sc16is762" for NXP SC16IS762.
++- reg: I2C address of the SC16IS7xx device.
++- interrupt-parent: The phandle for the interrupt controller that
++  services interrupts for this IC.
++- interrupts: Should contain the UART interrupt
++- clocks: Reference to the IC source clock.
++
++Optional properties:
++- gpio-controller: Marks the device node as a GPIO controller.
++- #gpio-cells: Should be two. The first cell is the GPIO number and
++  the second cell is used to specify the GPIO polarity:
++    0 = active high,
++    1 = active low.
++
++Example:
++        sc16is750: sc16is750@51 {
++                compatible = "nxp,sc16is750";
++                reg = <0x51>;
++                clocks = <&clk20m>;
++                interrupt-parent = <&gpio3>;
++                interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
++                gpio-controller;
++                #gpio-cells = <2>;
++        };
 -- 
-1.7.9.5
+1.8.5.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
