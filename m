@@ -1,46 +1,59 @@
-From: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 3/3] Documentation: update samsung pmu binding information for
- Exynos4210/4212/4412
-Date: Wed, 02 Apr 2014 17:02:58 +0900
-Message-ID: <1396425778-4379-4-git-send-email-pankaj.dubey@samsung.com>
-References: <1396425778-4379-1-git-send-email-pankaj.dubey@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1396425778-4379-1-git-send-email-pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chow.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 2/3] ARM: dts: document the berlin enable-method
+ property
+Date: Thu, 3 Apr 2014 10:02:47 +0100
+Message-ID: <20140403090247.GM16420@e106331-lin.cambridge.arm.com>
+References: <1396512496-8030-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1396512496-8030-3-git-send-email-antoine.tenart@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1396512496-8030-3-git-send-email-antoine.tenart@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Antoine =?utf-8?Q?T=C3=A9nart?= <antoine.tenart@free-electrons.com>
+Cc: "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>, "zmxu@marvell.com" <zmxu@marvell.com>, "jszhang@marvell.com" <jszhang@marvell.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch updates samsung pmu (power management unit) binding information
-for Exynos4210, Exynos4212 and Exynos4412.
+On Thu, Apr 03, 2014 at 09:08:15AM +0100, Antoine T=C3=A9nart wrote:
+> Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com=
+>
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documen=
+tation/devicetree/bindings/arm/cpus.txt
+> index 333f4aea3029..a9e42a2dbc99 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -185,6 +185,8 @@ nodes to be present and contain the properties de=
+scribed below.
+>  			    "qcom,gcc-msm8660"
+>  			    "qcom,kpss-acc-v1"
+>  			    "qcom,kpss-acc-v2"
+> +			    "marvell,88de31-smp" - cpu-core handling for Berlin
+> +					SoC from Marvell starting with 88de31
 
-CC: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-CC: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-CC: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-CC: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
-Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/samsung/pmu.txt |    3 +++
- 1 file changed, 3 insertions(+)
+It would probably be best to add an enable-method directory and documen=
+t
+what each of these mean (what's expected of the platform, what steps an
+OS should make to bring up and/or tear down CPUs).
 
-diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
-index f1f1552..b562634 100644
---- a/Documentation/devicetree/bindings/arm/samsung/pmu.txt
-+++ b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
-@@ -2,6 +2,9 @@ SAMSUNG Exynos SoC series PMU Registers
- 
- Properties:
-  - compatible : should contain two values. First value must be one from following list:
-+		   - "samsung,exynos4210-pmu" - for Exynos4210 SoC,
-+		   - "samsung,exynos4212-pmu" - for Exynos4212 SoC,
-+		   - "samsung,exynos4412-pmu" - for Exynos4412 SoC,
- 		   - "samsung,exynos5250-pmu" - for Exynos5250 SoC,
- 		   - "samsung,exynos5420-pmu" - for Exynos5420 SoC.
- 		second value must be always "syscon".
--- 
-1.7.10.4
+While it's nice to factor this out of the kernel, I'd like this to be
+better-defined such that it's clear what the expectations of each
+enable-method are. That ways it iss possible for OSs other than Linux t=
+o
+make use of the enable-method information (as it won't be an opaque
+reference to Linux internals), and we can have a clear definition of
+each enable-method independent of any implementation details.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Going forward I would like to see fewer implementation-specific
+protocols for bringing up secondaries, and a move to fewer more
+standardised mechanisms like PSCI. I realise that might not be possible
+in all cases, but it would be nice to avoid a proliferation of
+enable-methods with single users.
+
+Cheers,
+Mark.
