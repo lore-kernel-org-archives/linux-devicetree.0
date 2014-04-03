@@ -1,74 +1,52 @@
-From: Clement Perrochaud <clement.perrochaud-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH v4 2/2] NFC: pn544_i2c: Add DTS Documentation
-Date: Wed, 2 Apr 2014 09:03:27 +0000
-Message-ID: <f8420dc39bb74443b49e6e05d4a96fd0@AMXPR04MB136.eurprd04.prod.outlook.com>
+From: Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] rtc: Add APM X-Gene SoC RTC driver
+Date: Wed, 2 Apr 2014 19:16:29 -0600
+Message-ID: <CALdTtnvxGjF6tMWEOuRqSRsM+2av6i5JeEfaHMRbj28OuTNq=g@mail.gmail.com>
+References: <1396287370-1011-1-git-send-email-lho@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1396287370-1011-1-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Clement Perrochaud <clement.perrochaud-3arQi8VN3Tc@public.gmane.org>, "linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org" <linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>, patches-qTEPVZfXA3Y@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Describe the properties used by the PN544 NFC controller driver.
+Tested-by: dann frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 
-Signed-off-by: Cl=E9ment Perrochaud <clement.perrochaud-3arQi8VN3Tc@public.gmane.org>
----
- .../devicetree/bindings/net/nfc/pn544.txt          | 35 ++++++++++++++=
-++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/nfc/pn544.txt
-
-diff --git a/Documentation/devicetree/bindings/net/nfc/pn544.txt b/Docu=
-mentation/devicetree/bindings/net/nfc/pn544.txt
-new file mode 100644
-index 0000000..642ff5c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/nfc/pn544.txt
-@@ -0,0 +1,35 @@
-+* NXP Semiconductors PN544 NFC Controller
-+
-+Required properties:
-+- compatible: Should be "nxp,pn544-i2c".
-+- clock-frequency: I=B2C work frequency.
-+- reg: address on the bus
-+- interrupt-parent: phandle for the interrupt gpio controller
-+- interrupts: GPIO interrupt to which the chip is connected
-+- enable-gpios: Output GPIO pin used for enabling/disabling the PN544
-+- firmware-gpios: Output GPIO pin used to enter firmware download mode
-+
-+Optional SoC Specific Properties:
-+- pinctrl-names: Contains only one value - "default".
-+- pintctrl-0: Specifies the pin control groups used for this controlle=
-r.
-+
-+Example (for ARM-based BeagleBone with PN544 on I2C2):
-+
-+&i2c2 {
-+
-+	status =3D "okay";
-+
-+	pn544: pn544@28 {
-+
-+		compatible =3D "nxp,pn544-i2c";
-+
-+		reg =3D <0x28>;
-+		clock-frequency =3D <400000>;
-+
-+		interrupt-parent =3D <&gpio1>;
-+		interrupts =3D <17 GPIO_ACTIVE_HIGH>;
-+
-+		enable-gpios =3D <&gpio3 21 GPIO_ACTIVE_HIGH>;
-+		firmware-gpios =3D <&gpio3 19 GPIO_ACTIVE_HIGH>;
-+	};
-+};
---=20
-1.9.1
-
+On Mon, Mar 31, 2014 at 11:36 AM, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org> wrote:
+> This patch adds support for the APM X-Gene SoC RTC driver.
+>
+> v2
+> * Change function xgene_rtc_read_time to return rtc_valid_tm(tm) instead 0
+>
+> v1
+> * Initial version
+>
+> Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+> Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+> ---
+> Loc Ho (3):
+>   Documentation: Add documentation for the APM X-Gene SoC RTC DTS
+>     binding
+>   rtc: Add APM X-Gene SoC RTC driver
+>   arm64: Add APM X-Gene SoC RTC DTS entry
+>
+>  .../devicetree/bindings/rtc/xgene-rtc.txt          |   28 ++
+>  arch/arm64/boot/dts/apm-storm.dtsi                 |   21 ++
+>  drivers/rtc/Kconfig                                |    9 +
+>  drivers/rtc/Makefile                               |    1 +
+>  drivers/rtc/rtc-xgene.c                            |  278 ++++++++++++++++++++
+>  5 files changed, 337 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/xgene-rtc.txt
+>  create mode 100644 drivers/rtc/rtc-xgene.c
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
