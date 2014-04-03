@@ -1,38 +1,64 @@
-From: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Subject: [patch] irqchip/irq-crossbar: not allocating enough memory
-Date: Thu, 3 Apr 2014 10:21:34 +0300
-Message-ID: <20140403072134.GA14286@mwanda>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v6 1/3] ARM: EXYNOS: initial board support for exynos5260 SoC
+Date: Thu, 03 Apr 2014 10:47:55 +0530
+Message-ID: <1396502277-19588-2-git-send-email-rahul.sharma@samsung.com>
+References: <1396502277-19588-1-git-send-email-rahul.sharma@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
+In-reply-to: <1396502277-19588-1-git-send-email-rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-We are allocating the size of a pointer and not the size of the data.
-This will lead to memory corruption.
+From: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-There isn't actually a "cb_device" struct, btw.  The code is only able
-to compile because GCC knows that all pointers are the same size.
+This patch add basic arch side support for exynos5260 SoC.
 
-Fixes: 96ca848ef7ea ('DRIVERS: IRQCHIP: CROSSBAR: Add support for Crossbar IP')
-Signed-off-by: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/mach-exynos/Kconfig           |    4 ++++
+ arch/arm/mach-exynos/mach-exynos5-dt.c |    1 +
+ 2 files changed, 5 insertions(+)
 
-diff --git a/drivers/irqchip/irq-crossbar.c b/drivers/irqchip/irq-crossbar.c
-index fc817d2..3d15d16 100644
---- a/drivers/irqchip/irq-crossbar.c
-+++ b/drivers/irqchip/irq-crossbar.c
-@@ -107,7 +107,7 @@ static int __init crossbar_of_init(struct device_node *node)
- 	int i, size, max, reserved = 0, entry;
- 	const __be32 *irqsr;
+diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+index 54162ef..69c00ca 100644
+--- a/arch/arm/mach-exynos/Kconfig
++++ b/arch/arm/mach-exynos/Kconfig
+@@ -29,6 +29,7 @@ config ARCH_EXYNOS5
+ 	bool "SAMSUNG EXYNOS5"
+ 	default y
+ 	select SOC_EXYNOS5250
++	select SOC_EXYNOS5260
+ 	select SOC_EXYNOS5420
+ 	select USB_ARCH_HAS_XHCI
+ 	help
+@@ -65,6 +66,9 @@ config SOC_EXYNOS4412
+ config SOC_EXYNOS5250
+ 	bool
  
--	cb = kzalloc(sizeof(struct cb_device *), GFP_KERNEL);
-+	cb = kzalloc(sizeof(*cb), GFP_KERNEL);
++config SOC_EXYNOS5260
++	bool
++
+ config SOC_EXYNOS5420
+ 	bool
  
- 	if (!cb)
- 		return -ENOMEM;
+diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
+index 37ea261..790009e 100644
+--- a/arch/arm/mach-exynos/mach-exynos5-dt.c
++++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
+@@ -51,6 +51,7 @@ static void __init exynos5_dt_machine_init(void)
+ 
+ static char const *exynos5_dt_compat[] __initdata = {
+ 	"samsung,exynos5250",
++	"samsung,exynos5260",
+ 	"samsung,exynos5420",
+ 	"samsung,exynos5440",
+ 	NULL
+-- 
+1.7.9.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
