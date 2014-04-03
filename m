@@ -1,64 +1,112 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH 1/2] devicetree: Add devicetree bindings documentation
- for Zynq Quad SPI
-Date: Thu, 3 Apr 2014 10:50:48 -0700
-Message-ID: <46a3a23e-786e-4acf-aa42-c3808b1a46d3@CH1EHSMHS028.ehs.local>
-References: <ee057d8c-50d9-4d4b-ac86-d7c5fc44b1b0@TX2EHSMHS034.ehs.local>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ee057d8c-50d9-4d4b-ac86-d7c5fc44b1b0@TX2EHSMHS034.ehs.local>
-Sender: linux-doc-owner@vger.kernel.org
-To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
-Cc: broonie@kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, michal.simek@xilinx.com, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, harinik@xilinx.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: RE: [PATCH] of: fix of_update_property [v2]
+Date: Thu, 03 Apr 2014 18:51:12 +0100
+Message-ID: <20140403175112.DF1FFC4200D@trevor.secretlab.ca>
+References: <1396331486-29354-1-git-send-email-Li.Xiubo@freescale.com> < 20140401091920.E8E45C408A6@trevor.secretlab.ca> < 9622800c30f5412a9bbb9dfd95def751@BY2PR03MB505.namprd03.prod.outlook.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9622800c30f5412a9bbb9dfd95def751-+7O3WWA3DPshjIn37xzcLOO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Punnaiah,
+On Wed, 2 Apr 2014 05:29:53 +0000, "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> 
+> 
+> > > @@ -1776,25 +1776,26 @@ int of_update_property(struct device_node *np,
+> > struct property *newprop)
+> > >  	if (!newprop->name)
+> > >  		return -EINVAL;
+> > >
+> > > -	oldprop = of_find_property(np, newprop->name, NULL);
+> > > -	if (!oldprop)
+> > > -		return of_add_property(np, newprop);
+> > > -
+> > >  	raw_spin_lock_irqsave(&devtree_lock, flags);
+> > > -	next = &np->properties;
+> > > -	while (*next) {
+> > > +	oldprop = __of_find_property(np, newprop->name, NULL);
+> > > +	if (!oldprop) {
+> > > +		/* add the node */
+> > > +		rc = __of_add_property(np, newprop);
+> > > +	} else {
+> > 
+> > if you changed this line to:
+> > 	} else while (*next) {
+> > then most of the other changes go away. You don't need the separate
+> > while loop 
+> 
+> Yes, I will fix this.
+> 
+> 
+> > and the function remains largely identical aside from moving
+> > the __of_find_property() into the spinlock.
+> >
+> 
+> But, from the following codes, we can see that, if oldprop !=  NULL 
+> Meaning that we have found it, and should just do the updatation later:
+> +++++++++++++++
+> 	oldprop = of_find_property(np, newprop->name, NULL);
+> 	if (!oldprop)
+> 		return of_add_property(np, newprop);
+> ---------------
+> 
+> 
+>  
+> > >  			/* found the node */
+> > >  			newprop->next = oldprop->next;
+> > >  			*next = newprop;
+> > >  			oldprop->next = np->deadprops;
+> > >  			np->deadprops = oldprop;
+> > > -			found = 1;
+> 
+> And why the 'found' flag is here is that the oldprop maybe removed
+> just before the spin_lock and after of_find_property().
+> 
+> And so use and move __of_find_property() and __of_add_property() into
+> the spinlock could avoid this...
 
-On Thu, 2014-04-03 at 10:33PM +0530, Punnaiah Choudary Kalluri wrote:
-> Add bindings documentation for Zynq Quad SPI driver.
->=20
-> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
-> ---
->  .../devicetree/bindings/spi/spi-zynq-qspi.txt      |   26 ++++++++++=
-++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi-zynq-qs=
-pi.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/spi/spi-zynq-qspi.txt =
-b/Documentation/devicetree/bindings/spi/spi-zynq-qspi.txt
-> new file mode 100644
-> index 0000000..88e00f8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/spi-zynq-qspi.txt
-> @@ -0,0 +1,26 @@
-> +Xilinx Zynq QSPI controller Device Tree Bindings
-> +-------------------------------------------------
-> +
-> +Required properties:
-> +- compatible		: Should be "xlnx,zynq-qspi-1.0".
-> +- reg			: Physical base address and size of QSPI registers map.
-> +- interrupts		: Property with a value describing the interrupt
-> +			  number.
-> +- interrupt-parent	: Must be core interrupt controller
-> +- clock-names		: List of input clock names - "ref_clk", "aper_clk"
-> +			  (See clock bindings for details).
-> +- clocks		: Clock phandles (see clock bindings for details).
-> +
-> +Optional properties:
-> +- num-cs		: Number of chip selects used.
-> +
-> +Example:
-> +	qspi@e000d000 {
-> +		compatible =3D "xlnx,zynq-qspi-1.0";
-> +		clock-names =3D "ref_clk", "aper_clk";
+Isn't that what I said?
 
-These seem to be the SOC names of the clocks. Doesn't have the IP its
-own naming for these clock inputs?
+g.
 
-	S=C3=B6ren
+> 
+> 
+> Thanks,
+> --
+> 
+> BRs,
+> Xiubo
+> 
+> 
+> > > -			break;
+> > >  		}
+> > > -		next = &(*next)->next;
+> > >  	}
+> > >  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> > > +
+> > >  	if (rc)
+> > >  		return rc;
+> > >
+> > > @@ -1803,9 +1804,6 @@ int of_update_property(struct device_node *np, struct
+> > property *newprop)
+> > >  		sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
+> > >  	__of_add_property_sysfs(np, newprop);
+> > >
+> > > -	if (!found)
+> > > -		return -ENODEV;
+> > > -
+> > >  	return 0;
+> > >  }
+> > >
+> > > --
+> > > 1.8.4
+> > >
+> > >
+> > 
+> > 
+> 
 
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
