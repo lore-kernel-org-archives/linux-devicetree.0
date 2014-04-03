@@ -1,150 +1,42 @@
-From: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v6 3/3] ARM: dts: add dts files for xyref5260 board
-Date: Thu, 03 Apr 2014 10:47:57 +0530
-Message-ID: <1396502277-19588-4-git-send-email-rahul.sharma@samsung.com>
-References: <1396502277-19588-1-git-send-email-rahul.sharma@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1396502277-19588-1-git-send-email-rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
+	<antoine.tenart@free-electrons.com>
+Subject: [PATCH 0/3] ARM: berlin: convert smp to CPU_METHOD_OF_DECLARE
+Date: Thu,  3 Apr 2014 10:08:13 +0200
+Message-ID: <1396512496-8030-1-git-send-email-antoine.tenart@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com
+Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch adds the dts files for xyref5260 board which
-is based on Exynos5260 Evt0 sample.
+The newly introduced CPU_METHOD_OF_DECLARE (6c3ff8b11a16) [1] allows to
+get rid of the board file reference to smp ops. This serie converts the
+Berlin SoC smp to use this and allows to set the enable-method in the
+device tree.
 
-Signed-off-by: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/Makefile                      |    1 +
- arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts |  103 +++++++++++++++++++++++
- 2 files changed, 104 insertions(+)
- create mode 100644 arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts
+This serie applies on top of Sebastian's topic/smp-bg3-bg2q branch [2]
+rebased on top of linux-next.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b9d6a8b..5a391bf 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -72,6 +72,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
- 	exynos5250-arndale.dtb \
- 	exynos5250-smdk5250.dtb \
- 	exynos5250-snow.dtb \
-+	exynos5260-xyref5260-evt0.dtb \
- 	exynos5420-arndale-octa.dtb \
- 	exynos5420-smdk5420.dtb \
- 	exynos5440-sd5v1.dtb \
-diff --git a/arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts b/arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts
-new file mode 100644
-index 0000000..fb1b0ee
---- /dev/null
-+++ b/arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts
-@@ -0,0 +1,103 @@
-+/*
-+ * SAMSUNG XYREF5260 EVT0 board device tree source
-+ *
-+ * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-+ *		http://www.samsung.com
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+*/
-+
-+/dts-v1/;
-+#include "exynos5260.dtsi"
-+
-+/ {
-+	model = "SAMSUNG XYREF5260 EVT0 board based on EXYNOS5260";
-+	compatible = "samsung,xyref5260", "samsung,exynos5260";
-+
-+	memory {
-+		reg = <0x20000000 0x80000000>;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttySAC2,115200";
-+	};
-+
-+	fin_pll: xxti {
-+		compatible = "fixed-clock";
-+		clock-frequency = <24000000>;
-+		clock-output-names = "fin_pll";
-+		#clock-cells = <0>;
-+	};
-+
-+	xrtcxti: xrtcxti {
-+		compatible = "fixed-clock";
-+		clock-frequency = <32768>;
-+		clock-output-names = "xrtcxti";
-+		#clock-cells = <0>;
-+	};
-+};
-+
-+&pinctrl_0 {
-+	hdmi_hpd_irq: hdmi-hpd-irq {
-+		samsung,pins = "gpx3-7";
-+		samsung,pin-function = <0>;
-+		samsung,pin-pud = <1>;
-+		samsung,pin-drv = <0>;
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	status = "okay";
-+};
-+
-+&mmc_0 {
-+	status = "okay";
-+	num-slots = <1>;
-+	broken-cd;
-+	bypass-smu;
-+	supports-highspeed;
-+	supports-hs200-mode; /* 200 Mhz */
-+	card-detect-delay = <200>;
-+	samsung,dw-mshc-ciu-div = <3>;
-+	samsung,dw-mshc-sdr-timing = <0 4>;
-+	samsung,dw-mshc-ddr-timing = <0 2>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd0_rdqs &sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4 &sd0_bus8>;
-+
-+	slot@0 {
-+		reg = <0>;
-+		bus-width = <8>;
-+	};
-+};
-+
-+&mmc_2 {
-+	status = "okay";
-+	num-slots = <1>;
-+	supports-highspeed;
-+	card-detect-delay = <200>;
-+	samsung,dw-mshc-ciu-div = <3>;
-+	samsung,dw-mshc-sdr-timing = <2 3>;
-+	samsung,dw-mshc-ddr-timing = <1 2>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus1 &sd2_bus4>;
-+
-+	slot@0 {
-+		reg = <0>;
-+		bus-width = <4>;
-+		disable-wp;
-+	};
-+};
--- 
-1.7.9.5
+Tested on the Berlin BG2Q.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1] https://patchwork.kernel.org/patch/3399311/
+[2] https://github.com/shesselba/linux-berlin/tree/topic/smp-bg2-bg2q
+
+Antoine T=C3=A9nart (3):
+  ARM: berlin: use CPU_METHOD_OF_DECLARE for smp
+  ARM: dts: document the berlin enable-method property
+  ARM: dts: berlin: add enable-method property in cpus node for smp
+
+ Documentation/devicetree/bindings/arm/cpus.txt | 2 ++
+ arch/arm/boot/dts/berlin2.dtsi                 | 1 +
+ arch/arm/boot/dts/berlin2q.dtsi                | 1 +
+ arch/arm/mach-berlin/berlin.c                  | 1 -
+ arch/arm/mach-berlin/common.h                  | 2 --
+ arch/arm/mach-berlin/platsmp.c                 | 3 ++-
+ 6 files changed, 6 insertions(+), 4 deletions(-)
+
+--=20
+1.8.3.2
