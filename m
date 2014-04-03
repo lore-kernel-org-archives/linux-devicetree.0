@@ -1,68 +1,145 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v3 3/3] arm64: Add APM X-Gene SoC RTC DTS entry
-Date: Thu,  3 Apr 2014 00:17:53 -0600
-Message-ID: <1396505873-5507-4-git-send-email-lho@apm.com>
-References: <1396505873-5507-1-git-send-email-lho@apm.com>
- <1396505873-5507-2-git-send-email-lho@apm.com>
- <1396505873-5507-3-git-send-email-lho@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396505873-5507-3-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH v7 3/3] ARM: dts: add dts files for xyref5260 board
+Date: Thu, 03 Apr 2014 15:30:24 +0530
+Message-ID: <1396519224-18712-4-git-send-email-rahul.sharma@samsung.com>
+References: <1396519224-18712-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1396519224-18712-1-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds APM X-Gene SoC RTC DTS entry
+The patch adds the dts files for xyref5260 board which
+is based on Exynos5260 Evt0 sample.
 
-Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Tested-by: dann frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
 ---
- arch/arm64/boot/dts/apm-storm.dtsi |   21 +++++++++++++++++++++
- 1 files changed, 21 insertions(+), 0 deletions(-)
+ arch/arm/boot/dts/Makefile                 |    1 +
+ arch/arm/boot/dts/exynos5260-xyref5260.dts |  103 ++++++++++++++++++++++++++++
+ 2 files changed, 104 insertions(+)
+ create mode 100644 arch/arm/boot/dts/exynos5260-xyref5260.dts
 
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index 93f4b2d..4917f3b 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -257,6 +257,19 @@
- 				enable-offset = <0x0>;
- 				enable-mask = <0x39>;
- 			};
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index b9d6a8b..477723b 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -72,6 +72,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
+ 	exynos5250-arndale.dtb \
+ 	exynos5250-smdk5250.dtb \
+ 	exynos5250-snow.dtb \
++	exynos5260-xyref5260.dtb \
+ 	exynos5420-arndale-octa.dtb \
+ 	exynos5420-smdk5420.dtb \
+ 	exynos5440-sd5v1.dtb \
+diff --git a/arch/arm/boot/dts/exynos5260-xyref5260.dts b/arch/arm/boot/dts/exynos5260-xyref5260.dts
+new file mode 100644
+index 0000000..fb1b0ee
+--- /dev/null
++++ b/arch/arm/boot/dts/exynos5260-xyref5260.dts
+@@ -0,0 +1,103 @@
++/*
++ * SAMSUNG XYREF5260 EVT0 board device tree source
++ *
++ * Copyright (c) 2013 Samsung Electronics Co., Ltd.
++ *		http://www.samsung.com
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++*/
 +
-+			rtcclk: rtcclk@17000000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x17000000 0x0 0x2000>;
-+				reg-names = "csr-reg";
-+				csr-offset = <0xc>;
-+				csr-mask = <0x2>;
-+				enable-offset = <0x10>;
-+				enable-mask = <0x2>;
-+				clock-output-names = "rtcclk";
-+			};
- 		};
- 
- 		serial0: serial@1c020000 {
-@@ -339,5 +352,13 @@
- 			phys = <&phy3 0>;
- 			phy-names = "sata-phy";
- 		};
++/dts-v1/;
++#include "exynos5260.dtsi"
 +
-+		rtc: rtc@10510000 {
-+			compatible = "apm,xgene-rtc";
-+			reg = <0x0 0x10510000 0x0 0x400>;
-+			interrupts = <0x0 0x46 0x4>;
-+			#clock-cells = <1>;
-+			clocks = <&rtcclk 0>;
-+		};
- 	};
- };
++/ {
++	model = "SAMSUNG XYREF5260 EVT0 board based on EXYNOS5260";
++	compatible = "samsung,xyref5260", "samsung,exynos5260";
++
++	memory {
++		reg = <0x20000000 0x80000000>;
++	};
++
++	chosen {
++		bootargs = "console=ttySAC2,115200";
++	};
++
++	fin_pll: xxti {
++		compatible = "fixed-clock";
++		clock-frequency = <24000000>;
++		clock-output-names = "fin_pll";
++		#clock-cells = <0>;
++	};
++
++	xrtcxti: xrtcxti {
++		compatible = "fixed-clock";
++		clock-frequency = <32768>;
++		clock-output-names = "xrtcxti";
++		#clock-cells = <0>;
++	};
++};
++
++&pinctrl_0 {
++	hdmi_hpd_irq: hdmi-hpd-irq {
++		samsung,pins = "gpx3-7";
++		samsung,pin-function = <0>;
++		samsung,pin-pud = <1>;
++		samsung,pin-drv = <0>;
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&uart1 {
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&uart3 {
++	status = "okay";
++};
++
++&mmc_0 {
++	status = "okay";
++	num-slots = <1>;
++	broken-cd;
++	bypass-smu;
++	supports-highspeed;
++	supports-hs200-mode; /* 200 Mhz */
++	card-detect-delay = <200>;
++	samsung,dw-mshc-ciu-div = <3>;
++	samsung,dw-mshc-sdr-timing = <0 4>;
++	samsung,dw-mshc-ddr-timing = <0 2>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sd0_rdqs &sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4 &sd0_bus8>;
++
++	slot@0 {
++		reg = <0>;
++		bus-width = <8>;
++	};
++};
++
++&mmc_2 {
++	status = "okay";
++	num-slots = <1>;
++	supports-highspeed;
++	card-detect-delay = <200>;
++	samsung,dw-mshc-ciu-div = <3>;
++	samsung,dw-mshc-sdr-timing = <2 3>;
++	samsung,dw-mshc-ddr-timing = <1 2>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus1 &sd2_bus4>;
++
++	slot@0 {
++		reg = <0>;
++		bus-width = <4>;
++		disable-wp;
++	};
++};
 -- 
-1.5.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
