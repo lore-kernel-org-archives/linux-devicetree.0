@@ -1,112 +1,71 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: RE: [PATCH] of: fix of_update_property [v2]
-Date: Thu, 03 Apr 2014 18:51:12 +0100
-Message-ID: <20140403175112.DF1FFC4200D@trevor.secretlab.ca>
-References: <1396331486-29354-1-git-send-email-Li.Xiubo@freescale.com> < 20140401091920.E8E45C408A6@trevor.secretlab.ca> < 9622800c30f5412a9bbb9dfd95def751@BY2PR03MB505.namprd03.prod.outlook.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9622800c30f5412a9bbb9dfd95def751-+7O3WWA3DPshjIn37xzcLOO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
+Date: Thu, 03 Apr 2014 19:57:53 +0200
+Message-ID: <5153369.PcVDn1cGQl@wuerfel>
+References: <1396358832-15828-1-git-send-email-zhangfei.gao@linaro.org> <9532591.5yuCbpL4pV@wuerfel> <20140403152746.GQ7528@n2100.arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20140403152746.GQ7528@n2100.arm.linux.org.uk>
+Sender: netdev-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Zhangfei Gao <zhangfei.gao@linaro.org>, davem@davemloft.net, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@aculab.com, eric.dumazet@gmail.com, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2 Apr 2014 05:29:53 +0000, "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+On Thursday 03 April 2014 16:27:46 Russell King - ARM Linux wrote:
+> On Wed, Apr 02, 2014 at 11:21:45AM +0200, Arnd Bergmann wrote:
+> > - As David Laight pointed out earlier, you must also ensure that
+> >   you don't have too much /data/ pending in the descriptor ring
+> >   when you stop the queue. For a 10mbit connection, you have already
+> >   tested (as we discussed on IRC) that 64 descriptors with 1500 byte
+> >   frames gives you a 68ms round-trip ping time, which is too much.
+> >   Conversely, on 1gbit, having only 64 descriptors actually seems
+> >   a little low, and you may be able to get better throughput if
+> >   you extend the ring to e.g. 512 descriptors.
 > 
-> 
-> > > @@ -1776,25 +1776,26 @@ int of_update_property(struct device_node *np,
-> > struct property *newprop)
-> > >  	if (!newprop->name)
-> > >  		return -EINVAL;
-> > >
-> > > -	oldprop = of_find_property(np, newprop->name, NULL);
-> > > -	if (!oldprop)
-> > > -		return of_add_property(np, newprop);
-> > > -
-> > >  	raw_spin_lock_irqsave(&devtree_lock, flags);
-> > > -	next = &np->properties;
-> > > -	while (*next) {
-> > > +	oldprop = __of_find_property(np, newprop->name, NULL);
-> > > +	if (!oldprop) {
-> > > +		/* add the node */
-> > > +		rc = __of_add_property(np, newprop);
-> > > +	} else {
-> > 
-> > if you changed this line to:
-> > 	} else while (*next) {
-> > then most of the other changes go away. You don't need the separate
-> > while loop 
-> 
-> Yes, I will fix this.
-> 
-> 
-> > and the function remains largely identical aside from moving
-> > the __of_find_property() into the spinlock.
-> >
-> 
-> But, from the following codes, we can see that, if oldprop !=  NULL 
-> Meaning that we have found it, and should just do the updatation later:
-> +++++++++++++++
-> 	oldprop = of_find_property(np, newprop->name, NULL);
-> 	if (!oldprop)
-> 		return of_add_property(np, newprop);
-> ---------------
-> 
-> 
->  
-> > >  			/* found the node */
-> > >  			newprop->next = oldprop->next;
-> > >  			*next = newprop;
-> > >  			oldprop->next = np->deadprops;
-> > >  			np->deadprops = oldprop;
-> > > -			found = 1;
-> 
-> And why the 'found' flag is here is that the oldprop maybe removed
-> just before the spin_lock and after of_find_property().
-> 
-> And so use and move __of_find_property() and __of_add_property() into
-> the spinlock could avoid this...
+> You don't manage that by stopping the queue - there's separate interfaces
+> where you report how many bytes you've queued (netdev_sent_queue()) and
+> how many bytes/packets you've sent (netdev_tx_completed_queue()).  This
+> allows the netdev schedulers to limit how much data is held in the queue,
+> preserving interactivity while allowing the advantages of larger rings.
 
-Isn't that what I said?
+Ah, I didn't know about these.  However, reading through the dql code,
+it seems that will not work if the tx reclaim is triggered by a timer,
+since it expects to get feedback from the actual hardware behavior. :(
 
-g.
+I guess this is (part of) what David Miller also meant by saying it won't
+ever work properly. 
 
-> 
-> 
-> Thanks,
-> --
-> 
-> BRs,
-> Xiubo
-> 
-> 
-> > > -			break;
-> > >  		}
-> > > -		next = &(*next)->next;
-> > >  	}
-> > >  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> > > +       phys = dma_map_single(&ndev->dev, skb->data, skb->len, DMA_TO_DEVICE);
+> > > +       if (dma_mapping_error(&ndev->dev, phys)) {
+> > > +               dev_kfree_skb(skb);
+> > > +               return NETDEV_TX_OK;
+> > > +       }
 > > > +
-> > >  	if (rc)
-> > >  		return rc;
-> > >
-> > > @@ -1803,9 +1804,6 @@ int of_update_property(struct device_node *np, struct
-> > property *newprop)
-> > >  		sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
-> > >  	__of_add_property_sysfs(np, newprop);
-> > >
-> > > -	if (!found)
-> > > -		return -ENODEV;
-> > > -
-> > >  	return 0;
-> > >  }
-> > >
-> > > --
-> > > 1.8.4
-> > >
-> > >
+> > > +       priv->tx_skb[tx_head] = skb;
+> > > +       priv->tx_phys[tx_head] = phys;
+> > > +       desc->send_addr = cpu_to_be32(phys);
+> > > +       desc->send_size = cpu_to_be16(skb->len);
+> > > +       desc->cfg = cpu_to_be32(DESC_DEF_CFG);
+> > > +       phys = priv->tx_desc_dma + tx_head * sizeof(struct tx_desc);
+> > > +       desc->wb_addr = cpu_to_be32(phys);
 > > 
-> > 
+> > One detail: since you don't have cache-coherent DMA, "desc" will
+> > reside in uncached memory, so you try to minimize the number of accesses.
+> > It's probably faster if you build the descriptor on the stack and
+> > then atomically copy it over, rather than assigning each member at
+> > a time.
 > 
+> DMA coherent memory is write combining, so multiple writes will be
+> coalesced.  This also means that barriers may be required to ensure the
+> descriptors are pushed out in a timely manner if something like writel()
+> is not used in the transmit-triggering path.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Right, makes sense. There is a writel() right after this, so no need
+for extra barriers. We already concluded that the store operation on
+uncached memory isn't actually a problem, and Zhangfei Gao did some
+measurements to check the overhead of the one read from uncached
+memory that is in the tx path, which was lost in the noise.
+
+	Arnd
