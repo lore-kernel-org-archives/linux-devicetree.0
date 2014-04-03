@@ -1,119 +1,101 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] i2c: Add driver for Cadence I2C controller
-Date: Thu, 03 Apr 2014 09:25:47 +0200
-Message-ID: <533D0CFB.7050707@monstr.eu>
-References: <1394556613-11692-1-git-send-email-soren.brinkmann@xilinx.com> <533CF913.4020308@monstr.eu> <20140403071004.GA2571@katana>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] mfd: twl6040: Optional clk32k clock handling
+Date: Thu, 3 Apr 2014 13:54:42 +0300
+Message-ID: <1396522482-32036-2-git-send-email-peter.ujfalusi@ti.com>
+References: <1396522482-32036-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="uRFjPXGuh6ecXObbHBHLfOOWu4XTNMNbB"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140403071004.GA2571@katana>
+In-Reply-To: <1396522482-32036-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---uRFjPXGuh6ecXObbHBHLfOOWu4XTNMNbB
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+In certain boards the source for the clk32k clock can be gated. In these
+boards the clk32k clock can be provided to the driver and it is going to be
+enabled/disabled when it is needed.
+If the clk32k clock is not provided the driver will assume that it is always
+running.
 
-On 04/03/2014 09:10 AM, Wolfram Sang wrote:
->=20
-> Please don't quote large parts of the message f you are not referring t=
-o
-> it.
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mfd/twl6040.txt |  2 ++
+ drivers/mfd/twl6040.c                             | 10 ++++++++++
+ include/linux/mfd/twl6040.h                       |  2 ++
+ 3 files changed, 14 insertions(+)
 
-Normally I do it. Forgot sorry.
+diff --git a/Documentation/devicetree/bindings/mfd/twl6040.txt b/Documentation/devicetree/bindings/mfd/twl6040.txt
+index 0f5dd709d752..a41157b5d930 100644
+--- a/Documentation/devicetree/bindings/mfd/twl6040.txt
++++ b/Documentation/devicetree/bindings/mfd/twl6040.txt
+@@ -19,6 +19,8 @@ Required properties:
+ 
+ Optional properties, nodes:
+ - enable-active-high: To power on the twl6040 during boot.
++- clocks: phandle to the clk32k clock provider
++- clock-names: Must be "clk32k"
+ 
+ Vibra functionality
+ Required properties:
+diff --git a/drivers/mfd/twl6040.c b/drivers/mfd/twl6040.c
+index 2e6504a8e1e3..12b314ea48dc 100644
+--- a/drivers/mfd/twl6040.c
++++ b/drivers/mfd/twl6040.c
+@@ -291,6 +291,8 @@ int twl6040_power(struct twl6040 *twl6040, int on)
+ 		if (twl6040->power_count++)
+ 			goto out;
+ 
++		clk_prepare_enable(twl6040->clk32k);
++
+ 		/* Allow writes to the chip */
+ 		regcache_cache_only(twl6040->regmap, false);
+ 
+@@ -346,6 +348,8 @@ int twl6040_power(struct twl6040 *twl6040, int on)
+ 
+ 		twl6040->sysclk = 0;
+ 		twl6040->mclk = 0;
++
++		clk_disable_unprepare(twl6040->clk32k);
+ 	}
+ 
+ out:
+@@ -644,6 +648,12 @@ static int twl6040_probe(struct i2c_client *client,
+ 
+ 	i2c_set_clientdata(client, twl6040);
+ 
++	twl6040->clk32k = devm_clk_get(&client->dev, "clk32k");
++	if (IS_ERR(twl6040->clk32k)) {
++		dev_info(&client->dev, "clk32k is not handled\n");
++		twl6040->clk32k = NULL;
++	}
++
+ 	twl6040->supplies[0].supply = "vio";
+ 	twl6040->supplies[1].supply = "v2v1";
+ 	ret = devm_regulator_bulk_get(&client->dev, TWL6040_NUM_SUPPLIES,
+diff --git a/include/linux/mfd/twl6040.h b/include/linux/mfd/twl6040.h
+index a69d16b30c18..8f9fc3d26e6d 100644
+--- a/include/linux/mfd/twl6040.h
++++ b/include/linux/mfd/twl6040.h
+@@ -28,6 +28,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/mfd/core.h>
+ #include <linux/regulator/consumer.h>
++#include <linux/clk.h>
+ 
+ #define TWL6040_REG_ASICID		0x01
+ #define TWL6040_REG_ASICREV		0x02
+@@ -223,6 +224,7 @@ struct twl6040 {
+ 	struct regmap *regmap;
+ 	struct regmap_irq_chip_data *irq_data;
+ 	struct regulator_bulk_data supplies[2]; /* supplies for vio, v2v1 */
++	struct clk *clk32k;
+ 	struct mutex mutex;
+ 	struct mutex irq_mutex;
+ 	struct mfd_cell cells[TWL6040_CELLS];
+-- 
+1.9.1
 
->>> +#ifdef CONFIG_PM_SLEEP
->>> +/**
->>> + * cdns_i2c_suspend - Suspend method for the driver
->>> + * @_dev:	Address of the platform_device structure
->>> + * Return: 0 always
->>> + *
->>> + * Put the driver into low power mode.
->>> + */
->>> +static int cdns_i2c_suspend(struct device *_dev)
->>> +{
->>> +	struct platform_device *pdev =3D container_of(_dev,
->>> +			struct platform_device, dev);
->>> +	struct cdns_i2c *xi2c =3D platform_get_drvdata(pdev);
->>> +
->>> +	clk_disable(xi2c->clk);
->>> +	xi2c->suspended =3D 1;
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +/**
->>> + * cdns_i2c_resume - Resume from suspend
->>> + * @_dev:	Address of the platform_device structure
->>> + * Return: 0 on success and error value on error
->>> + *
->>> + * Resume operation after suspend.
->>> + */
->>> +static int cdns_i2c_resume(struct device *_dev)
->>> +{
->>> +	struct platform_device *pdev =3D container_of(_dev,
->>> +			struct platform_device, dev);
->>> +	struct cdns_i2c *xi2c =3D platform_get_drvdata(pdev);
->>> +	int ret;
->>> +
->>> +	ret =3D clk_enable(xi2c->clk);
->>> +	if (ret) {
->>> +		dev_err(_dev, "Cannot enable clock.\n");
->>> +		return ret;
->>> +	}
->>> +
->>> +	xi2c->suspended =3D 0;
->>> +
->>> +	return 0;
->>> +}
->>> +#endif
->>
->> Can you also please remove this #ifdef and use __maybe_used
->> instead? Better not to have any ifdef in the code.
->=20
-> Is this a new pattern? For PM_SLEEP, #ifdef seems to be quite common.
-
-The first suggestion to do it came from CAN maintainer.
-It is valid in general for ifdef.
-I have checked all our drivers and we are changing them to use __maybe_us=
-ed
-because then we can easily find out if there is any problem
-when function prototype has changed.
-
-Thanks,
-Michal
-
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---uRFjPXGuh6ecXObbHBHLfOOWu4XTNMNbB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlM9DPsACgkQykllyylKDCEcfwCfQsLUeOED+rmyClPSDfDT/DKn
-EgEAnjgSaJsz0mfHflcF8d2GEZwYhQGL
-=hV/7
------END PGP SIGNATURE-----
-
---uRFjPXGuh6ecXObbHBHLfOOWu4XTNMNbB--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
