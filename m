@@ -1,75 +1,95 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: document the berlin enable-method property
-Date: Thu, 03 Apr 2014 09:40:42 +0000
-Message-ID: <533D2C9A.6010302@gmail.com>
-References: <1396512496-8030-1-git-send-email-antoine.tenart@free-electrons.com>	<1396512496-8030-3-git-send-email-antoine.tenart@free-electrons.com> <20140403162202.79b63729@xhacker> <533D21AF.2070508@free-electrons.com> <533D268E.7070502@free-electrons.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH] mfd: twl6040: Optional clk32k clock handling
+Date: Thu, 3 Apr 2014 13:54:41 +0300
+Message-ID: <1396522482-32036-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <533D268E.7070502-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?QW50b2luZSBUw6luYXJ0?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Cc: "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org
+Cc: sameo@linux.intel.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/03/2014 09:14 AM, Antoine T=C3=A9nart wrote:
-> On 03/04/2014 10:54, Antoine T=C3=A9nart wrote:
->> On 03/04/2014 10:22, Jisheng Zhang wrote:
->>> On Thu, 3 Apr 2014 01:08:15 -0700
->>> Antoine T=C3=A9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->>>
->>>> Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.=
-com>
->>>> ---
->>>>   Documentation/devicetree/bindings/arm/cpus.txt | 2 ++
->>>>   1 file changed, 2 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt
->>>> b/Documentation/devicetree/bindings/arm/cpus.txt index
->>>> 333f4aea3029..a9e42a2dbc99 100644 ---
->>>> a/Documentation/devicetree/bindings/arm/cpus.txt +++
->>>> b/Documentation/devicetree/bindings/arm/cpus.txt @@ -185,6 +185,8 =
-@@
->>>> nodes
->>>> to be present and contain the properties described below.
->>>> "qcom,gcc-msm8660"
->>>>                   "qcom,kpss-acc-v1"
->>>>                   "qcom,kpss-acc-v2"
->>>> +                "marvell,88de31-smp" - cpu-core handling for
->>>
->>> why not "marvell,berlin-smp"?
->>
->> We have SMP on the BG2 and the BG2Q currently. Future boards may not=
- be
->> compatible with this method (BG3 ?), I think "marvell,berlin-smp" is=
- too
->> generic.
->>
->> We could use "marvell,88de31xx-smp" as Alexandre suggested.
->
-> "marvell,88de31xx-smp" is not a good choice too, since futur SoC may
-> match the "xx" and not use this method. A better way should be to use
-> the first SoC implementing the feature, so "marvell,88de3100".
+In certain boards the source for the clk32k clock can be gated. In these
+boards the clk32k clock can be provided to the driver and it is going to be
+enabled/disabled when it is needed.
+If the clk32k clock is not provided the driver will assume that it is always
+running.
 
-Never introduce the SoC numbers, we have chosen to stick with
-berlin2{,cd,q} so use that.
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ Documentation/devicetree/bindings/mfd/twl6040.txt |  2 ++
+ drivers/mfd/twl6040.c                             | 10 ++++++++++
+ include/linux/mfd/twl6040.h                       |  2 ++
+ 3 files changed, 14 insertions(+)
 
-Given the comment from Mark Rutland and Russell King here[1], I'd rathe=
-r
-concentrate on a proper SMP implementation. Unfortunately, I haven't
-found a good documentation about the requirements nor call sequence -
-but I haven't looked hard.
-
-Having said that, can we postpone the DT enable method patches until
-we agreed on a better SMP implementation?
-
-Sebastian
-
-[1] http://www.spinics.net/lists/arm-kernel/msg318585.html
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/mfd/twl6040.txt b/Documentation/devicetree/bindings/mfd/twl6040.txt
+index 0f5dd709d752..a41157b5d930 100644
+--- a/Documentation/devicetree/bindings/mfd/twl6040.txt
++++ b/Documentation/devicetree/bindings/mfd/twl6040.txt
+@@ -19,6 +19,8 @@ Required properties:
+ 
+ Optional properties, nodes:
+ - enable-active-high: To power on the twl6040 during boot.
++- clocks: phandle to the clk32k clock provider
++- clock-names: Must be "clk32k"
+ 
+ Vibra functionality
+ Required properties:
+diff --git a/drivers/mfd/twl6040.c b/drivers/mfd/twl6040.c
+index 2e6504a8e1e3..12b314ea48dc 100644
+--- a/drivers/mfd/twl6040.c
++++ b/drivers/mfd/twl6040.c
+@@ -291,6 +291,8 @@ int twl6040_power(struct twl6040 *twl6040, int on)
+ 		if (twl6040->power_count++)
+ 			goto out;
+ 
++		clk_prepare_enable(twl6040->clk32k);
++
+ 		/* Allow writes to the chip */
+ 		regcache_cache_only(twl6040->regmap, false);
+ 
+@@ -346,6 +348,8 @@ int twl6040_power(struct twl6040 *twl6040, int on)
+ 
+ 		twl6040->sysclk = 0;
+ 		twl6040->mclk = 0;
++
++		clk_disable_unprepare(twl6040->clk32k);
+ 	}
+ 
+ out:
+@@ -644,6 +648,12 @@ static int twl6040_probe(struct i2c_client *client,
+ 
+ 	i2c_set_clientdata(client, twl6040);
+ 
++	twl6040->clk32k = devm_clk_get(&client->dev, "clk32k");
++	if (IS_ERR(twl6040->clk32k)) {
++		dev_info(&client->dev, "clk32k is not handled\n");
++		twl6040->clk32k = NULL;
++	}
++
+ 	twl6040->supplies[0].supply = "vio";
+ 	twl6040->supplies[1].supply = "v2v1";
+ 	ret = devm_regulator_bulk_get(&client->dev, TWL6040_NUM_SUPPLIES,
+diff --git a/include/linux/mfd/twl6040.h b/include/linux/mfd/twl6040.h
+index a69d16b30c18..8f9fc3d26e6d 100644
+--- a/include/linux/mfd/twl6040.h
++++ b/include/linux/mfd/twl6040.h
+@@ -28,6 +28,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/mfd/core.h>
+ #include <linux/regulator/consumer.h>
++#include <linux/clk.h>
+ 
+ #define TWL6040_REG_ASICID		0x01
+ #define TWL6040_REG_ASICREV		0x02
+@@ -223,6 +224,7 @@ struct twl6040 {
+ 	struct regmap *regmap;
+ 	struct regmap_irq_chip_data *irq_data;
+ 	struct regulator_bulk_data supplies[2]; /* supplies for vio, v2v1 */
++	struct clk *clk32k;
+ 	struct mutex mutex;
+ 	struct mutex irq_mutex;
+ 	struct mfd_cell cells[TWL6040_CELLS];
+-- 
+1.9.1
