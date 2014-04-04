@@ -1,39 +1,177 @@
-From: Harini Katakam <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] devicetree: Add devicetree bindings documentation for
- Zynq Quad SPI
-Date: Fri, 4 Apr 2014 08:31:43 +0530
-Message-ID: <CAFcVEC+sqB9VQUEgiFN_MwHcvYFqEifh6EuHPLAkKZOnBiaQ9A@mail.gmail.com>
-References: <ee057d8c-50d9-4d4b-ac86-d7c5fc44b1b0@TX2EHSMHS034.ehs.local>
-	<20140403210135.GX14763@sirena.org.uk>
+From: Harini Katakam <harinikatakamlinux@gmail.com>
+Subject: Re: [PATCH 2/2] SPI: Add support for Zynq Quad SPI controller
+Date: Fri, 4 Apr 2014 08:59:47 +0530
+Message-ID: <CAFcVECJiSm8MMJ37c-Qfsu-UE0jgEYRmeGZ8OQG97wyRMaJ1LQ@mail.gmail.com>
+References: <1396544587-10876-1-git-send-email-punnaia@xilinx.com>
+	<203181a5-626f-437e-8efe-983a9d78ec5d@AM1EHSMHS017.ehs.local>
+	<20140403212940.GY14763@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140403210135.GX14763-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Punnaiah Choudary <kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, punnaiah choudary kalluri <kalluripunnaiahchoudary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140403212940.GY14763@sirena.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-spi@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, Punnaiah Choudary <kpc528@gmail.com>, punnaiah choudary kalluri <kalluripunnaiahchoudary@gmail.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi Mark,
 
-On Fri, Apr 4, 2014 at 2:31 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Apr 03, 2014 at 10:33:06PM +0530, Punnaiah Choudary Kalluri wrote:
+On Fri, Apr 4, 2014 at 2:59 AM, Mark Brown <broonie@kernel.org> wrote:
+> On Thu, Apr 03, 2014 at 10:33:07PM +0530, Punnaiah Choudary Kalluri wrote:
 >
->> +Optional properties:
->> +- num-cs             : Number of chip selects used.
+> Overall this looks fairly good, there are a few issues that need to be
+> looked at but they're not too invasive.  Please also check for coding
+> style issues, quite a few spaces before commas for example.
 >
-> What does this translate into?
->
->> +             num-cs = /bits/ 16 <1>;
->
-> Why the odd specification in the example - why not just specify it as a
-> number?
 
-Same as discussed on SPI cadence thread.
+Thanks. I'll check that.
+
+<snip>
+
+>> +/**
+>> + * zynq_qspi_copy_read_data - Copy data to RX buffer
+>> + * @xqspi:   Pointer to the zynq_qspi structure
+>> + * @data:    The 32 bit variable where data is stored
+>> + * @size:    Number of bytes to be copied from data to RX buffer
+>> + */
+>> +static void zynq_qspi_copy_read_data(struct zynq_qspi *xqspi, u32 data, u8 size)
+>> +{
+>> +     if (xqspi->rxbuf) {
+>> +             memcpy(xqspi->rxbuf, ((u8 *) &data) + 4 - size, size);
+>> +             xqspi->rxbuf += size;
+>> +     }
+>> +     xqspi->bytes_to_receive -= size;
+>> +}
+>
+> Does this and the write function really need to be a separate function -
+> it's trivial and used once?  It's probably more beneficial to split out
+> some of the more complex logic later on that's causing the indentation
+> to get too deep.
+>
+
+I'm aware it's used in only one place but it does make receive data handling
+easier for future. As you may have noticed there are 4 different ways to
+write into transmit FIFO and the data read also differs accordingly.
+I'll try to reduce the indentation in other places.
+
+<snip>
+
+>> +static int zynq_qspi_setup_transfer(struct spi_device *qspi,
+>> +                                 struct spi_transfer *transfer)
+>> +{
+>> +     struct zynq_qspi *xqspi = spi_master_get_devdata(qspi->master);
+>> +     u32 config_reg, req_hz, baud_rate_val = 0;
+>> +
+>> +     if (transfer)
+>> +             req_hz = transfer->speed_hz;
+>> +     else
+>> +             req_hz = qspi->max_speed_hz;
+>
+> Why would a transfer be being set up without a transfer being provided?
+>
+
+The setup function calls this function before a transfer is initiated.
+In this case NULL is passed to setup_transfer (see below) and
+SPI is initialized with default clock configuration.
+This initialization is necessary because otherwise this clock config
+would be done
+only after SPI is enabled in prepare_hardware, which is wrong.
+(I'm checking for master->busy in setup to address your previous
+comment on SPI).
+
+I explained the same in SPI v2 changes and this valid there too.
+
+>> +/**
+>> + * zynq_qspi_setup - Configure the QSPI controller
+>> + * @qspi:    Pointer to the spi_device structure
+>> + *
+>> + * Sets the operational mode of QSPI controller for the next QSPI transfer, baud
+>> + * rate and divisor value to setup the requested qspi clock.
+>> + *
+>> + * Return:   0 on success and error value on failure
+>> + */
+>> +static int zynq_qspi_setup(struct spi_device *qspi)
+>> +{
+>> +     if (qspi->master->busy)
+>> +             return -EBUSY;
+>> +
+>> +     return zynq_qspi_setup_transfer(qspi, NULL);
+>> +}
+>
+> No, this is broken - you have to support setup() while the hardware is
+> active.  Just remove this if there's nothing to do and set up on the
+> transfer.
+
+But where do you suggest this clock configuration be done?
+I've looked at the option of doing it in prepare_hardware but
+spi_device structure is not passed to it.
+
+<snip>
+
+>
+>> +                             if (xqspi->rxbuf) {
+>> +                                     (*(u32 *)xqspi->rxbuf) =
+>> +                                     zynq_qspi_read(xqspi,
+>> +                                                    ZYNQ_QSPI_RXD_OFFSET);
+>> +                                     xqspi->rxbuf += 4;
+>
+> This only works in 4 byte words?  That seems a bit limited.
+> Alternatively, if it works with smaller sizes (as it appears to) then
+> isn't this at risk of overflowing buffers?
+>
+
+There is a
+if (xqspi->bytes_to_receive < 4) {
+above and this statement is in the else loop.
+When less than 4 bytes are being read/received, the handling is different.
+
+>> +static int __maybe_unused zynq_qspi_suspend(struct device *_dev)
+>> +{
+>> +     struct platform_device *pdev = container_of(_dev,
+>> +                     struct platform_device, dev);
+>> +     struct spi_master *master = platform_get_drvdata(pdev);
+>> +
+>> +     spi_master_suspend(master);
+>> +
+>> +     zynq_unprepare_transfer_hardware(master);
+>
+> Why are you unpreparing the hardware - the framework should be doing
+> that for you if the device is active, if it's not you've got an extra
+> clock disable here?
+>
+
+I called unprepare_hardware  becuase it does the things necessary
+after master suspend - disable clock and controller.
+(I thought this was your suggestion for SPI?)
+
+>> +static int __maybe_unused zynq_qspi_resume(struct device *dev)
+>
+> This doesn't appear to be calling init_hw() - is it guaranteed that all
+> the register settings written there are OK after power on?
+>
+>> +     ret = clk_prepare_enable(xqspi->aperclk);
+>> +     if (ret) {
+>> +             dev_err(&pdev->dev, "Unable to enable APER clock.\n");
+>> +             goto remove_master;
+>> +     }
+>> +
+>> +     ret = clk_prepare_enable(xqspi->devclk);
+>> +     if (ret) {
+>> +             dev_err(&pdev->dev, "Unable to enable device clock.\n");
+>> +             goto clk_dis_aper;
+>> +     }
+>
+> The driver isn't using runtime_pm or otherwise disabling the clocks when
+> idle so it looks like the clocks will always be enabled and the
+> management in prepare and unprepare won't have any practical effect.  I
+> can see needing at least one of the clocks for setting up the device but
+> probably either the probe should disable them as it finishes or you
+> should move the clock enable/disable from prepare/unprepare to runtime
+> PM.
+
+OK I understand.
+
+Thanks for the review.
 
 Regards,
 Harini
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
