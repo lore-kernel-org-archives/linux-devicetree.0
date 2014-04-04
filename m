@@ -1,72 +1,109 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] devicetree: Add devicetree bindings documentation
- for Cadence SPI
-Date: Fri, 4 Apr 2014 13:46:37 +0100
-Message-ID: <20140404124637.GT14763@sirena.org.uk>
-References: <1396523431-14519-1-git-send-email-harinik@xilinx.com>
- <1396523431-14519-2-git-send-email-harinik@xilinx.com>
- <20140403213446.GB14763@sirena.org.uk>
- <CAFcVEC+mpHh_d2j6_sdhWS3d2KyXrDYUq6L6jO2Q=SS68Hda2g@mail.gmail.com>
- <20140404100919.GO14763@sirena.org.uk>
- <CAFcVECLDyfFSZFk9fzFKsr6pM=f1nwzGAhjX17z=NsbvWpiDew@mail.gmail.com>
+From: Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 59/75] ARM: l2c: prima2: remove cache size override
+Date: Fri, 4 Apr 2014 21:40:31 +0800
+Message-ID: <CAGsJ_4yUNET5mWEUH-KEtA1ei49Fo2aC20Wmb-jXhs0vF7HSYw@mail.gmail.com>
+References: <20140328151249.GJ7528@n2100.arm.linux.org.uk> <E1WTYZ6-0007Gr-6r@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="EOP8HhwRQvhZjZeP"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAFcVECLDyfFSZFk9fzFKsr6pM=f1nwzGAhjX17z=NsbvWpiDew-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Harini Katakam <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <E1WTYZ6-0007Gr-6r-eh5Bv4kxaXIANfyc6IWni62ZND6+EDdj@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DL-SHA-WorkGroupLinux <workgroup.linux-kQvG35nSl+M@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+2014-03-28 23:19 GMT+08:00 Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>:
+> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/marco.dtsi  |  2 +-
+>  arch/arm/boot/dts/prima2.dtsi |  2 +-
+>  arch/arm/mach-prima2/l2x0.c   | 34 +---------------------------------
+>  3 files changed, 3 insertions(+), 35 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/marco.dtsi b/arch/arm/boot/dts/marco.dtsi
+> index 1579c3491ccd..247879aa1224 100644
+> --- a/arch/arm/boot/dts/marco.dtsi
+> +++ b/arch/arm/boot/dts/marco.dtsi
+> @@ -36,7 +36,7 @@
+>                 ranges = <0x40000000 0x40000000 0xa0000000>;
+>
+>                 l2-cache-controller@c0030000 {
+> -                       compatible = "sirf,marco-pl310-cache", "arm,pl310-cache";
+> +                       compatible = "arm,pl310-cache";
+>                         reg = <0xc0030000 0x1000>;
+>                         interrupts = <0 59 0>;
+>                         arm,tag-latency = <1 1 1>;
+> diff --git a/arch/arm/boot/dts/prima2.dtsi b/arch/arm/boot/dts/prima2.dtsi
+> index 0e219932d7cc..29b578727b0a 100644
+> --- a/arch/arm/boot/dts/prima2.dtsi
+> +++ b/arch/arm/boot/dts/prima2.dtsi
+> @@ -48,7 +48,7 @@
+>                 ranges = <0x40000000 0x40000000 0x80000000>;
+>
+>                 l2-cache-controller@80040000 {
+> -                       compatible = "arm,pl310-cache", "sirf,prima2-pl310-cache";
+> +                       compatible = "arm,pl310-cache";
+>                         reg = <0x80040000 0x1000>;
+>                         interrupts = <59>;
+>                         arm,tag-latency = <1 1 1>;
+> diff --git a/arch/arm/mach-prima2/l2x0.c b/arch/arm/mach-prima2/l2x0.c
+> index 3a4eda45171e..09f68f046830 100644
+> --- a/arch/arm/mach-prima2/l2x0.c
+> +++ b/arch/arm/mach-prima2/l2x0.c
+> @@ -8,42 +8,10 @@
+>
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+> -#include <linux/of.h>
+>  #include <asm/hardware/cache-l2x0.h>
+>
+> -struct l2x0_aux
+> -{
+> -       u32 val;
+> -       u32 mask;
+> -};
+> -
+> -static struct l2x0_aux prima2_l2x0_aux __initconst = {
+> -       .val = L2C_AUX_CTRL_WAY_SIZE(2),
+> -       .mask = 0,
+> -};
+> -
+> -static struct l2x0_aux marco_l2x0_aux __initconst = {
+> -       .val = L2C_AUX_CTRL_WAY_SIZE(2) | L310_AUX_CTRL_ASSOCIATIVITY_16,
+> -       .mask = L2X0_AUX_CTRL_MASK,
+> -};
+> -
+> -static struct of_device_id sirf_l2x0_ids[] __initconst = {
+> -       { .compatible = "sirf,prima2-pl310-cache", .data = &prima2_l2x0_aux, },
+> -       { .compatible = "sirf,marco-pl310-cache", .data = &marco_l2x0_aux, },
+> -       {},
+> -};
+> -
+>  static int __init sirfsoc_l2x0_init(void)
+>  {
+> -       struct device_node *np;
+> -       const struct l2x0_aux *aux;
+> -
+> -       np = of_find_matching_node(NULL, sirf_l2x0_ids);
+> -       if (np) {
+> -               aux = of_match_node(sirf_l2x0_ids, np)->data;
+> -               return l2x0_of_init(aux->val, aux->mask);
+> -       }
+> -
+> -       return 0;
+> +       return l2x0_of_init(0, ~0);
 
---EOP8HhwRQvhZjZeP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Russell, as i mailed you before, pre-set L2 has disabled
+write_combined, here we can make the bit restored.
 
-On Fri, Apr 04, 2014 at 05:44:23PM +0530, Harini Katakam wrote:
-> On Fri, Apr 4, 2014 at 3:39 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > On Fri, Apr 04, 2014 at 08:30:38AM +0530, Harini Katakam wrote:
+>  }
+>  early_initcall(sirfsoc_l2x0_init);
+> --
+> 1.8.3.1
+>
 
-> >> This IP can drive 4 slaves.
-> >> The CS line to be driven is selected in spi device structure and
-> >> that is driven by the software.
-
-> > So why specify this in the binding at all?  If the device always has the
-> > same number of chip selects it's redundant.
-
-> I'm sorry, I should have explained that better.
-> The IP can support upto 4 chip selects.
-> The num-cs value here is the number of chip selects actually used on the board.
-
-Why does that need to be configured?  Surely the presence of slaves is
-enough information.
-
---EOP8HhwRQvhZjZeP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTPqmpAAoJELSic+t+oim9R04QAI7uxIX6rvg8RPCBrtsMu9V4
-14kUK42WQppfs05BN0DMCqNRPY/w7Et9k1grbaon7BjdZ0NVTyIuovxpYiPuHDWF
-mzElgFWr5FExev8vLpiwac5W5GGc2z2ffmJd1tI4LyYvGMpqxP8xa1Qbj/wcq2pm
-/5l63fR2k1UEPvtdzlvuG+Hf8fv7Jnkjbvt69M91dEJtiVixzuwxi9888KN+pSIY
-D9UMSd7e/6nmSC3117p50mD6bb6YU/UDqGzS9BelOfZy/wiAswX5fQn3/83TC68u
-cmAf7C/mUTuq60zhVyhFdb0PYEQ5COumye2SaKhfHymU+457xDF5ctNIZJjWPWHW
-oRkQ3kOSn/mIyycBLfZAFs9bHqd++0exgWzod2ri3Hh1bJ39I9kzazXac9CO0Cwm
-J6L1F6fML7+Vbr+s8XOjqtRfn3g/9TEXycQpEvE8d1SJKPHs5rG1uSFJTUl8E8S7
-i4rl/QDJqAqJ0yx4OilSoAKisFQ0nrQ2T/9OJu4c2aWvCeOchdsP9ix7/VO959Le
-3Jzs+YuGEzgM+ZzHRM9LKseftTAqK/wMo2tjS3FgsMKahlb9koxnnD9EBhxyRzVG
-J8EDcN55uxsXOpaXK+vh5vk3Hhw87I/IIyWSjDRaoB6MRkKttO+FVxeHwV4wnEYh
-YnC44F3xxQKtjbR97a97
-=8/gz
------END PGP SIGNATURE-----
-
---EOP8HhwRQvhZjZeP--
+-barry
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
