@@ -1,127 +1,49 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v2 1/2] usb: doc: udc-xilinx: Add devicetree bindings
-Date: Fri, 04 Apr 2014 07:52:04 +0200
-Message-ID: <533E4884.1020907@monstr.eu>
-References: <5a9b0116-246c-40a0-b894-3321c74648de@CH1EHSMHS007.ehs.local> <20140403145934.GE14162@saruman.home>
-Reply-To: monstr@monstr.eu
+From: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
+Subject: Re: [patch] irqchip/irq-crossbar: not allocating enough memory
+Date: Fri, 4 Apr 2014 12:00:36 +0530
+Message-ID: <533E518C.5020807@ti.com>
+References: <20140403072134.GA14286@mwanda>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="ktmQKHiMnuAePgwjbCw4dTPXkD2C3IPII"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140403145934.GE14162@saruman.home>
-Sender: linux-kernel-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, michals@xilinx.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140403072134.GA14286@mwanda>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---ktmQKHiMnuAePgwjbCw4dTPXkD2C3IPII
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Thursday 03 April 2014 12:51 PM, Dan Carpenter wrote:
+> We are allocating the size of a pointer and not the size of the data.
+> This will lead to memory corruption.
+>
+> There isn't actually a "cb_device" struct, btw.  The code is only able
+> to compile because GCC knows that all pointers are the same size.
+>
+> Fixes: 96ca848ef7ea ('DRIVERS: IRQCHIP: CROSSBAR: Add support for Crossbar IP')
+> Signed-off-by: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+>
+> diff --git a/drivers/irqchip/irq-crossbar.c b/drivers/irqchip/irq-crossbar.c
+> index fc817d2..3d15d16 100644
+> --- a/drivers/irqchip/irq-crossbar.c
+> +++ b/drivers/irqchip/irq-crossbar.c
+> @@ -107,7 +107,7 @@ static int __init crossbar_of_init(struct device_node *node)
+>  	int i, size, max, reserved = 0, entry;
+>  	const __be32 *irqsr;
+>  
+> -	cb = kzalloc(sizeof(struct cb_device *), GFP_KERNEL);
+> +	cb = kzalloc(sizeof(*cb), GFP_KERNEL);
+>  
+>  	if (!cb)
+>  		return -ENOMEM;
+Yes. correct. Thanks for the catch.
 
-On 04/03/2014 04:59 PM, Felipe Balbi wrote:
-> On Thu, Apr 03, 2014 at 01:05:18PM +0530, Subbaraya Sundeep Bhatta wrot=
-e:
->> Add devicetree bindings for Xilinx axi udc driver.
->>
->> Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
->> ---
->> Changes for v2:
->> 	- replaced xlnx,include-dma with xlnx,has-builtin-dma
->>
->>  .../devicetree/bindings/usb/udc-xilinx.txt         |   20 +++++++++++=
-+++++++++
->>  1 files changed, 20 insertions(+), 0 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/usb/udc-xilinx.t=
-xt
->>
->> diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt b/Do=
-cumentation/devicetree/bindings/usb/udc-xilinx.txt
->> new file mode 100644
->> index 0000000..7c24fac
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
->> @@ -0,0 +1,20 @@
->> +Xilinx AXI USB2 device controller
->> +
->> +Required properties:
->> +- compatible		: Should be "xlnx,axi-usb2-device-4.00.a"
->> +- reg			: Physical base address and size of the Axi USB2
->> +			  device registers map.
->> +- interrupts		: Property with a value describing the interrupt
->> +			  number.
->> +- interrupt-parent	: Must be core interrupt controller
->> +- xlnx,has-builtin-dma	: if DMA is included
->=20
-> isn't there a configuration register to tell you this ?
-
-I have checked this with Sundeep and there is nothing like that in the HW=
-=2E
-
->=20
->> +
->> +Example:
->> + 		axi-usb2-device@42e00000 {
->> +                        compatible =3D "xlnx,axi-usb2-device-4.00.a";=
-
->> +                        interrupt-parent =3D <0x1>;
->=20
-> why isn't interrupt-parent a phandle ?
-
-Just for the record: Using number here should be also fine because DTC
-is converting it to numbers with linux,phandle and phandle.
-[linux-next]$ dtc -O dts -I dtb /tftpboot/devicetree.dtb | less
-=2E..
-                ps7-scugic@f8f01000 {
-                        #address-cells =3D <0x2>;
-                        #interrupt-cells =3D <0x3>;
-                        #size-cells =3D <0x1>;
-                        compatible =3D "arm,cortex-a9-gic", "arm,gic";
-                        interrupt-controller;
-                        num_cpus =3D <0x2>;
-                        num_interrupts =3D <0x60>;
-                        reg =3D <0xf8f01000 0x1000 0xf8f00100 0x100>;
-                        linux,phandle =3D <0x3>;
-                        phandle =3D <0x3>;
-                };
-
-                ps7-scutimer@f8f00600 {
-                        clocks =3D <0x2 0x4>;
-                        compatible =3D "arm,cortex-a9-twd-timer";
-                        interrupt-parent =3D <0x3>;
-                        interrupts =3D <0x1 0xd 0x301>;
-                        reg =3D <0xf8f00600 0x20>;
-                };
-=2E..
-
-but anyway Sundeep with change it to any sensible value <&intc>;
-
-Thanks for pointing to it,
-Michal
+Acked-by: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
 
 
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---ktmQKHiMnuAePgwjbCw4dTPXkD2C3IPII
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlM+SIQACgkQykllyylKDCH/yACfaGnZM5oUhMYf7zFW1sD6kcOn
-DugAn0AxYyiQ3hxmyQ6RVUue6fm9HJxc
-=ugKb
------END PGP SIGNATURE-----
-
---ktmQKHiMnuAePgwjbCw4dTPXkD2C3IPII--
+Regards,
+ Sricharan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
