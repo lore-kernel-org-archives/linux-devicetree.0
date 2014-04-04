@@ -1,97 +1,151 @@
-From: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCHv2] of: fix of_update_property again
-Date: Fri, 4 Apr 2014 16:52:31 +0800
-Message-ID: <1396601551-26857-1-git-send-email-Li.Xiubo@freescale.com>
+From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
+Subject: RE: [PATCH 1/2] ASoC: fsl_sai: Add clock control for SAI
+Date: Fri, 4 Apr 2014 09:43:12 +0000
+Message-ID: <f713ce2310f44ef883194429ba97d4a8@BY2PR03MB505.namprd03.prod.outlook.com>
+References: <cover.1396352401.git.Guangyu.Chen@freescale.com>
+ <87d225a25812d730c0865f9d0bb733c67d8b3ed1.1396352401.git.Guangyu.Chen@freescale.com>
+ <49295d4f0f0f42c4b9c6de77583b978e@BY2PR03MB505.namprd03.prod.outlook.com>
+ <20140404092804.GA2735@MrMyself>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140404092804.GA2735@MrMyself>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: "guangyu.chen@freescale.com" <guangyu.chen@freescale.com>
+Cc: "broonie@kernel.org" <broonie@kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "timur@tabi.org" <timur@tabi.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob@landley.net" <rob@landley.net>, "galak@codeaurora.org" <galak@codeaurora.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The of_update_property() is intented to update a property in a node
-and if the property does not exist, will add it.
+> Subject: Re: [PATCH 1/2] ASoC: fsl_sai: Add clock control for SAI
+> 
+> Hi Xiubo,
+> 
+> On Fri, Apr 04, 2014 at 05:24:39PM +0800, Xiubo Li-B47053 wrote:
+> > Hi,
+> >
+> > I have test this series on my Vybrid-TWR board and it works happily.
+> 
+> You just checked the wrong version. I've sent a mail to let people disregard
+> this version and a newer v2.
+> 
 
-The second search of the property is possibly won't be found, that
-maybe removed by other thread just before the second search begain.
+Sorry, I didn't receive these, I will search it in the web page.
 
-Using the __of_find_property() and __of_add_property() instead and
-move them into lock operations.
+> >
+> > [...]
+> > > diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+> > > index 3847d2a..2d749df 100644
+> > > --- a/sound/soc/fsl/fsl_sai.c
+> > > +++ b/sound/soc/fsl/fsl_sai.c
+> > > @@ -428,5 +428,18 @@ static int fsl_sai_startup(struct snd_pcm_substream
+> > > *substream,
+> > >  {
+> > >  	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
+> > > -	u32 reg;
+> > > +	struct device *dev = &sai->pdev->dev;
+> > > +	u32 reg, ret;
+> > > +
+> >
+> > I'd prefer:
+> >   +	int ret;
+> 
+> Just like last time I said, it would be converted to 'int' any way. There's
+> no much difference between them.
+> 
 
-Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- drivers/of/base.c | 36 +++++++++++++++++-------------------
- 1 file changed, 17 insertions(+), 19 deletions(-)
+Yes, it is...
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 418a4ff9..a2ecf71 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1767,7 +1767,7 @@ int of_update_property(struct device_node *np, struct property *newprop)
- {
- 	struct property **next, *oldprop;
- 	unsigned long flags;
--	int rc, found = 0;
-+	int rc;
- 
- 	rc = of_property_notify(OF_RECONFIG_UPDATE_PROPERTY, np, newprop);
- 	if (rc)
-@@ -1776,23 +1776,24 @@ int of_update_property(struct device_node *np, struct property *newprop)
- 	if (!newprop->name)
- 		return -EINVAL;
- 
--	oldprop = of_find_property(np, newprop->name, NULL);
--	if (!oldprop)
--		return of_add_property(np, newprop);
--
- 	raw_spin_lock_irqsave(&devtree_lock, flags);
--	next = &np->properties;
--	while (*next) {
--		if (*next == oldprop) {
--			/* found the node */
--			newprop->next = oldprop->next;
--			*next = newprop;
--			oldprop->next = np->deadprops;
--			np->deadprops = oldprop;
--			found = 1;
--			break;
-+	oldprop = __of_find_property(np, newprop->name, NULL);
-+	if (!oldprop) {
-+		/* add the new node */
-+		rc = __of_add_property(np, newprop);
-+	} else {
-+		/* found the node and then replace it */
-+		next = &np->properties;
-+		while (*next) {
-+			if (*next == oldprop) {
-+				newprop->next = oldprop->next;
-+				*next = newprop;
-+				oldprop->next = np->deadprops;
-+				np->deadprops = oldprop;
-+				break;
-+			}
-+			next = &(*next)->next;
- 		}
--		next = &(*next)->next;
- 	}
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 	if (rc)
-@@ -1803,9 +1804,6 @@ int of_update_property(struct device_node *np, struct property *newprop)
- 		sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
- 	__of_add_property_sysfs(np, newprop);
- 
--	if (!found)
--		return -ENODEV;
--
- 	return 0;
- }
- 
--- 
-1.8.4
+I have ever encounter something like this in the feature maybe someone will
+do the following check:
+
+If (ret < 0)
+	...
+
+Just one potential problem and one suggestion.
+
+Thanks,
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >
+> > > +	ret = clk_prepare_enable(sai->ipg_clk);
+> > > +	if (ret) {
+> > > +		dev_err(dev, "failed to prepare and enable ipg clock\n");
+> > > +		return ret;
+> > > +	}
+> > > +
+> >
+> > [...]
+> >
+> > > @@ -609,5 +630,5 @@ static int fsl_sai_probe(struct platform_device *pdev)
+> > >
+> > >  	sai->regmap = devm_regmap_init_mmio_clk(&pdev->dev,
+> > > -			"sai", base, &fsl_sai_regmap_config);
+> > > +			"ipg", base, &fsl_sai_regmap_config);
+> > >  	if (IS_ERR(sai->regmap)) {
+> > >  		dev_err(&pdev->dev, "regmap init failed\n");
+> > > @@ -615,4 +636,16 @@ static int fsl_sai_probe(struct platform_device *pdev)
+> > >  	}
+> > >
+> > > +	sai->ipg_clk = devm_clk_get(&pdev->dev, "ipg");
+> > > +	if (IS_ERR(sai->ipg_clk)) {
+> > > +		dev_err(&pdev->dev, "failed to get ipg clock\n");
+> > > +		return PTR_ERR(sai->ipg_clk);
+> > > +	}
+> > > +
+> >
+> > Since the 'ipg' clock is just intend to be used for registers accessing and
+> > We are using the regmap_init_mmio_clk(), so we can just drop it here and
+> > Let the regmap APIs to do the clock options properly.
+> 
+> This 'ipg' clock, which I renamed in v2 to 'bus clock', is not just used
+> in the way you said but also able to drive bit clock as your own code in
+> the fsl_sai_set_dai_sysclk_tr(), and as reference manual describes:
+> 
+> 52.3.1.3 Bus clock
+> The bus clock is used by the control and configuration registers and to
+> generate synchronous interrupts and DMA requests.
+> 
+> Thanks,
+> Nicolin
+> 
+> >
+> > Otherwise it look good to me.
+> >
+> > After this:
+> > Acked-by: Xiubo Li <Li.Xiubo@freescale.com>
+> >
+> >
+> >
+> > Thanks,
+> >
+> > Brs,
+> > Xiubo
+> >
+> >
+> >
+> >
+> > > +	sai->sai_clk = devm_clk_get(&pdev->dev, "sai");
+> > > +	if (IS_ERR(sai->sai_clk)) {
+> > > +		dev_err(&pdev->dev, "failed to get sai clock\n");
+> > > +		return PTR_ERR(sai->sai_clk);
+> > > +	}
+> > > +
+> > >  	irq = platform_get_irq(pdev, 0);
+> > >  	if (irq < 0) {
+> > > diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
+> > > index 677670d..cbaf114 100644
+> > > --- a/sound/soc/fsl/fsl_sai.h
+> > > +++ b/sound/soc/fsl/fsl_sai.h
+> > > @@ -127,4 +127,6 @@ struct fsl_sai {
+> > >  	struct platform_device *pdev;
+> > >  	struct regmap *regmap;
+> > > +	struct clk *ipg_clk;
+> > > +	struct clk *sai_clk;
+> > >
+> > >  	bool big_endian_regs;
+> > > --
+> > > 1.8.4
+> > >
+> >
+
