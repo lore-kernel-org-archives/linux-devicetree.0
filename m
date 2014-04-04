@@ -1,184 +1,147 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [GIT PULL] exynos-drm-next
-Date: Fri, 4 Apr 2014 17:26:54 +0900
-Message-ID: <CAAQKjZPB13x608AdY0oBNeHWJMnKk1EVCX0=+S4iR_bHY--f6A@mail.gmail.com>
-References: <1396546492-9978-1-git-send-email-inki.dae@samsung.com>
- <533E3C39.7030705@gmail.com>
- <00e301cf4fc7$8b8f6330$a2ae2990$%dae@samsung.com>
- <533E5F1E.9050609@samsung.com>
- <010b01cf4fda$46019f50$d204ddf0$%dae@samsung.com>
- <533E67BA.6030202@samsung.com>
+From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] of: fix of_update_property [v2]
+Date: Fri, 4 Apr 2014 08:30:42 +0000
+Message-ID: <179ad743feea49bb946a3b31a629e229@BY2PR03MB505.namprd03.prod.outlook.com>
+References: <1396331486-29354-1-git-send-email-Li.Xiubo@freescale.com> <
+ 20140401091920.E8E45C408A6@trevor.secretlab.ca> <
+ 9622800c30f5412a9bbb9dfd95def751@BY2PR03MB505.namprd03.prod.outlook.com>
+ <20140403175112.DF1FFC4200D@trevor.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <533E67BA.6030202@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robh+dt@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140403175112.DF1FFC4200D-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-04-04 17:05 GMT+09:00, Tomasz Figa <t.figa@samsung.com>:
-> On 04.04.2014 09:48, Inki Dae wrote:
->>
->>
->>> -----Original Message-----
->>> From: Tomasz Figa [mailto:t.figa@samsung.com]
->>> Sent: Friday, April 04, 2014 4:29 PM
->>> To: Inki Dae; 'Tomasz Figa'; airlied@linux.ie; dri-
->>> devel@lists.freedesktop.org; 'Marek Szyprowski';
->>> devicetree@vger.kernel.org; Grant Likely; Rob Herring
->>> Subject: Re: [GIT PULL] exynos-drm-next
->>>
->>> On 04.04.2014 07:34, Inki Dae wrote:
->>>> Hi Tomasz,
->>>>
->>>>> -----Original Message-----
->>>>> From: Tomasz Figa [mailto:tomasz.figa@gmail.com]
->>>>> Sent: Friday, April 04, 2014 2:00 PM
->>>>> To: inki.dae@samsung.com; airlied@linux.ie; dri-
->>>>> devel@lists.freedesktop.org
->>>>> Subject: Re: [GIT PULL] exynos-drm-next
->>>>>
->>>>> Hi Inki,
->>>>>
->>>>> On 03.04.2014 19:34, inki.dae@samsung.com wrote:
->>>>>> Hi Dave,
->>>>>>       Sorry for late.
->>>>>>       This pull request includes MIPI-DSI driver, two panel drivers,
->>>>>>       super device support, and relevant dt bindings.
->>>>>>
->>>>>> Summaries:
->>>>>> - Add MIPI-DSI Driver, and dt bindigs
->>>>>> - Add S6E8AA0 MIPI-DSI based panel drivers, and dt bindings
->>>>>> - Add LD9040 parallel panel driver
->>>>>>      . this driver is placed in drivers/gpu/drm/panel, and it seems
->>>>>>        to be used for exynos drm as of now,
->>>>>> - Add super device support, and dt bindings
->>>>>>      . this patch resolves the probe order issue to sub drivers
->>>>>>        without specific lists
->>>>>
->>>>> I don't think the DT bindings have been Acked by DT maintainers,
->>>>> which is necessary to merge them.
->>>>>
->>>>> Also I believe more discussion is needed on this, but I didn't have
->>>>> time to comment on this series yet. Please hold off with merging the
->>>>> supernode series yet.
->>>>
->>>> I sent a email about review request to you but I didn't get any answer
->>>> from you.
->>>
->>> It's been just three days ago and I just didn't find time yet to review
->>
->> No, the email was just ping. My original RFC patch series had been posted
->> March 3, about 1 month ago, And for my official patch series, eight days
->> ago.
->> So the email I sent three days ago was just a ping that I requested for
->> you
->> to review the patch series.
->
-> As I said, it was not even posted to samsung-soc, the central ML for
-> Samsung SoC related patches, as mandated by MAINTAINERS file. I learned
-> about its presence just after your ping.
->
->>> them. I would like to be able to review all the patches straight after
->>> them being posted, but unfortunately that's not the only thing I have to
->>> do.
->>>
->>
->> So I think there was no any comments from you for a long time.
->>
->>> Anyway, a common practice in open source world is to let the patches
->>> wait
->>> on the mailing lists for two weeks for people to find some time to
->>> review
->>> them and only then apply. There might be people that don't work full
->>> time
->>> on this area, but still would be interested to do a review in some free
->>> time.
->>>
->>> Also, neither version of this series have been posted to
->>> linux-samsung-soc
->>> mailing list, which is also a key to have a broader review. Note that
->>> this
->>> ML is listed in MAINTAINERS file for all kernel files with "exynos" in
->>> name.
->>>
->>> ARM/S5P EXYNOS ARM ARCHITECTURES
->>> M:      Kukjin Kim <kgene.kim@samsung.com>
->>> L:      linux-arm-kernel@lists.infradead.org (moderated for
->> non-subscribers)
->>> L:      linux-samsung-soc@vger.kernel.org (moderated for
->>> non-subscribers)
->>> S:      Maintained
->>> F:      arch/arm/mach-s5p*/
->>> F:      arch/arm/mach-exynos*/
->>> N:      exynos
->>>
->>>
->>>> And I think super node concept was already accepted, and relevant
->>>> codes, component framework, has already been merged to mainline. And
->>>> Linux staging next has already such dt bindings. Please see imx dts
->>> files.
->>>
->>> Yes, they are, but for other platforms not this particular instance.
->>>
->>> Any new DT bindings introduced are needed to have an ACK from one of DT
->>> maintainers to be merged, unless you can't get any reply from any of
->>> them
->>> for a longer time, usually 3 weeks from posting the series to be
->>> applied.
->>
->> So should I wait for more times?
->>
->
-> Since this series is not a dependency for any other patches queued for
-> this release and it doesn't add any new functionality, I don't think
-> there is any need to hurry with it.
->
+> Subject: RE: [PATCH] of: fix of_update_property [v2]
+> 
+> On Wed, 2 Apr 2014 05:29:53 +0000, "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org"
+> <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> >
+> >
+> > > > @@ -1776,25 +1776,26 @@ int of_update_property(struct device_node *np,
+> > > struct property *newprop)
+> > > >  	if (!newprop->name)
+> > > >  		return -EINVAL;
+> > > >
+> > > > -	oldprop = of_find_property(np, newprop->name, NULL);
+> > > > -	if (!oldprop)
+> > > > -		return of_add_property(np, newprop);
+> > > > -
+> > > >  	raw_spin_lock_irqsave(&devtree_lock, flags);
+> > > > -	next = &np->properties;
+> > > > -	while (*next) {
+> > > > +	oldprop = __of_find_property(np, newprop->name, NULL);
+> > > > +	if (!oldprop) {
+> > > > +		/* add the node */
+> > > > +		rc = __of_add_property(np, newprop);
+> > > > +	} else {
+> > >
+> > > if you changed this line to:
+> > > 	} else while (*next) {
+> > > then most of the other changes go away. You don't need the separate
+> > > while loop
+> >
 
-That was times enough to me, one month! And that is for easy to
-maintain this patch sets.
+Well, this will output some errors by using the './scripts/checkpatch.pl'
+Checking.
 
->>>
->>> Of course standard pinging rules apply, so you should ping DT
->>> maintainers
->>> first before applying such series.
->>
->>
->> The email I sent to you three days ago was that.
->
-> Unfortunately I'm not a DT maintainer, so I don't qualify here. You can
-> see list of DT maintainers in MAINTAINERS file:
->
-> OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
-> M:      Rob Herring <robh+dt@kernel.org>
-> M:      Pawel Moll <pawel.moll@arm.com>
-> M:      Mark Rutland <mark.rutland@arm.com>
-> M:      Ian Campbell <ijc+devicetree@hellion.org.uk>
-> M:      Kumar Gala <galak@codeaurora.org>
-> L:      devicetree@vger.kernel.org
-> S:      Maintained
-> F:      Documentation/devicetree/
-> F:      arch/*/boot/dts/
-> F:      include/dt-bindings/
->
+$ ./scripts/checkpatch.pl
 
-Yes, that was what I missed. I should have cced above people. Ok, will
-remove the supernode feature from next tree.
+ERROR: trailing statements should be on next line
+#1785: FILE: of/base.c:1785:
++       else while (*next) {
 
-> Best regards,
-> Tomasz
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
->
+ERROR: trailing statements should be on next line
+#1785: FILE: of/base.c:1785:
++       else while (*next) {
+
+Should be split into two lines...
+
+Thanks,
+
+BRs
+Xiubo
+
+
+> > Yes, I will fix this.
+> >
+> >
+> > > and the function remains largely identical aside from moving
+> > > the __of_find_property() into the spinlock.
+> > >
+> >
+> > But, from the following codes, we can see that, if oldprop !=  NULL
+> > Meaning that we have found it, and should just do the updatation later:
+> > +++++++++++++++
+> > 	oldprop = of_find_property(np, newprop->name, NULL);
+> > 	if (!oldprop)
+> > 		return of_add_property(np, newprop);
+> > ---------------
+> >
+> >
+> >
+> > > >  			/* found the node */
+> > > >  			newprop->next = oldprop->next;
+> > > >  			*next = newprop;
+> > > >  			oldprop->next = np->deadprops;
+> > > >  			np->deadprops = oldprop;
+> > > > -			found = 1;
+> >
+> > And why the 'found' flag is here is that the oldprop maybe removed
+> > just before the spin_lock and after of_find_property().
+> >
+> > And so use and move __of_find_property() and __of_add_property() into
+> > the spinlock could avoid this...
+> 
+> Isn't that what I said?
+> 
+> g.
+> 
+> >
+> >
+> > Thanks,
+> > --
+> >
+> > BRs,
+> > Xiubo
+> >
+> >
+> > > > -			break;
+> > > >  		}
+> > > > -		next = &(*next)->next;
+> > > >  	}
+> > > >  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> > > > +
+> > > >  	if (rc)
+> > > >  		return rc;
+> > > >
+> > > > @@ -1803,9 +1804,6 @@ int of_update_property(struct device_node *np,
+> struct
+> > > property *newprop)
+> > > >  		sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
+> > > >  	__of_add_property_sysfs(np, newprop);
+> > > >
+> > > > -	if (!found)
+> > > > -		return -ENODEV;
+> > > > -
+> > > >  	return 0;
+> > > >  }
+> > > >
+> > > > --
+> > > > 1.8.4
+> > > >
+> > > >
+> > >
+> > >
+> >
+> 
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
