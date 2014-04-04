@@ -1,81 +1,67 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 04/19] mmc: mmci: Add DT bindings for signal direction
-Date: Fri, 4 Apr 2014 13:47:15 +0200
-Message-ID: <CAPDyKFr5bC8Qf=P9yLi=Qg0Q2hP6HqMc=4ke8D60fBksjo5RLA@mail.gmail.com>
-References: <1396279100-2920-1-git-send-email-ulf.hansson@linaro.org>
-	<1396279100-2920-5-git-send-email-ulf.hansson@linaro.org>
-	<CAL_JsqL1f+REzDaAztEU5ZCxf39Pu3GcKo5YO3PwCLgt85hxRQ@mail.gmail.com>
+From: Harini Katakam <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] devicetree: Add devicetree bindings documentation
+ for Cadence SPI
+Date: Fri, 4 Apr 2014 17:44:23 +0530
+Message-ID: <CAFcVECLDyfFSZFk9fzFKsr6pM=f1nwzGAhjX17z=NsbvWpiDew@mail.gmail.com>
+References: <1396523431-14519-1-git-send-email-harinik@xilinx.com>
+	<1396523431-14519-2-git-send-email-harinik@xilinx.com>
+	<20140403213446.GB14763@sirena.org.uk>
+	<CAFcVEC+mpHh_d2j6_sdhWS3d2KyXrDYUq6L6jO2Q=SS68Hda2g@mail.gmail.com>
+	<20140404100919.GO14763@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqL1f+REzDaAztEU5ZCxf39Pu3GcKo5YO3PwCLgt85hxRQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140404100919.GO14763-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3 April 2014 22:05, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Mon, Mar 31, 2014 at 10:18 AM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> Some variants have support for indicating the bus signal directions,
->> which currently are configured through platform data.
->>
->> Add corresponding DT bindings to enable us to move away from using the
->> platform data.
->>
->> Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/mmc/mmci.txt |   11 ++++++++++-
->>  drivers/mmc/host/mmci.c                        |   11 +++++++++++
->>  2 files changed, 21 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/mmci.txt b/Documentation/devicetree/bindings/mmc/mmci.txt
->> index ff233d1..9bd2ffa 100644
->> --- a/Documentation/devicetree/bindings/mmc/mmci.txt
->> +++ b/Documentation/devicetree/bindings/mmc/mmci.txt
->> @@ -4,7 +4,8 @@ The ARM PrimeCell MMCI PL180 and PL181 provides an interface for
->>  reading and writing to MultiMedia and SD cards alike.
->>
->>  This file documents differences between the core properties described
->> -by mmc.txt and the properties used by the mmci driver.
->> +by mmc.txt and the properties used by the mmci driver. Using "st" as
->> +the prefix for a property, indicates support by the ST Micro variant.
->>
->>  Required properties:
->>  - compatible             : contains "arm,pl18x", "arm,primecell".
->> @@ -18,6 +19,11 @@ Optional properties:
->>  - mmc-cap-sd-highspeed   : indicates whether SD is high speed capable.
->>  - vqmmc-supply           : phandle to the regulator device tree node, mentioned
->>                             as the VCCQ/VDD_IO supply in the eMMC/SD specs.
->> +- st,sig-dir-dat0        : bus signal direction pin used for DAT[0].
->> +- st,sig-dir-dat2        : bus signal direction pin used for DAT[2].
->> +- st,sig-dir-dat31       : bus signal direction pin used for DAT[3] and DAT[1].
->> +- st,sig-dir-dat74       : bus signal direction pin used for DAT[4] to DAT[7].
->> +- st,sig-dir-cmd         : cmd signal direction pin used for CMD.
+Hi Mark,
+
+On Fri, Apr 4, 2014 at 3:39 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Apr 04, 2014 at 08:30:38AM +0530, Harini Katakam wrote:
+>> On Fri, Apr 4, 2014 at 3:04 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> > On Thu, Apr 03, 2014 at 04:40:31PM +0530, Harini Katakam wrote:
 >
-> What I'm still not clear on is when you set these properties and when
-> you don't. For example, is any combination valid and why wouldn't all
-> data signals be configured the same way?
+>> >> +Optional properties:
+>> >> +- num-cs             : Number of chip selects used.
+>
+>> > How does this translate to the hardware?
+>
+>> This IP can drive 4 slaves.
+>> The CS line to be driven is selected in spi device structure and
+>> that is driven by the software.
+>
+> So why specify this in the binding at all?  If the device always has the
+> same number of chip selects it's redundant.
 
-Several combinations are possible.
-
-This is a matter of configuring the internal logic of the primecell to
-which signals it shall use. That will be depending on what signal
-connectors there are available on the external voltage level shifter
-circuit and how you have routed these to the primecell.
-
-The signals are used to introduce a delta delay between the external
-level shifter drive enable and internal IO drive enable. It's needed
-to be able to cope with the electrical parts of the SD card
-specification.
-
-Hope this answers your questions. :-)
-
-Kind regards
-Ulf Hansson
+I'm sorry, I should have explained that better.
+The IP can support upto 4 chip selects.
+The num-cs value here is the number of chip selects actually used on the board.
 
 >
-> Rob
+>> >> +             num-cs = /bits/ 16 <4>;
+>
+>> > What's going on with the /bits/ - is this something that's required for
+>> > the property?
+>
+>> The master->num-chipselect property is 16 bit but writing <4> here directly
+>> leads to 0 being read in of_property_read (because it's big endian).
+>> Instead using of property read u32 and then copying, we decided to do this.
+>> This was discussed on v2 between Michal and Rob:
+>
+> No, don't do that.  You're contorting the binding to serve Linux's
+> implementation needs and you've not documented this requirement either.
+> If there *was* a need to have the number be 16 bits you'd need to
+> document that reqirement in the binding, though like I say I don't think
+> the number needs to be there at all.
+
+OK. I'll remove the /bits/ 16 and handle it in the driver.
+
+Regards,
+Harini
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
