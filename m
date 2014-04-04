@@ -1,131 +1,74 @@
-From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [RFC 2/5] ARM: tegra: Add new PCIe regulator properties
-Date: Fri, 4 Apr 2014 16:49:26 +0200
-Message-ID: <1396622969-17837-3-git-send-email-treding@nvidia.com>
-References: <1396622969-17837-1-git-send-email-treding@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396622969-17837-1-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Tomasz Stanislawski <t.stanislaws@samsung.com>
+Subject: [PATCH 0/4] Update to Exynos clocks
+Date: Fri, 04 Apr 2014 16:53:17 +0200
+Message-ID: <1396623201-26000-1-git-send-email-t.stanislaws@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: t.figa@samsung.com, mturquette@linaro.org, kgene.kim@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, kyungmin.park@samsung.com, airlied@linux.ie, rob.herring@calxeda.com, sylvester.nawrocki@gmail.com, a.hajda@samsung.com, kishon@ti.com, Tomasz Stanislawski <t.stanislaws@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-These new properties more accurately reflect the real connections of the
-boards and therefore make it easier to match them up with schematics.
+This patchset adds some updates to clocks for Exynos4 platform and to the clock
+core.  The patches are rebased on linux/next.
 
-Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/tegra20-harmony.dts   | 10 +++++++++-
- arch/arm/boot/dts/tegra20-tamonten.dtsi |  7 +++++++
- arch/arm/boot/dts/tegra20-trimslice.dts |  8 ++++++++
- arch/arm/boot/dts/tegra30-beaver.dts    | 11 +++++++++++
- arch/arm/boot/dts/tegra30-cardhu.dtsi   | 10 ++++++++++
- 5 files changed, 45 insertions(+), 1 deletion(-)
+An interesting part might be 'propagation of clk_set_parent()'.  This feature
+simplifies configuration of complex topologyof clocks by drivers.  Such a
+situation happens for Exynos HDMI driver.
 
-diff --git a/arch/arm/boot/dts/tegra20-harmony.dts b/arch/arm/boot/dts/tegra20-harmony.dts
-index 3fb1f50f6d46..7d5d0aa1778a 100644
---- a/arch/arm/boot/dts/tegra20-harmony.dts
-+++ b/arch/arm/boot/dts/tegra20-harmony.dts
-@@ -561,9 +561,17 @@
- 	};
- 
- 	pcie-controller@80003000 {
-+		status = "okay";
-+
-+		avdd-pex-supply = <&pci_vdd_reg>;
-+		vdd-pex-supply = <&pci_vdd_reg>;
-+		avdd-pex-pll-supply = <&pci_vdd_reg>;
-+		avdd-plle-supply = <&pci_vdd_reg>;
-+		vddio-pex-clk-supply = <&pci_clk_reg>;
-+
-+		/* deprecated */
- 		pex-clk-supply = <&pci_clk_reg>;
- 		vdd-supply = <&pci_vdd_reg>;
--		status = "okay";
- 
- 		pci@1,0 {
- 			status = "okay";
-diff --git a/arch/arm/boot/dts/tegra20-tamonten.dtsi b/arch/arm/boot/dts/tegra20-tamonten.dtsi
-index a1b0d965757f..0e33577750ae 100644
---- a/arch/arm/boot/dts/tegra20-tamonten.dtsi
-+++ b/arch/arm/boot/dts/tegra20-tamonten.dtsi
-@@ -473,6 +473,13 @@
- 	};
- 
- 	pcie-controller@80003000 {
-+		avdd-pex-supply = <&pci_vdd_reg>;
-+		vdd-pex-supply = <&pci_vdd_reg>;
-+		avdd-pex-pll-supply = <&pci_vdd_reg>;
-+		avdd-plle-supply = <&pci_vdd_reg>;
-+		vddio-pex-clk-supply = <&pci_clk_reg>;
-+
-+		/* deprecated */
- 		pex-clk-supply = <&pci_clk_reg>;
- 		vdd-supply = <&pci_vdd_reg>;
- 	};
-diff --git a/arch/arm/boot/dts/tegra20-trimslice.dts b/arch/arm/boot/dts/tegra20-trimslice.dts
-index 216fa6d50c65..401b32e44369 100644
---- a/arch/arm/boot/dts/tegra20-trimslice.dts
-+++ b/arch/arm/boot/dts/tegra20-trimslice.dts
-@@ -318,6 +318,14 @@
- 
- 	pcie-controller@80003000 {
- 		status = "okay";
-+
-+		avdd-pex-supply = <&pci_vdd_reg>;
-+		vdd-pex-supply = <&pci_vdd_reg>;
-+		avdd-pex-pll-supply = <&pci_vdd_reg>;
-+		avdd-plle-supply = <&pci_vdd_reg>;
-+		vddio-pex-clk-supply = <&pci_clk_reg>;
-+
-+		/* deprecated */
- 		pex-clk-supply = <&pci_clk_reg>;
- 		vdd-supply = <&pci_vdd_reg>;
- 
-diff --git a/arch/arm/boot/dts/tegra30-beaver.dts b/arch/arm/boot/dts/tegra30-beaver.dts
-index e93fe45b7803..b434ec1f278a 100644
---- a/arch/arm/boot/dts/tegra30-beaver.dts
-+++ b/arch/arm/boot/dts/tegra30-beaver.dts
-@@ -17,6 +17,17 @@
- 
- 	pcie-controller@00003000 {
- 		status = "okay";
-+
-+		avdd-pexa-supply = <&ldo1_reg>;
-+		vdd-pexa-supply = <&ldo1_reg>;
-+		avdd-pexb-supply = <&ldo1_reg>;
-+		vdd-pexb-supply = <&ldo1_reg>;
-+		avdd-pex-pll-supply = <&ldo1_reg>;
-+		avdd-plle-supply = <&ldo1_reg>;
-+		vddio-pex-ctl-supply = <&sys_3v3_reg>;
-+		hvdd-pex-supply = <&sys_3v3_pexs_reg>;
-+
-+		/* deprecated */
- 		pex-clk-supply = <&sys_3v3_pexs_reg>;
- 		vdd-supply = <&ldo1_reg>;
- 		avdd-supply = <&ldo2_reg>;
-diff --git a/arch/arm/boot/dts/tegra30-cardhu.dtsi b/arch/arm/boot/dts/tegra30-cardhu.dtsi
-index 0cf0848a82d8..55051a808ced 100644
---- a/arch/arm/boot/dts/tegra30-cardhu.dtsi
-+++ b/arch/arm/boot/dts/tegra30-cardhu.dtsi
-@@ -38,6 +38,16 @@
- 
- 	pcie-controller@00003000 {
- 		status = "okay";
-+
-+		/* AVDD_PEXA and VDD_PEXA are grounded on Cardhu. */
-+		avdd-pexb-supply = <&ldo1_reg>;
-+		vdd-pexb-supply = <&ldo1_reg>;
-+		avdd-pex-pll-supply = <&ldo1_reg>;
-+		hvdd-pex-supply = <&pex_hvdd_3v3_reg>;
-+		vddio-pex-ctl-supply = <&sys_3v3_reg>;
-+		avdd-plle-supply = <&ldo2_reg>;
-+
-+		/* deprecated */
- 		pex-clk-supply = <&pex_hvdd_3v3_reg>;
- 		vdd-supply = <&ldo1_reg>;
- 		avdd-supply = <&ldo2_reg>;
+The HDMI device is clocked by sclk_hdmi clock. In older versions of SoC and its
+driver, the clock had two parent clocks: sclk_hdmiphy and sclk_pixel.
+The sclk_hdmi was a gated clock.
+
+In the recent version of Exynos clock provider this topology was slightly
+changed. A new clock named mout_hdmi was introduced.  This new clock represents
+the output of multiplexer that selects between sclk_hdmiphy and sclk_pixel.
+
+After the change the sclk_hdmi is still gated but has a single parent -
+mout_hdmi.
+
+This change caused interesting situation in Exynos HDMI driver because this
+driver used only sclk_hdmi.  Now clk_set_parent(sclk_hdmi, ...) fails because
+sclk_hdmi has a single parent now.  Using mout_hdmi instead of sclk_hdmi will
+not work because clk_enable(mout_hdmi) is not propagated to sclk_hdmi.
+
+To solve this problem, the setup of mout_hdmi was added to Exynos HDMI in the
+patch: "drm/exynos: add mout_hdmi clock in hdmi driver to change parent"
+
+IMO, this change breaks abstraction of clock API reveling too detailed
+information about clock topology to the driver.
+
+Moreover, the driver no longer works with old DT bindings because they provide
+no mout_hdmi clock.
+
+The clock set_parent propagation can be used to fix this.  The clk_set_parent()
+is propagated to a parent as long as the current clock has a single parent and
+has the flag CLK_SET_PARENT_PARENT set.
+
+Now Exynos HDMI can use only sclk_hdmi clock. The clk_enable() gates this clock
+directly and clk_set_parent() is propagated to mout_hdmi.
+
+This new behaviour does not break DT bindings because mout_hdmi would be simply
+ignored.
+
+After this change the 'add mout_hdmi clock' is no longer needed.
+
+Regards,
+Tomasz Stanislawski
+
+Tomasz Stanislawski (4):
+  clk: propagate parent change up one level
+  clk: exynos4: export sclk_hdmiphy clock
+  clk: exynos4: enable clk_set_parent() propagation for sclk_hdmi and
+    sclk_mixer clocks
+  Revert "drm/exynos: add mout_hdmi clock in hdmi driver to change
+    parent"
+
+ drivers/clk/clk.c                    |    6 ++++++
+ drivers/clk/samsung/clk-exynos4.c    |    8 +++++---
+ drivers/gpu/drm/exynos/exynos_hdmi.c |   14 ++++----------
+ include/dt-bindings/clock/exynos4.h  |    1 +
+ include/linux/clk-provider.h         |    1 +
+ 5 files changed, 17 insertions(+), 13 deletions(-)
+
 -- 
-1.9.1
+1.7.9.5
