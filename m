@@ -1,65 +1,67 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: RE: [PATCH] of: fix of_update_property [v2]
-Date: Fri, 04 Apr 2014 15:28:55 +0100
-Message-ID: <20140404142855.D6C42C41E5F@trevor.secretlab.ca>
-References: <1396331486-29354-1-git-send-email-Li.Xiubo@freescale.com> < 20140401091920.E8E45C408A6@trevor.secretlab.ca> < 9622800c30f5412a9bbb9dfd95def751@BY2PR03MB505.namprd03.prod.outlook.com> < 20140403175112.DF1FFC4200D@trevor.secretlab.ca> < 179ad743feea49bb946a3b31a629e229@BY2PR03MB505.namprd03.prod.outlook.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <179ad743feea49bb946a3b31a629e229-+7O3WWA3DPshjIn37xzcLOO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Harini Katakam <harinikatakamlinux@gmail.com>
+Subject: Re: [PATCH v2 2/2] devicetree: Add devicetree bindings documentation
+ for Cadence SPI
+Date: Fri, 4 Apr 2014 20:00:19 +0530
+Message-ID: <CAFcVECJYdW0=r425tWs8y6DJDNh3c75TAzg7+UCNRgLP8WHf+A@mail.gmail.com>
+References: <1396523431-14519-1-git-send-email-harinik@xilinx.com>
+	<1396523431-14519-2-git-send-email-harinik@xilinx.com>
+	<20140403213446.GB14763@sirena.org.uk>
+	<CAFcVEC+mpHh_d2j6_sdhWS3d2KyXrDYUq6L6jO2Q=SS68Hda2g@mail.gmail.com>
+	<20140404100919.GO14763@sirena.org.uk>
+	<CAFcVECLDyfFSZFk9fzFKsr6pM=f1nwzGAhjX17z=NsbvWpiDew@mail.gmail.com>
+	<20140404124637.GT14763@sirena.org.uk>
+	<CAFcVEC+FAAxxxxA8PgcTzLU5UFu=pkDEM4Li06dRmEwA95sz_g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFcVEC+FAAxxxxA8PgcTzLU5UFu=pkDEM4Li06dRmEwA95sz_g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-spi@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 4 Apr 2014 08:30:42 +0000, "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> > Subject: RE: [PATCH] of: fix of_update_property [v2]
-> > 
-> > On Wed, 2 Apr 2014 05:29:53 +0000, "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org"
-> > <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> > >
-> > >
-> > > > > @@ -1776,25 +1776,26 @@ int of_update_property(struct device_node *np,
-> > > > struct property *newprop)
-> > > > >  	if (!newprop->name)
-> > > > >  		return -EINVAL;
-> > > > >
-> > > > > -	oldprop = of_find_property(np, newprop->name, NULL);
-> > > > > -	if (!oldprop)
-> > > > > -		return of_add_property(np, newprop);
-> > > > > -
-> > > > >  	raw_spin_lock_irqsave(&devtree_lock, flags);
-> > > > > -	next = &np->properties;
-> > > > > -	while (*next) {
-> > > > > +	oldprop = __of_find_property(np, newprop->name, NULL);
-> > > > > +	if (!oldprop) {
-> > > > > +		/* add the node */
-> > > > > +		rc = __of_add_property(np, newprop);
-> > > > > +	} else {
-> > > >
-> > > > if you changed this line to:
-> > > > 	} else while (*next) {
-> > > > then most of the other changes go away. You don't need the separate
-> > > > while loop
-> > >
-> 
-> Well, this will output some errors by using the './scripts/checkpatch.pl'
-> Checking.
-> 
-> $ ./scripts/checkpatch.pl
-> 
-> ERROR: trailing statements should be on next line
-> #1785: FILE: of/base.c:1785:
-> +       else while (*next) {
-> 
-> ERROR: trailing statements should be on next line
-> #1785: FILE: of/base.c:1785:
-> +       else while (*next) {
-> 
-> Should be split into two lines...
+Hi,
 
-Checkpatch is wrong. I won't reject that approach.
+On Fri, Apr 4, 2014 at 7:38 PM, Harini Katakam
+<harinikatakamlinux@gmail.com> wrote:
+> Hi Mark,
+>
+> On Fri, Apr 4, 2014 at 6:16 PM, Mark Brown <broonie@kernel.org> wrote:
+>> On Fri, Apr 04, 2014 at 05:44:23PM +0530, Harini Katakam wrote:
+>>> On Fri, Apr 4, 2014 at 3:39 PM, Mark Brown <broonie@kernel.org> wrote:
+>>> > On Fri, Apr 04, 2014 at 08:30:38AM +0530, Harini Katakam wrote:
+>>
+>>> >> This IP can drive 4 slaves.
+>>> >> The CS line to be driven is selected in spi device structure and
+>>> >> that is driven by the software.
+>>
+>>> > So why specify this in the binding at all?  If the device always has the
+>>> > same number of chip selects it's redundant.
+>>
+>>> I'm sorry, I should have explained that better.
+>>> The IP can support upto 4 chip selects.
+>>> The num-cs value here is the number of chip selects actually used on the board.
+>>
+>> Why does that need to be configured?  Surely the presence of slaves is
+>> enough information.
+>
+> OK. I understand.
+> Can you comment on the case where a decoder is used?
+>
+> There is support for adding a decoder where extended slaves can be selected
+> through the IP's control register.
+> (This is not currently implemented in the driver but will be in the future.)
+>
+> How should the driver know whether it is 4 or 16 select lines for example?
+> This has to be written to master->num_chipselect.
+>
+> Regards,
+> Harini
 
-g.
+Just adding to my above comment.
+Alternately, I could not use the "num-cs" property and add another
+optional property to be used only when required.
+The driver sets a default value already.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Harini
