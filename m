@@ -1,88 +1,76 @@
-From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
-Subject: RE: [PATCH v2 2/2] ARM: dts: Append clock bindings for sai2 on
- VF610 platform
-Date: Fri, 4 Apr 2014 09:52:48 +0000
-Message-ID: <1ce55f756ee04609a2d8ea1f14ad1f3f@BY2PR03MB505.namprd03.prod.outlook.com>
-References: <cover.1396432924.git.Guangyu.Chen@freescale.com>
- <d09da3eb629143abd3f61ae037af4ddaf7286a83.1396432924.git.Guangyu.Chen@freescale.com>
- <20140402130302.GC8558@dragon> <20140402133955.GB29440@MrMyself>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v2 1/2] SPI: Add driver for Cadence SPI controller
+Date: Fri, 04 Apr 2014 12:02:13 +0200
+Message-ID: <533E8325.5000503@monstr.eu>
+References: <1396523431-14519-1-git-send-email-harinik@xilinx.com> <533E7588.5060209@ti.com> <533E7A3C.3060302@ti.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="NcuilO6TNIcHFGELEbSvXi4h8juiJ7aB6"
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140402133955.GB29440@MrMyself>
-Content-Language: en-US
+In-Reply-To: <533E7A3C.3060302@ti.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: "guangyu.chen@freescale.com" <guangyu.chen@freescale.com>, Shawn Guo <shawn.guo@linaro.org>
-Cc: "broonie@kernel.org" <broonie@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "timur@tabi.org" <timur@tabi.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob@landley.net" <rob@landley.net>, "galak@codeaurora.org" <galak@codeaurora.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+To: sourav <sourav.poddar@ti.com>
+Cc: Harini Katakam <harinik@xilinx.com>, broonie@kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--NcuilO6TNIcHFGELEbSvXi4h8juiJ7aB6
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-> Subject: Re: [PATCH v2 2/2] ARM: dts: Append clock bindings for sai2 on VF610
-> platform
-> 
-> Hi Shawn,
-> 
->    Thanks for the comments, but...
-> 
-> On Wed, Apr 02, 2014 at 09:03:04PM +0800, Shawn Guo wrote:
-> > On Wed, Apr 02, 2014 at 06:10:20PM +0800, Nicolin Chen wrote:
-> > > Since we added fours clock to the DT binding, we should update the current
-> > > SAI dts/dtsi so as not to break their functions.
-> > >
-> > > Signed-off-by: Nicolin Chen <Guangyu.Chen@freescale.com>
-> > > ---
-> > >  arch/arm/boot/dts/vf610.dtsi | 6 ++++--
-> > >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
-> > > index d31ce1b..9fd0007 100644
-> > > --- a/arch/arm/boot/dts/vf610.dtsi
-> > > +++ b/arch/arm/boot/dts/vf610.dtsi
-> > > @@ -139,8 +139,10 @@
-> > >  				compatible = "fsl,vf610-sai";
-> > >  				reg = <0x40031000 0x1000>;
-> > >  				interrupts = <0 86 0x04>;
-> > > -				clocks = <&clks VF610_CLK_SAI2>;
-> > > -				clock-names = "sai";
-> > > +				clocks = <&clks VF610_CLK_SAI2>,
-> > > +				       <&clks VF610_CLK_SAI2>,
-> > > +				       <&clks 0>, <&clks 0>;
-> >
-> > So it seems that SAI on vf610 does work with only one clock.  So the
-> > driver change will break old DTB for vf610?  If that's case, we will
-> > have to need a new compatible for cases where 4 clocks are needed.
-> 
-> According to Vybrid's RM Chapter 9.11.12 SAI clocking, the SoC actually
-> connects SAI with two clocks: SAI_CLK and Platform Bus Clock. So the DT
-> binding here still needs to be corrected even if ignoring driver change.
-> 
-> Besides, I've checked both SAI on imx and vf610 and found that they are
-> seemly identical, especially for the clock part -- "The transmitter and
-> receiver can independently select between the bus clock and up to three
-> audio master clocks to generate the bit clock." And the driver that was
-> designed for vf610 already contains the code to switch the clock between
-> Bus Clock and Three MCLKs. What I want to say is, even if SAI on vf610
-> does work with only one clock, it still doesn't have the full function
-> on vf610 -- driving clock from Platform Bus Clock unless we make this
-> improvement to the DT binding.
-> 
-> So I think it's fair to complete the code here for both platforms, even
-> though we might take the risk of merging conflict. And I understand
-> your point to avoid function break on those platform both of us aren't
-> convenient to test. But I've already involved Xiubo in the list. And
-> we can wait for his test result.
-> 
+Hi Sourav
 
-This has been test on my Vybird-TWR board and it's fine.
+On 04/04/2014 11:24 AM, sourav wrote:
+> HI,
+> On Friday 04 April 2014 02:34 PM, sourav wrote:
+>> Hi Harini,
+>> On Thursday 03 April 2014 04:40 PM, Harini Katakam wrote:
+>>> Add driver for Cadence SPI controller. This is used in Xilinx Zynq.
+>>>
+>>> Signed-off-by: Harini Katakam<harinik@xilinx.com>
+>>> ---
+>> I had looked at cadence qspi controller. What I can see is that your
+>> patch implements "normal spi ode of operation" ? and the patch looks f=
+ine.
+>> But, to avail the maximum throughput, I see cadence qspi supports
+>> direct/indirect mode of operations, as well as read data capture logic=
+=2E
+>>
+>> So, do you intent to add any of the above in your driver?
+>>
+> Looks like, I got a bit confused. This is not cadence QSPI controller b=
+ut only SPI controller.
+> Sorry for the noise.
+
+Look at this one
+http://www.spinics.net/lists/kernel/msg1716894.html
 
 Thanks,
+Michal
 
-Brs
-Xiubo
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
 
 
 
-> Hope you can understand the circumstance,
-> Nicolin
+--NcuilO6TNIcHFGELEbSvXi4h8juiJ7aB6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlM+gyUACgkQykllyylKDCGA2wCgl0wVsHuw5wpfuG+te6wJTjZS
+ABcAoIISwm0Wp9p6bFvL0PvUoZ8pkcUM
+=sAYZ
+-----END PGP SIGNATURE-----
+
+--NcuilO6TNIcHFGELEbSvXi4h8juiJ7aB6--
