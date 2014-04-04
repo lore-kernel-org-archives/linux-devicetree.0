@@ -1,104 +1,64 @@
-From: Courtney Cavin <courtney.cavin@sonymobile.com>
-Subject: Re: [PATCH 1/9] crypto: qce: Add core driver implementation
-Date: Thu, 3 Apr 2014 16:38:44 -0700
-Message-ID: <20140403233844.GF17066@sonymobile.com>
-References: <1396541886-10966-1-git-send-email-svarbanov@mm-sol.com>
- <1396541886-10966-2-git-send-email-svarbanov@mm-sol.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1396541886-10966-2-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/5] ARM: SMP: support Broadcom mobile SoCs
+Date: Thu,  3 Apr 2014 21:18:06 -0500
+Message-ID: <1396577891-2713-1-git-send-email-elder@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 03, 2014 at 06:17:58PM +0200, Stanimir Varbanov wrote:
-> This adds core driver files. The core part is implementing a
-> platform driver probe and remove callbaks, the probe enables
-> clocks, checks crypto version, initialize and request dma
-> channels, create done tasklet and work queue and finally
-> register the algorithms into crypto subsystem.
-> 
-> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> ---
->  drivers/crypto/qce/core.c | 333 ++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/crypto/qce/core.h |  69 ++++++++++
->  2 files changed, 402 insertions(+)
->  create mode 100644 drivers/crypto/qce/core.c
->  create mode 100644 drivers/crypto/qce/core.h
-> 
-> diff --git a/drivers/crypto/qce/core.c b/drivers/crypto/qce/core.c
-[...]
-> +static struct qce_algo_ops qce_ops[] = {
-> +	{
-> +		.type = CRYPTO_ALG_TYPE_ABLKCIPHER,
-> +		.register_alg = qce_ablkcipher_register,
-> +	},
-> +	{
-> +		.type = CRYPTO_ALG_TYPE_AHASH,
-> +		.register_alg = qce_ahash_register,
-> +	},
-> +};
-> +
-> +static void qce_unregister_algs(struct qce_device *qce)
-> +{
-> +	struct qce_alg_template *tmpl, *n;
-> +
-> +	list_for_each_entry_safe(tmpl, n, &qce->alg_list, entry) {
-> +		if (tmpl->crypto_alg_type == CRYPTO_ALG_TYPE_AHASH)
-> +			crypto_unregister_ahash(&tmpl->alg.ahash);
-> +		else
-> +			crypto_unregister_alg(&tmpl->alg.crypto);
-> +
-> +		list_del(&tmpl->entry);
-> +		kfree(tmpl);
+This series adds SMP support for two Broadcom mobile SoC families.
+It uses CPU_METHOD_OF_DECLARE() (or rather a new variant of that)
+so that SMP operations are assigned using device tree rather than
+adding it to a machine definition in a board file.
 
-I find this whole memory/list management to be very disorganised.
-ops->register_alg() is supposed to allocate this item--more precisely,
-multiple items--using something that must be able to be kfree'd
-directly, register it with the crypto core, and put it on this list
-manually.  Here we unregister/remove/free this in the core.  Josh's
-recommendation of a unregister_alg callback might help, but it all
-remains a bit unclear with register_alg/unregister_alg managing X
-algorithms per call. 
+The first patch adds the ability to extract information from device
+tree nodes having a matching "enable-method" value.  This allows
+additional parameters to be associated with the enable method.  This
+is used for the Broadcom SoCs to efficiently determine the location
+of a special register used in coordinating the start of secondary
+CPUs.
 
-Additionally, above you have qce_ops, which clearly defines the
-operations for specific algorithms types/groups, which in later patches
-are shown to be seperated out into independent implementations.
+I have not included a device tree document update here; I would like
+suggestions on where the new enable method and its parameter should
+be documented.  (I presume in .../arm/cpus.txt, but that could get
+out of hand as more boards define new enable methods.)
 
->From what I can tell, this seems to be a framework with built-in yet
-independent crypto implementations which call the crypto API directly.
+					-Alex
 
-It would be more logical to me if this was seperated out into a
-"library/core" API, with the individual implementations as platform
-drivers of their own.  Then they can register with the core, managing
-memory how they please.
+Note:
+This series is based on the current arm-soc/for-next branch:
+    e98cd72 arm-soc: document samsung merges
+Plus one more recently-posted patch:
+    http://permalink.gmane.org/gmane.linux.kernel/1677714
 
-What am I missing?
+This series is available here:
+    http://git.linaro.org/landing-teams/working/broadcom/kernel.git
+    Branch review/bcm-smp
 
-> +	}
-> +}
-> +
-> +static int qce_register_algs(struct qce_device *qce)
-> +{
-> +	struct qce_algo_ops *ops;
-> +	int i, rc = -ENODEV;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(qce_ops); i++) {
-> +		ops = &qce_ops[i];
-> +		ops->async_req_queue = qce_async_request_queue;
-> +		ops->async_req_done = qce_async_request_done;
-> +		rc = ops->register_alg(qce, ops);
-> +		if (rc)
-> +			break;
-> +	}
-> +
-> +	if (rc)
-> +		qce_unregister_algs(qce);
-> +
-> +	return rc;
-> +}
+Alex Elder (5):
+  ARM: introduce CPU_METHOD_OF_DECLARE_SETUP()
+  ARM: add SMP support for Broadcom mobile SoCs
+  ARM: configs: enable SMP in bcm_defconfig
+  ARM: dts: enable SMP support for bcm28155
+  ARM: dts: enable SMP support for bcm21664
 
--Courtney
+ arch/arm/boot/dts/bcm11351.dtsi |   19 ++++
+ arch/arm/boot/dts/bcm21664.dtsi |   19 ++++
+ arch/arm/configs/bcm_defconfig  |    2 +
+ arch/arm/include/asm/smp.h      |   10 +-
+ arch/arm/kernel/devtree.c       |   31 +++++--
+ arch/arm/mach-bcm/Kconfig       |   18 +++-
+ arch/arm/mach-bcm/Makefile      |    5 +-
+ arch/arm/mach-bcm/platsmp.c     |  194 +++++++++++++++++++++++++++++++++++++++
+ 8 files changed, 286 insertions(+), 12 deletions(-)
+ create mode 100644 arch/arm/mach-bcm/platsmp.c
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
