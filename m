@@ -1,10 +1,10 @@
 From: Zhangfei Gao <zhangfei.gao@linaro.org>
 Subject: [PATCH 2/3] net: hisilicon: new hip04 MDIO driver
-Date: Fri,  4 Apr 2014 23:42:16 +0800
-Message-ID: <1396626136-2338-1-git-send-email-zhangfei.gao@linaro.org>
-References: <1396358832-15828-3-git-send-email-zhangfei.gao@linaro.org>
+Date: Fri,  4 Apr 2014 23:45:57 +0800
+Message-ID: <1396626357-2414-1-git-send-email-zhangfei.gao@linaro.org>
+References: <1396624597-390-3-git-send-email-zhangfei.gao@linaro.org>
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1396358832-15828-3-git-send-email-zhangfei.gao@linaro.org>
+In-Reply-To: <1396624597-390-3-git-send-email-zhangfei.gao@linaro.org>
 Sender: netdev-owner@vger.kernel.org
 To: davem@davemloft.net, linux@arm.linux.org.uk, arnd@arndb.de, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@ACULAB.COM, eric.dumazet@gmail.com
 Cc: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Zhangfei Gao <zhangfei.gao@linaro.org>
