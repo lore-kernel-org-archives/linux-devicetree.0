@@ -1,157 +1,65 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [GIT PULL] exynos-drm-next
-Date: Fri, 04 Apr 2014 10:05:14 +0200
-Message-ID: <533E67BA.6030202@samsung.com>
-References: <1396546492-9978-1-git-send-email-inki.dae@samsung.com>
- <533E3C39.7030705@gmail.com> <00e301cf4fc7$8b8f6330$a2ae2990$%dae@samsung.com>
- <533E5F1E.9050609@samsung.com>
- <010b01cf4fda$46019f50$d204ddf0$%dae@samsung.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 2/2] devicetree: Add devicetree bindings documentation
+ for Cadence SPI
+Date: Fri, 4 Apr 2014 10:09:47 +0200
+Message-ID: <CAMuHMdWvFT1kLpcYGSuNFs6qVTbn4S-9-rFV8jkJMAaS8xCDnQ@mail.gmail.com>
+References: <1396523431-14519-1-git-send-email-harinik@xilinx.com>
+	<1396523431-14519-2-git-send-email-harinik@xilinx.com>
+	<20140403213446.GB14763@sirena.org.uk>
+	<CAFcVEC+mpHh_d2j6_sdhWS3d2KyXrDYUq6L6jO2Q=SS68Hda2g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <010b01cf4fda$46019f50$d204ddf0$%dae@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Inki Dae <inki.dae@samsung.com>, 'Tomasz Figa' <tomasz.figa@gmail.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org, 'Marek Szyprowski' <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Rob Herring' <robh+dt@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAFcVEC+mpHh_d2j6_sdhWS3d2KyXrDYUq6L6jO2Q=SS68Hda2g@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Harini Katakam <harinikatakamlinux@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-spi <linux-spi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04.04.2014 09:48, Inki Dae wrote:
->
->
->> -----Original Message-----
->> From: Tomasz Figa [mailto:t.figa@samsung.com]
->> Sent: Friday, April 04, 2014 4:29 PM
->> To: Inki Dae; 'Tomasz Figa'; airlied@linux.ie; dri-
->> devel@lists.freedesktop.org; 'Marek Szyprowski';
->> devicetree@vger.kernel.org; Grant Likely; Rob Herring
->> Subject: Re: [GIT PULL] exynos-drm-next
+Hi Harini,
+
+On Fri, Apr 4, 2014 at 5:00 AM, Harini Katakam
+<harinikatakamlinux@gmail.com> wrote:
+>>> +             num-cs = /bits/ 16 <4>;
 >>
->> On 04.04.2014 07:34, Inki Dae wrote:
->>> Hi Tomasz,
+>> What's going on with the /bits/ - is this something that's required for
+>> the property?
+>
+> The master->num-chipselect property is 16 bit but writing <4> here directly
+> leads to 0 being read in of_property_read (because it's big endian).
+> Instead using of property read u32 and then copying, we decided to do this.
+> This was discussed on v2 between Michal and Rob:
+>>>>> +               num-chip-select = /bits/ 16 <4>;
 >>>
->>>> -----Original Message-----
->>>> From: Tomasz Figa [mailto:tomasz.figa@gmail.com]
->>>> Sent: Friday, April 04, 2014 2:00 PM
->>>> To: inki.dae@samsung.com; airlied@linux.ie; dri-
->>>> devel@lists.freedesktop.org
->>>> Subject: Re: [GIT PULL] exynos-drm-next
->>>>
->>>> Hi Inki,
->>>>
->>>> On 03.04.2014 19:34, inki.dae@samsung.com wrote:
->>>>> Hi Dave,
->>>>>       Sorry for late.
->>>>>       This pull request includes MIPI-DSI driver, two panel drivers,
->>>>>       super device support, and relevant dt bindings.
->>>>>
->>>>> Summaries:
->>>>> - Add MIPI-DSI Driver, and dt bindigs
->>>>> - Add S6E8AA0 MIPI-DSI based panel drivers, and dt bindings
->>>>> - Add LD9040 parallel panel driver
->>>>>      . this driver is placed in drivers/gpu/drm/panel, and it seems
->>>>>        to be used for exynos drm as of now,
->>>>> - Add super device support, and dt bindings
->>>>>      . this patch resolves the probe order issue to sub drivers
->>>>>        without specific lists
->>>>
->>>> I don't think the DT bindings have been Acked by DT maintainers,
->>>> which is necessary to merge them.
->>>>
->>>> Also I believe more discussion is needed on this, but I didn't have
->>>> time to comment on this series yet. Please hold off with merging the
->>>> supernode series yet.
->>>
->>> I sent a email about review request to you but I didn't get any answer
->>> from you.
+>>> I was expecting you will comment this a little bit. :-)
+>>> Because all just reading this num-cs as 32bit and then
+>>> assigning this value to master->num_chipselect which is 16bit.
 >>
->> It's been just three days ago and I just didn't find time yet to review
->
-> No, the email was just ping. My original RFC patch series had been posted
-> March 3, about 1 month ago, And for my official patch series, eight days
-> ago.
-> So the email I sent three days ago was just a ping that I requested for you
-> to review the patch series.
+>> Well, everyone else has that problem then. Obviously it takes a bit
+>> more care than just reading into a u32, but that is a kernel problem
+>> and not a problem of the binding.
+> They are not reading it directly with read_u32 but they are using
+> intermediate u32 value which is assigned to u16 which is fine.
+> This pattern is in most drivers(maybe all).
+> The point is if binding should or can't simplify driver code.
+> And from your reaction above I expect that it is up to driver
+> owner and binding doc how you want to do it.
 
-As I said, it was not even posted to samsung-soc, the central ML for 
-Samsung SoC related patches, as mandated by MAINTAINERS file. I learned 
-about its presence just after your ping.
+IMHO this "/bits/ 16" doesn't simplify the binding.
 
->> them. I would like to be able to review all the patches straight after
->> them being posted, but unfortunately that's not the only thing I have to
->> do.
->>
->
-> So I think there was no any comments from you for a long time.
->
->> Anyway, a common practice in open source world is to let the patches wait
->> on the mailing lists for two weeks for people to find some time to review
->> them and only then apply. There might be people that don't work full time
->> on this area, but still would be interested to do a review in some free
->> time.
->>
->> Also, neither version of this series have been posted to linux-samsung-soc
->> mailing list, which is also a key to have a broader review. Note that this
->> ML is listed in MAINTAINERS file for all kernel files with "exynos" in
->> name.
->>
->> ARM/S5P EXYNOS ARM ARCHITECTURES
->> M:      Kukjin Kim <kgene.kim@samsung.com>
->> L:      linux-arm-kernel@lists.infradead.org (moderated for
-> non-subscribers)
->> L:      linux-samsung-soc@vger.kernel.org (moderated for non-subscribers)
->> S:      Maintained
->> F:      arch/arm/mach-s5p*/
->> F:      arch/arm/mach-exynos*/
->> N:      exynos
->>
->>
->>> And I think super node concept was already accepted, and relevant
->>> codes, component framework, has already been merged to mainline. And
->>> Linux staging next has already such dt bindings. Please see imx dts
->> files.
->>
->> Yes, they are, but for other platforms not this particular instance.
->>
->> Any new DT bindings introduced are needed to have an ACK from one of DT
->> maintainers to be merged, unless you can't get any reply from any of them
->> for a longer time, usually 3 weeks from posting the series to be applied.
->
-> So should I wait for more times?
->
+As "num-cs" is a generic spi subsystem binding, it should not be
+restricted to 16 bits for the sake of a driver. As your hardware can drive 4
+chip selects, you could represent it in 3 bits (don't!).
 
-Since this series is not a dependency for any other patches queued for 
-this release and it doesn't add any new functionality, I don't think 
-there is any need to hurry with it.
+Simple integers are 32 bit in DT, so use a temporary.
 
->>
->> Of course standard pinging rules apply, so you should ping DT maintainers
->> first before applying such series.
->
->
-> The email I sent to you three days ago was that.
+Gr{oetje,eeting}s,
 
-Unfortunately I'm not a DT maintainer, so I don't qualify here. You can 
-see list of DT maintainers in MAINTAINERS file:
+                        Geert
 
-OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
-M:      Rob Herring <robh+dt@kernel.org>
-M:      Pawel Moll <pawel.moll@arm.com>
-M:      Mark Rutland <mark.rutland@arm.com>
-M:      Ian Campbell <ijc+devicetree@hellion.org.uk>
-M:      Kumar Gala <galak@codeaurora.org>
-L:      devicetree@vger.kernel.org
-S:      Maintained
-F:      Documentation/devicetree/
-F:      arch/*/boot/dts/
-F:      include/dt-bindings/
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Best regards,
-Tomasz
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
