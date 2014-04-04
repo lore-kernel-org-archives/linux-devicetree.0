@@ -1,35 +1,85 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH] clk: qcom: Various fixes for MSM8960's global clock controller
-Date: Fri, 04 Apr 2014 11:18:59 -0700
-Message-ID: <533EF793.3050104@codeaurora.org>
-References: <1396629176-7413-1-git-send-email-galak@codeaurora.org>
+Subject: [PATCH 4/4] devicetree: bindings: qcom,mmcc: Document GDSC binding
+Date: Fri,  4 Apr 2014 11:45:36 -0700
+Message-ID: <1396637136-29974-5-git-send-email-sboyd@codeaurora.org>
+References: <1396637136-29974-1-git-send-email-sboyd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1396629176-7413-1-git-send-email-galak@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>, Mike Turquette <mturquette@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1396637136-29974-1-git-send-email-sboyd@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: devicetree@vger.kernel.org, Saravana Kannan <skannan@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/04/14 09:32, Kumar Gala wrote:
-> * Remove CE2_SLEEP_CLK, doesn't exist on 8960 family SoCs
-> * Fix incorrect offset for PMIC_SSBI2_RESET
-> * Fix typo:
-> 	SIC_TIC -> SPS_TIC_H
-> 	SFAB_ADM0_M2_A_CLK -> SFAB_ADM0_M2_H_CLK
-> * Fix naming convention:
-> 	SFAB_CFPB_S_HCLK -> SFAB_CFPB_S_H_CLK
-> 	SATA_SRC_CLK -> SATA_CLK_SRC
->
-> Signed-off-by: Kumar Gala <galak@codeaurora.org>
->
+Document the GDSC nodes present within the multimedia clock
+controller.
 
-Thanks
+Cc: <devicetree@vger.kernel.org>
+Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+---
+ .../devicetree/bindings/clock/qcom,mmcc.txt        | 42 ++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
-
+diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt b/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+index d572e9964c54..695f86ad94ea 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
++++ b/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+@@ -19,3 +19,45 @@ Example:
+ 		#clock-cells = <1>;
+ 		#reset-cells = <1>;
+ 	};
++
++Qualcomm Global Distributed Switch Controller (GDSC) Binding
++------------------------------------------------------------
++
++The GDSC is responsible for safely collapsing and restoring power to
++peripheral cores on chipsets like msm8974 for power savings.
++
++Required properties:
++ - regulator-name:  A string used as a descriptive name for regulator outputs
++
++Optional properties:
++ - parent-supply:   phandle to the parent supply/regulator node
++ - qcom,retain-mem:  Presence denotes a hardware requirement to leave the
++		     forced core memory retention signals in the core's clock
++		     branch control registers asserted.
++ - qcom,retain-periph: Presence denotes a hardware requirement to leave the
++		     forced periph memory retention signal in the core's clock
++		     branch control registers asserted.
++ - qcom,skip-logic-collapse: Presence denotes a requirement to leave power to
++                             the core's logic enabled.
++ - qcom,support-hw-trigger: Presence denotes a hardware feature to switch
++			    on/off this regulator based on internal HW signals
++			    to save more power.
++
++Example:
++	clock-controller@4000000 {
++		compatible = "qcom,mmcc-msm8974";
++		reg = <0x4000000 0x1000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++
++		regulators {
++			gdsc_oxili_gx: gdsc_oxili_gx {
++				regulator-name = "gdsc_oxili_gx";
++				parent-supply = <&pm8841_s4>;
++				qcom,retain-mem;
++				qcom,retain-periph;
++				qcom,skip-logic-collapse;
++				qcom,support-hw-trigger;
++			};
++		};
++	};
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 hosted by The Linux Foundation
