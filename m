@@ -1,16 +1,14 @@
-From: Sebastian Capella <sebastian.capella@linaro.org>
-Subject: Re: [PATCH RFC v5 3/3] Documentation: arm: define DT idle states
- bindings
-Date: Fri, 4 Apr 2014 15:01:06 -0700
-Message-ID: <CADHgK6v-t69qLYTcez+m2rE1tRecVsKfgwDdPrNPJOKPbmL-nA@mail.gmail.com>
-References: <1395142132-20788-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1395142132-20788-4-git-send-email-lorenzo.pieralisi@arm.com>
- <20140404155622.GA4061@e102568-lin.cambridge.arm.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH 1/2] ARM: zynq: dt: Convert to preprocessor includes
+Date: Fri, 4 Apr 2014 15:41:52 -0700
+Message-ID: <9700480d-fe16-4842-bc2e-78267776fb21@CH1EHSMHS026.ehs.local>
+References: <1396648831-7570-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140404155622.GA4061@e102568-lin.cambridge.arm.com>
+Content-Disposition: inline
+In-Reply-To: <1396648831-7570-1-git-send-email-soren.brinkmann@xilinx.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,21 +18,13 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Mark Hambleton <mark.hambleton@broadcom.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Dave P Martin <Dave.Martin@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen Boyd <sboyd@codeaurora.org>, Amit
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>
+Cc: devicetree@vger.kernel.org, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo,
-
-I like this :)
-
-I was going to suggest linking the tree upside down (starting with the
-leaves such that walking the list takes you back to the root node
-(system sleep), but I don't think it matters as long as the
-relationship is established (which this does).  I tend to think of
-these states in that order, starting from the leaf(shallowest idle
-state) and working back to the root(system sleep) since it provides a
-simple linear view of the sleep states from the cpu perspective, yet
-keeps the heirarchy.
-
-Sebastian
+U29ycnkgdGhpcyBhY2NpZGVudGFsbHkgd2VudCBvdXQgdG9vIGVhcmx5LiBJIG1lYW50IHRvIGlu
+Y2x1ZGUgcGF0Y2hlcwp0byBjb252ZXJ0IHRoZSBjbG9ja3MgYXMgd2VsbC4gSSdsbCBzZW5kIGEg
+djIgdG8gaW5jbHVkZSB0aG9zZSBwYXRjaGVzLgoKCVPDtnJlbgoKCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
+bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
