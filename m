@@ -1,52 +1,61 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH 74/75] ARM: l2c: always enable low power modes
-Date: Fri, 4 Apr 2014 09:53:29 -0700
-Message-ID: <b3b6dd79-5646-4c9f-8e62-ed9c4a5596e3@VA3EHSMHS040.ehs.local>
-References: <20140328151249.GJ7528@n2100.arm.linux.org.uk>
- <E1WTYaK-0007I0-Sm@rmk-PC.arm.linux.org.uk>
- <CAL_Jsq+vja-BeNfiVnOicFAa+E6jigDfnb5KWWpxZCZ3eGkJiA@mail.gmail.com>
- <20140328155127.GL7528@n2100.arm.linux.org.uk>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2 2/6] PCI: tegra: use new OF interrupt mapping when
+ possible
+Date: Fri, 4 Apr 2014 10:55:59 -0600
+Message-ID: <20140404165559.GE9007@google.com>
+References: <1394025951-32438-1-git-send-email-l.stach@pengutronix.de>
+ <1394025951-32438-3-git-send-email-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140328155127.GL7528@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1394025951-32438-3-git-send-email-l.stach@pengutronix.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Jingoo Han <jg1.han@samsung.com>, Simon Horman <horms@verge.net.au>, Shawn Guo <shawn.guo@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Thierry Reding <thierry.reding@gmail.com>, Arnd Bergmann <arnd@arndb.de>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE0LTAzLTI4IGF0IDAzOjUxUE0gKzAwMDAsIFJ1c3NlbGwgS2luZyAtIEFSTSBM
-aW51eCB3cm90ZToKPiBPbiBGcmksIE1hciAyOCwgMjAxNCBhdCAxMDo0Mjo1NEFNIC0wNTAwLCBS
-b2IgSGVycmluZyB3cm90ZToKPiA+IE9uIEZyaSwgTWFyIDI4LCAyMDE0IGF0IDEwOjIwIEFNLCBS
-dXNzZWxsIEtpbmcKPiA+IDxybWsra2VybmVsQGFybS5saW51eC5vcmcudWs+IHdyb3RlOgo+ID4g
-PiBBbHdheXMgZW5hYmxlIHRoZSBMMkMgbG93IHBvd2VyIG1vZGVzIG9uIEwyQy0zMTAgUjNQMCBh
-bmQgbmV3ZXIgcGFydHMuCj4gPiAKPiA+IEkgYXNzdW1lIHlvdSB3YW50IHRvIHNxdWFzaCB0aGlz
-IHdpdGggcGF0Y2ggNjgvNzU/IE9yIHlvdSBhcmUgc3RpbGwKPiA+IGRlYmF0aW5nIHdoZXRoZXIg
-d2Ugd2FudCB0byBkbyB0aGlzIG9yIG5vdD8gR2l2ZW4gdGhhdCBpdCBpcyByM3B4Cj4gPiBvbmx5
-LCB0aGF0IHNob3VsZCBncmVhdGx5IHJlZHVjZSBhbnkgY2hhbmNlIG9mIGJyZWFrYWdlIHRvIG5l
-d2VyCj4gPiBwbGF0Zm9ybXMuCj4gCj4gSSB3aWxsIGV2ZW50dWFsbHkgLSBJJ3ZlIGtlcHQgaXQg
-c2VwYXJhdGUgZm9yIHRoZSB0aW1lIGJlaW5nIHRvIGdpdmUKPiBtb3JlIG9wdGlvbnMuICBMZXQn
-cyBzZWUgaG93IHBlb3BsZSBnZXQgb24gd2l0aCBpdCAtIGl0J2xsIGJlIHJ1bm5pbmcKPiB0aHJv
-dWdoIE9sb2YncyBidWlsZGVyIGxhdGVyIHRvZGF5LCBhbmQgdGhlcmUncyBzb21lIG90aGVyIHBl
-b3BsZQo+IHdhbnRpbmcgdG8gdGFrZSBpdCBmb3IgYSBzcGluLgoKQSB3aGlsZSBiYWNrIEkgc3Vn
-Z2VzdGVkIGFsdGVyaW5nIHRob3NlIGJpdHMsIGJ1dCB0aGF0IHdhcyB0dXJuZWQgZG93bjoKaHR0
-cHM6Ly9sa21sLm9yZy9sa21sLzIwMTMvMy8xLzM1MAoKQXJlIHRoZXJlIGFueSBudW1iZXJzIGF2
-YWlsYWJsZSBvbiBob3cgZW5hYmxpbmcgdGhlc2UgZmVhdHVyZXMgaW1wYWN0cwp0aGUgc3lzdGVt
-PyBJJ20gYSBsaXR0bGUgYml0IGNvbmNlcm5lZCBvZiBhbHdheXMgZW5hYmxpbmcgdGhlbQp1bmNv
-bmRpdGlvbmFsbHksIGluIGNhc2UgaXQgaW5jcmVhc2VzIGxhdGVuY3kgZm9yIHNvbWUgdXNlIGNh
-c2VzLiBJCnRoaW5rIEknZCBwcmVmZXIgdGhlIERUIGFwcHJvYWNoLCB1bmxlc3MgdGhlIGltcGFj
-dCBpcyByZXBvcnRlZCB0byBiZQpuZWdsaWdpYmxlIC0gd2hpY2ggaXQgbGlrZWx5IGlzLCBJIGd1
-ZXNzLgoKCVRoYW5rcywKCVPDtnJlbgoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0t
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Wed, Mar 05, 2014 at 02:25:47PM +0100, Lucas Stach wrote:
+> This is the recommended method of doing the IRQ
+> mapping. For old devicetrees we fall back to the
+> previous practice.
+> 
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+
+Applied with Stephen's Tested-by to my pending/host-tegra branch.  I'll
+rebase and rename it after v3.15-rc1, and I think we can squeeze it into
+v3.15 shortly after that.  Thanks.
+
+> ---
+>  drivers/pci/host/pci-tegra.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
+> index 330f7e3a32dd..083cf37ca047 100644
+> --- a/drivers/pci/host/pci-tegra.c
+> +++ b/drivers/pci/host/pci-tegra.c
+> @@ -639,10 +639,15 @@ static int tegra_pcie_setup(int nr, struct pci_sys_data *sys)
+>  static int tegra_pcie_map_irq(const struct pci_dev *pdev, u8 slot, u8 pin)
+>  {
+>  	struct tegra_pcie *pcie = sys_to_pcie(pdev->bus->sysdata);
+> +	int irq;
+>  
+>  	tegra_cpuidle_pcie_irqs_in_use();
+>  
+> -	return pcie->irq;
+> +	irq = of_irq_parse_and_map_pci(pdev, slot, pin);
+> +	if (!irq)
+> +		irq = pcie->irq;
+> +
+> +	return irq;
+>  }
+>  
+>  static void tegra_pcie_add_bus(struct pci_bus *bus)
+> -- 
+> 1.9.0
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
