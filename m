@@ -1,225 +1,52 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: [PATCH] ARM: qcom: Add initial APQ8064 SoC and IFC6410 board device trees
-Date: Fri,  4 Apr 2014 11:33:34 -0500
-Message-ID: <1396629214-7466-1-git-send-email-galak@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, David Brown <davidb@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH 74/75] ARM: l2c: always enable low power modes
+Date: Fri, 4 Apr 2014 09:53:29 -0700
+Message-ID: <b3b6dd79-5646-4c9f-8e62-ed9c4a5596e3@VA3EHSMHS040.ehs.local>
+References: <20140328151249.GJ7528@n2100.arm.linux.org.uk>
+ <E1WTYaK-0007I0-Sm@rmk-PC.arm.linux.org.uk>
+ <CAL_Jsq+vja-BeNfiVnOicFAa+E6jigDfnb5KWWpxZCZ3eGkJiA@mail.gmail.com>
+ <20140328155127.GL7528@n2100.arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20140328155127.GL7528@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add basic APQ8064 SoC include device tree and support for basic booting on
-the IFC6410 board.
-
-Signed-off-by: Kumar Gala <galak@codeaurora.org>
----
- arch/arm/boot/dts/Makefile                 |   1 +
- arch/arm/boot/dts/qcom-apq8064-ifc6410.dts |  12 +++
- arch/arm/boot/dts/qcom-apq8064.dtsi        | 151 +++++++++++++++++++++++++++++
- arch/arm/mach-qcom/board.c                 |   1 +
- 4 files changed, 165 insertions(+)
- create mode 100644 arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
- create mode 100644 arch/arm/boot/dts/qcom-apq8064.dtsi
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 0591ed0..1223fa89 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -232,6 +232,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
- dtb-$(CONFIG_ARCH_ORION5X) += orion5x-lacie-ethernet-disk-mini-v2.dtb
- dtb-$(CONFIG_ARCH_PRIMA2) += prima2-evb.dtb
- dtb-$(CONFIG_ARCH_QCOM) += \
-+	qcom-apq8064-ifc6410.dtb \
- 	qcom-apq8074-dragonboard.dtb \
- 	qcom-ipq8064-ap148.dtb \
- 	qcom-msm8660-surf.dtb \
-diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-new file mode 100644
-index 0000000..c5fda40
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-@@ -0,0 +1,12 @@
-+#include "qcom-apq8064.dtsi"
-+
-+/ {
-+	model = "Qualcomm APQ8064/IFC6410";
-+	compatible = "qcom,apq8064-ifc6410", "qcom,apq8064";
-+
-+	soc {
-+		serial@16640000 {
-+			status = "ok";
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-new file mode 100644
-index 0000000..60b89e5
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -0,0 +1,151 @@
-+/dts-v1/;
-+
-+/include/ "skeleton.dtsi"
-+
-+#include <dt-bindings/clock/qcom,gcc-msm8960.h>
-+
-+/ {
-+	model = "Qualcomm APQ8064";
-+	compatible = "qcom,apq8064";
-+	interrupt-parent = <&intc>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		interrupts = <1 14 0x304>;
-+		compatible = "qcom,krait";
-+		enable-method = "qcom,kpss-acc-v1";
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			reg = <0>;
-+			next-level-cache = <&L2>;
-+			qcom,acc = <&acc0>;
-+			qcom,saw = <&saw0>;
-+		};
-+
-+		cpu@1 {
-+			device_type = "cpu";
-+			reg = <1>;
-+			next-level-cache = <&L2>;
-+			qcom,acc = <&acc1>;
-+			qcom,saw = <&saw1>;
-+		};
-+
-+		cpu@2 {
-+			device_type = "cpu";
-+			reg = <2>;
-+			next-level-cache = <&L2>;
-+			qcom,acc = <&acc2>;
-+			qcom,saw = <&saw2>;
-+		};
-+
-+		cpu@3 {
-+			device_type = "cpu";
-+			reg = <3>;
-+			next-level-cache = <&L2>;
-+			qcom,acc = <&acc3>;
-+			qcom,saw = <&saw3>;
-+		};
-+
-+		L2: l2-cache {
-+			compatible = "cache";
-+			cache-level = <2>;
-+			interrupts = <0 2 0x4>;
-+		};
-+	};
-+
-+	soc: soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+		compatible = "simple-bus";
-+
-+
-+		intc: interrupt-controller@2000000 {
-+			compatible = "qcom,msm-qgic2";
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			reg = < 0x02000000 0x1000 >,
-+			      < 0x02002000 0x1000 >;
-+		};
-+
-+		timer@200a000 {
-+			compatible = "qcom,kpss-timer", "qcom,msm-timer";
-+			interrupts = <1 1 0x301>,
-+				     <1 2 0x301>,
-+				     <1 3 0x301>;
-+			reg = <0x0200a000 0x100>;
-+			clock-frequency = <27000000>,
-+					  <32768>;
-+			cpu-offset = <0x80000>;
-+		};
-+
-+		acc0: clock-controller@2088000 {
-+			compatible = "qcom,kpss-acc-v1";
-+			reg = <0x02088000 0x1000>, <0x02008000 0x1000>;
-+		};
-+
-+		acc1: clock-controller@2098000 {
-+			compatible = "qcom,kpss-acc-v1";
-+			reg = <0x02098000 0x1000>, <0x02008000 0x1000>;
-+		};
-+
-+		acc2: clock-controller@20a8000 {
-+			compatible = "qcom,kpss-acc-v1";
-+			reg = <0x020a8000 0x1000>, <0x02008000 0x1000>;
-+		};
-+
-+		acc3: clock-controller@20b8000 {
-+			compatible = "qcom,kpss-acc-v1";
-+			reg = <0x020b8000 0x1000>, <0x02008000 0x1000>;
-+		};
-+
-+		saw0: regulator@2089000 {
-+			compatible = "qcom,saw2";
-+			reg = <0x02089000 0x1000>, <0x02009000 0x1000>;
-+			regulator;
-+		};
-+
-+		saw1: regulator@2099000 {
-+			compatible = "qcom,saw2";
-+			reg = <0x02099000 0x1000>, <0x02009000 0x1000>;
-+			regulator;
-+		};
-+
-+		saw2: regulator@20a9000 {
-+			compatible = "qcom,saw2";
-+			reg = <0x020a9000 0x1000>, <0x02009000 0x1000>;
-+			regulator;
-+		};
-+
-+		saw3: regulator@20b9000 {
-+			compatible = "qcom,saw2";
-+			reg = <0x020b9000 0x1000>, <0x02009000 0x1000>;
-+			regulator;
-+		};
-+
-+		serial@16640000 {
-+			compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
-+			reg = <0x16640000 0x1000>,
-+			      <0x16600000 0x1000>;
-+			interrupts = <0 158 0x0>;
-+			clocks = <&gcc GSBI7_UART_CLK>, <&gcc GSBI7_H_CLK>;
-+			clock-names = "core", "iface";
-+			status = "disabled";
-+		};
-+
-+		qcom,ssbi@500000 {
-+			compatible = "qcom,ssbi";
-+			reg = <0x00500000 0x1000>;
-+			qcom,controller-type = "pmic-arbiter";
-+		};
-+
-+		gcc: clock-controller@900000 {
-+			compatible = "qcom,gcc-apq8064";
-+			reg = <0x00900000 0x4000>;
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/mach-qcom/board.c b/arch/arm/mach-qcom/board.c
-index cb3c07c..333dced5 100644
---- a/arch/arm/mach-qcom/board.c
-+++ b/arch/arm/mach-qcom/board.c
-@@ -15,6 +15,7 @@
- #include <asm/mach/arch.h>
- 
- static const char * const qcom_dt_match[] __initconst = {
-+	"qcom,apq8064",
- 	"qcom,apq8074-dragonboard",
- 	"qcom,ipq8062",
- 	"qcom,ipq8064",
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+T24gRnJpLCAyMDE0LTAzLTI4IGF0IDAzOjUxUE0gKzAwMDAsIFJ1c3NlbGwgS2luZyAtIEFSTSBM
+aW51eCB3cm90ZToKPiBPbiBGcmksIE1hciAyOCwgMjAxNCBhdCAxMDo0Mjo1NEFNIC0wNTAwLCBS
+b2IgSGVycmluZyB3cm90ZToKPiA+IE9uIEZyaSwgTWFyIDI4LCAyMDE0IGF0IDEwOjIwIEFNLCBS
+dXNzZWxsIEtpbmcKPiA+IDxybWsra2VybmVsQGFybS5saW51eC5vcmcudWs+IHdyb3RlOgo+ID4g
+PiBBbHdheXMgZW5hYmxlIHRoZSBMMkMgbG93IHBvd2VyIG1vZGVzIG9uIEwyQy0zMTAgUjNQMCBh
+bmQgbmV3ZXIgcGFydHMuCj4gPiAKPiA+IEkgYXNzdW1lIHlvdSB3YW50IHRvIHNxdWFzaCB0aGlz
+IHdpdGggcGF0Y2ggNjgvNzU/IE9yIHlvdSBhcmUgc3RpbGwKPiA+IGRlYmF0aW5nIHdoZXRoZXIg
+d2Ugd2FudCB0byBkbyB0aGlzIG9yIG5vdD8gR2l2ZW4gdGhhdCBpdCBpcyByM3B4Cj4gPiBvbmx5
+LCB0aGF0IHNob3VsZCBncmVhdGx5IHJlZHVjZSBhbnkgY2hhbmNlIG9mIGJyZWFrYWdlIHRvIG5l
+d2VyCj4gPiBwbGF0Zm9ybXMuCj4gCj4gSSB3aWxsIGV2ZW50dWFsbHkgLSBJJ3ZlIGtlcHQgaXQg
+c2VwYXJhdGUgZm9yIHRoZSB0aW1lIGJlaW5nIHRvIGdpdmUKPiBtb3JlIG9wdGlvbnMuICBMZXQn
+cyBzZWUgaG93IHBlb3BsZSBnZXQgb24gd2l0aCBpdCAtIGl0J2xsIGJlIHJ1bm5pbmcKPiB0aHJv
+dWdoIE9sb2YncyBidWlsZGVyIGxhdGVyIHRvZGF5LCBhbmQgdGhlcmUncyBzb21lIG90aGVyIHBl
+b3BsZQo+IHdhbnRpbmcgdG8gdGFrZSBpdCBmb3IgYSBzcGluLgoKQSB3aGlsZSBiYWNrIEkgc3Vn
+Z2VzdGVkIGFsdGVyaW5nIHRob3NlIGJpdHMsIGJ1dCB0aGF0IHdhcyB0dXJuZWQgZG93bjoKaHR0
+cHM6Ly9sa21sLm9yZy9sa21sLzIwMTMvMy8xLzM1MAoKQXJlIHRoZXJlIGFueSBudW1iZXJzIGF2
+YWlsYWJsZSBvbiBob3cgZW5hYmxpbmcgdGhlc2UgZmVhdHVyZXMgaW1wYWN0cwp0aGUgc3lzdGVt
+PyBJJ20gYSBsaXR0bGUgYml0IGNvbmNlcm5lZCBvZiBhbHdheXMgZW5hYmxpbmcgdGhlbQp1bmNv
+bmRpdGlvbmFsbHksIGluIGNhc2UgaXQgaW5jcmVhc2VzIGxhdGVuY3kgZm9yIHNvbWUgdXNlIGNh
+c2VzLiBJCnRoaW5rIEknZCBwcmVmZXIgdGhlIERUIGFwcHJvYWNoLCB1bmxlc3MgdGhlIGltcGFj
+dCBpcyByZXBvcnRlZCB0byBiZQpuZWdsaWdpYmxlIC0gd2hpY2ggaXQgbGlrZWx5IGlzLCBJIGd1
+ZXNzLgoKCVRoYW5rcywKCVPDtnJlbgoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0t
+a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
