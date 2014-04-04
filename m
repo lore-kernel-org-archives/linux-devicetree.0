@@ -1,137 +1,54 @@
-From: Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 59/75] ARM: l2c: prima2: remove cache size override
-Date: Fri, 4 Apr 2014 22:56:08 +0800
-Message-ID: <CAGsJ_4zPrOQm0PzPSBQ55wCkNHfjP0eGb2rLew_MZwP5jSEc+w@mail.gmail.com>
-References: <20140328151249.GJ7528@n2100.arm.linux.org.uk> <E1WTYZ6-0007Gr-6r@rmk-PC.arm.linux.org.uk>
- <CAGsJ_4yUNET5mWEUH-KEtA1ei49Fo2aC20Wmb-jXhs0vF7HSYw@mail.gmail.com> <20140404141034.GC7528@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140404141034.GC7528-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DL-SHA-WorkGroupLinux <workgroup.linux-kQvG35nSl+M@public.gmane.org>
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH v6 0/3] add hisilicon hip04 ethernet driver
+Date: Fri,  4 Apr 2014 23:16:34 +0800
+Message-ID: <1396624597-390-1-git-send-email-zhangfei.gao@linaro.org>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: davem@davemloft.net, linux@arm.linux.org.uk, arnd@arndb.de, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@ACULAB.COM, eric.dumazet@gmail.com
+Cc: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Zhangfei Gao <zhangfei.gao@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-04-04 22:10 GMT+08:00 Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>:
-> On Fri, Apr 04, 2014 at 09:40:31PM +0800, Barry Song wrote:
->> 2014-03-28 23:19 GMT+08:00 Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>:
->> > Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
->> > ---
->> >  arch/arm/boot/dts/marco.dtsi  |  2 +-
->> >  arch/arm/boot/dts/prima2.dtsi |  2 +-
->> >  arch/arm/mach-prima2/l2x0.c   | 34 +---------------------------------
->> >  3 files changed, 3 insertions(+), 35 deletions(-)
->> >
->> > diff --git a/arch/arm/boot/dts/marco.dtsi b/arch/arm/boot/dts/marco.dtsi
->> > index 1579c3491ccd..247879aa1224 100644
->> > --- a/arch/arm/boot/dts/marco.dtsi
->> > +++ b/arch/arm/boot/dts/marco.dtsi
->> > @@ -36,7 +36,7 @@
->> >                 ranges = <0x40000000 0x40000000 0xa0000000>;
->> >
->> >                 l2-cache-controller@c0030000 {
->> > -                       compatible = "sirf,marco-pl310-cache", "arm,pl310-cache";
->> > +                       compatible = "arm,pl310-cache";
->> >                         reg = <0xc0030000 0x1000>;
->> >                         interrupts = <0 59 0>;
->> >                         arm,tag-latency = <1 1 1>;
->> > diff --git a/arch/arm/boot/dts/prima2.dtsi b/arch/arm/boot/dts/prima2.dtsi
->> > index 0e219932d7cc..29b578727b0a 100644
->> > --- a/arch/arm/boot/dts/prima2.dtsi
->> > +++ b/arch/arm/boot/dts/prima2.dtsi
->> > @@ -48,7 +48,7 @@
->> >                 ranges = <0x40000000 0x40000000 0x80000000>;
->> >
->> >                 l2-cache-controller@80040000 {
->> > -                       compatible = "arm,pl310-cache", "sirf,prima2-pl310-cache";
->> > +                       compatible = "arm,pl310-cache";
->> >                         reg = <0x80040000 0x1000>;
->> >                         interrupts = <59>;
->> >                         arm,tag-latency = <1 1 1>;
->> > diff --git a/arch/arm/mach-prima2/l2x0.c b/arch/arm/mach-prima2/l2x0.c
->> > index 3a4eda45171e..09f68f046830 100644
->> > --- a/arch/arm/mach-prima2/l2x0.c
->> > +++ b/arch/arm/mach-prima2/l2x0.c
->> > @@ -8,42 +8,10 @@
->> >
->> >  #include <linux/init.h>
->> >  #include <linux/kernel.h>
->> > -#include <linux/of.h>
->> >  #include <asm/hardware/cache-l2x0.h>
->> >
->> > -struct l2x0_aux
->> > -{
->> > -       u32 val;
->> > -       u32 mask;
->> > -};
->> > -
->> > -static struct l2x0_aux prima2_l2x0_aux __initconst = {
->> > -       .val = L2C_AUX_CTRL_WAY_SIZE(2),
->> > -       .mask = 0,
->> > -};
->> > -
->> > -static struct l2x0_aux marco_l2x0_aux __initconst = {
->> > -       .val = L2C_AUX_CTRL_WAY_SIZE(2) | L310_AUX_CTRL_ASSOCIATIVITY_16,
->> > -       .mask = L2X0_AUX_CTRL_MASK,
->> > -};
->> > -
->> > -static struct of_device_id sirf_l2x0_ids[] __initconst = {
->> > -       { .compatible = "sirf,prima2-pl310-cache", .data = &prima2_l2x0_aux, },
->> > -       { .compatible = "sirf,marco-pl310-cache", .data = &marco_l2x0_aux, },
->> > -       {},
->> > -};
->> > -
->> >  static int __init sirfsoc_l2x0_init(void)
->> >  {
->> > -       struct device_node *np;
->> > -       const struct l2x0_aux *aux;
->> > -
->> > -       np = of_find_matching_node(NULL, sirf_l2x0_ids);
->> > -       if (np) {
->> > -               aux = of_match_node(sirf_l2x0_ids, np)->data;
->> > -               return l2x0_of_init(aux->val, aux->mask);
->> > -       }
->> > -
->> > -       return 0;
->> > +       return l2x0_of_init(0, ~0);
->>
->> Russell, as i mailed you before, pre-set L2 has disabled
->> write_combined, here we can make the bit restored.
->
-> *Sigh*.  This is what your final email said on the subject:
->
->   [Barry Song]
->   Anyway, it seems I can drop the whole mach-prima2/l2x0.c if I use 0 as the
->   aux_val. For aux_mask, let me zero those bits I really want to zero.
+v6:
+Suggest by Russell: Use netdev_sent_queue & netdev_completed_queue to solve latency issue 
+Also shorten the period of timer, which is used to wakeup the queue since no
+tx completed interrupt.
 
-yes. it is my final mail on the subject.
+v5:
+no big change, fix typo
 
->
-> which to me means "I need to figure out what we need to do here, and I'll
-> eventually send you a patch".
+v4:
+Modify accoringly to the suggetion from Arnd, Florian, Eric, David
+Use of_parse_phandle_with_fixed_args & syscon_node_to_regmap get ppe info
+Add skb_orphan() and tx_timer for reclaim since no tx_finished interrupt
+Update timeout, and move of_phy_connect to probe to reuse open/stop
 
-it was because i missed your this mail and patch in mail list when i
-got that mail. so i said i would send a patch to follow your
-requirement.
-but since you already had one here, i will not.
+v3:
+Suggest from Arnd, use syscon & regmap_write/read to replace static void __iomem *ppebase.
+Modify hisilicon-hip04-net.txt accrordingly to suggestion from Florian and Sergei.
 
->
-> It's really quite simple.  I've done nothing (as you can see if you compare
-> this to what I sent you originally) because you've done nothing to help me.
-> If you want me to do something different here, send me what you need.
-> Otherwise, I'm not going to change it, because I don't know what you want
-> here.
->
+v2:
+Got many suggestions from Russell, Arnd, Florian, Mark and Sergei
+Remove memcpy, use dma_map/unmap_single, use dma_alloc_coherent rather than dma_pool, etc.
+Refer property in ethernet.txt, change ppe description, etc.
 
-i was not asking why you have not done anything. i was just remarking
-when i found this mail today.
-about what i want here,  my 1st goal is making aux_mask 0xfdffffff.
-my 2nd goal is making mach-prima2/l2x0.c disappear and moving
-l2x0_of_init to mach-prima2/common.c.
+Zhangfei Gao (3):
+  Documentation: add Device tree bindings for Hisilicon hip04 ethernet
+  net: hisilicon: new hip04 MDIO driver
+  net: hisilicon: new hip04 ethernet driver
 
--barry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../bindings/net/hisilicon-hip04-net.txt           |   88 +++
+ drivers/net/ethernet/Kconfig                       |    1 +
+ drivers/net/ethernet/Makefile                      |    1 +
+ drivers/net/ethernet/hisilicon/Kconfig             |   32 +
+ drivers/net/ethernet/hisilicon/Makefile            |    5 +
+ drivers/net/ethernet/hisilicon/hip04_eth.c         |  777 ++++++++++++++++++++
+ drivers/net/ethernet/hisilicon/hip04_mdio.c        |  186 +++++
+ 7 files changed, 1090 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
+ create mode 100644 drivers/net/ethernet/hisilicon/Kconfig
+ create mode 100644 drivers/net/ethernet/hisilicon/Makefile
+ create mode 100644 drivers/net/ethernet/hisilicon/hip04_eth.c
+ create mode 100644 drivers/net/ethernet/hisilicon/hip04_mdio.c
+
+-- 
+1.7.9.5
