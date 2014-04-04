@@ -1,100 +1,122 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2] axs_nand - add driver for NAND controller used on
- Synopsys AXS dev boards
-Date: Fri, 4 Apr 2014 11:09:34 -0300
-Message-ID: <20140404140933.GA25772@arch.cereza>
-References: <1396597089-1081-1-git-send-email-abrodkin@synopsys.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 59/75] ARM: l2c: prima2: remove cache size override
+Date: Fri, 4 Apr 2014 15:10:34 +0100
+Message-ID: <20140404141034.GC7528@n2100.arm.linux.org.uk>
+References: <20140328151249.GJ7528@n2100.arm.linux.org.uk> <E1WTYZ6-0007Gr-6r@rmk-PC.arm.linux.org.uk> <CAGsJ_4yUNET5mWEUH-KEtA1ei49Fo2aC20Wmb-jXhs0vF7HSYw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1396597089-1081-1-git-send-email-abrodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <CAGsJ_4yUNET5mWEUH-KEtA1ei49Fo2aC20Wmb-jXhs0vF7HSYw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Francois Bedard <Francois.Bedard-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DL-SHA-WorkGroupLinux <workgroup.linux-kQvG35nSl+M@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Apr 04, Alexey Brodkin wrote:
-> Signed-off-by: Alexey Brodkin <abrodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->=20
+On Fri, Apr 04, 2014 at 09:40:31PM +0800, Barry Song wrote:
+> 2014-03-28 23:19 GMT+08:00 Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>:
+> > Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/marco.dtsi  |  2 +-
+> >  arch/arm/boot/dts/prima2.dtsi |  2 +-
+> >  arch/arm/mach-prima2/l2x0.c   | 34 +---------------------------------
+> >  3 files changed, 3 insertions(+), 35 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/marco.dtsi b/arch/arm/boot/dts/marco.dtsi
+> > index 1579c3491ccd..247879aa1224 100644
+> > --- a/arch/arm/boot/dts/marco.dtsi
+> > +++ b/arch/arm/boot/dts/marco.dtsi
+> > @@ -36,7 +36,7 @@
+> >                 ranges = <0x40000000 0x40000000 0xa0000000>;
+> >
+> >                 l2-cache-controller@c0030000 {
+> > -                       compatible = "sirf,marco-pl310-cache", "arm,pl310-cache";
+> > +                       compatible = "arm,pl310-cache";
+> >                         reg = <0xc0030000 0x1000>;
+> >                         interrupts = <0 59 0>;
+> >                         arm,tag-latency = <1 1 1>;
+> > diff --git a/arch/arm/boot/dts/prima2.dtsi b/arch/arm/boot/dts/prima2.dtsi
+> > index 0e219932d7cc..29b578727b0a 100644
+> > --- a/arch/arm/boot/dts/prima2.dtsi
+> > +++ b/arch/arm/boot/dts/prima2.dtsi
+> > @@ -48,7 +48,7 @@
+> >                 ranges = <0x40000000 0x40000000 0x80000000>;
+> >
+> >                 l2-cache-controller@80040000 {
+> > -                       compatible = "arm,pl310-cache", "sirf,prima2-pl310-cache";
+> > +                       compatible = "arm,pl310-cache";
+> >                         reg = <0x80040000 0x1000>;
+> >                         interrupts = <59>;
+> >                         arm,tag-latency = <1 1 1>;
+> > diff --git a/arch/arm/mach-prima2/l2x0.c b/arch/arm/mach-prima2/l2x0.c
+> > index 3a4eda45171e..09f68f046830 100644
+> > --- a/arch/arm/mach-prima2/l2x0.c
+> > +++ b/arch/arm/mach-prima2/l2x0.c
+> > @@ -8,42 +8,10 @@
+> >
+> >  #include <linux/init.h>
+> >  #include <linux/kernel.h>
+> > -#include <linux/of.h>
+> >  #include <asm/hardware/cache-l2x0.h>
+> >
+> > -struct l2x0_aux
+> > -{
+> > -       u32 val;
+> > -       u32 mask;
+> > -};
+> > -
+> > -static struct l2x0_aux prima2_l2x0_aux __initconst = {
+> > -       .val = L2C_AUX_CTRL_WAY_SIZE(2),
+> > -       .mask = 0,
+> > -};
+> > -
+> > -static struct l2x0_aux marco_l2x0_aux __initconst = {
+> > -       .val = L2C_AUX_CTRL_WAY_SIZE(2) | L310_AUX_CTRL_ASSOCIATIVITY_16,
+> > -       .mask = L2X0_AUX_CTRL_MASK,
+> > -};
+> > -
+> > -static struct of_device_id sirf_l2x0_ids[] __initconst = {
+> > -       { .compatible = "sirf,prima2-pl310-cache", .data = &prima2_l2x0_aux, },
+> > -       { .compatible = "sirf,marco-pl310-cache", .data = &marco_l2x0_aux, },
+> > -       {},
+> > -};
+> > -
+> >  static int __init sirfsoc_l2x0_init(void)
+> >  {
+> > -       struct device_node *np;
+> > -       const struct l2x0_aux *aux;
+> > -
+> > -       np = of_find_matching_node(NULL, sirf_l2x0_ids);
+> > -       if (np) {
+> > -               aux = of_match_node(sirf_l2x0_ids, np)->data;
+> > -               return l2x0_of_init(aux->val, aux->mask);
+> > -       }
+> > -
+> > -       return 0;
+> > +       return l2x0_of_init(0, ~0);
+> 
+> Russell, as i mailed you before, pre-set L2 has disabled
+> write_combined, here we can make the bit restored.
 
-Maybe it would be nice adding some driver description here, so the comm=
-it
-log actually says something useful about the commit.
+*Sigh*.  This is what your final email said on the subject:
 
-[..]
-> Reviewed-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->=20
-> +/**
-> + * axs_flag_wait_and_reset - Waits until requested flag in INT_STATU=
-S register
-> + *              is set by HW and resets it by writing "1" in INT_CLR=
-_STATUS.
-> + * @host:	Pointer to private data structure.
-> + * @flag:	Bit/flag offset in INT_STATUS register
-> + */
-> +static void axs_flag_wait_and_reset(struct axs_nand_host *host, int =
-flag)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i =3D 0; i < AXS_FLAG_WAIT_DELAY * 100; i++) {
-> +		unsigned int status =3D reg_get(host, INT_STATUS);
-> +
-> +		if (status & (1 << flag)) {
-> +			reg_set(host, INT_CLR_STATUS, 1 << flag);
-> +			return;
-> +		}
-> +
-> +		udelay(10);
-> +	}
-> +
-> +	/*
-> +	 * Since we cannot report this problem any further than
-> +	 * axs_nand_{write|read}_buf() letting user know there's a problem.
-> +	 */
-> +	dev_err(host->dev, "Waited too long (%d s.) for flag/bit %d\n",
-> +		AXS_FLAG_WAIT_DELAY, flag);
-> +}
+  [Barry Song]
+  Anyway, it seems I can drop the whole mach-prima2/l2x0.c if I use 0 as the
+  aux_val. For aux_mask, let me zero those bits I really want to zero.
 
-Hm... I'm not sure the above is really true.
+which to me means "I need to figure out what we need to do here, and I'll
+eventually send you a patch".
 
-The NAND core uses the replaceable chip->waitfunc callback to check the
-status of issued commands. See for instance:
+It's really quite simple.  I've done nothing (as you can see if you compare
+this to what I sent you originally) because you've done nothing to help me.
+If you want me to do something different here, send me what you need.
+Otherwise, I'm not going to change it, because I don't know what you want
+here.
 
-static int nand_write_oob_std(struct mtd_info *mtd, struct nand_chip *c=
-hip,
-                              int page)
-{
-        int status =3D 0;
-        const uint8_t *buf =3D chip->oob_poi;
-        int length =3D mtd->oobsize;
-
-        chip->cmdfunc(mtd, NAND_CMD_SEQIN, mtd->writesize, page);
-        chip->write_buf(mtd, buf, length);
-        /* Send command to program the OOB data */
-        chip->cmdfunc(mtd, NAND_CMD_PAGEPROG, -1, -1);
-
-        status =3D chip->waitfunc(mtd, chip);
-
-        return status & NAND_STATUS_FAIL ? -EIO : 0;
-}
-
-On the other side, if you are clearing the flags in axs_flag_wait_and_r=
-eset()
-it might be a bit hard for you to get this right.
-
-IOW, I'm not saying you *must* do this, but instead suggesting that you=
- take
-a look at waitfunc() and see if it helps report a proper error in the
-read/write path.
---=20
-Ezequiel Garc=EDa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
