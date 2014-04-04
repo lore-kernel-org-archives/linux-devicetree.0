@@ -1,85 +1,69 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] i2c: Add driver for Cadence I2C controller
-Date: Fri, 4 Apr 2014 16:38:47 +0200
-Message-ID: <20140404143847.GA5529@katana>
-References: <1396547967-19260-1-git-send-email-soren.brinkmann@xilinx.com>
- <1396547967-19260-2-git-send-email-soren.brinkmann@xilinx.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 2/2] devicetree: Add devicetree bindings documentation
+ for Cadence SPI
+Date: Fri, 4 Apr 2014 15:42:44 +0100
+Message-ID: <20140404144244.GV14763@sirena.org.uk>
+References: <1396523431-14519-1-git-send-email-harinik@xilinx.com>
+ <1396523431-14519-2-git-send-email-harinik@xilinx.com>
+ <20140403213446.GB14763@sirena.org.uk>
+ <CAFcVEC+mpHh_d2j6_sdhWS3d2KyXrDYUq6L6jO2Q=SS68Hda2g@mail.gmail.com>
+ <20140404100919.GO14763@sirena.org.uk>
+ <CAFcVECLDyfFSZFk9fzFKsr6pM=f1nwzGAhjX17z=NsbvWpiDew@mail.gmail.com>
+ <20140404124637.GT14763@sirena.org.uk>
+ <CAFcVEC+FAAxxxxA8PgcTzLU5UFu=pkDEM4Li06dRmEwA95sz_g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lrZ03NoBR/3+SXJZ"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="dtsE+6jMZxJpedRo"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1396547967-19260-2-git-send-email-soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CAFcVEC+FAAxxxxA8PgcTzLU5UFu=pkDEM4Li06dRmEwA95sz_g@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Harini Katakam <harinikatakamlinux@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-spi@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
---lrZ03NoBR/3+SXJZ
+--dtsE+6jMZxJpedRo
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 03, 2014 at 10:59:26AM -0700, Soren Brinkmann wrote:
-> Add a driver for the Cadence I2C controller. This controller is for
-> example found in Xilinx Zynq.
->=20
-> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Tested-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Reviewed-by: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+On Fri, Apr 04, 2014 at 07:38:14PM +0530, Harini Katakam wrote:
 
-Only minor stuff, but since you resend anyhow because of 400kHz issue...
+> OK. I understand.
+> Can you comment on the case where a decoder is used?
 
-> +static void cdns_i2c_mrecv(struct cdns_i2c *id)
-> +{
-> +	unsigned int ctrl_reg;
-> +	unsigned int isr_status;
-> +
-> +	id->p_recv_buf =3D id->p_msg->buf;
-> +	id->recv_count =3D id->p_msg->len;
-> +
-> +	/* Put the controller in master receive mode and clear the FIFO */
-> +	ctrl_reg =3D cdns_i2c_readreg(CDNS_I2C_CR_OFFSET);
-> +	ctrl_reg |=3D CDNS_I2C_CR_RW | CDNS_I2C_CR_CLR_FIFO;
-> +
-> +	if ((id->p_msg->flags & I2C_M_RECV_LEN) =3D=3D I2C_M_RECV_LEN)
+> There is support for adding a decoder where extended slaves can be selected
+> through the IP's control register.
+> (This is not currently implemented in the driver but will be in the future.)
 
-'if (id->p_msg->flags & I2C_M_RECV_LEN)' is enough.
+> How should the driver know whether it is 4 or 16 select lines for example?
+> This has to be written to master->num_chipselect.
 
-> +		/* Report the other error interrupts to application as EIO */
-> +		if (id->err_status & (CDNS_I2C_IXR_RX_UNF |
-> +				      CDNS_I2C_IXR_TX_OVF |
-> +				      CDNS_I2C_IXR_RX_OVF |
-> +				      CDNS_I2C_IXR_NACK)) {
-> +			cdns_i2c_master_reset(adap);
-> +			return -EIO;
-> +		}
+That's the sort of case where it's useful yes - depending on how the
+implementation is done it may be sensible to just have a property
+specifying if a decoder is there (if it just changes the encoding in the
+register for example).
 
-NACK is returned as -ENXIO. Check 'Documentation/i2c/fault-codes' for
-standard patterns. I'd think the rest is EIO, though.
-
-
---lrZ03NoBR/3+SXJZ
+--dtsE+6jMZxJpedRo
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTPsP3AAoJEBQN5MwUoCm2WV4P/39bAkxtCvoj8gUKN3f3hLse
-ykH+NCPg3/G2UekYs27KtwY/+Zp7d+9a3moLwDJJxgjghav33Aryq1jPLBYoequM
-kn9P9vc/QtSWiIOWsHR4c+ZzdXFRfQAD+Xozb26eHup3xOXYmrCJ3I8SK7gzN/F9
-fnLUp3OvkRheB0+iM6NNopuNktvfg1xmvReOEQmsAQCO/t6jsONoNXj+XbBAud7E
-GpKtflVQEk/pqSGZA6OtIcYt4Zj0nch9g4BGlc19vUjTqN/51B1IEEraTUn+Hjwg
-ZIXOztZyT9sBnCRm26XYlKfXeV8c0IGMA99PUxKYbBq4ph8dLH+rylJSLkVIP739
-hu8YwRUMQZascv/VOBmEBguKH15BHNn8NXnYsixFb7rJVkS6fUwKLLSU2qb5y1Ny
-4Q43Q5aLTrbpNylkk9GzmQnJbptWTy9ZrLwu26dXiR0SiPxRL3HD1y2NkNBK23bF
-OBrYosH9GsHbb8s6qOPbC6dT47HBU2wvTf5sCCwQGoqkpsNHfE4z4pdG6c1sY1ij
-aXgw6KOQ3tyVLjBL+eWf9+TqM9SB69QfOKAn4WhqeCw0v6SeBWY5+9xxs0VbU5KX
-Nept3zeKD5d65PS59KpD+nYlCiNqAtVDw0DCgjIlaQb/DnpobXklPJUC8WnqmsZk
-4xcMVytvijLDUqoem3cE
-=QQu0
+iQIcBAEBAgAGBQJTPsThAAoJELSic+t+oim9RxAP/R+P3uXit2uGGj9y6epVIFGy
+KKUyK68OB2vWV9GOmWP+8NatKin/akQGahfzZwgRG8uq6u4j1SXh7zpXmWSPDY6u
+/Bb28xEIKqUrIe+WDagnM7I6w1CB7N2RGOG6cQLhbYC4OCQZD/dQ/yAd0Mtr8Itw
+LQU/z+f9PGlBQ/4X12ohsQn+xThsoO3pM43ylrYaXQOX8J2JvhvAqA6Sg9PmaUaS
+IXgPPUq4ySg/wV1eRGsiR4rPy5PtWvFgvuN/2RcWMc13Suld+5SSrKgEFp2LtB3y
+qH6lZhWCgdXqUGwz9+n5svbyuP1opTGMbx9EWUw4gP2w82+MEwm0P/Le+9Tj0we6
+yBBiVIWOxs0u7nz6Mh7ayrV3OrXed0wKH6zFL0TSeS6nspt4SPWR4h06mqy5MzHz
+FbtB1aEXpmX8NfSrGSCRFkzV0hZPdaasTT6ZJQoCTCCJnUhytcY2/sphDjY1Wa5h
+f/IdZE8J4eglTSfY61u1SL4zQA8JUGfqbZB8ozqwsirOUaVvkWvsNVDhO2lIqFm7
+SYLwuyPfaw+zXwRBaxROO5r261BmoiQNHvQh2+1n+aO5FHlnMbIFQ8NpQjC5CRmQ
+A64n7vnAPwrNB//yV4QUyahCjVey0oKzFVGcgb62xvlDPGp1ff0ifMckLt4NFTE3
+rtikGpIgJ7B89NAduJaA
+=aOmE
 -----END PGP SIGNATURE-----
 
---lrZ03NoBR/3+SXJZ--
+--dtsE+6jMZxJpedRo--
