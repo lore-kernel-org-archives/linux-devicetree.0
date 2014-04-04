@@ -1,76 +1,37 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v2 1/2] SPI: Add driver for Cadence SPI controller
-Date: Fri, 04 Apr 2014 12:02:13 +0200
-Message-ID: <533E8325.5000503@monstr.eu>
-References: <1396523431-14519-1-git-send-email-harinik@xilinx.com> <533E7588.5060209@ti.com> <533E7A3C.3060302@ti.com>
-Reply-To: monstr@monstr.eu
+From: Nicolin Chen <Guangyu.Chen@freescale.com>
+Subject: [PATCH v3 0/2] ASoC: fsl_sai: Add bus clock and mclks with clock controls
+Date: Fri, 4 Apr 2014 18:08:11 +0800
+Message-ID: <cover.1396605772.git.Guangyu.Chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="NcuilO6TNIcHFGELEbSvXi4h8juiJ7aB6"
+Content-Type: text/plain
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <533E7A3C.3060302@ti.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: sourav <sourav.poddar@ti.com>
-Cc: Harini Katakam <harinik@xilinx.com>, broonie@kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+To: broonie@kernel.org, shawn.guo@linaro.org
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, timur@tabi.org, Li.Xiubo@freescale.com, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---NcuilO6TNIcHFGELEbSvXi4h8juiJ7aB6
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+This series of patches add clock controls to fsl_sai driver and updates
+the vf610.dtsi accordingly.
 
-Hi Sourav
+Changelog
+v3:
+ * Use int type for ret instead of u32.
+ * Added Acked-by and Tested-by from Xiubo Li.
+v2:
+ * Appended two extra mclks to the driver since SAI actually has three.
+ * Renamed clock name to 'bus' and 'mclk' according to the reference manual.
 
-On 04/04/2014 11:24 AM, sourav wrote:
-> HI,
-> On Friday 04 April 2014 02:34 PM, sourav wrote:
->> Hi Harini,
->> On Thursday 03 April 2014 04:40 PM, Harini Katakam wrote:
->>> Add driver for Cadence SPI controller. This is used in Xilinx Zynq.
->>>
->>> Signed-off-by: Harini Katakam<harinik@xilinx.com>
->>> ---
->> I had looked at cadence qspi controller. What I can see is that your
->> patch implements "normal spi ode of operation" ? and the patch looks f=
-ine.
->> But, to avail the maximum throughput, I see cadence qspi supports
->> direct/indirect mode of operations, as well as read data capture logic=
-=2E
->>
->> So, do you intent to add any of the above in your driver?
->>
-> Looks like, I got a bit confused. This is not cadence QSPI controller b=
-ut only SPI controller.
-> Sorry for the noise.
+Nicolin Chen (2):
+  ASoC: fsl_sai: Add clock controls for SAI
+  ARM: dts: Append clock bindings for sai2 on VF610 platform
 
-Look at this one
-http://www.spinics.net/lists/kernel/msg1716894.html
+ .../devicetree/bindings/sound/fsl-sai.txt          |  8 ++--
+ arch/arm/boot/dts/vf610.dtsi                       |  6 ++-
+ sound/soc/fsl/fsl_sai.c                            | 51 ++++++++++++++++++++--
+ sound/soc/fsl/fsl_sai.h                            |  4 ++
+ 4 files changed, 60 insertions(+), 9 deletions(-)
 
-Thanks,
-Michal
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+-- 
+1.8.4
 
 
-
---NcuilO6TNIcHFGELEbSvXi4h8juiJ7aB6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlM+gyUACgkQykllyylKDCGA2wCgl0wVsHuw5wpfuG+te6wJTjZS
-ABcAoIISwm0Wp9p6bFvL0PvUoZ8pkcUM
-=sAYZ
------END PGP SIGNATURE-----
-
---NcuilO6TNIcHFGELEbSvXi4h8juiJ7aB6--
