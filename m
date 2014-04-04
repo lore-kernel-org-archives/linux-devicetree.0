@@ -1,103 +1,55 @@
-From: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Subject: [PATCH v2 4/5] dt-bindings: clock: Add Zynq-7000 header
-Date: Fri,  4 Apr 2014 16:14:15 -0700
-Message-ID: <1396653256-28397-5-git-send-email-soren.brinkmann@xilinx.com>
-References: <1396653256-28397-1-git-send-email-soren.brinkmann@xilinx.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v7 5/6] pci: Export find_pci_host_bridge() function.
+Date: Fri, 4 Apr 2014 17:39:48 -0600
+Message-ID: <20140404233948.GC15806@google.com>
+References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
+ <1394811272-1547-6-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1396653256-28397-1-git-send-email-soren.brinkmann@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Mike Looijmans <mike.looijmans@topic.nl>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1394811272-1547-6-git-send-email-Liviu.Dudau@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Add header file with symbolic names for Zynq's clocks.
+On Fri, Mar 14, 2014 at 03:34:31PM +0000, Liviu Dudau wrote:
+> This is a useful function and we should make it visible outside the
+> generic PCI code. Export it as a GPL symbol.
+> 
+> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> Tested-by: Tanmay Inamdar <tinamdar@apm.com>
+> ---
+>  drivers/pci/host-bridge.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/host-bridge.c b/drivers/pci/host-bridge.c
+> index 06ace62..8708b652 100644
+> --- a/drivers/pci/host-bridge.c
+> +++ b/drivers/pci/host-bridge.c
+> @@ -17,12 +17,13 @@ static struct pci_bus *find_pci_root_bus(struct pci_bus *bus)
+>  	return bus;
+>  }
+>  
+> -static struct pci_host_bridge *find_pci_host_bridge(struct pci_bus *bus)
+> +struct pci_host_bridge *find_pci_host_bridge(struct pci_bus *bus)
+>  {
+>  	struct pci_bus *root_bus = find_pci_root_bus(bus);
+>  
+>  	return to_pci_host_bridge(root_bus->bridge);
+>  }
+> +EXPORT_SYMBOL_GPL(find_pci_host_bridge);
 
-Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
----
+Do you have a place where you actually need to use find_pci_host_bridge()?
+I'd rather not export it, even as _GPL, unless we have a user.
 
-Changes in v2:
- - this patch has been added
+If we *do* export it, I'd like it to have a more conventional name, e.g.,
+something starting with "pci_".
 
----
- include/dt-bindings/clock/zynq-7000.h | 64 +++++++++++++++++++++++++++=
-++++++++
- 1 file changed, 64 insertions(+)
- create mode 100644 include/dt-bindings/clock/zynq-7000.h
-
-diff --git a/include/dt-bindings/clock/zynq-7000.h b/include/dt-binding=
-s/clock/zynq-7000.h
-new file mode 100644
-index 000000000000..851f5cffe481
---- /dev/null
-+++ b/include/dt-bindings/clock/zynq-7000.h
-@@ -0,0 +1,64 @@
-+/*
-+ * Copyright (c) 2014 Xilinx Inc.
-+ * Author: S=C3=B6ren Brinkmann <soren.brinkmann@xilinx.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modif=
-y
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * Device Tree binding constants for Zynq 7000 clock controller.
-+*/
-+
-+#ifndef _DT_BINDINGS_CLOCK_ZYNQ_7000_H
-+#define _DT_BINDINGS_CLOCK_ZYNQ_7000_H
-+
-+#define ZYNQ_CLK_ARMPLL		0
-+#define ZYNQ_CLK_DDRPLL		1
-+#define ZYNQ_CLK_IOPLL		2
-+#define ZYNQ_CLK_CPU_6OR4X	3
-+#define ZYNQ_CLK_CPU_3OR2X	4
-+#define ZYNQ_CLK_CPU_2X		5
-+#define ZYNQ_CLK_CPU_1X		6
-+#define ZYNQ_CLK_DDR2X		7
-+#define ZYNQ_CLK_DDR3X		8
-+#define ZYNQ_CLK_DCI		9
-+#define ZYNQ_CLK_LQSPI		10
-+#define ZYNQ_CLK_SMC		11
-+#define ZYNQ_CLK_PCAP		12
-+#define ZYNQ_CLK_GEM0		13
-+#define ZYNQ_CLK_GEM1		14
-+#define ZYNQ_CLK_FCLK0		15
-+#define ZYNQ_CLK_FCLK1		16
-+#define ZYNQ_CLK_FCLK2		17
-+#define ZYNQ_CLK_FCLK3		18
-+#define ZYNQ_CLK_CAN0		19
-+#define ZYNQ_CLK_CAN1		20
-+#define ZYNQ_CLK_SDIO0		21
-+#define ZYNQ_CLK_SDIO1		22
-+#define ZYNQ_CLK_UART0		23
-+#define ZYNQ_CLK_UART1		24
-+#define ZYNQ_CLK_SPI0		25
-+#define ZYNQ_CLK_SPI1		26
-+#define ZYNQ_CLK_DMA		27
-+#define ZYNQ_CLK_USB0_APER	28
-+#define ZYNQ_CLK_USB1_APER	29
-+#define ZYNQ_CLK_GEM0_APER	30
-+#define ZYNQ_CLK_GEM1_APER	31
-+#define ZYNQ_CLK_SDIO0_APER	32
-+#define ZYNQ_CLK_SDIO1_APER	33
-+#define ZYNQ_CLK_SPI0_APER	34
-+#define ZYNQ_CLK_SPI1_APER	35
-+#define ZYNQ_CLK_CAN0_APER	36
-+#define ZYNQ_CLK_CAN1_APER	37
-+#define ZYNQ_CLK_I2C0_APER	38
-+#define ZYNQ_CLK_I2C1_APER	39
-+#define ZYNQ_CLK_UART0_APER	40
-+#define ZYNQ_CLK_UART1_APER	41
-+#define ZYNQ_CLK_GPIO_APER	42
-+#define ZYNQ_CLK_LQSPI_APER	43
-+#define ZYNQ_CLK_SMC_APER	44
-+#define ZYNQ_CLK_SWDT		45
-+#define ZYNQ_CLK_DBG_TRC	46
-+#define ZYNQ_CLK_DBG_APB	47
-+
-+#endif /* _DT_BINDINGS_CLOCK_ZYNQ_7000_H */
---=20
-1.9.1.1.gbb9f595
+>  
+>  void pci_set_host_bridge_release(struct pci_host_bridge *bridge,
+>  				 void (*release_fn)(struct pci_host_bridge *),
+> -- 
+> 1.9.0
+> 
