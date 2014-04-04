@@ -1,47 +1,80 @@
-From: Harini Katakam <harinikatakamlinux@gmail.com>
-Subject: Re: [PATCH v2 2/2] devicetree: Add devicetree bindings documentation
- for Cadence SPI
-Date: Fri, 4 Apr 2014 20:19:37 +0530
-Message-ID: <CAFcVECKEMa9agyk8BQAbdadmggscwUk=9x-3nAM1TZiAoGf0MA@mail.gmail.com>
-References: <1396523431-14519-1-git-send-email-harinik@xilinx.com>
-	<1396523431-14519-2-git-send-email-harinik@xilinx.com>
-	<20140403213446.GB14763@sirena.org.uk>
-	<CAFcVEC+mpHh_d2j6_sdhWS3d2KyXrDYUq6L6jO2Q=SS68Hda2g@mail.gmail.com>
-	<20140404100919.GO14763@sirena.org.uk>
-	<CAFcVECLDyfFSZFk9fzFKsr6pM=f1nwzGAhjX17z=NsbvWpiDew@mail.gmail.com>
-	<20140404124637.GT14763@sirena.org.uk>
-	<CAFcVEC+FAAxxxxA8PgcTzLU5UFu=pkDEM4Li06dRmEwA95sz_g@mail.gmail.com>
-	<20140404144244.GV14763@sirena.org.uk>
+From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [RFC 1/5] PCI: tegra: Overhaul regulator usage
+Date: Fri, 4 Apr 2014 16:49:25 +0200
+Message-ID: <1396622969-17837-2-git-send-email-treding@nvidia.com>
+References: <1396622969-17837-1-git-send-email-treding@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140404144244.GV14763@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-spi@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1396622969-17837-1-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+The current usage of regulators for the Tegra PCIe block is wrong. It
+doesn't accurately reflect the actual supply inputs of the IP block and
+therefore isn't as flexible as it should be. Rectify this by describing
+all possible supply inputs in the device tree binding documentation and
+deprecate the old supply properties.
 
-On Fri, Apr 4, 2014 at 8:12 PM, Mark Brown <broonie@kernel.org> wrote:
-> On Fri, Apr 04, 2014 at 07:38:14PM +0530, Harini Katakam wrote:
->
->> OK. I understand.
->> Can you comment on the case where a decoder is used?
->
->> There is support for adding a decoder where extended slaves can be selected
->> through the IP's control register.
->> (This is not currently implemented in the driver but will be in the future.)
->
->> How should the driver know whether it is 4 or 16 select lines for example?
->> This has to be written to master->num_chipselect.
->
-> That's the sort of case where it's useful yes - depending on how the
-> implementation is done it may be sensible to just have a property
-> specifying if a decoder is there (if it just changes the encoding in the
-> register for example).
+Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ .../bindings/pci/nvidia,tegra20-pcie.txt           | 35 ++++++++++++++++++++--
+ 1 file changed, 32 insertions(+), 3 deletions(-)
 
-OK, great. That approach will work.
-
-Regards,
-Harini
+diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+index c300391e8d3e..66e8aca4aef0 100644
+--- a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+@@ -14,9 +14,6 @@ Required properties:
+ - interrupt-names: Must include the following entries:
+   "intr": The Tegra interrupt that is asserted for controller interrupts
+   "msi": The Tegra interrupt that is asserted when an MSI is received
+-- pex-clk-supply: Supply voltage for internal reference clock
+-- vdd-supply: Power supply for controller (1.05V)
+-- avdd-supply: Power supply for controller (1.05V) (not required for Tegra20)
+ - bus-range: Range of bus numbers associated with this controller
+ - #address-cells: Address representation for root ports (must be 3)
+   - cell 0 specifies the bus and device numbers of the root port:
+@@ -60,6 +57,38 @@ Required properties:
+   - afi
+   - pcie_x
+ 
++Power supplies for Tegra20:
++- avdd-pex-supply: Power supply for analog PCIe logic. Must supply 1.05 V.
++- vdd-pex-supply: Power supply for digital PCIe I/O. Must supply 1.05 V.
++- avdd-pex-pll-supply: Power supply for dedicated (internal) PCIe PLL. Must
++  supply 1.05 V.
++- avdd-plle-supply: Power supply for PLLE, which is shared with SATA. Must
++  supply 1.05 V.
++- vddio-pex-clk-supply: Power supply for PCIe clock. Must supply 3.3 V.
++
++Power supplies for Tegra30:
++- Required:
++  - avdd-pex-pll-supply: Power supply for dedicated (internal) PCIe PLL. Must
++    supply 1.05 V.
++  - avdd-plle-supply: Power supply for PLLE, which is shared with SATA. Must
++    supply 1.05 V.
++  - vddio-pex-ctl-supply: Power supply for PCIe control I/O partition. Must
++    supply 1.8 V.
++  - hvdd-pex-supply: High-voltage supply for PCIe I/O and PCIe output clocks.
++    Must supply 3.3 V.
++- Optional:
++  - If port 0 is enabled:
++    - avdd-pexa-supply: Power supply for analog PCIe logic. Must supply 1.05 V.
++    - vdd-pexa-supply: Power supply for digital PCIe I/O. Must supply 1.05 V.
++  - If at least one of ports 1 and 2 is enabled:
++    - avdd-pexb-supply: Power supply for analog PCIe logic. Must supply 1.05 V.
++    - vdd-pexb-supply: Power supply for digital PCIe I/O. Must supply 1.05 V.
++
++Deprecated supplies:
++- pex-clk-supply: Supply voltage for internal reference clock
++- vdd-supply: Power supply for controller (1.05V)
++- avdd-supply: Power supply for controller (1.05V) (not required for Tegra20)
++
+ Root ports are defined as subnodes of the PCIe controller node.
+ 
+ Required properties:
+-- 
+1.9.1
