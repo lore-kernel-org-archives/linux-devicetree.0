@@ -1,52 +1,97 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 2/5] ARM: add SMP support for Broadcom mobile SoCs
-Date: Fri, 04 Apr 2014 10:55:40 -0700
-Message-ID: <533EF21C.6000909@codeaurora.org>
-References: <1396577891-2713-1-git-send-email-elder@linaro.org> <1396577891-2713-3-git-send-email-elder@linaro.org>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] clk: qcom: Add support for IPQ8064's global clock controller
+ (GCC)
+Date: Fri, 04 Apr 2014 11:14:59 -0700
+Message-ID: <533EF6A3.9010003@codeaurora.org>
+References: <1396629001-6656-1-git-send-email-galak@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1396577891-2713-3-git-send-email-elder@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Elder <elder@linaro.org>, mporter@linaro.org, bcm@fixthebug.org, devicetree@vger.kernel.org, arnd@arndb.de
-Cc: bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1396629001-6656-1-git-send-email-galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/03/14 19:18, Alex Elder wrote:
-> +
-> +/*
-> + * Secondary startup method setup routine to extract the location of
-> + * the secondary boot register from a "cpu" or "cpus" device tree
-> + * node.  Only the first seen secondary boot register value is used;
-> + * any others are ignored.  The secondary boot register value must be
-> + * non-zero.
-> + *
-> + * Returns 0 if successful or an error code otherwise.
-> + */
-> +static int __init of_enable_method_setup(struct device_node *node)
-> +{
-> +	int ret;
-> +
-> +	/* Ignore all but the first one specified */
-> +	if (secondary_boot)
-> +		return 0;
-> +
-> +	ret = of_property_read_u32(node, OF_SECONDARY_BOOT, &secondary_boot);
-> +	if (ret)
-> +		pr_err("%s: missing/invalid " OF_SECONDARY_BOOT " property\n",
-> +			node->name);
-> +
-> +	return ret;
-> +}
+On 04/04/14 09:30, Kumar Gala wrote:
+> Add a driver for the global clock controller found on IPQ8064 based
+> platforms. This should allow most non-multimedia device drivers to probe
+> and control their clocks.
+>
+> This is currently missing clocks for SATA, USB, audio and networking
+> devices.
+>
 
-I don't understand why we need this. Why can't we get the secondary boot
-address from the /cpus node in the smp_prepare_cpus op. It isn't that
-hard to get access to the cpus node there via of_find_node_by_path().
-Then we don't need patch 1 at all. If it turns out to be common stuff,
-we can always have the common function live in arm common code or maybe
-even be a devicetree API.
+There shouldn't be any audio clocks in GCC.
+
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.txt b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
+> index 767401f..74974d6 100644
+> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.txt
+> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
+> @@ -4,6 +4,7 @@ Qualcomm Global Clock & Reset Controller Binding
+>  Required properties :
+>  - compatible : shall contain only one of the following:
+>  
+> +			"qcom,gcc-ipq8064"
+>  			"qcom,gcc-msm8660"
+>  			"qcom,gcc-msm8960"
+>  			"qcom,gcc-msm8974"
+> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+> index 995bcfa..5d81f7d 100644
+> --- a/drivers/clk/qcom/Kconfig
+> +++ b/drivers/clk/qcom/Kconfig
+> @@ -4,6 +4,14 @@ config COMMON_CLK_QCOM
+>  	select REGMAP_MMIO
+>  	select RESET_CONTROLLER
+>  
+> +config MSM_GCC_806X
+
+It would be better to say IPQ_GCC_806X here instead of MSM.
+
+> +	tristate "IPQ806x Global Clock Controller"
+> +	depends on COMMON_CLK_QCOM
+> +	help
+> +	  Support for the global clock controller on ipq806x devices.
+> +	  Say Y if you want to use peripheral devices such as UART, SPI,
+> +	  i2c, USB, SD/eMMC, etc.
+> +
+>
+> diff --git a/drivers/clk/qcom/gcc-ipq806x.c b/drivers/clk/qcom/gcc-ipq806x.c
+> new file mode 100644
+> index 0000000..cc5b6c8
+> --- /dev/null
+> +++ b/drivers/clk/qcom/gcc-ipq806x.c
+[...]
+> +static int gcc_ipq806x_probe(struct platform_device *pdev)
+> +{
+> +	struct clk *clk;
+> +	struct device *dev = &pdev->dev;
+> +
+> +	/* Temporary until RPM clocks supported */
+> +	clk = clk_register_fixed_rate(dev, "cxo", NULL, CLK_IS_ROOT, 19200000);
+> +	if (IS_ERR(clk))
+> +		return PTR_ERR(clk);
+> +
+> +	clk = clk_register_fixed_rate(dev, "pxo", NULL, CLK_IS_ROOT, 27000000);
+
+I thought PXO was 25MHz. Is there even a CXO present? It may just be PXO.
+
+> diff --git a/include/dt-bindings/clock/qcom,gcc-ipq806x.h b/include/dt-bindings/clock/qcom,gcc-ipq806x.h
+> new file mode 100644
+> index 0000000..50a640e
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/qcom,gcc-ipq806x.h
+
+One thing I've been considering is moving the reset defines into the
+same dt-binding include as the clocks. That way we cut down on the
+number of files that are all related to the same thing. What do you think?
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 hosted by The Linux Foundation
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
