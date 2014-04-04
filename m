@@ -1,60 +1,37 @@
 From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 0/5] ARM: SMP: support Broadcom mobile SoCs
-Date: Thu,  3 Apr 2014 21:18:06 -0500
-Message-ID: <1396577891-2713-1-git-send-email-elder@linaro.org>
+Subject: [PATCH 3/5] ARM: configs: enable SMP in bcm_defconfig
+Date: Thu,  3 Apr 2014 21:18:09 -0500
+Message-ID: <1396577891-2713-4-git-send-email-elder@linaro.org>
+References: <1396577891-2713-1-git-send-email-elder@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1396577891-2713-1-git-send-email-elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds SMP support for two Broadcom mobile SoC families.
-It uses CPU_METHOD_OF_DECLARE() (or rather a new variant of that)
-so that SMP operations are assigned using device tree rather than
-adding it to a machine definition in a board file.
+Also explicitly set CONFIG_NR_CPUS to 2, limiting it to the most we
+currently need.
 
-The first patch adds the ability to extract information from device
-tree nodes having a matching "enable-method" value.  This allows
-additional parameters to be associated with the enable method.  This
-is used for the Broadcom SoCs to efficiently determine the location
-of a special register used in coordinating the start of secondary
-CPUs.
+Signed-off-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/configs/bcm_defconfig |    2 ++
+ 1 file changed, 2 insertions(+)
 
-I have not included a device tree document update here; I would like
-suggestions on where the new enable method and its parameter should
-be documented.  (I presume in .../arm/cpus.txt, but that could get
-out of hand as more boards define new enable methods.)
-
-					-Alex
-
-Note:
-This series is based on the current arm-soc/for-next branch:
-    e98cd72 arm-soc: document samsung merges
-Plus one more recently-posted patch:
-    http://permalink.gmane.org/gmane.linux.kernel/1677714
-
-This series is available here:
-    http://git.linaro.org/landing-teams/working/broadcom/kernel.git
-    Branch review/bcm-smp
-
-Alex Elder (5):
-  ARM: introduce CPU_METHOD_OF_DECLARE_SETUP()
-  ARM: add SMP support for Broadcom mobile SoCs
-  ARM: configs: enable SMP in bcm_defconfig
-  ARM: dts: enable SMP support for bcm28155
-  ARM: dts: enable SMP support for bcm21664
-
- arch/arm/boot/dts/bcm11351.dtsi |   19 ++++
- arch/arm/boot/dts/bcm21664.dtsi |   19 ++++
- arch/arm/configs/bcm_defconfig  |    2 +
- arch/arm/include/asm/smp.h      |   10 +-
- arch/arm/kernel/devtree.c       |   31 +++++--
- arch/arm/mach-bcm/Kconfig       |   18 +++-
- arch/arm/mach-bcm/Makefile      |    5 +-
- arch/arm/mach-bcm/platsmp.c     |  194 +++++++++++++++++++++++++++++++++++++++
- 8 files changed, 286 insertions(+), 12 deletions(-)
- create mode 100644 arch/arm/mach-bcm/platsmp.c
-
+diff --git a/arch/arm/configs/bcm_defconfig b/arch/arm/configs/bcm_defconfig
+index 0100464..ea374a7 100644
+--- a/arch/arm/configs/bcm_defconfig
++++ b/arch/arm/configs/bcm_defconfig
+@@ -24,6 +24,8 @@ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PARTITION_ADVANCED=y
++CONFIG_SMP=y
++CONFIG_NR_CPUS=2
+ CONFIG_ARCH_BCM=y
+ CONFIG_ARCH_BCM_MOBILE=y
+ CONFIG_ARM_THUMBEE=y
 -- 
 1.7.9.5
 
