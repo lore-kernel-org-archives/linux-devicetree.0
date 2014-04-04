@@ -1,102 +1,81 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v2 2/2] devicetree: Add devicetree bindings documentation
- for Cadence SPI
-Date: Fri, 04 Apr 2014 13:16:59 +0200
-Message-ID: <533E94AB.6060400@monstr.eu>
-References: <1396523431-14519-1-git-send-email-harinik@xilinx.com> <1396523431-14519-2-git-send-email-harinik@xilinx.com> <20140403213446.GB14763@sirena.org.uk> <CAFcVEC+mpHh_d2j6_sdhWS3d2KyXrDYUq6L6jO2Q=SS68Hda2g@mail.gmail.com> <CAMuHMdWvFT1kLpcYGSuNFs6qVTbn4S-9-rFV8jkJMAaS8xCDnQ@mail.gmail.com>
-Reply-To: monstr@monstr.eu
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 04/19] mmc: mmci: Add DT bindings for signal direction
+Date: Fri, 4 Apr 2014 13:47:15 +0200
+Message-ID: <CAPDyKFr5bC8Qf=P9yLi=Qg0Q2hP6HqMc=4ke8D60fBksjo5RLA@mail.gmail.com>
+References: <1396279100-2920-1-git-send-email-ulf.hansson@linaro.org>
+	<1396279100-2920-5-git-send-email-ulf.hansson@linaro.org>
+	<CAL_JsqL1f+REzDaAztEU5ZCxf39Pu3GcKo5YO3PwCLgt85hxRQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="Cdw5EfFCIsanNVDpkgvWw1A791LJUAXmi"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWvFT1kLpcYGSuNFs6qVTbn4S-9-rFV8jkJMAaS8xCDnQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Harini Katakam <harinikatakamlinux@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-spi <linux-spi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqL1f+REzDaAztEU5ZCxf39Pu3GcKo5YO3PwCLgt85hxRQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---Cdw5EfFCIsanNVDpkgvWw1A791LJUAXmi
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-On 04/04/2014 10:09 AM, Geert Uytterhoeven wrote:
-> Hi Harini,
->=20
-> On Fri, Apr 4, 2014 at 5:00 AM, Harini Katakam
-> <harinikatakamlinux@gmail.com> wrote:
->>>> +             num-cs =3D /bits/ 16 <4>;
->>>
->>> What's going on with the /bits/ - is this something that's required f=
-or
->>> the property?
+On 3 April 2014 22:05, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Mon, Mar 31, 2014 at 10:18 AM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> Some variants have support for indicating the bus signal directions,
+>> which currently are configured through platform data.
 >>
->> The master->num-chipselect property is 16 bit but writing <4> here dir=
-ectly
->> leads to 0 being read in of_property_read (because it's big endian).
->> Instead using of property read u32 and then copying, we decided to do =
-this.
->> This was discussed on v2 between Michal and Rob:
->>>>>> +               num-chip-select =3D /bits/ 16 <4>;
->>>>
->>>> I was expecting you will comment this a little bit. :-)
->>>> Because all just reading this num-cs as 32bit and then
->>>> assigning this value to master->num_chipselect which is 16bit.
->>>
->>> Well, everyone else has that problem then. Obviously it takes a bit
->>> more care than just reading into a u32, but that is a kernel problem
->>> and not a problem of the binding.
->> They are not reading it directly with read_u32 but they are using
->> intermediate u32 value which is assigned to u16 which is fine.
->> This pattern is in most drivers(maybe all).
->> The point is if binding should or can't simplify driver code.
->> And from your reaction above I expect that it is up to driver
->> owner and binding doc how you want to do it.
->=20
-> IMHO this "/bits/ 16" doesn't simplify the binding.
->=20
-> As "num-cs" is a generic spi subsystem binding, it should not be
-> restricted to 16 bits for the sake of a driver. As your hardware can dr=
-ive 4
-> chip selects, you could represent it in 3 bits (don't!).
->=20
-> Simple integers are 32 bit in DT, so use a temporary.
+>> Add corresponding DT bindings to enable us to move away from using the
+>> platform data.
+>>
+>> Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/mmc/mmci.txt |   11 ++++++++++-
+>>  drivers/mmc/host/mmci.c                        |   11 +++++++++++
+>>  2 files changed, 21 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/mmci.txt b/Documentation/devicetree/bindings/mmc/mmci.txt
+>> index ff233d1..9bd2ffa 100644
+>> --- a/Documentation/devicetree/bindings/mmc/mmci.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/mmci.txt
+>> @@ -4,7 +4,8 @@ The ARM PrimeCell MMCI PL180 and PL181 provides an interface for
+>>  reading and writing to MultiMedia and SD cards alike.
+>>
+>>  This file documents differences between the core properties described
+>> -by mmc.txt and the properties used by the mmci driver.
+>> +by mmc.txt and the properties used by the mmci driver. Using "st" as
+>> +the prefix for a property, indicates support by the ST Micro variant.
+>>
+>>  Required properties:
+>>  - compatible             : contains "arm,pl18x", "arm,primecell".
+>> @@ -18,6 +19,11 @@ Optional properties:
+>>  - mmc-cap-sd-highspeed   : indicates whether SD is high speed capable.
+>>  - vqmmc-supply           : phandle to the regulator device tree node, mentioned
+>>                             as the VCCQ/VDD_IO supply in the eMMC/SD specs.
+>> +- st,sig-dir-dat0        : bus signal direction pin used for DAT[0].
+>> +- st,sig-dir-dat2        : bus signal direction pin used for DAT[2].
+>> +- st,sig-dir-dat31       : bus signal direction pin used for DAT[3] and DAT[1].
+>> +- st,sig-dir-dat74       : bus signal direction pin used for DAT[4] to DAT[7].
+>> +- st,sig-dir-cmd         : cmd signal direction pin used for CMD.
+>
+> What I'm still not clear on is when you set these properties and when
+> you don't. For example, is any combination valid and why wouldn't all
+> data signals be configured the same way?
 
-No problem to keep it there to 32bit range. I really appreciate
-that discussion we have about it.
+Several combinations are possible.
 
-Just a note: If "num-cs" is the part of generic spi subsystem binding
-maybe it should be moved directly to spi core as is done for
-example for timeout-sec in watchdog.
-Also this should be listed in any Documentation/devicetree/bindings/spi/s=
-pi.txt
-file that this is generic spi binding.
+This is a matter of configuring the internal logic of the primecell to
+which signals it shall use. That will be depending on what signal
+connectors there are available on the external voltage level shifter
+circuit and how you have routed these to the primecell.
 
-Thanks,
-Michal
+The signals are used to introduce a delta delay between the external
+level shifter drive enable and internal IO drive enable. It's needed
+to be able to cope with the electrical parts of the SD card
+specification.
 
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+Hope this answers your questions. :-)
 
+Kind regards
+Ulf Hansson
 
-
---Cdw5EfFCIsanNVDpkgvWw1A791LJUAXmi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlM+lKsACgkQykllyylKDCGkcQCfdTs4zmS2/AmvgdR8D1enuOs+
-M8cAnR0cnWrNqc07g8kEGyf6Yx2UIIjx
-=yFCi
------END PGP SIGNATURE-----
-
---Cdw5EfFCIsanNVDpkgvWw1A791LJUAXmi--
+>
+> Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
