@@ -1,139 +1,72 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH v4 4/8] OF: platform: Add overlay bus handler
-Date: Fri,  4 Apr 2014 15:43:57 +0300
-Message-ID: <1396615441-29630-5-git-send-email-pantelis.antoniou@konsulko.com>
-References: <1396615441-29630-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1396615441-29630-1-git-send-email-pantelis.antoniou@konsulko.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>Pante
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] devicetree: Add devicetree bindings documentation
+ for Cadence SPI
+Date: Fri, 4 Apr 2014 13:46:37 +0100
+Message-ID: <20140404124637.GT14763@sirena.org.uk>
+References: <1396523431-14519-1-git-send-email-harinik@xilinx.com>
+ <1396523431-14519-2-git-send-email-harinik@xilinx.com>
+ <20140403213446.GB14763@sirena.org.uk>
+ <CAFcVEC+mpHh_d2j6_sdhWS3d2KyXrDYUq6L6jO2Q=SS68Hda2g@mail.gmail.com>
+ <20140404100919.GO14763@sirena.org.uk>
+ <CAFcVECLDyfFSZFk9fzFKsr6pM=f1nwzGAhjX17z=NsbvWpiDew@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="EOP8HhwRQvhZjZeP"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAFcVECLDyfFSZFk9fzFKsr6pM=f1nwzGAhjX17z=NsbvWpiDew-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Harini Katakam <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the bus handler registration needed for performing overlays
-containing platform devices.
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
----
- drivers/base/platform.c | 98 +++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 95 insertions(+), 3 deletions(-)
+--EOP8HhwRQvhZjZeP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index e714709..bf5b429 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -922,6 +922,86 @@ struct bus_type platform_bus_type = {
- };
- EXPORT_SYMBOL_GPL(platform_bus_type);
- 
-+#ifdef CONFIG_OF_OVERLAY
-+
-+static int platform_handler_create(struct of_overlay_device_entry *de,
-+		int revert)
-+{
-+	struct device_node *dn;
-+	struct platform_device *pdev_parent, *pdev;
-+
-+	if (!de || !de->np)
-+		return -ENOTSUPP;
-+
-+	dn = de->np;
-+
-+	/* verify that the parent is a bus */
-+	if (!of_match_node(of_default_bus_match_table, dn->parent))
-+		return -ENOTSUPP;
-+
-+	/* pdev_parent may be NULL when there is no bus platform device */
-+	pdev_parent = of_find_device_by_node(dn->parent);
-+	pdev = of_platform_device_create(dn, NULL,
-+			pdev_parent ? &pdev_parent->dev : NULL);
-+	of_dev_put(pdev_parent);
-+
-+	if (pdev == NULL) {
-+		pr_err("%s: failed to create platform device "
-+				"for '%s'\n",
-+				__func__, dn->full_name);
-+		/* of_platform_device_create tosses the real error code */
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int platform_handler_remove(struct of_overlay_device_entry *de,
-+		int revert)
-+{
-+	struct device_node *dn;
-+	struct platform_device *pdev;
-+
-+	if (!de || !de->np)
-+		return -ENOTSUPP;
-+
-+	dn = de->np;
-+
-+	pdev = of_find_device_by_node(dn);
-+	if (pdev == NULL)
-+		return -ENOTSUPP;
-+
-+	/* unregister takes one ref away */
-+	platform_device_unregister(pdev);
-+
-+	/* and put the reference of the find */
-+	of_dev_put(pdev);
-+
-+	return 0;
-+}
-+
-+static const struct of_overlay_handler_ops platform_handler_ops = {
-+	.create	= platform_handler_create,
-+	.remove = platform_handler_remove,
-+};
-+
-+static struct of_overlay_handler platform_handler = {
-+	.name = "platform",
-+	.ops = &platform_handler_ops,
-+};
-+
-+static int __init platform_bus_handler_register(void)
-+{
-+	return of_overlay_handler_register(&platform_handler);
-+}
-+
-+#else
-+static inline int platform_bus_handler_register(void)
-+{
-+	return 0;
-+}
-+#endif
-+
- int __init platform_bus_init(void)
- {
- 	int error;
-@@ -930,10 +1010,22 @@ int __init platform_bus_init(void)
- 
- 	error = device_register(&platform_bus);
- 	if (error)
--		return error;
--	error =  bus_register(&platform_bus_type);
-+		goto err_out;
-+
-+	error = bus_register(&platform_bus_type);
- 	if (error)
--		device_unregister(&platform_bus);
-+		goto err_unreg_dev;
-+
-+	error = platform_bus_handler_register();
-+	if (error)
-+		goto err_unreg_bus;
-+
-+	return 0;
-+err_unreg_bus:
-+	bus_unregister(&platform_bus_type);
-+err_unreg_dev:
-+	device_unregister(&platform_bus);
-+err_out:
- 	return error;
- }
- 
--- 
-1.7.12
+On Fri, Apr 04, 2014 at 05:44:23PM +0530, Harini Katakam wrote:
+> On Fri, Apr 4, 2014 at 3:39 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> > On Fri, Apr 04, 2014 at 08:30:38AM +0530, Harini Katakam wrote:
+
+> >> This IP can drive 4 slaves.
+> >> The CS line to be driven is selected in spi device structure and
+> >> that is driven by the software.
+
+> > So why specify this in the binding at all?  If the device always has the
+> > same number of chip selects it's redundant.
+
+> I'm sorry, I should have explained that better.
+> The IP can support upto 4 chip selects.
+> The num-cs value here is the number of chip selects actually used on the board.
+
+Why does that need to be configured?  Surely the presence of slaves is
+enough information.
+
+--EOP8HhwRQvhZjZeP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTPqmpAAoJELSic+t+oim9R04QAI7uxIX6rvg8RPCBrtsMu9V4
+14kUK42WQppfs05BN0DMCqNRPY/w7Et9k1grbaon7BjdZ0NVTyIuovxpYiPuHDWF
+mzElgFWr5FExev8vLpiwac5W5GGc2z2ffmJd1tI4LyYvGMpqxP8xa1Qbj/wcq2pm
+/5l63fR2k1UEPvtdzlvuG+Hf8fv7Jnkjbvt69M91dEJtiVixzuwxi9888KN+pSIY
+D9UMSd7e/6nmSC3117p50mD6bb6YU/UDqGzS9BelOfZy/wiAswX5fQn3/83TC68u
+cmAf7C/mUTuq60zhVyhFdb0PYEQ5COumye2SaKhfHymU+457xDF5ctNIZJjWPWHW
+oRkQ3kOSn/mIyycBLfZAFs9bHqd++0exgWzod2ri3Hh1bJ39I9kzazXac9CO0Cwm
+J6L1F6fML7+Vbr+s8XOjqtRfn3g/9TEXycQpEvE8d1SJKPHs5rG1uSFJTUl8E8S7
+i4rl/QDJqAqJ0yx4OilSoAKisFQ0nrQ2T/9OJu4c2aWvCeOchdsP9ix7/VO959Le
+3Jzs+YuGEzgM+ZzHRM9LKseftTAqK/wMo2tjS3FgsMKahlb9koxnnD9EBhxyRzVG
+J8EDcN55uxsXOpaXK+vh5vk3Hhw87I/IIyWSjDRaoB6MRkKttO+FVxeHwV4wnEYh
+YnC44F3xxQKtjbR97a97
+=8/gz
+-----END PGP SIGNATURE-----
+
+--EOP8HhwRQvhZjZeP--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
