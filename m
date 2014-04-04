@@ -1,65 +1,63 @@
-From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/5] ARM: add SMP support for Broadcom mobile SoCs
-Date: Thu, 03 Apr 2014 21:26:03 -0500
-Message-ID: <533E183B.9080105@linaro.org>
-References: <1396577891-2713-1-git-send-email-elder@linaro.org> <1396577891-2713-3-git-send-email-elder@linaro.org>
+From: Harini Katakam <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] devicetree: Add devicetree bindings documentation
+ for Cadence SPI
+Date: Fri, 4 Apr 2014 08:30:38 +0530
+Message-ID: <CAFcVEC+mpHh_d2j6_sdhWS3d2KyXrDYUq6L6jO2Q=SS68Hda2g@mail.gmail.com>
+References: <1396523431-14519-1-git-send-email-harinik@xilinx.com>
+	<1396523431-14519-2-git-send-email-harinik@xilinx.com>
+	<20140403213446.GB14763@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396577891-2713-3-git-send-email-elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140403213446.GB14763-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/03/2014 09:18 PM, Alex Elder wrote:
-> This patch adds SMP support for BCM281XX and BCM21664 family SoCs.
-> 
-> This feature is controlled with a distinct config option such that a
-> SMP-enabled multi-v7 binary can be configured to run these SoCs in
-> uniprocessor mode.  Since this SMP functionality is used for
-> multiple Broadcom mobile chip families the config option is called
-> ARCH_BCM_MOBILE_SMP (for lack of a better name).
-> 
-> On SoCs of this type, the secondary core is not held in reset on
-> power-on.  Instead it loops in a ROM-based holding pen.  To release
-> it, one must write into a special register a jump address whose
-> low-order bits have been replaced with a secondary core's id, then
-> trigger an event with SEV.  On receipt of an event, the ROM code
-> will examine the register's contents, and if the low-order bits
-> match its cpu id, it will clear them and write the value back to the
-> register just prior to jumping to the address specified.
-> 
-> The location of the special register is defined in the device tree
-> using a "secondary-boot-reg" property in a node whose "enable-method"
-> matches.
-> 
-> Derived from code originally provided by Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> 
-> Signed-off-by: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
+Hi Mark,
 
-. . .
+On Fri, Apr 4, 2014 at 3:04 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, Apr 03, 2014 at 04:40:31PM +0530, Harini Katakam wrote:
+>
+>> +Optional properties:
+>> +- num-cs             : Number of chip selects used.
+>
+> How does this translate to the hardware?
 
-> diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
-> index b2279e3..929579f 100644
-> --- a/arch/arm/mach-bcm/Makefile
-> +++ b/arch/arm/mach-bcm/Makefile
-> @@ -15,7 +15,10 @@ obj-$(CONFIG_ARCH_BCM_281XX)	+= board_bcm281xx.o
->  plus_sec := $(call as-instr,.arch_extension sec,+sec)
->  
->  # BCM21664
-> -obj-$(CONFIG_ARCH_BCM_21664)	+= board_bcm21664.o
-> +obj-$(CONFIG_ARCH_BCM_21664)	:= board_bcm21664.o
+This IP can drive 4 slaves.
+The CS line to be driven is selected in spi device structure and
+that is driven by the software.
 
-The above was a mistake, it should still be +=.
+>
+>> +             num-cs = /bits/ 16 <4>;
+>
+> What's going on with the /bits/ - is this something that's required for
+> the property?
 
-(I'll fix it.)
+The master->num-chipselect property is 16 bit but writing <4> here directly
+leads to 0 being read in of_property_read (because it's big endian).
+Instead using of property read u32 and then copying, we decided to do this.
+This was discussed on v2 between Michal and Rob:
+>>>> +               num-chip-select = /bits/ 16 <4>;
+>>
+>> I was expecting you will comment this a little bit. :-)
+>> Because all just reading this num-cs as 32bit and then
+>> assigning this value to master->num_chipselect which is 16bit.
+>
+> Well, everyone else has that problem then. Obviously it takes a bit
+> more care than just reading into a u32, but that is a kernel problem
+> and not a problem of the binding.
+They are not reading it directly with read_u32 but they are using
+intermediate u32 value which is assigned to u16 which is fine.
+This pattern is in most drivers(maybe all).
+The point is if binding should or can't simplify driver code.
+And from your reaction above I expect that it is up to driver
+owner and binding doc how you want to do it.
 
-. . .
-
+Regards,
+Harini
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
