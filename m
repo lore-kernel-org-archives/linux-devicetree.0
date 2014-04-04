@@ -1,218 +1,209 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH RFC v5 3/3] Documentation: arm: define DT idle states
- bindings
-Date: Fri, 4 Apr 2014 16:56:27 +0100
-Message-ID: <20140404155622.GA4061@e102568-lin.cambridge.arm.com>
-References: <1395142132-20788-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1395142132-20788-4-git-send-email-lorenzo.pieralisi@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1395142132-20788-4-git-send-email-lorenzo.pieralisi@arm.com>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Mark Hambleton <mark.hambleton@broadcom.com>, Russell King <linux@arm.linux.org.uk>, Sebastian Capella <sebastian.capella@linaro.org>, Nicolas Pitre <nico@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Dave P Martin <Dave.Martin@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen Boyd <sboyd@codeaurora.org>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: [PATCH] ARM: qcom: Add initial IPQ8064 SoC and AP148 device trees
+Date: Fri,  4 Apr 2014 11:29:46 -0500
+Message-ID: <1396628986-6613-1-git-send-email-galak@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, David Brown <davidb@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-[replying to self, since I have a query]
+Add basic IPQ8064 SoC include device tree and support for basic booting on
+the AP148 Reference board.  Also, keep dtb build list and qcom_dt_match in
+sorted order.
 
-[...]
+Signed-off-by: Kumar Gala <galak@codeaurora.org>
+---
+ arch/arm/boot/dts/Makefile               |   8 +-
+ arch/arm/boot/dts/qcom-ipq8064-ap148.dts |  12 +++
+ arch/arm/boot/dts/qcom-ipq8064.dtsi      | 122 +++++++++++++++++++++++++++++++
+ arch/arm/mach-qcom/board.c               |   4 +-
+ 4 files changed, 142 insertions(+), 4 deletions(-)
+ create mode 100644 arch/arm/boot/dts/qcom-ipq8064-ap148.dts
+ create mode 100644 arch/arm/boot/dts/qcom-ipq8064.dtsi
 
-> +===========================================
-> +4 - Examples
-> +===========================================
-> +
-> +Example 1 (ARM 64-bit, 16-cpu system):
-> +
-> +pd_clusters: power-domain-clusters@80002000 {
-> +       compatible = "arm,power-controller";
-> +       reg = <0x0 0x80002000 0x0 0x1000>;
-> +       #power-domain-cells = <1>;
-> +       #address-cells = <2>;
-> +       #size-cells = <2>;
-> +
-> +       pd_cores: power-domain-cores@80000000 {
-> +               compatible = "arm,power-controller";
-> +               reg = <0x0 0x80000000 0x0 0x1000>;
-> +               #power-domain-cells = <1>;
-> +       };
-> +};
-> +
-> +cpus {
-> +       #size-cells = <0>;
-> +       #address-cells = <2>;
-> +
-> +       idle-states {
-> +               entry-method = "arm,psci-cpu-suspend";
-> +
-> +               CLUSTER_RETENTION_0: cluster-retention-0 {
-> +                       compatible = "arm,idle-state";
-> +                       index = <2>;
-> +                       logic-state-retained;
-> +                       cache-state-retained;
-> +                       entry-method-param = <0x1010000>;
-> +                       entry-latency-us = <50>;
-> +                       exit-latency-us = <100>;
-> +                       min-residency-us = <250>;
-> +                       power-domains = <&pd_clusters 0>;
-> +                       CPU_RETENTION_0_0: cpu-retention-0 {
-> +                               compatible = "arm,idle-state";
-> +                               index = <0>;
-> +                               cache-state-retained;
-> +                               entry-method-param = <0x0010000>;
-> +                               entry-latency-us = <20>;
-> +                               exit-latency-us = <40>;
-> +                               min-residency-us = <30>;
-> +                               power-domains = <&pd_cores 0>,
-> +                                               <&pd_cores 1>,
-> +                                               <&pd_cores 2>,
-> +                                               <&pd_cores 3>,
-> +                                               <&pd_cores 4>,
-> +                                               <&pd_cores 5>,
-> +                                               <&pd_cores 6>,
-> +                                               <&pd_cores 7>;
-> +                       };
-> +               };
-> +
-> +               CLUSTER_SLEEP_0: cluster-sleep-0 {
-> +                       compatible = "arm,idle-state";
-> +                       index = <3>;
-> +                       entry-method-param = <0x1010000>;
-> +                       entry-latency-us = <600>;
-> +                       exit-latency-us = <1100>;
-> +                       min-residency-us = <2700>;
-> +                       power-domains = <&pd_clusters 0>;
-> +                       CPU_SLEEP_0_0: cpu-sleep-0 {
-> +                               /* cpu sleep */
-> +                               compatible = "arm,idle-state";
-> +                               index = <1>;
-> +                               entry-method-param = <0x0010000>;
-> +                               entry-latency-us = <250>;
-> +                               exit-latency-us = <500>;
-> +                               min-residency-us = <350>;
-> +                               power-domains = <&pd_cores 0>,
-> +                                               <&pd_cores 1>,
-> +                                               <&pd_cores 2>,
-> +                                               <&pd_cores 3>,
-> +                                               <&pd_cores 4>,
-> +                                               <&pd_cores 5>,
-> +                                               <&pd_cores 6>,
-> +                                               <&pd_cores 7>;
-> +                       };
-> +               };
-
-I noticed while developing the CPUidle generic driver, that by using this
-representation I might end up requiring duplicated states.
-
-For instance, a cluster-retention state and a cluster-sleep state might
-want to have cpu-sleep state as substate, and this would require an
-idle state node duplication.
-
-I think it is better to have a single flat (and ordered...that would
-kill two birds with one stone) list of nodes in the idle-states node and
-every state might have a list of phandles to subnodes (substates), something
-like the following example.
-
-This simplifies parsing  and I think it solves the last issue I
-came across (the need for duplicate states - in the bindings below,
-CPU_SLEEP_0 is a substate of both CLUSTER_RETENTION_0 and
-CLUSTER_SLEEP_0, through phandles).
-
-Thoughts very appreciated, thanks.
-
-Lorenzo
-
-idle-states {
-       entry-method = "arm,psci-cpu-suspend";
-
-	CPU_RETENTION_0: cpu-retention-0 {
-		       compatible = "arm,idle-state";
-		       cache-state-retained;
-		       entry-method-param = <0x0010000>;
-		       entry-latency-us = <20>;
-		       exit-latency-us = <40>;
-		       min-residency-us = <30>;
-		       power-domains = <&pd_cores 0>,
-				       <&pd_cores 1>,
-				       <&pd_cores 2>,
-				       <&pd_cores 3>,
-	};
-
-	CPU_SLEEP_0: cpu-sleep-0 {
-		       /* cpu sleep */
-		       compatible = "arm,idle-state";
-		       entry-method-param = <0x0010000>;
-		       entry-latency-us = <250>;
-		       exit-latency-us = <500>;
-		       min-residency-us = <350>;
-		       power-domains = <&pd_cores 0>,
-				       <&pd_cores 1>,
-				       <&pd_cores 2>,
-				       <&pd_cores 3>,
-	};
-
-	CPU_SLEEP_1: cpu-sleep-1 {
-		       /* cpu sleep */
-		       compatible = "arm,idle-state";
-		       entry-method-param = <0x0010000>;
-		       entry-latency-us = <250>;
-		       exit-latency-us = <500>;
-		       min-residency-us = <350>;
-				       <&pd_cores 4>,
-				       <&pd_cores 5>,
-				       <&pd_cores 6>,
-				       <&pd_cores 7>;
-	};
-
-	CLUSTER_RETENTION_0: cluster-retention-0 {
-	       compatible = "arm,idle-state";
-	       logic-state-retained;
-	       cache-state-retained;
-	       entry-method-param = <0x1010000>;
-	       entry-latency-us = <50>;
-	       exit-latency-us = <800>;
-	       min-residency-us = <2400>;
-	       power-domains = <&pd_clusters 0>;
-	       substates = <&CPU_SLEEP_0>;
-	};
-
-	CLUSTER_SLEEP_0: cluster-sleep-0 {
-	       compatible = "arm,idle-state";
-	       entry-method-param = <0x1010000>;
-	       entry-latency-us = <600>;
-	       exit-latency-us = <1100>;
-	       min-residency-us = <2700>;
-	       power-domains = <&pd_clusters 0>;
-	       substates = <&CPU_SLEEP_0>;
-	};
-
-	CLUSTER_SLEEP_1: cluster-sleep-1 {
-	       compatible = "arm,idle-state";
-	       entry-method-param = <0x1010000>;
-	       entry-latency-us = <600>;
-	       exit-latency-us = <1100>;
-	       min-residency-us = <2700>;
-	       power-domains = <&pd_clusters 1>;
-	       substates = <&CPU_SLEEP_1>;
-	};
-
-	SYSTEM_SLEEP_0: system-sleep-0 {
-	       compatible = "arm,idle-state";
-	       entry-method-param = <0x2010000>;
-	       entry-latency-us = <6000>;
-	       exit-latency-us = <10000>;
-	       min-residency-us = <30000>;
-	       power-domains = <&pd_system 0>;
-	       substates = <&CLUSTER_SLEEP_0>, <&CLUSTER_SLEEP_1>;
-	};
-};
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 4a89023..0591ed0 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -231,9 +231,11 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
+ 	dra7-evm.dtb
+ dtb-$(CONFIG_ARCH_ORION5X) += orion5x-lacie-ethernet-disk-mini-v2.dtb
+ dtb-$(CONFIG_ARCH_PRIMA2) += prima2-evb.dtb
+-dtb-$(CONFIG_ARCH_QCOM) += qcom-msm8660-surf.dtb \
+-	qcom-msm8960-cdp.dtb \
+-	qcom-apq8074-dragonboard.dtb
++dtb-$(CONFIG_ARCH_QCOM) += \
++	qcom-apq8074-dragonboard.dtb \
++	qcom-ipq8064-ap148.dtb \
++	qcom-msm8660-surf.dtb \
++	qcom-msm8960-cdp.dtb
+ dtb-$(CONFIG_ARCH_U8500) += ste-snowball.dtb \
+ 	ste-hrefprev60-stuib.dtb \
+ 	ste-hrefprev60-tvk.dtb \
+diff --git a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
+new file mode 100644
+index 0000000..0861110
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
+@@ -0,0 +1,12 @@
++#include "qcom-ipq8064.dtsi"
++
++/ {
++	model = "Qualcomm IPQ8064/DB149";
++	compatible = "qcom,ipq8064-db149", "qcom,ipq8064";
++
++	soc {
++		serial@16340000 {
++			status = "ok";
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+new file mode 100644
+index 0000000..31f735c
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+@@ -0,0 +1,122 @@
++/dts-v1/;
++
++/include/ "skeleton.dtsi"
++
++#include <dt-bindings/clock/qcom,gcc-ipq806x.h>
++
++/ {
++	model = "Qualcomm IPQ8064";
++	compatible = "qcom,ipq8064";
++	interrupt-parent = <&intc>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		interrupts = <1 14 0x304>;
++		compatible = "qcom,krait";
++		enable-method = "qcom,kpss-acc-v1";
++
++		cpu@0 {
++			device_type = "cpu";
++			reg = <0>;
++			next-level-cache = <&L2>;
++			qcom,acc = <&acc0>;
++			qcom,saw = <&saw0>;
++		};
++
++		cpu@1 {
++			device_type = "cpu";
++			reg = <1>;
++			next-level-cache = <&L2>;
++			qcom,acc = <&acc1>;
++			qcom,saw = <&saw1>;
++		};
++
++		L2: l2-cache {
++			compatible = "cache";
++			cache-level = <2>;
++			interrupts = <0 2 0x4>;
++		};
++	};
++
++	soc: soc {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++		compatible = "simple-bus";
++
++		intc: interrupt-controller@2000000 {
++			compatible = "qcom,msm-qgic2";
++			interrupt-controller;
++			#interrupt-cells = <3>;
++			reg = < 0x02000000 0x1000 >,
++			      < 0x02002000 0x1000 >;
++		};
++
++		timer@200a000 {
++			compatible = "qcom,kpss-timer", "qcom,msm-timer";
++			interrupts = <1 1 0x301>,
++				     <1 2 0x301>,
++				     <1 3 0x301>;
++			reg = <0x0200a000 0x100>;
++			clock-frequency = <27000000>,
++					  <32768>;
++			cpu-offset = <0x80000>;
++		};
++
++		acc0: clock-controller@2088000 {
++			compatible = "qcom,kpss-acc-v1";
++			reg = <0x02088000 0x1000>, <0x02008000 0x1000>;
++		};
++
++		acc1: clock-controller@2098000 {
++			compatible = "qcom,kpss-acc-v1";
++			reg = <0x02098000 0x1000>, <0x02008000 0x1000>;
++		};
++
++		saw0: regulator@2089000 {
++			compatible = "qcom,saw2";
++			reg = <0x02089000 0x1000>, <0x02009000 0x1000>;
++			regulator;
++		};
++
++		saw1: regulator@2099000 {
++			compatible = "qcom,saw2";
++			reg = <0x02099000 0x1000>, <0x02009000 0x1000>;
++			regulator;
++		};
++
++		serial@12490000 {
++			compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
++			reg = <0x12490000 0x1000>,
++			      <0x12480000 0x1000>;
++			interrupts = <0 195 0x0>;
++			clocks = <&gcc GSBI2_UART_CLK>, <&gcc GSBI2_H_CLK>;
++			clock-names = "core", "iface";
++			status = "disabled";
++		};
++
++		serial@16340000 {
++			compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
++			reg = <0x16340000 0x1000>,
++			      <0x16300000 0x1000>;
++			interrupts = <0 152 0x0>;
++			clocks = <&gcc GSBI4_UART_CLK>, <&gcc GSBI4_H_CLK>;
++			clock-names = "core", "iface";
++			status = "disabled";
++		};
++
++		qcom,ssbi@500000 {
++			compatible = "qcom,ssbi";
++			reg = <0x00500000 0x1000>;
++			qcom,controller-type = "pmic-arbiter";
++		};
++
++		gcc: clock-controller@900000 {
++			compatible = "qcom,gcc-ipq8064";
++			reg = <0x00900000 0x4000>;
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++		};
++	};
++};
+diff --git a/arch/arm/mach-qcom/board.c b/arch/arm/mach-qcom/board.c
+index bae617e..cb3c07c 100644
+--- a/arch/arm/mach-qcom/board.c
++++ b/arch/arm/mach-qcom/board.c
+@@ -15,9 +15,11 @@
+ #include <asm/mach/arch.h>
+ 
+ static const char * const qcom_dt_match[] __initconst = {
++	"qcom,apq8074-dragonboard",
++	"qcom,ipq8062",
++	"qcom,ipq8064",
+ 	"qcom,msm8660-surf",
+ 	"qcom,msm8960-cdp",
+-	"qcom,apq8074-dragonboard",
+ 	NULL
+ };
+ 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
