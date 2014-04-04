@@ -1,61 +1,105 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH 1/2] devicetree: Add devicetree bindings documentation
- for Zynq Quad SPI
-Date: Fri, 04 Apr 2014 07:38:00 +0200
-Message-ID: <533E4538.70107@monstr.eu>
-References: <ee057d8c-50d9-4d4b-ac86-d7c5fc44b1b0@TX2EHSMHS034.ehs.local> <20140403210135.GX14763@sirena.org.uk> <CAFcVEC+sqB9VQUEgiFN_MwHcvYFqEifh6EuHPLAkKZOnBiaQ9A@mail.gmail.com>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v2 1/2] usb: doc: udc-xilinx: Add devicetree bindings
+Date: Fri, 04 Apr 2014 07:52:04 +0200
+Message-ID: <533E4884.1020907@monstr.eu>
+References: <5a9b0116-246c-40a0-b894-3321c74648de@CH1EHSMHS007.ehs.local> <20140403145934.GE14162@saruman.home>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
  protocol="application/pgp-signature";
- boundary="StdWMl9Q0AaEu5jNiAqw8S3odGLnk4Rfx"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFcVEC+sqB9VQUEgiFN_MwHcvYFqEifh6EuHPLAkKZOnBiaQ9A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Harini Katakam <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Punnaiah Choudary <kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, punnaiah choudary kalluri <kalluripunnaiahchoudary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+ boundary="ktmQKHiMnuAePgwjbCw4dTPXkD2C3IPII"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140403145934.GE14162@saruman.home>
+Sender: linux-kernel-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, michals@xilinx.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---StdWMl9Q0AaEu5jNiAqw8S3odGLnk4Rfx
+--ktmQKHiMnuAePgwjbCw4dTPXkD2C3IPII
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mark and Harini,
-
-On 04/04/2014 05:01 AM, Harini Katakam wrote:
-> Hi Mark,
+On 04/03/2014 04:59 PM, Felipe Balbi wrote:
+> On Thu, Apr 03, 2014 at 01:05:18PM +0530, Subbaraya Sundeep Bhatta wrot=
+e:
+>> Add devicetree bindings for Xilinx axi udc driver.
+>>
+>> Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
+>> ---
+>> Changes for v2:
+>> 	- replaced xlnx,include-dma with xlnx,has-builtin-dma
+>>
+>>  .../devicetree/bindings/usb/udc-xilinx.txt         |   20 +++++++++++=
++++++++++
+>>  1 files changed, 20 insertions(+), 0 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/usb/udc-xilinx.t=
+xt
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt b/Do=
+cumentation/devicetree/bindings/usb/udc-xilinx.txt
+>> new file mode 100644
+>> index 0000000..7c24fac
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+>> @@ -0,0 +1,20 @@
+>> +Xilinx AXI USB2 device controller
+>> +
+>> +Required properties:
+>> +- compatible		: Should be "xlnx,axi-usb2-device-4.00.a"
+>> +- reg			: Physical base address and size of the Axi USB2
+>> +			  device registers map.
+>> +- interrupts		: Property with a value describing the interrupt
+>> +			  number.
+>> +- interrupt-parent	: Must be core interrupt controller
+>> +- xlnx,has-builtin-dma	: if DMA is included
 >=20
-> On Fri, Apr 4, 2014 at 2:31 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Thu, Apr 03, 2014 at 10:33:06PM +0530, Punnaiah Choudary Kalluri wr=
-ote:
->>
->>> +Optional properties:
->>> +- num-cs             : Number of chip selects used.
->>
->> What does this translate into?
->>
->>> +             num-cs =3D /bits/ 16 <1>;
->>
->> Why the odd specification in the example - why not just specify it as =
-a
->> number?
+> isn't there a configuration register to tell you this ?
+
+I have checked this with Sundeep and there is nothing like that in the HW=
+=2E
+
 >=20
-> Same as discussed on SPI cadence thread.
+>> +
+>> +Example:
+>> + 		axi-usb2-device@42e00000 {
+>> +                        compatible =3D "xlnx,axi-usb2-device-4.00.a";=
 
-I have discussed this briefly with Rob and it is more up to Mark
-if he wants to have this with 16bit width or not. I expect that
-"num-cs" is getting to be shared across spi drivers
-and maybe in near future you will move "num-cs" of probe to spi core
-that's why it should stay 32bit for easier integration.
+>> +                        interrupt-parent =3D <0x1>;
+>=20
+> why isn't interrupt-parent a phandle ?
 
-I have asked Harini some weeks ago to try to do it just with
-of_property_read_u16 because you can directly setup
-master->num_chipselect and you don't need to read it as u32
-and saving to u16.
+Just for the record: Using number here should be also fine because DTC
+is converting it to numbers with linux,phandle and phandle.
+[linux-next]$ dtc -O dts -I dtb /tftpboot/devicetree.dtb | less
+=2E..
+                ps7-scugic@f8f01000 {
+                        #address-cells =3D <0x2>;
+                        #interrupt-cells =3D <0x3>;
+                        #size-cells =3D <0x1>;
+                        compatible =3D "arm,cortex-a9-gic", "arm,gic";
+                        interrupt-controller;
+                        num_cpus =3D <0x2>;
+                        num_interrupts =3D <0x60>;
+                        reg =3D <0xf8f01000 0x1000 0xf8f00100 0x100>;
+                        linux,phandle =3D <0x3>;
+                        phandle =3D <0x3>;
+                };
 
-Thanks,
+                ps7-scutimer@f8f00600 {
+                        clocks =3D <0x2 0x4>;
+                        compatible =3D "arm,cortex-a9-twd-timer";
+                        interrupt-parent =3D <0x3>;
+                        interrupts =3D <0x1 0xd 0x301>;
+                        reg =3D <0xf8f00600 0x20>;
+                };
+=2E..
+
+but anyway Sundeep with change it to any sensible value <&intc>;
+
+Thanks for pointing to it,
 Michal
+
 
 --=20
 Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
@@ -66,7 +110,7 @@ Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
 
 
 
---StdWMl9Q0AaEu5jNiAqw8S3odGLnk4Rfx
+--ktmQKHiMnuAePgwjbCw4dTPXkD2C3IPII
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
@@ -75,13 +119,9 @@ Content-Disposition: attachment; filename="signature.asc"
 Version: GnuPG v1.4.10 (GNU/Linux)
 Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iEYEARECAAYFAlM+RTgACgkQykllyylKDCFYHACfRnVIuDYW4iKWeGhw3YWDRwAu
-jsEAniwyjNmI2fVlwuieSK+osHzM8dR2
-=lwtq
+iEYEARECAAYFAlM+SIQACgkQykllyylKDCH/yACfaGnZM5oUhMYf7zFW1sD6kcOn
+DugAn0AxYyiQ3hxmyQ6RVUue6fm9HJxc
+=ugKb
 -----END PGP SIGNATURE-----
 
---StdWMl9Q0AaEu5jNiAqw8S3odGLnk4Rfx--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--ktmQKHiMnuAePgwjbCw4dTPXkD2C3IPII--
