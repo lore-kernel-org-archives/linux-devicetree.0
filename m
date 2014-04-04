@@ -1,236 +1,218 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH 1/9] crypto: qce: Add core driver implementation
-Date: Fri, 04 Apr 2014 18:54:52 +0300
-Message-ID: <533ED5CC.50909@mm-sol.com>
-References: <1396541886-10966-1-git-send-email-svarbanov@mm-sol.com> <1396541886-10966-2-git-send-email-svarbanov@mm-sol.com> <20140403181914.GG28265@joshc.qualcomm.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH RFC v5 3/3] Documentation: arm: define DT idle states
+ bindings
+Date: Fri, 4 Apr 2014 16:56:27 +0100
+Message-ID: <20140404155622.GA4061@e102568-lin.cambridge.arm.com>
+References: <1395142132-20788-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1395142132-20788-4-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140403181914.GG28265@joshc.qualcomm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Josh Cartwright <joshc@codeaurora.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1395142132-20788-4-git-send-email-lorenzo.pieralisi@arm.com>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Mark Hambleton <mark.hambleton@broadcom.com>, Russell King <linux@arm.linux.org.uk>, Sebastian Capella <sebastian.capella@linaro.org>, Nicolas Pitre <nico@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Dave P Martin <Dave.Martin@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Josh,
+[replying to self, since I have a query]
 
-Thanks for the comments!
+[...]
 
-On 04/03/2014 09:19 PM, Josh Cartwright wrote:
-> Hey Stanimir-
-> 
-> Just a few comments/questions from a quick scan of your patchset:
-> 
-> On Thu, Apr 03, 2014 at 07:17:58PM +0300, Stanimir Varbanov wrote:
-> [..]
->> +++ b/drivers/crypto/qce/core.c
-> [..]
->> +
->> +static struct qce_algo_ops qce_ops[] = {
->> +	{
->> +		.type = CRYPTO_ALG_TYPE_ABLKCIPHER,
->> +		.register_alg = qce_ablkcipher_register,
->> +	},
->> +	{
->> +		.type = CRYPTO_ALG_TYPE_AHASH,
->> +		.register_alg = qce_ahash_register,
->> +	},
->> +};
->> +
->> +static void qce_unregister_algs(struct qce_device *qce)
->> +{
->> +	struct qce_alg_template *tmpl, *n;
->> +
->> +	list_for_each_entry_safe(tmpl, n, &qce->alg_list, entry) {
->> +		if (tmpl->crypto_alg_type == CRYPTO_ALG_TYPE_AHASH)
->> +			crypto_unregister_ahash(&tmpl->alg.ahash);
->> +		else
->> +			crypto_unregister_alg(&tmpl->alg.crypto);
-> 
-> Why no 'unregister_alg' member in qce_algo_ops?
+> +===========================================
+> +4 - Examples
+> +===========================================
+> +
+> +Example 1 (ARM 64-bit, 16-cpu system):
+> +
+> +pd_clusters: power-domain-clusters@80002000 {
+> +       compatible = "arm,power-controller";
+> +       reg = <0x0 0x80002000 0x0 0x1000>;
+> +       #power-domain-cells = <1>;
+> +       #address-cells = <2>;
+> +       #size-cells = <2>;
+> +
+> +       pd_cores: power-domain-cores@80000000 {
+> +               compatible = "arm,power-controller";
+> +               reg = <0x0 0x80000000 0x0 0x1000>;
+> +               #power-domain-cells = <1>;
+> +       };
+> +};
+> +
+> +cpus {
+> +       #size-cells = <0>;
+> +       #address-cells = <2>;
+> +
+> +       idle-states {
+> +               entry-method = "arm,psci-cpu-suspend";
+> +
+> +               CLUSTER_RETENTION_0: cluster-retention-0 {
+> +                       compatible = "arm,idle-state";
+> +                       index = <2>;
+> +                       logic-state-retained;
+> +                       cache-state-retained;
+> +                       entry-method-param = <0x1010000>;
+> +                       entry-latency-us = <50>;
+> +                       exit-latency-us = <100>;
+> +                       min-residency-us = <250>;
+> +                       power-domains = <&pd_clusters 0>;
+> +                       CPU_RETENTION_0_0: cpu-retention-0 {
+> +                               compatible = "arm,idle-state";
+> +                               index = <0>;
+> +                               cache-state-retained;
+> +                               entry-method-param = <0x0010000>;
+> +                               entry-latency-us = <20>;
+> +                               exit-latency-us = <40>;
+> +                               min-residency-us = <30>;
+> +                               power-domains = <&pd_cores 0>,
+> +                                               <&pd_cores 1>,
+> +                                               <&pd_cores 2>,
+> +                                               <&pd_cores 3>,
+> +                                               <&pd_cores 4>,
+> +                                               <&pd_cores 5>,
+> +                                               <&pd_cores 6>,
+> +                                               <&pd_cores 7>;
+> +                       };
+> +               };
+> +
+> +               CLUSTER_SLEEP_0: cluster-sleep-0 {
+> +                       compatible = "arm,idle-state";
+> +                       index = <3>;
+> +                       entry-method-param = <0x1010000>;
+> +                       entry-latency-us = <600>;
+> +                       exit-latency-us = <1100>;
+> +                       min-residency-us = <2700>;
+> +                       power-domains = <&pd_clusters 0>;
+> +                       CPU_SLEEP_0_0: cpu-sleep-0 {
+> +                               /* cpu sleep */
+> +                               compatible = "arm,idle-state";
+> +                               index = <1>;
+> +                               entry-method-param = <0x0010000>;
+> +                               entry-latency-us = <250>;
+> +                               exit-latency-us = <500>;
+> +                               min-residency-us = <350>;
+> +                               power-domains = <&pd_cores 0>,
+> +                                               <&pd_cores 1>,
+> +                                               <&pd_cores 2>,
+> +                                               <&pd_cores 3>,
+> +                                               <&pd_cores 4>,
+> +                                               <&pd_cores 5>,
+> +                                               <&pd_cores 6>,
+> +                                               <&pd_cores 7>;
+> +                       };
+> +               };
 
-Because we have a common unregister function :). We have common
-unregster function because in my opinion there is no need to copy the
-same piece of code on every algorithm file (ablkcipher.c, sha.c and one
-or two more could be added in the future). Something more, I'm not the
-inventor of this asymmetric calling convention in driver internals, it
-is widely spread in crypto drivers. So, I'm just have been inspired by
-this idea, and giving that I personally do not like the monotonic and
-linear  coding thus it was easy to me to borrow it.
+I noticed while developing the CPUidle generic driver, that by using this
+representation I might end up requiring duplicated states.
 
-> 
->> +
->> +		list_del(&tmpl->entry);
->> +		kfree(tmpl);
->> +	}
->> +}
->> +
->> +static int qce_register_algs(struct qce_device *qce)
->> +{
->> +	struct qce_algo_ops *ops;
->> +	int i, rc = -ENODEV;
->> +
->> +	for (i = 0; i < ARRAY_SIZE(qce_ops); i++) {
->> +		ops = &qce_ops[i];
->> +		ops->async_req_queue = qce_async_request_queue;
->> +		ops->async_req_done = qce_async_request_done;
-> 
-> Why not set these statically?
+For instance, a cluster-retention state and a cluster-sleep state might
+want to have cpu-sleep state as substate, and this would require an
+idle state node duplication.
 
-To save few lines of code. If this breaks readability I could move those
-function pointers to the qce_ops[].
+I think it is better to have a single flat (and ordered...that would
+kill two birds with one stone) list of nodes in the idle-states node and
+every state might have a list of phandles to subnodes (substates), something
+like the following example.
 
-> 
->> +		rc = ops->register_alg(qce, ops);
->> +		if (rc)
->> +			break;
->> +	}
->> +
->> +	if (rc)
->> +		qce_unregister_algs(qce);
->> +
->> +	return rc;
->> +}
-> [..]
->> +static int qce_get_version(struct qce_device *qce)
->> +{
->> +	u32 major, minor, step;
->> +	u32 val;
->> +
->> +	val = readl(qce->base + REG_VERSION);
->> +	major = (val & CORE_MAJOR_REV_MASK) >> CORE_MAJOR_REV;
->> +	minor = (val & CORE_MINOR_REV_MASK) >> CORE_MINOR_REV;
->> +	step = (val & CORE_STEP_REV_MASK) >> CORE_STEP_REV;
->> +
->> +	/*
->> +	 * the driver does not support v5 with minor 0 because it has special
->> +	 * alignment requirements.
->> +	 */
->> +	if (major < QCE_MAJOR_VERSION5 && minor == 0)
->> +		return -ENODEV;
->> +
->> +	qce->burst_size = QCE_BAM_BURST_SIZE;
->> +	qce->pipe_pair_index = 1;
->> +
->> +	dev_info(qce->dev, "Crypto device found, version %d.%d.%d\n",
->> +		 major, minor, step);
-> 
-> I'd suggest dev_dbg().  Kernel boot is chatty enough.
+This simplifies parsing  and I think it solves the last issue I
+came across (the need for duplicate states - in the bindings below,
+CPU_SLEEP_0 is a substate of both CLUSTER_RETENTION_0 and
+CLUSTER_SLEEP_0, through phandles).
 
-OK.
+Thoughts very appreciated, thanks.
 
-> 
-> [..]
->> +static int qce_clks_enable(struct qce_device *qce, int enable)
->> +{
->> +	int rc = 0;
->> +	int i;
->> +
->> +	for (i = 0; i < QCE_CLKS_NUM; i++) {
->> +		if (enable)
->> +			rc = clk_prepare_enable(qce->clks[i]);
->> +		else
->> +			clk_disable_unprepare(qce->clks[i]);
->> +
->> +		if (rc)
->> +			break;
->> +	}
->> +
->> +	if (rc)
->> +		do
->> +			clk_disable_unprepare(qce->clks[i]);
->> +		while (--i >= 0);
->> +
->> +	return rc;
->> +}
-> 
-> See my below comment about lumping clocks together.
-> 
-> [..]
->> +static int qce_crypto_remove(struct platform_device *pdev)
->> +{
->> +	struct qce_device *qce = platform_get_drvdata(pdev);
->> +
->> +	cancel_work_sync(&qce->queue_work);
->> +	destroy_workqueue(qce->queue_wq);
->> +	tasklet_kill(&qce->done_tasklet);
->> +	qce_unregister_algs(qce);
->> +	qce_dma_release(&qce->dma);
->> +	qce_clks_enable(qce, 0);
-> 
-> qce_clks_enable(qce, 0) is really confusing....I'd suggest creating
-> separate qce_clks_enable() and qce_clks_disable() functions.
-> 
+Lorenzo
 
-OK will do.
+idle-states {
+       entry-method = "arm,psci-cpu-suspend";
 
-> [..]
->> +static const struct of_device_id qce_crypto_of_match[] = {
->> +	{ .compatible = "qcom,crypto-v5.1", },
->> +	{}
->> +};
-> 
-> MODULE_DEVICE_TABLE()?
+	CPU_RETENTION_0: cpu-retention-0 {
+		       compatible = "arm,idle-state";
+		       cache-state-retained;
+		       entry-method-param = <0x0010000>;
+		       entry-latency-us = <20>;
+		       exit-latency-us = <40>;
+		       min-residency-us = <30>;
+		       power-domains = <&pd_cores 0>,
+				       <&pd_cores 1>,
+				       <&pd_cores 2>,
+				       <&pd_cores 3>,
+	};
 
-Good catch. Thanks.
+	CPU_SLEEP_0: cpu-sleep-0 {
+		       /* cpu sleep */
+		       compatible = "arm,idle-state";
+		       entry-method-param = <0x0010000>;
+		       entry-latency-us = <250>;
+		       exit-latency-us = <500>;
+		       min-residency-us = <350>;
+		       power-domains = <&pd_cores 0>,
+				       <&pd_cores 1>,
+				       <&pd_cores 2>,
+				       <&pd_cores 3>,
+	};
 
-> 
-> [..]
->> +++ b/drivers/crypto/qce/core.h
->> @@ -0,0 +1,69 @@
->> +/*
->> + * Copyright (c) 2010-2014, The Linux Foundation. All rights reserved.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 and
->> + * only version 2 as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +#ifndef _CORE_H_
->> +#define _CORE_H_
->> +
->> +static const char * const clk_names[] = {
->> +	"core",		/* GCC_CE_CLK */
->> +	"iface",	/* GCC_CE_AHB_CLK */
->> +	"bus",		/* GCC_CE_AXI_CLK */
->> +};
-> 
-> You probably don't want this in a header file, as now each compilation
-> unit will have a copy :(.
+	CPU_SLEEP_1: cpu-sleep-1 {
+		       /* cpu sleep */
+		       compatible = "arm,idle-state";
+		       entry-method-param = <0x0010000>;
+		       entry-latency-us = <250>;
+		       exit-latency-us = <500>;
+		       min-residency-us = <350>;
+				       <&pd_cores 4>,
+				       <&pd_cores 5>,
+				       <&pd_cores 6>,
+				       <&pd_cores 7>;
+	};
 
-It is my fault, I just forgot to move this array in the core.c.
+	CLUSTER_RETENTION_0: cluster-retention-0 {
+	       compatible = "arm,idle-state";
+	       logic-state-retained;
+	       cache-state-retained;
+	       entry-method-param = <0x1010000>;
+	       entry-latency-us = <50>;
+	       exit-latency-us = <800>;
+	       min-residency-us = <2400>;
+	       power-domains = <&pd_clusters 0>;
+	       substates = <&CPU_SLEEP_0>;
+	};
 
-> 
-> Lumping all the clocks together assumes that you will only ever have all
-> clocks enabled, or all clocks disabled, are you sure that's what you
-> want?
+	CLUSTER_SLEEP_0: cluster-sleep-0 {
+	       compatible = "arm,idle-state";
+	       entry-method-param = <0x1010000>;
+	       entry-latency-us = <600>;
+	       exit-latency-us = <1100>;
+	       min-residency-us = <2700>;
+	       power-domains = <&pd_clusters 0>;
+	       substates = <&CPU_SLEEP_0>;
+	};
 
-At least until now all clocks are needed. When adding power management
-this code should be revised.
+	CLUSTER_SLEEP_1: cluster-sleep-1 {
+	       compatible = "arm,idle-state";
+	       entry-method-param = <0x1010000>;
+	       entry-latency-us = <600>;
+	       exit-latency-us = <1100>;
+	       min-residency-us = <2700>;
+	       power-domains = <&pd_clusters 1>;
+	       substates = <&CPU_SLEEP_1>;
+	};
 
-> 
-> [..]
->> +struct qce_algo_ops {
->> +	u32 type;
->> +	int (*register_alg)(struct qce_device *qce, struct qce_algo_ops *ops);
->> +	int (*async_req_queue)(struct qce_device *qce,
->> +			       struct crypto_async_request *req);
->> +	void (*async_req_done)(struct qce_device *qce, int ret);
-> 
-> What is the relationship between qce_algo_ops and the qce_alg_template
-> (which has these same two identically named callbacks)?
-
-This is a way of passing function pointers from core.c to the
-ablkcipher.c and sha.c (where they are needed to queue up new crypto
-async requests and finish the requests with done counterpart). This
-avoids prototyping those core.c functions and calling them directly.
-
--- 
-regards,
-Stan
+	SYSTEM_SLEEP_0: system-sleep-0 {
+	       compatible = "arm,idle-state";
+	       entry-method-param = <0x2010000>;
+	       entry-latency-us = <6000>;
+	       exit-latency-us = <10000>;
+	       min-residency-us = <30000>;
+	       power-domains = <&pd_system 0>;
+	       substates = <&CLUSTER_SLEEP_0>, <&CLUSTER_SLEEP_1>;
+	};
+};
