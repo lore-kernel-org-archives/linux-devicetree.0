@@ -1,96 +1,103 @@
 From: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Subject: [PATCH v2 2/5] ARM: zynq: dt: Convert to preprocessor includes
-Date: Fri,  4 Apr 2014 16:14:13 -0700
-Message-ID: <1396653256-28397-3-git-send-email-soren.brinkmann@xilinx.com>
+Subject: [PATCH v2 4/5] dt-bindings: clock: Add Zynq-7000 header
+Date: Fri,  4 Apr 2014 16:14:15 -0700
+Message-ID: <1396653256-28397-5-git-send-email-soren.brinkmann@xilinx.com>
 References: <1396653256-28397-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1396653256-28397-1-git-send-email-soren.brinkmann@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>
-Cc: devicetree@vger.kernel.org, Mike Looijmans <mike.looijmans@topic.nl>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Steffen Trumtrar <s.trumtrar@pengutronix.de>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Mike Looijmans <mike.looijmans@topic.nl>
 List-Id: devicetree@vger.kernel.org
 
-Convert all Zynq DT files to the dtc preprocessor include syntax.
-This allows to include header files in the devicetrees like other
-SoC-types already do.
-
-Inspired-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-(http://www.spinics.net/lists/arm-kernel/msg319832.html)
+Add header file with symbolic names for Zynq's clocks.
 
 Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
 ---
 
-Changes in v2: None
+Changes in v2:
+ - this patch has been added
 
- arch/arm/boot/dts/zynq-7000.dtsi | 3 ++-
- arch/arm/boot/dts/zynq-zc702.dts | 2 +-
- arch/arm/boot/dts/zynq-zc706.dts | 2 +-
- arch/arm/boot/dts/zynq-zed.dts   | 2 +-
- 4 files changed, 5 insertions(+), 4 deletions(-)
+---
+ include/dt-bindings/clock/zynq-7000.h | 64 +++++++++++++++++++++++++++=
+++++++++
+ 1 file changed, 64 insertions(+)
+ create mode 100644 include/dt-bindings/clock/zynq-7000.h
 
-diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-index 20a13cba65a3..66613d04de5d 100644
---- a/arch/arm/boot/dts/zynq-7000.dtsi
-+++ b/arch/arm/boot/dts/zynq-7000.dtsi
-@@ -10,7 +10,8 @@
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  * GNU General Public License for more details.
-  */
--/include/ "skeleton.dtsi"
+diff --git a/include/dt-bindings/clock/zynq-7000.h b/include/dt-binding=
+s/clock/zynq-7000.h
+new file mode 100644
+index 000000000000..851f5cffe481
+--- /dev/null
++++ b/include/dt-bindings/clock/zynq-7000.h
+@@ -0,0 +1,64 @@
++/*
++ * Copyright (c) 2014 Xilinx Inc.
++ * Author: S=C3=B6ren Brinkmann <soren.brinkmann@xilinx.com>
++ *
++ * This program is free software; you can redistribute it and/or modif=
+y
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * Device Tree binding constants for Zynq 7000 clock controller.
++*/
 +
-+#include "skeleton.dtsi"
- 
- / {
- 	compatible = "xlnx,zynq-7000";
-diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
-index c913f77a21eb..07713d3c716a 100644
---- a/arch/arm/boot/dts/zynq-zc702.dts
-+++ b/arch/arm/boot/dts/zynq-zc702.dts
-@@ -12,7 +12,7 @@
-  * GNU General Public License for more details.
-  */
- /dts-v1/;
--/include/ "zynq-7000.dtsi"
-+#include "zynq-7000.dtsi"
- 
- / {
- 	model = "Zynq ZC702 Development Board";
-diff --git a/arch/arm/boot/dts/zynq-zc706.dts b/arch/arm/boot/dts/zynq-zc706.dts
-index 88f62c50382e..cf6566cdb02a 100644
---- a/arch/arm/boot/dts/zynq-zc706.dts
-+++ b/arch/arm/boot/dts/zynq-zc706.dts
-@@ -13,7 +13,7 @@
-  * GNU General Public License for more details.
-  */
- /dts-v1/;
--/include/ "zynq-7000.dtsi"
-+#include "zynq-7000.dtsi"
- 
- / {
- 	model = "Zynq ZC706 Development Board";
-diff --git a/arch/arm/boot/dts/zynq-zed.dts b/arch/arm/boot/dts/zynq-zed.dts
-index 82d7ef1a9a9c..1541716e2cfb 100644
---- a/arch/arm/boot/dts/zynq-zed.dts
-+++ b/arch/arm/boot/dts/zynq-zed.dts
-@@ -13,7 +13,7 @@
-  * GNU General Public License for more details.
-  */
- /dts-v1/;
--/include/ "zynq-7000.dtsi"
-+#include "zynq-7000.dtsi"
- 
- / {
- 	model = "Zynq Zed Development Board";
--- 
++#ifndef _DT_BINDINGS_CLOCK_ZYNQ_7000_H
++#define _DT_BINDINGS_CLOCK_ZYNQ_7000_H
++
++#define ZYNQ_CLK_ARMPLL		0
++#define ZYNQ_CLK_DDRPLL		1
++#define ZYNQ_CLK_IOPLL		2
++#define ZYNQ_CLK_CPU_6OR4X	3
++#define ZYNQ_CLK_CPU_3OR2X	4
++#define ZYNQ_CLK_CPU_2X		5
++#define ZYNQ_CLK_CPU_1X		6
++#define ZYNQ_CLK_DDR2X		7
++#define ZYNQ_CLK_DDR3X		8
++#define ZYNQ_CLK_DCI		9
++#define ZYNQ_CLK_LQSPI		10
++#define ZYNQ_CLK_SMC		11
++#define ZYNQ_CLK_PCAP		12
++#define ZYNQ_CLK_GEM0		13
++#define ZYNQ_CLK_GEM1		14
++#define ZYNQ_CLK_FCLK0		15
++#define ZYNQ_CLK_FCLK1		16
++#define ZYNQ_CLK_FCLK2		17
++#define ZYNQ_CLK_FCLK3		18
++#define ZYNQ_CLK_CAN0		19
++#define ZYNQ_CLK_CAN1		20
++#define ZYNQ_CLK_SDIO0		21
++#define ZYNQ_CLK_SDIO1		22
++#define ZYNQ_CLK_UART0		23
++#define ZYNQ_CLK_UART1		24
++#define ZYNQ_CLK_SPI0		25
++#define ZYNQ_CLK_SPI1		26
++#define ZYNQ_CLK_DMA		27
++#define ZYNQ_CLK_USB0_APER	28
++#define ZYNQ_CLK_USB1_APER	29
++#define ZYNQ_CLK_GEM0_APER	30
++#define ZYNQ_CLK_GEM1_APER	31
++#define ZYNQ_CLK_SDIO0_APER	32
++#define ZYNQ_CLK_SDIO1_APER	33
++#define ZYNQ_CLK_SPI0_APER	34
++#define ZYNQ_CLK_SPI1_APER	35
++#define ZYNQ_CLK_CAN0_APER	36
++#define ZYNQ_CLK_CAN1_APER	37
++#define ZYNQ_CLK_I2C0_APER	38
++#define ZYNQ_CLK_I2C1_APER	39
++#define ZYNQ_CLK_UART0_APER	40
++#define ZYNQ_CLK_UART1_APER	41
++#define ZYNQ_CLK_GPIO_APER	42
++#define ZYNQ_CLK_LQSPI_APER	43
++#define ZYNQ_CLK_SMC_APER	44
++#define ZYNQ_CLK_SWDT		45
++#define ZYNQ_CLK_DBG_TRC	46
++#define ZYNQ_CLK_DBG_APB	47
++
++#endif /* _DT_BINDINGS_CLOCK_ZYNQ_7000_H */
+--=20
 1.9.1.1.gbb9f595
