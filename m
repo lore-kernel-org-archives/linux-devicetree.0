@@ -1,49 +1,47 @@
-From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/5] ARM: configs: enable SMP in bcm_defconfig
-Date: Fri, 04 Apr 2014 05:21:07 -0500
-Message-ID: <533E8793.8060409@linaro.org>
-References: <1396577891-2713-1-git-send-email-elder@linaro.org> <1396577891-2713-4-git-send-email-elder@linaro.org>
+From: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: add vendor-prefix for Newhaven Display
+Date: Fri, 4 Apr 2014 12:35:27 +0200
+Message-ID: <20140404103527.GC9242@amd.pavel.ucw.cz>
+References: <1396493527-26170-1-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396577891-2713-4-git-send-email-elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1396493527-26170-1-git-send-email-dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/03/2014 09:18 PM, Alex Elder wrote:
-> Also explicitly set CONFIG_NR_CPUS to 2, limiting it to the most we
-> currently need.
+On Wed 2014-04-02 21:52:07, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
+> From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 > 
-> Signed-off-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm/configs/bcm_defconfig |    2 ++
->  1 file changed, 2 insertions(+)
+> Newhaven Display provides the worldwide marketplace with cost
+> effective high quality display devices ranging from OLED and LCD
+> Displays to VFD Displays.
 > 
-> diff --git a/arch/arm/configs/bcm_defconfig b/arch/arm/configs/bcm_defconfig
-> index 0100464..ea374a7 100644
-> --- a/arch/arm/configs/bcm_defconfig
-> +++ b/arch/arm/configs/bcm_defconfig
-> @@ -24,6 +24,8 @@ CONFIG_MODULES=y
->  CONFIG_MODULE_UNLOAD=y
->  # CONFIG_BLK_DEV_BSG is not set
->  CONFIG_PARTITION_ADVANCED=y
-> +CONFIG_SMP=y
-> +CONFIG_NR_CPUS=2
+> Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 
-Since this will be part of a MULTIPLATFORM build, I don't
-want to set CONFIG_NR_CPUS.  I will delete this line.
+Commit log should not be a place for advertising? :-)
 
-					-Alex
+Reviewed-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
 
->  CONFIG_ARCH_BCM=y
->  CONFIG_ARCH_BCM_MOBILE=y
->  CONFIG_ARM_THUMBEE=y
-> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 4685ec3..7037990 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -60,6 +60,7 @@ microchip	Microchip Technology Inc.
+>  mosaixtech	Mosaix Technologies, Inc.
+>  national	National Semiconductor
+>  neonode		Neonode Inc.
+> +newhaven	Newhaven Display International
+>  nintendo	Nintendo
+>  nvidia	NVIDIA
+>  nxp	NXP Semiconductors
 
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
