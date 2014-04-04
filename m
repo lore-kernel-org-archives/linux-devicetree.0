@@ -1,117 +1,58 @@
-From: Alex Elder <elder-EkmVulN54Sk@public.gmane.org>
-Subject: Re: [RFC PATCH 0/7] ARM: SMP: common "pen" secondary release method
-Date: Fri, 04 Apr 2014 15:38:47 -0500
-Message-ID: <533F1857.1020604@ieee.org>
-References: <1396041180-29897-1-git-send-email-elder@linaro.org>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH 74/75] ARM: l2c: always enable low power modes
+Date: Fri, 4 Apr 2014 13:47:57 -0700
+Message-ID: <5fa8a528-2f01-4c55-8a27-b23c83b1adfa@CH1EHSMHS002.ehs.local>
+References: <20140328151249.GJ7528@n2100.arm.linux.org.uk>
+ <E1WTYaK-0007I0-Sm@rmk-PC.arm.linux.org.uk>
+ <CAL_Jsq+vja-BeNfiVnOicFAa+E6jigDfnb5KWWpxZCZ3eGkJiA@mail.gmail.com>
+ <20140328155127.GL7528@n2100.arm.linux.org.uk>
+ <b3b6dd79-5646-4c9f-8e62-ed9c4a5596e3@VA3EHSMHS040.ehs.local>
+ <20140404191732.GF7528@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396041180-29897-1-git-send-email-elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shiraz.hashim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org
-Cc: spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20140404191732.GF7528@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/28/2014 04:12 PM, Alex Elder wrote:
-> This series proposes creating a single implementation of the "pen
-> release" (or spin-table) mechanism for starting secondary CPUs on
-> ARM SMP systems.  This mechanism is currently implemented at least 5
-> times in the kernel, each essentially identical to the other.  There
-> are other machines that use this method, but slight differences make
-> it necessary to incorporate further work in order to accomodate them
-> with a single set of functions.
-
-Given Russell King's reluctance to include this sort of
-thing in common code I'm withdrawing this series from
-consideration.
-
-					-Alex
-
-> 
-> This work began with integrating SMP support for a Broadcom SoC.
-> The code I started was another copy of the "pen release" code.
-> Looking at how existing systems handled this, the duplication of
-> code was obvious, but the fact that implementations were identical
-> was less so.  In addition, the arm64 (though not 32-bit arm) code
-> supports the ability to define an "enable-method" property for CPUs
-> in a machine's device tree (one of which is "spin-table"), allowing
-> the secondary startup mechanism to be specified abstractly.
-> 
-> My broader goal then was to set up the SMP support for the Broadcom
-> SoC such that it could be defined in its device tree using a central
-> "spin-table" enable method for secondary CPUs.  The first step was
-> to create a central spin-table implementation.  I've tried to do
-> this generally so it's usable by as many other platforms as
-> possible.  (An alternative would be to define a custom enable method
-> for this platform, but I'd prefer to avoid that if I can.)
-> 
-> I already have some code for the second step--which supports
-> specifying the "spin-table" CPU enable method in device tree files.
-> But before presenting that I wanted to post this series to get
-> feedback on the approach.
-> 
-> I've provided a little more information for each patch below.
-> 
-> This code is available in the "review/common-spin-code" branch of
-> the git repository here:
->     http://git.linaro.org/landing-teams/working/broadcom/kernel.git
-> 
-> 
-> 					-Alex
-> 
-> Alex Elder (7):
->   ARM: allow <asm/cputype.h> inclusion from assembly
->     This patch is done specifically so the next one can use the
->     value of MPIDR_HWID_BITMASK in secondary_holding_pen(), which is
->     defined in asssembly.
->   ARM: SMP: generic SMP spin-table method routines
->     Define the common code (based on any of the others, but
->     reportedly they all derive from ARM Realview.)  Names are
->     changed to be more like arch/arm64/kernel/smp_spin_table.c.
-> 
->   ARM: realview: use central SMP spin-table routines
->   ARM: vexpress: use central SMP spin-table routines
->   ARM: versatile: kill off SMP support code
->   	The SMP code for realview and vexpress both use SMP code
-> 	defined under mach-versatile, so these three go together.
-> 
->   ARM: ux500: use generic SMP spin-table routines
->     This one is a pretty straightforward switch to using
->     the common code.
->   	
->   ARM: spear: use central SMP spin-table routines
->     This is straightforward as well, but it depends on the
->     two prerequisite patches mentioned above (which together
->     make this code roughly identical to the rest).
-> 
->  arch/arm/include/asm/cputype.h                 |    4 ++
->  arch/arm/include/asm/smp.h                     |    5 ++
->  arch/arm/kernel/head.S                         |   33 +++++++++
->  arch/arm/kernel/smp.c                          |   77 ++++++++++++++++++++
->  arch/arm/mach-realview/platsmp.c               |    8 +--
->  arch/arm/mach-spear/Makefile                   |    2 +-
->  arch/arm/mach-spear/generic.h                  |    1 -
->  arch/arm/mach-spear/headsmp.S                  |   47 ------------
->  arch/arm/mach-spear/platsmp.c                  |   75 +------------------
->  arch/arm/mach-ux500/Makefile                   |    2 +-
->  arch/arm/mach-ux500/headsmp.S                  |   37 ----------
->  arch/arm/mach-ux500/platsmp.c                  |   72 +------------------
->  arch/arm/mach-vexpress/platsmp.c               |    8 +--
->  arch/arm/mach-vexpress/v2m.c                   |    1 -
->  arch/arm/plat-versatile/Makefile               |    1 -
->  arch/arm/plat-versatile/headsmp.S              |   41 -----------
->  arch/arm/plat-versatile/include/plat/platsmp.h |   14 ----
->  arch/arm/plat-versatile/platsmp.c              |   91 ------------------------
->  18 files changed, 133 insertions(+), 386 deletions(-)
->  delete mode 100644 arch/arm/mach-spear/headsmp.S
->  delete mode 100644 arch/arm/mach-ux500/headsmp.S
->  delete mode 100644 arch/arm/plat-versatile/headsmp.S
->  delete mode 100644 arch/arm/plat-versatile/include/plat/platsmp.h
->  delete mode 100644 arch/arm/plat-versatile/platsmp.c
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCAyMDE0LTA0LTA0IGF0IDA4OjE3UE0gKzAxMDAsIFJ1c3NlbGwgS2luZyAtIEFSTSBM
+aW51eCB3cm90ZToKPiBPbiBGcmksIEFwciAwNCwgMjAxNCBhdCAwOTo1MzoyOUFNIC0wNzAwLCBT
+w7ZyZW4gQnJpbmttYW5uIHdyb3RlOgo+ID4gT24gRnJpLCAyMDE0LTAzLTI4IGF0IDAzOjUxUE0g
+KzAwMDAsIFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eCB3cm90ZToKPiA+ID4gT24gRnJpLCBNYXIg
+MjgsIDIwMTQgYXQgMTA6NDI6NTRBTSAtMDUwMCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gPiA+ID4g
+T24gRnJpLCBNYXIgMjgsIDIwMTQgYXQgMTA6MjAgQU0sIFJ1c3NlbGwgS2luZwo+ID4gPiA+IDxy
+bWsra2VybmVsQGFybS5saW51eC5vcmcudWs+IHdyb3RlOgo+ID4gPiA+ID4gQWx3YXlzIGVuYWJs
+ZSB0aGUgTDJDIGxvdyBwb3dlciBtb2RlcyBvbiBMMkMtMzEwIFIzUDAgYW5kIG5ld2VyIHBhcnRz
+Lgo+ID4gPiA+IAo+ID4gPiA+IEkgYXNzdW1lIHlvdSB3YW50IHRvIHNxdWFzaCB0aGlzIHdpdGgg
+cGF0Y2ggNjgvNzU/IE9yIHlvdSBhcmUgc3RpbGwKPiA+ID4gPiBkZWJhdGluZyB3aGV0aGVyIHdl
+IHdhbnQgdG8gZG8gdGhpcyBvciBub3Q/IEdpdmVuIHRoYXQgaXQgaXMgcjNweAo+ID4gPiA+IG9u
+bHksIHRoYXQgc2hvdWxkIGdyZWF0bHkgcmVkdWNlIGFueSBjaGFuY2Ugb2YgYnJlYWthZ2UgdG8g
+bmV3ZXIKPiA+ID4gPiBwbGF0Zm9ybXMuCj4gPiA+IAo+ID4gPiBJIHdpbGwgZXZlbnR1YWxseSAt
+IEkndmUga2VwdCBpdCBzZXBhcmF0ZSBmb3IgdGhlIHRpbWUgYmVpbmcgdG8gZ2l2ZQo+ID4gPiBt
+b3JlIG9wdGlvbnMuICBMZXQncyBzZWUgaG93IHBlb3BsZSBnZXQgb24gd2l0aCBpdCAtIGl0J2xs
+IGJlIHJ1bm5pbmcKPiA+ID4gdGhyb3VnaCBPbG9mJ3MgYnVpbGRlciBsYXRlciB0b2RheSwgYW5k
+IHRoZXJlJ3Mgc29tZSBvdGhlciBwZW9wbGUKPiA+ID4gd2FudGluZyB0byB0YWtlIGl0IGZvciBh
+IHNwaW4uCj4gPiAKPiA+IEEgd2hpbGUgYmFjayBJIHN1Z2dlc3RlZCBhbHRlcmluZyB0aG9zZSBi
+aXRzLCBidXQgdGhhdCB3YXMgdHVybmVkIGRvd246Cj4gPiBodHRwczovL2xrbWwub3JnL2xrbWwv
+MjAxMy8zLzEvMzUwCj4gCj4gQXMgSSBzYWlkIHllc3RlcmRheSwgcGxlYXNlIHVzZSBhIGRpZmZl
+cmVudCBhcmNoaXZlIHdlYnNpdGUsIHByZWZlcmFibHkKPiBvbmUgd2hpY2ggd29ya3MuICBsa21s
+Lm9yZyBoYXMgYmVlbiBicm9rZW4gaW4gdmFyaW91cyB3YXlzIGZvciBhIGNvdXBsZQo+IG9mIGRh
+eXMgbm93LCBhbmQgcXVvdGluZyB1bnJlYWNoYWJsZSBVUkxzIGlzbid0IHVzZWZ1bCBmb3IgZGlz
+Y3Vzc2lvbgo+IHB1cnBvc2VzLgoKSXQgd29ya2VkIHdoZW4gSSBwdWxsZWQgdGhlIGxpbmsuIEFu
+eXdheSwgdGhlIHRocmVhZCBhdCBnbWFuZToKaHR0cDovL3RocmVhZC5nbWFuZS5vcmcvZ21hbmUu
+bGludXgua2VybmVsLzE0NDk1NDQvZm9jdXM9MTQ1MDQ3NQoKCVPDtnJlbgoKCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
+aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
