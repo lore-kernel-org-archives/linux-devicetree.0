@@ -1,78 +1,63 @@
-From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/5] ARM: add SMP support for Broadcom mobile SoCs
-Date: Fri, 04 Apr 2014 14:30:15 -0500
-Message-ID: <533F0847.6050909@linaro.org>
-References: <1396577891-2713-1-git-send-email-elder@linaro.org> <1396577891-2713-3-git-send-email-elder@linaro.org> <533EF21C.6000909@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <533EF21C.6000909-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: [PATCH v6 0/5] Krait L1/L2 EDAC driver
+Date: Fri,  4 Apr 2014 12:57:25 -0700
+Message-ID: <1396641450-12854-1-git-send-email-sboyd@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Courtney Cavin <courtney.cavin@sonymobile.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Stepan Moskovchenko <stepanm@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/04/2014 12:55 PM, Stephen Boyd wrote:
-> On 04/03/14 19:18, Alex Elder wrote:
->> +
->> +/*
->> + * Secondary startup method setup routine to extract the location of
->> + * the secondary boot register from a "cpu" or "cpus" device tree
->> + * node.  Only the first seen secondary boot register value is used;
->> + * any others are ignored.  The secondary boot register value must be
->> + * non-zero.
->> + *
->> + * Returns 0 if successful or an error code otherwise.
->> + */
->> +static int __init of_enable_method_setup(struct device_node *node)
->> +{
->> +	int ret;
->> +
->> +	/* Ignore all but the first one specified */
->> +	if (secondary_boot)
->> +		return 0;
->> +
->> +	ret = of_property_read_u32(node, OF_SECONDARY_BOOT, &secondary_boot);
->> +	if (ret)
->> +		pr_err("%s: missing/invalid " OF_SECONDARY_BOOT " property\n",
->> +			node->name);
->> +
->> +	return ret;
->> +}
-> 
-> I don't understand why we need this. Why can't we get the secondary boot
-> address from the /cpus node in the smp_prepare_cpus op. It isn't that
-> hard to get access to the cpus node there via of_find_node_by_path().
-> Then we don't need patch 1 at all. If it turns out to be common stuff,
-> we can always have the common function live in arm common code or maybe
-> even be a devicetree API.
+This patchset adds support for the Krait L1/L2 cache error detection
+hardware. The second patch adds the Krait L2 indirection
+register code. This patch is in need of an ACK from ARM folks.
+The next two patches add the driver and the binding and 
+the final patch fixes up the DT nodes to match the binding (this last
+one should go through the arm-soc tree).
 
-You're right, that is one of several ways this could have
-also been done.
+NOTE: the DT binding patches rely on Lorenzo's cache DT binding document[1]
 
-Part of my thinking about this was affected by seeing how
-arm_dt_init_cpu_maps() works.  (Well, at least how it's
-structured.)  It looks for an enable method in each "cpu"
-node, then falls back to looking for one in the "cpus" node
-if none was seen.  It doesn't assume the extra properties
-are in the "cpus" node (or a "cpu" node for that matter).
-It directly supplies a node that's known to have a matching
-"enable-method" property--at the time that match is found--to
-make it possible to extract other relevant information from
-that matching node.
+Changes since v5:
+ * Don't rely on platform device being created from cpus node
+ * Get interrupts from L1 cache node
+ * Rework binding to be in cache document
 
-(As an aside, the documentation doesn't mention that "cpus"
-nodes will contain "enable-method" properties, even though
-it seems that's more a function of "cpus" than each individual
-"cpu".)
+Changes since v4:
+ * Prefixed l2 accessors functions with krait_
+ * Dropped first two patches as Boris says he picked them up
 
-I think it offers useful flexibility to do it this way,
-and I like that it is unambiguous which node should be
-searched for the additional information.
+Changes since v3:
+ * Fixed l1_irq handler to properly dereference dev_id
 
-					-Alex
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes since v2:
+ * Picked up acks
+ * s/an/a/ in DT binding
+
+Stephen Boyd (5):
+  genirq: export percpu irq functions for module usage
+  ARM: Add Krait L2 register accessor functions
+  devicetree: bindings: Document Krait cache error interrupts
+  edac: Add support for Krait CPU cache error detection
+  ARM: dts: msm: Fix Krait CPU/L2 nodes
+
+ Documentation/devicetree/bindings/arm/cache.txt |  48 ++-
+ arch/arm/boot/dts/qcom-msm8960.dtsi             |  29 +-
+ arch/arm/boot/dts/qcom-msm8974.dtsi             |  49 +++-
+ arch/arm/common/Kconfig                         |   3 +
+ arch/arm/common/Makefile                        |   1 +
+ arch/arm/common/krait-l2-accessors.c            |  58 ++++
+ arch/arm/include/asm/krait-l2-accessors.h       |  20 ++
+ drivers/edac/Kconfig                            |   8 +
+ drivers/edac/Makefile                           |   2 +
+ drivers/edac/krait_edac.c                       | 370 ++++++++++++++++++++++++
+ kernel/irq/manage.c                             |   2 +
+ 11 files changed, 568 insertions(+), 22 deletions(-)
+ create mode 100644 arch/arm/common/krait-l2-accessors.c
+ create mode 100644 arch/arm/include/asm/krait-l2-accessors.h
+ create mode 100644 drivers/edac/krait_edac.c
+
+[1] http://www.spinics.net/lists/arm-kernel/msg308540.html
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
