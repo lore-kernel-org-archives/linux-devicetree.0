@@ -1,293 +1,236 @@
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: [PATCH 2/3] net: hisilicon: new hip04 MDIO driver
-Date: Fri,  4 Apr 2014 23:45:57 +0800
-Message-ID: <1396626357-2414-1-git-send-email-zhangfei.gao@linaro.org>
-References: <1396624597-390-3-git-send-email-zhangfei.gao@linaro.org>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1396624597-390-3-git-send-email-zhangfei.gao@linaro.org>
-Sender: netdev-owner@vger.kernel.org
-To: davem@davemloft.net, linux@arm.linux.org.uk, arnd@arndb.de, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@ACULAB.COM, eric.dumazet@gmail.com
-Cc: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Zhangfei Gao <zhangfei.gao@linaro.org>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH 1/9] crypto: qce: Add core driver implementation
+Date: Fri, 04 Apr 2014 18:54:52 +0300
+Message-ID: <533ED5CC.50909@mm-sol.com>
+References: <1396541886-10966-1-git-send-email-svarbanov@mm-sol.com> <1396541886-10966-2-git-send-email-svarbanov@mm-sol.com> <20140403181914.GG28265@joshc.qualcomm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20140403181914.GG28265@joshc.qualcomm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Josh Cartwright <joshc@codeaurora.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hisilicon hip04 platform mdio driver
-Reuse Marvell phy drivers/net/phy/marvell.c
+Hi Josh,
 
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
----
- drivers/net/ethernet/Kconfig                |    1 +
- drivers/net/ethernet/Makefile               |    1 +
- drivers/net/ethernet/hisilicon/Kconfig      |   31 +++++
- drivers/net/ethernet/hisilicon/Makefile     |    5 +
- drivers/net/ethernet/hisilicon/hip04_mdio.c |  186 +++++++++++++++++++++++++++
- 5 files changed, 224 insertions(+)
- create mode 100644 drivers/net/ethernet/hisilicon/Kconfig
- create mode 100644 drivers/net/ethernet/hisilicon/Makefile
- create mode 100644 drivers/net/ethernet/hisilicon/hip04_mdio.c
+Thanks for the comments!
 
-diff --git a/drivers/net/ethernet/Kconfig b/drivers/net/ethernet/Kconfig
-index 506b024..1c8dc3d 100644
---- a/drivers/net/ethernet/Kconfig
-+++ b/drivers/net/ethernet/Kconfig
-@@ -54,6 +54,7 @@ source "drivers/net/ethernet/neterion/Kconfig"
- source "drivers/net/ethernet/faraday/Kconfig"
- source "drivers/net/ethernet/freescale/Kconfig"
- source "drivers/net/ethernet/fujitsu/Kconfig"
-+source "drivers/net/ethernet/hisilicon/Kconfig"
- source "drivers/net/ethernet/hp/Kconfig"
- source "drivers/net/ethernet/ibm/Kconfig"
- source "drivers/net/ethernet/intel/Kconfig"
-diff --git a/drivers/net/ethernet/Makefile b/drivers/net/ethernet/Makefile
-index c0b8789..da1a435 100644
---- a/drivers/net/ethernet/Makefile
-+++ b/drivers/net/ethernet/Makefile
-@@ -29,6 +29,7 @@ obj-$(CONFIG_NET_VENDOR_EXAR) += neterion/
- obj-$(CONFIG_NET_VENDOR_FARADAY) += faraday/
- obj-$(CONFIG_NET_VENDOR_FREESCALE) += freescale/
- obj-$(CONFIG_NET_VENDOR_FUJITSU) += fujitsu/
-+obj-$(CONFIG_NET_VENDOR_HISILICON) += hisilicon/
- obj-$(CONFIG_NET_VENDOR_HP) += hp/
- obj-$(CONFIG_NET_VENDOR_IBM) += ibm/
- obj-$(CONFIG_NET_VENDOR_INTEL) += intel/
-diff --git a/drivers/net/ethernet/hisilicon/Kconfig b/drivers/net/ethernet/hisilicon/Kconfig
-new file mode 100644
-index 0000000..628537f
---- /dev/null
-+++ b/drivers/net/ethernet/hisilicon/Kconfig
-@@ -0,0 +1,31 @@
-+#
-+# HISILICON device configuration
-+#
-+
-+config NET_VENDOR_HISILICON
-+	bool "Hisilicon devices"
-+	default y
-+	depends on ARM
-+	---help---
-+	  If you have a network (Ethernet) card belonging to this class, say Y
-+	  and read the Ethernet-HOWTO, available from
-+	  <http://www.tldp.org/docs.html#howto>.
-+
-+	  Note that the answer to this question doesn't directly affect the
-+	  kernel: saying N will just cause the configurator to skip all
-+	  the questions about Hisilicon devices. If you say Y, you will be asked
-+	  for your specific card in the following questions.
-+
-+if NET_VENDOR_HISILICON
-+
-+config HIP04_ETH
-+	tristate "HISILICON P04 Ethernet support"
-+	select PHYLIB
-+	select MARVELL_PHY
-+	select MFD_SYSCON
-+	---help---
-+	  If you wish to compile a kernel for a hardware with hisilicon p04 SoC and
-+	  want to use the internal ethernet then you should answer Y to this.
-+
-+
-+endif # NET_VENDOR_HISILICON
-diff --git a/drivers/net/ethernet/hisilicon/Makefile b/drivers/net/ethernet/hisilicon/Makefile
-new file mode 100644
-index 0000000..1d6eb6e
---- /dev/null
-+++ b/drivers/net/ethernet/hisilicon/Makefile
-@@ -0,0 +1,5 @@
-+#
-+# Makefile for the HISILICON network device drivers.
-+#
-+
-+obj-$(CONFIG_HIP04_ETH) += hip04_mdio.o
-diff --git a/drivers/net/ethernet/hisilicon/hip04_mdio.c b/drivers/net/ethernet/hisilicon/hip04_mdio.c
-new file mode 100644
-index 0000000..e4f67ca
---- /dev/null
-+++ b/drivers/net/ethernet/hisilicon/hip04_mdio.c
-@@ -0,0 +1,186 @@
-+
-+/* Copyright (c) 2014 Linaro Ltd.
-+ * Copyright (c) 2014 Hisilicon Limited.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/io.h>
-+#include <linux/of_mdio.h>
-+#include <linux/delay.h>
-+
-+#define MDIO_CMD_REG		0x0
-+#define MDIO_ADDR_REG		0x4
-+#define MDIO_WDATA_REG		0x8
-+#define MDIO_RDATA_REG		0xc
-+#define MDIO_STA_REG		0x10
-+
-+#define MDIO_START		BIT(14)
-+#define MDIO_R_VALID		BIT(1)
-+#define MDIO_READ	        (BIT(12) | BIT(11) | MDIO_START)
-+#define MDIO_WRITE	        (BIT(12) | BIT(10) | MDIO_START)
-+
-+struct hip04_mdio_priv {
-+	void __iomem *base;
-+};
-+
-+#define WAIT_TIMEOUT 10
-+static int hip04_mdio_wait_ready(struct mii_bus *bus)
-+{
-+	struct hip04_mdio_priv *priv = bus->priv;
-+	int i;
-+
-+	for (i = 0; readl_relaxed(priv->base + MDIO_CMD_REG) & MDIO_START; i++) {
-+		if (i == WAIT_TIMEOUT)
-+			return -ETIMEDOUT;
-+		msleep(20);
-+	}
-+
-+	return 0;
-+}
-+
-+static int hip04_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
-+{
-+	struct hip04_mdio_priv *priv = bus->priv;
-+	u32 val;
-+	int ret;
-+
-+	ret = hip04_mdio_wait_ready(bus);
-+	if (ret < 0)
-+		goto out;
-+
-+	val = regnum | (mii_id << 5) | MDIO_READ;
-+	writel_relaxed(val, priv->base + MDIO_CMD_REG);
-+
-+	ret = hip04_mdio_wait_ready(bus);
-+	if (ret < 0)
-+		goto out;
-+
-+	val = readl_relaxed(priv->base + MDIO_STA_REG);
-+	if (val & MDIO_R_VALID) {
-+		dev_err(bus->parent, "SMI bus read not valid\n");
-+		ret = -ENODEV;
-+		goto out;
-+	}
-+
-+	val = readl_relaxed(priv->base + MDIO_RDATA_REG);
-+	ret = val & 0xFFFF;
-+out:
-+	return ret;
-+}
-+
-+static int hip04_mdio_write(struct mii_bus *bus, int mii_id,
-+			    int regnum, u16 value)
-+{
-+	struct hip04_mdio_priv *priv = bus->priv;
-+	u32 val;
-+	int ret;
-+
-+	ret = hip04_mdio_wait_ready(bus);
-+	if (ret < 0)
-+		goto out;
-+
-+	writel_relaxed(value, priv->base + MDIO_WDATA_REG);
-+	val = regnum | (mii_id << 5) | MDIO_WRITE;
-+	writel_relaxed(val, priv->base + MDIO_CMD_REG);
-+out:
-+	return ret;
-+}
-+
-+
-+static int hip04_mdio_reset(struct mii_bus *bus)
-+{
-+	int temp, err, i;
-+
-+	for (i = 0; i < PHY_MAX_ADDR; i++) {
-+		hip04_mdio_write(bus, i, 22, 0);
-+		temp = hip04_mdio_read(bus, i, MII_BMCR);
-+		temp |= BMCR_RESET;
-+		err = hip04_mdio_write(bus, i, MII_BMCR, temp);
-+		if (err < 0)
-+			return err;
-+	}
-+
-+	mdelay(500);
-+	return 0;
-+}
-+
-+static int hip04_mdio_probe(struct platform_device *pdev)
-+{
-+	struct resource *r;
-+	struct mii_bus *bus;
-+	struct hip04_mdio_priv *priv;
-+	int ret;
-+
-+	bus = mdiobus_alloc_size(sizeof(struct hip04_mdio_priv));
-+	if (!bus) {
-+		dev_err(&pdev->dev, "Cannot allocate MDIO bus\n");
-+		return -ENOMEM;
-+	}
-+
-+	bus->name = "hip04_mdio_bus";
-+	bus->read = hip04_mdio_read;
-+	bus->write = hip04_mdio_write;
-+	bus->reset = hip04_mdio_reset;
-+	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-mii", dev_name(&pdev->dev));
-+	bus->parent = &pdev->dev;
-+	priv = bus->priv;
-+
-+	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	priv->base = devm_ioremap_resource(&pdev->dev, r);
-+	if (IS_ERR(priv->base)) {
-+		ret = PTR_ERR(priv->base);
-+		goto out_mdio;
-+	}
-+
-+	ret = of_mdiobus_register(bus, pdev->dev.of_node);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "Cannot register MDIO bus (%d)\n", ret);
-+		goto out_mdio;
-+	}
-+
-+	platform_set_drvdata(pdev, bus);
-+
-+	return 0;
-+
-+out_mdio:
-+	mdiobus_free(bus);
-+	return ret;
-+}
-+
-+static int hip04_mdio_remove(struct platform_device *pdev)
-+{
-+	struct mii_bus *bus = platform_get_drvdata(pdev);
-+
-+	mdiobus_unregister(bus);
-+	mdiobus_free(bus);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id hip04_mdio_match[] = {
-+	{ .compatible = "hisilicon,hip04-mdio" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, hip04_mdio_match);
-+
-+static struct platform_driver hip04_mdio_driver = {
-+	.probe = hip04_mdio_probe,
-+	.remove = hip04_mdio_remove,
-+	.driver = {
-+		.name = "hip04-mdio",
-+		.owner = THIS_MODULE,
-+		.of_match_table = hip04_mdio_match,
-+	},
-+};
-+
-+module_platform_driver(hip04_mdio_driver);
-+
-+MODULE_DESCRIPTION("HISILICON P04 MDIO interface driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:hip04-mdio");
+On 04/03/2014 09:19 PM, Josh Cartwright wrote:
+> Hey Stanimir-
+> 
+> Just a few comments/questions from a quick scan of your patchset:
+> 
+> On Thu, Apr 03, 2014 at 07:17:58PM +0300, Stanimir Varbanov wrote:
+> [..]
+>> +++ b/drivers/crypto/qce/core.c
+> [..]
+>> +
+>> +static struct qce_algo_ops qce_ops[] = {
+>> +	{
+>> +		.type = CRYPTO_ALG_TYPE_ABLKCIPHER,
+>> +		.register_alg = qce_ablkcipher_register,
+>> +	},
+>> +	{
+>> +		.type = CRYPTO_ALG_TYPE_AHASH,
+>> +		.register_alg = qce_ahash_register,
+>> +	},
+>> +};
+>> +
+>> +static void qce_unregister_algs(struct qce_device *qce)
+>> +{
+>> +	struct qce_alg_template *tmpl, *n;
+>> +
+>> +	list_for_each_entry_safe(tmpl, n, &qce->alg_list, entry) {
+>> +		if (tmpl->crypto_alg_type == CRYPTO_ALG_TYPE_AHASH)
+>> +			crypto_unregister_ahash(&tmpl->alg.ahash);
+>> +		else
+>> +			crypto_unregister_alg(&tmpl->alg.crypto);
+> 
+> Why no 'unregister_alg' member in qce_algo_ops?
+
+Because we have a common unregister function :). We have common
+unregster function because in my opinion there is no need to copy the
+same piece of code on every algorithm file (ablkcipher.c, sha.c and one
+or two more could be added in the future). Something more, I'm not the
+inventor of this asymmetric calling convention in driver internals, it
+is widely spread in crypto drivers. So, I'm just have been inspired by
+this idea, and giving that I personally do not like the monotonic and
+linear  coding thus it was easy to me to borrow it.
+
+> 
+>> +
+>> +		list_del(&tmpl->entry);
+>> +		kfree(tmpl);
+>> +	}
+>> +}
+>> +
+>> +static int qce_register_algs(struct qce_device *qce)
+>> +{
+>> +	struct qce_algo_ops *ops;
+>> +	int i, rc = -ENODEV;
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(qce_ops); i++) {
+>> +		ops = &qce_ops[i];
+>> +		ops->async_req_queue = qce_async_request_queue;
+>> +		ops->async_req_done = qce_async_request_done;
+> 
+> Why not set these statically?
+
+To save few lines of code. If this breaks readability I could move those
+function pointers to the qce_ops[].
+
+> 
+>> +		rc = ops->register_alg(qce, ops);
+>> +		if (rc)
+>> +			break;
+>> +	}
+>> +
+>> +	if (rc)
+>> +		qce_unregister_algs(qce);
+>> +
+>> +	return rc;
+>> +}
+> [..]
+>> +static int qce_get_version(struct qce_device *qce)
+>> +{
+>> +	u32 major, minor, step;
+>> +	u32 val;
+>> +
+>> +	val = readl(qce->base + REG_VERSION);
+>> +	major = (val & CORE_MAJOR_REV_MASK) >> CORE_MAJOR_REV;
+>> +	minor = (val & CORE_MINOR_REV_MASK) >> CORE_MINOR_REV;
+>> +	step = (val & CORE_STEP_REV_MASK) >> CORE_STEP_REV;
+>> +
+>> +	/*
+>> +	 * the driver does not support v5 with minor 0 because it has special
+>> +	 * alignment requirements.
+>> +	 */
+>> +	if (major < QCE_MAJOR_VERSION5 && minor == 0)
+>> +		return -ENODEV;
+>> +
+>> +	qce->burst_size = QCE_BAM_BURST_SIZE;
+>> +	qce->pipe_pair_index = 1;
+>> +
+>> +	dev_info(qce->dev, "Crypto device found, version %d.%d.%d\n",
+>> +		 major, minor, step);
+> 
+> I'd suggest dev_dbg().  Kernel boot is chatty enough.
+
+OK.
+
+> 
+> [..]
+>> +static int qce_clks_enable(struct qce_device *qce, int enable)
+>> +{
+>> +	int rc = 0;
+>> +	int i;
+>> +
+>> +	for (i = 0; i < QCE_CLKS_NUM; i++) {
+>> +		if (enable)
+>> +			rc = clk_prepare_enable(qce->clks[i]);
+>> +		else
+>> +			clk_disable_unprepare(qce->clks[i]);
+>> +
+>> +		if (rc)
+>> +			break;
+>> +	}
+>> +
+>> +	if (rc)
+>> +		do
+>> +			clk_disable_unprepare(qce->clks[i]);
+>> +		while (--i >= 0);
+>> +
+>> +	return rc;
+>> +}
+> 
+> See my below comment about lumping clocks together.
+> 
+> [..]
+>> +static int qce_crypto_remove(struct platform_device *pdev)
+>> +{
+>> +	struct qce_device *qce = platform_get_drvdata(pdev);
+>> +
+>> +	cancel_work_sync(&qce->queue_work);
+>> +	destroy_workqueue(qce->queue_wq);
+>> +	tasklet_kill(&qce->done_tasklet);
+>> +	qce_unregister_algs(qce);
+>> +	qce_dma_release(&qce->dma);
+>> +	qce_clks_enable(qce, 0);
+> 
+> qce_clks_enable(qce, 0) is really confusing....I'd suggest creating
+> separate qce_clks_enable() and qce_clks_disable() functions.
+> 
+
+OK will do.
+
+> [..]
+>> +static const struct of_device_id qce_crypto_of_match[] = {
+>> +	{ .compatible = "qcom,crypto-v5.1", },
+>> +	{}
+>> +};
+> 
+> MODULE_DEVICE_TABLE()?
+
+Good catch. Thanks.
+
+> 
+> [..]
+>> +++ b/drivers/crypto/qce/core.h
+>> @@ -0,0 +1,69 @@
+>> +/*
+>> + * Copyright (c) 2010-2014, The Linux Foundation. All rights reserved.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 and
+>> + * only version 2 as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#ifndef _CORE_H_
+>> +#define _CORE_H_
+>> +
+>> +static const char * const clk_names[] = {
+>> +	"core",		/* GCC_CE_CLK */
+>> +	"iface",	/* GCC_CE_AHB_CLK */
+>> +	"bus",		/* GCC_CE_AXI_CLK */
+>> +};
+> 
+> You probably don't want this in a header file, as now each compilation
+> unit will have a copy :(.
+
+It is my fault, I just forgot to move this array in the core.c.
+
+> 
+> Lumping all the clocks together assumes that you will only ever have all
+> clocks enabled, or all clocks disabled, are you sure that's what you
+> want?
+
+At least until now all clocks are needed. When adding power management
+this code should be revised.
+
+> 
+> [..]
+>> +struct qce_algo_ops {
+>> +	u32 type;
+>> +	int (*register_alg)(struct qce_device *qce, struct qce_algo_ops *ops);
+>> +	int (*async_req_queue)(struct qce_device *qce,
+>> +			       struct crypto_async_request *req);
+>> +	void (*async_req_done)(struct qce_device *qce, int ret);
+> 
+> What is the relationship between qce_algo_ops and the qce_alg_template
+> (which has these same two identically named callbacks)?
+
+This is a way of passing function pointers from core.c to the
+ablkcipher.c and sha.c (where they are needed to queue up new crypto
+async requests and finish the requests with done counterpart). This
+avoids prototyping those core.c functions and calling them directly.
+
 -- 
-1.7.9.5
+regards,
+Stan
