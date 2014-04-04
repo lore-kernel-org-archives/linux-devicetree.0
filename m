@@ -1,50 +1,78 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 74/75] ARM: l2c: always enable low power modes
-Date: Fri, 4 Apr 2014 20:17:33 +0100
-Message-ID: <20140404191732.GF7528@n2100.arm.linux.org.uk>
-References: <20140328151249.GJ7528@n2100.arm.linux.org.uk> <E1WTYaK-0007I0-Sm@rmk-PC.arm.linux.org.uk> <CAL_Jsq+vja-BeNfiVnOicFAa+E6jigDfnb5KWWpxZCZ3eGkJiA@mail.gmail.com> <20140328155127.GL7528@n2100.arm.linux.org.uk> <b3b6dd79-5646-4c9f-8e62-ed9c4a5596e3@VA3EHSMHS040.ehs.local>
+From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/5] ARM: add SMP support for Broadcom mobile SoCs
+Date: Fri, 04 Apr 2014 14:30:15 -0500
+Message-ID: <533F0847.6050909@linaro.org>
+References: <1396577891-2713-1-git-send-email-elder@linaro.org> <1396577891-2713-3-git-send-email-elder@linaro.org> <533EF21C.6000909@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <b3b6dd79-5646-4c9f-8e62-ed9c4a5596e3@VA3EHSMHS040.ehs.local>
-Sender: linux-doc-owner@vger.kernel.org
-To: =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>
-Cc: Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <533EF21C.6000909-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 04, 2014 at 09:53:29AM -0700, S=F6ren Brinkmann wrote:
-> On Fri, 2014-03-28 at 03:51PM +0000, Russell King - ARM Linux wrote:
-> > On Fri, Mar 28, 2014 at 10:42:54AM -0500, Rob Herring wrote:
-> > > On Fri, Mar 28, 2014 at 10:20 AM, Russell King
-> > > <rmk+kernel@arm.linux.org.uk> wrote:
-> > > > Always enable the L2C low power modes on L2C-310 R3P0 and newer=
- parts.
-> > >=20
-> > > I assume you want to squash this with patch 68/75? Or you are sti=
-ll
-> > > debating whether we want to do this or not? Given that it is r3px
-> > > only, that should greatly reduce any chance of breakage to newer
-> > > platforms.
-> >=20
-> > I will eventually - I've kept it separate for the time being to giv=
-e
-> > more options.  Let's see how people get on with it - it'll be runni=
-ng
-> > through Olof's builder later today, and there's some other people
-> > wanting to take it for a spin.
->=20
-> A while back I suggested altering those bits, but that was turned dow=
-n:
-> https://lkml.org/lkml/2013/3/1/350
+On 04/04/2014 12:55 PM, Stephen Boyd wrote:
+> On 04/03/14 19:18, Alex Elder wrote:
+>> +
+>> +/*
+>> + * Secondary startup method setup routine to extract the location of
+>> + * the secondary boot register from a "cpu" or "cpus" device tree
+>> + * node.  Only the first seen secondary boot register value is used;
+>> + * any others are ignored.  The secondary boot register value must be
+>> + * non-zero.
+>> + *
+>> + * Returns 0 if successful or an error code otherwise.
+>> + */
+>> +static int __init of_enable_method_setup(struct device_node *node)
+>> +{
+>> +	int ret;
+>> +
+>> +	/* Ignore all but the first one specified */
+>> +	if (secondary_boot)
+>> +		return 0;
+>> +
+>> +	ret = of_property_read_u32(node, OF_SECONDARY_BOOT, &secondary_boot);
+>> +	if (ret)
+>> +		pr_err("%s: missing/invalid " OF_SECONDARY_BOOT " property\n",
+>> +			node->name);
+>> +
+>> +	return ret;
+>> +}
+> 
+> I don't understand why we need this. Why can't we get the secondary boot
+> address from the /cpus node in the smp_prepare_cpus op. It isn't that
+> hard to get access to the cpus node there via of_find_node_by_path().
+> Then we don't need patch 1 at all. If it turns out to be common stuff,
+> we can always have the common function live in arm common code or maybe
+> even be a devicetree API.
 
-As I said yesterday, please use a different archive website, preferably
-one which works.  lkml.org has been broken in various ways for a couple
-of days now, and quoting unreachable URLs isn't useful for discussion
-purposes.
+You're right, that is one of several ways this could have
+also been done.
 
---=20
-=46TTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... sl=
-owly
-improving, and getting towards what was expected from it.
+Part of my thinking about this was affected by seeing how
+arm_dt_init_cpu_maps() works.  (Well, at least how it's
+structured.)  It looks for an enable method in each "cpu"
+node, then falls back to looking for one in the "cpus" node
+if none was seen.  It doesn't assume the extra properties
+are in the "cpus" node (or a "cpu" node for that matter).
+It directly supplies a node that's known to have a matching
+"enable-method" property--at the time that match is found--to
+make it possible to extract other relevant information from
+that matching node.
+
+(As an aside, the documentation doesn't mention that "cpus"
+nodes will contain "enable-method" properties, even though
+it seems that's more a function of "cpus" than each individual
+"cpu".)
+
+I think it offers useful flexibility to do it this way,
+and I like that it is unambiguous which node should be
+searched for the additional information.
+
+					-Alex
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
