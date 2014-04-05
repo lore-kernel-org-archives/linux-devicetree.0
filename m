@@ -1,105 +1,118 @@
-From: Harini Katakam <harinikatakamlinux@gmail.com>
-Subject: Re: [PATCH v2 2/2] devicetree: Add devicetree bindings documentation
- for Cadence SPI
-Date: Sat, 5 Apr 2014 11:35:03 +0530
-Message-ID: <CAFcVEC+vWwepHgsCAP63YG2F_0ZXKMck1YYwi7XU3JQdpC9ZQw@mail.gmail.com>
-References: <1396523431-14519-1-git-send-email-harinik@xilinx.com>
-	<1396523431-14519-2-git-send-email-harinik@xilinx.com>
-	<20140403213446.GB14763@sirena.org.uk>
-	<CAFcVEC+mpHh_d2j6_sdhWS3d2KyXrDYUq6L6jO2Q=SS68Hda2g@mail.gmail.com>
-	<20140404100919.GO14763@sirena.org.uk>
-	<CAFcVECLDyfFSZFk9fzFKsr6pM=f1nwzGAhjX17z=NsbvWpiDew@mail.gmail.com>
-	<20140404124637.GT14763@sirena.org.uk>
-	<CAFcVEC+FAAxxxxA8PgcTzLU5UFu=pkDEM4Li06dRmEwA95sz_g@mail.gmail.com>
-	<CAFcVECJYdW0=r425tWs8y6DJDNh3c75TAzg7+UCNRgLP8WHf+A@mail.gmail.com>
-	<CAEgOgz56hhFCy6sjZmw+Wn6uT4rU8mXSpazscPG_uJ-==-uXLw@mail.gmail.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: [PATCH 1/5] ASoC: omap: rx51: Use devm_snd_soc_register_card
+Date: Sat,  5 Apr 2014 23:35:49 +0200
+Message-ID: <1396733753-9820-2-git-send-email-sre@kernel.org>
+References: <1396733753-9820-1-git-send-email-sre@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAEgOgz56hhFCy6sjZmw+Wn6uT4rU8mXSpazscPG_uJ-==-uXLw@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
-Cc: Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-spi@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1396733753-9820-1-git-send-email-sre@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@ring0.de>, Mark Brown <broonie@kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Jarkko Nikula <jarkko.nikula@bitmer.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, alsa-devel@alsa-project.org, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Sebastian Reichel <sre@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+=46rom: Pali Roh=C3=A1r <pali.rohar@gmail.com>
 
-On Sat, Apr 5, 2014 at 4:44 AM, Peter Crosthwaite
-<peter.crosthwaite@xilinx.com> wrote:
-> On Sat, Apr 5, 2014 at 12:30 AM, Harini Katakam
-> <harinikatakamlinux@gmail.com> wrote:
->> Hi,
->>
->> On Fri, Apr 4, 2014 at 7:38 PM, Harini Katakam
->> <harinikatakamlinux@gmail.com> wrote:
->>> Hi Mark,
->>>
->>> On Fri, Apr 4, 2014 at 6:16 PM, Mark Brown <broonie@kernel.org> wrote:
->>>> On Fri, Apr 04, 2014 at 05:44:23PM +0530, Harini Katakam wrote:
->>>>> On Fri, Apr 4, 2014 at 3:39 PM, Mark Brown <broonie@kernel.org> wrote:
->>>>> > On Fri, Apr 04, 2014 at 08:30:38AM +0530, Harini Katakam wrote:
->>>>
->>>>> >> This IP can drive 4 slaves.
->>>>> >> The sCS line to be driven is selected in spi device structure and
->>>>> >> that is driven by the software.
->>>>
->>>>> > So why specify this in the binding at all?  If the device always has the
->>>>> > same number of chip selects it's redundant.
->>>>
->>>>> I'm sorry, I should have explained that better.
->>>>> The IP can support upto 4 chip selects.
->>>>> The num-cs value here is the number of chip selects actually used on the board.
->
-> Shouldnt it be a property of the controller not the board? How for
-> example do we differentiate between different implementations of
-> cadence SPI controller that only supports up to two CS lines? My
-> thinking is that this property should always be present and = 4 in the
-> Zynq case as the controller always has 4 physical CS lines coming out
-> (before any decoders, pin muxes or slaves etc.).
->
->>>>
->>>> Why does that need to be configured?  Surely the presence of slaves is
->>>> enough information.
->
-> And presence of slaves / board info is inferable from subnodes.
->
->>>
->>> OK. I understand.
->>> Can you comment on the case where a decoder is used?
->>>
->>> There is support for adding a decoder where extended slaves can be selected
->>> through the IP's control register.
->>> (This is not currently implemented in the driver but will be in the future.)
->>>
->
-> I think thats seperate information. is-decoded-cs property of something.
->
->>> How should the driver know whether it is 4 or 16 select lines for example?
->>> This has to be written to master->num_chipselect.
->>>
->
-> If you only have one property (== 4) how do you tell the difference
-> between 4 un-decoded CS lines vs 2 decoded CS lines?
->
+This patch converts the rx51 ASoC module to use
+devm_snd_soc_register_card. It also adds module alias
+to support driver autoloading.
 
-If an SoC implements 2 CS and sets "decoder" property,
-then we'd configure the register with "select decode" bit and write
-0b0011 to the slave select field to select 4th slave.
+Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+Signed-off-by: Sebastian Reichel <sre@kernel.org>
+---
+ sound/soc/omap/rx51.c | 48 ++++++++++++++++++++++++++++---------------=
+-----
+ 1 file changed, 28 insertions(+), 20 deletions(-)
 
-If decoder property is not set, then we'd write 0b1000 to select 4th slave.
-
-But yes, if the SoC only implements 2 CS, doesn't use decoder but
-if there is an erroneous input to set_cs for 4th slave, it would be a problem.
-
->
-> I think num-cs has validity as the number of CS lines implemented in
-> the controller. For any given SoC, it's constant but could differ
-> between SoCs.
->
-
-I dint consider that this property will be useful to SoC's implementing <4 CS;
-master->num_chipselect (when set to this property's value)
-will be used to check error conditions.
-
-Regards,
-Harini
+diff --git a/sound/soc/omap/rx51.c b/sound/soc/omap/rx51.c
+index 7fb3d4b..58f5e12 100644
+--- a/sound/soc/omap/rx51.c
++++ b/sound/soc/omap/rx51.c
+@@ -394,10 +394,9 @@ static struct snd_soc_card rx51_sound_card =3D {
+ 	.num_configs =3D ARRAY_SIZE(rx51_codec_conf),
+ };
+=20
+-static struct platform_device *rx51_snd_device;
+-
+-static int __init rx51_soc_init(void)
++static int rx51_soc_probe(struct platform_device *pdev)
+ {
++	struct snd_soc_card *card =3D &rx51_sound_card;
+ 	int err;
+=20
+ 	if (!machine_is_nokia_rx51() && !of_machine_is_compatible("nokia,omap=
+3-n900"))
+@@ -412,22 +411,17 @@ static int __init rx51_soc_init(void)
+ 	if (err)
+ 		goto err_gpio_eci_sw;
+=20
+-	rx51_snd_device =3D platform_device_alloc("soc-audio", -1);
+-	if (!rx51_snd_device) {
+-		err =3D -ENOMEM;
+-		goto err1;
+-	}
+-
+-	platform_set_drvdata(rx51_snd_device, &rx51_sound_card);
++	card->dev =3D &pdev->dev;
+=20
+-	err =3D platform_device_add(rx51_snd_device);
+-	if (err)
+-		goto err2;
++	err =3D devm_snd_soc_register_card(card->dev, card);
++	if (err) {
++		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", err);
++		goto err_snd;
++	}
+=20
+ 	return 0;
+-err2:
+-	platform_device_put(rx51_snd_device);
+-err1:
++err_snd:
++	card->dev =3D NULL;
+ 	gpio_free(RX51_ECI_SW_GPIO);
+ err_gpio_eci_sw:
+ 	gpio_free(RX51_TVOUT_SEL_GPIO);
+@@ -436,19 +430,33 @@ err_gpio_tvout_sel:
+ 	return err;
+ }
+=20
+-static void __exit rx51_soc_exit(void)
++static int rx51_soc_remove(struct platform_device *pdev)
+ {
++	struct snd_soc_card *card =3D platform_get_drvdata(pdev);
++
+ 	snd_soc_jack_free_gpios(&rx51_av_jack, ARRAY_SIZE(rx51_av_jack_gpios)=
+,
+ 				rx51_av_jack_gpios);
+=20
+-	platform_device_unregister(rx51_snd_device);
++	card->dev =3D NULL;
++
+ 	gpio_free(RX51_ECI_SW_GPIO);
+ 	gpio_free(RX51_TVOUT_SEL_GPIO);
++
++	return 0;
+ }
+=20
+-module_init(rx51_soc_init);
+-module_exit(rx51_soc_exit);
++static struct platform_driver rx51_soc_driver =3D {
++	.driver =3D {
++		.name =3D "rx51-audio",
++		.owner =3D THIS_MODULE,
++	},
++	.probe =3D rx51_soc_probe,
++	.remove =3D rx51_soc_remove,
++};
++
++module_platform_driver(rx51_soc_driver);
+=20
+ MODULE_AUTHOR("Nokia Corporation");
+ MODULE_DESCRIPTION("ALSA SoC Nokia RX-51");
+ MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:rx51-audio");
+--=20
+1.9.1
