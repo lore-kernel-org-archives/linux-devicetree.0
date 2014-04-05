@@ -1,174 +1,95 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v7 4/6] pci: Introduce a domain number for
- pci_host_bridge.
-Date: Fri, 4 Apr 2014 18:00:07 -0600
-Message-ID: <20140405000007.GD15806@google.com>
+From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v7 1/6] pci: Introduce pci_register_io_range() helper
+ function.
+Date: Fri, 4 Apr 2014 18:19:53 -0600
+Message-ID: <20140405001953.GE15806@google.com>
 References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
- <1394811272-1547-5-git-send-email-Liviu.Dudau@arm.com>
+ <1394811272-1547-2-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1394811272-1547-5-git-send-email-Liviu.Dudau@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
+In-Reply-To: <1394811272-1547-2-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 14, 2014 at 03:34:30PM +0000, Liviu Dudau wrote:
-> Make it easier to discover the domain number of a bus by storing
-> the number in pci_host_bridge for the root bus. Several architectures
-> have their own way of storing this information, so it makes sense
-> to try to unify the code. 
+On Fri, Mar 14, 2014 at 03:34:27PM +0000, Liviu Dudau wrote:
+> Some architectures do not share x86 simple view of the PCI I/O space
+> and instead use a range of addresses that map to bus addresses. For
+> some architectures these ranges will be expressed by OF bindings
+> in a device tree file.
 
-I like the idea of unifying the way we handle the domain number.  But 
-I'd like to see more of the strategy before committing to this approach.
+It's true that the current Linux "x86 view of PCI I/O space" is pretty
+simple and limited.  But I don't think that's a fundamental x86 limitation
+(other than the fact that the actual INB/OUTB/etc. CPU instructions
+themselves are limited to a single 64K I/O port space).
 
-This patch adds struct pci_host_bridge.domain_nr, but of course
-pci_domain_nr() doesn't use it.  It can't today, because
-pci_create_root_bus() relies on pci_domain_nr() to fill in
-pci_host_bridge.domain_nr.
+Host bridges on x86 could have MMIO apertures that turn CPU memory accesses
+into PCI port accesses.  We could implement any number of I/O port spaces
+this way, by making the kernel inb()/outb()/etc. interfaces smart enough to
+use the memory-mapped space instead of (or in addition to) the
+INB/OUTB/etc. instructions.
 
-But I suppose the intent is that someday we can make pci_domain_nr()
-arch-independent somehow.  I'd just like to see more of the path to
-that happening.
+ia64 does this (see arch/ia64/include/asm/io.h for a little description)
+and I think maybe one or two other arches have something similar.
 
-> While at this, add a new function that
-> creates a root bus in a given domain and make pci_create_root_bus()
-> a wrapper around this function.
+> Introduce a pci_register_io_range() helper function that can be used
+> by the architecture code to keep track of the I/O ranges described by the
+> PCI bindings. If the PCI_IOBASE macro is not defined that signals
+> lack of support for PCI and we return an error.
 
-I'm a little concerned about adding a new "create root bus" interface,
-partly because we have quite a few already, and I'd like to reduce the
-number of them instead of adding more.  And I think there might be other
-similar opportunities for unification, so I could easily see us adding new
-functions in the future to unify NUMA node info, ECAM info, etc.
+I don't quite see how you intend to use this, because this series doesn't
+include any non-stub implementation of pci_register_io_range().
 
-I wonder if we need some sort of descriptor structure that the arch could
-fill in and pass to the PCI core.  Then we could add new members without
-having to create new interfaces each time.
+Is this anything like the ia64 strategy I mentioned above?  If so, it would
+be really nice to unify some of this stuff.
 
-> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> Tested-by: Tanmay Inamdar <tinamdar@apm.com>
+> Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+> Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Tested-by: Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>
 > ---
->  drivers/pci/probe.c | 41 +++++++++++++++++++++++++++++++++--------
->  include/linux/pci.h |  4 ++++
->  2 files changed, 37 insertions(+), 8 deletions(-)
+>  drivers/of/address.c       | 9 +++++++++
+>  include/linux/of_address.h | 1 +
+>  2 files changed, 10 insertions(+)
 > 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index fd11c12..172c615 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1714,8 +1714,9 @@ void __weak pcibios_remove_bus(struct pci_bus *bus)
->  {
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index 1a54f1f..be958ed 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -619,6 +619,15 @@ const __be32 *of_get_address(struct device_node *dev, int index, u64 *size,
 >  }
+>  EXPORT_SYMBOL(of_get_address);
 >  
-> -struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
-> -		struct pci_ops *ops, void *sysdata, struct list_head *resources)
-> +struct pci_bus *pci_create_root_bus_in_domain(struct device *parent,
-> +		int domain, int bus, struct pci_ops *ops, void *sysdata,
-> +		struct list_head *resources)
->  {
->  	int error;
->  	struct pci_host_bridge *bridge;
-> @@ -1728,30 +1729,34 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
->  
->  	bridge = pci_alloc_host_bridge();
->  	if (!bridge)
-> -		return NULL;
-> +		return ERR_PTR(-ENOMEM);
->  
->  	bridge->dev.parent = parent;
->  	bridge->dev.release = pci_release_host_bridge_dev;
-> +	bridge->domain_nr = domain;
->  	error = pcibios_root_bridge_prepare(bridge);
->  	if (error)
->  		goto err_out;
->  
->  	b = pci_alloc_bus();
-> -	if (!b)
-> +	if (!b) {
-> +		error = -ENOMEM;
->  		goto err_out;
-> +	}
->  
->  	b->sysdata = sysdata;
->  	b->ops = ops;
->  	b->number = b->busn_res.start = bus;
-> -	b2 = pci_find_bus(pci_domain_nr(b), bus);
-> +	b2 = pci_find_bus(bridge->domain_nr, bus);
->  	if (b2) {
->  		/* If we already got to this bus through a different bridge, ignore it */
->  		dev_dbg(&b2->dev, "bus already known\n");
-> +		error = -EEXIST;
->  		goto err_bus_out;
->  	}
->  
->  	bridge->bus = b;
-> -	dev_set_name(&bridge->dev, "pci%04x:%02x", pci_domain_nr(b), bus);
-> +	dev_set_name(&bridge->dev, "pci%04x:%02x", bridge->domain_nr, bus);
->  	error = device_register(&bridge->dev);
->  	if (error) {
->  		put_device(&bridge->dev);
-> @@ -1766,7 +1771,7 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
->  
->  	b->dev.class = &pcibus_class;
->  	b->dev.parent = b->bridge;
-> -	dev_set_name(&b->dev, "%04x:%02x", pci_domain_nr(b), bus);
-> +	dev_set_name(&b->dev, "%04x:%02x", bridge->domain_nr, bus);
->  	error = device_register(&b->dev);
->  	if (error)
->  		goto class_dev_reg_err;
-> @@ -1816,7 +1821,27 @@ err_bus_out:
->  	kfree(b);
->  err_out:
->  	kfree(bridge);
-> -	return NULL;
-> +	return ERR_PTR(error);
+> +int __weak pci_register_io_range(phys_addr_t addr, resource_size_t size)
+> +{
+> +#ifndef PCI_IOBASE
+> +	return -EINVAL;
+> +#else
+> +	return 0;
+> +#endif
 > +}
 > +
-> +struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
-> +		struct pci_ops *ops, void *sysdata, struct list_head *resources)
-> +{
-> +	int domain_nr;
-> +	struct pci_bus *b = pci_alloc_bus();
-> +	if (!b)
-> +		return NULL;
-> +
-> +	b->sysdata = sysdata;
-> +	domain_nr = pci_domain_nr(b);
-> +	kfree(b);
-> +
-> +	b = pci_create_root_bus_in_domain(parent, domain_nr, bus,
-> +				ops, sysdata, resources);
-> +	if (IS_ERR(b))
-> +		return NULL;
-> +
-> +	return b;
->  }
+>  unsigned long __weak pci_address_to_pio(phys_addr_t address)
+>  {
+>  	if (address > IO_SPACE_LIMIT)
+> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+> index 5f6ed6b..40c418d 100644
+> --- a/include/linux/of_address.h
+> +++ b/include/linux/of_address.h
+> @@ -56,6 +56,7 @@ extern void __iomem *of_iomap(struct device_node *device, int index);
+>  extern const __be32 *of_get_address(struct device_node *dev, int index,
+>  			   u64 *size, unsigned int *flags);
 >  
->  int pci_bus_insert_busn_res(struct pci_bus *b, int bus, int bus_max)
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 33aa2ca..1eed009 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -394,6 +394,7 @@ struct pci_host_bridge_window {
->  struct pci_host_bridge {
->  	struct device dev;
->  	struct pci_bus *bus;		/* root bus */
-> +	int domain_nr;
->  	struct list_head windows;	/* pci_host_bridge_windows */
->  	void (*release_fn)(struct pci_host_bridge *);
->  	void *release_data;
-> @@ -747,6 +748,9 @@ struct pci_bus *pci_scan_bus(int bus, struct pci_ops *ops, void *sysdata);
->  struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
->  				    struct pci_ops *ops, void *sysdata,
->  				    struct list_head *resources);
-> +struct pci_bus *pci_create_root_bus_in_domain(struct device *parent,
-> +			int domain, int bus, struct pci_ops *ops,
-> +			void *sysdata, struct list_head *resources);
->  int pci_bus_insert_busn_res(struct pci_bus *b, int bus, int busmax);
->  int pci_bus_update_busn_res_end(struct pci_bus *b, int busmax);
->  void pci_bus_release_busn_res(struct pci_bus *b);
+> +extern int pci_register_io_range(phys_addr_t addr, resource_size_t size);
+>  extern unsigned long pci_address_to_pio(phys_addr_t addr);
+>  
+>  extern int of_pci_range_parser_init(struct of_pci_range_parser *parser,
 > -- 
 > 1.9.0
 > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
