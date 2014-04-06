@@ -1,66 +1,52 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: i.MX6: update KSZ9031 phy fixup
-Date: Sun, 6 Apr 2014 20:04:54 +0800
-Message-ID: <20140406120452.GD24260@dragon>
-References: <1395421687-12934-1-git-send-email-hchaumette@adeneo-embedded.com>
- <20140402220125.4e203cd2@crub>
- <1396533947.25686.22.camel@EMBLYSD005.adetelgroup.com>
- <20140406110635.GA24260@dragon>
- <20140406112655.GP7528@n2100.arm.linux.org.uk>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] mfd: sec-core: Fix uninitialized 'regmap_rtc' on S2MPA01
+Date: Sun, 6 Apr 2014 15:23:09 +0200
+Message-ID: <CAMuHMdX2yCCSUn=t9BZ_+bHMcV11O35b2PDj1hS=NNHmiiG0eA@mail.gmail.com>
+References: <20140318110947.GR25478@lee--X1>
+	<1395148286-32002-1-git-send-email-k.kozlowski@samsung.com>
+	<CAK9yfHwNmN+M8ncSGjUwnfXs1p-e7pCy5Y-K7uX6JV5JyWYhEg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140406112655.GP7528-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+In-Reply-To: <CAK9yfHwNmN+M8ncSGjUwnfXs1p-e7pCy5Y-K7uX6JV5JyWYhEg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hubert Chaumette <hchaumette-HH5893ap9ioXz/+GnIZSFEEOCMrvLtNR@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 06, 2014 at 12:26:55PM +0100, Russell King - ARM Linux wrote:
-> Ergh.  So much for "DT describes the hardware, not the software
-> implementation."
-> 
-> commit 954c396756e3d31985f7bc6a414a988a4736a7d0
-> Author: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-> Date:   Wed Aug 21 01:46:12 2013 +0000
-> 
->     net/phy: micrel: Add OF configuration support for ksz9021
-> 
->     Some boards require custom PHY configuration, for example due to trace
->     length differences.  Add the ability to configure these registers in
->     order to get the PHY to function on boards that need it.
-> 
->     Because PHYs are auto-detected based on MDIO device IDs, allow PHY
->     configuration to be specified in the parent Ethernet device node if no
->     PHY device node is present.
-> 
-> If we were describing the hardware, we'd create a node for the phy and put
-> the phy specific properties in there, and reference it from the ethernet
-> driver, and have some way to look up the phy node when we automatically
-> discover the phy.
+On Wed, Mar 19, 2014 at 9:27 AM, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 18 March 2014 18:41, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>> Initialize the 'regmap_rtc' on S2MPA01 to some sane value. Sane at least
+>> for S5M87X chipsets, not S2MPS/S2MPA but it won't be used because
+>> rtc-s5m driver does not support S2MPA01.
+>>
+>> This fixes following error:
+>> drivers/mfd/sec-core.c:342:45: warning: 'regmap_rtc' may be used uninitialized in this function [-Wuninitialized]
+>>
+>> Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>
+> From the point of suppressing this warning and considering how it is
+> done for S2MPS11,
+> Acked-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-This is exactly how new style devices work, like allwinner case below.
+This is not just about suppressing a warning. The following may crash when
+passed a random pointer:
 
-  arch/arm/boot/dts/sun4i-a10-a1000.dts
-  drivers/net/ethernet/allwinner/sun4i-emac.c
+sec_pmic->regmap_rtc = devm_regmap_init_i2c(sec_pmic->rtc, regmap_rtc);
 
-> 
-> Well, it's too late to do anything else now, we're stuck with this, and
-> I guess everyone's going to be stuffing the phy chip's configuration into
-> the ethernet device's node from now on. :(
+and if regmap_rtc happens to be NULL, devm_regmap_init_i2c() will
+return -EINVAL.
 
-Let's take a look at ksz9021_config_init().
+Gr{oetje,eeting}s,
 
-	if (!of_node && dev->parent->of_node)
-		of_node = dev->parent->of_node;
+                        Geert
 
-It's a stepping back in case that the phy device has no of_node
-attached.  So for phy devices that are initiated from device tree like
-allwinner case above, they will just work in the sane way.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-Shawn
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
