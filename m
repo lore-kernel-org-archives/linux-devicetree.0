@@ -1,53 +1,57 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] mfd: sec-core: Fix uninitialized 'regmap_rtc' on S2MPA01
-Date: Sun, 6 Apr 2014 15:23:09 +0200
-Message-ID: <CAMuHMdX2yCCSUn=t9BZ_+bHMcV11O35b2PDj1hS=NNHmiiG0eA@mail.gmail.com>
-References: <20140318110947.GR25478@lee--X1>
-	<1395148286-32002-1-git-send-email-k.kozlowski@samsung.com>
-	<CAK9yfHwNmN+M8ncSGjUwnfXs1p-e7pCy5Y-K7uX6JV5JyWYhEg@mail.gmail.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v5 2/3] i2c: Add driver for Cadence I2C controller
+Date: Sun, 6 Apr 2014 17:51:06 +0200
+Message-ID: <20140406155106.GD2609@katana>
+References: <1396646876-27336-1-git-send-email-soren.brinkmann@xilinx.com>
+ <1396646876-27336-2-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK9yfHwNmN+M8ncSGjUwnfXs1p-e7pCy5Y-K7uX6JV5JyWYhEg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="P+33d92oIH25kiaB"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1396646876-27336-2-git-send-email-soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 19, 2014 at 9:27 AM, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 18 March 2014 18:41, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->> Initialize the 'regmap_rtc' on S2MPA01 to some sane value. Sane at least
->> for S5M87X chipsets, not S2MPS/S2MPA but it won't be used because
->> rtc-s5m driver does not support S2MPA01.
->>
->> This fixes following error:
->> drivers/mfd/sec-core.c:342:45: warning: 'regmap_rtc' may be used uninitialized in this function [-Wuninitialized]
->>
->> Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->
-> From the point of suppressing this warning and considering how it is
-> done for S2MPS11,
-> Acked-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-This is not just about suppressing a warning. The following may crash when
-passed a random pointer:
+--P+33d92oIH25kiaB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-sec_pmic->regmap_rtc = devm_regmap_init_i2c(sec_pmic->rtc, regmap_rtc);
+On Fri, Apr 04, 2014 at 02:27:55PM -0700, Soren Brinkmann wrote:
+> Add a driver for the Cadence I2C controller. This controller is for
+> example found in Xilinx Zynq.
+>=20
+> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Tested-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Reviewed-by: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 
-and if regmap_rtc happens to be NULL, devm_regmap_init_i2c() will
-return -EINVAL.
+Applied to for-next, thanks!
 
-Gr{oetje,eeting}s,
 
-                        Geert
+--P+33d92oIH25kiaB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAEBAgAGBQJTQXfqAAoJEBQN5MwUoCm20jMP/0GpIKkIGjN9cQON/V5RLiMz
+Qb5YwLo61jN0I4X4shJdNgkMmNIJH9emE3UsLp2k0r688mcnwFRHpGMrII9YeLOb
+cPARhwlQP70Lr6LZmE3okdQZ0VAyZZaQIrxzyXXiAF58kK9awr7QSgGll0/N1hy0
+XelfJxORIe7ZLnEVmiKCGWspwBfez3SJKwIZLQmwNaLmsBRoCFoN1Kyi+eI2Z6E2
+d1CNnSVOR3KCn3Xt9LKcewxcTK48cgn2Gn2iPj7iGwu0D84Iv5kQUVaIzN6y5ho3
+P5JVIm3Bm9VyM/UyGqj+ZHLDQfgZP7AhRXaZ3Lsihinr/kFqiWCpWLi/w7FQkwKL
+UExxIM2mfWgD3NrV55fLx+hJ6/oHDSzBBnWNFRqq0HVnZ+lBhmzpKwX+RTBbQA7Z
+GC9KFA07qN8rqmZT2EaqUVnIYM3FjZcrTu56yhe6N72sCl+SBp7d5sk+AjejHtUF
+PgqMooEdyQHLGkDvDt0xHmF0KVeMsqmslYNqhqHgOF+W/mhZIxZS+W4rrEZiuDd7
+uBa6SQAD5nhrXGWBZ+X7JXnbQWRST3Khqzc9x+VmzTUZRliah7yTwNzvY47/Q1D+
+uI/vhb3PdhwStw+GHemYsQjJeqRkMXIQEXL3hnXumFR1MfxanmvyMqpKJcjG4pFp
+4gru24eb/2mpx3IqZ1yu
+=Ryve
+-----END PGP SIGNATURE-----
+
+--P+33d92oIH25kiaB--
