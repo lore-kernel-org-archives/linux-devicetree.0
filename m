@@ -1,74 +1,64 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: i.MX6: update KSZ9031 phy fixup
-Date: Sun, 6 Apr 2014 12:26:55 +0100
-Message-ID: <20140406112655.GP7528@n2100.arm.linux.org.uk>
-References: <1395421687-12934-1-git-send-email-hchaumette@adeneo-embedded.com> <20140402220125.4e203cd2@crub> <1396533947.25686.22.camel@EMBLYSD005.adetelgroup.com> <20140406110635.GA24260@dragon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [RFC 0/2] [media] si4713 DT binding
+Date: Sun,  6 Apr 2014 13:52:03 +0200
+Message-ID: <1396785125-8759-1-git-send-email-sre@kernel.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140406110635.GA24260@dragon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Hubert Chaumette <hchaumette-HH5893ap9ioXz/+GnIZSFEEOCMrvLtNR@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Dinesh Ram <Dinesh.Ram-vJEk5272eHo@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 06, 2014 at 07:06:38PM +0800, Shawn Guo wrote:
-> On Thu, Apr 03, 2014 at 04:05:47PM +0200, Hubert Chaumette wrote:
-> > Le mercredi 02 avril 2014 =E0 22:01 +0200, Anatolij Gustschin a =E9=
-crit :
-> > > It would be better to configure the pad skews in the board specif=
-ic
-> > > way in the device tree. There is a binding for ksz9021 PHY in
-> > > Documentation/devicetree/bindings/net/micrel-ksz9021.txt.
-> >=20
-> > I wonder why it it's not used in arch/arm/boot/dts/imx6q-sabrelite.=
-dts
-> > instead of ksz9021rn_phy_fixup().
->=20
-> Oh, if you look at arch/arm/boot/dts/imx6qdl-sabrelite.dtsi on mainli=
-ne
-> tree today, you will find it.
+Hi,
 
-Ergh.  So much for "DT describes the hardware, not the software
-implementation."
+This is an RFC patch adding DT support to the si4713 radio transmitter i2c
+driver. The changes can be summarized as follows:
 
-commit 954c396756e3d31985f7bc6a414a988a4736a7d0
-Author: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Date:   Wed Aug 21 01:46:12 2013 +0000
+ * Move regulator information back into the driver. The regulators needed are
+   documented in the chip and have nothing to do with boarddata. Instead
+   devm_regulator_get_optional and errors are handled quite loosely now.
+   Maybe the USB driver should provide dummy regulators.
+ * GPIO handling is updated to gpiod consumer interface, resulting in a driver
+   cleanup and easy DT handling
+ * The driver is updated to use managed resources wherever possible
 
-    net/phy: micrel: Add OF configuration support for ksz9021
+So much about the nice stuff. But there is also
 
-    Some boards require custom PHY configuration, for example due to tr=
-ace
-    length differences.  Add the ability to configure these registers i=
-n
-    order to get the PHY to function on boards that need it.
+ * Instantiation of the platform device from the i2c (sub-)device. Since DT
+   is not supposed to contain linuxisms the device is a simple i2c node
+   resulting in the i2c probe function being called. Thus registering the main
+   v4l device must happen from there.
 
-    Because PHYs are auto-detected based on MDIO device IDs, allow PHY
-    configuration to be specified in the parent Ethernet device node if=
- no
-    PHY device node is present.
+Tested:
+ * Compilation on torvalds/linux.git:master
+ * Booting in DT mode
+ * Some simply driver queries using v4l2-ctl
 
-If we were describing the hardware, we'd create a node for the phy and =
-put
-the phy specific properties in there, and reference it from the etherne=
-t
-driver, and have some way to look up the phy node when we automatically
-discover the phy.
+Not tested:
+ * The USB driver, since I do not own the USB dongle
+ * The legacy platform code (only DT boot has been tested).
+   (The legacy platform code is supposed to removed in the near future anyways)
 
-Well, it's too late to do anything else now, we're stuck with this, and
-I guess everyone's going to be stuffing the phy chip's configuration in=
-to
-the ethernet device's node from now on. :(
+-- Sebastian
 
---=20
-=46TTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... sl=
-owly
-improving, and getting towards what was expected from it.
+Sebastian Reichel (2):
+  [media] si4713: add Device Tree support
+  [media] Ad DT binding documentation for si4713
+
+ Documentation/devicetree/bindings/media/si4713.txt |  30 ++++
+ arch/arm/mach-omap2/board-rx51-peripherals.c       |  67 ++++-----
+ drivers/media/radio/si4713/radio-platform-si4713.c |  28 +---
+ drivers/media/radio/si4713/si4713.c                | 166 +++++++++++++--------
+ drivers/media/radio/si4713/si4713.h                |  15 +-
+ include/media/radio-si4713.h                       |  30 ----
+ include/media/si4713.h                             |   4 +-
+ 7 files changed, 183 insertions(+), 157 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/si4713.txt
+ delete mode 100644 include/media/radio-si4713.h
+
+-- 
+1.9.1
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
