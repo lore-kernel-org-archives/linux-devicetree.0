@@ -1,54 +1,36 @@
-From: Russell King <rmk+kernel@arm.linux.org.uk>
-Subject: [PATCH 5/5] leds: leds-pwm: add DT support for LEDs wired to supply
-Date: Sun, 06 Apr 2014 23:20:24 +0100
-Message-ID: <E1WWvQO-00049j-36@rmk-PC.arm.linux.org.uk>
-References: <20140406221854.GS7528@n2100.arm.linux.org.uk>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140406221854.GS7528@n2100.arm.linux.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-leds@vger.kernel.org
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [linux-nfc] [PATCH v4 0/2] NFC: pn544_i2c: Add device-tree
+ support to PN544
+Date: Mon, 7 Apr 2014 01:14:13 +0200
+Message-ID: <20140406231413.GC16829@zurbaran>
+References: <060c5ba8ed98462d835a641ce8d83af9@AMXPR04MB136.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <060c5ba8ed98462d835a641ce8d83af9-fjMGVQzTDdguRZvghep3ngfhPeD8jYilXA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Clement Perrochaud <clement.perrochaud-3arQi8VN3Tc@public.gmane.org>
+Cc: "linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org" <linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The non-DT driver allowed an active low property to be specified, but DT
-is missing this in its description.  Add the property to the DT binding
-document, making it optional.  It defaults to active high, which retains
-compatibility with existing descriptions.
+Hi Clement,
 
-This should only be used for causes where the LED is wired to supply,
-and the PWM does not sensibly support its own inversion.
+On Wed, Apr 02, 2014 at 09:01:05AM +0000, Clement Perrochaud wrote:
+> Cl=E9ment Perrochaud (2):
+>   NFC: pn544_i2c: Add device-tree (Open Firmware) support to PN544
+>   NFC: pn544_i2c: Add DTS Documentation
+Both patches applied to nfc-next, thanks a lot.
 
-Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
----
- Documentation/devicetree/bindings/leds/leds-pwm.txt | 2 ++
- drivers/leds/leds-pwm.c                             | 1 +
- 2 files changed, 3 insertions(+)
+Cheers,
+Samuel.
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.txt b/Documentation/devicetree/bindings/leds/leds-pwm.txt
-index 7297107cf832..6c6583c35f2f 100644
---- a/Documentation/devicetree/bindings/leds/leds-pwm.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-pwm.txt
-@@ -13,6 +13,8 @@ node's name represents the name of the corresponding LED.
-   For the pwms and pwm-names property please refer to:
-   Documentation/devicetree/bindings/pwm/pwm.txt
- - max-brightness : Maximum brightness possible for the LED
-+- active-low : (optional) For PWMs where the LED is wired to supply
-+  rather than ground.
- - label :  (optional)
-   see Documentation/devicetree/bindings/leds/common.txt
- - linux,default-trigger :  (optional)
-diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
-index 1d47742c551f..fb1eafe09324 100644
---- a/drivers/leds/leds-pwm.c
-+++ b/drivers/leds/leds-pwm.c
-@@ -155,6 +155,7 @@ static int led_pwm_create_of(struct device *dev, struct led_pwm_priv *priv)
- 
- 		led.default_trigger = of_get_property(child,
- 						"linux,default-trigger", NULL);
-+		led.active_low = of_property_read_bool(child, "active-low");
- 		of_property_read_u32(child, "max-brightness",
- 				     &led.max_brightness);
- 
--- 
-1.8.3.1
-
+--=20
+Intel Open Source Technology Centre
+http://oss.intel.com/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
