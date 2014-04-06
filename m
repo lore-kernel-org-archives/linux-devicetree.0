@@ -1,61 +1,52 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v7 1/6] pci: Introduce pci_register_io_range() helper
- function.
-Date: Sun, 06 Apr 2014 19:49:53 +1000
-Message-ID: <1396777793.3671.15.camel@pasglop>
-References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
- <1394811272-1547-2-git-send-email-Liviu.Dudau@arm.com>
- <20140405001953.GE15806@google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140405001953.GE15806@google.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>, linux-pci <linux-pci@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Tanmay Inamdar <tinamdar@apm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, LAKML <linux-arm-kernel@lists.infradead.org>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] of: introduce of_property_read_s32
+Date: Sun,  6 Apr 2014 12:52:11 +0200
+Message-ID: <1396781531-3397-1-git-send-email-sre@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Eric Piel <eric.piel-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2014-04-04 at 18:19 -0600, Bjorn Helgaas wrote:
-> > Introduce a pci_register_io_range() helper function that can be used
-> > by the architecture code to keep track of the I/O ranges described by the
-> > PCI bindings. If the PCI_IOBASE macro is not defined that signals
-> > lack of support for PCI and we return an error.
-> 
-> I don't quite see how you intend to use this, because this series doesn't
-> include any non-stub implementation of pci_register_io_range().
-> 
-> Is this anything like the ia64 strategy I mentioned above?  If so, it would
-> be really nice to unify some of this stuff.
+Introduce signed 32bit integer of_property_read method.
 
-We also use two different strategies on ppc32 and ppc64
+Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+Hi,
 
- - On ppc32, inb/outb turn into an MMIO access to _IO_BASE + port
+This is a dependency for the DT binding additions in lis302dl, which can be
+found at [0]. Since I never got any reply from the DT maintainers I will try to
+send this patch separate, so that the it hopefully catches their eyes :)
 
-That _IO_BASE is a variable which is initialized to the ioremapped address
-of the IO space MMIO aperture of the first bridge we discover. Then port
-numbers are "fixed up" on all other bridges so that the addition _IO_BASE + port
-fits the ioremapped address of the IO space on that bridge. A bit messy... and breaks
-whenever drivers copy port numbers into variables of the wrong type such as shorts.
+[0] http://www.spinics.net/lists/devicetree/msg15747.html
 
- - On ppc64, we have more virtual space, so instead we reserve a range
-of address space (fixed) for IO space, it's always the same. Bridges IO spaces
-are then mapped into that range, so we always have a positive offset from _IO_BASE
-which makes things a bit more robust and less "surprising" than ppc32. Additionally,
-the first 64k are reserved. They are only mapped if we see an ISA bridge (which some
-older machines have). Otherwise it's left unmapped, so crappy drivers trying to
-hard code x86 IO ports will blow up immediately which I deem better than silently
-whacking the wrong hardware. In addition, we have a mechanism we use on powernv to
-re-route accesses to that first 64k to the power8 built-in LPC bus which can
-have some legacy IOs on it such as a UART or a RTC.
+-- Sebastian
+---
+ include/linux/of.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Cheers,
-Ben.
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 919bf21..70530d1 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -691,6 +691,13 @@ static inline int of_property_read_u32(const struct device_node *np,
+ 	return of_property_read_u32_array(np, propname, out_value, 1);
+ }
+ 
++static inline int of_property_read_s32(const struct device_node *np,
++				       const char *propname,
++				       s32 *out_value)
++{
++	return of_property_read_u32(np, propname, (u32*) out_value);
++}
++
+ #define of_property_for_each_u32(np, propname, prop, p, u)	\
+ 	for (prop = of_find_property(np, propname, NULL),	\
+ 		p = of_prop_next_u32(prop, NULL, &u);		\
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
