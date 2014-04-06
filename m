@@ -1,119 +1,61 @@
-From: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
-Subject: Re: [PATCH v2 2/2] devicetree: Add devicetree bindings documentation
- for Cadence SPI
-Date: Sun, 6 Apr 2014 09:43:25 +1000
-Message-ID: <CAEgOgz5XsOYXyPTpUzx_j=+Z19oksTT5TB8G3r9KbYakrQvgHw@mail.gmail.com>
-References: <1396523431-14519-1-git-send-email-harinik@xilinx.com>
-	<1396523431-14519-2-git-send-email-harinik@xilinx.com>
-	<20140403213446.GB14763@sirena.org.uk>
-	<CAFcVEC+mpHh_d2j6_sdhWS3d2KyXrDYUq6L6jO2Q=SS68Hda2g@mail.gmail.com>
-	<20140404100919.GO14763@sirena.org.uk>
-	<CAFcVECLDyfFSZFk9fzFKsr6pM=f1nwzGAhjX17z=NsbvWpiDew@mail.gmail.com>
-	<20140404124637.GT14763@sirena.org.uk>
-	<CAFcVEC+FAAxxxxA8PgcTzLU5UFu=pkDEM4Li06dRmEwA95sz_g@mail.gmail.com>
-	<CAFcVECJYdW0=r425tWs8y6DJDNh3c75TAzg7+UCNRgLP8WHf+A@mail.gmail.com>
-	<CAEgOgz56hhFCy6sjZmw+Wn6uT4rU8mXSpazscPG_uJ-==-uXLw@mail.gmail.com>
-	<CAFcVEC+vWwepHgsCAP63YG2F_0ZXKMck1YYwi7XU3JQdpC9ZQw@mail.gmail.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH v7 1/6] pci: Introduce pci_register_io_range() helper
+ function.
+Date: Sun, 06 Apr 2014 19:49:53 +1000
+Message-ID: <1396777793.3671.15.camel@pasglop>
+References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
+ <1394811272-1547-2-git-send-email-Liviu.Dudau@arm.com>
+ <20140405001953.GE15806@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAFcVEC+vWwepHgsCAP63YG2F_0ZXKMck1YYwi7XU3JQdpC9ZQw@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Harini Katakam <harinikatakamlinux@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-spi@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140405001953.GE15806@google.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>, linux-pci <linux-pci@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Tanmay Inamdar <tinamdar@apm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 5, 2014 at 4:05 PM, Harini Katakam
-<harinikatakamlinux@gmail.com> wrote:
-> Hi Peter,
->
-> On Sat, Apr 5, 2014 at 4:44 AM, Peter Crosthwaite
-> <peter.crosthwaite@xilinx.com> wrote:
->> On Sat, Apr 5, 2014 at 12:30 AM, Harini Katakam
->> <harinikatakamlinux@gmail.com> wrote:
->>> Hi,
->>>
->>> On Fri, Apr 4, 2014 at 7:38 PM, Harini Katakam
->>> <harinikatakamlinux@gmail.com> wrote:
->>>> Hi Mark,
->>>>
->>>> On Fri, Apr 4, 2014 at 6:16 PM, Mark Brown <broonie@kernel.org> wrote:
->>>>> On Fri, Apr 04, 2014 at 05:44:23PM +0530, Harini Katakam wrote:
->>>>>> On Fri, Apr 4, 2014 at 3:39 PM, Mark Brown <broonie@kernel.org> wrote:
->>>>>> > On Fri, Apr 04, 2014 at 08:30:38AM +0530, Harini Katakam wrote:
->>>>>
->>>>>> >> This IP can drive 4 slaves.
->>>>>> >> The sCS line to be driven is selected in spi device structure and
->>>>>> >> that is driven by the software.
->>>>>
->>>>>> > So why specify this in the binding at all?  If the device always has the
->>>>>> > same number of chip selects it's redundant.
->>>>>
->>>>>> I'm sorry, I should have explained that better.
->>>>>> The IP can support upto 4 chip selects.
->>>>>> The num-cs value here is the number of chip selects actually used on the board.
->>
->> Shouldnt it be a property of the controller not the board? How for
->> example do we differentiate between different implementations of
->> cadence SPI controller that only supports up to two CS lines? My
->> thinking is that this property should always be present and = 4 in the
->> Zynq case as the controller always has 4 physical CS lines coming out
->> (before any decoders, pin muxes or slaves etc.).
->>
->>>>>
->>>>> Why does that need to be configured?  Surely the presence of slaves is
->>>>> enough information.
->>
->> And presence of slaves / board info is inferable from subnodes.
->>
->>>>
->>>> OK. I understand.
->>>> Can you comment on the case where a decoder is used?
->>>>
->>>> There is support for adding a decoder where extended slaves can be selected
->>>> through the IP's control register.
->>>> (This is not currently implemented in the driver but will be in the future.)
->>>>
->>
->> I think thats seperate information. is-decoded-cs property of something.
->>
->>>> How should the driver know whether it is 4 or 16 select lines for example?
->>>> This has to be written to master->num_chipselect.
->>>>
->>
->> If you only have one property (== 4) how do you tell the difference
->> between 4 un-decoded CS lines vs 2 decoded CS lines?
->>
->
-> If an SoC implements 2 CS and sets "decoder" property,
-> then we'd configure the register with "select decode" bit and write
-> 0b0011 to the slave select field to select 4th slave.
->
-> If decoder property is not set, then we'd write 0b1000 to select 4th slave.
->
+On Fri, 2014-04-04 at 18:19 -0600, Bjorn Helgaas wrote:
+> > Introduce a pci_register_io_range() helper function that can be used
+> > by the architecture code to keep track of the I/O ranges described by the
+> > PCI bindings. If the PCI_IOBASE macro is not defined that signals
+> > lack of support for PCI and we return an error.
+> 
+> I don't quite see how you intend to use this, because this series doesn't
+> include any non-stub implementation of pci_register_io_range().
+> 
+> Is this anything like the ia64 strategy I mentioned above?  If so, it would
+> be really nice to unify some of this stuff.
 
-What are your proposed dt bindings for these differing options - what
-is num-cs in each case?
+We also use two different strategies on ppc32 and ppc64
 
-> But yes, if the SoC only implements 2 CS, doesn't use decoder but
-> if there is an erroneous input to set_cs for 4th slave, it would be a problem.
->
+ - On ppc32, inb/outb turn into an MMIO access to _IO_BASE + port
 
-Sure, that's an error condition though that should be caught by SPI
-because master->num_chipselect would only be 2 right?
+That _IO_BASE is a variable which is initialized to the ioremapped address
+of the IO space MMIO aperture of the first bridge we discover. Then port
+numbers are "fixed up" on all other bridges so that the addition _IO_BASE + port
+fits the ioremapped address of the IO space on that bridge. A bit messy... and breaks
+whenever drivers copy port numbers into variables of the wrong type such as shorts.
 
-Regards,
-Peter
+ - On ppc64, we have more virtual space, so instead we reserve a range
+of address space (fixed) for IO space, it's always the same. Bridges IO spaces
+are then mapped into that range, so we always have a positive offset from _IO_BASE
+which makes things a bit more robust and less "surprising" than ppc32. Additionally,
+the first 64k are reserved. They are only mapped if we see an ISA bridge (which some
+older machines have). Otherwise it's left unmapped, so crappy drivers trying to
+hard code x86 IO ports will blow up immediately which I deem better than silently
+whacking the wrong hardware. In addition, we have a mechanism we use on powernv to
+re-route accesses to that first 64k to the power8 built-in LPC bus which can
+have some legacy IOs on it such as a UART or a RTC.
 
->>
->> I think num-cs has validity as the number of CS lines implemented in
->> the controller. For any given SoC, it's constant but could differ
->> between SoCs.
->>
->
-> I dint consider that this property will be useful to SoC's implementing <4 CS;
-> master->num_chipselect (when set to this property's value)
-> will be used to check error conditions.
->
-> Regards,
-> Harini
+Cheers,
+Ben.
