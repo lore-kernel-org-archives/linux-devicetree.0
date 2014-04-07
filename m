@@ -1,117 +1,49 @@
-From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v7 1/6] pci: Introduce pci_register_io_range() helper
- function.
-Date: Mon, 7 Apr 2014 14:42:50 +0100
-Message-ID: <20140407134250.GL17163@e106497-lin.cambridge.arm.com>
-References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
- <20140405001953.GE15806@google.com>
- <20140407083120.GE17163@e106497-lin.cambridge.arm.com>
- <5183143.FxBNM0xTAV@wuerfel>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [PATCH v5 00/11] imx-drm dt bindings
+Date: Mon, 7 Apr 2014 21:43:04 +0800
+Message-ID: <20140407134302.GB2438@dragon>
+References: <1394011262-16849-1-git-send-email-p.zabel@pengutronix.de>
+ <20140311034607.GA26502@S2101-09.ap.freescale.net>
+ <20140407042334.GA28025@dragon>
+ <1396865135.3811.13.camel@paszta.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5183143.FxBNM0xTAV@wuerfel>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+In-Reply-To: <1396865135.3811.13.camel@paszta.hi.pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 07, 2014 at 12:36:15PM +0100, Arnd Bergmann wrote:
-> On Monday 07 April 2014 09:31:20 Liviu Dudau wrote:
-> > On Sat, Apr 05, 2014 at 01:19:53AM +0100, Bjorn Helgaas wrote:
-> >
-> > > Host bridges on x86 could have MMIO apertures that turn CPU memor=
-y accesses
-> > > into PCI port accesses.  We could implement any number of I/O por=
-t spaces
-> > > this way, by making the kernel inb()/outb()/etc. interfaces smart=
- enough to
-> > > use the memory-mapped space instead of (or in addition to) the
-> > > INB/OUTB/etc. instructions.
->=20
-> PowerPC actually has this already, as CONFIG_PPC_INDIRECT_PIO meaning=
- that
-> access to PIO registers is bus specific, and there is also CONFIG_PPC=
-_INDIRECT_MMIO
-> for the case where MMIO access is not native.
-> =20
-> > Right, sorry for my ignorance then: how does *currently* the device=
- driver do
-> > the I/O transfer transparent of the implementation mechanism? Or th=
-ey have
-> > intimate knowledge of wether the device is behind a host bridge and=
- can do MMIO
-> > or is on an ISA or CF bus and then it needs INB/OUTB ? And if we ma=
-ke inb/outb
-> > smarter, does that mean that we need to change the drivers?
->=20
-> The idea of that would be to not change drivers.
->=20
-> My preference here would be to only have a generic function for those
-> architectures that have the simple MMIO access all the time.
->=20
-> > > ia64 does this (see arch/ia64/include/asm/io.h for a little descr=
-iption)
-> > > and I think maybe one or two other arches have something similar.
-> > >=20
-> > > > Introduce a pci_register_io_range() helper function that can be=
- used
-> > > > by the architecture code to keep track of the I/O ranges descri=
-bed by the
-> > > > PCI bindings. If the PCI_IOBASE macro is not defined that signa=
-ls
-> > > > lack of support for PCI and we return an error.
-> > >=20
-> > > I don't quite see how you intend to use this, because this series=
- doesn't
-> > > include any non-stub implementation of pci_register_io_range().
-> > >=20
-> > > Is this anything like the ia64 strategy I mentioned above?  If so=
-, it would
-> > > be really nice to unify some of this stuff.
-> >=20
-> > After discussions with Arnd and Catalin I know have a new series th=
-at moves
-> > some of the code from arm64 series into this one. I am putting it t=
-hrough
-> > testing right know as I am going to have to depend on another serie=
-s that
-> > makes PCI_IOBASE defined only for architectures that do MMIO in ord=
-er to
-> > choose the correct default implementation for these functions. My h=
-ope is
-> > that I will be able to send the series this week.
->=20
-> I think migrating other architectures to use the same code should be
-> a separate effort from adding a generic implementation that can be
-> used by arm64. It's probably a good idea to have patches to convert
-> arm32 and/or microblaze.
+On Mon, Apr 07, 2014 at 12:05:35PM +0200, Philipp Zabel wrote:
+> > Did you get any chance to reproduce this dual display issue?  Now it
+> > shows on mainline kernel.
+> 
+> I have not yet reproduced, but I've sent a patch today ("imx-drm:
+> imx-drm-core: Fix imx_drm_encoder_get_mux_id") that might fix this.
 
-Agree. My updated series only moves the arm64 code into framework to ma=
-ke the
-arm64 part a noop.
+Yes, it fixes my issue.
 
-Liviu
+> 
+> > And I see another HDMI regression with my testing on mainline kernel.  I
+> > can have my HDMI work at 1920x1080 with v3.14 kernel, but it can only
+> > probes 1024x768 with the mainline today.  The Xorg.0.log are attached
+> > below.  The hardware and user space are same, so I guess this is another
+> > issue introduced by the recently kernel driver changes?
+> 
+> Hmm, not sure. Have you updated to the i2c-ddc-bus phandle property as
+> described in Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt?
 
->=20
-> 	Arnd
->=20
->=20
+That's indeed the cause of my problem.  Thanks, Philipp.
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Shawn
