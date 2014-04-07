@@ -1,49 +1,32 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: Re: [PATCH V7 1/1] drivers/gpio: Altera soft IP GPIO driver and
- devicetree binding
-Date: Mon, 7 Apr 2014 12:11:15 -0500
-Message-ID: <20140407171115.GA3956@joshc.qualcomm.com>
-References: <1393842463-5206-1-git-send-email-thloh@altera.com>
- <20140307151455.GI18529@joshc.qualcomm.com>
- <CAOLUe6aspffO1PUjKWW7ejpbxnYtb+RKRQrK=y30kuF7KXUUhA@mail.gmail.com>
- <CAOLUe6aPWmkJJSiBLL8tmw2MNfpaeLpSp3CSwP1u7q+qXxCh9Q@mail.gmail.com>
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: keystone: add cell's information to i2c nodes
+Date: Mon, 7 Apr 2014 13:50:45 -0400
+Message-ID: <5342E575.60308@ti.com>
+References: <1396884272-8307-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAOLUe6aPWmkJJSiBLL8tmw2MNfpaeLpSp3CSwP1u7q+qXxCh9Q@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Tien Hock Loh <thloh@altera.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, dinguyen@altera.com, "lftan@altera.com" <lftan@altera.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1396884272-8307-1-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Cc: ivan.khoronzhuk-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 07, 2014 at 04:00:43PM +0800, Tien Hock Loh wrote:
-> On Wed, Mar 19, 2014 at 6:09 PM, Tien Hock Loh <thloh@altera.com> wrote:
-> > On Fri, Mar 7, 2014 at 11:14 PM, Josh Cartwright <joshc@codeaurora.org> wrote:
-> >> On Mon, Mar 03, 2014 at 06:27:43PM +0800, thloh@altera.com wrote:
-> >>> From: Tien Hock Loh <thloh@altera.com>
-[..]
-> >>> +     altera_gc->mapped_irq = irq_of_parse_and_map(node, 0);
-> >>>
-> >>
-> >> platform_get_irq(pdev, 0);
-> >>
-> > OK.
-> >
->
-> platform_get_irq doesn't create the irq mapping which is needed by the
-> driver. Since this driver is targeted at using of, should I be using
-> irq_of_parse_and_map or should I still redo the codes with
-> platform_get_irq and irq_create_mapping? I think the latter would be
-> introducing code redundancy. Please advice.
+On Monday 07 April 2014 11:24 AM, Grygorii Strashko wrote:
+> I2C nodes should always have #address-cells and #size-cells defined.
+> Hence, ensure that all i2cX nodes have #address-cells and #size-cells
+> properties defined.
+> 
+> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+> ---
+Right. BTW, have you seen some issue without this patch ?
+Just curious what prompted you to create this patch and whether
+it needs to be sent as fix during rc's.
 
-Yes, it is technically true that platform_get_irq() doesn't do the
-mapping directly, but that's because the mapping is setup earlier, when
-of_device_alloc() (drivers/of/platform.c) allocates resources for your
-platform device.
-
-Calling irq_of_parse_and_map() should be unnecessary.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Regards,
+Santosh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
