@@ -1,69 +1,101 @@
-From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v7 4/6] pci: Introduce a domain number for
- pci_host_bridge.
-Date: Mon, 7 Apr 2014 11:07:15 +0100
-Message-ID: <20140407100715.GI17163@e106497-lin.cambridge.arm.com>
-References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
- <1394811272-1547-5-git-send-email-Liviu.Dudau@arm.com>
- <20140405000007.GD15806@google.com>
- <20140407084623.GG17163@e106497-lin.cambridge.arm.com>
- <1396862058.3671.40.camel@pasglop>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] ARM: shmobile: r8a7791: add EHCI clock DT support
+Date: Mon, 07 Apr 2014 12:30:53 +0200
+Message-ID: <1854497.ZhKYzhMEAC@avalon>
+References: <201404050349.56764.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396862058.3671.40.camel@pasglop>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <201404050349.56764.sergei.shtylyov@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 07, 2014 at 10:14:18AM +0100, Benjamin Herrenschmidt wrote:
-> On Mon, 2014-04-07 at 09:46 +0100, Liviu Dudau wrote:
-> >=20
-> > *My* strategy is to get rid of pci_domain_nr(). I don't see why we =
-need
-> > to have arch specific way of providing the number, specially after =
-looking
-> > at the existing implementations that return a value from a variable=
- that
-> > is never touched or incremented. My guess is that pci_domain_nr() w=
-as
-> > created to work around the fact that there was no domain_nr maintai=
-nance in
-> > the generic code.
->=20
-> Well, there was no generic host bridge structure. There is one now, i=
-t should
-> go there.
+Hi Sergei,
 
-Exactly! Hence my patch. After it gets accepted I will go through archi=
-tectures
-and remove their version of pci_domain_nr().
+Thank you for the patch.
 
-Best regards,
-Liviu
+On Saturday 05 April 2014 03:49:55 Sergei Shtylyov wrote:
+> Add the USB EHCI clock to the R8A7791 device tree.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
->=20
-> Cheers,
-> Ben.
-> =20
->=20
->=20
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+> 
+> ---
+> The patch is against 'renesas-devel-3.14-20140403' tag of Simon Horman's
+> 'renesas.git' repo.
+> 
+>  arch/arm/boot/dts/r8a7791.dtsi            |   25 +++++++++++++++----------
+>  include/dt-bindings/clock/r8a7791-clock.h |    1 +
+>  2 files changed, 16 insertions(+), 10 deletions(-)
+> 
+> Index: renesas/arch/arm/boot/dts/r8a7791.dtsi
+> ===================================================================
+> --- renesas.orig/arch/arm/boot/dts/r8a7791.dtsi
+> +++ renesas/arch/arm/boot/dts/r8a7791.dtsi
+> @@ -774,20 +774,25 @@
+>  		mstp7_clks: mstp7_clks@e615014c {
+>  			compatible = "renesas,r8a7791-mstp-clocks", "renesas,cpg-mstp-
+clocks";
+>  			reg = <0 0xe615014c 0 4>, <0 0xe61501c4 0 4>;
+> -			clocks = <&mp_clk>, <&zs_clk>, <&p_clk>, <&p_clk>, <&zs_clk>,
+> -				 <&zs_clk>, <&p_clk>, <&p_clk>, <&p_clk>, <&p_clk>,
+> -				 <&zx_clk>, <&zx_clk>, <&zx_clk>;
+> +			clocks = <&mp_clk>, <&mp_clk>, <&zs_clk>, <&p_clk>,
+> +			         <&p_clk>, <&zs_clk>, <&zs_clk>, <&p_clk>,
+> +				 <&p_clk>, <&p_clk>, <&p_clk>, <&zx_clk>,
+> +				 <&zx_clk>, <&zx_clk>;
+>  			#clock-cells = <1>;
+>  			renesas,clock-indices = <
+> -				R8A7791_CLK_HSUSB R8A7791_CLK_HSCIF2 R8A7791_CLK_SCIF5
+> -				R8A7791_CLK_SCIF4 R8A7791_CLK_HSCIF1 R8A7791_CLK_HSCIF0
+> -				R8A7791_CLK_SCIF3 R8A7791_CLK_SCIF2 R8A7791_CLK_SCIF1
+> -				R8A7791_CLK_SCIF0 R8A7791_CLK_DU1 R8A7791_CLK_DU0
+> -				R8A7791_CLK_LVDS0
+> +				R8A7791_CLK_EHCI R8A7791_CLK_HSUSB
+> +				R8A7791_CLK_HSCIF2 R8A7791_CLK_SCIF5
+> +				R8A7791_CLK_SCIF4 R8A7791_CLK_HSCIF1
+> +				R8A7791_CLK_HSCIF0 R8A7791_CLK_SCIF3
+> +				R8A7791_CLK_SCIF2 R8A7791_CLK_SCIF1
+> +				R8A7791_CLK_SCIF0 R8A7791_CLK_DU1
+> +				R8A7791_CLK_DU0 R8A7791_CLK_LVDS0
+> 
+>  			>;
+> 
+>  			clock-output-names =
+> -				"hsusb", "hscif2", "scif5", "scif4", "hscif1", "hscif0",
+> -				"scif3", "scif2", "scif1", "scif0", "du1", "du0", "lvds0";
+> +				"ehci", "hsusb", "hscif2", "scif5",
+> +				"scif4", "hscif1", "hscif0", "scif3",
+> +				"scif2", "scif1", "scif0", "du1",
+> +				"du0", "lvds0";
+>  		};
+>  		mstp8_clks: mstp8_clks@e6150990 {
+>  			compatible = "renesas,r8a7791-mstp-clocks", "renesas,cpg-mstp-
+clocks";
+> Index: renesas/include/dt-bindings/clock/r8a7791-clock.h
+> ===================================================================
+> --- renesas.orig/include/dt-bindings/clock/r8a7791-clock.h
+> +++ renesas/include/dt-bindings/clock/r8a7791-clock.h
+> @@ -63,6 +63,7 @@
+>  #define R8A7791_CLK_PWM			23
+> 
+>  /* MSTP7 */
+> +#define R8A7791_CLK_EHCI		3
+>  #define R8A7791_CLK_HSUSB		4
+>  #define R8A7791_CLK_HSCIF2		13
+>  #define R8A7791_CLK_SCIF5		14
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+
+Laurent Pinchart
+
