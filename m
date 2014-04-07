@@ -1,62 +1,33 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
+From: Shawn Guo <shawn.guo@freescale.com>
 Subject: Re: [PATCH v5 00/11] imx-drm dt bindings
-Date: Mon, 07 Apr 2014 14:34:15 +0200
-Message-ID: <1396874055.3811.19.camel@paszta.hi.pengutronix.de>
+Date: Mon, 7 Apr 2014 21:40:13 +0800
+Message-ID: <20140407134010.GA2438@dragon>
 References: <1394011262-16849-1-git-send-email-p.zabel@pengutronix.de>
  <20140311034607.GA26502@S2101-09.ap.freescale.net>
  <20140407042334.GA28025@dragon>
- <1396865135.3811.13.camel@paszta.hi.pengutronix.de>
+ <20140407090927.GW7528@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1396865135.3811.13.camel@paszta.hi.pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Shawn Guo <shawn.guo@freescale.com>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <20140407090927.GW7528@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, kernel@pengutronix.de, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, den 07.04.2014, 12:05 +0200 schrieb Philipp Zabel:
-> Hi Shawn,
-> 
-> Am Montag, den 07.04.2014, 12:23 +0800 schrieb Shawn Guo:
-> > On Tue, Mar 11, 2014 at 11:46:11AM +0800, Shawn Guo wrote:
-> > > I just came across a couple problems when testing the series on
-> > > my imx6dl-sabresd board in dual display case - HDMI + LVDS.  I tested it
-> > > using Russell's branch below, which I believe has all the pieces put
-> > > together.
-> > > 
-> > >   git://ftp.arm.linux.org.uk/~rmk/linux-arm.git imx-drm-staging
-> > > 
-> > > - When I enable HDMI and LVDS support in both kernel build and device
-> > >   tree, HDMI seems working fine but LVDS color is corrupted quite badly.
-> > 
-> > Philipp,
-> > 
-> > Did you get any chance to reproduce this dual display issue?  Now it
-> > shows on mainline kernel.
-> 
-> I have not yet reproduced, but I've sent a patch today ("imx-drm:
-> imx-drm-core: Fix imx_drm_encoder_get_mux_id") that might fix this.
+On Mon, Apr 07, 2014 at 10:09:27AM +0100, Russell King - ARM Linux wrote:
+> So no EDID.  Did you update the "ddc" property to "ddc-i2c-bus" ?
 
-Tested on imx6q-phytec-pbab01 with LVDS panel and DVI monitor.
+Ah, right.  This is exactly the cause.  Thanks, Russell.
 
-> > And I see another HDMI regression with my testing on mainline kernel.  I
-> > can have my HDMI work at 1920x1080 with v3.14 kernel, but it can only
-> > probes 1024x768 with the mainline today.  The Xorg.0.log are attached
-> > below.  The hardware and user space are same, so I guess this is another
-> > issue introduced by the recently kernel driver changes?
-> 
-> Hmm, not sure. Have you updated to the i2c-ddc-bus phandle property as
-> described in Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt?
-
-regards
-Philipp
+Shawn
