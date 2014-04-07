@@ -1,40 +1,238 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v7 4/6] pci: Introduce a domain number for pci_host_bridge.
-Date: Mon, 07 Apr 2014 19:14:18 +1000
-Message-ID: <1396862058.3671.40.camel@pasglop>
-References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
- <1394811272-1547-5-git-send-email-Liviu.Dudau@arm.com>
- <20140405000007.GD15806@google.com>
- <20140407084623.GG17163@e106497-lin.cambridge.arm.com>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] reset: add driver for socfpga
+Date: Mon, 7 Apr 2014 11:28:23 +0200
+Message-ID: <20140407092823.GL12170@pengutronix.de>
+References: <1396629087-23727-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1396629087-23727-2-git-send-email-s.trumtrar@pengutronix.de>
+ <1396860408.3811.10.camel@paszta.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140407084623.GG17163@e106497-lin.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>, linux-pci <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Tanmay Inamdar <tinamdar@apm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1396860408.3811.10.camel-+qGW7pzALmz7o/J7KWpOmN53zsg1cpMQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2014-04-07 at 09:46 +0100, Liviu Dudau wrote:
+Hi!
+
+On Mon, Apr 07, 2014 at 10:46:48AM +0200, Philipp Zabel wrote:
+> Hi Steffen,
 > 
-> *My* strategy is to get rid of pci_domain_nr(). I don't see why we need
-> to have arch specific way of providing the number, specially after looking
-> at the existing implementations that return a value from a variable that
-> is never touched or incremented. My guess is that pci_domain_nr() was
-> created to work around the fact that there was no domain_nr maintainance in
-> the generic code.
+> a few minor issues below:
+> 
+> Am Freitag, den 04.04.2014, 18:31 +0200 schrieb Steffen Trumtrar:
+> > Add a reset-controller driver for the socfpga platform.
+> > The reset-controller has four banks with up to 32 entries all encapsulated in
+> > one module block.
+> > 
+> > Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > ---
+> >  drivers/reset/Makefile        |   1 +
+> >  drivers/reset/reset-socfpga.c | 149 ++++++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 150 insertions(+)
+> >  create mode 100644 drivers/reset/reset-socfpga.c
+> > 
+> > diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> > index cc29832..ab64077 100644
+> > --- a/drivers/reset/Makefile
+> > +++ b/drivers/reset/Makefile
+> > @@ -1,2 +1,3 @@
+> >  obj-$(CONFIG_RESET_CONTROLLER) += core.o
+> >  obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
+> > +obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
+> > diff --git a/drivers/reset/reset-socfpga.c b/drivers/reset/reset-socfpga.c
+> > new file mode 100644
+> > index 0000000..b21e4e4
+> > --- /dev/null
+> > +++ b/drivers/reset/reset-socfpga.c
+> > @@ -0,0 +1,149 @@
+> > +/*
+> > + * Copyright 2014 Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > + *
+> > + * based on
+> > + * Allwinner SoCs Reset Controller driver
+> > + *
+> > + * Copyright 2013 Maxime Ripard
+> > + *
+> > + * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License as published by
+> > + * the Free Software Foundation; either version 2 of the License, or
+> > + * (at your option) any later version.
+> > + */
+> > +
+> > +#include <linux/err.h>
+> > +#include <linux/io.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/reset-controller.h>
+> > +#include <linux/spinlock.h>
+> > +#include <linux/types.h>
+> > +
+> > +#define NR_BANKS		4
+> > +#define MAX_BANK_WIDTH		32
+> 
+> Since you are using BITS_PER_LONG for bank and offset calculation, why
+> not just drop MAX_BANK_WIDTH and use BITS_PER_LONG directly? (Or use
+> MAX_BANK_WIDTH everywhere.)
+>
 
-Well, there was no generic host bridge structure. There is one now, it should
-go there.
+Hm, yeah. I will change that to BITS_PER_LONG everywhere.
 
-Cheers,
-Ben.
+> > +#define OFFSET_MODRST		0x10
+> > +
+> > +struct socfpga_reset_data {
+> > +	spinlock_t			lock;
+> > +	void __iomem			*membase;
+> > +	struct reset_controller_dev	rcdev;
+> > +};
+> > +
+> > +static int socfpga_reset_assert(struct reset_controller_dev *rcdev,
+> > +				unsigned long id)
+> > +{
+> > +	struct socfpga_reset_data *data = container_of(rcdev,
+> > +						     struct socfpga_reset_data,
+> > +						     rcdev);
+> > +	int bank = id / BITS_PER_LONG;
+> > +	int offset = id % BITS_PER_LONG;
+> > +	unsigned long flags;
+> > +	u32 reg;
+> > +
+> > +	spin_lock_irqsave(&data->lock, flags);
+> > +
+> > +	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
+> > +	writel(reg | BIT(offset), data->membase + OFFSET_MODRST +
+> > +				 (bank * NR_BANKS));
+> > +	spin_unlock_irqrestore(&data->lock, flags);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int socfpga_reset_deassert(struct reset_controller_dev *rcdev,
+> > +				  unsigned long id)
+> > +{
+> > +	struct socfpga_reset_data *data = container_of(rcdev,
+> > +						     struct socfpga_reset_data,
+> > +						     rcdev);
+> > +
+> > +	int bank = id / BITS_PER_LONG;
+> > +	int offset = id % BITS_PER_LONG;
+> > +	unsigned long flags;
+> > +	u32 reg;
+> > +
+> > +	spin_lock_irqsave(&data->lock, flags);
+> > +
+> > +	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
+> > +	writel(reg & ~BIT(offset), data->membase + OFFSET_MODRST +
+> > +				  (bank * NR_BANKS));
+> > +
+> > +	spin_unlock_irqrestore(&data->lock, flags);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct reset_control_ops socfpga_reset_ops = {
+> > +	.assert		= socfpga_reset_assert,
+> > +	.deassert	= socfpga_reset_deassert,
+> > +};
+> > +
+> > +static int socfpga_reset_probe(struct platform_device *pdev)
+> > +{
+> > +	struct socfpga_reset_data *data;
+> > +	struct resource *res;
+> > +	int ret;
+> > +
+> > +	/*
+> > +	 * The binding was mainlined without the required property.
+> > +	 * Do not continue, when we encounter an old DT.
+> > +	 */
+> > +	if (!of_find_property(pdev->dev.of_node, "#reset-cells", NULL)) {
+> > +		dev_err(&pdev->dev, "dt missing #reset-cells property\n");
+> 
+> Maybe also print pdev->dev.of_node->full_name here?
+> 
+
+Okay.
+
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> > +	if (!data)
+> > +		return -ENOMEM;
+> > +
+> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	data->membase = devm_ioremap_resource(&pdev->dev, res);
+> > +	if (!data->membase) {
+> > +		ret = -ENOMEM;
+> > +		return ret;
+> 
+> This should be:
+> 	if (IS_ERR(data->membase))
+> 		return PTR_ERR(data->membase);
+> 
+
+Ah, of course. Somehow didn't think about that here.
+
+> > +	}
+> > +
+> > +	spin_lock_init(&data->lock);
+> > +
+> > +	data->rcdev.owner = THIS_MODULE;
+> > +	data->rcdev.nr_resets = NR_BANKS * MAX_BANK_WIDTH;
+> 
+> See above.
+> 
+> > +	data->rcdev.ops = &socfpga_reset_ops;
+> > +	data->rcdev.of_node = pdev->dev.of_node;
+> > +	reset_controller_register(&data->rcdev);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int socfpga_reset_remove(struct platform_device *pdev)
+> > +{
+> > +	struct socfpga_reset_data *data = platform_get_drvdata(pdev);
+> > +
+> > +	reset_controller_unregister(&data->rcdev);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct of_device_id socfpga_reset_dt_ids[] = {
+> > +	{ .compatible = "altr,rst-mgr", },
+> > +	{ /* sentinel */ },
+> > +};
+> > +
+> > +static struct platform_driver socfpga_reset_driver = {
+> > +	.probe	= socfpga_reset_probe,
+> > +	.remove	= socfpga_reset_remove,
+> > +	.driver = {
+> > +		.name		= "socfpga-reset",
+> > +		.owner		= THIS_MODULE,
+> > +		.of_match_table	= socfpga_reset_dt_ids,
+> > +	},
+> > +};
+> > +module_platform_driver(socfpga_reset_driver);
+> > +
+> > +MODULE_AUTHOR("Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org");
+> > +MODULE_DESCRIPTION("Socfpga Reset Controller Driver");
+> > +MODULE_LICENSE("GPL");
+> 
+
+Thanks,
+Steffen
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
