@@ -1,43 +1,49 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] ARM: zynq: dt: Convert to preprocessor includes
-Date: Mon, 7 Apr 2014 11:10:12 -0600
-Message-ID: <20140407171012.GC9952@obsidianresearch.com>
-References: <1396653256-28397-1-git-send-email-soren.brinkmann@xilinx.com>
- <1396653256-28397-3-git-send-email-soren.brinkmann@xilinx.com>
- <53423E75.3020008@monstr.eu>
- <53429754.8080105@topic.nl>
- <534298E7.2020409@monstr.eu>
+From: Josh Cartwright <joshc@codeaurora.org>
+Subject: Re: [PATCH V7 1/1] drivers/gpio: Altera soft IP GPIO driver and
+ devicetree binding
+Date: Mon, 7 Apr 2014 12:11:15 -0500
+Message-ID: <20140407171115.GA3956@joshc.qualcomm.com>
+References: <1393842463-5206-1-git-send-email-thloh@altera.com>
+ <20140307151455.GI18529@joshc.qualcomm.com>
+ <CAOLUe6aspffO1PUjKWW7ejpbxnYtb+RKRQrK=y30kuF7KXUUhA@mail.gmail.com>
+ <CAOLUe6aPWmkJJSiBLL8tmw2MNfpaeLpSp3CSwP1u7q+qXxCh9Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <534298E7.2020409-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Cc: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <CAOLUe6aPWmkJJSiBLL8tmw2MNfpaeLpSp3CSwP1u7q+qXxCh9Q@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Tien Hock Loh <thloh@altera.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, dinguyen@altera.com, "lftan@altera.com" <lftan@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 07, 2014 at 02:24:07PM +0200, Michal Simek wrote:
+On Mon, Apr 07, 2014 at 04:00:43PM +0800, Tien Hock Loh wrote:
+> On Wed, Mar 19, 2014 at 6:09 PM, Tien Hock Loh <thloh@altera.com> wrote:
+> > On Fri, Mar 7, 2014 at 11:14 PM, Josh Cartwright <joshc@codeaurora.org> wrote:
+> >> On Mon, Mar 03, 2014 at 06:27:43PM +0800, thloh@altera.com wrote:
+> >>> From: Tien Hock Loh <thloh@altera.com>
+[..]
+> >>> +     altera_gc->mapped_irq = irq_of_parse_and_map(node, 0);
+> >>>
+> >>
+> >> platform_get_irq(pdev, 0);
+> >>
+> > OK.
+> >
+>
+> platform_get_irq doesn't create the irq mapping which is needed by the
+> driver. Since this driver is targeted at using of, should I be using
+> irq_of_parse_and_map or should I still redo the codes with
+> platform_get_irq and irq_create_mapping? I think the latter would be
+> introducing code redundancy. Please advice.
 
-> Device-tree BSP and in 2014.01 there will be new BSP which just
-> generate them directly from the Vivado tools which just target your
-> reference design.  You can connect your custom IP (or Xilinx or 3rd
-> party) directly to the GIC which using different IRQ sensitivity
-> with whatever register addresses and make no sense to write it by
-> hand.
+Yes, it is technically true that platform_get_irq() doesn't do the
+mapping directly, but that's because the mapping is setup earlier, when
+of_device_alloc() (drivers/of/platform.c) allocates resources for your
+platform device.
 
-On our Zynq design here we ended up being unwilling to use platform
-generation from Vivado. Basically all our IP was custom, so there was
-no win at all to invoking the complexity of the automatic tools.
+Calling irq_of_parse_and_map() should be unnecessary.
 
-Thus we write the DT by hand, and our DT is complex, integrating
-peripherals that span two FPGAs.
-
-I think the in-kernel DT should use the kernel conventions, which
-means using #include and the binding constants over magic values.
-
-Jason
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
