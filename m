@@ -1,36 +1,71 @@
-From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Subject: Re: [PATCH v7 5/6] pci: Export find_pci_host_bridge() function.
-Date: Mon, 7 Apr 2014 15:38:50 +0100
-Message-ID: <20140407153850.3c9ef3e5@alan.etchedpixels.co.uk>
-References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
- <1394811272-1547-6-git-send-email-Liviu.Dudau@arm.com>
- <20140404233948.GC15806@google.com>
- <20140407142045.GO17163@e106497-lin.cambridge.arm.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH v2] clk: qcom: Add support for IPQ8064's global clock
+ controller (GCC)
+Date: Mon, 07 Apr 2014 18:01:58 +0300
+Message-ID: <1396882918.28420.37.camel@iivanov-dev>
+References: <1396642749-12979-1-git-send-email-galak@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140407142045.GO17163@e106497-lin.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Arnd Bergmann <arnd@arndb.de>, linux-pci <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Tanmay Inamdar <tinamdar@apm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1396642749-12979-1-git-send-email-galak@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Mike Turquette <mturquette@linaro.org>, devicetree@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> > If we *do* export it, I'd like it to have a more conventional name, e.g.,
-> > something starting with "pci_".
+Hi Kumar,
+
+On Fri, 2014-04-04 at 15:19 -0500, Kumar Gala wrote:
+> Add a driver for the global clock controller found on IPQ8064 based
+> platforms. This should allow most non-multimedia device drivers to probe
+> and control their clocks.
 > 
-> Understood. pci_find_host_bridge() ?
+> This is currently missing clocks for SATA, USB, and networking devices.
+> 
+> Signed-off-by: Kumar Gala <galak@codeaurora.org>
+> ---
+> v2:
+> * dropped audio clock from commit message
+> * changed Kconfig symbol to IPQ_GCC_806X
+> * Fixed PXO/CXO clk freq to 25Mhz
+> 
 
-pci_get_host_bridge() and take a reference IMHO ? If your primary bus is
-not PCI then your PCI "host" bridge could be hot swappable so the API at
-least ought to get that right.
+<snip>
 
-Alan
+> --- /dev/null
+> +++ b/drivers/clk/qcom/gcc-ipq806x.c
+> @@ -0,0 +1,1957 @@
+> +/*
+> + * Copyright (c) 2014, The Linux Foundation. All rights reserved.
+> + *
+> + * This software is licensed under the terms of the GNU General Public
+> + * License version 2, as published by the Free Software Foundation, and
+> + * may be copied, distributed, and modified under those terms.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/bitops.h>
+> +#include <linux/err.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset-controller.h>
+> +
+> +#include <dt-bindings/clock/qcom,gcc-ipq806x.h>
+> +#include <dt-bindings/reset/qcom,gcc-ipq806x.h>
+> +
+> +#include "common.h"
+
+Do I miss something or this file is not available?
+
+Regards,
+Ivan
