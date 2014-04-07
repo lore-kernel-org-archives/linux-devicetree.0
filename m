@@ -1,34 +1,47 @@
-From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: socfpga: dts: add reset-controller
-Date: Mon, 7 Apr 2014 16:12:01 -0500
-Message-ID: <1396905121.25236.2.camel@linux-builds1>
-References: <1396629087-23727-1-git-send-email-s.trumtrar@pengutronix.de>
-	 <1396629087-23727-4-git-send-email-s.trumtrar@pengutronix.de>
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH 0/5] Fix various issues with leds-pwm
+Date: Mon, 7 Apr 2014 14:31:00 -0700
+Message-ID: <CAK5ve-JijCvD8cZMpx+zG7YAjce3hnhpwTHCJr+zzfMKmJPt=g@mail.gmail.com>
+References: <20140406221854.GS7528@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396629087-23727-4-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20140406221854.GS7528@n2100.arm.linux.org.uk>
+Sender: linux-leds-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Richard Purdie <rpurdie@rpsys.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2014-04-04 at 18:31 +0200, Steffen Trumtrar wrote:
-> Add the necessary #reset-cells property to the rst-mgr node and
-> provide a header-file with all possible resets specified.
-> 
-> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/socfpga.dtsi           |  8 ++-
->  include/dt-bindings/reset/altr,rst-mgr.h | 90 ++++++++++++++++++++++++++++++++
+On Sun, Apr 6, 2014 at 3:18 PM, Russell King - ARM Linux
+<linux@arm.linux.org.uk> wrote:
+> This patch series fixes various problems with leds-pwm.
+>
+> The first patch is very important to solve a boot time oops on OMAP
+> boards (and probably others) which has recently shown its face.
+>
+> The next two clean up leds-pwm so that we can avoid the madness of
+> having entirely separate initialisation paths for DT and non-DT, which
+> I believe is the core cause of the initial problem.
+>
+> The last two patches add support for LEDs connected in the opposite
+> sense to PWM outputs, where either the PWM does not support inversion,
+> or does not support it in a way that works sanely with leds-pwm.  These
+> add a new property to leds-pwm, hence why that patch (and this cover)
+> copies the DT people.
+>
+> The first patch is an absolute must for going.
+>
 
-Does this file belong under dt-bindings/reset/ or
-dt-bindings/reset-controller/?
+Cool, I think Thierry is good for this patchset. I'm going to merge it
+with Thierry's ack and queue it for 3.16 merge window.
 
-Dinh
+-Bryan
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+>  .../devicetree/bindings/leds/leds-pwm.txt          |   2 +
+>  drivers/leds/leds-pwm.c                            | 161 ++++++++++-----------
+>  2 files changed, 82 insertions(+), 81 deletions(-)
+>
+> --
+> FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+> improving, and getting towards what was expected from it.
