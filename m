@@ -1,152 +1,78 @@
-From: Harini Katakam <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] devicetree: Add devicetree bindings documentation
- for Cadence SPI
-Date: Mon, 7 Apr 2014 13:16:47 +0530
-Message-ID: <CAFcVECJN0g5L2wiOJFvESqu9Zd3zpcckhh8wbvwsiwxVfc=+Wg@mail.gmail.com>
-References: <1396523431-14519-1-git-send-email-harinik@xilinx.com>
-	<1396523431-14519-2-git-send-email-harinik@xilinx.com>
-	<20140403213446.GB14763@sirena.org.uk>
-	<CAFcVEC+mpHh_d2j6_sdhWS3d2KyXrDYUq6L6jO2Q=SS68Hda2g@mail.gmail.com>
-	<20140404100919.GO14763@sirena.org.uk>
-	<CAFcVECLDyfFSZFk9fzFKsr6pM=f1nwzGAhjX17z=NsbvWpiDew@mail.gmail.com>
-	<20140404124637.GT14763@sirena.org.uk>
-	<CAFcVEC+FAAxxxxA8PgcTzLU5UFu=pkDEM4Li06dRmEwA95sz_g@mail.gmail.com>
-	<CAFcVECJYdW0=r425tWs8y6DJDNh3c75TAzg7+UCNRgLP8WHf+A@mail.gmail.com>
-	<CAEgOgz56hhFCy6sjZmw+Wn6uT4rU8mXSpazscPG_uJ-==-uXLw@mail.gmail.com>
-	<CAFcVEC+vWwepHgsCAP63YG2F_0ZXKMck1YYwi7XU3JQdpC9ZQw@mail.gmail.com>
-	<CAEgOgz5XsOYXyPTpUzx_j=+Z19oksTT5TB8G3r9KbYakrQvgHw@mail.gmail.com>
+From: Tien Hock Loh <thloh@altera.com>
+Subject: Re: [PATCH V7 1/1] drivers/gpio: Altera soft IP GPIO driver and
+ devicetree binding
+Date: Mon, 7 Apr 2014 16:00:43 +0800
+Message-ID: <CAOLUe6aPWmkJJSiBLL8tmw2MNfpaeLpSp3CSwP1u7q+qXxCh9Q@mail.gmail.com>
+References: <1393842463-5206-1-git-send-email-thloh@altera.com>
+	<20140307151455.GI18529@joshc.qualcomm.com>
+	<CAOLUe6aspffO1PUjKWW7ejpbxnYtb+RKRQrK=y30kuF7KXUUhA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAEgOgz5XsOYXyPTpUzx_j=+Z19oksTT5TB8G3r9KbYakrQvgHw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAOLUe6aspffO1PUjKWW7ejpbxnYtb+RKRQrK=y30kuF7KXUUhA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tien Hock Loh <thloh@altera.com>
+Cc: Josh Cartwright <joshc@codeaurora.org>, robh+dt@kernel.org, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, dinguyen@altera.com, "lftan@altera.com" <lftan@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
-
-On Sun, Apr 6, 2014 at 5:13 AM, Peter Crosthwaite
-<peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> On Sat, Apr 5, 2014 at 4:05 PM, Harini Katakam
-> <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Hi Peter,
+On Wed, Mar 19, 2014 at 6:09 PM, Tien Hock Loh <thloh@altera.com> wrote:
+> On Fri, Mar 7, 2014 at 11:14 PM, Josh Cartwright <joshc@codeaurora.org> wrote:
+>> On Mon, Mar 03, 2014 at 06:27:43PM +0800, thloh@altera.com wrote:
+>>> From: Tien Hock Loh <thloh@altera.com>
+>>>
+>>> Add driver support for Altera GPIO soft IP, including interrupts and I/O.
+>>> Tested on Altera CV SoC board using dipsw and LED using LED framework.
+>>>
+>>> Signed-off-by: Tien Hock Loh <thloh@altera.com>
+>>> ---
 >>
->> On Sat, Apr 5, 2014 at 4:44 AM, Peter Crosthwaite
->> <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
->>> On Sat, Apr 5, 2014 at 12:30 AM, Harini Katakam
->>> <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>> Hi,
->>>>
->>>> On Fri, Apr 4, 2014 at 7:38 PM, Harini Katakam
->>>> <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>>> Hi Mark,
->>>>>
->>>>> On Fri, Apr 4, 2014 at 6:16 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>>>>> On Fri, Apr 04, 2014 at 05:44:23PM +0530, Harini Katakam wrote:
->>>>>>> On Fri, Apr 4, 2014 at 3:39 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>>>>>> > On Fri, Apr 04, 2014 at 08:30:38AM +0530, Harini Katakam wrote:
->>>>>>
->>>>>>> >> This IP can drive 4 slaves.
->>>>>>> >> The sCS line to be driven is selected in spi device structure and
->>>>>>> >> that is driven by the software.
->>>>>>
->>>>>>> > So why specify this in the binding at all?  If the device always has the
->>>>>>> > same number of chip selects it's redundant.
->>>>>>
->>>>>>> I'm sorry, I should have explained that better.
->>>>>>> The IP can support upto 4 chip selects.
->>>>>>> The num-cs value here is the number of chip selects actually used on the board.
->>>
->>> Shouldnt it be a property of the controller not the board? How for
->>> example do we differentiate between different implementations of
->>> cadence SPI controller that only supports up to two CS lines? My
->>> thinking is that this property should always be present and = 4 in the
->>> Zynq case as the controller always has 4 physical CS lines coming out
->>> (before any decoders, pin muxes or slaves etc.).
->>>
->>>>>>
->>>>>> Why does that need to be configured?  Surely the presence of slaves is
->>>>>> enough information.
->>>
->>> And presence of slaves / board info is inferable from subnodes.
->>>
->>>>>
->>>>> OK. I understand.
->>>>> Can you comment on the case where a decoder is used?
->>>>>
->>>>> There is support for adding a decoder where extended slaves can be selected
->>>>> through the IP's control register.
->>>>> (This is not currently implemented in the driver but will be in the future.)
->>>>>
->>>
->>> I think thats seperate information. is-decoded-cs property of something.
->>>
->>>>> How should the driver know whether it is 4 or 16 select lines for example?
->>>>> This has to be written to master->num_chipselect.
->>>>>
->>>
->>> If you only have one property (== 4) how do you tell the difference
->>> between 4 un-decoded CS lines vs 2 decoded CS lines?
+>>> +             return -ENOMEM;
+>>> +     }
+>>> +     altera_gc->domain = 0;
+>>> +
+>>> +     spin_lock_init(&altera_gc->gpio_lock);
+>>> +
+>>> +     id = pdev->id;
+>>> +
+>>> +     if (of_property_read_u32(node, "altr,gpio-bank-width", &reg))
+>>> +             /*By default assume full GPIO controller*/
+>>> +             altera_gc->mmchip.gc.ngpio = 32;
+>>> +     else
+>>> +             altera_gc->mmchip.gc.ngpio = reg;
+>>> +
+>>> +     if (altera_gc->mmchip.gc.ngpio > 32) {
+>>> +             dev_warn(&pdev->dev,
+>>> +                     "ngpio is greater than 32, defaulting to 32\n");
+>>> +             altera_gc->mmchip.gc.ngpio = 32;
+>>> +     }
+>>> +
+>>> +     altera_gc->mmchip.gc.direction_input    = altera_gpio_direction_input;
+>>> +     altera_gc->mmchip.gc.direction_output   = altera_gpio_direction_output;
+>>> +     altera_gc->mmchip.gc.get                = altera_gpio_get;
+>>> +     altera_gc->mmchip.gc.set                = altera_gpio_set;
+>>> +     altera_gc->mmchip.gc.to_irq             = altera_gpio_to_irq;
+>>> +     altera_gc->mmchip.gc.owner              = THIS_MODULE;
+>>> +
+>>> +     ret = of_mm_gpiochip_add(node, &altera_gc->mmchip);
+>>> +     if (ret) {
+>>> +             dev_err(&pdev->dev, "Failed adding memory mapped gpiochip\n");
+>>> +             return ret;
+>>> +     }
+>>> +
+>>> +     platform_set_drvdata(pdev, altera_gc);
+>>> +
+>>> +     altera_gc->mapped_irq = irq_of_parse_and_map(node, 0);
 >>>
 >>
->> If an SoC implements 2 CS and sets "decoder" property,
->> then we'd configure the register with "select decode" bit and write
->> 0b0011 to the slave select field to select 4th slave.
+>> platform_get_irq(pdev, 0);
 >>
->> If decoder property is not set, then we'd write 0b1000 to select 4th slave.
->>
->
-> What are your proposed dt bindings for these differing options - what
-> is num-cs in each case?
-
-I think it will be better to have num-cs equal to the max slaves allowed and
-the property to indicate if decoder is present helps driver configure the
-register accordingly. (master->num_chipselect is written with "num-cs" value)
-
-For ex.,
-1. 4 slaves without decoder
-num-cs = <4>
-is-decoded-cs = <false>
-
-2. 4 slaves driven through 2 to 4 decoder:
-num-cs = <4>
-is-decoded-cs = <true>
-
-The other option is have num-cs reflect number of CS before decoder
-but the above option makes more sense as num-cs directly reflects
-the max valid slaves.
-
->
->> But yes, if the SoC only implements 2 CS, doesn't use decoder but
->> if there is an erroneous input to set_cs for 4th slave, it would be a problem.
->>
->
-> Sure, that's an error condition though that should be caught by SPI
-> because master->num_chipselect would only be 2 right?
+> OK.
 >
 
-Yes.
+platform_get_irq doesn't create the irq mapping which is needed by the
+driver. Since this driver is targeted at using of, should I be using
+irq_of_parse_and_map or should I still redo the codes with
+platform_get_irq and irq_create_mapping? I think the latter would be
+introducing code redundancy. Please advice.
 
-Regards,
-Harini
-
-> Regards,
-> Peter
->
->>>
->>> I think num-cs has validity as the number of CS lines implemented in
->>> the controller. For any given SoC, it's constant but could differ
->>> between SoCs.
->>>
->>
->> I dint consider that this property will be useful to SoC's implementing <4 CS;
->> master->num_chipselect (when set to this property's value)
->> will be used to check error conditions.
->>
->> Regards,
->> Harini
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks.
