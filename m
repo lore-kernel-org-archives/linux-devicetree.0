@@ -1,40 +1,61 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] ARM: shmobile: lager: correct renesas,gpios to
- renesas,groups in sd[02] pfc
-Date: Mon, 7 Apr 2014 22:35:12 +0200
-Message-ID: <CAMuHMdW+ZD0r+W2BWw8Uusz_LYPmnrsX+Hk5wkvhiEf0f8u4cg@mail.gmail.com>
-References: <1396898212-7078-1-git-send-email-ben.dooks@codethink.co.uk>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 6/9] ARM: shmobile: r8a7790: add audio dmac node
+Date: Tue, 08 Apr 2014 00:39:24 +0400
+Message-ID: <53430CFC.7000107@cogentembedded.com>
+References: <1396901229-29117-1-git-send-email-ben.dooks@codethink.co.uk> <1396901229-29117-7-git-send-email-ben.dooks@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1396898212-7078-1-git-send-email-ben.dooks@codethink.co.uk>
+In-Reply-To: <1396901229-29117-7-git-send-email-ben.dooks@codethink.co.uk>
 Sender: linux-sh-owner@vger.kernel.org
-To: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: linux-kernel@lists.codethink.co.uk, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, magnus.damm@opensource.se, Simon Horman <horms@verge.net.au>, Rob Taylor <rob.taylor@codethink.co.uk>
+To: Ben Dooks <ben.dooks@codethink.co.uk>, linux-kernel@lists.codethink.co.uk, dmaengine@vger.kernel.org
+Cc: vinod.koul@intel.com, dan.j.williams@intel.com, linux-sh@vger.kernel.org, magnus.damm@opensource.se, horms@verge.net.au, g.liakhovetski@gmx.d, kuninori.morimoto.gx@renesas.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 7, 2014 at 9:16 PM, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
-> From: Rob Taylor <rob.taylor@codethink.co.uk>
->
-> Fix probable typo of renesas,groups in the lager dt. The kernel has no
-> renesas,gpios but this should match renesas,groups.
->
-> Signed-off-by: Rob Taylor <rob.taylor@codethink.co.uk>
+Hello.
 
-Thanks, nice catch!
+On 04/08/2014 12:07 AM, Ben Dooks wrote:
 
-> [ben.dooks@codethink.co.uk: fixup description]
+> Add initial audio dmac node and resources.
+
 > Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> ---
+>   arch/arm/boot/dts/r8a7790.dtsi | 68 ++++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 68 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+> index 2c8cbbd..6032783 100644
+> --- a/arch/arm/boot/dts/r8a7790.dtsi
+> +++ b/arch/arm/boot/dts/r8a7790.dtsi
+> @@ -176,6 +176,74 @@
+>   		};
+>   	};
+>
+> +	dma1: dma-mux@1 {
+> +		compatible = "renesas,shdma-mux";
+> +		#dma-cells = <1>;
+> +		dma-channels = <20>;
+> +		dma-requests = <256>;
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		audiodma0: dmac@ec700000 {
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+    According to the ePARR standard [1], the node name should be 
+"dma-controller", not just "dmac".
 
-Gr{oetje,eeting}s,
+> +			compatible = "renesas,dma-r8a7790", "renesas,dma-arm";
+> +			clocks = <&mstp5_clks R8A7790_CLK_AUDIO_DMAC0>;
+> +			dma-channels = <13>;
+> +			status = "disabled";
+> +			reg = <0 0xec700020 0 0xffc0>;
+> +			interrupt-parent = <&gic>;
 
-                        Geert
+    Shouldn't it be just inherited from the top level node?
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+[1] http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.pdf
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+WBR, Sergei
+
