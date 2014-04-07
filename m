@@ -1,238 +1,58 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] reset: add driver for socfpga
-Date: Mon, 7 Apr 2014 11:28:23 +0200
-Message-ID: <20140407092823.GL12170@pengutronix.de>
-References: <1396629087-23727-1-git-send-email-s.trumtrar@pengutronix.de>
- <1396629087-23727-2-git-send-email-s.trumtrar@pengutronix.de>
- <1396860408.3811.10.camel@paszta.hi.pengutronix.de>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v5 00/11] imx-drm dt bindings
+Date: Mon, 07 Apr 2014 12:05:35 +0200
+Message-ID: <1396865135.3811.13.camel@paszta.hi.pengutronix.de>
+References: <1394011262-16849-1-git-send-email-p.zabel@pengutronix.de>
+ <20140311034607.GA26502@S2101-09.ap.freescale.net>
+ <20140407042334.GA28025@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1396860408.3811.10.camel-+qGW7pzALmz7o/J7KWpOmN53zsg1cpMQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20140407042334.GA28025@dragon>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Shawn Guo <shawn.guo@freescale.com>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Hi Shawn,
 
-On Mon, Apr 07, 2014 at 10:46:48AM +0200, Philipp Zabel wrote:
-> Hi Steffen,
-> 
-> a few minor issues below:
-> 
-> Am Freitag, den 04.04.2014, 18:31 +0200 schrieb Steffen Trumtrar:
-> > Add a reset-controller driver for the socfpga platform.
-> > The reset-controller has four banks with up to 32 entries all encapsulated in
-> > one module block.
+Am Montag, den 07.04.2014, 12:23 +0800 schrieb Shawn Guo:
+> On Tue, Mar 11, 2014 at 11:46:11AM +0800, Shawn Guo wrote:
+> > I just came across a couple problems when testing the series on
+> > my imx6dl-sabresd board in dual display case - HDMI + LVDS.  I tested it
+> > using Russell's branch below, which I believe has all the pieces put
+> > together.
 > > 
-> > Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
-> >  drivers/reset/Makefile        |   1 +
-> >  drivers/reset/reset-socfpga.c | 149 ++++++++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 150 insertions(+)
-> >  create mode 100644 drivers/reset/reset-socfpga.c
+> >   git://ftp.arm.linux.org.uk/~rmk/linux-arm.git imx-drm-staging
 > > 
-> > diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> > index cc29832..ab64077 100644
-> > --- a/drivers/reset/Makefile
-> > +++ b/drivers/reset/Makefile
-> > @@ -1,2 +1,3 @@
-> >  obj-$(CONFIG_RESET_CONTROLLER) += core.o
-> >  obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
-> > +obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
-> > diff --git a/drivers/reset/reset-socfpga.c b/drivers/reset/reset-socfpga.c
-> > new file mode 100644
-> > index 0000000..b21e4e4
-> > --- /dev/null
-> > +++ b/drivers/reset/reset-socfpga.c
-> > @@ -0,0 +1,149 @@
-> > +/*
-> > + * Copyright 2014 Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > + *
-> > + * based on
-> > + * Allwinner SoCs Reset Controller driver
-> > + *
-> > + * Copyright 2013 Maxime Ripard
-> > + *
-> > + * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License as published by
-> > + * the Free Software Foundation; either version 2 of the License, or
-> > + * (at your option) any later version.
-> > + */
-> > +
-> > +#include <linux/err.h>
-> > +#include <linux/io.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/reset-controller.h>
-> > +#include <linux/spinlock.h>
-> > +#include <linux/types.h>
-> > +
-> > +#define NR_BANKS		4
-> > +#define MAX_BANK_WIDTH		32
+> > - When I enable HDMI and LVDS support in both kernel build and device
+> >   tree, HDMI seems working fine but LVDS color is corrupted quite badly.
 > 
-> Since you are using BITS_PER_LONG for bank and offset calculation, why
-> not just drop MAX_BANK_WIDTH and use BITS_PER_LONG directly? (Or use
-> MAX_BANK_WIDTH everywhere.)
->
-
-Hm, yeah. I will change that to BITS_PER_LONG everywhere.
-
-> > +#define OFFSET_MODRST		0x10
-> > +
-> > +struct socfpga_reset_data {
-> > +	spinlock_t			lock;
-> > +	void __iomem			*membase;
-> > +	struct reset_controller_dev	rcdev;
-> > +};
-> > +
-> > +static int socfpga_reset_assert(struct reset_controller_dev *rcdev,
-> > +				unsigned long id)
-> > +{
-> > +	struct socfpga_reset_data *data = container_of(rcdev,
-> > +						     struct socfpga_reset_data,
-> > +						     rcdev);
-> > +	int bank = id / BITS_PER_LONG;
-> > +	int offset = id % BITS_PER_LONG;
-> > +	unsigned long flags;
-> > +	u32 reg;
-> > +
-> > +	spin_lock_irqsave(&data->lock, flags);
-> > +
-> > +	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
-> > +	writel(reg | BIT(offset), data->membase + OFFSET_MODRST +
-> > +				 (bank * NR_BANKS));
-> > +	spin_unlock_irqrestore(&data->lock, flags);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int socfpga_reset_deassert(struct reset_controller_dev *rcdev,
-> > +				  unsigned long id)
-> > +{
-> > +	struct socfpga_reset_data *data = container_of(rcdev,
-> > +						     struct socfpga_reset_data,
-> > +						     rcdev);
-> > +
-> > +	int bank = id / BITS_PER_LONG;
-> > +	int offset = id % BITS_PER_LONG;
-> > +	unsigned long flags;
-> > +	u32 reg;
-> > +
-> > +	spin_lock_irqsave(&data->lock, flags);
-> > +
-> > +	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
-> > +	writel(reg & ~BIT(offset), data->membase + OFFSET_MODRST +
-> > +				  (bank * NR_BANKS));
-> > +
-> > +	spin_unlock_irqrestore(&data->lock, flags);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static struct reset_control_ops socfpga_reset_ops = {
-> > +	.assert		= socfpga_reset_assert,
-> > +	.deassert	= socfpga_reset_deassert,
-> > +};
-> > +
-> > +static int socfpga_reset_probe(struct platform_device *pdev)
-> > +{
-> > +	struct socfpga_reset_data *data;
-> > +	struct resource *res;
-> > +	int ret;
-> > +
-> > +	/*
-> > +	 * The binding was mainlined without the required property.
-> > +	 * Do not continue, when we encounter an old DT.
-> > +	 */
-> > +	if (!of_find_property(pdev->dev.of_node, "#reset-cells", NULL)) {
-> > +		dev_err(&pdev->dev, "dt missing #reset-cells property\n");
+> Philipp,
 > 
-> Maybe also print pdev->dev.of_node->full_name here?
-> 
+> Did you get any chance to reproduce this dual display issue?  Now it
+> shows on mainline kernel.
 
-Okay.
+I have not yet reproduced, but I've sent a patch today ("imx-drm:
+imx-drm-core: Fix imx_drm_encoder_get_mux_id") that might fix this.
 
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> > +	if (!data)
-> > +		return -ENOMEM;
-> > +
-> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	data->membase = devm_ioremap_resource(&pdev->dev, res);
-> > +	if (!data->membase) {
-> > +		ret = -ENOMEM;
-> > +		return ret;
-> 
-> This should be:
-> 	if (IS_ERR(data->membase))
-> 		return PTR_ERR(data->membase);
-> 
+> And I see another HDMI regression with my testing on mainline kernel.  I
+> can have my HDMI work at 1920x1080 with v3.14 kernel, but it can only
+> probes 1024x768 with the mainline today.  The Xorg.0.log are attached
+> below.  The hardware and user space are same, so I guess this is another
+> issue introduced by the recently kernel driver changes?
 
-Ah, of course. Somehow didn't think about that here.
+Hmm, not sure. Have you updated to the i2c-ddc-bus phandle property as
+described in Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt?
 
-> > +	}
-> > +
-> > +	spin_lock_init(&data->lock);
-> > +
-> > +	data->rcdev.owner = THIS_MODULE;
-> > +	data->rcdev.nr_resets = NR_BANKS * MAX_BANK_WIDTH;
-> 
-> See above.
-> 
-> > +	data->rcdev.ops = &socfpga_reset_ops;
-> > +	data->rcdev.of_node = pdev->dev.of_node;
-> > +	reset_controller_register(&data->rcdev);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int socfpga_reset_remove(struct platform_device *pdev)
-> > +{
-> > +	struct socfpga_reset_data *data = platform_get_drvdata(pdev);
-> > +
-> > +	reset_controller_unregister(&data->rcdev);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id socfpga_reset_dt_ids[] = {
-> > +	{ .compatible = "altr,rst-mgr", },
-> > +	{ /* sentinel */ },
-> > +};
-> > +
-> > +static struct platform_driver socfpga_reset_driver = {
-> > +	.probe	= socfpga_reset_probe,
-> > +	.remove	= socfpga_reset_remove,
-> > +	.driver = {
-> > +		.name		= "socfpga-reset",
-> > +		.owner		= THIS_MODULE,
-> > +		.of_match_table	= socfpga_reset_dt_ids,
-> > +	},
-> > +};
-> > +module_platform_driver(socfpga_reset_driver);
-> > +
-> > +MODULE_AUTHOR("Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org");
-> > +MODULE_DESCRIPTION("Socfpga Reset Controller Driver");
-> > +MODULE_LICENSE("GPL");
-> 
-
-Thanks,
-Steffen
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards
+Philipp
