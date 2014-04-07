@@ -1,58 +1,69 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v5 00/11] imx-drm dt bindings
-Date: Mon, 07 Apr 2014 12:05:35 +0200
-Message-ID: <1396865135.3811.13.camel@paszta.hi.pengutronix.de>
-References: <1394011262-16849-1-git-send-email-p.zabel@pengutronix.de>
- <20140311034607.GA26502@S2101-09.ap.freescale.net>
- <20140407042334.GA28025@dragon>
+From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v7 4/6] pci: Introduce a domain number for
+ pci_host_bridge.
+Date: Mon, 7 Apr 2014 11:07:15 +0100
+Message-ID: <20140407100715.GI17163@e106497-lin.cambridge.arm.com>
+References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
+ <1394811272-1547-5-git-send-email-Liviu.Dudau@arm.com>
+ <20140405000007.GD15806@google.com>
+ <20140407084623.GG17163@e106497-lin.cambridge.arm.com>
+ <1396862058.3671.40.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20140407042334.GA28025@dragon>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Shawn Guo <shawn.guo@freescale.com>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1396862058.3671.40.camel@pasglop>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+On Mon, Apr 07, 2014 at 10:14:18AM +0100, Benjamin Herrenschmidt wrote:
+> On Mon, 2014-04-07 at 09:46 +0100, Liviu Dudau wrote:
+> >=20
+> > *My* strategy is to get rid of pci_domain_nr(). I don't see why we =
+need
+> > to have arch specific way of providing the number, specially after =
+looking
+> > at the existing implementations that return a value from a variable=
+ that
+> > is never touched or incremented. My guess is that pci_domain_nr() w=
+as
+> > created to work around the fact that there was no domain_nr maintai=
+nance in
+> > the generic code.
+>=20
+> Well, there was no generic host bridge structure. There is one now, i=
+t should
+> go there.
 
-Am Montag, den 07.04.2014, 12:23 +0800 schrieb Shawn Guo:
-> On Tue, Mar 11, 2014 at 11:46:11AM +0800, Shawn Guo wrote:
-> > I just came across a couple problems when testing the series on
-> > my imx6dl-sabresd board in dual display case - HDMI + LVDS.  I tested it
-> > using Russell's branch below, which I believe has all the pieces put
-> > together.
-> > 
-> >   git://ftp.arm.linux.org.uk/~rmk/linux-arm.git imx-drm-staging
-> > 
-> > - When I enable HDMI and LVDS support in both kernel build and device
-> >   tree, HDMI seems working fine but LVDS color is corrupted quite badly.
-> 
-> Philipp,
-> 
-> Did you get any chance to reproduce this dual display issue?  Now it
-> shows on mainline kernel.
+Exactly! Hence my patch. After it gets accepted I will go through archi=
+tectures
+and remove their version of pci_domain_nr().
 
-I have not yet reproduced, but I've sent a patch today ("imx-drm:
-imx-drm-core: Fix imx_drm_encoder_get_mux_id") that might fix this.
+Best regards,
+Liviu
 
-> And I see another HDMI regression with my testing on mainline kernel.  I
-> can have my HDMI work at 1920x1080 with v3.14 kernel, but it can only
-> probes 1024x768 with the mainline today.  The Xorg.0.log are attached
-> below.  The hardware and user space are same, so I guess this is another
-> issue introduced by the recently kernel driver changes?
+>=20
+> Cheers,
+> Ben.
+> =20
+>=20
+>=20
 
-Hmm, not sure. Have you updated to the i2c-ddc-bus phandle property as
-described in Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt?
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
 
-regards
-Philipp
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
