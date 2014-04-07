@@ -1,20 +1,29 @@
 From: <tthayer@altera.com>
-Subject: [PATCH 2/3] dts: socfpga: Add bindings for Altera SoC SDRAM EDAC
-Date: Mon, 7 Apr 2014 16:54:08 -0500
-Message-ID: <1396907649-20212-3-git-send-email-tthayer@altera.com>
+Subject: [PATCH 1/3] dts: socfpga: Add bindings for Altera SoC SDRAM controller
+Date: Mon, 7 Apr 2014 16:54:07 -0500
+Message-ID: <1396907649-20212-2-git-send-email-tthayer@altera.com>
 References: <1396907649-20212-1-git-send-email-tthayer@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1396907649-20212-1-git-send-email-tthayer@altera.com>
-Sender: linux-doc-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robherring2@gmail.com, dougthompson@xmission.com, grant.likely@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, dinguyen@altera.com
-Cc: Thor Thayer <tthayer@altera.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Thor Thayer <tthayer@altera.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <tthayer@altera.com>
 
-Addition of the Altera SDRAM EDAC bindings and device
+Addition of the Altera SDRAM controller bindings and device
 tree changes to the Altera SoC project.
 
 Signed-off-by: Thor Thayer <tthayer@altera.com>
@@ -31,40 +40,42 @@ Cc: linux-doc@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
 ---
- .../bindings/arm/altera/socfpga-sdram-edac.txt     |   12 ++++++++++++
+ .../bindings/arm/altera/socfpga-sdram.txt          |   14 ++++++++++++++
  arch/arm/boot/dts/socfpga.dtsi                     |    5 +++++
- 2 files changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
+ 2 files changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
 
-diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
+diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
 new file mode 100644
-index 0000000..9348c53
+index 0000000..525cb76
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
-@@ -0,0 +1,12 @@
-+Altera SOCFPGA SDRAM Error Detection & Correction [EDAC]
++++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+@@ -0,0 +1,14 @@
++Altera SOCFPGA SDRAM Controller
 +
 +Required properties:
-+- compatible : should contain "altr,sdr-edac";
-+- interrupts : Should contain the SDRAM ECC IRQ in the
-+	appropriate format for the IRQ controller.
++- compatible : "altr,sdr-ctl", "syscon";
++                Note that syscon is invoked for this device to support the FPGA
++		bridge driver, EDAC driver and other devices that share the
++		registers.
++- reg : Should contain 1 register ranges(address and length)
 +
 +Example:
-+	sdramedac@0 {
-+		compatible = "altr,sdram-edac";
-+		interrupts = <0 39 4>;
++	sdrctl@ffc25000 {
++		compatible = "altr,sdr-ctl", "syscon";
++		reg = <0xffc25000 0x1000>;
 +	};
 diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 6ce912e..a0ea69b 100644
+index df43702..6ce912e 100644
 --- a/arch/arm/boot/dts/socfpga.dtsi
 +++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -681,6 +681,11 @@
- 			reg = <0xffc25000 0x1000>;
+@@ -676,6 +676,11 @@
+ 			clocks = <&l4_sp_clk>;
  		};
  
-+		sdramedac@0 {
-+			compatible = "altr,sdram-edac";
-+			interrupts = <0 39 4>;
++		sdrctl@ffc25000 {
++			compatible = "altr,sdr-ctl", "syscon";
++			reg = <0xffc25000 0x1000>;
 +		};
 +
  		rstmgr@ffd05000 {
@@ -72,4 +83,3 @@ index 6ce912e..a0ea69b 100644
  			reg = <0xffd05000 0x1000>;
 -- 
 1.7.9.5
-
