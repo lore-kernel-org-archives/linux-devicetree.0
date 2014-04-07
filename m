@@ -1,57 +1,180 @@
-From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: [PATCH 0/5] Fix various issues with leds-pwm
-Date: Mon, 7 Apr 2014 14:36:26 -0700
-Message-ID: <CAK5ve-KMLvxZgwFiks7eQHdBfakfMUPqUiuY0+KFmGLat8VhPA@mail.gmail.com>
-References: <20140406221854.GS7528@n2100.arm.linux.org.uk> <CAK5ve-JijCvD8cZMpx+zG7YAjce3hnhpwTHCJr+zzfMKmJPt=g@mail.gmail.com>
- <20140407213337.GL7528@n2100.arm.linux.org.uk>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] pci-rcar-gen2: add device tree support
+Date: Tue, 8 Apr 2014 01:41:20 +0400
+Message-ID: <201404080141.21605.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20140407213337.GL7528@n2100.arm.linux.org.uk>
-Sender: linux-leds-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Richard Purdie <rpurdie@rpsys.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: horms@verge.net.au, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bhelgaas@google.com, linux-pci@vger.kernel.org
+Cc: linux-sh@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, ben.dooks@codethink.co.uk, linux-doc@vger.kernel.org, rob@landley.net, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 7, 2014 at 2:33 PM, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
-> On Mon, Apr 07, 2014 at 02:31:00PM -0700, Bryan Wu wrote:
->> On Sun, Apr 6, 2014 at 3:18 PM, Russell King - ARM Linux
->> <linux@arm.linux.org.uk> wrote:
->> > This patch series fixes various problems with leds-pwm.
->> >
->> > The first patch is very important to solve a boot time oops on OMAP
->> > boards (and probably others) which has recently shown its face.
->> >
->> > The next two clean up leds-pwm so that we can avoid the madness of
->> > having entirely separate initialisation paths for DT and non-DT, which
->> > I believe is the core cause of the initial problem.
->> >
->> > The last two patches add support for LEDs connected in the opposite
->> > sense to PWM outputs, where either the PWM does not support inversion,
->> > or does not support it in a way that works sanely with leds-pwm.  These
->> > add a new property to leds-pwm, hence why that patch (and this cover)
->> > copies the DT people.
->> >
->> > The first patch is an absolute must for going.
->> >
->>
->> Cool, I think Thierry is good for this patchset. I'm going to merge it
->> with Thierry's ack and queue it for 3.16 merge window.
->
-> I don't mind the majority of the patch set being queued for the next
-> merge window, but I object to the first patch being delayed.  The
-> first patch is a very necessary bug fix for a regression that has
-> cropped up since -rc7.
->
-> It may not be the fault of leds-pwm, but it's leds-pwm which is most
-> certainly buggy.  kfree'ing a work_struct which is active is *not*
-> on.
->
+From: Ben Dooks <ben.dooks@codethink.co.uk>
 
-Sure, actually just after I sent out my previous email, I think I need
-add your first patch into my git pull request for 3.15 merge window.
-So no worries, I will do that.
+Add device tree probing support to the 'pci-rcar-gen2' driver.
 
-Thanks,
--Bryan
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+[Sergei: numerous fixes/cleanups]
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+---
+The patch is against the 'next' branch of Bjorn Helgaas' 'pci.git' repo.
+
+Changes in version 3:
+- added "renesas,pci-r8a7791" to the possible "compatible" property values;
+- removed '#ifdef CONFIG_OF' around rcar_pci_of_match[] and hence of_match_ptr()
+  invocation too;
+- fixed trailing whitespace in the DT parsing code;
+- removed the wrong "renessas," prefix from the binding document's file name;
+- moved the PCI device sub-nodes from the board example to the SoC example;
+- fixed labels in the board example;
+- fixed grammar and punctuation in the binding document;
+- reworded the changelog, fixed the subject.
+
+Changes in version 2:
+- merged the binding document from a separate patch;
+- moved to the "bus-range" property parsing;
+- added example to the binding document.
+
+ Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt |   54 ++++++++++++++++
+ drivers/pci/host/pci-rcar-gen2.c                        |   32 ++++++++-
+ 2 files changed, 84 insertions(+), 2 deletions(-)
+
+Index: pci/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+===================================================================
+--- /dev/null
++++ pci/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+@@ -0,0 +1,54 @@
++Renesas AHB to PCI bridge
++-------------------------
++
++This is the bridge used internally to connect the USB controllers to the
++AHB. There is one bridge instance per USB port connected to the internal
++OHCI and EHCI controllers.
++
++Required properties:
++- compatible: "renesas,pci-r8a7790" for the R8A7790 SoC;
++	      "renesas,pci-r8a7791" for the R8A7791 SoC.
++- reg:	A list of physical regions to access the device: the first is
++	the operational registers for the OHCI/EHCI controllers and the
++	second is for the bridge configuration and control registers.
++- interrupts: interrupt for the device.
++- clocks: The reference to the device clock.
++- bus-range: The PCI bus number range; as this is a single bus, the range
++	      should be specified as the same value twice.
++
++Example SoC configuration:
++
++	pci0: pci@ee090000  {
++		compatible = "renesas,pci-r8a7790";
++		clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
++		reg = <0x0 0xee090000 0x0 0xc00>,
++		      <0x0 0xee080000 0x0 0x1100>;
++		interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
++		status = "disabled";
++
++		bus-range = <0 0>;
++		#address-cells = <3>;
++		#size-cells = <2>;
++
++		pci@0,1 {
++			reg = <0x800 0 0 0 0>;
++			device_type = "pci";
++			phys = <&usbphy 0 0>;
++			phy-names = "usb";
++		};
++
++		pci@0,2 {
++			reg = <0x1000 0 0 0 0>;
++			device_type = "pci";
++			phys = <&usbphy 0 0>;
++			phy-names = "usb";
++		};
++	};
++
++Example board setup:
++
++&pci0 {
++	status = "okay";
++	pinctrl-0 = <&usb0_pins>;
++	pinctrl-names = "default";
++};
+Index: pci/drivers/pci/host/pci-rcar-gen2.c
+===================================================================
+--- pci.orig/drivers/pci/host/pci-rcar-gen2.c
++++ pci/drivers/pci/host/pci-rcar-gen2.c
+@@ -16,6 +16,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/pci.h>
++#include <linux/of_pci.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/sizes.h>
+@@ -98,6 +99,7 @@ struct rcar_pci_priv {
+ 	struct resource io_res;
+ 	struct resource mem_res;
+ 	struct resource *cfg_res;
++	unsigned busnr;
+ 	int irq;
+ 	unsigned long window_size;
+ };
+@@ -312,8 +314,8 @@ static int rcar_pci_setup(int nr, struct
+ 	pci_add_resource(&sys->resources, &priv->io_res);
+ 	pci_add_resource(&sys->resources, &priv->mem_res);
+ 
+-	/* Setup bus number based on platform device id */
+-	sys->busnr = to_platform_device(priv->dev)->id;
++	/* Setup bus number based on platform device id / of bus-range */
++	sys->busnr = priv->busnr;
+ 	return 1;
+ }
+ 
+@@ -366,6 +368,23 @@ static int rcar_pci_probe(struct platfor
+ 
+ 	priv->window_size = SZ_1G;
+ 
++	if (pdev->dev.of_node) {
++		struct resource busnr;
++		int ret;
++
++		ret = of_pci_parse_bus_range(pdev->dev.of_node, &busnr);
++		if (ret < 0) {
++			dev_err(&pdev->dev, "failed to parse bus-range\n");
++			return ret;
++		}
++
++		priv->busnr = busnr.start;
++		if (busnr.end != busnr.start)
++			dev_warn(&pdev->dev, "only one bus number supported\n");
++	} else {
++		priv->busnr = pdev->id;
++	}
++
+ 	hw_private[0] = priv;
+ 	memset(&hw, 0, sizeof(hw));
+ 	hw.nr_controllers = ARRAY_SIZE(hw_private);
+@@ -377,11 +396,20 @@ static int rcar_pci_probe(struct platfor
+ 	return 0;
+ }
+ 
++static struct of_device_id rcar_pci_of_match[] = {
++	{ .compatible = "renesas,pci-r8a7790", },
++	{ .compatible = "renesas,pci-r8a7791", },
++	{ },
++};
++
++MODULE_DEVICE_TABLE(of, rcar_pci_of_match);
++
+ static struct platform_driver rcar_pci_driver = {
+ 	.driver = {
+ 		.name = "pci-rcar-gen2",
+ 		.owner = THIS_MODULE,
+ 		.suppress_bind_attrs = true,
++		.of_match_table = rcar_pci_of_match,
+ 	},
+ 	.probe = rcar_pci_probe,
+ };
