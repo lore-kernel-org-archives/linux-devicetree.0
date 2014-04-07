@@ -1,219 +1,83 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] reset: add driver for socfpga
-Date: Mon, 07 Apr 2014 10:46:48 +0200
-Message-ID: <1396860408.3811.10.camel@paszta.hi.pengutronix.de>
-References: <1396629087-23727-1-git-send-email-s.trumtrar@pengutronix.de>
-	 <1396629087-23727-2-git-send-email-s.trumtrar@pengutronix.de>
+From: sundeep subbaraya <sundeep.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] usb: gadget: Add xilinx axi usb2 device support
+Date: Mon, 7 Apr 2014 14:31:37 +0530
+Message-ID: <CALHRZuotnhQH03xVThGF0kz_80zGvJG-jbkXbFCczk8gs6ZQXw@mail.gmail.com>
+References: <1396510519-8555-1-git-send-email-sbhatta@xilinx.com>
+	<113d0620-4003-417d-806b-0b79ae692829@VA3EHSMHS023.ehs.local>
+	<20140403145853.GD14162@saruman.home>
+	<533D7CF0.2000702@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396629087-23727-2-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <533D7CF0.2000702-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+Cc: balbi-l0cyMroinI0@public.gmane.org, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Steffen,
+Hi Michal,
 
-a few minor issues below:
+On Thu, Apr 3, 2014 at 8:53 PM, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org> wrote:
+>>> +struct xusb_udc {
+>>> +    struct usb_gadget gadget;
+>>> +    struct xusb_ep ep[8];
+>>> +    struct usb_gadget_driver *driver;
+>>> +    struct cmdbuf ch9cmd;
+>>> +    u32 usb_state;
+>>> +    u32 remote_wkp;
+>>> +    unsigned int (*read_fn)(void __iomem *);
+>>> +    void (*write_fn)(void __iomem *, u32, u32);
+>>
+>> why do you need these to be function pointers ? Because of endianness ?
+>> generic readl()/writel() already take care of that.
+>
+> readl from asm-generic/io.h is converting value from little endian IO
+> to cpu endianness.
+> This IP exists also in big endian version.
+> It means we have to support all possible combinations.
+> IP little and reading it on little or big endian CPU
+> IP big and reading it on little or big endian CPU.
+>
+> Look below.
+>
+>>> +    spin_lock_init(&udc->lock);
+>>> +
+>>> +    /* Check for IP endianness */
+>>> +    udc->write_fn = xudc_write32_be;
+>>> +    udc->read_fn = xudc_read32_be;
+>>> +    udc->write_fn(udc->base_address, XUSB_TESTMODE_OFFSET, TEST_J);
+>>> +    if ((udc->read_fn(udc->base_address + XUSB_TESTMODE_OFFSET))
+>>> +                    != TEST_J) {
+>>> +            udc->write_fn = xudc_write32;
+>>> +            udc->read_fn = xudc_read32;
+>>> +    }
+>>
+>> hmm... isn't there a configuration register to check this out ?
+>
+> Sundeep can tell us if there is any configuration register but
+> I don't think so in connection to my experience with Xilinx soft IPs.
+>
 
-Am Freitag, den 04.04.2014, 18:31 +0200 schrieb Steffen Trumtrar:
-> Add a reset-controller driver for the socfpga platform.
-> The reset-controller has four banks with up to 32 entries all encapsulated in
-> one module block.
-> 
-> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  drivers/reset/Makefile        |   1 +
->  drivers/reset/reset-socfpga.c | 149 ++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 150 insertions(+)
->  create mode 100644 drivers/reset/reset-socfpga.c
-> 
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index cc29832..ab64077 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -1,2 +1,3 @@
->  obj-$(CONFIG_RESET_CONTROLLER) += core.o
->  obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
-> +obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
-> diff --git a/drivers/reset/reset-socfpga.c b/drivers/reset/reset-socfpga.c
-> new file mode 100644
-> index 0000000..b21e4e4
-> --- /dev/null
-> +++ b/drivers/reset/reset-socfpga.c
-> @@ -0,0 +1,149 @@
-> +/*
-> + * Copyright 2014 Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> + *
-> + * based on
-> + * Allwinner SoCs Reset Controller driver
-> + *
-> + * Copyright 2013 Maxime Ripard
-> + *
-> + * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/types.h>
-> +
-> +#define NR_BANKS		4
-> +#define MAX_BANK_WIDTH		32
+Yes, there is no configuration register for endianess.
 
-Since you are using BITS_PER_LONG for bank and offset calculation, why
-not just drop MAX_BANK_WIDTH and use BITS_PER_LONG directly? (Or use
-MAX_BANK_WIDTH everywhere.)
+Thanks,
+Sundeep.
 
-> +#define OFFSET_MODRST		0x10
-> +
-> +struct socfpga_reset_data {
-> +	spinlock_t			lock;
-> +	void __iomem			*membase;
-> +	struct reset_controller_dev	rcdev;
-> +};
-> +
-> +static int socfpga_reset_assert(struct reset_controller_dev *rcdev,
-> +				unsigned long id)
-> +{
-> +	struct socfpga_reset_data *data = container_of(rcdev,
-> +						     struct socfpga_reset_data,
-> +						     rcdev);
-> +	int bank = id / BITS_PER_LONG;
-> +	int offset = id % BITS_PER_LONG;
-> +	unsigned long flags;
-> +	u32 reg;
-> +
-> +	spin_lock_irqsave(&data->lock, flags);
-> +
-> +	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
-> +	writel(reg | BIT(offset), data->membase + OFFSET_MODRST +
-> +				 (bank * NR_BANKS));
-> +	spin_unlock_irqrestore(&data->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int socfpga_reset_deassert(struct reset_controller_dev *rcdev,
-> +				  unsigned long id)
-> +{
-> +	struct socfpga_reset_data *data = container_of(rcdev,
-> +						     struct socfpga_reset_data,
-> +						     rcdev);
-> +
-> +	int bank = id / BITS_PER_LONG;
-> +	int offset = id % BITS_PER_LONG;
-> +	unsigned long flags;
-> +	u32 reg;
-> +
-> +	spin_lock_irqsave(&data->lock, flags);
-> +
-> +	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
-> +	writel(reg & ~BIT(offset), data->membase + OFFSET_MODRST +
-> +				  (bank * NR_BANKS));
-> +
-> +	spin_unlock_irqrestore(&data->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct reset_control_ops socfpga_reset_ops = {
-> +	.assert		= socfpga_reset_assert,
-> +	.deassert	= socfpga_reset_deassert,
-> +};
-> +
-> +static int socfpga_reset_probe(struct platform_device *pdev)
-> +{
-> +	struct socfpga_reset_data *data;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	/*
-> +	 * The binding was mainlined without the required property.
-> +	 * Do not continue, when we encounter an old DT.
-> +	 */
-> +	if (!of_find_property(pdev->dev.of_node, "#reset-cells", NULL)) {
-> +		dev_err(&pdev->dev, "dt missing #reset-cells property\n");
-
-Maybe also print pdev->dev.of_node->full_name here?
-
-> +		return -EINVAL;
-> +	}
-> +
-> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	data->membase = devm_ioremap_resource(&pdev->dev, res);
-> +	if (!data->membase) {
-> +		ret = -ENOMEM;
-> +		return ret;
-
-This should be:
-	if (IS_ERR(data->membase))
-		return PTR_ERR(data->membase);
-
-> +	}
-> +
-> +	spin_lock_init(&data->lock);
-> +
-> +	data->rcdev.owner = THIS_MODULE;
-> +	data->rcdev.nr_resets = NR_BANKS * MAX_BANK_WIDTH;
-
-See above.
-
-> +	data->rcdev.ops = &socfpga_reset_ops;
-> +	data->rcdev.of_node = pdev->dev.of_node;
-> +	reset_controller_register(&data->rcdev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int socfpga_reset_remove(struct platform_device *pdev)
-> +{
-> +	struct socfpga_reset_data *data = platform_get_drvdata(pdev);
-> +
-> +	reset_controller_unregister(&data->rcdev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id socfpga_reset_dt_ids[] = {
-> +	{ .compatible = "altr,rst-mgr", },
-> +	{ /* sentinel */ },
-> +};
-> +
-> +static struct platform_driver socfpga_reset_driver = {
-> +	.probe	= socfpga_reset_probe,
-> +	.remove	= socfpga_reset_remove,
-> +	.driver = {
-> +		.name		= "socfpga-reset",
-> +		.owner		= THIS_MODULE,
-> +		.of_match_table	= socfpga_reset_dt_ids,
-> +	},
-> +};
-> +module_platform_driver(socfpga_reset_driver);
-> +
-> +MODULE_AUTHOR("Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org");
-> +MODULE_DESCRIPTION("Socfpga Reset Controller Driver");
-> +MODULE_LICENSE("GPL");
-
-regards
-Philipp
-
+> Endian detection directly on IP itself came from my discussion
+> on drivers/spi/spi-xilinx.c that this is only one way how to do it.
+>
+> Thanks,
+> Michal
+>
+> --
+> Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+> w: www.monstr.eu p: +42-0-721842854
+> Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+> Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+> Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+>
+>
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
