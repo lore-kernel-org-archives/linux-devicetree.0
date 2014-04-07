@@ -1,7 +1,7 @@
 From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: [PATCH 1/9] ARM: shmobile: r8a7790: add dmac0,dmac1 clocks
-Date: Mon,  7 Apr 2014 21:07:01 +0100
-Message-ID: <1396901229-29117-2-git-send-email-ben.dooks@codethink.co.uk>
+Subject: [PATCH 7/9] ARM: shmobile: lager: enable sysdma units 0 and 1
+Date: Mon,  7 Apr 2014 21:07:07 +0100
+Message-ID: <1396901229-29117-8-git-send-email-ben.dooks@codethink.co.uk>
 References: <1396901229-29117-1-git-send-email-ben.dooks@codethink.co.uk>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1396901229-29117-1-git-send-email-ben.dooks@codethink.co.uk>
@@ -10,37 +10,29 @@ To: linux-kernel@lists.codethink.co.uk, dmaengine@vger.kernel.org
 Cc: vinod.koul@intel.com, dan.j.williams@intel.com, linux-sh@vger.kernel.org, magnus.damm@opensource.se, horms@verge.net.au, g.liakhovetski@gmx.d, kuninori.morimoto.gx@renesas.com, devicetree@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Add clocks for the SYS-DMAC0 and SYS-DMAC1 hardware blocks.
+Add the new sysdma units to the lager board.
 
 Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 ---
- arch/arm/boot/dts/r8a7790.dtsi | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/r8a7790-lager.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-index a1e7c39..f98b01d 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -671,16 +671,17 @@
- 			compatible = "renesas,r8a7790-mstp-clocks", "renesas,cpg-mstp-clocks";
- 			reg = <0 0xe6150138 0 4>, <0 0xe6150040 0 4>;
- 			clocks = <&mp_clk>, <&mp_clk>, <&mp_clk>, <&mp_clk>, <&mp_clk>,
--				 <&mp_clk>, <&mp_clk>, <&mp_clk>, <&mp_clk>;
-+				 <&mp_clk>, <&mp_clk>, <&mp_clk>, <&mp_clk>, <&hp_clk>, <&hp_clk>;
- 			#clock-cells = <1>;
- 			renesas,clock-indices = <
- 				R8A7790_CLK_SCIFA2 R8A7790_CLK_SCIFA1 R8A7790_CLK_SCIFA0
- 				R8A7790_CLK_MSIOF2 R8A7790_CLK_SCIFB0 R8A7790_CLK_SCIFB1
- 				R8A7790_CLK_MSIOF1 R8A7790_CLK_MSIOF3 R8A7790_CLK_SCIFB2
-+				R8A7790_CLK_SYS_DMAC0 R8A7790_CLK_SYS_DMAC1
- 			>;
- 			clock-output-names =
- 				"scifa2", "scifa1", "scifa0", "msiof2", "scifb0",
--				"scifb1", "msiof1", "msiof3", "scifb2";
-+				"scifb1", "msiof1", "msiof3", "scifb2", "dmac0", "dmac1";
- 		};
- 		mstp3_clks: mstp3_clks@e615013c {
- 			compatible = "renesas,r8a7790-mstp-clocks", "renesas,cpg-mstp-clocks";
+diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
+index 26a9010..3b4f59c 100644
+--- a/arch/arm/boot/dts/r8a7790-lager.dts
++++ b/arch/arm/boot/dts/r8a7790-lager.dts
+@@ -214,3 +214,11 @@
+ 	cd-gpios = <&gpio3 22 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ };
++
++&sysdma0 {
++	status = "okay";
++};
++
++&sysdma1 {
++	status = "okay";
++};
 -- 
 1.9.1
 
