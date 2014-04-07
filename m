@@ -1,256 +1,219 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v7 4/6] pci: Introduce a domain number for
- pci_host_bridge.
-Date: Mon, 7 Apr 2014 09:46:23 +0100
-Message-ID: <20140407084623.GG17163@e106497-lin.cambridge.arm.com>
-References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
- <1394811272-1547-5-git-send-email-Liviu.Dudau@arm.com>
- <20140405000007.GD15806@google.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] reset: add driver for socfpga
+Date: Mon, 07 Apr 2014 10:46:48 +0200
+Message-ID: <1396860408.3811.10.camel@paszta.hi.pengutronix.de>
+References: <1396629087-23727-1-git-send-email-s.trumtrar@pengutronix.de>
+	 <1396629087-23727-2-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140405000007.GD15806@google.com>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1396629087-23727-2-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 05, 2014 at 01:00:07AM +0100, Bjorn Helgaas wrote:
-> On Fri, Mar 14, 2014 at 03:34:30PM +0000, Liviu Dudau wrote:
-> > Make it easier to discover the domain number of a bus by storing
-> > the number in pci_host_bridge for the root bus. Several architectur=
-es
-> > have their own way of storing this information, so it makes sense
-> > to try to unify the code.=20
->=20
-> I like the idea of unifying the way we handle the domain number.  But=
-=20
-> I'd like to see more of the strategy before committing to this approa=
-ch.
+Hi Steffen,
 
-*My* strategy is to get rid of pci_domain_nr(). I don't see why we need
-to have arch specific way of providing the number, specially after look=
-ing
-at the existing implementations that return a value from a variable tha=
-t
-is never touched or incremented. My guess is that pci_domain_nr() was
-created to work around the fact that there was no domain_nr maintainanc=
-e in
-the generic code.
+a few minor issues below:
 
->=20
-> This patch adds struct pci_host_bridge.domain_nr, but of course
-> pci_domain_nr() doesn't use it.  It can't today, because
-> pci_create_root_bus() relies on pci_domain_nr() to fill in
-> pci_host_bridge.domain_nr.
->=20
-> But I suppose the intent is that someday we can make pci_domain_nr()
-> arch-independent somehow.  I'd just like to see more of the path to
-> that happening.
+Am Freitag, den 04.04.2014, 18:31 +0200 schrieb Steffen Trumtrar:
+> Add a reset-controller driver for the socfpga platform.
+> The reset-controller has four banks with up to 32 entries all encapsulated in
+> one module block.
+> 
+> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  drivers/reset/Makefile        |   1 +
+>  drivers/reset/reset-socfpga.c | 149 ++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 150 insertions(+)
+>  create mode 100644 drivers/reset/reset-socfpga.c
+> 
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index cc29832..ab64077 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -1,2 +1,3 @@
+>  obj-$(CONFIG_RESET_CONTROLLER) += core.o
+>  obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
+> +obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
+> diff --git a/drivers/reset/reset-socfpga.c b/drivers/reset/reset-socfpga.c
+> new file mode 100644
+> index 0000000..b21e4e4
+> --- /dev/null
+> +++ b/drivers/reset/reset-socfpga.c
+> @@ -0,0 +1,149 @@
+> +/*
+> + * Copyright 2014 Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> + *
+> + * based on
+> + * Allwinner SoCs Reset Controller driver
+> + *
+> + * Copyright 2013 Maxime Ripard
+> + *
+> + * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset-controller.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/types.h>
+> +
+> +#define NR_BANKS		4
+> +#define MAX_BANK_WIDTH		32
 
-The path would be to send a patch that removes all existing pci_domain_=
-nr()
-macros/inline functions and rely on the generic function.
+Since you are using BITS_PER_LONG for bank and offset calculation, why
+not just drop MAX_BANK_WIDTH and use BITS_PER_LONG directly? (Or use
+MAX_BANK_WIDTH everywhere.)
 
->=20
-> > While at this, add a new function that
-> > creates a root bus in a given domain and make pci_create_root_bus()
-> > a wrapper around this function.
->=20
-> I'm a little concerned about adding a new "create root bus" interface=
-,
-> partly because we have quite a few already, and I'd like to reduce th=
-e
-> number of them instead of adding more.  And I think there might be ot=
-her
-> similar opportunities for unification, so I could easily see us addin=
-g new
-> functions in the future to unify NUMA node info, ECAM info, etc.
+> +#define OFFSET_MODRST		0x10
+> +
+> +struct socfpga_reset_data {
+> +	spinlock_t			lock;
+> +	void __iomem			*membase;
+> +	struct reset_controller_dev	rcdev;
+> +};
+> +
+> +static int socfpga_reset_assert(struct reset_controller_dev *rcdev,
+> +				unsigned long id)
+> +{
+> +	struct socfpga_reset_data *data = container_of(rcdev,
+> +						     struct socfpga_reset_data,
+> +						     rcdev);
+> +	int bank = id / BITS_PER_LONG;
+> +	int offset = id % BITS_PER_LONG;
+> +	unsigned long flags;
+> +	u32 reg;
+> +
+> +	spin_lock_irqsave(&data->lock, flags);
+> +
+> +	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
+> +	writel(reg | BIT(offset), data->membase + OFFSET_MODRST +
+> +				 (bank * NR_BANKS));
+> +	spin_unlock_irqrestore(&data->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static int socfpga_reset_deassert(struct reset_controller_dev *rcdev,
+> +				  unsigned long id)
+> +{
+> +	struct socfpga_reset_data *data = container_of(rcdev,
+> +						     struct socfpga_reset_data,
+> +						     rcdev);
+> +
+> +	int bank = id / BITS_PER_LONG;
+> +	int offset = id % BITS_PER_LONG;
+> +	unsigned long flags;
+> +	u32 reg;
+> +
+> +	spin_lock_irqsave(&data->lock, flags);
+> +
+> +	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
+> +	writel(reg & ~BIT(offset), data->membase + OFFSET_MODRST +
+> +				  (bank * NR_BANKS));
+> +
+> +	spin_unlock_irqrestore(&data->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct reset_control_ops socfpga_reset_ops = {
+> +	.assert		= socfpga_reset_assert,
+> +	.deassert	= socfpga_reset_deassert,
+> +};
+> +
+> +static int socfpga_reset_probe(struct platform_device *pdev)
+> +{
+> +	struct socfpga_reset_data *data;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	/*
+> +	 * The binding was mainlined without the required property.
+> +	 * Do not continue, when we encounter an old DT.
+> +	 */
+> +	if (!of_find_property(pdev->dev.of_node, "#reset-cells", NULL)) {
+> +		dev_err(&pdev->dev, "dt missing #reset-cells property\n");
 
-The reason for creating the wrapper function was to allow for explicit =
-passing
-of domain_nr. If we find architectures where generic allocation of doma=
-in_nr
-doesn't work for them, we can make them use this wrapper to pass the do=
-main_nr
-into the host bridge when creating the root bus.
+Maybe also print pdev->dev.of_node->full_name here?
 
->=20
-> I wonder if we need some sort of descriptor structure that the arch c=
-ould
-> fill in and pass to the PCI core.  Then we could add new members with=
-out
-> having to create new interfaces each time.
+> +		return -EINVAL;
+> +	}
+> +
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	data->membase = devm_ioremap_resource(&pdev->dev, res);
+> +	if (!data->membase) {
+> +		ret = -ENOMEM;
+> +		return ret;
 
-I'm trying to reduce the number of variables being passed between archi=
-tectures
-and generic code. host_bridge (with the associated root bus), domain_nr=
- those
-are needed. Is there anything else that you have in your mind that need=
-s to
-be shared?
+This should be:
+	if (IS_ERR(data->membase))
+		return PTR_ERR(data->membase);
 
-My approach would be in sharing of the data: PCI is a standard, and the=
- core
-framework implements it. What is so broken in your architecture that yo=
-u need
-to work around the core code? And I'm not talking about drivers and qui=
-rks,
-but architectural level support.
+> +	}
+> +
+> +	spin_lock_init(&data->lock);
+> +
+> +	data->rcdev.owner = THIS_MODULE;
+> +	data->rcdev.nr_resets = NR_BANKS * MAX_BANK_WIDTH;
 
-Best regards,
-Liviu
+See above.
 
->=20
-> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> > Tested-by: Tanmay Inamdar <tinamdar@apm.com>
-> > ---
-> >  drivers/pci/probe.c | 41 +++++++++++++++++++++++++++++++++--------
-> >  include/linux/pci.h |  4 ++++
-> >  2 files changed, 37 insertions(+), 8 deletions(-)
-> >=20
-> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > index fd11c12..172c615 100644
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -1714,8 +1714,9 @@ void __weak pcibios_remove_bus(struct pci_bus=
- *bus)
-> >  {
-> >  }
-> > =20
-> > -struct pci_bus *pci_create_root_bus(struct device *parent, int bus=
-,
-> > -		struct pci_ops *ops, void *sysdata, struct list_head *resources)
-> > +struct pci_bus *pci_create_root_bus_in_domain(struct device *paren=
-t,
-> > +		int domain, int bus, struct pci_ops *ops, void *sysdata,
-> > +		struct list_head *resources)
-> >  {
-> >  	int error;
-> >  	struct pci_host_bridge *bridge;
-> > @@ -1728,30 +1729,34 @@ struct pci_bus *pci_create_root_bus(struct =
-device *parent, int bus,
-> > =20
-> >  	bridge =3D pci_alloc_host_bridge();
-> >  	if (!bridge)
-> > -		return NULL;
-> > +		return ERR_PTR(-ENOMEM);
-> > =20
-> >  	bridge->dev.parent =3D parent;
-> >  	bridge->dev.release =3D pci_release_host_bridge_dev;
-> > +	bridge->domain_nr =3D domain;
-> >  	error =3D pcibios_root_bridge_prepare(bridge);
-> >  	if (error)
-> >  		goto err_out;
-> > =20
-> >  	b =3D pci_alloc_bus();
-> > -	if (!b)
-> > +	if (!b) {
-> > +		error =3D -ENOMEM;
-> >  		goto err_out;
-> > +	}
-> > =20
-> >  	b->sysdata =3D sysdata;
-> >  	b->ops =3D ops;
-> >  	b->number =3D b->busn_res.start =3D bus;
-> > -	b2 =3D pci_find_bus(pci_domain_nr(b), bus);
-> > +	b2 =3D pci_find_bus(bridge->domain_nr, bus);
-> >  	if (b2) {
-> >  		/* If we already got to this bus through a different bridge, ign=
-ore it */
-> >  		dev_dbg(&b2->dev, "bus already known\n");
-> > +		error =3D -EEXIST;
-> >  		goto err_bus_out;
-> >  	}
-> > =20
-> >  	bridge->bus =3D b;
-> > -	dev_set_name(&bridge->dev, "pci%04x:%02x", pci_domain_nr(b), bus)=
-;
-> > +	dev_set_name(&bridge->dev, "pci%04x:%02x", bridge->domain_nr, bus=
-);
-> >  	error =3D device_register(&bridge->dev);
-> >  	if (error) {
-> >  		put_device(&bridge->dev);
-> > @@ -1766,7 +1771,7 @@ struct pci_bus *pci_create_root_bus(struct de=
-vice *parent, int bus,
-> > =20
-> >  	b->dev.class =3D &pcibus_class;
-> >  	b->dev.parent =3D b->bridge;
-> > -	dev_set_name(&b->dev, "%04x:%02x", pci_domain_nr(b), bus);
-> > +	dev_set_name(&b->dev, "%04x:%02x", bridge->domain_nr, bus);
-> >  	error =3D device_register(&b->dev);
-> >  	if (error)
-> >  		goto class_dev_reg_err;
-> > @@ -1816,7 +1821,27 @@ err_bus_out:
-> >  	kfree(b);
-> >  err_out:
-> >  	kfree(bridge);
-> > -	return NULL;
-> > +	return ERR_PTR(error);
-> > +}
-> > +
-> > +struct pci_bus *pci_create_root_bus(struct device *parent, int bus=
-,
-> > +		struct pci_ops *ops, void *sysdata, struct list_head *resources)
-> > +{
-> > +	int domain_nr;
-> > +	struct pci_bus *b =3D pci_alloc_bus();
-> > +	if (!b)
-> > +		return NULL;
-> > +
-> > +	b->sysdata =3D sysdata;
-> > +	domain_nr =3D pci_domain_nr(b);
-> > +	kfree(b);
-> > +
-> > +	b =3D pci_create_root_bus_in_domain(parent, domain_nr, bus,
-> > +				ops, sysdata, resources);
-> > +	if (IS_ERR(b))
-> > +		return NULL;
-> > +
-> > +	return b;
-> >  }
-> > =20
-> >  int pci_bus_insert_busn_res(struct pci_bus *b, int bus, int bus_ma=
-x)
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 33aa2ca..1eed009 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -394,6 +394,7 @@ struct pci_host_bridge_window {
-> >  struct pci_host_bridge {
-> >  	struct device dev;
-> >  	struct pci_bus *bus;		/* root bus */
-> > +	int domain_nr;
-> >  	struct list_head windows;	/* pci_host_bridge_windows */
-> >  	void (*release_fn)(struct pci_host_bridge *);
-> >  	void *release_data;
-> > @@ -747,6 +748,9 @@ struct pci_bus *pci_scan_bus(int bus, struct pc=
-i_ops *ops, void *sysdata);
-> >  struct pci_bus *pci_create_root_bus(struct device *parent, int bus=
-,
-> >  				    struct pci_ops *ops, void *sysdata,
-> >  				    struct list_head *resources);
-> > +struct pci_bus *pci_create_root_bus_in_domain(struct device *paren=
-t,
-> > +			int domain, int bus, struct pci_ops *ops,
-> > +			void *sysdata, struct list_head *resources);
-> >  int pci_bus_insert_busn_res(struct pci_bus *b, int bus, int busmax=
-);
-> >  int pci_bus_update_busn_res_end(struct pci_bus *b, int busmax);
-> >  void pci_bus_release_busn_res(struct pci_bus *b);
-> > --=20
-> > 1.9.0
-> >=20
->=20
+> +	data->rcdev.ops = &socfpga_reset_ops;
+> +	data->rcdev.of_node = pdev->dev.of_node;
+> +	reset_controller_register(&data->rcdev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int socfpga_reset_remove(struct platform_device *pdev)
+> +{
+> +	struct socfpga_reset_data *data = platform_get_drvdata(pdev);
+> +
+> +	reset_controller_unregister(&data->rcdev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id socfpga_reset_dt_ids[] = {
+> +	{ .compatible = "altr,rst-mgr", },
+> +	{ /* sentinel */ },
+> +};
+> +
+> +static struct platform_driver socfpga_reset_driver = {
+> +	.probe	= socfpga_reset_probe,
+> +	.remove	= socfpga_reset_remove,
+> +	.driver = {
+> +		.name		= "socfpga-reset",
+> +		.owner		= THIS_MODULE,
+> +		.of_match_table	= socfpga_reset_dt_ids,
+> +	},
+> +};
+> +module_platform_driver(socfpga_reset_driver);
+> +
+> +MODULE_AUTHOR("Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org");
+> +MODULE_DESCRIPTION("Socfpga Reset Controller Driver");
+> +MODULE_LICENSE("GPL");
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
