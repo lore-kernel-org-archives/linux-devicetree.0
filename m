@@ -1,67 +1,47 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCHv2 1/5] Input: add common DT binding for touchscreens
-Date: Mon, 7 Apr 2014 11:38:01 -0500
-Message-ID: <CAL_Jsq+46bPtgnQc5aAN8bcaw=te6MX=cvMMNP6+6xjG8Drkbg@mail.gmail.com>
-References: <1396736821-14395-1-git-send-email-sre@kernel.org>
-	<1396736821-14395-2-git-send-email-sre@kernel.org>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 0/5] Kirkwood DT Documentation
+Date: Mon, 7 Apr 2014 12:59:42 -0400
+Message-ID: <20140407165942.GH28334@titan.lakedaemon.net>
+References: <1395492360-1865-1-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1396736821-14395-2-git-send-email-sre@kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Sebastian Reichel <sre@ring0.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dmitry Torokhov <dtor@mail.ru>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1395492360-1865-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 5, 2014 at 5:26 PM, Sebastian Reichel <sre@kernel.org> wrote:
-> Add common DT binding documentation for touchscreen devices and
-> implement input_parse_touchscreen_of_params, which parses the common
-> properties and configures the input device accordingly.
+On Sat, Mar 22, 2014 at 01:45:55PM +0100, Andrew Lunn wrote:
+> This patchset fixes up a number of issues found by checkpatch in the
+> kirkwood DT files or binding Documentation. Vendor Prefixes are
+> documented, missing prefixes are added, incorrect prefixes are
+> corrected, and Kirkwood SoCs are documented.
+> 
+> Note that some of these patches contain UTF-8 characters, which the
+> mailing lists sometime don't like. The patches can also be found in
+> 
+> https://github.com/lunn/linux.git v3.14-rc7-next-20140321-dt
+> 
+> which is based on linux-next tag next-20140321.
+> 
+> Andrew Lunn (5):
+>   DT: Vendor: Add prefixes used by Kirkwood devices
+>   DT: bindings: add missing Marvell Kirkwood SoC documentation
+>   ARM: Kirkwood: Fix Atmel vendor prefix
+>   DT: I2C: Add trivial bindings used by kirkwood boards
+>   ARM: Kirkwood: DT: Add missing vendor prefix
 
-Good.
+Patches 3 and 5 five taken in to mvebu/dt-fixes-non-critical for v3.15.
+Updated our for-next branch.
 
->
-> Signed-off-by: Sebastian Reichel <sre@kernel.org>
-> ---
->  .../bindings/input/touchscreen/touchscreen.txt     |  9 ++++++
->  drivers/input/input.c                              | 34 ++++++++++++++++++++++
->  include/linux/input.h                              |  8 +++++
->  3 files changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
->
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-> new file mode 100644
-> index 0000000..a2ff0a0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-> @@ -0,0 +1,9 @@
-> +General Touchscreen Properties:
-> +
-> +Optional properties for Touchscreens:
-> + - touchscreen-size-x          : horizontal resolution of touchscreen
-> + - touchscreen-size-y          : vertical resolution of touchscreen
+If all goes well, I'll send a pull request later in the week.
 
-While I like the consistency, x-size and y-size are already commonly
-used. Perhaps the common binding should have both and x-size/y-size be
-marked deprecated.
+thx,
 
-> + - touchscreen-max-pressure    : maximum reported pressure
-> + - touchscreen-fuzz-x          : horizontal noise value of the absolute input device
-> + - touchscreen-fuzz-y          : vertical noise value of the absolute input device
-> + - touchscreen-fuzz-pressure   : pressure noise value of the absolute input device
-
-What are the units or are they just an arbitrary range dependent on
-the controller? Several existing bindings appear to be in pixels, but
-that seems wrong to me.
-
-There's also these various properties that should have common versions created:
-
-ti,x-plate-resistance and ti,x-plate-ohms (tsc2007)
-- rohm,flip-x             : Flip touch coordinates on the X axis
- - rohm,flip-y             : Flip touch coordinates on the Y axis
-- x-invert: invert X axis
-- y-invert: invert Y axis
-- contact-threshold:
-- moving-threshold:
-
-Rob
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
