@@ -1,16 +1,16 @@
 From: Arnd Bergmann <arnd@arndb.de>
 Subject: Re: [PATCH v7 1/6] pci: Introduce pci_register_io_range() helper
  function.
-Date: Mon, 07 Apr 2014 13:16:56 +0200
-Message-ID: <4164782.o9VMXFGud6@wuerfel>
+Date: Mon, 07 Apr 2014 13:36:15 +0200
+Message-ID: <5183143.FxBNM0xTAV@wuerfel>
 References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
- <20140407083550.GF17163@e106497-lin.cambridge.arm.com>
- <1396862008.3671.39.camel@pasglop>
+ <20140405001953.GE15806@google.com>
+ <20140407083120.GE17163@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1396862008.3671.39.camel@pasglop>
+In-Reply-To: <20140407083120.GE17163@e106497-lin.cambridge.arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,23 +20,58 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Tanmay Inamdar <tinamdar@apm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bjorn Helgaas <bhelgaas@google.com>
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Tanmay Inamdar <tinamdar@apm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 07 April 2014 19:13:28 Benjamin Herrenschmidt wrote:
-> On Mon, 2014-04-07 at 09:35 +0100, Liviu Dudau wrote:
-> > Thanks for the summary, is really useful as I was recently looking
-> > into code in that
-> > area. One thing I was trying to understand is why ppc needs _IO_BASE
-> > at all rather
-> > than using the generic PCI_IOBASE? 
-> 
-> Perhaps because our code predates it ?  I haven't looked much into
-> the semantics of PCI_IOBASE yet...
+On Monday 07 April 2014 09:31:20 Liviu Dudau wrote:
+> On Sat, Apr 05, 2014 at 01:19:53AM +0100, Bjorn Helgaas wrote:
+>
+> > Host bridges on x86 could have MMIO apertures that turn CPU memory accesses
+> > into PCI port accesses.  We could implement any number of I/O port spaces
+> > this way, by making the kernel inb()/outb()/etc. interfaces smart enough to
+> > use the memory-mapped space instead of (or in addition to) the
+> > INB/OUTB/etc. instructions.
 
-Yes, I'm pretty sure that's all there is to it. PCI_IOBASE just
-happened to be an identifier we picked for asm-generic, but the
-use on PowerPC is much older than the generic file.
+PowerPC actually has this already, as CONFIG_PPC_INDIRECT_PIO meaning that
+access to PIO registers is bus specific, and there is also CONFIG_PPC_INDIRECT_MMIO
+for the case where MMIO access is not native.
+ 
+> Right, sorry for my ignorance then: how does *currently* the device driver do
+> the I/O transfer transparent of the implementation mechanism? Or they have
+> intimate knowledge of wether the device is behind a host bridge and can do MMIO
+> or is on an ISA or CF bus and then it needs INB/OUTB ? And if we make inb/outb
+> smarter, does that mean that we need to change the drivers?
+
+The idea of that would be to not change drivers.
+
+My preference here would be to only have a generic function for those
+architectures that have the simple MMIO access all the time.
+
+> > ia64 does this (see arch/ia64/include/asm/io.h for a little description)
+> > and I think maybe one or two other arches have something similar.
+> > 
+> > > Introduce a pci_register_io_range() helper function that can be used
+> > > by the architecture code to keep track of the I/O ranges described by the
+> > > PCI bindings. If the PCI_IOBASE macro is not defined that signals
+> > > lack of support for PCI and we return an error.
+> > 
+> > I don't quite see how you intend to use this, because this series doesn't
+> > include any non-stub implementation of pci_register_io_range().
+> > 
+> > Is this anything like the ia64 strategy I mentioned above?  If so, it would
+> > be really nice to unify some of this stuff.
+> 
+> After discussions with Arnd and Catalin I know have a new series that moves
+> some of the code from arm64 series into this one. I am putting it through
+> testing right know as I am going to have to depend on another series that
+> makes PCI_IOBASE defined only for architectures that do MMIO in order to
+> choose the correct default implementation for these functions. My hope is
+> that I will be able to send the series this week.
+
+I think migrating other architectures to use the same code should be
+a separate effort from adding a generic implementation that can be
+used by arm64. It's probably a good idea to have patches to convert
+arm32 and/or microblaze.
 
 	Arnd
