@@ -1,55 +1,17 @@
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: [PATCH 5/9] ARM: shmobile: add Audio DMAC clocks
-Date: Mon,  7 Apr 2014 21:07:05 +0100
-Message-ID: <1396901229-29117-6-git-send-email-ben.dooks@codethink.co.uk>
-References: <1396901229-29117-1-git-send-email-ben.dooks@codethink.co.uk>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1396901229-29117-1-git-send-email-ben.dooks@codethink.co.uk>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-kernel@lists.codethink.co.uk, dmaengine@vger.kernel.org
-Cc: vinod.koul@intel.com, dan.j.williams@intel.com, linux-sh@vger.kernel.org, magnus.damm@opensource.se, horms@verge.net.au, g.liakhovetski@gmx.d, kuninori.morimoto.gx@renesas.com, devicetree@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>
+From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Subject: shdma of updates and r8a7790 enablement
+Date: Mon,  7 Apr 2014 21:07:00 +0100
+Message-ID: <1396901229-29117-1-git-send-email-ben.dooks@codethink.co.uk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, magnus.damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org, horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, g.liakhovetski@gmx.d, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add MSTP5 clock definitions for Audio DMAC
+Add the device tree entries for the R8A7790 SoC and update the shdma
+code to use the information in the device tree.
 
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
----
- arch/arm/boot/dts/r8a7790.dtsi            | 7 ++++---
- include/dt-bindings/clock/r8a7790-clock.h | 2 ++
- 2 files changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-index a64bdc6..2c8cbbd 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -795,10 +795,11 @@
- 		mstp5_clks: mstp5_clks@e6150144 {
- 			compatible = "renesas,r8a7790-mstp-clocks", "renesas,cpg-mstp-clocks";
- 			reg = <0 0xe6150144 0 4>, <0 0xe615003c 0 4>;
--			clocks = <&extal_clk>, <&p_clk>;
-+			clocks = <&hp_clk>, <&hp_clk>, <&extal_clk>, <&p_clk>;
- 			#clock-cells = <1>;
--			renesas,clock-indices = <R8A7790_CLK_THERMAL R8A7790_CLK_PWM>;
--			clock-output-names = "thermal", "pwm";
-+			renesas,clock-indices = <R8A7790_CLK_AUDIO_DMAC0 R8A7790_CLK_AUDIO_DMAC1
-+						 R8A7790_CLK_THERMAL R8A7790_CLK_PWM>;
-+			clock-output-names = "audmac0", "audamc1", "thermal", "pwm";
- 		};
- 		mstp7_clks: mstp7_clks@e615014c {
- 			compatible = "renesas,r8a7790-mstp-clocks", "renesas,cpg-mstp-clocks";
-diff --git a/include/dt-bindings/clock/r8a7790-clock.h b/include/dt-bindings/clock/r8a7790-clock.h
-index 6548a5f..9e74d11 100644
---- a/include/dt-bindings/clock/r8a7790-clock.h
-+++ b/include/dt-bindings/clock/r8a7790-clock.h
-@@ -63,6 +63,8 @@
- #define R8A7790_CLK_USBDMAC1		31
- 
- /* MSTP5 */
-+#define R8A7790_CLK_AUDIO_DMAC1		1
-+#define R8A7790_CLK_AUDIO_DMAC0		2
- #define R8A7790_CLK_THERMAL		22
- #define R8A7790_CLK_PWM			23
- 
--- 
-1.9.1
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
