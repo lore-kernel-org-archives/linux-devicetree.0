@@ -1,59 +1,61 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v5 00/11] imx-drm dt bindings
-Date: Mon, 7 Apr 2014 10:09:27 +0100
-Message-ID: <20140407090927.GW7528@n2100.arm.linux.org.uk>
-References: <1394011262-16849-1-git-send-email-p.zabel@pengutronix.de>
- <20140311034607.GA26502@S2101-09.ap.freescale.net>
- <20140407042334.GA28025@dragon>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH v2 6/6] PCI: designware: use new OF interrupt mapping when
+ possible
+Date: Mon, 07 Apr 2014 18:13:20 +0900
+Message-ID: <002601cf5241$9e819cc0$db84d640$%han@samsung.com>
+References: <1394025951-32438-1-git-send-email-l.stach@pengutronix.de>
+ <1394025951-32438-7-git-send-email-l.stach@pengutronix.de>
+ <20140305184219.GA29903@obsidianresearch.com>
+ <20140404170341.GG9007@google.com> <20140404170517.GH9007@google.com>
+ <1396859929.4553.2.camel@weser.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20140407042334.GA28025@dragon>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Shawn Guo <shawn.guo@freescale.com>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-reply-to: <1396859929.4553.2.camel@weser.hi.pengutronix.de>
+Content-language: ko
+Sender: linux-sh-owner@vger.kernel.org
+To: 'Lucas Stach' <l.stach@pengutronix.de>, 'Bjorn Helgaas' <bhelgaas@google.com>
+Cc: 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kernel@pengutronix.de, 'Arnd Bergmann' <arnd@arndb.de>, 'Stephen Warren' <swarren@wwwdotorg.org>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, linux-tegra@vger.kernel.org, 'Simon Horman' <horms@verge.net.au>, 'Thierry Reding' <thierry.reding@gmail.com>, 'Ben Dooks' <ben-linux@fluff.org>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Shawn Guo' <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 07, 2014 at 12:23:37PM +0800, Shawn Guo wrote:
-> And I see another HDMI regression with my testing on mainline kernel.  I
-> can have my HDMI work at 1920x1080 with v3.14 kernel, but it can only
-> probes 1024x768 with the mainline today.
-
-Works for me here.
-
-> [    20.606] (II) LoadModule: "modesetting"
-> [    20.607] (II) Loading /usr/lib/xorg/modules/drivers/modesetting_drv.so
-> [    20.609] (II) Module modesetting: vendor="X.Org Foundation"
-> [    20.609] 	compiled for 1.12.1.902, module version = 0.3.0
-> [    20.610] 	Module class: X.Org Video Driver
-> [    20.610] 	ABI class: X.Org Video Driver, version 12.0
-> [    20.610] (II) modesetting: Driver for Modesetting Kernel Drivers: kms
-> [    20.610] (++) using VT number 7
+On Monday, April 07, 2014 5:39 PM, Lucas Stach wrote:
+> Am Freitag, den 04.04.2014, 11:05 -0600 schrieb Bjorn Helgaas:
+> > On Fri, Apr 04, 2014 at 11:03:41AM -0600, Bjorn Helgaas wrote:
+> > > On Wed, Mar 05, 2014 at 11:42:19AM -0700, Jason Gunthorpe wrote:
+> > > > On Wed, Mar 05, 2014 at 02:25:51PM +0100, Lucas Stach wrote:
+> > > > > -	return pp->irq;
+> > > > > +	irq = of_irq_parse_and_map_pci(dev, slot, pin);
+> > > > > +	if (!irq)
+> > > > > +		irq = pp->irq;
+> > > >
+> > > > In light of the two bugs that Tim found, it might be wise to throw a
+> > > > 'dev_warn(FW_BUG "Missing DT interrupt mapping")' in the fall back
+> > > > path, so it doesn't continue to silently cover up errors on the OF/DT
+> > > > side..
+> > >
+> > > This sounds like a reasonable thing to do, but I didn't see a response to
+> > > this comment.  Should I merge it as-is, or do you want to add the message?
+> >
+> > Oh, and I suppose the same question applies to the other host drivers in
+> > this series (tegra, rcar)?
 > 
-> [    20.624] (WW) Falling back to old probe method for modesetting
-> [    20.624] (II) modesetting(0): using default device
-> [    20.627] (II) modesetting(0): Creating default Display subsection in Screen section
-> 	"Default Screen Section" for depth/fbbpp 24/32
-> [    20.627] (==) modesetting(0): Depth 24, (==) framebuffer bpp 32
-> [    20.628] (==) modesetting(0): RGB weight 888
-> [    20.628] (==) modesetting(0): Default visual is TrueColor
-> [    20.628] (II) modesetting(0): ShadowFB: preferred NO, enabled NO
-> [    20.628] (II) modesetting(0): Output HDMI-0 has no monitor section
-> [    20.629] (II) modesetting(0): EDID for output HDMI-0
-> [    20.629] (II) modesetting(0): Printing probed modes for output HDMI-0
+> Please apply as-is. of_irq_parse_and_map_pci() already prints an error
+> message if it isn't able to establish the mapping, thus right before we
+> fall into the fallback path. So any the warning would be redundant.
 
-So no EDID.  Did you update the "ddc" property to "ddc-i2c-bus" ?
++1
 
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+I agree with Lucas Stach's opinion. of_irq_parse_and_map_pci() already
+prints an error as below. So, additional warning message of host controller
+looks superfluous.
+
+	ret = of_irq_parse_pci(dev, &oirq);
+	if (ret) {
+		dev_err(&dev->dev, "of_irq_parse_pci() failed with rc=%d\n", ret);
+		return 0; /* Proper return code 0 == NO_IRQ */
+
+
+Best regards,
+Jingoo Han
+
