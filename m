@@ -1,7 +1,7 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2 1/2] ARM: shmobile: r8a7790: add internal PCI bridge nodes
-Date: Tue, 8 Apr 2014 02:37:44 +0400
-Message-ID: <201404080237.45734.sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2 2/2] ARM: shmobile: lager: enable internal PCI
+Date: Tue, 8 Apr 2014 02:40:12 +0400
+Message-ID: <201404080240.13639.sergei.shtylyov@cogentembedded.com>
 References: <201404080235.22151.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
@@ -11,71 +11,73 @@ Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <201404080235.22151.sergei.shtylyov@cogentembedded.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, ben.dooks@codethink.co.uk
 List-Id: devicetree@vger.kernel.org
 
 From: Ben Dooks <ben.dooks@codethink.co.uk>
 
-Add device nodes for the R8A7790 internal PCI bridge devices.
+Enable internal AHB-PCI bridges for the USB EHCI/OHCI controllers attached to
+them.
 
 Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
+[Sergei: enabled PCI0]
 Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
 ---
 Changes in version 2:
-- reworded summary (fixing typo) and changelog;
-- removed extra spaces before {;
+- enabled PCI0 device;
+- reworded summary and changelog;
 - refreshed the patch.
 
- arch/arm/boot/dts/r8a7790.dtsi |   39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ arch/arm/boot/dts/r8a7790-lager.dts |   33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-Index: renesas/arch/arm/boot/dts/r8a7790.dtsi
+Index: renesas/arch/arm/boot/dts/r8a7790-lager.dts
 ===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7790.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7790.dtsi
-@@ -820,4 +820,43 @@
- 		#size-cells = <0>;
- 		status = "disabled";
+--- renesas.orig/arch/arm/boot/dts/r8a7790-lager.dts
++++ renesas/arch/arm/boot/dts/r8a7790-lager.dts
+@@ -199,6 +199,21 @@
+ 				 "msiof1_tx";
+ 		renesas,function = "msiof1";
  	};
 +
-+	pci0: pci@ee090000 {
-+		compatible = "renesas,pci-r8a7790";
-+		clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
-+		reg = <0x0 0xee090000 0x0 0xc00>,
-+		      <0x0 0xee080000 0x0 0x1100>;
-+		interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
-+		status = "disabled";
-+
-+		bus-range = <0 0>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
++	usb0_pins: usb0 {
++		renesas,groups = "usb0";
++		renesas,function = "usb0";
 +	};
 +
-+	pci1: pci@ee0b0000 {
-+		compatible = "renesas,pci-r8a7790";
-+		clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
-+		reg = <0x0 0xee0b0000 0x0 0xc00>,
-+		      <0x0 0xee0a0000 0x0 0x1100>;
-+		interrupts = <0 112 IRQ_TYPE_LEVEL_HIGH>;
-+		status = "disabled";
-+
-+		bus-range = <1 1>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
++	usb1_pins: usb1 {
++		renesas,groups = "usb1";
++		renesas,function = "usb1";
 +	};
 +
-+	pci2: pci@ee0d0000 {
-+		compatible = "renesas,pci-r8a7790";
-+		clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
-+		reg = <0x0 0xee0d0000 0x0 0xc00>,
-+		      <0x0 0xee0c0000 0x0 0x1100>;
-+		interrupts = <0 113 IRQ_TYPE_LEVEL_HIGH>;
-+		status = "disabled";
-+
-+		bus-range = <2 2>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
++	usb2_pins: usb2 {
++		renesas,groups = "usb2";
++		renesas,function = "usb2";
 +	};
  };
+ 
+ &ether {
+@@ -297,3 +312,21 @@
+ 	cd-gpios = <&gpio3 22 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ };
++
++&pci0 {
++	status = "okay";
++	pinctrl-0 = <&usb0_pins>;
++	pinctrl-names = "default";
++};
++
++&pci1 {
++	status = "okay";
++	pinctrl-0 = <&usb1_pins>;
++	pinctrl-names = "default";
++};
++
++&pci2 {
++	status = "okay";
++	pinctrl-0 = <&usb2_pins>;
++	pinctrl-names = "default";
++};
