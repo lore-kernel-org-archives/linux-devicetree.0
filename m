@@ -1,101 +1,42 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] ARM: shmobile: r8a7791: add EHCI clock DT support
-Date: Mon, 07 Apr 2014 12:30:53 +0200
-Message-ID: <1854497.ZhKYzhMEAC@avalon>
-References: <201404050349.56764.sergei.shtylyov@cogentembedded.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v7 1/6] pci: Introduce pci_register_io_range() helper
+ function.
+Date: Mon, 07 Apr 2014 13:16:56 +0200
+Message-ID: <4164782.o9VMXFGud6@wuerfel>
+References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
+ <20140407083550.GF17163@e106497-lin.cambridge.arm.com>
+ <1396862008.3671.39.camel@pasglop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <201404050349.56764.sergei.shtylyov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1396862008.3671.39.camel@pasglop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Tanmay Inamdar <tinamdar@apm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bjorn Helgaas <bhelgaas@google.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
-
-Thank you for the patch.
-
-On Saturday 05 April 2014 03:49:55 Sergei Shtylyov wrote:
-> Add the USB EHCI clock to the R8A7791 device tree.
+On Monday 07 April 2014 19:13:28 Benjamin Herrenschmidt wrote:
+> On Mon, 2014-04-07 at 09:35 +0100, Liviu Dudau wrote:
+> > Thanks for the summary, is really useful as I was recently looking
+> > into code in that
+> > area. One thing I was trying to understand is why ppc needs _IO_BASE
+> > at all rather
+> > than using the generic PCI_IOBASE? 
 > 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Perhaps because our code predates it ?  I haven't looked much into
+> the semantics of PCI_IOBASE yet...
 
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Yes, I'm pretty sure that's all there is to it. PCI_IOBASE just
+happened to be an identifier we picked for asm-generic, but the
+use on PowerPC is much older than the generic file.
 
-> 
-> ---
-> The patch is against 'renesas-devel-3.14-20140403' tag of Simon Horman's
-> 'renesas.git' repo.
-> 
->  arch/arm/boot/dts/r8a7791.dtsi            |   25 +++++++++++++++----------
->  include/dt-bindings/clock/r8a7791-clock.h |    1 +
->  2 files changed, 16 insertions(+), 10 deletions(-)
-> 
-> Index: renesas/arch/arm/boot/dts/r8a7791.dtsi
-> ===================================================================
-> --- renesas.orig/arch/arm/boot/dts/r8a7791.dtsi
-> +++ renesas/arch/arm/boot/dts/r8a7791.dtsi
-> @@ -774,20 +774,25 @@
->  		mstp7_clks: mstp7_clks@e615014c {
->  			compatible = "renesas,r8a7791-mstp-clocks", "renesas,cpg-mstp-
-clocks";
->  			reg = <0 0xe615014c 0 4>, <0 0xe61501c4 0 4>;
-> -			clocks = <&mp_clk>, <&zs_clk>, <&p_clk>, <&p_clk>, <&zs_clk>,
-> -				 <&zs_clk>, <&p_clk>, <&p_clk>, <&p_clk>, <&p_clk>,
-> -				 <&zx_clk>, <&zx_clk>, <&zx_clk>;
-> +			clocks = <&mp_clk>, <&mp_clk>, <&zs_clk>, <&p_clk>,
-> +			         <&p_clk>, <&zs_clk>, <&zs_clk>, <&p_clk>,
-> +				 <&p_clk>, <&p_clk>, <&p_clk>, <&zx_clk>,
-> +				 <&zx_clk>, <&zx_clk>;
->  			#clock-cells = <1>;
->  			renesas,clock-indices = <
-> -				R8A7791_CLK_HSUSB R8A7791_CLK_HSCIF2 R8A7791_CLK_SCIF5
-> -				R8A7791_CLK_SCIF4 R8A7791_CLK_HSCIF1 R8A7791_CLK_HSCIF0
-> -				R8A7791_CLK_SCIF3 R8A7791_CLK_SCIF2 R8A7791_CLK_SCIF1
-> -				R8A7791_CLK_SCIF0 R8A7791_CLK_DU1 R8A7791_CLK_DU0
-> -				R8A7791_CLK_LVDS0
-> +				R8A7791_CLK_EHCI R8A7791_CLK_HSUSB
-> +				R8A7791_CLK_HSCIF2 R8A7791_CLK_SCIF5
-> +				R8A7791_CLK_SCIF4 R8A7791_CLK_HSCIF1
-> +				R8A7791_CLK_HSCIF0 R8A7791_CLK_SCIF3
-> +				R8A7791_CLK_SCIF2 R8A7791_CLK_SCIF1
-> +				R8A7791_CLK_SCIF0 R8A7791_CLK_DU1
-> +				R8A7791_CLK_DU0 R8A7791_CLK_LVDS0
-> 
->  			>;
-> 
->  			clock-output-names =
-> -				"hsusb", "hscif2", "scif5", "scif4", "hscif1", "hscif0",
-> -				"scif3", "scif2", "scif1", "scif0", "du1", "du0", "lvds0";
-> +				"ehci", "hsusb", "hscif2", "scif5",
-> +				"scif4", "hscif1", "hscif0", "scif3",
-> +				"scif2", "scif1", "scif0", "du1",
-> +				"du0", "lvds0";
->  		};
->  		mstp8_clks: mstp8_clks@e6150990 {
->  			compatible = "renesas,r8a7791-mstp-clocks", "renesas,cpg-mstp-
-clocks";
-> Index: renesas/include/dt-bindings/clock/r8a7791-clock.h
-> ===================================================================
-> --- renesas.orig/include/dt-bindings/clock/r8a7791-clock.h
-> +++ renesas/include/dt-bindings/clock/r8a7791-clock.h
-> @@ -63,6 +63,7 @@
->  #define R8A7791_CLK_PWM			23
-> 
->  /* MSTP7 */
-> +#define R8A7791_CLK_EHCI		3
->  #define R8A7791_CLK_HSUSB		4
->  #define R8A7791_CLK_HSCIF2		13
->  #define R8A7791_CLK_SCIF5		14
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
--- 
-Regards,
-
-Laurent Pinchart
-
+	Arnd
