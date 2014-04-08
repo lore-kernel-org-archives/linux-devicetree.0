@@ -1,60 +1,71 @@
 From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 0/5] clk: bcm21664: add common clock support
-Date: Tue,  8 Apr 2014 17:23:51 -0500
-Message-ID: <1396995836-31111-1-git-send-email-elder@linaro.org>
+Subject: [PATCH v2 3/5] ARM: dts: define clock binding for bcm21664
+Date: Tue,  8 Apr 2014 17:23:54 -0500
+Message-ID: <1396995836-31111-4-git-send-email-elder@linaro.org>
+References: <1396995836-31111-1-git-send-email-elder@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1396995836-31111-1-git-send-email-elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is series has two parts.  The first two patches are changes
-to the existing Broadcom Kona family clock code to prepare for the
-addition of support for another SoC, bcm21664.
+Document the device tree binding for Broadcom BCM28164 clock control
+units and clocks.  This SoC uses Kona CCUs, similar to the BCM281XX
+SoC family.
 
-The remaining three define the binding and code for bcm21664, and
-replace the use of "fake" clocks in the device tree with the real
-ones.  This ends up being a fairly straightforward definition of
-the clocks on this SoC; the rest of the clock code is shared with
-other SoCs that use the Kona style clock system.
+Signed-off-by: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/clock/bcm-kona-clock.txt   |   39 ++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-This series depends on the following patch, which has been taken
-into the clk-fixes tree:
-    clk: bcm281xx: don't use unnamed structs or unions
-    https://lkml.org/lkml/2014/4/7/322
-
-In addition, it depends on the version 4 of the following series,
-just (re)posted for review:
-    clk: bcm281xx: updates
-    https://lkml.org/lkml/2014/4/8/485
-
-The patches in this series--based on the current linus/master branch
-plus the patches mentioned above--are available here:
-    http://git.linaro.org/git/landing-teams/working/broadcom/kernel.git
-    Branch review/bcm21664-clock-v2
-
-
-					-Alex
-
-Alex Elder (5):
-  clk: bcm281xx: move compatible string definitions
-  ARM: dts: revise kona clock binding document
-  ARM: dts: define clock binding for bcm21664
-  clk: bcm21664: use common clock framework
-  ARM: dts: use real clocks for bcm21664
-
- .../devicetree/bindings/clock/bcm-kona-clock.txt   |  116 +++++---
- arch/arm/boot/dts/bcm21664.dtsi                    |  190 ++++++++-----
- drivers/clk/bcm/Kconfig                            |    2 +-
- drivers/clk/bcm/Makefile                           |    1 +
- drivers/clk/bcm/clk-bcm21664.c                     |  290 ++++++++++++++++++++
- drivers/clk/bcm/clk-bcm281xx.c                     |   12 -
- include/dt-bindings/clock/bcm21664.h               |   62 +++++
- include/dt-bindings/clock/bcm281xx.h               |   12 +
- 8 files changed, 565 insertions(+), 120 deletions(-)
- create mode 100644 drivers/clk/bcm/clk-bcm21664.c
- create mode 100644 include/dt-bindings/clock/bcm21664.h
-
+diff --git a/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt b/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
+index ebe3ab6..5286e26 100644
+--- a/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
++++ b/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
+@@ -98,3 +98,42 @@ be used.  These specifiers are defined in:
+     slave   bsc2            peri      7     BCM281XX_SLAVE_CCU_BSC2
+     slave   bsc3            peri      8     BCM281XX_SLAVE_CCU_BSC3
+     slave   pwm             peri      9     BCM281XX_SLAVE_CCU_PWM
++
++
++BCM21664 family
++---------------
++CCU compatible string values for SoCs in the BCM21664 family are:
++    "brcm,bcm21664-root-ccu"
++    "brcm,bcm21664-aon-ccu"
++    "brcm,bcm21664-master-ccu"
++    "brcm,bcm21664-slave-ccu"
++
++The following table defines the set of CCUs and clock specifiers for
++BCM21664 family clocks.  When a clock consumer references a clocks,
++its symbolic specifier (rather than its numeric index value) should
++be used.  These specifiers are defined in:
++    "include/dt-bindings/clock/bcm21664.h"
++
++    CCU     Clock           Type    Index   Specifier
++    ---     -----           ----    -----   ---------
++    root    frac_1m         peri      0     BCM21664_ROOT_CCU_FRAC_1M
++
++    aon     hub_timer       peri      0     BCM21664_AON_CCU_HUB_TIMER
++
++    master  sdio1           peri      0     BCM21664_MASTER_CCU_SDIO1
++    master  sdio2           peri      1     BCM21664_MASTER_CCU_SDIO2
++    master  sdio3           peri      2     BCM21664_MASTER_CCU_SDIO3
++    master  sdio4           peri      3     BCM21664_MASTER_CCU_SDIO4
++    master  sdio1_sleep     peri      4     BCM21664_MASTER_CCU_SDIO1_SLEEP
++    master  sdio2_sleep     peri      5     BCM21664_MASTER_CCU_SDIO2_SLEEP
++    master  sdio3_sleep     peri      6     BCM21664_MASTER_CCU_SDIO3_SLEEP
++    master  sdio4_sleep     peri      7     BCM21664_MASTER_CCU_SDIO4_SLEEP
++
++    slave   uartb           peri      0     BCM21664_SLAVE_CCU_UARTB
++    slave   uartb2          peri      1     BCM21664_SLAVE_CCU_UARTB2
++    slave   uartb3          peri      2     BCM21664_SLAVE_CCU_UARTB3
++    slave   uartb4          peri      3     BCM21664_SLAVE_CCU_UARTB4
++    slave   bsc1            peri      4     BCM21664_SLAVE_CCU_BSC1
++    slave   bsc2            peri      5     BCM21664_SLAVE_CCU_BSC2
++    slave   bsc3            peri      6     BCM21664_SLAVE_CCU_BSC3
++    slave   bsc4            peri      7     BCM21664_SLAVE_CCU_BSC4
 -- 
 1.7.9.5
 
