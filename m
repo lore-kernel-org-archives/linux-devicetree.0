@@ -1,34 +1,89 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: shmobile: lager: correct renesas,gpios to
- renesas,groups in sd[02] pfc
-Date: Tue, 8 Apr 2014 09:39:27 +0900
-Message-ID: <20140408003927.GD30496@verge.net.au>
-References: <1396898212-7078-1-git-send-email-ben.dooks@codethink.co.uk>
- <CAMuHMdW+ZD0r+W2BWw8Uusz_LYPmnrsX+Hk5wkvhiEf0f8u4cg@mail.gmail.com>
+From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] of: fix of_update_property [v2]
+Date: Tue, 8 Apr 2014 01:57:42 +0000
+Message-ID: <961322a566e04dbcaf69a49b923e9ba2@BY2PR03MB505.namprd03.prod.outlook.com>
+References: <1396331486-29354-1-git-send-email-Li.Xiubo@freescale.com> <
+ 20140401091920.E8E45C408A6@trevor.secretlab.ca> <
+ 9622800c30f5412a9bbb9dfd95def751@BY2PR03MB505.namprd03.prod.outlook.com> <
+ 20140403175112.DF1FFC4200D@trevor.secretlab.ca> <
+ 179ad743feea49bb946a3b31a629e229@BY2PR03MB505.namprd03.prod.outlook.com>
+ <20140404142855.D6C42C41E5F@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdW+ZD0r+W2BWw8Uusz_LYPmnrsX+Hk5wkvhiEf0f8u4cg@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>, linux-kernel@lists.codethink.co.uk, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, magnus.damm@opensource.se, Rob Taylor <rob.taylor@codethink.co.uk>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140404142855.D6C42C41E5F-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 07, 2014 at 10:35:12PM +0200, Geert Uytterhoeven wrote:
-> On Mon, Apr 7, 2014 at 9:16 PM, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
-> > From: Rob Taylor <rob.taylor@codethink.co.uk>
-> >
-> > Fix probable typo of renesas,groups in the lager dt. The kernel has no
-> > renesas,gpios but this should match renesas,groups.
-> >
-> > Signed-off-by: Rob Taylor <rob.taylor@codethink.co.uk>
-> 
-> Thanks, nice catch!
-> 
-> > [ben.dooks@codethink.co.uk: fixup description]
-> > Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> 
-> Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-Thanks, I will queue this up as a fix for v3.15.
+> Subject: RE: [PATCH] of: fix of_update_property [v2]
+> 
+> On Fri, 4 Apr 2014 08:30:42 +0000, "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org"
+> <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > > Subject: RE: [PATCH] of: fix of_update_property [v2]
+> > >
+> > > On Wed, 2 Apr 2014 05:29:53 +0000, "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org"
+> > > <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > > >
+> > > >
+> > > > > > @@ -1776,25 +1776,26 @@ int of_update_property(struct device_node
+> *np,
+> > > > > struct property *newprop)
+> > > > > >  	if (!newprop->name)
+> > > > > >  		return -EINVAL;
+> > > > > >
+> > > > > > -	oldprop = of_find_property(np, newprop->name, NULL);
+> > > > > > -	if (!oldprop)
+> > > > > > -		return of_add_property(np, newprop);
+> > > > > > -
+> > > > > >  	raw_spin_lock_irqsave(&devtree_lock, flags);
+> > > > > > -	next = &np->properties;
+> > > > > > -	while (*next) {
+> > > > > > +	oldprop = __of_find_property(np, newprop->name, NULL);
+> > > > > > +	if (!oldprop) {
+> > > > > > +		/* add the node */
+> > > > > > +		rc = __of_add_property(np, newprop);
+> > > > > > +	} else {
+> > > > >
+> > > > > if you changed this line to:
+> > > > > 	} else while (*next) {
+> > > > > then most of the other changes go away. You don't need the separate
+> > > > > while loop
+> > > >
+> >
+> > Well, this will output some errors by using the './scripts/checkpatch.pl'
+> > Checking.
+> >
+> > $ ./scripts/checkpatch.pl
+> >
+> > ERROR: trailing statements should be on next line
+> > #1785: FILE: of/base.c:1785:
+> > +       else while (*next) {
+> >
+> > ERROR: trailing statements should be on next line
+> > #1785: FILE: of/base.c:1785:
+> > +       else while (*next) {
+> >
+> > Should be split into two lines...
+> 
+> Checkpatch is wrong. I won't reject that approach.
+> 
+
+Okey, I have sent one version, should I send it again ?
+
+Thanks,
+Brs
+Xiubo
+
+
+> g.
+> 
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
