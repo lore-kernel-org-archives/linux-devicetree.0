@@ -1,113 +1,65 @@
-From: Courtney Cavin <courtney.cavin@sonymobile.com>
-Subject: Re: [PATCH 1/9] crypto: qce: Add core driver implementation
-Date: Tue, 8 Apr 2014 15:00:44 -0700
-Message-ID: <20140408220044.GH17066@sonymobile.com>
-References: <1396541886-10966-1-git-send-email-svarbanov@mm-sol.com>
- <1396541886-10966-2-git-send-email-svarbanov@mm-sol.com>
- <20140403233844.GF17066@sonymobile.com>
- <53442344.8000801@mm-sol.com>
+From: Stanimir Vabanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: qcom: Add initial APQ8064 SoC and IFC6410 board
+ device trees
+Date: Wed, 09 Apr 2014 01:02:24 +0300
+Message-ID: <534471F0.5050800@mm-sol.com>
+References: <1396972391-11759-1-git-send-email-galak@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53442344.8000801@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1396972391-11759-1-git-send-email-galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 08, 2014 at 06:26:44PM +0200, Stanimir Varbanov wrote:
-> On 04/04/2014 02:38 AM, Courtney Cavin wrote:
-> > On Thu, Apr 03, 2014 at 06:17:58PM +0200, Stanimir Varbanov wrote:
-> >> This adds core driver files. The core part is implementing a
-> >> platform driver probe and remove callbaks, the probe enables
-> >> clocks, checks crypto version, initialize and request dma
-> >> channels, create done tasklet and work queue and finally
-> >> register the algorithms into crypto subsystem.
-> >>
-> >> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> >> ---
-> >>  drivers/crypto/qce/core.c | 333 ++++++++++++++++++++++++++++++++++++++++++++++
-> >>  drivers/crypto/qce/core.h |  69 ++++++++++
-> >>  2 files changed, 402 insertions(+)
-> >>  create mode 100644 drivers/crypto/qce/core.c
-> >>  create mode 100644 drivers/crypto/qce/core.h
-> >>
-> >> diff --git a/drivers/crypto/qce/core.c b/drivers/crypto/qce/core.c
-> > [...]
-> >> +static struct qce_algo_ops qce_ops[] = {
-> >> +	{
-> >> +		.type = CRYPTO_ALG_TYPE_ABLKCIPHER,
-> >> +		.register_alg = qce_ablkcipher_register,
-> >> +	},
-> >> +	{
-> >> +		.type = CRYPTO_ALG_TYPE_AHASH,
-> >> +		.register_alg = qce_ahash_register,
-> >> +	},
-> >> +};
-> >> +
-> >> +static void qce_unregister_algs(struct qce_device *qce)
-> >> +{
-> >> +	struct qce_alg_template *tmpl, *n;
-> >> +
-> >> +	list_for_each_entry_safe(tmpl, n, &qce->alg_list, entry) {
-> >> +		if (tmpl->crypto_alg_type == CRYPTO_ALG_TYPE_AHASH)
-> >> +			crypto_unregister_ahash(&tmpl->alg.ahash);
-> >> +		else
-> >> +			crypto_unregister_alg(&tmpl->alg.crypto);
-> >> +
-> >> +		list_del(&tmpl->entry);
-> >> +		kfree(tmpl);
-> > 
-> > I find this whole memory/list management to be very disorganised.
-> > ops->register_alg() is supposed to allocate this item--more precisely,
-> > multiple items--using something that must be able to be kfree'd
-> > directly, register it with the crypto core, and put it on this list
-> > manually.  Here we unregister/remove/free this in the core.  Josh's
-> > recommendation of a unregister_alg callback might help, but it all
-> > remains a bit unclear with register_alg/unregister_alg managing X
-> > algorithms per call. 
-> > 
-> > Additionally, above you have qce_ops, which clearly defines the
-> > operations for specific algorithms types/groups, which in later patches
-> > are shown to be seperated out into independent implementations.
-> > 
-> > From what I can tell, this seems to be a framework with built-in yet
-> > independent crypto implementations which call the crypto API directly.
-> > 
-> > It would be more logical to me if this was seperated out into a
-> > "library/core" API, with the individual implementations as platform
-> > drivers of their own.  Then they can register with the core, managing
-> > memory how they please.
-> > 
-> > What am I missing?
-> > 
-> 
-> No, you have not miss nothing.
-> 
-> OK I see your point. I made few changes in the core, killed the alg_list
-> and its manipulation function and added a .unregister_algs operation.
-> Now every type of algorithm will handle all core crypto api functions
-> itself. Also I'm using devm_kzalloc() in .register_algs when allocating
-> memory for qce_alg_template structures to avoid kfree(). The callbacks
-> async_req_queue/done are now embedded in qce_device structure and they
-> are invoked directly from algorithm implementations. Thus I have
-> separated the interfaces: functions implemented in core part of the
-> driver and struct qce_algo_ops having the function pointers implemented
-> by every type of algorithm.
-> 
-> If you don't have some objections I can send out a version 2.
+Hi Kumar,
 
+<snip>
 
-Well, I'd have to see the code to understand clearly what you are
-describing here, but the mention of devm_kzalloc() concerns me.  The
-only device which I currently see to which this allocation could be
-associated is the single platform_device in the core.  Associating the
-memory with the core gets rid of the explicit call to kfree() by the
-core, but doesn't rearrange the way the memory is actually managed.
+> +		intc: interrupt-controller@2000000 {
+> +			compatible = "qcom,msm-qgic2";
+> +			interrupt-controller;
+> +			#interrupt-cells = <3>;
+> +			reg = < 0x02000000 0x1000 >,
+> +			      < 0x02002000 0x1000 >;
 
-If you have changed it so that each algorithm "block" has its own
-device, then this would seem more reasonable, but I don't see that in
-the explanation you provided.
+extra space around numbers.
 
--Courtney
+I wonder what is the preferred way of describing the properties:
+
+reg = <0x02000000 0x1000>,
+      <0x02002000 0x1000>;
+or
+
+reg = <0x02000000 0x1000>, <0x02002000 0x1000>;
+
+This file mixes the above two ways of describing.
+
+> +		};
+> +
+> +		timer@200a000 {
+> +			compatible = "qcom,kpss-timer", "qcom,msm-timer";
+> +			interrupts = <1 1 0x301>,
+> +				     <1 2 0x301>,
+> +				     <1 3 0x301>;
+> +			reg = <0x0200a000 0x100>;
+> +			clock-frequency = <27000000>,
+> +					  <32768>;
+> +			cpu-offset = <0x80000>;
+> +		};
+> +
+> +		acc0: clock-controller@2088000 {
+> +			compatible = "qcom,kpss-acc-v1";
+> +			reg = <0x02088000 0x1000>, <0x02008000 0x1000>;
+> +		};
+> +
+
+regards,
+Stan
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
