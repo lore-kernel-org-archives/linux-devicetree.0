@@ -1,46 +1,72 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: Fix the section mismatch warnings.
-Date: Tue, 8 Apr 2014 07:55:26 -0500
-Message-ID: <CAL_JsqKuvKwEv89hOSknc-0Pq3aiwyPFhB-kPA-cRjGK831oFQ@mail.gmail.com>
-References: <1396936087-23043-1-git-send-email-Li.Xiubo@freescale.com>
+From: Hanjun Guo <hanjun.guo@linaro.org>
+Subject: Re: [PATCH v7 6/6] pci: Add support for creating a generic host_bridge
+ from device tree
+Date: Tue, 08 Apr 2014 20:57:54 +0800
+Message-ID: <5343F252.2050708@linaro.org>
+References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com> <1394811272-1547-7-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396936087-23043-1-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1394811272-1547-7-git-send-email-Liviu.Dudau@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Grant Likely <grant.likely@secretlab.ca>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 8, 2014 at 12:48 AM, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> In tag next-20140407, building with CONFIG_DEBUG_SECTION_MISMATCH
-> enabled, the following WARNING is occured:
->
-> WARNING: drivers/built-in.o(.text.unlikely+0x2220): Section mismatch
-> in reference from the function __reserved_mem_check_root() to the
-> function .init.text:of_get_flat_dt_prop()
-> The function __reserved_mem_check_root() references
-> the function __init of_get_flat_dt_prop().
-> This is often because __reserved_mem_check_root lacks a __init
-> annotation or the annotation of of_get_flat_dt_prop is wrong.
->
-> WARNING: vmlinux.o(.text.unlikely+0xb9d0): Section mismatch in reference
-> from the function __reserved_mem_check_root() to the (unknown reference)
-> .init.data:(unknown)
-> The function __reserved_mem_check_root() references
-> the (unknown reference) __initdata (unknown).
-> This is often because __reserved_mem_check_root lacks a __initdata
-> annotation or the annotation of (unknown) is wrong.
->
-> This is cause by :
-> 'drivers: of: add initialization code for dynamic reserved memory'.
->
-> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Hi Liviu,
 
-Applied.
+On 2014-3-14 23:34, Liviu Dudau wrote:
+> Several platforms use a rather generic version of parsing
+> the device tree to find the host bridge ranges. Move the common code
+> into the generic PCI code and use it to create a pci_host_bridge
+> structure that can be used by arch code.
+> 
+> Based on early attempts by Andrew Murray to unify the code.
+> Used powerpc and microblaze PCI code as starting point.
+> 
+> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> Tested-by: Tanmay Inamdar <tinamdar@apm.com>
+> ---
+>  drivers/pci/host-bridge.c | 158 ++++++++++++++++++++++++++++++++++++
+>  include/linux/pci.h       |  13 +++
+>  2 files changed, 171 insertions(+)
+> 
+> diff --git a/drivers/pci/host-bridge.c b/drivers/pci/host-bridge.c
+> index 8708b652..7cda90b 100644
+> --- a/drivers/pci/host-bridge.c
+> +++ b/drivers/pci/host-bridge.c
+> @@ -6,9 +6,14 @@
+>  #include <linux/init.h>
+>  #include <linux/pci.h>
+>  #include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_pci.h>
+> +#include <linux/slab.h>
+>  
+>  #include "pci.h"
+>  
+> +static atomic_t domain_nr = ATOMIC_INIT(-1);
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+domain_nr will only be used inside the #ifdef CONFIG_OF,
+and this will lead to compile warning which complains that
+'domain_nr' defined but not used when CONFIG_OF=n (for example
+on x86).
+
+How about moving the definition to --->
+
+> +
+>  static struct pci_bus *find_pci_root_bus(struct pci_bus *bus)
+>  {
+>  	while (bus->parent)
+> @@ -92,3 +97,156 @@ void pcibios_bus_to_resource(struct pci_bus *bus, struct resource *res,
+>  	res->end = region->end + offset;
+>  }
+>  EXPORT_SYMBOL(pcibios_bus_to_resource);
+> +
+> +#ifdef CONFIG_OF
+
+here?
+
+Thanks
+Hanjun
