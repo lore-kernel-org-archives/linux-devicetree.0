@@ -1,61 +1,411 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v7 1/6] pci: Introduce pci_register_io_range() helper
- function.
-Date: Tue, 8 Apr 2014 10:50:39 +0100
-Message-ID: <20140408095038.GT17163@e106497-lin.cambridge.arm.com>
-References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
- <20140405001953.GE15806@google.com>
- <20140407083120.GE17163@e106497-lin.cambridge.arm.com>
- <5183143.FxBNM0xTAV@wuerfel>
- <CAErSpo4iEV6khP63ZTF+YUTKi9WLFXzMv13nxw15y3qDg15Ztg@mail.gmail.com>
+From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v7 3/3] arm64: Add architecture support for PCI
+Date: Tue, 8 Apr 2014 10:52:46 +0100
+Message-ID: <20140408095246.GU17163@e106497-lin.cambridge.arm.com>
+References: <1394811258-1500-1-git-send-email-Liviu.Dudau@arm.com>
+ <1394811258-1500-4-git-send-email-Liviu.Dudau@arm.com>
+ <20140407235830.GA9959@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAErSpo4iEV6khP63ZTF+YUTKi9WLFXzMv13nxw15y3qDg15Ztg@mail.gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140407235830.GA9959-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 07, 2014 at 06:58:24PM +0100, Bjorn Helgaas wrote:
-> On Mon, Apr 7, 2014 at 5:36 AM, Arnd Bergmann <arnd@arndb.de> wrote:
->=20
-> > I think migrating other architectures to use the same code should b=
+On Tue, Apr 08, 2014 at 12:58:30AM +0100, Bjorn Helgaas wrote:
+> On Fri, Mar 14, 2014 at 03:34:18PM +0000, Liviu Dudau wrote:
+> > Use the generic host bridge functions to provide support for
+> > PCI Express on arm64. There is no support for ISA memory.
+> >
+> > Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+> > Tested-by: Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>
+> > ---
+> >  arch/arm64/Kconfig            |  19 +++-
+> >  arch/arm64/include/asm/Kbuild |   1 +
+> >  arch/arm64/include/asm/io.h   |   3 +-
+> >  arch/arm64/include/asm/pci.h  |  51 ++++++++++
+> >  arch/arm64/kernel/Makefile    |   1 +
+> >  arch/arm64/kernel/pci.c       | 173 ++++++++++++++++++++++++++++++=
+++
+> >  6 files changed, 246 insertions(+), 2 deletions(-)
+> >  create mode 100644 arch/arm64/include/asm/pci.h
+> >  create mode 100644 arch/arm64/kernel/pci.c
+> >
+> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > index 27bbcfc..d1c8568 100644
+> > --- a/arch/arm64/Kconfig
+> > +++ b/arch/arm64/Kconfig
+> > @@ -62,7 +62,7 @@ config MMU
+> >       def_bool y
+> >
+> >  config NO_IOPORT
+> > -     def_bool y
+> > +     def_bool y if !PCI
+> >
+> >  config STACKTRACE_SUPPORT
+> >       def_bool y
+> > @@ -134,6 +134,23 @@ menu "Bus support"
+> >  config ARM_AMBA
+> >       bool
+> >
+> > +config PCI
+> > +     bool "PCI support"
+> > +     help
+> > +       This feature enables support for PCIe bus system. If you sa=
+y Y
+> > +       here, the kernel will include drivers and infrastructure co=
+de
+> > +       to support PCIe bus devices.
+> > +
+> > +config PCI_DOMAINS
+> > +     def_bool PCI
+> > +
+> > +config PCI_SYSCALL
+> > +     def_bool PCI
+> > +
+> > +source "drivers/pci/Kconfig"
+> > +source "drivers/pci/pcie/Kconfig"
+> > +source "drivers/pci/hotplug/Kconfig"
+> > +
+> >  endmenu
+> >
+> >  menu "Kernel Features"
+> > diff --git a/arch/arm64/include/asm/Kbuild b/arch/arm64/include/asm=
+/Kbuild
+> > index 71c53ec..46924bc 100644
+> > --- a/arch/arm64/include/asm/Kbuild
+> > +++ b/arch/arm64/include/asm/Kbuild
+> > @@ -26,6 +26,7 @@ generic-y +=3D mman.h
+> >  generic-y +=3D msgbuf.h
+> >  generic-y +=3D mutex.h
+> >  generic-y +=3D pci.h
+> > +generic-y +=3D pci-bridge.h
+> >  generic-y +=3D poll.h
+> >  generic-y +=3D posix_types.h
+> >  generic-y +=3D resource.h
+> > diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/i=
+o.h
+> > index 7846a6b..67463a5 100644
+> > --- a/arch/arm64/include/asm/io.h
+> > +++ b/arch/arm64/include/asm/io.h
+> > @@ -120,7 +120,8 @@ static inline u64 __raw_readq(const volatile vo=
+id __iomem *addr)
+> >  /*
+> >   *  I/O port access primitives.
+> >   */
+> > -#define IO_SPACE_LIMIT               0xffff
+> > +#define arch_has_dev_port()  (1)
+> > +#define IO_SPACE_LIMIT               0x1ffffff
+> >  #define PCI_IOBASE           ((void __iomem *)(MODULES_VADDR - SZ_=
+32M))
+> >
+> >  static inline u8 inb(unsigned long addr)
+> > diff --git a/arch/arm64/include/asm/pci.h b/arch/arm64/include/asm/=
+pci.h
+> > new file mode 100644
+> > index 0000000..d93576f
+> > --- /dev/null
+> > +++ b/arch/arm64/include/asm/pci.h
+> > @@ -0,0 +1,51 @@
+> > +#ifndef __ASM_PCI_H
+> > +#define __ASM_PCI_H
+> > +#ifdef __KERNEL__
+> > +
+> > +#include <linux/types.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/dma-mapping.h>
+> > +
+> > +#include <asm/io.h>
+> > +#include <asm-generic/pci-bridge.h>
+> > +#include <asm-generic/pci-dma-compat.h>
+> > +
+> > +#define PCIBIOS_MIN_IO               0x1000
+> > +#define PCIBIOS_MIN_MEM              0
+> > +
+> > +struct pci_host_bridge *find_pci_host_bridge(struct pci_bus *bus);
+> > +
+> > +/*
+> > + * Set to 1 if the kernel should re-assign all PCI bus numbers
+> > + */
+> > +#define pcibios_assign_all_busses() \
+> > +     (pci_has_flag(PCI_REASSIGN_ALL_BUS))
+> > +
+> > +/*
+> > + * PCI address space differs from physical memory address space
+> > + */
+> > +#define PCI_DMA_BUS_IS_PHYS  (0)
+> > +
+> > +extern int isa_dma_bridge_buggy;
+> > +
+> > +#ifdef CONFIG_PCI
+> > +static inline int pci_domain_nr(struct pci_bus *bus)
+> > +{
+> > +     struct pci_host_bridge *bridge =3D find_pci_host_bridge(bus);
+> > +
+> > +     if (bridge)
+> > +             return bridge->domain_nr;
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static inline int pci_proc_domain(struct pci_bus *bus)
+> > +{
+> > +     return 1;
+> > +}
+> > +#endif
+> > +
+> > +extern unsigned long pci_ioremap_io(const struct resource *res, ph=
+ys_addr_t phys_addr);
+> > +
+> > +#endif  /* __KERNEL__ */
+> > +#endif  /* __ASM_PCI_H */
+> > diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefil=
 e
-> > a separate effort from adding a generic implementation that can be
-> > used by arm64. It's probably a good idea to have patches to convert
-> > arm32 and/or microblaze.
+> > index 2d4554b..64fc479 100644
+> > --- a/arch/arm64/kernel/Makefile
+> > +++ b/arch/arm64/kernel/Makefile
+> > @@ -20,6 +20,7 @@ arm64-obj-$(CONFIG_HAVE_HW_BREAKPOINT)+=3D hw_bre=
+akpoint.o
+> >  arm64-obj-$(CONFIG_EARLY_PRINTK)     +=3D early_printk.o
+> >  arm64-obj-$(CONFIG_ARM64_CPU_SUSPEND)        +=3D sleep.o suspend.=
+o
+> >  arm64-obj-$(CONFIG_JUMP_LABEL)               +=3D jump_label.o
+> > +arm64-obj-$(CONFIG_PCI)                      +=3D pci.o
+> >
+> >  obj-y                                        +=3D $(arm64-obj-y) v=
+dso/
+> >  obj-m                                        +=3D $(arm64-obj-m)
+> > diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
+> > new file mode 100644
+> > index 0000000..9f29c9a
+> > --- /dev/null
+> > +++ b/arch/arm64/kernel/pci.c
+> > @@ -0,0 +1,173 @@
+> > +/*
+> > + * Code borrowed from powerpc/kernel/pci-common.c
+> > + *
+> > + * Copyright (C) 2003 Anton Blanchard <anton-hXjcm30GF6XQT0dZR+AlfA@public.gmane.org>, IBM
+> > + * Copyright (C) 2014 ARM Ltd.
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > + * modify it under the terms of the GNU General Public License
+> > + * version 2 as published by the Free Software Foundation.
+> > + *
+> > + */
+> > +
+> > +#include <linux/init.h>
+> > +#include <linux/io.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/mm.h>
+> > +#include <linux/of_pci.h>
+> > +#include <linux/of_platform.h>
+> > +#include <linux/slab.h>
+> > +
+> > +#include <asm/pci-bridge.h>
+> > +
+> > +struct ioresource {
+> > +     struct list_head list;
+> > +     phys_addr_t start;
+> > +     resource_size_t size;
+> > +};
+> > +
+> > +static LIST_HEAD(io_list);
+> > +
+> > +int pci_register_io_range(phys_addr_t address, resource_size_t siz=
+e)
+> > +{
+> > +     struct ioresource *res;
+> > +     resource_size_t allocated_size =3D 0;
+> > +
+> > +     /* find if the range has not been already allocated */
+> > +     list_for_each_entry(res, &io_list, list) {
+> > +             if (address >=3D res->start &&
+> > +                     address + size <=3D res->start + size)
+> > +                     return 0;
+> > +             allocated_size +=3D res->size;
+> > +     }
+> > +
+> > +     /* range not already registered, check for space */
+> > +     if (allocated_size + size > IO_SPACE_LIMIT)
+> > +             return -E2BIG;
+> > +
+> > +     /* add the range in the list */
+> > +     res =3D kzalloc(sizeof(*res), GFP_KERNEL);
+> > +     if (!res)
+> > +             return -ENOMEM;
+> > +     res->start =3D address;
+> > +     res->size =3D size;
+> > +
+> > +     list_add_tail(&res->list, &io_list);
+> > +
+> > +     return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(pci_register_io_range);
+> > +
+> > +unsigned long pci_address_to_pio(phys_addr_t address)
+> > +{
+> > +     struct ioresource *res;
+> > +
+> > +     list_for_each_entry(res, &io_list, list) {
+> > +             if (address >=3D res->start &&
+> > +                     address < res->start + res->size) {
+> > +                     return res->start - address;
+> > +             }
+> > +     }
+> > +
+> > +     return (unsigned long)-1;
+> > +}
+> > +EXPORT_SYMBOL_GPL(pci_address_to_pio);
+> > +
+> > +/*
+> > + * Called after each bus is probed, but before its children are ex=
+amined
+> > + */
+> > +void pcibios_fixup_bus(struct pci_bus *bus)
+> > +{
+> > +     struct pci_dev *dev;
+> > +     struct resource *res;
+> > +     int i;
+> > +
+> > +     if (!pci_is_root_bus(bus)) {
+> > +             pci_read_bridge_bases(bus);
+> > +
+> > +             pci_bus_for_each_resource(bus, res, i) {
+> > +                     if (!res || !res->flags || res->parent)
+> > +                             continue;
+> > +
+> > +                     /*
+> > +                      * If we are going to reassign everything, we=
+ can
+> > +                      * shrink the P2P resource to have zero size =
+to
+> > +                      * save space
+> > +                      */
+> > +                     if (pci_has_flag(PCI_REASSIGN_ALL_RSRC)) {
+> > +                             res->flags |=3D IORESOURCE_UNSET;
+> > +                             res->start =3D 0;
+> > +                             res->end =3D -1;
+> > +                             continue;
+> > +                     }
+> > +             }
+> > +     }
 >=20
-> Let me reiterate that I am 100% in favor of replacing arch-specific
-> code with more generic implementations.
->=20
-> However, I am not 100% in favor of doing it as separate efforts
-> (although maybe I could be convinced).  The reasons I hesitate are
-> that (1) if only one architecture uses a new "generic" implementation=
-,
-> we really don't know whether it is generic enough, (2) until I see th=
-e
-> patches to convert other architectures, I have to assume that I'm the
-> one who will write them, and (3) as soon as we add the code to
-> drivers/pci, it becomes partly my headache to maintain it, even if
-> only one arch benefits from it.
->=20
-> Please don't think I'm questioning anyone's intent or good will.  It'=
-s
-> just that I understand the business pressures, and I know how hard it
-> can be to justify this sort of work to one's management, especially
-> after the immediate problem has been solved.
+> Is there any other place we can put this?  I'm trying to nuke
+> pcibios_fixup_bus() because things like hotplug work better if we can=
+ do
+> them in a per-device way rather than a per-bus way.
 
-I understand your concern. I guess the only way to prove my good intent=
-ions
-is to shut up and show the code.
+That's good. I'm all for removing this one, will give it a go.
+
+>=20
+> > +
+> > +     list_for_each_entry(dev, &bus->devices, bus_list) {
+> > +             /* Ignore fully discovered devices */
+> > +             if (dev->is_added)
+> > +                     continue;
+> > +
+> > +             set_dev_node(&dev->dev, pcibus_to_node(dev->bus));
+>=20
+> Do you really need this?  pci_device_add() already contains the same =
+line.
+
+OK.
+
+>=20
+> > +
+> > +             /* Read default IRQs and fixup if necessary */
+> > +             dev->irq =3D of_irq_parse_and_map_pci(dev, 0, 0);
+>=20
+> Could this be done in pcibios_add_device() or someplace similar?
+
+Will do.
+
+>=20
+> > +     }
+> > +}
+> > +EXPORT_SYMBOL(pcibios_fixup_bus);
+> > +
+> > +/*
+> > + * We don't have to worry about legacy ISA devices, so nothing to =
+do here
+> > + */
+> > +resource_size_t pcibios_align_resource(void *data, const struct re=
+source *res,
+> > +                             resource_size_t size, resource_size_t=
+ align)
+> > +{
+> > +     return res->start;
+> > +}
+> > +
+> > +int pcibios_enable_device(struct pci_dev *dev, int mask)
+> > +{
+> > +     return pci_enable_resources(dev, mask);
+> > +}
+>=20
+> There is already a weak default implementation of pcibios_enable_devi=
+ce()
+> that does this, so you should be able to just drop this.
+
+OK.
+
+Thanks for reviewing the series!
 
 Liviu
 
 >=20
-> Bjorn
+> > +#define IO_SPACE_PAGES       ((IO_SPACE_LIMIT + 1) / PAGE_SIZE)
+> > +static DECLARE_BITMAP(pci_iospace, IO_SPACE_PAGES);
+> > +
+> > +unsigned long pci_ioremap_io(const struct resource *res, phys_addr=
+_t phys_addr)
+> > +{
+> > +     unsigned long start, len, virt_start;
+> > +     int err;
+> > +
+> > +     if (res->end > IO_SPACE_LIMIT)
+> > +             return -EINVAL;
+> > +
+> > +     /*
+> > +      * try finding free space for the whole size first,
+> > +      * fall back to 64K if not available
+> > +      */
+> > +     len =3D resource_size(res);
+> > +     start =3D bitmap_find_next_zero_area(pci_iospace, IO_SPACE_PA=
+GES,
+> > +                             res->start / PAGE_SIZE, len / PAGE_SI=
+ZE, 0);
+> > +     if (start =3D=3D IO_SPACE_PAGES && len > SZ_64K) {
+> > +             len =3D SZ_64K;
+> > +             start =3D 0;
+> > +             start =3D bitmap_find_next_zero_area(pci_iospace, IO_=
+SPACE_PAGES,
+> > +                                     start, len / PAGE_SIZE, 0);
+> > +     }
+> > +
+> > +     /* no 64K area found */
+> > +     if (start =3D=3D IO_SPACE_PAGES)
+> > +             return -ENOMEM;
+> > +
+> > +     /* ioremap physical aperture to virtual aperture */
+> > +     virt_start =3D start * PAGE_SIZE + (unsigned long)PCI_IOBASE;
+> > +     err =3D ioremap_page_range(virt_start, virt_start + len,
+> > +                             phys_addr, __pgprot(PROT_DEVICE_nGnRE=
+));
+> > +     if (err)
+> > +             return err;
+> > +
+> > +     bitmap_set(pci_iospace, start, len / PAGE_SIZE);
+> > +
+> > +     /* return io_offset */
+> > +     return start * PAGE_SIZE - res->start;
+> > +}
+> > --
+> > 1.9.0
+> >
 >=20
 
 --=20
@@ -67,3 +417,9 @@ Liviu
  \ source code!  /
   ---------------
     =C2=AF\_(=E3=83=84)_/=C2=AF
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
