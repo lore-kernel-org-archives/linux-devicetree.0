@@ -1,50 +1,46 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH 2/2] ARM: dts: MSM8974: Add pinctrl node
-Date: Tue, 08 Apr 2014 16:46:45 +0300
-Message-ID: <1396964805.28420.53.camel@iivanov-dev>
-References: <1391700529-11816-1-git-send-email-iivanov@mm-sol.com>
-		 <1391700529-11816-2-git-send-email-iivanov@mm-sol.com>
-		 <CAOZdJXVE7MSMBaL+bt0kjw5LEidz-aVp+vrWqQWkye6HdE7EeA@mail.gmail.com>
-	 <1396959284.28420.45.camel@iivanov-dev> <5343EC87.700@codeaurora.org>
+From: Thor Thayer <tthayer@altera.com>
+Subject: Re: [PATCH 3/3] edac: altera: Add SDRAM EDAC support for
+ CycloneV/ArriaV
+Date: Tue, 8 Apr 2014 08:57:39 -0500
+Message-ID: <1396965459.23349.4.camel@dinh-ubuntu>
+References: <1396907649-20212-1-git-send-email-tthayer@altera.com>
+	 <1396907649-20212-4-git-send-email-tthayer@altera.com>
+	 <20140408100851.GF30077@pd.tnic>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <5343EC87.700@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140408100851.GF30077@pd.tnic>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: robherring2@gmail.com, dougthompson@xmission.com, grant.likely@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, dinguyen@altera.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-04-08 at 07:33 -0500, Timur Tabi wrote:
-> Ivan T. Ivanov wrote:
-> >> >I'm confused by this.  Isn't this information already defined in the
-> >> >pinctrl-msm8x74.c driver?
-> >> >
-> >> >static const char * const blsp_spi8_groups[] = {
-> >> >     "gpio45", "gpio46", "gpio47", "gpio48"
-> >> >};
-> > I am not sure that I understand the question. This is one of
-> > possible ways to describe relationship between pins and functions.
-> > As they are described is visible what is their real purpose.
+On Tue, 2014-04-08 at 12:08 +0200, Borislav Petkov wrote:
+> On Mon, Apr 07, 2014 at 04:54:09PM -0500, tthayer@altera.com wrote:
+> > From: Thor Thayer <tthayer@altera.com>
+> > 
+> > Added EDAC support for reporting ECC errors of CycloneV
+> > and ArriaV SDRAM controller.
+> > - The SDRAM Controller registers are used by the FPGA bridge so
+> >   these are accessed through the syscon interface.
+> > - The configuration of the SDRAM memory size for the EDAC framework
+> >   is discovered from the memory node of the device tree.
+> > - Documentation of the bindings in devicetree/bindings/arm/altera/
+> >   socfpga-sdram-edac.txt
+> > - Correction of single bit errors, detection of double bit errors.
 > 
-> Ok, let me rephrase.
-> 
-> The 8x74 pinctrl driver already contains this information.  It already 
-> defines a "blsp_spi8" group consisting of GPIOs 45, 46, 47, and 48.
-> 
-> This patch adds that same exact information into the device tree.  Why 
-> are we duplicating that information?  Why add it to the device tree when 
-> it's already in the driver (and already working).
+> Before I go and take a look at this further, is anyone at Altera going
+> to maintain this driver in case of bug reports and issues with it?
 
-Probably. It was my natural way of thinking. Pin have a functions. 
-It is easier if I measure signals to just look at the device
-tree file. What are you suggesting?
+Yes, Altera has a group specifically supporting Linux drivers on the
+Altera SoCs.
 
 > 
-> Also, I don't see any code anywhere that uses these new device tree nodes.
+> Also, I see patch 3/3. Are the other two related? I see they are
+> devicetree additions and, as such, all three should go together...
+> 
 
-This is easy to fix :-).
-
-Regards,
-Ivan
+I was told that the device tree additions should be separate patches in
+a series since the device tree additions go to a separate group for
+approval.
