@@ -1,95 +1,121 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v7 1/6] pci: Introduce pci_register_io_range() helper function.
-Date: Tue, 08 Apr 2014 12:11:07 +0200
-Message-ID: <6228807.4v9ZRtib77@wuerfel>
-References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com> <CAErSpo6S49qNuJQB-XXEfJ1Nkz=4gZ5_hE93=gb_yGZesA1H9Q@mail.gmail.com> <20140408094933.GS17163@e106497-lin.cambridge.arm.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v7 4/6] pci: Introduce a domain number for
+ pci_host_bridge.
+Date: Tue, 8 Apr 2014 11:20:43 +0100
+Message-ID: <20140408102043.GV17163@e106497-lin.cambridge.arm.com>
+References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
+ <1394811272-1547-5-git-send-email-Liviu.Dudau@arm.com>
+ <20140405000007.GD15806@google.com>
+ <20140407084623.GG17163@e106497-lin.cambridge.arm.com>
+ <1396862058.3671.40.camel@pasglop>
+ <20140407100715.GI17163@e106497-lin.cambridge.arm.com>
+ <CAErSpo7h+Yew2hBztzkOzcHU5r4OQebxFbcZGkNUwJwfTFsbfg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140408094933.GS17163@e106497-lin.cambridge.arm.com>
+In-Reply-To: <CAErSpo7h+Yew2hBztzkOzcHU5r4OQebxFbcZGkNUwJwfTFsbfg@mail.gmail.com>
+Content-Disposition: inline
 Sender: linux-pci-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 08 April 2014 10:49:33 Liviu Dudau wrote:
-> On Tue, Apr 08, 2014 at 12:21:51AM +0100, Bjorn Helgaas wrote:
-> > On Fri, Mar 14, 2014 at 9:34 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
-> > > Some architectures do not share x86 simple view of the PCI I/O space
-> > > and instead use a range of addresses that map to bus addresses. For
-> > > some architectures these ranges will be expressed by OF bindings
-> > > in a device tree file.
-> > >
-> > > Introduce a pci_register_io_range() helper function that can be used
-> > > by the architecture code to keep track of the I/O ranges described by the
-> > > PCI bindings. If the PCI_IOBASE macro is not defined that signals
-> > > lack of support for PCI and we return an error.
-> > >
-> > > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> > > Acked-by: Grant Likely <grant.likely@linaro.org>
-> > > Tested-by: Tanmay Inamdar <tinamdar@apm.com>
-> > > ---
-> > >  drivers/of/address.c       | 9 +++++++++
-> > >  include/linux/of_address.h | 1 +
-> > >  2 files changed, 10 insertions(+)
-> > >
-> > > diff --git a/drivers/of/address.c b/drivers/of/address.c
-> > > index 1a54f1f..be958ed 100644
-> > > --- a/drivers/of/address.c
-> > > +++ b/drivers/of/address.c
-> > > @@ -619,6 +619,15 @@ const __be32 *of_get_address(struct device_node *dev, int index, u64 *size,
-> > >  }
-> > >  EXPORT_SYMBOL(of_get_address);
-> > >
-> > > +int __weak pci_register_io_range(phys_addr_t addr, resource_size_t size)
-> > > +{
-> > > +#ifndef PCI_IOBASE
-> > > +       return -EINVAL;
-> > > +#else
-> > > +       return 0;
-> > > +#endif
-> > > +}
-> > 
-> > This isn't PCI code, so I'm fine with it in that sense, but I'm not
-> > sure the idea of a PCI_IOBASE #define is really what we need.  It's
-> > not really determined by the processor architecture, it's determined
-> > by the platform.  And a single address isn't enough in general,
-> > either, because if there are multiple host bridges, there's no reason
-> > the apertures that generate PCI I/O transactions need to be contiguous
-> > on the CPU side.
-> 
-> It should not be only platform's choice if the architecture doesn't support it.
-> To my mind PCI_IOBASE means "I support MMIO operations and this is the
-> start of the virtual address where my I/O ranges are mapped." It's the
-> same as ppc's _IO_BASE. And pci_address_to_pio() will take care to give
-> you the correct io_offset in the presence of multiple host bridges,
-> while keeping the io resource in the range [0 .. host_bridge_io_range_size - 1]
+On Mon, Apr 07, 2014 at 11:44:51PM +0100, Bjorn Helgaas wrote:
+> On Mon, Apr 7, 2014 at 4:07 AM, Liviu Dudau <Liviu.Dudau@arm.com> wro=
+te:
+> > On Mon, Apr 07, 2014 at 10:14:18AM +0100, Benjamin Herrenschmidt wr=
+ote:
+> >> On Mon, 2014-04-07 at 09:46 +0100, Liviu Dudau wrote:
+> >> >
+> >> > *My* strategy is to get rid of pci_domain_nr(). I don't see why =
+we need
+> >> > to have arch specific way of providing the number, specially aft=
+er looking
+> >> > at the existing implementations that return a value from a varia=
+ble that
+> >> > is never touched or incremented. My guess is that pci_domain_nr(=
+) was
+> >> > created to work around the fact that there was no domain_nr main=
+tainance in
+> >> > the generic code.
+> >>
+> >> Well, there was no generic host bridge structure. There is one now=
+, it should
+> >> go there.
+> >
+> > Exactly! Hence my patch. After it gets accepted I will go through a=
+rchitectures
+> > and remove their version of pci_domain_nr().
+>=20
+> Currently the arch has to supply pci_domain_nr() because that's the
+> only way for the generic code to learn the domain.  After you add
+> pci_create_root_bus_in_domain(), the arch can supply the domain that
+> way, and we won't need the arch-specific pci_domain_nr().  Right?
+> That makes more sense to me; thanks for the explanation.
 
-There is a wide range of implementations across architectures:
+Right.
 
-a) no access to I/O ports at all (tile, s390, ...)
-b) access to I/O ports only through special instructions (x86, ...)
-c) all MMIO is mapped virtual contiguous to PCI_IOBASE or _IO_BASE
-   (most ppc64, arm32 with MMU, arm64, ...)
-d) only one PCI host can have an I/O space (mips, microblaze, ...)
-e) each host controller can have its own method (ppc64 with indirect pio)
-f) PIO token equals virtual address plus offset (some legacy ARM platforms,
-   probably some other architectures), or physical address (sparc)
-g) PIO token encodes address space number plus offset (ia64)
+>=20
+> Let me try to explain my concern about the
+> pci_create_root_bus_in_domain() interface.  We currently have these
+> interfaces:
+>=20
+>   pci_scan_root_bus()
+>   pci_scan_bus()
+>   pci_scan_bus_parented()
+>   pci_create_root_bus()
+>=20
+> pci_scan_root_bus() is a higher-level interface than
+> pci_create_root_bus(), so I'm trying to migrate toward it because it
+> lets us remove a little code from the arch, e.g., pci_scan_child_bus(=
+)
+> and pci_bus_add_devices().
+>=20
+> I think we can only remove the arch-specific pci_domain_nr() if that
+> arch uses pci_create_root_bus_in_domain().  When we convert an arch
+> from using scan_bus interfaces to using
+> pci_create_root_bus_in_domain(), we will have to move the rest of the
+> scan_bus code (pci_scan_child_bus(), pci_bus_add_devices()) back into
+> the arch code.
+>=20
+> One alternative is to add an _in_domain() variant of each of these
+> interfaces, but that doesn't seem very convenient either.  My idea of
+> passing in a structure would also require adding variants, so there's
+> not really an advantage there, but I am thinking of the next
+> unification effort, e.g., for NUMA node info.  I don't really want to
+> have to change all the _in_domain() interfaces to also take yet
+> another parameter for the node number.
 
-a) and b) are trivially handled by any implementation that falls
-back to 'return -EINVAL'.
-I believe that c) is the most appropriate solution and we should be
-able to adopt it by most of the architectures that have an MMU and
-make it the default implementation.
-d) seems like a good fallback for noMMU architectures: While we do
-need to support I/O spaces, we need to support multiple PCI domains,
-and we need to support noMMU, the combination of all three should
-be extremely rare, and I'd leave it up to the architecture to support
-that if there is a real use case, rather than trying to put that into
-common code.
-Anything that currently requires e), f) or g) I think should keep
-doing that and not try to use the generic implementation.
+OK, what about this: all the functions that you have mentioned take a
+void *sysdata parameter. Should we convert this opaque pointer into a
+specific structure that holds the domain_nr and (in future) the NUMA
+node info?
 
-	Arnd
+Converting all the architectures is going to be a long winded job as
+everyone loved to add their own stuff in the structure pointed by sysda=
+ta,
+breaking that will lead to frustrations, but maybe the framework should
+take back ownership of it.
+
+Best regards,
+Liviu
+
+>=20
+> Bjorn
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" =
+in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
