@@ -1,50 +1,199 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/3] edac: altera: Add SDRAM EDAC support for
- CycloneV/ArriaV
-Date: Tue, 8 Apr 2014 17:10:54 +0100
-Message-ID: <20140408161054.GA26210@e106331-lin.cambridge.arm.com>
-References: <1396907649-20212-1-git-send-email-tthayer@altera.com>
- <1396907649-20212-4-git-send-email-tthayer@altera.com>
- <20140408100851.GF30077@pd.tnic>
- <1396965459.23349.4.camel@dinh-ubuntu>
- <20140408152406.GI30077@pd.tnic>
- <20140408154017.GF11876@e106331-lin.cambridge.arm.com>
- <20140408160351.GK30077@pd.tnic>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140408160351.GK30077-fF5Pk5pvG8Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Cc: Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, "robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org" <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v3 4/6] v4l: vsp1: Add DT support
+Date: Tue,  8 Apr 2014 18:16:15 +0200
+Message-ID: <1396973775-5690-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+References: <4542787.8JEGs6DclK@avalon>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <4542787.8JEGs6DclK@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 08, 2014 at 05:03:51PM +0100, Borislav Petkov wrote:
-> On Tue, Apr 08, 2014 at 04:40:17PM +0100, Mark Rutland wrote:
-> > The patches should be in the same series, but for review purposes it's
-> > nicer if the bindings are separate patches from the code within that
-> > series.
-> >
-> > I usually look at the drivers implementing bindings and prefer to be
-> > Cc'd on the whole series, with both the binding and driver.
-> 
-> Right, but I got only the 3/3 patch on linux-edac which made me wonder.
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+---
+ .../devicetree/bindings/media/renesas,vsp1.txt     | 43 ++++++++++++++++++
+ drivers/media/platform/vsp1/vsp1_drv.c             | 52 ++++++++++++++++++----
+ 2 files changed, 87 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/renesas,vsp1.txt
 
-Ah. The whole series should've been Cc'd to linux-edac; I didn't realise
-that wasn't the case.
+Hi,
 
-> So I'm guessing you or someone else would be picking the whole set once
-> I've acked the EDAC part?
+This is the second last call (I'm perfectly aware of the logic flaw in this
+sentence, thank you :-)) for DT bindings review, with a small change to the
+bindings wording compared to v2. I plan to send a pull request at the end of
+the week.
 
-Typically the bindings would go with the driver via the appropriate
-subsystem maintainer. That way we don't get bindings without drivers or
-vice-versa if there's a problem part-way, and we don't end up with every
-other driver going via a dt tree.
+Changes since v2:
 
-Cheers,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- Remove the interrupt-parent property
+- Drop of_match_ptr() as the table is always compiled in
+
+Changes since v1:
+
+- Drop the clock-names property, as the VSP1 uses a single clock
+
+diff --git a/Documentation/devicetree/bindings/media/renesas,vsp1.txt b/Documentation/devicetree/bindings/media/renesas,vsp1.txt
+new file mode 100644
+index 0000000..87fe08a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/renesas,vsp1.txt
+@@ -0,0 +1,43 @@
++* Renesas VSP1 Video Processing Engine
++
++The VSP1 is a video processing engine that supports up-/down-scaling, alpha
++blending, color space conversion and various other image processing features.
++It can be found in the Renesas R-Car second generation SoCs.
++
++Required properties:
++
++  - compatible: Must contain "renesas,vsp1"
++
++  - reg: Base address and length of the registers block for the VSP1.
++  - interrupts: VSP1 interrupt specifier.
++  - clocks: A phandle + clock-specifier pair for the VSP1 functional clock.
++
++  - renesas,#rpf: Number of Read Pixel Formatter (RPF) modules in the VSP1.
++  - renesas,#uds: Number of Up Down Scaler (UDS) modules in the VSP1.
++  - renesas,#wpf: Number of Write Pixel Formatter (WPF) modules in the VSP1.
++
++
++Optional properties:
++
++  - renesas,has-lif: Boolean, indicates that the LCD Interface (LIF) module is
++    available.
++  - renesas,has-lut: Boolean, indicates that the Look Up Table (LUT) module is
++    available.
++  - renesas,has-sru: Boolean, indicates that the Super Resolution Unit (SRU)
++    module is available.
++
++
++Example: R8A7790 (R-Car H2) VSP1-S node
++
++	vsp1@fe928000 {
++		compatible = "renesas,vsp1";
++		reg = <0 0xfe928000 0 0x8000>;
++		interrupts = <0 267 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp1_clks R8A7790_CLK_VSP1_S>;
++
++		renesas,has-lut;
++		renesas,has-sru;
++		renesas,#rpf = <5>;
++		renesas,#uds = <3>;
++		renesas,#wpf = <4>;
++	};
+diff --git a/drivers/media/platform/vsp1/vsp1_drv.c b/drivers/media/platform/vsp1/vsp1_drv.c
+index 28e1de3..c69ee06 100644
+--- a/drivers/media/platform/vsp1/vsp1_drv.c
++++ b/drivers/media/platform/vsp1/vsp1_drv.c
+@@ -16,6 +16,7 @@
+ #include <linux/device.h>
+ #include <linux/interrupt.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/videodev2.h>
+ 
+@@ -431,34 +432,59 @@ static const struct dev_pm_ops vsp1_pm_ops = {
+  * Platform Driver
+  */
+ 
+-static struct vsp1_platform_data *
+-vsp1_get_platform_data(struct platform_device *pdev)
++static int vsp1_validate_platform_data(struct platform_device *pdev,
++				       struct vsp1_platform_data *pdata)
+ {
+-	struct vsp1_platform_data *pdata = pdev->dev.platform_data;
+-
+ 	if (pdata == NULL) {
+ 		dev_err(&pdev->dev, "missing platform data\n");
+-		return NULL;
++		return -EINVAL;
+ 	}
+ 
+ 	if (pdata->rpf_count <= 0 || pdata->rpf_count > VPS1_MAX_RPF) {
+ 		dev_err(&pdev->dev, "invalid number of RPF (%u)\n",
+ 			pdata->rpf_count);
+-		return NULL;
++		return -EINVAL;
+ 	}
+ 
+ 	if (pdata->uds_count <= 0 || pdata->uds_count > VPS1_MAX_UDS) {
+ 		dev_err(&pdev->dev, "invalid number of UDS (%u)\n",
+ 			pdata->uds_count);
+-		return NULL;
++		return -EINVAL;
+ 	}
+ 
+ 	if (pdata->wpf_count <= 0 || pdata->wpf_count > VPS1_MAX_WPF) {
+ 		dev_err(&pdev->dev, "invalid number of WPF (%u)\n",
+ 			pdata->wpf_count);
+-		return NULL;
++		return -EINVAL;
+ 	}
+ 
++	return 0;
++}
++
++static struct vsp1_platform_data *
++vsp1_get_platform_data(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct vsp1_platform_data *pdata;
++
++	if (!IS_ENABLED(CONFIG_OF) || np == NULL)
++		return pdev->dev.platform_data;
++
++	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++	if (pdata == NULL)
++		return NULL;
++
++	if (of_property_read_bool(np, "renesas,has-lif"))
++		pdata->features |= VSP1_HAS_LIF;
++	if (of_property_read_bool(np, "renesas,has-lut"))
++		pdata->features |= VSP1_HAS_LUT;
++	if (of_property_read_bool(np, "renesas,has-sru"))
++		pdata->features |= VSP1_HAS_SRU;
++
++	of_property_read_u32(np, "renesas,#rpf", &pdata->rpf_count);
++	of_property_read_u32(np, "renesas,#uds", &pdata->uds_count);
++	of_property_read_u32(np, "renesas,#wpf", &pdata->wpf_count);
++
+ 	return pdata;
+ }
+ 
+@@ -481,6 +507,10 @@ static int vsp1_probe(struct platform_device *pdev)
+ 	if (vsp1->pdata == NULL)
+ 		return -ENODEV;
+ 
++	ret = vsp1_validate_platform_data(pdev, vsp1->pdata);
++	if (ret < 0)
++		return ret;
++
+ 	/* I/O, IRQ and clock resources */
+ 	io = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	vsp1->mmio = devm_ioremap_resource(&pdev->dev, io);
+@@ -527,6 +557,11 @@ static int vsp1_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id vsp1_of_match[] = {
++	{ .compatible = "renesas,vsp1" },
++	{ },
++};
++
+ static struct platform_driver vsp1_platform_driver = {
+ 	.probe		= vsp1_probe,
+ 	.remove		= vsp1_remove,
+@@ -534,6 +569,7 @@ static struct platform_driver vsp1_platform_driver = {
+ 		.owner	= THIS_MODULE,
+ 		.name	= "vsp1",
+ 		.pm	= &vsp1_pm_ops,
++		.of_match_table = vsp1_of_match,
+ 	},
+ };
+ 
+-- 
+Regards,
+
+Laurent Pinchart
