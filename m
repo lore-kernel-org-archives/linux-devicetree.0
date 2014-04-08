@@ -1,73 +1,49 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCHv3 19/41] OMAPDSS: panel-dpi: Add DT support
-Date: Tue, 8 Apr 2014 08:29:15 -0700
-Message-ID: <20140408152914.GA11110@atomide.com>
-References: <1390301833-24944-1-git-send-email-tomi.valkeinen@ti.com>
- <1390301833-24944-20-git-send-email-tomi.valkeinen@ti.com>
- <20140408001339.GA15842@atomide.com>
- <53438B45.2090209@ti.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v6 3/5] devicetree: bindings: Document Krait cache error
+ interrupts
+Date: Tue, 8 Apr 2014 17:39:25 +0200
+Message-ID: <20140408153925.GJ30077@pd.tnic>
+References: <1396641450-12854-1-git-send-email-sboyd@codeaurora.org>
+ <1396641450-12854-4-git-send-email-sboyd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <53438B45.2090209@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Stefan Roese <stefan.roese@gmail.com>, Sebastian Reichel <sre@debian.org>, Robert Nelson <robertcnelson@gmail.com>, "Dr . H . Nikolaus Schaller" <hns@goldelico.com>, Marek Belisko <marek@goldelico.com>, Sebastian Reichel <sre@ring0.de>, Javier Martinez Canillas <javier@dowhile0.org>, Enric Balletbo Serra <eballetbo@gmail.com>, Florian Vaussard <florian.vaussard@epfl.ch>
+In-Reply-To: <1396641450-12854-4-git-send-email-sboyd@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen@ti.com> [140407 22:42]:
-> On 08/04/14 03:13, Tony Lindgren wrote:
-> > Tomi,
-> > 
-> > * Tomi Valkeinen <tomi.valkeinen@ti.com> [140121 03:01]:
-> >> Add DT support for panel-dpi.
-> > 
-> > Looks like this patch did not get merged or am I missing
-> > something?
+On Fri, Apr 04, 2014 at 12:57:28PM -0700, Stephen Boyd wrote:
+> The Krait L1/L2 error reporting hardware is made up a per-CPU
+> interrupt for the L1 cache and a SPI interrupt for the L2.
 > 
-> Yes, I dropped it. None of the boards that I converted used panel-dpi.
-> There was so much discussions about the display bindings, so I thought
-> it's better to leave out all but the needed patches.
-
-OK
- 
-> > As you probably are aware, we have at least these boards
-> > needing it before we can remove the omap3 legacy support:
-> > 
-> > board-am3517evm.c
-> > board-cm-t35.c
-> > board-devkit8000.c
-> > board-ldp.c
-> > board-overo.c
-> > 
-> > We could probably set the display timings based on the
-> > compatible flag in the driver if that's an issue?
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: <devicetree@vger.kernel.org>
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/arm/cache.txt | 48 ++++++++++++++++++++++++-
+>  1 file changed, 47 insertions(+), 1 deletion(-)
 > 
-> The timings shouldn't be an issue. But there's the backlight GPIO,
-> currently handled by panel-dpi, which should be removed from the panel.
-> We should use gpio-backlight for that one.
+> diff --git a/Documentation/devicetree/bindings/arm/cache.txt b/Documentation/devicetree/bindings/arm/cache.txt
+> index b90fcc7c53cf..d7357e777399 100644
+> --- a/Documentation/devicetree/bindings/arm/cache.txt
+> +++ b/Documentation/devicetree/bindings/arm/cache.txt
 
-Using gpio-backlight makes sense for sure.
+Right, that's http://www.spinics.net/lists/arm-kernel/msg308540.html
 
-FYI, in the case of the LDP there are four GPIOs to configure to
-get things going:
+So whoever picks those patches up, Lorenzo's doc needs to be in his tree
+first too.
 
-gpio55		LCD RESET		panel-dpi?
-gpio56		LCD QVGA		panel-dpi?
-twl gpio7	LCD power		panel-dpi
-twl gpio15	LCD backlight		gpio-backlight
- 
-> > And then board-omap3pandora.c also needs support for
-> > panel_tpo_td043mtea1_platform_data.
-> 
-> Yep, there's still much to do for DSS DT support. Hopefully it will be
-> easier now that the core support is there. I'll continue working on the
-> remaining boards and panels. However, I don't have any of the remaining
-> boards, so help is of course appreciated.
+How about I review the EDAC part and an arm maintainer picks the whole
+series up? Would that be easier, logistically?
 
-Yeah I can test at least the LDP here.
+-- 
+Regards/Gruss,
+    Boris.
 
-Regards,
-
-Tony
+Sent from a fat crate under my desk. Formatting is fine.
+--
