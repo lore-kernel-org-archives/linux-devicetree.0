@@ -1,103 +1,213 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH 1/9] crypto: qce: Add core driver implementation
-Date: Tue, 08 Apr 2014 19:26:44 +0300
-Message-ID: <53442344.8000801@mm-sol.com>
-References: <1396541886-10966-1-git-send-email-svarbanov@mm-sol.com> <1396541886-10966-2-git-send-email-svarbanov@mm-sol.com> <20140403233844.GF17066@sonymobile.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v3 4/6] v4l: vsp1: Add DT support
+Date: Tue, 08 Apr 2014 18:26:58 +0200
+Message-ID: <53442352.5050809@samsung.com>
+References: <4542787.8JEGs6DclK@avalon>
+ <1396973775-5690-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140403233844.GF17066@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Courtney Cavin <courtney.cavin@sonymobile.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <1396973775-5690-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Courtney,
+Hi Laurent,
 
-Thanks for the review!
+On 08/04/14 18:16, Laurent Pinchart wrote:
 
-On 04/04/2014 02:38 AM, Courtney Cavin wrote:
-> On Thu, Apr 03, 2014 at 06:17:58PM +0200, Stanimir Varbanov wrote:
->> This adds core driver files. The core part is implementing a
->> platform driver probe and remove callbaks, the probe enables
->> clocks, checks crypto version, initialize and request dma
->> channels, create done tasklet and work queue and finally
->> register the algorithms into crypto subsystem.
->>
->> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
->> ---
->>  drivers/crypto/qce/core.c | 333 ++++++++++++++++++++++++++++++++++++++++++++++
->>  drivers/crypto/qce/core.h |  69 ++++++++++
->>  2 files changed, 402 insertions(+)
->>  create mode 100644 drivers/crypto/qce/core.c
->>  create mode 100644 drivers/crypto/qce/core.h
->>
->> diff --git a/drivers/crypto/qce/core.c b/drivers/crypto/qce/core.c
-> [...]
->> +static struct qce_algo_ops qce_ops[] = {
->> +	{
->> +		.type = CRYPTO_ALG_TYPE_ABLKCIPHER,
->> +		.register_alg = qce_ablkcipher_register,
->> +	},
->> +	{
->> +		.type = CRYPTO_ALG_TYPE_AHASH,
->> +		.register_alg = qce_ahash_register,
->> +	},
->> +};
->> +
->> +static void qce_unregister_algs(struct qce_device *qce)
->> +{
->> +	struct qce_alg_template *tmpl, *n;
->> +
->> +	list_for_each_entry_safe(tmpl, n, &qce->alg_list, entry) {
->> +		if (tmpl->crypto_alg_type == CRYPTO_ALG_TYPE_AHASH)
->> +			crypto_unregister_ahash(&tmpl->alg.ahash);
->> +		else
->> +			crypto_unregister_alg(&tmpl->alg.crypto);
->> +
->> +		list_del(&tmpl->entry);
->> +		kfree(tmpl);
-> 
-> I find this whole memory/list management to be very disorganised.
-> ops->register_alg() is supposed to allocate this item--more precisely,
-> multiple items--using something that must be able to be kfree'd
-> directly, register it with the crypto core, and put it on this list
-> manually.  Here we unregister/remove/free this in the core.  Josh's
-> recommendation of a unregister_alg callback might help, but it all
-> remains a bit unclear with register_alg/unregister_alg managing X
-> algorithms per call. 
-> 
-> Additionally, above you have qce_ops, which clearly defines the
-> operations for specific algorithms types/groups, which in later patches
-> are shown to be seperated out into independent implementations.
-> 
-> From what I can tell, this seems to be a framework with built-in yet
-> independent crypto implementations which call the crypto API directly.
-> 
-> It would be more logical to me if this was seperated out into a
-> "library/core" API, with the individual implementations as platform
-> drivers of their own.  Then they can register with the core, managing
-> memory how they please.
-> 
-> What am I missing?
-> 
+It may be worth to split DT binding documentation and the driver changes
+into separate patches, and perhaps add some commit description here.
+Either way fell free to stick:
 
-No, you have not miss nothing.
+Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-OK I see your point. I made few changes in the core, killed the alg_list
-and its manipulation function and added a .unregister_algs operation.
-Now every type of algorithm will handle all core crypto api functions
-itself. Also I'm using devm_kzalloc() in .register_algs when allocating
-memory for qce_alg_template structures to avoid kfree(). The callbacks
-async_req_queue/done are now embedded in qce_device structure and they
-are invoked directly from algorithm implementations. Thus I have
-separated the interfaces: functions implemented in core part of the
-driver and struct qce_algo_ops having the function pointers implemented
-by every type of algorithm.
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+>
+> ---
+>  .../devicetree/bindings/media/renesas,vsp1.txt     | 43 ++++++++++++++++++
+>  drivers/media/platform/vsp1/vsp1_drv.c             | 52 ++++++++++++++++++----
+>  2 files changed, 87 insertions(+), 8 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/renesas,vsp1.txt
+> 
+> Hi,
+> 
+> This is the second last call (I'm perfectly aware of the logic flaw in this
+> sentence, thank you :-)) for DT bindings review, with a small change to the
+> bindings wording compared to v2. I plan to send a pull request at the end of
+> the week.
+> 
+> Changes since v2:
+> 
+> - Remove the interrupt-parent property
+> - Drop of_match_ptr() as the table is always compiled in
+> 
+> Changes since v1:
+> 
+> - Drop the clock-names property, as the VSP1 uses a single clock
+> 
+> diff --git a/Documentation/devicetree/bindings/media/renesas,vsp1.txt b/Documentation/devicetree/bindings/media/renesas,vsp1.txt
+> new file mode 100644
+> index 0000000..87fe08a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/renesas,vsp1.txt
+> @@ -0,0 +1,43 @@
+> +* Renesas VSP1 Video Processing Engine
+> +
+> +The VSP1 is a video processing engine that supports up-/down-scaling, alpha
+> +blending, color space conversion and various other image processing features.
+> +It can be found in the Renesas R-Car second generation SoCs.
+> +
+> +Required properties:
+> +
+> +  - compatible: Must contain "renesas,vsp1"
+> +
+> +  - reg: Base address and length of the registers block for the VSP1.
+> +  - interrupts: VSP1 interrupt specifier.
+> +  - clocks: A phandle + clock-specifier pair for the VSP1 functional clock.
+> +
+> +  - renesas,#rpf: Number of Read Pixel Formatter (RPF) modules in the VSP1.
+> +  - renesas,#uds: Number of Up Down Scaler (UDS) modules in the VSP1.
+> +  - renesas,#wpf: Number of Write Pixel Formatter (WPF) modules in the VSP1.
+> +
+> +
+> +Optional properties:
+> +
+> +  - renesas,has-lif: Boolean, indicates that the LCD Interface (LIF) module is
+> +    available.
+> +  - renesas,has-lut: Boolean, indicates that the Look Up Table (LUT) module is
+> +    available.
+> +  - renesas,has-sru: Boolean, indicates that the Super Resolution Unit (SRU)
+> +    module is available.
+> +
+> +
+> +Example: R8A7790 (R-Car H2) VSP1-S node
+> +
+> +	vsp1@fe928000 {
+> +		compatible = "renesas,vsp1";
+> +		reg = <0 0xfe928000 0 0x8000>;
+> +		interrupts = <0 267 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&mstp1_clks R8A7790_CLK_VSP1_S>;
+> +
+> +		renesas,has-lut;
+> +		renesas,has-sru;
+> +		renesas,#rpf = <5>;
+> +		renesas,#uds = <3>;
+> +		renesas,#wpf = <4>;
+> +	};
+> diff --git a/drivers/media/platform/vsp1/vsp1_drv.c b/drivers/media/platform/vsp1/vsp1_drv.c
+> index 28e1de3..c69ee06 100644
+> --- a/drivers/media/platform/vsp1/vsp1_drv.c
+> +++ b/drivers/media/platform/vsp1/vsp1_drv.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/device.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/module.h>
+> +#include <linux/of.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/videodev2.h>
+>  
+> @@ -431,34 +432,59 @@ static const struct dev_pm_ops vsp1_pm_ops = {
+>   * Platform Driver
+>   */
+>  
+> -static struct vsp1_platform_data *
+> -vsp1_get_platform_data(struct platform_device *pdev)
+> +static int vsp1_validate_platform_data(struct platform_device *pdev,
+> +				       struct vsp1_platform_data *pdata)
+>  {
+> -	struct vsp1_platform_data *pdata = pdev->dev.platform_data;
+> -
+>  	if (pdata == NULL) {
+>  		dev_err(&pdev->dev, "missing platform data\n");
+> -		return NULL;
+> +		return -EINVAL;
+>  	}
+>  
+>  	if (pdata->rpf_count <= 0 || pdata->rpf_count > VPS1_MAX_RPF) {
+>  		dev_err(&pdev->dev, "invalid number of RPF (%u)\n",
+>  			pdata->rpf_count);
+> -		return NULL;
+> +		return -EINVAL;
+>  	}
+>  
+>  	if (pdata->uds_count <= 0 || pdata->uds_count > VPS1_MAX_UDS) {
+>  		dev_err(&pdev->dev, "invalid number of UDS (%u)\n",
+>  			pdata->uds_count);
+> -		return NULL;
+> +		return -EINVAL;
+>  	}
+>  
+>  	if (pdata->wpf_count <= 0 || pdata->wpf_count > VPS1_MAX_WPF) {
+>  		dev_err(&pdev->dev, "invalid number of WPF (%u)\n",
+>  			pdata->wpf_count);
+> -		return NULL;
+> +		return -EINVAL;
+>  	}
+>  
+> +	return 0;
+> +}
+> +
+> +static struct vsp1_platform_data *
+> +vsp1_get_platform_data(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct vsp1_platform_data *pdata;
+> +
+> +	if (!IS_ENABLED(CONFIG_OF) || np == NULL)
+> +		return pdev->dev.platform_data;
+> +
+> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (pdata == NULL)
+> +		return NULL;
+> +
+> +	if (of_property_read_bool(np, "renesas,has-lif"))
+> +		pdata->features |= VSP1_HAS_LIF;
+> +	if (of_property_read_bool(np, "renesas,has-lut"))
+> +		pdata->features |= VSP1_HAS_LUT;
+> +	if (of_property_read_bool(np, "renesas,has-sru"))
+> +		pdata->features |= VSP1_HAS_SRU;
+> +
+> +	of_property_read_u32(np, "renesas,#rpf", &pdata->rpf_count);
+> +	of_property_read_u32(np, "renesas,#uds", &pdata->uds_count);
+> +	of_property_read_u32(np, "renesas,#wpf", &pdata->wpf_count);
+> +
+>  	return pdata;
+>  }
+>  
+> @@ -481,6 +507,10 @@ static int vsp1_probe(struct platform_device *pdev)
+>  	if (vsp1->pdata == NULL)
+>  		return -ENODEV;
+>  
+> +	ret = vsp1_validate_platform_data(pdev, vsp1->pdata);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	/* I/O, IRQ and clock resources */
+>  	io = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	vsp1->mmio = devm_ioremap_resource(&pdev->dev, io);
+> @@ -527,6 +557,11 @@ static int vsp1_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static const struct of_device_id vsp1_of_match[] = {
+> +	{ .compatible = "renesas,vsp1" },
+> +	{ },
+> +};
+> +
+>  static struct platform_driver vsp1_platform_driver = {
+>  	.probe		= vsp1_probe,
+>  	.remove		= vsp1_remove,
+> @@ -534,6 +569,7 @@ static struct platform_driver vsp1_platform_driver = {
+>  		.owner	= THIS_MODULE,
+>  		.name	= "vsp1",
+>  		.pm	= &vsp1_pm_ops,
+> +		.of_match_table = vsp1_of_match,
+>  	},
+>  };
 
-If you don't have some objections I can send out a version 2.
-
--- 
-regards,
-Stan
+--
+Regards,
+Sylwester
