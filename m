@@ -1,60 +1,57 @@
-From: Johan Hovold <jhovold@gmail.com>
-Subject: [PATCH] ARM: dts: OMAP2+: remove uses of obsolete gpmc,device-nand
-Date: Tue,  8 Apr 2014 11:20:17 +0200
-Message-ID: <1396948817-29362-1-git-send-email-jhovold@gmail.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
-Cc: Jon Hunter <jon-hunter@ti.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Johan Hovold <jhovold@gmail.com>
+From: Javi Merino <javi.merino@arm.com>
+Subject: Re: [PATCH v11 0/4] thermal: samsung: Clean up and add support for
+ Exynos5420
+Date: Tue, 8 Apr 2014 10:33:43 +0100
+Message-ID: <20140408093343.GA7947@e102654-lin.cambridge.arm.com>
+References: <1384238132-24515-1-git-send-email-ch.naveen@samsung.com>
+ <1386657640-21481-1-git-send-email-ch.naveen@samsung.com>
+ <CAL1wa8fj+pYN7EOkh0nggkwss2U9pJhGEoaA7TG+7oy0LK3zFQ@mail.gmail.com>
+ <5329BE8C.8000508@samsung.com>
+ <CAHfPSqA6gW+-yTj0vp0b3xbWRVFczkx03nO=GCe9ccgXsRtOag@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAHfPSqA6gW+-yTj0vp0b3xbWRVFczkx03nO=GCe9ccgXsRtOag@mail.gmail.com>
+Content-Disposition: inline
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+Cc: Tomasz Figa <t.figa@samsung.com>, Leela Krishna Amudala <leelakrishna.a@gmail.com>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "eduardo.valentin@ti.com" <eduardo.valentin@ti.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "amit.daniel@samsung.com" <amit.daniel@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, "cpgs ." <cpgs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Remove all remaining uses of gpmc,device-nand that have been added since
-the property was removed by commit f40739faba8e ("ARM: dts: OMAP2+:
-Simplify NAND support").
+On Thu, Mar 20, 2014 at 02:45:54AM +0000, Naveen Krishna Ch wrote:
+> Hello Tomasz,
+> 
+> On 20 March 2014 00:58, Tomasz Figa <t.figa@samsung.com> wrote:
+> > Hi Leela,
+> >
+> >
+> > On 19.03.2014 12:19, Leela Krishna Amudala wrote:
+> >>
+> >> Hi All,
+> >>
+> >> I didn't see this series in mainline, Any comments for this ?
+> >
+> >
+> > Naveen had posted v12 of this series and I believe all the patches got my
+> > Reviewed-by.
+> >
+> > Best regards,
+> > Tomasz
+> Thanks for your reply.
+> These patches are posted to the mailing list quite some time now.
+> Anything i can do to speed up the process.
 
-Signed-off-by: Johan Hovold <jhovold@gmail.com>
----
- arch/arm/boot/dts/am335x-igep0033.dtsi  | 1 -
- arch/arm/boot/dts/omap3-devkit8000.dts  | 1 -
- arch/arm/boot/dts/omap3-lilly-a83x.dtsi | 1 -
- 3 files changed, 3 deletions(-)
+These patches create 5 thermal zones, one for each sensor.  Due to the
+way the exynos code in drivers/thermal/samsung/exynos_thermal_common.c
+registers thermal zones, each one gets a cpufreq_cooling_device.
+Therefore you end up with 5 thermal zone each of which is controlling
+the cpu frequency.
 
-diff --git a/arch/arm/boot/dts/am335x-igep0033.dtsi b/arch/arm/boot/dts/am335x-igep0033.dtsi
-index 7063311a58d9..06c822a48b71 100644
---- a/arch/arm/boot/dts/am335x-igep0033.dtsi
-+++ b/arch/arm/boot/dts/am335x-igep0033.dtsi
-@@ -118,7 +118,6 @@
- 		reg = <0 0 0>; /* CS0, offset 0 */
- 		nand-bus-width = <8>;
- 		ti,nand-ecc-opt = "bch8";
--		gpmc,device-nand = "true";
- 		gpmc,device-width = <1>;
- 		gpmc,sync-clk-ps = <0>;
- 		gpmc,cs-on-ns = <0>;
-diff --git a/arch/arm/boot/dts/omap3-devkit8000.dts b/arch/arm/boot/dts/omap3-devkit8000.dts
-index bf5a515a3247..da402f0fdab4 100644
---- a/arch/arm/boot/dts/omap3-devkit8000.dts
-+++ b/arch/arm/boot/dts/omap3-devkit8000.dts
-@@ -112,7 +112,6 @@
- 		reg = <0 0 0>; /* CS0, offset 0 */
- 		nand-bus-width = <16>;
- 
--		gpmc,device-nand;
- 		gpmc,sync-clk-ps = <0>;
- 		gpmc,cs-on-ns = <0>;
- 		gpmc,cs-rd-off-ns = <44>;
-diff --git a/arch/arm/boot/dts/omap3-lilly-a83x.dtsi b/arch/arm/boot/dts/omap3-lilly-a83x.dtsi
-index 6369d9f43ca2..cc1dce6978f5 100644
---- a/arch/arm/boot/dts/omap3-lilly-a83x.dtsi
-+++ b/arch/arm/boot/dts/omap3-lilly-a83x.dtsi
-@@ -368,7 +368,6 @@
- 		/* no elm on omap3 */
- 
- 		gpmc,mux-add-data = <0>;
--		gpmc,device-nand;
- 		gpmc,device-width = <2>;
- 		gpmc,wait-pin = <0>;
- 		gpmc,wait-monitoring-ns = <0>;
--- 
-1.8.3.2
+Wouldn't it be better to collate these 5 sensors to create one thermal
+zone for the whole SoC?  Maybe a simplistic algorithm like reporting
+the maximum temperature of all the sensors as the thermal zone
+temperature is good enough.
 
+Cheers,
+Javi
