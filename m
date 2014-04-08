@@ -1,33 +1,64 @@
 From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: Re: [PATCH 3/9] ARM: shmobile: r8a7790: add dmac0 dmac1 nodes
-Date: Tue, 08 Apr 2014 14:58:21 +0100
-Message-ID: <5344007D.3030100@codethink.co.uk>
-References: <1396901229-29117-1-git-send-email-ben.dooks@codethink.co.uk>	<1396901229-29117-4-git-send-email-ben.dooks@codethink.co.uk> <CAMuHMdVO0O29fr_GZjaKhWC775aSw2cT6wcsu5s66eRvjV57tA@mail.gmail.com>
+Subject: Re: [PATCH 6/9] ARM: shmobile: r8a7790: add audio dmac node
+Date: Tue, 08 Apr 2014 14:58:49 +0100
+Message-ID: <53440099.5010002@codethink.co.uk>
+References: <1396901229-29117-1-git-send-email-ben.dooks@codethink.co.uk> <1396901229-29117-7-git-send-email-ben.dooks@codethink.co.uk> <53430CFC.7000107@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVO0O29fr_GZjaKhWC775aSw2cT6wcsu5s66eRvjV57tA@mail.gmail.com>
+In-Reply-To: <53430CFC.7000107@cogentembedded.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-kernel@lists.codethink.co.uk, dmaengine@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linux-sh list <linux-sh@vger.kernel.org>, magnus.damm@opensource.se, Simon Horman <horms@verge.net.au>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-kernel@lists.codethink.co.uk, dmaengine@vger.kernel.org
+Cc: vinod.koul@intel.com, dan.j.williams@intel.com, linux-sh@vger.kernel.org, magnus.damm@opensource.se, horms@verge.net.au, g.liakhovetski@gmx.d, kuninori.morimoto.gx@renesas.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/04/14 22:05, Geert Uytterhoeven wrote:
-> Hi Ben,
+On 07/04/14 21:39, Sergei Shtylyov wrote:
+> Hello.
 >
-> On Mon, Apr 7, 2014 at 10:07 PM, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
->> Add nodes for the SYS-DMA controllers, SYS-DMAC0 and SYS-DMAC1. These
->> both share the same device sources, so are wrapped in the shdma-mux
+> On 04/08/2014 12:07 AM, Ben Dooks wrote:
 >
-> Do you mean device REsources?
+>> Add initial audio dmac node and resources.
 >
->> node to allow both to be used.
+>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>> ---
+>>   arch/arm/boot/dts/r8a7790.dtsi | 68
+>> ++++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 68 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/r8a7790.dtsi
+>> b/arch/arm/boot/dts/r8a7790.dtsi
+>> index 2c8cbbd..6032783 100644
+>> --- a/arch/arm/boot/dts/r8a7790.dtsi
+>> +++ b/arch/arm/boot/dts/r8a7790.dtsi
+>> @@ -176,6 +176,74 @@
+>>           };
+>>       };
+>>
+>> +    dma1: dma-mux@1 {
+>> +        compatible = "renesas,shdma-mux";
+>> +        #dma-cells = <1>;
+>> +        dma-channels = <20>;
+>> +        dma-requests = <256>;
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +        ranges;
+>> +
+>> +        audiodma0: dmac@ec700000 {
+>
+>     According to the ePARR standard [1], the node name should be
+> "dma-controller", not just "dmac".
+>
+>> +            compatible = "renesas,dma-r8a7790", "renesas,dma-arm";
+>> +            clocks = <&mstp5_clks R8A7790_CLK_AUDIO_DMAC0>;
+>> +            dma-channels = <13>;
+>> +            status = "disabled";
+>> +            reg = <0 0xec700020 0 0xffc0>;
+>> +            interrupt-parent = <&gic>;
+>
+>     Shouldn't it be just inherited from the top level node?
 
-Thanks.
-
-Looking at it, they share the same device muxes is a better way of
-putting it as the parent node also says.
+Thanks, it should be in this case and forgot to remove it.
 
 
 -- 
