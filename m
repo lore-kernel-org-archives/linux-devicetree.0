@@ -1,49 +1,64 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v6 3/5] devicetree: bindings: Document Krait cache error
- interrupts
-Date: Tue, 08 Apr 2014 12:55:35 -0700
-Message-ID: <53445437.1030902@codeaurora.org>
-References: <1396641450-12854-1-git-send-email-sboyd@codeaurora.org> <1396641450-12854-4-git-send-email-sboyd@codeaurora.org> <20140408153925.GJ30077@pd.tnic>
+From: Thierry Reding <treding@nvidia.com>
+Subject: Re: [RFC 2/5] ARM: tegra: Add new PCIe regulator properties
+Date: Tue, 8 Apr 2014 21:54:42 +0200
+Message-ID: <20140408195442.GB21978@ulmo.nvidia.com>
+References: <1396622969-17837-1-git-send-email-treding@nvidia.com>
+ <1396622969-17837-3-git-send-email-treding@nvidia.com>
+ <53444B2D.8050209@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140408153925.GJ30077@pd.tnic>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="f2QGlHpHGjS2mn6Y"
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <53444B2D.8050209@wwwdotorg.org>
+Content-Disposition: inline
+Sender: linux-pci-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/08/14 08:39, Borislav Petkov wrote:
-> On Fri, Apr 04, 2014 at 12:57:28PM -0700, Stephen Boyd wrote:
->> The Krait L1/L2 error reporting hardware is made up a per-CPU
->> interrupt for the L1 cache and a SPI interrupt for the L2.
->>
->> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Kumar Gala <galak@codeaurora.org>
->> Cc: <devicetree@vger.kernel.org>
->> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
->> ---
->>  Documentation/devicetree/bindings/arm/cache.txt | 48 ++++++++++++++++++++++++-
->>  1 file changed, 47 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/cache.txt b/Documentation/devicetree/bindings/arm/cache.txt
->> index b90fcc7c53cf..d7357e777399 100644
->> --- a/Documentation/devicetree/bindings/arm/cache.txt
->> +++ b/Documentation/devicetree/bindings/arm/cache.txt
-> Right, that's http://www.spinics.net/lists/arm-kernel/msg308540.html
->
-> So whoever picks those patches up, Lorenzo's doc needs to be in his tree
-> first too.
->
-> How about I review the EDAC part and an arm maintainer picks the whole
-> series up? Would that be easier, logistically?
->
+--f2QGlHpHGjS2mn6Y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That sounds fine if you want to give an ack on the edac changes. I can
-route it through arm-soc.
+On Tue, Apr 08, 2014 at 09:17:01PM +0200, Stephen Warren wrote:
+> On 04/04/2014 08:49 AM, Thierry Reding wrote:
+> > These new properties more accurately reflect the real connections of the
+> > boards and therefore make it easier to match them up with schematics.
+>=20
+> > diff --git a/arch/arm/boot/dts/tegra30-cardhu.dtsi b/arch/arm/boot/dts/=
+tegra30-cardhu.dtsi
+>=20
+> >  	pcie-controller@00003000 {
+> >  		status =3D "okay";
+> > +
+> > +		/* AVDD_PEXA and VDD_PEXA are grounded on Cardhu. */
+>=20
+> Perhaps add the word "inputs" before "are"?
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Done. Thanks,
+
+Thierry
+
+--f2QGlHpHGjS2mn6Y
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTRFQCAAoJEN0jrNd/PrOhqFwP+QGKyQg9Dp/eqINyGpUKlEqs
+XzCf7Bs5ZlYqlLpEmFtKRv1xsTC3k7nlb9a4lrj1CNMnVZBIXerDvF0Dzt0DE89g
+sqccl86mR4lpprYZV2doHjA1+ASv2qbwfd9BXwUvFoo9F3re4bHlFZ/bwVAoswnA
+tzDigrGmysF9cyxBxaHrpZdlK3GxQm4RW7riIeeY3Fv4LJa7RGcrFOkJ29bujSLD
+gbgMOCzOgfGmSAxhhDa2KDV2xTu03HoNteI90OYONWsWbuNnSLLeQx/2fob+9r/c
+tmwIlruvhNb89xXStlwHu8DvwuFFt2uIyA5oG9fPLLRfz9Xyvc7ar5ofeW4J5qRO
+dzDoWjuGKsiaXc0dAfLBVHmJI2WsXHKqJA95l2oJTVFKivBiqegOXyTiQbFXMFBs
+40TDMgA1alHheRSyzfgUSNVjaMMudUaEjQdjnnDFm26HCfb8Pz4JVl0OGdG361l5
+Fq6gsIFC3N9dc6ytXMYaiDecTjmo3utJvpCMrc/UFedmf3ALyXLuGweZnq1ftM53
+L7pW1TMm2FsgB67egthNw/J9141GGZBEZH6Owe94fVBZQgeIAIUdek9skvVDnE25
+bqcXTgLLNrFqATKbFWOeKC0Q7PslyPU34rZWiJHuczgJIjUp2rNSHGddxDAzs3lk
+1cjHK0GuXyKZjNEO3hyV
+=w+ep
+-----END PGP SIGNATURE-----
+
+--f2QGlHpHGjS2mn6Y--
