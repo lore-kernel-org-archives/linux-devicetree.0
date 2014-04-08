@@ -1,93 +1,94 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] dts: socfpga: Add bindings for Altera SoC SDRAM
- controller
-Date: Tue, 8 Apr 2014 16:33:27 +0200
-Message-ID: <20140408143327.GC16054@pengutronix.de>
-References: <1396907649-20212-1-git-send-email-tthayer@altera.com>
- <1396907649-20212-2-git-send-email-tthayer@altera.com>
- <20140408133818.GB16054@pengutronix.de>
- <1396967390.23349.15.camel@dinh-ubuntu>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1396967390.23349.15.camel@dinh-ubuntu>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Cc: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: [PATCH V4 0/5] Add Exynos5 USB 3.0 phy driver based on generic PHY framework
+Date: Tue,  8 Apr 2014 20:06:38 +0530
+Message-ID: <1396967803-28868-1-git-send-email-gautam.vivek@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, kishon@ti.com
+Cc: gregkh@linuxfoundation.org, balbi@ti.com, kgene.kim@samsung.com, t.figa@samsung.com, k.debski@samsung.com, jg1.han@samsung.com, sylvester.nawrocki@gmail.com, gautam.vivek@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 08, 2014 at 09:29:50AM -0500, Thor Thayer wrote:
-> On Tue, 2014-04-08 at 15:38 +0200, Steffen Trumtrar wrote:
-> > Hi!
-> > 
-> > On Mon, Apr 07, 2014 at 04:54:07PM -0500, tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
-> > > From: Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-> > > 
-> > > Addition of the Altera SDRAM controller bindings and device
-> > > tree changes to the Altera SoC project.
-> > > 
-> [snip]
-> > > +
-> > > +Required properties:
-> > > +- compatible : "altr,sdr-ctl", "syscon";
-> > > +                Note that syscon is invoked for this device to support the FPGA
-> > > +		bridge driver, EDAC driver and other devices that share the
-> > > +		registers.
-> > > +- reg : Should contain 1 register ranges(address and length)
-> > 
-> > I haven't really thought this through, but why would the FPGA bridge driver
-> > access the sdram controller? For releasing the resets in fpgaportrst ? Or is
-> > there more?
-> 
-> Hi Steffan. No, not for resets. We need to enable the FPGA to SDRAM
-> path. Our SDRAM controller allows FPGA master access to the SDRAM.
->
+Based on 'next' branch of Kishon's phy tree (linux-phy).
+Tested on 'usb-next' of Greg's usb tree.
 
-Yes. But what you have to do to enable the path is let the FPGA port you use
-out of reset. And that is it as far as I can see. The rest happens in the
-bitstream. Or is there more to enable the path?
-The FPGA2SDRAM bridge is the one I didn't use as of yet, so if I miss something
-please elaborate.
+Changes from V3:
+1) Separated out the phy init sequences for utmi and pipe3 phys.
+2) Changed the nomenclature across the phy to 'usbdrd-phy' to
+   indicate USB 3.0 DRD PHY controller; and thereby changed the names                
+   of functions correspondingly, including specific functions for
+   utmi and pipe3 phys.                                                              
+3) Modified the DT nodes for the updated nomenclature.
+4) Using BIT macro for single bit definitions.                                       
+5) Keeping track of reference clock after getting till the removal of                
+   phy, and getting the ref clock using devm_clk_get() api.
+6) Removed aliases for mutiple channel PHYs, and instead using
+   'samsung,pmu-offset' property for PHY power control register offset.
+7) Keeping the phy_init() and phy_power_on() separately in order to
+   align with phy handling in the consumer (DWC3).
 
-> > Wouldn't it be more appropriate to represent those bits as a reset-controller to
-> > some hypothetical IP core driver?
-> > Then you could have something like
-> > 
-> > 	hps2fpga@c0000000 {
-> > 		ipcore@0 {
-> > 			resets = <&sdr 1>;
-> > 			reset-names = "foo";
-> > 			resets = <&rst 96>;
-> > 			reset-names = "bar";
-> > 			(...)
-> > 		};
-> > 
-> > 		ipcore@1000 {
-> > 			resets = <&rst 96>;
-> > 			reset-names = "baz";
-> > 			(...)
-> > 		};
-> > 	};
-> > 
-> > And you would always have the correct bridges released out of reset for your
-> > IP core. Does the FPGA bridge driver do more? I think that is basically it.
-> > Where we maybe could run into problems though is the early_init stuff.
-> > 
-> > I think syscon is nice for some things, but we should try not to overuse it.
-> 
-> Understood. In this case, syscon seems to be appropriate.
+Changes from v2:
+1) Added support for multiple PHYs (UTMI+ and PIPE3) and                   
+   related changes in the driver structuring.
+2) Added a xlate function to get the required phy out of
+   number of PHYs in mutiple PHY scenerio.
+3) Changed the names of few structures and variables to                
+   have a clearer meaning. 
+4) Added 'usb3phy_config' structure to take care of mutiple
+   phys for a SoC having 'exynos5_usb3phy_drv_data' driver data.      
+5) Not deleting support for old driver 'phy-samsung-usb3' until
+   required support for generic phy is added to DWC3.  
+ 
+Changes from RFC patch-set:
+1) fixes in documentation file
+ - added provision for syscon interface for using PMU register.
+ - added clock names and description
+ - modified description style for 'compatible property'                    
+ - made usb30_sclk as additional clock rather then making it optional, since
+   it is actually an additional clock for Exynos5420 Soc.
+2) fixes in phy-exynos5-usb3 driver file
+ - removed unnecessary #ifndef around KHZ and MHZ definitions            
+ - removed 'samsung_cpu_type', 'usb3phy_state' enums; and merged necessary
+   necessary from 'usb3phy_instance' structure to 'usb3phy_driver'.
+ - changed name 'sclk_usbphy30' to 'usb30_sclk_100m' since this is the name
+   indicated as input to the PHY block; and also added (!IS_ERR()) check for
+   using usb30_sclk.
+ - removed unnecessary 'state' check code.
+ - moved 'of_device_id' structure definitions before 'probe()' to avoid
+   unnecessary declaration.
+ - added (pdev->dev.of_node == NULL) check at the starting of probe()
+ - moved 'devm_of_phy_provider_register()' call to end of the probe().
+ - removed 'label' for usb3drd phy.
+ - corrected macros definition 'PHYCLKRST_MPLL_MULTIPLIER_50M_REF' from
+   0x02 to 0x32 after confirming same from PHY's data sheet.
+ - replaced pmu register handling, used for power-isolation, with syscon
+   interface api's.
+ - added '.init' and '.exit' callbacks and using them for one time
+   PHY-initialization and deinitialization.
+ - Filtering out the PHY 'power-on' and 'power-off' sequence to '.power_on"
+   and ".power_off" callbacks.
+ - Removed drivers/usb/phy/phy-samsung-usb3.c driver and related code.
+3) fixes in dt files
+ - added reference for 'samsung,syscon-phandle' to used for PMU register.
+ - removed second register field which was earlier used for PMU.
 
-I'm not convinced yet.
+Vivek Gautam (5):
+  phy: Add new Exynos5 USB 3.0 PHY driver
+  dt: exynos5420: Enable support for USB 3.0 PHY controller
+  dt: exynos5420: Enable support for DWC3 controller
+  dt: exynos5250: Enable support for generic USB DRD phy
+  usb-phy: samsung-usb3: Remove older phy-samsung-usb3 driver
 
-Steffen
+ .../devicetree/bindings/phy/samsung-phy.txt        |   42 ++
+ arch/arm/boot/dts/exynos5250.dtsi                  |   21 +-
+ arch/arm/boot/dts/exynos5420.dtsi                  |   54 ++
+ drivers/phy/Kconfig                                |   11 +
+ drivers/phy/Makefile                               |    1 +
+ drivers/phy/phy-exynos5-usbdrd.c                   |  668 ++++++++++++++++++++
+ drivers/usb/phy/phy-samsung-usb.h                  |   83 ---
+ drivers/usb/phy/phy-samsung-usb3.c                 |  350 ----------
+ 8 files changed, 785 insertions(+), 445 deletions(-)
+ create mode 100644 drivers/phy/phy-exynos5-usbdrd.c
+ delete mode 100644 drivers/usb/phy/phy-samsung-usb3.c
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.10.4
