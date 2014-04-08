@@ -1,79 +1,91 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 0/7] Add support for the Allwinner A31
- DMA Controller
-Date: Tue, 8 Apr 2014 10:28:17 +0200
-Message-ID: <20140408082817.GA28585@lukather>
-References: <1394723659-4995-1-git-send-email-maxime.ripard@free-electrons.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: David Laight <David.Laight@ACULAB.COM>
+Subject: RE: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
+Date: Tue, 8 Apr 2014 08:30:37 +0000
+Message-ID: <063D6719AE5E284EB5DD2968C1650D6D0F6F1434@AcuExch.aculab.com>
+References: <1396672506-9296-1-git-send-email-zhangfei.gao@linaro.org>
+	<1396672506-9296-4-git-send-email-zhangfei.gao@linaro.org>
+ <20140407.145356.928382660541891827.davem@davemloft.net>
+ <5343AE45.4020308@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HlL+5n6rz5pIUxbD"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBDHHR2NAKGQEH6I6GAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1394723659-4995-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <5343AE45.4020308@linaro.org>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: 'zhangfei' <zhangfei.gao@linaro.org>, David Miller <davem@davemloft.net>
+Cc: "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "arnd@arndb.de" <arnd@arndb.de>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "eric.dumazet@gmail.com" <eric.dumazet@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+From: zhangfei [mailto:zhangfei.gao@linaro.org]
+> On 04/08/2014 02:53 AM, David Miller wrote:
+> > From: Zhangfei Gao <zhangfei.gao@linaro.org>
+> > Date: Sat,  5 Apr 2014 12:35:06 +0800
+> >
+> >> +struct tx_desc {
+> >> +	u32 send_addr;
+> >> +	u16 reserved_16;
+> >> +	u16 send_size;
 
---HlL+5n6rz5pIUxbD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The above doesn't look right for endianness independence.
+I'd guess the hardware spec shows a 32bit word with the 'send size'
+in one half - that is what you need to define.
 
-Dan, Vinod,
+Since this is a tx descriptor (and written by the host) you
+can't have 'reserved' field - the host has to write it.
+probably these are 'must be zero' fields.
 
-On Thu, Mar 13, 2014 at 04:14:12PM +0100, Maxime Ripard wrote:
-> Hi,
->=20
-> This patchset adds support for the DMA controller found in the
-> Allwinner A31 and A23 SoCs.
->=20
-> This has been tested using the newly introduced SPI driver on an A31
-> EVK. Support for DMA-driven SPI transfers will be the subject of
-> another patch serie.
->=20
-> Thanks,
-> Maxime
+> >> +	u32 reserved_32;
+> >> +	u32 cfg;
+> >> +	u32 wb_addr;
+> >> +} ____cacheline_aligned;
+> >
+> > I do not think that ____cacheline_aligned is appropriate at all here.
+> >
+> > First of all, this is a hardware descriptor, so it has a fixed layout
+> > and therefore size.
 
-I first sent this patch set a month and a half ago, and since then
-never had *any* comment from you. It seems like it has reached the
-point where people start to be happy about it, how can we move
-forward?
+The structure also isn't even a multiple of a power of two.
+So there will be implicit padding at the end.
 
-Maxime
+Since there isn't a 'pointer to next' I presume the hardware accesses
+the descriptors from adjacent physical addresses.
+So you need to explicitly pad to that size.
+If the cache line size were 128 byte the above wouldn't work at all.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+> >
+> > Secondly, unless you declare this object statically in the data section
+> > of the object file, the alignment doesn't matter.  These descriptors
+> > are always dynamically allocated, rather than instantiated in the
+> > kernel/driver image.
+> 
+> The ____cacheline_aligned used here is only for the requirement of
+> alignment, and use dma_alloc_coherent, while at first dma_pool is used
+> for the requirement of alignment.
+> Otherwise desc[1] is not aligned and can not be used directly, the
+> structure is smaller.
 
---HlL+5n6rz5pIUxbD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+It sounds like you should be explicitly padding the structure
+to 32 bytes - whether or not that is the cache line size.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
+...
+> I am sorry, but unfortunately this series really does NOT have TX done
+> interrupt after checked with hardware guy many times.
+> And next series will add TX done interrupt according to the feedback.
+> 
+> There are two reasons of removing the TX done interrupt when the chip is
+> designed.
+> 1. The specific product does not care the latency, only care the throughput.
+> 2. When doing many experiment, the tx done interrupt will impact the
+> throughput, as a result reclaim is moved to xmit as one of
+> optimizations, then finally tx done interrupt is removed at all.
+> 
+> Is it acceptable of removing timer as well as latency handling, or any
+> other work around of this kind of hardware?
 
-iQIcBAEBAgAGBQJTQ7MhAAoJEBx+YmzsjxAg03AP+QFuLGoYHoJ1yNKIXKRFZPFw
-GjaKDiwc8ofla+PPublNCt7WnmVD+wsT4qVZBJb08LRKNK0vpP4aTU8Kgd0z9wMg
-MFBPWxhbf1QJksu8Mmb7IHnOFblarhJ5YHcHbBKCZo3ZTj1wHV7voqWtvcarf5ZR
-X+Nz32SPSutpQAlXTyEjQKbBMVcd8aYFoM+Qy+LBc5hY1SgwKflLxLXPYIfTSkL7
-eNrMGviYdyalCkl/X8Hqpk8M++AbIfpD9TTT+JpPTTIiGqtYAjn3vS9nUPwY/MA7
-HeVHCtjiMhdMFH0HR1PJnySq7bvpJLpKRoOOH7BxmYP3XcsZHhRHe/Q+AXv/0adC
-sPDDAw+gPjI5OvLiJPSuQWu3GavlCmn2/DleW21j3bHcksiIL0iiuClICEKKdfZD
-GiEm8E+dn129IE3SdQpv8oYgwfCd8ltPqNOxvLnLGspJqxQX1E5s/oc9HeWOwlEf
-VbeQ+pDi/bEjfbPZRAchxVIKmZ15b9cxCjcMSJ19xzv2G+xhXCzUFJHr/Omx578A
-/xqooXLmhP6/QQasghcf/aI5Y1gpqJr3ONQXbvMmFCORxaVrTjvSY/deF3a1gzj4
-YnVdPT8YUv6MlZY26tntafQNXoms67HD7YRSfi9vu1edt4o/7uuDraXLKW+Q/PS2
-PWb2yLusfR1PeK37FFvn
-=+Aqp
------END PGP SIGNATURE-----
+If you don't have a global 'TX done' interrupt, you need a per
+descriptor one.
+Otherwise you cannot send at maximum rate in the absence of
+receive traffic.
 
---HlL+5n6rz5pIUxbD--
+	David
