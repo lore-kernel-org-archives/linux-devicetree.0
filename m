@@ -1,78 +1,45 @@
-From: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2] mtd: davinci-nand: disable subpage write for keystone-nand
-Date: Tue, 8 Apr 2014 15:51:34 +0300
-Message-ID: <5343F0D6.2010804@ti.com>
-References: <1395346112-13350-1-git-send-email-ivan.khoronzhuk@ti.com> <532B4C36.8060405@ti.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: Fix the section mismatch warnings.
+Date: Tue, 8 Apr 2014 07:55:26 -0500
+Message-ID: <CAL_JsqKuvKwEv89hOSknc-0Pq3aiwyPFhB-kPA-cRjGK831oFQ@mail.gmail.com>
+References: <1396936087-23043-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <532B4C36.8060405-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1396936087-23043-1-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
+To: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 03/20/2014 10:14 PM, Santosh Shilimkar wrote:
-> On Thursday 20 March 2014 04:08 PM, Ivan Khoronzhuk wrote:
->> From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
->>
->> Sub page write doesn't work because of hw issue in controller found on
->> Keystone SOCs. AEMIF controller is also used on DaVinci SOCs which
->> don't seems to have any issue. So add "ti,keysone-nand" compatible
->> to nand driver in order to set NAND_NO_SUBPAGE_WRITE option.
->>
->> Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Cc: Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
->> Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
->>
->> Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
->> ---
->>
-> Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+On Tue, Apr 8, 2014 at 12:48 AM, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> In tag next-20140407, building with CONFIG_DEBUG_SECTION_MISMATCH
+> enabled, the following WARNING is occured:
 >
->> This patch is a result of discussion on patch v1:
->> https://lkml.org/lkml/2014/3/20/461
->>
->>   drivers/mtd/nand/davinci_nand.c | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
->> index 4615d79..b922c8e 100644
->> --- a/drivers/mtd/nand/davinci_nand.c
->> +++ b/drivers/mtd/nand/davinci_nand.c
->> @@ -523,6 +523,7 @@ static struct nand_ecclayout hwecc4_2048 = {
->>   #if defined(CONFIG_OF)
->>   static const struct of_device_id davinci_nand_of_match[] = {
->>   	{.compatible = "ti,davinci-nand", },
->> +	{.compatible = "ti,keystone-nand", },
->>   	{},
->>   };
->>   MODULE_DEVICE_TABLE(of, davinci_nand_of_match);
->> @@ -581,6 +582,11 @@ static struct davinci_nand_pdata
->>   		    of_property_read_bool(pdev->dev.of_node,
->>   			"ti,davinci-nand-use-bbt"))
->>   			pdata->bbt_options = NAND_BBT_USE_FLASH;
->> +
->> +		if (of_device_is_compatible(pdev->dev.of_node,
->> +					    "ti,keystone-nand")) {
->> +			pdata->options |= NAND_NO_SUBPAGE_WRITE;
->> +		}
->>   	}
->>   
->>   	return dev_get_platdata(&pdev->dev);
->>
->>
+> WARNING: drivers/built-in.o(.text.unlikely+0x2220): Section mismatch
+> in reference from the function __reserved_mem_check_root() to the
+> function .init.text:of_get_flat_dt_prop()
+> The function __reserved_mem_check_root() references
+> the function __init of_get_flat_dt_prop().
+> This is often because __reserved_mem_check_root lacks a __init
+> annotation or the annotation of of_get_flat_dt_prop is wrong.
+>
+> WARNING: vmlinux.o(.text.unlikely+0xb9d0): Section mismatch in reference
+> from the function __reserved_mem_check_root() to the (unknown reference)
+> .init.data:(unknown)
+> The function __reserved_mem_check_root() references
+> the (unknown reference) __initdata (unknown).
+> This is often because __reserved_mem_check_root lacks a __initdata
+> annotation or the annotation of (unknown) is wrong.
+>
+> This is cause by :
+> 'drivers: of: add initialization code for dynamic reserved memory'.
+>
+> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Brian,
-Could you pick up subj patch?
+Applied.
 
--- 
-Regards,
-Ivan Khoronzhuk
-
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
