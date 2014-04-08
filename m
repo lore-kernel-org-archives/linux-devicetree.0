@@ -1,121 +1,66 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v7 4/6] pci: Introduce a domain number for
- pci_host_bridge.
-Date: Tue, 8 Apr 2014 11:20:43 +0100
-Message-ID: <20140408102043.GV17163@e106497-lin.cambridge.arm.com>
-References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
- <1394811272-1547-5-git-send-email-Liviu.Dudau@arm.com>
- <20140405000007.GD15806@google.com>
- <20140407084623.GG17163@e106497-lin.cambridge.arm.com>
- <1396862058.3671.40.camel@pasglop>
- <20140407100715.GI17163@e106497-lin.cambridge.arm.com>
- <CAErSpo7h+Yew2hBztzkOzcHU5r4OQebxFbcZGkNUwJwfTFsbfg@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v7 1/6] pci: Introduce pci_register_io_range() helper function.
+Date: Tue, 08 Apr 2014 12:22:13 +0200
+Message-ID: <4778371.oH3kIlbD0f@wuerfel>
+References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com> <CAErSpo4iEV6khP63ZTF+YUTKi9WLFXzMv13nxw15y3qDg15Ztg@mail.gmail.com> <20140408095038.GT17163@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAErSpo7h+Yew2hBztzkOzcHU5r4OQebxFbcZGkNUwJwfTFsbfg@mail.gmail.com>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140408095038.GT17163@e106497-lin.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 07, 2014 at 11:44:51PM +0100, Bjorn Helgaas wrote:
-> On Mon, Apr 7, 2014 at 4:07 AM, Liviu Dudau <Liviu.Dudau@arm.com> wro=
-te:
-> > On Mon, Apr 07, 2014 at 10:14:18AM +0100, Benjamin Herrenschmidt wr=
-ote:
-> >> On Mon, 2014-04-07 at 09:46 +0100, Liviu Dudau wrote:
-> >> >
-> >> > *My* strategy is to get rid of pci_domain_nr(). I don't see why =
-we need
-> >> > to have arch specific way of providing the number, specially aft=
-er looking
-> >> > at the existing implementations that return a value from a varia=
-ble that
-> >> > is never touched or incremented. My guess is that pci_domain_nr(=
-) was
-> >> > created to work around the fact that there was no domain_nr main=
-tainance in
-> >> > the generic code.
-> >>
-> >> Well, there was no generic host bridge structure. There is one now=
-, it should
-> >> go there.
-> >
-> > Exactly! Hence my patch. After it gets accepted I will go through a=
-rchitectures
-> > and remove their version of pci_domain_nr().
->=20
-> Currently the arch has to supply pci_domain_nr() because that's the
-> only way for the generic code to learn the domain.  After you add
-> pci_create_root_bus_in_domain(), the arch can supply the domain that
-> way, and we won't need the arch-specific pci_domain_nr().  Right?
-> That makes more sense to me; thanks for the explanation.
+On Tuesday 08 April 2014 10:50:39 Liviu Dudau wrote:
+> On Mon, Apr 07, 2014 at 06:58:24PM +0100, Bjorn Helgaas wrote:
+> > On Mon, Apr 7, 2014 at 5:36 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > 
+> > > I think migrating other architectures to use the same code should be
+> > > a separate effort from adding a generic implementation that can be
+> > > used by arm64. It's probably a good idea to have patches to convert
+> > > arm32 and/or microblaze.
+> > 
+> > Let me reiterate that I am 100% in favor of replacing arch-specific
+> > code with more generic implementations.
+> > 
+> > However, I am not 100% in favor of doing it as separate efforts
+> > (although maybe I could be convinced).  The reasons I hesitate are
+> > that (1) if only one architecture uses a new "generic" implementation,
+> > we really don't know whether it is generic enough, (2) until I see the
+> > patches to convert other architectures, I have to assume that I'm the
+> > one who will write them, and (3) as soon as we add the code to
+> > drivers/pci, it becomes partly my headache to maintain it, even if
+> > only one arch benefits from it.
 
-Right.
+Fair enough.
 
->=20
-> Let me try to explain my concern about the
-> pci_create_root_bus_in_domain() interface.  We currently have these
-> interfaces:
->=20
->   pci_scan_root_bus()
->   pci_scan_bus()
->   pci_scan_bus_parented()
->   pci_create_root_bus()
->=20
-> pci_scan_root_bus() is a higher-level interface than
-> pci_create_root_bus(), so I'm trying to migrate toward it because it
-> lets us remove a little code from the arch, e.g., pci_scan_child_bus(=
-)
-> and pci_bus_add_devices().
->=20
-> I think we can only remove the arch-specific pci_domain_nr() if that
-> arch uses pci_create_root_bus_in_domain().  When we convert an arch
-> from using scan_bus interfaces to using
-> pci_create_root_bus_in_domain(), we will have to move the rest of the
-> scan_bus code (pci_scan_child_bus(), pci_bus_add_devices()) back into
-> the arch code.
->=20
-> One alternative is to add an _in_domain() variant of each of these
-> interfaces, but that doesn't seem very convenient either.  My idea of
-> passing in a structure would also require adding variants, so there's
-> not really an advantage there, but I am thinking of the next
-> unification effort, e.g., for NUMA node info.  I don't really want to
-> have to change all the _in_domain() interfaces to also take yet
-> another parameter for the node number.
+My approach to the asm-generic infrastruction has mostly been to ensure
+that whoever adds a new architecture has to make things easier for the
+next person. For the PCI code it's clearly your call to pick whatever
+works best for you.
 
-OK, what about this: all the functions that you have mentioned take a
-void *sysdata parameter. Should we convert this opaque pointer into a
-specific structure that holds the domain_nr and (in future) the NUMA
-node info?
+> > Please don't think I'm questioning anyone's intent or good will.  It's
+> > just that I understand the business pressures, and I know how hard it
+> > can be to justify this sort of work to one's management, especially
+> > after the immediate problem has been solved.
+> 
+> I understand your concern. I guess the only way to prove my good intentions
+> is to shut up and show the code.
 
-Converting all the architectures is going to be a long winded job as
-everyone loved to add their own stuff in the structure pointed by sysda=
-ta,
-breaking that will lead to frustrations, but maybe the framework should
-take back ownership of it.
+I'd suggest looking at architectures in this order then:
 
-Best regards,
-Liviu
+* microblaze (this one is easy and wants to share code with us)
+* arm32-multiplatform (obviously interesting, but not as easy as microblaze)
+* powerpc64 (they are keen on sharing, code is similar to what you have)
+* mips (this is really platform specific, some want to share drivers with
+  arm32, others should keep their current code. Note that platform selection
+  on mips is compile-time only, they don't have to do it all the same way)
+* powerpc32 (their code is currently different, might not be worth it)
 
->=20
-> Bjorn
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" =
-in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
+My preference would be to have only the first two done initially and leave
+the other ones up to architecture maintainers, but Bjorn should say
+how much he wants to see get done.
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+	Arnd
