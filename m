@@ -1,125 +1,60 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] driver: clocksource: fix age-old arch timer C3STOP detection issue
-Date: Tue, 08 Apr 2014 10:19:48 +0100
-Message-ID: <87k3b041qj.fsf@approximate.cambridge.arm.com>
-References: <1396947872-6673-1-git-send-email-lorenzo.pieralisi@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396947872-6673-1-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-	(Lorenzo Pieralisi's message of "Tue, 8 Apr 2014 10:04:32 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Magnus Damm <damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
+From: Johan Hovold <jhovold@gmail.com>
+Subject: [PATCH] ARM: dts: OMAP2+: remove uses of obsolete gpmc,device-nand
+Date: Tue,  8 Apr 2014 11:20:17 +0200
+Message-ID: <1396948817-29362-1-git-send-email-jhovold@gmail.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: Jon Hunter <jon-hunter@ti.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Johan Hovold <jhovold@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 08 2014 at 10:04:32 am BST, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
-> ARM arch timers are tightly coupled with the CPU logic and lose context
-> on platform implementing HW power management when cores are powered
-> down at run-time. Marking the arch timers as C3STOP regardless of power
-> management capabilities causes issues on platforms with no power management,
-> since in that case the arch timers cannot possibly enter states where the
-> timer loses context at runtime and therefore can always be used as a high
-> resolution clockevent device.
->
-> In order to fix the C3STOP issue in a way compliant with how real HW
-> works, this patch adds a boolean property to the arch timer bindings
-> to define if the arch timer is managed by an always-on power domain.
->
-> This power domain is present on all ARM platforms to date, and manages
-> HW that must not be turned off, whatever the state of other HW
-> components (eg power controller). On platforms with no power management
-> capabilities, it is the only power domain present, which encompasses
-> and manages power supply for all HW components in the system.
->
-> If the timer is powered by the always-on power domain, the always-on
-> property must be present in the bindings which means that the timer cannot
-> be shutdown at runtime, so it is not a C3STOP clockevent device.
-> If the timer binding does not contain the always-on property, the timer is
-> assumed to be power-gateable, hence it must be defined as a C3STOP
-> clockevent device.
+Remove all remaining uses of gpmc,device-nand that have been added since
+the property was removed by commit f40739faba8e ("ARM: dts: OMAP2+:
+Simplify NAND support").
 
-Just for the record: KVM guests are a typical example of an "always-on"
-timer implementation (irrespective of the host implementation - it is
-all virtual). Furthermore, the fact that they usually don't have another
-timer to provide timekeeping in presence of C3STOP timers prevents the
-kernel from using hrtimers.
+Signed-off-by: Johan Hovold <jhovold@gmail.com>
+---
+ arch/arm/boot/dts/am335x-igep0033.dtsi  | 1 -
+ arch/arm/boot/dts/omap3-devkit8000.dts  | 1 -
+ arch/arm/boot/dts/omap3-lilly-a83x.dtsi | 1 -
+ 3 files changed, 3 deletions(-)
 
-We then end up in the situation where we force the timers to generate a
-100Hz timer interrupt in a situation where using hrtimers and NO_HZ
-would be the most beneficial (and perfectly valid).
-
-I did a quick test with this patch (and the obvious kvmtool hack to add
-this property to the timer node), and noticed a 10-fold reduction in
-context-switches on the host for a single 4-vcpu guest that was
-otherwise *idle*!
-
-So a massive thumb-up from my side.
-
-Cheers,
-
-	M.
-
-> Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Magnus Damm <damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
-> Cc: Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/arch_timer.txt | 3 +++
->  drivers/clocksource/arm_arch_timer.c                 | 6 +++++-
->  2 files changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
-> index 06fc760..37b2caf 100644
-> --- a/Documentation/devicetree/bindings/arm/arch_timer.txt
-> +++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
-> @@ -19,6 +19,9 @@ to deliver its interrupts via SPIs.
->  
->  - clock-frequency : The frequency of the main counter, in Hz. Optional.
->  
-> +- always-on : a boolean property. If present, the timer is powered through an
-> +  always-on power domain, therefore it never loses context.
-> +
->  Example:
->  
->  	timer {
-> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-> index 57e823c..5163ec1 100644
-> --- a/drivers/clocksource/arm_arch_timer.c
-> +++ b/drivers/clocksource/arm_arch_timer.c
-> @@ -66,6 +66,7 @@ static int arch_timer_ppi[MAX_TIMER_PPI];
->  static struct clock_event_device __percpu *arch_timer_evt;
->  
->  static bool arch_timer_use_virtual = true;
-> +static bool arch_timer_c3stop;
->  static bool arch_timer_mem_use_virtual;
->  
->  /*
-> @@ -263,7 +264,8 @@ static void __arch_timer_setup(unsigned type,
->  	clk->features = CLOCK_EVT_FEAT_ONESHOT;
->  
->  	if (type == ARCH_CP15_TIMER) {
-> -		clk->features |= CLOCK_EVT_FEAT_C3STOP;
-> +		if (arch_timer_c3stop)
-> +			clk->features |= CLOCK_EVT_FEAT_C3STOP;
->  		clk->name = "arch_sys_timer";
->  		clk->rating = 450;
->  		clk->cpumask = cpumask_of(smp_processor_id());
-> @@ -665,6 +667,8 @@ static void __init arch_timer_init(struct device_node *np)
->  		}
->  	}
->  
-> +	arch_timer_c3stop = !of_property_read_bool(np, "always-on");
-> +
->  	arch_timer_register();
->  	arch_timer_common_init();
->  }
-
+diff --git a/arch/arm/boot/dts/am335x-igep0033.dtsi b/arch/arm/boot/dts/am335x-igep0033.dtsi
+index 7063311a58d9..06c822a48b71 100644
+--- a/arch/arm/boot/dts/am335x-igep0033.dtsi
++++ b/arch/arm/boot/dts/am335x-igep0033.dtsi
+@@ -118,7 +118,6 @@
+ 		reg = <0 0 0>; /* CS0, offset 0 */
+ 		nand-bus-width = <8>;
+ 		ti,nand-ecc-opt = "bch8";
+-		gpmc,device-nand = "true";
+ 		gpmc,device-width = <1>;
+ 		gpmc,sync-clk-ps = <0>;
+ 		gpmc,cs-on-ns = <0>;
+diff --git a/arch/arm/boot/dts/omap3-devkit8000.dts b/arch/arm/boot/dts/omap3-devkit8000.dts
+index bf5a515a3247..da402f0fdab4 100644
+--- a/arch/arm/boot/dts/omap3-devkit8000.dts
++++ b/arch/arm/boot/dts/omap3-devkit8000.dts
+@@ -112,7 +112,6 @@
+ 		reg = <0 0 0>; /* CS0, offset 0 */
+ 		nand-bus-width = <16>;
+ 
+-		gpmc,device-nand;
+ 		gpmc,sync-clk-ps = <0>;
+ 		gpmc,cs-on-ns = <0>;
+ 		gpmc,cs-rd-off-ns = <44>;
+diff --git a/arch/arm/boot/dts/omap3-lilly-a83x.dtsi b/arch/arm/boot/dts/omap3-lilly-a83x.dtsi
+index 6369d9f43ca2..cc1dce6978f5 100644
+--- a/arch/arm/boot/dts/omap3-lilly-a83x.dtsi
++++ b/arch/arm/boot/dts/omap3-lilly-a83x.dtsi
+@@ -368,7 +368,6 @@
+ 		/* no elm on omap3 */
+ 
+ 		gpmc,mux-add-data = <0>;
+-		gpmc,device-nand;
+ 		gpmc,device-width = <2>;
+ 		gpmc,wait-pin = <0>;
+ 		gpmc,wait-monitoring-ns = <0>;
 -- 
-Jazz is not dead. It just smells funny.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.3.2
+
