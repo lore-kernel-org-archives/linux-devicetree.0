@@ -1,62 +1,52 @@
 From: Bjorn Helgaas <bhelgaas@google.com>
 Subject: Re: [PATCH v7 1/6] pci: Introduce pci_register_io_range() helper function.
-Date: Tue, 8 Apr 2014 10:48:18 -0600
-Message-ID: <CAErSpo4nZiEcTth5W6ZhcRSne80T8VWTWR2zm0yN7ogFR0Norw@mail.gmail.com>
+Date: Tue, 8 Apr 2014 10:54:01 -0600
+Message-ID: <CAErSpo4RtEovyRXw=UXxBSz_hD4kfayBOkaKH_4Qk_s+hsEAxg@mail.gmail.com>
 References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
- <CAErSpo6S49qNuJQB-XXEfJ1Nkz=4gZ5_hE93=gb_yGZesA1H9Q@mail.gmail.com>
- <20140408094933.GS17163@e106497-lin.cambridge.arm.com> <6228807.4v9ZRtib77@wuerfel>
+ <CAErSpo4iEV6khP63ZTF+YUTKi9WLFXzMv13nxw15y3qDg15Ztg@mail.gmail.com>
+ <20140408095038.GT17163@e106497-lin.cambridge.arm.com> <4778371.oH3kIlbD0f@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <6228807.4v9ZRtib77@wuerfel>
+In-Reply-To: <4778371.oH3kIlbD0f@wuerfel>
 Sender: linux-pci-owner@vger.kernel.org
 To: Arnd Bergmann <arnd@arndb.de>
 Cc: Liviu Dudau <Liviu.Dudau@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 8, 2014 at 4:11 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-
-> There is a wide range of implementations across architectures:
+On Tue, Apr 8, 2014 at 4:22 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tuesday 08 April 2014 10:50:39 Liviu Dudau wrote:
+>> On Mon, Apr 07, 2014 at 06:58:24PM +0100, Bjorn Helgaas wrote:
+>> > On Mon, Apr 7, 2014 at 5:36 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> >
+>> > > I think migrating other architectures to use the same code should be
+>> > > a separate effort from adding a generic implementation that can be
+>> > > used by arm64. It's probably a good idea to have patches to convert
+>> > > arm32 and/or microblaze.
+>> >
+>> > Let me reiterate that I am 100% in favor of replacing arch-specific
+>> > code with more generic implementations.
+>> >
+>> > However, I am not 100% in favor of doing it as separate efforts
+>> > (although maybe I could be convinced).  The reasons I hesitate are
+>> > that (1) if only one architecture uses a new "generic" implementation,
+>> > we really don't know whether it is generic enough, (2) until I see the
+>> > patches to convert other architectures, I have to assume that I'm the
+>> > one who will write them, and (3) as soon as we add the code to
+>> > drivers/pci, it becomes partly my headache to maintain it, even if
+>> > only one arch benefits from it.
 >
-> a) no access to I/O ports at all (tile, s390, ...)
-> b) access to I/O ports only through special instructions (x86, ...)
-> c) all MMIO is mapped virtual contiguous to PCI_IOBASE or _IO_BASE
->    (most ppc64, arm32 with MMU, arm64, ...)
-> d) only one PCI host can have an I/O space (mips, microblaze, ...)
-> e) each host controller can have its own method (ppc64 with indirect pio)
-> f) PIO token equals virtual address plus offset (some legacy ARM platforms,
->    probably some other architectures), or physical address (sparc)
-> g) PIO token encodes address space number plus offset (ia64)
+> Fair enough.
 >
-> a) and b) are trivially handled by any implementation that falls
-> back to 'return -EINVAL'.
-> I believe that c) is the most appropriate solution and we should be
-> able to adopt it by most of the architectures that have an MMU and
-> make it the default implementation.
-> d) seems like a good fallback for noMMU architectures: While we do
-> need to support I/O spaces, we need to support multiple PCI domains,
-> and we need to support noMMU, the combination of all three should
-> be extremely rare, and I'd leave it up to the architecture to support
-> that if there is a real use case, rather than trying to put that into
-> common code.
-> Anything that currently requires e), f) or g) I think should keep
-> doing that and not try to use the generic implementation.
+> My approach to the asm-generic infrastruction has mostly been to ensure
+> that whoever adds a new architecture has to make things easier for the
+> next person.
 
-Thanks for the nice summary.  That's way more than I had figured out myself.
-
-I don't know whether it'd be worth it, especially for something that's
-so close to obsolete, but it seems like it should be *possible* to
-generalize and unify this somewhat.  I would argue that g) (which I
-wrote, so I know it better than the others) could fairly easily
-subsume c), d), and f), since it maps an ioport number to a virtual
-address for an MMIO access, but it doesn't assume that all the MMIO
-spaces are contiguous.
-
-b), e), and maybe a) could be handled with an exception, e.g., inside
-inb(), look up the struct io_space (e.g., similar to what ia64 does in
-__ia64_mk_io_addr()), and if that struct contains a non-zero ops
-pointer, use that instead of doing the MMIO access.  The ops pointer
-functions could use the x86 INB instruction or do the indirect PIO
-thing or whatever.
+That's a good rule.  But if we add a generic implementation used only
+by one architecture, the overall complexity has increased (we added
+new unshared code), so the next person has to look at N+1 existing
+implementations.  If we even convert one existing arch, that seems
+like an improvement: we have N implementations with one being used by
+at least two arches.
 
 Bjorn
