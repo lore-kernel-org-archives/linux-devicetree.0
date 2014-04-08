@@ -1,39 +1,35 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 3/3] edac: altera: Add SDRAM EDAC support for
- CycloneV/ArriaV
-Date: Tue, 8 Apr 2014 17:24:06 +0200
-Message-ID: <20140408152406.GI30077@pd.tnic>
-References: <1396907649-20212-1-git-send-email-tthayer@altera.com>
- <1396907649-20212-4-git-send-email-tthayer@altera.com>
- <20140408100851.GF30077@pd.tnic>
- <1396965459.23349.4.camel@dinh-ubuntu>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH 2/2] ARM: dts: MSM8974: Add pinctrl node
+Date: Tue, 08 Apr 2014 10:26:18 -0500
+Message-ID: <5344151A.8030108@codeaurora.org>
+References: <1391700529-11816-1-git-send-email-iivanov@mm-sol.com> 	 <1391700529-11816-2-git-send-email-iivanov@mm-sol.com> 	 <CAOZdJXVE7MSMBaL+bt0kjw5LEidz-aVp+vrWqQWkye6HdE7EeA@mail.gmail.com>  <1396959284.28420.45.camel@iivanov-dev> <5343EC87.700@codeaurora.org> <1396964805.28420.53.camel@iivanov-dev> <53440544.9040502@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1396965459.23349.4.camel@dinh-ubuntu>
+In-Reply-To: <53440544.9040502@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thor Thayer <tthayer@altera.com>
-Cc: robherring2@gmail.com, dougthompson@xmission.com, grant.likely@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, dinguyen@altera.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 08, 2014 at 08:57:39AM -0500, Thor Thayer wrote:
-> Yes, Altera has a group specifically supporting Linux drivers on the
-> Altera SoCs.
+On 04/08/2014 09:18 AM, Timur Tabi wrote:
+>
+> Back in July, Qualcomm submitted a patch that added this information
+> into the device tree:
+>
+> http://marc.info/?t=137185166100003&r=1&w=2
+>
+> However, this was rejected.  Now it appears that this information is
+> again being added to the device tree, but it's being accepted.  What's
+> different now?
 
-Then please add MAINTAINERS file entry for this EDAC driver so that
-people can send issues/reports to that group.
-
-> I was told that the device tree additions should be separate patches
-> in a series since the device tree additions go to a separate group for
-> approval.
-
-Well, the EDAC driver depends on the devicetree stuff, right? If so,
-they should go together.
+After re-reading the documentation and having someone kindly explain 
+this to me, I understand it now.  The device tree is only specifying 
+specific configurations that a driver wants, not the sum total of all 
+possible groupings.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-Sent from a fat crate under my desk. Formatting is fine.
---
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, hosted by the Linux Foundation.
