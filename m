@@ -1,85 +1,60 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCHv3 19/41] OMAPDSS: panel-dpi: Add DT support
-Date: Tue, 8 Apr 2014 08:38:13 +0300
-Message-ID: <53438B45.2090209@ti.com>
-References: <1390301833-24944-1-git-send-email-tomi.valkeinen@ti.com> <1390301833-24944-20-git-send-email-tomi.valkeinen@ti.com> <20140408001339.GA15842@atomide.com>
+From: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] of: Fix the section mismatch warnings.
+Date: Tue, 8 Apr 2014 13:48:07 +0800
+Message-ID: <1396936087-23043-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="d8WsVtOgQBImHRjjGmeMfFuTWOeX7IdQj"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140408001339.GA15842@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Stefan Roese <stefan.roese@gmail.com>, Sebastian Reichel <sre@debian.org>, Robert Nelson <robertcnelson@gmail.com>, "Dr . H . Nikolaus Schaller" <hns@goldelico.com>, Marek Belisko <marek@goldelico.com>, Sebastian Reichel <sre@ring0.de>, Javier Martinez Canillas <javier@dowhile0.org>, Enric Balletbo Serra <eballetbo@gmail.com>, Florian Vaussard <florian.vaussard@epfl.ch>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---d8WsVtOgQBImHRjjGmeMfFuTWOeX7IdQj
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+In tag next-20140407, building with CONFIG_DEBUG_SECTION_MISMATCH
+enabled, the following WARNING is occured:
 
-On 08/04/14 03:13, Tony Lindgren wrote:
-> Tomi,
->=20
-> * Tomi Valkeinen <tomi.valkeinen@ti.com> [140121 03:01]:
->> Add DT support for panel-dpi.
->=20
-> Looks like this patch did not get merged or am I missing
-> something?
+WARNING: drivers/built-in.o(.text.unlikely+0x2220): Section mismatch
+in reference from the function __reserved_mem_check_root() to the
+function .init.text:of_get_flat_dt_prop()
+The function __reserved_mem_check_root() references
+the function __init of_get_flat_dt_prop().
+This is often because __reserved_mem_check_root lacks a __init
+annotation or the annotation of of_get_flat_dt_prop is wrong.
 
-Yes, I dropped it. None of the boards that I converted used panel-dpi.
-There was so much discussions about the display bindings, so I thought
-it's better to leave out all but the needed patches.
+WARNING: vmlinux.o(.text.unlikely+0xb9d0): Section mismatch in reference
+from the function __reserved_mem_check_root() to the (unknown reference)
+.init.data:(unknown)
+The function __reserved_mem_check_root() references
+the (unknown reference) __initdata (unknown).
+This is often because __reserved_mem_check_root lacks a __initdata
+annotation or the annotation of (unknown) is wrong.
 
-> As you probably are aware, we have at least these boards
-> needing it before we can remove the omap3 legacy support:
->=20
-> board-am3517evm.c
-> board-cm-t35.c
-> board-devkit8000.c
-> board-ldp.c
-> board-overo.c
->=20
-> We could probably set the display timings based on the
-> compatible flag in the driver if that's an issue?
+This is cause by :
+'drivers: of: add initialization code for dynamic reserved memory'.
 
-The timings shouldn't be an issue. But there's the backlight GPIO,
-currently handled by panel-dpi, which should be removed from the panel.
-We should use gpio-backlight for that one.
+Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ drivers/of/fdt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> And then board-omap3pandora.c also needs support for
-> panel_tpo_td043mtea1_platform_data.
-
-Yep, there's still much to do for DSS DT support. Hopefully it will be
-easier now that the core support is there. I'll continue working on the
-remaining boards and panels. However, I don't have any of the remaining
-boards, so help is of course appreciated.
-
- Tomi
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index fa16a91..7a2ef7b 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -491,7 +491,7 @@ static int __init __reserved_mem_reserve_reg(unsigned long node,
+  * in /reserved-memory matches the values supported by the current implementation,
+  * also check if ranges property has been provided
+  */
+-static int __reserved_mem_check_root(unsigned long node)
++static int __init __reserved_mem_check_root(unsigned long node)
+ {
+ 	__be32 *prop;
+ 
+-- 
+1.8.4
 
 
-
---d8WsVtOgQBImHRjjGmeMfFuTWOeX7IdQj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTQ4tJAAoJEPo9qoy8lh71drAP/RXIVWMBoFi2dySEsTzaWJ0b
-gIHhGMNypFPv7q73ZQj7ay1PxLvryA72PWJQvIahJZZ4c9HL4f+yKHGm6j4k+4nz
-AKncGVPmvEjfUc/Js6kWg5OxoVEA5nTZw0NTURIQFs2ImxhazCmSMAUy403knuHX
-/S7/JiARVGkgHo7n3a20bTcXUgBJWVEHuT/3aOzzoZl61NSy+sVnJoFeK0GUMO6T
-uS+/cYdKkyv3rNds23XjXuHn/o0dMQC7P/4G7wvDkMqk9fh1vAdvuRqnRepg1CN4
-i2UbvOt+TC6dPoBlUrTZOPru77g7Evy6Alv5u/AhCbbzuSwbqNQPGKeQEzm/mUJr
-U9VOkTaGtYtgy5Why8OGx0zjhZ95zF3xUfldC+i+RH6UBT/agJ13SM4RngTHQGJh
-O2lCk06T1ynT1Bks7ZcdPDWYVPlMzfAsKRr/Wpf0SZSnT/QuTCKb977aF8YVUj/8
-cfLAg7J1veMUyQeGCOIzUW4pvfMzrvfLHJj7IrUCH+bQ9FPMnshGMmUJw2YcRu79
-iP1Q6hfAimyrWQfL4tBLobZOoNdNX/5YjugVhEuwd7VTdCWmSEdwdfF+lyBHuj53
-Eo6Ft+4RV5iQmmT2wudI0U0OJzE2nhAjRhu80Di1eEtVn9ROsE3n8go0POBz4afg
-utlYWnPGDPFWOe5X3lgc
-=1d5G
------END PGP SIGNATURE-----
-
---d8WsVtOgQBImHRjjGmeMfFuTWOeX7IdQj--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
