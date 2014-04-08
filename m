@@ -1,7 +1,7 @@
 From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 2/2] ARM: dts: keystone: move i2c0 device node from SoC to board files
-Date: Tue, 8 Apr 2014 14:46:07 +0300
-Message-ID: <1396957567-14540-3-git-send-email-grygorii.strashko@ti.com>
+Subject: [PATCH v2 1/2] ARM: dts: keystone: add cell's information to i2c nodes
+Date: Tue, 8 Apr 2014 14:46:06 +0300
+Message-ID: <1396957567-14540-2-git-send-email-grygorii.strashko@ti.com>
 References: <1396957567-14540-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,81 +12,42 @@ To: santosh.shilimkar-l0cyMroinI0@public.gmane.org
 Cc: ivan.khoronzhuk-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-I2C devices are not the part of Keystone SoC and have to be
-defined in board DTS files.
-Hence, move i2c0 EEPROM device node from Keystone SoC to
-k2hk, k2e, k2l EVM files as they all have similar EEPROM SoCs
-installed.
+I2C nodes should always have #address-cells and #size-cells defined,
+otherwise warnings will be produced in case of adding child
+nodes to the I2C bus in DT:
+Warning (avoid_default_addr_size): Relying on default #address-cells value for /soc/i2c@2530800/pca@20
+Warning (avoid_default_addr_size): Relying on default #size-cells value for /soc/i2c@2530800/pca@20
+
+Hence, ensure that all i2cX nodes have #address-cells and #size-cells
+properties defined.
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 ---
- arch/arm/boot/dts/k2e-evm.dts   |    7 +++++++
- arch/arm/boot/dts/k2hk-evm.dts  |    7 +++++++
- arch/arm/boot/dts/k2l-evm.dts   |    7 +++++++
- arch/arm/boot/dts/keystone.dtsi |    5 -----
- 4 files changed, 21 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/keystone.dtsi |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/k2e-evm.dts b/arch/arm/boot/dts/k2e-evm.dts
-index 74b3b63..d60ce34 100644
---- a/arch/arm/boot/dts/k2e-evm.dts
-+++ b/arch/arm/boot/dts/k2e-evm.dts
-@@ -58,3 +58,10 @@
- &usb1 {
- 	status = "okay";
- };
-+
-+&i2c0 {
-+	dtt@50 {
-+		compatible = "at,24c1024";
-+		reg = <0x50>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/k2hk-evm.dts b/arch/arm/boot/dts/k2hk-evm.dts
-index c93d06f..d2aa102 100644
---- a/arch/arm/boot/dts/k2hk-evm.dts
-+++ b/arch/arm/boot/dts/k2hk-evm.dts
-@@ -138,3 +138,10 @@
- 		};
- 	};
- };
-+
-+&i2c0 {
-+	dtt@50 {
-+		compatible = "at,24c1024";
-+		reg = <0x50>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/k2l-evm.dts b/arch/arm/boot/dts/k2l-evm.dts
-index 50a7013..bdc94a0 100644
---- a/arch/arm/boot/dts/k2l-evm.dts
-+++ b/arch/arm/boot/dts/k2l-evm.dts
-@@ -35,3 +35,10 @@
- &usb {
- 	status = "okay";
- };
-+
-+&i2c0 {
-+	dtt@50 {
-+		compatible = "at,24c1024";
-+		reg = <0x50>;
-+	};
-+};
 diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-index f730392..7563934 100644
+index 90823eb..f730392 100644
 --- a/arch/arm/boot/dts/keystone.dtsi
 +++ b/arch/arm/boot/dts/keystone.dtsi
-@@ -102,11 +102,6 @@
- 			interrupts = <GIC_SPI 283 IRQ_TYPE_EDGE_RISING>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
--
--			dtt@50 {
--				compatible = "at,24c1024";
--				reg = <0x50>;
--			};
+@@ -115,6 +115,8 @@
+ 			clock-frequency = <100000>;
+ 			clocks = <&clki2c>;
+ 			interrupts = <GIC_SPI 286 IRQ_TYPE_EDGE_RISING>;
++			#address-cells = <1>;
++			#size-cells = <0>;
  		};
  
- 		i2c1: i2c@2530400 {
+ 		i2c2: i2c@2530800 {
+@@ -123,6 +125,8 @@
+ 			clock-frequency = <100000>;
+ 			clocks = <&clki2c>;
+ 			interrupts = <GIC_SPI 289 IRQ_TYPE_EDGE_RISING>;
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 		};
+ 
+ 		spi0: spi@21000400 {
 -- 
 1.7.9.5
 
