@@ -1,66 +1,44 @@
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: Re: [PATCH 6/9] ARM: shmobile: r8a7790: add audio dmac node
-Date: Tue, 08 Apr 2014 14:58:49 +0100
-Message-ID: <53440099.5010002@codethink.co.uk>
-References: <1396901229-29117-1-git-send-email-ben.dooks@codethink.co.uk> <1396901229-29117-7-git-send-email-ben.dooks@codethink.co.uk> <53430CFC.7000107@cogentembedded.com>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH v2 0/2] Add PCI USB DT support for R8A7790/Lager reference board
+Date: Tue, 8 Apr 2014 22:59:48 +0900
+Message-ID: <CANqRtoSg+JLZ5AbiOnnfXjg3m86q5J2U675VhgmhP1jxmDmmLA@mail.gmail.com>
+References: <201404080235.22151.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <53430CFC.7000107@cogentembedded.com>
+In-Reply-To: <201404080235.22151.sergei.shtylyov@cogentembedded.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-kernel@lists.codethink.co.uk, dmaengine@vger.kernel.org
-Cc: vinod.koul@intel.com, dan.j.williams@intel.com, linux-sh@vger.kernel.org, magnus.damm@opensource.se, horms@verge.net.au, g.liakhovetski@gmx.d, kuninori.morimoto.gx@renesas.com, devicetree@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: "Simon Horman [Horms]" <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, robh+dt@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/04/14 21:39, Sergei Shtylyov wrote:
+Hi Sergei,
+
+On Tue, Apr 8, 2014 at 7:35 AM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
 > Hello.
 >
-> On 04/08/2014 12:07 AM, Ben Dooks wrote:
+>    Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
+> 'renesas-devel-v3.14-20140403' tag. Here we add the PCI USB device tree
+> support on the R8A7790/Lager reference board. The patchset requires the
+> 'pci-rcar-gen2' driver device tree support (just re-posted) in order to work.
 >
->> Add initial audio dmac node and resources.
->
->> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
->> ---
->>   arch/arm/boot/dts/r8a7790.dtsi | 68
->> ++++++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 68 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/r8a7790.dtsi
->> b/arch/arm/boot/dts/r8a7790.dtsi
->> index 2c8cbbd..6032783 100644
->> --- a/arch/arm/boot/dts/r8a7790.dtsi
->> +++ b/arch/arm/boot/dts/r8a7790.dtsi
->> @@ -176,6 +176,74 @@
->>           };
->>       };
->>
->> +    dma1: dma-mux@1 {
->> +        compatible = "renesas,shdma-mux";
->> +        #dma-cells = <1>;
->> +        dma-channels = <20>;
->> +        dma-requests = <256>;
->> +        #address-cells = <2>;
->> +        #size-cells = <2>;
->> +        ranges;
->> +
->> +        audiodma0: dmac@ec700000 {
->
->     According to the ePARR standard [1], the node name should be
-> "dma-controller", not just "dmac".
->
->> +            compatible = "renesas,dma-r8a7790", "renesas,dma-arm";
->> +            clocks = <&mstp5_clks R8A7790_CLK_AUDIO_DMAC0>;
->> +            dma-channels = <13>;
->> +            status = "disabled";
->> +            reg = <0 0xec700020 0 0xffc0>;
->> +            interrupt-parent = <&gic>;
->
->     Shouldn't it be just inherited from the top level node?
+> [1/2] ARM: shmobile: r8a7790: add internal PCI bridge nodes
+> [2/2] ARM: shmobile: lager: enable internal PCI
 
-Thanks, it should be in this case and forgot to remove it.
+Thanks for your efforts. It is good to see that you are caring for
+both r8a7790 and r8a7791 now.
 
+By the way, have you decided how to use DT with the PHY driver? Just
+integrating this portion seems of the hardware seems insufficient to
+me.
 
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+I believe the PHY driver is also needed in the system for correct
+runtime configuration of USB0 and USB2. So DT support is needed for
+multiple drivers for correct operation in the DT case. Regardless it
+is of course good to see DT support for this hardware block but it
+would be useful to have a good overview of DT support for all
+components involved in USB Host support to avoid committing to a
+premature half-baked ABI.
+
+/ magnus
