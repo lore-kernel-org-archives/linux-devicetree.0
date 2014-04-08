@@ -1,98 +1,33 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v7 6/6] pci: Add support for creating a generic
- host_bridge from device tree
-Date: Tue, 8 Apr 2014 14:09:20 +0100
-Message-ID: <20140408130920.GY17163@e106497-lin.cambridge.arm.com>
-References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
- <1394811272-1547-7-git-send-email-Liviu.Dudau@arm.com>
- <5343F252.2050708@linaro.org>
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] ARM: dts: keystone: i2c updates
+Date: Tue, 8 Apr 2014 09:16:17 -0400
+Message-ID: <5343F6A1.6010608@ti.com>
+References: <1396957567-14540-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <5343F252.2050708@linaro.org>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Hanjun Guo <hanjun.guo@linaro.org>
-Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1396957567-14540-1-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Strashko, Grygorii" <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Cc: "ivan.khoronzhuk-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org" <ivan.khoronzhuk-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hanjun,
+On Tuesday 08 April 2014 07:46 AM, Strashko, Grygorii wrote:
+> Hi Santosh,
+> 
+> There are two small non critical fixes for Keystone 2 I2C DT definitions.
+> 
+> Changes in v2;
+> - added additional patch to move i2c0 device node from SoC to board files
+> - updated commits messages
+> 
+Thanks. I shall pick these up for 3.16.
 
-On Tue, Apr 08, 2014 at 01:57:54PM +0100, Hanjun Guo wrote:
-> Hi Liviu,
->=20
-> On 2014-3-14 23:34, Liviu Dudau wrote:
-> > Several platforms use a rather generic version of parsing
-> > the device tree to find the host bridge ranges. Move the common cod=
-e
-> > into the generic PCI code and use it to create a pci_host_bridge
-> > structure that can be used by arch code.
-> >=20
-> > Based on early attempts by Andrew Murray to unify the code.
-> > Used powerpc and microblaze PCI code as starting point.
-> >=20
-> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> > Tested-by: Tanmay Inamdar <tinamdar@apm.com>
-> > ---
-> >  drivers/pci/host-bridge.c | 158 ++++++++++++++++++++++++++++++++++=
-++
-> >  include/linux/pci.h       |  13 +++
-> >  2 files changed, 171 insertions(+)
-> >=20
-> > diff --git a/drivers/pci/host-bridge.c b/drivers/pci/host-bridge.c
-> > index 8708b652..7cda90b 100644
-> > --- a/drivers/pci/host-bridge.c
-> > +++ b/drivers/pci/host-bridge.c
-> > @@ -6,9 +6,14 @@
-> >  #include <linux/init.h>
-> >  #include <linux/pci.h>
-> >  #include <linux/module.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/of_pci.h>
-> > +#include <linux/slab.h>
-> > =20
-> >  #include "pci.h"
-> > =20
-> > +static atomic_t domain_nr =3D ATOMIC_INIT(-1);
->=20
-> domain_nr will only be used inside the #ifdef CONFIG_OF,
-> and this will lead to compile warning which complains that
-> 'domain_nr' defined but not used when CONFIG_OF=3Dn (for example
-> on x86).
->=20
-> How about moving the definition to --->
->=20
-> > +
-> >  static struct pci_bus *find_pci_root_bus(struct pci_bus *bus)
-> >  {
-> >  	while (bus->parent)
-> > @@ -92,3 +97,156 @@ void pcibios_bus_to_resource(struct pci_bus *bu=
-s, struct resource *res,
-> >  	res->end =3D region->end + offset;
-> >  }
-> >  EXPORT_SYMBOL(pcibios_bus_to_resource);
-> > +
-> > +#ifdef CONFIG_OF
->=20
-> here?
+Regards,
+Santosh
 
-I've already moved the definition there in my refresh.
-
-Thanks for reviewing the code,
-Liviu
-
->=20
-> Thanks
-> Hanjun
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
