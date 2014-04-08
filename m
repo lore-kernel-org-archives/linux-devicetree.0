@@ -1,89 +1,78 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 3/3] edac: altera: Add SDRAM EDAC support for
- CycloneV/ArriaV
-Date: Tue, 8 Apr 2014 14:45:41 +0200
-Message-ID: <20140408124541.GA16054@pengutronix.de>
-References: <1396907649-20212-1-git-send-email-tthayer@altera.com>
- <1396907649-20212-4-git-send-email-tthayer@altera.com>
- <20140408104525.GA11876@e106331-lin.cambridge.arm.com>
+From: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2] mtd: davinci-nand: disable subpage write for keystone-nand
+Date: Tue, 8 Apr 2014 15:51:34 +0300
+Message-ID: <5343F0D6.2010804@ti.com>
+References: <1395346112-13350-1-git-send-email-ivan.khoronzhuk@ti.com> <532B4C36.8060405@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140408104525.GA11876-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+In-Reply-To: <532B4C36.8060405-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, "robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org" <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 08, 2014 at 11:45:25AM +0100, Mark Rutland wrote:
-> On Mon, Apr 07, 2014 at 10:54:09PM +0100, tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
-> > From: Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-> > 
-> > Added EDAC support for reporting ECC errors of CycloneV
-> > and ArriaV SDRAM controller.
-> > - The SDRAM Controller registers are used by the FPGA bridge so
-> >   these are accessed through the syscon interface.
-> > - The configuration of the SDRAM memory size for the EDAC framework
-> >   is discovered from the memory node of the device tree.
-> > - Documentation of the bindings in devicetree/bindings/arm/altera/
-> >   socfpga-sdram-edac.txt
-> > - Correction of single bit errors, detection of double bit errors.
-> > 
-> > Signed-off-by: Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-> > To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > To: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>
-> > To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Cc: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > ---
-> >  drivers/edac/Kconfig          |    9 ++
-> >  drivers/edac/Makefile         |    2 +
-> >  drivers/edac/altera_mc_edac.c |  360 +++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 371 insertions(+)
-> >  create mode 100644 drivers/edac/altera_mc_edac.c
-> 
-> [...]
-> 
-> > +/* Get total memory size from Open Firmware DTB */
-> > +static u32 altr_sdram_get_total_mem_size(void)
-> > +{
-> > +       struct device_node *np;
-> > +       u32 retcode, reg_array[2];
-> > +
-> > +       np = of_find_node_by_type(NULL, "memory");
-> > +       if (!np)
-> > +               return 0;
-> > +
-> > +       retcode = of_property_read_u32_array(np, "reg",
-> > +                                            reg_array, ARRAY_SIZE(reg_array));
-> 
-> There's no requirement that #address-cells = <1> or #size-cells = <1>,
-> even if any values in either would fit into 32 bits. If we must read
-> this from the DTB rather than elsewhere, please check
-> of_n_{addr,size}_cells.
-> 
-> Additionally, it's possible that the physical memory might be described
-> over multiple reg entries, or multiple memory nodes for some arbitrary
-> reason.
-> 
-> Can we not get this info from elsewhere rather than having to parse the
-> memory node within a driver?
-> 
 
-It should be possible to calculate this from the dramaddrw register in the
-SDRAM controller.
+On 03/20/2014 10:14 PM, Santosh Shilimkar wrote:
+> On Thursday 20 March 2014 04:08 PM, Ivan Khoronzhuk wrote:
+>> From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+>>
+>> Sub page write doesn't work because of hw issue in controller found on
+>> Keystone SOCs. AEMIF controller is also used on DaVinci SOCs which
+>> don't seems to have any issue. So add "ti,keysone-nand" compatible
+>> to nand driver in order to set NAND_NO_SUBPAGE_WRITE option.
+>>
+>> Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Cc: Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
+>> Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+>>
+>> Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+>> ---
+>>
+> Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+>
+>> This patch is a result of discussion on patch v1:
+>> https://lkml.org/lkml/2014/3/20/461
+>>
+>>   drivers/mtd/nand/davinci_nand.c | 6 ++++++
+>>   1 file changed, 6 insertions(+)
+>>
+>> diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
+>> index 4615d79..b922c8e 100644
+>> --- a/drivers/mtd/nand/davinci_nand.c
+>> +++ b/drivers/mtd/nand/davinci_nand.c
+>> @@ -523,6 +523,7 @@ static struct nand_ecclayout hwecc4_2048 = {
+>>   #if defined(CONFIG_OF)
+>>   static const struct of_device_id davinci_nand_of_match[] = {
+>>   	{.compatible = "ti,davinci-nand", },
+>> +	{.compatible = "ti,keystone-nand", },
+>>   	{},
+>>   };
+>>   MODULE_DEVICE_TABLE(of, davinci_nand_of_match);
+>> @@ -581,6 +582,11 @@ static struct davinci_nand_pdata
+>>   		    of_property_read_bool(pdev->dev.of_node,
+>>   			"ti,davinci-nand-use-bbt"))
+>>   			pdata->bbt_options = NAND_BBT_USE_FLASH;
+>> +
+>> +		if (of_device_is_compatible(pdev->dev.of_node,
+>> +					    "ti,keystone-nand")) {
+>> +			pdata->options |= NAND_NO_SUBPAGE_WRITE;
+>> +		}
+>>   	}
+>>   
+>>   	return dev_get_platdata(&pdev->dev);
+>>
+>>
 
-Regards,
-Steffen
+Brian,
+Could you pick up subj patch?
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Regards,
+Ivan Khoronzhuk
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
