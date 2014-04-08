@@ -1,265 +1,358 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/9] ARM: shmobile: r8a7790: add dma defines for sys and audio dmacs
-Date: Tue, 08 Apr 2014 15:22:17 +0200
-Message-ID: <1756954.RD74mEdSeA@avalon>
-References: <1396901229-29117-1-git-send-email-ben.dooks@codethink.co.uk> <1396901229-29117-3-git-send-email-ben.dooks@codethink.co.uk>
+Subject: Re: [PATCH 8/9] DMA: shdma: initial of common code
+Date: Tue, 08 Apr 2014 15:30:51 +0200
+Message-ID: <5567568.Dj9beQre5s@avalon>
+References: <1396901229-29117-1-git-send-email-ben.dooks@codethink.co.uk> <1396901229-29117-9-git-send-email-ben.dooks@codethink.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1396901229-29117-3-git-send-email-ben.dooks@codethink.co.uk>
+In-Reply-To: <1396901229-29117-9-git-send-email-ben.dooks@codethink.co.uk>
 Sender: linux-sh-owner@vger.kernel.org
 To: Ben Dooks <ben.dooks@codethink.co.uk>
 Cc: linux-kernel@lists.codethink.co.uk, dmaengine@vger.kernel.org, vinod.koul@intel.com, dan.j.williams@intel.com, linux-sh@vger.kernel.org, magnus.damm@opensource.se, horms@verge.net.au, g.liakhovetski@gmx.d, kuninori.morimoto.gx@renesas.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ben
+Hi Ben,
 
-Thank you for the patch.
+thank you for the patch.
 
-On Monday 07 April 2014 21:07:02 Ben Dooks wrote:
-> Add the DMA resource IDs for the R8A7790 Audio and SYS DMA controllers
-> for use when specifying DMA handles.
+On Monday 07 April 2014 21:07:08 Ben Dooks wrote:
+> Add support for building shdma internal data from the device tree to allow
+> converting the driver to be device tree enabled.
+> 
+> It includes a helper for the of case to build the internal data used to
+> select and filter out the DMA channels from the ID information in the
+> device tree. Also updates the documentation for the DT case.
 > 
 > Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 > ---
->  include/dt-bindings/dma/r8a7790-dma.h | 223 +++++++++++++++++++++++++++++++
->  1 file changed, 223 insertions(+)
->  create mode 100644 include/dt-bindings/dma/r8a7790-dma.h
+>  Documentation/devicetree/bindings/dma/shdma.txt |  24 +++++
+>  drivers/dma/sh/shdma-of.c                       | 134 +++++++++++++++++++++
+>  drivers/dma/sh/shdma.h                          |  20 ++++
+>  include/dt-bindings/dma/shdma.h                 |  45 ++++++++
+>  4 files changed, 223 insertions(+)
+>  create mode 100644 include/dt-bindings/dma/shdma.h
 > 
-> diff --git a/include/dt-bindings/dma/r8a7790-dma.h
-> b/include/dt-bindings/dma/r8a7790-dma.h new file mode 100644
-> index 0000000..7c52132
-> --- /dev/null
-> +++ b/include/dt-bindings/dma/r8a7790-dma.h
-> @@ -0,0 +1,223 @@
-> +/*
-> + * R8A7790 System and Audio DMA channel resource identifiers
-> + *
-> + * Copyirght (c) 2014 Codethink Ltd.
+> diff --git a/Documentation/devicetree/bindings/dma/shdma.txt
+> b/Documentation/devicetree/bindings/dma/shdma.txt index 2a3f3b8..7d9e7bd
+> 100644
+> --- a/Documentation/devicetree/bindings/dma/shdma.txt
+> +++ b/Documentation/devicetree/bindings/dma/shdma.txt
+> @@ -15,6 +15,12 @@ Required properties:
+>  - compatible:	should be "renesas,shdma-mux"
+>  - #dma-cells:	should be <1>, see "dmas" property below
+> 
+> +New properites, required for renesas,dma-r8a7790.
+
+s/properites/properties/
+
+> +- reneasa,slaves: A list of DMA channel MID/RID and the configuration to
+
+s/reneasa/renesas/
+
+> +		go with them. These pairs are in the form of:
+> +			< mid+rid configuration>
+
+The description is pretty terse. Just reading it I don't know what slaves need 
+to be listed, what an MID or RID is, how "mid+rid" combines the MID and RID 
+exactly, and what configuration can be specified. I believe a more detailed 
+description is needed.
+
+> +
+> +
+>  Optional properties (currently unused):
+>  - dma-channels:	number of DMA channels
+>  - dma-requests:	number of DMA request signals
+> @@ -25,6 +31,7 @@ Required properties:
+>  - compatible:	should be of the form "renesas,shdma-<soc>", where <soc>
+> should be replaced with the desired SoC model, e.g.
+>  		"renesas,shdma-r8a73a4" for the system DMAC on r8a73a4 SoC
+> +		"renesas,dma-r8a7790" for the DMAC on the R8A7790.
+> 
+>  Example:
+>  	dmac: dma-multiplexer@0 {
+> @@ -70,6 +77,23 @@ Example:
+>  		};
+>  	};
+> 
+> +For r8a7790, the following is an example of using the reneasas,slaves to
+> +configure the slave channels on the controller:
+> +
+> +	dma0: dma-mux@0 {
+> +		compatible = "renesas,shdma-mux";
+> +		#dma-cells = <1>;
+> +		dma-channels = <20>;
+> +		dma-requests = <256>;
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +
+> +		renesas,slaves = <R8A7790_DMA_SDHI0_RX  CHCR_RX_256BIT>,
+> +                                 <R8A7790_DMA_SDHI0_TX  CHCR_TX_256BIT>;
+
+The MID/RID of slave devices are already specified in the "dmas" property of 
+the slave devices DT nodes. Why does it need to be specified here as well ? Is 
+the configuration hardware properties or software parameters ? In the later 
+case shouldn't it be specified in the slave DT node instead ?
+
+> +	}
+> +
+>  * DMA client
+> 
+>  Required properties:
+> diff --git a/drivers/dma/sh/shdma-of.c b/drivers/dma/sh/shdma-of.c
+> index 06473a0..386fd9e 100644
+> --- a/drivers/dma/sh/shdma-of.c
+> +++ b/drivers/dma/sh/shdma-of.c
+> @@ -3,12 +3,15 @@
+>   *
+>   * Copyright (C) 2013 Renesas Electronics Inc.
+>   * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> + * Copyright (c) 2014 Codethink Limited
 > + *	Ben Dooks <ben.dooks@codethink.co.uk>
+>   *
+>   * This is free software; you can redistribute it and/or modify
+>   * it under the terms of version 2 of the GNU General Public License as
+>   * published by the Free Software Foundation.
+>   */
+> 
+> +#include <linux/slab.h>
+>  #include <linux/dmaengine.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> @@ -16,9 +19,37 @@
+>  #include <linux/of_platform.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/shdma-base.h>
+> +#include <linux/sh_dma.h>
+> +
+> +#include <dt-bindings/dma/shdma.h>
+> 
+>  #define to_shdma_chan(c) container_of(c, struct shdma_chan, dma_chan)
+> 
+> +#include "shdma-arm.h"
+> +
+> +static const unsigned int arm_dma_ts_shift[] = SH_DMAE_TS_SHIFT;
+> +
+> +static struct sh_dmae_pdata arm_dmae_info = {
+> +	.ts_low_shift	= SHDMA_ARM_TS_LOW_SHIFT,
+> +	.ts_low_mask	= SHDMA_ARM_TS_LOW_BIT << SHDMA_ARM_TS_LOW_SHIFT,
+> +	.ts_high_shift	= SHDMA_ARM_TS_HI_SHIFT,
+> +	.ts_high_mask	= SHDMA_ARM_TS_HI_BIT << SHDMA_ARM_TS_HI_SHIFT,
+> +	.ts_shift	= arm_dma_ts_shift,
+> +	.ts_shift_num	= ARRAY_SIZE(arm_dma_ts_shift),
+> +	.dmaor_init	= DMAOR_DME,
+> +	.chclr_present	= 1,
+> +	.chclr_bitwise	= 1,
+> +};
+> +
+> +struct sh_dmae_of_info shdma_arm_info = {
+> +	.pdata_template	= &arm_dmae_info,
+> +	.channel_offset	= 0x8000-0x20,
+> +	.channel_stride	= 0x80,
+> +	.offset		= 0x0,
+> +	.dmars		= 0x40,
+> +	.chclr_offset	= 0x80,
+> +};
+> +
+>  static struct dma_chan *shdma_of_xlate(struct of_phandle_args *dma_spec,
+>  				       struct of_dma *ofdma)
+>  {
+> @@ -40,6 +71,109 @@ static struct dma_chan *shdma_of_xlate(struct
+> of_phandle_args *dma_spec, return chan;
+>  }
+> 
+> +const struct sh_dmae_pdata *
+> +sh_dma_probe_of(struct platform_device *pdev, const struct of_device_id
+> *ofmatch) +{
+> +	const struct device_node *np = pdev->dev.of_node;
+> +	const struct sh_dmae_of_info *ofinf;
+> +	struct device *dev = &pdev->dev;
+> +	struct sh_dmae_pdata *pdata;
+> +	struct sh_dmae_channel *chan;
+> +	struct property *prop;
+> +	u32 nr_chan;
+> +	unsigned ch;
+> +	int ret;
+> +	int len;
+> +
+> +	if (!ofmatch)
+> +		return NULL;
+> +
+> +	ofinf = ofmatch->data;
+> +
+> +	pdata = devm_kzalloc(dev, sizeof(struct sh_dmae_pdata), GFP_KERNEL);
+> +	if (!pdata) {
+> +		dev_err(dev, "failed to make platform data\n");
+> +		return NULL;
+> +	}
+> +
+> +	*pdata = *ofinf->pdata_template;	/* copy in template first */
+> +
+> +	ret = of_property_read_u32(np, "dma-channels", &nr_chan);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to get number of channels\n");
+> +		return NULL;
+> +	}
+> +
+> +	chan = devm_kzalloc(dev, nr_chan * sizeof(struct sh_dmae_channel),
+> +			    GFP_KERNEL);
+> +	if (!chan) {
+> +		dev_err(dev, "cannot allocate %d channels\n", nr_chan);
+> +		return NULL;
+> +	}
+> +
+> +	pdata->channel = chan;
+> +	pdata->channel_num = nr_chan;
+> +
+> +	dev_dbg(dev, "%d dma channels allocated\n", nr_chan);
+> +
+> +	for (ch = 0; ch < nr_chan; ch++) {
+> +		struct sh_dmae_channel *cp = chan + ch;
+> +		u32 base = ofinf->channel_offset + ofinf->channel_stride * ch;
+> +
+> +		cp->offset = base + ofinf->offset;
+> +		cp->dmars = base + ofinf->dmars;
+> +		cp->chclr_bit = ch;
+> +		cp->chclr_offset = ofinf->chclr_offset;
+> +
+> +		dev_dbg(dev, "ch %d: off %08x, dmars %08x, bit %d, off %d\n",
+> +			ch, cp->offset, cp->dmars,
+> +			cp->chclr_bit, cp->chclr_offset);
+> +	}
+> +
+> +	/* look in current, or parent node for the slave mappings */
+> +	prop = of_find_property(np, "renesas,slaves", &len);
+> +	if (!prop)
+> +		prop = of_find_property(np->parent, "renesas,slaves", &len);
+> +
+> +	if (prop) {
+> +		struct sh_dmae_slave_config *slaves;
+> +		int nr_slaves = len / (sizeof(u32) * 3);
+> +		const __be32 *of_ptr;
+> +		u32 of_idx;
+> +
+> +		slaves = devm_kzalloc(dev, sizeof(*slaves) * nr_slaves,
+> +				      GFP_KERNEL);
+> +		if (!slaves) {
+> +			dev_err(dev, "cannot allocate %d slaves\n", nr_slaves);
+> +			return NULL;
+> +		}
+> +
+> +		pdata->slave = slaves;
+> +		pdata->slave_num = nr_slaves;
+> +		of_idx = 0;
+> +		of_ptr = NULL;
+> +
+> +		dev_dbg(dev, "building %d slaves\n", nr_slaves);
+> +
+> +		for (; nr_slaves > 0; nr_slaves--, slaves++) {
+> +			of_ptr= of_prop_next_u32(prop, of_ptr, &of_idx);
+> +			slaves->mid_rid = be32_to_cpu(*of_ptr);
+> +			slaves->slave_id = slaves->mid_rid;
+> +
+> +			of_ptr= of_prop_next_u32(prop, of_ptr, &of_idx);
+> +			slaves->chcr = be32_to_cpu(*of_ptr);
+> +
+> +			dev_dbg(dev, "slave: id %02x, chcr %08x, addr %08x\n",
+> +				slaves->mid_rid, slaves->chcr, slaves->addr);
+> +		}
+> +	} else {
+> +		dev_warn(dev, "did not find any slave information\n");
+> +	}
+> +
+> +	pdev->dev.platform_data = pdata;
+> +	return pdata;
+> +};
+> +
+>  static int shdma_of_probe(struct platform_device *pdev)
+>  {
+>  	const struct of_dev_auxdata *lookup = dev_get_platdata(&pdev->dev);
+> diff --git a/drivers/dma/sh/shdma.h b/drivers/dma/sh/shdma.h
+> index 758a57b..0db8327 100644
+> --- a/drivers/dma/sh/shdma.h
+> +++ b/drivers/dma/sh/shdma.h
+> @@ -56,6 +56,26 @@ struct sh_dmae_desc {
+>  	struct shdma_desc shdma_desc;
+>  };
+> 
+> +/*
+> + * Template information for building shdma data, provided as part of the
+> + * data field in the of_device_id structure. This is then used to build
+> + * the platform data for the dma code.
+> + */
+> +struct sh_dmae_of_info {
+> +	struct sh_dmae_pdata	*pdata_template;
+> +	unsigned int		channel_offset;
+> +	unsigned int		channel_stride;
+> +	int			offset;
+> +	int			dmars;
+> +	int			chclr_offset;
+> +	int			chclr_bit;
+> +};
+> +
+> +extern struct sh_dmae_of_info shdma_arm_info;
+> +
+> +extern const struct sh_dmae_pdata *sh_dma_probe_of(struct platform_device
+> *pdev, +						   const struct of_device_id *match);
+> +
+>  #define to_sh_chan(chan) container_of(chan, struct sh_dmae_chan,
+> shdma_chan) #define to_sh_desc(lh) container_of(lh, struct sh_desc, node)
+>  #define tx_to_sh_desc(tx) container_of(tx, struct sh_desc, async_tx)
+> diff --git a/include/dt-bindings/dma/shdma.h
+> b/include/dt-bindings/dma/shdma.h new file mode 100644
+> index 0000000..0c8fc9e
+> --- /dev/null
+> +++ b/include/dt-bindings/dma/shdma.h
+> @@ -0,0 +1,45 @@
+> +/* DMA binding definitions for SH-DMAC engines.
 > + *
-> + * Licensed under GPLv2
-> +*/
+> + * Moved from sh_dma.h to share with device tree by Ben Dooks.
+> + * Orignal code from:
+> + *   shdma.h: Copyright (C) 2010 Guennadi Liakhovetski
+> <g.liakhovetski@gmx.de> + *   shdma-arm.h: Copyright (C) 2013 Renesas
+> Electronics, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
 > +
-> +/* System DMAC */
+> +#define SHDMA_DM_INC	0x00004000
+> +#define SHDMA_DM_DEC	0x00008000
+> +#define SHDMA_DM_FIX	0x0000c000
+> +#define SHDMA_SM_INC	0x00001000
+> +#define SHDMA_SM_DEC	0x00002000
+> +#define SHDMA_SM_FIX	0x00003000
+> +#define SHDMA_CHCR_DE	0x00000001
+> +#define SHDMA_CHCR_TE	0x00000002
+> +#define SHDMA_CHCR_IE	0x00000004
 > +
-> +#define R8A7790_DMA_SCIFA0_TX	(0x21)
-
-Do we really need parentheses ? Also, doesn't the kernel favor lower-case hex 
-values ?
-
-> +#define R8A7790_DMA_SCIFA0_RX	(0x22)
-> +#define R8A7790_DMA_SCIFA1_TX	(0x25)
-> +#define R8A7790_DMA_SCIFA1_RX	(0x26)
-> +#define R8A7790_DMA_SCIFA2_TX	(0x27)
-> +#define R8A7790_DMA_SCIFA2_RX	(0x28)
+> +/* ARM specific definitions */
 > +
-> +#define R8A7790_DMA_SCIFB0_TX	(0x3D)
-> +#define R8A7790_DMA_SCIFB0_RX	(0x3E)
-> +#define R8A7790_DMA_SCIFB1_TX	(0x19)
-> +#define R8A7790_DMA_SCIFB1_RX	(0x1A)
-> +#define R8A7790_DMA_SCIFB2_TX	(0x1D)
-> +#define R8A7790_DMA_SCIFB2_RX	(0x1E)
+> +#define SHDMA_ARM_SZ_8BIT	(0)
+> +#define SHDMA_ARM_SZ_16BIT	(1)
+> +#define SHDMA_ARM_SZ_32BIT	(2)
+> +#define SHDMA_ARM_SZ_64BIT	(7)
+> +#define SHDMA_ARM_SZ_128BIT	(3)
+> +#define SHDMA_ARM_SZ_256BIT	(4)
+> +#define SHDMA_ARM_SZ_512BIT	(5)
 > +
-> +#define R8A7790_DMA_HSCIF0_TX	(0x39)
-> +#define R8A7790_DMA_HSCIF0_RX	(0x3A)
-> +#define R8A7790_DMA_HSCIF1_TX	(0x4D)
-> +#define R8A7790_DMA_HSCIF1_RX	(0x4E)
+> +#define SHDMA_ARM_TS_LOW_BIT	(0x3)
+> +#define SHDMA_ARM_TS_HI_BIT	(0xc)
 > +
-> +#define R8A7790_DMA_SCIF0_TX	(0x29)
-> +#define R8A7790_DMA_SCIF0_RX	(0x2A)
-> +#define R8A7790_DMA_SCIF1_TX	(0x2D)
-> +#define R8A7790_DMA_SCIF1_RX	(0x2E)
+> +#define SHDMA_ARM_TS_LOW_SHIFT	(3)
+> +#define SHDMA_ARM_TS_HI_SHIFT	(20 - 2)	/* 2 bits for shifted low TS */
 > +
-> +#define R8A7790_DMA_MSIOF0_TX	(0x81)
-> +#define R8A7790_DMA_MSIOF0_RX	(0x82)
-> +#define R8A7790_DMA_MSIOF1_TX	(0x85)
-> +#define R8A7790_DMA_MSIOF1_RX	(0x86)
-> +#define R8A7790_DMA_MSIOF2_TX	(0x41)
-> +#define R8A7790_DMA_MSIOF2_RX	(0x42)
-> +#define R8A7790_DMA_MSIOF3_TX	(0x45)
-> +#define R8A7790_DMA_MSIOF3_RX	(0x46)
+> +#define SHDMA_ARM_TS_INDEX2VAL(i) \
+> +	((((i) & SHDMA_ARM_TS_LOW_BIT) << SHDMA_ARM_TS_LOW_SHIFT) |\
+> +	 (((i) & SHDMA_ARM_TS_HI_BIT)  << SHDMA_ARM_TS_HI_SHIFT))
 > +
-> +#define R8A7790_DMA_QSPI_TX	(0x17)
-> +#define R8A7790_DMA_QSPI_RX	(0x18)
-> +
-> +#define R8A7790_DMA_SIM_TX	(0xA1)
-> +#define R8A7790_DMA_SIM_RX	(0xA2)
-> +
-> +#define R8A7790_DMA_IIC0_TX	(0x61)
-> +#define R8A7790_DMA_IIC0_RX	(0x62)
-> +#define R8A7790_DMA_IIC1_TX	(0x65)
-> +#define R8A7790_DMA_IIC1_RX	(0x66)
-> +#define R8A7790_DMA_IIC2_TX	(0x69)
-> +#define R8A7790_DMA_IIC2_RX	(0x6A)
-> +#define R8A7790_DMA_IIC3_TX	(0x77)
-> +#define R8A7790_DMA_IIC3_RX	(0x78)
-> +
-> +#define R8A7790_DMA_SDHI0_TX	(0xCD)
-> +#define R8A7790_DMA_SDHI0_RX	(0xCE)
-> +#define R8A7790_DMA_SDHI1_TX	(0xC9)
-> +#define R8A7790_DMA_SDHI1_RX	(0xCA)
-> +#define R8A7790_DMA_SDHI2_TX	(0xC1)
-> +#define R8A7790_DMA_SDHI2_RX	(0xC2)
-> +#define R8A7790_DMA_SDHI2C2_TX	(0xC5)
-> +#define R8A7790_DMA_SDHI2C2_RX	(0xC6)
-> +#define R8A7790_DMA_SDHI3_TX	(0xD3)
-> +#define R8A7790_DMA_SDHI3_RX	(0xD4)
-> +#define R8A7790_DMA_SDHI3C2_TX	(0xDF)
-> +#define R8A7790_DMA_SDHI3C2_RX	(0xDE)
-> +
-> +#define R8A7790_DMA_TPU0	(0xF1)
-> +#define R8A7790_DMA_TSIF0	(0xEA)
-> +#define R8A7790_DMA_TSIF1	(0xF0)
-> +
-> +#define R8A7790_DMA_AXISTATR	(0xA6)
-> +#define R8A7790_DMA_AXISTATS0	(0xAC)
-> +#define R8A7790_DMA_AXISTATS1	(0xAA)
-> +#define R8A7790_DMA_AXISTATS2	(0xA8)
-> +#define R8A7790_DMA_AXISTATS3	(0xA4)
-> +
-> +#define R8A7790_DMA_MMCIF0_TX	(0xD1)
-> +#define R8A7790_DMA_MMCIF0_RX	(0xD2)
-> +#define R8A7790_DMA_MMCIF1_TX	(0xE1)
-> +#define R8A7790_DMA_MMCIF1_RX	(0xE2)
-> +
-> +/* Audio DMAC */
-> +
-> +#define R8A7790_DMA_DTCPC0_TX	(0xD7)
-> +#define R8A7790_DMA_DTCPC0_RX	(0xD8)
-> +#define R8A7790_DMA_DTCPC1_TX	(0xD9)
-> +#define R8A7790_DMA_DTCPC1_RX	(0xDA)
-> +#define R8A7790_DMA_DTCPP0_TX	(0xBF)
-> +#define R8A7790_DMA_DTCPP0_RX	(0xC0)
-> +#define R8A7790_DMA_DTCPP1_TX	(0xD5)
-> +#define R8A7790_DMA_DTCPP1_RX	(0xD6)
-> +
-> +#define R8A7790_DMA_MLM0_TX	(0xDB)
-> +#define R8A7790_DMA_MLM0_RX	(0xDC)
-> +#define R8A7790_DMA_MLM1_TX	(0xE3)
-> +#define R8A7790_DMA_MLM1_RX	(0xE4)
-> +#define R8A7790_DMA_MLM2_TX	(0xE5)
-> +#define R8A7790_DMA_MLM2_RX	(0xE6)
-> +#define R8A7790_DMA_MLM3_TX	(0xE7)
-> +#define R8A7790_DMA_MLM3_RX	(0xE8)
-> +#define R8A7790_DMA_MLM4_TX	(0xF3)
-> +#define R8A7790_DMA_MLM4_RX	(0xF4)
-> +#define R8A7790_DMA_MLM5_TX	(0xF5)
-> +#define R8A7790_DMA_MLM5_RX	(0xF6)
-> +#define R8A7790_DMA_MLM6_TX	(0xF7)
-> +#define R8A7790_DMA_MLM6_RX	(0xF8)
-> +#define R8A7790_DMA_MLM7_TX	(0xF9)
-> +#define R8A7790_DMA_MLM7_RX	(0xFA)
-> +
-> +#define R8A7790_DMA_SCU0	(0x85)
-> +#define R8A7790_DMA_SCU1	(0x87)
-> +#define R8A7790_DMA_SCU2	(0x89)
-> +#define R8A7790_DMA_SCU3	(0x8B)
-> +#define R8A7790_DMA_SCU4	(0x8D)
-> +#define R8A7790_DMA_SCU5	(0x8F)
-> +#define R8A7790_DMA_SCU6	(0x91)
-> +#define R8A7790_DMA_SCU7	(0x93)
-> +#define R8A7790_DMA_SCU8	(0x95)
-> +#define R8A7790_DMA_SCU9	(0x97)
-> +
-> +#define R8A7790_DMA_SCUCMD0	(0xBC)
-> +#define R8A7790_DMA_SCUCMD1	(0xBE)
-> +
-> +#define R8A7790_DMA_SCUOUT0	(0x9A)
-> +#define R8A7790_DMA_SCUOUT1	(0x9C)
-> +#define R8A7790_DMA_SCUOUT2	(0x9E)
-> +#define R8A7790_DMA_SCUOUT3	(0xA0)
-> +#define R8A7790_DMA_SCUOUT4	(0xB0)
-> +#define R8A7790_DMA_SCUOUT5	(0xB2)
-> +#define R8A7790_DMA_SCUOUT6	(0xB4)
-> +#define R8A7790_DMA_SCUOUT7	(0xB6)
-> +#define R8A7790_DMA_SCUOUT8	(0xB8)
-> +#define R8A7790_DMA_SCUOUT9	(0xBA)
-> +
-> +#define R8A7790_DMA_SSCI00_TX	(0x15)
-> +#define R8A7790_DMA_SSCI00_RX	(0x16)
-> +#define R8A7790_DMA_SSCI01_TX	(0x35)
-> +#define R8A7790_DMA_SSCI01_RX	(0x36)
-> +#define R8A7790_DMA_SSCI02_TX	(0x37)
-> +#define R8A7790_DMA_SSCI02_RX	(0x38)
-> +#define R8A7790_DMA_SSCI03_TX	(0x47)
-> +#define R8A7790_DMA_SSCI03_RX	(0x48)
-> +
-> +#define R8A7790_DMA_SSCI10_TX	(0x49)
-> +#define R8A7790_DMA_SSCI10_RX	(0x4A)
-> +#define R8A7790_DMA_SSCI11_TX	(0x4B)
-> +#define R8A7790_DMA_SSCI11_RX	(0x4C)
-> +#define R8A7790_DMA_SSCI12_TX	(0x57)
-> +#define R8A7790_DMA_SSCI12_RX	(0x58)
-> +#define R8A7790_DMA_SSCI13_TX	(0x59)
-> +#define R8A7790_DMA_SSCI13_RX	(0x5A)
-> +
-> +#define R8A7790_DMA_SSCI20_TX	(0x63)
-> +#define R8A7790_DMA_SSCI20_RX	(0x64)
-> +#define R8A7790_DMA_SSCI21_TX	(0x67)
-> +#define R8A7790_DMA_SSCI21_RX	(0x68)
-> +#define R8A7790_DMA_SSCI22_TX	(0x6B)
-> +#define R8A7790_DMA_SSCI22_RX	(0x6C)
-> +#define R8A7790_DMA_SSCI23_TX	(0x6D)
-> +#define R8A7790_DMA_SSCI23_RX	(0x6E)
-> +
-> +#define R8A7790_DMA_SSCI20_TX	(0x63)
-> +#define R8A7790_DMA_SSCI20_RX	(0x64)
-> +#define R8A7790_DMA_SSCI21_TX	(0x67)
-> +#define R8A7790_DMA_SSCI21_RX	(0x68)
-> +#define R8A7790_DMA_SSCI22_TX	(0x6B)
-> +#define R8A7790_DMA_SSCI22_RX	(0x6C)
-> +#define R8A7790_DMA_SSCI23_TX	(0x6D)
-> +#define R8A7790_DMA_SSCI23_RX	(0x6E)
-> +
-> +#define R8A7790_DMA_SSCI3_TX	(0x6F)
-> +#define R8A7790_DMA_SSCI3_RX	(0x70)
-> +
-> +#define R8A7790_DMA_SSCI4_TX	(0x71)
-> +#define R8A7790_DMA_SSCI4_RX	(0x72)
-> +
-> +#define R8A7790_DMA_SSCI5_TX	(0x73)
-> +#define R8A7790_DMA_SSCI5_RX	(0x74)
-> +
-> +#define R8A7790_DMA_SSCI6_TX	(0x75)
-> +#define R8A7790_DMA_SSCI6_RX	(0x76)
-> +
-> +#define R8A7790_DMA_SSCI7_TX	(0x79)
-> +#define R8A7790_DMA_SSCI7_RX	(0x7A)
-> +
-> +#define R8A7790_DMA_SSCI8_TX	(0x7B)
-> +#define R8A7790_DMA_SSCI8_RX	(0x7C)
-> +
-> +#define R8A7790_DMA_SSCI90_TX	(0x7D)
-> +#define R8A7790_DMA_SSCI90_RX	(0x7E)
-> +#define R8A7790_DMA_SSCI91_TX	(0x7F)
-> +#define R8A7790_DMA_SSCI91_RX	(0x80)
-> +#define R8A7790_DMA_SSCI92_TX	(0x81)
-> +#define R8A7790_DMA_SSCI92_RX	(0x82)
-> +#define R8A7790_DMA_SSCI93_TX	(0x83)
-> +#define R8A7790_DMA_SSCI93_RX	(0x84)
-> +
-> +#define R8A7790_DMA_SSIND0_TX	(0x01)
-> +#define R8A7790_DMA_SSIND0_RX	(0x02)
-> +#define R8A7790_DMA_SSIND1_TX	(0x03)
-> +#define R8A7790_DMA_SSIND1_RX	(0x04)
-> +#define R8A7790_DMA_SSIND2_TX	(0x05)
-> +#define R8A7790_DMA_SSIND2_RX	(0x06)
-> +#define R8A7790_DMA_SSIND3_TX	(0x07)
-> +#define R8A7790_DMA_SSIND3_RX	(0x08)
-> +#define R8A7790_DMA_SSIND4_TX	(0x09)
-> +#define R8A7790_DMA_SSIND4_RX	(0x0A)
-> +#define R8A7790_DMA_SSIND5_TX	(0x0B)
-> +#define R8A7790_DMA_SSIND5_RX	(0x0C)
-> +#define R8A7790_DMA_SSIND6_TX	(0x0D)
-> +#define R8A7790_DMA_SSIND6_RX	(0x0E)
-> +#define R8A7790_DMA_SSIND7_TX	(0x0F)
-> +#define R8A7790_DMA_SSIND7_RX	(0x10)
-> +#define R8A7790_DMA_SSIND8_TX	(0x11)
-> +#define R8A7790_DMA_SSIND8_RX	(0x12)
-> +#define R8A7790_DMA_SSIND9_TX	(0x13)
-> +#define R8A7790_DMA_SSIND9_RX	(0x14)
+> +#define SHDMA_ARM_CHCR_RX(size) (SHDMA_DM_INC | SHDMA_SM_FIX | 0x800 |
+> SHDMA_ARM_TS_INDEX2VAL(size)) +#define SHDMA_ARM_CHCR_TX(size)
+> (SHDMA_DM_FIX | SHDMA_SM_INC | 0x800 | SHDMA_ARM_TS_INDEX2VAL(size)) +
 
 -- 
 Regards,
