@@ -1,50 +1,128 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH] of: add vendor prefix for I2SE GmbH
-Date: Tue, 08 Apr 2014 09:35:16 +0200
-Message-ID: <5343A6B4.9030309@i2se.com>
-References: <1396514029-5769-1-git-send-email-stefan.wahren@i2se.com>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
+Date: Tue, 08 Apr 2014 16:07:33 +0800
+Message-ID: <5343AE45.4020308@linaro.org>
+References: <1396672506-9296-1-git-send-email-zhangfei.gao@linaro.org>	<1396672506-9296-4-git-send-email-zhangfei.gao@linaro.org> <20140407.145356.928382660541891827.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396514029-5769-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20140407.145356.928382660541891827.davem@davemloft.net>
+Sender: netdev-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: linux@arm.linux.org.uk, arnd@arndb.de, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@ACULAB.COM, eric.dumazet@gmail.com, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Dear David
 
-Am 03.04.2014 10:33, schrieb Stefan Wahren:
-> Add i2se to the list of DT vendor prefixes.
+On 04/08/2014 02:53 AM, David Miller wrote:
+> From: Zhangfei Gao <zhangfei.gao@linaro.org>
+> Date: Sat,  5 Apr 2014 12:35:06 +0800
 >
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt |    1 +
->  1 file changed, 1 insertion(+)
+>> +struct tx_desc {
+>> +	u32 send_addr;
+>> +	u16 reserved_16;
+>> +	u16 send_size;
+>> +	u32 reserved_32;
+>> +	u32 cfg;
+>> +	u32 wb_addr;
+>> +} ____cacheline_aligned;
 >
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index e9d19e2..f27f6c9 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -45,6 +45,7 @@ haoyu	Haoyu Microelectronic Co. Ltd.
->  hisilicon	Hisilicon Limited.
->  honeywell	Honeywell
->  hp	Hewlett Packard
-> +i2se	I2SE GmbH
->  ibm	International Business Machines (IBM)
->  idt	Integrated Device Technologies, Inc.
->  img	Imagination Technologies Ltd.
+> I do not think that ____cacheline_aligned is appropriate at all here.
+>
+> First of all, this is a hardware descriptor, so it has a fixed layout
+> and therefore size.
+>
+> Secondly, unless you declare this object statically in the data section
+> of the object file, the alignment doesn't matter.  These descriptors
+> are always dynamically allocated, rather than instantiated in the
+> kernel/driver image.
 
-i forgot to mention that my patch is an addition to this patch:
+The ____cacheline_aligned used here is only for the requirement of 
+alignment, and use dma_alloc_coherent, while at first dma_pool is used 
+for the requirement of alignment.
+Otherwise desc[1] is not aligned and can not be used directly, the 
+structure is smaller.
 
-https://git.linaro.org/people/shawn.guo/linux-2.6.git/commit/df0355f2b06caf8e7948534c278114bafc2f72e0
+>
+>> +	val = (duplex) ? BIT(0) : 0;
+>
+> Parenthesis around duplex is not necessary, please remove.
+OK
+>
+>> +static void hip04_reset_ppe(struct hip04_priv *priv)
+>> +{
+>> +	u32 val, tmp;
+>> +
+>> +	do {
+>> +		regmap_read(priv->map, priv->port * 4 + PPE_CURR_BUF_CNT, &val);
+>> +		regmap_read(priv->map, priv->port * 4 + PPE_CFG_RX_ADDR, &tmp);
+>> +	} while (val & 0xfff);
+>> +}
+>
+> This polling loop can loop forever, if the condition never triggers it will
+> loop forever.  You must add some kind of limit or timeout, and subsequent
+> error handing up the call chain to handle this.
+OK
+>
+>> +	val = readl_relaxed(priv->base + PPE_CFG_STS_MODE);
+>> +	val |= BIT(12);			/* PPE_HIS_RX_PKT_CNT read clear */
+>> +	writel_relaxed(val, priv->base + PPE_CFG_STS_MODE);
+>   ...
+>> +	/* set bus ctrl */
+>> +	val = BIT(14);			/* buffer locally release */
+>> +	val |= BIT(0);			/* big endian */
+>> +	writel_relaxed(val, priv->base + PPE_CFG_BUS_CTRL_REG);
+>
+> Instead of having to set only one bit at a time in every register and
+> adding comments here, just define these register values using macros
+> properly in a header file or similar.
+>
+> Then you can go val |= PPE_CFG_BUS_CTRL_VAL_THIS | PPE_CFG_BUS_CTRL_VAL_THAT
+> on one line.
+>
+> Document the registers where you define the macros, that way people can learn
+> what other bits are in these register and what they mean, even if you don't
+> currently use them in the driver itself.
+OK, got it.
+However, some bits is not planed to open since used internally and may 
+be removed later.
 
-The prefix i2se is used in imx28-duckbill.dts.
+>
+>> +static void hip04_tx_reclaim(struct net_device *ndev, bool force)
+>   ...
+>> +static void hip04_xmit_timer(unsigned long data)
+>> +{
+>> +	struct net_device *ndev = (void *) data;
+>> +
+>> +	hip04_tx_reclaim(ndev, false);
+>> +}
+>   ...
+>> +	mod_timer(&priv->txtimer, jiffies + RECLAIM_PERIOD);
+>
+> And this is where I stop reading your driver, I've stated already that this
+> kind of reclaim scheme is unacceptable.
+>
+> The kernel timers lack the granularity necessary to service TX reclaim
+> with a reasonable amount of latency.
+>
+> You must use some kind of hardware notification of TX slots becomming
+> available, I find it totally impossible that a modern ethernet controller
+> was created without a TX done interrupt.
+>
 
-Kind regards
-Stefan Wahren
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I am sorry, but unfortunately this series really does NOT have TX done 
+interrupt after checked with hardware guy many times.
+And next series will add TX done interrupt according to the feedback.
+
+There are two reasons of removing the TX done interrupt when the chip is 
+designed.
+1. The specific product does not care the latency, only care the throughput.
+2. When doing many experiment, the tx done interrupt will impact the 
+throughput, as a result reclaim is moved to xmit as one of 
+optimizations, then finally tx done interrupt is removed at all.
+
+Is it acceptable of removing timer as well as latency handling, or any 
+other work around of this kind of hardware?
+
+Thanks
