@@ -1,144 +1,41 @@
-From: Alex Elder <elder@linaro.org>
-Subject: [PATCH v2 2/5] ARM: dts: revise kona clock binding document
-Date: Tue,  8 Apr 2014 17:23:53 -0500
-Message-ID: <1396995836-31111-3-git-send-email-elder@linaro.org>
-References: <1396995836-31111-1-git-send-email-elder@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1396995836-31111-1-git-send-email-elder@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@linaro.org, mporter@linaro.org, bcm@fixthebug.org, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2] ARM: qcom: Add initial APQ8064 SoC and IFC6410 board
+ device trees
+Date: Tue, 8 Apr 2014 16:26:20 -0700
+Message-ID: <20140408232619.GL9985@codeaurora.org>
+References: <1396972391-11759-1-git-send-email-galak@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1396972391-11759-1-git-send-email-galak@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, David Brown <davidb@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The next patch defines a binding for a new Broadcom SoC that uses
-Kona style CCUs for its clocks.  Update the generic Kona clock
-binding document so it's more natural to accomodate the definitions
-of additional SoC families.
+On 04/08, Kumar Gala wrote:
+> Add basic APQ8064 SoC include device tree and support for basic booting on
+> the IFC6410 board.
+> 
+> Signed-off-by: Kumar Gala <galak@codeaurora.org>
+> ---
+> v2:
+> * created a v2.0 apq8064.dtsi to handle differences in Si rev in future
+> * changed /include/ to #include
+> * added PMU node
+> * dropped interrupts from cpus node, not currently part of binding
+> 
+> 
+>  arch/arm/boot/dts/Makefile                 |   1 +
+>  arch/arm/boot/dts/qcom-apq8064-ifc6410.dts |  12 +++
+>  arch/arm/boot/dts/qcom-apq8064-v2.0.dtsi   |   1 +
+>  arch/arm/boot/dts/qcom-apq8064.dtsi        | 154 +++++++++++++++++++++++++++++
+>  arch/arm/mach-qcom/board.c                 |   1 +
 
-Specifically:
-    - Define the compatible string values generically, referring
-      to specific per-model values later in the document.
-    - Put the device tree example immediately after the required
-      properties listing, before the tables of SoC-specific values.
-    - Clearly identify the start of the section defining specific
-      values related to the BCM281XX family
-    - Add a list of the specific BCM281XX family compatible strings.
-    - Reword the description of the table slightly.
+I suspect the arm-soc folks would like us to split the mach-qcom
+changes from the dts changes.
 
-Signed-off-by: Alex Elder <elder@linaro.org>
----
- .../devicetree/bindings/clock/bcm-kona-clock.txt   |   87 +++++++++++---------
- 1 file changed, 47 insertions(+), 40 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt b/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
-index 56d1f49..ebe3ab6 100644
---- a/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
-@@ -10,12 +10,12 @@ This binding uses the common clock binding:
- 
- Required properties:
- - compatible
--	Shall have one of the following values:
--	- "brcm,bcm11351-root-ccu"
--	- "brcm,bcm11351-aon-ccu"
--	- "brcm,bcm11351-hub-ccu"
--	- "brcm,bcm11351-master-ccu"
--	- "brcm,bcm11351-slave-ccu"
-+	Shall have a value of the form "brcm,<model>-<which>-ccu",
-+	where <model> is a Broadcom SoC model number and <which> is
-+	the name of a defined CCU.  For example:
-+	    "brcm,bcm11351-root-ccu"
-+	The compatible strings used for each supported SoC family
-+	are defined below.
- - reg
- 	Shall define the base and range of the address space
- 	containing clock control registers
-@@ -26,12 +26,48 @@ Required properties:
- 	Shall be an ordered list of strings defining the names of
- 	the clocks provided by the CCU.
- 
-+Device tree example:
- 
--BCM281XX family SoCs use Kona CCUs.  The following table defines
--the set of CCUs and clock specifiers for BCM281XX clocks.  When
--a clock consumer references a clocks, its symbolic specifier
--(rather than its numeric index value) should be used.  These
--specifiers are defined in "include/dt-bindings/clock/bcm281xx.h".
-+	slave_ccu: slave_ccu {
-+		compatible = "brcm,bcm11351-slave-ccu";
-+		reg = <0x3e011000 0x0f00>;
-+		#clock-cells = <1>;
-+		clock-output-names = "uartb",
-+				     "uartb2",
-+				     "uartb3",
-+				     "uartb4";
-+	};
-+
-+	ref_crystal_clk: ref_crystal {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <26000000>;
-+	};
-+
-+	uart@3e002000 {
-+		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
-+		status = "disabled";
-+		reg = <0x3e002000 0x1000>;
-+		clocks = <&slave_ccu BCM281XX_SLAVE_CCU_UARTB3>;
-+		interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+	};
-+
-+BCM281XX family
-+---------------
-+CCU compatible string values for SoCs in the BCM281XX family are:
-+    "brcm,bcm11351-root-ccu"
-+    "brcm,bcm11351-aon-ccu"
-+    "brcm,bcm11351-hub-ccu"
-+    "brcm,bcm11351-master-ccu"
-+    "brcm,bcm11351-slave-ccu"
-+
-+The following table defines the set of CCUs and clock specifiers for
-+BCM281XX family clocks.  When a clock consumer references a clocks,
-+its symbolic specifier (rather than its numeric index value) should
-+be used.  These specifiers are defined in:
-+    "include/dt-bindings/clock/bcm281xx.h"
- 
-     CCU     Clock           Type    Index   Specifier
-     ---     -----           ----    -----   ---------
-@@ -62,32 +98,3 @@ specifiers are defined in "include/dt-bindings/clock/bcm281xx.h".
-     slave   bsc2            peri      7     BCM281XX_SLAVE_CCU_BSC2
-     slave   bsc3            peri      8     BCM281XX_SLAVE_CCU_BSC3
-     slave   pwm             peri      9     BCM281XX_SLAVE_CCU_PWM
--
--
--Device tree example:
--
--	slave_ccu: slave_ccu {
--		compatible = "brcm,bcm11351-slave-ccu";
--		reg = <0x3e011000 0x0f00>;
--		#clock-cells = <1>;
--		clock-output-names = "uartb",
--				     "uartb2",
--				     "uartb3",
--				     "uartb4";
--	};
--
--	ref_crystal_clk: ref_crystal {
--		#clock-cells = <0>;
--		compatible = "fixed-clock";
--		clock-frequency = <26000000>;
--	};
--
--	uart@3e002000 {
--		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
--		status = "disabled";
--		reg = <0x3e002000 0x1000>;
--		clocks = <&slave_ccu BCM281XX_SLAVE_CCU_UARTB3>;
--		interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
--		reg-shift = <2>;
--		reg-io-width = <4>;
--	};
 -- 
-1.7.9.5
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
