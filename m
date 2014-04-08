@@ -1,52 +1,57 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v7 1/6] pci: Introduce pci_register_io_range() helper function.
-Date: Tue, 8 Apr 2014 10:54:01 -0600
-Message-ID: <CAErSpo4RtEovyRXw=UXxBSz_hD4kfayBOkaKH_4Qk_s+hsEAxg@mail.gmail.com>
-References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
- <CAErSpo4iEV6khP63ZTF+YUTKi9WLFXzMv13nxw15y3qDg15Ztg@mail.gmail.com>
- <20140408095038.GT17163@e106497-lin.cambridge.arm.com> <4778371.oH3kIlbD0f@wuerfel>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] ARM: zynq: dt: Convert to preprocessor includes
+Date: Tue, 8 Apr 2014 11:27:52 -0600
+Message-ID: <20140408172752.GC27776@obsidianresearch.com>
+References: <1396653256-28397-1-git-send-email-soren.brinkmann@xilinx.com>
+ <1396653256-28397-3-git-send-email-soren.brinkmann@xilinx.com>
+ <53423E75.3020008@monstr.eu>
+ <53429754.8080105@topic.nl>
+ <534298E7.2020409@monstr.eu>
+ <20140407171012.GC9952@obsidianresearch.com>
+ <20140407180228.GN12170@pengutronix.de>
+ <53439F3F.2030801@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <4778371.oH3kIlbD0f@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <53439F3F.2030801-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Cc: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 8, 2014 at 4:22 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tuesday 08 April 2014 10:50:39 Liviu Dudau wrote:
->> On Mon, Apr 07, 2014 at 06:58:24PM +0100, Bjorn Helgaas wrote:
->> > On Mon, Apr 7, 2014 at 5:36 AM, Arnd Bergmann <arnd@arndb.de> wrote:
->> >
->> > > I think migrating other architectures to use the same code should be
->> > > a separate effort from adding a generic implementation that can be
->> > > used by arm64. It's probably a good idea to have patches to convert
->> > > arm32 and/or microblaze.
->> >
->> > Let me reiterate that I am 100% in favor of replacing arch-specific
->> > code with more generic implementations.
->> >
->> > However, I am not 100% in favor of doing it as separate efforts
->> > (although maybe I could be convinced).  The reasons I hesitate are
->> > that (1) if only one architecture uses a new "generic" implementation,
->> > we really don't know whether it is generic enough, (2) until I see the
->> > patches to convert other architectures, I have to assume that I'm the
->> > one who will write them, and (3) as soon as we add the code to
->> > drivers/pci, it becomes partly my headache to maintain it, even if
->> > only one arch benefits from it.
->
-> Fair enough.
->
-> My approach to the asm-generic infrastruction has mostly been to ensure
-> that whoever adds a new architecture has to make things easier for the
-> next person.
+On Tue, Apr 08, 2014 at 09:03:27AM +0200, Michal Simek wrote:
 
-That's a good rule.  But if we add a generic implementation used only
-by one architecture, the overall complexity has increased (we added
-new unshared code), so the next person has to look at N+1 existing
-implementations.  If we even convert one existing arch, that seems
-like an improvement: we have N implementations with one being used by
-at least two arches.
+> > If in doubt follow common mainline practice. Although using includes
+> > for DT is not necessarily common practice, readability of DTs is
+> > really important IMHO.
+> 
+> Let me give you one example. When you add xilinx intc controller
+> to zynq HW design which uses gic with headers you are using
+> then you will find out that sensitivity for both controllers
+> are just different.
+> This is just one case I am aware of. I expect there will be one more.
 
-Bjorn
+I'm not sure I see the problem here, just because some bindings can't
+use the standard shared constants doesn't mean the GIC bindings and
+users should avoid them. The binding documentation is supposed to make
+it clear what is correct.
+
+It is just as easy to get confused with numbers, does 4 mean
+XILINX_INTC_IRQ_RISING or IRQ_TYPE_LEVEL_HIGH ?
+
+> Using dtc preprocessor and macros improve DTS readability but at the same
+> time force other users to copy all necessary files from the kernel
+> to that projects which is just hassle.
+
+You can run the DTS through cpp before you export it out of the kernel
+environment, then you get a flat file with no includes.
+
+The shared kernel conventions are more important than constraints from
+outside projects.
+
+Jason
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
