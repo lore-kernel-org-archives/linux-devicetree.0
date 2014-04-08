@@ -1,30 +1,34 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2] clk: qcom: Add support for IPQ8064's global clock
- controller (GCC)
-Date: Mon, 7 Apr 2014 17:33:04 -0700
-Message-ID: <20140408003304.GK9985@codeaurora.org>
-References: <1396642749-12979-1-git-send-email-galak@codeaurora.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: shmobile: lager: correct renesas,gpios to
+ renesas,groups in sd[02] pfc
+Date: Tue, 8 Apr 2014 09:39:27 +0900
+Message-ID: <20140408003927.GD30496@verge.net.au>
+References: <1396898212-7078-1-git-send-email-ben.dooks@codethink.co.uk>
+ <CAMuHMdW+ZD0r+W2BWw8Uusz_LYPmnrsX+Hk5wkvhiEf0f8u4cg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1396642749-12979-1-git-send-email-galak@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Mike Turquette <mturquette@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+In-Reply-To: <CAMuHMdW+ZD0r+W2BWw8Uusz_LYPmnrsX+Hk5wkvhiEf0f8u4cg@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>, linux-kernel@lists.codethink.co.uk, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, magnus.damm@opensource.se, Rob Taylor <rob.taylor@codethink.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 04/04, Kumar Gala wrote:
-> Add a driver for the global clock controller found on IPQ8064 based
-> platforms. This should allow most non-multimedia device drivers to probe
-> and control their clocks.
+On Mon, Apr 07, 2014 at 10:35:12PM +0200, Geert Uytterhoeven wrote:
+> On Mon, Apr 7, 2014 at 9:16 PM, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
+> > From: Rob Taylor <rob.taylor@codethink.co.uk>
+> >
+> > Fix probable typo of renesas,groups in the lager dt. The kernel has no
+> > renesas,gpios but this should match renesas,groups.
+> >
+> > Signed-off-by: Rob Taylor <rob.taylor@codethink.co.uk>
 > 
-> This is currently missing clocks for SATA, USB, and networking devices.
+> Thanks, nice catch!
 > 
-> Signed-off-by: Kumar Gala <galak@codeaurora.org>
+> > [ben.dooks@codethink.co.uk: fixup description]
+> > Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> 
+> Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Thanks, I will queue this up as a fix for v3.15.
