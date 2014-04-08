@@ -1,53 +1,33 @@
 From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 1/2] ARM: dts: keystone: add cell's information to i2c nodes
-Date: Tue, 8 Apr 2014 14:46:06 +0300
-Message-ID: <1396957567-14540-2-git-send-email-grygorii.strashko@ti.com>
-References: <1396957567-14540-1-git-send-email-grygorii.strashko@ti.com>
+Subject: [PATCH v2 0/2] ARM: dts: keystone: i2c updates
+Date: Tue, 8 Apr 2014 14:46:05 +0300
+Message-ID: <1396957567-14540-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396957567-14540-1-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: santosh.shilimkar-l0cyMroinI0@public.gmane.org
 Cc: ivan.khoronzhuk-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-I2C nodes should always have #address-cells and #size-cells defined,
-otherwise warnings will be produced in case of adding child
-nodes to the I2C bus in DT:
-Warning (avoid_default_addr_size): Relying on default #address-cells value for /soc/i2c@2530800/pca@20
-Warning (avoid_default_addr_size): Relying on default #size-cells value for /soc/i2c@2530800/pca@20
+Hi Santosh,
 
-Hence, ensure that all i2cX nodes have #address-cells and #size-cells
-properties defined.
+There are two small non critical fixes for Keystone 2 I2C DT definitions.
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/keystone.dtsi |    4 ++++
- 1 file changed, 4 insertions(+)
+Changes in v2;
+- added additional patch to move i2c0 device node from SoC to board files
+- updated commits messages
 
-diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-index 90823eb..f730392 100644
---- a/arch/arm/boot/dts/keystone.dtsi
-+++ b/arch/arm/boot/dts/keystone.dtsi
-@@ -115,6 +115,8 @@
- 			clock-frequency = <100000>;
- 			clocks = <&clki2c>;
- 			interrupts = <GIC_SPI 286 IRQ_TYPE_EDGE_RISING>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 		};
- 
- 		i2c2: i2c@2530800 {
-@@ -123,6 +125,8 @@
- 			clock-frequency = <100000>;
- 			clocks = <&clki2c>;
- 			interrupts = <GIC_SPI 289 IRQ_TYPE_EDGE_RISING>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 		};
- 
- 		spi0: spi@21000400 {
+Grygorii Strashko (2):
+  ARM: dts: keystone: add cell's information to i2c nodes
+  ARM: dts: keystone: move i2c0 device node from SoC to board files
+
+ arch/arm/boot/dts/k2e-evm.dts   |    7 +++++++
+ arch/arm/boot/dts/k2hk-evm.dts  |    7 +++++++
+ arch/arm/boot/dts/k2l-evm.dts   |    7 +++++++
+ arch/arm/boot/dts/keystone.dtsi |    9 ++++-----
+ 4 files changed, 25 insertions(+), 5 deletions(-)
+
 -- 
 1.7.9.5
 
