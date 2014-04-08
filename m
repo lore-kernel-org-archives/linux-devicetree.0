@@ -1,79 +1,50 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v7 1/6] pci: Introduce pci_register_io_range() helper function.
-Date: Tue, 08 Apr 2014 09:12:50 +0200
-Message-ID: <4845032.VeNZmbvuW3@wuerfel>
-References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com> <1394811272-1547-2-git-send-email-Liviu.Dudau@arm.com> <CAErSpo6S49qNuJQB-XXEfJ1Nkz=4gZ5_hE93=gb_yGZesA1H9Q@mail.gmail.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH] of: add vendor prefix for I2SE GmbH
+Date: Tue, 08 Apr 2014 09:35:16 +0200
+Message-ID: <5343A6B4.9030309@i2se.com>
+References: <1396514029-5769-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAErSpo6S49qNuJQB-XXEfJ1Nkz=4gZ5_hE93=gb_yGZesA1H9Q@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1396514029-5769-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 07 April 2014 17:21:51 Bjorn Helgaas wrote:
-> On Fri, Mar 14, 2014 at 9:34 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
-> > Some architectures do not share x86 simple view of the PCI I/O space
-> > and instead use a range of addresses that map to bus addresses. For
-> > some architectures these ranges will be expressed by OF bindings
-> > in a device tree file.
-> >
-> > Introduce a pci_register_io_range() helper function that can be used
-> > by the architecture code to keep track of the I/O ranges described by the
-> > PCI bindings. If the PCI_IOBASE macro is not defined that signals
-> > lack of support for PCI and we return an error.
-> >
-> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> > Acked-by: Grant Likely <grant.likely@linaro.org>
-> > Tested-by: Tanmay Inamdar <tinamdar@apm.com>
-> > ---
-> >  drivers/of/address.c       | 9 +++++++++
-> >  include/linux/of_address.h | 1 +
-> >  2 files changed, 10 insertions(+)
-> >
-> > diff --git a/drivers/of/address.c b/drivers/of/address.c
-> > index 1a54f1f..be958ed 100644
-> > --- a/drivers/of/address.c
-> > +++ b/drivers/of/address.c
-> > @@ -619,6 +619,15 @@ const __be32 *of_get_address(struct device_node *dev, int index, u64 *size,
-> >  }
-> >  EXPORT_SYMBOL(of_get_address);
-> >
-> > +int __weak pci_register_io_range(phys_addr_t addr, resource_size_t size)
-> > +{
-> > +#ifndef PCI_IOBASE
-> > +       return -EINVAL;
-> > +#else
-> > +       return 0;
-> > +#endif
-> > +}
-> 
-> This isn't PCI code, so I'm fine with it in that sense, but I'm not
-> sure the idea of a PCI_IOBASE #define is really what we need.  It's
-> not really determined by the processor architecture, it's determined
-> by the platform.  And a single address isn't enough in general,
-> either, because if there are multiple host bridges, there's no reason
-> the apertures that generate PCI I/O transactions need to be contiguous
-> on the CPU side.
-> 
-> That's just a long way of saying that if we ever came up with a more
-> generic way to handle I/O port spaces, PCI_IOBASE might go away.  And
-> I guess part of that rework could be changing this use of it along
-> with the others.
+Hi,
 
-I'd rather not add a generic implementation of this at all, but
-keep it all within the host resource scanning code.
+Am 03.04.2014 10:33, schrieb Stefan Wahren:
+> Add i2se to the list of DT vendor prefixes.
+>
+> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt |    1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index e9d19e2..f27f6c9 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -45,6 +45,7 @@ haoyu	Haoyu Microelectronic Co. Ltd.
+>  hisilicon	Hisilicon Limited.
+>  honeywell	Honeywell
+>  hp	Hewlett Packard
+> +i2se	I2SE GmbH
+>  ibm	International Business Machines (IBM)
+>  idt	Integrated Device Technologies, Inc.
+>  img	Imagination Technologies Ltd.
 
-If we do add a generic implementation, my preference would be
-to use the version introduced for arm64, with a fallback of
-returning -EINVAL if the architecture doesn't implement it.
+i forgot to mention that my patch is an addition to this patch:
 
-There is no way ever that returning '0' makes sense here: Either
-the architecture supports memory mapped I/O spaces and then we
-should be able to find an appropriate io_offset for it, or it
-doesn't support memory mapped I/O spaces and we should never
-even call this function.
+https://git.linaro.org/people/shawn.guo/linux-2.6.git/commit/df0355f2b06caf8e7948534c278114bafc2f72e0
 
-	Arnd
+The prefix i2se is used in imx28-duckbill.dts.
+
+Kind regards
+Stefan Wahren
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
