@@ -1,128 +1,95 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Tue, 08 Apr 2014 16:07:33 +0800
-Message-ID: <5343AE45.4020308@linaro.org>
-References: <1396672506-9296-1-git-send-email-zhangfei.gao@linaro.org>	<1396672506-9296-4-git-send-email-zhangfei.gao@linaro.org> <20140407.145356.928382660541891827.davem@davemloft.net>
+From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH 8/9] DMA: shdma: initial of common code
+Date: Tue, 8 Apr 2014 08:04:23 +0000
+Message-ID: <1396944263.11914.80.camel@smile.fi.intel.com>
+References: <1396901229-29117-1-git-send-email-ben.dooks@codethink.co.uk>
+	 <1396901229-29117-9-git-send-email-ben.dooks@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20140407.145356.928382660541891827.davem@davemloft.net>
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: linux@arm.linux.org.uk, arnd@arndb.de, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@ACULAB.COM, eric.dumazet@gmail.com, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1396901229-29117-9-git-send-email-ben.dooks@codethink.co.uk>
+Content-Language: en-US
+Content-ID: <FDEA1523E9C59D498F3BD241DA6CBECE@intel.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: "linux-kernel@lists.codethink.co.uk" <linux-kernel@lists.codethink.co.uk>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "Koul, Vinod" <vinod.koul@intel.com>, "Williams, Dan J" <dan.j.williams@intel.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "magnus.damm@opensource.se" <magnus.damm@opensource.se>, "horms@verge.net.au" <horms@verge.net.au>, "g.liakhovetski@gmx.d" <g.liakhovetski@gmx.d>, "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear David
+T24gTW9uLCAyMDE0LTA0LTA3IGF0IDIxOjA3ICswMTAwLCBCZW4gRG9va3Mgd3JvdGU6DQo+IEFk
+ZCBzdXBwb3J0IGZvciBidWlsZGluZyBzaGRtYSBpbnRlcm5hbCBkYXRhIGZyb20gdGhlIGRldmlj
+ZSB0cmVlIHRvIGFsbG93DQo+IGNvbnZlcnRpbmcgdGhlIGRyaXZlciB0byBiZSBkZXZpY2UgdHJl
+ZSBlbmFibGVkLg0KPiANCj4gSXQgaW5jbHVkZXMgYSBoZWxwZXIgZm9yIHRoZSBvZiBjYXNlIHRv
+IGJ1aWxkIHRoZSBpbnRlcm5hbCBkYXRhIHVzZWQgdG8NCj4gc2VsZWN0IGFuZCBmaWx0ZXIgb3V0
+IHRoZSBETUEgY2hhbm5lbHMgZnJvbSB0aGUgSUQgaW5mb3JtYXRpb24gaW4gdGhlDQo+IGRldmlj
+ZSB0cmVlLiBBbHNvIHVwZGF0ZXMgdGhlIGRvY3VtZW50YXRpb24gZm9yIHRoZSBEVCBjYXNlLg0K
+DQoNCkZldyBtaW5vciBjb21tZW50cyBiZWxvdy4NCg0KPiAtLS0gYS9kcml2ZXJzL2RtYS9zaC9z
+aGRtYS1vZi5jDQo+ICsrKyBiL2RyaXZlcnMvZG1hL3NoL3NoZG1hLW9mLmMNCg0KDQo+IEBAIC00
+MCw2ICs3MSwxMDkgQEAgc3RhdGljIHN0cnVjdCBkbWFfY2hhbiAqc2hkbWFfb2ZfeGxhdGUoc3Ry
+dWN0IG9mX3BoYW5kbGVfYXJncyAqZG1hX3NwZWMsDQo+ICAJcmV0dXJuIGNoYW47DQo+ICB9DQo+
+ICANCj4gK2NvbnN0IHN0cnVjdCBzaF9kbWFlX3BkYXRhICoNCj4gK3NoX2RtYV9wcm9iZV9vZihz
+dHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LCBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkICpv
+Zm1hdGNoKQ0KPiArew0KPiArCWNvbnN0IHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBwZGV2LT5k
+ZXYub2Zfbm9kZTsNCj4gKwljb25zdCBzdHJ1Y3Qgc2hfZG1hZV9vZl9pbmZvICpvZmluZjsNCj4g
+KwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Ow0KPiArCXN0cnVjdCBzaF9kbWFlX3Bk
+YXRhICpwZGF0YTsNCj4gKwlzdHJ1Y3Qgc2hfZG1hZV9jaGFubmVsICpjaGFuOw0KPiArCXN0cnVj
+dCBwcm9wZXJ0eSAqcHJvcDsNCj4gKwl1MzIgbnJfY2hhbjsNCj4gKwl1bnNpZ25lZCBjaDsNCj4g
+KwlpbnQgcmV0Ow0KPiArCWludCBsZW47DQo+ICsNCj4gKwlpZiAoIW9mbWF0Y2gpDQo+ICsJCXJl
+dHVybiBOVUxMOw0KPiArDQo+ICsJb2ZpbmYgPSBvZm1hdGNoLT5kYXRhOw0KPiArDQo+ICsJcGRh
+dGEgPSBkZXZtX2t6YWxsb2MoZGV2LCBzaXplb2Yoc3RydWN0IHNoX2RtYWVfcGRhdGEpLCBHRlBf
+S0VSTkVMKTsNCg0Kc2l6ZW9mKCpwZGF0YSkgPw0KDQo+ICsJaWYgKCFwZGF0YSkgew0KPiArCQlk
+ZXZfZXJyKGRldiwgImZhaWxlZCB0byBtYWtlIHBsYXRmb3JtIGRhdGFcbiIpOw0KPiArCQlyZXR1
+cm4gTlVMTDsNCj4gKwl9DQo+ICsNCj4gKwkqcGRhdGEgPSAqb2ZpbmYtPnBkYXRhX3RlbXBsYXRl
+OwkvKiBjb3B5IGluIHRlbXBsYXRlIGZpcnN0ICovDQo+ICsNCj4gKwlyZXQgPSBvZl9wcm9wZXJ0
+eV9yZWFkX3UzMihucCwgImRtYS1jaGFubmVscyIsICZucl9jaGFuKTsNCj4gKwlpZiAocmV0IDwg
+MCkgew0KPiArCQlkZXZfZXJyKGRldiwgImZhaWxlZCB0byBnZXQgbnVtYmVyIG9mIGNoYW5uZWxz
+XG4iKTsNCj4gKwkJcmV0dXJuIE5VTEw7DQo+ICsJfQ0KPiArDQo+ICsJY2hhbiA9IGRldm1fa3ph
+bGxvYyhkZXYsIG5yX2NoYW4gKiBzaXplb2Yoc3RydWN0IHNoX2RtYWVfY2hhbm5lbCksDQo+ICsJ
+CQkgICAgR0ZQX0tFUk5FTCk7DQoNCmRldm1fa2NhbGxvYygpDQoNCj4gKwlpZiAoIWNoYW4pIHsN
+Cj4gKwkJZGV2X2VycihkZXYsICJjYW5ub3QgYWxsb2NhdGUgJWQgY2hhbm5lbHNcbiIsIG5yX2No
+YW4pOw0KPiArCQlyZXR1cm4gTlVMTDsNCj4gKwl9DQo+ICsNCj4gKwlwZGF0YS0+Y2hhbm5lbCA9
+IGNoYW47DQo+ICsJcGRhdGEtPmNoYW5uZWxfbnVtID0gbnJfY2hhbjsNCj4gKw0KPiArCWRldl9k
+YmcoZGV2LCAiJWQgZG1hIGNoYW5uZWxzIGFsbG9jYXRlZFxuIiwgbnJfY2hhbik7DQo+ICsNCj4g
+Kwlmb3IgKGNoID0gMDsgY2ggPCBucl9jaGFuOyBjaCsrKSB7DQo+ICsJCXN0cnVjdCBzaF9kbWFl
+X2NoYW5uZWwgKmNwID0gY2hhbiArIGNoOw0KPiArCQl1MzIgYmFzZSA9IG9maW5mLT5jaGFubmVs
+X29mZnNldCArIG9maW5mLT5jaGFubmVsX3N0cmlkZSAqIGNoOw0KPiArDQo+ICsJCWNwLT5vZmZz
+ZXQgPSBiYXNlICsgb2ZpbmYtPm9mZnNldDsNCj4gKwkJY3AtPmRtYXJzID0gYmFzZSArIG9maW5m
+LT5kbWFyczsNCj4gKwkJY3AtPmNoY2xyX2JpdCA9IGNoOw0KPiArCQljcC0+Y2hjbHJfb2Zmc2V0
+ID0gb2ZpbmYtPmNoY2xyX29mZnNldDsNCj4gKw0KPiArCQlkZXZfZGJnKGRldiwgImNoICVkOiBv
+ZmYgJTA4eCwgZG1hcnMgJTA4eCwgYml0ICVkLCBvZmYgJWRcbiIsDQo+ICsJCQljaCwgY3AtPm9m
+ZnNldCwgY3AtPmRtYXJzLA0KPiArCQkJY3AtPmNoY2xyX2JpdCwgY3AtPmNoY2xyX29mZnNldCk7
+DQo+ICsJfQ0KPiArDQo+ICsJLyogbG9vayBpbiBjdXJyZW50LCBvciBwYXJlbnQgbm9kZSBmb3Ig
+dGhlIHNsYXZlIG1hcHBpbmdzICovDQo+ICsJcHJvcCA9IG9mX2ZpbmRfcHJvcGVydHkobnAsICJy
+ZW5lc2FzLHNsYXZlcyIsICZsZW4pOw0KPiArCWlmICghcHJvcCkNCj4gKwkJcHJvcCA9IG9mX2Zp
+bmRfcHJvcGVydHkobnAtPnBhcmVudCwgInJlbmVzYXMsc2xhdmVzIiwgJmxlbik7DQo+ICsNCj4g
+KwlpZiAocHJvcCkgew0KPiArCQlzdHJ1Y3Qgc2hfZG1hZV9zbGF2ZV9jb25maWcgKnNsYXZlczsN
+Cj4gKwkJaW50IG5yX3NsYXZlcyA9IGxlbiAvIChzaXplb2YodTMyKSAqIDMpOw0KPiArCQljb25z
+dCBfX2JlMzIgKm9mX3B0cjsNCj4gKwkJdTMyIG9mX2lkeDsNCj4gKw0KPiArCQlzbGF2ZXMgPSBk
+ZXZtX2t6YWxsb2MoZGV2LCBzaXplb2YoKnNsYXZlcykgKiBucl9zbGF2ZXMsDQo+ICsJCQkJICAg
+ICAgR0ZQX0tFUk5FTCk7DQoNCmRldm1fa2NhbGxvYygpDQoNCj4gKwkJaWYgKCFzbGF2ZXMpIHsN
+Cj4gKwkJCWRldl9lcnIoZGV2LCAiY2Fubm90IGFsbG9jYXRlICVkIHNsYXZlc1xuIiwgbnJfc2xh
+dmVzKTsNCj4gKwkJCXJldHVybiBOVUxMOw0KPiArCQl9DQo+ICsNCj4gKwkJcGRhdGEtPnNsYXZl
+ID0gc2xhdmVzOw0KPiArCQlwZGF0YS0+c2xhdmVfbnVtID0gbnJfc2xhdmVzOw0KPiArCQlvZl9p
+ZHggPSAwOw0KPiArCQlvZl9wdHIgPSBOVUxMOw0KPiArDQo+ICsJCWRldl9kYmcoZGV2LCAiYnVp
+bGRpbmcgJWQgc2xhdmVzXG4iLCBucl9zbGF2ZXMpOw0KPiArDQo+ICsJCWZvciAoOyBucl9zbGF2
+ZXMgPiAwOyBucl9zbGF2ZXMtLSwgc2xhdmVzKyspIHsNCj4gKwkJCW9mX3B0cj0gb2ZfcHJvcF9u
+ZXh0X3UzMihwcm9wLCBvZl9wdHIsICZvZl9pZHgpOw0KPiArCQkJc2xhdmVzLT5taWRfcmlkID0g
+YmUzMl90b19jcHUoKm9mX3B0cik7DQo+ICsJCQlzbGF2ZXMtPnNsYXZlX2lkID0gc2xhdmVzLT5t
+aWRfcmlkOw0KPiArDQo+ICsJCQlvZl9wdHI9IG9mX3Byb3BfbmV4dF91MzIocHJvcCwgb2ZfcHRy
+LCAmb2ZfaWR4KTsNCj4gKwkJCXNsYXZlcy0+Y2hjciA9IGJlMzJfdG9fY3B1KCpvZl9wdHIpOw0K
+PiArDQo+ICsJCQlkZXZfZGJnKGRldiwgInNsYXZlOiBpZCAlMDJ4LCBjaGNyICUwOHgsIGFkZHIg
+JTA4eFxuIiwNCj4gKwkJCQlzbGF2ZXMtPm1pZF9yaWQsIHNsYXZlcy0+Y2hjciwgc2xhdmVzLT5h
+ZGRyKTsNCj4gKwkJfQ0KPiArCX0gZWxzZSB7DQo+ICsJCWRldl93YXJuKGRldiwgImRpZCBub3Qg
+ZmluZCBhbnkgc2xhdmUgaW5mb3JtYXRpb25cbiIpOw0KPiArCX0NCj4gKw0KPiArCXBkZXYtPmRl
+di5wbGF0Zm9ybV9kYXRhID0gcGRhdGE7DQo+ICsJcmV0dXJuIHBkYXRhOw0KPiArfTsNCg0KDQoN
+Ci0tIA0KQW5keSBTaGV2Y2hlbmtvIDxhbmRyaXkuc2hldmNoZW5rb0BpbnRlbC5jb20+DQpJbnRl
+bCBGaW5sYW5kIE95DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KSW50ZWwgRmlubGFuZCBPeQpSZWdpc3RlcmVkIEFk
+ZHJlc3M6IFBMIDI4MSwgMDAxODEgSGVsc2lua2kgCkJ1c2luZXNzIElkZW50aXR5IENvZGU6IDAz
+NTc2MDYgLSA0IApEb21pY2lsZWQgaW4gSGVsc2lua2kgCgpUaGlzIGUtbWFpbCBhbmQgYW55IGF0
+dGFjaG1lbnRzIG1heSBjb250YWluIGNvbmZpZGVudGlhbCBtYXRlcmlhbCBmb3IKdGhlIHNvbGUg
+dXNlIG9mIHRoZSBpbnRlbmRlZCByZWNpcGllbnQocykuIEFueSByZXZpZXcgb3IgZGlzdHJpYnV0
+aW9uCmJ5IG90aGVycyBpcyBzdHJpY3RseSBwcm9oaWJpdGVkLiBJZiB5b3UgYXJlIG5vdCB0aGUg
+aW50ZW5kZWQKcmVjaXBpZW50LCBwbGVhc2UgY29udGFjdCB0aGUgc2VuZGVyIGFuZCBkZWxldGUg
+YWxsIGNvcGllcy4K
 
-On 04/08/2014 02:53 AM, David Miller wrote:
-> From: Zhangfei Gao <zhangfei.gao@linaro.org>
-> Date: Sat,  5 Apr 2014 12:35:06 +0800
->
->> +struct tx_desc {
->> +	u32 send_addr;
->> +	u16 reserved_16;
->> +	u16 send_size;
->> +	u32 reserved_32;
->> +	u32 cfg;
->> +	u32 wb_addr;
->> +} ____cacheline_aligned;
->
-> I do not think that ____cacheline_aligned is appropriate at all here.
->
-> First of all, this is a hardware descriptor, so it has a fixed layout
-> and therefore size.
->
-> Secondly, unless you declare this object statically in the data section
-> of the object file, the alignment doesn't matter.  These descriptors
-> are always dynamically allocated, rather than instantiated in the
-> kernel/driver image.
-
-The ____cacheline_aligned used here is only for the requirement of 
-alignment, and use dma_alloc_coherent, while at first dma_pool is used 
-for the requirement of alignment.
-Otherwise desc[1] is not aligned and can not be used directly, the 
-structure is smaller.
-
->
->> +	val = (duplex) ? BIT(0) : 0;
->
-> Parenthesis around duplex is not necessary, please remove.
-OK
->
->> +static void hip04_reset_ppe(struct hip04_priv *priv)
->> +{
->> +	u32 val, tmp;
->> +
->> +	do {
->> +		regmap_read(priv->map, priv->port * 4 + PPE_CURR_BUF_CNT, &val);
->> +		regmap_read(priv->map, priv->port * 4 + PPE_CFG_RX_ADDR, &tmp);
->> +	} while (val & 0xfff);
->> +}
->
-> This polling loop can loop forever, if the condition never triggers it will
-> loop forever.  You must add some kind of limit or timeout, and subsequent
-> error handing up the call chain to handle this.
-OK
->
->> +	val = readl_relaxed(priv->base + PPE_CFG_STS_MODE);
->> +	val |= BIT(12);			/* PPE_HIS_RX_PKT_CNT read clear */
->> +	writel_relaxed(val, priv->base + PPE_CFG_STS_MODE);
->   ...
->> +	/* set bus ctrl */
->> +	val = BIT(14);			/* buffer locally release */
->> +	val |= BIT(0);			/* big endian */
->> +	writel_relaxed(val, priv->base + PPE_CFG_BUS_CTRL_REG);
->
-> Instead of having to set only one bit at a time in every register and
-> adding comments here, just define these register values using macros
-> properly in a header file or similar.
->
-> Then you can go val |= PPE_CFG_BUS_CTRL_VAL_THIS | PPE_CFG_BUS_CTRL_VAL_THAT
-> on one line.
->
-> Document the registers where you define the macros, that way people can learn
-> what other bits are in these register and what they mean, even if you don't
-> currently use them in the driver itself.
-OK, got it.
-However, some bits is not planed to open since used internally and may 
-be removed later.
-
->
->> +static void hip04_tx_reclaim(struct net_device *ndev, bool force)
->   ...
->> +static void hip04_xmit_timer(unsigned long data)
->> +{
->> +	struct net_device *ndev = (void *) data;
->> +
->> +	hip04_tx_reclaim(ndev, false);
->> +}
->   ...
->> +	mod_timer(&priv->txtimer, jiffies + RECLAIM_PERIOD);
->
-> And this is where I stop reading your driver, I've stated already that this
-> kind of reclaim scheme is unacceptable.
->
-> The kernel timers lack the granularity necessary to service TX reclaim
-> with a reasonable amount of latency.
->
-> You must use some kind of hardware notification of TX slots becomming
-> available, I find it totally impossible that a modern ethernet controller
-> was created without a TX done interrupt.
->
-
-I am sorry, but unfortunately this series really does NOT have TX done 
-interrupt after checked with hardware guy many times.
-And next series will add TX done interrupt according to the feedback.
-
-There are two reasons of removing the TX done interrupt when the chip is 
-designed.
-1. The specific product does not care the latency, only care the throughput.
-2. When doing many experiment, the tx done interrupt will impact the 
-throughput, as a result reclaim is moved to xmit as one of 
-optimizations, then finally tx done interrupt is removed at all.
-
-Is it acceptable of removing timer as well as latency handling, or any 
-other work around of this kind of hardware?
-
-Thanks
