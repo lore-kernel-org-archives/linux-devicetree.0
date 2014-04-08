@@ -1,66 +1,79 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v7 1/6] pci: Introduce pci_register_io_range() helper function.
-Date: Tue, 08 Apr 2014 12:22:13 +0200
-Message-ID: <4778371.oH3kIlbD0f@wuerfel>
-References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com> <CAErSpo4iEV6khP63ZTF+YUTKi9WLFXzMv13nxw15y3qDg15Ztg@mail.gmail.com> <20140408095038.GT17163@e106497-lin.cambridge.arm.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/3] edac: altera: Add SDRAM EDAC support for
+ CycloneV/ArriaV
+Date: Tue, 8 Apr 2014 11:45:25 +0100
+Message-ID: <20140408104525.GA11876@e106331-lin.cambridge.arm.com>
+References: <1396907649-20212-1-git-send-email-tthayer@altera.com>
+ <1396907649-20212-4-git-send-email-tthayer@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140408095038.GT17163@e106497-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1396907649-20212-4-git-send-email-tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Cc: "robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org" <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 08 April 2014 10:50:39 Liviu Dudau wrote:
-> On Mon, Apr 07, 2014 at 06:58:24PM +0100, Bjorn Helgaas wrote:
-> > On Mon, Apr 7, 2014 at 5:36 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > 
-> > > I think migrating other architectures to use the same code should be
-> > > a separate effort from adding a generic implementation that can be
-> > > used by arm64. It's probably a good idea to have patches to convert
-> > > arm32 and/or microblaze.
-> > 
-> > Let me reiterate that I am 100% in favor of replacing arch-specific
-> > code with more generic implementations.
-> > 
-> > However, I am not 100% in favor of doing it as separate efforts
-> > (although maybe I could be convinced).  The reasons I hesitate are
-> > that (1) if only one architecture uses a new "generic" implementation,
-> > we really don't know whether it is generic enough, (2) until I see the
-> > patches to convert other architectures, I have to assume that I'm the
-> > one who will write them, and (3) as soon as we add the code to
-> > drivers/pci, it becomes partly my headache to maintain it, even if
-> > only one arch benefits from it.
-
-Fair enough.
-
-My approach to the asm-generic infrastruction has mostly been to ensure
-that whoever adds a new architecture has to make things easier for the
-next person. For the PCI code it's clearly your call to pick whatever
-works best for you.
-
-> > Please don't think I'm questioning anyone's intent or good will.  It's
-> > just that I understand the business pressures, and I know how hard it
-> > can be to justify this sort of work to one's management, especially
-> > after the immediate problem has been solved.
+On Mon, Apr 07, 2014 at 10:54:09PM +0100, tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
+> From: Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 > 
-> I understand your concern. I guess the only way to prove my good intentions
-> is to shut up and show the code.
+> Added EDAC support for reporting ECC errors of CycloneV
+> and ArriaV SDRAM controller.
+> - The SDRAM Controller registers are used by the FPGA bridge so
+>   these are accessed through the syscon interface.
+> - The configuration of the SDRAM memory size for the EDAC framework
+>   is discovered from the memory node of the device tree.
+> - Documentation of the bindings in devicetree/bindings/arm/altera/
+>   socfpga-sdram-edac.txt
+> - Correction of single bit errors, detection of double bit errors.
+> 
+> Signed-off-by: Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> To: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>
+> To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  drivers/edac/Kconfig          |    9 ++
+>  drivers/edac/Makefile         |    2 +
+>  drivers/edac/altera_mc_edac.c |  360 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 371 insertions(+)
+>  create mode 100644 drivers/edac/altera_mc_edac.c
 
-I'd suggest looking at architectures in this order then:
+[...]
 
-* microblaze (this one is easy and wants to share code with us)
-* arm32-multiplatform (obviously interesting, but not as easy as microblaze)
-* powerpc64 (they are keen on sharing, code is similar to what you have)
-* mips (this is really platform specific, some want to share drivers with
-  arm32, others should keep their current code. Note that platform selection
-  on mips is compile-time only, they don't have to do it all the same way)
-* powerpc32 (their code is currently different, might not be worth it)
+> +/* Get total memory size from Open Firmware DTB */
+> +static u32 altr_sdram_get_total_mem_size(void)
+> +{
+> +       struct device_node *np;
+> +       u32 retcode, reg_array[2];
+> +
+> +       np = of_find_node_by_type(NULL, "memory");
+> +       if (!np)
+> +               return 0;
+> +
+> +       retcode = of_property_read_u32_array(np, "reg",
+> +                                            reg_array, ARRAY_SIZE(reg_array));
 
-My preference would be to have only the first two done initially and leave
-the other ones up to architecture maintainers, but Bjorn should say
-how much he wants to see get done.
+There's no requirement that #address-cells = <1> or #size-cells = <1>,
+even if any values in either would fit into 32 bits. If we must read
+this from the DTB rather than elsewhere, please check
+of_n_{addr,size}_cells.
 
-	Arnd
+Additionally, it's possible that the physical memory might be described
+over multiple reg entries, or multiple memory nodes for some arbitrary
+reason.
+
+Can we not get this info from elsewhere rather than having to parse the
+memory node within a driver?
+
+Cheers,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
