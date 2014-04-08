@@ -1,87 +1,62 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v4 4.1/6] v4l: vsp1: Add DT bindings documentation
-Date: Tue,  8 Apr 2014 18:46:56 +0200
-Message-ID: <1396975616-6618-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <4542787.8JEGs6DclK@avalon>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <4542787.8JEGs6DclK@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v7 1/6] pci: Introduce pci_register_io_range() helper function.
+Date: Tue, 8 Apr 2014 10:48:18 -0600
+Message-ID: <CAErSpo4nZiEcTth5W6ZhcRSne80T8VWTWR2zm0yN7ogFR0Norw@mail.gmail.com>
+References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
+ <CAErSpo6S49qNuJQB-XXEfJ1Nkz=4gZ5_hE93=gb_yGZesA1H9Q@mail.gmail.com>
+ <20140408094933.GS17163@e106497-lin.cambridge.arm.com> <6228807.4v9ZRtib77@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <6228807.4v9ZRtib77@wuerfel>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-All parameters supplied through platform data can now be passed through
-the device tree.
+On Tue, Apr 8, 2014 at 4:11 AM, Arnd Bergmann <arnd@arndb.de> wrote:
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
- .../devicetree/bindings/media/renesas,vsp1.txt     | 43 ++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/renesas,vsp1.txt
+> There is a wide range of implementations across architectures:
+>
+> a) no access to I/O ports at all (tile, s390, ...)
+> b) access to I/O ports only through special instructions (x86, ...)
+> c) all MMIO is mapped virtual contiguous to PCI_IOBASE or _IO_BASE
+>    (most ppc64, arm32 with MMU, arm64, ...)
+> d) only one PCI host can have an I/O space (mips, microblaze, ...)
+> e) each host controller can have its own method (ppc64 with indirect pio)
+> f) PIO token equals virtual address plus offset (some legacy ARM platforms,
+>    probably some other architectures), or physical address (sparc)
+> g) PIO token encodes address space number plus offset (ia64)
+>
+> a) and b) are trivially handled by any implementation that falls
+> back to 'return -EINVAL'.
+> I believe that c) is the most appropriate solution and we should be
+> able to adopt it by most of the architectures that have an MMU and
+> make it the default implementation.
+> d) seems like a good fallback for noMMU architectures: While we do
+> need to support I/O spaces, we need to support multiple PCI domains,
+> and we need to support noMMU, the combination of all three should
+> be extremely rare, and I'd leave it up to the architecture to support
+> that if there is a real use case, rather than trying to put that into
+> common code.
+> Anything that currently requires e), f) or g) I think should keep
+> doing that and not try to use the generic implementation.
 
-Changes since v3:
+Thanks for the nice summary.  That's way more than I had figured out myself.
 
-- Split DT bindings documentation and support in the driver to seperate patches
-- Add a more verbose commit message
+I don't know whether it'd be worth it, especially for something that's
+so close to obsolete, but it seems like it should be *possible* to
+generalize and unify this somewhat.  I would argue that g) (which I
+wrote, so I know it better than the others) could fairly easily
+subsume c), d), and f), since it maps an ioport number to a virtual
+address for an MMIO access, but it doesn't assume that all the MMIO
+spaces are contiguous.
 
-Changes since v2:
+b), e), and maybe a) could be handled with an exception, e.g., inside
+inb(), look up the struct io_space (e.g., similar to what ia64 does in
+__ia64_mk_io_addr()), and if that struct contains a non-zero ops
+pointer, use that instead of doing the MMIO access.  The ops pointer
+functions could use the x86 INB instruction or do the indirect PIO
+thing or whatever.
 
-- Remove the interrupt-parent property
-- Drop of_match_ptr() as the table is always compiled in
-
-Changes since v1:
-
-- Drop the clock-names property, as the VSP1 uses a single clock
-
-diff --git a/Documentation/devicetree/bindings/media/renesas,vsp1.txt b/Documentation/devicetree/bindings/media/renesas,vsp1.txt
-new file mode 100644
-index 0000000..87fe08a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/renesas,vsp1.txt
-@@ -0,0 +1,43 @@
-+* Renesas VSP1 Video Processing Engine
-+
-+The VSP1 is a video processing engine that supports up-/down-scaling, alpha
-+blending, color space conversion and various other image processing features.
-+It can be found in the Renesas R-Car second generation SoCs.
-+
-+Required properties:
-+
-+  - compatible: Must contain "renesas,vsp1"
-+
-+  - reg: Base address and length of the registers block for the VSP1.
-+  - interrupts: VSP1 interrupt specifier.
-+  - clocks: A phandle + clock-specifier pair for the VSP1 functional clock.
-+
-+  - renesas,#rpf: Number of Read Pixel Formatter (RPF) modules in the VSP1.
-+  - renesas,#uds: Number of Up Down Scaler (UDS) modules in the VSP1.
-+  - renesas,#wpf: Number of Write Pixel Formatter (WPF) modules in the VSP1.
-+
-+
-+Optional properties:
-+
-+  - renesas,has-lif: Boolean, indicates that the LCD Interface (LIF) module is
-+    available.
-+  - renesas,has-lut: Boolean, indicates that the Look Up Table (LUT) module is
-+    available.
-+  - renesas,has-sru: Boolean, indicates that the Super Resolution Unit (SRU)
-+    module is available.
-+
-+
-+Example: R8A7790 (R-Car H2) VSP1-S node
-+
-+	vsp1@fe928000 {
-+		compatible = "renesas,vsp1";
-+		reg = <0 0xfe928000 0 0x8000>;
-+		interrupts = <0 267 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp1_clks R8A7790_CLK_VSP1_S>;
-+
-+		renesas,has-lut;
-+		renesas,has-sru;
-+		renesas,#rpf = <5>;
-+		renesas,#uds = <3>;
-+		renesas,#wpf = <4>;
-+	};
--- 
-1.8.3.2
+Bjorn
