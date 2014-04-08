@@ -1,39 +1,68 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] phy: Renesas R-Car Gen2 PHY driver
-Date: Wed, 09 Apr 2014 01:30:50 +0400
-Message-ID: <53446A8A.5050001@cogentembedded.com>
-References: <201404090102.03074.sergei.shtylyov@cogentembedded.com>
+From: Stanimir Vabanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH v2] ARM: qcom: Add initial IPQ8064 SoC and AP148 device
+ trees
+Date: Wed, 09 Apr 2014 00:36:28 +0300
+Message-ID: <53446BDC.2050609@mm-sol.com>
+References: <1396972276-11549-1-git-send-email-galak@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <201404090102.03074.sergei.shtylyov@cogentembedded.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kishon@ti.com
-Cc: linux-sh@vger.kernel.org, magnus.damm@gmail.com, linux-doc@vger.kernel.org, rdunlap@infradead.org, grant.likely@linaro.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1396972276-11549-1-git-send-email-galak@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, David Brown <davidb@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi Kumar,
 
-On 04/09/2014 01:02 AM, Sergei Shtylyov wrote:
+<snip>
 
-> This PHY, though formally being a part of Renesas USBHS controller, contains the
-> UGCTRL2 register that controls multiplexing of the USB ports (Renesas calls them
-> channels) to the different USB controllers: channel 0 can be connected to either
-> PCI EHCI/OHCI or USBHS controllers, channel 2 can be connected to PCI EHCI/OHCI
-> or xHCI controllers.
+> diff --git a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
+> new file mode 100644
+> index 0000000..5e6f456
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
+> @@ -0,0 +1,12 @@
+> +#include "qcom-ipq8064-v1.0.dtsi"
+> +
+> +/ {
+> +	model = "Qualcomm IPQ8064/DB149";
+> +	compatible = "qcom,ipq8064-db149", "qcom,ipq8064";
 
-> This is a new driver for this USB PHY currently already supported under drivers/
-> usb/phy/. The reason for writing the new driver was the requirement that the
-> multiplexing of USB channels to the controller be dynamic, depending on what
-> USB drivers are loaded,  rather than static as provided by the old driver.	
-> The infrastructure provided by drivers/phy/phy-core.c seems to fit that purpose
-> ideally. The new driver only supports device tree probing for now.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+The patch subject saying AP148, and here AP149. Which is the wrong one?
 
-    Oops, I forgot to rebase it against Kishon's linux-phy.git repo's next 
-branch. I will re-send shortly.
+> +
+> +	soc {
+> +		serial@16340000 {
+> +			status = "ok";
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/qcom-ipq8064-v1.0.dtsi b/arch/arm/boot/dts/qcom-ipq8064-v1.0.dtsi
+> new file mode 100644
+> index 0000000..7093b07
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/qcom-ipq8064-v1.0.dtsi
+> @@ -0,0 +1 @@
+> +#include "qcom-ipq8064.dtsi"
+> diff --git a/arch/arm/boot/dts/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+> new file mode 100644
+> index 0000000..8ca3b51
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
 
-WBR, Sergei
+<snip>
 
+> +
+> +		intc: interrupt-controller@2000000 {
+> +			compatible = "qcom,msm-qgic2";
+> +			interrupt-controller;
+> +			#interrupt-cells = <3>;
+> +			reg = < 0x02000000 0x1000 >,
+> +			      < 0x02002000 0x1000 >;
+
+extra spaces around these numbers
+
+regards,
+Stan
