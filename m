@@ -1,115 +1,101 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2] ARM: qcom: Add initial APQ8064 SoC and IFC6410 board
- device trees
-Date: Tue, 8 Apr 2014 16:32:02 -0700
-Message-ID: <20140408233202.GM9985@codeaurora.org>
-References: <1396972391-11759-1-git-send-email-galak@codeaurora.org>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] devcietree: bindings: add some MFD Keymile FPGAs
+Date: Tue, 8 Apr 2014 19:44:51 -0500
+Message-ID: <1397004291.32034.327.camel@snotra.buserror.net>
+References: <1395754915-14534-1-git-send-email-valentin.longchamp@keymile.com>
+	 <1395754915-14534-3-git-send-email-valentin.longchamp@keymile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1396972391-11759-1-git-send-email-galak@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, David Brown <davidb@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1395754915-14534-3-git-send-email-valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/08, Kumar Gala wrote:
-> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+On Tue, 2014-03-25 at 14:41 +0100, Valentin Longchamp wrote:
+> These are the bindings for 2 MFD devices used on some of the Keymile boards.
+> The first one is the chassis managmenet bfticu FPGA.
+> The second one is the board controller (reset, LEDs, GPIOs) QRIO CPDL.
+> These FPGAs are used in the kmcoge4 board.
+> 
+> This patch also add KEYMILE to the vendor-prefixes.
+> 
+> Signed-off-by: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+> 
+> ---
+> Changes in v3:
+> - add a patch with the bindings for the KEYMILE FPGAs
+> 
+> Changes in v2: None
+> 
+>  Documentation/devicetree/bindings/mfd/bfticu.txt   | 26 ++++++++++++++++++++++
+>  Documentation/devicetree/bindings/mfd/qriox.txt    | 17 ++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>  3 files changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/bfticu.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/qriox.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/bfticu.txt b/Documentation/devicetree/bindings/mfd/bfticu.txt
 > new file mode 100644
-> index 0000000..e336c09
+> index 0000000..92de32e
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-> @@ -0,0 +1,154 @@
-> +/dts-v1/;
+> +++ b/Documentation/devicetree/bindings/mfd/bfticu.txt
+> @@ -0,0 +1,26 @@
+> +KEYMILE bfticu Chassis Management FPGA
 > +
-> +#include "skeleton.dtsi"
-> +#include <dt-bindings/clock/qcom,gcc-msm8960.h>
+> +The bfticu is a multifunction device that manages the whole chassis.
+> +Its main functionality is to collect IRQs from the whole chassis and signals
+> +them to a single controller.
 > +
-> +/ {
-> +	model = "Qualcomm APQ8064";
-> +	compatible = "qcom,apq8064";
-> +	interrupt-parent = <&intc>;
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "qcom,krait";
+> +Required properties:
+> +- compatible: "keymile,bfticu"
+> +- interrupt-controller: the bfticu FPGA is an interrupt controller
+> +- interrupts: the main IRQ line to signal the collected IRQs
+> +- #interrupt-cells : is 2
+> +	- The 1st cell is the local IRQ number on the bfticu
+> +	- The 2nd cell is the type of the IRQ (IRQ_TYPE_xxx)
 
-This doesn't follow the binding. We're supposed to put the
-compatible in each cpu node even though it's always the same.
+Device tree bindings should not depend on the content of Linux headers.
+One is stable ABI, and the other isn't.
 
-> +		enable-method = "qcom,kpss-acc-v1";
-> +
-> +		cpu@0 {
-> +			device_type = "cpu";
-> +			reg = <0>;
-> +			next-level-cache = <&L2>;
-> +			qcom,acc = <&acc0>;
-> +			qcom,saw = <&saw0>;
-> +		};
-> +
-> +		cpu@1 {
-> +			device_type = "cpu";
-> +			reg = <1>;
-> +			next-level-cache = <&L2>;
-> +			qcom,acc = <&acc1>;
-> +			qcom,saw = <&saw1>;
-> +		};
-> +
-> +		cpu@2 {
-> +			device_type = "cpu";
-> +			reg = <2>;
-> +			next-level-cache = <&L2>;
-> +			qcom,acc = <&acc2>;
-> +			qcom,saw = <&saw2>;
-> +		};
-> +
-> +		cpu@3 {
-> +			device_type = "cpu";
-> +			reg = <3>;
-> +			next-level-cache = <&L2>;
-> +			qcom,acc = <&acc3>;
-> +			qcom,saw = <&saw3>;
-> +		};
-> +
-> +		L2: l2-cache {
-> +			compatible = "cache";
+If you want you can make the values the same for convenience, as is done
+by IPIC, CPM PIC, etc -- but the values need to be explicitly stated in
+the binding.  It'll still break if the Linux values change (so it may
+not be a good idea to try to keep the values the same), but at least the
+fix would be in Linux code rather than an ABI change.
 
-This would be "qcom,arch-cache" if the binding is accepted.
-
-> +			cache-level = <2>;
-> +			interrupts = <0 2 0x4>;
-
-These interrupts here are also not accepted as a binding yet.
-
-> +		};
+> diff --git a/Documentation/devicetree/bindings/mfd/qriox.txt b/Documentation/devicetree/bindings/mfd/qriox.txt
+> new file mode 100644
+> index 0000000..f301e2d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/qriox.txt
+> @@ -0,0 +1,17 @@
+> +KEYMILE qrio Board Control CPLD
+> +
+> +The qrio is a multifunction device that controls the KEYMILE boards based on
+> +the kmp204x design.
+> +It is consists of a reset controller, watchdog timer, LEDs, and 2 IRQ capable
+> +GPIO blocks.
+> +
+> +Required properties:
+> +- compatible: "keymile,qriox"
+> +- reg: access on the parent local bus (chip select, offset in chip select, size)
+> +
+> +Example:
+> +
+> +	board-control@1,0 {
+> +		compatible = "keymile,qriox";
+> +		reg = <1 0 0x80>;
 > +	};
-> +
-> +	cpu-pmu {
-> +		compatible = "qcom,krait-pmu";
-> +		interrupts = <1 10 0x304>;
-> +	};
-> +
-> +	soc: soc {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +		compatible = "simple-bus";
-> +
-> +
 
-Nit: Weird two newlines here
+If it has GPIO blocks, shouldn't it be using the GPIO binding?
 
-> +		intc: interrupt-controller@2000000 {
-> +			compatible = "qcom,msm-qgic2";
-> +			interrupt-controller;
-> +			#interrupt-cells = <3>;
-> +			reg = < 0x02000000 0x1000 >,
-> +			      < 0x02002000 0x1000 >;
-> +		};
-> +
+-Scott
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
