@@ -1,56 +1,35 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v5 3/8] mtd: spi-nor: add the framework for SPI NOR
-Date: Wed, 9 Apr 2014 10:48:37 -0700
-Message-ID: <20140409174837.GE32070@ld-irv-0074>
-References: <1393238262-8622-1-git-send-email-b32955@freescale.com>
- <1393238262-8622-4-git-send-email-b32955@freescale.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [RFC PATCH v2] edac: synopsys: Added EDAC support for zynq ddr
+ ecc controller
+Date: Wed, 9 Apr 2014 19:48:59 +0200
+Message-ID: <20140409174859.GP6529@pd.tnic>
+References: <1220b715-6fc2-42ed-8393-b9859fc0deb9@TX2EHSMHS021.ehs.local>
+ <20140408204047.GQ30077@pd.tnic>
+ <CAGnW=BYJxEkhAitCGi-i6+260-i-+GPrg0yPcY=M+7YmDF6ZRw@mail.gmail.com>
+ <20140409110339.GF6529@pd.tnic>
+ <CAGnW=BYay7fDeqgUDM4L8WqjEm66f5HVjht+RtbL+SPGOR1Xag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1393238262-8622-4-git-send-email-b32955@freescale.com>
+In-Reply-To: <CAGnW=BYay7fDeqgUDM4L8WqjEm66f5HVjht+RtbL+SPGOR1Xag@mail.gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Huang Shijie <b32955@freescale.com>
-Cc: dwmw2@infradead.org, angus.clark@st.com, lee.jones@linaro.org, pekon@ti.com, sourav.poddar@ti.com, broonie@linaro.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, b44548@freescale.com, b18965@freescale.com, devicetree@vger.kernel.org, shawn.guo@linaro.org
+To: punnaiah choudary kalluri <punnaia@xilinx.com>
+Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, dougthompson@xmission.com, linux-edac@vger.kernel.org, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, sorenb@xilinx.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Punnaiah Choudary <kpc528@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 24, 2014 at 06:37:37PM +0800, Huang Shijie wrote:
-> This patch cloned most of the m25p80.c. In theory, it adds a new spi-=
-nor layer.
-=2E..
-> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-=
-nor.c
-> new file mode 100644
-> index 0000000..a840e88
-> --- /dev/null
-> +++ b/drivers/mtd/spi-nor/spi-nor.c
-> @@ -0,0 +1,1087 @@
-> +/*
-> + * Cloned most of the code from the m25p80.c
+On Wed, Apr 09, 2014 at 11:15:00PM +0530, punnaiah choudary kalluri wrote:
+> OK. I just checked at highbank_mc_edac and other drivers found
+> no documentation for static functions. So, is it ok if i remove
+> documentation completely for these static functions?
 
-Please include a copyright notice here. This should carry both the
-original m25p80.c copyright notice, as well as your own additional
-copyright if you choose. For instance:
+Yes. Didn't I already suggested that, like, twice already?
 
- * Based on m25p80.c, by Mike Lavender (mike@steroidmicros.com), with
- * influence from lart.c (Abraham Van Der Merwe) and mtd_dataflash.c
- *
- * Copyright =A9 2005, Intec Automation Inc.
- * Copyright =A9 2014, Freescale Semiconductor, Inc.
+Just drop them.
 
-> + *
-> + * This code is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/errno.h>
-> +#include <linux/module.h>
-> +#include <linux/device.h>
-> +#include <linux/mutex.h>
-> +#include <linux/math64.h>
-=2E..
+-- 
+Regards/Gruss,
+    Boris.
 
-Brian
+Sent from a fat crate under my desk. Formatting is fine.
+--
