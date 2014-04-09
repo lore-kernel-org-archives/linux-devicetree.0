@@ -1,178 +1,91 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 1/4] clocksource: Add support for the Mediatek SoCs
-Date: Wed, 9 Apr 2014 13:58:50 -0700
-Message-ID: <20140409205850.GO9985@codeaurora.org>
-References: <1397072736-10793-1-git-send-email-matthias.bgg@gmail.com>
- <1397072736-10793-2-git-send-email-matthias.bgg@gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [rtc-linux] [PATCH v3 2/3] rtc: Add APM X-Gene SoC RTC driver
+Date: Wed, 9 Apr 2014 22:01:48 +0100
+Message-ID: <20140409210148.GT6518@sirena.org.uk>
+References: <1396505873-5507-1-git-send-email-lho@apm.com>
+ <1396505873-5507-2-git-send-email-lho@apm.com>
+ <1396505873-5507-3-git-send-email-lho@apm.com>
+ <20140403162648.GW14763@sirena.org.uk>
+ <CAPw-ZT=XRDbqN8CJLOyXauif25Yq0n9G+NANqUtvX63QsyNT1g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="pnDjx0H/VpusRTEI"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1397072736-10793-2-git-send-email-matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAPw-ZT=XRDbqN8CJLOyXauif25Yq0n9G+NANqUtvX63QsyNT1g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, heiko.stuebner-K3U4GQvHnyU@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/09, Matthias Brugger wrote:
-> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> index 96918e1..bb29321 100644
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
-> @@ -144,6 +144,10 @@ config VF_PIT_TIMER
->  config SYS_SUPPORTS_SH_CMT
->          bool
->  
-> +config MTK_TIMER
-> +	bool
-> +
-> +
 
-Why two newlines?
+--pnDjx0H/VpusRTEI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> diff --git a/drivers/clocksource/mtk_timer.c b/drivers/clocksource/mtk_timer.c
-> new file mode 100644
-> index 0000000..bf901e3
-> --- /dev/null
-> +++ b/drivers/clocksource/mtk_timer.c
-> @@ -0,0 +1,248 @@
-> +
-> +#include <linux/clk.h>
-> +#include <linux/clockchips.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-> +#include <linux/irqreturn.h>
-> +#include <linux/sched_clock.h>
+On Wed, Apr 09, 2014 at 10:16:11AM -0700, Loc Ho wrote:
+> >> +static int xgene_rtc_suspend(struct device *dev)
 
-Were you planning on registering a sched_clock source?
+> >> +     } else {
+> >> +             xgene_rtc_alarm_irq_enable(dev, 0);
+> >> +             clk_disable(pdata->clk);
+> >> +     }
 
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +
-[...]
-> +
-> +static struct clock_event_device mtk_clockevent = {
-> +	.name = "mtk_tick",
-> +	.rating = 300,
-> +	.shift = 32,
+> > Why does the driver only disable the clock over suspend rather than also
+> > unpreparing it?
 
-This is unnecessary as it's handled by
-clockevents_config_and_register().
+> This was modeled after rtc-spear.c. Is this or rtc-spear in-correct?
 
-> +	.features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT,
-> +	.set_mode = mtk_clkevt_mode,
-> +	.set_next_event = mtk_clkevt_next_event,
-> +};
-> +
-> +
-> +static irqreturn_t mtk_timer_interrupt(int irq, void *dev_id)
-> +{
-> +	struct clock_event_device *evt = (struct clock_event_device *)dev_id;
+They're both broken, looks like a bad conversion to prepare clocks.
 
-Unnecessary cast from void.
+> >> +     if (device_may_wakeup(&pdev->dev)) {
+> >> +             if (pdata->irq_wake) {
+> >> +                     disable_irq_wake(irq);
+> >> +                     pdata->irq_wake = 0;
+> >> +             }
+> >> +     } else {
+> >> +             clk_enable(pdata->clk);
 
-> +
-> +	/* Acknowledge timer0 irq */
-> +	writel(GPT_IRQ_ACK(GPT_CLK_EVT), gpt_base + GPT_IRQ_ACK_REG);
-> +	evt->event_handler(evt);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-[...]
-> +
-> +static struct irqaction mtk_timer_irq = {
-> +	.name = "mtk_timer0",
-> +	.flags = IRQF_DISABLED | IRQF_TIMER | IRQF_IRQPOLL,
+> > It's also not checking for errors here.
 
-IRQF_DISABLED is a nop. Remove it.
+> This was also modeled after rtc-spear. I guess I can check and print
+> an warning but don't believe it matter.
 
-> +	.handler = mtk_timer_interrupt,
-> +	.dev_id = &mtk_clockevent,
-> +};
-> +
-> +static u32 mtk_timer_sched_read(void)
-> +{
-> +	return readl(gpt_base + TIMER_CNT_REG(GPT_CLK_SRC));
-> +}
+You should return an error if the operation failed.
 
-This is unused unless you register a sched_clock source.
+> >> +             xgene_rtc_alarm_irq_enable(dev, 1);
+> >> +     }
 
-> +
-> +static void __init mtk_timer_init(struct device_node *node)
-> +{
-> +	unsigned long rate = 0;
-> +	struct clk *clk;
-> +	int ret, irq;
-> +	u32 val;
-> +
-> +	gpt_base = of_iomap(node, 0);
-> +	if (!gpt_base)
-> +		panic("Can't map registers");
-> +
-> +	irq = irq_of_parse_and_map(node, 0);
-> +	if (irq <= 0)
-> +		panic("Can't parse IRQ");
-> +
-> +	clk = of_clk_get_by_name(node, "sys_clk");
-> +	if (IS_ERR(clk))
-> +		panic("Can't get timer clock");
-> +	clk_prepare_enable(clk);
-> +
-> +	rate = clk_get_rate(clk);
-> +
-> +	mtk_timer_global_reset();
-> +
-> +	/* Configure clock source */
-> +	mtk_timer_reset(GPT_CLK_SRC);
-> +
-> +	writel(TIMER_CLK_SRC(TIMER_CLK_SRC_SYS13M) | TIMER_CLK_DIV1,
-> +			gpt_base + TIMER_CLK_REG(GPT_CLK_SRC));
-> +
-> +	writel(TIMER_CTRL_OP(TIMER_CTRL_OP_FREERUN) | TIMER_CTRL_ENABLE,
-> +				gpt_base + TIMER_CTRL_REG(GPT_CLK_SRC));
-> +
-> +	clocksource_mmio_init(gpt_base + TIMER_CNT_REG(GPT_CLK_SRC), node->name,
-> +			      rate, 300, 32, clocksource_mmio_readl_up);
-> +
-> +	ticks_per_jiffy = DIV_ROUND_UP(rate, HZ);
-> +
-> +	/* Configure clock event */
-> +	mtk_timer_reset(GPT_CLK_EVT);
-> +
-> +	writel(TIMER_CLK_SRC(TIMER_CLK_SRC_SYS13M) | TIMER_CLK_DIV1,
-> +			gpt_base + TIMER_CLK_REG(GPT_CLK_EVT));
-> +	writel(0, gpt_base + TIMER_CMP_REG(GPT_CLK_EVT));
-> +
-> +	writel(TIMER_CTRL_OP(TIMER_CTRL_OP_REPEAT) | TIMER_CTRL_ENABLE,
-> +			gpt_base + TIMER_CTRL_REG(GPT_CLK_EVT));
-> +
-> +	ret = setup_irq(irq, &mtk_timer_irq);
+> > Won't this unconditionally enable the interrupt regardless of what the
+> > setting was prior to suspend?
 
-Most clocksource drivers use request_irq() nowadays. Can you use
-that?
+> This was also modeled after rtc-spear.c. Is this or rtc-spear in-correct?
 
-> +	if (ret)
-> +		pr_warn("failed to setup irq %d\n", irq);
-> +
-> +	/* Enable timer0 interrupt */
-> +	val = readl(gpt_base + GPT_IRQ_EN_REG);
-> +	writel(val | GPT_IRQ_ENABLE(GPT_CLK_EVT), gpt_base + GPT_IRQ_EN_REG);
-> +
-> +	mtk_clockevent.cpumask = cpumask_of(0);
+I would expct they're both broken here.
 
-Is it possible for this timer to be used on SMP hardware? If so,
-this should probably be cpu_all_mask. Please assign the .irq
-member here as well.
+--pnDjx0H/VpusRTEI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +
-> +	clockevents_config_and_register(&mtk_clockevent, rate, 0x3,
-> +					0xffffffff);
-> +}
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTRbU5AAoJELSic+t+oim98gUP/3+MPBrXZPx0AxhkLx5Lxj9v
+xktum56kwELnjPqaGpPWgIcglnya2rPx7iRGd7nitwvN3SpSJT7fyNCnxPsXno/5
+IHMqwQXGwk4duuM3VbDLMVAHHQRLPwZMA5PA+g4kcNVv4Ze9hQLHZiFCbT71P1q8
+YxjJqju2MfSYlESav/vDLlwZPkky+6Z/47CAEhW70gPTbASMNOOVhm7JLAV3sVKg
+0I1TejZckdmFL/ZawHndPtteg14oqySubJCS4CIp4bPegZOOJGsProjUpHNxlanV
+ERb5mOtsLt2e6Q3er6i9zrFwgtaDPv76777FwYXsRS83f/DWz8DyDRvuSWMx+ZCc
+C38ioDnoVzT1InmoAZALI2xK66o5xIr/Y+CQw1hYSY1TFBniFwF9V5R8nDNqad9R
+/9PLnGGAuuJ4VD8rzLyHKifzcoYdzlvMBQpt9uJqS5oFyJFts0gg8IkIL9//rAHP
+HuO4HME/wzrbRhaBxbgIvHWFOH1CVosP/c3t/BBhISiPfSOarl1lYEJH3ftGZ6WZ
+nvljaNmUS2p4lU9WMS+TQSaJwhGyHfW9VG7ub73F4k+gNlzIBwOWFz7k5lgogQSG
+mgikiC8BM+D4dwnYu3FwUujj0HGVv4JRFdGS1ne/KmXvMGNmKAigNpmc8ofy6dlS
+ho+GyOYgewVDxjyB5mG0
+=N2Cr
+-----END PGP SIGNATURE-----
+
+--pnDjx0H/VpusRTEI--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
