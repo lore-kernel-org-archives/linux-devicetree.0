@@ -1,64 +1,35 @@
 From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: [PATCH 13/15] pinctrl: sunxi: retrieve and enable PL reset line for
- A31 SoC
-Date: Wed,  9 Apr 2014 15:51:16 +0200
-Message-ID: <1397051478-4113-14-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH 12/15] pinctrl: sunxi: retrieve and enable PL clk gate for A31 SoC
+Date: Wed,  9 Apr 2014 15:51:15 +0200
+Message-ID: <1397051478-4113-13-git-send-email-boris.brezillon@free-electrons.com>
 References: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Retrieve and deassert the reset line related to PL pins.
+Retrieve and enable the clock gate related to PL pins.
 
 Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
 ---
- drivers/pinctrl/pinctrl-sunxi.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/pinctrl/pinctrl-sunxi.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/drivers/pinctrl/pinctrl-sunxi.c b/drivers/pinctrl/pinctrl-sunxi.c
-index da76ceb..09eea79 100644
+index 64dffc8..da76ceb 100644
 --- a/drivers/pinctrl/pinctrl-sunxi.c
 +++ b/drivers/pinctrl/pinctrl-sunxi.c
-@@ -26,6 +26,7 @@
- #include <linux/pinctrl/pinconf-generic.h>
- #include <linux/pinctrl/pinmux.h>
- #include <linux/platform_device.h>
-+#include <linux/reset.h>
- #include <linux/slab.h>
+@@ -898,6 +898,13 @@ static int sunxi_pinctrl_probe(struct platform_device *pdev)
+ 			return -ENOMEM;
  
- #include "core.h"
-@@ -878,6 +879,7 @@ static int sunxi_pinctrl_probe(struct platform_device *pdev)
- 	const struct of_device_id *device;
- 	struct pinctrl_pin_desc *pins;
- 	struct sunxi_pinctrl *pctl;
-+	struct reset_control *rstc;
- 	int i, ret, last_pin;
- 	struct clk *clk;
- 
-@@ -905,6 +907,14 @@ static int sunxi_pinctrl_probe(struct platform_device *pdev)
- 		ret = clk_prepare_enable(clk);
- 		if (ret)
- 			return ret;
+ 		pctl->get_membase = sun6i_a31_pinctrl_get_membase;
++		clk = devm_clk_get(&pdev->dev, "pioL_clk");
++		if (IS_ERR(clk))
++			return PTR_ERR(clk);
 +
-+		rstc = devm_reset_control_get(&pdev->dev, NULL);
-+		if (IS_ERR(rstc))
-+			return PTR_ERR(rstc);
-+
-+		ret = reset_control_deassert(rstc);
++		ret = clk_prepare_enable(clk);
 +		if (ret)
 +			return ret;
  	} else {
