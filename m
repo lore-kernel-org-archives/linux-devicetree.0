@@ -1,281 +1,63 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCHv2 1/3] phy: Add exynos-simple-phy driver
-Date: Wed, 09 Apr 2014 10:37:05 +0200
-Message-ID: <534506B1.4040908@samsung.com>
-References: <1396967856-27470-1-git-send-email-t.stanislaws@samsung.com>
- <1396967856-27470-2-git-send-email-t.stanislaws@samsung.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH 3/3] ARM: socfpga: dts: add reset-controller
+Date: Wed, 09 Apr 2014 10:37:13 +0200
+Message-ID: <73mwfu3nly.fsf@unicorn.hi.pengutronix.de>
+References: <1396629087-23727-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1396629087-23727-4-git-send-email-s.trumtrar@pengutronix.de>
+ <1396905121.25236.2.camel@linux-builds1>
+ <20140407224110.GA28399@pengutronix.de> <53435F37.7060301@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1396967856-27470-2-git-send-email-t.stanislaws@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomasz Stanislawski <t.stanislaws@samsung.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: kgene.kim@samsung.com, kishon@ti.com, kyungmin.park@samsung.com, robh+dt@kernel.org, grant.likely@linaro.org, sylvester.nawrocki@gmail.com, rahul.sharma@samsung.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <53435F37.7060301@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dinh Nguyen <dinh.linux@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, kernel@pengutronix.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Dinh Nguyen <dinguyen@altera.com>, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
 
-On 04/08/2014 04:37 PM, Tomasz Stanislawski wrote:
-> Add exynos-simple-phy driver to support a single register
-> PHY interfaces present on Exynos4 SoC.
-> 
-> Signed-off-by: Tomasz Stanislawski <t.stanislaws@samsung.com>
-> ---
->  .../devicetree/bindings/phy/samsung-phy.txt        |   24 +++
->  drivers/phy/Kconfig                                |    5 +
->  drivers/phy/Makefile                               |    1 +
->  drivers/phy/exynos-simple-phy.c                    |  154 ++++++++++++++++++++
->  4 files changed, 184 insertions(+)
->  create mode 100644 drivers/phy/exynos-simple-phy.c
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-> index b422e38..f97c4c3 100644
-> --- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-> @@ -114,3 +114,27 @@ Example:
->  		compatible = "samsung,exynos-sataphy-i2c";
->  		reg = <0x38>;
->  	};
-> +
-> +Samsung S5P/EXYNOS SoC series SIMPLE PHY
-> +-------------------------------------------------
-> +
-> +Required properties:
-> +- compatible : should be one of the listed compatibles:
-> +	- "samsung,exynos4210-simple-phy"
-> +	- "samsung,exynos4412-simple-phy"
-> +- reg : offset and length of the register set;
-> +- #phy-cells : from the generic phy bindings, must be 1;
-> +
-> +For "samsung,exynos4210-simple-phy" compatible PHYs the second cell in
-> +the PHY specifier identifies the PHY and its meaning is as follows:
-> +  0 - HDMI PHY,
-> +  1 - DAC PHY,
-> +  2 - ADC PHY,
-> +  3 - PCIE PHY.
-> +  4 - SATA PHY.
-> +
-> +For "samsung,exynos4412-simple-phy" compatible PHYs the second cell in
-> +the PHY specifier identifies the PHY and its meaning is as follows:
-> +  0 - HDMI PHY,
-> +  1 - ADC PHY,
+Dinh Nguyen <dinh.linux@gmail.com> writes:
 
-What about using preprocessor macros?
+> On 4/7/14 5:41 PM, Steffen Trumtrar wrote:
+>> On Mon, Apr 07, 2014 at 04:12:01PM -0500, Dinh Nguyen wrote:
+>>> On Fri, 2014-04-04 at 18:31 +0200, Steffen Trumtrar wrote:
+>>>> Add the necessary #reset-cells property to the rst-mgr node and
+>>>> provide a header-file with all possible resets specified.
+>>>>
+>>>> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+>>>> ---
+>>>>  arch/arm/boot/dts/socfpga.dtsi           |  8 ++-
+>>>>  include/dt-bindings/reset/altr,rst-mgr.h | 90 ++++++++++++++++++++++++++++++++
+>>> Does this file belong under dt-bindings/reset/ or
+>>> dt-bindings/reset-controller/?
+>>>
+>> ATM there is no such directory, or is there ?
+>> So, reset seems appropriate I think.
+> commit [6b7f06 ARM: STi: STiH415: Add reset controller support.]
+> Seems more appropriate for this to go into reset-controller.
+>
 
-> +
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index 3bb05f1..65ab783 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -166,4 +166,9 @@ config PHY_XGENE
->  	help
->  	  This option enables support for APM X-Gene SoC multi-purpose PHY.
->  
-> +config EXYNOS_SIMPLE_PHY
-> +	tristate "Exynos Simple PHY driver"
-> +	help
-> +	  Support for 1-bit PHY controllers on SoCs from Exynos family.
-> +
->  endmenu
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index 2faf78e..88c5b60 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -18,3 +18,4 @@ obj-$(CONFIG_PHY_EXYNOS4210_USB2)	+= phy-exynos4210-usb2.o
->  obj-$(CONFIG_PHY_EXYNOS4X12_USB2)	+= phy-exynos4x12-usb2.o
->  obj-$(CONFIG_PHY_EXYNOS5250_USB2)	+= phy-exynos5250-usb2.o
->  obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
-> +obj-$(CONFIG_EXYNOS_SIMPLE_PHY)		+= exynos-simple-phy.o
-> diff --git a/drivers/phy/exynos-simple-phy.c b/drivers/phy/exynos-simple-phy.c
-> new file mode 100644
-> index 0000000..57ad338
-> --- /dev/null
-> +++ b/drivers/phy/exynos-simple-phy.c
-> @@ -0,0 +1,154 @@
-> +/*
-> + * Exynos Simple PHY driver
-> + *
-> + * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-> + * Author: Tomasz Stanislawski <t.stanislaws@samsung.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_device.h>
-> +#include <linux/phy/phy.h>
-> +
-> +#define EXYNOS_PHY_ENABLE	(1 << 0)
-> +
-> +static int exynos_phy_power_on(struct phy *phy)
-> +{
-> +	void __iomem *reg = phy_get_drvdata(phy);
-> +	u32 val;
-> +
-> +	val = readl(reg);
-> +	val |= EXYNOS_PHY_ENABLE;
-> +	writel(val, reg);
-> +
-> +	return 0;
-> +}
-> +
-> +static int exynos_phy_power_off(struct phy *phy)
-> +{
-> +	void __iomem *reg = phy_get_drvdata(phy);
-> +	u32 val;
-> +
-> +	val = readl(reg);
-> +	val &= ~EXYNOS_PHY_ENABLE;
-> +	writel(val, reg);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct phy_ops exynos_phy_ops = {
-> +	.power_on	= exynos_phy_power_on,
-> +	.power_off	= exynos_phy_power_off,
-> +	.owner		= THIS_MODULE,
-> +};
-> +
-> +static const u32 exynos4210_offsets[] = {
-> +	0x0700, /* HDMI_PHY */
-> +	0x070C, /* DAC_PHY */
-> +	0x0718, /* ADC_PHY */
-> +	0x071C, /* PCIE_PHY */
-> +	0x0720, /* SATA_PHY */
-> +	~0, /* end mark */
-> +};
-> +
-> +static const u32 exynos4412_offsets[] = {
-> +	0x0700, /* HDMI_PHY */
-> +	0x0718, /* ADC_PHY */
-> +	~0, /* end mark */
-> +};
+Okay, the current mainline master now has include/dt-bindings/reset and
+include/dt-bindings/reset-controller.
 
-Why have you selected only these registers?
-According to specs Exynos 4210 has 9 and 4412 has 7 control registers
-with 'phy-enable' functionality.
-I guess MIPI would require little more work as it has also reset bits,
-but it will be still better than separate driver.
+I think one of those directories shouldn't be there, but be merged in
+the other instead. But which one? Where shall I put my precious code?
 
-> +
-> +static const struct of_device_id exynos_phy_of_match[] = {
-> +	{ .compatible = "samsung,exynos4210-simple-phy",
-> +	  .data = exynos4210_offsets},
-> +	{ .compatible = "samsung,exynos4412-simple-phy",
-> +	  .data = exynos4412_offsets},
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, exynos_phy_of_match);
-> +
-> +static struct phy *exynos_phy_xlate(struct device *dev,
-> +					struct of_phandle_args *args)
-> +{
-> +	struct phy **phys = dev_get_drvdata(dev);
-> +	int index = args->args[0];
-> +	int i;
-> +
-> +	/* verify if index is valid */
-> +	for (i = 0; i <= index; ++i)
-> +		if (!phys[i])
-> +			return ERR_PTR(-ENODEV);
-> +
-> +	return phys[index];
-> +}
-> +
-> +static int exynos_phy_probe(struct platform_device *pdev)
-> +{
-> +	const struct of_device_id *of_id = of_match_device(
-> +		of_match_ptr(exynos_phy_of_match), &pdev->dev);
-> +	const u32 *offsets = of_id->data;
-> +	int count;
-> +	struct device *dev = &pdev->dev;
-> +	struct phy **phys;
-> +	struct resource *res;
-> +	void __iomem *regs;
-> +	int i;
-> +	struct phy_provider *phy_provider;
-> +
-> +	/* count number of phys to create */
-> +	for (count = 0; offsets[count] != ~0; ++count)
-> +		;
 
-count = ARRAY_SIZE(offsets) - 1;
+Regards,
+Steffen
 
-> +
-> +	phys = devm_kzalloc(dev, (count + 1) * sizeof(phys[0]), GFP_KERNEL);
-> +	if (!phys)
-> +		return -ENOMEM;
-> +
-> +	dev_set_drvdata(dev, phys);
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +
-> +	regs = devm_ioremap(dev, res->start, res->end - res->start);
-> +	if (!regs) {
-> +		dev_err(dev, "failed to ioremap registers\n");
-> +		return -EFAULT;
-> +	}
-
-Why not devm_ioremap_resource? If not, resource_size function calculates
-length of resource correctly.
-
-Anyway I like the idea of implementing multiple phys in one driver.
-The only drawback I see is that some phys will be created even there are
-no consumers for them. To avoid such situation you can try to use
-lazy approach - create phy only if there is request for it,
-exynos_phy_xlate callback should allow this.
-
-Regards
-Andrzej
-
-> +
-> +	/* NOTE: last entry in phys[] is NULL */
-> +	for (i = 0; i < count; ++i) {
-> +		phys[i] = devm_phy_create(dev, &exynos_phy_ops, NULL);
-> +		if (IS_ERR(phys[i])) {
-> +			dev_err(dev, "failed to create PHY %d\n", i);
-> +			return PTR_ERR(phys[i]);
-> +		}
-> +		phy_set_drvdata(phys[i], regs + offsets[i]);
-> +	}
-> +
-> +	phy_provider = devm_of_phy_provider_register(dev, exynos_phy_xlate);
-> +	if (IS_ERR(phy_provider)) {
-> +		dev_err(dev, "failed to register PHY provider\n");
-> +		return PTR_ERR(phy_provider);
-> +	}
-> +
-> +	dev_info(dev, "added %d phys\n", count);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver exynos_phy_driver = {
-> +	.probe	= exynos_phy_probe,
-> +	.driver = {
-> +		.of_match_table	= exynos_phy_of_match,
-> +		.name  = "exynos-simple-phy",
-> +		.owner = THIS_MODULE,
-> +	}
-> +};
-> +module_platform_driver(exynos_phy_driver);
-> +
-> +MODULE_DESCRIPTION("Exynos Simple PHY driver");
-> +MODULE_AUTHOR("Tomasz Stanislawski <t.stanislaws@samsung.com>");
-> +MODULE_LICENSE("GPL v2");
-> 
+-- 
+Pengutronix e.K.                           | Steffen Trumtrar            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
