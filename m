@@ -1,124 +1,81 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 13/15] pinctrl: sunxi: retrieve and enable PL reset line
- for A31 SoC
-Date: Wed, 9 Apr 2014 17:34:12 +0200
-Message-ID: <20140409153412.GJ28585@lukather>
+Subject: Re: [PATCH 14/15] pinctrl: sunxi: define A31 PL0/PL1 pins
+Date: Wed, 9 Apr 2014 17:38:49 +0200
+Message-ID: <20140409153849.GK28585@lukather>
 References: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com>
- <1397051478-4113-14-git-send-email-boris.brezillon@free-electrons.com>
+ <1397051478-4113-15-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3019955169368087562=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1397051478-4113-14-git-send-email-boris.brezillon@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="d6d1KVhp94hk3Jrm"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1397051478-4113-15-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, linux-doc@vger.kernel.org, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Randy Dunlap <rdunlap@infradead.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============3019955169368087562==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tAmVnWIZ6lqEAvSf"
-Content-Disposition: inline
-
-
---tAmVnWIZ6lqEAvSf
+--d6d1KVhp94hk3Jrm
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 09, 2014 at 03:51:16PM +0200, Boris BREZILLON wrote:
-> Retrieve and deassert the reset line related to PL pins.
+On Wed, Apr 09, 2014 at 03:51:17PM +0200, Boris BREZILLON wrote:
+> Define PL0/PL1 pins available on the A31 SoC.
 >=20
 > Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
 > ---
->  drivers/pinctrl/pinctrl-sunxi.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+>  drivers/pinctrl/pinctrl-sunxi-pins.h | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 >=20
-> diff --git a/drivers/pinctrl/pinctrl-sunxi.c b/drivers/pinctrl/pinctrl-su=
-nxi.c
-> index da76ceb..09eea79 100644
-> --- a/drivers/pinctrl/pinctrl-sunxi.c
-> +++ b/drivers/pinctrl/pinctrl-sunxi.c
-> @@ -26,6 +26,7 @@
->  #include <linux/pinctrl/pinconf-generic.h>
->  #include <linux/pinctrl/pinmux.h>
->  #include <linux/platform_device.h>
-> +#include <linux/reset.h>
->  #include <linux/slab.h>
-> =20
->  #include "core.h"
-> @@ -878,6 +879,7 @@ static int sunxi_pinctrl_probe(struct platform_device=
- *pdev)
->  	const struct of_device_id *device;
->  	struct pinctrl_pin_desc *pins;
->  	struct sunxi_pinctrl *pctl;
-> +	struct reset_control *rstc;
->  	int i, ret, last_pin;
->  	struct clk *clk;
-> =20
-> @@ -905,6 +907,14 @@ static int sunxi_pinctrl_probe(struct platform_devic=
-e *pdev)
->  		ret =3D clk_prepare_enable(clk);
->  		if (ret)
->  			return ret;
-> +
-> +		rstc =3D devm_reset_control_get(&pdev->dev, NULL);
-> +		if (IS_ERR(rstc))
-> +			return PTR_ERR(rstc);
-> +
-> +		ret =3D reset_control_deassert(rstc);
-> +		if (ret)
-> +			return ret;
+> diff --git a/drivers/pinctrl/pinctrl-sunxi-pins.h b/drivers/pinctrl/pinct=
+rl-sunxi-pins.h
+> index 3d60669..274cefa 100644
+> --- a/drivers/pinctrl/pinctrl-sunxi-pins.h
+> +++ b/drivers/pinctrl/pinctrl-sunxi-pins.h
+> @@ -2818,6 +2818,14 @@ static const struct sunxi_desc_pin sun6i_a31_pins[=
+] =3D {
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+>  		  SUNXI_FUNCTION(0x2, "nand1")),	/* CE3 */
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN_PL0,
+> +		  SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		  SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		  SUNXI_FUNCTION(0x3, "p2wi")),		/* SCL */
+> +	SUNXI_PIN(SUNXI_PINCTRL_PIN_PL1,
+> +		  SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		  SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		  SUNXI_FUNCTION(0x3, "p2wi")),		/* SDA */
 
-Same thing than in patch 12 :)
+If possible, I'd prefer to have this list as exhaustive as
+possible.
 
 --=20
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
 
---tAmVnWIZ6lqEAvSf
+--d6d1KVhp94hk3Jrm
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.14 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTRWh0AAoJEBx+YmzsjxAgTIAP/R76HlrnrJU+0ObM08Ks4Vv3
-+Pes2DjV0DvghqncJb+REm4qkbHr10o3yZuBx4AH0gJvL6vGKMOomnt0WUsVjbOr
-XGQ01E6oEOm3cHRUpCc9y1NU9rQH5efqYAQuDGcaxVdfpLTQSPVDY1j/CQkcZT4d
-G7W/Kf9zwXq0pZVBdKkmnRKv5bEh94ySExY7jkWUibVb0MsaNp8NVTT8+0kbjJwv
-7DeqCkff2h0RiU+5M6YigxUROIu6OoJPYnBtqXdJt5BddEOCwIDkaZVgqRhnvb3B
-B9Fp92cuGW5Yefu+U7iMPc0TpvAF6rA5B+LjrdxHirJsu9HJNiI57b0Rv7nOQRLb
-q0eVZZbQuZXBFExteJny1nVrYnTliba1lyVWVNv+NR8dovU8qmzxYL0h7aSebinr
-Vl/sH5kmFmWN/mlUMmr59veUElw9dZ27LbeZvF0pOQC+hbRiMTgJpvkAteiRznUy
-qqKD9iCuGOl7YWdEyHdw3npHqEip5pOOXTf4fNNxFTriYtnI7TG9LEzU19drdMYm
-PA21OVL4V/KhRJb3TysaxotL2JYWzpYblMvbCHgN+ajI13eyKDPEiFuRDGEzUj+1
-j5B4PF79/WPV74SERtCEu0hMBviOvF+PelwnvfdPd1ADyVnW1016W4uXSWgGn5aO
-sXQ9gEGhJ/rpIUh3XcfQ
-=ozaJ
+iQIcBAEBAgAGBQJTRWmJAAoJEBx+YmzsjxAggbYP/1M4fxdAcA9gWxq6EdoCVIpY
+ewlL0RvAIZNUp4iycQ8lhavEojGxJLVKRW8aiqXTdvCp5OO1YBooTeXtZyWRyx9e
+q9ExCwSkI1GyvYPBLekVtKyHCsqbolMuqwaGjeYinFU9J2wJPEmPv0nfF4KNWTSf
+YnqR0FyIHcaKJdZUshnVvOK5RFuE26vcwTLyCr0CPqrhQNfH0sZKyTQVSvgSDGD/
+SPMBpXc3nWAd2eAF46xahvSw/qtoT0U8gA2MSu0rpYSngCgzdcFM9W0i4ckuiHxQ
+v2szMzfmLA/tzS4pVvgD+V0reoC7q503jrm5qVkq60iQrHGrHlw2wQ2FLzf5YsSF
+wPIqtvuTJ5XGhIAhKBJOHn+NoYY8/geIIKbhl7+GWPPWin3EZgAseBOR5Hu3/O3e
+UQ3/k/gg+uHyMA0mTyQO+xU8a4fAOE3wmfhdbpBkBxaqf7FMUVxUBqqs3+V7okJX
+eqfZciL+RQ+ihTFWpuDoV5DZZ4SBHyeuzx5+PqrPP2ohMXb99CKzd1NqFr204E6x
+kdmagzvol93hv/MdyISF15CIAmhf7YX2OB+uDkAPExY2pn6/yzdM0ddNkXWVPawG
+8f7jopIBHIzmjRd4C0vrILMZAzDyRniM1Rdp8RlyNPJM1LwJChxwNYcTtSp4yEmW
+9g9aH6WLMrhexzvsdMQN
+=sumE
 -----END PGP SIGNATURE-----
 
---tAmVnWIZ6lqEAvSf--
-
-
---===============3019955169368087562==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============3019955169368087562==--
+--d6d1KVhp94hk3Jrm--
