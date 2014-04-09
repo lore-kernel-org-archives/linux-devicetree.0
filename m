@@ -1,68 +1,94 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 07/15] ARM: sunxi: dt: define A31's APB0 clk gates node
-Date: Wed, 09 Apr 2014 16:43:40 +0200
-Message-ID: <53455C9C.1040607@free-electrons.com>
-References: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com> <1397051478-4113-8-git-send-email-boris.brezillon@free-electrons.com> <534553FF.4060401@elopez.com.ar>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 01/15] ARM: sunxi: dt: list all pinctrl compatible strings
+Date: Wed, 9 Apr 2014 16:43:48 +0200
+Message-ID: <20140409144348.GC28585@lukather>
+References: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1397051478-4113-2-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <534553FF.4060401@elopez.com.ar>
-Sender: linux-doc-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>, Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="UFHRwCdBEJvubb2X"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1397051478-4113-2-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
-On 09/04/2014 16:06, Emilio L=F3pez wrote:
-> Hi Boris,
->
-> El 09/04/14 10:51, Boris BREZILLON escribi=F3:
->> Define the APB0 clk gates controlled by the PRCM (Power/Reset/Clock
->> Management) block.
->>
->> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
->> ---
->>   arch/arm/boot/dts/sun6i-a31.dtsi | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi
->> b/arch/arm/boot/dts/sun6i-a31.dtsi
->> index 3858424..61e8b34 100644
->> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
->> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
->> @@ -141,6 +141,16 @@
->>                       "ahb1_drc0", "ahb1_drc1";
->>           };
->>
->> +        apb0_gates: apb0_gates@01f01428 {
->
-> Looks like this node is out of place, judging by the address. Try to
-> keep them in order.
+--UFHRwCdBEJvubb2X
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sure, I'll fix it for the next version.
+Hi,
 
->
->> +            #clock-cells =3D <1>;
->> +            compatible =3D "allwinner,sun6i-a31-apb0-gates-clk";
->> +            reg =3D <0x01f01428 0x4>;
->> +            clock-output-names =3D "apb0_pio", "apb0_ir",
->> +                    "apb0_timer01", "apb0_p2wi",
->> +                    "apb0_uart", "apb0_1wire",
->> +                    "apb0_i2c";
->> +        };
->> +
->>           apb1: apb1@01c20054 {
->>               #clock-cells =3D <0>;
->>               compatible =3D "allwinner,sun4i-apb0-clk";
->>
->
-> Cheers,
->
-> Emilio
+On Wed, Apr 09, 2014 at 03:51:04PM +0200, Boris BREZILLON wrote:
+> List all sunxi pinctrl compatible strings in order to be able to grep for
+> those values.
+>=20
+> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  .../devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt      | 9 +++=
+++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pi=
+nctrl.txt b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinct=
+rl.txt
+> index dff0e5f..0e7e9a1 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.t=
+xt
+> +++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.t=
+xt
+> @@ -6,8 +6,13 @@ the first two functions being GPIO in and out. The confi=
+guration on
+>  the pins includes drive strength and pull-up.
+> =20
+>  Required properties:
+> -- compatible: "allwinner,<soc>-pinctrl". Supported SoCs for now are:
+> -  sun5i-a13.
+> +- compatible: Should be one of the followings (depending on you SoC):
+> +  "allwinner,sun4i-a10-pinctrl"
+> +  "allwinner,sun5i-a10s-pinctrl"
+> +  "allwinner,sun5i-a13-pinctrl"
+> +  "allwinner,sun6i-a31-pinctrl"
+> +  "allwinner,sun6i-a31-pinctrl"
+
+Copy and paste error ? :)
+
+Thanks!
+Maxime
 
 --=20
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
 
+--UFHRwCdBEJvubb2X
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTRVykAAoJEBx+YmzsjxAgZXgP/iRxKepemAUKfhK6G2LFK86n
+n8xMGGfAODoA58j276F+7elmdfV5PdYFUZ494zhXM7/RixqSzp8R2MeGKr/MPlxR
+oTSkIHuAO2/hUaTmCP0o1eJFn22N5B7aNZp2SbIFeUeD2LSHQjGTct+SBvMYWYMo
+7RplEMuP3SnD2crcgG2Km6Q2Kncq3fIYpkjJ/T56SkaEAQNNgdx150zzx2gkE9wZ
+79WdhnZdVnKvmO/dXScweDLh2R3hlvuHCDbSFBUWFbcD1vscXSss8Xgd8iVK05BU
+Q/Ft3lrbAa8uhb7ne+ntQO9F+14WvKiYRZowd9OnION60e8lid2SfnqwstijLFWF
+P2mFnQSI4YDH9oauDTQtAFb9/zJLubEns9XEJP/YrT6aWqE6rgtYIJAAji/1b0bB
+IoKWK7ScZ3aDZEJTYP8PfUfJyXxRdbddG0TznSGMB0WZ7v6Z/2Cm5DHHl1OstRZe
+76fcl3ritMfec6GKCoAvjKfwf+B0EWIJhZ3QWg9QxfbN+Z7w4Sn2ptEwslBx4iWL
+QBDlcxnRupcWAkBDNPclmZBsn11fmFcvMx3nAMpzuIzEeOyZvjJasHvLkWn92NEw
+HcXWfof/GYvYwbIDw39Z/vDDluGbEELstH1ZMKbiiPbUbS4Q1jtiiTSgkOoEDp85
+pkYB/HCHAmnEPGRlhGwh
+=5NKS
+-----END PGP SIGNATURE-----
+
+--UFHRwCdBEJvubb2X--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
