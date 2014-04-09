@@ -1,46 +1,67 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH] phy: exynos5-usbdrd: Add facility to toggle vbus gpio
- on/off
-Date: Wed, 09 Apr 2014 14:38:06 +0200
-Message-ID: <53453F2E.40606@samsung.com>
-References: <1397044485-26483-1-git-send-email-gautam.vivek@samsung.com>
- <534538F6.2010009@samsung.com>
- <CAFp+6iHf5Ndt3yNbdAaayXi08-A54Sk8LDTiASm4RTw09GuWvg@mail.gmail.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: [PATCH 0/8] Current imx-drm queue
+Date: Wed, 9 Apr 2014 13:53:54 +0100
+Message-ID: <20140409125354.GP16119@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <CAFp+6iHf5Ndt3yNbdAaayXi08-A54Sk8LDTiASm4RTw09GuWvg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <gautam.vivek@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: kishon <kishon@ti.com>, Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, Kukjin Kim <kgene.kim@samsung.com>, Kamil Debski <k.debski@samsung.com>, Jingoo Han <jg1.han@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-doc@vger.kernel.org, linux-media@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Denis Carikli <denis@eukrea.com>, Philipp Zabel <p.zabel@pengutronix.de>, Fabio Estevam <fabio.estevam@freescale.com>, arm@kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 09.04.2014 14:24, Vivek Gautam wrote:
-> Hi Sylwester,
->
->
-> On Wed, Apr 9, 2014 at 5:41 PM, Sylwester Nawrocki
-> <s.nawrocki@samsung.com> wrote:
->> Hi Vivek,
->>
->> On 09/04/14 13:54, Vivek Gautam wrote:
->>> Adding support to enable/disable VBUS hooked to a gpio
->>> to enable vbus supply on the port.
->>
->> Does the GPIO control a fixed voltage regulator ? If so, shouldn't
->> it be modelled by the regulator API instead ?
->
-> No, this GPIO controls a 'current limiting power distribution switch',
-> which gives the output vbus to usb controller.
-> Should i model this as a fixed regulator ?
+The following patches are those which I currently have queued up for
+Greg for merging into his stable tree when he's next accepting patches.
+If you have any concerns about these patches, please let me know in
+a timely fashion.
 
-If I understand this correctly, this is just a switch that lets you 
-control whether vbus is provided to the USB connector or not. If so, 
-this doesn't look like an Exynos-specific thing at all and should rather 
-be modeled on higher level.
+I've re-ordered and cherry-picked some of Denis' patches, as I can't
+take the patches which touch arch/arm/boot/dts.  Some other method is
+going to have to be found to deal with those changes.
 
-Best regards,
-Tomasz
+The unfortunate thing is that without the DT changes able to be merged
+in a timely and sane manner, in a way which does not result in breaking
+this driver, it pushes the point where we can finally think about moving
+this driver out of drivers/staging back even further.
+
+It seems arm-soc want to be obtuse, so let's let them be obtuse and show
+what damage it does to being able to make progress.
+
+Thanks.
+
+Denis Carikli (3):
+      imx-drm: Match ipu_di_signal_cfg's clk_pol with its description.
+      v4l2: add new V4L2_PIX_FMT_RGB666 pixel format.
+      imx-drm: Add RGB666 support for parallel display.
+
+Fabio Estevam (2):
+      imx-drm: ipu-dmfc: Remove unneeded 'dmfc' check
+      imx-drm: imx-ldb: Use snprintf()
+
+Philipp Zabel (3):
+      imx-drm: Move IPU_PIX_FMT_GBR24 definition into imx-ipu-v3.h
+      imx-drm: ipu-dc: Use usleep_range instead of msleep
+      imx-drm: imx-ldb: Add drm_panel support
+
+ Documentation/DocBook/media/v4l/pixfmt-packed-rgb.xml             | 39 +++++++++++++++++++++++++++++++++++++++
+ Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt |  3 ++-
+ drivers/staging/imx-drm/Kconfig                                   |  1 +
+ drivers/staging/imx-drm/imx-drm.h                                 |  4 ----
+ drivers/staging/imx-drm/imx-ldb.c                                 | 25 +++++++++++++++++++++++--
+ drivers/staging/imx-drm/imx-tve.c                                 |  1 +
+ drivers/staging/imx-drm/ipu-v3/imx-ipu-v3.h                       |  2 ++
+ drivers/staging/imx-drm/ipu-v3/ipu-dc.c                           | 11 ++++++++++-
+ drivers/staging/imx-drm/ipu-v3/ipu-di.c                           |  2 +-
+ drivers/staging/imx-drm/ipu-v3/ipu-dmfc.c                         |  3 ---
+ drivers/staging/imx-drm/ipuv3-crtc.c                              |  2 +-
+ drivers/staging/imx-drm/parallel-display.c                        |  2 ++
+ include/uapi/linux/videodev2.h                                    |  1 +
+ 13 files changed, 83 insertions(+), 13 deletions(-)
+
+
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
