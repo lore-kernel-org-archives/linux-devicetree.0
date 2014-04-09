@@ -1,107 +1,61 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 07/15] ARM: sunxi: dt: define A31's APB0 clk gates node
-Date: Wed, 9 Apr 2014 17:08:46 +0200
-Message-ID: <20140409150846.GG28585@lukather>
-References: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com>
- <1397051478-4113-8-git-send-email-boris.brezillon@free-electrons.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [RFC PATCH] edac: add support for ARM PL310 L2 cache parity
+Date: Wed, 9 Apr 2014 17:19:32 +0200
+Message-ID: <20140409151932.GK6529@pd.tnic>
+References: <1393770760-32550-1-git-send-email-punnaia@xilinx.com>
+ <a1a9e47a-069c-4285-9899-d5a58cf532c2@CO9EHSMHS003.ehs.local>
+ <20140409113246.GA8778@pd.tnic>
+ <CAL_Jsq+gszc+R_BrLtHKEBGYd=3T+sE1d+-HoF9aYZt6C2k5-g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="m0vRWufqUC70IDnR"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1397051478-4113-8-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <CAL_Jsq+gszc+R_BrLtHKEBGYd=3T+sE1d+-HoF9aYZt6C2k5-g@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, Doug Thompson <dougthompson@xmission.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, punnaia@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Apr 09, 2014 at 08:18:28AM -0500, Rob Herring wrote:
+> I don't think so, the PL310 is present on lots of ARM chips besides
+> Xilinx. I don't know how many support parity as that is optional. In
+> fact the highbank_l2_edac.c is for the PL310 as well, but the
+> registers it uses is all custom logic added for ECC and there is no
+> part of the PL310 h/w used by the driver.
 
---m0vRWufqUC70IDnR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Oh ok, so highbank_l2 and PL310 could theoretically be merged together
+in one compilation unit, even if they don't really share code at all...
 
-On Wed, Apr 09, 2014 at 03:51:10PM +0200, Boris BREZILLON wrote:
-> Define the APB0 clk gates controlled by the PRCM (Power/Reset/Clock
-> Management) block.
->=20
-> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-> ---
->  arch/arm/boot/dts/sun6i-a31.dtsi | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a=
-31.dtsi
-> index 3858424..61e8b34 100644
-> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
-> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-> @@ -141,6 +141,16 @@
->  					"ahb1_drc0", "ahb1_drc1";
->  		};
-> =20
-> +		apb0_gates: apb0_gates@01f01428 {
+> If there is lots duplication, then that's a sign the framework needs
+> to handle more of the boilerplate pieces. There could be a "simple"
+> driver/library for devices which are no more than some registers, an
+> interrupt handler and static information about the type of EDAC
+> device.
 
-The node name should reflect the class of the device, so it should be
-clk@<address>.
+Yeah, it's not that - I'm just getting worried that I'm receiving an
+EDAC driver for each piece of silicon out there and would like to still
+keep drivers/edac/ sane and be able to control that wild growth.
 
-> +			#clock-cells =3D <1>;
-> +			compatible =3D "allwinner,sun6i-a31-apb0-gates-clk";
-> +			reg =3D <0x01f01428 0x4>;
-> +			clock-output-names =3D "apb0_pio", "apb0_ir",
-> +					"apb0_timer01", "apb0_p2wi",
-> +					"apb0_uart", "apb0_1wire",
-> +					"apb0_i2c";
-> +		};
-> +
+I'm just thinking out loud here, bear with me pls:
 
-Hmmm, I'm not really fond of this.
+Frankly, having a single compilation unit contain similar silicon
+functionality could be a good way to put a hold on the growth but the
+disadvantage of this is fatter drivers. Which wouldn't matter all too
+much but after a certain level of fat, they might need splitting.
 
-There's already a PRCM node in the DT, which is used for the SMP
-bringup.
+And the highbank version is nothing but the big probe routine and a
+small irq handler.
 
-I really don't want any duplicate memory regions in the DT, so you'll
-have to fix the SMP code.
+And the PL310 is similar but also with a poller.
 
-That being said, I can understand that you did this to be consistent
-with the scheme we have for the clock controller where we chose to
-make every clock a single driver.
+I guess, if they don't share functionality at all, putting them together
+might not be worth it. Hohummm.
 
-That worked well for the CCU precisely because we only had clocks. It
-doesn't for the PRCM because it's not been very well documented, and
-it does clocks, resets, that fits pretty well in the existing
-frameworks we have, but the SMP related functions are actually not
-fitting that well.
+Thanks.
 
-It's mostly a power clamp and a power gating bits, that could maybe
-fit in the regulator framework.
+-- 
+Regards/Gruss,
+    Boris.
 
-I don't really have a solution for this. Maybe someone else will.
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---m0vRWufqUC70IDnR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTRWJ9AAoJEBx+YmzsjxAg64gP/ioTdHhaimPXU5XYz4EYBfJw
-wVcxjK+dkd1aJ8tcQT9V8BbBcCOe5ctFehFglCZme1ZWNcyYOFTaoqOUuSKAI884
-bw+B9gFTglpymCXp0DmviiJCweJcZa+qWJ+0nduTbRaQUZO5N9/eg7hTcFG7ZWuR
-vWUnQEnEzABPcbaKEaNvMu3nL5dbYYHRnifAv0P2QkaJmUVVho2mKX79T+DnZCnt
-/5SQqcL4nRe7guqKCA046RgeBd2RpRswth8XxMViug9CG0cT0m0sfVX1Z1fwWq5r
-/bz9LYHfNZ/I6W6PEwYNQeeLqmxB8ru2VFiXAUlUU7/ADa4GojSyOo8Mw8rBDGrj
-h1M0QsgHer8gRT0to4P0IBbSAZg/8V3LndO/YLItNz5qRb/i2TTvFSMU+PmneKIb
-tMcTSG2m6xbDA4B8Sl2ORYLCswusmVAjr0KpT95H5kwTsuHlpTtZlE1Ln9WNDYAy
-aOfinPXkTgkrk494c54qBStNdN61uC0uApEI8hPxxy0Y1pRyOuuaaNVRI42Whg72
-3kWS6YRBMQVdT92F7dSBFNQJVqwH3Xz3yBhJanYaacmPYQ01Q/PKj1eGCjQkz2v/
-ud7BkEFOjteqrVdhzl2tBgyTsyAbhZa57eAu+UcuQCjlEwWEvh1up9/5EcRZe/bK
-AyuETFEtk4J/ushM4131
-=xBPG
------END PGP SIGNATURE-----
-
---m0vRWufqUC70IDnR--
+Sent from a fat crate under my desk. Formatting is fine.
+--
