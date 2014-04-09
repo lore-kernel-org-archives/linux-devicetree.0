@@ -1,134 +1,69 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 00/15] ARM: sunxi: add A31 PL pins support
-Date: Wed, 09 Apr 2014 18:14:40 +0200
-Message-ID: <534571F0.10706@free-electrons.com>
-References: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com> <CAGb2v66XCN2ar1wj+a1+ZwdcdJ3gzJ+nDiO9bu52OwK+mBB_Hg@mail.gmail.com>
+From: Tim Kryger <tim.kryger@linaro.org>
+Subject: [RESEND PATCH v5 0/5] Add Broadcom Kona PWM Support
+Date: Wed, 9 Apr 2014 09:23:06 -0700
+Message-ID: <1397060591-5060-1-git-send-email-tim.kryger@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v66XCN2ar1wj+a1+ZwdcdJ3gzJ+nDiO9bu52OwK+mBB_Hg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-doc@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Matt Porter <mporter@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Grant Likely <grant.likely@linaro.org>
+Cc: Tim Kryger <tim.kryger@linaro.org>, Linux PWM List <linux-pwm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, Linux Doc List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+This series introduces the driver for the Kona PWM controller found in
+Broadcom mobile SoCs like bcm281xx and updates the device tree and the
+defconfig to enable use of this hardware on the bcm28155 AP board.
 
-On 09/04/2014 16:53, Chen-Yu Tsai wrote:
-> Hi Boris,
->
-> On Wed, Apr 9, 2014 at 9:51 PM, Boris BREZILLON
-> <boris.brezillon@free-electrons.com> wrote:
->> Hello,
->>
->> This series rework the sunxi pinctrl driver to support the PLx pins
->> available on the A31 SoC.
-> Thanks for working on this. I mentioned to Maxime on IRC yesterday that
-> we have complete pinctrl drivers for both A31 and A23, based on our current
-> pinctrl-sunxi driver, in the A23 SDK. These have the complete pin mapping.
+Changes since v4:
+  - Added in real polarity support
+  - Labeled trigger bits as such rather than use the name from hw docs
+  - Listed unsual hardware characteristics at the top of the file
+  - Removed default from Kconfig and update defconfig accordingly
+  - Always use unsigned int for temporary register values
 
-Thanks for pointing this out, I'll take a look.
+Changes since v3:
+  - Removed polarity support for now
+  - Cleaned up whitespace issues, shortened some variable names
+  - Use container_of instead of dev_get_drvdata to get private data
+  - Removed workaround for PWM framework bug
+  - Reworded some binding documentation
 
->
->> It also add missing A31 reset controller DT bindings documentation.
->>
->> I need those PL pins (actually I only need PL0 and PL1) to support
->> the P2WI bus, which in turn is used to communicate with the AXP221
->> PMIC.
-> If you could, please add all the PL and PM pins.
+Changes since v2:
+  - SoC DTS file updated to use real clock's phandle + specifier
+  - Toggle smooth mode off during apply so new settings take immediately
 
-Sure, I'll add pin macros for L and M ports.
+Changes since v1:
+  - Fixed up macros to be clearer and more complete
+  - Corrected spelling and punctuation mistakes
+  - Added support for polarity
+  - Made peripheral clock use more efficient
+  - Made prescale and duty computation clearer
+  - Moved Makefile addition to keep alphabetical
+  - Split complex lines into multiple steps
 
-> As I said, you can find complete definitions in the A23 SDK.
->
->> Let me know if these changes are too intrusive.
-> I wonder if we should do a separate driver for the new PIO controller.
-> Clearly it's a separate IP block, with it's own clock and reset controls.
+Dependencies:
+The "ARM: dts: Declare the PWM for bcm11351 (bcm281xx)" patch depends
+upon "ARM: dts: bcm281xx: define real clocks" which is queued up in
+for-next of arm-soc. See https://lkml.org/lkml/2014/2/14/451
 
-This is what I had in mind in the first place, but then I encountered
-several issues when doing so:
+Tim Kryger (5):
+  Documentation: dt: Add Kona PWM binding
+  pwm: kona: Introduce Kona PWM controller support
+  ARM: dts: Declare the PWM for bcm11351 (bcm281xx)
+  ARM: dts: Enable the PWM for bcm28155 AP board
+  ARM: bcm_defconfig: Enable PWM and Backlight
 
- 1) the gpio chip is not dynamically allocated but is declared as a
-static variable instead
- 2) we have to tweak the pinctrl base field, otherwise the pin numbers
-overlap
- 3) other things I haven't noticed yet :-)
-
-I'll try to rework the driver to be able to declare 2 separated pin
-controllers.
-
-> Allwinner sources list this block as "R_PIO". I suggest using this name.
-> Clearly "pioL" does not cover all the functionality.
-
-Fair enough. I'll modify it.
-
->
-> I have started to document the PRCM block: http://linux-sunxi.org/PRCM
->
-> Last, please send the patches to the linux-sunxi mailing list as well.
-> At the very least, Hans will see them and add them to sunxi-devel branch.
-
-Sure, this is an oversight, I'm using get_maintainer and just forgot to
-add Hans and the linux-sunxi ML. But I'll take care to add you, hans and
-the sunxi ML in Cc next time.
-
-Thanks for your review.
-
-Best Regards,
-
-Boris
-
->
->
-> Cheers,
-> ChenYu
->
->> Best Regards,
->>
->> Boris
->>
->> Boris BREZILLON (15):
->>   ARM: sunxi: dt: list all pinctrl compatible strings
->>   ARM: sunxi: dt: document pinctrl clock related properties
->>   ARM: sunxi: dt: add pinctrl clock-names properties
->>   pinctrl: sunxi: specify clk name when retrieving pinctrl pio clk
->>   clk: sunxi: add A31 APB0 clk gate defintions
->>   clk: sunxi: add A31 APB0 gates compatible string to the documentation
->>   ARM: sunxi: dt: define A31's APB0 clk gates node
->>   reset: sunxi: document sunxi's reset controllers bindings
->>   clk: sunxi: add A31 APB0 reset line defintions
->>   pinctrl: sunxi: add PL pin definitions
->>   pinctrl: sunxi: add support for A31 PL pins
->>   pinctrl: sunxi: retrieve and enable PL clk gate for A31 SoC
->>   pinctrl: sunxi: retrieve and enable PL reset line for A31 SoC
->>   pinctrl: sunxi: define A31 PL0/PL1 pins
->>   ARM: sunxi: dt: add support for A31's PL pins
->>
->>  Documentation/devicetree/bindings/clock/sunxi.txt  |   1 +
->>  .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |  13 +-
->>  .../bindings/reset/allwinner,sunxi-clock-reset.txt |  21 +++
->>  arch/arm/boot/dts/sun4i-a10.dtsi                   |   1 +
->>  arch/arm/boot/dts/sun5i-a10s.dtsi                  |   1 +
->>  arch/arm/boot/dts/sun5i-a13.dtsi                   |   1 +
->>  arch/arm/boot/dts/sun6i-a31.dtsi                   |  25 ++-
->>  arch/arm/boot/dts/sun7i-a20.dtsi                   |   1 +
->>  drivers/clk/sunxi/clk-sunxi.c                      |   5 +
->>  drivers/pinctrl/pinctrl-sunxi-pins.h               |   8 +
->>  drivers/pinctrl/pinctrl-sunxi.c                    | 205 +++++++++++++++------
->>  drivers/pinctrl/pinctrl-sunxi.h                    |  39 +++-
->>  12 files changed, 264 insertions(+), 57 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt
->>
->> --
->> 1.8.3.2
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+ .../devicetree/bindings/pwm/bcm-kona-pwm.txt       |   21 ++
+ arch/arm/boot/dts/bcm11351.dtsi                    |    8 +
+ arch/arm/boot/dts/bcm28155-ap.dts                  |    4 +
+ arch/arm/configs/bcm_defconfig                     |    3 +
+ drivers/pwm/Kconfig                                |    9 +
+ drivers/pwm/Makefile                               |    1 +
+ drivers/pwm/pwm-bcm-kona.c                         |  319 ++++++++++++++++++++
+ 7 files changed, 365 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
+ create mode 100644 drivers/pwm/pwm-bcm-kona.c
 
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+1.7.9.5
+
