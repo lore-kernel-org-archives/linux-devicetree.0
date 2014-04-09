@@ -1,57 +1,47 @@
 From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: [PATCH 05/15] clk: sunxi: add A31 APB0 clk gate defintions
-Date: Wed,  9 Apr 2014 15:51:08 +0200
-Message-ID: <1397051478-4113-6-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH 15/15] ARM: sunxi: dt: add support for A31's PL pins
+Date: Wed,  9 Apr 2014 15:51:18 +0200
+Message-ID: <1397051478-4113-16-git-send-email-boris.brezillon@free-electrons.com>
 References: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Add APB0 gates support for the A31 SoC.
-This gates are controlled by the PRCM (Power/Reset/Clock Management) block
-and thus will act on a different iomem range.
+The A31 SoC control its PL pins using a different memory, and needs both a
+new gate clk and a reset line to enable these PL port.
 
 Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
 ---
- drivers/clk/sunxi/clk-sunxi.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/sun6i-a31.dtsi | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
-index abb6c5a..f9b11c3 100644
---- a/drivers/clk/sunxi/clk-sunxi.c
-+++ b/drivers/clk/sunxi/clk-sunxi.c
-@@ -718,6 +718,10 @@ static const struct gates_data sun5i_a13_apb0_gates_data __initconst = {
- 	.mask = {0x61},
- };
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+index ed9c2c1..90b3a25 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -210,13 +210,17 @@
  
-+static const struct gates_data sun6i_a31_apb0_gates_data __initconst = {
-+	.mask = { 0x7f },
-+};
+ 		pio: pinctrl@01c20800 {
+ 			compatible = "allwinner,sun6i-a31-pinctrl";
+-			reg = <0x01c20800 0x400>;
++			reg = <0x01c20800 0x400>,
++			      <0x01f02c00 0x400>;
+ 			interrupts = <0 11 4>,
+ 				     <0 15 4>,
+ 				     <0 16 4>,
+ 				     <0 17 4>;
+-			clocks = <&apb1_gates 5>;
+-			clock-names = "pio_clk";
++			clocks = <&apb1_gates 5>,
++				 <&apb0_gates 0>;
++			clock-names = "pio_clk", "pioL_clk";
++			resets = <&apb0_rst 0>;
 +
- static const struct gates_data sun7i_a20_apb0_gates_data __initconst = {
- 	.mask = { 0x4ff },
- };
-@@ -1013,6 +1017,7 @@ static const struct of_device_id clk_gates_match[] __initconst = {
- 	{.compatible = "allwinner,sun4i-apb0-gates-clk", .data = &sun4i_apb0_gates_data,},
- 	{.compatible = "allwinner,sun5i-a10s-apb0-gates-clk", .data = &sun5i_a10s_apb0_gates_data,},
- 	{.compatible = "allwinner,sun5i-a13-apb0-gates-clk", .data = &sun5i_a13_apb0_gates_data,},
-+	{.compatible = "allwinner,sun6i-a31-apb0-gates-clk", .data = &sun6i_a31_apb0_gates_data,},
- 	{.compatible = "allwinner,sun7i-a20-apb0-gates-clk", .data = &sun7i_a20_apb0_gates_data,},
- 	{.compatible = "allwinner,sun4i-apb1-gates-clk", .data = &sun4i_apb1_gates_data,},
- 	{.compatible = "allwinner,sun5i-a10s-apb1-gates-clk", .data = &sun5i_a10s_apb1_gates_data,},
+ 			gpio-controller;
+ 			interrupt-controller;
+ 			#address-cells = <1>;
 -- 
 1.8.3.2
