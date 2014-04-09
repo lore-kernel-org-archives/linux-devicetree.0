@@ -1,58 +1,33 @@
-From: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>
-Subject: Re: [PATCH 07/15] ARM: sunxi: dt: define A31's APB0 clk gates node
-Date: Wed, 09 Apr 2014 11:06:55 -0300
-Message-ID: <534553FF.4060401@elopez.com.ar>
-References: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com> <1397051478-4113-8-git-send-email-boris.brezillon@free-electrons.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v7 4/6] pci: Introduce a domain number for pci_host_bridge.
+Date: Wed, 09 Apr 2014 16:08:43 +0200
+Message-ID: <5040304.p3jyCMi26Y@wuerfel>
+References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com> <20140409120750.GN985@e106497-lin.cambridge.arm.com> <CAErSpo4BmoYzf6GxOPRni=q563zhON57s7=5Hz=2Cf-X2ft-1A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1397051478-4113-8-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>, Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAErSpo4BmoYzf6GxOPRni=q563zhON57s7=5Hz=2Cf-X2ft-1A@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+On Wednesday 09 April 2014 08:02:41 Bjorn Helgaas wrote:
+> 
+> It's possible we could manage domain numbers in the core.  On ACPI
+> systems, we currently we use the ACPI _SEG value as the domain.  In
+> some cases, e.g., on ia64, config space access is done via firmware
+> interfaces, and those interfaces expect the _SEG values.  We could
+> conceivably maintain a mapping between _SEG and domain, but I'm not
+> sure there's an advantage there.
 
-El 09/04/14 10:51, Boris BREZILLON escribi=F3:
-> Define the APB0 clk gates controlled by the PRCM (Power/Reset/Clock
-> Management) block.
->
-> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-> ---
->   arch/arm/boot/dts/sun6i-a31.dtsi | 10 ++++++++++
->   1 file changed, 10 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun=
-6i-a31.dtsi
-> index 3858424..61e8b34 100644
-> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
-> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-> @@ -141,6 +141,16 @@
->   					"ahb1_drc0", "ahb1_drc1";
->   		};
->
-> +		apb0_gates: apb0_gates@01f01428 {
+I think it's a safe assumption that we will never have more than
+one firmware trying to enumerate the domains, so it would be
+safe to let ACPI keep doing its own thing for domain numbers,
+have the DT code pick domain number using some method we come up
+with, and for everything else let the architecture code deal with
+it. There are probably very few systems that have multiple domains
+but use neither ACPI nor DT.
 
-Looks like this node is out of place, judging by the address. Try to=20
-keep them in order.
-
-> +			#clock-cells =3D <1>;
-> +			compatible =3D "allwinner,sun6i-a31-apb0-gates-clk";
-> +			reg =3D <0x01f01428 0x4>;
-> +			clock-output-names =3D "apb0_pio", "apb0_ir",
-> +					"apb0_timer01", "apb0_p2wi",
-> +					"apb0_uart", "apb0_1wire",
-> +					"apb0_i2c";
-> +		};
-> +
->   		apb1: apb1@01c20054 {
->   			#clock-cells =3D <0>;
->   			compatible =3D "allwinner,sun4i-apb0-clk";
->
-
-Cheers,
-
-Emilio
+	Arnd
