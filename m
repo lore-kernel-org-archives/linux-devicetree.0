@@ -1,60 +1,97 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 05/15] clk: sunxi: add A31 APB0 clk gate defintions
-Date: Wed, 9 Apr 2014 16:49:40 +0200
-Message-ID: <20140409144940.GE28585@lukather>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 00/15] ARM: sunxi: add A31 PL pins support
+Date: Wed, 9 Apr 2014 22:53:13 +0800
+Message-ID: <CAGb2v66XCN2ar1wj+a1+ZwdcdJ3gzJ+nDiO9bu52OwK+mBB_Hg@mail.gmail.com>
 References: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com>
- <1397051478-4113-6-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jTMWTj4UTAEmbWeb"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1397051478-4113-6-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-doc-owner@vger.kernel.org
 To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Boris,
 
---jTMWTj4UTAEmbWeb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Apr 9, 2014 at 9:51 PM, Boris BREZILLON
+<boris.brezillon@free-electrons.com> wrote:
+> Hello,
+>
+> This series rework the sunxi pinctrl driver to support the PLx pins
+> available on the A31 SoC.
 
-On Wed, Apr 09, 2014 at 03:51:08PM +0200, Boris BREZILLON wrote:
-> Add APB0 gates support for the A31 SoC.
-> This gates are controlled by the PRCM (Power/Reset/Clock Management) block
-> and thus will act on a different iomem range.
->=20
-> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Thanks for working on this. I mentioned to Maxime on IRC yesterday that
+we have complete pinctrl drivers for both A31 and A23, based on our current
+pinctrl-sunxi driver, in the A23 SDK. These have the complete pin mapping.
 
-Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> It also add missing A31 reset controller DT bindings documentation.
+>
+> I need those PL pins (actually I only need PL0 and PL1) to support
+> the P2WI bus, which in turn is used to communicate with the AXP221
+> PMIC.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+If you could, please add all the PL and PM pins.
+As I said, you can find complete definitions in the A23 SDK.
 
---jTMWTj4UTAEmbWeb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> Let me know if these changes are too intrusive.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
+I wonder if we should do a separate driver for the new PIO controller.
+Clearly it's a separate IP block, with it's own clock and reset controls.
 
-iQIcBAEBAgAGBQJTRV4EAAoJEBx+YmzsjxAgOrgP/0Dkt1QLTn7ccNG0of2Pz/Wj
-+TTRc+L10kuyQxWfv6QBxa6V806BCka2f/pwGVz3360DusFJcQwbyUeXJkMy5XRr
-22vJ4/19VXwAqNxBLj8J0cCfHRmbBseqPtn91rC+JrzKGlXCrxmYryMKYHc8cyu3
-/CzDt+TfrB7G/rwKjlPBegGM+kRO4bAwGo77B17TJV73WmB1xbrlSP4zjbnO3tb7
-K8MJtXKEoQ8iW8gMAzEXc3MYSVr4Dq+3Ub8/YC1HwxDTRTF6JCwbqZFj/PPFl97s
-dbuRPw66eJch9YHcD5FPRmdtpH4KfAQtF78y7YRjpLt+B+q0m0AOR1S/eyUgxT2U
-Thhj50W5g1cF69X8xNB2/WBPpRf4s8YUA8Xse6a9mH7NNqHenXl+OuYZix2Rgl5f
-BcYtkr2jcnGXJfx2TXjJhgBykTndNMAmo3llDlO9pRMVuNNsY/CIPVyf3XeWdmiG
-9L13h9gdIVxb9fpqRZmVxc2Ps0LVMnZd8+PImqciIUV2AyXcCadt9IczL3pZTRw7
-/5ea3hZisaHGtTLhZFN61aEwvjTLrRxh25+8hgfnuK5py8zpiudTJjrnCCqdzFO2
-bYyDj6noOThqdFEEKWQNZb7fu32FXgTfCAgF26A6Od63WBZREGj27cf6pPGockSs
-hc8CkESjuHBaGVJw8YrU
-=8PvA
------END PGP SIGNATURE-----
+Allwinner sources list this block as "R_PIO". I suggest using this name.
+Clearly "pioL" does not cover all the functionality.
 
---jTMWTj4UTAEmbWeb--
+I have started to document the PRCM block: http://linux-sunxi.org/PRCM
+
+Last, please send the patches to the linux-sunxi mailing list as well.
+At the very least, Hans will see them and add them to sunxi-devel branch.
+
+
+Cheers,
+ChenYu
+
+> Best Regards,
+>
+> Boris
+>
+> Boris BREZILLON (15):
+>   ARM: sunxi: dt: list all pinctrl compatible strings
+>   ARM: sunxi: dt: document pinctrl clock related properties
+>   ARM: sunxi: dt: add pinctrl clock-names properties
+>   pinctrl: sunxi: specify clk name when retrieving pinctrl pio clk
+>   clk: sunxi: add A31 APB0 clk gate defintions
+>   clk: sunxi: add A31 APB0 gates compatible string to the documentation
+>   ARM: sunxi: dt: define A31's APB0 clk gates node
+>   reset: sunxi: document sunxi's reset controllers bindings
+>   clk: sunxi: add A31 APB0 reset line defintions
+>   pinctrl: sunxi: add PL pin definitions
+>   pinctrl: sunxi: add support for A31 PL pins
+>   pinctrl: sunxi: retrieve and enable PL clk gate for A31 SoC
+>   pinctrl: sunxi: retrieve and enable PL reset line for A31 SoC
+>   pinctrl: sunxi: define A31 PL0/PL1 pins
+>   ARM: sunxi: dt: add support for A31's PL pins
+>
+>  Documentation/devicetree/bindings/clock/sunxi.txt  |   1 +
+>  .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |  13 +-
+>  .../bindings/reset/allwinner,sunxi-clock-reset.txt |  21 +++
+>  arch/arm/boot/dts/sun4i-a10.dtsi                   |   1 +
+>  arch/arm/boot/dts/sun5i-a10s.dtsi                  |   1 +
+>  arch/arm/boot/dts/sun5i-a13.dtsi                   |   1 +
+>  arch/arm/boot/dts/sun6i-a31.dtsi                   |  25 ++-
+>  arch/arm/boot/dts/sun7i-a20.dtsi                   |   1 +
+>  drivers/clk/sunxi/clk-sunxi.c                      |   5 +
+>  drivers/pinctrl/pinctrl-sunxi-pins.h               |   8 +
+>  drivers/pinctrl/pinctrl-sunxi.c                    | 205 +++++++++++++++------
+>  drivers/pinctrl/pinctrl-sunxi.h                    |  39 +++-
+>  12 files changed, 264 insertions(+), 57 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt
+>
+> --
+> 1.8.3.2
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
