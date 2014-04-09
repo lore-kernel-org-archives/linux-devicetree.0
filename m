@@ -1,56 +1,62 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH 4/4] pinctrl: msm: Add definitions for the APQ8064
- platform
-Date: Wed, 09 Apr 2014 16:33:04 +0300
-Message-ID: <1397050384.22858.27.camel@iivanov-dev>
-References: <1396302597-31801-4-git-send-email-bjorn.andersson@sonymobile.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: [PATCH 00/15] ARM: sunxi: add A31 PL pins support
+Date: Wed,  9 Apr 2014 15:51:03 +0200
+Message-ID: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com>
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1396302597-31801-4-git-send-email-bjorn.andersson@sonymobile.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
-Hi,
+This series rework the sunxi pinctrl driver to support the PLx pins
+available on the A31 SoC.
 
-On Mon, 2014-03-31 at 14:49 -0700, Bjorn Andersson wrote:
-> This adds pinctrl definitions for the GPIO pins of the TLMM v2 block in the
-> Qualcomm APQ8064 platform.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> ---
->  drivers/pinctrl/Kconfig           |   8 +
->  drivers/pinctrl/Makefile          |   1 +
->  drivers/pinctrl/pinctrl-apq8064.c | 567 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 576 insertions(+)
->  create mode 100644 drivers/pinctrl/pinctrl-apq8064.c
-> 
-> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-> index 32b6b49..526f1c6 100644
-> --- a/drivers/pinctrl/Kconfig
-> +++ b/drivers/pinctrl/Kconfig
-> @@ -222,6 +222,14 @@ config PINCTRL_MSM
->  	select PINCONF
->  	select GENERIC_PINCONF
->  
-> +config PINCTRL_APQ8064
-> +	tristate "Qualcomm APQ8064 pin controller driver"
-> +	depends on GPIOLIB && OF
-> +	select PINCTRL_MSM
-> +	help
-> +	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-> +	  Qualcomm TLMM block found in the Qualcomm APQ8064 platform.
+It also add missing A31 reset controller DT bindings documentation.
 
-The comment is not directly related to this patch, but..
-Should we start adding select PINCTRL in Qualcomm arches 
-which support PINCTRL, otherwise there is no way to select 
-desired implementation.
+I need those PL pins (actually I only need PL0 and PL1) to support
+the P2WI bus, which in turn is used to communicate with the AXP221
+PMIC.
 
-Regards,
-Ivan
+Let me know if these changes are too intrusive.
 
+Best Regards,
+
+Boris
+
+Boris BREZILLON (15):
+  ARM: sunxi: dt: list all pinctrl compatible strings
+  ARM: sunxi: dt: document pinctrl clock related properties
+  ARM: sunxi: dt: add pinctrl clock-names properties
+  pinctrl: sunxi: specify clk name when retrieving pinctrl pio clk
+  clk: sunxi: add A31 APB0 clk gate defintions
+  clk: sunxi: add A31 APB0 gates compatible string to the documentation
+  ARM: sunxi: dt: define A31's APB0 clk gates node
+  reset: sunxi: document sunxi's reset controllers bindings
+  clk: sunxi: add A31 APB0 reset line defintions
+  pinctrl: sunxi: add PL pin definitions
+  pinctrl: sunxi: add support for A31 PL pins
+  pinctrl: sunxi: retrieve and enable PL clk gate for A31 SoC
+  pinctrl: sunxi: retrieve and enable PL reset line for A31 SoC
+  pinctrl: sunxi: define A31 PL0/PL1 pins
+  ARM: sunxi: dt: add support for A31's PL pins
+
+ Documentation/devicetree/bindings/clock/sunxi.txt  |   1 +
+ .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |  13 +-
+ .../bindings/reset/allwinner,sunxi-clock-reset.txt |  21 +++
+ arch/arm/boot/dts/sun4i-a10.dtsi                   |   1 +
+ arch/arm/boot/dts/sun5i-a10s.dtsi                  |   1 +
+ arch/arm/boot/dts/sun5i-a13.dtsi                   |   1 +
+ arch/arm/boot/dts/sun6i-a31.dtsi                   |  25 ++-
+ arch/arm/boot/dts/sun7i-a20.dtsi                   |   1 +
+ drivers/clk/sunxi/clk-sunxi.c                      |   5 +
+ drivers/pinctrl/pinctrl-sunxi-pins.h               |   8 +
+ drivers/pinctrl/pinctrl-sunxi.c                    | 205 +++++++++++++++------
+ drivers/pinctrl/pinctrl-sunxi.h                    |  39 +++-
+ 12 files changed, 264 insertions(+), 57 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt
+
+-- 
+1.8.3.2
 
