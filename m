@@ -1,100 +1,99 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH] edac: add support for ARM PL310 L2 cache parity
-Date: Wed, 9 Apr 2014 08:18:28 -0500
-Message-ID: <CAL_Jsq+gszc+R_BrLtHKEBGYd=3T+sE1d+-HoF9aYZt6C2k5-g@mail.gmail.com>
-References: <1393770760-32550-1-git-send-email-punnaia@xilinx.com>
-	<a1a9e47a-069c-4285-9899-d5a58cf532c2@CO9EHSMHS003.ehs.local>
-	<20140409113246.GA8778@pd.tnic>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH V4 1/5] phy: Add new Exynos5 USB 3.0 PHY driver
+Date: Wed, 09 Apr 2014 15:33:05 +0200
+Message-ID: <53454C11.7060607@samsung.com>
+References: <1396967803-28868-1-git-send-email-gautam.vivek@samsung.com>
+ <1396967803-28868-2-git-send-email-gautam.vivek@samsung.com>
+ <534529B2.2020107@samsung.com>
+ <CAFp+6iEzaxCQNkGZWuBnAaAHk0uXrX4KhjVbaJfZFChB6uzk4A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140409113246.GA8778-fF5Pk5pvG8Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kalluripunnaiahchoudary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <CAFp+6iEzaxCQNkGZWuBnAaAHk0uXrX4KhjVbaJfZFChB6uzk4A@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Vivek Gautam <gautam.vivek@samsung.com>
+Cc: Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, kishon <kishon@ti.com>, Greg KH <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, Kukjin Kim <kgene.kim@samsung.com>, Kamil Debski <k.debski@samsung.com>, Jingoo Han <jg1.han@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 9, 2014 at 6:32 AM, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org> wrote:
-> On Sun, Mar 02, 2014 at 08:02:40PM +0530, Punnaiah Choudary Kalluri wrote:
->> Add support for ARM Pl310 L2 cache controller parity error
->>
->> Signed-off-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->> ---
->>  .../devicetree/bindings/edac/pl310_edac_l2.txt     |   19 ++
->>  drivers/edac/Kconfig                               |    7 +
->>  drivers/edac/Makefile                              |    1 +
->>  drivers/edac/pl310_edac_l2.c                       |  236 ++++++++++++++++++++
->>  4 files changed, 263 insertions(+), 0 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/edac/pl310_edac_l2.txt
->>  create mode 100644 drivers/edac/pl310_edac_l2.c
->>
->> diff --git a/Documentation/devicetree/bindings/edac/pl310_edac_l2.txt b/Documentation/devicetree/bindings/edac/pl310_edac_l2.txt
->> new file mode 100644
->> index 0000000..94fbb8d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/edac/pl310_edac_l2.txt
->> @@ -0,0 +1,19 @@
->> +Pl310 L2 Cache EDAC driver, it does reports the data and tag ram parity errors.
->> +
->> +Required properties:
->> +- compatible: Should be "arm,pl310-cache".
->> +- intterupts: Interrupt number to the cpu.
->> +- reg: Physical base address and size of cache controller's memory mapped
->> +  registers
->> +
->> +Example:
->> +++++++++
->> +
->> +     L2: cache-controller {
->> +             compatible = "arm,pl310-cache";
->> +             interrupts = <0 2 4>;
->> +             reg = <0xf8f02000 0x1000>;
->> +     };
->> +
->> +PL310 L2 Cache EDAC driver detects the Parity enable state by reading the
->> +appropriate control register.
->> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
->> index 878f090..059ac31 100644
->> --- a/drivers/edac/Kconfig
->> +++ b/drivers/edac/Kconfig
->> @@ -326,6 +326,13 @@ config EDAC_TILE
->>         Support for error detection and correction on the
->>         Tilera memory controller.
->>
->> +config EDAC_PL310_L2
->> +     tristate "Pl310 L2 Cache Controller"
->> +     depends on EDAC_MM_EDAC && ARM
->> +     help
->> +       Support for parity error detection on L2 cache controller
->> +       data and tag ram memory
->> +
+On 09.04.2014 13:49, Vivek Gautam wrote:
+> Hi,
 >
 >
-> Ok, so I'm looking at this after having looked at the synopsys thing
-> and it looks very similar in functionality - it does the basic dance of
-> registering and setting up stuff, only using different devicetree nodes,
-> regs, etc.
+> On Wed, Apr 9, 2014 at 4:36 PM, Tomasz Figa <t.figa@samsung.com> wrote:
+>> Hi Vivek,
+>>
+>> Please see my comments inline.
+>>
+>>
+>> On 08.04.2014 16:36, Vivek Gautam wrote:
+>>>
+>>> Add a new driver for the USB 3.0 PHY on Exynos5 series of SoCs.
+>>> The new driver uses the generic PHY framework and will interact
+>>> with DWC3 controller present on Exynos5 series of SoCs.
+>>> Thereby, removing old phy-samsung-usb3 driver and related code
+>>> used untill now which was based on usb/phy framework.
+>>>
+>>> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+>>> ---
+>>>    .../devicetree/bindings/phy/samsung-phy.txt        |   42 ++
+>>>    drivers/phy/Kconfig                                |   11 +
+>>>    drivers/phy/Makefile                               |    1 +
+>>>    drivers/phy/phy-exynos5-usbdrd.c                   |  668
+>>> ++++++++++++++++++++
+>>>    4 files changed, 722 insertions(+)
+>>>    create mode 100644 drivers/phy/phy-exynos5-usbdrd.c
+>>
+>>
+>> [snip]
+>>
+>>
+>>> +       Additional clock required for Exynos5420:
+>>> +       - usb30_sclk_100m: Additional special clock used for PHY operation
+>>> +                          depicted as 'sclk_usbphy30' in CMU of
+>>> Exynos5420.
+>>
+>>
+>> Are you sure this isn't simply a gate for the ref clock, as it can be found
+>> on another SoC that is not upstream yet? I don't have documentation for
+>> Exynos 5420 so I can't tell, but I'd like to ask you to recheck this.
 >
-> However, it adds a new file under drivers/edac/ and I'm wondering if it
-> wouldn't be better to simply create a xilinx_edac.c and put all your
-> stuff in there, maybe even share code by abstracting it nicely. Having
-> a separate driver only for a single L2 cache controller seems kinda too
-> granulary for me.
+>>From what i can see in the manual :
+> sclk_usbphy30 is derived from OSCCLK.
+> It is coming from a MUX (default input line to this is OSCCLK)  and
+> then through a DIV
+> there's this gate.
+>
+>        {OSCCLK  + other sources} --->[MUX] ---> [DIV] --> [GATE for
+> sclk_usbphy30]
+>
+> the {rate of sclk_usbphy30} == OSCCLK
+>
+> However the 'ref' clock that we have been using is the actual oscillator clock.
+> And on SoC Exynos5250, we don't have any such gate (sclk_usbphy30).
+> So should this mean that ref clock and sclk_usbphy30 are still be controlled by
+> two different gates ?
+>
 
-I don't think so, the PL310 is present on lots of ARM chips besides
-Xilinx. I don't know how many support parity as that is optional. In
-fact the highbank_l2_edac.c is for the PL310 as well, but the
-registers it uses is all custom logic added for ECC and there is no
-part of the PL310 h/w used by the driver.
+Is there maybe a diagram of PHY input clocks in the datasheet, like for 
+USB 2.0 PHY in Exynos4210/4412/5250 datasheets in the chapter about 
+USB2.0 Device? Something like:
 
-If there is lots duplication, then that's a sign the framework needs
-to handle more of the boilerplate pieces. There could be a "simple"
-driver/library for devices which are no more than some registers, an
-interrupt handler and static information about the type of EDAC
-device.
+                      ____________________________________
+                     |                                    |
+                     |                         ___________|
+XusbXTI             |   Phy_fsel[2:0]        |  _______  |
+    _______[X]_______|    |         __________|_|___|\__|_|
+   |                 |   _v___     |  _____   ^ |   |/  | |
+_____               |  |     |    | |     |  | |  ___  | |
+  ___                |  |     |    | |     |  | | |   |_|_|
+|___|               |  | X 0 |____|_| PLL |__|_|_|CLK|_|_|
+_____               |  |     |      |     |    | |DIV|_|_|
+   |_______[X]       |  |_____| 12   |_____|480 | |___| | |
+                     |          MHz         MHz |Digital| |
+XusbXTO             |   USB PHY                |_______| |
+                     |____________________________________|
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Best regards,
+Tomasz
