@@ -1,48 +1,49 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH 1/4] clocksource: Add support for the Mediatek SoCs
-Date: Wed, 9 Apr 2014 14:52:45 -0700
-Message-ID: <CAOesGMg2zvPPeyqTvztiNKVJzWP5PsNs2pkXKMaS+CfXHgO0rQ@mail.gmail.com>
-References: <1397072736-10793-1-git-send-email-matthias.bgg@gmail.com>
-	<1397072736-10793-2-git-send-email-matthias.bgg@gmail.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH v7 4/6] pci: Introduce a domain number for
+ pci_host_bridge.
+Date: Thu, 10 Apr 2014 09:49:51 +1000
+Message-ID: <1397087391.3671.153.camel@pasglop>
+References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
+	 <1394811272-1547-5-git-send-email-Liviu.Dudau@arm.com>
+	 <20140405000007.GD15806@google.com>
+	 <20140407084623.GG17163@e106497-lin.cambridge.arm.com>
+	 <1396862058.3671.40.camel@pasglop>
+	 <20140407100715.GI17163@e106497-lin.cambridge.arm.com>
+	 <CAErSpo7h+Yew2hBztzkOzcHU5r4OQebxFbcZGkNUwJwfTFsbfg@mail.gmail.com>
+	 <20140408102043.GV17163@e106497-lin.cambridge.arm.com>
+	 <CAErSpo4anYBmaRbJEFE9kAXSmnvfqud=w1QA=mSSsTUamM4kSw@mail.gmail.com>
+	 <20140409120750.GN985@e106497-lin.cambridge.arm.com>
+	 <CAErSpo4BmoYzf6GxOPRni=q563zhON57s7=5Hz=2Cf-X2ft-1A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397072736-10793-2-git-send-email-matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, florian.vaussard-p8DiymsW2f8@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, heiko.stuebner-K3U4GQvHnyU@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel@lists.>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAErSpo4BmoYzf6GxOPRni=q563zhON57s7=5Hz=2Cf-X2ft-1A@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, 2014-04-09 at 08:02 -0600, Bjorn Helgaas wrote:
+> It's possible we could manage domain numbers in the core.  On ACPI
+> systems, we currently we use the ACPI _SEG value as the domain.  In
+> some cases, e.g., on ia64, config space access is done via firmware
+> interfaces, and those interfaces expect the _SEG values.  We could
+> conceivably maintain a mapping between _SEG and domain, but I'm not
+> sure there's an advantage there.
 
-On Wed, Apr 9, 2014 at 12:45 PM, Matthias Brugger
-<matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> This patch adds a clock source and clock event for the timer found
-> on the Mediatek SoCs.
->
-> The Mediatek General Porpose Timer block provides five 32 bit timers and
-> one 64 bit timer.
->
-> Two 32 bit timers are used:
-> TIMER1: clock events supporting periodic and oneshot events
-> TIMER2: clock source configured as a free running counter
->
-> The General Porpose Timer block can be run with two clocks. A 13 MHz system
-> clock and the RTC clock running at 32 KHz. This implementation uses the system
-> clock.
+I'd rather keep the ability for the architecture to assign domain
+numbers.
 
-Hm, are you planning on using these on the Cortex-A7-based and newer
-SoCs? On those, the arm generic timers should be available, and you
-might be better off just using those there.
+I'm working on making them relate to the physical slot numbers
+on our new systems so we get predictable PCI IDs which helps with
+some stuff like the new network device naming scheme etc...
 
-Of course, you'll still need these for the A9-based platforms, so the
-driver might very well be needed anyway. Some of the earlier patches
-seem to be for A7-based systems so I'm not sure what you're primarily
-working on here. :)
+Predictability is a good thing :-)
 
+> I probably don't understand what you intend by reversing the order.
+> Are you suggesting something like new pcibios_*() interfaces the arch
+> can use to get the host bridge apertures and domain number?
 
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Ben.
