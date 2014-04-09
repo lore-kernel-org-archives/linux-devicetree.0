@@ -1,106 +1,30 @@
-From: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] devcietree: bindings: add some MFD Keymile FPGAs
-Date: Wed, 09 Apr 2014 08:39:55 +0200
-Message-ID: <5344EB3B.40401@keymile.com>
-References: <1395754915-14534-1-git-send-email-valentin.longchamp@keymile.com>	 <1395754915-14534-3-git-send-email-valentin.longchamp@keymile.com> <1397004291.32034.327.camel@snotra.buserror.net>
+From: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: am335x-boards: Fixup the usb control module
+ address in respective Board files
+Date: Wed, 9 Apr 2014 12:26:47 +0530
+Message-ID: <5344EF2F.8010106@ti.com>
+References: <1396962477-9045-1-git-send-email-george.cherian@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397004291.32034.327.camel-88ow+0ZRuxG2UiBs7uKeOtHuzzzSOjJt@public.gmane.org>
+In-Reply-To: <1396962477-9045-1-git-send-email-george.cherian-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/09/2014 02:44 AM, Scott Wood wrote:
-> On Tue, 2014-03-25 at 14:41 +0100, Valentin Longchamp wrote:
->> These are the bindings for 2 MFD devices used on some of the Keymile boards.
->> The first one is the chassis managmenet bfticu FPGA.
->> The second one is the board controller (reset, LEDs, GPIOs) QRIO CPDL.
->> These FPGAs are used in the kmcoge4 board.
->>
->> This patch also add KEYMILE to the vendor-prefixes.
->>
->> Signed-off-by: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
->>
->> ---
->> Changes in v3:
->> - add a patch with the bindings for the KEYMILE FPGAs
->>
->> Changes in v2: None
->>
->>  Documentation/devicetree/bindings/mfd/bfticu.txt   | 26 ++++++++++++++++++++++
->>  Documentation/devicetree/bindings/mfd/qriox.txt    | 17 ++++++++++++++
->>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->>  3 files changed, 44 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mfd/bfticu.txt
->>  create mode 100644 Documentation/devicetree/bindings/mfd/qriox.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/bfticu.txt b/Documentation/devicetree/bindings/mfd/bfticu.txt
->> new file mode 100644
->> index 0000000..92de32e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/bfticu.txt
->> @@ -0,0 +1,26 @@
->> +KEYMILE bfticu Chassis Management FPGA
->> +
->> +The bfticu is a multifunction device that manages the whole chassis.
->> +Its main functionality is to collect IRQs from the whole chassis and signals
->> +them to a single controller.
->> +
->> +Required properties:
->> +- compatible: "keymile,bfticu"
->> +- interrupt-controller: the bfticu FPGA is an interrupt controller
->> +- interrupts: the main IRQ line to signal the collected IRQs
->> +- #interrupt-cells : is 2
->> +	- The 1st cell is the local IRQ number on the bfticu
->> +	- The 2nd cell is the type of the IRQ (IRQ_TYPE_xxx)
-> 
-> Device tree bindings should not depend on the content of Linux headers.
-> One is stable ABI, and the other isn't.
-> 
-> If you want you can make the values the same for convenience, as is done
-> by IPIC, CPM PIC, etc -- but the values need to be explicitly stated in
-> the binding.  It'll still break if the Linux values change (so it may
-> not be a good idea to try to keep the values the same), but at least the
-> fix would be in Linux code rather than an ABI change.
+On Tuesday 08 April 2014 06:37 PM, George Cherian wrote:
+> The USB Contol Module address was updated in am33xx.dtsi file
+> by the following commit 8abcdd680d543fb582371e146e62ba9f2af8a816
+> ARM: dts: am33xx: correcting dt node unit address for usb
+>
+> The same changes need to be done for respective board files.
+> Without these changes USB wont be detected in any of the boards.
+>
+> Signed-off-by: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
 
-OK. I will then explicitly give the list of the values.
-
-> 
->> diff --git a/Documentation/devicetree/bindings/mfd/qriox.txt b/Documentation/devicetree/bindings/mfd/qriox.txt
->> new file mode 100644
->> index 0000000..f301e2d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/qriox.txt
->> @@ -0,0 +1,17 @@
->> +KEYMILE qrio Board Control CPLD
->> +
->> +The qrio is a multifunction device that controls the KEYMILE boards based on
->> +the kmp204x design.
->> +It is consists of a reset controller, watchdog timer, LEDs, and 2 IRQ capable
->> +GPIO blocks.
->> +
->> +Required properties:
->> +- compatible: "keymile,qriox"
->> +- reg: access on the parent local bus (chip select, offset in chip select, size)
->> +
->> +Example:
->> +
->> +	board-control@1,0 {
->> +		compatible = "keymile,qriox";
->> +		reg = <1 0 0x80>;
->> +	};
-> 
-> If it has GPIO blocks, shouldn't it be using the GPIO binding?
-> 
-
-You are right it should. But this is currently being reworked (also in HW) and
-that's why I left it out completely, instead of submitting something subject to
-change.
-
-Valentin
+Acked-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
