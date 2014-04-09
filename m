@@ -1,44 +1,84 @@
-From: Tim Kryger <tim.kryger@linaro.org>
-Subject: [RESEND PATCH v5 3/5] ARM: dts: Declare the PWM for bcm11351 (bcm281xx)
-Date: Wed, 9 Apr 2014 09:23:09 -0700
-Message-ID: <1397060591-5060-4-git-send-email-tim.kryger@linaro.org>
-References: <1397060591-5060-1-git-send-email-tim.kryger@linaro.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 00/15] ARM: sunxi: add A31 PL pins support
+Date: Thu, 10 Apr 2014 00:27:32 +0800
+Message-ID: <CAGb2v67+YNhw2MXSu9DTKSUfXH=v+uD7KEaxyiPezyf9CYtmPw@mail.gmail.com>
+References: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com>
+ <CAGb2v66XCN2ar1wj+a1+ZwdcdJ3gzJ+nDiO9bu52OwK+mBB_Hg@mail.gmail.com> <20140409151747.GH28585@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1397060591-5060-1-git-send-email-tim.kryger@linaro.org>
+In-Reply-To: <20140409151747.GH28585@lukather>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Matt Porter <mporter@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Grant Likely <grant.likely@linaro.org>
-Cc: Tim Kryger <tim.kryger@linaro.org>, Linux PWM List <linux-pwm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, Linux Doc List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Boris BREZILLON <boris.brezillon@free-electrons.com>, Randy Dunlap <rdunlap@infradead.org>, =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the device tree node for the PWM on bcm11351 SoCs.
+Hi,
 
-Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
-Reviewed-by: Alex Elder <elder@linaro.org>
-Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
----
- arch/arm/boot/dts/bcm11351.dtsi |    8 ++++++++
- 1 file changed, 8 insertions(+)
+On Wed, Apr 9, 2014 at 11:17 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> On Wed, Apr 09, 2014 at 10:53:13PM +0800, Chen-Yu Tsai wrote:
+>> Hi Boris,
+>>
+>> On Wed, Apr 9, 2014 at 9:51 PM, Boris BREZILLON
+>> <boris.brezillon@free-electrons.com> wrote:
+>> > Hello,
+>> >
+>> > This series rework the sunxi pinctrl driver to support the PLx pins
+>> > available on the A31 SoC.
+>>
+>> Thanks for working on this. I mentioned to Maxime on IRC yesterday that
+>> we have complete pinctrl drivers for both A31 and A23, based on our current
+>> pinctrl-sunxi driver, in the A23 SDK. These have the complete pin mapping.
+>>
+>> > It also add missing A31 reset controller DT bindings documentation.
+>> >
+>> > I need those PL pins (actually I only need PL0 and PL1) to support
+>> > the P2WI bus, which in turn is used to communicate with the AXP221
+>> > PMIC.
+>>
+>> If you could, please add all the PL and PM pins.
+>> As I said, you can find complete definitions in the A23 SDK.
+>
+> We have no idea what these PM pins are for the A31. And this code only
+> is of interest for the A31 for the moment. Let's not take into account
+> the A23 for now as far as the pin definitions are concerned.
 
-diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
-index 64d069b..6b05ae6 100644
---- a/arch/arm/boot/dts/bcm11351.dtsi
-+++ b/arch/arm/boot/dts/bcm11351.dtsi
-@@ -193,6 +193,14 @@
- 		status = "disabled";
- 	};
- 
-+	pwm: pwm@3e01a000 {
-+		compatible = "brcm,bcm11351-pwm", "brcm,kona-pwm";
-+		reg = <0x3e01a000 0xcc>;
-+		clocks = <&slave_ccu BCM281XX_SLAVE_CCU_PWM>;
-+		#pwm-cells = <3>;
-+		status = "disabled";
-+	};
-+
- 	clocks {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--- 
-1.7.9.5
+Yes I was referring to the A31. In the A23 SDK, sun8iw1 refers to A31.
+As for the PM pins, the A31 EVB fex file uses one PM pin for LCD backlight
+control. And don't take my word for it. A31 standard design schematics from
+Omilex clearly show PL/PM pins with the possible functions on the top left of
+page 7. See:
+
+https://github.com/OLIMEX/OLINUXINO/blob/master/HARDWARE/A31-PDFs/A31_PAD_STD_V1_90_130225.pdf
+
+>> > Let me know if these changes are too intrusive.
+>>
+>> I wonder if we should do a separate driver for the new PIO controller.
+>> Clearly it's a separate IP block, with it's own clock and reset controls.
+>
+> It's been merged together in the A23, hence why we did it like that.
+
+I'm not sure I understand. The clock gate and reset control are still separate,
+are they not?
+
+>> Allwinner sources list this block as "R_PIO". I suggest using this name.
+>> Clearly "pioL" does not cover all the functionality.
+>
+> I'd agree with that.
+>
+>
+>> I have started to document the PRCM block: http://linux-sunxi.org/PRCM
+>
+> It's quite different on the A31 and on the A23 actually :(
+>
+> You don't have any of the audio thing for example, but you have the
+> CPUs power clamp controls, that have been removed in the A23.
+
+Thank you for bringing this up. I went through the code and updated
+these bits on the wiki. The CPU power clamps are interleaved throughout
+the PRCM registers :(
+
+
+Cheers,
+ChenYu
