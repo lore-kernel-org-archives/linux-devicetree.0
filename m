@@ -1,88 +1,40 @@
-From: Russell King <rmk+kernel@arm.linux.org.uk>
-Subject: [PATCH 8/8] imx-drm: Add RGB666 support for parallel display.
-Date: Wed, 09 Apr 2014 13:55:30 +0100
-Message-ID: <E1WXs2M-0002bG-3u@rmk-PC.arm.linux.org.uk>
-References: <20140409125354.GP16119@n2100.arm.linux.org.uk>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140409125354.GP16119@n2100.arm.linux.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, devel@driverdev.osuosl.org
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH] phy: exynos5-usbdrd: Add facility to toggle vbus gpio
+ on/off
+Date: Wed, 09 Apr 2014 15:08:56 +0200
+Message-ID: <53454668.8090300@samsung.com>
+References: <1397044485-26483-1-git-send-email-gautam.vivek@samsung.com>
+ <534538F6.2010009@samsung.com>
+ <CAFp+6iHf5Ndt3yNbdAaayXi08-A54Sk8LDTiASm4RTw09GuWvg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <CAFp+6iHf5Ndt3yNbdAaayXi08-A54Sk8LDTiASm4RTw09GuWvg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vivek Gautam <gautam.vivek@samsung.com>
+Cc: kishon <kishon@ti.com>, Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Kamil Debski <k.debski@samsung.com>, Jingoo Han <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Denis Carikli <denis@eukrea.com>
-To: linux-arm-kernel@lists.infradead.org
+On 09/04/14 14:24, Vivek Gautam wrote:
+> On Wed, Apr 9, 2014 at 5:41 PM, Sylwester Nawrocki
+> <s.nawrocki@samsung.com> wrote:
+>> > On 09/04/14 13:54, Vivek Gautam wrote:
+>>> >> Adding support to enable/disable VBUS hooked to a gpio
+>>> >> to enable vbus supply on the port.
+>> >
+>> > Does the GPIO control a fixed voltage regulator ? If so, shouldn't
+>> > it be modelled by the regulator API instead ?
+>
+> No, this GPIO controls a 'current limiting power distribution switch',
+> which gives the output vbus to usb controller.
+> Should i model this as a fixed regulator ?
 
-Signed-off-by: Denis Carikli <denis@eukrea.com>
-Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
----
- .../devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt          | 3 ++-
- drivers/staging/imx-drm/ipu-v3/ipu-dc.c                          | 9 +++++++++
- drivers/staging/imx-drm/parallel-display.c                       | 2 ++
- 3 files changed, 13 insertions(+), 1 deletion(-)
+OK, it's just a power switch then. I suspect using the regulator API
+would be more universal, as such a GPIO is somewhat a board design
+detail. I'm not going to object to your patch, just might be better
+to use the gpiod API instead.
 
-diff --git a/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt b/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt
-index 3be5ce7a9654..83137ef5a1ba 100644
---- a/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt
-+++ b/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt
-@@ -60,7 +60,8 @@ Parallel display support
- - compatible: Should be "fsl,imx-parallel-display"
- Optional properties:
- - interface_pix_fmt: How this display is connected to the
--  display interface. Currently supported types: "rgb24", "rgb565", "bgr666"
-+  display interface. Currently supported types: "rgb24", "rgb565", "bgr666",
-+  "rgb666"
- - edid: verbatim EDID data block describing attached display.
- - ddc: phandle describing the i2c bus handling the display data
-   channel
-diff --git a/drivers/staging/imx-drm/ipu-v3/ipu-dc.c b/drivers/staging/imx-drm/ipu-v3/ipu-dc.c
-index d5de8bb5c803..6f9abe8a4575 100644
---- a/drivers/staging/imx-drm/ipu-v3/ipu-dc.c
-+++ b/drivers/staging/imx-drm/ipu-v3/ipu-dc.c
-@@ -92,6 +92,7 @@ enum ipu_dc_map {
- 	IPU_DC_MAP_GBR24, /* TVEv2 */
- 	IPU_DC_MAP_BGR666,
- 	IPU_DC_MAP_BGR24,
-+	IPU_DC_MAP_RGB666,
- };
- 
- struct ipu_dc {
-@@ -155,6 +156,8 @@ static int ipu_pixfmt_to_map(u32 fmt)
- 		return IPU_DC_MAP_BGR666;
- 	case V4L2_PIX_FMT_BGR24:
- 		return IPU_DC_MAP_BGR24;
-+	case V4L2_PIX_FMT_RGB666:
-+		return IPU_DC_MAP_RGB666;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -404,6 +407,12 @@ int ipu_dc_init(struct ipu_soc *ipu, struct device *dev,
- 	ipu_dc_map_config(priv, IPU_DC_MAP_BGR24, 1, 15, 0xff); /* green */
- 	ipu_dc_map_config(priv, IPU_DC_MAP_BGR24, 0, 23, 0xff); /* blue */
- 
-+	/* rgb666 */
-+	ipu_dc_map_clear(priv, IPU_DC_MAP_RGB666);
-+	ipu_dc_map_config(priv, IPU_DC_MAP_RGB666, 0, 5, 0xfc); /* blue */
-+	ipu_dc_map_config(priv, IPU_DC_MAP_RGB666, 1, 11, 0xfc); /* green */
-+	ipu_dc_map_config(priv, IPU_DC_MAP_RGB666, 2, 17, 0xfc); /* red */
-+
- 	return 0;
- }
- 
-diff --git a/drivers/staging/imx-drm/parallel-display.c b/drivers/staging/imx-drm/parallel-display.c
-index d610f0726bb2..12a1b5e54f14 100644
---- a/drivers/staging/imx-drm/parallel-display.c
-+++ b/drivers/staging/imx-drm/parallel-display.c
-@@ -196,6 +196,8 @@ static int imx_pd_bind(struct device *dev, struct device *master, void *data)
- 			imxpd->interface_pix_fmt = V4L2_PIX_FMT_RGB565;
- 		else if (!strcmp(fmt, "bgr666"))
- 			imxpd->interface_pix_fmt = V4L2_PIX_FMT_BGR666;
-+		else if (!strcmp(fmt, "rgb666"))
-+			imxpd->interface_pix_fmt = V4L2_PIX_FMT_RGB666;
- 	}
- 
- 	imxpd->dev = dev;
 -- 
-1.8.3.1
-
+Regards,
+Sylwester
