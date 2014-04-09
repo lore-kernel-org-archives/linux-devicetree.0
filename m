@@ -1,7 +1,7 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] ARM: shmobile: r8a7790: link PCI USb devices to USB PHY
-Date: Wed, 9 Apr 2014 23:18:25 +0400
-Message-ID: <201404092318.26231.sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] ARM: shmobile: r8a7791: link PCI USb devices to USB PHY
+Date: Wed, 9 Apr 2014 23:19:30 +0400
+Message-ID: <201404092319.31646.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
   charset="iso-8859-1"
@@ -15,24 +15,22 @@ List-Id: devicetree@vger.kernel.org
 Describe the PCI USB devices that are behind the PCI bridges, adding necessary
 links to the USB PHY device.
 
-Based on the original work by Ben Dooks <ben.dooks@codethink.co.uk>.
-
 Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
 ---
 This patch is against 'renesas-devel-v3.14-20140408' tag of Simon Horman's
-'renesas.git' repo plus R8A7790/Lager PCI and USB PHY support patches posted
+'renesas.git' repo plus R8A7791/Koelsch PCI and USB PHY support patches posted
 yesterday and day before. The patch requires the internal PCI and USB PHY
 drivers (also already posted) in order to work...
 
- arch/arm/boot/dts/r8a7790.dtsi |   28 ++++++++++++++++++++++++++++
+ arch/arm/boot/dts/r8a7791.dtsi |   28 ++++++++++++++++++++++++++++
  1 file changed, 28 insertions(+)
 
-Index: renesas/arch/arm/boot/dts/r8a7790.dtsi
+Index: renesas/arch/arm/boot/dts/r8a7791.dtsi
 ===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7790.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7790.dtsi
-@@ -841,6 +841,20 @@
+--- renesas.orig/arch/arm/boot/dts/r8a7791.dtsi
++++ renesas/arch/arm/boot/dts/r8a7791.dtsi
+@@ -891,6 +891,20 @@
  		bus-range = <0 0>;
  		#address-cells = <3>;
  		#size-cells = <2>;
@@ -52,9 +50,9 @@ Index: renesas/arch/arm/boot/dts/r8a7790.dtsi
 +		};
  	};
  
- 	pci1: pci@ee0b0000 {
-@@ -867,5 +881,19 @@
- 		bus-range = <2 2>;
+ 	pci1: pci@ee0d0000 {
+@@ -904,5 +918,19 @@
+ 		bus-range = <1 1>;
  		#address-cells = <3>;
  		#size-cells = <2>;
 +
