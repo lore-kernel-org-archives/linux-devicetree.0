@@ -1,42 +1,46 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: [PATCH 01/15] ARM: sunxi: dt: list all pinctrl compatible strings
-Date: Wed,  9 Apr 2014 15:51:04 +0200
-Message-ID: <1397051478-4113-2-git-send-email-boris.brezillon@free-electrons.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 06/15] clk: sunxi: add A31 APB0 gates compatible string to
+ the documentation
+Date: Wed, 9 Apr 2014 21:59:02 +0800
+Message-ID: <CAGb2v645Yu_1ODQhVcQjjFf1M0uf3aHBfRw4F_uhoYk9RozcOA@mail.gmail.com>
 References: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
+ <1397051478-4113-7-git-send-email-boris.brezillon@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1397051478-4113-7-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-List all sunxi pinctrl compatible strings in order to be able to grep for
-those values.
+Hi,
 
-Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
----
- .../devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt      | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+On Wed, Apr 9, 2014 at 9:51 PM, Boris BREZILLON
+<boris.brezillon@free-electrons.com> wrote:
+> Add the new "allwinner,sun6i-a31-apb0-gates-clk" compatible string to the
+> sunxi clock documentation.
+>
+> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> ---
+>  Documentation/devicetree/bindings/clock/sunxi.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+> index c2cb762..bc30387 100644
+> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
+> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+> @@ -25,6 +25,7 @@ Required properties:
+>         "allwinner,sun4i-apb0-gates-clk" - for the APB0 gates on A10
+>         "allwinner,sun5i-a13-apb0-gates-clk" - for the APB0 gates on A13
+>         "allwinner,sun5i-a10s-apb0-gates-clk" - for the APB0 gates on A10s
+> +       "allwinner,sun6i-a31-apb0-gates-clk" - for the APB0 gates on A10s
+                                                                       ^^^^
+Copy paste error here.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
-index dff0e5f..0e7e9a1 100644
---- a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
-@@ -6,8 +6,13 @@ the first two functions being GPIO in and out. The configuration on
- the pins includes drive strength and pull-up.
- 
- Required properties:
--- compatible: "allwinner,<soc>-pinctrl". Supported SoCs for now are:
--  sun5i-a13.
-+- compatible: Should be one of the followings (depending on you SoC):
-+  "allwinner,sun4i-a10-pinctrl"
-+  "allwinner,sun5i-a10s-pinctrl"
-+  "allwinner,sun5i-a13-pinctrl"
-+  "allwinner,sun6i-a31-pinctrl"
-+  "allwinner,sun6i-a31-pinctrl"
-+  "allwinner,sun7i-a20-pinctrl"
- - reg: Should contain the register physical address and length for the
-   pin controller.
- 
--- 
-1.8.3.2
+
+ChenYu
+
+>         "allwinner,sun7i-a20-apb0-gates-clk" - for the APB0 gates on A20
+>         "allwinner,sun4i-apb1-clk" - for the APB1 clock
+>         "allwinner,sun4i-apb1-mux-clk" - for the APB1 clock muxing
