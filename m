@@ -1,67 +1,73 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [rtc-linux] [PATCH v3 2/3] rtc: Add APM X-Gene SoC RTC driver
-Date: Wed, 9 Apr 2014 10:16:11 -0700
-Message-ID: <CAPw-ZT=XRDbqN8CJLOyXauif25Yq0n9G+NANqUtvX63QsyNT1g@mail.gmail.com>
-References: <1396505873-5507-1-git-send-email-lho@apm.com>
-	<1396505873-5507-2-git-send-email-lho@apm.com>
-	<1396505873-5507-3-git-send-email-lho@apm.com>
-	<20140403162648.GW14763@sirena.org.uk>
+From: Punnaiah Choudary <kpc528@gmail.com>
+Subject: Re: [RFC PATCH] edac: add support for ARM PL310 L2 cache parity
+Date: Wed, 9 Apr 2014 22:59:49 +0530
+Message-ID: <CAHLkNHJTA5bGD1zAfzE2JrDFAWvmgYyYjir+4vR-d9Fe2-E48g@mail.gmail.com>
+References: <1393770760-32550-1-git-send-email-punnaia@xilinx.com>
+	<a1a9e47a-069c-4285-9899-d5a58cf532c2@CO9EHSMHS003.ehs.local>
+	<20140409113246.GA8778@pd.tnic>
+	<CAL_Jsq+gszc+R_BrLtHKEBGYd=3T+sE1d+-HoF9aYZt6C2k5-g@mail.gmail.com>
+	<20140409151932.GK6529@pd.tnic>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140403162648.GW14763-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140409151932.GK6529@pd.tnic>
+Sender: linux-doc-owner@vger.kernel.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: Rob Herring <robherring2@gmail.com>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, Doug Thompson <dougthompson@xmission.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, punnaiah choudary kalluri <kalluripunnaiahchoudary@gmail.com>, punnaiah choudary kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+There is a driver file cache-l2x0.c under arch/arm/mm for pl310 cache
+configuration and management. Russel king had suggested to use
+single driver file for both pl310 edac implementation and cache-l2x0.c
+Here is the thread
+http://www.spinics.net/lists/arm-kernel/msg320407.html
 
->> +static int xgene_rtc_suspend(struct device *dev)
->> +{
->> +     struct platform_device *pdev = to_platform_device(dev);
->> +     struct xgene_rtc_dev *pdata = platform_get_drvdata(pdev);
->> +     int irq;
->> +
->> +     irq = platform_get_irq(pdev, 0);
->> +     if (device_may_wakeup(&pdev->dev)) {
->> +             if (!enable_irq_wake(irq))
->> +                     pdata->irq_wake = 1;
->> +     } else {
->> +             xgene_rtc_alarm_irq_enable(dev, 0);
->> +             clk_disable(pdata->clk);
->> +     }
+please provide your inputs
+
+Thanks,
+Punnaiah
+
+On Wed, Apr 9, 2014 at 8:49 PM, Borislav Petkov <bp@alien8.de> wrote:
+> On Wed, Apr 09, 2014 at 08:18:28AM -0500, Rob Herring wrote:
+>> I don't think so, the PL310 is present on lots of ARM chips besides
+>> Xilinx. I don't know how many support parity as that is optional. In
+>> fact the highbank_l2_edac.c is for the PL310 as well, but the
+>> registers it uses is all custom logic added for ECC and there is no
+>> part of the PL310 h/w used by the driver.
 >
-> Why does the driver only disable the clock over suspend rather than also
-> unpreparing it?
-
-This was modeled after rtc-spear.c. Is this or rtc-spear in-correct?
-
+> Oh ok, so highbank_l2 and PL310 could theoretically be merged together
+> in one compilation unit, even if they don't really share code at all...
 >
->> +     if (device_may_wakeup(&pdev->dev)) {
->> +             if (pdata->irq_wake) {
->> +                     disable_irq_wake(irq);
->> +                     pdata->irq_wake = 0;
->> +             }
->> +     } else {
->> +             clk_enable(pdata->clk);
+>> If there is lots duplication, then that's a sign the framework needs
+>> to handle more of the boilerplate pieces. There could be a "simple"
+>> driver/library for devices which are no more than some registers, an
+>> interrupt handler and static information about the type of EDAC
+>> device.
 >
-> It's also not checking for errors here.
-
-This was also modeled after rtc-spear. I guess I can check and print
-an warning but don't believe it matter.
-
+> Yeah, it's not that - I'm just getting worried that I'm receiving an
+> EDAC driver for each piece of silicon out there and would like to still
+> keep drivers/edac/ sane and be able to control that wild growth.
 >
->> +             xgene_rtc_alarm_irq_enable(dev, 1);
->> +     }
+> I'm just thinking out loud here, bear with me pls:
 >
-> Won't this unconditionally enable the interrupt regardless of what the
-> setting was prior to suspend?
-
-This was also modeled after rtc-spear.c. Is this or rtc-spear in-correct?
-
--Loc
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Frankly, having a single compilation unit contain similar silicon
+> functionality could be a good way to put a hold on the growth but the
+> disadvantage of this is fatter drivers. Which wouldn't matter all too
+> much but after a certain level of fat, they might need splitting.
+>
+> And the highbank version is nothing but the big probe routine and a
+> small irq handler.
+>
+> And the PL310 is similar but also with a poller.
+>
+> I guess, if they don't share functionality at all, putting them together
+> might not be worth it. Hohummm.
+>
+> Thanks.
+>
+> --
+> Regards/Gruss,
+>     Boris.
+>
+> Sent from a fat crate under my desk. Formatting is fine.
+> --
