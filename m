@@ -1,81 +1,67 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 14/15] pinctrl: sunxi: define A31 PL0/PL1 pins
-Date: Wed, 9 Apr 2014 17:38:49 +0200
-Message-ID: <20140409153849.GK28585@lukather>
+Subject: Re: [PATCH 00/15] ARM: sunxi: add A31 PL pins support
+Date: Wed, 9 Apr 2014 17:45:09 +0200
+Message-ID: <20140409154509.GL28585@lukather>
 References: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com>
- <1397051478-4113-15-git-send-email-boris.brezillon@free-electrons.com>
+ <CAGb2v66XCN2ar1wj+a1+ZwdcdJ3gzJ+nDiO9bu52OwK+mBB_Hg@mail.gmail.com>
+ <20140409151747.GH28585@lukather>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="d6d1KVhp94hk3Jrm"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="p7S+EREVcBHk3zUG"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1397051478-4113-15-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20140409151747.GH28585@lukather>
+Sender: linux-doc-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Boris BREZILLON <boris.brezillon@free-electrons.com>, Randy Dunlap <rdunlap@infradead.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---d6d1KVhp94hk3Jrm
+--p7S+EREVcBHk3zUG
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 09, 2014 at 03:51:17PM +0200, Boris BREZILLON wrote:
-> Define PL0/PL1 pins available on the A31 SoC.
+On Wed, Apr 09, 2014 at 05:17:47PM +0200, Maxime Ripard wrote:
+> > I have started to document the PRCM block: http://linux-sunxi.org/PRCM
 >=20
-> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-> ---
->  drivers/pinctrl/pinctrl-sunxi-pins.h | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> It's quite different on the A31 and on the A23 actually :(
 >=20
-> diff --git a/drivers/pinctrl/pinctrl-sunxi-pins.h b/drivers/pinctrl/pinct=
-rl-sunxi-pins.h
-> index 3d60669..274cefa 100644
-> --- a/drivers/pinctrl/pinctrl-sunxi-pins.h
-> +++ b/drivers/pinctrl/pinctrl-sunxi-pins.h
-> @@ -2818,6 +2818,14 @@ static const struct sunxi_desc_pin sun6i_a31_pins[=
-] =3D {
->  		  SUNXI_FUNCTION(0x0, "gpio_in"),
->  		  SUNXI_FUNCTION(0x1, "gpio_out"),
->  		  SUNXI_FUNCTION(0x2, "nand1")),	/* CE3 */
-> +	SUNXI_PIN(SUNXI_PINCTRL_PIN_PL0,
-> +		  SUNXI_FUNCTION(0x0, "gpio_in"),
-> +		  SUNXI_FUNCTION(0x1, "gpio_out"),
-> +		  SUNXI_FUNCTION(0x3, "p2wi")),		/* SCL */
-> +	SUNXI_PIN(SUNXI_PINCTRL_PIN_PL1,
-> +		  SUNXI_FUNCTION(0x0, "gpio_in"),
-> +		  SUNXI_FUNCTION(0x1, "gpio_out"),
-> +		  SUNXI_FUNCTION(0x3, "p2wi")),		/* SDA */
+> You don't have any of the audio thing for example, but you have the
+> CPUs power clamp controls, that have been moved to the=20
 
-If possible, I'd prefer to have this list as exhaustive as
-possible.
+-that have been moved to the
++that have been removed in the A23
+
+Sorry :)
+
+Maxime
 
 --=20
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
 
---d6d1KVhp94hk3Jrm
+--p7S+EREVcBHk3zUG
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.14 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTRWmJAAoJEBx+YmzsjxAggbYP/1M4fxdAcA9gWxq6EdoCVIpY
-ewlL0RvAIZNUp4iycQ8lhavEojGxJLVKRW8aiqXTdvCp5OO1YBooTeXtZyWRyx9e
-q9ExCwSkI1GyvYPBLekVtKyHCsqbolMuqwaGjeYinFU9J2wJPEmPv0nfF4KNWTSf
-YnqR0FyIHcaKJdZUshnVvOK5RFuE26vcwTLyCr0CPqrhQNfH0sZKyTQVSvgSDGD/
-SPMBpXc3nWAd2eAF46xahvSw/qtoT0U8gA2MSu0rpYSngCgzdcFM9W0i4ckuiHxQ
-v2szMzfmLA/tzS4pVvgD+V0reoC7q503jrm5qVkq60iQrHGrHlw2wQ2FLzf5YsSF
-wPIqtvuTJ5XGhIAhKBJOHn+NoYY8/geIIKbhl7+GWPPWin3EZgAseBOR5Hu3/O3e
-UQ3/k/gg+uHyMA0mTyQO+xU8a4fAOE3wmfhdbpBkBxaqf7FMUVxUBqqs3+V7okJX
-eqfZciL+RQ+ihTFWpuDoV5DZZ4SBHyeuzx5+PqrPP2ohMXb99CKzd1NqFr204E6x
-kdmagzvol93hv/MdyISF15CIAmhf7YX2OB+uDkAPExY2pn6/yzdM0ddNkXWVPawG
-8f7jopIBHIzmjRd4C0vrILMZAzDyRniM1Rdp8RlyNPJM1LwJChxwNYcTtSp4yEmW
-9g9aH6WLMrhexzvsdMQN
-=sumE
+iQIcBAEBAgAGBQJTRWsFAAoJEBx+YmzsjxAgdrAP/0UsAQQ/Fp4ncaFc5+UMuFzP
+BH36sSn+d6qmBUr1TQogbHiB6KW2oQkkf4m4/BDdsAGvsP1RtEWHNrokWZ8U1Aee
+fd8l5lMvRCzqzssMvovvbEM7dAl70EZkUsDcq9U39Y/jT0HxUYEKfG4FF0nQqhSj
+bibY5c/wlMZRLlQmgU5r2SDzRRAL0rjVGuKxO++0O49AtxwXq7eqh5t5UDv7OCgz
+z44xAt/x7Lg7gPWM5ZG66vDQYUNa7CugZQlA2hICdX1lsxtnF4pTvUePvt3u0xH+
+X13xMdseocpgSNe5N6ngURaJA2dn2+DLJQK8m0hKdJ+BBmFwKiHmpgPU+koeSlTd
+5Fgma5cLHaUbG13P+fjItU6NGyDQwrDGJD1l2gos1OoJdnWfoAtok4xRqzzjTTFy
+iV/Sr0pOVbcrC8ogWvcnrodatQ/RWqPvkVQMYcVzPg1Wh7O/QSlxTam8p1mYpJxS
+l0B8l2CdsFFkwnVFtre1uaki5kbnbA6g6O82/SVQtltoJ4nf+K19LaF3YoIsc9dq
+vKyaXyRwKxJNYQlICwCFCQnhwM9RFavjs8Nkl2A87+Q0z2a0K5KH6Jp8VGwAX8jP
+7HYVtzuyqyLnJ0+RAK14abhdr1vy1RqyaI91RcWGfr/R0H9vsi2sb6xSk2sGP2bw
+kEX8FPyQyKIoDxFoSSUt
+=6LGz
 -----END PGP SIGNATURE-----
 
---d6d1KVhp94hk3Jrm--
+--p7S+EREVcBHk3zUG--
