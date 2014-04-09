@@ -1,67 +1,134 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
 Subject: Re: [PATCH 00/15] ARM: sunxi: add A31 PL pins support
-Date: Wed, 9 Apr 2014 17:45:09 +0200
-Message-ID: <20140409154509.GL28585@lukather>
-References: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com>
- <CAGb2v66XCN2ar1wj+a1+ZwdcdJ3gzJ+nDiO9bu52OwK+mBB_Hg@mail.gmail.com>
- <20140409151747.GH28585@lukather>
+Date: Wed, 09 Apr 2014 18:14:40 +0200
+Message-ID: <534571F0.10706@free-electrons.com>
+References: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com> <CAGb2v66XCN2ar1wj+a1+ZwdcdJ3gzJ+nDiO9bu52OwK+mBB_Hg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="p7S+EREVcBHk3zUG"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140409151747.GH28585@lukather>
-Sender: linux-doc-owner@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v66XCN2ar1wj+a1+ZwdcdJ3gzJ+nDiO9bu52OwK+mBB_Hg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Chen-Yu Tsai <wens@csie.org>
-Cc: Boris BREZILLON <boris.brezillon@free-electrons.com>, Randy Dunlap <rdunlap@infradead.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-doc@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---p7S+EREVcBHk3zUG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 09/04/2014 16:53, Chen-Yu Tsai wrote:
+> Hi Boris,
+>
+> On Wed, Apr 9, 2014 at 9:51 PM, Boris BREZILLON
+> <boris.brezillon@free-electrons.com> wrote:
+>> Hello,
+>>
+>> This series rework the sunxi pinctrl driver to support the PLx pins
+>> available on the A31 SoC.
+> Thanks for working on this. I mentioned to Maxime on IRC yesterday that
+> we have complete pinctrl drivers for both A31 and A23, based on our current
+> pinctrl-sunxi driver, in the A23 SDK. These have the complete pin mapping.
 
-On Wed, Apr 09, 2014 at 05:17:47PM +0200, Maxime Ripard wrote:
-> > I have started to document the PRCM block: http://linux-sunxi.org/PRCM
->=20
-> It's quite different on the A31 and on the A23 actually :(
->=20
-> You don't have any of the audio thing for example, but you have the
-> CPUs power clamp controls, that have been moved to the=20
+Thanks for pointing this out, I'll take a look.
 
--that have been moved to the
-+that have been removed in the A23
+>
+>> It also add missing A31 reset controller DT bindings documentation.
+>>
+>> I need those PL pins (actually I only need PL0 and PL1) to support
+>> the P2WI bus, which in turn is used to communicate with the AXP221
+>> PMIC.
+> If you could, please add all the PL and PM pins.
 
-Sorry :)
+Sure, I'll add pin macros for L and M ports.
 
-Maxime
+> As I said, you can find complete definitions in the A23 SDK.
+>
+>> Let me know if these changes are too intrusive.
+> I wonder if we should do a separate driver for the new PIO controller.
+> Clearly it's a separate IP block, with it's own clock and reset controls.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
+This is what I had in mind in the first place, but then I encountered
+several issues when doing so:
+
+ 1) the gpio chip is not dynamically allocated but is declared as a
+static variable instead
+ 2) we have to tweak the pinctrl base field, otherwise the pin numbers
+overlap
+ 3) other things I haven't noticed yet :-)
+
+I'll try to rework the driver to be able to declare 2 separated pin
+controllers.
+
+> Allwinner sources list this block as "R_PIO". I suggest using this name.
+> Clearly "pioL" does not cover all the functionality.
+
+Fair enough. I'll modify it.
+
+>
+> I have started to document the PRCM block: http://linux-sunxi.org/PRCM
+>
+> Last, please send the patches to the linux-sunxi mailing list as well.
+> At the very least, Hans will see them and add them to sunxi-devel branch.
+
+Sure, this is an oversight, I'm using get_maintainer and just forgot to
+add Hans and the linux-sunxi ML. But I'll take care to add you, hans and
+the sunxi ML in Cc next time.
+
+Thanks for your review.
+
+Best Regards,
+
+Boris
+
+>
+>
+> Cheers,
+> ChenYu
+>
+>> Best Regards,
+>>
+>> Boris
+>>
+>> Boris BREZILLON (15):
+>>   ARM: sunxi: dt: list all pinctrl compatible strings
+>>   ARM: sunxi: dt: document pinctrl clock related properties
+>>   ARM: sunxi: dt: add pinctrl clock-names properties
+>>   pinctrl: sunxi: specify clk name when retrieving pinctrl pio clk
+>>   clk: sunxi: add A31 APB0 clk gate defintions
+>>   clk: sunxi: add A31 APB0 gates compatible string to the documentation
+>>   ARM: sunxi: dt: define A31's APB0 clk gates node
+>>   reset: sunxi: document sunxi's reset controllers bindings
+>>   clk: sunxi: add A31 APB0 reset line defintions
+>>   pinctrl: sunxi: add PL pin definitions
+>>   pinctrl: sunxi: add support for A31 PL pins
+>>   pinctrl: sunxi: retrieve and enable PL clk gate for A31 SoC
+>>   pinctrl: sunxi: retrieve and enable PL reset line for A31 SoC
+>>   pinctrl: sunxi: define A31 PL0/PL1 pins
+>>   ARM: sunxi: dt: add support for A31's PL pins
+>>
+>>  Documentation/devicetree/bindings/clock/sunxi.txt  |   1 +
+>>  .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |  13 +-
+>>  .../bindings/reset/allwinner,sunxi-clock-reset.txt |  21 +++
+>>  arch/arm/boot/dts/sun4i-a10.dtsi                   |   1 +
+>>  arch/arm/boot/dts/sun5i-a10s.dtsi                  |   1 +
+>>  arch/arm/boot/dts/sun5i-a13.dtsi                   |   1 +
+>>  arch/arm/boot/dts/sun6i-a31.dtsi                   |  25 ++-
+>>  arch/arm/boot/dts/sun7i-a20.dtsi                   |   1 +
+>>  drivers/clk/sunxi/clk-sunxi.c                      |   5 +
+>>  drivers/pinctrl/pinctrl-sunxi-pins.h               |   8 +
+>>  drivers/pinctrl/pinctrl-sunxi.c                    | 205 +++++++++++++++------
+>>  drivers/pinctrl/pinctrl-sunxi.h                    |  39 +++-
+>>  12 files changed, 264 insertions(+), 57 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt
+>>
+>> --
+>> 1.8.3.2
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
 http://free-electrons.com
-
---p7S+EREVcBHk3zUG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTRWsFAAoJEBx+YmzsjxAgdrAP/0UsAQQ/Fp4ncaFc5+UMuFzP
-BH36sSn+d6qmBUr1TQogbHiB6KW2oQkkf4m4/BDdsAGvsP1RtEWHNrokWZ8U1Aee
-fd8l5lMvRCzqzssMvovvbEM7dAl70EZkUsDcq9U39Y/jT0HxUYEKfG4FF0nQqhSj
-bibY5c/wlMZRLlQmgU5r2SDzRRAL0rjVGuKxO++0O49AtxwXq7eqh5t5UDv7OCgz
-z44xAt/x7Lg7gPWM5ZG66vDQYUNa7CugZQlA2hICdX1lsxtnF4pTvUePvt3u0xH+
-X13xMdseocpgSNe5N6ngURaJA2dn2+DLJQK8m0hKdJ+BBmFwKiHmpgPU+koeSlTd
-5Fgma5cLHaUbG13P+fjItU6NGyDQwrDGJD1l2gos1OoJdnWfoAtok4xRqzzjTTFy
-iV/Sr0pOVbcrC8ogWvcnrodatQ/RWqPvkVQMYcVzPg1Wh7O/QSlxTam8p1mYpJxS
-l0B8l2CdsFFkwnVFtre1uaki5kbnbA6g6O82/SVQtltoJ4nf+K19LaF3YoIsc9dq
-vKyaXyRwKxJNYQlICwCFCQnhwM9RFavjs8Nkl2A87+Q0z2a0K5KH6Jp8VGwAX8jP
-7HYVtzuyqyLnJ0+RAK14abhdr1vy1RqyaI91RcWGfr/R0H9vsi2sb6xSk2sGP2bw
-kEX8FPyQyKIoDxFoSSUt
-=6LGz
------END PGP SIGNATURE-----
-
---p7S+EREVcBHk3zUG--
