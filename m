@@ -1,99 +1,56 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH V4 1/5] phy: Add new Exynos5 USB 3.0 PHY driver
-Date: Wed, 09 Apr 2014 15:33:05 +0200
-Message-ID: <53454C11.7060607@samsung.com>
-References: <1396967803-28868-1-git-send-email-gautam.vivek@samsung.com>
- <1396967803-28868-2-git-send-email-gautam.vivek@samsung.com>
- <534529B2.2020107@samsung.com>
- <CAFp+6iEzaxCQNkGZWuBnAaAHk0uXrX4KhjVbaJfZFChB6uzk4A@mail.gmail.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH 4/4] pinctrl: msm: Add definitions for the APQ8064
+ platform
+Date: Wed, 09 Apr 2014 16:33:04 +0300
+Message-ID: <1397050384.22858.27.camel@iivanov-dev>
+References: <1396302597-31801-4-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <CAFp+6iEzaxCQNkGZWuBnAaAHk0uXrX4KhjVbaJfZFChB6uzk4A@mail.gmail.com>
+In-Reply-To: <1396302597-31801-4-git-send-email-bjorn.andersson@sonymobile.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Vivek Gautam <gautam.vivek@samsung.com>
-Cc: Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, kishon <kishon@ti.com>, Greg KH <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, Kukjin Kim <kgene.kim@samsung.com>, Kamil Debski <k.debski@samsung.com>, Jingoo Han <jg1.han@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09.04.2014 13:49, Vivek Gautam wrote:
-> Hi,
->
->
-> On Wed, Apr 9, 2014 at 4:36 PM, Tomasz Figa <t.figa@samsung.com> wrote:
->> Hi Vivek,
->>
->> Please see my comments inline.
->>
->>
->> On 08.04.2014 16:36, Vivek Gautam wrote:
->>>
->>> Add a new driver for the USB 3.0 PHY on Exynos5 series of SoCs.
->>> The new driver uses the generic PHY framework and will interact
->>> with DWC3 controller present on Exynos5 series of SoCs.
->>> Thereby, removing old phy-samsung-usb3 driver and related code
->>> used untill now which was based on usb/phy framework.
->>>
->>> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
->>> ---
->>>    .../devicetree/bindings/phy/samsung-phy.txt        |   42 ++
->>>    drivers/phy/Kconfig                                |   11 +
->>>    drivers/phy/Makefile                               |    1 +
->>>    drivers/phy/phy-exynos5-usbdrd.c                   |  668
->>> ++++++++++++++++++++
->>>    4 files changed, 722 insertions(+)
->>>    create mode 100644 drivers/phy/phy-exynos5-usbdrd.c
->>
->>
->> [snip]
->>
->>
->>> +       Additional clock required for Exynos5420:
->>> +       - usb30_sclk_100m: Additional special clock used for PHY operation
->>> +                          depicted as 'sclk_usbphy30' in CMU of
->>> Exynos5420.
->>
->>
->> Are you sure this isn't simply a gate for the ref clock, as it can be found
->> on another SoC that is not upstream yet? I don't have documentation for
->> Exynos 5420 so I can't tell, but I'd like to ask you to recheck this.
->
->>From what i can see in the manual :
-> sclk_usbphy30 is derived from OSCCLK.
-> It is coming from a MUX (default input line to this is OSCCLK)  and
-> then through a DIV
-> there's this gate.
->
->        {OSCCLK  + other sources} --->[MUX] ---> [DIV] --> [GATE for
-> sclk_usbphy30]
->
-> the {rate of sclk_usbphy30} == OSCCLK
->
-> However the 'ref' clock that we have been using is the actual oscillator clock.
-> And on SoC Exynos5250, we don't have any such gate (sclk_usbphy30).
-> So should this mean that ref clock and sclk_usbphy30 are still be controlled by
-> two different gates ?
->
 
-Is there maybe a diagram of PHY input clocks in the datasheet, like for 
-USB 2.0 PHY in Exynos4210/4412/5250 datasheets in the chapter about 
-USB2.0 Device? Something like:
+Hi,
 
-                      ____________________________________
-                     |                                    |
-                     |                         ___________|
-XusbXTI             |   Phy_fsel[2:0]        |  _______  |
-    _______[X]_______|    |         __________|_|___|\__|_|
-   |                 |   _v___     |  _____   ^ |   |/  | |
-_____               |  |     |    | |     |  | |  ___  | |
-  ___                |  |     |    | |     |  | | |   |_|_|
-|___|               |  | X 0 |____|_| PLL |__|_|_|CLK|_|_|
-_____               |  |     |      |     |    | |DIV|_|_|
-   |_______[X]       |  |_____| 12   |_____|480 | |___| | |
-                     |          MHz         MHz |Digital| |
-XusbXTO             |   USB PHY                |_______| |
-                     |____________________________________|
+On Mon, 2014-03-31 at 14:49 -0700, Bjorn Andersson wrote:
+> This adds pinctrl definitions for the GPIO pins of the TLMM v2 block in the
+> Qualcomm APQ8064 platform.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> ---
+>  drivers/pinctrl/Kconfig           |   8 +
+>  drivers/pinctrl/Makefile          |   1 +
+>  drivers/pinctrl/pinctrl-apq8064.c | 567 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 576 insertions(+)
+>  create mode 100644 drivers/pinctrl/pinctrl-apq8064.c
+> 
+> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+> index 32b6b49..526f1c6 100644
+> --- a/drivers/pinctrl/Kconfig
+> +++ b/drivers/pinctrl/Kconfig
+> @@ -222,6 +222,14 @@ config PINCTRL_MSM
+>  	select PINCONF
+>  	select GENERIC_PINCONF
+>  
+> +config PINCTRL_APQ8064
+> +	tristate "Qualcomm APQ8064 pin controller driver"
+> +	depends on GPIOLIB && OF
+> +	select PINCTRL_MSM
+> +	help
+> +	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+> +	  Qualcomm TLMM block found in the Qualcomm APQ8064 platform.
+
+The comment is not directly related to this patch, but..
+Should we start adding select PINCTRL in Qualcomm arches 
+which support PINCTRL, otherwise there is no way to select 
+desired implementation.
+
+Regards,
+Ivan
 
 
-Best regards,
-Tomasz
