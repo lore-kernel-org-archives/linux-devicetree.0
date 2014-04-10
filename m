@@ -1,202 +1,166 @@
-From: Nicolin Chen <Guangyu.Chen@freescale.com>
-Subject: [PATCH v5] ASoC: fsl_sai: Add clock controls for SAI
-Date: Thu, 10 Apr 2014 19:23:12 +0800
-Message-ID: <1397128992-3609-1-git-send-email-Guangyu.Chen@freescale.com>
+From: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V4 1/5] phy: Add new Exynos5 USB 3.0 PHY driver
+Date: Thu, 10 Apr 2014 17:09:56 +0530
+Message-ID: <CAFp+6iHU0YXj18ajDwOqPh_SJWr6GkMPRr6qaGdmPoCc0+tz5g@mail.gmail.com>
+References: <1396967803-28868-1-git-send-email-gautam.vivek@samsung.com>
+	<1396967803-28868-2-git-send-email-gautam.vivek@samsung.com>
+	<534529B2.2020107@samsung.com>
+	<CAFp+6iEzaxCQNkGZWuBnAaAHk0uXrX4KhjVbaJfZFChB6uzk4A@mail.gmail.com>
+	<53454C11.7060607@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: broonie@kernel.org, shawn.guo@linaro.org
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, timur@tabi.org, Li.Xiubo@freescale.com, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53454C11.7060607-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon <kishon-l0cyMroinI0@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The SAI mainly has the following clocks:
-  bus clock
-    control and configure registers and to generate synchronous
-    interrupts and DMA requests.
+On Wed, Apr 9, 2014 at 7:03 PM, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> On 09.04.2014 13:49, Vivek Gautam wrote:
+>>
+>> Hi,
+>>
+>>
+>> On Wed, Apr 9, 2014 at 4:36 PM, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>>>
+>>> Hi Vivek,
+>>>
+>>> Please see my comments inline.
+>>>
+>>>
+>>> On 08.04.2014 16:36, Vivek Gautam wrote:
+>>>>
+>>>>
+>>>> Add a new driver for the USB 3.0 PHY on Exynos5 series of SoCs.
+>>>> The new driver uses the generic PHY framework and will interact
+>>>> with DWC3 controller present on Exynos5 series of SoCs.
+>>>> Thereby, removing old phy-samsung-usb3 driver and related code
+>>>> used untill now which was based on usb/phy framework.
+>>>>
+>>>> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>>> ---
+>>>>    .../devicetree/bindings/phy/samsung-phy.txt        |   42 ++
+>>>>    drivers/phy/Kconfig                                |   11 +
+>>>>    drivers/phy/Makefile                               |    1 +
+>>>>    drivers/phy/phy-exynos5-usbdrd.c                   |  668
+>>>> ++++++++++++++++++++
+>>>>    4 files changed, 722 insertions(+)
+>>>>    create mode 100644 drivers/phy/phy-exynos5-usbdrd.c
+>>>
+>>>
+>>>
+>>> [snip]
+>>>
+>>>
+>>>> +       Additional clock required for Exynos5420:
+>>>> +       - usb30_sclk_100m: Additional special clock used for PHY
+>>>> operation
+>>>> +                          depicted as 'sclk_usbphy30' in CMU of
+>>>> Exynos5420.
+>>>
+>>>
+>>>
+>>> Are you sure this isn't simply a gate for the ref clock, as it can be
+>>> found
+>>> on another SoC that is not upstream yet? I don't have documentation for
+>>> Exynos 5420 so I can't tell, but I'd like to ask you to recheck this.
+>>
+>>
+>>> From what i can see in the manual :
+>>
+>> sclk_usbphy30 is derived from OSCCLK.
+>> It is coming from a MUX (default input line to this is OSCCLK)  and
+>> then through a DIV
+>> there's this gate.
+>>
+>>        {OSCCLK  + other sources} --->[MUX] ---> [DIV] --> [GATE for
+>> sclk_usbphy30]
+>>
+>> the {rate of sclk_usbphy30} == OSCCLK
+>>
+>> However the 'ref' clock that we have been using is the actual oscillator
+>> clock.
+>> And on SoC Exynos5250, we don't have any such gate (sclk_usbphy30).
+>> So should this mean that ref clock and sclk_usbphy30 are still be
+>> controlled by
+>> two different gates ?
+>>
+>
+> Is there maybe a diagram of PHY input clocks in the datasheet, like for USB
+> 2.0 PHY in Exynos4210/4412/5250 datasheets in the chapter about USB2.0
+> Device? Something like:
+>
+>                      ____________________________________
+>                     |                                    |
+>                     |                         ___________|
+> XusbXTI             |   Phy_fsel[2:0]        |  _______  |
+>    _______[X]_______|    |         __________|_|___|\__|_|
+>   |                 |   _v___     |  _____   ^ |   |/  | |
+> _____               |  |     |    | |     |  | |  ___  | |
+>  ___                |  |     |    | |     |  | | |   |_|_|
+> |___|               |  | X 0 |____|_| PLL |__|_|_|CLK|_|_|
+> _____               |  |     |      |     |    | |DIV|_|_|
+>   |_______[X]       |  |_____| 12   |_____|480 | |___| | |
+>                     |          MHz         MHz |Digital| |
+> XusbXTO             |   USB PHY                |_______| |
+>                     |____________________________________|
+>
+>
 
-  mclk1, mclk2, mclk3
-    to generate the bit clock when the receiver or transmitter is
-    configured for an internally generated bit clock.
+Below is the block diagram given for DRD controller.
 
-So this patch adds these clocks and their clock controls to the driver,
-meanwhile, corrects the existing DTS accordingly so those platforms can
-benifit from the further feature with different clock sources.
+___________________
+|                                |
+|      ____________     |
+|      | PHY           |      |
+|      | controller     |-----|-----------------------------------------------
+|      |__________  |     |                                               |
+|                                |
+          |
+|         USB 3.0           |                                              V
+|           DRD              |
+-----------------------
+|        Controller          |                                      |
+                     |
+|                                |    USB30_SCLK_100M    | USB 3.0 DRD  |
+|      ----------------          |           ----------------------->
+|       PHY         |
+|     | Link cont. |         |                                      |
+                     |
+|      -------------             |
+ |                       |
+|___________________|                                     |_____________|
 
-[ To concern the old DTB cases, I've added a bit of extra code to make
-  the driver compatible with them. And by marking clock NULL if failed
-  to get, the clk_prepare() or clk_get_rate() would easily return 0
-  so no further path should be broken. -- by Nicolin ]
+Does this help ?
 
-Signed-off-by: Nicolin Chen <Guangyu.Chen@freescale.com>
-Acked-by: Xiubo Li <Li.Xiubo@freescale.com>
-Acked-by: Shawn Guo <shawn.guo@linaro.org>
----
+So, USB30_SCLK_100M is the SCLK that we are talking in the driver. I
+don't see any reference to XXTI in the USB 3.0 DRD controller chapter
+(in both Exynos5250 and 5420)
+In addition to this there's one more point to be noticed here.
+On Exynos5420 system, the sclk_usbphy300 (which is the sclk_usbphy30
+for USB DRD channel 0), is also the PICO phy clock, i.e. USB 2.0 phy
+clock.
+So we should add a similar clk_get() for this clock in the
+phy-exynos5250-usb2 driver too, to support Exynos5420.
 
-Changelog
-v5:
- * Dropped mclk preparing and enabling since we are not using them currecntly.
- * Made the change compatible to the old DTB.
- * Added returned error value print.
-v4:
- * Merged into single patch.
- * Fixed bus clock ID on vf610.
-v3:
- * Use int type for ret instead of u32.
- * Added Acked-by and Tested-by from Xiubo Li.
-v2:
- * Appended two extra mclks to the driver since SAI actually has three.
- * Renamed clock name to 'bus' and 'mclk' according to the reference manual.
 
- .../devicetree/bindings/sound/fsl-sai.txt          |  9 +++--
- arch/arm/boot/dts/vf610.dtsi                       |  6 ++--
- sound/soc/fsl/fsl_sai.c                            | 38 ++++++++++++++++++++--
- sound/soc/fsl/fsl_sai.h                            |  4 +++
- 4 files changed, 50 insertions(+), 7 deletions(-)
+>
+> Best regards,
+> Tomasz
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-index 35c09fe..0f4e238 100644
---- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
-+++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-@@ -10,7 +10,8 @@ Required properties:
- - compatible: Compatible list, contains "fsl,vf610-sai" or "fsl,imx6sx-sai".
- - reg: Offset and length of the register set for the device.
- - clocks: Must contain an entry for each entry in clock-names.
--- clock-names : Must include the "sai" entry.
-+- clock-names : Must include the "bus" for register access and "mclk1" "mclk2"
-+  "mclk3" for bit clock and frame clock providing.
- - dmas : Generic dma devicetree binding as described in
-   Documentation/devicetree/bindings/dma/dma.txt.
- - dma-names : Two dmas have to be defined, "tx" and "rx".
-@@ -30,8 +31,10 @@ sai2: sai@40031000 {
- 	      reg = <0x40031000 0x1000>;
- 	      pinctrl-names = "default";
- 	      pinctrl-0 = <&pinctrl_sai2_1>;
--	      clocks = <&clks VF610_CLK_SAI2>;
--	      clock-names = "sai";
-+	      clocks = <&clks VF610_CLK_PLATFORM_BUS>,
-+		     <&clks VF610_CLK_SAI2>,
-+		     <&clks 0>, <&clks 0>;
-+	      clock-names = "bus", "mclk1", "mclk2", "mclk3";
- 	      dma-names = "tx", "rx";
- 	      dmas = <&edma0 0 VF610_EDMA_MUXID0_SAI2_TX>,
- 		   <&edma0 0 VF610_EDMA_MUXID0_SAI2_RX>;
-diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
-index d31ce1b..4c3cd59 100644
---- a/arch/arm/boot/dts/vf610.dtsi
-+++ b/arch/arm/boot/dts/vf610.dtsi
-@@ -139,8 +139,10 @@
- 				compatible = "fsl,vf610-sai";
- 				reg = <0x40031000 0x1000>;
- 				interrupts = <0 86 0x04>;
--				clocks = <&clks VF610_CLK_SAI2>;
--				clock-names = "sai";
-+				clocks = <&clks VF610_CLK_PLATFORM_BUS>,
-+				       <&clks VF610_CLK_SAI2>,
-+				       <&clks 0>, <&clks 0>;
-+				clock-names = "bus", "mclk1", "mclk2", "mclk3";
- 				status = "disabled";
- 			};
- 
-diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-index db9f75e..5fff2e1 100644
---- a/sound/soc/fsl/fsl_sai.c
-+++ b/sound/soc/fsl/fsl_sai.c
-@@ -401,7 +401,15 @@ static int fsl_sai_startup(struct snd_pcm_substream *substream,
- 		struct snd_soc_dai *cpu_dai)
- {
- 	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
-+	struct device *dev = &sai->pdev->dev;
- 	u32 reg;
-+	int ret;
-+
-+	ret = clk_prepare_enable(sai->bus_clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable bus clock: %d\n", ret);
-+		return ret;
-+	}
- 
- 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
- 		reg = FSL_SAI_TCR3;
-@@ -427,6 +435,8 @@ static void fsl_sai_shutdown(struct snd_pcm_substream *substream,
- 
- 	regmap_update_bits(sai->regmap, reg, FSL_SAI_CR3_TRCE,
- 			   ~FSL_SAI_CR3_TRCE);
-+
-+	clk_disable_unprepare(sai->bus_clk);
- }
- 
- static const struct snd_soc_dai_ops fsl_sai_pcm_dai_ops = {
-@@ -559,7 +569,8 @@ static int fsl_sai_probe(struct platform_device *pdev)
- 	struct fsl_sai *sai;
- 	struct resource *res;
- 	void __iomem *base;
--	int irq, ret;
-+	char tmp[8];
-+	int irq, ret, i;
- 
- 	sai = devm_kzalloc(&pdev->dev, sizeof(*sai), GFP_KERNEL);
- 	if (!sai)
-@@ -582,12 +593,35 @@ static int fsl_sai_probe(struct platform_device *pdev)
- 		return PTR_ERR(base);
- 
- 	sai->regmap = devm_regmap_init_mmio_clk(&pdev->dev,
--			"sai", base, &fsl_sai_regmap_config);
-+			"bus", base, &fsl_sai_regmap_config);
-+
-+	/* Compatible with old DTB cases */
-+	if (IS_ERR(sai->regmap))
-+		sai->regmap = devm_regmap_init_mmio_clk(&pdev->dev,
-+				"sai", base, &fsl_sai_regmap_config);
- 	if (IS_ERR(sai->regmap)) {
- 		dev_err(&pdev->dev, "regmap init failed\n");
- 		return PTR_ERR(sai->regmap);
- 	}
- 
-+	/* No error out for old DTB cases but only mark the clock NULL */
-+	sai->bus_clk = devm_clk_get(&pdev->dev, "bus");
-+	if (IS_ERR(sai->bus_clk)) {
-+		dev_err(&pdev->dev, "failed to get bus clock: %ld\n",
-+				PTR_ERR(sai->bus_clk));
-+		sai->bus_clk = NULL;
-+	}
-+
-+	for (i = 0; i < FSL_SAI_MCLK_MAX; i++) {
-+		sprintf(tmp, "mclk%d", i + 1);
-+		sai->mclk_clk[i] = devm_clk_get(&pdev->dev, tmp);
-+		if (IS_ERR(sai->mclk_clk[i])) {
-+			dev_err(&pdev->dev, "failed to get mclk%d clock: %ld\n",
-+					i + 1, PTR_ERR(sai->mclk_clk[i]));
-+			sai->mclk_clk[i] = NULL;
-+		}
-+	}
-+
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq < 0) {
- 		dev_err(&pdev->dev, "no irq for node %s\n", np->full_name);
-diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
-index 677670d..0e6c9f5 100644
---- a/sound/soc/fsl/fsl_sai.h
-+++ b/sound/soc/fsl/fsl_sai.h
-@@ -119,6 +119,8 @@
- #define FSL_SAI_CLK_MAST2	2
- #define FSL_SAI_CLK_MAST3	3
- 
-+#define FSL_SAI_MCLK_MAX	3
-+
- /* SAI data transfer numbers per DMA request */
- #define FSL_SAI_MAXBURST_TX 6
- #define FSL_SAI_MAXBURST_RX 6
-@@ -126,6 +128,8 @@
- struct fsl_sai {
- 	struct platform_device *pdev;
- 	struct regmap *regmap;
-+	struct clk *bus_clk;
-+	struct clk *mclk_clk[FSL_SAI_MCLK_MAX];
- 
- 	bool big_endian_regs;
- 	bool big_endian_data;
+
+
 -- 
-1.8.4
-
-
+Best Regards
+Vivek Gautam
+Samsung R&D Institute, Bangalore
+India
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
