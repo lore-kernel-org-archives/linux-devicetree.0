@@ -1,43 +1,59 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 1/1] of: add vendor prefix for ISEE 2007 S.L.
-Date: Thu, 10 Apr 2014 08:31:05 -0500
-Message-ID: <CAL_JsqJ9KWmo+Ws1u_CJdMMDrR1-UQRYkHoVYHZ_Cnipjojxfw@mail.gmail.com>
-References: <1382647219-6118-1-git-send-email-javier@dowhile0.org>
-	<AD1CF90F-89BD-425F-A09E-A8599304C5EA@codeaurora.org>
-	<CABxcv=mgesiidJ0-rkv63Zr9+fMjt3SpTw=F2WvST5_SJZZgMg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CABxcv=mgesiidJ0-rkv63Zr9+fMjt3SpTw=F2WvST5_SJZZgMg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Subject: [PATCH v2] checkpatch: fix wildcard DT compatible string checking
+Date: Thu, 10 Apr 2014 08:41:54 -0500
+Message-ID: <1397137314-13523-1-git-send-email-robherring2@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Joe Perches <joe@perches.com>, Andy Whitcroft <apw@canonical.com>, Andrew Morton <akpm@linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 10, 2014 at 3:39 AM, Javier Martinez Canillas
-<javier@dowhile0.org> wrote:
-> Hello,
->
-> On Fri, Oct 25, 2013 at 5:19 AM, Kumar Gala <galak@codeaurora.org> wrote:
->>
->> On Oct 24, 2013, at 3:40 PM, Javier Martinez Canillas wrote:
->>
->>> This trivial patch adds ISEE 2007 S.L. to the list of
->>> devicetree vendor prefixes.
->>>
->>> Signed-off-by: Javier Martinez Canillas <javier@dowhile0.org>
->>> ---
->>> Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->>> 1 file changed, 1 insertion(+)
->>
->> Acked-by: Kumar Gala <galak@codeaurora.org>
->>
->> - k
->>
->
-> Any reason why this patch has not been merged, it was sent months ago
-> and already acked by Kumar?
+From: Rob Herring <robh@kernel.org>
 
-Sorry, slipped thru the cracks. Applied for 3.15.
+We attempt to search for compatible strings which use a variable
+token in the documented name such as <chip> or <soc>. While this
+was attempted to be handled, it's utterly broken.
 
-Rob
+The desired forms of matching are:
+
+vendor,<chip>-*
+vendor,name<part#>-*
+
+For <chip>, lower case characters and numbers are permitted. For
+<part#>, only numeric values are allowed.
+
+With this change, the number of missing compatible strings reported in
+arch/arm/boot/dts is reduced from 1071 to 960.
+
+Reported-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Cc: Florian Vaussard <florian.vaussard@epfl.ch>
+Cc: Joe Perches <joe@perches.com>
+Cc: Andy Whitcroft <apw@canonical.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+---
+v2:
+- drop debugging print
+
+ scripts/checkpatch.pl | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 34eb216..62d005e 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -2093,8 +2093,10 @@ sub process {
+ 
+ 			foreach my $compat (@compats) {
+ 				my $compat2 = $compat;
+-				$compat2 =~ s/\,[a-z]*\-/\,<\.\*>\-/;
+-				`grep -Erq "$compat|$compat2" $dt_path`;
++				$compat2 =~ s/\,[a-zA-Z0-9]*\-/\,<\.\*>\-/;
++				my $compat3 = $compat;
++				$compat3 =~ s/\,([a-z]*)[0-9]*\-/\,$1<\.\*>\-/;
++				`grep -Erq "$compat|$compat2|$compat3" $dt_path`;
+ 				if ( $? >> 8 ) {
+ 					WARN("UNDOCUMENTED_DT_STRING",
+ 					     "DT compatible string \"$compat\" appears un-documented -- check $dt_path\n" . $herecurr);
+-- 
+1.9.1
