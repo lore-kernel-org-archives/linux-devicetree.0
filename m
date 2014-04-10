@@ -1,100 +1,43 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v7 4/6] pci: Introduce a domain number for pci_host_bridge.
-Date: Thu, 10 Apr 2014 10:00:17 +0200
-Message-ID: <4506772.YFSM2m1eaP@wuerfel>
-References: <1394811272-1547-5-git-send-email-Liviu.Dudau@arm.com>
- <20140410012715.GA1328@bart>
- <CAErSpo7egL2T_W_OCJw2kPHFDqspwOHXtZJw8JyjWU=56ofFKQ@mail.gmail.com>
+From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Subject: [PATCH BUGFIX] arm: dts: imx53: fix apparent copy/paste error
+Date: Thu, 10 Apr 2014 10:03:40 +0200
+Message-ID: <1397117020-8900-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAErSpo7egL2T_W_OCJw2kPHFDqspwOHXtZJw8JyjWU=56ofFKQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, linux-pci <linux-pci@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Tanmay Inamdar <tinamdar@apm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 09 April 2014 21:48:14 Bjorn Helgaas wrote:
-> On Wed, Apr 9, 2014 at 7:27 PM, Liviu Dudau <liviu@dudau.co.uk> wrote:
-> > On Wed, Apr 09, 2014 at 08:02:41AM -0600, Bjorn Helgaas wrote:
-> >> >>   struct pci_host_bridge {
-> >> >>     int domain;
-> >> >>     int node;
-> >> >>     struct device *dev;
-> >> >>     struct pci_ops *ops;
-> >> >>     struct list_head resources;
-> >> >>     void *sysdata;
-> >> >>     struct pci_bus *bus;  /* filled in by core, not by arch */
-> >> >>     ... /* other existing contents managed by core */
-> >> >>   };
-> >> >>
-> >> >>   struct pci_bus *pci_scan_host_bridge(struct pci_host_bridge *bridge);
-> >> >
-> >> > I'm really reluctant to give the arches more rope to hang themselves.
-> >>
-> >> If you mean the sysdata pointer is rope to hang themselves, I think it
-> >> would be great it we didn't need sysdata at all.  But I think it would
-> >> be a huge amount of work to get rid of it completely, and keeping it
-> >> would let us work at that incrementally.
-> >
-> > Agree. But then your suggestion was to wrap sysdata inside another structure,
-> > which to me constitutes additional rope.
-> 
-> I'll ponder this more, but I don't see your point here yet.  The arch
-> already supplies a sysdata pointer to pci_scan_root_bus(), and we
-> stash it in every struct pci_bus already.  My idea was just to pass it
-> in differently, as a structure member rather than a separate argument.
->  (And I'm not completely attached to my proposal; it was only to
-> illustrate my concern about the explosion of interfaces if we have to
-> add *_domain(), *_node(), etc.)
+The 'remote-endpoint' property should point back to ipu_di1_lvds1
+rather than ipu_di0_lvds0.
 
-As a minor variation of your suggestion, how about passing in a pointer
-to struct pci_host_bridge, and embed that within its own private
-structure? I think this is closer to how a lot of other subsystems
-do the abstraction.
+Signed-off-by: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+---
+ arch/arm/boot/dts/imx53.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > The "what" for PCI host bridges is defined in the spec. The "how" is implementation
-> > defined. What I'm trying to get with the cleanup is the ordering of pci_host_bridge
-> > creation: core creates the structure first ("what"), arch then has the chance
-> > of adding specific data to it (ops, resources, etc) ("how").
-> >
-> > At the moment arm and powerpc do some horrible dances in trying to create their
-> > local idea of a host bridge before passing it to the core code.
-> >
-> > As for the root bus number, maybe we can offer some sensible default strategy
-> > for numbering them and the arches that don't care too much can use that.
-> 
-> I think we're at the limit of what can be accomplished with the
-> abstractness of English.
-> 
-> My opinion is that it's reasonable for the arch to discover the host
-> bridge properties first and pass them to the core, and it doesn't
-> require unreasonable things of the arch.  I know the arm PCI setup is
-> complicated, partly because it deals with a huge number of machines
-> that don't have a consistent firmware interface.  The x86/ACPI setup
-> is relatively simple because it deals with a simple firmware
-> interface.  But that's just my opinion, and maybe your code will show
-> otherwise.
+diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dts=
+i
+index f0962e5..33a4e5b 100644
+--- a/arch/arm/boot/dts/imx53.dtsi
++++ b/arch/arm/boot/dts/imx53.dtsi
+@@ -431,7 +431,7 @@
+=20
+ 					port {
+ 						lvds1_in: endpoint {
+-							remote-endpoint =3D <&ipu_di0_lvds0>;
++							remote-endpoint =3D <&ipu_di1_lvds1>;
+ 						};
+ 					};
+ 				};
+--=20
+1.7.10.4
 
-Makes sense. One of the areas where the PCI code shows its age is the
-method how the various parts link together: there are function calls
-going back and forth between architecture specific files and generic
-files, rather a hierarchy of files with generic code being code by more
-specific code.
-
-To do the probing properly, I think it's totally fine to have the
-core code expect stuff like the resources and domain number
-to be filled out already by whoever calls it, but then have wrappers
-around it that get this information from a firmware interface, or
-from hardwired architecture specific code where necessary.
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
