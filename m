@@ -1,8 +1,7 @@
 From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 7/7] ARM: sunxi: update the default
- ARCH_NR_GPIO for sunxi arch
-Date: Thu, 10 Apr 2014 15:52:46 +0200
-Message-ID: <1397137966-30818-8-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH v3 5/7] pinctrl: sunxi: define A31 R_PIO pin functions
+Date: Thu, 10 Apr 2014 15:52:44 +0200
+Message-ID: <1397137966-30818-6-git-send-email-boris.brezillon@free-electrons.com>
 References: <1397137966-30818-1-git-send-email-boris.brezillon@free-electrons.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
@@ -19,28 +18,136 @@ To: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Maxime Ripar
 Cc: Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The A31 SoC has PL and PM banks and thus increase the default ARCH_NR_GPIO.
+The A31 SoC provides both PL and PM pio bank through the R_PIO block.
+
+These pins all support gpio function and can bbe assigned to system
+peripherals (like TWI, P2WI, JTAG, ...)
+
+Add new compatible string to the DT bindings doc.
 
 Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |  1 +
+ drivers/pinctrl/pinctrl-sunxi-pins.h               | 74 ++++++++++++++++++++++
+ drivers/pinctrl/pinctrl-sunxi.c                    |  1 +
+ 3 files changed, 76 insertions(+)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 5db05f6a..ee096bf 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -1644,9 +1644,9 @@ config ARCH_NR_GPIO
- 	int
- 	default 1024 if ARCH_SHMOBILE || ARCH_TEGRA
- 	default 512 if ARCH_EXYNOS || ARCH_KEYSTONE || SOC_OMAP5 || SOC_DRA7XX || ARCH_S3C24XX || ARCH_S3C64XX
-+	default 416 if ARCH_SUNXI
- 	default 392 if ARCH_U8500
- 	default 352 if ARCH_VT8500
--	default 288 if ARCH_SUNXI
- 	default 264 if MACH_H4700
- 	default 0
- 	help
+diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+index f5da7e3..d8d0656 100644
+--- a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+@@ -11,6 +11,7 @@ Required properties:
+   "allwinner,sun5i-a10s-pinctrl"
+   "allwinner,sun5i-a13-pinctrl"
+   "allwinner,sun6i-a31-pinctrl"
++  "allwinner,sun6i-a31-r-pinctrl"
+   "allwinner,sun7i-a20-pinctrl"
+ - reg: Should contain the register physical address and length for the
+   pin controller.
+diff --git a/drivers/pinctrl/pinctrl-sunxi-pins.h b/drivers/pinctrl/pinctrl-sunxi-pins.h
+index 3d60669..51100ca 100644
+--- a/drivers/pinctrl/pinctrl-sunxi-pins.h
++++ b/drivers/pinctrl/pinctrl-sunxi-pins.h
+@@ -2820,6 +2820,74 @@ static const struct sunxi_desc_pin sun6i_a31_pins[] = {
+ 		  SUNXI_FUNCTION(0x2, "nand1")),	/* CE3 */
+ };
+ 
++static const struct sunxi_desc_pin sun6i_a31_r_pins[] = {
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PL0,
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "s_twi"),		/* SCK */
++		  SUNXI_FUNCTION(0x3, "s_p2wi")),	/* SCK */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PL1,
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "s_twi"),		/* SDA */
++		  SUNXI_FUNCTION(0x3, "s_p2wi")),	/* SDA */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PL2,
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "s_uart")),	/* TX */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PL3,
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "s_uart")),	/* RX */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PL4,
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "s_ir")),		/* RX */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PL5,
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x3, "s_jtag")),	/* MS */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PL6,
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x3, "s_jtag")),	/* CK */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PL7,
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x3, "s_jtag")),	/* DO */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PL8,
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x3, "s_jtag")),	/* DI */
++	/* Hole */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PM0,
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PM1,
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PM2,
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x3, "1wire")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PM3,
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PM4,
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PM5,
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PM6,
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PM7,
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x3, "rtc")),		/* CLKO */
++};
++
+ static const struct sunxi_desc_pin sun7i_a20_pins[] = {
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN_PA0,
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+@@ -3855,6 +3923,12 @@ static const struct sunxi_pinctrl_desc sun6i_a31_pinctrl_data = {
+ 	.npins = ARRAY_SIZE(sun6i_a31_pins),
+ };
+ 
++static const struct sunxi_pinctrl_desc sun6i_a31_r_pinctrl_data = {
++	.pins = sun6i_a31_r_pins,
++	.npins = ARRAY_SIZE(sun6i_a31_r_pins),
++	.pin_base = PL_BASE,
++};
++
+ static const struct sunxi_pinctrl_desc sun7i_a20_pinctrl_data = {
+ 	.pins = sun7i_a20_pins,
+ 	.npins = ARRAY_SIZE(sun7i_a20_pins),
+diff --git a/drivers/pinctrl/pinctrl-sunxi.c b/drivers/pinctrl/pinctrl-sunxi.c
+index 6db1c9e..17b5f80 100644
+--- a/drivers/pinctrl/pinctrl-sunxi.c
++++ b/drivers/pinctrl/pinctrl-sunxi.c
+@@ -677,6 +677,7 @@ static struct of_device_id sunxi_pinctrl_match[] = {
+ 	{ .compatible = "allwinner,sun5i-a10s-pinctrl", .data = (void *)&sun5i_a10s_pinctrl_data },
+ 	{ .compatible = "allwinner,sun5i-a13-pinctrl", .data = (void *)&sun5i_a13_pinctrl_data },
+ 	{ .compatible = "allwinner,sun6i-a31-pinctrl", .data = (void *)&sun6i_a31_pinctrl_data },
++	{ .compatible = "allwinner,sun6i-a31-r-pinctrl", .data = (void *)&sun6i_a31_r_pinctrl_data },
+ 	{ .compatible = "allwinner,sun7i-a20-pinctrl", .data = (void *)&sun7i_a20_pinctrl_data },
+ 	{}
+ };
 -- 
 1.8.3.2
