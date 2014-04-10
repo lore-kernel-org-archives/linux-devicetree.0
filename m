@@ -1,43 +1,78 @@
-From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Subject: [PATCH BUGFIX] arm: dts: imx53: fix apparent copy/paste error
-Date: Thu, 10 Apr 2014 10:03:40 +0200
-Message-ID: <1397117020-8900-1-git-send-email-LW@KARO-electronics.de>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 00/15] ARM: sunxi: add A31 PL pins support
+Date: Thu, 10 Apr 2014 10:10:31 +0200
+Message-ID: <20140410081031.GM28585@lukather>
+References: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com>
+ <CAGb2v66XCN2ar1wj+a1+ZwdcdJ3gzJ+nDiO9bu52OwK+mBB_Hg@mail.gmail.com>
+ <20140409151747.GH28585@lukather>
+ <CAGb2v67+YNhw2MXSu9DTKSUfXH=v+uD7KEaxyiPezyf9CYtmPw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="4oQnj4jcM03NhqPN"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v67+YNhw2MXSu9DTKSUfXH=v+uD7KEaxyiPezyf9CYtmPw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Boris BREZILLON <boris.brezillon@free-electrons.com>, Randy Dunlap <rdunlap@infradead.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The 'remote-endpoint' property should point back to ipu_di1_lvds1
-rather than ipu_di0_lvds0.
 
-Signed-off-by: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
----
- arch/arm/boot/dts/imx53.dtsi |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--4oQnj4jcM03NhqPN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dts=
-i
-index f0962e5..33a4e5b 100644
---- a/arch/arm/boot/dts/imx53.dtsi
-+++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -431,7 +431,7 @@
-=20
- 					port {
- 						lvds1_in: endpoint {
--							remote-endpoint =3D <&ipu_di0_lvds0>;
-+							remote-endpoint =3D <&ipu_di1_lvds1>;
- 						};
- 					};
- 				};
+On Thu, Apr 10, 2014 at 12:27:32AM +0800, Chen-Yu Tsai wrote:
+> >> > Let me know if these changes are too intrusive.
+> >>
+> >> I wonder if we should do a separate driver for the new PIO controller.
+> >> Clearly it's a separate IP block, with it's own clock and reset contro=
+ls.
+> >
+> > It's been merged together in the A23, hence why we did it like that.
+>=20
+> I'm not sure I understand. The clock gate and reset control are still sep=
+arate,
+> are they not?
+
+On the A31 the "regular" port controler handles PA to PH banks, while
+the R_PIO handles the PL and PM banks.
+
+On the A23, the regular port controler handles PA to PL banks, and the
+R_PIO and PM bank doesn't exist.
+
+So we're not quite in the same situation. The A31 is troublesome,
+while the A23 (except for the external interrupts), is pretty much
+what we've seen so far with the A10/A20/...
+
+Maxime
+
 --=20
-1.7.10.4
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--4oQnj4jcM03NhqPN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTRlH3AAoJEBx+YmzsjxAgGBIP/3BR71Fgu+cyZxrqBOKilVrq
+lN5AwGgc0Uw0Ivt1a6dUxW6qobI8oF0MQT9hHtrNLYqErfdJ+lU6awhtI9j/QNyb
+EEv2+JitoYKfek2gbRVVpnJ2mlnAQot9fZfQDBQtc3LYN6SD77S3AW1YnhPLD2Ag
+CiCGb2E8BAHZM9sPjbNE6ZUzW1w3X/mwqesIRQWLU4ZJH+GH3v5uGS5BUsKhBelC
+7/JqvVsEEfS40k4Ic5rmg0JmP3eRB55zT23Jr/SJwzPwxtNMpB3Sb43ccHvgtCCN
+YQEJsWbv+OF5wF5qJgunvmk0kMTgGzytEznZ91hn9/q6hqhUhY10SDeBIodZiU4w
+0O9YJOBLS0oNeHNAhgDXRJCp8ls2kg4h1QJ9AC0QKoTgwGofk+baEQh5Do5CwvhK
+2YshynJabqItpWFZ6VvkuPk+wHxxhcDpgKAPI1c9zRiKQ45P5B75k84Fi29NANPM
+eDhjPbGOgo+39dAGjD/UF1SZD+bT8PJYRQEM47tT36x2piS5+ik714H2vEXRWzdn
+upXOIx+AREpMkw6mM6uc4UjXdH+cx5iTol3b84vNgkct8HqDoua9hMnExjY532kI
+yB6KOjC8acIv6SmzONNeDxEtndZnU9hfoIUUKG7RzTQK+iBGgl6RoJXcOcKzkbpo
+H2YS/MLBbUm0Utj/u5jR
+=mY0X
+-----END PGP SIGNATURE-----
+
+--4oQnj4jcM03NhqPN--
