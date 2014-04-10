@@ -1,58 +1,100 @@
-From: Nicolin Chen <Guangyu.Chen@freescale.com>
-Subject: Re: [PATCH v4] ASoC: fsl_sai: Add clock controls for SAI
-Date: Thu, 10 Apr 2014 15:46:36 +0800
-Message-ID: <20140410074635.GA14658@MrMyself>
-References: <1397041577-9580-1-git-send-email-Guangyu.Chen@freescale.com>
- <fe26bf436e1846fca85415fc4c8bb67e@BY2PR03MB505.namprd03.prod.outlook.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v7 4/6] pci: Introduce a domain number for pci_host_bridge.
+Date: Thu, 10 Apr 2014 10:00:17 +0200
+Message-ID: <4506772.YFSM2m1eaP@wuerfel>
+References: <1394811272-1547-5-git-send-email-Liviu.Dudau@arm.com>
+ <20140410012715.GA1328@bart>
+ <CAErSpo7egL2T_W_OCJw2kPHFDqspwOHXtZJw8JyjWU=56ofFKQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <fe26bf436e1846fca85415fc4c8bb67e@BY2PR03MB505.namprd03.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Xiubo Li-B47053 <Li.Xiubo@freescale.com>
-Cc: "broonie@kernel.org" <broonie@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "timur@tabi.org" <timur@tabi.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob@landley.net" <rob@landley.net>, "galak@codeaurora.org" <galak@codeaurora.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAErSpo7egL2T_W_OCJw2kPHFDqspwOHXtZJw8JyjWU=56ofFKQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, linux-pci <linux-pci@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Tanmay Inamdar <tinamdar@apm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 10, 2014 at 03:39:51PM +0800, Xiubo Li-B47053 wrote:
-> > diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-> > index db9f75e..7cd4af9 100644
-> > --- a/sound/soc/fsl/fsl_sai.c
-> > +++ b/sound/soc/fsl/fsl_sai.c
-> > @@ -401,7 +401,23 @@ static int fsl_sai_startup(struct snd_pcm_substream
-> > *substream,
-> >  		struct snd_soc_dai *cpu_dai)
-> >  {
-> >  	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
-> > -	u32 reg;
-> > +	struct device *dev = &sai->pdev->dev;
-> > +	u32 reg, i;
-> > +	int ret;
-> > +
-> > +	ret = clk_prepare_enable(sai->bus_clk);
-> > +	if (ret) {
-> > +		dev_err(dev, "failed to enable bus clock\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	for (i = 0; i < FSL_SAI_MCLK_MAX; i++) {
-> > +		ret = clk_prepare_enable(sai->mclk_clk[i]);
-> > +		if (ret) {
-> > +			dev_err(dev, "failed to enable mclk%d clock\n", i + 1);
-> > +			goto err;
-> > +		}
-> > +	}
-> > 
+On Wednesday 09 April 2014 21:48:14 Bjorn Helgaas wrote:
+> On Wed, Apr 9, 2014 at 7:27 PM, Liviu Dudau <liviu@dudau.co.uk> wrote:
+> > On Wed, Apr 09, 2014 at 08:02:41AM -0600, Bjorn Helgaas wrote:
+> >> >>   struct pci_host_bridge {
+> >> >>     int domain;
+> >> >>     int node;
+> >> >>     struct device *dev;
+> >> >>     struct pci_ops *ops;
+> >> >>     struct list_head resources;
+> >> >>     void *sysdata;
+> >> >>     struct pci_bus *bus;  /* filled in by core, not by arch */
+> >> >>     ... /* other existing contents managed by core */
+> >> >>   };
+> >> >>
+> >> >>   struct pci_bus *pci_scan_host_bridge(struct pci_host_bridge *bridge);
+> >> >
+> >> > I'm really reluctant to give the arches more rope to hang themselves.
+> >>
+> >> If you mean the sysdata pointer is rope to hang themselves, I think it
+> >> would be great it we didn't need sysdata at all.  But I think it would
+> >> be a huge amount of work to get rid of it completely, and keeping it
+> >> would let us work at that incrementally.
+> >
+> > Agree. But then your suggestion was to wrap sysdata inside another structure,
+> > which to me constitutes additional rope.
 > 
-> Why prepare and enable all the mclks here ?
-> And at last only one of 'bus', 'mclk1', 'mclk2' and 'mclk3' will be selected
-> To generate the bit clock. How about just prepare and enable the selected
-> one ?
- 
-That's a fair suggestion. I'll do the revise.
+> I'll ponder this more, but I don't see your point here yet.  The arch
+> already supplies a sysdata pointer to pci_scan_root_bus(), and we
+> stash it in every struct pci_bus already.  My idea was just to pass it
+> in differently, as a structure member rather than a separate argument.
+>  (And I'm not completely attached to my proposal; it was only to
+> illustrate my concern about the explosion of interfaces if we have to
+> add *_domain(), *_node(), etc.)
 
-But in this way. We can provisionally drop the clock enabling part and add
-them later after my clock dividing patch is ready.
+As a minor variation of your suggestion, how about passing in a pointer
+to struct pci_host_bridge, and embed that within its own private
+structure? I think this is closer to how a lot of other subsystems
+do the abstraction.
 
-Thank you,
-Nicolin
+> > The "what" for PCI host bridges is defined in the spec. The "how" is implementation
+> > defined. What I'm trying to get with the cleanup is the ordering of pci_host_bridge
+> > creation: core creates the structure first ("what"), arch then has the chance
+> > of adding specific data to it (ops, resources, etc) ("how").
+> >
+> > At the moment arm and powerpc do some horrible dances in trying to create their
+> > local idea of a host bridge before passing it to the core code.
+> >
+> > As for the root bus number, maybe we can offer some sensible default strategy
+> > for numbering them and the arches that don't care too much can use that.
+> 
+> I think we're at the limit of what can be accomplished with the
+> abstractness of English.
+> 
+> My opinion is that it's reasonable for the arch to discover the host
+> bridge properties first and pass them to the core, and it doesn't
+> require unreasonable things of the arch.  I know the arm PCI setup is
+> complicated, partly because it deals with a huge number of machines
+> that don't have a consistent firmware interface.  The x86/ACPI setup
+> is relatively simple because it deals with a simple firmware
+> interface.  But that's just my opinion, and maybe your code will show
+> otherwise.
+
+Makes sense. One of the areas where the PCI code shows its age is the
+method how the various parts link together: there are function calls
+going back and forth between architecture specific files and generic
+files, rather a hierarchy of files with generic code being code by more
+specific code.
+
+To do the probing properly, I think it's totally fine to have the
+core code expect stuff like the resources and domain number
+to be filled out already by whoever calls it, but then have wrappers
+around it that get this information from a firmware interface, or
+from hardwired architecture specific code where necessary.
+
+	Arnd
