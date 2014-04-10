@@ -1,62 +1,85 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: topology: Make it clear that all CPUs need to be
- described
-Date: Fri, 11 Apr 2014 00:18:08 +0100
-Message-ID: <20140410231808.GJ6518@sirena.org.uk>
-References: <1396016467-23257-1-git-send-email-broonie@kernel.org>
- <20140331093046.GA2245@e102568-lin.cambridge.arm.com>
- <CAL_JsqLj56d6Mb5Vjd4UnBvQ6myAc4j3moY+3EM9zgHxrNgHbw@mail.gmail.com>
+From: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Subject: Re: [rtc-linux] [PATCH v2 2/3] rtc: Add APM X-Gene SoC RTC driver
+Date: Thu, 10 Apr 2014 16:24:18 -0700
+Message-ID: <20140410162418.e926ea069f046baf7845a9a1@linux-foundation.org>
+References: <1396287370-1011-1-git-send-email-lho@apm.com>
+	<1396287370-1011-2-git-send-email-lho@apm.com>
+	<1396287370-1011-3-git-send-email-lho@apm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/T+UM55GOh1Yge7W"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLj56d6Mb5Vjd4UnBvQ6myAc4j3moY+3EM9zgHxrNgHbw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1396287370-1011-3-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 31 Mar 2014 11:36:09 -0600 Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org> wrote:
 
---/T+UM55GOh1Yge7W
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> This patch adds support for the APM X-Gene SoC RTC driver.
+> 
+> ...
+>
+> +static int xgene_rtc_probe(struct platform_device *pdev)
+> +{
+> +	struct xgene_rtc_dev *pdata;
+> +	struct resource *res;
+> +	int ret;
+> +	int irq;
+> +
+> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
+> +		return -ENOMEM;
+> +	platform_set_drvdata(pdev, pdata);
+> +	pdata->dev = &pdev->dev;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	pdata->csr_base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(pdata->csr_base))
+> +		return PTR_ERR(pdata->csr_base);
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0) {
+> +		dev_err(&pdev->dev, "No IRQ resource\n");
+> +		return irq;
+> +	}
+> +	ret = devm_request_irq(&pdev->dev, irq, xgene_rtc_interrupt, 0,
+> +			       dev_name(&pdev->dev), pdata);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Could not request IRQ\n");
+> +		return ret;
+> +	}
+> +
+> +	pdata->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(pdata->clk)) {
+> +		dev_err(&pdev->dev, "Couldn't get the clock for RTC\n");
+> +		return -ENODEV;
+> +	}
+> +	clk_prepare_enable(pdata->clk);
+> +
+> +	/* Turn on the clock and the crystal */
+> +	writel(RTC_CCR_EN, pdata->csr_base + RTC_CCR);
+> +
+> +	device_init_wakeup(&pdev->dev, 1);
 
-On Thu, Apr 10, 2014 at 06:01:31PM -0500, Rob Herring wrote:
-> On Mon, Mar 31, 2014 at 4:30 AM, Lorenzo Pieralisi
+Forgot to check the returns values from clk_prepare_enable() and
+device_init_wakeup()?
 
-> > Patch is ok with me, thanks:
+> +	pdata->rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
+> +					 &xgene_rtc_ops, THIS_MODULE);
+> +	if (IS_ERR(pdata->rtc)) {
+> +		clk_disable_unprepare(pdata->clk);
+> +		return PTR_ERR(pdata->rtc);
+> +	}
+> +
+> +	/* HW does not support update faster than 1 seconds */
+> +	pdata->rtc->uie_unsupported = 1;
+> +
+> +	return 0;
+> +}
 
-> > Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-
-> Applied for 3.15.
-
-Catalin already sent this to Linus I think unless I got my patches
-confused.
-
---/T+UM55GOh1Yge7W
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTRyatAAoJELSic+t+oim9DgUP/R6lMunxpLJQDlKZ9RsHvQa5
-cRt40FhrD9Dr0YFdnCYXayVSlPBLZoa/EQAqW1CGyxnoQA5fLuJdxV2OaBA9fPk/
-VMkIzVy434lYMTHSHLTxtCrukPtPV4oVpxAZXPziMs1qL62br4c423IWQIPAGg/8
-jMjlEJR4rLH4DJjrXHSaiJQG4K3or8pQOI3feFXuWEYPxUVPE6Kb35IVr7h0q6J/
-KQpcKPsThs33CJFut+a9jrMIVkQq54CL0EtGUiyQGTIlhlqBIdjLYHkwqotjDrI5
-oGHZabfghQAJHfjkw+DHTU7A6Gu6EQvbgQL6OchBtSy9SEN4aIdrMNRgBYAUWJnI
-TAPZzSi6hd4ShRqlulSI7pMIlxyf3qfOeq0Dsj6bifzEa3/3HNjjsf2oazcxC6Ob
-2ECX9MKfqOHN55q+mLyoMzjFJh8d2s8nJo8mBrQ5golhKw2dydkvNQ7vfLbMSbiW
-YTOZINZ9j5fyHWkV3D65qATsNjUzXyYDH/4BeCu/CewYoBvayl7ZoAWrykcESQEo
-7mMazfRzf63HYfNYHDHlqoHkFHc3A1WW+rVVLheQK05XN/nbTI1GO17hvrl11WLA
-esqMlKmifqDqkixHRZHQcEghSoxmFQ5/2IKswEJscGFnnXDWTN6t3iazUFtkD/vq
-bfXowSyw6m01eSeNu/VY
-=+XR4
------END PGP SIGNATURE-----
-
---/T+UM55GOh1Yge7W--
+Otherwise it looks OK to me - I queued all three patches, thanks.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
