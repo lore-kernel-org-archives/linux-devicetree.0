@@ -1,60 +1,52 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 04/15] pinctrl: sunxi: specify clk name when retrieving
- pinctrl pio clk
-Date: Thu, 10 Apr 2014 23:17:28 +0200
-Message-ID: <53470A68.6090005@free-electrons.com>
-References: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com>	<1397051478-4113-5-git-send-email-boris.brezillon@free-electrons.com>	<CACRpkdYW6b_37V40TRxs=7ecaWuV0X7_YJ4=-Psr9CG-cTb79w@mail.gmail.com> <CACRpkdbG-D5RXrrJs9LBEGs-1dydmfPKvCgNb4S2=BbBq3SxQw@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v6] ASoC: fsl_sai: Add clock controls for SAI
+Date: Thu, 10 Apr 2014 23:36:31 +0100
+Message-ID: <20140410223631.GG6518@sirena.org.uk>
+References: <1397143575-10426-1-git-send-email-Guangyu.Chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jk/5KjyVsvxWSMIA"
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbG-D5RXrrJs9LBEGs-1dydmfPKvCgNb4S2=BbBq3SxQw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1397143575-10426-1-git-send-email-Guangyu.Chen@freescale.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Nicolin Chen <Guangyu.Chen@freescale.com>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, timur@tabi.org, Li.Xiubo@freescale.com, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, shawn.guo@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Linus,
 
-On 10/04/2014 20:16, Linus Walleij wrote:
-> On Thu, Apr 10, 2014 at 8:14 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
->> On Wed, Apr 9, 2014 at 3:51 PM, Boris BREZILLON
->> <boris.brezillon@free-electrons.com> wrote:
->>
->>> Specify base pio clk name when retrieving it using the CCF.
->>> This way we will avoid conflicts when introducing a second clk for the A31
->>> SoC.
->>>
->>> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
->> Are you merging all these through ARM SoC?
->>
->> In that case
->> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->>
->> If it's OK to merge stand-alone tell me and I'll apply it to
->> the pinctrl tree.
-> Hm there seems to be quite a few patches to pinctrl here...
->
-> May I apply this and the others to the pinctrl tree simply?
+--jk/5KjyVsvxWSMIA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Actually I made a v2 (and then a v3 https://lkml.org/lkml/2014/4/10/320
-:-)) of this series, in which I removed all DT related stuff.
-So, if you agree with these changes, I guess you can take them through
-you tree.
+On Thu, Apr 10, 2014 at 11:26:15PM +0800, Nicolin Chen wrote:
+> The SAI mainly has the following clocks:
+>   bus clock
+>     control and configure registers and to generate synchronous
+>     interrupts and DMA requests.
 
-Best Regards,
+Applied, thanks.
 
-Boris
+--jk/5KjyVsvxWSMIA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
->
-> As DTS files should be maintained separately I don't think
-> it's important to keep driver and DTS file changes together.
->
-> Yours,
-> Linus Walleij
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+iQIcBAEBAgAGBQJTRxzsAAoJELSic+t+oim9+5cP/R5cdpTumXrEfPAIM2WIo0sQ
+gi/Fs1bR4L9HiEXNVOh7kueN4AzxE2Kn9ijRXX6J1R7VrD/vOMNzdai4AyYjJL0C
+LEU5SW2ehlC8/u1s4HP/6/XGmU9AyJDJjsuq4MPj9AeXsqNHXFmvfST6arZO1q/Q
+v18z7Tp+XKmR7/8to4+72AlctPXyKDTh0cZXkcayV7JUgbIsMNjn746Oo08umf2/
+ahF3L/nNnf5+sYg7j0ZHl7tjkgHSpq8ZPcj+NA5HktwAMJX1kEGcxIDPa7gKP/n6
+bSGGwmvEGlkeEWkb1ee4xsw46LQ++M+RtkDBc79FikTi/b8I+hw07yG4gtg8GYGS
+4NNRu1/IzoEWwzggdOjzqqA4vHcfbrO8i62X+kLx72CMVnHBYXR+2gMlOAo1OCla
+fJL6heywU3mqWXy6KLCBZ4Eb379GN3VXURamYc0FiYvlwFIz8554LAiT1SO4IFoa
+vwKi05GMLAZpEtDNxTrD6N6sZv2hCIsv7xAO/gxBiQJMZU+Lni4wOHWAkpu1OvhL
+bJsal3eH76R7JZ5F8e6/w3rabqHVSGaYjjERJIQGA7uMjoZkReHGDwStbmTUU4Yi
+fgkRcq4XEovtZ8LuYz+WI8vpe99F/5ipXpilJpmJTpIsRNBZYLxubBHvPztp6v12
+N//79nPMbYMsR+9Yiylm
+=7bWg
+-----END PGP SIGNATURE-----
 
+--jk/5KjyVsvxWSMIA--
