@@ -1,87 +1,58 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V3 4/5] mfd: palmas: support IRQ inversion at the board
- level
-Date: Thu, 10 Apr 2014 08:25:56 +0100
-Message-ID: <20140410072556.GB4214@lee--X1>
-References: <1393876300-3061-1-git-send-email-swarren@wwwdotorg.org>
- <1393876300-3061-4-git-send-email-swarren@wwwdotorg.org>
- <CAAVeFuJY67zdoHiZufxDbkaw=xt8YwxyDAwHW_T7UZeSOt35NA@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 3/4] arm: add basic support for Mediatek MT6589 boards
+Date: Thu, 10 Apr 2014 09:36:40 +0200
+Message-ID: <4752537.la6uZladzC@wuerfel>
+References: <1397072736-10793-1-git-send-email-matthias.bgg@gmail.com>
+ <1397072736-10793-4-git-send-email-matthias.bgg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAAVeFuJY67zdoHiZufxDbkaw=xt8YwxyDAwHW_T7UZeSOt35NA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1397072736-10793-4-git-send-email-matthias.bgg@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, andrew@lunn.ch, linux-doc@vger.kernel.org, thierry.reding@gmail.com, heiko.stuebner@bq.com, linux@arm.linux.org.uk, daniel.lezcano@linaro.org, rmk+kernel@arm.linux.org.uk, florian.vaussard@epfl.ch, sebastian.hesselbarth@gmail.com, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, tglx@linutronix.de, rdunlap@infradead.org, linux-kernel@vger.kernel.org, silvio.fricke@gmail.com, galak@codeaurora.org, olof@lixom.net, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> Stephen, any news about this patch? I'm waiting for it to be merged i=
-n
-> order to resend some Tegra DTs, but still cannot see it in -next.
+On Wednesday 09 April 2014 21:45:35 Matthias Brugger wrote:
+> This adds a generic devicetree board file and a dtsi for boards
+> based on the MT6589 SoCs from Mediatek.
+> 
+> Apart from the generic parts (gic, clocks) the only component
+> currently supported are the timers.
+> 
+> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
 
-I doubt it's been applied.
+Hi Matthias,
 
-No one got back to me with reference to how to deal with the set [1],
-so I certainly didn't apply it.
+First of all, I'm really glad to see this get started, thanks for looking
+into these!
 
-[1] http://www.spinics.net/lists/arm-kernel/msg312694.html
+Do you know how similar the MT6589 is to the later chips like MT65x2
+and MT6588? What are the on-chip devices like, is it mostly licensed
+IP blocks from designware and others that we already have drivers for,
+or all new drivers?
 
-> On Tue, Mar 4, 2014 at 4:51 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org=
-> wrote:
-> > From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >
-> > Implement the new DT property ti,irq-externally-inverted, and add a=
-n
-> > equivalent platform data field to match. This allows the driver to
-> > correctly automatically configure the IRQ output polarity when the =
-board
-> > or SoC contains an inverter between the Palmas IRQ output and IRQ
-> > controller input.
-> >
-> > Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > ---
-> > v3:
-> > * Use an IRQD flag to represent the data, rather than a custom DT p=
-roperty.
-> > v2:
-> > * Split V1's patch 1/2 into separate patches 1/3 and 2/3.
-> > ---
-> >  drivers/mfd/palmas.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/mfd/palmas.c b/drivers/mfd/palmas.c
-> > index d280d789e55a..3281d4103e9d 100644
-> > --- a/drivers/mfd/palmas.c
-> > +++ b/drivers/mfd/palmas.c
-> > @@ -292,7 +292,8 @@ static int palmas_set_pdata_irq_flag(struct i2c=
-_client *i2c,
-> >                 return -EINVAL;
-> >         }
-> >
-> > -       pdata->irq_flags =3D irqd_get_trigger_type(irq_data);
-> > +       pdata->irq_flags =3D irqd_get_trigger_type(irq_data) |
-> > +                          irqd_get_src_dst_inverted(irq_data);
-> >         dev_info(&i2c->dev, "Irq flag is 0x%08x\n", pdata->irq_flag=
-s);
-> >         return 0;
-> >  }
-> > @@ -447,6 +448,8 @@ static int palmas_i2c_probe(struct i2c_client *=
-i2c,
-> >                 reg =3D PALMAS_POLARITY_CTRL_INT_POLARITY;
-> >         else
-> >                 reg =3D 0;
-> > +       if (pdata->irq_flags & IRQ_SRC_DST_INVERTED)
-> > +               reg ^=3D PALMAS_POLARITY_CTRL_INT_POLARITY;
-> >         ret =3D palmas_update_bits(palmas, PALMAS_PU_PD_OD_BASE,
-> >                         PALMAS_POLARITY_CTRL, PALMAS_POLARITY_CTRL_=
-INT_POLARITY,
-> >                         reg);
-> >
+> +#include <asm/hardware/cache-l2x0.h>
+> +
+> +static void __init mediatek_dt_init(void)
+> +{
+> +	l2x0_of_init(0, ~0);
+> +	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
+> +}
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+I hope that with all the cleanup work that Russell has done in the
+past few weeks, we can manage to kill off the call to l2x0_of_init()
+here and have it done by core architecture code instead. That would
+let you have an empty machine file, unless you have other things you
+will need to add in the future.
+
+	Arnd
