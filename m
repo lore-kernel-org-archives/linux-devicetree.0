@@ -1,12 +1,13 @@
 From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 5/7] pinctrl: sunxi: define A31 R_PIO pin functions
-Date: Thu, 10 Apr 2014 15:52:44 +0200
-Message-ID: <1397137966-30818-6-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH v3 2/7] pinctrl: sunxi: disable clk when failing
+ to probe pin controller
+Date: Thu, 10 Apr 2014 15:52:41 +0200
+Message-ID: <1397137966-30818-3-git-send-email-boris.brezillon@free-electrons.com>
 References: <1397137966-30818-1-git-send-email-boris.brezillon@free-electrons.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCIPJ6FA2QLBB6WETKNAKGQEUKXUKWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCIPJ6FA2QLBB6OETKNAKGQEREIKGCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1397137966-30818-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -18,136 +19,43 @@ To: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Maxime Ripar
 Cc: Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The A31 SoC provides both PL and PM pio bank through the R_PIO block.
-
-These pins all support gpio function and can bbe assigned to system
-peripherals (like TWI, P2WI, JTAG, ...)
-
-Add new compatible string to the DT bindings doc.
+Disable the clk when failing to probe the pin controller device.
 
 Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |  1 +
- drivers/pinctrl/pinctrl-sunxi-pins.h               | 74 ++++++++++++++++++++++
- drivers/pinctrl/pinctrl-sunxi.c                    |  1 +
- 3 files changed, 76 insertions(+)
+ drivers/pinctrl/pinctrl-sunxi.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
-index f5da7e3..d8d0656 100644
---- a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
-@@ -11,6 +11,7 @@ Required properties:
-   "allwinner,sun5i-a10s-pinctrl"
-   "allwinner,sun5i-a13-pinctrl"
-   "allwinner,sun6i-a31-pinctrl"
-+  "allwinner,sun6i-a31-r-pinctrl"
-   "allwinner,sun7i-a20-pinctrl"
- - reg: Should contain the register physical address and length for the
-   pin controller.
-diff --git a/drivers/pinctrl/pinctrl-sunxi-pins.h b/drivers/pinctrl/pinctrl-sunxi-pins.h
-index 3d60669..51100ca 100644
---- a/drivers/pinctrl/pinctrl-sunxi-pins.h
-+++ b/drivers/pinctrl/pinctrl-sunxi-pins.h
-@@ -2820,6 +2820,74 @@ static const struct sunxi_desc_pin sun6i_a31_pins[] = {
- 		  SUNXI_FUNCTION(0x2, "nand1")),	/* CE3 */
- };
- 
-+static const struct sunxi_desc_pin sun6i_a31_r_pins[] = {
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN_PL0,
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_twi"),		/* SCK */
-+		  SUNXI_FUNCTION(0x3, "s_p2wi")),	/* SCK */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN_PL1,
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_twi"),		/* SDA */
-+		  SUNXI_FUNCTION(0x3, "s_p2wi")),	/* SDA */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN_PL2,
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_uart")),	/* TX */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN_PL3,
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_uart")),	/* RX */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN_PL4,
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_ir")),		/* RX */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN_PL5,
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "s_jtag")),	/* MS */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN_PL6,
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "s_jtag")),	/* CK */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN_PL7,
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "s_jtag")),	/* DO */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN_PL8,
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "s_jtag")),	/* DI */
-+	/* Hole */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN_PM0,
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out")),
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN_PM1,
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out")),
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN_PM2,
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "1wire")),
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN_PM3,
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out")),
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN_PM4,
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out")),
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN_PM5,
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out")),
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN_PM6,
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out")),
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN_PM7,
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "rtc")),		/* CLKO */
-+};
-+
- static const struct sunxi_desc_pin sun7i_a20_pins[] = {
- 	SUNXI_PIN(SUNXI_PINCTRL_PIN_PA0,
- 		  SUNXI_FUNCTION(0x0, "gpio_in"),
-@@ -3855,6 +3923,12 @@ static const struct sunxi_pinctrl_desc sun6i_a31_pinctrl_data = {
- 	.npins = ARRAY_SIZE(sun6i_a31_pins),
- };
- 
-+static const struct sunxi_pinctrl_desc sun6i_a31_r_pinctrl_data = {
-+	.pins = sun6i_a31_r_pins,
-+	.npins = ARRAY_SIZE(sun6i_a31_r_pins),
-+	.pin_base = PL_BASE,
-+};
-+
- static const struct sunxi_pinctrl_desc sun7i_a20_pinctrl_data = {
- 	.pins = sun7i_a20_pins,
- 	.npins = ARRAY_SIZE(sun7i_a20_pins),
 diff --git a/drivers/pinctrl/pinctrl-sunxi.c b/drivers/pinctrl/pinctrl-sunxi.c
-index 6db1c9e..17b5f80 100644
+index 2d9ca1c..73d11e2 100644
 --- a/drivers/pinctrl/pinctrl-sunxi.c
 +++ b/drivers/pinctrl/pinctrl-sunxi.c
-@@ -677,6 +677,7 @@ static struct of_device_id sunxi_pinctrl_match[] = {
- 	{ .compatible = "allwinner,sun5i-a10s-pinctrl", .data = (void *)&sun5i_a10s_pinctrl_data },
- 	{ .compatible = "allwinner,sun5i-a13-pinctrl", .data = (void *)&sun5i_a13_pinctrl_data },
- 	{ .compatible = "allwinner,sun6i-a31-pinctrl", .data = (void *)&sun6i_a31_pinctrl_data },
-+	{ .compatible = "allwinner,sun6i-a31-r-pinctrl", .data = (void *)&sun6i_a31_r_pinctrl_data },
- 	{ .compatible = "allwinner,sun7i-a20-pinctrl", .data = (void *)&sun7i_a20_pinctrl_data },
- 	{}
- };
+@@ -891,7 +891,7 @@ static int sunxi_pinctrl_probe(struct platform_device *pdev)
+ 	pctl->irq = irq_of_parse_and_map(node, 0);
+ 	if (!pctl->irq) {
+ 		ret = -EINVAL;
+-		goto gpiochip_error;
++		goto clk_error;
+ 	}
+ 
+ 	pctl->domain = irq_domain_add_linear(node, SUNXI_IRQ_NUMBER,
+@@ -899,7 +899,7 @@ static int sunxi_pinctrl_probe(struct platform_device *pdev)
+ 	if (!pctl->domain) {
+ 		dev_err(&pdev->dev, "Couldn't register IRQ domain\n");
+ 		ret = -ENOMEM;
+-		goto gpiochip_error;
++		goto clk_error;
+ 	}
+ 
+ 	for (i = 0; i < SUNXI_IRQ_NUMBER; i++) {
+@@ -917,6 +917,8 @@ static int sunxi_pinctrl_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ 
++clk_error:
++	clk_disable_unprepare(clk);
+ gpiochip_error:
+ 	if (gpiochip_remove(pctl->chip))
+ 		dev_err(&pdev->dev, "failed to remove gpio chip\n");
 -- 
 1.8.3.2
