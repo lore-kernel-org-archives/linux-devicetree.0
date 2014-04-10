@@ -1,44 +1,32 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 04/15] pinctrl: sunxi: specify clk name when retrieving
- pinctrl pio clk
-Date: Thu, 10 Apr 2014 20:16:30 +0200
-Message-ID: <CACRpkdbG-D5RXrrJs9LBEGs-1dydmfPKvCgNb4S2=BbBq3SxQw@mail.gmail.com>
-References: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1397051478-4113-5-git-send-email-boris.brezillon@free-electrons.com>
-	<CACRpkdYW6b_37V40TRxs=7ecaWuV0X7_YJ4=-Psr9CG-cTb79w@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] ARM: shmobile: r8a7790: link PCI USb devices to USB PHY
+Date: Thu, 10 Apr 2014 22:46:47 +0400
+Message-ID: <5346E717.4040507@cogentembedded.com>
+References: <201404092318.26231.sergei.shtylyov@cogentembedded.com> <CANqRtoQeuT=Q9PRYNMqA079gjb1VkwgvcDmsWKxjzSVxcVfeWw@mail.gmail.com> <534674B5.6080706@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYW6b_37V40TRxs=7ecaWuV0X7_YJ4=-Psr9CG-cTb79w@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <534674B5.6080706@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: "Simon Horman [Horms]" <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, robh+dt@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 10, 2014 at 8:14 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Wed, Apr 9, 2014 at 3:51 PM, Boris BREZILLON
-> <boris.brezillon@free-electrons.com> wrote:
->
->> Specify base pio clk name when retrieving it using the CCF.
->> This way we will avoid conflicts when introducing a second clk for the A31
->> SoC.
->>
->> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
->
-> Are you merging all these through ARM SoC?
->
-> In that case
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->
-> If it's OK to merge stand-alone tell me and I'll apply it to
-> the pinctrl tree.
+On 04/10/2014 02:38 PM, Sergei Shtylyov wrote:
 
-Hm there seems to be quite a few patches to pinctrl here...
+>> Thanks for this patch, good to see that the relationship between the
+>> USB Host and the PHY is described via DT.
 
-May I apply this and the others to the pinctrl tree simply?
+>> This patch seems to cover USB0 and USB2 that both require special
+>> control in the PHY. How about USB1? Can you explain about the reason
+>> why you omit that?
 
-As DTS files should be maintained separately I don't think
-it's important to keep driver and DTS file changes together.
+>     Because the driver does nothing for USB1 anyway.
 
-Yours,
-Linus Walleij
+    Looks like I should have tested that last minute change: kernel oopses due 
+to NULL pointer dereference somewhere in phy_get() once it gets called for 
+EHCI on the channel #1. At least doesn't seem to be my mistake...
+
+WBR, Sergei
+
