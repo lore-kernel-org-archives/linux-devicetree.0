@@ -1,45 +1,375 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [RFC PATCH v2] edac: synopsys: Added EDAC support for zynq ddr
- ecc controller
-Date: Thu, 10 Apr 2014 12:00:47 +0200
-Message-ID: <20140410100047.GG29093@pd.tnic>
-References: <1220b715-6fc2-42ed-8393-b9859fc0deb9@TX2EHSMHS021.ehs.local>
- <20140408204047.GQ30077@pd.tnic>
- <534633C0.9090905@monstr.eu>
- <20140410092144.GD29093@pd.tnic>
- <5e0042b6-f169-4025-8fd7-9d70c2ed0cf6@AM1EHSMHS012.ehs.local>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2] phy: Renesas R-Car Gen2 PHY driver
+Date: Thu, 10 Apr 2014 15:31:43 +0530
+Message-ID: <53466C07.4080409@ti.com>
+References: <201404090144.26769.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5e0042b6-f169-4025-8fd7-9d70c2ed0cf6@AM1EHSMHS012.ehs.local>
+In-Reply-To: <201404090144.26769.sergei.shtylyov@cogentembedded.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: Michal Simek <monstr@monstr.eu>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, dougthompson@xmission.com, linux-edac@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, sorenb@xilinx.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, punnaia@xilinx.com
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-sh@vger.kernel.org, magnus.damm@gmail.com, linux-doc@vger.kernel.org, rdunlap@infradead.org, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 10, 2014 at 11:49:57AM +0200, Michal Simek wrote:
-> I agree with you that we can use shorter name. I have checked this
-> with Punnaiah and I can't see any problem to have more edac drivers
-> in the system. For zynq there is primary ddr controller which is
-> target by this driver. Then we are talking about L2 in another thread.
-> Because zynq has programmable logic next to chip where you can add
-> soft memory controller (we have these hw designs) on the same bus then
-> there could be others edac drivers. I would say how many you like till
-> pins on the package.
+Hi,
 
-I knew you were gonna say something like that! :-)
+On Wednesday 09 April 2014 03:14 AM, Sergei Shtylyov wrote:
+> This PHY, though formally being a part of Renesas USBHS controller, contains the
+> UGCTRL2 register that controls multiplexing of the USB ports (Renesas calls them
+> channels) to the different USB controllers: channel 0 can be connected to either
+> PCI EHCI/OHCI or USBHS controllers, channel 2 can be connected to PCI EHCI/OHCI
+> or xHCI controllers.
+> 
+> This is a new driver for this USB PHY currently already supported under drivers/
+> usb/phy/. The reason for writing the new driver was the requirement that the
+> multiplexing of USB channels to the controller be dynamic, depending on what
+> USB drivers are loaded,  rather than static as provided by the old driver.
 
-Then you'll have to check whether edac can even stomach more than one
-drivers in parallel. TTBOMK, no one has ever done this so far... Yadda
-yadda.
+I'm not sure what you mean by dynamic here as the binding between the
+controller and the PHY is given in dt data.
+> The infrastructure provided by drivers/phy/phy-core.c seems to fit that purpose
+> ideally. The new driver only supports device tree probing for now.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> ---
+> The patch is against the 'next' branch of Kishon's 'linux-phy.git' repo.
+> 
+> Changes in version 2:
+> - rebased the patch, resolving reject.
+> 
+>  Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt |   35 +
+>  drivers/phy/Kconfig                                     |    7 
+>  drivers/phy/Makefile                                    |    1 
+>  drivers/phy/phy-rcar-gen2.c                             |  287 ++++++++++++++++
+>  4 files changed, 330 insertions(+)
+> 
+> Index: linux-phy/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
+> ===================================================================
+> --- /dev/null
+> +++ linux-phy/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
+> @@ -0,0 +1,35 @@
+> +* Renesas R-Car generation 2 USB PHY
+> +
+> +This file provides information on what the device node for the R-Car generation
+> +2 USB PHY contains.
+> +
+> +Required properties:
+> +- compatible: "renesas,usb-phy-r8a7790" if the device is a part of R8A7790 SoC.
+> +	      "renesas,usb-phy-r8a7791" if the device is a part of R8A7791 SoC.
+> +- reg: offset and length of the register block.
+> +- #phy-cells: see phy-bindings.txt in the same directory, must be 2.
+> +- clocks: clock phandle and specifier pair.
+> +- clock-names: string, clock input name, must be "usbhs".
+> +
+> +The phandle's first argument in the PHY specifier identifies the USB channel,
+> +the second one is the USB controller selector and depends on the first:
+> +
+> ++-----------+---------------+---------------+
+> +|\ Selector |               |               |
+> ++ --------- +       0       |       1       |
+> +| Channel  \|               |               |
+> ++-----------+---------------+---------------+
+> +| 0         | PCI EHCI/OHCI | HS-USB        |
+> +| 1         | PCI EHCI/OHCI | PCI EHCI/OHCI |
+> +| 2         | PCI EHCI/OHCI | xHCI          |
+> ++-----------+---------------+---------------+
+> +
+> +Example (Lager board):
+> +
+> +	usb-phy@e6590100 {
+> +		compatible = "renesas,usb-phy-r8a7790";
+> +		reg = <0 0xe6590100 0 0x100>;
+> +		#phy-cells = <2>;
+> +		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
+> +		clock-names = "usbhs";
+> +	};
+> Index: linux-phy/drivers/phy/Kconfig
+> ===================================================================
+> --- linux-phy.orig/drivers/phy/Kconfig
+> +++ linux-phy/drivers/phy/Kconfig
+> @@ -31,6 +31,13 @@ config PHY_MVEBU_SATA
+>  	depends on OF
+>  	select GENERIC_PHY
+>  
+> +config PHY_RCAR_GEN2
+> +	tristate "Renesas R-Car generation 2 USB PHY driver"
+> +	depends on ARCH_SHMOBILE
+> +	depends on GENERIC_PHY
 
-But before you do all that, you need to check whether edac is really
-what you're looking for, as I put it in my other mail.
+depends on CONFIG_OF?
+> +	help
+> +	  Support for USB PHY found on Renesas R-Car generation 2 SoCs.
+> +
+>  config OMAP_CONTROL_PHY
+>  	tristate "OMAP CONTROL PHY Driver"
+>  	help
+> Index: linux-phy/drivers/phy/Makefile
+> ===================================================================
+> --- linux-phy.orig/drivers/phy/Makefile
+> +++ linux-phy/drivers/phy/Makefile
+> @@ -9,6 +9,7 @@ obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= p
+>  obj-$(CONFIG_PHY_MVEBU_SATA)		+= phy-mvebu-sata.o
+>  obj-$(CONFIG_OMAP_CONTROL_PHY)		+= phy-omap-control.o
+>  obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
+> +obj-$(CONFIG_PHY_RCAR_GEN2)		+= phy-rcar-gen2.o
+>  obj-$(CONFIG_TI_PIPE3)			+= phy-ti-pipe3.o
+>  obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
+>  obj-$(CONFIG_PHY_EXYNOS5250_SATA)	+= phy-exynos5250-sata.o
+> Index: linux-phy/drivers/phy/phy-rcar-gen2.c
+> ===================================================================
+> --- /dev/null
+> +++ linux-phy/drivers/phy/phy-rcar-gen2.c
+> @@ -0,0 +1,287 @@
+> +/*
+> + * Renesas R-Car Gen2 PHY driver
+> + *
+> + * Copyright (C) 2014 Renesas Solutions Corp.
+> + * Copyright (C) 2014 Cogent Embedded, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/spinlock.h>
+> +
+> +#define USBHS_LPSTS			0x02
+> +#define USBHS_UGCTRL			0x80
+> +#define USBHS_UGCTRL2			0x84
+> +#define USBHS_UGSTS			0x88
+> +
+> +/* Low Power Status register (LPSTS) */
+> +#define USBHS_LPSTS_SUSPM		0x4000
+> +
+> +/* USB General control register (UGCTRL) */
+> +#define USBHS_UGCTRL_CONNECT		0x00000004
+> +#define USBHS_UGCTRL_PLLRESET		0x00000001
+> +
+> +/* USB General control register 2 (UGCTRL2) */
+> +#define USBHS_UGCTRL2_USB2SEL		0x80000000
+> +#define USBHS_UGCTRL2_USB2SEL_PCI	0x00000000
+> +#define USBHS_UGCTRL2_USB2SEL_USB30	0x80000000
+> +#define USBHS_UGCTRL2_USB0SEL		0x00000030
+> +#define USBHS_UGCTRL2_USB0SEL_PCI	0x00000010
+> +#define USBHS_UGCTRL2_USB0SEL_HS_USB	0x00000030
 
--- 
-Regards/Gruss,
-    Boris.
+Why isn't there an entry for channel 1?
+> +
+> +/* USB General status register (UGSTS) */
+> +#define USBHS_UGSTS_LOCK		0x00000300	/* 0x00000003? */
 
-Sent from a fat crate under my desk. Formatting is fine.
---
+Not sure about the LOCK value?
+> +
+> +#define	NUM_USB_CHANNELS	3
+> +
+> +struct rcar_gen2_phy {
+> +	struct phy *phy;
+> +	struct rcar_gen2_phy_driver *drv;
+> +	u32 select_mask;
+> +	u32 select_value;
+> +};
+> +
+> +struct rcar_gen2_phy_driver {
+> +	void __iomem *base;
+> +	struct clk *clk;
+> +	spinlock_t lock;
+> +	struct rcar_gen2_phy phys[NUM_USB_CHANNELS][2];
+> +};
+> +
+> +static int rcar_gen2_phy_init(struct phy *p)
+> +{
+> +	struct rcar_gen2_phy *phy = phy_get_drvdata(p);
+> +	struct rcar_gen2_phy_driver *drv = phy->drv;
+> +	unsigned long flags;
+> +	u32 ugctrl2;
+> +
+> +	if (phy->select_mask) {
+> +		clk_prepare_enable(drv->clk);
+> +
+> +		spin_lock_irqsave(&drv->lock, flags);
+> +		ugctrl2 = readl(drv->base + USBHS_UGCTRL2);
+> +		ugctrl2 &= ~phy->select_mask;
+> +		ugctrl2 |= phy->select_value;
+> +		writel(ugctrl2, drv->base + USBHS_UGCTRL2);
+> +		spin_unlock_irqrestore(&drv->lock, flags);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int rcar_gen2_phy_exit(struct phy *p)
+> +{
+> +	struct rcar_gen2_phy *phy = phy_get_drvdata(p);
+> +
+> +	if (phy->select_mask)
+> +		clk_disable_unprepare(phy->drv->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static int rcar_gen2_usbhs_phy_power_on(struct phy *p)
+> +{
+> +	struct rcar_gen2_phy *phy = phy_get_drvdata(p);
+> +	struct rcar_gen2_phy_driver *drv = phy->drv;
+> +	void __iomem *base = drv->base;
+> +	unsigned long flags;
+> +	u32 value;
+> +	int err = 0, i;
+> +
+> +	spin_lock_irqsave(&drv->lock, flags);
+> +
+> +	/* Power on USBHS PHY */
+> +	value = readl(base + USBHS_UGCTRL);
+> +	value &= ~USBHS_UGCTRL_PLLRESET;
+> +	writel(value, base + USBHS_UGCTRL);
+
+hmm.. Don't have separate bits to control power for separate PHYs?
+> +
+> +	value = ioread16(base + USBHS_LPSTS);
+
+why ioreadl here?
+> +	value |= USBHS_LPSTS_SUSPM;
+> +	iowrite16(value, base + USBHS_LPSTS);
+> +
+> +	for (i = 0; i < 20; i++) {
+> +		value = readl(base + USBHS_UGSTS);
+> +		if ((value & USBHS_UGSTS_LOCK) == USBHS_UGSTS_LOCK) {
+> +			value = readl(base + USBHS_UGCTRL);
+> +			value |= USBHS_UGCTRL_CONNECT;
+> +			writel(value, base + USBHS_UGCTRL);
+> +			goto out;
+> +		}
+> +		udelay(1);
+> +	}
+> +
+> +	/* Timed out waiting for the PLL lock */
+> +	err = -ETIMEDOUT;
+> +
+> +out:
+> +	spin_unlock_irqrestore(&drv->lock, flags);
+> +
+> +	return err;
+> +}
+> +
+> +static int rcar_gen2_usbhs_phy_power_off(struct phy *p)
+> +{
+> +	struct rcar_gen2_phy *phy = phy_get_drvdata(p);
+> +	struct rcar_gen2_phy_driver *drv = phy->drv;
+> +	void __iomem *base = drv->base;
+> +	unsigned long flags;
+> +	u32 value;
+> +
+> +	spin_lock_irqsave(&drv->lock, flags);
+> +
+> +	/* Power off USBHS PHY */
+> +	value = readl(base + USBHS_UGCTRL);
+> +	value &= ~USBHS_UGCTRL_CONNECT;
+> +	writel(value, base + USBHS_UGCTRL);
+
+here too.. that will power off all the PHYs no?
+> +
+> +	value = ioread16(base + USBHS_LPSTS);
+> +	value &= ~USBHS_LPSTS_SUSPM;
+> +	iowrite16(value, base + USBHS_LPSTS);
+> +
+> +	value = readl(base + USBHS_UGCTRL);
+> +	value |= USBHS_UGCTRL_PLLRESET;
+> +	writel(value, base + USBHS_UGCTRL);
+> +
+> +	spin_unlock_irqrestore(&drv->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct phy_ops rcar_gen2_phy_ops = {
+> +	.init		= rcar_gen2_phy_init,
+> +	.exit		= rcar_gen2_phy_exit,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static struct phy_ops rcar_gen2_usbhs_phy_ops = {
+> +	.init		= rcar_gen2_phy_init,
+> +	.exit		= rcar_gen2_phy_exit,
+> +	.power_on	= rcar_gen2_usbhs_phy_power_on,
+> +	.power_off	= rcar_gen2_usbhs_phy_power_off,
+> +	.owner		= THIS_MODULE,
+> +};
+
+Let's not create multiple phy_ops for a single driver.
+> +
+> +static const struct of_device_id rcar_gen2_phy_match_table[] = {
+> +	{ .compatible = "renesas,usb-phy-r8a7790" },
+> +	{ .compatible = "renesas,usb-phy-r8a7791" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, rcar_gen2_phy_match_table);
+> +
+> +static struct phy *rcar_gen2_phy_xlate(struct device *dev,
+> +				       struct of_phandle_args *args)
+> +{
+> +	struct rcar_gen2_phy_driver *drv;
+> +
+> +	drv = dev_get_drvdata(dev);
+> +	if (!drv)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	if (args->args[0] >= NUM_USB_CHANNELS || args->args[1] >= 2)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	return drv->phys[args->args[0]][args->args[1]].phy;
+> +}
+> +
+> +static int rcar_gen2_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct rcar_gen2_phy_driver *drv;
+> +	struct phy_provider *provider;
+> +	struct resource *res;
+> +	void __iomem *base;
+> +	struct clk *clk;
+> +	int i, j;
+> +
+> +	if (!dev->of_node) {
+> +		dev_err(dev, "This driver is required to be instantiated from device tree\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	clk = devm_clk_get(dev, "usbhs");
+> +	if (IS_ERR(clk)) {
+> +		dev_err(dev, "Can't get USBHS clock\n");
+> +		return PTR_ERR(clk);
+> +	}
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	drv = devm_kzalloc(dev, sizeof(*drv), GFP_KERNEL);
+> +	if (!drv)
+> +		return -ENOMEM;
+> +
+> +	spin_lock_init(&drv->lock);
+> +
+> +	drv->clk = clk;
+> +	drv->base = base;
+> +
+> +	drv->phys[0][0].select_mask  = USBHS_UGCTRL2_USB0SEL;
+> +	drv->phys[0][0].select_value = USBHS_UGCTRL2_USB0SEL_PCI;
+> +	drv->phys[0][1].select_mask  = USBHS_UGCTRL2_USB0SEL;
+> +	drv->phys[0][1].select_value = USBHS_UGCTRL2_USB0SEL_HS_USB;
+
+channel 1 is not used?
+
+Thanks
+Kishon
