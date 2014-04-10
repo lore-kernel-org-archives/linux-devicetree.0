@@ -1,64 +1,141 @@
 From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
-	<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 0/5] ARM: berlin: add pinctrl support
-Date: Thu, 10 Apr 2014 14:47:38 +0200
-Message-ID: <1397134063-10503-1-git-send-email-antoine.tenart@free-electrons.com>
+	<antoine.tenart@free-electrons.com>
+Subject: [PATCH 1/5] pinctrl: allows not to define the get_group_pins operation
+Date: Thu, 10 Apr 2014 14:47:39 +0200
+Message-ID: <1397134063-10503-2-git-send-email-antoine.tenart@free-electrons.com>
+References: <1397134063-10503-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-xBCQruHUn5ppWr+L1FloEB2eb7JE58TQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1397134063-10503-1-git-send-email-antoine.tenart@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, linus.walleij@linaro.org
+Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@list.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This series add support for the Marvell Berlin pinctrl, allowing to
-configure the pinmuxing from the device tree.
+When using a group only pinctrl driver, which does not have any
+information on the pins it is useless to define a get_group_pins
+always returning an empty list of pins.
 
-This is a group based pinmux and only group informations are defined.
-=46or this to work a modification in the pinctrl framework is needed so
-that get_group_pin could not be defined. Please have a look on patches
-1/5 and 2/5 commit logs.
+When not using get_group_pin[1], a driver must implement it so
+pins =3D NULL and num_pins =3D 0. This patch makes it the default
+behaviour if not defined in the pinctrl driver when used in
+pinmux enable and disable funtions and in pinctrl_groups_show.
 
-This serie applies on top of patches introducing the Marvell Berlin
-BG2Q you can find on Sebastian's for-next branch[1] and Alexandre's
-BG2Q symbol introduction[2].
+It also adds a check in pinctrl_get_group_pins and return -EINVAL if
+not defined. This function is called in the gpiolib when adding when
+pingroup range. It cannot be used if no group is defined, so this seams
+reasonable.
 
-Tested on the Berlin BG2Q.
+[1] get_group_pin(struct pinctrl_dev *pctldev,
+		  unsigned selector,
+		  const unsigned **pins,
+		  unsigned *num_pins);
 
-[1] https://github.com/shesselba/linux-berlin/commits/for-next
-[2] https://patchwork.kernel.org/patch/3876141/
+Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
+---
+ drivers/pinctrl/core.c   | 17 ++++++++++-------
+ drivers/pinctrl/pinmux.c | 23 +++++++++++++----------
+ 2 files changed, 23 insertions(+), 17 deletions(-)
 
-Antoine T=C3=A9nart (5):
-  pinctrl: allows not to define the get_group_pins operation
-  pinctrl: berlin: add a pinctrl driver for Marvell Berlin SoCs
-  ARM: berlin: add the pinctrl dependency for the Marvell Berlin SoCs
-  Documentation: add the Marvell Berlin pinctrl documentation
-  ARM: dts: berlin: add the pinctrl node and muxing setup for uarts
-
- .../bindings/pinctrl/marvell,berlin-pinctrl.txt    |  43 ++
- arch/arm/boot/dts/berlin2.dtsi                     |  20 +
- arch/arm/boot/dts/berlin2cd.dtsi                   |  13 +
- arch/arm/boot/dts/berlin2q.dtsi                    |  20 +
- arch/arm/mach-berlin/Kconfig                       |   2 +
- drivers/pinctrl/Kconfig                            |   4 +
- drivers/pinctrl/Makefile                           |   1 +
- drivers/pinctrl/core.c                             |  17 +-
- drivers/pinctrl/pinctrl-berlin.c                   | 498 +++++++++++++=
-++++++++
- drivers/pinctrl/pinctrl-berlin.h                   |  72 +++
- drivers/pinctrl/pinmux.c                           |  23 +-
- 11 files changed, 696 insertions(+), 17 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,b=
-erlin-pinctrl.txt
- create mode 100644 drivers/pinctrl/pinctrl-berlin.c
- create mode 100644 drivers/pinctrl/pinctrl-berlin.h
-
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index c0fe6091566a..e09474ecde23 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -468,6 +468,9 @@ int pinctrl_get_group_pins(struct pinctrl_dev *pctl=
+dev, const char *pin_group,
+ 	const struct pinctrl_ops *pctlops =3D pctldev->desc->pctlops;
+ 	int gs;
+=20
++	if (!pctlops->get_group_pins)
++		return -EINVAL;
++
+ 	gs =3D pinctrl_get_group_selector(pctldev, pin_group);
+ 	if (gs < 0)
+ 		return gs;
+@@ -1362,15 +1365,16 @@ static int pinctrl_groups_show(struct seq_file =
+*s, void *what)
+=20
+ 	seq_puts(s, "registered pin groups:\n");
+ 	while (selector < ngroups) {
+-		const unsigned *pins;
+-		unsigned num_pins;
++		const unsigned *pins =3D NULL;
++		unsigned num_pins =3D 0;
+ 		const char *gname =3D ops->get_group_name(pctldev, selector);
+ 		const char *pname;
+-		int ret;
++		int ret =3D 0;
+ 		int i;
+=20
+-		ret =3D ops->get_group_pins(pctldev, selector,
+-					  &pins, &num_pins);
++		if (ops->get_group_pins)
++			ret =3D ops->get_group_pins(pctldev, selector,
++						  &pins, &num_pins);
+ 		if (ret)
+ 			seq_printf(s, "%s [ERROR GETTING PINS]\n",
+ 				   gname);
+@@ -1694,8 +1698,7 @@ static int pinctrl_check_ops(struct pinctrl_dev *=
+pctldev)
+=20
+ 	if (!ops ||
+ 	    !ops->get_groups_count ||
+-	    !ops->get_group_name ||
+-	    !ops->get_group_pins)
++	    !ops->get_group_name)
+ 		return -EINVAL;
+=20
+ 	if (ops->dt_node_to_map && !ops->dt_free_map)
+diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
+index 9248ce4efed4..051e8592990e 100644
+--- a/drivers/pinctrl/pinmux.c
++++ b/drivers/pinctrl/pinmux.c
+@@ -391,14 +391,16 @@ int pinmux_enable_setting(struct pinctrl_setting =
+const *setting)
+ 	struct pinctrl_dev *pctldev =3D setting->pctldev;
+ 	const struct pinctrl_ops *pctlops =3D pctldev->desc->pctlops;
+ 	const struct pinmux_ops *ops =3D pctldev->desc->pmxops;
+-	int ret;
+-	const unsigned *pins;
+-	unsigned num_pins;
++	int ret =3D 0;
++	const unsigned *pins =3D NULL;
++	unsigned num_pins =3D 0;
+ 	int i;
+ 	struct pin_desc *desc;
+=20
+-	ret =3D pctlops->get_group_pins(pctldev, setting->data.mux.group,
+-				      &pins, &num_pins);
++	if (pctlops->get_group_pins)
++		ret =3D pctlops->get_group_pins(pctldev, setting->data.mux.group,
++					      &pins, &num_pins);
++
+ 	if (ret) {
+ 		const char *gname;
+=20
+@@ -470,14 +472,15 @@ void pinmux_disable_setting(struct pinctrl_settin=
+g const *setting)
+ 	struct pinctrl_dev *pctldev =3D setting->pctldev;
+ 	const struct pinctrl_ops *pctlops =3D pctldev->desc->pctlops;
+ 	const struct pinmux_ops *ops =3D pctldev->desc->pmxops;
+-	int ret;
+-	const unsigned *pins;
+-	unsigned num_pins;
++	int ret =3D 0;
++	const unsigned *pins =3D NULL;
++	unsigned num_pins =3D 0;
+ 	int i;
+ 	struct pin_desc *desc;
+=20
+-	ret =3D pctlops->get_group_pins(pctldev, setting->data.mux.group,
+-				      &pins, &num_pins);
++	if (pctlops->get_group_pins)
++		ret =3D pctlops->get_group_pins(pctldev, setting->data.mux.group,
++					      &pins, &num_pins);
+ 	if (ret) {
+ 		const char *gname;
+=20
 --=20
 1.8.3.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
