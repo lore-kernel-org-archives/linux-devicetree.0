@@ -1,53 +1,64 @@
-From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] Update bcm_defconfig with new pinctrl CONFIG
-Date: Thu, 10 Apr 2014 13:56:23 -0400
-Message-ID: <20140410175623.GC23695@beef>
+From: Matt Porter <matt.porter@linaro.org>
+Subject: Re: [PATCH v3 1/3] pinctrl: Rename Broadcom Capri pinctrl driver
+Date: Thu, 10 Apr 2014 13:57:10 -0400
+Message-ID: <20140410175710.GD23695@beef>
 References: <1390509887-19278-1-git-send-email-syin@broadcom.com>
  <1396478439-16586-1-git-send-email-syin@broadcom.com>
- <1396478439-16586-3-git-send-email-syin@broadcom.com>
+ <1396478439-16586-2-git-send-email-syin@broadcom.com>
+ <CACRpkdZ1Lt2JsMMWVMBgfS8ktkpeYzA3MiGmWB27Jwhw16UYYg@mail.gmail.com>
+ <CACRpkdbY58J7GcQnYcUVTkfVO3VNCyJa0zVTKV4ibF8khxD8EA@mail.gmail.com>
+ <20140410165626.GB23695@beef>
+ <CACRpkdZaMcSjy+-15y4kNsBgLZrThwxzJQr7SEy59AVm3yuM_A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1396478439-16586-3-git-send-email-syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sherman Yin <syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <CACRpkdZaMcSjy+-15y4kNsBgLZrThwxzJQr7SEy59AVm3yuM_A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Sherman Yin <syin@broadcom.com>, Mark Brown <broonie@kernel.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 02, 2014 at 03:40:38PM -0700, Sherman Yin wrote:
-> To be consistent with other Broadcom drivers, the Broadcom Capri pinctrl
-> driver and its related CONFIG option are renamed to bcm281xx.
+On Thu, Apr 10, 2014 at 07:41:20PM +0200, Linus Walleij wrote:
+> On Thu, Apr 10, 2014 at 6:56 PM, Matt Porter <matt.porter@linaro.org> wrote:
+> > On Thu, Apr 10, 2014 at 06:51:12PM +0200, Linus Walleij wrote:
+> >> On Thu, Apr 10, 2014 at 6:49 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> >> > On Thu, Apr 3, 2014 at 12:40 AM, Sherman Yin <syin@broadcom.com> wrote:
+> >> >
+> >> >> To be consistent with other Broadcom drivers, the Broadcom Capri pinctrl
+> >> >> driver and its related CONFIG option are renamed to bcm281xx.
+> >> >>
+> >> >> Devicetree compatible string and binding documentation use
+> >> >> "brcm,bcm11351-pinctrl" to match the machine binding here:
+> >> >> Documentation/devicetree/bindings/arm/bcm/bcm11351.txt
+> >> >>
+> >> >> This driver supports pinctrl on BCM11130, BCM11140, BCM11351, BCM28145
+> >> >> and BCM28155 SoCs.
+> >> >>
+> >> >> Signed-off-by: Sherman Yin <syin@broadcom.com>
+> >> >> Reviewed-by: Matt Porter <mporter@linaro.org>
+> >> >> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> >> >> ---
+> >> >>  drivers/pinctrl/Kconfig                            |    8 +-
+> >> >>  drivers/pinctrl/Makefile                           |    2 +-
+> >> >>  .../{pinctrl-capri.c => pinctrl-bcm281xx.c}        | 1519 ++++++++++----------
+> >> >
+> >> > This last version from apr 7 does not change
+> >> > arch/arm/configs/bcm_defconfig:CONFIG_PINCTRL_CAPRI=y
+> >> >
+> >> > Doesn't this mean that you render this platform without a pin
+> >> > control driver and thus broken?
+> >>
+> >> Bah I see that it's a separate patch now, sorry...
+> >>
+> >> Looking closer.
+> >
+> > I can take that one through mach-bcm for 3.16 to keep these changes
+> > in one place.
 > 
-> This commit updates the defconfig that enables the pinctrl driver.
-> 
-> Signed-off-by: Sherman Yin <syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Nah I might as well take all of it through the pin control tree.
+> Can I have your ACK on the defconfig change?
 
-Acked-by: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sounds fine to me, done.
 
-> ---
->  arch/arm/configs/bcm_defconfig |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/configs/bcm_defconfig b/arch/arm/configs/bcm_defconfig
-> index 2519d6d..b4d3013 100644
-> --- a/arch/arm/configs/bcm_defconfig
-> +++ b/arch/arm/configs/bcm_defconfig
-> @@ -125,7 +125,7 @@ CONFIG_CRC_ITU_T=y
->  CONFIG_CRC7=y
->  CONFIG_XZ_DEC=y
->  CONFIG_AVERAGE=y
-> -CONFIG_PINCTRL_CAPRI=y
-> +CONFIG_PINCTRL_BCM281XX=y
->  CONFIG_WATCHDOG=y
->  CONFIG_BCM_KONA_WDT=y
->  CONFIG_BCM_KONA_WDT_DEBUG=y
-> -- 
-> 1.7.9.5
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Matt
