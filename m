@@ -1,50 +1,120 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [RFC PATCH v2] edac: synopsys: Added EDAC support for zynq ddr
- ecc controller
-Date: Thu, 10 Apr 2014 11:21:44 +0200
-Message-ID: <20140410092144.GD29093@pd.tnic>
-References: <1220b715-6fc2-42ed-8393-b9859fc0deb9@TX2EHSMHS021.ehs.local>
- <20140408204047.GQ30077@pd.tnic>
- <534633C0.9090905@monstr.eu>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko.stuebner@bq.com>
+Subject: Re: [PATCH 3/4] arm: add basic support for Mediatek MT6589 boards
+Date: Thu, 10 Apr 2014 11:34:47 +0200
+Message-ID: <3428574.kpvz0qlT1a@diego>
+References: <1397072736-10793-1-git-send-email-matthias.bgg@gmail.com> <CABuKBeKnEw38sQYwrkheoWetZZcPTJhKRsBK4a62FS6-6dRFTA@mail.gmail.com> <53465A4B.4040906@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <534633C0.9090905@monstr.eu>
-Sender: linux-doc-owner@vger.kernel.org
-To: Michal Simek <monstr@monstr.eu>
-Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, dougthompson@xmission.com, linux-edac@vger.kernel.org, michal.simek@xilinx.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, sorenb@xilinx.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, punnaia@xilinx.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <53465A4B.4040906@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Randy Dunlap <rdunlap@infradead.org>, Silvio F <silvio.fricke@gmail.com>, Kumar Gala <galak>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 10, 2014 at 08:01:36AM +0200, Michal Simek wrote:
-> Just add it to Zynq maintainer fragment as we are doing for non
-> zynq/xilinx drivers.
+Hi Gregory,
 
-Yep, as a file pattern F:
+Am Donnerstag, 10. April 2014, 08:46:03 schrieb Gregory CLEMENT:
+> On 10/04/2014 08:29, Matthias Brugger wrote:
+> > 2014-04-09 22:26 GMT+02:00 Gregory CLEMENT <gregory.clement@free-
+electrons.com>:
+> >> Hi Matthias,
+> >> 
+> >> On 09/04/2014 19:45, Matthias Brugger wrote:
+> >>> diff --git a/arch/arm/boot/dts/mtk6589.dtsi
+> >>> b/arch/arm/boot/dts/mtk6589.dtsi new file mode 100644
+> >>> index 0000000..6dbb74f
+> >>> --- /dev/null
+> >>> +++ b/arch/arm/boot/dts/mtk6589.dtsi
+> >>> @@ -0,0 +1,105 @@
+> >>> +/*
+> >>> + * Copyright (c) 2014 MundoReader S.L.
+> >>> + * Author: Matthias Brugger <matthias.bgg@gmail.com>
+> >>> + *
+> >>> + * This program is free software; you can redistribute it and/or modify
+> >>> + * it under the terms of the GNU General Public License as published by
+> >>> + * the Free Software Foundation; either version 2 of the License, or
+> >>> + * (at your option) any later version.
+> >>> + *
+> >>> + * This program is distributed in the hope that it will be useful,
+> >>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> >>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> >>> + * GNU General Public License for more details.
+> >>> + */
+> >>> +
+> >>> +#include <dt-bindings/interrupt-controller/irq.h>
+> >>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> >>> +#include "skeleton.dtsi"
+> >>> +
+> >>> +/ {
+> >>> +     compatible = "mediatek,mt6589";
+> >>> +     interrupt-parent = <&gic>;
+> >>> +
+> >>> +     cpus {
+> >>> +             #address-cells = <1>;
+> >>> +             #size-cells = <0>;
+> >>> +
+> >>> +             cpu@0 {
+> >>> +                     device_type = "cpu";
+> >>> +                     compatible = "arm,cortex-a7";
+> >>> +                     next-level-cache = <&L2>;
+> >>> +                     reg = <0x0>;
+> >>> +             };
+> >>> +             cpu@1 {
+> >>> +                     device_type = "cpu";
+> >>> +                     compatible = "arm,cortex-a7";
+> >>> +                     next-level-cache = <&L2>;
+> >>> +                     reg = <0x1>;
+> >>> +             };
+> >>> +             cpu@2 {
+> >>> +                     device_type = "cpu";
+> >>> +                     compatible = "arm,cortex-a7";
+> >>> +                     next-level-cache = <&L2>;
+> >>> +                     reg = <0x2>;
+> >>> +             };
+> >>> +             cpu@3 {
+> >>> +                     device_type = "cpu";
+> >>> +                     compatible = "arm,cortex-a7";
+> >>> +                     next-level-cache = <&L2>;
+> >>> +                     reg = <0x3>;
+> >>> +             };
+> >>> +
+> >>> +     };
+> >>> +
+> >>> +     clocks {
+> >>> +             #address-cells = <1>;
+> >>> +             #size-cells = <1>;
+> >>> +             ranges;
+> >>> +
+> >>> +             system_clk: system_clk {
+> >>> +                     compatible = "fixed-clock";
+> >>> +                     clock-frequency = <13000000>;
+> >>> +                     #clock-cells = <0>;
+> >>> +                     clock-output-names = "system_clk";
+> >>> +             };
+> >> 
+> >> Is it really a fixed clock without any parent, or do you
+> >> declare it as a fixed clock because you don't have any clock
+> >> common framework support yet?
+> > 
+> > I don't have any common clock framework support yet.
+> 
+> So maybe you should provide one (even a very simple one).
+> 
+> Pretending a clock is a fixed clock and ignoring its parents
+> will be problematic when you will add the common clock framework
+> support because the device tree is supposed to be stable and you won't
+> be able to change it then.
 
-> At least the is the first time when someone saying that only some
-> functions should be documented.
+personally I think the danger of introducing unsuitable bindings/precedents 
+for a clock controller before it is fully understood is higher.
 
-I don't see the need to document simple functions which are *obvious*.
-But if you want to do that, I'm not going to stop you so be my guest.
+I'd just rename the clock above to something like dummy130m like sunxi also 
+does for example, to reflect its unfinished state and when the clock controller 
+is present later on change the supplying clock of the timer.
+
+Or maybe I'm overlooking something here :-)
 
 
-> I don't think this is good to do. When we remove this prefix entirely
-> it is bigger chance that the same function name will be used by
-> another driver. It is not a problem with linking but the same
-> functions names will be listed in System.map which will complicate
-> debugging.
-
-Ok, fair enough. You probably still want to make them shorter, though,
-so that your code doesn't have to be line-broken too much. For example,
-since we only load a single edac driver per system, you can shorten the
-prefix to "edac_" only.
-
-Thanks.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Sent from a fat crate under my desk. Formatting is fine.
---
+Heiko
