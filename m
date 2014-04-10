@@ -1,7 +1,7 @@
 From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH V3 02/19] mmc: mmci: Convert to devm functions
-Date: Thu, 10 Apr 2014 14:20:45 +0200
-Message-ID: <1397132462-8005-3-git-send-email-ulf.hansson@linaro.org>
+Subject: [PATCH V3 04/19] mmc: mmci: Add DT bindings for signal direction
+Date: Thu, 10 Apr 2014 14:20:47 +0200
+Message-ID: <1397132462-8005-5-git-send-email-ulf.hansson@linaro.org>
 References: <1397132462-8005-1-git-send-email-ulf.hansson@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1397132462-8005-1-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -10,144 +10,77 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell 
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Converting to devm functions to simplify error handling in ->probe() and
-to cleanup ->remove().
+Some variants have support for indicating the bus signal directions,
+which currently are configured through platform data.
+
+Add corresponding DT bindings to enable us to move away from using the
+platform data.
 
 Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
+ Documentation/devicetree/bindings/mmc/mmci.txt |   11 ++++++++++-
+ drivers/mmc/host/mmci.c                        |   11 +++++++++++
+ 2 files changed, 21 insertions(+), 1 deletion(-)
 
-Changes in v3:
-	Convert to use devm_ioremap_resource(), suggested by Michal Simek.
-
----
- drivers/mmc/host/mmci.c |   52 ++++++++++++++++-------------------------------
- 1 file changed, 17 insertions(+), 35 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/mmc/mmci.txt b/Documentation/devicetree/bindings/mmc/mmci.txt
+index ff233d1..9bd2ffa 100644
+--- a/Documentation/devicetree/bindings/mmc/mmci.txt
++++ b/Documentation/devicetree/bindings/mmc/mmci.txt
+@@ -4,7 +4,8 @@ The ARM PrimeCell MMCI PL180 and PL181 provides an interface for
+ reading and writing to MultiMedia and SD cards alike.
+ 
+ This file documents differences between the core properties described
+-by mmc.txt and the properties used by the mmci driver.
++by mmc.txt and the properties used by the mmci driver. Using "st" as
++the prefix for a property, indicates support by the ST Micro variant.
+ 
+ Required properties:
+ - compatible             : contains "arm,pl18x", "arm,primecell".
+@@ -18,6 +19,11 @@ Optional properties:
+ - mmc-cap-sd-highspeed   : indicates whether SD is high speed capable.
+ - vqmmc-supply           : phandle to the regulator device tree node, mentioned
+                            as the VCCQ/VDD_IO supply in the eMMC/SD specs.
++- st,sig-dir-dat0        : bus signal direction pin used for DAT[0].
++- st,sig-dir-dat2        : bus signal direction pin used for DAT[2].
++- st,sig-dir-dat31       : bus signal direction pin used for DAT[3] and DAT[1].
++- st,sig-dir-dat74       : bus signal direction pin used for DAT[4] to DAT[7].
++- st,sig-dir-cmd         : cmd signal direction pin used for CMD.
+ 
+ Example:
+ 
+@@ -38,6 +44,9 @@ sdi0_per1@80126000 {
+ 	mmc-cap-sd-highspeed;
+ 	mmc-cap-mmc-highspeed;
+ 	cd-gpios  = <&gpio2 31 0x4>; // 95
++	st,sig-dir-dat0;
++	st,sig-dir-dat2;
++	st,sig-dir-cmd;
+ 
+ 	vmmc-supply = <&ab8500_ldo_aux3_reg>;
+ 	vqmmc-supply = <&vmmci>;
 diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-index b0b81ac..93b1b10 100644
+index 93b1b10..2766e5c 100644
 --- a/drivers/mmc/host/mmci.c
 +++ b/drivers/mmc/host/mmci.c
-@@ -13,6 +13,7 @@
- #include <linux/init.h>
- #include <linux/ioport.h>
- #include <linux/device.h>
-+#include <linux/io.h>
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/slab.h>
-@@ -1456,15 +1457,9 @@ static int mmci_probe(struct amba_device *dev,
- 	if (np)
- 		mmci_dt_populate_generic_pdata(np, plat);
+@@ -1392,6 +1392,17 @@ static void mmci_dt_populate_generic_pdata(struct device_node *np,
+ {
+ 	int bus_width = 0;
  
--	ret = amba_request_regions(dev, DRIVER_NAME);
--	if (ret)
--		goto out;
--
- 	mmc = mmc_alloc_host(sizeof(struct mmci_host), &dev->dev);
--	if (!mmc) {
--		ret = -ENOMEM;
--		goto rel_regions;
--	}
-+	if (!mmc)
-+		return -ENOMEM;
- 
- 	host = mmc_priv(mmc);
- 	host->mmc = mmc;
-@@ -1500,10 +1495,11 @@ static int mmci_probe(struct amba_device *dev,
- 		dev_dbg(mmc_dev(mmc), "eventual mclk rate: %u Hz\n",
- 			host->mclk);
- 	}
++	if (of_get_property(np, "st,sig-dir-dat0", NULL))
++		pdata->sigdir |= MCI_ST_DATA0DIREN;
++	if (of_get_property(np, "st,sig-dir-dat2", NULL))
++		pdata->sigdir |= MCI_ST_DATA2DIREN;
++	if (of_get_property(np, "st,sig-dir-dat31", NULL))
++		pdata->sigdir |= MCI_ST_DATA31DIREN;
++	if (of_get_property(np, "st,sig-dir-dat74", NULL))
++		pdata->sigdir |= MCI_ST_DATA74DIREN;
++	if (of_get_property(np, "st,sig-dir-cmd", NULL))
++		pdata->sigdir |= MCI_ST_CMDDIREN;
 +
- 	host->phybase = dev->res.start;
--	host->base = ioremap(dev->res.start, resource_size(&dev->res));
--	if (!host->base) {
--		ret = -ENOMEM;
-+	host->base = devm_ioremap_resource(&dev->dev, &dev->res);
-+	if (IS_ERR(host->base)) {
-+		ret = PTR_ERR(host->base);
- 		goto clk_disable;
- 	}
+ 	pdata->gpio_wp = of_get_named_gpio(np, "wp-gpios", 0);
+ 	pdata->gpio_cd = of_get_named_gpio(np, "cd-gpios", 0);
  
-@@ -1592,34 +1588,35 @@ static int mmci_probe(struct amba_device *dev,
- 
- 	if (plat->gpio_cd == -EPROBE_DEFER) {
- 		ret = -EPROBE_DEFER;
--		goto err_gpio_cd;
-+		goto clk_disable;
- 	}
- 	if (gpio_is_valid(plat->gpio_cd)) {
- 		ret = mmc_gpio_request_cd(mmc, plat->gpio_cd, 0);
- 		if (ret)
--			goto err_gpio_cd;
-+			goto clk_disable;
- 	}
- 	if (plat->gpio_wp == -EPROBE_DEFER) {
- 		ret = -EPROBE_DEFER;
--		goto err_gpio_cd;
-+		goto clk_disable;
- 	}
- 	if (gpio_is_valid(plat->gpio_wp)) {
- 		ret = mmc_gpio_request_ro(mmc, plat->gpio_wp);
- 		if (ret)
--			goto err_gpio_cd;
-+			goto clk_disable;
- 	}
- 
--	ret = request_irq(dev->irq[0], mmci_irq, IRQF_SHARED, DRIVER_NAME " (cmd)", host);
-+	ret = devm_request_irq(&dev->dev, dev->irq[0], mmci_irq, IRQF_SHARED,
-+			DRIVER_NAME " (cmd)", host);
- 	if (ret)
--		goto err_gpio_cd;
-+		goto clk_disable;
- 
- 	if (!dev->irq[1])
- 		host->singleirq = true;
- 	else {
--		ret = request_irq(dev->irq[1], mmci_pio_irq, IRQF_SHARED,
--				  DRIVER_NAME " (pio)", host);
-+		ret = devm_request_irq(&dev->dev, dev->irq[1], mmci_pio_irq,
-+				IRQF_SHARED, DRIVER_NAME " (pio)", host);
- 		if (ret)
--			goto irq0_free;
-+			goto clk_disable;
- 	}
- 
- 	writel(MCI_IRQENABLE, host->base + MMCIMASK0);
-@@ -1641,17 +1638,10 @@ static int mmci_probe(struct amba_device *dev,
- 
- 	return 0;
- 
-- irq0_free:
--	free_irq(dev->irq[0], host);
-- err_gpio_cd:
--	iounmap(host->base);
-  clk_disable:
- 	clk_disable_unprepare(host->clk);
-  host_free:
- 	mmc_free_host(mmc);
-- rel_regions:
--	amba_release_regions(dev);
-- out:
- 	return ret;
- }
- 
-@@ -1677,16 +1667,8 @@ static int mmci_remove(struct amba_device *dev)
- 		writel(0, host->base + MMCIDATACTRL);
- 
- 		mmci_dma_release(host);
--		free_irq(dev->irq[0], host);
--		if (!host->singleirq)
--			free_irq(dev->irq[1], host);
--
--		iounmap(host->base);
- 		clk_disable_unprepare(host->clk);
--
- 		mmc_free_host(mmc);
--
--		amba_release_regions(dev);
- 	}
- 
- 	return 0;
 -- 
 1.7.9.5
 
