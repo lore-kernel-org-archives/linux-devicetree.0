@@ -1,7 +1,7 @@
 From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH V3 19/19] mmc: mmci: Enforce max frequency configuration through DT
-Date: Thu, 10 Apr 2014 14:21:02 +0200
-Message-ID: <1397132462-8005-20-git-send-email-ulf.hansson@linaro.org>
+Subject: [PATCH V3 17/19] mmc: mmci: Enforce mmc capabilities through DT
+Date: Thu, 10 Apr 2014 14:21:00 +0200
+Message-ID: <1397132462-8005-18-git-send-email-ulf.hansson@linaro.org>
 References: <1397132462-8005-1-git-send-email-ulf.hansson@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1397132462-8005-1-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -10,56 +10,51 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell 
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Remove the option to provide a maximum frequency as platform data,
-enforce it through DT.
+Remove the option to provide the flags for mmc capabilities as platform
+data, enforce it through DT.
 
 Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/mmc/host/mmci.c   |    5 +----
- include/linux/amba/mmci.h |    4 ----
- 2 files changed, 1 insertion(+), 8 deletions(-)
+ drivers/mmc/host/mmci.c   |    2 --
+ include/linux/amba/mmci.h |    5 -----
+ 2 files changed, 7 deletions(-)
 
 diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-index 04cff5e..83f5e56 100644
+index cac5f28..9a87bad 100644
 --- a/drivers/mmc/host/mmci.c
 +++ b/drivers/mmc/host/mmci.c
-@@ -1478,13 +1478,10 @@ static int mmci_probe(struct amba_device *dev,
- 	 * If no maximum operating frequency is supplied, fall back to use
- 	 * the module parameter, which has a (low) default value in case it
- 	 * is not specified. Either value must not exceed the clock rate into
--	 * the block, of course. Also note that DT takes precedence over
--	 * platform data.
-+	 * the block, of course.
- 	 */
- 	if (mmc->f_max)
- 		mmc->f_max = min(host->mclk, mmc->f_max);
--	else if (plat->f_max)
--		mmc->f_max = min(host->mclk, plat->f_max);
- 	else
- 		mmc->f_max = min(host->mclk, fmax);
- 	dev_dbg(mmc_dev(mmc), "clocking block at %u Hz\n", mmc->f_max);
+@@ -1519,8 +1519,6 @@ static int mmci_probe(struct amba_device *dev,
+ 		dev_warn(mmc_dev(mmc), "Platform OCR mask is ignored\n");
+ 
+ 	/* DT takes precedence over platform data. */
+-	mmc->caps = np ? mmc->caps : plat->capabilities;
+-	mmc->caps2 = np ? mmc->caps2 : plat->capabilities2;
+ 	if (!np) {
+ 		if (!plat->cd_invert)
+ 			mmc->caps2 |= MMC_CAP2_CD_ACTIVE_HIGH;
 diff --git a/include/linux/amba/mmci.h b/include/linux/amba/mmci.h
-index bf339ff..8c98113 100644
+index 0d3ff95..b992fc9 100644
 --- a/include/linux/amba/mmci.h
 +++ b/include/linux/amba/mmci.h
-@@ -9,9 +9,6 @@
- /**
-  * struct mmci_platform_data - platform configuration for the MMCI
-  * (also known as PL180) block.
-- * @f_max: the maximum operational frequency for this host in this
-- * platform configuration. When this is specified it takes precedence
-- * over the module parameter for the same frequency.
-  * @ocr_mask: available voltages on the 4 pins from the block, this
-  * is ignored if a regulator is used, see the MMC_VDD_* masks in
-  * mmc/host.h
-@@ -28,7 +25,6 @@
+@@ -29,9 +29,6 @@ struct dma_chan;
+  * @gpio_wp: read this GPIO pin to see if the card is write protected
+  * @gpio_cd: read this GPIO pin to detect card insertion
   * @cd_invert: true if the gpio_cd pin value is active low
-  */
- struct mmci_platform_data {
--	unsigned int f_max;
- 	unsigned int ocr_mask;
- 	int (*ios_handler)(struct device *, struct mmc_ios *);
- 	unsigned int (*status)(struct device *);
+- * @capabilities: the capabilities of the block as implemented in
+- * this platform, signify anything MMC_CAP_* from mmc/host.h
+- * @capabilities2: more capabilities, MMC_CAP2_* from mmc/host.h
+  * @dma_filter: function used to select an appropriate RX and TX
+  * DMA channel to be used for DMA, if and only if you're deploying the
+  * generic DMA engine
+@@ -52,8 +49,6 @@ struct mmci_platform_data {
+ 	int	gpio_wp;
+ 	int	gpio_cd;
+ 	bool	cd_invert;
+-	unsigned long capabilities;
+-	unsigned long capabilities2;
+ 	bool (*dma_filter)(struct dma_chan *chan, void *filter_param);
+ 	void *dma_rx_param;
+ 	void *dma_tx_param;
 -- 
 1.7.9.5
 
