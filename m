@@ -1,14 +1,15 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH] phy: exynos5-usbdrd: Add facility to toggle vbus gpio
- on/off
-Date: Thu, 10 Apr 2014 14:39:13 +0530
-Message-ID: <53465FB9.7070002@ti.com>
-References: <1397044485-26483-1-git-send-email-gautam.vivek@samsung.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 3/4] arm: add basic support for Mediatek MT6589 boards
+Date: Thu, 10 Apr 2014 11:15:49 +0200
+Message-ID: <CABuKBeJ59uockVxoRdfbYQq4xy9kra7b92nNSmXBmeSj3CtzrA@mail.gmail.com>
+References: <1397072736-10793-1-git-send-email-matthias.bgg@gmail.com>
+ <1397072736-10793-4-git-send-email-matthias.bgg@gmail.com>
+ <4752537.la6uZladzC@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1397044485-26483-1-git-send-email-gautam.vivek@samsung.com>
+In-Reply-To: <4752537.la6uZladzC@wuerfel>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,79 +19,56 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: k.debski@samsung.com, kgene.kim@samsung.com, gregkh@linuxfoundation.org, t.figa@samsung.com, jg1.han@samsung.com, balbi@ti.com, sylvester.nawrocki@gmail.com
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko.stuebner@bq.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, rmk+kernel@arm.linux.org.uk, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Silvio F <silvio.>
 List-Id: devicetree@vger.kernel.org
 
-Hi.
+2014-04-10 9:36 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
+> On Wednesday 09 April 2014 21:45:35 Matthias Brugger wrote:
+>> This adds a generic devicetree board file and a dtsi for boards
+>> based on the MT6589 SoCs from Mediatek.
+>>
+>> Apart from the generic parts (gic, clocks) the only component
+>> currently supported are the timers.
+>>
+>> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+>
+> Hi Matthias,
+>
+> First of all, I'm really glad to see this get started, thanks for looking
+> into these!
+>
+> Do you know how similar the MT6589 is to the later chips like MT65x2
+> and MT6588? What are the on-chip devices like, is it mostly licensed
+> IP blocks from designware and others that we already have drivers for,
+> or all new drivers?
 
-On Wednesday 09 April 2014 05:24 PM, Vivek Gautam wrote:
-> Adding support to enable/disable VBUS hooked to a gpio
-> to enable vbus supply on the port.
-> 
-> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
-> ---
-> 
-> Based on 'phy-exynos5-usbdrd' patches:
-> [PATCH V4 0/5] Add Exynos5 USB 3.0 phy driver based on generic PHY framework
-> http://www.spinics.net/lists/linux-usb/msg105507.html
-> 
->  drivers/phy/phy-exynos5-usbdrd.c |   18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/drivers/phy/phy-exynos5-usbdrd.c b/drivers/phy/phy-exynos5-usbdrd.c
-> index ff54a7c..5ca7485 100644
-> --- a/drivers/phy/phy-exynos5-usbdrd.c
-> +++ b/drivers/phy/phy-exynos5-usbdrd.c
-> @@ -18,6 +18,7 @@
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_address.h>
-> +#include <linux/of_gpio.h>
->  #include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
->  #include <linux/mutex.h>
-> @@ -176,6 +177,7 @@ struct exynos5_usbdrd_phy {
->  	struct clk *ref_clk;
->  	unsigned long ref_rate;
->  	unsigned int refclk_reg;
-> +	int gpio;
->  };
->  
->  #define to_usbdrd_phy(inst) \
-> @@ -460,6 +462,9 @@ static int exynos5_usbdrd_phy_power_on(struct phy *phy)
->  	if (!IS_ERR(phy_drd->usb30_sclk))
->  		clk_prepare_enable(phy_drd->usb30_sclk);
->  
-> +	/* Toggle VBUS gpio - on */
-> +	gpio_set_value(phy_drd->gpio, 1);
-> +
->  	/* Power-on PHY*/
->  	inst->phy_cfg->phy_isol(inst, 0);
->  
-> @@ -476,6 +481,9 @@ static int exynos5_usbdrd_phy_power_off(struct phy *phy)
->  	/* Power-off the PHY */
->  	inst->phy_cfg->phy_isol(inst, 1);
->  
-> +	/* Toggle VBUS gpio - off */
-> +	gpio_set_value(phy_drd->gpio, 0);
-> +
->  	if (!IS_ERR(phy_drd->usb30_sclk))
->  		clk_disable_unprepare(phy_drd->usb30_sclk);
->  
-> @@ -585,6 +593,16 @@ static int exynos5_usbdrd_phy_probe(struct platform_device *pdev)
->  
->  	phy_drd->drv_data = drv_data;
->  
-> +	/* Get required GPIO for vbus */
-> +	phy_drd->gpio = of_get_named_gpio(dev->of_node,
-> +					  "samsung,vbus-gpio", 0);
+Actually I don't have any information about the MT6589.
+For MT6572 I had a deeper look on the GPT and the UART which seem to
+be the same in both SoCs.
+But they don't look like IP blocks from any other vendor. Most of the
+other on-chip devices look quite similar.
+In any case don't trust me too much, as I'm just doing my first steps
+on an effort like this.
 
-Is this dt property documented somewhere?
-> +	if (!gpio_is_valid(phy_drd->gpio))
-> +		dev_dbg(dev, "no usbdrd-phy vbus gpio defined\n");
+>
+>> +#include <asm/hardware/cache-l2x0.h>
+>> +
+>> +static void __init mediatek_dt_init(void)
+>> +{
+>> +     l2x0_of_init(0, ~0);
+>> +     of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
+>> +}
+>
+> I hope that with all the cleanup work that Russell has done in the
+> past few weeks, we can manage to kill off the call to l2x0_of_init()
+> here and have it done by core architecture code instead. That would
+> let you have an empty machine file, unless you have other things you
+> will need to add in the future.
+>
+>         Arnd
 
-No return here? Can the PHY be functional even without the VBUS?
 
-Thanks
-Kishon
+
+-- 
+motzblog.wordpress.com
