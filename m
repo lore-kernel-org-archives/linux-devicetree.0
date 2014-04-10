@@ -1,83 +1,73 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [RFC PATCH] edac: add support for ARM PL310 L2 cache parity
-Date: Thu, 10 Apr 2014 08:12:17 +0200
-Message-ID: <53463641.1030800@monstr.eu>
-References: <1393770760-32550-1-git-send-email-punnaia@xilinx.com> <a1a9e47a-069c-4285-9899-d5a58cf532c2@CO9EHSMHS003.ehs.local> <20140409113246.GA8778@pd.tnic> <CAL_Jsq+gszc+R_BrLtHKEBGYd=3T+sE1d+-HoF9aYZt6C2k5-g@mail.gmail.com> <20140409151932.GK6529@pd.tnic> <CAHLkNHJTA5bGD1zAfzE2JrDFAWvmgYyYjir+4vR-d9Fe2-E48g@mail.gmail.com> <20140409174701.GO6529@pd.tnic>
-Reply-To: monstr@monstr.eu
+From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V3 4/5] mfd: palmas: support IRQ inversion at the board level
+Date: Thu, 10 Apr 2014 16:04:02 +0900
+Message-ID: <CAAVeFuJY67zdoHiZufxDbkaw=xt8YwxyDAwHW_T7UZeSOt35NA@mail.gmail.com>
+References: <1393876300-3061-1-git-send-email-swarren@wwwdotorg.org> <1393876300-3061-4-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="ME3xMGXB0ilkieRoxEIfFGdTbD860ewG6"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140409174701.GO6529@pd.tnic>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Punnaiah Choudary <kpc528@gmail.com>, Rob Herring <robherring2@gmail.com>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, Doug Thompson <dougthompson@xmission.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, punnaiah choudary kalluri <kalluripunnaiahchoudary@gmail.com>, punnaiah choudary kalluri <punnaia@xilinx.com>, Russell King <linux@arm.linux.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1393876300-3061-4-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---ME3xMGXB0ilkieRoxEIfFGdTbD860ewG6
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-On 04/09/2014 07:47 PM, Borislav Petkov wrote:
-> On Wed, Apr 09, 2014 at 10:59:49PM +0530, Punnaiah Choudary wrote:
->> There is a driver file cache-l2x0.c under arch/arm/mm for pl310 cache
->> configuration and management. Russel king had suggested to use
->> single driver file for both pl310 edac implementation and cache-l2x0.c=
-
->> Here is the thread
->> http://www.spinics.net/lists/arm-kernel/msg320407.html
->>
->> please provide your inputs
->=20
-> Well, it is very simple - you don't really need an EDAC compilation uni=
-t
-> just so that you can report errors - you can very well do that in your
-> cache-l2x0.c and boom, problem solved.
->=20
-> Simply move the irq handler and the parity error checker to that file.
-
-I am just curious about this recommendation. Does it mean that we shouldn=
-'t
-use edac interface just for reporting problems?
-
-I didn't play with it but I guess that there is a record about edac drive=
-r
-via sysfs, etc. You could read some useful information that you know
-what it is protected and I hope that edac interface bring any value
-to reporting errors comparing to just printk message from IRQ handler.
-
-My question is if using printk in IRQ handler and report problem is equal=
- to
-reporting this via edac interface. Or it is just easy way to do but
-using edac interface is right solution and how to do it properly
-is different question.
+Stephen, any news about this patch? I'm waiting for it to be merged in
+order to resend some Tegra DTs, but still cannot see it in -next.
 
 Thanks,
-Michal
+Alex.
 
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---ME3xMGXB0ilkieRoxEIfFGdTbD860ewG6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlNGNkEACgkQykllyylKDCFcdwCfWd+zLKLdg7fKhj2az7pGDH2u
-6eEAn14us5SrSATJ2vm0EKz1wf7BtV8B
-=Jujl
------END PGP SIGNATURE-----
-
---ME3xMGXB0ilkieRoxEIfFGdTbD860ewG6--
+On Tue, Mar 4, 2014 at 4:51 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>
+> Implement the new DT property ti,irq-externally-inverted, and add an
+> equivalent platform data field to match. This allows the driver to
+> correctly automatically configure the IRQ output polarity when the board
+> or SoC contains an inverter between the Palmas IRQ output and IRQ
+> controller input.
+>
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> v3:
+> * Use an IRQD flag to represent the data, rather than a custom DT property.
+> v2:
+> * Split V1's patch 1/2 into separate patches 1/3 and 2/3.
+> ---
+>  drivers/mfd/palmas.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/mfd/palmas.c b/drivers/mfd/palmas.c
+> index d280d789e55a..3281d4103e9d 100644
+> --- a/drivers/mfd/palmas.c
+> +++ b/drivers/mfd/palmas.c
+> @@ -292,7 +292,8 @@ static int palmas_set_pdata_irq_flag(struct i2c_client *i2c,
+>                 return -EINVAL;
+>         }
+>
+> -       pdata->irq_flags = irqd_get_trigger_type(irq_data);
+> +       pdata->irq_flags = irqd_get_trigger_type(irq_data) |
+> +                          irqd_get_src_dst_inverted(irq_data);
+>         dev_info(&i2c->dev, "Irq flag is 0x%08x\n", pdata->irq_flags);
+>         return 0;
+>  }
+> @@ -447,6 +448,8 @@ static int palmas_i2c_probe(struct i2c_client *i2c,
+>                 reg = PALMAS_POLARITY_CTRL_INT_POLARITY;
+>         else
+>                 reg = 0;
+> +       if (pdata->irq_flags & IRQ_SRC_DST_INVERTED)
+> +               reg ^= PALMAS_POLARITY_CTRL_INT_POLARITY;
+>         ret = palmas_update_bits(palmas, PALMAS_PU_PD_OD_BASE,
+>                         PALMAS_POLARITY_CTRL, PALMAS_POLARITY_CTRL_INT_POLARITY,
+>                         reg);
+> --
+> 1.8.1.5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-tegra" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
