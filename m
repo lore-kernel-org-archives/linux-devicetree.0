@@ -1,86 +1,38 @@
-From: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Subject: Re: [rtc-linux] [PATCH v2 2/3] rtc: Add APM X-Gene SoC RTC driver
-Date: Thu, 10 Apr 2014 16:24:18 -0700
-Message-ID: <20140410162418.e926ea069f046baf7845a9a1@linux-foundation.org>
-References: <1396287370-1011-1-git-send-email-lho@apm.com>
-	<1396287370-1011-2-git-send-email-lho@apm.com>
-	<1396287370-1011-3-git-send-email-lho@apm.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 4/6] v4l: vsp1: Add DT support
+Date: Fri, 11 Apr 2014 01:37:11 +0200
+Message-ID: <2026957.GUESdWNMVE@avalon>
+References: <1394047444-30077-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <4172444.b80tq3sQnW@avalon> <20140410230417.GB4358@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396287370-1011-3-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20140410230417.GB4358@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, linux-media@vger.kernel.org
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 31 Mar 2014 11:36:09 -0600 Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org> wrote:
+Hi Simon,
 
-> This patch adds support for the APM X-Gene SoC RTC driver.
+On Friday 11 April 2014 08:04:18 Simon Horman wrote:
+> On Tue, Mar 25, 2014 at 01:18:22PM +0100, Laurent Pinchart wrote:
+> > Hello,
+> > 
+> > Gentle ping. I'll send a pull request in a week if I don't receive any
+> > comment on the DT bindings in the meantime.
 > 
-> ...
->
-> +static int xgene_rtc_probe(struct platform_device *pdev)
-> +{
-> +	struct xgene_rtc_dev *pdata;
-> +	struct resource *res;
-> +	int ret;
-> +	int irq;
-> +
-> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata)
-> +		return -ENOMEM;
-> +	platform_set_drvdata(pdev, pdata);
-> +	pdata->dev = &pdev->dev;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	pdata->csr_base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(pdata->csr_base))
-> +		return PTR_ERR(pdata->csr_base);
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		dev_err(&pdev->dev, "No IRQ resource\n");
-> +		return irq;
-> +	}
-> +	ret = devm_request_irq(&pdev->dev, irq, xgene_rtc_interrupt, 0,
-> +			       dev_name(&pdev->dev), pdata);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Could not request IRQ\n");
-> +		return ret;
-> +	}
-> +
-> +	pdata->clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(pdata->clk)) {
-> +		dev_err(&pdev->dev, "Couldn't get the clock for RTC\n");
-> +		return -ENODEV;
-> +	}
-> +	clk_prepare_enable(pdata->clk);
-> +
-> +	/* Turn on the clock and the crystal */
-> +	writel(RTC_CCR_EN, pdata->csr_base + RTC_CCR);
-> +
-> +	device_init_wakeup(&pdev->dev, 1);
+> Hi Laurent,
+> 
+> one way or another can you let me know if/when the bindings are accepted and
+> I'll queue-up the shmobile patches.
 
-Forgot to check the returns values from clk_prepare_enable() and
-device_init_wakeup()?
+Sure. The DT bindings have been acked and I've sent a pull request. I'll let 
+you know when the patches get pulled, until then there's no guarantee that the 
+bindings won't change.
 
-> +	pdata->rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
-> +					 &xgene_rtc_ops, THIS_MODULE);
-> +	if (IS_ERR(pdata->rtc)) {
-> +		clk_disable_unprepare(pdata->clk);
-> +		return PTR_ERR(pdata->rtc);
-> +	}
-> +
-> +	/* HW does not support update faster than 1 seconds */
-> +	pdata->rtc->uie_unsupported = 1;
-> +
-> +	return 0;
-> +}
+-- 
+Regards,
 
-Otherwise it looks OK to me - I queued all three patches, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
+
