@@ -1,64 +1,64 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v7 4/6] pci: Introduce a domain number for pci_host_bridge.
-Date: Thu, 10 Apr 2014 07:50:52 -0600
-Message-ID: <CAErSpo6u7kr+QdnhAXBo20izg-DNHR4zHT+kRvq34whp68RJCQ@mail.gmail.com>
-References: <1394811272-1547-5-git-send-email-Liviu.Dudau@arm.com>
- <20140410012715.GA1328@bart> <CAErSpo7egL2T_W_OCJw2kPHFDqspwOHXtZJw8JyjWU=56ofFKQ@mail.gmail.com>
- <4506772.YFSM2m1eaP@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <4506772.YFSM2m1eaP@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: [PATCH v3 0/7] ARM: sunxi: add multi pin controller support
+Date: Thu, 10 Apr 2014 15:52:39 +0200
+Message-ID: <1397137966-30818-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>
+Cc: Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dev@linux-sunxi.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 10, 2014 at 2:00 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Wednesday 09 April 2014 21:48:14 Bjorn Helgaas wrote:
->> On Wed, Apr 9, 2014 at 7:27 PM, Liviu Dudau <liviu@dudau.co.uk> wrote:
->> > On Wed, Apr 09, 2014 at 08:02:41AM -0600, Bjorn Helgaas wrote:
->> >> >>   struct pci_host_bridge {
->> >> >>     int domain;
->> >> >>     int node;
->> >> >>     struct device *dev;
->> >> >>     struct pci_ops *ops;
->> >> >>     struct list_head resources;
->> >> >>     void *sysdata;
->> >> >>     struct pci_bus *bus;  /* filled in by core, not by arch */
->> >> >>     ... /* other existing contents managed by core */
->> >> >>   };
->> >> >>
->> >> >>   struct pci_bus *pci_scan_host_bridge(struct pci_host_bridge *bridge);
->> >> >
->> >> > I'm really reluctant to give the arches more rope to hang themselves.
->> >>
->> >> If you mean the sysdata pointer is rope to hang themselves, I think it
->> >> would be great it we didn't need sysdata at all.  But I think it would
->> >> be a huge amount of work to get rid of it completely, and keeping it
->> >> would let us work at that incrementally.
->> >
->> > Agree. But then your suggestion was to wrap sysdata inside another structure,
->> > which to me constitutes additional rope.
->>
->> I'll ponder this more, but I don't see your point here yet.  The arch
->> already supplies a sysdata pointer to pci_scan_root_bus(), and we
->> stash it in every struct pci_bus already.  My idea was just to pass it
->> in differently, as a structure member rather than a separate argument.
->>  (And I'm not completely attached to my proposal; it was only to
->> illustrate my concern about the explosion of interfaces if we have to
->> add *_domain(), *_node(), etc.)
->
-> As a minor variation of your suggestion, how about passing in a pointer
-> to struct pci_host_bridge, and embed that within its own private
-> structure? I think this is closer to how a lot of other subsystems
-> do the abstraction.
+Hello,
 
-I'm not sure I'm following you; you mean the arch-specific sysdata
-structure would contain a pointer to struct pci_host_bridge?
+This series rework the sunxi pinctrl driver to support the PL and PM
+pins available on the A31 SoC, which are controlled using the R_PIO
+block.
 
-I have to admit that I'm not up on how other subsystems handle this
-sort of abstraction.  Do you have any pointers to good examples that I
-can study?
+This series add support for multi pin controller which was previously
+impossible for several reasons:
+1) the pinctrl instance was registering a static instance of the gpio
+   chip, which means, in case you were probing 2 devices, the gpio chip
+   was added twice to the gpiochip list
+2) the base pin of the gpio chip was always set to 0, and thus the 2
+   gpiochip pin numbers were overlapping
 
-Bjorn
+I still haven't reworked the interrupt part (to handle the "per bank
+interrupt" instead of the "one interrupt for the whole gpio" chip
+approach), but this will be part of another series.
+
+Best Regards,
+
+Boris
+
+Changes since v2:
+ - check clk_prepare_enable return value
+ - disable the clk in case of probe failure
+ - make use devm_reset_control_get_optional
+ - reassert the reset line in case of probe failure
+Changes since v1:
+ - rework the pinctrl driver to support multiple pin controller instances
+ - removed reset and clock gate patches from the series
+ - removed A31 DT modifications from the series (we need to get the PRCM
+ reset and clk drivers before being able to declare the r_pio node, and
+ we're still discussing how this should be implemented)
+
+
+Boris BREZILLON (7):
+  pinctrl: sunxi: check clk_prepare_enable return value
+  pinctrl: sunxi: disable clk when failing to probe pin controller
+  pinctrl: sunxi: add PL and PM pin definitions
+  pinctrl: sunxi: support multiple pin controller
+  pinctrl: sunxi: define A31 R_PIO pin functions
+  pinctrl: sunxi: add reset control support
+  ARM: sunxi: update the default ARCH_NR_GPIO for sunxi arch
+
+ .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |  1 +
+ arch/arm/Kconfig                                   |  2 +-
+ drivers/pinctrl/pinctrl-sunxi-pins.h               | 74 ++++++++++++++++++++++
+ drivers/pinctrl/pinctrl-sunxi.c                    | 53 ++++++++++------
+ drivers/pinctrl/pinctrl-sunxi.h                    | 69 ++++++++++++++++++++
+ 5 files changed, 179 insertions(+), 20 deletions(-)
+
+-- 
+1.8.3.2
+
