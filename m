@@ -1,96 +1,87 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH] ARM: shmobile: r8a7790: link PCI USb devices to USB PHY
-Date: Thu, 10 Apr 2014 16:07:23 +0900
-Message-ID: <CANqRtoQeuT=Q9PRYNMqA079gjb1VkwgvcDmsWKxjzSVxcVfeWw@mail.gmail.com>
-References: <201404092318.26231.sergei.shtylyov@cogentembedded.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V3 4/5] mfd: palmas: support IRQ inversion at the board
+ level
+Date: Thu, 10 Apr 2014 08:25:56 +0100
+Message-ID: <20140410072556.GB4214@lee--X1>
+References: <1393876300-3061-1-git-send-email-swarren@wwwdotorg.org>
+ <1393876300-3061-4-git-send-email-swarren@wwwdotorg.org>
+ <CAAVeFuJY67zdoHiZufxDbkaw=xt8YwxyDAwHW_T7UZeSOt35NA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <201404092318.26231.sergei.shtylyov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: "Simon Horman [Horms]" <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, robh+dt@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAAVeFuJY67zdoHiZufxDbkaw=xt8YwxyDAwHW_T7UZeSOt35NA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+> Stephen, any news about this patch? I'm waiting for it to be merged i=
+n
+> order to resend some Tegra DTs, but still cannot see it in -next.
 
-Thanks for this patch, good to see that the relationship between the
-USB Host and the PHY is described via DT.
+I doubt it's been applied.
 
-This patch seems to cover USB0 and USB2 that both require special
-control in the PHY. How about USB1? Can you explain about the reason
-why you omit that?
+No one got back to me with reference to how to deal with the set [1],
+so I certainly didn't apply it.
 
-I somehow expected USB1 to be tied to the PHY via DT as well, this so
-the PHY driver can be able to disable the hardware if no ports are
-registered. In detail, I'm thinking that the register.bit
-UGCTL.CONNECT wants to be set to 0 by default but be set to 1 once one
-or more USB controllers are hooked up to the PHY.
+[1] http://www.spinics.net/lists/arm-kernel/msg312694.html
 
-Cheers,
+> On Tue, Mar 4, 2014 at 4:51 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org=
+> wrote:
+> > From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >
+> > Implement the new DT property ti,irq-externally-inverted, and add a=
+n
+> > equivalent platform data field to match. This allows the driver to
+> > correctly automatically configure the IRQ output polarity when the =
+board
+> > or SoC contains an inverter between the Palmas IRQ output and IRQ
+> > controller input.
+> >
+> > Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > ---
+> > v3:
+> > * Use an IRQD flag to represent the data, rather than a custom DT p=
+roperty.
+> > v2:
+> > * Split V1's patch 1/2 into separate patches 1/3 and 2/3.
+> > ---
+> >  drivers/mfd/palmas.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/mfd/palmas.c b/drivers/mfd/palmas.c
+> > index d280d789e55a..3281d4103e9d 100644
+> > --- a/drivers/mfd/palmas.c
+> > +++ b/drivers/mfd/palmas.c
+> > @@ -292,7 +292,8 @@ static int palmas_set_pdata_irq_flag(struct i2c=
+_client *i2c,
+> >                 return -EINVAL;
+> >         }
+> >
+> > -       pdata->irq_flags =3D irqd_get_trigger_type(irq_data);
+> > +       pdata->irq_flags =3D irqd_get_trigger_type(irq_data) |
+> > +                          irqd_get_src_dst_inverted(irq_data);
+> >         dev_info(&i2c->dev, "Irq flag is 0x%08x\n", pdata->irq_flag=
+s);
+> >         return 0;
+> >  }
+> > @@ -447,6 +448,8 @@ static int palmas_i2c_probe(struct i2c_client *=
+i2c,
+> >                 reg =3D PALMAS_POLARITY_CTRL_INT_POLARITY;
+> >         else
+> >                 reg =3D 0;
+> > +       if (pdata->irq_flags & IRQ_SRC_DST_INVERTED)
+> > +               reg ^=3D PALMAS_POLARITY_CTRL_INT_POLARITY;
+> >         ret =3D palmas_update_bits(palmas, PALMAS_PU_PD_OD_BASE,
+> >                         PALMAS_POLARITY_CTRL, PALMAS_POLARITY_CTRL_=
+INT_POLARITY,
+> >                         reg);
+> >
 
-/ magnus
-
-On Thu, Apr 10, 2014 at 4:18 AM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Describe the PCI USB devices that are behind the PCI bridges, adding necessary
-> links to the USB PHY device.
->
-> Based on the original work by Ben Dooks <ben.dooks@codethink.co.uk>.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->
-> ---
-> This patch is against 'renesas-devel-v3.14-20140408' tag of Simon Horman's
-> 'renesas.git' repo plus R8A7790/Lager PCI and USB PHY support patches posted
-> yesterday and day before. The patch requires the internal PCI and USB PHY
-> drivers (also already posted) in order to work...
->
->  arch/arm/boot/dts/r8a7790.dtsi |   28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->
-> Index: renesas/arch/arm/boot/dts/r8a7790.dtsi
-> ===================================================================
-> --- renesas.orig/arch/arm/boot/dts/r8a7790.dtsi
-> +++ renesas/arch/arm/boot/dts/r8a7790.dtsi
-> @@ -841,6 +841,20 @@
->                 bus-range = <0 0>;
->                 #address-cells = <3>;
->                 #size-cells = <2>;
-> +
-> +               pci@0,1 {
-> +                       reg = <0x800 0 0 0 0>;
-> +                       device_type = "pci";
-> +                       phys = <&usbphy 0 0>;
-> +                       phy-names = "usb";
-> +               };
-> +
-> +               pci@0,2 {
-> +                       reg = <0x1000 0 0 0 0>;
-> +                       device_type = "pci";
-> +                       phys = <&usbphy 0 0>;
-> +                       phy-names = "usb";
-> +               };
->         };
->
->         pci1: pci@ee0b0000 {
-> @@ -867,5 +881,19 @@
->                 bus-range = <2 2>;
->                 #address-cells = <3>;
->                 #size-cells = <2>;
-> +
-> +               pci@0,1 {
-> +                       reg = <0x800 0 0 0 0>;
-> +                       device_type = "pci";
-> +                       phys = <&usbphy 2 0>;
-> +                       phy-names = "usb";
-> +               };
-> +
-> +               pci@0,2 {
-> +                       reg = <0x1000 0 0 0 0>;
-> +                       device_type = "pci";
-> +                       phys = <&usbphy 2 0>;
-> +                       phy-names = "usb";
-> +               };
->         };
->  };
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
