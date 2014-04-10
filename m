@@ -1,78 +1,52 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 00/15] ARM: sunxi: add A31 PL pins support
-Date: Thu, 10 Apr 2014 10:10:31 +0200
-Message-ID: <20140410081031.GM28585@lukather>
-References: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com>
- <CAGb2v66XCN2ar1wj+a1+ZwdcdJ3gzJ+nDiO9bu52OwK+mBB_Hg@mail.gmail.com>
- <20140409151747.GH28585@lukather>
- <CAGb2v67+YNhw2MXSu9DTKSUfXH=v+uD7KEaxyiPezyf9CYtmPw@mail.gmail.com>
+From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v5 5/8 fix] mtd: m25p80: use the SPI nor framework
+Date: Thu, 10 Apr 2014 15:25:11 +0800
+Message-ID: <20140410072509.GA24100@localhost>
+References: <1393238262-8622-6-git-send-email-b32955@freescale.com>
+ <1393574142-17234-1-git-send-email-b32955@freescale.com>
+ <20140409213749.GH32070@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="4oQnj4jcM03NhqPN"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v67+YNhw2MXSu9DTKSUfXH=v+uD7KEaxyiPezyf9CYtmPw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Boris BREZILLON <boris.brezillon@free-electrons.com>, Randy Dunlap <rdunlap@infradead.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-doc@vger.kernel.org
+In-Reply-To: <20140409213749.GH32070@ld-irv-0074>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, angus.clark-qxv4g6HH51o@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pekon-l0cyMroinI0@public.gmane.org, sourav.poddar-l0cyMroinI0@public.gmane.org, broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Russel King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Apr 09, 2014 at 02:37:49PM -0700, Brian Norris wrote:
+> >  config MTD_M25P80
+> >  	tristate "Support most SPI Flash chips (AT26DF, M25P, W25X, ...)"
+> > -	depends on SPI_MASTER
+> > +	depends on SPI_MASTER && MTD_SPI_NOR_BASE
+> >  	help
+> >  	  This enables access to most modern SPI flash chips, used for
+> >  	  program and data storage.   Series supported include Atmel AT26DF,
+> 
+> Now that M25P80 depends on MTD_SPI_NOR_BASE (which I proposed to rename
+> to MTD_SPI_NOR a few hours ago), shouldn't we be updating everybody's
+> defconfigs? As it stands, the defconfigs that use M25P80 will just drop
+> it silently when built.
+> 
+> And if so, I'm not sure how this should be handled. Should defconfig
+> patches be sent to their respective arch maintainers?
 
---4oQnj4jcM03NhqPN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+IMHO, we should create a patch or several patches to add the MTD_SPI_NOR
+to the defconfigs.
 
-On Thu, Apr 10, 2014 at 12:27:32AM +0800, Chen-Yu Tsai wrote:
-> >> > Let me know if these changes are too intrusive.
-> >>
-> >> I wonder if we should do a separate driver for the new PIO controller.
-> >> Clearly it's a separate IP block, with it's own clock and reset contro=
-ls.
-> >
-> > It's been merged together in the A23, hence why we did it like that.
->=20
-> I'm not sure I understand. The clock gate and reset control are still sep=
-arate,
-> are they not?
+Another method is to select the MTD_SPI_NOR which we enable the MTD.
 
-On the A31 the "regular" port controler handles PA to PH banks, while
-the R_PIO handles the PL and PM banks.
+> 
+> Also, I think m25p80.c is no longer a "self-contained MTD device driver"
+> and should be moved under drivers/mtd/spi-nor/.
+If we move the m25p80.c to the drivers/mtd/spi-nor/, we also need to move
+other drivers too.
 
-On the A23, the regular port controler handles PA to PL banks, and the
-R_PIO and PM bank doesn't exist.
+thanks
+Huang Shijie
 
-So we're not quite in the same situation. The A31 is troublesome,
-while the A23 (except for the external interrupts), is pretty much
-what we've seen so far with the A10/A20/...
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---4oQnj4jcM03NhqPN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTRlH3AAoJEBx+YmzsjxAgGBIP/3BR71Fgu+cyZxrqBOKilVrq
-lN5AwGgc0Uw0Ivt1a6dUxW6qobI8oF0MQT9hHtrNLYqErfdJ+lU6awhtI9j/QNyb
-EEv2+JitoYKfek2gbRVVpnJ2mlnAQot9fZfQDBQtc3LYN6SD77S3AW1YnhPLD2Ag
-CiCGb2E8BAHZM9sPjbNE6ZUzW1w3X/mwqesIRQWLU4ZJH+GH3v5uGS5BUsKhBelC
-7/JqvVsEEfS40k4Ic5rmg0JmP3eRB55zT23Jr/SJwzPwxtNMpB3Sb43ccHvgtCCN
-YQEJsWbv+OF5wF5qJgunvmk0kMTgGzytEznZ91hn9/q6hqhUhY10SDeBIodZiU4w
-0O9YJOBLS0oNeHNAhgDXRJCp8ls2kg4h1QJ9AC0QKoTgwGofk+baEQh5Do5CwvhK
-2YshynJabqItpWFZ6VvkuPk+wHxxhcDpgKAPI1c9zRiKQ45P5B75k84Fi29NANPM
-eDhjPbGOgo+39dAGjD/UF1SZD+bT8PJYRQEM47tT36x2piS5+ik714H2vEXRWzdn
-upXOIx+AREpMkw6mM6uc4UjXdH+cx5iTol3b84vNgkct8HqDoua9hMnExjY532kI
-yB6KOjC8acIv6SmzONNeDxEtndZnU9hfoIUUKG7RzTQK+iBGgl6RoJXcOcKzkbpo
-H2YS/MLBbUm0Utj/u5jR
-=mY0X
------END PGP SIGNATURE-----
-
---4oQnj4jcM03NhqPN--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
