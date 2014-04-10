@@ -1,7 +1,7 @@
 From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 4/7] pinctrl: sunxi: support multiple pin controller
-Date: Thu, 10 Apr 2014 15:52:43 +0200
-Message-ID: <1397137966-30818-5-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH v3 6/7] pinctrl: sunxi: add reset control support
+Date: Thu, 10 Apr 2014 15:52:45 +0200
+Message-ID: <1397137966-30818-7-git-send-email-boris.brezillon@free-electrons.com>
 References: <1397137966-30818-1-git-send-email-boris.brezillon@free-electrons.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
@@ -18,81 +18,73 @@ To: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Maxime Ripar
 Cc: Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for multiple pin controller instances.
+The A31 SoC define a reset line for the R_PIO block which needs to be
+deasserted.
 
-First remove the static definition of the sunxi gpio chip struct and fill
-the dynamically struct instead.
-Then define a new pin_base field in the sunxi_pinctrl_desc which will be
-used to specify the gpiochip base pin.
+Try to retrieve a reset control and deassert if one was found.
 
 Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/pinctrl/pinctrl-sunxi.c | 30 ++++++++++++++----------------
- drivers/pinctrl/pinctrl-sunxi.h |  1 +
- 2 files changed, 15 insertions(+), 16 deletions(-)
+ drivers/pinctrl/pinctrl-sunxi.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pinctrl/pinctrl-sunxi.c b/drivers/pinctrl/pinctrl-sunxi.c
-index 73d11e2..6db1c9e 100644
+index 17b5f80..07af35a 100644
 --- a/drivers/pinctrl/pinctrl-sunxi.c
 +++ b/drivers/pinctrl/pinctrl-sunxi.c
-@@ -538,19 +538,6 @@ static int sunxi_pinctrl_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
- 	return irq_find_mapping(pctl->domain, desc->irqnum);
- }
+@@ -26,6 +26,7 @@
+ #include <linux/pinctrl/pinconf-generic.h>
+ #include <linux/pinctrl/pinmux.h>
+ #include <linux/platform_device.h>
++#include <linux/reset.h>
+ #include <linux/slab.h>
  
--static struct gpio_chip sunxi_pinctrl_gpio_chip = {
--	.owner			= THIS_MODULE,
--	.request		= sunxi_pinctrl_gpio_request,
--	.free			= sunxi_pinctrl_gpio_free,
--	.direction_input	= sunxi_pinctrl_gpio_direction_input,
--	.direction_output	= sunxi_pinctrl_gpio_direction_output,
--	.get			= sunxi_pinctrl_gpio_get,
--	.set			= sunxi_pinctrl_gpio_set,
--	.of_xlate		= sunxi_pinctrl_gpio_of_xlate,
--	.to_irq			= sunxi_pinctrl_gpio_to_irq,
--	.of_gpio_n_cells	= 3,
--	.can_sleep		= false,
--};
+ #include "core.h"
+@@ -792,6 +793,7 @@ static int sunxi_pinctrl_probe(struct platform_device *pdev)
+ 	const struct of_device_id *device;
+ 	struct pinctrl_pin_desc *pins;
+ 	struct sunxi_pinctrl *pctl;
++	struct reset_control *rstc;
+ 	int i, ret, last_pin;
+ 	struct clk *clk;
  
- static int sunxi_pinctrl_irq_set_type(struct irq_data *d,
- 				      unsigned int type)
-@@ -858,11 +845,22 @@ static int sunxi_pinctrl_probe(struct platform_device *pdev)
+@@ -887,10 +889,17 @@ static int sunxi_pinctrl_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto gpiochip_error;
+ 
++	rstc = devm_reset_control_get_optional(&pdev->dev, NULL);
++	if (!IS_ERR(rstc)) {
++		ret = reset_control_deassert(rstc);
++		if (ret)
++			goto clk_error;
++	}
++
+ 	pctl->irq = irq_of_parse_and_map(node, 0);
+ 	if (!pctl->irq) {
+ 		ret = -EINVAL;
+-		goto clk_error;
++		goto rstc_error;
  	}
  
- 	last_pin = pctl->desc->pins[pctl->desc->npins - 1].pin.number;
--	pctl->chip = &sunxi_pinctrl_gpio_chip;
--	pctl->chip->ngpio = round_up(last_pin, PINS_PER_BANK);
-+	pctl->chip->owner = THIS_MODULE;
-+	pctl->chip->request = sunxi_pinctrl_gpio_request,
-+	pctl->chip->free = sunxi_pinctrl_gpio_free,
-+	pctl->chip->direction_input = sunxi_pinctrl_gpio_direction_input,
-+	pctl->chip->direction_output = sunxi_pinctrl_gpio_direction_output,
-+	pctl->chip->get = sunxi_pinctrl_gpio_get,
-+	pctl->chip->set = sunxi_pinctrl_gpio_set,
-+	pctl->chip->of_xlate = sunxi_pinctrl_gpio_of_xlate,
-+	pctl->chip->to_irq = sunxi_pinctrl_gpio_to_irq,
-+	pctl->chip->of_gpio_n_cells = 3,
-+	pctl->chip->can_sleep = false,
-+	pctl->chip->ngpio = round_up(last_pin, PINS_PER_BANK) -
-+			    pctl->desc->pin_base;
- 	pctl->chip->label = dev_name(&pdev->dev);
- 	pctl->chip->dev = &pdev->dev;
--	pctl->chip->base = 0;
-+	pctl->chip->base = pctl->desc->pin_base;
+ 	pctl->domain = irq_domain_add_linear(node, SUNXI_IRQ_NUMBER,
+@@ -898,7 +907,7 @@ static int sunxi_pinctrl_probe(struct platform_device *pdev)
+ 	if (!pctl->domain) {
+ 		dev_err(&pdev->dev, "Couldn't register IRQ domain\n");
+ 		ret = -ENOMEM;
+-		goto clk_error;
++		goto rstc_error;
+ 	}
  
- 	ret = gpiochip_add(pctl->chip);
- 	if (ret)
-diff --git a/drivers/pinctrl/pinctrl-sunxi.h b/drivers/pinctrl/pinctrl-sunxi.h
-index ed3c4d7..35d15b2 100644
---- a/drivers/pinctrl/pinctrl-sunxi.h
-+++ b/drivers/pinctrl/pinctrl-sunxi.h
-@@ -450,6 +450,7 @@ struct sunxi_pinctrl_desc {
- 	int				npins;
- 	struct pinctrl_gpio_range	*ranges;
- 	int				nranges;
-+	unsigned			pin_base;
- };
+ 	for (i = 0; i < SUNXI_IRQ_NUMBER; i++) {
+@@ -916,6 +925,9 @@ static int sunxi_pinctrl_probe(struct platform_device *pdev)
  
- struct sunxi_pinctrl_function {
+ 	return 0;
+ 
++rstc_error:
++	if (!IS_ERR(rstc))
++		reset_control_assert(rstc);
+ clk_error:
+ 	clk_disable_unprepare(clk);
+ gpiochip_error:
 -- 
 1.8.3.2
