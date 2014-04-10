@@ -1,64 +1,45 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: [PATCH v3 0/7] ARM: sunxi: add multi pin controller support
-Date: Thu, 10 Apr 2014 15:52:39 +0200
-Message-ID: <1397137966-30818-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>
-Cc: Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dev@linux-sunxi.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 1/7] pinctrl: sunxi: check clk_prepare_enable
+ return value
+Date: Thu, 10 Apr 2014 15:52:40 +0200
+Message-ID: <1397137966-30818-2-git-send-email-boris.brezillon@free-electrons.com>
+References: <1397137966-30818-1-git-send-email-boris.brezillon@free-electrons.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCIPJ6FA2QLBB5WETKNAKGQENZO7XWA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1397137966-30818-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Check the clk_prepare_enable return value to avoid false positive probe.
 
-This series rework the sunxi pinctrl driver to support the PL and PM
-pins available on the A31 SoC, which are controlled using the R_PIO
-block.
+Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ drivers/pinctrl/pinctrl-sunxi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-This series add support for multi pin controller which was previously
-impossible for several reasons:
-1) the pinctrl instance was registering a static instance of the gpio
-   chip, which means, in case you were probing 2 devices, the gpio chip
-   was added twice to the gpiochip list
-2) the base pin of the gpio chip was always set to 0, and thus the 2
-   gpiochip pin numbers were overlapping
-
-I still haven't reworked the interrupt part (to handle the "per bank
-interrupt" instead of the "one interrupt for the whole gpio" chip
-approach), but this will be part of another series.
-
-Best Regards,
-
-Boris
-
-Changes since v2:
- - check clk_prepare_enable return value
- - disable the clk in case of probe failure
- - make use devm_reset_control_get_optional
- - reassert the reset line in case of probe failure
-Changes since v1:
- - rework the pinctrl driver to support multiple pin controller instances
- - removed reset and clock gate patches from the series
- - removed A31 DT modifications from the series (we need to get the PRCM
- reset and clk drivers before being able to declare the r_pio node, and
- we're still discussing how this should be implemented)
-
-
-Boris BREZILLON (7):
-  pinctrl: sunxi: check clk_prepare_enable return value
-  pinctrl: sunxi: disable clk when failing to probe pin controller
-  pinctrl: sunxi: add PL and PM pin definitions
-  pinctrl: sunxi: support multiple pin controller
-  pinctrl: sunxi: define A31 R_PIO pin functions
-  pinctrl: sunxi: add reset control support
-  ARM: sunxi: update the default ARCH_NR_GPIO for sunxi arch
-
- .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |  1 +
- arch/arm/Kconfig                                   |  2 +-
- drivers/pinctrl/pinctrl-sunxi-pins.h               | 74 ++++++++++++++++++++++
- drivers/pinctrl/pinctrl-sunxi.c                    | 53 ++++++++++------
- drivers/pinctrl/pinctrl-sunxi.h                    | 69 ++++++++++++++++++++
- 5 files changed, 179 insertions(+), 20 deletions(-)
-
+diff --git a/drivers/pinctrl/pinctrl-sunxi.c b/drivers/pinctrl/pinctrl-sunxi.c
+index f9fabe9..2d9ca1c 100644
+--- a/drivers/pinctrl/pinctrl-sunxi.c
++++ b/drivers/pinctrl/pinctrl-sunxi.c
+@@ -884,7 +884,9 @@ static int sunxi_pinctrl_probe(struct platform_device *pdev)
+ 		goto gpiochip_error;
+ 	}
+ 
+-	clk_prepare_enable(clk);
++	ret = clk_prepare_enable(clk);
++	if (ret)
++		goto gpiochip_error;
+ 
+ 	pctl->irq = irq_of_parse_and_map(node, 0);
+ 	if (!pctl->irq) {
 -- 
 1.8.3.2
-
