@@ -1,70 +1,129 @@
-From: Harini Katakam <harinik@xilinx.com>
-Subject: [PATCH v3 2/2] devicetree: Add devicetree bindings documentation for Cadence SPI
-Date: Thu, 10 Apr 2014 17:43:50 +0530
-Message-ID: <1397132030-2440-2-git-send-email-harinik@xilinx.com>
-References: <1397132030-2440-1-git-send-email-harinik@xilinx.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1397132030-2440-1-git-send-email-harinik@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: michals@xilinx.com, Harini Katakam <harinik@xilinx.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH V3 00/19] mmc: mmci: Improve DT support
+Date: Thu, 10 Apr 2014 14:20:43 +0200
+Message-ID: <1397132462-8005-1-git-send-email-ulf.hansson@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add spi-cadence bindings documentation.
+Step by step, improve the DT support for the mmci host driver.
 
-Signed-off-by: Harini Katakam <harinik@xilinx.com>
----
+This enables us to move the final pieces of platform data for mmci for ux500
+into DT. We are then able to remove yet another machine specific file for ux500.
 
-v3 changes:
-- Remove /bits/ 16 from num-cs property in example.
-- Add is-decoded-cs optional property and add to description of num-cs.
+This patchset needs to be merged together. I suggest we go through Russell's
+ARM tree, since most of the patches are mmci specific which he maintains -
+unless someone think there is a better alternative.
 
-v2 changes:
-- Separate patch for bindings.
-- Add xilinx compatible string; Make compatible string first in the node.
-- Use property name num-cs. Make this property optional.
+I will thus seek acks from the SOC maintainers for the SOC specific patches.
 
----
- .../devicetree/bindings/spi/spi-cadence.txt        |   31 ++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-cadence.txt
+The goal is to queue this for 3.16, thus I might need to rebase the patches for
+3.15 rc[n]. Still I would appreciate any comments at this point.
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-cadence.txt b/Documentation/devicetree/bindings/spi/spi-cadence.txt
-new file mode 100644
-index 0000000..94f0914
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-cadence.txt
-@@ -0,0 +1,31 @@
-+Cadence SPI controller Device Tree Bindings
-+-------------------------------------------
-+
-+Required properties:
-+- compatible		: Should be "cdns,spi-r1p6" or "xlnx,zynq-spi-r1p6".
-+- reg			: Physical base address and size of SPI registers map.
-+- interrupts		: Property with a value describing the interrupt
-+			  number.
-+- interrupt-parent	: Must be core interrupt controller
-+- clock-names		: List of input clock names - "ref_clk", "pclk"
-+			  (See clock bindings for details).
-+- clocks		: Clock phandles (see clock bindings for details).
-+
-+Optional properties:
-+- num-cs		: Number of chip selects used.
-+			  If a decoder is used, this will be the number of
-+			  chip selects after the decoder.
-+- is-decoded-cs		: Flag to indicate whether decoder is used or not.
-+
-+Example:
-+
-+	spi@e0007000 {
-+		compatible = "xlnx,zynq-spi-r1p6";
-+		clock-names = "ref_clk", "pclk";
-+		clocks = <&clkc 26>, <&clkc 35>;
-+		interrupt-parent = <&intc>;
-+		interrupts = <0 49 4>;
-+		num-cs = <4>;
-+		is-decoded-cs = <0>;
-+		reg = <0xe0007000 0x1000>;
-+	} ;
+Changes in v3:
+	- Adopting to review comments from Michal Simek for patch 2.
+	- Rebased patches and added some acks/reviewed by tags.
+
+Changes in v2:
+	- Adopting to review comments from Rob Herring and Linus Walleij. More
+	or less causing each an every patch to be rebased.
+	- Removed the patch for regulator for the db8500-prcmu from this
+	patchset, since Mark Brown already queued it for 3.15.
+
+Ulf Hansson (19):
+  mmc: mmci: Convert to the mmc gpio API
+  mmc: mmci: Convert to devm functions
+  mmc: mmci: Update DT documentation
+  mmc: mmci: Add DT bindings for signal direction
+  mmc: mmci: Add DT bindings for feedback clock pin
+  mmc: mmci: Use the common mmc DT parser
+  ARM: ux500: Add mmci signal directions and feeback clock in DT for
+    href
+  ARM: ux500: Convert to the common mmc DT bindings for highspeed mode
+  ARM: nomadik: Convert to the common mmc DT bindings for highspeed
+    mode
+  ARM: u300: Convert to the common mmc DT bindings for highspeed mode
+  mmc: mmci: Mark the DT bindings for highspeed mode as deprecated
+  mmc: mmci: Enable MMC_CAP_CMD23
+  ARM: ux500: Add the mmc capabilities flags to DT
+  ARM: ux500: Add a vmmc regulator through DT for the poped eMMC for
+    href
+  ARM: ux500: Remove redundant board file for mmci platform data
+  mmc: mmci: Enforce DT for signal direction and feedback clock
+  mmc: mmci: Enforce mmc capabilities through DT
+  mmc: mmci: Enforce DMA configuration through DT
+  mmc: mmci: Enforce max frequency configuration through DT
+
+ Documentation/devicetree/bindings/mmc/mmci.txt |   54 ++++-
+ arch/arm/boot/dts/ste-ccu9540.dts              |    6 +-
+ arch/arm/boot/dts/ste-href.dtsi                |   19 +-
+ arch/arm/boot/dts/ste-nomadik-stn8815.dtsi     |    4 +-
+ arch/arm/boot/dts/ste-snowball.dts             |    4 +-
+ arch/arm/boot/dts/ste-u300.dts                 |    4 +-
+ arch/arm/mach-ux500/Makefile                   |    3 +-
+ arch/arm/mach-ux500/board-mop500-sdi.c         |  166 ---------------
+ arch/arm/mach-ux500/board-mop500.h             |    5 -
+ arch/arm/mach-ux500/cpu-db8500.c               |    4 -
+ drivers/mmc/host/mmci.c                        |  265 +++++++-----------------
+ drivers/mmc/host/mmci.h                        |   14 +-
+ include/linux/amba/mmci.h                      |   42 ----
+ 13 files changed, 157 insertions(+), 433 deletions(-)
+ delete mode 100644 arch/arm/mach-ux500/board-mop500-sdi.c
+
 -- 
 1.7.9.5
+
+
+
+
+
+
+Ulf Hansson (19):
+  mmc: mmci: Convert to the mmc gpio API
+  mmc: mmci: Convert to devm functions
+  mmc: mmci: Update DT documentation
+  mmc: mmci: Add DT bindings for signal direction
+  mmc: mmci: Add DT bindings for feedback clock pin
+  mmc: mmci: Use the common mmc DT parser
+  ARM: ux500: Add mmci signal directions and feeback clock in DT for
+    href
+  ARM: ux500: Convert to the common mmc DT bindings for highspeed mode
+  ARM: nomadik: Convert to the common mmc DT bindings for highspeed
+    mode
+  ARM: u300: Convert to the common mmc DT bindings for highspeed mode
+  mmc: mmci: Mark the DT bindings for highspeed mode as deprecated
+  mmc: mmci: Enable MMC_CAP_CMD23
+  ARM: ux500: Add the mmc capabilities flags to DT
+  ARM: ux500: Add a vmmc regulator through DT for the poped eMMC for
+    href
+  ARM: ux500: Remove redundant board file for mmci platform data
+  mmc: mmci: Enforce DT for signal direction and feedback clock
+  mmc: mmci: Enforce mmc capabilities through DT
+  mmc: mmci: Enforce DMA configuration through DT
+  mmc: mmci: Enforce max frequency configuration through DT
+
+ Documentation/devicetree/bindings/mmc/mmci.txt |   54 ++++-
+ arch/arm/boot/dts/ste-ccu9540.dts              |    6 +-
+ arch/arm/boot/dts/ste-href.dtsi                |   19 +-
+ arch/arm/boot/dts/ste-nomadik-stn8815.dtsi     |    4 +-
+ arch/arm/boot/dts/ste-snowball.dts             |    4 +-
+ arch/arm/boot/dts/ste-u300.dts                 |    4 +-
+ arch/arm/mach-ux500/Makefile                   |    3 +-
+ arch/arm/mach-ux500/board-mop500-sdi.c         |  166 ---------------
+ arch/arm/mach-ux500/board-mop500.h             |    5 -
+ arch/arm/mach-ux500/cpu-db8500.c               |    4 -
+ drivers/mmc/host/mmci.c                        |  264 ++++++------------------
+ drivers/mmc/host/mmci.h                        |   14 +-
+ include/linux/amba/mmci.h                      |   42 ----
+ 13 files changed, 154 insertions(+), 435 deletions(-)
+ delete mode 100644 arch/arm/mach-ux500/board-mop500-sdi.c
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
