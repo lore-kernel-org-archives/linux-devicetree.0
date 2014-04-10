@@ -1,59 +1,60 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v7 4/6] pci: Introduce a domain number for pci_host_bridge.
-Date: Thu, 10 Apr 2014 22:46:36 +0200
-Message-ID: <6459805.ygy4tBNDNz@wuerfel>
-References: <1394811272-1547-5-git-send-email-Liviu.Dudau@arm.com> <6144916.rD76jOL8sv@wuerfel> <20140410145304.GS985@e106497-lin.cambridge.arm.com>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH 04/15] pinctrl: sunxi: specify clk name when retrieving
+ pinctrl pio clk
+Date: Thu, 10 Apr 2014 23:17:28 +0200
+Message-ID: <53470A68.6090005@free-electrons.com>
+References: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com>	<1397051478-4113-5-git-send-email-boris.brezillon@free-electrons.com>	<CACRpkdYW6b_37V40TRxs=7ecaWuV0X7_YJ4=-Psr9CG-cTb79w@mail.gmail.com> <CACRpkdbG-D5RXrrJs9LBEGs-1dydmfPKvCgNb4S2=BbBq3SxQw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140410145304.GS985@e106497-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbG-D5RXrrJs9LBEGs-1dydmfPKvCgNb4S2=BbBq3SxQw@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 10 April 2014 15:53:04 Liviu Dudau wrote:
-> On Thu, Apr 10, 2014 at 03:07:44PM +0100, Arnd Bergmann wrote:
+Hello Linus,
 
-> > This mirrors how we treat devices: a pci_device has an embedded device,
-> > and so on, in other subsystems we can have multiple layers.
-> > 
-> > In this example, the tegra pcie driver then allocates its own tegra_pcie
-> > structure, fills out the fields it needs, and registers it with the
-> > ARM architecture code, passing just the pci_sys_data pointer. That function
-> > in turn passes a pointer to the embedded pci_host_bridge down to the
-> > generic code. Ideally we should try to eliminate the architecture specific
-> > portion here, but that is a later step.
-> 
-> So Arnd seems to agree with me: we should try to get out of architecture specific
-> pci_sys_data and link the host bridge driver straight into the PCI core. The
-> core then can call into arch code via pcibios_*() functions.
-> 
-> Arnd, am I reading correctly into what you are saying?
+On 10/04/2014 20:16, Linus Walleij wrote:
+> On Thu, Apr 10, 2014 at 8:14 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+>> On Wed, Apr 9, 2014 at 3:51 PM, Boris BREZILLON
+>> <boris.brezillon@free-electrons.com> wrote:
+>>
+>>> Specify base pio clk name when retrieving it using the CCF.
+>>> This way we will avoid conflicts when introducing a second clk for the A31
+>>> SoC.
+>>>
+>>> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+>> Are you merging all these through ARM SoC?
+>>
+>> In that case
+>> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>>
+>> If it's OK to merge stand-alone tell me and I'll apply it to
+>> the pinctrl tree.
+> Hm there seems to be quite a few patches to pinctrl here...
+>
+> May I apply this and the others to the pinctrl tree simply?
 
-Half of it ;-)
+Actually I made a v2 (and then a v3 https://lkml.org/lkml/2014/4/10/320
+:-)) of this series, in which I removed all DT related stuff.
+So, if you agree with these changes, I guess you can take them through
+you tree.
 
-I think it would be better to not have an architecture specific data
-structure, just like it would be better not to have architecture specific
-pcibios_* functions that get called by the PCI core. Note that the
-architecture specific functions are the ones that rely on the architecture
-specific data structures as well. If they only use the common fields,
-it should also be possible to share the code.
+Best Regards,
 
-I also don't realistically think we can get there on a lot of architectures
-any time soon. Note that most architectures only have one PCI host
-implementation, so the architecture structure is the same as the host
-driver structure anyway.
+Boris
 
-For architectures like powerpc and arm that have people actively working
-on them, we have a chance to clean up that code in the way we want it
-(if we can agree on the direction), but it's still not trivial to do.
+>
+> As DTS files should be maintained separately I don't think
+> it's important to keep driver and DTS file changes together.
+>
+> Yours,
+> Linus Walleij
 
-Speaking of arm32 in particular, I think we will end up with a split
-approach: modern platforms (multiplatform, possibly all DT based) using
-PCI core infrastructure directly and no architecture specific PCI
-code on the one side, and a variation of today's code for the legacy
-platforms on the other.
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-	Arnd
