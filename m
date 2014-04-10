@@ -1,30 +1,100 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [RFC PATCH v2] edac: synopsys: Added EDAC support for zynq ddr
- ecc controller
-Date: Thu, 10 Apr 2014 12:11:58 +0200
-Message-ID: <2508260c-5ae5-4ff5-97a9-248470c062af@CH1EHSMHS012.ehs.local>
-References: <1220b715-6fc2-42ed-8393-b9859fc0deb9@TX2EHSMHS021.ehs.local> <20140408204047.GQ30077@pd.tnic> <534633C0.9090905@monstr.eu> <20140410092144.GD29093@pd.tnic> <5e0042b6-f169-4025-8fd7-9d70c2ed0cf6@AM1EHSMHS012.ehs.local> <20140410100047.GG29093@pd.tnic> <20140410100542.GH29093@pd.tnic>
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH] phy: exynos5-usbdrd: Add facility to toggle vbus gpio on/off
+Date: Thu, 10 Apr 2014 16:02:52 +0530
+Message-ID: <CAFp+6iHKT6wFBimhzEGVJRiY_y-2rAur_e-TPFS9=RTLckf-rA@mail.gmail.com>
+References: <1397044485-26483-1-git-send-email-gautam.vivek@samsung.com>
+	<53465FB9.7070002@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140410100542.GH29093@pd.tnic>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Michal Simek <michal.simek@xilinx.com>, Michal Simek <monstr@monstr.eu>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, dougthompson@xmission.com, linux-edac@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, sorenb@xilinx.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, punnaia@xilinx.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <53465FB9.7070002@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Kamil Debski <k.debski@samsung.com>, Jingoo Han <jg1.han@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/10/2014 12:05 PM, Borislav Petkov wrote:
-> On Thu, Apr 10, 2014 at 12:00:47PM +0200, Borislav Petkov wrote:
->> Then you'll have to check whether edac can even stomach more than one
->> drivers in parallel. TTBOMK, no one has ever done this so far... Yadda
->> yadda.
-> 
-> Alternatively, you could put together a single edac driver which
-> contains both zynq and L2 functionality.
+Hi Kishon,
 
-That's seems to more problematic because we just don't know what our
-customers will do and what combinations they will use.
 
-Thanks,
-Michal
+On Thu, Apr 10, 2014 at 2:39 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> Hi.
+>
+> On Wednesday 09 April 2014 05:24 PM, Vivek Gautam wrote:
+>> Adding support to enable/disable VBUS hooked to a gpio
+>> to enable vbus supply on the port.
+>>
+>> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+>> ---
+>>
+>> Based on 'phy-exynos5-usbdrd' patches:
+>> [PATCH V4 0/5] Add Exynos5 USB 3.0 phy driver based on generic PHY framework
+>> http://www.spinics.net/lists/linux-usb/msg105507.html
+>>
+>>  drivers/phy/phy-exynos5-usbdrd.c |   18 ++++++++++++++++++
+>>  1 file changed, 18 insertions(+)
+>>
+>> diff --git a/drivers/phy/phy-exynos5-usbdrd.c b/drivers/phy/phy-exynos5-usbdrd.c
+>> index ff54a7c..5ca7485 100644
+>> --- a/drivers/phy/phy-exynos5-usbdrd.c
+>> +++ b/drivers/phy/phy-exynos5-usbdrd.c
+>> @@ -18,6 +18,7 @@
+>>  #include <linux/module.h>
+>>  #include <linux/of.h>
+>>  #include <linux/of_address.h>
+>> +#include <linux/of_gpio.h>
+>>  #include <linux/phy/phy.h>
+>>  #include <linux/platform_device.h>
+>>  #include <linux/mutex.h>
+>> @@ -176,6 +177,7 @@ struct exynos5_usbdrd_phy {
+>>       struct clk *ref_clk;
+>>       unsigned long ref_rate;
+>>       unsigned int refclk_reg;
+>> +     int gpio;
+>>  };
+>>
+>>  #define to_usbdrd_phy(inst) \
+>> @@ -460,6 +462,9 @@ static int exynos5_usbdrd_phy_power_on(struct phy *phy)
+>>       if (!IS_ERR(phy_drd->usb30_sclk))
+>>               clk_prepare_enable(phy_drd->usb30_sclk);
+>>
+>> +     /* Toggle VBUS gpio - on */
+>> +     gpio_set_value(phy_drd->gpio, 1);
+>> +
+>>       /* Power-on PHY*/
+>>       inst->phy_cfg->phy_isol(inst, 0);
+>>
+>> @@ -476,6 +481,9 @@ static int exynos5_usbdrd_phy_power_off(struct phy *phy)
+>>       /* Power-off the PHY */
+>>       inst->phy_cfg->phy_isol(inst, 1);
+>>
+>> +     /* Toggle VBUS gpio - off */
+>> +     gpio_set_value(phy_drd->gpio, 0);
+>> +
+>>       if (!IS_ERR(phy_drd->usb30_sclk))
+>>               clk_disable_unprepare(phy_drd->usb30_sclk);
+>>
+>> @@ -585,6 +593,16 @@ static int exynos5_usbdrd_phy_probe(struct platform_device *pdev)
+>>
+>>       phy_drd->drv_data = drv_data;
+>>
+>> +     /* Get required GPIO for vbus */
+>> +     phy_drd->gpio = of_get_named_gpio(dev->of_node,
+>> +                                       "samsung,vbus-gpio", 0);
+>
+> Is this dt property documented somewhere?
+>> +     if (!gpio_is_valid(phy_drd->gpio))
+>> +             dev_dbg(dev, "no usbdrd-phy vbus gpio defined\n");
+>
+> No return here? Can the PHY be functional even without the VBUS?
+
+On few boards, the switch IC's enable may no be controlled by a GPIO,
+rather enabled by default.
+So in those cases we may not want to stop PHY probe, when the VBUS
+GPIO is not present.
+
+
+-- 
+Best Regards
+Vivek Gautam
+Samsung R&D Institute, Bangalore
+India
