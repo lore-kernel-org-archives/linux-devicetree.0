@@ -1,31 +1,21 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: add vendor-prefix for Newhaven Display
-Date: Thu, 10 Apr 2014 09:31:54 -0500
-Message-ID: <CAL_Jsq+qHLgLP=C=m4DFNeLOKhQGgVf6hzpv9BrmzoX6Hy7zAw@mail.gmail.com>
-References: <1396493527-26170-1-git-send-email-dinguyen@altera.com>
-	<20140404103527.GC9242@amd.pavel.ucw.cz>
+Subject: Re: [PATCH] of: add vendor prefix for I2SE GmbH
+Date: Thu, 10 Apr 2014 09:32:16 -0500
+Message-ID: <CAL_Jsq+xGQD+UQArr_TayEUEz3Uu_t=WX9TP5d95Z8ExdFtVLg@mail.gmail.com>
+References: <1396514029-5769-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140404103527.GC9242-tWAi6jLit6GreWDznjuHag@public.gmane.org>
+In-Reply-To: <1396514029-5769-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-Cc: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 4, 2014 at 5:35 AM, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org> wrote:
-> On Wed 2014-04-02 21:52:07, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
->> From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
->>
->> Newhaven Display provides the worldwide marketplace with cost
->> effective high quality display devices ranging from OLED and LCD
->> Displays to VFD Displays.
->>
->> Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+On Thu, Apr 3, 2014 at 3:33 AM, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
+> Add i2se to the list of DT vendor prefixes.
 >
-> Commit log should not be a place for advertising? :-)
->
-> Reviewed-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 
 Applied for 3.15.
 
