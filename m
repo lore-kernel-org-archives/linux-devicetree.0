@@ -1,72 +1,54 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 00/15] ARM: sunxi: add A31 PL pins support
-Date: Thu, 10 Apr 2014 10:16:11 +0200
-Message-ID: <20140410081611.GN28585@lukather>
-References: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com>
- <CAGb2v66XCN2ar1wj+a1+ZwdcdJ3gzJ+nDiO9bu52OwK+mBB_Hg@mail.gmail.com>
- <534571F0.10706@free-electrons.com>
- <CAGb2v651R-sG3OB4aD4UXWiyQVcHz7zXub1wO6B4xp-toUcC7Q@mail.gmail.com>
+From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v5 3/8] mtd: spi-nor: add the framework for SPI NOR
+Date: Thu, 10 Apr 2014 15:27:12 +0800
+Message-ID: <20140410072711.GB24100@localhost>
+References: <1393238262-8622-1-git-send-email-b32955@freescale.com>
+ <1393238262-8622-4-git-send-email-b32955@freescale.com>
+ <20140409174837.GE32070@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="QGBKWVSgmlsIyJ+t"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v651R-sG3OB4aD4UXWiyQVcHz7zXub1wO6B4xp-toUcC7Q@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Boris BREZILLON <boris.brezillon@free-electrons.com>, Randy Dunlap <rdunlap@infradead.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-doc@vger.kernel.org
+In-Reply-To: <20140409174837.GE32070@ld-irv-0074>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, angus.clark-qxv4g6HH51o@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pekon-l0cyMroinI0@public.gmane.org, sourav.poddar-l0cyMroinI0@public.gmane.org, broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---QGBKWVSgmlsIyJ+t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Apr 10, 2014 at 01:14:26AM +0800, Chen-Yu Tsai wrote:
-> >  3) other things I haven't noticed yet :-)
+On Wed, Apr 09, 2014 at 10:48:37AM -0700, Brian Norris wrote:
+> On Mon, Feb 24, 2014 at 06:37:37PM +0800, Huang Shijie wrote:
+> > This patch cloned most of the m25p80.c. In theory, it adds a new sp=
+i-nor layer.
+> ...
+> > diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/sp=
+i-nor.c
+> > new file mode 100644
+> > index 0000000..a840e88
+> > --- /dev/null
+> > +++ b/drivers/mtd/spi-nor/spi-nor.c
+> > @@ -0,0 +1,1087 @@
+> > +/*
+> > + * Cloned most of the code from the m25p80.c
 >=20
-> Reworking EINT to use one interrupt per bank will yield some more surpris=
-es.
+> Please include a copyright notice here. This should carry both the
+> original m25p80.c copyright notice, as well as your own additional
+> copyright if you choose. For instance:
 >=20
-> There's also new gpiolib irqchip helpers, but that will require reworking
-> each pin bank into separate gpio chips. May be more work than just adding
-> different irq domains for different banks.
+>  * Based on m25p80.c, by Mike Lavender (mike-UTnDXsALFwNjMdQLN6DIHgC/G2K4zDHf@public.gmane.org), with
+>  * influence from lart.c (Abraham Van Der Merwe) and mtd_dataflash.c
+>  *
+>  * Copyright =A9 2005, Intec Automation Inc.
+>  * Copyright =A9 2014, Freescale Semiconductor, Inc.
 >=20
-> See: https://lkml.org/lkml/2014/3/25/175
+I will send a patch to add the copyright info which will based on your =
+patch
+set.
 
-I'm not sure it's worth it actually. Using these helpers will probably
-simplify the A31/A23 case, where you have one interrupt controller per
-bank, but it will be much more complicated to handle the A10/A20 case
-where you have a single interrupt controller for all the banks.
+thanks
+Huang Shijie
 
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---QGBKWVSgmlsIyJ+t
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTRlNLAAoJEBx+YmzsjxAgaS4P/A2N1vwJCW7mo+wHOjdgZzry
-oZOvn5I7asACoB4aHAVCAfkCcK4v0ThQC3PSfuxlE05CcIjnrxr2OfT+Y/j5bpRT
-+MGsAyHuQRnslTbXyu28FSO0A5LfeGiyLw0SecOKIKdieZBMTD3wIsbI14ophc0k
-2POnK/jFAGcuv4yksUCVNtMPJy1V1FDDzQl9MyDBsNXNi+0XHWOWFRLdbjillNrX
-L4o9V9FQ6q/WpJQ8zLmIO9EJMN4OwCUsSL+f3mSq/hKjUPFDvnWIn2CVb5Ksp26d
-A2L0JQC5KRPTQl/GYYZx4/D7m8gE5lWkP1NnEscMpUpNKw9ZEwPeLudPNXLnC8Bg
-XWjFfnIEVd0uHfhayKzQogi2l1juw1cgrHl4B4zQACUK8ruC2SwMAkOtb4wU2aI8
-eLBycv2F6FXSpOe6/T6EZsQJlY/FcOjhOuvi7LL95YLlAuizgiII8c2Po4Dkhd0f
-Kd+k5EGtDMaSqpXFpAoAUSfD9elyDiY9s8f8367is4oGjA1FKJ9ODOdJoaf+XXcF
-k2rejUqqRdvUbLwkn/QP7hO3HfE1j9WyePHJvT3AeIybN3wq1NzsTZ07+MY1N69x
-pDEUp1f83bVxRaExUSTUNNcG0PnijYL52Xo4dlaUYTr1m2DWcF3WV6sLnS3Yogt9
-JuRYpanaPypveA39L7In
-=KGOJ
------END PGP SIGNATURE-----
-
---QGBKWVSgmlsIyJ+t--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
