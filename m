@@ -1,111 +1,764 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v7 4/6] pci: Introduce a domain number for pci_host_bridge.
-Date: Wed, 9 Apr 2014 21:48:14 -0600
-Message-ID: <CAErSpo7egL2T_W_OCJw2kPHFDqspwOHXtZJw8JyjWU=56ofFKQ@mail.gmail.com>
-References: <1394811272-1547-5-git-send-email-Liviu.Dudau@arm.com>
- <20140405000007.GD15806@google.com> <20140407084623.GG17163@e106497-lin.cambridge.arm.com>
- <1396862058.3671.40.camel@pasglop> <20140407100715.GI17163@e106497-lin.cambridge.arm.com>
- <CAErSpo7h+Yew2hBztzkOzcHU5r4OQebxFbcZGkNUwJwfTFsbfg@mail.gmail.com>
- <20140408102043.GV17163@e106497-lin.cambridge.arm.com> <CAErSpo4anYBmaRbJEFE9kAXSmnvfqud=w1QA=mSSsTUamM4kSw@mail.gmail.com>
- <20140409120750.GN985@e106497-lin.cambridge.arm.com> <CAErSpo4BmoYzf6GxOPRni=q563zhON57s7=5Hz=2Cf-X2ft-1A@mail.gmail.com>
- <20140410012715.GA1328@bart>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140410012715.GA1328@bart>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
+From: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v2 2/2] ALSA: hda - Add driver for Tegra SoC HDA
+Date: Wed,  9 Apr 2014 21:19:53 -0700
+Message-ID: <1397103593-19885-1-git-send-email-dgreid@chromium.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: tiwai-l3A5Bk7waGM@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 9, 2014 at 7:27 PM, Liviu Dudau <liviu@dudau.co.uk> wrote:
-> On Wed, Apr 09, 2014 at 08:02:41AM -0600, Bjorn Helgaas wrote:
->> On Wed, Apr 9, 2014 at 6:07 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
->> > On Tue, Apr 08, 2014 at 05:28:39PM +0100, Bjorn Helgaas wrote:
->> >> On Tue, Apr 8, 2014 at 4:20 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
->> >> > On Mon, Apr 07, 2014 at 11:44:51PM +0100, Bjorn Helgaas wrote:
->> >>
->> >> >> Let me try to explain my concern about the
->> >> >> pci_create_root_bus_in_domain() interface.  We currently have these
->> >> >> interfaces:
->> >> >>
->> >> >>   pci_scan_root_bus()
->> >> >>   pci_scan_bus()
->> >> >>   pci_scan_bus_parented()
->> >> >>   pci_create_root_bus()
->> >> >> ...
->> >>
->> >> >> One alternative is to add an _in_domain() variant of each of these
->> >> >> interfaces, but that doesn't seem very convenient either.  My idea of
->> >> >> passing in a structure would also require adding variants, so there's
->> >> >> not really an advantage there, but I am thinking of the next
->> >> >> unification effort, e.g., for NUMA node info.  I don't really want to
->> >> >> have to change all the _in_domain() interfaces to also take yet
->> >> >> another parameter for the node number.
->> >> >
->> >> > OK, what about this: all the functions that you have mentioned take a
->> >> > void *sysdata parameter. Should we convert this opaque pointer into a
->> >> > specific structure that holds the domain_nr and (in future) the NUMA
->> >> > node info?
->> >>
->> >> I doubt if we can make sysdata itself generic because I suspect we
->> >> need a way to have *some* arch-specific data.  But maybe the arch
->> >> could supply a structure containing a struct device *, domain, struct
->> >> pci_ops *, list of resources, aperture info, etc.  I wonder if struct
->> >> pci_host_bridge would be a reasonable place to put this stuff, e.g.,
->> >> something like this:
->> >>
->> >>   struct pci_host_bridge {
->> >>     int domain;
->> >>     int node;
->> >>     struct device *dev;
->> >>     struct pci_ops *ops;
->> >>     struct list_head resources;
->> >>     void *sysdata;
->> >>     struct pci_bus *bus;  /* filled in by core, not by arch */
->> >>     ... /* other existing contents managed by core */
->> >>   };
->> >>
->> >>   struct pci_bus *pci_scan_host_bridge(struct pci_host_bridge *bridge);
->> >
->> > I'm really reluctant to give the arches more rope to hang themselves.
->>
->> If you mean the sysdata pointer is rope to hang themselves, I think it
->> would be great it we didn't need sysdata at all.  But I think it would
->> be a huge amount of work to get rid of it completely, and keeping it
->> would let us work at that incrementally.
->
-> Agree. But then your suggestion was to wrap sysdata inside another structure,
-> which to me constitutes additional rope.
+This adds a driver for the HDA block in Tegra SoCs.  The HDA bus is
+used to communicate with the HDMI codec on Tegra124.
 
-I'll ponder this more, but I don't see your point here yet.  The arch
-already supplies a sysdata pointer to pci_scan_root_bus(), and we
-stash it in every struct pci_bus already.  My idea was just to pass it
-in differently, as a structure member rather than a separate argument.
- (And I'm not completely attached to my proposal; it was only to
-illustrate my concern about the explosion of interfaces if we have to
-add *_domain(), *_node(), etc.)
+Most of the code is re-used from the Intel/PCI HDA driver.  It brings
+over only two of the module params, power_save and probe_mask.
 
-> The "what" for PCI host bridges is defined in the spec. The "how" is implementation
-> defined. What I'm trying to get with the cleanup is the ordering of pci_host_bridge
-> creation: core creates the structure first ("what"), arch then has the chance
-> of adding specific data to it (ops, resources, etc) ("how").
->
-> At the moment arm and powerpc do some horrible dances in trying to create their
-> local idea of a host bridge before passing it to the core code.
->
-> As for the root bus number, maybe we can offer some sensible default strategy
-> for numbering them and the arches that don't care too much can use that.
+Signed-off-by: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+Changes since v1:
 
-I think we're at the limit of what can be accomplished with the
-abstractness of English.
+Kconfig depends on OF and ARCH_TEGRA.
+Fix warning on 64 bit build.
+Integrate a bunch of good suggestions from Thierry, including:
+  Add resets property to device tree entry.
+  More consistent/better naming.
+  Remove probe mask that isn't needed.
+  Cleaner/more readable handling of dword write restriction.
 
-My opinion is that it's reasonable for the arch to discover the host
-bridge properties first and pass them to the core, and it doesn't
-require unreasonable things of the arch.  I know the arm PCI setup is
-complicated, partly because it deals with a huge number of machines
-that don't have a consistent firmware interface.  The x86/ACPI setup
-is relatively simple because it deals with a simple firmware
-interface.  But that's just my opinion, and maybe your code will show
-otherwise.
+---
+ .../bindings/sound/nvidia,tegra30-hda.txt          |  27 +
+ sound/pci/hda/Kconfig                              |  15 +
+ sound/pci/hda/Makefile                             |   2 +
+ sound/pci/hda/hda_tegra.c                          | 644 +++++++++++++++++++++
+ 4 files changed, 688 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra30-hda.txt
+ create mode 100644 sound/pci/hda/hda_tegra.c
 
-Bjorn
+diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra30-hda.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra30-hda.txt
+new file mode 100644
+index 0000000..97f6832
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/nvidia,tegra30-hda.txt
+@@ -0,0 +1,27 @@
++NVIDIA Tegra30 HDA controller
++
++Required properties:
++- compatible : "nvidia,tegra30-hda"
++- reg : Should contain the HDA registers location and length.
++- interrupts : The interrupt from the hda controller.
++- clocks : Must contain an entry for each required entry in clock-names.
++- clock-names : Must include the following entries: hda, hdacodec_2x, hda2hdmi
++- resets : Must contain an entry for each entry in reset-names.
++  See ../reset/reset.txt for details.
++- reset-names : Must include the following entries: hda, hdacodec_2x, hda2hdmi
++
++Example:
++
++hda@70030000 {
++	compatible = "nvidia,tegra124-hda", "nvidia,tegra30-hda";
++	reg = <0x0 0x70030000 0x10000>;
++	interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&tegra_car TEGRA124_CLK_HDA>,
++		 <&tegra_car TEGRA124_CLK_HDA2HDMI>,
++		 <&tegra_car TEGRA124_CLK_HDA2CODEC_2X>;
++	clock-names = "hda", "hda2hdmi", "hdacodec_2x";
++	resets = <&tegra_car 125>, /* hda */
++		 <&tegra_car 128>; /* hda2hdmi */
++		 <&tegra_car 111>, /* hda2codec_2x */
++	reset-names = "hda", "hda2hdmi", "hdacodec_2x";
++};
+diff --git a/sound/pci/hda/Kconfig b/sound/pci/hda/Kconfig
+index ac17c3f..f17c016 100644
+--- a/sound/pci/hda/Kconfig
++++ b/sound/pci/hda/Kconfig
+@@ -20,6 +20,21 @@ config SND_HDA_INTEL
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called snd-hda-intel.
+ 
++config SND_HDA_TEGRA
++	tristate "NVIDIA Tegra HD Audio"
++	depends on OF && ARCH_TEGRA
++	select SND_HDA
++	help
++	  Say Y here to support the HDA controller present in NVIDIA
++	  Tegra SoCs
++
++	  This options enables support for the HD Audio controller
++	  present in some NVIDIA Tegra SoCs, used to communicate audio
++	  to the HDMI output.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called snd-hda-tegra.
++
+ if SND_HDA
+ 
+ config SND_HDA_DSP_LOADER
+diff --git a/sound/pci/hda/Makefile b/sound/pci/hda/Makefile
+index d0d0c19..194f3093 100644
+--- a/sound/pci/hda/Makefile
++++ b/sound/pci/hda/Makefile
+@@ -1,5 +1,6 @@
+ snd-hda-intel-objs := hda_intel.o
+ snd-hda-controller-objs := hda_controller.o
++snd-hda-tegra-objs := hda_tegra.o
+ # for haswell power well
+ snd-hda-intel-$(CONFIG_SND_HDA_I915) +=	hda_i915.o
+ 
+@@ -47,3 +48,4 @@ obj-$(CONFIG_SND_HDA_CODEC_HDMI) += snd-hda-codec-hdmi.o
+ # otherwise the codec patches won't be hooked before the PCI probe
+ # when built in kernel
+ obj-$(CONFIG_SND_HDA_INTEL) += snd-hda-intel.o
++obj-$(CONFIG_SND_HDA_TEGRA) += snd-hda-tegra.o
+diff --git a/sound/pci/hda/hda_tegra.c b/sound/pci/hda/hda_tegra.c
+new file mode 100644
+index 0000000..75f246b
+--- /dev/null
++++ b/sound/pci/hda/hda_tegra.c
+@@ -0,0 +1,644 @@
++/*
++ *
++ * Implementation of primary alsa driver code base for NVIDIA Tegra HDA.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ *
++ */
++
++#include <linux/clk.h>
++#include <linux/clocksource.h>
++#include <linux/completion.h>
++#include <linux/delay.h>
++#include <linux/dma-mapping.h>
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/moduleparam.h>
++#include <linux/mutex.h>
++#include <linux/of_device.h>
++#include <linux/pm_runtime.h>
++#include <linux/reboot.h>
++#include <linux/slab.h>
++#include <linux/time.h>
++
++#include <sound/core.h>
++#include <sound/initval.h>
++
++#include "hda_codec.h"
++#include "hda_controller.h"
++#include "hda_priv.h"
++
++/* Defines for NVIDIA Tegra HDA support */
++#define HDA_BAR0           0x8000
++
++#define HDA_CFG_CMD        0x1004
++#define HDA_CFG_BAR0       0x1010
++
++#define HDA_ENABLE_IO_SPACE       (1 << 0)
++#define HDA_ENABLE_MEM_SPACE      (1 << 1)
++#define HDA_ENABLE_BUS_MASTER     (1 << 2)
++#define HDA_ENABLE_SERR           (1 << 8)
++#define HDA_DISABLE_INTR          (1 << 10)
++#define HDA_BAR0_INIT_PROGRAM     0xFFFFFFFF
++#define HDA_BAR0_FINAL_PROGRAM    (1 << 14)
++
++/* IPFS */
++#define HDA_IPFS_CONFIG           0x180
++#define HDA_IPFS_EN_FPCI          0x1
++
++#define HDA_IPFS_FPCI_BAR0        0x80
++#define HDA_FPCI_BAR0_START       0x40
++
++#define HDA_IPFS_INTR_MASK        0x188
++#define HDA_IPFS_EN_INTR          (1 << 16)
++
++struct hda_tegra {
++	struct azx chip;
++	struct device *dev;
++	struct clk *hda_clk;
++	struct clk *hda2codec_2x_clk;
++	struct clk *hda2hdmi_clk;
++	void __iomem *regs;
++};
++
++static int power_save = CONFIG_SND_HDA_POWER_SAVE_DEFAULT;
++module_param(power_save, bint, 0644);
++MODULE_PARM_DESC(power_save,
++		 "Automatic power-saving timeout (in seconds, 0 = disable).");
++
++/*
++ * DMA page allocation ops.
++ */
++static int dma_alloc_pages(struct azx *chip, int type, size_t size,
++			   struct snd_dma_buffer *buf)
++{
++	return snd_dma_alloc_pages(type, chip->card->dev, size, buf);
++}
++
++static void dma_free_pages(struct azx *chip, struct snd_dma_buffer *buf)
++{
++	snd_dma_free_pages(buf);
++}
++
++static int substream_alloc_pages(struct azx *chip,
++				 struct snd_pcm_substream *substream,
++				 size_t size)
++{
++	struct azx_dev *azx_dev = get_azx_dev(substream);
++
++	azx_dev->bufsize = 0;
++	azx_dev->period_bytes = 0;
++	azx_dev->format_val = 0;
++	return snd_pcm_lib_malloc_pages(substream, size);
++}
++
++static int substream_free_pages(struct azx *chip,
++				struct snd_pcm_substream *substream)
++{
++	return snd_pcm_lib_free_pages(substream);
++}
++
++/*
++ * Register access ops. Tegra HDA register access is DWORD only.
++ */
++static void hda_tegra_writel(u32 value, u32 *addr)
++{
++	writel(value, addr);
++}
++
++static u32 hda_tegra_readl(u32 *addr)
++{
++	return readl(addr);
++}
++
++static void hda_tegra_writew(u16 value, u16 *addr)
++{
++	unsigned long shift = ((uintptr_t)(addr) & 0x3) << 3;
++	void *dword_addr = (void *)((uintptr_t)(addr) & ~0x3);
++	u32 v;
++
++	v = readl(dword_addr);
++	v &= ~(0xffff << shift);
++	v |= value << shift;
++	writel(v, dword_addr);
++}
++
++static u16 hda_tegra_readw(u16 *addr)
++{
++	unsigned long shift = ((uintptr_t)(addr) & 0x3) << 3;
++	void *dword_addr = (void *)((uintptr_t)(addr) & ~0x3);
++	u32 v;
++
++	v = readl(dword_addr);
++	return (v >> shift) & 0xffff;
++}
++
++static void hda_tegra_writeb(u8 value, u8 *addr)
++{
++	unsigned long shift = ((uintptr_t)(addr) & 0x3) << 3;
++	void *dword_addr = (void *)((uintptr_t)(addr) & ~0x3);
++	u32 v;
++
++	v = readl(dword_addr);
++	v &= ~(0xff << shift);
++	v |= value << shift;
++	writel(v, dword_addr);
++}
++
++static u8 hda_tegra_readb(u8 *addr)
++{
++	unsigned long shift = ((uintptr_t)(addr) & 0x3) << 3;
++	void *dword_addr = (void *)((uintptr_t)(addr) & ~0x3);
++	u32 v;
++
++	v = readl(dword_addr);
++	return (v >> shift) & 0xff;
++}
++
++static const struct hda_controller_ops hda_tegra_ops = {
++	.reg_writel = hda_tegra_writel,
++	.reg_readl = hda_tegra_readl,
++	.reg_writew = hda_tegra_writew,
++	.reg_readw = hda_tegra_readw,
++	.reg_writeb = hda_tegra_writeb,
++	.reg_readb = hda_tegra_readb,
++	.dma_alloc_pages = dma_alloc_pages,
++	.dma_free_pages = dma_free_pages,
++	.substream_alloc_pages = substream_alloc_pages,
++	.substream_free_pages = substream_free_pages,
++};
++
++static void hda_tegra_init(struct hda_tegra *hda)
++{
++	u32 v;
++
++	/*Enable the PCI access */
++	v = readl(hda->regs + HDA_IPFS_CONFIG);
++	v |= HDA_IPFS_EN_FPCI;
++	writel(v, hda->regs + HDA_IPFS_CONFIG);
++
++	/* Enable MEM/IO space and bus master */
++	v = readl(hda->regs + HDA_CFG_CMD);
++	v &= ~HDA_DISABLE_INTR;
++	v |= HDA_ENABLE_MEM_SPACE | HDA_ENABLE_IO_SPACE |
++		HDA_ENABLE_BUS_MASTER | HDA_ENABLE_SERR;
++	writel(v, hda->regs + HDA_CFG_CMD);
++
++	writel(HDA_BAR0_INIT_PROGRAM, hda->regs + HDA_CFG_BAR0);
++	writel(HDA_BAR0_FINAL_PROGRAM, hda->regs + HDA_CFG_BAR0);
++	writel(HDA_FPCI_BAR0_START, hda->regs + HDA_IPFS_FPCI_BAR0);
++
++	v = readl(hda->regs + HDA_IPFS_INTR_MASK);
++	v |= HDA_IPFS_EN_INTR;
++	writel(v, hda->regs + HDA_IPFS_INTR_MASK);
++}
++
++static int hda_tegra_enable_clocks(struct hda_tegra *data)
++{
++	int rc;
++
++	rc = clk_prepare_enable(data->hda_clk);
++	if (rc)
++		return rc;
++	rc = clk_prepare_enable(data->hda2codec_2x_clk);
++	if (rc)
++		goto disable_hda;
++	rc = clk_prepare_enable(data->hda2hdmi_clk);
++	if (rc)
++		goto disable_codec_2x;
++
++	return 0;
++
++disable_codec_2x:
++	clk_disable_unprepare(data->hda2codec_2x_clk);
++disable_hda:
++	clk_disable_unprepare(data->hda_clk);
++	return rc;
++}
++
++static void hda_tegra_disable_clocks(struct hda_tegra *data)
++{
++	clk_disable_unprepare(data->hda2hdmi_clk);
++	clk_disable_unprepare(data->hda2codec_2x_clk);
++	clk_disable_unprepare(data->hda_clk);
++}
++
++#ifdef CONFIG_PM_SLEEP
++/*
++ * power management
++ */
++static int hda_tegra_suspend(struct device *dev)
++{
++	struct snd_card *card = dev_get_drvdata(dev);
++	struct azx *chip = card->private_data;
++	struct azx_pcm *p;
++
++	snd_power_change_state(card, SNDRV_CTL_POWER_D3hot);
++	list_for_each_entry(p, &chip->pcm_list, list)
++		snd_pcm_suspend_all(p->pcm);
++	if (chip->initialized)
++		snd_hda_suspend(chip->bus);
++
++	if (pm_runtime_active(card->dev)) {
++		azx_stop_chip(chip);
++		azx_enter_link_reset(chip);
++	}
++
++	return 0;
++}
++
++static int hda_tegra_resume(struct device *dev)
++{
++	struct snd_card *card = dev_get_drvdata(dev);
++	struct azx *chip = card->private_data;
++	struct hda_tegra *hda = container_of(chip, struct hda_tegra, chip);
++
++	if (pm_runtime_active(card->dev)) {
++		hda_tegra_init(hda);
++
++		azx_init_chip(chip, 1);
++
++		snd_hda_resume(chip->bus);
++		snd_power_change_state(card, SNDRV_CTL_POWER_D0);
++	}
++
++	return 0;
++}
++#endif /* CONFIG_PM_SLEEP */
++
++#ifdef CONFIG_PM_RUNTIME
++static int hda_tegra_runtime_suspend(struct device *dev)
++{
++	struct snd_card *card = dev_get_drvdata(dev);
++	struct azx *chip = card->private_data;
++	struct hda_tegra *hda = container_of(chip, struct hda_tegra, chip);
++
++	/* enable controller wake up event */
++	azx_writew(chip, WAKEEN, azx_readw(chip, WAKEEN) |
++		  STATESTS_INT_MASK);
++
++	azx_stop_chip(chip);
++	azx_enter_link_reset(chip);
++	hda_tegra_disable_clocks(hda);
++	return 0;
++}
++
++static int hda_tegra_runtime_resume(struct device *dev)
++{
++	struct snd_card *card = dev_get_drvdata(dev);
++	struct azx *chip = card->private_data;
++	struct hda_codec *codec;
++	struct hda_tegra *hda = container_of(chip, struct hda_tegra, chip);
++	int status;
++
++	hda_tegra_enable_clocks(hda);
++
++	/* Read STATESTS before controller reset */
++	status = azx_readw(chip, STATESTS);
++
++	hda_tegra_init(hda);
++
++	azx_init_chip(chip, 1);
++
++	snd_hda_resume(chip->bus);
++	snd_power_change_state(card, SNDRV_CTL_POWER_D0);
++
++	if (status && chip->bus) {
++		list_for_each_entry(codec, &chip->bus->codec_list, list)
++			if (status & (1 << codec->addr))
++				queue_delayed_work(codec->bus->workq,
++						   &codec->jackpoll_work,
++						   codec->jackpoll_interval);
++	}
++
++	/* disable controller Wake Up event*/
++	azx_writew(chip, WAKEEN, azx_readw(chip, WAKEEN) & ~STATESTS_INT_MASK);
++
++	return 0;
++}
++
++#endif /* CONFIG_PM_RUNTIME */
++
++static const struct dev_pm_ops hda_tegra_pm = {
++	SET_SYSTEM_SLEEP_PM_OPS(hda_tegra_suspend, hda_tegra_resume)
++	SET_RUNTIME_PM_OPS(hda_tegra_runtime_suspend,
++			   hda_tegra_runtime_resume,
++			   NULL)
++};
++
++/*
++ * reboot notifier for hang-up problem at power-down
++ */
++static int hda_tegra_halt(struct notifier_block *nb, unsigned long event,
++			  void *buf)
++{
++	struct azx *chip = container_of(nb, struct azx, reboot_notifier);
++	snd_hda_bus_reboot_notify(chip->bus);
++	azx_stop_chip(chip);
++	return NOTIFY_OK;
++}
++
++static void hda_tegra_notifier_register(struct azx *chip)
++{
++	chip->reboot_notifier.notifier_call = hda_tegra_halt;
++	register_reboot_notifier(&chip->reboot_notifier);
++}
++
++static void hda_tegra_notifier_unregister(struct azx *chip)
++{
++	if (chip->reboot_notifier.notifier_call)
++		unregister_reboot_notifier(&chip->reboot_notifier);
++}
++
++/*
++ * destructor
++ */
++static int hda_tegra_dev_free(struct snd_device *device)
++{
++	int i;
++	struct azx *chip = device->device_data;
++
++	if (chip->running)
++		pm_runtime_get_noresume(chip->card->dev);
++
++	hda_tegra_notifier_unregister(chip);
++
++	if (chip->initialized) {
++		for (i = 0; i < chip->num_streams; i++)
++			azx_stream_stop(chip, &chip->azx_dev[i]);
++		azx_stop_chip(chip);
++	}
++
++	azx_free_stream_pages(chip);
++
++	return 0;
++}
++
++static int hda_tegra_init_chip(struct azx *chip, struct platform_device *pdev)
++{
++	struct hda_tegra *hda = container_of(chip, struct hda_tegra, chip);
++	struct device *dev = hda->dev;
++	struct resource *res;
++	int err;
++
++	hda->hda_clk = devm_clk_get(dev, "hda");
++	if (IS_ERR(hda->hda_clk))
++		return PTR_ERR(hda->hda_clk);
++	hda->hda2codec_2x_clk = devm_clk_get(dev, "hda2codec_2x");
++	if (IS_ERR(hda->hda2codec_2x_clk))
++		return PTR_ERR(hda->hda2codec_2x_clk);
++	hda->hda2hdmi_clk = devm_clk_get(dev, "hda2hdmi");
++	if (IS_ERR(hda->hda2hdmi_clk))
++		return PTR_ERR(hda->hda2hdmi_clk);
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	hda->regs = devm_ioremap_resource(dev, res);
++	if (IS_ERR(chip->remap_addr))
++		return PTR_ERR(chip->remap_addr);
++
++	chip->remap_addr = hda->regs + HDA_BAR0;
++	chip->addr = res->start + HDA_BAR0;
++
++	err = hda_tegra_enable_clocks(hda);
++	if (err)
++		return err;
++
++	hda_tegra_init(hda);
++
++	return 0;
++}
++
++/*
++ * The codecs were powered up in snd_hda_codec_new().
++ * Now all initialization done, so turn them down if possible
++ */
++static void power_down_all_codecs(struct azx *chip)
++{
++	struct hda_codec *codec;
++	list_for_each_entry(codec, &chip->bus->codec_list, list)
++		snd_hda_power_down(codec);
++}
++
++static int hda_tegra_first_init(struct azx *chip, struct platform_device *pdev)
++{
++	struct snd_card *card = chip->card;
++	int err;
++	unsigned short gcap;
++	int irq_id = platform_get_irq(pdev, 0);
++
++	err = hda_tegra_init_chip(chip, pdev);
++	if (err)
++		return err;
++
++	err = devm_request_irq(chip->card->dev, irq_id, azx_interrupt,
++			     IRQF_SHARED, KBUILD_MODNAME, chip);
++	if (err) {
++		dev_err(chip->card->dev,
++			"unable to request IRQ %d, disabling device\n",
++			irq_id);
++		return err;
++	}
++	chip->irq = irq_id;
++
++	synchronize_irq(chip->irq);
++
++	gcap = azx_readw(chip, GCAP);
++	dev_dbg(card->dev, "chipset global capabilities = 0x%x\n", gcap);
++
++	/* read number of streams from GCAP register instead of using
++	 * hardcoded value
++	 */
++	chip->capture_streams = (gcap >> 8) & 0x0f;
++	chip->playback_streams = (gcap >> 12) & 0x0f;
++	if (!chip->playback_streams && !chip->capture_streams) {
++		/* gcap didn't give any info, switching to old method */
++		chip->playback_streams = ICH6_NUM_PLAYBACK;
++		chip->capture_streams = ICH6_NUM_CAPTURE;
++	}
++	chip->capture_index_offset = 0;
++	chip->playback_index_offset = chip->capture_streams;
++	chip->num_streams = chip->playback_streams + chip->capture_streams;
++	chip->azx_dev = devm_kcalloc(card->dev, chip->num_streams,
++				     sizeof(*chip->azx_dev), GFP_KERNEL);
++	if (!chip->azx_dev)
++		return -ENOMEM;
++
++	err = azx_alloc_stream_pages(chip);
++	if (err < 0)
++		return err;
++
++	/* initialize streams */
++	azx_init_stream(chip);
++
++	/* initialize chip */
++	azx_init_chip(chip, 1);
++
++	/* codec detection */
++	if (!chip->codec_mask) {
++		dev_err(card->dev, "no codecs found!\n");
++		return -ENODEV;
++	}
++
++	strcpy(card->driver, "tegra-hda");
++	strcpy(card->shortname, "tegra-hda");
++	snprintf(card->longname, sizeof(card->longname),
++		 "%s at 0x%lx irq %i",
++		 card->shortname, chip->addr, chip->irq);
++
++	return 0;
++}
++
++/*
++ * constructor
++ */
++static int hda_tegra_create(struct snd_card *card,
++			    unsigned int driver_caps,
++			    const struct hda_controller_ops *hda_ops,
++			    struct hda_tegra *hda)
++{
++	static struct snd_device_ops ops = {
++		.dev_free = hda_tegra_dev_free,
++	};
++	struct azx *chip;
++	int err;
++
++	chip = &hda->chip;
++
++	spin_lock_init(&chip->reg_lock);
++	mutex_init(&chip->open_mutex);
++	chip->card = card;
++	chip->ops = hda_ops;
++	chip->irq = -1;
++	chip->driver_caps = driver_caps;
++	chip->driver_type = driver_caps & 0xff;
++	chip->dev_index = 0;
++	INIT_LIST_HEAD(&chip->pcm_list);
++	INIT_LIST_HEAD(&chip->list);
++
++	chip->position_fix[0] = POS_FIX_AUTO;
++	chip->position_fix[1] = POS_FIX_AUTO;
++	chip->codec_probe_mask = -1;
++
++	chip->single_cmd = false;
++	chip->snoop = true;
++
++	err = snd_device_new(card, SNDRV_DEV_LOWLEVEL, chip, &ops);
++	if (err < 0) {
++		dev_err(card->dev, "Error creating device\n");
++		return err;
++	}
++
++	return 0;
++}
++
++static const struct of_device_id hda_tegra_match[] = {
++	{ .compatible = "nvidia,tegra30-hda" },
++	{},
++};
++
++static int hda_tegra_probe(struct platform_device *pdev)
++{
++	struct snd_card *card;
++	struct azx *chip;
++	struct hda_tegra *hda;
++	const struct of_device_id *of_id;
++	int err;
++	const unsigned int driver_flags = AZX_DCAPS_RIRB_DELAY |
++					  AZX_DCAPS_PM_RUNTIME;
++
++	of_id = of_match_device(hda_tegra_match, &pdev->dev);
++	if (!of_id)
++		return -ENODEV;
++
++	hda = devm_kzalloc(&pdev->dev, sizeof(*hda), GFP_KERNEL);
++	if (!hda)
++		return -ENOMEM;
++	hda->dev = &pdev->dev;
++	chip = &hda->chip;
++
++	err = snd_card_new(&pdev->dev, SNDRV_DEFAULT_IDX1, SNDRV_DEFAULT_STR1,
++			   THIS_MODULE, 0, &card);
++	if (err < 0) {
++		dev_err(&pdev->dev, "Error creating card!\n");
++		return err;
++	}
++
++	err = hda_tegra_create(card, driver_flags, &hda_tegra_ops, hda);
++	if (err < 0)
++		goto out_free;
++	card->private_data = chip;
++
++	dev_set_drvdata(&pdev->dev, card);
++
++	err = hda_tegra_first_init(chip, pdev);
++	if (err < 0)
++		goto out_free;
++
++	/* create codec instances */
++	err = azx_codec_create(chip, NULL, 0, &power_save);
++	if (err < 0)
++		goto out_free;
++
++	err = azx_codec_configure(chip);
++	if (err < 0)
++		goto out_free;
++
++	/* create PCM streams */
++	err = snd_hda_build_pcms(chip->bus);
++	if (err < 0)
++		goto out_free;
++
++	/* create mixer controls */
++	err = azx_mixer_create(chip);
++	if (err < 0)
++		goto out_free;
++
++	err = snd_card_register(chip->card);
++	if (err < 0)
++		goto out_free;
++
++	chip->running = 1;
++	pm_runtime_enable(chip->card->dev);
++	hda_tegra_disable_clocks(hda);
++	power_down_all_codecs(chip);
++	hda_tegra_notifier_register(chip);
++
++	return 0;
++
++out_free:
++	snd_card_free(card);
++	return err;
++}
++
++static int hda_tegra_remove(struct platform_device *pdev)
++{
++	return snd_card_free(dev_get_drvdata(&pdev->dev));
++}
++
++static struct platform_driver tegra_platform_hda = {
++	.driver = {
++		.name = "tegra-hda",
++		.pm = &hda_tegra_pm,
++		.of_match_table = hda_tegra_match,
++	},
++	.probe = hda_tegra_probe,
++	.remove = hda_tegra_remove,
++};
++module_platform_driver(tegra_platform_hda);
++
++MODULE_DESCRIPTION("Tegra HDA bus driver");
++MODULE_LICENSE("GPL v2");
++MODULE_DEVICE_TABLE(of, tegra_platform_hda_match);
+-- 
+1.8.1.3.605.g02339dd
