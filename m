@@ -1,141 +1,158 @@
 From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
-	<antoine.tenart@free-electrons.com>
-Subject: [PATCH RESEND 1/5] pinctrl: allows not to define the get_group_pins operation
-Date: Thu, 10 Apr 2014 15:07:50 +0200
-Message-ID: <1397135274-10764-2-git-send-email-antoine.tenart@free-electrons.com>
+	<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH RESEND 5/5] ARM: dts: berlin: add the pinctrl node and muxing setup for uarts
+Date: Thu, 10 Apr 2014 15:07:54 +0200
+Message-ID: <1397135274-10764-6-git-send-email-antoine.tenart@free-electrons.com>
 References: <1397135274-10764-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1397135274-10764-1-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com, linus.walleij@linaro.org
-Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1397135274-10764-1-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-When using a group only pinctrl driver, which does not have any
-information on the pins it is useless to define a get_group_pins
-always returning an empty list of pins.
+The uart0 pinmux configuration is in the dtsi because uart0 will always
+use uart0-pmux to work, no other possibility. Same thing for uart1.
 
-When not using get_group_pin[1], a driver must implement it so
-pins =3D NULL and num_pins =3D 0. This patch makes it the default
-behaviour if not defined in the pinctrl driver when used in
-pinmux enable and disable funtions and in pinctrl_groups_show.
-
-It also adds a check in pinctrl_get_group_pins and return -EINVAL if
-not defined. This function is called in the gpiolib when adding when
-pingroup range. It cannot be used if no group is defined, so this seams
-reasonable.
-
-[1] get_group_pin(struct pinctrl_dev *pctldev,
-		  unsigned selector,
-		  const unsigned **pins,
-		  unsigned *num_pins);
-
-Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
+Signed-off-by: Antoine T=C3=A9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/pinctrl/core.c   | 17 ++++++++++-------
- drivers/pinctrl/pinmux.c | 23 +++++++++++++----------
- 2 files changed, 23 insertions(+), 17 deletions(-)
+ arch/arm/boot/dts/berlin2.dtsi   | 20 ++++++++++++++++++++
+ arch/arm/boot/dts/berlin2cd.dtsi | 13 +++++++++++++
+ arch/arm/boot/dts/berlin2q.dtsi  | 20 ++++++++++++++++++++
+ 3 files changed, 53 insertions(+)
 
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index c0fe6091566a..e09474ecde23 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -468,6 +468,9 @@ int pinctrl_get_group_pins(struct pinctrl_dev *pctl=
-dev, const char *pin_group,
- 	const struct pinctrl_ops *pctlops =3D pctldev->desc->pctlops;
- 	int gs;
+diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berlin2=
+=2Edtsi
+index 56a1af2f1052..43eb90c36050 100644
+--- a/arch/arm/boot/dts/berlin2.dtsi
++++ b/arch/arm/boot/dts/berlin2.dtsi
+@@ -176,6 +176,22 @@
+ 			};
+ 		};
 =20
-+	if (!pctlops->get_group_pins)
-+		return -EINVAL;
++		pinctrl: pinctrl@0 {
++			compatible =3D "marvell,berlin2-pinctrl";
++			reg =3D <0xea0000 0x08>, <0xfc0000 0x44>;
++			reg-names =3D "global_base", "apb_base";
 +
- 	gs =3D pinctrl_get_group_selector(pctldev, pin_group);
- 	if (gs < 0)
- 		return gs;
-@@ -1362,15 +1365,16 @@ static int pinctrl_groups_show(struct seq_file =
-*s, void *what)
-=20
- 	seq_puts(s, "registered pin groups:\n");
- 	while (selector < ngroups) {
--		const unsigned *pins;
--		unsigned num_pins;
-+		const unsigned *pins =3D NULL;
-+		unsigned num_pins =3D 0;
- 		const char *gname =3D ops->get_group_name(pctldev, selector);
- 		const char *pname;
--		int ret;
-+		int ret =3D 0;
- 		int i;
-=20
--		ret =3D ops->get_group_pins(pctldev, selector,
--					  &pins, &num_pins);
-+		if (ops->get_group_pins)
-+			ret =3D ops->get_group_pins(pctldev, selector,
-+						  &pins, &num_pins);
- 		if (ret)
- 			seq_printf(s, "%s [ERROR GETTING PINS]\n",
- 				   gname);
-@@ -1694,8 +1698,7 @@ static int pinctrl_check_ops(struct pinctrl_dev *=
-pctldev)
-=20
- 	if (!ops ||
- 	    !ops->get_groups_count ||
--	    !ops->get_group_name ||
--	    !ops->get_group_pins)
-+	    !ops->get_group_name)
- 		return -EINVAL;
-=20
- 	if (ops->dt_node_to_map && !ops->dt_free_map)
-diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
-index 9248ce4efed4..051e8592990e 100644
---- a/drivers/pinctrl/pinmux.c
-+++ b/drivers/pinctrl/pinmux.c
-@@ -391,14 +391,16 @@ int pinmux_enable_setting(struct pinctrl_setting =
-const *setting)
- 	struct pinctrl_dev *pctldev =3D setting->pctldev;
- 	const struct pinctrl_ops *pctlops =3D pctldev->desc->pctlops;
- 	const struct pinmux_ops *ops =3D pctldev->desc->pmxops;
--	int ret;
--	const unsigned *pins;
--	unsigned num_pins;
-+	int ret =3D 0;
-+	const unsigned *pins =3D NULL;
-+	unsigned num_pins =3D 0;
- 	int i;
- 	struct pin_desc *desc;
-=20
--	ret =3D pctlops->get_group_pins(pctldev, setting->data.mux.group,
--				      &pins, &num_pins);
-+	if (pctlops->get_group_pins)
-+		ret =3D pctlops->get_group_pins(pctldev, setting->data.mux.group,
-+					      &pins, &num_pins);
++			uart0_pmux: uart0-pmux {
++				berlin,group =3D "GSM4";
++				berlin,function =3D <0>;
++			};
 +
- 	if (ret) {
- 		const char *gname;
++			uart1_pmux: uart1-pmux {
++				berlin,group =3D "GSM5";
++				berlin,function =3D <1>;
++			};
++		};
++
+ 		apb@fc0000 {
+ 			compatible =3D "simple-bus";
+ 			#address-cells =3D <1>;
+@@ -191,6 +207,8 @@
+ 				reg-io-width =3D <1>;
+ 				interrupts =3D <8>;
+ 				clocks =3D <&smclk>;
++				pinctrl-0 =3D <&uart0_pmux>;
++				pinctrl-names =3D "default";
+ 				status =3D "disabled";
+ 			};
 =20
-@@ -470,14 +472,15 @@ void pinmux_disable_setting(struct pinctrl_settin=
-g const *setting)
- 	struct pinctrl_dev *pctldev =3D setting->pctldev;
- 	const struct pinctrl_ops *pctlops =3D pctldev->desc->pctlops;
- 	const struct pinmux_ops *ops =3D pctldev->desc->pmxops;
--	int ret;
--	const unsigned *pins;
--	unsigned num_pins;
-+	int ret =3D 0;
-+	const unsigned *pins =3D NULL;
-+	unsigned num_pins =3D 0;
- 	int i;
- 	struct pin_desc *desc;
+@@ -201,6 +219,8 @@
+ 				reg-io-width =3D <1>;
+ 				interrupts =3D <9>;
+ 				clocks =3D <&smclk>;
++				pinctrl-0 =3D <&uart1_pmux>;
++				pinctrl-names =3D "default";
+ 				status =3D "disabled";
+ 			};
 =20
--	ret =3D pctlops->get_group_pins(pctldev, setting->data.mux.group,
--				      &pins, &num_pins);
-+	if (pctlops->get_group_pins)
-+		ret =3D pctlops->get_group_pins(pctldev, setting->data.mux.group,
-+					      &pins, &num_pins);
- 	if (ret) {
- 		const char *gname;
+diff --git a/arch/arm/boot/dts/berlin2cd.dtsi b/arch/arm/boot/dts/berli=
+n2cd.dtsi
+index 094968c27533..4c04cff89226 100644
+--- a/arch/arm/boot/dts/berlin2cd.dtsi
++++ b/arch/arm/boot/dts/berlin2cd.dtsi
+@@ -169,6 +169,17 @@
+ 			};
+ 		};
+=20
++		pinctrl: pinctrl@0 {
++			compatible =3D "marvell,berlin2cd-pinctrl";
++			reg =3D <0xea0000 0x08>, <0xfc0000 0x44>;
++			reg-names =3D "global_base", "apb_base";
++
++			uart0_pmux: uart0-pmux {
++				berlin,group =3D "G6";
++				berlin,function =3D <0>;
++			};
++		};
++
+ 		apb@fc0000 {
+ 			compatible =3D "simple-bus";
+ 			#address-cells =3D <1>;
+@@ -184,6 +195,8 @@
+ 				reg-io-width =3D <1>;
+ 				interrupts =3D <8>;
+ 				clocks =3D <&smclk>;
++				pinctrl-0 =3D <&uart0_pmux>;
++				pinctrl-names =3D "default";
+ 				status =3D "disabled";
+ 			};
+=20
+diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin=
+2q.dtsi
+index 07452a7483fa..e6e556055dfc 100644
+--- a/arch/arm/boot/dts/berlin2q.dtsi
++++ b/arch/arm/boot/dts/berlin2q.dtsi
+@@ -183,6 +183,22 @@
+ 			};
+ 		};
+=20
++		pinctrl: pinctrl@0 {
++			compatible =3D "marvell,berlin2q-pinctrl";
++			reg =3D <0xea0000 0x4c>, <0xfcd000 0x44>;
++			reg-names =3D "global_base", "sm_base";
++
++			uart0_pmux: uart0-pmux {
++				berlin,group =3D "GSM12";
++				berlin,function =3D <0>;
++			};
++
++			uart1_pmux: uart1-pmux {
++				berlin,group =3D "GSM14";
++				berlin,function =3D <1>;
++			};
++		};
++
+ 		apb@fc0000 {
+ 			compatible =3D "simple-bus";
+ 			#address-cells =3D <1>;
+@@ -198,6 +214,8 @@
+ 				interrupts =3D <8>;
+ 				clocks =3D <&smclk>;
+ 				reg-shift =3D <2>;
++				pinctrl-0 =3D <&uart0_pmux>;
++				pinctrl-names =3D "default";
+ 				status =3D "disabled";
+ 			};
+=20
+@@ -208,6 +226,8 @@
+ 				interrupts =3D <9>;
+ 				clocks =3D <&smclk>;
+ 				reg-shift =3D <2>;
++				pinctrl-0 =3D <&uart1_pmux>;
++				pinctrl-names =3D "default";
+ 				status =3D "disabled";
+ 			};
 =20
 --=20
 1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
