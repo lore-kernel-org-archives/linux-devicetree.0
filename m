@@ -1,251 +1,58 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH V3 15/19] ARM: ux500: Remove redundant board file for mmci platform data
-Date: Thu, 10 Apr 2014 14:20:58 +0200
-Message-ID: <1397132462-8005-16-git-send-email-ulf.hansson@linaro.org>
-References: <1397132462-8005-1-git-send-email-ulf.hansson@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397132462-8005-1-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] SPI: Add driver for Cadence SPI controller
+Date: Thu, 10 Apr 2014 13:21:46 +0100
+Message-ID: <20140410122146.GY6518@sirena.org.uk>
+References: <1397132030-2440-1-git-send-email-harinik@xilinx.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7tPHY7RFL01rOa8z"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1397132030-2440-1-git-send-email-harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Since all platform data has been transfered to DT, we don't need the
-container for the mmci platform data anymore. Remove the file and the
-corresponding references to it's data.
 
-Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/mach-ux500/Makefile           |    3 +-
- arch/arm/mach-ux500/board-mop500-sdi.c |  166 --------------------------------
- arch/arm/mach-ux500/board-mop500.h     |    5 -
- arch/arm/mach-ux500/cpu-db8500.c       |    4 -
- 4 files changed, 1 insertion(+), 177 deletions(-)
- delete mode 100644 arch/arm/mach-ux500/board-mop500-sdi.c
+--7tPHY7RFL01rOa8z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/mach-ux500/Makefile b/arch/arm/mach-ux500/Makefile
-index de544aa..9741de95 100644
---- a/arch/arm/mach-ux500/Makefile
-+++ b/arch/arm/mach-ux500/Makefile
-@@ -5,8 +5,7 @@
- obj-y				:= cpu.o id.o timer.o pm.o
- obj-$(CONFIG_CACHE_L2X0)	+= cache-l2x0.o
- obj-$(CONFIG_UX500_SOC_DB8500)	+= cpu-db8500.o
--obj-$(CONFIG_MACH_MOP500)	+= board-mop500-sdi.o \
--				board-mop500-regulators.o \
-+obj-$(CONFIG_MACH_MOP500)	+= board-mop500-regulators.o \
- 				board-mop500-audio.o
- obj-$(CONFIG_SMP)		+= platsmp.o headsmp.o
- obj-$(CONFIG_HOTPLUG_CPU)	+= hotplug.o
-diff --git a/arch/arm/mach-ux500/board-mop500-sdi.c b/arch/arm/mach-ux500/board-mop500-sdi.c
-deleted file mode 100644
-index fcbf3a1..0000000
---- a/arch/arm/mach-ux500/board-mop500-sdi.c
-+++ /dev/null
-@@ -1,166 +0,0 @@
--/*
-- * Copyright (C) ST-Ericsson SA 2010
-- *
-- * Author: Hanumath Prasad <hanumath.prasad-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
-- * License terms: GNU General Public License (GPL) version 2
-- */
--
--#include <linux/kernel.h>
--#include <linux/gpio.h>
--#include <linux/amba/bus.h>
--#include <linux/amba/mmci.h>
--#include <linux/mmc/host.h>
--#include <linux/platform_device.h>
--#include <linux/platform_data/dma-ste-dma40.h>
--
--#include <asm/mach-types.h>
--
--#include "db8500-regs.h"
--#include "board-mop500.h"
--#include "ste-dma40-db8500.h"
--
--/*
-- * v2 has a new version of this block that need to be forced, the number found
-- * in hardware is incorrect
-- */
--#define U8500_SDI_V2_PERIPHID 0x10480180
--
--/*
-- * SDI 0 (MicroSD slot)
-- */
--
--#ifdef CONFIG_STE_DMA40
--struct stedma40_chan_cfg mop500_sdi0_dma_cfg_rx = {
--	.mode = STEDMA40_MODE_LOGICAL,
--	.dir = DMA_DEV_TO_MEM,
--	.dev_type = DB8500_DMA_DEV29_SD_MM0,
--};
--
--static struct stedma40_chan_cfg mop500_sdi0_dma_cfg_tx = {
--	.mode = STEDMA40_MODE_LOGICAL,
--	.dir = DMA_MEM_TO_DEV,
--	.dev_type = DB8500_DMA_DEV29_SD_MM0,
--};
--#endif
--
--struct mmci_platform_data mop500_sdi0_data = {
--	.f_max		= 100000000,
--	.capabilities	= MMC_CAP_4_BIT_DATA |
--				MMC_CAP_SD_HIGHSPEED |
--				MMC_CAP_MMC_HIGHSPEED |
--				MMC_CAP_ERASE |
--				MMC_CAP_UHS_SDR12 |
--				MMC_CAP_UHS_SDR25,
--	.gpio_wp	= -1,
--	.sigdir		= MCI_ST_FBCLKEN |
--				MCI_ST_CMDDIREN |
--				MCI_ST_DATA0DIREN |
--				MCI_ST_DATA2DIREN,
--#ifdef CONFIG_STE_DMA40
--	.dma_filter	= stedma40_filter,
--	.dma_rx_param	= &mop500_sdi0_dma_cfg_rx,
--	.dma_tx_param	= &mop500_sdi0_dma_cfg_tx,
--#endif
--};
--
--/*
-- * SDI1 (SDIO WLAN)
-- */
--#ifdef CONFIG_STE_DMA40
--static struct stedma40_chan_cfg sdi1_dma_cfg_rx = {
--	.mode = STEDMA40_MODE_LOGICAL,
--	.dir = DMA_DEV_TO_MEM,
--	.dev_type = DB8500_DMA_DEV32_SD_MM1,
--};
--
--static struct stedma40_chan_cfg sdi1_dma_cfg_tx = {
--	.mode = STEDMA40_MODE_LOGICAL,
--	.dir = DMA_MEM_TO_DEV,
--	.dev_type = DB8500_DMA_DEV32_SD_MM1,
--};
--#endif
--
--struct mmci_platform_data mop500_sdi1_data = {
--	.ocr_mask	= MMC_VDD_29_30,
--	.f_max		= 100000000,
--	.capabilities	= MMC_CAP_4_BIT_DATA |
--				MMC_CAP_NONREMOVABLE,
--	.gpio_cd	= -1,
--	.gpio_wp	= -1,
--#ifdef CONFIG_STE_DMA40
--	.dma_filter	= stedma40_filter,
--	.dma_rx_param	= &sdi1_dma_cfg_rx,
--	.dma_tx_param	= &sdi1_dma_cfg_tx,
--#endif
--};
--
--/*
-- * SDI 2 (POP eMMC, not on DB8500ed)
-- */
--
--#ifdef CONFIG_STE_DMA40
--struct stedma40_chan_cfg mop500_sdi2_dma_cfg_rx = {
--	.mode = STEDMA40_MODE_LOGICAL,
--	.dir = DMA_DEV_TO_MEM,
--	.dev_type =  DB8500_DMA_DEV28_SD_MM2,
--};
--
--static struct stedma40_chan_cfg mop500_sdi2_dma_cfg_tx = {
--	.mode = STEDMA40_MODE_LOGICAL,
--	.dir = DMA_MEM_TO_DEV,
--	.dev_type = DB8500_DMA_DEV28_SD_MM2,
--};
--#endif
--
--struct mmci_platform_data mop500_sdi2_data = {
--	.ocr_mask	= MMC_VDD_165_195,
--	.f_max		= 100000000,
--	.capabilities	= MMC_CAP_4_BIT_DATA |
--				MMC_CAP_8_BIT_DATA |
--				MMC_CAP_NONREMOVABLE |
--				MMC_CAP_MMC_HIGHSPEED |
--				MMC_CAP_ERASE |
--				MMC_CAP_CMD23,
--	.gpio_cd	= -1,
--	.gpio_wp	= -1,
--#ifdef CONFIG_STE_DMA40
--	.dma_filter	= stedma40_filter,
--	.dma_rx_param	= &mop500_sdi2_dma_cfg_rx,
--	.dma_tx_param	= &mop500_sdi2_dma_cfg_tx,
--#endif
--};
--
--/*
-- * SDI 4 (on-board eMMC)
-- */
--
--#ifdef CONFIG_STE_DMA40
--struct stedma40_chan_cfg mop500_sdi4_dma_cfg_rx = {
--	.mode = STEDMA40_MODE_LOGICAL,
--	.dir = DMA_DEV_TO_MEM,
--	.dev_type =  DB8500_DMA_DEV42_SD_MM4,
--};
--
--static struct stedma40_chan_cfg mop500_sdi4_dma_cfg_tx = {
--	.mode = STEDMA40_MODE_LOGICAL,
--	.dir = DMA_MEM_TO_DEV,
--	.dev_type = DB8500_DMA_DEV42_SD_MM4,
--};
--#endif
--
--struct mmci_platform_data mop500_sdi4_data = {
--	.f_max		= 100000000,
--	.capabilities	= MMC_CAP_4_BIT_DATA |
--				MMC_CAP_8_BIT_DATA |
--				MMC_CAP_NONREMOVABLE |
--				MMC_CAP_MMC_HIGHSPEED |
--				MMC_CAP_ERASE |
--				MMC_CAP_CMD23,
--	.gpio_cd	= -1,
--	.gpio_wp	= -1,
--#ifdef CONFIG_STE_DMA40
--	.dma_filter	= stedma40_filter,
--	.dma_rx_param	= &mop500_sdi4_dma_cfg_rx,
--	.dma_tx_param	= &mop500_sdi4_dma_cfg_tx,
--#endif
--};
-diff --git a/arch/arm/mach-ux500/board-mop500.h b/arch/arm/mach-ux500/board-mop500.h
-index 32cc0d8..7c7b0ad 100644
---- a/arch/arm/mach-ux500/board-mop500.h
-+++ b/arch/arm/mach-ux500/board-mop500.h
-@@ -8,12 +8,7 @@
- #define __BOARD_MOP500_H
- 
- #include <linux/platform_data/asoc-ux500-msp.h>
--#include <linux/amba/mmci.h>
- 
--extern struct mmci_platform_data mop500_sdi0_data;
--extern struct mmci_platform_data mop500_sdi1_data;
--extern struct mmci_platform_data mop500_sdi2_data;
--extern struct mmci_platform_data mop500_sdi4_data;
- extern struct msp_i2s_platform_data msp0_platform_data;
- extern struct msp_i2s_platform_data msp1_platform_data;
- extern struct msp_i2s_platform_data msp2_platform_data;
-diff --git a/arch/arm/mach-ux500/cpu-db8500.c b/arch/arm/mach-ux500/cpu-db8500.c
-index 8820f60..fa308f0 100644
---- a/arch/arm/mach-ux500/cpu-db8500.c
-+++ b/arch/arm/mach-ux500/cpu-db8500.c
-@@ -146,10 +146,6 @@ static struct of_dev_auxdata u8500_auxdata_lookup[] __initdata = {
- 	/* Requires call-back bindings. */
- 	OF_DEV_AUXDATA("arm,cortex-a9-pmu", 0, "arm-pmu", &db8500_pmu_platdata),
- 	/* Requires DMA bindings. */
--	OF_DEV_AUXDATA("arm,pl18x", 0x80126000, "sdi0",  &mop500_sdi0_data),
--	OF_DEV_AUXDATA("arm,pl18x", 0x80118000, "sdi1",  &mop500_sdi1_data),
--	OF_DEV_AUXDATA("arm,pl18x", 0x80005000, "sdi2",  &mop500_sdi2_data),
--	OF_DEV_AUXDATA("arm,pl18x", 0x80114000, "sdi4",  &mop500_sdi4_data),
- 	OF_DEV_AUXDATA("stericsson,ux500-msp-i2s", 0x80123000,
- 		       "ux500-msp-i2s.0", &msp0_platform_data),
- 	OF_DEV_AUXDATA("stericsson,ux500-msp-i2s", 0x80124000,
--- 
-1.7.9.5
+On Thu, Apr 10, 2014 at 05:43:49PM +0530, Harini Katakam wrote:
 
+> Firstly, the timeout value obtained from this is a too low.
+> This timeout is typically used for an error conditions such as
+> hardware hang etc. and using a value >1*HZ would be better.
+> This driver used to use similar timeout and as I understand, other
+> drivers also use similar values.
+
+Send patches...
+
+--7tPHY7RFL01rOa8z
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTRozXAAoJELSic+t+oim9yQUP/RheMmc5lFwvXa2yuTAe3Lkv
+dgC8+WEke3iYWHQNJHJIYewKdZtVzucbMDX4JhnQfkdtkA7w34RHxU79YBADfYD3
+Q9Aig63VvE+1VvM+bh3qNPnERNlilH1TBRCGO9P2FOqEGLCt0yy6btka0HcsUnny
+xD8QFLEQHxxrJLi6WtwkfAEHOxCBqaey+IwDMfU/Mbr7ZpdL8yP/RIcXgKNlXj9V
+8m+L3TEhjyeaEWdjwvIIrHuhQUwOIABMCnWJsBMdX/6kjWOe6oIZK+Y7JJ5GAHZd
+mHwDCUv5cyo10OmJQvgVM4k61oHDZ0ZPrOPxy+U6MQcUNsrcvMBTRLVyQeDp4p36
+pAquchakenME1mcdjjKM4eXer5RYQs2gdny6VPG4lAG2ySGt2bb5gJMGlgPqDS3d
+iN80Kdbu+eWqRtN+uOaVbUEOlaK/qd+WvK0TxfsqeE+eJukBDv4e3viqY/YRI/Se
+DCIXYgfCbApjDbIMU2ylHXFvsGXD88dSN62dX5OiukqnE2Wfia+rrOkUU4XOwd2r
++NABGhbjsm1QOgbptKXzTYRgenO68qaQ6DWrwBZ9YZGn2sI0mHQk25IaaY6SKoa9
+wFMguYks2jLTwX0IPOAQ3E/L2ou4jd0I7u+kmR+R4wCIPSTofHBThp65ir+NgVfe
+rPeQWyiAUoAgu2azgYzD
+=EaHN
+-----END PGP SIGNATURE-----
+
+--7tPHY7RFL01rOa8z--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
