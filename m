@@ -1,57 +1,49 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [RFC PATCH v2] edac: synopsys: Added EDAC support for zynq ddr
- ecc controller
-Date: Thu, 10 Apr 2014 11:49:57 +0200
-Message-ID: <5e0042b6-f169-4025-8fd7-9d70c2ed0cf6@AM1EHSMHS012.ehs.local>
-References: <1220b715-6fc2-42ed-8393-b9859fc0deb9@TX2EHSMHS021.ehs.local> <20140408204047.GQ30077@pd.tnic> <534633C0.9090905@monstr.eu> <20140410092144.GD29093@pd.tnic>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 00/15] ARM: sunxi: add A31 PL pins support
+Date: Thu, 10 Apr 2014 17:56:14 +0800
+Message-ID: <CAGb2v65xhEHS_qETZUWcjeaVQK1V84J4h1LzA7uTrtWS=7P8+Q@mail.gmail.com>
+References: <1397051478-4113-1-git-send-email-boris.brezillon@free-electrons.com>
+ <CAGb2v66XCN2ar1wj+a1+ZwdcdJ3gzJ+nDiO9bu52OwK+mBB_Hg@mail.gmail.com>
+ <20140409151747.GH28585@lukather> <CAGb2v67+YNhw2MXSu9DTKSUfXH=v+uD7KEaxyiPezyf9CYtmPw@mail.gmail.com>
+ <20140410081031.GM28585@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140410092144.GD29093@pd.tnic>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Michal Simek <monstr@monstr.eu>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, dougthompson@xmission.com, linux-edac@vger.kernel.org, michal.simek@xilinx.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, sorenb@xilinx.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, punnaia@xilinx.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140410081031.GM28585@lukather>
+Sender: linux-doc-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Boris BREZILLON <boris.brezillon@free-electrons.com>, Randy Dunlap <rdunlap@infradead.org>, =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/10/2014 11:21 AM, Borislav Petkov wrote:
-> On Thu, Apr 10, 2014 at 08:01:36AM +0200, Michal Simek wrote:
->> Just add it to Zynq maintainer fragment as we are doing for non
->> zynq/xilinx drivers.
-> 
-> Yep, as a file pattern F:
+On Thu, Apr 10, 2014 at 4:10 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> On Thu, Apr 10, 2014 at 12:27:32AM +0800, Chen-Yu Tsai wrote:
+>> >> > Let me know if these changes are too intrusive.
+>> >>
+>> >> I wonder if we should do a separate driver for the new PIO controller.
+>> >> Clearly it's a separate IP block, with it's own clock and reset controls.
+>> >
+>> > It's been merged together in the A23, hence why we did it like that.
+>>
+>> I'm not sure I understand. The clock gate and reset control are still separate,
+>> are they not?
+>
+> On the A31 the "regular" port controler handles PA to PH banks, while
+> the R_PIO handles the PL and PM banks.
+>
+> On the A23, the regular port controler handles PA to PL banks, and the
+> R_PIO and PM bank doesn't exist.
 
-yep.
+On closer inspection of the user manual and the SDK code,
+there is no reset control for R_PIO in the A23, but there is
+still a APB0 gate. Also the register space is still at 0x01f02c00,
+the address space for R_PIO.
 
->> At least the is the first time when someone saying that only some
->> functions should be documented.
-> 
-> I don't see the need to document simple functions which are *obvious*.
-> But if you want to do that, I'm not going to stop you so be my guest.
+I know the user manual lists the PL pins under the PIO controller,
+however the section doesn't list registers for them. It would seem
+they are still separate blocks. Also the kernel code never bothers
+to enable the R_PIO clock, possibly because it was enabled by U-boot.
 
-ok. thanks.
-
-
->> I don't think this is good to do. When we remove this prefix entirely
->> it is bigger chance that the same function name will be used by
->> another driver. It is not a problem with linking but the same
->> functions names will be listed in System.map which will complicate
->> debugging.
-> 
-> Ok, fair enough. You probably still want to make them shorter, though,
-> so that your code doesn't have to be line-broken too much. For example,
-> since we only load a single edac driver per system, you can shorten the
-> prefix to "edac_" only.
-
-I agree with you that we can use shorter name.
-I have checked this with Punnaiah and I can't see any problem to have
-more edac drivers in the system.
-For zynq there is primary ddr controller which is target by this driver.
-Then we are talking about L2 in another thread.
-Because zynq has programmable logic next to chip where you can add
-soft memory controller (we have these hw designs) on the same bus
-then there could be others edac drivers.
-I would say how many you like till pins on the package.
-
-Thanks,
-Michal
+> So we're not quite in the same situation. The A31 is troublesome,
+> while the A23 (except for the external interrupts), is pretty much
+> what we've seen so far with the A10/A20/...
