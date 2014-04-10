@@ -1,162 +1,223 @@
-From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v7 4/6] pci: Introduce a domain number for
- pci_host_bridge.
-Date: Thu, 10 Apr 2014 15:53:04 +0100
-Message-ID: <20140410145304.GS985@e106497-lin.cambridge.arm.com>
-References: <1394811272-1547-5-git-send-email-Liviu.Dudau@arm.com>
- <4506772.YFSM2m1eaP@wuerfel>
- <CAErSpo6u7kr+QdnhAXBo20izg-DNHR4zHT+kRvq34whp68RJCQ@mail.gmail.com>
- <6144916.rD76jOL8sv@wuerfel>
+From: Nicolin Chen <Guangyu.Chen@freescale.com>
+Subject: Re: [PATCH v5] ASoC: fsl_sai: Add clock controls for SAI
+Date: Thu, 10 Apr 2014 22:39:35 +0800
+Message-ID: <20140410143933.GB14658@MrMyself>
+References: <1397128992-3609-1-git-send-email-Guangyu.Chen@freescale.com>
+ <20140410140745.GE28420@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6144916.rD76jOL8sv@wuerfel>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+In-Reply-To: <20140410140745.GE28420@dragon>
+Sender: linux-doc-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: broonie@kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, timur@tabi.org, Li.Xiubo@freescale.com, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 10, 2014 at 03:07:44PM +0100, Arnd Bergmann wrote:
-> On Thursday 10 April 2014 07:50:52 Bjorn Helgaas wrote:
-> > On Thu, Apr 10, 2014 at 2:00 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrot=
-e:
-> > > On Wednesday 09 April 2014 21:48:14 Bjorn Helgaas wrote:
-> > >> On Wed, Apr 9, 2014 at 7:27 PM, Liviu Dudau <liviu-I3yL/QOVVjH10XsdtD+oqA@public.gmane.org> =
-wrote:
-> > >> > On Wed, Apr 09, 2014 at 08:02:41AM -0600, Bjorn Helgaas wrote:
-> > >> >> >>   struct pci_host_bridge {
-> > >> >> >>     int domain;
-> > >> >> >>     int node;
-> > >> >> >>     struct device *dev;
-> > >> >> >>     struct pci_ops *ops;
-> > >> >> >>     struct list_head resources;
-> > >> >> >>     void *sysdata;
-> > >> >> >>     struct pci_bus *bus;  /* filled in by core, not by arc=
-h */
-> > >> >> >>     ... /* other existing contents managed by core */
-> > >> >> >>   };
-> > >> >> >>
-> > >> >> >>   struct pci_bus *pci_scan_host_bridge(struct pci_host_bri=
-dge *bridge);
-> > >> >> >
-> >=20
-> > I'm not sure I'm following you; you mean the arch-specific sysdata
-> > structure would contain a pointer to struct pci_host_bridge?
-> >=20
-> > I have to admit that I'm not up on how other subsystems handle this
-> > sort of abstraction.  Do you have any pointers to good examples tha=
-t I
-> > can study?
->=20
-> What I mean is like this:
->=20
-> /* generic structure */
-> struct pci_host_bridge {
->         int domain;
->         int node;
->         struct device *dev;
->         struct pci_ops *ops;=20
->         struct list_head resources;
->         struct pci_bus *bus;  /* filled in by core, not by arch */
->         ... /* other existing contents managed by core */
-> };
->=20
-> /* arm specific structure */
-> struct pci_sys_data {
->         char            io_res_name[12];
->                                         /* Bridge swizzling          =
-           */
->         u8              (*swizzle)(struct pci_dev *, u8 *);
->                                         /* IRQ mapping               =
-           */
->         int             (*map_irq)(const struct pci_dev *, u8, u8);
->                                         /* Resource alignement requir=
-ements     */
->         void            (*add_bus)(struct pci_bus *bus);
->         void            (*remove_bus)(struct pci_bus *bus);
->         void            *private_data;  /* platform controller privat=
-e data     */
->=20
-> 	/* not a pointer: */
-> 	struct pci_host_bridge bridge;
-> };
-> static inline struct pci_sys_data *to_pci_sys_data(struct pci_host_br=
-idge *bridge)
-> {
-> 	return container_of(bridge, struct pci_sys_data, bridge);
-> }
->=20
-> /* arm specific, driver specific structure */
-> struct tegra_pcie {
->         void __iomem *pads;
->         void __iomem *afi;
->=20
->         struct clk *pex_clk;
->         struct clk *afi_clk;
->         struct clk *pll_e;
->         struct clk *cml_clk;
->=20
->         struct tegra_msi msi;
->=20
->         struct list_head ports;
->         unsigned int num_ports;
->=20
-> 	struct pci_sys_data sysdata;
-> };
-> static inline struct tegra_pcie *to_tegra_pcie(struct pci_sys_data *s=
-ysdata)
-> {
-> 	return container_of(sysdata, struct tegra_pcie, sysdata);
-> }
->=20
-> This mirrors how we treat devices: a pci_device has an embedded devic=
-e,
-> and so on, in other subsystems we can have multiple layers.
->=20
-> In this example, the tegra pcie driver then allocates its own tegra_p=
-cie
-> structure, fills out the fields it needs, and registers it with the
-> ARM architecture code, passing just the pci_sys_data pointer. That fu=
-nction
-> in turn passes a pointer to the embedded pci_host_bridge down to the
-> generic code. Ideally we should try to eliminate the architecture spe=
-cific
-> portion here, but that is a later step.
+On Thu, Apr 10, 2014 at 10:07:47PM +0800, Shawn Guo wrote:
+> On Thu, Apr 10, 2014 at 07:23:12PM +0800, Nicolin Chen wrote:
+> > The SAI mainly has the following clocks:
+> >   bus clock
+> >     control and configure registers and to generate synchronous
+> >     interrupts and DMA requests.
+> > 
+> >   mclk1, mclk2, mclk3
+> >     to generate the bit clock when the receiver or transmitter is
+> >     configured for an internally generated bit clock.
+> > 
+> > So this patch adds these clocks and their clock controls to the driver,
+> > meanwhile, corrects the existing DTS accordingly so those platforms can
+> > benifit from the further feature with different clock sources.
+> > 
+> > [ To concern the old DTB cases, I've added a bit of extra code to make
+> >   the driver compatible with them. And by marking clock NULL if failed
+> >   to get, the clk_prepare() or clk_get_rate() would easily return 0
+> >   so no further path should be broken. -- by Nicolin ]
+> 
+> In this case, the arch/arm/boot/dts/vf610.dtsi can just go via IMX tree,
+> since nothing should be broken on sound tree even without dts change?
 
-So Arnd seems to agree with me: we should try to get out of architectur=
-e specific
-pci_sys_data and link the host bridge driver straight into the PCI core=
-=2E The
-core then can call into arch code via pcibios_*() functions.
+You are right...I'll send the v6.
 
-Arnd, am I reading correctly into what you are saying?
+Thank you,
+Nicolin
 
-Liviu
+----
+> 
+> Shawn
+> 
+> > 
+> > Signed-off-by: Nicolin Chen <Guangyu.Chen@freescale.com>
+> > Acked-by: Xiubo Li <Li.Xiubo@freescale.com>
+> > Acked-by: Shawn Guo <shawn.guo@linaro.org>
+> > ---
+> > 
+> > Changelog
+> > v5:
+> >  * Dropped mclk preparing and enabling since we are not using them currecntly.
+> >  * Made the change compatible to the old DTB.
+> >  * Added returned error value print.
+> > v4:
+> >  * Merged into single patch.
+> >  * Fixed bus clock ID on vf610.
+> > v3:
+> >  * Use int type for ret instead of u32.
+> >  * Added Acked-by and Tested-by from Xiubo Li.
+> > v2:
+> >  * Appended two extra mclks to the driver since SAI actually has three.
+> >  * Renamed clock name to 'bus' and 'mclk' according to the reference manual.
+> > 
+> >  .../devicetree/bindings/sound/fsl-sai.txt          |  9 +++--
+> >  arch/arm/boot/dts/vf610.dtsi                       |  6 ++--
+> >  sound/soc/fsl/fsl_sai.c                            | 38 ++++++++++++++++++++--
+> >  sound/soc/fsl/fsl_sai.h                            |  4 +++
+> >  4 files changed, 50 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
+> > index 35c09fe..0f4e238 100644
+> > --- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
+> > +++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
+> > @@ -10,7 +10,8 @@ Required properties:
+> >  - compatible: Compatible list, contains "fsl,vf610-sai" or "fsl,imx6sx-sai".
+> >  - reg: Offset and length of the register set for the device.
+> >  - clocks: Must contain an entry for each entry in clock-names.
+> > -- clock-names : Must include the "sai" entry.
+> > +- clock-names : Must include the "bus" for register access and "mclk1" "mclk2"
+> > +  "mclk3" for bit clock and frame clock providing.
+> >  - dmas : Generic dma devicetree binding as described in
+> >    Documentation/devicetree/bindings/dma/dma.txt.
+> >  - dma-names : Two dmas have to be defined, "tx" and "rx".
+> > @@ -30,8 +31,10 @@ sai2: sai@40031000 {
+> >  	      reg = <0x40031000 0x1000>;
+> >  	      pinctrl-names = "default";
+> >  	      pinctrl-0 = <&pinctrl_sai2_1>;
+> > -	      clocks = <&clks VF610_CLK_SAI2>;
+> > -	      clock-names = "sai";
+> > +	      clocks = <&clks VF610_CLK_PLATFORM_BUS>,
+> > +		     <&clks VF610_CLK_SAI2>,
+> > +		     <&clks 0>, <&clks 0>;
+> > +	      clock-names = "bus", "mclk1", "mclk2", "mclk3";
+> >  	      dma-names = "tx", "rx";
+> >  	      dmas = <&edma0 0 VF610_EDMA_MUXID0_SAI2_TX>,
+> >  		   <&edma0 0 VF610_EDMA_MUXID0_SAI2_RX>;
+> > diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
+> > index d31ce1b..4c3cd59 100644
+> > --- a/arch/arm/boot/dts/vf610.dtsi
+> > +++ b/arch/arm/boot/dts/vf610.dtsi
+> > @@ -139,8 +139,10 @@
+> >  				compatible = "fsl,vf610-sai";
+> >  				reg = <0x40031000 0x1000>;
+> >  				interrupts = <0 86 0x04>;
+> > -				clocks = <&clks VF610_CLK_SAI2>;
+> > -				clock-names = "sai";
+> > +				clocks = <&clks VF610_CLK_PLATFORM_BUS>,
+> > +				       <&clks VF610_CLK_SAI2>,
+> > +				       <&clks 0>, <&clks 0>;
+> > +				clock-names = "bus", "mclk1", "mclk2", "mclk3";
+> >  				status = "disabled";
+> >  			};
+> >  
+> > diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+> > index db9f75e..5fff2e1 100644
+> > --- a/sound/soc/fsl/fsl_sai.c
+> > +++ b/sound/soc/fsl/fsl_sai.c
+> > @@ -401,7 +401,15 @@ static int fsl_sai_startup(struct snd_pcm_substream *substream,
+> >  		struct snd_soc_dai *cpu_dai)
+> >  {
+> >  	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
+> > +	struct device *dev = &sai->pdev->dev;
+> >  	u32 reg;
+> > +	int ret;
+> > +
+> > +	ret = clk_prepare_enable(sai->bus_clk);
+> > +	if (ret) {
+> > +		dev_err(dev, "failed to enable bus clock: %d\n", ret);
+> > +		return ret;
+> > +	}
+> >  
+> >  	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+> >  		reg = FSL_SAI_TCR3;
+> > @@ -427,6 +435,8 @@ static void fsl_sai_shutdown(struct snd_pcm_substream *substream,
+> >  
+> >  	regmap_update_bits(sai->regmap, reg, FSL_SAI_CR3_TRCE,
+> >  			   ~FSL_SAI_CR3_TRCE);
+> > +
+> > +	clk_disable_unprepare(sai->bus_clk);
+> >  }
+> >  
+> >  static const struct snd_soc_dai_ops fsl_sai_pcm_dai_ops = {
+> > @@ -559,7 +569,8 @@ static int fsl_sai_probe(struct platform_device *pdev)
+> >  	struct fsl_sai *sai;
+> >  	struct resource *res;
+> >  	void __iomem *base;
+> > -	int irq, ret;
+> > +	char tmp[8];
+> > +	int irq, ret, i;
+> >  
+> >  	sai = devm_kzalloc(&pdev->dev, sizeof(*sai), GFP_KERNEL);
+> >  	if (!sai)
+> > @@ -582,12 +593,35 @@ static int fsl_sai_probe(struct platform_device *pdev)
+> >  		return PTR_ERR(base);
+> >  
+> >  	sai->regmap = devm_regmap_init_mmio_clk(&pdev->dev,
+> > -			"sai", base, &fsl_sai_regmap_config);
+> > +			"bus", base, &fsl_sai_regmap_config);
+> > +
+> > +	/* Compatible with old DTB cases */
+> > +	if (IS_ERR(sai->regmap))
+> > +		sai->regmap = devm_regmap_init_mmio_clk(&pdev->dev,
+> > +				"sai", base, &fsl_sai_regmap_config);
+> >  	if (IS_ERR(sai->regmap)) {
+> >  		dev_err(&pdev->dev, "regmap init failed\n");
+> >  		return PTR_ERR(sai->regmap);
+> >  	}
+> >  
+> > +	/* No error out for old DTB cases but only mark the clock NULL */
+> > +	sai->bus_clk = devm_clk_get(&pdev->dev, "bus");
+> > +	if (IS_ERR(sai->bus_clk)) {
+> > +		dev_err(&pdev->dev, "failed to get bus clock: %ld\n",
+> > +				PTR_ERR(sai->bus_clk));
+> > +		sai->bus_clk = NULL;
+> > +	}
+> > +
+> > +	for (i = 0; i < FSL_SAI_MCLK_MAX; i++) {
+> > +		sprintf(tmp, "mclk%d", i + 1);
+> > +		sai->mclk_clk[i] = devm_clk_get(&pdev->dev, tmp);
+> > +		if (IS_ERR(sai->mclk_clk[i])) {
+> > +			dev_err(&pdev->dev, "failed to get mclk%d clock: %ld\n",
+> > +					i + 1, PTR_ERR(sai->mclk_clk[i]));
+> > +			sai->mclk_clk[i] = NULL;
+> > +		}
+> > +	}
+> > +
+> >  	irq = platform_get_irq(pdev, 0);
+> >  	if (irq < 0) {
+> >  		dev_err(&pdev->dev, "no irq for node %s\n", np->full_name);
+> > diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
+> > index 677670d..0e6c9f5 100644
+> > --- a/sound/soc/fsl/fsl_sai.h
+> > +++ b/sound/soc/fsl/fsl_sai.h
+> > @@ -119,6 +119,8 @@
+> >  #define FSL_SAI_CLK_MAST2	2
+> >  #define FSL_SAI_CLK_MAST3	3
+> >  
+> > +#define FSL_SAI_MCLK_MAX	3
+> > +
+> >  /* SAI data transfer numbers per DMA request */
+> >  #define FSL_SAI_MAXBURST_TX 6
+> >  #define FSL_SAI_MAXBURST_RX 6
+> > @@ -126,6 +128,8 @@
+> >  struct fsl_sai {
+> >  	struct platform_device *pdev;
+> >  	struct regmap *regmap;
+> > +	struct clk *bus_clk;
+> > +	struct clk *mclk_clk[FSL_SAI_MCLK_MAX];
+> >  
+> >  	bool big_endian_regs;
+> >  	bool big_endian_data;
+> > -- 
+> > 1.8.4
+> > 
+> > 
+> 
 
->=20
-> 	Arnd
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" =
-in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
