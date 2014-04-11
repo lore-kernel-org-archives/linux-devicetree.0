@@ -1,55 +1,260 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/6] ARM: dts: keystone: drop address and size cells from
- GIC node
-Date: Fri, 11 Apr 2014 10:58:42 -0500
-Message-ID: <CAL_JsqJx-+7t237K+xsUtF7UifknJ3EV+2ujMNrp8wMA8Ns6jw@mail.gmail.com>
-References: <1397228380-7352-1-git-send-email-l.stach@pengutronix.de>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v3 2/2] dt: platform driver: Fill the resources before
+ probe and defer if needed
+Date: Fri, 11 Apr 2014 12:28:52 -0500
+Message-ID: <CAL_Jsq+aU+rs28gV=Gesb_-Dy6Ht7zuKrRA6_hmqp94Uun23Yg@mail.gmail.com>
+References: <20140320161118.B7075C4067A@trevor.secretlab.ca>
+	<1395413185-29763-1-git-send-email-jjhiblot@traphandler.com>
+	<1395413185-29763-3-git-send-email-jjhiblot@traphandler.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397228380-7352-1-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1395413185-29763-3-git-send-email-jjhiblot@traphandler.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 11, 2014 at 9:59 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> This is likely a copy-and-paste error from the
-> ARM GIC documentation, that has already been fixed.
+On Fri, Mar 21, 2014 at 9:46 AM, Jean-Jacques Hiblot
+<jjhiblot@traphandler.com> wrote:
+> The goal of this patch is to allow drivers to be probed even if at the time of
+> the DT parsing some of their IRQ ressources are not available yet.
 >
-> address-cells should have been set to 0, as with the size
-> cells. As having those properties set to 0 is the
-> same thing as not specifying them, drop them completely.
+> In the current situation, the IRQ resources of a platform device are filled from
+> the DT at the time the device is created (of_device_alloc()). The drawback of
+> this is that a device sitting close to the top of the DT (ahb for example) but
+> depending on ressources that are initialized later (IRQ domain dynamically
+> created for example) will fail to probe because the ressources don't exist
+> at this time.
+
+s/ressources/resources/
+
 >
-> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> This patch fills the resource structure only before the device is probed and
+> will defer the probe if the IRQ resource is not yet available.
+>
+> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
+> ---
+>  drivers/base/platform.c     |   5 ++
+>  drivers/of/platform.c       | 114 ++++++++++++++++++++++++++++++++++----------
+>  include/linux/device.h      |   1 +
+>  include/linux/of_platform.h |  10 ++++
+>  4 files changed, 105 insertions(+), 25 deletions(-)
+>
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index bc78848..cee9b8d 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -481,6 +481,10 @@ static int platform_drv_probe(struct device *_dev)
+>         struct platform_device *dev = to_platform_device(_dev);
+>         int ret;
+>
+> +       ret = of_platform_device_prepare(dev);
+> +       if (ret)
+> +               goto error;
+> +
+>         if (ACPI_HANDLE(_dev))
+>                 acpi_dev_pm_attach(_dev, true);
+>
+> @@ -488,6 +492,7 @@ static int platform_drv_probe(struct device *_dev)
+>         if (ret && ACPI_HANDLE(_dev))
+>                 acpi_dev_pm_detach(_dev, true);
+>
+> +error:
+>         if (drv->prevent_deferred_probe && ret == -EPROBE_DEFER) {
+>                 dev_warn(_dev, "probe deferral not supported\n");
+>                 ret = -ENXIO;
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index 404d1da..ba6be4a 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -141,41 +141,17 @@ struct platform_device *of_device_alloc(struct device_node *np,
+>                                   struct device *parent)
+>  {
+>         struct platform_device *dev;
+> -       int rc, i, num_reg = 0, num_irq;
+> -       struct resource *res, temp_res;
+>
+>         dev = platform_device_alloc("", -1);
+>         if (!dev)
+>                 return NULL;
+>
+> -       /* count the io and irq resources */
+> -       if (of_can_translate_address(np))
+> -               while (of_address_to_resource(np, num_reg, &temp_res) == 0)
+> -                       num_reg++;
+> -       num_irq = of_irq_count(np);
+> -
+> -       /* Populate the resource table */
+> -       if (num_irq || num_reg) {
+> -               res = kzalloc(sizeof(*res) * (num_irq + num_reg), GFP_KERNEL);
+> -               if (!res) {
+> -                       platform_device_put(dev);
+> -                       return NULL;
+> -               }
+> -
+> -               dev->num_resources = num_reg + num_irq;
+> -               dev->resource = res;
+> -               for (i = 0; i < num_reg; i++, res++) {
+> -                       rc = of_address_to_resource(np, i, res);
+> -                       WARN_ON(rc);
+> -               }
+> -               WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
+> -       }
+> -
+>         dev->dev.of_node = of_node_get(np);
+>  #if defined(CONFIG_MICROBLAZE)
+>         dev->dev.dma_mask = &dev->archdata.dma_mask;
+>  #endif
+>         dev->dev.parent = parent;
+> +       dev->dev.of_device = 1;
+>
+>         if (bus_id)
+>                 dev_set_name(&dev->dev, "%s", bus_id);
+> @@ -233,6 +209,94 @@ static struct platform_device *of_platform_device_create_pdata(
+>         return dev;
+>  }
+>
+> +static int of_reg_count(struct device_node *np)
 
-Thanks for doing this. For the series:
+This belongs in of/address.c. It can be more efficiently written as:
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+int of_reg_count(struct device_node *dev)
+{
+const __be32 *prop;
+unsigned int psize;
+struct device_node *parent;
+struct of_bus *bus;
+int na, ns;
+
+/* Get parent & match bus type */
+parent = of_get_parent(dev);
+if (!parent)
+  return 0;
+bus = of_match_bus(parent);
+bus->count_cells(dev, &na, &ns);
+of_node_put(parent);
+if (!OF_CHECK_COUNTS(na, ns))
+  return 0;
+
+/* Get "reg" or "assigned-addresses" property */
+prop = of_get_property(dev, bus->addresses, &psize);
+if (!prop)
+  return 0;
+psize /= 4;
+
+return psize / (na + ns);
+}
+
+
+> +{
+> +       int nreg = 0;
+> +       if (of_can_translate_address(np)) {
+> +               struct resource temp_res;
+> +               while (of_address_to_resource(np, nreg, &temp_res) == 0)
+> +                       nreg++;
+> +       }
+> +       return nreg;
+> +}
+> +
+> +int of_platform_device_prepare(struct platform_device *dev)
+> +{
+> +       struct device_node *np;
+> +       int i, irq_index;
+> +       struct resource *res;
+> +
+> +       /*
+> +        * This function applies only devices described in the DT and
+> +        * created by of_device_alloc().
+> +        * Other platform devices have their ressources already populated.
+> +        */
+> +       np = dev->dev.of_node;
+> +       if (!np || !dev->dev.of_device)
+> +               return 0;
+> +
+> +       /* Populate the resource table */
+> +       if (!dev->resource) {
+> +               int rc, nreg = 0, nirq;
+> +               /* count the io and irq resources */
+> +               nreg = of_reg_count(np);
+> +               nirq = of_irq_count(np);
+
+I think of_irq_count should be changed to return errors from
+of_irq_parse_one. It's complicated by the fact you want to distinguish
+checking the index is too big versus all other errors.
+
+> +
+> +               if (!nirq && !nreg)
+> +                       return 0;
+> +
+> +               res = kzalloc(sizeof(*res) * (nirq + nreg), GFP_KERNEL);
+> +               if (!res)
+> +                       return -ENOMEM;
+> +
+> +               dev->resource = res;
+> +               dev->num_resources = nreg + nirq;
+> +
+> +               for (i = 0; i < nreg; i++, res++) {
+> +                       rc = of_address_to_resource(np, i, res);
+> +                       if (WARN_ON(rc)) {
+> +                               /* THIS IS BAD; don't try to defer probing */
+> +                               dev->num_resources = 0;
+> +                               dev->resource = NULL;
+> +                               kfree(res);
+
+You are incrementing res, so this kfree is wrong. Using "res + i"
+instead would work, but...
+
+> +                               return rc;
+> +                       }
+> +               }
+> +
+> +               if (!rc && of_irq_to_resource_table(np, res, nirq) != nirq)
+
+...then res needs to change here.
+
+Doesn't this give a rc may not be initialized warning? You don't need
+to check rc. You need to check !nirq instead.
+
+> +                       /*
+> +                        * Not all irqs can be translated. redo the irq
+> +                        * resources to check if the probe can be deferred
+> +                        */
+> +                       goto redo_irq_resources;
+> +
+> +               return 0;
+
+But then, you don't really need any of this. You can just fall-thru
+and the code below will work.
+
+> +       }
+> +
+> +redo_irq_resources:
+> +       /* See which IRQ resources need to be redone */
+> +       irq_index = 0;
+> +       for (i = 0, res = dev->resource; i < dev->num_resources; i++, res++) {
+> +               if (!res->flags) {
+> +                       int rc;
+> +                       /*
+> +                        * If the IRQ can't be translated to a resource, check
+> +                        * if its IRQ domain exists.
+> +                        */
+> +                       rc = of_irq_to_resource(np, irq_index, res);
+> +                       if (!rc) {
+> +                               if (of_find_irq_domain(np, irq_index) == NULL)
+> +                                       return -EPROBE_DEFER;
+> +                               return rc;
+> +                       }
+
+I would move this check into of_irq_to_resource_table and also make it
+skip entries with IORESOURCE_IRQ set. Then this can become:
+
+for (i = 0, res = dev->resource; i < dev->num_resources; i++, res++) {
+  if (resource_type(res) != IORESOURCE_MEM)
+    break;
+}
+rc = of_irq_to_resource_table(np, res, dev->num_resources - i);
+return (rc < 0) ? rc : 0;
+
 
 Rob
-
-> ---
->  arch/arm/boot/dts/keystone.dtsi | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-> index 90823eb90c1b..d0b0266d8922 100644
-> --- a/arch/arm/boot/dts/keystone.dtsi
-> +++ b/arch/arm/boot/dts/keystone.dtsi
-> @@ -28,8 +28,6 @@
->         gic: interrupt-controller {
->                 compatible = "arm,cortex-a15-gic";
->                 #interrupt-cells = <3>;
-> -               #size-cells = <0>;
-> -               #address-cells = <1>;
->                 interrupt-controller;
->                 reg = <0x0 0x02561000 0x0 0x1000>,
->                       <0x0 0x02562000 0x0 0x2000>,
-> --
-> 1.9.1
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
