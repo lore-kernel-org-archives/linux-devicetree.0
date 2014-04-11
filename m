@@ -1,80 +1,240 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v7 4/6] pci: Introduce a domain number for
- pci_host_bridge.
-Date: Fri, 11 Apr 2014 15:01:09 +1000
-Message-ID: <1397192469.19518.11.camel@pasglop>
-References: <1394811272-1547-5-git-send-email-Liviu.Dudau@arm.com>
-	 <6144916.rD76jOL8sv@wuerfel>
-	 <20140410145304.GS985@e106497-lin.cambridge.arm.com>
-	 <6459805.ygy4tBNDNz@wuerfel>
+From: Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: Re: [RFC PATCH 1/2] drivers: mfd: Add support of exynos-pmu driver
+Date: Fri, 11 Apr 2014 15:00:30 +0900
+Message-ID: <534784FE.6090107@samsung.com>
+References: <1396427085-4696-1-git-send-email-pankaj.dubey@samsung.com>
+ <1396427085-4696-2-git-send-email-pankaj.dubey@samsung.com>
+ <4187440.t3CeqIPlpy@amdc1032>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <6459805.ygy4tBNDNz@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <4187440.t3CeqIPlpy@amdc1032>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, linux@arm.linux.org.uk, chow.kim@samsung.com, Younggun Jang <yg1004.jang@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Sangbeom Kim <sbkim73@samsung.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2014-04-10 at 22:46 +0200, Arnd Bergmann wrote:
+Hi Bartlomiej,
 
-> Half of it ;-)
-> 
-> I think it would be better to not have an architecture specific data
-> structure, just like it would be better not to have architecture specific
-> pcibios_* functions that get called by the PCI core. Note that the
-> architecture specific functions are the ones that rely on the architecture
-> specific data structures as well. If they only use the common fields,
-> it should also be possible to share the code.
+Thanks for review.
 
-I don't understand... we'll never get rid of architecture specific hooks
-in one form or another.
+On 04/03/2014 08:56 PM, Bartlomiej Zolnierkiewicz wrote:
+> Hi,
+>
+> On Wednesday, April 02, 2014 05:24:44 PM Pankaj Dubey wrote:
+>> From: Younggun Jang <yg1004.jang@samsung.com>
+>>
+>> This driver is mainly used for setting misc bits of register from PMU IP
+>> of Exynos SoC which will be required to configure before Suspend/Resume.
+>> Currently all these settings are done in "arch/arm/mach-exynos/pmu.c" but
+>> moving ahead for ARM64 based SoC support, there is a need of DT based
+>> implementation of PMU driver.
+> PMU support for ARM32 EXYNOS SoCs is heavily SoC dependent and there
+> is very little code shared between diffirent SoCs.  Unless PMU setup
+> for Samsung ARM64 SoCs is similar to some existing ARM32 EXYNOS SoCs
+> it may be better to just add a separate PMU driver for Samsung ARM64
+> SoCs. IOW it would be best to show that this patch series is really
+> useful before merging it.
 
-We'll always need to some things in an architecture or host-bridge
-specific way. Now if you don't want to call them arch hooks, then call
-them host bridge ops, but they are needed and thus they will need some
-kind of architecture specific extension to the base host bridge 
-structure.
+We think it will be useful, but I will consider your point of making driver
+which should have common piece of code to address various EXYNOS SoCs.
+We are working on it, once it takes some proper shape I will post details here.
 
-EEH is one big nasty example on powerpc.
+>
+> When it comes to the current patches it would be better to do changes
+> converting PMU support to be a platform driver first for the existing
+> arch/arm/mach-exynos/pmu.c file and then move+rename this file in
+> the separate patch.  Currently the code changes are done at the same
+> time as the code movement which makes them difficult to review/verify.
 
-Another random one that happens to be hot in my brain right now because
-we just finished debugging it: On powernv, we are just fixing a series
-of bugs caused by the generic code trying to do hot resets on PCIe "by
-hand" by directly toggling the secondary reset register in bridges.
+OK, will do as you suggested in next version.
 
-Well, on our root complexes, this triggers a link loss which triggers
-a fatal EEH "ER_all" interrupt which we escalate into a fence and all
-hell breaks loose.
+> There are also some minor issues with the new code:
+>
+> [...]
+>
+>> diff --git a/drivers/mfd/exynos-pmu.c b/drivers/mfd/exynos-pmu.c
+>> new file mode 100644
+>> index 0000000..24abd9b
+>> --- /dev/null
+>> +++ b/drivers/mfd/exynos-pmu.c
+>> @@ -0,0 +1,534 @@
+>> +/*
+>> + * Copyright (c) 2014-2015 Samsung Electronics Co., Ltd.
+>> + *		http://www.samsung.com/
+> 2015?
 
-We need to mask some error traps in the hardware before doing something
-that can cause an intentional link loss... and unmask them when done.
-(Among other things, there are other issues on P7 with hot reset).
+Will fix this.
 
-So hot reset must be an architecture hook.
+> [...]
+>
+>> +static int __init exynos4210_pmu_init(void)
+>> +{
+>> +	exynos_pmu_config = exynos4210_pmu_config;
+>> +	pmu_data->pmu_id = PMU_EXYNOS4210;
+>> +	pr_info("EXYNOS4210 PMU Initialize\n");
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int __init exynos4212_pmu_init(void)
+>> +{
+>> +	exynos_pmu_config = exynos4x12_pmu_config;
+>> +	pmu_data->pmu_id = PMU_EXYNOS4212;
+>> +	pr_info("EXYNOS4x12 PMU Initialize\n");
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int __init exynos4412_pmu_init(void)
+>> +{
+>> +	exynos_pmu_config = exynos4x12_pmu_config;
+>> +	pmu_data->pmu_id = PMU_EXYNOS4412;
+>> +	pr_info("EXYNOS4412 PMU Initialize\n");
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int __init exynos5250_pmu_init(void)
+>> +{
+>> +	unsigned int value;
+>> +
+>> +	/*
+>> +	 * When SYS_WDTRESET is set, watchdog timer reset request
+>> +	 * is ignored by power management unit.
+>> +	 */
+>> +	value = __raw_readl(pmu_data->regs + EXYNOS5_AUTO_WDTRESET_DISABLE);
+>> +	value &= ~EXYNOS5_SYS_WDTRESET;
+>> +	__raw_writel(value, pmu_data->regs + EXYNOS5_AUTO_WDTRESET_DISABLE);
+>> +
+>> +	value = __raw_readl(pmu_data->regs + EXYNOS5_MASK_WDTRESET_REQUEST);
+>> +	value &= ~EXYNOS5_SYS_WDTRESET;
+>> +	__raw_writel(value, pmu_data->regs + EXYNOS5_MASK_WDTRESET_REQUEST);
+>> +
+>> +	exynos_pmu_config = exynos5250_pmu_config;
+>> +	pmu_data->pmu_id = PMU_EXYNOS5250;
+>> +	pr_info("EXYNOS5250 PMU Initialize\n");
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +/*
+>> + * PMU platform driver and devicetree bindings.
+>> + */
+>> +static struct of_device_id exynos_pmu_of_device_ids[] = {
+>> +	{
+>> +		.compatible = "samsung,exynos4210-pmu",
+>> +		.data = (void *)exynos4210_pmu_init
+>> +	},
+>> +	{
+>> +		.compatible = "samsung,exynos4212-pmu",
+>> +		.data = (void *)exynos4212_pmu_init
+>> +	},
+>> +	{
+>> +		.compatible = "samsung,exynos4412-pmu",
+>> +		.data = (void *)exynos4412_pmu_init
+>> +	},
+>> +	{
+>> +		.compatible = "samsung,exynos5250-pmu",
+>> +		.data = (void *)exynos5250_pmu_init
+>> +	},
+>> +	{},
+>> +};
+>> +
+>> +static int exynos_pmu_probe(struct platform_device *pdev)
+>> +{
+>> +	const struct of_device_id *match;
+>> +	exynos_pmu_init_t exynos_pmu_init;
+>> +	struct resource *res;
+>> +
+>> +	pmu_data = devm_kzalloc(&pdev->dev,
+>> +			sizeof(struct exynos_pmu_data), GFP_KERNEL);
+>> +	if (!pmu_data) {
+>> +		dev_err(&pdev->dev, "exynos_pmu driver probe failed\n");
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	pmu_data->dev = &pdev->dev;
+>> +
+>> +	match = of_match_node(exynos_pmu_of_device_ids, pdev->dev.of_node);
+>> +	exynos_pmu_init = match->data;
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	pmu_data->regs = devm_ioremap_resource(&pdev->dev, res);
+> devm_ioremap_resouce() return value should be checked for errors with
+>
+> if (IS_ERR(pmu_data->regs))
+> 	return PTR_ERR(pmu_data->regs);
+Will take care.
+>> +
+>> +	exynos_pmu_init();
+> exynos*_pmu_init() methods should be void as they always return 0 and
+> the return value is ignored anyway.
+>
+> Also they cannot be marked with __init as the driver probe function
+> itself is not marked with __init (it cannot be beacuse of possibility
+> of doing unbind/bind through sysfs).
+Will take care.
+>> +
+>> +	return 0;
+>> +};
+>> +
+>> +static int exynos_pmu_remove(struct platform_device *pdev)
+>> +{
+>> +	exynos_pmu_config = NULL;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static struct platform_driver exynos_pmu_driver = {
+>> +	.driver  = {
+>> +		.name   = "exynos-pmu",
+>> +		.of_match_table = exynos_pmu_of_device_ids,
+>> +	},
+>> +	.probe = exynos_pmu_probe,
+>> +	.remove = exynos_pmu_remove,
+>> +};
+>> +
+>> +static int __init exynos_pmu_driver_init(void)
+>> +{
+>> +	return platform_driver_register(&exynos_pmu_driver);
+>> +}
+>> +arch_initcall(exynos_pmu_driver_init);
+>> +
+>> +MODULE_AUTHOR("Younggun Jang <yg1004.jang@samsung.com");
+>> +MODULE_DESCRIPTION("Exynos PMU driver");
+>> +MODULE_LICENSE("GPL v2");
+> This driver can be build as module now but:
+> - exynos_sys_powerdown_conf() is not exported
+> - there is no exynos_pmu_driver_exit()
+OK, will take care.
+> Also it is not clear what happens if exynos_sys_powerdown_conf() is called
+> while there are no platform devices binded to a driver but driver itself is
+> loaded.
+>
+> [...]
+>
+>> diff --git a/include/linux/mfd/samsung/exynos-regs-pmu.h b/include/linux/mfd/samsung/exynos-regs-pmu.h
+>> new file mode 100644
+>> index 0000000..ed8259d
+>> --- /dev/null
+>> +++ b/include/linux/mfd/samsung/exynos-regs-pmu.h
+>> @@ -0,0 +1,308 @@
+>> +/*
+>> + * Copyright (c) 2014-2015 Samsung Electronics Co., Ltd.
+> 2015?
+I will change.
+>
+> Best regards,
+> --
+> Bartlomiej Zolnierkiewicz
+> Samsung R&D Institute Poland
+> Samsung Electronics
+>
+>
 
-PERST (fundamental reset) can *only* be a hook. The way to generate a
-PERST is not specified. In fact, on our machines, we have special GPIOs
-we can use to generate PERST on individual slots below a PLX bridge
-and a different methods for slots directly on a PHB.
 
-Eventually most of those hooks land into firmware, and as such it's akin
-to ACPI which also keeps a separate state structure and a pile of hooks.
-
-> I also don't realistically think we can get there on a lot of architectures
-> any time soon. Note that most architectures only have one PCI host
-> implementation, so the architecture structure is the same as the host
-> driver structure anyway.
-> 
-> For architectures like powerpc and arm that have people actively working
-> on them, we have a chance to clean up that code in the way we want it
-> (if we can agree on the direction), but it's still not trivial to do.
-> 
-> Speaking of arm32 in particular, I think we will end up with a split
-> approach: modern platforms (multiplatform, possibly all DT based) using
-> PCI core infrastructure directly and no architecture specific PCI
-> code on the one side, and a variation of today's code for the legacy
-> platforms on the other.
-> 
-> 	Arnd
+-- 
+Best Regards,
+Pankaj Dubey
