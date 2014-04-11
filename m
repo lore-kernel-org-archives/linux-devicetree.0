@@ -1,48 +1,80 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] rtc: Add APM X-Gene SoC RTC driver
-Date: Thu, 10 Apr 2014 21:22:43 -0700
-Message-ID: <CAPw-ZTns1EOT0inn0hq0Xh+CdjMkxhOkvL+_BnRThnm7HQC=BQ@mail.gmail.com>
-References: <1397155678-26607-1-git-send-email-lho@apm.com>
-	<1397155678-26607-2-git-send-email-lho@apm.com>
-	<1397155678-26607-3-git-send-email-lho@apm.com>
-	<20140410224244.GH6518@sirena.org.uk>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH v7 4/6] pci: Introduce a domain number for
+ pci_host_bridge.
+Date: Fri, 11 Apr 2014 15:01:09 +1000
+Message-ID: <1397192469.19518.11.camel@pasglop>
+References: <1394811272-1547-5-git-send-email-Liviu.Dudau@arm.com>
+	 <6144916.rD76jOL8sv@wuerfel>
+	 <20140410145304.GS985@e106497-lin.cambridge.arm.com>
+	 <6459805.ygy4tBNDNz@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140410224244.GH6518-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <6459805.ygy4tBNDNz@wuerfel>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, 2014-04-10 at 22:46 +0200, Arnd Bergmann wrote:
 
->
->> +     if (device_may_wakeup(&pdev->dev)) {
->> +             if (!enable_irq_wake(irq))
->> +                     pdata->irq_wake = 1;
->> +     } else {
->> +             pdata->irq_enabled = xgene_rtc_alarm_irq_enabled(dev);
->> +             xgene_rtc_alarm_irq_enable(dev, 0);
->> +             clk_disable(pdata->clk);
->> +     }
->> +     clk_unprepare(pdata->clk);
->
-> This will unconditionally unprepare the clock even if it wasn't disabled
-> which looks like a bug - I would have expected the disable to be a
-> clk_disable_unprepare() instead?  Similarly for the resume path.
->
+> Half of it ;-)
+> 
+> I think it would be better to not have an architecture specific data
+> structure, just like it would be better not to have architecture specific
+> pcibios_* functions that get called by the PCI core. Note that the
+> architecture specific functions are the ones that rely on the architecture
+> specific data structures as well. If they only use the common fields,
+> it should also be possible to share the code.
 
-I was modeled after driver rtc-coh901331.c. It seems like all I need
-here is to call clk_disable_unprepare() instead clk_disable for
-suspend. For resume, call clk_prepare_disable() instead clk_enable().
-No need to split them up. Am I correct?
+I don't understand... we'll never get rid of architecture specific hooks
+in one form or another.
 
-Given that Andrew Morton applied v2, should I post an patch against v2
-going forward?
+We'll always need to some things in an architecture or host-bridge
+specific way. Now if you don't want to call them arch hooks, then call
+them host bridge ops, but they are needed and thus they will need some
+kind of architecture specific extension to the base host bridge 
+structure.
 
--Loc
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+EEH is one big nasty example on powerpc.
+
+Another random one that happens to be hot in my brain right now because
+we just finished debugging it: On powernv, we are just fixing a series
+of bugs caused by the generic code trying to do hot resets on PCIe "by
+hand" by directly toggling the secondary reset register in bridges.
+
+Well, on our root complexes, this triggers a link loss which triggers
+a fatal EEH "ER_all" interrupt which we escalate into a fence and all
+hell breaks loose.
+
+We need to mask some error traps in the hardware before doing something
+that can cause an intentional link loss... and unmask them when done.
+(Among other things, there are other issues on P7 with hot reset).
+
+So hot reset must be an architecture hook.
+
+PERST (fundamental reset) can *only* be a hook. The way to generate a
+PERST is not specified. In fact, on our machines, we have special GPIOs
+we can use to generate PERST on individual slots below a PLX bridge
+and a different methods for slots directly on a PHB.
+
+Eventually most of those hooks land into firmware, and as such it's akin
+to ACPI which also keeps a separate state structure and a pile of hooks.
+
+> I also don't realistically think we can get there on a lot of architectures
+> any time soon. Note that most architectures only have one PCI host
+> implementation, so the architecture structure is the same as the host
+> driver structure anyway.
+> 
+> For architectures like powerpc and arm that have people actively working
+> on them, we have a chance to clean up that code in the way we want it
+> (if we can agree on the direction), but it's still not trivial to do.
+> 
+> Speaking of arm32 in particular, I think we will end up with a split
+> approach: modern platforms (multiplatform, possibly all DT based) using
+> PCI core infrastructure directly and no architecture specific PCI
+> code on the one side, and a variation of today's code for the legacy
+> platforms on the other.
+> 
+> 	Arnd
