@@ -1,58 +1,60 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH] ARM: shmobile: r8a7790: link PCI USb devices to USB PHY
-Date: Fri, 11 Apr 2014 14:48:42 +0900
-Message-ID: <CANqRtoSub2TULO2rURiODz1VFXNUqe5gi488mkPtq_F+Oje2cQ@mail.gmail.com>
-References: <201404092318.26231.sergei.shtylyov@cogentembedded.com>
-	<CANqRtoQeuT=Q9PRYNMqA079gjb1VkwgvcDmsWKxjzSVxcVfeWw@mail.gmail.com>
-	<534674B5.6080706@cogentembedded.com>
-	<5346E717.4040507@cogentembedded.com>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: Re: [PATCH RESEND 4/5] Documentation: add the Marvell Berlin
+ pinctrl documentation
+Date: Fri, 11 Apr 2014 14:33:18 +0800
+Message-ID: <20140411143318.67e55a17@xhacker>
+References: <1397135274-10764-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1397135274-10764-5-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <5346E717.4040507@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: "Simon Horman [Horms]" <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, robh+dt@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1397135274-10764-5-git-send-email-antoine.tenart@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Antoine =?UTF-8?B?VMOpbmFydA==?= <antoine.tenart@free-electrons.com>
+Cc: Jimmy Xu <zmxu@marvell.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
-
-On Fri, Apr 11, 2014 at 3:46 AM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> On 04/10/2014 02:38 PM, Sergei Shtylyov wrote:
->
->>> Thanks for this patch, good to see that the relationship between the
->>> USB Host and the PHY is described via DT.
->
->
->>> This patch seems to cover USB0 and USB2 that both require special
->>> control in the PHY. How about USB1? Can you explain about the reason
->>> why you omit that?
->
->
->>     Because the driver does nothing for USB1 anyway.
->
->
->    Looks like I should have tested that last minute change: kernel oopses
-> due to NULL pointer dereference somewhere in phy_get() once it gets called
-> for EHCI on the channel #1. At least doesn't seem to be my mistake...
-
-No worries, thanks for looking into fixing that.
-
-Regarding the USB ports on R-Car Gen2 in general and especially USB1,
-it is my impression that even though there is no USB controller
-selection available for USB1 I still believe the UGCTL.CONNECT bit
-shall be used for power management purpose.
-
-I may of course be wrong, but since the PHY hardware is shared between
-USB0, USB1 and USB2 it makes sense to have some kind of usage counter
-and manage the hardware enable bit based on registered users somehow.
-There is no need to manage this bit at this point IMO, but in the
-future we may want to add such handling to improve power management.
-And that can only happen if DT is used to connect all USB controllers
-with the PHY, so please make sure to describe the complete
-dependencies in DT.
-
-Thanks,
-
-/ magnus
+T24gVGh1LCAxMCBBcHIgMjAxNCAwNjowNzo1MyAtMDcwMApBbnRvaW5lIFTDqW5hcnQgPGFudG9p
+bmUudGVuYXJ0QGZyZWUtZWxlY3Ryb25zLmNvbT4gd3JvdGU6Cgo+IFNpZ25lZC1vZmYtYnk6IEFu
+dG9pbmUgVMOpbmFydCA8YW50b2luZS50ZW5hcnRAZnJlZS1lbGVjdHJvbnMuY29tPgo+IC0tLQo+
+ICAuLi4vYmluZGluZ3MvcGluY3RybC9tYXJ2ZWxsLGJlcmxpbi1waW5jdHJsLnR4dCAgICB8IDQz
+Cj4gKysrKysrKysrKysrKysrKysrKysrKyAxIGZpbGUgY2hhbmdlZCwgNDMgaW5zZXJ0aW9ucygr
+KQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQKPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvcGluY3RybC9tYXJ2ZWxsLGJlcmxpbi1waW5jdHJsLnR4dAo+IAo+IGRpZmYgLS1naXQKPiBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21hcnZlbGwsYmVybGlu
+LXBpbmN0cmwudHh0Cj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3Ry
+bC9tYXJ2ZWxsLGJlcmxpbi1waW5jdHJsLnR4dCBuZXcKPiBmaWxlIG1vZGUgMTAwNjQ0IGluZGV4
+IDAwMDAwMDAwMDAwMC4uZTIxNTM4YTM3NzM0IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9tYXJ2ZWxsLGJlcmxpbi1waW5jdHJs
+LnR4dAo+IEBAIC0wLDAgKzEsNDMgQEAKPiArKiBQaW5jdHJsIGRyaXZlciBmb3IgdGhlIE1hcnZl
+bGwgQmVybGluIFNvQ3MKPiArCj4gK1RoZSBwaW5zIGNvbnRyb2xsZWQgYnkgdGhlIE1hcnZlbGwg
+QmVybGluIGNvbnRyb2xsZXIgYXJlIG9yZ2FuaXplZCBpbgo+IGdyb3Vwcy4gK0NvbmZpZ3VyYXRp
+b24gaXMgZG9uZSBieSBncm91cCwgc28gbm8gYWN0dWFsIHBpbiBpbmZvcm1hdGlvbiBpcwo+IG5l
+ZWRlZC4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6CSJtYXJ2ZWxs
+LWJlcmxpbjJjZC1waW5jdHJsIiwKPiArCQkibWFydmVsbC1iZXJsaW4yLXBpbmN0cmwiLAo+ICsJ
+CSJtYXJ2ZWxsLWJlcmxpbjJxLXBpbmN0cmwiCj4gKy0gcmVnOiByZWdpc3RlcnMgcGh5c2ljYWwg
+YWRkcmVzc2VzIGFuZCBsZW5ndGhzIG9mIHRoZSBwaW4gY29udHJvbGxlci4KPiArLSByZWctbmFt
+ZXM6IG5hbWUgb2YgdGhlIHJlZ2lzdGVyIHJlZ2lvbnMuCj4gKwo+ICtQbGVhc2UgcmVmZXIgdG8g
+cGluY3RybC1iaW5kaW5ncy50eHQgaW4gdGhpcyBkaXJlY3RvcnkgZm9yIGRldGFpbHMgb2YgdGhl
+Cj4gK2NvbW1vbiBwaW5jdHJsIGJpbmRpbmdzIHVzZWQgYnkgY2xpZW50IGRldmljZXMuCj4gKwo+
+ICtBIHBpbmN0cmwgc2hvdWxkIGNvbnRhaW5zIHN1Ym5vZGVzIHJlcHJlc2VudGluZyB0aGUgcGlu
+Y3RybCBwaW4gZ3JvdXAKPiArY29uZmlndXJhdGlvbnMsIG9uZSBwZXIgZ3JvdXAuIEVhY2ggc3Vi
+bm9kZSBoYXMgdGhlIGdyb3VwIG5hbWUgYW5kIHRoZQo+IG11eGluZyArZnVuY3Rpb24gdXNlZC4K
+PiArCj4gK1JlcXVpcmVkIHN1Ym5vZGUtcHJvcGVydGllczoKPiArLSBiZXJsaW4sZ3JvdXA6IGEg
+c3RyaW5nIGRlc2NyaWJpbmcgdGhlIGdyb3VwJ3MgbmFtZS4KPiArLSBiZXJsaW4sZnVuY3Rpb246
+IHRoZSBmdW5jdGlvbiB1c2VkIHRvIG11eCB0aGUgZ3JvdXAuCgpXb3VsZCBpdCBiZSBiZXR0ZXIg
+dG8gcy9mdW5jdGlvbi9tb2RlPyBCZWNhdXNlIGluIG1ydmwgaW50ZXJuYWwgdGVjaG5vbG9neQpk
+aXNjdXNzaW9uIGFuZCBkb2NzLCB3ZSB1c3VhbGx5IHNheSAic2V0IHBpbm11eCBHeSBhcyBtb2Rl
+IHoiLgoKClRoYW5rcywKSmlzaGVuZwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
