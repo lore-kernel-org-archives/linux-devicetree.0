@@ -1,38 +1,37 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 4/6] v4l: vsp1: Add DT support
-Date: Fri, 11 Apr 2014 09:04:30 +0900
-Message-ID: <20140411000429.GB4816@verge.net.au>
-References: <1394047444-30077-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <4172444.b80tq3sQnW@avalon>
- <20140410230417.GB4358@verge.net.au>
- <2026957.GUESdWNMVE@avalon>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: topology: Make it clear that all CPUs need to be described
+Date: Thu, 10 Apr 2014 19:24:25 -0500
+Message-ID: <CAL_Jsq+K-JrkzfsNqjwNgksgBL_M1v6BNSdXiMc+jN9JoD=X=g@mail.gmail.com>
+References: <1396016467-23257-1-git-send-email-broonie@kernel.org>
+	<20140331093046.GA2245@e102568-lin.cambridge.arm.com>
+	<CAL_JsqLj56d6Mb5Vjd4UnBvQ6myAc4j3moY+3EM9zgHxrNgHbw@mail.gmail.com>
+	<20140410231808.GJ6518@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2026957.GUESdWNMVE@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140410231808.GJ6518-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 11, 2014 at 01:37:11AM +0200, Laurent Pinchart wrote:
-> Hi Simon,
-> 
-> On Friday 11 April 2014 08:04:18 Simon Horman wrote:
-> > On Tue, Mar 25, 2014 at 01:18:22PM +0100, Laurent Pinchart wrote:
-> > > Hello,
-> > > 
-> > > Gentle ping. I'll send a pull request in a week if I don't receive any
-> > > comment on the DT bindings in the meantime.
-> > 
-> > Hi Laurent,
-> > 
-> > one way or another can you let me know if/when the bindings are accepted and
-> > I'll queue-up the shmobile patches.
-> 
-> Sure. The DT bindings have been acked and I've sent a pull request. I'll
-> let you know when the patches get pulled, until then there's no guarantee
-> that the bindings won't change.
+On Thu, Apr 10, 2014 at 6:18 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, Apr 10, 2014 at 06:01:31PM -0500, Rob Herring wrote:
+>> On Mon, Mar 31, 2014 at 4:30 AM, Lorenzo Pieralisi
+>
+>> > Patch is ok with me, thanks:
+>
+>> > Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+>
+>> Applied for 3.15.
+>
+> Catalin already sent this to Linus I think unless I got my patches
+> confused.
 
-Thanks, got it.
+Yes, you're right.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
