@@ -1,125 +1,145 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH 2/5] drivers/bus: arm-cci: Add common control interface
  for ACE ports
-Date: Fri, 11 Apr 2014 14:24:16 -0400 (EDT)
-Message-ID: <alpine.LFD.2.11.1404111419540.980@knanqh.ubzr>
-References: <1397239311-27717-1-git-send-email-a.kesavan@samsung.com> <1397239311-27717-3-git-send-email-a.kesavan@samsung.com>
+Date: Sat, 12 Apr 2014 00:46:32 +0530
+Message-ID: <CAM4voakzCCuK08A+i8kVEhe-nzZyRCkz0hj2ancfF2joCkdEbg@mail.gmail.com>
+References: <1397239311-27717-1-git-send-email-a.kesavan@samsung.com>
+	<1397239311-27717-3-git-send-email-a.kesavan@samsung.com>
+	<alpine.LFD.2.11.1404111419540.980@knanqh.ubzr>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397239311-27717-3-git-send-email-a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <alpine.LFD.2.11.1404111419540.980-fMhRO7WWcppj+hNMo8g0rg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Dave.Martin-5wv7dgnIgG8@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Thomas P Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave.Martin-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 11 Apr 2014, Abhilash Kesavan wrote:
+Hi Nicolas,
 
-> From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> 
-> cci_disable_port_by_cpu() can be used to disable an arbitrary
-> ACE port, but there is no C-callable way to enable an ACE port.
-> Change cci_disable_port_by_cpu() to cci_control_port_by_cpu()
-> to allow us to disable and enable a CPU's ACE port.
-> 
-> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+On Fri, Apr 11, 2014 at 11:54 PM, Nicolas Pitre
+<nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, 11 Apr 2014, Abhilash Kesavan wrote:
+>
+>> From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>>
+>> cci_disable_port_by_cpu() can be used to disable an arbitrary
+>> ACE port, but there is no C-callable way to enable an ACE port.
+>> Change cci_disable_port_by_cpu() to cci_control_port_by_cpu()
+>> to allow us to disable and enable a CPU's ACE port.
+>>
+>> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>
+> As soon as this patch is applied, it'll break compilation for
+> arch/arm/mach-vexpress/dcscb.c and arch/arm/mach-vexpress/tc2_pm.c.
+>
+> I suggest you add a compatibility macro in include/linux/arm-cci.h that
+> may look like:
+>
+> #define cci_disable_port_by_cpu(mpidr) cci_control_port_by_cpu(mpidr, false)
+>
+> ... or at least update existing callers.
 
-As soon as this patch is applied, it'll break compilation for 
-arch/arm/mach-vexpress/dcscb.c and arch/arm/mach-vexpress/tc2_pm.c.
-
-I suggest you add a compatibility macro in include/linux/arm-cci.h that 
-may look like:
-
-#define cci_disable_port_by_cpu(mpidr) cci_control_port_by_cpu(mpidr, false)
-
-... or at least update existing callers.
+Thanks for the review.
+This was an oversight on my part as our internal 3.8 based tree did
+not have any users of this.
+I will update the patch so that it does not break any existing callers.
 
 
-> ---
->  drivers/bus/arm-cci.c   |   13 +++++++------
->  include/linux/arm-cci.h |    7 +++++--
->  2 files changed, 12 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
-> index 5a86da9..5668b40 100644
-> --- a/drivers/bus/arm-cci.c
-> +++ b/drivers/bus/arm-cci.c
-> @@ -763,10 +763,11 @@ static void notrace cci_port_control(unsigned int port, bool enable)
->  }
->  
->  /**
-> - * cci_disable_port_by_cpu() - function to disable a CCI port by CPU
-> + * cci_control_port_by_cpu() - function to control a CCI port by CPU
->   *			       reference
->   *
-> - * @mpidr: mpidr of the CPU whose CCI port should be disabled
-> + * @mpidr: mpidr of the CPU whose CCI port should be enabled/disabled
-> + * @enable: if true enables the port, if false disables it
->   *
->   * Disabling a CCI port for a CPU implies disabling the CCI port
->   * controlling that CPU cluster. Code disabling CPU CCI ports
-> @@ -777,20 +778,20 @@ static void notrace cci_port_control(unsigned int port, bool enable)
->   *	0 on success
->   *	-ENODEV on port look-up failure
->   */
-> -int notrace cci_disable_port_by_cpu(u64 mpidr)
-> +int notrace cci_control_port_by_cpu(u64 mpidr, bool enable)
->  {
->  	int cpu;
->  	bool is_valid;
->  	for (cpu = 0; cpu < nr_cpu_ids; cpu++) {
->  		is_valid = cpu_port_is_valid(&cpu_port[cpu]);
->  		if (is_valid && cpu_port_match(&cpu_port[cpu], mpidr)) {
-> -			cci_port_control(cpu_port[cpu].port, false);
-> +			cci_port_control(cpu_port[cpu].port, enable);
->  			return 0;
->  		}
->  	}
->  	return -ENODEV;
->  }
-> -EXPORT_SYMBOL_GPL(cci_disable_port_by_cpu);
-> +EXPORT_SYMBOL_GPL(cci_control_port_by_cpu);
->  
->  /**
->   * cci_enable_port_for_self() - enable a CCI port for calling CPU
-> @@ -936,7 +937,7 @@ int notrace __cci_control_port_by_index(u32 port, bool enable)
->  	/*
->  	 * CCI control for ports connected to CPUS is extremely fragile
->  	 * and must be made to go through a specific and controlled
-> -	 * interface (ie cci_disable_port_by_cpu(); control by general purpose
-> +	 * interface (ie cci_control_port_by_cpu(); control by general purpose
->  	 * indexing is therefore disabled for ACE ports.
->  	 */
->  	if (ports[port].type == ACE_PORT)
-> diff --git a/include/linux/arm-cci.h b/include/linux/arm-cci.h
-> index 79d6edf..c6c3ed0 100644
-> --- a/include/linux/arm-cci.h
-> +++ b/include/linux/arm-cci.h
-> @@ -29,7 +29,7 @@ struct device_node;
->  #ifdef CONFIG_ARM_CCI
->  extern bool cci_probed(void);
->  extern int cci_ace_get_port(struct device_node *dn);
-> -extern int cci_disable_port_by_cpu(u64 mpidr);
-> +extern int cci_control_port_by_cpu(u64 mpidr, bool enable);
->  extern int __cci_control_port_by_device(struct device_node *dn, bool enable);
->  extern int __cci_control_port_by_index(u32 port, bool enable);
->  #else
-> @@ -38,7 +38,10 @@ static inline int cci_ace_get_port(struct device_node *dn)
->  {
->  	return -ENODEV;
->  }
-> -static inline int cci_disable_port_by_cpu(u64 mpidr) { return -ENODEV; }
-> +static inline int cci_disable_port_by_cpu(u64 mpidr, bool enable)
-> +{
-> +	return -ENODEV;
-> +}
->  static inline int __cci_control_port_by_device(struct device_node *dn,
->  					       bool enable)
->  {
-> -- 
-> 1.7.9.5
-> 
+Regards,
+Abhilash
+>
+>
+>> ---
+>>  drivers/bus/arm-cci.c   |   13 +++++++------
+>>  include/linux/arm-cci.h |    7 +++++--
+>>  2 files changed, 12 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
+>> index 5a86da9..5668b40 100644
+>> --- a/drivers/bus/arm-cci.c
+>> +++ b/drivers/bus/arm-cci.c
+>> @@ -763,10 +763,11 @@ static void notrace cci_port_control(unsigned int port, bool enable)
+>>  }
+>>
+>>  /**
+>> - * cci_disable_port_by_cpu() - function to disable a CCI port by CPU
+>> + * cci_control_port_by_cpu() - function to control a CCI port by CPU
+>>   *                          reference
+>>   *
+>> - * @mpidr: mpidr of the CPU whose CCI port should be disabled
+>> + * @mpidr: mpidr of the CPU whose CCI port should be enabled/disabled
+>> + * @enable: if true enables the port, if false disables it
+>>   *
+>>   * Disabling a CCI port for a CPU implies disabling the CCI port
+>>   * controlling that CPU cluster. Code disabling CPU CCI ports
+>> @@ -777,20 +778,20 @@ static void notrace cci_port_control(unsigned int port, bool enable)
+>>   *   0 on success
+>>   *   -ENODEV on port look-up failure
+>>   */
+>> -int notrace cci_disable_port_by_cpu(u64 mpidr)
+>> +int notrace cci_control_port_by_cpu(u64 mpidr, bool enable)
+>>  {
+>>       int cpu;
+>>       bool is_valid;
+>>       for (cpu = 0; cpu < nr_cpu_ids; cpu++) {
+>>               is_valid = cpu_port_is_valid(&cpu_port[cpu]);
+>>               if (is_valid && cpu_port_match(&cpu_port[cpu], mpidr)) {
+>> -                     cci_port_control(cpu_port[cpu].port, false);
+>> +                     cci_port_control(cpu_port[cpu].port, enable);
+>>                       return 0;
+>>               }
+>>       }
+>>       return -ENODEV;
+>>  }
+>> -EXPORT_SYMBOL_GPL(cci_disable_port_by_cpu);
+>> +EXPORT_SYMBOL_GPL(cci_control_port_by_cpu);
+>>
+>>  /**
+>>   * cci_enable_port_for_self() - enable a CCI port for calling CPU
+>> @@ -936,7 +937,7 @@ int notrace __cci_control_port_by_index(u32 port, bool enable)
+>>       /*
+>>        * CCI control for ports connected to CPUS is extremely fragile
+>>        * and must be made to go through a specific and controlled
+>> -      * interface (ie cci_disable_port_by_cpu(); control by general purpose
+>> +      * interface (ie cci_control_port_by_cpu(); control by general purpose
+>>        * indexing is therefore disabled for ACE ports.
+>>        */
+>>       if (ports[port].type == ACE_PORT)
+>> diff --git a/include/linux/arm-cci.h b/include/linux/arm-cci.h
+>> index 79d6edf..c6c3ed0 100644
+>> --- a/include/linux/arm-cci.h
+>> +++ b/include/linux/arm-cci.h
+>> @@ -29,7 +29,7 @@ struct device_node;
+>>  #ifdef CONFIG_ARM_CCI
+>>  extern bool cci_probed(void);
+>>  extern int cci_ace_get_port(struct device_node *dn);
+>> -extern int cci_disable_port_by_cpu(u64 mpidr);
+>> +extern int cci_control_port_by_cpu(u64 mpidr, bool enable);
+>>  extern int __cci_control_port_by_device(struct device_node *dn, bool enable);
+>>  extern int __cci_control_port_by_index(u32 port, bool enable);
+>>  #else
+>> @@ -38,7 +38,10 @@ static inline int cci_ace_get_port(struct device_node *dn)
+>>  {
+>>       return -ENODEV;
+>>  }
+>> -static inline int cci_disable_port_by_cpu(u64 mpidr) { return -ENODEV; }
+>> +static inline int cci_disable_port_by_cpu(u64 mpidr, bool enable)
+>> +{
+>> +     return -ENODEV;
+>> +}
+>>  static inline int __cci_control_port_by_device(struct device_node *dn,
+>>                                              bool enable)
+>>  {
+>> --
+>> 1.7.9.5
+>>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
