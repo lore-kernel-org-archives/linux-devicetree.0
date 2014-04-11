@@ -1,101 +1,68 @@
-From: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>
-Subject: Re: [PATCH RESEND 2/5] pinctrl: berlin: add a pinctrl driver for
- Marvell Berlin SoCs
-Date: Fri, 11 Apr 2014 11:21:57 +0200
-Message-ID: <20140411092157.GD20147@kwain>
-References: <1397135274-10764-1-git-send-email-antoine.tenart@free-electrons.com>
- <1397135274-10764-3-git-send-email-antoine.tenart@free-electrons.com>
- <20140411144431.04fb148d@xhacker> <20140411081839.GB20147@kwain>
- <20140411162716.74e739e1@xhacker>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] rtc: Add APM X-Gene SoC RTC driver
+Date: Fri, 11 Apr 2014 10:28:56 +0100
+Message-ID: <20140411092856.GL6518@sirena.org.uk>
+References: <1397155678-26607-1-git-send-email-lho@apm.com>
+ <1397155678-26607-2-git-send-email-lho@apm.com>
+ <1397155678-26607-3-git-send-email-lho@apm.com>
+ <20140410224244.GH6518@sirena.org.uk>
+ <CAPw-ZTns1EOT0inn0hq0Xh+CdjMkxhOkvL+_BnRThnm7HQC=BQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Ai6NJizWfpRUKxSm"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140411162716.74e739e1@xhacker>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jisheng Zhang <jszhang@marvell.com>
-Cc: Jimmy Xu <zmxu@marvell.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>
+In-Reply-To: <CAPw-ZTns1EOT0inn0hq0Xh+CdjMkxhOkvL+_BnRThnm7HQC=BQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Jisheng,
 
-On Fri, Apr 11, 2014 at 04:27:16PM +0800, Jisheng Zhang wrote:
-> Hi Antoine,
-> =
+--Ai6NJizWfpRUKxSm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> On Fri, 11 Apr 2014 01:18:39 -0700
-> Antoine T=E9nart <antoine.tenart@free-electrons.com> wrote:
-> =
+On Thu, Apr 10, 2014 at 09:22:43PM -0700, Loc Ho wrote:
 
-> > Hi Jisheng,
-> > =
+> I was modeled after driver rtc-coh901331.c. It seems like all I need
+> here is to call clk_disable_unprepare() instead clk_disable for
+> suspend. For resume, call clk_prepare_disable() instead clk_enable().
+> No need to split them up. Am I correct?
 
-> > On Fri, Apr 11, 2014 at 02:44:31PM +0800, Jisheng Zhang wrote:
-> > > On Thu, 10 Apr 2014 06:07:51 -0700
-> > > Antoine T=E9nart <antoine.tenart@free-electrons.com> wrote:
-> > > =
+Yes, the only reason the two operations are split is to support enabling
+and disabling in interrupt context but you're not doing that.
 
-> > > ...
-> > > > +static int berlin_pinmux_enable(struct pinctrl_dev *pctrl_dev,
-> > > > +                               unsigned function,
-> > > > +                               unsigned group)
-> > > > +{
-> > > > +       struct berlin_pinctrl *pctrl =3D
-> > > > pinctrl_dev_get_drvdata(pctrl_dev);
-> > > > +       struct berlin_pinctrl_group *group_desc =3D pctrl->groups +=
- group;
-> > > > +       struct berlin_pinctrl_function *function_desc =3D
-> > > > +               pctrl->functions + function;
-> > > > +       unsigned long flags;
-> > > > +       u32 regval;
-> > > > +
-> > > > +       spin_lock_irqsave(&pctrl->lock, flags);
-> > > > +
-> > > > +       regval =3D readl(group_desc->reg);
-> > > > +       regval &=3D group_desc->mask;
-> > > > +       regval |=3D function_desc->muxval << group_desc->lsb;
-> > > > +       writel(regval, group_desc->reg);
-> > > =
+> Given that Andrew Morton applied v2, should I post an patch against v2
+> going forward?
 
-> > > Could we use relaxed version instead?
-> > =
+Yes, once something has been applied you should only be sending
+incremental patches.
 
-> > We could, but this is not a performance issue here at all, so I guess w=
-e can
-> > keep writel().
-> =
+--Ai6NJizWfpRUKxSm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> Yes it's not a performance issue here but an issue for the system which i=
-s doing
-> PL310 L2 cache maintenance. If pinmux operation hold the l2x0_lock due to=
- writel()
-> the important video/audio process which is cleaning PL310 cache must wait=
-, thus
-> cause jitter. So I'd like relaxed version if we can. Then I don't need to=
- add this
-> patch to mainline kernel when we upgrade internal tree.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-I'm not sure I got that. As I understand it, you will need to play video/au=
-dio
-*while* configuring the pinmux. But the pinmuxing configuration is done at =
-boot
-time, and I don't think a video/audio is being played then. So I'm not cert=
-ain a
-jitter will appear. What do you think ?
+iQIcBAEBAgAGBQJTR7XVAAoJELSic+t+oim982oP/2o+CzYx0aZdwSuoHmcLeyYi
+SED1DrWo1+AYjSaR7oQttGJsqG2Alh6DEGjmLfkb7eBk3CG8kTZ085f5lSzGEDpx
+vWUOj+Ha1BcN4JNx7/EXcYgZ37BG3kWtNduIEI4LPNm/h5h8YiywENylUYySLtI4
+Kl+G5r+pC8OeGPZ0rmMa4w08DNjg6vX0OMOvAI9iqIs4f/5dip+LXKwvy12MCW60
++89SP8bXT5xI0wNCxGyVJRztMpDYp4+7Gh1VUDyFZHn7Pme7+x2Bsr6pwEG5jvPw
+9NJNQ4fVP1MiZj+0ycvqB5WgjrL46vwdGHHVwEfg7XFPFNelZNqn44354tF4YPgp
+0Nxp7N0naVOv409EPL+hMhlBgryjp0HYAF9AJrIhLygvDwLjPTYo/5Z2DwQCJ4Bc
+5hn7vZwiASh7CC+CeP96v1huT18Jabf5XJ7AxXRHU3EoAH5P6K1tAuyY6VvjnGIz
+riFHuWab+TQd67/7FmiwES6ZarIxKmEoqvSHnxgbvH3g86XYcMcq4/17bojFBHuj
+LR/GHs8WU2dqUbdCPT4FCHyNVIv1Ymr+/9WTOCHnXKFXH5FXR4q4PJUnL8dwOz/C
+P2gEt3JEMaBVa4xlbTvKnaLoAUWTZBqfKj+U6IgRmUeRLBoL17WVSE+PJbOHlqfv
+aUy1a9hfxvZ6l9TIYDQa
+=IUhv
+-----END PGP SIGNATURE-----
 
-Antoine
-
--- =
-
-Antoine T=E9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+--Ai6NJizWfpRUKxSm--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
