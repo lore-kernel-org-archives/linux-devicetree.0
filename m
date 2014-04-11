@@ -1,68 +1,75 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] rtc: Add APM X-Gene SoC RTC driver
-Date: Fri, 11 Apr 2014 10:28:56 +0100
-Message-ID: <20140411092856.GL6518@sirena.org.uk>
-References: <1397155678-26607-1-git-send-email-lho@apm.com>
- <1397155678-26607-2-git-send-email-lho@apm.com>
- <1397155678-26607-3-git-send-email-lho@apm.com>
- <20140410224244.GH6518@sirena.org.uk>
- <CAPw-ZTns1EOT0inn0hq0Xh+CdjMkxhOkvL+_BnRThnm7HQC=BQ@mail.gmail.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 3/4] arm: add basic support for Mediatek MT6589 boards
+Date: Fri, 11 Apr 2014 10:43:30 +0100
+Message-ID: <5347B942.2040703@arm.com>
+References: <1397072736-10793-1-git-send-email-matthias.bgg@gmail.com>
+ <1397072736-10793-4-git-send-email-matthias.bgg@gmail.com>
+ <CAL_JsqJowqV2bsxE2VeYXQQSj4_L_KcH+C_dD=ZUvC=1crN4dA@mail.gmail.com>
+ <87ha6136dz.fsf@approximate.cambridge.arm.com>
+ <CABuKBeKLexBsTwF-nX15AYfLNA9bFDRm2XyeLpwQg9+3m6Xf=w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Ai6NJizWfpRUKxSm"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAPw-ZTns1EOT0inn0hq0Xh+CdjMkxhOkvL+_BnRThnm7HQC=BQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CABuKBeKLexBsTwF-nX15AYfLNA9bFDRm2XyeLpwQg9+3m6Xf=w@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "heiko.stuebner@bq.com" <heiko.stuebner@bq.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Silvio F <silvio.fricke@gmail.com>, Kumar
 List-Id: devicetree@vger.kernel.org
 
+On 11/04/14 10:11, Matthias Brugger wrote:
+> 2014-04-10 11:01 GMT+02:00 Marc Zyngier <marc.zyngier@arm.com>:
+>> A couple of things on top of Rob's comments:
+>>
+>> On Wed, Apr 09 2014 at 10:50:33 pm BST, Rob Herring <robherring2@gmail.com> wrote:
+>>> On Wed, Apr 9, 2014 at 2:45 PM, Matthias Brugger <matthias.bgg@gmail.com> wrote:
+>>>> This adds a generic devicetree board file and a dtsi for boards
+>>>> based on the MT6589 SoCs from Mediatek.
+>>>>
+>>>> Apart from the generic parts (gic, clocks) the only component
+>>>> currently supported are the timers.
+>>>>
+>>>> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+>>
+>> [...]
+>>
+>>>> diff --git a/arch/arm/mach-mediatek/Kconfig b/arch/arm/mach-mediatek/Kconfig
+>>>> new file mode 100644
+>>>> index 0000000..c0139ca
+>>>> --- /dev/null
+>>>> +++ b/arch/arm/mach-mediatek/Kconfig
+>>>> @@ -0,0 +1,14 @@
+>>>> +config ARCH_MEDIATEK
+>>>> +       bool "Mediatek MT6589 SoC" if ARCH_MULTI_V7
+>>>> +       select ARCH_REQUIRE_GPIOLIB
+>>>
+>>> Then where is your GPIO driver?
+>>>
+>>>> +       select ARM_GIC
+>>>> +       select CACHE_L2X0
+>>>> +       select HAVE_ARM_TWD if LOCAL_TIMERS
+>>
+>> Hell no! ;-) ARM_ARCH_TIMER is the way (please also add the missing
+>> node).
+> 
+> I considered this, but the timer wasn't able to get it's clock frequency:
+> "Architected timer frequency not available
+> Division by zero in kernel."
 
---Ai6NJizWfpRUKxSm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is because your bootloader/firmware is utterly broken, and doesn't
+set CNTFRQ (it must be set on all CPUs, from secure mode). As a
+*workaround*, you can set the timer frequency in the timer node, but
+that's just a hack, and will prevent virtual machines from running on
+such hardware.
 
-On Thu, Apr 10, 2014 at 09:22:43PM -0700, Loc Ho wrote:
-
-> I was modeled after driver rtc-coh901331.c. It seems like all I need
-> here is to call clk_disable_unprepare() instead clk_disable for
-> suspend. For resume, call clk_prepare_disable() instead clk_enable().
-> No need to split them up. Am I correct?
-
-Yes, the only reason the two operations are split is to support enabling
-and disabling in interrupt context but you're not doing that.
-
-> Given that Andrew Morton applied v2, should I post an patch against v2
-> going forward?
-
-Yes, once something has been applied you should only be sending
-incremental patches.
-
---Ai6NJizWfpRUKxSm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTR7XVAAoJELSic+t+oim982oP/2o+CzYx0aZdwSuoHmcLeyYi
-SED1DrWo1+AYjSaR7oQttGJsqG2Alh6DEGjmLfkb7eBk3CG8kTZ085f5lSzGEDpx
-vWUOj+Ha1BcN4JNx7/EXcYgZ37BG3kWtNduIEI4LPNm/h5h8YiywENylUYySLtI4
-Kl+G5r+pC8OeGPZ0rmMa4w08DNjg6vX0OMOvAI9iqIs4f/5dip+LXKwvy12MCW60
-+89SP8bXT5xI0wNCxGyVJRztMpDYp4+7Gh1VUDyFZHn7Pme7+x2Bsr6pwEG5jvPw
-9NJNQ4fVP1MiZj+0ycvqB5WgjrL46vwdGHHVwEfg7XFPFNelZNqn44354tF4YPgp
-0Nxp7N0naVOv409EPL+hMhlBgryjp0HYAF9AJrIhLygvDwLjPTYo/5Z2DwQCJ4Bc
-5hn7vZwiASh7CC+CeP96v1huT18Jabf5XJ7AxXRHU3EoAH5P6K1tAuyY6VvjnGIz
-riFHuWab+TQd67/7FmiwES6ZarIxKmEoqvSHnxgbvH3g86XYcMcq4/17bojFBHuj
-LR/GHs8WU2dqUbdCPT4FCHyNVIv1Ymr+/9WTOCHnXKFXH5FXR4q4PJUnL8dwOz/C
-P2gEt3JEMaBVa4xlbTvKnaLoAUWTZBqfKj+U6IgRmUeRLBoL17WVSE+PJbOHlqfv
-aUy1a9hfxvZ6l9TIYDQa
-=IUhv
------END PGP SIGNATURE-----
-
---Ai6NJizWfpRUKxSm--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	M.
+-- 
+Jazz is not dead. It just smells funny...
