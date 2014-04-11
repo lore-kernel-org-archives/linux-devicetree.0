@@ -1,51 +1,46 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2] Documentation: dt: Reduce fragmentation of <..> placeholders
-Date: Thu, 10 Apr 2014 19:25:59 -0500
-Message-ID: <CAL_JsqLiAF916KvHDgRu2df0qbkYAUL51BFq-62z50xfzZOr-g@mail.gmail.com>
-References: <CAMuHMdUmcnzafPhWrp4qYBB3UniFbVtqzNNg-7ed_Q6hZKMeDw@mail.gmail.com>
-	<1394234910-8547-1-git-send-email-florian.vaussard@epfl.ch>
-	<CAL_Jsq+4SztwyrmMtN31Vof3Tb8U9VVpLs1uON5W=VVOpX=nUQ@mail.gmail.com>
+From: Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 5/8 fix] mtd: m25p80: use the SPI nor framework
+Date: Fri, 11 Apr 2014 08:32:05 +0800
+Message-ID: <20140411003203.GC3837@localhost.localdomain>
+References: <1393238262-8622-6-git-send-email-b32955@freescale.com>
+ <1393574142-17234-1-git-send-email-b32955@freescale.com>
+ <20140409213749.GH32070@ld-irv-0074>
+ <20140410072509.GA24100@localhost>
+ <20140410192902.GM32070@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+4SztwyrmMtN31Vof3Tb8U9VVpLs1uON5W=VVOpX=nUQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Vaussard <florian.vaussard@epfl.ch>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Geert Uytterhoeven <geert@linux-m68k.org>, Joe Perches <joe@perches.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140410192902.GM32070@ld-irv-0074>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, angus.clark-qxv4g6HH51o@public.gmane.org, Russel King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pekon-l0cyMroinI0@public.gmane.org, sourav.poddar-l0cyMroinI0@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 8, 2014 at 3:09 PM, Rob Herring <robherring2@gmail.com> wrote:
-> On Fri, Mar 7, 2014 at 5:28 PM, Florian Vaussard
-> <florian.vaussard@epfl.ch> wrote:
->> Placeholders <..> are sometimes used in the devicetree documentation
->> to define family-wide compatible strings (like fsl,<chip>-ipu where
->> chip can be any Freescale SoC).
->>
->> These placeholders are loosly defined. This lead to some
->> fragmentation. Looking at the current placeholders, we have:
->>
->>       3 <board>
->>      32 <chip>
->>       1 <chip name>
->>       1 <mcu-chip>
->>       1 <processor>
->>      30 <soc>
->>       1 <SOC>
->>       1 <soc-family>
->>
->> This patch consolidates this to:
->>
->>       3 <board>
->>      33 <chip>
->>       1 <mcu-chip>
->>       1 <processor>
->>      32 <soc>
->>
->
-> I would prefer to consolidate these into just board and chip. If we
-> have any oddballs, they can just document the exact strings.
+On Thu, Apr 10, 2014 at 12:29:02PM -0700, Brian Norris wrote:
+> > IMHO, we should create a patch or several patches to add the MTD_SPI_NOR
+> > to the defconfigs.
+> 
+> Yeah, I think that's best.
+I will create a patch when i back to office.
+Or you can create it yourself.
 
-Florian, Do you plan to re-spin this? I can take it for 3.15 if it is
-early in the rc's.
+> 
+> > > Also, I think m25p80.c is no longer a "self-contained MTD device driver"
+> > > and should be moved under drivers/mtd/spi-nor/.
+> > If we move the m25p80.c to the drivers/mtd/spi-nor/, we also need to move
+> > other drivers too.
+> 
+> Which ones? I think it only makes sense to move those that depend on the
+> same core code (i.e., spi-nor.c), or have a close relation to it (so
+> Lee's st_spi_fsm.c is a candidate).
 
-Rob
+yes, i mean the st_spi_fsm.c and other drivers which will use the
+spi-nor core code in the future.
+
+thanks
+Huang Shijie
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
