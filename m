@@ -1,69 +1,63 @@
-From: Vikas Sajjan <sajjan.linux@gmail.com>
-Subject: Re: [PATCH v2 0/3] Add initial support of PMU for exynos5260
-Date: Fri, 11 Apr 2014 18:46:06 +0530
-Message-ID: <CAGm_ybhk8FdBy_U2jJfY0d=dC-dJDcXnkFexr3q_LCLXUVxtHw@mail.gmail.com>
-References: <1395061795-17777-1-git-send-email-vikas.sajjan@samsung.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dt-binding: fix GIC example
+Date: Fri, 11 Apr 2014 08:20:47 -0500
+Message-ID: <CAL_Jsq+-8hmKf31nX7rbhZ6EBXAycWS3THHRz-ZLt1RXqWnjVA@mail.gmail.com>
+References: <1396023951-32383-1-git-send-email-l.stach@pengutronix.de>
+	<CAL_Jsq+_+B=TKMQ2ULkXiBJGTNmGGLkB1xjKNJkF1BK_4TRXkg@mail.gmail.com>
+	<1397211012.4577.5.camel@weser.hi.pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1395061795-17777-1-git-send-email-vikas.sajjan@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vikas Sajjan <vikas.sajjan@samsung.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Vikas Sajjan <vikas.sajjan@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1397211012.4577.5.camel-WzVe3FnzCwFR6QfukMTsflXZhhPuCNm+@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
- Hi,
+On Fri, Apr 11, 2014 at 5:10 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> Hi Rob,
+>
+> Am Donnerstag, den 10.04.2014, 10:21 -0500 schrieb Rob Herring:
+>> On Fri, Mar 28, 2014 at 11:25 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+>> > From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+>> >
+>> > When using interrupt-maps, the size of a map entry is #address-cells +
+>>
+>> Plus what? You mean ", and "?
+>>
+> Urgh, I obviously messed this up while editing the commit message in the
+> last minute. It should have been something along the lines of:
+>
+> When using interrupt-maps, the size of a map entry is #address-cells +
+> #interrupt-cells. address-cells should be 0 as this offset is not used
+> in the GIC.
+>
+> As #address-cells = <0> is the same as not specifying the
+> property, simply remove it.
+>
+> Can you edit this while applying, or should I send a new patch?
 
- Any comments on this series.
+I'll fix it up and apply.
 
+>
+>> > address-cells should be 0 as this is not used.
+>> >
+>> > As #address-cells = <0> is the same as not specifying the
+>> > property, simply remove it.
+>> >
+>> > Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+>> > Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>
+>> Did this get applied? I can't seem to find patch 2.
+>>
+> As Shawn pointed out patch 2 got applied through the imx tree as it
+> fixes a real bug there.
 
-On Mon, Mar 17, 2014 at 6:39 PM, Vikas Sajjan <vikas.sajjan@samsung.com> wrote:
-> From: Vikas Sajjan <vikas.sajjan@linaro.org>
->
-> 1) Added initial PMU support for exynos5260
->
-> 2) Added S2R(single CPU) support on exynos5260
->
-> 3) Added PMU mapping via DT.
->
-> rebased on
-> 1) kgene tree for-next branch
-> https://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git/log/?h=for-next
->
-> 2) Rahul's patches for basic support of exynos5260
-> http://www.spinics.net/lists/linux-samsung-soc/msg27282.html
->
-> 3) Rahul's clk patches http://www.spinics.net/lists/linux-samsung-soc/msg27275.html
->
-> 4) Tomasz Figa's http://permalink.gmane.org/gmane.linux.ports.arm.kernel/299340
->
-> Changes since v1:
->                -- Addressed Tomasz Figa's comments.
->                -- removed CMU patch
->                -- Added PMU mapping via DT
->
-> Vikas Sajjan (3):
->   ARM: EXYNOS: Map PMU address through DT
->   ARM: EXYNOS: Add initial support of PMU for Exynos5260
->   arm: exynos5260: add support for S2R
->
->  .../devicetree/bindings/arm/samsung/pmu.txt        |    5 +-
->  arch/arm/boot/dts/exynos4.dtsi                     |    5 +
->  arch/arm/boot/dts/exynos5260.dtsi                  |    5 +
->  arch/arm/mach-exynos/common.c                      |   51 ++--
->  arch/arm/mach-exynos/common.h                      |   26 +++
->  arch/arm/mach-exynos/include/mach/map.h            |    3 -
->  arch/arm/mach-exynos/pm.c                          |   96 ++++++--
->  arch/arm/mach-exynos/pmu.c                         |  238 +++++++++++++++++++
->  arch/arm/mach-exynos/regs-pmu.h                    |  244 ++++++++++++++++++++
->  arch/arm/plat-samsung/include/plat/cpu.h           |    8 +
->  10 files changed, 637 insertions(+), 44 deletions(-)
->
-> --
-> 1.7.9.5
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+It was highlighted that other instances beyond iMX were wrong. Please
+fix those as well.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
