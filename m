@@ -1,56 +1,45 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v5 5/8 fix] mtd: m25p80: use the SPI nor framework
-Date: Fri, 11 Apr 2014 08:04:14 +0100
-Message-ID: <20140411070414.GA9801@lee--X1>
-References: <1393238262-8622-6-git-send-email-b32955@freescale.com>
- <1393574142-17234-1-git-send-email-b32955@freescale.com>
- <20140409213749.GH32070@ld-irv-0074>
- <20140410072509.GA24100@localhost>
- <20140410192902.GM32070@ld-irv-0074>
- <20140411003203.GC3837@localhost.localdomain>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 0/4] ARM: imx6: cleanup for fixed-clock
+Date: Fri, 11 Apr 2014 16:04:03 +0800
+Message-ID: <1397203447-22965-1-git-send-email-shawn.guo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140411003203.GC3837@localhost.localdomain>
-Sender: linux-doc-owner@vger.kernel.org
-To: Huang Shijie <shijie8@gmail.com>
-Cc: Brian Norris <computersforpeace@gmail.com>, Huang Shijie <b32955@freescale.com>, angus.clark@st.com, Russel King <linux@arm.linux.org.uk>, broonie@linaro.org, dwmw2@infradead.org, linux-doc@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, pekon@ti.com, sourav.poddar@ti.com, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 11 Apr 2014, Huang Shijie wrote:
+The series cleans up fixed-clock handling for imx6 a little bit, so that
+we can have clock driver simply call of_clk_get_by_name() than
+imx_obtain_fixed_clock() to retrieve the clocks, and generic name can
+just be used for these clocks.
 
-> On Thu, Apr 10, 2014 at 12:29:02PM -0700, Brian Norris wrote:
-> > > IMHO, we should create a patch or several patches to add the MTD_=
-SPI_NOR
-> > > to the defconfigs.
-> >=20
-> > Yeah, I think that's best.
-> I will create a patch when i back to office.
-> Or you can create it yourself.
->=20
-> >=20
-> > > > Also, I think m25p80.c is no longer a "self-contained MTD devic=
-e driver"
-> > > > and should be moved under drivers/mtd/spi-nor/.
-> > > If we move the m25p80.c to the drivers/mtd/spi-nor/, we also need=
- to move
-> > > other drivers too.
-> >=20
-> > Which ones? I think it only makes sense to move those that depend o=
-n the
-> > same core code (i.e., spi-nor.c), or have a close relation to it (s=
-o
-> > Lee's st_spi_fsm.c is a candidate).
->=20
-> yes, i mean the st_spi_fsm.c and other drivers which will use the
-> spi-nor core code in the future.
+Shawn Guo (4):
+  ARM: dts: imx: add required #clock-cells for fixed-clock
+  ARM: dts: imx6: define input clocks to CCM block
+  ARM: dts: imx6: use of_clk_get_by_name() to retrieve fixed-clock
+  ARM: dts: imx6: use generic name for fixed-clock nodes
 
-+1 - happy with this.
+ arch/arm/boot/dts/imx25.dtsi      |  1 +
+ arch/arm/boot/dts/imx27-apf27.dts |  1 +
+ arch/arm/boot/dts/imx27.dtsi      |  1 +
+ arch/arm/boot/dts/imx50.dtsi      |  4 ++++
+ arch/arm/boot/dts/imx51.dtsi      |  4 ++++
+ arch/arm/boot/dts/imx53.dtsi      |  4 ++++
+ arch/arm/boot/dts/imx6qdl.dtsi    | 23 +++++++++++++++++------
+ arch/arm/boot/dts/imx6sl.dtsi     | 12 ++++++++++--
+ arch/arm/boot/dts/vf610-twr.dts   |  2 ++
+ arch/arm/boot/dts/vf610.dtsi      |  2 ++
+ arch/arm/mach-imx/clk-imx6q.c     |  6 +++---
+ arch/arm/mach-imx/clk-imx6sl.c    |  4 ++--
+ 12 files changed, 51 insertions(+), 13 deletions(-)
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+-- 
+1.8.3.2
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
