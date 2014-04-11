@@ -1,63 +1,73 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dt-binding: fix GIC example
-Date: Fri, 11 Apr 2014 12:10:12 +0200
-Message-ID: <1397211012.4577.5.camel@weser.hi.pengutronix.de>
-References: <1396023951-32383-1-git-send-email-l.stach@pengutronix.de>
-	 <CAL_Jsq+_+B=TKMQ2ULkXiBJGTNmGGLkB1xjKNJkF1BK_4TRXkg@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] ARM: shmobile: r8a7790: link PCI USb devices to USB PHY
+Date: Fri, 11 Apr 2014 15:39:12 +0400
+Message-ID: <5347D460.3070803@cogentembedded.com>
+References: <201404092318.26231.sergei.shtylyov@cogentembedded.com>	<CANqRtoQeuT=Q9PRYNMqA079gjb1VkwgvcDmsWKxjzSVxcVfeWw@mail.gmail.com>	<534674B5.6080706@cogentembedded.com>	<5346E717.4040507@cogentembedded.com> <CANqRtoSub2TULO2rURiODz1VFXNUqe5gi488mkPtq_F+Oje2cQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+_+B=TKMQ2ULkXiBJGTNmGGLkB1xjKNJkF1BK_4TRXkg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CANqRtoSub2TULO2rURiODz1VFXNUqe5gi488mkPtq_F+Oje2cQ@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: "Simon Horman [Horms]" <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, robh+dt@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 11.04.2014 9:48, Magnus Damm wrote:
 
-Am Donnerstag, den 10.04.2014, 10:21 -0500 schrieb Rob Herring:
-> On Fri, Mar 28, 2014 at 11:25 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-> >
-> > When using interrupt-maps, the size of a map entry is #address-cells +
-> 
-> Plus what? You mean ", and "?
-> 
-Urgh, I obviously messed this up while editing the commit message in the
-last minute. It should have been something along the lines of:
+>>>> Thanks for this patch, good to see that the relationship between the
+>>>> USB Host and the PHY is described via DT.
 
-When using interrupt-maps, the size of a map entry is #address-cells +
-#interrupt-cells. address-cells should be 0 as this offset is not used
-in the GIC.
+>>>> This patch seems to cover USB0 and USB2 that both require special
+>>>> control in the PHY. How about USB1? Can you explain about the reason
+>>>> why you omit that?
 
-As #address-cells = <0> is the same as not specifying the
-property, simply remove it.
+>>>      Because the driver does nothing for USB1 anyway.
 
-Can you edit this while applying, or should I send a new patch?
+>>     Looks like I should have tested that last minute change: kernel oopses
+>> due to NULL pointer dereference somewhere in phy_get() once it gets called
+>> for EHCI on the channel #1. At least doesn't seem to be my mistake...
 
-> > address-cells should be 0 as this is not used.
-> >
-> > As #address-cells = <0> is the same as not specifying the
-> > property, simply remove it.
-> >
-> > Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-> > Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> 
-> Did this get applied? I can't seem to find patch 2.
-> 
-As Shawn pointed out patch 2 got applied through the imx tree as it
-fixes a real bug there.
+> No worries, thanks for looking into fixing that.
 
-Regards,
-Lucas
--- 
-Pengutronix e.K.                           | Lucas Stach                 |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-5076 |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> Regarding the USB ports on R-Car Gen2 in general and especially USB1,
+> it is my impression that even though there is no USB controller
+> selection available for USB1 I still believe the UGCTL.CONNECT bit
+> shall be used for power management purpose.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    I don't think so. As I said the EHCI driver happily works without touching 
+this bit.
+
+> I may of course be wrong, but since the PHY hardware is shared between
+> USB0, USB1 and USB2
+
+    I believe it's a wrong impression (which probably my and Valentine's PHY 
+drivers have created). The PHY actually belongs to USBHS only; UGCTRL2 
+register is some kind of ad-hockery in this PHY.
+
+> it makes sense to have some kind of usage counter
+
+    Generic PHY core already maintains such counters for phy_{init|exit}() and 
+phy_power_{on|off}() calls.
+
+> and manage the hardware enable bit based on registered users somehow.
+> There is no need to manage this bit at this point IMO, but in the
+> future we may want to add such handling to improve power management.
+
+    I handle this bit but only for USBHS. What is actually necessary for all 
+USB controllers is enabling the USBHS clocks in order for UGCTRL2 to work.
+
+> And that can only happen if DT is used to connect all USB controllers
+> with the PHY, so please make sure to describe the complete
+> dependencies in DT.
+
+    I cannnot represent USBHS in the device tree yet. I think I can represent 
+xHCI there but I was told it needs the firmware in order to work -- which we 
+don't have, so I'm not sure about xHCI testing.
+
+> Thanks,
+
+> / magnus
+
+WBR, Sergei
+
