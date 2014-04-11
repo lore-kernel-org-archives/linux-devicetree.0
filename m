@@ -1,72 +1,51 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH RESEND 5/5] ARM: dts: berlin: add the pinctrl node and
- muxing setup for uarts
-Date: Fri, 11 Apr 2014 10:18:59 +0200
-Message-ID: <20140411081859.GL10240@lunn.ch>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH RESEND 4/5] Documentation: add the Marvell Berlin pinctrl
+ documentation
+Date: Fri, 11 Apr 2014 10:22:18 +0200
+Message-ID: <20140411082218.GM10240@lunn.ch>
 References: <1397135274-10764-1-git-send-email-antoine.tenart@free-electrons.com>
- <1397135274-10764-6-git-send-email-antoine.tenart@free-electrons.com>
+ <1397135274-10764-5-git-send-email-antoine.tenart@free-electrons.com>
+ <20140411143318.67e55a17@xhacker>
+ <20140411081259.GA20147@kwain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1397135274-10764-6-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>
-Cc: sebastian.hesselbarth@gmail.com, linus.walleij@linaro.org, zmxu@marvell.com, jszhang@marvell.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20140411081259.GA20147@kwain>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 10, 2014 at 03:07:54PM +0200, Antoine T=E9nart wrote:
-> The uart0 pinmux configuration is in the dtsi because uart0 will alwa=
-ys
-> use uart0-pmux to work, no other possibility. Same thing for uart1.
+On Fri, Apr 11, 2014 at 10:12:59AM +0200, Antoine T=E9nart wrote:
+> Hi Jisheng,
 >=20
-> Signed-off-by: Antoine T=E9nart <antoine.tenart@free-electrons.com>
-> ---
->  arch/arm/boot/dts/berlin2.dtsi   | 20 ++++++++++++++++++++
->  arch/arm/boot/dts/berlin2cd.dtsi | 13 +++++++++++++
->  arch/arm/boot/dts/berlin2q.dtsi  | 20 ++++++++++++++++++++
->  3 files changed, 53 insertions(+)
+> On Fri, Apr 11, 2014 at 02:33:18PM +0800, Jisheng Zhang wrote:
+> > On Thu, 10 Apr 2014 06:07:53 -0700
+> > Antoine T=E9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > > +Required subnode-properties:
+> > > +- berlin,group: a string describing the group's name.
+> > > +- berlin,function: the function used to mux the group.
+> >=20
+> > Would it be better to s/function/mode? Because in mrvl internal tec=
+hnology
+> > discussion and docs, we usually say "set pinmux Gy as mode z".
 >=20
-> diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berli=
-n2.dtsi
-> index 56a1af2f1052..43eb90c36050 100644
-> --- a/arch/arm/boot/dts/berlin2.dtsi
-> +++ b/arch/arm/boot/dts/berlin2.dtsi
-> @@ -176,6 +176,22 @@
->  			};
->  		};
-> =20
-> +		pinctrl: pinctrl@0 {
-> +			compatible =3D "marvell,berlin2-pinctrl";
-> +			reg =3D <0xea0000 0x08>, <0xfc0000 0x44>;
-> +			reg-names =3D "global_base", "apb_base";
-> +
-> +			uart0_pmux: uart0-pmux {
-> +				berlin,group =3D "GSM4";
-> +				berlin,function =3D <0>;
-> +			};
-> +
-> +			uart1_pmux: uart1-pmux {
-> +				berlin,group =3D "GSM5";
-> +				berlin,function =3D <1>;
+> The pinctrl framework uses 'function', so I guess it's better not to =
+introduce
+> an other keyword that may confuse people.
 
-Hi Antoine
+Agreed. DT is a standard, Marvell datasheets are just datasheets.
 
-This very much looks like black magic.
+> But I agree this is not what's used in the Marvell's docs. What do
+> you think about we mention it in this documentation ?
 
-I assume the data sheet is not available? So i think you need to
-document all possible combinations of values of group and function.
-Maybe you can add a file in
+Or ask for the datahsheet to be changed :-)
 
-arch/arm/boot/dts/include/dt-bindings/pinctrl/
-
-with something like
-
-#define GSM4_UART0	0
-#define GSM5_UART1	1
-#define GSM12_UART0	1
-#define GSM12_IrDA0	1
-#define GSM12_GPIO	2
-
-	Andrew
+   Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
