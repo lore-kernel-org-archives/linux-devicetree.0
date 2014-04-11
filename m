@@ -1,35 +1,161 @@
-Return-Path: <shc_work@mail.ru>
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCAzLzRdIEFMU0E6IHNvdW5kL2F0bWVsL2FjOTdjLmM6IEFk?=
- =?UTF-8?B?ZCBkZXZpY2UgdHJlZSBzdXBwb3J0?=
-Mime-Version: 1.0
-Date: Sat, 12 Apr 2014 14:31:28 +0400
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Message-ID: <1397298688.295112408@f331.i.mail.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-In-Reply-To: <1397293707-26890-4-git-send-email-alexanders83@web.de>
-References: <1397293707-26890-1-git-send-email-alexanders83@web.de>
- <1397293707-26890-4-git-send-email-alexanders83@web.de>
-To: =?UTF-8?B?QWxleGFuZGVyIFN0ZWlu?= <alexanders83@web.de>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt@kernel.org>, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <pawel.moll@arm.com>, =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ijc+devicetree@hellion.org.uk>, =?UTF-8?B?S3VtYXIgR2FsYQ==?= <galak@codeaurora.org>, =?UTF-8?B?UmFuZHkgRHVubGFw?= <rdunlap@infradead.org>, =?UTF-8?B?QW5kcmV3IFZpY3Rvcg==?= <linux@maxim.org.za>, =?UTF-8?B?Tmljb2xhcyBGZXJyZQ==?= <nicolas.ferre@atmel.com>, =?UTF-8?B?SmVhbi1DaHJpc3RvcGhlIFBsYWduaW9sLVZpbGxhcmQ=?= <plagnioj@jcrosoft.com>, =?UTF-8?B?SmFyb3NsYXYgS3lzZWxh?= <perex@perex.cz>, =?UTF-8?B?VGFrYXNoaSBJd2Fp?= <tiwai@suse.de>, =?UTF-8?B?R3JhbnQgTGlrZWx5?= <grant.likely@linaro.org>
+Return-Path: <gabriel.fernandez@linaro.org>
+MIME-Version: 1.0
+In-Reply-To: <1397226820-5604-1-git-send-email-gabriel.fernandez@linaro.org>
+References: <1397226820-5604-1-git-send-email-gabriel.fernandez@linaro.org>
+Date: Fri, 11 Apr 2014 16:53:56 +0200
+Message-ID: <CAG374jCL3m0Yxkbim-VpJn+Q0Gv+pSUgR19L0gWwLDZW3axU_A@mail.gmail.com>
+Subject: Re: [PATCH v3 0/7] Add ST Keyscan driver
+From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Content-Type: multipart/alternative; boundary=001a1134f2bec99d6404f6c58092
+To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-U2F0LCAxMiBBcHIgMjAxNCAxMTowODoyNiArMDIwMCDQvtGCIEFsZXhhbmRlciBTdGVpbiA8YWxl
-eGFuZGVyczgzQHdlYi5kZT46Cj4gU2lnbmVkLW9mZi1ieTogQWxleGFuZGVyIFN0ZWluIDxhbGV4
-YW5kZXJzODNAd2ViLmRlPgo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9h
-dG1lbF9hYzk3Yy50eHQgICAgICB8IDIwICsrKysrKysrKwo+ICBzb3VuZC9hdG1lbC9hYzk3Yy5j
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDUyICsrKysrKysrKysrKysrKysrKysr
-LS0KPiAgMiBmaWxlcyBjaGFuZ2VkLCA2OSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQo+
-ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Nv
-dW5kL2F0bWVsX2FjOTdjLnR4dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3Mvc291bmQvYXRtZWxfYWM5N2MudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3NvdW5kL2F0bWVsX2FjOTdjLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAw
-NjQ0Cj4gaW5kZXggMDAwMDAwMC4uOTgzOTQwMwo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvYXRtZWxfYWM5N2MudHh0Cj4gQEAg
-LTAsMCArMSwyMCBAQAo+ICsqIEF0bWVsIEFDOTcgY29udHJvbGxlcgo+ICsKPiArUmVxdWlyZWQg
-cHJvcGVydGllczoKPiArICAtIGNvbXBhdGlibGU6ICJhdG1lbCxhdG1lbF9hYzk3YyIKPiArICAt
-IHJlZzogQWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSByZWdpc3RlciBzZXQgZm9yIHRoZSBkZXZp
-Y2UKPiArICAtIGludGVycnVwdHM6IFNob3VsZCBjb250YWluIEFDOTcgaW50ZXJydXB0Cj4gKyAg
-LSBhdG1lbCxyZXNldC1waW46IEdQSU8gZm9yIHJlc2V0dGluZyB0aGUgY29kZWMKCldoeSBzdGFu
-ZGFyZCAiZ3Bpb3MiIHByb3BlcnR5IGNhbm5vdCBiZSB1c2VkIGhlcmU/CgotLS0KCg==
+--001a1134f2bec99d6404f6c58092
+Content-Type: text/plain; charset=ISO-8859-1
+
+Sorry,  don't review this v3 version, i made mistake...
+
+i prepare a v4 version.
+
+Best regards.
+
+Gabriel
+
+
+
+On 11 April 2014 16:33, Gabriel FERNANDEZ <gabriel.fernandez@st.com> wrote:
+
+> Changes in v3:
+> - add reset controller management
+> - rename 'st,debounce_us' into 'st,debounce-us' in dt binding
+>
+> Changes in v2:
+> - use standard format for matrix keymap
+> - suppress __exit mark for keyscan_remove()
+> - Call to keyscan_stop() shoudl go into keyscan_close() implementation
+> - use of SIMPLE_DEV_PM_OPS()
+> - rename compatibility name into "st,sti-keyscan"
+> - suppress platform data management
+> - omit vendor information
+> - cosmetic change and renaming
+>
+> The goal of this series is to add ST Keyscan support to ST SoCs.
+> The DT definition is added for STiH415 and STiH416 SoCs on
+> B2000 board.
+>
+> Gabriel Fernandez (5):
+>   drivers: input: keyboard: st-keyscan: add keyscan driver
+>   ARM: STi: DT: add keyscan for stih415
+>   ARM: STi: DT: add keyscan for stih416
+>   ARM: STi: DT: add keyscan for stih41x-b2000
+>   ARM: multi_v7_defconfig: add ST Keyscan driver
+>
+> Giuseppe CONDORELLI (2):
+>   driver: reset: sti: add keyscan for stih415
+>   driver: reset: sti: add keyscan for stih416
+>
+>  .../devicetree/bindings/input/st-keyscan.txt       |  60 +++++
+>  arch/arm/boot/dts/stih415-pinctrl.dtsi             |  16 ++
+>  arch/arm/boot/dts/stih415.dtsi                     |  12 +
+>  arch/arm/boot/dts/stih416-pinctrl.dtsi             |  16 ++
+>  arch/arm/boot/dts/stih416.dtsi                     |  12 +
+>  arch/arm/boot/dts/stih41x-b2000.dtsi               |  23 ++
+>  arch/arm/configs/multi_v7_defconfig                |   1 +
+>  drivers/input/keyboard/Kconfig                     |  12 +
+>  drivers/input/keyboard/Makefile                    |   1 +
+>  drivers/input/keyboard/st-keyscan.c                | 260
+> +++++++++++++++++++++
+>  drivers/reset/sti/reset-stih415.c                  |   1 +
+>  drivers/reset/sti/reset-stih416.c                  |   1 +
+>  .../dt-bindings/reset-controller/stih415-resets.h  |   1 +
+>  .../dt-bindings/reset-controller/stih416-resets.h  |   1 +
+>  14 files changed, 417 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/st-keyscan.txt
+>  create mode 100644 drivers/input/keyboard/st-keyscan.c
+>
+> --
+> 1.9.1
+>
+>
+
+--001a1134f2bec99d6404f6c58092
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div><div>Sorry,=A0 don&#39;t review this v3 version, i ma=
+de mistake...<br><br></div><div>i prepare a v4 version.<br></div><div><br><=
+/div>Best regards.<br><br></div>Gabriel<br><div><div><br></div></div></div>=
+<div class=3D"gmail_extra">
+<br><br><div class=3D"gmail_quote">On 11 April 2014 16:33, Gabriel FERNANDE=
+Z <span dir=3D"ltr">&lt;<a href=3D"mailto:gabriel.fernandez@st.com" target=
+=3D"_blank">gabriel.fernandez@st.com</a>&gt;</span> wrote:<br><blockquote c=
+lass=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;=
+padding-left:1ex">
+Changes in v3:<br>
+- add reset controller management<br>
+- rename &#39;st,debounce_us&#39; into &#39;st,debounce-us&#39; in dt bindi=
+ng<br>
+<br>
+Changes in v2:<br>
+- use standard format for matrix keymap<br>
+- suppress __exit mark for keyscan_remove()<br>
+- Call to keyscan_stop() shoudl go into keyscan_close() implementation<br>
+- use of SIMPLE_DEV_PM_OPS()<br>
+- rename compatibility name into &quot;st,sti-keyscan&quot;<br>
+- suppress platform data management<br>
+- omit vendor information<br>
+- cosmetic change and renaming<br>
+<br>
+The goal of this series is to add ST Keyscan support to ST SoCs.<br>
+The DT definition is added for STiH415 and STiH416 SoCs on<br>
+B2000 board.<br>
+<br>
+Gabriel Fernandez (5):<br>
+=A0 drivers: input: keyboard: st-keyscan: add keyscan driver<br>
+=A0 ARM: STi: DT: add keyscan for stih415<br>
+=A0 ARM: STi: DT: add keyscan for stih416<br>
+=A0 ARM: STi: DT: add keyscan for stih41x-b2000<br>
+=A0 ARM: multi_v7_defconfig: add ST Keyscan driver<br>
+<br>
+Giuseppe CONDORELLI (2):<br>
+=A0 driver: reset: sti: add keyscan for stih415<br>
+=A0 driver: reset: sti: add keyscan for stih416<br>
+<br>
+=A0.../devicetree/bindings/input/st-keyscan.txt =A0 =A0 =A0 | =A060 +++++<b=
+r>
+=A0arch/arm/boot/dts/stih415-pinctrl.dtsi =A0 =A0 =A0 =A0 =A0 =A0 | =A016 +=
++<br>
+=A0arch/arm/boot/dts/stih415.dtsi =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 |=
+ =A012 +<br>
+=A0arch/arm/boot/dts/stih416-pinctrl.dtsi =A0 =A0 =A0 =A0 =A0 =A0 | =A016 +=
++<br>
+=A0arch/arm/boot/dts/stih416.dtsi =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 |=
+ =A012 +<br>
+=A0arch/arm/boot/dts/stih41x-b2000.dtsi =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A023=
+ ++<br>
+=A0arch/arm/configs/multi_v7_defconfig =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| =A0=
+ 1 +<br>
+=A0drivers/input/keyboard/Kconfig =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 |=
+ =A012 +<br>
+=A0drivers/input/keyboard/Makefile =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0|=
+ =A0 1 +<br>
+=A0drivers/input/keyboard/st-keyscan.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| 260=
+ +++++++++++++++++++++<br>
+=A0drivers/reset/sti/reset-stih415.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| =
+=A0 1 +<br>
+=A0drivers/reset/sti/reset-stih416.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| =
+=A0 1 +<br>
+=A0.../dt-bindings/reset-controller/stih415-resets.h =A0| =A0 1 +<br>
+=A0.../dt-bindings/reset-controller/stih416-resets.h =A0| =A0 1 +<br>
+=A014 files changed, 417 insertions(+)<br>
+=A0create mode 100644 Documentation/devicetree/bindings/input/st-keyscan.tx=
+t<br>
+=A0create mode 100644 drivers/input/keyboard/st-keyscan.c<br>
+<span class=3D"HOEnZb"><font color=3D"#888888"><br>
+--<br>
+1.9.1<br>
+<br>
+</font></span></blockquote></div><br></div>
+
+--001a1134f2bec99d6404f6c58092--
