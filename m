@@ -1,77 +1,188 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2] phy: Renesas R-Car Gen2 PHY driver
-Date: Fri, 11 Apr 2014 16:10:28 +0400
-Message-ID: <5347DBB4.3070401@cogentembedded.com>
-References: <201404090144.26769.sergei.shtylyov@cogentembedded.com> <53466C07.4080409@ti.com> <5346F6B6.8000901@cogentembedded.com>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH RFC v5 2/2] clk: Add handling of clk parent and rate
+ assigned from DT
+Date: Fri, 11 Apr 2014 14:25:49 +0200
+Message-ID: <5347DF4D.5000005@samsung.com>
+References: <1397042790-10636-1-git-send-email-s.nawrocki@samsung.com>
+ <1397042790-10636-3-git-send-email-s.nawrocki@samsung.com>
+ <CAL_JsqKDJ_yFxFYnrTtmzMPoxO2rmypiujybwbhUh35y1LS-Mw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5346F6B6.8000901@cogentembedded.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: linux-sh@vger.kernel.org, magnus.damm@gmail.com, linux-doc@vger.kernel.org, rdunlap@infradead.org, grant.likely@linaro.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <CAL_JsqKDJ_yFxFYnrTtmzMPoxO2rmypiujybwbhUh35y1LS-Mw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 10-04-2014 23:53, Sergei Shtylyov wrote:
-
->> On Wednesday 09 April 2014 03:14 AM, Sergei Shtylyov wrote:
->>> This PHY, though formally being a part of Renesas USBHS controller,
->>> contains the
->>> UGCTRL2 register that controls multiplexing of the USB ports (Renesas calls
->>> them
->>> channels) to the different USB controllers: channel 0 can be connected to
->>> either
->>> PCI EHCI/OHCI or USBHS controllers, channel 2 can be connected to PCI
->>> EHCI/OHCI
->>> or xHCI controllers.
-
->>> This is a new driver for this USB PHY currently already supported under
->>> drivers/
->>> usb/phy/. The reason for writing the new driver was the requirement that the
->>> multiplexing of USB channels to the controller be dynamic, depending on what
->>> USB drivers are loaded,  rather than static as provided by the old driver.
-
+On 10/04/14 18:04, Rob Herring wrote:
+> On Wed, Apr 9, 2014 at 6:26 AM, Sylwester Nawrocki
+> <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>> This patch adds a helper function to configure clock parents and
+>> rates as specified in clock-parents, clock-rates DT properties
+>> for a consumer device and a call to it before driver is bound to
+>> a device.
+>>
+>> Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> ---
 [...]
+>> ---
+>>  .../devicetree/bindings/clock/clock-bindings.txt   |   44 ++++++++++
+>>  drivers/base/platform.c                            |    5 ++
+>>  drivers/clk/Makefile                               |    3 +
+>>  drivers/clk/clk-conf.c                             |   85 ++++++++++++++++++++
+>>  drivers/clk/clk.c                                  |   12 ++-
+>>  include/linux/clk/clk-conf.h                       |   19 +++++
+>>  6 files changed, 167 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/clk/clk-conf.c
+>>  create mode 100644 include/linux/clk/clk-conf.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> index 700e7aa..93513fc 100644
+>> --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> @@ -132,3 +132,47 @@ clock signal, and a UART.
+>>    ("pll" and "pll-switched").
+>>  * The UART has its baud clock connected the external oscillator and its
+>>    register clock connected to the PLL clock (the "pll-switched" signal)
+>> +
+>> +==Assigned clock parents and rates==
+>> +
+>> +Some platforms require static initial configuration of parts of the clocks
+>> +controller. Such a configuration can be specified in a clock consumer node
+>> +through clock-parents and clock-rates DT properties. The former should
+>> +contain a list of parent clocks in form of phandle and clock specifier pairs,
+>> +the latter the list of assigned clock frequency values (one cell each).
+>> +To skip setting parent or rate of a clock its corresponding entry should be
+>> +set to 0, or can be omitted if it is not followed by any non-zero entry.
+>> +
+>> +    uart@a000 {
+>> +        compatible = "fsl,imx-uart";
+>> +        reg = <0xa000 0x1000>;
+>> +        ...
+>> +        clocks = <&clkcon 0>, <&clkcon 3>;
+>> +        clock-names = "baud", "mux";
+>> +
+>> +        clock-parents = <0>, <&pll 1>;
+>> +        clock-rates = <460800>;
+> 
+> Is this the input frequency or serial baud rate? Looks like a baud
+> rate, but the clock framework needs input (to the uart) frequency. I
+> would say this should be clock-frequency and specify the max baud rate
+> as is being done with i2c bindings. The uart driver should know how to
+> convert between input clock freq and baud rate.
 
->>> The infrastructure provided by drivers/phy/phy-core.c seems to fit that
->>> purpose
->>> ideally. The new driver only supports device tree probing for now.
+This UART example is not quite representative for the issues I have been
+trying to address with this patch set. There is a need to set (an initial)
+input clock frequency. E.g. in case of multimedia devices there may be
+a need to set clock parent and frequency of an input clock to multiple IP
+blocks, so they are clocked synchronously and data is carried properly
+across a whole processing chain. Thus there may not be even clock output
+in an IP block, but still input clock needs to be set. IIUC there is
+similar issue with audio, where it is difficult to calculate the clock
+frequencies/determine parent clocks in individual drivers algorithmically.
 
->>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>> +    };
+>> +
+>> +In this example the pll is set as parent of "mux" clock and frequency 
+>> of "baud"
+>> +clock is specified as 460800 Hz.
+> 
+> I don't really like clock-parents. The parent information is part of
+> the clock source, not the consumer.
 
-[...]
+I'm not sure we must always consider the parent information as property
+of a clock source. If for example we expose a structure like below as
+single clock object, supporting clock gating, parent and frequency
+setting the parent setting is still accessible from within a device
+driver. And clock parent selection may depend on a system configuration
+not immediately obvious from within a single device driver perspective.
 
->>> Index: linux-phy/drivers/phy/phy-rcar-gen2.c
->>> ===================================================================
->>> --- /dev/null
->>> +++ linux-phy/drivers/phy/phy-rcar-gen2.c
->>> @@ -0,0 +1,287 @@
+                         MUX
+                       ,-------.     DIVIDER      GATE
+common clk source 1 -->|--.    |   ,--------.   ,--------.
+                       |   \   |   |        |   |        |
+common clk source 2 -->|-   '--|-->|        |-->|        |--> consumer
+       ...             |       |   |        |   |        |
+common clk source N -->|-      |   '--------'   '--------'
+                       '-------'
 
-[...]
+> We've somewhat decided against having every single clock defined in DT
+> and rather only describe a clock controller with leaf clocks to
+> devices. That is not a hard rule, but for complex clock trees that is
+> the norm. Doing something like this will require all levels of the
+> clock tree to be described. You may have multiple layers of parents
+> that have to be configured correctly. How are you configuring the rest
+> of the tree?
 
->>> +static struct phy_ops rcar_gen2_phy_ops = {
->>> +    .init        = rcar_gen2_phy_init,
->>> +    .exit        = rcar_gen2_phy_exit,
->>> +    .owner        = THIS_MODULE,
->>> +};
->>> +
->>> +static struct phy_ops rcar_gen2_usbhs_phy_ops = {
->>> +    .init        = rcar_gen2_phy_init,
->>> +    .exit        = rcar_gen2_phy_exit,
->>> +    .power_on    = rcar_gen2_usbhs_phy_power_on,
->>> +    .power_off    = rcar_gen2_usbhs_phy_power_off,
->>> +    .owner        = THIS_MODULE,
->>> +};
+I believe even clock controllers where clocks are represented as flat
+array often describe the clock tree entirely by parenthood, the tree
+structure is just not obvious from the DT binding.
+In addition, there seems to be appearing more and more clock controller
+DT bindings describing their clocks individually.
 
->> Let's not create multiple phy_ops for a single driver.
+>> +Configuring a clock's parent and rate through the device node that uses
+>> +the clock can be done only for clocks that have a single user. Specifying
+>> +conflicting parent or rate configuration in multiple consumer nodes for
+>> +a shared clock is forbidden.
+>> +
+>> +Configuration of common clocks, which affect multiple consumer devices
+>> +can be specified in a dedicated 'assigned-clocks' subnode of a clock
+>> +provider node, e.g.:
+> 
+> This seems like a work-around due to having clock-parents in the
+> consumer node. If (I'm not convinced we should) we have a binding for
+> parent config, it needs to be a single binding that works for both
+> cases.
 
->     Unfortunately, I have to because not all PHYs are equal.
+When this issue was first raised during an ARM kernel summit it was
+proposed to add 'assigned' prefix to DT properties for such bindings.
 
-    OK, actually I can do without extra 'struct phy_ops'. I just figured that 
-out a bit late...
+How about separate properties for the default clock configuration,
+e.g. assigned-clocks/assigned-clock-parents/assigned-clock-rates ?
+So a clock provider would look like:
 
-WBR, Sergei
+    clkcon {
+        ...
+        #clock-cells = <1>;
 
+        assigned-clocks = <&clkcon 16>, <&clkcon 17>;
+        assigned-clock-parents = <0>, <&clkcon 1>;
+        assigned-clock-rates = <200000>;
+    };
+
+And a consumer device node:
+
+    uart@a000 {
+        compatible = "fsl,imx-uart";
+        reg = <0xa000 0x1000>;
+        ...
+        clocks = <&clkcon 0>;
+        clock-names = "baud";
+
+        assigned-clocks = <&clkcon 3>, <&clkcon 0>;
+        assigned-clock-parents = <&pll 1>;
+        assigned-clock-rates = <0>, <460800>;
+};
+
+?
+>> +
+>> +    clkcon {
+>> +        ...
+>> +        #clock-cells = <1>;
+>> +
+>> +        assigned-clocks {
+>> +            clocks = <&clkcon 16>, <&clkcon 17>;
+>> +            clock-parents = <0>, <&clkcon 1>;
+>> +            clock-rates = <200000>;
+>> +        };
+>> +    };
+
+--
+Thanks,
+Sylwester
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
