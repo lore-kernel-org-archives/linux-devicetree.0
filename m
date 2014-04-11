@@ -1,47 +1,53 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [PATCH v2 2/6] PCI: tegra: use new OF interrupt mapping when
- possible
-Date: Fri, 11 Apr 2014 14:41:41 -0600
-Message-ID: <20140411204140.GA8967@obsidianresearch.com>
-References: <1394025951-32438-1-git-send-email-l.stach@pengutronix.de>
- <1394025951-32438-3-git-send-email-l.stach@pengutronix.de>
- <5318B232.2020507@wwwdotorg.org>
- <1394127555.4582.1.camel@weser.hi.pengutronix.de>
- <CA+mB=1JCjDMzTuctvSQgjNhBnkyUPC2ooAzJOX_PC5L1gAau8w@mail.gmail.com>
+From: =?UTF-8?B?7LWc7LCs7Jqw?= <cwchoi00@gmail.com>
+Subject: Re: [PATCH] iio: adc: exynos_adc: Control special clock of ADC to
+ support Exynos3250 ADC
+Date: Sat, 12 Apr 2014 07:49:22 +0900
+Message-ID: <CAGTfZH1t9QEZk5qaDRnGkeMatwtTXFq5SGgR27-4nXhdzKU-Ng@mail.gmail.com>
+References: <1397181640-18513-1-git-send-email-cw00.choi@samsung.com>
+	<5347BE67.1080209@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CA+mB=1JCjDMzTuctvSQgjNhBnkyUPC2ooAzJOX_PC5L1gAau8w@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Srikanth Thokala <sriku.linux@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>, Tanmay Inamdar <tinamdar@apm.com>, devicetree@vger.kernel.org, Jingoo Han <jg1.han@samsung.com>, linux-samsung-soc@vger.kernel.org, kernel@pengutronix.de, Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, Thierry Reding <thierry.reding@gmail.com>, Ben Dooks <ben-linux@fluff.org>, linux-tegra@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5347BE67.1080209@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-iio@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, ch.naveen@samsung.com, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 11, 2014 at 11:10:59PM +0530, Srikanth Thokala wrote:
+Hi Sylwester,
 
-> I see this error too on my setup (Xilinx PCIe Root Complex Driver),
-> https://lkml.org/lkml/2014/3/3/183
+On Fri, Apr 11, 2014 at 7:05 PM, Sylwester Nawrocki
+<s.nawrocki@samsung.com> wrote:
+> Hi Chanwoo,
+>
+> On 11/04/14 04:00, Chanwoo Choi wrote:
+>> This patch control special clock for ADC in Exynos series's FSYS block.
+>> If special clock of ADC is registerd on clock list of common clk framework,
+>> Exynos ADC drvier have to control this clock.
+>>
+>> Exynos3250/Exynos4/Exynos5 has 'adc' clock as following:
+>> - 'adc' clock: bus clock for ADC
+>>
+>> Exynos3250 has additional 'sclk_tsadc' clock as following:
+>> - 'sclk_tsadc' clock: special clock for ADC which provide clock to internal ADC
+>>
+>> Exynos 4210/4212/4412 and Exynos5250/5420 has not included 'sclk_tsadc' clock
+>> in FSYS_BLK. But, Exynos3250 based on Cortex-A7 has only included 'sclk_tsadc'
+>> clock in FSYS_BLK.
+>
+> I think a new compatible should be added for the ADC device for Exynos3250
+> and the required clocks should be handled properly, based on compatible
+> value. This could be handled, e.g. through some flags in driver's data
+> selected based on the compatible property value.
 
-> After digging into it, I see I need to override the API
-> pcibios_get_phb_of_node()
+OK, I'll consider new patch using new compatible string according to
+your comment.
 
-No, as I pointed out before, the DT node comes in through
-pci_scan_root_bus:
+>
+> And the new clocks should be documented in Documentation/devicetree/bindings
+> /arm/samsung/exynos-adc.txt.
 
-+static struct pci_bus __init *xilinx_pcie_scan_bus(int nr,
-+				struct pci_sys_data *sys)
-+{
-+	struct xilinx_pcie_port *port = sys_to_pcie(sys);
-+	struct pci_bus *bus;
-+
-+	if (port) {
-+		port->root_busno = sys->busnr;
-+		bus = pci_scan_root_bus(NULL, sys->busnr, &xilinx_pcie_ops,
-                                       ^^^^^^
+OK, I'll modify it. Thanks,
 
-You can't pass NULL here and have DT work properly. 
-
-See http://www.spinics.net/lists/arm-kernel/msg312392.html
-
-Jason
+Best Regards,
+Chanwoo Choi
