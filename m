@@ -1,7 +1,7 @@
 From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 5/6] ARM: dts: ste-dbx: drop address cells from GIC node
-Date: Fri, 11 Apr 2014 16:59:39 +0200
-Message-ID: <1397228380-7352-5-git-send-email-l.stach@pengutronix.de>
+Subject: [PATCH 6/6] ARM: dts: sh: drop address cells from GIC node
+Date: Fri, 11 Apr 2014 16:59:40 +0200
+Message-ID: <1397228380-7352-6-git-send-email-l.stach@pengutronix.de>
 References: <1397228380-7352-1-git-send-email-l.stach@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1397228380-7352-1-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
@@ -19,21 +19,34 @@ same thing as not specifying them, drop them completely.
 
 Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- arch/arm/boot/dts/ste-dbx5x0.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/boot/dts/r8a7740.dtsi | 1 -
+ arch/arm/boot/dts/sh73a0.dtsi  | 1 -
+ 2 files changed, 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
-index e41eedca3ce3..c73414d3fe50 100644
---- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
-+++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
-@@ -24,7 +24,6 @@
- 		intc: interrupt-controller@a0411000 {
- 			compatible = "arm,cortex-a9-gic";
- 			#interrupt-cells = <3>;
--			#address-cells = <1>;
- 			interrupt-controller;
- 			reg = <0xa0411000 0x1000>,
- 			      <0xa0410100 0x100>;
+diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
+index 8280884bfa59..2551e9438d35 100644
+--- a/arch/arm/boot/dts/r8a7740.dtsi
++++ b/arch/arm/boot/dts/r8a7740.dtsi
+@@ -28,7 +28,6 @@
+ 	gic: interrupt-controller@c2800000 {
+ 		compatible = "arm,cortex-a9-gic";
+ 		#interrupt-cells = <3>;
+-		#address-cells = <1>;
+ 		interrupt-controller;
+ 		reg = <0xc2800000 0x1000>,
+ 		      <0xc2000000 0x1000>;
+diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
+index b7bd3b9a6753..5ecf552e1c00 100644
+--- a/arch/arm/boot/dts/sh73a0.dtsi
++++ b/arch/arm/boot/dts/sh73a0.dtsi
+@@ -34,7 +34,6 @@
+ 	gic: interrupt-controller@f0001000 {
+ 		compatible = "arm,cortex-a9-gic";
+ 		#interrupt-cells = <3>;
+-		#address-cells = <1>;
+ 		interrupt-controller;
+ 		reg = <0xf0001000 0x1000>,
+ 		      <0xf0000100 0x100>;
 -- 
 1.9.1
 
