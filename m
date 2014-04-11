@@ -1,123 +1,117 @@
-From: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2] axs_nand - add driver for NAND controller used on
- Synopsys AXS dev boards
-Date: Fri, 11 Apr 2014 14:51:29 +0000
-Message-ID: <1397227889.3284.17.camel@abrodkin-8560l.internal.synopsys.com>
-References: <1396597089-1081-1-git-send-email-abrodkin@synopsys.com>
-	 <20140404140933.GA25772@arch.cereza>
-	 <1396851239.4081.10.camel@abrodkin-8560l.internal.synopsys.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396851239.4081.10.camel-qexTn8sybohw4zDQoAj8xIno5vre8uhWHKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
-Content-ID: <FA034EBC1515CA4A815AE778F2E19C94-z7JfP6tgrtVBCHUSTMH8dZqQE7yCjDx5@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "Francois.Bedard-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Francois.Bedard-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: [PATCH/RFC v3 0/5] LED / flash API integration
+Date: Fri, 11 Apr 2014 16:56:51 +0200
+Message-ID: <1397228216-6657-1-git-send-email-j.anaszewski@samsung.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: s.nawrocki@samsung.com, a.hajda@samsung.com, kyungmin.park@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ezequiel,
+This is is the third version of the patch series being a follow up
+of the discussion on Media summit 2013-10-23, related to the
+LED / flash API integration (the notes from the discussion were
+enclosed in the message [1], paragraph 5).
+The series is based on linux-next next-20140328
 
-On Mon, 2014-04-07 at 10:13 +0400, Alexey Brodkin wrote:
-> Hi Ezequiel,
-> 
-> On Fri, 2014-04-04 at 11:09 -0300, Ezequiel Garcia wrote:
-> > On Apr 04, Alexey Brodkin wrote:
-> > > Signed-off-by: Alexey Brodkin <abrodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> > > 
-> > 
-> > Maybe it would be nice adding some driver description here, so the commit
-> > log actually says something useful about the commit.
-> 
-> Well, I thought about it but frankly I'm not sure if there's anything
-> else to add to commit title "driver for NAND controller used on Synopsys
-> AXS dev boards".
-> 
-> Do you think more info may make sense?
-> 
-> > > +/**
-> > > + * axs_flag_wait_and_reset - Waits until requested flag in INT_STATUS register
-> > > + *              is set by HW and resets it by writing "1" in INT_CLR_STATUS.
-> > > + * @host:	Pointer to private data structure.
-> > > + * @flag:	Bit/flag offset in INT_STATUS register
-> > > + */
-> > > +static void axs_flag_wait_and_reset(struct axs_nand_host *host, int flag)
-> > > +{
-> > > +	unsigned int i;
-> > > +
-> > > +	for (i = 0; i < AXS_FLAG_WAIT_DELAY * 100; i++) {
-> > > +		unsigned int status = reg_get(host, INT_STATUS);
-> > > +
-> > > +		if (status & (1 << flag)) {
-> > > +			reg_set(host, INT_CLR_STATUS, 1 << flag);
-> > > +			return;
-> > > +		}
-> > > +
-> > > +		udelay(10);
-> > > +	}
-> > > +
-> > > +	/*
-> > > +	 * Since we cannot report this problem any further than
-> > > +	 * axs_nand_{write|read}_buf() letting user know there's a problem.
-> > > +	 */
-> > > +	dev_err(host->dev, "Waited too long (%d s.) for flag/bit %d\n",
-> > > +		AXS_FLAG_WAIT_DELAY, flag);
-> > > +}
-> > 
-> > Hm... I'm not sure the above is really true.
-> > 
-> > The NAND core uses the replaceable chip->waitfunc callback to check the
-> > status of issued commands. See for instance:
-> > 
-> > static int nand_write_oob_std(struct mtd_info *mtd, struct nand_chip *chip,
-> >                               int page)
-> > {
-> >         int status = 0;
-> >         const uint8_t *buf = chip->oob_poi;
-> >         int length = mtd->oobsize;
-> > 
-> >         chip->cmdfunc(mtd, NAND_CMD_SEQIN, mtd->writesize, page);
-> >         chip->write_buf(mtd, buf, length);
-> >         /* Send command to program the OOB data */
-> >         chip->cmdfunc(mtd, NAND_CMD_PAGEPROG, -1, -1);
-> > 
-> >         status = chip->waitfunc(mtd, chip);
-> > 
-> >         return status & NAND_STATUS_FAIL ? -EIO : 0;
-> > }
-> > 
-> > On the other side, if you are clearing the flags in axs_flag_wait_and_reset()
-> > it might be a bit hard for you to get this right.
-> > 
-> > IOW, I'm not saying you *must* do this, but instead suggesting that you take
-> > a look at waitfunc() and see if it helps report a proper error in the
-> > read/write path.
-> 
-> As I may understand from generic implementation of "waitfunc" in
-> "nand_base.c" it checks status of NAND chip itself - which IMHO makes
-> sense. And this is done via NAND_CMD_STATUS command sent to chip through
-> NAND controller.
-> 
-> In AXS NAND driver you may see 2 types of wait checks:
-> 1. NAND_ISR_CMDDONE - this flag means that NAND controller has just
-> executed provided command (i.e. set proper signal on control lines of
-> NAND chip etc), but it doesn't mean NAND chip itself has completed
-> command execution. That's why "waitfunc" is not direct replacement here.
-> 
-> 2. NAND_ISR_{RX|TX}DMACOMPLETE - this flag indicates completion of DMA
-> transfer to/from NAND chip to RAM. "waitfunc" won't work here as well.
-> 
-> I hope this explanation makes sense.
+Description of the proposed modifications according to
+the kernel components they are relevant to:
+    - LED subsystem modifications
+        * added led_flash module which, when enabled in the config,
+	  registers flash specific sysfs attributes:
+            - flash_brightness
+	    - max_flash_brightness
+	    - indicator_brightness
+	    - max_indicator_brightness
+            - flash_timeout
+            - max_flash_timeout
+	    - flash_strobe
+            - flash_fault
+            - external_strobe
+	and exposes kernel internal API
+            - led_set_flash_strobe
+            - led_get_flash_strobe
+            - led_set_indicator_brightness
+            - led_update_indicator_brightness
+            - led_set_flash_timeout
+            - led_get_flash_fault
+            - led_set_external_strobe
+            - led_sysfs_lock
+            - led_sysfs_unlock
+    - Addition of a V4L2 Flash sub-device registration helpers
+        * added v4l2-flash.c and v4l2-flash.h files with helper
+          functions that facilitate registration/unregistration
+          of a subdevice, which wrapps a LED subsystem device and
+          exposes V4L2 Flash control interface
+    - Addition of a driver for the flash cell of the MAX77693 mfd
+        * the driver exploits the newly introduced mechanism
+    - Update of the max77693.txt DT bindings documentation
 
-Please treat this message as a gentle reminder.
-I'm wondering if my explanation in the previous email makes any sense or
-I still need to fix stuff.
+================
+Changes since v2
+================
 
-Regards,
-Alexey
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    - refactored the code so that it is possible to build
+      led-core without led-flash module
+    - added v4l2-flash ops which slackens dependency from
+      the led-flash module
+    - implemented led_clamp_align_val function and led_ctrl
+      structure which allows to align led control values
+      in the manner compatible with V4L2 Flash controls;
+      the flash brightness and timeout units have been defined
+      as microamperes and microseconds respectively to properly
+      support devices which define current and time levels
+      as fractions of 1/1000.
+    - added support for the flash privacy leds
+    - modified LED sysfs locking mechanism - now it locks/unlocks
+      the interface on V4L2 Flash sub-device file open/close
+    - changed hw_triggered attribute name to external_strobe,
+      which maps on the V4L2_FLASH_STROBE_SOURCE_EXTERNAL name 
+      more intuitively
+    - made external_strobe and indicator related sysfs attributes
+      created optionally only if related features are declared
+      by the led device driver
+    - removed from the series patches modifying exynos4-is media
+      controller - a proposal for "flash manager" which will take
+      care of flash devices registration is due to be submitted
+    - removed modifications to the LED class devices documentation,
+      it will be covered after the whole functionality is accepted
+
+Thanks,
+Jacek Anaszewski
+
+[1] http://www.spinics.net/lists/linux-media/msg69253.html
+
+Jacek Anaszewski (5):
+  leds: Add sysfs and kernel internal API for flash LEDs
+  leds: Improve and export led_update_brightness function
+  leds: Add support for max77693 mfd flash cell
+  DT: Add documentation for the mfd Maxim max77693 flash cell
+  media: Add registration helpers for V4L2 flash sub-devices
+
+ Documentation/devicetree/bindings/mfd/max77693.txt |   57 ++
+ drivers/leds/Kconfig                               |   18 +
+ drivers/leds/Makefile                              |    2 +
+ drivers/leds/led-class.c                           |   42 +-
+ drivers/leds/led-core.c                            |   16 +
+ drivers/leds/led-flash.c                           |  627 ++++++++++++++++
+ drivers/leds/led-triggers.c                        |   16 +-
+ drivers/leds/leds-max77693.c                       |  794 ++++++++++++++++++++
+ drivers/leds/leds.h                                |    6 +
+ drivers/media/v4l2-core/Kconfig                    |   10 +
+ drivers/media/v4l2-core/Makefile                   |    2 +
+ drivers/media/v4l2-core/v4l2-flash.c               |  393 ++++++++++
+ drivers/mfd/max77693.c                             |    2 +-
+ include/linux/leds.h                               |   60 +-
+ include/linux/leds_flash.h                         |  252 +++++++
+ include/linux/mfd/max77693.h                       |   38 +
+ include/media/v4l2-flash.h                         |  119 +++
+ 17 files changed, 2433 insertions(+), 21 deletions(-)
+ create mode 100644 drivers/leds/led-flash.c
+ create mode 100644 drivers/leds/leds-max77693.c
+ create mode 100644 drivers/media/v4l2-core/v4l2-flash.c
+ create mode 100644 include/linux/leds_flash.h
+ create mode 100644 include/media/v4l2-flash.h
+
+-- 
+1.7.9.5
