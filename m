@@ -1,33 +1,138 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/4] clocksource: Add support for the Mediatek SoCs
-Date: Fri, 11 Apr 2014 11:21:59 +0200
-Message-ID: <129772722.mXH1xx9vCv@wuerfel>
-References: <1397072736-10793-1-git-send-email-matthias.bgg@gmail.com> <CAOesGMg2zvPPeyqTvztiNKVJzWP5PsNs2pkXKMaS+CfXHgO0rQ@mail.gmail.com> <CABuKBeKr77qJwusoTgjR2yOspWbi6Exvt5i8WPc5tjd7fez-YA@mail.gmail.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v7 4/6] pci: Introduce a domain number for
+ pci_host_bridge.
+Date: Fri, 11 Apr 2014 10:22:25 +0100
+Message-ID: <20140411092225.GW985@e106497-lin.cambridge.arm.com>
+References: <1394811272-1547-5-git-send-email-Liviu.Dudau@arm.com>
+ <6144916.rD76jOL8sv@wuerfel>
+ <20140410145304.GS985@e106497-lin.cambridge.arm.com>
+ <6459805.ygy4tBNDNz@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABuKBeKr77qJwusoTgjR2yOspWbi6Exvt5i8WPc5tjd7fez-YA@mail.gmail.com>
+In-Reply-To: <6459805.ygy4tBNDNz@wuerfel>
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Olof Johansson <olof@lixom.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Thierry Reding <thierry.reding@gmail.com>, Florian Vaussard <florian.vaussard@epfl.ch>, Jonathan Cameron <jic23@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Silvio F <silvio.fricke@gmail.com>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko.stuebner@bq.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 11 April 2014 11:07:35 Matthias Brugger wrote:
-> >
-> > Of course, you'll still need these for the A9-based platforms, so the
-> > driver might very well be needed anyway. Some of the earlier patches
-> > seem to be for A7-based systems so I'm not sure what you're primarily
-> > working on here. 
-> 
-> I'm working on a Cortex-A7 based platform. But ARM_ARCH_TIMER seems to
-> get no clocking.
-> Initializing the timer fails with:
-> Architected timer frequency not available
-> 
-> That's why I use the SoC timer.
+On Thu, Apr 10, 2014 at 09:46:36PM +0100, Arnd Bergmann wrote:
+> On Thursday 10 April 2014 15:53:04 Liviu Dudau wrote:
+> > On Thu, Apr 10, 2014 at 03:07:44PM +0100, Arnd Bergmann wrote:
+>=20
+> > > This mirrors how we treat devices: a pci_device has an embedded d=
+evice,
+> > > and so on, in other subsystems we can have multiple layers.
+> > >=20
+> > > In this example, the tegra pcie driver then allocates its own teg=
+ra_pcie
+> > > structure, fills out the fields it needs, and registers it with t=
+he
+> > > ARM architecture code, passing just the pci_sys_data pointer. Tha=
+t function
+> > > in turn passes a pointer to the embedded pci_host_bridge down to =
+the
+> > > generic code. Ideally we should try to eliminate the architecture=
+ specific
+> > > portion here, but that is a later step.
+> >=20
+> > So Arnd seems to agree with me: we should try to get out of archite=
+cture specific
+> > pci_sys_data and link the host bridge driver straight into the PCI =
+core. The
+> > core then can call into arch code via pcibios_*() functions.
+> >=20
+> > Arnd, am I reading correctly into what you are saying?
+>=20
+> Half of it ;-)
+>=20
+> I think it would be better to not have an architecture specific data
+> structure, just like it would be better not to have architecture spec=
+ific
+> pcibios_* functions that get called by the PCI core. Note that the
+> architecture specific functions are the ones that rely on the archite=
+cture
+> specific data structures as well. If they only use the common fields,
+> it should also be possible to share the code.
 
-Are you sure you're not just missing a "clock-frequency" property
-in your DT node for the timer?
+While I've come to like the pcibios_*() interface (and yes, it could be
+formalised and abstracted into a pci_xxxx_ops structure) I don't like t=
+he fact
+that those functions use architectural data in order to function. I kno=
+w it
+might sound strange, as they *are* supposed to be implemented by the ar=
+ches,
+but in my mind the link between generic code and arch code for PCI shou=
+ld be
+done by the host bridge driver. That's how PCI spec describes it, and I=
+ see no
+reason why we should not be able to adopt the same view.
 
-	Arnd
+To be more precise, what I would like to happen in the case of some fun=
+ctions
+would be for the PCI core code to call a pci_host_bridge_ops method whi=
+ch
+in turn will call the arch specific code if it needs to. Why I think th=
+at would
+be better? Because otherwise you put in the architectural side code to =
+cope
+with a certain host bridge, then another host bridge comes in and you a=
+dd
+more architectural code, but then when you port host bridge X to arch B=
+ you
+discover that you need to add code there as well for X. And it all ends=
+ up in
+the mess we currently have where the drivers in drivers/pci/host are no=
+t capable
+of being ported to a different architecture because they rely on infras=
+tructure
+only present in arm32 that is not properly documented.
+
+>=20
+> I also don't realistically think we can get there on a lot of archite=
+ctures
+> any time soon. Note that most architectures only have one PCI host
+> implementation, so the architecture structure is the same as the host
+> driver structure anyway.
+>=20
+> For architectures like powerpc and arm that have people actively work=
+ing
+> on them, we have a chance to clean up that code in the way we want it
+> (if we can agree on the direction), but it's still not trivial to do.
+>=20
+> Speaking of arm32 in particular, I think we will end up with a split
+> approach: modern platforms (multiplatform, possibly all DT based) usi=
+ng
+> PCI core infrastructure directly and no architecture specific PCI
+> code on the one side, and a variation of today's code for the legacy
+> platforms on the other.
+
+Actually, if we could come up with a compromise for the pci_fixup_*() f=
+unctions
+(are they still used by functional hardware?) then I think we could con=
+vert
+most of the arm32 arch code to re-direct the calls to the infrastructur=
+e code.
+But yes, there might be a lot of resistance to change due to lack of re=
+sources
+when changing old platforms.
+
+Best regards,
+Liviu
+
+>=20
+> 	Arnd
+>=20
+>=20
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
