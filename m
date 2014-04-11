@@ -1,570 +1,208 @@
-From: Antoine =?iso-8859-1?Q?T=E9nart?=
-	<antoine.tenart@free-electrons.com>
-Subject: Re: [PATCH RESEND 2/5] pinctrl: berlin: add a pinctrl driver for
- Marvell Berlin SoCs
-Date: Fri, 11 Apr 2014 14:37:37 +0200
-Message-ID: <20140411123737.GA5903@kwain>
-References: <1397135274-10764-1-git-send-email-antoine.tenart@free-electrons.com>
- <1397135274-10764-3-git-send-email-antoine.tenart@free-electrons.com>
- <5347AFF4.3050607@gmail.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH RFC v5 2/2] clk: Add handling of clk parent and rate assigned from DT
+Date: Fri, 11 Apr 2014 15:08:14 +0200
+Message-ID: <3915682.bldtqrJ6U5@avalon>
+References: <1397042790-10636-1-git-send-email-s.nawrocki@samsung.com> <CAL_JsqKDJ_yFxFYnrTtmzMPoxO2rmypiujybwbhUh35y1LS-Mw@mail.gmail.com> <5347DF4D.5000005@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5347AFF4.3050607@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: linus.walleij@linaro.org, alexandre.belloni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5347DF4D.5000005-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Sebastian,
-
-On Fri, Apr 11, 2014 at 11:03:48AM +0200, Sebastian Hesselbarth wrote:
-> On 04/10/2014 03:07 PM, Antoine T=C3=A9nart wrote:
-> >The Marvell Berlin boards have a group based pinmuxing mechanism. Th=
-is
-> >driver adds the support for the BG2CD, BG2 and BG2Q. We actually do =
-not
-> >need any information about the pins here and only have the definitio=
-n
-> >of the groups.
->=20
-> Antoine,
->=20
-> as always, thanks for providing this :)
->=20
-> >Let's take the example of the uart0 pinmuxing on the BG2Q. Balls BK4=
- and
-> >BH6 are muxed to respectively UART0 RX and TX if the group GSM12 is =
-set
-> >to mode 0:
-> >
-> >Group	Modes	Offset Base	Offset	LSB	Bit Width
-> >GSM12	3	sm_base		0x40	0x10	0x2
-> >
-> >Ball	Group	Mode 0		Mode 1		Mode 2
-> >BK4	GSM12	UART0_RX	IrDA0_RX	GPIO9
-> >BH6	GSM12	UART0_TX	IrDA0_TX	GPIO10
->=20
-> Actually, I consider above mode table a very vital information
-> that is missing from the driver below. Especially, I expect bg2 and
-> bg2cd different in some modes and there is no way to look it up.
-
-They are.
-
-> It doesn't matter if we know all mode names now, but we should
-> have a placeholder at least.
->=20
-> Also, I know gpio<>pingroup relationship is very broken by design
-> on berlin, but how are you planing to exploit that information?
-> We will have some straight numbered gpios and need to determine
-> what pingroup has to be switched.
-
-I need to think about that.
-
-> >So in order to configure BK4 -> UART0_TX and BH6 -> UART0_RX, we nee=
-d
-> >to set (sm_base + 0x40 + 0x10) &=3D ff3fffff.
-> >
-> >Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.co=
-m>
-> >---
-> >  drivers/pinctrl/Kconfig          |   4 +
-> >  drivers/pinctrl/Makefile         |   1 +
-> >  drivers/pinctrl/pinctrl-berlin.c | 498 +++++++++++++++++++++++++++=
-++++++++++++
-> >  drivers/pinctrl/pinctrl-berlin.h |  72 ++++++
-> >  4 files changed, 575 insertions(+)
-> >  create mode 100644 drivers/pinctrl/pinctrl-berlin.c
-> >  create mode 100644 drivers/pinctrl/pinctrl-berlin.h
-> >
-> >diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-> >index e49324032611..2d9339a7bd05 100644
-> >--- a/drivers/pinctrl/Kconfig
-> >+++ b/drivers/pinctrl/Kconfig
-> >@@ -104,6 +104,10 @@ config PINCTRL_BCM2835
-> >  	select PINMUX
-> >  	select PINCONF
-> >
-> >+config PINCTRL_BERLIN
-> >+	bool
-> >+	select PINMUX
->=20
-> select PINCTRL too and drop it from the individual SoC configs
-> later on.
-
-Will do.
-
-> >  config PINCTRL_CAPRI
-> >  	bool "Broadcom Capri pinctrl driver"
-> >  	depends on OF
-> >diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-> >index 4b835880cf80..fd5a01d4475f 100644
-> >--- a/drivers/pinctrl/Makefile
-> >+++ b/drivers/pinctrl/Makefile
-> >@@ -21,6 +21,7 @@ obj-$(CONFIG_PINCTRL_BF60x)	+=3D pinctrl-adi2-bf60=
-x.o
-> >  obj-$(CONFIG_PINCTRL_AT91)	+=3D pinctrl-at91.o
-> >  obj-$(CONFIG_PINCTRL_BCM2835)	+=3D pinctrl-bcm2835.o
-> >  obj-$(CONFIG_PINCTRL_BAYTRAIL)	+=3D pinctrl-baytrail.o
-> >+obj-$(CONFIG_PINCTRL_BERLIN)	+=3D pinctrl-berlin.o
->=20
-> Please split the driver into common and soc-specific parts, and if
-> you do please put it into a subfolder berlin, too.
-
-The only SoC specific part is the group structure. I'll need to have
-functions in each SoC specific part calling ... only the common ones.
-Do you have a better solution in mind ?
-
-> >  obj-$(CONFIG_PINCTRL_CAPRI)	+=3D pinctrl-capri.o
-> >  obj-$(CONFIG_PINCTRL_IMX)	+=3D pinctrl-imx.o
-> >  obj-$(CONFIG_PINCTRL_IMX1_CORE)	+=3D pinctrl-imx1-core.o
-> >diff --git a/drivers/pinctrl/pinctrl-berlin.c b/drivers/pinctrl/pinc=
-trl-berlin.c
-> >new file mode 100644
-> >index 000000000000..a377d6fbb127
-> >--- /dev/null
-> >+++ b/drivers/pinctrl/pinctrl-berlin.c
-> >@@ -0,0 +1,498 @@
-> >+/*
-> >+ * Marvell Berlin SoC pinctrl driver.
-> >+ *
-> >+ * Copyright (C) 2014 Marvell Technology Group Ltd.
-> >+ *
-> >+ * Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
-> >+ *
-> >+ * This file is licensed under the terms of the GNU General Public
-> >+ * License version 2. This program is licensed "as is" without any
-> >+ * warranty of any kind, whether express or implied.
-> >+ */
-> >+
-> >+#include <linux/io.h>
-> >+#include <linux/module.h>
-> >+#include <linux/of.h>
-> >+#include <linux/of_address.h>
-> >+#include <linux/of_device.h>
-> >+#include <linux/pinctrl/pinctrl.h>
-> >+#include <linux/pinctrl/pinmux.h>
-> >+#include <linux/platform_device.h>
-> >+#include <linux/slab.h>
-> >+
-> >+#include "core.h"
-> >+#include "pinctrl-utils.h"
-> >+#include "pinctrl-berlin.h"
-> >+
-> >+#define NFCTS(bit_width)	(1 << ((bit_width) + 1))
->=20
-> Number-of-FunCTionS ? You use that define twice, but maybe it is
-
-Yes :)
-
-> more clear to write it out where you use it. Otherwise it is
-> kind of hard to get the idea.
-
-OK, with a comment describing what's happening.
-
-> >+static const struct berlin_desc_group berlin2cd_pinctrl_groups[] =3D=
- {
->=20
-> First SoC in bg2 and bg2cd is possibly bg2. Use that one for the
-> names please.
-
-Will do.
-
->=20
-> >+	/* GSM */
-> >+	BERLIN_PINCTRL_GROUP("GSM0",  "apb_base",    0x40, 0x2, 0x00),
->=20
-> I'd love to see the mode/function tables in here.
->=20
-> >+	BERLIN_PINCTRL_GROUP("GSM1",  "apb_base",    0x40, 0x2, 0x02),
-> >+	BERLIN_PINCTRL_GROUP("GSM2",  "apb_base",    0x40, 0x2, 0x04),
-> >+	BERLIN_PINCTRL_GROUP("GSM3",  "apb_base",    0x40, 0x2, 0x06),
-> >+	BERLIN_PINCTRL_GROUP("GSM4",  "apb_base",    0x40, 0x2, 0x08),
-> >+	BERLIN_PINCTRL_GROUP("GSM5",  "apb_base",    0x40, 0x2, 0x0a),
-> >+	BERLIN_PINCTRL_GROUP("GSM6",  "apb_base",    0x40, 0x2, 0x0c),
-> >+	BERLIN_PINCTRL_GROUP("GSM7",  "apb_base",    0x40, 0x1, 0x0e),
-> >+	BERLIN_PINCTRL_GROUP("GSM8",  "apb_base",    0x40, 0x1, 0x0f),
-> >+	BERLIN_PINCTRL_GROUP("GSM9",  "apb_base",    0x40, 0x1, 0x10),
-> >+	BERLIN_PINCTRL_GROUP("GSM10", "apb_base",    0x40, 0x1, 0x11),
-> >+	BERLIN_PINCTRL_GROUP("GSM11", "apb_base",    0x40, 0x1, 0x12),
+On Friday 11 April 2014 14:25:49 Sylwester Nawrocki wrote:
+> On 10/04/14 18:04, Rob Herring wrote:
+> > On Wed, Apr 9, 2014 at 6:26 AM, Sylwester Nawrocki wrote:
+> >> This patch adds a helper function to configure clock parents and
+> >> rates as specified in clock-parents, clock-rates DT properties
+> >> for a consumer device and a call to it before driver is bound to
+> >> a device.
+> >> 
+> >> Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> >> ---
+> 
 > [...]
-> >+static int berlin_pinctrl_get_group_count(struct pinctrl_dev *pctrl=
-_dev)
-> >+{
-> >+	struct berlin_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctrl_dev=
-);
-> >+
-> >+	return pctrl->ngroups;
-> >+}
-> >+
-> >+static const char *berlin_pinctrl_get_group_name(struct pinctrl_dev=
- *pctrl_dev,
-> >+						 unsigned group)
-> >+{
-> >+	struct berlin_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctrl_dev=
-);
-> >+
-> >+	return pctrl->groups[group].name;
-> >+}
-> >+
-> >+static int berlin_pinctrl_dt_node_to_map(struct pinctrl_dev *pctrl_=
-dev,
-> >+					 struct device_node *node,
-> >+					 struct pinctrl_map **map,
-> >+					 unsigned *num_maps)
-> >+{
-> >+	struct berlin_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctrl_dev=
-);
-> >+	const char *group_name;
-> >+	char *function_name;
-> >+	unsigned reserved_maps =3D 0;
-> >+	u32 function;
-> >+	int ret;
-> >+
-> >+	*map =3D NULL;
-> >+	*num_maps =3D 0;
-> >+
-> >+	ret =3D pinctrl_utils_reserve_map(pctrl_dev, map, &reserved_maps,
-> >+					num_maps, 1);
-> >+	if (ret) {
-> >+		dev_err(pctrl->dev, "can't reserve map: %d\n", ret);
-> >+		return ret;
-> >+	}
-> >+
-> >+	ret =3D of_property_read_u32(node, "berlin,function", &function);
->=20
-> Properties should be _vendor_ prefixed, i.e. "marvell,function".
+> 
+> >> ---
+> >> 
+> >>  .../devicetree/bindings/clock/clock-bindings.txt   |   44 ++++++++++
+> >>  drivers/base/platform.c                            |    5 ++
+> >>  drivers/clk/Makefile                               |    3 +
+> >>  drivers/clk/clk-conf.c                             |   85 ++++++++++++++
+> >>  drivers/clk/clk.c                                  |   12 ++-
+> >>  include/linux/clk/clk-conf.h                       |   19 +++++
+> >>  6 files changed, 167 insertions(+), 1 deletion(-)
+> >>  create mode 100644 drivers/clk/clk-conf.c
+> >>  create mode 100644 include/linux/clk/clk-conf.h
+> >> 
+> >> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> >> b/Documentation/devicetree/bindings/clock/clock-bindings.txt index
+> >> 700e7aa..93513fc 100644
+> >> --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> >> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> >> @@ -132,3 +132,47 @@ clock signal, and a UART.
+> >>    ("pll" and "pll-switched").
+> >>  * The UART has its baud clock connected the external oscillator and its
+> >>    register clock connected to the PLL clock (the "pll-switched" signal)
+> >> +
+> >> +==Assigned clock parents and rates==
+> >> +
+> >> +Some platforms require static initial configuration of parts of the
+> >> clocks
+> >> +controller. Such a configuration can be specified in a clock consumer
+> >> node
+> >> +through clock-parents and clock-rates DT properties. The former should
+> >> +contain a list of parent clocks in form of phandle and clock specifier
+> >> pairs,
+> >> +the latter the list of assigned clock frequency values (one cell each).
+> >> +To skip setting parent or rate of a clock its corresponding entry should
+> >> be
+> >> +set to 0, or can be omitted if it is not followed by any non-zero entry.
+> >> +
+> >> +    uart@a000 {
+> >> +        compatible = "fsl,imx-uart";
+> >> +        reg = <0xa000 0x1000>;
+> >> +        ...
+> >> +        clocks = <&clkcon 0>, <&clkcon 3>;
+> >> +        clock-names = "baud", "mux";
+> >> +
+> >> +        clock-parents = <0>, <&pll 1>;
+> >> +        clock-rates = <460800>;
+> > 
+> > Is this the input frequency or serial baud rate? Looks like a baud
+> > rate, but the clock framework needs input (to the uart) frequency. I
+> > would say this should be clock-frequency and specify the max baud rate
+> > as is being done with i2c bindings. The uart driver should know how to
+> > convert between input clock freq and baud rate.
+> 
+> This UART example is not quite representative for the issues I have been
+> trying to address with this patch set. There is a need to set (an initial)
+> input clock frequency. E.g. in case of multimedia devices there may be
+> a need to set clock parent and frequency of an input clock to multiple IP
+> blocks, so they are clocked synchronously and data is carried properly
+> across a whole processing chain. Thus there may not be even clock output
+> in an IP block, but still input clock needs to be set. IIUC there is
+> similar issue with audio, where it is difficult to calculate the clock
+> frequencies/determine parent clocks in individual drivers algorithmically.
 
-Right.
+Just to be used as an example, this is how the SMIA++ sensor driver computes 
+the PLL parameters automatically based on the input frequency, desired output 
+frequency and various hardware limits.
 
-> >+	if (ret) {
-> >+		dev_err(pctrl->dev,
-> >+			"missing 'berlin,function' property in node %s\n",
-> >+			node->name);
-> >+		return -EINVAL;
-> >+	}
-> >+
-> >+	ret =3D of_property_read_string(node, "berlin,group", &group_name)=
-;
->=20
-> ditto.
->=20
-> >+	if (ret) {
-> >+		dev_err(pctrl->dev,
-> >+			"missing 'berlin,group' property in node %s\n",
-> >+			node->name);
-> >+		return -EINVAL;
-> >+	}
-> >+
-> >+	function_name =3D kzalloc(strlen(group_name) + 7, GFP_KERNEL);
-> >+	if (!function_name)
-> >+		return -ENOMEM;
-> >+	snprintf(function_name, strlen(group_name) + 7, "%s_mode%d", group=
-_name,
-> >+			function);
->=20
-> With proper mode tables above, this can refer to a const char* and yo=
-u
-> can get rid of allocation here. Also, below you already allocated
-> function_names, how is this one different from the below?
+http://lxr.free-electrons.com/source/drivers/media/i2c/smiapp-pll.c
 
-The one below is used to describe the available functions for a given g=
-roup
-while this one describe a function found in the device tree. It is used=
- to check
-the function we want to use in the device is provided by the driver. Th=
-e
-function name used here may not actually exist. We could check the func=
-tion
-actually exists here (and find the previously allocated function name),=
- but this
-check is handled by the pinctrl framework. This would end up in a diffe=
-rent
-behaviour than the expected one, imho.
+See the code complexity and keep in mind that it only handles a single device 
+with a single set of constraints and a single parent. If we add several 
+devices to the mix, as well as selectable parents, there would indeed probably 
+be no sane way to configure the clocks algorithmically.
 
-[=E2=80=A6]
+> >> +    };
+> >> +
+> >> +In this example the pll is set as parent of "mux" clock and frequency
+> >> of "baud"
+> >> +clock is specified as 460800 Hz.
+> > 
+> > I don't really like clock-parents. The parent information is part of
+> > the clock source, not the consumer.
+> 
+> I'm not sure we must always consider the parent information as property
+> of a clock source. If for example we expose a structure like below as
+> single clock object, supporting clock gating, parent and frequency
+> setting the parent setting is still accessible from within a device
+> driver. And clock parent selection may depend on a system configuration
+> not immediately obvious from within a single device driver perspective.
+> 
+>                          MUX
+>                        ,-------.     DIVIDER      GATE
+> common clk source 1 -->|--.    |   ,--------.   ,--------.
+>                        |   \   |   |        |   |        |
+> common clk source 2 -->|-   '--|-->|        |-->|        |--> consumer
+>        ...             |       |   |        |   |        |
+> common clk source N -->|-      |   '--------'   '--------'
+>                        '-------'
+> 
+> > We've somewhat decided against having every single clock defined in DT
+> > and rather only describe a clock controller with leaf clocks to
+> > devices. That is not a hard rule, but for complex clock trees that is
+> > the norm. Doing something like this will require all levels of the
+> > clock tree to be described. You may have multiple layers of parents
+> > that have to be configured correctly. How are you configuring the rest
+> > of the tree?
+> 
+> I believe even clock controllers where clocks are represented as flat
+> array often describe the clock tree entirely by parenthood, the tree
+> structure is just not obvious from the DT binding.
+> In addition, there seems to be appearing more and more clock controller
+> DT bindings describing their clocks individually.
+> 
+> >> +Configuring a clock's parent and rate through the device node that uses
+> >> +the clock can be done only for clocks that have a single user.
+> >> Specifying
+> >> +conflicting parent or rate configuration in multiple consumer nodes for
+> >> +a shared clock is forbidden.
+> >> +
+> >> +Configuration of common clocks, which affect multiple consumer devices
+> >> +can be specified in a dedicated 'assigned-clocks' subnode of a clock
+> >> +provider node, e.g.:
+> >
+> > This seems like a work-around due to having clock-parents in the
+> > consumer node. If (I'm not convinced we should) we have a binding for
+> > parent config, it needs to be a single binding that works for both
+> > cases.
+> 
+> When this issue was first raised during an ARM kernel summit it was
+> proposed to add 'assigned' prefix to DT properties for such bindings.
+> 
+> How about separate properties for the default clock configuration,
+> e.g. assigned-clocks/assigned-clock-parents/assigned-clock-rates ?
+> So a clock provider would look like:
+> 
+>     clkcon {
+>         ...
+>         #clock-cells = <1>;
+> 
+>         assigned-clocks = <&clkcon 16>, <&clkcon 17>;
+>         assigned-clock-parents = <0>, <&clkcon 1>;
+>         assigned-clock-rates = <200000>;
+>     };
+> 
+> And a consumer device node:
+> 
+>     uart@a000 {
+>         compatible = "fsl,imx-uart";
+>         reg = <0xa000 0x1000>;
+>         ...
+>         clocks = <&clkcon 0>;
+>         clock-names = "baud";
+> 
+>         assigned-clocks = <&clkcon 3>, <&clkcon 0>;
+>         assigned-clock-parents = <&pll 1>;
+>         assigned-clock-rates = <0>, <460800>;
+> };
+> 
+> ?
+> 
+> >> +
+> >> +    clkcon {
+> >> +        ...
+> >> +        #clock-cells = <1>;
+> >> +
+> >> +        assigned-clocks {
+> >> +            clocks = <&clkcon 16>, <&clkcon 17>;
+> >> +            clock-parents = <0>, <&clkcon 1>;
+> >> +            clock-rates = <200000>;
+> >> +        };
+> >> +    };
 
-> >+static int berlin_pinctrl_build_state(struct platform_device *pdev,
-> >+			      struct berlin_pinctrl_reg_base *bases,
-> >+			      unsigned nbases)
-> >+{
-> >+	struct berlin_pinctrl *pctrl =3D platform_get_drvdata(pdev);
-> >+	int i, j, cur_fct =3D 0;
-> >+
-> >+	pctrl->ngroups =3D pctrl->desc->ngroups;
-> >+	pctrl->nfunctions =3D 0;
-> >+
-> >+	for (i =3D 0; i < pctrl->ngroups; i++) {
-> >+		struct berlin_desc_group const *desc =3D pctrl->desc->groups + i;
-> >+		pctrl->nfunctions +=3D NFCTS(desc->bit_width);
-> >+	}
->=20
-> As you need desc later on, make it global to this function. Then you
-> can also walk through it with desc++
->=20
-> desc =3D pctrl->desc->groups;
-> for (i =3D 0; i < pctl->ngroups; i++, desc++)
-> 	pctrl->nfunctions =3D ...
->=20
-> Having said that, the above assumes that each function is unique
-> but IIRC the idea of the function table was to group pins/groups
-> with the same function, e.g. function "gpio", groups 1,7,25,...
+-- 
+Regards,
 
-Most of the functions you can use on the Berlin they will be unique and=
- would
-only be used in one group, except for the 'gpio' one.
+Laurent Pinchart
 
-> >+	pctrl->groups =3D devm_kzalloc(&pdev->dev,
-> >+				     pctrl->ngroups * sizeof(struct berlin_pinctrl_group),
-> >+				     GFP_KERNEL);
-> >+	if (!pctrl->groups)
-> >+		return -ENOMEM;
-> >+
-> >+	pctrl->functions =3D devm_kzalloc(&pdev->dev,
-> >+					pctrl->ngroups * pctrl->nfunctions *
-> >+						sizeof(struct berlin_pinctrl_function),
-> >+					GFP_KERNEL);
-> >+	if (!pctrl->functions)
-> >+		return -ENOMEM;
-> >+
-> >+	for (i =3D 0; i < pctrl->ngroups; i++) {
-> >+		struct berlin_desc_group const *desc =3D pctrl->desc->groups + i;
-> >+		struct berlin_pinctrl_group *group =3D pctrl->groups + i;
-> >+
-> >+		group->name =3D desc->name;
-> >+		group->mask =3D GENMASK(desc->lsb + desc->bit_width - 1,
-> >+				      desc->lsb);
-> >+		group->lsb =3D desc->lsb;
-> >+
-> >+		for (j =3D 0; j < nbases; j++) {
-> >+			if (!strcmp(desc->base_name, bases[j].name)) {
-> >+				group->reg =3D bases[j].base + desc->offset;
-> >+				break;
-> >+			}
-> >+		}
-> >+
-> >+		if (j =3D=3D nbases) {
-> >+			dev_err(pctrl->dev, "cannot find base address for %s\n",
-> >+					desc->base_name);
-> >+			return -EINVAL;
-> >+		}
->=20
-> TBH, I am not so happy with this name<>reg relationship. What about
-> having two separate pin controllers instead?
-
-I'm OK with having separate pin controllers.
-
-> >+		for (j =3D 0; j < NFCTS(desc->bit_width); j++) {
-> >+			struct berlin_pinctrl_function *function =3D
-> >+				pctrl->functions + cur_fct;
-> >+			char *function_name =3D devm_kzalloc(&pdev->dev,
-> >+							   (strlen(desc->name) + 7) * sizeof(char),
-> >+							   GFP_KERNEL);
-> >+			if (!function_name)
-> >+				return -ENOMEM;
->=20
-> Allocating function_names again?
->=20
-> >+
-> >+			snprintf(function_name, strlen(desc->name) + 7,
-> >+				 "%s_mode%d", desc->name, j);
-> >+
-> >+			function->name =3D function_name;
-> >+			function->group =3D desc->name;
-> >+			function->muxval =3D j;
-> >+
-> >+			cur_fct++;
-> >+		}
-> >+	}
-> >+
-> >+	return 0;
-> >+}
-> >+
-> >+static struct pinctrl_desc berlin_pctrl_desc =3D {
-> >+	.name		=3D "berlin-pinctrl",
-> >+	.pctlops	=3D &berlin_pinctrl_ops,
-> >+	.pmxops		=3D &berlin_pinmux_ops,
-> >+	.owner		=3D THIS_MODULE,
-> >+};
-> >+
-> >+static const struct berlin_pinctrl_desc berlin2cd_pinctrl_data =3D =
-{
-> >+	.groups =3D berlin2cd_pinctrl_groups,
-> >+	.ngroups =3D ARRAY_SIZE(berlin2cd_pinctrl_groups),
-> >+};
-> >+
-> >+static const struct berlin_pinctrl_desc berlin2q_pinctrl_data =3D {
-> >+	.groups =3D berlin2q_pinctrl_groups,
-> >+	.ngroups =3D ARRAY_SIZE(berlin2q_pinctrl_groups),
-> >+};
-> >+
-> >+static struct of_device_id berlin_pinctrl_match[] =3D {
-> >+	{
-> >+		.compatible =3D "marvell,berlin2cd-pinctrl",
-> >+		.data =3D &berlin2cd_pinctrl_data
-> >+	},
-> >+	{
-> >+		.compatible =3D "marvell,berlin2-pinctrl",
-> >+		.data =3D &berlin2cd_pinctrl_data
-> >+	},
-> >+	{
-> >+		.compatible =3D "marvell,berlin2q-pinctrl",
-> >+		.data =3D &berlin2q_pinctrl_data
-> >+	},
-> >+	{}
-> >+};
-> >+MODULE_DEVICE_TABLE(of, berlin_pinctrl_match);
->=20
-> Please sort alphabetically.
-
-Sure.
-
-> >+
-> >+static int berlin_pinctrl_probe(struct platform_device *pdev)
-> >+{
-> >+	struct device *dev =3D &pdev->dev;
-> >+	struct device_node *node;
-> >+	struct property *prop;
-> >+	struct berlin_pinctrl *pctrl;
-> >+	struct berlin_pinctrl_reg_base *bases;
-> >+	const struct of_device_id *device;
-> >+	const char *reg_name;
-> >+	int ret, i =3D 0;
-> >+	unsigned nbases;
-> >+
-> >+	if (!dev->of_node) {
-> >+		dev_err(dev, "device node not found\n");
->=20
-> There is no way you will see this driver being called without
-> .of_node set. I'll really have an eye on anybody who will try
-> to introduce non-DT platform_device registration ;)
->=20
-> >+		return -ENODEV;
-> >+	}
-> >+	node =3D dev->of_node;
-> >+
-> >+	pctrl =3D devm_kzalloc(dev, sizeof(struct berlin_pinctrl), GFP_KER=
-NEL);
-> >+	if (!pctrl)
-> >+		return -ENOMEM;
-> >+
-> >+	platform_set_drvdata(pdev, pctrl);
-> >+
-> >+	spin_lock_init(&pctrl->lock);
-> >+
-> >+	device =3D of_match_device(berlin_pinctrl_match, dev);
->=20
-> With the comment above, you can move the assignment right to the
-> declaration. Also, it will always match.
->=20
-> >+	if (!device) {
-> >+		dev_err(dev, "pinctrl didn't match\n");
-> >+		return -ENODEV;
-> >+	}
-> >+
-> >+	nbases =3D of_property_count_strings(node, "reg-names");
-> >+	if (nbases < 0) {
-> >+		dev_err(dev, "missing 'reg-names' property in node %s\n",
-> >+				node->name);
-> >+		return -EINVAL;
-> >+	}
->=20
-> See my comment about names<>reg relation.
->=20
-> >+	bases =3D devm_kzalloc(dev,
-> >+			     nbases * sizeof(struct berlin_pinctrl_reg_base),
-> >+			     GFP_KERNEL);
-> >+	if (!bases)
-> >+		return -ENOMEM;
-> > +
-> >+	of_property_for_each_string(node, "reg-names", prop, reg_name) {
-> >+		struct resource *r =3D
-> >+			platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> >+						     reg_name);
-> >+		bases[i].base =3D devm_ioremap_resource(&pdev->dev, r);
-> >+		if (IS_ERR(bases[i].base))
-> >+			return PTR_ERR(bases[i].base);
-> >+
-> >+		bases[i].name =3D reg_name;
-> >+		i++;
-> >+	}
-> >+
-> >+	pctrl->desc =3D (struct berlin_pinctrl_desc *)device->data;
-> >+
-> >+	ret =3D berlin_pinctrl_build_state(pdev, bases, nbases);
-> >+	kfree(bases);
-> >+	if (ret) {
-> >+		dev_err(dev, "cannot build driver state: %d\n", ret);
-> >+		return ret;
-> >+	}
-> >+
-> >+	pctrl->dev =3D &pdev->dev;
-> >+
-> >+	pctrl->pctrl_dev =3D pinctrl_register(&berlin_pctrl_desc, dev, pct=
-rl);
-> >+	if (!pctrl->pctrl_dev) {
-> >+		dev_err(dev, "failed to register pinctrl driver\n");
-> >+		return -EINVAL;
-> >+	}
-> >+
-> >+	return 0;
-> >+}
-> >+
-> >+static struct platform_driver berlin_pinctrl_driver =3D {
-> >+	.probe	=3D berlin_pinctrl_probe,
-> >+	.driver	=3D {
-> >+		.name =3D "berlin-pinctrl",
-> >+		.owner =3D THIS_MODULE,
-> >+		.of_match_table =3D berlin_pinctrl_match,
-> >+	},
-> >+};
-> >+module_platform_driver(berlin_pinctrl_driver);
-> >+
-> >+MODULE_AUTHOR("Antoine T=C3=A9nart <antoine.tenart@free-electrons.c=
-om>");
-> >+MODULE_DESCRIPTION("Marvell Berlin pinctrl driver");
-> >+MODULE_LICENSE("GPL");
-> >diff --git a/drivers/pinctrl/pinctrl-berlin.h b/drivers/pinctrl/pinc=
-trl-berlin.h
-> >new file mode 100644
-> >index 000000000000..db3e8a379e84
-> >--- /dev/null
-> >+++ b/drivers/pinctrl/pinctrl-berlin.h
-> >@@ -0,0 +1,72 @@
-> >+/*
-> >+ * Marvell Berlin SoC pinctrl driver.
-> >+ *
-> >+ * Copyright (C) 2014 Marvell Technology Group Ltd.
-> >+ *
-> >+ * Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
-> >+ *
-> >+ * This file is licensed under the terms of the GNU General Public
-> >+ * License version 2. This program is licensed "as is" without any
-> >+ * warranty of any kind, whether express or implied.
-> >+ */
-> >+
-> >+#ifndef __PINCTRL_BERLIN_H
-> >+#define __PINCTRL_BERLIN_H
-> >+
-> >+struct berlin_desc_group {
-> >+	const char	*name;
-> >+	const char	*base_name;
-> >+	u32		offset;
-> >+	u32		bit_width;
-> >+	u32		lsb;
->=20
-> You expect any offsets, bit_widths or lsbs at 2^32-1 ? ;)
-
-Sure :) I'll update.
-
-
-Thanks for the review !
-
-Antoine
-
---=20
-Antoine T=C3=A9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
