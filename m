@@ -1,86 +1,55 @@
-From: Srikanth Thokala <sriku.linux@gmail.com>
-Subject: Re: [PATCH v2 2/6] PCI: tegra: use new OF interrupt mapping when possible
-Date: Fri, 11 Apr 2014 23:10:59 +0530
-Message-ID: <CA+mB=1JCjDMzTuctvSQgjNhBnkyUPC2ooAzJOX_PC5L1gAau8w@mail.gmail.com>
-References: <1394025951-32438-1-git-send-email-l.stach@pengutronix.de>
-	<1394025951-32438-3-git-send-email-l.stach@pengutronix.de>
-	<5318B232.2020507@wwwdotorg.org>
-	<1394127555.4582.1.camel@weser.hi.pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1394127555.4582.1.camel@weser.hi.pengutronix.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>, Tanmay Inamdar <tinamdar@apm.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-sh@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org, Jingoo Han <jg1.han@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, Shawn Guo <shawn.guo@linaro.org>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Thierry Reding <thierry.reding@gmail.com>, Arnd Bergmann <arnd@arndb.de>, kernel@pengutronix.de
+From: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/5] MCPM backend for Exynos5420
+Date: Fri, 11 Apr 2014 23:31:46 +0530
+Message-ID: <1397239311-27717-1-git-send-email-a.kesavan@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Dave.Martin-5wv7dgnIgG8@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lucas/Tanmay,
+This series adds the MCPM backend support for SMP secondary boot and core
+switching on Samsung's Exynos5420. The patches are based on the mcpm
+support added for Exynos5420 in the Chromium kernel repository here:
+https://chromium.googlesource.com/chromiumos/third_party/kernel-next/+/chromeos-3.8
 
-On Thu, Mar 6, 2014 at 11:09 PM, Lucas Stach <l.stach@pengutronix.de> wrote:
-> Am Donnerstag, den 06.03.2014, 10:36 -0700 schrieb Stephen Warren:
->> On 03/05/2014 06:25 AM, Lucas Stach wrote:
->> > This is the recommended method of doing the IRQ
->> > mapping. For old devicetrees we fall back to the
->> > previous practice.
->>
->> Tested-by: Stephen Warren <swarren@nvidia.com>
->>
->> I tested both with and without patch 1/6, and the PCIe-based NIC on
->> Beaver worked fine either way. Without patch 1/6, I do see:
->>
->> pci 0000:00:01.0: of_irq_parse_pci() failed with rc=-22
->>
->> ... but that seems reasonable given that the DT that of_irq_parse_pci()
->> parses is missing, and did correctly trigger the fallback path, so
->> everything still worked.
->
-> Yes, this should be normal. It spits this error for old DTs, but keeps
-> doing the right thing. I'm not sure if we should downgrade this to info
-> or dbg.
+This patchset depends on:
+ARM: EXYNOS5: Add PMU settings for exynos5420
+(https://patchwork.kernel.org/patch/3896471/)
 
-I see this error too on my setup (Xilinx PCIe Root Complex Driver),
-https://lkml.org/lkml/2014/3/3/183
+The patches have been prepared on Kgene's for-next branch and tested on
+SMDK5420 EVT1 using the "/dev/b.L_switcher" user interface.
 
-After digging into it, I see I need to override the API
-pcibios_get_phb_of_node()
-to pass my device node.  Is this the only possible way?
+Abhilash Kesavan (2):
+  ARM: EXYNOS5420: Add IO mapping for non-secure SYSRAM
+  arm: exynos: Add MCPM call-back functions
 
->From the discussion in this thread, I feel am missing something in the dt node.
-Below is my dt node, please let me know if you see any issues.
+Andrew Bresticker (3):
+  ARM: bL_switcher: Don't enable bL switcher on systems without CCI
+  drivers/bus: arm-cci: Add common control interface for ACE ports
+  ARM: dts: exynos5420: add CCI node
 
-+++++++++++++++++++++++
-pcie{
-   reg = <XXXX>;
-   ranges = <YYYY>;
-   interrupts = <0 52 4>;
+ arch/arm/boot/dts/exynos5420.dtsi        |   27 ++
+ arch/arm/common/bL_switcher.c            |   12 +
+ arch/arm/mach-exynos/Kconfig             |    9 +
+ arch/arm/mach-exynos/Makefile            |    2 +
+ arch/arm/mach-exynos/common.h            |    1 +
+ arch/arm/mach-exynos/exynos.c            |   12 +
+ arch/arm/mach-exynos/include/mach/map.h  |    1 +
+ arch/arm/mach-exynos/mcpm-exynos-setup.S |   35 +++
+ arch/arm/mach-exynos/mcpm-exynos.c       |  444 ++++++++++++++++++++++++++++++
+ arch/arm/mach-exynos/platsmp.c           |   19 ++
+ arch/arm/mach-exynos/regs-pmu.h          |    2 +
+ drivers/bus/arm-cci.c                    |   13 +-
+ include/linux/arm-cci.h                  |    7 +-
+ 13 files changed, 576 insertions(+), 8 deletions(-)
+ create mode 100644 arch/arm/mach-exynos/mcpm-exynos-setup.S
+ create mode 100644 arch/arm/mach-exynos/mcpm-exynos.c
 
-   pcie_intc: interrupt-controller {
-       interrupt-controller;
-       #address-cells = <0>;
-       #interrupt-cells = <1>;
-   }
+-- 
+1.7.9.5
 
-   interrupt-map-mask = <0 0 0 7>;
-   interrupt-map = <0 0 0 1 &pcie_intc 1>,
-                          <0 0 0 2 &pcie_intc 2>,
-                          <0 0 0 3 &pcie_intc 3>,
-                          <0 0 0 4 &pcie_intc 4>;
-};
-
-Thanks in advance,
-Srikanth.
-
->
-> Regards,
-> Lucas
-> --
-> Pengutronix e.K.                           | Lucas Stach                 |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-5076 |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
