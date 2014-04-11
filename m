@@ -1,43 +1,73 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 3/6] ARM: dts: zynq: drop address cells from GIC node
-Date: Fri, 11 Apr 2014 16:59:37 +0200
-Message-ID: <1397228380-7352-3-git-send-email-l.stach@pengutronix.de>
-References: <1397228380-7352-1-git-send-email-l.stach@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397228380-7352-1-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Subject: Re: [PATCH v3 0/7] Add ST Keyscan driver
+Date: Fri, 11 Apr 2014 17:00:49 +0200
+Message-ID: <CAG374jD4qi-T=yXN8oagg+275QRSm_UeNmH2c=fROkzvz11XHw@mail.gmail.com>
+References: <1397226820-5604-1-git-send-email-gabriel.fernandez@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1397226820-5604-1-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This is likely a copy-and-paste error from the
-ARM GIC documentation, that has already been fixed.
+Sorry,  don't review this v3 version, i made mistake...
 
-address-cells should have been set to 0, as with the size
-cells. As having those properties set to 0 is the
-same thing as not specifying them, drop them completely.
+i prepare a v4 version.
 
-Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- arch/arm/boot/dts/zynq-7000.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+Best regards.
 
-diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-index 511180769af5..3f277c2bc19c 100644
---- a/arch/arm/boot/dts/zynq-7000.dtsi
-+++ b/arch/arm/boot/dts/zynq-7000.dtsi
-@@ -57,7 +57,6 @@
- 		intc: interrupt-controller@f8f01000 {
- 			compatible = "arm,cortex-a9-gic";
- 			#interrupt-cells = <3>;
--			#address-cells = <1>;
- 			interrupt-controller;
- 			reg = <0xF8F01000 0x1000>,
- 			      <0xF8F00100 0x100>;
--- 
-1.9.1
+Gabriel
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 11 April 2014 16:33, Gabriel FERNANDEZ <gabriel.fernandez@st.com> wrote:
+> Changes in v3:
+> - add reset controller management
+> - rename 'st,debounce_us' into 'st,debounce-us' in dt binding
+>
+> Changes in v2:
+> - use standard format for matrix keymap
+> - suppress __exit mark for keyscan_remove()
+> - Call to keyscan_stop() shoudl go into keyscan_close() implementation
+> - use of SIMPLE_DEV_PM_OPS()
+> - rename compatibility name into "st,sti-keyscan"
+> - suppress platform data management
+> - omit vendor information
+> - cosmetic change and renaming
+>
+> The goal of this series is to add ST Keyscan support to ST SoCs.
+> The DT definition is added for STiH415 and STiH416 SoCs on
+> B2000 board.
+>
+> Gabriel Fernandez (5):
+>   drivers: input: keyboard: st-keyscan: add keyscan driver
+>   ARM: STi: DT: add keyscan for stih415
+>   ARM: STi: DT: add keyscan for stih416
+>   ARM: STi: DT: add keyscan for stih41x-b2000
+>   ARM: multi_v7_defconfig: add ST Keyscan driver
+>
+> Giuseppe CONDORELLI (2):
+>   driver: reset: sti: add keyscan for stih415
+>   driver: reset: sti: add keyscan for stih416
+>
+>  .../devicetree/bindings/input/st-keyscan.txt       |  60 +++++
+>  arch/arm/boot/dts/stih415-pinctrl.dtsi             |  16 ++
+>  arch/arm/boot/dts/stih415.dtsi                     |  12 +
+>  arch/arm/boot/dts/stih416-pinctrl.dtsi             |  16 ++
+>  arch/arm/boot/dts/stih416.dtsi                     |  12 +
+>  arch/arm/boot/dts/stih41x-b2000.dtsi               |  23 ++
+>  arch/arm/configs/multi_v7_defconfig                |   1 +
+>  drivers/input/keyboard/Kconfig                     |  12 +
+>  drivers/input/keyboard/Makefile                    |   1 +
+>  drivers/input/keyboard/st-keyscan.c                | 260 +++++++++++++++++++++
+>  drivers/reset/sti/reset-stih415.c                  |   1 +
+>  drivers/reset/sti/reset-stih416.c                  |   1 +
+>  .../dt-bindings/reset-controller/stih415-resets.h  |   1 +
+>  .../dt-bindings/reset-controller/stih416-resets.h  |   1 +
+>  14 files changed, 417 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/st-keyscan.txt
+>  create mode 100644 drivers/input/keyboard/st-keyscan.c
+>
+> --
+> 1.9.1
+>
