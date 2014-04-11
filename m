@@ -1,45 +1,72 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: Re: [PATCH RESEND 4/5] Documentation: add the Marvell Berlin
- pinctrl documentation
-Date: Fri, 11 Apr 2014 16:18:43 +0800
-Message-ID: <20140411161843.0bc75185@xhacker>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH RESEND 5/5] ARM: dts: berlin: add the pinctrl node and
+ muxing setup for uarts
+Date: Fri, 11 Apr 2014 10:18:59 +0200
+Message-ID: <20140411081859.GL10240@lunn.ch>
 References: <1397135274-10764-1-git-send-email-antoine.tenart@free-electrons.com>
- <1397135274-10764-5-git-send-email-antoine.tenart@free-electrons.com>
- <20140411143318.67e55a17@xhacker> <20140411081259.GA20147@kwain>
+ <1397135274-10764-6-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140411081259.GA20147@kwain>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Antoine =?UTF-8?B?VMOpbmFydA==?= <antoine.tenart@free-electrons.com>
-Cc: Jimmy Xu <zmxu@marvell.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1397135274-10764-6-git-send-email-antoine.tenart@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>
+Cc: sebastian.hesselbarth@gmail.com, linus.walleij@linaro.org, zmxu@marvell.com, jszhang@marvell.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW50b2luZSwKCk9uIEZyaSwgMTEgQXByIDIwMTQgMDE6MTI6NTkgLTA3MDAKQW50b2luZSBU
-w6luYXJ0IDxhbnRvaW5lLnRlbmFydEBmcmVlLWVsZWN0cm9ucy5jb20+IHdyb3RlOgoKPiBIaSBK
-aXNoZW5nLAo+IAo+IE9uIEZyaSwgQXByIDExLCAyMDE0IGF0IDAyOjMzOjE4UE0gKzA4MDAsIEpp
-c2hlbmcgWmhhbmcgd3JvdGU6Cj4gPiBPbiBUaHUsIDEwIEFwciAyMDE0IDA2OjA3OjUzIC0wNzAw
-Cj4gPiBBbnRvaW5lIFTDqW5hcnQgPGFudG9pbmUudGVuYXJ0QGZyZWUtZWxlY3Ryb25zLmNvbT4g
-d3JvdGU6Cj4gPiA+ICtSZXF1aXJlZCBzdWJub2RlLXByb3BlcnRpZXM6Cj4gPiA+ICstIGJlcmxp
-bixncm91cDogYSBzdHJpbmcgZGVzY3JpYmluZyB0aGUgZ3JvdXAncyBuYW1lLgo+ID4gPiArLSBi
-ZXJsaW4sZnVuY3Rpb246IHRoZSBmdW5jdGlvbiB1c2VkIHRvIG11eCB0aGUgZ3JvdXAuCj4gPiAK
-PiA+IFdvdWxkIGl0IGJlIGJldHRlciB0byBzL2Z1bmN0aW9uL21vZGU/IEJlY2F1c2UgaW4gbXJ2
-bCBpbnRlcm5hbCB0ZWNobm9sb2d5Cj4gPiBkaXNjdXNzaW9uIGFuZCBkb2NzLCB3ZSB1c3VhbGx5
-IHNheSAic2V0IHBpbm11eCBHeSBhcyBtb2RlIHoiLgo+IAo+IFRoZSBwaW5jdHJsIGZyYW1ld29y
-ayB1c2VzICdmdW5jdGlvbicsIHNvIEkgZ3Vlc3MgaXQncyBiZXR0ZXIgbm90IHRvCj4gaW50cm9k
-dWNlIGFuIG90aGVyIGtleXdvcmQgdGhhdCBtYXkgY29uZnVzZSBwZW9wbGUuIEJ1dCBJIGFncmVl
-IHRoaXMgaXMgbm90Cj4gd2hhdCdzIHVzZWQgaW4gdGhlIE1hcnZlbGwncyBkb2NzLiBXaGF0IGRv
-IHlvdSB0aGluayBhYm91dCB3ZSBtZW50aW9uIGl0IGluCj4gdGhpcyBkb2N1bWVudGF0aW9uID8K
-ClRoYXQncyBhIGdvb2QgaWRlYS4KClRoYW5rcywKSmlzaGVuZwoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
-c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Thu, Apr 10, 2014 at 03:07:54PM +0200, Antoine T=E9nart wrote:
+> The uart0 pinmux configuration is in the dtsi because uart0 will alwa=
+ys
+> use uart0-pmux to work, no other possibility. Same thing for uart1.
+>=20
+> Signed-off-by: Antoine T=E9nart <antoine.tenart@free-electrons.com>
+> ---
+>  arch/arm/boot/dts/berlin2.dtsi   | 20 ++++++++++++++++++++
+>  arch/arm/boot/dts/berlin2cd.dtsi | 13 +++++++++++++
+>  arch/arm/boot/dts/berlin2q.dtsi  | 20 ++++++++++++++++++++
+>  3 files changed, 53 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berli=
+n2.dtsi
+> index 56a1af2f1052..43eb90c36050 100644
+> --- a/arch/arm/boot/dts/berlin2.dtsi
+> +++ b/arch/arm/boot/dts/berlin2.dtsi
+> @@ -176,6 +176,22 @@
+>  			};
+>  		};
+> =20
+> +		pinctrl: pinctrl@0 {
+> +			compatible =3D "marvell,berlin2-pinctrl";
+> +			reg =3D <0xea0000 0x08>, <0xfc0000 0x44>;
+> +			reg-names =3D "global_base", "apb_base";
+> +
+> +			uart0_pmux: uart0-pmux {
+> +				berlin,group =3D "GSM4";
+> +				berlin,function =3D <0>;
+> +			};
+> +
+> +			uart1_pmux: uart1-pmux {
+> +				berlin,group =3D "GSM5";
+> +				berlin,function =3D <1>;
+
+Hi Antoine
+
+This very much looks like black magic.
+
+I assume the data sheet is not available? So i think you need to
+document all possible combinations of values of group and function.
+Maybe you can add a file in
+
+arch/arm/boot/dts/include/dt-bindings/pinctrl/
+
+with something like
+
+#define GSM4_UART0	0
+#define GSM5_UART1	1
+#define GSM12_UART0	1
+#define GSM12_IrDA0	1
+#define GSM12_GPIO	2
+
+	Andrew
