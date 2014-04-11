@@ -1,101 +1,48 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 4/4] ARM: dts: imx6: use generic name for fixed-clock nodes
-Date: Fri, 11 Apr 2014 16:04:07 +0800
-Message-ID: <1397203447-22965-5-git-send-email-shawn.guo@freescale.com>
-References: <1397203447-22965-1-git-send-email-shawn.guo@freescale.com>
+From: Antoine =?iso-8859-1?Q?T=E9nart?=
+	<antoine.tenart@free-electrons.com>
+Subject: Re: [PATCH RESEND 4/5] Documentation: add the Marvell Berlin pinctrl
+ documentation
+Date: Fri, 11 Apr 2014 10:12:59 +0200
+Message-ID: <20140411081259.GA20147@kwain>
+References: <1397135274-10764-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1397135274-10764-5-git-send-email-antoine.tenart@free-electrons.com>
+ <20140411143318.67e55a17@xhacker>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397203447-22965-1-git-send-email-shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140411143318.67e55a17@xhacker>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jisheng Zhang <jszhang@marvell.com>
+Cc: "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, Jimmy Xu <zmxu@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Per device tree spec, we should use generic name for device node when
-possible.  Let's do that for the fixed-clock nodes, and use property
-clock-output-names to define the name for clock.
+Hi Jisheng,
 
-While at it, let's drop those unneeded imx specific compatible string
-for these fixed rate clocks.
+On Fri, Apr 11, 2014 at 02:33:18PM +0800, Jisheng Zhang wrote:
+> On Thu, 10 Apr 2014 06:07:53 -0700
+> Antoine T=E9nart <antoine.tenart@free-electrons.com> wrote:
+> > +Required subnode-properties:
+> > +- berlin,group: a string describing the group's name.
+> > +- berlin,function: the function used to mux the group.
+>=20
+> Would it be better to s/function/mode? Because in mrvl internal techn=
+ology
+> discussion and docs, we usually say "set pinmux Gy as mode z".
 
-Signed-off-by: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- arch/arm/boot/dts/imx6qdl.dtsi | 18 ++++++++++++------
- arch/arm/boot/dts/imx6sl.dtsi  |  8 ++++++--
- 2 files changed, 18 insertions(+), 8 deletions(-)
+The pinctrl framework uses 'function', so I guess it's better not to in=
+troduce
+an other keyword that may confuse people. But I agree this is not what'=
+s used in
+the Marvell's docs. What do you think about we mention it in this docum=
+entation ?
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 2a35b08..400f75c 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -57,22 +57,28 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		ckil: ckil {
--			compatible = "fsl,imx-ckil", "fixed-clock";
-+		ckil: clock@0 {
-+			compatible = "fixed-clock";
-+			reg = <0>;
- 			#clock-cells = <0>;
- 			clock-frequency = <32768>;
-+			clock-output-names = "ckil";
- 		};
- 
--		ckih1: ckih1 {
--			compatible = "fsl,imx-ckih1", "fixed-clock";
-+		ckih1: clock@1 {
-+			compatible = "fixed-clock";
-+			reg = <1>;
- 			#clock-cells = <0>;
- 			clock-frequency = <0>;
-+			clock-output-names = "ckih1";
- 		};
- 
--		osc: osc {
--			compatible = "fsl,imx-osc", "fixed-clock";
-+		osc: clock@2 {
-+			compatible = "fixed-clock";
-+			reg = <2>;
- 			#clock-cells = <0>;
- 			clock-frequency = <24000000>;
-+			clock-output-names = "osc";
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index a6d3afb..275eb30 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -79,16 +79,20 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		ckil: ckil {
-+		ckil: clock@0 {
- 			compatible = "fixed-clock";
-+			reg = <0>;
- 			#clock-cells = <0>;
- 			clock-frequency = <32768>;
-+			clock-output-names = "ckil";
- 		};
- 
--		osc: osc {
-+		osc: clock@1 {
- 			compatible = "fixed-clock";
-+			reg = <1>;
- 			#clock-cells = <0>;
- 			clock-frequency = <24000000>;
-+			clock-output-names = "osc";
- 		};
- 	};
- 
--- 
-1.8.3.2
+Thanks for the feedback !
 
+Antoine
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
