@@ -1,46 +1,45 @@
-From: Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 5/8 fix] mtd: m25p80: use the SPI nor framework
-Date: Fri, 11 Apr 2014 08:32:05 +0800
-Message-ID: <20140411003203.GC3837@localhost.localdomain>
-References: <1393238262-8622-6-git-send-email-b32955@freescale.com>
- <1393574142-17234-1-git-send-email-b32955@freescale.com>
- <20140409213749.GH32070@ld-irv-0074>
- <20140410072509.GA24100@localhost>
- <20140410192902.GM32070@ld-irv-0074>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dt-binding: fix GIC example
+Date: Fri, 11 Apr 2014 09:16:04 +0800
+Message-ID: <20140411011602.GF28420@dragon>
+References: <1396023951-32383-1-git-send-email-l.stach@pengutronix.de>
+ <CAL_Jsq+_+B=TKMQ2ULkXiBJGTNmGGLkB1xjKNJkF1BK_4TRXkg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140410192902.GM32070@ld-irv-0074>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, angus.clark-qxv4g6HH51o@public.gmane.org, Russel King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pekon-l0cyMroinI0@public.gmane.org, sourav.poddar-l0cyMroinI0@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <CAL_Jsq+_+B=TKMQ2ULkXiBJGTNmGGLkB1xjKNJkF1BK_4TRXkg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 10, 2014 at 12:29:02PM -0700, Brian Norris wrote:
-> > IMHO, we should create a patch or several patches to add the MTD_SPI_NOR
-> > to the defconfigs.
+On Thu, Apr 10, 2014 at 10:21:35AM -0500, Rob Herring wrote:
+> On Fri, Mar 28, 2014 at 11:25 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> > From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+> >
+> > When using interrupt-maps, the size of a map entry is #address-cells +
 > 
-> Yeah, I think that's best.
-I will create a patch when i back to office.
-Or you can create it yourself.
-
+> Plus what? You mean ", and "?
 > 
-> > > Also, I think m25p80.c is no longer a "self-contained MTD device driver"
-> > > and should be moved under drivers/mtd/spi-nor/.
-> > If we move the m25p80.c to the drivers/mtd/spi-nor/, we also need to move
-> > other drivers too.
+> > address-cells should be 0 as this is not used.
+> >
+> > As #address-cells = <0> is the same as not specifying the
+> > property, simply remove it.
+> >
+> > Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+> > Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > 
-> Which ones? I think it only makes sense to move those that depend on the
-> same core code (i.e., spi-nor.c), or have a close relation to it (so
-> Lee's st_spi_fsm.c is a candidate).
+> Did this get applied? I can't seem to find patch 2.
 
-yes, i mean the st_spi_fsm.c and other drivers which will use the
-spi-nor core code in the future.
+No.  We expect this patch to be applied on DT tree, while the
+patch #2 [1] is going through IMX tree.
 
-thanks
-Huang Shijie
+Shawn
+
+[1] http://www.spinics.net/lists/arm-kernel/msg318810.html
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
