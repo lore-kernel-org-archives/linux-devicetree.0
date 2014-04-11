@@ -1,121 +1,63 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH] iio: adc: exynos_adc: Control special clock of ADC to
- support Exynos3250 ADC
-Date: Fri, 11 Apr 2014 12:05:27 +0200
-Message-ID: <5347BE67.1080209@samsung.com>
-References: <1397181640-18513-1-git-send-email-cw00.choi@samsung.com>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dt-binding: fix GIC example
+Date: Fri, 11 Apr 2014 12:10:12 +0200
+Message-ID: <1397211012.4577.5.camel@weser.hi.pengutronix.de>
+References: <1396023951-32383-1-git-send-email-l.stach@pengutronix.de>
+	 <CAL_Jsq+_+B=TKMQ2ULkXiBJGTNmGGLkB1xjKNJkF1BK_4TRXkg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1397181640-18513-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: jic23@kernel.org, ch.naveen@samsung.com, kgene.kim@samsung.com, linux-iio@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kyungmin Park <kyungmin.park@samsung.com>, devicetree <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+_+B=TKMQ2ULkXiBJGTNmGGLkB1xjKNJkF1BK_4TRXkg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
+Hi Rob,
 
-On 11/04/14 04:00, Chanwoo Choi wrote:
-> This patch control special clock for ADC in Exynos series's FSYS block.
-> If special clock of ADC is registerd on clock list of common clk framework,
-> Exynos ADC drvier have to control this clock.
+Am Donnerstag, den 10.04.2014, 10:21 -0500 schrieb Rob Herring:
+> On Fri, Mar 28, 2014 at 11:25 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> > From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+> >
+> > When using interrupt-maps, the size of a map entry is #address-cells +
 > 
-> Exynos3250/Exynos4/Exynos5 has 'adc' clock as following:
-> - 'adc' clock: bus clock for ADC
+> Plus what? You mean ", and "?
 > 
-> Exynos3250 has additional 'sclk_tsadc' clock as following:
-> - 'sclk_tsadc' clock: special clock for ADC which provide clock to internal ADC
-> 
-> Exynos 4210/4212/4412 and Exynos5250/5420 has not included 'sclk_tsadc' clock
-> in FSYS_BLK. But, Exynos3250 based on Cortex-A7 has only included 'sclk_tsadc'
-> clock in FSYS_BLK.
+Urgh, I obviously messed this up while editing the commit message in the
+last minute. It should have been something along the lines of:
 
-I think a new compatible should be added for the ADC device for Exynos3250
-and the required clocks should be handled properly, based on compatible
-value. This could be handled, e.g. through some flags in driver's data
-selected based on the compatible property value.
+When using interrupt-maps, the size of a map entry is #address-cells +
+#interrupt-cells. address-cells should be 0 as this offset is not used
+in the GIC.
 
-And the new clocks should be documented in Documentation/devicetree/bindings
-/arm/samsung/exynos-adc.txt.
+As #address-cells = <0> is the same as not specifying the
+property, simply remove it.
 
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Kukjin Kim <kgene.kim@samsung.com>
-> Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-> Cc: linux-iio@vger.kernel.org
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
->  drivers/iio/adc/exynos_adc.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+Can you edit this while applying, or should I send a new patch?
+
+> > address-cells should be 0 as this is not used.
+> >
+> > As #address-cells = <0> is the same as not specifying the
+> > property, simply remove it.
+> >
+> > Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+> > Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > 
-> diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
-> index d25b262..4cd1975 100644
-> --- a/drivers/iio/adc/exynos_adc.c
-> +++ b/drivers/iio/adc/exynos_adc.c
-> @@ -88,6 +88,7 @@ struct exynos_adc {
->  	void __iomem		*regs;
->  	void __iomem		*enable_reg;
->  	struct clk		*clk;
-> +	struct clk		*sclk;
->  	unsigned int		irq;
->  	struct regulator	*vdd;
->  
-> @@ -308,6 +309,13 @@ static int exynos_adc_probe(struct platform_device *pdev)
->  		goto err_irq;
->  	}
->  
-> +	info->sclk = devm_clk_get(&pdev->dev, "sclk_tsadc");
-> +	if (IS_ERR(info->sclk)) {
-> +		dev_warn(&pdev->dev, "failed getting sclk clock, err = %ld\n",
-> +							PTR_ERR(info->sclk));
-> +		info->sclk = NULL;
-> +	}
-> +
->  	info->vdd = devm_regulator_get(&pdev->dev, "vdd");
->  	if (IS_ERR(info->vdd)) {
->  		dev_err(&pdev->dev, "failed getting regulator, err = %ld\n",
-> @@ -341,6 +349,7 @@ static int exynos_adc_probe(struct platform_device *pdev)
->  		goto err_iio_dev;
->  
->  	clk_prepare_enable(info->clk);
-> +	clk_prepare_enable(info->sclk);
->  
->  	exynos_adc_hw_init(info);
->  
-> @@ -357,6 +366,7 @@ err_of_populate:
->  				exynos_adc_remove_devices);
->  	regulator_disable(info->vdd);
->  	clk_disable_unprepare(info->clk);
-> +	clk_disable_unprepare(info->sclk);
->  err_iio_dev:
->  	iio_device_unregister(indio_dev);
->  err_irq:
-> @@ -373,6 +383,7 @@ static int exynos_adc_remove(struct platform_device *pdev)
->  				exynos_adc_remove_devices);
->  	regulator_disable(info->vdd);
->  	clk_disable_unprepare(info->clk);
-> +	clk_disable_unprepare(info->sclk);
->  	writel(0, info->enable_reg);
->  	iio_device_unregister(indio_dev);
->  	free_irq(info->irq, info);
-> @@ -398,6 +409,7 @@ static int exynos_adc_suspend(struct device *dev)
->  	}
->  
->  	clk_disable_unprepare(info->clk);
-> +	clk_disable_unprepare(info->sclk);
->  	writel(0, info->enable_reg);
->  	regulator_disable(info->vdd);
->  
-> @@ -416,6 +428,7 @@ static int exynos_adc_resume(struct device *dev)
->  
->  	writel(1, info->enable_reg);
->  	clk_prepare_enable(info->clk);
-> +	clk_prepare_enable(info->sclk);
->  
->  	exynos_adc_hw_init(info);
->  
+> Did this get applied? I can't seem to find patch 2.
 > 
+As Shawn pointed out patch 2 got applied through the imx tree as it
+fixes a real bug there.
 
 Regards,
-Sylwester
+Lucas
+-- 
+Pengutronix e.K.                           | Lucas Stach                 |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-5076 |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
