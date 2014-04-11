@@ -1,17 +1,16 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 2/7] pinctrl: sunxi: disable clk when
- failing to probe pin controller
-Date: Fri, 11 Apr 2014 15:06:17 +0200
-Message-ID: <20140411130617.GY28585@lukather>
+Subject: Re: [PATCH v3 6/7] pinctrl: sunxi: add reset control support
+Date: Fri, 11 Apr 2014 15:07:02 +0200
+Message-ID: <20140411130702.GZ28585@lukather>
 References: <1397137966-30818-1-git-send-email-boris.brezillon@free-electrons.com>
- <1397137966-30818-3-git-send-email-boris.brezillon@free-electrons.com>
+ <1397137966-30818-7-git-send-email-boris.brezillon@free-electrons.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="j13PAD5Nz8dz2ik7"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBNWTT6NAKGQE6GGSR2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="m3EZO/+NOdcYnaJL"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBOWTT6NAKGQEW7CWGEQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1397137966-30818-3-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1397137966-30818-7-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi>
@@ -23,13 +22,18 @@ Cc: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Emilio =?iso
 List-Id: devicetree@vger.kernel.org
 
 
---j13PAD5Nz8dz2ik7
+--m3EZO/+NOdcYnaJL
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 10, 2014 at 03:52:41PM +0200, Boris BREZILLON wrote:
-> Disable the clk when failing to probe the pin controller device.
+Hi,
+
+On Thu, Apr 10, 2014 at 03:52:45PM +0200, Boris BREZILLON wrote:
+> The A31 SoC define a reset line for the R_PIO block which needs to be
+> deasserted.
+>=20
+> Try to retrieve a reset control and deassert if one was found.
 >=20
 > Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
@@ -42,26 +46,26 @@ Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
 
---j13PAD5Nz8dz2ik7
+--m3EZO/+NOdcYnaJL
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.14 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTR+jJAAoJEBx+YmzsjxAgSB4P/3vvTbh4EWCCgZ163QeAgBMR
-ZuJDR93bs0B7kMCRkVAZnT6V7Y6UKFlozTkS7bHmIE+vYAcT/P+lDeGFzIWFAYd6
-/YDNB11PS0SDsUbmCPGBKQ8EqOn2D7Ud+hu6LEB3v88Ud+xXxnrr2ge5Jj1gtk9v
-orCSXWL6gsihpslFosWki6BFE7so3/358oB+pX9Fn4u30JHvU6CA/wUPubmElT7x
-vgYigU+tZEAtqpNxNDnDWti0cOhv4zOil7T2r0DBMqdbnqiahD5WHDf6pywtfYqs
-IryroWUwlUJ0myPb0p5SrSNq1OyCT6ffNw8SaQ8ZWNOE7tlnXwzCXztFkRzUUev9
-SsjDSXrhL2L7WLM5Bo78O23TfC8P2l82SFpHoeCPw486WGAwS7abEN8dsvqgDIL/
-miQueZOJoGbAKJ1yo+4dYRNGDZfix688Qiio/H3AJKV2WgW0Zwfo9LSYMcvCxsr2
-3lZVmZaa9DeUmjUX+Qe536DzASGN9/yTadM2qZuMTTyJG2vZKUX8gfSXExI0l0CL
-agx6vcArQ3ItSRs1Gaj6p7cv1tK2RsjqnRC1bXcQt0/vPy0+XSdKwQe3hKXjOtO2
-AIYiNIexTfSPsykRD1sd1Xven3hnL6OTjGoEaOPBSyxkw5hVApIMI0pMd/zPMtfi
-3v/dID7iAhGugxHelUKU
-=zkvY
+iQIcBAEBAgAGBQJTR+j2AAoJEBx+YmzsjxAgTCYQAKyO8v3wiGvJy5ViwLlmu3Hb
+PCpSFCuVYfsto5JX6zpqql1J2OL7BrVe0DZJtIgNHHmC5BLmz52+9tNU+XKtjKag
+a3HuFrnPMzDpriTMmlR/cPRHxcRsgo3F8oLk15RF4zeJXNJvpqECN3kXVYxCi5ns
+U9vdOOuwh+IadfejtqgRaqE7mz5Ta262KbQ09WGXdFoJsCuA+LyaO/fPuGWhEOti
+1vNYuEj8kxdxv1inIRQiMmqRejIxifo3fAwQZDTVEQq0wcZbhLSZYWrBKuC8idm/
+8hXh09e0h3z1PLPGEppohCttHn4GDRJ5uwYw+pYK4Pfl/1VHEzxOZPrzaMhILn2/
+Pb8NoWJ54VrDHvrOO2s1GI3U2uT2g/Ut+LOpkQKc5/ddOgP8jVIpKzm7Bk1bxu6K
+iSLXssbPrGtXIhoikkskbNf9Wx0cxVgIzmpGXTN9ELjQMdZh9/ue/tc1hDB8mn2V
+N/XUrOfcRmt1XGVLaWkXgMwP8m6fwOuZgLnQ+WaZotCu25hPRdy+mvwN3R+raY0J
+FASpNynOCa8jlWv+DoxPVoN8gnikf5dmJTUwdkCdvyLz2+Dioq6DrCEaT48kOaL6
+rlde3qksl/Un9ZUYeCdJkiU7f4sGF9bKJq0sqT029frr5E3GovBN7TG5ZC2t1ESs
+uC5c3BPbVOCxu9JzN/ZP
+=05tP
 -----END PGP SIGNATURE-----
 
---j13PAD5Nz8dz2ik7--
+--m3EZO/+NOdcYnaJL--
