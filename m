@@ -1,117 +1,54 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: [PATCH] serial: uart: add hw flow control support configuration
-Date: Fri, 11 Apr 2014 15:17:57 -0400
-Message-ID: <1397243877-23234-1-git-send-email-m-karicheri2@ti.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] ARM: zynq: DT: Add 'clock-latency' property
+Date: Fri, 11 Apr 2014 12:41:02 -0700
+Message-ID: <34776df5-5255-4d58-a5ab-83f2017e16fc@AM1EHSMHS018.ehs.local>
+References: <1396653256-28397-1-git-send-email-soren.brinkmann@xilinx.com>
+ <1396653256-28397-2-git-send-email-soren.brinkmann@xilinx.com>
+ <53423BB6.7010508@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Cc: balbi@ti.com, Murali Karicheri <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <53423BB6.7010508-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-8250 uart driver currently supports only software assisted hw flow
-control. The software assisted hw flow control maintains a hw_stopped
-flag in the tty structure to stop and start transmission and use modem
-status interrupt for the event to drive the handshake signals. This is
-not needed if hw has flow control capabilities. This patch adds a
-DT attribute for enabling hw flow control for a uart port. Also skip
-stop and start if this flag is present in flag field of the port
-structure.
+On Mon, 2014-04-07 at 07:46AM +0200, Michal Simek wrote:
+> On 04/05/2014 01:14 AM, Soren Brinkmann wrote:
+> > Specify the 'clock-latency' property to avoid certain cpufreq gover=
+nors
+> > from refusing to work with the following error:
+> >   ondemand governor failed, too long transition latency of HW, fall=
+back to performance governor
+> >=20
+> > Reported-by: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>
+> > Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> > Tested-by: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>
+> > Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> > ---
+> > This is a fix from our vendor tree
+> >=20
+> > Changes in v2:
+> >  - This patch has been added
+> >=20
+> > ---
+> >  arch/arm/boot/dts/zynq-7000.dtsi | 1 +
+> >  1 file changed, 1 insertion(+)
+>=20
+> Applied to zynq-dt.
 
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Pawel Moll <pawel.moll@arm.com> 
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
-CC: Kumar Gala <galak@codeaurora.org>
-CC: Randy Dunlap <rdunlap@infradead.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Jiri Slaby <jslaby@suse.cz>
+Actually, this should probably go in as fix into the current (3.15)
+release cycle.
 
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
----
- .../devicetree/bindings/serial/of-serial.txt       |    2 ++
- drivers/tty/serial/8250/8250_core.c                |    6 ++++--
- drivers/tty/serial/of_serial.c                     |    4 ++++
- drivers/tty/serial/serial_core.c                   |   12 +++++++++---
- 4 files changed, 19 insertions(+), 5 deletions(-)
+	Thanks,
+	S=C3=B6ren
 
-diff --git a/Documentation/devicetree/bindings/serial/of-serial.txt b/Documentation/devicetree/bindings/serial/of-serial.txt
-index 1928a3e..123de01 100644
---- a/Documentation/devicetree/bindings/serial/of-serial.txt
-+++ b/Documentation/devicetree/bindings/serial/of-serial.txt
-@@ -37,6 +37,8 @@ Optional properties:
- - auto-flow-control: one way to enable automatic flow control support. The
-   driver is allowed to detect support for the capability even without this
-   property.
-+- hw-flow-control: this enables pure hw flow control and no software
-+  intervention needed.
- 
- Example:
- 
-diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
-index 81f909c..6b1b868 100644
---- a/drivers/tty/serial/8250/8250_core.c
-+++ b/drivers/tty/serial/8250/8250_core.c
-@@ -2338,9 +2338,11 @@ serial8250_do_set_termios(struct uart_port *port, struct ktermios *termios,
- 	 * the trigger, or the MCR RTS bit is cleared.  In the case where
- 	 * the remote UART is not using CTS auto flow control, we must
- 	 * have sufficient FIFO entries for the latency of the remote
--	 * UART to respond.  IOW, at least 32 bytes of FIFO.
-+	 * UART to respond.  IOW, at least 32 bytes of FIFO. Also enable
-+	 * AFE if hw flow control is supported
- 	 */
--	if (up->capabilities & UART_CAP_AFE && port->fifosize >= 32) {
-+	if ((up->capabilities & UART_CAP_AFE && (port->fifosize >= 32)) ||
-+	    port->flags & UPF_HARD_FLOW) {
- 		up->mcr &= ~UART_MCR_AFE;
- 		if (termios->c_cflag & CRTSCTS)
- 			up->mcr |= UART_MCR_AFE;
-diff --git a/drivers/tty/serial/of_serial.c b/drivers/tty/serial/of_serial.c
-index 9924660..1a5f528 100644
---- a/drivers/tty/serial/of_serial.c
-+++ b/drivers/tty/serial/of_serial.c
-@@ -182,6 +182,10 @@ static int of_platform_serial_probe(struct platform_device *ofdev)
- 					  "auto-flow-control"))
- 			port8250.capabilities |= UART_CAP_AFE;
- 
-+		if (of_property_read_bool(ofdev->dev.of_node,
-+					  "hw-flow-control"))
-+			port8250.port.flags |= UPF_HARD_FLOW;
-+
- 		ret = serial8250_register_8250_port(&port8250);
- 		break;
- 	}
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index 2cf5649..16e3615 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -170,8 +170,12 @@ static int uart_port_startup(struct tty_struct *tty, struct uart_state *state,
- 			if (tty->termios.c_cflag & CBAUD)
- 				uart_set_mctrl(uport, TIOCM_RTS | TIOCM_DTR);
- 		}
--
--		if (tty_port_cts_enabled(port)) {
-+		/*
-+		 * if hw support flow control without software intervention,
-+		 * then skip the below check
-+		 */
-+		if (tty_port_cts_enabled(port) &&
-+		    !(uport->flags & UPF_HARD_FLOW)) {
- 			spin_lock_irq(&uport->lock);
- 			if (!(uport->ops->get_mctrl(uport) & TIOCM_CTS))
- 				tty->hw_stopped = 1;
-@@ -2768,7 +2772,9 @@ void uart_handle_cts_change(struct uart_port *uport, unsigned int status)
- 
- 	uport->icount.cts++;
- 
--	if (tty_port_cts_enabled(port)) {
-+	/* skip below code if the hw flow control is supported */
-+	if (tty_port_cts_enabled(port) &&
-+	    !(uport->flags & UPF_HARD_FLOW)) {
- 		if (tty->hw_stopped) {
- 			if (status) {
- 				tty->hw_stopped = 0;
--- 
-1.7.9.5
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
