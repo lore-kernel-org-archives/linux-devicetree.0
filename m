@@ -1,59 +1,88 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH v3 7/7] driver: reset: sti: add keyscan for stih416
-Date: Fri, 11 Apr 2014 16:33:40 +0200
-Message-ID: <1397226820-5604-14-git-send-email-gabriel.fernandez@linaro.org>
-References: <1397226820-5604-1-git-send-email-gabriel.fernandez@linaro.org>
+From: Thor Thayer <tthayer@altera.com>
+Subject: Re: [PATCH 1/3] dts: socfpga: Add bindings for Altera SoC SDRAM
+ controller
+Date: Fri, 11 Apr 2014 09:43:34 -0500
+Message-ID: <1397227414.8304.6.camel@dinh-ubuntu>
+References: <1396907649-20212-1-git-send-email-tthayer@altera.com>
+	 <1396907649-20212-2-git-send-email-tthayer@altera.com>
+	 <20140408133818.GB16054@pengutronix.de>
+	 <1396967390.23349.15.camel@dinh-ubuntu>
+	 <20140408143327.GC16054@pengutronix.de>
+	 <CANk1AXR0bDENDV673M-AVXNWHmGuee5SGc+ZnPqdBdEBwJXQXQ@mail.gmail.com>
+	 <CAL_JsqJRweynpCA7LMFU4wfa71XzjGC3b8H9XKJpogf5H93h_A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1397226820-5604-1-git-send-email-gabriel.fernandez@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, linux-doc@vger.kernel.org, Gabriel Fernandez <gabriel.fernandez@linaro.org>, linux-kernel@vger.kernel.org, Giuseppe CONDORELLI <giuseppe.condorelli@st.com>, linux-input@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJRweynpCA7LMFU4wfa71XzjGC3b8H9XKJpogf5H93h_A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: delicious quinoa <delicious.quinoa@gmail.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Doug Thompson <dougthompson@xmission.com>, Grant Likely <grant.likely@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Dinh Nguyen <dinguyen@altera.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Giuseppe CONDORELLI <giuseppe.condorelli@st.com>
+On Tue, 2014-04-08 at 13:52 -0500, Rob Herring wrote:
+> On Tue, Apr 8, 2014 at 11:02 AM, delicious quinoa
+> <delicious.quinoa@gmail.com> wrote:
+> > On Tue, Apr 8, 2014 at 9:33 AM, Steffen Trumtrar
+> > <s.trumtrar@pengutronix.de> wrote:
+> >> On Tue, Apr 08, 2014 at 09:29:50AM -0500, Thor Thayer wrote:
+> >>> On Tue, 2014-04-08 at 15:38 +0200, Steffen Trumtrar wrote:
+> >>> > Hi!
+> >>> >
+> >>> > On Mon, Apr 07, 2014 at 04:54:07PM -0500, tthayer@altera.com wrote:
+> >>> > > From: Thor Thayer <tthayer@altera.com>
+> >>> > >
+> >>> > > Addition of the Altera SDRAM controller bindings and device
+> >>> > > tree changes to the Altera SoC project.
+> >>> > >
+> >>> [snip]
+> >>> > > +
+> >>> > > +Required properties:
+> >>> > > +- compatible : "altr,sdr-ctl", "syscon";
+> >>> > > +                Note that syscon is invoked for this device to support the FPGA
+> >>> > > +         bridge driver, EDAC driver and other devices that share the
+> >>> > > +         registers.
+> >>> > > +- reg : Should contain 1 register ranges(address and length)
+> >>> >
+> >>> > I haven't really thought this through, but why would the FPGA bridge driver
+> >>> > access the sdram controller? For releasing the resets in fpgaportrst ? Or is
+> >>> > there more?
+> >>>
+> >>> Hi Steffan. No, not for resets. We need to enable the FPGA to SDRAM
+> >>> path. Our SDRAM controller allows FPGA master access to the SDRAM.
+> >>>
+> >>
+> >> Yes. But what you have to do to enable the path is let the FPGA port you use
+> >> out of reset. And that is it as far as I can see. The rest happens in the
+> >> bitstream. Or is there more to enable the path?
+> >> The FPGA2SDRAM bridge is the one I didn't use as of yet, so if I miss something
+> >> please elaborate.
+> >
+> > Hi Steffen,
+> >
+> > The sdram controller is used by two drivers.  That's why we want to
+> > specify "syscon" here.  The other driver is the FPGA bridge driver.
+> > Its functionality is very separate from what this driver is doing (we
+> > are not enabling the bridge in this driver; we are enabling the
+> > monitoring and resetting the interrupt bit of the EDAC).  We wanted to
+> > specify "syscon" her so that we don't have to have to change it for
+> > the other driver.
+> 
+> But are there actually overlapping registers which are accessed by
+> both drivers and need the protection of regmap?
+> 
+> Perhaps MFD is more appropriate than syscon?
 
-Add keyscan reset on stih416 reset controller.
+Hi Rob,
 
-Signed-off-by: Giuseppe Condorelli <giuseppe.condorelli@st.com>
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
----
- drivers/reset/sti/reset-stih416.c                     | 1 +
- include/dt-bindings/reset-controller/stih416-resets.h | 1 +
- 2 files changed, 2 insertions(+)
+We are accessing bits in the SDRAM Controller's Control register which
+has other bits that configure the SDRAM controller. Since this main
+control register may be accessed by other drivers (more likely for
+reading the current SDRAM configuration setup than for writing), the
+syscon still seems like an appropriate use.
 
-diff --git a/drivers/reset/sti/reset-stih416.c b/drivers/reset/sti/reset-stih416.c
-index fe3bf02..5fc9870 100644
---- a/drivers/reset/sti/reset-stih416.c
-+++ b/drivers/reset/sti/reset-stih416.c
-@@ -104,6 +104,7 @@ static const struct syscfg_reset_channel_data stih416_softresets[] = {
- 	[STIH416_COMPO_A_SOFTRESET] = STIH416_SRST_CPU(SYSCFG_7564, 4),
- 	[STIH416_VP8_DEC_SOFTRESET] = STIH416_SRST_CPU(SYSCFG_7564, 10),
- 	[STIH416_VTG_MAIN_SOFTRESET] = STIH416_SRST_CPU(SYSCFG_7564, 16),
-+	[STIH416_KEYSCAN_SOFTRESET] = STIH416_SRST_LPM(LPM_SYSCFG_1, 8),
- };
- 
- static struct syscfg_reset_controller_data stih416_powerdown_controller = {
-diff --git a/include/dt-bindings/reset-controller/stih416-resets.h b/include/dt-bindings/reset-controller/stih416-resets.h
-index 2127743..fcf9af1 100644
---- a/include/dt-bindings/reset-controller/stih416-resets.h
-+++ b/include/dt-bindings/reset-controller/stih416-resets.h
-@@ -46,5 +46,6 @@
- #define STIH416_COMPO_A_SOFTRESET	25
- #define STIH416_VP8_DEC_SOFTRESET	26
- #define STIH416_VTG_MAIN_SOFTRESET	27
-+#define STIH416_KEYSCAN_SOFTRESET	28
- 
- #endif /* _DT_BINDINGS_RESET_CONTROLLER_STIH416 */
--- 
-1.9.1
+Thor
+
+
+> 
+> Rob
