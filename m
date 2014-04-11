@@ -1,159 +1,94 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RESEND 2/5] pinctrl: berlin: add a pinctrl driver for
- Marvell Berlin SoCs
-Date: Fri, 11 Apr 2014 15:35:06 +0200
-Message-ID: <5347EF8A.8040600@gmail.com>
-References: <1397135274-10764-1-git-send-email-antoine.tenart@free-electrons.com> <1397135274-10764-3-git-send-email-antoine.tenart@free-electrons.com> <5347AFF4.3050607@gmail.com> <20140411123737.GA5903@kwain>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dt-binding: fix GIC example
+Date: Fri, 11 Apr 2014 08:40:00 -0500
+Message-ID: <CAL_JsqKAnqMRM2ipYO4NsgXgZhtdhzEySR6pRVCMoXn3vRff7A@mail.gmail.com>
+References: <1396023951-32383-1-git-send-email-l.stach@pengutronix.de>
+	<CAL_Jsq+_+B=TKMQ2ULkXiBJGTNmGGLkB1xjKNJkF1BK_4TRXkg@mail.gmail.com>
+	<1397211012.4577.5.camel@weser.hi.pengutronix.de>
+	<CAL_Jsq+-8hmKf31nX7rbhZ6EBXAycWS3THHRz-ZLt1RXqWnjVA@mail.gmail.com>
+	<1397222629.4577.7.camel@weser.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140411123737.GA5903@kwain>
+In-Reply-To: <1397222629.4577.7.camel-WzVe3FnzCwFR6QfukMTsflXZhhPuCNm+@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?QW50b2luZSBUw6luYXJ0?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/11/2014 02:37 PM, Antoine T=C3=A9nart wrote:
-> On Fri, Apr 11, 2014 at 11:03:48AM +0200, Sebastian Hesselbarth wrote=
-:
->> On 04/10/2014 03:07 PM, Antoine T=C3=A9nart wrote:
->>> The Marvell Berlin boards have a group based pinmuxing mechanism. T=
-his
->>> driver adds the support for the BG2CD, BG2 and BG2Q. We actually do=
- not
->>> need any information about the pins here and only have the definiti=
-on
->>> of the groups.
+On Fri, Apr 11, 2014 at 8:23 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> Am Freitag, den 11.04.2014, 08:20 -0500 schrieb Rob Herring:
+>> On Fri, Apr 11, 2014 at 5:10 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+>> > Hi Rob,
+>> >
+>> > Am Donnerstag, den 10.04.2014, 10:21 -0500 schrieb Rob Herring:
+>> >> On Fri, Mar 28, 2014 at 11:25 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+>> >> > From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+>> >> >
+>> >> > When using interrupt-maps, the size of a map entry is #address-cells +
+>> >>
+>> >> Plus what? You mean ", and "?
+>> >>
+>> > Urgh, I obviously messed this up while editing the commit message in the
+>> > last minute. It should have been something along the lines of:
+>> >
+>> > When using interrupt-maps, the size of a map entry is #address-cells +
+>> > #interrupt-cells. address-cells should be 0 as this offset is not used
+>> > in the GIC.
+>> >
+>> > As #address-cells = <0> is the same as not specifying the
+>> > property, simply remove it.
+>> >
+>> > Can you edit this while applying, or should I send a new patch?
 >>
-[...]
->>> diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
->>> index 4b835880cf80..fd5a01d4475f 100644
->>> --- a/drivers/pinctrl/Makefile
->>> +++ b/drivers/pinctrl/Makefile
->>> @@ -21,6 +21,7 @@ obj-$(CONFIG_PINCTRL_BF60x)	+=3D pinctrl-adi2-bf6=
-0x.o
->>>   obj-$(CONFIG_PINCTRL_AT91)	+=3D pinctrl-at91.o
->>>   obj-$(CONFIG_PINCTRL_BCM2835)	+=3D pinctrl-bcm2835.o
->>>   obj-$(CONFIG_PINCTRL_BAYTRAIL)	+=3D pinctrl-baytrail.o
->>> +obj-$(CONFIG_PINCTRL_BERLIN)	+=3D pinctrl-berlin.o
+>> I'll fix it up and apply.
 >>
->> Please split the driver into common and soc-specific parts, and if
->> you do please put it into a subfolder berlin, too.
+> Thanks.
 >
-> The only SoC specific part is the group structure. I'll need to have
-> functions in each SoC specific part calling ... only the common ones.
-> Do you have a better solution in mind ?
-
-We have a similar structure for mvebu, control is common, structure is
-not. You'll have one common driver to register pinctrl and switch a
-specific mux, and one file for each SoC holding the group structure
-and function table.
-
-If bg2 and bg2cd have the same group layout but different functions
-assigned to it, you can either strictly separate by SoC or separate
-by similarity. Have a look at e.g. pinctrl/mvebu/pinctrl-kirkwood.c,
-although SoCs are different with respect to individual functions, we
-have a variant mask to determine if a specific function is available
-on that SoC.
-
-But if bg2 and bg2cd are _very_ different from the functions assigned
-to each group, I'd rather have two separate files, too.
-
-Basically, folder structure will look like this:
-drivers/pinctrl
-   +- berlin/
-      +- common.c : common code (pinctrl register, pinmux)
-      +- common.h : common include (group structure, common callbacks)
-      +- bg2.c    : BG2 specific group/function tables
-      +- bg2cd.c  : BG2CD specific group/function tables
-      +- bg2q.c   : BG2Q specific group/function tables
-      +- ...
-
-(BTW, as we know we are beneath drivers/pinctrl, drop the pinctrl-
-prefix)
-
-If we consider bg2cd as a variant of bg2, join the two files above
-and have a variant mask as we have for Kirkwood.
-
-[...]
->>> +	function_name =3D kzalloc(strlen(group_name) + 7, GFP_KERNEL);
->>> +	if (!function_name)
->>> +		return -ENOMEM;
->>> +	snprintf(function_name, strlen(group_name) + 7, "%s_mode%d", grou=
-p_name,
->>> +			function);
+>> >
+>> >> > address-cells should be 0 as this is not used.
+>> >> >
+>> >> > As #address-cells = <0> is the same as not specifying the
+>> >> > property, simply remove it.
+>> >> >
+>> >> > Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+>> >> > Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> >>
+>> >> Did this get applied? I can't seem to find patch 2.
+>> >>
+>> > As Shawn pointed out patch 2 got applied through the imx tree as it
+>> > fixes a real bug there.
 >>
->> With proper mode tables above, this can refer to a const char* and y=
-ou
->> can get rid of allocation here. Also, below you already allocated
->> function_names, how is this one different from the below?
+>> It was highlighted that other instances beyond iMX were wrong. Please
+>> fix those as well.
 >
-> The one below is used to describe the available functions for a given=
- group
-> while this one describe a function found in the device tree. It is us=
-ed to check
-> the function we want to use in the device is provided by the driver. =
-The
+> Oh, I wasn't aware of that. Will send patches.
 
-Ah, ok. With numeric values for marvell,function and proper function=20
-tables for each of the groups, you can just look up the group and loop
-over the available functions. Or if you prefer strings, give a proper
-name to each function in the table and use that string as DT match.
+It was raised here: http://www.spinics.net/lists/linux-pci/msg29768.html
 
-> function name used here may not actually exist. We could check the fu=
-nction
-> actually exists here (and find the previously allocated function name=
-), but this
-> check is handled by the pinctrl framework. This would end up in a dif=
-ferent
-> behaviour than the expected one, imho.
-[...]
->>> +static int berlin_pinctrl_build_state(struct platform_device *pdev=
-,
->>> +			      struct berlin_pinctrl_reg_base *bases,
->>> +			      unsigned nbases)
->>> +{
->>> +	struct berlin_pinctrl *pctrl =3D platform_get_drvdata(pdev);
->>> +	int i, j, cur_fct =3D 0;
->>> +
->>> +	pctrl->ngroups =3D pctrl->desc->ngroups;
->>> +	pctrl->nfunctions =3D 0;
->>> +
->>> +	for (i =3D 0; i < pctrl->ngroups; i++) {
->>> +		struct berlin_desc_group const *desc =3D pctrl->desc->groups + i=
-;
->>> +		pctrl->nfunctions +=3D NFCTS(desc->bit_width);
->>> +	}
->>
->> As you need desc later on, make it global to this function. Then you
->> can also walk through it with desc++
->>
->> desc =3D pctrl->desc->groups;
->> for (i =3D 0; i < pctl->ngroups; i++, desc++)
->> 	pctrl->nfunctions =3D ...
->>
->> Having said that, the above assumes that each function is unique
->> but IIRC the idea of the function table was to group pins/groups
->> with the same function, e.g. function "gpio", groups 1,7,25,...
->
-> Most of the functions you can use on the Berlin they will be unique a=
-nd would
-> only be used in one group, except for the 'gpio' one.
+Here's a somewhat accurate list:
 
-Yeah, I had a similar discussion about it back then for mvebu. IIRC, th=
-e
-correct answer is: Have a list of functions with groups assigned to it
-no matter if there is only one group per function (or 40 per function a=
-s
-it will be for gpio).
+$ git grep -A8 'arm,.*gic' origin/master  -- arch/arm/boot/dts | grep
+'address.*1'
+origin/master:arch/arm/boot/dts/ecx-2000.dts-
+#address-cells = <1>;
+origin/master:arch/arm/boot/dts/highbank.dts-
+#address-cells = <1>;
+origin/master:arch/arm/boot/dts/imx6qdl.dtsi-           #address-cells = <1>;
+origin/master:arch/arm/boot/dts/imx6sl.dtsi-            #address-cells = <1>;
+origin/master:arch/arm/boot/dts/keystone.dtsi-          #address-cells = <1>;
+origin/master:arch/arm/boot/dts/r8a7740.dtsi-           #address-cells = <1>;
+origin/master:arch/arm/boot/dts/sh73a0.dtsi-            #address-cells = <1>;
+origin/master:arch/arm/boot/dts/socfpga.dtsi-           #address-cells = <1>;
+origin/master:arch/arm/boot/dts/ste-dbx5x0.dtsi-
+ #address-cells = <1>;
+origin/master:arch/arm/boot/dts/vf610.dtsi-
+ #address-cells = <1>;
+origin/master:arch/arm/boot/dts/zynq-7000.dtsi-
+#address-cells = <1>;
 
-Maybe Linus can give an update on how to deal with it?
-
-Sebastian
-
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
