@@ -1,44 +1,107 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: Re: [PATCH RESEND 2/5] pinctrl: berlin: add a pinctrl driver for
- Marvell Berlin SoCs
-Date: Fri, 11 Apr 2014 14:44:31 +0800
-Message-ID: <20140411144431.04fb148d@xhacker>
-References: <1397135274-10764-1-git-send-email-antoine.tenart@free-electrons.com>
- <1397135274-10764-3-git-send-email-antoine.tenart@free-electrons.com>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH 1/2] GPIO: Add driver for Zynq GPIO controller
+Date: Fri, 11 Apr 2014 08:57:25 +0200
+Message-ID: <53479255.4070206@monstr.eu>
+References: <1395933906-2268-1-git-send-email-harinik@xilinx.com> <CACRpkdbU35xG1QtagB+9e9vxvehf1UQFaF4PikJhsPNAMw=D1Q@mail.gmail.com> <CAFcVECJsEp_s2V5=oK_UJahGRUpWYWMCxTMxqdpX+O0qebP41A@mail.gmail.com> <CACRpkdZEFsJubRVwCp6nTie7s7+DZOym6SWsA2ZynN_devi-2Q@mail.gmail.com> <533BA67B.6070905@monstr.eu> <CACRpkdbk0Ru=txcF3DGBDD=CitqHYFR8w-1fUDR9wSinQBQyvw@mail.gmail.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1397135274-10764-3-git-send-email-antoine.tenart@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Antoine =?UTF-8?B?VMOpbmFydA==?= <antoine.tenart@free-electrons.com>, "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-Cc: Jimmy Xu <zmxu@marvell.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="P6DCUkoior2W0lEE0jAVK3rn1Cqf0Oa3E"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbk0Ru=txcF3DGBDD=CitqHYFR8w-1fUDR9wSinQBQyvw@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Harini Katakam <harinikatakamlinux@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, michals@xilinx.com, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW50b2luZSwKCk9uIFRodSwgMTAgQXByIDIwMTQgMDY6MDc6NTEgLTA3MDAKQW50b2luZSBU
-w6luYXJ0IDxhbnRvaW5lLnRlbmFydEBmcmVlLWVsZWN0cm9ucy5jb20+IHdyb3RlOgoKLi4uCj4g
-K3N0YXRpYyBpbnQgYmVybGluX3Bpbm11eF9lbmFibGUoc3RydWN0IHBpbmN0cmxfZGV2ICpwY3Ry
-bF9kZXYsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1bnNpZ25lZCBmdW5jdGlv
-biwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGdyb3VwKQo+ICt7
-Cj4gKyAgICAgICBzdHJ1Y3QgYmVybGluX3BpbmN0cmwgKnBjdHJsID0gcGluY3RybF9kZXZfZ2V0
-X2RydmRhdGEocGN0cmxfZGV2KTsKPiArICAgICAgIHN0cnVjdCBiZXJsaW5fcGluY3RybF9ncm91
-cCAqZ3JvdXBfZGVzYyA9IHBjdHJsLT5ncm91cHMgKyBncm91cDsKPiArICAgICAgIHN0cnVjdCBi
-ZXJsaW5fcGluY3RybF9mdW5jdGlvbiAqZnVuY3Rpb25fZGVzYyA9Cj4gKyAgICAgICAgICAgICAg
-IHBjdHJsLT5mdW5jdGlvbnMgKyBmdW5jdGlvbjsKPiArICAgICAgIHVuc2lnbmVkIGxvbmcgZmxh
-Z3M7Cj4gKyAgICAgICB1MzIgcmVndmFsOwo+ICsKPiArICAgICAgIHNwaW5fbG9ja19pcnFzYXZl
-KCZwY3RybC0+bG9jaywgZmxhZ3MpOwo+ICsKPiArICAgICAgIHJlZ3ZhbCA9IHJlYWRsKGdyb3Vw
-X2Rlc2MtPnJlZyk7Cj4gKyAgICAgICByZWd2YWwgJj0gZ3JvdXBfZGVzYy0+bWFzazsKPiArICAg
-ICAgIHJlZ3ZhbCB8PSBmdW5jdGlvbl9kZXNjLT5tdXh2YWwgPDwgZ3JvdXBfZGVzYy0+bHNiOwo+
-ICsgICAgICAgd3JpdGVsKHJlZ3ZhbCwgZ3JvdXBfZGVzYy0+cmVnKTsKCkNvdWxkIHdlIHVzZSBy
-ZWxheGVkIHZlcnNpb24gaW5zdGVhZD8KClRoYW5rcywKSmlzaGVuZwoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
-IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
-bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--P6DCUkoior2W0lEE0jAVK3rn1Cqf0Oa3E
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+On 04/10/2014 07:52 PM, Linus Walleij wrote:
+> On Wed, Apr 2, 2014 at 7:56 AM, Michal Simek <monstr@monstr.eu> wrote:
+>> On 03/31/2014 10:22 AM, Linus Walleij wrote:
+>>> On Sat, Mar 29, 2014 at 5:44 AM, Harini Katakam
+>>> <harinikatakamlinux@gmail.com> wrote:
+>>>> On Sat, Mar 29, 2014 at 3:20 AM, Linus Walleij <linus.walleij@linaro=
+=2Eorg> wrote:
+>>>>> On Thu, Mar 27, 2014 at 4:25 PM, Harini Katakam <harinik@xilinx.com=
+> wrote:
+>>>
+>>>>>> +/* Read/Write access to the GPIO PS registers */
+>>>>>> +static inline u32 zynq_gpio_readreg(void __iomem *offset)
+>>>>>> +{
+>>>>>> +       return readl_relaxed(offset);
+>>>>>> +}
+>>>>>> +
+>>>>>> +static inline void zynq_gpio_writereg(void __iomem *offset, u32 v=
+al)
+>>>>>> +{
+>>>>>> +       writel_relaxed(val, offset);
+>>>>>> +}
+>>>>>
+>>>>> I think this is unnecessary and confusing indirection.
+>>>>> Just use the readl_relaxed/writel_relaxed functions directly in
+>>>>> the code.
+>>>>>
+>>>>
+>>>> This is just to be flexible.
+>>>
+>>> Define exactly what you mean with "flexible" in this context. I
+>>> only see unnecessary overhead and hard-to-read code.
+>>
+>> We have just passed this discussion for watchdog driver
+>> here: https://lkml.org/lkml/2014/4/1/843
+>>
+>> Are you ok with doing it in this way?
+>=20
+> No :-)
+>=20
+> Subsystem maintainers do not necessarily agree on such issues.
+
+I think your sentence is right.  :-)
+But what to do to convince you to agree with it?
+We can use readl/writel directly (or relaxed versions) but it will
+just end up that we will have a patch in our xilinx git tree
+which won't be in the mainline.
+
+Having central point for IO access functions it not an unused technique.
+I was able to find out some cases in drivers/gpio/
+gpio-bt8xx.c, gpio-msm-v1.c, gpio-tegra.c, gpio-xilinx.c (almost similar =
+reason
+here :-))
+and just one in pinctrl-spear.h.
+But I have to admit most of gpio/pinmux drivers are using them directly
+but on the other hand they are not FPGA based. :-)
+
+BTW: Shouldn't be __raw_ versions replaced by _relaxed?
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--P6DCUkoior2W0lEE0jAVK3rn1Cqf0Oa3E
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlNHklUACgkQykllyylKDCEDhwCglIYKdLtFmXcQ4eAlY3w3X/0c
+GE4An2RhE9/c3bE7sEETihNiKemwoS7z
+=RRjI
+-----END PGP SIGNATURE-----
+
+--P6DCUkoior2W0lEE0jAVK3rn1Cqf0Oa3E--
