@@ -1,104 +1,83 @@
-From: Antoine =?iso-8859-1?Q?T=E9nart?=
-	<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH RESEND 5/5] ARM: dts: berlin: add the pinctrl node and
- muxing setup for uarts
-Date: Fri, 11 Apr 2014 11:09:36 +0200
-Message-ID: <20140411090936.GC20147@kwain>
-References: <1397135274-10764-1-git-send-email-antoine.tenart@free-electrons.com>
- <1397135274-10764-6-git-send-email-antoine.tenart@free-electrons.com>
- <20140411081859.GL10240@lunn.ch>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 3/4] arm: add basic support for Mediatek MT6589 boards
+Date: Fri, 11 Apr 2014 11:11:49 +0200
+Message-ID: <CABuKBeKLexBsTwF-nX15AYfLNA9bFDRm2XyeLpwQg9+3m6Xf=w@mail.gmail.com>
+References: <1397072736-10793-1-git-send-email-matthias.bgg@gmail.com>
+ <1397072736-10793-4-git-send-email-matthias.bgg@gmail.com>
+ <CAL_JsqJowqV2bsxE2VeYXQQSj4_L_KcH+C_dD=ZUvC=1crN4dA@mail.gmail.com>
+ <87ha6136dz.fsf@approximate.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140411081859.GL10240-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <87ha6136dz.fsf@approximate.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "heiko.stuebner@bq.com" <heiko.stuebner@bq.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Silvio F <silvio.fricke@gmail.com>, Kumar
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+2014-04-10 11:01 GMT+02:00 Marc Zyngier <marc.zyngier@arm.com>:
+> A couple of things on top of Rob's comments:
+>
+> On Wed, Apr 09 2014 at 10:50:33 pm BST, Rob Herring <robherring2@gmail.com> wrote:
+>> On Wed, Apr 9, 2014 at 2:45 PM, Matthias Brugger <matthias.bgg@gmail.com> wrote:
+>>> This adds a generic devicetree board file and a dtsi for boards
+>>> based on the MT6589 SoCs from Mediatek.
+>>>
+>>> Apart from the generic parts (gic, clocks) the only component
+>>> currently supported are the timers.
+>>>
+>>> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+>
+> [...]
+>
+>>> diff --git a/arch/arm/mach-mediatek/Kconfig b/arch/arm/mach-mediatek/Kconfig
+>>> new file mode 100644
+>>> index 0000000..c0139ca
+>>> --- /dev/null
+>>> +++ b/arch/arm/mach-mediatek/Kconfig
+>>> @@ -0,0 +1,14 @@
+>>> +config ARCH_MEDIATEK
+>>> +       bool "Mediatek MT6589 SoC" if ARCH_MULTI_V7
+>>> +       select ARCH_REQUIRE_GPIOLIB
+>>
+>> Then where is your GPIO driver?
+>>
+>>> +       select ARM_GIC
+>>> +       select CACHE_L2X0
+>>> +       select HAVE_ARM_TWD if LOCAL_TIMERS
+>
+> Hell no! ;-) ARM_ARCH_TIMER is the way (please also add the missing
+> node).
 
-On Fri, Apr 11, 2014 at 10:18:59AM +0200, Andrew Lunn wrote:
-> On Thu, Apr 10, 2014 at 03:07:54PM +0200, Antoine T=E9nart wrote:
-> > The uart0 pinmux configuration is in the dtsi because uart0 will al=
-ways
-> > use uart0-pmux to work, no other possibility. Same thing for uart1.
-> >=20
-> > Signed-off-by: Antoine T=E9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/berlin2.dtsi   | 20 ++++++++++++++++++++
-> >  arch/arm/boot/dts/berlin2cd.dtsi | 13 +++++++++++++
-> >  arch/arm/boot/dts/berlin2q.dtsi  | 20 ++++++++++++++++++++
-> >  3 files changed, 53 insertions(+)
-> >=20
-> > diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/ber=
-lin2.dtsi
-> > index 56a1af2f1052..43eb90c36050 100644
-> > --- a/arch/arm/boot/dts/berlin2.dtsi
-> > +++ b/arch/arm/boot/dts/berlin2.dtsi
-> > @@ -176,6 +176,22 @@
-> >  			};
-> >  		};
-> > =20
-> > +		pinctrl: pinctrl@0 {
-> > +			compatible =3D "marvell,berlin2-pinctrl";
-> > +			reg =3D <0xea0000 0x08>, <0xfc0000 0x44>;
-> > +			reg-names =3D "global_base", "apb_base";
-> > +
-> > +			uart0_pmux: uart0-pmux {
-> > +				berlin,group =3D "GSM4";
-> > +				berlin,function =3D <0>;
-> > +			};
-> > +
-> > +			uart1_pmux: uart1-pmux {
-> > +				berlin,group =3D "GSM5";
-> > +				berlin,function =3D <1>;
->=20
-> Hi Antoine
->=20
-> This very much looks like black magic.
->=20
-> I assume the data sheet is not available? So i think you need to
-> document all possible combinations of values of group and function.
-> Maybe you can add a file in
->=20
-> arch/arm/boot/dts/include/dt-bindings/pinctrl/
->=20
-> with something like
->=20
-> #define GSM4_UART0	0
-> #define GSM5_UART1	1
-> #define GSM12_UART0	1
-> #define GSM12_IrDA0	1
-> #define GSM12_GPIO	2
+I considered this, but the timer wasn't able to get it's clock frequency:
+"Architected timer frequency not available
+Division by zero in kernel."
 
-Groups' functions are not the same between BG2/BG2CD and BG2Q so multip=
-le
-headers would be needed which may not be a good thing. Some platforms u=
-se black
-magic, and we can find a pinmux configuration for OMAP looking like:
+>
+>>> +       select HAVE_SMP
+>>
+>> Not needed now (going into 3.15).
+>>
+>>> +       select LOCAL_TIMERS if SMP
+>
+> No, A7 always have the arch timers.
+>
+> Thanks,
+>
+>         M.
+> --
+> Jazz is not dead. It just smells funny.
 
-0x128 (PIN_INPUT_PULLUP | MUX_MODE0)
 
-Weel, we could explicitly define the functions in the driver itself and=
- use in
-the dt something like:
 
-berlin,group =3D "GSM4";
-berlin,function =3D "uart0";
-
-This is what's done on the sunxi's pinctrl.
-
-Antoine
-
---=20
-Antoine T=E9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+motzblog.wordpress.com
