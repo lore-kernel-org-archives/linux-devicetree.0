@@ -1,146 +1,117 @@
-From: Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/5] drivers/bus: arm-cci: Add common control interface
- for ACE ports
-Date: Sat, 12 Apr 2014 00:46:32 +0530
-Message-ID: <CAM4voakzCCuK08A+i8kVEhe-nzZyRCkz0hj2ancfF2joCkdEbg@mail.gmail.com>
-References: <1397239311-27717-1-git-send-email-a.kesavan@samsung.com>
-	<1397239311-27717-3-git-send-email-a.kesavan@samsung.com>
-	<alpine.LFD.2.11.1404111419540.980@knanqh.ubzr>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [PATCH] serial: uart: add hw flow control support configuration
+Date: Fri, 11 Apr 2014 15:17:57 -0400
+Message-ID: <1397243877-23234-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.LFD.2.11.1404111419540.980-fMhRO7WWcppj+hNMo8g0rg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Thomas P Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave.Martin-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Cc: balbi@ti.com, Murali Karicheri <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>
 List-Id: devicetree@vger.kernel.org
 
-Hi Nicolas,
+8250 uart driver currently supports only software assisted hw flow
+control. The software assisted hw flow control maintains a hw_stopped
+flag in the tty structure to stop and start transmission and use modem
+status interrupt for the event to drive the handshake signals. This is
+not needed if hw has flow control capabilities. This patch adds a
+DT attribute for enabling hw flow control for a uart port. Also skip
+stop and start if this flag is present in flag field of the port
+structure.
 
-On Fri, Apr 11, 2014 at 11:54 PM, Nicolas Pitre
-<nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, 11 Apr 2014, Abhilash Kesavan wrote:
->
->> From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>
->> cci_disable_port_by_cpu() can be used to disable an arbitrary
->> ACE port, but there is no C-callable way to enable an ACE port.
->> Change cci_disable_port_by_cpu() to cci_control_port_by_cpu()
->> to allow us to disable and enable a CPU's ACE port.
->>
->> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->
-> As soon as this patch is applied, it'll break compilation for
-> arch/arm/mach-vexpress/dcscb.c and arch/arm/mach-vexpress/tc2_pm.c.
->
-> I suggest you add a compatibility macro in include/linux/arm-cci.h that
-> may look like:
->
-> #define cci_disable_port_by_cpu(mpidr) cci_control_port_by_cpu(mpidr, false)
->
-> ... or at least update existing callers.
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Pawel Moll <pawel.moll@arm.com> 
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
+CC: Kumar Gala <galak@codeaurora.org>
+CC: Randy Dunlap <rdunlap@infradead.org>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Jiri Slaby <jslaby@suse.cz>
 
-Thanks for the review.
-This was an oversight on my part as our internal 3.8 based tree did
-not have any users of this.
-I will update the patch so that it does not break any existing callers.
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+---
+ .../devicetree/bindings/serial/of-serial.txt       |    2 ++
+ drivers/tty/serial/8250/8250_core.c                |    6 ++++--
+ drivers/tty/serial/of_serial.c                     |    4 ++++
+ drivers/tty/serial/serial_core.c                   |   12 +++++++++---
+ 4 files changed, 19 insertions(+), 5 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/serial/of-serial.txt b/Documentation/devicetree/bindings/serial/of-serial.txt
+index 1928a3e..123de01 100644
+--- a/Documentation/devicetree/bindings/serial/of-serial.txt
++++ b/Documentation/devicetree/bindings/serial/of-serial.txt
+@@ -37,6 +37,8 @@ Optional properties:
+ - auto-flow-control: one way to enable automatic flow control support. The
+   driver is allowed to detect support for the capability even without this
+   property.
++- hw-flow-control: this enables pure hw flow control and no software
++  intervention needed.
+ 
+ Example:
+ 
+diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
+index 81f909c..6b1b868 100644
+--- a/drivers/tty/serial/8250/8250_core.c
++++ b/drivers/tty/serial/8250/8250_core.c
+@@ -2338,9 +2338,11 @@ serial8250_do_set_termios(struct uart_port *port, struct ktermios *termios,
+ 	 * the trigger, or the MCR RTS bit is cleared.  In the case where
+ 	 * the remote UART is not using CTS auto flow control, we must
+ 	 * have sufficient FIFO entries for the latency of the remote
+-	 * UART to respond.  IOW, at least 32 bytes of FIFO.
++	 * UART to respond.  IOW, at least 32 bytes of FIFO. Also enable
++	 * AFE if hw flow control is supported
+ 	 */
+-	if (up->capabilities & UART_CAP_AFE && port->fifosize >= 32) {
++	if ((up->capabilities & UART_CAP_AFE && (port->fifosize >= 32)) ||
++	    port->flags & UPF_HARD_FLOW) {
+ 		up->mcr &= ~UART_MCR_AFE;
+ 		if (termios->c_cflag & CRTSCTS)
+ 			up->mcr |= UART_MCR_AFE;
+diff --git a/drivers/tty/serial/of_serial.c b/drivers/tty/serial/of_serial.c
+index 9924660..1a5f528 100644
+--- a/drivers/tty/serial/of_serial.c
++++ b/drivers/tty/serial/of_serial.c
+@@ -182,6 +182,10 @@ static int of_platform_serial_probe(struct platform_device *ofdev)
+ 					  "auto-flow-control"))
+ 			port8250.capabilities |= UART_CAP_AFE;
+ 
++		if (of_property_read_bool(ofdev->dev.of_node,
++					  "hw-flow-control"))
++			port8250.port.flags |= UPF_HARD_FLOW;
++
+ 		ret = serial8250_register_8250_port(&port8250);
+ 		break;
+ 	}
+diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+index 2cf5649..16e3615 100644
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -170,8 +170,12 @@ static int uart_port_startup(struct tty_struct *tty, struct uart_state *state,
+ 			if (tty->termios.c_cflag & CBAUD)
+ 				uart_set_mctrl(uport, TIOCM_RTS | TIOCM_DTR);
+ 		}
+-
+-		if (tty_port_cts_enabled(port)) {
++		/*
++		 * if hw support flow control without software intervention,
++		 * then skip the below check
++		 */
++		if (tty_port_cts_enabled(port) &&
++		    !(uport->flags & UPF_HARD_FLOW)) {
+ 			spin_lock_irq(&uport->lock);
+ 			if (!(uport->ops->get_mctrl(uport) & TIOCM_CTS))
+ 				tty->hw_stopped = 1;
+@@ -2768,7 +2772,9 @@ void uart_handle_cts_change(struct uart_port *uport, unsigned int status)
+ 
+ 	uport->icount.cts++;
+ 
+-	if (tty_port_cts_enabled(port)) {
++	/* skip below code if the hw flow control is supported */
++	if (tty_port_cts_enabled(port) &&
++	    !(uport->flags & UPF_HARD_FLOW)) {
+ 		if (tty->hw_stopped) {
+ 			if (status) {
+ 				tty->hw_stopped = 0;
+-- 
+1.7.9.5
 
-Regards,
-Abhilash
->
->
->> ---
->>  drivers/bus/arm-cci.c   |   13 +++++++------
->>  include/linux/arm-cci.h |    7 +++++--
->>  2 files changed, 12 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
->> index 5a86da9..5668b40 100644
->> --- a/drivers/bus/arm-cci.c
->> +++ b/drivers/bus/arm-cci.c
->> @@ -763,10 +763,11 @@ static void notrace cci_port_control(unsigned int port, bool enable)
->>  }
->>
->>  /**
->> - * cci_disable_port_by_cpu() - function to disable a CCI port by CPU
->> + * cci_control_port_by_cpu() - function to control a CCI port by CPU
->>   *                          reference
->>   *
->> - * @mpidr: mpidr of the CPU whose CCI port should be disabled
->> + * @mpidr: mpidr of the CPU whose CCI port should be enabled/disabled
->> + * @enable: if true enables the port, if false disables it
->>   *
->>   * Disabling a CCI port for a CPU implies disabling the CCI port
->>   * controlling that CPU cluster. Code disabling CPU CCI ports
->> @@ -777,20 +778,20 @@ static void notrace cci_port_control(unsigned int port, bool enable)
->>   *   0 on success
->>   *   -ENODEV on port look-up failure
->>   */
->> -int notrace cci_disable_port_by_cpu(u64 mpidr)
->> +int notrace cci_control_port_by_cpu(u64 mpidr, bool enable)
->>  {
->>       int cpu;
->>       bool is_valid;
->>       for (cpu = 0; cpu < nr_cpu_ids; cpu++) {
->>               is_valid = cpu_port_is_valid(&cpu_port[cpu]);
->>               if (is_valid && cpu_port_match(&cpu_port[cpu], mpidr)) {
->> -                     cci_port_control(cpu_port[cpu].port, false);
->> +                     cci_port_control(cpu_port[cpu].port, enable);
->>                       return 0;
->>               }
->>       }
->>       return -ENODEV;
->>  }
->> -EXPORT_SYMBOL_GPL(cci_disable_port_by_cpu);
->> +EXPORT_SYMBOL_GPL(cci_control_port_by_cpu);
->>
->>  /**
->>   * cci_enable_port_for_self() - enable a CCI port for calling CPU
->> @@ -936,7 +937,7 @@ int notrace __cci_control_port_by_index(u32 port, bool enable)
->>       /*
->>        * CCI control for ports connected to CPUS is extremely fragile
->>        * and must be made to go through a specific and controlled
->> -      * interface (ie cci_disable_port_by_cpu(); control by general purpose
->> +      * interface (ie cci_control_port_by_cpu(); control by general purpose
->>        * indexing is therefore disabled for ACE ports.
->>        */
->>       if (ports[port].type == ACE_PORT)
->> diff --git a/include/linux/arm-cci.h b/include/linux/arm-cci.h
->> index 79d6edf..c6c3ed0 100644
->> --- a/include/linux/arm-cci.h
->> +++ b/include/linux/arm-cci.h
->> @@ -29,7 +29,7 @@ struct device_node;
->>  #ifdef CONFIG_ARM_CCI
->>  extern bool cci_probed(void);
->>  extern int cci_ace_get_port(struct device_node *dn);
->> -extern int cci_disable_port_by_cpu(u64 mpidr);
->> +extern int cci_control_port_by_cpu(u64 mpidr, bool enable);
->>  extern int __cci_control_port_by_device(struct device_node *dn, bool enable);
->>  extern int __cci_control_port_by_index(u32 port, bool enable);
->>  #else
->> @@ -38,7 +38,10 @@ static inline int cci_ace_get_port(struct device_node *dn)
->>  {
->>       return -ENODEV;
->>  }
->> -static inline int cci_disable_port_by_cpu(u64 mpidr) { return -ENODEV; }
->> +static inline int cci_disable_port_by_cpu(u64 mpidr, bool enable)
->> +{
->> +     return -ENODEV;
->> +}
->>  static inline int __cci_control_port_by_device(struct device_node *dn,
->>                                              bool enable)
->>  {
->> --
->> 1.7.9.5
->>
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
